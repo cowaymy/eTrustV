@@ -17,8 +17,8 @@ SELECT TO_CHAR(TO_DATE(A.IF_DATE, 'YYYY-MM-DD'), 'DD/MM/YYYY') AS IF_DATE
      , A.ERR_MSG
   FROM SCM0055L A
   LEFT OUTER JOIN SYS0013M B ON (A.IF_TYPE = B.CODE AND B.CODE_MASTER_ID = 352) /* CODE_MASTER_ID = 352 : SCM Interface Type */
-  LEFT OUTER JOIN SYS0013M C ON (A.IF_TYPE = C.CODE AND C.CODE_MASTER_ID = 405) /* CODE_MASTER_ID = 405 : SCM Interface Status */
-  LEFT OUTER JOIN SYS0013M D ON (A.IF_TYPE = D.CODE AND D.CODE_MASTER_ID = 404) /* CODE_MASTER_ID = 352 : SCM Interface Cycle */
+  LEFT OUTER JOIN SYS0013M C ON (A.IF_STATUS = C.CODE AND C.CODE_MASTER_ID = 405) /* CODE_MASTER_ID = 405 : SCM Interface Status */
+  LEFT OUTER JOIN SYS0013M D ON (A.IF_CYCLE = D.CODE AND D.CODE_MASTER_ID = 404) /* CODE_MASTER_ID = 352 : SCM Interface Cycle */
  WHERE A.IF_DATE BETWEEN #{startDate} AND #{endDate}
 	<if test="scmIfTypeCbBox != null and ! scmIfTypeCbBox.isEmpty">
    AND A.IF_TYPE IN
@@ -32,7 +32,7 @@ SELECT TO_CHAR(TO_DATE(A.IF_DATE, 'YYYY-MM-DD'), 'DD/MM/YYYY') AS IF_DATE
 		#{item}
 		</foreach>
 	</if>
- ORDER BY A.IF_DATE DESC, A.IF_SEQ, A.IF_TYPE, A.IF_STATUS
+ ORDER BY A.IF_DATE DESC, A.IF_TIME DESC, A.IF_SEQ DESC, A.IF_TYPE, A.IF_STATUS
 </select>
 
 <select id="doInterface" parameterType="Map" resultType="egovMap">
@@ -133,5 +133,69 @@ VALUES
      , #{poItemStusId}
  )
 </insert>
+
+<resultMap id="executeSP_SCM_0039M_ITF0156Map" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0039M_ITF0156" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call SP_SCM_0039M_ITF0156(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0039M_ITF0156Map}
+                             , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0039M_ITF0156Map})
+ }
+</select>
+
+<resultMap id="executeSP_SCM_0039M_ITF0160Map" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0039M_ITF0160" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call SP_SCM_0039M_ITF0160(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0039M_ITF0160Map}
+                             , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0039M_ITF0160Map})
+ }
+</select>
+
+<resultMap id="executeSP_SCM_0050S_INSERTMap" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0050S_INSERT" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call executeSP_SCM_0050S_INSERT(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0050S_INSERTMap}
+                                   , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0050S_INSERTMap})
+ }
+</select>
+
+<resultMap id="executeSP_SCM_0051S_INSERTMap" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0051S_INSERT" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call executeSP_SCM_0051S_INSERT(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0051S_INSERTMap}
+                                   , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0051S_INSERTMap})
+ }
+</select>
+
+<resultMap id="executeSP_SCM_0051S_INSERT_CALLMap" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0051S_INSERT_CALL" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call executeSP_SCM_0051S_INSERT_CALL(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0051S_INSERT_CALLMap}
+                                        , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0051S_INSERT_CALLMap})
+ }
+</select>
+
+<resultMap id="executeSP_SCM_0052S_INSERTMap" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0052S_INSERT" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call executeSP_SCM_0052S_INSERT(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0052S_INSERTMap}
+                                   , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0052S_INSERTMap})
+ }
+</select>
+
+<resultMap id="executeSP_SCM_0053S_INSERTMap" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0053S_INSERT" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call executeSP_SCM_0053S_INSERT(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0053S_INSERTMap}
+                                   , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0053S_INSERTMap})
+ }
+</select>
+
+<resultMap id="executeSP_MTH_SCM_FILTER_FRCSTMap" type="egovMap"></resultMap>
+<select id="executeSP_MTH_SCM_FILTER_FRCST" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call executeSP_MTH_SCM_FILTER_FRCST(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_MTH_SCM_FILTER_FRCSTMap}
+                                       , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_MTH_SCM_FILTER_FRCSTMap})
+ }
+</select>
 
 </mapper>
