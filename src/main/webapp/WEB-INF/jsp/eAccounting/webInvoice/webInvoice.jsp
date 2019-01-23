@@ -872,7 +872,7 @@ function fn_editRejected() {
 </style>
 
 <form id="dataForm">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/Web_Invoice_N.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/Web_Invoice.rpt" /><!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
     <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> --><!-- Download Name -->
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
