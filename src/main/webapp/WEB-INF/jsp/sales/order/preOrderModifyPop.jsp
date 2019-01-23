@@ -1191,7 +1191,7 @@
         $('#salesmanNm').val('');
 
         Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
-
+        	console.log('fn_loadOrderSalesman memId:'+memInfo);
             if(memInfo == null) {
                 Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
             }
@@ -1491,7 +1491,7 @@
                     $("#corpTypeNm").val(""); //Industry Code
                 }
 
-                if('${preOrderInfo.custBillAddId}' != null && '${preOrderInfo.custBillAddId}' != null) {
+                if('${preOrderInfo.custBillAddId}' != null && '${preOrderInfo.instAddId}' != null) {
                     //----------------------------------------------------------
                     // [Billing Detail] : Billing Address SETTING
                     //----------------------------------------------------------
@@ -1503,22 +1503,22 @@
                     fn_loadInstallAddr('${preOrderInfo.instAddId}');
                 }
 
-                if(custInfo.custCntcId > 0) {
+                if('${preOrderInfo.custCntcId}' > 0) {
                     //----------------------------------------------------------
                     // [Master Contact] : Owner & Purchaser Contact
                     //                    Additional Service Contact
                     //----------------------------------------------------------
-                    fn_loadMainCntcPerson(custInfo.custCntcId);
+                    fn_loadMainCntcPerson('${preOrderInfo.custCntcId}');
                     fn_loadCntcPerson('${preOrderInfo.custCntcId}');
 
                     if('${preOrderInfo.custCntcId}' != custInfo.custCntcId) {
                         $('#chkSameCntc').prop("checked", false);
                         $('#scAnothCntc').removeClass("blind");
                     }
-
-                    // Salesman
-                    fn_loadOrderSalesman(null, '${preOrderInfo.memCode}');
                 }
+
+                // Salesman
+                fn_loadOrderSalesman(null, '${preOrderInfo.memCode}');
 
                 if(custInfo.codeName == 'Government') {
                     Common.alert('<b>Goverment Customer</b>');

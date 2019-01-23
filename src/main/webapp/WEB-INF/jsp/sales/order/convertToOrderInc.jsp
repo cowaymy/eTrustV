@@ -51,7 +51,7 @@
                     $('#sctBillPrefer').addClass("blind");
                 }
 
-                if(custInfo.custAddId > 0) {
+                if('${preOrderInfo.custBillAddId}' != null && '${preOrderInfo.instAddId}' != null) {
 
                     //----------------------------------------------------------
                     // [Billing Detail] : Billing Address SETTING
@@ -64,7 +64,7 @@
                     fn_loadInstallAddr('${preOrderInfo.instAddId}');
                 }
 
-                if(custInfo.custCntcId > 0) {
+                if('${preOrderInfo.custCntcId}' > 0) {
                     //----------------------------------------------------------
                     // [Master Contact] : Owner & Purchaser Contact
                     //                    Additional Service Contact
@@ -124,7 +124,7 @@
 		        $('#promoDiscPeriod').val('${preOrderInfo.promoDiscPeriod}');
 		        $('#ordPrice').val('${preOrderInfo.totAmt}');
 		        $('#orgOrdPrice').val('${preOrderInfo.norAmt}');
-		        $('#orgOrdRentalFees').val('${preOrderInfo.norRntFee}');
+		        $('#orgOrdRentalFees').val('${preOrderInfo.discRntFee}');
 		        $('#ordRentalFees').val('${preOrderInfo.discRntFee}');
 		        $('#ordPv').val('${preOrderInfo.totPv}');
 		        $('#ordPvGST').val('${preOrderInfo.totPvGst}');
