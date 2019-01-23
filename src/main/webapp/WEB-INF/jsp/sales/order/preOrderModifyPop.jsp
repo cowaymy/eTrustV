@@ -1510,6 +1510,7 @@
                     //----------------------------------------------------------
                     fn_loadMainCntcPerson('${preOrderInfo.custCntcId}');
                     fn_loadCntcPerson('${preOrderInfo.custCntcId}');
+                    //fn_loadSrvCntcPerson('${preOrderInfo.custBillCustCareCntId}');
 
                     if('${preOrderInfo.custCntcId}' != custInfo.custCntcId) {
                         $('#chkSameCntc').prop("checked", false);
@@ -1753,6 +1754,33 @@
                 $("#custTelO").val(custCntcInfo.telO);
                 $("#custTelF").val(custCntcInfo.telf);
                 $("#custExt").val(custCntcInfo.ext);
+            }
+        });
+    }
+
+    function fn_loadSrvCntcPerson(custCareCntId) {
+        console.log("fn_loadSrvCntcPerson START");
+
+        Common.ajax("GET", "/sales/order/selectSrvCntcJsonInfo.do", {custCareCntId : custCareCntId}, function(srvCntcInfo) {
+
+            if(srvCntcInfo != null) {
+
+                console.log("성공.");
+                console.log("srvCntcInfo:"+srvCntcInfo.custCareCntId);
+                console.log("srvCntcInfo:"+srvCntcInfo.name);
+                console.log("srvCntcInfo:"+srvCntcInfo.custInitial);
+                console.log("srvCntcInfo:"+srvCntcInfo.email);
+
+                //hiddenBPCareId
+                $("#hiddenBPCareId").val(srvCntcInfo.custCareCntId);
+                $("#custCntcName").val(srvCntcInfo.name);
+                $("#custCntcInitial").val(srvCntcInfo.custInitial);
+                $("#custCntcEmail").val(srvCntcInfo.email);
+                $("#custCntcTelM").val(srvCntcInfo.telM);
+                $("#custCntcTelR").val(srvCntcInfo.telR);
+                $("#custCntcTelO").val(srvCntcInfo.telO);
+                $("#custCntcTelF").val(srvCntcInfo.telf);
+                $("#custCntcExt").val(srvCntcInfo.ext);
             }
         });
     }

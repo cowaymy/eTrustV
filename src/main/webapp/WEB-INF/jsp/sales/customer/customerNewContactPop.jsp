@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
 $(document).ready(function() {
-    
+
     /* ##### cust CNTCID ##### */
     fn_getCustCntcId();
     /* ###  Page Param #### */
@@ -13,7 +13,7 @@ $(document).ready(function() {
             changeYear:true,
             dateFormat: "dd/mm/yy"
     };
-    
+
     $(".j_date").datepicker(pickerOpts);
 
     var monthOptions = {
@@ -24,12 +24,12 @@ $(document).ready(function() {
     };
 
     $(".j_date2").monthpicker(monthOptions);
-    
-    
+
+
     doGetCombo('/common/selectCodeList.do', '17', '', 'cntcCmbInitialTypeId', 'S' , ''); // Customer Initial Type Combo Box
     doGetCombo('/common/selectCodeList.do', '2', '', 'cntcCmbRaceTypeId', 'S' , ''); // Customer Race Type Combo Box
-    
-    
+
+
     // Save Button Click
     $("#_saveBtn").click(function() {
         // 1. validation
@@ -63,7 +63,7 @@ $(document).ready(function() {
         //Tel
         if(("" == $("#cntcTelm").val() || null == $("#cntcTelm").val()) && ("" == $("#cntcTelr").val() || null == $("#cntcTelr").val())
                 && ("" == $("#cntcTelo").val() || null == $("#cntcTelo").val()) && ("" == $("#cntcTelf").val() || null == $("#cntcTelf").val())){
-            
+
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinAtLeastOneConNum" />');
             return;
         }else{
@@ -95,12 +95,12 @@ $(document).ready(function() {
                     return;
                 }
             }
-            
+
         }// tel end
-        
+
         //Ext
         if(""  != $("#cntcExtNo").val() && null != $("#cntcExtNo").val()){
-            
+
             if(FormUtil.checkNum($("#cntcExtNo"))){
                  Common.alert('<spring:message code="sal.alert.msg.invaildExtNoNum" />');
                  return;
@@ -108,7 +108,7 @@ $(document).ready(function() {
         }
         //Email
         if("" != $("#cntcEmail").val() && null != $("#cntcEmail").val()){
-            
+
             if(FormUtil.checkEmail($("#cntcEmail").val())){
                  Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');
                  return;
@@ -116,19 +116,19 @@ $(document).ready(function() {
         }
         // Validation Success
         // 2. Add
-      fn_customerContactInfoAddAjax(); 
-        
+      fn_customerContactInfoAddAjax();
+
     });
-    
+
     $("#_copyBtn").click(function() {
-        
+
         //custAddrId
         var cntcId = $("#_tempContactId").val();
-        
+
         $.ajax({
             type : "GET",
             url : getContextPath() + "/sales/customer/selectCustomerCopyContactJson",
-            data : { getparam : cntcId}, 
+            data : { getparam : cntcId},
             dataType: "json",
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
@@ -152,29 +152,30 @@ $(document).ready(function() {
             },
             complete: function(){
             }
-            
+
         });
    });
-    
+
 }); // Document Ready Func End
 
 /* ####### update Func ########### */
     // Call Ajax - DB Update
    function fn_customerContactInfoAddAjax(){
         Common.ajax("GET", "/sales/customer/insertCustomerContactAddAf.do",$("#addForm").serialize(), function(result) {
-            
+
             if("" != $("#_callParam").val() && null != $("#_callParam").val()){
-               Common.alert(result.message);    
+               Common.alert(result.message);
             }else{
                Common.alert(result.message, fn_parentReload);
             }
-            if('${callParam}' == 'ORD_REGISTER_CNTC_OWN' || '${callParam}' == 'PRE_ORD_CNTC') {
+            if('${callParam}' == 'ORD_REGISTER_CNTC_OWN' ) {
+            	//|| '${callParam}' == 'PRE_ORD_CNTC'
                 fn_loadCntcPerson(result.data);
                 $("#_close1").click();
             }
         });
     }
-    
+
     // Parent Reload Func
     function fn_parentReload() {
         fn_selectPstRequestDOListAjax(); //parent Method (Reload)
@@ -183,24 +184,24 @@ $(document).ready(function() {
         $("#_selectParam").val('3');
         Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
         Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', $("#popForm").serializeJSON(), null , true ,'_editDiv3New');
-        
+
     }
 /* ####### update Func  End########### */
 
     function fn_getCustCntcId(){
-        
+
         var getparam = $("#_insCustId").val();
         $.ajax({
-            
+
             type: "GET",
             url : getContextPath() + "/sales/customer/selectCustomerMainContact",
             data : {getparam : getparam},
             dataType : "json",
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
-                   
+
                     $("#_tempContactId").val(data.custCntcId);
-                    
+
             },
             error: function(){
                 alert("Get Contact Id was Failed!");
@@ -208,11 +209,11 @@ $(document).ready(function() {
             complete: function(){
             }
         });
-        
+
     }
-    
+
     function fn_selectPage(){
-        
+
         if("" != $("#_callParam").val() && null != $("#_callParam").val()){
              $("#_copyBtn").css("display" , "");
         }
@@ -257,7 +258,7 @@ $(document).ready(function() {
     <th scope="row"><spring:message code="sal.text.name" /><span class="must">*</span></th>
     <td><input type="text" title="" placeholder="" class="w100p"  id="cntcName" name="cntcName" maxlength="70"/></td>
     <th scope="row"><spring:message code="sal.text.race" /><span class="must">*</span></th>
-    <td>    
+    <td>
     <select class="w100p" id="cntcCmbRaceTypeId" name="cntcCmbRaceTypeId"></select>
     </td>
 </tr>
