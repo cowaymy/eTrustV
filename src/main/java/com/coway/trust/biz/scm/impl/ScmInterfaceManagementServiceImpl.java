@@ -61,17 +61,43 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 		return	scmInterfaceManagementMapper.selectInterfaceList(params);
 	}
 	@Override
-	public int doInterface(List<Map<String, Object>> chkList, SessionVO sessionVO) {
+	public int doInterface(List<Map<String, Object>> chkList) {
 		
 		int saveCnt	= 0;
-		int crtUserId	= sessionVO.getUserId();
+		String ifType	= "";
 		Map<String, Object> params = new HashMap<>();
+		params.put("status", 0);
+		params.put("result", "");
 		
 		try {
 			for ( Map<String, Object> list : chkList ) {
 				//	do anything
+				ifType	= list.get("ifType").toString();
 				
-				scmInterfaceManagementMapper.doInterface(params);
+				if ( "156".equals(ifType) ) {
+					//	SAP 생성 PO번호 정보
+					scmInterfaceManagementMapper.executeSP_SCM_0039M_ITF0156(params);
+				} else if ( "160".equals(ifType) ) {
+					//	GR/AP 정보
+					scmInterfaceManagementMapper.executeSP_SCM_0039M_ITF0160(params);
+				} else if ( "161".equals(ifType) ) {
+					//	주문정보
+					scmInterfaceManagementMapper.executeSP_SCM_0050S_INSERT(params);
+				} else if ( "162".equals(ifType) ) {
+					//	출고정보
+					scmInterfaceManagementMapper.executeSP_SCM_0051S_INSERT(params);
+					scmInterfaceManagementMapper.executeSP_SCM_0051S_INSERT_CALL(params);
+				} else if ( "163".equals(ifType) ) {
+					//	오버듀정보
+					scmInterfaceManagementMapper.executeSP_SCM_0052S_INSERT(params);
+				} else if ( "164".equals(ifType) ) {
+					//	재고정보
+					scmInterfaceManagementMapper.executeSP_SCM_0053S_INSERT(params);
+				} else if ( "165".equals(ifType) ) {
+					//	월별재고예측정보
+					scmInterfaceManagementMapper.executeSP_MTH_SCM_FILTER_FRCST(params);
+				}
+				//scmInterfaceManagementMapper.doInterface(params);
 				saveCnt++;
 			}
 		} catch ( Exception e ) {
