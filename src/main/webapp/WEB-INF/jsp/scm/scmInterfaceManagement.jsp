@@ -221,9 +221,20 @@ function fnDoInterface(obj) {
 }
 
 function fnExecute() {
+	console.log(AUIGrid.getCheckedRowItemsAll(myGridID));
+	return	false;
 	Common.ajax("GET"
 			, "/scm/connection2.do"
 			, ""
+			, ""
+			, "");
+}
+
+function fnExecute1() {
+	var params	= $.extend($("#MainForm").serializeJSON(), params);
+	Common.ajax("POST"
+			, "/scm/executeSupplyPlanRtp.do"
+			, params
 			, ""
 			, "");
 }
@@ -236,16 +247,7 @@ var interfaceLayout	=
 		{
 			dataField : "ifDate",
 			headerText : "IF Date",
-			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 20 == item.ifStatus ) {
-					return	"my-columnCenter2";
-				} else {
-					return	"my-columnCenter";
-				}
-			}
-		}, {
-			dataField : "ifSeq",
-			headerText : "SEQ",
+			width : "5%",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 20 == item.ifStatus ) {
 					return	"my-columnCenter2";
@@ -256,6 +258,30 @@ var interfaceLayout	=
 		}, {
 			dataField : "ifTime",
 			headerText : "IF Time",
+			width : "5%",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( 20 == item.ifStatus ) {
+					return	"my-columnCenter2";
+				} else {
+					return	"my-columnCenter";
+				}
+			}
+		}, {
+			dataField : "ifSeq",
+			headerText : "SEQ",
+			width : "5%",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( 20 == item.ifStatus ) {
+					return	"my-columnCenter2";
+				} else {
+					return	"my-columnCenter";
+				}
+			}
+		}, {
+			dataField : "ifType",
+			headerText : "IF Type",
+			//width : "25%",
+			visible : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 20 == item.ifStatus ) {
 					return	"my-columnCenter2";
@@ -266,26 +292,18 @@ var interfaceLayout	=
 		}, {
 			dataField : "ifTypeName",
 			headerText : "IF Type",
+			width : "25%",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 20 == item.ifStatus ) {
-					return	"my-columnCenter2";
+					return	"my-columnLeft2";
 				} else {
-					return	"my-columnCenter";
-				}
-			}
-		}, {
-			dataField : "ifTypeName",
-			headerText : "IF Type",
-			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 20 == item.ifStatus ) {
-					return	"my-columnCenter2";
-				} else {
-					return	"my-columnCenter";
+					return	"my-columnLeft";
 				}
 			}
 		}, {
 			dataField : "ifStatusName",
 			headerText : "IF Status",
+			width : "10%",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 20 == item.ifStatus ) {
 					return	"my-columnCenter2";
@@ -296,6 +314,7 @@ var interfaceLayout	=
 		}, {
 			dataField : "ifCycleName",
 			headerText : "IF Cycle",
+			width : "10%",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 20 == item.ifStatus ) {
 					return	"my-columnCenter2";
@@ -306,6 +325,7 @@ var interfaceLayout	=
 		}, {
 			dataField : "execCnt",
 			headerText : "Result Count",
+			width : "10%",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 20 == item.ifStatus ) {
 					return	"my-columnCenter2";
@@ -316,11 +336,12 @@ var interfaceLayout	=
 		}, {
 			dataField : "errMsg",
 			headerText : "Error",
+			width : "30%",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 20 == item.ifStatus ) {
-					return	"my-columnCenter2";
+					return	"my-columnLeft2";
 				} else {
-					return	"my-columnCenter";
+					return	"my-columnLeft";
 				}
 			}
 		}
@@ -331,13 +352,20 @@ var myGridID
 
 $(document).ready(function() {
 	var interfaceLayoutOption = {
-			usePaging : true,
+			usePaging : false,
 			useGroupingPanel : false,
 			showRowNumColumn : false,
 			showStateColumn : false,
 			showRowCheckColumn : true,
+			editable : false,
 			enableRestore : true,
-			softRemovePolicy : "exceptNew"
+			softRemovePolicy : "exceptNew",
+			rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
+				if ( 20 == item.ifStatus ) {
+					return	true;
+				}
+				return	false;
+			}
 	};
 	
 	myGridID	= GridCommon.createAUIGrid("InterfaceGridDiv", interfaceLayout, "", interfaceLayoutOption);
@@ -437,8 +465,9 @@ $(document).ready(function() {
 
 <section class="search_result"><!-- search_result start -->
 	<ul class="right_btns">
-		<!-- <li><p id="btnInterface" class="btn_grid"><a onclick="fnDoInterface();">Do Interface</a></p></li> -->
-		<li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute();">Execute</a></p></li>
+		<li><p id="btnInterface" class="btn_grid"><a onclick="fnDoInterface();">Do Interface</a></p></li>
+		<!-- <li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute();">Execute</a></p></li>
+		<li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute1();">Execute1</a></p></li> -->
 	</ul>
 
 	<article class="grid_wrap"><!-- grid_wrap start -->
