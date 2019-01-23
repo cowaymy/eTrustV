@@ -71,7 +71,7 @@
                     //----------------------------------------------------------
 
                     fn_loadCntcPerson('${preOrderInfo.custCntcId}');
-                    fn_loadSrvCntcPerson(custInfo.custCareCntId);
+                    fn_loadSrvCntcPerson('${preOrderInfo.custBillCustCareCntId}');
 
                     //----------------------------------------------------------
                     // [Installation] : Installation Contact Person
