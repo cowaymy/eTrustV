@@ -662,10 +662,11 @@ function fnSearch() {
 				console.log(result);
 				
 				//	supplyPlanQty set
-				leadTm		= result.selectScmTotalInfo[0].leadTm;
-				planWeekTh	= result.selectScmTotalInfo[0].planWeekTh;
-				fromPlanToPoSpltCnt	= result.selectScmTotalInfo[0].fromPlanToPoSpltCnt;
+				//leadTm		= result.selectScmTotalInfo[0].leadTm;
+				//planWeekTh	= result.selectScmTotalInfo[0].planWeekTh;
+				//fromPlanToPoSpltCnt	= result.selectScmTotalInfo[0].fromPlanToPoSpltCnt;
 				planGrWeekSpltYn	= result.selectScmTotalInfo[0].planGrWeekSpltYn;
+				leadTm	= result.selectGetPoCntTargetCnt[0].cnt;
 				fnPoTargetGrid();
 				
 				fnSetPlanQty(result.selectPoTargetList);
@@ -728,7 +729,8 @@ function fnSetPlanQty(list) {
 	var planQty2	= 0;	var planQty2S	= "";
 	var totLeadCnt	= 0;
 	
-	totLeadCnt	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(fromPlanToPoSpltCnt) + 1;
+	//totLeadCnt	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(fromPlanToPoSpltCnt) + 1;
+	totLeadCnt	= parseInt(leadTm) + 1;
 	console.log("totLeadCnt : " + totLeadCnt + ", planGrWeekSpltYn : " + planGrWeekSpltYn);
 	for ( var i = 0 ; i < list.length ; i++ ) {
 		if ( 1 == planGrWeekSpltYn ) {
