@@ -38,13 +38,12 @@ public class PoManagementController {
 	
 	@Autowired
 	private PoMngementService poMngementService;
-	
 	@Autowired
 	private PoManagementService poManagementService;
-	
 	@Autowired
 	private ScmCommonService scmCommonService;
-	
+	@Autowired
+	private SupplyPlanManagementService supplyPlanManagementService;
 	@Autowired
 	private ScmInterfaceManagementService scmInterfaceManagementService;
 	
@@ -78,10 +77,22 @@ public class PoManagementController {
 		params.put("planGrYear", planGrYear);
 		params.put("planGrMonth", planGrMonth);
 		params.put("planGrWeek", planGrWeek);
+		
+		Map<String, Object> targetParams = new HashMap<String, Object>();
+		//LOGGER.debug("planFstWeek : " + planFstWeek + ", planFstSpltWeekk : " + planFstSpltWeek + ", planWeekTh : " + planWeekTh);
+		targetParams.put("planYear", selectScmTotalInfo.get(0).get("planYear"));
+		targetParams.put("planMonth", selectScmTotalInfo.get(0).get("planMonth"));
+		targetParams.put("planWeekTh", selectScmTotalInfo.get(0).get("planWeekTh"));
+		targetParams.put("planFstSpltWeek", selectScmTotalInfo.get(0).get("planFstSpltWeek"));
+		targetParams.put("planYearLstWeek", selectScmTotalInfo.get(0).get("planYearLstWeek"));
+		targetParams.put("leadTm", selectScmTotalInfo.get(0).get("leadTm"));
+		List<EgovMap> selectGetPoCntTargetCnt	= supplyPlanManagementService.selectGetPoCntTargetCnt(targetParams);
+		
 		List<EgovMap> selectPoStatus		= poManagementService.selectPoStatus(params);
 		List<EgovMap> selectPoTargetList	= poManagementService.selectPoTargetList(params);
 		List<EgovMap> selectPoCreatedList	= poManagementService.selectPoCreatedList(params);
 		
+		map.put("selectGetPoCntTargetCnt", selectGetPoCntTargetCnt);
 		map.put("selectScmTotalInfo", selectScmTotalInfo);
 		map.put("selectPoStatus", selectPoStatus);
 		map.put("selectPoTargetList", selectPoTargetList);
