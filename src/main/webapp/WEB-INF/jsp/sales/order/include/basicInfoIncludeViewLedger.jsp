@@ -10,7 +10,7 @@
             resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
             scrollbars : "yes" // 스크롤바. (yes/no)(default : yes)
     };
-    
+
 function fn_goLedger1(){
     Common.popupWin('legderParam', "/sales/order/orderLedgerViewPop.do", option);
 }
@@ -110,7 +110,15 @@ function fn_goLedger2(){
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.obligationPeriod" /></th>
-    <td colspan="5">${orderDetail.basicInfo.obligtYear}</td>
+    <td>${orderDetail.basicInfo.obligtYear}</td>
+    <th scope="row"><spring:message code="sal.text.AddCmpt" /></th>
+    <td colspan="3">${orderDetail.basicInfo.addCmpt}</td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.ekeyCrtUser" /></th>
+    <td colspan="1">${orderDetail.basicInfo.ekeyCrtUser}</td>
+    <th scope="row"><spring:message code="sal.text.ekeyBrnchName" /></th>
+    <td colspan="3">${orderDetail.basicInfo.ekeyBrnchName}</td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
