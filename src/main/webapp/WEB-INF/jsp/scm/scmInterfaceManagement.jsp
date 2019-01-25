@@ -200,7 +200,7 @@ function fnDoInterface(obj) {
 	}
 	data.checked	= chkList;
 	
-	Common.ajax("POST"
+	Common.ajax("GET"
 			, "/scm/doInterface.do"
 			, data
 			, function(result) {
@@ -220,22 +220,49 @@ function fnDoInterface(obj) {
 			});
 }
 
-function fnExecute() {
-	console.log(AUIGrid.getCheckedRowItemsAll(myGridID));
-	return	false;
-	Common.ajax("GET"
-			, "/scm/connection2.do"
-			, ""
-			, ""
+function fnExecuteSo() {
+	var params	= $.extend($("#MainForm").serializeJSON(), params);
+	//console.log(params);
+	Common.ajax("POST"
+			, "/scm/executeOtdSo.do"
+			, params
+			, function(result) {
+				fnExecutePp();
+			} 
+			, "");
+}
+function fnExecutePp() {
+	var params	= $.extend($("#MainForm").serializeJSON(), params);
+	//console.log(params);
+	Common.ajax("POST"
+			, "/scm/executeOtdPp.do"
+			, params
+			, function(result) {
+				fnExecuteGi();
+			}
+			, "");
+}
+function fnExecuteGi() {
+	var params	= $.extend($("#MainForm").serializeJSON(), params);
+	//console.log(params);
+	Common.ajax("POST"
+			, "/scm/executeOtdGi.do"
+			, params
+			, function(result) {
+				fnExecute();
+			}
 			, "");
 }
 
-function fnExecute1() {
+function fnExecute() {
 	var params	= $.extend($("#MainForm").serializeJSON(), params);
+	//console.log(params);
 	Common.ajax("POST"
 			, "/scm/executeSupplyPlanRtp.do"
 			, params
-			, ""
+			, function(result) {
+				fnSearch();
+			}
 			, "");
 }
 
@@ -390,7 +417,7 @@ $(document).ready(function() {
 
 
 <section class="search_table"><!-- search_table start -->
-<form id="MainForm" method="post" action="">
+<form id="MainForm" method="get" action="">
 	<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
@@ -466,8 +493,8 @@ $(document).ready(function() {
 <section class="search_result"><!-- search_result start -->
 	<ul class="right_btns">
 		<li><p id="btnInterface" class="btn_grid"><a onclick="fnDoInterface();">Do Interface</a></p></li>
-		<!-- <li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute();">Execute</a></p></li>
-		<li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute1();">Execute1</a></p></li> -->
+		<li><p id="btnExecuteAll" class="btn_grid"><a onclick="fnExecuteSo();">Execute OTD All</a></p></li>
+		<!-- <li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute();">Execute Supply Plan Rtp</a></p></li> -->
 	</ul>
 
 	<article class="grid_wrap"><!-- grid_wrap start -->

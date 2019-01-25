@@ -766,7 +766,7 @@ $(document).ready(function() {
 <section class="search_result"><!-- search_result start -->
 	<div class="side_btns">
 		<ul class="right_btns">
-			<li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute();">Execute</a></p></li>
+			<!-- <li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute();">Execute</a></p></li> -->
 			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'Otd Report');">Excel</a></p></li>
 		</ul>
 	</div>
