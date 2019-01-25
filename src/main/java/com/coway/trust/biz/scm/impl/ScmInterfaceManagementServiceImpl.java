@@ -39,7 +39,10 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 	@Autowired
 	private ScmInterfaceManagementMapper	scmInterfaceManagementMapper;
 
-	//	Interface
+	/*
+	 * SCM Interface
+	 */
+	//	Search & etc
 	@Override
 	public List<EgovMap> selectInterfaceList(Map<String, Object> params) {
 		String startDate	= "";
@@ -59,52 +62,6 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 		LOGGER.debug("startDate : " + startDate + ", endDate : " + endDate);
 		
 		return	scmInterfaceManagementMapper.selectInterfaceList(params);
-	}
-	@Override
-	public int doInterface(List<Map<String, Object>> chkList) {
-		
-		int saveCnt	= 0;
-		String ifType	= "";
-		Map<String, Object> params = new HashMap<>();
-		params.put("status", 0);
-		params.put("result", "");
-		
-		try {
-			for ( Map<String, Object> list : chkList ) {
-				//	do anything
-				ifType	= list.get("ifType").toString();
-				
-				if ( "156".equals(ifType) ) {
-					//	SAP 생성 PO번호 정보
-					scmInterfaceManagementMapper.executeSP_SCM_0039M_ITF0156(params);
-				} else if ( "160".equals(ifType) ) {
-					//	GR/AP 정보
-					scmInterfaceManagementMapper.executeSP_SCM_0039M_ITF0160(params);
-				} else if ( "161".equals(ifType) ) {
-					//	주문정보
-					scmInterfaceManagementMapper.executeSP_SCM_0050S_INSERT(params);
-				} else if ( "162".equals(ifType) ) {
-					//	출고정보
-					scmInterfaceManagementMapper.executeSP_SCM_0051S_INSERT(params);
-					scmInterfaceManagementMapper.executeSP_SCM_0051S_INSERT_CALL(params);
-				} else if ( "163".equals(ifType) ) {
-					//	오버듀정보
-					scmInterfaceManagementMapper.executeSP_SCM_0052S_INSERT(params);
-				} else if ( "164".equals(ifType) ) {
-					//	재고정보
-					scmInterfaceManagementMapper.executeSP_SCM_0053S_INSERT(params);
-				} else if ( "165".equals(ifType) ) {
-					//	월별재고예측정보
-					scmInterfaceManagementMapper.executeSP_MTH_SCM_FILTER_FRCST(params);
-				}
-				//scmInterfaceManagementMapper.doInterface(params);
-				saveCnt++;
-			}
-		} catch ( Exception e ) {
-			e.printStackTrace();
-		}
-		
-		return	saveCnt;
 	}
 	@Override
 	public int scmIf155(List<Map<String, Object>> chkList, SessionVO sessionVO) {
@@ -128,7 +85,6 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 		
 		return	saveCnt;
 	}
-	
 	@Override
 	public int insertSCM0039M(List<Map<String, Object>> chkList, SessionVO sessionVO) {
 		
@@ -153,5 +109,104 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 		}
 		
 		return	saveCnt;
+	}
+	
+	//	log
+	@Override
+	public void insertLog(Map<String, Object> params) {
+		LOGGER.debug("insertLog : {}", params);
+		scmInterfaceManagementMapper.insertLog(params);
+	}
+	
+	//	Procedure Batch
+	@Override
+	public void executeProcedureBatch(Map<String, Object> params) {
+		String ifType	= "";
+		params.put("status", 0);
+		params.put("result", "");
+		
+		try {
+			//	do anything
+			ifType	= params.get("ifType").toString();
+			
+			if ( "151".equals(ifType) ) {
+				//	OTD SO 정보
+				scmInterfaceManagementMapper.executeSP_SCM_0039M_ITF0156(params);
+			} else if ( "152".equals(ifType) ) {
+				//	OTD GI 정보
+				scmInterfaceManagementMapper.executeSP_SCM_0039M_ITF0156(params);
+			} else if ( "153".equals(ifType) ) {
+				//	OTD PP 정보
+				scmInterfaceManagementMapper.executeSP_SCM_0039M_ITF0156(params);
+			} else if ( "156".equals(ifType) ) {
+				//	SAP 생성 PO번호 정보
+				scmInterfaceManagementMapper.executeSP_SCM_0039M_ITF0156(params);
+			} else if ( "160".equals(ifType) ) {
+				//	GR/AP 정보
+				scmInterfaceManagementMapper.executeSP_SCM_0039M_ITF0160(params);
+			} else if ( "161".equals(ifType) ) {
+				//	주문정보
+				scmInterfaceManagementMapper.executeSP_SCM_0050S_INSERT(params);
+			} else if ( "162".equals(ifType) ) {
+				//	출고정보
+				scmInterfaceManagementMapper.executeSP_SCM_0051S_INSERT(params);
+				scmInterfaceManagementMapper.executeSP_SCM_0051S_INSERT_CALL(params);
+			} else if ( "163".equals(ifType) ) {
+				//	오버듀정보
+				scmInterfaceManagementMapper.executeSP_SCM_0052S_INSERT(params);
+			} else if ( "164".equals(ifType) ) {
+				//	재고정보
+				scmInterfaceManagementMapper.executeSP_SCM_0053S_INSERT(params);
+			} else if ( "165".equals(ifType) ) {
+				//	월별재고예측정보
+				scmInterfaceManagementMapper.executeSP_MTH_SCM_FILTER_FRCST(params);
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+	}
+	
+	//	FTP Supply Plan RTP Batch
+	@Override
+	public List<EgovMap> selectTodayWeekTh(Map<String, Object> params) {
+		return	scmInterfaceManagementMapper.selectTodayWeekTh(params);
+	}
+	@Override
+	public List<EgovMap> selectScmIfSeq(Map<String, Object> params) {
+		return	scmInterfaceManagementMapper.selectScmIfSeq(params);
+	}
+	@Override
+	public void mergeSupplyPlanRtp(Map<String, Object> params) {
+		scmInterfaceManagementMapper.mergeSupplyPlanRtp(params);
+	}
+	@Override
+	public void updateSupplyPlanRtp(Map<String, Object> params) {
+		scmInterfaceManagementMapper.updateSupplyPlanRtp(params);
+	}
+	
+	//	FTP OTD SO Batch
+	@Override
+	public void updateOtdSo(Map<String, Object> params) {
+		LOGGER.debug("updateOtdSo : {}", params);
+		scmInterfaceManagementMapper.updateOtdSo(params);
+	}
+	
+	//	FTP OTD PP Batch
+	@Override
+	public void deleteOtdPp(Map<String, Object> params) {
+		LOGGER.debug("deleteOtdPp : {}", params);
+		scmInterfaceManagementMapper.deleteOtdPp(params);
+	}
+	@Override
+	public void mergeOtdPp(Map<String, Object> params) {
+		LOGGER.debug("mergeOtdPp : {}", params);
+		scmInterfaceManagementMapper.mergeOtdPp(params);
+	}
+	
+	//	FTP OTD GI Batch
+	@Override
+	public void mergeOtdGi(Map<String, Object> params) {
+		LOGGER.debug("mergeOtdGi : {}", params);
+		scmInterfaceManagementMapper.mergeOtdGi(params);
 	}
 }
