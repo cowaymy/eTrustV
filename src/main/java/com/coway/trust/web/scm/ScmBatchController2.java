@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.net.ftp.FTPClient;
@@ -29,12 +30,19 @@ import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.ibm.icu.util.Calendar;
 
 import oracle.jdbc.OracleResultSet;
@@ -48,6 +56,62 @@ public class ScmBatchController2 {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ScmBatchController.class);
 	
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+	/*
+	@RequestMapping(value = "/supplyPlanRtp.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> supplyPlanRtp(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		
+		int resultCnt	= 0;
+		ReturnMessage message = new ReturnMessage();
+		
+		BufferedReader reader	= null;
+		SimpleDateFormat sdf	= new SimpleDateFormat("yyyyMMdd");
+		Calendar cal	= Calendar.getInstance();
+		String today	= sdf.format(cal.getTime());
+		
+		String fileName	= "COWAY_SU_DATA_" + today + ".TXT";
+		fileName	= "COWAY_SU_DATA_20190116.TXT";
+		
+		client	= new FTPClient();
+		client.setControlEncoding("euc-kr");
+		
+		FTPClientConfig	config	= new FTPClientConfig();
+		client.configure(config);
+		
+		try {
+			client.connect("10.101.3.40", 21);
+			LOGGER.debug("ftp connected==================");
+			
+			client.login("etrustftp3", "akffus#20!*");
+			LOGGER.debug("ftp login======================");
+			
+			//read(client);
+			try {
+				InputStream is	= client.retrieveFileStream("/" + fileName);
+				if ( null != is ) {
+					reader	= new BufferedReader(new InputStreamReader(is, "utf-8"));
+				} else {
+					//	접속종료
+					message.setCode(AppConstants.FAIL);
+					message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+					disconnect();
+				}
+			} catch ( Exception se ) {
+				se.printStackTrace();
+			}
+		} catch ( Exception se ) {
+			se.printStackTrace();
+		}
+		if ( true ) {
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(resultCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}
+
+		return ResponseEntity.ok(message);
+	}
+	*/
 	@RequestMapping(value = "/connection2.do", method = RequestMethod.GET)
 	public ResponseEntity<String> connection2(@RequestParam Map<String, Object> params) {
 
