@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.scm.impl.ScmInterfaceManagementMapper">
 
+<!-- SCM Interface -->
+<!-- Search & etc -->
 <select id="selectInterfaceList" parameterType="Map" resultType="egovMap">
 SELECT TO_CHAR(TO_DATE(A.IF_DATE, 'YYYY-MM-DD'), 'DD/MM/YYYY') AS IF_DATE
      , TO_CHAR(TO_DATE(A.IF_TIME, 'HH24MISS'), 'HH:MI:SS') AS IF_TIME
@@ -34,10 +36,6 @@ SELECT TO_CHAR(TO_DATE(A.IF_DATE, 'YYYY-MM-DD'), 'DD/MM/YYYY') AS IF_DATE
 	</if>
  ORDER BY A.IF_DATE DESC, A.IF_TIME DESC, A.IF_SEQ DESC, A.IF_TYPE, A.IF_STATUS
 </select>
-
-<select id="doInterface" parameterType="Map" resultType="egovMap">
-</select>
-
 <insert id="scmIf155" parameterType="Map">
 INSERT INTO ITF0155M
 (
@@ -112,7 +110,6 @@ SELECT '155' || TO_CHAR(SYSDATE, 'YYMMDD') || '_' || LPAD(A.IF_KEY + A.IF_KEY_SE
            AND B.PO_ITEM_NO = #{poItemNo}
         ) A
 </insert>
-
 <insert id="insertSCM0039M" parameterType="Map">
 INSERT INTO SCM0039M
 (
@@ -134,6 +131,37 @@ VALUES
  )
 </insert>
 
+<!-- log -->
+<insert id="insertLog" parameterType="Map">
+INSERT INTO SCM0055L
+(
+       IF_DATE
+     , IF_TYPE
+     , IF_CYCLE
+     , IF_SEQ
+     , IF_TIME
+     , IF_STATUS
+     , EXEC_CNT
+     , FILE_NAME
+     , FILE_SIZE
+     , ERR_MSG
+ )
+VALUES
+(
+       #{ifDate}
+     , #{ifType}
+     , #{ifCycle}
+     , #{ifSeq}
+     , #{ifTime}
+     , #{ifStatus}
+     , #{execCnt}
+     , #{fileName}
+     , #{fileSize}
+     , #{errMsg}
+ )
+</insert>
+
+<!-- Procedure Batch -->
 <resultMap id="executeSP_SCM_0039M_ITF0156Map" type="egovMap"></resultMap>
 <select id="executeSP_SCM_0039M_ITF0156" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
 {
@@ -197,5 +225,164 @@ VALUES
                                        , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_MTH_SCM_FILTER_FRCSTMap})
  }
 </select>
+
+
+<!-- FTP Supply Plan RTP Batch -->
+<select id="selectTodayWeekTh" parameterType="Map" resultType="egovMap">
+SELECT CASE WHEN SCM_MONTH || SCM_WEEK = '121' THEN SCM_YEAR + 1 ELSE SCM_YEAR END AS SCM_YEAR
+     , CASE WHEN SCM_MONTH || SCM_WEEK = '121' THEN 1 ELSE SCM_MONTH END AS SCM_MONTH
+     , MIN(SCM_WEEK) AS SCM_WEEK
+  FROM SCM0018M
+ WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN TO_CHAR(SCM_WEEK_START, 'YYYYMMDD') AND TO_CHAR(SCM_WEEK_END, 'YYYYMMDD')
+ GROUP BY SCM_YEAR, SCM_MONTH, SCM_WEEK
+</select>
+<select id="selectScmIfSeq" parameterType="Map" resultType="egovMap">
+SELECT NVL(MAX(IF_SEQ), 0) + 1 AS SEQ
+  FROM SCM0055L
+ WHERE IF_DATE = #{ifDate}
+   AND IF_TYPE = #{ifType}
+</select>
+<insert id="mergeSupplyPlanRtp" parameterType="Map">
+MERGE INTO SCM0056S
+USING DUAL ON (PLAN_YEAR = #{planYear} AND PLAN_WEEK = #{planWeek} AND STOCK_CODE = #{stockCode})
+WHEN MATCHED THEN
+UPDATE
+   SET W01 = #{w01}, W02 = #{w02}, W03 = #{w03}, W04 = #{w04}, W05 = #{w05}, W06 = #{w06}, W07 = #{w07}, W08 = #{w08}, W09 = #{w09}, W10 = #{w10}
+     , W11 = #{w11}, W12 = #{w12}, W13 = #{w13}, W14 = #{w14}, W15 = #{w15}, W16 = #{w16}, W17 = #{w17}, W18 = #{w18}, W19 = #{w19}, W20 = #{w20}
+     , W21 = #{w21}, W22 = #{w22}, W23 = #{w23}, W24 = #{w24}, W25 = #{w25}, W26 = #{w26}, W27 = #{w27}, W28 = #{w28}, W29 = #{w29}, W30 = #{w30}
+     , WS1 = #{ws1}, WS2 = #{ws2}, WS3 = #{ws3}, WS4 = #{ws4}, WS5 = #{ws5}
+     , UPD_DT = SYSDATE
+     , UPD_USER_ID = 'mergeSupplyPlanRpt'
+WHEN NOT MATCHED THEN
+INSERT
+(PLAN_YEAR, PLAN_WEEK, STOCK_CODE,
+ W01, W02, W03, W04, W05, W06, W07, W08, W09, W10,
+ W11, W12, W13, W14, W15, W16, W17, W18, W19, W20,
+ W21, W22, W23, W24, W25, W26, W27, W28, W29, W30,
+ WS1, WS2, WS3, WS4, WS5,
+ CRT_USER_ID)
+VALUES
+(#{planYear}, #{planWeek}, #{stockCode},
+ #{w01}, #{w02}, #{w03}, #{w04}, #{w05}, #{w06}, #{w07}, #{w08}, #{w09}, #{w10},
+ #{w11}, #{w12}, #{w13}, #{w14}, #{w15}, #{w16}, #{w17}, #{w18}, #{w19}, #{w20},
+ #{w21}, #{w22}, #{w23}, #{w24}, #{w25}, #{w26}, #{w27}, #{w28}, #{w29}, #{w30},
+ #{ws1}, #{ws2}, #{ws3}, #{ws4}, #{ws5},
+ 'mergeSupplyPlanRpt')
+</insert>
+<select id="selectBatchTarget" parameterType="Map" resultType="egovMap">
+SELECT A.PLAN_YEAR, A.PLAN_WEEK, A.STOCK_CODE
+     , A.W01, A.W02, A.W03, A.W04, A.W05, A.W06, A.W07, A.W08, A.W09, A.W10, A.W11, A.W12
+  FROM SCM0056S A
+ WHERE A.EXEC_YN = 'N'
+</select>
+<update id="updateSupplyPlanRtp" parameterType="Map">
+UPDATE SCM0056S
+   SET EXEC_YN = 'Y'
+     , M0 = #{m0}, M1 = #{m1}, M2 = #{m2}, M3 = #{m3}, M4 = #{m4}
+     , W01 = #{w01}, W02 = #{w02}, W03 = #{w03}, W04 = #{w04}, W05 = #{w05}, W06 = #{w06}, W07 = #{w07}, W08 = #{w08}, W09 = #{w09}, W10 = #{w10}
+     , W11 = #{w11}, W12 = #{w12}, W13 = #{w13}, W14 = #{w14}, W15 = #{w15}, W16 = #{w16}, W17 = #{w17}, W18 = #{w18}, W19 = #{w19}, W20 = #{w20}
+     , W21 = #{w21}, W22 = #{w22}, W23 = #{w23}, W24 = #{w24}, W25 = #{w25}, W26 = #{w26}, W27 = #{w27}, W28 = #{w28}, W29 = #{w29}, W30 = #{w30}
+     , UPD_DT = SYSDATE
+     , UPD_USER_ID = 'updateSupplyPlanRpt'
+ WHERE PLAN_YEAR = #{planYear}
+   AND PLAN_WEEK = #{planWeek}
+   AND STOCK_CODE = #{stockCode}
+</update>
+
+<!-- FTP OTD SO Batch -->
+<update id="updateOtdSo" parameterType="Map">
+UPDATE SCM0039M
+   SET UPD_DT = SYSDATE
+     , UPD_USER_ID = 'updateOtdSo'
+     , SO_NO = #{soNo}
+     , SO_ITEM_NO = #{soItemNo}
+     , SO_DT = #{soDt}
+     , SO_QTY = #{soQty}
+ WHERE PO_NO = #{poNo}
+   AND STOCK_CODE = #{stockCode}
+</update>
+
+<!-- FTP OTD PP Batch -->
+<delete id="deleteOtdPp" parameterType="Map">
+DELETE FROM SCM0014D
+ WHERE PO_NO || SO_NO || SO_ITEM_NO || STOCK_CODE || PP_PROD_END_DT IN
+ (
+  SELECT PO_NO || SO_NO || SO_ITEM_NO || STOCK_CODE || PP_PROD_END_DT
+    FROM SCM0014D
+   GROUP BY PO_NO || SO_NO || SO_ITEM_NO || STOCK_CODE || PP_PROD_END_DT
+   HAVING COUNT(*) > 1
+  )
+</delete>
+<insert id="mergeOtdPp" parameterType="Map">
+MERGE INTO SCM0014D
+USING DUAL ON (IF_DATE = #{ifDate} AND PP_PROD_END_DT = #{ppProdEndDt} AND PO_NO = #{poNo} AND SO_NO = #{soNo} AND SO_ITEM_NO = #{soItemNo} AND STOCK_CODE = #{stockCode})
+WHEN MATCHED THEN
+UPDATE
+  SET PP_PLAN_QTY = #{ppPlanQty}
+    , PP_PROD_QTY = #{ppProdQty}
+    , PP_PROD_START_DT = CASE WHEN #{ppProdStartDt} = '00000000' THEN PP_PROD_START_DT
+                              ELSE CASE WHEN PP_PROD_START_DT > #{ppProdStartDt} THEN #{ppProdStartDt}
+                                        ELSE PP_PROD_START_DT
+                                        END
+                              END
+WHEN NOT MATCHED THEN
+INSERT
+(
+       IF_DATE
+     , PO_NO
+     , SO_NO
+     , SO_ITEM_NO
+     , STOCK_CODE
+     , PP_PLAN_QTY
+     , PP_PROD_QTY
+     , PP_PROD_START_DT
+     , PP_PROD_END_DT
+ )
+VALUES
+(
+       #{ifDate}
+     , #{poNo}
+     , #{soNo}
+     , #{soItemNo}
+     , #{stockCode}
+     , #{ppPlanQty}
+     , #{ppProdQty}
+     , #{ppProdStartDt}
+     , #{ppProdEndDt}
+ )
+</insert>
+
+<!-- FTP OTD GI Batch -->
+<insert id="mergeOtdGi" parameterType="Map">
+MERGE INTO SCM0013D
+USING DUAL ON (PO_NO = #{poNo} AND SO_NO = #{soNo} AND SO_ITEM_NO = #{soItemNo} AND DELV_NO = #{delvNo} AND DELV_ITEM_NO = #{delvItemNo} AND STOCK_CODE = #{stockCode})
+WHEN MATCHED THEN
+UPDATE
+   SET GI_QTY = #{giQty}
+     , GI_DT = #{giDt}
+WHEN NOT MATCHED THEN
+INSERT
+(
+       PO_NO
+     , SO_NO
+     , SO_ITEM_NO
+     , DELV_NO
+     , DELV_ITEM_NO
+     , STOCK_CODE
+     , GI_QTY
+     , GI_DT
+ )
+VALUES
+(
+       #{poNo}
+     , #{soNo}
+     , #{soItemNo}
+     , #{delvNo}
+     , #{delvItemNo}
+     , #{stockCode}
+     , #{giQty}
+     , #{giDt}
+ )
+</insert>
 
 </mapper>
