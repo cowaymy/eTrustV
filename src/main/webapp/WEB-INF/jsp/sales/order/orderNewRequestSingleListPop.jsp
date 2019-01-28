@@ -10,16 +10,16 @@
 	        resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
 	        scrollbars : "yes" // 스크롤바. (yes/no)(default : yes)
 	};
-	
+
     function fn_orderNoExist(){
         $("#searchOrdDt").show();
     }
-    
+
     function fn_orderNoExist2(){
         $("#searchOrdDt").hide();
         $("#searchOrd").val('');
     }
-    
+
     function fn_orderNoExist3(){
         $("#searchOrdDt").hide();
         $("#searchOrd").val($("#salesOrdId").val());
@@ -31,14 +31,14 @@
 //        fn_orderInvestigationListAjax();
         Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#popForm").serializeJSON(), null, true, 'dtPop');
     }
-    
+
     $(document).ready(function(){
     	//input setting
         setInputFile2();
-    	
+
         $("input[name=searchOrd]").removeAttr("disabled");
         $("#searchBtn").removeAttr("disabled");
-    
+
         //file Delete
         $("#_fileDel").click(function() {
             $("#attachInvest").val('');
@@ -46,10 +46,10 @@
             console.log("fileDel complete.");
         });
     });
-    
+
     //f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
     doGetCombo('/common/selectCodeList.do', '57', '','cmbInvType', 'S' , '');    // Exchange Type Combo Box
-    
+
     function fn_getNewReq(){
         var searchOrd = singleForm.searchOrd.value;
 
@@ -58,7 +58,7 @@
             return false;
         }
         $.ajax({
-            
+
             type : "GET",
             url : getContextPath() + "/sales/order/orderNewRequestSingleChk",
             contentType: "application/json;charset=UTF-8",
@@ -89,7 +89,7 @@
                     $("#searchBtn").attr('disabled', 'disabled');
                     $("#searchOrdDt").hide();
                 }
-                
+
             },
             error : function (data) {
                 Common.removeLoader();
@@ -98,26 +98,26 @@
                 }else{                            // No data
                     Common.alert("No order found or this order.");
                 }
-                
-                
+
+
             }
         });
     }
-    
+
     function fn_reqInvest(){
         var today = new Date();
         var todayMm = today.getMonth()+1;
         var todayDd = today.getDate();
         var todayYMD = today.getFullYear() +""+ (todayMm<10 ? '0' + todayMm : todayMm) +""+ (todayDd<10 ? '0' + todayDd : todayDd);
         var callDay = document.viewForm.insCallDt.value;
-        
+
         var callDayValue = callDay.substr(6) + callDay.substr(3,2) + callDay.substr(0,2);
 
         if(document.viewForm.cmbInvType.value == ""){
             Common.alert("<spring:message code='sal.alert.msg.pleaseSelectAnInvestRequest' />");
             return false;
         }
-        
+
         if(callDay == ""){
             Common.alert("<spring:message code='sal.alert.msg.callDateCannotBeEmpty' />!");
             return false;
@@ -138,19 +138,21 @@
             Common.alert("<spring:message code='sal.alert.msg.visitationDateConnotBeEmpty' />");
             return false;
         }
-        
+
         if(document.viewForm.invReqRem.value == ""){
             Common.alert("<spring:message code='sal.alert.msg.pleaseEnterRequestRemark' />!");
             return false;
         }
-        
+
         if(document.viewForm.attachInvest.value != ""){
             var formData = Common.getFormData("viewForm");
             Common.ajaxFile("/sales/order/investFileUpload.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
-                
+            	$("#atchFileGrpId").val(result.atchFileGrpId);
             });
         }
-        
+
+        setTimeout(function(){
+        	console.log("attachment : " + $("#atchFileGrpId").val());
         Common.ajax("GET", "/sales/order/orderNewRequestSingleOk", $("#viewForm").serializeJSON(), function(result) {
 
               console.log("Order Investigation Request successfully saved.");
@@ -158,8 +160,8 @@
 
               $("#invReqId").val(result.invReqId);
               Common.alert("<spring:message code='sal.alert.msg.invRequestSuccessfully' />.",fn_orderNoExist3 );
-              
-              
+
+
 //              Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#viewForm").serializeJSON());
           },  function(jqXHR, textStatus, errorThrown) {
               try {
@@ -176,12 +178,13 @@
               }
               alert("Fail : " + jqXHR.responseJSON.message);
         });
+       },500);
     }
-    
+
     function setInputFile2(){//인풋파일 세팅하기
         $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a id='_fileDel'>Delete</a></span>");
     }
-    
+
     function fn_goLedger1(){
         Common.popupWin('viewForm', "/sales/order/orderLedgerViewPop.do", option);
     }
@@ -285,6 +288,7 @@
     <th scope="row"><spring:message code="sal.text.attachment" /></th>
     <td colspan="3">
     <div class="auto_file2"><!-- auto_file start -->
+    <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" />
     <input type="file" id="attachInvest" name="attachInvest" title="file add" />
     </div><!-- auto_file end -->
     </td>

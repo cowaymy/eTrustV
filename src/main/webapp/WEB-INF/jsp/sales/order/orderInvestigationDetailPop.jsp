@@ -3,7 +3,7 @@
 <script type="text/javascript">
 	//AUIGrid 생성 후 반환 ID
 	var detailGridID;
-	
+
 	// popup 크기
     var option = {
             winName : "popup",
@@ -12,38 +12,70 @@
             resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
             scrollbars : "yes" // 스크롤바. (yes/no)(default : yes)
     };
-	
+
     $(document).ready(function(){
-        
+
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-        
+
 //        AUIGrid.setSelectionMode(detailGridID, "singleRow");
-        
+
         //Call Ajax
         orderInvestDetailGridAjax();
-    
+
         if(gridParam.invReqStusParam.value == '1' || gridParam.invReqStusParam.value == '44'){
         	$("#pendingDiv").show();
         }
-        
+
       //Btn Auth
         if(basicAuth == true){
             $("#_basicUpdBtn").css("display" , "");
         }else{
             $("#_basicUpdBtn").css("display" , "none");
         }
-      
+
 //        $('#btnDownFile').click(function() {
 //            var fileSubPath = $('#subPath').val();
 //            var fileName = $('#fileName').val();
 //            var orignlFileNm = $('#orignlFileNm').val();
-            
+
 //            window.open("<c:url value='/file/fileDown.do?subPath=" + fileSubPath
 //                + "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm + "'/>");
 //        });
+
+        /* atchFileGrpId */
+        var attachList = $("#atchFileGrpId").val();
+        console.log(attachList);
+        Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :attachList} , function(result) {
+             console.log(result);
+        if(result) {
+             if(result.length > 0) {
+                 $("#attachTd").html("");
+                 for(var i = 0; i < result.length; i++) {
+                     var atchTdId = "atchId" + (i+1);
+                     $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='w100p input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
+                     $(".input_text[name='" + atchTdId + "']").val(result[i].atchFileName);
+                 }
+
+                 // 파일 다운
+                 $(".input_text").dblclick(function() {
+                     var oriFileName = $(this).val();
+                     var fileGrpId;
+                     var fileId;
+                     for(var i = 0; i < result.length; i++) {
+                         if(result[i].atchFileName == oriFileName) {
+                             fileGrpId = result[i].atchFileGrpId;
+                             fileId = result[i].atchFileId;
+                         }
+                     }
+                     fn_atchViewDown(fileGrpId, fileId);
+                 });
+             }
+         }
+
+        });
     });
-    
+
     function createAUIGrid() {
         // AUIGrid 칼럼 설정
 	    // 데이터 형태는 다음과 같은 형태임,
@@ -65,60 +97,60 @@
 	        }, {
 	            dataField : "invReqItmCrtDt",
 	            headerText : "<spring:message code='sal.title.respondAt' />",
-	            dataType : "date", 
+	            dataType : "date",
                 formatString : "dd/mm/yyyy",
 	            width : 100,
 	            editable : false
 	        }];
-    
+
 	    // 그리드 속성 설정
         var gridPros = {
-        
-	        // 페이징 사용       
+
+	        // 페이징 사용
 	        usePaging : false,
-	        
+
 	        // 한 화면에 출력되는 행 개수 20(기본값:20)
 	        pageRowCount : 20,
-	        
+
 	        editable : true,
-	        
+
 	        fixedColumnCount : 1,
-	        
-	        showStateColumn : true, 
-	        
+
+	        showStateColumn : true,
+
 	        displayTreeOpen : true,
-	        
+
 	        selectionMode : "multipleCells",
-	        
+
 	        headerHeight : 30,
-	        
+
 	        // 그룹핑 패널 사용
 	        useGroupingPanel : false,
-	        
+
 	        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	        skipReadonlyColumns : true,
-	        
+
 	        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 	        wrapSelectionMove : true,
-	        
+
 	        // 줄번호 칼럼 렌더러 출력
 	        showRowNumColumn : true,
-	        
+
 	        groupingMessage : "Here groupping"
 	    };
-	    
+
 	    //detailGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
 	    detailGridID = AUIGrid.create("#pop_grid_wrap", columnLayout, gridPros);
 	    //AUIGrid.resize(detailGridID, 800, 150);
 	}
-    
+
     // Ajax
-    function orderInvestDetailGridAjax() {        
+    function orderInvestDetailGridAjax() {
         Common.ajax("GET", "/sales/order/orderInvestDetailGridJsonList",$("#gridParam").serialize(), function(result) {
             AUIGrid.setGridData(detailGridID, result);
         });
     }
-    
+
     function fn_stusChange(){
     	if(statusForm.statusPop.value == '44'){    // panding
     		$("#pendingDiv").show();
@@ -137,22 +169,22 @@
 //                    alert("true");
 //                }
                 $("#existChk").html(result.existChkCnt);
-                
+
     		});
             $("#pendingDiv").show();
             $("#approveDiv").hide();
             $("#rejectDiv").show();
         }
-    	
+
     }
-    
+
     function fn_inCharge(obj , value , tag , selvalue){
     	var robj= '#'+obj;
     	$(robj).attr("disabled",false);
 
     		getCmbChargeNm('/sales/order/inchargeJsonList.do', value , '' , selvalue,obj, 'S', '');
     }
-    
+
     function getCmbChargeNm(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){
     	$.ajax({
             type : "GET",
@@ -171,7 +203,7 @@
             }
         });
     }
-    
+
     function doDefNmCombo(data, selCode, obj , type, callbackFn){
         var targetObj = document.getElementById(obj);
         var custom = "";
@@ -202,7 +234,7 @@
             eval(strCallback);
         }
     }
-    
+
     function fn_saveInvest(){
     	if(document.statusForm.statusRem.value == ""){
             Common.alert("<spring:message code='sal.alert.msg.pleaseEnterResponeRemark' /> !");
@@ -226,11 +258,11 @@
                 Common.alert("<spring:message code='sal.alert.msg.pleaseSelectARejectReason' />");
                 return false;
             }
-            
+
         }
-    	
+
     	// $("#existChkCnt").val() check부터
-    	
+
     	Common.ajax("GET", "/sales/order/saveInvest.do", $("#statusForm").serializeJSON(), function(result) {
             //$("#existChkCnt").html(result.existChkCnt);
             Common.alert(result.msg, fn_orderInvestigationListAjax);
@@ -251,9 +283,33 @@
             alert("Fail : " + jqXHR.responseJSON.message);
         });
     }
-    
+
     function fn_goLedger(){
     	Common.popupWin('gridParam', "/sales/order/orderLedgerViewPop.do", option);
+    }
+
+    function fn_atchViewDown(fileGrpId, fileId) {
+        var data = {
+                atchFileGrpId : fileGrpId,
+                atchFileId : fileId
+        };
+        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+            console.log(result);
+             if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
+                // TODO View
+                var fileSubPath = result.fileSubPath;
+                fileSubPath = fileSubPath.replace('\', '/'');
+                console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            } else {
+                var fileSubPath = result.fileSubPath;
+                fileSubPath = fileSubPath.replace('\', '/'');
+                console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
+                        + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
+                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            }
+        });
     }
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -322,9 +378,9 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.attachment" /></th>
-    <td colspan="3">
-    <c:if test="${orderCustomerInfo.invReqAttachFile eq '' }">
-        <p class="btn_sky"><a href="#">No Attachment</a></p>
+    <td colspan="3" id="attachTd">
+    <c:if test="${orderCustomerInfo.invReqAttachFile ne '' }">
+        <input type="hidden" id ="atchFileGrpId" value="${orderInvestInfo.invReqHasAttach}">
     </c:if>
     </td>
 </tr>
