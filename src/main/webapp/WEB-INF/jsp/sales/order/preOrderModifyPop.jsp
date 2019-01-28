@@ -1898,8 +1898,8 @@
 	                        $(".input_text[id='otherFileTxt']").val(otherFileName);
 	                        break;
 	                    case '6':
-                            otherFileId = result[i].atchFileId;
-                            otherFileName = result[i].atchFileName;
+                            otherFileId2 = result[i].atchFileId;
+                            otherFileName2 = result[i].atchFileName;
                             $(".input_text[id='otherFileTxt2']").val(otherFileName2);
                             break;
 	                     default:
