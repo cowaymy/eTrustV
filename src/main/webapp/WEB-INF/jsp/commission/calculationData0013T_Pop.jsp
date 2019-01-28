@@ -458,9 +458,9 @@
       <a href="javascript:fn_downFile()" id="addRow"><spring:message
         code='sys.btn.excel.dw' /></a>
      </p></li>
-    <li><p class="btn_grid">
+    <!-- <li><p class="btn_grid">
       <a href="#" id="save_13T"><spring:message code='sys.btn.save' /></a>
-     </p></li>
+     </p></li> -->
    </ul>
    <!-- grid_wrap start -->
    <div id="grid_wrap_13T"
