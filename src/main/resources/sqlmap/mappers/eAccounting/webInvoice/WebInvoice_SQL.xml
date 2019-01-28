@@ -305,8 +305,8 @@ SELECT   T.CLM_NO
        ,#{budgetCode}
        ,#{budgetCodeName}
        ,'VB'
-       ,#{totAmt}
        ,'0'
+       ,#{totAmt}
        ,'0'
        ,#{totAmt}
        ,#{expDesc}
@@ -689,8 +689,8 @@ SELECT   T.CLM_NO
        ,#{budgetCode}
        ,#{budgetCodeName}
        ,'VB'
-       ,#{totAmt}
        ,'0'
+       ,#{totAmt}
        ,'0'
        ,#{totAmt}
        ,#{expDesc}
