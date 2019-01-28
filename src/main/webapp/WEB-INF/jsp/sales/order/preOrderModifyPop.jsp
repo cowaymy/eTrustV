@@ -1509,8 +1509,8 @@
                     //                    Additional Service Contact
                     //----------------------------------------------------------
                     fn_loadMainCntcPerson('${preOrderInfo.custCntcId}');
-                    fn_loadCntcPerson('${preOrderInfo.custCntcId}');
-                    //fn_loadSrvCntcPerson('${preOrderInfo.custBillCustCareCntId}');
+                    //fn_loadCntcPerson('${preOrderInfo.custCntcId}');
+                    fn_loadSrvCntcPerson('${preOrderInfo.custBillCustCareCntId}');
 
                     if('${preOrderInfo.custCntcId}' != custInfo.custCntcId) {
                         $('#chkSameCntc').prop("checked", false);
