@@ -31,7 +31,8 @@ public interface ScmInterfaceManagementMapper
 	//	FTP Supply Plan RTP Batch
 	List<EgovMap> selectTodayWeekTh(Map<String, Object> params);
 	List<EgovMap> selectScmIfSeq(Map<String, Object> params);
-	List<EgovMap> selectBatchTarget(Map<String, Object> params);
+	List<EgovMap> selectUpdateTarget(Map<String, Object> params);
+	List<EgovMap> selectSupplyPlanPsi3(Map<String, Object> params);
 	void updateSupplyPlanRtp(Map<String, Object> params);
 	void mergeSupplyPlanRtp(Map<String, Object> params);
 	

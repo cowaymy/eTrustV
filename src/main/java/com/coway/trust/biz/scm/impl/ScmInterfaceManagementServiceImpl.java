@@ -19,15 +19,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.ScmInterfaceManagementService;
-import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -38,6 +35,8 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 
 	@Autowired
 	private ScmInterfaceManagementMapper	scmInterfaceManagementMapper;
+	@Autowired
+	private ScmCommonMapper	scmCommonMapper;
 
 	/*
 	 * SCM Interface
@@ -181,6 +180,120 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 	}
 	@Override
 	public void updateSupplyPlanRtp(Map<String, Object> params) {
+		LOGGER.debug("updateSupplyPlanRtp : {}", params.toString());
+		
+		//	1. Variables
+		int planYear		= 0;	int planWeek		= 0;	String stockCode	= "";
+		int m0WeekCnt		= 0;	int m1WeekCnt		= 0;	int m2WeekCnt		= 0;	int m3WeekCnt		= 0;	int m4WeekCnt		= 0;
+		int planFstSpltWeek	= 0;	int planWeekTh		= 0;
+		int m0FstWeek		= 0;	int m1FstWeek		= 0;	int m2FstWeek		= 0;	int m3FstWeek		= 0;	int m4FstWeek		= 0;
+		int m0FstSpltWeek	= 0;	int m1FstSpltWeek	= 0;	int m2FstSpltWeek	= 0;	int m3FstSpltWeek	= 0;	int m4FstSpltWeek	= 0;
+		
+		//	for test
+		//params.put("planYear", 2019);
+		//params.put("planWeek", 4);
+		
+		//	2. Get Basic Info
+		params.put("planYear", Integer.parseInt(params.get("scmYearCbBox").toString()));
+		params.put("planWeek", Integer.parseInt(params.get("scmWeekCbBox").toString()));
+		List<EgovMap> selectScmTotalInfo	= scmCommonMapper.selectScmTotalInfo(params);
+		m0WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m0WeekCnt").toString());
+		m1WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m1WeekCnt").toString());
+		m2WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m2WeekCnt").toString());
+		m3WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m3WeekCnt").toString());
+		m4WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m4WeekCnt").toString());
+		planFstSpltWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("planFstSpltWeek").toString());
+		planWeekTh	= Integer.parseInt(selectScmTotalInfo.get(0).get("planWeekTh").toString());
+		
+		m0FstWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("m0FstWeek").toString());
+		m1FstWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("m1FstWeek").toString());
+		m2FstWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("m2FstWeek").toString());
+		m3FstWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("m3FstWeek").toString());
+		m4FstWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("m4FstWeek").toString());
+		m0FstSpltWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("m0FstSpltWeek").toString());
+		m1FstSpltWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("m1FstSpltWeek").toString());
+		m2FstSpltWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("m2FstSpltWeek").toString());
+		m3FstSpltWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("m3FstSpltWeek").toString());
+		m4FstSpltWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("m4FstSpltWeek").toString());
+		
+		//	3. Get update target & Supply Plan
+		List<EgovMap> selectUpdateTarget	= scmInterfaceManagementMapper.selectUpdateTarget(params);
+		List<EgovMap> selectSupplyPlanPsi3	= scmInterfaceManagementMapper.selectSupplyPlanPsi3(params);
+		
+		//	4. Update
+		Map<String, Object> insParams	= new HashMap<String, Object>();
+		for ( int i = 0 ; i < selectUpdateTarget.size() ; i++ ) {
+			
+			String rtpWeek	= "";	int rtpNo	= 1;
+			String psiWeek	= "";	int psiNo	= 1;
+			
+			planYear	= Integer.parseInt(selectUpdateTarget.get(i).get("planYear").toString());
+			planWeek	= Integer.parseInt(selectUpdateTarget.get(i).get("planWeek").toString());
+			stockCode	= selectUpdateTarget.get(i).get("stockCode").toString();
+			if ( 9999 != planYear ) {
+				//	Target
+				
+				/*
+				 * 개요
+				 * - selectUpdateTarget의 w01 ~ w12는 스플릿 주차 구분이 안되어있음
+				 * - selectUpdateTarget의 w01 : 수립주차 기준 바로 그 다음주       (ex 2019/4 기준 w01 = 5주차)
+				 * - selectSupplyPlanPsi3의 w01 : 수립주차가 포함된 월의 가장 첫주 (ex 2019/4 기준 w01 = 1-2주차)
+				 * 1) selectUpdateTarget의 w01 ~ w12에 스플릿정보 적용
+				 * 2) selectUpdateTarget의 w01 ~ w12를 selectSupplyPlanPsi3와 주차가 맞도록 조정
+				 * 3) 조정된 selectUpdateTarget의 각 m0 ~ m4 계산
+				 * fstWeek : m0월의 첫주차
+				 * planWeek : m0월의 수립주차
+				 */
+				
+				//	m0
+				for ( int w = 1 ; w < m0WeekCnt + 1 ; w++ ) {
+					psiWeek	= String.valueOf(psiNo);
+					if ( 1 == psiWeek.length() ) {
+						psiWeek	= "0" + psiWeek;
+					}
+					
+					if ( w <= planWeekTh + 1 ) {
+						//	수량 0
+						insParams.put("w" + psiWeek, 0);
+						LOGGER.debug(i + ". STOCK_CODE : " + stockCode + " m0월 수량0주차 : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+					} else {
+						if ( w == m0WeekCnt ) {
+							//	m0의 가장 마지막 week인 경우
+							insParams.put("w" + psiWeek, 0);
+							LOGGER.debug(i + ". STOCK_CODE : " + stockCode + " m0월 마지막주차 : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+						} else {
+							rtpWeek	= String.valueOf(rtpNo);
+							if ( 1 == rtpWeek.length() ) {
+								rtpWeek	= "0" + rtpWeek;
+							}
+							insParams.put("w" + psiWeek, selectUpdateTarget.get(i).get("w" + rtpWeek));
+							rtpNo++;
+							LOGGER.debug(i + ". STOCK_CODE : " + stockCode + " m0월 정상주차 : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+						}
+					}
+					psiNo++;
+					/*
+					if ( m0FstWeek == m0FstSpltWeek ) {
+						if ( w <= planWeekTh + 1 ) {
+							//	수량 0 넣어야 하는 주차
+							insParams.put("w" + psiWeek, 0);
+						} else {
+							rtpWeek	= String.valueOf(rtpNo);
+							if ( 1 == rtpWeek.length() ) {
+								rtpWeek	= "0" + rtpWeek;
+							}
+							insParams.put("w" + psiWeek, selectSupplyPlanPsi3.get(i).get("w" + psiWeek));
+						}
+					} else {
+						
+					}
+					*/
+				}
+			} else {
+				//	Not Target
+			}
+		}
+		
 		scmInterfaceManagementMapper.updateSupplyPlanRtp(params);
 	}
 	
