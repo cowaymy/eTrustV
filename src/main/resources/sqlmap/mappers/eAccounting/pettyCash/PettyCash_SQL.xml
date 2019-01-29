@@ -433,7 +433,7 @@ WHERE T1.CLM_NO = #{clmNo}
        ,#{glAccCodeName}
        ,#{budgetCode}
        ,#{budgetCodeName}
-       ,#{taxCode}
+       ,'VB'
        ,#{reqstAmt}
        ,0
        ,#{reqstAmt}
@@ -1214,7 +1214,7 @@ WHERE  T1.CLM_NO = #{clmNo}
         INVC_NO,
         INVC_DT,
         GST_RGIST_NO,
-        TAX_CODE,
+        'VB',
         GST_BEFOR_AMT,
         GST_AMT,
         NON_CLM_GST_AMT,

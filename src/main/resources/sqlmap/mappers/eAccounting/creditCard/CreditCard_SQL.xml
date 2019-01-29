@@ -950,7 +950,7 @@ WHERE CRDIT_CARD_STUS = 'A'
         GL_ACC_CODE_NAME,
         BUDGET_CODE,
         BUDGET_CODE_NAME,
-        TAX_CODE,
+        'VB',
         NET_AMT,
         TAX_AMT,
         TAX_NON_CLM_AMT,
