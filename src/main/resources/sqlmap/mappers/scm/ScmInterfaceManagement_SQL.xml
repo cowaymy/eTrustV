@@ -269,11 +269,71 @@ VALUES
  #{ws1}, #{ws2}, #{ws3}, #{ws4}, #{ws5},
  'mergeSupplyPlanRpt')
 </insert>
-<select id="selectBatchTarget" parameterType="Map" resultType="egovMap">
-SELECT A.PLAN_YEAR, A.PLAN_WEEK, A.STOCK_CODE
-     , A.W01, A.W02, A.W03, A.W04, A.W05, A.W06, A.W07, A.W08, A.W09, A.W10, A.W11, A.W12
-  FROM SCM0056S A
- WHERE A.EXEC_YN = 'N'
+<select id="selectUpdateTarget" parameterType="Map" resultType="egovMap">
+SELECT NVL(B.PLAN_YEAR, 9999) AS PLAN_YEAR
+     , NVL(B.PLAN_WEEK, 99) AS PLAN_WEEK
+     , A.STOCK_CODE
+     , NVL(B.W01, 0) AS W01, NVL(B.W02, 0) AS W02, NVL(B.W03, 0) AS W03, NVL(B.W04, 0) AS W04, NVL(B.W05, 0) AS W05, NVL(B.W06, 0) AS W06
+     , NVL(B.W07, 0) AS W07, NVL(B.W08, 0) AS W08, NVL(B.W09, 0) AS W09, NVL(B.W10, 0) AS W10, NVL(B.W11, 0) AS W11, NVL(B.W12, 0) AS W12
+  FROM (
+        SELECT DISTINCT A.PLAN_YEAR
+             , A.PLAN_WEEK
+             , B.STOCK_CODE
+          FROM SCM0005M A
+          LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
+         WHERE A.PLAN_YEAR = #{planYear}
+           AND A.PLAN_WEEK = #{planWeek}
+           AND B.PSI_ID = 3
+        ) A
+  LEFT OUTER JOIN SCM0056S B ON (A.PLAN_YEAR = B.PLAN_YEAR AND A.PLAN_WEEK = B.PLAN_WEEK AND A.STOCK_CODE = B.STOCK_CODE AND B.EXEC_YN = 'N')
+ ORDER BY A.STOCK_CODE
+</select>
+<select id="selectSupplyPlanPsi3" parameterType="Map" resultType="egovMap">
+SELECT A.PLAN_YEAR
+     , A.PLAN_WEEK
+     , B.STOCK_CODE
+     , SUM(NVL(B.M0, 0)) AS M0
+     , SUM(NVL(B.M1, 0)) AS M1
+     , SUM(NVL(B.M2, 0)) AS M2
+     , SUM(NVL(B.M3, 0)) AS M3
+     , SUM(NVL(B.M4, 0)) AS M4
+     , SUM(NVL(B.W01, 0)) AS W01
+     , SUM(NVL(B.W02, 0)) AS W02
+     , SUM(NVL(B.W03, 0)) AS W03
+     , SUM(NVL(B.W04, 0)) AS W04
+     , SUM(NVL(B.W05, 0)) AS W05
+     , SUM(NVL(B.W06, 0)) AS W06
+     , SUM(NVL(B.W07, 0)) AS W07
+     , SUM(NVL(B.W08, 0)) AS W08
+     , SUM(NVL(B.W09, 0)) AS W09
+     , SUM(NVL(B.W10, 0)) AS W10
+     , SUM(NVL(B.W11, 0)) AS W11
+     , SUM(NVL(B.W12, 0)) AS W12
+     , SUM(NVL(B.W13, 0)) AS W13
+     , SUM(NVL(B.W14, 0)) AS W14
+     , SUM(NVL(B.W15, 0)) AS W15
+     , SUM(NVL(B.W16, 0)) AS W16
+     , SUM(NVL(B.W17, 0)) AS W17
+     , SUM(NVL(B.W18, 0)) AS W18
+     , SUM(NVL(B.W19, 0)) AS W19
+     , SUM(NVL(B.W20, 0)) AS W20
+     , SUM(NVL(B.W21, 0)) AS W21
+     , SUM(NVL(B.W22, 0)) AS W22
+     , SUM(NVL(B.W23, 0)) AS W23
+     , SUM(NVL(B.W24, 0)) AS W24
+     , SUM(NVL(B.W25, 0)) AS W25
+     , SUM(NVL(B.W26, 0)) AS W26
+     , SUM(NVL(B.W27, 0)) AS W27
+     , SUM(NVL(B.W28, 0)) AS W28
+     , SUM(NVL(B.W29, 0)) AS W29
+     , SUM(NVL(B.W30, 0)) AS W30
+  FROM SCM0005M A
+  LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
+ WHERE A.PLAN_YEAR = #{planYear}
+   AND A.PLAN_WEEK = #{planWeek}
+   AND B.PSI_ID = 3
+ GROUP BY A.PLAN_YEAR, A.PLAN_WEEK, B.STOCK_CODE
+ ORDER BY B.STOCK_CODE
 </select>
 <update id="updateSupplyPlanRtp" parameterType="Map">
 UPDATE SCM0056S
