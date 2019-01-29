@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 /**
  * @author methree
@@ -52,37 +52,38 @@ public class SirimReceiveServiceImpl extends EgovAbstractServiceImpl implements 
 		// TODO Auto-generated method stub
 		return SirimReceiveMapper.getSirimReceiveInfo(params);
 	}
-	
+
 
 	@Override
 	public void InsertReceiveInfo(Map<String, Object> InsertReceiveMap, List<EgovMap> ItemsAddList, int loginId) {
 
 		int receiveStatus = Integer.parseInt((String) InsertReceiveMap.get("receiveStatus"));
+		int transitId = Integer.parseInt((String) InsertReceiveMap.get("TransitId"));
 
 		String getdocNo = SirimReceiveMapper.docNoCreateSeq();
 		String SirimLoc="";
 		if(receiveStatus == 4){
 			Logger.debug("SirimLocTo!!!!!!!!!!!");
 			SirimLoc = (String) InsertReceiveMap.get("SirimLocTo");
-			
+
 		}else{
 			Logger.debug("SirimLocFrom !!!!!!!!!!!");
 			SirimLoc = (String) InsertReceiveMap.get("SirimLocFrom");
 		}
-		
-		
+
+
 		for (int i = 0; i < ItemsAddList.size(); i++) {
-			
+
 			Map<String, Object> ItemsListMap = ItemsAddList.get(i);
 			ItemsListMap.put("upuser_id", loginId);
 			ItemsListMap.put("receiveStatus", receiveStatus);
-			
-			
+
+
 			SirimReceiveMapper.SrmResultStatusUpdate(ItemsListMap);
 
 			Map<String, Object> sirimNegMap = new HashMap<String, Object>();
-			int CrdSirimId = SirimReceiveMapper.ReceiveCreateSeq();
-			sirimNegMap.put("CrdSirimId", CrdSirimId);
+			//int CrdSirimId = SirimReceiveMapper.ReceiveCreateSeq();
+			//sirimNegMap.put("CrdSirimId", CrdSirimId);
 			sirimNegMap.put("saveSirimNo", ItemsListMap.get("srmNo"));
 			sirimNegMap.put("addTypeSirim", ItemsListMap.get("srmTypeId"));
 			sirimNegMap.put("addSirimLoc", InsertReceiveMap.get("receiveInfoCourier"));
@@ -92,16 +93,25 @@ public class SirimReceiveServiceImpl extends EgovAbstractServiceImpl implements 
 			SirimReceiveMapper.insertReceiveSirim(sirimNegMap);
 
 			Map<String, Object> sirimPosMap = new HashMap<String, Object>();
-			CrdSirimId = SirimReceiveMapper.ReceiveCreateSeq();
-			sirimPosMap.put("CrdSirimId", CrdSirimId);
+			//CrdSirimId = SirimReceiveMapper.ReceiveCreateSeq();
+			//sirimPosMap.put("CrdSirimId", CrdSirimId);
 			sirimPosMap.put("saveSirimNo", ItemsListMap.get("srmNo"));
 			sirimPosMap.put("addTypeSirim", ItemsListMap.get("srmTypeId"));
 			sirimPosMap.put("addSirimLoc", SirimLoc);
 			sirimPosMap.put("addSirimQty", 1);
 			sirimPosMap.put("getdocNo", getdocNo);
 			sirimPosMap.put("crtuser_id", loginId);
-			SirimReceiveMapper.insertReceiveSirim(sirimPosMap);
+            SirimReceiveMapper.insertReceiveSirim(sirimPosMap);
 
+		}
+
+		int total = SirimReceiveMapper.selectTransReceive(InsertReceiveMap);
+
+		if(total <= 0){
+			Map<String, Object> statusUpdate = new HashMap<String, Object>();
+			statusUpdate.put("transitId", transitId);
+			statusUpdate.put("userId", loginId);
+			SirimReceiveMapper.SrmTransStatusUpdate(statusUpdate);
 		}
 
 	}

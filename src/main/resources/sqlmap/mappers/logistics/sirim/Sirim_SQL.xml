@@ -1,95 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.sirim.impl.SirimMapper">
-    
-    
-<select id="selectWarehouseList" parameterType="Map" resultType="EgovMap">  
+
+
+<select id="selectWarehouseList" parameterType="Map" resultType="EgovMap">
     SELECT Extent1.WH_LOC_ID CODE_ID  ,
                Extent1.OLD_WH_LOC_CODE CODE  ,
-               Extent1.WH_LOC_DESC CODE_NAME  
+               Extent1.WH_LOC_DESC CODE_NAME
       FROM SYS0028M Extent1
-      WHERE  ( 1 = Extent1.WH_LOC_STUS_ID ) 
-      AND ( 'B' <![CDATA[<> ]]> Extent1.WH_LOC_STK_GRAD ) 
+      WHERE  ( 1 = Extent1.WH_LOC_STUS_ID )
+      AND ( 'B' <![CDATA[<> ]]> Extent1.WH_LOC_STK_GRAD )
       AND ( 277 = Extent1.WH_LOC_TYPE_ID )
 </select>
 
 
-<select id="selectSirimList" parameterType="Map" resultType="EgovMap">  
+<select id="selectSirimList" parameterType="Map" resultType="EgovMap">
 SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
        Project1.SIRIM_NO SIRIM_NO  ,
        Project1.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
        Project1.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
        Project1.SIRIM_LOC SIRIM_LOC  ,
-       Project1.SIRIM_QTY SIRIM_QTY  
+       Project1.SIRIM_QTY SIRIM_QTY
   FROM ( SELECT Extent1.SIRIM_LOC SIRIM_LOC  ,
                 Extent1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
                 Extent1.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
                 Extent1.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
                 Extent1.SIRIM_QTY SIRIM_QTY  ,
-                LTRIM(RTRIM(Extent1.SIRIM_NO)) SIRIM_NO  
+                LTRIM(RTRIM(Extent1.SIRIM_NO)) SIRIM_NO
          FROM ( SELECT LOG1002V.SIRIM_NO SIRIM_NO  ,
                        LOG1002V.SIRIM_LOC SIRIM_LOC  ,
                        LOG1002V.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
                        LOG1002V.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
                        LOG1002V.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
-                       LOG1002V.SIRIM_QTY SIRIM_QTY  
+                       LOG1002V.SIRIM_QTY SIRIM_QTY
                 FROM LOG1002V ) Extent1
                 WHERE 1 = 1
                <if test="searchSirimNo != null and searchSirimNo !=''">
-                    AND  (LTRIM(RTRIM(Extent1.SIRIM_NO)))= #{searchSirimNo}                         
-               </if> 
+                    AND  (LTRIM(RTRIM(Extent1.SIRIM_NO)))= #{searchSirimNo}
+               </if>
                <if test="searchCategory != null and searchCategory !=''">
-                     AND Extent1.SIRIM_TYPE_ID = #{searchCategory}             
+                     AND Extent1.SIRIM_TYPE_ID = #{searchCategory}
                </if>
                <if test="searchWarehouse != null and searchWarehouse !=''">
                      AND Extent1.SIRIM_LOC = #{searchWarehouse}
                </if>
                ) Project1
   ORDER BY Project1.SIRIM_NO ASC
-</select>   
+</select>
 
 
-<!-- <select id="selectSirimNo" parameterType="Map" resultType="EgovMap">  
-    select count(*) 
-    from LOG0033D 
+<!-- <select id="selectSirimNo" parameterType="Map" resultType="EgovMap">
+    select count(*)
+    from LOG0033D
     where SRM_NO_FROM = #{StartSirimNo}
     AND SRM_NO_TO =#{EndSirimNo}
-</select>   -->  
+</select>   -->
 
-<select id="selectSirimNo" parameterType="Map" resultType="Integer">  
-   select count(*) 
-   from LOG0040D 
+<select id="selectSirimNo" parameterType="Map" resultType="Integer">
+   select count(*)
+   from LOG0040D
    where SIRIM_NO in
     <foreach item="item" collection="StartSirimNo" index="index" open="(" separator="," close=")">
             #{item}
     </foreach>
-   
-   
+
+
 </select>
 
 
  <insert id="insertSirimM" parameterType="Map">
     INSERT INTO LOG0033D(
         SRM_BATCH_ID,
-        SRM_BATCH_NO, 
-        SRM_NO_FROM, 
-        SRM_NO_TO, 
-        SRM_WH_LOC, 
-        SRM_STUS_ID, 
-        SRM_CRT_USER_ID, 
-        SRM_CRT_DT, 
-        SRM_QTY, 
-        SRM_REM, 
-        SRM_UPD_USER_ID, 
+        SRM_BATCH_NO,
+        SRM_NO_FROM,
+        SRM_NO_TO,
+        SRM_WH_LOC,
+        SRM_STUS_ID,
+        SRM_CRT_USER_ID,
+        SRM_CRT_DT,
+        SRM_QTY,
+        SRM_REM,
+        SRM_UPD_USER_ID,
         SRM_UPD_DT )
-     VALUES 
-        ( 
+     VALUES
+        (
         #{srmBatchId},
         #{getdocNo},
         #{SrmNoFrom},
         #{SrmNoTo},
         #{addWarehouse},
-        1, 
+        1,
         #{crtuser_id},
         SYSDATE,
         #{addQuantity},
@@ -97,23 +97,23 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
         #{upuser_id},
         SYSDATE
         )
-</insert> 
+</insert>
 
 
 <insert id="insertSirimD" parameterType="Map">
     INSERT INTO LOG0034D(
-        SRM_DET_ID, 
-        SRM_BATCH_ID, 
-        SRM_DCF_ID, 
-        SRM_NO, 
-        SRM_STUS_ID, 
-        SRM_CRT_USER_ID, 
-        SRM_CRT_DT, 
-        SRM_UPD_USER_ID, 
+        SRM_DET_ID,
+        SRM_BATCH_ID,
+        SRM_DCF_ID,
+        SRM_NO,
+        SRM_STUS_ID,
+        SRM_CRT_USER_ID,
+        SRM_CRT_DT,
+        SRM_UPD_USER_ID,
         SRM_UPD_DT )
-  VALUES 
+  VALUES
   (
-   #{srdBatchId}, 
+   #{srdBatchId},
    #{srmBatchId},
    0,
    #{saveSirimNo},
@@ -122,30 +122,30 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
    SYSDATE,
    #{upuser_id},
    SYSDATE
-  )    
+  )
 </insert>
 
 
 <insert id="insertSirimCrd_Pos" parameterType="Map">
-    INSERT INTO LOG0040D( 
+    INSERT INTO LOG0040D(
     SIRIM_ID,
-    SIRIM_NO, 
-    SIRIM_TYPE_ID, 
-    SIRIM_LOC, 
-    SIRIM_QTY, 
-    SIRIM_DOC_NO, 
-    SIRIM_REM, 
-    SIRIM_CRT_DT, 
-    SIRIM_CRT_USER_ID, 
-    SIRIM_SYNC_CHK, 
-    SIRIM_ENTRY_POINT, 
+    SIRIM_NO,
+    SIRIM_TYPE_ID,
+    SIRIM_LOC,
+    SIRIM_QTY,
+    SIRIM_DOC_NO,
+    SIRIM_REM,
+    SIRIM_CRT_DT,
+    SIRIM_CRT_USER_ID,
+    SIRIM_SYNC_CHK,
+    SIRIM_ENTRY_POINT,
     SIRIM_AFT_WEB_SYS )
-  VALUES 
-  ( 
+  VALUES
+  (
   #{CrdSirimId},
   #{saveSirimNo},
   #{addTypeSirim},
-  #{addSirimLoc},                   
+  #{addSirimLoc},
   #{addSirimQty},
   #{getdocNo},
   '',
@@ -153,7 +153,7 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
   #{crtuser_id},
   1,
   1,
-  1 
+  1
   )
 </insert>
 
@@ -163,15 +163,15 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
 </select>
 <select id="SirimDCreateSeq" resultType="Integer">
      SELECT NVL(MAX(SRM_DET_ID),0) + 1 from LOG0034D
-</select> 
+</select>
 <select id="CrdPosCreateSeq" resultType="Integer">
      SELECT NVL(MAX(SIRIM_ID),0) + 1 from LOG0040D
 </select>
 <select id="docNoCreateSeq" resultType="String">
       select FN_GET_DOCNO('75') from dual
-</select>   
+</select>
 
-<select id="selectSirimTransList" parameterType="Map" resultType="EgovMap">  
+<select id="selectSirimTransList" parameterType="Map" resultType="EgovMap">
     SELECT TRNSIT_ID                     AS trnsitid     ,
            TRNSIT_NO                     AS trnsitno     ,
            TRNSIT_DT                     AS trnsitdt     ,
@@ -186,28 +186,26 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
            TRNSIT_CRT_USER_ID_USER_NAME  AS crtusernm    ,
            TRNSIT_CLOS_DT                AS trnsitcdt    ,
            TOT_TRNSIT_ITM                AS totitm       ,
-           TOT_CNT                       AS totcnt      
+           TOT_CNT                       AS totcnt
       FROM LOG1003V LV
          , SYS0028M S28
      WHERE LV.TRNSIT_TO = S28.CODE2
        <if test="strnsitno != null and strnsitno !=''">
            AND LV.TRNSIT_NO = #{strnsitno}
-       </if> 
+       </if>
        <if test="sStatus != null and sStatus !=''">
            AND LV.TRNSIT_STUS_ID = #{sStatus}
        </if>
        <if test="sfrloc != null and sfrloc !=''">
            AND LV.TRNSIT_FROM = #{sfrloc}
-       </if> 
-       <if test="stoloc != null and stoloc !=''">
-           AND LV.TRNSIT_TO = #{stoloc}
-       </if> 
+       </if>
+       AND S28.WH_LOC_STK_GRAD = 'A'
        ORDER BY LV.TRNSIT_NO
-       
+
 </select>
 
 <select id="selectSirimToTransit" parameterType="Map" resultType="EgovMap">
-    select ROWNUM RNUM 
+    select ROWNUM RNUM
          , L36.SRM_TRANS_ITM_ID STII
          , L36.SRM_TYPE_ID  STID
          , L36.SRM_NO SNO
@@ -216,14 +214,14 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
          , TO_CHAR(L36.TR_TRANS_CLOS_DT , 'dd/mm/yyyy') TTCD
          , S13.CODE_DESC CDESC
          , S38.CODE CODE
-         , DECODE(S47.USER_ID , NULL , '-' ,  S47.USER_NAME) UNAME 
+         , DECODE(S47.USER_ID , NULL , '-' ,  S47.USER_NAME) UNAME
       from LOG0036D L36
          , SYS0013M S13
          , SYS0038M S38
          , SYS0047M S47
      WHERE 1 = 1
        AND L36.SRM_TYPE_ID = S13.CODE_ID
-       AND L36.SRM_TRANS_STUS_ID = S38.STUS_CODE_ID
+       AND L36.SRM_RESULT_STUS_ID = S38.STUS_CODE_ID
        AND L36.SRM_TRANS_UPD_USER_ID = S47.USER_ID(+)
        AND SRM_TRANS_STUS_ID = 1
        AND SRM_TRANSF_ID = #{trnsitid}
@@ -231,10 +229,10 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
            AND SRM_RESULT_STUS_ID = #{statusid}
        </if>
        order by SRM_TRANS_ITM_ID
-</select> 
+</select>
 
 <select id="selectTransitItemlist" parameterType="Map" resultType="EgovMap">
-    with tab1 as ( 
+    with tab1 as (
                     select sirim_no , sirim_loc ,sirim_type_id , s13.code_name
                          , nvl (SUM (l40.sirim_qty), 0) AS sirim_qty
                       from LOG0040D l40
@@ -243,14 +241,14 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
                     group by sirim_no , sirim_loc ,sirim_type_id , s13.code_name
                     having (sum(l40.sirim_qty) > 0)
                   )
-    select rownum rnum , sirim_no sno , sirim_loc sloc , sirim_type_id stid , code_name stnm , sirim_qty sqty from tab1 
+    select rownum rnum , sirim_no sno , sirim_loc sloc , sirim_type_id stid , code_name stnm , sirim_qty sqty from tab1
      where 1 = 1
-       and sirim_loc = #{nfrloc} 
-       and sirim_no between #{nprefix}||#{nsirimfr} and #{nprefix}||#{nsirimto} 
+       and sirim_loc = #{nfrloc}
+       and sirim_no between #{nprefix}||#{nsirimfr} and #{nprefix}||#{nsirimto}
      order by sirim_no
 </select>
 <select id="selectTransitDoctype" parameterType="Integer" resultType="EgovMap">
-    select DOC_NO_ID, DOC_NO_PREFIX, DOC_NO, TYPE_CODE, TYPE_DESC, ISS_DT, AUTO_REFRESH, AUTO_REFRESH_PRIOD 
+    select DOC_NO_ID, DOC_NO_PREFIX, DOC_NO, TYPE_CODE, TYPE_DESC, ISS_DT, AUTO_REFRESH, AUTO_REFRESH_PRIOD
       from SYS0022C
      where doc_no_id = #{doctype}
 </select>
@@ -266,7 +264,7 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
 
 <insert id="insertSirimTransferDtl" parameterType="Map">
     insert into LOG0036D
-            (SRM_TRANS_ITM_ID, SRM_TRANSF_ID, 
+            (SRM_TRANS_ITM_ID, SRM_TRANSF_ID,
             SRM_TYPE_ID, SRM_NO, SRM_TRANS_STUS_ID, SRM_RESULT_STUS_ID, SRM_TRANS_CRT_USER_ID, SRM_TRANS_CRT_DT, SRM_TRANS_UPD_USER_ID, SRM_TRANS_UPD_DT, TR_TRANS_CLOS_DT)
     values(
             (select max(SRM_TRANS_ITM_ID)+1 from LOG0036D) , (select max(SRM_TRANSF_ID)+1 from LOG0035D),
@@ -286,19 +284,19 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
 
 <select id="selectSirimModDetail" parameterType="Map" resultType="EgovMap">
     SELECT T1.STI , T1.TTI ,
-           L35.SRM_TRANSF_REF_NO STN, 
+           L35.SRM_TRANSF_REF_NO STN,
            L35.SRM_TRANSF_DT STDF,
            TO_CHAR(L35.SRM_TRANSF_DT , 'DD/MM/YYYY') STD,
-           TRIM(L35.SRM_TRANSF_FROM) STF , 
-           TRIM(L35.SRM_TRANSF_TO) STT, 
+           TRIM(L35.SRM_TRANSF_FROM) STF ,
+           TRIM(L35.SRM_TRANSF_TO) STT,
            TRIM(L35.CURIER_CODE) STC ,
-           L35.SRM_TRANSF_CRT_USER_ID STCU, 
+           L35.SRM_TRANSF_CRT_USER_ID STCU,
            L35.SRM_TRANSF_STUS_ID STSI,
-           NVL(S47.USER_NAME ,'') SUN , 
-           S38.CODE TSC, 
+           NVL(S47.USER_NAME ,'') SUN ,
+           S38.CODE TSC,
            S38.NAME TSN,
            0 AS TITC
-      FROM( 
+      FROM(
             SELECT L35.SRM_TRANSF_ID STI , COUNT(1) TTI
               FROM LOG0035D L35
                  , LOG0036D L36
@@ -313,7 +311,7 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
       WHERE 1 = 1
         AND L35.SRM_TRANSF_CRT_USER_ID = S47.USER_ID(+)
         AND L35.SRM_TRANSF_STUS_ID = S38.STUS_CODE_ID
-        AND T1.STI = L35.SRM_TRANSF_ID 
+        AND T1.STI = L35.SRM_TRANSF_ID
         AND T1.STI = #{trnsitid}
 </select>
 <select id="selecthasItemReceiveByReceiverCnt" parameterType="Map" resultType="Integer">
@@ -321,7 +319,7 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
       FROM LOG0036D
      WHERE SRM_TRANS_STUS_ID = 1
        AND SRM_TRANSF_ID = #{trnsitid}
-       AND SRM_RESULT_STUS_ID = '4' 
+       AND SRM_RESULT_STUS_ID = '4'
 </select>
 <update id="updateSirimTransit36" parameterType="Map">
    update LOG0036D
@@ -340,4 +338,42 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
          , SRM_TRANSF_UPD_USER_ID =#{suserid}
      where SRM_TRANSF_ID = #{htranid}
 </update>
+
+<select id="selectBranchCode" parameterType="Map" resultType="String">
+
+    SELECT CODE2
+
+    FROM SYS0028M
+    WHERE 1=1
+
+      AND CODE2 = #{ntoloc}
+
+
+
+  </select>
+
+  <select id="selectWarehouseLocByUserBranch" parameterType="Map" resultType="egovMap">
+        SELECT
+                WH_LOC_ID CODE_ID,
+                CODE2 CODE ,
+               CODE2 || ' - ' ||WH_LOC_DESC CODE_NAME
+          FROM SYS0028M S28M
+         WHERE 1 = 1
+           AND S28M.WH_LOC_STUS_ID = 1
+           AND S28M.WH_LOC_STK_GRAD = 'A'
+           AND S28M.WH_LOC_TYPE_ID = 277
+           AND S28M.WH_LOC_BRNCH_ID = #{branchId}
+    </select>
+
+    <select id="selectWarehouseLoc" parameterType="Map" resultType="egovMap">
+        SELECT
+                WH_LOC_ID CODE_ID,
+                CODE2 CODE ,
+               CODE2 || ' - ' ||WH_LOC_DESC CODE_NAME
+          FROM SYS0028M S28M
+         WHERE 1 = 1
+           AND S28M.WH_LOC_STUS_ID = 1
+           AND S28M.WH_LOC_STK_GRAD  <![CDATA[<>]]> 'B'
+           AND S28M.WH_LOC_TYPE_ID = 277
+    </select>
 </mapper>
