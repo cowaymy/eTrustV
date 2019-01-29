@@ -799,7 +799,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,#{budgetCode}
        ,#{budgetCodeName}
        ,'VB'
-       ,'0'
+       ,#{totAmt}
        ,'0'
        ,'0'
        ,#{totAmt}
