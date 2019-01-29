@@ -31,8 +31,6 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.AppConstants;
 import com.coway.trust.ScmConstants;
-import com.coway.trust.biz.scm.PoMngementService;
-import com.coway.trust.biz.scm.SalesPlanMngementService;
 import com.coway.trust.biz.scm.ScmCommonService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -108,6 +106,20 @@ public class ScmInterfaceManagementController {
 		
 		List<EgovMap> selectScmIfErrCode	= scmCommonService.selectScmIfErrCode(params);
 		return ResponseEntity.ok(selectScmIfErrCode);
+	}
+	
+	//	test
+	@RequestMapping(value = "/scmtest.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public ResponseEntity<Map<String, Object>> scmtest(@RequestBody Map<String, Object> params) {
+		LOGGER.debug("scmtest : {}", params.toString());
+		
+		scmInterfaceManagementService.updateSupplyPlanRtp(params);
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		map.put("selectInterfaceList", "");
+		
+		return	ResponseEntity.ok(map);
 	}
 	
 	//	search
@@ -411,6 +423,9 @@ public class ScmInterfaceManagementController {
 				this.fileRead(ScmConstants.IF_SUPP_RTP);
 				if ( null != bufferedReader ) {
 					totCnt	= this.mergeSupplyPlanRtp();
+					LOGGER.debug("========== executeSupplyPlanRtp : mergeSupplyPlanRtp executed ==========");
+				} else {
+					LOGGER.debug("========== executeSupplyPlanRtp : mergeSupplyPlanRtp not executed ==========");
 				}
 			} else {
 				logParams.put("errMsg", ScmConstants.FTP_CONN_ERR);
@@ -451,6 +466,7 @@ public class ScmInterfaceManagementController {
 		
 		try {
 			while ( null != (row = bufferedReader.readLine()) ) {
+				fileSize	+= row.length();
 				String col[]	= row.split("\\|");
 				for ( int i = 0 ; i < col.length ; i++ ) {
 					if ( 0 == i )	poNo	= col[i].trim();
@@ -531,6 +547,7 @@ public class ScmInterfaceManagementController {
 			
 			//	2. merge new pp info
 			while ( null != (row = bufferedReader.readLine()) ) {
+				fileSize	+= row.length();
 				String col[]	= row.split("\\|");
 				for ( int i = 0 ; i < col.length ; i++ ) {
 					if ( 0 == i )	poNo	= col[i].trim();
@@ -609,6 +626,7 @@ public class ScmInterfaceManagementController {
 		
 		try {
 			while ( null != (row = bufferedReader.readLine()) ) {
+				fileSize	+= row.length();
 				String col[]	= row.split("\\|");
 				for ( int i = 0 ; i < col.length ; i++ ) {
 					if ( 0 == i )	poNo	= col[i].trim();
@@ -691,6 +709,7 @@ public class ScmInterfaceManagementController {
 		logParams.put("fileName", fileName);
 		
 		try {
+			//	1. File Read and DB Write
 			while ( null != (row = bufferedReader.readLine()) ) {
 				fileSize	+= row.length();
 				String col[]	= row.split("\\|");
@@ -744,6 +763,11 @@ public class ScmInterfaceManagementController {
 				scmInterfaceManagementService.mergeSupplyPlanRtp(params);
 				totCnt++;
 			}
+			
+			//	2. Newly update merged data
+			scmInterfaceManagementService.updateSupplyPlanRtp(params);
+			
+			//	3. Insert log
 			logParams.put("execCnt", totCnt);
 			logParams.put("fileSize", fileSize);
 			if ( 0 == fileSize ) {

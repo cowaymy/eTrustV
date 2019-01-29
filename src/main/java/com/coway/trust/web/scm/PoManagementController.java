@@ -85,6 +85,7 @@ public class PoManagementController {
 		targetParams.put("planWeekTh", selectScmTotalInfo.get(0).get("planWeekTh"));
 		targetParams.put("planFstSpltWeek", selectScmTotalInfo.get(0).get("planFstSpltWeek"));
 		targetParams.put("planYearLstWeek", selectScmTotalInfo.get(0).get("planYearLstWeek"));
+		targetParams.put("planGrWeek", selectScmTotalInfo.get(0).get("planGrWeek"));
 		targetParams.put("leadTm", selectScmTotalInfo.get(0).get("leadTm"));
 		List<EgovMap> selectGetPoCntTargetCnt	= supplyPlanManagementService.selectGetPoCntTargetCnt(targetParams);
 		
