@@ -168,7 +168,7 @@ function btnGeneratePDF_Click(){
         if($("#cmbListingType :selected").val() == 1){
         	$("#form #reportFileName").val("/logistics/HSUsedFilterListing_PDF.rpt");
         	$("#reportDownFileName").val("HSUsedFilterListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-        	orderBySQL += " ORDER BY l82.SVC_DT, l82.SVC_ORD_ID ";
+        	orderBySQL += " ORDER BY s26.STK_CODE, s26.STK_DESC, s01.SALES_ORD_NO, l82.SVC_DT ";
 
         }
         if($("#cmbListingType :selected").val() == 2){
