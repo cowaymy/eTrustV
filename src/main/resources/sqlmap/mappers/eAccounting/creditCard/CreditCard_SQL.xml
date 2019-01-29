@@ -481,7 +481,7 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
        ,#{budgetCode}
        ,#{budgetCodeName}
        ,'VB'
-       ,'0'
+       ,#{totAmt}
        ,'0'
        ,'0'
        ,#{totAmt}
