@@ -12,6 +12,7 @@
 }
 </style>
 <script type="text/javascript">
+console.log("webInvoiceApproveViewPop");
 var myGridID;
 var myGridData = $.parseJSON('${appvInfoAndItems}');
 var attachList = null;

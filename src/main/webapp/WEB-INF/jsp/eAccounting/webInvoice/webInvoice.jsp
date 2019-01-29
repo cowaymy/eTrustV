@@ -386,7 +386,7 @@ function fn_getValue(index) {
 function fn_getTotalAmount() {
     // 수정할 때 netAmount와 taxAmount의 values를 각각 더하고 합하기
     sum = 0;
-    var netAmtList = AUIGrid.getColumnValues(newGridID, "netAmt");
+    /*var netAmtList = AUIGrid.getColumnValues(newGridID, "netAmt");
     var taxAmtList = AUIGrid.getColumnValues(newGridID, "taxAmt");
     var taxNonClmAmtList = AUIGrid.getColumnValues(newGridID, "taxNonClmAmt");
     if(netAmtList.length > 0) {
@@ -402,6 +402,13 @@ function fn_getTotalAmount() {
     if(taxNonClmAmtList.length > 0) {
         for(var i in taxNonClmAmtList) {
             sum += taxNonClmAmtList[i];
+        }
+    }*/
+
+    var totAmtList = AUIGrid.getColumnValues(newGridID, "totAmt");
+    if(totAmtList.length > 0) {
+        for(var i in totAmtList) {
+            sum += totAmtList[i];
         }
     }
     return sum;
@@ -549,7 +556,7 @@ function fn_setNewGridEvent() {
 		  });
 
 		    AUIGrid.bind(newGridID, "cellEditEnd", function( event ) {
-		        if(event.dataField == "netAmt" || event.dataField == "taxAmt" || event.dataField == "taxNonClmAmt") {
+		        if(event.dataField == "netAmt" || event.dataField == "taxAmt" || event.dataField == "taxNonClmAmt" || event.dataField == "totAmt") {
 		            var taxAmt = 0;
 		            var taxNonClmAmt = 0;
 		            if($("#invcType").val() == "S") {

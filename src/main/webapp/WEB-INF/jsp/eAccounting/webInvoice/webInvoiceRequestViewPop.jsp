@@ -12,6 +12,7 @@
 }
 </style>
 <script type="text/javascript">
+console.log("webInvoiceRequestViewPop");
 var myGridID;
 var myGridData = $.parseJSON('${appvInfoAndItems}');
 var attachList = null;
@@ -483,8 +484,8 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
             } else if(clmType == "J2") {
                 $("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
                 $("#supplirTd").text(result.data.supplier);
-                $("#payInfo1").show();
-                $("#payInfo2").show();
+                //$("#payInfo1").show();
+                //$("#payInfo2").show();
                 $("#utilNo").text(result.data.utilNo);
                 $("#jPayNo").text(result.data.jPayNo);
                 var bilPeriod = "";
@@ -694,22 +695,22 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <tr>
     <th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
     <td id="invcNo"></td>
-    <th scope="row">Billing Period</th>
-    <td id="bilPeriod"></td>
+    <th scope="row" id="supplirTh"></th>
+    <td id="supplirTd"></td>
     <!-- <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
     <td id="invcType"></td> -->
 </tr>
 <!-- <tr>
     <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
     <td id="gstRgistNo"></td>
-    <th scope="row" id="supplirTh"></th>
-    <td id="supplirTd"></td>
 </tr>-->
 <tr id="payInfo1">
     <th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
     <td id="utilNo"></td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">Billing Period</th>
+    <td id="bilPeriod"></td>
+    <!-- <th scope="row" id="supplirTh"></th>
+    <td id="supplirTd"></td> -->
 </tr>
 <tr id="payInfo2" style="display: none;">
     <th scope="row">JomPAY No</th>
