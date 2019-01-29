@@ -1483,10 +1483,10 @@
         var vAppType    = $('#appType').val();
         var vDefRentAmt = vAppType == '66' ? $('#ordRentalFees').val().trim() : 0;
         var vCustBillId = $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0;
-        var vBindingNo  = FormUtil.isEmpty($('#txtOldOrderID').val().trim()) ? $('#relatedNo').val().trim() : $('#hiddenOldOrderId').val().trim();
+        var vBindingNo  = FormUtil.isNotEmpty($('#txtOldOrderID').val().trim()) ? $('#relatedNo').val().trim() : $('#hiddenOldOrderId').val().trim();
         var vCnvrSchemeId;
 console.log("vBindingNo" + vBindingNo);
-        if($('#trialNoChk').is(":checked")) {
+		if($('#trialNoChk').is(":checked")) {
             vBindingNo = $('#trialNo').val().trim();
             vCnvrSchemeId = $('#trialId').val().trim();
         }
@@ -2685,28 +2685,28 @@ console.log("vBindingNo" + vBindingNo);
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.initial" /></th>
-    <td><input id="custInitial" name="custInitial" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="custInitial" name="custInitial" type="text" title="" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.text.name" /></th>
-    <td><input id="custCntcName" name="custCntcName" type="text" title="" placeholder="" class="w100p" />
+    <td><input id="custCntcName" name="custCntcName" type="text" title="" placeholder="" class="w100p" disabled/>
         <input id="hiddenCustCntcId" name="custCntcId" type="hidden" /></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telMOne" /></th>
-    <td><input id="custCntcTelM" name="custCntcTelM" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="custCntcTelM" name="custCntcTelM" type="text" title="" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.title.text.telROne" /></th>
-    <td><input id="custCntcTelR" name="custCntcTelR" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="custCntcTelR" name="custCntcTelR" type="text" title="" placeholder="" class="w100p" disabled/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telOOne" /></th>
-    <td><input id="custCntcTelO" name="custCntcTelO" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="custCntcTelO" name="custCntcTelO" type="text" title="" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.title.text.extNo" />(1)</th>
-    <td><input id="custCntcExt" name="custCntcExt" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="custCntcExt" name="custCntcExt" type="text" title="" placeholder="" class="w100p" disabled/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telFOne" /></th>
-    <td><input id="custCntcTelF" name="custCntcTelF" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="custCntcTelF" name="custCntcTelF" type="text" title="" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.title.text.eamilOne" /></th>
-    <td><input id="custCntcEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="custCntcEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p" disabled/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -2743,25 +2743,25 @@ console.log("vBindingNo" + vBindingNo);
 <tbody>
 <tr>
     <th scope="row">Name</th>
-    <td colspan="3"><input id="srvCntcName" name="srvCntcName" type="text" title="" placeholder="" class="w100p" /></td>
+    <td colspan="3"><input id="srvCntcName" name="srvCntcName" type="text" title="" placeholder="" class="w100p" disabled/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telMTwo" /></th>
-    <td><input id="srvCntcTelM" name="srvCntcTelM" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="srvCntcTelM" name="srvCntcTelM" type="text" title="" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.title.text.telRTwo" /></th>
-    <td><input id="srvCntcTelR" name="srvCntcTelR" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="srvCntcTelR" name="srvCntcTelR" type="text" title="" placeholder="" class="w100p" disabled/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telOTwo" /></th>
-    <td><input id="srvCntcTelO" name="srvCntcTelO" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="srvCntcTelO" name="srvCntcTelO" type="text" title="" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.title.text.extNo" />(2)</th>
-    <td><input id="srvCntcExt" name="srvCntcExt" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="srvCntcExt" name="srvCntcExt" type="text" title="" placeholder="" class="w100p" disabled/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telFTwo" /></th>
-    <td><input id="srvCntcTelF" name="srvCntcTelF" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="srvCntcTelF" name="srvCntcTelF" type="text" title="" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.title.text.emailTwo" /></th>
-    <td><input id="srvCntcEmail" name="srvCntcEmail" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="srvCntcEmail" name="srvCntcEmail" type="text" title="" placeholder="" class="w100p" disabled/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
