@@ -17,11 +17,11 @@
     <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td><span>${orderDetail.basicInfo.custId}
     <c:if test="${not empty orderDetail.basicInfo.crtDur}">
-        (${orderDetail.basicInfo.crtDur} month)    
+        (${orderDetail.basicInfo.crtDur} month)
     </c:if>
     </span></td>
     <th scope="row"><spring:message code="sal.text.custName" /></th>
-    <td colspan="3"><span>${orderDetail.basicInfo.custName}</span></td>
+    <td colspan="3"><span>${orderDetail.basicInfo.custName} ${orderDetail.basicInfo.memInfo}</span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.custType" /></th>
