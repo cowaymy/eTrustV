@@ -33,6 +33,7 @@ public interface ScmInterfaceManagementMapper
 	List<EgovMap> selectScmIfSeq(Map<String, Object> params);
 	List<EgovMap> selectUpdateTarget(Map<String, Object> params);
 	List<EgovMap> selectSupplyPlanPsi3(Map<String, Object> params);
+	void deleteSupplyPlanRtp(Map<String, Object> params);
 	void updateSupplyPlanRtp(Map<String, Object> params);
 	void mergeSupplyPlanRtp(Map<String, Object> params);
 	

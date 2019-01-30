@@ -175,6 +175,10 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 		return	scmInterfaceManagementMapper.selectScmIfSeq(params);
 	}
 	@Override
+	public void deleteSupplyPlanRtp(Map<String, Object> params) {
+		scmInterfaceManagementMapper.deleteSupplyPlanRtp(params);
+	}
+	@Override
 	public void mergeSupplyPlanRtp(Map<String, Object> params) {
 		scmInterfaceManagementMapper.mergeSupplyPlanRtp(params);
 	}
@@ -183,15 +187,13 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 		LOGGER.debug("updateSupplyPlanRtp : {}", params.toString());
 		
 		//	1. Variables
+		int m0	= 0;	int m1	= 0;	int m2	= 0;	int m3	= 0;	int m4	= 0;
 		int planYear		= 0;	int planWeek		= 0;	String stockCode	= "";
 		int m0WeekCnt		= 0;	int m1WeekCnt		= 0;	int m2WeekCnt		= 0;	int m3WeekCnt		= 0;	int m4WeekCnt		= 0;
-		int planFstSpltWeek	= 0;	int planWeekTh		= 0;
+		int planFstSpltWeek	= 0;	int planWeekTh		= 0;	int planWeekSpltCnt	= 0;
 		int m0FstWeek		= 0;	int m1FstWeek		= 0;	int m2FstWeek		= 0;	int m3FstWeek		= 0;	int m4FstWeek		= 0;
 		int m0FstSpltWeek	= 0;	int m1FstSpltWeek	= 0;	int m2FstSpltWeek	= 0;	int m3FstSpltWeek	= 0;	int m4FstSpltWeek	= 0;
-		
-		//	for test
-		//params.put("planYear", 2019);
-		//params.put("planWeek", 4);
+		int	updSect			= 0;
 		
 		//	2. Get Basic Info
 		params.put("planYear", Integer.parseInt(params.get("scmYearCbBox").toString()));
@@ -203,7 +205,16 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 		m3WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m3WeekCnt").toString());
 		m4WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m4WeekCnt").toString());
 		planFstSpltWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("planFstSpltWeek").toString());
+		planWeekSpltCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("planWeekSpltCnt").toString());
 		planWeekTh	= Integer.parseInt(selectScmTotalInfo.get(0).get("planWeekTh").toString());
+		if ( 1 == planWeekSpltCnt ) {
+			updSect	= planWeekTh + 1;
+		} else if ( 2 == planWeekSpltCnt ) {
+			updSect	= planWeekTh;
+		} else {
+			LOGGER.debug("error");
+		}
+		LOGGER.debug("planWeekTh : " + planWeekTh + ", planWeekSpltCnt : " + planWeekSpltCnt + ", updSect : " + updSect);
 		
 		m0FstWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("m0FstWeek").toString());
 		m1FstWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("m1FstWeek").toString());
@@ -218,18 +229,22 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 		
 		//	3. Get update target & Supply Plan
 		List<EgovMap> selectUpdateTarget	= scmInterfaceManagementMapper.selectUpdateTarget(params);
-		List<EgovMap> selectSupplyPlanPsi3	= scmInterfaceManagementMapper.selectSupplyPlanPsi3(params);
+		//List<EgovMap> selectSupplyPlanPsi3	= scmInterfaceManagementMapper.selectSupplyPlanPsi3(params);
 		
 		//	4. Update
 		Map<String, Object> insParams	= new HashMap<String, Object>();
 		for ( int i = 0 ; i < selectUpdateTarget.size() ; i++ ) {
-			
+			m0	= 0;	m1	= 0;	m2	= 0;	m3	= 0;	m4	= 0;
 			String rtpWeek	= "";	int rtpNo	= 1;
 			String psiWeek	= "";	int psiNo	= 1;
 			
 			planYear	= Integer.parseInt(selectUpdateTarget.get(i).get("planYear").toString());
 			planWeek	= Integer.parseInt(selectUpdateTarget.get(i).get("planWeek").toString());
 			stockCode	= selectUpdateTarget.get(i).get("stockCode").toString();
+			insParams.put("planYear", planYear);
+			insParams.put("planWeek", planWeek);
+			insParams.put("stockCode", stockCode);
+			
 			if ( 9999 != planYear ) {
 				//	Target
 				
@@ -251,50 +266,202 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 					if ( 1 == psiWeek.length() ) {
 						psiWeek	= "0" + psiWeek;
 					}
-					
-					if ( w <= planWeekTh + 1 ) {
-						//	수량 0
+					if ( 1 == w ) {
+						//	m0의 첫주차(스플릿이든 아니든) : 0
 						insParams.put("w" + psiWeek, 0);
-						LOGGER.debug(i + ". STOCK_CODE : " + stockCode + " m0월 수량0주차 : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+						LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m0월 w01주차 : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
 					} else {
-						if ( w == m0WeekCnt ) {
-							//	m0의 가장 마지막 week인 경우
+						if ( w <= updSect ) {
+							//	m0의 2번째 주차 ~ m0의 수립주차 : 0
 							insParams.put("w" + psiWeek, 0);
-							LOGGER.debug(i + ". STOCK_CODE : " + stockCode + " m0월 마지막주차 : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+							LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m0월 2번째 주차 ~ m0의 수립주차주차 : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
 						} else {
-							rtpWeek	= String.valueOf(rtpNo);
-							if ( 1 == rtpWeek.length() ) {
-								rtpWeek	= "0" + rtpWeek;
+							if ( w == m0WeekCnt ) {
+								//	m0의 마지막 주차 : 0 or selectUpdateTarget 불러옴
+								LOGGER.debug("m1FstWeek : " + m1FstWeek + ", m1FstSpltWeek : " + m1FstSpltWeek);
+								if ( m1FstWeek != m1FstSpltWeek ) {
+									//	m1 첫주차, m1 첫스플릿주차 다른주차(스플릿) : 0
+									insParams.put("w" + psiWeek, 0);
+									LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m1 첫주차, m1 첫스플릿주차 다른주차(스플릿) : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+								} else {
+									//	m1 첫주차, m1 첫스플릿주차 같은주차(스플릿아님) : selectUpdateTarget 불러옴
+									rtpWeek	= String.valueOf(rtpNo);
+									if ( 1 == rtpWeek.length() ) {
+										rtpWeek	= "0" + rtpWeek;
+									}
+									m0	= m0 + Integer.parseInt(selectUpdateTarget.get(i).get("w" + rtpWeek).toString());
+									insParams.put("w" + psiWeek, selectUpdateTarget.get(i).get("w" + rtpWeek));
+									rtpNo++;
+									LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m1 첫주차, m1 첫스플릿주차 같은주차(스플릿아님) : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+								}
+							} else {
+								//	m0의 수립주차 +1주차 ~ m0의 마지막주차 -1주차
+								rtpWeek	= String.valueOf(rtpNo);
+								if ( 1 == rtpWeek.length() ) {
+									rtpWeek	= "0" + rtpWeek;
+								}
+								m0	= m0 + Integer.parseInt(selectUpdateTarget.get(i).get("w" + rtpWeek).toString());
+								insParams.put("w" + psiWeek, selectUpdateTarget.get(i).get("w" + rtpWeek));
+								rtpNo++;
+								LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m0의 수립주차 +1주차 ~ m0의 마지막주차 -1주차 : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
 							}
-							insParams.put("w" + psiWeek, selectUpdateTarget.get(i).get("w" + rtpWeek));
-							rtpNo++;
-							LOGGER.debug(i + ". STOCK_CODE : " + stockCode + " m0월 정상주차 : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
 						}
 					}
 					psiNo++;
-					/*
-					if ( m0FstWeek == m0FstSpltWeek ) {
-						if ( w <= planWeekTh + 1 ) {
-							//	수량 0 넣어야 하는 주차
+				}
+				insParams.put("m0", m0);
+				LOGGER.debug("m0 : " + m0);
+				//	m1
+				for ( int w = 1 ; w < m1WeekCnt + 1 ; w++ ) {
+					psiWeek	= String.valueOf(psiNo);
+					if ( 1 == psiWeek.length() ) {
+						psiWeek	= "0" + psiWeek;
+					}
+					
+					if ( 1 == w ) {
+						//	m1의 첫주차
+						if ( m1FstWeek == planWeek ) {
+							//	m1의 첫주차 = 수립주차 : 0
 							insParams.put("w" + psiWeek, 0);
+							LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m1의 첫주 = 수립주차 " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
 						} else {
+							//	m1의 첫주차 != 수립주차 : selectUpdateTarget 불러옴
 							rtpWeek	= String.valueOf(rtpNo);
 							if ( 1 == rtpWeek.length() ) {
 								rtpWeek	= "0" + rtpWeek;
 							}
-							insParams.put("w" + psiWeek, selectSupplyPlanPsi3.get(i).get("w" + psiWeek));
+							m1	= m1 + Integer.parseInt(selectUpdateTarget.get(i).get("w" + rtpWeek).toString());
+							insParams.put("w" + psiWeek, selectUpdateTarget.get(i).get("w" + rtpWeek));
+							rtpNo++;
+							LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m1의 첫주차 != 수립주차 : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
 						}
 					} else {
-						
+						if ( w < m1WeekCnt ) {
+							//	m1의 2번째주차 ~ m1 마지막주차 -1 : selectUpdateTarget 불러옴
+							rtpWeek	= String.valueOf(rtpNo);
+							if ( 1 == rtpWeek.length() ) {
+								rtpWeek	= "0" + rtpWeek;
+							}
+							m1	= m1 + Integer.parseInt(selectUpdateTarget.get(i).get("w" + rtpWeek).toString());
+							insParams.put("w" + psiWeek, selectUpdateTarget.get(i).get("w" + rtpWeek));
+							rtpNo++;
+							LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m1의 2번째주차 ~ m1 마지막주차 -1 : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+						} else {
+							//	m1의 마지막 주차 : 0 or selectUpdateTarget 불러옴
+							LOGGER.debug("m2FstWeek : " + m2FstWeek + ", m2FstSpltWeek : " + m2FstSpltWeek);
+							if ( m2FstWeek != m2FstSpltWeek ) {
+								//	m2 첫주차, m2 첫스플릿주차 다른주차(스플릿) : 0
+								insParams.put("w" + psiWeek, 0);
+								LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m2 첫주차, m2 첫스플릿주차 다른주차(스플릿) : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+							} else {
+								//	m2 첫주차, m2 첫스플릿주차 같은주차(스플릿아님) : selectUpdateTarget 불러옴
+								rtpWeek	= String.valueOf(rtpNo);
+								if ( 1 == rtpWeek.length() ) {
+									rtpWeek	= "0" + rtpWeek;
+								}
+								m1	= m1 + Integer.parseInt(selectUpdateTarget.get(i).get("w" + rtpWeek).toString());
+								insParams.put("w" + psiWeek, selectUpdateTarget.get(i).get("w" + rtpWeek));
+								rtpNo++;
+								LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m2 첫주차, m2 첫스플릿주차 같은주차(스플릿아님) : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+							}
+						}
 					}
-					*/
+					psiNo++;
 				}
+				insParams.put("m1", m1);
+				LOGGER.debug("m1 : " + m1);
+				//	m2
+				for ( int w = 1 ; w < m2WeekCnt + 1 ; w++ ) {
+					psiWeek	= String.valueOf(psiNo);
+					if ( 1 == psiWeek.length() ) {
+						psiWeek	= "0" + psiWeek;
+					}
+					
+					//	m2부터는 처음부터 값 입력
+					if ( w < m2WeekCnt ) {
+						//	m2의 1번째주차 ~ m2 마지막주차 -1 : selectUpdateTarget 불러옴
+						rtpWeek	= String.valueOf(rtpNo);
+						if ( 1 == rtpWeek.length() ) {
+							rtpWeek	= "0" + rtpWeek;
+						}
+						m2	= m2 + Integer.parseInt(selectUpdateTarget.get(i).get("w" + rtpWeek).toString());
+						insParams.put("w" + psiWeek, selectUpdateTarget.get(i).get("w" + rtpWeek));
+						rtpNo++;
+						LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m2의 1번째주차 ~ m2 마지막주차 -1 : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+					} else {
+						//	m2의 마지막 주차 : 0 or selectUpdateTarget 불러옴
+						LOGGER.debug("m3FstWeek : " + m3FstWeek + ", m3FstSpltWeek : " + m3FstSpltWeek);
+						if ( m3FstWeek != m3FstSpltWeek ) {
+							//	m3 첫주차, m3 첫스플릿주차 다른주차(스플릿) : 0
+							insParams.put("w" + psiWeek, 0);
+							LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m3 첫주차, m3 첫스플릿주차 다른주차(스플릿) : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+						} else {
+							//	m3 첫주차, m3 첫스플릿주차 같은주차(스플릿아님) : selectUpdateTarget 불러옴
+							rtpWeek	= String.valueOf(rtpNo);
+							if ( 1 == rtpWeek.length() ) {
+								rtpWeek	= "0" + rtpWeek;
+							}
+							m2	= m2 + Integer.parseInt(selectUpdateTarget.get(i).get("w" + rtpWeek).toString());
+							insParams.put("w" + psiWeek, selectUpdateTarget.get(i).get("w" + rtpWeek));
+							rtpNo++;
+							LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m3 첫주차, m3 첫스플릿주차 같은주차(스플릿아님) : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+						}
+					}
+					psiNo++;
+				}
+				insParams.put("m2", m2);
+				LOGGER.debug("m2 : " + m2);
+				//	m3
+				for ( int w = 1 ; w < m3WeekCnt + 1 ; w++ ) {
+					psiWeek	= String.valueOf(psiNo);
+					if ( 1 == psiWeek.length() ) {
+						psiWeek	= "0" + psiWeek;
+					}
+					
+					//	m3부터는 처음부터 값 입력
+					if ( w < m3WeekCnt ) {
+						//	m3의 1번째주차 ~ m3 마지막주차 -1 : selectUpdateTarget 불러옴
+						rtpWeek	= String.valueOf(rtpNo);
+						if ( 1 == rtpWeek.length() ) {
+							rtpWeek	= "0" + rtpWeek;
+						}
+						m3	= m3 + Integer.parseInt(selectUpdateTarget.get(i).get("w" + rtpWeek).toString());
+						insParams.put("w" + psiWeek, selectUpdateTarget.get(i).get("w" + rtpWeek));
+						rtpNo++;
+						LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m3의 1번째주차 ~ m3 마지막주차 -1 : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+					} else {
+						//	m3의 마지막 주차 : 0 or selectUpdateTarget 불러옴
+						LOGGER.debug("m4FstWeek : " + m4FstWeek + ", m4FstSpltWeek : " + m4FstSpltWeek);
+						if ( m4FstWeek != m4FstSpltWeek ) {
+							//	m4 첫주차, m4 첫스플릿주차 다른주차(스플릿) : 0
+							insParams.put("w" + psiWeek, 0);
+							LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m4 첫주차, m4 첫스플릿주차 다른주차(스플릿) : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+						} else {
+							//	m4 첫주차, m4 첫스플릿주차 같은주차(스플릿아님) : selectUpdateTarget 불러옴
+							rtpWeek	= String.valueOf(rtpNo);
+							if ( 1 == rtpWeek.length() ) {
+								rtpWeek	= "0" + rtpWeek;
+							}
+							m3	= m3 + Integer.parseInt(selectUpdateTarget.get(i).get("w" + rtpWeek).toString());
+							insParams.put("w" + psiWeek, selectUpdateTarget.get(i).get("w" + rtpWeek));
+							rtpNo++;
+							LOGGER.debug(i + "-" + w + ". STOCK_CODE : " + stockCode + " m4 첫주차, m4 첫스플릿주차 같은주차(스플릿아님) : " + w + ". val : " + insParams.get("w" + psiWeek) + ", psiNo : " + psiNo + ", rtpNo : " + rtpNo);
+						}
+					}
+					psiNo++;
+				}
+				insParams.put("m3", m3);
+				LOGGER.debug("m3 : " + m3);
+				//	m4 : 본사에서 넘어오는 정보가 수립주차 기준, 이후 12주간의 계획이므로 m4까지 update할 일은 없음
+				insParams.put("m4", m4);
+				LOGGER.debug("m4 : " + m4);
+				LOGGER.debug(i + ". insParams : {}", insParams.toString());
+				scmInterfaceManagementMapper.updateSupplyPlanRtp(insParams);
 			} else {
 				//	Not Target
+				//LOGGER.debug("This Stock is not update target.");
 			}
 		}
-		
-		scmInterfaceManagementMapper.updateSupplyPlanRtp(params);
 	}
 	
 	//	FTP OTD SO Batch
