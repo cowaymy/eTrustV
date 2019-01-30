@@ -15,7 +15,7 @@
 
 
 <select id="selectSirimList" parameterType="Map" resultType="EgovMap">
-SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
+<!-- SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
        Project1.SIRIM_NO SIRIM_NO  ,
        Project1.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
        Project1.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
@@ -45,7 +45,51 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
                      AND Extent1.SIRIM_LOC = #{searchWarehouse}
                </if>
                ) Project1
-  ORDER BY Project1.SIRIM_NO ASC
+  ORDER BY Project1.SIRIM_NO ASC  -->
+  SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
+       Project1.SIRIM_NO SIRIM_NO  ,
+       Project1.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
+       Project1.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
+       Project1.SIRIM_LOC SIRIM_LOC  ,
+       Project1.SIRIM_QTY SIRIM_QTY
+  FROM ( SELECT Extent1.SIRIM_LOC SIRIM_LOC  ,
+                Extent1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
+                Extent1.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
+                Extent1.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
+                Extent1.SIRIM_QTY SIRIM_QTY  ,
+                LTRIM(RTRIM(Extent1.SIRIM_NO)) SIRIM_NO
+         FROM ( SELECT LOG1002V.SIRIM_NO SIRIM_NO  ,
+                       LOG1002V.SIRIM_LOC SIRIM_LOC  ,
+                       LOG1002V.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
+                       LOG1002V.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
+                       LOG1002V.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
+                       LOG1002V.SIRIM_QTY SIRIM_QTY,
+                       a.WH_LOC_CODE LOC_CODE
+                FROM LOG1002V
+                left join sys0028m a on a.WH_LOC_CODE = LOG1002V.SIRIM_LOC
+                union
+                SELECT LOG1002V.SIRIM_NO SIRIM_NO  ,
+                       LOG1002V.SIRIM_LOC SIRIM_LOC  ,
+                       LOG1002V.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
+                       LOG1002V.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
+                       LOG1002V.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
+                       LOG1002V.SIRIM_QTY SIRIM_QTY,
+                       a.WH_LOC_CODE LOC_CODE
+                FROM LOG1002V
+                left join sys0028m a on a.OLD_WH_LOC_CODE = LOG1002V.SIRIM_LOC) Extent1
+
+                WHERE 1 = 1
+               <if test="searchSirimNo != null and searchSirimNo !=''">
+                    AND  (LTRIM(RTRIM(Extent1.SIRIM_NO)))= #{searchSirimNo}
+               </if>
+               <if test="searchCategory != null and searchCategory !=''">
+                     AND Extent1.SIRIM_TYPE_ID = #{searchCategory}
+               </if>
+               <if test="searchWarehouse != null and searchWarehouse !=''">
+                     AND Extent1.LOC_CODE = #{searchWarehouse}
+               </if>
+               ) Project1
+  ORDER BY Project1.SIRIM_LOC ASC
 </select>
 
 
@@ -172,7 +216,7 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
 </select>
 
 <select id="selectSirimTransList" parameterType="Map" resultType="EgovMap">
-    SELECT TRNSIT_ID                     AS trnsitid     ,
+   <!--   SELECT TRNSIT_ID                     AS trnsitid     ,
            TRNSIT_NO                     AS trnsitno     ,
            TRNSIT_DT                     AS trnsitdt     ,
            TRNSIT_FROM                   AS trnsitfr     ,
@@ -200,8 +244,76 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
            AND LV.TRNSIT_FROM = #{sfrloc}
        </if>
        AND S28.WH_LOC_STK_GRAD = 'A'
-       ORDER BY LV.TRNSIT_NO
-
+       ORDER BY LV.TRNSIT_NO  -->
+SELECT Extent1.trnsitid                     AS trnsitid     ,
+           Extent1.trnsitno                     AS trnsitno     ,
+           Extent1.trnsitdt                     AS trnsitdt     ,
+           Extent1.trnsitfr                   AS trnsitfr     ,
+           Extent1.trnsitto                     AS trnsitto     ,
+           Extent1.trnsitcur                 AS trnsitcur    ,
+           (select curier_name from SYS0016M where CURIER_CODE = Extent1.trnsitcur) curiername ,
+           Extent1.trnsitstusid                AS trnsitstusid ,
+           Extent1.trnsitstuscd              AS trnsitstuscd ,
+           Extent1.trnsitstusnm              AS trnsitstusnm ,
+           Extent1.crtuserid         AS crtuserid    ,
+           Extent1.crtusernm  AS crtusernm    ,
+           Extent1.trnsitcdt                AS trnsitcdt    ,
+           Extent1.totitm                AS totitm       ,
+           Extent1.totcnt                       AS totcnt
+FROM (
+SELECT LV.TRNSIT_ID                     AS trnsitid     ,
+           LV.TRNSIT_NO                     AS trnsitno     ,
+           LV.TRNSIT_DT                     AS trnsitdt     ,
+           LV.TRNSIT_FROM                   AS trnsitfr     ,
+           LV.TRNSIT_TO                     AS trnsitto     ,
+           LV.TRNSIT_CURIER                 AS trnsitcur    ,
+           (select curier_name from SYS0016M where CURIER_CODE = LV.TRNSIT_CURIER) curiername ,
+           LV.TRNSIT_STUS_ID                AS trnsitstusid ,
+           LV.TRNSIT_STUS_CODE              AS trnsitstuscd ,
+           LV.TRNSIT_STUS_NAME              AS trnsitstusnm ,
+           LV.TRNSIT_CRT_USER_ID_ID         AS crtuserid    ,
+           LV.TRNSIT_CRT_USER_ID_USER_NAME  AS crtusernm    ,
+           LV.TRNSIT_CLOS_DT                AS trnsitcdt    ,
+           LV.TOT_TRNSIT_ITM                AS totitm       ,
+           LV.TOT_CNT                       AS totcnt       ,
+           S28.WH_LOC_STK_GRAD               AS whlocstkgrad,
+           S28.WH_LOC_CODE                  AS whloccode
+      FROM LOG1003V LV
+         , SYS0028M S28
+     WHERE LV.TRNSIT_FROM = S28.WH_LOC_CODE
+     union
+     SELECT LV.TRNSIT_ID                     AS trnsitid     ,
+           LV.TRNSIT_NO                     AS trnsitno     ,
+           LV.TRNSIT_DT                     AS trnsitdt     ,
+           LV.TRNSIT_FROM                   AS trnsitfr     ,
+           LV.TRNSIT_TO                     AS trnsitto     ,
+          LV. TRNSIT_CURIER                 AS trnsitcur    ,
+           (select curier_name from SYS0016M where CURIER_CODE = LV.TRNSIT_CURIER) curiername ,
+           LV.TRNSIT_STUS_ID                AS trnsitstusid ,
+           LV.TRNSIT_STUS_CODE              AS trnsitstuscd ,
+           LV.TRNSIT_STUS_NAME              AS trnsitstusnm ,
+           LV.TRNSIT_CRT_USER_ID_ID         AS crtuserid    ,
+           LV.TRNSIT_CRT_USER_ID_USER_NAME  AS crtusernm    ,
+           LV.TRNSIT_CLOS_DT                AS trnsitcdt    ,
+           LV.TOT_TRNSIT_ITM                AS totitm       ,
+           LV.TOT_CNT                       AS totcnt       ,
+           S28.WH_LOC_STK_GRAD               AS whlocstkgrad,
+           S28.WH_LOC_CODE                  AS whloccode
+      FROM LOG1003V LV
+         , SYS0028M S28
+     WHERE LV.TRNSIT_FROM = S28.OLD_WH_LOC_CODE) Extent1
+     WHERE 1=1
+       <if test="strnsitno != null and strnsitno !=''">
+           AND Extent1.trnsitno = #{strnsitno}
+       </if>
+       <if test="sStatus != null and sStatus !=''">
+           AND Extent1.trnsitstusid = #{sStatus}
+       </if>
+       <if test="sfrloc != null and sfrloc !=''">
+           AND Extent1.whloccode = #{sfrloc}
+       </if>
+       AND Extent1.whlocstkgrad = 'A'
+       ORDER BY Extent1.trnsitno
 </select>
 
 <select id="selectSirimToTransit" parameterType="Map" resultType="EgovMap">
@@ -232,7 +344,7 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
 </select>
 
 <select id="selectTransitItemlist" parameterType="Map" resultType="EgovMap">
-    with tab1 as (
+  <!--  with tab1 as (
                     select sirim_no , sirim_loc ,sirim_type_id , s13.code_name
                          , nvl (SUM (l40.sirim_qty), 0) AS sirim_qty
                       from LOG0040D l40
@@ -245,7 +357,45 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
      where 1 = 1
        and sirim_loc = #{nfrloc}
        and sirim_no between #{nprefix}||#{nsirimfr} and #{nprefix}||#{nsirimto}
-     order by sirim_no
+     order by sirim_no -->
+     SELECT ROWNUM rnum,
+     Project1.SIRIM_TYPE_ID stid  ,
+       Project1.SIRIM_NO sno  ,
+       Project1.SIRIM_TYPE_NAME stnm  ,
+       Project1.SIRIM_LOC sloc  ,
+       Project1.SIRIM_QTY sqty
+  FROM ( SELECT Extent1.SIRIM_LOC SIRIM_LOC  ,
+                Extent1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
+                Extent1.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
+                Extent1.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
+                Extent1.SIRIM_QTY SIRIM_QTY  ,
+                LTRIM(RTRIM(Extent1.SIRIM_NO)) SIRIM_NO
+         FROM ( SELECT LOG1002V.SIRIM_NO SIRIM_NO  ,
+                       LOG1002V.SIRIM_LOC SIRIM_LOC  ,
+                       LOG1002V.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
+                       LOG1002V.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
+                       LOG1002V.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
+                       LOG1002V.SIRIM_QTY SIRIM_QTY,
+                       a.WH_LOC_CODE LOC_CODE
+                FROM LOG1002V
+                left join sys0028m a on a.WH_LOC_CODE = LOG1002V.SIRIM_LOC
+                union
+                SELECT LOG1002V.SIRIM_NO SIRIM_NO  ,
+                       LOG1002V.SIRIM_LOC SIRIM_LOC  ,
+                       LOG1002V.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
+                       LOG1002V.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
+                       LOG1002V.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
+                       LOG1002V.SIRIM_QTY SIRIM_QTY,
+                       a.WH_LOC_CODE LOC_CODE
+                FROM LOG1002V
+                left join sys0028m a on a.OLD_WH_LOC_CODE = LOG1002V.SIRIM_LOC) Extent1
+
+                WHERE 1 = 1
+
+                     AND Extent1.LOC_CODE = #{nfrloc}
+                     AND Extent1.SIRIM_NO between #{nprefix}||#{nsirimfr} and #{nprefix}||#{nsirimto}
+               ) Project1
+  ORDER BY sno ASC
 </select>
 <select id="selectTransitDoctype" parameterType="Integer" resultType="EgovMap">
     select DOC_NO_ID, DOC_NO_PREFIX, DOC_NO, TYPE_CODE, TYPE_DESC, ISS_DT, AUTO_REFRESH, AUTO_REFRESH_PRIOD
@@ -355,25 +505,28 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
   <select id="selectWarehouseLocByUserBranch" parameterType="Map" resultType="egovMap">
         SELECT
                 WH_LOC_ID CODE_ID,
-                CODE2 CODE ,
-               CODE2 || ' - ' ||WH_LOC_DESC CODE_NAME
+                WH_LOC_CODE CODE ,
+               WH_LOC_CODE || ' - ' ||WH_LOC_DESC CODE_NAME
           FROM SYS0028M S28M
          WHERE 1 = 1
            AND S28M.WH_LOC_STUS_ID = 1
            AND S28M.WH_LOC_STK_GRAD = 'A'
            AND S28M.WH_LOC_TYPE_ID = 277
            AND S28M.WH_LOC_BRNCH_ID = #{branchId}
+           ORDER BY CODE
     </select>
 
     <select id="selectWarehouseLoc" parameterType="Map" resultType="egovMap">
         SELECT
                 WH_LOC_ID CODE_ID,
-                CODE2 CODE ,
-               CODE2 || ' - ' ||WH_LOC_DESC CODE_NAME
+                WH_LOC_CODE CODE ,
+               WH_LOC_CODE || ' - ' ||WH_LOC_DESC CODE_NAME
           FROM SYS0028M S28M
          WHERE 1 = 1
            AND S28M.WH_LOC_STUS_ID = 1
            AND S28M.WH_LOC_STK_GRAD  <![CDATA[<>]]> 'B'
            AND S28M.WH_LOC_TYPE_ID = 277
+          ORDER BY CODE
+
     </select>
 </mapper>
