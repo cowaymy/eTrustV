@@ -313,7 +313,37 @@ function fn_departmentCode(value){
                             }
                          }
                      });
-        	   }
+        	   } else if( traineeType == '3201'){ // HOMECARE -- ADDED BY TOMMY
+                    doGetComboSepa("/common/selectBranchCodeList.do",'4' , '-',''   , 'branch' , 'S', '');
+
+                   $("#branch").change(function(){
+                       var jsonObj = {
+                               memberLvl : 3,
+                               flag :  "%CHT%",
+                               branchVal : $("#branch").val()
+                       };
+
+                       doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+                   });
+
+                   //Training Course ajax콜 위치
+                   //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
+                   var groupCode  = {groupCode : traineeType};
+                   Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
+
+                        $("#course").find('option').each(function() {
+                            $(this).remove();
+                        });
+                         console.log("-------------------------" + JSON.stringify(result));
+                         if (result!= null) {
+                         $("#course").append("<option value=''>Choose One</option>");
+                            for( var i=0; i< result.length; i++) {
+                             $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
+                            }
+                         }
+                     });
+
+               }
            });
 
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
@@ -359,15 +389,6 @@ function fn_departmentCode(value){
                 });
 	        }
 
-
-/*         case "3201" : // HOMECARE TECHNICIAN DEPARTMENT CODE -- Added by Tommy
-
-            var jsonObj = {
-                memberLvl : 3,
-                flag :  "%HTM%"
-        };
-           doGetCombo("/organization/selectHomecareDepartmentCode", jsonObj , ''   , 'deptCd' , 'S', '');
- */
 	        /*
 	        $("#branch").find('option').each(function() {
                     $(this).remove();
@@ -482,7 +503,7 @@ console.log("ready");
         } else if(memberType ==  "5") {
             $('#mobileNo').prop('required', true);
             $('#mobileNoLbl').append("<span class='must'>*</span>");
-        }else {
+        } else {
             $('#course').removeAttr('disabled');
         }
         fn_departmentCode(memberType);
@@ -491,7 +512,7 @@ console.log("ready");
 	$("#traineeType1").click(function(){   // CHECK Trainee Type = Cody then Disable Main & Sub Department selection -- Added by Tommy
 		var traineeType = $("#traineeType1").val();
 
-		if(traineeType == 2){
+		if(traineeType == 2 || traineeType == 3201 ){
             $("#searchdepartment").attr("disabled", true);
             $("#searchSubDept").attr("disabled", true);
 		}else{
@@ -1063,7 +1084,7 @@ function checkNRIC(){
 
    	var jsonObj = { "nric" : $("#nric").val() };
 
-   	if ($("#memberType").val() == '2803' || $("#memberType").val() == '4' || $("#memberType").val() == '5') {
+   	if ($("#memberType").val() == '2803' || $("#memberType").val() == '4' || $("#memberType").val() == '5' || $("#memberType").val() == '3201') {
 	   	Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
 	           console.log("data : " + result);
 	           if (result.message != "pass") {
@@ -1246,7 +1267,6 @@ function checkBankAccNo() {
         <option value="4">Coway Staff (Staff)</option>
         <option value="5" selected="selected">Trainee</option>
         <option value="2803">HP Applicant</option>
-<!--         <option value="3201">HOMECARE Technician</option> -->
     </select>
     </td>
 </tr>
@@ -1513,6 +1533,7 @@ function checkBankAccNo() {
         <option value="">Choose One</option>
         <option value= "2">Cody</option>
         <option value = "3">CT</option>
+        <option value = "3201">HT</option>
     </select>
     </td>
     <th scope="row"></th>
