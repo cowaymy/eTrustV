@@ -121,7 +121,7 @@
             }
         });
         $('#btnNewCntc').click(function() {
-            Common.popupDiv('/sales/customer/updateCustomerNewContactPopeSales.do', {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_CNTC"}, null , true);
+            Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_CNTC"}, null , true);
         });
         $('#btnSelCntc').click(function() {
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "PRE_ORD_CNTC"}, null, true);
@@ -1000,7 +1000,7 @@
         var vIs3rdParty = $('#thrdParty').is(":checked") ? 1 : 0;
         var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
         var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
-
+        console.log("service :: " + $("#hiddenBPCareId").val());
         var orderVO = {
             sofNo                : $('#sofNo').val().trim(),
             custPoNo             : $('#poNo').val().trim(),
@@ -1164,6 +1164,12 @@
         Common.ajax("GET", "/sales/order/selectSrvCntcJsonInfo.do", {custCareCntId : custCareCntId}, function(srvCntcInfo) {
 
             if(srvCntcInfo != null) {
+                console.log("성공.");
+                console.log("srvCntcInfo:"+srvCntcInfo.custCareCntId);
+                console.log("srvCntcInfo:"+srvCntcInfo.name);
+                console.log("srvCntcInfo:"+srvCntcInfo.custInitial);
+                console.log("srvCntcInfo:"+srvCntcInfo.email);
+
                 $("#hiddenBPCareId").val(srvCntcInfo.custCareCntId);
                 $("#billPreferInitial").val(srvCntcInfo.custInitial);
                 $("#billPreferName").val(srvCntcInfo.name);
@@ -1339,7 +1345,7 @@
         $('#billMthdEmailTxt2').val('');
         $('#billGrpWebUrl').val('');
 
-        $('#hiddenBPCareId').val('');
+        //$('#hiddenBPCareId').val('');
         $('#billPreferInitial').val('');
         $('#billPreferName').val('');
         $('#billPreferTelO').val('');

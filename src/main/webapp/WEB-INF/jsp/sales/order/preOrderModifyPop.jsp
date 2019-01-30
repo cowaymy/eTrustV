@@ -1345,7 +1345,7 @@
         $('#billMthdEmailTxt2').val('');
         $('#billGrpWebUrl').val('');
 
-        $('#hiddenBPCareId').val('');
+        //$('#hiddenBPCareId').val('');
         $('#billPreferInitial').val('');
         $('#billPreferName').val('');
         $('#billPreferTelO').val('');
