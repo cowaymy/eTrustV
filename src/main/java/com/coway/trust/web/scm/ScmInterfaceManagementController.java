@@ -719,6 +719,14 @@ public class ScmInterfaceManagementController {
 						planYear	= Integer.parseInt(yyyymm.substring(0, 4));
 						planWeek	= Integer.parseInt(yyyymm.substring(4, 6));
 					}
+					//	삭제 부분 추가
+					if ( 0 == totCnt ) {
+						//	첫번째만 삭제
+						params.put("planYear", planYear);
+						params.put("planWeek", planWeek);
+						LOGGER.debug("just one delete");
+						scmInterfaceManagementService.deleteSupplyPlanRtp(params);
+					}
 					if ( 1 == i ) {
 						/*
 						 * 본사 stock code는 6자리, 7자리코드가 들어온다.
@@ -749,8 +757,8 @@ public class ScmInterfaceManagementController {
 					//LOGGER.debug(i + " : '" + col[i] + "'");
 				}
 				//	set params
-				params.put("planYear", planYear);
-				params.put("planWeek", planWeek);
+				params.put("planYear", planYear);	params.put("scmYearCbBox", planYear);
+				params.put("planWeek", planWeek);	params.put("scmWeekCbBox", planWeek);
 				params.put("stockCode", stockCode);
 				params.put("w01", w01);	params.put("w02", w02);	params.put("w03", w03);	params.put("w04", w04);	params.put("w05", w05);
 				params.put("w06", w06);	params.put("w07", w07);	params.put("w08", w08);	params.put("w09", w09);	params.put("w10", w10);
