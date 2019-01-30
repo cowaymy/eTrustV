@@ -101,7 +101,7 @@ var pettyCashReqstColumnLayout = [ {
             myString = '<spring:message code="invoiceApprove.noAtch.msg" />';
         }
         return myString;
-     }, 
+     },
     renderer : {
         type : "ButtonRenderer",
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -164,7 +164,7 @@ var pettyCashReqstColumnLayout = [ {
 
 //그리드 속성 설정
 var pettyCashReqstGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -178,16 +178,16 @@ var pettyCashReqstGridID;
 
 $(document).ready(function () {
     pettyCashReqstGridID = AUIGrid.create("#pettyCashReqst_grid_wrap", pettyCashReqstColumnLayout, pettyCashReqstGridPros);
-    
+
     $("#search_supplier_btn").click(fn_supplierSearchPop);
     $("#search_costCenter_btn").click(fn_costCenterSearchPop);
     $("#registration_btn").click(fn_newRequestPop);
-    
-    AUIGrid.bind(pettyCashReqstGridID, "cellDoubleClick", function( event ) 
+
+    AUIGrid.bind(pettyCashReqstGridID, "cellDoubleClick", function( event )
             {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 console.log("CellDoubleClick clmNo : " + event.item.clmNo);
-                
+
                 if(event.item.appvPrcssStusCode == "T") {
                 	fn_viewRequestPop(event.item.clmNo);
                 } else {
@@ -196,26 +196,45 @@ $(document).ready(function () {
                     fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType);
                 }
             });
-    
+
     $("#appvPrcssStus").multipleSelect("checkAll");
-    
+
+    $("#_pettyCashRequestBtn").click(function() {
+
+        //Param Set
+        var gridObj = AUIGrid.getSelectedItems(pettyCashReqstGridID);
+
+
+        if(gridObj == null || gridObj.length <= 0 ){
+            Common.alert("* No Record Selected. ");
+            return;
+        }
+
+        var claimno = gridObj[0].item.clmNo;
+        $("#_repClaimNo").val(claimno);
+        console.log("clmNo : " + $("#_repClaimNo").val());
+
+        fn_report();
+        //Common.alert('The program is under development.');
+    });
+
     fn_setToDay();
 });
 
 function fn_setToDay() {
     var today = new Date();
-    
+
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();
-    
+
     if(dd < 10) {
         dd = "0" + dd;
     }
     if(mm < 10){
         mm = "0" + mm
     }
-    
+
     today = dd + "/" + mm + "/" + yyyy;
     $("#startDt").val(today)
     $("#endDt").val(today)
@@ -258,7 +277,7 @@ function fn_setCostCenter() {
 function fn_setPopCostCenter() {
     $("#newCostCenter").val($("#search_costCentr").val());
     $("#newCostCenterText").val($("#search_costCentrName").val());
-    
+
     if(fn_checkEmpty()){
         // Approved Cash Amount GET and CUSTDN_NRIC GET
         var data = {
@@ -300,7 +319,7 @@ function fn_setCostCenterEvent() {
                     console.log(row);
                     $("#newCostCenterText").val(row.costCenterText);
                 }
-                
+
                 if(fn_checkEmpty()){
                     // Approved Cash Amount GET and CUSTDN_NRIC GET
                     var data = {
@@ -330,7 +349,7 @@ function fn_setCostCenterEvent() {
                 }
             });
         }
-   }); 
+   });
 }
 
 function fn_selectRequestList() {
@@ -369,7 +388,25 @@ function fn_webInvoiceRequestPop(appvPrcssNo, clmType) {
     };
     Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
 }
+
+function fn_report() {
+    var option = {
+        isProcedure : true
+    };
+    Common.report("dataForm", option);
+}
+
 </script>
+
+<!-- report Form -->
+<form id="dataForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/PettyCashRequest.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> --><!-- Download Name -->
+
+    <!-- params -->
+    <input type="hidden" id="_repClaimNo" name="V_CLAIMNO" />
+</form>
 
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -429,6 +466,21 @@ function fn_webInvoiceRequestPop(appvPrcssNo, clmType) {
 </tr>
 </tbody>
 </table><!-- table end -->
+
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+        <dt>Link</dt>
+        <dd>
+        <ul class="btns">
+            <li><p class="link_btn"><a href="#" id="_pettyCashRequestBtn">Petty Cash Request Slip</a></p></li>
+        </ul>
+        <ul class="btns">
+        </ul>
+        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+    </aside><!-- link_btns_wrap end -->
 
 </form>
 </section><!-- search_table end -->
