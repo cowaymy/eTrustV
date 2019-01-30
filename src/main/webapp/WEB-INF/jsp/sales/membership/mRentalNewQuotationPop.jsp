@@ -62,6 +62,14 @@ function fn_doConfirm (){
              Common.alert("No order found or this order is not under complete status or activation status.");
              return ;
 
+         }
+
+         else if(result[0].itmStkId == '1' || result[0].itmStkId == '651' || result[0].itmStkId == '218' || result[0].itmStkId == '689' || result[0].itmStkId == '216' || result[0].itmStkId == '687' || result[0].itmStkId== '3' || result[0].itmStkId == '653')  {
+
+
+             Common.alert("Product have been discontinued. Therefore, create new quotation is not allowed");
+             return ;
+
          }else{
 
 
