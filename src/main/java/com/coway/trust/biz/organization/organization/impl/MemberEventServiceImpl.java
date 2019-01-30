@@ -282,6 +282,13 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
                 DocNoID = 104;
             else if (level.equals("3"))
                 DocNoID = 105;
+        }else if (memberTypeID.equals("3201")){ // HOMECARE -- ADDED BY TOMMY
+            if (level.equals("1"))
+                DocNoID = 166; // HOMECARE ORG CODE
+            else if (level.equals("2"))
+                DocNoID = 165; // HOMECARE GROUP CODE
+            else if (level.equals("3"))
+                DocNoID = 164; // HOMECARE DEPT CODE
         }
 
 		return DocNoID;
