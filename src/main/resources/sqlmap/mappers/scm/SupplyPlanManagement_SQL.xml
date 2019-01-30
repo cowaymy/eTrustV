@@ -1049,93 +1049,122 @@ SELECT A.STOCK_CODE
 <!-- Supply Plan Summary View -->
 <!-- Search -->
 <select id="selectSupplyPlanSummaryList" parameterType="Map" resultType="egovMap">
-SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_TYPE_ID, B.STOCK_CODE), 2) AS DIV_ODD
+SELECT MOD(DENSE_RANK() OVER (ORDER BY C.STK_TYPE_ID, A.STOCK_CODE), 2) AS DIV_ODD
      , A.PLAN_YEAR
      , A.PLAN_MONTH
      , A.PLAN_WEEK
-     , B.PSI_ID
-     , G.CODE_NAME AS PSI_NAME
-     , D.STK_TYPE_ID AS TYPE_ID
-     , F.CODE_NAME AS TYPE_NAME
-     , D.STK_CTGRY_ID AS CATEGORY_ID
-     , E.CODE_NAME AS CATEGORY_NAME
-     , B.STOCK_CODE AS CODE
-     , D.STK_DESC AS NAME
-     , SUM(NVL(B.M0, 0)) AS M0
-     , SUM(NVL(B.M1, 0)) AS M1
-     , SUM(NVL(B.M2, 0)) AS M2
-     , SUM(NVL(B.M3, 0)) AS M3
-     , SUM(NVL(B.M4, 0)) AS M4
-     , SUM(NVL(B.OVERDUE, 0)) AS OVERDUE
-     , SUM(NVL(B.W01, 0)) AS W01
-     , SUM(NVL(B.W02, 0)) AS W02
-     , SUM(NVL(B.W03, 0)) AS W03
-     , SUM(NVL(B.W04, 0)) AS W04
-     , SUM(NVL(B.W05, 0)) AS W05
-     , SUM(NVL(B.W06, 0)) AS W06
-     , SUM(NVL(B.W07, 0)) AS W07
-     , SUM(NVL(B.W08, 0)) AS W08
-     , SUM(NVL(B.W09, 0)) AS W09
-     , SUM(NVL(B.W10, 0)) AS W10
-     , SUM(NVL(B.W11, 0)) AS W11
-     , SUM(NVL(B.W12, 0)) AS W12
-     , SUM(NVL(B.W13, 0)) AS W13
-     , SUM(NVL(B.W14, 0)) AS W14
-     , SUM(NVL(B.W15, 0)) AS W15
-     , SUM(NVL(B.W16, 0)) AS W16
-     , SUM(NVL(B.W17, 0)) AS W17
-     , SUM(NVL(B.W18, 0)) AS W18
-     , SUM(NVL(B.W19, 0)) AS W19
-     , SUM(NVL(B.W20, 0)) AS W20
-     , SUM(NVL(B.W21, 0)) AS W21
-     , SUM(NVL(B.W22, 0)) AS W22
-     , SUM(NVL(B.W23, 0)) AS W23
-     , SUM(NVL(B.W24, 0)) AS W24
-     , SUM(NVL(B.W25, 0)) AS W25
-     , SUM(NVL(B.W26, 0)) AS W26
-     , SUM(NVL(B.W27, 0)) AS W27
-     , SUM(NVL(B.W28, 0)) AS W28
-     , SUM(NVL(B.W29, 0)) AS W29
-     , SUM(NVL(B.W30, 0)) AS W30
-  FROM SCM0005M A
-  LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
-  LEFT OUTER JOIN SCM0008M C ON (B.STOCK_CODE = C.STOCK_CODE)
-  LEFT OUTER JOIN SYS0026M D ON (C.STOCK_ID = D.STK_ID)
-  LEFT OUTER JOIN SYS0013M E ON (D.STK_CTGRY_ID = E.CODE_ID AND E.CODE_MASTER_ID = 11) /* 11 : Stock Category */
-  LEFT OUTER JOIN SYS0013M F ON (D.STK_TYPE_ID = F.CODE_ID AND F.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
-  LEFT OUTER JOIN SYS0013M G ON (B.PSI_ID = G.CODE AND G.CODE_MASTER_ID = 399) /* 399 : PSI ID */
- WHERE A.PLAN_YEAR = #{scmYearCbBox}
-   AND A.PLAN_WEEK = #{scmWeekCbBox}
+     , A.PSI_ID
+     , F.CODE_NAME AS PSI_NAME
+     , C.STK_TYPE_ID AS TYPE_ID
+     , E.CODE_NAME AS TYPE_NAME
+     , C.STK_CTGRY_ID AS CATEGORY_ID
+     , F.CODE_NAME AS CATEGORY_NAME
+     , A.STOCK_CODE AS CODE
+     , C.STK_DESC AS NAME
+     , A.M0, A.M1, A.M2, A.M3, A.M4, A.OVERDUE
+     , A.W01, A.W02, A.W03, A.W04, A.W05, A.W06, A.W07, A.W08, A.W09, A.W10
+     , A.W11, A.W12, A.W13, A.W14, A.W15, A.W16, A.W17, A.W18, A.W19, A.W20
+     , A.W21, A.W22, A.W23, A.W24, A.W25, A.W26, A.W27, A.W28, A.W29, A.W30
+  FROM (
+        SELECT Z.PLAN_YEAR
+             , Z.PLAN_MONTH
+             , Z.PLAN_WEEK
+             , X.STOCK_CODE
+             , X.PSI_ID
+             , SUM(NVL(X.M0, 0)) AS M0
+             , SUM(NVL(X.M1, 0)) AS M1
+             , SUM(NVL(X.M2, 0)) AS M2
+             , SUM(NVL(X.M3, 0)) AS M3
+             , SUM(NVL(X.M4, 0)) AS M4
+             , SUM(NVL(X.OVERDUE, 0)) AS OVERDUE
+             , SUM(NVL(X.W01, 0)) AS W01
+             , SUM(NVL(X.W02, 0)) AS W02
+             , SUM(NVL(X.W03, 0)) AS W03
+             , SUM(NVL(X.W04, 0)) AS W04
+             , SUM(NVL(X.W05, 0)) AS W05
+             , SUM(NVL(X.W06, 0)) AS W06
+             , SUM(NVL(X.W07, 0)) AS W07
+             , SUM(NVL(X.W08, 0)) AS W08
+             , SUM(NVL(X.W09, 0)) AS W09
+             , SUM(NVL(X.W10, 0)) AS W10
+             , SUM(NVL(X.W11, 0)) AS W11
+             , SUM(NVL(X.W12, 0)) AS W12
+             , SUM(NVL(X.W13, 0)) AS W13
+             , SUM(NVL(X.W14, 0)) AS W14
+             , SUM(NVL(X.W15, 0)) AS W15
+             , SUM(NVL(X.W16, 0)) AS W16
+             , SUM(NVL(X.W17, 0)) AS W17
+             , SUM(NVL(X.W18, 0)) AS W18
+             , SUM(NVL(X.W19, 0)) AS W19
+             , SUM(NVL(X.W20, 0)) AS W20
+             , SUM(NVL(X.W21, 0)) AS W21
+             , SUM(NVL(X.W22, 0)) AS W22
+             , SUM(NVL(X.W23, 0)) AS W23
+             , SUM(NVL(X.W24, 0)) AS W24
+             , SUM(NVL(X.W25, 0)) AS W25
+             , SUM(NVL(X.W26, 0)) AS W26
+             , SUM(NVL(X.W27, 0)) AS W27
+             , SUM(NVL(X.W28, 0)) AS W28
+             , SUM(NVL(X.W29, 0)) AS W29
+             , SUM(NVL(X.W30, 0)) AS W30
+          FROM SCM0005M Z
+          LEFT OUTER JOIN SCM0006D X ON (Z.PLAN_ID = X.PLAN_ID)
+         WHERE Z.PLAN_YEAR = #{scmYearCbBox}
+           AND Z.PLAN_WEEK = #{scmWeekCbBox}
+         GROUP BY Z.PLAN_YEAR
+             , Z.PLAN_MONTH
+             , Z.PLAN_WEEK
+             , X.STOCK_CODE
+             , X.PSI_ID
+        UNION ALL
+        SELECT Z.PLAN_YEAR
+             , 0 AS PLAN_MONTH
+             , Z.PLAN_WEEK
+             , Z.STOCK_CODE
+             , 4.5 AS PSI_ID
+             , NVL(X.M0, 0) AS M0, NVL(X.M1, 0) AS M1, NVL(X.M2, 0) AS M2, NVL(X.M3, 0) AS M3, NVL(X.M4, 0) AS M4, 0 AS OVERDUE
+             , NVL(X.W01, 0) AS W01, NVL(X.W02, 0) AS W02, NVL(X.W03, 0) AS W03, NVL(X.W04, 0) AS W04, NVL(X.W05, 0) AS W05, NVL(X.W06, 0) AS W06
+             , NVL(X.W07, 0) AS W07, NVL(X.W08, 0) AS W08, NVL(X.W09, 0) AS W09, NVL(X.W10, 0) AS W10, NVL(X.W11, 0) AS W11, NVL(X.W12, 0) AS W12
+             , NVL(X.W13, 0) AS W13, NVL(X.W14, 0) AS W14, NVL(X.W14, 0) AS W15, NVL(X.W16, 0) AS W16, NVL(X.W17, 0) AS W17, NVL(X.W18, 0) AS W18
+             , NVL(X.W19, 0) AS W19, NVL(X.W20, 0) AS W20, NVL(X.W21, 0) AS W21, NVL(X.W22, 0) AS W22, NVL(X.W23, 0) AS W23, NVL(X.W24, 0) AS W24
+             , NVL(X.W25, 0) AS W25, NVL(X.W26, 0) AS W26, NVL(X.W27, 0) AS W27, NVL(X.W28, 0) AS W28, NVL(X.W29, 0) AS W29, NVL(X.W30, 0) AS W30
+          FROM (
+                SELECT DISTINCT G.PLAN_YEAR
+                     , G.PLAN_WEEK
+                     , H.STOCK_CODE
+                  FROM SCM0005M G
+                  LEFT OUTER JOIN SCM0006D H ON (G.PLAN_ID = H.PLAN_ID)
+                 WHERE G.PLAN_YEAR = #{scmYearCbBox}
+                   AND G.PLAN_WEEK = #{scmWeekCbBox}
+                   AND H.PSI_ID = 3
+                ) Z
+          LEFT OUTER JOIN SCM0056S X ON (Z.PLAN_YEAR = X.PLAN_YEAR AND Z.PLAN_WEEK = X.PLAN_WEEK AND Z.STOCK_CODE = X.STOCK_CODE AND X.EXEC_YN = 'Y')
+        ) A
+  LEFT OUTER JOIN SCM0008M B ON (A.STOCK_CODE = B.STOCK_CODE)
+  LEFT OUTER JOIN SYS0026M C ON (B.STOCK_ID = C.STK_ID)
+  LEFT OUTER JOIN SYS0013M D ON (C.STK_CTGRY_ID = D.CODE_ID AND D.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M E ON (C.STK_TYPE_ID = E.CODE_ID AND E.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+  LEFT OUTER JOIN SYS0013M F ON (A.PSI_ID = F.CODE AND F.CODE_MASTER_ID = 399) /* 399 : PSI ID */
+ WHERE 1 = 1
 	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
-   AND D.STK_TYPE_ID IN
+   AND C.STK_TYPE_ID IN
 		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
 		#{item}
 		</foreach>
 	</if>
  	<if test="scmStockCategoryCbBox != null and ! scmStockCategoryCbBox.isEmpty">
-   AND D.STK_CTGRY_ID IN
+   AND C.STK_CTGRY_ID IN
 		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
 		#{item}
 		</foreach>
 	</if>
  	<if test="scmStockCodeCbBox != null and ! scmStockCodeCbBox.isEmpty">
-   AND D.STK_CODE IN
+   AND A.STOCK_CODE IN
 		<foreach item="item" collection="scmStockCodeCbBox" index="index" open="(" separator="," close=")">
 		#{item}
 		</foreach>
 	</if>
- GROUP BY A.PLAN_YEAR
-     , A.PLAN_MONTH
-     , A.PLAN_WEEK
-     , B.PSI_ID
-     , G.CODE_NAME
-     , D.STK_TYPE_ID
-     , E.CODE_NAME
-     , D.STK_CTGRY_ID
-     , F.CODE_NAME
-     , B.STOCK_CODE
-     , D.STK_DESC
- ORDER BY D.STK_TYPE_ID, B.STOCK_CODE, B.PSI_ID
+ ORDER BY C.STK_TYPE_ID, A.STOCK_CODE, A.PSI_ID
 </select>
 
 </mapper>

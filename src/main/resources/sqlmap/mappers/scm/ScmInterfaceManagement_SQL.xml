@@ -242,6 +242,11 @@ SELECT NVL(MAX(IF_SEQ), 0) + 1 AS SEQ
  WHERE IF_DATE = #{ifDate}
    AND IF_TYPE = #{ifType}
 </select>
+<delete id="deleteSupplyPlanRtp" parameterType="Map">
+DELETE FROM SCM0056S
+ WHERE PLAN_YEAR = #{planYear}
+   AND PLAN_WEEK = #{planWeek}
+</delete>
 <insert id="mergeSupplyPlanRtp" parameterType="Map">
 MERGE INTO SCM0056S
 USING DUAL ON (PLAN_YEAR = #{planYear} AND PLAN_WEEK = #{planWeek} AND STOCK_CODE = #{stockCode})
@@ -275,6 +280,9 @@ SELECT NVL(B.PLAN_YEAR, 9999) AS PLAN_YEAR
      , A.STOCK_CODE
      , NVL(B.W01, 0) AS W01, NVL(B.W02, 0) AS W02, NVL(B.W03, 0) AS W03, NVL(B.W04, 0) AS W04, NVL(B.W05, 0) AS W05, NVL(B.W06, 0) AS W06
      , NVL(B.W07, 0) AS W07, NVL(B.W08, 0) AS W08, NVL(B.W09, 0) AS W09, NVL(B.W10, 0) AS W10, NVL(B.W11, 0) AS W11, NVL(B.W12, 0) AS W12
+     , NVL(B.W13, 0) AS W13, NVL(B.W14, 0) AS W14, NVL(B.W14, 0) AS W15, NVL(B.W16, 0) AS W16, NVL(B.W17, 0) AS W17, NVL(B.W18, 0) AS W18
+     , NVL(B.W19, 0) AS W19, NVL(B.W20, 0) AS W20, NVL(B.W21, 0) AS W21, NVL(B.W22, 0) AS W22, NVL(B.W23, 0) AS W23, NVL(B.W24, 0) AS W24
+     , NVL(B.W25, 0) AS W25, NVL(B.W26, 0) AS W26, NVL(B.W27, 0) AS W27, NVL(B.W28, 0) AS W28, NVL(B.W29, 0) AS W29, NVL(B.W30, 0) AS W30
   FROM (
         SELECT DISTINCT A.PLAN_YEAR
              , A.PLAN_WEEK
