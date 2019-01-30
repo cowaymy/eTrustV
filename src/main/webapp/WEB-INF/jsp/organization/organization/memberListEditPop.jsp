@@ -1054,6 +1054,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
         <option value="4">Coway Staff (Staff)</option>
         <option value="5">Trainee</option>
         <option value="2803">HP Applicant</option>
+           <option value="3201">Homecare Technician (HT)</option>
     </select>
     </td>
 </tr>
