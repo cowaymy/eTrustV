@@ -111,7 +111,7 @@ public class CommisssionUploadCsvController {
 		mMap.put("uploadTypeID",request.getParameter("type"));
 		mMap.put("statusID","1");
 
-		String dt = CommonUtils.getCalMonth(-1);
+		String dt = CommonUtils.getCalMonth(0);
 		mMap.put("actionDate",dt.substring(0,6));
 
 		mMap.put("creator",loginId);
