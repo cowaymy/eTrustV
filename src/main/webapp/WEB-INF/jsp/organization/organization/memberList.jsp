@@ -57,7 +57,7 @@ console.log( memberType )
 
 
     if(val == '1'){
-        if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 ) {
+        if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 || memberType ==  3201 ) { // ADDED HOMECARE -- BY TOMMY
              var jsonObj = {
                          MemberID :memberid,
                         MemberType : memberType
@@ -68,7 +68,7 @@ console.log( memberType )
             Common.alert("Only available to entry with Terminate/Resign Request in regular type of member");
         }
     }else{
-       if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 ) {
+       if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 || memberType == 3201) { // ADDED HOMECARE -- BY TOMMY
             var jsonObj = {
                      MemberID :memberid,
                     MemberType : memberType
@@ -111,7 +111,7 @@ function fn_requestVacationPop(){
 
     console.log(memberid + " :: " + memberType + " :: " + traineeType)
 
-    if ( memberType == 5 && (traineeType == 2 || traineeType == 3)) {
+    if ( memberType == 5 && (traineeType == 2 || traineeType == 3 || traineeType == 3201 )) { // ADDED HOMECARE -- BY TOMMY
 
         //alert(testResult);
 
@@ -135,6 +135,10 @@ function fn_requestVacationPop(){
 
                 if ( traineeType == 3) {
                     Common.alert(" CT  registration has been completed. "+membercode+" to "+ result.message);
+                }
+
+                if ( traineeType == 3201) { // ADDED HOMECARE -- BY TOMMY
+                    Common.alert(" HT  registration has been completed. "+membercode+" to "+ result.message);
                 }
               fn_memberListSearch();
          }
