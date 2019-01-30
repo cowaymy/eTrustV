@@ -665,8 +665,9 @@ function fnSearch() {
 				//leadTm		= result.selectScmTotalInfo[0].leadTm;
 				//planWeekTh	= result.selectScmTotalInfo[0].planWeekTh;
 				//fromPlanToPoSpltCnt	= result.selectScmTotalInfo[0].fromPlanToPoSpltCnt;
-				planGrWeekSpltYn	= result.selectScmTotalInfo[0].planGrWeekSpltYn;
-				leadTm	= result.selectGetPoCntTargetCnt[0].cnt;
+				//planGrWeekSpltYn	= result.selectScmTotalInfo[0].planGrWeekSpltYn;
+				leadTm	= parseInt(result.selectGetPoCntTargetCnt[0].cnt);
+				planGrWeekSpltYn	= parseInt(result.selectGetPoCntTargetCnt[0].planGrWeekSpltYn);
 				fnPoTargetGrid();
 				
 				fnSetPlanQty(result.selectPoTargetList);
@@ -687,7 +688,7 @@ function fnFilterPoTargetList(list) {
 	//var poTargetList	= new Array();
 	poTargetList	= [];
 	for ( var i = 0 ; i < list.length ; i++ ) {
-		if ( 0 < list[i].planQty ) {
+		//if ( 0 < list[i].planQty ) {
 			var poList	= new Object();
 			
 			poList.poYear	= list[i].poYear;
@@ -720,59 +721,59 @@ function fnFilterPoTargetList(list) {
 			poList.currName	= list[i].currName;
 			
 			poTargetList.push(poList);
-		}
+		//}
 	}
 	AUIGrid.setGridData(myGridID, poTargetList);
 }
 function fnSetPlanQty(list) {
-	var planQty1	= 0;	var planQty1S	= "";
-	var planQty2	= 0;	var planQty2S	= "";
-	var totLeadCnt	= 0;
+	var planQty1	= 0;
+	var planQty2	= 0;
+	//var totLeadCnt	= 0;
 	
 	//totLeadCnt	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(fromPlanToPoSpltCnt) + 1;
-	totLeadCnt	= parseInt(leadTm) + 1;
-	console.log("totLeadCnt : " + totLeadCnt + ", planGrWeekSpltYn : " + planGrWeekSpltYn);
+	//totLeadCnt	= parseInt(leadTm);
+	console.log("leadTm : " + leadTm + ", planGrWeekSpltYn : " + planGrWeekSpltYn);
 	for ( var i = 0 ; i < list.length ; i++ ) {
 		if ( 1 == planGrWeekSpltYn ) {
 			//	PLAN_GR_WEEK IS NOT SPLIT WEEK
-			if ( 9 == totLeadCnt ) {
+			if ( 9 == leadTm ) {
 				planQty1	= list[i].w09;	planQty2	= 0;
-			} else if ( 10 == totLeadCnt ) {
+			} else if ( 10 == leadTm ) {
 				planQty1	= list[i].w10;	planQty2	= 0;
-			} else if ( 11 == totLeadCnt ) {
+			} else if ( 11 == leadTm ) {
 				planQty1	= list[i].w11;	planQty2	= 0;
-			} else if ( 12 == totLeadCnt ) {
+			} else if ( 12 == leadTm ) {
 				planQty1	= list[i].w12;	planQty2	= 0;
-			} else if ( 13 == totLeadCnt ) {
+			} else if ( 13 == leadTm ) {
 				planQty1	= list[i].w13;	planQty2	= 0;
-			} else if ( 14 == totLeadCnt ) {
+			} else if ( 14 == leadTm ) {
 				planQty1	= list[i].w14;	planQty2	= 0;
-			} else if ( 15 == totLeadCnt ) {
+			} else if ( 15 == leadTm ) {
 				planQty1	= list[i].w15;	planQty2	= 0;
 			} else {
 				console.log("u must make more else if");
 			}
 		} else if ( 2 == planGrWeekSpltYn ) {
 			//	PLAN_GR_WEEK IS SPLIT WEEK
-			if ( 9 == totLeadCnt ) {
+			if ( 9 == leadTm ) {
 				planQty1	= list[i].w09;	planQty2	= list[i].w10;
-			} else if ( 10 == totLeadCnt ) {
+			} else if ( 10 == leadTm ) {
 				planQty1	= list[i].w10;	planQty2	= list[i].w11;
-			} else if ( 11 == totLeadCnt ) {
+			} else if ( 11 == leadTm ) {
 				planQty1	= list[i].w11;	planQty2	= list[i].w12;
-			} else if ( 12 == totLeadCnt ) {
+			} else if ( 12 == leadTm ) {
 				planQty1	= list[i].w12;	planQty2	= list[i].w13;
-			} else if ( 13 == totLeadCnt ) {
+			} else if ( 13 == leadTm ) {
 				planQty1	= list[i].w13;	planQty2	= list[i].w14;
-			} else if ( 14 == totLeadCnt ) {
+			} else if ( 14 == leadTm ) {
 				planQty1	= list[i].w14;	planQty2	= list[i].w15;
-			} else if ( 15 == totLeadCnt ) {
+			} else if ( 15 == leadTm ) {
 				planQty1	= list[i].w15;	planQty2	= list[i].w16;
 			} else {
 				console.log("u must make more else if");
 			}
 		}
-		//console.log("planQty1 : " + planQty1 + ", planQty2 : " + planQty2);
+		console.log("planQty1 : " + planQty1 + ", planQty2 : " + planQty2);
 		list[i].planQty	= parseInt(planQty1) + parseInt(planQty2);
 	}
 }

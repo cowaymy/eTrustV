@@ -277,14 +277,23 @@ function fnSupplyPlanHeader() {
 				}
 				
 				scmTotalInfo	= result.selectScmTotalInfo;
-				var leadTm		= result.selectScmTotalInfo[0].leadTm;
-				var planWeekTh	= result.selectScmTotalInfo[0].planWeekTh;
-				var fromPlanToPoSpltCnt		= result.selectScmTotalInfo[0].fromPlanToPoSpltCnt;
-				console.log("leadTm : " + leadTm + ", planWeekTh : " + planWeekTh + ", fromPlanToPoSpltCnt : " + fromPlanToPoSpltCnt);
-				leadTm	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(fromPlanToPoSpltCnt);
+				//var leadTm		= result.selectScmTotalInfo[0].leadTm;
+				//var planWeekTh	= result.selectScmTotalInfo[0].planWeekTh;
+				//var fromPlanToPoSpltCnt		= result.selectScmTotalInfo[0].fromPlanToPoSpltCnt;
+				//console.log("leadTm : " + leadTm + ", planWeekTh : " + planWeekTh + ", fromPlanToPoSpltCnt : " + fromPlanToPoSpltCnt);
+				//leadTm	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(fromPlanToPoSpltCnt);
 				
-				leadTm	= result.selectGetPoCntTargetCnt[0].cnt;
-				console.log("leadTm : " + leadTm);
+				var planGrWeekSpltYn	= parseInt(result.selectGetPoCntTargetCnt[0].planGrWeekSpltYn);
+				var leadTm	= 0;
+				if ( 1 == planGrWeekSpltYn ) {
+					leadTm	= parseInt(result.selectGetPoCntTargetCnt[0].cnt) - parseInt(1);
+					console.log("1. leadTm : " + leadTm + ", planGrWeekSpltYn : " + planGrWeekSpltYn);
+				} else if ( 2 == planGrWeekSpltYn ) {
+					leadTm	= parseInt(result.selectGetPoCntTargetCnt[0].cnt) - parseInt(2);
+					console.log("2. leadTm : " + leadTm + ", planGrWeekSpltYn : " + planGrWeekSpltYn);
+				} else {
+					console.log("selectScmTotalInfo or selectGetPoCntTargetCnt is error.");
+				}
 				
 				//	make header
 				if ( null != result.selectSupplyPlanHeader && 0 < result.selectSupplyPlanHeader.length ) {

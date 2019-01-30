@@ -219,12 +219,21 @@ function fnDoInterface(obj) {
 				Common.alert("Fail : " + jqXHR.responseJSON.message);
 			});
 }
-
+function fnTest() {
+	var params	= { scmYearCbBox : $("#year").val(), scmWeekCbBox : $("#week").val() };
+	console.log(params);
+	Common.ajax("POST"
+			, "/scm/scmtest.do"
+			, params
+			, ""
+			, "");
+}
 function fnExecuteSo() {
 	var params	= $.extend($("#MainForm").serializeJSON(), params);
 	//console.log(params);
 	Common.ajax("POST"
 			, "/scm/executeOtdSo.do"
+			//, "/scm/executeSupplyPlanRtp.do"
 			, params
 			, function(result) {
 				fnExecutePp();
@@ -249,7 +258,7 @@ function fnExecuteGi() {
 			, "/scm/executeOtdGi.do"
 			, params
 			, function(result) {
-				fnExecute();
+				fnSearch();
 			}
 			, "");
 }
@@ -418,6 +427,8 @@ $(document).ready(function() {
 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
+	<input type="text" id="year" name="year" /></p>
+	<input type="text" id="week" name="week" /></p>
 	<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
@@ -493,8 +504,8 @@ $(document).ready(function() {
 <section class="search_result"><!-- search_result start -->
 	<ul class="right_btns">
 		<li><p id="btnInterface" class="btn_grid"><a onclick="fnDoInterface();">Do Interface</a></p></li>
-		<li><p id="btnExecuteAll" class="btn_grid"><a onclick="fnExecuteSo();">Execute OTD All</a></p></li>
-		<!-- <li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute();">Execute Supply Plan Rtp</a></p></li> -->
+		<li><p id="btnExecuteAll" class="btn_grid"><a onclick="fnExecuteSo();">Execute OTD</a></p></li>
+		<li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute();">Execute RTP</a></p></li>
 	</ul>
 
 	<article class="grid_wrap"><!-- grid_wrap start -->
