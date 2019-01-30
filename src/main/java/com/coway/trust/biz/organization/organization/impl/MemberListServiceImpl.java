@@ -150,12 +150,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         // If HP Applicant or Trainee
         if (Integer.parseInt((String) params.get("memberType")) == 2803) {
             return insertApplicant(params, sessionVO);
-        }
-  /*      else if(Integer.parseInt((String) params.get("memberType")) == 3201){ // HOMECARE ADD MEMBER -- ADDED BY TOMMY
-        	 return insertHomeCareMember(params,docType,sessionVO);
-        }*/
-
-        else {
+        } else {
 
             // Mirror params value for applicant table insertion
             Map<String, Object> paramM = new HashMap<String, Object> ();
@@ -363,97 +358,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     }
 
 
-/*    public String insertHomeCareMember(Map<String, Object> params,List<Object> docType, SessionVO sessionVO) { // HOMECARE INSERT MEMBER -- ADDED BY TOMMY
-
-        String appId = "";
-        String memCode = "";
-
-        logger.debug("params : {}", params);
-        // Mirror params value for applicant table insertion
-        Map<String, Object> paramM = new HashMap<String, Object> ();
-        paramM.putAll(params);
-
-        int rank = 0;
-        if (params.get("memberType").equals("1")) {
-            rank = 433;
-        }
-        if (params.get("memberType").equals("2") || params.get("memberType").equals("3")) {
-            rank = 53;
-        }
-        if (params.get("memberType").equals("4")) {
-            rank = 427;
-        }
-
-        params.put("memberID", 0);
-        params.put("memberCode", "");
-        params.put("memberType", Integer.parseInt((String) params.get("memberType")));
-        params.put("memberNm", params.get("memberNm").toString().trim().toUpperCase());
-        params.put("fulllName", params.get("memberNm").toString().trim().toUpperCase());
-        params.put("password", params.get("nric").toString().trim().substring(((String) params.get("nric")).trim().length() - 6, 6));
-        params.put("nric", params.get("nric").toString().trim().toUpperCase());
-        params.put("race", Integer.parseInt((String) params.get("cmbRace")));
-        params.put("nation", Integer.parseInt((String) params.get("national")));
-        params.put("marrital", Integer.parseInt((String) params.get("marrital")));
-        params.put("country", params.get("country") != null ? Integer.parseInt(params.get("country").toString().trim()) : 0);
-        params.put("mobileNo", params.get("mobileNo").toString().trim() != null ? params.get("mobileNo").toString().trim() : "");
-        params.put("officeNo", params.get("officeNo").toString().trim() != null ? params.get("officeNo").toString().trim() : "");
-        params.put("residenceNo", params.get("residenceNo").toString().trim() != null ? params.get("residenceNo").toString().trim() : "");
-        params.put("email", params.get("email").toString().trim() != null ? params.get("email").toString().trim() : "");
-        params.put("educationLvl", params.get("educationLvl") != null && params.get("educationLvl") != "" ? Integer.parseInt(params.get("educationLvl").toString().trim()) : 0);
-        params.put("language", params.get("language") != null && params.get("language") != "" ? Integer.parseInt(params.get("language").toString().trim()) : 0);
-        params.put("issuedBank", params.get("issuedBank") != null ? params.get("issuedBank").toString().trim() : "");
-        params.put("bankAccNo", params.get("bankAccNo").toString().trim() != null ? params.get("bankAccNo").toString().trim() : "");
-        params.put("sponsorCd", params.get("sponsorCd").toString().trim() != null ? params.get("sponsorCd").toString().trim() : "");
-        params.put("reSignDate", "01/01/1900");
-        params.put("termDate", "01/01/1900");
-        params.put("RenewDate", params.get("joinDate"));
-        params.put("AgrmntNo", "");
-        params.put("branch", params.get("branch") != null && params.get("branch") != "" ? Integer.parseInt(params.get("branch").toString().trim()) : 0);
-        params.put("status", "1");
-        params.put("SyncCheck", false);
-        params.put("rank", rank);
-        params.put("transportCd", params.get("transportCd") != null && params.get("transportCd") != "" ? Integer.parseInt(params.get("transportCd").toString().trim()) : 0);
-        params.put("promoteDate", "01/01/1900");
-        params.put("trNo", params.get("trNo") != null ? params.get("trNo").toString().trim() : "");
-        params.put("created", new Date());
-        params.put("creator", sessionVO.getUserId());
-        params.put("updated", new Date());
-        params.put("updator", sessionVO.getUserId());
-        params.put("memIsOutSource", false);
-        params.put("applicantID", appId != null ? appId : 0);
-        params.put("BusinessesType", 1375);
-        params.put("Hospitalization", false);
-        params.put("deptCode", params.get("deptCd") != null ? params.get("deptCd").toString().trim() : "");
-        params.put("codyPaExpr", params.get("codyPaExpr") != null ? params.get("codyPaExpr").toString().trim() : "");
-        params.put("religion", params.get("religion") != null ? params.get("religion") : "");
-        // params.put("traineeType",Integer.parseInt(params.get("traineeType").toString()));
-
-        // addr 가져오기
-        params.put("areaId", params.get("areaId").toString());
-        params.put("streetDtl", params.get("streetDtl") != null ? params.get("streetDtl").toString() : "");
-        params.put("addrDtl", params.get("addrDtl") != null ? params.get("addrDtl").toString() : "");
-
-        // Department
-        params.put("searchdepartment", params.get("searchdepartment").toString().trim() != null ? params.get("searchdepartment").toString().trim() : "");
-        params.put("searchSubDept", params.get("subDept").toString().trim() != null ? params.get("subDept").toString().trim() : "");
-
-        // 두번째 탭 text 가져오기
-        params.put("spouseCode", params.get("spouseCode").toString().trim() != null ? params.get("spouseCode").toString().trim() : "");
-        params.put("spouseName", params.get("spouseName").toString().trim() != null ? params.get("spouseName").toString().trim() : "");
-        params.put("spouseNric", params.get("spouseNric").toString().trim() != null ? params.get("spouseNric").toString().trim() : "");
-        params.put("spouseOcc", params.get("spouseOcc").toString().trim() != null ? params.get("spouseOcc").toString().trim() : "");
-        params.put("spouseDob", params.get("spouseDob").toString().equals("") ? "01/01/1900" : params.get("spouseDob").toString().trim());
-        params.put("spouseContat", params.get("spouseContat").toString().trim() != null ? params.get("spouseContat").toString().trim() : "");
-
-        Boolean success = false;
-
-        if (params != null) {
-            memCode = doSaveMember(params, docType);
-
-        }
-        return memCode;
-
-    }*/
 
 	public String getRandomNumber(int a){
 		Random random = new Random();
@@ -683,18 +587,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         		logger.debug("nextDocNo : {}",nextDocNo);
         		selectMemberCode.put("nextDocNo", nextDocNo);
         		break;
-
-
-			/*case 3201: // HOMECARE MEMBER CODE -- ADDED BY TOMMY
-				selectMemberCode = getDocNo("163");
-				memberCode = selectMemberCode.get("docNo").toString();
-				params.put("memberCode", memberCode);
-				ID=163;
-				nextDocNo = getNextDocNo("CHT",selectMemberCode.get("docNo").toString());
-				logger.debug("nextDocNo : {}",nextDocNo);
-				selectMemberCode.put("nextDocNo", nextDocNo);
-				break;*/
-			}
+        		}
 
 			logger.debug("selectMemberCode : {}",selectMemberCode);
 			if(Integer.parseInt(selectMemberCode.get("docNoId").toString()) == ID){
@@ -1099,7 +992,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			}
 
 			if(params.get("memberType").toString().equals("5")  &&  !params.get("course").equals("")) {
-				if (params.get("traineeType1").toString().equals("2") || params.get("traineeType1").toString().equals("3") ){
+				if (params.get("traineeType1").toString().equals("2") || params.get("traineeType1").toString().equals("3") || params.get("traineeType1").toString().equals("3201") ){ // ADDED HOMECARE AS TRAINEE TYPE -- BY TOMMY
 
     					logger.debug("=============================================================================================================");
     					logger.debug("=====================  memberType {}  traineeType {} ", params.get("memberType").toString(), params.get("traineeType").toString() );
@@ -1226,16 +1119,15 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					} else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
 						deptCode = getDocNo("103");
 					}
-				}
-/*				else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 3201) { // HOMECARE -- ADDED BY TOMMY
+				}else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 3201) { // HOMECARE ADDED BY TOMMY
 					if (params.get("memberLvl").equals("4") && params.get("lvlTo").equals("3")) {
-						deptCode = getDocNo("166");
+						deptCode = getDocNo("164");
 					} else if (params.get("memberLvl").equals("3") && params.get("lvlTo").equals("2")) {
 						deptCode = getDocNo("165");
 					} else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
-						deptCode = getDocNo("164");
+						deptCode = getDocNo("166");
 					}
-				}*/
+				}
 
 				// Demote
 				if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 2) {
@@ -1256,14 +1148,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					} else if (params.get("memberLvl").equals("1") && params.get("lvlTo").equals("2")) {
 						deptCode = getDocNo("104");
 					}
-				}
-/*				else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 3201) { // HOMECARE -- ADDED BY TOMMY
+				} else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 3201) { // HOMECARE ADDED BY TOMMY
 					if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("3")) {
-						deptCode = getDocNo("166");
+						deptCode = getDocNo("164");
 					} else if (params.get("memberLvl").equals("1") && params.get("lvlTo").equals("2")) {
 						deptCode = getDocNo("165");
 					}
-				}*/
+				}
 
 
 				if (params.get("lvlTo").equals("4")) {
@@ -2195,12 +2086,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		return memberListMapper.selectDepartmentCodeLit(params);
 	}
-
-/*	@Override
-	public List<EgovMap> selectHomecareDepartmentCodeList(Map<String, Object> params) {
-
-		return memberListMapper.selectHomecareDepartmentCodeList(params);
-	}*/
 
 	@Override
 	public List<EgovMap> selectBranchCodeLit(Map<String, Object> params) {
