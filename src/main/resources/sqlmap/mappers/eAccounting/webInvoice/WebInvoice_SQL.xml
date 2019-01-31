@@ -1191,7 +1191,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
        ,#{expDesc}
        ,#{glAccCode}
        ,#{glAccCodeName}
-       ,#{appvAmt}
+       ,#{netAmt}
        ,#{taxAmt}
        ,#{taxNonClmAmt}
        ,#{appvAmt}
