@@ -1191,7 +1191,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
        ,#{expDesc}
        ,#{glAccCode}
        ,#{glAccCodeName}
-       ,#{netAmt}
+       ,#{appvAmt}
        ,#{taxAmt}
        ,#{taxNonClmAmt}
        ,#{appvAmt}
@@ -1483,7 +1483,7 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         BUDGET_CODE,
         BUDGET_CODE_NAME,
         'VB',
-        NET_AMT,
+        TOT_AMT,
         TAX_AMT,
         TAX_NON_CLM_AMT,
         TOT_AMT,
