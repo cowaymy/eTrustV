@@ -13,7 +13,7 @@
 	    || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC'
 	    || $('#callPrgm').val() == 'fn_loadCntcPerson'
 	    || $('#callPrgm').val() == 'fn_loadInstallationCntcPerson'
-	    || $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
+	    ) {
 	        createAUIGrid();
 	        fn_getCustomerContactAjax();
 
@@ -24,7 +24,8 @@
             });
 	    }
 	    else if($('#cnctSearchForm #callPrgm').val() == 'ORD_REGISTER_CNTC_ADD'
-	         || $('#cnctSearchForm #callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
+	         || $('#cnctSearchForm #callPrgm').val() == 'ORD_REGISTER_BILL_PRF'
+	         || $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
 	        createAUIGrid2();
 	        fn_getCustomerCareAjax();
 
@@ -38,10 +39,10 @@
 	});
 
 	function fn_setData(cntcId) {
-	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN' || $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
+	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN' ) {
 	        fn_loadCntcPerson(cntcId);
 	    }
-	    else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD') {
+	    else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD' || $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
 	        fn_loadSrvCntcPerson(cntcId);
 	    }
 	    else if($('#callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
@@ -99,7 +100,7 @@
             { headerText : '<spring:message code="sal.title.status" />',          dataField : "name",          width : 100 }
           , { headerText : '<spring:message code="sal.text.name" />',            dataField : "name1"}
           , { headerText : '<spring:message code="sal.text.nric" />',            dataField : "nric",          width : 120 }
-          , { headerText : '<spring:message code="sal.text.telM" />',    dataField : "telM1",         width : 120 }
+          , { headerText : '<spring:message code="sal.text.telM" />',    dataField : "telM",         width : 120 }
           , { headerText : '<spring:message code="sal.text.telO" />',    dataField : "telO",          width : 120 }
           , { headerText : '<spring:message code="sal.text.telR" />', dataField : "telR",          width : 120 }
           , { headerText : '<spring:message code="sal.text.telF" />',       dataField : "telf",          width : 120 }
