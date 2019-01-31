@@ -780,7 +780,7 @@
         WHERE
             a.SRV_QUOT_STUS_ID = 1
             AND b.SRV_MEM_LG_ID IS NULL
-            AND a.SRV_QUOT_VAL_ID <![CDATA[<=]]> TRUNC(SYSDATE)
+            AND a.SRV_QUOT_VAL_ID <![CDATA[>=]]> TRUNC(SYSDATE)
             <if test="orderNo != null and orderNo != ''">
             AND c.SALES_ORD_NO = #{orderNo}
             </if>
