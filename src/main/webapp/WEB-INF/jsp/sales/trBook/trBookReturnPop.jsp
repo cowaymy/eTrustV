@@ -109,8 +109,9 @@ function creatTrReBookGrid(){
                   type : "ButtonRenderer",
                   labelText : "<spring:message code="sal.btn.Go" />",
                   onclick : function(rowIndex, columnIndex, value, item) {
-                      $("#trItemId").val(AUIGrid.getCellValue(trReBookGridID, rowIndex, "trBookItmId"));
+                      $("#trBookItmId").val(AUIGrid.getCellValue(trReBookGridID, rowIndex, "trBookItmId"));
                       $("#itmUnderDcf").val(AUIGrid.getCellValue(trReBookGridID, rowIndex, "itmUnderDcf"));
+                      $("#trReTrReciptNo").val(AUIGrid.getCellValue(trReBookGridID, rowIndex, "trReciptNo"));
 
                       if($("#itmUnderDcf").val() =="1"){
                     	  Common.alert("<spring:message code="sal.alert.title.actionRestriction" />"  + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.underDCF" />.<br /><spring:message code="sal.alert.msg.noOtherAction" />");
