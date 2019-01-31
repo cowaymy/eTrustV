@@ -1167,6 +1167,7 @@
 		 FROM SAL0074D Extent1
 	   WHERE Extent1.SALES_ORD_ID = #{ordId}
            AND Extent1.SVC_CNTRCT_ID = #{svcCntrctId}
+           AND Extent1.IS_3RD_PARTY = 1
            AND ROWNUM <![CDATA[<=]]> 1
     </select>
 
