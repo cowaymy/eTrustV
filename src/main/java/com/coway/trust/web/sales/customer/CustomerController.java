@@ -876,7 +876,7 @@ public class CustomerController {
     } else {
       insmap.put("rem", null);
     }
-    insmap.put("stusCodeId", 1); // 고정
+    insmap.put("stusCodeId", 9); // 고정 Set main contact and service contact's status to MAIN
     insmap.put("updUserId", sessionVo.getUserId());
     insmap.put("renGrp", ""); // 고정
     insmap.put("pstTerms", 0); // 고정
