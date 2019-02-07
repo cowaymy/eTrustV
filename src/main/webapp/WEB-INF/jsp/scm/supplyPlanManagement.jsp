@@ -23,7 +23,7 @@
 	background : #CCCCFF;
 	color : #000;
 }
-.my-columnLeadTm {
+.my-columnleadCnt {
 	text-align : right;
 	background : #FFCCFF;
 	color : #000;
@@ -284,13 +284,13 @@ function fnSupplyPlanHeader() {
 				//leadTm	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(fromPlanToPoSpltCnt);
 				
 				var planGrWeekSpltYn	= parseInt(result.selectGetPoCntTargetCnt[0].planGrWeekSpltYn);
-				var leadTm	= 0;
+				var leadCnt	= 0;
 				if ( 1 == planGrWeekSpltYn ) {
-					leadTm	= parseInt(result.selectGetPoCntTargetCnt[0].cnt) - parseInt(1);
-					console.log("1. leadTm : " + leadTm + ", planGrWeekSpltYn : " + planGrWeekSpltYn);
+					leadCnt	= parseInt(result.selectGetPoCntTargetCnt[0].leadCnt) - parseInt(1);
+					console.log("1. leadCnt : " + leadCnt + ", planGrWeekSpltYn : " + planGrWeekSpltYn);
 				} else if ( 2 == planGrWeekSpltYn ) {
-					leadTm	= parseInt(result.selectGetPoCntTargetCnt[0].cnt) - parseInt(2);
-					console.log("2. leadTm : " + leadTm + ", planGrWeekSpltYn : " + planGrWeekSpltYn);
+					leadCnt	= parseInt(result.selectGetPoCntTargetCnt[0].leadCnt) - parseInt(2);
+					console.log("2. leadCnt : " + leadCnt + ", planGrWeekSpltYn : " + planGrWeekSpltYn);
 				} else {
 					console.log("selectScmTotalInfo or selectGetPoCntTargetCnt is error.");
 				}
@@ -522,7 +522,7 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						if ( iLoopDataFieldCnt > leadTm ) {
+						if ( iLoopDataFieldCnt > leadCnt ) {
 							//	리드타임 이내
 							groupM0.children.push({
 								dataField : "w" + intToStrFieldCnt,	//	w00
@@ -549,7 +549,7 @@ function fnSupplyPlanHeader() {
 								dataType : "numeric",
 								//formatString : "#,##0",
 								editable : false,
-								style : "my-columnLeadTm"
+								style : "my-columnleadCnt"
 							});
 						}
 						iLoopCnt++;
@@ -571,7 +571,7 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						if ( iLoopDataFieldCnt > leadTm ) {
+						if ( iLoopDataFieldCnt > leadCnt ) {
 							//	리드타임 이내
 							groupM1.children.push({
 								dataField : "w" + intToStrFieldCnt,
@@ -598,7 +598,7 @@ function fnSupplyPlanHeader() {
 								dataType : "numeric",
 								//formatString : "#,##0",
 								editable : false,
-								style : "my-columnLeadTm"
+								style : "my-columnleadCnt"
 							});
 						}
 						iLoopCnt ++;
@@ -620,7 +620,7 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						if ( iLoopDataFieldCnt > leadTm ) {
+						if ( iLoopDataFieldCnt > leadCnt ) {
 							//	리드타임 이내
 							groupM2.children.push({
 								dataField : "w" + intToStrFieldCnt,
@@ -647,7 +647,7 @@ function fnSupplyPlanHeader() {
 								dataType : "numeric",
 								//formatString : "#,##0",
 								editable : false,
-								style : "my-columnLeadTm"
+								style : "my-columnleadCnt"
 							});
 						}
 						iLoopCnt++;
@@ -669,7 +669,7 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						if ( iLoopDataFieldCnt > leadTm ) {
+						if ( iLoopDataFieldCnt > leadCnt ) {
 							//	리드타임 이내
 							groupM3.children.push({
 								dataField : "w" + intToStrFieldCnt,
@@ -696,7 +696,7 @@ function fnSupplyPlanHeader() {
 								dataType : "numeric",
 								//formatString : "#,##0",
 								editable : false,
-								style : "my-columnLeadTm"
+								style : "my-columnleadCnt"
 							});
 						}
 						iLoopCnt++;
@@ -718,7 +718,7 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						if ( iLoopDataFieldCnt > leadTm ) {
+						if ( iLoopDataFieldCnt > leadCnt ) {
 							//	리드타임 이내
 							groupM4.children.push({
 								dataField : "w" + intToStrFieldCnt,
@@ -744,7 +744,7 @@ function fnSupplyPlanHeader() {
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
 								//formatString : "#,##0",
-								style : "my-columnLeadTm"
+								style : "my-columnleadCnt"
 							});
 						}
 						iLoopCnt++;
@@ -1276,11 +1276,11 @@ var myGridID;
 			<li><p class="btn_grid"><!-- <input type='button' id='UpdateBtn' name='UpdateBtn' value='Update M0 Data' disabled /> --></p></li>
 		</ul>
 		<ul class="right_btns">
-			<li><p id="btnCreate" class="btn_grid"><a onclick="fnCreate(this);">Create</a></p></li>
+			<li><p id="btnCreate" class="btn_grid btn_disabled"><a onclick="fnCreate(this);">Create</a></p></li>
 			<li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSaveDetail(this);">Save</a></p></li>
 			<li><p id="btnConfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'confirm');">Confirm</a></p></li>
 			<li><p id="btnUnconfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'unconfirm');">UnConfirm</a></p></li>
-			<li><p id="btnReCalc" class="btn_grid"><a onclick="fnSaveMaster(this, 'reCalc');">Re-Calculation</a></p></li>
+			<li><p id="btnReCalc" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'reCalc');">Re-Calculation</a></p></li>
 			<li><p id="btnExcel" class="btn_grid btn_disabled"><a onclick="fnExcel(this, 'SupplyPlanManagement');">Excel</a></p></li>
 		</ul>
 	</div><!-- side_btns end -->

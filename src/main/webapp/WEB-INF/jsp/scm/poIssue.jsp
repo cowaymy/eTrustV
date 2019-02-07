@@ -94,7 +94,7 @@ var headSelectCnt	= 6;	//	selectPoTargetList 에서 w01 앞에 있는 칼럼 갯
 var poQtyTh			= 21;	//	selectPoTargetList 에서 poQty 의 위치
 var selectedRow		= 0;
 
-var leadTm	= 0;
+var leadCnt	= 0;
 var splitCnt	= 0;
 var lastSplitYn	= 0;
 var lastWeekSplitYn	= 0;
@@ -666,7 +666,7 @@ function fnSearch() {
 				//planWeekTh	= result.selectScmTotalInfo[0].planWeekTh;
 				//fromPlanToPoSpltCnt	= result.selectScmTotalInfo[0].fromPlanToPoSpltCnt;
 				//planGrWeekSpltYn	= result.selectScmTotalInfo[0].planGrWeekSpltYn;
-				leadTm	= parseInt(result.selectGetPoCntTargetCnt[0].cnt);
+				leadCnt	= parseInt(result.selectGetPoCntTargetCnt[0].leadCnt);
 				planGrWeekSpltYn	= parseInt(result.selectGetPoCntTargetCnt[0].planGrWeekSpltYn);
 				fnPoTargetGrid();
 				
@@ -688,7 +688,7 @@ function fnFilterPoTargetList(list) {
 	//var poTargetList	= new Array();
 	poTargetList	= [];
 	for ( var i = 0 ; i < list.length ; i++ ) {
-		//if ( 0 < list[i].planQty ) {
+		if ( 0 < list[i].planQty ) {
 			var poList	= new Object();
 			
 			poList.poYear	= list[i].poYear;
@@ -721,7 +721,7 @@ function fnFilterPoTargetList(list) {
 			poList.currName	= list[i].currName;
 			
 			poTargetList.push(poList);
-		//}
+		}
 	}
 	AUIGrid.setGridData(myGridID, poTargetList);
 }
@@ -732,43 +732,43 @@ function fnSetPlanQty(list) {
 	
 	//totLeadCnt	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(fromPlanToPoSpltCnt) + 1;
 	//totLeadCnt	= parseInt(leadTm);
-	console.log("leadTm : " + leadTm + ", planGrWeekSpltYn : " + planGrWeekSpltYn);
+	console.log("leadCnt : " + leadCnt + ", planGrWeekSpltYn : " + planGrWeekSpltYn);
 	for ( var i = 0 ; i < list.length ; i++ ) {
 		if ( 1 == planGrWeekSpltYn ) {
 			//	PLAN_GR_WEEK IS NOT SPLIT WEEK
-			if ( 9 == leadTm ) {
+			if ( 9 == leadCnt ) {
 				planQty1	= list[i].w09;	planQty2	= 0;
-			} else if ( 10 == leadTm ) {
+			} else if ( 10 == leadCnt ) {
 				planQty1	= list[i].w10;	planQty2	= 0;
-			} else if ( 11 == leadTm ) {
+			} else if ( 11 == leadCnt ) {
 				planQty1	= list[i].w11;	planQty2	= 0;
-			} else if ( 12 == leadTm ) {
+			} else if ( 12 == leadCnt ) {
 				planQty1	= list[i].w12;	planQty2	= 0;
-			} else if ( 13 == leadTm ) {
+			} else if ( 13 == leadCnt ) {
 				planQty1	= list[i].w13;	planQty2	= 0;
-			} else if ( 14 == leadTm ) {
+			} else if ( 14 == leadCnt ) {
 				planQty1	= list[i].w14;	planQty2	= 0;
-			} else if ( 15 == leadTm ) {
+			} else if ( 15 == leadCnt ) {
 				planQty1	= list[i].w15;	planQty2	= 0;
 			} else {
 				console.log("u must make more else if");
 			}
 		} else if ( 2 == planGrWeekSpltYn ) {
 			//	PLAN_GR_WEEK IS SPLIT WEEK
-			if ( 9 == leadTm ) {
+			if ( 9 == leadCnt ) {
+				planQty1	= list[i].w08;	planQty2	= list[i].w09;
+			} else if ( 10 == leadCnt ) {
 				planQty1	= list[i].w09;	planQty2	= list[i].w10;
-			} else if ( 10 == leadTm ) {
+			} else if ( 11 == leadCnt ) {
 				planQty1	= list[i].w10;	planQty2	= list[i].w11;
-			} else if ( 11 == leadTm ) {
+			} else if ( 12 == leadCnt ) {
 				planQty1	= list[i].w11;	planQty2	= list[i].w12;
-			} else if ( 12 == leadTm ) {
+			} else if ( 13 == leadCnt ) {
 				planQty1	= list[i].w12;	planQty2	= list[i].w13;
-			} else if ( 13 == leadTm ) {
+			} else if ( 14 == leadCnt ) {
 				planQty1	= list[i].w13;	planQty2	= list[i].w14;
-			} else if ( 14 == leadTm ) {
+			} else if ( 15 == leadCnt ) {
 				planQty1	= list[i].w14;	planQty2	= list[i].w15;
-			} else if ( 15 == leadTm ) {
-				planQty1	= list[i].w15;	planQty2	= list[i].w16;
 			} else {
 				console.log("u must make more else if");
 			}
