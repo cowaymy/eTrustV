@@ -18,23 +18,29 @@ var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
 	$(document).ready(function() {
 		createAUIGrid();
 		AUIGrid.setSelectionMode(myGridID, "singleRow");
-		
+
+		if("${SESSION_INFO.userTypeId}" != 1 && "${SESSION_INFO.userTypeId}" != 2){
+			  $("#typeCode").prop("disabled",false);
+		}
+
 		$("#search").click(function(){
 			var valid = $("#memCode").val();
-			
+
 			if(valid == null || valid == ""){
 				//Common.alert("Please select the member code");
 				Common.setMsg("<spring:message code='commission.alert.SHIIndex.member.noSelect'/>");
 				$("#teamCode").val("");
                 $("#level").val("");
 			}else{
+				$("#typeCode").prop("disabled",false);
 				Common.ajax("GET", "/commission/report/commSHIMemSearch", $("#myForm").serializeJSON(), function(result) {
 					if(result != null){
 						$("#teamCode").val(result.DEPT_CODE);
 						$("#level").val(result.MEM_LVL);
-						
-						
+
+
 						Common.ajax("GET", "/commission/report/commSPCRgenrawSHIIndex", $("#myForm").serializeJSON(), function(result) {
+							$("#typeCode").prop("disabled",true);
 							AUIGrid.setGridData(myGridID, result);
 						});
 					}else{
@@ -49,12 +55,12 @@ var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
 				});
 			}
 		});
-		
+
 		$('#memBtn').click(function() {
 		    //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
 		    Common.popupDiv("/common/memberPop.do", $("#myForm").serializeJSON(), null, true);
 		});
-		
+
 		AUIGrid.bind(myGridID, "cellClick", function(event) {
 			memCode = null;
 			if(AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode") != null && AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode") != ""){
@@ -63,14 +69,14 @@ var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
 				Common.popupDiv("/commission/report/commSHIIndexViewDetailsPop.do",date);
 			}
 		});
-		
+
 		$("#clear").click(function(){
 			document.myForm.reset();
 		});
-		
+
 		$("#generate").click(function(){
 		    var valid = $("#memCode").val();
-            
+
             if(valid == null || valid == ""){
                 //Common.alert("Please select the member code");
             	Common.setMsg("<spring:message code='commission.alert.SHIIndex.member.noSelect'/>");
@@ -85,22 +91,22 @@ var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
                 var typeCode = $("#typeCode").val();
                 var teamCode = $("#teamCode").val();
                 var level = $("#level").val();
-                
+
                 var reportFileName = "/commission/SHIIndexExcelRaw.rpt"; //reportFileName
-                var reportDownFileName = "SHIIndexExcelFile_" + today; //report name     
+                var reportDownFileName = "SHIIndexExcelFile_" + today; //report name
                 var reportViewType = "EXCEL"; //viewType
-                    
+
                 $("#reportForm #mCode").val(memCd);
                 $("#reportForm #month").val(month);
                 $("#reportForm #year").val(year);
                 $("#reportForm #mLvl").val(level);
                 $("#reportForm #mType").val(typeCode);
                 $("#reportForm #deptCode").val(teamCode);
-                
+
                 $("#reportForm #reportFileName").val(reportFileName);
                 $("#reportForm #reportDownFileName").val(reportDownFileName);
                 $("#reportForm #viewType").val(reportViewType);
-                
+
             //  report 호출
                 var option = {
                     isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -109,7 +115,7 @@ var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
             }
 		});
 	});
-	
+
 	function createAUIGrid() {
 	    var columnLayout3 = [{
 	        dataField : "topOrgCode",
@@ -154,27 +160,27 @@ var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
 	    }];
 	    // 그리드 속성 설정
 	    var gridPros = {
-	        
-	        // 페이징 사용       
+
+	        // 페이징 사용
 	        usePaging : true,
-	        
+
 	        // 한 화면에 출력되는 행 개수 20(기본값:20)
 	        pageRowCount : 20,
-	        
+
 	        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	        skipReadonlyColumns : true,
-	        
+
 	        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 	        wrapSelectionMove : true,
-	        
+
 	        // 줄번호 칼럼 렌더러 출력
 	        showRowNumColumn : true,
-	        
+
 	        headerHeight : 40
 	    };
 	    myGridID = AUIGrid.create("#grid_wrap", columnLayout3,gridPros);
 	   }
-	
+
 	function fn_loadOrderSalesman(memId, memCode) {
 	    $("#memCode").val(memCode);
 	    console.log(' memId:'+memId);
@@ -189,7 +195,7 @@ var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
 		<li><spring:message code='commission.text.head.report'/></li>
 		<li><spring:message code='commission.text.head.shiIndex'/></li>
 	</ul>
-	
+
 	<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 		<h2><spring:message code='commission.title.SHI'/></h2>
@@ -198,8 +204,8 @@ var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
 			<li><p class="btn_blue"><a href="#" id="clear"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
-	
-	
+
+
 	<section class="search_table"><!-- search_table start -->
 	   <form name="reportForm" id="reportForm">
 	       <input type="hidden" name="V_MEMCODE" id="mCode"/>
@@ -213,7 +219,7 @@ var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
 	       <input type="hidden" name="viewType" id="viewType"/>
 	   </form>
 		<form action="#" method="post" name="myForm" id="myForm">
-			
+
 			<table class="type1"><!-- table start -->
 				<caption>table</caption>
 				<colgroup>
@@ -228,9 +234,11 @@ var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
 					<tr>
 						<th scope="row"><spring:message code='commission.text.search.orgType'/></th>
 						<td>
-							<select class="w100p" id="typeCode" name="typeCode">
-							<c:forEach var="list" items="${memType }">
-                                    <option value="${list.cdid}">${list.cdnm} (${list.cd})</option>
+							<select class="w100p" id="typeCode" name="typeCode" disabled>
+							<c:forEach var="list" items="${memType}">
+							        <option value="${list.cdid}" <c:if test="${list.cdid == SESSION_INFO.userTypeId}"> selected</c:if>>
+							             ${list.cdnm} (${list.cd})
+							         </option>
                                 </c:forEach>
 							</select>
 						</td>
@@ -263,7 +271,7 @@ var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
 					</tr>
 					<tr>
 						<td colspan="6" class="col_all al_center">
-						
+
 							<table class="type2" style="width:460px;"><!-- table start -->
 								<caption>table</caption>
 								<colgroup>
@@ -303,29 +311,29 @@ var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
 									</tr>
 								</tbody>
 							</table><!-- table end -->
-						
+
 						</td>
 					</tr>
 				</tbody>
 			</table><!-- table end -->
 		</form>
 	</section><!-- search_table end -->
-	
+
 	<section class="search_result"><!-- search_result start -->
-	
+
 	<ul class="right_btns">
 		<li><p class="btn_grid"><a href="#" id="generate"><spring:message code='commission.button.generate'/></a></p></li>
 	</ul>
-	
+
 	<article class="grid_wrap"><!-- grid_wrap start -->
 	<div id="grid_wrap" style="width: 100%; height: 334px; margin: 0 auto;"></div>
 	</article><!-- grid_wrap end -->
-	
+
 	</section><!-- search_result end -->
 
 </section><!-- content end -->
 
-		
+
 <hr />
 
 </body>
