@@ -87,8 +87,9 @@ public class PoManagementController {
 		targetParams.put("planYearLstWeek", selectScmTotalInfo.get(0).get("planYearLstWeek"));
 		targetParams.put("planGrWeek", selectScmTotalInfo.get(0).get("planGrWeek"));
 		targetParams.put("leadTm", selectScmTotalInfo.get(0).get("leadTm"));
-		List<EgovMap> selectGetPoCntTargetCnt	= supplyPlanManagementService.selectGetPoCntTargetCnt(targetParams);
+		LOGGER.debug("targetParams : {}", targetParams.toString());
 		
+		List<EgovMap> selectGetPoCntTargetCnt	= supplyPlanManagementService.selectGetPoCntTargetCnt(targetParams);
 		List<EgovMap> selectPoStatus		= poManagementService.selectPoStatus(params);
 		List<EgovMap> selectPoTargetList	= poManagementService.selectPoTargetList(params);
 		List<EgovMap> selectPoCreatedList	= poManagementService.selectPoCreatedList(params);
