@@ -641,10 +641,10 @@ SELECT A.CAL_ID
  ORDER BY A.CAL_ID
 </select>
 <select id="selectGetPoCntTargetCnt" parameterType="Map" resultType="egovMap">
-SELECT A.CNT
+SELECT A.LEAD_CNT
      , (SELECT COUNT(*) FROM SCM0018M WHERE SCM_YEAR = #{planYear} AND SCM_WEEK = #{planGrWeek}) AS PLAN_GR_WEEK_SPLT_YN
   FROM (
-        SELECT COUNT(*) AS CNT
+        SELECT COUNT(*) AS LEAD_CNT
           FROM SCM0018M A
              , (
                 SELECT (
@@ -696,7 +696,7 @@ SELECT A.CNT
          WHERE A.CAL_ID BETWEEN B.FROM_CAL AND NVL(B.TO_CAL1, B.TO_CAL2)
          ORDER BY A.CAL_ID
        ) A
- GROUP BY A.CNT
+ GROUP BY A.LEAD_CNT
 </select>
 <select id="selectGetPoCnt" parameterType="Map" resultType="egovMap">
 SELECT A.STOCK_CODE
@@ -1125,7 +1125,7 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY C.STK_TYPE_ID, A.STOCK_CODE), 2) AS DIV_O
              , NVL(X.M0, 0) AS M0, NVL(X.M1, 0) AS M1, NVL(X.M2, 0) AS M2, NVL(X.M3, 0) AS M3, NVL(X.M4, 0) AS M4, 0 AS OVERDUE
              , NVL(X.W01, 0) AS W01, NVL(X.W02, 0) AS W02, NVL(X.W03, 0) AS W03, NVL(X.W04, 0) AS W04, NVL(X.W05, 0) AS W05, NVL(X.W06, 0) AS W06
              , NVL(X.W07, 0) AS W07, NVL(X.W08, 0) AS W08, NVL(X.W09, 0) AS W09, NVL(X.W10, 0) AS W10, NVL(X.W11, 0) AS W11, NVL(X.W12, 0) AS W12
-             , NVL(X.W13, 0) AS W13, NVL(X.W14, 0) AS W14, NVL(X.W14, 0) AS W15, NVL(X.W16, 0) AS W16, NVL(X.W17, 0) AS W17, NVL(X.W18, 0) AS W18
+             , NVL(X.W13, 0) AS W13, NVL(X.W14, 0) AS W14, NVL(X.W15, 0) AS W15, NVL(X.W16, 0) AS W16, NVL(X.W17, 0) AS W17, NVL(X.W18, 0) AS W18
              , NVL(X.W19, 0) AS W19, NVL(X.W20, 0) AS W20, NVL(X.W21, 0) AS W21, NVL(X.W22, 0) AS W22, NVL(X.W23, 0) AS W23, NVL(X.W24, 0) AS W24
              , NVL(X.W25, 0) AS W25, NVL(X.W26, 0) AS W26, NVL(X.W27, 0) AS W27, NVL(X.W28, 0) AS W28, NVL(X.W29, 0) AS W29, NVL(X.W30, 0) AS W30
           FROM (
