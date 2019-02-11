@@ -97,6 +97,12 @@ var columnLayout = [{dataField: "sirimNo",headerText :"<spring:message code='log
 
     $(function(){
    	    $("#search").click(function(){
+   	    	if((null == $("#searchWarehouse").val() || '' == $("#searchWarehouse").val())){
+
+                Common.alert('Please select warehouse');
+                return;
+
+            }
             getSirimListAjax();
          });
 
