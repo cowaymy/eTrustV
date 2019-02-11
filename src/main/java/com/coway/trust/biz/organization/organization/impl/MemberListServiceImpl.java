@@ -20,7 +20,9 @@ import com.coway.trust.biz.organization.organization.vo.DocSubmissionVO;
 import com.coway.trust.biz.organization.organization.vo.MemberListVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.organization.organization.MemberListController;
+import com.ibm.icu.util.Calendar;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -1486,6 +1488,25 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         boolean success = false;
         Map<String, Object> paramM = new HashMap<String, Object>();
         Map<String, Object> resultValue = new HashMap<String, Object>(); // 팝업 결과값 가져가는 map
+
+        if("2".equals(params.get("traineeType"))) {
+            try{
+                String joinDate = "";
+                String strDt = CommonUtils.getNowDate().substring(0,6) + "01";
+
+                Date cDt = new SimpleDateFormat("yyyyMMdd").parse(strDt);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(cDt);
+                cal.add(Calendar.MONTH, 1);
+
+                joinDate = new SimpleDateFormat("dd-MMM-yyyy").format(cal.getTime());
+
+                params.put("joinDt", joinDate);
+            } catch(Exception ex) {
+                ex.printStackTrace();
+                logger.error(ex.toString());
+            }
+        }
 
         // CT, CD 코드 생성
         int a = memberListMapper.traineeUpdate(params);

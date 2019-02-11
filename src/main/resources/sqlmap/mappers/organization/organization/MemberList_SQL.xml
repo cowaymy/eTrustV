@@ -2456,6 +2456,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		          MEM_TYPE = TRAINEE_TYPE,
 		          TRAINEE_CODE = MEM_CODE,
 		          UPD_DT     = SYSDATE
+		          <if test = "joinDt != null and joinDt != '' ">
+		          , JOIN_DT = #{joinDt}
+		          </if>
 		 WHERE  MEM_ID   = #{memberId}
     </insert>
 
