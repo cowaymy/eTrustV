@@ -123,7 +123,9 @@ function fn_requestVacationPop(){
             return;
         }
 
-     Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode }, function(result) {
+        console.log("traineeType :: " + traineeType);
+
+     Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode, traineeType : traineeType }, function(result) {
          console.log("성공.");
          console.log( result);
 
