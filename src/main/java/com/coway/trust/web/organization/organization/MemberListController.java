@@ -1,6 +1,7 @@
 package com.coway.trust.web.organization.organization;
 
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1154,19 +1155,67 @@ public class MemberListController {
 		logger.debug("nric_params : {} " + params);
 		List<EgovMap> checkNRIC2 = memberListService.checkNRIC2(params);
 		String memType = "";
+		String resignDt = "";
+		String resignDtFlg = "";
+		String status = "";
 
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
 
 		if (checkNRIC2.size() > 0) {
 			memType = checkNRIC2.get(0).get("memType").toString();
-			logger.debug("memType : " + memType);
+			resignDt = checkNRIC2.get(0).get("resignDt").toString();
+			status = checkNRIC2.get(0).get("stus").toString();
 
+			logger.debug("memType : " + memType);
+			logger.debug("resignDt : " + resignDt);
+			logger.debug("status : " + status);
+
+			// 2019-02-12 - LaiKW - Amend checking for 6 months resignation allow rejoin
+            try{
+                String strDt = CommonUtils.getNowDate().substring(0,6) + "01";
+
+                // Current date - 6 months
+                Date cDt = new SimpleDateFormat("yyyyMMdd").parse(strDt);
+                Calendar cCal = Calendar.getInstance();
+                cCal.setTime(cDt);
+                cCal.add(Calendar.MONTH, -6);
+
+                logger.debug("M-6 :: " + new SimpleDateFormat("dd-MMM-yyyy").format(cCal.getTime()));
+
+                Date rDt = new SimpleDateFormat("yyyyMMdd").parse(resignDt);
+                Calendar rCal = Calendar.getInstance();
+                rCal.setTime(rDt);
+
+                logger.debug("Resign :: " + new SimpleDateFormat("dd-MMM-yyyy").format(rCal.getTime()));
+
+                if(rCal.before(cCal)) {
+                    // Resignation Date is before 6 months before current date
+                    resignDtFlg = "Y";
+                }
+            } catch(Exception ex) {
+                ex.printStackTrace();
+                logger.error(ex.toString());
+            }
+
+			if(status.equals("51")) {
+			    if(resignDtFlg.equals("Y")) {
+			        message.setMessage("pass");
+			    } else {
+			        message.setMessage("This member resigned less than 6 months.");
+			    }
+			} else {
+			    message.setMessage("This member is of active/terminate status.");
+			}
+
+			/*
 			if (memType.equals("1") || memType.equals("2") || memType.equals("3") || memType.equals("4")) {
-				message.setMessage("This member is our existing HP/Cody/Staff/CT");
+			//if (memType.equals("1") || memType.equals("2") || memType.equals("3") || memType.equals("4") || memType.equals("7")) {
+			    message.setMessage("This member is our existing HP/Cody/Staff/CT");
+			    //message.setMessage("This member is our existing HP/Cody/Staff/CT/HT");
 			} else {
 				message.setMessage("pass");
-			}
+			}*/
 		} else {
 			message.setMessage("pass");
 		}

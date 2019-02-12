@@ -3815,10 +3815,12 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
     <select id="checkNRIC2"  parameterType="Map" resultType="egovMap">
     <![CDATA[
-        SELECT MEM_TYPE
+        SELECT
+            MEM_TYPE,
+            TO_CHAR(RESIGN_DT, 'YYYYMMDD') RESIGN_DT,
+            STUS
 		FROM ORG0001D
 		WHERE NRIC = #{nric}
-		AND STUS <> '51'
     ]]>
     </select>
 
