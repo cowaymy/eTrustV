@@ -2452,7 +2452,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     <insert id="traineeUpdate" parameterType="Map" >
 
 		 UPDATE ORG0001D
-		  SET   MEM_CODE = DECODE ( TRAINEE_TYPE , '3' , FN_GET_DOCNO(7) , '2' ,FN_GET_DOCNO(6) , '3201' , FN_GET_DOCNO(163) ) ,
+		  SET   MEM_CODE = DECODE ( TRAINEE_TYPE , '3' , FN_GET_DOCNO(7) , '2' ,FN_GET_DOCNO(6) , '7' , FN_GET_DOCNO(163) ) ,
 		          MEM_TYPE = TRAINEE_TYPE,
 		          TRAINEE_CODE = MEM_CODE,
 		          UPD_DT     = SYSDATE
@@ -3735,7 +3735,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                AND COURS_END  BETWEEN to_date(#{startDay},'yyyymm') and to_date(#{endDay},'yyyymm')
             ]]>
             </when>
-             <when test="groupCode == 3201">
+             <when test="groupCode == 7">
             <![CDATA[
             SELECT MS8.COURS_ID AS CODE_ID, MS8.COURS_NAME AS CODE_NAME
               FROM MSC0008D MS8,
@@ -3746,7 +3746,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                     GROUP BY COURS_ID) MS9
              WHERE 1 = 1
                AND MS8.COURS_ID = MS9.COURS_ID(+)
-               AND COURS_MEM_TYPE_ID = '3201'
+               AND COURS_MEM_TYPE_ID = '7'
                AND COURS_STUS_ID = '1'
                AND COURS_LIMIT > nvl (MS9.CNT, 0)
                AND COURS_START  BETWEEN to_date(#{startDay},'yyyymm') and to_date(#{endDay},'yyyymm')
