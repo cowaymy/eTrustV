@@ -313,7 +313,7 @@ function fn_departmentCode(value){
                             }
                          }
                      });
-        	   } else if( traineeType == '3201'){ // HOMECARE -- ADDED BY TOMMY
+        	   } else if( traineeType == '7'){ // HOMECARE -- ADDED BY TOMMY
                     doGetComboSepa("/common/selectBranchCodeList.do",'4' , '-',''   , 'branch' , 'S', '');
 
                    $("#branch").change(function(){
@@ -512,7 +512,7 @@ console.log("ready");
 	$("#traineeType1").click(function(){   // CHECK Trainee Type = Cody then Disable Main & Sub Department selection -- Added by Tommy
 		var traineeType = $("#traineeType1").val();
 
-		if(traineeType == 2 || traineeType == 3201 ){
+		if(traineeType == 2 || traineeType == 7 ){
             $("#searchdepartment").attr("disabled", true);
             $("#searchSubDept").attr("disabled", true);
 		}else{
@@ -1084,7 +1084,7 @@ function checkNRIC(){
 
    	var jsonObj = { "nric" : $("#nric").val() };
 
-   	if ($("#memberType").val() == '2803' || $("#memberType").val() == '4' || $("#memberType").val() == '5' || $("#memberType").val() == '3201') {
+   	if ($("#memberType").val() == '2803' || $("#memberType").val() == '4' || $("#memberType").val() == '5' || $("#memberType").val() == '7') {
 	   	Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
 	           console.log("data : " + result);
 	           if (result.message != "pass") {
@@ -1533,7 +1533,7 @@ function checkBankAccNo() {
         <option value="">Choose One</option>
         <option value= "2">Cody</option>
         <option value = "3">CT</option>
-        <option value = "3201">HT</option>
+        <option value = "7">HT</option>
     </select>
     </td>
     <th scope="row"></th>
