@@ -327,8 +327,10 @@
         ) C
             ON A.POP_ID = C.POP_ID
         WHERE SUBSTR(A.POP_MEM_TYPE, 1, 4) = #{userTypeId}
-        <if test="roleId != null and roleId != ''">
-            AND SUBSTR(A.POP_MEM_TYPE, 6, 3) = #{roleType}
+        <if test="userTypeId != '0004' ">
+            <if test="roleId != null and roleId != ''">
+                AND SUBSTR(A.POP_MEM_TYPE, 6, 3) = #{roleType}
+            </if>
         </if>
         <if test="popType != null and popType != ''">
             AND POP_TYPE = #{popType}

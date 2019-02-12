@@ -239,6 +239,23 @@ public class LoginController {
         return "/login/loginPop";
     }
 
+    @RequestMapping(value="/getLoginDtls.do", method = RequestMethod.GET)
+    public ResponseEntity<Map> getLoginDtls(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+        LOGGER.debug("==================== getLoginDtls ====================");
+
+        //Map<String, Object> popInfo = new HashMap();
+
+        params.put("userTypeId", sessionVO.getUserTypeId());
+        params.put("userId", sessionVO.getUserId());
+
+        EgovMap item1 = new EgovMap();
+        item1 = (EgovMap) loginService.getDtls(params);
+        params.put("roleType", item1.get("roleType"));
+
+        return ResponseEntity.ok(params);
+    }
+
     @RequestMapping(value = "/loginPopCheck", method = RequestMethod.GET)
     public ResponseEntity<Map> cdEagmt1(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
