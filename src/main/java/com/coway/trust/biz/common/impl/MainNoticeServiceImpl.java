@@ -55,4 +55,10 @@ public class MainNoticeServiceImpl extends EgovAbstractServiceImpl implements Ma
 		return mainNoticeMapper.selectDailyPerformance(params);
 	}
 
+	@Override
+    public List<EgovMap> getSalesOrgPerf(Map<String, Object> params) {
+        LOGGER.debug("getSalesOrgPerf");
+        return mainNoticeMapper.selectSalesOrgPerf(params);
+    }
+
 }

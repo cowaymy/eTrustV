@@ -16,4 +16,6 @@ public interface MainNoticeService {
 	List<EgovMap> getTagStatus(Map<String, Object> params);
 
 	List<EgovMap> getDailyPerformance(Map<String, Object> params);
+
+	List<EgovMap> getSalesOrgPerf(Map<String, Object> params);
 }

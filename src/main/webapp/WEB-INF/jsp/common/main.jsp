@@ -54,6 +54,146 @@
         editable: false,
         visible: false
     }];
+
+    var hpDashboard = [{
+        dataField: "period",
+        headerText: "Period"
+    }, {
+        dataField: "ranking",
+        headerText: "Rank"
+    }, {
+        dataField: "sponsor",
+        headerText: "Self Sponsor",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "actMem",
+        headerText: "Active HP",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "sales",
+        headerText: "Own Sales",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "pvVal",
+        headerText: "PV Value",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "ys",
+        headerText: "YS",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "actOrd",
+        headerText: "Active Order",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "rcRate",
+        headerText: "RC Rate"
+    }];
+
+    var salesManagerDashboard = [{
+        dataField: "period",
+        headerText: "Period"
+    }, {
+        dataField: "ranking",
+        headerText: "Rank"
+    }, {
+        dataField: "sponsor",
+        headerText: "Sponsor",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "recruit",
+        headerText: "Recruit",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "actmem",
+        headerText: "Active HP",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "prdtvy",
+        headerText: "Productivity",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "sales",
+        headerText: "Group Sales",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "pvval",
+        headerText: "PV Value",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "actord",
+        headerText: "Active Order",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "ys",
+        headerText: "YS",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "rc",
+        headerText: "RC Rate"
+    }];
+
+    var sgmDashboard = [{
+        dataField: "period",
+        headerText: "Period"
+    }, {
+        dataField: "sponsor",
+        headerText: "Sponsor",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "recruit",
+        headerText: "Recruit",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "actMem",
+        headerText: "Active HP with Net Sales",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "productivity",
+        headerText: "Productivity",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "sales",
+        headerText: "Group Sales",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "pvVal",
+        headerText: "PV Value (Net Sales)",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "actOrd",
+        headerText: "Active Order",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "ys",
+        headerText: "YS",
+        dataType : "numeric",
+        formatString : "#,##0"
+    }, {
+        dataField: "rcRate",
+        headerText: "RC Rate"
+    }];
 /*
     var tagStatusColumnLayout =
 	[
@@ -296,18 +436,50 @@
     	$(".bottom_msg_box").attr("style","display:none");
         /***********************************************[ NOTICE GRID] ************************************************/
 
-        noticeGridID = GridCommon.createAUIGrid("noticeGrid", noticeLayout, null, gridOption);
+        var roleType;
 
-        // 셀 더블클릭 이벤트 바인딩
-        AUIGrid.bind(noticeGridID, "cellDoubleClick", function (event) {
+        Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
+        	console.log(result);
 
-            var data = {
-                ntceNo: event.item.ntceNo
-            };
-            Common.popupDiv("/notice/readNoticePop.do", data, null, true, "readNoticePop");
+        	roleType = result.roleType;
+
+        	if(result.userTypeId == 1) {
+        		$("#notice").empty();
+        		$("#notice").append("Sales Organization Performance");
+        		$("#moreNotice").hide();
+
+        		var salesGridOption = {
+        			    usePaging : false,
+        			    showStateColumn : false,
+        			    pageRowCount : 4,
+        			    editable : false
+        			};
+
+        		if(result.roleType == 115) {
+        			console.log("else :: hpDashboard");
+        			noticeGridID = GridCommon.createAUIGrid("noticeGrid", hpDashboard, null, salesGridOption);
+        		} else if(result.roleType == 111) {
+        			console.log("else :: sgmDashboard");
+        			noticeGridID = GridCommon.createAUIGrid("noticeGrid", sgmDashboard, null, salesGridOption);
+        		} else {
+        			console.log("else :: salesManagerDashboard");
+        			noticeGridID = GridCommon.createAUIGrid("noticeGrid", salesManagerDashboard, null, salesGridOption);
+        		}
+        	} else {
+        		noticeGridID = GridCommon.createAUIGrid("noticeGrid", noticeLayout, null, gridOption);
+
+        		// 셀 더블클릭 이벤트 바인딩
+                AUIGrid.bind(noticeGridID, "cellDoubleClick", function (event) {
+
+                    var data = {
+                        ntceNo: event.item.ntceNo
+                    };
+                    Common.popupDiv("/notice/readNoticePop.do", data, null, true, "readNoticePop");
+                });
+
+                fn_selectNoticeListAjax();
+        	}
         });
-
-        fn_selectNoticeListAjax();
 
         /***********************************************[ DETAIL GRID] ************************************************/
 
@@ -347,6 +519,8 @@
         fn_selectTagStatusListAjax("Y");
         */
         fn_selectDailyPerformanceListAjax();
+
+        fn_selectSalesDashboard(roleType);
     });   //$(document).ready
 
 
@@ -355,6 +529,25 @@
         Common.ajax("GET", "/common/getMainNotice.do", {}, function (result) {
             AUIGrid.setGridData(noticeGridID, result);
         });
+    }
+
+    function fn_selectSalesDashboard(userRole) {
+        if(userRole == 115) { // hp
+            Common.ajax("GET", "/common/getSalesOrgPerf.do", {}, function (result) {
+                console.log(result);
+                AUIGrid.setGridData(noticeGridID, result);
+            });
+        } else if(userRole == 111) { // sgm
+            Common.ajax("GET", "/common/getSalesOrgPerf.do", {}, function (result) {
+                console.log(result);
+                AUIGrid.setGridData(noticeGridID, result);
+            });
+        } else { // hm sm gm
+            Common.ajax("GET", "/common/getSalesOrgPerf.do", {}, function (result) {
+                console.log(result);
+                AUIGrid.setGridData(noticeGridID, result);
+            });
+        }
     }
 /*
     // Tag Status 리스트 조회.
@@ -399,8 +592,8 @@
 <section id="content"><!-- content start -->
 
     <aside class="title_line main_title"><!-- title_line start -->
-        <h2><spring:message code='sys.label.notice'/></h2>
-        <p class="more"><a href="${pageContext.request.contextPath}/notice/noticeList.do"><spring:message code='sys.label.more'/> ></a></p>
+        <h2 id="notice"><spring:message code='sys.label.notice'/></h2>
+        <p class="more" id="moreNotice"><a href="${pageContext.request.contextPath}/notice/noticeList.do"><spring:message code='sys.label.more'/> ></a></p>
     </aside><!-- title_line end -->
 
     <form id="MainForm" method="get" action="">
