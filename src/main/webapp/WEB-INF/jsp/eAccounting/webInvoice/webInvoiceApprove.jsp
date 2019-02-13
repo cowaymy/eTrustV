@@ -70,10 +70,6 @@ var invoAprveGridColLayout = [ {
     headerText : '<spring:message code="webInvoice.ccName" />',
     style : "aui-grid-user-custom-left"
 }, {
-    dataField : "invcType",
-    headerText : '<spring:message code="invoiceApprove.invcType" />',
-    style : "aui-grid-user-custom-left"
-}, {
     dataField : "memAccId",
     headerText : '<spring:message code="invoiceApprove.member" />',
 }, {
