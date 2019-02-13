@@ -482,6 +482,12 @@ function fn_checkEmpty() {
                     checkResult = false;
                     return checkResult;
                 }
+                if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "totAmt")) || AUIGrid.getCellValue(myGridID, i, "totAmt") <= 0) { //gstBeforAmt
+                    //Common.alert('<spring:message code="pettyCashExp.amtBeforeGstOfLine.msg" />' + (i +1) + ".");
+                    Common.alert('Please enter amount for detail line' + (i +1) + ".");
+                    checkResult = false;
+                    return checkResult;
+                }
 	        }
 	    }
 	//}
