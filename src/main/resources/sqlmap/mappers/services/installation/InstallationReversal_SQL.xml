@@ -1586,4 +1586,11 @@ AND ROWNUM                    <= 1
 		,#{TradeIsSync}
 		)
     </insert>
+
+     <select id="SP_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_LOGISTIC_REQUEST( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+      }
+     </select>
+
     </mapper>
