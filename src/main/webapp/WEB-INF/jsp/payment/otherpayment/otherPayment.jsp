@@ -385,9 +385,9 @@ var columnPending=[
 var columnLayout = [
      {
          dataField : "id",
-         headerText : "<spring:message code='pay.btn.id'/>",
-         editable : false,
-         visible : false
+         headerText : "Transaction ID",
+         editable : false
+         //visible : false
      },
     {
         dataField : "bank",
