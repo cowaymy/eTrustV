@@ -127,6 +127,7 @@ public class InstallationReversalController {
 
 	/*	By KV - this is wrong - int installResultID = CommonUtils.intNvl(Integer.parseInt(params.get("einstallEntryId").toString()));*/
 		int installEntryID = CommonUtils.intNvl(Integer.parseInt(params.get("einstallEntryId").toString()));
+		String installEntryNo = CommonUtils.nvl(params.get("einstallEntryNo").toString());
 		String installDate = CommonUtils.nvl(params.get("instalStrlDate").toString());
 		String nextCallDate = CommonUtils.nvl(params.get("nextCallStrlDate").toString());
 
@@ -374,6 +375,24 @@ public class InstallationReversalController {
     		salesorderLog.put("CallEntryId", CallEntryId);
 
     		installationReversalService.addSalesorderLog(salesorderLog);
+
+
+    		 // Logistics Reversal Process Begin -- Added By Adrian, 17/01/2019
+    		  Map<String, Object>  logPram = null ;
+
+      		  logPram =new HashMap<String, Object>();
+              logPram.put("ORD_ID", installEntryNo);
+              logPram.put("RETYPE", "SVO");
+              logPram.put("P_TYPE", "OD02");
+              logPram.put("P_PRGNM", "INSCAN");
+              logPram.put("USERID", sessionVO.getUserId());
+
+
+              installationReversalService.SP_LOGISTIC_REQUEST(logPram);
+             // Logistics Reversal Process End
+
+
+
 
     		String rentDateTime = "2017-02-01";
             params.put("rentDateTime", rentDateTime);
