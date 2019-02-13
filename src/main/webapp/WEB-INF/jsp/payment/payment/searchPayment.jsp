@@ -74,7 +74,7 @@ var columnLayout = [
   { dataField:"payTypeId" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false ,visible:false},
 
   {dataField:"rnum", headerText:"<spring:message code='pay.head.no'/>", width : 80,editable : false },
-  { dataField:"trxId" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false },
+  { dataField:"trxId" ,headerText:"TrxID",editable : false },
 	{ dataField:"trxDt" ,headerText:"<spring:message code='pay.head.trxDate'/>",editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
 	{ dataField:"trxAmt" ,headerText:"<spring:message code='pay.head.trxTotal'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},
 	{ dataField:"payId" ,headerText:"<spring:message code='pay.head.PID'/>" ,editable : false },
@@ -401,8 +401,9 @@ function fn_officialReceiptReport(){
                         <td>
                            <input id="batchPaymentId" name="batchPaymentId" type="text" title="Batch Payment ID" placeholder="Batch Payment ID" class="w100p" />
                         </td>
-                        <th scope="row"></th>
+                        <th scope="row">Transaction ID</th>
                         <td>
+                          <input id="trxId" name="trxId" type="text" title="Transaction ID" placeholder="Transaction ID" class="w100p" />
                         </td>
                         <th scope="row"></th>
                         <td>
