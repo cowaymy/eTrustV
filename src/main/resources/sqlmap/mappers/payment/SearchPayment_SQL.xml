@@ -127,6 +127,9 @@
 	        <if test="batchPaymentId != '' and batchPaymentId != null">
 			AND BATCH_PAY_ID = #{batchPaymentId}
 			</if>
+			<if test="trxId != '' and trxId != null">
+            AND TRX_ID = #{trxId}
+            </if>
 
 			<if test="orderNo != '' and orderNo != null
 			             or payDate1 != '' and payDate1 != null
@@ -144,7 +147,8 @@
 			             or chequeNo != '' and chequeNo != null
 			             or crcNo != '' and crcNo != null
 			             or bankAccount != '' and bankAccount != null
-			             or batchPaymentId != '' and batchPaymentId != null ">
+			             or batchPaymentId != '' and batchPaymentId != null
+			             or trxId != '' and trxId != null ">
                 ORDER BY PAY_ID
             </if>
 	    <include refid="pagingEnd" />
