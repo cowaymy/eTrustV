@@ -232,10 +232,14 @@ var myGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "budgetCode",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
+    headerText : "Budget Code"
+    //visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "budgetCodeName",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
+    headerText : "Budget Code Name",
+    style : "aui-grid-user-custom-left",
+    colSpan : 2
+    //visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "taxCode",
     headerText : '<spring:message code="newWebInvoice.taxCode" />',
