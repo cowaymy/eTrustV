@@ -198,6 +198,17 @@ var myGridColumnLayout = [ {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
+    dataField : "budgetCode",
+    headerText : '<spring:message code="expense.Activity" />',
+    editable : false
+    //visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "budgetCodeName",
+    headerText : '<spring:message code="newWebInvoice.activityName" />',
+    style : "aui-grid-user-custom-left",
+    editable : false
+    //visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "expType",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
@@ -230,16 +241,6 @@ var myGridColumnLayout = [ {
 }, {
     dataField : "glAccCodeName",
     visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "budgetCode",
-    headerText : "Budget Code"
-    //visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "budgetCodeName",
-    headerText : "Budget Code Name",
-    style : "aui-grid-user-custom-left",
-    colSpan : 2
-    //visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "taxCode",
     headerText : '<spring:message code="newWebInvoice.taxCode" />',

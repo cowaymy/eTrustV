@@ -23,6 +23,7 @@
 </style>
 <script type="text/javascript">
 var clmNo = "${clmNo}";
+//var prevClmNo = "${prevClmNo}";
 var clmSeq = 0;
 var clamUn = null;
 var atchFileGrpId;
@@ -189,6 +190,17 @@ var myGridColumnLayout = [ {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
+    dataField : "budgetCode",
+    headerText : '<spring:message code="expense.Activity" />',
+    editable : false
+    //visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "budgetCodeName",
+    headerText : '<spring:message code="newWebInvoice.activityName" />',
+    style : "aui-grid-user-custom-left",
+    editable : false
+    //visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "expType",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
@@ -220,12 +232,6 @@ var myGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "glAccCodeName",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "budgetCode",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "budgetCodeName",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "taxCode",
