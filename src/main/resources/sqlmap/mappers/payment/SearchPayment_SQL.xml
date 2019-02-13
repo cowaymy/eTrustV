@@ -18,117 +18,120 @@
     <select id="selectOrderList" parameterType="Map" resultType="egovMap">
     <include refid="pagingStart" />
         SELECT
-            TRX_ID,
-			TRX_DT,
-			TRX_AMT,
-			PAY_ID,
-			OR_NO,
-			TR_NO,
-			PAY_DT,
-			LAST_UPD_DT,
-			PAY_TYPE_ID,
-			PAY_TYPE_NAME,
-			LAST_UPD_USER_ID,
-			LAST_UPD_USER_NAME,
-			SALES_ORD_ID,
-			SALES_ORD_NO,
-			OR_AMT,
-			PO_NO,
-			CLCTR_BRNCH_ID,
-			CLCTR_BRNCH_CODE,
-			CLCTR_BRNCH_NAME,
-			CUST_ID,
-			CUST_NAME,
-			CUST_IC,
-			CUST_TYPE_ID,
-			CUST_TYPE_NAME,
-			PRODUCT_CTGRY_ID,
-			PRODUCT_CTGRY_NAME,
-			PRODUCT_ID,
-			PRODUCT_CODE,
-			PRODUCT_DESC,
-			KEYIN_USER_ID,
-			KEYIN_USER_NAME,
-			APP_TYPE_ID,
-			APP_TYPE_NAME,
-			CLCTR_NAME,
-			CLCTR_CODE,
-			KEYIN_BRNCH_ID,
-			KEYIN_BRNCH_CODE,
-			KEYIN_BRNCH_NAME,
-			DEBTOR_ACC_ID,
-			DEBTOR_ACC_CODE,
-			DEBTOR_ACC_DESC,
-			SALES_MEM_ID,
-			SALES_MEM_CODE,
-			SALES_MEM_NAME,
-			VIRTL_ACC_NO,
-			HP_CODE,
-			HP_NAME,
-			HP_ID,
-			CLCTR_ID,
-			ALLOW_COMM,
-			ADV_MONTH,
-			TR_ISSU_DT,
-			BATCH_PAY_ID
+            H.BANK_STATE_MAPPING_ID TRX_ID,
+			pay.TRX_DT,
+			pay.TRX_AMT,
+			pay.PAY_ID,
+			pay.OR_NO,
+			pay.TR_NO,
+			pay.PAY_DT,
+			pay.LAST_UPD_DT,
+			pay.PAY_TYPE_ID,
+			pay.PAY_TYPE_NAME,
+			pay.LAST_UPD_USER_ID,
+			pay.LAST_UPD_USER_NAME,
+			pay.SALES_ORD_ID,
+			pay.SALES_ORD_NO,
+			pay.OR_AMT,
+			pay.PO_NO,
+			pay.CLCTR_BRNCH_ID,
+			pay.CLCTR_BRNCH_CODE,
+			pay.CLCTR_BRNCH_NAME,
+			pay.CUST_ID,
+			pay.CUST_NAME,
+			pay.CUST_IC,
+			pay.CUST_TYPE_ID,
+			pay.CUST_TYPE_NAME,
+			pay.PRODUCT_CTGRY_ID,
+			pay.PRODUCT_CTGRY_NAME,
+			pay.PRODUCT_ID,
+			pay.PRODUCT_CODE,
+			pay.PRODUCT_DESC,
+			pay.KEYIN_USER_ID,
+			pay.KEYIN_USER_NAME,
+			pay.APP_TYPE_ID,
+			pay.APP_TYPE_NAME,
+			pay.CLCTR_NAME,
+			pay.CLCTR_CODE,
+			pay.KEYIN_BRNCH_ID,
+			pay.KEYIN_BRNCH_CODE,
+			pay.KEYIN_BRNCH_NAME,
+			pay.DEBTOR_ACC_ID,
+			pay.DEBTOR_ACC_CODE,
+			pay.DEBTOR_ACC_DESC,
+			pay.SALES_MEM_ID,
+			pay.SALES_MEM_CODE,
+			pay.SALES_MEM_NAME,
+			pay.VIRTL_ACC_NO,
+			pay.HP_CODE,
+			pay.HP_NAME,
+			pay.HP_ID,
+			pay.CLCTR_ID,
+			pay.ALLOW_COMM,
+			pay.ADV_MONTH,
+			pay.TR_ISSU_DT,
+			pay.BATCH_PAY_ID
 	    FROM
-	        PAY1001V
+	        PAY1001V pay
+            LEFT JOIN (SELECT MAX(RSLT_SEQ),PAY_ID,BANK_STATE_MAPPING_ID 
+                                FROM PAY0252T GROUP BY PAY_ID,BANK_STATE_MAPPING_ID) H ON pay.PAY_ID = H.PAY_ID
+                  
 	    WHERE
 	        1=1
 	        <if test="orderNo != '' and orderNo != null">
-			  AND SALES_ORD_NO = #{orderNo}
+			  AND pay.SALES_ORD_NO = #{orderNo}
 	        </if>
 	        <if test="orderId != '' and orderId != null">
-              AND SALES_ORD_ID = #{orderId}
+              AND pay.SALES_ORD_ID = #{orderId}
             </if>
 	        <if test="payDate1 != '' and payDate2 != '' and payDate1 != null and payDate2 != null">
-				AND PAY_DT  <![CDATA[   >= ]]> TO_DATE(TO_CHAR(TO_DATE(#{payDate1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
-		        AND PAY_DT  <![CDATA[  < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{payDate2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
+				AND pay.PAY_DT  <![CDATA[   >= ]]> TO_DATE(TO_CHAR(TO_DATE(#{payDate1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+		        AND pay.PAY_DT  <![CDATA[  < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{payDate2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
 			</if>
 	        <if test="applicationType != '' and applicationType != null">
-			AND APP_TYPE_ID = #{applicationType}
+			AND pay.APP_TYPE_ID = #{applicationType}
 			</if>
 	        <if test="orNo != '' and orNo != null">
-			AND OR_NO = #{orNo}
+			AND pay.OR_NO = #{orNo}
 			</if>
 	        <if test="poNo != '' and poNo != null">
-			AND PO_NO = #{poNo}
+			AND pay.PO_NO = #{poNo}
 			</if>
 	        <if test="paymentType != '' and paymentType != null">
-			AND PAY_TYPE_ID = #{paymentType}
+			AND pay.PAY_TYPE_ID = #{paymentType}
 			</if>
 	        <if test="customerId != '' and customerId != null">
-			AND CUST_ID = #{customerId}
+			AND pay.CUST_ID = #{customerId}
 			</if>
 	        <if test="branchId != '' and branchId != null">
-			AND KEYIN_BRNCH_ID = #{branchId}
+			AND pay.KEYIN_BRNCH_ID = #{branchId}
 			</if>
 	        <if test="userId != '' and userId != null">
-			AND KEYIN_USER_ID = #{userId}
+			AND pay.KEYIN_USER_ID = #{userId}
 			</if>
 	        <if test="customerName != '' and customerName != null">
-			AND CUST_NAME LIKE '%' || #{customerName} || '%'
+			AND pay.CUST_NAME LIKE '%' || #{customerName} || '%'
 			</if>
 	        <if test="customerIC != '' and customerIC != null">
-			AND CUST_IC = #{customerIC}
+			AND pay.CUST_IC = #{customerIC}
 			</if>
 	        <if test="trNo != '' and trNo != null">
-			AND TR_NO = #{trNo}
+			AND pay.TR_NO = #{trNo}
 			</if>
 	        <if test="chequeNo != '' and chequeNo != null">
-			AND PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_CHQ_NO = #{chequeNo})
+			AND pay.PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_CHQ_NO = #{chequeNo})
 			</if>
 	        <if test="crcNo != '' and crcNo != null">
-			AND PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_ORI_CC_NO = #{crcNo})
+			AND pay.PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_ORI_CC_NO = #{crcNo})
 			</if>
 	        <if test="bankAccount != '' and bankAccount != null">
-			AND PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_ISSU_BANK_ID = #{bankAccount})
+			AND pay.PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_ISSU_BANK_ID = #{bankAccount})
 			</if>
 	        <if test="batchPaymentId != '' and batchPaymentId != null">
-			AND BATCH_PAY_ID = #{batchPaymentId}
+			AND pay.BATCH_PAY_ID = #{batchPaymentId}
 			</if>
 			<if test="trxId != '' and trxId != null">
-            AND TRX_ID = #{trxId}
+            AND H.BANK_STATE_MAPPING_ID = #{trxId}
             </if>
 
 			<if test="orderNo != '' and orderNo != null
