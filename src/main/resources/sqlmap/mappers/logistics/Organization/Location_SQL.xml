@@ -8,7 +8,7 @@
         <result property="locaddr3" column="locaddr3" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="descr" column="descr" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap> -->
-    
+
 	<select id="selectLocationList" parameterType="Map"  resultType="egovMap">
         <![CDATA[
 		  SELECT WH_LOC_ID locid,
@@ -38,7 +38,7 @@
 		         s05m.name branchnm,
 		         s05m.dcode,
 		         s05m.descr,
-		         s28m.WH_LOC_GB whlocgb,		         
+		         s28m.WH_LOC_GB whlocgb,
                  crdc.CODE_NAME whlocgbnm,
 		         s28m.SERIAL_FT_CHK serialftchk,
 		         s28m.SERIAL_PT_CHK serialptchk,
@@ -47,6 +47,7 @@
 		         s28m.RDC_CODE rdccode,
 		         s28m.PLANT plant,
 		         s28m.SL_PLANT slplant,
+		         s28m.WH_LOC_LANE whloclane,
 		         (SELECT code_name
 		            FROM SYS0013M
 		           WHERE code_id = s28m.WH_LOC_TYPE_ID)
@@ -66,7 +67,7 @@
 		         SYS0047M s47m,
 		         (SELECT *
 		            FROM SYS0013M
-		           WHERE code_master_id = 339) crdc 
+		           WHERE code_master_id = 339) crdc
 		         ]]>
 		   WHERE     s28m.AREA_ID        = s64m.AREA_ID(+)
 		         AND s28m.WH_LOC_BRNCH_ID = s05m.BRNCH_ID(+)
@@ -74,7 +75,7 @@
 		         AND s28m.WH_LOC_UPD_USER_ID = s47m.USER_ID(+)
 		         AND s28m.WH_LOC_GB = crdc.code(+)
 		         <if test="loccd != null and loccd !=''">
-		              AND (s28m.WH_LOC_CODE like #{loccd}||'%' or s28m.WH_LOC_DESC like '%'||#{loccd}||'%')  
+		              AND (s28m.WH_LOC_CODE like #{loccd}||'%' or s28m.WH_LOC_DESC like '%'||#{loccd}||'%')
 		         </if>
 		         <if test="locdesc != null and locdesc !=''">
                       AND s28m.WH_LOC_DESC like '%'||#{locdesc}||'%'
@@ -97,7 +98,7 @@
                 <if test="locgrad != null and locgrad != ''">
                     AND s28m.WH_LOC_STK_GRAD  = #{locgrad}
                 </if>
-		ORDER BY WH_LOC_CODE    			
+		ORDER BY WH_LOC_CODE
 	</select>
 	<select id="selectLocationStockList" parameterType="Map" resultType="egovMap">
 	    SELECT T1.QTY qty,
@@ -128,7 +129,7 @@
 		               SYS0026M T2
 		         WHERE T1.STOCKID = T2.STK_ID AND QTY > 0) T1
 	</select>
-	
+
 	<update id="updateLocationInfo" parameterType="Map">
 	   UPDATE SYS0028M
           SET WH_LOC_CODE           = #{loccd}
@@ -154,27 +155,28 @@
             , PLANT                 = #{plant}
             , SL_PLANT              = #{slplant}
             , WH_LOC_STUS_ID  = #{locstus}
+            , WH_LOC_LANE = #{loclane}
         WHERE WH_LOC_ID = #{locid}
 	</update>
-	
-	
+
+
     <insert id="insertLocationInfo" parameterType="Map">
 	     INSERT INTO SYS0028M(
 	       WH_LOC_ID, WH_LOC_CODE, WH_LOC_DESC, WH_LOC_TEL1, WH_LOC_TEL2    , CDC_CODE, RDC_CODE, WH_LOC_BRNCH_ID, WH_LOC_TYPE_ID, WH_LOC_STK_GRAD, WH_LOC_STUS_ID, WH_LOC_UPD_USER_ID, WH_LOC_UPD_DT, CODE2, DESC2, WH_LOC_IS_SYNC, WH_LOC_MOBILE, AREA_ID, ADDR_DTL, STREET, WH_LOC_BRNCH_ID2, WH_LOC_BRNCH_ID3, WH_LOC_GB, SERIAL_PD_CHK, SERIAL_FT_CHK, SERIAL_PT_CHK , PLANT , SL_PLANT
-	     )  
+	     )
 	    VALUES (
 	     #{inlocid} ,#{inwarecd} ,#{inwarenm},#{incontact1},#{incontact2} ,#{cdccode},#{rdccode}, #{branch1},#{intype_id}  , #{ingrad}      , #{instus_id}  , #{inup_user_id}   , SYSDATE      ,#{incode2} , #{indesc2},#{inis_sync}  , #{inmobile}  , #{areaid}, #{addrdtl} , #{street} , #{branch2},#{branch3},#{locationtype} , #{pdchk} , #{ftchk}, #{ptchk} , #{plant} , #{slplant}
 	    )
     </insert>
     <delete id="deleteLocationInfo" parameterType="Map">
-	    DELETE FROM SYS0028M 
-	    WHERE WH_LOC_ID = #{locid} 
+	    DELETE FROM SYS0028M
+	    WHERE WH_LOC_ID = #{locid}
     </delete>
-    
+
     <select id="locCreateSeq" parameterType="Map" resultType="Integer">
         SELECT NVL(MAX(WH_LOC_ID),0) + 1 from SYS0028M
     </select>
-    
+
     <select id="selectLocationCodeList" parameterType="Map"  resultType="egovMap">
      <![CDATA[
           SELECT WH_LOC_ID locid,
@@ -223,22 +225,22 @@
                       )
                  </if>
                  <if test="locgb != null and locgb != ''">
-		            AND s28m.WH_LOC_GB in 
+		            AND s28m.WH_LOC_GB in
 		            <foreach item="item" collection="locgb" index="index" open="(" separator="," close=")">
 		            #{item}
 		            </foreach>
 		       </if>
-        ORDER BY WH_LOC_CODE        
+        ORDER BY WH_LOC_CODE
     </select>
-    
+
     <select id="selectLocationChk" parameterType="String"  resultType="integer">
         select count(*) cnt from sys0028m where WH_LOC_CODE=#{loccode}
     </select>
-    
+
     <select id="selectLocStatusList" parameterType="Map" resultType="egovMap">
             SELECT STUS_CODE_ID code,NAME CODE_NAME  FROM SYS0038M where STUS_CODE_ID in('1','3','8','10','51')
     </select>
-   
-    
-    
+
+
+
 </mapper>
