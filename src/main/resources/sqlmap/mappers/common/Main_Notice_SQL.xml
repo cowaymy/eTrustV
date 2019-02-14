@@ -151,15 +151,15 @@ FROM VIEW_COUNT
     <select id="selectSalesOrgPerf" parameterType="Map" resultType="egovMap">
         <![CDATA[
             SELECT
-			    CASE WHEN (YEAR < TO_CHAR(SYSDATE, 'YYYY') AND MONTH <> TO_CHAR(SYSDATE, 'MM')) THEN TO_CHAR(YEAR) || '/' || TO_CHAR(MONTH) ELSE 'CURRENT' END PERIOD,
+			    CASE WHEN (YEAR <= TO_CHAR(SYSDATE, 'YYYY') AND MONTH < TO_CHAR(SYSDATE, 'MM')) THEN TO_CHAR(YEAR) || '/' || TO_CHAR(MONTH) ELSE 'CURRENT' END PERIOD,
 			    RANKING,
 			    SPONSOR,
 			    RECRUIT,
-			    ACT_MEM ACTMEM,
-			    PRODUCTIVITY PRDTVY,
+			    ACT_MEM,
+			    PRODUCTIVITY,
 			    SALES,
-			    PV_VALUE PVVAL,
-			    ACT_ORD ACTORD,
+			    PV_VALUE,
+			    ACT_ORD,
 			    YS,
 			    RC_RATE RC
 			FROM REP0080D
@@ -168,6 +168,7 @@ FROM VIEW_COUNT
 			INNER JOIN SYS0047M
 			    ON ORG0001D.MEM_CODE = SYS0047M.USER_NAME
 			WHERE SYS0047M.USER_ID = #{userId}
+			AND ROWNUM <= 4
 			ORDER BY YEAR DESC, MONTH DESC
         ]]>
     </select>

@@ -77,23 +77,24 @@
         dataType : "numeric",
         formatString : "#,##0"
     }, {
-        dataField: "pvVal",
+        dataField: "pvValue",
         headerText: "PV Value",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0.00"
     }, {
         dataField: "ys",
         headerText: "YS",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0.00"
     }, {
         dataField: "actOrd",
         headerText: "Active Order",
         dataType : "numeric",
         formatString : "#,##0"
     }, {
-        dataField: "rcRate",
-        headerText: "RC Rate"
+        dataField: "rc",
+        headerText: "RC Rate",
+        formatString : "#,##0.00"
     }];
 
     var salesManagerDashboard = [{
@@ -113,27 +114,27 @@
         dataType : "numeric",
         formatString : "#,##0"
     }, {
-        dataField: "actmem",
+        dataField: "actMem",
         headerText: "Active HP",
         dataType : "numeric",
         formatString : "#,##0"
     }, {
-        dataField: "prdtvy",
+        dataField: "productivity",
         headerText: "Productivity",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0.0"
     }, {
         dataField: "sales",
         headerText: "Group Sales",
         dataType : "numeric",
         formatString : "#,##0"
     }, {
-        dataField: "pvval",
+        dataField: "pvValue",
         headerText: "PV Value",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0.00"
     }, {
-        dataField: "actord",
+        dataField: "actOrd",
         headerText: "Active Order",
         dataType : "numeric",
         formatString : "#,##0"
@@ -141,10 +142,11 @@
         dataField: "ys",
         headerText: "YS",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0.00"
     }, {
         dataField: "rc",
-        headerText: "RC Rate"
+        headerText: "RC Rate",
+        formatString : "#,##0.00"
     }];
 
     var sgmDashboard = [{
@@ -169,17 +171,17 @@
         dataField: "productivity",
         headerText: "Productivity",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0.0"
     }, {
         dataField: "sales",
         headerText: "Group Sales",
         dataType : "numeric",
         formatString : "#,##0"
     }, {
-        dataField: "pvVal",
+        dataField: "pvValue",
         headerText: "PV Value (Net Sales)",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0.00"
     }, {
         dataField: "actOrd",
         headerText: "Active Order",
@@ -189,10 +191,11 @@
         dataField: "ys",
         headerText: "YS",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0.00"
     }, {
-        dataField: "rcRate",
-        headerText: "RC Rate"
+        dataField: "rc",
+        headerText: "RC Rate",
+        formatString : "#,##0.00"
     }];
 /*
     var tagStatusColumnLayout =
@@ -532,22 +535,10 @@
     }
 
     function fn_selectSalesDashboard(userRole) {
-        if(userRole == 115) { // hp
-            Common.ajax("GET", "/common/getSalesOrgPerf.do", {}, function (result) {
-                console.log(result);
-                AUIGrid.setGridData(noticeGridID, result);
-            });
-        } else if(userRole == 111) { // sgm
-            Common.ajax("GET", "/common/getSalesOrgPerf.do", {}, function (result) {
-                console.log(result);
-                AUIGrid.setGridData(noticeGridID, result);
-            });
-        } else { // hm sm gm
-            Common.ajax("GET", "/common/getSalesOrgPerf.do", {}, function (result) {
-                console.log(result);
-                AUIGrid.setGridData(noticeGridID, result);
-            });
-        }
+        Common.ajax("GET", "/common/getSalesOrgPerf.do", {}, function (result) {
+            console.log(result);
+            AUIGrid.setGridData(noticeGridID, result);
+        });
     }
 /*
     // Tag Status 리스트 조회.
