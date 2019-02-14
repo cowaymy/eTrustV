@@ -422,7 +422,6 @@
                 console.log("srvCntcInfo:"+srvCntcInfo.email);
 
                 //
-                $("#hiddenInstCntcId").val(srvCntcInfo.custCareCntId);
                 $("#srvCntcId").val(srvCntcInfo.custCareCntId);
                 $("#srvCntcName").val(srvCntcInfo.name);
                 $("#srvInitial").val(srvCntcInfo.custInitial);
@@ -444,6 +443,7 @@
             if(custCntcInfo != null) {
                 console.log('custCntcInfo.custCntcId:'+custCntcInfo.custCntcId);
                 //
+                $("#hiddenInstCntcId").val(custCntcInfo.custCntcId);
                 $("#hiddenCustCntcId").val(custCntcInfo.custCntcId);
                 $("#custCntcName").val(custCntcInfo.name1);
                 $("#custInitial").val(custCntcInfo.code);
@@ -471,7 +471,7 @@
                 console.log("fn_loadInstallationCntcPerson instInitial     :"+instCntcInfo.custInitial);
                 console.log("fn_loadInstallationCntcPerson instCntcEmail   :"+instCntcInfo.email);
 
-                $("#hiddenInstCntcId").val(instCntcInfo.custCntcId);
+                //$("#hiddenInstCntcId").val(instCntcInfo.custCntcId);
                 $("#instCntcName").val(instCntcInfo.name1);
                 $("#instInitial").val(instCntcInfo.code);
                 $("#instCntcEmail").val(instCntcInfo.email);
