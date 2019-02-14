@@ -637,10 +637,10 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,'0'
        ,#{totAmt}
        ,#{atchFileGrpId}
-       ,#{expDesc}
+       ,REGEXP_REPLACE(#{expDesc}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,#{clamUn}
-       ,#{utilNo}
-       ,#{jPayNo}
+       ,REGEXP_REPLACE(#{utilNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+       ,REGEXP_REPLACE(#{jPayNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,TO_DATE(#{bilPeriodF}, 'DD/MM/YYYY')
        ,TO_DATE(#{bilPeriodT}, 'DD/MM/YYYY')
        ,SYSDATE
@@ -670,9 +670,9 @@ SELECT T1.CLM_SEQ,
            WHEN 'F' THEN 'Full Tax invoice'
            WHEN 'S' THEN 'Simplified Tax invoice'
          END )     AS INVC_TYPE_NAME,
-       T1.INVC_NO,
+       REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
        TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT,
-       T1.GST_RGIST_NO,
+       REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO,
        T1.TAX_CODE,
        T2.TAX_NAME,
        'MYR'       AS CUR,
@@ -681,9 +681,9 @@ SELECT T1.CLM_SEQ,
        T1.NON_CLM_GST_AMT,
        T1.TOT_AMT,
        T1.ATCH_FILE_GRP_ID,
-       T1.EXP_DESC,
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
        T1.CLAM_UN,
-       T1.UTIL_NO,
+       REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) UTIL_NO,
        T3.TOT_AMT  AS ALL_TOT_AMT,
        T3.APPV_PRCSS_NO
 FROM   FCM0014D T1
@@ -706,10 +706,10 @@ GROUP BY
     t1.budget_code,
     t1.budget_code_name,
     t1.supplier,
-    t1.invc_no,
+    REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
     t1.invc_dt,
     t1.invc_type,
-    t1.gst_rgist_no,
+    REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
     t1.tax_code,
     t2.tax_name,
       t1.gst_befor_amt,
@@ -717,9 +717,9 @@ GROUP BY
     t1.non_clm_gst_amt,
     t1.tot_amt,
     t1.atch_file_grp_id,
-    t1.exp_desc,
+    REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
     t1.clam_un,
-    t1.util_no,
+    REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
     t3.tot_amt,
     t3.appv_prcss_no
 ORDER  BY T1.CLM_SEQ
@@ -749,9 +749,9 @@ SELECT T1.CLM_SEQ,
        T1.SUPPLIER AS S_MEM_ACC_NAME,
        MAX(T4.MEM_ACC_ID) AS S_MEM_ACC_ID,
        T1.INVC_TYPE,
-       T1.INVC_NO,
+       REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
        TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT,
-       T1.GST_RGIST_NO,
+       REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO,
        T1.TAX_CODE,
        'MYR'       AS CUR,
        T1.GST_BEFOR_AMT,
@@ -759,9 +759,9 @@ SELECT T1.CLM_SEQ,
        T1.NON_CLM_GST_AMT,
        T1.TOT_AMT,
        T1.ATCH_FILE_GRP_ID,
-       T1.EXP_DESC,
-       T1.UTIL_NO,
-       T1.J_PAY_NO,
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
+       REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) UTIL_NO,
+       REGEXP_REPLACE(T1.J_PAY_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) J_PAY_NO,
        TO_CHAR(T1.BIL_PERIOD_F, 'DD/MM/YYYY') AS BIL_PERIOD_F,
        TO_CHAR(T1.BIL_PERIOD_T, 'DD/MM/YYYY') AS BIL_PERIOD_T,
        T2.CRT_USER_ID,
@@ -798,18 +798,18 @@ GROUP BY
        T1.SUPPLIER,
        T4.MEM_ACC_ID,
        T1.INVC_TYPE,
-       T1.INVC_NO,
+       REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
        T1.INVC_DT,
-       T1.GST_RGIST_NO,
+       REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
        T1.TAX_CODE,
        T1.GST_BEFOR_AMT,
        T1.GST_AMT,
        T1.NON_CLM_GST_AMT,
        T1.TOT_AMT,
        T1.ATCH_FILE_GRP_ID,
-       T1.EXP_DESC,
-       T1.UTIL_NO,
-       T1.J_PAY_NO,
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       REGEXP_REPLACE(T1.J_PAY_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
        T1.BIL_PERIOD_F,
        T1.BIL_PERIOD_T,
        T2.CRT_USER_ID,
@@ -846,9 +846,9 @@ SELECT T1.CLM_SEQ,
                THEN 'Simplified Tax invoice'
          END
         ) AS INVC_TYPE,
-       T1.INVC_NO,
+       REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
        TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT,
-       T1.GST_RGIST_NO,
+       REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO,
        T1.TAX_CODE,
        'MYR'       AS CUR,
        T1.GST_BEFOR_AMT,
@@ -856,9 +856,9 @@ SELECT T1.CLM_SEQ,
        T1.NON_CLM_GST_AMT,
        T1.TOT_AMT,
        T1.ATCH_FILE_GRP_ID,
-       T1.EXP_DESC,
-       T1.UTIL_NO,
-       T1.J_PAY_NO,
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
+       REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) UTIL_NO,
+       REGEXP_REPLACE(T1.J_PAY_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) J_PAY_NO,
        TO_CHAR(T1.BIL_PERIOD_F, 'DD/MM/YYYY') AS BIL_PERIOD_F,
        TO_CHAR(T1.BIL_PERIOD_T, 'DD/MM/YYYY') AS BIL_PERIOD_T,
        T2.CRT_USER_ID,
@@ -895,18 +895,18 @@ GROUP BY
        T1.SUPPLIER,
        T4.MEM_ACC_ID,
        T1.INVC_TYPE,
-       T1.INVC_NO,
+       REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
        T1.INVC_DT,
-       T1.GST_RGIST_NO,
+       REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
        T1.TAX_CODE,
        T1.GST_BEFOR_AMT,
        T1.GST_AMT,
        T1.NON_CLM_GST_AMT,
        T1.TOT_AMT,
        T1.ATCH_FILE_GRP_ID,
-       T1.EXP_DESC,
-       T1.UTIL_NO,
-       T1.J_PAY_NO,
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       REGEXP_REPLACE(T1.J_PAY_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
        T1.BIL_PERIOD_F,
        T1.BIL_PERIOD_T,
        T2.CRT_USER_ID,
@@ -1061,7 +1061,7 @@ WHERE  T1.CLM_NO = #{clmNo}
     (
         #{appvPrcssNo}
        ,#{clmSeq}
-       ,#{invcNo}
+       ,REGEXP_REPLACE(#{invcNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,#{invcType}
        ,#{memAccId}
@@ -1080,11 +1080,11 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,'0'
        ,'0'
        ,#{totAmt}
-       ,#{expDesc}
+       ,REGEXP_REPLACE(#{expDesc}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,#{atchFileGrpId}
        ,#{clamUn}
-       ,#{utilNo}
-       ,#{jPayNo}
+       ,REGEXP_REPLACE(#{utilNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+       ,REGEXP_REPLACE(#{jPayNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,TO_DATE(#{bilPeriodF}, 'DD/MM/YYYY')
        ,TO_DATE(#{bilPeriodT}, 'DD/MM/YYYY')
        ,SYSDATE
