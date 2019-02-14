@@ -422,6 +422,7 @@
                 console.log("srvCntcInfo:"+srvCntcInfo.email);
 
                 //
+                $("#hiddenInstCntcId").val(srvCntcInfo.custCareCntId);
                 $("#srvCntcId").val(srvCntcInfo.custCareCntId);
                 $("#srvCntcName").val(srvCntcInfo.name);
                 $("#srvInitial").val(srvCntcInfo.custInitial);
@@ -1526,6 +1527,7 @@ console.log("vBindingNo" + vBindingNo);
         else if($('#rentPayMode').val() == '134') {
             vAdtPayMode = "FPX";
         }
+        console.log(" TEST CONTACT  ::::: "+ $('#srvCntcId').val().trim());
 
         var orderVO = {
 
@@ -1658,7 +1660,7 @@ console.log("vBindingNo" + vBindingNo);
             docSubmissionVOList         : GridCommon.getEditData(docGridID)
         };
 
-        Common.ajax("POST", "/sales/order/registerOrder.do", orderVO, function(result) {
+         Common.ajax("POST", "/sales/order/registerOrder.do", orderVO, function(result) {
 
             Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
 
