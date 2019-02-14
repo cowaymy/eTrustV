@@ -9,25 +9,25 @@ var trGridID;
 
 
 $(document).ready(function(){
-    
+
     tr_CreateAUIGrid();
-    
-    // 행 추가 이벤트 바인딩 
+
+    // 행 추가 이벤트 바인딩
     AUIGrid.bind(trGridID, "addRow", auiAddRowHandler);
-    // 행 삭제 이벤트 바인딩   
+    // 행 삭제 이벤트 바인딩
     AUIGrid.bind(trGridID, "removeRow", auiRemoveRowHandler);
-    
-    
+
+
     fn_getPackageInfo ();
     fn_getConfigDataInfo();
-    
+
 
     $("#confirmbt").attr("style" ,"display:inline");
     $("#searchbt").attr("style" ,"display:inline");
     $("#resetbt").attr("style" ,"display:none");
-    
+
     AUIGrid.resize(trGridID, 1000,300)
-    
+
     fn_getHasBill ();
 });
 
@@ -41,15 +41,15 @@ function auiRemoveRowHandler(event) {}
 
 
 function tr_CreateAUIGrid(){
-        
-           var columnLayout = [ 
-                                {dataField : "type",       headerText : "<spring:message code="sal.title.type" />",    width :300}, 
+
+           var columnLayout = [
+                                {dataField : "type",       headerText : "<spring:message code="sal.title.type" />",    width :300},
                                 {dataField : "trNo",       headerText : "<spring:message code="sal.title.trNo" />",    width : 100},
                                 {dataField : "issDate",   headerText : "<spring:message code="sal.title.issueDate" />",  width : 200},
                                 {
                                        dataField : "undefined",
                                        headerText : " ",
-                                       width           : 110,    
+                                       width           : 110,
                                        renderer : {
                                            type : "ButtonRenderer",
                                            labelText : "Remove",
@@ -63,58 +63,58 @@ function tr_CreateAUIGrid(){
                                         visible : false
                                            }
           ];
-         
+
            var gridPros = { usePaging : false,editable: false  ,     softRemovePolicy : "exceptNew" };
-           trGridID = GridCommon.createAUIGrid("tr_grid_wrap",columnLayout,'', gridPros);  
+           trGridID = GridCommon.createAUIGrid("tr_grid_wrap",columnLayout,'', gridPros);
 }
-       
+
 
 
 
 function  fn_goAddNewTr(){
     Common.popupDiv("/sales/membership/paymentAddNewTR.do");
-}     
+}
 
 
 
 var packageInfo  ={};
 
-//getPackageInfo 
-function fn_getPackageInfo (){ 
-    
+//getPackageInfo
+function fn_getPackageInfo (){
+
     var  v_QUOT_ID = $("#QUOT_ID").val();
-    
+
     if  ('${QUOT_ID}'  !=""){
         v_QUOT_ID = '${QUOT_ID}';
-    }   
-    
+    }
+
 Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo", {QUOT_ID:v_QUOT_ID  ,ORD_ID: $("#ORD_ID").val() }, function(result) {
 	   console.log( "selectMembershipQuotInfo==>");
 	console.log( result);
-     
-     
+
+
              fn_doQuotInfoClear();
-         
+
              if(result.length > 0){
-            	 
+
             	   packageInfo=  result[0];
-                 
+
                    $("#convt_quotNo").html(result[0].quotNo);
                    $("#convt_cretDt").html(result[0].crtDt);
-                   $("#convt_create").html(result[0].crtUserId); 
+                   $("#convt_create").html(result[0].crtUserId);
                    $("#convt_sales").html("");
-                   $("#convt_validDt").html(result[0].validDt);  
-                   $("#convt_dur").html(result[0].dur+" <spring:message code="sal.text.month" /> ");     
-                   
-                   $("#convt_package").html(result[0].pacDesc);     
+                   $("#convt_validDt").html(result[0].validDt);
+                   $("#convt_dur").html(result[0].dur+" <spring:message code="sal.text.month" /> ");
+
+                   $("#convt_package").html(result[0].pacDesc);
                    $("#convt_totAmt").html(result[0].totAmt);
-                   $("#convt_pakAmt").html(result[0].pacAmt);  
-                   $("#convt_filterAmt").html(result[0].filterAmt);  
+                   $("#convt_pakAmt").html(result[0].pacAmt);
+                   $("#convt_filterAmt").html(result[0].filterAmt);
                    $("#convt_packPromo").html(result[0].pacPromoCode +" "+ result[0].pacPromoDesc);
-                   $("#convt_filterPromo").html(result[0].promoCode + " " +result[0].promoDesc);  
-                   $("#convt_bsFreq").html(result[0].bsFreq +" <spring:message code="sal.text.month" /> ");  
-                   
-                   
+                   $("#convt_filterPromo").html(result[0].promoCode + " " +result[0].promoDesc);
+                   $("#convt_bsFreq").html(result[0].bsFreq +" <spring:message code="sal.text.month" /> ");
+
+
                    //Contact Person Tab //MembershipQuotInfo
                       $("#inc_cntName").html(result[0].cntName);
                       $("#inc_cntNric").html(result[0].cntNric);
@@ -125,24 +125,24 @@ Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo", {QUOT_ID:v_QUOT
                       $("#inc_cntTelO").html(result[0].cntTelO);
                       $("#inc_cntTelF").html(result[0].cntTelF);
                       $("#inc_cntEmail").html(result[0].cntEmail);
-                      
+
                       //$("#BranchID").val(result[0].brnchName );
 
-                      
-                      
+
+
                       if(result[0].ordId>0){
-                          
-                          
+
+
                           $("#ORD_ID").val(result[0].ordId);
                           $("#SALES_PERSON").val(result[0].memCode);
                           $("#SALES_PERSON_DESC").html( "<b>"+result[0].memName+"</b>");
-                          
+
                           $("#sale_confirmbt").attr("style" ,"display:none");
                           $("#sale_searchbt").attr("style" ,"display:none");
                           $("#sale_resetbt").attr("style" ,"display:inline");
                           $("#SALES_PERSON").attr("class","readonly");
-                          
-                          
+
+
                       }
              }
      });
@@ -162,7 +162,7 @@ function fn_doQuotInfoClear(){
         $("#convt_packPromo").html("");
         $("#convt_filterPromo").html("");
         $("#convt_bsFreq").html("");
-        
+
          $("#inc_cntName").html("");
          $("#inc_cntNric").html("");
          $("#inc_cntGender").html("");
@@ -184,18 +184,18 @@ function  fn_goCollecter(){
 
 
 function fn_doCollecterResult(item){
-       
+
        console.log(item);
-       
+
         if (typeof (item) != "undefined"){
-                
+
                $("#COLL_MEM_CODE").val(item.memCode);
                $("#COLL_MEM_NAME").html(item.name);
                $("#confirmbt").attr("style" ,"display:none");
                $("#searchbt").attr("style" ,"display:none");
                $("#resetbt").attr("style" ,"display:inline");
                $("#COLL_MEM_CODE").attr("class","readonly");
-               
+
         }else{
                $("#COLL_MEM_CODE").val("");
                $("#COLL_MEM_NAME").html("");
@@ -204,35 +204,35 @@ function fn_doCollecterResult(item){
 }
 
 function fn_goColleConfirm() {
-    
+
     if($("#COLL_MEM_CODE").val() =="") {
-            
+
             Common.alert("<spring:message code="sal.alert.msg.keyInCollectorCode" /> ");
             return ;
     }
-        
-        
+
+
     Common.ajax("GET", "/sales/membership/paymentColleConfirm", $("#collForm").serialize(), function(result) {
              console.log( result);
-             
+
              if(result.length > 0){
-                 
+
                  $("#COLL_MEM_CODE").val(result[0].memCode);
                  $("#COLL_MEM_NAME").html(result[0].name);
-                 
+
                  $("#confirmbt").attr("style" ,"display:none");
                  $("#searchbt").attr("style" ,"display:none");
                  $("#resetbt").attr("style" ,"display:inline");
                  $("#COLL_MEM_CODE").attr("class","readonly");
-                 
+
              }else {
-                 
+
                  $("#COLL_MEM_NAME").html("");
                  Common.alert(" <spring:message code="sal.alert.msg.unableToFind" /> [" +$("#COLL_MEM_CODE").val() +"] <spring:message code="sal.alert.msg.unableToFind2" />   ");
                  return ;
              }
      });
-        
+
 }
 
 
@@ -241,55 +241,55 @@ function fn_goColleConfirm() {
 
 
 function fn_resultAddNewTr(item){
-    
+
       console.log( item);
-      
+
       if(  item.tr_type =="3"){
-          
+
           var  gItem = new Object();
                   gItem.type ="Membership Package" ;
                   gItem.trNo = item.tr_number;
                   gItem.issDate = item.tr_issueddate;
                   gItem.trId ="1";
-                  
-                  
+
+
                  if( AUIGrid.isUniqueValue (trGridID,"trId" ,gItem.trId )){
-                     
+
                       fn_addRow(gItem);
                  }else{
                      Common.alert("<b>Failed to bind current TR list.<br />Please try again later.</b>");
                      return ;
                  }
-                 
-               
-                  
-                 
-                  
+
+
+
+
+
           var  gItem2 = new Object();
                   gItem2.type ="Filter (1st BS)" ;
                   gItem2.trNo = item.tr_number;
                   gItem2.issDate = item.tr_issueddate;
                   gItem2.trId ="2";
-                  
+
                   if(  AUIGrid.isUniqueValue (trGridID,"trId",gItem2.trId)) {
-                      
+
                       fn_addRow(gItem2);
-                  
+
                  }else{
                       Common.alert("<b>Failed to bind current TR list.<br />Please try again later.</b>");
                       return ;
                   }
-                  
-                 
+
+
       }else{
-         
+
                   var  gItem = new Object();
                   gItem.type =item.tr_text ;
                   gItem.trNo = item.tr_number;
                   gItem.issDate = item.tr_issueddate;
                   gItem.trId =item.tr_type;
-                  
-                  
+
+
                   if( AUIGrid.isUniqueValue (trGridID,"trId",gItem.trId )){
                             fn_addRow(gItem);
                   }else{
@@ -302,20 +302,20 @@ function fn_resultAddNewTr(item){
 
 
 //행 추가, 삽입
-function  fn_addRow(gItem) {      
+function  fn_addRow(gItem) {
     AUIGrid.addRow(trGridID, gItem, "first");
 }
 
 
 
 function fn_goCollecterReset(){
-    
+
     $("#confirmbt").attr("style" ,"display:inline");
     $("#searchbt").attr("style" ,"display:inline");
     $("#resetbt").attr("style" ,"display:none");
     $("#COLL_MEM_CODE").attr("class","");
     $("#COLL_MEM_NAME").html("");
-    
+
 }
 
 
@@ -323,30 +323,30 @@ function fn_goCollecterReset(){
 
 
 //get Last Membership  &   Expire Date
-function fn_getConfigDataInfo (){ 
-    
+function fn_getConfigDataInfo (){
+
   Common.ajax("GET", "/sales/membership/paymentConfig", {PAY_ORD_ID:$("#ORD_ID").val()  }, function(result) {
        console.log( result);
-       
+
        $("#last_membership_text").html("");
        $("#expire_date_text").html("");
-       
-       
+
+
        if(result.length > 0){
-           
-           if(result[0].lastSrvMemId >0){
-               
+
+           if(result[0].lastSrvMemId >0 && result[0].srvMemNo.substring(0,2) == 'SM'){
+
                $("#LAST_MBRSH_ID").val(result[0].lastSrvMemId );
-               
+
                fn_getMembershipDataInfo ();
                //fn_getMembershipChargesDataInfo();
-               
+
            }else{
-               
+
                  $("#confirmbt").attr("style" ,"display:inline");
                  $("#searchbt").attr("style" ,"display:inline");
                  $("#resetbt").attr("style" ,"display:none");
-                    
+
            }
        }
   });
@@ -355,13 +355,13 @@ function fn_getConfigDataInfo (){
 
 var pMInfo ={};
 //get Last Membership  &   Expire Date
-function fn_getMembershipDataInfo (){ 
+function fn_getMembershipDataInfo (){
     Common.ajax("GET", "/sales/membership/paymentLastMembership", {PAY_LAST_MBRSH_ID : $("#LAST_MBRSH_ID").val() },  function(result) {
-        console.log("paymentLastMembership==>"); 
+        console.log("paymentLastMembership==>");
     	console.log( result);
-    	
+
     	pMInfo =result[0];
-    	
+
     	 //$("#BranchID").val(result[0].brnchId);
          $("#last_membership_text").html( result[0].pacCode +" "+ result[0].pacName);
          $("#expire_date_text").html( result[0].mbrshExprDt);
@@ -370,41 +370,41 @@ function fn_getMembershipDataInfo (){
 
 
 function fn_goSalesConfirm(){
-    
+
        if($("#SALES_PERSON").val() =="") {
-                
+
                 Common.alert("Please key in the collector code before you confirm the payment collector ");
                 return ;
         }
-            
-            
+
+
         Common.ajax("GET", "/sales/membership/paymentColleConfirm", { COLL_MEM_CODE:   $("#SALES_PERSON").val() } , function(result) {
                  console.log( result);
-                 
+
                  if(result.length > 0){
-                     
+
                      $("#SALES_PERSON").val(result[0].memCode);
                      $("#SALES_PERSON_DESC").html(result[0].name);
-                     
+
                      $("#sale_confirmbt").attr("style" ,"display:none");
                      $("#sale_searchbt").attr("style" ,"display:none");
                      $("#sale_resetbt").attr("style" ,"display:inline");
                      $("#SALES_PERSON").attr("class","readonly");
-                     
+
                  }else {
-                     
+
                      $("#SALES_PERSON_DESC").html("");
                      Common.alert(" Unable to find [" +$("#SALES_PERSON").val() +"] in system. <br>  Please ensure you key in the correct member code.   ");
                      return ;
                  }
-                 
+
          });
-} 
+}
 
 function  fn_goSalesPerson(){
-    
+
       Common.popupDiv("/sales/membership/paymentCollecter.do?resultFun=S");
-} 
+}
 
 
 function fn_goSalesPersonReset(){
@@ -414,21 +414,21 @@ function fn_goSalesPersonReset(){
     $("#sale_resetbt").attr("style" ,"display:none");
     $("#SALES_PERSON").attr("class","");
     $("#SALES_PERSON_DESC").html("");
-    
+
 }
 
 
 function fn_doSalesResult(item){
-       
+
     if (typeof (item) != "undefined"){
-            
+
            $("#SALES_PERSON").val(item.memCode);
            $("#SALES_PERSON_DESC").html(item.name);
            $("#sale_confirmbt").attr("style" ,"display:none");
            $("#sale_searchbt").attr("style" ,"display:none");
            $("#sale_resetbt").attr("style" ,"display:inline");
            $("#SALES_PERSON").attr("class","readonly");
-           
+
     }else{
            $("#SALES_PERSON").val("");
            $("#SALES_PERSON_DESC").html("");
@@ -441,8 +441,8 @@ function fn_doSalesResult(item){
 
 
 function fn_Sale_processing(){
-	
-    
+
+
 	var mSaveForm={
 								srvMemQuotId :   $("#QUOT_ID").val() =="" ?  '${QUOT_ID}' : $("#QUOT_ID").val()  ,
 							    srvSalesOrdId: $("#ORD_ID").val() ,
@@ -477,36 +477,36 @@ function fn_Sale_processing(){
 								srvStockCode :  $("#inc_stockCode").text(),
 							    srvStockDesc :  $("#inc_stockDesc").text(),
 							    poNo : $("#poNo").val()
-								
+
 	}
-   
-	
+
+
 	console.log(mSaveForm);
 	Common.ajax("POST", "/sales/membership/mQuotConvSaleSave.do", mSaveForm,  function(result) {
        console.log( result);
-       
+
        if(result !="" ){
            Common.alert("<b>Membership successfully saved.<br> You must key in payment.</b>");
            $("#_mConvSaleDiv1").remove();
            fn_selectListAjax() ;
        }
-       
-    
+
+
    });
 }
 
 
-//getHasBill 
-function fn_getHasBill (){ 
-	
+//getHasBill
+function fn_getHasBill (){
+
   Common.ajax("GET", "/sales/membership/getHasBill.do", {srvMemQuotId:'${QUOT_ID}' },  function(result) {
-      console.log("getHasBill.do==>"); 
+      console.log("getHasBill.do==>");
       console.log("==>["+result+"]");
-      
+
       if(null != result ){
     	   $("#processbt").attr("style","display:none");
       }
-      
+
   });
 }
 
@@ -517,7 +517,7 @@ function fn_getHasBill (){
 
 
 
- 
+
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
@@ -543,12 +543,12 @@ function fn_getHasBill (){
 <input type="hidden" name="BranchID"  id="BranchID"  value="${SESSION_INFO.userBranchId}"/>
 <input type="hidden" name="aaQUOT_ID"  id="aaQUOT_ID" value=  '${QUOT_ID}'  />
  </div>
-    
+
 </form>
-  
 
 
-<section class="tap_wrap"><!-- tap_wrap start -->  
+
+<section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
    <!--  <li><a href="#" class="on">Membership Info</a></li> -->
     <li><a href="#"  class="on">Package Info</a></li>
@@ -617,17 +617,17 @@ function fn_getHasBill (){
 
 
 <!-- oder info tab  start...-->
-    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_orderInfo.do?ORD_ID=${ORD_ID}'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_orderInfo.do?ORD_ID=${ORD_ID}'/>
 <!-- oder info tab  end...-->
 
 
 <!-- person info tab  start...-->
-    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_contactPersonInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_contactPersonInfo.do'/>
 <!-- oder info tab  end...-->
 
 
 <!-- person info tab  start...-->
-    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_quotFilterInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_quotFilterInfo.do'/>
 <!-- oder info tab  end...-->
 
 <br/>
@@ -669,16 +669,16 @@ function fn_getHasBill (){
 </form>
 </section><!-- search_table end -->
  --%>
- 
- 
- 
- 
- 
- 
- <div  id='payments_old' style='display:none'> 
- 
- 
- 
+
+
+
+
+
+
+ <div  id='payments_old' style='display:none'>
+
+
+
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Payment Item</h3>
@@ -708,27 +708,27 @@ function fn_getHasBill (){
         </select>
     </td>
     <th scope="row">Pay Mode</th>
-    <td>       
-    
+    <td>
+
         <select class="w100p"  id="payMode" name="payMode" >
           <option value="1"> CRC</option>
           <option value="2">Normal </option>
           <option value="3">Advance</option>
       </select>
-    
+
     </td>
-    
+
     <th scope="row">Processing</th>
-    <td>       
-        <p class="btn_sky"  id="sale_processing" ><a href="#" onclick="javascript:fn_Sale_processing()">Processing</a></p>    
+    <td>
+        <p class="btn_sky"  id="sale_processing" ><a href="#" onclick="javascript:fn_Sale_processing()">Processing</a></p>
     </td>
 </tr>
 </tbody>
 </table><!-- table end -->
 </form>
 </section><!-- search_table end -->
- 
- 
+
+
 
 
 <aside class="title_line"><!-- title_line start -->
@@ -750,8 +750,8 @@ function fn_getHasBill (){
 <tr>
     <th scope="row">Sales Person Code</th>
     <td><input type="text" title="" placeholder="" class="" id="SALES_PERSON" name="SALES_PERSON"  />
-        <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()">Confirm</a></p>    
-        <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" >Search</a></p>  
+        <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()">Confirm</a></p>
+        <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" >Search</a></p>
         <p class="btn_sky"  id="sale_resetbt"><a href="#" onclick="javascript:fn_goSalesPersonReset()" >Reset</a></p>
     </td>
     <th scope="row">Sales Person Code</th>
@@ -772,7 +772,7 @@ function fn_getHasBill (){
 </aside><!-- title_line end -->
 
 <section class="search_table mt20"><!-- search_table start -->
-<form action="#" method="post"> 
+<form action="#" method="post">
 
 
 <table class="type1"><!-- table start -->
@@ -816,17 +816,17 @@ function fn_getHasBill (){
     <col style="width:150px" />
     <col style="width:*" />
 </colgroup>
-<tbody>  
+<tbody>
 <tr>
     <th scope="row">Collector Code</th>
     <td><input type="text" title="" placeholder="" class=""  id="COLL_MEM_CODE"  NAME="COLL_MEM_CODE"/>
-        <p class="btn_sky"  id="confirmbt" ><a href="#" onclick="javascript:fn_goColleConfirm()">Confirm</a></p>  
-        <p class="btn_sky"  id="searchbt"><a href="#" onclick="javascript:fn_goCollecter()" >Search</a></p>  
+        <p class="btn_sky"  id="confirmbt" ><a href="#" onclick="javascript:fn_goColleConfirm()">Confirm</a></p>
+        <p class="btn_sky"  id="searchbt"><a href="#" onclick="javascript:fn_goCollecter()" >Search</a></p>
         <p class="btn_sky"  id="resetbt"><a href="#" onclick="javascript:fn_goCollecterReset()" >Reset</a></p>
      </td>
     <th scope="row">Collector Name</th>
     <td><span id="COLL_MEM_NAME" NAME="COLL_MEM_NAME">-</span></td>
-</tr>   
+</tr>
 <tr>
     <th scope="row">Commission</th>
     <td colspan="3">
@@ -841,30 +841,30 @@ function fn_getHasBill (){
 
 
  ---------------------   add on for Payment Item -----------------------------
- 
+
  </div>
- 
- 
+
+
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
 
 
 
-<script> 
+<script>
     var quot = $("#QUOT_ID").val();
     console.log(quot);
-    
-    if(quot >0){  
-         fn_getMembershipQuotInfoAjax(); 
+
+    if(quot >0){
+         fn_getMembershipQuotInfoAjax();
          fn_getMembershipQuotInfoFilterAjax('${QUOT_ID}');
-          
+
     }else{
-        //auto로 넘어온 경우 
+        //auto로 넘어온 경우
         fn_getMembershipQuotInfoFilterAjax('${QUOT_ID}');
     }
-     
-    
-    
+
+
+
 </script>
 
