@@ -241,14 +241,14 @@ SELECT   T.CLM_NO
        ,#{bankCode}
        ,#{bankAccNo}
        ,#{invcType}
-       ,#{invcNo}
+       ,REGEXP_REPLACE(#{invcNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
        ,#{atchFileGrpId}
-       ,#{invcRem}
+       ,REGEXP_REPLACE(#{invcRem}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,#{totAmt}
        ,#{appvPrcssNo}
-       ,#{utilNo}
+       ,REGEXP_REPLACE(#{utilNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,TO_DATE(#{keyDate}, 'DD/MM/YYYY')
        ,#{jPayNo}
        ,TO_DATE(#{bilPeriodF}, 'DD/MM/YYYY')
@@ -328,18 +328,18 @@ SELECT   T.CLM_NO
                    ,T1.INVC_TYPE
                    ,T1.MEM_ACC_ID
                    ,T2.MEM_ACC_NAME
-                   ,T1.GST_RGIST_NO
+                   ,REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO
                    ,T1.BANK_CODE
                    ,T2.BANK_NAME
                    ,T1.BANK_ACC_NO
                    ,TO_CHAR(T1.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT
                    ,T1.ATCH_FILE_GRP_ID
-                   ,T1.INVC_REM
+                   ,REGEXP_REPLACE(T1.INVC_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_REM
                    ,NVL(T1.TOT_AMT, 0) TOT_AMT
                    ,T1.APPV_PRCSS_NO
-                   ,T1.UTIL_NO
+                   ,REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) UTIL_NO
                    ,TO_CHAR(T1.KEY_IN_DT, 'DD/MM/YYYY') AS KEY_IN_DT
-                   ,T1.J_PAY_NO
+                   ,REGEXP_REPLACE(T1.J_PAY_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) J_PAY_NO
                    ,TO_CHAR(T1.BIL_PERIOD_F, 'DD/MM/YYYY') AS BIL_PERIOD_F
                    ,TO_CHAR(T1.BIL_PERIOD_T, 'DD/MM/YYYY') AS BIL_PERIOD_T
                    ,T1.CRT_DT
@@ -370,18 +370,18 @@ SELECT   T.CLM_NO
                    ) AS INVC_TYPE
                    ,T1.MEM_ACC_ID
                    ,T2.MEM_ACC_NAME
-                   ,T1.GST_RGIST_NO
+                   ,REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO
                    ,T1.BANK_CODE
                    ,T2.BANK_NAME
                    ,T1.BANK_ACC_NO
                    ,TO_CHAR(T1.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT
                    ,T1.ATCH_FILE_GRP_ID
-                   ,T1.INVC_REM
+                   ,REGEXP_REPLACE(T1.INVC_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_REM
                    ,NVL(T1.TOT_AMT, 0) TOT_AMT
                    ,T1.APPV_PRCSS_NO
-                   ,T1.UTIL_NO
+                   ,REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) UTIL_NO
                    ,TO_CHAR(T1.KEY_IN_DT, 'DD/MM/YYYY') AS KEY_IN_DT
-                   ,T1.J_PAY_NO
+                   ,REGEXP_REPLACE(T1.J_PAY_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) J_PAY_NO
                    ,TO_CHAR(T1.BIL_PERIOD_F, 'DD/MM/YYYY') AS BIL_PERIOD_F
                    ,TO_CHAR(T1.BIL_PERIOD_T, 'DD/MM/YYYY') AS BIL_PERIOD_T
                    ,T1.CRT_DT
@@ -414,7 +414,7 @@ SELECT   T.CLM_NO
                    ,T.TAX_AMT
                    ,T.TAX_NON_CLM_AMT
                    ,T.TOT_AMT
-                   ,T.EXP_DESC
+                   ,REGEXP_REPLACE(T.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC
                    ,T.CLAM_UN
           FROM FCM0003D T LEFT JOIN FCM0007C TT
           ON T.TAX_CODE = TT.TAX_CODE
@@ -440,7 +440,7 @@ SELECT   T.CLM_NO
                    ,T.TAX_AMT AS GST_AMT
                    ,T.TAX_NON_CLM_AMT
                    ,T.TOT_AMT
-                   ,T.EXP_DESC
+                   ,REGEXP_REPLACE(T.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC
                    ,T.CLAM_UN
           FROM FCM0003D T LEFT JOIN FCM0007C TT
           ON T.TAX_CODE = TT.TAX_CODE
@@ -510,11 +510,11 @@ SELECT   T.CLM_NO
        ,INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,PAY_DUE_DT = TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
        ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
-       ,INVC_REM = #{invcRem}
+       ,INVC_REM = REGEXP_REPLACE(#{invcRem}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,TOT_AMT = #{totAmt}
-       ,UTIL_NO = #{utilNo}
+       ,UTIL_NO = REGEXP_REPLACE(#{utilNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,KEY_IN_DT = TO_DATE(#{keyDate}, 'DD/MM/YYYY')
-       ,J_PAY_NO = #{jPayNo}
+       ,J_PAY_NO = REGEXP_REPLACE(#{jPayNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,BIL_PERIOD_F = TO_DATE(#{bilPeriodF}, 'DD/MM/YYYY')
        ,BIL_PERIOD_T = TO_DATE(#{bilPeriodT}, 'DD/MM/YYYY')
        ,UPD_DT = SYSDATE
@@ -533,7 +533,7 @@ SELECT   T.CLM_NO
        ,BUDGET_CODE = #{budgetCode}
        ,BUDGET_CODE_NAME = #{budgetCodeName}
        ,TOT_AMT = #{totAmt}
-       ,EXP_DESC = #{expDesc}
+       ,EXP_DESC = REGEXP_REPLACE(#{expDesc}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
     WHERE CLM_NO = #{clmNo}
@@ -693,11 +693,11 @@ SELECT   T.CLM_NO
        ,#{totAmt}
        ,'0'
        ,#{totAmt}
-       ,#{expDesc}
+       ,REGEXP_REPLACE(#{expDesc}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,#{atchFileGrpId}
        ,#{clamUn}
-       ,#{utilNo}
-       ,#{jPayNo}
+       ,REGEXP_REPLACE(#{utilNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+       ,REGEXP_REPLACE(#{jPayNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,TO_DATE(#{bilPeriodF}, 'DD/MM/YYYY')
        ,TO_DATE(#{bilPeriodT}, 'DD/MM/YYYY')
        ,SYSDATE
@@ -1421,15 +1421,15 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         COST_CENTR,
         COST_CENTR_NAME,
         MEM_ACC_ID,
-        GST_RGIST_NO,
+        REGEXP_REPLACE(GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO,
         BANK_CODE,
         BANK_ACC_NO,
         INVC_TYPE,
-        INVC_NO,
+        REGEXP_REPLACE(INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
         INVC_DT,
         PAY_DUE_DT,
         ATCH_FILE_GRP_ID,
-        INVC_REM,
+        REGEXP_REPLACE(INVC_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_REM
         TOT_AMT,
         SYSDATE,
         #{userId},
@@ -1487,7 +1487,7 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         TAX_AMT,
         TAX_NON_CLM_AMT,
         TOT_AMT,
-        EXP_DESC,
+        REGEXP_REPLACE(EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
         #{clamUn},
         SYSDATE,
         #{userId},

@@ -471,7 +471,7 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
         #{clmNo}
        ,#{clmSeq}
        ,#{invcType}
-       ,#{invcNo}
+       ,REGEXP_REPLACE(#{invcNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,#{supplyName}
        ,#{expType}
@@ -486,11 +486,11 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
        ,'0'
        ,#{totAmt}
        ,#{atchFileGrpId}
-       ,#{expDesc}
+       ,REGEXP_REPLACE(#{expDesc}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,#{clamUn}
        ,UPPER(#{sCostCentr})
        ,NVL(#{sCostCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{sCostCentr})))
-       ,#{gstRgistNo}
+       ,REGEXP_REPLACE(#{gstRgistNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -517,7 +517,7 @@ SELECT T1.CLM_SEQ,
            WHEN 'F' THEN 'Full Tax invoice'
            WHEN 'S' THEN 'Simplified Tax invoice'
          END )     AS INVC_TYPE_NAME,
-       T1.INVC_NO,
+       REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
        TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT,
        T1.TAX_CODE,
        T2.TAX_NAME,
@@ -530,8 +530,8 @@ SELECT T1.CLM_SEQ,
        REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
        T1.CLAM_UN,
        T1.COST_CENTR AS S_COST_CENTR,
-       T1.COST_CENTR_NAME AS S_COST_CENTR_NAME,
-       T1.GST_RGIST_NO,
+       T1.COST_CENTR_NAME AS S_COST_CENTR_NAME,,
+       REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO,
        T3.TOT_AMT  AS ALL_TOT_AMT,
        T3.APPV_PRCSS_NO
 FROM   FCM0018D T1
@@ -556,13 +556,13 @@ SELECT T1.CLM_SEQ,
        T2.COST_CENTR_NAME,
        T1.COST_CENTR AS S_COST_CENTR,
        T1.COST_CENTR_NAME AS S_COST_CENTR_NAME,
-       T1.GST_RGIST_NO,
+       REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO,
        T2.BANK_CODE,
        T2.BANK_NAME,
        TO_CHAR(TO_DATE(T2.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH,
        T2.APPV_PRCSS_NO,
        T1.INVC_TYPE,
-       T1.INVC_NO,
+       REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
        TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT,
        T1.SUPPLY_NAME,
        T1.EXP_TYPE,
@@ -578,7 +578,7 @@ SELECT T1.CLM_SEQ,
        T1.TAX_NON_CLM_AMT,
        T1.TOT_AMT,
        T1.ATCH_FILE_GRP_ID,
-       T1.EXP_DESC
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC
 FROM   FCM0018D T1
        LEFT JOIN FCM0017M T2
               ON T1.CLM_NO = T2.CLM_NO
@@ -600,7 +600,7 @@ SELECT T1.CLM_SEQ,
        T2.COST_CENTR_NAME,
        T1.COST_CENTR AS S_COST_CENTR,
        T1.COST_CENTR_NAME AS S_COST_CENTR_NAME,
-       T1.GST_RGIST_NO,
+       REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO,
        T2.BANK_CODE,
        T2.BANK_NAME,
        TO_CHAR(TO_DATE(T2.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH,
@@ -612,7 +612,7 @@ SELECT T1.CLM_SEQ,
               THEN 'Simplified Tax invoice'
         END
         ) AS INVC_TYPE,
-       T1.INVC_NO,
+       REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
        TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT,
        T1.SUPPLY_NAME AS SUPPLIER,
        T1.EXP_TYPE,
@@ -628,7 +628,7 @@ SELECT T1.CLM_SEQ,
        T1.TAX_NON_CLM_AMT,
        T1.TOT_AMT,
        T1.ATCH_FILE_GRP_ID,
-       T1.EXP_DESC
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC
 FROM   FCM0018D T1
        LEFT JOIN FCM0017M T2
               ON T1.CLM_NO = T2.CLM_NO
@@ -784,7 +784,7 @@ WHERE  T1.CLM_NO = #{clmNo}
     (
         #{appvPrcssNo}
        ,#{clmSeq}
-       ,#{invcNo}
+       ,REGEXP_REPLACE(#{invcNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,#{invcType}
        ,#{crditCardUserId}
@@ -803,7 +803,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,'0'
        ,'0'
        ,#{totAmt}
-       ,#{expDesc}
+       ,REGEXP_REPLACE(#{expDesc}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,#{atchFileGrpId}
        ,#{clamUn}
        ,SYSDATE
@@ -941,7 +941,7 @@ WHERE CRDIT_CARD_STUS = 'A'
         #{newClmNo},
         CLM_SEQ,
         INVC_TYPE,
-        INVC_NO,
+        REGEXP_REPLACE(INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
         INVC_DT,
         SUPPLY_NAME,
         EXP_TYPE,
@@ -956,7 +956,7 @@ WHERE CRDIT_CARD_STUS = 'A'
         TAX_NON_CLM_AMT,
         TOT_AMT,
         ATCH_FILE_GRP_ID,
-        EXP_DESC,
+        REGEXP_REPLACE(EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC
         CLAM_UN,
         SYSDATE,
         #{userId},
@@ -964,7 +964,7 @@ WHERE CRDIT_CARD_STUS = 'A'
         #{userId},
         COST_CENTR,
         COST_CENTR_NAME,
-        GST_RGIST_NO
+        REGEXP_REPLACE(GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO
     FROM
         FCM0018D
     WHERE
