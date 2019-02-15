@@ -29,7 +29,7 @@ $(document).ready(function(){
     myPopGridID = GridCommon.createAUIGrid("grid_Pop_wrap", myPopLayout,null,gridPros);
 
     //초기화면 로딩시 조회
-    selectAdjustmentDetailPop("${adjId}");
+    selectAdjustmentDetailPop("${adjId}", "${invNo}");
 
     //모드에 따라 버튼 세팅
     if("${mode}" == "SEARCH"){
@@ -49,17 +49,18 @@ var memoAdjTypeId;
 var memoInvoiceNo;
 var month;
 var year;
+var refNo;
 
 var totalChrg = "0.00";
 var totalGST = "0.00";
 var totalAmt = "0.00";
 //상세 팝업
-function selectAdjustmentDetailPop(adjId){
+function selectAdjustmentDetailPop(adjId, invNo){
 
 
 
     //데이터 조회 (초기화면시 로딩시 조회)
-    Common.ajax("GET", "/payment/selectAdjustmentDetailPop.do", {"adjId":adjId}, function(result) {
+    Common.ajax("GET", "/payment/selectAdjustmentDetailPop.do", {"adjId":adjId, "invNo":invNo}, function(result) {
         if(result != 'undefined'){
 
             //Master데이터 출력
@@ -71,6 +72,7 @@ function selectAdjustmentDetailPop(adjId){
             memoInvoiceNo = result.master.taxInvcRefNo;
             month = result.master.month;
             year = result.master.year;
+            refNo = result.master.memoAdjRefNo;
 
             $("#tRequestor").text(result.master.memoAdjCrtUserId);
             $("#tStatus").text(result.master.memoAdjStusNm);
@@ -124,6 +126,11 @@ function fn_generateReport(){
 		Common.alert("<spring:message code='pay.alert.onlyComplete'/>");
         return;
 	}
+
+	if(invoiceType ==  0){
+        $("#reportPDFFormOld #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF_BeforeGST.rpt');
+
+    }
 
     if(invoiceType ==  126 || invoiceType == 127){
     	if( parseInt(year)*100 + parseInt(month) >= 201809){
@@ -201,13 +208,24 @@ function fn_generateReport(){
 
     $("#reportPDFForm #v_adjid").val(memoAdjId);
     $("#reportPDFForm #v_type").val(invoiceType);
+    if(invoiceType == 0){
+        $("#reportPDFFormOld #v_adjid").val(memoAdjId);
+        $("#reportPDFFormOld #v_type").val(invoiceType);
+        $("#reportPDFFormOld #v_refno").val(refNo);
+
+    }
 
     //report 호출
     var option = {
             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
     };
 
-    Common.report("reportPDFForm", option);
+    if(invoiceType == 0){
+        Common.report("reportPDFFormOld", option);
+    }
+    else{
+        Common.report("reportPDFForm", option);
+    }
 }
 
 function fn_approve(process){
@@ -356,4 +374,12 @@ function fn_approve(process){
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="v_adjid" name="v_adjid" />
     <input type="hidden" id="v_type" name="v_type" />
+</form>
+
+<form name="reportPDFFormOld" id="reportPDFFormOld"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="v_adjid" name="v_adjid" />
+    <input type="hidden" id="v_type" name="v_type" />
+    <input type="hidden" id="v_refno" name="v_refno" />
 </form>

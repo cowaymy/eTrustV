@@ -28,28 +28,28 @@ public interface InvoiceAdjMapper {
 	 * @return
 	 */
 	List<EgovMap> selectInvoiceAdjList(Map<String, Object> params);
-	
+
 	/**
 	 * New Invoice Master 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectNewAdjMaster(Map<String, Object> params);
-	
+
 	/**
 	 * New Invoice Detail 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectNewAdjDetailList(Map<String, Object> params);
-	
+
 	 /**
 	 * Adjustment CN/DN AccID  조회
 	 * @param params
 	 * @return
 	 */
 	EgovMap getAdjustmentCnDnAccId(Map<String, Object> params);
-	
+
 	 /**
 	 * Adjustment ID 채번
 	 * @param params
@@ -63,56 +63,56 @@ public interface InvoiceAdjMapper {
 	 * @return
 	 */
 	void saveNewAdjMaster(Map<String, Object> params);
-	
+
 	/**
 	 * Adjustment request Batch Info 등록
 	 * @param params
 	 * @return
 	 */
 	void saveBatchInfo(Map<String, Object> params);
-	
+
 	 /**
 	 * Adjustment request Detail  등록
 	 * @param params
 	 * @return
 	 */
 	void saveNewAdjDetail(Map<String, Object> params);
-	
+
 	/**
 	 * Adjustment Batch ID 채번
 	 * @param params
 	 * @return
 	 */
 	int getAdjBatchId();
-	
+
 	/**
 	 * Adjustment History 등록
 	 * @param params
 	 * @return
 	 */
 	void saveNewAdjHist(Map<String, Object> params);
-	
+
 	/**
 	 * Adjustment CN/DN Detail Pop-up Master 조회
 	 * @param params
 	 * @return
 	 */
     EgovMap selectAdjDetailPopMaster(Map<String, Object> params);
-    
+
     /**
 	 * Adjustment CN/DN Detail Pop-up Detail List 조회
 	 * @param params
 	 * @return
 	 */
     List<EgovMap> selectAdjDetailPopList(Map<String, Object> params);
-    
+
     /**
 	 * Adjustment CN/DN Detail Pop-up History 조회
 	 * @param params
 	 * @return
 	 */
     List<EgovMap> selectAdjDetailPopHist(Map<String, Object> params);
-    
+
     /**
 	* Approval Adjustment  - Approva / Reject Master
 	* @param params
@@ -120,7 +120,7 @@ public interface InvoiceAdjMapper {
 	* @return
 	*/
 	void approvalAdjustmentMaster(Map<String, Object> params);
-	
+
 	/**
 	* Approval Adjustment  - Approva / Reject Details
 	* @param params
@@ -128,13 +128,13 @@ public interface InvoiceAdjMapper {
 	* @return
 	*/
 	void approvalAdjustmentDetails(Map<String, Object> params);
-	
+
 	/**
 	 * 승인 데이터 처리에 필요한 메서드들 : Rental
 	 * @param params
 	 * @return
 	 */
-	
+
 	int getNoteId();
     EgovMap selectAdjMasterForApprovalRental(Map<String, Object> params);
     void insertAccTaxDebitCreditNote(EgovMap params);
@@ -142,7 +142,7 @@ public interface InvoiceAdjMapper {
     void insertAccTaxDebitCreditNoteSub(EgovMap params);
     void insertAccServiceContractLedger(Map<String, Object> params);
     void insertAccRentLedger(Map<String, Object> params);
-    
+
     /**
 	 * 승인 데이터 처리에 필요한 메서드들 : Outright
 	 * @param params
@@ -151,7 +151,7 @@ public interface InvoiceAdjMapper {
     EgovMap selectAdjMasterForApprovalOutright(Map<String, Object> params);
     List<EgovMap> selectAdjDetailsForApprovalOutright(Map<String, Object> params);
     void insertAccTradeLedger(Map<String, Object> params);
-    
+
     /**
 	 * 승인 데이터 처리에 필요한 메서드들 : Misc
 	 * @param params
@@ -159,38 +159,41 @@ public interface InvoiceAdjMapper {
 	 */
     EgovMap selectAdjMasterForApprovalMisc(Map<String, Object> params);
     List<EgovMap> selectAdjDetailsForApprovalMisc(Map<String, Object> params);
-    void insertASLedger(Map<String, Object> params);    
+    void insertASLedger(Map<String, Object> params);
     int selectQuotId(String quotNo);
     int selectSrvMemId(int quotId);
     void insertAccSrvMemLedger(Map<String, Object> params);
-    
+
     /**
 	 * Adjustment CN/DN Batch Approval Pop-up Master 조회
 	 * @param params
 	 * @return
 	 */
     EgovMap selectAdjBatchApprovalPopMaster(Map<String, Object> params);
-    
+
     /**
 	 * Adjustment CN/DN Batch Approval Pop-up Detail 조회
 	 * @param params
 	 * @return
 	 */
     List<EgovMap> selectAdjBatchApprovalPopDetail(Map<String, Object> params);
-    
+
     /**
 	 *  Adjustment CN/DN Batch Approval Pop-up History 조회
 	 * @param params
 	 * @return
 	 */
     List<EgovMap> selectAdjBatchApprovalPopHist(Map<String, Object> params);
-    
+
     /**
-   	 * 
+   	 *
    	 * @param params
    	 * @return
    	 */
    	int countAdjustmentExcelList(Map<String, Object> params);
-    
-    
+
+    EgovMap selectAdjDetailPopMasterOld(Map<String, Object> params);
+
+    List<EgovMap> selectAdjDetailPopListOld(Map<String, Object> params);
+
 }

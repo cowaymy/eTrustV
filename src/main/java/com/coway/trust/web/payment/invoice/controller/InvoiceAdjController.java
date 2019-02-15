@@ -75,6 +75,7 @@ public class InvoiceAdjController {
 	public String initAdjustmentDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		model.addAttribute("adjId", params.get("adjId"));
 		model.addAttribute("mode", params.get("mode"));
+		model.addAttribute("invNo", params.get("invNo"));
 		return "payment/invoice/adjCnDnDetailPop";
 	}
 
@@ -98,19 +99,40 @@ public class InvoiceAdjController {
 	 */
 	@RequestMapping(value = "/selectAdjustmentDetailPop.do", method = RequestMethod.GET)
 	public ResponseEntity<HashMap<String,Object>> selectAdjustmentDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
-
+		LOGGER.debug("adjId : {}", params.toString());
 		LOGGER.debug("adjId : {}", params.get("adjId"));
+		LOGGER.debug("invNo : {}", params.get("invNo"));
 
-		EgovMap master = invoiceService.selectAdjDetailPopMaster(params);					//마스터 데이터 조회
-		List<EgovMap> detailList = invoiceService.selectAdjDetailPopList(params);		//상세 리스트 조회
-		List<EgovMap> histlList = invoiceService.selectAdjDetailPopHist(params);		//히스토리 조회
+		String invNo = params.get("invNo").toString();
 
-		HashMap <String, Object> returnValue = new HashMap<String, Object>();
-		returnValue.put("master", master);
-		returnValue.put("detailList", detailList);
-		returnValue.put("histlList", histlList);
+		if( invNo == ""){
+			EgovMap master = invoiceService.selectAdjDetailPopMasterOld(params);					//마스터 데이터 조회
+			List<EgovMap> detailList = invoiceService.selectAdjDetailPopListOld(params);		//상세 리스트 조회
+			List<EgovMap> histlList = null;		//히스토리 조회
 
-		return ResponseEntity.ok(returnValue);
+			HashMap <String, Object> returnValue = new HashMap<String, Object>();
+			returnValue.put("master", master);
+			returnValue.put("detailList", detailList);
+			returnValue.put("histlList", histlList);
+
+			return ResponseEntity.ok(returnValue);
+
+		}
+		else{
+
+		    EgovMap master = invoiceService.selectAdjDetailPopMaster(params);					//마스터 데이터 조회
+		    List<EgovMap> detailList = invoiceService.selectAdjDetailPopList(params);		//상세 리스트 조회
+		    List<EgovMap> histlList = invoiceService.selectAdjDetailPopHist(params);		//히스토리 조회
+
+		    HashMap <String, Object> returnValue = new HashMap<String, Object>();
+			returnValue.put("master", master);
+			returnValue.put("detailList", detailList);
+			returnValue.put("histlList", histlList);
+
+			return ResponseEntity.ok(returnValue);
+
+		}
+
 	}
 
 	/**

@@ -26,7 +26,8 @@ $(document).ready(function(){
 	// 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
     	var adjId = AUIGrid.getCellValue(myGridID, event.rowIndex, 'memoAdjId');
-    	Common.popupDiv('/payment/initAdjustmentDetailPop.do', {adjId : adjId, mode : "SEARCH"}, null , true ,'_adjustmentDetailPop');
+    	var invNo = AUIGrid.getCellValue(myGridID, event.rowIndex, 'memoAdjInvcNo');
+    	Common.popupDiv('/payment/initAdjustmentDetailPop.do', {adjId : adjId, invNo : invNo, mode : "SEARCH"}, null , true ,'_adjustmentDetailPop');
     });
 
 });
