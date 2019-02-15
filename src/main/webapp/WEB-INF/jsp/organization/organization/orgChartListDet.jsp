@@ -8,12 +8,12 @@
     <script type="text/javaScript" language="javascript">
     // AUIGrid 생성 후 반환 ID
        var myGridID;
-       
-	   var memberTypeData = [{"codeId": "1","codeName": "Health Planner"},{"codeId": "2","codeName": "Coway Lady"},{"codeId": "3","codeName": "Coway Technician"}];
-	
-       
-            
-                        
+
+	   var memberTypeData = [{"codeId": "1","codeName": "Health Planner"},{"codeId": "2","codeName": "Coway Lady"},{"codeId": "3","codeName": "Coway Technician"},{"codeId": "7","codeName": "Homecare Technician"}];
+
+
+
+
         function createAUIGrid(){
         // AUIGrid 칼럼 설정
         var columnLayout = [ {
@@ -27,32 +27,32 @@
              }, {
                     dataField : "nric",
                     headerText : "NRIC",
-                    width : 120           
+                    width : 120
              }, {
                     dataField : "orgCode",
                     headerText : "Org Code",
-                    width : 120              
+                    width : 120
              }, {
                     dataField : "grpCode",
                     headerText : "Grp Code",
-                    width : 120  
+                    width : 120
              }, {
                     dataField : "deptCode",
                     headerText : "Dept Code",
-                    width : 120    
+                    width : 120
              }, {
                     dataField : "memOrgDescCode",
                     headerText : "Position",
-                    width : 120                                                                                                                   
+                    width : 120
              }, {
                  dataField : "evtApplyDt",
                  headerText : "Plan Month",
-                 width : 120                                                                                                                   
+                 width : 120
           }];
-            
+
             // 그리드 속성 설정
             var gridPros = {
-               // 페이징 사용       
+               // 페이징 사용
                usePaging : true,
                // 한 화면에 출력되는 행 개수 20(기본값:20)
                pageRowCount : 20,
@@ -72,59 +72,59 @@
             $("#cmbLvl").multipleSelect("checkAll");
             createAUIGrid();
             AUIGrid.setSelectionMode(myGridID, "singleRow");
-            //MemberType set 
-            doDefCombo(memberTypeData, '' ,'cmbMemberType', 'S', '');   
-            
+            //MemberType set
+            doDefCombo(memberTypeData, '' ,'cmbMemberType', 'S', '');
+
          //group code = MemberType
          $('#cmbMemberType').change(function (){
              doGetCombo('/organization/getDeptTreeList.do', $(this).val() , ''   , 'cmbOrganizationId' , 'S', '');
          });
-            
-            
+
+
             //Organization Combo 변경시 Group Code Combo 생성
             //group code = Member Id
          $('#cmbOrganizationId').change(function (){
             // var paramdata;
-             
+
              $("#groupCode").val( $(this).val());
              $("#memType").val(  $('#cmbMemberType').val() );
              $("#memLvl").val(2);
-             
+
             // paramdata = { groupCode : $(this).val() , memType : $('#cmbMemberType').val() , memLvl:'2'};
              //doGetCombo('/organization/getGroupTreeList.do', paramdata, '','cmbGroupId', 'S' , '');
-             
+
              doGetComboData('/organization/getGroupTreeList.do', $("#cForm").serialize(), '','cmbGroupId', 'S' , '');
-             
+
          });
-            
-            
-            
+
+
+
             //Group Combo 변경시  Department Combo 생성
             $('#cmbGroupId').change(function (){
                 var paramdata;
-                 
+
                 $("#groupCode").val( $(this).val());
                 $("#memType").val(  $('#cmbMemberType').val() );
                 $("#memLvl").val(3);
-                
+
                 //paramdata = { groupCode : $(this).val() , memType : $('#cmbMemberType').val() , memLvl:'3'};
                 //doGetCombo('/organization/getGroupTreeList.do', paramdata, '','cmbDepartmentCode', 'S' , '');
                 doGetComboData('/organization/getGroupTreeList.do', $("#cForm").serialize(), '','cmbDepartmentCode', 'S' , '');
-                
-            });     
-            
+
+            });
+
         });
-        
-        
-        
+
+
+
 function fn_excelDown(){
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
     GridCommon.exportTo("grid_wrapExport", "xlsx", "orgChartListDet");
-}        
-        
-        
-        
-        
+}
+
+
+
+
         function get_chked_values(){
 
 			var etcs = '';
@@ -137,16 +137,16 @@ function fn_excelDown(){
 			return etcs ;
 
         }
-        
-                
-        
+
+
+
         // 조회 버튼/리스트 조회.
         function fn_SelectOrgChartDetAjax() {
-            
+
             var memLvl = get_chked_values();
-            
-            var paramsDetdata  = { memType :  $("#cmbMemberType").val() , 
-                                     orgId :  $("#cmbOrganizationId").val() , 
+
+            var paramsDetdata  = { memType :  $("#cmbMemberType").val() ,
+                                     orgId :  $("#cmbOrganizationId").val() ,
                                     gropId :  $("#cmbGroupId").val(),
                                   deptCode :  $("#cmbDepartmentCode").val(),
                                   memLvl   :  memLvl ,
@@ -155,18 +155,18 @@ function fn_excelDown(){
                                   nowDate : $("#searchDt").val(),
                                   resignDate : $("#searchDt").val()
                                   };
-            
+
 	        Common.ajax("GET", "/organization/selectOrgChartDetList.do",paramsDetdata, function(result) {
 	            console.log("성공.");
 	            console.log( result);
 	            AUIGrid.setGridData(myGridID, result);
 	        });
-            
+
         }
-                
-    
+
+
     </script>
-    
+
 
 <form id='cForm' name='cForm'>
 
@@ -201,7 +201,7 @@ function fn_excelDown(){
     <th scope="row">Member Type</th>
     <td>
     <select id ="cmbMemberType" nsme = "cmbMemberType" class="w100p">
-        <option value="">MemberType</option>     
+        <option value="">MemberType</option>
     </select>
     </td>
     <th scope="row">Organization Code</th>
@@ -228,17 +228,17 @@ function fn_excelDown(){
     <th scope="row">Position</th>
     <td >
     <select class="multy_select w100p" multiple="multiple" id="cmbLvl" name="cmbLvl">
-            <option value="1">GM / GCM / SCTM</option>
-            <option value="2">SM / SCM / CTM</option>
-            <option value="3">HM / CM / CTL</option>
-            <option value="4">HP / CD / CT</option>
+            <option value="1">GM / GCM / SCTM / GHTM</option>
+            <option value="2">SM / SCM / CTM / SHTM</option>
+            <option value="3">HM / CM / CTL / HTM</option>
+            <option value="4">HP / CD / CT / HT</option>
     </select>
     </td>
     <th scope="row">Plan Month</th>
 	    <td>
 	    <input type="text" title="Create start Date" placeholder="MM/YYYY" name="searchDt" id="searchDt" class="j_date2" value="" />
 	    </td>
-</tr>  
+</tr>
 </tbody>
 </table><!-- table end -->
 
