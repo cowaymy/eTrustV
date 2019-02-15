@@ -512,9 +512,15 @@ console.log("ready");
 	$("#traineeType1").click(function(){   // CHECK Trainee Type = Cody then Disable Main & Sub Department selection -- Added by Tommy
 		var traineeType = $("#traineeType1").val();
 
-		if(traineeType == 2 || traineeType == 7 ){
+		if(traineeType == 2){
             $("#searchdepartment").attr("disabled", true);
             $("#searchSubDept").attr("disabled", true);
+
+		}else if(traineeType == 7 ){
+                $("#searchdepartment").attr("disabled", true);
+                $("#searchSubDept").attr("disabled", true);
+                $("#transportCd option[value=253]").attr('selected', 'selected');
+
 		}else{
             $("#searchdepartment").attr("disabled", false);
             $("#searchSubDept").attr("disabled", false);
