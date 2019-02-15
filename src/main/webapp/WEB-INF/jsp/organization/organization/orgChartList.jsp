@@ -11,6 +11,7 @@
        var myHpGridID;
        var myCdGridID;
        var myCtGridID;
+       var myHtGridID;
 
        var gridValue;
 
@@ -22,7 +23,7 @@
 
 
     //Combo Data
-    var memberTypeData = [{"codeId": "1","codeName": "Health Planner"},{"codeId": "2","codeName": "Coway Lady"},{"codeId": "3","codeName": "Coway Technician"}];
+    var memberTypeData = [{"codeId": "1","codeName": "Health Planner"},{"codeId": "2","codeName": "Coway Lady"},{"codeId": "3","codeName": "Coway Technician"},{"codeId": "7","codeName": "Homecare Technician"}];
 
 
         function createAUIGrid(){
@@ -73,6 +74,7 @@
                  myHpGridID = AUIGrid.create("#grid_wrapHp", columnLayout, gridPros);
                  myCdGridID = AUIGrid.create("#grid_wrapCd", columnLayout, gridPros);
                  myCtGridID = AUIGrid.create("#grid_wrapCt", columnLayout, gridPros);
+                 myHtGridID = AUIGrid.create("#grid_wrapHt", columnLayout, gridPros);
 
                  // 트리그리드 lazyLoading 요청 이벤트 핸들러 HP
                  AUIGrid.bind(myHpGridID, "treeLazyRequest", function(event) {
@@ -126,6 +128,24 @@
                         }
                     }); // end of ajax
                  });
+
+
+                 AUIGrid.bind(myHtGridID, "treeLazyRequest", function(event) {
+                     var item = event.item;
+                     var vMemLvl = item.memLvl +1 ;
+                     var memType = item.memType;
+
+                     console.log("data : " + event.item);
+
+                        $.ajax({
+                            url: "/organization/selectOrgChartCdList.do?groupCode=" + item.memId + "&memLvl=" + vMemLvl + "&memType="+memType + "&searchDt="+$('#searchDt').val(),
+                            success: function(data) {
+                                // 성공 시 완전한 배열 객체로 삽입하십시오.
+                                event.response(data);
+
+                            }
+                        }); // end of ajax
+                     });
 
     }
 
@@ -184,10 +204,12 @@
             AUIGrid.setSelectionMode(myHpGridID, "singleRow");
             AUIGrid.setSelectionMode(myCdGridID, "singleRow");
             AUIGrid.setSelectionMode(myCtGridID, "singleRow");
+            AUIGrid.setSelectionMode(myHtGridID, "singleRow");
 
             fn_getOrgChartHPListAjax();
             fn_getOrgChartCdListAjax();
             fn_getOrgChartCtListAjax();
+            fn_getOrgChartHtListAjax();
 
         });
 
@@ -199,6 +221,7 @@
         	fn_getOrgChartHPListAjax();
             fn_getOrgChartCdListAjax();
         	fn_getOrgChartCtListAjax();
+        	fn_getOrgChartHtListAjax();
 
 
 
@@ -478,6 +501,49 @@
         }
 
 
+                function fn_getOrgChartHtListAjax() {
+
+
+                	            var cmbMemberTp = 7;
+                	            var deptLevelCd = 2;
+                	            var parentIdCd = "78962";
+                	            var deptIdCd = "";
+
+                	            var memType = $('#memType').val();
+                	            var memLvl = $('#memLvl').val();
+
+
+                	            if (memType == "4" ) {
+                	                memType = "7";
+                	                memLvl = "11";
+                	            } else if (memType == "" ) {
+                	                memType = "7";
+                	            }
+
+                	         //hp
+                	            var paramCddata;
+                	            //paramHpdata = { groupCode : parentId , memType : cmbMemberTp , memLvl : deptLevel};
+                	            paramCddata = { memType : memType , memLvl : memLvl, searchDt : $('#searchDt').val()};
+
+                	            //ct
+                	           //var paramCddata;
+                	           //paramCddata = { groupCode : parentIdCd , memType : cmbMemberTp , memLvl : deptLevelCd, deptIdCd : deptIdCd};
+
+                	                //cd
+                	           Common.ajax("GET", "/organization/selectOrgChartCdList.do", paramCddata, function(result) {
+
+                	                console.log("성공.");
+                	                console.log("data : " + result);
+                	                //AUIGrid.setGridData(myCtGridID, result);
+
+                	                if ( memType == "7" || memType == "4" ) {
+                	                    AUIGrid.setGridData(myHtGridID, result);
+                	                }
+                	            });
+
+                	        }
+
+
 
 
         function fn_getChidListAjax() {
@@ -644,6 +710,16 @@
 <article class="grid_wrapCt"><!-- grid_wrap start -->
   <!-- grid_wrap start -->
       <div id="grid_wrapCt" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+</article>
+
+<article>
+<h3>HT Member</h3>
+
+<article class="grid_wrapHt"><!-- grid_wrap start -->
+  <!-- grid_wrap start -->
+      <div id="grid_wrapHt" style="width: 100%; height: 334px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article>
