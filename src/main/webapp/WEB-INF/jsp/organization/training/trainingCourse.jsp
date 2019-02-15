@@ -101,7 +101,7 @@ var courseColumnLayout = [ {
 
 //그리드 속성 설정
 var courseGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -157,7 +157,7 @@ var attendeeColumnLayout = [ {
         type : "IconRenderer",
         iconTableRef :  {
             "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
-        },         
+        },
         iconWidth : 24,
         iconHeight : 24,
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -227,7 +227,7 @@ var attendeeColumnLayout = [ {
 
 //그리드 속성 설정
 var attendeeGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -242,23 +242,23 @@ var attendeeGridID;
 $(document).ready(function () {
 	courseGridID = AUIGrid.create("#course_grid_wrap", courseColumnLayout, courseGridPros);
 	attendeeGridID = AUIGrid.create("#attendee_grid_wrap", attendeeColumnLayout, attendeeGridPros);
-	
+
 	fn_setAttendeeGridCheckboxEvent();
-	
+
 	// course status
     CommonCombo.make("stusCodeId", "/organization/training/selectCourseStatusList.do", null, "", {
         id: "stusCodeId",
         name: "name",
         type:"S"
     });
-	
+
 	// course type
 	CommonCombo.make("codeId", "/organization/training/selectCourseTypeList.do", null, "", {
         id: "codeId",
         name: "codeName",
         type:"S"
     });
-	
+
 	// Memeber (Y/N)
     CommonCombo.make("generalCode", "/common/selectCodeList.do", {groupCode : '328'}, "", {
         id: "codeId",
@@ -266,17 +266,17 @@ $(document).ready(function () {
         isShowChoose: false,
         type:"S"
     });
-    
+
     // Member Type
-    CommonCombo.make("memType", "/common/selectCodeList.do", {groupCode : '1', codeIn : 'HP,CD,CT,ST'}, "", {
+    CommonCombo.make("memType", "/common/selectCodeList.do", {groupCode : '1', codeIn : 'HP,CD,CT,ST,CHT'}, "", {
         id: "codeId",
         name: "codeName",
         type:"S"
     });
-    
+
 	// search list
 	$("#search_btn").click(fn_selectCourseList);
-	
+
 	// view/edit popup
 	// 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(courseGridID, "cellDoubleClick", function(event){
@@ -301,11 +301,11 @@ $(document).ready(function () {
 		fn_attendeeSave(attendeeGridID);
 	});
 	$("#result_btn").click(fn_courseResultPop);
-	
+
 	fn_setToDay();
 });
 
-function auiGridSelectionChangeHandler(event) { 
+function auiGridSelectionChangeHandler(event) {
     // 200ms 보다 빠르게 그리드 선택자가 변경된다면 데이터 요청 안함
     if(timerId) {
         clearTimeout(timerId);
@@ -315,7 +315,7 @@ function auiGridSelectionChangeHandler(event) {
     	var selectedItems = event.selectedItems;
 //        if(selectedItems.length <= 0)
 //            return;
-        
+
         var rowItem = selectedItems[0].item; // 행 아이템들
         var corId = rowItem.coursId; // 선택한 행의 고객 ID 값
         var corCode = rowItem.coursCode;
@@ -325,7 +325,7 @@ function auiGridSelectionChangeHandler(event) {
 
             fn_selectAttendeeList(corId);
             coursId = corId;
-            
+
 //        }
     }, 200);
 }
@@ -335,19 +335,19 @@ function fn_setAttendeeGridCheckboxEvent() {
     AUIGrid.bind(attendeeGridID, "ready", function(event) {
         gridDataLength = AUIGrid.getRowCount(attendeeGridID); // 그리드 전체 행수 보관
     });
-    
+
     // 헤더 클릭 핸들러 바인딩
     AUIGrid.bind(attendeeGridID, "headerClick", headerClickHandler);
-    
+
     // 셀 수정 완료 이벤트 바인딩
     AUIGrid.bind(attendeeGridID, "cellEditEnd", function(event) {
-        
+
         // isActive 칼럼 수정 완료 한 경우
         if(event.dataField == "isActive") {
-            
+
             // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
             var activeItems = AUIGrid.getItemsByValue(attendeeGridID, "isActive", "Active");
-            
+
             // 헤더 체크 박스 전체 체크 일치시킴.
             if(activeItems.length != gridDataLength) {
                 document.getElementById("allCheckbox").checked = false;
@@ -360,7 +360,7 @@ function fn_setAttendeeGridCheckboxEvent() {
 
 //그리드 헤더 클릭 핸들러
 function headerClickHandler(event) {
-    
+
     // isActive 칼럼 클릭 한 경우
     if(event.dataField == "isActive") {
         if(event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
@@ -373,9 +373,9 @@ function headerClickHandler(event) {
 
 // 전체 체크 설정, 전체 체크 해제 하기
 function checkAll(isChecked) {
-    
-     var idx = AUIGrid.getRowCount(attendeeGridID); 
-    
+
+     var idx = AUIGrid.getRowCount(attendeeGridID);
+
     // 그리드의 전체 데이터를 대상으로 isActive 필드를 "Active" 또는 "Inactive" 로 바꿈.
     if(isChecked) {
         for(var i = 0; i < idx; i++){
@@ -385,25 +385,25 @@ function checkAll(isChecked) {
     } else {
         AUIGrid.updateAllToValue(attendeeGridID, "isActive", "Inactive");
     }
-    
+
     // 헤더 체크 박스 일치시킴.
     document.getElementById("allCheckbox").checked = isChecked;
 }
 
 function fn_setToDay() {
     var today = new Date();
-    
+
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();
-    
+
     if(dd < 10) {
         dd = "0" + dd;
     }
     if(mm < 10){
         mm = "0" + mm
     }
-    
+
     today = dd + "/" + mm + "/" + yyyy;
     $("#coursStart").val(today)
     $("#coursEnd").val(today)
@@ -414,10 +414,10 @@ function fn_selectCourseList() {
         console.log(result);
         AUIGrid.setGridData(courseGridID, result);
     });
-	
+
 	AUIGrid.destroy(attendeeGridID);
 	attendeeGridID = AUIGrid.create("#attendee_grid_wrap", attendeeColumnLayout, attendeeGridPros);
-	
+
 	fn_setAttendeeGridCheckboxEvent();
 }
 
@@ -427,7 +427,7 @@ function fn_courseViewPop(couseIdVal) {
 	            coursId : couseIdVal
 	    };
 	    Common.popupDiv("/organization/training/courseViewPop.do", data, null, true, "courseViewPop");
-	    
+
 	    coursId = 0;
     } else {
     	Common.alert('Please select a course.');
@@ -508,15 +508,15 @@ function fn_loadOrderSalesman(memId, memCode) {
             AUIGrid.setCellValue(gridId, rIndex, "coursMemId", memInfo.memId);
             AUIGrid.setCellValue(gridId, rIndex, "coursDMemName", memInfo.name);
             AUIGrid.setCellValue(gridId, rIndex, "coursDMemNric", memInfo.nric);
-            
+
             Common.ajax("GET", "/organization/training/selectBranchByMemberId.do", {memId : memInfo.memId}, function(result) {
             	console.log(result);
-            	
+
             	if(result.data) {
             		AUIGrid.setCellValue(gridId, rIndex, "brnchId", result.data.brnchId);
                     AUIGrid.setCellValue(gridId, rIndex, "code", result.data.code);
             	}
-            	
+
             	gridId = null;
                 rIndex = 0;
             });
@@ -529,9 +529,9 @@ function fn_courseSave() {
 	if(GridCommon.getEditData(courseGridID).update.length > 0) {
 		Common.ajax("POST", "/organization/training/updateCourseForLimitStatus.do", GridCommon.getEditData(courseGridID), function(result) {
 	        console.log(result);
-	        
+
 	        fn_selectCourseList();
-	        
+
 	        Common.alert('Saved successfully.');
 	    });
 	} else {
@@ -548,11 +548,11 @@ function fn_attendeeSave(gridID) {
 		};
 		Common.ajax("POST", "/organization/training/updateAttendee.do", data, function(result) {
 	        console.log(result);
-	        
+
 	        fn_selectAttendeeList(coursId);
-	        
+
 	        Common.alert('Saved successfully.');
-	        
+
 	        //coursId = 0;
 	    });
 	} else {
@@ -566,7 +566,7 @@ function fn_courseResultPop() {
                 coursId : coursId
         };
         Common.popupDiv("/organization/training/courseResultPop.do", data, null, true, "courseResultPop");
-        
+
         coursId = 0;
     } else {
         Common.alert('Please select a course.');
@@ -574,22 +574,22 @@ function fn_courseResultPop() {
 }
 
 function fn_generate(method){
-	
+
 	if($("#coursId").val() == ""){
 		Common.alert("Please select the item to print.");
 	}
 	//CURRENT DATE
     var date = new Date().getDate();
 	var mon = new Date().getMonth()+1;
-	
+
     if(date.toString().length == 1){
         date = "0" + date;
     }
-    
+
     if(mon.toString().length == 1){
         mon = "0" + mon;
     }
-    
+
 	//VIEW
     if(method == "PDF"){
         $("#viewType").val('PDF');     //method
@@ -599,9 +599,9 @@ function fn_generate(method){
         $("#viewType").val('EXCEL');//method
         $("#reportFileName").val('/organization/training/HPTrainingReport_Excel.rpt'); //File Name
     }
-    
+
     $("#reportDownFileName").val($("#coursCodeR").val() +'_'+date+mon+new Date().getFullYear()); ////DOWNLOAD FILE NAME
-    
+
     //params
     $("#V_COURSEID").val($("#coursId").val());
     $("#V_SELECTSQL").val("");
@@ -609,7 +609,7 @@ function fn_generate(method){
     $("#V_EXTRAWHERESQL").val("");
     $("#V_ORDERBYSQL").val("");
     $("#V_FULLSQL").val("");
-    
+
     var option = {
         isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
     };
@@ -734,7 +734,7 @@ $.fn.clearForm = function() {
     <td>
     <input type="text" title="Course Code" placeholder="" class="w100p" id="coursCode" name="coursCode"/>
     </td>
-<!-- 
+<!--
 	<th scope="row">Location</th>
 	<td>
 	<input type="text" title="Location" placeholder="" class="w100p" id="coursLoc" name="coursLoc"/>
@@ -777,7 +777,7 @@ $.fn.clearForm = function() {
 <ul class="right_btns">
     <!-- <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li> 
+    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_grid"><a href="#" id="viewEdit_btn">Edit</a></p></li>
    <li><p class="btn_grid"><a href="#" id="registration_btn">New</a></p></li>-->
