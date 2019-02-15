@@ -57,8 +57,8 @@ var totalAmt = "0.00";
 //상세 팝업
 function selectAdjustmentDetailPop(adjId, invNo){
 
-
-
+	console.log('adjId:'+adjId);
+	console.log('InvNo:'+invNo);
     //데이터 조회 (초기화면시 로딩시 조회)
     Common.ajax("GET", "/payment/selectAdjustmentDetailPop.do", {"adjId":adjId, "invNo":invNo}, function(result) {
         if(result != 'undefined'){
