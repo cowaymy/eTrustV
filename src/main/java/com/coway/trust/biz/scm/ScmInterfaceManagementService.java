@@ -29,6 +29,7 @@ public interface ScmInterfaceManagementService
 	void deleteSupplyPlanRtp(Map<String, Object> params);
 	void mergeSupplyPlanRtp(Map<String, Object> params);
 	void updateSupplyPlanRtp(Map<String, Object> params);
+	void testSupplyPlanRtp(Map<String, Object> params);
 	
 	//	FTP OTD SO Batch
 	void updateOtdSo(Map<String, Object> params);
