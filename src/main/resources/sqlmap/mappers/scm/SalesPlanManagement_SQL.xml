@@ -817,4 +817,100 @@ SELECT A.TEAM
 	</if>
 </select>
 
+<!-- Sales Plan Accuracy -->
+<!-- Monthly Header -->
+<select id="selectSalesAccuracyMonthlyHeader" parameterType="Map" resultType="egovMap">
+SELECT TEAM
+     , TERM
+     , MON_ACC
+     , (CASE WHEN (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W1_WEEK_SEQ ,1,5) ELSE SUBSTR(W1_WEEK_SEQ ,1,3) END) AS W1_WEEK_SEQ
+     , (CASE WHEN (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W2_WEEK_SEQ ,1,5) ELSE SUBSTR(W2_WEEK_SEQ ,1,3) END) AS W2_WEEK_SEQ
+     , (CASE WHEN (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W3_WEEK_SEQ ,1,5) ELSE SUBSTR(W3_WEEK_SEQ ,1,3) END) AS W3_WEEK_SEQ
+     , (CASE WHEN (FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W4_WEEK_SEQ ,1,5) ELSE SUBSTR(W4_WEEK_SEQ ,1,3) END) AS W4_WEEK_SEQ
+     , (CASE WHEN (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W5_WEEK_SEQ ,1,5) ELSE SUBSTR(W5_WEEK_SEQ ,1,3) END) AS W5_WEEK_SEQ
+     , (CASE WHEN (FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W6_WEEK_SEQ ,1,5) ELSE SUBSTR(W6_WEEK_SEQ ,1,3) END) AS W6_WEEK_SEQ
+  FROM (
+        SELECT *
+          FROM (
+                SELECT DECODE(RNO, 1, '1', 2, '2', 3, '3', 4, '4', 5, '5', 6, '6') AS RNO
+                     , WEEK_SEQ
+                     , TEAM
+                     , TERM
+                     , MON_ACC
+                  FROM (
+                        SELECT ROW_NUMBER() OVER (PARTITION BY Z.USE_YN ORDER BY Z.CAL_ID) AS RNO
+                             , DECODE(LEAD(Z.SCM_WEEK_SEQ) OVER (ORDER BY 'W' || LPAD(Z.SCM_WEEK, 2, 0) || '-' || Z.SCM_WEEK_SEQ)
+                                    , NULL
+                                    , 'W' || LPAD(Z.SCM_WEEK, 2, 0) || '-' || Z.SCM_WEEK_SEQ || '-' || '9'
+                                    , 'W' || LPAD(Z.SCM_WEEK, 2, 0) || '-' || Z.SCM_WEEK_SEQ || '-' || LEAD(Z.SCM_WEEK_SEQ) OVER (ORDER BY 'W'|| LPAD(Z.SCM_WEEK, 2, 0) || '-' || Z.SCM_WEEK_SEQ)) AS WEEK_SEQ
+                             , 'team' AS TEAM
+                             , 'term' AS TERM
+                             , 'monAcc' AS MON_ACC
+                          FROM SCM0018M Z
+                         WHERE Z.SCM_YYYYMM = #{yyyyMm}
+                           AND Z.USE_YN = 'Y'
+                        )
+                )
+         PIVOT (
+                MAX(WEEK_SEQ) WEEK_SEQ
+                FOR RNO IN (1  AS W1,  2  AS W2,  3  AS W3,  4  AS W4,  5  AS W5,  6  AS W6)
+                )
+        )
+</select>
+<select id="selectSalesAccuracyweeklyHeader" parameterType="Map" resultType="egovMap">
+SELECT MONTH
+     , WEEK
+     , TYPE
+     , CODE
+     , NAME
+     , TEAM
+     , SALES_ORDER
+     , SHO_TERM
+     , MID_TERM
+     , W1_WEEK_SEQ, W2_WEEK_SEQ, W3_WEEK_SEQ, W4_WEEK_SEQ, W5_WEEK_SEQ, W6_WEEK_SEQ
+     , W7_WEEK_SEQ, W8_WEEK_SEQ, W9_WEEK_SEQ, W10_WEEK_SEQ, W11_WEEK_SEQ, W12_WEEK_SEQ
+  FROM (
+        SELECT DECODE(RNO, 1, '1', 2, '2', 3, '3', 4, '4', 5, '5', 6, '6', 7, '7', 8, '8', 9, '9', 10, '10', 11, '11', 12, '12', 13, '13', 14, '14', 15, '15') AS RNO
+             , WEEK_SEQ
+             , MONTH
+             , WEEK
+             , TYPE
+             , CODE
+             , NAME
+             , TEAM
+             , SALES_ORDER
+             , SHO_TERM
+             , MID_TERM
+          FROM (
+                SELECT ROW_NUMBER() OVER (PARTITION BY X.USE_YN ORDER BY X.CAL_ID) AS RNO
+                     , 'W' || LPAD(Z.SCM_WEEK, 2, 0) AS WEEK_SEQ
+                     , 'month' AS MONTH
+                     , 'week' AS WEEK
+                     , 'type' AS TYPE
+                     , 'code' AS CODE
+                     , 'name' AS NAME
+                     , 'team' AS TEAM
+                     , 'salesOrder' AS SALES_ORDER
+                     , 'shoTerm' AS SHO_TERM
+                     , 'midTerm' AS MID_TERM
+                  FROM (
+                        SELECT SCM_YEAR
+                             , SCM_MONTH
+                             , SCM_WEEK
+                             , SCM_YYYYMM
+                          FROM SCM0018M
+                         WHERE SCM_YYYYMM BETWEEN #{fromYyyyMm} AND #{toYyyyMm}
+                           AND USE_YN = 'Y'
+                        ) Z
+                  LEFT OUTER JOIN SCM0018M X ON (Z.SCM_YEAR = X.SCM_YEAR AND Z.SCM_WEEK = X.SCM_WEEK AND Z.SCM_YYYYMM = X.SCM_YYYYMM)
+                 WHERE X.SCM_WEEK_SEQ = 1
+                )
+        )
+ PIVOT (
+        MAX(WEEK_SEQ) WEEK_SEQ
+        FOR RNO IN (1 AS W1, 2 AS W2, 3 AS W3, 4 AS W4, 5 AS W5, 6 AS W6, 7 AS W7, 8 AS W8, 9 AS W9, 10 AS W10, 11 AS W11, 12 AS W12, 13 AS W13, 14 AS W14, 15 AS W15)
+        )
+</select>
+<!-- Weekly Header -->
+
 </mapper>

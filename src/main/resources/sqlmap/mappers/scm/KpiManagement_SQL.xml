@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.KpiManagementMapper">
+
+<!-- Inventory Report -->
+<!-- 
+<select id="selectInventoryReportTotalHeader" parameterType="Map" resultType="egovMap">
+</select>
+<select id="selectInventoryReportDetailHeader" parameterType="Map" resultType="egovMap">
+</select> -->
+<select id="selectInventoryReportTotal" parameterType="Map" resultType="egovMap">
+SELECT A.STOCK_TYPE_ID
+     , A.STOCK_TYPE_NAME
+     , SUM(A.TOT_PREV_QTY) AS TOT_PREV_QTY
+     , SUM(A.TOT_CURR_QTY) AS TOT_CURR_QTY
+     , SUM(A.TOT_CURR_QTY) - SUM(A.TOT_PREV_QTY) AS TOT_GAP_QTY
+     , SUM(A.TRAN_PREV_QTY) AS TRAN_PREV_QTY
+     , SUM(A.TRAN_CURR_QTY) AS TRAN_CURR_QTY
+     , SUM(A.TRAN_CURR_QTY) - SUM(A.TRAN_PREV_QTY) AS TRAN_GAP_QTY
+     , SUM(A.HAND_PREV_QTY) AS HAND_PREV_QTY
+     , SUM(A.HAND_CURR_QTY) AS HAND_CURR_QTY
+     , SUM(A.HAND_CURR_QTY) - SUM(A.HAND_PREV_QTY) AS HAND_GAP_QTY
+     , SUM(A.DAYS_PREV_QTY) AS DAYS_PREV_QTY
+     , SUM(A.DAYS_CURR_QTY) AS DAYS_CURR_QTY
+     , SUM(A.DAYS_CURR_QTY) - SUM(A.DAYS_PREV_QTY) AS DAYS_GAP_QTY
+     , SUM(A.AGE_PREV_QTY) AS AGE_PREV_QTY
+     , SUM(A.AGE_CURR_QTY) AS AGE_CURR_QTY
+     , SUM(A.AGE_CURR_QTY) - SUM(A.AGE_PREV_QTY) AS AGE_GAP_QTY
+     , SUM(A.STKB_PREV_QTY) AS STKB_PREV_QTY
+     , SUM(A.STKB_CURR_QTY) AS STKB_CURR_QTY
+     , SUM(A.STKB_CURR_QTY) - SUM(A.STKB_PREV_QTY) AS STKB_GAP_QTY
+  FROM (
+        SELECT TO_NUMBER(60) AS STOCK_TYPE_ID
+             , TO_CHAR('Total') AS STOCK_TYPE_NAME
+             , 0 AS TOT_PREV_QTY
+             , SUM(A.TOT_QTY) AS TOT_CURR_QTY
+             , 0 AS TRAN_PREV_QTY
+             , SUM(A.TRAN_QTY) AS TRAN_CURR_QTY
+             , 0 AS HAND_PREV_QTY
+             , SUM(A.HAND_QTY) AS HAND_CURR_QTY
+             , 0 AS DAYS_PREV_QTY
+             , SUM(A.DAYS_QTY) AS DAYS_CURR_QTY
+             , 0 AS AGE_PREV_QTY
+             , SUM(A.AGE_QTY) AS AGE_CURR_QTY
+             , 0 AS STKB_PREV_QTY
+             , SUM(A.STKB_QTY) AS STKB_CURR_QTY
+          FROM SCM0057L A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+         WHERE A.YEAR_MONTH = TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -1), 'YYYYMM')
+           AND B.STK_TYPE_ID IN (61, 62, 63, 64)
+        UNION ALL
+        SELECT TO_NUMBER(60) AS STOCK_TYPE_ID
+             , TO_CHAR('Total') AS STOCK_TYPE_NAME
+             , SUM(A.TOT_QTY) AS TOT_PREV_QTY
+             , 0 AS TOT_CURR_QTY
+             , SUM(A.TRAN_QTY) AS TRAN_PREV_QTY
+             , 0 AS TRAN_CURR_QTY
+             , SUM(A.HAND_QTY) AS HAND_PREV_QTY
+             , 0 AS HAND_CURR_QTY
+             , SUM(A.DAYS_QTY) AS DAYS_PREV_QTY
+             , 0 AS DAYS_CURR_QTY
+             , SUM(A.AGE_QTY) AS AGE_PREV_QTY
+             , 0 AS AGE_CURR_QTY
+             , SUM(A.STKB_QTY) AS STKB_PREV_QTY
+             , 0 AS STKB_CURR_QTY
+          FROM SCM0057L A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+         WHERE A.YEAR_MONTH = TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -2), 'YYYYMM')
+           AND B.STK_TYPE_ID IN (61, 62, 63, 64)
+        UNION ALL
+        SELECT TO_NUMBER(B.STK_TYPE_ID) AS STOCK_TYPE_ID
+             , TO_CHAR(C.CODE_NAME) AS STOCK_TYPE_NAME
+             , 0 AS TOT_PREV_QTY
+             , SUM(A.TOT_QTY) AS TOT_CURR_QTY
+             , 0 AS TRAN_PREV_QTY
+             , SUM(A.TRAN_QTY) AS TRAN_CURR_QTY
+             , 0 AS HAND_PREV_QTY
+             , SUM(A.HAND_QTY) AS HAND_CURR_QTY
+             , 0 AS DAYS_PREV_QTY
+             , SUM(A.DAYS_QTY) AS DAYS_CURR_QTY
+             , 0 AS AGE_PREV_QTY
+             , SUM(A.AGE_QTY) AS AGE_CURR_QTY
+             , 0 AS STKB_PREV_QTY
+             , SUM(A.STKB_QTY) AS STKB_CURR_QTY
+          FROM SCM0057L A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+          LEFT OUTER JOIN SYS0013M C ON (B.STK_TYPE_ID = C.CODE_ID AND C.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+         WHERE A.YEAR_MONTH = TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -1), 'YYYYMM')
+           AND B.STK_TYPE_ID IN (61, 62, 63, 64)
+         GROUP BY B.STK_TYPE_ID, C.CODE_NAME
+        UNION ALL
+        SELECT TO_NUMBER(B.STK_TYPE_ID) AS STOCK_TYPE_ID
+             , TO_CHAR(C.CODE_NAME) AS STOCK_TYPE_NAME
+             , SUM(A.TOT_QTY) AS TOT_PREV_QTY
+             , 0 AS TOT_CURR_QTY
+             , SUM(A.TRAN_QTY) AS TRAN_PREV_QTY
+             , 0 AS TRAN_CURR_QTY
+             , SUM(A.HAND_QTY) AS HAND_PREV_QTY
+             , 0 AS HAND_CURR_QTY
+             , SUM(A.DAYS_QTY) AS DAYS_PREV_QTY
+             , 0 AS DAYS_CURR_QTY
+             , SUM(A.AGE_QTY) AS AGE_PREV_QTY
+             , 0 AS AGE_CURR_QTY
+             , SUM(A.STKB_QTY) AS STKB_PREV_QTY
+             , 0 AS STKB_CURR_QTY
+          FROM SCM0057L A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+          LEFT OUTER JOIN SYS0013M C ON (B.STK_TYPE_ID = C.CODE_ID AND C.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+         WHERE A.YEAR_MONTH = TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -2), 'YYYYMM')
+           AND B.STK_TYPE_ID IN (61, 62, 63, 64)
+         GROUP BY B.STK_TYPE_ID, C.CODE_NAME
+        ) A
+ GROUP BY A.STOCK_TYPE_ID, A.STOCK_TYPE_NAME
+</select>
+<select id="selectInventoryReportDetail" parameterType="Map" resultType="egovMap">
+SELECT D.CODE_NAME AS STOCK_TYPE_NAME
+     , C.CODE_NAME AS STOCK_CATEGORY_NAME
+     , A.STOCK_CODE
+     , B.STK_DESC AS STOCK_NAME
+     , A.TOT_AMT
+     , A.TRAN_AMT
+     , A.HAND_AMT
+     , A.DAYS_AMT
+     , A.AGE_AMT
+     , A.STKB_AMT
+     , A.TOT_QTY
+     , A.TRAN_QTY
+     , A.HAND_QTY
+     , A.DAYS_QTY
+     , A.AGE_QTY
+     , A.STKB_QTY
+     , A.MM6_ISS_QTY
+     , A.MM5_ISS_QTY
+     , A.MM4_ISS_QTY
+     , A.MM3_ISS_QTY
+     , A.MM2_ISS_QTY
+     , A.MM1_ISS_QTY
+     , A.M0_PLAN_QTY
+     , A.M1_PLAN_QTY
+     , A.M2_PLAN_QTY
+     , A.AVG_FORW_QTY
+  FROM SCM0057L A
+  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+  LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M D ON (B.STK_TYPE_ID = D.CODE_ID AND D.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+ WHERE A.YEAR_MONTH = TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -1), 'YYYYMM')
+	<if test="stockTypeId != null and stockTypeId != ''">
+   AND D.CODE_ID = #{stockTypeId}
+	</if>
+ ORDER BY C.CODE_NAME, D.CODE_NAME, A.STOCK_CODE
+</select>
+
+</mapper>
