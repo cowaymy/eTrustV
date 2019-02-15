@@ -2,6 +2,7 @@ package com.coway.trust.web.scm;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
@@ -113,7 +114,7 @@ public class ScmInterfaceManagementController {
 	public ResponseEntity<Map<String, Object>> scmtest(@RequestBody Map<String, Object> params) {
 		LOGGER.debug("scmtest : {}", params.toString());
 		
-		scmInterfaceManagementService.updateSupplyPlanRtp(params);
+		scmInterfaceManagementService.testSupplyPlanRtp(params);
 		
 		Map<String, Object> map	= new HashMap<>();
 		
@@ -143,7 +144,7 @@ public class ScmInterfaceManagementController {
 		int totCnt	= 0;	int soCnt	= 0;	int ppCnt	= 0;	int giCnt	= 0;	int suppCnt	= 0;	int procCnt	= 0;
 		List<Map<String, Object>> chkList	= params.get(AppConstants.AUIGRID_CHECK);
 		LOGGER.debug("chkList : {}", chkList.toString());
-		
+		init();
 		today	= sdf.format(cal.getTime());
 		LOGGER.debug("========== today : " + today);
 		
@@ -169,6 +170,7 @@ public class ScmInterfaceManagementController {
 					logParams.put("ifCycle", ScmConstants.DAILY);
 					this.connect(ifType);
 					if ( null != client ) {
+						bufferedReader	= null;
 						this.fileRead(ifType);
 						if ( null != bufferedReader ) {
 							totCnt	= this.updateOtdSo();
@@ -180,6 +182,8 @@ public class ScmInterfaceManagementController {
 					}
 				} catch ( Exception e ) {
 					e.printStackTrace();
+				} finally {
+					if ( null != bufferedReader )	try { bufferedReader.close();	bufferedReader	= null; }	catch ( IOException e )	{}
 				}
 				soCnt++;
 			} else if ( ScmConstants.IF_OTD_PP.equals(ifType) ) {
@@ -189,6 +193,7 @@ public class ScmInterfaceManagementController {
 					logParams.put("ifCycle", ScmConstants.DAILY);
 					this.connect(ifType);
 					if ( null != client ) {
+						bufferedReader	= null;
 						this.fileRead(ifType);
 						if ( null != bufferedReader ) {
 							totCnt	= this.mergeOtdPp();
@@ -200,6 +205,8 @@ public class ScmInterfaceManagementController {
 					}
 				} catch ( Exception e ) {
 					e.printStackTrace();
+				} finally {
+					if ( null != bufferedReader )	try { bufferedReader.close();	bufferedReader	= null; }	catch ( IOException e )	{}
 				}
 				ppCnt++;
 			} else if ( ScmConstants.IF_OTD_GI.equals(ifType) ) {
@@ -209,6 +216,7 @@ public class ScmInterfaceManagementController {
 					logParams.put("ifCycle", ScmConstants.DAILY);
 					this.connect(ifType);
 					if ( null != client ) {
+						bufferedReader	= null;
 						this.fileRead(ifType);
 						if ( null != bufferedReader ) {
 							totCnt	= this.mergeOtdGi();
@@ -220,6 +228,8 @@ public class ScmInterfaceManagementController {
 					}
 				} catch ( Exception e ) {
 					e.printStackTrace();
+				} finally {
+					if ( null != bufferedReader )	try { bufferedReader.close();	bufferedReader	= null; }	catch ( IOException e )	{}
 				}
 				giCnt++;
 			} else if ( ScmConstants.IF_SUPP_RTP.equals(ifType) ) {
@@ -229,6 +239,7 @@ public class ScmInterfaceManagementController {
 					logParams.put("ifCycle", ScmConstants.DAILY);
 					this.connect(ifType);
 					if ( null != client ) {
+						bufferedReader	= null;
 						this.fileRead(ifType);
 						if ( null != bufferedReader ) {
 							totCnt	= this.mergeSupplyPlanRtp();
@@ -240,6 +251,8 @@ public class ScmInterfaceManagementController {
 					}
 				} catch ( Exception e ) {
 					e.printStackTrace();
+				} finally {
+					if ( null != bufferedReader )	try { bufferedReader.close();	bufferedReader	= null; }	catch ( IOException e )	{}
 				}
 				suppCnt++;
 			} else {
@@ -247,6 +260,7 @@ public class ScmInterfaceManagementController {
 				procCnt++;
 			}
 		}
+		close();
 		totCnt	= soCnt + ppCnt + giCnt + suppCnt + procCnt;
 		
 		ReturnMessage message = new ReturnMessage();
@@ -262,7 +276,7 @@ public class ScmInterfaceManagementController {
 	public ResponseEntity<ReturnMessage> executeOtdSo(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
 		LOGGER.debug("executeOtdBatch : {}", params.toString());
 		int totCnt	= 0;
-		
+		init();
 		today	= sdf.format(cal.getTime());
 		LOGGER.debug("========== executeOtdSo : today : " + today);
 		
@@ -282,6 +296,7 @@ public class ScmInterfaceManagementController {
 			fileName	= "COWAY_SO_DATA_" + today.substring(0, 8) + ".TXT";
 			this.connect(ScmConstants.IF_OTD_SO);
 			if ( null != client ) {
+				bufferedReader	= null;
 				this.fileRead(ScmConstants.IF_OTD_SO);
 				if ( null != bufferedReader ) {
 					totCnt	= this.updateOtdSo();
@@ -293,8 +308,10 @@ public class ScmInterfaceManagementController {
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			if ( null != bufferedReader )	try { bufferedReader.close();	bufferedReader	= null; }	catch ( IOException e )	{}
 		}
-		
+		close();
 		LOGGER.debug("totCnt : " + totCnt);
 		
 		ReturnMessage message = new ReturnMessage();
@@ -308,7 +325,7 @@ public class ScmInterfaceManagementController {
 	@RequestMapping(value = "/executeOtdPp.do", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<ReturnMessage> executeOtdPp(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
 		int totCnt	= 0;
-		
+		init();
 		today	= sdf.format(cal.getTime());
 		LOGGER.debug("========== executeOtdPp : today : " + today);
 		
@@ -328,6 +345,7 @@ public class ScmInterfaceManagementController {
 			fileName	= "COWAY_PP_DATA_" + today.substring(0, 8) + ".TXT";
 			this.connect(ScmConstants.IF_OTD_PP);
 			if ( null != client ) {
+				bufferedReader	= null;
 				this.fileRead(ScmConstants.IF_OTD_PP);
 				if ( null != bufferedReader ) {
 					totCnt	= this.mergeOtdPp();
@@ -339,8 +357,10 @@ public class ScmInterfaceManagementController {
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			if ( null != bufferedReader )	try { bufferedReader.close();	bufferedReader	= null; }	catch ( IOException e )	{}
 		}
-		
+		close();
 		LOGGER.debug("totCnt : " + totCnt);
 		
 		ReturnMessage message = new ReturnMessage();
@@ -354,7 +374,7 @@ public class ScmInterfaceManagementController {
 	@RequestMapping(value = "/executeOtdGi.do", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<ReturnMessage> executeOtdGi(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
 		int totCnt	= 0;
-		
+		init();
 		today	= sdf.format(cal.getTime());
 		LOGGER.debug("========== executeOtdGi : today : " + today);
 		
@@ -374,6 +394,7 @@ public class ScmInterfaceManagementController {
 			fileName	= "COWAY_GI_DATA_" + today.substring(0, 8) + ".TXT";
 			this.connect(ScmConstants.IF_OTD_GI);
 			if ( null != client ) {
+				bufferedReader	= null;
 				this.fileRead(ScmConstants.IF_OTD_GI);
 				if ( null != bufferedReader ) {
 					LOGGER.debug("========== executeOtdGi : " + bufferedReader);
@@ -382,8 +403,10 @@ public class ScmInterfaceManagementController {
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			if ( null != bufferedReader )	try { bufferedReader.close();	bufferedReader	= null; }	catch ( IOException e )	{}
 		}
-		
+		close();
 		LOGGER.debug("totCnt : " + totCnt);
 		
 		ReturnMessage message = new ReturnMessage();
@@ -399,7 +422,7 @@ public class ScmInterfaceManagementController {
 	public ResponseEntity<ReturnMessage> executeSupplyPlanRtp(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
 		LOGGER.debug("executeSupplyPlanRtp : {}", params.toString());
 		int totCnt	= 0;
-		
+		init();
 		today	= sdf.format(cal.getTime());
 		LOGGER.debug("========== executeSupplyPlanRtp : today : " + today);
 		
@@ -420,12 +443,15 @@ public class ScmInterfaceManagementController {
 			fileName	= "COWAY_SU_DATA_" + today.substring(0, 8) + ".TXT";
 			this.connect(ScmConstants.IF_SUPP_RTP);
 			if ( null != client ) {
+				bufferedReader	= null;
 				this.fileRead(ScmConstants.IF_SUPP_RTP);
+				LOGGER.debug("BUFFERED_READER : " + bufferedReader);
+				//LOGGER.debug("BUFFERED_READER : " + bufferedReader.toString());
 				if ( null != bufferedReader ) {
+					LOGGER.debug("========== executeSupplyPlanRtp : bufferedReader is not null so mergeSupplyPlanRtp executed ==========");
 					totCnt	= this.mergeSupplyPlanRtp();
-					LOGGER.debug("========== executeSupplyPlanRtp : mergeSupplyPlanRtp executed ==========");
 				} else {
-					LOGGER.debug("========== executeSupplyPlanRtp : mergeSupplyPlanRtp not executed ==========");
+					LOGGER.debug("========== executeSupplyPlanRtp : bufferedReader is null so mergeSupplyPlanRtp not executed ==========");
 				}
 			} else {
 				logParams.put("errMsg", ScmConstants.FTP_CONN_ERR);
@@ -434,8 +460,10 @@ public class ScmInterfaceManagementController {
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			if ( null != bufferedReader )	try { bufferedReader.close();	bufferedReader	= null; }	catch ( IOException e )	{}
 		}
-		
+		close();
 		LOGGER.debug("totCnt : " + totCnt);
 		
 		ReturnMessage message = new ReturnMessage();
@@ -518,6 +546,8 @@ public class ScmInterfaceManagementController {
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			if ( null != bufferedReader )	try { bufferedReader.close();	bufferedReader	= null; }	catch ( IOException e )	{}
 		}
 		
 		return	totCnt;
@@ -602,6 +632,8 @@ public class ScmInterfaceManagementController {
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			if ( null != bufferedReader )	try { bufferedReader.close();	bufferedReader	= null; }	catch ( IOException e )	{}
 		}
 		
 		return	totCnt;
@@ -680,6 +712,8 @@ public class ScmInterfaceManagementController {
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			if ( null != bufferedReader )	try { bufferedReader.close();	bufferedReader	= null; }	catch ( IOException e )	{}
 		}
 		
 		return	totCnt;
@@ -790,8 +824,9 @@ public class ScmInterfaceManagementController {
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			if ( null != bufferedReader )	try { bufferedReader.close();	bufferedReader	= null; }	catch ( IOException e )	{}
 		}
-		//scmBatchService.updateSupplyPlanRtp(params);
 		
 		return	totCnt;
 	}
@@ -821,10 +856,21 @@ public class ScmInterfaceManagementController {
 			LOGGER.debug("========== FTP Server loged out ==========");
 			if ( client.isConnected() ) {
 				client.disconnect();
+				client	= null;
 				LOGGER.debug("========== FTP Server disconnected ==========");
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
+		} finally {
+			if ( null != client ) {
+				try {
+					client.disconnect();
+					client	= null;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	public void fileRead(String ifType) {
@@ -842,7 +888,7 @@ public class ScmInterfaceManagementController {
 		
 		try {
 			inputStream	= client.retrieveFileStream("/" + fileName);
-			
+			LOGGER.debug("========== fileRead : fileName : /" + fileName);
 			if ( null != inputStream ) {
 				bufferedReader	= new BufferedReader(new InputStreamReader(inputStream, "utf-8"));
 			} else {
@@ -854,6 +900,66 @@ public class ScmInterfaceManagementController {
 		} catch ( Exception e ) {
 			LOGGER.debug("========== fileRead : ScmConstants.FTP_FILE_READ_ERR ==========");
 			e.printStackTrace();
+		}
+	}
+	
+	private void init() {
+		//	init all private variables
+		ifSeq	= 0;	execCnt	= 0;	fileSize	= 0;
+		ifDate	= "";	ifTime	= "";	ifType	= "";	ifCycle	= "";	ifStatus	= "";	fileName	= "";	errMsg	= "";
+		
+		today	= "";
+		
+		if ( null != bufferedReader ) {
+			try {
+				bufferedReader.close();
+				bufferedReader	= null;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if ( null != inputStream ) {
+			try {
+				inputStream.close();
+				inputStream	= null;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if ( null != sdf ) {
+			sdf	= null;
+		}
+		sdf	= new SimpleDateFormat("yyyyMMddHHmmss");
+		
+		if ( null != cal ) {
+			cal	= null;
+		}
+		cal	= Calendar.getInstance();
+	}
+	
+	private void close() {
+		if ( null != bufferedReader ) {
+			try {
+				bufferedReader.close();
+				bufferedReader	= null;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if ( null != inputStream ) {
+			try {
+				inputStream.close();
+				inputStream	= null;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }
