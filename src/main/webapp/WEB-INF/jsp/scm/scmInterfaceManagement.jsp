@@ -427,8 +427,8 @@ $(document).ready(function() {
 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
-	<!-- <input type="text" id="year" name="year" /></p>
-	<input type="text" id="week" name="week" /></p> -->
+	<input type="text" id="year" name="year" /></p>
+	<input type="text" id="week" name="week" /></p>
 	<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
@@ -503,6 +503,7 @@ $(document).ready(function() {
 
 <section class="search_result"><!-- search_result start -->
 	<ul class="right_btns">
+		<li><p id="btnTest" class="btn_grid"><a onclick="fnTest();">Test</a></p></li>
 		<li><p id="btnInterface" class="btn_grid"><a onclick="fnDoInterface();">Do Interface</a></p></li>
 		<li><p id="btnExecuteAll" class="btn_grid"><a onclick="fnExecuteSo();">Execute OTD</a></p></li>
 		<li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute();">Execute RTP</a></p></li>
