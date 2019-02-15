@@ -103,7 +103,7 @@ public class InvoiceAdjController {
 		LOGGER.debug("adjId : {}", params.get("adjId"));
 		LOGGER.debug("invNo : {}", params.get("invNo"));
 
-		String invNo = params.get("invNo").toString();
+		String invNo = "";//params.get("invNo").toString();
 
 		if( invNo == "" || invNo == null){
 			EgovMap master = invoiceService.selectAdjDetailPopMasterOld(params);					//마스터 데이터 조회
