@@ -58,7 +58,7 @@ var newAttendeeColumnLayout = [ {
         type : "IconRenderer",
         iconTableRef :  {
             "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
-        },         
+        },
         iconWidth : 24,
         iconHeight : 24,
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -113,7 +113,7 @@ var newAttendeeColumnLayout = [ {
 
 //그리드 속성 설정
 var newAttendeeGridPros = {
-		// 페이징 사용       
+		// 페이징 사용
 	    usePaging : true,
 	    // 한 화면에 출력되는 행 개수 20(기본값:20)
 	    pageRowCount : 20,
@@ -126,24 +126,24 @@ var newAttendeeGridID;
 
 $(document).ready(function () {
     newAttendeeGridID = AUIGrid.create("#newAttendee_grid_wrap", newAttendeeColumnLayout, newAttendeeGridPros);
-    
+
  // ready 이벤트 바인딩
     AUIGrid.bind(newAttendeeGridID, "ready", function(event) {
         newGridDataLength = AUIGrid.getGridData(newAttendeeGridID).length; // 그리드 전체 행수 보관
     });
-    
+
     // 헤더 클릭 핸들러 바인딩
     AUIGrid.bind(newAttendeeGridID, "headerClick", newHeaderClickHandler);
-    
+
     // 셀 수정 완료 이벤트 바인딩
     AUIGrid.bind(newAttendeeGridID, "cellEditEnd", function(event) {
-        
+
         // isActive 칼럼 수정 완료 한 경우
         if(event.dataField == "isActive") {
-            
+
             // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
             var activeItems = AUIGrid.getItemsByValue(newAttendeeGridID, "isActive", "Active");
-            
+
             // 헤더 체크 박스 전체 체크 일치시킴.
             if(activeItems.length != newGridDataLength) {
                 document.getElementById("newAllCheckbox").checked = false;
@@ -152,14 +152,14 @@ $(document).ready(function () {
             }
         }
     });
-    
+
     // course type
     CommonCombo.make("newCodeId", "/organization/training/selectCourseTypeList.do", null, "", {
         id: "codeId",
         name: "codeName",
         type:"S"
     });
-    
+
     $("#newAttendee_btn").click(function() {
     	fn_attendeePopNew();
     });
@@ -170,7 +170,7 @@ $(document).ready(function () {
     	fn_delRow(newAttendeeGridID);
     });
     $("#new_save_btn").click(fn_insertCourseAttendee);
-    
+
     $("#coursLimit").val("9999");
 });
 
@@ -210,7 +210,7 @@ function fn_checkAttendanceNew(){
 
 //그리드 헤더 클릭 핸들러
 function newHeaderClickHandler(event) {
-    
+
     // isActive 칼럼 클릭 한 경우
     if(event.dataField == "isActive") {
         if(event.orgEvent.target.id == "newAllCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
@@ -223,9 +223,9 @@ function newHeaderClickHandler(event) {
 
 // 전체 체크 설정, 전체 체크 해제 하기
 function newCheckAll(isChecked) {
-    
-     var idx = AUIGrid.getRowCount(newAttendeeGridID); 
-    
+
+     var idx = AUIGrid.getRowCount(newAttendeeGridID);
+
     // 그리드의 전체 데이터를 대상으로 isActive 필드를 "Active" 또는 "Inactive" 로 바꿈.
     if(isChecked) {
         for(var i = 0; i < idx; i++){
@@ -235,7 +235,7 @@ function newCheckAll(isChecked) {
     } else {
         AUIGrid.updateAllToValue(newAttendeeGridID, "isActive", "Inactive");
     }
-    
+
     // 헤더 체크 박스 일치시킴.
     document.getElementById("newAllCheckbox").checked = isChecked;
 }
@@ -249,7 +249,7 @@ CommonCombo.make("generalCodeNew", "/common/selectCodeList.do", {groupCode : '32
 });
 
 // Member Type
-CommonCombo.make("memTypeNew", "/common/selectCodeList.do", {groupCode : '1', codeIn : 'HP,CD,CT,ST'}, "${courseInfo.coursMemTypeId}", {
+CommonCombo.make("memTypeNew", "/common/selectCodeList.do", {groupCode : '1', codeIn : 'HP,CD,CT,ST,CHT'}, "${courseInfo.coursMemTypeId}", {
     id: "codeId",
     name: "codeName",
     type:"S"
@@ -264,7 +264,7 @@ CommonCombo.make("attendanceNew", "/common/selectCodeList.do", {groupCode : '327
 });
 
 function fn_insertCourseAttendee() {
-	
+
 	if(form_newCours.newCodeId.value == ""){
 		Common.alert("* Please select the course type.");
 		return false;
@@ -300,37 +300,37 @@ function fn_insertCourseAttendee() {
         Common.alert("* Please key in the location.");
         return false;
     }
-	
-	
+
+
 	$("#attendanceNew").removeAttr("disabled");
 	var obj = $("#form_newCours").serializeJSON();
 	obj.gridData = GridCommon.getEditData(newAttendeeGridID);
 	console.log(obj);
 	Common.ajax("POST", "/organization/training/insertCourseAttendee.do", obj, function(result) {
         console.log(result);
-        
+
         $("#courseNewPop").remove();
-        
+
         Common.alert('Saved successfully.');
-        
+
         fn_selectCourseList();
     });
 }
 
 function fn_getDateGap(){
-    
+
     var startArr, endArr;
     var sdate=$("#newCoursStart").val();
     var edate=$("#newCoursEnd").val();
-    
+
     startArr = sdate.split('/');
     endArr = edate.split('/');
-    
+
     var keyStartDate = new Date(startArr[2] , startArr[1] , startArr[0]);
     var keyEndDate = new Date(endArr[2] , endArr[1] , endArr[0]);
-    
+
     var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
-    
+
 //    console.log("gap : " + gap);
 
     return gap;
