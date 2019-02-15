@@ -1070,7 +1070,7 @@
 			                            JOIN ORG0012D Extent3   ON ( Extent3.MEM_ORG_LVL = Extent2.MEM_LVL )
 			                            AND  Extent3.MEM_TYPE_ID = Extent1.MEM_TYPE
 			                      WHERE   1 = Extent1.STUS
-			                               AND  Extent1.MEM_TYPE IN ( 1,2,3 )
+			                               AND  Extent1.MEM_TYPE IN ( 1,2,3,7 )
 			                               AND  EXTENT1.MEM_ID NOT IN (
 																                               SELECT C.MEM_ID
 																                               from  ORG0007D C
@@ -1144,7 +1144,7 @@
                                                             from org0005d Extent1
                                                             where        1=1
                                                                              AND (Extent1.MEM_LVL = 1)
-                                                                             AND (Extent1.MEM_UP_ID = 31983)
+                                                                             AND (Extent1.MEM_UP_ID IN (31983,78960))
                                                                              and   mem_id  = #{orgId})
                                </if>
                                <if test="gropId != null and gropId != ''">
