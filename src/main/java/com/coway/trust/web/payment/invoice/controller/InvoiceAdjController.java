@@ -103,9 +103,10 @@ public class InvoiceAdjController {
 		LOGGER.debug("adjId : {}", params.get("adjId"));
 		LOGGER.debug("invNo : {}", params.get("invNo"));
 
-		String invNo = "";//params.get("invNo").toString();
+		//String invNo = "";//params.get("invNo").toString();
 
-		if( invNo == "" || invNo == null){
+		//if( invNo == "" || invNo == null){
+		if( params.get("invNo")== ""){
 			EgovMap master = invoiceService.selectAdjDetailPopMasterOld(params);					//마스터 데이터 조회
 			List<EgovMap> detailList = invoiceService.selectAdjDetailPopListOld(params);		//상세 리스트 조회
 			List<EgovMap> histlList = null;		//히스토리 조회
