@@ -530,7 +530,7 @@ SELECT T1.CLM_SEQ,
        REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
        T1.CLAM_UN,
        T1.COST_CENTR AS S_COST_CENTR,
-       T1.COST_CENTR_NAME AS S_COST_CENTR_NAME,,
+       T1.COST_CENTR_NAME AS S_COST_CENTR_NAME,
        REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO,
        T3.TOT_AMT  AS ALL_TOT_AMT,
        T3.APPV_PRCSS_NO
