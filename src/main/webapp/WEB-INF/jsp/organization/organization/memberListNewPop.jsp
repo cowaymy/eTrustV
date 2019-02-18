@@ -515,6 +515,8 @@ console.log("ready");
 		if(traineeType == 2){
             $("#searchdepartment").attr("disabled", true);
             $("#searchSubDept").attr("disabled", true);
+            $("#joinDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
+            $("#joinDate").attr("readOnly", true);
 
 		}else if(traineeType == 7 ){
                 $("#searchdepartment").attr("disabled", true);
@@ -525,6 +527,8 @@ console.log("ready");
 		}else{
             $("#searchdepartment").attr("disabled", false);
             $("#searchSubDept").attr("disabled", false);
+            $("#joinDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
+            $("#joinDate").attr("readOnly", true);
 		}
 
 	});
