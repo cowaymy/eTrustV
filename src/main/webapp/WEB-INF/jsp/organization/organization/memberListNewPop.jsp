@@ -520,6 +520,7 @@ console.log("ready");
                 $("#searchdepartment").attr("disabled", true);
                 $("#searchSubDept").attr("disabled", true);
                 $("#transportCd option[value=253]").attr('selected', 'selected');
+                $("#joinDate").attr("readOnly", false);
 
 		}else{
             $("#searchdepartment").attr("disabled", false);
