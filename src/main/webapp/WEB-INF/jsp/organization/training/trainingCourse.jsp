@@ -268,7 +268,7 @@ $(document).ready(function () {
     });
 
     // Member Type
-    CommonCombo.make("memType", "/common/selectCodeList.do", {groupCode : '1', codeIn : 'HP,CD,CT,ST,CHT'}, "", {
+    CommonCombo.make("memType", "/common/selectCodeList.do", {groupCode : '1', codeIn : 'HP,CD,CT,ST,HT'}, "", {
         id: "codeId",
         name: "codeName",
         type:"S"
