@@ -5,8 +5,8 @@
 
 var myGridID;
 
-//Grid Properties 설정 
-var gridPros = {            
+//Grid Properties 설정
+var gridPros = {
         editable : false,                 // 편집 가능 여부 (기본값 : false)
         headerHeight : 35,
         showStateColumn : false     // 상태 칼럼 사용
@@ -15,20 +15,21 @@ var gridPros = {
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-	
+
 	// 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
         var adjId = AUIGrid.getCellValue(myGridID, event.rowIndex, 'memoAdjId');
+        var invNo = AUIGrid.getCellValue(myGridID, event.rowIndex, 'memoAdjInvcNo');
         var batchId = AUIGrid.getCellValue(myGridID, event.rowIndex, 'batchId');
-        
+
         if(batchId == 0){
-        	Common.popupDiv('/payment/initAdjustmentDetailPop.do', {adjId : adjId, mode : "APPROVAL"}, null , true ,'_adjustmentDetailPop');
+        	Common.popupDiv('/payment/initAdjustmentDetailPop.do', {adjId : adjId, invNo : invNo, mode : "APPROVAL"}, null , true ,'_adjustmentDetailPop');
         }else{
         	Common.popupDiv('/payment/initApprovalBatchPop.do', {batchId : batchId}, null , true ,'_approvalBatchPop');
         }
-         
+
     });
-    
+
 });
 
 var columnLayout=[
@@ -37,7 +38,7 @@ var columnLayout=[
     { dataField:"memoItmChrg" ,headerText:"<spring:message code='pay.head.adjustmentCharges'/>" ,editable : false  , visible : false},
     { dataField:"memoAdjRptNo" ,headerText:"<spring:message code='pay.head.reportNo'/>" ,editable : false  , visible : false},
     { dataField:"memoAdjId" ,headerText:"<spring:message code='pay.head.adjustmentId'/>" ,editable : false  , visible : false},
-    
+
     { dataField:"batchId" ,headerText:"<spring:message code='pay.head.batchId'/>" ,editable : false },
     { dataField:"memoAdjRefNo" ,headerText:"<spring:message code='pay.head.cnDnNo'/>" ,editable : false },
     { dataField:"memoAdjInvcNo" ,headerText:"<spring:message code='pay.head.invoiceNo'/>" ,editable : false },
@@ -52,7 +53,7 @@ var columnLayout=[
 
 // 리스트 조회.
 function fn_getAdjustmentListAjax() {
-    
+
     if(FormUtil.checkReqValue($("#orderNo")) &&
             FormUtil.checkReqValue($("#invoiceNo")) &&
             FormUtil.checkReqValue($("#batchId")) &&
@@ -60,14 +61,14 @@ function fn_getAdjustmentListAjax() {
         Common.alert("<spring:message code='pay.alert.oneEntry'/>");
         return;
     }
-    
+
     Common.ajax("GET", "/payment/selectAdjustmentList.do", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
 }
 
 </script>
-  
+
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Approval Adjustment (CN / DN)</h1>
@@ -85,18 +86,18 @@ function fn_getAdjustmentListAjax() {
                     <col style="width:180px" />
                     <col style="width:*" />
                     <col style="width:180px" />
-                    <col style="width:*" />                 
+                    <col style="width:*" />
                 </colgroup>
                 <tbody>
                     <tr>
                         <th scope="row">Order No.</th>
                         <td>
                            <input id="orderNo" name="orderNo" type="text" placeholder="Order No." class="w100p" />
-                        </td>      
+                        </td>
                         <th scope="row">Batch ID</th>
                         <td>
                            <input id="batchId" name="batchId" type="text" placeholder="Batch ID" class="w100p" />
-                        </td>                   
+                        </td>
                     </tr>
                     <tr>
                        <th scope="row">Invoice No.</th>
@@ -116,5 +117,5 @@ function fn_getAdjustmentListAjax() {
 		<!-- grid_wrap start -->
 		<article id="grid_wrap" class="grid_wrap"></article>
 		<!-- grid_wrap end -->
-	</section>	
+	</section>
 </div>
