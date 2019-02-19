@@ -1429,7 +1429,7 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         INVC_DT,
         PAY_DUE_DT,
         ATCH_FILE_GRP_ID,
-        REGEXP_REPLACE(INVC_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_REM
+        REGEXP_REPLACE(INVC_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_REM,
         TOT_AMT,
         SYSDATE,
         #{userId},
