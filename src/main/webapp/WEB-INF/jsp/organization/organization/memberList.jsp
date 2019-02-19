@@ -130,17 +130,30 @@ function fn_requestVacationPop(){
          console.log( result);
 
          if(result !="" ){
+
+        	    var telMobile = result.telMobile;
+        	    var sms;
+
              //Common.alert(" New Cody registration has been completed from "+membercode+" to "+ result.message);
                  if ( traineeType == 2) {
-                    Common.alert(" Cody registration has been completed. "+membercode+" to "+ result.message);
+                    Common.alert(" Cody registration has been completed. "+membercode+" to "+ result.memCode);
+                    sms = 'Your Cody Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
                 }
 
                 if ( traineeType == 3) {
-                    Common.alert(" CT  registration has been completed. "+membercode+" to "+ result.message);
+                    Common.alert(" CT  registration has been completed. "+membercode+" to "+ result.memCode);
                 }
 
                 if ( traineeType == 7) { // ADDED HOMECARE -- BY TOMMY
-                    Common.alert(" HT  registration has been completed. "+membercode+" to "+ result.message);
+                    Common.alert(" HT  registration has been completed. "+membercode+" to "+ result.memCode);
+                    sms = 'Your HT Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
+                }
+
+                if(telMobile != "") {
+                    Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo : telMobile, msg : sms} , function(result) {
+                        console.log("sms.");
+                        console.log( result);
+                    });
                 }
               fn_memberListSearch();
          }

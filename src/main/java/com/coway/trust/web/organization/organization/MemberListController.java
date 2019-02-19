@@ -779,10 +779,11 @@ public class MemberListController {
 
 
 	@RequestMapping(value = "/traineeUpdate.do", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage>  traineeUpdate(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+	public ResponseEntity<Map<String, Object>>  traineeUpdate(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 
 		ReturnMessage message = new ReturnMessage();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
+		Map<String, Object> trInfo = new HashMap();
 
 		logger.debug("in...... traineeUpdate");
 		logger.debug("params : {}", params);
@@ -791,11 +792,14 @@ public class MemberListController {
 		resultValue = memberListService.traineeUpdate(params,sessionVO);
 
 		if(null != resultValue){
-			message.setMessage((String)resultValue.get("memCode"));
+		    trInfo.put("memCode", (String)resultValue.get("memCode"));
+		    trInfo.put("telMobile", (String)resultValue.get("telMobile"));
+
+			//message.setMessage((String)resultValue.get("memCode"));
 		}
 
 
-		return ResponseEntity.ok(message);
+		return ResponseEntity.ok(trInfo);
 	}
 
 	/**

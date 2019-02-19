@@ -1540,6 +1540,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             memberListMapper.updateCdApl(paramM);
         }
 
+        params.put("src", "member");
+        EgovMap trDtls = new EgovMap();
+        trDtls = (EgovMap) memberListMapper.getHPCtc(params);
+
+        resultValue.put("telMobile", trDtls.get("mobile"));
+
         return resultValue;
     }
 

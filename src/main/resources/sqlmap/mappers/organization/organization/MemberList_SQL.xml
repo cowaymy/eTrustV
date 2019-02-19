@@ -4391,7 +4391,13 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             TEL_MOBILE MOBILE,
             EMAIL
             from ORG0001D
-            where MEM_CODE = #{memCode}
+            where
+            <if test="memCode != null and memCode != '' ">
+                MEM_CODE = #{memCode}
+            </if>
+            <if test="memberId != null and memberId != '' ">
+                MEM_ID = #{memberId}
+            </if>
         </if>
       </select>
 
