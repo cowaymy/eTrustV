@@ -635,6 +635,7 @@
       </choose>
 
                        and s28.WH_LOC_GB in ( '02' ,'05')
+                       AND s28.WH_LOC_STUS_ID = '1'
           and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D
 
                              WHERE A.SALES_ORD_ID = C.SALES_ORD_ID
