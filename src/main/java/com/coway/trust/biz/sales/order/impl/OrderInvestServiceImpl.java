@@ -201,8 +201,8 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 		params.put("invReqUserIdAuto", 0);
 		params.put("invReqTypeId", params.get("cmbInvType"));
 		//params.put("invReqHasAttach", params.get("attachInvest") != null ? "1" : "0");
-		params.put("invReqHasAttach", (params.get("atchFileGrpId") != null || params.get("atchFileGrpId") == "" ) ? params.get("atchFileGrpId") : 0);
-		params.put("invReqAttachFile", params.get("atchFileGrpId") != null ? targetFolder + filename : null);
+		params.put("invReqHasAttach", params.get("atchFileGrpId") != "" ? params.get("atchFileGrpId") : 0);
+		params.put("invReqAttachFile", params.get("atchFileGrpId") != "" ? targetFolder + filename : null);
 		params.put("invReqRejctResnId", 0);
 
 		// parameter setting (SalesOrderLog)
