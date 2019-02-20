@@ -548,7 +548,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
     		int a =0;
 
     		Map<String, Object>  pay31dMap = new HashMap<String, Object>();
-
+    		logger.debug("params : " + params);
     		EgovMap newAddr = membershipConvSaleMapper.getNewAddr(params);
 
     		//채번
@@ -559,8 +559,10 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
      	    pay31dMap.put("taxInvcRefDt",new Date());
      	    pay31dMap.put("taxInvcSvcNo",params.get("srvMemQuotNo"));
      	    pay31dMap.put("taxInvcType","119");
-     	    pay31dMap.put("taxInvcCustName",params.get("srvMemQuotCustName"));
-     	    pay31dMap.put("taxInvcCntcPerson",params.get("srvMemQuotCntName"));
+     	    //pay31dMap.put("taxInvcCustName",params.get("srvMemQuotCustName"));
+     	    //pay31dMap.put("taxInvcCntcPerson",params.get("srvMemQuotCntName"));
+     	    pay31dMap.put("taxInvcCustName",newAddr.get("custName"));
+     	    pay31dMap.put("taxInvcCntcPerson",newAddr.get("cntcName"));
      	    pay31dMap.put("taxInvcAddr1","");
      	    pay31dMap.put("taxInvcAddr2","");
      	    pay31dMap.put("taxInvcAddr3","");
