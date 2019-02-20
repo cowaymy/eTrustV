@@ -473,7 +473,7 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
        ,#{invcType}
        ,REGEXP_REPLACE(#{invcNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
-       ,#{supplyName}
+       ,REGEXP_REPLACE(#{supplyName}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,#{expType}
        ,#{expTypeName}
        ,#{glAccCode}
@@ -943,7 +943,7 @@ WHERE CRDIT_CARD_STUS = 'A'
         INVC_TYPE,
         REGEXP_REPLACE(INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
         INVC_DT,
-        SUPPLY_NAME,
+        REGEXP_REPLACE(SUPPLY_NAME, '(^[[:space:]]+)|([[:space:]]+$)', NULL) SUPPLY_NAME,
         EXP_TYPE,
         EXP_TYPE_NAME,
         GL_ACC_CODE,
@@ -956,7 +956,7 @@ WHERE CRDIT_CARD_STUS = 'A'
         TAX_NON_CLM_AMT,
         TOT_AMT,
         ATCH_FILE_GRP_ID,
-        REGEXP_REPLACE(EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC
+        REGEXP_REPLACE(EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
         CLAM_UN,
         SYSDATE,
         #{userId},
