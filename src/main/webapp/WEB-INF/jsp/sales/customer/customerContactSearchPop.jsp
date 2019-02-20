@@ -130,7 +130,15 @@
 
 	$(function(){
 	    $('#cntcSearchBtn').click(function() {
-	        fn_getCustomerContactAjax();
+	    	if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN'
+                || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
+                || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC') {
+                    fn_getCustomerContactAjax();
+                }
+                else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD'
+                     || $('#callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
+                    fn_getCustomerCareAjax();
+                }
 	    });
         $('#searchWord').keydown(function (event) {
             if (event.which === 13) {    //enter
