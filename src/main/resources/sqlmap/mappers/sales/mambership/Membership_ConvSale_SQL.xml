@@ -520,7 +520,11 @@
 	    SELECT D.AREA_ID
 		           ,C.STREET
 		           ,C.ADDR_DTL
+		             ,CUST.NAME CUST_NAME
+                   ,CUST1.NAME CNTC_NAME
 		  FROM SAL0001D A LEFT JOIN SAL0024D B ON A.CUST_BILL_ID = B.CUST_BILL_ID
+		  LEFT JOIN SAL0029D CUST ON CUST.CUST_ID = A.CUST_ID
+          LEFT JOIN SAL0027D CUST1 ON A.CUST_CNT_ID = CUST1.CUST_CNTC_ID
 		    JOIN SAL0023D C ON C.CUST_ADD_ID = (CASE WHEN A.CUST_BILL_ID = 0 THEN  A.CUST_ADD_ID
 		                                                                               WHEN A.CUST_BILL_ID IS NULL THEN A.CUST_ADD_ID
 		                                                                               ELSE B.CUST_BILL_ADD_ID END)
