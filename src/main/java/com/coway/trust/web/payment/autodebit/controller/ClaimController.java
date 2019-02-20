@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -989,6 +993,10 @@ public class ClaimController {
     // Calim Master 데이터 조회
     Map<String, Object> map = (Map<String, Object>) formList.get(0);
     EgovMap claimMap = claimService.selectClaimById(map);
+    String batchName  = "";
+    String fileDirectory = "";
+    String batchDate    = "";
+
 
     // 파일 생성하기
     if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
@@ -1006,6 +1014,12 @@ public class ClaimController {
         if ("3".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
           // claimService.deleteClaimFileDownloadInfo(claimMap);
           this.createClaimFileCIMB(claimMap);
+
+          batchName  = "BILLING_ORG2120";
+          batchDate   = claimMap.get("ctrlBatchDt").toString();
+          fileDirectory = filePath + "/CIMB/ClaimBank/";
+          zipFilesEmail(batchName, fileDirectory, batchDate);
+
         }
 
         // HLBB
@@ -1061,6 +1075,11 @@ public class ClaimController {
               claimMap.put("rowCount", 10000);
               this.createCreditCardFileCIMB(claimMap);
             }
+
+            batchName = "CRC";
+            fileDirectory = filePath + "/CRC/CIMB_GROUP/";
+            batchDate   = claimMap.get("ctrlBatchDt").toString();
+            zipFilesEmail(batchName, fileDirectory, batchDate);
           }
         } else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
           int totRowCount = claimService.selectCCClaimDetailByIdCnt(map);
@@ -1079,6 +1098,10 @@ public class ClaimController {
               claimMap.put("type", 2);
               this.createCreditCardFileMBB(claimMap);
             }
+            batchName = "CZ";
+            fileDirectory = filePath + "/CRC/MBB_GROUP/";
+            batchDate   = claimMap.get("ctrlBatchDt").toString();
+            zipFilesEmail(batchName, fileDirectory, batchDate);
           }
         }
       } else {
@@ -1093,6 +1116,11 @@ public class ClaimController {
               claimMap.put("rowCount", 10000);
               this.createClaimFileCrcCIMB(claimMap, i);
             }
+
+            batchName = "CRC";
+            fileDirectory = filePath + "/CRC/CIMB/";
+            batchDate   = claimMap.get("ctrlBatchDt").toString();
+            zipFilesEmail(batchName, fileDirectory, batchDate);
           }
         } else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
           int totRowCount = claimService.selectClaimDetailByIdCnt(map);
@@ -1111,6 +1139,11 @@ public class ClaimController {
               claimMap.put("type", 2);
               this.createClaimFileCrcMBB(claimMap);
             }
+
+            batchName = "CZ";
+            fileDirectory = filePath + "/CRC/MBB/";
+            batchDate   = claimMap.get("ctrlBatchDt").toString();
+            zipFilesEmail(batchName, fileDirectory, batchDate);
           }
         }
       }
@@ -1222,7 +1255,7 @@ public class ClaimController {
     // claimService.insertClaimFileDownloadInfo(claimMap);
 
     // E-mail 전송하기
-    File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
+    /*File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
     EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
@@ -1231,7 +1264,7 @@ public class ClaimController {
     email.setText("Please find attached the claim file for your kind perusal.");
     email.addFile(file);
 
-    adaptorService.sendEmail(email, false);
+    adaptorService.sendEmail(email, false);*/
 
   }
 
@@ -1263,7 +1296,7 @@ public class ClaimController {
       // "yyyyMMdd") + "B01.dat";
       sFile = "BILLING_ORG2120_" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + ".txt";
 
-      downloadHandler = getTextDownloadCIMBHandler(sFile, claimFileColumns, null, filePath, "/CIMB/ClaimBank/",
+      downloadHandler = getTextDownloadCIMBHandler(sFile, claimFileColumns, null, filePath, "/CIMB/ClaimBank/"+inputDate+"/",
           claimMap);
 
       largeExcelService.downLoadClaimFileCIMB(claimMap, downloadHandler);
@@ -1289,7 +1322,7 @@ public class ClaimController {
     // claimService.insertClaimFileDownloadInfo(claimMap);
 
     // E-mail 전송하기
-    File file = new File(filePath + "/CIMB/ClaimBank/" + sFile);
+  /*  File file = new File(filePath + "/CIMB/ClaimBank/" + sFile);
     EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
@@ -1298,7 +1331,7 @@ public class ClaimController {
     email.setText("Please find attached the claim file for your kind perusal.");
     email.addFile(file);
 
-    adaptorService.sendEmail(email, false);
+    adaptorService.sendEmail(email, false);*/
   }
 
   private ClaimFileCIMBHandler getTextDownloadCIMBHandler(String fileName, String[] columns, String[] titles,
@@ -1957,7 +1990,7 @@ public class ClaimController {
       todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
       sFile = "CRC_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo")) + ".csv";
 
-      downloadHandler = getTextDownloadCrcCIMBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
+      downloadHandler = getTextDownloadCrcCIMBHandler(sFile, claimFileColumns, null, filePath, "/CRC/CIMB/"+inputDate+"/", claimMap);
 
       largeExcelService.downLoadClaimFileCrcCIMB(claimMap, downloadHandler);
       // downloadHandler.writeFooter();
@@ -1982,7 +2015,7 @@ public class ClaimController {
     // claimService.insertClaimFileDownloadInfo(claimMap);
 
     // E-mail 전송하기
-    File file = new File(filePath + "/CRC/" + sFile);
+/*    File file = new File(filePath + "/CRC/" + sFile);
     EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
@@ -1991,7 +2024,7 @@ public class ClaimController {
     email.setText("Please find attached the claim file for your kind perusal.");
     email.addFile(file);
 
-    adaptorService.sendEmail(email, false);
+    adaptorService.sendEmail(email, false);*/
 
   }
 
@@ -2027,7 +2060,7 @@ public class ClaimController {
           sFile = "CZ" + todayDate + "_NEW_" + claimMap.get("ctrlId") + ".dat";
       }
 
-      downloadHandler = getTextDownloadCrcMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
+      downloadHandler = getTextDownloadCrcMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/MBB/"+inputDate+"/", claimMap);
 
       largeExcelService.downLoadClaimFileCrcMBB(claimMap, downloadHandler);
       if (claimMap.get("pageNo") == claimMap.get("pageCnt")) {
@@ -2048,7 +2081,7 @@ public class ClaimController {
 
     // E-mail 전송하기
     File file = new File(filePath + "/CRC/" + sFile);
-    EmailVO email = new EmailVO();
+    /*EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
     email.setHtml(false);
@@ -2058,7 +2091,7 @@ public class ClaimController {
     email.addFile(file);
 
     adaptorService.sendEmail(email, false);
-
+*/
   }
 
   private ClaimFileCrcMBBHandler getTextDownloadCrcMBBHandler(String fileName, String[] columns, String[] titles,
@@ -2089,7 +2122,7 @@ public class ClaimController {
       todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
       sFile = "CRC_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo")) + ".csv";
 
-      downloadHandler = getTextDownloadCreditCardCIMBHandler(sFile, claimFileColumns, null, filePath, "/CRC/",
+      downloadHandler = getTextDownloadCreditCardCIMBHandler(sFile, claimFileColumns, null, filePath, "/CRC/CIMB_GROUP/"+inputDate+"/",
           claimMap);
 
       largeExcelService.downLoadCreditCardFileCIMB(claimMap, downloadHandler);
@@ -2109,7 +2142,7 @@ public class ClaimController {
 
     // E-mail 전송하기
     File file = new File(filePath + "/CRC/" + sFile);
-    EmailVO email = new EmailVO();
+   /* EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
     email.setHtml(false);
@@ -2117,7 +2150,7 @@ public class ClaimController {
     email.setText("Please find attached the claim file for your kind perusal.");
     email.addFile(file);
 
-    adaptorService.sendEmail(email, false);
+    adaptorService.sendEmail(email, false);*/
 
   }
 
@@ -2153,7 +2186,7 @@ public class ClaimController {
           sFile = "CZ" + todayDate + "_NEW_" + claimMap.get("ctrlId") + ".dat";
       }
 
-      downloadHandler = getTextDownloadCreditCardMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
+      downloadHandler = getTextDownloadCreditCardMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/MBB_GROUP/"+inputDate+"/", claimMap);
 
       largeExcelService.downLoadCreditCardFileMBB(claimMap, downloadHandler);
 
@@ -2173,7 +2206,7 @@ public class ClaimController {
     }
 
     // E-mail 전송하기
-    File file = new File(filePath + "/CRC/" + sFile);
+   /* File file = new File(filePath + "/CRC/" + sFile);
     EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
@@ -2183,7 +2216,7 @@ public class ClaimController {
     email.addFile(file);
 
     adaptorService.sendEmail(email, false);
-
+*/
   }
 
   private CreditCardFileMBBHandler getTextDownloadCreditCardMBBHandler(String fileName, String[] columns,
@@ -2301,6 +2334,60 @@ public class ClaimController {
   public ResponseEntity<List<EgovMap>> selectAccBank(@RequestParam Map<String, Object> params) throws Exception {
     List<EgovMap> codeList = claimService.selectAccBank(params);
     return ResponseEntity.ok(codeList);
+  }
+
+  public void zipFilesEmail(String batchName, String fileDirectory, String batchDate) {
+
+      String zipFile = fileDirectory + "/" + batchName +"_" +batchDate + ".zip";
+      String srcDir  = fileDirectory + "/" + batchDate;
+
+      try {
+
+          // create byte buffer
+          byte[] buffer = new byte[1024];
+
+          FileOutputStream fos = new FileOutputStream(zipFile);
+          ZipOutputStream zos = new ZipOutputStream(fos);
+
+          File dir = new File(srcDir);
+          File[] files = dir.listFiles();
+
+          for (int i = 0; i < files.length; i++) {
+              System.out.println("Adding file: " + files[i].getName());
+
+              FileInputStream fis = new FileInputStream(files[i]);
+
+              // begin writing a new ZIP entry, positions the stream to the start of the entry data
+              zos.putNextEntry(new ZipEntry(files[i].getName()));
+
+              int length;
+
+              while ((length = fis.read(buffer)) > 0) {
+                  zos.write(buffer, 0, length);
+              }
+
+              zos.closeEntry();
+              // close the InputStream
+              fis.close();
+          }
+          // close the ZipOutputStream
+          zos.close();
+
+          //Email Start
+          File file = new File(zipFile);
+          EmailVO email = new EmailVO();
+
+          email.setTo(emailReceiver);
+          email.setHtml(false);
+          email.setSubject("CIMB Auto Debit Claim File - Batch Date : " + batchDate);
+          email.setText("Please find attached the claim file for your kind perusal.");
+          email.addFile(file);
+
+          adaptorService.sendEmail(email, false);
+      }
+      catch (IOException ioe) {
+          System.out.println("Error creating zip file" + ioe);
+      }
   }
 
 }
