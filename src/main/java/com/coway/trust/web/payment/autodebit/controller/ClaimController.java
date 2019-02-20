@@ -996,6 +996,7 @@ public class ClaimController {
     String batchName  = "";
     String fileDirectory = "";
     String batchDate    = "";
+    String emailSubject  = "";
 
 
     // 파일 생성하기
@@ -1018,7 +1019,8 @@ public class ClaimController {
           batchName  = "BILLING_ORG2120";
           batchDate   = claimMap.get("ctrlBatchDt").toString();
           fileDirectory = filePath + "/CIMB/ClaimBank/";
-          zipFilesEmail(batchName, fileDirectory, batchDate);
+          emailSubject = "CIMB Auto Debit Claim File";
+          zipFilesEmail(batchName, fileDirectory, batchDate, emailSubject);
 
         }
 
@@ -1079,7 +1081,8 @@ public class ClaimController {
             batchName = "CRC";
             fileDirectory = filePath + "/CRC/CIMB_GROUP/";
             batchDate   = claimMap.get("ctrlBatchDt").toString();
-            zipFilesEmail(batchName, fileDirectory, batchDate);
+            emailSubject = "CIMB Credit Card Claim File";
+            zipFilesEmail(batchName, fileDirectory, batchDate,emailSubject);
           }
         } else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
           int totRowCount = claimService.selectCCClaimDetailByIdCnt(map);
@@ -1101,7 +1104,8 @@ public class ClaimController {
             batchName = "CZ";
             fileDirectory = filePath + "/CRC/MBB_GROUP/";
             batchDate   = claimMap.get("ctrlBatchDt").toString();
-            zipFilesEmail(batchName, fileDirectory, batchDate);
+            emailSubject = "SCB CRC Deduction File";
+            zipFilesEmail(batchName, fileDirectory, batchDate,emailSubject);
           }
         }
       } else {
@@ -1120,7 +1124,8 @@ public class ClaimController {
             batchName = "CRC";
             fileDirectory = filePath + "/CRC/CIMB/";
             batchDate   = claimMap.get("ctrlBatchDt").toString();
-            zipFilesEmail(batchName, fileDirectory, batchDate);
+            emailSubject = "CIMB Credit Card Claim File";
+            zipFilesEmail(batchName, fileDirectory, batchDate,emailSubject);
           }
         } else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
           int totRowCount = claimService.selectClaimDetailByIdCnt(map);
@@ -1143,7 +1148,8 @@ public class ClaimController {
             batchName = "CZ";
             fileDirectory = filePath + "/CRC/MBB/";
             batchDate   = claimMap.get("ctrlBatchDt").toString();
-            zipFilesEmail(batchName, fileDirectory, batchDate);
+            emailSubject = "SCB CRC Deduction File";
+            zipFilesEmail(batchName, fileDirectory, batchDate,emailSubject);
           }
         }
       }
@@ -2080,8 +2086,8 @@ public class ClaimController {
     }
 
     // E-mail 전송하기
-    File file = new File(filePath + "/CRC/" + sFile);
-    /*EmailVO email = new EmailVO();
+    /*File file = new File(filePath + "/CRC/" + sFile);
+    EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
     email.setHtml(false);
@@ -2336,7 +2342,7 @@ public class ClaimController {
     return ResponseEntity.ok(codeList);
   }
 
-  public void zipFilesEmail(String batchName, String fileDirectory, String batchDate) {
+  public void zipFilesEmail(String batchName, String fileDirectory, String batchDate, String emailSubject) {
 
       String zipFile = fileDirectory + "/" + batchName +"_" +batchDate + ".zip";
       String srcDir  = fileDirectory + "/" + batchDate;
@@ -2379,7 +2385,7 @@ public class ClaimController {
 
           email.setTo(emailReceiver);
           email.setHtml(false);
-          email.setSubject("CIMB Auto Debit Claim File - Batch Date : " + batchDate);
+          email.setSubject(emailSubject + " - Batch Date : " + batchDate);
           email.setText("Please find attached the claim file for your kind perusal.");
           email.addFile(file);
 
