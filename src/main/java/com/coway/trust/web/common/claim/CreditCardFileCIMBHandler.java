@@ -65,7 +65,8 @@ public class CreditCardFileCIMBHandler extends BasicTextDownloadHandler implemen
 		// String CrcNo = EncryptionProvider.Decrypt(det.AccNo.Trim()).Trim();
 		crcNo = String.valueOf(dataRow.get("bankDtlCrcNo")).trim();
 		//crcExpiry = "0000";
-		crcExpiry = dataRow.get("rentPayCrcExpr") == null ? "0000" : String.valueOf(dataRow.get("rentPayCrcExpr")).trim();
+		//crcExpiry = dataRow.get("rentPayCrcExpr") == null ? "0000" : String.valueOf(dataRow.get("rentPayCrcExpr")).trim();
+		crcExpiry = String.valueOf(dataRow.get("rentPayCrcExpr")).trim();
 		amount = CommonUtils.getNumberFormat(String.valueOf(dataRow.get("bankDtlAmt")), "0.00");
 		serviceCode = dataRow.get("cntrctNOrdNo") == null ? "0000" : String.valueOf(dataRow.get("cntrctNOrdNo")).trim();
 		remarks = String.valueOf(dataRow.get("bankDtlGrpId"));

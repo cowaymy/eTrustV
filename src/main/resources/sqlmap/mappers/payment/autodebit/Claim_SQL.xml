@@ -753,7 +753,7 @@
         RENT_PAY_CRC_EXPR
       </when>
       <otherwise>
-        ,( SELECT
+        ,NVL( ( SELECT
         MAX(NVL(crc.CUST_CRC_EXPR, '0000')) RENT_PAY_CRC_EXPR
         FROM
         PAY0287D grp
@@ -776,7 +776,7 @@
         (19,34,17,28,18,31,16)
         AND dtl.BANK_DTL_GRP_ID =
         EXTENT1.BANK_DTL_GRP_ID
-        ) AS RENT_PAY_CRC_EXPR
+        ),'0000') AS RENT_PAY_CRC_EXPR
       </otherwise>
     </choose>
 
