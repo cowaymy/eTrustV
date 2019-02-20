@@ -178,7 +178,7 @@
               }
               alert("Fail : " + jqXHR.responseJSON.message);
         });
-       },2000);
+       },3000);
     }
 
     function setInputFile2(){//인풋파일 세팅하기
