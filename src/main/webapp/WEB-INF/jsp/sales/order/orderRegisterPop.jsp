@@ -288,21 +288,28 @@
 
                 console.log("성공.");
                 console.log("gstChk : " + custInfo.gstChk);
-                console.log("custInfo.areaId.substring(0,2):"+custInfo.areaId.substring(0,2));
 
-                if("DM" == custInfo.areaId.substring(0,2)) {
-        		    Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />');
-        		    /*
-        		    fn_clearInstallAddr();
-                    $('#liInstNewAddr').removeClass("blind");
-                    $('#liInstSelAddr').removeClass("blind");
-        		    return;
-                    */
-                    $("#validAreaIdYN").val("N");
-        	    }
-        	    else {
-        	        $("#validAreaIdYN").val("Y");
-        	    }
+
+                if(custInfo.areaId != undefined){
+	                console.log("custInfo.areaId.substring(0,2):"+custInfo.areaId.substring(0,2));
+	                if("DM" == custInfo.areaId.substring(0,2)) {
+	        		    Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />');
+	        		    /*
+	        		    fn_clearInstallAddr();
+	                    $('#liInstNewAddr').removeClass("blind");
+	                    $('#liInstSelAddr').removeClass("blind");
+	        		    return;
+	                    */
+	                    $("#validAreaIdYN").val("N");
+	        	    }
+	        	    else {
+	        	        $("#validAreaIdYN").val("Y");
+	        	    }
+                }else{
+                	Common.alert('<spring:message code="sal.alert.msg.invalidMagicAddress"/>',fn_orderRegPopClose());
+                	return false;
+                }
+
 
                 //
                 $("#hiddenCustAddId").val(custInfo.custAddId); //Customer Address ID(Hidden)
