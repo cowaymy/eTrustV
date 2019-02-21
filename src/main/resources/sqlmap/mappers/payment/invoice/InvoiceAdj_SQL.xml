@@ -664,7 +664,7 @@
                        LEFT JOIN SYS0013M Extent4   ON ( Extent3.CODE = Extent4.CODE )
                        OR ( ( Extent3.CODE IS NULL )
                        AND ( Extent4.CODE IS NULL ) )
-                 WHERE  Extent4.CODE_MASTER_ID IN ( 128,125 )
+                 WHERE  Extent4.CODE_MASTER_ID IN ( 128,125,142 )
                ) Filter1
                 JOIN PAY0016D Extent5   ON ( Filter1.BR_NO = Extent5.ACC_BILL_REM )
                 AND ( Extent5.ACC_BILL_MODE_ID = Filter1.OLDCODEID1 )
