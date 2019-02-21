@@ -94,7 +94,7 @@
                     return;
                 }
 
-            if (month >= 10 && year >= 2018){
+            if (month >= 10 && year >= 2018 || year >2018){
                 reportFileName = "/commission/CodyComm_PDF_201810.rpt"; //reportFileName
             }
             else{
