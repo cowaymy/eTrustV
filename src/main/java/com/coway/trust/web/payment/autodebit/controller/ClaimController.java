@@ -1124,7 +1124,7 @@ public class ClaimController {
             batchName = "CRC";
             fileDirectory = filePath + "/CRC/CIMB/";
             batchDate   = claimMap.get("ctrlBatchDt").toString();
-            emailSubject = "CIMB Credit Card Claim File";
+            emailSubject = "CIMB CRC";
             zipFilesEmail(batchName, fileDirectory, batchDate,emailSubject);
           }
         } else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
