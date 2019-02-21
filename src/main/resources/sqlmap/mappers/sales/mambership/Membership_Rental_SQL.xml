@@ -1715,7 +1715,7 @@
 						           ON Ext9.USER_ID = Ext1.UPD_USER_ID
 						   WHERE (Ext1.SALES_ORD_ID = #{salesOrdId})
 						       AND (Ext1.SVC_CNTRCT_ID = #{srvCntrctId})
-
+                ORDER BY UPD_DT DESC
             ]]>
   </select>
 

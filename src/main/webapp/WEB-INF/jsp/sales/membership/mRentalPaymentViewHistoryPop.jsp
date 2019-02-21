@@ -11,18 +11,18 @@
 <script type="text/javascript">
 	//AUIGrid 생성 후 반환 ID
 	var viewHistGridID;
-	
+
 	$(document).ready(function() {
-	    
+
 		// AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-	        
+
         fn_paymentViewHistAjax();
 	});
-	
+
 	function createAUIGrid() {
         // AUIGrid 칼럼 설정
-        
+
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
@@ -63,7 +63,7 @@
                 headerText : "<spring:message code="sal.title.submitDate" />",
                 editable : false
             }, {
-                dataField : "-",
+                dataField : "ddStartDt",
                 headerText : "<spring:message code="sal.title.approveDate" />",
                 editable : false
             },{
@@ -105,17 +105,17 @@
                 headerText : "<spring:message code="sal.title.updateDate" />",
                 editable : false
             }];
-        
+
      // 그리드 속성 설정
         var gridPros = {
-            
-            // 페이징 사용       
+
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
             editable : true,
             fixedColumnCount : 1,
-            showStateColumn : false, 
+            showStateColumn : false,
             displayTreeOpen : true,
             selectionMode : "multipleCells",
             headerHeight : 30,
@@ -128,7 +128,7 @@
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : false
         };
-        
+
         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
         viewHistGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
     }
@@ -139,33 +139,33 @@
            AUIGrid.setGridData(viewHistGridID, result);
        });
    }
-	
+
     //addcolum button hidden
     function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataField){
 
        if(item.ddApplyDt != '-' && item.ddSubmitDt != '-' && item.ddStartDt != '-' && item.c6 != 'Current'){
-           return '';  
+           return '';
        }else{
            return 'edit-column';
        }
     }
-    
+
     function fn_confirm(mode, bank, applyDt){
 
     	var msg = "<spring:message code="sal.conf.requestSummary" /> </br>";
     	msg += "<spring:message code="sal.conf.payMode" />["+mode+"] </br> <spring:message code="sal.conf.bankCode" />: ["+bank+"] </br> <spring:message code="sal.conf.applyDate" />: ["+applyDt+"]";
-    	
+
     	Common.confirm(msg, fn_confirmOk);
-    	
+
     }
-    
+
     function fn_confirmOk(){
 
         Common.ajax("GET", "/sales/membershipRental/paymentViewHistoryConfirm.do", $('#historyForm').serializeJSON(), function(result) {
             console.log(result);
-            
+
             Common.alert('<spring:message code="sal.alert.msg.succPaySet" />');
-            
+
             //$("#histClose").click();
             fn_paymentViewHistAjax();
 
