@@ -899,8 +899,11 @@ public class ECashDeductionController {
 			if (i == page) {
 				end = list.size();
 			}
-			bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
-			eCashDeductionService.updateECashDeductionResultItemBulk(bulkMap);
+			LOGGER.info("list ::" + list.stream().skip(start).limit(end).count());
+			if(list.stream().skip(start).limit(end).count() != 0){
+				bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+				eCashDeductionService.updateECashDeductionResultItemBulk(bulkMap);
+			}
 		}
 
 		eCashMap = eCashDeductionService.selectECashBankResult(eCashMap);

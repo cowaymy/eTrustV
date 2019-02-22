@@ -487,8 +487,10 @@ public class ClaimController {
       if (i == page) {
         end = list.size();
       }
-      bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
-      claimService.updateClaimResultItemBulk4(bulkMap);
+      if(list.stream().skip(start).limit(end).count() != 0){
+          bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+          claimService.updateClaimResultItemBulk4(bulkMap);
+      }
     }
 
     // 업로드된 값을 재정리 한다. REF_CODE / REF_NO LPAD 처리
