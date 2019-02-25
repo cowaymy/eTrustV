@@ -463,6 +463,7 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
             if(clmType == "J1") {
                 $("#supplirTh").html('');
                 $("#supplirTd").text("");
+                $("#crcInfo").hide();
                 $("#payInfo1").show();
                 $("#payInfo2").show();
                 $("#expDesc").text(result.data.invcRem);
@@ -484,6 +485,7 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
             } else if(clmType == "J2") {
                 $("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
                 $("#supplirTd").text(result.data.supplier);
+                $("#crcInfo").hide();
                 //$("#payInfo1").show();
                 //$("#payInfo2").show();
                 $("#utilNo").text(result.data.utilNo);
@@ -500,6 +502,15 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
                     }
                 }
                 $("#bilPeriod").text(bilPeriod);
+            } else if(clmType == "J3"){
+                $("#ccInvcInfo").hide();
+                $("#crcInfo").show();
+                $("#crcCostCentr").text(result.data.sCostCentr + "/" + result.data.sCostCentrName);
+                $("#crcInvcDt").text(result.data.invcDt);
+                $("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
+                $("#supplirTd").text(result.data.supplier);
+                $("#payInfo1").hide();
+                $("#payInfo2").hide();
             } else {
                 $("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
                 $("#supplirTd").text(result.data.supplier);
@@ -651,7 +662,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
     <th scope="row"><spring:message code="invoiceApprove.clmType" /></th>
     <td><span id="viewClmType"></span></td>
 </tr>
-<tr>
+<tr id="ccInvcInfo">
     <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
     <td id="viewCostCentr"></td>
     <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
@@ -699,6 +710,12 @@ function fn_atchViewDown(fileGrpId, fileId) {
     <td id="supplirTd"></td>
     <!-- <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
     <td id="invcType"></td> -->
+</tr>
+<tr id="crcInfo">
+    <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
+    <td id="crcInvcDt"></td>
+    <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
+    <td id="crcCostCentr"></td>
 </tr>
 <!-- <tr>
     <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
