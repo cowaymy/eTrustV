@@ -1,12 +1,17 @@
 package com.coway.trust.web.payment.ecash.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 
@@ -394,6 +399,10 @@ public class ECashDeductionController {
 		Map<String, Object> map = (Map<String, Object>) formList.get(0);
 		EgovMap claimMap = eCashDeductionService.selectECashDeductById(map);
 		boolean isGrp = map.get("v_isGrp") != null ? true : false;
+		String batchName  = "";
+	    String fileDirectory = "";
+	    String batchDate    = "";
+	    String emailSubject  = "";
 
     		if(isGrp){
     			// For Credit Card Grouping Only
@@ -409,6 +418,12 @@ public class ECashDeductionController {
         					claimMap.put("rowCount", 10000);
         					this.createECashGrpDeductionFileCIMB(claimMap);
         				}
+
+        				batchName  = "eCash_CIMB_CIMB";
+        		        batchDate   = claimMap.get("fileBatchCrtDt").toString();
+        		        fileDirectory = filePath + "/eCash/CIMB_GROUP/";
+        		        emailSubject = "CIMB eAuto Debit CRC Deduction File";
+        		        zipFilesEmail(batchName, fileDirectory, batchDate, emailSubject);
         			}
                 }else if ("19".equals(String.valueOf(claimMap.get("fileBatchBankId")))){// Standard Charted merchant getting MBB's cardHolder
 
@@ -428,6 +443,12 @@ public class ECashDeductionController {
         					claimMap.put("type", 2);
                             this.createECashGrpDeductionFileMBB(claimMap);
         				}
+
+        				batchName  = "CZ";
+        		        batchDate   = claimMap.get("fileBatchCrtDt").toString();
+        		        fileDirectory = filePath + "/eCash/MBB_GROUP/";
+        		        emailSubject = "SCB eCash CRC Grouping Deduction File";
+        		        zipFilesEmail(batchName, fileDirectory, batchDate, emailSubject);
         			}
                 }
 
@@ -444,6 +465,12 @@ public class ECashDeductionController {
         					claimMap.put("rowCount", 10000);
         					this.createECashDeductionFileCIMB(claimMap);
         				}
+
+        				batchName  = "eCash_CIMB_CIMB";
+        		        batchDate   = claimMap.get("fileBatchCrtDt").toString();
+        		        fileDirectory = filePath + "/eCash/CIMB/";
+        		        emailSubject = "CIMB eAuto Debit CRC Deduction File";
+        		        zipFilesEmail(batchName, fileDirectory, batchDate, emailSubject);
         			}
                 }else if ("19".equals(String.valueOf(claimMap.get("fileBatchBankId")))){// Standard Charted merchant getting MBB's cardHolder
 
@@ -463,6 +490,12 @@ public class ECashDeductionController {
         					claimMap.put("type", 2);
         					this.createECashDeductionFileMBB(claimMap);
         				}
+
+        				batchName  = "CZ";
+        		        batchDate   = claimMap.get("fileBatchCrtDt").toString();
+        		        fileDirectory = filePath + "/eCash/MBB/";
+        		        emailSubject = "SCB eCash CRC Grouping Deduction File";
+        		        zipFilesEmail(batchName, fileDirectory, batchDate, emailSubject);
         			}
                 }
         }
@@ -503,7 +536,7 @@ public class ECashDeductionController {
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
 			sFile = "eCash_CIMB_CIMB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".csv";
 
-			downloadHandler = getTextDownloadCIMBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
+			downloadHandler = getTextDownloadCIMBHandler(sFile, claimFileColumns, null, filePath, "/eCash/CIMB/"+inputDate+"/", claimMap);
 
 			largeExcelService.downLoadECashDeductionFileCIMB(claimMap, downloadHandler);
 			//downloadHandler.writeFooter();
@@ -521,7 +554,7 @@ public class ECashDeductionController {
 		}
 
 		// E-mail 전송하기
-		File file = new File(filePath + "/CRC/" + sFile);
+	/*	File file = new File(filePath + "/CRC/" + sFile);
 		EmailVO email = new EmailVO();
 
 		email.setTo(emailReceiver);
@@ -530,7 +563,7 @@ public class ECashDeductionController {
 		email.setText("Please find attached the claim file for your kind perusal.");
 		email.addFile(file);
 
-		adaptorService.sendEmail(email, false);
+		adaptorService.sendEmail(email, false);*/
 
 	}
 
@@ -572,7 +605,7 @@ public class ECashDeductionController {
 			    sFile = "CZ" + todayDate + "_NEW_" + claimMap.get("fileBatchId") + ".dat";
 			}
 
-			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
+			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/eCash/MBB/"+inputDate+"/", claimMap);
 			largeExcelService.downLoadECashDeductionFileMBB(claimMap, downloadHandler);
 			if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
                 downloadHandler.writeFooter(Integer.toString((Integer) claimMap.get("type")));
@@ -591,7 +624,7 @@ public class ECashDeductionController {
 		}
 
 		// E-mail 전송하기
-		File file = new File(filePath + "/CRC/" + sFile);
+/*		File file = new File(filePath + "/CRC/" + sFile);
 		EmailVO email = new EmailVO();
 
 		email.setTo(emailReceiver);
@@ -612,7 +645,7 @@ public class ECashDeductionController {
 		} else {
 		    email.addFile(file);
 		    adaptorService.sendEmail(email, false);
-		}
+		}*/
 
 	}
 
@@ -635,7 +668,7 @@ public class ECashDeductionController {
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
 			sFile = "eCash_CIMB_CIMB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".csv";
 
-			downloadHandler = getTextDownloadCIMBGrpHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
+			downloadHandler = getTextDownloadCIMBGrpHandler(sFile, claimFileColumns, null, filePath, "/eCash/CIMB_GROUP/"+inputDate+"/", claimMap);
 
 			largeExcelService.downLoadECashGrpDeductionFileCIMB(claimMap, downloadHandler);
 			//downloadHandler.writeFooter();
@@ -653,7 +686,7 @@ public class ECashDeductionController {
 		}
 
 		// E-mail 전송하기
-		File file = new File(filePath + "/CRC/" + sFile);
+/*		File file = new File(filePath + "/CRC/" + sFile);
 		EmailVO email = new EmailVO();
 
 		email.setTo(emailReceiver);
@@ -662,7 +695,7 @@ public class ECashDeductionController {
 		email.setText("Please find attached the claim file for your kind perusal.");
 		email.addFile(file);
 
-		adaptorService.sendEmail(email, false);
+		adaptorService.sendEmail(email, false);*/
 
 	}
 
@@ -690,7 +723,7 @@ public class ECashDeductionController {
 	            sFile = "CZ" + todayDate + "_NEW_" + claimMap.get("fileBatchId") + ".dat";
 	        }
 
-			downloadHandler = getTextDownloadMBBGrpHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
+			downloadHandler = getTextDownloadMBBGrpHandler(sFile, claimFileColumns, null, filePath, "/eCash/MBB_GROUP"+inputDate+"/", claimMap);
 			largeExcelService.downLoadECashGrpDeductionFileMBB(claimMap, downloadHandler);
 			if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
                 downloadHandler.writeFooter(Integer.toString((Integer) claimMap.get("type")));
@@ -709,7 +742,7 @@ public class ECashDeductionController {
 		}
 
 		// E-mail 전송하기
-		File file = new File(filePath + "/CRC/" + sFile);
+		/*File file = new File(filePath + "/CRC/" + sFile);
 		EmailVO email = new EmailVO();
 
 		List<String> recList = new ArrayList<String>();
@@ -732,7 +765,7 @@ public class ECashDeductionController {
         } else {
             email.addFile(file);
             adaptorService.sendEmail(email, false);
-        }
+        }*/
 
 	}
 
@@ -917,6 +950,60 @@ public class ECashDeductionController {
     	message.setMessage("Saved Successfully");
 
     	return ResponseEntity.ok(message);
+    }
+
+    public void zipFilesEmail(String batchName, String fileDirectory, String batchDate, String emailSubject) {
+
+        String zipFile = fileDirectory + "/" + batchName +"_" +batchDate + ".zip";
+        String srcDir  = fileDirectory + "/" + batchDate;
+
+        try {
+
+            // create byte buffer
+            byte[] buffer = new byte[1024];
+
+            FileOutputStream fos = new FileOutputStream(zipFile);
+            ZipOutputStream zos = new ZipOutputStream(fos);
+
+            File dir = new File(srcDir);
+            File[] files = dir.listFiles();
+
+            for (int i = 0; i < files.length; i++) {
+                System.out.println("Adding file: " + files[i].getName());
+
+                FileInputStream fis = new FileInputStream(files[i]);
+
+                // begin writing a new ZIP entry, positions the stream to the start of the entry data
+                zos.putNextEntry(new ZipEntry(files[i].getName()));
+
+                int length;
+
+                while ((length = fis.read(buffer)) > 0) {
+                    zos.write(buffer, 0, length);
+                }
+
+                zos.closeEntry();
+                // close the InputStream
+                fis.close();
+            }
+            // close the ZipOutputStream
+            zos.close();
+
+            //Email Start
+            File file = new File(zipFile);
+            EmailVO email = new EmailVO();
+
+            email.setTo(emailReceiver);
+            email.setHtml(false);
+            email.setSubject(emailSubject + " - Batch Date : " + batchDate);
+            email.setText("Please find attached the claim file for your kind perusal.");
+            email.addFile(file);
+
+            adaptorService.sendEmail(email, false);
+        }
+        catch (IOException ioe) {
+            System.out.println("Error creating zip file" + ioe);
+        }
     }
 
 
