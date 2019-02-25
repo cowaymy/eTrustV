@@ -1503,7 +1503,8 @@
 						            WHEN (Extent9.USER_ID IS NOT NULL) THEN Extent9.USER_NAME
 						            ELSE ' '
 						         END
-						            USER_NAME
+						            USER_NAME,
+						            Extent1.UPD_DT UPD_DT_1
 						  FROM                           SAL0074D Extent1
 						                              JOIN
 						                                 SYS0013M Extent2
@@ -1675,7 +1676,8 @@
 						              WHEN (Ext9.USER_ID IS NOT NULL) THEN Ext9.USER_NAME
 						              ELSE ' '
 						           END
-						              USER_NAME
+						              USER_NAME,
+						              Ext1.UPD_DT UPD_DT_1
 						    FROM                           SAL0076D Ext1
 						                                JOIN
 						                                   SYS0013M Ext2
@@ -1715,7 +1717,7 @@
 						           ON Ext9.USER_ID = Ext1.UPD_USER_ID
 						   WHERE (Ext1.SALES_ORD_ID = #{salesOrdId})
 						       AND (Ext1.SVC_CNTRCT_ID = #{srvCntrctId})
-                ORDER BY UPD_DT DESC
+                ORDER BY UPD_DT_1 DESC
             ]]>
   </select>
 
