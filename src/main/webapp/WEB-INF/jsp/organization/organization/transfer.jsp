@@ -3,7 +3,7 @@
 
 <script type="text/javaScript">
 
-var memberTypeData = [{"codeId": "1","codeName": "Health Planner"},{"codeId": "2","codeName": "Coway Lady"},{"codeId": "3","codeName": "Coway Technician"}];
+var memberTypeData = [{"codeId": "1","codeName": "Health Planner"},{"codeId": "2","codeName": "Coway Lady"},{"codeId": "3","codeName": "Coway Technician"},{"codeId": "7","codeName": "Homecare Technician"}];
 
 
 function fn_saveConfirm(){
@@ -228,7 +228,7 @@ $(document).ready(function(){
 <ul class="center_btns">
 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_saveConfirm();">Request Transfer</a></p></li>
-</c:if>    
+</c:if>
 </ul>
 </form>
 </section><!-- content end -->
