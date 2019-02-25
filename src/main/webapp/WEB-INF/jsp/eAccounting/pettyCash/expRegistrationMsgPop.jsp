@@ -5,7 +5,7 @@
 $(document).ready(function () {
     $("#no").click(fn_closePop);
     $("#yes").click(fn_approveLineSubmit);
-    
+
 });
 
 function fn_closePop() {
@@ -14,7 +14,7 @@ function fn_closePop() {
 
 function fn_approveLineSubmit() {
 	$("#expRegistrationMsgPop").remove();
-	
+
 	var newGridList = AUIGrid.getOrgGridData(newGridID);
 	var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
     var obj = {
@@ -24,11 +24,19 @@ function fn_approveLineSubmit() {
             allTotAmt : Number($("allTotAmt_text").text().replace(/,/gi, ''))
     };
     console.log(obj);
-    
-    Common.ajax("POST", "/eAccounting/pettyCash/expApproveLineSubmit.do", obj, function(result) {
-        console.log(result);
-        Common.popupDiv("/eAccounting/pettyCash/expCompletedMsgPop.do", {callType:callType,clmNo:result.data.clmNo}, null, true, "expCompletedMsgPop");
-        //Common.alert("Your authorization request was successful.");
+
+    Common.ajax("POST", "/eAccounting/webInvoice/checkFinAppr.do", obj, function(resultFinAppr) {
+        console.log(resultFinAppr);
+
+        if(resultFinAppr.code == "99") {
+            Common.alert("Please select the relevant final approver.");
+        } else {
+            Common.ajax("POST", "/eAccounting/pettyCash/expApproveLineSubmit.do", obj, function(result) {
+                console.log(result);
+                Common.popupDiv("/eAccounting/pettyCash/expCompletedMsgPop.do", {callType:callType,clmNo:result.data.clmNo}, null, true, "expCompletedMsgPop");
+                //Common.alert("Your authorization request was successful.");
+            });
+        }
     });
 }
 
