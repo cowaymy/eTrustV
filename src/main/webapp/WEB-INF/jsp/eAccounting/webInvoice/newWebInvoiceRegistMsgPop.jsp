@@ -2,10 +2,12 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
+
+console.log("newWebInvoiceRegistMsgPop");
 $(document).ready(function () {
     $("#no").click(fn_closePop);
     $("#yes").click(fn_approveLineSubmit);
-    
+
 });
 
 function fn_closePop() {
@@ -14,7 +16,7 @@ function fn_closePop() {
 
 function fn_approveLineSubmit() {
 	$("#registMsgPop").remove();
-	
+
     var newGridList = AUIGrid.getOrgGridData(newGridID);
     var date = new Date();
     var year = date.getFullYear();
@@ -27,7 +29,7 @@ function fn_approveLineSubmit() {
             ,costCentr : costCentr
     };
     console.log(data);
-    
+
     // 예산확인
     Common.ajax("POST", "/eAccounting/webInvoice/budgetCheck.do", data, function(result) {
         console.log(result);
@@ -46,11 +48,19 @@ function fn_approveLineSubmit() {
             var obj = $("#form_newWebInvoice").serializeJSON();
             obj.newGridList = newGridList;
             obj.apprGridList = apprGridList;
-            
-            Common.ajax("POST", "/eAccounting/webInvoice/approveLineSubmit.do", obj, function(result) {
-                console.log(result);
-                Common.popupDiv("/eAccounting/webInvoice/newCompletedMsgPop.do", {callType:callType, clmNo:result.data.clmNo}, null, true, "completedMsgPop");
-                //Common.alert("Your authorization request was successful.");
+
+            Common.ajax("POST", "/eAccounting/webInvoice/checkFinAppr.do", obj, function(resultFinAppr) {
+                console.log(resultFinAppr);
+
+                if(resultFinAppr.code == "99") {
+                    Common.alert("Please select the relevant final approver.");
+                } else {
+                    Common.ajax("POST", "/eAccounting/webInvoice/approveLineSubmit.do", obj, function(result) {
+                        console.log(result);
+                        Common.popupDiv("/eAccounting/webInvoice/newCompletedMsgPop.do", {callType:callType, clmNo:result.data.clmNo}, null, true, "completedMsgPop");
+                        //Common.alert("Your authorization request was successful.");
+                    });
+                }
             });
         }
     });

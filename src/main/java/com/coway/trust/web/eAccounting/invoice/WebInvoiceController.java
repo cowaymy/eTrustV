@@ -896,4 +896,48 @@ public class WebInvoiceController {
 	       trInfo.put("finalAppr", apprDtls.get("finalAppr"));
 	       return ResponseEntity.ok(trInfo);
 	   }
+
+	   @RequestMapping(value = "/checkFinAppr.do", method = RequestMethod.POST)
+	    public ResponseEntity<ReturnMessage> checkFinAppr(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+	       /*
+	        * @RequestMapping(value = "/approveLineSubmit.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> approveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	        */
+
+	        LOGGER.debug("checkFinAppr");
+	        LOGGER.debug("params =====================================>>  " + params);
+
+	        ReturnMessage message = new ReturnMessage();
+
+	        List<Object> apprGridList = (List<Object>) params.get("apprGridList");
+
+	        if (apprGridList.size() > 0) {
+	            //webInvoiceMapper.getFinApprover
+	            Map hm = null;
+	            List<String> appvLineUserId = new ArrayList<>();
+
+	            for (Object map : apprGridList) {
+	                hm = (HashMap<String, Object>) map;
+	                appvLineUserId.add(hm.get("memCode").toString());
+	            }
+
+	            params.put("clmType", params.get("clmNo").toString().substring(0, 2));
+	            EgovMap hm2 = webInvoiceService.getFinApprover(params);
+	            String memCode = hm2.get("apprMemCode").toString();
+	            LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
+
+	            memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+	            if(!appvLineUserId.contains(memCode)) {
+	                message.setCode(AppConstants.FAIL);
+	                message.setData(params);
+	                message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	            } else {
+	                message.setCode(AppConstants.SUCCESS);
+	                message.setData(params);
+	                message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	            }
+	        }
+
+	        return ResponseEntity.ok(message);
+	    }
 }

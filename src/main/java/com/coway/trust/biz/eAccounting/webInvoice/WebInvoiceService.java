@@ -85,4 +85,5 @@ public interface WebInvoiceService {
 
 	EgovMap getFinalApprAct(Map<String, Object> params);
 
+	EgovMap getFinApprover(Map<String, Object> params);
 }
