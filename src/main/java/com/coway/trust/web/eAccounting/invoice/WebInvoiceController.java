@@ -156,14 +156,23 @@ public class WebInvoiceController {
 		List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(params);
 
 		String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
-		memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
-		for(int i = 0; i < appvLineInfo.size(); i++) {
-			EgovMap info = appvLineInfo.get(i);
-			if(memCode.equals(info.get("appvLineUserId"))) {
-				String appvPrcssResult = String.valueOf(info.get("appvStus"));
-				model.addAttribute("appvPrcssResult", appvPrcssResult);
-			}
-		}
+        memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+        params.put("memCode", memCode);
+        EgovMap apprDtls = new EgovMap();
+        apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+        List<String> appvLineUserId = new ArrayList<>();
+        for(int i = 0; i < appvLineInfo.size(); i++) {
+            EgovMap info = appvLineInfo.get(i);
+            appvLineUserId.add(info.get("appvLineUserId").toString());
+            if(memCode.equals(info.get("appvLineUserId"))) {
+                String appvPrcssResult = String.valueOf(info.get("appvStus"));
+                model.addAttribute("appvPrcssResult", appvPrcssResult);
+            }
+        }
+
+        if(!appvLineUserId.contains(memCode) && apprDtls != null) {
+            model.addAttribute("appvPrcssResult", "R");
+        }
 
 		// TODO appvPrcssStus 생성
 		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
@@ -334,34 +343,14 @@ public class WebInvoiceController {
 
 		LOGGER.debug("params =====================================>>  " + params);
 
+		EgovMap apprDtls = new EgovMap();
+		apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+		if(apprDtls != null) {
+		    params.put("apprGrp", apprDtls.get("apprGrp"));
+		}
+
 		String[] pClmType = request.getParameterValues("clmType");
 		String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
-
-		// Removal of J3 (credit card type)
-		/*int index = -1;
-		for(int i = 0; i < pClmType.length; i++) {
-			if(pClmType[i].equals("J3")) {
-				index = i;
-				break;
-			}
-		}
-
-		Object[] clmType = null;
-		if(index >= 0) {
-			clmType = (Object[]) Array.newInstance(pClmType.getClass().getComponentType(), pClmType.length - 1);
-
-			if(clmType.length > 0) {
-				System.arraycopy(pClmType, 0, clmType, 0, index);
-				System.arraycopy(pClmType, index + 1, clmType, index, clmType.length - index);
-			}
-			params.put("crcPrcssStus", "J3");
-		}
-
-		if(clmType == null) {
-			params.put("clmType", pClmType);
-		} else {
-			params.put("clmType", clmType);
-		}*/
 
 		params.put("clmType", pClmType);
 		params.put("appvPrcssStus", appvPrcssStus);
@@ -522,6 +511,7 @@ public class WebInvoiceController {
 
 		String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
 		memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+        params.put("memCode", memCode);
 
 		List<Object> invoAppvGridList = (List<Object>) params.get("invoAppvGridList");
 		for (int i = 0; i < invoAppvGridList.size(); i++) {
@@ -531,6 +521,19 @@ public class WebInvoiceController {
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("appvPrcssNo", appvPrcssNo);
 			param.put("memCode", memCode);
+
+			EgovMap apprDtls = new EgovMap();
+            apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+			List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(param);
+			List<String> appvLineUserId = new ArrayList<>();
+			for(int a = 0; a < appvLineInfo.size(); a++) {
+			    EgovMap info = appvLineInfo.get(a);
+			    appvLineUserId.add(info.get("appvLineUserId").toString());
+			}
+
+			if(!appvLineUserId.contains(memCode)) {
+			    param.put("apprGrp", apprDtls.get("apprGrp"));
+			}
 
 			int returnData = webInvoiceService.selectAppvStus(param);
 
@@ -582,6 +585,7 @@ public class WebInvoiceController {
 
 		String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
 		memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+		params.put("memCode", memCode);
 
 		List<Object> invoAppvGridList = (List<Object>) params.get("invoAppvGridList");
 		for (int i = 0; i < invoAppvGridList.size(); i++) {
@@ -591,6 +595,19 @@ public class WebInvoiceController {
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("appvPrcssNo", appvPrcssNo);
 			param.put("memCode", memCode);
+
+			EgovMap apprDtls = new EgovMap();
+            apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+            List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(param);
+            List<String> appvLineUserId = new ArrayList<>();
+            for(int a = 0; a < appvLineInfo.size(); a++) {
+                EgovMap info = appvLineInfo.get(a);
+                appvLineUserId.add(info.get("appvLineUserId").toString());
+            }
+
+            if(!appvLineUserId.contains(memCode)) {
+                param.put("apprGrp", apprDtls.get("apprGrp"));
+            }
 
 			int returnData = webInvoiceService.selectAppvStus(param);
 
@@ -867,4 +884,16 @@ public class WebInvoiceController {
 
 	        return ResponseEntity.ok(message);
 	    }
+
+	   @RequestMapping(value = "/getFinalApprAct.do", method = RequestMethod.GET)
+	   public ResponseEntity<Map<String, Object>>  getFinalApprAct(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+
+	       LOGGER.debug("params =====================================>>  " + params);
+
+	       Map<String, Object> trInfo = new HashMap();
+	       EgovMap apprDtls = new EgovMap();
+	       apprDtls = (EgovMap) webInvoiceService.getFinalApprAct(params);
+	       trInfo.put("finalAppr", apprDtls.get("finalAppr"));
+	       return ResponseEntity.ok(trInfo);
+	   }
 }

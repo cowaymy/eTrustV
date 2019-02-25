@@ -852,10 +852,21 @@ SELECT T.APPV_PRCSS_NO
                                                            X.ATCH_FILE_GRP_ID) R
                                   WHERE  R.RNUM = 1) Q
                           WHERE  Q.RNUM = 1) T6 ON T3.ATCH_FILE_GRP_ID = T6.ATCH_FILE_GRP_ID
-           WHERE     T2.APPV_LINE_USER_ID = #{memCode}
+           WHERE <!-- T2.APPV_LINE_USER_ID = #{memCode} -->
            <!-- WHERE 1=1 -->
-                 AND (T1.APPV_PRCSS_STUS = 'R' OR T1.APPV_PRCSS_STUS = 'P' OR T1.APPV_PRCSS_STUS = 'A' or T1.APPV_PRCSS_STUS = 'J')
+                 (T1.APPV_PRCSS_STUS = 'R' OR T1.APPV_PRCSS_STUS = 'P' OR T1.APPV_PRCSS_STUS = 'A' or T1.APPV_PRCSS_STUS = 'J')
                  AND (T2.APPV_STUS = 'R' OR T2.APPV_STUS = 'A' OR T2.APPV_STUS = 'J')
+                 <if test="apprGrp == null or apprGrp == ''">
+                    AND T2.APPV_LINE_USER_ID = #{memCode}
+                 </if>
+                 <if test="apprGrp != null and apprGrp != ''">
+                    AND T2.APPV_LINE_USER_ID IN (
+                        SELECT
+                            APPR_MEM_CODE
+                        FROM FCM0023M
+                        WHERE APPR_GRP = #{apprGrp}
+                    )
+                </if>
         <!-- GROUP BY T1.APPV_PRCSS_NO
                 ,T2.APPV_LINE_SEQ
                 ,T1.APPV_REQ_KEY_NO
@@ -1382,7 +1393,19 @@ SELECT HR_CODE AS MEM_CODE FROM SYS0047M WHERE USER_ID = #{userId}
 <select id="selectAppvStus"  parameterType="Map" resultType="int">
 SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
   FROM FCM0005D
- WHERE APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_USER_ID = #{memCode}
+ WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+ <if test="apprGrp == null or apprGrp == '' ">
+    AND APPV_LINE_USER_ID = #{memCode}
+ </if>
+ <if test="apprGrp != null or apprGrp != ''">
+    AND APPV_LINE_USER_ID IN (
+        SELECT
+            APPR_MEM_CODE
+        FROM FCM0023M
+        WHERE APPR_GRP = #{apprGrp}
+    )
+    AND APPV_STUS = 'R'
+ </if>
 </select>
 
 <insert id="insertRejectM" parameterType="Map">
@@ -1530,5 +1553,129 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
     FROM FCM0008M
     WHERE COST_CENTER = #{costCenter}
 </select>
+
+<select id="getClmDesc" parameterType="Map" resultType="egovMap">
+    SELECT
+        CODE_DESC
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = '343'
+    AND CODE = SUBSTR(#{clmNo}, 1, 2)
+</select>
+
+<select id="getNtfUser" parameterType="Map" resultType="egovMap">
+    SELECT
+        USER_NAME
+    FROM SYS0047M
+    WHERE HR_CODE = #{memCode}
+</select>
+
+<select id="getApprGrp" parameterType="Map" resultType="egovMap">
+    SELECT
+        APPR_GRP
+    FROM FCM0023M
+    WHERE APPR_MEM_CODE = #{memCode}
+        AND APPR_MEM_STUS = '1'
+</select>
+
+<select id="getFinalApprAct" parameterType="Map" resultType="egovMap">
+    SELECT
+	    CASE WHEN B.APPV_STUS = 'A' THEN 'Approval By ' ELSE 'Reject By ' END || C.NAME || ' [' || TO_CHAR(B.APPV_DT, 'DD/MM/YYYY') || ']' FINAL_APPR
+	FROM FCM0004M A
+	INNER JOIN FCM0005D B
+	    ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+	    AND A.APPV_LINE_PRCSS_CNT = B.APPV_LINE_SEQ
+	INNER JOIN ORG0001D C
+	    ON B.APPV_LINE_USER_ID = C.MEM_CODE
+	WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
+	ORDER BY A.APPV_PRCSS_NO DESC, B.APPV_LINE_SEQ
+</select>
+
+<select id="getFinApprover" parameterType="Map" resultType="egovMap">
+    SELECT
+        APPR_MEM_CODE
+    FROM FCM0023M
+    WHERE APPR_MEM_STUS = '1'
+    <if test="clmType == 'J1' ">
+        <![CDATA[
+            AND J1 <> '0'
+        ]]>
+    </if>
+    <if test="clmType == 'J2' ">
+        <![CDATA[
+            AND J2 <> '0'
+        ]]>
+    </if>
+    <if test="clmType == 'J3' ">
+        <![CDATA[
+            AND J3 <> '0'
+        ]]>
+    </if>
+    <if test="clmType == 'J4' ">
+        <![CDATA[
+            AND J4 <> '0'
+        ]]>
+    </if>
+    <if test="clmType == 'J5' ">
+        <![CDATA[
+            AND J5 <> '0'
+        ]]>
+    </if>
+    <if test="clmType == 'J6' ">
+        <![CDATA[
+            AND J6 <> '0'
+        ]]>
+    </if>
+    <if test="clmType == 'J7' ">
+        <![CDATA[
+            AND J7 <> '0'
+        ]]>
+    </if>
+    <if test="clmType == 'J8' ">
+        <![CDATA[
+            AND J8 <> '0'
+        ]]>
+    </if>
+    <if test="clmType == 'R1' ">
+        <![CDATA[
+            AND R1 <> '0'
+        ]]>
+    </if>
+</select>
+
+<update id="insMissAppr" parameterType="Map">
+    MERGE INTO FCM0005D A
+    USING (
+        SELECT
+            APPV_PRCSS_NO,
+            MAX(APPV_LINE_SEQ) APPV_LINE_SEQ,
+            #{memCode} APPV_LINE_USER_ID
+        FROM FCM0005D
+        WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+        GROUP BY APPV_PRCSS_NO, #{memCode}
+    ) SRC
+    ON (A.APPV_PRCSS_NO = SRC.APPV_PRCSS_NO
+    AND A.APPV_LINE_SEQ = SRC.APPV_LINE_SEQ
+    AND A.APPV_LINE_USER_ID = SRC.APPV_LINE_USER_ID)
+    WHEN NOT MATCHED THEN
+    INSERT (
+        APPV_PRCSS_NO,
+        APPV_LINE_SEQ,
+        APPV_LINE_USER_ID,
+        APPV_STUS,
+        CRT_DT,
+        CRT_USER_ID,
+        UPD_DT,
+        UPD_USER_ID
+    ) VALUES (
+        SRC.APPV_PRCSS_NO,
+        (TO_NUMBER(SRC.APPV_LINE_SEQ) + 1),
+        #{memCode},
+        'T',
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId}
+    )
+</update>
 
 </mapper>

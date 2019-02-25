@@ -21,6 +21,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.biz.sample.impl.SampleServiceImpl;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -213,7 +214,9 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		webInvoiceMapper.insertApproveManagement(params);
 
 		if (apprGridList.size() > 0) {
+		    //webInvoiceMapper.getFinApprover
 			Map hm = null;
+			List<String> appvLineUserId = new ArrayList<>();
 
 			for (Object map : apprGridList) {
 				hm = (HashMap<String, Object>) map;
@@ -223,7 +226,42 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				LOGGER.debug("insertApproveLineDetail =====================================>>  " + hm);
 				// TODO appvLineDetailTable Insert
 				webInvoiceMapper.insertApproveLineDetail(hm);
+
+				appvLineUserId.add(hm.get("memCode").toString());
 			}
+
+			params.put("clmType", params.get("clmNo").toString().substring(0, 2));
+			EgovMap e1 = webInvoiceMapper.getFinApprover(params);
+			String memCode = e1.get("apprMemCode").toString();
+			LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
+	        memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+			if(!appvLineUserId.contains(memCode)) {
+			    Map mAppr = new HashMap<String, Object>();
+			    mAppr.put("appvPrcssNo", params.get("appvPrcssNo"));
+			    mAppr.put("userId", params.get("userId"));
+			    mAppr.put("memCode", memCode);
+			    LOGGER.debug("insMissAppr =====================================>>  " + mAppr);
+			    webInvoiceMapper.insMissAppr(mAppr);
+            }
+
+			// 2019-02-19 - LaiKW - Insert notification for request.
+			Map ntf = (HashMap<String, Object>) apprGridList.get(0);
+			ntf.put("clmNo", params.get("clmNo"));
+
+			EgovMap ntfDtls = new EgovMap();
+			ntfDtls = (EgovMap) webInvoiceMapper.getClmDesc(params);
+			ntf.put("codeName", ntfDtls.get("codeDesc"));
+
+			ntfDtls = (EgovMap) webInvoiceMapper.getNtfUser(ntf);
+			ntf.put("reqstUserId", ntfDtls.get("userName"));
+			ntf.put("code", params.get("clmNo").toString().substring(0, 2));
+			ntf.put("appvStus", "R");
+			ntf.put("rejctResn", "Pending Approval.");
+
+			LOGGER.debug("ntf =====================================>>  " + ntf);
+
+			webInvoiceMapper.insertNotification(ntf);
+
 		}
 
 		if (newGridList.size() > 0) {
@@ -293,7 +331,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				String clmNo = String.valueOf(invoAppvInfo.get("clmNo"));
 				String clmType = clmNo.substring(0, 2);
 				LOGGER.debug("clmType =====================================>>  " + clmType);
-				invoAppvInfo.put("clmType", clmType);
+				invoAppvInfo.put("clmType", clmType); // 2018-10-29 - LaiKW - Added clmType key value for Credit Card SQL
 				if("J1".equals(clmType) || "J2".equals(clmType) || "J3".equals(clmType) || "J4".equals(clmType) || "J5".equals(clmType) || "J6".equals(clmType) || "J7".equals(clmType) || "J8".equals(clmType)) {
 					// appvPrcssNo의 items get
 					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(invoAppvInfo);
@@ -506,5 +544,15 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
     @Override
     public EgovMap getCostCenterName(Map<String, Object> params) {
         return webInvoiceMapper.getCostCenterName(params);
+    }
+
+    @Override
+    public EgovMap getApprGrp(Map<String, Object> params) {
+        return webInvoiceMapper.getApprGrp(params);
+    }
+
+    @Override
+    public EgovMap getFinalApprAct(Map<String, Object> params) {
+        return webInvoiceMapper.getFinalApprAct(params);
     }
 }

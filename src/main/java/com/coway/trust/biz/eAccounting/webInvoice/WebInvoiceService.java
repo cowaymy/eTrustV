@@ -80,4 +80,9 @@ public interface WebInvoiceService {
 	EgovMap getDtls(Map<String, Object> params);
 
 	EgovMap getCostCenterName(Map<String, Object> params);
+
+	EgovMap getApprGrp(Map<String, Object> params);
+
+	EgovMap getFinalApprAct(Map<String, Object> params);
+
 }

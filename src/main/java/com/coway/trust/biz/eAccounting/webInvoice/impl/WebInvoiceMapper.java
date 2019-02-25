@@ -118,4 +118,17 @@ public interface WebInvoiceMapper {
 	void insertNotification(Map<String, Object> params);
 
 	EgovMap getCostCenterName(Map<String, Object> params);
+
+	EgovMap getClmDesc(Map<String, Object> params);
+
+	EgovMap getNtfUser(Map<String, Object> params);
+
+	EgovMap getApprGrp(Map<String, Object> params);
+
+	EgovMap getFinalApprAct(Map<String, Object> params);
+
+	EgovMap getFinApprover(Map<String, Object> params);
+
+	void insMissAppr(Map<String, Object> params);
+
 }

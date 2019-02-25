@@ -399,6 +399,26 @@ $(document).ready(function () {
     $("#pApprove_btn").click(fn_approvalSubmit);
     $("#pReject_btn").click(fn_RejectSubmit);
 
+    console.log("appvPrcssResult :: " + "${appvPrcssResult}");
+    console.log("appvPrcssStus :: " + myGridData[0].appvPrcssStus);
+
+    if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
+    	$("#pApprove_btn").hide();
+        $("#pReject_btn").hide();
+
+    	$("#finApprAct").show();
+
+        Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
+            console.log(result);
+
+            $("#viewFinAppr").text(result.finalAppr);
+        });
+    } else {
+    	$("#finApprAct").hide();
+    }
+
+    // #viewFinAppr
+
     fn_setGridData(myGridID, myGridData);
 });
 
@@ -673,6 +693,10 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <tr>
 	<th scope="row"><spring:message code="approveView.approveStatus" /></th>
 	<td colspan="3" style="height:60px" id="viewAppvStus">${appvPrcssStus}</td>
+</tr>
+<tr id="finApprAct">
+    <th scope="row">Final Approver</th>
+    <td colspan="3" id="viewFinAppr"></td>
 </tr>
 </tbody>
 </table><!-- table end -->
