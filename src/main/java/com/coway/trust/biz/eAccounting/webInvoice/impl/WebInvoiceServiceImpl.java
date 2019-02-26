@@ -321,6 +321,22 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				invoAppvInfo.put("appvLineSeq", appvLineSeq + 1);
 				LOGGER.debug("next invoAppvInfo =====================================>>  " + invoAppvInfo);
 				webInvoiceMapper.updateAppvLine(invoAppvInfo);
+
+				Map ntf = new HashMap<String, Object>();
+	            ntf.put("clmNo", invoAppvInfo.get("clmNo"));
+
+				EgovMap ntfDtls = (EgovMap) webInvoiceMapper.getClmDesc(invoAppvInfo);
+				ntf.put("codeName", ntfDtls.get("codeDesc"));
+
+				ntfDtls = (EgovMap) webInvoiceMapper.getNtfUser(invoAppvInfo);
+				ntf.put("reqstUserId", ntfDtls.get("userName"));
+				ntf.put("code", invoAppvInfo.get("clmNo").toString().substring(0, 2));
+				ntf.put("appvStus", "R");
+	            ntf.put("rejctResn", "Pending Approval.");
+
+	            LOGGER.debug("ntf =====================================>>  " + ntf);
+
+	            webInvoiceMapper.insertNotification(ntf);
 			}
 			if(appvLineCnt == appvLinePrcssCnt + 1) {
 				LOGGER.debug("last invoAppvInfo =====================================>>  " + invoAppvInfo);

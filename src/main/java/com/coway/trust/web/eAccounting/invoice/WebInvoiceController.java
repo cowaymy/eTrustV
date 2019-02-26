@@ -899,12 +899,7 @@ public class WebInvoiceController {
 
 	   @RequestMapping(value = "/checkFinAppr.do", method = RequestMethod.POST)
 	    public ResponseEntity<ReturnMessage> checkFinAppr(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
-	       /*
-	        * @RequestMapping(value = "/approveLineSubmit.do", method = RequestMethod.POST)
-    public ResponseEntity<ReturnMessage> approveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-	        */
 
-	        LOGGER.debug("checkFinAppr");
 	        LOGGER.debug("params =====================================>>  " + params);
 
 	        ReturnMessage message = new ReturnMessage();
@@ -912,7 +907,6 @@ public class WebInvoiceController {
 	        List<Object> apprGridList = (List<Object>) params.get("apprGridList");
 
 	        if (apprGridList.size() > 0) {
-	            //webInvoiceMapper.getFinApprover
 	            Map hm = null;
 	            List<String> appvLineUserId = new ArrayList<>();
 
