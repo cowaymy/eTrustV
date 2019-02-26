@@ -723,7 +723,7 @@ public class ECashDeductionController {
 	            sFile = "CZ" + todayDate + "_NEW_" + claimMap.get("fileBatchId") + ".dat";
 	        }
 
-			downloadHandler = getTextDownloadMBBGrpHandler(sFile, claimFileColumns, null, filePath, "/eCash/MBB_GROUP"+inputDate+"/", claimMap);
+			downloadHandler = getTextDownloadMBBGrpHandler(sFile, claimFileColumns, null, filePath, "/eCash/MBB_GROUP/"+inputDate+"/", claimMap);
 			largeExcelService.downLoadECashGrpDeductionFileMBB(claimMap, downloadHandler);
 			if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
                 downloadHandler.writeFooter(Integer.toString((Integer) claimMap.get("type")));
