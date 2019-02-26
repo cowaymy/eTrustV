@@ -506,7 +506,7 @@
 
                 	            var cmbMemberTp = 7;
                 	            var deptLevelCd = 2;
-                	            var parentIdCd = "78962";
+                	            var parentIdCd = "113237";
                 	            var deptIdCd = "";
 
                 	            var memType = $('#memType').val();
