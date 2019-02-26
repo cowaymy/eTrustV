@@ -1397,7 +1397,7 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
  <if test="apprGrp == null or apprGrp == '' ">
     AND APPV_LINE_USER_ID = #{memCode}
  </if>
- <if test="apprGrp != null or apprGrp != ''">
+ <if test="apprGrp != null and apprGrp != ''">
     AND APPV_LINE_USER_ID IN (
         SELECT
             APPR_MEM_CODE
