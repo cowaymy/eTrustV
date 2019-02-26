@@ -398,6 +398,21 @@ $(document).ready(function () {
     $("#pApprove_btn").click(fn_approvalSubmit);
     $("#pReject_btn").click(fn_RejectSubmit);
 
+    if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
+        $("#pApprove_btn").hide();
+        $("#pReject_btn").hide();
+
+        $("#finApprAct").show();
+
+        Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
+            console.log(result);
+
+            $("#viewFinAppr").text(result.finalAppr);
+        });
+    } else {
+        $("#finApprAct").hide();
+    }
+
     AUIGrid.setGridData(myGridID, myGridData);
 });
 
@@ -687,6 +702,10 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <tr>
     <th scope="row">Reject</th>
     <td colspan="3">${rejctResn}</td>
+</tr>
+<tr id="finApprAct">
+    <th scope="row">Final Approver</th>
+    <td colspan="3" id="viewFinAppr"></td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -421,8 +421,6 @@ $(document).ready(function () {
     	$("#finApprAct").hide();
     }
 
-    // #viewFinAppr
-
     fn_setGridData(myGridID, myGridData);
 });
 
