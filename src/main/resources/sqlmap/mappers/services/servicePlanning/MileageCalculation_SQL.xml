@@ -108,7 +108,7 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
           C.CITY_TO CITY_TO,
           C.DCP_TO DCP_TO,
           C.DCP_TO_ID DCP_TO_ID,
-          TO_CHAR(A.DISTANCE)  DISTANCE
+          NVL(TO_CHAR(A.DISTANCE),0)  DISTANCE
         FROM SVC0034M A
         FULL OUTER JOIN (SELECT AA.CODY_BRNCH_CODE, AA.CITY CITY_FROM, AA.AREA DCP_FROM, AA.AREA_ID DCP_FROM_ID, BB.CITY CITY_TO, BB.AREA DCP_TO, BB.AREA_ID DCP_TO_ID
                         FROM SYS0064M AA, SYS0064M BB
@@ -157,7 +157,7 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
           C.CITY_TO CITY_TO,
           C.DCP_TO DCP_TO,
           C.DCP_TO_ID DCP_TO_ID,
-          TO_CHAR(A.DISTANCE)  DISTANCE
+          NVL(TO_CHAR(A.DISTANCE),0)  DISTANCE
         FROM SVC0034M A
         FULL OUTER JOIN (SELECT AA.CT_BRNCH_CODE, AA.CITY CITY_FROM, AA.AREA DCP_FROM, AA.AREA_ID DCP_FROM_ID, BB.CITY CITY_TO, BB.AREA DCP_TO, BB.AREA_ID DCP_TO_ID
                         FROM SYS0064M AA, SYS0064M BB
@@ -503,8 +503,8 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
 
 <select id="selectCTResultMgmt"  parameterType="Map" resultType="egovMap">
 <![CDATA[
-SELECT MEM_CODE,Decode(MEM_TYPE ,2,'CODY','CT') MEM_TYPE ,SERVICE_DATE, DISTANCE TOTAL_DISTANCE, BRANCH_ID ,   
-             ( 
+SELECT MEM_CODE,Decode(MEM_TYPE ,2,'CODY','CT') MEM_TYPE ,SERVICE_DATE, DISTANCE TOTAL_DISTANCE, BRANCH_ID ,
+             (
 		        SELECT (NVL(MILEAGE_AMT,0) + (((NVL(DISTANCE,0)-NVL(DEDUCT_FLAG,0))*NVL(MULTI_RATE,0))+NVL(EXT_CHARG,0)))
 		              FROM SVC0033M A
 		              WHERE A.mem_type = z.mem_Type
@@ -514,13 +514,13 @@ SELECT MEM_CODE,Decode(MEM_TYPE ,2,'CODY','CT') MEM_TYPE ,SERVICE_DATE, DISTANCE
 		              AND RANGE_TO       >= DISTANCE
              ) AS MILEAGE
                                                                     ]]>
-FROM 
+FROM
       (
             SELECT MEM_TYPE,MEM_CODE, SERVICE_DATE,NVL (SUM(DISTANCE),0 ) AS DISTANCE ,  code BRANCH_ID
             FROM
             (
               SELECT C.MEM_TYPE,C.MEM_CODE,D.code ,TO_CHAR(B.AS_SETL_DT, 'YYYY/MM/DD') AS SERVICE_DATE , A.DISTANCE
-               FROM SVC0001D A, 
+               FROM SVC0001D A,
                     SVC0004D B,
                     ORG0001D C,
                     SYS0005M D
@@ -528,16 +528,16 @@ FROM
                 AND TO_CHAR(B.AS_SETL_DT, 'MM/YYYY') = #{month}
                 AND B.AS_CT_ID = C.MEM_ID
                 AND C.BRNCH  = D.BRNCH_ID
-                AND UPPER(C.MEM_CODE)   IN  
+                AND UPPER(C.MEM_CODE)   IN
                 <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
                    #{item}
                  </foreach>
-                
+
                 UNION ALL
-                
-     
+
+
               SELECT C.MEM_TYPE,C.MEM_CODE, D.code ,TO_CHAR(B.INSTALL_DT, 'YYYY/MM/DD') AS SERVICE_DATE , A.DISTANCE
-               FROM SAL0046D A, 
+               FROM SAL0046D A,
                     SAL0047D B,
                     ORG0001D C,
                     SYS0005M D
@@ -545,15 +545,15 @@ FROM
                 AND TO_CHAR(B.INSTALL_DT, 'MM/YYYY') = #{month}
                 AND B.CT_ID = C.MEM_ID
                 AND C.BRNCH  = D.BRNCH_ID
-                AND UPPER(C.MEM_CODE)   IN  
+                AND UPPER(C.MEM_CODE)   IN
                 <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
                    #{item}
                  </foreach>
-               
-            UNION ALL 
-            
+
+            UNION ALL
+
             SELECT C.MEM_TYPE,C.MEM_CODE, D.code ,TO_CHAR(B.STK_RETN_DT, 'YYYY/MM/DD') AS SERVICE_DATE , A.DISTANCE
-            FROM    Log0038D A, 
+            FROM    Log0038D A,
                     Log0039D B,
                     ORG0001D C,
                     SYS0005M D
@@ -561,13 +561,13 @@ FROM
                 AND TO_CHAR(B.STK_RETN_DT, 'MM/YYYY') = #{month}
                 AND B.STK_RETN_CT_MEM_ID = C.MEM_ID
                 AND C.BRNCH  = D.BRNCH_ID
-                AND UPPER(C.MEM_CODE)  IN  
+                AND UPPER(C.MEM_CODE)  IN
                 <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
                    #{item}
-                 </foreach>   
-                
+                 </foreach>
+
             ) A
-            GROUP BY MEM_CODE, SERVICE_DATE, code, MEM_TYPE    
+            GROUP BY MEM_CODE, SERVICE_DATE, code, MEM_TYPE
       ) Z
 
   where 1=1
@@ -590,7 +590,7 @@ FROM
                    #{item}
                    </foreach>
                 </if>
-         order by SERVICE_DATE   
+         order by SERVICE_DATE
 </select>
 <select id="selectSchemaResultMgmt"  parameterType="Map" resultType="egovMap">
 <![CDATA[
@@ -608,21 +608,21 @@ FROM
               AND RANGE_TO       >= DISTANCE
            ) AS MILEAGE
     ]]>
-FROM 
+FROM
       (
             SELECT MEM_TYPE,MEM_CODE, SERVICE_DATE, NVL (SUM(DISTANCE) , 0 ) AS DISTANCE ,  code BRANCH_ID
             FROM
             (
                 SELECT B.MEM_TYPE,B.MEM_CODE, TO_CHAR(C.SETL_DT, 'YYYY/MM/DD') AS SERVICE_DATE, A.DISTANCE , D.code
                 FROM SVC0008D A, ORG0001D B , SVC0006D C ,  SYS0005M  D
-                WHERE A.CODY_ID = B.MEM_ID 
+                WHERE A.CODY_ID = B.MEM_ID
                 AND B.BRNCH  = D.BRNCH_ID
                 AND   A.SCHDUL_ID = C.SCHDUL_ID
-                AND UPPER(B.MEM_CODE) IN  
+                AND UPPER(B.MEM_CODE) IN
                 <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
                    #{item}
                  </foreach>
-                AND A.YEAR = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2) 
+                AND A.YEAR = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2)
                 AND A.MONTH = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)
             ) A
             GROUP BY MEM_CODE, SERVICE_DATE, code, MEM_TYPE
@@ -647,7 +647,7 @@ FROM
                    #{item}
                    </foreach>
                 </if>
-         order by SERVICE_DATE       
+         order by SERVICE_DATE
 </select>
     <select id="selectBranch"  parameterType="Map" resultType="egovMap">
         SELECT CODE CODE_ID,
