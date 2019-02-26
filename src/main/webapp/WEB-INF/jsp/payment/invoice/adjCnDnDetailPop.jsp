@@ -228,6 +228,32 @@ function fn_generateReport(){
     }
 }
 
+/* KV-reportForDecision */
+ function fn_reportForDecision()
+ {
+	    var date = new Date();
+        var day =date.getDate();
+        if(date.getDate() < 10){
+         day = "0"+date.getDate();
+         }
+	   $("#reportPDFFormRFD #v_adjid").val(memoAdjId);
+	   $("#reportPDFFormRFD #v_type").val(invoiceType);
+	  /*  alert( $("#reportPDFFormRFD #v_adjid").val());
+	   alert( $("#reportPDFFormRFD #v_type").val()); */
+	   $("#reportPDFFormRFD #reportFileName").val('/statement/RFD_CNDN.rpt');
+	   $("#reportPDFFormRFD #viewType").val("PDF");
+       $("#reportPDFFormRFD #reportDownFileName").val("AdjustmentRFD_"+day+date.getMonth()+date.getFullYear());
+
+       //report 호출
+      var option = {
+               isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+       };
+
+      Common.report("reportPDFFormRFD", option);
+
+
+ }
+
 function fn_approve(process){
 	var param = {"adjId":"${adjId}" ,
 			           "process" : process,
@@ -360,6 +386,8 @@ function fn_approve(process){
 
         <ul class="center_btns mt20" id="centerBtn1" style="display: none">
             <li><p class="btn_blue2"><a href="javascript:fn_generateReport();"><spring:message code='pay.btn.generateCnDn'/></a></p></li>
+            <!-- By KV -reportForDecision-->
+            <li><p class="btn_blue2"><a href="javascript:fn_reportForDecision();"><spring:message code='pay.btn.reportForDecision'/></a></p></li>
         </ul>
         <ul class="center_btns mt20" id="centerBtn2" style="display: none">
             <li><p class="btn_blue2"><a href="javascript:fn_approve('APPROVE');"><spring:message code='pay.btn.approve'/></a></p></li>
@@ -383,3 +411,13 @@ function fn_approve(process){
     <input type="hidden" id="v_type" name="v_type" />
     <input type="hidden" id="v_refno" name="v_refno" />
 </form>
+
+<form name="reportPDFFormRFD" id="reportPDFFormRFD"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="v_adjid" name="v_adjid" />
+    <input type="hidden" id="v_type" name="v_type" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
+</form>
+
+
