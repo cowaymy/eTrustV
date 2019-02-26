@@ -1566,7 +1566,19 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
     SELECT
         USER_NAME
     FROM SYS0047M
-    WHERE HR_CODE = #{memCode}
+    WHERE
+    <if test="memCode != null and memCode != '' ">
+        HR_CODE = #{memCode}
+    </if>
+    <if test="memCode == null or memCode == '' ">
+        HR_CODE = (
+            SELECT
+                APPV_LINE_USER_ID
+            FROM FCM0005D
+            WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+        AND APPV_LINE_SEQ = #{appvLineSeq}
+        )
+    </if>
 </select>
 
 <select id="getApprGrp" parameterType="Map" resultType="egovMap">
