@@ -74,7 +74,7 @@ public class OrgChartListServiceImpl extends EgovAbstractServiceImpl implements 
 		}else if(params.get("groupCode").equals("3")){
 			memUpId = "23259";
 		}else if(params.get("groupCode").equals("7")){
-			memUpId = "78960";
+			memUpId = "113237";
 		}
 		params.put("memUpId", memUpId);
 
