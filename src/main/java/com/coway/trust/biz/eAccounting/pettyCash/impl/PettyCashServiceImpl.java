@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.biz.eAccounting.pettyCash.PettyCashService;
 import com.coway.trust.biz.eAccounting.webInvoice.impl.WebInvoiceMapper;
 import com.coway.trust.biz.sample.impl.SampleServiceImpl;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -139,6 +140,7 @@ public class PettyCashServiceImpl implements PettyCashService {
 
 		if (apprGridList.size() > 0) {
 			Map hm = null;
+			List<String> appvLineUserId = new ArrayList<>();
 
 			for (Object map : apprGridList) {
 				hm = (HashMap<String, Object>) map;
@@ -148,7 +150,41 @@ public class PettyCashServiceImpl implements PettyCashService {
 				LOGGER.debug("insertApproveLineDetail =====================================>>  " + hm);
 				// TODO appvLineDetailTable Insert
 				webInvoiceMapper.insertApproveLineDetail(hm);
+
+				appvLineUserId.add(hm.get("memCode").toString());
 			}
+
+			params.put("clmType", params.get("clmNo").toString().substring(0, 2));
+            EgovMap e1 = webInvoiceMapper.getFinApprover(params);
+            String memCode = e1.get("apprMemCode").toString();
+            LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
+            memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+            if(!appvLineUserId.contains(memCode)) {
+                Map mAppr = new HashMap<String, Object>();
+                mAppr.put("appvPrcssNo", params.get("appvPrcssNo"));
+                mAppr.put("userId", params.get("userId"));
+                mAppr.put("memCode", memCode);
+                LOGGER.debug("insMissAppr =====================================>>  " + mAppr);
+                webInvoiceMapper.insMissAppr(mAppr);
+            }
+
+            // 2019-02-19 - LaiKW - Insert notification for request.
+            Map ntf = (HashMap<String, Object>) apprGridList.get(0);
+            ntf.put("clmNo", params.get("clmNo"));
+
+            EgovMap ntfDtls = new EgovMap();
+            ntfDtls = (EgovMap) webInvoiceMapper.getClmDesc(params);
+            ntf.put("codeName", ntfDtls.get("codeDesc"));
+
+            ntfDtls = (EgovMap) webInvoiceMapper.getNtfUser(ntf);
+            ntf.put("reqstUserId", ntfDtls.get("userName"));
+            ntf.put("code", params.get("clmNo").toString().substring(0, 2));
+            ntf.put("appvStus", "R");
+            ntf.put("rejctResn", "Pending Approval.");
+
+            LOGGER.debug("ntf =====================================>>  " + ntf);
+
+            webInvoiceMapper.insertNotification(ntf);
 		}
 
 		int appvItmSeq = webInvoiceMapper.selectNextAppvItmSeq(String.valueOf(params.get("appvPrcssNo")));
@@ -296,6 +332,7 @@ public class PettyCashServiceImpl implements PettyCashService {
 
 		if (apprGridList.size() > 0) {
 			Map hm = null;
+			List<String> appvLineUserId = new ArrayList<>();
 
 			for (Object map : apprGridList) {
 				hm = (HashMap<String, Object>) map;
@@ -305,7 +342,41 @@ public class PettyCashServiceImpl implements PettyCashService {
 				LOGGER.debug("insertApproveLineDetail =====================================>>  " + hm);
 				// TODO appvLineDetailTable Insert
 				webInvoiceMapper.insertApproveLineDetail(hm);
+
+				appvLineUserId.add(hm.get("memCode").toString());
 			}
+
+			params.put("clmType", params.get("clmNo").toString().substring(0, 2));
+            EgovMap e1 = webInvoiceMapper.getFinApprover(params);
+            String memCode = e1.get("apprMemCode").toString();
+            LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
+            memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+            if(!appvLineUserId.contains(memCode)) {
+                Map mAppr = new HashMap<String, Object>();
+                mAppr.put("appvPrcssNo", params.get("appvPrcssNo"));
+                mAppr.put("userId", params.get("userId"));
+                mAppr.put("memCode", memCode);
+                LOGGER.debug("insMissAppr =====================================>>  " + mAppr);
+                webInvoiceMapper.insMissAppr(mAppr);
+            }
+
+            // 2019-02-19 - LaiKW - Insert notification for request.
+            Map ntf = (HashMap<String, Object>) apprGridList.get(0);
+            ntf.put("clmNo", params.get("clmNo"));
+
+            EgovMap ntfDtls = new EgovMap();
+            ntfDtls = (EgovMap) webInvoiceMapper.getClmDesc(params);
+            ntf.put("codeName", ntfDtls.get("codeDesc"));
+
+            ntfDtls = (EgovMap) webInvoiceMapper.getNtfUser(ntf);
+            ntf.put("reqstUserId", ntfDtls.get("userName"));
+            ntf.put("code", params.get("clmNo").toString().substring(0, 2));
+            ntf.put("appvStus", "R");
+            ntf.put("rejctResn", "Pending Approval.");
+
+            LOGGER.debug("ntf =====================================>>  " + ntf);
+
+            webInvoiceMapper.insertNotification(ntf);
 		}
 
 		if (newGridList.size() > 0) {
