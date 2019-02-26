@@ -1579,7 +1579,7 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
 
 <select id="getFinalApprAct" parameterType="Map" resultType="egovMap">
     SELECT
-	    CASE WHEN B.APPV_STUS = 'A' THEN 'Approval By ' ELSE 'Reject By ' END || C.NAME || ' [' || TO_CHAR(B.APPV_DT, 'DD/MM/YYYY') || ']' FINAL_APPR
+	    CASE WHEN B.APPV_STUS = 'A' THEN 'Approval By ' ELSE 'Reject By ' END || D.NAME || ' [' || TO_CHAR(B.APPV_DT, 'DD/MM/YYYY') || ']' FINAL_APPR
 	FROM FCM0004M A
 	INNER JOIN FCM0005D B
 	    ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
