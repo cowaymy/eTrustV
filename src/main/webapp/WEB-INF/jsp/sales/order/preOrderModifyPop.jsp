@@ -1816,6 +1816,7 @@
 
                 if(MEM_TYPE == '1' || MEM_TYPE == '2'){
                     $('#memBtn').addClass("blind");
+                    $('#salesmanCd').prop("readonly",true).addClass("readonly");;
                     //$('#salesmanCd').val("${SESSION_INFO.userName}");
                     //$('#salesmanCd').change();
                 }
