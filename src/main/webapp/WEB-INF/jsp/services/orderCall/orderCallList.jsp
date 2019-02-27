@@ -109,7 +109,6 @@
   }
 
   function fn_orderCallList() {
-    if ()
     if ($("#orderNo").val() == "") {
       /*  if( $("#createDate").val() =="" ||  $("#endDate").val() ==""  ||   $("#listDSCCode").val() ==""  ) */
       if ($("#createDate").val() == "" || $("#endDate").val() == "") {
