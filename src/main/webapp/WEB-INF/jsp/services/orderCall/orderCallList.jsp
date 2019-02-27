@@ -6,6 +6,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  25/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
+ 27/02/2019  ONGHC  1.0.1          Amend error message while search
  -->
 
 <script type="text/javaScript">
@@ -108,10 +109,11 @@
   }
 
   function fn_orderCallList() {
+    if ()
     if ($("#orderNo").val() == "") {
       /*  if( $("#createDate").val() =="" ||  $("#endDate").val() ==""  ||   $("#listDSCCode").val() ==""  ) */
       if ($("#createDate").val() == "" || $("#endDate").val() == "") {
-        Common.alert("<spring:message code='service.msg.ordDtReq'/>");
+        Common.alert("<spring:message code='service.msg.ordNoDtReq'/>");
         return;
       }
     }
@@ -346,7 +348,7 @@
     </colgroup>
     <tbody>
      <tr>
-      <th scope="row"><spring:message code='service.title.OrderNo' /></th>
+      <th scope="row"><spring:message code='service.title.OrderNo' /><span name="m1" id="m1" class="must">*</span></th>
       <td><input type="text" title="" placeholder="${ordNo}"
        class="w100p" id="orderNo" name="orderNo" /></td>
       <th scope="row"><spring:message
@@ -355,7 +357,7 @@
        id="listAppType" name="appType">
       </select></td>
       <th scope="row"><spring:message
-        code='service.title.OrderDate' /></th>
+        code='service.title.OrderDate' /><span name="m1" id="m1" class="must">*</span></th>
       <td>
        <div class="date_set">
         <!-- date_set start -->
