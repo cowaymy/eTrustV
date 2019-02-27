@@ -62,6 +62,7 @@ function tagMgmtGrid() {
 
     var excelLayout = [
                         {dataField: "regDate",headerText: "Register Date",width:150 ,height:80}
+                        ,{dataField: "ordNo",headerText: "Order Number",width:200 ,height:80}
                        ,{dataField: "counselingNo",headerText: "CounselingNo",width:200 ,height:80}
                        ,{dataField: "customerName",headerText: "Customer",width:200 ,height:80}
                        ,{dataField: "mainInquiry",headerText: "Main Inquiry",width:200 ,height:80}

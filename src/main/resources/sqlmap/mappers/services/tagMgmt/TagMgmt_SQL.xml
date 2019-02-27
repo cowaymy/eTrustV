@@ -30,7 +30,7 @@
                 , A.Ord_no
                 , DECODE(B.STUS_CODE_ID, '', 'Active', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.STUS_CODE_ID)) as Status
                 , to_date(Substr(a.REG_DTM, 1, 8 ),'YYYY/MM/DD') Reg_date
-                , to_date(Substr(a.LST_UPD_DTM, 1, 8 ),'YYYY/MM/DD') UPD_DT
+                , C.LST_UPD_DTM UPD_DT
                 , a.hc_mem_id , A.CNSL_LRGCLAS_CD,  A.CNSL_MEDCLAS_CD
                 , BRNCH_ID
                 , A.LST_UPD_ID
