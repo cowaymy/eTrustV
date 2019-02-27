@@ -72,8 +72,10 @@ public class AgreementController {
         EgovMap item = new EgovMap();
         item = (EgovMap) agreementService.getBranchCd(params);
 
-        if(item.get("branch") != null) {
-            model.addAttribute("branch", item.get("branch"));
+        if(item != null) {
+            if(item.get("branch") != null) {
+                model.addAttribute("branch", item.get("branch"));
+            }
         }
 
         return "logistics/Agreement/agreementList";

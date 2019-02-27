@@ -119,7 +119,7 @@ $(document).ready(function() {
             }
 
             if(memType == 2) {
-                $("#agreementVersion option[value='2017']").attr("selected", true);
+                $("#agreementVersion > option[value='2017']").attr("selected", true);
                 $("#agreementVersion").attr("disabled", false);
             }
         });
