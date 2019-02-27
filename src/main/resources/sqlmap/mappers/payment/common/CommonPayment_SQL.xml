@@ -1453,7 +1453,9 @@
 			DSCNT_AMT,
 			SRV_LDGR_CNTRCT_ID,
 			BILL_AS_ID,
-			SRV_MEM_ID
+			SRV_MEM_ID,
+			TR_NO,
+			TR_ISSU_DT
 
         ) VALUES (
             PAY0241T_SEQ.NEXTVAL,
@@ -1481,8 +1483,9 @@
 			#{discountAmt},
 			#{srvcContractID},
 			#{billAsId},
-			#{srvMemId}
-
+			#{srvMemId},
+            #{trNo},
+            TO_DATE(#{trDt},'YYYY/MM/DD')
         )
     </insert>
 
