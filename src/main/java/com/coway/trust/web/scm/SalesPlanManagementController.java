@@ -59,12 +59,6 @@ public class SalesPlanManagementController {
 		return	"/scm/salesPlanSummary";
 	}
 	
-	//	view
-	@RequestMapping(value = "/salesPlanAccuracy.do")
-	public String salesPlanAccuracy(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
-		return	"/scm/salesPlanAccuracy";
-	}
-	
 	/*
 	 * Sales Plan Manager
 	 */

@@ -1,0 +1,207 @@
+package com.coway.trust.web.scm;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.coway.trust.biz.scm.ScmReportService;
+import com.coway.trust.biz.scm.ScmCommonService;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+@Controller
+@RequestMapping(value = "/scm")
+public class ScmReportController {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ScmReportController.class);
+	
+	@Autowired
+	private ScmCommonService scmCommonService;
+	@Autowired
+	private ScmReportService scmReportService;
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+	
+	/*
+	 * View
+	 */
+	//	Business Plan Report
+	@RequestMapping(value = "/businessPlanReport.do")
+	public String businessPlanReportView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		return	"/scm/businessPlanReport";
+	}
+	//	Sales Plan Accuracy
+	@RequestMapping(value = "/salesPlanAccuracy.do")
+	public String salesPlanAccuracyView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		return	"/scm/salesPlanAccuracy";
+	}
+	//	Ontime Delivery Report
+	@RequestMapping(value = "/ontimeDeliveryReport.do")
+	public String ontimeDeliveryReportView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		return	"/scm/ontimeDeliveryReport";
+	}
+	//	Inventory Report
+	/*@RequestMapping(value = "/inventoryReport.do")
+	public String inventoryReportView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		return	"/scm/inventoryReport";
+	}*/
+	
+	/*
+	 * Business Plan Report
+	 */
+	@RequestMapping(value = "/selectPlanVer.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPlanVer(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectPlanVer : {}", params.toString());
+		
+		List<EgovMap> selectPlanVer	= scmReportService.selectPlanVer(params);
+		return ResponseEntity.ok(selectPlanVer);
+	}
+	@RequestMapping(value = "/selectBusinessPlanReport.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectBusinessPlanReport(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("selectBusinessPlanReport : {}", params.toString());
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		List<EgovMap> selectBusinessPlanSummary	= scmReportService.selectBusinessPlanSummary(params);
+		List<EgovMap> selectBusinessPlanDetail	= scmReportService.selectBusinessPlanDetail(params);
+		
+		map.put("selectBusinessPlanSummary", selectBusinessPlanSummary);
+		map.put("selectBusinessPlanDetail", selectBusinessPlanDetail);
+		
+		return	ResponseEntity.ok(map);
+	}
+	
+	/*
+	 * Sales Plan Accuracy
+	 */
+	@RequestMapping(value = "/selectSalesAccuracyDetailHeader.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectSalesAccuracyDetailHeader(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("selectSalesAccuracyDetailHeader : {}", params.toString());
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		List<EgovMap> selectSalesAccuracyDetailHeader	= scmReportService.selectSalesAccuracyDetailHeader(params);
+		
+		map.put("selectSalesAccuracyDetailHeader", selectSalesAccuracyDetailHeader);
+		
+		return	ResponseEntity.ok(map);
+	}
+	@RequestMapping(value = "/selectSalesAccuracy.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectSalesAccuracy(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("selectSalesAccuracy : {}", params.toString());
+		
+		List<EgovMap> selectScmTotalPeriod	= scmCommonService.selectScmTotalPeriod(params);
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		List<EgovMap> selectSalesPlanAccuracyWeeklySummary	= scmReportService.selectSalesPlanAccuracyWeeklySummary(params);
+		List<EgovMap> selectSalesPlanAccuracyMonthlySummary	= scmReportService.selectSalesPlanAccuracyMonthlySummary(params);
+		List<EgovMap> selectSalesPlanAccuracyWeeklyDetail	= scmReportService.selectSalesPlanAccuracyWeeklyDetail(params);
+		List<EgovMap> selectSalesPlanAccuracyMonthlyDetail	= scmReportService.selectSalesPlanAccuracyMonthlyDetail(params);
+		
+		map.put("selectSalesPlanAccuracyWeeklySummary", selectSalesPlanAccuracyWeeklySummary);
+		map.put("selectSalesPlanAccuracyMonthlySummary", selectSalesPlanAccuracyMonthlySummary);
+		map.put("selectSalesPlanAccuracyWeeklyDetail", selectSalesPlanAccuracyWeeklyDetail);
+		map.put("selectSalesPlanAccuracyMonthlyDetail", selectSalesPlanAccuracyMonthlyDetail);
+		
+		return	ResponseEntity.ok(map);
+	}
+	@RequestMapping(value = "/selectSalesAccuracyDetail.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectSalesAccuracyDetail(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("selectSalesAccuracyDetail : {}", params.toString());
+		
+		int currWeek	= 0;	int currMonth	= 0;
+		int clickWeek	= 0;	int clickMonth	= 0;
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		if ( "1".equals(params.get("gbn").toString()) ) {
+			//	Weekly Detail
+			List<EgovMap> selectWeekly16Week	= scmReportService.selectWeekly16Week(params);
+			
+			//	i = 0 -> 클릭한 Summary Grid의 주차
+			//	i = 1 -> Detail Grid의 가장 처음(왼쪽) 주차
+			//	...
+			//	i = 16 -> Detail Grid의 가장 마지막(오른쪽) 주차
+			for ( int i = 0 ; i < selectWeekly16Week.size() ; i++ ) {
+				if ( 0 == i ) {
+					params.put("ordFrom" + i, Integer.parseInt(selectWeekly16Week.get(i).get("ordFrom").toString()));
+					params.put("ordTo"   + i, Integer.parseInt(selectWeekly16Week.get(i).get("ordTo").toString()));
+				} else {
+					params.put("targetYear" + i, Integer.parseInt(selectWeekly16Week.get(i).get("scmYear").toString()));
+					params.put("targetWeek" + i, Integer.parseInt(selectWeekly16Week.get(i).get("scmWeek").toString()));
+				}
+			}
+			LOGGER.debug("selectSalesAccuracyDetail Weekly : {}", params.toString());
+		} else {
+			//	Monthly Detail
+			List<EgovMap> selectMonthly16Week	= scmReportService.selectMonthly16Week(params);
+			
+			for ( int i = 0 ; i < selectMonthly16Week.size() ; i++ ) {
+				params.put("scmYear" + (i + 1), Integer.parseInt(selectMonthly16Week.get(i).get("scmYear").toString()));
+				params.put("scmWeek" + (i + 1), Integer.parseInt(selectMonthly16Week.get(i).get("scmWeek").toString()));
+			}
+			LOGGER.debug("selectSalesAccuracyDetail Monthly : {}", params.toString());
+		}
+		
+		List<EgovMap> selectSalesPlanAccuracyWeeklyDetail	= scmReportService.selectSalesPlanAccuracyWeeklyDetail(params);
+		List<EgovMap> selectSalesPlanAccuracyMonthlyDetail	= scmReportService.selectSalesPlanAccuracyMonthlyDetail(params);
+		
+		map.put("selectSalesPlanAccuracyWeeklyDetail", selectSalesPlanAccuracyWeeklyDetail);
+		map.put("selectSalesPlanAccuracyMonthlyDetail", selectSalesPlanAccuracyMonthlyDetail);
+		
+		return	ResponseEntity.ok(map);
+	}
+	
+	/*
+	 * On-Time Delivery Report
+	 */
+	@RequestMapping(value = "/selectOntimeDeliveryReport.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectOntimeDelivery(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("selectOntimeDeliveryReport : {}", params.toString());
+		String planYearMonth	= "";
+		
+		Map<String, Object> map	= new HashMap<>();
+		planYearMonth	= params.get("planYearMonth").toString();
+		planYearMonth	= planYearMonth.replace("/", "");
+		planYearMonth	= planYearMonth.substring(2, 6) + planYearMonth.substring(0, 2);
+		params.put("planYearMonth", planYearMonth);
+		LOGGER.debug("selectOntimeDeliveryReport : {}", params.toString());
+		
+		//List<EgovMap> selectInventoryReportTotalHeader	= kpiManagementService.selectInventoryReportTotalHeader(params);
+		//List<EgovMap> selectInventoryReportDetailHeader	= kpiManagementService.selectInventoryReportDetailHeader(params);
+		//List<EgovMap> selectInventoryReportTotal	= kpiManagementService.selectInventoryReportTotal(params);
+		//List<EgovMap> selectInventoryReportDetail	= kpiManagementService.selectInventoryReportDetail(params);
+		
+		//map.put("selectInventoryReportTotalHeader", selectInventoryReportTotalHeader);
+		//map.put("selectInventoryReportDetailHeader", selectInventoryReportDetailHeader);
+		map.put("selectOntimeDeliveryReport", null);
+		
+		return	ResponseEntity.ok(map);
+	}
+	
+	/*
+	 * Inventory Report
+	 */
+}
