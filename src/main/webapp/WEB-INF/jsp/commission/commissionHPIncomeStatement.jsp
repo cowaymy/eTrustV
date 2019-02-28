@@ -4,14 +4,14 @@
 
 <script type="text/javaScript">
 	//화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
-	today = "${today}";	
+	today = "${today}";
 	$(document).ready(function() {
-		
+
 		//form clear
 		$("#clear").click(function() {
-			$("#searchForm")[0].reset();			
+			$("#searchForm")[0].reset();
 		});
-	    
+
 		// search member code
 		$('#generate').click(function() {
 			var $reportForm = $("#reportForm")[0];
@@ -19,34 +19,42 @@
 			$($reportForm).empty(); //remove children
 			var memCode = $("#searchForm [name=memCode]").val(); //member code
 			var cmmYear = $("#searchForm [name=cmmYear]").val(); //commission year
-			 
+
 			if (memCode == "") {
 				Common.alert("Please select the member.");
 				return;
 			} else if (cmmYear == "") {
 				Common.alert("Please select the year ");
 				return;
-		  } 
+		  }
 
 			var reportDownFileName = ""; //download report name
 			var reportFileName = ""; //reportFileName
 			var reportViewType = ""; //viewType
 
 			//default input setting
-			$($reportForm).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name		  
+			$($reportForm).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
 			$($reportForm).append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
 			$($reportForm).append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
-						
+
 			var option = {
 			        isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
 			      };
 
-		
-	    $($reportForm).append('<input type="hidden" id="V_MEMBERCODE" name="V_MEMBERCODE" value="" /> ');      
-	    $($reportForm).append('<input type="hidden" id="V_YEAR" name="V_YEAR" value="" /> ');	  
-	    reportFileName = "/commission/MemberIncomeStatement.rpt"; //reportFileName        
-			reportDownFileName = "MemberIncomeStatement_" + today; //report name			
-			reportViewType = "PDF"; //viewType			
+
+	    $($reportForm).append('<input type="hidden" id="V_MEMBERCODE" name="V_MEMBERCODE" value="" /> ');
+	    $($reportForm).append('<input type="hidden" id="V_YEAR" name="V_YEAR" value="" /> ');
+
+	    if (cmmYear >= 2018) {
+	        reportFileName = "/commission/MemberIncomeStatement2018.rpt"; //reportFileName
+
+	    }
+	    else {
+	    	 reportFileName = "/commission/MemberIncomeStatement.rpt"; //reportFileName
+	    }
+
+			reportDownFileName = "MemberIncomeStatement_" + today; //report name
+			reportViewType = "PDF"; //viewType
 
 			//report info
 			if (reportFileName == "" || reportDownFileName == "" || reportViewType == "") {
@@ -55,29 +63,29 @@
 			}
 
 			$("#reportForm #V_MEMBERCODE").val(memCode);
-	    $("#reportForm #V_YEAR").val(cmmYear);
-	        
+	        $("#reportForm #V_YEAR").val(cmmYear);
+
 			//default setting
 			$("#reportForm #reportFileName").val(reportFileName);
 			$("#reportForm #reportDownFileName").val(reportDownFileName);
 			$("#reportForm #viewType").val(reportViewType);
 
 			//  report 호출
-			
+
 			Common.report("reportForm", option);
-			  
+
 		});
-		
+
 		  // search member code popup
 	      $('#memBtn').click(function() {
 	        Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
 	      });
 
 	});
-	
+
 	 function fn_loadOrderSalesman(memId, memCode) {
-	      $("#memCode").val(memCode);	  
-	  }	  
+	      $("#memCode").val(memCode);
+	  }
 
 </script>
 
@@ -102,7 +110,7 @@
 
 	<section class="search_table">
 		<!-- search_table start -->
-		<form name="searchForm" id="searchForm" method="post">		
+		<form name="searchForm" id="searchForm" method="post">
 			<table class="type1">
 				<!-- table start -->
 				<caption>table</caption>
@@ -112,7 +120,7 @@
 					<col style="width: 170px" />
 					<col style="width: *" />
 				</colgroup>
-				<tbody>					
+				<tbody>
 					<tr>
 						<th scope="row"><spring:message code='commission.text.search.memCode'/></th>
 						<%-- <td colspan="3"><input type="text" id="memCode" name="memCode" title="" class="readonly w100p" readonly="readonly" value="${loginId }" />
