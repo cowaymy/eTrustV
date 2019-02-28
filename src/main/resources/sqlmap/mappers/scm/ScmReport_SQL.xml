@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.ScmReportMapper">
+
+<!-- Business Plan Report -->
+<select id="selectPlanVer" parameterType="Map" resultType="egovMap">
+SELECT CASE WHEN A.ID = 1 THEN CASE WHEN A.ID = B.ID THEN B.ID ELSE A.ID END
+            ELSE B.ID END AS ID
+     , CASE WHEN A.ID = 1 THEN CASE WHEN A.ID = B.ID THEN B.NAME ELSE A.NAME END
+            ELSE B.NAME END AS NAME
+  FROM (SELECT 1 AS ID, '[1]' AS NAME FROM DUAL) A
+  FULL OUTER JOIN (
+        SELECT A.VER AS ID
+             , '[' || A.VER || '] - ' || TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') AS NAME
+          FROM SCM0061M A
+         WHERE A.YEAR = #{planYear}
+        ) B ON (A.ID = B.ID)
+ ORDER BY A.ID
+</select>
+<select id="selectBusinessPlanSummary" parameterType="Map" resultType="egovMap">
+</select>
+<select id="selectBusinessPlanDetail" parameterType="Map" resultType="egovMap">
+</select>
+
+<!-- Sales Plan Accuracy -->
+<select id="selectSalesAccuracyDetailHeader" parameterType="Map" resultType="egovMap">
+SELECT TEAM
+     , STOCK_CODE
+     , SALES_ISS_QTY
+     , SALES_ACC_PER
+     , START_WEEK
+     , END_WEEK
+     , W1_SCM_WEEK, W2_SCM_WEEK, W3_SCM_WEEK, W4_SCM_WEEK, W5_SCM_WEEK, W6_SCM_WEEK, W7_SCM_WEEK, W8_SCM_WEEK, W9_SCM_WEEK
+     , W10_SCM_WEEK, W11_SCM_WEEK, W12_SCM_WEEK, W13_SCM_WEEK, W14_SCM_WEEK, W15_SCM_WEEK, W16_SCM_WEEK
+  FROM (
+        SELECT DECODE(A.RNO, 1, '1', 2, '2', 3, '3', 4, '4', 5, '5', 6, '6', 7, '7', 8, '8', 9, '9'
+                           , 10, '10', 11, '11', 12, '12', 13, '13', 14, '14', 15, '15', 16, '16') AS RNO
+             , A.TEAM, A.STOCK_CODE, A.SALES_ISS_QTY, A.SALES_ACC_PER, A.START_WEEK, A.END_WEEK, A.SCM_WEEK
+          FROM (
+                SELECT ROW_NUMBER() OVER (PARTITION BY A.SCM ORDER BY A.CAL_ID DESC) AS RNO
+                     , 'team' AS TEAM
+                     , 'stockCode' AS STOCK_CODE
+                     , 'salesIssQty' AS SALES_ISS_QTY
+                     , 'salesAccPer' AS SALES_ACC_PER
+                     , 'startWeek' AS START_WEEK
+                     , 'endWeek' AS END_WEEK
+                     , 'W' || LPAD(A.SCM_WEEK, 2, '0') AS SCM_WEEK
+                  FROM (
+                        SELECT DISTINCT A.CAL_ID, A.SCM_WEEK, 1 AS SCM
+                          FROM SCM0018M A
+                             , (SELECT CAL_ID FROM SCM0018M WHERE TO_CHAR(SYSDATE - (7*2)  - #{weekDiff}, 'YYYYMMDD') BETWEEN TO_CHAR(SCM_WEEK_START, 'YYYYMMDD') AND TO_CHAR(SCM_WEEK_END, 'YYYYMMDD')) B
+                             , (SELECT CAL_ID FROM SCM0018M WHERE TO_CHAR(SYSDATE - (7*17) - #{weekDiff}, 'YYYYMMDD') BETWEEN TO_CHAR(SCM_WEEK_START, 'YYYYMMDD') AND TO_CHAR(SCM_WEEK_END, 'YYYYMMDD')) C
+                         WHERE A.CAL_ID BETWEEN C.CAL_ID AND B.CAL_ID
+                           AND A.SCM_WEEK_SEQ = 1
+                        ) A
+                ) A
+        )
+ PIVOT (
+        MAX(SCM_WEEK) SCM_WEEK
+        FOR RNO IN (1 AS W1, 2 AS W2, 3 AS W3, 4 AS W4, 5 AS W5, 6 AS W6, 7 AS W7, 8 AS W8, 9 AS W9
+                  , 10 AS W10, 11 AS W11, 12 AS W12, 13 AS W13, 14 AS W14, 15 AS W15, 16 AS W16)
+        )
+</select>
+<select id="selectSalesPlanAccuracyWeeklySummary" parameterType="Map" resultType="egovMap">
+SELECT #{planYear} AS PLAN_YEAR, A.TEAM, A.ORD
+     , SUM(A.W1 ) AS W1 , SUM(A.W2 ) AS W2 , SUM(A.W3 ) AS W3 , SUM(A.W4 ) AS W4 , SUM(A.W5 ) AS W5
+     , SUM(A.W6 ) AS W6 , SUM(A.W7 ) AS W7 , SUM(A.W8 ) AS W8 , SUM(A.W9 ) AS W9 , SUM(A.W10) AS W10
+     , SUM(A.W11) AS W11, SUM(A.W12) AS W12, SUM(A.W13) AS W13, SUM(A.W14) AS W14, SUM(A.W15) AS W15
+     , SUM(A.W16) AS W16, SUM(A.W17) AS W17, SUM(A.W18) AS W18, SUM(A.W19) AS W19, SUM(A.W20) AS W20
+     , SUM(A.W21) AS W21, SUM(A.W22) AS W22, SUM(A.W23) AS W23, SUM(A.W24) AS W24, SUM(A.W25) AS W25
+     , SUM(A.W26) AS W26, SUM(A.W27) AS W27, SUM(A.W28) AS W28, SUM(A.W29) AS W29, SUM(A.W30) AS W30
+     , SUM(A.W31) AS W31, SUM(A.W32) AS W32, SUM(A.W33) AS W33, SUM(A.W34) AS W34, SUM(A.W35) AS W35
+     , SUM(A.W36) AS W36, SUM(A.W37) AS W37, SUM(A.W38) AS W38, SUM(A.W39) AS W39, SUM(A.W40) AS W40
+     , SUM(A.W41) AS W41, SUM(A.W42) AS W42, SUM(A.W43) AS W43, SUM(A.W44) AS W44, SUM(A.W45) AS W45
+     , SUM(A.W46) AS W46, SUM(A.W47) AS W47, SUM(A.W48) AS W48, SUM(A.W49) AS W49, SUM(A.W50) AS W50
+     , SUM(A.W51) AS W51, SUM(A.W52) AS W52
+  FROM (
+        SELECT Z.TEAM
+             , DECODE(Z.TEAM, 'DST', 1, 'CODY', 2, 'CS', 3, 'ALL', 4) AS ORD
+             , CASE WHEN Z.SECT = 1 THEN Z.ACC ELSE 0 END AS W1
+             , CASE WHEN Z.SECT = 2 THEN Z.ACC ELSE 0 END AS W2
+             , CASE WHEN Z.SECT = 3 THEN Z.ACC ELSE 0 END AS W3
+             , CASE WHEN Z.SECT = 4 THEN Z.ACC ELSE 0 END AS W4
+             , CASE WHEN Z.SECT = 5 THEN Z.ACC ELSE 0 END AS W5
+             , CASE WHEN Z.SECT = 6 THEN Z.ACC ELSE 0 END AS W6
+             , CASE WHEN Z.SECT = 7 THEN Z.ACC ELSE 0 END AS W7
+             , CASE WHEN Z.SECT = 8 THEN Z.ACC ELSE 0 END AS W8
+             , CASE WHEN Z.SECT = 9 THEN Z.ACC ELSE 0 END AS W9
+             , CASE WHEN Z.SECT = 10 THEN Z.ACC ELSE 0 END AS W10
+             , CASE WHEN Z.SECT = 11 THEN Z.ACC ELSE 0 END AS W11
+             , CASE WHEN Z.SECT = 12 THEN Z.ACC ELSE 0 END AS W12
+             , CASE WHEN Z.SECT = 13 THEN Z.ACC ELSE 0 END AS W13
+             , CASE WHEN Z.SECT = 14 THEN Z.ACC ELSE 0 END AS W14
+             , CASE WHEN Z.SECT = 15 THEN Z.ACC ELSE 0 END AS W15
+             , CASE WHEN Z.SECT = 16 THEN Z.ACC ELSE 0 END AS W16
+             , CASE WHEN Z.SECT = 17 THEN Z.ACC ELSE 0 END AS W17
+             , CASE WHEN Z.SECT = 18 THEN Z.ACC ELSE 0 END AS W18
+             , CASE WHEN Z.SECT = 19 THEN Z.ACC ELSE 0 END AS W19
+             , CASE WHEN Z.SECT = 20 THEN Z.ACC ELSE 0 END AS W20
+             , CASE WHEN Z.SECT = 21 THEN Z.ACC ELSE 0 END AS W21
+             , CASE WHEN Z.SECT = 22 THEN Z.ACC ELSE 0 END AS W22
+             , CASE WHEN Z.SECT = 23 THEN Z.ACC ELSE 0 END AS W23
+             , CASE WHEN Z.SECT = 24 THEN Z.ACC ELSE 0 END AS W24
+             , CASE WHEN Z.SECT = 25 THEN Z.ACC ELSE 0 END AS W25
+             , CASE WHEN Z.SECT = 26 THEN Z.ACC ELSE 0 END AS W26
+             , CASE WHEN Z.SECT = 27 THEN Z.ACC ELSE 0 END AS W27
+             , CASE WHEN Z.SECT = 28 THEN Z.ACC ELSE 0 END AS W28
+             , CASE WHEN Z.SECT = 29 THEN Z.ACC ELSE 0 END AS W29
+             , CASE WHEN Z.SECT = 30 THEN Z.ACC ELSE 0 END AS W30
+             , CASE WHEN Z.SECT = 31 THEN Z.ACC ELSE 0 END AS W31
+             , CASE WHEN Z.SECT = 32 THEN Z.ACC ELSE 0 END AS W32
+             , CASE WHEN Z.SECT = 33 THEN Z.ACC ELSE 0 END AS W33
+             , CASE WHEN Z.SECT = 34 THEN Z.ACC ELSE 0 END AS W34
+             , CASE WHEN Z.SECT = 35 THEN Z.ACC ELSE 0 END AS W35
+             , CASE WHEN Z.SECT = 36 THEN Z.ACC ELSE 0 END AS W36
+             , CASE WHEN Z.SECT = 37 THEN Z.ACC ELSE 0 END AS W37
+             , CASE WHEN Z.SECT = 38 THEN Z.ACC ELSE 0 END AS W38
+             , CASE WHEN Z.SECT = 39 THEN Z.ACC ELSE 0 END AS W39
+             , CASE WHEN Z.SECT = 40 THEN Z.ACC ELSE 0 END AS W40
+             , CASE WHEN Z.SECT = 41 THEN Z.ACC ELSE 0 END AS W41
+             , CASE WHEN Z.SECT = 42 THEN Z.ACC ELSE 0 END AS W42
+             , CASE WHEN Z.SECT = 43 THEN Z.ACC ELSE 0 END AS W43
+             , CASE WHEN Z.SECT = 44 THEN Z.ACC ELSE 0 END AS W44
+             , CASE WHEN Z.SECT = 45 THEN Z.ACC ELSE 0 END AS W45
+             , CASE WHEN Z.SECT = 46 THEN Z.ACC ELSE 0 END AS W46
+             , CASE WHEN Z.SECT = 47 THEN Z.ACC ELSE 0 END AS W47
+             , CASE WHEN Z.SECT = 48 THEN Z.ACC ELSE 0 END AS W48
+             , CASE WHEN Z.SECT = 49 THEN Z.ACC ELSE 0 END AS W49
+             , CASE WHEN Z.SECT = 50 THEN Z.ACC ELSE 0 END AS W50
+             , CASE WHEN Z.SECT = 51 THEN Z.ACC ELSE 0 END AS W51
+             , CASE WHEN Z.SECT = 52 THEN Z.ACC ELSE 0 END AS W52
+          FROM SCM0063S Z
+         WHERE Z.YEAR = #{planYear}
+           AND Z.STOCK_CODE = 'SUM'
+           AND Z.GBN = 1 /* WEEKLY */
+        ) A
+ GROUP BY A.TEAM, A.ORD
+ ORDER BY A.ORD
+</select>
+<select id="selectSalesPlanAccuracyMonthlySummary" parameterType="Map" resultType="egovMap">
+SELECT #{planYear} AS PLAN_YEAR, A.TEAM, A.ORD
+     , SUM(A.M1 ) AS M1 , SUM(A.M2 ) AS M2 , SUM(A.M3 ) AS M3 , SUM(A.M4 ) AS M4 , SUM(A.M5 ) AS M5, SUM(A.M6 ) AS M6
+     , SUM(A.M7 ) AS M7 , SUM(A.M8 ) AS M8 , SUM(A.M9 ) AS M9 , SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
+  FROM (
+        SELECT Z.TEAM
+             , DECODE(Z.TEAM, 'DST', 1, 'CODY', 2, 'CS', 3, 'ALL', 4) AS ORD
+             , CASE WHEN Z.SECT = 1 THEN Z.ACC ELSE 0 END AS M1
+             , CASE WHEN Z.SECT = 2 THEN Z.ACC ELSE 0 END AS M2
+             , CASE WHEN Z.SECT = 3 THEN Z.ACC ELSE 0 END AS M3
+             , CASE WHEN Z.SECT = 4 THEN Z.ACC ELSE 0 END AS M4
+             , CASE WHEN Z.SECT = 5 THEN Z.ACC ELSE 0 END AS M5
+             , CASE WHEN Z.SECT = 6 THEN Z.ACC ELSE 0 END AS M6
+             , CASE WHEN Z.SECT = 7 THEN Z.ACC ELSE 0 END AS M7
+             , CASE WHEN Z.SECT = 8 THEN Z.ACC ELSE 0 END AS M8
+             , CASE WHEN Z.SECT = 9 THEN Z.ACC ELSE 0 END AS M9
+             , CASE WHEN Z.SECT = 10 THEN Z.ACC ELSE 0 END AS M10
+             , CASE WHEN Z.SECT = 11 THEN Z.ACC ELSE 0 END AS M11
+             , CASE WHEN Z.SECT = 12 THEN Z.ACC ELSE 0 END AS M12
+          FROM SCM0063S Z
+         WHERE Z.YEAR = #{planYear}
+           AND Z.STOCK_CODE = 'SUM'
+           AND Z.GBN = 2 /* MONTHLY */
+        ) A
+ GROUP BY A.TEAM, A.ORD
+ ORDER BY A.ORD
+</select>
+<select id="selectWeekly16Week" parameterType="Map" resultType="egovMap">
+SELECT DISTINCT A.CAL_ID
+     , CASE WHEN A.SCM_MONTH = 12 AND A.SCM_WEEK = 1 THEN A.SCM_YEAR + 1 ELSE A.SCM_YEAR END AS SCM_YEAR
+     , A.SCM_WEEK
+     , TO_CHAR(A.SCM_WEEK_START, 'YYYYMMDD') AS ORD_FROM
+     , TO_CHAR(A.SCM_WEEK_START + 6, 'YYYYMMDD') AS ORD_TO
+  FROM SCM0018M A
+     , (SELECT CAL_ID FROM SCM0018M WHERE TO_CHAR(SYSDATE - (7*1)  - #{weekDiff}, 'YYYYMMDD') BETWEEN TO_CHAR(SCM_WEEK_START, 'YYYYMMDD') AND TO_CHAR(SCM_WEEK_END, 'YYYYMMDD')) B  /* 1st week */
+     , (SELECT CAL_ID FROM SCM0018M WHERE TO_CHAR(SYSDATE - (7*17) - #{weekDiff}, 'YYYYMMDD') BETWEEN TO_CHAR(SCM_WEEK_START, 'YYYYMMDD') AND TO_CHAR(SCM_WEEK_END, 'YYYYMMDD')) C /* 16th week */
+ WHERE A.CAL_ID BETWEEN C.CAL_ID AND B.CAL_ID
+   AND A.SCM_WEEK_SEQ = 1
+ ORDER BY A.CAL_ID DESC
+</select>
+<select id="selectSalesPlanAccuracyWeeklyDetail" parameterType="Map" resultType="egovMap">
+SELECT A.TEAM, A.STOCK_CODE, SUM(A.W0 ) AS W0, A.ACC
+     , CASE WHEN A.START_WEEK <![CDATA[ < ]]> 0 THEN 52 - A.START_WEEK ELSE A.START_WEEK END AS START_WEEK
+     , CASE WHEN A.END_WEEK   <![CDATA[ < ]]> 0 THEN 52 - A.END_WEEK   ELSE A.END_WEEK   END AS END_WEEK
+     , SUM(A.W1 ) AS W1 , SUM(A.W2 ) AS W2 , SUM(A.W3 ) AS W3 , SUM(A.W4 ) AS W4 , SUM(A.W5 ) AS W5 , SUM(A.W6 ) AS W6 , SUM(A.W7 ) AS W7 , SUM(A.W8 ) AS W8
+     , SUM(A.W9 ) AS W9 , SUM(A.W10) AS W10, SUM(A.W11) AS W11, SUM(A.W12) AS W12, SUM(A.W13) AS W13, SUM(A.W14) AS W14, SUM(A.W15) AS W15, SUM(A.W16) AS W16
+  FROM (
+        SELECT Z.TEAM, Z.STOCK_CODE, Z.ACC
+             , (SELECT #{clickWeek} - MIN(X.WEEK) FROM SCM0062M X WHERE X.YEAR = #{clickYear} AND X.GBN = 1) AS START_WEEK
+             , (SELECT #{clickWeek} - MAX(X.WEEK) FROM SCM0062M X WHERE X.YEAR = #{clickYear} AND X.GBN = 1) AS END_WEEK
+             , (SELECT SUM(X.ORD_QTY) FROM SCM0050S X WHERE X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE AND X.ORD_DT BETWEEN #{ordFrom}  AND #{ordTo} ) AS W0
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear1},  #{targetWeek1}) AS W1
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear2},  #{targetWeek2}) AS W2
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear3},  #{targetWeek3}) AS W3
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear4},  #{targetWeek4}) AS W4
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear5},  #{targetWeek5}) AS W5
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear6},  #{targetWeek6}) AS W6
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear7},  #{targetWeek7}) AS W7
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear8},  #{targetWeek8}) AS W8
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear9},  #{targetWeek9}) AS W9
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear10}, #{targetWeek10}) AS W10
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear11}, #{targetWeek11}) AS W11
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear12}, #{targetWeek12}) AS W12
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear13}, #{targetWeek13}) AS W13
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear14}, #{targetWeek14}) AS W14
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear15}, #{targetWeek15}) AS W15
+             , FN_GET_SALES_PLAN_QTY(Z.YEAR, Z.SECT, Z.TEAM, Z.STOCK_CODE, #{targetYear16}, #{targetWeek16}) AS W16
+          FROM SCM0063S Z
+         WHERE Z.YEAR = #{clickYear}
+     <if test="team != null and team != ''">
+           AND Z.TEAM = #{team}
+     </if>
+           AND Z.STOCK_CODE != 'SUM'
+           AND Z.SECT = #{clickWeek}
+           AND Z.GBN = 1
+        ) A
+ GROUP BY A.TEAM, A.STOCK_CODE, A.ACC, A.START_WEEK, A.END_WEEK
+ ORDER BY A.TEAM, A.STOCK_CODE
+</select>
+<select id="selectMonthly16Week" parameterType="Map" resultType="egovMap">
+SELECT DISTINCT A.CAL_ID
+     , CASE WHEN A.SCM_MONTH = 12 AND A.SCM_WEEK = 1 THEN A.SCM_YEAR + 1 ELSE A.SCM_YEAR END AS SCM_YEAR
+     , A.SCM_WEEK
+  FROM SCM0018M A
+     , (SELECT CAL_ID FROM SCM0018M WHERE TO_CHAR(ADD_MONTHS(SYSDATE, #{monthDiff}) - (7*2) , 'YYYYMMDD') BETWEEN TO_CHAR(SCM_WEEK_START, 'YYYYMMDD') AND TO_CHAR(SCM_WEEK_END, 'YYYYMMDD')) B  /* 1st week */
+     , (SELECT CAL_ID FROM SCM0018M WHERE TO_CHAR(ADD_MONTHS(SYSDATE, #{monthDiff}) - (7*17), 'YYYYMMDD') BETWEEN TO_CHAR(SCM_WEEK_START, 'YYYYMMDD') AND TO_CHAR(SCM_WEEK_END, 'YYYYMMDD')) C /* 16th week */
+ WHERE A.CAL_ID BETWEEN C.CAL_ID AND B.CAL_ID
+   AND A.SCM_WEEK_SEQ = 1
+ ORDER BY A.CAL_ID DESC
+</select>
+<select id="selectSalesPlanAccuracyMonthlyDetail" parameterType="Map" resultType="egovMap">
+SELECT A.TEAM, A.STOCK_CODE, A.ACC
+     , SUM(NVL(A.W1 , 0)) AS W1 , SUM(NVL(A.W2 , 0)) AS W2 , SUM(NVL(A.W3 , 0)) AS W3 , SUM(NVL(A.W4 , 0)) AS W4
+     , SUM(NVL(A.W5 , 0)) AS W5 , SUM(NVL(A.W6 , 0)) AS W6 , SUM(NVL(A.W7 , 0)) AS W7 , SUM(NVL(A.W8 , 0)) AS W8
+     , SUM(NVL(A.W9 , 0)) AS W9 , SUM(NVL(A.W10, 0)) AS W10, SUM(NVL(A.W11, 0)) AS W11, SUM(NVL(A.W12, 0)) AS W12
+     , SUM(NVL(A.W13, 0)) AS W13, SUM(NVL(A.W14, 0)) AS W14, SUM(NVL(A.W15, 0)) AS W15, SUM(NVL(A.W16, 0)) AS W16
+  FROM (
+        SELECT Z.TEAM, Z.STOCK_CODE, Z.ACC
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear1} AND X.GBN = 1 AND X.SECT = #{scmMonth1} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W1
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear2} AND X.GBN = 1 AND X.SECT = #{scmMonth2} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W2
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear3} AND X.GBN = 1 AND X.SECT = #{scmMonth3} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W3
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear4} AND X.GBN = 1 AND X.SECT = #{scmMonth4} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W4
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear5} AND X.GBN = 1 AND X.SECT = #{scmMonth5} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W5
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear6} AND X.GBN = 1 AND X.SECT = #{scmMonth6} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W6
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear7} AND X.GBN = 1 AND X.SECT = #{scmMonth7} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W7
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear8} AND X.GBN = 1 AND X.SECT = #{scmMonth8} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W8
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear9} AND X.GBN = 1 AND X.SECT = #{scmMonth9} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W9
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear10} AND X.GBN = 1 AND X.SECT = #{scmMonth10} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W10
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear11} AND X.GBN = 1 AND X.SECT = #{scmMonth11} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W11
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear12} AND X.GBN = 1 AND X.SECT = #{scmMonth12} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W12
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear13} AND X.GBN = 1 AND X.SECT = #{scmMonth13} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W13
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear14} AND X.GBN = 1 AND X.SECT = #{scmMonth14} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W14
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear15} AND X.GBN = 1 AND X.SECT = #{scmMonth15} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W15
+             , (SELECT X.ACC FROM SCM0063S X WHERE X.YEAR = #{scmYear16} AND X.GBN = 1 AND X.SECT = #{scmMonth16} AND X.TEAM = Z.TEAM AND X.STOCK_CODE = Z.STOCK_CODE) AS W16
+          FROM SCM0063S Z
+         WHERE Z.YEAR = #{clickYear}
+	<if test="team != null and team != ''">
+           AND Z.TEAM = #{team}
+	</if>
+           AND Z.STOCK_CODE != 'SUM'
+           AND Z.SECT = #{clickMonth}
+           AND Z.GBN = 2
+        ) A
+ WHERE A.STOCK_CODE != 'SUM'
+ GROUP BY A.TEAM, A.STOCK_CODE, A.ACC
+ ORDER BY A.STOCK_CODE
+</select>
+
+<!-- Ontime Delivery Report -->
+<select id="selectOntimeDelivery" parameterType="Map" resultType="egovMap">
+</select>
+
+</mapper>
