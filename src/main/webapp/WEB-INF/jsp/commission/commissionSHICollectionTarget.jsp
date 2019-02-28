@@ -250,6 +250,7 @@
           dataField : "collectrate",
           headerText : "<spring:message code='commission.text.grid.collectionRate'/>",
           style : "right-column",
+          formatString : "#,##0.00",
           editable : false
         } ];
     // 그리드 속성 설정
