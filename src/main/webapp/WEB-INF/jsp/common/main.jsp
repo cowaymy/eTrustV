@@ -80,12 +80,12 @@
         dataField: "pvValue",
         headerText: "PV Value",
         dataType : "numeric",
-        formatString : "#,##0.00"
+        formatString : "#,##0"
     }, {
         dataField: "ys",
         headerText: "YS",
         dataType : "numeric",
-        formatString : "#,##0.00"
+        formatString : "#,##0"
     }, {
         dataField: "actOrd",
         headerText: "Active Order",
@@ -93,7 +93,7 @@
         formatString : "#,##0"
     }, {
         dataField: "rc",
-        headerText: "RC Rate",
+        headerText: "SHI Index",
         formatString : "#,##0.00"
     }];
 
@@ -132,7 +132,7 @@
         dataField: "pvValue",
         headerText: "PV Value",
         dataType : "numeric",
-        formatString : "#,##0.00"
+        formatString : "#,##0"
     }, {
         dataField: "actOrd",
         headerText: "Active Order",
@@ -142,10 +142,10 @@
         dataField: "ys",
         headerText: "YS",
         dataType : "numeric",
-        formatString : "#,##0.00"
+        formatString : "#,##0"
     }, {
         dataField: "rc",
-        headerText: "RC Rate",
+        headerText: "SHI Index",
         formatString : "#,##0.00"
     }];
 
@@ -181,7 +181,7 @@
         dataField: "pvValue",
         headerText: "PV Value (Net Sales)",
         dataType : "numeric",
-        formatString : "#,##0.00"
+        formatString : "#,##0"
     }, {
         dataField: "actOrd",
         headerText: "Active Order",
@@ -191,10 +191,10 @@
         dataField: "ys",
         headerText: "YS",
         dataType : "numeric",
-        formatString : "#,##0.00"
+        formatString : "#,##0"
     }, {
         dataField: "rc",
-        headerText: "RC Rate",
+        headerText: "SHI Index",
         formatString : "#,##0.00"
     }];
 /*
