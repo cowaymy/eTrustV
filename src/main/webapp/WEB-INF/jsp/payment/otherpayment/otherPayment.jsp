@@ -660,32 +660,7 @@ var columnLayout = [
 	    { dataField:"srvcContractID" ,headerText:"<spring:message code='pay.head.srvcContractId'/>" ,editable : false , width : 100 , visible : false },
 	    { dataField:"billAsId" ,headerText:"<spring:message code='pay.head.billAsId'/>" ,editable : false , width : 150 , visible : false },
 	    { dataField:"discountAmt" ,headerText:"<spring:message code='pay.head.discountAmt'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00" , visible : false },
-	    { dataField:"srvMemId" ,headerText:"<spring:message code='pay.head.serviceMembershipId'/>" ,editable : false , width : 150 , visible : false },
-	    { dataField:"trNo" ,headerText:"TR No" ,editable : true , width : 150 },
-	    {
-	        dataField: "trDt",
-	        headerText: "TR Issue Date",
-	        dataType : "date",
-	        formatString : "dd/mm/yyyy",
-	        width:160,
-	        editRenderer : {
-	            type : "CalendarRenderer",
-	            showExtraDays : false, // 지난 달, 다음 달 여분의 날짜(days) 출력 안함
-	            onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-	            validator : function(oldValue, newValue, rowItem) { // 에디팅 유효성 검사
-	                    var date, isValid = true;
-	                    if(isNaN(Number(newValue)) ) { //20160201 형태 또는 그냥 1, 2 로 입력한 경우는 허락함.
-	                        if(isNaN(Date.parse(newValue))) { // 그냥 막 입력한 경우 인지 조사. 즉, JS 가 Date 로 파싱할 수 있는 형식인지 조사
-	                            isValid = false;
-	                        } else {
-	                            isValid = true;
-	                        }
-	                    }
-	                    // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-	                    return { "validate" : isValid, "message"  : "Invalid Date" };
-	            }
-	        }
-	    }
+	    { dataField:"srvMemId" ,headerText:"<spring:message code='pay.head.serviceMembershipId'/>" ,editable : false , width : 150 , visible : false }
 	];
 
 	//AUIGrid 칼럼 설정 : targetBillMstGridID
@@ -2578,12 +2553,6 @@ function srvcDiscountValue(){
 
 	    var gridList = AUIGrid.getGridData(targetFinalBillGridID);       //그리드 데이터
 
-	    var RowCount = AUIGrid.getRowCount(targetFinalBillGridID);
-	    for(j = 0 ; j < RowCount ; j++){
-	        var trNo = AUIGrid.getCellValue(targetFinalBillGridID, j ,"trNo");
-	        var trDt = AUIGrid.getCellValue(targetFinalBillGridID, j ,"trDt");
-	    }
-
 	    var selPayType=$("#payMode").val();
 	    if(selPayType == '105'){
 	    	$("#cash").find("#bankType").prop("disabled", false);
@@ -2626,17 +2595,6 @@ function srvcDiscountValue(){
 	        Common.alert("<spring:message code='pay.alert.noRowData'/>");
 	        return;
 	    }
-
-	    if(trNo == "" || trNo == null){
-	        Common.alert("Please key in TR No at the Payment Key-In section");
-	        return;
-	    }
-
-        if(trDt == "" || trDt == null){
-            Common.alert("Please key in TR Issue Date at the Payment Key-In section");
-            return;
-        }
-
 
 	    if(formList.length > 0) data.form = formList;
 	    else data.form = [];
@@ -3224,11 +3182,11 @@ function fn_genUnknownReport() {
             <tr>
                  <th scope="row">TR No.</th>
                         <td>
-                            <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" disabled />
+                            <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
                         </td>
                         <th scope="row">TR Issue Date</th>
                  <td>
-                     <input id="keyInTrIssueDateOnline" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" disabled />
+                     <input id="keyInTrIssueDateOnline" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                  </td>
              </tr>
              <tr>
@@ -3320,11 +3278,11 @@ function fn_genUnknownReport() {
             <tr>
                    <th scope="row">TR No.</th>
                         <td>
-                            <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" disabled/>
+                            <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
                         </td>
                         <th scope="row">TR Issue Date</th>
                    <td>
-                       <input id="keyInTrIssueDateCash" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" disabled />
+                       <input id="keyInTrIssueDateCash" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                    </td>
                </tr>
                <tr>
@@ -3416,11 +3374,11 @@ function fn_genUnknownReport() {
             <tr>
                   <th scope="row">TR No.</th>
                         <td>
-                            <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" disabled/>
+                            <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
                         </td>
                         <th scope="row">TR Issue Date</th>
                   <td>
-                      <input id="keyInTrIssueDateCheque" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" disabled />
+                      <input id="keyInTrIssueDateCheque" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                   </td>
               </tr>
               <tr>
