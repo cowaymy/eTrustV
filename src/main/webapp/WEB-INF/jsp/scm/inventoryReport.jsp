@@ -443,8 +443,8 @@ function fnSetHeader() {
 	m7	= new Date(yyyy + "/" + mm + "/" + "01");
 	m8	= new Date(yyyy + "/" + mm + "/" + "01");
 	m9	= new Date(yyyy + "/" + mm + "/" + "01");
-	prevMm	= today.getMonth();
-	currMm	= today.getMonth() + 1;
+	prevMm	= today.getMonth() - 1;
+	currMm	= today.getMonth() + 0;
 	yyyy	= today.getFullYear();
 	
 	//	Total Header
@@ -468,15 +468,15 @@ function fnSetHeader() {
 	totalHeader[1]	= currMm + "/" + yyyy;
 	
 	//	Detail Header
-	m1	= new Date(m1.setMonth(m1.getMonth() - 5));	console.log(m1.getMonth());
-	m2	= new Date(m2.setMonth(m2.getMonth() - 4));	console.log(m2.getMonth());
-	m3	= new Date(m3.setMonth(m3.getMonth() - 3));	console.log(m3.getMonth());
-	m4	= new Date(m4.setMonth(m4.getMonth() - 2));	console.log(m4.getMonth());
-	m5	= new Date(m5.setMonth(m5.getMonth() - 1));	console.log(m5.getMonth());
-	m6	= new Date(m6.setMonth(m6.getMonth() - 0));	console.log(m6.getMonth());
-	m7	= new Date(m7.setMonth(m7.getMonth() + 1));	console.log(m7.getMonth());
-	m8	= new Date(m8.setMonth(m8.getMonth() + 2));	console.log(m8.getMonth());
-	m9	= new Date(m9.setMonth(m9.getMonth() + 3));	console.log(m9.getMonth());
+	m1	= new Date(m1.setMonth(m1.getMonth() - 6));	console.log(m1.getMonth());
+	m2	= new Date(m2.setMonth(m2.getMonth() - 5));	console.log(m2.getMonth());
+	m3	= new Date(m3.setMonth(m3.getMonth() - 4));	console.log(m3.getMonth());
+	m4	= new Date(m4.setMonth(m4.getMonth() - 3));	console.log(m4.getMonth());
+	m5	= new Date(m5.setMonth(m5.getMonth() - 2));	console.log(m5.getMonth());
+	m6	= new Date(m6.setMonth(m6.getMonth() - 1));	console.log(m6.getMonth());
+	m7	= new Date(m7.setMonth(m7.getMonth() + 0));	console.log(m7.getMonth());
+	m8	= new Date(m8.setMonth(m8.getMonth() + 1));	console.log(m8.getMonth());
+	m9	= new Date(m9.setMonth(m9.getMonth() + 2));	console.log(m9.getMonth());
 	detailHeader[0]	= "Issued (" + monName[m1.getMonth()] + ")";
 	detailHeader[1]	= "Issued (" + monName[m2.getMonth()] + ")";
 	detailHeader[2]	= "Issued (" + monName[m3.getMonth()] + ")";
