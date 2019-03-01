@@ -2982,4 +2982,10 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value="/neoProListingPop.do")
+	public String neoProListingPop(){
+
+		return "commission/commissionNeoProListingPop";
+	}
+
 }
