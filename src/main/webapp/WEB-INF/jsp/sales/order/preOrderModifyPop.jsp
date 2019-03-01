@@ -1545,7 +1545,7 @@
         var stkType = '${preOrderInfo.appTypeId}' == '66' ? '1' : '2';
         doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.itmStkId}', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
 
-        if('${preOrderInfo.cpntId}' != null){
+        if('${preOrderInfo.cpntId}' != 0){
         	$('#compType').removeClass("blind");
         	fn_loadProductComponent('${preOrderInfo.itmStkId}');
         }
