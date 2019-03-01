@@ -956,6 +956,14 @@
     }, null, true, '_addASRemarkPopDiv');
   }
 
+  function fn_rstFrm() {
+   var rqtDt = $('#sFm #requestDate').val();
+   var ordNo = $('#sFm #entry_orderNo').val();
+   $('#sFm').clearForm();
+   $('#sFm #entry_orderNo').val(ordNo);
+   $('#sFm #requestDate').val(rqtDt);
+  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap ">
  <!-- popup_wrap start -->
@@ -1285,7 +1293,7 @@
          <a href="#" onClick="fn_doSave()"><spring:message code='service.btn.Save' /></a>
         </p></li>
        <li><p class="btn_blue2 big">
-         <a href="#" onClick="javascript:$('#sFm').clearForm();"><spring:message code='service.btn.Clear' /></a>
+         <a href="#" onClick="fn_rstFrm()"><spring:message code='service.btn.Clear' /></a>
         </p></li>
       </ul>
      </section>
