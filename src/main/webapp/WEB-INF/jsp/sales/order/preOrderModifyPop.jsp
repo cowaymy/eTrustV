@@ -1241,7 +1241,8 @@
 
     //LoadProductComponent
     function fn_loadProductComponent(stkId) {
-        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', ''); //Common Code
+    	var cnptId = '${preOrderInfo.cpntId}' != undefined ? '${preOrderInfo.cpntId}' : 0;
+        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, cnptId, 'compType', 'S', ''); //Common Code
     }
 
     //LoadProductPromotion
@@ -1547,7 +1548,6 @@
         if('${preOrderInfo.cpntId}' != null){
         	$('#compType').removeClass("blind");
         	fn_loadProductComponent('${preOrderInfo.itmStkId}');
-        	setTimeout(function() { fn_check() }, 200);
         }
 
         $('#installDur').val('${preOrderInfo.instPriod}');
