@@ -99,6 +99,11 @@
                 var stkType = $("#appType").val() == '66' ? '1' : '2';
                 doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.itmStkId}', 'ordProudct', 'S', 'fn_setOptGrpClass');//product ����
 
+                if('${preOrderInfo.cpntId}' != null){
+                    $('#compType').removeClass("blind");
+                    doGetComboData('/sales/order/selectProductComponent.do', {stkId:'${preOrderInfo.itmStkId}'}, '${preOrderInfo.cpntId}', 'compType', 'S', ''); //Common Code
+                }
+
                 $('#empChk').val('${preOrderInfo.empChk}');
                 $('#gstChk').val('${preOrderInfo.gstChk}');
                 $('#exTrade').val('${preOrderInfo.exTrade}');
