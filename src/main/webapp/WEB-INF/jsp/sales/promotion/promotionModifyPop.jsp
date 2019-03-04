@@ -54,12 +54,13 @@
                           , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "prcRpf", editable : false, width : 100 }
                           , { headerText : "<spring:message code='sales.pv'/>",        dataField : "prcPv",  editable : false, width : 100 }]}
           , { headerText : "<spring:message code='sales.title.Promotion'/>"
-            , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    editable : false, width : 100 }
+            , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    editable : true, width : 100 }
                           , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", editable : false, width : 100 }
                           , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 100 }]}
           , { headerText : "itmid",         dataField   : "promoItmStkId",    visible  : false, width : 80 }
           , { headerText : "promoItmId",    dataField   : "promoItmId",       visible  : false, width : 80 }
           , { headerText : "savedPvYn",     dataField   : "savedPvYn",        visible  : false, width : 80 }
+          , { headerText : "newItm",     dataField   : "newItm",        visible  : false, width : 80 }
           ];
 
         //AUIGrid 칼럼 설정
@@ -94,6 +95,15 @@
 
         stckGridID = GridCommon.createAUIGrid("pop_stck_grid_wrap", columnLayout1, "", gridPros);
         giftGridID = GridCommon.createAUIGrid("pop_gift_grid_wrap", columnLayout2, "", gridPros);
+
+        //Cell Edit - Promo Amount field is not allowed to edit if it is not a new item.
+        AUIGrid.bind(stckGridID, ["cellEditBegin"], function(event) {
+            if(event.dataField == "promoAmt" ) {
+                if(event.item.newItm != "NEW") {
+                    return false;
+                }
+            }
+        });
     }
 
     function fn_selectPromotionPrdListAjax(promoId) {
@@ -559,7 +569,8 @@
                         amt                : 0,
                         prcRpf             : 0,
                         prcPv              : 0,
-                        savedPvYn          : 'N'
+                        savedPvYn       : 'N',
+                        newItm           : 'NEW'
                     }
                     aIdx++;
                 }

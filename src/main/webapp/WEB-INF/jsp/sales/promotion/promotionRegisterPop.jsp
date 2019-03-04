@@ -38,7 +38,7 @@
                           , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "prcRpf",      editable : false, width : 100  }
                           , { headerText : "<spring:message code='sales.pv'/>",        dataField : "prcPv",       editable : false, width : 100  }]}
           , { headerText : "<spring:message code='sales.title.Promotion'/>"
-            , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    editable : false, width : 100  }
+            , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    editable : true, width : 100  }
                           , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", editable : false, width : 100  }
                           , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 100  }]}
           , { headerText : "promoItmPvGst", dataField   : "promoItmPvGst",  visible  : false,     width : 80  }
