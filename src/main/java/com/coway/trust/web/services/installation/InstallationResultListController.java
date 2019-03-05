@@ -38,6 +38,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 31/01/2019    ONGHC      1.0.1       - Restructure File
+ * 05/03/2019    ONGHC      1.0.2       - To Show Error Code for SP
  *********************************************************************************************/
 
 @Controller
@@ -677,7 +678,7 @@ public class InstallationResultListController {
         logger.debug("spMap :" + spMap.toString());
         if (!"000".equals(spMap.get("P_RESULT_MSG"))) { // FAIL
           resultValue.put("logerr", "Y");
-          message.setMessage("Error Encounter. Please Contact Administrator.");
+          message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS1): " + spMap.get("P_RESULT_MSG").toString());
         } else { // SUCCESS
           servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 
@@ -691,7 +692,7 @@ public class InstallationResultListController {
                 logger.debug("spMap :" + spMap.toString());
                 if (!"000".equals(spMap.get("P_RESULT_MSG"))) { // FAIL
                   resultValue.put("logerr", "Y");
-                  message.setMessage("Error Encounter. Please Contact Administrator.");
+                  message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS2): " + spMap.get("P_RESULT_MSG").toString());
                 } else {
                   servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 
@@ -702,7 +703,7 @@ public class InstallationResultListController {
                     logger.debug("spMap :" + spMap.toString());
                     if (!"000".equals(spMap.get("P_RESULT_MSG"))) { // FAIL
                       resultValue.put("logerr", "Y");
-                      message.setMessage("Error Encounter. Please Contact Administrator.");
+                      message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS3): " + spMap.get("P_RESULT_MSG").toString());
                     } else {
                       servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
                     }
