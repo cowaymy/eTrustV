@@ -3802,6 +3802,9 @@
                                     ,DEFECT_DTL_CODE_DESC    AS CODE_NAME
                         FROM SVC0056M A
                          WHERE DEFECT_TYPE_CODE = #{DEFECT_TYPE_CODE}
+                        GROUP BY DEFECT_TYPE_CODE,
+                                        DEFECT_DTL_CODE,
+                                        DEFECT_DTL_CODE_DESC
         ]]>
     </select>
 
