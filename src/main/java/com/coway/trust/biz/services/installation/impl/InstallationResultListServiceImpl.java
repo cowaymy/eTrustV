@@ -34,6 +34,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 31/01/2019    ONGHC      1.0.1       - Restructure File
+ * 05/03/2019    ONGHC      1.0.2       - Add Param to isExchange
  *********************************************************************************************/
 
 @Service("installationResultListService")
@@ -2723,6 +2724,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
       if (isExchange != null) {
         // UPDATE EXCHANGE STATUS
         isExchange.put("logCreator", orderLog.get("logCreator"));
+        isExchange.put("salesOrderId", orderLog.get("salesOrderId"));
         installationResultListMapper.updateSal0004d_2(isExchange);
         Map<String, Object> exchgInfo = new HashMap<>();
         exchgInfo = installationResultListMapper.getExchangeInfo(isExchange);
