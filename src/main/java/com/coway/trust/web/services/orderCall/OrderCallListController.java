@@ -30,6 +30,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 31/01/2019    ONGHC      1.0.1       - Restructure File
+ * 05/03/2019    ONGHC      1.0.2       - To Show Error Code for SP
  *********************************************************************************************/
 
 @Controller
@@ -230,7 +231,7 @@ public class OrderCallListController {
       if (null != resultValue) {
         if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
           if ("1".equals(resultValue.get("logStat"))) {
-            message.setMessage("Error Encounter. Please Contact Administrator.");
+            message.setMessage("Error Encounter. Please Contact Administrator. Error Code(CL): " + resultValue.get("logStat").toString());
             message.setCode("99");
           } else {
             message.setMessage("Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo"));
