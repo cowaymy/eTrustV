@@ -1086,12 +1086,12 @@
         <tr>
          <th scope="row"><spring:message code='service.grid.ReqstDt' /><span class="must">*</span></th>
          <td><input type="text" title="Create start Date"
-          placeholder="DD/MM/YYYY" class="j_date w100p readonly" id="requestDate"
-          name="requestDate"  disabled="disabled"/></td>
+          placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate"
+          name="requestDate" onChange="fn_doAllaction()"/></td>
          <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
          <td><input type="text" title="Create start Date"
           placeholder="DD/MM/YYYY" class="j_date w100p"
-          readonly="readonly" id="appDate" name="appDate"  onChange="fn_doAllaction()"/></td>
+          readonly="readonly" id="appDate" name="appDate" /></td>
          <th scope="row"><spring:message code='service.title.AppointmentSessione' /><span class="must">*</span></th>
          <td><input type="text" title="" placeholder="<spring:message code='service.title.AppointmentDate' />"
           id="CTSSessionCode" name="CTSSessionCode"
