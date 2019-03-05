@@ -413,10 +413,13 @@
                     Extent3.NAME as status_name,
                     '' as brnch_id,
                     '' ct_sub_grp,
-                    '' position_name
+                    '' position_name,
+                    Extent4.LAST_GRP_CODE GRP_CODE,
+                    Extent4.LAST_ORG_CODE ORG_CODE
                     FROM   ORG0003D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
                     INNER JOIN SYS0013M Extent2 ON Extent1.APLICNT_type = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
                     INNER JOIN SYS0038M Extent3 ON Extent1.STUS_ID = Extent3.STUS_CODE_ID   /*StatusCode    eg.active, not active*/
+                    INNER JOIN ORG0005D Extent4 ON Extent1.DEPT_CODE = Extent4.DEPT_CODE AND Extent4.MEM_LVL = '3'
                     ]]>
                         WHERE 1=1
                         AND Extent1.APLICNT_TYPE IN ('1', '2803')
@@ -456,8 +459,20 @@
                           <if test="contact != null and contact != ''">
                             AND  ((Extent1.APLICNT_TEL_HUSE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.APLICNT_TEL_OFFICE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.APLICNT_TEL_MOBILE LIKE '%' || #{contact}|| '%' ) ) AND ( Extent1.APLICNT_TEL_MOBILE = #{contact} OR Extent1.APLICNT_TEL_HUSE = #{contact} OR Extent1.APLICNT_TEL_OFFICE = #{contact})
                          </if>
-                         <if test="deptCodeHd != null and deptCodeHd != ''">
-                            AND Extent1.DEPT_CODE = #{deptCodeHd}
+                         <if test = 'memberLevel == "3" '>
+                            <if test="deptCodeHd != null and deptCodeHd != ''">
+                                AND Extent1.DEPT_CODE = #{deptCodeHd}
+                            </if>
+                         </if>
+                         <if test = 'memberLevel == "2" '>
+                            <if test="grpCodeHd != null and grpCodeHd != ''">
+                                AND Extent4.LAST_GRP_CODE = #{grpCodeHd}
+                            </if>
+                         </if>
+                         <if test = 'memberLevel == "1" '>
+                            <if test="orgCodeHd != null and orgCodeHd != ''">
+                                AND Extent4.LAST_ORG_CODE = #{orgCodeHd}
+                            </if>
                          </if>
                   <![CDATA[
                 )   Project1
