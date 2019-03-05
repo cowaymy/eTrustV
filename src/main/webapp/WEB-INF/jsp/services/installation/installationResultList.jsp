@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  25/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
+ 05/03/2019  ONGHC  1.0.1          Remove selection mode as singleRow
  -->
 
 <script type="text/javaScript">
@@ -13,7 +14,7 @@
     doGetCombo('/services/getProductList.do', '', '', 'product', 'S', '');
 
     createInstallationListAUIGrid();
-    AUIGrid.setSelectionMode(myGridID, "singleRow");
+    //AUIGrid.setSelectionMode(myGridID, "singleRow");
 
     AUIGrid.bind(myGridID, "cellDoubleClick",
     function(event) {
