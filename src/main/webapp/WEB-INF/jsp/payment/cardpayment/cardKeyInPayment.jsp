@@ -245,31 +245,9 @@ var targetFinalBillColumnLayout = [
 { dataField:"billAsId" ,headerText:"<spring:message code='pay.head.billAsId'/>" ,editable : false , width : 150 , visible : false },
 { dataField:"discountAmt" ,headerText:"<spring:message code='pay.head.discountAmt'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
 { dataField:"srvMemId" ,headerText:"<spring:message code='pay.head.serviceMembershipId'/>" ,editable : false , width : 150 , visible : false },
-{ dataField:"trNo" ,headerText:"TR No" ,editable : true , width : 150 },
-{
-    dataField: "trDt",
-    headerText: "TR Issue Date",
-    dataType : "date",
-    formatString : "dd/mm/yyyy",
-    width:160,
-    editRenderer : {
-        type : "CalendarRenderer",
-        showExtraDays : false, // 지난 달, 다음 달 여분의 날짜(days) 출력 안함
-        onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-        validator : function(oldValue, newValue, rowItem) { // 에디팅 유효성 검사
-                var date, isValid = true;
-                if(isNaN(Number(newValue)) ) { //20160201 형태 또는 그냥 1, 2 로 입력한 경우는 허락함.
-                    if(isNaN(Date.parse(newValue))) { // 그냥 막 입력한 경우 인지 조사. 즉, JS 가 Date 로 파싱할 수 있는 형식인지 조사
-                        isValid = false;
-                    } else {
-                        isValid = true;
-                    }
-                }
-                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                return { "validate" : isValid, "message"  : "Invalid Date" };
-        }
-    }
-}
+{ dataField:"trNo" ,headerText:"TR No" ,editable : false , width : 150 },
+{ dataField:"collectorCode" ,headerText:"Collector Code" ,editable : false , width : 150 },
+{ dataField:"collectorId" ,headerText:"Collector Id" ,editable : false , width : 150 ,visible : false}
 ];
 
 
@@ -487,8 +465,26 @@ function fn_searchUserIdPop() {
 
 //Collector 조회 팝업 결과값 세팅
 function fn_loadOrderSalesman(memId, memCode, memNm){
-	$("#keyInCollMemId").val(memId);
-	$("#keyInCollMemNm").val(memNm);
+	//$("#keyInCollMemId").val(memId);
+	//$("#keyInCollMemNm").val(memNm);
+	var appType = $("#appType").val();
+
+    if(appType == "1"){//Rental
+        $("#rentalkeyInCollMemId").val(memId);
+        $("#rentalkeyInCollMemNm").val(memNm);
+    }else if(appType == "2"){//Outright
+        $("#outkeyInCollMemId").val(memId);
+        $("#outkeyInCollMemNm").val(memNm);
+    }else if(appType == "3"){//Rental Membership
+        $("#srvckeyInCollMemId").val(memId);
+        $("#srvckeyInCollMemNm").val(memNm);
+    }else if(appType == "4"){//Bill Payment
+        $("#billkeyInCollMemId").val(memId);
+        $("#billkeyInCollMemNm").val(memNm);
+    }else if(appType == "5"){//Outright Membership
+        $("#outSrvckeyInCollMemId").val(memId);
+        $("#outSrvckeyInCollMemNm").val(memNm);
+    }
 }
 
 
@@ -711,11 +707,6 @@ function savePayment(){
 	var gridList = AUIGrid.getGridData(targetFinalBillGridID);       //그리드 데이터
 	var formList = $("#paymentForm").serializeArray();       //폼 데이터
 
-    var RowCount = AUIGrid.getRowCount(targetFinalBillGridID);
-    for(j = 0 ; j < RowCount ; j++){
-        var trNo = AUIGrid.getCellValue(targetFinalBillGridID, j ,"trNo");
-        var trDt = AUIGrid.getCellValue(targetFinalBillGridID, j ,"trDt");
-    }
 
 	//array에 담기
 	if(gridList.length > 0) {
@@ -725,15 +716,6 @@ function savePayment(){
 		return;
 	}
 
-    if(trNo == "" || trNo == null){
-        Common.alert("Please key in TR No at the Payment Key-In section");
-        return;
-    }
-
-    if(trDt == "" || trDt == null){
-        Common.alert("Please key in TR Issue Date at the Payment Key-In section");
-        return;
-    }
 
     if(formList.length > 0) data.form = formList;
     else data.form = [];
@@ -1197,6 +1179,9 @@ function addRentalToFinal(){
                      item.srvcContractID   = 0;
                      item.billAsId    = 0;
 					 item.srvMemId	=0;
+                     item.trNo =  $("#rentalkeyInTrNo").val() ;
+                     item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
+                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
 
                      AUIGrid.addRow(targetFinalBillGridID, item, "last");
                      addedCount++;
@@ -1236,6 +1221,9 @@ function addRentalToFinal(){
                         item.srvcContractID   = 0;
                         item.billAsId    = 0;
 						item.srvMemId	=0;
+	                     item.trNo =  $("#rentalkeyInTrNo").val() ;
+	                     item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
+	                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
                         addedCount++;
@@ -1271,6 +1259,9 @@ function addRentalToFinal(){
                     item.srvcContractID   = 0;
                     item.billAsId    = 0;
 					item.srvMemId	=0;
+                    item.trNo =  $("#rentalkeyInTrNo").val() ;
+                    item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
+                    item.collectorId = $("#rentalkeyInCollMemId").val() ;
 
                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
                     addedCount++;
@@ -1498,6 +1489,9 @@ function addOutToFinal(){
 	            item.srvcContractID   = 0;
 	            item.billAsId    = 0;
 				item.srvMemId	=0;
+                item.trNo =  $("#outkeyInTrNo").val() ;
+                item.collectorCode = $("#outkeyInCollMemNm").val() ;
+                item.collectorId = $("#outkeyInCollMemId").val() ;
 
 	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	            addedCount++;
@@ -1889,6 +1883,9 @@ function addSrvcToFinal(){
                      item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
                      item.billAsId    = 0;
 					item.srvMemId	=0;
+                    item.trNo =  $("#srvckeyInTrNo").val() ;
+                    item.collectorCode = $("#srvckeyInCollMemNm").val() ;
+                    item.collectorId = $("#srvckeyInCollMemId").val() ;
 
                      AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1923,6 +1920,9 @@ function addSrvcToFinal(){
                     item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
                     item.billAsId    = 0;
 					item.srvMemId	=0;
+                    item.trNo =  $("#srvckeyInTrNo").val() ;
+                    item.collectorCode = $("#srvckeyInCollMemNm").val() ;
+                    item.collectorId = $("#srvckeyInCollMemId").val() ;
 
                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1958,6 +1958,9 @@ function addSrvcToFinal(){
                     item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
                     item.billAsId    = 0;
 					item.srvMemId	=0;
+                    item.trNo =  $("#srvckeyInTrNo").val() ;
+                    item.collectorCode = $("#srvckeyInCollMemNm").val() ;
+                    item.collectorId = $("#srvckeyInCollMemId").val() ;
 
                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1998,6 +2001,9 @@ function addSrvcToFinal(){
                         item.srvcContractID   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrCntrctId");
                         item.billAsId    = 0;
 						item.srvMemId	=0;
+	                    item.trNo =  $("#srvckeyInTrNo").val() ;
+	                    item.collectorCode = $("#srvckeyInCollMemNm").val() ;
+	                    item.collectorId = $("#srvckeyInCollMemId").val() ;
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -2223,6 +2229,9 @@ function addBillToFinal(){
                         item.srvcContractID   = 0;
                         item.billAsId    = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAsId");
 						item.srvMemId	=0;
+                        item.trNo =  $("#billkeyInTrNo").val() ;
+                        item.collectorCode = $("#billkeyInCollMemNm").val() ;
+                        item.collectorId = $("#billkeyInCollMemId").val() ;
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
                         addedCount++;
@@ -2404,6 +2413,9 @@ function addOutSrvcToFinal(){
 	            item.srvcContractID   = 0;
 	            item.billAsId    = 0;
 				item.srvMemId	=AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
+                item.trNo =  $("#outSrvckeyInTrNo").val() ;
+                item.collectorCode = $("#outSrvckeyInCollMemNm").val() ;
+                item.collectorId = $("#outSrvckeyInCollMemId").val() ;
 
 	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	            addedCount++;
@@ -2438,6 +2450,9 @@ function addOutSrvcToFinal(){
 	            item.srvcContractID   = 0;
 	            item.billAsId    = 0;
 				item.srvMemId	=AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
+                item.trNo =  $("#outSrvckeyInTrNo").val() ;
+                item.collectorCode = $("#outSrvckeyInCollMemNm").val() ;
+                item.collectorId = $("#outSrvckeyInCollMemId").val() ;
 
 	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	            addedCount++;
@@ -2585,6 +2600,24 @@ function isDupOutSrvcToFinal(){
 	                            <input type="text" id="rentalTxtAdvMonth" name="rentalTxtAdvMonth" title="Advance Month" size="3" maxlength="2" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_rentalAdvMonthChangeTxt();"/>
 	                        </td>
 	                    </tr>
+	                    <tr>
+                  <th scope="row">TR No.</th>
+                        <td>
+                            <input id="rentalkeyInTrNo" name="rentalkeyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                        </td>
+
+              </tr>
+              <tr>
+                  <th scope="row">Collector</th>
+                  <td>
+                      <input id="rentalkeyInCollMemId" name="rentalkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
+                      <input id="rentalkeyInCollMemNm" name="rentalkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                      </a>
+                  </td>
+
+              </tr>
 	                </tbody>
 	            </table>
 	            <!-- table end -->
@@ -2646,6 +2679,24 @@ function isDupOutSrvcToFinal(){
 	                                </p>
 	                        </td>
 	                    </tr>
+	                    <tr>
+                        <th scope="row">TR No.</th>
+                        <td>
+                            <input id="outkeyInTrNo" name="outkeyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                        </td>
+
+              </tr>
+              <tr>
+                  <th scope="row">Collector</th>
+                  <td>
+                      <input id="outkeyInCollMemId" name="outkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
+                      <input id="outkeyInCollMemNm" name="outkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                      </a>
+                  </td>
+
+              </tr>
 	                </tbody>
 	            </table>
 	            <!-- table end -->
@@ -2718,6 +2769,24 @@ function isDupOutSrvcToFinal(){
 	                            <input type="text" id="srvcTxtAdvMonth" name="srvcTxtAdvMonth" title="Rental Membership Advance Month" size="3" maxlength="2" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_srvcAdvMonthChangeTxt();"/>
 	                        </td>
 	                    </tr>
+	                    <tr>
+                  <th scope="row">TR No.</th>
+                        <td>
+                            <input id="srvckeyInTrNo" name="srvckeyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                        </td>
+
+              </tr>
+              <tr>
+                  <th scope="row">Collector</th>
+                  <td>
+                      <input id="srvckeyInCollMemId" name="srvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
+                      <input id="srvckeyInCollMemNm" name="srvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                      </a>
+                  </td>
+
+              </tr>
 	                </tbody>
 	            </table>
 	            <!-- table end -->
@@ -2787,6 +2856,24 @@ function isDupOutSrvcToFinal(){
                                 </p>
                             </td>
                         </tr>
+                        <tr>
+                  <th scope="row">TR No.</th>
+                        <td>
+                            <input id="billkeyInTrNo" name="billkeyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                        </td>
+
+              </tr>
+              <tr>
+                  <th scope="row">Collector</th>
+                  <td>
+                      <input id="billkeyInCollMemId" name="billkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
+                      <input id="billkeyInCollMemNm" name="billkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                      </a>
+                  </td>
+
+              </tr>
                     </tbody>
                 </table>
                 <!-- table end -->
@@ -2844,6 +2931,25 @@ function isDupOutSrvcToFinal(){
                                     </p>
                             </td>
                         </tr>
+                        <tr>
+                  <th scope="row">TR No.</th>
+                        <td>
+                            <input id="outSrvckeyInTrNo" name="outSrvckeyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                        </td>
+
+              </tr>
+              <tr>
+                  <th scope="row">Collector</th>
+                  <td>
+                      <input id="outSrvckeyInCollMemId" name="outSrvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
+                      <input id="outSrvckeyInCollMemNm" name="outSrvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                      </a>
+                  </td>
+
+              </tr>
+
 
                     </tbody>
                 </table>
@@ -3037,7 +3143,7 @@ function isDupOutSrvcToFinal(){
 				        </td>
 				        <th scope="row">TR Issue Date</th>
 				        <td>
-				            <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" disabled />
+				            <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p"  />
 				        </td>
 				    </tr>
 				    <tr>
@@ -3045,9 +3151,9 @@ function isDupOutSrvcToFinal(){
 				        <td>
 				            <input id="keyInCollMemId" name="keyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
 				            <input id="keyInCollMemNm" name="keyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-				            <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+				            <!--<a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
 				                <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                            </a>
+                            </a>-->
 				        </td>
 				        <th scope="row">Pay Date<span class="must">*</span></th>
 				        <td>
