@@ -7,6 +7,7 @@
  ----------------------------------------------------------------
  25/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  27/02/2019  ONGHC  1.0.1          Amend error message while search
+ 05/03/2019  ONGHC  1.0.2          Remove selection mode as singleRow
  -->
 
 <script type="text/javaScript">
@@ -52,7 +53,7 @@
 
             // AUIGrid 그리드를 생성합니다.
             orderCallListGrid();
-            AUIGrid.setSelectionMode(myGridID, "singleRow");
+            //AUIGrid.setSelectionMode(myGridID, "singleRow");
 
             AUIGrid
                 .bind(
@@ -249,7 +250,7 @@
     fixedColumnCount : 1,
     showStateColumn : true,
     displayTreeOpen : true,
-    selectionMode : "singleRow",
+    //selectionMode : "singleRow",
     headerHeight : 30,
     useGroupingPanel : true,
     skipReadonlyColumns : true,
