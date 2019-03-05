@@ -747,112 +747,102 @@ $(document).ready(function() {
 </script>
 
 <section id="content"><!-- content start -->
-<ul class="path">
-	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
-</ul>
-
-<aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
-<h2>Supply Plan Summary View</h2>
-	<ul class="right_btns">
-		<li><p class="btn_blue"><a onclick="fnSupplyPlanHeader();"><span class="search"></span>Search</a></p></li>
+	<ul class="path">
+		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+		<li>Sales</li>
+		<li>Order list</li>
 	</ul>
-</aside><!-- title_line end -->
-
-
-<section class="search_table"><!-- search_table start -->
-<form id="MainForm" method="post" action="">
-	<table class="type1"><!-- table start -->
-		<caption>table</caption>
-		<colgroup>
-			<col style="width:140px" />
-			<col style="width:*" />
-			<col style="width:70px" />
-			<col style="width:*" />
-			<col style="width:100px" />
-			<col style="width:*" />
-		</colgroup>
-		<tbody>
-			<tr>
-				<th scope="row">EST Year &amp; Week</th>
-				<td>
-					<div class="date_set w100p"><!-- date_set start -->
-						<select class="sel_year" id="scmYearCbBox" name="scmYearCbBox"></select>
-						<select class="sel_date" id="scmWeekCbBox" name="scmWeekCbBox"></select>
-					</div><!-- date_set end -->
-				</td>
-				<th scope="row">Type</th>
-				<td>
-					<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
-				</td>
-				<th scope="row">Category</th>
-				<td>
-					<select class="w100p" id="scmStockCategoryCbBox" multiple="multiple" name="scmStockCategoryCbBox"></select>
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">Material</th>
-				<td>
-					<!-- <input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}"> -->
-					<select class="js-example-basic-multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox" multiple="multiple">
-				</td>
-				<td colspan="4"></td>
-			</tr>
-		</tbody>
-	</table><!-- table end -->
-
-	<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-	<p class="show_btn">
-		<%-- <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%>
-	</p>
-		<dl class="link_list">
-			<dt>Link</dt>
-			<dd>
-				<ul class="btns">
-					<li><p class="link_btn"><a href="javascript:void(0);">menu1</a></p></li>
-					<li><p class="link_btn"><a href="javascript:void(0);">menu2</a></p></li>
-					<li><p class="link_btn"><a href="javascript:void(0);">menu3</a></p></li>
-					<li><p class="link_btn"><a href="javascript:void(0);">menu4</a></p></li>
-					<li><p class="link_btn"><a href="javascript:void(0);">Search Payment</a></p></li>
-					<li><p class="link_btn"><a href="javascript:void(0);">menu6</a></p></li>
-					<li><p class="link_btn"><a href="javascript:void(0);">menu7</a></p></li>
-					<li><p class="link_btn"><a href="javascript:void(0);">menu8</a></p></li>
-				</ul>
-				<ul class="btns">
-					<li><p class="link_btn type2"><a href="javascript:void(0);">menu1</a></p></li>
-					<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
-					<li><p class="link_btn type2"><a href="javascript:void(0);">menu3</a></p></li>
-					<li><p class="link_btn type2"><a href="javascript:void(0);">menu4</a></p></li>
-					<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
-					<li><p class="link_btn type2"><a href="javascript:void(0);">menu6</a></p></li>
-					<li><p class="link_btn type2"><a href="javascript:void(0);">menu7</a></p></li>
-					<li><p class="link_btn type2"><a href="javascript:void(0);">menu8</a></p></li>
-				</ul>
-				<p class="hide_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-			</dd>
-		</dl>
-	</aside><!-- link_btns_wrap end -->
-</form>
-</section><!-- search_table end -->
-
-<section class="search_result"><!-- search_result start -->
-<ul class="right_btns">
-	<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'SupplyPlanSummary');">Excel</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-	<!-- 그리드 영역 -->
-	<div id="supply_plan_summary_wrap" style="height:700px;"></div>
-</article><!-- grid_wrap end -->
-
-<ul class="center_btns">
-	<li>
-		<p class="btn_blue2 big">
-			<!--   <a href="javascript:void(0);">Download Raw Data</a> -->
-		</p>
-	</li>
-</ul>
-</section><!-- search_result end -->
+	
+	<aside class="title_line"><!-- title_line start -->
+		<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
+		<h2>Supply Plan Summary View</h2>
+		<ul class="right_btns">
+			<li><p class="btn_blue"><a onclick="fnSupplyPlanHeader();"><span class="search"></span>Search</a></p></li>
+		</ul>
+	</aside><!-- title_line end -->
+	
+	<section class="search_table"><!-- search_table start -->
+		<form id="MainForm" method="post" action="">
+			<table class="type1"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+					<col style="width:140px" />
+					<col style="width:*" />
+					<col style="width:70px" />
+					<col style="width:*" />
+					<col style="width:100px" />
+					<col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<th scope="row">EST Year &amp; Week</th>
+						<td>
+							<div class="date_set w100p"><!-- date_set start -->
+								<select class="sel_year" id="scmYearCbBox" name="scmYearCbBox"></select>
+								<select class="sel_date" id="scmWeekCbBox" name="scmWeekCbBox"></select>
+							</div><!-- date_set end -->
+						</td>
+						<th scope="row">Type</th>
+						<td>
+							<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
+						</td>
+						<th scope="row">Category</th>
+						<td>
+							<select class="w100p" id="scmStockCategoryCbBox" multiple="multiple" name="scmStockCategoryCbBox"></select>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Material</th>
+						<td>
+							<!-- <input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}"> -->
+							<select class="js-example-basic-multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox" multiple="multiple">
+						</td>
+						<td colspan="4"></td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+		
+			<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+				<p class="show_btn">
+					<%-- <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%>
+				</p>
+				<dl class="link_list">
+					<dt>Link</dt>
+					<dd>
+						<ul class="btns">
+							<li><p class="link_btn"><a href="javascript:void(0);">menu1</a></p></li>
+							<li><p class="link_btn"><a href="javascript:void(0);">menu2</a></p></li>
+							<li><p class="link_btn"><a href="javascript:void(0);">menu3</a></p></li>
+							<li><p class="link_btn"><a href="javascript:void(0);">menu4</a></p></li>
+							<li><p class="link_btn"><a href="javascript:void(0);">Search Payment</a></p></li>
+							<li><p class="link_btn"><a href="javascript:void(0);">menu6</a></p></li>
+							<li><p class="link_btn"><a href="javascript:void(0);">menu7</a></p></li>
+							<li><p class="link_btn"><a href="javascript:void(0);">menu8</a></p></li>
+						</ul>
+						<ul class="btns">
+							<li><p class="link_btn type2"><a href="javascript:void(0);">menu1</a></p></li>
+							<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
+							<li><p class="link_btn type2"><a href="javascript:void(0);">menu3</a></p></li>
+							<li><p class="link_btn type2"><a href="javascript:void(0);">menu4</a></p></li>
+							<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
+							<li><p class="link_btn type2"><a href="javascript:void(0);">menu6</a></p></li>
+							<li><p class="link_btn type2"><a href="javascript:void(0);">menu7</a></p></li>
+							<li><p class="link_btn type2"><a href="javascript:void(0);">menu8</a></p></li>
+						</ul>
+						<p class="hide_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+					</dd>
+				</dl>
+			</aside><!-- link_btns_wrap end -->
+		</form>
+	</section><!-- search_table end -->
+	
+	<section class="search_result"><!-- search_result start -->
+		<ul class="right_btns">
+			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'SupplyPlanSummary');">Excel</a></p></li>
+		</ul>
+		<article class="grid_wrap"><!-- grid_wrap start -->
+			<!-- 그리드 영역 -->
+			<div id="supply_plan_summary_wrap" style="height:642px;"></div>
+		</article><!-- grid_wrap end -->
+	</section><!-- search_result end -->
 </section><!-- content end -->

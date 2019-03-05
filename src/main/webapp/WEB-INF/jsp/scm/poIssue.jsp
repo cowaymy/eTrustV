@@ -1436,160 +1436,154 @@ $(document).ready(function() {
 </script>
 
 <section id="content"><!-- content start -->
-<ul class="path">
-	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
-</ul>
-
-<aside class="title_line"><!-- title_line start -->
-	<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
-	<h2>PO Issue</h2>
-	<ul class="right_btns">
-		<li><p class="btn_blue"><a onclick="fnSearch();"><span class="search"></span>Search</a></p></li>
+	<ul class="path">
+		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+		<li>Sales</li>
+		<li>Order list</li>
 	</ul>
-</aside><!-- title_line end -->
-
-<form id="reportDataForm" action="">
-	<input type ="hidden" id="reportFileName" name="reportFileName" value=""/>
-	<input type ="hidden" id="viewType" name="viewType" value=""/>
-	<input type ="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
-	<input type ="hidden" id="V_PO_NO" name="V_PO_NO" value="" />
-</form>
-
-<section class="search_table"><!-- search_table start -->
-<form id="MainForm" method="post" action="">
-	<table class="type1"><!-- table start -->
-		<caption>table</caption>
-		<colgroup>
-			<col style="width:140px" />
-			<col style="width:*" />
-			<col style="width:70px" />
-			<col style="width:*" />
-			<col style="width:100px" />
-			<col style="width:*" />
-		</colgroup>
-		<tbody>
-			<tr>
-				<th scope="row">EST Year &amp; Week</th>
-				<td>
-					<div class="date_set w100p"><!-- date_set start -->
-						<select class="sel_year" id="scmYearCbBox" name="scmYearCbBox"></select>
-						<select class="sel_date" id="scmWeekCbBox" name="scmWeekCbBox"></select>
-					</div><!-- date_set end -->
-				</td>
-				<th scope="row">CDC</th>
-				<td>
-					<select class="w100p" id="scmCdcCbBox" name="scmCdcCbBox"></select>
-				</td>
-				<th scope="row">PO Status</th>
-				<td>
-					<div class="status_result">
-						<!-- circle_red, circle_blue, circle_grey -->
-						<p><span id ="cirIssue" class="circle circle_grey"></span> Po Issue</p>
-						<p><span id ="cirAppro" class="circle circle_grey"></span> Po Approval</p>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">Type</th>
-				<td>
-					<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
-				</td>
-				<th scope="row">Category</th>
-				<td>
-					<select class="w100p" id="scmStockCategoryCbBox" multiple="multiple" name="scmStockCategoryCbBox"></select>
-				</td>
-				<th scope="row">Material</th>
-				<td>
-					<!-- <input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}"> -->
-					<select class="js-example-basic-multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox" multiple="multiple">
-				</td>
-			</tr>
-		</tbody>
-	</table><!-- table end -->
-
-	<div class="divine_auto type2 mt30"><!-- divine_auto start -->
-		<div style="width:40%;">
-			<div class="border_box" style="min-height:150px"><!-- border_box start -->
-				<article class="grid_wrap"><!-- grid_wrap start -->
-					<!-- 그리드 영역1 -->
-					<div id="poTargetListGridDiv"></div>
-				</article><!-- grid_wrap end -->
-			</div><!-- border_box end -->
-		</div>
-		<div style="width:60%;">
-			<div class="border_box" style="min-height:150px"><!-- border_box start -->
-				<article class="grid_wrap"><!-- grid_wrap start -->
-					<!-- 그리드 영역2 -->
-					<div id="poCreateListGridDiv"></div>
-				</article><!-- grid_wrap end -->
-				<ul class="btns">
-					<li><a onclick="fnMoveStockGroup();"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right.gif" alt="right" /></a></li>
-				</ul>
-				<ul class="center_btns">
-					<li>
-					<p id="btnClear" class="btn_blue btn_disabled">
-						<a onclick="fnClear(this);">Clear</a>
-					</p>
-					</li>
-					<li>
-						<p id="btnCreate" class="btn_blue btn_disabled">
-							<a onclick="fnCreate(this);">Create PO</a>
-						</p>
-					</li>
-				</ul>
-			</div><!-- border_box end -->
-		</div><!-- width: 50 -->
-	</div><!-- divine_auto end -->
 	
-	<article class="grid_wrap mt30" style=""><!-- grid_wrap start -->
+	<aside class="title_line"><!-- title_line start -->
+		<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
+		<h2>PO Issue</h2>
 		<ul class="right_btns">
-			<li><p id="btnDelete" class="btn_blue btn_disabled"><a onclick="fnDelete(this);">Delete</a></p></li>
+			<li><p class="btn_blue"><a onclick="fnSearch();"><span class="search"></span>Search</a></p></li>
 		</ul>
-		<!-- 그리드 영역3 -->
-		<div id="poCreatedListGridDiv"></div>
-	</article><!-- grid_wrap end -->
+	</aside><!-- title_line end -->
 	
-	<ul class="center_btns">
-		<li>
-			<p class="btn_blue2 big">
-				<!--    <a href="javascript:void(0);">Download Raw Data</a> <a onclick="fnExcelExport('PO ISSUE');">Download</a>-->
-			</p>
-		</li>
-	</ul>
+	<form id="reportDataForm" action="">
+		<input type ="hidden" id="reportFileName" name="reportFileName" value=""/>
+		<input type ="hidden" id="viewType" name="viewType" value=""/>
+		<input type ="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+		<input type ="hidden" id="V_PO_NO" name="V_PO_NO" value="" />
+	</form>
+
+	<section class="search_table"><!-- search_table start -->
+		<form id="MainForm" method="post" action="">
+			<table class="type1"><!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+					<col style="width:140px" />
+					<col style="width:*" />
+					<col style="width:70px" />
+					<col style="width:*" />
+					<col style="width:100px" />
+					<col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<th scope="row">EST Year &amp; Week</th>
+						<td>
+							<div class="date_set w100p"><!-- date_set start -->
+								<select class="sel_year" id="scmYearCbBox" name="scmYearCbBox"></select>
+								<select class="sel_date" id="scmWeekCbBox" name="scmWeekCbBox"></select>
+							</div><!-- date_set end -->
+						</td>
+						<th scope="row">CDC</th>
+						<td>
+							<select class="w100p" id="scmCdcCbBox" name="scmCdcCbBox"></select>
+						</td>
+						<th scope="row">PO Status</th>
+						<td>
+							<div class="status_result">
+								<!-- circle_red, circle_blue, circle_grey -->
+								<p><span id ="cirIssue" class="circle circle_grey"></span> Po Issue</p>
+								<p><span id ="cirAppro" class="circle circle_grey"></span> Po Approval</p>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Type</th>
+						<td>
+							<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
+						</td>
+						<th scope="row">Category</th>
+						<td>
+							<select class="w100p" id="scmStockCategoryCbBox" multiple="multiple" name="scmStockCategoryCbBox"></select>
+						</td>
+						<th scope="row">Material</th>
+						<td>
+							<!-- <input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}"> -->
+							<select class="js-example-basic-multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox" multiple="multiple">
+						</td>
+					</tr>
+				</tbody>
+			</table><!-- table end -->
+			
+			<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+				<p class="show_btn">
+				<%-- <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%>
+				</p>
+				<dl class="link_list">
+					<dt>Link</dt>
+					<dd>
+					<ul class="btns">
+						<li><p class="link_btn"><a href="javascript:void(0);">menu1</a></p></li>
+						<li><p class="link_btn"><a href="javascript:void(0);">menu2</a></p></li>
+						<li><p class="link_btn"><a href="javascript:void(0);">menu3</a></p></li>
+						<li><p class="link_btn"><a href="javascript:void(0);">menu4</a></p></li>
+						<li><p class="link_btn"><a href="javascript:void(0);">Search Payment</a></p></li>
+						<li><p class="link_btn"><a href="javascript:void(0);">menu6</a></p></li>
+						<li><p class="link_btn"><a href="javascript:void(0);">menu7</a></p></li>
+						<li><p class="link_btn"><a href="javascript:void(0);">menu8</a></p></li>
+					</ul>
+					<ul class="btns">
+						<li><p class="link_btn type2"><a href="javascript:void(0);">menu1</a></p></li>
+						<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
+						<li><p class="link_btn type2"><a href="javascript:void(0);">menu3</a></p></li>
+						<li><p class="link_btn type2"><a href="javascript:void(0);">menu4</a></p></li>
+						<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
+						<li><p class="link_btn type2"><a href="javascript:void(0);">menu6</a></p></li>
+						<li><p class="link_btn type2"><a href="javascript:void(0);">menu7</a></p></li>
+						<li><p class="link_btn type2"><a href="javascript:void(0);">menu8</a></p></li>
+					</ul>
+					<p class="hide_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+					</dd>
+				</dl>
+			</aside><!-- link_btns_wrap end -->
+		</form>
+	</section><!-- search_table end -->
 	
-	<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-		<p class="show_btn">
-		<%-- <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%>
-		</p>
-		<dl class="link_list">
-			<dt>Link</dt>
-			<dd>
-			<ul class="btns">
-				<li><p class="link_btn"><a href="javascript:void(0);">menu1</a></p></li>
-				<li><p class="link_btn"><a href="javascript:void(0);">menu2</a></p></li>
-				<li><p class="link_btn"><a href="javascript:void(0);">menu3</a></p></li>
-				<li><p class="link_btn"><a href="javascript:void(0);">menu4</a></p></li>
-				<li><p class="link_btn"><a href="javascript:void(0);">Search Payment</a></p></li>
-				<li><p class="link_btn"><a href="javascript:void(0);">menu6</a></p></li>
-				<li><p class="link_btn"><a href="javascript:void(0);">menu7</a></p></li>
-				<li><p class="link_btn"><a href="javascript:void(0);">menu8</a></p></li>
+	<section class="search_result"><!-- search_result start -->
+		<div class="divine_auto type2 mt30"><!-- divine_auto start -->
+			<div style="width:40%;">
+				<div class="border_box" style="min-height:130px"><!-- border_box start -->
+					<article class="grid_wrap"><!-- grid_wrap start -->
+						<!-- 그리드 영역1 -->
+						<div id="poTargetListGridDiv"></div>
+					</article><!-- grid_wrap end -->
+				</div><!-- border_box end -->
+			</div>
+			<div style="width:60%;">
+				<div class="border_box" style="min-height:130px"><!-- border_box start -->
+					<article class="grid_wrap"><!-- grid_wrap start -->
+						<!-- 그리드 영역2 -->
+						<div id="poCreateListGridDiv"></div>
+					</article><!-- grid_wrap end -->
+					<ul class="btns">
+						<li><a onclick="fnMoveStockGroup();"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right.gif" alt="right" /></a></li>
+					</ul>
+					<ul class="center_btns">
+						<li>
+						<p id="btnClear" class="btn_blue btn_disabled">
+							<a onclick="fnClear(this);">Clear</a>
+						</p>
+						</li>
+						<li>
+							<p id="btnCreate" class="btn_blue btn_disabled">
+								<a onclick="fnCreate(this);">Create PO</a>
+							</p>
+						</li>
+					</ul>
+				</div><!-- border_box end -->
+			</div><!-- width: 50 -->
+		</div><!-- divine_auto end -->
+		
+		<article class="grid_wrap mt30" style=""><!-- grid_wrap start -->
+			<ul class="right_btns">
+				<li><p id="btnDelete" class="btn_blue btn_disabled"><a onclick="fnDelete(this);">Delete</a></p></li>
 			</ul>
-			<ul class="btns">
-				<li><p class="link_btn type2"><a href="javascript:void(0);">menu1</a></p></li>
-				<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
-				<li><p class="link_btn type2"><a href="javascript:void(0);">menu3</a></p></li>
-				<li><p class="link_btn type2"><a href="javascript:void(0);">menu4</a></p></li>
-				<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
-				<li><p class="link_btn type2"><a href="javascript:void(0);">menu6</a></p></li>
-				<li><p class="link_btn type2"><a href="javascript:void(0);">menu7</a></p></li>
-				<li><p class="link_btn type2"><a href="javascript:void(0);">menu8</a></p></li>
-			</ul>
-			<p class="hide_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-			</dd>
-		</dl>
-	</aside><!-- link_btns_wrap end -->
-</form>
-</section><!-- search_table end -->
+			<!-- 그리드 영역3 -->
+			<div id="poCreatedListGridDiv" style="height:234px;"></div>
+		</article><!-- grid_wrap end -->
+	</section>
 </section><!-- content end -->

@@ -794,18 +794,17 @@ $(document).ready(function() {
 			</aside>						<!-- aside link_btns_wrap end -->
 		</form>
 	</section>								<!-- section search_table end -->
+	<section class="search_result">				<!-- section search_result start -->
+		<article class="grid_wrap">				<!-- article grid_wrap start -->
+			<!-- Monthly Grid -->
+			<div id="inventory_report_total_wrap" style="height:186px;"></div>
+		</article>								<!-- article grid_wrap end -->
+		<ul class="right_btns">
+			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'InventoryReport');">Excel</a></p></li>
+		</ul>
+		<article class="grid_wrap">				<!-- article grid_wrap start -->
+			<!-- Weekly Grid -->
+			<div id="inventory_report_detail_wrap" style="height:471px;"></div>
+		</article>								<!-- article grid_wrap end -->
+	</section>									<!-- section search_result end -->
 </section>									<!-- section content end -->
-
-<section class="search_result">				<!-- section search_result start -->
-	<article class="grid_wrap">				<!-- article grid_wrap start -->
-		<!-- Monthly Grid -->
-		<div id="inventory_report_total_wrap" style="height:186px;"></div>
-	</article>								<!-- article grid_wrap end -->
-	<ul class="right_btns">
-		<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'InventoryReport');">Excel</a></p></li>
-	</ul>
-	<article class="grid_wrap">				<!-- article grid_wrap start -->
-		<!-- Weekly Grid -->
-		<div id="inventory_report_detail_wrap" style="height:476px;"></div>
-	</article>								<!-- article grid_wrap end -->
-</section>									<!-- section search_result end -->
