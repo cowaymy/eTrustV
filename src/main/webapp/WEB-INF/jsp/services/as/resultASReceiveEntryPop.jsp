@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  08/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
+ 05/03/2019  ONGHC  1.0.1          AMEND REQUEST AND APPOINMENT DATE
  -->
 
 <script type="text/javaScript">
@@ -123,6 +124,19 @@
         $("#checkSms2").attr("checked", true);
       else
         $("#checkSms2").attr("checked", false);
+
+      if ($("#requestDate").val() != "") {
+        $("#requestDate").attr("disabled", true);
+        $("#appDate").on("change", function(event) {
+          fn_doAllaction();
+        });
+        $("#rbt").attr("hidden", true);
+      } else {
+        $("#requestDate").attr("disabled", false);
+        $("#appDate").on("change", function(event) {
+        });
+        $("#rbt").attr("hidden", false);
+      }
 
       fn_getCallLog();
     });
