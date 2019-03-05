@@ -18,12 +18,15 @@ public interface ScmReportService {
 	List<EgovMap> selectBusinessPlanDetail(Map<String, Object> params);
 	
 	//	Sales Plan Accuracy
-	List<EgovMap> selectSalesAccuracyDetailHeader(Map<String, Object> params);
+	List<EgovMap> selectSalesAccuracyWeeklyDetailHeader(Map<String, Object> params);
+	List<EgovMap> selectSalesAccuracyMonthlyDetailHeader(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanAccuracyWeeklySummary(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanAccuracyMonthlySummary(Map<String, Object> params);
 	List<EgovMap> selectWeekly16Week(Map<String, Object> params);
+	List<EgovMap> selectWeeklyStartEnd(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanAccuracyWeeklyDetail(Map<String, Object> params);
 	List<EgovMap> selectMonthly16Week(Map<String, Object> params);
+	List<EgovMap> selectMonthlyStartEnd(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanAccuracyMonthlyDetail(Map<String, Object> params);
 	
 	//	Ontime Delivery Report
