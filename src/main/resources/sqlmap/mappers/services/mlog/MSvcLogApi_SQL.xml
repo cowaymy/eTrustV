@@ -179,7 +179,7 @@ FROM (
 		                         INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID AND B.MEM_CODE = #{userId}
 		                         LEFT OUTER JOIN SAL0095D C
 		                            ON     A.SALES_ORD_ID = C.SRV_SALES_ORD_ID
-		                               AND SYSDATE BETWEEN C.SRV_START_DT AND C.SRV_EXPR_DT
+		                               <!-- AND SYSDATE BETWEEN C.SRV_START_DT AND C.SRV_EXPR_DT -->
 		                               AND C.SRV_STUS_CODE_ID = 4
 		                   WHERE     A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
 		                         AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
