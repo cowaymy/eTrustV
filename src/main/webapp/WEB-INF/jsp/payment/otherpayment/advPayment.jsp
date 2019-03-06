@@ -1296,6 +1296,9 @@ function addRentalToFinal(){
     }
 
     recalculatePaymentTotalAmt();
+    $("#rentalkeyInTrNo").clearForm() ;
+    $("#rentalkeyInCollMemNm").clearForm() ;
+    $("#rentalkeyInCollMemId").clearForm() ;
 }
 
 
@@ -1522,6 +1525,9 @@ function addOutToFinal(){
     }
 
     recalculatePaymentTotalAmt();
+    $("#outkeyInTrNo").clearForm() ;
+    $("#outkeyInCollMemNm").clearForm() ;
+    $("#outkeyInCollMemId").clearForm() ;
 }
 
 
@@ -2035,6 +2041,9 @@ function addSrvcToFinal(){
     }
 
     recalculatePaymentTotalAmt();
+    $("#srvckeyInTrNo").clearForm() ;
+    $("#srvckeyInCollMemNm").clearForm() ;
+    $("#srvckeyInCollMemId").clearForm() ;
 }
 
 
@@ -2262,6 +2271,9 @@ function addBillToFinal(){
         }
 
         recalculatePaymentTotalAmt();
+        $("#billkeyInTrNo").clearForm() ;
+        $("#billkeyInCollMemNm").clearForm() ;
+        $("#billkeyInCollMemId").clearForm() ;
     }
 }
 
@@ -2647,6 +2659,9 @@ function addOutSrvcToFinal(){
     }
 
     recalculatePaymentTotalAmt();
+    $("#outSrvckeyInTrNo").clearForm() ;
+    $("#outSrvckeyInCollMemNm").clearForm() ;
+    $("#outSrvckeyInCollMemId").clearForm() ;
 }
 
 
@@ -2689,6 +2704,21 @@ function isDupOutSrvcToFinal(){
 	return dupCnt;
 }
 
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password' || type === 'hidden' || type === 'file' || tag === 'textarea'){
+            this.value = '';
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
+        }else if (tag === 'select'){
+            this.selectedIndex = 0;
+        }
+    });
+};
 
 
 
