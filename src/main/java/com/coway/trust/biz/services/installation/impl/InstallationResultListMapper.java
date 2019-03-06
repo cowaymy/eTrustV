@@ -10,6 +10,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 31/01/2019    ONGHC      1.0.1       - Restructure File
+ * 06/03/2019    ONGHC      1.0.2       - Create getSalStat
  *********************************************************************************************/
 
 @Mapper("installationResultListMapper")
@@ -186,6 +187,8 @@ public interface InstallationResultListMapper {
   List<EgovMap> selectInstallationNoteListing(Map<String, Object> params);
 
   String getInvoiceNum(Map<String, Object> params);
+
+  String getSalStat(Map<String, Object> params);
 
   EgovMap selectInstallInfo(Map<String, Object> params);
 
