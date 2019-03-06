@@ -241,27 +241,31 @@ public class ScmReportController {
 	/*
 	 * On-Time Delivery Report
 	 */
-	@RequestMapping(value = "/selectOntimeDeliveryReport.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/selectOntimeDelivery.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectOntimeDelivery(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 		
-		LOGGER.debug("selectOntimeDeliveryReport : {}", params.toString());
-		String planYearMonth	= "";
+		LOGGER.debug("selectOntimeDelivery : {}", params.toString());
 		
 		Map<String, Object> map	= new HashMap<>();
-		planYearMonth	= params.get("planYearMonth").toString();
-		planYearMonth	= planYearMonth.replace("/", "");
-		planYearMonth	= planYearMonth.substring(2, 6) + planYearMonth.substring(0, 2);
-		params.put("planYearMonth", planYearMonth);
-		LOGGER.debug("selectOntimeDeliveryReport : {}", params.toString());
 		
-		//List<EgovMap> selectInventoryReportTotalHeader	= kpiManagementService.selectInventoryReportTotalHeader(params);
-		//List<EgovMap> selectInventoryReportDetailHeader	= kpiManagementService.selectInventoryReportDetailHeader(params);
-		//List<EgovMap> selectInventoryReportTotal	= kpiManagementService.selectInventoryReportTotal(params);
-		//List<EgovMap> selectInventoryReportDetail	= kpiManagementService.selectInventoryReportDetail(params);
+		List<EgovMap> selectOntimeDeliverySummary	= scmReportService.selectOntimeDeliverySummary(params);
+		List<EgovMap> selectOntimeDeliveryDetail	= scmReportService.selectOntimeDeliveryDetail(params);
 		
-		//map.put("selectInventoryReportTotalHeader", selectInventoryReportTotalHeader);
-		//map.put("selectInventoryReportDetailHeader", selectInventoryReportDetailHeader);
-		map.put("selectOntimeDeliveryReport", null);
+		map.put("selectOntimeDeliverySummary", selectOntimeDeliverySummary);
+		map.put("selectOntimeDeliveryDetail", selectOntimeDeliveryDetail);
+		
+		return	ResponseEntity.ok(map);
+	}
+	@RequestMapping(value = "/selectOntimeDeliveryDetail.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectOntimeDeliveryDetail(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("selectOntimeDeliveryDetail : {}", params.toString());
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		List<EgovMap> selectOntimeDeliveryDetail	= scmReportService.selectOntimeDeliveryDetail(params);
+		
+		map.put("selectOntimeDeliveryDetail", selectOntimeDeliveryDetail);
 		
 		return	ResponseEntity.ok(map);
 	}
