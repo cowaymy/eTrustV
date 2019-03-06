@@ -662,7 +662,7 @@ var columnLayout = [
 	    { dataField:"discountAmt" ,headerText:"<spring:message code='pay.head.discountAmt'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00" , visible : false },
 	    { dataField:"srvMemId" ,headerText:"<spring:message code='pay.head.serviceMembershipId'/>" ,editable : false , width : 150 , visible : false },
 	    { dataField:"trNo" ,headerText:"TR No" ,editable : false , width : 150 },
-	    { dataField:"collectorCode" ,headerText:"Collector Code" ,editable : false , width : 150 },
+	    { dataField:"collectorCode" ,headerText:"Collector Code" ,editable : false , width : 250 },
 	    { dataField:"collectorId" ,headerText:"Collector Id" ,editable : false , width : 150 ,visible : false}
 
 	];
@@ -2709,22 +2709,23 @@ function fn_searchUserIdPop(){
 //Collector 조회 팝업 결과값 세팅
 function fn_loadOrderSalesman(memId, memCode, memNm){
     var appType = $("#appType").val();
+    var memCode = memCode + " - " + memNm;
 
     if(appType == "1"){//Rental
         $("#rentalkeyInCollMemId").val(memId);
-        $("#rentalkeyInCollMemNm").val(memNm);
+        $("#rentalkeyInCollMemNm").val(memCode);
     }else if(appType == "2"){//Outright
         $("#outkeyInCollMemId").val(memId);
-        $("#outkeyInCollMemNm").val(memNm);
+        $("#outkeyInCollMemNm").val(memCode);
     }else if(appType == "3"){//Rental Membership
         $("#srvckeyInCollMemId").val(memId);
-        $("#srvckeyInCollMemNm").val(memNm);
+        $("#srvckeyInCollMemNm").val(memCode);
     }else if(appType == "4"){//Bill Payment
         $("#billkeyInCollMemId").val(memId);
-        $("#billkeyInCollMemNm").val(memNm);
+        $("#billkeyInCollMemNm").val(memCode);
     }else if(appType == "5"){//Outright Membership
         $("#outSrvckeyInCollMemId").val(memId);
-        $("#outSrvckeyInCollMemNm").val(memNm);
+        $("#outSrvckeyInCollMemNm").val(memCode);
     }
 
 }
