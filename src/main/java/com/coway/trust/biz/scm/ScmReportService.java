@@ -30,7 +30,8 @@ public interface ScmReportService {
 	List<EgovMap> selectSalesPlanAccuracyMonthlyDetail(Map<String, Object> params);
 	
 	//	Ontime Delivery Report
-	List<EgovMap> selectOntimeDelivery(Map<String, Object> params);
+	List<EgovMap> selectOntimeDeliverySummary(Map<String, Object> params);
+	List<EgovMap> selectOntimeDeliveryDetail(Map<String, Object> params);
 	
 	//	Inventory Report
 	List<EgovMap> selectInventoryReportTotalHeader(Map<String, Object> params);

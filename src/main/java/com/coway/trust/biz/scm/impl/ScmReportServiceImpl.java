@@ -107,8 +107,12 @@ public class ScmReportServiceImpl implements ScmReportService {
 	
 	//	Ontime Delivery Report
 	@Override
-	public List<EgovMap> selectOntimeDelivery(Map<String, Object> params) {
-		return	scmReportMapper.selectOntimeDelivery(params);
+	public List<EgovMap> selectOntimeDeliverySummary(Map<String, Object> params) {
+		return	scmReportMapper.selectOntimeDeliverySummary(params);
+	}
+	@Override
+	public List<EgovMap> selectOntimeDeliveryDetail(Map<String, Object> params) {
+		return	scmReportMapper.selectOntimeDeliveryDetail(params);
 	}
 	
 	//	Inventory Report
