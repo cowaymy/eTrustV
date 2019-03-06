@@ -35,6 +35,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *--------------------------------------------------------------------------------------------
  * 31/01/2019    ONGHC      1.0.1       - Restructure File
  * 05/03/2019    ONGHC      1.0.2       - Add Param to isExchange
+ * 06/03/2019    ONGHC      1.0.3       - Create getSalStat
  *********************************************************************************************/
 
 @Service("installationResultListService")
@@ -1333,14 +1334,29 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
         }
       } else {
         if (params.get("hidCallType").equals("258")) { // PRODUCT EXCHANGE
-          if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
-            retype = "COMPLET";
-            p_type = "OD53";
-            p_Pgrnm = "PEXCOM";
-          } else if (Integer.parseInt(params.get("installStatus").toString()) == 21) { // FAIL
-            retype = "SVO";
-            p_type = "OD54";
-            p_Pgrnm = "PEXCAN";
+          // TO CHECK ORDER STATUS
+          String ordStat = installationResultListMapper.getSalStat(params);
+          logger.debug("== SALES ORDER STATUS :: " + ordStat);
+          if ("1".equals(ordStat)) {
+            if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
+              retype = "COMPLET";
+              p_type = "OD01";
+              p_Pgrnm = "INSCOM";
+            } else if (Integer.parseInt(params.get("installStatus").toString()) == 21) { // FAIL
+              retype = "SVO";
+              p_type = "OD02";
+              p_Pgrnm = "INSCAN";
+            }
+          } else {
+            if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
+              retype = "COMPLET";
+              p_type = "OD53";
+              p_Pgrnm = "PEXCOM";
+            } else if (Integer.parseInt(params.get("installStatus").toString()) == 21) { // FAIL
+              retype = "SVO";
+              p_type = "OD54";
+              p_Pgrnm = "PEXCAN";
+            }
           }
         } else { // NEW INSTALLATION
           if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
@@ -2996,4 +3012,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   public int selRcdTms(Map<String, Object> params) {
     return installationResultListMapper.selRcdTms(params);
   }
+
+  @Override
+  public String getSalStat(Map<String, Object> params) {
+    return installationResultListMapper.getSalStat(params);
+  }
+
+
 }
