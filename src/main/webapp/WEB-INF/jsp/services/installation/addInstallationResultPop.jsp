@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  25/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
+ 06/03/2019  ONGHC  1.0.1          Remove Installation Status Active
  -->
 
 <script type="text/javaScript">
@@ -795,6 +796,8 @@
          <c:choose>
           <c:when test="${list.codeId=='4'}">
             <option value="${list.codeId}" selected>${list.codeName}</option>
+          </c:when>
+          <c:when test="${list.codeId=='1'}">
           </c:when>
           <c:otherwise>
             <option value="${list.codeId}">${list.codeName}</option>
