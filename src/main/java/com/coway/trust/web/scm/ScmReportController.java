@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.scm.ScmReportService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.ScmCommonService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -49,6 +52,12 @@ public class ScmReportController {
 	@RequestMapping(value = "/salesPlanAccuracy.do")
 	public String salesPlanAccuracyView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return	"/scm/salesPlanAccuracy";
+	}
+	@RequestMapping(value = "/salesPlanAccuracyMaster.do")
+	public String salesPlanAccuracyMasterView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		model.addAttribute("params", params);
+		
+		return	"/scm/salesPlanAccuracyMaster";
 	}
 	//	Ontime Delivery Report
 	@RequestMapping(value = "/ontimeDeliveryReport.do")
@@ -91,25 +100,25 @@ public class ScmReportController {
 	/*
 	 * Sales Plan Accuracy
 	 */
-	@RequestMapping(value = "/selectSalesAccuracyDetailHeader.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectSalesAccuracyDetailHeader(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+	@RequestMapping(value = "/selectSalesPlanAccuracyDetailHeader.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectSalesPlanAccuracyDetailHeader(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 		
-		LOGGER.debug("selectSalesAccuracyDetailHeader : {}", params.toString());
+		LOGGER.debug("selectSalesPlanAccuracyDetailHeader : {}", params.toString());
 		
 		Map<String, Object> map	= new HashMap<>();
 		
-		List<EgovMap> selectSalesAccuracyWeeklyDetailHeader		= scmReportService.selectSalesAccuracyWeeklyDetailHeader(params);
-		List<EgovMap> selectSalesAccuracyMonthlyDetailHeader	= scmReportService.selectSalesAccuracyMonthlyDetailHeader(params);
+		List<EgovMap> selectSalesPlanAccuracyWeeklyDetailHeader		= scmReportService.selectSalesPlanAccuracyWeeklyDetailHeader(params);
+		List<EgovMap> selectSalesPlanAccuracyMonthlyDetailHeader	= scmReportService.selectSalesPlanAccuracyMonthlyDetailHeader(params);
 		
-		map.put("selectSalesAccuracyWeeklyDetailHeader", selectSalesAccuracyWeeklyDetailHeader);
-		map.put("selectSalesAccuracyMonthlyDetailHeader", selectSalesAccuracyMonthlyDetailHeader);
+		map.put("selectSalesPlanAccuracyWeeklyDetailHeader", selectSalesPlanAccuracyWeeklyDetailHeader);
+		map.put("selectSalesPlanAccuracyMonthlyDetailHeader", selectSalesPlanAccuracyMonthlyDetailHeader);
 		
 		return	ResponseEntity.ok(map);
 	}
-	@RequestMapping(value = "/selectSalesAccuracy.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectSalesAccuracy(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+	@RequestMapping(value = "/selectSalesPlanAccuracy.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectSalesPlanAccuracy(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 		
-		LOGGER.debug("selectSalesAccuracy : {}", params.toString());
+		LOGGER.debug("selectSalesPlanAccuracy : {}", params.toString());
 		
 		Map<String, Object> map	= new HashMap<>();
 		Map<String, Object> weeklyParams	= new HashMap<>();
@@ -141,7 +150,7 @@ public class ScmReportController {
 		
 		weeklyParams.put("startWeek", selectWeeklyStartEnd.get(0).get("startWeek").toString());
 		weeklyParams.put("endWeek", selectWeeklyStartEnd.get(0).get("endWeek").toString());
-		LOGGER.debug("selectSalesAccuracy Weekly : {}", weeklyParams.toString());
+		LOGGER.debug("selectSalesPlanAccuracy Weekly : {}", weeklyParams.toString());
 		List<EgovMap> selectSalesPlanAccuracyWeeklyDetail	= scmReportService.selectSalesPlanAccuracyWeeklyDetail(weeklyParams);
 		
 		//	Monthly Detail
@@ -164,7 +173,7 @@ public class ScmReportController {
 		
 		monthlyParams.put("startWeek", selectMonthlyStartEnd.get(0).get("startWeek").toString());
 		monthlyParams.put("endWeek", selectMonthlyStartEnd.get(0).get("endWeek").toString());
-		LOGGER.debug("selectSalesAccuracy Monthly : {}", monthlyParams.toString());
+		LOGGER.debug("selectSalesPlanAccuracy Monthly : {}", monthlyParams.toString());
 		List<EgovMap> selectSalesPlanAccuracyMonthlyDetail	= scmReportService.selectSalesPlanAccuracyMonthlyDetail(monthlyParams);
 		
 		map.put("selectSalesPlanAccuracyWeeklySummary", selectSalesPlanAccuracyWeeklySummary);
@@ -174,10 +183,10 @@ public class ScmReportController {
 		
 		return	ResponseEntity.ok(map);
 	}
-	@RequestMapping(value = "/selectSalesAccuracyDetail.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectSalesAccuracyDetail(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+	@RequestMapping(value = "/selectSalesPlanAccuracyDetail.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectSalesPlanAccuracyDetail(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 		
-		LOGGER.debug("selectSalesAccuracyDetail : {}", params.toString());
+		LOGGER.debug("selectSalesPlanAccuracyDetail : {}", params.toString());
 		
 		Map<String, Object> map	= new HashMap<>();
 		Map<String, Object> weeklyParams	= new HashMap<>();
@@ -206,7 +215,7 @@ public class ScmReportController {
 		
 		weeklyParams.put("startWeek", selectWeeklyStartEnd.get(0).get("startWeek").toString());
 		weeklyParams.put("endWeek", selectWeeklyStartEnd.get(0).get("endWeek").toString());
-		LOGGER.debug("selectSalesAccuracyDetail Weekly : {}", weeklyParams.toString());
+		LOGGER.debug("selectSalesPlanAccuracyDetail Weekly : {}", weeklyParams.toString());
 		List<EgovMap> selectSalesPlanAccuracyWeeklyDetail	= scmReportService.selectSalesPlanAccuracyWeeklyDetail(weeklyParams);
 		
 		//	Monthly Detail
@@ -229,13 +238,64 @@ public class ScmReportController {
 		
 		monthlyParams.put("startWeek", selectMonthlyStartEnd.get(0).get("startWeek").toString());
 		monthlyParams.put("endWeek", selectMonthlyStartEnd.get(0).get("endWeek").toString());
-		LOGGER.debug("selectSalesAccuracyDetail Monthly : {}", monthlyParams.toString());
+		LOGGER.debug("selectSalesPlanAccuracyDetail Monthly : {}", monthlyParams.toString());
 		List<EgovMap> selectSalesPlanAccuracyMonthlyDetail	= scmReportService.selectSalesPlanAccuracyMonthlyDetail(monthlyParams);
 		
 		map.put("selectSalesPlanAccuracyWeeklyDetail", selectSalesPlanAccuracyWeeklyDetail);
 		map.put("selectSalesPlanAccuracyMonthlyDetail", selectSalesPlanAccuracyMonthlyDetail);
 		
 		return	ResponseEntity.ok(map);
+	}
+	@RequestMapping(value = "/selectSalesPlanAccuracyMaster.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSalesPlanAccuracyMaster(@RequestBody Map<String, Object> params) {
+		
+		LOGGER.debug("selectSalesPlanAccuracyMaster : {}", params.toString());
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		List<EgovMap> selectSalesPlanAccuracyMaster		= scmReportService.selectSalesPlanAccuracyMaster(params);
+		
+		map.put("selectSalesPlanAccuracyMaster", selectSalesPlanAccuracyMaster);
+		
+		return	ResponseEntity.ok(map);
+	}
+	@RequestMapping(value = "/selectSalesPlanAccuracyMaster1.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectSalesPlanAccuracyMaster1(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectSalesPlanAccuracyMaster1 : {}", params.toString());
+		
+		List<EgovMap> selectSalesPlanAccuracyMaster1	= scmReportService.selectSalesPlanAccuracyMaster(params);
+		return ResponseEntity.ok(selectSalesPlanAccuracyMaster1);
+	}
+	/*
+	@RequestMapping(value = "/selectSalesPlanAccuracyMaster1.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectSalesPlanAccuracyMaster1(@RequestBody Map<String, Object> params) {
+		
+		LOGGER.debug("selectSalesPlanAccuracyMaster1 : {}", params.toString());
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		List<EgovMap> selectSalesPlanAccuracyMaster		= scmReportService.selectSalesPlanAccuracyMaster(params);
+		
+		map.put("selectSalesPlanAccuracyMaster", selectSalesPlanAccuracyMaster);
+		
+		return	ResponseEntity.ok(map);
+	}
+	*/
+	@RequestMapping(value = "/saveSalesPlanAccuracyMaster.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveSalesPlanAccuracyMaster(@RequestBody Map<String, List<Map<String, Object>>> params,	SessionVO sessionVO) {
+		
+		LOGGER.debug("saveSalesPlanAccuracyMaster : {}", params.toString());
+		
+		int totCnt	= 0;
+		
+		ReturnMessage message = new ReturnMessage();
+		
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
 	}
 	
 	/*
