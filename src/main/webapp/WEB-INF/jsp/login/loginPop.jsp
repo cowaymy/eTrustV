@@ -27,6 +27,8 @@ console.log("loginPop.jsp");
         $("#PDF").attr("hidden", false);
     }
 
+    $("#agreementLogoutBtn").attr("hidden", true);
+
     if("${popType}" == "M") {
         $("#memoButton").attr("hidden", false);
         $("#agreementButton").attr("hidden", true);
@@ -46,6 +48,11 @@ console.log("loginPop.jsp");
         } else {
             $("#agreementRejectBtn").attr("hidden", true);
         }
+    }
+
+    if(userType == "2") {
+    	$("#agreementLogoutBtn").attr("hidden", false);
+        $("#agreementRejectBtn").attr("hidden", true);
     }
 
 });
@@ -109,6 +116,13 @@ function fn_RejectAgreement() {
             }
         });
     });
+}
+
+function fn_Logout() {
+	$("#loginForm").attr({
+        action: "/login/logout.do",
+        method: "POST"
+    }).submit();
 }
 
 </script>
@@ -229,6 +243,7 @@ input {
     <ul class="center_btns" id="agreementButton">
         <li><p class="btn_blue" id="agreementAcceptBtn"><a href="javascript:fn_AcceptAgreement();">Accept</a></p></li>
         <li><p class="btn_blue" id="agreementRejectBtn"><a href="javascript:fn_RejectAgreement();">Reject</a></p></li>
+        <li><p class="btn_blue" id="agreementLogoutBtn"><a href="javascript:fn_Logout();">Logout</a></p></li>
     </ul>
 </form>
 
