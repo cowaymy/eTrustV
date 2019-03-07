@@ -65,12 +65,12 @@ public class ScmReportServiceImpl implements ScmReportService {
 	
 	//	Sales Plan Accuracy
 	@Override
-	public List<EgovMap> selectSalesAccuracyWeeklyDetailHeader(Map<String, Object> params) {
-		return	scmReportMapper.selectSalesAccuracyWeeklyDetailHeader(params);
+	public List<EgovMap> selectSalesPlanAccuracyWeeklyDetailHeader(Map<String, Object> params) {
+		return	scmReportMapper.selectSalesPlanAccuracyWeeklyDetailHeader(params);
 	}
 	@Override
-	public List<EgovMap> selectSalesAccuracyMonthlyDetailHeader(Map<String, Object> params) {
-		return	scmReportMapper.selectSalesAccuracyMonthlyDetailHeader(params);
+	public List<EgovMap> selectSalesPlanAccuracyMonthlyDetailHeader(Map<String, Object> params) {
+		return	scmReportMapper.selectSalesPlanAccuracyMonthlyDetailHeader(params);
 	}
 	@Override
 	public List<EgovMap> selectSalesPlanAccuracyWeeklySummary(Map<String, Object> params) {
@@ -103,6 +103,10 @@ public class ScmReportServiceImpl implements ScmReportService {
 	@Override
 	public List<EgovMap> selectSalesPlanAccuracyMonthlyDetail(Map<String, Object> params) {
 		return	scmReportMapper.selectSalesPlanAccuracyMonthlyDetail(params);
+	}
+	@Override
+	public List<EgovMap> selectSalesPlanAccuracyMaster(Map<String, Object> params) {
+		return	scmReportMapper.selectSalesPlanAccuracyMaster(params);
 	}
 	
 	//	Ontime Delivery Report

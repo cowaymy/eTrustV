@@ -18,8 +18,8 @@ public interface ScmReportService {
 	List<EgovMap> selectBusinessPlanDetail(Map<String, Object> params);
 	
 	//	Sales Plan Accuracy
-	List<EgovMap> selectSalesAccuracyWeeklyDetailHeader(Map<String, Object> params);
-	List<EgovMap> selectSalesAccuracyMonthlyDetailHeader(Map<String, Object> params);
+	List<EgovMap> selectSalesPlanAccuracyWeeklyDetailHeader(Map<String, Object> params);
+	List<EgovMap> selectSalesPlanAccuracyMonthlyDetailHeader(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanAccuracyWeeklySummary(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanAccuracyMonthlySummary(Map<String, Object> params);
 	List<EgovMap> selectWeekly16Week(Map<String, Object> params);
@@ -28,6 +28,7 @@ public interface ScmReportService {
 	List<EgovMap> selectMonthly16Week(Map<String, Object> params);
 	List<EgovMap> selectMonthlyStartEnd(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanAccuracyMonthlyDetail(Map<String, Object> params);
+	List<EgovMap> selectSalesPlanAccuracyMaster(Map<String, Object> params);
 	
 	//	Ontime Delivery Report
 	List<EgovMap> selectOntimeDeliverySummary(Map<String, Object> params);
