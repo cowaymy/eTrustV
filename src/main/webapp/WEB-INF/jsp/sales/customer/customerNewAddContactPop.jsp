@@ -2,30 +2,30 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
     $(document).ready(function() {
-    	
+
     	/* ##### cust CNTCID ##### */
     	//fn_getCustCntcId();
-    
+
         //j_date
         var pickerOpts={
             changeMonth:true,
             changeYear:true,
             dateFormat: "dd/mm/yy"
         };
-        
+
         $(".j_date").datepicker(pickerOpts);
-    
+
         var monthOptions = {
             pattern: 'mm/yyyy',
             selectedYear: 2017,
             startYear: 2007,
             finalYear: 2027
         };
-    
+
         $(".j_date2").monthpicker(monthOptions);
-            
-        doGetCombo('/common/selectCodeList.do', '17', '', 'cntcCmbInitialTypeId', 'S' , ''); // Customer Initial Type Combo Box    
-        
+
+        doGetCombo('/common/selectCodeList.do', '17', '', 'cntcCmbInitialTypeId', 'S' , ''); // Customer Initial Type Combo Box
+
         // Save Button Click
         $("#_saveBtn").click(function() {
             // 1. validation
@@ -42,7 +42,7 @@
             //Tel
             if(("" == $("#cntcTelm").val() || null == $("#cntcTelm").val()) && ("" == $("#cntcTelr").val() || null == $("#cntcTelr").val())
                     && ("" == $("#cntcTelo").val() || null == $("#cntcTelo").val()) && ("" == $("#cntcTelf").val() || null == $("#cntcTelf").val())){
-                
+
                 Common.alert('<spring:message code="sal.alert.msg.plzKeyinAtLeastOneConNum" />');
                 return;
             }else{
@@ -74,12 +74,12 @@
                         return;
                     }
                 }
-                
+
             }// tel end
-            
+
             //Ext
             if(""  != $("#cntcExtNo").val() && null != $("#cntcExtNo").val()){
-                
+
                 if(FormUtil.checkNum($("#cntcExtNo"))){
                      Common.alert('<spring:message code="sal.alert.msg.invaildExtNoNum" />');
                      return;
@@ -87,7 +87,7 @@
             }
             //Email
             if("" != $("#cntcEmail").val() && null != $("#cntcEmail").val()){
-                
+
                 if(FormUtil.checkEmail($("#cntcEmail").val())){
                      Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');
                      return;
@@ -95,16 +95,16 @@
             }
             // Validation Success
             // 2. Add
-          fn_customerContactInfoAddAjax(); 
-            
-        });    
+          fn_customerContactInfoAddAjax();
+
+        });
     }); // Document Ready Func End
 
    function fn_customerContactInfoAddAjax(){
         Common.ajax("GET", "/sales/customer/insertCareContactInfo.do",$("#addForm").serialize(), function(result) {
             Common.alert(result.message);
-            
-            if('${callParam}' == 'ORD_REGISTER_CNTC_ADD') {
+
+            if('${callParam}' == 'ORD_REGISTER_CNTC_ADD' || || '${callParam}' == 'PRE_ORD_CNTC') {
                 fn_loadSrvCntcPerson(result.data);
                 $("#_close1").click();
             }
