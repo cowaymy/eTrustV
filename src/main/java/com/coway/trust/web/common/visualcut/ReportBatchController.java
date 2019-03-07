@@ -44,6 +44,7 @@ import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
  * CAUTION : 135 Server only //////@Scheduled of ReportBatchController should be
  * uncommented. Then the report batch is executed. Note: If another instance is
  * uncommented, it will be executed multiple times.
+ * http://10.201.32.135:8094/
  * Path: /apps/domains/SalesDmain/servers/eTRUST_report/WEB-INF/classes/com/coway/trust/web/common/visualcut
  * Folder: /apps/apache/htdocs/resources/WebShare/RawData/Public
  */
@@ -1279,6 +1280,7 @@ public class ReportBatchController {
                                                                      // rpt file
                                                                      // name.
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "Monthly HS and Filter Raw Data" + File.separator + "MonthlyHSandFilter_RawData" + CommonUtils.getNowDate() + ".xls");
 
