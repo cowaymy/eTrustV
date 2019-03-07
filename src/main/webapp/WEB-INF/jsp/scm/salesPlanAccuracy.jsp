@@ -76,7 +76,7 @@ $(function(){
 /*
  * Button Functions
  */
-function fnSalesAccuracyDetailHeader(gbn) {
+function fnSalesPlanAccuracyDetailHeader(gbn) {
 	if ( 1 > $("#planYear").val().length ) {
 		Common.alert("<spring:message code='sys.msg.necessary' arguments='Year' htmlEscape='false'/>");
 		return	false;
@@ -167,12 +167,12 @@ function fnSalesAccuracyDetailHeader(gbn) {
 		monthlyCalcYear : monthlyCalcYear,
 		monthlyCalcMonth : monthlyCalcMonth
 	};
-	console.log("fnSalesAccuracyDetailHeader");
+	console.log("fnSalesPlanAccuracyDetailHeader");
 	console.log(params);
 	params	= $.extend($("#MainForm").serializeJSON(), params);
 	
 	Common.ajax("GET"
-			, "/scm/selectSalesAccuracyDetailHeader.do"
+			, "/scm/selectSalesPlanAccuracyDetailHeader.do"
 			//, $("#MainForm").serializeJSON()
 			, params
 			, function(result) {
@@ -180,41 +180,41 @@ function fnSalesAccuracyDetailHeader(gbn) {
 				//console.log(result);
 				
 				//	result check
-				if ( null == result.selectSalesAccuracyWeeklyDetailHeader || 1 > result.selectSalesAccuracyWeeklyDetailHeader.length ) {
+				if ( null == result.selectSalesPlanAccuracyWeeklyDetailHeader || 1 > result.selectSalesPlanAccuracyWeeklyDetailHeader.length ) {
 					Common.alert("Scm Calendar Information is wrong");
 					return	false;
 				}
 				
 				//	create grid
-				if ( null != result.selectSalesAccuracyWeeklyDetailHeader && 0 < result.selectSalesAccuracyWeeklyDetailHeader.length ) {
+				if ( null != result.selectSalesPlanAccuracyWeeklyDetailHeader && 0 < result.selectSalesPlanAccuracyWeeklyDetailHeader.length ) {
 					//	1. create weekly
 					weeklyDetailLayout.push(
 							{
 								headerText : "Team",
-								dataField : result.selectSalesAccuracyWeeklyDetailHeader[0].team,
+								dataField : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].team,
 								style : "my-columnCenter"
 							}, {
 								headerText : "Code",
-								dataField : result.selectSalesAccuracyWeeklyDetailHeader[0].stockCode,
+								dataField : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].stockCode,
 								style : "my-columnCenter"
 							}, {
 								headerText : "Ordered Qty",
-								dataField : result.selectSalesAccuracyWeeklyDetailHeader[0].salesOrdQty,
+								dataField : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].salesOrdQty,
 								style : "my-columnRight"
 							}, {
 								headerText : "Accuracy",
-								dataField : result.selectSalesAccuracyWeeklyDetailHeader[0].salesAccPer,
+								dataField : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].salesAccPer,
 								style : "my-columnCenter"
 							}, {
 								headerText : "Start",
-								dataField : result.selectSalesAccuracyWeeklyDetailHeader[0].startWeek,
+								dataField : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].startWeek,
 								style : "my-columnCenter"
 							}, {
 								headerText : "End",
-								dataField : result.selectSalesAccuracyWeeklyDetailHeader[0].endWeek,
+								dataField : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].endWeek,
 								style : "my-columnCenter"
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w1ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w1ScmWeek,
 								dataField : "w1",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -234,7 +234,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w2ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w2ScmWeek,
 								dataField : "w2",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -254,7 +254,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w3ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w3ScmWeek,
 								dataField : "w3",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -274,7 +274,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w4ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w4ScmWeek,
 								dataField : "w4",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -294,7 +294,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w5ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w5ScmWeek,
 								dataField : "w5",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -314,7 +314,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w6ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w6ScmWeek,
 								dataField : "w6",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -334,7 +334,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w7ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w7ScmWeek,
 								dataField : "w7",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -354,7 +354,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w8ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w8ScmWeek,
 								dataField : "w8",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -374,7 +374,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w9ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w9ScmWeek,
 								dataField : "w9",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -394,7 +394,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w10ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w10ScmWeek,
 								dataField : "w10",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -414,7 +414,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w11ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w11ScmWeek,
 								dataField : "w11",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -434,7 +434,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w12ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w12ScmWeek,
 								dataField : "w12",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -454,7 +454,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w13ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w13ScmWeek,
 								dataField : "w13",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -474,7 +474,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w14ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w14ScmWeek,
 								dataField : "w14",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -494,7 +494,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w15ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w15ScmWeek,
 								dataField : "w15",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -514,7 +514,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyWeeklyDetailHeader[0].w16ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w16ScmWeek,
 								dataField : "w16",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -538,30 +538,30 @@ function fnSalesAccuracyDetailHeader(gbn) {
 					monthlyDetailLayout.push(
 							{
 								headerText : "Team",
-								dataField : result.selectSalesAccuracyMonthlyDetailHeader[0].team,
+								dataField : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].team,
 								style : "my-columnCenter"
 							}, {
 								headerText : "Code",
-								dataField : result.selectSalesAccuracyMonthlyDetailHeader[0].stockCode,
+								dataField : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].stockCode,
 								style : "my-columnCenter"
 							}, {
 								headerText : "Ordered Qty",
-								dataField : result.selectSalesAccuracyMonthlyDetailHeader[0].salesOrdQty,
-								style : "my-columnCenter"
+								dataField : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].salesOrdQty,
+								style : "my-columnRight"
 							}, {
 								headerText : "Accuracy",
-								dataField : result.selectSalesAccuracyMonthlyDetailHeader[0].salesAccPer,
+								dataField : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].salesAccPer,
 								style : "my-columnCenter"
 							}, {
 								headerText : "Start",
-								dataField : result.selectSalesAccuracyMonthlyDetailHeader[0].startWeek,
+								dataField : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].startWeek,
 								style : "my-columnCenter"
 							}, {
 								headerText : "End",
-								dataField : result.selectSalesAccuracyMonthlyDetailHeader[0].endWeek,
+								dataField : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].endWeek,
 								style : "my-columnCenter"
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w1ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w1ScmWeek,
 								dataField : "w1",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -581,7 +581,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w2ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w2ScmWeek,
 								dataField : "w2",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -601,7 +601,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w3ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w3ScmWeek,
 								dataField : "w3",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -621,7 +621,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w4ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w4ScmWeek,
 								dataField : "w4",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -641,7 +641,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w5ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w5ScmWeek,
 								dataField : "w5",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -661,7 +661,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w6ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w6ScmWeek,
 								dataField : "w6",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -681,7 +681,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w7ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w7ScmWeek,
 								dataField : "w7",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -701,7 +701,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w8ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w8ScmWeek,
 								dataField : "w8",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -721,7 +721,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w9ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w9ScmWeek,
 								dataField : "w9",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -741,7 +741,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w10ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w10ScmWeek,
 								dataField : "w10",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -761,7 +761,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w11ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w11ScmWeek,
 								dataField : "w11",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -781,7 +781,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w12ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w12ScmWeek,
 								dataField : "w12",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -801,7 +801,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w13ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w13ScmWeek,
 								dataField : "w13",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -821,7 +821,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w14ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w14ScmWeek,
 								dataField : "w14",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -841,7 +841,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w15ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w15ScmWeek,
 								dataField : "w15",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -861,7 +861,7 @@ function fnSalesAccuracyDetailHeader(gbn) {
 									}
 						 		}
 							}, {
-								headerText : result.selectSalesAccuracyMonthlyDetailHeader[0].w16ScmWeek,
+								headerText : result.selectSalesPlanAccuracyWeeklyDetailHeader[0].w16ScmWeek,
 								dataField : "w16",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									var header	= 0;
@@ -1053,7 +1053,7 @@ function fnSearch() {
 	console.log(params);
 	params	= $.extend($("#MainForm").serializeJSON(), params);
 	Common.ajax("GET"
-			, "/scm/selectSalesAccuracy.do"
+			, "/scm/selectSalesPlanAccuracy.do"
 			//, $("#MainForm").serialize()
 			, params
 			, function(result) {
@@ -1062,8 +1062,8 @@ function fnSearch() {
 				AUIGrid.setGridData(myGridID2, result.selectSalesPlanAccuracyMonthlySummary);
 				AUIGrid.setGridData(myGridID3, result.selectSalesPlanAccuracyWeeklyDetail);
 				AUIGrid.setGridData(myGridID4, result.selectSalesPlanAccuracyMonthlyDetail);
-				
-				fnRadioButton($("#gbn").val());
+				console.log($("input[name='gbn']:checked").val());
+				fnRadioButton($("input[name='gbn']:checked").val());
 			});
 }
 function fnSearchDetail() {
@@ -1085,17 +1085,57 @@ function fnSearchDetail() {
 	console.log(params);
 	params	= $.extend($("#MainForm").serializeJSON(), params);
 	Common.ajax("GET"
-			, "/scm/selectSalesAccuracyDetail.do"
+			, "/scm/selectSalesPlanAccuracyDetail.do"
 			//, $("#MainForm").serialize()
 			, params
 			, function(result) {
 				//console.log(result);
 				AUIGrid.setGridData(myGridID3, result.selectSalesPlanAccuracyWeeklyDetail);
 				AUIGrid.setGridData(myGridID4, result.selectSalesPlanAccuracyMonthlyDetail);
-				
-				fnRadioButton($("#gbn").val());
+				console.log($("input[name='gbn']:checked").val());
+				fnRadioButton($("input[name='gbn']:checked").val());
 			});
 }
+function fnMaster() {
+	var params	= {
+			planYear : $("#planYear").val()
+	}
+	
+	var popUpObj	= Common.popupDiv("/scm/salesPlanAccuracyMaster.do"
+			, params
+			, null
+			, false
+			, "salesPlanAccuracyMaster"
+	);
+}
+/*
+function fnMaster() {
+    var option	= {
+		winName : "SalesPlanAccuracyMaster",
+		isDuplicate : true,		// 계속 팝업을 띄울지 여부.
+		fullscreen : "no",		// 전체 창. (yes/no)(default : no)
+		location : "no",		// 주소창이 활성화. (yes/no)(default : yes)
+		menubar : "no",			// 메뉴바 visible. (yes/no)(default : yes)
+		titlebar : "yes",		// 타이틀바. (yes/no)(default : yes)
+		toolbar : "no",			// 툴바. (yes/no)(default : yes)
+		resizable : "yes",		// 창 사이즈 변경. (yes/no)(default : yes)
+		scrollbars : "yes",		// 스크롤바. (yes/no)(default : yes)
+		width : "1600px",		// 창 가로 크기
+		height : "200px"		// 창 세로 크기
+	};
+	var params	= {
+		planYearParam : $("#planYear").val()
+	}
+	console.log(params);
+	var popUpObj	= Common.popupWin("popupForm"
+			, "/scm/salesPlanAccuracyMaster.do"
+			, params
+			, null
+			, true
+			, "salesPlanAccuracyMaster"
+	);
+}
+*/
 function fnExcel(obj, fileName) {
 	//	1. grid id
 	//	2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
@@ -1237,31 +1277,31 @@ var myGridID1, myGridID2, myGridID3, myGridID4;
 
 //	Summary Weekly Grid
 var weeklySummaryOption	= {
-		usePaging : false,
-		useGroupingPanel : false,
-		showRowNumColumn : false,
-		showRowCheckColumn : false,
-		showStateColumn : false,
-		showEditedCellMarker : false,
-		showFooter : false,
-		editable : false,
-		enableCellMerge : false,
-		enableRestore : false,
-		fixedColumnCount : 1
-	};
-	var monthlySummaryOption	= {
-		usePaging : false,
-		useGroupingPanel : false,
-		showRowNumColumn : false,
-		showRowCheckColumn : false,
-		showStateColumn : false,
-		showEditedCellMarker : false,
-		showFooter : false,
-		editable : false,
-		enableCellMerge : false,
-		enableRestore : false,
-		fixedColumnCount : 1
-	};
+	usePaging : false,
+	useGroupingPanel : false,
+	showRowNumColumn : false,
+	showRowCheckColumn : false,
+	showStateColumn : false,
+	showEditedCellMarker : false,
+	showFooter : false,
+	editable : false,
+	enableCellMerge : false,
+	enableRestore : false,
+	fixedColumnCount : 1
+};
+var monthlySummaryOption	= {
+	usePaging : false,
+	useGroupingPanel : false,
+	showRowNumColumn : false,
+	showRowCheckColumn : false,
+	showStateColumn : false,
+	showEditedCellMarker : false,
+	showFooter : false,
+	editable : false,
+	enableCellMerge : false,
+	enableRestore : false,
+	fixedColumnCount : 1
+};
 var weeklySummaryLayout	= 
 						[
 						 	{	headerText : "Team",	dataField : "team",	style : "my-columnCenter"	},
@@ -1615,7 +1655,7 @@ $(document).ready(function() {
 				weeklyCalcWeek	= parseInt(event.columnIndex) - 1;
 			}
 			console.log("weeklyYear : " + weeklyYear + ", weeklyWeek : " + weeklyWeek);
-			fnSalesAccuracyDetailHeader("click");
+			fnSalesPlanAccuracyDetailHeader("click");
 		} else {
 			console.log("none");
 		}
@@ -1640,7 +1680,7 @@ $(document).ready(function() {
 				monthlyCalcYear	= AUIGrid.getCellValue(myGridID2, event.rowIndex, "planYear");
 				monthlyCalcMonth	= parseInt(event.columnIndex) - 1;
 			}
-			fnSalesAccuracyDetailHeader("click");
+			fnSalesPlanAccuracyDetailHeader("click");
 		} else {
 			console.log("none");
 		}
@@ -1648,8 +1688,6 @@ $(document).ready(function() {
 	AUIGrid.bind(myGridID2, "cellDoubleClick", function(event) {
 		
 	});
-	//$("#monthly_summary_wrap").hide();
-	//$("#monthly_detail_wrap").hide();
 });
 </script>
 
@@ -1664,7 +1702,7 @@ $(document).ready(function() {
 		<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
 		<h2>Sales Plan Accuracy</h2>
 		<ul class="right_btns">
-			<li><p class="btn_blue"><a onclick="fnSalesAccuracyDetailHeader('search')"><span class="search"></span>Search</a></p></li>
+			<li><p class="btn_blue"><a onclick="fnSalesPlanAccuracyDetailHeader('search')"><span class="search"></span>Search</a></p></li>
 		</ul>
 	</aside>								<!-- aside title_line end -->
 	
@@ -1737,7 +1775,8 @@ $(document).ready(function() {
 			<div id="monthly_summary_wrap" style="height:133px;"></div>
 		</article>								<!-- article grid_wrap end -->
 		<ul class="right_btns">
-			<li><p id="btnExcel" class="btn_grid btn_disabled"><a onclick="fnExcel(this, 'SalesPlanAccuracy');">Excel</a></p></li>
+			<li><p id="btnMaster" class="btn_grid"><a onclick="fnMaster();">Master</a></p></li>
+			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'SalesPlanAccuracy');">Excel</a></p></li>
 		</ul>
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Detail Grid -->
