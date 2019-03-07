@@ -1269,6 +1269,23 @@ public class ReportBatchController {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] dailyRentCollRtTrdCom...");
   }
+  /*KV*/
+  @RequestMapping(value = "/SQLHs_and_Filter_RawData_Excel.do")
+  //@Scheduled(cron = " 0 30 0 7 * *") // Monthly (Day 7) 12:30am
+  public void SQLHs_and_Filter_RawData_Excel() throws IOException {
+    LOGGER.info("[START] SQLHs_and_Filter_RawData_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/SQLHs_and_Filter_RawData_Excel.rpt");// visualcut
+                                                                     // rpt file
+                                                                     // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Monthly HS and Filter Raw Data" + File.separator + "MonthlyHSandFilter_RawData" + CommonUtils.getNowDate() + ".xls");
+
+    this.view(null, null, params);
+    LOGGER.info("[END] SQLHs_and_Filter_RawData_Excel...");
+  }
+
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
