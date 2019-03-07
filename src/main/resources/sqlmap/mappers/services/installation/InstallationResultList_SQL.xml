@@ -4132,7 +4132,7 @@
                FROM SAL0001D B ,
                     SAL0023D C ,
                     SAL0024D D
-               WHERE B.SALES_ORD_ID =# {hidSalesOrderId}
+               WHERE B.SALES_ORD_ID = #{hidSalesOrderId}
                  AND B.CUST_BILL_ID = D.CUST_BILL_ID
                  AND C.CUST_ADD_ID = D.CUST_BILL_ADD_ID
                  AND ROWNUM = 1 )
