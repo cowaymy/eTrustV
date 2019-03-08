@@ -1292,12 +1292,12 @@ WHERE 1=1
         AND BUDGET_GRP_SEQ = #{budgetGrpSeq}
         <if test=' type == "S" '>
           <![CDATA[
-              AND SIGNAL = '+'
+              AND SIGNAL = '-'
           ]]>
         </if>
         <if test=' type == "R" '>
           <![CDATA[
-              AND SIGNAL = '-'
+              AND SIGNAL = '+'
           ]]>
         </if>
         GROUP BY BUDGET_DOC_NO
