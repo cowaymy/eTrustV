@@ -331,7 +331,8 @@ $(document).ready(function() {
 				<tr>
 					<th scope="row">Year</th>
 					<td>
-						<select class="sel_year" id="planYearP" name="planYearP"></select>
+						<!-- <select class="sel_year" id="planYearP" name="planYearP"></select> -->
+						<input type="text" id="planYearP" name="planYearP" />
 					</td>
 				</tr>
 			</tbody>

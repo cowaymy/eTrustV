@@ -251,6 +251,16 @@ var detailLayout	=
 	 		headerText : "PO Item No.",
 	 		dataField : "poItemNo",
 	 		style : "my-columnCenter"
+	 	},{
+	 		headerText : "SAP PO No.",
+	 		dataField : "sapPoNo",
+	 		style : "my-columnCenter",
+	 		visible : false
+	 	}, {
+	 		headerText : "SAP PO Item No.",
+	 		dataField : "sapPoItemNo",
+	 		style : "my-columnCenter",
+	 		visible : false
 	 	}, {
 	 		headerText : "Code",
 	 		dataField : "stockCode",
@@ -310,21 +320,41 @@ $(document).ready(function() {
 	//	Summary Grid
 	myGridID1	= GridCommon.createAUIGrid("#summary_wrap", summaryLayout, "", summaryOptions);
 	AUIGrid.bind(myGridID1, "cellClick", function(event) {
-		if ( $("#planYear").val() == currYear ) {
-			if ( event.columnIndex <= planMonth ) {
+		if ( 0 != event.columnIndex ) {
+			if ( $("#planYear").val() == currYear ) {
+				if ( event.columnIndex <= currMonth ) {
+					planYear	= AUIGrid.getCellValue(myGridID1, event.rowIndex, "planYear");
+					planMonth	= event.columnIndex;
+					fnSearchDetail();
+				}
+			} else {
 				planYear	= AUIGrid.getCellValue(myGridID1, event.rowIndex, "planYear");
 				planMonth	= event.columnIndex;
 				fnSearchDetail();
 			}
-		} else {
-			planYear	= AUIGrid.getCellValue(myGridID1, event.rowIndex, "planYear");
-			planMonth	= event.columnIndex;
-			fnSearchDetail();
 		}
 	});
 	
 	//	Detail Grid
 	myGridID2	= GridCommon.createAUIGrid("#detail_wrap", detailLayout, "", detailOptions);
+	AUIGrid.bind(myGridID2, "cellClick", function(event) {
+		console.log(event);
+		if ( "" != event.value && null != event.value && 9 == event.columnIndex ) {
+			//	click GR Week(Last)
+			var params	= {
+					sapPoNo : event.item.sapPoNo,
+					sapPoItemNo : event.item.sapPoItemNo,
+					stockCode : event.item.stockCode
+			}
+			
+			var popUpObj	= Common.popupDiv("/scm/ontimeDeliveryReportPopup.do"
+					, params
+					, null
+					, false
+					, "ontimeDeliveryReportPopup"
+			);
+		}
+	});
 });
 </script>
 
@@ -344,7 +374,7 @@ $(document).ready(function() {
 	</aside>								<!-- aside title_line end -->
 	
 	<section class="search_table">			<!-- section search_table start -->
-		<form id="MainForm" method="post" action="">
+		<form id="MainForm" method="get" action="">
 			<input type="hidden" id="stockTypeId" name="stockTypeId" />
 			<table class="type1">			<!-- table type1 start -->
 			<caption>table</caption>
