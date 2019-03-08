@@ -40,65 +40,11 @@ public class KpiManagementController {
 	/*
 	 * View
 	 */
-	//	Inventory Report
-	@RequestMapping(value = "/inventoryReport.do")
-	public String inventoryReportView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
-		return	"/scm/inventoryReport";
-	}
+	//	
 	
 	/*
 	 * Inventory Report
 	 */
 	//	Search Total
-	@RequestMapping(value = "/selectInventoryReportTotal.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectInventoryReportTotal(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
-		
-		LOGGER.debug("selectInventoryReportTotal : {}", params.toString());
-		String planYearMonth	= "";
-		
-		Map<String, Object> map	= new HashMap<>();
-		planYearMonth	= params.get("planYearMonth").toString();
-		planYearMonth	= planYearMonth.replace("/", "");
-		planYearMonth	= planYearMonth.substring(2, 6) + planYearMonth.substring(0, 2);
-		params.put("planYearMonth", planYearMonth);
-		LOGGER.debug("selectInventoryReportTotal : {}", params.toString());
-		
-		//List<EgovMap> selectInventoryReportTotalHeader	= kpiManagementService.selectInventoryReportTotalHeader(params);
-		//List<EgovMap> selectInventoryReportDetailHeader	= kpiManagementService.selectInventoryReportDetailHeader(params);
-		List<EgovMap> selectInventoryReportTotal	= kpiManagementService.selectInventoryReportTotal(params);
-		List<EgovMap> selectInventoryReportDetail	= kpiManagementService.selectInventoryReportDetail(params);
-		
-		//map.put("selectInventoryReportTotalHeader", selectInventoryReportTotalHeader);
-		//map.put("selectInventoryReportDetailHeader", selectInventoryReportDetailHeader);
-		map.put("selectInventoryReportTotal", selectInventoryReportTotal);
-		map.put("selectInventoryReportDetail", selectInventoryReportDetail);
-		
-		return	ResponseEntity.ok(map);
-	}
-	//	Search Detail
-	@RequestMapping(value = "/selectInventoryReportDetail.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectInventoryReportDetail(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
-		
-		LOGGER.debug("selectInventoryReportDetail : {}", params.toString());
-		String planYearMonth	= "";
-		
-		Map<String, Object> map	= new HashMap<>();
-		planYearMonth	= params.get("planYearMonth").toString();
-		planYearMonth	= planYearMonth.replace("/", "");
-		planYearMonth	= planYearMonth.substring(2, 6) + planYearMonth.substring(0, 2);
-		params.put("planYearMonth", planYearMonth);
-		LOGGER.debug("selectInventoryReportDetail : {}", params.toString());
-		
-		//List<EgovMap> selectInventoryReportTotalHeader	= kpiManagementService.selectInventoryReportTotalHeader(params);
-		//List<EgovMap> selectInventoryReportDetailHeader	= kpiManagementService.selectInventoryReportDetailHeader(params);
-		//List<EgovMap> selectInventoryReportTotal	= kpiManagementService.selectInventoryReportTotal(params);
-		List<EgovMap> selectInventoryReportDetail	= kpiManagementService.selectInventoryReportDetail(params);
-		
-		//map.put("selectInventoryReportTotalHeader", selectInventoryReportTotalHeader);
-		//map.put("selectInventoryReportDetailHeader", selectInventoryReportDetailHeader);
-		//map.put("selectInventoryReportTotal", selectInventoryReportTotal);
-		map.put("selectInventoryReportDetail", selectInventoryReportDetail);
-		
-		return	ResponseEntity.ok(map);
-	}
+
 }

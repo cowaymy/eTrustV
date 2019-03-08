@@ -64,11 +64,17 @@ public class ScmReportController {
 	public String ontimeDeliveryReportView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return	"/scm/ontimeDeliveryReport";
 	}
+	@RequestMapping(value = "/ontimeDeliveryReportPopup.do")
+	public String ontimeDeliveryReportPopup(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		model.addAttribute("params", params);
+		
+		return	"/scm/ontimeDeliveryReportPopup";
+	}
 	//	Inventory Report
-	/*@RequestMapping(value = "/inventoryReport.do")
+	@RequestMapping(value = "/inventoryReport.do")
 	public String inventoryReportView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return	"/scm/inventoryReport";
-	}*/
+	}
 	
 	/*
 	 * Business Plan Report
@@ -329,8 +335,62 @@ public class ScmReportController {
 		
 		return	ResponseEntity.ok(map);
 	}
+	@RequestMapping(value = "/selectOntimeDeliveryPopup.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectOntimeDeliveryPopup(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("selectOntimeDeliveryPopup : {}", params.toString());
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		List<EgovMap> selectOntimeDeliveryPopup	= scmReportService.selectOntimeDeliveryPopup(params);
+		
+		map.put("selectOntimeDeliveryPopup", selectOntimeDeliveryPopup);
+		
+		return	ResponseEntity.ok(map);
+	}
 	
 	/*
 	 * Inventory Report
 	 */
+	@RequestMapping(value = "/selectInventoryReportTotal.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectInventoryReportTotal(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("selectInventoryReportTotal : {}", params.toString());
+		String planYearMonth	= "";
+		
+		Map<String, Object> map	= new HashMap<>();
+		planYearMonth	= params.get("planYearMonth").toString();
+		planYearMonth	= planYearMonth.replace("/", "");
+		planYearMonth	= planYearMonth.substring(2, 6) + planYearMonth.substring(0, 2);
+		params.put("planYearMonth", planYearMonth);
+		LOGGER.debug("selectInventoryReportTotal : {}", params.toString());
+		
+		List<EgovMap> selectInventoryReportTotal	= scmReportService.selectInventoryReportTotal(params);
+		List<EgovMap> selectInventoryReportDetail	= scmReportService.selectInventoryReportDetail(params);
+		
+		map.put("selectInventoryReportTotal", selectInventoryReportTotal);
+		map.put("selectInventoryReportDetail", selectInventoryReportDetail);
+		
+		return	ResponseEntity.ok(map);
+	}
+	//	Search Detail
+	@RequestMapping(value = "/selectInventoryReportDetail.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectInventoryReportDetail(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("selectInventoryReportDetail : {}", params.toString());
+		String planYearMonth	= "";
+		
+		Map<String, Object> map	= new HashMap<>();
+		planYearMonth	= params.get("planYearMonth").toString();
+		planYearMonth	= planYearMonth.replace("/", "");
+		planYearMonth	= planYearMonth.substring(2, 6) + planYearMonth.substring(0, 2);
+		params.put("planYearMonth", planYearMonth);
+		LOGGER.debug("selectInventoryReportDetail : {}", params.toString());
+		
+		List<EgovMap> selectInventoryReportDetail	= scmReportService.selectInventoryReportDetail(params);
+		
+		map.put("selectInventoryReportDetail", selectInventoryReportDetail);
+		
+		return	ResponseEntity.ok(map);
+	}
 }
