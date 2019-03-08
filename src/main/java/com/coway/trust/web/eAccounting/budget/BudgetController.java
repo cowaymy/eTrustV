@@ -1,6 +1,7 @@
 package com.coway.trust.web.eAccounting.budget;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -805,6 +806,66 @@ public class BudgetController {
 
 		return ResponseEntity.ok(budgetList);
 
+	}
+
+	@RequestMapping(value = "/getAdjView.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> getAdjView(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	    LOGGER.debug("params =====================================>>  " + params);
+
+	    Map<String, Object> info = new HashMap();
+
+	    EgovMap item1 = new EgovMap();
+
+	    DecimalFormat df = new DecimalFormat("##.00");
+
+	    String adjType = params.get("budgetAdjType").toString();
+	    String mth = "";
+
+	    params.put("type", "S");
+	    item1 = (EgovMap) budgetService.getAdjInfo(params);
+
+	    if(item1 != null) {
+	        if(item1.get("budgetMth").toString().length() < 2) {
+	            mth = "0" + item1.get("budgetMth").toString() + "/" + item1.get("budgetYear").toString();
+	        } else {
+	            mth = item1.get("budgetMth").toString() + "/" + item1.get("budgetYear").toString();
+	        }
+
+	        info.put("senderBudgetPeriod", mth);
+	        info.put("senderCostCenter", item1.get("costCentr"));
+	        info.put("senderBudgetCode", item1.get("budgetCode"));
+	        info.put("senderBudgetDesc", item1.get("budgetDesc"));
+	        info.put("senderGLAcc", item1.get("glAcc"));
+	        info.put("senderGLDesc", item1.get("glDesc"));
+	        info.put("senderAmount", df.format(Double.parseDouble(item1.get("amt").toString())));
+	        info.put("senderRem", item1.get("rem"));
+	    }
+
+	    if(adjType != "01" && adjType != "02") {
+	        params.put("type", "R");
+	        item1 = (EgovMap) budgetService.getAdjInfo(params);
+
+	        if(item1 != null) {
+	            if(item1.get("budgetMth").toString().length() < 2) {
+	                mth = "0" + item1.get("budgetMth").toString() + "/" + item1.get("budgetYear").toString();
+	            } else {
+	                mth = item1.get("budgetMth").toString() + "/" + item1.get("budgetYear").toString();
+	            }
+
+	            info.put("receiverBudgetPeriod", mth);
+	            //info.put("receiverBudgetPeriod", item1.get("budgetMthYear"));
+	            info.put("receiverCostCenter", item1.get("costCentr"));
+	            info.put("receiverBudgetCode", item1.get("budgetCode"));
+	            info.put("receiverBudgetDesc", item1.get("budgetDesc"));
+	            info.put("receiverGLAcc", item1.get("glAcc"));
+	            info.put("receiverGLDesc", item1.get("glDesc"));
+	            info.put("receiverAmount", df.format(Double.parseDouble(item1.get("amt").toString())));
+	            info.put("receiverRem", item1.get("rem"));
+	        }
+	    }
+
+	    return ResponseEntity.ok(info);
 	}
 }
 

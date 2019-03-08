@@ -118,15 +118,17 @@ $(document).ready(function(){
         headerText : '<spring:message code="budget.AdjustmentType" />',
         width : 150
     },{
-        dataField : "adjAmt",
+        dataField : "signal",
         headerText : '<spring:message code="budget.Amount" />',
+        width : 25,
+        colSpan : 2
+    },{
+        dataField : "adjAmt",
         dataType : "numeric",
         formatString : "#,##0.00",
         style : "my-right-style",
-        width : 100
-    },{
-        dataField : "signal",
-        headerText : 'Signal'
+        width : 100,
+        colSpan : -1
     },{
         dataField : "adjRem",
         headerText : '<spring:message code="budget.Remark" />',
@@ -141,7 +143,8 @@ $(document).ready(function(){
         cellMerge : true ,
         mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
-        width : 150
+        width : 150,
+        visible : false
     },{
         dataField : "filePath",
         headerText : '',

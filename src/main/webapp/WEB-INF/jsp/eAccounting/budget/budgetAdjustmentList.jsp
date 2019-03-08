@@ -122,15 +122,18 @@ $(document).ready(function(){
         headerText : '<spring:message code="budget.AdjustmentType" />',
         width : 150
     },{
+        dataField : "signal",
+        headerText : '<spring:message code="budget.Amount" />',
+        width : 25,
+        colSpan : 2
+    },{
         dataField : "adjAmt",
         headerText : '<spring:message code="budget.Amount" />',
         dataType : "numeric",
         formatString : "#,##0.00",
         style : "my-right-style",
-        width : 100
-    },{
-        dataField : "signal",
-        headerText : 'Signal'
+        width : 100,
+        colSpan : -1
     },{
         dataField : "adjRem",
         headerText : '<spring:message code="budget.Remark" />',
@@ -198,6 +201,7 @@ $(document).ready(function(){
     AUIGrid.bind(adjMGridID, "cellClick", auiCellClikcHandler);
 
     $("#appvStus").multipleSelect("checkAll");
+    //$("#appvPrcssStus").multipleSelect("checkAll");
 
 });
 
@@ -536,12 +540,18 @@ function fn_budgetDelete() {
 	<td>
 	<select id="appvStus" name="appvStus" class="multy_select w100p" multiple="multiple">
 		<option value="T"><spring:message code="budget.Draft" /></option>
-		<option value="O"><spring:message code="budget.Open" /></option>
-		<option value="C"><spring:message code="budget.Close" /></option>
+		<option value="O">Pending</option>
+		<option value="C">Approved</option>
 	</select>
 	</td>
-	<th scope="row"></th>
-	<td></td>
+	<th scope="row">Approval Status</th>
+	<td>
+	   <select class="multy_select w100p" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
+            <option value="A"><spring:message code="webInvoice.select.approved" /></option>
+            <option value="R"><spring:message code="webInvoice.select.request" /></option>
+            <option value="J"><spring:message code="pettyCashRqst.rejected" /></option>
+        </select>
+	</td>
 </tr>
 </tbody>
 </table><!-- table end -->

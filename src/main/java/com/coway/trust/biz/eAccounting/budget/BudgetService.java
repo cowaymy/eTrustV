@@ -56,4 +56,6 @@ public interface BudgetService {
 	EgovMap availableAmtCp(Map<String, Object> params);
 
 	EgovMap checkBgtPlan(Map<String, Object> params);
+
+	EgovMap getAdjInfo(Map<String, Object> params);
 }
