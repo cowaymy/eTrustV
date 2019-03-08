@@ -50,20 +50,5 @@ public class KpiManagementServiceImpl implements KpiManagementService {
 	@Autowired
 	private KpiManagementMapper kpiManagementMapper;
 	
-	@Override
-	public List<EgovMap> selectInventoryReportTotalHeader(Map<String, Object> params) {
-		return	kpiManagementMapper.selectInventoryReportTotalHeader(params);
-	}
-	@Override
-	public List<EgovMap> selectInventoryReportDetailHeader(Map<String, Object> params) {
-		return	kpiManagementMapper.selectInventoryReportDetailHeader(params);
-	}
-	@Override
-	public List<EgovMap> selectInventoryReportTotal(Map<String, Object> params) {
-		return	kpiManagementMapper.selectInventoryReportTotal(params);
-	}
-	@Override
-	public List<EgovMap> selectInventoryReportDetail(Map<String, Object> params) {
-		return	kpiManagementMapper.selectInventoryReportDetail(params);
-	}
+
 }

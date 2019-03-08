@@ -30,6 +30,7 @@ public interface ScmReportMapper {
 	//	Ontime Delivery Report
 	List<EgovMap> selectOntimeDeliverySummary(Map<String, Object> params);
 	List<EgovMap> selectOntimeDeliveryDetail(Map<String, Object> params);
+	List<EgovMap> selectOntimeDeliveryPopup(Map<String, Object> params);
 	
 	//	Inventory Report
 	List<EgovMap> selectInventoryReportTotalHeader(Map<String, Object> params);

@@ -10,8 +10,5 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface KpiManagementMapper {
 	
 	//	Inventory Report
-	List<EgovMap> selectInventoryReportTotalHeader(Map<String, Object> params);
-	List<EgovMap> selectInventoryReportDetailHeader(Map<String, Object> params);
-	List<EgovMap> selectInventoryReportTotal(Map<String, Object> params);
-	List<EgovMap> selectInventoryReportDetail(Map<String, Object> params);
+	
 }
