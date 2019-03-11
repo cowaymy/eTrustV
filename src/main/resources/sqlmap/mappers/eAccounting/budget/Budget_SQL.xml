@@ -551,7 +551,7 @@ WHERE 1=1
                   ,B.GL_ACC_CODE
                   ,(SELECT GL_ACC_DESC FROM FCM0009M A WHERE A.GL_ACC_CODE = B.GL_ACC_CODE) GL_ACC_DESC
                   ,B.SIGNAL
-                  ,ADJ_AMT
+                  ,TO_CHAR(ADJ_AMT, , '9,999,999.99') ADJ_AMT
                   ,B.ADJ_REM
          FROM FCM0102M  A,  FCM0103D B
         WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
@@ -587,7 +587,7 @@ WHERE 1=1
                ,TO_CHAR(B.PAY_DUE_DT, 'dd/mm/yyyy') PAY_DUE_DT
                ,B.MEM_ACC_ID
                ,(SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = B.MEM_ACC_ID) AS MEM_ACC_NAME
-               ,B.NET_AMT
+               ,TO_CHAR(B.NET_AMT, , '9,999,999.99') NET_AMT
                ,B.EXP_DESC
        FROM FCM0004M A, FCM0015D B
      WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
@@ -766,6 +766,7 @@ WHERE 1=1
                ,CRT_USER_ID
                ,UPD_DT
                ,UPD_USER_ID
+               ,BUDGET_GRP_SEQ
            )
          VALUES
            (
@@ -784,6 +785,7 @@ WHERE 1=1
                ,#{userId}
                ,SYSDATE
                ,#{userId}
+               ,#{budgetGrpSeq}
            )
     </insert>
 
@@ -1308,5 +1310,12 @@ WHERE 1=1
             ON FCM0103D.BUDGET_CODE = B.BUDGET_CODE
         INNER JOIN FCM0009M C
             ON FCM0103D.GL_ACC_CODE = C.GL_ACC_CODE
+    </select>
+
+    <select id="getGrpSeq" parameterType="Map" resultType="int">
+            SELECT
+                NVL(MAX(BUDGET_GRP_SEQ) + 1, 1) GRP_SEQ
+            FROM FCM0103D
+            WHERE BUDGET_DOC_NO = #{pBudgetDocNo}
     </select>
 </mapper>
