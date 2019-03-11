@@ -1165,7 +1165,7 @@ function fn_setBudgetView() {
 		$("#sendGlAccCodeName").val(result.senderGLDesc);
 		$("#sendAmount").val(result.senderAmount);
 
-		if(budgetAdjType != "01" || budgetAdjType != "02") {
+		if(budgetAdjType != "01" && budgetAdjType != "02") {
 			$("#recvYearMonth").val(result.receiverBudgetPeriod);
 			$("#recvCostCenter").val(result.receiverCostCenter);
 			$("#recvBudgetCode").val(result.receiverBudgetCode);
