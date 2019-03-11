@@ -247,7 +247,8 @@ var targetFinalBillColumnLayout = [
 { dataField:"srvMemId" ,headerText:"<spring:message code='pay.head.serviceMembershipId'/>" ,editable : false , width : 150 , visible : false },
 { dataField:"trNo" ,headerText:"TR No" ,editable : false , width : 150 },
 { dataField:"collectorCode" ,headerText:"Collector Code" ,editable : false , width : 250 },
-{ dataField:"collectorId" ,headerText:"Collector Id" ,editable : false , width : 150 ,visible : false}
+{ dataField:"collectorId" ,headerText:"Collector Id" ,editable : false , width : 150 ,visible : false},
+{ dataField:"allowComm" ,headerText:"Commission" ,editable : false , width : 150F}
 ];
 
 
@@ -1125,6 +1126,12 @@ function addRentalToFinal(){
 		return;
 	}
 
+	if($("#rentalcashIsCommChk").is(":checked") == true){
+        $("#rentalcashIsCommChk").val("1");
+    }else{
+        $("#rentalcashIsCommChk").val("0");
+    }
+
     var rowCnt = AUIGrid.getRowCount(targetRenMstGridID);
     maxSeq = maxSeq + 1;
 
@@ -1183,6 +1190,7 @@ function addRentalToFinal(){
                      item.trNo =  $("#rentalkeyInTrNo").val() ;
                      item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
                      item.collectorId = $("#rentalkeyInCollMemId").val() ;
+                     item.allowComm = $("#rentalcashIsCommChk").val() ;
 
                      AUIGrid.addRow(targetFinalBillGridID, item, "last");
                      addedCount++;
@@ -1225,6 +1233,7 @@ function addRentalToFinal(){
 	                     item.trNo =  $("#rentalkeyInTrNo").val() ;
 	                     item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
 	                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
+	                     item.allowComm = $("#rentalcashIsCommChk").val() ;
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
                         addedCount++;
@@ -1263,6 +1272,7 @@ function addRentalToFinal(){
                     item.trNo =  $("#rentalkeyInTrNo").val() ;
                     item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
+                    item.allowComm = $("#rentalcashIsCommChk").val() ;
 
                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
                     addedCount++;
@@ -1276,9 +1286,7 @@ function addRentalToFinal(){
     	Common.alert("<spring:message code='pay.alert.selectBillingData'/>");
     }
     recalculatePaymentTotalAmt();
-    $("#rentalkeyInTrNo").clearForm() ;
-    $("#rentalkeyInCollMemNm").clearForm() ;
-    $("#rentalkeyInCollMemId").clearForm() ;
+
 }
 
 
@@ -1446,6 +1454,12 @@ function addOutToFinal(){
 		return;
 	}
 
+	if($("#outcashIsCommChk").is(":checked") == true){
+        $("#outcashIsCommChk").val("1");
+    }else{
+        $("#outcashIsCommChk").val("0");
+    }
+
     var rowCnt = AUIGrid.getRowCount(targetOutMstGridID);
     maxSeq = maxSeq + 1;
 
@@ -1496,6 +1510,7 @@ function addOutToFinal(){
                 item.trNo =  $("#outkeyInTrNo").val() ;
                 item.collectorCode = $("#outkeyInCollMemNm").val() ;
                 item.collectorId = $("#outkeyInCollMemId").val() ;
+                item.allowComm = $("#outcashIsCommChk").val() ;
 
 	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	            addedCount++;
@@ -1509,9 +1524,7 @@ function addOutToFinal(){
     }
 
     recalculatePaymentTotalAmt();
-    $("#outkeyInTrNo").clearForm() ;
-    $("#outkeyInCollMemNm").clearForm() ;
-    $("#outkeyInCollMemId").clearForm() ;
+
 }
 
 
@@ -1835,6 +1848,12 @@ function addSrvcToFinal(){
 		return;
 	}
 
+	if($("#srvccashIsCommChk").is(":checked") == true){
+        $("#srvccashIsCommChk").val("1");
+    }else{
+        $("#srvccashIsCommChk").val("0");
+    }
+
     var rowCnt = AUIGrid.getRowCount(targetSrvcMstGridID);
     maxSeq = maxSeq + 1;
 
@@ -1893,6 +1912,7 @@ function addSrvcToFinal(){
                     item.trNo =  $("#srvckeyInTrNo").val() ;
                     item.collectorCode = $("#srvckeyInCollMemNm").val() ;
                     item.collectorId = $("#srvckeyInCollMemId").val() ;
+                    item.allowComm = $("#srvccashIsCommChk").val() ;
 
                      AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1930,6 +1950,7 @@ function addSrvcToFinal(){
                     item.trNo =  $("#srvckeyInTrNo").val() ;
                     item.collectorCode = $("#srvckeyInCollMemNm").val() ;
                     item.collectorId = $("#srvckeyInCollMemId").val() ;
+                    item.allowComm = $("#srvccashIsCommChk").val() ;
 
                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1968,6 +1989,7 @@ function addSrvcToFinal(){
                     item.trNo =  $("#srvckeyInTrNo").val() ;
                     item.collectorCode = $("#srvckeyInCollMemNm").val() ;
                     item.collectorId = $("#srvckeyInCollMemId").val() ;
+                    item.allowComm = $("#srvccashIsCommChk").val() ;
 
                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -2011,6 +2033,7 @@ function addSrvcToFinal(){
 	                    item.trNo =  $("#srvckeyInTrNo").val() ;
 	                    item.collectorCode = $("#srvckeyInCollMemNm").val() ;
 	                    item.collectorId = $("#srvckeyInCollMemId").val() ;
+	                    item.allowComm = $("#srvccashIsCommChk").val() ;
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -2025,9 +2048,7 @@ function addSrvcToFinal(){
         Common.alert("<spring:message code='pay.alert.selectBillingData'/>");
     }
     recalculatePaymentTotalAmt();
-    $("#srvckeyInTrNo").clearForm() ;
-    $("#srvckeyInCollMemNm").clearForm() ;
-    $("#srvckeyInCollMemId").clearForm() ;
+
 }
 
 
@@ -2181,6 +2202,12 @@ function addBillToFinal(){
 	var addedCount = 0;
     var checkArray = AUIGrid.getItemsByValue(targetBillMstGridID,"btnCheck","1");
 
+    if($("#billcashIsCommChk").is(":checked") == true){
+        $("#billcashIsCommChk").val("1");
+    }else{
+        $("#billcashIsCommChk").val("0");
+    }
+
     if(checkArray.length > 1){
         Common.alert("<spring:message code='pay.alert.onlyOneBill'/>");
         return;
@@ -2242,6 +2269,7 @@ function addBillToFinal(){
                         item.trNo =  $("#billkeyInTrNo").val() ;
                         item.collectorCode = $("#billkeyInCollMemNm").val() ;
                         item.collectorId = $("#billkeyInCollMemId").val() ;
+                        item.allowComm = $("#billcashIsCommChk").val() ;
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
                         addedCount++;
@@ -2255,9 +2283,7 @@ function addBillToFinal(){
         }
 
         recalculatePaymentTotalAmt();
-        $("#billkeyInTrNo").clearForm() ;
-        $("#billkeyInCollMemNm").clearForm() ;
-        $("#billkeyInCollMemId").clearForm() ;
+
     }
 }
 
@@ -2380,6 +2406,13 @@ function addOutSrvcToFinal(){
 		return;
 	}
 
+	if($("#outSrvccashIsCommChk").is(":checked") == true){
+        $("#outSrvccashIsCommChk").val("1");
+    }else{
+        $("#outSrvccashIsCommChk").val("0");
+    }
+
+
     var rowCnt = AUIGrid.getRowCount(targetOutSrvcMstGridID);
     maxSeq = maxSeq + 1;
 
@@ -2429,6 +2462,7 @@ function addOutSrvcToFinal(){
                 item.trNo =  $("#outSrvckeyInTrNo").val() ;
                 item.collectorCode = $("#outSrvckeyInCollMemNm").val() ;
                 item.collectorId = $("#outSrvckeyInCollMemId").val() ;
+                item.allowComm = $("#outSrvccashIsCommChk").val() ;
 
 	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	            addedCount++;
@@ -2466,6 +2500,7 @@ function addOutSrvcToFinal(){
                 item.trNo =  $("#outSrvckeyInTrNo").val() ;
                 item.collectorCode = $("#outSrvckeyInCollMemNm").val() ;
                 item.collectorId = $("#outSrvckeyInCollMemId").val() ;
+                item.allowComm = $("#outSrvccashIsCommChk").val() ;
 
 	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	            addedCount++;
@@ -2479,9 +2514,7 @@ function addOutSrvcToFinal(){
     }
 
     recalculatePaymentTotalAmt();
-    $("#outSrvckeyInTrNo").clearForm() ;
-    $("#outSrvckeyInCollMemNm").clearForm() ;
-    $("#outSrvckeyInCollMemId").clearForm() ;
+
 }
 
 // Add 할때 중복된 건이 있는지 체크한다.
@@ -2648,6 +2681,12 @@ $.fn.clearForm = function() {
                   </td>
 
               </tr>
+              <tr>
+                      <th scope="row">Commission</th>
+                      <td>
+                            <label><input type="checkbox" id="rentalcashIsCommChk" name="rentalcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+                      </td>
+             </tr>
 	                </tbody>
 	            </table>
 	            <!-- table end -->
@@ -2727,6 +2766,12 @@ $.fn.clearForm = function() {
                   </td>
 
               </tr>
+              <tr>
+                      <th scope="row">Commission</th>
+                      <td>
+                            <label><input type="checkbox" id="outcashIsCommChk" name="outcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+                      </td>
+             </tr>
 	                </tbody>
 	            </table>
 	            <!-- table end -->
@@ -2817,6 +2862,12 @@ $.fn.clearForm = function() {
                   </td>
 
               </tr>
+              <tr>
+                      <th scope="row">Commission</th>
+                      <td>
+                            <label><input type="checkbox" id="srvccashIsCommChk" name="srvccashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+                      </td>
+             </tr>
 	                </tbody>
 	            </table>
 	            <!-- table end -->
@@ -2904,6 +2955,12 @@ $.fn.clearForm = function() {
                   </td>
 
               </tr>
+              <tr>
+                      <th scope="row">Commission</th>
+                      <td>
+                            <label><input type="checkbox" id="billcashIsCommChk" name="billcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+                      </td>
+             </tr>
                     </tbody>
                 </table>
                 <!-- table end -->
@@ -2979,6 +3036,12 @@ $.fn.clearForm = function() {
                   </td>
 
               </tr>
+              <tr>
+                      <th scope="row">Commission</th>
+                      <td>
+                            <label><input type="checkbox" id="outSrvccashIsCommChk" name="outSrvccashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+                      </td>
+             </tr>
 
 
                     </tbody>
@@ -3193,7 +3256,7 @@ $.fn.clearForm = function() {
 					<tr>
 				        <th scope="row">Commission</th>
 				        <td colspan="3">
-							<label><input type="checkbox" id="keyInIsCommChk" name="keyInIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+							<label><input type="checkbox" id="keyInIsCommChk" name="keyInIsCommChk" value="1"  checked="checked" disabled/><span>Allow commssion for this payment</span></label>
 				        </td>
 				    </tr>
 				</tbody>

@@ -1455,7 +1455,8 @@
 			BILL_AS_ID,
 			SRV_MEM_ID,
 			TR_NO,
-			COLL_MEM_ID
+			COLL_MEM_ID,
+			ALLOW_COMM
 
         ) VALUES (
             PAY0241T_SEQ.NEXTVAL,
@@ -1485,7 +1486,8 @@
 			#{billAsId},
 			#{srvMemId},
             #{trNo},
-            #{collectorId}
+            #{collectorId},
+            #{allowComm}
         )
     </insert>
 
