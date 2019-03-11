@@ -123,6 +123,8 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 		Object  atchFileGrpId = params.get("atchFileGrpId");
 		Map approvalMap = new HashMap<String, Object>();
 
+		int grpSeq = budgetMapper.getGrpSeq(params);
+
 		if(addList.size() > 0){
 
 			Logger.debug(" >>>>> insertAdjustmentInfo ");
@@ -145,6 +147,7 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 				}
 
 				((Map<String, Object>) obj).put("budgetDocNo", budgetDocNo);
+				((Map<String, Object>) obj).put("budgetGrpSeq", grpSeq);
 
 				//detail table insert
 				budgetMapper.insertAdjustmentD((Map<String, Object>) obj);

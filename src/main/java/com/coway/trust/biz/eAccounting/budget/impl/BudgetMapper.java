@@ -74,4 +74,6 @@ public interface BudgetMapper {
 	EgovMap checkBgtPlan(Map<String, Object> params);
 
 	EgovMap getAdjInfo(Map<String, Object> params);
+
+	int getGrpSeq(Map<String, Object> params) throws Exception;
 }

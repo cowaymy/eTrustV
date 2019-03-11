@@ -69,6 +69,27 @@ $(document).ready(function(){
         style :"aui-grid-pointer",
         width : 100
     },{
+        dataField : "apprName",
+        headerText : "Approval ID",
+        cellMerge : true,
+        mergeRef : "budgetDocNo",
+        mergePolicy : "restrict",
+        width : 100
+    },{
+        dataField : "appvPrcssDt",
+        headerText : "Approval Date",
+        cellMerge : true,
+        mergeRef : "budgetDocNo",
+        mergePolicy : "restrict",
+        width : 100
+    },{
+        dataField : "appvPrcssStus",
+        headerText : "Approval Status",
+        cellMerge : true,
+        mergeRef : "budgetDocNo",
+        mergePolicy : "restrict",
+        width : 100
+    },{
         dataField : "costCenterText",
         headerText : '<spring:message code="budget.CostCenter" />',
         style : "aui-grid-user-custom-left ",
@@ -149,7 +170,8 @@ $(document).ready(function(){
         mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
         style :"aui-grid-pointer",
-        width : 150
+        width : 150,
+        visible : false
     },{
         dataField : "filePath",
         headerText : '',
@@ -540,8 +562,8 @@ function fn_budgetDelete() {
 	<td>
 	<select id="appvStus" name="appvStus" class="multy_select w100p" multiple="multiple">
 		<option value="T"><spring:message code="budget.Draft" /></option>
-		<option value="O">Pending</option>
-		<option value="C">Approved</option>
+		<option value="O"><spring:message code="budget.Open" /></option>
+        <option value="C"><spring:message code="budget.Close" /></option>
 	</select>
 	</td>
 	<th scope="row">Approval Status</th>

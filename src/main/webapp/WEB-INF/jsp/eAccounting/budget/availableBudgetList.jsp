@@ -17,84 +17,149 @@
 <script  type="text/javascript">
 var budgetGridID;
 $(document).ready(function(){
-    
+
 	fn_creatGrid();
-	
+
     //엑셀 다운
-    $('#excelDown').click(function() {        
+    $('#excelDown').click(function() {
        GridCommon.exportTo("budgetGridID", 'xlsx', "Available Budget List");
     });
-    
+
 });
 
 function fn_creatGrid(){
-	
+
     var colLayout = [
             /*  {  dataField : "budgetPlanYear", headerText : '', width : 90, visible :false }
             ,{  dataField : "budgetPlanMonth", headerText : '', width : 90, visible :false }, */
-             {  dataField : "costCentr", headerText : '<spring:message code="budget.CostCenter" />', width : 90 }
-            ,{  dataField : "costCenterText", headerText : '<spring:message code="budget.CostCenter" />', width : 130 }
-            ,{  dataField : "budgetCode", headerText : '<spring:message code="expense.Activity" />', width : 100 }
-            ,{  dataField : "budgetCodeText", headerText : '<spring:message code="expense.ActivityName" />', width : 130 }
-            ,{  dataField : "glAccCode", headerText : '<spring:message code="expense.GLAccount" />', width : 100 }
-            ,{  dataField : "glAccDesc", headerText : '<spring:message code="expense.GLAccountName" />', width : 130 }
-            ,{  dataField : "planAmt", headerText : '<spring:message code="budget.YearlyPlan" />',        dataType : "numeric",        formatString : "#,##0.00",        style : "my-right-style",        width : 100    }
-            ,{  dataField : "chngAmt", headerText : '<spring:message code="budget.Yearlyadditional" />',        dataType : "numeric",        formatString : "#,##0.00",        style : "my-right-style",        width : 120    }
-            ,{  dataField : "adjustAmt",        headerText : '<spring:message code="budget.Adjustment" /> <spring:message code="budget.Amount" />',        dataType : "numeric",        formatString : "#,##0.00",        style : "my-pointer-style",        width : 120    }
-            ,{  dataField : "total",        headerText : '<spring:message code="budget.Total" /> <spring:message code="budget.Amount" />',        dataType : "numeric",        formatString : "#,##0.00",        style : "my-right-style",        width : 120    }
-            ,{  dataField : "pendAppvAmt",        headerText : '<spring:message code="budget.Pending" /> <spring:message code="budget.Amount" />',        dataType : "numeric",        formatString : "#,##0.00",        style : "my-pointer-style",        width : 120    }
-            ,{  dataField : "consumAppvAmt",        headerText : '<spring:message code="budget.Utilised" /> <spring:message code="budget.Amount" />',        dataType : "numeric",        formatString : "#,##0.00",        style : "my-pointer-style",        width : 120    }
-            ,{  dataField : "availableAmt",        headerText : '<spring:message code="budget.Available" /> <spring:message code="budget.Amount" />',        dataType : "numeric",        formatString : "#,##0.00",        style : "my-right-style",        width : 120    }
+            {
+                dataField : "costCentr",
+                headerText : '<spring:message code="budget.CostCenter" />',
+                width : 90
+            }, {
+                dataField : "costCenterText",
+                headerText : '<spring:message code="budget.CostCenter" />',
+                width : 130
+            }, {
+                dataField : "budgetCode",
+                headerText : '<spring:message code="expense.Activity" />',
+                width : 100
+            }, {
+                dataField : "budgetCodeText",
+                headerText : '<spring:message code="expense.ActivityName" />',
+                width : 130
+            }, {
+                dataField : "glAccCode",
+                headerText : '<spring:message code="expense.GLAccount" />',
+                width : 100
+            }, {
+                dataField : "glAccDesc",
+                headerText : '<spring:message code="expense.GLAccountName" />',
+                width : 130
+            }, {
+                dataField : "cntrlType",
+                headerText : 'Control Type',
+                width : 80
+            }, {
+                dataField : "planAmt",
+                headerText : '<spring:message code="budget.YearlyPlan" />',
+                dataType : "numeric",
+                formatString : "#,##0.00",
+                style : "my-right-style",
+                width : 100
+            }, {
+                dataField : "chngAmt",
+                headerText : '<spring:message code="budget.Yearlyadditional" />',
+                dataType : "numeric",
+                formatString : "#,##0.00",
+                style : "my-right-style",
+                width : 120
+            }, {
+                dataField : "adjustAmt",
+                headerText : '<spring:message code="budget.Adjustment" /> <spring:message code="budget.Amount" />',
+                dataType : "numeric",
+                formatString : "#,##0.00",
+                style : "my-pointer-style",
+                width : 120
+            }, {
+                dataField : "total",
+                headerText : '<spring:message code="budget.Total" /> <spring:message code="budget.Amount" />',
+                dataType : "numeric",
+                formatString : "#,##0.00",
+                style : "my-right-style",
+                width : 120
+            }, {
+                dataField : "pendAppvAmt",
+                headerText : '<spring:message code="budget.Pending" /> <spring:message code="budget.Amount" />',
+                dataType : "numeric",
+                formatString : "#,##0.00",
+                style : "my-pointer-style",
+                width : 120
+            }, {
+                dataField : "consumAppvAmt",
+                headerText : '<spring:message code="budget.Utilised" /> <spring:message code="budget.Amount" />',
+                dataType : "numeric",
+                formatString : "#,##0.00",
+                style : "my-pointer-style",
+                width : 120
+            }, {
+                dataField : "availableAmt",
+                headerText : '<spring:message code="budget.Available" /> <spring:message code="budget.Amount" />',
+                dataType : "numeric",
+                formatString : "#,##0.00",
+                style : "my-right-style",
+                width : 120
+            }
     ];
-         
+
     var options = {
             showStateColumn:false,
             showRowNumColumn    : false,
             usePaging : false,
             editable :false
-      }; 
-    
+      };
+
     budgetGridID = GridCommon.createAUIGrid("#budgetGridID", colLayout, "", options);
-    
-    
+
+
     AUIGrid.bind(budgetGridID, "cellClick", function(event){
-    	
+
     	$("#stDate").val($("#stYearMonth").val());
     	$("#edDate").val($("#edYearMonth").val());
     	$("#costCentr").val(AUIGrid.getCellValue(budgetGridID, event.rowIndex, "costCentr"));
     	$("#budgetCode").val(AUIGrid.getCellValue(budgetGridID, event.rowIndex, "budgetCode"));
     	$("#glAccCode").val(AUIGrid.getCellValue(budgetGridID, event.rowIndex, "glAccCode"));
-        
+
     	if(event.dataField == "adjustAmt"){
-    		
+
             Common.popupDiv("/eAccounting/budget/adjustmentAmountPop.do",$("#searchForm").serializeJSON(), null, true, "adjustmentAmountPop");
-            
+
     	}else if(event.dataField == "pendAppvAmt"){
-    		
-            $("#type").val("Pending");  
+
+            $("#type").val("Pending");
             Common.popupDiv("/eAccounting/budget/pendingConsumedAmountPop.do",$("#searchForm").serializeJSON(), null, true, "pendingConsumedAmountPop");
-            
+
     	}else if(event.dataField == "consumAppvAmt"){
-    		
-            $("#type").val("Consumed");         
-             Common.popupDiv("/eAccounting/budget/pendingConsumedAmountPop.do",$("#searchForm").serializeJSON(), null, true, "pendingConsumedAmountPop");  
+
+            $("#type").val("Consumed");
+             Common.popupDiv("/eAccounting/budget/pendingConsumedAmountPop.do",$("#searchForm").serializeJSON(), null, true, "pendingConsumedAmountPop");
     	}
     });
-      
+
 }
 
 //리스트 조회.
-function fn_selectListAjax() { 
-	
+function fn_selectListAjax() {
+
 	if($("#stYearMonth").val() == ""){
 		Common.alert("Please key in start date.");
 		return;
 	}
     Common.ajax("GET", "/eAccounting/budget/selectAvailableBudgetList", $("#listSForm").serialize(), function(result) {
-        
+
          console.log("성공.");
          console.log( result);
-         
+
         AUIGrid.setGridData(budgetGridID, result);
 
     });
@@ -105,7 +170,7 @@ var budgetStr ;
 function fn_budgetCodePop(str){
   budgetStr = str;
   Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do",null, null, true, "budgetCodeSearchPop");
-}  
+}
 
 
 function  fn_setBudgetData(){
@@ -116,7 +181,7 @@ function  fn_setBudgetData(){
       $("#edBudgetCode").val($("#pBudgetCode").val());
       $("#edBudgetCodeName").val( $("#pBudgetCodeName").val());
   }
-  
+
 }
 
 //Gl Account Pop 호출
@@ -127,7 +192,7 @@ function fn_glAccountSearchPop(str){
 }
 
 function fn_setGlData (str){
-  
+
   if(glStr =="st"){
       $("#stGlAccCode").val($("#pGlAccCode").val());
       $("#stGlAccCodeName").val( $("#pGlAccCodeName").val());
@@ -135,7 +200,7 @@ function fn_setGlData (str){
       $("#edGlAccCode").val($("#pGlAccCode").val());
       $("#edGlAccCodeName").val( $("#pGlAccCodeName").val());
   }
-      
+
 }
 
 //Cost Center
@@ -146,7 +211,7 @@ function fn_costCenterSearchPop(str) {
 }
 
 function fn_setCostCenter (str){
-  
+
   if(costStr =="st"){
       $("#stCostCentr").val($("#search_costCentr").val());
       $("#stCostCentrName").val( $("#search_costCentrName").val());
@@ -154,7 +219,7 @@ function fn_setCostCenter (str){
       $("#edCostCentr").val($("#search_costCentr").val());
       $("#edCostCentrName").val( $("#search_costCentrName").val());
   }
-      
+
 }
 
 function comma(str) {
@@ -180,7 +245,7 @@ function comma(str) {
 
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="searchForm" name="searchForm"> 
+<form action="#" method="post" id="searchForm" name="searchForm">
     <input type="hidden" id = "stDate" name="stDate" />
     <input type="hidden" id = "edDate" name="edDate" />
     <input type="hidden" id = "costCentr" name="costCentr" />
@@ -188,15 +253,15 @@ function comma(str) {
     <input type="hidden" id = "glAccCode" name="glAccCode" />
     <input type="hidden" id = "type" name="type" />
 </form>
-<form action="#" method="post" id="listSForm" name="listSForm">    
+<form action="#" method="post" id="listSForm" name="listSForm">
     <input type="hidden" id = "pBudgetCode" name="pBudgetCode" />
     <input type="hidden" id = "pBudgetCodeName" name="pBudgetCodeName" />
     <input type="hidden" id = "pGlAccCode" name="pGlAccCode" />
     <input type="hidden" id = "pGlAccCodeName" name="pGlAccCodeName" />
-    
+
     <input type="hidden" id = "search_costCentr" name="search_costCentr" />
-    <input type="hidden" id = "search_costCentrName" name="search_costCentrName" />    
-    
+    <input type="hidden" id = "search_costCentrName" name="search_costCentrName" />
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

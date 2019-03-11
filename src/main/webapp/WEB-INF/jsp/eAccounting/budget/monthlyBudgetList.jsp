@@ -29,32 +29,35 @@
 var budgetMGrid;
 
 $(document).ready(function(){
-    
+
+
+
+
     //엑셀 다운
-    $('#excelDown').click(function() {        
+    $('#excelDown').click(function() {
        GridCommon.exportTo("budgetMGrid", 'xlsx', "<spring:message code='budget.MonthlyBudgetInterchange' />");
     });
-    
+
     //그리드 생성
     fn_makeGrid();
-     
+
 });
 
 
 //리스트 조회.
-function fn_selectListAjax() {  
+function fn_selectListAjax() {
     var stMsg = '<spring:message code="fcm.startValue" />'; //시작값
-    var edMsg = '<spring:message code="fcm.endValue" />'; //종료값 
-        
+    var edMsg = '<spring:message code="fcm.endValue" />'; //종료값
+
      if ($("#budgetPlanYear").val() == "")
-     {       
+     {
          var msg = '<spring:message code="budget.Year" />';
          Common.alert("<spring:message code='sys.msg.necessary' arguments='"+msg+"' htmlEscape='false'/>" , function(){
              $("#budgetPlanYear").focus();
          });
          return;
      }
-     
+
      if ($("#stCostCentr").val() != "" || $("#edCostCentr").val() != "")
      {
          var msg = '<spring:message code="budget.CostCenter" />';
@@ -73,22 +76,22 @@ function fn_selectListAjax() {
              } */
 
              if ($("#stCostCentr").val() != "" && $("#edCostCentr").val() != "")
-             {       
+             {
                      if($("#stCostCentr").val() > $("#edCostCentr").val() ){
 
                          Common.alert("<spring:message code='sys.msg.mustMore' arguments='"+stMsg+" ; "+edMsg+"' htmlEscape='false' argumentSeparator=';' />");
 
-                         return; 
+                         return;
                      }
              }
-        
+
      }
-     
-    
+
+
        if ($("#stGlAccCode").val() != "" || $("#edGlAccCode").val() != "")
          {
              var msg = '<spring:message code="expense.GLAccount" />';
-                 
+
                  if($("#stGlAccCode").val() == "" ){
                      Common.alert("<spring:message code='sys.msg.necessary' arguments='"+msg+"' htmlEscape='false'/>" , function(){
                            $("#stGlAccCode").focus();
@@ -100,21 +103,21 @@ function fn_selectListAjax() {
                            $("#edGlAccCode").focus()
                      });
                      return;
-                 }   */    
-                 
+                 }   */
+
                  if ($("#stGlAccCode").val() != "" && $("#edGlAccCode").val() != ""){
-                     
+
                      if($("#stGlAccCode").val() >   $("#edGlAccCode").val() ){
                          Common.alert("<spring:message code='sys.msg.mustMore' arguments='"+stMsg+" ; "+edMsg+"' htmlEscape='false' argumentSeparator=';' />");
                          return;
                      }
-                 }             
+                 }
          }
 
        if ($("#stBudgetCode").val() != "" || $("#edBudgetCode").val() != "")
        {
            var msg = '<spring:message code="expense.Activity" />';
-           
+
            if($("#stBudgetCode").val() == "" ){
                Common.alert("<spring:message code='sys.msg.necessary' arguments='"+msg+"' htmlEscape='false'/>" , function(){
                     $("#stBudgetCode").focus();
@@ -127,36 +130,36 @@ function fn_selectListAjax() {
                     $("#edBudgetCode").focus();
                });
                return;
-           } */  
-           
+           } */
+
            if ($("#stBudgetCode").val() != "" && $("#edBudgetCode").val() != ""){
-               
+
                if($("#stBudgetCode").val() >   $("#edBudgetCode").val() ){
                    Common.alert("<spring:message code='sys.msg.mustMore' arguments='"+stMsg+" ; "+edMsg+"' htmlEscape='false' argumentSeparator=';' />");
                    return;
                }
            }
        }
-    
+
     Common.ajax("GET", "/eAccounting/budget/selectMonthlyBudgetList", $("#listSForm").serialize(), function(result) {
-            
+
         console.log("성공.");
         console.log( result);
 
         if($("#stMonth").val() !="" && $("#edMonth").val() !=""){
-                
+
             AUIGrid.destroy(budgetMGrid);// 그리드 삭제
-                 
+
             var index = parseInt($("#edMonth").val())  - parseInt($("#stMonth").val()) ;
-                
+
             fn_makeGrid();
 
-        }            
-           
+        }
+
         AUIGrid.setGridData(budgetMGrid, result);
-         
+
         fn_total(); //total 값 계산
-    }); 
+    });
 }
 
 //total 값 계산
@@ -164,19 +167,19 @@ function fn_total(){
 
     var index = parseInt($("#edMonth").val())  - parseInt($("#stMonth").val()) ;
     var mon = parseInt($("#stMonth").val());
-    
-    var idx = AUIGrid.getRowCount(budgetMGrid); 
-    
+
+    var idx = AUIGrid.getRowCount(budgetMGrid);
+
     for(var i= 0 ; i < idx ; i++) { //
 
-        var total = 0;    
+        var total = 0;
         for(var j= mon ; j <= mon+index; j++) {
             total += parseInt(AUIGrid.getCellValue(budgetMGrid , i , "m"+j));
         }
 
         AUIGrid.setCellValue(budgetMGrid, i, "total", total);
     }
-    
+
 
     AUIGrid.setCellMerge(budgetMGrid, true);
 }
@@ -184,13 +187,13 @@ function fn_total(){
 function fn_makeGrid(){
 
     var monPop = [];
-    
+
     monPop[0] = {dataField : "costCentr",
             headerText : '<spring:message code="budget.CostCenter" />',
             width : 100,
-            cellMerge : true 
+            cellMerge : true
     }
-    
+
     monPop.push({
                     dataField : "budgetPlanYear",
                     headerText : '',
@@ -200,7 +203,7 @@ function fn_makeGrid(){
                     dataField : "costCenterText",
                     headerText : '<spring:message code="budget.costCenterName" />',
                     width : 100,
-                    cellMerge : true 
+                    cellMerge : true
                 },{
                     dataField : "budgetCode",
                     headerText : '<spring:message code="expense.Activity" />',
@@ -222,15 +225,15 @@ function fn_makeGrid(){
                     headerText : '<spring:message code="budget.ControlType" />',
                     width : 50
                 });
-    
-    
-    
+
+
+
     if($("#stMonth").val() !="" && $("#edMonth").val() !=""){
         var index = parseInt($("#edMonth").val())  - parseInt($("#stMonth").val()) ;
         var mon = parseInt($("#stMonth").val());
-               
+
         for(var i= mon ; i <= mon+index; i++) { //
-                var msg ;               
+                var msg ;
             if(i == 1){
                 msg = "<spring:message code='budget.1' />";
             }else if(i == 2){
@@ -256,8 +259,8 @@ function fn_makeGrid(){
             }else if(i == 12){
                 msg = "<spring:message code='budget.12' />";
             }
-            
-            
+
+
             monPop.push( {
                  dataField : "m"+i,
                  headerText :msg,
@@ -268,8 +271,8 @@ function fn_makeGrid(){
                  editable : false
             });
         }
-    } 
-    
+    }
+
     monPop.push( {
         editable : false,
         headerText : "<spring:message code='budget.Total' />",
@@ -280,16 +283,16 @@ function fn_makeGrid(){
         formatString : "#,##0.00",
         width:120
     });
-    
-    
+
+
 	 var monFooter = [];
-	    
+
 	 monFooter[0] = {
 		        labelText : "<spring:message code='budget.Total' />",
 		        positionField : "glAccDesc"
 		    }
- 
- 
+
+
 	for(var i= mon ; i <= mon+index; i++) {
 		 monFooter.push( {
 	         dataField : "m"+i,
@@ -298,14 +301,14 @@ function fn_makeGrid(){
 	         formatString : "#,##0.00"
 	    });
 	 }
-	 
+
 	 monFooter.push( {
 	        dataField : "total", // 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
             positionField : "total",
             operation : "SUM",
             formatString : "#,##0.00"
 	    });
-	    
+
      var monOptions = {
             enableCellMerge : true,
             showStateColumn:false,
@@ -313,36 +316,36 @@ function fn_makeGrid(){
             showRowNumColumn    : false,
             usePaging : false,
             showFooter : true
-      }; 
-    
+      };
+
     budgetMGrid = GridCommon.createAUIGrid("#budgetMGrid", monPop, "", monOptions);
     // 푸터 객체 세팅
     AUIGrid.setFooter(budgetMGrid, monFooter);
-    
+
     AUIGrid.bind(budgetMGrid, "cellClick", auiCellClikcHandler);
 }
-      
+
 function auiCellClikcHandler(event){
-    console.log("dataField : " +event.dataField + " rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked"); 
-    
-    var month = event.dataField.replace("m", "");   
-    
-     
-    
+    console.log("dataField : " +event.dataField + " rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+
+    var month = event.dataField.replace("m", "");
+
+
+
     if(event.columnIndex > 6){
     	if(event.headerText !="Total"){
-    		Common.popupDiv("/eAccounting/budget/availableBudgetDisplayPop.do",{item : event.item, month:month}, null, true, "availableBudgetDisplayPop");	
+    		Common.popupDiv("/eAccounting/budget/availableBudgetDisplayPop.do",{item : event.item, month:month}, null, true, "availableBudgetDisplayPop");
     	}
-    }    
-    
-}      
-      
+    }
+
+}
+
 var budgetStr ;
 //Budget Code Pop 호출
 function fn_budgetCodePop(str){
     budgetStr = str;
     Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do",null, null, true, "budgetCodeSearchPop");
-}  
+}
 
 
 function  fn_setBudgetData(){
@@ -353,7 +356,7 @@ function  fn_setBudgetData(){
         $("#edBudgetCode").val($("#pBudgetCode").val());
         $("#edBudgetCodeName").val( $("#pBudgetCodeName").val());
     }
-    
+
 }
 
 //Gl Account Pop 호출
@@ -364,7 +367,7 @@ function fn_glAccountSearchPop(str){
 }
 
 function fn_setGlData (str){
-    
+
     if(glStr =="st"){
         $("#stGlAccCode").val($("#pGlAccCode").val());
         $("#stGlAccCodeName").val( $("#pGlAccCodeName").val());
@@ -372,7 +375,7 @@ function fn_setGlData (str){
         $("#edGlAccCode").val($("#pGlAccCode").val());
         $("#edGlAccCodeName").val( $("#pGlAccCodeName").val());
     }
-        
+
 }
 
 //Cost Center
@@ -383,7 +386,7 @@ function fn_costCenterSearchPop(str) {
 }
 
 function fn_setCostCenter (str){
-    
+
     if(costStr =="st"){
         $("#stCostCentr").val($("#search_costCentr").val());
         $("#stCostCentrName").val( $("#search_costCentrName").val());
@@ -391,7 +394,7 @@ function fn_setCostCenter (str){
         $("#edCostCentr").val($("#search_costCentr").val());
         $("#edCostCentrName").val( $("#search_costCentrName").val());
     }
-        
+
 }
 
 function fn_excelDown(){
@@ -421,9 +424,7 @@ function fn_goApproval(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code="budget.MonthlyBudgetInterchange" /></h2>
 <ul class="right_btns">
-    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_selectListAjax();" ><span class="search"></span><spring:message code="expense.btn.Search" /></a></p></li>
-    </c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -434,7 +435,7 @@ function fn_goApproval(){
     <input type="hidden" id = "pBudgetCodeName" name="pBudgetCodeName" />
     <input type="hidden" id = "pGlAccCode" name="pGlAccCode" />
     <input type="hidden" id = "pGlAccCodeName" name="pGlAccCodeName" />
-    
+
     <input type="hidden" id = "search_costCentr" name="search_costCentr" />
     <input type="hidden" id = "search_costCentrName" name="search_costCentrName" />
 
