@@ -1175,7 +1175,17 @@ function fn_setBudgetView() {
 			$("#recvAmount").val(result.receiverAmount);
 		}
 
-		if(result.senderRem != "" || result.senderRem != null) {
+		if(budgetAdjType == "01" || budgetAdjType == "02") {
+			$("#sendYearMonth").val(result.receiverBudgetPeriod);
+            $("#sendCostCenter").val(result.receiverCostCenter);
+            $("#sendBudgetCode").val(result.receiverBudgetCode);
+            $("#sendBudgetCodeName").val(result.receiverBudgetDesc);
+            $("#sendGlAccCode").val(result.receiverGLAcc);
+            $("#sendGlAccCodeName").val(result.receiverGLDesc);
+            $("#sendAmount").val(result.receiverAmount);
+		}
+
+		if(result.senderRem != "" && result.senderRem != null) {
 			$("#remark").val(result.senderRem);
 		} else {
 			$("#remark").val(result.receiverRem);
