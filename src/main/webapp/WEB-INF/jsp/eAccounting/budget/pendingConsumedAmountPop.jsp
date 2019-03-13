@@ -14,7 +14,7 @@
 var penGridID;
 
 $(document).ready(function(){
-    
+
      var penPopColumnLayout = [ {
          dataField : "appvReqKeyNo",
          headerText : '<spring:message code="budget.WebDocument" />',
@@ -54,35 +54,65 @@ $(document).ready(function(){
          style : "my-right-style",
          width : 150
      },{
+        dataField : "netAmt1",
+        dataType : "numeric",
+        width : 150,
+        visible : false
+     },{
          dataField : "expDesc",
          headerText : '<spring:message code="budget.Remark" />',
          style : "aui-grid-user-custom-left",
          width : 150
      }];
-          
+
+     var footerObject = [ {
+         labelText : "<spring:message code="budget.Total" />",
+         positionField : "memAccName"
+     },{
+         positionField : "netAmt",
+         dataField : "netAmt",
+         dataType : "numeric",
+         formatString : "#,##0.00",
+         style : "my-right-style",
+         expFunction : function(columnValues) {
+
+             var idx = AUIGrid.getRowCount(penGridID);
+             var amt = 0;
+             for(var i = 0; i < idx; i++){
+            	 console.log(AUIGrid.getCellValue(penGridID, i, "netAmt1"));
+                 amt += AUIGrid.getCellValue(penGridID, i, "netAmt1");
+             }
+             console.log("amt :: " + amt);
+             return amt;
+         }
+     }];
+
      var penOptions = {
                 showStateColumn:false,
                 showRowNumColumn    : true,
                 usePaging : true,
-                editable : false
-          }; 
-     
+                editable : false,
+                showFooter : true
+          };
+
         penGridID = GridCommon.createAUIGrid("#penGridID", penPopColumnLayout, "", penOptions);
-        
+
         fn_selectListPenAjax();
-        
+
+        AUIGrid.setFooter(penGridID, footerObject);
+
 });
 
 //리스트 조회.
-function fn_selectListPenAjax() {  
-     
+function fn_selectListPenAjax() {
+
     Common.ajax("GET", "/eAccounting/budget/selectPenConAmountList", $("#penPForm").serialize(), function(result) {
-            
+
         console.log("성공.");
         console.log( result);
-           
+
         AUIGrid.setGridData(penGridID, result);
-    }); 
+    });
 }
 
 function comma(str) {

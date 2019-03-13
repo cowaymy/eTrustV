@@ -587,7 +587,8 @@ WHERE 1=1
                ,TO_CHAR(B.PAY_DUE_DT, 'dd/mm/yyyy') PAY_DUE_DT
                ,B.MEM_ACC_ID
                ,(SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = B.MEM_ACC_ID) AS MEM_ACC_NAME
-               ,TO_CHAR(B.NET_AMT, '9,999,999.99') NET_AMT
+               ,TO_CHAR(NVL(B.NET_AMT, 0), '9,999,999.99') NET_AMT
+               ,ROUND(B.NET_AMT, 2) NET_AMT1
                ,B.EXP_DESC
        FROM FCM0004M A, FCM0015D B
      WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
@@ -652,6 +653,7 @@ WHERE 1=1
                  ,B.SIGNAL
                  ,B.BUDGET_GRP_SEQ
                  ,NVL(C.APPR_NAME, ' ') APPR_NAME
+                 ,NVL(C.REQST_NAME, ' ') REQST_NAME
                  ,NVL(TO_CHAR(C.APPV_PRCSS_DT, 'DD/MM/YYYY'), ' ') APPV_PRCSS_DT
                  , CASE WHEN C.APPV_PRCSS_STUS = 'J' THEN 'REJECT'
                            WHEN C.APPV_PRCSS_STUS = 'R' THEN 'REQUEST'
@@ -665,7 +667,7 @@ WHERE 1=1
             SELECT
                 C1.BUDGET_DOC_NO,
                 C1.REQST_DT,
-                C1.REQST_USER_ID,
+                C3.USER_NAME REQST_NAME,
                 C1.APPV_PRCSS_STUS,
                 C1.APPV_PRCSS_DT,
                 C1.REJCT_RESN,
@@ -673,6 +675,8 @@ WHERE 1=1
             FROM FCM0105M C1
             INNER JOIN SYS0047M C2
                 ON C1.UPD_USER_ID = C2.USER_ID
+            INNER JOIN SYS0047M C3
+                ON C1.REQST_USER_ID = C3.USER_ID
        )C
            ON A.BUDGET_DOC_NO = C.BUDGET_DOC_NO
        WHERE  1=1
