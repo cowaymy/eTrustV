@@ -177,7 +177,10 @@ public interface htOrderRegisterMapper {
 
     void insertAccSrvMemLedger(Map<String, Object> params);
 
+    EgovMap selectMembershipPackageInfo(Map<String, Object> params);
 
+    void updateMembershipSales(Map<String, Object> params);
 
+    void updateSrvConfigPeriod(Map<String, Object> params);
 
 }
