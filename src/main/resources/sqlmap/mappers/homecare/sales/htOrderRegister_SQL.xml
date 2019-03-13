@@ -1655,7 +1655,7 @@
              ( #{srvPrdId}
              , #{srvConfigId}
              , #{srvMbrshId}
-             , TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM')||'-01', 'YYYY-MM-DD')
+  			 , TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM')||'-01', 'YYYY-MM-DD')
              , TO_DATE(TO_CHAR(LAST_DAY(SYSDATE), 'YYYY-MM-DD'), 'YYYY-MM-DD')
              , #{srvPrdDur}
              , #{srvPrdStusId}
@@ -2078,8 +2078,9 @@
                   AND T5.CODE_MASTER_ID = '381'
             </if>
             <if test='stkType != null and stkType == "2"'>
-                SELECT DISTINCT T1.STK_ID
-                    , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                SELECT DISTINCT T1.STK_ID,
+                <!--     , T1.STK_CODE ||' - '|| -->
+                    T1.STK_DESC C1
                     , CASE WHEN T2.DISCONTINUE = '1' THEN T3.CODE_NAME ||' ('||T5.CODE_NAME||')'
                            ELSE T3.CODE_NAME
                       END CODE_NAME
@@ -2481,19 +2482,23 @@
         A.SRV_ORD_ID = #{CS_SO_ID}
         ) search
 
+    </select>
 
-<!--         SELECT search.TAX_INVOICE_CUST_NAME, search.TAX_INVOICE_CONT_PERS
-        from (
-        SELECT B.NAME TAX_INVOICE_CONT_PERS , D.NAME TAX_INVOICE_CUST_NAME
-        FROM
-        SAL0225D A,
-        SAL0027D B,
-        SAL0029D D
-        WHERE A.CUST_CNT_ID = B.CUST_CNTC_ID
-        AND A.CUST_ID = D.CUST_ID
-        AND A.SALES_ORD_ID = #{CS_SO_ID}
+  <select id="selectMembershipPackageInfo" parameterType="Map" resultType="egovMap">
 
-        ) search -->
+SELECT
+SRV_ORD_ID ,
+SRV_MEM_PAC_ID ,
+SRV_MEM_CODE ,
+SRV_MEM_DUR ,
+TO_CHAR(SALES_DT,'YYYYMMDD') STRT_DT ,
+TO_CHAR(LAST_DAY(ADD_MONTHS(srv.SALES_DT , SRV_MEM_DUR )),'YYYYMMDD') EXPR_DT
+FROM SAL0229M pack
+JOIN SAL0225D srv ON srv.SRV_PAC_ID = pack.SRV_MEM_PAC_ID
+WHERE
+pack.SRV_MEM_PAC_ID = #{srvPacId} AND
+srv.SRV_ORD_ID = #{salesOrdId}
+
     </select>
 
     <select id="getSeqPay0031D" resultType="java.lang.Integer">
@@ -2523,6 +2528,25 @@
                        #{r01}
                )
 </insert>
+
+    <update id="updateMembershipSales" parameterType="Map">
+        UPDATE SAL0095D
+             SET
+                   SRV_FREQ = #{srvFreq},
+                   SRV_START_DT = #{srvStrtDt},
+                   SRV_EXPR_DT = #{srvExprDt},
+                   SRV_DUR = #{srvPrdDur}
+         WHERE SRV_SALES_ORD_ID = #{salesOrdId}
+    </update>
+
+        <update id="updateSrvConfigPeriod" parameterType="Map">
+        UPDATE SAL0227D
+             SET
+                   SRV_PRD_START_DT = #{srvStrtDt},
+                   SRV_PRD_EXPR_DT = #{srvExprDt},
+                   SRV_PRD_DUR = #{srvPrdDur}
+         WHERE SRV_PRD_ID = #{srvPrdId}
+    </update>
 
 
 </mapper>
