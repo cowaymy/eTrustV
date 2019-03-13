@@ -2400,7 +2400,7 @@
         <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.poNo" /><span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.poNo" /><span class="must"></span></th>
     <td><input id="poNo" name="poNo" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row"><spring:message code="sal.title.text.salesmanType" /></th>
     <td><input id="salesmanType" name="salesmanType" type="text" title="" placeholder="Salesman Type" class="w100p readonly" readonly/>
@@ -2708,7 +2708,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.specialInstruction" /><span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.specialInstruction" /><span class="must"></span></th>
     <td colspan="3"><textarea id="speclInstct" name="speclInstct" cols="20" rows="5"></textarea></td>
 </tr>
 </tbody>
