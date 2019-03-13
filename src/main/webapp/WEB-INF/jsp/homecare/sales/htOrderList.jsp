@@ -118,12 +118,12 @@ function fn_setDetail(gridID, rowIdx){
 	  $('#btnNew').click(function() {
           Common.popupDiv("/homecare/sales/htOrderRegisterPop.do");
       });
-      $('#btnEdit').click(function() {
+	  /*$('#btnEdit').click(function() {
           fn_orderModifyPop();
       });
-      $('#btnReq').click(function() {
+       $('#btnReq').click(function() {
           fn_orderRequestPop();
-      });
+      }); */
       $('#btnSrch').click(function() {
           if(fn_validSearchList()) fn_selectListAjax();
       });
@@ -225,7 +225,7 @@ function createAUIGrid() {
     listMyGridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPros);
 }
 
-function fn_orderRequestPop() {
+/* function fn_orderRequestPop() {
     var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
     if(selIdx > -1) {
         Common.popupDiv("/homecare/sales/htOrderReqCancellationPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
@@ -243,7 +243,7 @@ function fn_orderModifyPop() {
     else {
         Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
     }
-}
+} */
 
 
 function fn_multiCombo(){
@@ -253,21 +253,10 @@ function fn_multiCombo(){
         selectAll: true, // 전체선택
         width: '100%'
     });
-    $('#listDscBrnchId').change(function() {
-        //console.log($(this).val());
-    }).multipleSelect({
-        selectAll: true, // 전체선택
-        width: '100%'
-    });
+
     $('#listOrdStusId').multipleSelect("checkAll");
     $('#listProductId').multipleSelect("checkAll");
-    $('#listRentStus').change(function() {
-        //console.log($(this).val());
-    }).multipleSelect({
-        selectAll: true, // 전체선택
-        width: '100%'
-    });
-//  $('#listRentStus').multipleSelect("checkAll");
+
 }
 
 function fn_multiCombo2(){
@@ -297,9 +286,7 @@ $.fn.clearForm = function() {
     });
 };
 
-function fn_rawData(){
-    Common.popupDiv("/sales/order/eRequestRawDataPop.do", null, null, true);
-}
+
 
 </script>
 
@@ -312,7 +299,7 @@ function fn_rawData(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Care Service Sales</h2>
+<h2>Care Service Order</h2>
 <ul class="right_btns">
 <c:if test="${SESSION_INFO.userIsExternal == '0'}">
  <li><p class="btn_blue"><a id="btnNew" href="#" ><spring:message code='sales.btn.new'/></a></p></li>
