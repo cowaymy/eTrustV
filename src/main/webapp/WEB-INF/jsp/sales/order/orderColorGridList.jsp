@@ -244,28 +244,31 @@
         //  lev 1  Order Date    Order Date
         //  lev 2   netSalesMonth
 
+        var isValid = true;
+        if(FormUtil.isEmpty($("#ordNo").val())         &&
+           FormUtil.isEmpty($("#contactNum").val()) &&
+           FormUtil.isEmpty($("#salesmanCode").val()) &&
+           FormUtil.isEmpty($("#custIc").val()) ){
 
-        if (  $("#netSalesMonth").val() ==""   &&   $("#createStDate").val()  =="" ){
-        	Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
-            return ;
-        }
+	        if (  $("#netSalesMonth").val() ==""   &&   $("#createStDate").val()  =="" ){
+	        	isValid = false;
+	        }
 
-        if (  ($("#createStDate").val()  ==""  &&   $("#createEnDate").val()  =="")     &&  $("#netSalesMonth").val() ==""   ){
-            Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
-            return ;
-        }
+	        if (  ($("#createStDate").val()  ==""  &&   $("#createEnDate").val()  =="")     &&  $("#netSalesMonth").val() ==""   ){
+	        	isValid = false;
+	        }
 
-        if (   $("#netSalesMonth").val() ==""   ){
-        	 if( $("#createStDate").val()  ==""  ||    $("#createEnDate").val()  ==""  ){
-        		 Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
-                 return ;
-        	 }
-        	  /* var startDate = $('#createStDate').val();
-              var endDate = $('#createEnDate').val();
-              if( fn_getDateGap(startDate , endDate) > 31){
-                  Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
-                  return;
-              } */
+	        if (   $("#netSalesMonth").val() ==""   ){
+	        	 if( $("#createStDate").val()  ==""  ||    $("#createEnDate").val()  ==""  ){
+	        		 isValid = false;
+	        	 }
+	        	  /* var startDate = $('#createStDate').val();
+	              var endDate = $('#createEnDate').val();
+	              if( fn_getDateGap(startDate , endDate) > 31){
+	                  Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
+	                  return;
+	              } */
+	        }
         }
 
        /* if( $("#createStDate").val()  !=""  &&   $("#createEnDate").val()  !=""  ){
@@ -306,29 +309,33 @@
         }
 
            */
+           if(isValid == true){
+	        Common.ajax("GET", "/sales/order/orderColorGridJsonList", $("#searchForm").serialize(), function(result) {
+	            AUIGrid.setGridData(myGridID, result);
 
-        Common.ajax("GET", "/sales/order/orderColorGridJsonList", $("#searchForm").serialize(), function(result) {
-            AUIGrid.setGridData(myGridID, result);
+	            AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item) {
+	                if(item.stusId == 4) {
+	                	if(item.isNet == 1){
+	                		return "my-green-style";
+	                	}else{
+	                		return "my-yellow-style";
+	                	}
 
-            AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item) {
-                if(item.stusId == 4) {
-                	if(item.isNet == 1){
-                		return "my-green-style";
-                	}else{
-                		return "my-yellow-style";
-                	}
+	                }else if(item.stusId == 10){
+	                	return "my-pink-style";
+	                }else{
+	                	return "";
+	                }
 
-                }else if(item.stusId == 10){
-                	return "my-pink-style";
-                }else{
-                	return "";
-                }
+	             });
 
-             });
-
-             // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
-             AUIGrid.update(myGridID);
-        });
+	             // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
+	             AUIGrid.update(myGridID);
+	        });
+           }else{
+               Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
+               return ;
+           }
     }
 
     function fn_getDateGap(sdate, edate){
