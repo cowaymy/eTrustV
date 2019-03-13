@@ -300,6 +300,10 @@ function fn_insertCourseAttendee() {
         Common.alert("* Please key in the location.");
         return false;
     }
+	if(form_newCours.courseClsDt.value == ""){
+        Common.alert("* Please select closing date.");
+        return false;
+    }
 
 
 	$("#attendanceNew").removeAttr("disabled");
@@ -405,6 +409,16 @@ function fn_getDateGap(){
 			<input type="text" title="" placeholder="" id="coursLimit" name="coursLimit"/>
 		</div>
 	</td>
+</tr>
+<tr>
+    <th scope="row"></th>
+    <td colspan="3"></td>
+    <th scope="row">Closing Date<span class="must">*</span></th>
+    <td>
+        <div class="w100p">
+            <p><input type="text" title="Closing Date" placeholder="DD/MM/YYYY" class="j_date w100p" id=courseClsDt name="courseClsDt"/></p>
+        </div>
+    </td>
 </tr>
 </tbody>
 </table>

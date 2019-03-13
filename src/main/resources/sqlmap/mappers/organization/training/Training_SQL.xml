@@ -188,11 +188,7 @@ SELECT Project1.CODE_ID   ,
 SELECT Extent1.COURS_ITM_ID   ,
        Extent1.COURS_ID   ,
        Extent2.MEM_TYPE,
-       (CASE Extent2.MEM_TYPE
-       WHEN 1 THEN 'Health Planner'
-       WHEN 2 THEN 'Cody'
-       WHEN 3 THEN 'Coway Technician'
-       WHEN 4 THEN 'Staff' END) AS MEM_TYPE_NAME,
+       Extent4.CODE_NAME || ' - ' || Extent5.CODE_NAME AS MEM_TYPE_NAME,
        Extent1.COURS_MEM_ID  ,
        Extent2.MEM_CODE  ,
        Extent1.COURS_TEST_RESULT   ,
@@ -205,12 +201,18 @@ SELECT Extent1.COURS_ITM_ID   ,
        Extent1.COURS_D_MEM_NAME   ,
        Extent1.COURS_D_MEM_NRIC ,
        DECODE(Extent1.COURS_ATTEND_DAY, 0, 0, Extent1.COURS_ATTEND_DAY) COURS_ATTEND_DAY,
-       Extent3.CODE
+       Extent3.CODE || ' - ' || Extent3.NAME CODE
   FROM MSC0009D Extent1
   LEFT JOIN ORG0001D Extent2
   ON Extent1.COURS_MEM_ID = Extent2.MEM_ID
   LEFT JOIN SYS0005M Extent3
   ON Extent2.BRNCH = Extent3.BRNCH_ID
+  LEFT JOIN SYS0013M Extent4
+  ON Extent2.MEM_TYPE = Extent4.CODE_ID
+  and Extent4.CODE_MASTER_ID = '1'
+  LEFT JOIN SYS0013M Extent5
+  ON Extent2.TRAINEE_TYPE = Extent5.CODE_ID
+  and Extent5.CODE_MASTER_ID = '1'
  WHERE  ( Extent1.COURS_ID = #{coursId} )
           AND ( 1 = Extent1.COURS_MEM_STUS_ID )
 </select>
@@ -288,7 +290,8 @@ INSERT INTO MSC0008D
              COURS_CRT_USER_ID,
              COURS_MEM_YN_ID,
              COURS_MEM_TYPE_ID,
-             COURS_ATTEND_OWNER)
+             COURS_ATTEND_OWNER,
+             COURS_CLS_DT)
 VALUES      ( #{coursId},
               #{codeId},
               #{coursCode},
@@ -304,7 +307,8 @@ VALUES      ( #{coursId},
               #{userId},
               #{generalCode},
               #{memType},
-              #{attendance} )
+              #{attendance},
+              TO_DATE( #{courseClsDt}, 'DD/MM/YYYY') )
 </insert>
 
 <insert id="insertAttendee" parameterType="Map">

@@ -29,6 +29,9 @@
 </style>
 <script type="text/javascript">
 //그리드에 삽입된 데이터의 전체 길이 보관
+var courseRowIndex;
+var courseLimit;
+var courseAplcnt;
 var gridDataLength = 0;
 var gridId = null;
 var rIndex = 0;
@@ -143,12 +146,14 @@ var attendeeColumnLayout = [ {
 }, {
     dataField : "memTypeName",
     headerText : 'Member Type',
-    editable : false
+    editable : false,
+    width : 180
 }, {
     dataField : "memCode",
     headerText : 'Member Code',
     editable : false,
-    colSpan : 2
+    colSpan : 2,
+    width : 90
 }, {
     dataField : "",
     headerText : '',
@@ -171,21 +176,25 @@ var attendeeColumnLayout = [ {
     dataField : "coursDMemName",
     headerText : 'Member Name',
     style : "aui-grid-user-custom-left",
+    width : 300
 }, {
     dataField : "coursDMemNric",
     headerText : 'NRIC',
-    editable : false
+    editable : false,
+    width : 110
 }, {
     dataField : "brnchId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "code",
     headerText : 'Branch',
+    style : "aui-grid-user-custom-left",
     editable : false
 }, {
     dataField : "coursAttendDay",
     headerText : 'Attend Day',
-    editable : true
+    editable : true,
+    width : 90
 }, {
     dataField : "coursTestResult",
     headerText : 'Result',
@@ -194,7 +203,8 @@ var attendeeColumnLayout = [ {
         list : [{"coursTestResult":"P","name":"Pass"},{"coursTestResult":"F","name":"Fail"},{"coursTestResult":"AB","name":"Absent"}], //key-value Object 로 구성된 리스트
         keyField : "coursTestResult", // key 에 해당되는 필드명
         valueField : "name" // value 에 해당되는 필드명
-    }
+    },
+    width :130
 }//, {
 //    dataField : "coursMemShirtSize",
 //    headerText : 'Shirt Size',
@@ -316,9 +326,14 @@ function auiGridSelectionChangeHandler(event) {
 //        if(selectedItems.length <= 0)
 //            return;
 
+        courseRowIndex = event.selectedItems[0].rowIndex;
+        console.log("Selected Course Index :: " + courseRowIndex);
+
         var rowItem = selectedItems[0].item; // 행 아이템들
         var corId = rowItem.coursId; // 선택한 행의 고객 ID 값
         var corCode = rowItem.coursCode;
+        courseLimit = rowItem.coursLimit;
+        courseAplcnt = rowItem.total;
         $("#coursId").val(corId);
         $("#coursCodeR").val(corCode);
 //        if(event.dataField != "coursLimit" && event.dataField != "stusCodeId") {
@@ -410,6 +425,7 @@ function fn_setToDay() {
 }
 
 function fn_selectCourseList() {
+	courseRowIndex = null;
 	Common.ajax("GET", "/organization/training/selectCourseList.do?_cacheId=" + Math.random(), $("#form_course").serialize(), function(result) {
         console.log(result);
         AUIGrid.setGridData(courseGridID, result);
@@ -478,7 +494,19 @@ function fn_attendeePop(pType) {
 }
 
 function fn_addRow(gridID) {
-    AUIGrid.addRow(gridID, {}, "first");
+	console.log("addrow");
+	console.log("courseRowIndex :: " + courseRowIndex);
+	if(courseRowIndex == null) {
+		Common.alert("Please select course.");
+	} else {
+		console.log("courseLimit :: " + courseLimit);
+		console.log("courseAplcnt :: " + courseAplcnt);
+		if(courseLimit > courseAplcnt) {
+            AUIGrid.addRow(gridID, {}, "first");
+        } else {
+            Common.alert("Training course limit reached!");
+        }
+	}
 }
 
 function fn_delRow(gridID) {

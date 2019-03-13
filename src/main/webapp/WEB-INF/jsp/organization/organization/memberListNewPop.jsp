@@ -477,6 +477,7 @@ console.log("ready");
         $('span', '#emailLbl').empty().remove();
         $('span', '#mobileNoLbl').empty().remove();
         $('span', '#meetingPointLbl').empty().remove();
+        $('span', '#courseLbl').empty().remove();
 
         if ( memberType ==  "2803") {
             //$('#grid_wrap_doc').attr("hidden", true);
@@ -512,27 +513,35 @@ console.log("ready");
 	$("#traineeType1").click(function(){   // CHECK Trainee Type = Cody then Disable Main & Sub Department selection -- Added by Tommy
 		var traineeType = $("#traineeType1").val();
 
+	    $('span', '#courseLbl').empty().remove();
+
 		if(traineeType == 2){
+			$('#courseLbl').append("<span class='must'>*</span>");
             $("#searchdepartment").attr("disabled", true);
             $("#searchSubDept").attr("disabled", true);
             $("#joinDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
             $("#joinDate").attr("readOnly", true);
 
 		}else if(traineeType == 7 ){
-                $("#searchdepartment").attr("disabled", true);
-                $("#searchSubDept").attr("disabled", true);
-                $("#transportCd option[value=253]").attr('selected', 'selected');
-                $("#joinDate").attr("readOnly", false);
+			$('#courseLbl').append("<span class='must'>*</span>");
+            $("#searchdepartment").attr("disabled", true);
+            $("#searchSubDept").attr("disabled", true);
+            $("#transportCd option[value=253]").attr('selected', 'selected');
+            $("#joinDate").attr("readOnly", false);
 
 		}else{
+			$('#courseLbl').append("<span class='must'>*</span>");
             $("#searchdepartment").attr("disabled", false);
             $("#searchSubDept").attr("disabled", false);
             $("#joinDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
             $("#joinDate").attr("readOnly", true);
 		}
 
-	});
+		if(traineeType == "" || traineeType == null) {
+			$('span', '#courseLbl').empty().remove();
+		}
 
+	});
 
      $("#searchdepartment").change(function(){
 
@@ -599,6 +608,8 @@ console.log("ready");
 function onclickIssuedBank() {
 	$("#issuedBank > option[value='22']").remove();
 	$("#issuedBank > option[value='24']").remove();
+	$("#issuedBank > option[value='42']").remove();
+	$("#issuedBank > option[value='43']").remove();
 }
 
 function createAUIGridDoc() {
@@ -862,39 +873,37 @@ console.log("validation");
         return false;
     }
 
-    if($("#memberNm").val() == '5'){ //Training Course
-	    if($("#course").val() == ''){
-	        Common.alert("Please key  in Training Course");
-	        return false;
-	    }
-    }
-    if($("#memberType").val() =='5'){
-    	if($("#traineeType1").val() ==''){
-    		   Common.alert("Please key in Trainee type");
-    		   return false;
-    	}
-    }
-
     if($("#memberType").val() == "2803" || $("#memberType").val() == "5") {
         if($("#mobileNo").val() == '') {
         	Common.alert("Please key in Mobile No.");
             return false;
         }
-    }
 
-    if($("#memberType").val() == "2803") {
-        if($("#email").val() == '') {
-            Common.alert("Please key in Email Address");
-            return false;
+        if($("#memberType").val() == "2803") {
+            if($("#email").val() == '') {
+                Common.alert("Please key in Email Address");
+                return false;
+            }
+
+            // 2018-07-26 - LaiKW - Added Meeting Point and Branch
+            if($('#meetingPoint').val() == '') {
+                Common.alert("Please select reporting branch");
+                return false;
+            }
         }
 
-        // 2018-07-26 - LaiKW - Added Meeting Point and Branch
-        if($('#meetingPoint').val() == '') {
-            Common.alert("Please select reporting branch");
-            return false;
+        if($("#memberType").val() =='5'){
+            if($("#traineeType1").val() ==''){
+                   Common.alert("Please key in Trainee type");
+                   return false;
+            }
+
+            if($("#course").val() == ''){
+                Common.alert("Please key  in Training Course");
+                return false;
+            }
         }
     }
-
 	return true;
 }
 
@@ -1509,7 +1518,7 @@ function checkBankAccNo() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Training Course</th>
+    <th id="courseLbl" scope="row">Training Course</th>
     <td colspan="2">
     <select class="w100p" id="course" name="course">
     </select>

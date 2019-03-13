@@ -1087,6 +1087,12 @@ public class MemberListController {
 
 		Calendar Startcal = Calendar.getInstance();
 
+		StringBuffer currDt = new StringBuffer();
+		currDt.append(String.format("%04d", Startcal.get(Startcal.YEAR)));
+		currDt.append(String.format("%02d", Startcal.get(Startcal.MONTH) + 1));
+		currDt.append(String.format("%02d", Startcal.get(Startcal.DATE)));
+		params.put("curDt", currDt.toString());
+
 		Startcal.add(Calendar.MONTH,1);
 
 		//현재 년도, 월, 일
