@@ -3,7 +3,9 @@
  */
 package com.coway.trust.biz.homecare.sales.impl;
 
+
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -15,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import static java.lang.Math.toIntExact;
-
 import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1442,7 +1443,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
 		HTOrderVO HTOrderVO = new HTOrderVO();
 
-		GridDataSet<DocSubmissionVO>    documentList     = orderVO.getDocSubmissionVOList();
+		//GridDataSet<DocSubmissionVO>    documentList     = orderVO.getDocSubmissionVOList();
 		//List<DocSubmissionVO>               docSubVOList     = documentList.getUpdate(); // 수정 리스트 얻기
 		InstallationVO 		                      installationVO 	  = orderVO.getInstallationVO();
 
@@ -1450,6 +1451,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		int orderAppType = orderVO.getAppTypeId();
 		int custTypeId   = orderVO.getCustTypeId();
 		int custRaceId   = orderVO.getRaceId();
+		int srvPacId = orderVO.getSrvPacId();
 
 		//SERVICE ADDRESS INSTALLATION
 		String sInstallDate = installationVO.getPreDt();
@@ -1484,10 +1486,10 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		HTOrderVO.setSrvConfigPeriodVO(srvConfigPeriodVO);
 
 		// SERVICE CARE ORDER LOG
-		List<SalesOrderLogVO> salesOrderLogVOList = new ArrayList<SalesOrderLogVO>();
+/*		List<SalesOrderLogVO> salesOrderLogVOList = new ArrayList<SalesOrderLogVO>();
 		this.preprocOrderLog(salesOrderLogVOList, orderAppType, custTypeId, custRaceId, sessionVO);
 		HTOrderVO.setSalesOrderLogVOList(salesOrderLogVOList);
-
+*/
 		//GET SERVICE CARE ORDER NO
 		String salesOrdNo = "";
 		salesOrdNo =  htOrderRegisterMapper.selectDocNo(168);
@@ -1515,9 +1517,27 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
         }
 */
      //SERVICE MEMBERSHIP SALES - SAL0095D
+
+        Map<String, Object> srvparams = null;
+		srvparams = new HashMap<String, Object>();
+		srvparams.put("srvPacId",srvPacId);
+		srvparams.put("salesOrdId",salesOrdId);
+		EgovMap memberPackageInfo = htOrderRegisterMapper.selectMembershipPackageInfo(srvparams);
+
+		String startDt = (String) memberPackageInfo.get("strtDt");
+		String expireDt = (String) memberPackageInfo.get("exprDt");
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+		Date startDt1 = df.parse(startDt.toString());
+		Date expireDt1 = df.parse(expireDt.toString());
+
     	if(srvMembershipSalesVO != null && srvMembershipSalesVO.getSrvStusCodeId() > 0) {
     		String membershipNo = htOrderRegisterMapper.selectDocNo(DocTypeConstants.MEMBERSHIP_NO);
 
+    		srvMembershipSalesVO.setSrvFreq(4);
+    		srvMembershipSalesVO.setSrvStartDt(startDt1);
+    		srvMembershipSalesVO.setSrvExprDt(expireDt1);
+    		srvMembershipSalesVO.setSrvDur(CommonUtils.intNvl(memberPackageInfo.get("srvMemDur")));
+    		srvMembershipSalesVO.setSrvMemPacId(srvPacId);
     		srvMembershipSalesVO.setSrvMemNo(membershipNo);
     		srvMembershipSalesVO.setSrvSalesOrdId(salesOrdId);
     		htOrderRegisterMapper.insertSrvMembershipSales(srvMembershipSalesVO);
@@ -1529,7 +1549,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
     		htOrderRegisterMapper.insertSrvConfiguration(srvConfigurationVO);
     	}
 
-    	//SERVICE CONFIG SETTING - SAL0227D
+    	//SERVICE CONFIG SETTING - SAL0228D
         if(srvConfigSettingVOList != null && srvConfigSettingVOList.size() > 0) {
         	for(SrvConfigSettingVO srvConfigSettingVO : srvConfigSettingVOList) {
         		srvConfigSettingVO.setSrvConfigId(srvConfigurationVO.getSrvConfigId());
@@ -1537,9 +1557,12 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
         	}
         }
 
-        //SERVICE CONFIG PERIOD - SAL0229D
+        //SERVICE CONFIG PERIOD - SAL0227D
         if(srvConfigPeriodVO != null && srvConfigPeriodVO.getSrvPrdStusId() > 0) {
         	srvConfigPeriodVO.setSrvConfigId(srvConfigurationVO.getSrvConfigId());
+        	srvConfigPeriodVO.setSrvPrdDur(4);
+        	srvConfigPeriodVO.setSrvPrdStartDt(startDt1);
+        	srvConfigPeriodVO.setSrvPrdExprDt(expireDt1);;
         	htOrderRegisterMapper.insertSrvConfigPeriod(srvConfigPeriodVO);
         }
 
@@ -1552,9 +1575,6 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
         		htOrderRegisterMapper.insertSalesOrderLog(salesOrderLogVO);
         	}
         }*/
-
-
-
 
 
 	    // TAX INVOICE
@@ -1687,7 +1707,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		String invDocNo = "";
 		switch(orderVO.getAppTypeId()){
 		case 3212 :
-			appTypeName = "Service Care";
+			appTypeName = "Care Service";
 			invDocNo =  String.valueOf(invoiceDocNo.get("csno"));
 			break;
 		case 145 :
@@ -1702,7 +1722,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
 
 
-		String msg = "Order successfully saved.<br /> SERVICE CARE NO :  " + salesOrdNo + "<br /> APPLICATION TYPE : " + appTypeName + "<br /> INVOICE DOC NO : " + invDocNo;
+		String msg = "Order successfully saved.<br /> Service Care No. :  " + salesOrdNo + "<br /> Application Type : " + appTypeName + "<br /> Invoice Doc No. : " + invDocNo;
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 //		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
