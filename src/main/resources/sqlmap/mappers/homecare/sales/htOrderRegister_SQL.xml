@@ -1546,8 +1546,10 @@
              , #{srvMemBsAmt}
              , #{srvMemPv}
              , #{srvFreq}
-             , TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM')||'-01', 'YYYY-MM-DD')
-             , TO_DATE(TO_CHAR(LAST_DAY(SYSDATE), 'YYYY-MM-DD'), 'YYYY-MM-DD')
+         <!--     , TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM')||'-01', 'YYYY-MM-DD')
+             , TO_DATE(TO_CHAR(LAST_DAY(SYSDATE), 'YYYY-MM-DD'), 'YYYY-MM-DD') -->
+             , #{srvStartDt}
+             , #{srvExprDt}
              , #{srvDur}
              , #{srvStusCodeId}
              , #{srvRem}
@@ -1655,8 +1657,10 @@
              ( #{srvPrdId}
              , #{srvConfigId}
              , #{srvMbrshId}
-  			 , TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM')||'-01', 'YYYY-MM-DD')
-             , TO_DATE(TO_CHAR(LAST_DAY(SYSDATE), 'YYYY-MM-DD'), 'YYYY-MM-DD')
+ <!--  			 , TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM')||'-01', 'YYYY-MM-DD')
+             , TO_DATE(TO_CHAR(LAST_DAY(SYSDATE), 'YYYY-MM-DD'), 'YYYY-MM-DD') -->
+             , #{srvPrdStartDt}
+             , #{srvPrdExprDt}
              , #{srvPrdDur}
              , #{srvPrdStusId}
              , #{srvPrdRem}
