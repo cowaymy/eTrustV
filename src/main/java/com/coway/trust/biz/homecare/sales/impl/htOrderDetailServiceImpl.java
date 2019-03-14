@@ -82,19 +82,16 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 		String memInfo           = htOrderDetailMapper.selectMemberInfo((String) basicInfo.get("custNric"));
 		EgovMap installationInfo = htOrderDetailMapper.selectOrderInstallationInfoByOrderID(params);
 		EgovMap orderCfgInfo 	 = htOrderDetailMapper.selectOrderConfigInfo(params);
+		EgovMap mailingInfo 	 = htOrderDetailMapper.selectOrderMailingInfoByOrderID(params);
 
 		//EgovMap logView          = htOrderDetailMapper.selectLatestOrderLogByOrderID(params);
 		//EgovMap agreementView    = htOrderDetailMapper.selectOrderAgreementByOrderID(params);
-		//EgovMap installationInfo = htOrderDetailMapper.selectOrderInstallationInfoByOrderID(params);
 		//EgovMap ccpFeedbackCode  = htOrderDetailMapper.selectOrderCCPFeedbackCodeByOrderID(params);
 		//EgovMap ccpInfo          = htOrderDetailMapper.selectOrderCCPInfoByOrderID(params);
-		//EgovMap salesmanInfo 	 = htOrderDetailMapper.selectOrderSalesmanViewByOrderID(params);
-		//EgovMap codyInfo     	 = htOrderDetailMapper.selectOrderServiceMemberViewByOrderID(params);
 		//EgovMap mailingInfo 	 = htOrderDetailMapper.selectOrderMailingInfoByOrderID(params);
 		//EgovMap rentPaySetInf 	 = null;
 		//EgovMap thirdPartyInfo   = null;
 		//EgovMap grntnfo          = null;
-		//EgovMap orderCfgInfo 	 = htOrderDetailMapper.selectOrderConfigInfo(params);
 		//EgovMap gstCertInfo      = htOrderDetailMapper.selectGSTCertInfo(params);
 
 
@@ -147,7 +144,7 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 		this.loadCustInfo(basicInfo);
 		if(installationInfo != null) this.loadInstallationInfo(installationInfo);
 //		if(mailingInfo != null) this.loadMailingInfo(mailingInfo, basicInfo);
-//		if(orderCfgInfo != null) this.loadConfigInfo(orderCfgInfo);
+		if(orderCfgInfo != null) this.loadConfigInfo(orderCfgInfo);
 //		if(gstCertInfo != null) this.loadGstCertInfo(gstCertInfo);
 
 		orderDetail.put("basicInfo",     	basicInfo);
@@ -158,7 +155,7 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 //		orderDetail.put("ccpInfo", 			ccpInfo);
 		orderDetail.put("salesmanInfo", 	salesmanInfo);
 		orderDetail.put("codyInfo", 		codyInfo);
-//		orderDetail.put("mailingInfo", 		mailingInfo);
+		orderDetail.put("mailingInfo", 		mailingInfo);
 //		orderDetail.put("rentPaySetInf", 	rentPaySetInf);
 //		orderDetail.put("thirdPartyInfo", 	thirdPartyInfo);
 		orderDetail.put("orderCfgInfo", 	orderCfgInfo);
@@ -187,7 +184,8 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	private void loadConfigInfo(EgovMap orderCfgInfo) {
-		orderCfgInfo.put("configBsGen", ((BigDecimal)orderCfgInfo.get("configBsGen")).compareTo(BigDecimal.ONE) == 0 ? "Available" : "Unavailable");
+		//orderCfgInfo.put("configBsGen", ((BigDecimal)orderCfgInfo.get("configBsGen")).compareTo(BigDecimal.ONE) == 0 ? "Available" : "Unavailable");
+		orderCfgInfo.put("configBsGen", CommonUtils.intNvl(orderCfgInfo.get("configBsGen")) == 0 ? "Available" : "Unavailable");
 	}
 
 	private void loadOrderGuaranteeInfo(EgovMap grntnfo, EgovMap installationInfo) throws ParseException {
