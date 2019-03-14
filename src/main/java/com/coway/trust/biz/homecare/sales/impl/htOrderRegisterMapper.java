@@ -183,4 +183,6 @@ public interface htOrderRegisterMapper {
 
     void updateSrvConfigPeriod(Map<String, Object> params);
 
+	EgovMap selectHTCovergPostCode(Map<String, Object> params);
+
 }
