@@ -64,4 +64,6 @@ public interface htOrderRegisterService {
 
 	EgovMap selectProductComponentDefaultKey(Map<String, Object> params);
 
+	EgovMap selectHTCovergPostCode(Map<String, Object> params);
+
 }
