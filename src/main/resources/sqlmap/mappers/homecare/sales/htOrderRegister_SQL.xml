@@ -2552,5 +2552,19 @@ srv.SRV_ORD_ID = #{salesOrdId}
          WHERE SRV_PRD_ID = #{srvPrdId}
     </update>
 
+    <select id="selectHTCovergPostCode" parameterType="Map" resultType="egovMap">
+
+ SELECT DISTINCT cvrg.AREA_ID,
+ B.POSTCODE,
+ som.CUST_ID
+  FROM SAL0225D som
+JOIN SAL0045D inst ON som.SRV_ORD_ID = inst.SALES_ORD_ID
+JOIN SAL0023D addr ON inst.ADD_ID = addr.CUST_ADD_ID
+JOIN SAL0233M cvrg ON addr.AREA_ID = cvrg.AREA_ID
+JOIN SYS0064M B ON cvrg.AREA_ID = B.AREA_ID
+WHERE
+som.CUST_ID  = #{custId}
+
+    </select>
 
 </mapper>
