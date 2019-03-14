@@ -143,17 +143,14 @@ public class htOrderRegisterController {
 
     //	EgovMap custAddInfo = htOrderRegisterService.selectCustAddInfo(params);
     	EgovMap custAddInfo = customerService.selectCustomerViewMainAddress(params);
-/*
+
     	if(custAddInfo != null) {
     		if(CommonUtils.isNotEmpty(custAddInfo.get("postcode"))) {
     			params.put("postCode", custAddInfo.get("postcode"));
 
-    			EgovMap brnchInfo = commonService.selectBrnchIdByPostCode(params);
-
-    			custAddInfo.put("brnchId", brnchInfo.get("brnchId"));
     		}
     	}
-*/
+
     	// 데이터 리턴.
     	return ResponseEntity.ok(custAddInfo);
     }
@@ -387,5 +384,12 @@ logger.info("extrade :: " + params.get("exTrade"));
         EgovMap defaultKey = htOrderRegisterService.selectProductComponentDefaultKey(params);
         // 데이터 리턴.
         return ResponseEntity.ok(defaultKey);
+    }
+
+    @RequestMapping(value = "/selectHTCovergPostCode.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectHTCovergPostCode(@RequestParam Map<String, Object> params)
+    {
+    	EgovMap postCodeInfo = htOrderRegisterService.selectHTCovergPostCode(params);
+    	return ResponseEntity.ok(postCodeInfo);
     }
 }
