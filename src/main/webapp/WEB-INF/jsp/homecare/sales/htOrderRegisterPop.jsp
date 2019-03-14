@@ -148,6 +148,10 @@
         $('#sctThrdParty').removeClass("blind");
     }*/
 
+
+
+
+
     function fn_loadCustomer(custId){
 
         $("#searchCustId").val(custId);
@@ -196,6 +200,8 @@
                 } else {
                     $('#sctBillPrefer').addClass("blind");
                 }
+
+                fn_checkPostCodeCoverage(custInfo.custId);
 
                 if(custInfo.custAddId > 0) {
 
@@ -259,6 +265,23 @@
         });
     }
 
+    function fn_checkPostCodeCoverage(custId){
+        console.log("fn_checkPostCodeCoverage START");
+       Common.ajax("GET", "/homecare/sales/selectHTCovergPostCode.do", {custId : custId}, function(postCodeInfo) {
+
+           console.log("fn_checkPostCodeCoverage START : " + postCodeInfo);
+              if(postCodeInfo != null){
+
+              }else{
+                  Common.alert('<b>* Post Code not in Care Service coverage area.<br />' , fn_clearAllForm() );
+                  return false;
+              }
+       });
+   }
+
+
+
+
     function fn_loadMailAddr(custAddId){
         console.log("fn_loadMailAddr START");
 
@@ -285,6 +308,8 @@
         });
     }
 
+
+
     function fn_loadInstallAddr(custAddId){
         console.log("fn_loadInstallAddr START");
 
@@ -310,6 +335,7 @@
                     Common.alert('<spring:message code="sal.alert.msg.invalidMagicAddress"/>',fn_orderRegPopClose());
                     return false;
                 }
+
 
                 $("#hiddenCustAddId").val(custInfo.custAddId); //Customer Address ID(Hidden)
                 $("#instAddrDtl").val(custInfo.addrDtl); //Address
@@ -1385,7 +1411,7 @@
     function fn_validCustomer() {
         var isValid = true, msg = "";
 
-        if(FormUtil.checkReqValue($('#hiddenCustId'))) {
+        if(FormUtil.checkReqValue($('#hiddenCustId')) && FormUtil.checkReqValue($('#custId'))) {
             isValid = false;
             msg += '<spring:message code="sal.alert.msg.plzSelCust2" />';
         }
@@ -1864,7 +1890,7 @@
 
         if(FormUtil.isNotEmpty(trialNo)) {
 
-            Common.ajax("GET", "/sales/order/selectTrialNo.do", {salesOrdNo : trialNo}, function(trialInfo) {
+            Common.ajax("GET", "/homecare/sales/selectTrialNo.do", {salesOrdNo : trialNo}, function(trialInfo) {
 
                 if(trialInfo != null) {
 
@@ -1879,7 +1905,7 @@
 
     function fn_loadPromotionPrice(promoId, stkId, srvPacId) {
 
-        Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
+        Common.ajax("GET", "/homecare/sales/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
 
             if(promoPriceInfo != null) {
 
@@ -1910,10 +1936,10 @@
         //$('#ordPromo').removeAttr("disabled");
 
         if(appTypeVal !=66){
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
+            doGetComboData('/homecare/sales/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
         }
         else
-        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
+        doGetComboData('/homecare/sales/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
     }
 
     //LoadProductPrice
@@ -1996,6 +2022,24 @@
             default :
                 break;
         }
+    }
+
+    //ClearControl_AllForm
+    function fn_clearAllForm(){
+    	   fn_clearCustomer();
+    	   fn_clearMailAddress();
+
+    	   $('#ownerPurchsForm').clearForm();
+           $('#addSvcCntcForm').clearForm();
+
+    	   fn_clearSales();
+    	   fn_clearInstallAddr();
+    	   fn_clearCntcPerson();
+
+    	  /*  $('#ownerPurchsForm').clearForm();
+    	   $('#addSvcCntcForm').clearForm();
+    	   $('#instAddrForm').clearForm(); */
+
     }
 
     //ClearControl_Customer(Customer)
