@@ -248,7 +248,7 @@ var targetFinalBillColumnLayout = [
 { dataField:"trNo" ,headerText:"TR No" ,editable : false , width : 150 },
 { dataField:"collectorCode" ,headerText:"Collector Code" ,editable : false , width : 250 },
 { dataField:"collectorId" ,headerText:"Collector Id" ,editable : false , width : 150 ,visible : false},
-{ dataField:"allowComm" ,headerText:"Commission" ,editable : false , width : 150F}
+{ dataField:"allowComm" ,headerText:"Commission" ,editable : false , width : 150}
 ];
 
 
