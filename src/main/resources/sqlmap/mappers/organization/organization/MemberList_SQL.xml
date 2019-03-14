@@ -4353,17 +4353,28 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             STUS_ID,
             STUS_NM,
             CNFM,
-            CNFM_DT from (
+            CNFM_DT,
+            APLICNT_NAME,
+            APLICNT_NRIC,
+            BNK_NM,
+            APLICNT_BANK_ACC_NO
+        from (
                 select
                     aplicnt.APLCTN_ID,
                     aplicnt.APLICNT_IDNTFC IDNTFC,
                     aplicnt.STUS_ID,
                     s.NAME STUS_NM,
                     aplicnt.CNFM,
-                    TO_CHAR(aplicnt.CNFM_DT, 'YYYY-MM-DD') CNFM_DT
+                    TO_CHAR(aplicnt.CNFM_DT, 'YYYY-MM-DD') CNFM_DT,
+                    aplicnt.APLICNT_NAME,
+                    aplicnt.APLICNT_NRIC,
+                    bnk.NAME BNK_NM,
+                    aplicnt.APLICNT_BANK_ACC_NO
                 from ORG0003D aplicnt
                 inner join SYS0038M s
                     on aplicnt.STUS_ID = s.STUS_CODE_ID
+                INNER JOIN SYS0096M bnk
+                    on bnk.BANK_ID = aplicnt.APLICNT_BANK_ID
                 where
                     1=1
                     <if test="aplcntCode != null and aplcntCode != '' ">
@@ -4447,6 +4458,13 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         </if>
       </select>
 
+      <select id="checkAccLen" parameterType="Map" resultType="egovMap">
+          SELECT
+              ACC_LEN
+          FROM SYS0096M
+          WHERE BANK_ID = #{bankId}
+      </select>
+
       <select id="getUserRole" parameterType="Map" resultType="egovMap">
       select
         a.USER_ID userId,
@@ -4464,6 +4482,16 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         on c.ROLE_ID = b.ROLE_ID
       where a.USER_ID = #{userId}
       </select>
+
+    <select id="selectAccBank" parameterType="Map" resultType="egovMap">
+    SELECT
+        BANK_ID CODE_ID,
+        CODE,
+        CODE || ' - ' || NAME CODE_NAME
+    FROM SYS0096M
+    WHERE STUS = '1'
+    ORDER BY CODE
+    </select>
 
 <!--
     <select id="getCDDtls" parameterType="Map" resultType="egovMap">

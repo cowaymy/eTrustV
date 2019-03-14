@@ -1590,6 +1590,10 @@ logger.debug("params : {}", params);
         aplicntStatus.put("stus", item.get("stusId"));
         aplicntStatus.put("cnfm", item.get("cnfm"));
         aplicntStatus.put("cnfm_dt", item.get("cnfmDt"));
+        aplicntStatus.put("aplicntName", item.get("aplicntName"));
+        aplicntStatus.put("aplicntNric", item.get("aplicntNric"));
+        aplicntStatus.put("bnkNm", item.get("bnkNm"));
+        aplicntStatus.put("aplicntBankAccNo", item.get("aplicntBankAccNo"));
 
         return ResponseEntity.ok(aplicntStatus);
     }
@@ -1756,6 +1760,49 @@ logger.debug("params : {}", params);
         return ResponseEntity.ok(bankAccCheck);
     }
     // Kit Wai - End - 20180428
+
+    // Kit Wai - Start - 20190314
+    // Added bank account number length checking
+    @RequestMapping(value = "/checkAccLen", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> checkAccLen(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+        logger.debug("==================== checkAccLen ====================");
+
+        ReturnMessage message = new ReturnMessage();
+
+        String bankAccNo = params.get("bankAccNo").toString();
+
+        EgovMap item = new EgovMap();
+        item = (EgovMap) memberListService.checkAccLen(params);
+
+        String[] lenArr = item.get("accLen").toString().split("\\|\\|");;
+
+        if(lenArr != null) {
+            //String flg = ""
+            for(int i = 0; i < lenArr.length; i++) {
+                if(bankAccNo.length() == Integer.parseInt(lenArr[i])) {
+                    message.setMessage("S");
+                    break;
+                } else {
+                    message.setMessage("F");
+                }
+            }
+        }
+
+        return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/selectAccBank.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectAccBank(@RequestParam Map<String, Object> params) throws Exception {
+
+        logger.debug("==================== org-selectAccBank ====================");
+
+        logger.debug("groupCode : {}", params.get("groupCode"));
+
+        List<EgovMap> codeList = memberListService.selectAccBank(params);
+        return ResponseEntity.ok(codeList);
+    }
+    // Kit Wai - End - 20190314
 
     // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - Start
     @RequestMapping(value = "/cdAgreement.do")

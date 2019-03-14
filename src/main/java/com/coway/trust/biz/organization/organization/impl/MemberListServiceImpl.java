@@ -2427,4 +2427,15 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		// TODO Auto-generated method stub
 		return memberListMapper.selectApprovalBranch(params);
 	}
+
+	@Override
+    public EgovMap checkAccLen(Map<String, Object> params) {
+        return memberListMapper.checkAccLen(params);
+    }
+
+	@Override
+	public List<EgovMap> selectAccBank(Map<String, Object> params) {
+	    return memberListMapper.selectAccBank(params);
+    }
+
 }

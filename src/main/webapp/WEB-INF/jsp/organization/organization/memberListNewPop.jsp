@@ -7,6 +7,8 @@ var optionCity = {chooseMessage: "2. City"};
 var optionPostCode = {chooseMessage: "3. Post Code"};
 var optionArea = {chooseMessage: "4. Area"};
 
+var issuedBankTxt;
+
 var myGridID_Doc;
 function fn_memberSave(){
 
@@ -53,10 +55,10 @@ function fn_memberSave(){
                             if($("#mobileNo").val() != "") {
                                 var rTelNo = $("#mobileNo").val();
 
-                                Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
+                                /*Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
                                     console.log("sms.");
                                     console.log( result);
-                                });
+                                });*/
                             }
 
                             if($("#email").val() != "") {
@@ -65,10 +67,10 @@ function fn_memberSave(){
                                 var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
 
                                 // Send Email file, recipient
-                                Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
+                                /*Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
                                     console.log("email.");
                                     console.log(result);
-                                })
+                                })*/
                             }
 
 			            });
@@ -94,8 +96,16 @@ function fn_close(){
 }
 function fn_saveConfirm(){
 
-	if(fn_saveValidation()){
-        Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
+    if(fn_saveValidation()){
+        if($("#memberType").val() == 2803){
+            Common.confirm($("#memberNm").val() + "</br>" +
+                                   $("#nric").val() + "</br>" +
+                                   issuedBankTxt + "</br>" +
+                                   "A/C : " + $("#bankAccNo").val() + "</br></br>" +
+                                   "Do you want to save with above information (for commission purpose)?", fn_memberSave);
+        } else {
+            Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
+        }
     }
 }
 function fn_docSubmission(){
@@ -501,6 +511,7 @@ console.log("ready");
             $("#educationLvl").attr("disabled", true);
             $("#language").attr("disabled", true);
             $("#trNo").attr("disabled", true);
+            doGetCombo('/organization/selectAccBank.do', '', '', 'issuedBank', 'S', '');
         } else if(memberType ==  "5") {
             $('#mobileNo').prop('required', true);
             $('#mobileNoLbl').append("<span class='must'>*</span>");
@@ -610,6 +621,11 @@ function onclickIssuedBank() {
 	$("#issuedBank > option[value='24']").remove();
 	$("#issuedBank > option[value='42']").remove();
 	$("#issuedBank > option[value='43']").remove();
+}
+
+function onChangeIssuedBank(sel) {
+	issuedBankTxt = sel.options[sel.selectedIndex].text;
+	console.log("issuedBankTxt :: " + issuedBankTxt);
 }
 
 function createAUIGridDoc() {
@@ -1225,19 +1241,47 @@ function checkBankAccNoEnter() {
 
 function checkBankAccNo() {
     //var jsonObj = { "bank" : $("#issuedBank").val(), "bankAccNo" : $("#bankAccNo").val() };
-    var jsonObj = { "bankAccNo" : $("#bankAccNo").val() };
+    var jsonObj = {
+        "bankId" : $("#issuedBank").val(),
+        "bankAccNo" : $("#bankAccNo").val()
+    };
 
-    Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
-    	console.log(result);
-        if(result.cnt1 == "0" && result.cnt2 == "0") {
-            return true;
-        } else {
-            Common.alert("Bank account number has been registered.");
-            //$("#issuedBank").val("");
-            $("#bankAccNo").val("");
-            return false;
-        }
-    });
+    if($("#memberType").val() == "2803") {
+        Common.ajax("GET", "/organization/checkAccLen", jsonObj, function(resultM) {
+            console.log(resultM);
+
+            if(resultM.message == "F") {
+                Common.alert("Invalid Account Length!");
+                $("#bankAccNo").val("");
+                return false;
+            } else if(resultM.message == "S") {
+
+                Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
+                    console.log(result);
+                    if(result.cnt1 == "0" && result.cnt2 == "0") {
+                        return true;
+                    } else {
+                        Common.alert("Bank account number has been registered.");
+                        //$("#issuedBank").val("");
+                        $("#bankAccNo").val("");
+                        return false;
+                    }
+                });
+            }
+        });
+    } else {
+        Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
+            console.log(result);
+            if(result.cnt1 == "0" && result.cnt2 == "0") {
+                return true;
+            } else {
+                Common.alert("Bank account number has been registered.");
+                //$("#issuedBank").val("");
+                $("#bankAccNo").val("");
+                return false;
+            }
+        });
+    }
 }
 
 </script>
@@ -1599,7 +1643,7 @@ function checkBankAccNo() {
 <tr>
     <th scope="row">Issued Bank<span class="must">*</span></th>
     <td>
-    <select class="w100p" id="issuedBank" name="issuedBank" onClick="javascript : onclickIssuedBank()">
+    <select class="w100p" id="issuedBank" name="issuedBank" onClick="javascript : onclickIssuedBank()" onChange="onChangeIssuedBank(this)">
     </select>
     </td>
     <th scope="row">Bank Account No<span class="must">*</span></th>

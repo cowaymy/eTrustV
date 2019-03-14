@@ -288,8 +288,10 @@ public interface MemberListMapper {
     void updateMeetpoint(Map<String, Object> params);
 
 	List<EgovMap> selectMemberTypeHP(Map<String, Object> params);
-	
+
 	List<EgovMap> selectApprovalBranch(Map<String, Object> params);
 
+	EgovMap checkAccLen(Map<String, Object> params);
 
+	List<EgovMap> selectAccBank(Map<String, Object> params);
 }
