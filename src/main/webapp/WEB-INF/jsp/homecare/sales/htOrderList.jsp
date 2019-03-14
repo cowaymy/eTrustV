@@ -118,10 +118,10 @@ function fn_setDetail(gridID, rowIdx){
 	  $('#btnNew').click(function() {
           Common.popupDiv("/homecare/sales/htOrderRegisterPop.do");
       });
-	  /*$('#btnEdit').click(function() {
+	  $('#btnEdit').click(function() {
           fn_orderModifyPop();
       });
-       $('#btnReq').click(function() {
+	  /* $('#btnReq').click(function() {
           fn_orderRequestPop();
       }); */
       $('#btnSrch').click(function() {
@@ -233,7 +233,7 @@ function createAUIGrid() {
     else {
         Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
     }
-}
+}*/
 
 function fn_orderModifyPop() {
     var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
@@ -243,7 +243,7 @@ function fn_orderModifyPop() {
     else {
         Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
     }
-} */
+}
 
 
 function fn_multiCombo(){
@@ -303,8 +303,8 @@ $.fn.clearForm = function() {
 <ul class="right_btns">
 <c:if test="${SESSION_INFO.userIsExternal == '0'}">
  <li><p class="btn_blue"><a id="btnNew" href="#" ><spring:message code='sales.btn.new'/></a></p></li>
-<%--  <li><p class="btn_blue"><a id="btnEdit" href="#"><spring:message code='sales.btn.edit'/></a></p></li>
-    <li><p class="btn_blue"><a id="btnReq" href="#"><spring:message code='sales.btn.request'/></a></p></li> --%>
+  <li><p class="btn_blue"><a id="btnEdit" href="#"><spring:message code='sales.btn.edit'/></a></p></li>
+ <%--   <li><p class="btn_blue"><a id="btnReq" href="#"><spring:message code='sales.btn.request'/></a></p></li> --%>
 </c:if>
     <li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span><spring:message code='sales.Search'/></a></p></li>
     <li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
