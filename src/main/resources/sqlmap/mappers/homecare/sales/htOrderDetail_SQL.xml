@@ -5,6 +5,7 @@
 
     <select id="selectBasicInfo" parameterType="Map" resultType="egovMap">
  SELECT
+ V1.APP_TYPE_ID,
  V1.APP_TYPE_CODE,
  V1.APP_TYPE_NAME,
  V1.CRT_USER_ID,
@@ -1092,8 +1093,7 @@
                                   , T2.CONFIG_SETT_INS
                                   , T2.CONFIG_SETT_BS
                                   , T2.CONFIG_SETT_AS
-                                   , CASE WHEN T2.CONFIG_BS_GEN = 1 THEN 'Available'
-                                  ELSE 'Unavailable' END AS CONFIG_BS_GEN
+                                   ,T2.CONFIG_BS_GEN
                                   , T2.CONFIG_BS_MEM_ID
                                   , T2.CONFIG_BS_WEEK
                                   , T2.CONFIG_BS_REM
