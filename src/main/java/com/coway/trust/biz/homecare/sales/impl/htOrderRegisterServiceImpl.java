@@ -1532,7 +1532,6 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
     	if(srvMembershipSalesVO != null && srvMembershipSalesVO.getSrvStusCodeId() > 0) {
     		String membershipNo = htOrderRegisterMapper.selectDocNo(DocTypeConstants.MEMBERSHIP_NO);
-
     		srvMembershipSalesVO.setSrvFreq(4);
     		srvMembershipSalesVO.setSrvStartDt(startDt1);
     		srvMembershipSalesVO.setSrvExprDt(expireDt1);
@@ -1546,6 +1545,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
     	//SERVICE CONFIGURATION - SAL0226D
     	if(srvConfigurationVO != null && srvConfigurationVO.getSrvStusId() > 0) {
     		srvConfigurationVO.setSrvSoId(salesOrdId);
+    		//srvConfigurationVO.setSrvBsGen(1);
     		htOrderRegisterMapper.insertSrvConfiguration(srvConfigurationVO);
     	}
 
@@ -1767,5 +1767,11 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	public EgovMap selectProductComponentDefaultKey(Map<String, Object> params) {
 		EgovMap cpntKey = htOrderRegisterMapper.selectProductComponentDefaultKey(params);
 		return cpntKey;
+	}
+
+	public EgovMap selectHTCovergPostCode(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+
+		return htOrderRegisterMapper.selectHTCovergPostCode(params);
 	}
 }
