@@ -85,7 +85,7 @@
     <li><a id="aTabBI" href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
     <li><a href="#"><spring:message code="sal.title.text.hpCody" /></a></li>
     <li><a id="aTabCI" href="#" onClick="javascript:chgTab('custInfo');"><spring:message code="sal.title.text.custInfo" /></a></li>
-    <li><a id="aTabIns" href="#"><spring:message code="sal.title.text.installInfo" /></a></li>
+    <li><a id="aTabIns" href="#">Care Service Address Info</a></li>
   <%--  <li><a id="aTabMA" href="#"><spring:message code="sal.title.text.maillingInfo" /></a></li>
  <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' || orderDetail.basicInfo.appTypeCode == 'OUTPLS'}">
     <li><a  id="aTabPay" href="#"><spring:message code="sal.title.text.paymentChnnl" /></a></li>
