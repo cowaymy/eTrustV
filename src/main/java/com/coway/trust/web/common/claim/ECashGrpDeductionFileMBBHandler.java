@@ -139,7 +139,8 @@ public class ECashGrpDeductionFileMBBHandler extends BasicTextDownloadHandler im
 	        sbatchNo   = StringUtils.leftPad(String.valueOf(dataRow.get("pageno")), 5, "0");
 	    }
 		merOrg 			= StringUtils.rightPad(String.valueOf("001"), 3, " ");
-		merId 			= StringUtils.rightPad(String.valueOf("060012051"), 1, " ");
+		//merId 			= StringUtils.rightPad(String.valueOf("060012051"), 1, " ");
+		merId 			= StringUtils.rightPad(String.valueOf("060013831"), 1, " ");
 		merName 		= StringUtils.rightPad(String.valueOf("COWAY (M) SDN BHD"), 20, " ");
 		//merCode 		= StringUtils.rightPad(String.valueOf("7523"), 4, " ");
 		merCode 		= StringUtils.rightPad(String.valueOf("5722"), 4, " ");
