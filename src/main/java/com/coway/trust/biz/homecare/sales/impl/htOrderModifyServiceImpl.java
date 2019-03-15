@@ -29,7 +29,7 @@ import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.homecare.sales.htOrderModifyService;
 import com.coway.trust.biz.homecare.sales.htOrderRegisterService;
-import com.coway.trust.biz.sales.order.impl.OrderDetailMapper;
+import com.coway.trust.biz.homecare.sales.impl.htOrderDetailMapper;
 import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
 import com.coway.trust.biz.sales.order.vo.CallEntryVO;
 import com.coway.trust.biz.sales.order.vo.CallResultVO;
@@ -83,8 +83,8 @@ public class htOrderModifyServiceImpl extends EgovAbstractServiceImpl implements
 	@Resource(name = "htOrderModifyMapper")
 	private htOrderModifyMapper htOrderModifyMapper;
 
-	@Resource(name = "orderDetailMapper")
-	private OrderDetailMapper orderDetailMapper;
+	@Resource(name = "htOrderDetailMapper")
+	private htOrderDetailMapper htOrderDetailMapper;
 
 	@Resource(name = "htOrderRegisterMapper")
 	private htOrderRegisterMapper htOrderRegisterMapper;
@@ -408,7 +408,7 @@ public class htOrderModifyServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public EgovMap selectInstallInfo(Map<String, Object> params) throws Exception {
 
-		EgovMap instMap = orderDetailMapper.selectOrderInstallationInfoByOrderID(params);
+		EgovMap instMap = htOrderDetailMapper.selectOrderInstallationInfoByOrderID(params);
 
 		String TM = this.convert12Tm((String) instMap.get("preferInstTm"));
 
@@ -508,7 +508,7 @@ public class htOrderModifyServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public EgovMap selectRentPaySetInfo(Map<String, Object> params) throws Exception {
 
-		EgovMap cnctMap = orderDetailMapper.selectOrderRentPaySetInfoByOrderID(params);
+		EgovMap cnctMap = htOrderDetailMapper.selectOrderRentPaySetInfoByOrderID(params);
 
 		return cnctMap;
 	}
