@@ -25,7 +25,7 @@
     <th scope="row"><spring:message code="sal.text.refNo" /></th>
     <td>${orderDetail.basicInfo.refNo}</td>
     <th scope="row"><spring:message code="sal.title.text.keyAtBy" /></th>
-    <td>${orderDetail.basicInfo.ordCrtUserId}</td>
+    <td>${orderDetail.basicInfo.crtUserId}</td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.product" /></th>
