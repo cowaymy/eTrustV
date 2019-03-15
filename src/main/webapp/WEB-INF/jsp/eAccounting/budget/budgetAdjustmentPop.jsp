@@ -65,6 +65,19 @@ $(document).ready(function(){
         isShowChoose:false
     });
 
+    var apprStus = '${budgetApprStatus}';
+    console.log("apprStus :: " + apprStus);
+    if(apprStus != "" && apprStus != null) {
+        $("#apprRow").show();
+        $("#apprRejctRow").show();
+
+        $("#apprUsrId").text('${apprLine}');
+        $("#rejctRsn").text('${rejectRsn}');
+    } else {
+        $("#apprRow").hide();
+        $("#apprRejctRow").hide();
+    }
+
 	$("#btnAdd").click(fn_AddRow);
 	$("#btnDel").click(fn_RemoveRow);
 
@@ -1378,8 +1391,8 @@ function fn_setBudgetView() {
 		<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_clearData();" id="btnClear"><spring:message code="budget.Clear" /></a></p></li>
 </ul>
     </c:if>
-<article class="grid_wrap mt10" style="height:170px"><!-- grid_wrap start -->
-    <div id="adjPGridID" style="width:100%; height:150px; margin:0 auto;"></div>
+<article class="grid_wrap mt10" style="height:180px"><!-- grid_wrap start -->
+    <div id="adjPGridID" style="width:100%; height:180px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <table class="type1 mt10"><!-- table start -->
@@ -1415,6 +1428,24 @@ function fn_setBudgetView() {
 	    </c:if>
     </td>
 </tr>
+</tbody>
+</table><!-- table end -->
+
+<table class="type1 mt10"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:120px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+    <tr id="apprRow">
+        <th scope="row">Approver</th>
+        <td colspan="3" id="apprUsrId"></td>
+    </tr>
+    <tr id="apprRejctRow">
+        <th scope="row">Reject Reason</th>
+        <td colspan="3" id="rejctRsn"></td>
+    </tr>
 </tbody>
 </table><!-- table end -->
 

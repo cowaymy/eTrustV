@@ -261,9 +261,13 @@ public class BudgetController {
 	}
 
 	@RequestMapping(value = "/selectPenConAmountList")
-	public ResponseEntity<List<EgovMap>>  selectPenConAmountList (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	public ResponseEntity<List<EgovMap>>  selectPenConAmountList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
 
 		LOGGER.debug("params =====================================>>  " + params);
+
+		String[] pClmType = request.getParameterValues("clmType");
+
+        params.put("clmType", pClmType);
 
 		List<EgovMap> adjustmentList = null;
 
@@ -390,6 +394,20 @@ public class BudgetController {
 
 			model.addAttribute("budgetStatus", adjustmentList.get(0).get("status"));
 			LOGGER.debug("status =======>>>" + adjustmentList.get(0).get("status").toString());
+
+			String bgtApprStus = "";
+			if(adjustmentList.get(0).get("appvPrcssStusCde") != null && adjustmentList.get(0).get("appvPrcssStusCde") != "") {
+			    bgtApprStus = adjustmentList.get(0).get("appvPrcssStusCde").toString();
+			    model.addAttribute("budgetApprStatus", bgtApprStus);
+			    LOGGER.debug("bgtApprStus :: " + bgtApprStus);
+			}
+
+			if("A".equals(bgtApprStus) || "J".equals(bgtApprStus)) {
+			    EgovMap item = new EgovMap();
+			    item = budgetService.getBgtApprList(param);
+			    model.addAttribute("apprLine", item.get("apprLine"));
+			    model.addAttribute("rejectRsn", item.get("rejctResn"));
+			}
 
 			if(!adjustmentList.get(0).get("status").toString().equals("Temp. Save")){
 				model.addAttribute("budgetStatus","N");

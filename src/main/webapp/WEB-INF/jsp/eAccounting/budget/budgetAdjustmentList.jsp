@@ -67,32 +67,10 @@ $(document).ready(function(){
         headerText : '<spring:message code="budget.BudgetDoc" />',
         cellMerge : true ,
         style :"aui-grid-pointer",
-        width : 100
-    },{
-        dataField : "apprName",
-        headerText : "Approval ID",
-        cellMerge : true,
-        mergeRef : "budgetDocNo",
-        mergePolicy : "restrict",
-        width : 100
-    },{
-        dataField : "appvPrcssDt",
-        headerText : "Approval Date",
-        cellMerge : true,
-        mergeRef : "budgetDocNo",
-        mergePolicy : "restrict",
-        width : 100
-    },{
-        dataField : "appvPrcssStus",
-        headerText : "Approval Status",
-        cellMerge : true,
-        mergeRef : "budgetDocNo",
-        mergePolicy : "restrict",
-        width : 100
+        width : 95
     },{
         dataField : "costCenterText",
         headerText : '<spring:message code="budget.CostCenter" />',
-        style : "aui-grid-user-custom-left ",
         cellMerge : true ,
         mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
@@ -110,28 +88,30 @@ $(document).ready(function(){
         cellMerge : true ,
         mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
-        width : 100
+        width : 100,
+        visible : false
     },{
         dataField : "budgetCodeText",
         headerText : '<spring:message code="expense.ActivityName" />',
         cellMerge : true ,
         mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
-        width : 100
+        width : 220
     }, {
         dataField : "glAccCode",
         headerText : '<spring:message code="expense.GLAccount" />',
         cellMerge : true ,
         mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
-        width : 100
+        width : 100,
+        visible : false
     },{
         dataField : "glAccDesc",
         headerText : '<spring:message code="expense.GLAccountName" />',
         cellMerge : true ,
         mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
-        width : 100
+        width : 220
     },{
         dataField : "budgetAdjType",
         headerText : '<spring:message code="budget.AdjustmentType" />',
@@ -149,7 +129,7 @@ $(document).ready(function(){
         colSpan : 2
     },{
         dataField : "adjAmt",
-        headerText : '<spring:message code="budget.Amount" />',
+        //headerText : '<spring:message code="budget.Amount" />',
         dataType : "numeric",
         formatString : "#,##0.00",
         style : "my-right-style",
@@ -162,7 +142,22 @@ $(document).ready(function(){
         cellMerge : true ,
         mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
-        width : 150
+        width : 150,
+        visible : false
+    },{
+        dataField : "reqstName",
+        headerText : "Requester",
+        cellMerge : true,
+        mergeRef : "budgetDocNo",
+        mergePolicy : "restrict",
+        width : 80
+    },{
+        dataField : "appvPrcssStus",
+        headerText : "Approval Status",
+        cellMerge : true,
+        mergeRef : "budgetDocNo",
+        mergePolicy : "restrict",
+        width : 100
     },{
         dataField : "fileSubPath",
         headerText : '<spring:message code="budget.View" />',

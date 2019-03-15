@@ -58,4 +58,6 @@ public interface BudgetService {
 	EgovMap checkBgtPlan(Map<String, Object> params);
 
 	EgovMap getAdjInfo(Map<String, Object> params);
+
+	EgovMap getBgtApprList(Map<String, Object> params);
 }

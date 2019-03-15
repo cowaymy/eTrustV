@@ -15,6 +15,12 @@ var penGridID;
 
 $(document).ready(function(){
 
+	CommonCombo.make("clmType", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
+        id: "code",
+        name: "codeName",
+        type:"M"
+    });
+
      var penPopColumnLayout = [ {
          dataField : "appvReqKeyNo",
          headerText : '<spring:message code="budget.WebDocument" />',
@@ -101,6 +107,13 @@ $(document).ready(function(){
 
         AUIGrid.setFooter(penGridID, footerObject);
 
+        $('#clmType').change(function() {
+            console.log("clmType blur");
+
+            fn_selectListPenAjax();
+
+            AUIGrid.setFooter(penGridID, footerObject);
+        });
 });
 
 //리스트 조회.
@@ -146,7 +159,24 @@ function comma(str) {
     <input type="hidden" id="glAccCode" name ="glAccCode"  value="${item.glAccCode }" />
     <input type="hidden"  id="budgetCode" name ="budgetCode" value="${item.budgetCode }"/>
     <input type="hidden"  id="type" name ="type" value="${item.type }"/>
+
+    <table class="type1 mt10"><!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+        <col style="width:120px" />
+        <col style="width:*" />
+    </colgroup>
+    <tbody>
+        <tr>
+            <th scope="row"><spring:message code="invoiceApprove.clmType" /></th>
+            <td>
+            <select class="w100p" id="clmType" name="clmType" multiple="multiple">
+            </select>
+        </tr>
+    </tbody>
+    </table><!-- table end -->
 </form>
+
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="penGridID" style="width:100%; height:450px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->

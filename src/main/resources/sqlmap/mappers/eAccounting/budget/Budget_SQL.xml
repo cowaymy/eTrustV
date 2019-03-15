@@ -577,47 +577,56 @@ WHERE 1=1
             ORDER BY B.BUDGET_ADJ_YEAR, B.BUDGET_ADJ_MONTH
   </select>
 
-  <select id="selectPenConAmount" parameterType="Map" resultType="egovMap">
-      SELECT A.APPV_REQ_KEY_NO
-               ,B.COST_CENTR_NAME
-               ,(SELECT USER_NAME FROM SYS0047M WHERE USER_ID = A.CRT_USER_ID) AS USER_NAME
-               ,A.CRT_USER_ID
-               ,TO_CHAR(A.CRT_DT, 'dd/mm/yyyy') CRT_DT
-               ,TO_CHAR(B.INVC_DT, 'dd/mm/yyyy') INVC_DT
-               ,TO_CHAR(B.PAY_DUE_DT, 'dd/mm/yyyy') PAY_DUE_DT
-               ,B.MEM_ACC_ID
-               ,(SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = B.MEM_ACC_ID) AS MEM_ACC_NAME
-               ,TO_CHAR(NVL(B.NET_AMT, 0), '9,999,999.99') NET_AMT
-               ,ROUND(B.NET_AMT, 2) NET_AMT1
-               ,B.EXP_DESC
-       FROM FCM0004M A, FCM0015D B
-     WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
-     <if test='type == "Pending" '>
-         AND A.APPV_PRCSS_STUS IN ( 'R' ,'P' )
-     </if>
-     <if test='type == "Consumed" '>
-         AND A.APPV_PRCSS_STUS =  'A'
-     </if>
-
-         <choose>
-          <when test="stDate != null and stDate !='' ">
-               <if test="edDate != null and edDate != '' ">
-            AND TO_CHAR(A.CRT_DT, 'yyyymm') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edDate},'/',''), 'mmyyyy'), 'yyyymm')
-               </if>
-               <if test="edDate == null or edDate == '' ">
-            AND  TO_CHAR(A.CRT_DT, 'yyyymm') = TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm')
+<select id="selectPenConAmount" parameterType="Map" resultType="egovMap">
+    SELECT * FROM (
+        SELECT
+            SUBSTR(a.APPV_REQ_KEY_NO, 1, 2) CLM_TYPE,
+            A.APPV_REQ_KEY_NO
+            ,B.COST_CENTR_NAME
+            ,(SELECT USER_NAME FROM SYS0047M WHERE USER_ID = A.CRT_USER_ID) AS USER_NAME
+            ,A.CRT_USER_ID
+            ,TO_CHAR(A.CRT_DT, 'dd/mm/yyyy') CRT_DT
+            ,TO_CHAR(B.INVC_DT, 'dd/mm/yyyy') INVC_DT
+            ,TO_CHAR(B.PAY_DUE_DT, 'dd/mm/yyyy') PAY_DUE_DT
+            ,B.MEM_ACC_ID
+            ,(SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = B.MEM_ACC_ID) AS MEM_ACC_NAME
+            ,TO_CHAR(NVL(B.NET_AMT, 0), '9,999,999.99') NET_AMT
+            ,ROUND(B.NET_AMT, 2) NET_AMT1
+            ,B.EXP_DESC
+        FROM FCM0004M A, FCM0015D B
+        WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
+        <if test='type == "Pending" '>
+            AND A.APPV_PRCSS_STUS IN ( 'R' ,'P' )
+        </if>
+        <if test='type == "Consumed" '>
+            AND A.APPV_PRCSS_STUS =  'A'
+        </if>
+        <choose>
+            <when test="stDate != null and stDate !='' ">
+                <if test="edDate != null and edDate != '' ">
+                    AND TO_CHAR(A.CRT_DT, 'yyyymm') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edDate},'/',''), 'mmyyyy'), 'yyyymm')
+                </if>
+                <if test="edDate == null or edDate == '' ">
+                    AND  TO_CHAR(A.CRT_DT, 'yyyymm') = TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm')
                 </if>
             </when>
             <otherwise>
-            AND TO_CHAR(B.CRT_DT, 'yyyy')   = #{budgetPlanYear}
-            AND TO_CHAR(B.CRT_DT, 'mm')   = TO_CHAR(#{budgetPlanMonth}, 'FM00')
+                AND TO_CHAR(B.CRT_DT, 'yyyy')   = #{budgetPlanYear}
+                AND TO_CHAR(B.CRT_DT, 'mm')   = TO_CHAR(#{budgetPlanMonth}, 'FM00')
             </otherwise>
-            </choose>
-            AND B.COST_CENTR         = #{costCentr}
-            AND B.BUDGET_CODE        = #{budgetCode}
-            AND B.GL_ACC_CODE        = #{glAccCode}
-            ORDER BY B.INVC_DT
-  </select>
+        </choose>
+        AND B.COST_CENTR = #{costCentr}
+        AND B.BUDGET_CODE = #{budgetCode}
+        AND B.GL_ACC_CODE = #{glAccCode}
+    )
+    <if test="clmType != null and clmType != ''">
+        WHERE CLM_TYPE IN
+        <foreach item="item" collection="clmType" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+    ORDER BY INVC_DT
+</select>
 
   <select id="selectAdjustmentList" parameterType="Map" resultType="egovMap">
        <![CDATA[
@@ -625,12 +634,12 @@ WHERE 1=1
                  ,A.BUDGET_DOC_NO
                  ,B.COST_CENTR
                  ,BUDGET_DOC_SEQ
-                 ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
+                 ,B.COST_CENTR || ' - ' || (SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
                  ,TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR ADJ_YEAR_MONTH
                  ,B.BUDGET_CODE
-                 ,(SELECT BUDGET_CODE_TEXT FROM FCM0010M WHERE BUDGET_CODE = B.BUDGET_CODE) BUDGET_CODE_TEXT
+                 ,B.BUDGET_CODE || ' - ' || (SELECT BUDGET_CODE_TEXT FROM FCM0010M WHERE BUDGET_CODE = B.BUDGET_CODE) BUDGET_CODE_TEXT
                  ,B.GL_ACC_CODE
-                 ,(SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = B.GL_ACC_CODE) GL_ACC_DESC
+                 ,B.GL_ACC_CODE || ' - ' || (SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = B.GL_ACC_CODE) GL_ACC_DESC
                  ,FN_GET_CODENAME('347', B.BUDGET_ADJ_TYPE) BUDGET_ADJ_TYPE_NAME
                  ,B.BUDGET_ADJ_TYPE
                  ,B.ADJ_AMT
@@ -655,11 +664,12 @@ WHERE 1=1
                  ,NVL(C.APPR_NAME, ' ') APPR_NAME
                  ,NVL(C.REQST_NAME, ' ') REQST_NAME
                  ,NVL(TO_CHAR(C.APPV_PRCSS_DT, 'DD/MM/YYYY'), ' ') APPV_PRCSS_DT
-                 , CASE WHEN C.APPV_PRCSS_STUS = 'J' THEN 'REJECT'
-                           WHEN C.APPV_PRCSS_STUS = 'R' THEN 'REQUEST'
-                           WHEN C.APPV_PRCSS_STUS = 'A' THEN 'APPROVED'
-                           ELSE ' '
-                   END APPV_PRCSS_STUS
+                 ,C.APPV_PRCSS_STUS APPV_PRCSS_STUS_CDE
+                 ,CASE WHEN C.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
+                          WHEN C.APPV_PRCSS_STUS = 'R' THEN 'Request'
+                          WHEN C.APPV_PRCSS_STUS = 'A' THEN 'Approved'
+                          ELSE ' '
+                  END APPV_PRCSS_STUS
        FROM FCM0102M A
        INNER JOIN FCM0103D B
            ON A.BUDGET_DOC_NO = B.BUDGET_DOC_NO
@@ -1382,5 +1392,18 @@ WHERE 1=1
                 NVL(MAX(BUDGET_GRP_SEQ) + 1, 1) GRP_SEQ
             FROM FCM0103D
             WHERE BUDGET_DOC_NO = #{pBudgetDocNo}
+    </select>
+
+    <select id="getBgtApprList" parameterType="Map" resultType="egovMap">
+        SELECT
+            BUDGET_DOC_NO,
+            APPV_PRCSS_STUS,
+            (CASE WHEN APPV_PRCSS_STUS = 'A' THEN 'Approved By '
+            WHEN APPV_PRCSS_STUS = 'J' THEN 'Rejected By ' END) || B.USER_NAME || ' [' || TO_CHAR(A.UPD_DT, 'DD/MM/YYYY') || ']' APPR_LINE,
+            CASE WHEN APPV_PRCSS_STUS = 'J' THEN REJCT_RESN ELSE '-' END AS REJCT_RESN
+        FROM FCM0105M A
+        INNER JOIN SYS0047M B
+        ON A.UPD_USER_ID = B.USER_ID
+        WHERE BUDGET_DOC_NO = #{budgetDocNo}
     </select>
 </mapper>
