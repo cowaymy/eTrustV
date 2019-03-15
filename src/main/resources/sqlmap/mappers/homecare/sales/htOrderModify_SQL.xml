@@ -319,10 +319,10 @@
     </update>
 
     <update id="updateInstallUpdateInfo" parameterType="Map">
-        UPDATE SAL0001D
+        UPDATE SAL0225D
            SET UPD_USER_ID  = #{updUserId}
              , UPD_DT       = SYSDATE
-         WHERE SALES_ORD_ID = #{salesOrdId}
+         WHERE SRV_ORD_ID = #{salesOrdId}
     </update>
 
     <update id="updatePaymentChannel" parameterType="rentPaySetVO">
