@@ -187,7 +187,7 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
     			Common.alert("Please Select data.");
     			return false;
     		}
-    		$("#dataTitle2").text("Memo Randum Edit");
+    		$("#dataTitle2").text("Memorandum Edit");
     		$("#editwindow").show();
             $("#vdelete").show();
 
@@ -232,7 +232,7 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
     		$("#hpmemo").attr("checked" , false);
     		editor.setHTML("");
     		$("#editwindow").show();
-    		$("#dataTitle2").text("Memo Randum New");
+    		$("#dataTitle2").text("Memorandum New");
             //TODO : 추후 퍼블리싱 해결 해야함
             $(".htmlarea").attr("style","width:100%; height:100%;");
     		$(".htmlarea .toolbar > table").attr("style","width:100%;");
@@ -323,7 +323,7 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
 
 <div class="popup_wrap" id="viewwindow" style="display:none"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
-            <h1 id="dataTitle">MEMO RANDUM VIEW</h1>
+            <h1 id="dataTitle">MEMORANDUM VIEW</h1>
             <ul class="right_opt">
                 <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
             </ul>
