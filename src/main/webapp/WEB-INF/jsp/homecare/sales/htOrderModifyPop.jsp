@@ -2056,10 +2056,10 @@
             msg += '<spring:message code="sal.alert.msg.plzSelInstallContact" />';
         }
 
-        if ($("#dscBrnchId option:selected").index() <= 0) {
+      /*   if ($("#dscBrnchId option:selected").index() <= 0) {
             isValid = false;
             msg += '<spring:message code="sal.alert.msg.plzSelDscBrnch" />';
-        }
+        } */
 
         if (FormUtil.isEmpty($('#modPreferInstDt').val().trim())) {
             isValid = false;
@@ -2785,7 +2785,7 @@
  <header class="pop_header">
   <!-- pop_header start -->
   <h1 id="hTitle">
-   <spring:message code="sal.title.text.ordEdit" />
+   Care Service Order Edit
   </h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">
@@ -3311,7 +3311,7 @@
    <aside class="title_line">
     <!-- title_line start -->
     <h3>
-     <spring:message code="sal.text.instAddr" />
+   Service Address
     </h3>
    </aside>
    <!-- title_line end -->
@@ -3381,7 +3381,7 @@
      <aside class="title_line">
       <!-- title_line start -->
       <h3>
-       <spring:message code="sal.title.text.installCntcPerson" />
+       Service Contact Person
       </h3>
      </aside>
      <!-- title_line end -->
@@ -3454,7 +3454,7 @@
      <aside class="title_line">
       <!-- title_line start -->
       <h3>
-       <spring:message code="sal.title.text.installInfomation" />
+       Service Information
       </h3>
      </aside>
      <!-- title_line end -->
@@ -3468,12 +3468,12 @@
        <col style="width: *" />
       </colgroup>
       <tbody>
-       <tr>
+    <%--    <tr>
         <th scope="row"><spring:message
           code="sal.title.text.dscBrnch" /><span class="must">*</span></th>
         <td colspan="3"><select id="dscBrnchId" name="dscBrnchId"
          class="w100p"></select></td>
-       </tr>
+       </tr> --%>
        <tr>
         <th scope="row"><spring:message
           code="sal.title.text.perferInstDate" /><span class="must">*</span></th>
