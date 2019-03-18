@@ -1627,7 +1627,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
 	    param2.put("taxInvcId", taxInvcId);
 	    param2.put("invcItmType", orderVO.getAppTypeId()); // AS CHANGE FILTER
-	    param2.put("invcItmOrdNo", salesOrdId);
+	    param2.put("invcItmOrdNo", salesOrdNo);
 	    param2.put("invcItmPoNo", orderVO.getCustPoNo());
 	    param2.put("invcItmCode", orderVO.getProdSize());
 	    param2.put("invcItmDesc1", orderVO.getProdBrand());
@@ -1649,7 +1649,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	    param2.put("invcItmCnty", "");
 	    param2.put("invcItmInstallDt", "");
 	    param2.put("invcItmRetnDt", "");
-	    param2.put("invcItmBillRefNo", "");
+	    param2.put("invcItmBillRefNo", "Care Service");
 
 	    // PAY0016D
 	    Map<String, Object> param3 = new HashMap();
