@@ -3378,6 +3378,15 @@
       AND SALES_ORD_ID = #{orderId}
       AND RCD_TMS = #{rcdTms}
   </select>
+
+  <select id="getINSNo" parameterType="Map" resultType="String">
+    SELECT MAX(INSTALL_ENTRY_NO) AS INSNO
+    FROM SAL0046D
+    WHERE SALES_ORD_ID = #{hidSalesOrderId}
+      AND STUS_CODE_ID = '4'
+    ORDER BY INSTALL_ENTRY_ID
+  </select>
+
   <!-- SELECT END -->
 
   <!-- INSERT START -->
