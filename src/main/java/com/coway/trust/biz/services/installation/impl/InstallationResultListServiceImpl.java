@@ -36,6 +36,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 31/01/2019    ONGHC      1.0.1       - Restructure File
  * 05/03/2019    ONGHC      1.0.2       - Add Param to isExchange
  * 06/03/2019    ONGHC      1.0.3       - Create getSalStat
+ * 18/03/2019    ONGHC      1.0.4       - Set Previous INS number for OD55
  *********************************************************************************************/
 
 @Service("installationResultListService")
@@ -1307,6 +1308,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   public Map<String, Object> runInstSp(Map<String, Object> params, SessionVO sessionVO, String no) throws ParseException {
     Map<String, Object> resultValue = new HashMap<String, Object>();
     Map<String, Object> logPram = null;
+    String p_ordID = "";
     String retype = "";
     String p_type = "";
     String p_Pgrnm = "";
@@ -1314,6 +1316,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     if (sessionVO != null) {
       if ("2".equals(no)) { //
         if (params.get("hidCallType").equals("258")) { // PRODUCT EXCHANGE RETURN OLD STOCK REQUEST
+          p_ordID = installationResultListMapper.getINSNo(params);
+          logger.debug("== PREV. INSTALLATION NO :: " + p_ordID);
           if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
             retype = "SVO";
             p_type = "OD55"; // ORDER EXCHANGE FROM CUSTOMER
@@ -1322,6 +1326,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
         }
       } else if ("3".equals(no)) {
         if (params.get("hidCallType").equals("258")) { // PRODUCT EXCHANGE RETURN OLD STOCK RESULT
+          p_ordID = installationResultListMapper.getINSNo(params);
+          logger.debug("== PREV. INSTALLATION NO :: " + p_ordID);
           if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
             retype = "COMPLET";
             p_type = "OD55";
@@ -1339,20 +1345,24 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
           logger.debug("== SALES ORDER STATUS :: " + ordStat);
           if ("1".equals(ordStat)) {
             if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
+              p_ordID = params.get("hiddeninstallEntryNo").toString();
               retype = "COMPLET";
               p_type = "OD01";
               p_Pgrnm = "INSCOM";
             } else if (Integer.parseInt(params.get("installStatus").toString()) == 21) { // FAIL
+              p_ordID = params.get("hiddeninstallEntryNo").toString();
               retype = "SVO";
               p_type = "OD02";
               p_Pgrnm = "INSCAN";
             }
           } else {
             if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
+              p_ordID = params.get("hiddeninstallEntryNo").toString();
               retype = "COMPLET";
               p_type = "OD53";
               p_Pgrnm = "PEXCOM";
             } else if (Integer.parseInt(params.get("installStatus").toString()) == 21) { // FAIL
+              p_ordID = params.get("hiddeninstallEntryNo").toString();
               retype = "SVO";
               p_type = "OD54";
               p_Pgrnm = "PEXCAN";
@@ -1360,10 +1370,12 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
           }
         } else { // NEW INSTALLATION
           if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
+            p_ordID = params.get("hiddeninstallEntryNo").toString();
             retype = "COMPLET";
             p_type = "OD01";
             p_Pgrnm = "INSCOM";
           } else if (Integer.parseInt(params.get("installStatus").toString()) == 21) { // FAIL
+            p_ordID = params.get("hiddeninstallEntryNo").toString();
             retype = "SVO";
             p_type = "OD02";
             p_Pgrnm = "INSCAN";
@@ -1372,7 +1384,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
       }
 
       logPram = new HashMap<String, Object>();
-      logPram.put("ORD_ID", params.get("hiddeninstallEntryNo"));
+      logPram.put("ORD_ID", p_ordID);
       logPram.put("RETYPE", retype);
       logPram.put("P_TYPE", p_type);
       logPram.put("P_PRGNM", p_Pgrnm);
@@ -2675,9 +2687,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     String maxTaxInvoiceID = installationResultListMapper.selectMaxId_2(maxtaxInvoiceID);
     // String ApptypeID = (String) TaxinvoiceCompany.get("ApptypeID");
 
-    // UPDTE SALES MASTER STATUS - STATUS CODE
-    installationResultListMapper.updateSalesOrderMStatus(salesOrderM);
-
     if ("66".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID)) { // Rental
                                                                                         // ||
                                                                                         // Sponsor
@@ -2732,6 +2741,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     }
 
     if (installResult.get("statusCodeId").toString().equals("4")) { // COMPLETE
+      // UPDTE SALES MASTER STATUS - STATUS CODE
+      installationResultListMapper.updateSalesOrderMStatus(salesOrderM);
+
       // INSERT SAL0009D
       installationResultListMapper.insertOrderLog(orderLog);
 
