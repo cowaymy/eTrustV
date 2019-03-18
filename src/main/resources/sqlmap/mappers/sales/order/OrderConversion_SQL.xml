@@ -428,4 +428,141 @@
             CALL SP_RENTAL_STUS_CNVR_DET_VERIFY(#{batchId})
         }
       </select>
+
+    <select id="srvContractCnvrInfo" parameterType="Map" resultType="egovMap">
+        SELECT SRV_CNTRCT_ID, SRV_CNTRCT_REF_NO, SRV_CNTRCT_ORD_ID
+          FROM SAL0077D
+         WHERE SRV_CNTRCT_REF_NO = #{ordNo}
+    </select>
+
+    <select id="crtSeqSAL0234D" resultType="Integer">
+        SELECT SAL0234D_PAY_CNVR_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+     <insert id="insertCnvrSAL0234D">
+        INSERT INTO SAL0234D
+              ( PAY_CNVR_ID, PAY_CNVR_NO, PAY_STUS_ID, PAY_CNVR_STUS_ID, PAY_CNVR_STUS_FROM
+              , PAY_CNVR_STUS_TO, PAY_CNVR_TOTAL_ITM, PAY_CNVR_CRT_USER_ID, PAY_CNVR_CRT_DT
+              , PAY_CNVR_UPD_USER_ID, PAY_CNVR_UPD_DT, PAY_CNVR_REM, PAY_CNVR_ATTACH_URL )
+        VALUES
+              ( #{payCnvrId}, #{payCnvrNo}, #{payStusId}, #{payCnvrStusId}, #{payStusFrom}
+              , #{payStusTo}, #{totalItm}, #{userId}, SYSDATE, #{userId}
+              , SYSDATE, #{payCnvrRem}, #{payCnvrAttachURL} )
+     </insert>
+
+     <insert id="insertCnvrSAL0235D" parameterType="Map">
+        INSERT INTO SAL0235D
+            (
+                PAY_CNVR_ITM_ID,
+                PAY_CNVR_ID,
+                PAY_CNVR_ORDER_ID,
+                PAY_CNVR_ORDER_NO,
+                PAY_CNVR_SRV_CNTRCT_ID,
+                PAY_CNVR_SRV_CNTRCT_REF_NO,
+                PAY_CNVR_ITM_REM,
+                PAY_CNVR_ITM_STUS,
+                PAY_CNVR_ITM_CRT_USER_ID,
+                PAY_CNVR_ITM_CRT_DT,
+                PAY_CNVR_ITM_UPD_USER_ID,
+                PAY_CNVR_ITM_UPD_DT
+
+             )
+             VALUES
+             (
+                 SAL0235D_PAY_CNVR_ITM_ID_SEQ.NEXTVAL ,
+                 #{payCnvrId},
+                 #{ordId},
+                 #{ordNo},
+                 #{cntrctId},
+                 #{cntrctNo},
+                 #{remark},
+                 #{status},
+                 #{userId},
+                 SYSDATE,
+                 #{userId},
+                 SYSDATE
+
+             )
+    </insert>
+
+    <update id="updSAL0001D">
+        UPDATE SAL0001D
+             SET UPD_DT  = SYSDATE,
+                   UPD_USER_ID  = 349,
+                   SYNC_CHK  = 0
+
+         WHERE SALES_ORD_ID = #{ordId}
+    </update>
+
+    <update id="updSalesCRCSAL0074D">
+        UPDATE SAL0074D
+             SET MODE_ID  = 130,
+                   CUST_CRC_ID  = 0,
+                   CUST_ACC_ID  = 0,
+                   BANK_ID = 0,
+                   DD_APPLY_DT = SYSDATE,
+                   DD_SUBMIT_DT = null,
+                   DD_START_DT = null,
+                   DD_REJCT_DT = null,
+                   FAIL_RESN_ID = null
+
+         WHERE SALES_ORD_ID = #{ordId}
+         AND MODE_ID = 131
+    </update>
+
+    <update id="updSalesDDSAL0074D">
+        UPDATE SAL0074D
+             SET MODE_ID  = 130,
+                   CUST_CRC_ID  = 0,
+                   CUST_ACC_ID  = 0,
+                   BANK_ID = 0,
+                   DD_APPLY_DT = SYSDATE,
+                   DD_SUBMIT_DT = null,
+                   DD_START_DT = null,
+                   DD_REJCT_DT = null,
+                   FAIL_RESN_ID = null
+
+         WHERE SALES_ORD_ID = #{ordId}
+         AND MODE_ID = 132
+    </update>
+
+    <update id="updSAL0077D">
+        UPDATE SAL0077D
+             SET SRV_CNTRCT_UPD_DT = SYSDATE,
+                   SRV_CNTRCT_UPD_USER_ID = 349
+
+         WHERE SRV_CNTRCT_ID = #{cntrctId}
+    </update>
+
+    <update id="updSrvCntrctCRCSAL0074D">
+        UPDATE SAL0074D
+             SET MODE_ID  = 130,
+                   CUST_CRC_ID  = 0,
+                   CUST_ACC_ID  = 0,
+                   BANK_ID = 0,
+                   DD_APPLY_DT = SYSDATE,
+                   DD_SUBMIT_DT = null,
+                   DD_START_DT = null,
+                   DD_REJCT_DT = null,
+                   FAIL_RESN_ID = null
+
+         WHERE SVC_CNTRCT_ID = #{cntrctId}
+         AND MODE_ID = 131
+    </update>
+
+    <update id="updSrvCntrctDDSAL0074D">
+        UPDATE SAL0074D
+             SET MODE_ID  = 130,
+                   CUST_CRC_ID  = 0,
+                   CUST_ACC_ID  = 0,
+                   BANK_ID = 0,
+                   DD_APPLY_DT = SYSDATE,
+                   DD_SUBMIT_DT = null,
+                   DD_START_DT = null,
+                   DD_REJCT_DT = null,
+                   FAIL_RESN_ID = null
+
+         WHERE SVC_CNTRCT_ID = #{cntrctId}
+         AND MODE_ID = 132
+    </update>
 </mapper>

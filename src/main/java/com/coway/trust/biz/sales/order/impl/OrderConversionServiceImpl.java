@@ -26,19 +26,19 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class OrderConversionServiceImpl extends EgovAbstractServiceImpl implements  OrderConversionService{
 
 	private static final Logger logger = LoggerFactory.getLogger(OrderConversionServiceImpl.class);
-	
+
 	@Resource(name = "orderConversionMapper")
 	private OrderConversionMapper orderConversionMapper;
-	
+
 	@Resource(name = "membershipRSMapper")
 	private MembershipRSMapper membershipRSMapper;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
-	
+
 	/**
 	 * 글 목록을 조회한다.
-	 * 
+	 *
 	 * @param searchVO
 	 *            - 조회할 정보가 담긴 VO
 	 * @return 글 목록
@@ -47,65 +47,65 @@ public class OrderConversionServiceImpl extends EgovAbstractServiceImpl implemen
 	public List<EgovMap> orderConversionList(Map<String, Object> params) {
 		return orderConversionMapper.orderConversionList(params);
 	}
-	
+
 	public EgovMap orderConversionView(Map<String, Object> params) {
 		return orderConversionMapper.orderConversionView(params);
 	}
-	
+
 	public List<EgovMap> orderConversionViewItmList(Map<String, Object> params) {
 		return orderConversionMapper.orderConversionViewItmList(params);
 	}
-	
+
 	public List<EgovMap> orderCnvrValidItmList(Map<String, Object> params) {
 		return orderConversionMapper.orderCnvrValidItmList(params);
 	}
-	
+
 	public List<EgovMap> orderCnvrInvalidItmList(Map<String, Object> params) {
 		return orderConversionMapper.orderCnvrInvalidItmList(params);
 	}
-	
+
 	public void delCnvrItmSAL0073D(Map<String, Object> params) {
 		orderConversionMapper.delCnvrItmSAL0073D(params);
 	}
-	
+
 	public void updCnvrConfirm(Map<String, Object> params) {
 		orderConversionMapper.updCnvrConfirm(params);
 	}
-	
+
 	public void updCnvrDeactive(Map<String, Object> params) {
 		orderConversionMapper.updCnvrDeactive(params);
 	}
-	
+
 	public EgovMap orderCnvrInfo(Map<String, Object> params) {
 		return orderConversionMapper.orderCnvrInfo(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> chkNewCnvrList(Map<String, Object> params) {
-		
+
 		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
 		Map<String, Object> formData =  (Map<String, Object>) params.get("form");
-		
+
 		EgovMap result = new EgovMap();
-		
+
 		String msg = null;
 
 		Map<String, Object> map = new HashMap();
-		
+
 		List checkList = new ArrayList();
-		
-		for (Object obj : list) 
-		{			
+
+		for (Object obj : list)
+		{
 			((Map<String, Object>) obj).put("userId", params.get("userId"));
-			
+
 			logger.debug(" OrderNo : {}", ((Map<String, Object>) obj).get("0"));
 			params.put("ordNo", ((Map<String, Object>) obj).get("0"));
-			
+
 			if(!StringUtils.isEmpty(params.get("ordNo"))){
 				((Map<String, Object>) obj).put("ordNo",  String.format("%07d", Integer.parseInt(((Map<String, Object>) obj).get("0").toString())));
-				
+
 				EgovMap info = orderConversionMapper.orderCnvrInfo(params);
-				
+
 				((Map<String, Object>) obj).put("orderNo", info.get("ordNo"));
 				((Map<String, Object>) obj).put("ordStusCode", info.get("ordStusCode"));
 				((Map<String, Object>) obj).put("appTypeCode", info.get("appTypeCode"));
@@ -120,17 +120,17 @@ public class OrderConversionServiceImpl extends EgovAbstractServiceImpl implemen
 		}
 		return checkList;
 	}
-	
+
 	public void saveNewConvertList(Map<String, Object> params) {
-		
+
 		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
 		Map<String, Object> formData =  (Map<String, Object>) params.get("form");
-		
+
 		logger.debug("gridData ============>> " + list);
-		
+
 		params.put("docNoId", 100);
 		String convertNo = membershipRSMapper.getDocNo(params);
-		
+
 		int crtSeqSAL0072D = orderConversionMapper.crtSeqSAL0072D();
 		params.put("rsCnvrId", crtSeqSAL0072D);
 		params.put("stusFrom", formData.get("pRsCnvrStusFrom"));
@@ -146,10 +146,10 @@ public class OrderConversionServiceImpl extends EgovAbstractServiceImpl implemen
 		params.put("rsCnvrAttachUrl", "");
 		params.put("rsCnvrReactFeesApply", formData.get("rsCnvrReactFeesApply"));
 		params.put("rsCnvrTypeId", 1319);
-		
+
 		orderConversionMapper.insertCnvrSAL0072D(params);
-		
-		for (Object obj : list) 
+
+		for (Object obj : list)
 		{
 			params.put("ordNo",  ((Map<String, Object>) obj).get("ordNo"));
 			params.put("rsItmStusId", 1);
@@ -167,5 +167,131 @@ public class OrderConversionServiceImpl extends EgovAbstractServiceImpl implemen
 		}
 		params.put("batchId", crtSeqSAL0072D);
 		orderConversionMapper.insertCnvrList(params);
+	}
+
+	@Override
+	public List<EgovMap> chkPayCnvrList(Map<String, Object> params) {
+
+		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
+		Map<String, Object> formData =  (Map<String, Object>) params.get("form");
+
+		EgovMap result = new EgovMap();
+
+		String msg = null;
+
+		Map<String, Object> map = new HashMap();
+
+		List checkList = new ArrayList();
+
+		int convertType = Integer.parseInt(String.valueOf(formData.get("cnvrType")));
+
+		for (Object obj : list)
+		{
+			((Map<String, Object>) obj).put("userId", params.get("userId"));
+
+			logger.debug(" OrderNo : {}", ((Map<String, Object>) obj).get("0"));
+			logger.debug(" Remark : {}", ((Map<String, Object>) obj).get("1"));
+
+			params.put("ordNo", ((Map<String, Object>) obj).get("0"));
+			params.put("remark", ((Map<String, Object>) obj).get("1"));
+
+            if(convertType == 1){
+			if(!StringUtils.isEmpty(params.get("ordNo"))){
+				((Map<String, Object>) obj).put("ordNo",  String.format("%07d", Integer.parseInt(((Map<String, Object>) obj).get("0").toString())));
+
+				EgovMap info = orderConversionMapper.orderCnvrInfo(params);
+
+				((Map<String, Object>) obj).put("orderNo", info.get("ordNo"));
+				((Map<String, Object>) obj).put("orderId", info.get("ordId"));
+				((Map<String, Object>) obj).put("reason", ((Map<String, Object>) obj).get("1"));
+				logger.debug("info ================>>  " + info.get("ordNo"));
+				logger.debug("info ================>>  " + info.get("ordId"));
+				logger.debug("info ================>>  " + ((Map<String, Object>) obj).get("1"));
+				checkList.add(obj);
+				continue;
+			}
+            }
+            else{
+            	if(!StringUtils.isEmpty(params.get("ordNo"))){
+    				((Map<String, Object>) obj).put("ordNo",  String.format("%.11s", ((Map<String, Object>) obj).get("0").toString()));
+
+    				EgovMap info = orderConversionMapper.srvContractCnvrInfo(params);
+
+    				((Map<String, Object>) obj).put("srvCntrctId", info.get("srvCntrctId"));
+    				((Map<String, Object>) obj).put("srvCntrctRefNo", info.get("srvCntrctRefNo"));
+    				((Map<String, Object>) obj).put("orderId", info.get("srvCntrctOrdId"));
+    				((Map<String, Object>) obj).put("reason", ((Map<String, Object>) obj).get("1"));
+    				logger.debug("info ================>>  " + info.get("srvCntrctId"));
+    				logger.debug("info ================>>  " + info.get("srvCntrctRefNo"));
+    				logger.debug("info ================>>  " + info.get("srvCntrctOrdId"));
+    				logger.debug("info ================>>  " + ((Map<String, Object>) obj).get("1"));
+    				checkList.add(obj);
+    				continue;
+    			}
+            }
+		}
+		return checkList;
+	}
+
+public void savePayConvertList(Map<String, Object> params) {
+
+		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
+		Map<String, Object> formData =  (Map<String, Object>) params.get("form");
+
+		logger.debug("gridData ============>> " + list);
+		int convertType = Integer.parseInt(String.valueOf(formData.get("cnvrType")));
+		int total = Integer.parseInt(String.valueOf(formData.get("hiddenTotal")));
+		String convertFrom = String.valueOf(formData.get("payCnvrStusFrom"));
+
+		params.put("docNoId", 167);
+		String convertNo = membershipRSMapper.getDocNo(params);
+
+		int crtSeqSAL0234D = orderConversionMapper.crtSeqSAL0234D();
+		params.put("payCnvrId", crtSeqSAL0234D);
+		params.put("payCnvrNo", convertNo);
+		params.put("payStusId", 1);
+		params.put("payCnvrStusId", 4);
+		params.put("payStusFrom", formData.get("payCnvrStusFrom"));
+		params.put("payStusTo", formData.get("payCnvrStusTo"));
+		params.put("totalItm", total);
+		params.put("payCnvrRem", formData.get("newCnvrRem"));
+		params.put("payCnvrAttachURL", "");
+
+		orderConversionMapper.insertCnvrSAL0234D(params);
+
+		for (Object obj : list)
+		{
+			params.put("ordId",  ((Map<String, Object>) obj).get("orderId"));
+			params.put("ordNo",  ((Map<String, Object>) obj).get("orderNo"));
+			params.put("cntrctId",  ((Map<String, Object>) obj).get("srvCntrctId"));
+			params.put("cntrctNo",  ((Map<String, Object>) obj).get("srvCntrctRefNo"));
+			params.put("remark",  ((Map<String, Object>) obj).get("reason"));
+			params.put("status", 4);
+
+			orderConversionMapper.insertCnvrSAL0235D(params);
+
+			if(convertType == 1){
+				orderConversionMapper.updSAL0001D(params);
+				if("CRC".equals(convertFrom)){
+					orderConversionMapper.updSalesCRCSAL0074D(params);
+
+				}
+				else{
+					orderConversionMapper.updSalesDDSAL0074D(params);
+				}
+			}
+			else{
+				orderConversionMapper.updSAL0077D(params);
+				if("CRC".equals(convertFrom)){
+					orderConversionMapper.updSrvCntrctCRCSAL0074D(params);
+
+				}
+				else{
+					orderConversionMapper.updSrvCntrctDDSAL0074D(params);
+				}
+			}
+
+
+		}
 	}
 }
