@@ -2397,7 +2397,7 @@
         PAY0032D_SEQ.NEXTVAL,
         #{taxInvcId},
         #{invcItmType},
-        (select sales_ord_no from sal0001d where sales_ord_id =#{invcItmOrdNo}),
+        #{invcItmOrdNo},
         #{invcItmPoNo},
         #{invcItmCode},
         #{invcItmDesc1},
@@ -2420,11 +2420,11 @@
         #{invcItmInstallDt},
         #{invcItmRetnDt},
         #{invcItmBillRefNo},
-        FN_GET_SVC_BILL_MADDRESS( (select srv_ord_no from SAL0225D where srv_ord_id
+        FN_GET_SVC_BILL_MADDRESS( (select srv_ord_no from SAL0225D where srv_ord_no
         =#{invcItmOrdNo}) ,'AREA_ID'),
-        FN_GET_SVC_BILL_MADDRESS( (select srv_ord_no from SAL0225D where srv_ord_id
+        FN_GET_SVC_BILL_MADDRESS( (select srv_ord_no from SAL0225D where srv_ord_no
         =#{invcItmOrdNo}) ,'ADDR1'),
-        FN_GET_SVC_BILL_MADDRESS( (select srv_ord_no from SAL0225D where srv_ord_id
+        FN_GET_SVC_BILL_MADDRESS( (select srv_ord_no from SAL0225D where srv_ord_no
         =#{invcItmOrdNo}) ,'ADDR2')
         )
 
