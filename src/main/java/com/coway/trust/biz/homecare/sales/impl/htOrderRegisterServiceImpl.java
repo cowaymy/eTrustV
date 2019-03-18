@@ -1659,7 +1659,16 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	    param3.put("accBillRefNo", "2000");
 	    param3.put("accBillOrdId", salesOrdId);
 	    param3.put("accBillTypeId", "1159"); // SYSTEM GENERATE BILL
-	    param3.put("accBillModeId", "3215"); // CS BILL
+
+	    int packId = orderVO.getSrvPacId();
+	    String scModeId = "";
+	    if (packId == 25){
+	    	scModeId = "3215";
+	    }else if(packId == 26){
+	    	scModeId = "3216";
+	    }
+
+	    param3.put("accBillModeId", scModeId); // CS BILL
 	    param3.put("accBillSchdulId", "0");
 	    param3.put("accBillSchdulPriod", "0");
 	    param3.put("accBillAdjId", "0");
