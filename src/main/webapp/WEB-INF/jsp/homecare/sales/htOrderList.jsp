@@ -256,6 +256,7 @@ function fn_multiCombo(){
 
     $('#listOrdStusId').multipleSelect("checkAll");
     $('#listProductId').multipleSelect("checkAll");
+    $('#listPackId').multipleSelect("checkAll");
 
 }
 
@@ -370,14 +371,23 @@ $.fn.clearForm = function() {
         <option value="10">Cancelled</option>
     </select>
     </td>
+    <th scope="row">Package Type</th>
+    <td>
+        <select id="listPackId" name="packId" class="multy_select w100p" multiple="multiple">
+        <option value="2">No Package</option>
+        <option value="25">1 Time Package</option>
+        <option value="26">1 Year Package</option>
+    </select>
+    </td>
+
     <th scope="row"><spring:message code='sales.keyInBranch'/></th>
     <td>
     <select id="listKeyinBrnchId" name="keyinBrnchId" class="multy_select w100p" multiple="multiple"></select>
     </td>
-    <th scope="row"><spring:message code='sales.Creator'/></th>
+    <%-- <th scope="row"><spring:message code='sales.Creator'/></th>
     <td>
     <input id="listCrtUserId" name="crtUserId" type="text" title="Creator" placeholder="Creator (Username)" class="w100p" />
-    </td>
+    </td> --%>
 </tr>
 <tr>
     <th scope="row"><spring:message code='sales.custId2'/></th>
