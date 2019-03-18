@@ -121,6 +121,12 @@
                     #{item}
                   </foreach>
                 </if>
+                 <if test='arrPackId != null and arrPackId != ""'>
+                  AND V1.ITM_PRC_ID IN
+                   <foreach item="item" collection="arrPackId" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
 
                 <if test='arrOrdStusId != null and arrOrdStusId != ""'>
                   AND V1.ORD_STUS_ID IN
