@@ -11,6 +11,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *--------------------------------------------------------------------------------------------
  * 31/01/2019    ONGHC      1.0.1       - Restructure File
  * 06/03/2019    ONGHC      1.0.2       - Create getSalStat
+ * 18/03/2019    ONGHC      1.0.3       - Create getINSNo
  *********************************************************************************************/
 
 @Mapper("installationResultListMapper")
@@ -251,4 +252,6 @@ public interface InstallationResultListMapper {
   int chkRcdTms(Map<String, Object> params);
 
   int selRcdTms(Map<String, Object> params);
+
+  String getINSNo(Map<String, Object> params);
 }
