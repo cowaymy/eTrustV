@@ -380,7 +380,15 @@ public class PettyCashController {
 	}
 
 	@RequestMapping(value = "/expenseMgmt.do")
-	public String expenseMgmt(ModelMap model) {
+	public String expenseMgmt(@RequestParam Map<String, Object> params, ModelMap model) {
+	    if (params.get("clmNo") != null && params.get("period") != null) {
+            String clmNo = (String) params.get("clmNo");
+            String period = (String) params.get("period");
+
+            model.addAttribute("clmNo", clmNo);
+            model.addAttribute("period", period.substring(4) + "/" + period.substring(0, 4));
+        }
+
 		return "eAccounting/pettyCash/pettyCashExpense";
 	}
 
@@ -516,6 +524,7 @@ public class PettyCashController {
 		model.addAttribute("itemList", new Gson().toJson(itemList));
 		model.addAttribute("clmNo", (String) params.get("clmNo"));
 		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeList));
+		model.addAttribute("prevClmNo", (String) params.get("prevClmNo"));
 		if(itemList.size() > 0) {
 			model.addAttribute("appvPrcssNo", itemList.get(0).get("appvPrcssNo"));
 		}

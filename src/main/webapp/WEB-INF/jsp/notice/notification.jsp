@@ -12,6 +12,7 @@
 <script type="text/javaScript">
 
 var notificationGridID;
+var clmNo;
 
 /* =============================================
  * Notification Grid Design -- Start
@@ -44,19 +45,36 @@ var notificationColumnLayout = [
         visible : false
     },
     {
+        dataField : "ntfType",
+        visible : false
+    },
+    {
+        dataField : "ntfKeyStus",
+        visible : false
+    },
+    {
+        dataField : "ntfKeyStusDesc",
+        headerText : "Notification Status",
+        width : 200
+    },
+    {
         dataField : "ntfTypeDesc",
         headerText : "Notification Type",
-        width : 300
+        width : 200
     },
     {
         dataField : "ntfKey",
         headerText : "Notification Key",
-        width : 200
+        width : 150
     },
     {
         dataField : "ntfRem",
         headerText : "Notification Remark",
         style : "aui-grid-user-custom-left"
+    },
+    {
+        dataField : "period",
+        visible : false
     }
 ];
 
@@ -71,11 +89,75 @@ $(document).ready(function() {
     notificationGridID = AUIGrid.create("#notification_grid_wrap", notificationColumnLayout, notificationGridPros);
 
     $("#markBtn").click(fn_markReadUnread);
+
+    CommonCombo.make("clmType", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
+        id: "code",
+        name: "codeName",
+        type:"M"
+    });
+
+    AUIGrid.bind(notificationGridID, "cellDoubleClick", function(event) {
+        console.log("cellDoubleClick :: " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        console.log("event.item.clmNo :: " + event.item.ntfKey);
+        console.log("event.item.ntfKeyStus :: " + event.item.ntfKeyStus);
+        console.log("event.item.ntfType :: " + event.item.ntfType);
+
+        $("#clmNo").val(event.item.ntfKey);
+        $("#clmType1").val(event.item.ntfType);
+        $("#period").val(event.item.period);
+
+        var data = {
+                ntfId : event.item.ntfId,
+                ntfKey : event.item.ntfKey,
+                ntfFlag : "0"
+            };
+
+        if(event.item.ntfKeyStus == "R") {
+
+
+            Common.ajax("GET", "/notice/updateNtf.do", data, function(result) {
+                console.log(result);
+
+                $("#ntfForm").attr({
+                    action: getContextPath() + "/eAccounting/webInvoice/webInvoiceApprove.do",
+                    method: "POST"
+                }).submit();
+            });
+
+        } else if(event.item.ntfKeyStus == "J") {
+            var url = getContextPath() + "/eAccounting/";
+
+            var ntfType = event.item.ntfType;
+            if(ntfType == "J1") {
+                url += "webInvoice/webInvoice.do";
+
+            } else if(ntfType == "J2") {
+                url += "pettyCash/expenseMgmt.do";
+
+            } else if(ntfType == "J3") {
+                url += "creditCard/creditCardReimbursement.do";
+
+            } else if(ntfType == "J4") {
+                url += "staffClaim/staffClaimMgmt.do";
+            }
+
+            Common.ajax("GET", "/notice/updateNtf.do", data, function(result) {
+                console.log(result);
+
+                $("#ntfForm").attr({
+                    action: url,
+                    method: "POST"
+                }).submit();
+            });
+        }
+
+    });
+
     console.log("Notification :: ready :: end");
 });
 
 function fn_selectNtfList() {
-    Common.ajax("GET", "/test/selectNtfList.do", $("#ntfForm").serialize(), function(result) {
+    Common.ajax("GET", "/notice/selectNtfList.do", $("#ntfForm").serialize(), function(result) {
         console.log(result);
 
         AUIGrid.setGridData(notificationGridID, result);
@@ -111,7 +193,7 @@ function fn_markReadUnread() {
             ntfFlag : flag
         };
 
-        Common.ajax("GET", "/test/updateNtf.do", data, function(result) {
+        Common.ajax("GET", "/notice/updateNtf.do", data, function(result) {
             console.log(result);
         });
     }
@@ -141,11 +223,18 @@ function fn_markReadUnread() {
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="ntfForm">
 
+<input type="hidden" id="clmNo" name="clmNo" />
+<input type="hidden" id="clmType1" name="clmType1" />
+<input type="hidden" id="period" name="period" />
+
+
 <table class="type1"><!-- table start -->
 <colgroup>
-    <col style="width:175px" />
+    <col style="width:150px" />
     <col style="width:*" />
-    <col style="width:175px" />
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:150px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -165,6 +254,10 @@ function fn_markReadUnread() {
             <option value="0">Read</option>
             <option value="1">Unread</option>
         </select>
+    </td>
+    <th scope="row">Notification Type</th>
+    <td>
+        <select class="w100p" id="clmType" name="clmType" multiple="multiple"></select>
     </td>
 </tr>
 </tbody>

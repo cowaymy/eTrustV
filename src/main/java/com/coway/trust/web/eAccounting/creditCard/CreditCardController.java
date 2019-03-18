@@ -236,7 +236,12 @@ public class CreditCardController {
 	}
 
 	@RequestMapping(value = "/creditCardReimbursement.do")
-	public String creditCardReimbursement(ModelMap model) {
+	public String creditCardReimbursement(@RequestParam Map<String, Object> params, ModelMap model) {
+	    if(params != null) {
+            String clmNo = (String) params.get("clmNo");
+            model.addAttribute("clmNo", clmNo);
+        }
+
 		return "eAccounting/creditCard/creditCardReimbursement";
 	}
 

@@ -243,7 +243,19 @@ $(document).ready(function () {
 
     $("#appvPrcssStus").multipleSelect("checkAll");
 
-    fn_setToDay()
+    fn_setToDay();
+
+    if('${clmNo}' != null && '${clmNo}' != "") {
+        $("#startDt").val("");
+        $("#endDt").val("");
+
+        $("#clmNoStart").val('${clmNo}');
+        $("#clmNoEnd").val('${clmNo}');
+
+        fn_selectApproveList();
+
+        Common.ajax("POST", "")
+    }
 });
 
 //그리드 헤더 클릭 핸들러

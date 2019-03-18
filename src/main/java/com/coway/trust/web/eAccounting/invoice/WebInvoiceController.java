@@ -40,6 +40,7 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
+import com.coway.trust.util.Precondition;
 import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -73,7 +74,12 @@ public class WebInvoiceController {
 	private SessionHandler sessionHandler;
 
 	@RequestMapping(value = "/webInvoice.do")
-	public String webInvoice(ModelMap model) {
+	public String webInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
+	    if(params != null) {
+            String clmNo = (String) params.get("clmNo");
+            model.addAttribute("clmNo", clmNo);
+        }
+
 		return "eAccounting/webInvoice/webInvoice";
 	}
 
@@ -474,7 +480,12 @@ public class WebInvoiceController {
 	}
 
 	@RequestMapping(value = "/webInvoiceApprove.do")
-	public String approve(ModelMap model) {
+	public String approve(@RequestParam Map<String, Object> params, ModelMap model) {
+	    if(params != null) {
+	        String clmNo = (String) params.get("clmNo");
+	        model.addAttribute("clmNo", clmNo);
+	    }
+
 		return "eAccounting/webInvoice/webInvoiceApprove";
 	}
 

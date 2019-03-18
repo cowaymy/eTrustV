@@ -147,6 +147,15 @@ $(document).ready(function () {
     $("#appvPrcssStus").multipleSelect("checkAll");
 
     fn_setToDay();
+
+    if('${clmNo}' != null && '${clmNo}' != "") {
+        $("#startDt").val("");
+        $("#endDt").val("");
+
+        $("#clmNo").val('${clmNo}');
+
+        fn_selectReimbursementList();
+   }
 });
 
 function fn_setToDay() {

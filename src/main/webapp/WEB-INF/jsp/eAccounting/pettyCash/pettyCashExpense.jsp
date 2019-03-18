@@ -126,6 +126,17 @@ $(document).ready(function () {
     $("#editRejBtn").click(fn_editRejected);
 
     fn_setToMonth();
+
+    if('${clmNo}' != null && '${clmNo}' != "") {
+        $("#clmMonth").val("");
+
+        $("#clmNo").val('${clmNo}');
+        $("#clmMonth").val('${period}');
+
+        fn_selectExpenseList();
+
+        Common.ajax("POST", "")
+    }
 });
 
 function fn_setToMonth() {

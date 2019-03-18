@@ -64,9 +64,17 @@ public class StaffClaimController {
 	private WebInvoiceService webInvoiceService;
 
 	@RequestMapping(value = "/staffClaimMgmt.do")
-	public String staffClaimMgmt(ModelMap model) {
-		return "eAccounting/staffClaim/staffClaim";
-	}
+    public String staffClaimMgmt(@RequestParam Map<String, Object> params, ModelMap model) {
+        if (params.get("clmNo") != null && params.get("period") != null) {
+            String clmNo = (String) params.get("clmNo");
+            String period = (String) params.get("period");
+
+            model.addAttribute("clmNo", clmNo);
+            model.addAttribute("period", period.substring(4) + "/" + period.substring(0, 4));
+        }
+
+        return "eAccounting/staffClaim/staffClaim";
+    }
 
 	@RequestMapping(value = "/selectStaffClaimList.do")
 	public ResponseEntity<List<EgovMap>> selectStaffClaimList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
@@ -341,7 +349,7 @@ public class StaffClaimController {
 	@RequestMapping(value = "/checkOnceAMonth.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> checkOnceAMonth(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
-		LOGGER.debug("params =====================================>>  " + params);
+        LOGGER.debug("params =====================================>>  " + params);
 
 		int cnt = staffClaimService.checkOnceAMonth(params);
 
