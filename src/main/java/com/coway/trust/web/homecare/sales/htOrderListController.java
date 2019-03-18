@@ -80,6 +80,7 @@ public class htOrderListController {
 		String[] arrDscBrnchId = request.getParameterValues("dscBrnchId"); //DSC Branch
 		String[] arrRentStus = request.getParameterValues("rentStus"); //Rent Status
 		String[] arrProductId = request.getParameterValues("productId"); //Product Id
+		String[] arrPackId = request.getParameterValues("packId"); //Pack Id
 
 		if(StringUtils.isEmpty(params.get("ordStartDt"))) params.put("ordStartDt", "01/01/1900");
     	if(StringUtils.isEmpty(params.get("ordEndDt")))   params.put("ordEndDt",   "31/12/9999");
@@ -93,6 +94,7 @@ public class htOrderListController {
 		if(arrDscBrnchId   != null && !CommonUtils.containsEmpty(arrDscBrnchId))   params.put("arrDscBrnchId", arrDscBrnchId);
 		if(arrRentStus     != null && !CommonUtils.containsEmpty(arrRentStus))     params.put("arrRentStus", arrRentStus);
 		if(arrProductId     != null && !CommonUtils.containsEmpty(arrProductId))     params.put("arrProductId", arrProductId);
+		if(arrPackId     != null && !CommonUtils.containsEmpty(arrPackId))     params.put("arrPackId", arrPackId);
 
 
 		if(params.get("custIc") == null) {logger.debug("!@###### custIc is null");}
