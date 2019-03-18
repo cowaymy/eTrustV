@@ -40,6 +40,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 31/01/2019    ONGHC      1.0.1       - Restructure File
  * 05/03/2019    ONGHC      1.0.2       - To Show Error Code for SP
  * 06/03/2019    ONGHC      1.0.3       - Create getSalStat
+ * 18/03/2019    ONGHC      1.0.4       - Remove runInstSp 3rd Part
  *********************************************************************************************/
 
 @Controller
@@ -699,18 +700,18 @@ public class InstallationResultListController {
                   } else {
                     servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 
-                    resultValue = installationResultListService.runInstSp(params, sessionVO, "3");
+                    //resultValue = installationResultListService.runInstSp(params, sessionVO, "3");
 
-                    if (null != resultValue) {
-                      spMap = (HashMap) resultValue.get("spMap");
-                      logger.debug("spMap :" + spMap.toString());
-                      if (!"000".equals(spMap.get("P_RESULT_MSG"))) { // FAIL
-                        resultValue.put("logerr", "Y");
-                        message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS3): " + spMap.get("P_RESULT_MSG").toString());
-                     } else {
-                       servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-                      }
-                    }
+                    //if (null != resultValue) {
+                      //spMap = (HashMap) resultValue.get("spMap");
+                      //logger.debug("spMap :" + spMap.toString());
+                      //if (!"000".equals(spMap.get("P_RESULT_MSG"))) { // FAIL
+                        //resultValue.put("logerr", "Y");
+                        //message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS3): " + spMap.get("P_RESULT_MSG").toString());
+                     //} else {
+                       //servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+                      //}
+                    //}
                   }
                 }
               }
