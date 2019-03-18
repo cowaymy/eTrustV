@@ -17,7 +17,8 @@ var invoiceTypeData = [{"codeId": "117","codeName": "HP Registration Invoice (BR
                             {"codeId": "122","codeName": "Item Bank Invoice (BR65)"},
                             {"codeId": "123","codeName": "WholeSales Invoice (BR63)"},
                             {"codeId": "124","codeName": "Product Lost Invoice (BR56)"},
-                            {"codeId": "125","codeName": "Early Termination Invoice (BR52)"}
+                            {"codeId": "125","codeName": "Early Termination Invoice (BR52)"},
+                            {"codeId": "407","codeName": "Care Service Invoice (BR71)"}
                             ];
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
@@ -152,6 +153,8 @@ function fn_generateInvoice(){
                 else {
                 	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF.rpt');
                 }
+            case 407 :
+                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_CareService_PDF_SST.rpt');
                 break;
             default:
                 break;
