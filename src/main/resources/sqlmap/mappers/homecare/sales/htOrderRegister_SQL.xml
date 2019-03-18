@@ -2371,12 +2371,9 @@
         #{taxInvcAmtDue},
         #{taxInvcCrtDt},
         #{taxInvcCrtUserId},
-        FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id =#{AS_SO_ID})
-        ,'AREA_ID'),
-        FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id =#{AS_SO_ID})
-        ,'ADDR1'),
-        FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id =#{AS_SO_ID})
-        ,'ADDR2')
+        #{areaId},
+        #{addrDtl},
+        #{street}
         )
     </insert>
 
@@ -2420,12 +2417,9 @@
         #{invcItmInstallDt},
         #{invcItmRetnDt},
         #{invcItmBillRefNo},
-        FN_GET_SVC_BILL_MADDRESS( (select srv_ord_no from SAL0225D where srv_ord_no
-        =#{invcItmOrdNo}) ,'AREA_ID'),
-        FN_GET_SVC_BILL_MADDRESS( (select srv_ord_no from SAL0225D where srv_ord_no
-        =#{invcItmOrdNo}) ,'ADDR1'),
-        FN_GET_SVC_BILL_MADDRESS( (select srv_ord_no from SAL0225D where srv_ord_no
-        =#{invcItmOrdNo}) ,'ADDR2')
+         #{areaId},
+        #{addrDtl},
+        #{street}
         )
 
     </insert>
@@ -2554,14 +2548,14 @@ srv.SRV_ORD_ID = #{salesOrdId}
 
     <select id="selectHTCovergPostCode" parameterType="Map" resultType="egovMap">
 
- SELECT DISTINCT cvrg.AREA_ID,
- B.POSTCODE,
- addr.CUST_ID
+ SELECT DISTINCT
+ cvrg.AREA_ID
  FROM
 SAL0023D addr
 JOIN SAL0233M cvrg ON addr.AREA_ID = cvrg.AREA_ID
 JOIN SYS0064M B ON cvrg.AREA_ID = B.AREA_ID
 WHERE
+addr.STUS_CODE_ID = 9 AND
 addr.CUST_ID  = #{custId}
 
     </select>
