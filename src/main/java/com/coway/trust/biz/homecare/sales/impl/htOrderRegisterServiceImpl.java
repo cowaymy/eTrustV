@@ -1595,7 +1595,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	    param.put("taxInvcRefNo", String.valueOf(invoiceDocNo.get("csno")));
 	    param.put("taxInvcRefDt", "");
 	    param.put("taxInvcSvcNo", salesOrdNo);
-	    param.put("taxInvcType", "407"); // Service Care
+	    param.put("taxInvcType", "407"); // CARE SERVICE
 
 	    try {
 	      param.put("taxInvcCustName", taxPersonInfo.get("taxInvoiceCustName"));
@@ -1613,6 +1613,9 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	    param.put("taxInvcAddr4", "");
 	    param.put("taxInvcPostCode", "");
 	    param.put("taxInvcStateName", "");
+	    param.put("areaId", taxPersonInfo.get("areaId"));
+	    param.put("addrDtl", taxPersonInfo.get("addrDtl"));
+	    param.put("street", taxPersonInfo.get("street"));
 	    param.put("taxInvcCnty", "");
 	    param.put("taxInvcTaskId", "");
 	    param.put("taxInvcRem", "");
@@ -1626,7 +1629,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	    Map<String, Object> param2 = new HashMap();
 
 	    param2.put("taxInvcId", taxInvcId);
-	    param2.put("invcItmType", orderVO.getAppTypeId()); // AS CHANGE FILTER
+	    param2.put("invcItmType", orderVO.getAppTypeId()); //
 	    param2.put("invcItmOrdNo", salesOrdNo);
 	    param2.put("invcItmPoNo", orderVO.getCustPoNo());
 	    param2.put("invcItmCode", orderVO.getProdSize());
@@ -1646,6 +1649,9 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	    param2.put("invcItmPostCode", "");
 	    param2.put("invcItmAreaName", "");
 	    param2.put("invcItmStateName", "");
+	    param.put("areaId", taxPersonInfo.get("areaId"));
+	    param.put("addrDtl", taxPersonInfo.get("addrDtl"));
+	    param.put("street", taxPersonInfo.get("street"));
 	    param2.put("invcItmCnty", "");
 	    param2.put("invcItmInstallDt", "");
 	    param2.put("invcItmRetnDt", "");
@@ -1662,13 +1668,13 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
 	    int packId = orderVO.getSrvPacId();
 	    String scModeId = "";
-	    if (packId == 25){
+	    if (packId == 25){ // 1 TIME PACKAGE
 	    	scModeId = "3215";
-	    }else if(packId == 26){
+	    }else if(packId == 26){ // 1 YEAR PACKAGE
 	    	scModeId = "3216";
 	    }
 
-	    param3.put("accBillModeId", scModeId); // CS BILL
+	    param3.put("accBillModeId", scModeId); // CARE SERVICE BILL
 	    param3.put("accBillSchdulId", "0");
 	    param3.put("accBillSchdulPriod", "0");
 	    param3.put("accBillAdjId", "0");
