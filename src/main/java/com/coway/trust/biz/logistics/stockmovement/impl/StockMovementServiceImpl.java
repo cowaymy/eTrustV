@@ -33,24 +33,24 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	public String insertStockMovementInfo(Map<String, Object> params) {
 		List<Object> insList = (List<Object>) params.get("add");
 		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
-		
+
 		if (insList.size() > 0) {
 			for (int i = 0; i < insList.size(); i++) {
 				Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
-				
+
 				insMap.put("tlocation", fMap.get("tlocation"));
-				
+
 				int iCnt = stockMoveMapper.selectAvaliableStockQty(insMap);
 				if (iCnt == 1 ){
 					return "";
 				}
 			}
 		}
-		
+
 		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
 		String seq = stockMoveMapper.selectStockMovementSeq();
 
-		
+
 
 		// String reqNo = fMap.get("headtitle") + seq;
 		String reqNo = seq;
@@ -304,44 +304,44 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		}
 		/*
 		 * String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
-		 * 
+		 *
 		 * String scanno = "";
-		 * 
+		 *
 		 * if (checkList.size() > 0) {
-		 * 
+		 *
 		 * Map<String, Object> insMap = null;
-		 * 
+		 *
 		 * for (int i = 0; i < checkList.size(); i++) {
-		 * 
+		 *
 		 * Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-		 * 
+		 *
 		 * insMap = (Map<String, Object>) tmpMap.get("item");
-		 * 
+		 *
 		 * logger.info(" item : {}", tmpMap.get("item")); logger.info(" reqstno : {}", insMap.get("reqstno"));
-		 * 
+		 *
 		 * insMap.put("delno", deliSeq); insMap.put("userId", params.get("userId"));
 		 * stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
-		 * 
+		 *
 		 * if (serialList.size() > 0) { int uCnt = 0; for (int j = 0; j < serialList.size(); j++) {
-		 * 
+		 *
 		 * Map<String, Object> insSerial = null; insSerial = (Map<String, Object>) serialList.get(j);
 		 * insSerial.put("delno" , deliSeq); insSerial.put("reqstno", insMap.get("reqstno")); insSerial.put("userId" ,
 		 * params.get("userId")); int icnt = stockMoveMapper.insertMovementSerial(insSerial); logger.info(" :::: " +
 		 * icnt); if (icnt > 0 ){ uCnt = uCnt +icnt; if (uCnt == (int)insMap.get("indelyqty")){ break; } } scanno =
 		 * (String)insSerial.get("scanno"); } if (scanno != null) stockMoveMapper.updateMovementSerialScan(scanno); }
-		 * 
+		 *
 		 * insMap.put("scanno" , scanno);
-		 * 
+		 *
 		 * }
-		 * 
+		 *
 		 * stockMoveMapper.insertDeliveryStockMovement(insMap); stockMoveMapper.updateRequestMovement((String)
 		 * formMap.get("reqstno")); } String[] delvcd = { deliSeq };
-		 * 
+		 *
 		 * formMap.put("parray", delvcd); formMap.put("userId", params.get("userId")); // formMap.put("prgnm",
 		 * params.get("prgnm")); formMap.put("refdocno", ""); formMap.put("salesorder", "");
-		 * 
+		 *
 		 * stockMoveMapper.StockMovementIssue(formMap);
-		 * 
+		 *
 		 */
 		return formMap;
 	}
@@ -356,7 +356,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	public Map<String, Object> stockMovementDeliveryIssue(Map<String, Object> params) {
 		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
+
 		String gtype= (String) formMap.get("gtype");
 		int iCnt = 0;
 		String tmpdelCd = "";
@@ -382,10 +382,10 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 				}
 			}
 		}
-		
-		
+
+
 		if("RC".equals(gtype)){
-			
+
 			String[] delvcd = delyCd.split("∈");
 
 			formMap.put("parray", delvcd);
@@ -403,27 +403,27 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 				// }
 				// }
 				stockMoveMapper.StockMovementCancelIssue(formMap); // movement receipt cancel
-			} 
-			
+			}
+
 			formMap.put("retMsg", "succ");
-			
+
 		}else{
-			
+
 		Map<String, Object> grlist = stockMoveMapper.selectDelvryGRcmplt(delyno);
-		
+
 		if(null == grlist){
-			
+
 		}
-		
+
 		String grmplt =(String) grlist.get("DEL_GR_CMPLT");
 		String gimplt =(String) grlist.get("DEL_GI_CMPLT");
-		
+
 		if ( "Y".equals(grmplt)){
-		
+
 			formMap.put("failMsg", "Already processed.");
-		
+
 		}else{
-			
+
 			String[] delvcd = delyCd.split("∈");
 
 			formMap.put("parray", delvcd);
@@ -465,17 +465,17 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 				stockMoveMapper.StockMovementIssue(formMap);
 			}
 			formMap.put("retMsg", "succ");
-			// }		
+			// }
 		}
-	}	
-		
+	}
+
 		return formMap;
 
 	}
-	
-	
+
+
 	//백업
-	
+
 //	@Override
 //	public Map<String, Object> stockMovementDeliveryIssue(Map<String, Object> params) {
 //		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
@@ -550,7 +550,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 //		return formMap;
 //
 //	}
-	
+
 	@Override
 	public List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -575,18 +575,18 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		return stockMoveMapper.selectGetSerialDataCall(params);
 	}
-	
+
 	@Override
 	public void deleteSmoNo(Map<String, Object> params) {
-		
+
 		String reqsmono = (String) params.get("reqsmono");
 		logger.info(" reqsmono ???? : {}", params.get("reqsmono"));
 		if(!"".equals(reqsmono) || null != reqsmono){
-			stockMoveMapper.updateStockHead(reqsmono);
+			//stockMoveMapper.updateStockHead(reqsmono);
 			stockMoveMapper.deleteStockDelete(reqsmono);
 			stockMoveMapper.deleteStockBooking(reqsmono);
 		}
 	}
-	
-	
+
+
 }
