@@ -237,17 +237,20 @@ $(function(){
 	        return;
 	    }else{
 	    	var docno= selectedItem[0].item.docno;
-	    	if(docno !=null || docno !=undefined){
-	    	docno = docno.substr(0,3);
+	    	if(docno !=null || docno !=undefined){ docno = docno.substr(0,3); }
+
+	    	var reqstDt = selectedItem[0].item.reqdt;
+	    	var todayMonth = yyyy + '/' + mm;
+
+	    	var reqstono=selectedItem[0].item.reqstno;
+
+	    	if(reqstDt.substring(0, 7) != todayMonth)
+	    	{
+                Common.confirm("SMO not current month. Will be cancelled instead of delete.</br> " + reqstono, fn_delete);
 	    	}
-		     if('INS'== docno){
-		    	 Common.alert("It cannot delete for INS.");
-		     }else if(selectedItem[0].item.status != 'O' ){
-		    	 Common.alert("No Delete SMO No.");
-		     }else{
-                var reqstono=selectedItem[0].item.reqstno;
-                Common.confirm("<spring:message code='sys.common.alert.delete'/></br> "+reqstono,fn_delete);
-                //fn_deleteAjax(reqsmono);
+		    else
+		    {
+                Common.confirm("<spring:message code='sys.common.alert.delete'/></br> " + reqstono, fn_delete);
 		     }
 		}
     });
@@ -517,7 +520,7 @@ function locationList(){
 </c:if>
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 		    <li><p class="btn_grid"><a id="insert">New</a></p></li>
-		    <li><p class="btn_grid"><a id="delete">Delete</a></p></li>
+		    <li><p class="btn_grid"><a id="delete">Delete/Cancel</a></p></li>
 </c:if>
         </ul>
 
