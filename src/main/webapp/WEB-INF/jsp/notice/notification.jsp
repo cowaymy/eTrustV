@@ -73,6 +73,11 @@ var notificationColumnLayout = [
         style : "aui-grid-user-custom-left"
     },
     {
+        dataField : "crtDt",
+        headerText : "Request Date",
+        width : 120
+    },
+    {
         dataField : "period",
         visible : false
     }
