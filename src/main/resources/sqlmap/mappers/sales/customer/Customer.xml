@@ -2576,4 +2576,16 @@
     </if>
 
   </select>
+
+     <select id="existingHPCodyMobile" parameterType="Map" resultType="egovMap">
+
+    SELECT FULL_NAME, MEM_CODE FROM ORG0001D
+        WHERE 1 = 1
+        AND MEM_TYPE IN (1,2)
+
+    <if test="contactNumber != null and contactNumber !=''">
+      AND #{contactNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE) AND ROWNUM <![CDATA[<= 1 ]]>
+    </if>
+
+  </select>
 </mapper>

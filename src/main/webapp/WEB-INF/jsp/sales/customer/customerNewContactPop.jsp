@@ -73,6 +73,22 @@ $(document).ready(function() {
                     Common.alert('<spring:message code="sal.alert.msg.invaildTelNumM" />');
                     return;
                 }
+
+                if($("#cntcTelm").val().substring(0,3) == "015"){
+                    Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
+                    return;
+                }else if($("#cntcTelm").val().substring(0,2) != "01"){
+                    Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
+                    return;
+                }
+
+                Common.ajax("GET", "/sales/customer/existingHPCodyMobile", {contactNumber : $("#cntcTelm").val()} , function(result) {
+                    if(result != null){
+                        Common.
+                        alert("<spring:message code='sal.alert.msg.existingHPCodyMobile' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
+                        return;
+                    }
+               });
             }
             // telr(Residence)
             if("" != $("#cntcTelr").val() && null != $("#cntcTelr").val()){
@@ -272,15 +288,15 @@ $(document).ready(function() {
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.telM" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"   id="cntcTelm" name="cntcTelm" maxlength="20"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"   id="cntcTelm" name="cntcTelm" maxlength="12"/></td>
     <th scope="row"><spring:message code="sal.text.telO" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  id="cntcTelo" name="cntcTelo" maxlength="20"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  id="cntcTelo" name="cntcTelo" maxlength="12"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.telR" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"   id="cntcTelr" name="cntcTelr" maxlength="20"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"   id="cntcTelr" name="cntcTelr" maxlength="12"/></td>
     <th scope="row"><spring:message code="sal.text.telF" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p"   id="cntcTelf" name="cntcTelf" maxlength="20"/></td>
+    <td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p"   id="cntcTelf" name="cntcTelf" maxlength="12"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.dept" /></th>

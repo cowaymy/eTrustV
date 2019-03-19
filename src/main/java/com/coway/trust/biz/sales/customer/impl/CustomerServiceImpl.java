@@ -870,4 +870,10 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     return customerMapper.selectPairOrdId(params);
   }
 
+  @Override
+  public EgovMap existingHPCodyMobile(Map<String, Object> params) {
+
+    return customerMapper.existingHPCodyMobile(params);
+  }
+
 }

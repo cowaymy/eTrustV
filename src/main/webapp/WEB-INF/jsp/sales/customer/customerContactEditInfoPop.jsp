@@ -9,7 +9,7 @@ $(document).ready(function() {
             changeYear:true,
             dateFormat: "dd/mm/yy"
     };
-    
+
     $(".j_date").datepicker(pickerOpts);
 
     var monthOptions = {
@@ -20,18 +20,18 @@ $(document).ready(function() {
     };
 
     $(".j_date2").monthpicker(monthOptions);
-    
+
     var selCodeInitial = $("#selCodeInitial").val();
     var selCodeRace = $("#selCodeRace").val();
-    
+
     doGetCombo('/common/selectCodeList.do', '17', selCodeInitial, 'cntcCmbInitialTypeId', 'S' , ''); // Customer Initial Type Combo Box
     doGetCombo('/common/selectCodeList.do', '2', selCodeRace, 'cntcCmbRaceTypeId', 'S' , ''); // Customer Race Type Combo Box
-    
+
     // main 일 경우 delete 버튼 숨기기
     if($("#stusCodeId").val() == 9){
         $("#_delBtn").css("display", "none" );
-    } 
-    
+    }
+
     // update Button Click
     $("#_updBtn").click(function() {
         // 1. validation
@@ -66,7 +66,7 @@ $(document).ready(function() {
         //Tel
         if(("" == $("#cntcTelm").val() || null == $("#cntcTelm").val()) && ("" == $("#cntcTelr").val() || null == $("#cntcTelr").val())
                 && ("" == $("#cntcTelo").val() || null == $("#cntcTelo").val()) && ("" == $("#cntcTelf").val() || null == $("#cntcTelf").val())){
-            
+
             Common.alert("<spring:message code='sal.msg.keyInContactNum' />");
             return;
         }else{
@@ -76,6 +76,22 @@ $(document).ready(function() {
                     Common.alert("<spring:message code='sal.alert.msg.invalidTelNumMobile' />");
                     return;
                 }
+
+                if($("#cntcTelm").val().substring(0,3) == "015"){
+                    Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
+                    return;
+                }else if($("#cntcTelm").val().substring(0,2) != "01"){
+                    Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
+                    return;
+                }
+
+                Common.ajax("GET", "/sales/customer/existingHPCodyMobile", {contactNumber : $("#cntcTelm").val()} , function(result) {
+                    if(result != null){
+                        Common.
+                        alert("<spring:message code='sal.alert.msg.existingHPCodyMobile' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
+                        return;
+                    }
+               });
             }
             // telr(Residence)
             if("" != $("#cntcTelr").val() && null != $("#cntcTelr").val()){
@@ -98,12 +114,12 @@ $(document).ready(function() {
                     return;
                 }
             }
-            
+
         }// tel end
-        
+
         //Ext
         if(""  != $("#cntcExtNo").val() && null != $("#cntcExtNo").val()){
-            
+
             if(FormUtil.checkNum($("#cntcExtNo"))){
                  Common.alert("<spring:message code='sal.alert.msg.invalidExtNoNumber' />");
                  return;
@@ -111,19 +127,19 @@ $(document).ready(function() {
         }
         //Email
         if("" != $("#cntcEmail").val() && null != $("#cntcEmail").val()){
-            
+
             if(FormUtil.checkEmail($("#cntcEmail").val())){
                  Common.alert("<spring:message code='sal.msg.invalidEmail' />");
                  return;
             }
         }
-        
+
         // Validation Success
         // 2. Update
         fn_customerContactInfoUpdateAjax();
-        
+
     });
-    
+
      //Delete
     $("#_delBtn").click(function() {
        Common.confirm("<spring:message code='sal.alert.msg.areYouSureWantToDelContPerson' />", fn_deleteContactAjax);
@@ -137,7 +153,7 @@ $(document).ready(function() {
             Common.alert(result.message, fn_parentReload);
         });
     }
-    
+
     // Parent Reload Func
     function fn_parentReload() {
         fn_selectPstRequestDOListAjax(); //parent Method (Reload)
@@ -146,20 +162,20 @@ $(document).ready(function() {
         $("#_selectParam").val('3');
         Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
         Common.popupDiv("/sales/customer/updateCustomerContactInfoPop.do", $('#editForm').serializeJSON(), null , true, '_editDiv3Pop');
-        
+
     }
 /* ####### update Func  End########### */
 
 /* ####### delete Func ########### */
     //delete
     function fn_deleteContactAjax(){
-        
+
         Common.ajax("GET", "/sales/customer/deleteCustomerContact.do", $("#updForm").serialize(), function(result){
             //result alert and closePage
             Common.alert(result.message, fn_closePage);
         });
     }
-    
+
     //Parent Reload and PageClose Func
     function fn_closePage(){
         fn_selectPstRequestDOListAjax(); //parent Method (Reload)
@@ -208,7 +224,7 @@ $(document).ready(function() {
     <th scope="row"><spring:message code="sal.text.name" /><span class="must">*</span></th>
     <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.name1 }" id="cntcName" name="cntcName" maxlength="70"/></td>
     <th scope="row"><spring:message code="sal.text.race" /><span class="must">*</span></th>
-    <td>    
+    <td>
     <select class="w100p" id="cntcCmbRaceTypeId" name="cntcCmbRaceTypeId"></select>
     </td>
 </tr>
@@ -222,15 +238,15 @@ $(document).ready(function() {
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.telM" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.telM1}" id="cntcTelm" name="cntcTelm" maxlength="20"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.telM1}" id="cntcTelm" name="cntcTelm" maxlength="12"/></td>
     <th scope="row"><spring:message code="sal.text.telO" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" value="${detailcontact.telO}" id="cntcTelo" name="cntcTelo" maxlength="20"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" value="${detailcontact.telO}" id="cntcTelo" name="cntcTelo" maxlength="12"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.telR" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.telR }" id="cntcTelr" name="cntcTelr" maxlength="20"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.telR }" id="cntcTelr" name="cntcTelr" maxlength="12"/></td>
     <th scope="row"><spring:message code="sal.text.telF" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p"  value="${detailcontact.telf}" id="cntcTelf" name="cntcTelf" maxlength="20"/></td>
+    <td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p"  value="${detailcontact.telf}" id="cntcTelf" name="cntcTelf" maxlength="12"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.dept" /></th>

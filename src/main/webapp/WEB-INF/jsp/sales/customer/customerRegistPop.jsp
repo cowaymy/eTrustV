@@ -489,10 +489,29 @@
                     Common.alert('<spring:message code="sal.alert.msg.invaildTelNumM" />');
                     return false;
                 }
-                if($("#_telM1_").length > 20){
-                    Common.alert('<spring:message code="sal.alert.msg.telMNumExceedLengTwenty" />');
+
+                if($("#_telM1_").val().substring(0,3) == "015"){
+                    Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
+                    return false;
+                }else if($("#_telM1_").val().substring(0,2) != "01"){
+                    Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
                     return false;
                 }
+
+                if($("#_telM1_").length > 12){
+                    Common.alert('<spring:message code="sal.alert.msg.telMNumExceedLengTwelve" />');
+                    return false;
+                }
+
+                Common.ajax("GET", "/sales/customer/existingHPCodyMobile", {contactNumber : $("#_telM1_").val()} , function(result) {
+                    if(result != null){
+                		Common.
+                		alert("<spring:message code='sal.alert.msg.existingHPCodyMobile' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
+                        return false;
+                	}
+               });
+
+
             }
             if($("#_telO_").val() != ''){
 
@@ -500,8 +519,8 @@
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumO" />');
                        return false;
                    }
-                   if($("#_telO_").length > 20){
-                       Common.alert('<spring:message code="sal.alert.msg.telONumExceedLengTwenty" />');
+                   if($("#_telO_").length > 12){
+                       Common.alert('<spring:message code="sal.alert.msg.telONumExceedLengTwelve" />');
                        return false;
                    }
                }
@@ -509,8 +528,8 @@
                    if(FormUtil.checkNum($("#_telR_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumR" />');
                    }
-                   if($("#_telR_").length > 20){
-                       Common.alert('<spring:message code="sal.alert.msg.telRNumExceedLengTwenty" />');
+                   if($("#_telR_").length > 12){
+                       Common.alert('<spring:message code="sal.alert.msg.telRNumExceedLengTwelve" />');
                        return false;
                    }
                }
@@ -518,8 +537,8 @@
                    if(FormUtil.checkNum($("#_telF_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
                    }
-                   if($("#_telF_").length > 20){
-                       Common.alert('<spring:message code="sal.alert.msg.telFNumExceedLengTwenty" />');
+                   if($("#_telF_").length > 12){
+                       Common.alert('<spring:message code="sal.alert.msg.telFNumExceedLengTwelve" />');
                        return false;
                    }
                }
@@ -585,7 +604,65 @@
         if($("#_asTelM_").val() == '' && $("#_asTelR_").val() == '' && $("#_asTelF_").val() == '' && $("#_asTelO_").val() == '' ){
             Common.alert('<spring:message code="sal.msg.keyInContactNum" />');
             return false;
+        }else{
+            if($("#_asTelM_").val() != ''){
+                if(FormUtil.checkNum($("#_asTelM_"))){
+                    Common.alert('<spring:message code="sal.alert.msg.invaildTelNumM" />');
+                    return false;
+                }
+
+                if($("#_asTelM_").val().substring(0,3) == "015"){
+                	Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
+                    return false;
+                }else if($("#_asTelM_").val().substring(0,2) != "01"){
+                	Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
+                	return false;
+                }
+
+                if($("#_asTelM_").length > 12){
+                    Common.alert('<spring:message code="sal.alert.msg.telMNumExceedLengTwelveCustCare" />');
+                    return false;
+                }
+
+                Common.ajax("GET", "/sales/customer/existingHPCodyMobile", {contactNumber : $("#_asTelM_").val()} , function(result) {
+                	if(result != null){
+                        Common.
+                        alert("<spring:message code='sal.alert.msg.existingHPCodyMobile' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
+                        return false;
+                    }
+               });
+            }
+            if($("#_asTelO_").val() != ''){
+
+                   if(FormUtil.checkNum($("#_asTelO_"))){
+                       Common.alert('<spring:message code="sal.alert.msg.invaildTelNumO" />');
+                       return false;
+                   }
+                   if($("#_asTelO_").length > 12){
+                       Common.alert('<spring:message code="sal.alert.msg.telONumExceedLengTwelveCustCare" />');
+                       return false;
+                   }
+               }
+            if($("#_asTelR_").val() != ''){
+                   if(FormUtil.checkNum($("#_asTelR_"))){
+                       Common.alert('<spring:message code="sal.alert.msg.invaildTelNumR" />');
+                   }
+                   if($("#_asTelR_").length > 12){
+                       Common.alert('<spring:message code="sal.alert.msg.telRNumExceedLengTwelveCustCare" />');
+                       return false;
+                   }
+               }
+            if($("#_asTelF_").val() != ''){
+                   if(FormUtil.checkNum($("#_asTelF_"))){
+                       Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
+                   }
+                   if($("#_asTelF_").length > 12){
+                       Common.alert('<spring:message code="sal.alert.msg.telFNumExceedLengTwelveCustCare" />');
+                       return false;
+                   }
+               }
         }
+
 
 //      if(!FormUtil.checkNum($("#ext").val())){
 //               alert("* Invalid extension number.");
@@ -990,23 +1067,23 @@
             </td>
             <th scope="row"><spring:message code="sal.title.text.telMOne" /><span class="must">*</span></th>
             <td>
-                <input type="text" id="_telM1_" name="telM1" maxlength="20" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
+                <input type="text" id="_telM1_" name="telM1" maxlength="12" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
             </td>
         </tr>
         <tr>
             <th scope="row"><spring:message code="sal.title.text.telROne" /><span class="must">*</span></th>
             <td>
-            <input type="text" id="_telR_" name="telR" maxlength="20" title="" placeholder="Telephone Number (Residence)" class="w100p" />
+            <input type="text" id="_telR_" name="telR" maxlength="12" title="" placeholder="Telephone Number (Residence)" class="w100p" />
             </td>
             <th scope="row"><spring:message code="sal.title.text.telFOne" /><span class="must">*</span></th>
             <td>
-            <input type="text" id="_telF_" name="telF" maxlength="20" title="" placeholder="Telephone Number (Fax)" class="w100p" />
+            <input type="text" id="_telF_" name="telF" maxlength="12" title="" placeholder="Telephone Number (Fax)" class="w100p" />
             </td>
         </tr>
         <tr>
             <th scope="row"><spring:message code="sal.title.text.telOOne" /><span class="must">*</span></th>
             <td>
-            <input type="text" id="_telO_" name="telO" maxlength="20" title="" placeholder="Telephone Number (Office)" class="w100p" />
+            <input type="text" id="_telO_" name="telO" maxlength="12" title="" placeholder="Telephone Number (Office)" class="w100p" />
             </td>
             <th scope="row"><spring:message code="sal.title.text.extNo" /></th>
             <td>

@@ -2232,4 +2232,15 @@ public class CustomerController {
 
     return result;
   }
+
+  @RequestMapping(value = "/existingHPCodyMobile", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> existingHPCodyMobile(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+
+	  EgovMap existingHP = customerService.existingHPCodyMobile(params);
+
+    // 데이터 리턴.
+    return ResponseEntity.ok(existingHP);
+  }
+
 }

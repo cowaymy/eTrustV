@@ -548,4 +548,6 @@ public interface CustomerService {
 
   EgovMap selectPairOrdId(Map<String, Object> params);
 
+  EgovMap existingHPCodyMobile(Map<String, Object> params);
+
 }
