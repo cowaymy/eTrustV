@@ -893,6 +893,19 @@ console.log("validation");
         if($("#mobileNo").val() == '') {
         	Common.alert("Please key in Mobile No.");
             return false;
+        }else{
+            if($("#mobileNo").length < 9 || $("#mobileNo").length < 12){
+                Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
+                return false;
+            }
+
+            if($("#mobileNo").val().substring(0,3) == "015"){
+                Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
+                return false;
+            }else if($("#mobileNo").val().substring(0,2) != "01"){
+                Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
+                return false;
+            }
         }
 
         if($("#memberType").val() == "2803") {
