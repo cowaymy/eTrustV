@@ -481,7 +481,7 @@
     </select>
     </td>
     <th scope="row" style="width: 119px; ">Settle Date</th>
-    <td><input type="text" id ="settleDate" name = "settleDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+    <td><input type="text" id ="settleDate" name = "settleDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" readonly="true" /></td>
 </tr>
 <tr>
     <th scope="row">Fail Reason</th>
