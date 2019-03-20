@@ -427,13 +427,29 @@
             editable: false
         },
     ];
+
+     var memoColumnLayout = [
+                    {dataField: "memoid",headerText :"<spring:message code='log.head.memoid'/>"           ,width:120    ,height:30 , visible:false},
+                    {dataField: "memotitle",headerText :"<spring:message code='log.head.title'/>"              ,width:"30%"    ,height:30 , visible:true},
+                    {dataField: "stusname",headerText :"<spring:message code='log.head.statuscode'/>"        ,width:"20$"    ,height:30 , visible:true},
+                    {dataField: "crtdt",headerText :"<spring:message code='log.head.createdate'/>"           ,width:"20%"    ,height:30 , visible:true},
+                    {dataField: "crtusernm",headerText :"<spring:message code='log.head.creator'/>"          ,width:"20%"   ,height:30 , visible:true},
+               ];
+
     //AUIGrid 생성 후 반환 ID
-    var noticeGridID, detailGridID, statusCodeGridID;
+    var noticeGridID, detailGridID, statusCodeGridID, memoGridID;
 
     var gridOption = {
         showStateColumn : false,
         usePaging : false
     };
+
+    var memoGridOption = {showStateColumn : false
+            , editable : false
+            , pageRowCount : 10
+            , usePaging : true
+            , useGroupingPanel : false
+            , fixedColumnCount:2};
 
     $(document).ready(function () {
     	$(".bottom_msg_box").attr("style","display:none");
@@ -468,10 +484,20 @@
         			console.log("else :: salesManagerDashboard");
         			noticeGridID = GridCommon.createAUIGrid("noticeGrid", salesManagerDashboard, null, salesGridOption);
         		}
+
+        		$("#memo").show();
+        		memoGridID = GridCommon.createAUIGrid("memoGridID", memoColumnLayout, null, memoGridOption);
+
         	} else {
         		noticeGridID = GridCommon.createAUIGrid("noticeGrid", noticeLayout, null, gridOption);
-
         		// 셀 더블클릭 이벤트 바인딩
+
+        		if(result.userTypeId == 2){
+        			$("#memo").show();
+        			memoGridID = GridCommon.createAUIGrid("memoGridID", memoColumnLayout, null, memoGridOption);
+        		}
+
+
                 AUIGrid.bind(noticeGridID, "cellDoubleClick", function (event) {
 
                     var data = {
@@ -482,6 +508,17 @@
 
                 fn_selectNoticeListAjax();
         	}
+
+            AUIGrid.bind(memoGridID, "cellDoubleClick", function(event){
+                        $("#viewwindow").show();
+                        var itm = event.item;
+                        $("#vtitle").html(itm.memotitle);
+                        $("#vcrtnm").html(itm.crtusernm);
+                        $("#vcrtdt").html(itm.fcrtdt);
+                        $("#vupdnm").html(itm.updusernm);
+                        $("#vupddt").html(itm.upddt);
+                        $("#vmemo").html(itm.memocntnt);
+            });
         });
 
         /***********************************************[ DETAIL GRID] ************************************************/
@@ -524,6 +561,9 @@
         fn_selectDailyPerformanceListAjax();
 
         fn_selectSalesDashboard(roleType);
+
+        fn_selectMemoDashboard();
+
     });   //$(document).ready
 
 
@@ -536,10 +576,20 @@
 
     function fn_selectSalesDashboard(userRole) {
         Common.ajax("GET", "/common/getSalesOrgPerf.do", {}, function (result) {
-            console.log(result);
             AUIGrid.setGridData(noticeGridID, result);
         });
     }
+
+    function fn_selectMemoDashboard() {
+        var url = "/logistics/memorandum/memoSearchList.do";
+
+	    Common.ajax("POST", "/logistics/memorandum/memoSearchList.do", {}, function (result) {
+	    	AUIGrid.setGridData(memoGridID, result.data);
+	    });
+
+
+    }
+
 /*
     // Tag Status 리스트 조회.
     function fn_selectTagStatusListAjax(_initYn) {
@@ -616,7 +666,68 @@
             <div id="detailGrid" style="height:210px;"></div>
         </article><!-- grid_wrap end -->
 
+        <aside id="memo" class="title_line main_title mt30" style="display:none;">
+            <h2>Memorandum</h2>
+        </aside>
+
+        <article class="grid_wrap">
+             <div id="memoGridID" style="height:210px;"></div>
+        </article>
+
+
+
     </form>
+
+<div class="popup_wrap" id="viewwindow" style="display:none"><!-- popup_wrap start -->
+        <header class="pop_header"><!-- pop_header start -->
+            <h1 id="dataTitle">MEMORANDUM VIEW</h1>
+            <ul class="right_opt">
+                <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            </ul>
+        </header><!-- pop_header end -->
+
+        <section class="pop_body"><!-- pop_body start -->
+            <form id="grForm" name="grForm" method="POST">
+            <table class="type1">
+            <caption>search table</caption>
+            <colgroup>
+                <col style="width:150px" />
+                <col style="width:*" />
+                <col style="width:180px" />
+                <col style="width:*" />
+               <!--  <col style="width:30px" /> -->
+            </colgroup>
+            <tbody>
+                <tr>
+                    <th scope="row">Title</th>
+                    <td id="vtitle" colspan="2"></td>
+                   <td align="right"><div class="search_100p" align="right"><input name="pdf" type="button" value="PDF" /></div></td>
+                </tr>
+                <tr>
+                    <th scope="row">Creator</th>
+                    <td id="vcrtnm"></td>
+                    <th scope="row">Create Date</th>
+                    <td id="vcrtdt"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Updator</th>
+                    <td id="vupdnm"></td>
+                    <th scope="row">Update Date</th>
+                    <td id="vupddt" ></td>
+                </tr>
+                <tr>
+                    <td id="vmemo" colspan="4"></td>
+                </tr>
+            </tbody>
+            </table>
+
+           <!--  <ul class="center_btns">
+                <li><p class="btn_blue2 big"><a id="vclose">CLOSE</a></p></li>
+            </ul> -->
+            </form>
+
+        </section>
+    </div>
 
 </section>
 <!-- container end -->
