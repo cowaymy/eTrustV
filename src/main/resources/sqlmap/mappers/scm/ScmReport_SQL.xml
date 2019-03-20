@@ -546,8 +546,8 @@ SELECT A.TEAM, A.STOCK_CODE, SUM(NVL(A.W0, 0)) AS SALES_ORD_QTY, A.ACC AS SALES_
 </select>
 <select id="selectSalesPlanAccuracyMaster" parameterType="Map" resultType="egovMap">
 SELECT A.YEAR, A.GBN, A.GBN_NM
-     , A.W1, A.W2, A.W3, A.W4, A.W5, A.W6, A.W7, A.W8, A.W9
-     , A.W10, A.W11, A.W12, A.W13, A.W14, A.W15, A.W16
+     , A.W1, A.W2 , A.W3 , A.W4 , A.W5 , A.W6 , A.W7 , A.W8
+     , A.W9, A.W10, A.W11, A.W12, A.W13, A.W14, A.W15, A.W16
   FROM (
         SELECT A.YEAR, A.GBN, A.GBN_NM
              , NVL((SELECT Z.WEEK FROM SCM0062M Z WHERE A.YEAR = Z.YEAR AND A.GBN = Z.GBN AND Z.WEEK = 1), 0) AS W1
@@ -566,7 +566,7 @@ SELECT A.YEAR, A.GBN, A.GBN_NM
              , NVL((SELECT Z.WEEK FROM SCM0062M Z WHERE A.YEAR = Z.YEAR AND A.GBN = Z.GBN AND Z.WEEK = 14), 0) AS W14
              , NVL((SELECT Z.WEEK FROM SCM0062M Z WHERE A.YEAR = Z.YEAR AND A.GBN = Z.GBN AND Z.WEEK = 15), 0) AS W15
              , NVL((SELECT Z.WEEK FROM SCM0062M Z WHERE A.YEAR = Z.YEAR AND A.GBN = Z.GBN AND Z.WEEK = 16), 0) AS W16
-          FROM (SELECT #{planYear} AS YEAR, 1 AS GBN, 'Weekly' AS GBN_NM FROM DUAL) A
+          FROM (SELECT DISTINCT YEAR, 1 AS GBN, 'Weekly' AS GBN_NM FROM SCM0062M) A
         UNION ALL
         SELECT A.YEAR, A.GBN, A.GBN_NM
              , NVL((SELECT Z.WEEK FROM SCM0062M Z WHERE A.YEAR = Z.YEAR AND A.GBN = Z.GBN AND Z.WEEK = 1), 0) AS W1
@@ -585,9 +585,35 @@ SELECT A.YEAR, A.GBN, A.GBN_NM
              , NVL((SELECT Z.WEEK FROM SCM0062M Z WHERE A.YEAR = Z.YEAR AND A.GBN = Z.GBN AND Z.WEEK = 14), 0) AS W14
              , NVL((SELECT Z.WEEK FROM SCM0062M Z WHERE A.YEAR = Z.YEAR AND A.GBN = Z.GBN AND Z.WEEK = 15), 0) AS W15
              , NVL((SELECT Z.WEEK FROM SCM0062M Z WHERE A.YEAR = Z.YEAR AND A.GBN = Z.GBN AND Z.WEEK = 16), 0) AS W16
-          FROM (SELECT #{planYear} AS YEAR, 2 AS GBN, 'Monthly' AS GBN_NM FROM DUAL) A
+          FROM (SELECT DISTINCT YEAR, 2 AS GBN, 'Monthly' AS GBN_NM FROM SCM0062M) A
         ) A
- ORDER BY A.GBN
+ ORDER BY A.YEAR DESC, A.GBN
+</select>
+<update id="deleteSalesPlanAccuracyMaster" parameterType="Map">
+DELETE FROM SCM0062M
+ WHERE YEAR = #{year}
+   AND GBN = #{gbn}
+</update>
+<insert id="insertSalesPlanAccuracyMaster" parameterType="Map">
+INSERT INTO SCM0062M
+(
+       YEAR
+     , GBN
+     , WEEK
+ )
+VALUES
+(
+       #{year}
+     , #{gbn}
+     , #{week}
+ )
+</insert>
+<resultMap id="salesPlanAccuracyMap" type="egovMap"></resultMap>
+<select id="executeSalesPlanAccuracy" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call SP_SCM_0063S_EXECUTE(#{year}, #{gbn}
+                             , #{retValue, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=salesPlanAccuracyMap})
+ }
 </select>
 
 <!-- Ontime Delivery Report -->
@@ -595,10 +621,18 @@ SELECT A.YEAR, A.GBN, A.GBN_NM
 SELECT A.GBN
      , A.ORD
      , A.PLAN_YEAR
-     , ROUND(A.M1, 0) AS M1, ROUND(A.M2, 0) AS M2, ROUND(A.M3, 0) AS M3
-     , ROUND(A.M4, 0) AS M4, ROUND(A.M5, 0) AS M5, ROUND(A.M6, 0) AS M6
-     , ROUND(A.M7, 0) AS M7, ROUND(A.M8, 0) AS M8, ROUND(A.M9, 0) AS M9
-     , ROUND(A.M10, 0) AS M10, ROUND(A.M11, 0) AS M11, ROUND(A.M12, 0) AS M12
+     , CASE WHEN A.ORD = 3 THEN ROUND(A.M1, 0) || '%' ELSE TO_CHAR(ROUND(A.M1, 0)) END AS M1
+     , CASE WHEN A.ORD = 3 THEN ROUND(A.M2, 0) || '%' ELSE TO_CHAR(ROUND(A.M2, 0)) END AS M2
+     , CASE WHEN A.ORD = 3 THEN ROUND(A.M3, 0) || '%' ELSE TO_CHAR(ROUND(A.M3, 0)) END AS M3
+     , CASE WHEN A.ORD = 3 THEN ROUND(A.M4, 0) || '%' ELSE TO_CHAR(ROUND(A.M4, 0)) END AS M4
+     , CASE WHEN A.ORD = 3 THEN ROUND(A.M5, 0) || '%' ELSE TO_CHAR(ROUND(A.M5, 0)) END AS M5
+     , CASE WHEN A.ORD = 3 THEN ROUND(A.M6, 0) || '%' ELSE TO_CHAR(ROUND(A.M6, 0)) END AS M6
+     , CASE WHEN A.ORD = 3 THEN ROUND(A.M7, 0) || '%' ELSE TO_CHAR(ROUND(A.M7, 0)) END AS M7
+     , CASE WHEN A.ORD = 3 THEN ROUND(A.M8, 0) || '%' ELSE TO_CHAR(ROUND(A.M8, 0)) END AS M8
+     , CASE WHEN A.ORD = 3 THEN ROUND(A.M9, 0) || '%' ELSE TO_CHAR(ROUND(A.M9, 0)) END AS M9
+     , CASE WHEN A.ORD = 3 THEN ROUND(A.M10, 0) || '%' ELSE TO_CHAR(ROUND(A.M10, 0)) END AS M10
+     , CASE WHEN A.ORD = 3 THEN ROUND(A.M11, 0) || '%' ELSE TO_CHAR(ROUND(A.M11, 0)) END AS M11
+     , CASE WHEN A.ORD = 3 THEN ROUND(A.M12, 0) || '%' ELSE TO_CHAR(ROUND(A.M12, 0)) END AS M12
   FROM (
         SELECT 'Total PO' AS GBN, 1 AS ORD, Z.PLAN_YEAR
              , (SELECT COUNT(*) FROM SCM0052M X LEFT OUTER JOIN SCM0053D Y ON (X.PO_ID = Y.PO_ID) WHERE X.PO_YEAR = Z.PLAN_YEAR AND X.PO_MONTH = 1) AS M1
