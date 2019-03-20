@@ -1520,7 +1520,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
         Map<String, Object> srvparams = null;
 		srvparams = new HashMap<String, Object>();
-		srvparams.put("srvPacId",srvPacId);
+		srvparams.put("appTypeId",orderVO.getAppTypeId());
 		srvparams.put("salesOrdId",salesOrdId);
 		EgovMap memberPackageInfo = htOrderRegisterMapper.selectMembershipPackageInfo(srvparams);
 
@@ -1587,7 +1587,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	    int taxInvcId = htOrderRegisterMapper.getSeqPay0031D();
 	    EgovMap taxPersonInfo = htOrderRegisterMapper.selectTaxInvoice(params);
 
-	    if (orderVO.getAppTypeId() == 3212){  //CHECK APPLICATION TYPE = CARE SERVICE
+	    if (orderVO.getAppTypeId() == 3213 || orderVO.getAppTypeId() == 3214){  //CHECK APPLICATION TYPE = CARE SERVICE
 
 	    Map<String, Object> param = new HashMap();
 
@@ -1666,11 +1666,11 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	    param3.put("accBillOrdId", salesOrdId);
 	    param3.put("accBillTypeId", "1159"); // SYSTEM GENERATE BILL
 
-	    int packId = orderVO.getSrvPacId();
+	    int appId = orderVO.getAppTypeId();
 	    String scModeId = "";
-	    if (packId == 25){ // 1 TIME PACKAGE
+	    if (appId == 3213){ // 1 TIME PACKAGE
 	    	scModeId = "3215";
-	    }else if(packId == 26){ // 1 YEAR PACKAGE
+	    }else if(appId == 3214){ // 1 YEAR PACKAGE
 	    	scModeId = "3216";
 	    }
 
@@ -1721,8 +1721,12 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		String appTypeName= "";
 		String invDocNo = "";
 		switch(orderVO.getAppTypeId()){
-		case 3212 :
-			appTypeName = "Care Service";
+		case 3213 :
+			appTypeName = "Care Service 1 Time ";
+			invDocNo =  String.valueOf(invoiceDocNo.get("csno"));
+			break;
+		case 3214 :
+			appTypeName = "Care Service 1 Year ";
 			invDocNo =  String.valueOf(invoiceDocNo.get("csno"));
 			break;
 		case 145 :
