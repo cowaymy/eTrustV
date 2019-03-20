@@ -19,7 +19,6 @@
  V1.ORD_STUS_CODE,
  V1.ORD_STUS_ID,
  V1.PO_NO,
- V1.PRODUCT_NAME,
  V1.REF_NO,
  V1.SALESMAN_MEM_ID,
  V1.SALESMAN_CODE,
@@ -33,7 +32,6 @@
  V1.INST_TEL_MOB,
  V1.INST_TEL_OFF,
  V1.INST_TEL_RES,
- V1.ITM_PRC_ID,
  V1.PV_MONTH,
  V1.PV_YEAR,
  V1.PROMO_CODE,
@@ -41,7 +39,7 @@
  V1.RELATED_NO,
  V1.RELATED_ID,
  V1.BRAND,
- V1.PRODUCT_ID
+ V1.PRODUCT_NAME
  FROM (
  SELECT DISTINCT
           cd.CODE APP_TYPE_CODE,
@@ -60,7 +58,6 @@
           S.CODE ORD_STUS_CODE,
           som.STUS_CODE_ID ORD_STUS_ID,
           NVL (som.CUST_PO_NO, ' ') PO_NO,
-          packd.SRV_MEM_ITM_REM PRODUCT_NAME,
           NVL (som.REF_NO, ' ') REF_NO,
           NVL (som.MEM_ID, 0) SALESMAN_MEM_ID,
           NVL (mem.MEM_CODE, ' ') SALESMAN_CODE,
@@ -74,7 +71,6 @@
           cp3.TEL_M1 INST_TEL_MOB,
           cp3.TEL_O INST_TEL_OFF,
           cp3.TEL_R INST_TEL_RES,
-          packd.SRV_MEM_PAC_ID ITM_PRC_ID,
           som.PV_MONTH PV_MONTH,
           som.PV_YEAR PV_YEAR,
           NVL (pm.PROMO_CODE, ' ') PROMO_CODE,
@@ -82,12 +78,8 @@
           NVL (som.BINDING_NO, ' ') RELATED_NO,
           NVL (som.SALES_ORD_ID_OLD, 0) RELATED_ID,
           NVL (SOM.SALES_PROD_BRD,'OTHER') BRAND,
-          som.SALES_PROD_SZ PRODUCT_ID
-
+          som.SALES_PROD_SZ PRODUCT_NAME
      FROM SAL0225D som
-          JOIN SAL0231M sz ON sz.STK_ID = som.SALES_PROD_SZ
-          JOIN SAL0229M packm ON packM.SRV_MEM_PAC_ID = som.SRV_PAC_ID
-          JOIN SAL0230M packd ON packd.SRV_MEM_PAC_ID = packM.SRV_MEM_PAC_ID AND packd.SRV_MEM_ITM_STK_ID = sz.STK_ID
           JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
           JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
           JOIN SAL0045D i ON i.SALES_ORD_ID = som.SRV_ORD_ID
@@ -116,18 +108,11 @@
                   </foreach>
                 </if>
                   <if test='arrProductId != null and arrProductId != ""'>
-                  AND V1.PRODUCT_ID IN
+                  AND V1.PRODUCT_NAME IN
                    <foreach item="item" collection="arrProductId" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
-                 <if test='arrPackId != null and arrPackId != ""'>
-                  AND V1.ITM_PRC_ID IN
-                   <foreach item="item" collection="arrPackId" index="index" open="(" separator="," close=")">
-                    #{item}
-                  </foreach>
-                </if>
-
                 <if test='arrOrdStusId != null and arrOrdStusId != ""'>
                   AND V1.ORD_STUS_ID IN
                   <foreach item="item" collection="arrOrdStusId" index="index" open="(" separator="," close=")">
@@ -562,7 +547,7 @@
         </if>-->
 
 
-            AND CODE IN ('CSRV','TRL')
+            AND CODE IN ('CS1T','CS1Y','TRL')
 
 
 
