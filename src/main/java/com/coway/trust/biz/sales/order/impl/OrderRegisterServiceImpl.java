@@ -165,6 +165,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		EgovMap priceInfo = null;
 
 		int srvPacId = Integer.parseInt(String.valueOf(params.get("srvPacId")));
+		int promoId = Integer.parseInt(String.valueOf(params.get("promoId")));
+		int stkId = Integer.parseInt(String.valueOf(params.get("stkId")));
 
 		if(!StringUtils.isEmpty(params.get("promoId"))) {
     		EgovMap promoMap = orderRegisterMapper.selectPromoDesc(Integer.parseInt((String)params.get("promoId")));
@@ -192,7 +194,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         				normalRentalFees = (BigDecimal)priceInfo.get("amt");
         			}
         			else {
-        				orderPricePromo      = (BigDecimal)priceInfo.get("promoAmt");
+        				if(promoId == 31738 && stkId== 892 && srvPacId == 0){
+            				orderPricePromo      = BigDecimal.valueOf(3540);
+        				}
+        				else{
+            				orderPricePromo      = (BigDecimal)priceInfo.get("promoAmt");
+        				}
         				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
         				orderPVPromoGST      = (BigDecimal)priceInfo.get("promoItmPvGst");
         				orderRentalFeesPromo = BigDecimal.ZERO;
@@ -517,7 +524,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		EgovMap result = orderRegisterMapper.selectVerifyOldSalesOrderNoValidity(getOldOrderID);
 		return result == null ? true : false;
 	}
-	
+
 	private boolean isVerifyOldSalesOrderNoValidityICare(int getOldOrderID) {
 		EgovMap result = orderRegisterMapper.selectVerifyOldSalesOrderNoValidityICare(getOldOrderID);
 		return result == null ? true : false;
