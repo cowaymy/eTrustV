@@ -118,7 +118,8 @@ $(document).ready(function() {
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Midterm GR</h1>
 		<ul class="right_opt">
-			<!-- <li><p class="btn_blue2"><a href="fnClose();">Close</a></p></li> -->
+			<!-- <li><p class="btn_blue2"><a href="fnClose();">Close</a></p></li>
+			<li><p class="btn_blue"><a onclick="fnSearchPop();"><span class="search"></span>Search</a></p></li> -->
 			<li><p class="btn_blue"><a onclick="fnClose();"><span class="close"></span>Close</a></p></li>
 		</ul>
 	</header><!-- pop_header end -->

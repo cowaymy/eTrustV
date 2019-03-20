@@ -18,6 +18,15 @@
 	text-align : left;
 	margin-top : -20px;
 }
+.my-columnHyperLink:hover {
+	text-decoration : underline;
+	text-align : center;
+	margin-top : -20px;
+	cursor : pointer;
+}
+.aui-grid-selection-cell-border-lines {
+	background: #22741C; 
+}
 </style>
 
 <script type="text/javascript">
@@ -48,6 +57,10 @@ function fnSearch() {
 			, function(result) {
 				AUIGrid.setGridData(myGridID1, result.selectOntimeDeliverySummary);
 				AUIGrid.setGridData(myGridID2, result.selectOntimeDeliveryDetail);
+				$("#yearMonth").text(currMonth + "/" + AUIGrid.getCellValue(myGridID1, 0, "planYear"));
+				$("#issPoQty").text(AUIGrid.getCellValue(myGridID1, 0, currMonth));
+				$("#onTimeQty").text(AUIGrid.getCellValue(myGridID1, 1, currMonth));
+				$("#onTimeRate").text(AUIGrid.getCellValue(myGridID1, 2, currMonth));
 			});
 }
 function fnSearchDetail() {
@@ -288,7 +301,7 @@ var detailLayout	=
 	 		headerText : "GR Week(Last)",
 	 		dataField : "lstGrWeek",
 	 		dataType : "numeric",
-	 		style : "my-columnCenter"
+	 		style : "my-columnHyperLink"
 	 	}, {
 	 		headerText : "PO Qty",
 	 		dataField : "poQty",
@@ -332,6 +345,12 @@ $(document).ready(function() {
 				planMonth	= event.columnIndex;
 				fnSearchDetail();
 			}
+			
+			//	Detail Text
+			$("#yearMonth").text(event.columnIndex + "/" + event.item.planYear);
+			$("#issPoQty").text(AUIGrid.getCellValue(myGridID1, 0, event.columnIndex));
+			$("#onTimeQty").text(AUIGrid.getCellValue(myGridID1, 1, event.columnIndex));
+			$("#onTimeRate").text(AUIGrid.getCellValue(myGridID1, 2, event.columnIndex));
 		}
 	});
 	
@@ -433,9 +452,33 @@ $(document).ready(function() {
 			<!-- Summary Grid -->
 			<div id="summary_wrap" style="height:186px;"></div>
 		</article>								<!-- article grid_wrap end -->
-		<ul class="right_btns">
-			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'OntimeDelivery Report');">Excel</a></p></li>
-		</ul>
+		<table class="type1 mt10">				<!-- table start -->
+			<caption>table10</caption>
+			<colgroup>
+				<col style="width:100px" />
+				<col style="width:*" />
+				<col style="width:100px" />
+				<col style="width:*" />
+				<col style="width:100px" />
+				<col style="width:*" />
+				<col style="width:100px" />
+				<col style="width:*" />
+				<col style="width:100px" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row">Year/Month</th><td><span id="yearMonth"></span></td>
+					<th scope="row">Issued PO</th><td><span id="issPoQty"></span></td>
+					<th scope="row">On-Time</th><td><span id="onTimeQty"></span></td>
+					<th scope="row">On-Time Delivery Rate</th><td><span id="onTimeRate"></span></td>
+					<td>
+						<ul class="right_btns">
+							<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'OntimeDelivery Report');">Excel</a></p></li>
+						</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>								<!-- table end -->
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Detail Grid -->
 			<div id="detail_wrap" style="height:471px;"></div>

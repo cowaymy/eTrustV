@@ -1,8 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
+<link href="${pageContext.request.contextPath}/resources/css/select2.min.css" rel="stylesheet">
+<script src ="${pageContext.request.contextPath}/resources/js/select2.min.js" type="text/javascript"></script>
 <!-- char js -->
-<link href="${pageContext.request.contextPath}/resources/AUIGrid/AUIGrid_style.css" rel="stylesheet">
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/Chart.min.js"></script>
+<!-- <link href="${pageContext.request.contextPath}/resources/AUIGrid/AUIGrid_style.css" rel="stylesheet">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/Chart.min.js"></script> -->
 
 <style type="text/css">
 /* Custom Sales Accuracy Style */
@@ -10,47 +12,66 @@
 	text-align : center;
 	margin-top : -20px;
 }
-.my-columnCenter0 {
+.my-currDetailCenter {
 	text-align : center;
 	background : #CCFFFF;
 	color : #000;
 }
-.my-columnCenter1 {
+.my-currSummaryCenter {
 	text-align : center;
 	background : #CCCCFF;
+	color : #000;
+}
+.my-clickSummaryCenter {
+	text-align : center;
+	background : #FFCCFF;
 	color : #000;
 }
 .my-columnRight {
 	text-align : right;
 	margin-top : -20px;
 }
-.my-columnRight0 {
+.my-currDetailRight {
 	text-align : right;
 	background : #CCFFFF;
 	color : #000;
 }
-.my-columnRight1 {
+.my-currSummaryRight {
 	text-align : right;
 	background : #CCCCFF;
+	color : #000;
+}
+.my-clickSummaryRight {
+	text-align : right;
+	background : #FFCCFF;
 	color : #000;
 }
 .my-columnLeft {
 	text-align : left;
 	margin-top : -20px;
 }
-.my-columnLeft0 {
+.my-currDetailLeft {
 	text-align : left;
 	background : #CCFFFF;
 	color : #000;
 }
-.my-columnLeft1 {
+.my-currSummaryLeft {
 	text-align : left;
 	background : #CCCCFF;
 	color : #000;
 }
+.my-clickSummaryLeft {
+	text-align : left;
+	background : #FFCCFF;
+	color : #000;
+}
+.aui-grid-selection-cell-border-lines {
+	background: #22741C; 
+}
 </style>
 
 <script type="text/javascript">
+var beforeStyle	= "";
 var currYear	= 0;
 var currMonth	= 0;
 var currWeek	= 0;
@@ -70,6 +91,13 @@ var monthlyCalcMonth	= 0;
 var team		= "";
 
 $(function(){
+	if ( 1 == $("input[name='gbn']:checked").val() ) {
+		$("#periodLabel").text("Year/Week");
+		$("#period").text(currWeek + "W / " + currYear);
+	} else {
+		$("#periodLabel").text("Year/Month");
+		$("#period").text(currMonth + "M / " + currYear);
+	}
 	fnScmTotalPeriod();
 });
 
@@ -167,8 +195,8 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 		monthlyCalcYear : monthlyCalcYear,
 		monthlyCalcMonth : monthlyCalcMonth
 	};
-	console.log("fnSalesPlanAccuracyDetailHeader");
-	console.log(params);
+	//console.log("fnSalesPlanAccuracyDetailHeader");
+	//console.log(params);
 	params	= $.extend($("#MainForm").serializeJSON(), params);
 	
 	Common.ajax("GET"
@@ -226,10 +254,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -246,10 +274,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -266,10 +294,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -286,10 +314,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -306,10 +334,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -326,10 +354,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -346,10 +374,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -366,10 +394,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -386,10 +414,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -406,10 +434,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -426,10 +454,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -446,10 +474,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -466,10 +494,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -486,10 +514,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -506,10 +534,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -526,10 +554,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -573,10 +601,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -593,10 +621,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -613,10 +641,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -633,10 +661,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -653,10 +681,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -673,10 +701,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -693,10 +721,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -713,10 +741,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -733,10 +761,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -753,10 +781,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -773,10 +801,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -793,10 +821,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -813,10 +841,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -833,10 +861,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -853,10 +881,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
@@ -873,141 +901,15 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									end		= parseInt(item.endWeek.replace("W", ""));
 									
 									if ( start < end ) {
-										if ( header <= start || header >= end )	return	"my-columnRight0";
+										if ( header <= start || header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									} else {
-										if ( header <= start && header >= end )	return	"my-columnRight0";
+										if ( header <= start && header >= end )	return	"my-currDetailRight";
 										else									return	"my-columnRight";
 									}
 						 		}
 							}
 					);
-					/*
-					var weeklySummaryLayout	= 
-						[
-						 	{	headerText : "Team",	dataField : "team",	style : "my-columnCenter"	},
-						 	{	headerText : "1W",		dataField : "w1",	dataType : "numeric",	
-						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( item.w1 == planWeek )	return	"my-columnRight0";
-						 			else						return	"my-columnRight";
-						 		}
-						 	},	{	headerText : "2W",		dataField : "w2",	dataType : "numeric",	
-						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( item.w2 == planWeek )	return	"my-columnRight0";
-						 			else						return	"my-columnRight";
-						 		}
-						 	}, 	{	headerText : "3W",		dataField : "w3",	dataType : "numeric",	
-						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( item.w3 == planWeek )	return	"my-columnRight0";
-						 			else						return	"my-columnRight";
-						 		}
-						 	}, 	{	headerText : "4W",		dataField : "w4",	dataType : "numeric",	
-						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( item.w4 == planWeek )	return	"my-columnRight0";
-						 			else						return	"my-columnRight";
-						 		}
-						 	}, 	{	headerText : "5W",		dataField : "w5",	dataType : "numeric",	
-						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( item.w5 == planWeek )	return	"my-columnRight0";
-						 			else						return	"my-columnRight";
-						 		}
-						 	}, 	{	headerText : "6W",		dataField : "w6",	dataType : "numeric",	
-						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( columnIndex == parseInt(planWeek) - 2 )	return	"my-columnRight0";
-						 			else						return	"my-columnRight";
-						 		}
-						 	}, 	{	headerText : "7W",		dataField : "w7",	dataType : "numeric",	
-						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( columnIndex == parseInt(planWeek) - 2 )	return	"my-columnRight0";
-						 			else						return	"my-columnRight";
-						 		}
-						 	}, 	{	headerText : "8W",		dataField : "w8",	dataType : "numeric",	
-						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( columnIndex == parseInt(planWeek) - 2 )	return	"my-columnRight0";
-						 			else						return	"my-columnRight";
-						 		}
-						 	}, 	{	headerText : "9W",		dataField : "w9",	dataType : "numeric",	
-						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( columnIndex == parseInt(planWeek) - 2 )	return	"my-columnRight0";
-						 			else						return	"my-columnRight";
-						 		}
-						 	}, 	{	headerText : "10W",		dataField : "w10",	dataType : "numeric",	
-						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( columnIndex == parseInt(planWeek) - 2 )	return	"my-columnRight0";
-						 			else						return	"my-columnRight";
-						 		}
-						 	}, 	{	headerText : "11W",		dataField : "w11",	dataType : "numeric",	
-						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( columnIndex == parseInt(planWeek) - 2 )	return	"my-columnRight0";
-						 			else						return	"my-columnRight";
-						 		}
-						 	}, 	{	headerText : "12W",		dataField : "w12",	dataType : "numeric",	
-						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( columnIndex == parseInt(planWeek) - 2 )	return	"my-columnRight0";
-						 			else						return	"my-columnRight";
-						 		}
-						 	},
-						 	{	headerText : "13W",		dataField : "w13",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "14W",		dataField : "w14",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "15W",		dataField : "w15",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "16W",		dataField : "w16",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "17W",		dataField : "w17",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "18W",		dataField : "w18",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "19W",		dataField : "w19",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "20W",		dataField : "w20",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "21W",		dataField : "w21",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "22W",		dataField : "w22",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "23W",		dataField : "w23",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "24W",		dataField : "w24",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "25W",		dataField : "w25",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "26W",		dataField : "w26",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "27W",		dataField : "w27",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "28W",		dataField : "w28",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "29W",		dataField : "w29",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "30W",		dataField : "w30",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "31W",		dataField : "w31",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "32W",		dataField : "w32",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "33W",		dataField : "w33",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "34W",		dataField : "w34",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "35W",		dataField : "w35",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "36W",		dataField : "w36",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "37W",		dataField : "w37",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "38W",		dataField : "w38",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "39W",		dataField : "w39",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "40W",		dataField : "w40",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "41W",		dataField : "w41",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "42W",		dataField : "w42",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "43W",		dataField : "w43",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "44W",		dataField : "w44",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "45W",		dataField : "w45",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "46W",		dataField : "w46",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "47W",		dataField : "w47",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "48W",		dataField : "w48",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "49W",		dataField : "w49",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "50W",		dataField : "w50",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "51W",		dataField : "w51",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "52W",		dataField : "w52",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "year",	dataField : "planYear",	dataType : "numeric",	style : "my-columnRight", visible : false	}
-						 ];
-						 
-					var monthlySummaryLayout	= 
-						[
-						 	{	headerText : "Team",	dataField : "team",	style : "my-columnCenter"	},
-						 	{	headerText : "Jan",		dataField : "m1",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "Feb",		dataField : "m2",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "Mar",		dataField : "m3",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "Apr",		dataField : "m4",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "May",		dataField : "m5",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "Jun",		dataField : "m6",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "Jul",		dataField : "m7",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "Aug",		dataField : "m8",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "Sep",		dataField : "m9",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "Oct",		dataField : "m10",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "Nov",		dataField : "m11",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "Dec",		dataField : "m12",	dataType : "numeric",	style : "my-columnRight"	},
-						 	{	headerText : "year",	dataField : "planYear",	dataType : "numeric",	style : "my-columnRight", visible : false	}
-						 ];
-					*/
 					//	Create Grid
 					//myGridID1	= GridCommon.createAUIGrid("weekly_summary_wrap", weeklySummaryLayout, "", weeklySummaryOption);
 					//myGridID2	= GridCommon.createAUIGrid("monthly_summary_wrap", monthlySummaryLayout, "", monthlySummaryOption);
@@ -1049,21 +951,22 @@ function fnSearch() {
 		monthlyCalcYear : monthlyCalcYear,
 		monthlyCalcMonth : monthlyCalcMonth
 	};
-	console.log("fnSearch");
-	console.log(params);
+	//console.log("fnSearch");
+	//console.log(params);
 	params	= $.extend($("#MainForm").serializeJSON(), params);
 	Common.ajax("GET"
 			, "/scm/selectSalesPlanAccuracy.do"
 			//, $("#MainForm").serialize()
 			, params
 			, function(result) {
-				//console.log(result);
+				console.log(result);
 				AUIGrid.setGridData(myGridID1, result.selectSalesPlanAccuracyWeeklySummary);
 				AUIGrid.setGridData(myGridID2, result.selectSalesPlanAccuracyMonthlySummary);
 				AUIGrid.setGridData(myGridID3, result.selectSalesPlanAccuracyWeeklyDetail);
 				AUIGrid.setGridData(myGridID4, result.selectSalesPlanAccuracyMonthlyDetail);
-				console.log($("input[name='gbn']:checked").val());
+				//console.log($("input[name='gbn']:checked").val());
 				fnRadioButton($("input[name='gbn']:checked").val());
+				$("#team").text("ALL");
 			});
 }
 function fnSearchDetail() {
@@ -1081,8 +984,8 @@ function fnSearchDetail() {
 		monthlyCalcYear : monthlyCalcYear,
 		monthlyCalcMonth : monthlyCalcMonth
 	};
-	console.log("fnSearchDetail");
-	console.log(params);
+	//console.log("fnSearchDetail");
+	//console.log(params);
 	params	= $.extend($("#MainForm").serializeJSON(), params);
 	Common.ajax("GET"
 			, "/scm/selectSalesPlanAccuracyDetail.do"
@@ -1092,50 +995,23 @@ function fnSearchDetail() {
 				//console.log(result);
 				AUIGrid.setGridData(myGridID3, result.selectSalesPlanAccuracyWeeklyDetail);
 				AUIGrid.setGridData(myGridID4, result.selectSalesPlanAccuracyMonthlyDetail);
-				console.log($("input[name='gbn']:checked").val());
+				//console.log($("input[name='gbn']:checked").val());
 				fnRadioButton($("input[name='gbn']:checked").val());
+				$("#team").text("ALL");
 			});
 }
 function fnMaster() {
-	var params	= {
-			planYear : $("#planYear").val()
-	}
+	//var params	= {
+	//		planYear : $("#planYear").val()
+	//}
 	
-	var popUpObj	= Common.popupDiv("/scm/salesPlanAccuracyMaster.do"
-			, params
+	var popUpObj	= Common.popupDiv("/scm/salesPlanAccuracyMasterPopup.do"
+			, null
 			, null
 			, false
-			, "salesPlanAccuracyMaster"
+			, "salesPlanAccuracyMasterPopup"
 	);
 }
-/*
-function fnMaster() {
-    var option	= {
-		winName : "SalesPlanAccuracyMaster",
-		isDuplicate : true,		// 계속 팝업을 띄울지 여부.
-		fullscreen : "no",		// 전체 창. (yes/no)(default : no)
-		location : "no",		// 주소창이 활성화. (yes/no)(default : yes)
-		menubar : "no",			// 메뉴바 visible. (yes/no)(default : yes)
-		titlebar : "yes",		// 타이틀바. (yes/no)(default : yes)
-		toolbar : "no",			// 툴바. (yes/no)(default : yes)
-		resizable : "yes",		// 창 사이즈 변경. (yes/no)(default : yes)
-		scrollbars : "yes",		// 스크롤바. (yes/no)(default : yes)
-		width : "1600px",		// 창 가로 크기
-		height : "200px"		// 창 세로 크기
-	};
-	var params	= {
-		planYearParam : $("#planYear").val()
-	}
-	console.log(params);
-	var popUpObj	= Common.popupWin("popupForm"
-			, "/scm/salesPlanAccuracyMaster.do"
-			, params
-			, null
-			, true
-			, "salesPlanAccuracyMaster"
-	);
-}
-*/
 function fnExcel(obj, fileName) {
 	//	1. grid id
 	//	2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
@@ -1143,7 +1019,12 @@ function fnExcel(obj, fileName) {
 	if ( true == $(obj).parents().hasClass("btn_disabled") ) {
 		return	false;
 	}
-	GridCommon.exportTo("#sales_plan_wrap", "xlsx", fileName + "_" + getTimeStamp());
+	
+	if ( "1" == $("input[name='gbn']:checked").val() ) {
+		GridCommon.exportTo("#weekly_detail_wrap", "xlsx", fileName + "_" + getTimeStamp());
+	} else {
+		GridCommon.exportTo("#monthly_detail_wrap", "xlsx", fileName + "_" + getTimeStamp());
+	}
 }
 
 /*
@@ -1205,9 +1086,9 @@ function fnScmTotalPeriod() {
 				else if ( 10 == monthlyMonth )	monthlyHeader	= "Oct";
 				else if ( 11 == monthlyMonth )	monthlyHeader	= "Nov";
 				else if ( 12 == monthlyMonth )	monthlyHeader	= "Dec";
-				console.log("currYear : " + currYear + ", currMonth : " + currMonth + ", currWeek : " + currWeek);
-				console.log("weeklyYear : " + weeklyYear + ", weeklyWeek : " + weeklyWeek + ", monthlyYear : " + monthlyYear + ", monthlyMonth : " + monthlyMonth);
-				console.log("weeklyCalcYear : " + weeklyCalcYear + ", weeklyCalcWeek : " + weeklyCalcWeek + ", monthlyCalcYear : " + monthlyCalcYear + ", monthlyCalcMonth : " + monthlyCalcMonth);
+				//console.log("currYear : " + currYear + ", currMonth : " + currMonth + ", currWeek : " + currWeek);
+				//console.log("weeklyYear : " + weeklyYear + ", weeklyWeek : " + weeklyWeek + ", monthlyYear : " + monthlyYear + ", monthlyMonth : " + monthlyMonth);
+				//console.log("weeklyCalcYear : " + weeklyCalcYear + ", weeklyCalcWeek : " + weeklyCalcWeek + ", monthlyCalcYear : " + monthlyCalcYear + ", monthlyCalcMonth : " + monthlyCalcMonth);
 				
 				team	= "ALL";
 				fnScmYearCbBox();
@@ -1263,11 +1144,15 @@ function fnRadioButton(val) {
 		$("#weekly_detail_wrap").show();
 		$("#monthly_summary_wrap").hide();
 		$("#monthly_detail_wrap").hide();
+		$("#periodLabel").text("Year/Week");
+		$("#period").text(weeklyWeek + "W / " + weeklyYear);
 	} else {
 		$("#weekly_summary_wrap").hide();
 		$("#weekly_detail_wrap").hide();
 		$("#monthly_summary_wrap").show();
 		$("#monthly_detail_wrap").show();
+		$("#periodLabel").text("Year/Month");
+		$("#period").text(monthlyMonth + "M / " + monthlyYear);
 	}
 }
 /*
@@ -1283,6 +1168,7 @@ var weeklySummaryOption	= {
 	showRowCheckColumn : false,
 	showStateColumn : false,
 	showEditedCellMarker : false,
+	showSelectionBorder : true,
 	showFooter : false,
 	editable : false,
 	enableCellMerge : false,
@@ -1296,6 +1182,7 @@ var monthlySummaryOption	= {
 	showRowCheckColumn : false,
 	showStateColumn : false,
 	showEditedCellMarker : false,
+	showSelectionBorder : true,
 	showFooter : false,
 	editable : false,
 	enableCellMerge : false,
@@ -1307,262 +1194,262 @@ var weeklySummaryLayout	=
 						 	{	headerText : "Team",	dataField : "team",	style : "my-columnCenter"	},
 						 	{	headerText : "1W",		dataField : "w1",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "2W",		dataField : "w2",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "3W",		dataField : "w3",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "4W",		dataField : "w4",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "5W",		dataField : "w5",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "6W",		dataField : "w6",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "7W",		dataField : "w7",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "8W",		dataField : "w8",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "9W",		dataField : "w9",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "10W",		dataField : "w10",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "11W",		dataField : "w11",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "12W",		dataField : "w12",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "13W",		dataField : "w13",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "14W",		dataField : "w14",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "15W",		dataField : "w15",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "16W",		dataField : "w16",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "17W",		dataField : "w17",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "18W",		dataField : "w18",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "19W",		dataField : "w19",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "20W",		dataField : "w20",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "21W",		dataField : "w21",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "22W",		dataField : "w22",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "23W",		dataField : "w23",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "24W",		dataField : "w24",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "25W",		dataField : "w25",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "26W",		dataField : "w26",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "27W",		dataField : "w27",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "28W",		dataField : "w28",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "29W",		dataField : "w29",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "30W",		dataField : "w30",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "31W",		dataField : "w31",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "32W",		dataField : "w32",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "33W",		dataField : "w33",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "34W",		dataField : "w34",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "35W",		dataField : "w35",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "36W",		dataField : "w36",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "37W",		dataField : "w37",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "38W",		dataField : "w38",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "39W",		dataField : "w39",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "40W",		dataField : "w40",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "41W",		dataField : "w41",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "42W",		dataField : "w42",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "43W",		dataField : "w43",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "44W",		dataField : "w44",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "45W",		dataField : "w45",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "46W",		dataField : "w46",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "47W",		dataField : "w47",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "48W",		dataField : "w48",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "49W",		dataField : "w49",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "50W",		dataField : "w50",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "51W",		dataField : "w51",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "52W",		dataField : "w52",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == weeklyHeader )	return	"my-columnRight1";
+						 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},
@@ -1575,62 +1462,62 @@ var weeklySummaryLayout	=
 						 	{	headerText : "Team",	dataField : "team",	style : "my-columnCenter"	},
 						 	{	headerText : "Jan",		dataField : "m1",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == monthlyHeader )	return	"my-columnRight1";
+						 			if ( headerText == monthlyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "Feb",		dataField : "m2",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == monthlyHeader )	return	"my-columnRight1";
+						 			if ( headerText == monthlyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "Mar",		dataField : "m3",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == monthlyHeader )	return	"my-columnRight1";
+						 			if ( headerText == monthlyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "Apr",		dataField : "m4",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == monthlyHeader )	return	"my-columnRight1";
+						 			if ( headerText == monthlyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "May",		dataField : "m5",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == monthlyHeader )	return	"my-columnRight1";
+						 			if ( headerText == monthlyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "Jun",		dataField : "m6",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == monthlyHeader )	return	"my-columnRight1";
+						 			if ( headerText == monthlyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "Jul",		dataField : "m7",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == monthlyHeader )	return	"my-columnRight1";
+						 			if ( headerText == monthlyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "Aug",		dataField : "m8",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == monthlyHeader )	return	"my-columnRight1";
+						 			if ( headerText == monthlyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "Sep",		dataField : "m9",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == monthlyHeader )	return	"my-columnRight1";
+						 			if ( headerText == monthlyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	}, 	{	headerText : "Oct",		dataField : "m10",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == monthlyHeader )	return	"my-columnRight1";
+						 			if ( headerText == monthlyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "Nov",		dataField : "m11",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == monthlyHeader )	return	"my-columnRight1";
+						 			if ( headerText == monthlyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},	{	headerText : "Dec",		dataField : "m12",	dataType : "numeric",	
 						 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						 			if ( headerText == monthlyHeader )	return	"my-columnRight1";
+						 			if ( headerText == monthlyHeader )	return	"my-currSummaryRight";
 						 			else						return	"my-columnRight";
 						 		}
 						 	},
@@ -1654,8 +1541,27 @@ $(document).ready(function() {
 				weeklyCalcYear	= AUIGrid.getCellValue(myGridID1, event.rowIndex, "planYear");
 				weeklyCalcWeek	= parseInt(event.columnIndex) - 1;
 			}
-			console.log("weeklyYear : " + weeklyYear + ", weeklyWeek : " + weeklyWeek);
+			//console.log("weeklyYear : " + weeklyYear + ", weeklyWeek : " + weeklyWeek);
 			fnSalesPlanAccuracyDetailHeader("click");
+			
+			//	클릭한 셀 색상변경
+/*			if ( 0 != event.columnIndex ) {
+				AUIGrid.setProp(myGridID1, "columnStyleFunction", function(columnIndex, item) {
+					if ( 0 != columnIndex ) {
+						return	"my-clickSummaryRight";
+					} else {
+						if ( columnIndex == currMonth ) {
+							return	"my-currSummaryRight";
+						} else {
+							return	"my-columnRight";
+						}
+					}
+				});
+				AUIGrid.update(myGridID1);
+			}*/
+			
+			$("#period").text(event.columnIndex + "W / " + event.item.planYear);
+			$("#team").text(event.item.team);
 		} else {
 			console.log("none");
 		}
@@ -1681,6 +1587,9 @@ $(document).ready(function() {
 				monthlyCalcMonth	= parseInt(event.columnIndex) - 1;
 			}
 			fnSalesPlanAccuracyDetailHeader("click");
+			
+			$("#period").text(event.columnIndex + "M / " + event.item.planYear);
+			$("#team").text(event.item.team);
 		} else {
 			console.log("none");
 		}
@@ -1774,10 +1683,30 @@ $(document).ready(function() {
 			<!-- Summary Grid -->
 			<div id="monthly_summary_wrap" style="height:133px;"></div>
 		</article>								<!-- article grid_wrap end -->
-		<ul class="right_btns">
-			<li><p id="btnMaster" class="btn_grid"><a onclick="fnMaster();">Master</a></p></li>
-			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'SalesPlanAccuracy');">Excel</a></p></li>
-		</ul>
+		<table class="type1 mt10">				<!-- table start -->
+			<caption>table10</caption>
+			<colgroup>
+				<col style="width:100px" />
+				<col style="width:100px" />
+				<col style="width:100px" />
+				<col style="width:100px" />
+				<col style="width:*" />
+				<col style="width:200px" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row"><span id="teamLabel">Team</span></th><td><span id="team"></span></td>
+					<th scope="row"><span id="periodLabel"></span></th><td><span id="period"></span></td>
+					<td></td>
+					<td align="rignt">
+						<ul class="right_btns">
+							<li><p id="btnMaster" class="btn_grid"><a onclick="fnMaster();">Master</a></p></li>
+							<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'SalesPlanAccuracy');">Excel</a></p></li>
+						</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>								<!-- table end -->
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Detail Grid -->
 			<div id="weekly_detail_wrap" style="height:511px;width:100%;"></div>

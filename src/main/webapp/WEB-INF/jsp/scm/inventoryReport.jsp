@@ -18,6 +18,21 @@
 	text-align : left;
 	margin-top : -20px;
 }
+
+/* Grid Header style */
+.aui-grid-user-custom-header {
+	color : #ffffff !important;
+	text-align: center;
+	font-weight: bold;
+	font-size: 13px;
+	background: #000000;
+	background: -webkit-gradient(linear, left top, left bottom, from(#999999),to(#000000));
+	background: -webkit-linear-gradient(top, #999999, #000000);
+	background: -moz-linear-gradient(top, #999999, #000000);
+	background: -ms-linear-gradient(top, #999999, #000000);
+	background: -o-linear-gradient(top, #999999, #000000);
+	background: linear-gradient(top, #999999, #000000);
+}
 </style>
 
 <script type="text/javascript">
@@ -73,20 +88,24 @@ function fnSearchTotal() {
 				 	}, {
 				 		//	Total Inventory
 				 		headerText : "Total Inventory",
+				 		headerStyle : "aui-grid-user-custom-header",
 				 		children :
 				 			[
 								{
 									headerText : totalHeader[0],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "totPrevQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : totalHeader[1],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "totCurrQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : "Gap",
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "totGapQty",
 									dataType : "numeric",
 									style : "my-columnRight"
@@ -117,20 +136,24 @@ function fnSearchTotal() {
 				 	}, {
 				 		//	On-Hand
 				 		headerText : "On-Hand",
+				 		headerStyle : "aui-grid-user-custom-header",
 				 		children :
 				 			[
 								{
 									headerText : totalHeader[0],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "handPrevQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : totalHeader[1],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "handCurrQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : "Gap",
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "handGapQty",
 									dataType : "numeric",
 									style : "my-columnRight"
@@ -161,20 +184,24 @@ function fnSearchTotal() {
 				 	}, {
 				 		//	Aging
 				 		headerText : "Aging",
+				 		headerStyle : "aui-grid-user-custom-header",
 				 		children :
 				 			[
 								{
 									headerText : totalHeader[0],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "agePrevQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : totalHeader[1],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "ageCurrQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : "Gap",
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "ageGapQty",
 									dataType : "numeric",
 									style : "my-columnRight"
@@ -234,35 +261,42 @@ function fnSearchTotal() {
 					}, {
 				 		//	Amount
 				 		headerText : "Amount",
+				 		headerStyle : "aui-grid-user-custom-header",
 				 		children :
 				 			[
 								{
 									headerText : "Total Inventory",
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "totAmt",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : "In-Transit",
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "tranAmt",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : "On-Hand",
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "handAmt",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : "Days in Inventory",
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "daysAmt",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : "Aging",
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "ageAmt",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : "Stock B",
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "stkbAmt",
 									dataType : "numeric",
 									style : "my-columnRight"
@@ -308,55 +342,66 @@ function fnSearchTotal() {
 				 	}, {
 				 		//	Sales Performance and Planning(Quantity)
 				 		headerText : "Sales Performance and Planning(Quantity)",
+				 		headerStyle : "aui-grid-user-custom-header",
 				 		children :
 				 			[
 								{
 									headerText : detailHeader[0],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "mm6IssQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : detailHeader[1],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "mm5IssQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : detailHeader[2],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "mm4IssQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : detailHeader[3],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "mm3IssQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : detailHeader[4],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "mm2IssQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : detailHeader[5],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "mm1IssQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : detailHeader[6],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "m0PlanQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : detailHeader[7],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "m1PlanQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : detailHeader[8],
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "m2PlanQty",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : "Average Forwarding",
+									headerStyle : "aui-grid-user-custom-header",
 									dataField : "avgForwQty",
 									dataType : "numeric",
 									style : "my-columnRight"
@@ -534,14 +579,15 @@ var totalLayout	=
 	 	}, {
 	 		//	Total Inventory
 	 		headerText : "Total Inventory",
+	 		headerStyle : "aui-grid-user-custom-header",
 	 		children :
 	 			[
 					{
-						headerText : "Prev Month"
+						headerText : "Prev Month",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "Curr Month"
+						headerText : "Curr Month",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "Gap"
+						headerText : "Gap",	headerStyle : "aui-grid-user-custom-header"
 					}
 	 			 ]
 	 	}, {
@@ -560,14 +606,15 @@ var totalLayout	=
 	 	}, {
 	 		//	On-Hand
 	 		headerText : "On-Hand",
+	 		headerStyle : "aui-grid-user-custom-header",
 	 		children :
 	 			[
 					{
-						headerText : "Prev Month"
+						headerText : "Prev Month",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "Curr Month"
+						headerText : "Curr Month",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "Gap"
+						headerText : "Gap",	headerStyle : "aui-grid-user-custom-header"
 					}
 	 			 ]
 	 	}, {
@@ -586,14 +633,15 @@ var totalLayout	=
 	 	}, {
 	 		//	Aging
 	 		headerText : "Aging",
+	 		headerStyle : "aui-grid-user-custom-header",
 	 		children :
 	 			[
 					{
-						headerText : "Prev Month"
+						headerText : "Prev Month",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "Curr Month"
+						headerText : "Curr Month",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "Gap"
+						headerText : "Gap",	headerStyle : "aui-grid-user-custom-header"
 					}
 	 			 ]
 	 	}, {
@@ -638,20 +686,21 @@ var detailLayout	=
 		}, {
 	 		//	Amount
 	 		headerText : "Amount",
+	 		headerStyle : "aui-grid-user-custom-header",
 	 		children :
 	 			[
 					{
-						headerText : "Total Inventory"
+						headerText : "Total Inventory",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "In-Transit"
+						headerText : "In-Transit",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "On-Hand"
+						headerText : "On-Hand",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "Days in Inventory"
+						headerText : "Days in Inventory",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "Aging"
+						headerText : "Aging",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "Stock B"
+						headerText : "Stock B",	headerStyle : "aui-grid-user-custom-header"
 					}
 	 			 ]
 	 	}, {
@@ -676,28 +725,29 @@ var detailLayout	=
 	 	}, {
 	 		//	Sales Performance and Planning(Quantity)
 	 		headerText : "Sales Performance and Planning(Quantity)",
+	 		headerStyle : "aui-grid-user-custom-header",
 	 		children :
 	 			[
 					{
-						headerText : "M-5"
+						headerText : "M-5",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "M-4"
+						headerText : "M-4",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "M-3"
+						headerText : "M-3",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "M-2"
+						headerText : "M-2",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "M-1"
+						headerText : "M-1",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "M-0"
+						headerText : "M-0",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "M+1"
+						headerText : "M+1",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "M+2"
+						headerText : "M+2",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "M+3"
+						headerText : "M+3",	headerStyle : "aui-grid-user-custom-header"
 					}, {
-						headerText : "Average Forwarding"
+						headerText : "Average Forwarding",	headerStyle : "aui-grid-user-custom-header"
 					}
 	 			 ]
 	 	}
