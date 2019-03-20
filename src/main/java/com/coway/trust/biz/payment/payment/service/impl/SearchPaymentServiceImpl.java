@@ -319,7 +319,8 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 
 		if(!(payDet.getPayItemRefDate().equals("")) && !(payDet.getPayItemRefDate().equals("null"))){
     		String temp[] = payDet.getPayItemRefDate().split("/");
-    		payDate = temp[2] + "-" + temp[1] + "-" + temp[0];
+    		//payDate = temp[2] + "-" + temp[1] + "-" + temp[0];
+    		payDate = temp[0] + "/" + temp[1] + "/" + temp[2];
 		}else{
 			payDate = "1900-01-01";
 		}

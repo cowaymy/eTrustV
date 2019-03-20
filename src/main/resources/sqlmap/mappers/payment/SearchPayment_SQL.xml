@@ -1215,7 +1215,7 @@
             , PAY_ITM_ISSU_BANK_ID = #{payItemIssuedBankId}
         </if>
         <if test="payItemRefDate != null ">
-            , PAY_ITM_REF_DT = #{payItemRefDate}
+            , PAY_ITM_REF_DT = TO_DATE(#{payItemRefDate}, 'DD/MM/YYYY')
         </if>
         <if test="payItemRemark != null ">
             , PAY_ITM_REM = #{payItemRemark}
