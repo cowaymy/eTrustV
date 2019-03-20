@@ -108,6 +108,49 @@ public class ScmReportServiceImpl implements ScmReportService {
 	public List<EgovMap> selectSalesPlanAccuracyMaster(Map<String, Object> params) {
 		return	scmReportMapper.selectSalesPlanAccuracyMaster(params);
 	}
+	@Override
+	public int saveSalesPlanAccuracyMaster(List<Map<String, Object>> updList, SessionVO sessionVO) {
+		
+		LOGGER.debug("saveSalesPlanAccuracyMaster : {}", updList);
+		
+		int saveCnt	= 0;
+		int weeklyVal	= 0;
+		
+		Map<String, Object> delParam	= new HashMap<>();
+		Map<String, Object> insParam	= new HashMap<>();
+		
+		try {
+			for ( Map<String, Object> list : updList ) {
+				//	Master 그리드의 row
+				//	delete
+				delParam.put("year", list.get("year"));
+				delParam.put("gbn", list.get("gbn"));
+				LOGGER.debug("saveSalesPlanAccuracyMaster delete : {}", delParam);
+				scmReportMapper.deleteSalesPlanAccuracyMaster(delParam);
+				
+				//	insert
+				for ( int i = 1 ; i < 17 ; i++ ) {
+					//	Master 그리드의 column
+					weeklyVal	= Integer.parseInt(list.get("w" + i).toString());
+					if ( 0 != weeklyVal ) {
+						insParam.put("year", list.get("year"));
+						insParam.put("gbn", list.get("gbn"));
+						insParam.put("week", weeklyVal);
+						LOGGER.debug("saveSalesPlanAccuracyMaster insert : {}", insParam);
+						scmReportMapper.insertSalesPlanAccuracyMaster(insParam);
+					}
+				}
+				
+				//	마스터 변경한 연도의 판매계획 정확도 재실행
+				scmReportMapper.executeSalesPlanAccuracy(delParam);
+				saveCnt++;
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		
+		return	saveCnt;
+	}
 	
 	//	Ontime Delivery Report
 	@Override
