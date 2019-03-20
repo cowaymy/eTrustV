@@ -2,171 +2,193 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.services.as.impl.ASManagementListMapper">
 
-
-
        <resultMap id="callasLogClobMap" type="egovMap">
               <result property="callRem" column="CALL_REM" jdbcType="CLOB" javaType="string"/>
        </resultMap>
 
+  <select id="selectASManagementList" parameterType="Map" resultType="egovMap">
+    SELECT S.AS_ID ,
+           S.AS_NO ,
+           S.AS_SO_ID ,
+           S.AS_REQST_DT ,
+           S.AS_APPNT_DT,
+           S.AS_STUS_ID ,
+           S.AS_TYPE_ID ,
+           S.CODE ,
+           S.CODE1 ,
+           S.SALES_ORD_NO ,
+           S.CODE2,
+           S.NAME ,
+           S.NRIC ,
+           S.C1 ,
+           S.C2 ,
+           S.C3 ,
+           S.C4 ,
+           S.C5 ,
+           S.AS_RESULT_ID ,
+           S.AS_BRNCH_ID ,
+           S.AS_MEM_ID,
+           (SELECT CODE FROM SYS0005M H WHERE H.BRNCH_ID =AS_BRNCH_ID) BRNCH_CODE,
+           S.AS_SLUTN_RESN_ID,
+           S.IN_HUSE_REPAIR_REPLACE_YN,
+           S.REF_REQST,
+           S.AS_MALFUNC_ID,
+           S.AS_MALFUNC_RESN_ID,
+           DECODE(S.AS_IF_FLAG, 'E' ,'logistics err' ,'') AS_IF_FLAG,
+           MEM_CODE
+    FROM ( SELECT DISTINCT E.AS_ID AS_ID ,
+                           E.AS_NO AS_NO ,
+                           E.ASSOID1 AS_SO_ID ,
+                           E.AS_REQST_DT AS_REQST_DT ,
+                           E.AS_APPNT_DT AS_APPNT_DT,
+                           E.AS_STUS_ID AS_STUS_ID ,
+                           E.AS_TYPE_ID AS_TYPE_ID ,
+                           E.CODE3 CODE ,
+                           E.CODE4 CODE1 ,
+                           E.SALES_ORD_NO SALES_ORD_NO ,
+                           E.CODE5 CODE2 ,
+                           E.NAME1 NAME ,
+                           E.NRIC NRIC ,
+                           1 C1 ,
+                           CASE
+                             WHEN ( E.AS_RESULT_ID IS NOT NULL )
+                               THEN E.AS_RESULT_ID
+                             ELSE 0
+                           END C2 ,
+                           CASE
+                             WHEN ( E.AS_RESULT_ID IS NOT NULL )
+                               THEN E.AS_RESULT_NO
+                             ELSE '-'
+                           END C3 ,
+                           CASE
+                             WHEN ( Extent8.USER_ID IS NOT NULL )
+                               THEN Extent8.USER_NAME
+                             ELSE '-'
+                           END C4 ,
+                           CASE
+                             WHEN ( E.AS_RESULT_ID IS NOT NULL )
+                               THEN E.AS_TOT_AMT
+                             ELSE UTILS.CONVERT_TO_FLOAT(0,53)
+                           END C5 ,
+                           E.AS_RESULT_ID ,
+                           E.AS_BRNCH_ID,
+                           E.AS_MEM_ID,
+                           E.AS_SLUTN_RESN_ID,
+                           E.IN_HUSE_REPAIR_REPLACE_YN,
+                           E.REF_REQST,
+                           E.AS_MALFUNC_ID,
+                           E.AS_MALFUNC_RESN_ID,
+                           E.AS_IF_FLAG ,
+                           E.MEM_CODE
+           FROM ( SELECT Extent1.AS_ID AS_ID ,
+                         Extent1.AS_NO AS_NO ,
+                         Extent1.AS_SO_ID ASSOID1 ,
+                         Extent1.AS_REQST_DT AS_REQST_DT ,
+                         Extent1.AS_APPNT_DT AS_APPNT_DT ,
+                         Extent1.AS_STUS_ID AS_STUS_ID ,
+                         Extent1.AS_CRT_USER_ID AS_CRT_USER_ID ,
+                         Extent1.AS_TYPE_ID AS_TYPE_ID ,
+                         Extent2.CODE CODE3 ,
+                         Extent3.CODE CODE4 ,
+                         Extent4.SALES_ORD_NO SALES_ORD_NO ,
+                         Extent5.CODE CODE5 ,
+                         Extent6.NAME NAME1 ,
+                         Extent6.NRIC NRIC ,
+                         Extent7.AS_RESULT_ID AS_RESULT_ID ,
+                         Extent7.AS_RESULT_NO AS_RESULT_NO ,
+                         Extent7.AS_TOT_AMT AS_TOT_AMT ,
+                         Extent1.AS_BRNCH_ID,
+                         Extent1.AS_MEM_ID ,
+                         Extent7.AS_SLUTN_RESN_ID,
+                         Extent7.IN_HUSE_REPAIR_REPLACE_YN,
+                         Extent1.REF_REQST ,
+                         Extent1.AS_MALFUNC_ID,
+                         Extent1.AS_MALFUNC_RESN_ID,
+                         Extent1.AS_IF_FLAG ,
+                         Extent8.MEM_CODE
+                  FROM SVC0001D Extent1
+                  JOIN SYS0013M Extent2 ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
+                  JOIN SYS0038M Extent3 ON Extent1.AS_STUS_ID = Extent3.STUS_CODE_ID
+                  JOIN SAL0001D Extent4 ON Extent1.AS_SO_ID = Extent4.SALES_ORD_ID
+                  JOIN SYS0013M Extent5 ON Extent4.APP_TYPE_ID = Extent5.CODE_ID
+                  JOIN SAL0029D Extent6 ON Extent4.CUST_ID = Extent6.CUST_ID
+                  LEFT JOIN ORG0001D Extent8 ON Extent1.AS_MEM_ID = Extent8.MEM_ID
+                  LEFT JOIN SYS0005M Extent9 ON Extent9.BRNCH_ID = Extent8.BRNCH
+                  LEFT JOIN ( SELECT *
+                              FROM SVC0004D a
+                              WHERE AS_RESULT_ID IN ( SELECT MAX(AS_RESULT_ID)
+                                                      FROM SVC0004D WHERE ( 1 = as_result_is_curr ) group
+                                                      BY AS_ENTRY_ID )
+                  ) Extent7
+                  ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
+                 AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
+                 AND ( 1 = Extent7.AS_RESULT_IS_CURR )
+                 WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
 
+                 <if test="asStatusList != null and asStatusList != '' ">
+                   AND Extent1.AS_STUS_ID IN
+                   <foreach item="item" collection="asStatusList" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                 </if>
 
-    <select id="selectASManagementList" parameterType="Map" resultType="egovMap">
-                     SELECT    S.AS_ID   ,
-							       S.AS_NO   ,
-							       S.AS_SO_ID   ,
-							       S.AS_REQST_DT   ,
-							       S.AS_STUS_ID   ,
-							       S.AS_TYPE_ID   ,
-							       S.CODE   ,
-							       S.CODE1   ,
-							       S.SALES_ORD_NO   ,
-							       S.CODE2,
-							       S.NAME   ,
-							       S.NRIC   ,
-							       S.C1   ,
-							       S.C2   ,
-							       S.C3   ,
-							       S.C4   ,
-							       S.C5   ,
-							       S.AS_RESULT_ID ,
-							       S.AS_BRNCH_ID ,
-							       S.AS_MEM_ID,
-							       (SELECT  CODE  FROM  SYS0005M  H WHERE   H.BRNCH_ID =AS_BRNCH_ID) BRNCH_CODE,
-                                   S.AS_SLUTN_RESN_ID,
-                                   S.IN_HUSE_REPAIR_REPLACE_YN,
-                                   S.REF_REQST,
-                                   S.AS_MALFUNC_ID,
-                                   S.AS_MALFUNC_RESN_ID,
-                                   DECODE(S.AS_IF_FLAG, 'E' ,'logistics err' ,'') AS_IF_FLAG,
-                                   MEM_CODE
-						  FROM ( SELECT DISTINCT E.AS_ID AS_ID  ,
-						                         E.AS_NO AS_NO  ,
-						                         E.ASSOID1 AS_SO_ID  ,
-						                         E.AS_REQST_DT AS_REQST_DT  ,
-						                         E.AS_STUS_ID AS_STUS_ID  ,
-						                         E.AS_TYPE_ID AS_TYPE_ID  ,
-						                         E.CODE3 CODE  ,
-						                         E.CODE4 CODE1  ,
-						                         E.SALES_ORD_NO SALES_ORD_NO  ,
-						                         E.CODE5 CODE2  ,
-						                         E.NAME1 NAME  ,
-						                         E.NRIC NRIC  ,
-						                         1 C1  ,
-						                         CASE
-						                              WHEN ( E.AS_RESULT_ID IS NOT NULL ) THEN E.AS_RESULT_ID
-						                         ELSE 0
-						                            END C2  ,
-						                         CASE
-						                              WHEN ( E.AS_RESULT_ID IS NOT NULL ) THEN E.AS_RESULT_NO
-						                         ELSE '-'
-						                            END C3  ,
-						                         CASE
-						                              WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
-						                         ELSE '-'
-						                            END C4  ,
-						                         CASE
-						                              WHEN ( E.AS_RESULT_ID IS NOT NULL ) THEN E.AS_TOT_AMT
-						                         ELSE UTILS.CONVERT_TO_FLOAT(0,53)
-						                            END C5  ,
-						                         E.AS_RESULT_ID ,
-						                         E.AS_BRNCH_ID,
-						                         E.AS_MEM_ID,
-                                                E.AS_SLUTN_RESN_ID,
-                                                E.IN_HUSE_REPAIR_REPLACE_YN,
-                                                E.REF_REQST,
-                                                E.AS_MALFUNC_ID,
-                                                E.AS_MALFUNC_RESN_ID,
-                                                E.AS_IF_FLAG ,
-                                                E.MEM_CODE
-						         FROM ( SELECT Extent1.AS_ID AS_ID  ,
-						                       Extent1.AS_NO AS_NO  ,
-						                       Extent1.AS_SO_ID ASSOID1  ,
-						                       Extent1.AS_REQST_DT AS_REQST_DT  ,
-						                       Extent1.AS_STUS_ID AS_STUS_ID  ,
-						                       Extent1.AS_CRT_USER_ID AS_CRT_USER_ID  ,
-						                       Extent1.AS_TYPE_ID AS_TYPE_ID  ,
-						                       Extent2.CODE CODE3  ,
-						                       Extent3.CODE CODE4  ,
-						                       Extent4.SALES_ORD_NO SALES_ORD_NO  ,
-						                       Extent5.CODE CODE5  ,
-						                       Extent6.NAME NAME1  ,
-						                       Extent6.NRIC NRIC  ,
-						                       Extent7.AS_RESULT_ID AS_RESULT_ID  ,
-						                       Extent7.AS_RESULT_NO AS_RESULT_NO  ,
-						                       Extent7.AS_TOT_AMT AS_TOT_AMT ,
-						                       Extent1.AS_BRNCH_ID,
-						                       Extent1.AS_MEM_ID ,
-						                       Extent7.AS_SLUTN_RESN_ID,
-						                       Extent7.IN_HUSE_REPAIR_REPLACE_YN,
-						                       Extent1.REF_REQST ,
-						                       Extent1.AS_MALFUNC_ID,
-						                       Extent1.AS_MALFUNC_RESN_ID,
-						                       Extent1.AS_IF_FLAG ,
-						                       Extent8.MEM_CODE
-						                FROM SVC0001D Extent1
-						                       JOIN SYS0013M Extent2   ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
-						                       JOIN SYS0038M Extent3   ON Extent1.AS_STUS_ID = Extent3.STUS_CODE_ID
-						                       JOIN SAL0001D Extent4   ON Extent1.AS_SO_ID = Extent4.SALES_ORD_ID
-						                       JOIN SYS0013M Extent5   ON Extent4.APP_TYPE_ID = Extent5.CODE_ID
-						                       JOIN SAL0029D Extent6   ON Extent4.CUST_ID = Extent6.CUST_ID
-						                       LEFT JOIN ORG0001D Extent8   ON Extent1.AS_MEM_ID = Extent8.MEM_ID
-						                       LEFT JOIN SYS0005M Extent9   ON Extent9.BRNCH_ID = Extent8.BRNCH
-						                       LEFT JOIN ( select * from svc0004d a where AS_RESULT_ID in (
-                                                                            select max(AS_RESULT_ID) from svc0004d where ( 1 = as_result_is_curr ) group by AS_ENTRY_ID
-                                                               ) )  Extent7
-										                                               ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
-																                       AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
-																                       AND ( 1 = Extent7.AS_RESULT_IS_CURR )
-						                 WHERE  ( 8    <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
-						                   <if test="asStatusList != null and asStatusList != '' ">
-								                    AND Extent1.AS_STUS_ID  IN
-									                  <foreach item="item" collection="asStatusList" index="index" open="(" separator="," close=")">
-									                       #{item}
-									                 </foreach>
-								              </if>
-						                     <if test="asTypeList != null and asTypeList != '' ">
-								                     AND Extent1.AS_TYPE_ID  IN
-									                  <foreach item="item" collection="asTypeList" index="index" open="(" separator="," close=")">
-									                            #{item}
-									                  </foreach>
-								              </if>
+                 <if test="asTypeList != null and asTypeList != '' ">
+                   AND Extent1.AS_TYPE_ID IN
+                   <foreach item="item" collection="asTypeList" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                 </if>
 
-								              <if test="cmbbranchId != null and cmbbranchId != '' ">
-                                                     AND Extent9.CODE  IN #{cmbbranchId}
-                                              </if>
-                                              <if test="cmbctId != null and cmbctId != '' ">
-                                                     AND Extent8.MEM_CODE IN #{cmbctId}
-                                              </if>
+                 <if test="cmbbranchId != null and cmbbranchId != '' ">
+                   AND Extent9.CODE IN #{cmbbranchId}
+                 </if>
 
-						               ) E
-						                LEFT JOIN SYS0047M Extent8   ON E.AS_CRT_USER_ID = Extent8.USER_ID
-						          WHERE  1=1
-						                   <if test=" createStrDate  != null  and createStrDate !=''  ">
-						                         <![CDATA[ AND ( E.AS_REQST_DT >= to_date(#{createStrDate} ,'dd/mm/yyyy'))  ]]>
-						                    </if>
-						                   <if test="createEndDate != null   and createEndDate != '' ">
-						                        <![CDATA[  AND ( E.AS_REQST_DT  <=  to_date( #{createEndDate},'dd/mm/yyyy') )]]>
-						                   </if>
-						                    <if test="asNum != null and asNum != '' ">
-						                          AND ( E.AS_NO = #{asNum} )
-						                    </if>
-						                     <if test="resultNum != null and resultNum != '' ">
-						                           AND ( (CASE  WHEN ( E.AS_RESULT_ID IS NOT NULL ) THEN E.AS_RESULT_NO  ELSE '-'   END) = #{resultNum})
-						                     </if>
+                 <if test="cmbctId != null and cmbctId != '' ">
+                   AND Extent8.MEM_CODE IN #{cmbctId}
+                 </if>
 
-						                      <if test="orderNum != null and orderNum != '' ">
-						                            AND ( E.SALES_ORD_NO = #{orderNum} )
-						                      </if>
+          ) E LEFT JOIN SYS0047M Extent8 ON E.AS_CRT_USER_ID = Extent8.USER_ID
+          WHERE 1=1
 
-						                    <if test="custName != null and custName != '' ">
-                                                    AND ( E.NAME1 LIKE '%'||#{custName}||'%')
-                                            </if>
+          <if test=" createStrDate  != null  and createStrDate !=''  ">
+            <![CDATA[ AND ( E.AS_REQST_DT >= TO_DATE(#{createStrDate} ,'dd/mm/yyyy'))  ]]>
+          </if>
+          <if test="createEndDate != null   and createEndDate != '' ">
+            <![CDATA[ AND ( E.AS_REQST_DT <= TO_DATE( #{createEndDate},'dd/mm/yyyy') )]]>
+          </if>
 
-									         <if test="nricNum != null and nricNum != '' ">
-								                     AND ( E.NRIC LIKE  '%'||#{nricNum}||'%' )
-								             </if>
-						       )S
-    </select>
+          <if test=" appDtFrm  != null  and appDtFrm !=''  ">
+            <![CDATA[ AND ( E.AS_APPNT_DT >= TO_DATE(#{appDtFrm} ,'dd/mm/yyyy'))  ]]>
+          </if>
+          <if test="appDtTo != null   and appDtTo != '' ">
+            <![CDATA[ AND ( E.AS_APPNT_DT <= TO_DATE( #{appDtTo},'dd/mm/yyyy') )]]>
+          </if>
+
+          <if test="asNum != null and asNum != '' ">
+            AND ( E.AS_NO = #{asNum} )
+          </if>
+
+          <if test="resultNum != null and resultNum != '' ">
+            AND ( ( CASE WHEN ( E.AS_RESULT_ID IS NOT NULL )
+                           THEN E.AS_RESULT_NO
+                         ELSE '-'
+                    END) = #{resultNum})
+          </if>
+
+          <if test="orderNum != null and orderNum != '' ">
+            AND ( E.SALES_ORD_NO = #{orderNum} )
+          </if>
+
+          <if test="custName != null and custName != '' ">
+            AND ( E.NAME1 LIKE '%'||#{custName}||'%')
+          </if>
+
+          <if test="nricNum != null and nricNum != '' ">
+            AND ( E.NRIC LIKE '%'||#{nricNum}||'%' )
+           </if>
+    )S
+
+  </select>
 
     <select id="selectASManagementList2" parameterType="Map" resultType="egovMap">
     <![CDATA[
