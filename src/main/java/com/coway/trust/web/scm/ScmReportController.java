@@ -53,12 +53,24 @@ public class ScmReportController {
 	public String salesPlanAccuracyView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return	"/scm/salesPlanAccuracy";
 	}
-	@RequestMapping(value = "/salesPlanAccuracyMaster.do")
-	public String salesPlanAccuracyMasterView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+	@RequestMapping(value = "/salesPlanAccuracyMasterPopup.do")
+	public String salesPlanAccuracyMasterPopup(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		model.addAttribute("params", params);
 		
-		return	"/scm/salesPlanAccuracyMaster";
+		return	"/scm/salesPlanAccuracyMasterPopup";
 	}
+	/*
+	@RequestMapping(value = "/supplyPlanPsi1Pop.do")
+	public String supplyPlanPsi1Pop(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		
+		LOGGER.debug("supplyPlanPsi1Pop : {}", params.toString());
+		
+		//	POPUP으로 넘길 파라미터
+		model.addAttribute("params", params);
+		
+		return "/scm/supplyPlanPsi1Pop";
+	}
+	*/
 	//	Ontime Delivery Report
 	@RequestMapping(value = "/ontimeDeliveryReport.do")
 	public String ontimeDeliveryReportView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
@@ -253,47 +265,39 @@ public class ScmReportController {
 		return	ResponseEntity.ok(map);
 	}
 	@RequestMapping(value = "/selectSalesPlanAccuracyMaster.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> selectSalesPlanAccuracyMaster(@RequestBody Map<String, Object> params) {
+	public ResponseEntity<Map<String, Object>> selectSalesPlanAccuracyMaster(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 		
 		LOGGER.debug("selectSalesPlanAccuracyMaster : {}", params.toString());
 		
 		Map<String, Object> map	= new HashMap<>();
 		
-		List<EgovMap> selectSalesPlanAccuracyMaster		= scmReportService.selectSalesPlanAccuracyMaster(params);
+		List<EgovMap> selectSalesPlanAccuracyMaster	= scmReportService.selectSalesPlanAccuracyMaster(params);
 		
 		map.put("selectSalesPlanAccuracyMaster", selectSalesPlanAccuracyMaster);
 		
 		return	ResponseEntity.ok(map);
 	}
-	@RequestMapping(value = "/selectSalesPlanAccuracyMaster1.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectSalesPlanAccuracyMaster1(@RequestParam Map<String, Object> params) {
+/*	public ResponseEntity<Map<String, Object>> selectSalesPlanAccuracyMaster(@RequestBody Map<String, Object> params) {
+	//public ResponseEntity<List<EgovMap>> selectSalesPlanAccuracyMaster(@RequestParam Map<String, Object> params) {
 		
-		LOGGER.debug("selectSalesPlanAccuracyMaster1 : {}", params.toString());
-		
-		List<EgovMap> selectSalesPlanAccuracyMaster1	= scmReportService.selectSalesPlanAccuracyMaster(params);
-		return ResponseEntity.ok(selectSalesPlanAccuracyMaster1);
-	}
-	/*
-	@RequestMapping(value = "/selectSalesPlanAccuracyMaster1.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectSalesPlanAccuracyMaster1(@RequestBody Map<String, Object> params) {
-		
-		LOGGER.debug("selectSalesPlanAccuracyMaster1 : {}", params.toString());
+		LOGGER.debug("selectSalesPlanAccuracyMaster : {}", params.toString());
 		
 		Map<String, Object> map	= new HashMap<>();
 		
-		List<EgovMap> selectSalesPlanAccuracyMaster		= scmReportService.selectSalesPlanAccuracyMaster(params);
+		List<EgovMap> selectSalesPlanAccuracyMaster	= scmReportService.selectSalesPlanAccuracyMaster(params);
 		
 		map.put("selectSalesPlanAccuracyMaster", selectSalesPlanAccuracyMaster);
 		
-		return	ResponseEntity.ok(map);
-	}
-	*/
+		return ResponseEntity.ok(map);
+	}*/
 	@RequestMapping(value = "/saveSalesPlanAccuracyMaster.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveSalesPlanAccuracyMaster(@RequestBody Map<String, List<Map<String, Object>>> params,	SessionVO sessionVO) {
 		
 		LOGGER.debug("saveSalesPlanAccuracyMaster : {}", params.toString());
 		
-		int totCnt	= 0;
+		List<Map<String, Object>> updList	= params.get(AppConstants.AUIGRID_UPDATE);
+		LOGGER.debug("saveSalesPlanAccuracyMaster updList : {}", params.toString());
+		int totCnt	= scmReportService.saveSalesPlanAccuracyMaster(updList, sessionVO);
 		
 		ReturnMessage message = new ReturnMessage();
 		
