@@ -686,7 +686,7 @@ var myDetailGridData = null;
     <th scope="row" style="width: 186px; ">Settle Date</th>
     <td>
         <%-- <span><c:out value="${basicinfo.setlDt}"/></span> --%>
-        <input type="text" title="Settle Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="settleDt" name="settleDt" value="${basicinfo.setlDt}"/>
+        <input type="text" title="Settle Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="settleDt" name="settleDt" value="${basicinfo.setlDt}" readonly="true"/>
     </td>
 </tr>
 <tr>
