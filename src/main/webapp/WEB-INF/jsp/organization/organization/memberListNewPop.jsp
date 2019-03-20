@@ -894,7 +894,7 @@ console.log("validation");
         	Common.alert("Please key in Mobile No.");
             return false;
         }else{
-            if($("#mobileNo").length < 9 || $("#mobileNo").length < 12){
+            if($("#mobileNo").length < 9 || $("#mobileNo").length > 12){
                 Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
                 return false;
             }

@@ -454,6 +454,7 @@
         $("#_insCloseBtn").click();
     }
 
+
     // Validation Check
     function fn_saveValidationCheck(){
     	console.log("1.  type Check");
@@ -466,7 +467,7 @@
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinNricCompNum" />');
             return false;
         }
-        /*else if($("#_nric_").length > 12){
+        /*else if($("#_nric_") .length > 12){
             Common.alert("IC length More than 12 digit. </br> Are you sure you want to Save?");
         }else{
             if(FormUtil.checkNum($("#_nric_"))){
@@ -493,23 +494,21 @@
                 if($("#_telM1_").val().substring(0,3) == "015"){
                     Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
                     return false;
+
                 }else if($("#_telM1_").val().substring(0,2) != "01"){
                     Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
                     return false;
                 }
 
-                if($("#_telM1_").length > 12){
-                    Common.alert('<spring:message code="sal.alert.msg.telMNumExceedLengTwelve" />');
+                if($("#_telM1_").val().length < 9 || $("#_telM1_").val().length > 12){
+                    Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
                     return false;
                 }
 
-                Common.ajax("GET", "/sales/customer/existingHPCodyMobile", {contactNumber : $("#_telM1_").val()} , function(result) {
-                    if(result != null){
-                		Common.
-                		alert("<spring:message code='sal.alert.msg.existingHPCodyMobile' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
-                        return false;
-                	}
-               });
+                if($("#_telM1_").val().length > 12){
+                    Common.alert('<spring:message code="sal.alert.msg.telMNumExceedLengTwelve" />');
+                    return false;
+                }
 
 
             }
@@ -519,7 +518,11 @@
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumO" />');
                        return false;
                    }
-                   if($("#_telO_").length > 12){
+                   if($("#_telO_").val().length < 9 || $("#_telO_").val().length > 12){
+                       Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
+                       return false;
+                   }
+                   if($("#_telO_").val().length > 12){
                        Common.alert('<spring:message code="sal.alert.msg.telONumExceedLengTwelve" />');
                        return false;
                    }
@@ -528,7 +531,11 @@
                    if(FormUtil.checkNum($("#_telR_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumR" />');
                    }
-                   if($("#_telR_").length > 12){
+                   if($("#_telR_").val().length < 9 || $("#_telR_").val().length > 12){
+                       Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
+                       return false;
+                   }
+                   if($("#_telR_").val().length > 12){
                        Common.alert('<spring:message code="sal.alert.msg.telRNumExceedLengTwelve" />');
                        return false;
                    }
@@ -537,7 +544,11 @@
                    if(FormUtil.checkNum($("#_telF_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
                    }
-                   if($("#_telF_").length > 12){
+                   if($("#_telF_").val().length < 9 || $("#_telF_").val().length > 12){
+                       Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
+                       return false;
+                   }
+                   if($("#_telF_").val().length > 12){
                        Common.alert('<spring:message code="sal.alert.msg.telFNumExceedLengTwelve" />');
                        return false;
                    }
@@ -619,18 +630,15 @@
                 	return false;
                 }
 
-                if($("#_asTelM_").length > 12){
-                    Common.alert('<spring:message code="sal.alert.msg.telMNumExceedLengTwelveCustCare" />');
+                if($("#_asTelM_").val().length < 9 || $("#_asTelM_").val().length > 12){
+                	Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
                     return false;
                 }
 
-                Common.ajax("GET", "/sales/customer/existingHPCodyMobile", {contactNumber : $("#_asTelM_").val()} , function(result) {
-                	if(result != null){
-                        Common.
-                        alert("<spring:message code='sal.alert.msg.existingHPCodyMobile' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
-                        return false;
-                    }
-               });
+                if($("#_asTelM_").val().length > 12){
+                    Common.alert('<spring:message code="sal.alert.msg.telMNumExceedLengTwelveCustCare" />');
+                    return false;
+                }
             }
             if($("#_asTelO_").val() != ''){
 
@@ -638,7 +646,13 @@
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumO" />');
                        return false;
                    }
-                   if($("#_asTelO_").length > 12){
+
+                   if($("#_asTelO_").val().length < 9 || $("#_asTelO_").val().length > 12){
+                       Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
+                       return false;
+                   }
+
+                   if($("#_asTelO_").val().length > 12){
                        Common.alert('<spring:message code="sal.alert.msg.telONumExceedLengTwelveCustCare" />');
                        return false;
                    }
@@ -647,7 +661,13 @@
                    if(FormUtil.checkNum($("#_asTelR_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumR" />');
                    }
-                   if($("#_asTelR_").length > 12){
+
+                   if($("#_asTelR_").val().length < 9 || $("#_asTelR_").val().length > 12){
+                       Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
+                       return false;
+                   }
+
+                   if($("#_asTelR_").val().length > 12){
                        Common.alert('<spring:message code="sal.alert.msg.telRNumExceedLengTwelveCustCare" />');
                        return false;
                    }
@@ -656,7 +676,13 @@
                    if(FormUtil.checkNum($("#_asTelF_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
                    }
-                   if($("#_asTelF_").length > 12){
+
+                   if($("#_asTelF_").val().length < 9 || $("#_asTelF_").val().length > 12){
+                       Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
+                       return false;
+                   }
+
+                   if($("#_asTelF_").val().length > 12){
                        Common.alert('<spring:message code="sal.alert.msg.telFNumExceedLengTwelveCustCare" />');
                        return false;
                    }
@@ -952,6 +978,19 @@
         }
     }
 
+    function fn_validHPCodyContactNumber(contactNumber, fieldId){
+    	if(contactNumber != ""){
+		    Common.ajax("GET", "/sales/customer/existingHPCodyMobile", {contactNumber : contactNumber} , function(result) {
+		        if(result != null){
+		            Common.
+		            alert("<spring:message code='sal.alert.msg.existingHPCodyMobile' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
+		            $("#" + fieldId).val('');
+		            return;
+		        }
+		   });
+    	}
+    }
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -1067,23 +1106,23 @@
             </td>
             <th scope="row"><spring:message code="sal.title.text.telMOne" /><span class="must">*</span></th>
             <td>
-                <input type="text" id="_telM1_" name="telM1" maxlength="12" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
+                <input type="text" id="_telM1_" name="telM1" maxlength="12" title="" placeholder="Telephone Number (Mobile)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
             </td>
         </tr>
         <tr>
             <th scope="row"><spring:message code="sal.title.text.telROne" /><span class="must">*</span></th>
             <td>
-            <input type="text" id="_telR_" name="telR" maxlength="12" title="" placeholder="Telephone Number (Residence)" class="w100p" />
+            <input type="text" id="_telR_" name="telR" maxlength="12" title="" placeholder="Telephone Number (Residence)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
             </td>
             <th scope="row"><spring:message code="sal.title.text.telFOne" /><span class="must">*</span></th>
             <td>
-            <input type="text" id="_telF_" name="telF" maxlength="12" title="" placeholder="Telephone Number (Fax)" class="w100p" />
+            <input type="text" id="_telF_" name="telF" maxlength="12" title="" placeholder="Telephone Number (Fax)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
             </td>
         </tr>
         <tr>
             <th scope="row"><spring:message code="sal.title.text.telOOne" /><span class="must">*</span></th>
             <td>
-            <input type="text" id="_telO_" name="telO" maxlength="12" title="" placeholder="Telephone Number (Office)" class="w100p" />
+            <input type="text" id="_telO_" name="telO" maxlength="12" title="" placeholder="Telephone Number (Office)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
             </td>
             <th scope="row"><spring:message code="sal.title.text.extNo" /></th>
             <td>
@@ -1211,17 +1250,17 @@
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telMTwo" /><span class="must">*</span></th>
     <td>
-    <input type="text" id="_asTelM_" name="asTelM" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
+    <input type="text" id="_asTelM_" name="asTelM" title="" placeholder="Telephone Number (Mobile)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
     </td>
     <th scope="row"><spring:message code="sal.title.text.telRTwo" /><span class="must">*</span></th>
     <td>
-    <input type="text" id="_asTelR_" name="asTelR" title="" placeholder="Telephone Number (Residence)" class="w100p" />
+    <input type="text" id="_asTelR_" name="asTelR" title="" placeholder="Telephone Number (Residence)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telOTwo" /><span class="must">*</span></th>
     <td>
-    <input type="text" id="_asTelO_" name="asTelO" title="" placeholder="Telephone Number (Office)" class="w100p" />
+    <input type="text" id="_asTelO_" name="asTelO" title="" placeholder="Telephone Number (Office)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
     </td>
     <th scope="row"><spring:message code="sal.title.text.ext" /></th>
     <td>
@@ -1231,7 +1270,7 @@
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telFTwo" /><span class="must">*</span></th>
     <td>
-    <input type="text" id="_asTelF_" name="asTelF" title="" placeholder="Telephone Number (Fax)" class="w100p" />
+    <input type="text" id="_asTelF_" name="asTelF" title="" placeholder="Telephone Number (Fax)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
     </td>
     <th scope="row"><spring:message code="sal.title.text.emailTwo" /></th>
     <td>

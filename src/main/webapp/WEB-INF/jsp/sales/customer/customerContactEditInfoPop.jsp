@@ -85,13 +85,11 @@ $(document).ready(function() {
                     return;
                 }
 
-                Common.ajax("GET", "/sales/customer/existingHPCodyMobile", {contactNumber : $("#cntcTelm").val()} , function(result) {
-                    if(result != null){
-                        Common.
-                        alert("<spring:message code='sal.alert.msg.existingHPCodyMobile' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
-                        return;
-                    }
-               });
+                if($("#cntcTelm").val().length < 9 || $("#cntcTelm").val().length > 12){
+                    Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
+                    return;
+                }
+
             }
             // telr(Residence)
             if("" != $("#cntcTelr").val() && null != $("#cntcTelr").val()){
@@ -184,6 +182,19 @@ $(document).ready(function() {
         $("#_selectParam").val('3');
         Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
     }
+
+    function fn_validHPCodyContactNumber(contactNumber, fieldId){
+        if(contactNumber != ""){
+            Common.ajax("GET", "/sales/customer/existingHPCodyMobile", {contactNumber : contactNumber} , function(result) {
+                if(result != null){
+                    Common.
+                    alert("<spring:message code='sal.alert.msg.existingHPCodyMobile' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
+                    $("#" + fieldId).val('');
+                    return;
+                }
+           });
+        }
+    }
 /* ####### delete Func End ########### */
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -238,15 +249,15 @@ $(document).ready(function() {
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.telM" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.telM1}" id="cntcTelm" name="cntcTelm" maxlength="12"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.telM1}" id="cntcTelm" name="cntcTelm" maxlength="12" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
     <th scope="row"><spring:message code="sal.text.telO" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" value="${detailcontact.telO}" id="cntcTelo" name="cntcTelo" maxlength="12"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" value="${detailcontact.telO}" id="cntcTelo" name="cntcTelo" maxlength="12" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.telR" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.telR }" id="cntcTelr" name="cntcTelr" maxlength="12"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.telR }" id="cntcTelr" name="cntcTelr" maxlength="12" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
     <th scope="row"><spring:message code="sal.text.telF" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p"  value="${detailcontact.telf}" id="cntcTelf" name="cntcTelf" maxlength="12"/></td>
+    <td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p"  value="${detailcontact.telf}" id="cntcTelf" name="cntcTelf" maxlength="12" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.dept" /></th>
