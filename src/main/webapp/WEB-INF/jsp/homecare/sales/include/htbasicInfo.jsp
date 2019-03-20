@@ -28,7 +28,7 @@
     <td>${orderDetail.basicInfo.crtUserId}</td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.product" /></th>
+    <th scope="row">Product Size</th>
     <td>${orderDetail.basicInfo.productName}</td>
     <th scope="row"><spring:message code="sal.title.text.poNumber" /></th>
     <td>${orderDetail.basicInfo.poNo}</td>
