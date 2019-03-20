@@ -1094,9 +1094,6 @@
                                   , T2.SRV_MEM_ID
                                   , T2.SRV_MEM_NO
                                   , T2.SRV_MEM_BILL_NO
-                                  , T2.SRV_MEM_PAC_ID
-                                  , T2.SRV_MEM_PAC_CODE
-                                  , T2.SRV_MEM_PAC_NAME
                                   , T2.SRV_MEM_START_DT
                                   , T2.SRV_MEM_EXPR_DT
                                   , T2.SRV_MEM_FREQ
@@ -1130,9 +1127,6 @@
           a.SRV_MEM_ID ,
           NVL(sm.SRV_MEM_NO, ' ') SRV_MEM_NO  ,
           NVL(sm.SRV_MEM_BILL_NO, ' ') SRV_MEM_BILL_NO  ,
-          NVL(sm.SRV_MEM_PAC_ID, 0) SRV_MEM_PAC_ID  ,
-          NVL(p.SRV_MEM_CODE, ' ') SRV_MEM_PAC_CODE  ,
-          NVL(p.SRV_MEM_DESC, ' ') SRV_MEM_PAC_NAME  ,
       NVL(sm.SRV_START_DT, TO_DATE('01/01/1900', 'dd/mm/yyyy')) SRV_MEM_START_DT,
       NVL(sm.SRV_EXPR_DT, TO_DATE('01/01/1900', 'dd/mm/yyyy')) SRV_MEM_EXPR_DT,
           NVL(Prd.SRV_PRD_DUR, 0) SRV_MEM_FREQ  ,
@@ -1160,11 +1154,8 @@
              LEFT JOIN SAL0227D Prd   ON Prd.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
             AND Prd.SRV_PRD_STUS_ID = 1
               AND TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN TO_CHAR(Prd.SRV_PRD_START_DT,'YYYYMM')||'01' AND TO_CHAR(LAST_DAY(Prd.SRV_PRD_EXPR_DT),'YYYYMMDD')
-             LEFT JOIN SAL0229M p   ON p.SRV_MEM_PAC_ID = sm.SRV_MEM_PAC_ID
             LEFT JOIN ORG0001D mem   ON mem.MEM_ID = NVL(sm.SRV_MEM_SALES_MEM_ID, 0)
             AND NVL(sm.SRV_MEM_SALES_MEM_ID, 0) <> 0
-
-
                            ) T2
 
                        LEFT
