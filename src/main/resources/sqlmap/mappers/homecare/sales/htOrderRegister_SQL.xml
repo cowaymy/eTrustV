@@ -2056,9 +2056,8 @@
 
     <!--Product 정보 조회 -->
     <select id="selectProductCodeList" parameterType="Map" resultType="egovMap">
-        SELECT STK_ID
-             , C1
-             , CODE_NAME
+        SELECT STK_ID CODE
+             , C1 CODE_NAME
           FROM
              (
             <if test='stkType != null and stkType == "1"'>
@@ -2485,17 +2484,25 @@
   <select id="selectMembershipPackageInfo" parameterType="Map" resultType="egovMap">
 
 SELECT
+SRV.SRV_ORD_ID,
+SRV.SRV_MEM_PAC_ID,
+SRV.SRV_MEM_DUR,
+TO_CHAR(SRV.SALES_DT,'YYYYMMDD') STRT_DT ,
+TO_CHAR(LAST_DAY(ADD_MONTHS(SRV.SALES_DT , SRV_MEM_DUR )),'YYYYMMDD') EXPR_DT
+FROM (
+SELECT
 SRV_ORD_ID ,
-SRV_MEM_PAC_ID ,
-SRV_MEM_CODE ,
-SRV_MEM_DUR ,
-TO_CHAR(SALES_DT,'YYYYMMDD') STRT_DT ,
-TO_CHAR(LAST_DAY(ADD_MONTHS(srv.SALES_DT , SRV_MEM_DUR )),'YYYYMMDD') EXPR_DT
-FROM SAL0229M pack
-JOIN SAL0225D srv ON srv.SRV_PAC_ID = pack.SRV_MEM_PAC_ID
+0 AS SRV_MEM_PAC_ID ,
+CASE WHEN APP_TYPE_ID = 3213 THEN 1
+WHEN APP_TYPE_ID = 3214 THEN 12
+ELSE 0 END AS
+SRV_MEM_DUR,
+SALES_DT
+FROM SAL0225D
 WHERE
-pack.SRV_MEM_PAC_ID = #{srvPacId} AND
-srv.SRV_ORD_ID = #{salesOrdId}
+SRV_ORD_ID = #{salesOrdId}
+AND APP_TYPE_ID = #{appTypeId}
+) SRV
 
     </select>
 
