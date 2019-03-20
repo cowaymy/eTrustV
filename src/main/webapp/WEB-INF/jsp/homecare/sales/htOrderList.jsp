@@ -192,8 +192,8 @@ function createAUIGrid() {
       , { headerText : "<spring:message code='sales.Status'/>",  dataField : "ordStusCode", editable : false, width : 80  }
       , { headerText : "<spring:message code='sales.AppType'/>", dataField : "appTypeCode", editable : false, width : 80  }
       , { headerText : "<spring:message code='sales.ordDt'/>",   dataField : "ordDt",       editable : false, width : 100 }
-      , { headerText : "<spring:message code='sales.refNo2'/>",  dataField : "refNo",       editable : false, width : 150  }
-      , { headerText : "<spring:message code='sales.prod'/>",    dataField : "productName", editable : false, width : 200 }
+      , { headerText : "<spring:message code='sales.refNo2'/>",  dataField : "refNo",       editable : false, width : 200  }
+      , { headerText : "Product Size",    dataField : "productName", editable : false, width : 150 }
       , { headerText : "Brand",                                               dataField : "brand", editable : false, width : 150 }
       , { headerText : "<spring:message code='sales.custId'/>",  dataField : "custId",      editable : false, width : 80  }
       , { headerText : "<spring:message code='sales.cusName'/>", dataField : "custName",    editable : false, width : 300 }
@@ -294,8 +294,8 @@ $.fn.clearForm = function() {
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li><spring:message code='sales.path.sales'/></li>
-    <li><spring:message code='sales.path.order'/></li>
+    <li>Homecare</li>
+    <li>Sales</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -345,13 +345,13 @@ $.fn.clearForm = function() {
 <c:if test="${SESSION_INFO.userIsExternal == '0'}">
     <select id="listAppType" name="appType" class="multy_select w100p" multiple="multiple"></select>
 </c:if>
-<c:if test="${SESSION_INFO.userIsExternal == '1'}">
+<%-- <c:if test="${SESSION_INFO.userIsExternal == '1'}">
     <!-- <select id="listAppType" name="appType" class="w100p" disabled></select> -->
        <select id="listAppType" name="appType">
         <option value="3212">Care Service</option>
         <option value="145">Free Trial</option>
         </select>
-</c:if>
+</c:if> --%>
     </td>
     <th scope="row"><spring:message code='sales.ordDt'/></th>
     <td>
@@ -371,23 +371,15 @@ $.fn.clearForm = function() {
         <option value="10">Cancelled</option>
     </select>
     </td>
-    <th scope="row">Package Type</th>
-    <td>
-        <select id="listPackId" name="packId" class="multy_select w100p" multiple="multiple">
-        <option value="2">No Package</option>
-        <option value="25">1 Time Package</option>
-        <option value="26">1 Year Package</option>
-    </select>
-    </td>
 
     <th scope="row"><spring:message code='sales.keyInBranch'/></th>
     <td>
     <select id="listKeyinBrnchId" name="keyinBrnchId" class="multy_select w100p" multiple="multiple"></select>
     </td>
-    <%-- <th scope="row"><spring:message code='sales.Creator'/></th>
+    <th scope="row"><spring:message code='sales.Creator'/></th>
     <td>
     <input id="listCrtUserId" name="crtUserId" type="text" title="Creator" placeholder="Creator (Username)" class="w100p" />
-    </td> --%>
+    </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code='sales.custId2'/></th>
@@ -408,12 +400,12 @@ $.fn.clearForm = function() {
     <td>
     <input id="listPoNo" name="poNo" type="text" title="PO No" placeholder="<spring:message code='sales.poNum'/>" class="w100p" />
     </td>
-    <th scope="row"><spring:message code='sales.prod'/></th>
+    <th scope="row">Product Size</th>
     <td>
     <select id="listProductId" name="productId" class="multy_select w100p" multiple="multiple">
-        <option value="3213">SINGLE</option>
-        <option value="3214">QUEEN</option>
-        <option value="3215">KING</option>
+        <option value="SINGLE">SINGLE</option>
+        <option value="QUEEN">QUEEN</option>
+        <option value="KING">KING</option>
     </select>
     </td>
     <th scope="row"><spring:message code='sales.salesman'/></th>
