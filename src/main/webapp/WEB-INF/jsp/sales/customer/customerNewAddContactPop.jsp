@@ -51,17 +51,13 @@
                     if(FormUtil.checkNum($("#cntcTelm"))){
                         Common.alert('<spring:message code="sal.alert.msg.invaildTelNumM" />');
                         return;
-                    }
-
-                    if($("#cntcTelm").val().substring(0,3) == "015"){
+                    }else if($("#cntcTelm").val().substring(0,3) == "015"){
                         Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
                         return;
                     }else if($("#cntcTelm").val().substring(0,2) != "01"){
                         Common.alert('<spring:message code="sal.alert.msg.incorrectMobilePrefix" />');
                         return;
-                    }
-
-                    if($("#cntcTelm").val().length < 9 || $("#cntcTelm").val().length > 12){
+                    }else if($("#cntcTelm").val().length < 9 || $("#cntcTelm").val().length > 12){
                         Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
                         return;
                     }
@@ -71,8 +67,7 @@
                     if(FormUtil.checkNum($("#cntcTelr"))){
                         Common.alert('<spring:message code="sal.alert.msg.invaildTelNumR" />');
                         return;
-                    }
-                    if($("#cntcTelr").val().length < 9 || $("#cntcTelr").val().length > 12){
+                    }else if($("#cntcTelr").val().length < 9 || $("#cntcTelr").val().length > 12){
                         Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
                         return;
                     }
@@ -82,8 +77,7 @@
                     if(FormUtil.checkNum($("#cntcTelo"))){
                         Common.alert('<spring:message code="sal.alert.msg.invaildTelNumO" />');
                         return;
-                    }
-                    if($("#cntcTelo").val().length < 9 || $("#cntcTelo").val().length > 12){
+                    }else if($("#cntcTelo").val().length < 9 || $("#cntcTelo").val().length > 12){
                         Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
                         return;
                     }
@@ -93,8 +87,7 @@
                     if(FormUtil.checkNum($("#cntcTelf"))){
                         Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
                         return;
-                    }
-                    if($("#cntcTelf").val().length < 9 || $("#cntcTelf").val().length > 12){
+                    } else if($("#cntcTelf").val().length < 9 || $("#cntcTelf").val().length > 12){
                         Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
                         return;
                     }
@@ -142,7 +135,7 @@
                if(result != null){
                    Common.
                    alert("<spring:message code='sal.alert.msg.existingHPCodyMobile' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
-                   $("#" + fieldId).val('');
+                   //$("#" + fieldId).val('');
                    return;
                }
           });
