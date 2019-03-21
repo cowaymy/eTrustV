@@ -159,7 +159,7 @@ public class BudgetController {
 			params.put("costCentr", sessionVO.getCostCentr());
 		}
 
-		if(sessionVO.getUserId() == 79333) {
+		if(sessionVO.getUserId() == 270) {
 			params.put("costCentr", "A1701");
 			params.put("costCentr2", "A2101");
 		}
@@ -312,7 +312,7 @@ public class BudgetController {
 			params.put("costCentr", sessionVO.getCostCentr());
 		}
 
-		if(sessionVO.getUserId() == 79333) {
+		if(sessionVO.getUserId() == 270) {
 			params.put("costCentr", "A1701");
 			params.put("costCentr2", "A2101");
 		}
@@ -813,7 +813,7 @@ public class BudgetController {
 			params.put("costCentr", sessionVO.getCostCentr());
 		}
 
-		if(sessionVO.getUserId() == 79333) {
+		if(sessionVO.getUserId() == 270) {
 			params.put("costCentr", "A1701");
 			params.put("costCentr2", "A2101");
 		}
