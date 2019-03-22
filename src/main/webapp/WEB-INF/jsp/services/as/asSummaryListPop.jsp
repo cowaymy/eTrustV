@@ -34,8 +34,8 @@ function fn_validation(){
             return false;
         }
     }
-    if($("#appDtFr").val() != '' || $("#appDtTo").val() != ''){
-        if($("#appDtFr").val() == '' || $("#appDtTo").val() == ''){
+    if($("#appDtFr").val() != '' || $("#appDtTo2").val() != ''){
+        if($("#appDtFr").val() == '' || $("#appDtTo2").val() == ''){
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='appointment date (From & To)' htmlEscape='false'/>");
             return false;
         }
@@ -100,10 +100,10 @@ function fn_openGenerate(){
 
         var appointDateFrom = "";
         var appointDateTo = "";
-        if($("#appDtFr").val() != '' && $("#appDtTo").val() != '' && $("#appDtFr").val() != null && $("#appDtTo").val() != null){
+        if($("#appDtFr").val() != '' && $("#appDtTo2").val() != '' && $("#appDtFr").val() != null && $("#appDtTo2").val() != null){
         	appointDateFrom = $("#appDtFr").val();
-        	appointDateTo = $("#appDtTo").val();
-        	whereSql +=  "AND ae.AS_APPNT_DT between to_date('" + $("#appDtFr").val() + "', 'DD/MM/YYYY') AND to_date('" + $("#appDtTo").val()  + "', 'DD/MM/YYYY')  ";
+        	appointDateTo = $("#appDtTo2").val();
+        	whereSql +=  "AND ae.AS_APPNT_DT between to_date('" + $("#appDtFr").val() + "', 'DD/MM/YYYY') AND to_date('" + $("#appDtTo2").val()  + "', 'DD/MM/YYYY')  ";
         }
 
         var requestDateFrom = "";
@@ -268,7 +268,7 @@ function fn_openGenerate(){
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="appDtFr"/></p>
     <span>To</span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="appDtTo"/></p>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="appDtTo2"/></p>
     </div><!-- date_set end -->
 
     </td>
