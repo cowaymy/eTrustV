@@ -41,6 +41,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 05/03/2019    ONGHC      1.0.2       - To Show Error Code for SP
  * 06/03/2019    ONGHC      1.0.3       - Create getSalStat
  * 18/03/2019    ONGHC      1.0.4       - Remove runInstSp 3rd Part
+ * 22/03/2019    ONGHC      1.0.5       - Add Checking on SP_LOGISTIC_REQUEST's Data
  *********************************************************************************************/
 
 @Controller
@@ -678,7 +679,7 @@ public class InstallationResultListController {
       if (null != resultValue) {
         HashMap spMap = (HashMap) resultValue.get("spMap");
         logger.debug("spMap :" + spMap.toString());
-        if (!"000".equals(spMap.get("P_RESULT_MSG"))) { // FAIL
+        if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
           resultValue.put("logerr", "Y");
           message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS1): " + spMap.get("P_RESULT_MSG").toString());
         } else { // SUCCESS
@@ -694,7 +695,7 @@ public class InstallationResultListController {
                 if (null != resultValue) {
                   spMap = (HashMap) resultValue.get("spMap");
                   logger.debug("spMap :" + spMap.toString());
-                  if (!"000".equals(spMap.get("P_RESULT_MSG"))) { // FAIL
+                  if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
                     resultValue.put("logerr", "Y");
                     message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS2): " + spMap.get("P_RESULT_MSG").toString());
                   } else {
