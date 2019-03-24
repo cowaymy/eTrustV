@@ -194,13 +194,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         				normalRentalFees = (BigDecimal)priceInfo.get("amt");
         			}
         			else {
-        				/*if(promoId == 31738 && stkId== 892 && srvPacId == 0){
+        				if(promoId == 31834 && stkId== 892 && srvPacId == 0){
             				orderPricePromo      = BigDecimal.valueOf(3540);
         				}
         				else{
             				orderPricePromo      = (BigDecimal)priceInfo.get("promoAmt");
-        				}*/
-        				orderPricePromo      = (BigDecimal)priceInfo.get("promoAmt");
+        				}
         				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
         				orderPVPromoGST      = (BigDecimal)priceInfo.get("promoItmPvGst");
         				orderRentalFeesPromo = BigDecimal.ZERO;
