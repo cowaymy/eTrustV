@@ -115,46 +115,12 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 	var monthlyDetailLayout	= [];	//	myGridID4
 	var monthlyDetailOption	= {};
 	
-	/*if ( AUIGrid.isCreated(myGridID1) ) {
-		AUIGrid.destroy(myGridID1);
-	}
-	if ( AUIGrid.isCreated(myGridID2) ) {
-		AUIGrid.destroy(myGridID2);
-	}*/
 	if ( AUIGrid.isCreated(myGridID3) ) {
 		AUIGrid.destroy(myGridID3);
 	}
 	if ( AUIGrid.isCreated(myGridID4) ) {
 		AUIGrid.destroy(myGridID4);
 	}
-	/*
-	var weeklySummaryOption	= {
-		usePaging : false,
-		useGroupingPanel : false,
-		showRowNumColumn : false,
-		showRowCheckColumn : false,
-		showStateColumn : false,
-		showEditedCellMarker : false,
-		showFooter : true,
-		editable : false,
-		enableCellMerge : false,
-		enableRestore : false,
-		fixedColumnCount : 1
-	};
-	var monthlySummaryOption	= {
-		usePaging : false,
-		useGroupingPanel : false,
-		showRowNumColumn : false,
-		showRowCheckColumn : false,
-		showStateColumn : false,
-		showEditedCellMarker : false,
-		showFooter : true,
-		editable : false,
-		enableCellMerge : false,
-		enableRestore : false,
-		fixedColumnCount : 1
-	};
-	*/
 	var weeklyDetailOption	= {
 		usePaging : false,
 		useGroupingPanel : false,
@@ -204,9 +170,6 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 			//, $("#MainForm").serializeJSON()
 			, params
 			, function(result) {
-				
-				//console.log(result);
-				
 				//	result check
 				if ( null == result.selectSalesPlanAccuracyWeeklyDetailHeader || 1 > result.selectSalesPlanAccuracyWeeklyDetailHeader.length ) {
 					Common.alert("Scm Calendar Information is wrong");

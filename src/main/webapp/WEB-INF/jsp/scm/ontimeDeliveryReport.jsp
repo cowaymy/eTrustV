@@ -57,7 +57,7 @@ function fnSearch() {
 			, function(result) {
 				AUIGrid.setGridData(myGridID1, result.selectOntimeDeliverySummary);
 				AUIGrid.setGridData(myGridID2, result.selectOntimeDeliveryDetail);
-				$("#yearMonth").text(currMonth + "/" + AUIGrid.getCellValue(myGridID1, 0, "planYear"));
+				$("#yearMonth").text(planMonth + "/" + AUIGrid.getCellValue(myGridID1, 0, "planYear"));
 				$("#issPoQty").text(AUIGrid.getCellValue(myGridID1, 0, currMonth));
 				$("#onTimeQty").text(AUIGrid.getCellValue(myGridID1, 1, currMonth));
 				$("#onTimeRate").text(AUIGrid.getCellValue(myGridID1, 2, currMonth));
@@ -153,7 +153,10 @@ function fnChangeYear() {
 	planYear	= $("#planYear").val();
 	if ( planYear != currYear ) {
 		planMonth	= 1;
+	} else {
+		planMonth	= currMonth;
 	}
+	console.log("planYear : " + planYear + ", planMonth : " + planMonth);
 }
 
 /*
