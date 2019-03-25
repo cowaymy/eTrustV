@@ -131,7 +131,7 @@ public class htOrderRegisterController {
 	public String orderSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		model.put("callPrgm", params.get("callPrgm"));
 		model.put("indicator", params.get("indicator"));
-		return "sales/order/orderSearchPop";
+		return "homecare/sales/htOrderSearchPop";
 	}
 
     @RequestMapping(value = "/selectCustAddJsonInfo.do", method = RequestMethod.GET)
@@ -256,10 +256,10 @@ logger.info("extrade :: " + params.get("exTrade"));
     	return ResponseEntity.ok(codeList);
     }
 
-    @RequestMapping(value = "/selectProductPromotionPriceByPromoStockID.do", method = RequestMethod.GET)
-    public ResponseEntity<EgovMap> selectProductPromotionPriceByPromoStockID(@RequestParam Map<String, Object> params)
+    @RequestMapping(value = "/selectProductPromotionPercentByPromoID.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectProductPromotionPercentByPromoID(@RequestParam Map<String, Object> params)
     {
-    	EgovMap priceInfo = htOrderRegisterService.selectProductPromotionPriceByPromoStockID(params);
+    	EgovMap priceInfo = htOrderRegisterService.selectProductPromotionPercentByPromoID(params);
     	return ResponseEntity.ok(priceInfo);
     }
 
