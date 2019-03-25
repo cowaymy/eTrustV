@@ -441,8 +441,8 @@ SELECT DISTINCT A.SCM_YEAR, A.SCM_WEEK
 <select id="selectWeeklyStartEnd" parameterType="Map" resultType="egovMap">
 SELECT 'W' || LPAD(CASE WHEN A.START_WEEK <![CDATA[ <= ]]> 0 THEN 52 + A.START_WEEK ELSE A.START_WEEK END, 2, '0') AS START_WEEK
      , 'W' || LPAD(CASE WHEN B.END_WEEK   <![CDATA[ <= ]]> 0 THEN 52 + B.END_WEEK   ELSE B.END_WEEK   END, 2, '0') AS END_WEEK
-  FROM (SELECT #{week} - MIN(WEEK) AS START_WEEK FROM SCM0062M WHERE YEAR = #{year} AND GBN = 1) A
-     , (SELECT #{week} - MAX(WEEK) AS END_WEEK FROM SCM0062M WHERE YEAR = #{year} AND GBN = 1) B
+  FROM (SELECT #{week} - MIN(WEEK) + 1 AS START_WEEK FROM SCM0062M WHERE YEAR = #{year} AND GBN = 1) A
+     , (SELECT #{week} - MAX(WEEK) + 1 AS END_WEEK FROM SCM0062M WHERE YEAR = #{year} AND GBN = 1) B
 </select>
 <select id="selectSalesPlanAccuracyWeeklyDetail" parameterType="Map" resultType="egovMap">
 SELECT A.TEAM, A.STOCK_CODE, SUM(NVL(A.W0, 0)) AS SALES_ORD_QTY, A.ACC AS SALES_ACC_PER
