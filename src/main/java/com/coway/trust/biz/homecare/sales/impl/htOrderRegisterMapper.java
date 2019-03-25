@@ -57,7 +57,7 @@ public interface htOrderRegisterMapper {
 
 	List<EgovMap> selectPromotionByAppTypeStock2(Map<String, Object> params);
 
-	EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params);
+	EgovMap selectProductPromotionPercentByPromoID(Map<String, Object> params);
 
 	EgovMap selectProductPromotionPriceByPromoStockIDNew(Map<String, Object> params);
 
