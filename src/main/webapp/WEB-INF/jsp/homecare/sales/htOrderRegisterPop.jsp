@@ -314,9 +314,9 @@
                     var srvPacId = 0;
 
 
-                    fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
+                    fn_loadProductPrice(appTypeVal, stkIdVal);
                     if(FormUtil.isNotEmpty(promoIdVal)) {
-                        fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId);
+                        fn_loadPromotionPrice(promoIdVal);
                     }
 
                 }
@@ -611,34 +611,6 @@
 
         });
 
-/*         $('#srvPacId').change(function() {
-            // ONGHC - ADD
-            $('#ordProudct option').remove();
-            //$('#ordProudct optgroup').remove();
-            $('#ordPromo option').remove();
-            //$('#compType option').remove();
-            $('#ordPromo').prop("disabled", true);
-            //$('#compType').addClass("blind");
-
-            var idx    = $("#srvPacId option:selected").index();
-            var selVal = $("#srvPacId").val();
-
-            if(idx > 0) {
-                var stkType = $("#appType").val() == '66' ? '1' : '2';
-                // ONGHC - ADD
-                $('#ordProudct').removeAttr("disabled");
-                //doGetProductCombo('/sales/order/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
-
-                doGetComboData('/homecare/sales/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', '');//product 생성
-
-
-            } else {
-                // ONGHC - ADD
-                $('#ordProudct').prop("disabled", true);
-            }
-        }); */
-
-
         $('#ordProudct').change(function() {
         	 //Common.alert("Product value : "+ $('#ordProudct').val());
             if(FormUtil.isEmpty($('#ordProudct').val())) {
@@ -677,11 +649,29 @@
             var exTrade    = $("#exTrade").val();
             var srvPacId = 0;
 
-            if(stkIdx > 0) {
+            var promoAppTypeId = 0;
 
-                fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
-                fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
+            if (appTypeVal == 3213){
+
+            	 promoAppTypeId = 3217;
+
+            }else if (appTypeVal == 3214){
+
+            	promoAppTypeId = 3218;
+
+            }else{
+
+            	promoAppTypeId = 0;
+
             }
+
+
+            console.log('app type change --> appTypeVal:'+appTypeVal);
+            console.log('promo change --> promoAppTypeId:'+promoAppTypeId);
+
+                fn_loadProductPrice(appTypeVal, stkIdVal);
+                fn_loadProductPromotion(promoAppTypeId, stkIdVal, empChk, custTypeVal, exTrade);
+
         });
 
 
@@ -699,62 +689,6 @@
         });
 
 
-
-   /*      $('#btnCal').click(function() {
-            if($("#ordProudct option:selected").index() <= 0) {
-                Common.alert('<spring:message code="sal.alert.msg.plzSelProd" />');
-                return false;
-            }
-            var appTypeName  = $('#appType option:selected').text();
-            var productName  = $('#ordProudct option:selected').text();
-            //Amount before GST
-            var oldPrice     = $('#orgOrdPrice').val();
-            var newPrice     = $('#ordPrice').val();
-            var oldRental    = $('#orgOrdRentalFees').val();
-            var newRental    = $('#ordRentalFees').val();
-            var oldPv        = $('#ordPv').val();
-
-            console.log('oldPrice:'+oldPrice);
-            console.log('newPrice:'+newPrice);
-            console.log('oldRental:'+oldRental);
-            console.log('newRental:'+newRental);
-
-            //Amount of GST applied
-            var oldPriceGST  = fn_calcGst(oldPrice);
-            var newPriceGST  = fn_calcGst(newPrice);
-            var oldRentalGST = fn_calcGst(oldRental);
-            var newRentalGST = fn_calcGst(newRental);
-            var newPv        = $('#ordPvGST').val();
-
-            console.log('oldPriceGST:'+oldPriceGST);
-            console.log('newPriceGST:'+newPriceGST);
-            console.log('oldRentalGST:'+oldRentalGST);
-            console.log('newRentalGST:'+newRentalGST);
-
-            if($('#appType').val() != '66') {
-                oldPriceGST = Math.floor(oldPriceGST/10) * 10;
-                newPriceGST = Math.floor(newPriceGST/10) * 10;
-            }
-
-            console.log('oldPriceGST:'+oldPriceGST);
-            console.log('newPriceGST:'+newPriceGST);
-
-            var msg = '';
-
-            msg += 'Application Type : '+appTypeName +'<br>';
-            msg += 'Product          : '+productName +'<br>';
-            msg += 'Price(RPF)       : '+newPriceGST +'<br>';
-            msg += 'Normal Rental    : '+oldRentalGST+'<br>';
-            msg += 'Promotion        : '+newRentalGST+'<br>';
-            msg += '<br>The Price(Fee) was applied to the tab of [Sales Order]';
-
-            msg = '<spring:message code="sal.alert.msg.gstInfo" arguments="'+appTypeName+';'+productName+';'+newPriceGST+';'+oldRentalGST+';'+newRentalGST+'" argumentSeparator=";"/>';
-
-            //fn_excludeGstAmt();
-
-            Common.alert('<spring:message code="sal.alert.msg.gstAmount" />' + DEFAULT_DELIMITER + '<b>'+msg+'</b>');
-        }); */
-
         $('#ordPromo').change(function() {
 
 //          $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
@@ -767,7 +701,7 @@
             var stkIdVal   = $("#ordProudct").val();
             var promoIdIdx = $("#ordPromo option:selected").index();
             var promoIdVal = $("#ordPromo").val();
-            var srvPacId    = $('#srvPacId').val();
+            //var srvPacId    = $('#srvPacId').val();
 
 
             if(promoIdIdx > 0 && promoIdVal != '0') {
@@ -780,10 +714,10 @@
                     $('#trialNoChk').removeAttr("disabled");
                 }
 
-                fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId);
+                fn_loadPromotionPrice(promoIdVal);
             }
             else {
-                fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
+                fn_loadProductPrice(appTypeVal, stkIdVal);
             }
         });
 
@@ -1113,10 +1047,7 @@
             isValid = false;
             msg += '<spring:message code="sal.alert.msg.salAppType" /><br>';
         }
-/*         else if(srvPacIdx <= 0 || srvPacVal == "") {
-            isValid = false;
-            msg += '* <spring:message code="sal.alert.msg.plzSelPckgType" /><br>';
-        } */
+
         else {
             if(appTypeVal == '68' || appTypeVal == '1412') {
                 if(FormUtil.checkReqValue($('#installDur'))) {
@@ -1248,12 +1179,6 @@
             isValid = false;
             msg += '<spring:message code="sal.alert.msg.plzSelInstallAddr" />';
         }
-        /*
-        if(FormUtil.checkReqValue($('#hiddenInstCntcId'))) {
-            isValid = false;
-            msg += "* Please select an installation contact person.<br>";
-        }
-        */
 
         if(FormUtil.isEmpty($('#prefInstDt').val().trim())) {
             isValid = false;
@@ -1427,9 +1352,9 @@
         }
     }
 
-    function fn_loadPromotionPrice(promoId, stkId, srvPacId) {
+    function fn_loadPromotionPrice(promoId) {
 
-        Common.ajax("GET", "/homecare/sales/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
+        Common.ajax("GET", "/homecare/sales/selectProductPromotionPercentByPromoID.do", {promoId : promoId}, function(promoPriceInfo) {
 
             if(promoPriceInfo != null) {
 
@@ -1439,39 +1364,48 @@
 //              $("#ordPv").removeClass("readonly");
 //              $("#ordRentalFees").removeClass("readonly");
 
-                $("#ordPrice").val(promoPriceInfo.orderPricePromo);
-                $("#ordPv").val(promoPriceInfo.orderPVPromo);
-                $("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
-                $("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
+                var discPrice = 0;
 
-                $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
-                $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
+                discPrice = $('#orgOrdPrice').val() - ($('#orgOrdPrice').val() * promoPriceInfo.promoPrcPrcnt / 100);
+                console.log('discount Price -->  :'+ Math.floor(discPrice));
+
+                $("#ordPrice").val(Math.floor(discPrice));
+                //$("#ordPv").val(promoPriceInfo.orderPVPromo);
+                //$("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
+                //$("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
+
+                //$("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
+                //$("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
             }
         });
     }
 
     //LoadProductPromotion
-    function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade) {
-        console.log('fn_loadProductPromotion --> appTypeVal:'+appTypeVal);
-        console.log('fn_loadProductPromotion --> stkId:'+stkId);
+    function fn_loadProductPromotion(promoAppTypeId, stkId, empChk, custTypeVal, exTrade) {
+        console.log('fn_loadProductPromotion --> promoAppTypeId:'+promoAppTypeId);
+        //console.log('fn_loadProductPromotion --> stkId:'+stkId);
         console.log('fn_loadProductPromotion --> empChk:'+empChk);
         console.log('fn_loadProductPromotion --> custTypeVal:'+custTypeVal);
+        var exTrade = 0;
+        $('#ordPromo').removeAttr("disabled");
 
-        //$('#ordPromo').removeAttr("disabled");
+        if(promoAppTypeId == 3217 || promoAppTypeId == 3218){
 
-        if(appTypeVal !=66){
-            doGetComboData('/homecare/sales/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
+        	doGetComboData('/homecare/sales/selectPromotionByAppTypeStock.do', {appTypeId:promoAppTypeId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade}, '', 'ordPromo', 'S', ''); //Common Code
+
         }
-        else
-        doGetComboData('/homecare/sales/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
-    }
+        else{
+        	$('#ordPromo').prop("disabled", true);
+        }
+
+ }
 
     //LoadProductPrice
-    function fn_loadProductPrice(appTypeVal, stkId, srvPacId) {
+    function fn_loadProductPrice(appTypeVal, stkId) {
 
     	console.log('fn_loadProductPrice --> appTypeVal:'+appTypeVal);
         console.log('fn_loadProductPrice --> stkId:'+stkId);
-        console.log('fn_loadProductPrice --> srvPacId:'+srvPacId);
+        //console.log('fn_loadProductPrice --> srvPacId:'+srvPacId);
 
         var appTypeId = 0;
 
@@ -1479,7 +1413,7 @@
 
         $("#searchAppTypeId").val(appTypeId);
         $("#searchStkId").val(stkId);
-        $("#searchSrvPacId").val(srvPacId);
+        //$("#searchSrvPacId").val(srvPacId);
 
         var orderPrice = 0;
 
@@ -1511,7 +1445,7 @@
       }
 
                 $("#ordPrice").val(orderPrice);
-                $("#orgOrdPrice").val(stkPriceInfo.orderPrice);
+                $("#orgOrdPrice").val(orderPrice);
 
     }
 
@@ -2053,9 +1987,7 @@
           <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
     <td>
     <input id="ordPrice"    name="ordPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
-        <input id="ordPriceId"  name="ordPriceId"  type="hidden" />
         <input id="orgOrdPrice" name="orgOrdPrice" type="hidden" />
-        <input id="orgOrdPv"    name="orgOrdPv"    type="hidden" /></td>
 
     <th scope="row"><spring:message code="sal.text.organizationCode" /></th>
     <td><input id="orgCd" name="orgCd" type="text" title="" placeholder="Organization Code" class="w100p readonly" readonly />
