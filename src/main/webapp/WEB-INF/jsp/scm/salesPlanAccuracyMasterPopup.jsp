@@ -279,7 +279,7 @@ $(document).ready(function() {
 <body>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 	<header class="pop_header"><!-- pop_header start -->
-		<h1>Sales Plan / SO</h1>
+		<h1>Sales Plan Accuracy Master</h1>
 		<ul class="right_opt">
 			<!-- <li><p class="btn_blue"><a onclick="fnSearchPop();"><span class="search"></span>Search</a></p></li> -->
 			<li><p class="btn_blue"><a onclick="fnSave();"><span class="save"></span>Save</a></p></li>
