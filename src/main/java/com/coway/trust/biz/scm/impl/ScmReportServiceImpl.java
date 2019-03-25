@@ -113,6 +113,7 @@ public class ScmReportServiceImpl implements ScmReportService {
 		
 		LOGGER.debug("saveSalesPlanAccuracyMaster : {}", updList);
 		
+		int thisWeekTh	= 0;
 		int saveCnt	= 0;
 		int weeklyVal	= 0;
 		
