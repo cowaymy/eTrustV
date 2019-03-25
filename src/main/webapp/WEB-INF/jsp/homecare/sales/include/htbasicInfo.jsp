@@ -12,7 +12,7 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
+    <th scope="row">Service No</th>
     <td>${orderDetail.basicInfo.ordNo}  <c:if test="${orderDetail.basicInfo.custNric == orderDetail.salesmanInfo.nric}">(${orderDetail.salesmanInfo.memCode})</c:if></td>
     <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>${fn:substring(orderDetail.basicInfo.ordDt, 0, 19)}</td>
