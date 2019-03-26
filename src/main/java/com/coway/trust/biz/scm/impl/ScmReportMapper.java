@@ -42,4 +42,8 @@ public interface ScmReportMapper {
 	List<EgovMap> selectInventoryReportDetailHeader(Map<String, Object> params);
 	List<EgovMap> selectInventoryReportTotal(Map<String, Object> params);
 	List<EgovMap> selectInventoryReportDetail(Map<String, Object> params);
+	List<EgovMap> selectScmCurrency(Map<String, Object> params);
+	void updateScmCurrency(Map<String, Object> params);
+	void executeScmInventory(Map<String, Object> params);
+	void executeScmDaysInInventory(Map<String, Object> params);
 }

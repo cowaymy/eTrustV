@@ -184,4 +184,32 @@ public class ScmReportServiceImpl implements ScmReportService {
 	public List<EgovMap> selectInventoryReportDetail(Map<String, Object> params) {
 		return	scmReportMapper.selectInventoryReportDetail(params);
 	}
+	@Override
+	public List<EgovMap> selectScmCurrency(Map<String, Object> params) {
+		return	scmReportMapper.selectScmCurrency(params);
+	}
+	@Override
+	public void updateScmCurrency(Map<String, Object> params) {
+		scmReportMapper.updateScmCurrency(params);
+	}
+	@Override
+	public void executeScmInventory(Map<String, Object> params) {
+		try {
+			scmReportMapper.executeScmInventory(params);
+			
+			if ( 0 < Integer.parseInt(params.get("staValue").toString()) ) {
+				LOGGER.debug("executeScmInventory.staValue : " + Integer.parseInt(params.get("staValue").toString()));
+				scmReportMapper.executeScmDaysInInventory(params);
+				if ( 0 < Integer.parseInt(params.get("staValue").toString()) ) {
+					LOGGER.debug("executeScmDaysInInventory.staValue : " + Integer.parseInt(params.get("staValue").toString()));
+				} else {
+					LOGGER.debug("executeScmDaysInInventory occurs error");
+				}
+			} else {
+				LOGGER.debug("executeScmInventory occurs error");
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+	}
 }
