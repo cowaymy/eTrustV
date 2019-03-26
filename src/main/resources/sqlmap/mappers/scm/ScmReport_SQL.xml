@@ -127,226 +127,226 @@ SELECT A.ORD, A.TEAM, A.YEAR AS PLAN_YEAR
      , A.W21, A.W22, A.W23, A.W24, A.W25, A.W26, A.W27, A.W28, A.W29, A.W30
      , A.W31, A.W32, A.W33, A.W34, A.W35, A.W36, A.W37, A.W38, A.W39, A.W40
      , A.W41, A.W42, A.W43, A.W44, A.W45, A.W46, A.W47, A.W48, A.W49, A.W50
-     , A.W41, A.W42
+     , A.W51, A.W52
   FROM (
         SELECT 1 AS ORD, 'DST' AS TEAM, A.YEAR
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 1 AND A.YEAR = Z.YEAR) AS W1
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 2 AND A.YEAR = Z.YEAR) AS W2
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 3 AND A.YEAR = Z.YEAR) AS W3
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 4 AND A.YEAR = Z.YEAR) AS W4
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 5 AND A.YEAR = Z.YEAR) AS W5
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 6 AND A.YEAR = Z.YEAR) AS W6
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 7 AND A.YEAR = Z.YEAR) AS W7
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 8 AND A.YEAR = Z.YEAR) AS W8
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 9 AND A.YEAR = Z.YEAR) AS W9
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 10 AND A.YEAR = Z.YEAR) AS W10
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 11 AND A.YEAR = Z.YEAR) AS W11
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 12 AND A.YEAR = Z.YEAR) AS W12
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 13 AND A.YEAR = Z.YEAR) AS W13
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 14 AND A.YEAR = Z.YEAR) AS W14
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 15 AND A.YEAR = Z.YEAR) AS W15
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 16 AND A.YEAR = Z.YEAR) AS W16
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 17 AND A.YEAR = Z.YEAR) AS W17
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 18 AND A.YEAR = Z.YEAR) AS W18
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 19 AND A.YEAR = Z.YEAR) AS W19
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 20 AND A.YEAR = Z.YEAR) AS W20
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 21 AND A.YEAR = Z.YEAR) AS W21
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 22 AND A.YEAR = Z.YEAR) AS W22
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 23 AND A.YEAR = Z.YEAR) AS W23
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 24 AND A.YEAR = Z.YEAR) AS W24
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 25 AND A.YEAR = Z.YEAR) AS W25
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 26 AND A.YEAR = Z.YEAR) AS W26
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 27 AND A.YEAR = Z.YEAR) AS W27
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 28 AND A.YEAR = Z.YEAR) AS W28
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 29 AND A.YEAR = Z.YEAR) AS W29
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 30 AND A.YEAR = Z.YEAR) AS W30
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 31 AND A.YEAR = Z.YEAR) AS W31
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 32 AND A.YEAR = Z.YEAR) AS W32
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 33 AND A.YEAR = Z.YEAR) AS W33
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 34 AND A.YEAR = Z.YEAR) AS W34
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 35 AND A.YEAR = Z.YEAR) AS W35
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 36 AND A.YEAR = Z.YEAR) AS W36
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 37 AND A.YEAR = Z.YEAR) AS W37
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 38 AND A.YEAR = Z.YEAR) AS W38
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 39 AND A.YEAR = Z.YEAR) AS W39
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 40 AND A.YEAR = Z.YEAR) AS W40
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 41 AND A.YEAR = Z.YEAR) AS W41
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 42 AND A.YEAR = Z.YEAR) AS W42
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 43 AND A.YEAR = Z.YEAR) AS W43
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 44 AND A.YEAR = Z.YEAR) AS W44
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 45 AND A.YEAR = Z.YEAR) AS W45
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 46 AND A.YEAR = Z.YEAR) AS W46
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 47 AND A.YEAR = Z.YEAR) AS W47
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 48 AND A.YEAR = Z.YEAR) AS W48
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 49 AND A.YEAR = Z.YEAR) AS W49
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 50 AND A.YEAR = Z.YEAR) AS W50
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 51 AND A.YEAR = Z.YEAR) AS W51
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 52 AND A.YEAR = Z.YEAR) AS W52
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 1 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W1
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 2 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W2
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 3 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W3
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 4 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W4
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 5 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W5
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 6 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W6
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 7 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W7
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 8 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W8
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 9 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W9
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 10 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W10
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 11 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W11
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 12 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W12
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 13 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W13
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 14 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W14
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 15 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W15
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 16 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W16
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 17 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W17
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 18 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W18
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 19 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W19
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 20 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W20
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 21 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W21
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 22 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W22
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 23 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W23
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 24 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W24
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 25 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W25
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 26 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W26
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 27 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W27
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 28 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W28
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 29 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W29
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 30 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W30
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 31 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W31
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 32 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W32
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 33 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W33
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 34 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W34
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 35 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W35
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 36 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W36
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 37 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W37
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 38 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W38
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 39 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W39
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 40 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W40
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 41 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W41
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 42 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W42
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 43 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W43
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 44 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W44
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 45 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W45
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 46 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W46
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 47 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W47
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 48 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W48
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 49 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W49
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 50 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W50
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 51 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W51
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'DST' AND Z.SECT = 52 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W52
           FROM (SELECT #{planYear} AS YEAR FROM DUAL) A
         UNION ALL
         SELECT 2 AS ORD, 'CODY' AS TEAM, A.YEAR
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 1 AND A.YEAR = Z.YEAR) AS W1
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 2 AND A.YEAR = Z.YEAR) AS W2
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 3 AND A.YEAR = Z.YEAR) AS W3
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 4 AND A.YEAR = Z.YEAR) AS W4
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 5 AND A.YEAR = Z.YEAR) AS W5
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 6 AND A.YEAR = Z.YEAR) AS W6
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 7 AND A.YEAR = Z.YEAR) AS W7
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 8 AND A.YEAR = Z.YEAR) AS W8
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 9 AND A.YEAR = Z.YEAR) AS W9
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 10 AND A.YEAR = Z.YEAR) AS W10
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 11 AND A.YEAR = Z.YEAR) AS W11
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 12 AND A.YEAR = Z.YEAR) AS W12
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 13 AND A.YEAR = Z.YEAR) AS W13
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 14 AND A.YEAR = Z.YEAR) AS W14
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 15 AND A.YEAR = Z.YEAR) AS W15
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 16 AND A.YEAR = Z.YEAR) AS W16
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 17 AND A.YEAR = Z.YEAR) AS W17
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 18 AND A.YEAR = Z.YEAR) AS W18
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 19 AND A.YEAR = Z.YEAR) AS W19
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 20 AND A.YEAR = Z.YEAR) AS W20
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 21 AND A.YEAR = Z.YEAR) AS W21
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 22 AND A.YEAR = Z.YEAR) AS W22
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 23 AND A.YEAR = Z.YEAR) AS W23
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 24 AND A.YEAR = Z.YEAR) AS W24
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 25 AND A.YEAR = Z.YEAR) AS W25
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 26 AND A.YEAR = Z.YEAR) AS W26
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 27 AND A.YEAR = Z.YEAR) AS W27
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 28 AND A.YEAR = Z.YEAR) AS W28
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 29 AND A.YEAR = Z.YEAR) AS W29
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 30 AND A.YEAR = Z.YEAR) AS W30
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 31 AND A.YEAR = Z.YEAR) AS W31
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 32 AND A.YEAR = Z.YEAR) AS W32
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 33 AND A.YEAR = Z.YEAR) AS W33
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 34 AND A.YEAR = Z.YEAR) AS W34
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 35 AND A.YEAR = Z.YEAR) AS W35
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 36 AND A.YEAR = Z.YEAR) AS W36
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 37 AND A.YEAR = Z.YEAR) AS W37
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 38 AND A.YEAR = Z.YEAR) AS W38
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 39 AND A.YEAR = Z.YEAR) AS W39
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 40 AND A.YEAR = Z.YEAR) AS W40
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 41 AND A.YEAR = Z.YEAR) AS W41
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 42 AND A.YEAR = Z.YEAR) AS W42
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 43 AND A.YEAR = Z.YEAR) AS W43
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 44 AND A.YEAR = Z.YEAR) AS W44
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 45 AND A.YEAR = Z.YEAR) AS W45
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 46 AND A.YEAR = Z.YEAR) AS W46
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 47 AND A.YEAR = Z.YEAR) AS W47
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 48 AND A.YEAR = Z.YEAR) AS W48
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 49 AND A.YEAR = Z.YEAR) AS W49
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 50 AND A.YEAR = Z.YEAR) AS W50
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 51 AND A.YEAR = Z.YEAR) AS W51
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 52 AND A.YEAR = Z.YEAR) AS W52
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 1 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W1
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 2 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W2
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 3 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W3
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 4 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W4
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 5 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W5
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 6 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W6
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 7 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W7
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 8 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W8
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 9 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W9
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 10 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W10
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 11 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W11
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 12 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W12
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 13 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W13
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 14 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W14
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 15 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W15
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 16 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W16
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 17 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W17
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 18 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W18
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 19 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W19
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 20 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W20
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 21 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W21
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 22 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W22
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 23 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W23
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 24 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W24
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 25 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W25
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 26 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W26
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 27 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W27
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 28 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W28
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 29 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W29
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 30 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W30
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 31 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W31
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 32 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W32
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 33 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W33
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 34 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W34
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 35 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W35
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 36 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W36
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 37 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W37
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 38 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W38
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 39 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W39
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 40 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W40
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 41 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W41
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 42 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W42
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 43 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W43
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 44 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W44
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 45 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W45
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 46 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W46
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 47 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W47
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 48 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W48
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 49 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W49
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 50 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W50
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 51 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W51
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CODY' AND Z.SECT = 52 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W52
           FROM (SELECT #{planYear} AS YEAR FROM DUAL) A
         UNION ALL
         SELECT 3 AS ORD, 'CS' AS TEAM, A.YEAR
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 1 AND A.YEAR = Z.YEAR) AS W1
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 2 AND A.YEAR = Z.YEAR) AS W2
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 3 AND A.YEAR = Z.YEAR) AS W3
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 4 AND A.YEAR = Z.YEAR) AS W4
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 5 AND A.YEAR = Z.YEAR) AS W5
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 6 AND A.YEAR = Z.YEAR) AS W6
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 7 AND A.YEAR = Z.YEAR) AS W7
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 8 AND A.YEAR = Z.YEAR) AS W8
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 9 AND A.YEAR = Z.YEAR) AS W9
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 10 AND A.YEAR = Z.YEAR) AS W10
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 11 AND A.YEAR = Z.YEAR) AS W11
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 12 AND A.YEAR = Z.YEAR) AS W12
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 13 AND A.YEAR = Z.YEAR) AS W13
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 14 AND A.YEAR = Z.YEAR) AS W14
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 15 AND A.YEAR = Z.YEAR) AS W15
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 16 AND A.YEAR = Z.YEAR) AS W16
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 17 AND A.YEAR = Z.YEAR) AS W17
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 18 AND A.YEAR = Z.YEAR) AS W18
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 19 AND A.YEAR = Z.YEAR) AS W19
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 20 AND A.YEAR = Z.YEAR) AS W20
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 21 AND A.YEAR = Z.YEAR) AS W21
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 22 AND A.YEAR = Z.YEAR) AS W22
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 23 AND A.YEAR = Z.YEAR) AS W23
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 24 AND A.YEAR = Z.YEAR) AS W24
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 25 AND A.YEAR = Z.YEAR) AS W25
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 26 AND A.YEAR = Z.YEAR) AS W26
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 27 AND A.YEAR = Z.YEAR) AS W27
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 28 AND A.YEAR = Z.YEAR) AS W28
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 29 AND A.YEAR = Z.YEAR) AS W29
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 30 AND A.YEAR = Z.YEAR) AS W30
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 31 AND A.YEAR = Z.YEAR) AS W31
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 32 AND A.YEAR = Z.YEAR) AS W32
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 33 AND A.YEAR = Z.YEAR) AS W33
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 34 AND A.YEAR = Z.YEAR) AS W34
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 35 AND A.YEAR = Z.YEAR) AS W35
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 36 AND A.YEAR = Z.YEAR) AS W36
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 37 AND A.YEAR = Z.YEAR) AS W37
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 38 AND A.YEAR = Z.YEAR) AS W38
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 39 AND A.YEAR = Z.YEAR) AS W39
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 40 AND A.YEAR = Z.YEAR) AS W40
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 41 AND A.YEAR = Z.YEAR) AS W41
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 42 AND A.YEAR = Z.YEAR) AS W42
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 43 AND A.YEAR = Z.YEAR) AS W43
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 44 AND A.YEAR = Z.YEAR) AS W44
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 45 AND A.YEAR = Z.YEAR) AS W45
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 46 AND A.YEAR = Z.YEAR) AS W46
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 47 AND A.YEAR = Z.YEAR) AS W47
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 48 AND A.YEAR = Z.YEAR) AS W48
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 49 AND A.YEAR = Z.YEAR) AS W49
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 50 AND A.YEAR = Z.YEAR) AS W50
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 51 AND A.YEAR = Z.YEAR) AS W51
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 52 AND A.YEAR = Z.YEAR) AS W52
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 1 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W1
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 2 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W2
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 3 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W3
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 4 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W4
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 5 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W5
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 6 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W6
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 7 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W7
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 8 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W8
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 9 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W9
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 10 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W10
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 11 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W11
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 12 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W12
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 13 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W13
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 14 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W14
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 15 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W15
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 16 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W16
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 17 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W17
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 18 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W18
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 19 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W19
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 20 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W20
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 21 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W21
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 22 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W22
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 23 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W23
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 24 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W24
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 25 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W25
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 26 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W26
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 27 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W27
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 28 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W28
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 29 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W29
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 30 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W30
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 31 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W31
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 32 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W32
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 33 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W33
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 34 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W34
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 35 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W35
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 36 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W36
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 37 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W37
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 38 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W38
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 39 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W39
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 40 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W40
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 41 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W41
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 42 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W42
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 43 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W43
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 44 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W44
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 45 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W45
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 46 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W46
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 47 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W47
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 48 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W48
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 49 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W49
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 50 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W50
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 51 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W51
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'CS' AND Z.SECT = 52 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W52
           FROM (SELECT #{planYear} AS YEAR FROM DUAL) A
         UNION ALL
         SELECT 4 AS ORD, 'ALL' AS TEAM, A.YEAR
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 1 AND A.YEAR = Z.YEAR) AS W1
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 2 AND A.YEAR = Z.YEAR) AS W2
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 3 AND A.YEAR = Z.YEAR) AS W3
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 4 AND A.YEAR = Z.YEAR) AS W4
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 5 AND A.YEAR = Z.YEAR) AS W5
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 6 AND A.YEAR = Z.YEAR) AS W6
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 7 AND A.YEAR = Z.YEAR) AS W7
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 8 AND A.YEAR = Z.YEAR) AS W8
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 9 AND A.YEAR = Z.YEAR) AS W9
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 10 AND A.YEAR = Z.YEAR) AS W10
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 11 AND A.YEAR = Z.YEAR) AS W11
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 12 AND A.YEAR = Z.YEAR) AS W12
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 13 AND A.YEAR = Z.YEAR) AS W13
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 14 AND A.YEAR = Z.YEAR) AS W14
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 15 AND A.YEAR = Z.YEAR) AS W15
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 16 AND A.YEAR = Z.YEAR) AS W16
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 17 AND A.YEAR = Z.YEAR) AS W17
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 18 AND A.YEAR = Z.YEAR) AS W18
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 19 AND A.YEAR = Z.YEAR) AS W19
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 20 AND A.YEAR = Z.YEAR) AS W20
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 21 AND A.YEAR = Z.YEAR) AS W21
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 22 AND A.YEAR = Z.YEAR) AS W22
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 23 AND A.YEAR = Z.YEAR) AS W23
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 24 AND A.YEAR = Z.YEAR) AS W24
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 25 AND A.YEAR = Z.YEAR) AS W25
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 26 AND A.YEAR = Z.YEAR) AS W26
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 27 AND A.YEAR = Z.YEAR) AS W27
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 28 AND A.YEAR = Z.YEAR) AS W28
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 29 AND A.YEAR = Z.YEAR) AS W29
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 30 AND A.YEAR = Z.YEAR) AS W30
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 31 AND A.YEAR = Z.YEAR) AS W31
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 32 AND A.YEAR = Z.YEAR) AS W32
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 33 AND A.YEAR = Z.YEAR) AS W33
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 34 AND A.YEAR = Z.YEAR) AS W34
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 35 AND A.YEAR = Z.YEAR) AS W35
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 36 AND A.YEAR = Z.YEAR) AS W36
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 37 AND A.YEAR = Z.YEAR) AS W37
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 38 AND A.YEAR = Z.YEAR) AS W38
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 39 AND A.YEAR = Z.YEAR) AS W39
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 40 AND A.YEAR = Z.YEAR) AS W40
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 41 AND A.YEAR = Z.YEAR) AS W41
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 42 AND A.YEAR = Z.YEAR) AS W42
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 43 AND A.YEAR = Z.YEAR) AS W43
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 44 AND A.YEAR = Z.YEAR) AS W44
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 45 AND A.YEAR = Z.YEAR) AS W45
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 46 AND A.YEAR = Z.YEAR) AS W46
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 47 AND A.YEAR = Z.YEAR) AS W47
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 48 AND A.YEAR = Z.YEAR) AS W48
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 49 AND A.YEAR = Z.YEAR) AS W49
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 50 AND A.YEAR = Z.YEAR) AS W50
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 51 AND A.YEAR = Z.YEAR) AS W51
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 52 AND A.YEAR = Z.YEAR) AS W52
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 1 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W1
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 2 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W2
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 3 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W3
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 4 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W4
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 5 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W5
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 6 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W6
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 7 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W7
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 8 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W8
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 9 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W9
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 10 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W10
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 11 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W11
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 12 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W12
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 13 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W13
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 14 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W14
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 15 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W15
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 16 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W16
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 17 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W17
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 18 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W18
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 19 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W19
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 20 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W20
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 21 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W21
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 22 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W22
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 23 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W23
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 24 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W24
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 25 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W25
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 26 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W26
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 27 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W27
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 28 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W28
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 29 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W29
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 30 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W30
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 31 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W31
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 32 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W32
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 33 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W33
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 34 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W34
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 35 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W35
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 36 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W36
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 37 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W37
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 38 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W38
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 39 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W39
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 40 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W40
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 41 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W41
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 42 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W42
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 43 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W43
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 44 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W44
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 45 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W45
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 46 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W46
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 47 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W47
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 48 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W48
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 49 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W49
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 50 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W50
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 51 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W51
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 1 AND Z.TEAM = 'ALL' AND Z.SECT = 52 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS W52
           FROM (SELECT #{planYear} AS YEAR FROM DUAL) A
         ) A
  ORDER BY A.ORD
@@ -356,63 +356,63 @@ SELECT A.ORD, A.TEAM, A.YEAR AS PLAN_YEAR
      , A.M1, A.M2, A.M3, A.M4, A.M5, A.M6, A.M7, A.M8, A.M9, A.M10, A.M11, A.M12
   FROM (
         SELECT 1 AS ORD, 'DST' AS TEAM, A.YEAR
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 1 AND A.YEAR = Z.YEAR) AS M1
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 2 AND A.YEAR = Z.YEAR) AS M2
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 3 AND A.YEAR = Z.YEAR) AS M3
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 4 AND A.YEAR = Z.YEAR) AS M4
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 5 AND A.YEAR = Z.YEAR) AS M5
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 6 AND A.YEAR = Z.YEAR) AS M6
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 7 AND A.YEAR = Z.YEAR) AS M7
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 8 AND A.YEAR = Z.YEAR) AS M8
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 9 AND A.YEAR = Z.YEAR) AS M9
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 10 AND A.YEAR = Z.YEAR) AS M10
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 11 AND A.YEAR = Z.YEAR) AS M11
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 12 AND A.YEAR = Z.YEAR) AS M12
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 1 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M1
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 2 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M2
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 3 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M3
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 4 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M4
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 5 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M5
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 6 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M6
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 7 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M7
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 8 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M8
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 9 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M9
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 10 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M10
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 11 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M11
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'DST' AND Z.SECT = 12 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M12
           FROM (SELECT #{planYear} AS YEAR FROM DUAL) A
         UNION ALL
         SELECT 2 AS ORD, 'CODY' AS TEAM, A.YEAR
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 1 AND A.YEAR = Z.YEAR) AS M1
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 2 AND A.YEAR = Z.YEAR) AS M2
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 3 AND A.YEAR = Z.YEAR) AS M3
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 4 AND A.YEAR = Z.YEAR) AS M4
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 5 AND A.YEAR = Z.YEAR) AS M5
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 6 AND A.YEAR = Z.YEAR) AS M6
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 7 AND A.YEAR = Z.YEAR) AS M7
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 8 AND A.YEAR = Z.YEAR) AS M8
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 9 AND A.YEAR = Z.YEAR) AS M9
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 10 AND A.YEAR = Z.YEAR) AS M10
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 11 AND A.YEAR = Z.YEAR) AS M11
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 12 AND A.YEAR = Z.YEAR) AS M12
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 1 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M1
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 2 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M2
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 3 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M3
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 4 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M4
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 5 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M5
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 6 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M6
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 7 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M7
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 8 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M8
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 9 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M9
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 10 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M10
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 11 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M11
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CODY' AND Z.SECT = 12 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M12
           FROM (SELECT #{planYear} AS YEAR FROM DUAL) A
         UNION ALL
         SELECT 3 AS ORD, 'CS' AS TEAM, A.YEAR
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 1 AND A.YEAR = Z.YEAR) AS M1
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 2 AND A.YEAR = Z.YEAR) AS M2
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 3 AND A.YEAR = Z.YEAR) AS M3
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 4 AND A.YEAR = Z.YEAR) AS M4
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 5 AND A.YEAR = Z.YEAR) AS M5
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 6 AND A.YEAR = Z.YEAR) AS M6
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 7 AND A.YEAR = Z.YEAR) AS M7
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 8 AND A.YEAR = Z.YEAR) AS M8
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 9 AND A.YEAR = Z.YEAR) AS M9
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 10 AND A.YEAR = Z.YEAR) AS M10
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 11 AND A.YEAR = Z.YEAR) AS M11
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 12 AND A.YEAR = Z.YEAR) AS M12
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 1 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M1
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 2 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M2
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 3 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M3
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 4 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M4
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 5 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M5
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 6 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M6
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 7 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M7
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 8 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M8
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 9 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M9
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 10 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M10
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 11 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M11
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'CS' AND Z.SECT = 12 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M12
           FROM (SELECT #{planYear} AS YEAR FROM DUAL) A
         UNION ALL
         SELECT 4 AS ORD, 'ALL' AS TEAM, A.YEAR
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 1 AND A.YEAR = Z.YEAR) AS M1
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 2 AND A.YEAR = Z.YEAR) AS M2
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 3 AND A.YEAR = Z.YEAR) AS M3
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 4 AND A.YEAR = Z.YEAR) AS M4
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 5 AND A.YEAR = Z.YEAR) AS M5
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 6 AND A.YEAR = Z.YEAR) AS M6
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 7 AND A.YEAR = Z.YEAR) AS M7
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 8 AND A.YEAR = Z.YEAR) AS M8
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 9 AND A.YEAR = Z.YEAR) AS M9
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 10 AND A.YEAR = Z.YEAR) AS M10
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 11 AND A.YEAR = Z.YEAR) AS M11
-             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 12 AND A.YEAR = Z.YEAR) AS M12
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 1 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M1
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 2 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M2
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 3 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M3
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 4 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M4
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 5 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M5
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 6 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M6
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 7 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M7
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 8 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M8
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 9 AND A.YEAR  = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M9
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 10 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M10
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 11 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M11
+             , (SELECT NVL(ROUND(AVG(Z.ACC), 0), 0) || '%' FROM SCM0063S Z WHERE Z.GBN = 2 AND Z.TEAM = 'ALL' AND Z.SECT = 12 AND A.YEAR = Z.YEAR<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox} </if>) AS M12
           FROM (SELECT #{planYear} AS YEAR FROM DUAL) A
         ) A
  ORDER BY A.ORD
@@ -445,7 +445,7 @@ SELECT 'W' || LPAD(CASE WHEN A.START_WEEK <![CDATA[ <= ]]> 0 THEN 52 + A.START_W
      , (SELECT #{week} - MAX(WEEK) + 1 AS END_WEEK FROM SCM0062M WHERE YEAR = #{year} AND GBN = 1) B
 </select>
 <select id="selectSalesPlanAccuracyWeeklyDetail" parameterType="Map" resultType="egovMap">
-SELECT A.TEAM, A.STOCK_CODE, SUM(NVL(A.W0, 0)) AS SALES_ORD_QTY, A.ACC AS SALES_ACC_PER
+SELECT A.TEAM, A.STOCK_CODE, SUM(NVL(A.W0, 0)) AS SALES_ORD_QTY, A.ACC || '%' AS SALES_ACC_PER
      , #{startWeek} AS START_WEEK
      , #{endWeek} AS END_WEEK
      , SUM(A.W1 ) AS W1 , SUM(A.W2 ) AS W2 , SUM(A.W3 ) AS W3 , SUM(A.W4 ) AS W4 , SUM(A.W5 ) AS W5 , SUM(A.W6 ) AS W6 , SUM(A.W7 ) AS W7 , SUM(A.W8 ) AS W8
@@ -475,6 +475,9 @@ SELECT A.TEAM, A.STOCK_CODE, SUM(NVL(A.W0, 0)) AS SALES_ORD_QTY, A.ACC AS SALES_
          WHERE Z.YEAR = #{weeklyYear}
            AND Z.TEAM = #{team}
            AND Z.SECT = #{weeklyWeek}
+	<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''">
+           AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox}
+	</if>
            AND Z.GBN = 1
         ) A
  GROUP BY A.TEAM, A.STOCK_CODE, A.ACC
@@ -509,7 +512,7 @@ SELECT 'W' || LPAD(CASE WHEN A.START_WEEK <![CDATA[ <= ]]> 0 THEN 52 + A.START_W
      , (SELECT #{week} - MAX(WEEK) AS END_WEEK FROM SCM0062M WHERE YEAR = #{year} AND GBN = 2) B
 </select>
 <select id="selectSalesPlanAccuracyMonthlyDetail" parameterType="Map" resultType="egovMap">
-SELECT A.TEAM, A.STOCK_CODE, SUM(NVL(A.W0, 0)) AS SALES_ORD_QTY, A.ACC AS SALES_ACC_PER
+SELECT A.TEAM, A.STOCK_CODE, SUM(NVL(A.W0, 0)) AS SALES_ORD_QTY, A.ACC || '%' AS SALES_ACC_PER
      , #{startWeek} AS START_WEEK
      , #{endWeek} AS END_WEEK
      , SUM(A.W1 ) AS W1 , SUM(A.W2 ) AS W2 , SUM(A.W3 ) AS W3 , SUM(A.W4 ) AS W4 , SUM(A.W5 ) AS W5 , SUM(A.W6 ) AS W6 , SUM(A.W7 ) AS W7 , SUM(A.W8 ) AS W8
@@ -539,6 +542,9 @@ SELECT A.TEAM, A.STOCK_CODE, SUM(NVL(A.W0, 0)) AS SALES_ORD_QTY, A.ACC AS SALES_
          WHERE Z.YEAR = #{monthlyYear}
            AND Z.TEAM = #{team}
            AND Z.SECT = #{monthlyMonth}
+	<if test="scmStockTypeCbBox != null and scmStockTypeCbBox != ''">
+           AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox}
+	</if>
            AND Z.GBN = 2
         ) A
  GROUP BY A.TEAM, A.STOCK_CODE, A.ACC
@@ -876,6 +882,7 @@ SELECT D.CODE_NAME AS STOCK_TYPE_NAME
      , C.CODE_NAME AS STOCK_CATEGORY_NAME
      , A.STOCK_CODE
      , B.STK_DESC AS STOCK_NAME
+     , A.PURCH_PRC
      , A.TOT_AMT
      , A.TRAN_AMT
      , A.HAND_AMT
@@ -908,6 +915,31 @@ SELECT D.CODE_NAME AS STOCK_TYPE_NAME
    AND D.CODE_ID = #{stockTypeId}
 	</if>
  ORDER BY B.STK_TYPE_ID, B.STK_CTGRY_ID, A.STOCK_CODE
+</select>
+<select id="selectScmCurrency" parameterType="Map" resultType="egovMap">
+SELECT A.CODE_ID
+     , TO_NUMBER(A.CODE) AS CURR
+  FROM SYS0013M A
+ WHERE A.CODE_MASTER_ID = 407
+</select>
+<update id="updateScmCurrency" parameterType="Map">
+UPDATE SYS0013M
+   SET CODE = #{curr}
+ WHERE CODE_ID = #{codeId}
+</update>
+<resultMap id="scmInventoryMap" type="egovMap"></resultMap>
+<select id="executeScmInventory" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call SP_SCM_0057L_ITF0190(#{staValue, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=scmInventoryMap}
+                             , #{retValue, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=scmInventoryMap})
+ }
+</select>
+<resultMap id="scmDaysInInventoryMap" type="egovMap"></resultMap>
+<select id="executeScmDaysInInventory" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call SP_SCM_0058L_INSERT(#{staValue, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=scmInventoryMap}
+                            , #{retValue, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=scmDaysInInventoryMap})
+ }
 </select>
 
 </mapper>
