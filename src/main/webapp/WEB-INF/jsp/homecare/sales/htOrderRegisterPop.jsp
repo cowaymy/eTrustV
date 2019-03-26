@@ -604,12 +604,39 @@
 
         $('#appType').change(function() {
 
-           //Sales Order
-            $('#salesOrderForm').clearForm();
-
+           //Clear Care Service Order
             fn_clearSales();
 
+            var appTypeIdx = $("#appType option:selected").index();
+            console.log('appTypeIdx : ' + appTypeIdx);
+
+            if(appTypeIdx == 1 || appTypeIdx == 2 ){
+                  $('#ordQuantity').removeAttr("disabled");
+            }
+            else{
+                 $('#ordQuantity').prop("disabled", true);
+            }
+
         });
+
+        $('#ordQuantity').change(function() {
+
+            //Clear Care Service Order
+            $('#installDur').val('');
+            $('#ordProudct').val('0');
+            $('#ordPromo').val('');
+            $('#relatedNo').val('');
+            $('#trialNoChk').prop("checked", false);
+            $('#trialNo').val('');
+            $('#ordPrice').val('');
+            $('#ordPriceId').val('');
+            $('#ordPv').val('');
+            $('#ordRentalFees').val('');
+            $('#orgOrdRentalFees').val('');
+            $('#brandType').val('0');
+
+         });
+
 
         $('#ordProudct').change(function() {
         	 //Common.alert("Product value : "+ $('#ordProudct').val());
@@ -886,13 +913,14 @@
         var vECash = 0;
         var vPromoDiscPeriodTp = 0 ;
         var vPromoDiscPeriod = 0;
-        var vOrdPv = 0 ;
+        var vOrdPv = $('#ordPrice').val().trim();
         var vCustBillId = 0 ;
         var vMthRentAmt = 0;
         var vNorRntFee = 0 ;
         var vDiscRntFee = 0 ;
         var vGstChk = 0 ;
         var vProdBrand = "";
+        var vOrderQuantity = $('#ordQuantity').val();
 
         var brandTypeIdx = $("#brandType option:selected").index();
         if (brandTypeIdx == 11 ){
@@ -906,7 +934,7 @@
 
         custTypeId      : $('#typeId').val().trim(),
         raceId          : $('#raceId').val().trim(),
-
+        orderQuantity : vOrderQuantity,
     	 // SERVICE CARE ORDER
         appTypeId               : $('#appType').val(),
         refNo                   : $('#refereNo').val().trim(),
@@ -1360,22 +1388,20 @@
 
                 console.log("성공.");
 
-//              $("#ordPrice").removeClass("readonly");
-//              $("#ordPv").removeClass("readonly");
-//              $("#ordRentalFees").removeClass("readonly");
-
                 var discPrice = 0;
+                var appQty = $('#ordQuantity').val();
+                var discAddPrice = promoPriceInfo.promoAddDiscPrc;
 
-                discPrice = $('#orgOrdPrice').val() - ($('#orgOrdPrice').val() * promoPriceInfo.promoPrcPrcnt / 100);
+                discPrice = ($('#orgOrdPrice').val() - ($('#orgOrdPrice').val() * promoPriceInfo.promoPrcPrcnt / 100) - discAddPrice);
+
+
+                console.log('original Price -->  :'+ $('#orgOrdPrice').val());
                 console.log('discount Price -->  :'+ Math.floor(discPrice));
 
-                $("#ordPrice").val(Math.floor(discPrice));
-                //$("#ordPv").val(promoPriceInfo.orderPVPromo);
-                //$("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
-                //$("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
 
-                //$("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
-                //$("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
+                $("#ordPrice").val(Math.floor(discPrice));
+                $("#orgOrdPrice").val(Math.floor(discPrice));
+
             }
         });
     }
@@ -1415,8 +1441,9 @@
         $("#searchStkId").val(stkId);
         //$("#searchSrvPacId").val(srvPacId);
 
+         var orderQuantity = $('#ordQuantity').val();
         var orderPrice = 0;
-
+        var totalPrice = 0;
 
       if(appTypeVal == 3213){
         switch(stkId){
@@ -1444,8 +1471,10 @@
         }
       }
 
-                $("#ordPrice").val(orderPrice);
-                $("#orgOrdPrice").val(orderPrice);
+      totalPrice = orderPrice * orderQuantity;
+
+                $("#ordPrice").val(totalPrice);
+                $("#orgOrdPrice").val(totalPrice);
 
     }
 
@@ -1530,7 +1559,7 @@
 
     function fn_clearSales() {
         $('#installDur').val('');
-        $('#ordProudct').val('');
+        $('#ordProudct').val('0');
         $('#ordPromo').val('');
         $('#relatedNo').val('');
         $('#trialNoChk').prop("checked", false);
@@ -1540,6 +1569,8 @@
         $('#ordPv').val('');
         $('#ordRentalFees').val('');
         $('#orgOrdRentalFees').val('');
+        $('#ordQuantity').val('0');
+        $('#brandType').val('0');
     }
 
     //ClearControl_RentPaySet_ThirdParty
@@ -1891,8 +1922,14 @@
 <tr>
     <th scope="row"><spring:message code="sal.text.appType" /><span class="must">*</span></th>
     <td>
-    <p><select id="appType" name="appType" class="w100p"></select></p>
+    <p><select id="appType" name="appType" class="w100p"></select> </p>
 <!--     <p><select id="srvPacId" name="srvPacId" class="w100p"></select></p> -->
+       <p><select id="ordQuantity" name="ordQuantity" class="w100p" disabled>
+         <option value="0">Choose One</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+            </select>
+            </p>
     </td>
     <th scope="row"><spring:message code="sal.text.ordDate" /><span class="must">*</span></th>
     <td>${toDay}</td>
