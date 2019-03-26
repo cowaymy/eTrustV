@@ -731,21 +731,11 @@
             //var srvPacId    = $('#srvPacId').val();
 
 
-            if(promoIdIdx > 0 && promoIdVal != '0') {
-/*
-                if($("#exTrade").val() == '1') {
-                    $('#relatedNo').removeAttr("readonly").removeClass("readonly");
-                }
-*/
-                if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
-                    $('#trialNoChk').removeAttr("disabled");
-                }
 
-                fn_loadPromotionPrice(promoIdVal);
-            }
-            else {
                 fn_loadProductPrice(appTypeVal, stkIdVal);
-            }
+                fn_loadPromotionPrice(promoIdVal);
+
+
         });
 
 
