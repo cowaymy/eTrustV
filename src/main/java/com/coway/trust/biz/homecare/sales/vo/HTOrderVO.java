@@ -172,6 +172,8 @@ public class HTOrderVO implements Serializable {
 
 	private String dInstallDate;
 
+	private int orderQuantity;
+
 	private InstallationVO installationVO; //INSTALLATION MASTER
 
 	private GridDataSet<DocSubmissionVO> docSubmissionVOList;
@@ -834,6 +836,14 @@ public class HTOrderVO implements Serializable {
 
 	public void setdInstallDate(String dInstallDate) {
 		this.dInstallDate = dInstallDate;
+	}
+
+	public int getOrderQuantity() {
+		return orderQuantity;
+	}
+
+	public void setOrderQuantity(int orderQuantity) {
+		this.orderQuantity = orderQuantity;
 	}
 
 
