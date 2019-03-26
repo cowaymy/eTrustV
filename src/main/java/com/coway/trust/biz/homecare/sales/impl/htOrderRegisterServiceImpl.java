@@ -181,9 +181,11 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
     			if(promoInfo != null) {
 
     				BigDecimal promoPrcPrcnt;
+    				BigDecimal promoAddDiscPrc;
 
     				promoPrcPrcnt      = (BigDecimal)promoInfo.get("promoPrcPrcnt");
-
+    				promoAddDiscPrc  = (BigDecimal)promoInfo.get("promoAddDiscPrc");
+    				promoInfo.put("promoAddDiscPrc", promoAddDiscPrc);
     				promoInfo.put("promoPrcPrcnt", promoPrcPrcnt);
     				promoInfo.put("promoId", promoInfo.get("promoId"));
     				promoInfo.put("promoCode", promoInfo.get("promoCode"));
@@ -1414,6 +1416,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		int custTypeId   = orderVO.getCustTypeId();
 		int custRaceId   = orderVO.getRaceId();
 		int srvPacId = orderVO.getSrvPacId();
+		int orderQuantity = orderVO.getOrderQuantity();
 
 		//SERVICE ADDRESS INSTALLATION
 		String sInstallDate = installationVO.getPreDt();
@@ -1484,6 +1487,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		srvparams = new HashMap<String, Object>();
 		srvparams.put("appTypeId",orderVO.getAppTypeId());
 		srvparams.put("salesOrdId",salesOrdId);
+		srvparams.put("orderQuantity", orderQuantity);
 		EgovMap memberPackageInfo = htOrderRegisterMapper.selectMembershipPackageInfo(srvparams);
 
 		String startDt = (String) memberPackageInfo.get("strtDt");
