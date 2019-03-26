@@ -369,9 +369,11 @@ public class ScmReportController {
 		params.put("planYearMonth", planYearMonth);
 		LOGGER.debug("selectInventoryReportTotal : {}", params.toString());
 		
+		List<EgovMap> selectScmCurrency	= scmReportService.selectScmCurrency(params);
 		List<EgovMap> selectInventoryReportTotal	= scmReportService.selectInventoryReportTotal(params);
 		List<EgovMap> selectInventoryReportDetail	= scmReportService.selectInventoryReportDetail(params);
 		
+		map.put("selectScmCurrency", selectScmCurrency);
 		map.put("selectInventoryReportTotal", selectInventoryReportTotal);
 		map.put("selectInventoryReportDetail", selectInventoryReportDetail);
 		
@@ -391,10 +393,40 @@ public class ScmReportController {
 		params.put("planYearMonth", planYearMonth);
 		LOGGER.debug("selectInventoryReportDetail : {}", params.toString());
 		
+		List<EgovMap> selectScmCurrency	= scmReportService.selectScmCurrency(params);
 		List<EgovMap> selectInventoryReportDetail	= scmReportService.selectInventoryReportDetail(params);
 		
+		map.put("selectScmCurrency", selectScmCurrency);
 		map.put("selectInventoryReportDetail", selectInventoryReportDetail);
 		
 		return	ResponseEntity.ok(map);
+	}
+	@RequestMapping(value = "/updateScmCurrency.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateScmCurrency(@RequestBody Map<String, Object> params,	SessionVO sessionVO) {
+		
+		LOGGER.debug("updateScmCurrency : {}", params.toString());
+		
+		scmReportService.updateScmCurrency(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	@RequestMapping(value = "/executeScmInventory.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> executeScmInventory(@RequestBody Map<String, Object> params,	SessionVO sessionVO) {
+		
+		LOGGER.debug("executeScmInventory : {}", params.toString());
+		
+		scmReportService.executeScmInventory(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
 	}
 }
