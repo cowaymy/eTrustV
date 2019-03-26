@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
+<%@ page import="org.json.simple.JSONObject" %>
+<%@ page import="org.json.simple.JSONArray" %>
 <!-- char js -->
 <link href="${pageContext.request.contextPath}/resources/AUIGrid/AUIGrid_style.css" rel="stylesheet">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/Chart.min.js"></script>
@@ -14,24 +16,14 @@
 	text-align : right;
 	margin-top : -20px;
 }
+.my-columnRight1 {
+	text-align : right;
+	background : #CCFFFF;
+	margin-top : -20px;
+}
 .my-columnLeft {
 	text-align : left;
 	margin-top : -20px;
-}
-
-/* Grid Header style */
-.aui-grid-user-custom-header {
-	color : #ffffff !important;
-	text-align: center;
-	font-weight: bold;
-	font-size: 13px;
-	background: #000000;
-	background: -webkit-gradient(linear, left top, left bottom, from(#999999),to(#000000));
-	background: -webkit-linear-gradient(top, #999999, #000000);
-	background: -moz-linear-gradient(top, #999999, #000000);
-	background: -ms-linear-gradient(top, #999999, #000000);
-	background: -o-linear-gradient(top, #999999, #000000);
-	background: linear-gradient(top, #999999, #000000);
 }
 </style>
 
@@ -52,6 +44,15 @@ var detailHeader	= ["", "", "", "", "", "", "", "", ""];
 var m1		= null;	var m2		= null;	var m3		= null;
 var m4		= null;	var m5		= null;	var m6		= null;
 var m7		= null;	var m8		= null;	var m9		= null;
+
+var curr	= 0;
+var codeId	= "";
+
+var currObj	= new Object();
+var detObj	= new Object();
+//JSONObject jsonList	= new JSONObject();
+//JSONArray krwList	= new JSONArray();
+//JSONArray myrList	= new JSONArray();
 
 $(function(){
 	fnScmTotalPeriod();
@@ -88,27 +89,27 @@ function fnSearchTotal() {
 				 	}, {
 				 		//	Total Inventory
 				 		headerText : "Total Inventory",
-				 		headerStyle : "aui-grid-user-custom-header",
+				 		//headerStyle : "aui-grid-user-custom-header",
 				 		children :
 				 			[
 								{
 									headerText : totalHeader[0],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "totPrevQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : totalHeader[1],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "totCurrQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : "Gap",
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "totGapQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}
 				 			 ]
 				 	}, {
@@ -136,27 +137,27 @@ function fnSearchTotal() {
 				 	}, {
 				 		//	On-Hand
 				 		headerText : "On-Hand",
-				 		headerStyle : "aui-grid-user-custom-header",
+				 		//headerStyle : "aui-grid-user-custom-header",
 				 		children :
 				 			[
 								{
 									headerText : totalHeader[0],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "handPrevQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : totalHeader[1],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "handCurrQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : "Gap",
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "handGapQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}
 				 			 ]
 				 	}, {
@@ -184,27 +185,27 @@ function fnSearchTotal() {
 				 	}, {
 				 		//	Aging
 				 		headerText : "Aging",
-				 		headerStyle : "aui-grid-user-custom-header",
+				 		//headerStyle : "aui-grid-user-custom-header",
 				 		children :
 				 			[
 								{
 									headerText : totalHeader[0],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "agePrevQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : totalHeader[1],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "ageCurrQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : "Gap",
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "ageGapQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}
 				 			 ]
 				 	}, {
@@ -261,45 +262,45 @@ function fnSearchTotal() {
 					}, {
 				 		//	Amount
 				 		headerText : "Amount",
-				 		headerStyle : "aui-grid-user-custom-header",
+				 		//headerStyle : "aui-grid-user-custom-header",
 				 		children :
 				 			[
 								{
 									headerText : "Total Inventory",
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "totAmt",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : "In-Transit",
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "tranAmt",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : "On-Hand",
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "handAmt",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : "Days in Inventory",
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "daysAmt",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : "Aging",
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "ageAmt",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : "Stock B",
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "stkbAmt",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}
 				 			 ]
 				 	}, {
@@ -342,69 +343,69 @@ function fnSearchTotal() {
 				 	}, {
 				 		//	Sales Performance and Planning(Quantity)
 				 		headerText : "Sales Performance and Planning(Quantity)",
-				 		headerStyle : "aui-grid-user-custom-header",
+				 		//headerStyle : "aui-grid-user-custom-header",
 				 		children :
 				 			[
 								{
 									headerText : detailHeader[0],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "mm6IssQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : detailHeader[1],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "mm5IssQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : detailHeader[2],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "mm4IssQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : detailHeader[3],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "mm3IssQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : detailHeader[4],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "mm2IssQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : detailHeader[5],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "mm1IssQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : detailHeader[6],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "m0PlanQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : detailHeader[7],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "m1PlanQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : detailHeader[8],
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "m2PlanQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}, {
 									headerText : "Average Forwarding",
-									headerStyle : "aui-grid-user-custom-header",
+									//headerStyle : "aui-grid-user-custom-header",
 									dataField : "avgForwQty",
 									dataType : "numeric",
-									style : "my-columnRight"
+									style : "my-columnRight1"
 								}
 				 			 ]
 				 	}
@@ -418,7 +419,13 @@ function fnSearchTotal() {
 				});
 				//	Sales Plan Summary
 				AUIGrid.setGridData(myGridID1, result.selectInventoryReportTotal);
-				AUIGrid.setGridData(myGridID2, result.selectInventoryReportDetail);
+				//AUIGrid.setGridData(myGridID2, result.selectInventoryReportDetail);
+				currObj	= result.selectScmCurrency;
+				detObj	= result.selectInventoryReportDetail;
+				curr	= currObj[0].curr;
+				codeId	= currObj[0].codeId;
+				$("#curr").val(curr);
+				fnSetResult(result.selectInventoryReportDetail, result.selectScmCurrency);
 			});
 }
 function fnSearchDetail(stockTypeId) {
@@ -436,7 +443,63 @@ function fnSearchDetail(stockTypeId) {
 			, function(result) {
 				console.log(result);
 				
-				AUIGrid.setGridData(myGridID2, result.selectInventoryReportDetail);
+				//AUIGrid.setGridData(myGridID2, result.selectInventoryReportDetail);
+				currObj	= result.selectScmCurrency;
+				detObj	= result.selectInventoryReportDetail;
+				curr	= currObj[0].curr;
+				codeId	= currObj[0].codeId;
+				$("#curr").val(curr);
+				fnSetResult(result.selectInventoryReportDetail, result.selectScmCurrency);
+				//detKor	= result.selectInventoryReportDetail;
+			});
+}
+function fnExecuteBatch() {
+	var params	= {	staValue : 0, retValue : ""	};
+	
+	Common.ajax("POST"
+			, "/scm/executeScmInventory.do"
+			, params
+			, function(result) {
+				
+			}
+			, function(jqXHR, textStatus, errorThrown) {
+				try {
+					console.log("HeaderFail Status : " + jqXHR.status);
+					console.log("code : "        + jqXHR.responseJSON.code);
+					console.log("message : "     + jqXHR.responseJSON.message);
+					console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+				} catch ( e ) {
+					console.log(e);
+				}
+				Common.alert("Fail : " + jqXHR.responseJSON.message);
+			});
+}
+function fnSaveCurr() {
+	if ( 1 > $("#curr").val().length ) {
+		//Common.alert("<spring:message code='sys.msg.necessary' arguments='Currency' htmlEscape='false'/>");
+		return	false;
+	}
+	
+	var params	= {
+			curr : $("#curr").val()
+	};
+	console.log(params);
+	Common.ajax("POST"
+			, "/scm/updateScmCurrency.do"
+			, params
+			, function(result) {
+				
+			}
+			, function(jqXHR, textStatus, errorThrown) {
+				try {
+					console.log("HeaderFail Status : " + jqXHR.status);
+					console.log("code : "        + jqXHR.responseJSON.code);
+					console.log("message : "     + jqXHR.responseJSON.message);
+					console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+				} catch ( e ) {
+					console.log(e);
+				}
+				Common.alert("Fail : " + jqXHR.responseJSON.message);
 			});
 }
 function fnExcel(obj, fileName) {
@@ -531,6 +594,49 @@ function fnSetHeader() {
 	detailHeader[6]	= "Planned (" + monName[m7.getMonth()] + ")";
 	detailHeader[7]	= "Planned (" + monName[m8.getMonth()] + ")";
 	detailHeader[8]	= "Planned (" + monName[m9.getMonth() ] + ")";
+}
+function fnSetResult() {
+	var myr	= $("#curr").val();
+	var krwList	= new Array();
+	var myrList	= new Array();
+	
+	console.log("curr : " + curr + ", codeId : " + codeId + ", $('#curr').val() : " + $("#curr").val() + ", myr : " + myr);
+	myrList	= detObj;
+	for ( var i = 0 ; i < detObj.length ; i++ ) {
+		var temp	= new Object();
+		temp.stockTypeName	= detObj[i].stockTypeName;
+		temp.stockCategoryName	= detObj[i].stockCategoryName;
+		temp.stockCode	= detObj[i].stockCode;
+		temp.stockName	= detObj[i].stockName;
+		temp.totAmt		= ((parseInt(detObj[i].totAmt) * parseFloat(myr)) / 1000000).toFixed(1);
+		temp.tranAmt	= ((parseInt(detObj[i].tranAmt) * parseFloat(myr)) / 1000000).toFixed(1);
+		temp.handAmt	= ((parseInt(detObj[i].handAmt) * parseFloat(myr)) / 1000000).toFixed(1);
+		temp.daysAmt	= ((parseInt(detObj[i].daysAmt) * parseFloat(myr)) / 1000000).toFixed(1);
+		temp.ageAmt		= ((parseInt(detObj[i].ageAmt) * parseFloat(myr)) / 1000000).toFixed(1);
+		temp.stkbAmt	= ((parseInt(detObj[i].stkbAmt) * parseFloat(myr)) / 1000000).toFixed(1);
+		temp.totQty	= detObj[i].totQty;
+		temp.tranQty	= detObj[i].tranQty;
+		temp.handQty	= detObj[i].handQty;
+		temp.daysQty	= detObj[i].daysQty;
+		temp.ageQty	= detObj[i].ageQty;
+		temp.stkbQty	= detObj[i].stkbQty;
+		temp.mm6IssQty	= detObj[i].mm6IssQty;
+		temp.mm5IssQty	= detObj[i].mm5IssQty;
+		temp.mm4IssQty	= detObj[i].mm4IssQty;
+		temp.mm3IssQty	= detObj[i].mm3IssQty;
+		temp.mm2IssQty	= detObj[i].mm2IssQty;
+		temp.mm1IssQty	= detObj[i].mm1IssQty;
+		temp.m0PlanQty	= detObj[i].m0PlanQty;
+		temp.m1PlanQty	= detObj[i].m1PlanQty;
+		temp.m2PlanQty	= detObj[i].m2PlanQty;
+		krwList.push(temp);
+	}
+	
+	if ( "1" == $("input[name='gbn']:checked").val() ) {
+		AUIGrid.setGridData(myGridID2, krwList);
+	} else {
+		AUIGrid.setGridData(myGridID2, myrList);
+	}
 }
 
 /*
@@ -808,7 +914,12 @@ $(document).ready(function() {
 						<td>
 							<input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="planYearMonth" name="planYearMonth" onchange="fnPlanYearMonthChange();" />
 						</td>
-						<td colspan="4"></td>
+						<th scope="row"></th>
+						<td>
+							<label><input type="radio" name="gbn" id="gbn" value="2" checked="checked" onclick="fnSetResult()"/><span>Myr</span></label>
+							<label><input type="radio" name="gbn" id="gbn" value="1" onclick="fnSetResult()" /><span>Krw / Million</span></label>
+						</td>
+						<td colspan="2"></td>
 					</tr>
 				</tbody>
 			</table>						<!-- table type1 end -->
@@ -850,6 +961,9 @@ $(document).ready(function() {
 			<div id="inventory_report_total_wrap" style="height:186px;"></div>
 		</article>								<!-- article grid_wrap end -->
 		<ul class="right_btns">
+			<li><p id="btnExecute" class="btn_grid"><a onclick="fnExecuteBatch();">Execute Batch</a></p></li>
+			<li><input type="text" id="curr" name="curr" /></li>
+			<li><p id="btnSave" class="btn_grid"><a onclick="fnSaveCurr();">Save</a></p></li>
 			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'InventoryReport');">Excel</a></p></li>
 		</ul>
 		<article class="grid_wrap">				<!-- article grid_wrap start -->

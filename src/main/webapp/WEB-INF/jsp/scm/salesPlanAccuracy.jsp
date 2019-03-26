@@ -99,6 +99,7 @@ $(function(){
 		$("#period").text(currMonth + "M / " + currYear);
 	}
 	fnScmTotalPeriod();
+	fnScmStockTypeCbBox();
 });
 
 /*
@@ -912,7 +913,8 @@ function fnSearch() {
 		monthlyYear : monthlyYear,
 		monthlyMonth : monthlyMonth,
 		monthlyCalcYear : monthlyCalcYear,
-		monthlyCalcMonth : monthlyCalcMonth
+		monthlyCalcMonth : monthlyCalcMonth,
+		scmStockTypeCbBox : $("#scmStockTypeCbBox").val()
 	};
 	//console.log("fnSearch");
 	//console.log(params);
@@ -945,7 +947,8 @@ function fnSearchDetail() {
 		monthlyYear : monthlyYear,
 		monthlyMonth : monthlyMonth,
 		monthlyCalcYear : monthlyCalcYear,
-		monthlyCalcMonth : monthlyCalcMonth
+		monthlyCalcMonth : monthlyCalcMonth,
+		scmStockTypeCbBox : $("#scmStockTypeCbBox").val()
 	};
 	//console.log("fnSearchDetail");
 	//console.log(params);
@@ -1077,6 +1080,18 @@ function fnScmYearCbBox() {
 				id : "id",
 				name : "name",
 				chooseMessage : "Year"
+			}
+			, "");
+}
+function fnScmStockTypeCbBox() {
+	CommonCombo.make("scmStockTypeCbBox"
+			, "/scm/selectScmStockType.do"
+			, ""
+			, "61"
+			, {
+				id : "id",
+				name : "name",
+				chooseMessage : "ALL"
 			}
 			, "");
 }
@@ -1601,7 +1616,10 @@ $(document).ready(function() {
 							<label><input type="radio" name="gbn" id="gbn" value="1" checked="checked" onclick="fnRadioButton(1)" /><span>Weeky</span></label>
 							<label><input type="radio" name="gbn" id="gbn" value="2" onclick="fnRadioButton(2)"/><span>Monthly</span></label>
 						</td>
-						<td colspan="2" />
+						<th scope="row">Type</th>
+						<td>
+							<select class="w100p" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
+						</td>
 					</tr>
 				</tbody>
 			</table>						<!-- table type1 end -->
