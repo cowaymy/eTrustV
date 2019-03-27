@@ -28,6 +28,9 @@ var groupSeq = 1;
 
 var budgetFlg = 'N';
 
+var senderAmt = 0;
+var senderAmtArr;
+
 var fileList = new Array();
 <c:forEach var="file" items="${fileList}">
 var obj = {
@@ -104,16 +107,54 @@ $(document).ready(function(){
     });
 
     $("#sendAmount").click(function () {
+    	console.log("sendAmount :: click");
+    	console.log("sendAmount :: click :: " + $("#sendAmount").val());
+
     	var str = $("#sendAmount").val().replace(/,/gi, "");
         $("#sendAmount").val(str);
    });
 
     $("#sendAmount").blur(function () {
-    	var str = $("#sendAmount").val().replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+    	var str;
+
+    	console.log("sendAmount :: blur");
+    	console.log("sendAmount :: blur :: " + $("#sendAmount").val())
+
+    	senderAmt = $("#sendAmount").val();
+        if(!FormUtil.isEmpty(senderAmt)) {
+            senderAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1');
+            console.log("!FormUtil.isEmpty()");
+            senderAmtArr = senderAmt.split(".");
+
+            if(FormUtil.isEmpty(senderAmtArr[1]) || senderAmtArr[1].length == 0) {
+                senderAmt = senderAmtArr[0] + ".00";
+            } else if(!FormUtil.isEmpty(senderAmtArr[1]) && senderAmtArr[1].length == 1) {
+                senderAmt = senderAmtArr[0] + "." + senderAmtArr[1] + "0";
+            } else if(!FormUtil.isEmpty(senderAmtArr[1])) {
+                senderAmt = senderAmtArr[0] + "." + senderAmtArr[1];
+            }
+
+            console.log(senderAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+
+            if(senderAmtArr[0].length > 11) {
+                Common.alert("<spring:message code='budget.msg.inputAmount' />");
+                str = ""
+            } else {
+                str = senderAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+            }
+        }
+
         $("#sendAmount").val(str);
+
+        if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
+            $("#recvAmount").val(str);
+        }
    });
 
+    /*
      $("#sendAmount").change(function(){
+    	 console.log("sendAmount :: change");
+    	 console.log("sendAmount :: change :: " + $("#sendAmount").val())
         var str =""+ Math.floor($("#sendAmount").val() * 100)/100;
 
         var str2 = str.split(".");
@@ -135,7 +176,7 @@ $(document).ready(function(){
     	}
     	$("#sendAmount").val(str);
 
-    });
+    });*/
 
     //기본 콤보 셋팅
     fn_chnCombo('01');
@@ -1099,6 +1140,8 @@ function fn_popBudgetApproval(value){
                 textName : "promptText"
             };
 
+        $("#popAppvStus").val("C"); // adjustment Close
+        $("#popAppvPrcssStus").val("J"); //Approval
 
          Common.prompt("<spring:message code="budget.msg.reject" /> ", "", function(){
 
@@ -1107,9 +1150,6 @@ function fn_popBudgetApproval(value){
              fn_savePopApprove(value);
 
          }, null, option);
-
-        $("#popAppvStus").val("T"); // adjustment Close
-        $("#popAppvPrcssStus").val("J"); //Approval
     }
 
 }
