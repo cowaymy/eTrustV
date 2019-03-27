@@ -1223,17 +1223,17 @@
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telMTwo" /><span class="must">*</span></th>
     <td>
-    <input type="text" id="_asTelM_" name="asTelM" title="" placeholder="Telephone Number (Mobile)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
+    <input type="text" id="_asTelM_" name="asTelM" maxlength="11" title="" placeholder="Telephone Number (Mobile)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
     </td>
     <th scope="row"><spring:message code="sal.title.text.telRTwo" /><span class="must">*</span></th>
     <td>
-    <input type="text" id="_asTelR_" name="asTelR" title="" placeholder="Telephone Number (Residence)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
+    <input type="text" id="_asTelR_" name="asTelR" maxlength="11" title="" placeholder="Telephone Number (Residence)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telOTwo" /><span class="must">*</span></th>
     <td>
-    <input type="text" id="_asTelO_" name="asTelO" title="" placeholder="Telephone Number (Office)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
+    <input type="text" id="_asTelO_" name="asTelO" maxlength="11" title="" placeholder="Telephone Number (Office)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
     </td>
     <th scope="row"><spring:message code="sal.title.text.ext" /></th>
     <td>
@@ -1243,7 +1243,7 @@
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telFTwo" /><span class="must">*</span></th>
     <td>
-    <input type="text" id="_asTelF_" name="asTelF" title="" placeholder="Telephone Number (Fax)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
+    <input type="text" id="_asTelF_" name="asTelF" maxlength="11" title="" placeholder="Telephone Number (Fax)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/>
     </td>
     <th scope="row"><spring:message code="sal.title.text.emailTwo" /></th>
     <td>

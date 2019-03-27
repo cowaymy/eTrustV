@@ -15,7 +15,7 @@ var FormUtil = {
 	 */
 	checkNum : function(obj) {
 		var flag = false;
-		if (isNaN(obj.val())) {
+		if (isNaN(obj.val()) || obj.val().toUpperCase().includes("E") ) {
 			obj.val("");
 			obj.focus();
 			flag = true;
@@ -92,7 +92,7 @@ var FormUtil = {
 		return typeof str == 'undefined' || str === null
 				|| typeof str == 'string' && !str.trim();
 	},
-	
+
 	isNotEmpty : function(str) {
 		return !FormUtil.isEmpty(str);
 	},
@@ -144,7 +144,7 @@ var FormUtil = {
 
 	/**
 	 * 비밀 번호 연번 체크
-	 * 
+	 *
 	 * @param val
 	 */
 	checkPassword : function(val) {
@@ -214,7 +214,7 @@ var FormUtil = {
 
 	/**
 	 * 날짜 형식에 맞게 변경.
-	 * 
+	 *
 	 * @param date
 	 *            현재 날짜(yyyyMMddhhmm형식)
 	 * @param format
@@ -299,12 +299,12 @@ var FormUtil = {
 		}
 		return rtnDate;
 	},
-	
+
 	lpad : function (param, length, str) {
 	    param = param + "";
 	    return param.length >= length ? param : new Array(length - param.length + 1).join(str) + param;
 	},
-	
+
 	IsValidBankAccount : function(IssueBankID, AccNo) {
         var valid = true;
         var LengthOfAccNo = AccNo.length;
@@ -391,7 +391,7 @@ var FormUtil = {
         }
 
         var IsRejectAcc = false;
-        
+
         if(valid) {
             IsRejectAcc = FormUtil.IsRejectBankAccount(IssueBankID, AccNo);
             if (IsRejectAcc)
@@ -400,7 +400,7 @@ var FormUtil = {
 
         return valid;
 	},
-	
+
 	IsRejectBankAccount : function(IssueBankID, AccNo) {
         var isReject = false;
         if (IssueBankID == 21 || IssueBankID == 30) {
@@ -411,7 +411,7 @@ var FormUtil = {
         else if (IssueBankID == 3 || IssueBankID == 36) {
             //CIMB BANK
             if(AccNo.length == 14) {
-                if(AccNo.substring(11, 12).trim() == "9" 
+                if(AccNo.substring(11, 12).trim() == "9"
                 || AccNo.substring(11, 12).trim() == "2"
                 || AccNo.substring(11, 12).trim() == "1")
                     isReject = true;
@@ -435,11 +435,11 @@ var FormUtil = {
 
         return isReject;
 	},
-	
+
 	onlyNumber : function (event){
         event = event || window.event;
         var keyID = (event.which) ? event.which : event.keyCode;
-            if ( (keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 9  || keyID == 46 || keyID == 37 || keyID == 39 || keyID == 110 || keyID == 190){ 
+            if ( (keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 9  || keyID == 46 || keyID == 37 || keyID == 39 || keyID == 110 || keyID == 190){
                 return;
         }else{
                 return false;

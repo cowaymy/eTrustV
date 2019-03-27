@@ -462,7 +462,7 @@
             return false;
         }else{
             if($("#_telM1_").val() != ''){
-                if(FormUtil.checkNum($("#_telM1_"))){
+                if(FormUtil.checkNum($("#_telM1_")) || $("#_telM1_").includes("e")){
                     Common.alert('<spring:message code="sal.alert.msg.invaildTelNumM" />');
                     return false;
                 } else if($("#_telM1_").val().substring(0,3) == "015"){
@@ -1101,15 +1101,15 @@
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.title.text.telMTwo" /><span class="must">*</span></th>
-                                <td><input type="text" id="_asTelM_" name="asTelM" title="" placeholder="Telephone Number (Mobile)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
+                                <td><input type="text" id="_asTelM_" name="asTelM" maxlength="11" title="" placeholder="Telephone Number (Mobile)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.title.text.telRTwo" /></th>
-                                <td><input type="text" id="_asTelR_" name="asTelR" title="" placeholder="Telephone Number (Residence)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
+                                <td><input type="text" id="_asTelR_" name="asTelR" maxlength="11" title="" placeholder="Telephone Number (Residence)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.title.text.telOTwo" /></th>
-                                <td><input type="text" id="_asTelO_" name="asTelO" title="" placeholder="Telephone Number (Office)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
+                                <td><input type="text" id="_asTelO_" name="asTelO" maxlength="11" title="" placeholder="Telephone Number (Office)" class="w100p" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.title.text.ext" /></th>
