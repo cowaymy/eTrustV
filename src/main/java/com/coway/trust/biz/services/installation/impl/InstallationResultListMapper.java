@@ -12,6 +12,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 31/01/2019    ONGHC      1.0.1       - Restructure File
  * 06/03/2019    ONGHC      1.0.2       - Create getSalStat
  * 18/03/2019    ONGHC      1.0.3       - Create getINSNo
+ * 27/03/2019    ONGHC      1.0.4       - Create insertExchangeResult and updateExchangeEntry_2
  *********************************************************************************************/
 
 @Mapper("installationResultListMapper")
@@ -93,6 +94,8 @@ public interface InstallationResultListMapper {
 
   void insertInstallResult(Map<String, Object> params);
 
+  void insertExchangeResult(Map<String, Object> params);
+
   String selectMaxId(Map<String, Object> params);
 
   String selectMaxId_2(Map<String, Object> params);
@@ -100,6 +103,8 @@ public interface InstallationResultListMapper {
   void updateInstallEntry(Map<String, Object> params);
 
   void updateInstallEntry_2(Map<String, Object> params);
+
+  void updateExchangeEntry_2(Map<String, Object> params);
 
   void insertSirim(Map<String, Object> params);
 
@@ -230,6 +235,8 @@ public interface InstallationResultListMapper {
   void updateSal0004d(Map<String, Object> orderLog);
 
   void updateSal0004d_2(Map<String, Object> orderLog);
+
+  void updateLog0038d_2(Map<String, Object> orderLog);
 
   EgovMap checkExchangeCollLog(Map<String, Object> orderLog);
 
