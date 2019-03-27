@@ -3380,11 +3380,10 @@
   </select>
 
   <select id="getINSNo" parameterType="Map" resultType="String">
-    SELECT MAX(INSTALL_ENTRY_NO) AS INSNO
-    FROM SAL0046D
+    SELECT MAX(RETN_NO) AS INSNO
+    FROM LOG0038D
     WHERE SALES_ORD_ID = #{hidSalesOrderId}
-      AND STUS_CODE_ID = '4'
-    ORDER BY INSTALL_ENTRY_ID
+    ORDER BY STK_RETN_ID
   </select>
 
   <!-- SELECT END -->
@@ -3436,6 +3435,42 @@
             , #{updator}
             , #{adjAmount}
             , NULL
+    )
+  </insert>
+
+  <insert id="insertExchangeResult" parameterType="Map">
+    INSERT INTO LOG0039D (STK_RETN_RESULT_ID
+                        , STK_RETN_ID
+                        , STK_RETN_STUS_ID
+                        , STK_RETN_STK_IS_RET
+                        , STK_RETN_DT
+                        , STK_RETN_REM
+                        , STK_RETN_RESN_ID
+                        , STK_RETN_CC_ID
+                        , STK_RETN_CRT_DT
+                        , STK_RETN_CRT_USER_ID
+                        , STK_RETN_UPD_DT
+                        , STK_RETN_UPD_USER_ID
+                        , STK_RETN_RESULT_IS_SYNCH
+                        , STK_RETN_ALLOW_COMM
+                        , STK_RETN_CT_MEM_ID
+                        , OWNER_CODE
+    ) VALUES (LOG0039D_STK_RETN_RESULT_ID.NEXTVAL
+            , (SELECT MAX(STK_RETN_ID) FROM LOG0038D WHERE SALES_ORD_ID = #{salesOrderId} AND STUS_CODE_ID = '1')
+            , #{statusCodeId}
+            ,'1'
+            , TO_DATE(#{installDate},'DD-MM-YYYY')
+            , #{remark}
+            , '1630'
+            , '1781'
+            , SYSDATE
+            , #{creator}
+            , SYSDATE
+            , #{creator}
+            , '0'
+            , #{allowComm}
+            , #{ctid}
+            , '0'
     )
   </insert>
 
@@ -4391,6 +4426,18 @@
       AND SALES_ORD_ID = #{salesOrdId}
   </update>
 
+  <update id="updateExchangeEntry_2" parameterType="Map">
+    UPDATE LOG0038D SET STUS_CODE_ID = #{stusCodeId}
+                      , CALL_ENTRY_ID = #{callEntryId}
+                      , CT_ID = #{ctId}
+                      , UPD_DT = SYSDATE
+                      , UPD_USER_ID = #{creator}
+                      , APP_DT = TO_DATE(#{installDate},'DD-MM-YYYY')
+                      , REQST_DT = TO_DATE(#{installDate},'DD-MM-YYYY')
+    WHERE STK_RETN_ID = (SELECT MAX(STK_RETN_ID) FROM LOG0038D WHERE SALES_ORD_ID = #{salesOrdId} AND STUS_CODE_ID = '1')
+      AND SALES_ORD_ID = #{salesOrdId}
+  </update>
+
   <update id="updateInstallEntryEdit" parameterType="Map">
     UPDATE SAL0046D SET UPD_DT = SYSDATE
                       , UPD_USER_ID = #{user_id}
@@ -4419,6 +4466,14 @@
                       , SO_EXCHG_UPD_DT = SYSDATE
     WHERE SO_ID = #{salesOrderId}
       AND SO_EXCHG_ID = #{docId}
+  </update>
+
+  <update id="updateLog0038d_2" parameterType="Map">
+    UPDATE LOG0038D SET STUS_CODE_ID = '4'
+                      , UPD_USER_ID = #{logCreator}
+                      , UPD_DT = SYSDATE
+    WHERE SALES_ORD_ID = #{salesOrderId}
+      AND REF_ID = #{docId}
   </update>
 
   <update id="updateBillRem" parameterType="Map">
