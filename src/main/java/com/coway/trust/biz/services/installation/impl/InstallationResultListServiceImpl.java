@@ -37,6 +37,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 05/03/2019    ONGHC      1.0.2       - Add Param to isExchange
  * 06/03/2019    ONGHC      1.0.3       - Create getSalStat
  * 18/03/2019    ONGHC      1.0.4       - Set Previous INS number for OD55
+ * 27/03/2019    ONGHC      1.0.5       - To Update and Insert LOG0038D and LOG0039D
  *********************************************************************************************/
 
 @Service("installationResultListService")
@@ -2754,6 +2755,23 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
         isExchange.put("logCreator", orderLog.get("logCreator"));
         isExchange.put("salesOrderId", orderLog.get("salesOrderId"));
         installationResultListMapper.updateSal0004d_2(isExchange);
+        //installationResultListMapper.updateLog0038d_2(isExchange);
+
+        // INSERT LOG0038D RESULT
+        installResult.put("salesOrderId", orderLog.get("salesOrderId"));
+        installationResultListMapper.insertExchangeResult(installResult);
+
+        EgovMap l38dup = new EgovMap();
+        l38dup.put("stusCodeId", installResult.get("statusCodeId"));
+        l38dup.put("callEntryId", entry.get("callEntryId"));
+        l38dup.put("ctId", entry.get("ctId"));
+        l38dup.put("updated", installResult.get("created"));
+        l38dup.put("updator", installResult.get("creator"));
+        l38dup.put("installEntryId", installResult.get("entryId"));
+        l38dup.put("installDate", installResult.get("installDate"));
+        l38dup.put("salesOrdId", installResult.get("salesOrdId"));
+        installationResultListMapper.updateExchangeEntry_2(l38dup);
+
         Map<String, Object> exchgInfo = new HashMap<>();
         exchgInfo = installationResultListMapper.getExchangeInfo(isExchange);
 
