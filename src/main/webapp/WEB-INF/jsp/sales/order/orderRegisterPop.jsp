@@ -1326,6 +1326,12 @@
             msg += '<spring:message code="sal.alert.msg.certRefFile1" />' + '<spring:message code="sal.alert.msg.certRefFile2" />' + '<spring:message code="sal.alert.msg.certRefFile3" />';
         }
 
+        if(convToOrdYn == 'Y'){
+	        if(!fn_validHPCodyContactNumber()){
+	        	return false;
+	        }
+        }
+
         docSelCnt = fn_getDocChkCount();
 
         console.log('!@#### docSelCnt:'+docSelCnt);
@@ -2062,6 +2068,35 @@ console.log("vBindingNo" + vBindingNo);
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
+        return isValid;
+    }
+
+    function fn_validHPCodyContactNumber(){
+    	var isValid = true, msg = "";
+
+        if($('#custCntcTelM').val() && $('#srvCntcTelM').val()){
+
+
+            var contactNumber = {
+            		  contactNumber       : $('#custCntcTelM').val()
+            		, residenceNumber    : $('#custCntcTelR').val()
+            		, officeNumber          : $('#custCntcTelO').val()
+            		, faxNumber             : $('#custCntcTelF').val()
+            		, asContactNumber    : $('#srvCntcTelM').val()
+            		, asResidenceNumber : $('#srvCntcTelR').val()
+            		, asOfficeNumber       : $('#srvCntcTelO').val()
+            		, asFaxNumber          : $('#srvCntcTelF').val()
+            };
+
+            Common.ajax("GET", "/sales/customer/existingHPCodyMobile", contactNumber , function(result) {
+                if(result != null){
+                	isValid = false;
+                	msg += Common.
+                    alert("<spring:message code='sal.alert.msg.existingHPCodyMobileForSales' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
+
+                }
+           });
+        }
         return isValid;
     }
 /*******************************************************************************
