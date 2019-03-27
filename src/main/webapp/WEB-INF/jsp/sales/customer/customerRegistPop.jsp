@@ -521,6 +521,7 @@
             if($("#_telR_").val() != ''){
                    if(FormUtil.checkNum($("#_telR_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumR" />');
+                       return false;
                    } else if($("#_telR_").val().length < 9 || $("#_telR_").val().length > 12){
                        Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
                        return false;
@@ -532,6 +533,7 @@
             if($("#_telF_").val() != ''){
                    if(FormUtil.checkNum($("#_telF_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
+                       return false;
                    } else if($("#_telF_").val().length < 9 || $("#_telF_").val().length > 12){
                        Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
                        return false;
@@ -637,6 +639,7 @@
             if($("#_asTelR_").val() != ''){
                    if(FormUtil.checkNum($("#_asTelR_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumR" />');
+                       return false;
                    } else if($("#_asTelR_").val().length < 9 || $("#_asTelR_").val().length > 12){
                        Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
                        return false;
@@ -648,6 +651,7 @@
             if($("#_asTelF_").val() != ''){
                    if(FormUtil.checkNum($("#_asTelF_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
+                       return false;
                    } else if($("#_asTelF_").val().length < 9 || $("#_asTelF_").val().length > 12){
                        Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
                        return false;

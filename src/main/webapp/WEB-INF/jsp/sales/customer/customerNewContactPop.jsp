@@ -250,6 +250,7 @@ $(document).ready(function() {
                 }
            });
         }
+    }
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
