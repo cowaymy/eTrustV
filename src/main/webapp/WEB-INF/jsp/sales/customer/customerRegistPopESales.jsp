@@ -462,7 +462,7 @@
             return false;
         }else{
             if($("#_telM1_").val() != ''){
-                if(FormUtil.checkNum($("#_telM1_")) || $("#_telM1_").includes("e")){
+                if(FormUtil.checkNum($("#_telM1_")) ){
                     Common.alert('<spring:message code="sal.alert.msg.invaildTelNumM" />');
                     return false;
                 } else if($("#_telM1_").val().substring(0,3) == "015"){
@@ -506,7 +506,7 @@
                        return false;
                    }
                }
-           if($("#_telF_").val() != ''){
+           /* if($("#_telF_").val() != ''){
 
                    if(FormUtil.checkNum($("#_telF_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
@@ -518,7 +518,7 @@
                        Common.alert('<spring:message code="sal.alert.msg.telFNumExceedLengTwelve" />');
                        return false;
                    }
-               }
+               } */
         }
         console.log("5.  cmb type check");
         if($("#_cmbTypeId_").val() == '964'){
@@ -621,7 +621,7 @@
                        return false;
                    }
                }
-            if($("#_asTelF_").val() != ''){
+          /*   if($("#_asTelF_").val() != ''){
 
                    if(FormUtil.checkNum($("#_asTelF_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
@@ -633,7 +633,7 @@
                        Common.alert('<spring:message code="sal.alert.msg.telFNumExceedLengTwelveCustCare" />');
                        return false;
                    }
-               }
+               } */
         }
         console.log("12.  contact check");
 /*         if($("#_asTelM_").val() == '' && $("#_asTelR_").val() == '' && $("#_asTelF_").val() == '' && $("#_asTelO_").val() == '' ){
