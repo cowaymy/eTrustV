@@ -253,7 +253,7 @@
           LEFT JOIN SYS0038M T4 ON T4.STUS_CODE_ID = T1.STUS_CODE_ID
           LEFT JOIN SAL0071D T5 ON T5.SALES_ORD_ID = T1.SRV_ORD_ID
           LEFT JOIN SAL0003D T6 ON T6.CNTRCT_SALES_ORD_ID = T1.SRV_ORD_ID
-         WHERE T1.SALES_ORD_ID = #{salesOrdId}
+         WHERE T1.SRV_ORD_ID = #{salesOrdId}
          <if test='appTypeId != null and appTypeId !=0'>
            AND T1.APP_TYPE_ID = #{appTypeId}
          </if>
@@ -2530,5 +2530,35 @@ addr.STUS_CODE_ID = 9 AND
 addr.CUST_ID  = #{custId}
 
     </select>
+
+       <insert id="insert_Pay0007d" parameterType="Map" >
+                        INSERT INTO PAY0007D (
+                           BILL_ID, BILL_TYPE_ID, BILL_SO_ID,
+                           BILL_MEM_ID, BILL_AS_ID, BILL_PAY_TYPE_ID,
+                           BILL_NO, BILL_MEM_SHIP_NO, BILL_DT,
+                           BILL_AMT, BILL_REM, BILL_IS_PAID,
+                           BILL_IS_COMM, UPD_USER_ID, UPD_DT,
+                           SYNC_CHK, COURS_ID, STUS_ID)
+                        VALUES (
+                           PAY0007D_SEQ.NEXTVAL,
+                           #{billTypeId},
+                           #{billSoId},
+                           #{billMemId},
+                           #{billAsId},
+                           #{billPayTypeId},
+                           #{billNo},
+                           #{billMemShipNo},
+                           #{billDt},
+                           #{billAmt},
+                           #{billRem},
+                           #{billIsPaid},
+                           #{billIsComm},
+                           #{updUserId},
+                           #{updDt},
+                           #{syncChk},
+                           #{coursId},
+                           #{stusId})
+     </insert>
+
 
 </mapper>
