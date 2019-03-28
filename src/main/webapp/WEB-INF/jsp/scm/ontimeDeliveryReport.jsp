@@ -39,6 +39,7 @@ var planWeek	= 0;
 
 $(function(){
 	fnScmTotalPeriod();
+	fnScmCdcCbBox();
 });
 
 /*
@@ -47,9 +48,10 @@ $(function(){
 function fnSearch() {
 	var params	= {
 			planYear : planYear,
-			planMonth : planMonth
+			planMonth : planMonth,
+			cdc : $("#scmCdcCbBox").val()
 	}
-	console.log(planMonth);
+	//console.log(planMonth);
 	Common.ajax("GET"
 			, "/scm/selectOntimeDelivery.do"
 			//, $("#MainForm").serialize()
@@ -61,12 +63,15 @@ function fnSearch() {
 				$("#issPoQty").text(AUIGrid.getCellValue(myGridID1, 0, currMonth));
 				$("#onTimeQty").text(AUIGrid.getCellValue(myGridID1, 1, currMonth));
 				$("#onTimeRate").text(AUIGrid.getCellValue(myGridID1, 2, currMonth));
-			});
+			}
+			, ""
+			, { async : true, isShowLabel : false });
 }
 function fnSearchDetail() {
 	var params	= {
 			planYear : planYear,
-			planMonth : planMonth
+			planMonth : planMonth,
+			cdc : $("#scmCdcCbBox").val()
 	}
 	Common.ajax("GET"
 			, "/scm/selectOntimeDeliveryDetail.do"
@@ -125,6 +130,18 @@ function fnPlanYear() {
 				id : "id",
 				name : "name",
 				chooseMessage : "Year"
+			}
+			, "");
+}
+function fnScmCdcCbBox() {
+	CommonCombo.make("scmCdcCbBox"
+			, "/scm/selectScmCdc.do"
+			, ""
+			, ""
+			, {
+				id : "id",
+				name : "name",
+				chooseMessage : "ALL"
 			}
 			, "");
 }
@@ -319,12 +336,20 @@ var detailLayout	=
 	 		headerText : "On-Time",
 	 		dataField : "onTimeChk",
 	 		renderer : {
-	 			type : "CheckBoxEditRenderer",
-	 			showLabel : false,
-	 			editable : false,
-	 			checkValue : 1,
-	 			unCheckValue : 0
-	 		}
+	 			type : "TemplateRenderer"
+	 		},
+	 		labelFunction : function (rowIndex, columnIndex, value, headerText, item) {
+ 				var template	= "<div class='status_result'>";
+ 				if ( "1" == value ) {
+ 					template	+= "<span id='circle' class='circle circle_blue'></span>";
+ 				} else if ( "0" == value ) {
+ 					template	+= "<span id='circle' class='circle circle_red'></span>";
+ 				} else {
+ 					template	+= "<span id='circle' class='circle circle_grey'></span>";
+ 				}
+ 				template	+= "</div>";
+ 				return	template
+ 			}
 	 	}, {
 	 		headerText : "Etc",
 	 		dataField : "etc",
@@ -336,7 +361,7 @@ $(document).ready(function() {
 	//	Summary Grid
 	myGridID1	= GridCommon.createAUIGrid("#summary_wrap", summaryLayout, "", summaryOptions);
 	AUIGrid.bind(myGridID1, "cellClick", function(event) {
-		if ( 0 != event.columnIndex ) {
+		if ( parseInt(currMonth) >= event.columnIndex ) {
 			if ( $("#planYear").val() == currYear ) {
 				if ( event.columnIndex <= currMonth ) {
 					planYear	= AUIGrid.getCellValue(myGridID1, event.rowIndex, "planYear");
@@ -414,7 +439,11 @@ $(document).ready(function() {
 						<td>
 							<select class="sel_year" id="planYear" name="planYear" onchange="fnChangeYear();"></select>
 						</td>
-						<td colspan="4" />
+						<th scope="row">CDC</th>
+						<td>
+							<select class="w100p" id="scmCdcCbBox" name="scmCdcCbBox"></select>
+						</td>
+						<td colspan="2" />
 					</tr>
 				</tbody>
 			</table>						<!-- table type1 end -->

@@ -481,7 +481,8 @@ function fnSaveCurr() {
 	}
 	
 	var params	= {
-			curr : $("#curr").val()
+			curr : $("#curr").val(),
+			codeId : codeId
 	};
 	console.log(params);
 	Common.ajax("POST"
@@ -916,8 +917,8 @@ $(document).ready(function() {
 						</td>
 						<th scope="row"></th>
 						<td>
-							<label><input type="radio" name="gbn" id="gbn" value="2" checked="checked" onclick="fnSetResult()"/><span>Myr</span></label>
-							<label><input type="radio" name="gbn" id="gbn" value="1" onclick="fnSetResult()" /><span>Krw / Million</span></label>
+							<label><input type="radio" name="gbn" id="gbn" value="2" checked="checked" onclick="fnSetResult()"/><span>MYR</span></label>
+							<label><input type="radio" name="gbn" id="gbn" value="1" onclick="fnSetResult()" /><span>KRW (Million)</span></label>
 						</td>
 						<td colspan="2"></td>
 					</tr>

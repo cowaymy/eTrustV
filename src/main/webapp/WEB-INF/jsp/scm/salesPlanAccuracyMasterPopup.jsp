@@ -73,8 +73,18 @@ function fnValidationCdcCheck() {
 	
 	return	result;
 }
+
 function fnClose() {
 	$("#salesPlanAccuracyMasterPopup").remove();
+	/*console.log(AUIGrid.isCreated(myGridID1));
+	console.log(AUIGrid.isCreated(myGridID2));
+	console.log(AUIGrid.isCreated(myGridID3));
+	console.log(AUIGrid.isCreated(myGridID4));*/
+	AUIGrid.destroy(myGridID1);
+	AUIGrid.destroy(myGridID2);
+	AUIGrid.destroy(myGridID3);
+	AUIGrid.destroy(myGridID4);
+	//location.reload();
 }
 
 /***************************************************[ Main GRID] ***************************************************/
@@ -284,6 +294,7 @@ $(document).ready(function() {
 			<!-- <li><p class="btn_blue"><a onclick="fnSearchPop();"><span class="search"></span>Search</a></p></li> -->
 			<li><p class="btn_blue"><a onclick="fnSave();"><span class="save"></span>Save</a></p></li>
 			<li><p class="btn_blue"><a onclick="fnClose();"><span class="close"></span>Close</a></p></li>
+			<!-- <li><p class="btn_blue"><a href="fnClose();">CLOSE</a></p></li> -->
 		</ul>
 	</header><!-- pop_header end -->
 	<section class="pop_body"><!-- pop_body start -->
