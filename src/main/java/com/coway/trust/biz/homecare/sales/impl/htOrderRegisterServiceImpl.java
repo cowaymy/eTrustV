@@ -1489,6 +1489,8 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		srvparams.put("salesOrdId",salesOrdId);
 		srvparams.put("orderQuantity", orderQuantity);
 		EgovMap memberPackageInfo = htOrderRegisterMapper.selectMembershipPackageInfo(srvparams);
+		srvparams.put("DOCNO", "19");
+	    EgovMap membershipBillNo = htOrderRegisterMapper.getCSEntryDocNo(srvparams);
 
 		String startDt = (String) memberPackageInfo.get("strtDt");
 		String expireDt = (String) memberPackageInfo.get("exprDt");
@@ -1496,8 +1498,10 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		Date startDt1 = df.parse(startDt.toString());
 		Date expireDt1 = df.parse(expireDt.toString());
 
+
     	if(srvMembershipSalesVO != null && srvMembershipSalesVO.getSrvStusCodeId() > 0) {
     		String membershipNo = htOrderRegisterMapper.selectDocNo(DocTypeConstants.MEMBERSHIP_NO);
+    		srvMembershipSalesVO.setSrvMemBillNo(String.valueOf(membershipBillNo.get("csno")));
     		srvMembershipSalesVO.setSrvFreq(4);
     		srvMembershipSalesVO.setSrvStartDt(startDt1);
     		srvMembershipSalesVO.setSrvExprDt(expireDt1);
@@ -1659,7 +1663,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	    param3.put("accBillCntrctId", "0");
 
 
-	    //SERVICE MEMBER LEDGER
+	    //SERVICE MEMBER LEDGER SAL0291D
 	     Map<String , Object> param4 = new HashMap<String , Object> ();
 
 	     param4.put("srvMemId",srvMembershipSalesVO.getSrvMemId());
@@ -1675,14 +1679,37 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
          param4.put("srvMemQotatId",srvMembershipSalesVO.getSrvMemQuotId());
          param4.put("r01","");
 
+
+         // SERVICE MEMBER BILL PAY0007D
+         Map<String, Object> param5 = new HashMap();
+
+         param5.put("billTypeId", "223"); //MEMBERSHIP BILL
+         param5.put("billSoId", salesOrdId);
+         param5.put("billMemId", srvMembershipSalesVO.getSrvMemId());
+         param5.put("billAsId", "0");
+         param5.put("billPayTypeId", "386"); // SERVICE MEMBERSHIP BILL
+         param5.put("billNo", srvMembershipSalesVO.getSrvMemBillNo());
+         param5.put("billMemShipNo", srvMembershipSalesVO.getSrvMemNo());
+         param5.put("billDt", new Date());
+         param5.put("billAmt", orderVO.getTotAmt());
+         param5.put("billRem", "");
+         param5.put("billIsPaid", "1");
+         param5.put("billIsComm", "0");
+         param5.put("updUserId", sessionVO.getUserId());
+         param5.put("updDt", new Date());
+         param5.put("syncChk", "0");
+         param5.put("coursId", "0");
+         param5.put("stusId", "1");
+
+
+
 	    htOrderRegisterMapper.insert_Pay0031d(param);
 	    htOrderRegisterMapper.insert_Pay0032d(param2);
 	    htOrderRegisterMapper.insert_Pay0016d(param3);
 	    htOrderRegisterMapper.insertAccSrvMemLedger(param4);
+	    htOrderRegisterMapper.insert_Pay0007d(param5);
 
         }
-
-
 
 		String appTypeName= "";
 		String invDocNo = "";
