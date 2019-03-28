@@ -1326,12 +1326,6 @@
             msg += '<spring:message code="sal.alert.msg.certRefFile1" />' + '<spring:message code="sal.alert.msg.certRefFile2" />' + '<spring:message code="sal.alert.msg.certRefFile3" />';
         }
 
-        if(convToOrdYn == 'Y'){
-	        if(!fn_validHPCodyContactNumber()){
-	        	return false;
-	        }
-        }
-
         docSelCnt = fn_getDocChkCount();
 
         console.log('!@#### docSelCnt:'+docSelCnt);
@@ -1345,31 +1339,64 @@
             msg += '<spring:message code="sal.alert.msg.docuChk" />';
         }
 
-        console.log('!@#### isValid'+isValid);
+        if(convToOrdYn == 'Y'){// if it is eKeyin order
+                if($('#custCntcTelM').val() && $('#srvCntcTelM').val()){
 
-        if(!isValid) {
-            Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
-        }
-        else {
+                    var contactNumber = {
+                              contactNumber       : $('#custCntcTelM').val()
+                            , residenceNumber    : $('#custCntcTelR').val()
+                            , officeNumber          : $('#custCntcTelO').val()
+                            , faxNumber             : $('#custCntcTelF').val()
+                            , asContactNumber    : $('#srvCntcTelM').val()
+                            , asResidenceNumber : $('#srvCntcTelR').val()
+                            , asOfficeNumber       : $('#srvCntcTelO').val()
+                            , asFaxNumber          : $('#srvCntcTelF').val()
+                    };
 
-            if($("#ordPromo option:selected").index() > 0) {
-                console.log('!@#### ordSaveBtn click START 00000');
-                if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
-                    console.log('!@#### ordSaveBtn click START 11111');
-                    $('#txtOldOrderID').val();
-                    $('#relatedNo').val();
-                    Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val()}, null, true);
+                    Common.ajax("GET", "/sales/customer/existingHPCodyMobile", contactNumber , function(result) {
+                        if(result != null){
+                            Common.confirm("<spring:message code='sal.alert.msg.existingHPCodyMobileForSales' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />",
+                            function(){
+                            	if(docSelCnt <= 0){
+                            		Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
+                            	}else{
+                            		Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+                            		}
+                            });
+                        }
+                         else{
+                             Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+                         }
+                    });
                 }
-                else {
-                    console.log('!@#### ordSaveBtn click START 22222');
-                    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
-                }
-            }
-            else {
-                console.log('!@#### ordSaveBtn click START 33333');
-                Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
-            }
-        }
+        }else{
+
+	        console.log('!@#### isValid'+isValid);
+
+	        if(!isValid) {
+	            Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
+	        }
+	        else {
+
+	            if($("#ordPromo option:selected").index() > 0) {
+	                console.log('!@#### ordSaveBtn click START 00000');
+	                if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
+	                    console.log('!@#### ordSaveBtn click START 11111');
+	                    $('#txtOldOrderID').val();
+	                    $('#relatedNo').val();
+	                    Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val()}, null, true);
+	                }
+	                else {
+	                    console.log('!@#### ordSaveBtn click START 22222');
+	                    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+	                }
+	            }
+	            else {
+	                console.log('!@#### ordSaveBtn click START 33333');
+	                Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+	            }
+	        }
+	    }
     }
 
 	function fn_popOrderDetail() {
