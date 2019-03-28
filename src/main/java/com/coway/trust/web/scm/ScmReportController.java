@@ -125,11 +125,15 @@ public class ScmReportController {
 		
 		Map<String, Object> map	= new HashMap<>();
 		
-		List<EgovMap> selectSalesPlanAccuracyWeeklyDetailHeader		= scmReportService.selectSalesPlanAccuracyWeeklyDetailHeader(params);
-		List<EgovMap> selectSalesPlanAccuracyMonthlyDetailHeader	= scmReportService.selectSalesPlanAccuracyMonthlyDetailHeader(params);
-		
-		map.put("selectSalesPlanAccuracyWeeklyDetailHeader", selectSalesPlanAccuracyWeeklyDetailHeader);
-		map.put("selectSalesPlanAccuracyMonthlyDetailHeader", selectSalesPlanAccuracyMonthlyDetailHeader);
+		if ( "1".equals(params.get("gbn").toString()) ) {
+			List<EgovMap> selectSalesPlanAccuracyWeeklyDetailHeader	= scmReportService.selectSalesPlanAccuracyWeeklyDetailHeader(params);
+			map.put("selectSalesPlanAccuracyDetailHeader", selectSalesPlanAccuracyWeeklyDetailHeader);
+		} else if ( "2".equals(params.get("gbn").toString()) ) {
+			List<EgovMap> selectSalesPlanAccuracyMonthlyDetailHeader	= scmReportService.selectSalesPlanAccuracyMonthlyDetailHeader(params);
+			map.put("selectSalesPlanAccuracyDetailHeader", selectSalesPlanAccuracyMonthlyDetailHeader);
+		} else {
+			LOGGER.debug("selectSalesPlanAccuracyDetailHeader : ERRRRRRRRRRRRRRRRRRRRRRRRROR", params.toString());
+		}
 		
 		return	ResponseEntity.ok(map);
 	}
@@ -142,62 +146,68 @@ public class ScmReportController {
 		Map<String, Object> weeklyParams	= new HashMap<>();
 		Map<String, Object> monthlyParams	= new HashMap<>();
 		
-		List<EgovMap> selectSalesPlanAccuracyWeeklySummary	= scmReportService.selectSalesPlanAccuracyWeeklySummary(params);
-		List<EgovMap> selectSalesPlanAccuracyMonthlySummary	= scmReportService.selectSalesPlanAccuracyMonthlySummary(params);
-		
-		//	Weekly Detail
-		List<EgovMap> selectWeekly16Week	= scmReportService.selectWeekly16Week(params);
-		
-		//	조회결과는 항상 17 ROW
-		//	i = 0 -> 클릭한 Summary Grid의 주차
-		//	i = 1 -> Detail Grid의 가장 처음(왼쪽) 주차
-		//	...
-		//	i = 16 -> Detail Grid의 가장 마지막(오른쪽) 주차
-		for ( int i = 0 ; i < selectWeekly16Week.size() ; i++ ) {
-			weeklyParams.put("planYear" + (i + 1), Integer.parseInt(selectWeekly16Week.get(i).get("scmYear").toString()));
-			weeklyParams.put("planWeek" + (i + 1), Integer.parseInt(selectWeekly16Week.get(i).get("scmWeek").toString()));
+		if ( "1".equals(params.get("gbn").toString()) ) {
+			weeklyParams.put("team", params.get("team").toString());
+			weeklyParams.put("weeklyYear", Integer.parseInt(params.get("weeklyYear").toString()));
+			weeklyParams.put("weeklyWeek", Integer.parseInt(params.get("weeklyWeek").toString()));
+			weeklyParams.put("scmStockTypeCbBox", Integer.parseInt(params.get("scmStockTypeCbBox").toString()));
+			
+			List<EgovMap> selectSalesPlanAccuracyWeeklySummary	= scmReportService.selectSalesPlanAccuracyWeeklySummary(params);
+			List<EgovMap> selectWeekly16Week	= scmReportService.selectWeekly16Week(params);
+			
+			//	조회결과는 항상 17 ROW
+			//	i = 0 -> 클릭한 Summary Grid의 주차
+			//	i = 1 -> Detail Grid의 가장 처음(왼쪽) 주차
+			//	...
+			//	i = 16 -> Detail Grid의 가장 마지막(오른쪽) 주차
+			for ( int i = 0 ; i < selectWeekly16Week.size() ; i++ ) {
+				weeklyParams.put("planYear" + (i + 1), Integer.parseInt(selectWeekly16Week.get(i).get("scmYear").toString()));
+				weeklyParams.put("planWeek" + (i + 1), Integer.parseInt(selectWeekly16Week.get(i).get("scmWeek").toString()));
+			}
+			weeklyParams.put("year", Integer.parseInt(selectWeekly16Week.get(0).get("scmYear").toString()));
+			weeklyParams.put("week", Integer.parseInt(selectWeekly16Week.get(0).get("scmWeek").toString()));
+			weeklyParams.put("ordFrom", Integer.parseInt(selectWeekly16Week.get(0).get("ordFrom").toString()));
+			weeklyParams.put("ordTo", Integer.parseInt(selectWeekly16Week.get(0).get("ordTo").toString()));
+			
+			List<EgovMap> selectWeeklyStartEnd	= scmReportService.selectWeeklyStartEnd(weeklyParams);
+			weeklyParams.put("startWeek", selectWeeklyStartEnd.get(0).get("startWeek").toString());
+			weeklyParams.put("endWeek", selectWeeklyStartEnd.get(0).get("endWeek").toString());
+			LOGGER.debug("selectSalesPlanAccuracy Weekly : {}", weeklyParams.toString());
+			List<EgovMap> selectSalesPlanAccuracyWeeklyDetail	= scmReportService.selectSalesPlanAccuracyWeeklyDetail(weeklyParams);
+			
+			map.put("selectSalesPlanAccuracySummary", selectSalesPlanAccuracyWeeklySummary);
+			map.put("selectSalesPlanAccuracyDetail", selectSalesPlanAccuracyWeeklyDetail);
+		} else if ( "2".equals(params.get("gbn").toString()) ) {
+			monthlyParams.put("team", params.get("team").toString());
+			monthlyParams.put("monthlyYear", Integer.parseInt(params.get("monthlyYear").toString()));
+			monthlyParams.put("monthlyMonth", Integer.parseInt(params.get("monthlyMonth").toString()));
+			monthlyParams.put("scmStockTypeCbBox", params.get("scmStockTypeCbBox").toString());
+			
+			List<EgovMap> selectSalesPlanAccuracyMonthlySummary	= scmReportService.selectSalesPlanAccuracyMonthlySummary(params);
+			List<EgovMap> selectMonthly16Week	= scmReportService.selectMonthly16Week(params);
+			
+			//	조회결과는 항상 16 ROW
+			//	planYear, planWeek 파라미터 세팅
+			for ( int i = 0 ; i < selectMonthly16Week.size() ; i++ ) {
+				monthlyParams.put("planYear" + (i + 1), Integer.parseInt(selectMonthly16Week.get(i).get("scmYear").toString()));
+				monthlyParams.put("planWeek" + (i + 1), Integer.parseInt(selectMonthly16Week.get(i).get("scmWeek").toString()));
+			}
+			monthlyParams.put("year", Integer.parseInt(selectMonthly16Week.get(0).get("scmYear").toString()));
+			monthlyParams.put("week", Integer.parseInt(selectMonthly16Week.get(0).get("scmWeek").toString()));
+			monthlyParams.put("ordFrom", Integer.parseInt(selectMonthly16Week.get(0).get("ordFrom").toString()));
+			monthlyParams.put("ordTo"  , Integer.parseInt(selectMonthly16Week.get(0).get("ordTo").toString()));
+			
+			List<EgovMap> selectMonthlyStartEnd	= scmReportService.selectMonthlyStartEnd(monthlyParams);
+			monthlyParams.put("startWeek", selectMonthlyStartEnd.get(0).get("startWeek").toString());
+			monthlyParams.put("endWeek", selectMonthlyStartEnd.get(0).get("endWeek").toString());
+			LOGGER.debug("selectSalesPlanAccuracy Monthly : {}", monthlyParams.toString());
+			List<EgovMap> selectSalesPlanAccuracyMonthlyDetail	= scmReportService.selectSalesPlanAccuracyMonthlyDetail(monthlyParams);
+			
+			map.put("selectSalesPlanAccuracySummary", selectSalesPlanAccuracyMonthlySummary);
+			map.put("selectSalesPlanAccuracyDetail", selectSalesPlanAccuracyMonthlyDetail);
+		} else {
+			LOGGER.debug("selectSalesPlanAccuracy : ERRRRRRRRRRRRRRRRRRRRRRRRROR", params.toString());
 		}
-		weeklyParams.put("year", Integer.parseInt(selectWeekly16Week.get(0).get("scmYear").toString()));
-		weeklyParams.put("week", Integer.parseInt(selectWeekly16Week.get(0).get("scmWeek").toString()));
-		weeklyParams.put("ordFrom", Integer.parseInt(selectWeekly16Week.get(0).get("ordFrom").toString()));
-		weeklyParams.put("ordTo", Integer.parseInt(selectWeekly16Week.get(0).get("ordTo").toString()));
-		weeklyParams.put("team", params.get("team").toString());
-		weeklyParams.put("weeklyYear", Integer.parseInt(params.get("weeklyYear").toString()));
-		weeklyParams.put("weeklyWeek", Integer.parseInt(params.get("weeklyWeek").toString()));
-		List<EgovMap> selectWeeklyStartEnd	= scmReportService.selectWeeklyStartEnd(weeklyParams);
-		
-		weeklyParams.put("startWeek", selectWeeklyStartEnd.get(0).get("startWeek").toString());
-		weeklyParams.put("endWeek", selectWeeklyStartEnd.get(0).get("endWeek").toString());
-		LOGGER.debug("selectSalesPlanAccuracy Weekly : {}", weeklyParams.toString());
-		List<EgovMap> selectSalesPlanAccuracyWeeklyDetail	= scmReportService.selectSalesPlanAccuracyWeeklyDetail(weeklyParams);
-		
-		//	Monthly Detail
-		List<EgovMap> selectMonthly16Week	= scmReportService.selectMonthly16Week(params);
-		
-		//	조회결과는 항상 16 ROW
-		//	planYear, planWeek 파라미터 세팅
-		for ( int i = 0 ; i < selectMonthly16Week.size() ; i++ ) {
-			monthlyParams.put("planYear" + (i + 1), Integer.parseInt(selectMonthly16Week.get(i).get("scmYear").toString()));
-			monthlyParams.put("planWeek" + (i + 1), Integer.parseInt(selectMonthly16Week.get(i).get("scmWeek").toString()));
-		}
-		monthlyParams.put("year", Integer.parseInt(selectMonthly16Week.get(0).get("scmYear").toString()));
-		monthlyParams.put("week", Integer.parseInt(selectMonthly16Week.get(0).get("scmWeek").toString()));
-		monthlyParams.put("ordFrom", Integer.parseInt(selectMonthly16Week.get(0).get("ordFrom").toString()));
-		monthlyParams.put("ordTo"  , Integer.parseInt(selectMonthly16Week.get(0).get("ordTo").toString()));
-		monthlyParams.put("team", params.get("team").toString());
-		monthlyParams.put("monthlyYear", Integer.parseInt(params.get("monthlyYear").toString()));
-		monthlyParams.put("monthlyMonth", Integer.parseInt(params.get("monthlyMonth").toString()));
-		List<EgovMap> selectMonthlyStartEnd	= scmReportService.selectMonthlyStartEnd(monthlyParams);
-		
-		monthlyParams.put("startWeek", selectMonthlyStartEnd.get(0).get("startWeek").toString());
-		monthlyParams.put("endWeek", selectMonthlyStartEnd.get(0).get("endWeek").toString());
-		LOGGER.debug("selectSalesPlanAccuracy Monthly : {}", monthlyParams.toString());
-		List<EgovMap> selectSalesPlanAccuracyMonthlyDetail	= scmReportService.selectSalesPlanAccuracyMonthlyDetail(monthlyParams);
-		
-		map.put("selectSalesPlanAccuracyWeeklySummary", selectSalesPlanAccuracyWeeklySummary);
-		map.put("selectSalesPlanAccuracyMonthlySummary", selectSalesPlanAccuracyMonthlySummary);
-		map.put("selectSalesPlanAccuracyWeeklyDetail", selectSalesPlanAccuracyWeeklyDetail);
-		map.put("selectSalesPlanAccuracyMonthlyDetail", selectSalesPlanAccuracyMonthlyDetail);
 		
 		return	ResponseEntity.ok(map);
 	}
@@ -207,60 +217,68 @@ public class ScmReportController {
 		LOGGER.debug("selectSalesPlanAccuracyDetail : {}", params.toString());
 		
 		Map<String, Object> map	= new HashMap<>();
-		Map<String, Object> weeklyParams	= new HashMap<>();
-		Map<String, Object> monthlyParams	= new HashMap<>();
 		
-		//	Weekly Detail
-		List<EgovMap> selectWeekly16Week	= scmReportService.selectWeekly16Week(params);
-		
-		//	조회결과는 항상 17 ROW
-		//	i = 0 -> 클릭한 Summary Grid의 주차
-		//	i = 1 -> Detail Grid의 가장 처음(왼쪽) 주차
-		//	...
-		//	i = 16 -> Detail Grid의 가장 마지막(오른쪽) 주차
-		for ( int i = 0 ; i < selectWeekly16Week.size() ; i++ ) {
-			weeklyParams.put("planYear" + (i + 1), Integer.parseInt(selectWeekly16Week.get(i).get("scmYear").toString()));
-			weeklyParams.put("planWeek" + (i + 1), Integer.parseInt(selectWeekly16Week.get(i).get("scmWeek").toString()));
+		if ( "1".equals(params.get("gbn").toString()) ) {
+			Map<String, Object> weeklyParams	= new HashMap<>();
+			weeklyParams.put("team", params.get("team").toString());
+			weeklyParams.put("weeklyYear", Integer.parseInt(params.get("weeklyYear").toString()));
+			weeklyParams.put("weeklyWeek", Integer.parseInt(params.get("weeklyWeek").toString()));
+			weeklyParams.put("scmStockTypeCbBox", params.get("scmStockTypeCbBox").toString());
+			//	Weekly Detail
+			List<EgovMap> selectWeekly16Week	= scmReportService.selectWeekly16Week(params);
+			
+			//	조회결과는 항상 17 ROW
+			//	i = 0 -> 클릭한 Summary Grid의 주차
+			//	i = 1 -> Detail Grid의 가장 처음(왼쪽) 주차
+			//	...
+			//	i = 16 -> Detail Grid의 가장 마지막(오른쪽) 주차
+			for ( int i = 0 ; i < selectWeekly16Week.size() ; i++ ) {
+				weeklyParams.put("planYear" + (i + 1), Integer.parseInt(selectWeekly16Week.get(i).get("scmYear").toString()));
+				weeklyParams.put("planWeek" + (i + 1), Integer.parseInt(selectWeekly16Week.get(i).get("scmWeek").toString()));
+			}
+			weeklyParams.put("year", Integer.parseInt(selectWeekly16Week.get(0).get("scmYear").toString()));
+			weeklyParams.put("week", Integer.parseInt(selectWeekly16Week.get(0).get("scmWeek").toString()));
+			weeklyParams.put("ordFrom", Integer.parseInt(selectWeekly16Week.get(0).get("ordFrom").toString()));
+			weeklyParams.put("ordTo"  , Integer.parseInt(selectWeekly16Week.get(0).get("ordTo").toString()));
+			
+			List<EgovMap> selectWeeklyStartEnd	= scmReportService.selectWeeklyStartEnd(weeklyParams);
+			weeklyParams.put("startWeek", selectWeeklyStartEnd.get(0).get("startWeek").toString());
+			weeklyParams.put("endWeek", selectWeeklyStartEnd.get(0).get("endWeek").toString());
+			LOGGER.debug("selectSalesPlanAccuracyDetail Weekly : {}", weeklyParams.toString());
+			List<EgovMap> selectSalesPlanAccuracyWeeklyDetail	= scmReportService.selectSalesPlanAccuracyWeeklyDetail(weeklyParams);
+			
+			map.put("selectSalesPlanAccuracyDetail", selectSalesPlanAccuracyWeeklyDetail);
+		} else if ( "2".equals(params.get("gbn").toString()) ) {
+			Map<String, Object> monthlyParams	= new HashMap<>();
+			monthlyParams.put("team", params.get("team").toString());
+			monthlyParams.put("monthlyYear", Integer.parseInt(params.get("monthlyYear").toString()));
+			monthlyParams.put("monthlyMonth", Integer.parseInt(params.get("monthlyMonth").toString()));
+			monthlyParams.put("scmStockTypeCbBox", params.get("scmStockTypeCbBox").toString());
+			
+			//	Monthly Detail
+			List<EgovMap> selectMonthly16Week	= scmReportService.selectMonthly16Week(params);
+			
+			//	조회결과는 항상 16 ROW
+			//	1 ~ 16 ROW 전부 ORD_FROM, ORD_TO는 같은 값
+			for ( int i = 0 ; i < selectMonthly16Week.size() ; i++ ) {
+				monthlyParams.put("planYear" + (i + 1), Integer.parseInt(selectMonthly16Week.get(i).get("scmYear").toString()));
+				monthlyParams.put("planWeek" + (i + 1), Integer.parseInt(selectMonthly16Week.get(i).get("scmWeek").toString()));
+			}
+			monthlyParams.put("year", Integer.parseInt(selectMonthly16Week.get(0).get("scmYear").toString()));
+			monthlyParams.put("week", Integer.parseInt(selectMonthly16Week.get(0).get("scmWeek").toString()));
+			monthlyParams.put("ordFrom", Integer.parseInt(selectMonthly16Week.get(0).get("ordFrom").toString()));
+			monthlyParams.put("ordTo"  , Integer.parseInt(selectMonthly16Week.get(0).get("ordTo").toString()));
+			
+			List<EgovMap> selectMonthlyStartEnd	= scmReportService.selectMonthlyStartEnd(monthlyParams);
+			monthlyParams.put("startWeek", selectMonthlyStartEnd.get(0).get("startWeek").toString());
+			monthlyParams.put("endWeek", selectMonthlyStartEnd.get(0).get("endWeek").toString());
+			LOGGER.debug("selectSalesPlanAccuracyDetail Monthly : {}", monthlyParams.toString());
+			List<EgovMap> selectSalesPlanAccuracyMonthlyDetail	= scmReportService.selectSalesPlanAccuracyMonthlyDetail(monthlyParams);
+			
+			map.put("selectSalesPlanAccuracyMonthlyDetail", selectSalesPlanAccuracyMonthlyDetail);
+		} else {
+			LOGGER.debug("selectSalesPlanAccuracyDetail : ERRRRRRRRRRRRRRRRRRRRRRRRROR", params.toString());
 		}
-		weeklyParams.put("year", Integer.parseInt(selectWeekly16Week.get(0).get("scmYear").toString()));
-		weeklyParams.put("week", Integer.parseInt(selectWeekly16Week.get(0).get("scmWeek").toString()));
-		weeklyParams.put("ordFrom", Integer.parseInt(selectWeekly16Week.get(0).get("ordFrom").toString()));
-		weeklyParams.put("ordTo"  , Integer.parseInt(selectWeekly16Week.get(0).get("ordTo").toString()));
-		weeklyParams.put("team", params.get("team").toString());
-		weeklyParams.put("weeklyYear", Integer.parseInt(params.get("weeklyYear").toString()));
-		weeklyParams.put("weeklyWeek", Integer.parseInt(params.get("weeklyWeek").toString()));
-		List<EgovMap> selectWeeklyStartEnd	= scmReportService.selectWeeklyStartEnd(weeklyParams);
-		
-		weeklyParams.put("startWeek", selectWeeklyStartEnd.get(0).get("startWeek").toString());
-		weeklyParams.put("endWeek", selectWeeklyStartEnd.get(0).get("endWeek").toString());
-		LOGGER.debug("selectSalesPlanAccuracyDetail Weekly : {}", weeklyParams.toString());
-		List<EgovMap> selectSalesPlanAccuracyWeeklyDetail	= scmReportService.selectSalesPlanAccuracyWeeklyDetail(weeklyParams);
-		
-		//	Monthly Detail
-		List<EgovMap> selectMonthly16Week	= scmReportService.selectMonthly16Week(params);
-		
-		//	조회결과는 항상 16 ROW
-		//	1 ~ 16 ROW 전부 ORD_FROM, ORD_TO는 같은 값
-		for ( int i = 0 ; i < selectMonthly16Week.size() ; i++ ) {
-			monthlyParams.put("planYear" + (i + 1), Integer.parseInt(selectMonthly16Week.get(i).get("scmYear").toString()));
-			monthlyParams.put("planWeek" + (i + 1), Integer.parseInt(selectMonthly16Week.get(i).get("scmWeek").toString()));
-		}
-		monthlyParams.put("year", Integer.parseInt(selectMonthly16Week.get(0).get("scmYear").toString()));
-		monthlyParams.put("week", Integer.parseInt(selectMonthly16Week.get(0).get("scmWeek").toString()));
-		monthlyParams.put("ordFrom", Integer.parseInt(selectMonthly16Week.get(0).get("ordFrom").toString()));
-		monthlyParams.put("ordTo"  , Integer.parseInt(selectMonthly16Week.get(0).get("ordTo").toString()));
-		monthlyParams.put("team", params.get("team").toString());
-		monthlyParams.put("monthlyYear", Integer.parseInt(params.get("monthlyYear").toString()));
-		monthlyParams.put("monthlyMonth", Integer.parseInt(params.get("monthlyMonth").toString()));
-		List<EgovMap> selectMonthlyStartEnd	= scmReportService.selectMonthlyStartEnd(weeklyParams);
-		
-		monthlyParams.put("startWeek", selectMonthlyStartEnd.get(0).get("startWeek").toString());
-		monthlyParams.put("endWeek", selectMonthlyStartEnd.get(0).get("endWeek").toString());
-		LOGGER.debug("selectSalesPlanAccuracyDetail Monthly : {}", monthlyParams.toString());
-		List<EgovMap> selectSalesPlanAccuracyMonthlyDetail	= scmReportService.selectSalesPlanAccuracyMonthlyDetail(monthlyParams);
-		
-		map.put("selectSalesPlanAccuracyWeeklyDetail", selectSalesPlanAccuracyWeeklyDetail);
-		map.put("selectSalesPlanAccuracyMonthlyDetail", selectSalesPlanAccuracyMonthlyDetail);
 		
 		return	ResponseEntity.ok(map);
 	}
