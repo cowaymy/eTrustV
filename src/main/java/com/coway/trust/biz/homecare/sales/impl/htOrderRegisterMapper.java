@@ -185,4 +185,6 @@ public interface htOrderRegisterMapper {
 
 	EgovMap selectHTCovergPostCode(Map<String, Object> params);
 
+	void insert_Pay0007d(Map<String, Object> param5);
+
 }
