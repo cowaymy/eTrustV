@@ -265,6 +265,7 @@ var targetFinalBillColumnLayout = [
 { dataField:"discountAmt" ,headerText:"<spring:message code='pay.head.discountAmt'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
 { dataField:"srvMemId" ,headerText:"<spring:message code='pay.head.serviceMembershipId'/>" ,editable : false , width : 150 , visible : false },
 { dataField:"trNo" ,headerText:"TR No" ,editable : false , width : 150 },
+{ dataField:"trDt" ,headerText:"TR Issue Date" ,editable : false , width : 150 },
 { dataField:"collectorCode" ,headerText:"Collector Code" ,editable : false , width : 250 },
 { dataField:"collectorId" ,headerText:"Collector Id" ,editable : false , width : 150 ,visible : false},
 { dataField:"allowComm" ,headerText:"Commission" ,editable : false , width : 150}
@@ -1204,6 +1205,7 @@ function addRentalToFinal(){
                      item.billAsId    = 0;
  					 item.srvMemId	=0;
                      item.trNo =  $("#rentalkeyInTrNo").val() ;
+                     item.trDt =  $("#rentalkeyInTrIssueDate").val() ;
                      item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
                      item.collectorId = $("#rentalkeyInCollMemId").val() ;
                      item.allowComm = $("#rentalcashIsCommChk").val() ;
@@ -1248,6 +1250,7 @@ function addRentalToFinal(){
                         item.billAsId    = 0;
 						item.srvMemId	=0;
 	                    item.trNo =  $("#rentalkeyInTrNo").val() ;
+                        item.trDt =  $("#rentalkeyInTrIssueDate").val() ;
 	                    item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
 	                    item.collectorId = $("#rentalkeyInCollMemId").val() ;
 	                    item.allowComm = $("#rentalcashIsCommChk").val() ;
@@ -1288,6 +1291,7 @@ function addRentalToFinal(){
                     item.billAsId    = 0;
 					item.srvMemId	=0;
                     item.trNo =  $("#rentalkeyInTrNo").val() ;
+                    item.trDt =  $("#rentalkeyInTrIssueDate").val() ;
                     item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
                     item.allowComm = $("#rentalcashIsCommChk").val() ;
@@ -1306,7 +1310,8 @@ function addRentalToFinal(){
     }
 
     recalculatePaymentTotalAmt();
-
+    $("#rentalkeyInTrNo").clearForm() ;
+    $("#rentalkeyInTrIssueDate").clearForm() ;
 }
 
 
@@ -1524,6 +1529,7 @@ function addOutToFinal(){
                 item.billAsId    = 0;
 				item.srvMemId	=0;
                 item.trNo =  $("#outkeyInTrNo").val() ;
+                item.trDt =  $("#outkeyInTrIssueDate").val() ;
                 item.collectorCode = $("#outkeyInCollMemNm").val() ;
                 item.collectorId = $("#outkeyInCollMemId").val() ;
                 item.allowComm = $("#outcashIsCommChk").val() ;
@@ -1540,7 +1546,8 @@ function addOutToFinal(){
     }
 
     recalculatePaymentTotalAmt();
-
+    $("#outkeyInTrNo").clearForm() ;
+    $("#outkeyInTrIssueDate").clearForm() ;
 }
 
 
@@ -1925,6 +1932,7 @@ function addSrvcToFinal(){
                      item.billAsId    = 0;
  					item.srvMemId	=0;
                     item.trNo =  $("#srvckeyInTrNo").val() ;
+                    item.trDt =  $("#srvckeyInTrIssueDate").val() ;
                     item.collectorCode = $("#srvckeyInCollMemNm").val() ;
                     item.collectorId = $("#srvckeyInCollMemId").val() ;
                     item.allowComm = $("#srvccashIsCommChk").val() ;
@@ -1963,6 +1971,7 @@ function addSrvcToFinal(){
                     item.billAsId    = 0;
 					item.srvMemId	=0;
                     item.trNo =  $("#srvckeyInTrNo").val() ;
+                    item.trDt =  $("#srvckeyInTrIssueDate").val() ;
                     item.collectorCode = $("#srvckeyInCollMemNm").val() ;
                     item.collectorId = $("#srvckeyInCollMemId").val() ;
                     item.allowComm = $("#srvccashIsCommChk").val() ;
@@ -2002,6 +2011,7 @@ function addSrvcToFinal(){
                     item.billAsId    = 0;
 					item.srvMemId	=0;
                     item.trNo =  $("#srvckeyInTrNo").val() ;
+                    item.trDt =  $("#srvckeyInTrIssueDate").val() ;
                     item.collectorCode = $("#srvckeyInCollMemNm").val() ;
                     item.collectorId = $("#srvckeyInCollMemId").val() ;
                     item.allowComm = $("#srvccashIsCommChk").val() ;
@@ -2046,6 +2056,7 @@ function addSrvcToFinal(){
                         item.billAsId    = 0;
 						item.srvMemId	=0;
 	                    item.trNo =  $("#srvckeyInTrNo").val() ;
+	                    item.trDt =  $("#srvckeyInTrIssueDate").val() ;
 	                    item.collectorCode = $("#srvckeyInCollMemNm").val() ;
 	                    item.collectorId = $("#srvckeyInCollMemId").val() ;
 	                    item.allowComm = $("#srvccashIsCommChk").val() ;
@@ -2064,7 +2075,8 @@ function addSrvcToFinal(){
     }
 
     recalculatePaymentTotalAmt();
-
+    $("#srvckeyInTrNo").clearForm() ;
+    $("#srvckeyInTrIssueDate").clearForm() ;
 }
 
 
@@ -2282,6 +2294,7 @@ function addBillToFinal(){
                         item.billAsId    = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAsId");
 						item.srvMemId	=0;
                         item.trNo =  $("#billkeyInTrNo").val() ;
+                        item.trDt =  $("#billkeyInTrIssueDate").val() ;
                         item.collectorCode = $("#billkeyInCollMemNm").val() ;
                         item.collectorId = $("#billkeyInCollMemId").val() ;
                         item.allowComm = $("#billcashIsCommChk").val() ;
@@ -2299,7 +2312,8 @@ function addBillToFinal(){
         }
 
         recalculatePaymentTotalAmt();
-
+        $("#billkeyInTrNo").clearForm() ;
+        $("#billkeyInTrIssueDate").clearForm() ;
     }
 }
 
@@ -2639,6 +2653,7 @@ function addOutSrvcToFinal(){
 	            item.billAsId    = 0;
 				item.srvMemId	=AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
                 item.trNo =  $("#outSrvckeyInTrNo").val() ;
+                item.trDt =  $("#outSrvckeyInTrIssueDate").val() ;
                 item.collectorCode = $("#outSrvckeyInCollMemNm").val() ;
                 item.collectorId = $("#outSrvckeyInCollMemId").val() ;
                 item.allowComm = $("#outSrvccashIsCommChk").val() ;
@@ -2677,6 +2692,7 @@ function addOutSrvcToFinal(){
 	            item.billAsId    = 0;
 				item.srvMemId	=AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
                 item.trNo =  $("#outSrvckeyInTrNo").val() ;
+                item.trDt =  $("#outSrvckeyInTrIssueDate").val() ;
                 item.collectorCode = $("#outSrvckeyInCollMemNm").val() ;
                 item.collectorId = $("#outSrvckeyInCollMemId").val() ;
                 item.allowComm = $("#outSrvccashIsCommChk").val() ;
@@ -2693,7 +2709,8 @@ function addOutSrvcToFinal(){
     }
 
     recalculatePaymentTotalAmt();
-
+    $("#outSrvckeyInTrNo").clearForm() ;
+    $("#outSrvckeyInTrIssueDate").clearForm() ;
 }
 
 
@@ -2850,10 +2867,16 @@ $.fn.clearForm = function() {
                         <tr>
                   <th scope="row">TR No.</th>
                         <td>
-                            <input id="rentalkeyInTrNo" name="rentalkeyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                            <input id="rentalkeyInTrNo" name="rentalkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
                         </td>
 
               </tr>
+              <tr>
+                                <th scope="row">TR Issue Date</th>
+                        <td>
+                            <input id="rentalkeyInTrIssueDate" name="rentalkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
+                        </td>
+                        </tr>
               <tr>
                   <th scope="row">Collector</th>
                   <td>
@@ -2935,10 +2958,16 @@ $.fn.clearForm = function() {
                          <tr>
                         <th scope="row">TR No.</th>
                         <td>
-                            <input id="outkeyInTrNo" name="outkeyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                            <input id="outkeyInTrNo" name="outkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
                         </td>
 
               </tr>
+              <tr>
+                                <th scope="row">TR Issue Date</th>
+                        <td>
+                            <input id="outkeyInTrIssueDate" name="outkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
+                        </td>
+                        </tr>
               <tr>
                   <th scope="row">Collector</th>
                   <td>
@@ -3031,10 +3060,16 @@ $.fn.clearForm = function() {
                         <tr>
                   <th scope="row">TR No.</th>
                         <td>
-                            <input id="srvckeyInTrNo" name="srvckeyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                            <input id="srvckeyInTrNo" name="srvckeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
                         </td>
 
               </tr>
+              <tr>
+                                <th scope="row">TR Issue Date</th>
+                        <td>
+                            <input id="srvckeyInTrIssueDate" name="srvckeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
+                        </td>
+                        </tr>
               <tr>
                   <th scope="row">Collector</th>
                   <td>
@@ -3121,10 +3156,16 @@ $.fn.clearForm = function() {
                         <tr>
                   <th scope="row">TR No.</th>
                         <td>
-                            <input id="billkeyInTrNo" name="billkeyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                            <input id="billkeyInTrNo" name="billkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
                         </td>
 
               </tr>
+              <tr>
+                                <th scope="row">TR Issue Date</th>
+                        <td>
+                            <input id="billkeyInTrIssueDate" name="billkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
+                        </td>
+                        </tr>
               <tr>
                   <th scope="row">Collector</th>
                   <td>
@@ -3202,10 +3243,16 @@ $.fn.clearForm = function() {
                         <tr>
                   <th scope="row">TR No.</th>
                         <td>
-                            <input id="outSrvckeyInTrNo" name="outSrvckeyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                            <input id="outSrvckeyInTrNo" name="outSrvckeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
                         </td>
 
               </tr>
+              <tr>
+                                <th scope="row">TR Issue Date</th>
+                        <td>
+                            <input id="outSrvckeyInTrIssueDate" name="outSrvckeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
+                        </td>
+                        </tr>
               <tr>
                   <th scope="row">Collector</th>
                   <td>
@@ -3389,7 +3436,7 @@ $.fn.clearForm = function() {
                             </td>
                             <th scope="row">TR Issue Date</th>
                             <td>
-                                <input id="cashTrIssueDate" name="cashTrIssueDate" type="text" title="" placeholder="" class="j_date w100p"  />
+                                <input id="cashTrIssueDate" name="cashTrIssueDate" type="text" title="" placeholder="" class="j_date w100p"  disabled/>
                             </td>
                         </tr>
                         <tr>
@@ -3501,7 +3548,7 @@ $.fn.clearForm = function() {
                             </td>
                             <th scope="row">TR Issue Date</th>
                             <td>
-                                <input id="chequeTrIssueDate" name="chequeTrIssueDate" type="text" title="" placeholder="" class="j_date w100p"  />
+                                <input id="chequeTrIssueDate" name="chequeTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" disabled />
                             </td>
                         </tr>
                         <tr>
@@ -3622,7 +3669,7 @@ $.fn.clearForm = function() {
 	                        </td>
 	                        <th scope="row">TR Issue Date</th>
 	                        <td>
-	                            <input id="onlineTrIssueDate" name="onlineTrIssueDate" type="text" title="" placeholder="" class="j_date w100p"  />
+	                            <input id="onlineTrIssueDate" name="onlineTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" disabled />
 	                        </td>
 	                    </tr>
 	                    <tr>

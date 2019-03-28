@@ -1456,7 +1456,8 @@
 			SRV_MEM_ID,
 			TR_NO,
 			COLL_MEM_ID,
-			ALLOW_COMM
+			ALLOW_COMM,
+			TR_ISSU_DT
 
         ) VALUES (
             PAY0241T_SEQ.NEXTVAL,
@@ -1487,7 +1488,8 @@
 			#{srvMemId},
             #{trNo},
             #{collectorId},
-            #{allowComm}
+            #{allowComm},
+            TO_DATE(#{trDt}, 'DD/MM/YYYY')
         )
     </insert>
 
