@@ -31,6 +31,7 @@ var targetSrvcDetGridID;
 var targetBillMstGridID;
 var targetOutSrvcMstGridID;
 var targetFinalBillGridID;
+var targetCareSrvcMstGridID;
 
 var maxSeq = 0; //billing ADD 될 시퀀스
 
@@ -91,6 +92,7 @@ $(document).ready(function(){
     targetBillMstGridID = GridCommon.createAUIGrid("target_bill_grid_wrap", targetBillMstColumnLayout,null,gridPros3);
 	targetOutSrvcMstGridID = GridCommon.createAUIGrid("target_outSrvc_grid_wrap", targetOutSrvcMstColumnLayout,null,gridPros3);
     targetFinalBillGridID = GridCommon.createAUIGrid("target_finalBill_grid_wrap", targetFinalBillColumnLayout,null,targetGridPros);
+    targetCareSrvcMstGridID = GridCommon.createAUIGrid("target_careSrvc_grid_wrap", targetCareSrvcMstColumnLayout,null,gridPros3);
 
     // Master Grid 셀 클릭시 이벤트
     AUIGrid.bind(targetFinalBillGridID, "cellClick", function( event ){
@@ -634,6 +636,21 @@ var columnLayout = [
 		{ dataField:"filterPaid" ,headerText:"<spring:message code='pay.head.filterPaid'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"}
 	];
 
+	//AUIGrid 칼럼 설정 : targetCareSrvcMstGridID
+    var targetCareSrvcMstColumnLayout = [
+                                         { dataField:"quotId" ,headerText:"<spring:message code='pay.head.quotationId'/>" ,editable : false , width : 100, visible : false },
+                                         { dataField:"cnvrMemId" ,headerText:"<spring:message code='pay.head.serviceMembershipId'/>" ,editable : false , width : 100, visible : false },
+                                         { dataField:"srvOrdId" ,headerText:"<spring:message code='pay.head.orderId'/>" ,editable : false , width : 100, visible : false },
+                                         { dataField:"quotNo" ,headerText:"<spring:message code='pay.head.quotationNumber'/>" ,editable : false , width : 150, visible : false },
+                                         { dataField:"srvOrdNo" ,headerText:"<spring:message code='pay.head.orderNumber'/>" ,editable : false , width : 150 },
+                                         { dataField:"custNm" ,headerText:"<spring:message code='pay.head.customerName'/>" ,editable : false , width : 250},
+                                         { dataField:"appTypeNm" ,headerText:"Application Type" ,editable : false , width : 200},
+                                         { dataField:"totAmt" ,headerText:"<spring:message code='pay.head.totalAmount'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},
+                                         { dataField:"packageCharge" ,headerText:"<spring:message code='pay.head.packageAmount'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},
+                                         { dataField:"packagePaid" ,headerText:"<spring:message code='pay.head.packagePaid'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},
+                                         { dataField:"filterCharge" ,headerText:"<spring:message code='pay.head.filterAmount'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},
+                                         { dataField:"filterPaid" ,headerText:"<spring:message code='pay.head.filterPaid'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"}
+                                ];
 
 	//AUIGrid 칼럼 설정 : targetFinalBillGridID
 	var targetFinalBillColumnLayout = [
@@ -919,6 +936,10 @@ function fn_rentalAdvMonthChangeTxt(){
 	function resetSrvcGrid(){
 	    AUIGrid.clearGridData(targetSrvcMstGridID);
 	    AUIGrid.clearGridData(targetSrvcDetGridID);
+	}
+
+	function resetCareSrvcGrid(){
+	    AUIGrid.clearGridData(targetCareSrvcMstGridID);
 	}
 
 	//Rental Amount 계산
@@ -2188,6 +2209,7 @@ function isDupPOSToFinal(){
         $("#srvcSearch").hide();
         $("#billSearch").hide();
 		$("#outSrvcSearch").hide();
+		$("#careSrvcSearch").hide();
 
         //Form 초기화
         $("#rentalSearchForm")[0].reset();
@@ -2195,6 +2217,7 @@ function isDupPOSToFinal(){
         $("#srvcSearchForm")[0].reset();
         $("#billSearchForm")[0].reset();
 		$("#outSrvcSearchForm")[0].reset();
+		$("#careSrvcSearchForm")[0].reset();
 
         //그리드 초기화
         resetRentalGrid();
@@ -2202,6 +2225,7 @@ function isDupPOSToFinal(){
         resetSrvcGrid();
         resetBillGrid();
 		resetOutSrvcGrid();
+		resetCareSrvcGrid();
 
         //금액 표시 초기화
         $("#rentalTotalAmtTxt").text("RM " + $.number(0,2));
@@ -2209,6 +2233,8 @@ function isDupPOSToFinal(){
         $("#srvcTotalAmtTxt").text("RM " + $.number(0,2));
         $("#billTotalAmtTxt").text("RM " + $.number(0,2));
 		$("#outSrvcTotalAmtTxt").text("RM " + $.number(0,2));
+		$("#careSrvcTotalAmtTxt").text("RM " + $.number(0,2));
+
 
         if(appType == 1 ){
             $("#rentalSearch").show();
@@ -2227,7 +2253,10 @@ function isDupPOSToFinal(){
         }else if(appType == 5){
 			$("#outSrvcSearch").show();
 			AUIGrid.resize(targetOutSrvcMstGridID);
-		}
+		} else if(appType == 6){
+            $("#careSrvcSearch").show();
+            AUIGrid.resize(targetCareSrvcMstGridID);
+        }
    }
   //Rental Order Info 조회
     function fn_rentalOrderInfo(){
@@ -2339,6 +2368,232 @@ function fn_outConfirm(){
             recalculateOutTotalAmt();
         });
     }
+
+
+
+    //**************************************************
+    //**************************************************
+    //Care Service 관련 Script  -- CREATED BY TPY 28/03/2019
+    //**************************************************
+
+    //Search Order 팝업
+    function fn_careSrvcOrderSearchPop(){
+        resetOutGrid();
+        Common.popupDiv("/homecare/sales/orderSearchPop.do", {callPrgm : "CARESRVC_PAYMENT", indicator : "SearchOrder"});
+    }
+
+    //Search Order 팝업에서 결과값 받기
+    function fn_callBackCareSrvcOrderInfo(ordNo, ordId){
+
+        //Order Basic 정보 조회
+        Common.ajax("GET", "/payment/selectHTOrderBasicInfoByOrderId.do", {"orderId" : ordId}, function(result) {
+            $("#careSrvcOrdId").val(result.ordId);
+            $("#careSrvcOrdNo").val(result.ordNo);
+
+            //Order Info 및 Payment Info 조회
+            fn_careSrvcOrderInfo();
+        });
+    }
+
+  //Care Service Order Info 조회
+    function fn_careSrvcOrderInfo(){
+        var data;
+        data = {"orderId" : $("#careSrvcOrdId").val() };
+
+        //Outright : Order 정보 조회
+        Common.ajax("GET", "/payment/common/selectHTOrderInfoNonRental.do", data, function(result) {
+            //Outright : Order Info 세팅
+            AUIGrid.setGridData(targetCareSrvcMstGridID, result);
+
+            //총 금액 계산
+            recalculateCareSrvcTotalAmt();
+        });
+    }
+
+
+  //Care Service Amount 계산
+  function recalculateCareSrvcTotalAmt(){
+      var rowCnt = AUIGrid.getRowCount(targetCareSrvcMstGridID);
+      var totalAmt = 0;
+
+      if(rowCnt > 0){
+          for(var i = 0; i < rowCnt; i++){
+              totalAmt += (AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"packageCharge") - AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"packagePaid"))
+                          +(AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"filterCharge") - AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"filterPaid"));
+          }
+      }
+
+      $("#careSrvcTotalAmtTxt").text("RM " + $.number(totalAmt,2));
+  }
+
+  function resetCareSrvcGrid(){
+      AUIGrid.clearGridData(targetCareSrvcMstGridID);
+  }
+
+
+  function addCareSrvcToFinal(){
+      var addedCount = 0;
+
+      if(isDupCareSrvcToFinal() > 0){
+          Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
+          return;
+      }
+
+      if($("#careSrvccashIsCommChk").is(":checked") == true){
+          $("#careSrvccashIsCommChk").val("1");
+      }else{
+          $("#careSrvccashIsCommChk").val("0");
+      }
+
+      var rowCnt = AUIGrid.getRowCount(targetCareSrvcMstGridID);
+      maxSeq = maxSeq + 1;
+
+      if(rowCnt > 0){
+          for(i = 0 ; i < rowCnt ; i++){
+
+              if(rowCnt < 2){
+                  var salesOrdId = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"srvOrdId");
+                  Common.ajax("GET", "/payment/common/checkHTOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
+
+                      if(RESULT.rootState == 'ROOT_1') {
+
+                          Common.alert('No Outstanding' + DEFAULT_DELIMITER + RESULT.msg);
+                      }
+                  });
+              }
+
+              var packageAmt = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"packageCharge") - AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"packagePaid");
+
+              if(packageAmt > 0){
+                  var item = new Object();
+                  item.procSeq = maxSeq;
+                  item.appType = "CARE_SRVC";
+                  item.advMonth = 0;
+                  item.mstRpf = 0;
+                  item.mstRpfPaid = 0;
+
+                  item.assignAmt = 0;
+                  item.billAmt   = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"packageCharge");
+                  item.billDt   = "1900-01-01";
+                  item.billGrpId = 0;
+                  item.billId = 0;
+                  item.billNo = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"quotNo");
+                  item.billStatus = "";
+                  item.billTypeId = 164;
+                  item.billTypeNm   = "Membership Package";
+                  item.custNm   = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"custNm");
+                  item.discountAmt = 0;
+                  item.installment  = 0;
+                  item.ordId = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"srvOrdId");
+                  item.ordNo = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"srvOrdNo");
+                  item.paidAmt     = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"packagePaid");
+                  item.targetAmt   = packageAmt;
+                  item.srvcContractID   = 0;
+                  item.billAsId    = 0;
+                  item.srvMemId   =AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"cnvrMemId");
+                  item.trNo =  $("#careSrvckeyInTrNo").val() ;
+                  item.collectorCode = $("#careSrvckeyInCollMemNm").val() ;
+                  item.collectorId = $("#careSrvckeyInCollMemId").val() ;
+                  item.allowComm = $("#careSrvccashIsCommChk").val() ;
+
+                  AUIGrid.addRow(targetFinalBillGridID, item, "last");
+                  addedCount++;
+              }
+
+              var filterAmt = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"filterCharge") - AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"filterPaid");
+
+              if(filterAmt > 0){
+                  var item = new Object();
+                  item.procSeq = maxSeq;
+                  item.appType = "CARE_SRVC";
+                  item.advMonth = 0;
+                  item.mstRpf = 0;
+                  item.mstRpfPaid = 0;
+
+                  item.assignAmt = 0;
+                  item.billAmt   = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"filterCharge");
+                  item.billDt   = "1900-01-01";
+                  item.billGrpId = 0;
+                  item.billId = 0;
+                  item.billNo = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"quotNo");
+                  item.billStatus = "";
+                  item.billTypeId = 542;
+                  item.billTypeNm   = "Filter (1st BS)";
+                  item.custNm   = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"custNm");
+                  item.discountAmt = 0;
+                  item.installment  = 0;
+                  item.ordId = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"srvOrdId");
+                  item.ordNo = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"srvOrdNo");
+                  item.paidAmt     = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"filterPaid");
+                  item.targetAmt   = filterAmt;
+                  item.srvcContractID   = 0;
+                  item.billAsId    = 0;
+                  item.srvMemId   =AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"cnvrMemId");
+                  item.trNo =  $("#careSrvckeyInTrNo").val() ;
+                  item.collectorCode = $("#careSrvckeyInCollMemNm").val() ;
+                  item.collectorId = $("#careSrvckeyInCollMemId").val() ;
+                  item.allowComm = $("#careSrvccashIsCommChk").val() ;
+
+                  AUIGrid.addRow(targetFinalBillGridID, item, "last");
+                  addedCount++;
+              }
+          }
+      }
+
+
+      if(addedCount == 0){
+          Common.alert("<spring:message code='pay.alert.noBillingData'/>");
+      }
+
+      recalculatePaymentTotalAmt();
+
+  }
+
+
+
+  // Add 할때 중복된 건이 있는지 체크한다.
+  function isDupCareSrvcToFinal(){
+      var rowCnt = AUIGrid.getRowCount(targetCareSrvcMstGridID);
+      var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","CARE_SRVC");
+      var dupCnt = 0;
+
+      if(rowCnt > 0){
+          for(i = 0 ; i < rowCnt ; i++){
+              var packageAmt = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"packageCharge") - AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"packagePaid");
+
+              if(packageAmt > 0){
+                  if(addedRows.length > 0) {
+                      for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+                          if (AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"quotNo") == addedRows[addedIdx].billNo && 164 == addedRows[addedIdx].billTypeId) {
+                              dupCnt++;
+                          }
+                      }
+                  }
+              }
+
+              var filterAmt = AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"filterCharge") - AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"filterPaid");
+
+              if(filterAmt > 0){
+                  if(addedRows.length > 0) {
+                      for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+                          if (AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"quotNo") == addedRows[addedIdx].billNo && 542 == addedRows[addedIdx].billTypeId) {
+                              dupCnt++;
+                          }
+                      }
+                  }
+              }
+          }
+      }
+
+      return dupCnt;
+  }
+
+
+
+
+
+
+
 
   //**************************************************
   //**************************************************
@@ -2769,6 +3024,9 @@ function fn_loadOrderSalesman(memId, memCode, memNm){
     }else if(appType == "5"){//Outright Membership
         $("#outSrvckeyInCollMemId").val(memId);
         $("#outSrvckeyInCollMemNm").val(memCode);
+    }else if(appType == "6"){//Care Service
+        $("#careSrvckeyInCollMemId").val(memId);
+        $("#careSrvckeyInCollMemNm").val(memCode);
     }
 
 }
@@ -3586,6 +3844,7 @@ $.fn.clearForm = function() {
                             <option value="3">Rental Membership</option>
                             <option value="4">Bill Payment</option>
                             <option value="5">Outright Membership</option>
+                            <option value="6">Care Service</option>
                         </select>
                     </td>
                 </tr>
@@ -4077,6 +4336,87 @@ $.fn.clearForm = function() {
         <ul class="right_btns">
             <li><p class="amountTotalSttl">Amount Total :</p></li>
             <li><strong id="outSrvcTotalAmtTxt">RM 0.00</strong></li>
+        </ul>
+    </section>
+
+  <!--
+    ***************************************************************************************
+    ***************************************************************************************
+    *************                                          Care Services Search Area                                                         ****
+    ***************************************************************************************
+    ***************************************************************************************
+    -->
+    <section id="careSrvcSearch" style="display:none;">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- search_table start -->
+            <form id="careSrvcSearchForm" action="#" method="post">
+                <input type="hidden" name="careSrvcOrdId" id="careSrvcOrdId" />
+
+                <table class="type1">
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:180px" />
+                        <col style="width:*" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Service Order No.</th>
+                            <td>
+                                <input type="text" name="careSrvcOrdNo" id="careSrvcOrdNo" title="" placeholder="Order Number" class="" />
+                                    <p class="btn_sky">
+                                        <a href="javascript:fn_outConfirm();" id="confirm"><spring:message code='pay.btn.confirm'/></a>
+                                    </p>
+                                    <p class="btn_sky">
+                                        <a href="javascript:fn_careSrvcOrderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
+                                    </p>
+                            </td>
+                        </tr>
+                        <tr>
+                  <th scope="row">TR No.</th>
+                        <td>
+                            <input id="careSrvckeyInTrNo" name="careSrvckeyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+                        </td>
+
+              </tr>
+              <tr>
+                  <th scope="row">Collector</th>
+                  <td>
+                      <input id="careSrvckeyInCollMemId" name="careSrvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
+                      <input id="careSrvckeyInCollMemNm" name="careSrvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                      </a>
+                  </td>
+
+              </tr>
+              <tr>
+                      <th scope="row">Commission</th>
+                      <td>
+                            <label><input type="checkbox" id="careSrvccashIsCommChk" name="careSrvccashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+                      </td>
+             </tr>
+                    </tbody>
+                </table>
+                <!-- table end -->
+            </form>
+        </section>
+        <!-- search_table end -->
+
+        <ul class="right_btns">
+           <li><p class="btn_grid"><a href="javascript:addCareSrvcToFinal();"><spring:message code='pay.btn.add'/></a></p></li>
+        </ul>
+
+        <!-- grid_wrap start -->
+        <article class="grid_wrap">
+            <div id="target_careSrvc_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
+        </article>
+        <!-- grid_wrap end -->
+
+
+        <ul class="right_btns">
+            <li><p class="amountTotalSttl">Amount Total :</p></li>
+            <li><strong id="careSrvcTotalAmtTxt">RM 0.00</strong></li>
         </ul>
     </section>
 
