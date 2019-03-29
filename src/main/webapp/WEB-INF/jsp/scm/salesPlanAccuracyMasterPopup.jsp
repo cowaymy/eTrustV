@@ -75,15 +75,16 @@ function fnValidationCdcCheck() {
 }
 
 function fnClose() {
+	alert(myGridID1);
 	$("#salesPlanAccuracyMasterPopup").remove();
-	/*console.log(AUIGrid.isCreated(myGridID1));
+	console.log(AUIGrid.isCreated(myGridID1));
 	console.log(AUIGrid.isCreated(myGridID2));
 	console.log(AUIGrid.isCreated(myGridID3));
-	console.log(AUIGrid.isCreated(myGridID4));*/
-	AUIGrid.destroy(myGridID1);
+	console.log(AUIGrid.isCreated(myGridID4));
+	/*AUIGrid.destroy(myGridID1);
 	AUIGrid.destroy(myGridID2);
 	AUIGrid.destroy(myGridID3);
-	AUIGrid.destroy(myGridID4);
+	AUIGrid.destroy(myGridID4);*/
 	//location.reload();
 }
 

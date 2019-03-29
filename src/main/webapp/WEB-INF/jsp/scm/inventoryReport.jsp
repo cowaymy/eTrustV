@@ -49,6 +49,7 @@ var curr	= 0;
 var codeId	= "";
 
 var currObj	= new Object();
+var sumObj	= new Object();
 var detObj	= new Object();
 //JSONObject jsonList	= new JSONObject();
 //JSONArray krwList	= new JSONArray();
@@ -95,19 +96,19 @@ function fnSearchTotal() {
 								{
 									headerText : totalHeader[0],
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "totPrevQty",
+									dataField : "totPrevAmt",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}, {
 									headerText : totalHeader[1],
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "totCurrQty",
+									dataField : "totCurrAmt",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}, {
 									headerText : "Gap",
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "totGapQty",
+									dataField : "totGapAmt",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}
@@ -119,17 +120,17 @@ function fnSearchTotal() {
 				 			[
 								{
 									headerText : totalHeader[0],
-									dataField : "tranPrevQty",
+									dataField : "tranPrevAmt",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : totalHeader[1],
-									dataField : "tranCurrQty",
+									dataField : "tranCurrAmt",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : "Gap",
-									dataField : "tranGapQty",
+									dataField : "tranGapAmt",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}
@@ -143,19 +144,19 @@ function fnSearchTotal() {
 								{
 									headerText : totalHeader[0],
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "handPrevQty",
+									dataField : "handPrevAmt",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}, {
 									headerText : totalHeader[1],
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "handCurrQty",
+									dataField : "handCurrAmt",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}, {
 									headerText : "Gap",
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "handGapQty",
+									dataField : "handGapAmt",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}
@@ -191,19 +192,19 @@ function fnSearchTotal() {
 								{
 									headerText : totalHeader[0],
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "agePrevQty",
+									dataField : "agePrevAmt",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}, {
 									headerText : totalHeader[1],
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "ageCurrQty",
+									dataField : "ageCurrAmt",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}, {
 									headerText : "Gap",
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "ageGapQty",
+									dataField : "ageGapAmt",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}
@@ -215,17 +216,17 @@ function fnSearchTotal() {
 				 			[
 								{
 									headerText : totalHeader[0],
-									dataField : "stkbPrevQty",
+									dataField : "stkbPrevAmt",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : totalHeader[1],
-									dataField : "stkbCurrQty",
+									dataField : "stkbCurrAmt",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : "Gap",
-									dataField : "stkbGapQty",
+									dataField : "stkbGapAmt",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}
@@ -418,14 +419,17 @@ function fnSearchTotal() {
 					
 				});
 				//	Sales Plan Summary
-				AUIGrid.setGridData(myGridID1, result.selectInventoryReportTotal);
+				//AUIGrid.setGridData(myGridID1, result.selectInventoryReportTotal);
 				//AUIGrid.setGridData(myGridID2, result.selectInventoryReportDetail);
 				currObj	= result.selectScmCurrency;
+				sumObj	= result.selectInventoryReportTotal;
 				detObj	= result.selectInventoryReportDetail;
 				curr	= currObj[0].curr;
 				codeId	= currObj[0].codeId;
 				$("#curr").val(curr);
-				fnSetResult(result.selectInventoryReportDetail, result.selectScmCurrency);
+				fnSetResult();
+				//fnSetResult1(result.selectInventoryReportTotal, result.selectScmCurrency);
+				//fnSetResult(result.selectInventoryReportDetail, result.selectScmCurrency);
 			});
 }
 function fnSearchDetail(stockTypeId) {
@@ -449,7 +453,8 @@ function fnSearchDetail(stockTypeId) {
 				curr	= currObj[0].curr;
 				codeId	= currObj[0].codeId;
 				$("#curr").val(curr);
-				fnSetResult(result.selectInventoryReportDetail, result.selectScmCurrency);
+				fnSetResult();
+				//fnSetResult(result.selectInventoryReportDetail, result.selectScmCurrency);
 				//detKor	= result.selectInventoryReportDetail;
 			});
 }
@@ -525,6 +530,12 @@ function fnScmTotalPeriod() {
 				gPlanYear	= result.selectScmTotalPeriod[0].scmYear;
 				gPlanMonth	= result.selectScmTotalPeriod[0].scmMonth;
 				gPlanWeek	= result.selectScmTotalPeriod[0].scmWeek;
+				if ( 1 == gPlanMonth ) {
+					gPlanYear	= parseInt(gPlanYear) - 1;
+					gPlanMonth	= 12;
+				} else {
+					gPlanMonth	= parseInt(gPlanMonth) - 1;
+				}
 				if ( 0 < gPlanMonth && 10 > gPlanMonth ) {
 					gPlanYearMonth	= "0" + gPlanMonth + "/" + gPlanYear;
 				} else {
@@ -552,8 +563,8 @@ function fnSetHeader() {
 	m7	= new Date(yyyy + "/" + mm + "/" + "01");
 	m8	= new Date(yyyy + "/" + mm + "/" + "01");
 	m9	= new Date(yyyy + "/" + mm + "/" + "01");
-	prevMm	= today.getMonth() - 1;
-	currMm	= today.getMonth() + 0;
+	prevMm	= today.getMonth() + 0;
+	currMm	= today.getMonth() + 1;
 	yyyy	= today.getFullYear();
 	
 	//	Total Header
@@ -597,11 +608,11 @@ function fnSetHeader() {
 	detailHeader[8]	= "Planned (" + monName[m9.getMonth() ] + ")";
 }
 function fnSetResult() {
-	var myr	= $("#curr").val();
+	var curr	= $("#curr").val();
 	var krwList	= new Array();
 	var myrList	= new Array();
 	
-	console.log("curr : " + curr + ", codeId : " + codeId + ", $('#curr').val() : " + $("#curr").val() + ", myr : " + myr);
+	console.log("curr : " + curr + ", codeId : " + codeId + ", $('#curr').val() : " + $("#curr").val() + ", curr : " + curr);
 	myrList	= detObj;
 	for ( var i = 0 ; i < detObj.length ; i++ ) {
 		var temp	= new Object();
@@ -609,12 +620,12 @@ function fnSetResult() {
 		temp.stockCategoryName	= detObj[i].stockCategoryName;
 		temp.stockCode	= detObj[i].stockCode;
 		temp.stockName	= detObj[i].stockName;
-		temp.totAmt		= ((parseInt(detObj[i].totAmt) * parseFloat(myr)) / 1000000).toFixed(1);
-		temp.tranAmt	= ((parseInt(detObj[i].tranAmt) * parseFloat(myr)) / 1000000).toFixed(1);
-		temp.handAmt	= ((parseInt(detObj[i].handAmt) * parseFloat(myr)) / 1000000).toFixed(1);
-		temp.daysAmt	= ((parseInt(detObj[i].daysAmt) * parseFloat(myr)) / 1000000).toFixed(1);
-		temp.ageAmt		= ((parseInt(detObj[i].ageAmt) * parseFloat(myr)) / 1000000).toFixed(1);
-		temp.stkbAmt	= ((parseInt(detObj[i].stkbAmt) * parseFloat(myr)) / 1000000).toFixed(1);
+		temp.totAmt		= ((parseInt(detObj[i].totAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.tranAmt	= ((parseInt(detObj[i].tranAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.handAmt	= ((parseInt(detObj[i].handAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.daysAmt	= ((parseInt(detObj[i].daysAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.ageAmt		= ((parseInt(detObj[i].ageAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.stkbAmt	= ((parseInt(detObj[i].stkbAmt) * parseFloat(curr)) / 1000000).toFixed(1);
 		temp.totQty	= detObj[i].totQty;
 		temp.tranQty	= detObj[i].tranQty;
 		temp.handQty	= detObj[i].handQty;
@@ -633,9 +644,62 @@ function fnSetResult() {
 		krwList.push(temp);
 	}
 	
+	var krwList1	= new Array();
+	var myrList1	= new Array();
+	
+	for ( var i = 0 ; i < sumObj.length ; i++ ) {
+		var temp	= new Object();
+		temp.stockTypeId	= sumObj[i].stockTypeId;
+		temp.stockTypeName	= sumObj[i].stockTypeName;
+		temp.totPrevAmt		= ((parseInt(sumObj[i].totPrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.totCurrAmt		= ((parseInt(sumObj[i].totCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.totGapAmt		= ((parseInt(sumObj[i].totGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.tranPrevAmt	= ((parseInt(sumObj[i].tranPrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.tranCurrAmt	= ((parseInt(sumObj[i].tranCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.tranGapAmt		= ((parseInt(sumObj[i].tranGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.handPrevAmt	= ((parseInt(sumObj[i].handPrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.handCurrAmt	= ((parseInt(sumObj[i].handCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.handGapAmt		= ((parseInt(sumObj[i].handGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.daysPrevQty	= sumObj[i].daysPrevQty;
+		temp.daysCurrQty	= sumObj[i].daysCurrQty;
+		temp.daysGapQty		= sumObj[i].daysGapQty;
+		temp.agePrevAmt		= ((parseInt(sumObj[i].agePrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.ageCurrAmt		= ((parseInt(sumObj[i].ageCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.ageGapAmt		= ((parseInt(sumObj[i].ageGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.stkbPrevAmt	= ((parseInt(sumObj[i].stkbPrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.stkbCurrAmt	= ((parseInt(sumObj[i].stkbCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.stkbGapAmt		= ((parseInt(sumObj[i].stkbGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		krwList1.push(temp);
+		
+		var temp1	= new Object();
+		temp1.stockTypeId	= sumObj[i].stockTypeId;
+		temp1.stockTypeName	= sumObj[i].stockTypeName;
+		temp1.totPrevAmt	= ((sumObj[i].totPrevAmt));
+		temp1.totCurrAmt	= ((sumObj[i].totCurrAmt));
+		temp1.totGapAmt		= ((sumObj[i].totGapAmt));
+		temp1.tranPrevAmt	= ((sumObj[i].tranPrevAmt));
+		temp1.tranCurrAmt	= ((sumObj[i].tranCurrAmt));
+		temp1.tranGapAmt	= ((sumObj[i].tranGapAmt));
+		temp1.handPrevAmt	= ((sumObj[i].handPrevAmt));
+		temp1.handCurrAmt	= ((sumObj[i].handCurrAmt));
+		temp1.handGapAmt	= ((sumObj[i].handGapAmt));
+		temp1.daysPrevQty	= sumObj[i].daysPrevQty;
+		temp1.daysCurrQty	= sumObj[i].daysCurrQty;
+		temp1.daysGapQty	= sumObj[i].daysGapQty;
+		temp1.agePrevAmt	= ((sumObj[i].agePrevAmt));
+		temp1.ageCurrAmt	= ((sumObj[i].ageCurrAmt));
+		temp1.ageGapAmt		= ((sumObj[i].ageGapAmt));
+		temp1.stkbPrevAmt	= ((sumObj[i].stkbPrevAmt));
+		temp1.stkbCurrAmt	= ((sumObj[i].stkbCurrAmt));
+		temp1.stkbGapAmt	= ((sumObj[i].stkbGapAmt));
+		myrList1.push(temp1);
+	}
+	
 	if ( "1" == $("input[name='gbn']:checked").val() ) {
+		AUIGrid.setGridData(myGridID1, krwList1);
 		AUIGrid.setGridData(myGridID2, krwList);
 	} else {
+		AUIGrid.setGridData(myGridID1, myrList1);
 		AUIGrid.setGridData(myGridID2, myrList);
 	}
 }

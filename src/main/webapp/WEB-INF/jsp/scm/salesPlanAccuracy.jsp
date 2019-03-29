@@ -119,6 +119,7 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 	console.log(AUIGrid.isCreated(myGridID2));
 	console.log(AUIGrid.isCreated(myGridID3));
 	console.log(AUIGrid.isCreated(myGridID4));
+	alert(myGridID1);
 	if ( "search" == gbn ) {
 		if ( AUIGrid.isCreated(myGridID1) ) {
 			AUIGrid.destroy(myGridID1);
