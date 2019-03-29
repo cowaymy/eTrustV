@@ -133,6 +133,7 @@ public class FileDownloadController {
 		params.put("insStaff", params.get("insStaff") != null ? 1 : 0);
 		params.put("insCody", params.get("insCody") != null ? 1 : 0);
 		params.put("insHP", params.get("insHP") != null ? 1 : 0);
+		params.put("insHT", params.get("insHT") != null ? 1 : 0);
 		params.put("TypeLabel", TypeLabel);
 
 		int loginId = sessionVO.getUserId();

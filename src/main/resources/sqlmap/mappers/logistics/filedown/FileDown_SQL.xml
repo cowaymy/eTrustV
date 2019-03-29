@@ -14,6 +14,7 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
        Project1.FILE_URL FILE_URL  ,
        Project1.IS_CODY IS_CODY  ,
        Project1.IS_HP IS_HP  ,
+       Project1.IS_HT IS_HT  ,
        Project1.IS_STAFF IS_STAFF  ,
        Project1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
        Project1.STUS_CODE_ID STUS_CODE_ID  ,
@@ -35,6 +36,7 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
                 Project1.UPD_USER_ID UPD_USER_ID  ,
                 Project1.IS_HP IS_HP  ,
                 Project1.IS_CODY IS_CODY  ,
+                Project1.IS_HT IS_HT  ,
                 Project1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
                 Project1.IS_STAFF IS_STAFF  ,
                 Project1.FILE_ET FILE_ET  ,
@@ -55,6 +57,7 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
                        Extent1.UPD_USER_ID UPD_USER_ID  ,
                        Extent1.IS_HP IS_HP  ,
                        Extent1.IS_CODY IS_CODY  ,
+                       Extent1.IS_HT IS_HT  ,
                        Extent1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
                        Extent1.IS_STAFF IS_STAFF  ,
                        Extent1.FILE_ET FILE_ET  ,
@@ -92,8 +95,7 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
 				         #{item}
 				        </foreach>
 				     </if>
-                          AND ( Extent1.IS_STAFF = 1
-                          OR Extent1.CRT_USER_ID = 52366 ) ) Project1 ) Project1
+                          AND Extent1.IS_STAFF = 1 ) Project1 ) Project1
  WHERE  Project1.ROW_NUMBER > 0
   ORDER BY Project1.FILE_UPLOAD_ID DESC
 </select>
@@ -111,6 +113,7 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
        Project1.FILE_URL FILE_URL  ,
        Project1.IS_CODY IS_CODY  ,
        Project1.IS_HP IS_HP  ,
+       Project1.IS_HT IS_HT  ,
        Project1.IS_STAFF IS_STAFF  ,
        Project1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
        Project1.STUS_CODE_ID STUS_CODE_ID  ,
@@ -134,6 +137,7 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
                 Project1.UPD_USER_ID UPD_USER_ID  ,
                 Project1.IS_HP IS_HP  ,
                 Project1.IS_CODY IS_CODY  ,
+                Project1.IS_HT IS_HT
                 Project1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
                 Project1.IS_STAFF IS_STAFF  ,
                 Project1.FILE_ET FILE_ET  ,
@@ -155,6 +159,7 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
                        Extent1.UPD_USER_ID UPD_USER_ID  ,
                        Extent1.IS_HP IS_HP  ,
                        Extent1.IS_CODY IS_CODY  ,
+                       Extent1.IS_HT IS_HT  ,
                        Extent1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
                        Extent1.IS_STAFF IS_STAFF  ,
                        Extent1.FILE_ET FILE_ET  ,
@@ -182,8 +187,7 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
                        LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
                  WHERE  ( 1 = Extent1.STUS_CODE_ID )
                         AND Extent1.FILE_TYPE_ID = #{type}
-                          AND ( Extent1.IS_STAFF = 1
-                          OR Extent1.CRT_USER_ID = 52366 ) ) Project1 ) Project1
+                          AND Extent1.IS_STAFF = 1 ) Project1 ) Project1
  WHERE  Project1.ROW_NUMBER > 0
   ORDER BY Project1.FILE_UPLOAD_ID DESC
 </select>
@@ -213,6 +217,7 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
 				             UPD_USER_ID  =#{upd_user_id},
 				             IS_HP             =#{insHP} ,
 				             IS_CODY         =#{insCody} ,
+				             IS_HT             =#{insHT} ,
 				             FILE_TYPE_LBL  =#{TypeLabel} ,
 				             IS_STAFF         =#{insStaff}
         WHEN NOT MATCHED THEN
@@ -230,7 +235,8 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
              IS_CODY,
              FILE_TYPE_LBL,
              IS_STAFF,
-             FILE_ET
+             FILE_ET,
+             IS_HT
          )
         VALUES (
          #{FileUpId}
@@ -247,6 +253,7 @@ SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
         ,#{TypeLabel}
         ,#{insStaff}
         ,#{FileExtension}
+        ,#{insHT}
         )
     </insert>
 

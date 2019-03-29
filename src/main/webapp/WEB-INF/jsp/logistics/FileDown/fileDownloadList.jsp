@@ -59,6 +59,16 @@ var userSession = ${SESSION_INFO.userId};
                               unCheckValue :0
                           }
                       },
+                      {dataField:    "isHt",headerText :"<spring:message code='log.head.ht'/>"    ,width:60    ,height:30
+                          , renderer :
+                          {
+                              type : "CheckBoxEditRenderer",
+                              showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                              //editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                              checkValue :1, // true, false 인 경우가 기본
+                              unCheckValue :0
+                          }
+                      },
                       {dataField:   "isStaff",headerText :"<spring:message code='log.head.staff'/>"             ,width:60    ,height:30
                     	  , renderer :
                           {
@@ -180,6 +190,7 @@ $(function(){
     	 $("#insStaff").prop("checked", true);
     	 $("#insCody").prop("checked", true);
     	 $("#insHP").prop("checked", true);
+    	 $("#insHT").prop("checked", true);
     });
     $('#editFile').click(function() {
     	 var selectedItem = AUIGrid.getSelectedIndex(listGrid);
@@ -498,6 +509,11 @@ function fn_dataSet(){
 	    }else{
 	        $("#insHP").prop("checked", false);
 	    }
+	    if(1==AUIGrid.getCellValue(listGrid,  selectedItem[0], "isHt")){
+            $("#insHT").prop("checked", true);
+        }else{
+            $("#insHT").prop("checked", false);
+        }
 }
 
 function fn_reUpFile(){
@@ -652,6 +668,7 @@ function fn_reUpFile(){
         <label><input type="checkbox"  id="insStaff" name="insStaff"  checked="checked" /><span>Staff</span></label>
         <label><input type="checkbox"  id="insCody" name="insCody"   checked="checked" /><span>Cody</span></label>
         <label><input type="checkbox"  id="insHP" name="insHP"   checked="checked" /><span>HP</span></label>
+        <label><input type="checkbox"  id="insHT" name="insHT"   checked="checked" /><span>HT</span></label>
     </td>
 </tr>
 <tr id="fileSpace_tr">
