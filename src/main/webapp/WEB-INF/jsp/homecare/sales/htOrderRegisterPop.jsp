@@ -2211,12 +2211,12 @@
     </td> --%>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.perferInstDate" /><span class="must">*</span></th>
-    <td><input id="prefInstDt" name="prefInstDt" type="text" title="Create start Date" placeholder="Prefer Install Date (dd/MM/yyyy)" class="j_date w100p" /></td>
-    <th scope="row"><spring:message code="sal.title.text.perferInstTime" /><span class="must">*</span></th>
+    <th scope="row">Prefer Service Date<span class="must">*</span></th>
+    <td><input id="prefInstDt" name="prefInstDt" type="text" title="Create start Date" placeholder="Prefer Service Date (dd/MM/yyyy)" class="j_date w100p" /></td>
+    <th scope="row">Prefer Service Time<span class="must">*</span></th>
     <td>
     <div class="time_picker"><!-- time_picker start -->
-    <input id="prefInstTm" name="prefInstTm" type="text" title="" placeholder="Prefer Install Time (hh:mi tt)" class="time_date w100p" />
+    <input id="prefInstTm" name="prefInstTm" type="text" title="" placeholder="Prefer Service Time (hh:mi tt)" class="time_date w100p" />
     <ul>
         <li>Time Picker</li>
         <li><a href="#">12:00 AM</a></li>
