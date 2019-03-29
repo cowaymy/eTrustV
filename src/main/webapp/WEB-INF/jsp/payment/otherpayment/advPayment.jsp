@@ -878,6 +878,7 @@ function fn_rentalOrderInfo(){
 	Common.ajax("GET", "/payment/common/selectMegaDealByOrderId.do", megaDeal, function(result) {
 
         $("#rentalMegaDeal").val(result.megaDeal);
+        $("#rentalCnvrScheme").val(result.cnvrSchemeId);
     });
 
     //Rental : Order 정보 조회
@@ -976,8 +977,9 @@ function rentalDiscountValue(){
     var rows = AUIGrid.getRowIndexesByValue(targetRenMstGridID, "salesOrdId", $("#rentalOrdId").val());
     var mthRentAmt = AUIGrid.getCellValue(targetRenMstGridID, rows, "mthRentAmt");
 	var megaDeal = $("#rentalMegaDeal").val();
+	var cnvrScheme = $("#rentalCnvrScheme").val();
 
-	if(megaDeal == 0 ){
+	if(megaDeal == 0 && cnvrScheme == 0){
 		if (advMonth >= 6 && advMonth < 12){
 			discountValue = mthRentAmt * advMonth * 0.97;
 			originalprice = mthRentAmt * advMonth;
@@ -1046,9 +1048,10 @@ function recalculateRentalTotalAmtWidthAdv(discountValue, originalPrice, discoun
 
     var grandtotal = tot + discountValue;
     $("#rentalAdvAmt").val($.number(discountValue,2,'.',''));
-	var megaDeal = $("#rentalMegaDeal").val();
+	var megaDeal   = $("#rentalMegaDeal").val();
+	var cnvrScheme = $("#rentalCnvrScheme").val();
 
-	if(megaDeal == 0 ){
+	if(megaDeal == 0 && cnvrScheme == 0){
 	    if (tot > 0) {
 	        $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
 	    } else {
@@ -2828,6 +2831,7 @@ $.fn.clearForm = function() {
                 <input type="hidden" name="rentalBillGrpId" id="rentalBillGrpId" />
                 <input type="hidden" name="rentalAdvAmt" id="rentalAdvAmt" />
 	            <input type="hidden" name="rentalMegaDeal" id="rentalMegaDeal" />
+	            <input type="hidden" name="rentalCnvrScheme" id="rentalCnvrScheme" />
 
                 <table class="type1">
                     <caption>table</caption>
