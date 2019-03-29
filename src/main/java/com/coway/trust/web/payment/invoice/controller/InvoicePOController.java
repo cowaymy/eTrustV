@@ -26,12 +26,12 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class InvoicePOController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InvoicePOController.class);
-	
+
 	@Resource(name = "invoicePOService")
 	private InvoicePOService invoicePOService;
-	
+
 	/**
-	 * BillingMgnt 초기화 화면 
+	 * BillingMgnt 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -40,38 +40,49 @@ public class InvoicePOController {
 	public String initInvoiceStatementManagement(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/invoice/billingStatementPo";
 	}
-	
+
 	@RequestMapping(value = "/selectOrderBasicInfoByOrderId.do")
-	public ResponseEntity<EgovMap> selectOrderBasicInfoByOrderId(@RequestParam Map<String, Object> params, ModelMap model) {	
+	public ResponseEntity<EgovMap> selectOrderBasicInfoByOrderId(@RequestParam Map<String, Object> params, ModelMap model) {
 		EgovMap orderBasicInfo = null;
-		
+
 		LOGGER.debug("params : {}", params);
 
 		orderBasicInfo = invoicePOService.selectOrderBasicInfoByOrderId(params).get(0);
-		
+
 		return ResponseEntity.ok(orderBasicInfo);
 	}
-	
-	@RequestMapping(value = "/selectOrderDataByOrderId.do")
-	public ResponseEntity<List<EgovMap>> selectInvoiceStmtMgmtList(@RequestParam Map<String, Object> params, ModelMap model) {	
-		List<EgovMap> list = null;
-		
+
+	@RequestMapping(value = "/selectHTOrderBasicInfoByOrderId.do")
+	public ResponseEntity<EgovMap> selectHTOrderBasicInfoByOrderId(@RequestParam Map<String, Object> params, ModelMap model) {
+		EgovMap orderBasicInfo = null;
+
 		LOGGER.debug("params : {}", params);
-		
+
+		orderBasicInfo = invoicePOService.selectHTOrderBasicInfoByOrderId(params).get(0);
+
+		return ResponseEntity.ok(orderBasicInfo);
+	}
+
+	@RequestMapping(value = "/selectOrderDataByOrderId.do")
+	public ResponseEntity<List<EgovMap>> selectInvoiceStmtMgmtList(@RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> list = null;
+
+		LOGGER.debug("params : {}", params);
+
 		list = invoicePOService.selectOrderDataByOrderId(params);
-		
+
 		return ResponseEntity.ok(list);
 	}
-	
+
 	@RequestMapping(value = "/disablePOEntry.do")
-	public ResponseEntity<ReturnMessage> disablePOEntry(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {	
+	public ResponseEntity<ReturnMessage> disablePOEntry(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		String message = "";
 		ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
-    	
+
 		int userId = sessionVO.getUserId();
 		params.put("userId", userId);
-		
+
 		LOGGER.debug("params : {}", params);
 
 		if(userId > 0){
@@ -80,17 +91,17 @@ public class InvoicePOController {
 				message = "No records found";
 			}
 		};
-		
+
 		msg.setMessage(message);
 		return ResponseEntity.ok(msg);
 	}
-	
+
 	@RequestMapping(value = "/selectInvoiceStatement.do")
-	public ResponseEntity<ReturnMessage> selectInvoiceStatementByOrdId(@RequestParam Map<String, Object> params, ModelMap model) {	
+	public ResponseEntity<ReturnMessage> selectInvoiceStatementByOrdId(@RequestParam Map<String, Object> params, ModelMap model) {
 		String message = "";
 		ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
-		
+
 		LOGGER.debug("params : {}", params);
 
 		List<EgovMap> result = invoicePOService.selectInvoiceStatementByOrdId(params);
@@ -100,14 +111,14 @@ public class InvoicePOController {
 		msg.setMessage(message);
 		return ResponseEntity.ok(msg);
 	}
-	
+
 	@RequestMapping(value = "/insertInvoiceStatement.do")
-	public ResponseEntity<Map<String, Object>> insertInvoiceStatement(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {	
+	public ResponseEntity<Map<String, Object>> insertInvoiceStatement(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		LOGGER.debug("params : {}", params);
-		
+
 		params.put("userId", sessionVO.getUserId());
 		invoicePOService.insertInvoicStatement(params);
-		
+
 		return ResponseEntity.ok(params);
 	}
 }
