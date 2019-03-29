@@ -287,6 +287,8 @@ public interface CommonPaymentMapper {
 	 */
 	List<EgovMap> selectOrderInfoNonRental(Map<String, Object> params);
 
+	List<EgovMap> selectHTOrderInfoNonRental(Map<String, Object> params);
+
 	/**
 	 * Payment - Bill Info Non - Rental : Ledger 카운트 조회
 	 * @param params
@@ -470,6 +472,8 @@ public interface CommonPaymentMapper {
 	 *
 	 */
 	EgovMap selectOutSrvcBillInfo(Map<String, Object> params);
+
+	EgovMap selectCareServicePayInfo(Map<String, Object> params);
 
 	/**
 	 * Payment 임시정보 Sequence 가져오기
