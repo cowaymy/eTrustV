@@ -33,6 +33,7 @@ var userCode;
 var userSession = ${SESSION_INFO.userId};
 
  var rescolumnLayout=[
+                        {dataField: "crtDt",headerText :"<spring:message code='log.head.createdate'/>"                 ,width:110    ,height:30},
 						{dataField: "fileUploadId",headerText :"<spring:message code='log.head.fileuploadid'/>",width:120    ,height:30 , visible:false},
 						{dataField: "fileTypeId",headerText :"<spring:message code='log.head.filetypeid'/>",width:120    ,height:30 , visible:false},
 						{dataField: "codeName",headerText :"<spring:message code='log.head.type'/>",width:200    ,height:30 },
@@ -70,7 +71,6 @@ var userSession = ${SESSION_INFO.userId};
                       },
                       {dataField: "crtUserId",headerText :"<spring:message code='log.head.crtuserid'/>"                  ,width:110    ,height:30 , visible:false },
                       {dataField: "c1",headerText :"<spring:message code='log.head.creator'/>"                   ,width:110    ,height:30 },
-                      {dataField: "crtDt",headerText :"<spring:message code='log.head.createdate'/>"                 ,width:110    ,height:30},
                       {dataField: "fileUrl",headerText :"<spring:message code='log.head.file_url'/>"           ,width:120    ,height:30 , visible:false},
                       {
                           dataField : "",

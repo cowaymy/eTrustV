@@ -22,6 +22,7 @@
                  THEN ORG.BRNCH
               ELSE USR.USER_BRNCH_ID
            END AS userBranchId
+           , NVL(ORG.MAIN_DEPT,'')AS userMainDeptId
            ,CASE
               WHEN (ORG.SUB_DEPT IS NOT NULL)
                  THEN ORG.SUB_DEPT
@@ -40,6 +41,7 @@
 	       ,BRANCH.ADDR1 ||' '|| BRANCH.ADDR2 ||' '|| BRANCH.ADDR3 ||' '|| BRANCH.ADDR4 AS branchAddr
 	       ,BRANCH.TEL1 AS branchTel1
 	       ,BRANCH.TEL2 AS branchTel2
+	       , NVL((SELECT CODE_NAME FROM SYS0013M Z WHERE Z.CODE_MASTER_ID = '359' AND ORG.MAIN_DEPT = Z.CODE),'') AS mainDeptName
            ,CASE WHEN ORG.SUB_DEPT IS NULL
                  THEN (SELECT CODE_NAME FROM SYS0013M Z WHERE Z.CODE_MASTER_ID = '359' AND ORG.MAIN_DEPT = Z.CODE)
                  ELSE (SELECT CODE_NAME FROM SYS0013M Z WHERE Z.CODE_MASTER_ID = '360' AND ORG.SUB_DEPT = Z.CODE) END AS deptName

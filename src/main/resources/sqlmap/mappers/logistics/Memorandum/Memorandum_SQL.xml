@@ -24,16 +24,22 @@
                  , M10.IS_STAFF_MEMO STAFFMEMO
 			     , M10.IS_CODY_MEMO CODYMEMO
 			     , M10.IS_HP_MEMO HPMEMO
+			     , M10.IS_HT_MEMO HTMEMO
+			     , M10.CRT_DEPT_ID
+			     , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M',M10.CRT_DEPT_ID) as DEPARTMENT
 			  FROM MSC0010D M10 , SYS0038M S38
 			 WHERE 1 = 1
 			   AND M10.STUS_CODE_ID = S38.STUS_CODE_ID
 			   AND M10.STUS_CODE_ID = 1
         ]]>
             <if test="stitle != null and stitle != ''">
-            AND M10.MEMO_TITLE like '%'||#{stitle}||'%'
+            AND UPPER(M10.MEMO_TITLE) like UPPER('%'||#{stitle}||'%')
             </if>
             <if test="screator !=null and screator != ''">
             AND M10.CRT_USER_ID like '%'|| #{screator} || '%'
+            </if>
+            <if test="listDept != null and listDept != '' ">
+            AND M10.CRT_DEPT_ID = #{listDept}
             </if>
             <if test="crtsdt !=null and crtsdt != ''">
             AND M10.CRT_DT BETWEEN TO_DATE(#{crtsdt}||'000000' , 'DD/MM/YYYYHH24MISS') AND TO_DATE(#{crtedt}||'235959' , 'DD/MM/YYYYHH24MISS')
@@ -43,6 +49,9 @@
             </if>
             <if test="userTypeId == 2">
             AND M10.IS_CODY_MEMO = 1
+            </if>
+            <if test="userTypeId == 7">
+            AND M10.IS_HT_MEMO = 1
             </if>
         ORDER BY MEMO_ID DESC
     </select>
@@ -54,7 +63,8 @@
 		         decode(nvl(#{staffmemo} , '0') , '0' , 0 , 1),
 		         decode(nvl(#{codymemo}  , '0') , '0' , 0 , 1),
 		         decode(nvl(#{hpmemo}    , '0') , '0' , 0 , 1),
-		         #{userid} , sysdate ,#{userid} , sysdate
+		         decode(nvl(#{htmemo}    , '0') , '0' , 0 , 1),
+		         #{usermaindeptid}, #{userid} , sysdate ,#{userid} , sysdate
 		   from dual
     </insert>
     <update id="memoUpdate" parameterType="Map">
@@ -64,6 +74,7 @@
              , IS_STAFF_MEMO = decode(nvl(#{staffmemo} , '0') , '0' , 0 , 1)
              , IS_CODY_MEMO  = decode(nvl(#{codymemo}  , '0') , '0' , 0 , 1)
              , IS_HP_MEMO    = decode(nvl(#{hpmemo}    , '0') , '0' , 0 , 1)
+             , IS_HT_MEMO    = decode(nvl(#{htmemo}    , '0') , '0' , 0 , 1)
              , UPD_USER_ID   = #{userid}
              , UPD_DT        = SYSDATE
          WHERE MEMO_ID = #{memoid}
@@ -92,9 +103,13 @@
              , M10.IS_STAFF_MEMO STAFFMEMO
              , M10.IS_CODY_MEMO CODYMEMO
              , M10.IS_HP_MEMO HPMEMO
+             , M10.IS_HT_MEMO HTMEMO
+             , M10.CRT_DEPT_ID
+             , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M',M10.CRT_DEPT_ID) as DEPARTMENT
           FROM MSC0010D M10 , SYS0038M S38
          WHERE 1 = 1
            AND M10.STUS_CODE_ID = S38.STUS_CODE_ID
            AND M10.MEMO_ID = #{memoid}
     </select>
+
 </mapper>

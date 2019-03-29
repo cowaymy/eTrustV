@@ -14,6 +14,7 @@ public class SessionVO implements Serializable {
 	private int userStatusId;
 	private int userTypeId;
 	private String userDeptId;
+	private String userMainDeptId;
 	private int roleId;
 	private Integer memberLevel;
 	private Date userUpdateAt;
@@ -94,6 +95,14 @@ public class SessionVO implements Serializable {
 
 	public void setUserDeptId(String userDeptId) {
 		this.userDeptId = userDeptId;
+	}
+
+	public String getUserMainDeptId() {
+		return userMainDeptId;
+	}
+
+	public void setUserMainDeptId(String userMainDeptId) {
+		this.userMainDeptId = userMainDeptId;
 	}
 
 	public int getRoleId() {
@@ -240,6 +249,7 @@ public class SessionVO implements Serializable {
 			sessionVO.setRoleId(loginVO.getRoleId());
 			sessionVO.setMemberLevel(loginVO.getMemberLevel());
 			sessionVO.setUserDeptId(loginVO.getUserDeptId());
+			sessionVO.setUserMainDeptId(loginVO.getUserMainDeptId());
 			sessionVO.setUserUpdateAt(loginVO.getUserUpdateAt());
 			sessionVO.setUserPasswdLastUpdateAt(loginVO.getUserPasswdLastUpdateAt());
 			sessionVO.setUserMobileNo(loginVO.getUserMobileNo());

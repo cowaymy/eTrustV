@@ -12,6 +12,7 @@ public class LoginVO {
 	private String userEmail;
 	private int userStatusId;
 	private int userTypeId;
+	private String userMainDeptId;
 	private String userDeptId;
 	private int roleId;
 	private Integer memberLevel;
@@ -114,6 +115,14 @@ public class LoginVO {
 
 	public void setUserTypeId(int userTypeId) {
 		this.userTypeId = userTypeId;
+	}
+
+	public String getUserMainDeptId() {
+		return userMainDeptId;
+	}
+
+	public void setUserMainDeptId(String userMainDeptId) {
+		this.userMainDeptId = userMainDeptId;
 	}
 
 	public String getUserDeptId() {

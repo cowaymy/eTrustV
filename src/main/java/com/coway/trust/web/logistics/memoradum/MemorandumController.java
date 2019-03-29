@@ -98,6 +98,7 @@ public class MemorandumController {
 		}
 
 		params.put("userid", loginId);
+		params.put("usermaindeptid", sessionVO.getUserMainDeptId());
 
 		ReturnMessage msg = new ReturnMessage();
 

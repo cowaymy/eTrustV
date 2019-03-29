@@ -57,11 +57,12 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
 							{dataField: "memocntnt",headerText :"<spring:message code='log.head.memocntnt'/>"          ,width:350    ,height:30 , visible:false},
 							{dataField: "stusid",headerText :"<spring:message code='log.head.statuscode'/>"      ,width:140    ,height:30 , visible:false},
 							{dataField: "stuscode",headerText :"<spring:message code='log.head.statuscode'/>"        ,width:140    ,height:30 , visible:false},
-							{dataField: "stusname",headerText :"<spring:message code='log.head.statuscode'/>"        ,width:140    ,height:30 , visible:true},
+							{dataField: "stusname",headerText :"<spring:message code='log.head.statuscode'/>"        ,width:140    ,height:30 , visible:false},
 							{dataField: "crtdt",headerText :"<spring:message code='log.head.createdate'/>"           ,width:140    ,height:30 , visible:true},
 							{dataField: "fcrtdt",headerText :"<spring:message code='log.head.creator'/>"             ,width:140    ,height:30 , visible:false},
 							{dataField: "crtuserid",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},
 							{dataField: "crtusernm",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:true},
+							{dataField: "department",headerText :"<spring:message code='log.head.department'/>"          ,width:170    ,height:30 , visible:true},
 							{dataField: "upddt",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},
 							{dataField: "fupddt",headerText :"<spring:message code='log.head.creator'/>"             ,width:140    ,height:30 , visible:false},
 							{dataField: "upduserid",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},
@@ -99,6 +100,17 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
 
                             }
 
+                        },
+                        {dataField:  "htmemo",headerText :"<spring:message code='log.head.ht'/>"         ,width:140    ,height:30 , visible:true
+                            , renderer :
+                            {
+                                type : "CheckBoxEditRenderer",
+                                showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
+                                checkValue : "1", // true, false 인 경우가 기본
+                                unCheckValue : ""
+
+                            }
                         }
                        ];
 
@@ -108,6 +120,8 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
     $(document).ready(function(){
     	HTMLArea.init();
         HTMLArea.onload = initEditor;
+
+        doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'listDept' , 'S', '');
 
      	$("#editwindow").hide();
 
@@ -214,6 +228,11 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
             }else{
                 $("#hpmemo").prop("checked" , false);
             }
+            if (itm.htmemo == 1){
+                $("#htmemo").prop("checked" , true);
+            }else{
+                $("#htmemo").prop("checked" , false);
+            }
 
             //TODO : 추후 퍼블리싱 해결 해야함
             $(".htmlarea").attr("style","width:100%; height:100%;");
@@ -230,6 +249,7 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
     		$("#staffmemo").attr("checked" , false);
     		$("#codymemo").attr("checked" , false);
     		$("#hpmemo").attr("checked" , false);
+    		$("#htmemo").attr("checked" , false);
     		editor.setHTML("");
     		$("#editwindow").show();
     		$("#dataTitle2").text("Memorandum New");
@@ -299,6 +319,14 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
         <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date "></p>
         </div><!-- date_set end -->
     </td>
+</tr>
+<tr>
+    <th scope="row">Department </th>
+    <td><select id="listDept" name="listDept" class="w100p"></select></td>
+    <th scope="row"></th>
+    <td></td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -403,6 +431,7 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
                         <label><input type="checkbox" id='staffmemo' name='staffmemo'/><span> Staff Memo </span></label>
                         <label><input type="checkbox" id='codymemo'  name='codymemo'/><span> Cody Memo </span></label>
                         <label><input type="checkbox" id='hpmemo'    name='hpmemo'/><span> Hp Memo</span></label>
+                        <label><input type="checkbox" id='htmemo'    name='htmemo'/><span> HT Memo</span></label>
                     </td>
                 </tr>
             </tbody>
