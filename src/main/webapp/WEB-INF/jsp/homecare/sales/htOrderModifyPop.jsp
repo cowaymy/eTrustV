@@ -3475,13 +3475,11 @@
          class="w100p"></select></td>
        </tr> --%>
        <tr>
-        <th scope="row"><spring:message
-          code="sal.title.text.perferInstDate" /><span class="must">*</span></th>
+        <th scope="row">Prefer Service Date<span class="must">*</span></th>
         <td><input id="modPreferInstDt" name="preDt" type="text"
          title="Create start Date" placeholder="DD/MM/YYYY"
          class="j_date w100p" readonly /></td>
-        <th scope="row"><spring:message
-          code="sal.title.text.perferInstTime" /><span class="must">*</span></th>
+        <th scope="row">Prefer Service Time<span class="must">*</span></th>
         <td>
          <div class="time_picker w100p">
           <!-- time_picker start -->
