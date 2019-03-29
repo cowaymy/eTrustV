@@ -669,6 +669,42 @@
             AND  Extent1.SALES_ORD_ID = #{orderId}
     </select>
 
+        <select id="selectHTOrderInfoNonRental" parameterType="Map" resultType="egovMap">
+        SELECT
+            Extent1.SRV_ORD_ID,
+            Extent1.CUST_BILL_ID,
+            Extent1.SRV_ORD_NO,
+            Extent1.CUST_ID,
+            Extent7.NAME CUST_NM  ,
+            Extent1.APP_TYPE_ID,
+            Extent2.CODE_NAME APP_TYPE_NM  ,
+            Extent1.PV_YEAR,
+            Extent1.PV_MONTH,
+            Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+            Extent4.NAME STUS_CODE_NM  ,
+            Extent1.MTH_RENT_AMT ,
+            Extent1.TOT_AMT,
+            0 AS BALANCE,
+            '' AS LAST_PAYMENT,
+            Extent1.MEM_ID MEM_ID  ,
+            Extent3.NAME MEM_NM  ,
+            Extent5.NAME BRNCH_NM  ,
+            Extent6.USER_ID USER_ID  ,
+            '' CREATOR_CODE,
+            Extent6.USER_NAME USER_NAME
+        FROM
+            SAL0225D Extent1
+            JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
+            JOIN ORG0001D Extent3   ON Extent3.MEM_ID = Extent1.MEM_ID
+            JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = Extent1.STUS_CODE_ID
+            LEFT JOIN SYS0005M Extent5   ON Extent5.BRNCH_ID = UTILS.CONVERT_TO_NUMBER(Extent3.BRNCH,10,0)
+            LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.CRT_USER_ID
+            JOIN SAL0029D Extent7   ON Extent7.CUST_ID = Extent1.CUST_ID
+        WHERE
+            Extent1.APP_TYPE_ID IN ( 3213,3214 )
+            AND  Extent1.SRV_ORD_ID = #{orderId}
+    </select>
+
     <select id="selectBillInfoLedgerCnt" parameterType="Map" resultType="egovMap">
         SELECT COUNT(1) AS CNT FROM PAY0035D WHERE TRADE_SO_ID = #{orderId}
     </select>
@@ -1184,6 +1220,25 @@
         WHERE
             SRV_MEM_ID = #{cnvrMemId}
         GROUP BY SRV_MEM_ID
+    </select>
+
+        <select id="selectCareServicePayInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.SRV_MEM_ID ,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 386 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END))
+             + SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 157 THEN SRV_MEM_AMT ELSE 0 END ))
+             - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 155 THEN SRV_MEM_AMT ELSE 0 END ))AS PACKAGE_CHARGE,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 542 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END)) AS FILTER_CHARGE,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 164 AND SRV_MEM_AMT  <![CDATA[ < ]]> 0 THEN SRV_MEM_AMT * -1 ELSE 0 END))
+                - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID <![CDATA[ <> ]]> 542 THEN SRV_MEM_AMT ELSE 0 END)) AS PACKAGE_PAID,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID IN (542,543) AND SRV_MEM_AMT  <![CDATA[ < ]]>  0 THEN SRV_MEM_AMT * -1 ELSE 0 END))
+                - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID IN (542,543) THEN SRV_MEM_AMT ELSE 0 END)) AS FILTER_PAID
+        FROM
+            PAY0291D A
+            JOIN SAL0095D B ON A.SRV_MEM_ID = B.SRV_MEM_ID
+        WHERE
+            B.SRV_SALES_ORD_ID = #{orderId}
+        GROUP BY A.SRV_MEM_ID
     </select>
 
     <!-- Payment 임시정보 Sequence 가져오기  -->
