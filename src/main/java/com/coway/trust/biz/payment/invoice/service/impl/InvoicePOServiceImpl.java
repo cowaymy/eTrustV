@@ -39,6 +39,11 @@ public class InvoicePOServiceImpl extends EgovAbstractServiceImpl implements Inv
 	}
 
 	@Override
+	public List<EgovMap> selectHTOrderBasicInfoByOrderId(Map<String, Object> params) {
+		return invoicePOMapper.selectHTOrderBasicInfoByOrderId(params);
+	}
+
+	@Override
 	public List<EgovMap> selectOrderDataByOrderId(Map<String, Object> params) {
 		return invoicePOMapper.selectOrderDataByOrderId(params);
 	}
@@ -57,5 +62,5 @@ public class InvoicePOServiceImpl extends EgovAbstractServiceImpl implements Inv
 	public void insertInvoicStatement(Map<String, Object> params) {
 		invoicePOMapper.insertInvoicStatement(params);
 	}
-	
+
 }
