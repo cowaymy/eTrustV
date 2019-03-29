@@ -610,8 +610,12 @@
             var appTypeIdx = $("#appType option:selected").index();
             console.log('appTypeIdx : ' + appTypeIdx);
 
-            if(appTypeIdx == 1 || appTypeIdx == 2 ){
+            if( appTypeIdx == 2 ){
                   $('#ordQuantity').removeAttr("disabled");
+            }
+            else if(appTypeIdx == 1 ){
+            	$('#ordQuantity').val("1");
+            	$('#ordQuantity').prop("disabled", true);
             }
             else{
                  $('#ordQuantity').prop("disabled", true);
