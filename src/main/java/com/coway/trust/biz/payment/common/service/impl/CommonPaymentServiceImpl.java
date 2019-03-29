@@ -14,6 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+
+import com.coway.trust.biz.homecare.sales.impl.htOrderListServiceImpl;
+import com.coway.trust.biz.homecare.sales.htOrderRegisterService;
+import com.coway.trust.biz.homecare.sales.impl.htOrderRegisterMapper;
 import com.coway.trust.biz.payment.billinggroup.service.BillingGroupService;
 import com.coway.trust.biz.payment.common.service.CommonPaymentService;
 import com.coway.trust.biz.payment.common.service.CommonPopupPaymentService;
@@ -31,11 +35,16 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("commonPaymentService")
 public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements CommonPaymentService {
 
+	private static Logger logger = LoggerFactory.getLogger(CommonPaymentServiceImpl.class);
+
 	@Resource(name = "commonPaymentMapper")
 	private CommonPaymentMapper commonPaymentMapper;
 
 	@Resource(name = "orderRegisterMapper")
 	private OrderRegisterMapper orderRegisterMapper;
+
+	@Resource(name = "htOrderRegisterMapper")
+	private htOrderRegisterMapper htOrderRegisterMapper;
 
 	/**
 	 * Payment - Order Info 조회 : order No로 Order ID 조회하기
@@ -596,6 +605,31 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 
 		return rcList;
 	}
+
+	public List<EgovMap>  selectHTOrderInfoNonRental(Map<String, Object> params) {
+
+		List<EgovMap> rcList = commonPaymentMapper.selectHTOrderInfoNonRental(params);
+
+		Map<String , Object > newParams = null;
+		Map<String, Object> billInfo = null;
+
+		if(rcList != null && rcList.size() > 0){
+			for (EgovMap obj : rcList) {
+				newParams = new HashMap<String,Object>();
+				newParams.put("orderId", obj.get("srvOrdId"));
+				billInfo = commonPaymentMapper.selectCareServicePayInfo(newParams);
+
+				obj.put("cnvrMemId", billInfo.get("srvMemId"));
+				obj.put("packageCharge", billInfo.get("packageCharge"));
+				obj.put("filterCharge", billInfo.get("filterCharge"));
+				obj.put("packagePaid", billInfo.get("packagePaid"));
+				obj.put("filterPaid", billInfo.get("filterPaid"));
+			}
+		}
+
+		return rcList;
+	}
+
 
 	/**
 	 * Payment - Order Info Non-Rental Billing 정보 조회
@@ -1359,5 +1393,115 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 
 		return result;
 	}
+
+    @Override
+	public EgovMap checkHTOrderOutstanding(Map<String, Object> params) {
+
+		int orderId = 0;
+		String appTypId = "";
+		String ROOT_STATE = "", isInValid = "", msg = "";
+
+
+
+		//orderId = Integer.parseInt((String)params.get("custId"));
+		orderId = CommonUtils.intNvl(Integer.parseInt(String.valueOf(params.get("salesOrdId"))));
+
+		EgovMap RESULT = new EgovMap();
+
+
+        EgovMap resultMap = this.selectSrvOrderM(orderId, 0);
+
+		if(resultMap != null)
+			appTypId = resultMap.get("appTypeId").toString();
+
+		EgovMap ValiRentInstNo = null;
+		ValiRentInstNo =orderRegisterMapper.selectRentalInstNo(orderId);
+
+		EgovMap OutstandingAmt = null;
+		if("1412".equals(appTypId)){
+			OutstandingAmt = orderRegisterMapper.selectOutrightPlusOutstandingAmt(orderId);
+		}
+		else{
+			OutstandingAmt = orderRegisterMapper.selectOutstandingAmt(orderId);
+		}
+
+
+        		BigDecimal rentInstNo;
+        		BigDecimal rentPeriod;
+        		String ordStus = "";
+    			BigDecimal valiOutStanding;
+    			//valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+
+
+            	if("66".equals(appTypId) || "1412".equals(appTypId)) {
+            		//if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) != 0 || String.valueOf(ValiRentInstNo.get("rentInstNo")) != null){
+            		if(ValiRentInstNo != null){
+            			rentInstNo = (BigDecimal)ValiRentInstNo.get("rentInstNo");
+            		}
+            		else{
+            			rentInstNo = (BigDecimal.valueOf(100));
+            		}
+            		//rentInstNo = ValiRentInstNo.get("rentInstNo") != null ? Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))): 100;
+            		rentPeriod = (BigDecimal)resultMap.get("rentalPeriod");
+            	}
+            	else {
+            		rentInstNo = BigDecimal.ZERO;
+            		rentPeriod = BigDecimal.ZERO;
+            	}
+
+            	if(OutstandingAmt != null){
+        		    valiOutStanding = (BigDecimal)OutstandingAmt.get("rentAmt");
+        			valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+            	}
+            	else{
+        		    valiOutStanding = BigDecimal.ZERO;
+        			valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+            	}
+            	ordStus = resultMap.get("stusCodeId").toString();
+            	if((rentInstNo.compareTo(rentPeriod) == 1 || "10".equals(ordStus)) && (valiOutStanding.compareTo(BigDecimal.ZERO) == 0 || valiOutStanding.compareTo(BigDecimal.ZERO) == -1)){
+            		msg = "Order App Type : " + (String)resultMap.get("appTypeName") + "<br/>";
+            		msg = msg + "Order Status : " + (String)resultMap.get("orderStatus") + "<br/>";
+            		msg = msg + "Rental Status : " + (String)resultMap.get("rentalStatus") + "<br/>";
+            		if(valiOutStanding.compareTo(BigDecimal.ZERO) == -1){
+                		msg = msg + "Outstanding : RM " + "<span style='color:#ff0000;'>"+ valiOutStanding + "</span>";
+
+            		}
+            		else{
+                		msg = msg + "Outstanding : RM " +  valiOutStanding;
+
+            		}
+
+                    isInValid = "InValid";
+                    ROOT_STATE = "ROOT_1";
+            	}
+
+
+            	else {
+        		ROOT_STATE = "ROOT_2";
+        	}
+
+
+        RESULT.put("ROOT_STATE", ROOT_STATE);
+        RESULT.put("IS_IN_VALID", isInValid);
+        RESULT.put("MSG", msg);
+        RESULT.put("OLD_ORDER_ID", orderId);
+
+
+		return RESULT;
+	}
+
+	private EgovMap selectSrvOrderM(int ordId, int appTypeId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		params.put("salesOrdId", ordId);
+		params.put("appTypeId", appTypeId);
+
+		EgovMap result = htOrderRegisterMapper.selectSalesOrderM(params);
+
+		return result;
+	}
+
+
+
 
 }
