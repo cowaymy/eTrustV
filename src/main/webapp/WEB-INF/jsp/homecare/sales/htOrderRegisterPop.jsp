@@ -21,7 +21,7 @@
         fn_selectDocSubmissionList();
 
         //doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
-        CommonCombo.make("appType", "/common/selectCodeList.do", {groupCode : '10', codeIn : 'CS1T,CS1Y,TRL'}, "", {
+        CommonCombo.make("appType", "/homecare/sales/selectCodeList.do", {groupCode : '10', codeIn : 'CS1T,CS1Y,TRL'}, "", {
             id: "codeId",
             name: "codeName",
             type:"S"
