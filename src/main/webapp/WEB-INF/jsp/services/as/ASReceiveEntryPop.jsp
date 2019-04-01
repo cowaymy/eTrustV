@@ -1,107 +1,82 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-
+<!--
+ DATE        BY     VERSION        REMARK
+ ----------------------------------------------------------------
+ 01/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP
+ -->
 
 <script type="text/javaScript">
+  function fn_ASSave() {
+    Common.ajax("GET", "/services/as/addASNo.do", {}, function(result) {
+    });
+  }
 
-function fn_ASSave(){
-	   Common.ajax("GET", "/services/as/addASNo.do", {}, function(result) {
-	        console.log("성공.");
-	        console.log("data : " + result);
-	    });
-}
+  function fn_confirmOrder() {
 
-
-
-
-function fn_confirmOrder(){
-
-	 if ($("#entry_orderNo").val() =="")   {
-         Common.alert("Order Number Missing"+DEFAULT_DELIMITER+"<b>Please insert order number.</b>");
-           return ;
+    if ($("#entry_orderNo").val() == "") {
+      Common.alert("Order Number Missing" + DEFAULT_DELIMITER
+          + "<b>Please insert order number.</b>");
+      return;
     }
 
+    Common
+        .ajax(
+            "GET",
+            "/services/as/searchOrderNo",
+            {
+              orderNo : $("#entry_orderNo").val()
+            },
+            function(result) {
+              if (result == null) {
+                Common.alert("Order Not Found" + DEFAULT_DELIMITER + "<b>No order found or this order is not under complete status or CCP Status is rejected.</b>");
+                $("#Panel_AS").attr("style", "display:none");
+                return;
+              } else {
+                fn_resultASPop(result.ordId, result.ordNo);
+                $("#_NewEntryPopDiv1").remove();
+              }
+            });
+  }
 
-    Common.ajax("GET", "/services/as/searchOrderNo", {orderNo : $("#entry_orderNo").val() }, function(result) {
-        console.log(result);
+  $(document).ready(function() {
+    fn_keyEvent();
 
+    if ('${ORD_NO}' != "") {
+      $("#entry_orderNo").val('${ORD_NO}');
+      //fn_confirmOrder();
+      fn_checkASReceiveEntryConfirmation()
+    }
 
-        if(result ==null) {
-            Common.alert("Order Not Found"+DEFAULT_DELIMITER+"<b>No order found or this order is not under complete status or CCP Status is rejected.</b>");
+  });
 
-            $("#Panel_AS").attr("style" ,"display:none");
-
-            return ;
-
-        }else{
-        	 fn_resultASPop(result.ordId , result.ordNo);
-        	$("#_NewEntryPopDiv1").remove();
-        }
+  function fn_getOrderDetailListAjax() {
+    Common.ajax("GET", "/sales/order/orderTabInfo", { salesOrderId : _selSalesOrdId
+    }, function(result) {
     });
-}
+  }
 
-
-$(document).ready(function(){
-
- 	fn_keyEvent();
-
-
- 	if ('${ORD_NO}' !="" ){
-		$("#entry_orderNo").val('${ORD_NO}');
-
-		//fn_confirmOrder();
-		fn_checkASReceiveEntryConfirmation()
-	}
-
-});
-
-
-function fn_getOrderDetailListAjax(){
-
-     Common.ajax("GET", "/sales/order/orderTabInfo",{salesOrderId :_selSalesOrdId }, function(result) {
-        console.log("성공.");
-        console.log("data : " + result);
+  function fn_keyEvent() {
+    $("#entry_orderNo").keydown(function(key) {
+      if (key.keyCode == 13) {
+        //fn_confirmOrder();
+        fn_checkASReceiveEntryConfirmation()
+      }
     });
+  }
 
-}
+  function fn_goCustSearch() {
+    Common.popupDiv('/sales/ccp/searchOrderNoPop.do', null, null, true, '_searchDiv');
+  }
 
+  function fn_callbackOrdSearchFunciton(item) {
+    $("#entry_orderNo").val(item.ordNo);
+    //fn_confirmOrder();
+  }
 
-
-
-function fn_keyEvent(){
-    $("#entry_orderNo").keydown(function(key)  {
-            if (key.keyCode == 13) {
-                //fn_confirmOrder();
-                fn_checkASReceiveEntryConfirmation()
-            }
-     });
-}
-
-
-
-
-function  fn_goCustSearch(){
-Common.popupDiv('/sales/ccp/searchOrderNoPop.do' , null, null , true, '_searchDiv');
-}
-
-
-function fn_callbackOrdSearchFunciton(item){
-console.log(item);
-$("#entry_orderNo").val(item.ordNo);
-//fn_confirmOrder();
-
-}
-
-
-
-
-
-function fn_loadPageControl(){
-
-
+  function fn_loadPageControl() {
     /*
-
     CodeManager cm = new CodeManager();
     IList<Data.CodeDetail> atl = cm.GetCodeDetails(10);
 
@@ -135,96 +110,107 @@ function fn_loadPageControl(){
     ddlRequestor.DataSource = rql.OrderBy(itm => itm.CodeName);
     ddlRequestor.DataBind();
 
-    */
-}
+     */
+  }
 
-//AS RECEIVED ENTRY POP UP NOTIFICATION -- TPY
-function fn_checkASReceiveEntry(){
-    Common.ajaxSync("GET", "/services/as/checkASReceiveEntry.do",{salesOrderNo : $("#entry_orderNo").val()}, function(result) {
-         msg = result.message;
-});
-    return msg;
-}
-
-function fn_checkASReceiveEntryConfirmation(){
-
-    if ($("#entry_orderNo").val() =="")   {
-        Common.alert("Order Number Missing"+DEFAULT_DELIMITER+"<b>Please insert order number.</b>");
-          return ;
-   }
-
-    Common.ajax("GET", "/services/as/searchOrderNo", {orderNo : $("#entry_orderNo").val() }, function(result) {
-        console.log(result);
-
-
-        if(result ==null) {
-            Common.alert("Order Not Found"+DEFAULT_DELIMITER+"<b>No order found or this order is not under complete status or CCP Status is rejected.</b>");
-
-            $("#Panel_AS").attr("style" ,"display:none");
-
-            return ;
-
-        }else{
-
-            var msg = fn_checkASReceiveEntry();
-
-            if(msg == ""){
-         	fn_resultASPop(result.ordId , result.ordNo);
-            	$("#_NewEntryPopDiv1").remove();
-            }
-            else {
-            msg += '<br/> Do you want to proceed ? <br/>';
-
-            Common.confirm('AS Received Entry Confirmation' + DEFAULT_DELIMITER + "<b>"+msg+"</b>", fn_resultASPop(result.ordId , result.ordNo), fn_selfClose);
-            }
-        }
+  //AS RECEIVED ENTRY POP UP NOTIFICATION -- TPY
+  function fn_checkASReceiveEntry() {
+    Common.ajaxSync("GET", "/services/as/checkASReceiveEntry.do", { salesOrderNo : $("#entry_orderNo").val()
+    }, function(result) {
+      msg = result.message;
     });
+    return msg;
+  }
 
-}
+  function fn_checkASReceiveEntryConfirmation() {
+    if ($("#entry_orderNo").val() == "") {
+      Common.alert("Order Number Missing" + DEFAULT_DELIMITER + "<b>Please insert order number.</b>");
+      return;
+    }
 
+    Common.ajax("GET", "/services/as/searchOrderNo", { orderNo : $("#entry_orderNo").val() },
+      function(result) {
+        if (result == null) {
+          Common.alert("Order Not Found" + DEFAULT_DELIMITER + "<b>No order found or this order is not under complete status or CCP Status is rejected.</b>");
+          $("#Panel_AS").attr("style", "display:none");
+          return;
+        } else {
+          var msg = fn_checkASReceiveEntry();
 
-function fn_selfClose() {
+          if (msg == "") {
+            fn_resultASPop(result.ordId, result.ordNo);
+            $("#_NewEntryPopDiv1").remove();
+          } else {
+             msg += '<br/> Do you want to proceed ? <br/>';
+
+             Common.confirm('AS Received Entry Confirmation'
+                              + DEFAULT_DELIMITER
+                              + "<b>" + msg
+                              + "</b>",
+                          fn_resultASPop(
+                              result.ordId,
+                              result.ordNo),
+                          fn_selfClose);
+                }
+              }
+            });
+  }
+
+  function fn_selfClose() {
     $('#btnClose').click();
     $("#_resultNewEntryPopDiv1").remove();
-}
-
+  }
 
 </script>
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
-<section id="content"><!-- content start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1>AS ReceiveEntry</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a id="btnClose" href="#">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="" onsubmit="return false;">
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:100px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Order No</th>
- <!--    <td><input type="text" title="" placeholder="" class="" id="entry_orderNo" name="entry_orderNo"/><p class="btn_sky"><a href="#" onClick="fn_confirmOrder()">Confirm</a></p><p class="btn_sky"><a href="#"  onclick="fn_goCustSearch()">Search</a></p></td>
+<div id="popup_wrap" class="popup_wrap">
+ <!-- popup_wrap start -->
+ <section id="content">
+  <!-- content start -->
+  <header class="pop_header">
+   <!-- pop_header start -->
+   <h1>AS ReceiveEntry</h1>
+   <ul class="right_opt">
+    <li><p class="btn_blue2">
+      <a id="btnClose" href="#">CLOSE</a>
+     </p></li>
+   </ul>
+  </header>
+  <!-- pop_header end -->
+  <section class="pop_body">
+   <!-- pop_body start -->
+   <section class="search_table">
+    <!-- search_table start -->
+    <form action="#" method="post" id="" onsubmit="return false;">
+     <table class="type1">
+      <!-- table start -->
+      <caption>table</caption>
+      <colgroup>
+       <col style="width: 100px" />
+       <col style="width: *" />
+      </colgroup>
+      <tbody>
+       <tr>
+        <th scope="row">Order No</th>
+        <!--    <td><input type="text" title="" placeholder="" class="" id="entry_orderNo" name="entry_orderNo"/><p class="btn_sky"><a href="#" onClick="fn_confirmOrder()">Confirm</a></p><p class="btn_sky"><a href="#"  onclick="fn_goCustSearch()">Search</a></p></td>
  -->
- <td><input type="text" title="" placeholder="" class="" id="entry_orderNo" name="entry_orderNo"/><p class="btn_sky"><a href="#" onClick="fn_checkASReceiveEntryConfirmation()">Confirm</a></p><p class="btn_sky"><a href="#"  onclick="fn_goCustSearch()">Search</a></p></td>
-
- </tr>
-</tbody>
-</table><!-- table end -->
-</form>
-</section><!-- search_table end -->
-
-
-</section><!-- content end -->
-</section><!-- pop_body end -->
-</div><!-- popup_wrap end -->
+        <td><input type="text" title="" placeholder="" class=""
+         id="entry_orderNo" name="entry_orderNo" />
+        <p class="btn_sky">
+          <a href="#" onClick="fn_checkASReceiveEntryConfirmation()">Confirm</a>
+         </p>
+         <p class="btn_sky">
+          <a href="#" onclick="fn_goCustSearch()">Search</a>
+         </p></td>
+       </tr>
+      </tbody>
+     </table>
+     <!-- table end -->
+    </form>
+   </section>
+   <!-- search_table end -->
+  </section>
+  <!-- content end -->
+ </section>
+ <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->
