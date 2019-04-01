@@ -1685,16 +1685,14 @@
   <select id="selectASDataInfo" parameterType="Map" resultMap="callasLogClobMapAS">
     SELECT S.AS_ID AS_ID ,
            S.AS_ALLOW_COMM AS_ALLOW_COMM ,
-           S.AS_CRT_DT
-           AS_CRT_DT ,
+           S.AS_CRT_DT AS_CRT_DT ,
            CASE WHEN ( S.USER_ID IS NOT NULL )
                   THEN S.USER_NAME
                   ELSE '-'
            END C1 ,
            S.AS_NO AS_NO ,
            S.AS_STUS_ID AS_STUS_ID ,
-           S.AS_SO_ID
-           AS_SO_ID ,
+           S.AS_SO_ID AS_SO_ID ,
            CASE WHEN ( S.AS_REQSTER_TYPE_ID IS NOT NULL )
                   THEN S.AS_REQSTER_TYPE_ID
                   ELSE 0
@@ -1836,7 +1834,7 @@
            FROM SVC0001D Extent1 JOIN SYS0038M Extent2 ON Extent1.AS_STUS_ID = Extent2.STUS_CODE_ID
            LEFT JOIN SYS0047M Extent3 ON Extent1.AS_CRT_USER_ID = Extent3.USER_ID
            LEFT JOIN SYS0013M Extent4 ON Extent1.AS_REQSTER_TYPE_ID = Extent4.CODE_ID
-           LEFT JOINSVC0004D Extent5 ON ( Extent1.AS_ID = Extent5.AS_ENTRY_ID )
+           LEFT JOIN SVC0004D Extent5 ON ( Extent1.AS_ID = Extent5.AS_ENTRY_ID )
                                     AND ( 457 = Extent5.AS_RESULT_TYPE_ID )
                                     AND ( 1 = Extent5.AS_RESULT_IS_CURR )
            LEFT JOIN SYS0005M Extent6 ON Extent1.AS_BRNCH_ID = Extent6.BRNCH_ID
