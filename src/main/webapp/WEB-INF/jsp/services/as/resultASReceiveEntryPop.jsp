@@ -549,7 +549,7 @@
           //return ;
         }
 
-        if ($("#IN_AsResultId").val() != "") {
+        /*if ($("#IN_AsResultId").val() != "") {
           var inAsR = AUIGrid.getSelectedItems(inHouseRGridID);
 
           var asid = result.asId;
@@ -566,7 +566,7 @@
                     + "&isAuto=true";
 
           Common.popupDiv("/services/as/ASNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
-        }
+        }*/
 
         if (result.asNo != "") {
           var smsck_1 = false;
@@ -1195,7 +1195,7 @@
          <td colspan="3">
           <!--  <input type="text" title="" placeholder="" class="w100p" id="branchDSC" name="branchDSC"  disabled="disabled" /> -->
           <select class="w100p" id="branchDSC" name="branchDSC"
-          class="readonly" readonly="readonly" disabled="disabled">
+          class="" disabled="disabled">
          </select>
          </td>
          <th scope="row"><spring:message code='service.title.CTGroup' /></th>
