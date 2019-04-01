@@ -1,11 +1,18 @@
 package com.coway.trust.biz.services.as;
 
 import java.util.List;
+
 import java.util.Map;
 
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+/*********************************************************************************************
+ * DATE          PIC        VERSION     COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 01/04/2019    ONGHC      1.0.1       - Restructure File
+ *********************************************************************************************/
 
 public interface ASManagementListService {
 
@@ -143,4 +150,10 @@ public interface ASManagementListService {
   EgovMap checkWarrentyStatus(Map<String, Object> params);
 
   List<EgovMap> checkAOASRcdStat(Map<String, Object> params);
+
+  String getInHseLmtDy();
+
+  int selRcdTms(Map<String, Object> params);
+
+  int chkRcdTms(Map<String, Object> params);
 }
