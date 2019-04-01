@@ -388,7 +388,7 @@
                  FROM  SAL0017D T2
                   WHERE
                    T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (3217,3218)
+                  AND T2.PROMO_APP_TYPE_ID IN (3221,3220)
                   AND T2.PROMO_TYPE_ID = 2282 <!-- Discount -->
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
                   AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
@@ -2457,8 +2457,8 @@ FROM (
 SELECT
 SRV_ORD_ID ,
 0 AS SRV_MEM_PAC_ID ,
-CASE WHEN APP_TYPE_ID = 3213 THEN 1 * #{orderQuantity}
-WHEN APP_TYPE_ID = 3214 THEN 12 * #{orderQuantity}
+CASE WHEN APP_TYPE_ID = 3216 THEN 1 * #{orderQuantity}
+WHEN APP_TYPE_ID = 3217 THEN 12 * #{orderQuantity}
 ELSE 0 END AS
 SRV_MEM_DUR,
 SALES_DT
