@@ -75,7 +75,7 @@ function fnValidationCdcCheck() {
 }
 
 function fnClose() {
-	alert(myGridID1);
+	//alert(myGridID1);
 	$("#salesPlanAccuracyMasterPopup").remove();
 	console.log(AUIGrid.isCreated(myGridID1));
 	console.log(AUIGrid.isCreated(myGridID2));
