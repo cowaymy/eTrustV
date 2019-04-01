@@ -682,13 +682,13 @@
 
             var promoAppTypeId = 0;
 
-            if (appTypeVal == 3213){
+            if (appTypeVal == 3216){
 
-            	 promoAppTypeId = 3217;
+            	 promoAppTypeId = 3220;
 
-            }else if (appTypeVal == 3214){
+            }else if (appTypeVal == 3217){
 
-            	promoAppTypeId = 3218;
+            	promoAppTypeId = 3221;
 
             }else{
 
@@ -1409,7 +1409,7 @@
         var exTrade = 0;
         $('#ordPromo').removeAttr("disabled");
 
-        if(promoAppTypeId == 3217 || promoAppTypeId == 3218){
+        if(promoAppTypeId == 3220 || promoAppTypeId == 3221){
 
         	doGetComboData('/homecare/sales/selectPromotionByAppTypeStock.do', {appTypeId:promoAppTypeId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade}, '', 'ordPromo', 'S', ''); //Common Code
 
@@ -1439,7 +1439,7 @@
         var orderPrice = 0;
         var totalPrice = 0;
 
-      if(appTypeVal == 3213){
+      if(appTypeVal == 3216){
         switch(stkId){
         case "KING" :
             orderPrice = 240;
@@ -1451,7 +1451,7 @@
             orderPrice = 175;
             break;
         }
-      }else if (appTypeVal == 3214) {
+      }else if (appTypeVal == 3217) {
         switch(stkId){
         case "KING" :
         	orderPrice = 648;
