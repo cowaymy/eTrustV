@@ -115,7 +115,7 @@ public class ASManagementListController {
   @RequestMapping(value = "/searchASManagementList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectASManagementList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("===========================/asInHouseEntryPop.do===============================");
+    logger.debug("===========================/searchASManagementList.do===============================");
     logger.debug("== params " + params.toString());
 
     String[] asTypeList = request.getParameterValues("asType");
@@ -132,7 +132,7 @@ public class ASManagementListController {
     List<EgovMap> ASMList = ASManagementListService.selectASManagementList(params);
 
     logger.debug("== ASMList : {}", ASMList);
-    logger.debug("===========================/asInHouseEntryPop.do===============================");
+    logger.debug("===========================/searchASManagementList.do===============================");
     return ResponseEntity.ok(ASMList);
   }
 
