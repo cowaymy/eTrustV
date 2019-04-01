@@ -128,7 +128,7 @@
       if ($("#requestDate").val() != "") {
         $("#requestDate").attr("disabled", true);
         $("#appDate").on("change", function(event) {
-          fn_doAllaction();
+          fn_doAllaction("#appDate");
         });
         $("#rbt").attr("hidden", true);
       } else {
@@ -301,9 +301,43 @@
     bsHistoryGrid = GridCommon.createAUIGrid("#bshistory_grid_wrap", cLayout, '', gridPros);
   }
 
-  function fn_doAllaction() {
+  function fn_doAllaction(obj) {
     var ord_id = '${orderDetail.basicInfo.ordId}';
-    var vdte = $("#requestDate").val();
+
+    var vdte = $(obj).val();
+    var text = "";
+
+    if ($(obj).attr('id') == "requestDate") {
+      text = "Request Date";
+    } else {
+      text = "Appointment Date";
+    }
+
+    var fmt = fn_valDtFmt(vdte);
+    if (!fmt) {
+      Common.alert("* " + text + " invalid date format.");
+      $(obj).val("");
+      return;
+    }
+
+    var sDate = (vdte).split("/");
+    var tDate = new Date();
+    var tMth = tDate.getMonth() + 1;
+    var tYear = tDate.getFullYear();
+    var sMth = parseInt(sDate[1]);
+    var sYear = parseInt(sDate[2]);
+
+    if (tYear > sYear) {
+      Common.alert("* " + text + " must be in current month and year");
+      $(obj).val("");
+      return;
+    } else {
+      if (tMth > sMth) {
+        Common.alert("* " + text + " must be in current month and year");
+        $(obj).val("");
+        return;
+      }
+    }
 
     var options = {
       ORD_ID : ord_id,
@@ -491,6 +525,48 @@
             $("#sFm").find("input, textarea, button, select").attr("disabled", true);
             $("#save_bt_div").hide();
           });
+    }
+  }
+
+  function fn_valDtFmt(val) {
+    var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+    return dateRegex.test(val);
+  }
+
+  function fn_chkDt(obj) {
+    var vdte = $(obj).val();
+    var text = "";
+
+    if ($(obj).attr('id') == "requestDate") {
+      text = "Request Date";
+    } else {
+      text = "Appointment Date";
+    }
+
+    var fmt = fn_valDtFmt(vdte);
+    if (!fmt) {
+      Common.alert("* " + text + " invalid date format.");
+      $(obj).val("");
+      return;
+    }
+
+    var sDate = (vdte).split("/");
+    var tDate = new Date();
+    var tMth = tDate.getMonth() + 1;
+    var tYear = tDate.getFullYear();
+    var sMth = parseInt(sDate[1]);
+    var sYear = parseInt(sDate[2]);
+
+    if (tYear > sYear) {
+      Common.alert("* " + text + " must be in current month and year");
+      $(obj).val("");
+      return;
+    } else {
+      if (tMth > sMth) {
+        Common.alert("* " + text + " must be in current month and year");
+        $(obj).val("");
+        return;
+      }
     }
   }
 
@@ -1101,11 +1177,11 @@
          <th scope="row"><spring:message code='service.grid.ReqstDt' /><span class="must">*</span></th>
          <td><input type="text" title="Create start Date"
           placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate"
-          name="requestDate" onChange="fn_doAllaction()"/></td>
+          name="requestDate" onChange="fn_doAllaction('#requestDate')"/></td>
          <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
          <td><input type="text" title="Create start Date"
           placeholder="DD/MM/YYYY" class="j_date w100p"
-          readonly="readonly" id="appDate" name="appDate" /></td>
+          readonly="readonly" id="appDate" name="appDate" onChange="fn_chkDt('#appDate')"/></td>
          <th scope="row"><spring:message code='service.title.AppointmentSessione' /><span class="must">*</span></th>
          <td><input type="text" title="" placeholder="<spring:message code='service.title.AppointmentDate' />"
           id="CTSSessionCode" name="CTSSessionCode"
