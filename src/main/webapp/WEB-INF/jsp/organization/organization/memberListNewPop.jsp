@@ -55,10 +55,10 @@ function fn_memberSave(){
                             if($("#mobileNo").val() != "") {
                                 var rTelNo = $("#mobileNo").val();
 
-                                /*Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
+                                Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
                                     console.log("sms.");
                                     console.log( result);
-                                });*/
+                                });
                             }
 
                             if($("#email").val() != "") {
@@ -67,10 +67,10 @@ function fn_memberSave(){
                                 var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
 
                                 // Send Email file, recipient
-                                /*Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
+                                Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
                                     console.log("email.");
                                     console.log(result);
-                                })*/
+                                })
                             }
 
 			            });
