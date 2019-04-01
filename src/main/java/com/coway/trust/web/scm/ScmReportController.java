@@ -275,7 +275,7 @@ public class ScmReportController {
 			LOGGER.debug("selectSalesPlanAccuracyDetail Monthly : {}", monthlyParams.toString());
 			List<EgovMap> selectSalesPlanAccuracyMonthlyDetail	= scmReportService.selectSalesPlanAccuracyMonthlyDetail(monthlyParams);
 			
-			map.put("selectSalesPlanAccuracyMonthlyDetail", selectSalesPlanAccuracyMonthlyDetail);
+			map.put("selectSalesPlanAccuracyDetail", selectSalesPlanAccuracyMonthlyDetail);
 		} else {
 			LOGGER.debug("selectSalesPlanAccuracyDetail : ERRRRRRRRRRRRRRRRRRRRRRRRROR", params.toString());
 		}
