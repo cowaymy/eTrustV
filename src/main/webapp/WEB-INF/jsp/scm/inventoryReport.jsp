@@ -605,7 +605,7 @@ function fnSetHeader() {
 	detailHeader[5]	= "Issued (" + monName[m6.getMonth()] + ")";
 	detailHeader[6]	= "Planned (" + monName[m7.getMonth()] + ")";
 	detailHeader[7]	= "Planned (" + monName[m8.getMonth()] + ")";
-	detailHeader[8]	= "Planned (" + monName[m9.getMonth() ] + ")";
+	detailHeader[8]	= "Planned (" + monName[m9.getMonth()] + ")";
 }
 function fnSetResult() {
 	var curr	= $("#curr").val();

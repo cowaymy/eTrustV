@@ -115,23 +115,23 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 	var monthlySummaryLayout	= [];	//	myGridID2
 	var weeklyDetailLayout		= [];	//	myGridID3
 	var monthlyDetailLayout		= [];	//	myGridID4
-	console.log(AUIGrid.isCreated(myGridID1));
-	console.log(AUIGrid.isCreated(myGridID2));
-	console.log(AUIGrid.isCreated(myGridID3));
-	console.log(AUIGrid.isCreated(myGridID4));
+	//console.log(AUIGrid.isCreated(myGridID1));
+	//console.log(AUIGrid.isCreated(myGridID2));
+	//console.log(AUIGrid.isCreated(myGridID3));
+	//console.log(AUIGrid.isCreated(myGridID4));
 	//alert(myGridID1);
 	if ( "search" == gbn ) {
-		if ( AUIGrid.isCreated(myGridID1) ) {
+		if ( AUIGrid.isCreated(myGridID1) ) {console.log("myGridID1 : " + AUIGrid.isCreated(myGridID1));
 			AUIGrid.destroy(myGridID1);
 		}
-		if ( AUIGrid.isCreated(myGridID2) ) {
+		if ( AUIGrid.isCreated(myGridID2) ) {console.log("myGridID2 : " + AUIGrid.isCreated(myGridID2));
 			AUIGrid.destroy(myGridID2);
 		}
 	}
-	if ( AUIGrid.isCreated(myGridID3) ) {
+	if ( AUIGrid.isCreated(myGridID3) ) {console.log("myGridID3 : " + AUIGrid.isCreated(myGridID3));
 		AUIGrid.destroy(myGridID3);
 	}
-	if ( AUIGrid.isCreated(myGridID4) ) {
+	if ( AUIGrid.isCreated(myGridID4) ) {console.log("myGridID4 : " + AUIGrid.isCreated(myGridID4));
 		AUIGrid.destroy(myGridID4);
 	}
 	var gridOption	= {
@@ -816,6 +816,13 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 								}
 						);
 						myGridID3	= GridCommon.createAUIGrid("detail_wrap", weeklyDetailLayout, "", gridOption);
+						console.log("grid1 : " + AUIGrid.isCreated(myGridID1));
+						console.log("grid3 : " + AUIGrid.isCreated(myGridID3));
+						//	hide
+						$("#summary_wrap").show();
+						$("#summary_wrap1").hide();
+						$("#detail_wrap").show();
+						$("#detail_wrap1").hide();
 					} else {
 						if ( "search" == gbn ) {
 							//	monthly summary
@@ -884,7 +891,7 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 								 	},
 								 	{	headerText : "year",	dataField : "planYear",	dataType : "numeric",	style : "my-columnRight", visible : false	}
 							);
-							myGridID2	= GridCommon.createAUIGrid("summary_wrap", monthlySummaryLayout, "", gridOption);
+							myGridID2	= GridCommon.createAUIGrid("summary_wrap1", monthlySummaryLayout, "", gridOption);
 							AUIGrid.bind(myGridID2, "cellClick", function(event) {
 								if ( parseInt(currWeek) > event.columnIndex ) {
 									team	= AUIGrid.getCellValue(myGridID2, event.rowIndex, "team");
@@ -1256,8 +1263,16 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 							 		}
 								}
 						);
-						myGridID4	= GridCommon.createAUIGrid("detail_wrap", monthlyDetailLayout, "", gridOption);
+						myGridID4	= GridCommon.createAUIGrid("detail_wrap1", monthlyDetailLayout, "", gridOption);
+						console.log("grid2 : " + AUIGrid.isCreated(myGridID2));
+						console.log("grid4 : " + AUIGrid.isCreated(myGridID4));
+						//	hide
+						$("#summary_wrap").hide();
+						$("#summary_wrap1").show();
+						$("#detail_wrap").hide();
+						$("#detail_wrap1").show();
 					}
+					
 					//	search
 					if ( "search" == gbn ) {
 						fnSearch();
@@ -1483,31 +1498,70 @@ function getTimeStamp() {
 	
 	return	date + "_" + time;
 }
-/*
-function fnRadioButton(val) {
-	if ( 1 == val ) {
-		$("#weekly_summary_wrap").show();
-		$("#weekly_detail_wrap").show();
-		$("#monthly_summary_wrap").hide();
-		$("#monthly_detail_wrap").hide();
-		$("#periodLabel").text("Year/Week");
-		$("#period").text(weeklyWeek + "W / " + weeklyYear);
-	} else {
-		$("#weekly_summary_wrap").hide();
-		$("#weekly_detail_wrap").hide();
-		$("#monthly_summary_wrap").show();
-		$("#monthly_detail_wrap").show();
-		$("#periodLabel").text("Year/Month");
-		$("#period").text(monthlyMonth + "M / " + monthlyYear);
-	}
-}*/
 
 /*
  * Grid create & setting
  */
 var myGridID1, myGridID2, myGridID3, myGridID4;
 
+function fnCreateGrid() {
+	var gridOption	= {
+		usePaging : false,
+		useGroupingPanel : false,
+		showRowNumColumn : false,
+		showRowCheckColumn : false,
+		showStateColumn : false,
+		showEditedCellMarker : false,
+		showFooter : false,
+		editable : false,
+		enableCellMerge : false,
+		enableRestore : false,
+		fixedColumnCount : 1
+	};
+	
+	var weeklySummaryLayout	=
+		[
+		 {	headerText : "Team"	},
+		 {	headerText : "W01"	},	{	headerText : "W02"	},	{	headerText : "W03"	},	{	headerText : "W04"	},	{	headerText : "W05"	},
+		 {	headerText : "W06"	},	{	headerText : "W07"	},	{	headerText : "W08"	},	{	headerText : "W09"	},	{	headerText : "W10"	},
+		 {	headerText : "W11"	},	{	headerText : "W12"	},	{	headerText : "W13"	},	{	headerText : "W14"	},	{	headerText : "W15"	},
+		 {	headerText : "W16"	},	{	headerText : "W17"	},	{	headerText : "W18"	},	{	headerText : "W19"	},	{	headerText : "W20"	},
+		 {	headerText : "W21"	},	{	headerText : "W22"	},	{	headerText : "W23"	},	{	headerText : "W24"	},	{	headerText : "W25"	},
+		 {	headerText : "W26"	},	{	headerText : "W27"	},	{	headerText : "W28"	},	{	headerText : "W29"	},	{	headerText : "W30"	},
+		 {	headerText : "W31"	},	{	headerText : "W32"	},	{	headerText : "W33"	},	{	headerText : "W34"	},	{	headerText : "W35"	},
+		 {	headerText : "W36"	},	{	headerText : "W37"	},	{	headerText : "W38"	},	{	headerText : "W39"	},	{	headerText : "W40"	},
+		 {	headerText : "W41"	},	{	headerText : "W42"	},	{	headerText : "W43"	},	{	headerText : "W44"	},	{	headerText : "W45"	},
+		 {	headerText : "W46"	},	{	headerText : "W47"	},	{	headerText : "W48"	},	{	headerText : "W49"	},	{	headerText : "W50"	},	{	headerText : "W51"	},	{	headerText : "W52"	}
+		 ];
+	myGridID1	= GridCommon.createAUIGrid("summary_wrap", weeklySummaryLayout, "", gridOption);
+	
+	var monthlySummaryLayout	=
+		[
+		 {	headerText : "Team"	},
+		 {	headerText : "Jan"	},	{	headerText : "Feb"	},	{	headerText : "Mar"	},	{	headerText : "Apr"	},	{	headerText : "May"	},	{	headerText : "Jun"	},
+		 {	headerText : "Jul"	},	{	headerText : "Aug"	},	{	headerText : "Sep"	},	{	headerText : "Oct"	},	{	headerText : "Nov"	},	{	headerText : "Dec"	}
+		 ];
+	myGridID2	= GridCommon.createAUIGrid("summary_wrap1", monthlySummaryLayout, "", gridOption);
+	
+	var detailLayout	=
+		[
+		 {	headerText : "Team"	},	{	headerText : "Code"	},	{	headerText : "Name"	},	{	headerText : "Ordered"	},	{	headerText : "Accuracy"	},	{	headerText : "Start"	},	{	headerText : "End"	},
+		 {	headerText : "W16"	},	{	headerText : "W15"	},	{	headerText : "W14"	},	{	headerText : "W13"	},
+		 {	headerText : "W12"	},	{	headerText : "W11"	},	{	headerText : "W10"	},	{	headerText : "W09"	},
+		 {	headerText : "W08"	},	{	headerText : "W07"	},	{	headerText : "W06"	},	{	headerText : "W05"	},
+		 {	headerText : "W04"	},	{	headerText : "W03"	},	{	headerText : "W02"	},	{	headerText : "W01"	}
+		 ];
+	myGridID3	= GridCommon.createAUIGrid("detail_wrap", detailLayout, "", gridOption);
+	myGridID4	= GridCommon.createAUIGrid("detail_wrap1", detailLayout, "", gridOption);
+	
+	$("#summary_wrap").show();
+	$("#summary_wrap1").hide();
+	$("#detail_wrap").show();
+	$("#detail_wrap1").hide();
+}
+
 $(document).ready(function() {
+	fnCreateGrid();
 });
 </script>
 
@@ -1592,6 +1646,7 @@ $(document).ready(function() {
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Summary Grid -->
 			<div id="summary_wrap" style="height:146px;"></div>
+			<div id="summary_wrap1" style="height:146px;"></div>
 		</article>								<!-- article grid_wrap end -->
 		<table class="type1 mt10">				<!-- table start -->
 			<caption>table10</caption>
@@ -1620,6 +1675,7 @@ $(document).ready(function() {
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Detail Grid -->
 			<div id="detail_wrap" style="height:511px;width:100%;"></div>
+			<div id="detail_wrap1" style="height:511px;width:100%;"></div>
 		</article>								<!-- article grid_wrap end -->
 	</section>									<!-- section search_result end -->
 </section>									<!-- section content end -->
