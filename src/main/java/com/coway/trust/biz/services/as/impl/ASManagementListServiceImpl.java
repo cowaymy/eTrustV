@@ -1808,7 +1808,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     Map<String, Object> logPram = new HashMap<String, Object>();
     if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454")) { // REPAIR
       if (svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN") != null) {
-        if (svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN").equals("1")) { // Y -
+        if ((svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN").toString().trim()).equals("1")) { // Y -
                                                                         // TO
                                                                         // REPAIR
           if (svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length() == 0) {
