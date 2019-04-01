@@ -435,6 +435,10 @@
       $("#txtASStatus").text(result[0].code);
       $("#txtRequestDate").text(result[0].asReqstDt);
       $("#txtRequestTime").text(result[0].asReqstTm);
+
+      $("#txtAppDt").text(result[0].asAppntDt);
+      $("#txtAppTm").text(result[0].asAppntTm);
+
       $("#txtMalfunctionCode").text(result[0].asMalfuncId);
       $("#txtMalfunctionReason").text(result[0].asMalfuncResnId);
       $("#txtDSCCode").text(result[0].c7 + "-" + result[0].c8);
@@ -1392,6 +1396,41 @@
     }
   }
 
+  function fn_valDtFmt(val) {
+    var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+    return dateRegex.test(val);
+  }
+
+  function fn_chkDt(obj) {
+    var vdte = $(obj).val();
+
+    var fmt = fn_valDtFmt(vdte);
+    if (!fmt) {
+      Common.alert("* Settle Date invalid date format.");
+      $(obj).val("");
+      return;
+    }
+
+    var sDate = (vdte).split("/");
+    var tDate = new Date();
+    var tMth = tDate.getMonth() + 1;
+    var tYear = tDate.getFullYear();
+    var sMth = parseInt(sDate[1]);
+    var sYear = parseInt(sDate[2]);
+
+    if (tYear > sYear) {
+      Common.alert("* Settle Date must be in current month and year");
+      $(obj).val("");
+      return;
+    } else {
+      if (tMth > sMth) {
+        Common.alert("* Settle Date must be in current month and year");
+        $(obj).val("");
+        return;
+      }
+    }
+  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -1566,6 +1605,14 @@
          <th scope="row">Request Time</th>
          <td><span id='txtRequestTime'></span></td>
         </tr>
+         <tr>
+         <th scope="row"></th>
+         <td><span></span></td>
+         <th scope="row">Appointment Date</th>
+         <td><span id='txtAppDt'></span></td>
+         <th scope="row">Appointment Time</th>
+         <td><span id='txtAppTm'></span></td>
+        </tr>
         <tr>
          <th scope="row">Malfunction Code</th>
          <td><span id='txtMalfunctionCode'></span></td>
@@ -1641,7 +1688,7 @@
           <td><input type="text" title="Create start Date"
            id='dpSettleDate' name='dpSettleDate'
            placeholder="DD/MM/YYYY" class="readonly j_date"
-           disabled="disabled" /></td>
+           disabled="disabled" onChange="fn_chkDt('#dpSettleDate')"/></td>
           <th scope="row">Fail Reason <span id='m3' name='m3' class="must" style="display:none">*</span></th>
           <td><select id='ddlFailReason' name='ddlFailReason'
            disabled="disabled"></select></td>
