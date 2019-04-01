@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  20/03/2019  ONGHC  1.0.0          RE-STRUCTURE JSP AND ADD APPOINTMENT DATE
+ 01/04/2019  ONGHC  1.0.1          ADD Column CT Code
  -->
 
 <script type="text/javaScript">
@@ -33,13 +34,13 @@
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
     var ordno;
 
-    if (selectedItems.length > 0) {
+    /*if (selectedItems.length > 0) {
       if ("ASR" != selectedItems[0].item.code) {
         Common.alert("<spring:message code='service.msg.NoRcd'/>");
         return;
       }
       ordno = selectedItems[0].item.salesOrdNo;
-    }
+    }*/
 
     Common.popupDiv("/services/as/ASReceiveEntryPop.do", {in_ordNo : ordno}, null, true, '_NewEntryPopDiv1');
   }
@@ -78,11 +79,10 @@
     var asId = "";
 
     if (selectedItems.length > 0) {
-
-      if ("ASR" != selectedItems[0].item.code) {
+      /*if ("ASR" != selectedItems[0].item.code) {
         Common.alert("<spring:message code='service.msg.NoRcd'/>");
         return;
-      }
+      }*/
       mafuncId = selectedItems[0].item.asMalfuncId;
       mafuncResnId = selectedItems[0].item.asMalfuncResnId;
       asId = selectedItems[0].item.asId;
@@ -106,20 +106,35 @@
       return;
     }
 
-    var asid = selectedItems[0].item.asId;
+    var asId = selectedItems[0].item.asId;
     var asNo = selectedItems[0].item.asNo;
     var asStusId = selectedItems[0].item.code1;
     var salesOrdNo = selectedItems[0].item.salesOrdNo;
     var salesOrdId = selectedItems[0].item.asSoId;
     var refReqst = selectedItems[0].item.refReqst;
+    var rcdTms = selectedItems[0].item.rcdTms;
+    var asRst = selectedItems[0].item.c3;
 
     if (asStusId != "ACT") {
       Common.alert("<b>[" + asNo + "] already has [" + asStusId + "] result.  .</br> Result entry is disallowed.</b>");
       return;
     }
 
-    var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asid + "&refReqst=" + refReqst;
-    Common.popupDiv("/services/as/ASNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
+    Common.ajax("POST", "/services/as/selRcdTms.do", {
+        asNo : asNo,
+        asId : asId,
+        salesOrdNo : salesOrdNo,
+        salesOrderId : salesOrdId,
+        rcdTms : rcdTms
+    }, function(result) {
+      if (result.code == "99") {
+        Common.alert(result.message);
+        return;
+      } else {
+        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms;
+        Common.popupDiv("/services/as/ASNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
+      }
+    });
   }
 
   function fn_asAppViewPop() {
@@ -233,8 +248,7 @@
       return;
     }
 
-    console.log(selectedItems);
-    var asid = selectedItems[0].item.asId;
+    var asId = selectedItems[0].item.asId;
     var asNo = selectedItems[0].item.asNo;
     var asStusId = selectedItems[0].item.code1;
     var salesOrdNo = selectedItems[0].item.salesOrdNo;
@@ -242,6 +256,7 @@
     var asResultNo = selectedItems[0].item.c3;
     var asResultId = selectedItems[0].item.asResultId;
     var asTypeID = selectedItems[0].item.code;
+    var rcdTms = selectedItems[0].item.rcdTms;
 
     if (asStusId == "ACT") {
       if (selectedItems[0].item.asSlutnResnId == '454') {
@@ -275,14 +290,27 @@
               return;
             }
 
-            var param = "?ord_Id=" + salesOrdId
-                      + "&ord_No=" + salesOrdNo + "&as_No="
-                      + asNo + "&as_Id=" + asid
-                      + "&mod=RESULTEDIT&as_Result_No="
-                      + asResultNo + "&as_Result_Id="
-                      + asResultId;
+            Common.ajax("POST", "/services/as/selRcdTms.do", {
+                asNo : asNo,
+                asId : asId,
+                salesOrdNo : salesOrdNo,
+                salesOrderId : salesOrdId,
+                rcdTms : rcdTms
+            }, function(result) {
+              if (result.code == "99") {
+                Common.alert(result.message);
+                return;
+              } else {
+                var param = "?ord_Id=" + salesOrdId
+                          + "&ord_No=" + salesOrdNo + "&as_No="
+                          + asNo + "&as_Id=" + asId
+                          + "&mod=RESULTEDIT&as_Result_No="
+                          + asResultNo + "&as_Result_Id="
+                          + asResultId;
 
-            Common.popupDiv("/services/as/asResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
+                Common.popupDiv("/services/as/asResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
+              }
+            });
         });
     } else {
       if (asResultNo == "") {
@@ -290,11 +318,25 @@
         return;
       }
 
-      var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo
-                + "&as_No=" + asNo + "&as_Id=" + asid
-                + "&mod=RESULTEDIT&as_Result_No=" + asResultNo
-                + "&as_Result_Id=" + asResultId;
-      Common.popupDiv("/services/as/asResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
+      Common.ajax("POST", "/services/as/selRcdTms.do", {
+          asNo : asNo,
+          asId : asId,
+          salesOrdNo : salesOrdNo,
+          salesOrderId : salesOrdId,
+          rcdTms : rcdTms
+      }, function(result) {
+        if (result.code == "99") {
+          Common.alert(result.message);
+          return;
+        } else {
+          var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo
+                    + "&as_No=" + asNo + "&as_Id=" + asId
+                    + "&mod=RESULTEDIT&as_Result_No=" + asResultNo
+                    + "&as_Result_Id=" + asResultId;
+
+          Common.popupDiv("/services/as/asResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
+        }
+      });
     }
   }
 
@@ -311,7 +353,7 @@
       return;
     }
 
-    var asid = selectedItems[0].item.asId;
+    var asId = selectedItems[0].item.asId;
     var asNo = selectedItems[0].item.asNo;
     var asStusId = selectedItems[0].item.code1;
     var salesOrdNo = selectedItems[0].item.salesOrdNo;
@@ -319,9 +361,10 @@
     var asResultNo = selectedItems[0].item.c3;
     var asResultId = selectedItems[0].item.asResultId;
     var refReqst = selectedItems[0].item.refReqst;
+    var rcdTms = selectedItems[0].item.rcdTms;
 
     if (asStusId == "ACT") {
-      if (refReqst == "") { //inhoouse는  수정 가능
+      if (refReqst == "") {
         Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
         return;
       }
@@ -332,12 +375,25 @@
       return;
     }
 
-    var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo
-              + "&as_No=" + asNo + "&as_Id=" + asid
-              + "&mod=edit&as_Result_No=" + asResultNo + "&as_Result_Id="
-              + asResultId;
+    Common.ajax("POST", "/services/as/selRcdTms.do", {
+        asNo : asNo,
+        asId : asId,
+        salesOrdNo : salesOrdNo,
+        salesOrderId : salesOrdId,
+        rcdTms : rcdTms
+    }, function(result) {
+      if (result.code == "99") {
+        Common.alert(result.message);
+        return;
+      } else {
+        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo
+                  + "&as_No=" + asNo + "&as_Id=" + asId
+                  + "&mod=edit&as_Result_No=" + asResultNo + "&as_Result_Id="
+                  + asResultId;
 
-    Common.popupDiv("/services/as/asResultEditBasicPop.do" + param, null, null, true, '_newASResultBasicDiv1');
+        Common.popupDiv("/services/as/asResultEditBasicPop.do" + param, null, null, true, '_newASResultBasicDiv1');
+      }
+    });
   }
 
   function fn_assginCTTransfer() {
@@ -454,6 +510,12 @@
           width : 100
         },
         {
+          dataField : "memCode",
+          headerText : "<spring:message code='service.grid.CTCode'/>",
+          editable : false,
+          width : 100
+        },
+        {
           dataField : "salesOrdNo",
           headerText : "<spring:message code='service.title.SalesOrder'/>",
           editable : false,
@@ -530,6 +592,18 @@
               Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId=" + ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO, null, null, true, '_viewEntryPopDiv1');
             }
           }
+        },
+        {
+          dataField : "refReqst",
+          headerText : "",
+          width : 100,
+          visible : false
+        },
+        {
+          dataField : "rcdTms",
+          headerText : "",
+          width : 100,
+          visible : false
         }
     ];
 
