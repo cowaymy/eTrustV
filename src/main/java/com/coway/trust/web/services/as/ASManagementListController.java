@@ -37,6 +37,12 @@ import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
+/*********************************************************************************************
+ * DATE          PIC        VERSION     COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 01/04/2019    ONGHC      1.0.1       - Restructure File
+ *********************************************************************************************/
+
 @Controller
 @RequestMapping(value = "/services/as")
 public class ASManagementListController {
@@ -63,78 +69,60 @@ public class ASManagementListController {
   @Autowired
   private MessageSourceAccessor messageAccessor;
 
-  /**
-   * Services - AS - AS Management List 메인 화면
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/initASManagementList.do")
   public String initASManagementList(@RequestParam Map<String, Object> params, ModelMap model) {
-    // 호출될 화면
+    logger.debug("===========================/initASManagementList.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/initASManagementList.do===============================");
     return "services/as/ASManagementList";
   }
 
   @RequestMapping(value = "/asResultInfo.do")
   public String asResultInfo(@RequestParam Map<String, Object> params, ModelMap model) {
-    // 호출될 화면
-
+    logger.debug("===========================/asResultInfo.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/asResultInfo.do===============================");
     return "services/as/inc_asResultInfoPop";
   }
 
   @RequestMapping(value = "/asResultInfoEdit.do")
   public String asResultInfoEdit(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-    // 호출될 화면
-
-    logger.debug("========sessionVO.getUserId()===========>" + sessionVO.getUserId());
-
-    logger.debug("===================>" + params.toString());
+    logger.debug("===========================/asResultInfoEdit.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/asResultInfoEdit.do===============================");
 
     model.put("USER_ID", sessionVO.getMemId());
     model.put("USER_NAME", sessionVO.getUserName());
-
     model.put("BRANCH_NAME", sessionVO.getBranchName());
     model.put("BRANCH_ID", sessionVO.getUserBranchId());
     model.put("ORD_NO", params.get("ord_No"));
-
     return "services/as/inc_asResultEditPop";
   }
 
   @RequestMapping(value = "/asInHouseEntryPop.do")
   public String asInHouseEntryPop(@RequestParam Map<String, Object> params, ModelMap model) {
-    // 호출될 화면
-    logger.debug("===================>" + params.toString());
+    logger.debug("===========================/asInHouseEntryPop.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/asInHouseEntryPop.do===============================");
 
     model.put("ORD_ID", (String) params.get("ord_Id"));
     model.put("ORD_NO", (String) params.get("ord_No"));
     model.put("AS_ID", (String) params.get("as_Id"));
     model.put("AS_NO", (String) params.get("as_No"));
-
     return "services/as/asInHouseEntryPop";
   }
 
-  /**
-   * Services - AS - AS Management List Search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/searchASManagementList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectASManagementList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params : {}", params);
+    logger.debug("===========================/asInHouseEntryPop.do===============================");
+    logger.debug("== params " + params.toString());
 
     String[] asTypeList = request.getParameterValues("asType");
     String[] asStatusList = request.getParameterValues("asStatus");
 
     String cmbbranchId = request.getParameter("cmbbranchId");
-    logger.debug("cmbbranchId : " + cmbbranchId);
     String cmbctId = request.getParameter("cmbctId");
-    logger.debug("cmbctId : " + cmbctId);
 
     params.put("asTypeList", asTypeList);
     params.put("asStatusList", asStatusList);
@@ -143,20 +131,16 @@ public class ASManagementListController {
 
     List<EgovMap> ASMList = ASManagementListService.selectASManagementList(params);
 
-    logger.debug("ASMList : {}", ASMList);
+    logger.debug("== ASMList : {}", ASMList);
+    logger.debug("===========================/asInHouseEntryPop.do===============================");
     return ResponseEntity.ok(ASMList);
   }
 
-  /**
-   * Services - AS - ASReceiveEntry 메인화면
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/ASReceiveEntryPop.do")
   public String initASReceiveEntry(@RequestParam Map<String, Object> params, ModelMap model) {
+    logger.debug("===========================/ASReceiveEntryPop.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/ASReceiveEntryPop.do===============================");
 
     model.put("ORD_ID", (String) params.get("in_ordId"));
     model.put("ORD_NO", (String) params.get("in_ordNo"));
@@ -170,13 +154,13 @@ public class ASManagementListController {
     } else {
       return "services/as/ASReceiveEntryPop";
     }
-
-    // 호출될 화면
-
   }
 
   @RequestMapping(value = "/asResultViewPop.do")
   public String asResultViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    logger.debug("===========================/asResultViewPop.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/asResultViewPop.do===============================");
 
     model.put("ORD_ID", (String) params.get("ord_Id"));
     model.put("ORD_NO", (String) params.get("ord_No"));
@@ -184,40 +168,31 @@ public class ASManagementListController {
     model.put("AS_NO", (String) params.get("as_No"));
 
     EgovMap AsEventInfo = ASManagementListService.getAsEventInfo(params);
-    logger.debug("AsEventInfo {}", AsEventInfo);
     model.put("AsEventInfo", AsEventInfo);
 
-    // 호출될 화면
     return "services/as/asResultViewPop";
   }
 
-  /**
-   * Services - AS - ASReceiveEntry Order No search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/searchOrderNo", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> selectOrderNo(@RequestParam Map<String, Object> params, ModelMap model) {
-    logger.debug("params : {}", params);
+    logger.debug("===========================/searchOrderNo.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/searchOrderNo.do===============================");
+
     EgovMap basicInfo = ASManagementListService.selectOrderBasicInfo(params);
-    logger.debug("basicInfo : {}", basicInfo);
-    // 호출될 화면
+
     return ResponseEntity.ok(basicInfo);
   }
 
   @RequestMapping(value = "/resultASReceiveEntryPop.do")
   public String resultASReceiveEntryPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
       throws Exception {
+    logger.debug("===========================/resultASReceiveEntryPop.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/resultASReceiveEntryPop.do===============================");
 
-    logger.debug("params : {}", params.toString());
-
-    logger.debug("in resultASReceiveEntryPop :==>" + params.toString());
     params.put("orderNo", params.get("ordNo"));
 
-    // [Tap]Basic Info
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
     EgovMap as_ord_basicInfo = ASManagementListService.selectOrderBasicInfo(params);
     EgovMap asentryInfo = null;
@@ -229,7 +204,6 @@ public class ASManagementListController {
     model.put("MOD", (String) params.get("mod"));
     model.put("IN_AsResultId", (String) params.get("asResultId"));
 
-    // ASR인경우 SET ERRCODE
     model.put("mafuncId", (String) params.get("mafuncId"));
     model.put("mafuncResnId", (String) params.get("mafuncResnId"));
 
@@ -243,66 +217,47 @@ public class ASManagementListController {
      * ASManagementListService.selASEntryView(params); model.put("asentryInfo",
      * asentryInfo); }
      */
-    // logger.debug("in orderDetail :==>" +orderDetail.toString());
+
     if (as_ord_basicInfo != null) {
-      logger.debug("in as_ord_basicInfo :==>" + as_ord_basicInfo.toString());
+      logger.debug("Basic Info :: " + as_ord_basicInfo.toString());
     } else {
-      logger.debug("in as_ord_basicInfo :==> null");
+      logger.debug("Basic Info are null");
     }
 
     return "services/as/resultASReceiveEntryPop";
   }
 
-  /**
-   * Services - AS - ASReceiveEntry Order No search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/saveASEntry.do", method = RequestMethod.POST)
   public ResponseEntity<EgovMap> saveASEntry(@RequestBody Map<String, Object> params, ModelMap model,
       SessionVO sessionVO) {
-    ReturnMessage message = new ReturnMessage();
+    logger.debug("===========================/saveASEntry.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/saveASEntry.do===============================");
 
-    logger.debug("saveASEntry in....");
-    logger.debug("params :" + params.toString());
+    ReturnMessage message = new ReturnMessage();
     params.put("USER_ID", sessionVO.getUserId());
 
     EgovMap sm = ASManagementListService.saveASEntry(params);
-    logger.debug("sm :" + sm.toString());
-    //
-    //
-    // if( null !=sm){
-    // HashMap spMap =(HashMap)sm.get("spMap");
-    // logger.debug("spMap :"+ spMap.toString());
-    // if(! "000".equals(spMap.get("P_RESULT_MSG"))){
-    // sm.put("logerr","Y");
-    // }
-    //
-    // servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-    // }
 
-    // 호출될 화면
+    /*
+     * if( null !=sm){ HashMap spMap =(HashMap)sm.get("spMap"); logger.debug(
+     * "spMap :"+ spMap.toString()); if(!
+     * "000".equals(spMap.get("P_RESULT_MSG"))){ sm.put("logerr","Y"); }
+     *
+     * servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap); }
+     */
+
     return ResponseEntity.ok(sm);
   }
 
-  /**
-   * Services - AS - saveASInHouseEntry in house
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/saveASInHouseEntry.do", method = RequestMethod.POST)
   public ResponseEntity<EgovMap> saveASInHouseEntry(@RequestBody Map<String, Object> params, ModelMap model,
       SessionVO sessionVO) {
     ReturnMessage message = new ReturnMessage();
+    logger.debug("===========================/saveASInHouseEntry.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/saveASInHouseEntry.do===============================");
 
-    logger.debug("saveASEntry in....");
-    logger.debug("params :" + params.toString());
     params.put("updator", sessionVO.getUserId());
 
     EgovMap sm = ASManagementListService.saveASInHouseEntry(params);
@@ -314,73 +269,51 @@ public class ASManagementListController {
       }
       servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
     }
-
-    // 호출될 화면
     return ResponseEntity.ok(sm);
   }
 
-  /**
-   * Services - AS - saveASInHouseEntry in house
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/updateASInHouseEntry.do", method = RequestMethod.POST)
   public ResponseEntity<EgovMap> updateASInHouseEntry(@RequestBody Map<String, Object> params, ModelMap model,
       SessionVO sessionVO) {
     ReturnMessage message = new ReturnMessage();
 
-    logger.debug("updateASInHouseEntry in....");
-    logger.debug("params :" + params.toString());
+    logger.debug("===========================/updateASInHouseEntry.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/updateASInHouseEntry.do===============================");
     params.put("updator", sessionVO.getUserId());
 
     EgovMap sm = ASManagementListService.updateASInHouseEntry(params);
 
-    // 호출될 화면
     return ResponseEntity.ok(sm);
   }
 
-  /**
-   * Services - AS - ASReceiveEntry Order No search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/updateASEntry.do", method = RequestMethod.POST)
   public ResponseEntity<EgovMap> updateASEntry(@RequestBody Map<String, Object> params, ModelMap model,
       SessionVO sessionVO) {
     ReturnMessage message = new ReturnMessage();
 
-    logger.debug("updateASEntry in....");
-    logger.debug("params :" + params.toString());
+    logger.debug("===========================/updateASInHouseEntry.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/updateASInHouseEntry.do===============================");
+
     params.put("USER_ID", sessionVO.getUserId());
     EgovMap sm = ASManagementListService.updateASEntry(params);
 
-    // 호출될 화면
     return ResponseEntity.ok(sm);
   }
 
-  /**
-   * Services - AS - ASReceiveEntry 메인화면
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/ASNewResultPop.do")
   public String insertASResult(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-    // 호출될 화면
+    logger.debug("===========================/ASNewResultPop.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/ASNewResultPop.do===============================");
 
     model.put("ORD_ID", (String) params.get("ord_Id"));
     model.put("ORD_NO", (String) params.get("ord_No"));
     model.put("AS_NO", (String) params.get("as_No"));
     model.put("AS_ID", (String) params.get("as_Id"));
-    model.put("REF_REQST", (String) params.get("refReqst"));
+    model.put("REF_REQST", CommonUtils.nvl((String) params.get("refReqst")));
+    model.put("AS_RESULT_NO", (String) params.get("as_Rst"));
     model.put("IS_AUTO", (String) params.get("isAuto"));
 
     model.put("USER_ID", sessionVO.getMemId());
@@ -388,26 +321,30 @@ public class ASManagementListController {
 
     model.put("BRANCH_NAME", sessionVO.getBranchName());
     model.put("BRANCH_ID", sessionVO.getUserBranchId());
+    model.put("RCD_TMS", (String) params.get("rcdTms"));
 
     params.put("salesOrderId", params.get("ord_Id"));
 
-    // add order view info
     EgovMap orderDetail = null;
     // basicinfo = hsManualService.selectHsViewBasicInfo(params);
     try {
       orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     model.addAttribute("orderDetail", orderDetail);
+
+    String days = ASManagementListService.getInHseLmtDy();
+    model.addAttribute("inHseLmtDy", days);
 
     return "services/as/newASResultPop";
   }
 
   @RequestMapping(value = "/asResultEditViewPop.do")
   public String asResultEditViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-    // 호출될 화면
+    logger.debug("===========================/asResultEditViewPop.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/asResultEditViewPop.do===============================");
 
     model.put("ORD_ID", (String) params.get("ord_Id"));
     model.put("ORD_NO", (String) params.get("ord_No"));
@@ -428,7 +365,10 @@ public class ASManagementListController {
 
   @RequestMapping(value = "/asResultEditBasicPop.do")
   public String asResultEditBasicPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-    // 호출될 화면
+    logger.debug("===========================/asResultEditBasicPop.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/asResultEditBasicPop.do===============================");
+
     model.put("ORD_ID", (String) params.get("ord_Id"));
     model.put("ORD_NO", (String) params.get("ord_No"));
     model.put("AS_NO", (String) params.get("as_No"));
@@ -446,59 +386,36 @@ public class ASManagementListController {
     return "services/as/asResultEditBasicPop";
   }
 
-  /**
-   * Services - AS - AS Management List Search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/getASHistoryList", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getASHistoryList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("in  getASHistoryList.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getASHistoryList.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASHistoryList.do===============================");
 
     List<EgovMap> sHistoryList = ASManagementListService.getASHistoryList(params);
 
     return ResponseEntity.ok(sHistoryList);
   }
 
-  /**
-   * Services - AS - AS Management List Search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/getBSHistoryList", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getBSHistoryList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-
-    logger.debug("in  getBSHistoryList.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getBSHistoryList.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getBSHistoryList.do===============================");
 
     List<EgovMap> bHistoryList = ASManagementListService.getBSHistoryList(params);
 
     return ResponseEntity.ok(bHistoryList);
   }
 
-  /**
-   * Services - AS - AS Management List Search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/getBrnchId", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getBrnchId(@RequestParam Map<String, Object> params, HttpServletRequest request,
       ModelMap model) {
-
-    logger.debug("in  getBrnchId.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getBrnchId.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getBrnchId.do===============================");
 
     List<EgovMap> list = ASManagementListService.getBrnchId(params);
 
@@ -508,9 +425,9 @@ public class ASManagementListController {
   @RequestMapping(value = "/getMemberBymemberID", method = RequestMethod.GET)
   public ResponseEntity<Map> getMemberBymemberID(@RequestParam Map<String, Object> params, HttpServletRequest request,
       ModelMap model) {
-
-    logger.debug("in  getBrnchId.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getMemberBymemberID.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getMemberBymemberID.do===============================");
 
     EgovMap meminfo = ASManagementListService.getMemberBymemberID(params);
 
@@ -523,7 +440,10 @@ public class ASManagementListController {
   @RequestMapping(value = "/getStockPrice.do", method = RequestMethod.GET)
   public ResponseEntity<Map> getStockPrice(@RequestParam Map<String, Object> params, HttpServletRequest request,
       ModelMap model) {
-    logger.debug("params : ", params.toString());
+    logger.debug("===========================/getStockPrice.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getStockPrice.do===============================");
+
     EgovMap filterprice = ASManagementListService.getStockPricebyStkID(params);
 
     Map<String, Object> map = new HashMap();
@@ -536,9 +456,9 @@ public class ASManagementListController {
   @RequestMapping(value = "/getTotalUnclaimItem", method = RequestMethod.GET)
   public ResponseEntity<Map> getTotalUnclaimItem(@RequestParam Map<String, Object> params, HttpServletRequest request,
       ModelMap model) {
-
-    logger.debug("in  getTotalUnclaimItem.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getTotalUnclaimItem.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getTotalUnclaimItem.do===============================");
 
     EgovMap meminfo = ASManagementListService.spFilterClaimCheck(params);
 
@@ -551,9 +471,9 @@ public class ASManagementListController {
   @RequestMapping(value = "/selASEntryView", method = RequestMethod.GET)
   public ResponseEntity<Map> selASEntryView(@RequestParam Map<String, Object> params, HttpServletRequest request,
       ModelMap model) {
-
-    logger.debug("in  selASEntryView.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/selASEntryView.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/selASEntryView.do===============================");
 
     EgovMap meminfo = ASManagementListService.selASEntryView(params);
 
@@ -563,100 +483,60 @@ public class ASManagementListController {
     return ResponseEntity.ok(map);
   }
 
-  /**
-   * Services - AS - AS Management List Search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/getASOrderInfo", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getASOrderInfo(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-
-    logger.debug("in  getASOrderInfo.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getASOrderInfo.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASOrderInfo.do===============================");
 
     List<EgovMap> list = ASManagementListService.getASOrderInfo(params);
 
     return ResponseEntity.ok(list);
   }
 
-  /**
-   * Services - AS - AS Management List Search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/getASEvntsInfo", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getASEvntsInfo(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-
-    logger.debug("in  getASEvntsInfo.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getASEvntsInfo.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASEvntsInfo.do===============================");
 
     List<EgovMap> list = ASManagementListService.getASEvntsInfo(params);
 
     return ResponseEntity.ok(list);
   }
 
-  /**
-   * Services - AS - AS Management List Search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/getASHistoryInfo", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getASHistoryInfo(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-
-    logger.debug("in  getASHistoryInfo.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getASHistoryInfo.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASHistoryInfo.do===============================");
 
     List<EgovMap> list = ASManagementListService.getASHistoryInfo(params);
 
     return ResponseEntity.ok(list);
   }
 
-  /**
-   * Services - AS - AS Management List Search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/getASStockPrice", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getASStockPrice(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-
-    logger.debug("in  getASStockPrice.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getASStockPrice.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASStockPrice.do===============================");
 
     List<EgovMap> list = ASManagementListService.getASStockPrice(params);
 
     return ResponseEntity.ok(list);
   }
 
-  /**
-   * Services - AS - AS Management List Search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/getASFilterInfo", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getASFilterInfo(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-
-    logger.debug("in  getASFilterInfo.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getASFilterInfo.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASFilterInfo.do===============================");
 
     if (params.get("prdctCd") != null) {
       String str = params.get("prdctCd").toString();
@@ -675,60 +555,36 @@ public class ASManagementListController {
     return ResponseEntity.ok(list);
   }
 
-  /**
-   * Services - AS - AS Management List Search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/getASReasonCode", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getASReasonCode(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-
-    logger.debug("in  getASReasonCode.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getASReasonCode.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASReasonCode.do===============================");
 
     List<EgovMap> list = ASManagementListService.getASReasonCode(params);
 
     return ResponseEntity.ok(list);
   }
 
-  /**
-   * Services - AS - AS Management List Search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/getASReasonCode2", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getASReasonCode2(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-
-    logger.debug("in  getASReasonCode.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getASReasonCode2.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASReasonCode2.do===============================");
 
     List<EgovMap> list = ASManagementListService.getASReasonCode2(params);
 
     return ResponseEntity.ok(list);
   }
 
-  /**
-   * Services - AS - AS Management List Search
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
   @RequestMapping(value = "/getASMember", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getASMember(@RequestParam Map<String, Object> params, HttpServletRequest request,
       ModelMap model) {
-
-    logger.debug("in  getASMember.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getASMember.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASMember.do===============================");
 
     List<EgovMap> list = ASManagementListService.getASMember(params);
 
@@ -738,9 +594,9 @@ public class ASManagementListController {
   @RequestMapping(value = "/getCallLog", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getCallLog(@RequestParam Map<String, Object> params, HttpServletRequest request,
       ModelMap model) {
-
-    logger.debug("in  getCallLog.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getCallLog.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getCallLog.do===============================");
 
     List<EgovMap> list = ASManagementListService.getCallLog(params);
 
@@ -750,9 +606,9 @@ public class ASManagementListController {
   @RequestMapping(value = "/getASRulstSVC0004DInfo", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getASRulstSVC0004DInfo(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-
-    logger.debug("in  getASRulstSVC0004DInfo.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getASRulstSVC0004DInfo.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASRulstSVC0004DInfo.do===============================");
 
     List<EgovMap> list = ASManagementListService.getASRulstSVC0004DInfo(params);
 
@@ -762,9 +618,9 @@ public class ASManagementListController {
   @RequestMapping(value = "/getASRulstEditFilterInfo", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getASRulstEditFilterInfo(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-
-    logger.debug("in  getASRulstEditFilterInfo.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/getASRulstEditFilterInfo.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASRulstEditFilterInfo.do===============================");
 
     List<EgovMap> list = ASManagementListService.getASRulstEditFilterInfo(params);
 
@@ -774,9 +630,10 @@ public class ASManagementListController {
   @RequestMapping(value = "/selectASDataInfo", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectASDataInfo(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
+    logger.debug("===========================/selectASDataInfo.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/selectASDataInfo.do===============================");
 
-    logger.debug("in  selectASDataInfo.....");
-    logger.debug("params : {}", params.toString());
     List<EgovMap> list = ASManagementListService.selectASDataInfo(params);
     return ResponseEntity.ok(list);
   }
@@ -784,11 +641,8 @@ public class ASManagementListController {
   @RequestMapping(value = "/newResultAdd.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> newResultAdd(@RequestBody Map<String, Object> params, Model model,
       HttpServletRequest request, SessionVO sessionVO) {
-
-    logger.debug("in  newResultAdd ");
-    logger.debug("			pram set  log");
-    logger.debug("					" + params.toString());
-    logger.debug("			pram set end  ");
+    logger.debug("===========================/newResultAdd.do===============================");
+    logger.debug("== params " + params.toString());
 
     params.put("updator", sessionVO.getUserId());
 
@@ -797,10 +651,11 @@ public class ASManagementListController {
     List<EgovMap> remove = (List<EgovMap>) params.get("remove");
     List<EgovMap> update = (List<EgovMap>) params.get("update");
 
-    logger.debug("asResultM ===>" + asResultM.toString());
-    logger.debug("add ===>" + add.toString());
-    logger.debug("remove ===>" + remove.toString());
-    logger.debug("update ===>" + update.toString());
+    logger.debug("== asResultM = " + asResultM.toString());
+    logger.debug("== ADD = " + add.toString());
+    logger.debug("== REMOVE = " + remove.toString());
+    logger.debug("== UPDATE = " + update.toString());
+    logger.debug("===========================/newResultAdd.do===============================");
 
     ReturnMessage message = new ReturnMessage();
 
@@ -834,11 +689,8 @@ public class ASManagementListController {
   @RequestMapping(value = "/newResultUpdate.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> newResultUpdate(@RequestBody Map<String, Object> params, Model model,
       HttpServletRequest request, SessionVO sessionVO) {
-
-    logger.debug("in  newResultUpdate ");
-    logger.debug("			pram set  log");
-    logger.debug("					" + params.toString());
-    logger.debug("			pram set end  ");
+    logger.debug("===========================/newResultUpdate.do===============================");
+    logger.debug("== params " + params.toString());
 
     params.put("updator", sessionVO.getUserId());
 
@@ -847,14 +699,15 @@ public class ASManagementListController {
     List<EgovMap> remove = (List<EgovMap>) params.get("remove");
     List<EgovMap> update = (List<EgovMap>) params.get("update");
 
-    logger.debug("asResultM ===>" + asResultM.toString());
-    logger.debug("add ===>" + add.toString());
-    logger.debug("remove ===>" + remove.toString());
-    logger.debug("update ===>" + update.toString());
+    logger.debug("== asResultM = " + asResultM.toString());
+    logger.debug("== ADD = " + add.toString());
+    logger.debug("== REMOVE = " + remove.toString());
+    logger.debug("== UPDATE = " + update.toString());
+    logger.debug("===========================/newResultUpdate.do===============================");
 
     EgovMap rtnValue = ASManagementListService.asResult_update(params);
 
-    logger.debug("newResultUpdate   done!!--->" + rtnValue.toString());
+    logger.debug("newResultUpdate == " + rtnValue.toString());
 
     ReturnMessage message = new ReturnMessage();
     message.setCode(AppConstants.SUCCESS);
@@ -868,11 +721,8 @@ public class ASManagementListController {
   @RequestMapping(value = "/newResultUpdate_1.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> newResultUpdate_1(@RequestBody Map<String, Object> params, Model model,
       HttpServletRequest request, SessionVO sessionVO) {
-
-    logger.debug("in  newResultUpdate ");
-    logger.debug("			pram set  log");
-    logger.debug("					" + params.toString());
-    logger.debug("			pram set end  ");
+    logger.debug("===========================/newResultUpdate_1.do===============================");
+    logger.debug("== params " + params.toString());
 
     params.put("updator", sessionVO.getUserId());
 
@@ -883,10 +733,11 @@ public class ASManagementListController {
     // List<EgovMap> all = (List<EgovMap>) params.get("all");
 
     // logger.debug("test ===>"+params.get("test").toString());
-    logger.debug("asResultM ===>" + asResultM.toString());
-    logger.debug("add ===>" + add.toString());
-    logger.debug("remove ===>" + remove.toString());
-    logger.debug("update ===>" + update.toString());
+    logger.debug("== asResultM = " + asResultM.toString());
+    logger.debug("== ADD = " + add.toString());
+    logger.debug("== REMOVE = " + remove.toString());
+    logger.debug("== UPDATE = " + update.toString());
+    logger.debug("===========================/newResultUpdate_1.do===============================");
 
     EgovMap rtnValue = ASManagementListService.asResult_update_1(params);
 
@@ -906,11 +757,9 @@ public class ASManagementListController {
   @RequestMapping(value = "/newResultBasicUpdate.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> newResultBasicUpdate(@RequestBody Map<String, Object> params, Model model,
       HttpServletRequest request, SessionVO sessionVO) {
-
-    logger.debug("in  newResultBasicUpdate ");
-    logger.debug("			pram set  log");
-    logger.debug("					" + params.toString());
-    logger.debug("			pram set end  ");
+    logger.debug("===========================/newResultBasicUpdate.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/newResultBasicUpdate.do===============================");
 
     params.put("updator", sessionVO.getUserId());
 
@@ -935,15 +784,12 @@ public class ASManagementListController {
   @RequestMapping(value = "/addASRemark.do", method = RequestMethod.GET)
   public ResponseEntity<ReturnMessage> addASRemark(@RequestParam Map<String, Object> params, Model model,
       HttpServletRequest request, SessionVO sessionVO) {
-
-    logger.debug("in  addASRemark ");
-    logger.debug("			pram set  log");
-    logger.debug("					" + params.toString());
-    logger.debug("			pram set end  ");
+    logger.debug("===========================/addASRemark.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/addASRemark.do===============================");
 
     params.put("USER_ID", sessionVO.getUserId());
 
-    // CCR0007d
     params.put("AS_ID", params.get("asId"));
     params.put("CALL_STUS_ID", "40");
     params.put("CALL_FDBCK_ID", "0");
@@ -969,37 +815,31 @@ public class ASManagementListController {
 
   @RequestMapping(value = "/addASRemarkPop.do")
   public String addASRemarkPop(@RequestParam Map<String, Object> params, ModelMap model) {
-
-    logger.debug("in  addASRemarkPop ");
-    logger.debug("			pram set  log");
-    logger.debug("					" + params.toString());
-    logger.debug("			pram set end  ");
+    logger.debug("===========================/addASRemarkPop.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/addASRemarkPop.do===============================");
 
     model.put("AS_ID", (String) params.get("AS_ID"));
 
-    // 호출될 화면
     return "services/as/addASRemarkPop";
   }
 
   @RequestMapping(value = "/assignCTTransferPop.do")
   public String assignCTTransferPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    logger.debug("===========================/assignCTTransferPop.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/assignCTTransferPop.do===============================");
 
-    logger.debug("in  assignCTTransferPop ");
-    logger.debug("			pram set  log");
-    logger.debug("					" + params.toString());
-    logger.debug("			pram set end  ");
-
-    // 호출될 화면
     return "services/as/assignCTTransferPop";
   }
 
   @RequestMapping(value = "/assignCtList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> assignCtList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
+    logger.debug("===========================/assignCtList.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/assignCtList.do===============================");
 
-    logger.debug("in  assignCtList.....");
-    logger.debug("params : {}", params.toString());
-    // BRNCH_ID
     List<EgovMap> list = ASManagementListService.assignCtList(params);
 
     return ResponseEntity.ok(list);
@@ -1008,9 +848,9 @@ public class ASManagementListController {
   @RequestMapping(value = "/assignCtOrderList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> assignCtOrderList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-
-    logger.debug("in  assignCtOrderList.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/assignCtOrderList.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/assignCtOrderList.do===============================");
 
     String vAsNo = (String) params.get("asNo");
     String[] asNo = null;
@@ -1028,11 +868,9 @@ public class ASManagementListController {
   @RequestMapping(value = "/assignCtOrderListSave.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> assignCtOrderListSave(@RequestBody Map<String, Object> params, Model model,
       HttpServletRequest request, SessionVO sessionVO) {
-
-    logger.debug("in  assignCtOrderListSave ");
-    logger.debug("			pram set  log");
-    logger.debug("					" + params.toString());
-    logger.debug("			pram set end  ");
+    logger.debug("===========================/assignCtOrderListSave.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/assignCtOrderListSave.do===============================");
 
     params.put("updator", sessionVO.getUserId());
     List<EgovMap> update = (List<EgovMap>) params.get("update");
@@ -1052,8 +890,10 @@ public class ASManagementListController {
   @RequestMapping(value = "/selectCTByDSC.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectCTMByDSC(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
+    logger.debug("===========================/selectCTByDSC.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/selectCTByDSC.do===============================");
 
-    logger.debug("params {}", params);
     List<EgovMap> selectCTSubGroupDscList = ASManagementListService.selectCTByDSC(params);
     logger.debug("selectCTSubGroupDscList {}", selectCTSubGroupDscList);
     return ResponseEntity.ok(selectCTSubGroupDscList);
@@ -1062,75 +902,90 @@ public class ASManagementListController {
   @RequestMapping(value = "/inHouseGetProductMasters.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> inHouseGetProductMasters(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
+    logger.debug("===========================/inHouseGetProductMasters.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/inHouseGetProductMasters.do===============================");
 
-    logger.debug("params {}", params);
     List<EgovMap> getProductMasters = inHouseRepairService.getProductMasters(params);
-    logger.debug("GetProductMasters {}", getProductMasters);
     return ResponseEntity.ok(getProductMasters);
   }
 
   @RequestMapping(value = "/inHouseGetProductDetails.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> inHouseGetProductDetails(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
+    logger.debug("===========================/inHouseGetProductDetails.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/inHouseGetProductDetails.do===============================");
 
-    logger.debug("params {}", params);
     List<EgovMap> getProductDetails = inHouseRepairService.getProductDetails(params);
-    logger.debug("getProductDetails {}", getProductDetails);
     return ResponseEntity.ok(getProductDetails);
   }
 
   @RequestMapping(value = "/inHouseIsAbStck.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> inHouseIsAbStck(@RequestParam Map<String, Object> params, HttpServletRequest request,
       ModelMap model) {
+    logger.debug("===========================/inHouseIsAbStck.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/inHouseIsAbStck.do===============================");
 
-    logger.debug("params {}", params);
     EgovMap isAbStck = inHouseRepairService.isAbStck(params);
-    logger.debug("isAbStck {}", isAbStck);
     return ResponseEntity.ok(isAbStck);
   }
 
   @RequestMapping(value = "/newASInHouseAdd.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> newASInHouseAdd(@RequestBody Map<String, Object> params, Model model,
       HttpServletRequest request, SessionVO sessionVO) {
-
-    logger.debug("in  newASInHouseAdd ");
-    logger.debug("			pram set  log");
-    logger.debug("					" + params.toString());
-    logger.debug("			pram set end  ");
+    logger.debug("===========================/newASInHouseAdd.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/newASInHouseAdd.do===============================");
 
     params.put("updator", sessionVO.getUserId());
-
     ReturnMessage message = new ReturnMessage();
 
     HashMap mp = new HashMap();
-    Map svc0004dmap = (Map) params.get("asResultM");// hash
+    Map svc0004dmap = (Map) params.get("asResultM");
     mp.put("serviceNo", svc0004dmap.get("AS_NO"));
-    int isAsCnt = ASManagementListService.isAsAlreadyResult(mp);
 
-    if (isAsCnt == 0) {
-      EgovMap rtnValue = ASManagementListService.asResult_insert(params);
-      if (null != rtnValue) {
-        HashMap spMap = (HashMap) rtnValue.get("spMap");
-        logger.debug("spMap :" + spMap.toString());
-        if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-          rtnValue.put("logerr", "Y");
+    params.put("asNo", svc0004dmap.get("AS_NO"));
+    params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
+    params.put("asSoId", svc0004dmap.get("AS_SO_ID"));
+    params.put("rcdTms", svc0004dmap.get("RCD_TMS"));
+
+    int noRcd = ASManagementListService.chkRcdTms(params);
+
+    if (noRcd == 1) { // RECORD ABLE TO UPDATE
+      int isAsCnt = ASManagementListService.isAsAlreadyResult(mp);
+      logger.debug("== isAsCnt " + isAsCnt);
+
+      if (isAsCnt == 0) {
+        EgovMap rtnValue = ASManagementListService.asResult_insert(params);
+        if (null != rtnValue) {
+          HashMap spMap = (HashMap) rtnValue.get("spMap");
+          logger.debug("spMap :" + spMap.toString());
+          if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
+            rtnValue.put("logerr", "Y");
+          }
+
+          // ONGHC ADD FOR OPTIONAL FILTER
+          boolean rst = ASManagementListService.insertOptFlt(params);
+
+          servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+          logger.debug("SP_SVC_LOGISTIC_REQUEST===> " + spMap.toString());
         }
 
-        // ONGHC ADD FOR OPTIONAL FILTER
-        boolean rst = ASManagementListService.insertOptFlt(params);
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(rtnValue.get("asNo"));
+        message.setMessage("");
 
-        servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-        logger.debug("SP_SVC_LOGISTIC_REQUEST===> " + spMap.toString());
+      } else {
+        message.setCode("98");
+        message.setData(svc0004dmap.get("AS_NO"));
+        message.setMessage("There is complete result exist already");
       }
-
-      message.setCode(AppConstants.SUCCESS);
-      message.setData(rtnValue.get("asNo"));
-      message.setMessage("");
-
     } else {
-      message.setCode("98");
-      message.setData(svc0004dmap.get("AS_NO"));
-      message.setMessage("There is complete result exist already");
+      message.setMessage(
+          "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+      message.setCode("99");
     }
 
     return ResponseEntity.ok(message);
@@ -1139,78 +994,87 @@ public class ASManagementListController {
   @RequestMapping(value = "/getErrMstList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getErrMstList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/getErrMstList.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getErrMstList.do===============================");
+
     List<EgovMap> getErrMstList = ASManagementListService.getErrMstList(params);
-    logger.debug("getErrMstList {}", getErrMstList);
     return ResponseEntity.ok(getErrMstList);
   }
 
   @RequestMapping(value = "/getErrDetilList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getErrDetilList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/getErrDetilList.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getErrDetilList.do===============================");
 
     List<EgovMap> getErrDetilList = ASManagementListService.getErrDetilList(params);
-    logger.debug("getErrDetilList {}", getErrDetilList);
     return ResponseEntity.ok(getErrDetilList);
   }
 
   @RequestMapping(value = "/getSLUTN_CODE_List.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getSLUTN_CODE_List(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/getSLUTN_CODE_List.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getSLUTN_CODE_List.do===============================");
 
     List<EgovMap> getSLUTN_CODE_List = ASManagementListService.getSLUTN_CODE_List(params);
-    logger.debug("getErrDetilList {}", getSLUTN_CODE_List);
     return ResponseEntity.ok(getSLUTN_CODE_List);
   }
 
   @RequestMapping(value = "/getDTAIL_DEFECT_List.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getDTAIL_DEFECT_List(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/getDTAIL_DEFECT_List.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getDTAIL_DEFECT_List.do===============================");
 
     List<EgovMap> getDTAIL_DEFECT_List = ASManagementListService.getDTAIL_DEFECT_List(params);
-    logger.debug("getErrDetilList {}", getDTAIL_DEFECT_List);
     return ResponseEntity.ok(getDTAIL_DEFECT_List);
   }
 
   @RequestMapping(value = "/getDEFECT_PART_List.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getDEFECT_PART_List(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/getDEFECT_PART_List.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getDEFECT_PART_List.do===============================");
 
     List<EgovMap> getDEFECT_PART_List = ASManagementListService.getDEFECT_PART_List(params);
-    logger.debug("getErrDetilList {}", getDEFECT_PART_List);
     return ResponseEntity.ok(getDEFECT_PART_List);
   }
 
   @RequestMapping(value = "/getDEFECT_CODE_List.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getDEFECT_CODE_List(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/getDEFECT_CODE_List.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getDEFECT_CODE_List.do===============================");
 
     List<EgovMap> getDEFECT_CODE_List = ASManagementListService.getDEFECT_CODE_List(params);
-    logger.debug("getErrDetilList {}", getDEFECT_CODE_List);
     return ResponseEntity.ok(getDEFECT_CODE_List);
   }
 
   @RequestMapping(value = "/getDEFECT_TYPE_List.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getDEFECT_TYPE_List(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/getDEFECT_TYPE_List.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getDEFECT_TYPE_List.do===============================");
 
     List<EgovMap> getDEFECT_TYPE_List = ASManagementListService.getDEFECT_TYPE_List(params);
-    logger.debug("getErrDetilList {}", getDEFECT_TYPE_List);
     return ResponseEntity.ok(getDEFECT_TYPE_List);
   }
 
   @RequestMapping(value = "/sendSMS.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> sendSMS(@RequestParam Map<String, Object> params, HttpServletRequest request,
       ModelMap model, SessionVO session) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/sendSMS.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/sendSMS.do===============================");
 
-    // send SMS
     SmsVO sms = new SmsVO(session.getUserId(), 975);
     sms.setMessage(CommonUtils.nvl(params.get("msg")));
     sms.setMobiles(CommonUtils.nvl(params.get("rTelNo")));
@@ -1225,7 +1089,9 @@ public class ASManagementListController {
 
   @RequestMapping(value = "/sendSMSPop.do")
   public String sendSMSPop(@RequestParam Map<String, Object> params, ModelMap model) {
-    // 호출될 화면
+    logger.debug("===========================/sendSMSPop.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/sendSMSPop.do===============================");
 
     return "services/as/sendNewSMSPop";
   }
@@ -1233,11 +1099,12 @@ public class ASManagementListController {
   @RequestMapping(value = "/getCustAddressInfo.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> getCustAddressInfo(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/getCustAddressInfo.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getCustAddressInfo.do===============================");
 
     String address = ASManagementListService.getCustAddressInfo(params);
     EgovMap rtnm = new EgovMap();
-    logger.debug("address {}", address);
 
     rtnm.put("fulladdr", address);
 
@@ -1247,17 +1114,20 @@ public class ASManagementListController {
   @RequestMapping(value = "/getSmsCTMemberById.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> getSmsCTMemberById(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/getSmsCTMemberById.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getSmsCTMemberById.do===============================");
 
     EgovMap CT = ASManagementListService.getSmsCTMemberById(params);
-    logger.debug("CT {}", CT);
     return ResponseEntity.ok(CT);
   }
 
   @RequestMapping(value = "/getSmsCTMMemberById.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> getSmsCTMMemberById(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/getSmsCTMMemberById.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getSmsCTMMemberById.do===============================");
 
     EgovMap CTM = ASManagementListService.getSmsCTMMemberById(params);
     logger.debug("CTM {}", CTM);
@@ -1267,27 +1137,31 @@ public class ASManagementListController {
   @RequestMapping(value = "/getMemberByMemberIdCode.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> getMemberByMemberIdCode(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/getMemberByMemberIdCode.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getMemberByMemberIdCode.do===============================");
 
     EgovMap MEMup = ASManagementListService.getMemberByMemberIdCode(params);
-    logger.debug("MEMup {}", MEMup);
     return ResponseEntity.ok(MEMup);
   }
 
   @RequestMapping(value = "/getSVC_AVAILABLE_INVENTORY.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> getSVC_AVAILABLE_INVENTORY(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/getSVC_AVAILABLE_INVENTORY.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getSVC_AVAILABLE_INVENTORY.do===============================");
 
     EgovMap logc = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(params);
-    logger.debug("logc {}", logc);
     return ResponseEntity.ok(logc);
   }
 
   @RequestMapping(value = "/getAPILogList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getAPILogList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
+    logger.debug("===========================/getAPILogList.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getAPILogList.do===============================");
 
     String logType = (String) params.get("LOGTYPE");
 
@@ -1295,17 +1169,11 @@ public class ASManagementListController {
 
     if ("HS".equals(logType)) {
       list = ASManagementListService.selectSVC0023T(params);
-
     } else if ("AS".equals(logType)) {
-
       list = ASManagementListService.selectSVC0024T(params);
-
     } else if ("INS".equals(logType)) {
-
       list = ASManagementListService.selectSVC0025T(params);
-
     } else if ("PR".equals(logType)) {
-
       list = ASManagementListService.selectSVC0026T(params);
     }
 
@@ -1316,7 +1184,10 @@ public class ASManagementListController {
 
   @RequestMapping(value = "/initAPILog.do")
   public String initAPILog(@RequestParam Map<String, Object> params, ModelMap model) {
-    // 호출될 화면
+    logger.debug("===========================/initAPILog.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/initAPILog.do===============================");
+
     return "services/as/apiLogList";
   }
 
@@ -1324,15 +1195,17 @@ public class ASManagementListController {
   @RequestMapping(value = "/checkASReceiveEntry.do", method = RequestMethod.GET)
   public ResponseEntity<ReturnMessage> checkASReceiveEntry(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
+    logger.debug("===========================/checkASReceiveEntry.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/checkASReceiveEntry.do===============================");
+
     ReturnMessage message = new ReturnMessage();
-    logger.debug("params {}", params);
     String msg = "";
     EgovMap asReceiveInfo = ASManagementListService.checkASReceiveEntry(params);
     EgovMap hsInfo = ASManagementListService.checkHSStatus(params);
     EgovMap warrentyInfo = ASManagementListService.checkWarrentyStatus(params);
 
     if (asReceiveInfo != null) {
-      // logger.debug("AS Stus : " + asReceiveInfo.get("asStus"));
       if (asReceiveInfo.get("asStus") != null) {
         msg = msg + "* This order AS is under " + asReceiveInfo.get("asStusDesc") + " status.<br />";
       } else {
@@ -1343,14 +1216,12 @@ public class ASManagementListController {
     }
 
     if (warrentyInfo != null) {
-      // logger.debug("Srv Stus : " + warrentyInfo.get("srvStus"));
       msg = msg + "";
     } else {
       msg = msg + "* This order Membership is under Out of Warranty status.<br />";
     }
 
     if (hsInfo != null) {
-      // logger.debug("HS Stus : " + hsInfo.get("hsStus"));
       if (hsInfo.get("hsStus") != null) {
         msg = msg + "* This order HS is under " + hsInfo.get("hsStusDesc") + " status.<br />";
       } else {
@@ -1360,7 +1231,6 @@ public class ASManagementListController {
       msg = msg + "";
     }
 
-    logger.debug("checkASReceiveEntry - msg : " + msg);
     message.setMessage(msg);
     return ResponseEntity.ok(message);
   }
@@ -1368,10 +1238,33 @@ public class ASManagementListController {
   @RequestMapping(value = "/checkAOASRcdStat", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> checkAOASRcdStat(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-
-    logger.debug("params : {}", params.toString());
+    logger.debug("===========================/checkAOASRcdStat.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/checkAOASRcdStat.do===============================");
 
     List<EgovMap> list = ASManagementListService.checkAOASRcdStat(params);
     return ResponseEntity.ok(list);
+  }
+
+  @RequestMapping(value = "/selRcdTms.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> chkRcdTms(@RequestBody Map<String, Object> params, ModelMap model,
+      SessionVO sessionVO) {
+    ReturnMessage message = new ReturnMessage();
+
+    logger.debug("==================/selRcdTms.do=======================");
+    logger.debug("params : {}", params);
+
+    int noRcd = ASManagementListService.selRcdTms(params);
+    logger.debug("noRcd : ", noRcd);
+    logger.debug("==================/selRcdTms.do=======================");
+    if (noRcd == 1) {
+      message.setMessage("OK");
+      message.setCode("1");
+    } else {
+      message.setMessage(
+          "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+      message.setCode("99");
+    }
+    return ResponseEntity.ok(message);
   }
 }
