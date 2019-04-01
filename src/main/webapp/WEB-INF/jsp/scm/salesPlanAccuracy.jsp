@@ -819,9 +819,9 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 						console.log("grid1 : " + AUIGrid.isCreated(myGridID1));
 						console.log("grid3 : " + AUIGrid.isCreated(myGridID3));
 						//	hide
-						$("#summary_wrap").show();
+						$("#summary_wrap").show();	AUIGrid.resize(myGridID1);
 						$("#summary_wrap1").hide();
-						$("#detail_wrap").show();
+						$("#detail_wrap").show();	AUIGrid.resize(myGridID3);
 						$("#detail_wrap1").hide();
 					} else {
 						if ( "search" == gbn ) {
@@ -1268,9 +1268,9 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 						console.log("grid4 : " + AUIGrid.isCreated(myGridID4));
 						//	hide
 						$("#summary_wrap").hide();
-						$("#summary_wrap1").show();
+						$("#summary_wrap1").show();	AUIGrid.resize(myGridID2);
 						$("#detail_wrap").hide();
-						$("#detail_wrap1").show();
+						$("#detail_wrap1").show();	AUIGrid.resize(myGridID4);
 					}
 					
 					//	search
@@ -1554,9 +1554,9 @@ function fnCreateGrid() {
 	myGridID3	= GridCommon.createAUIGrid("detail_wrap", detailLayout, "", gridOption);
 	myGridID4	= GridCommon.createAUIGrid("detail_wrap1", detailLayout, "", gridOption);
 	
-	$("#summary_wrap").show();
+	$("#summary_wrap").show();	AUIGrid.resize(myGridID1);
 	$("#summary_wrap1").hide();
-	$("#detail_wrap").show();
+	$("#detail_wrap").show();	AUIGrid.resize(myGridID3);
 	$("#detail_wrap1").hide();
 }
 
