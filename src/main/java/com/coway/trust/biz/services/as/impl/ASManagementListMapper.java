@@ -7,6 +7,12 @@ import java.util.Map;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
+/*********************************************************************************************
+ * DATE          PIC        VERSION     COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 01/04/2019    ONGHC      1.0.1       - Restructure File
+ *********************************************************************************************/
+
 @Mapper("ASManagementListMapper")
 public interface ASManagementListMapper {
 
@@ -284,4 +290,11 @@ public interface ASManagementListMapper {
   EgovMap checkWarrentyStatus(Map<String, Object> params);
 
   List<EgovMap> checkAOASRcdStat(Map<String, Object> params);
+
+  String getInHseLmtDy();
+
+  int selRcdTms(Map<String, Object> params);
+
+  int chkRcdTms(Map<String, Object> params);
+
 }
