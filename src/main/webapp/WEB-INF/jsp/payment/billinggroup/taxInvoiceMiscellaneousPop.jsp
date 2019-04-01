@@ -153,7 +153,7 @@ function fn_generateInvoice(){
                 else {
                 	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF.rpt');
                 }
-            case 407 :
+            case 408 :
                     $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_CareService_PDF_SST.rpt');
                 break;
             default:
