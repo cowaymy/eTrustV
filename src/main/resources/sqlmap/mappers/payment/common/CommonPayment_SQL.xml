@@ -701,7 +701,7 @@
             LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.CRT_USER_ID
             JOIN SAL0029D Extent7   ON Extent7.CUST_ID = Extent1.CUST_ID
         WHERE
-            Extent1.APP_TYPE_ID IN ( 3213,3214 )
+            Extent1.APP_TYPE_ID IN (3216,3217)
             AND  Extent1.SRV_ORD_ID = #{orderId}
     </select>
 
