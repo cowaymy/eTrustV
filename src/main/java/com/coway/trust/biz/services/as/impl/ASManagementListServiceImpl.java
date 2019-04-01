@@ -27,6 +27,12 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import oracle.sql.DATE;
 
+/*********************************************************************************************
+ * DATE          PIC        VERSION     COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 01/04/2019    ONGHC      1.0.1       - Restructure File
+ *********************************************************************************************/
+
 @Service("ASManagementListService")
 public class ASManagementListServiceImpl extends EgovAbstractServiceImpl implements ASManagementListService {
 
@@ -267,14 +273,17 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         Map<String, Object> fltConfLstMap = (Map<String, Object>) fltConfLst.get(a);
         LOGGER.debug(" ============= FILTER :: " + fltConfLstMap.get("stkId") + " " + fltConfLstMap.get("stkDesc"));
         for (int i = 0; i < addListing.size(); i++) {
-          Map<String, Object> updateMap = (Map<String, Object>) addListing.get(i);
-          LOGGER.debug(" ============= :: " + updateMap.get("filterID").toString() + " = "
-              + fltConfLstMap.get("stkId").toString());
-          if ((updateMap.get("filterID").toString()).equals((fltConfLstMap.get("stkId")).toString())) {
-            fltSta = true;
-            break;
-          } else {
-            fltSta = false;
+          LOGGER.debug(" ============= :: " + i);
+          if (addListing.get(i) != null) {
+            Map<String, Object> updateMap = (Map<String, Object>) addListing.get(i);
+            LOGGER.debug(" ============= :: " + updateMap.get("filterID").toString() + " = "
+                + fltConfLstMap.get("stkId").toString());
+            if ((updateMap.get("filterID").toString()).equals((fltConfLstMap.get("stkId")).toString())) {
+              fltSta = true;
+              break;
+            } else {
+              fltSta = false;
+            }
           }
         }
 
@@ -666,7 +675,6 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
    * @return
    */
   public int updateStateSVC0001D(Map<String, Object> params) {
-    // svc0001d 상태 업데이트
     int b = ASManagementListMapper.updateStateSVC0001D(params);
     return b;
   }
@@ -1294,63 +1302,89 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   }
 
   /**
-   *
-   * 1.인하우스 3단계 AUTOINSERT false
-   *
-   * 2.인하우스 1단계 B8 요청인경우에는 FALSE B8 재고 확인후 요청인 경우 TRUE
-   *
-   * 3.
+   * 1.In-house phase 3 AUTOINSERT false 2.In-house Phase 1 B8 Request if FALSE
+   * B8 Inventory after request TRUE if request 3.
    *
    * @param svc0004dmap
    * @return
    */
   public boolean chkInHouseOpenComp(Map<String, Object> svc0004dmap) {
+    LOGGER.debug("================chkInHouseOpenComp - START ================");
+    LOGGER.debug("== SVC0004D MAP : " + svc0004dmap.toString());
+    LOGGER.debug("================chkInHouseOpenComp - END ================");
 
     boolean chkInHouseOpenComp = false;
 
-    // as update 시 발생코드
     if (CommonUtils.nvl(svc0004dmap.get("AUTOINSERT")).toString().equals("TRUE")) {
       return chkInHouseOpenComp;
     }
 
-    // 모바일 api B8
-    if (svc0004dmap.get("AS_SLUTN_RESN_ID").equals("454") && !"WEB".equals(svc0004dmap.get("CHANGBN"))) {
-      // 업데이트 확인
-      // boolean isInHouseB8Update =
-      // ASManagementListMapper.isInHouseB8Update(svc0004dmap) == 0 ? false
-      // :true;
+    // SERIAL NUMBER UPDATE ON RESULT FROM MOBILE
+    /*
+     * SOLUTION CODE DESCRIPTIION ===================================== 454
+     * REPAIR 452 REPAIR OUT =====================================
+     */
 
-      if (svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length() != 0) {
-        // 모바일에서 결과에 시리얼 업데이트
-        // if(isInHouseB8Update){
-        svc0004dmap.put("AS_RESULT_STUS_ID", "4");
-        this.updateStateSVC0001D(svc0004dmap);
-        this.updateState_SERIAL_NO_SVC0004D(svc0004dmap);
+    if (CommonUtils.nvl(svc0004dmap.get("AS_SLUTN_RESN_ID")).toString().equals("454")
+        && !"WEB".equals(CommonUtils.nvl(svc0004dmap.get("CHANGBN")).toString())) {
+      /*
+       * if
+       * (CommonUtils.nvl(svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO")).toString(
+       * ).trim().length() != 0) { svc0004dmap.put("AS_RESULT_STUS_ID", "4"); //
+       * COMPLETE this.updateStateSVC0001D(svc0004dmap);
+       * this.updateState_SERIAL_NO_SVC0004D(svc0004dmap); chkInHouseOpenComp =
+       * true; }
+       */
 
-        chkInHouseOpenComp = true;
-        // }else{
+      /*
+       * if(svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN") != null) { if
+       * (svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN").equals("0")) {
+       * svc0004dmap.put("AS_RESULT_STUS_ID", "4");
+       * this.updateStateSVC0001D(svc0004dmap); } }
+       */
 
-        // //모바일에서 결과에 시리얼을 넣어준 경우
-        // chkInHouseOpenComp = false;
-        // }
-      }
-      // if( )
-      if (svc0004dmap.get("IN_HUSE_REPAIR_REP_YN").equals("0")) {
-        svc0004dmap.put("AS_RESULT_STUS_ID", "4");
-        this.updateStateSVC0001D(svc0004dmap);
+      // REPLACEMENT
+      /*
+       * 0 - NO 1 - YES
+       */
+      LOGGER.debug("================chkInHouseOpenComp - 1 ================");
+      if (svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN") != null) {
+        LOGGER.debug("================chkInHouseOpenComp - 2 ================");
+        if ((svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN").toString().trim()).equals("0")) {
+          LOGGER.debug("================chkInHouseOpenComp - 3 ================");
+          svc0004dmap.put("AS_RESULT_STUS_ID", "4");
+          this.updateStateSVC0001D(svc0004dmap);
+          chkInHouseOpenComp = false;
+          LOGGER.debug("================chkInHouseOpenComp - 4 ================");
+        } else {
+          if (CommonUtils.nvl(svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO")).toString().trim().length() != 0) {
+            svc0004dmap.put("AS_RESULT_STUS_ID", "4"); // COMPLETE
+            this.updateStateSVC0001D(svc0004dmap);
+            this.updateState_SERIAL_NO_SVC0004D(svc0004dmap);
+            chkInHouseOpenComp = true;
+          }
+        }
       }
     }
 
-    // 모바일 api B6
-    if (svc0004dmap.get("AS_SLUTN_RESN_ID").equals("452") && !"WEB".equals(svc0004dmap.get("CHANGBN"))) {
+    if (CommonUtils.nvl(svc0004dmap.get("AS_SLUTN_RESN_ID")).toString().equals("452")
+        && !"WEB".equals(CommonUtils.nvl(svc0004dmap.get("CHANGBN")).toString())) {
       if (svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length() != 0) {
         svc0004dmap.put("AS_RESULT_STUS_ID", "4");
         this.updateStateSVC0001D(svc0004dmap);
         // this.updateState_SERIAL_NO_SVC0004D(svc0004dmap);
-
         chkInHouseOpenComp = true;
       }
 
+      if (svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN") != null) {
+        if ((svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN").toString().trim()).equals("0")) {
+          chkInHouseOpenComp = false;
+        } else {
+          svc0004dmap.put("AS_RESULT_STUS_ID", "4");
+          this.updateStateSVC0001D(svc0004dmap);
+          chkInHouseOpenComp = true;
+        }
+      }
     }
 
     return chkInHouseOpenComp;
@@ -1358,11 +1392,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
   @Override
   public EgovMap asResult_insert(Map<String, Object> params) {
-
-    LOGGER.debug("==========asResult_insert  Log  in================");
+    LOGGER.debug("================asResult_insert - START ================");
 
     String m = "";
-    Map svc0004dmap = (Map) params.get("asResultM");// hash
+    Map svc0004dmap = (Map) params.get("asResultM");
     svc0004dmap.put("updator", params.get("updator"));
 
     String zeroRatYn = "Y";
@@ -1374,17 +1407,17 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     int zeroRat = membershipRentalQuotationMapper.selectGSTZeroRateLocation(tm);
     int EURCert = membershipRentalQuotationMapper.selectGSTEURCertificate(tm);
 
-    LOGGER.debug("tm==>" + tm.toString());
-
-    // int package_TAXRATE =6; //2018-05-24 - Kit Wai - Update GST to 0%
+    // 2018-05-24 - Kit Wai - Update GST to 0%
+    // int package_TAXRATE =6;
     int package_TAXRATE = 0;
     int package_TAXCODE = 32;
 
-    // int filter_TAXRATE =6; //2018-05-24 - Kit Wai - Update GST to 0%
+    // 2018-05-24 - Kit Wai - Update GST to 0%
+    // int filter_TAXRATE =6;
     int filter_TAXRATE = 0;
     int filter_TAXCODE = 32;
 
-    // package
+    // PACKAGE
     if (EURCert > 0) {
       package_TAXRATE = 0;
       package_TAXCODE = 28;
@@ -1401,20 +1434,27 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       filter_TAXCODE = 28;
     }
 
-    // 인하우스 oepen close
+    // IN HOUSE REPAIR BACK RESULT FROM MOBILE TO COMPLETE THE LOGISTIC SVC
+    // REQUEST
     if (chkInHouseOpenComp(svc0004dmap)) {
-
-      // add by jgkim
-      String retype = "REPAIRIN";
-      if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454")) {
-        retype = "REPAIRIN";
-      } else if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("452")) {
+      /*
+       * ===================================== SOLUTION CODE DESCRIPTIION
+       * ===================================== 454 REPAIR 452 REPAIR OUT
+       * =====================================
+       */
+      String retype = "";
+      if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("452")) {
         retype = "REPAIROUT";
+      } else {
+        retype = "REPAIRIN";
       }
 
-      // 물류 호출 add by hgham
       Map<String, Object> logPram = null;
-      ///////////////////////// 물류 호출/////////////////////////
+
+      ///////////////////////// LOGISTIC SP CALL /////////////////////////
+      /*
+       * OD03 - Order-AS
+       */
       logPram = new HashMap<String, Object>();
       logPram.put("ORD_ID", svc0004dmap.get("AS_NO"));
       logPram.put("RETYPE", retype);
@@ -1423,19 +1463,19 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       logPram.put("USERID", String.valueOf(svc0004dmap.get("updator")));
 
       Map SRMap = new HashMap();
-      LOGGER.debug("ASManagementListServiceImpl.chkInHouseOpenComp in house 물류 차감  PRAM ===>" + logPram.toString());
+      LOGGER.debug("== IN HOUSE REPAIR SP PARAM = " + logPram.toString());
       servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
-      LOGGER.debug("ASManagementListServiceImpl.chkInHouseOpenComp  in house 물류 차감 결과 ===>" + logPram.toString());
+      LOGGER.debug("== IN HOUSE REPAIR SP RETURN PARAM = " + logPram.toString());
       logPram.put("P_RESULT_TYPE", "AS");
       logPram.put("P_RESULT_MSG", logPram.get("p1"));
 
-      ///////////////////////// 물류 호출 END //////////////////////
+      ///////////////////////// LOGISTIC SP CALL //////////////////////
 
       EgovMap em = new EgovMap();
       em.put("AS_NO", String.valueOf(svc0004dmap.get("asno")));
       em.put("SP_MAP", logPram);
 
-      LOGGER.debug("==========asResult_insert  Log  out================");
+      LOGGER.debug("================asResult_insert - END ================");
       return em;
     }
 
@@ -1445,8 +1485,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
     String AS_RESULT_ID = String.valueOf(seqMap.get("seq"));
 
-    LOGGER.debug("			NEW AS_RESULT_ID===> NEW AS_RESULT_ID[" + AS_RESULT_ID + "]");
-    LOGGER.debug("			NEW AS_RESULT_NO===> NEW AS_RESULT_NO[" + eMap.get("asno") + "]");
+    LOGGER.debug("== NEW AS RESULT ID = " + AS_RESULT_ID);
+    LOGGER.debug("== NEW AS RESULT NO = " + eMap.get("asno"));
 
     ArrayList<AsResultChargesViewVO> vewList = new ArrayList<AsResultChargesViewVO>();
 
@@ -1455,55 +1495,57 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     svc0004dmap.put("AS_RESULT_ID", AS_RESULT_ID);
     svc0004dmap.put("AS_RESULT_NO", String.valueOf(eMap.get("asno")));
 
-    /////////////////////////// HappyCallM/////////////////////
+    LOGGER.debug("================asResult_insert - HAPPY CALL - START ================");
     this.setCCR0001DData(svc0004dmap);
-    /////////////////////////// HappyCallM/////////////////////
+    LOGGER.debug("================asResult_insert - HAPPY CALL - END ================");
 
     double AS_TOT_AMT = 0;
     AS_TOT_AMT = Double.parseDouble(String.valueOf(svc0004dmap.get("AS_TOT_AMT")));
 
-    LOGGER.debug("				Logic 1===> AS_TOT_AMT[" + AS_TOT_AMT + "]");
+    LOGGER.debug("== TOTAL AMOUNT " + AS_TOT_AMT);
 
     if (AS_TOT_AMT > 0) {
-
-      // asBillNo 채번
+      // AS BILL NUMBER
       params.put("DOCNO", "22");
       EgovMap asBillDocNo = ASManagementListMapper.getASEntryDocNo(params);
       svc0004dmap.put("asBillNo", String.valueOf(asBillDocNo.get("asno")));
 
-      LOGGER.debug("									===> asBillDocNo[" + asBillDocNo + "]");
+      LOGGER.debug("== AS BILL NUMBER " + asBillDocNo);
 
-      // InvoiceNum 채번
+      // AS INVOICE NUMBER
       params.put("DOCNO", "128");
       EgovMap invoiceDocNo = ASManagementListMapper.getASEntryDocNo(params);
       svc0004dmap.put("taxInvcRefNo", String.valueOf(invoiceDocNo.get("asno")));
 
-      LOGGER.debug("									===> invoiceDocNo[" + invoiceDocNo + "]");
+      LOGGER.debug("== AS INVOICE NUMBER " + invoiceDocNo);
 
       int taxInvcId = posMapper.getSeqPay0031D();
       // int invcItmId = posMapper.getSeqPay0032D();
       svc0004dmap.put("taxInvcId", String.valueOf(taxInvcId));
       // svc0004dmap.put("invcItmId", String.valueOf(invcItmId)) ;
-      LOGGER.debug("									===> taxInvcId Pay0031D 채번 [" + taxInvcId + "]");
 
-      // getLeftSUM
+      LOGGER.debug("== AS INVOICE PAY0031D NUMBER " + taxInvcId);
+
       EgovMap sumLeftMap = ASManagementListMapper.geTtotalAASLeft(svc0004dmap);
-      LOGGER.debug("									===> sumLeftMap  select [" + sumLeftMap + "]");
 
-      if (Double.parseDouble((String) svc0004dmap.get("AS_WORKMNSH")) > 0) { // txtLabourCharge
+      LOGGER.debug("== AS SUM LEFT MAP " + sumLeftMap);
 
+      // LABOUR CHARGE
+      if (Double.parseDouble((String) svc0004dmap.get("AS_WORKMNSH")) > 0) {
         double txtLabourCharge = Double.parseDouble((String) svc0004dmap.get("AS_WORKMNSH"));
         double t_SpareCharges = 0.00;
+
         if (package_TAXRATE > 0) {
           t_SpareCharges = (txtLabourCharge * 100 / 106);
         } else {
           t_SpareCharges = txtLabourCharge;
         }
+
         double t_SpareTaxes = txtLabourCharge - t_SpareCharges;
 
-        LOGGER.debug("txtLabourCharge[" + txtLabourCharge + "]");
-        LOGGER.debug("t_SpareCharges===>[" + t_SpareCharges + "]");
-        LOGGER.debug("vewList  loop===>[" + t_SpareTaxes + "]");
+        LOGGER.debug("== LABOUR CHARGE = " + txtLabourCharge);
+        LOGGER.debug("== SPARE PART CHARGE = " + t_SpareCharges);
+        LOGGER.debug("== SPARE PART TAX = " + t_SpareTaxes);
 
         // setAsChargesTypeId 1261
         AsResultChargesViewVO vo_1261 = null;
@@ -1531,7 +1573,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       // isTaxCode 0
       if (isTaxCode_0) {
 
-        // 호출후 값 세팅 하기
+        // SETTING THE VALUE AFTER THE CALL
         svc0004dmap.put("TaxCode", filter_TAXCODE);
         svc0004dmap.put("TaxRate", filter_TAXRATE);
 
@@ -1549,14 +1591,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
               double ft = Double.parseDouble(CommonUtils.isEmpty(tempFilterTotal) == true ? "0" : tempFilterTotal);
               if (ft > 0) {
-
                 String filterCode = "";
                 String filterName = "";
                 if (!"".equals(updateMap.get("filterDesc"))) {
                   String temp = (String) updateMap.get("filterDesc");
                   if (null != temp) {
                     if (!temp.equals("API")) {
-
                       String[] animals = temp.split("-");
 
                       if (animals.length > 0) {
@@ -1596,13 +1636,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
             }
           }
         }
-
-        // tax 32
       } else {
-
         svc0004dmap.put("TaxCode", filter_TAXCODE);
         svc0004dmap.put("TaxRate", filter_TAXRATE);
 
+        // FILTER CHARGE
         if (Double.parseDouble(String.valueOf(svc0004dmap.get("AS_FILTER_AMT"))) > 0) { // txtFilterCharge
           if (addItemList.size() > 0) {
             for (int i = 0; i < addItemList.size(); i++) {
@@ -1618,17 +1656,13 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
               double ft = Double.parseDouble(tempFilterTotal);
 
               if (ft > 0) {
-
                 String filterCode = "";
                 String filterName = "";
                 if (!"".equals(updateMap.get("filterDesc"))) {
-
                   String temp = (String) updateMap.get("filterDesc");
                   if (null != temp) {
                     if (!temp.equals("API")) {
-
                       String[] animals = temp.split("-");
-
                       if (animals.length > 0) {
                         filterCode = animals[0];
                         filterName = animals[1];
@@ -1696,22 +1730,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         }
       }
 
-      LOGGER.debug("vewList  loop===>");
-      LOGGER.debug("					getAsChargesTypeId  1261 in===>");
-      LOGGER.debug("											labourCharges[" + labourCharges + "]");
-      LOGGER.debug("											labourTaxes[" + labourTaxes + "]");
-      LOGGER.debug("											labourAmountDue[" + labourAmountDue + "]");
-      LOGGER.debug("					getAsChargesTypeId  1261  out===>");
-
-      LOGGER.debug("					getAsChargesTypeId  1262 in===>");
-      LOGGER.debug("											partCharges[" + partCharges + "]");
-      LOGGER.debug("											partTaxes[" + partTaxes + "]");
-      LOGGER.debug("											partAmountDue[" + partAmountDue + "]");
-      LOGGER.debug("					getAsChargesTypeId  1262  out===>");
-      LOGGER.debug("vewList  loop===>");
-
       if (labourAmountDue > 0) {
-
         svc0004dmap.put("package_TAXRATE", package_TAXRATE);
         svc0004dmap.put("package_TAXCODE", package_TAXCODE);
         this.setPay16dLabourData(vewList, svc0004dmap);
@@ -1721,14 +1740,13 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         this.setPay16dPartData(vewList, svc0004dmap);
       }
 
-      // get total AS item amount
+      // GET TOTAL AS ITEM AMOUNT
       // double totalCharges =0;
       // double totalTaxes =0;
       double totalASAmount = 0;
 
       if (vewList.size() > 0) {
         for (AsResultChargesViewVO vo : vewList) {
-
           // totalCharges += Double.parseDouble(vo.getSpareCharges());
           // totalTaxes += Double.parseDouble(vo.getSpareTaxes());
           totalASAmount += Double.parseDouble(vo.getSpareAmountDue());
@@ -1755,7 +1773,6 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         if (totalAASLeft >= AS_TOT_AMT) {
           isBillIsPaid = true;
           this.setPay0006dData(vewList, svc0004dmap, "B", totalASAmount);
-
         } else {
           svc0004dmap.put("totalAASLeft", String.valueOf(sumLeftMap.get("totalaasleft")));
           this.setPay0006dData(vewList, svc0004dmap, "C", totalASAmount);
@@ -1766,15 +1783,13 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
       if (labourTaxes > 0) {
         svc0004dmap.put("AS_WORKMNSH_TAX_CODE_ID", "32");
-
       } else {
         svc0004dmap.put("AS_WORKMNSH_TAX_CODE_ID", "0");
       }
       svc0004dmap.put("AS_WORKMNSH_TXS", Double.toString(labourTaxes));
+    }
 
-    } // AS_TOT_AMT if eof
-
-    // insert svc0004d
+    // INSERT SVC0004D
     int c = this.insertSVC0004D(svc0004dmap);
     int callint = updateSTATE_CCR0006D(svc0004dmap);
     this.insertSVC0005D(addItemList, AS_RESULT_ID, String.valueOf(params.get("updator")));
@@ -1783,54 +1798,51 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     svc0004dmap.put("AS_ID", svc0004dmap.get("AS_ENTRY_ID"));
     svc0004dmap.put("USER_ID", String.valueOf(svc0004dmap.get("updator")));
 
-    // IN_HOUSE_CLOSE 인경우 as_app_Type 변경 모바일 잡 리스트 에서 인하우스 오더는 내려가지 않도록 했음.
+    // Change in as_app_Type if IN_HOUSE_CLOSE In-house order in mobile job list
+    // has not been lowered.
     if ("Y".equals((String) svc0004dmap.get("IN_HOUSE_CLOSE"))) {
       ASManagementListMapper.updateAS_TYPE_ID_SVC0001D(svc0004dmap);
     }
 
-    /////// 물류 결과 ///////////////////////
+    // LOGISTIC REQUEST
     Map<String, Object> logPram = new HashMap<String, Object>();
-    /////// 물류 결과 ///////////////////////
+    if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454")) { // REPAIR
+      if (svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN") != null) {
+        if (svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN").equals("1")) { // Y -
+                                                                        // TO
+                                                                        // REPAIR
+          if (svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length() == 0) {
+            svc0004dmap.put("AS_RESULT_STUS_ID", "1");
+            this.updateStateSVC0001D(svc0004dmap);
+            ///////////////////////// LOGISTIC SP CALL //////////////////////
+            logPram.put("ORD_ID", svc0004dmap.get("AS_NO"));
+            logPram.put("RETYPE", "SVO");
+            logPram.put("P_TYPE", "OD03");
+            logPram.put("P_PRGNM", "ASCOM_2");
+            logPram.put("USERID", String.valueOf(params.get("updator")));
 
-    if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454")) {
-
-      if (svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length() == 0) {
-
-        svc0004dmap.put("AS_RESULT_STUS_ID", "1");
-
-        this.updateStateSVC0001D(svc0004dmap);
-
-        // 물류 호출 add by hgham
-
-        ///////////////////////// 물류 호출//////////////////////
-        logPram.put("ORD_ID", svc0004dmap.get("AS_NO"));
-        logPram.put("RETYPE", "SVO");
-        logPram.put("P_TYPE", "OD03");
-        logPram.put("P_PRGNM", "ASCOM_2");
-        logPram.put("USERID", String.valueOf(params.get("updator")));
-
-        Map SRMap = new HashMap();
-        LOGGER.debug("ASManagementListServiceImpl.asResult_insert in house 물류 이관  PRAM ===>" + logPram.toString());
-        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
-        LOGGER.debug("ASManagementListServiceImpl.asResult_insert  in house 물류 이관  결과 ===>" + logPram.toString());
-        logPram.put("P_RESULT_TYPE", "AS");
-        logPram.put("P_RESULT_MSG", logPram.get("p1"));
-        ///////////////////////// 물류 호출 END //////////////////////
+            Map SRMap = new HashMap();
+            LOGGER.debug("== asResult_insert IN HOUSE SP REQUEST PARAM ===>" + logPram.toString());
+            servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+            LOGGER.debug("== asResult_insert IN HOUSE SP LOGISTIC SP CALL PARAM ===>" + logPram.toString());
+            logPram.put("P_RESULT_TYPE", "AS");
+            logPram.put("P_RESULT_MSG", logPram.get("p1"));
+            ///////////////////////// LOGISTIC SP CALL END
+            ///////////////////////// //////////////////////
+          }
+        }
       }
-
     } else {
-
-      // 인하우스 결과 등록
-      if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("452")) {
-        svc0004dmap.put("AS_RESULT_STUS_ID", "1");
+      // IN HOUSE RESULT REGISTRATION
+      if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("452")) { // REPAIR
+                                                                               // OUT
+        svc0004dmap.put("AS_RESULT_STUS_ID", "1"); // SET ACTIVE
       }
 
       this.updateStateSVC0001D(svc0004dmap);
 
       if (String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4")) {
-
-        // 물류 호출 add by hgham
-        ///////////////////////// 물류 호출//////////////////////
+        ///////////////////////// LOGISTIC SP CALL //////////////////////
         logPram.put("ORD_ID", svc0004dmap.get("AS_NO"));
         logPram.put("RETYPE", "COMPLET");
         logPram.put("P_TYPE", "OD03");
@@ -1838,13 +1850,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         logPram.put("USERID", String.valueOf(params.get("updator")));
 
         Map SRMap = new HashMap();
-        LOGGER.debug("ASManagementListServiceImpl.asResult_insert  물류 차감  PRAM ===>" + logPram.toString());
+        LOGGER.debug("asResult_insert PARAM ===>" + logPram.toString());
         servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
-        LOGGER.debug("ASManagementListServiceImpl.asResult_insert  물류 차감   결과 ===>" + logPram.toString());
+        LOGGER.debug("asResult_insert PARAM ===>" + logPram.toString());
         logPram.put("P_RESULT_TYPE", "AS");
         logPram.put("P_RESULT_MSG", logPram.get("p1"));
-
-        ///////////////////////// 물류 호출 END //////////////////////
+        ///////////////////////// LOGISTIC SP CALL END //////////////////////
       }
     }
 
@@ -1852,7 +1863,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     em.put("AS_NO", String.valueOf(eMap.get("asno")));
     em.put("SP_MAP", logPram);
 
-    LOGGER.debug("==========asResult_insert  Log  out================");
+    LOGGER.debug("================asResult_insert - END ================");
     return em;
   }
 
@@ -1877,6 +1888,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
     int asTotAmt = 0;
 
+    LOGGER.debug("PARAM================" + params);
     svc0004dmap = (LinkedHashMap) params.get("asResultM");
 
     String AS_ID = String.valueOf(svc0004dmap.get("AS_ID"));
@@ -3169,5 +3181,20 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   @Override
   public List<EgovMap> checkAOASRcdStat(Map<String, Object> params) {
     return ASManagementListMapper.checkAOASRcdStat(params);
+  }
+
+  @Override
+  public String getInHseLmtDy() {
+    return ASManagementListMapper.getInHseLmtDy();
+  }
+
+  @Override
+  public int selRcdTms(Map<String, Object> params) {
+    return ASManagementListMapper.selRcdTms(params);
+  }
+
+  @Override
+  public int chkRcdTms(Map<String, Object> params) {
+    return ASManagementListMapper.chkRcdTms(params);
   }
 }
