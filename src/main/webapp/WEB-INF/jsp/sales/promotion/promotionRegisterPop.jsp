@@ -438,7 +438,7 @@
             msg += "* Please select the free svc period.<br />";
         }
 */
-        if($('#promoAppTypeId').val() != 3217 && $('#promoAppTypeId').val() != 3218 ){
+        if($('#promoAppTypeId').val() != 3220 && $('#promoAppTypeId').val() != 3221 ){
         if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.isEmpty($('#promoSrvMemPacId').val())) {
             isValid = false;
             msg += "<spring:message code='sales.promo.msg17'/><br /> ";
