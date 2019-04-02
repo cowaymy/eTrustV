@@ -117,7 +117,6 @@ function fnScmTotalPeriod() {
  				planMonth	= result.selectScmTotalPeriod[0].scmMonth;
  				planWeek	= result.selectScmTotalPeriod[0].scmWeek;
  				fnPlanYear();
- 				fnPlanVerThis();
  			});
  }
 //	year
@@ -165,18 +164,6 @@ function fnPlanYear() {
 				chooseMessage : "Year"
 			}
 			, fnPlanVerCallback);
-}
-function fnPlanVerThis() {
-	CommonCombo.make("planVer"
-			, "/scm/selectPlanVer.do"
-			, { planYear : planYear }
-			, "1"
-			, {
-				id : "id",
-				name : "name",
-				chooseMessage : "Select a Year"
-			}
-			, "");
 }
 function fnValidation() {
 	var addList	= AUIGrid.getAddedRowItems(myGridID2);
@@ -226,7 +213,7 @@ var summaryOptions	= {
 	showRowCheckColumn : false,
 	showStateColumn : false,
 	showEditedCellMarker : false,
-	showFooter : true,
+	showFooter : false,
 	editable : false,
 	enableCellMerge : false,
 	enableRestore : false,
@@ -238,79 +225,79 @@ var summaryFooterLayout	=
 			labelText : "Sum",
 			positionField : "Category"
 		}, {
-			dataField : "jan",
+			dataField : "m01",
 			positionField : "jan",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "feb",
+			dataField : "m02",
 			positionField : "feb",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "mar",
+			dataField : "m03",
 			positionField : "mar",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "apr",
+			dataField : "m04",
 			positionField : "apr",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "may",
+			dataField : "m05",
 			positionField : "may",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "jun",
+			dataField : "m06",
 			positionField : "jun",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "jul",
+			dataField : "m07",
 			positionField : "jul",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "aug",
+			dataField : "m08",
 			positionField : "aug",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "sep",
+			dataField : "m09",
 			positionField : "sep",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "oct",
+			dataField : "m10",
 			positionField : "oct",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "nov",
+			dataField : "m11",
 			positionField : "nov",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "dec",
+			dataField : "m12",
 			positionField : "dec",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "sum",
+			dataField : "summ",
 			positionField : "sum",
 			operation : "SUM",
 			dataType : "numeric",
@@ -325,67 +312,67 @@ var summaryLayout	=
 	 		style : "my-columnCenter"
 	 	}, {
 	 		headerText : "Jan",
-	 		dataField : "jan",
+	 		dataField : "m01",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Feb",
-	 		dataField : "feb",
+	 		dataField : "m02",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Mar",
-	 		dataField : "mar",
+	 		dataField : "m03",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Apr",
-	 		dataField : "apr",
+	 		dataField : "m04",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "May",
-	 		dataField : "may",
+	 		dataField : "m05",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Jun",
-	 		dataField : "jun",
+	 		dataField : "m06",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Jul",
-	 		dataField : "jul",
+	 		dataField : "m07",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Aug",
-	 		dataField : "aug",
+	 		dataField : "m08",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Sep",
-	 		dataField : "sep",
+	 		dataField : "m09",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Oct",
-	 		dataField : "oct",
+	 		dataField : "m10",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Nov",
-	 		dataField : "nov",
+	 		dataField : "m11",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Dec",
-	 		dataField : "dec",
+	 		dataField : "m12",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Sum",
-	 		dataField : "sum",
+	 		dataField : "summ",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}
@@ -402,93 +389,95 @@ var detailOptions	= {
 	editable : false,
 	enableCellMerge : false,
 	enableRestore : false,
-	fixedColumnCount : 4
+	fixedColumnCount : 3
 };
+/*
 var detailFooterLayout	=
 	[
 		{
 			labelText : "Sum",
 			positionField : "categoryName"
 		}, {
-			dataField : "jan",
+			dataField : "m01",
 			positionField : "jan",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "feb",
+			dataField : "m02",
 			positionField : "feb",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "mar",
+			dataField : "m03",
 			positionField : "mar",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "apr",
+			dataField : "m04",
 			positionField : "apr",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "may",
+			dataField : "m05",
 			positionField : "may",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "jun",
+			dataField : "m06",
 			positionField : "jun",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "jul",
+			dataField : "m07",
 			positionField : "jul",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "aug",
+			dataField : "m08",
 			positionField : "aug",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "sep",
+			dataField : "m09",
 			positionField : "sep",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "oct",
+			dataField : "m10",
 			positionField : "oct",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "nov",
+			dataField : "m11",
 			positionField : "nov",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "dec",
+			dataField : "m12",
 			positionField : "dec",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}, {
-			dataField : "sum",
+			dataField : "summ",
 			positionField : "sum",
 			operation : "SUM",
 			dataType : "numeric",
 			style : "my-columnRight"
 		}
 	 ];
+	 */
 var detailLayout	=
 	[
 	 	{
@@ -505,67 +494,67 @@ var detailLayout	=
 	 		style : "my-columnLeft"
 	 	}, {
 	 		headerText : "Jan",
-	 		dataField : "jan",
+	 		dataField : "m01",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Feb",
-	 		dataField : "feb",
+	 		dataField : "m02",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Mar",
-	 		dataField : "mar",
+	 		dataField : "m03",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Apr",
-	 		dataField : "apr",
+	 		dataField : "m04",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "May",
-	 		dataField : "may",
+	 		dataField : "m05",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Jun",
-	 		dataField : "jun",
+	 		dataField : "m06",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Jul",
-	 		dataField : "jul",
+	 		dataField : "m07",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Aug",
-	 		dataField : "aug",
+	 		dataField : "m08",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Sep",
-	 		dataField : "sep",
+	 		dataField : "m09",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Oct",
-	 		dataField : "oct",
+	 		dataField : "m10",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Nov",
-	 		dataField : "nov",
+	 		dataField : "m11",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Dec",
-	 		dataField : "dec",
+	 		dataField : "m12",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
 	 		headerText : "Sum",
-	 		dataField : "sum",
+	 		dataField : "summ",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}
@@ -574,7 +563,7 @@ var detailLayout	=
 $(document).ready(function() {
 	//	Summary Grid
 	myGridID1	= GridCommon.createAUIGrid("#summary_wrap", summaryLayout, "", summaryOptions);
-	AUIGrid.setFooter(myGridID1, summaryFooterLayout);
+	//AUIGrid.setFooter(myGridID1, summaryFooterLayout);
 	AUIGrid.bind(myGridID1, "cellClick", function(event) {
 		
 	});
@@ -605,7 +594,7 @@ $(document).ready(function() {
 		<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
 		<h2>Business Plan Report</h2>
 		<ul class="right_btns">
-			<li><p class="btn_blue"><a onclick=""><span class="search"></span>Search</a></p></li>
+			<li><p class="btn_blue"><a onclick="fnSearch();"><span class="search"></span>Search</a></p></li>
 		</ul>
 	</aside>								<!-- aside title_line end -->
 	
@@ -629,13 +618,7 @@ $(document).ready(function() {
 								<select class="sel_year" id="planYear" name="planYear"></select>
 							</div>
 						</td>
-						<th scope="row">Version</th>
-						<td>
-							<div class="date_set w100p">
-								<select class="sel_version" id="planVer" name="planVer"></select>
-							</div>
-						</td>
-						<td colspan="2"></td>
+						<td colspan="4"></td>
 					</tr>
 				</tbody>
 			</table>						<!-- table type1 end -->
@@ -671,21 +654,22 @@ $(document).ready(function() {
 			</aside>						<!-- aside link_btns_wrap end -->
 		</form>
 	</section>								<!-- section search_table end -->
+	
+	<section class="search_result">				<!-- section search_result start -->
+		<article class="grid_wrap">				<!-- article grid_wrap start -->
+			<!-- Monthly Grid -->
+			<div id="summary_wrap" style="height:210px;"></div>
+		</article>								<!-- article grid_wrap end -->
+		<ul class="right_btns">
+			<!-- <li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSave(this);">Save</a></p></li>
+			<li><p id="btnSaveNew" class="btn_grid btn_disabled"><a onclick="fnSaveNew(this);">Save as New</a></p></li> -->
+			<li><p id="btnUpload" class="btn_grid"><a onclick="fnUpload(this);">Upload</a></p></li>
+			<li><p id="btnDownload" class="btn_grid"><a onclick="">Download CVS Format</a></p></li>
+			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'Business Plan Report');">Excel</a></p></li>
+		</ul>
+		<article class="grid_wrap">				<!-- article grid_wrap start -->
+			<!-- Weekly Grid -->
+			<div id="detail_wrap" style="height:447px;"></div>
+		</article>								<!-- article grid_wrap end -->
+	</section>									<!-- section search_result end -->
 </section>									<!-- section content end -->
-
-<section class="search_result">				<!-- section search_result start -->
-	<article class="grid_wrap">				<!-- article grid_wrap start -->
-		<!-- Monthly Grid -->
-		<div id="summary_wrap" style="height:226;"></div>
-	</article>								<!-- article grid_wrap end -->
-	<ul class="right_btns">
-		<li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSave(this);">Save</a></p></li>
-		<li><p id="btnSaveNew" class="btn_grid btn_disabled"><a onclick="fnSaveNew(this);">Save as New</a></p></li>
-		<li><p id="btnUpload" class="btn_grid btn_disabled"><a onclick="fnUpload(this);">Upload</a></p></li>
-		<li><p id="btnExcel" class="btn_grid btn_disabled"><a onclick="fnExcel(this, 'Business Plan Report');">Excel</a></p></li>
-	</ul>
-	<article class="grid_wrap">				<!-- article grid_wrap start -->
-		<!-- Weekly Grid -->
-		<div id="detail_wrap" style="height:400px;"></div>
-	</article>								<!-- article grid_wrap end -->
-</section>									<!-- section search_result end -->
