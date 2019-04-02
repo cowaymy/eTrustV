@@ -18,8 +18,79 @@ SELECT CASE WHEN A.ID = 1 THEN CASE WHEN A.ID = B.ID THEN B.ID ELSE A.ID END
  ORDER BY A.ID
 </select>
 <select id="selectBusinessPlanSummary" parameterType="Map" resultType="egovMap">
+SELECT A.YEAR
+     , A.CATEGORY_NAME
+     , A.M01, A.M02, A.M03, A.M04, A.M05, A.M06, A.M07, A.M08, A.M09, A.M10, A.M11, A.M12, A.SUMM
+  FROM (
+        SELECT A.YEAR
+             , C.CODE_NAME AS CATEGORY_NAME
+             , ROW_NUMBER() OVER (PARTITION BY A.YEAR ORDER BY B.STK_CTGRY_ID) AS RN
+             , SUM(A.M01) AS M01, SUM(A.M02) AS M02, SUM(A.M03) AS M03, SUM(A.M04) AS M04, SUM(A.M05) AS M05, SUM(A.M06) AS M06
+             , SUM(A.M07) AS M07, SUM(A.M08) AS M08, SUM(A.M09) AS M09, SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
+             , SUM(A.M01) + SUM(A.M02) + SUM(A.M03) + SUM(A.M04) + SUM(A.M05) + SUM(A.M06)
+             + SUM(A.M07) + SUM(A.M08) + SUM(A.M09) + SUM(A.M10) + SUM(A.M11) + SUM(A.M12) AS SUMM
+          FROM SCM0064S A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+          LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+         WHERE A.YEAR = #{planYear}
+         GROUP BY A.YEAR, C.CODE_NAME, B.STK_CTGRY_ID
+        UNION ALL
+        SELECT A.YEAR
+             , 'ALL' AS CATEGORY_NAME
+             , 100 AS RN
+             , SUM(A.M01) AS M01, SUM(A.M02) AS M02, SUM(A.M03) AS M03, SUM(A.M04) AS M04, SUM(A.M05) AS M05, SUM(A.M06) AS M06
+             , SUM(A.M07) AS M07, SUM(A.M08) AS M08, SUM(A.M09) AS M09, SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
+             , SUM(A.M01) + SUM(A.M02) + SUM(A.M03) + SUM(A.M04) + SUM(A.M05) + SUM(A.M06)
+             + SUM(A.M07) + SUM(A.M08) + SUM(A.M09) + SUM(A.M10) + SUM(A.M11) + SUM(A.M12) AS SUMM
+          FROM SCM0064S A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+          LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+         WHERE A.YEAR = #{planYear}
+         GROUP BY A.YEAR
+        ) A
+ ORDER BY A.RN
 </select>
 <select id="selectBusinessPlanDetail" parameterType="Map" resultType="egovMap">
+SELECT A.YEAR
+     , A.CATEGORY_NAME
+     , A.STOCK_CODE
+     , A.STOCK_NAME
+     , A.M01, A.M02, A.M03, A.M04, A.M05, A.M06, A.M07, A.M08, A.M09, A.M10, A.M11, A.M12, A.SUMM
+  FROM (
+        SELECT A.YEAR
+             , C.CODE_NAME AS CATEGORY_NAME
+             , TO_CHAR(A.STOCK_CODE) AS STOCK_CODE
+             , TO_CHAR(B.STK_DESC) AS STOCK_NAME
+             , ROW_NUMBER() OVER (PARTITION BY A.YEAR ORDER BY B.STK_CTGRY_ID, A.STOCK_CODE) AS RN
+             , SUM(A.M01) AS M01, SUM(A.M02) AS M02, SUM(A.M03) AS M03, SUM(A.M04) AS M04, SUM(A.M05) AS M05, SUM(A.M06) AS M06
+             , SUM(A.M07) AS M07, SUM(A.M08) AS M08, SUM(A.M09) AS M09, SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
+             , SUM(A.M01) + SUM(A.M02) + SUM(A.M03) + SUM(A.M04) + SUM(A.M05) + SUM(A.M06)
+             + SUM(A.M07) + SUM(A.M08) + SUM(A.M09) + SUM(A.M10) + SUM(A.M11) + SUM(A.M12) AS SUMM
+          FROM SCM0064S A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+          LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+         WHERE A.YEAR = #{planYear}
+         GROUP BY A.YEAR, C.CODE_NAME, B.STK_CTGRY_ID, A.STOCK_CODE, B.STK_DESC
+        UNION ALL
+        SELECT A.YEAR
+             , 'ALL' AS CATEGORY_NAME
+             , '' AS STOCK_CODE
+             , '' AS STCK_NAME
+             , 1000 AS RN
+             , SUM(A.M01) AS M01, SUM(A.M02) AS M02, SUM(A.M03) AS M03, SUM(A.M04) AS M04, SUM(A.M05) AS M05, SUM(A.M06) AS M06
+             , SUM(A.M07) AS M07, SUM(A.M08) AS M08, SUM(A.M09) AS M09, SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
+             , SUM(A.M01) + SUM(A.M02) + SUM(A.M03) + SUM(A.M04) + SUM(A.M05) + SUM(A.M06)
+             + SUM(A.M07) + SUM(A.M08) + SUM(A.M09) + SUM(A.M10) + SUM(A.M11) + SUM(A.M12) AS SUMM
+          FROM SCM0064S A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+          LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+         WHERE A.YEAR = #{planYear}
+         GROUP BY A.YEAR
+        ) A
+	<if test="categoryName != null and categoryName != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox}
+ WHERE A.CATEGORY_NAME = #{categoryName}
+	</if>
+ ORDER BY A.RN
 </select>
 
 <!-- Sales Plan Accuracy -->
