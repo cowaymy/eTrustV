@@ -1542,7 +1542,7 @@
         SELECT SAL0090D_SRV_CONFIG_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
         INSERT
-          INTO SAL0226D
+          INTO SAL0090D
              ( SRV_CONFIG_ID
              , SRV_SO_ID
              , SRV_CODY_ID
@@ -1577,7 +1577,7 @@
         SELECT SAL0089D_SRV_SETT_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
         INSERT
-          INTO SAL0228D
+          INTO SAL0089D
              ( SRV_SETT_ID
              , SRV_CONFIG_ID
              , SRV_SETT_TYPE_ID
@@ -1602,7 +1602,7 @@
         SELECT SAL0088D_SRV_PRD_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
         INSERT
-          INTO SAL0227D
+          INTO SAL0088D
              ( SRV_PRD_ID
              , SRV_CONFIG_ID
              , SRV_MBRSH_ID
@@ -2094,7 +2094,7 @@
                     , CODE_NAME
                     , DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
                  FROM SYS0013M T1
-                    , SAL0229M T2
+                    , SAL0091M T2
                 WHERE T1.CODE_MASTER_ID = #{appSubType}
                   AND T1.DISAB = 0
                   AND T1.CODE = T2.SRV_MEM_PAC_ID
@@ -2509,7 +2509,7 @@ AND APP_TYPE_ID = #{appTypeId}
     </update>
 
         <update id="updateSrvConfigPeriod" parameterType="Map">
-        UPDATE SAL0227D
+        UPDATE SAL0088D
              SET
                    SRV_PRD_START_DT = #{srvStrtDt},
                    SRV_PRD_EXPR_DT = #{srvExprDt},
