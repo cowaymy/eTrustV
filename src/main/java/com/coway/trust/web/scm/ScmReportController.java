@@ -114,6 +114,19 @@ public class ScmReportController {
 		
 		return	ResponseEntity.ok(map);
 	}
+	@RequestMapping(value = "/selectBusinessPlanReportDetail.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectBusinessPlanReportDetail(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("selectBusinessPlanReportDetail : {}", params.toString());
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		List<EgovMap> selectBusinessPlanDetail	= scmReportService.selectBusinessPlanDetail(params);
+		
+		map.put("selectBusinessPlanDetail", selectBusinessPlanDetail);
+		
+		return	ResponseEntity.ok(map);
+	}
 	
 	/*
 	 * Sales Plan Accuracy
