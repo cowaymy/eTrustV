@@ -6,6 +6,7 @@
  ----------------------------------------------------------------
  08/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  05/03/2019  ONGHC  1.0.1          AMEND REQUEST AND APPOINMENT DATE
+ 02/04/2019  ONGHC  1.0.2          ADD REQUEST AND APPOINTMENT DATE CHECKING
  -->
 
 <script type="text/javaScript">
@@ -128,7 +129,9 @@
       if ($("#requestDate").val() != "") {
         $("#requestDate").attr("disabled", true);
         $("#appDate").on("change", function(event) {
-          fn_doAllaction("#appDate");
+          if (fn_cpDt('#requestDate', '#appDate')) {
+            fn_doAllaction("#appDate");
+          }
         });
         $("#rbt").attr("hidden", true);
       } else {
@@ -522,6 +525,7 @@
 
       Common.ajax("POST", "/services/as/updateASEntry.do", updateForm,
           function(result) {
+            Common.alert("Record update successfully.");
             $("#sFm").find("input, textarea, button, select").attr("disabled", true);
             $("#save_bt_div").hide();
           });
@@ -536,6 +540,10 @@
   function fn_chkDt(obj) {
     var vdte = $(obj).val();
     var text = "";
+
+    if (vdte == "") {
+      return;
+    }
 
     if ($(obj).attr('id') == "requestDate") {
       text = "Request Date";
@@ -568,6 +576,43 @@
         return;
       }
     }
+  }
+
+  function fn_cpDt(obj_1, obj_2) {
+    var obj1 = $(obj_1).val();
+    var obj2 = $(obj_2).val();
+
+    if (obj1 == "" || obj2 == "") {
+      return false;
+    }
+
+    var txt_1 = "Request Date";
+    var txt_2 = "Appointment Date";
+
+    // VALIDATE 2 FILED FORMAT
+    var fmt = fn_valDtFmt(obj1);
+    if (!fmt) {
+      Common.alert("* " + txt_1 + " invalid date format.");
+      $(obj_1).val("");
+      return false;
+    }
+
+    fmt = fn_valDtFmt(obj2);
+    if (!fmt) {
+      Common.alert("* " + txt_2 + " invalid date format.");
+      $(obj_2).val("");
+      return false;
+    }
+
+    var dt1 = new Date(obj1);
+    var dt2 = new Date(obj2);
+
+    if (dt1 > dt2) {
+      Common.alert("* " + txt_2 + " must be greater than or equal to " + txt_1);
+      $(obj_2).val("");
+      return false;
+    }
+    return true
   }
 
   function fn_sendSms(_telNo, _msg) {
@@ -758,13 +803,13 @@
     var rtnMsg = "";
 
     if (FormUtil.checkReqValue($("#requestDate"))) {
-      rtnMsg += "Please select the request date.<br>";
+      rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Request Date' htmlEscape='false'/> </br>";
       rtnValue = false;
     } else {
       /*
        var  nowdate      = $.datepicker.formatDate($.datepicker.ATOM, new Date());
        var  nowdateArry  =nowdate.split("-");
-              nowdateArry = nowdateArry[0]+""+nowdateArry[1]+""+nowdateArry[2];
+            nowdateArry = nowdateArry[0]+""+nowdateArry[1]+""+nowdateArry[2];
        var  rdateArray   =$("#appDate").val().split("/");
        var requestDate  =rdateArray[2]+""+rdateArray[1]+""+rdateArray[0];
 
@@ -781,7 +826,7 @@
     }
 
     if (FormUtil.checkReqValue($("#appDate"))) {
-      rtnMsg += "Please select the appDate date.<br>";
+      rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Appointment Date' htmlEscape='false'/> </br>";
       rtnValue = false;
     } else {
 
@@ -797,7 +842,7 @@
       var dayDiff2 = Math.floor((Date.UTC(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate()) - Date.UTC(requestDate.getFullYear(), requestDate.getMonth(), requestDate.getDate())) / (1000 * 60 * 60 * 24));
 
       if (dayDiff1 > 14 || dayDiff2 > 14) {
-        rtnMsg += "* appDate date should not be longer than 14 days from current date.<br />";
+        rtnMsg += "* Appointment date should not be longer than 14 days from current date.<br />";
         rtnValue = false;
       }
     }
@@ -805,6 +850,11 @@
     if (FormUtil.checkReqValue($("#appTime"))) {
       // rtnMsg  +="Please select the appTime <br/>" ;
       // rtnValue =false;
+    }
+
+    // VALIDATE DATE
+    if (!fn_cpDt('#requestDate', '#appDate')) {
+      return false;
     }
 
     if ($("#errorCode").val() == "") {
