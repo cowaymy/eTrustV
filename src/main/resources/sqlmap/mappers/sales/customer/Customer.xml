@@ -2579,35 +2579,38 @@
 
     <select id="existingHPCodyMobile" parameterType="Map" resultType="egovMap">
 
-    SELECT FULL_NAME, MEM_CODE FROM ORG0001D
-        WHERE 1 = 1
-        AND MEM_TYPE IN (1,2)
+    SELECT FULL_NAME, MEM_CODE FROM
+    (
+	    SELECT FULL_NAME, MEM_CODE FROM ORG0001D
+	        WHERE 1 = 1
+	        AND MEM_TYPE IN (1,2)
 
-    <if test="contactNumber != null and contactNumber !=''">
-      AND #{contactNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
-    </if>
-    <if test="residenceNumber != null and residenceNumber !=''">
-      OR #{residenceNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
-    </if>
-    <if test="officeNumber != null and officeNumber !=''">
-      OR #{officeNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
-    </if>
-    <if test="faxNumber != null and faxNumber !=''">
-      OR #{faxNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
-    </if>
+	    <if test="contactNumber != null and contactNumber !=''">
+	      AND #{contactNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
+	    </if>
+	    <if test="residenceNumber.length() > 9">
+	      OR #{residenceNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
+	    </if>
+	    <if test="officeNumber.length() > 9">
+	      OR #{officeNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
+	    </if>
+	    <if test="faxNumber.length() > 9">
+	      OR #{faxNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
+	    </if>
 
-    <if test="asContactNumber != null and asContactNumber !=''">
-      OR #{asContactNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
-    </if>
-    <if test="asResidenceNumber != null and asResidenceNumber !=''">
-      OR #{asResidenceNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
-    </if>
-    <if test="asOfficeNumber != null and asOfficeNumber !=''">
-      OR #{asOfficeNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
-    </if>
-    <if test="asFaxNumber != null and asFaxNumber !=''">
-      OR #{asFaxNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
-    </if>
-      AND ROWNUM <![CDATA[<= 1 ]]>
+	    <if test="asContactNumber != null and asContactNumber !=''">
+	      OR #{asContactNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
+	    </if>
+	    <if test="asResidenceNumber.length() > 9 ">
+	      OR #{asResidenceNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
+	    </if>
+	    <if test="asOfficeNumber.length() > 9 ">
+	      OR #{asOfficeNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
+	    </if>
+	    <if test="asFaxNumber.length() > 9 ">
+	      OR #{asFaxNumber} IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
+	    </if>
+	 )
+	   WHERE ROWNUM <![CDATA[<= 1 ]]>
   </select>
 </mapper>
