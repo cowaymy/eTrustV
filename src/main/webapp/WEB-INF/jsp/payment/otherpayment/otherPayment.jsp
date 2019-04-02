@@ -2957,7 +2957,7 @@ function srvcDiscountValue(){
 
 			        if(resultInfo != null && resultInfo.length > 0){
 				        for(i=0 ; i < resultInfo.length ; i++){
-						    message += "<font color='red'>" + resultInfo[i].orNo + "</font><br>";
+			                message += "<font color='red'>" + result[i].orNo + " (Order No: " + result[i].salesOrdNo +  ")</font><br>";
 				        }
 			        }
 

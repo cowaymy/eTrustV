@@ -770,7 +770,7 @@ function saveAdvPayment(){
 
         if(result != null && result.length > 0){
             for(i=0 ; i < result.length ; i++){
-                message += "<font color='red'>" + result[i].orNo + "</font><br>";
+                message += "<font color='red'>" + result[i].orNo + " (Order No: " + result[i].salesOrdNo +  ")</font><br>";
             }
         }
 
