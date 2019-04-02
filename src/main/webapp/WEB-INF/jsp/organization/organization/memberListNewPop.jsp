@@ -894,8 +894,8 @@ console.log("validation");
         	Common.alert("Please key in Mobile No.");
             return false;
         }else{
-            if($("#mobileNo").val().length < 9 || $("#mobileNo").val().length > 12){
-                Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
+            if($("#mobileNo").val().length < 10 || $("#mobileNo").val().length > 12){
+                Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLengthMember" />');
                 return false;
             }
 
@@ -1487,7 +1487,7 @@ function checkBankAccNo() {
 <tr>
     <th scope="row" id="mobileNoLbl" name="mobileNoLbl">Mobile No.</th>
     <td>
-    <input type="text" title="" placeholder="Numeric Only" class="w100p" id="mobileNo" name="mobileNo" onKeyDown="fn_checkMobileNo()"
+    <input type="text" title="" placeholder="Numeric Only" class="w100p" id="mobileNo" name="mobileNo" maxlength="11" onKeyDown="fn_checkMobileNo()"
         onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
     <th scope="row">Office No.</th>

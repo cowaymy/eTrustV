@@ -610,7 +610,7 @@ function fn_report(){
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('FILE');">Re-Generate Claim File</a></p></li>
                         </c:if>
 
-                        <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}"> --%>
+                        <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openFailedeCash('VIEW');">Failed eCash Listing</a></p></li>
                         </c:if>
                     </ul>

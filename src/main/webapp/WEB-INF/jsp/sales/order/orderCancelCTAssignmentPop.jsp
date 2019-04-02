@@ -5,40 +5,41 @@
 	//AUIGrid 생성 후 반환 ID
 	var cancelLogGridID;       // Cancellation Log Transaction list
 	var prodReturnGridID;      // Product Return Transaction list
-	
+
 	 $(document).ready(function(){
-		 
-		//AUIGrid 그리드를 생성합니다. 
-        cancelLogGrid();  
+
+		//AUIGrid 그리드를 생성합니다.
+        cancelLogGrid();
         prodReturnGrid();
-        
+
         /*  AUIGrid.setSelectionMode(addrGridID, "singleRow"); */
         //Call Ajax
-        fn_cancelLogTransList(); 
+        fn_cancelLogTransList();
         fn_productReturnTransList();
-        
+
 	 });
-	
+
 	 function cancelLogGrid(){
 	        // Cancellation Log Transaction Column
-	        var cancelLogColumnLayout = [ 
-	             {dataField : "code1", headerText : "<spring:message code='sal.text.type' />", width : '10%'}, 
-	             {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '10%'},
-	             {dataField : "crtDt", headerText : "<spring:message code='sal.text.createDate' />", width : '20%'}, 
-	             {dataField : "callentryUserName", headerText : "<spring:message code='sal.text.creator' />", width : '20%'},
-	             {dataField : "updDt", headerText : "<spring:message code='sal.title.text.updateDate' />", width : '20%'}, 
-	             {dataField : "userName", headerText : "<spring:message code='sal.text.updator' />", width : '20%'}
-	         ];
-	        
+        var cancelLogColumnLayout = [
+             {dataField : "code1", headerText : "<spring:message code='sal.text.type' />", width : '7%'},
+             {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '7%'},
+             {dataField : "callRem", headerText : "<spring:message code='sal.text.remark' />", width : '40%'},
+             {dataField : "crtDt", headerText : "<spring:message code='sal.text.createDate' />", width : '10%'},
+             {dataField : "callentryUserName", headerText : "<spring:message code='sal.text.creator' />", width : '13%'},
+             {dataField : "updDt", headerText : "<spring:message code='sal.title.text.updateDate' />", width : '10%'},
+             {dataField : "userName", headerText : "<spring:message code='sal.text.updator' />", width : '13%'}
+         ];
+
 	        //그리드 속성 설정
 	        var gridPros = {
-	            // 페이징 사용       
+	            // 페이징 사용
 	            usePaging : true,
 	            // 한 화면에 출력되는 행 개수 10(기본값:10)
 	            pageRowCount : 10,
 	            editable : true,
 	            fixedColumnCount : 1,
-	            showStateColumn : false, //true 
+	            showStateColumn : false, //true
 	            displayTreeOpen : false, //true
 	            selectionMode : "multipleCells",
 	            headerHeight : 30,
@@ -50,33 +51,35 @@
 	            wrapSelectionMove : false, //false
 	            // 줄번호 칼럼 렌더러 출력
 	            showRowNumColumn : true,
-	            groupingMessage : "Here groupping"
+	            groupingMessage : "Here groupping",
+	            wordwrap : true
+
 	        };
-	        
+
 	        cancelLogGridID = GridCommon.createAUIGrid("#cancelLog", cancelLogColumnLayout,'', gridPros);
 	    }
-	    
+
 	    function prodReturnGrid(){
 	        // Product Return Transaction Column
-	        var prodReturnColumnLayout = [ 
-	             {dataField : "retnNo", headerText : "<spring:message code='sal.title.text.returnNo' />", width : '15%'}, 
+	        var prodReturnColumnLayout = [
+	             {dataField : "retnNo", headerText : "<spring:message code='sal.title.text.returnNo' />", width : '15%'},
 	             {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '10%'},
-	             {dataField : "created1", headerText : "<spring:message code='sal.text.createDate' />", width : '11%'}, 
+	             {dataField : "created1", headerText : "<spring:message code='sal.text.createDate' />", width : '11%'},
 	             {dataField : "username1", headerText : "<spring:message code='sal.text.creator' />", width : '11%'},
-	             {dataField : "memCodeName2", headerText : "<spring:message code='sal.title.text.assignCt' />"}, 
+	             {dataField : "memCodeName2", headerText : "<spring:message code='sal.title.text.assignCt' />"},
 	             {dataField : "ctGrp", headerText : "<spring:message code='sal.title.text.group' />", width : '8%'},
 	             {dataField : "whLocCodeDesc", headerText : "<spring:message code='sal.title.text.returnWarehouse' />", width : '25%'}
 	         ];
-	        
+
 	        //그리드 속성 설정
 	        var gridPros = {
-	            // 페이징 사용       
+	            // 페이징 사용
 	            usePaging : true,
 	            // 한 화면에 출력되는 행 개수 10(기본값:10)
 	            pageRowCount : 10,
 	            editable : true,
 	            fixedColumnCount : 1,
-	            showStateColumn : false, //true 
+	            showStateColumn : false, //true
 	            displayTreeOpen : false, //true
 	            selectionMode : "multipleCells",
 	            headerHeight : 30,
@@ -90,29 +93,29 @@
 	            showRowNumColumn : true,
 	            groupingMessage : "Here groupping"
 	        };
-	        
+
 	        prodReturnGridID = GridCommon.createAUIGrid("#productReturn", prodReturnColumnLayout,'',gridPros);
 	    }
-	    
+
 	    // 리스트 조회. (Cancellation Log Transaction list)
 	    function fn_cancelLogTransList() {
 	        Common.ajax("GET", "/sales/order/cancelLogTransList.do", $("#tabForm").serialize(), function(result) {
 	            AUIGrid.setGridData(cancelLogGridID, result);
 	        });
 	    }
-	    
+
 	    // 리스트 조회. (Product Return Transaction list)
-	    function fn_productReturnTransList() { 
+	    function fn_productReturnTransList() {
 	        Common.ajax("GET", "/sales/order/productReturnTransList.do", $("#tabForm").serialize(), function(result) {
 	            AUIGrid.setGridData(prodReturnGridID, result);
 	        });
 	    }
-	    
+
 	    //resize func (tab click)
-	    function fn_resizefunc(gridName){ // 
+	    function fn_resizefunc(gridName){ //
 	        AUIGrid.resize(gridName, 950, 300);
 	   }
-	    
+
 	    //Member Search Popup
 	    $('#memBtn').click(function() {
 	        Common.popupDiv("/sales/order/ctSearchPop.do", $("#tabForm").serializeJSON(), null, true);
@@ -126,7 +129,7 @@
 	            fn_loadOrderSalesman(0, memCd);
 	        }
 	    });
-	    
+
 	    function fn_loadOrderSalesman(memId, memCode) {
 
 	        Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
@@ -137,22 +140,22 @@
 	            else {
 	                $('#hiddenSalesmanId').val(memInfo.memId);
 	                $('#salesmanCd').val(memInfo.memCode);
-	               
+
 	                $('#salesmanCd').removeClass("readonly");
-	              
+
 	            }
 	        });
 	    }
-	    
+
 	    function fn_saveCT(){
 	    	if(ctForm.salesmanCd.value == ""){
 	            Common.alert("<spring:message code='sal.alert.msg.pleaseSelectTheAssignCt' />");
 	            return false;
 	        }
-	    	
+
 	    	Common.ajax("GET", "/sales/order/saveCtAssignment.do", $("#ctForm").serializeJSON(), function(result) {
 	            Common.alert(result.msg, fn_success);
-	            
+
 	        }, function(jqXHR, textStatus, errorThrown) {
 	                try {
 	                    console.log("status : " + jqXHR.status);
@@ -169,32 +172,32 @@
 	                alert("Fail : " + jqXHR.responseJSON.message);
 	        });
 	    }
-	    
+
 	    function fn_success(){
 	        fn_orderCancelListAjax();
-	        
+
 	        $("#_close").click();
 	        Common.popupDiv("/sales/order/ctAssignmentInfoPop.do", $("#detailForm").serializeJSON(), null , true, '_CTDiv');
 	    }
-	    
+
 	  //그리드 속성 설정
 	    var gridPros = {
 	        usePaging           : true,         //페이징 사용
-	        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-	        editable            : false,            
-	        fixedColumnCount    : 0,            
-	        showStateColumn     : true,             
-	        displayTreeOpen     : false,            
-	        selectionMode       : "singleRow",  //"multipleCells",            
-	        headerHeight        : 30,       
+	        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+	        editable            : false,
+	        fixedColumnCount    : 0,
+	        showStateColumn     : true,
+	        displayTreeOpen     : false,
+	        selectionMode       : "singleRow",  //"multipleCells",
+	        headerHeight        : 30,
 	        useGroupingPanel    : false,        //그룹핑 패널 사용
 	        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
 	        noDataMessage       : "No order found.",
 	        groupingMessage     : "Here groupping"
 	    };
-	        
+
 	    function chgGridTab(tabNm) {
 	        switch(tabNm) {
 	            case 'custInfo' :
