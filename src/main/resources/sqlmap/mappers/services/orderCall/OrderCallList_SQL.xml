@@ -36,6 +36,7 @@
           , Extent1.CRT_DT CRT_DT
           , Extent1.CALL_TYPE_NAME CALL_TYPE_NAME
           , Extent1.RCD_TMS RCD_TMS
+          , Extent1.POSTCODE POSTCODE
           , CASE WHEN ( Extent1.APP_TYPE_ID IS NOT NULL )
                    THEN Extent1.APP_TYPE_ID
                  ELSE 0
@@ -90,6 +91,7 @@
                    , vCallLogOrderCall.RCD_TMS RCD_TMS
                    , area.state
                    , area.area
+                   , area.postcode
             FROM CCR1002V vCallLogOrderCall
             JOIN SYS0064M area on area.AREA_ID = vcalllogordercall.INSTALL_AREA_ID) Extent1
      WHERE  1=1
