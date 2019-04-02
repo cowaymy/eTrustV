@@ -27,7 +27,7 @@ $(document).ready(function() {
     CommonCombo.make('_insPosModuleType', "/sales/pos/selectPosModuleCodeList", modulePopParam , '', optionModule);
 
     //PosSystemTypeComboBox
-    var systemPopParam = {groupCode : 140 , codeIn : [1357, 1358]};
+    var systemPopParam = {groupCode : 140 , codeIn : [1357]};
     CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
 
     CommonCombo.make('_cmbWhBrnchIdPop', "/sales/pos/selectWhBrnchList", '' , '', '');
