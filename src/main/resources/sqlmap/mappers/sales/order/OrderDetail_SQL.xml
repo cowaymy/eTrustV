@@ -890,7 +890,7 @@
 		WHEN t.ctrl_stus_id = 1 THEN '-'
 		WHEN t.BANK_DTL_APPR_CODE IS NULL OR t.BANK_DTL_APPR_CODE = 00 THEN
 		'Success'
-		WHEN t.BANK_DTL_APPR_CODE = 51 THEN 'Insufficient Fund'
+		WHEN t.BANK_DTL_APPR_CODE IN (05,51,61,65) THEN 'Insufficient Fund'
 		ELSE (CASE WHEN t.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END)
 		END is_approve_str
 		FROM
