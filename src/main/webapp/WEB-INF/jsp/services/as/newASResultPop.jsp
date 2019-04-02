@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  01/04/2019  ONGHC  1.0.1          RE-STRUCTURE JSP AND ADD IN HOUSE REPAIR FUNCTION
+ 02/04/2019  ONGHC  1.0.2          Inherit Error Code and Error Desc.
  -->
 
 <script type="text/javaScript">
@@ -678,10 +679,16 @@
     //fn_clearPageField();
 
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+    console.log(selectedItems);
     $("#ddlCTCode").val(selectedItems[0].item.asMemId);
     $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
     $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
     $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
+    if (selectedItems[0].item.asMalfuncId != "") {
+      $("#ddlErrorCode").val(selectedItems[0].item.asMalfuncId);
+      asMalfuncResnId = selectedItems[0].item.asMalfuncResnId;
+      fn_errMst_SelectedIndexChanged();
+    }
 
     switch ($("#ddlStatus").val()) {
     case "4":
