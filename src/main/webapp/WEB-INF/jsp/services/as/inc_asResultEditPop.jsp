@@ -1005,8 +1005,6 @@
     }
 
     var saveForm;
-    alert($("#requestMod").val());
-
     if ($("#requestMod").val() == "INHOUSE") {
       saveForm = {
         "asResultM" : asResultM,
