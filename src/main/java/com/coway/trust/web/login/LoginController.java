@@ -352,6 +352,32 @@ public class LoginController {
                             LOGGER.error(e.toString());
                         }
                     }
+                    // Cody agreement renewal
+                    else if("0002".equals(userTypeId) && "121".equals(item1.get("roleType"))) {
+                        params.put("roleId", "121");
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+                            Date currRenewalDt = null;
+                            Date joinDt = sdf.parse(item1.get("joinDt").toString().substring(0, 10));
+                            Date cnfmDate = sdf.parse(cnfmDt);
+
+                            Date currDate = new Date(); // Current Date
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(currDate);
+
+                            currRenewalDt = sdf.parse(Integer.toString(cal.get(Calendar.YEAR)) + "-04-01");
+LOGGER.debug(Integer.toString(cnfmDate.compareTo(currRenewalDt)));
+LOGGER.debug(Integer.toString(joinDt.compareTo(currRenewalDt)));
+                            if(cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) < 0) {
+                                params.put("popType", "A");
+                            } else if(cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) >= 0) {
+                                params.put("popType", "M");
+                            }
+                        } catch(Exception e) {
+                            LOGGER.error(e.toString());
+                        }
+                    }
                     // Other than HP user type
                     else {
                         params.put("popType", "M");

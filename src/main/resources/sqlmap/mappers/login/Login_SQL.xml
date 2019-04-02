@@ -280,7 +280,8 @@
             CASE WHEN D.CNTRCT_TYPE IS NULL THEN CAST(B.ROLE_ID AS VARCHAR(10)) ELSE D.CNTRCT_TYPE END ROLE_TYPE,
             D.STUS_ID,
             D.CNFM,
-            D.CNFM_DT
+            D.CNFM_DT,
+            C.JOIN_DT
         FROM SYS0047M A
         INNER JOIN SYS0045M B
             ON A.USER_ID = B.USER_ID and B.STUS_ID NOT IN ('8')
