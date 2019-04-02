@@ -8,6 +8,7 @@
  25/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  27/02/2019  ONGHC  1.0.1          Amend error message while search
  05/03/2019  ONGHC  1.0.2          Remove selection mode as singleRow
+ 02/04/2019  ONGHC  1.0.3          Add Post Code Column
  -->
 
 <script type="text/javaScript">
@@ -204,6 +205,11 @@
     }, {
       dataField : "area",
       headerText : '<spring:message code="service.grid.Area" />',
+      editable : false,
+      width : 180
+    }, {
+      dataField : "postcode",
+      headerText : '<spring:message code="service.grid.PostCode" />',
       editable : false,
       width : 180
     }, {
