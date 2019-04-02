@@ -285,8 +285,14 @@ public class OrderCallListController {
 
     EgovMap rdcincdc = orderCallListService.getRdcInCdc(orderCall);
 
+    params.put("viewSort", "2");
+    logger.debug("Paramss !!!!!!!!!!!! : {}", params.toString());
+    List<EgovMap> firstCallLog = orderDetailService.selectCallLogList(params);
+
     // Order Detail Tab
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+    //Get Oldest Call Log
+
     // logger.debug("orderCall : {}", orderCall);
     model.addAttribute("callStusCode", params.get("callStusCode"));
     model.addAttribute("callStusId", params.get("callStusId"));
@@ -297,6 +303,7 @@ public class OrderCallListController {
     model.addAttribute("callStatus", callStatus);
     model.addAttribute("orderDetail", orderDetail);
     model.addAttribute("orderRdcInCdc", rdcincdc);
+    model.addAttribute("firstCallLog", firstCallLog);
     return "services/orderCall/viewCallLogResultPop";
   }
 

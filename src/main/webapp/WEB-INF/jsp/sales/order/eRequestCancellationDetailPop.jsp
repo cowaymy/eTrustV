@@ -19,13 +19,14 @@
 
     function cancelLogGrid(){
         // Cancellation Log Transaction Column
-        var cancelLogColumnLayout = [
-             {dataField : "code1", headerText : "<spring:message code='sal.text.type' />", width : '10%'},
-             {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '10%'},
-             {dataField : "crtDt", headerText : "<spring:message code='sal.text.createDate' />", width : '20%'},
-             {dataField : "callentryUserName", headerText : "<spring:message code='sal.text.creator' />", width : '20%'},
-             {dataField : "updDt", headerText : "<spring:message code='sal.title.text.updateDate' />", width : '20%'},
-             {dataField : "userName", headerText : "<spring:message code='sal.text.updator' />", width : '20%'}
+    var cancelLogColumnLayout = [
+             {dataField : "code1", headerText : "<spring:message code='sal.text.type' />", width : '7%'},
+             {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '7%'},
+             {dataField : "callRem", headerText : "<spring:message code='sal.text.remark' />", width : '40%'},
+             {dataField : "crtDt", headerText : "<spring:message code='sal.text.createDate' />", width : '10%'},
+             {dataField : "callentryUserName", headerText : "<spring:message code='sal.text.creator' />", width : '13%'},
+             {dataField : "updDt", headerText : "<spring:message code='sal.title.text.updateDate' />", width : '10%'},
+             {dataField : "userName", headerText : "<spring:message code='sal.text.updator' />", width : '13%'}
          ];
 
         //그리드 속성 설정
@@ -48,7 +49,8 @@
             wrapSelectionMove : false, //false
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : true,
-            groupingMessage : "Here groupping"
+            groupingMessage : "Here groupping",
+            wordwrap : true
         };
 
         cancelLogGridID = GridCommon.createAUIGrid("#cancelLog", cancelLogColumnLayout,'', gridPros);

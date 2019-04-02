@@ -2672,8 +2672,8 @@
 				mthRentAmt : $('#ordRentalFees').val().trim(),
 				totPv : $('#ordPv').val().trim(),
 				discRntFee : $('#ordRentalFees').val().trim(),
-				promoDiscPeriodTp : $('#promoDiscPeriodTp').val().trim(),
-				promoDiscPeriod : $('#promoDiscPeriod').val().trim(),
+				promoDiscPeriodTp : $('#promoDiscPeriodTp').val(),
+				promoDiscPeriod : $('#promoDiscPeriod').val(),
 				salesOrdNo : ORD_NO
 			};
 		} else {

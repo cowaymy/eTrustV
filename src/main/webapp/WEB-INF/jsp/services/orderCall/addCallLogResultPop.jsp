@@ -330,8 +330,10 @@
         <th scope="row"><spring:message
           code='service.title.CreateDate' /></th>
         <td><span><c:out value="${orderCall.crtDt}" /> </span></td>
-        <th scope="row"></th>
-        <td></td>
+        <th scope="row">Call Log Posting Date</th>
+        <td>
+        <span><c:out value="${firstCallLog[0].callDt}"/> </span>
+        </td>
        </tr>
        <tr>
         <th scope="row"><spring:message
@@ -345,8 +347,10 @@
         <th scope="row"><spring:message
           code='service.title.Creator' /></th>
         <td><span><c:out value="${orderCall.crtUserId}" /></span></td>
-        <th scope="row"></th>
-        <td></td>
+        <th scope="row">Call Log Posting Time</th>
+        <td>
+        <span><c:out value="${firstCallLog[0].callTm}"/> </span>
+        </td>
        </tr>
        <tr>
         <th scope="row"><spring:message

@@ -242,6 +242,8 @@
 		, ROS_YEAR
 		, ROS_CALLER_USER_ID
 		, ROS_CALLER_USER_NAME
+		, CALL_DT
+		, CALL_TM
 		FROM
 		( SELECT T2.SALES_ORD_ID
 		, T2.CALL_ENTRY_ID
@@ -266,6 +268,8 @@
 		T7.ROS_MONTH IS NULL)) THEN T7.ROS_YEAR ELSE 0 END AS ROS_YEAR
 		, DECODE(T8.USER_ID, NULL, 0, T8.USER_ID) AS ROS_CALLER_USER_ID
 		, DECODE(T8.USER_ID, NULL, '', T8.USER_NAME) AS ROS_CALLER_USER_NAME
+		, TO_CHAR(T1.CALL_CRT_DT, 'dd/mm/yyyy') CALL_DT
+		, TO_CHAR(T1.CALL_CRT_DT, 'hh24:mi:ss') CALL_TM
 		FROM CCR0007D T1
 		INNER
 		JOIN CCR0006D T2
@@ -292,8 +296,22 @@
 		ON T8.USER_ID = T7.ROS_CALLER_USER_ID
 		WHERE 8 != T1.CALL_STUS_ID
 		AND T2.SALES_ORD_ID = #{salesOrderId}
-		ORDER BY T1.CALL_RESULT_ID DESC
+		 <choose>
+         <when test='viewSort == 1'>
+             ORDER BY T1.CALL_RESULT_ID DESC
+         </when>
+         <when test='viewSort == 2 '>
+             ORDER BY T1.CALL_RESULT_ID ASC
+         </when>
+         <otherwise>
+             ORDER BY T1.CALL_RESULT_ID DESC
+         </otherwise>
+        </choose>
 		)
+		<if test="viewSort != null and viewSoft != '' ">
+              WHERE ROWNUM <![CDATA[ <= ]]> 1
+         </if>
+
 	</select>
 
 	<select id="selectPaymentMasterList" parameterType="Map"

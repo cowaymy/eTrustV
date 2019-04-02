@@ -38,6 +38,12 @@
     <td><span>${orderDetail.installationInfo.instCountry}</span></td>
 </tr>
 <tr>
+    <th scope="row"><spring:message code="sal.text.latestCallDt" /></th>
+    <td><span>${orderDetail.callLog[0].callDt} </span></td>
+    <th scope="row"><spring:message code="sal.text.latestCallTm" /></th>
+    <td colspan="3"><span>${orderDetail.callLog[0].callTm} </span></td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.instruct" /></th>
     <td colspan="5"><span>${orderDetail.installationInfo.instct}</span></td>
 </tr>

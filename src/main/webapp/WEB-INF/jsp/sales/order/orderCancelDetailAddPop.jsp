@@ -53,13 +53,14 @@
 
     function cancelLogGrid(){
         // Cancellation Log Transaction Column
-        var cancelLogColumnLayout = [
-             {dataField : "code1", headerText : "<spring:message code='sal.text.type' />", width : '10%'}, 
-             {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '10%'},
-             {dataField : "crtDt", headerText : "<spring:message code='sal.text.createDate' />", width : '20%'}, 
-             {dataField : "callentryUserName", headerText : "<spring:message code='sal.text.creator' />", width : '20%'},
-             {dataField : "updDt", headerText : "<spring:message code='sal.title.text.updateDate' />", width : '20%'}, 
-             {dataField : "userName", headerText : "<spring:message code='sal.text.updator' />", width : '20%'}
+    var cancelLogColumnLayout = [
+             {dataField : "code1", headerText : "<spring:message code='sal.text.type' />", width : '7%'},
+             {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '7%'},
+             {dataField : "callRem", headerText : "<spring:message code='sal.text.remark' />", width : '40%'},
+             {dataField : "crtDt", headerText : "<spring:message code='sal.text.createDate' />", width : '10%'},
+             {dataField : "callentryUserName", headerText : "<spring:message code='sal.text.creator' />", width : '13%'},
+             {dataField : "updDt", headerText : "<spring:message code='sal.title.text.updateDate' />", width : '10%'},
+             {dataField : "userName", headerText : "<spring:message code='sal.text.updator' />", width : '13%'}
          ];
 
         //그리드 속성 설정
@@ -82,7 +83,8 @@
             wrapSelectionMove : false, //false
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : true,
-            groupingMessage : "Here groupping"
+            groupingMessage : "Here groupping",
+            wordwrap : true
         };
 
         cancelLogGridID = GridCommon.createAUIGrid("#cancelLog", cancelLogColumnLayout,'', gridPros);
@@ -91,11 +93,11 @@
     function prodReturnGrid(){
         // Product Return Transaction Column
         var prodReturnColumnLayout = [
-             {dataField : "retnNo", headerText : "<spring:message code='sal.title.text.returnNo' />", width : '15%'}, 
+             {dataField : "retnNo", headerText : "<spring:message code='sal.title.text.returnNo' />", width : '15%'},
              {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '10%'},
-             {dataField : "created1", headerText : "<spring:message code='sal.text.createDate' />", width : '11%'}, 
+             {dataField : "created1", headerText : "<spring:message code='sal.text.createDate' />", width : '11%'},
              {dataField : "username1", headerText : "<spring:message code='sal.text.creator' />", width : '11%'},
-             {dataField : "memCodeName2", headerText : "<spring:message code='sal.title.text.assignCt' />"}, 
+             {dataField : "memCodeName2", headerText : "<spring:message code='sal.title.text.assignCt' />"},
              {dataField : "ctGrp", headerText : "<spring:message code='sal.title.text.group' />", width : '8%'},
              {dataField : "whLocCodeDesc", headerText : "<spring:message code='sal.title.text.returnWarehouse' />", width : '25%'}
          ];
@@ -274,7 +276,7 @@
 //    		}
     	}
     	if($("#addStatus").val() == '32'){     // Confirm To Cancel
-    		
+
           if($("#reqStageId").val() == '24'){     // before installl
         	  console.log("before : " + $("#reqStageId").val());
                 if(addCallForm.cmbFeedbackCd.value == ""){
@@ -789,7 +791,7 @@
 			        <option value=""></option>
                      <c:forEach var="list" items="${selectAssignCTList }">
                         <option value="${list.memId}">${list.memCodeName}</option>
-                    </c:forEach> 
+                    </c:forEach>
 			    </select>
 			    </td>
 

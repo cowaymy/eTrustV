@@ -331,7 +331,11 @@
 			 WHERE  A.REQ_ID = #{reqId}
     </select>
 
-    <select id="cancelLogTransctionList" parameterType="Map" resultType="egovMap">
+   <resultMap id="callLogClobMap" type="egovMap">
+        <result property="CALL_REM" column="CALL_REM" jdbcType="CLOB"
+            javaType="string" />
+    </resultMap>
+    <select id="cancelLogTransctionList" parameterType="Map" resultMap="callLogClobMap">
          SELECT Filter1.CALL_ENTRY_ID ,
 			        Filter1.SALES_ORD_ID ,
 			        Filter1.TYPE_ID ,
@@ -361,7 +365,8 @@
 			        ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END ORI_CALL_DT  ,
 			        CASE
 			             WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
-			        ELSE '' END USER_NAME
+			        ELSE '' END USER_NAME,
+			        Filter1.CALL_REM
 			FROM ( SELECT Extent1.CALL_ENTRY_ID ,
 				                 Extent1.SALES_ORD_ID ,
 				                 Extent1.TYPE_ID ,
@@ -381,7 +386,8 @@
 				                 Extent3.CODE CODE3  ,
 				                 Extent3.CODE_NAME ,
 				                 Extent4.USER_ID ,
-				                 Extent4.USER_NAME
+				                 Extent4.USER_NAME,
+				                 NVL(EXTENT5.CALL_REM,'') CALL_REM
 				           FROM CCR0006D Extent1
 				            JOIN SYS0038M Extent2
 				              ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
@@ -389,6 +395,8 @@
 				              ON Extent3.CODE_ID = Extent1.TYPE_ID
 				            LEFT JOIN SYS0047M Extent4
 				              ON Extent4.USER_ID = Extent1.CRT_USER_ID
+				            LEFT JOIN CCR0007D Extent5
+                              ON EXTENT5.CALL_ENTRY_ID = EXTENT1.CALL_ENTRY_ID AND EXTENT5.CALL_RESULT_ID = EXTENT1.RESULT_ID
 				      <![CDATA[
 				         WHERE  8 <> Extent1.STUS_CODE_ID ) Filter1
 				      ]]>

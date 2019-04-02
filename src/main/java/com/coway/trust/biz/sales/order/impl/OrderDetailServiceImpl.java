@@ -92,6 +92,9 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		EgovMap orderCfgInfo 	 = orderDetailMapper.selectOrderConfigInfo(params);
 		EgovMap gstCertInfo      = orderDetailMapper.selectGSTCertInfo(params);
 
+		params.put("viewSort", "1");
+		List<EgovMap> callLog      = orderDetailMapper.selectCallLogList(params);
+
 		String memInfo           = orderDetailMapper.selectMemberInfo((String) basicInfo.get("custNric"));
 
 		if(CommonUtils.isNotEmpty(memInfo)) {
@@ -157,6 +160,8 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		orderDetail.put("thirdPartyInfo", 	thirdPartyInfo);
 		orderDetail.put("orderCfgInfo", 	orderCfgInfo);
 		orderDetail.put("gstCertInfo",   	gstCertInfo);
+		orderDetail.put("callLog",   	callLog);
+
 
 		Date salesDt = (Date) basicInfo.get("ordDt");
 

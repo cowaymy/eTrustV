@@ -7,7 +7,7 @@ function fn_saveValidation(){
         Common.alert("Please select call log status");
         return false;
     }
-	
+
 	if($("#feedBackCode").val() == ''){
         Common.alert("Please select feedback code");
         return false;
@@ -32,7 +32,7 @@ function fn_addCallSave(){
         $("#hideContent3").hide();
         $("#hideContent4").hide();
         $("#hiddenBtn").hide();
-        
+
     });
 }
 
@@ -47,7 +47,7 @@ function fn_callLogTransaction(){
 $(document).ready(function() {
 	callLogTranGrid();
 	fn_callLogTransaction();
-	
+
 });
 var callLogTranID;
 function callLogTranGrid() {
@@ -88,7 +88,7 @@ function callLogTranGrid() {
         headerText : "Key By",
         editable : false,
         width : 180
-        
+
     }, {
         dataField : "callCrtDt",
         headerText : "Key At",
@@ -96,33 +96,33 @@ function callLogTranGrid() {
     }];
      // 그리드 속성 설정
     var gridPros = {
-        
-        // 페이징 사용       
+
+        // 페이징 사용
         usePaging : true,
-        
+
         // 한 화면에 출력되는 행 개수 20(기본값:20)
         pageRowCount : 20,
-        
+
         editable : false,
-        
-        showStateColumn : true, 
-        
+
+        showStateColumn : true,
+
         displayTreeOpen : true,
-        
-        
+
+
         headerHeight : 30,
-        
+
         // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         skipReadonlyColumns : true,
-        
+
         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         wrapSelectionMove : true,
-        
+
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     callLogTranID = AUIGrid.create("#grid_wrap_callLogList", columnLayout, gridPros);
 }
@@ -131,7 +131,7 @@ function fn_doAllaction(){
     var ord_id = $("#salesOrdId").val();
     var  vdte = '';
     Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte ,TYPE:'INS'}, null , true , '_doAllactionDiv');
-    
+
 
 }
 </script>
@@ -150,7 +150,7 @@ function fn_doAllaction(){
 <dl>
     <dt class="click_add_on on"><a href="#">Call Log Information & Transaction</a></dt>
     <dd>
-    
+
     <table class="type1"><!-- table start -->
     <caption>table</caption>
     <colgroup>
@@ -169,9 +169,9 @@ function fn_doAllaction(){
         <td>
         <span><c:out value="${orderCall.crtDt}"/> </span>
         </td>
-        <th scope="row"></th>
+        <th scope="row">Call Log Posting Date</th>
         <td>
-        
+        <span><c:out value="${firstCallLog[0].callDt}"/> </span>
         </td>
     </tr>
     <tr>
@@ -186,15 +186,17 @@ function fn_doAllaction(){
         <span>Yes</span>
         </td>
          </c:if>
-    
-    
+
+
         <th scope="row">Creator</th>
         <td>
         <span><c:out value="${orderCall.crtUserId}"/></span>
         </td>
-        <th scope="row"></th>
+        <th scope="row">Call Log Posting Time</th>
         <td>
-        
+        <span><c:out value="${firstCallLog[0].callTm}"/> </span>
+        </td>
+
         </td>
     </tr>
     <tr>
@@ -208,7 +210,7 @@ function fn_doAllaction(){
         </td>
         <th scope="row"></th>
         <td>
-        
+
         </td>
     </tr>
     <tr>
@@ -232,7 +234,7 @@ function fn_doAllaction(){
     </tr>
     </tbody>
     </table><!-- table end -->
-    
+
     <article class="grid_wrap mt20"><!-- grid_wrap start -->
     <div id="grid_wrap_callLogList" style="width: 100%; height: 180px; margin: 0 auto;"></div>
     </article><!-- grid_wrap end -->
@@ -315,9 +317,9 @@ function fn_doAllaction(){
 <tr>
     <th scope="row">CT Group</th>
     <td>
-    
+
     <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="CTgroup" name="CTgroup"/>
-    
+
    <!--  <select class="w100p" id="CTgroup"  name="CTgroup" >
         <option value="A">A</option>
         <option value="B">B</option>
