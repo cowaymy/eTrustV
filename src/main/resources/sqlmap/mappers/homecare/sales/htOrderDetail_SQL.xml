@@ -660,7 +660,7 @@
              , T9.NAME NAME3
              , T9.TEL_MOBILE TEL_MOBILE3
           FROM SAL0225D T1
-          JOIN SAL0226D T2 ON T2.SRV_SO_ID = T1.SRV_ORD_ID
+          JOIN SAL0090D T2 ON T2.SRV_SO_ID = T1.SRV_ORD_ID
           JOIN ORG0001D T3 ON T3.MEM_ID = T2.SRV_CODY_ID
           JOIN
              ( SELECT V1.MEM_ID MEM_ID
@@ -1141,17 +1141,17 @@
                    AND sm.SRV_STUS_CODE_ID = 4
                    AND to_char(SYSDATE,'yyyymmdd') BETWEEN to_char(SRV_START_DT,'yyyymm')||'01' AND to_char(last_day(SRV_EXPR_DT),'yyyymmdd')
              WHERE  ( som.STUS_CODE_ID <> 8 ) ) a
-            LEFT JOIN SAL0226D cg   ON cg.SRV_SO_ID = a.ORD_ID
+            LEFT JOIN SAL0090D cg   ON cg.SRV_SO_ID = a.ORD_ID
             AND cg.SRV_STUS_ID = 1
-            LEFT JOIN SAL0228D cs1   ON cs1.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
+            LEFT JOIN SAL0089D cs1   ON cs1.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
             AND cs1.SRV_SETT_TYPE_ID = 281
-            LEFT JOIN SAL0228D cs2   ON cs2.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
+            LEFT JOIN SAL0089D cs2   ON cs2.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
             AND cs2.SRV_SETT_TYPE_ID = 280
-            LEFT JOIN SAL0228D cs3   ON cs3.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
+            LEFT JOIN SAL0089D cs3   ON cs3.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
             AND cs3.SRV_SETT_TYPE_ID = 279
             LEFT JOIN SAL0095D sm   ON sm.SRV_MEM_ID = a.SRV_MEM_ID
             AND a.SRV_MEM_ID <> 0
-             LEFT JOIN SAL0227D Prd   ON Prd.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
+             LEFT JOIN SAL0088D Prd   ON Prd.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
             AND Prd.SRV_PRD_STUS_ID = 1
               AND TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN TO_CHAR(Prd.SRV_PRD_START_DT,'YYYYMM')||'01' AND TO_CHAR(LAST_DAY(Prd.SRV_PRD_EXPR_DT),'YYYYMMDD')
             LEFT JOIN ORG0001D mem   ON mem.MEM_ID = NVL(sm.SRV_MEM_SALES_MEM_ID, 0)
