@@ -10,9 +10,24 @@
 	text-align : center;
 	margin-top : -20px;
 }
+.my-columnCenter1 {
+	text-align : center;
+	background : #CCCCFF;
+	color : #000;
+}
 .my-columnRight {
 	text-align : right;
 	margin-top : -20px;
+}
+.my-columnRight0 {
+	text-align : right;
+	background : #CCFFFF;
+	color : #000;
+}
+.my-columnRight1 {
+	text-align : right;
+	background : #CCCCFF;
+	color : #000;
 }
 .my-columnLeft {
 	text-align : left;
@@ -41,15 +56,16 @@ function fnSearch() {
 				//console.log(result);
 				AUIGrid.setGridData(myGridID1, result.selectBusinessPlanSummary);
 				AUIGrid.setGridData(myGridID2, result.selectBusinessPlanDetail);
+				AUIGrid.setGridData(myGridID3, result.selectBusinessPlanDetail1);
+				fnSwitch(false);
 			});
 }
-function fnSave(obj) {
+function fnSaveAll(obj) {
 	if ( true == $(obj).parents().hasClass("btn_disabled") )	return	false;
-	if ( false == fnValidation() )								return	false;
 	
 	Common.ajax("POST"
-			, "/scm/savePo.do"
-			, GridCommon.getEditData(myGridID2)
+			, "/scm/saveBusinessPlanAll.do"
+			, GridCommon.getGridData(myGridID2)
 			, function(result) {
 				Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 				fnSearch();
@@ -66,13 +82,13 @@ function fnSave(obj) {
 				Common.alert("Fail : " + jqXHR.responseJSON.message);
 			});
 }
-function fnSaveNew(obj) {
+function fnSave(obj) {
 	if ( true == $(obj).parents().hasClass("btn_disabled") )	return	false;
 	if ( false == fnValidation() )								return	false;
 	
 	Common.ajax("POST"
-			, "/scm/savePo.do"
-			, GridCommon.getEditData(myGridID2)
+			, "/scm/saveBusinessPlan.do"
+			, GridCommon.getEditData(myGridID3)
 			, function(result) {
 				Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 				fnSearch();
@@ -93,6 +109,9 @@ function fnUpload(obj) {
 	if ( true == $(obj).parents().hasClass("btn_disabled") )	return	false;
 }
 function fnExcel(obj, fileName) {
+	//	1. Grid Change for excel write
+	fnSwitch(true);
+	
 	//	1. grid id
 	//	2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
 	//	3. export ExcelFileName  MonthlyGridID, WeeklyGridID
@@ -166,9 +185,9 @@ function fnPlanYear() {
 			, fnPlanVerCallback);
 }
 function fnValidation() {
-	var addList	= AUIGrid.getAddedRowItems(myGridID2);
+	var updList	= AUIGrid.getEditedRowItems(myGridID3);
 	
-	if ( 0 == addList.length ) {
+	if ( 0 == updList.length ) {
 		Common.alert("No Change");
 		return	false;
 	}
@@ -200,10 +219,24 @@ function getTimeStamp() {
 	
 	return	date + "_" + time;
 }
+function fnSwitch(bool) {
+	//	true : excel download mode
+	if ( bool ) {
+		$("#detail_wrap").show();	AUIGrid.resize(myGridID2);
+		$("#detail_wrap1").hide();
+		$("#btnSaveAll").removeClass("btn_disabled");
+		$("#btnSave").addClass("btn_disabled");
+	} else {
+		$("#detail_wrap").hide();
+		$("#detail_wrap1").show();	AUIGrid.resize(myGridID3);
+		$("#btnSaveAll").addClass("btn_disabled");
+		$("#btnSave").removeClass("btn_disabled");
+	}
+}
 /*
  * Grid create & setting
  */
-var myGridID1, myGridID2;
+var myGridID1, myGridID2, myGridID3;
 
 //	myGridTotal
 var summaryOptions	= {
@@ -215,166 +248,178 @@ var summaryOptions	= {
 	showEditedCellMarker : false,
 	showFooter : false,
 	editable : false,
-	enableCellMerge : false,
+	enableCellMerge : true,
 	enableRestore : false,
 	fixedColumnCount : 1
 };
-var summaryFooterLayout	=
-	[
-		{
-			labelText : "Sum",
-			positionField : "Category"
-		}, {
-			dataField : "m01",
-			positionField : "jan",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m02",
-			positionField : "feb",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m03",
-			positionField : "mar",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m04",
-			positionField : "apr",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m05",
-			positionField : "may",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m06",
-			positionField : "jun",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m07",
-			positionField : "jul",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m08",
-			positionField : "aug",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m09",
-			positionField : "sep",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m10",
-			positionField : "oct",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m11",
-			positionField : "nov",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m12",
-			positionField : "dec",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "summ",
-			positionField : "sum",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}
-	 ];
 var summaryLayout	= 
 	[
 	 	{
 	 		headerText : "Category",
 	 		dataField : "categoryName",
-	 		style : "my-columnCenter"
+	 		cellMerge : true,
+			mergePolicy : "restrict",
+			mergeRef : "Category",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnCenter";
+				} else {
+					return	"my-columnCenter1";
+				}
+			}
+	 	}, {
+	 		headerText : "",
+	 		dataField : "gbnName",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnCenter";
+				} else {
+					return	"my-columnCenter1";
+				}
+			}
 	 	}, {
 	 		headerText : "Jan",
 	 		dataField : "m01",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight1";
+				}
+			}
 	 	}, {
 	 		headerText : "Feb",
 	 		dataField : "m02",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight1";
+				}
+			}
 	 	}, {
 	 		headerText : "Mar",
 	 		dataField : "m03",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight1";
+				}
+			}
 	 	}, {
 	 		headerText : "Apr",
 	 		dataField : "m04",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight1";
+				}
+			}
 	 	}, {
 	 		headerText : "May",
 	 		dataField : "m05",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight1";
+				}
+			}
 	 	}, {
 	 		headerText : "Jun",
 	 		dataField : "m06",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight1";
+				}
+			}
 	 	}, {
 	 		headerText : "Jul",
 	 		dataField : "m07",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight1";
+				}
+			}
 	 	}, {
 	 		headerText : "Aug",
 	 		dataField : "m08",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight1";
+				}
+			}
 	 	}, {
 	 		headerText : "Sep",
 	 		dataField : "m09",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight1";
+				}
+			}
 	 	}, {
 	 		headerText : "Oct",
 	 		dataField : "m10",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight1";
+				}
+			}
 	 	}, {
 	 		headerText : "Nov",
 	 		dataField : "m11",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight1";
+				}
+			}
 	 	}, {
 	 		headerText : "Dec",
 	 		dataField : "m12",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight1";
+				}
+			}
 	 	}, {
 	 		headerText : "Sum",
 	 		dataField : "summ",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Total" != item.categoryName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight1";
+				}
+			}
 	 	}
 	 ];
 
@@ -385,102 +430,19 @@ var detailOptions	= {
 	showRowNumColumn : true,
 	showRowCheckColumn : false,
 	showStateColumn : false,
-	showEditedCellMarker : false,
-	editable : false,
+	showEditedCellMarker : true,
+	editable : true,
 	enableCellMerge : false,
 	enableRestore : false,
-	fixedColumnCount : 3
+	fixedColumnCount : 1
 };
-/*
-var detailFooterLayout	=
-	[
-		{
-			labelText : "Sum",
-			positionField : "categoryName"
-		}, {
-			dataField : "m01",
-			positionField : "jan",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m02",
-			positionField : "feb",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m03",
-			positionField : "mar",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m04",
-			positionField : "apr",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m05",
-			positionField : "may",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m06",
-			positionField : "jun",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m07",
-			positionField : "jul",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m08",
-			positionField : "aug",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m09",
-			positionField : "sep",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m10",
-			positionField : "oct",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m11",
-			positionField : "nov",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "m12",
-			positionField : "dec",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}, {
-			dataField : "summ",
-			positionField : "sum",
-			operation : "SUM",
-			dataType : "numeric",
-			style : "my-columnRight"
-		}
-	 ];
-	 */
 var detailLayout	=
 	[
 	 	{
+	 		headerText : "Year",
+	 		dataField : "year",
+	 		style : "my-columnCenter"
+	 	}, {
 	 		headerText : "Category",
 	 		dataField : "categoryName",
 	 		style : "my-columnCenter"
@@ -559,7 +521,191 @@ var detailLayout	=
 	 		style : "my-columnRight"
 	 	}
 	 ];
-
+var detailOptions1	= {
+		usePaging : false,
+		useGroupingPanel : false,
+		showRowNumColumn : true,
+		showRowCheckColumn : false,
+		showStateColumn : false,
+		showEditedCellMarker : true,
+		editable : true,
+		enableCellMerge : true,
+		enableRestore : false,
+		fixedColumnCount : 4
+	};
+var detailLayout1	=
+	[
+	 	{
+	 		headerText : "Year",
+	 		dataField : "year",
+	 		style : "my-columnCenter",
+	 		visible : false
+	 	}, {
+	 		headerText : "Category",
+	 		dataField : "categoryName",
+	 		style : "my-columnCenter",
+	 		cellMerge : true,
+			mergePolicy : "restrict",
+			mergeRef : "Code",
+			editable : false
+	 	}, {
+	 		headerText : "Code",
+	 		dataField : "stockCode",
+	 		style : "my-columnCenter",
+	 		cellMerge : true,
+			mergePolicy : "restrict",
+			mergeRef : "Code",
+			editable : false
+	 	}, {
+	 		headerText : "Name",
+	 		dataField : "stockName",
+	 		style : "my-columnLeft",
+	 		cellMerge : true,
+			mergePolicy : "restrict",
+			mergeRef : "Code",
+			editable : false
+	 	}, {
+	 		headerText : "",
+	 		dataField : "gbnName",
+	 		style : "my-columnCenter",
+			editable : false
+	 	}, {
+	 		headerText : "Jan",
+	 		dataField : "m01",
+	 		dataType : "numeric",
+	 		style : "my-columnRight",
+	 		editable : true,
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight0";
+				}
+			}
+	 	}, {
+	 		headerText : "Feb",
+	 		dataField : "m02",
+	 		dataType : "numeric",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight0";
+				}
+			}
+	 	}, {
+	 		headerText : "Mar",
+	 		dataField : "m03",
+	 		dataType : "numeric",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight0";
+				}
+			}
+	 	}, {
+	 		headerText : "Apr",
+	 		dataField : "m04",
+	 		dataType : "numeric",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight0";
+				}
+			}
+	 	}, {
+	 		headerText : "May",
+	 		dataField : "m05",
+	 		dataType : "numeric",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight0";
+				}
+			}
+	 	}, {
+	 		headerText : "Jun",
+	 		dataField : "m06",
+	 		dataType : "numeric",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight0";
+				}
+			}
+	 	}, {
+	 		headerText : "Jul",
+	 		dataField : "m07",
+	 		dataType : "numeric",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight0";
+				}
+			}
+	 	}, {
+	 		headerText : "Aug",
+	 		dataField : "m08",
+	 		dataType : "numeric",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight0";
+				}
+			}
+	 	}, {
+	 		headerText : "Sep",
+	 		dataField : "m09",
+	 		dataType : "numeric",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight0";
+				}
+			}
+	 	}, {
+	 		headerText : "Oct",
+	 		dataField : "m10",
+	 		dataType : "numeric",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight0";
+				}
+			}
+	 	}, {
+	 		headerText : "Nov",
+	 		dataField : "m11",
+	 		dataType : "numeric",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight0";
+				}
+			}
+	 	}, {
+	 		headerText : "Dec",
+	 		dataField : "m12",
+	 		dataType : "numeric",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight0";
+				}
+			}
+	 	}
+	 ];
+	
 $(document).ready(function() {
 	//	Summary Grid
 	myGridID1	= GridCommon.createAUIGrid("#summary_wrap", summaryLayout, "", summaryOptions);
@@ -573,14 +719,15 @@ $(document).ready(function() {
 	
 	//	Detail Grid
 	myGridID2	= GridCommon.createAUIGrid("#detail_wrap", detailLayout, "", detailOptions);
-	AUIGrid.bind(myGridID2, "cellClick", function(event) {
-		
+	//	Detail Grid 1
+	myGridID3	= GridCommon.createAUIGrid("#detail_wrap1", detailLayout1, "", detailOptions1);
+	AUIGrid.bind(myGridID3, "cellEditBegin", function(event) {
+		if ( "Business Plan" != event.item.gbnName ) {
+			return	false;
+		}
 	});
-	AUIGrid.bind(myGridID2, "cellDoubleClick", function(event) {
-		
-	});
+	fnSwitch(false);
 });
-
 </script>
 
 <section id="content">						<!-- section content start -->
@@ -661,15 +808,14 @@ $(document).ready(function() {
 			<div id="summary_wrap" style="height:210px;"></div>
 		</article>								<!-- article grid_wrap end -->
 		<ul class="right_btns">
-			<!-- <li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSave(this);">Save</a></p></li>
-			<li><p id="btnSaveNew" class="btn_grid btn_disabled"><a onclick="fnSaveNew(this);">Save as New</a></p></li> -->
-			<li><p id="btnUpload" class="btn_grid"><a onclick="fnUpload(this);">Upload</a></p></li>
-			<li><p id="btnDownload" class="btn_grid"><a onclick="">Download CVS Format</a></p></li>
-			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'Business Plan Report');">Excel</a></p></li>
+			<li><p id="btnSaveAll" class="btn_grid btn_disabled"><a onclick="fnSaveAll(this);">Save All</a></p></li>
+			<li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSave(this);">Save</a></p></li>
+			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'Business Plan Upload Format');">Excel</a></p></li>
 		</ul>
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Weekly Grid -->
 			<div id="detail_wrap" style="height:447px;"></div>
+			<div id="detail_wrap1" style="height:447px;"></div>
 		</article>								<!-- article grid_wrap end -->
 	</section>									<!-- section search_result end -->
 </section>									<!-- section content end -->

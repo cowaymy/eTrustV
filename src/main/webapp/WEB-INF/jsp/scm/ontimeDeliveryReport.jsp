@@ -361,25 +361,25 @@ $(document).ready(function() {
 	//	Summary Grid
 	myGridID1	= GridCommon.createAUIGrid("#summary_wrap", summaryLayout, "", summaryOptions);
 	AUIGrid.bind(myGridID1, "cellClick", function(event) {
-		if ( parseInt(currMonth) >= event.columnIndex ) {
-			if ( $("#planYear").val() == currYear ) {
-				if ( event.columnIndex <= currMonth ) {
-					planYear	= AUIGrid.getCellValue(myGridID1, event.rowIndex, "planYear");
-					planMonth	= event.columnIndex;
-					fnSearchDetail();
-				}
-			} else {
+		console.log("currYear : " + currYear);
+		
+		if ( $("#planYear").val() < currYear ) {
+			planYear	= AUIGrid.getCellValue(myGridID1, event.rowIndex, "planYear");
+			planMonth	= event.columnIndex;
+			fnSearchDetail();
+		} else if ( $("#planYear").val() == currYear ) {
+			if ( parseInt(currMonth) >= event.columnIndex ) {
 				planYear	= AUIGrid.getCellValue(myGridID1, event.rowIndex, "planYear");
 				planMonth	= event.columnIndex;
 				fnSearchDetail();
 			}
+		} else {
 			
-			//	Detail Text
-			$("#yearMonth").text(event.columnIndex + "/" + event.item.planYear);
-			$("#issPoQty").text(AUIGrid.getCellValue(myGridID1, 0, event.columnIndex));
-			$("#onTimeQty").text(AUIGrid.getCellValue(myGridID1, 1, event.columnIndex));
-			$("#onTimeRate").text(AUIGrid.getCellValue(myGridID1, 2, event.columnIndex));
 		}
+		$("#yearMonth").text(event.columnIndex + "/" + event.item.planYear);
+		$("#issPoQty").text(AUIGrid.getCellValue(myGridID1, 0, event.columnIndex));
+		$("#onTimeQty").text(AUIGrid.getCellValue(myGridID1, 1, event.columnIndex));
+		$("#onTimeRate").text(AUIGrid.getCellValue(myGridID1, 2, event.columnIndex));
 	});
 	
 	//	Detail Grid
@@ -482,7 +482,7 @@ $(document).ready(function() {
 	<section class="search_result">				<!-- section search_result start -->
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Summary Grid -->
-			<div id="summary_wrap" style="height:186px;"></div>
+			<div id="summary_wrap" style="height:106px;"></div>
 		</article>								<!-- article grid_wrap end -->
 		<table class="type1 mt10">				<!-- table start -->
 			<caption>table10</caption>
@@ -513,7 +513,7 @@ $(document).ready(function() {
 		</table>								<!-- table end -->
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Detail Grid -->
-			<div id="detail_wrap" style="height:471px;"></div>
+			<div id="detail_wrap" style="height:541px;"></div>
 		</article>								<!-- article grid_wrap end -->
 	</section>									<!-- section search_result end -->
 </section>									<!-- section content end -->

@@ -623,7 +623,7 @@ function fnSetResult() {
 		temp.totAmt		= ((parseInt(detObj[i].totAmt) * parseFloat(curr)) / 1000000).toFixed(1);
 		temp.tranAmt	= ((parseInt(detObj[i].tranAmt) * parseFloat(curr)) / 1000000).toFixed(1);
 		temp.handAmt	= ((parseInt(detObj[i].handAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.daysAmt	= ((parseInt(detObj[i].daysAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.daysAmt	= detObj[i].daysAmt;
 		temp.ageAmt		= ((parseInt(detObj[i].ageAmt) * parseFloat(curr)) / 1000000).toFixed(1);
 		temp.stkbAmt	= ((parseInt(detObj[i].stkbAmt) * parseFloat(curr)) / 1000000).toFixed(1);
 		temp.totQty	= detObj[i].totQty;
