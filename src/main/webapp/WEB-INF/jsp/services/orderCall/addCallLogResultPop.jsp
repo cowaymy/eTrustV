@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  08/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
+ 03/04/2019  ONGHC  1.0.1          ADD CREATE & UPDATE DATETIME
  -->
 
 <script type="text/javaScript">
@@ -330,9 +331,22 @@
         <th scope="row"><spring:message
           code='service.title.CreateDate' /></th>
         <td><span><c:out value="${orderCall.crtDt}" /> </span></td>
-        <th scope="row">Call Log Posting Date</th>
+        <th scope="row"><spring:message
+          code='service.title.CreateTime' /></th>
         <td>
-        <span><c:out value="${firstCallLog[0].callDt}"/> </span>
+        <span><c:out value="${orderCall.crtTm}"/> </span>
+        </td>
+       </tr>
+        <tr>
+        <th scope="row"></th>
+        <td><span></span></td>
+        <th scope="row"><spring:message
+          code='service.title.UpdateDate' /></th>
+        <td><span><c:out value="${firstCallLog[0].callDt}" /> </span></td>
+        <th scope="row"><spring:message
+          code='service.title.UpdateTime' /></th>
+        <td>
+        <span><c:out value="${firstCallLog[0].callTm}"/> </span>
         </td>
        </tr>
        <tr>
@@ -347,10 +361,8 @@
         <th scope="row"><spring:message
           code='service.title.Creator' /></th>
         <td><span><c:out value="${orderCall.crtUserId}" /></span></td>
-        <th scope="row">Call Log Posting Time</th>
-        <td>
-        <span><c:out value="${firstCallLog[0].callTm}"/> </span>
-        </td>
+        <th scope="row"></th>
+        <td><span> </span></td>
        </tr>
        <tr>
         <th scope="row"><spring:message
