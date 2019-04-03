@@ -31,6 +31,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *--------------------------------------------------------------------------------------------
  * 31/01/2019    ONGHC      1.0.1       - Restructure File
  * 05/03/2019    ONGHC      1.0.2       - To Show Error Code for SP
+ * 03/04/2019    ONGHC      1.0.3       - Amend selectCallResultPop to retrieve Call Log Date Time
  *********************************************************************************************/
 
 @Controller
@@ -286,7 +287,6 @@ public class OrderCallListController {
     EgovMap rdcincdc = orderCallListService.getRdcInCdc(orderCall);
 
     params.put("viewSort", "2");
-    logger.debug("Paramss !!!!!!!!!!!! : {}", params.toString());
     List<EgovMap> firstCallLog = orderDetailService.selectCallLogList(params);
 
     // Order Detail Tab
