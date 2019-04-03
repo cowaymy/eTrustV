@@ -18,37 +18,198 @@ SELECT CASE WHEN A.ID = 1 THEN CASE WHEN A.ID = B.ID THEN B.ID ELSE A.ID END
  ORDER BY A.ID
 </select>
 <select id="selectBusinessPlanSummary" parameterType="Map" resultType="egovMap">
-SELECT A.YEAR
+SELECT A.YEAR, A.GBN, A.RN
+     , CASE WHEN A.GBN = 1 THEN 'Business Plan'
+            WHEN A.GBN = 2 THEN 'Forecast/Order'
+            ELSE 'Achievement(%)'
+            END GBN_NAME
      , A.CATEGORY_NAME
-     , A.M01, A.M02, A.M03, A.M04, A.M05, A.M06, A.M07, A.M08, A.M09, A.M10, A.M11, A.M12, A.SUMM
+     , CASE WHEN A.GBN = 3 THEN A.M01 || '%' ELSE TO_CHAR(A.M01) END AS M01
+     , CASE WHEN A.GBN = 3 THEN A.M02 || '%' ELSE TO_CHAR(A.M02) END AS M02
+     , CASE WHEN A.GBN = 3 THEN A.M03 || '%' ELSE TO_CHAR(A.M03) END AS M03
+     , CASE WHEN A.GBN = 3 THEN A.M04 || '%' ELSE TO_CHAR(A.M04) END AS M04
+     , CASE WHEN A.GBN = 3 THEN A.M05 || '%' ELSE TO_CHAR(A.M05) END AS M05
+     , CASE WHEN A.GBN = 3 THEN A.M06 || '%' ELSE TO_CHAR(A.M06) END AS M06
+     , CASE WHEN A.GBN = 3 THEN A.M07 || '%' ELSE TO_CHAR(A.M07) END AS M07
+     , CASE WHEN A.GBN = 3 THEN A.M08 || '%' ELSE TO_CHAR(A.M08) END AS M08
+     , CASE WHEN A.GBN = 3 THEN A.M09 || '%' ELSE TO_CHAR(A.M09) END AS M09
+     , CASE WHEN A.GBN = 3 THEN A.M10 || '%' ELSE TO_CHAR(A.M10) END AS M10
+     , CASE WHEN A.GBN = 3 THEN A.M11 || '%' ELSE TO_CHAR(A.M11) END AS M11
+     , CASE WHEN A.GBN = 3 THEN A.M12 || '%' ELSE TO_CHAR(A.M12) END AS M12
+     , CASE WHEN A.GBN = 3 THEN A.SUMM || '%' ELSE TO_CHAR(A.SUMM) END AS SUMM
   FROM (
-        SELECT A.YEAR
-             , C.CODE_NAME AS CATEGORY_NAME
-             , ROW_NUMBER() OVER (PARTITION BY A.YEAR ORDER BY B.STK_CTGRY_ID) AS RN
-             , SUM(A.M01) AS M01, SUM(A.M02) AS M02, SUM(A.M03) AS M03, SUM(A.M04) AS M04, SUM(A.M05) AS M05, SUM(A.M06) AS M06
-             , SUM(A.M07) AS M07, SUM(A.M08) AS M08, SUM(A.M09) AS M09, SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
-             , SUM(A.M01) + SUM(A.M02) + SUM(A.M03) + SUM(A.M04) + SUM(A.M05) + SUM(A.M06)
-             + SUM(A.M07) + SUM(A.M08) + SUM(A.M09) + SUM(A.M10) + SUM(A.M11) + SUM(A.M12) AS SUMM
-          FROM SCM0064S A
-          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
-          LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
-         WHERE A.YEAR = #{planYear}
-         GROUP BY A.YEAR, C.CODE_NAME, B.STK_CTGRY_ID
+        SELECT A.YEAR, 1 AS GBN, A.RN
+             , A.CATEGORY_NAME
+             , A.M01, A.M02, A.M03, A.M04, A.M05, A.M06, A.M07, A.M08, A.M09, A.M10, A.M11, A.M12, A.SUMM
+          FROM (
+                SELECT A.YEAR
+                     , C.CODE_NAME AS CATEGORY_NAME
+                     , ROW_NUMBER() OVER (PARTITION BY A.YEAR ORDER BY B.STK_CTGRY_ID) AS RN
+                     , SUM(A.M01) AS M01, SUM(A.M02) AS M02, SUM(A.M03) AS M03, SUM(A.M04) AS M04, SUM(A.M05) AS M05, SUM(A.M06) AS M06
+                     , SUM(A.M07) AS M07, SUM(A.M08) AS M08, SUM(A.M09) AS M09, SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
+                     , SUM(A.M01) + SUM(A.M02) + SUM(A.M03) + SUM(A.M04) + SUM(A.M05) + SUM(A.M06)
+                     + SUM(A.M07) + SUM(A.M08) + SUM(A.M09) + SUM(A.M10) + SUM(A.M11) + SUM(A.M12) AS SUMM
+                  FROM SCM0064S A
+                  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+                  LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+                 WHERE A.YEAR = #{planYear}
+                 GROUP BY A.YEAR, C.CODE_NAME, B.STK_CTGRY_ID
+                UNION ALL
+                SELECT A.YEAR
+                     , 'Total' AS CATEGORY_NAME
+                     , 100 AS RN
+                     , SUM(A.M01) AS M01, SUM(A.M02) AS M02, SUM(A.M03) AS M03, SUM(A.M04) AS M04, SUM(A.M05) AS M05, SUM(A.M06) AS M06
+                     , SUM(A.M07) AS M07, SUM(A.M08) AS M08, SUM(A.M09) AS M09, SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
+                     , SUM(A.M01) + SUM(A.M02) + SUM(A.M03) + SUM(A.M04) + SUM(A.M05) + SUM(A.M06)
+                     + SUM(A.M07) + SUM(A.M08) + SUM(A.M09) + SUM(A.M10) + SUM(A.M11) + SUM(A.M12) AS SUMM
+                  FROM SCM0064S A
+                  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+                  LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+                 WHERE A.YEAR = #{planYear}
+                 GROUP BY A.YEAR
+                ) A
         UNION ALL
-        SELECT A.YEAR
-             , 'ALL' AS CATEGORY_NAME
-             , 100 AS RN
-             , SUM(A.M01) AS M01, SUM(A.M02) AS M02, SUM(A.M03) AS M03, SUM(A.M04) AS M04, SUM(A.M05) AS M05, SUM(A.M06) AS M06
-             , SUM(A.M07) AS M07, SUM(A.M08) AS M08, SUM(A.M09) AS M09, SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
-             , SUM(A.M01) + SUM(A.M02) + SUM(A.M03) + SUM(A.M04) + SUM(A.M05) + SUM(A.M06)
-             + SUM(A.M07) + SUM(A.M08) + SUM(A.M09) + SUM(A.M10) + SUM(A.M11) + SUM(A.M12) AS SUMM
-          FROM SCM0064S A
-          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
-          LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
-         WHERE A.YEAR = #{planYear}
-         GROUP BY A.YEAR
+        SELECT A.YEAR, 2 AS GBN, A.RN
+             , A.CATEGORY_NAME
+             , A.M01, A.M02, A.M03, A.M04, A.M05, A.M06, A.M07, A.M08, A.M09, A.M10, A.M11, A.M12, A.SUMM
+          FROM (
+                SELECT A.YEAR
+                     , C.CODE_NAME AS CATEGORY_NAME
+                     , ROW_NUMBER() OVER (PARTITION BY A.YEAR ORDER BY B.STK_CTGRY_ID) AS RN
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 1, B.STK_CTGRY_ID), 0) AS M01
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 2, B.STK_CTGRY_ID), 0) AS M02
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 3, B.STK_CTGRY_ID), 0) AS M03
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 4, B.STK_CTGRY_ID), 0) AS M04
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 5, B.STK_CTGRY_ID), 0) AS M05
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 6, B.STK_CTGRY_ID), 0) AS M06
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 7, B.STK_CTGRY_ID), 0) AS M07
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 8, B.STK_CTGRY_ID), 0) AS M08
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 9, B.STK_CTGRY_ID), 0) AS M09
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 10, B.STK_CTGRY_ID), 0) AS M10
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 11, B.STK_CTGRY_ID), 0) AS M11
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 12, B.STK_CTGRY_ID), 0) AS M12
+                     , 0 AS SUMM
+                  FROM SCM0064S A
+                  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+                  LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+                 WHERE A.YEAR = #{planYear}
+                 GROUP BY A.YEAR, C.CODE_NAME, B.STK_CTGRY_ID
+                UNION ALL
+                SELECT A.YEAR
+                     , 'Total' AS CATEGORY_NAME
+                     , 100 AS RN
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 1, 0), 0) AS M01
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 2, 0), 0) AS M02
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 3, 0), 0) AS M03
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 4, 0), 0) AS M04
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 5, 0), 0) AS M05
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 6, 0), 0) AS M06
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 7, 0), 0) AS M07
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 8, 0), 0) AS M08
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 9, 0), 0) AS M09
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 10, 0), 0) AS M10
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 11, 0), 0) AS M11
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 12, 0), 0) AS M12
+                     , 0 AS SUMM
+                  FROM SCM0064S A
+                  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+                  LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+                 WHERE A.YEAR = #{planYear}
+                 GROUP BY A.YEAR
+                ) A
+        UNION ALL
+        SELECT A.YEAR, 3 AS GBN, A.RN
+             , A.CATEGORY_NAME
+             , CASE WHEN A.M01 = 0 THEN 0 ELSE ROUND(B.M01/A.M01*100, 0) END AS M01
+             , CASE WHEN A.M02 = 0 THEN 0 ELSE ROUND(B.M02/A.M02*100, 0) END AS M02
+             , CASE WHEN A.M03 = 0 THEN 0 ELSE ROUND(B.M03/A.M03*100, 0) END AS M03
+             , CASE WHEN A.M04 = 0 THEN 0 ELSE ROUND(B.M04/A.M04*100, 0) END AS M04
+             , CASE WHEN A.M05 = 0 THEN 0 ELSE ROUND(B.M05/A.M05*100, 0) END AS M05
+             , CASE WHEN A.M06 = 0 THEN 0 ELSE ROUND(B.M06/A.M06*100, 0) END AS M06
+             , CASE WHEN A.M07 = 0 THEN 0 ELSE ROUND(B.M07/A.M07*100, 0) END AS M07
+             , CASE WHEN A.M08 = 0 THEN 0 ELSE ROUND(B.M08/A.M08*100, 0) END AS M08
+             , CASE WHEN A.M09 = 0 THEN 0 ELSE ROUND(B.M09/A.M09*100, 0) END AS M09
+             , CASE WHEN A.M10 = 0 THEN 0 ELSE ROUND(B.M10/A.M10*100, 0) END AS M10
+             , CASE WHEN A.M11 = 0 THEN 0 ELSE ROUND(B.M11/A.M11*100, 0) END AS M11
+             , CASE WHEN A.M12 = 0 THEN 0 ELSE ROUND(B.M12/A.M12*100, 0) END AS M12
+             , CASE WHEN A.SUMM = 0 THEN 0 ELSE ROUND(B.SUMM/A.SUMM*100, 0) END AS SUMM
+          FROM (
+                SELECT A.YEAR
+                     , C.CODE_NAME AS CATEGORY_NAME
+                     , ROW_NUMBER() OVER (PARTITION BY A.YEAR ORDER BY B.STK_CTGRY_ID) AS RN
+                     , SUM(A.M01) AS M01, SUM(A.M02) AS M02, SUM(A.M03) AS M03, SUM(A.M04) AS M04, SUM(A.M05) AS M05, SUM(A.M06) AS M06
+                     , SUM(A.M07) AS M07, SUM(A.M08) AS M08, SUM(A.M09) AS M09, SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
+                     , SUM(A.M01) + SUM(A.M02) + SUM(A.M03) + SUM(A.M04) + SUM(A.M05) + SUM(A.M06)
+                     + SUM(A.M07) + SUM(A.M08) + SUM(A.M09) + SUM(A.M10) + SUM(A.M11) + SUM(A.M12) AS SUMM
+                  FROM SCM0064S A
+                  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+                  LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+                 WHERE A.YEAR = #{planYear}
+                 GROUP BY A.YEAR, C.CODE_NAME, B.STK_CTGRY_ID
+                UNION ALL
+                SELECT A.YEAR
+                     , 'Total' AS CATEGORY_NAME
+                     , 100 AS RN
+                     , SUM(A.M01) AS M01, SUM(A.M02) AS M02, SUM(A.M03) AS M03, SUM(A.M04) AS M04, SUM(A.M05) AS M05, SUM(A.M06) AS M06
+                     , SUM(A.M07) AS M07, SUM(A.M08) AS M08, SUM(A.M09) AS M09, SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
+                     , SUM(A.M01) + SUM(A.M02) + SUM(A.M03) + SUM(A.M04) + SUM(A.M05) + SUM(A.M06)
+                     + SUM(A.M07) + SUM(A.M08) + SUM(A.M09) + SUM(A.M10) + SUM(A.M11) + SUM(A.M12) AS SUMM
+                  FROM SCM0064S A
+                  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+                  LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+                 WHERE A.YEAR = #{planYear}
+                 GROUP BY A.YEAR
+                ) A
+             , (
+                SELECT A.YEAR
+                     , C.CODE_NAME AS CATEGORY_NAME
+                     , ROW_NUMBER() OVER (PARTITION BY A.YEAR ORDER BY B.STK_CTGRY_ID) AS RN
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 1, B.STK_CTGRY_ID), 0) AS M01
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 2, B.STK_CTGRY_ID), 0) AS M02
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 3, B.STK_CTGRY_ID), 0) AS M03
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 4, B.STK_CTGRY_ID), 0) AS M04
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 5, B.STK_CTGRY_ID), 0) AS M05
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 6, B.STK_CTGRY_ID), 0) AS M06
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 7, B.STK_CTGRY_ID), 0) AS M07
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 8, B.STK_CTGRY_ID), 0) AS M08
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 9, B.STK_CTGRY_ID), 0) AS M09
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 10, B.STK_CTGRY_ID), 0) AS M10
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 11, B.STK_CTGRY_ID), 0) AS M11
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 12, B.STK_CTGRY_ID), 0) AS M12
+                     , 0 AS SUMM
+                  FROM SCM0064S A
+                  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+                  LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+                 WHERE A.YEAR = #{planYear}
+                 GROUP BY A.YEAR, C.CODE_NAME, B.STK_CTGRY_ID
+                UNION ALL
+                SELECT A.YEAR
+                     , 'Total' AS CATEGORY_NAME
+                     , 100 AS RN
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 1, 0), 0) AS M01
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 2, 0), 0) AS M02
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 3, 0), 0) AS M03
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 4, 0), 0) AS M04
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 5, 0), 0) AS M05
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 6, 0), 0) AS M06
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 7, 0), 0) AS M07
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 8, 0), 0) AS M08
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 9, 0), 0) AS M09
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 10, 0), 0) AS M10
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 11, 0), 0) AS M11
+                     , NVL(FN_GET_FCST_ORD_SUM(A.YEAR, 12, 0), 0) AS M12
+                     , 0 AS SUMM
+                  FROM SCM0064S A
+                  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+                  LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+                 WHERE A.YEAR = #{planYear}
+                 GROUP BY A.YEAR
+                ) B
+         WHERE A.YEAR = B.YEAR
+           AND A.CATEGORY_NAME = B.CATEGORY_NAME
+           AND A.RN = B.RN
         ) A
- ORDER BY A.RN
+ ORDER BY A.RN, A.GBN
 </select>
 <select id="selectBusinessPlanDetail" parameterType="Map" resultType="egovMap">
 SELECT A.YEAR
@@ -71,12 +232,37 @@ SELECT A.YEAR
           LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
          WHERE A.YEAR = #{planYear}
          GROUP BY A.YEAR, C.CODE_NAME, B.STK_CTGRY_ID, A.STOCK_CODE, B.STK_DESC
-        UNION ALL
-        SELECT A.YEAR
-             , 'ALL' AS CATEGORY_NAME
-             , '' AS STOCK_CODE
-             , '' AS STCK_NAME
-             , 1000 AS RN
+        ) A
+ ORDER BY A.RN
+</select>
+<select id="selectBusinessPlanDetail1" parameterType="Map" resultType="egovMap">
+SELECT A.YEAR, A.GBN, A.RN
+     , CASE WHEN A.GBN = 1 THEN 'Business Plan'
+            WHEN A.GBN = 2 THEN 'Forecast/Order'
+            ELSE 'Achievement(%)'
+            END GBN_NAME
+     , A.CATEGORY_NAME
+     , A.STOCK_CODE
+     , A.STOCK_NAME
+     , CASE WHEN A.GBN = 3 THEN A.M01 || '%' ELSE TO_CHAR(A.M01) END AS M01
+     , CASE WHEN A.GBN = 3 THEN A.M02 || '%' ELSE TO_CHAR(A.M02) END AS M02
+     , CASE WHEN A.GBN = 3 THEN A.M03 || '%' ELSE TO_CHAR(A.M03) END AS M03
+     , CASE WHEN A.GBN = 3 THEN A.M04 || '%' ELSE TO_CHAR(A.M04) END AS M04
+     , CASE WHEN A.GBN = 3 THEN A.M05 || '%' ELSE TO_CHAR(A.M05) END AS M05
+     , CASE WHEN A.GBN = 3 THEN A.M06 || '%' ELSE TO_CHAR(A.M06) END AS M06
+     , CASE WHEN A.GBN = 3 THEN A.M07 || '%' ELSE TO_CHAR(A.M07) END AS M07
+     , CASE WHEN A.GBN = 3 THEN A.M08 || '%' ELSE TO_CHAR(A.M08) END AS M08
+     , CASE WHEN A.GBN = 3 THEN A.M09 || '%' ELSE TO_CHAR(A.M09) END AS M09
+     , CASE WHEN A.GBN = 3 THEN A.M10 || '%' ELSE TO_CHAR(A.M10) END AS M10
+     , CASE WHEN A.GBN = 3 THEN A.M11 || '%' ELSE TO_CHAR(A.M11) END AS M11
+     , CASE WHEN A.GBN = 3 THEN A.M12 || '%' ELSE TO_CHAR(A.M12) END AS M12
+     , CASE WHEN A.GBN = 3 THEN A.SUMM || '%' ELSE TO_CHAR(A.SUMM) END AS SUMM
+  FROM (
+        SELECT A.YEAR, 1 AS GBN
+             , C.CODE_NAME AS CATEGORY_NAME
+             , TO_CHAR(A.STOCK_CODE) AS STOCK_CODE
+             , TO_CHAR(B.STK_DESC) AS STOCK_NAME
+             , ROW_NUMBER() OVER (PARTITION BY A.YEAR ORDER BY B.STK_CTGRY_ID, A.STOCK_CODE) AS RN
              , SUM(A.M01) AS M01, SUM(A.M02) AS M02, SUM(A.M03) AS M03, SUM(A.M04) AS M04, SUM(A.M05) AS M05, SUM(A.M06) AS M06
              , SUM(A.M07) AS M07, SUM(A.M08) AS M08, SUM(A.M09) AS M09, SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
              , SUM(A.M01) + SUM(A.M02) + SUM(A.M03) + SUM(A.M04) + SUM(A.M05) + SUM(A.M06)
@@ -85,13 +271,142 @@ SELECT A.YEAR
           LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
           LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
          WHERE A.YEAR = #{planYear}
-         GROUP BY A.YEAR
+         GROUP BY A.YEAR, C.CODE_NAME, B.STK_CTGRY_ID, A.STOCK_CODE, B.STK_DESC
+        UNION ALL
+        SELECT A.YEAR, 2 AS GBN
+             , A.CATEGORY_NAME
+             , A.STOCK_CODE
+             , A.STOCK_NAME
+             , A.RN
+             , A.M01, A.M02, A.M03, A.M04, A.M05, A.M06, A.M07, A.M08, A.M09, A.M10, A.M11, A.M12
+             , A.M01 + A.M02 + A.M03 + A.M04 + A.M05 + A.M06 + A.M07 + A.M08 + A.M09 + A.M10 + A.M11 + A.M12 AS SUMM
+          FROM (
+                SELECT A.YEAR
+                     , C.CODE_NAME AS CATEGORY_NAME
+                     , TO_CHAR(A.STOCK_CODE) AS STOCK_CODE
+                     , TO_CHAR(B.STK_DESC) AS STOCK_NAME
+                     , ROW_NUMBER() OVER (PARTITION BY A.YEAR ORDER BY B.STK_CTGRY_ID, A.STOCK_CODE) AS RN
+                     , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 1, A.STOCK_CODE), 0) AS M01
+                     , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 2, A.STOCK_CODE), 0) AS M02
+                     , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 3, A.STOCK_CODE), 0) AS M03
+                     , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 4, A.STOCK_CODE), 0) AS M04
+                     , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 5, A.STOCK_CODE), 0) AS M05
+                     , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 6, A.STOCK_CODE), 0) AS M06
+                     , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 7, A.STOCK_CODE), 0) AS M07
+                     , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 8, A.STOCK_CODE), 0) AS M08
+                     , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 9, A.STOCK_CODE), 0) AS M09
+                     , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 10, A.STOCK_CODE), 0) AS M10
+                     , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 11, A.STOCK_CODE), 0) AS M11
+                     , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 12, A.STOCK_CODE), 0) AS M12
+                     , 0 AS SUMM
+                  FROM SCM0064S A
+                  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+                  LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+                 WHERE A.YEAR = #{planYear}
+                ) A
+        UNION ALL
+        SELECT A.YEAR, 3 AS GBN
+             , A.CATEGORY_NAME
+             , A.STOCK_CODE
+             , A.STOCK_NAME
+             , A.RN
+             , CASE WHEN A.M01 = 0 THEN 0 ELSE ROUND(B.M01/A.M01*100, 0) END AS M01
+             , CASE WHEN A.M02 = 0 THEN 0 ELSE ROUND(B.M02/A.M02*100, 0) END AS M02
+             , CASE WHEN A.M03 = 0 THEN 0 ELSE ROUND(B.M03/A.M03*100, 0) END AS M03
+             , CASE WHEN A.M04 = 0 THEN 0 ELSE ROUND(B.M04/A.M04*100, 0) END AS M04
+             , CASE WHEN A.M05 = 0 THEN 0 ELSE ROUND(B.M05/A.M05*100, 0) END AS M05
+             , CASE WHEN A.M06 = 0 THEN 0 ELSE ROUND(B.M06/A.M06*100, 0) END AS M06
+             , CASE WHEN A.M07 = 0 THEN 0 ELSE ROUND(B.M07/A.M07*100, 0) END AS M07
+             , CASE WHEN A.M08 = 0 THEN 0 ELSE ROUND(B.M08/A.M08*100, 0) END AS M08
+             , CASE WHEN A.M09 = 0 THEN 0 ELSE ROUND(B.M09/A.M09*100, 0) END AS M09
+             , CASE WHEN A.M10 = 0 THEN 0 ELSE ROUND(B.M10/A.M10*100, 0) END AS M10
+             , CASE WHEN A.M11 = 0 THEN 0 ELSE ROUND(B.M11/A.M11*100, 0) END AS M11
+             , CASE WHEN A.M12 = 0 THEN 0 ELSE ROUND(B.M12/A.M12*100, 0) END AS M12
+             , CASE WHEN A.SUMM = 0 THEN 0 ELSE ROUND(B.SUMM/A.SUMM*100, 0) END AS SUMM
+          FROM (
+                SELECT A.YEAR
+                     , C.CODE_NAME AS CATEGORY_NAME
+                     , TO_CHAR(A.STOCK_CODE) AS STOCK_CODE
+                     , TO_CHAR(B.STK_DESC) AS STOCK_NAME
+                     , ROW_NUMBER() OVER (PARTITION BY A.YEAR ORDER BY B.STK_CTGRY_ID, A.STOCK_CODE) AS RN
+                     , SUM(A.M01) AS M01, SUM(A.M02) AS M02, SUM(A.M03) AS M03, SUM(A.M04) AS M04, SUM(A.M05) AS M05, SUM(A.M06) AS M06
+                     , SUM(A.M07) AS M07, SUM(A.M08) AS M08, SUM(A.M09) AS M09, SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
+                     , SUM(A.M01) + SUM(A.M02) + SUM(A.M03) + SUM(A.M04) + SUM(A.M05) + SUM(A.M06)
+                     + SUM(A.M07) + SUM(A.M08) + SUM(A.M09) + SUM(A.M10) + SUM(A.M11) + SUM(A.M12) AS SUMM
+                  FROM SCM0064S A
+                  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+                  LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+                 WHERE A.YEAR = #{planYear}
+                 GROUP BY A.YEAR, C.CODE_NAME, B.STK_CTGRY_ID, A.STOCK_CODE, B.STK_DESC
+                ) A
+             , (
+                SELECT A.YEAR
+                     , A.CATEGORY_NAME
+                     , A.STOCK_CODE
+                     , A.STOCK_NAME
+                     , A.RN
+                     , A.M01, A.M02, A.M03, A.M04, A.M05, A.M06, A.M07, A.M08, A.M09, A.M10, A.M11, A.M12
+                     , A.M01 + A.M02 + A.M03 + A.M04 + A.M05 + A.M06 + A.M07 + A.M08 + A.M09 + A.M10 + A.M11 + A.M12 AS SUMM
+                  FROM (
+                        SELECT A.YEAR
+                             , C.CODE_NAME AS CATEGORY_NAME
+                             , TO_CHAR(A.STOCK_CODE) AS STOCK_CODE
+                             , TO_CHAR(B.STK_DESC) AS STOCK_NAME
+                             , ROW_NUMBER() OVER (PARTITION BY A.YEAR ORDER BY B.STK_CTGRY_ID, A.STOCK_CODE) AS RN
+                             , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 1, A.STOCK_CODE), 0) AS M01
+                             , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 2, A.STOCK_CODE), 0) AS M02
+                             , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 3, A.STOCK_CODE), 0) AS M03
+                             , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 4, A.STOCK_CODE), 0) AS M04
+                             , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 5, A.STOCK_CODE), 0) AS M05
+                             , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 6, A.STOCK_CODE), 0) AS M06
+                             , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 7, A.STOCK_CODE), 0) AS M07
+                             , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 8, A.STOCK_CODE), 0) AS M08
+                             , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 9, A.STOCK_CODE), 0) AS M09
+                             , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 10, A.STOCK_CODE), 0) AS M10
+                             , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 11, A.STOCK_CODE), 0) AS M11
+                             , NVL(FN_GET_FCST_ORD_QTY(A.YEAR, 12, A.STOCK_CODE), 0) AS M12
+                             , 0 AS SUMM
+                          FROM SCM0064S A
+                          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+                          LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+                         WHERE A.YEAR = #{planYear}
+                        ) A
+                ) B
+         WHERE A.YEAR = B.YEAR
+           AND A.STOCK_CODE = B.STOCK_CODE
+           AND A.RN = B.RN
         ) A
-	<if test="categoryName != null and categoryName != ''"> AND Z.STOCK_TYPE_ID = #{scmStockTypeCbBox}
- WHERE A.CATEGORY_NAME = #{categoryName}
-	</if>
- ORDER BY A.RN
+ ORDER BY A.RN, A.GBN
 </select>
+<update id="updateBusinessPlan" parameterType="Map">
+UPDATE SCM0064S
+   SET UPD_DT = SYSDATE
+     , UPD_USER_ID = #{userId}
+     , M01 = #{m01}, M02 = #{m02}, M03 = #{m03}, M04 = #{m04}, M05 = #{m05}, M06 = #{m06}
+     , M07 = #{m07}, M08 = #{m08}, M09 = #{m09}, M10 = #{m10}, M11 = #{m11}, M12 = #{m12}
+ WHERE YEAR = #{year}
+   AND STOCK_CODE = #{stockCode}
+</update>
+<delete id="deleteBusinessPlan" parameterType="Map">
+DELETE SCM0064S
+ WHERE YEAR = #{year}
+</delete>
+<insert id="insertBusinessPlan" parameterType="Map">
+INSERT INTO SCM0064S
+(
+       YEAR
+     , STOCK_CODE
+     , M01, M02, M03, M04, M05, M06, M07, M08, M09, M10, M11, M12
+     , CRT_USER_ID, CRT_DT
+ )
+VALUES
+(
+       #{year}
+     , #{stockCode}
+     , #{m01}, #{m02}, #{m03}, #{m04}, #{m05}, #{m06}, #{m07}, #{m08}, #{m09}, #{m10}, #{m11}, #{m12}
+     , #{userId}, SYSDATE
+ )
+</insert>
 
 <!-- Sales Plan Accuracy -->
 <select id="selectSalesPlanAccuracyWeeklyDetailHeader" parameterType="Map" resultType="egovMap">
@@ -968,7 +1283,7 @@ SELECT D.CODE_NAME AS STOCK_TYPE_NAME
      , A.TOT_QTY
      , A.TRAN_QTY
      , A.HAND_QTY
-     , CASE WHEN E.DAYS_AMT <![CDATA[ > ]]> 999 THEN 999 ELSE E.DAYS_AMT END AS DAYS_QTY
+     , CASE WHEN E.DAYS_QTY <![CDATA[ > ]]> 999 THEN 999 ELSE E.DAYS_QTY END AS DAYS_QTY
      , A.AGE_QTY
      , A.STKB_QTY
      , A.MM6_ISS_QTY
