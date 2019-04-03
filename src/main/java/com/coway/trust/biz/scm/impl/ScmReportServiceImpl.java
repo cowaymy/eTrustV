@@ -62,6 +62,51 @@ public class ScmReportServiceImpl implements ScmReportService {
 	public List<EgovMap> selectBusinessPlanDetail(Map<String, Object> params) {
 		return	scmReportMapper.selectBusinessPlanDetail(params);
 	}
+	@Override
+	public List<EgovMap> selectBusinessPlanDetail1(Map<String, Object> params) {
+		return	scmReportMapper.selectBusinessPlanDetail1(params);
+	}
+	@Override
+	public int saveBusinessPlanAll(List<Map<String, Object>> allList, SessionVO sessionVO) {
+		
+		LOGGER.debug("saveBusinessPlanAll : {}", allList);
+		int cnt	= 0;
+		
+		Map<String, Object> delParam	= new HashMap<>();
+		delParam.put("year", allList.get(0).get("year"));
+		
+		try {
+			scmReportMapper.deleteBusinessPlan(delParam);
+			
+			for ( Map<String, Object> list : allList ) {
+				list.put("userId", sessionVO.getUserId());
+				scmReportMapper.insertBusinessPlan(list);
+				cnt++;
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		
+		return	cnt;
+	}
+	@Override
+	public int saveBusinessPlan(List<Map<String, Object>> updList, SessionVO sessionVO) {
+		
+		LOGGER.debug("saveBusinessPlanAll : {}", updList);
+		int cnt	= 0;
+		
+		try {
+			for ( Map<String, Object> list : updList ) {
+				list.put("userId", sessionVO.getUserId());
+				scmReportMapper.updateBusinessPlan(list);
+				cnt++;
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		
+		return	cnt;
+	}
 	
 	//	Sales Plan Accuracy
 	@Override

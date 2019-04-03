@@ -15,6 +15,10 @@ public interface ScmReportMapper {
 	List<EgovMap> selectPlanVer(Map<String, Object> params);
 	List<EgovMap> selectBusinessPlanSummary(Map<String, Object> params);
 	List<EgovMap> selectBusinessPlanDetail(Map<String, Object> params);
+	List<EgovMap> selectBusinessPlanDetail1(Map<String, Object> params);
+	void updateBusinessPlan(Map<String, Object> params);
+	void deleteBusinessPlan(Map<String, Object> params);
+	void insertBusinessPlan(Map<String, Object> params);
 	
 	//	Sales Plan Accuracy
 	List<EgovMap> selectSalesPlanAccuracyWeeklyDetailHeader(Map<String, Object> params);

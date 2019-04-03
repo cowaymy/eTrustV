@@ -16,6 +16,9 @@ public interface ScmReportService {
 	List<EgovMap> selectPlanVer(Map<String, Object> params);
 	List<EgovMap> selectBusinessPlanSummary(Map<String, Object> params);
 	List<EgovMap> selectBusinessPlanDetail(Map<String, Object> params);
+	List<EgovMap> selectBusinessPlanDetail1(Map<String, Object> params);
+	int saveBusinessPlanAll(List<Map<String, Object>> updList, SessionVO sessionVO);
+	int saveBusinessPlan(List<Map<String, Object>> updList, SessionVO sessionVO);
 	
 	//	Sales Plan Accuracy
 	List<EgovMap> selectSalesPlanAccuracyWeeklyDetailHeader(Map<String, Object> params);
