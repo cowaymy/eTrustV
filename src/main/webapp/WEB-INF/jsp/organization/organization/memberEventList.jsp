@@ -9,9 +9,9 @@
     }
 
     function fn_confirmPopup(){
-    	
+
     	var activeItems = AUIGrid.getCheckedRowItems(myGridID);
-    	
+
     	if (activeItems.length > 1) {
     		Common.alert("Please choose only one request.");
     		return;
@@ -33,7 +33,7 @@
     		}
     	}
 
-    	
+
     	 /* if(stusId == 60){//in progress 일때만 confirm event open
 //           fn_setDetail(myGridID, event.rowIndex);
     		 Common.popupDiv("/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + promoId, "");
@@ -78,7 +78,7 @@
 
         });
 
-    
+
     });
 
 
@@ -92,30 +92,30 @@
 
     function createAUIGrid(){
         // AUIGrid 칼럼 설정
-	    var columnLayout = [ 
+	    var columnLayout = [
 	                        {
                                 dataField : "memberid",
                                 headerText : "memberid",
                                 width:0
-                               
-                               
+
+
                            }, {
                                  dataField : "branchid",
                                  headerText : "branchid",
                                  width:0
-                                
-                                
+
+
                             },{
 	                        	 dataField : "eventdt",
 	                             headerText : "eventdt",
 	                             width:0
-	                        	
-	                        	
+
+
 	                        },{
                     dataField : "promoId",
                     headerText : "promo ID.",
                     width : 120,
-                    visible:false     
+                    visible:false
                 }, {
 	                dataField : "reqstNo",
 	                headerText : "Request No.",
@@ -180,7 +180,7 @@
 	                 showRowNumColumn    : true ,       //줄번호 칼럼 렌더러 출력
 	                 showRowCheckColumn : true,
 	                 showRowAllCheckBox : true
-	                 
+
 		    };
 		            //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
 		        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
@@ -200,10 +200,10 @@ function fn_failOrgEventsAjax(){
    // var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
    var activeItems = AUIGrid.getCheckedRowItems(myGridID);
      console.log(activeItems);
-  
- 
+
+
     Common.confirm("Do you want to cancel the Events?"  , fn_MemsFail );
- 
+
 }
 function fn_MemsFail(){
  //var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
@@ -224,17 +224,17 @@ function fn_MemsFail(){
          console.log("data : " + result);
          $("#requestStatus").val("60");
          Common.alert(result.message, fn_getOrgEventListAjax(    $("#requestStatus").val("60")));
-         
-   
+
+
      });
 }
 
 
 function fn_getOrgEventsAjax(){
 
-	
+
 	   Common.confirm("Do you want to approve the Events?"  , fn_MemsApprove );
-	
+
 }
 function fn_MemsApprove(){
 	//var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
@@ -247,7 +247,7 @@ function fn_MemsApprove(){
 	       }
 	 }
 
-	
+
 	var jasonObj={update : activeItems};
 	console.log(jasonObj);
 	   Common.ajax("POST", "/organization/updateMemberListApprove", jasonObj, function(result) {
@@ -256,10 +256,10 @@ function fn_MemsApprove(){
 	        console.log("data : " + result);
 	        $("#requestStatus").val("60");
 	        Common.alert(result.message, fn_getOrgEventListAjax($("#requestStatus").val("60")));
-	        
-	  
+
+
 	    });
-	
+
 }
 
 // 그리드 초기화.
@@ -400,6 +400,7 @@ function f_info(data , v){
          <option value="1">Health Planner</option>
          <option value="2">Coway Lady</option>
          <option value="3">Coway Technician</option>
+         <option value="7">Homecare Technician</option>
     </select>
     </td>
     <th scope="row">Member Code</th>
@@ -423,7 +424,7 @@ function f_info(data , v){
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a href="#" onclick="javascript:fn_confirmPopup();">Confirm Member Event</a></p></li>
-       
+
         <!-- <li><p class="link_btn"><a href="#">menu2</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>
