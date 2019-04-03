@@ -185,7 +185,7 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 
 	private void loadConfigInfo(EgovMap orderCfgInfo) {
 		//orderCfgInfo.put("configBsGen", ((BigDecimal)orderCfgInfo.get("configBsGen")).compareTo(BigDecimal.ONE) == 0 ? "Available" : "Unavailable");
-		orderCfgInfo.put("configBsGen", CommonUtils.intNvl(orderCfgInfo.get("configBsGen")) == 0 ? "Available" : "Unavailable");
+		orderCfgInfo.put("configBsGen", CommonUtils.intNvl(orderCfgInfo.get("configBsGen")) == 0 ? "Unavailable" : "Available");
 	}
 
 	private void loadOrderGuaranteeInfo(EgovMap grntnfo, EgovMap installationInfo) throws ParseException {
