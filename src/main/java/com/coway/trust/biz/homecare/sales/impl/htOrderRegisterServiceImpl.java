@@ -1512,14 +1512,14 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
     		htOrderRegisterMapper.insertSrvMembershipSales(srvMembershipSalesVO);
     	}
 
-    	//SERVICE CONFIGURATION - SAL0226D
+    	//SERVICE CONFIGURATION - SAL0090D
     	if(srvConfigurationVO != null && srvConfigurationVO.getSrvStusId() > 0) {
     		srvConfigurationVO.setSrvSoId(salesOrdId);
     		//srvConfigurationVO.setSrvBsGen(1);
     		htOrderRegisterMapper.insertSrvConfiguration(srvConfigurationVO);
     	}
 
-    	//SERVICE CONFIG SETTING - SAL0228D
+    	//SERVICE CONFIG SETTING - SAL0089D
         if(srvConfigSettingVOList != null && srvConfigSettingVOList.size() > 0) {
         	for(SrvConfigSettingVO srvConfigSettingVO : srvConfigSettingVOList) {
         		srvConfigSettingVO.setSrvConfigId(srvConfigurationVO.getSrvConfigId());
@@ -1527,7 +1527,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
         	}
         }
 
-        //SERVICE CONFIG PERIOD - SAL0227D
+        //SERVICE CONFIG PERIOD - SAL0088D
         if(srvConfigPeriodVO != null && srvConfigPeriodVO.getSrvPrdStusId() > 0) {
         	srvConfigPeriodVO.setSrvConfigId(srvConfigurationVO.getSrvConfigId());
         	srvConfigPeriodVO.setSrvPrdDur(4);
@@ -1734,7 +1734,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
 
 
-		String msg = "Order successfully saved.<br /> Service Care No. :  " + salesOrdNo + "<br /> Application Type : " + appTypeName + "<br /> Invoice Doc No. : " + invDocNo;
+		String msg = "Care Service Order Saved.<br /> Care Service No. :  " + salesOrdNo + "<br /> Application Type : " + appTypeName + "<br /> Invoice Doc No. : " + invDocNo;
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 //		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
