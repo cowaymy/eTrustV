@@ -1143,7 +1143,7 @@
             }
         }
         else {
-            if(appTypeIdx > 0 && appTypeVal != 143) {
+            if(appTypeIdx > 0 && appTypeVal != 145) {
                 isValid = false;
                 msg += '<spring:message code="sal.alert.msg.plzSelectSalesman" />';
             }
