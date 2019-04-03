@@ -607,18 +607,36 @@
            //Clear Care Service Order
             fn_clearSales();
 
+            $('span', '#refereNoLbl').empty().remove();
+            $('span', '#ordPromoLbl').empty().remove();
+            $('span', '#ordProductLbl').empty().remove();
+            $('span', '#salesmanCdLbl').empty().remove();
+
+
             var appTypeIdx = $("#appType option:selected").index();
             console.log('appTypeIdx : ' + appTypeIdx);
 
             if( appTypeIdx == 2 ){
                   $('#ordQuantity').removeAttr("disabled");
+                  $("#refereNoLbl").append("<span class='must'>*</span>");
+                  $("#ordPromoLbl").append("<span class='must'>*</span>");
+                  $("#ordProductLbl").append("<span class='must'>*</span>");
+                  $("#salesmanCdLbl").append("<span class='must'>*</span>");
             }
             else if(appTypeIdx == 1 ){
             	$('#ordQuantity').val("1");
             	$('#ordQuantity').prop("disabled", true);
+                $("#refereNoLbl").append("<span class='must'>*</span>");
+                $("#ordPromoLbl").append("<span class='must'>*</span>");
+                $("#ordProductLbl").append("<span class='must'>*</span>");
+                $("#salesmanCdLbl").append("<span class='must'>*</span>");
             }
             else{
                  $('#ordQuantity').prop("disabled", true);
+                 $("#refereNoLbl").find("span").remove();
+                 $("#ordPromoLbl").find("span").remove();
+                 $("#ordProductLbl").find("span").remove();
+                 $("#salesmanCdLbl").find("span").remove();
             }
 
         });
@@ -1929,9 +1947,9 @@
     <td>${toDay}</td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.refNo" /><span class="must">*</span></th>
+    <th scope="row" id="refereNoLbl"><spring:message code="sal.text.refNo" /><span class="must"></span></th>
     <td><input id="refereNo" name="refereNo" type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row"><spring:message code="sal.text.salManCode" /><span class="must">*</span></th>
+    <th scope="row" id ="salesmanCdLbl"><spring:message code="sal.text.salManCode" /><span class="must"></span></th>
     <td><input id="salesmanCd" name="salesmanCd" type="text" title="" placeholder="" class="" />
         <input id="hiddenSalesmanId" name="salesmanId" type="hidden"  />
         <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
@@ -1944,7 +1962,7 @@
         <input id="hiddenSalesmanTypeId" name="salesmanTypeId" type="hidden" /></td>
 </tr>
 <tr>
-    <th scope="row">Product Size<span class="must">*</span></th>
+    <th scope="row" id = "ordProductLbl">Mattress Size<span class="must"></span></th>
     <td>
 <!--             <select id="srvProduct" name="srvProduct" class="w100p">
             <option value="0">Choose One</option>
@@ -1998,7 +2016,7 @@
 </tr>
 <tr>
 
-   <th scope="row"><spring:message code="sal.title.text.promo" /><span class="must">*</span></th>
+   <th scope="row" id="ordPromoLbl"><spring:message code="sal.title.text.promo" /><span class="must"></span></th>
     <td>
     <select id="ordPromo" name="ordPromo" class="w100p" ></select>
     <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
