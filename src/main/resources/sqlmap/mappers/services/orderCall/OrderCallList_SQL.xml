@@ -212,6 +212,7 @@
            , Limit1.DOC_ID DOC_ID
            , Limit1.IS_WAIT_CANCL IS_WAIT_CANCL
            , Limit1.CRT_DT CRT_DT
+           , Limit1.CRT_TM CRT_TM
            , Limit1.CRT_USER_ID_ID CRT_USER_ID_ID
            , Limit1.CRT_USER_ID CRT_USER_ID
            , Limit1.RCD_TMS RCD_TMS
@@ -242,6 +243,7 @@
                     , Extent1.CRT_USER_ID_ID CRT_USER_ID_ID
                     , Extent1.CRT_USER_ID CRT_USER_ID
                     , Extent1.CRT_DT CRT_DT
+                    , Extent1.CRT_TM CRT_TM
                     , Extent1.CALL_TYPE_NAME CALL_TYPE_NAME
                     , CASE WHEN ( Extent1.APP_TYPE_ID IS NOT NULL )
                       THEN Extent1.APP_TYPE_ID
@@ -291,6 +293,7 @@
                            vCallLogOrderCall.CRT_USER_ID CRT_USER_ID_ID ,
                            vCallLogOrderCall.CRT_USER_ID CRT_USER_ID ,
                            vCallLogOrderCall.CRT_DT CRT_DT ,
+                           vCallLogOrderCall.CRT_TM CRT_TM ,
                            vCallLogOrderCall.CALL_TYPE_NAME CALL_TYPE_NAME ,
                            vCallLogOrderCall.CALL_FDBCK_ID CALL_FDBCK_ID ,
                            vCallLogOrderCall.CALL_FDBCK_CODE CALL_FDBCK_CODE ,
