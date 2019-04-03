@@ -1515,7 +1515,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
     	//SERVICE CONFIGURATION - SAL0090D
     	if(srvConfigurationVO != null && srvConfigurationVO.getSrvStusId() > 0) {
     		srvConfigurationVO.setSrvSoId(salesOrdId);
-    		//srvConfigurationVO.setSrvBsGen(1);
+    		srvConfigurationVO.setSrvBsGen(1);
     		htOrderRegisterMapper.insertSrvConfiguration(srvConfigurationVO);
     	}
 
