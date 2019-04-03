@@ -108,9 +108,11 @@ public class ScmReportController {
 		
 		List<EgovMap> selectBusinessPlanSummary	= scmReportService.selectBusinessPlanSummary(params);
 		List<EgovMap> selectBusinessPlanDetail	= scmReportService.selectBusinessPlanDetail(params);
+		List<EgovMap> selectBusinessPlanDetail1	= scmReportService.selectBusinessPlanDetail1(params);
 		
 		map.put("selectBusinessPlanSummary", selectBusinessPlanSummary);
 		map.put("selectBusinessPlanDetail", selectBusinessPlanDetail);
+		map.put("selectBusinessPlanDetail1", selectBusinessPlanDetail1);
 		
 		return	ResponseEntity.ok(map);
 	}
@@ -122,10 +124,44 @@ public class ScmReportController {
 		Map<String, Object> map	= new HashMap<>();
 		
 		List<EgovMap> selectBusinessPlanDetail	= scmReportService.selectBusinessPlanDetail(params);
+		List<EgovMap> selectBusinessPlanDetail1	= scmReportService.selectBusinessPlanDetail1(params);
 		
 		map.put("selectBusinessPlanDetail", selectBusinessPlanDetail);
+		map.put("selectBusinessPlanDetail1", selectBusinessPlanDetail1);
 		
 		return	ResponseEntity.ok(map);
+	}
+	@RequestMapping(value = "/saveBusinessPlanAll.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveBusinessPlanAll(@RequestBody Map<String, List<Map<String, Object>>> params,	SessionVO sessionVO) {
+		
+		LOGGER.debug("saveBusinessPlanAll : {}", params.toString());
+		
+		List<Map<String, Object>> allList	= params.get(AppConstants.AUIGRID_ALL);
+		int totCnt	= scmReportService.saveBusinessPlanAll(allList, sessionVO);
+		
+		ReturnMessage message = new ReturnMessage();
+		
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	@RequestMapping(value = "/saveBusinessPlan.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveBusinessPlan(@RequestBody Map<String, List<Map<String, Object>>> params,	SessionVO sessionVO) {
+		
+		LOGGER.debug("saveBusinessPlan : {}", params.toString());
+		
+		List<Map<String, Object>> updList	= params.get(AppConstants.AUIGRID_UPDATE);
+		int totCnt	= scmReportService.saveBusinessPlan(updList, sessionVO);
+		
+		ReturnMessage message = new ReturnMessage();
+		
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
 	}
 	
 	/*
