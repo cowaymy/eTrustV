@@ -945,9 +945,9 @@
            S.AS_REM_REQSTER_CNTC
            AS_REM_REQSTER_CNTC ,
            S.CODE CODE ,
-           TO_CHAR( S.AS_REQST_DT, 'YYYY/MM/DD') AS_REQST_DT ,
+           TO_CHAR( S.AS_REQST_DT, 'dd/mm/yyyy') AS_REQST_DT ,
            NVL(SUBSTR(S.AS_REQST_TM,0,8),'00:00:00') AS_REQST_TM ,
-           TO_CHAR( S.AS_APPNT_DT, 'YYYY/MM/DD') AS_APPNT_DT ,
+           TO_CHAR( S.AS_APPNT_DT, 'dd/mm/yyyy') AS_APPNT_DT ,
            NVL(SUBSTR(S.AS_APPNT_TM,0,8),'00:00:00') AS_APPNT_TM ,
            S.DISTANCE DISTANCE ,
            S.PREV_SVC_AREA PREV_SVC_AREA,
@@ -2890,10 +2890,10 @@
                            CALL_ROS_AMT,
                            CALL_SMS,
                            CALL_SMS_REM
-     VALUES ( CCR0007D_CALL_RESULT_ID_SEQ.nextval,
+     ) VALUES ( CCR0007D_CALL_RESULT_ID_SEQ.nextval,
               (SELECT MAX(CALL_ENTRY_ID)
               FROM CCR0006D
-              WHERE DOC_ID =#{AS_ID}
+              WHERE DOC_ID = #{AS_ID}
               AND TYPE_ID ='339'),
               #{CALL_STUS_ID},
               #{CALL_FDBCK_ID},
