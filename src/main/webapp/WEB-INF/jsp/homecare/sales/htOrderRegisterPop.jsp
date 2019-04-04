@@ -635,7 +635,8 @@
                  $('#ordQuantity').prop("disabled", true);
                  $("#refereNoLbl").find("span").remove();
                  $("#ordPromoLbl").find("span").remove();
-                 $("#ordProductLbl").find("span").remove();
+                 $("#ordProductLbl").append("<span class='must'>*</span>");
+                 //$("#ordProductLbl").find("span").remove();
                  $("#salesmanCdLbl").find("span").remove();
             }
 
