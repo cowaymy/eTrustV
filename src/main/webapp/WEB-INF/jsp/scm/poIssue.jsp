@@ -750,6 +750,16 @@ function fnSetPlanQty(list) {
 				planQty1	= list[i].w14;	planQty2	= 0;
 			} else if ( 15 == leadCnt ) {
 				planQty1	= list[i].w15;	planQty2	= 0;
+			} else if ( 16 == leadCnt ) {
+				planQty1	= list[i].w16;	planQty2	= 0;
+			} else if ( 17 == leadCnt ) {
+				planQty1	= list[i].w17;	planQty2	= 0;
+			} else if ( 18 == leadCnt ) {
+				planQty1	= list[i].w18;	planQty2	= 0;
+			} else if ( 19 == leadCnt ) {
+				planQty1	= list[i].w19;	planQty2	= 0;
+			} else if ( 20 == leadCnt ) {
+				planQty1	= list[i].w20;	planQty2	= 0;
 			} else {
 				console.log("u must make more else if");
 			}
@@ -769,6 +779,16 @@ function fnSetPlanQty(list) {
 				planQty1	= list[i].w13;	planQty2	= list[i].w14;
 			} else if ( 15 == leadCnt ) {
 				planQty1	= list[i].w14;	planQty2	= list[i].w15;
+			} else if ( 16 == leadCnt ) {
+				planQty1	= list[i].w15;	planQty2	= list[i].w16;
+			} else if ( 17 == leadCnt ) {
+				planQty1	= list[i].w16;	planQty2	= list[i].w17;
+			} else if ( 18 == leadCnt ) {
+				planQty1	= list[i].w17;	planQty2	= list[i].w18;
+			} else if ( 19 == leadCnt ) {
+				planQty1	= list[i].w18;	planQty2	= list[i].w19;
+			} else if ( 20 == leadCnt ) {
+				planQty1	= list[i].w19;	planQty2	= list[i].w20;
 			} else {
 				console.log("u must make more else if");
 			}
@@ -1261,6 +1281,22 @@ function fnPoTargetGrid() {
 			}, {
 				dataField : "w16",
 				headerText : "W16",
+				visible : false
+			}, {
+				dataField : "w17",
+				headerText : "W17",
+				visible : false
+			}, {
+				dataField : "w18",
+				headerText : "W18",
+				visible : false
+			}, {
+				dataField : "w19",
+				headerText : "W19",
+				visible : false
+			}, {
+				dataField : "w20",
+				headerText : "W20",
 				visible : false
 			}, {
 				dataField : "fobPrc",
