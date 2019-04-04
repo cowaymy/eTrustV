@@ -196,6 +196,8 @@ public class ScmReportController {
 		Map<String, Object> monthlyParams	= new HashMap<>();
 		
 		if ( "1".equals(params.get("gbn").toString()) ) {
+			List<EgovMap> selectSalesPlanAccuracyMaster	= scmReportService.selectSalesPlanAccuracyMaster(params);
+			
 			weeklyParams.put("team", params.get("team").toString());
 			weeklyParams.put("weeklyYear", Integer.parseInt(params.get("weeklyYear").toString()));
 			weeklyParams.put("weeklyWeek", Integer.parseInt(params.get("weeklyWeek").toString()));
@@ -224,9 +226,12 @@ public class ScmReportController {
 			LOGGER.debug("selectSalesPlanAccuracy Weekly : {}", weeklyParams.toString());
 			List<EgovMap> selectSalesPlanAccuracyWeeklyDetail	= scmReportService.selectSalesPlanAccuracyWeeklyDetail(weeklyParams);
 			
+			map.put("selectSalesPlanAccuracyMaster", selectSalesPlanAccuracyMaster);
 			map.put("selectSalesPlanAccuracySummary", selectSalesPlanAccuracyWeeklySummary);
 			map.put("selectSalesPlanAccuracyDetail", selectSalesPlanAccuracyWeeklyDetail);
 		} else if ( "2".equals(params.get("gbn").toString()) ) {
+			List<EgovMap> selectSalesPlanAccuracyMaster	= scmReportService.selectSalesPlanAccuracyMaster(params);
+			
 			monthlyParams.put("team", params.get("team").toString());
 			monthlyParams.put("monthlyYear", Integer.parseInt(params.get("monthlyYear").toString()));
 			monthlyParams.put("monthlyMonth", Integer.parseInt(params.get("monthlyMonth").toString()));
@@ -252,6 +257,7 @@ public class ScmReportController {
 			LOGGER.debug("selectSalesPlanAccuracy Monthly : {}", monthlyParams.toString());
 			List<EgovMap> selectSalesPlanAccuracyMonthlyDetail	= scmReportService.selectSalesPlanAccuracyMonthlyDetail(monthlyParams);
 			
+			map.put("selectSalesPlanAccuracyMaster", selectSalesPlanAccuracyMaster);
 			map.put("selectSalesPlanAccuracySummary", selectSalesPlanAccuracyMonthlySummary);
 			map.put("selectSalesPlanAccuracyDetail", selectSalesPlanAccuracyMonthlyDetail);
 		} else {
