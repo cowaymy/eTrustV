@@ -391,8 +391,8 @@
                                                 insInfo.INST_AREA,
                                                 insInfo.INST_POSTCODE,
                                                 insInfo.INST_CITY ,
-						  (insInfo.INST_ADDR_DTL || ' ' || insInfo.INST_STREET || ' ' || insInfo.INST_AREA  || ' ' || insInfo.INST_CITY || ' ' || insInfo.INST_STATE || ' ' ||
-                   insInfo.INST_POSTCODE || ' ' || insInfo.INST_COUNTRY ) AS FULL_ADDR
+						  (UPPER(insInfo.INST_ADDR_DTL) || ' ' || UPPER(insInfo.INST_STREET) || ' ' || UPPER(insInfo.INST_AREA)  || ' ' || UPPER(insInfo.INST_CITY) || ' ' || UPPER(insInfo.INST_STATE) || ' ' ||
+                   insInfo.INST_POSTCODE || ' ' || UPPER(insInfo.INST_COUNTRY) ) AS FULL_ADDR
 						         FROM SAL1010V insinfo ) sList
 						 WHERE  sList.ORD_ID = #{ORD_ID}
 						      AND ROWNUM <= 1
