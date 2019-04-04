@@ -28,7 +28,8 @@ $(document).ready(function() {
         //doGetComboSepa("/common/selectBranchCodeList.do",2 , '-',''   , 'branch' , 'S', '');
 
         if($("#userRole").val() == 97 || $("#userRole").val() == 98 || $("#userRole").val() == 99 || $("#userRole").val() == 100 || // SO Branch
-                $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105) { // DST Support
+                $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105 || // DST Support
+                $("#userRole").val() == 166 || $("#userRole").val() == 167 || $("#userRole").val() == 261) { // DST Planning
 
             $('#memTypeCom option[value="1"] ').attr("selected", true);;
             $('#memTypeCom').attr("disabled", true);
@@ -233,7 +234,8 @@ function fn_downloadAgreement() {
 
     if($("#userRole").val() == 97 || $("#userRole").val() == 98 || $("#userRole").val() == 99 || $("#userRole").val() == 100 || // SO Branch
             $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105 || // DST Support
-            $("#userRole").val() == 128 || $("#userRole").val() == 129 || $("#userRole").val() == 130) { // Administrator
+            $("#userRole").val() == 128 || $("#userRole").val() == 129 || $("#userRole").val() == 130 || // Administrator
+            $("#userRole").val() == 166 || $("#userRole").val() == 167 || $("#userRole").val() == 261) {
 
         code = memberid;
         $("#v_memCode").val(memberid);
