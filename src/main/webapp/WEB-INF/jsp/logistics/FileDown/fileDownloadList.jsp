@@ -37,8 +37,8 @@ var userSession = ${SESSION_INFO.userId};
 						{dataField: "fileUploadId",headerText :"<spring:message code='log.head.fileuploadid'/>",width:120    ,height:30 , visible:false},
 						{dataField: "fileTypeId",headerText :"<spring:message code='log.head.filetypeid'/>",width:120    ,height:30 , visible:false},
 						{dataField: "codeName",headerText :"<spring:message code='log.head.type'/>",width:200    ,height:30 },
-						{dataField: "fileTypeLbl",headerText :"<spring:message code='log.head.label'/>"       ,width:400    ,height:30                },
-						{dataField: "fileName",headerText :"<spring:message code='log.head.filename'/>"                ,width:600    ,height:30  },
+						{dataField: "fileTypeLbl",headerText :"<spring:message code='log.head.title'/>"       ,width:400    ,height:30                },
+						{dataField: "fileName",headerText :"<spring:message code='log.head.subTitle'/>"                ,width:600    ,height:30  },
 						{dataField: "isCody",headerText :"<spring:message code='log.head.cody'/>",width:60    ,height:30
                    	   , renderer :
                          {
@@ -574,11 +574,11 @@ function fn_reUpFile(){
                    <td >
                       <select class="w100p" id="searchFileType" name="searchFileType"><option value=''>Choose One</option></select>
                     </td>
-                    <th scope="row">File Type Label</th>
+                    <th scope="row">Title</th>
                     <td>
                         <input type="text" title="" placeholder=""  class="w100p" id="searchTypeLabel" name="searchTypeLabel"/>
                     </td>
-                    <th scope="row">Filename</th>
+                    <th scope="row">Sub Title</th>
                     <td>
                         <input type="text" title="" placeholder=""  class="w100p" id="searchFilename" name="searchFilename"/>
                     </td>
