@@ -104,7 +104,7 @@ function fn_getmRLedgerGridAjax (){
          */
          $("#txtContractPeriod").html("-");
 
-         var  mailAddress;
+         var  mailAddress = "";
 
 	       mailAddress += " " + result.orderMailingInfo.addrDtl ;
 	       mailAddress += " " + result.orderMailingInfo.street ;
@@ -113,7 +113,7 @@ function fn_getmRLedgerGridAjax (){
 	       mailAddress += " " + result.orderMailingInfo.mailPostCode;
 	       mailAddress += " " + result.orderMailingInfo.mailCnty;
 
-		 $("#txtAddrMail").html(mailAddress);
+		 $("#txtAddrMail").text(mailAddress);
 
          $("#txtTelM").html(result.orderMailingInfo.mailCntTelM);
          $("#txtTelR").html(result.orderMailingInfo.mailCntTelR);
@@ -200,7 +200,7 @@ function fn_getmRLedgerProcessGridAjax (v){
 	<td ><span id='txtInstallDate'></span></td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="sal.text.insAddr" /></th>
+	<th scope="row"><spring:message code="sal.text.mailingAdd" /></th>
 	<td><span id='txtAddrMail' ></span></td>
 	<th scope="row"><spring:message code="sal.text.insAddr" /></th>
 	<td ><span id='txtAddrInst'></span></td>
