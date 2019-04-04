@@ -38,6 +38,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 06/03/2019    ONGHC      1.0.3       - Create getSalStat
  * 18/03/2019    ONGHC      1.0.4       - Set Previous INS number for OD55
  * 27/03/2019    ONGHC      1.0.5       - To Update and Insert LOG0038D and LOG0039D
+ * 04/04/2019    ONGHC      1.0.6       - Amend insertInstallation_2
  *********************************************************************************************/
 
 @Service("installationResultListService")
@@ -2678,7 +2679,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     logger.debug("===========================INSTALLATION ENTRY================================");
 
     maxIdValue.put("value", "resultId");
-    maxIdValue.put("salesOrderId", installResult.get("entryId"));
+    maxIdValue.put("salesOrderId", installResult.get("salesOrdId"));
     maxId = installationResultListMapper.selectMaxId_2(maxIdValue);
 
     logger.debug("maxId : {}", maxId);
