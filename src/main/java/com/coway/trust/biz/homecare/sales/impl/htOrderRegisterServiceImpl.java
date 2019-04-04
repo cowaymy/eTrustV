@@ -1491,6 +1491,15 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		EgovMap memberPackageInfo = htOrderRegisterMapper.selectMembershipPackageInfo(srvparams);
 		srvparams.put("DOCNO", "19");
 	    EgovMap membershipBillNo = htOrderRegisterMapper.getCSEntryDocNo(srvparams);
+	    String billNo = "";
+
+	    if (orderVO.getAppTypeId() == 3216 || orderVO.getAppTypeId() == 3217){
+	    	billNo = String.valueOf(membershipBillNo.get("csno"));
+	    }else
+	    {
+	    	billNo = "";
+	    }
+
 
 		String startDt = (String) memberPackageInfo.get("strtDt");
 		String expireDt = (String) memberPackageInfo.get("exprDt");
@@ -1501,7 +1510,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
     	if(srvMembershipSalesVO != null && srvMembershipSalesVO.getSrvStusCodeId() > 0) {
     		String membershipNo = htOrderRegisterMapper.selectDocNo(DocTypeConstants.MEMBERSHIP_NO);
-    		srvMembershipSalesVO.setSrvMemBillNo(String.valueOf(membershipBillNo.get("csno")));
+    		srvMembershipSalesVO.setSrvMemBillNo(billNo);
     		srvMembershipSalesVO.setSrvFreq(4);
     		srvMembershipSalesVO.setSrvStartDt(startDt1);
     		srvMembershipSalesVO.setSrvExprDt(expireDt1);
