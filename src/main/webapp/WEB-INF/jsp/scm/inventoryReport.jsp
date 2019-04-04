@@ -96,19 +96,19 @@ function fnSearchTotal() {
 								{
 									headerText : totalHeader[0],
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "totPrevAmt",
+									dataField : "totPrev",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}, {
 									headerText : totalHeader[1],
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "totCurrAmt",
+									dataField : "totCurr",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}, {
 									headerText : "Gap",
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "totGapAmt",
+									dataField : "totGap",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}
@@ -120,17 +120,17 @@ function fnSearchTotal() {
 				 			[
 								{
 									headerText : totalHeader[0],
-									dataField : "tranPrevAmt",
+									dataField : "tranPrev",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : totalHeader[1],
-									dataField : "tranCurrAmt",
+									dataField : "tranCurr",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : "Gap",
-									dataField : "tranGapAmt",
+									dataField : "tranGap",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}
@@ -144,19 +144,19 @@ function fnSearchTotal() {
 								{
 									headerText : totalHeader[0],
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "handPrevAmt",
+									dataField : "handPrev",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}, {
 									headerText : totalHeader[1],
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "handCurrAmt",
+									dataField : "handCurr",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}, {
 									headerText : "Gap",
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "handGapAmt",
+									dataField : "handGap",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}
@@ -192,19 +192,19 @@ function fnSearchTotal() {
 								{
 									headerText : totalHeader[0],
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "agePrevAmt",
+									dataField : "agePrev",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}, {
 									headerText : totalHeader[1],
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "ageCurrAmt",
+									dataField : "ageCurr",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}, {
 									headerText : "Gap",
 									//headerStyle : "aui-grid-user-custom-header",
-									dataField : "ageGapAmt",
+									dataField : "ageGap",
 									dataType : "numeric",
 									style : "my-columnRight1"
 								}
@@ -216,17 +216,17 @@ function fnSearchTotal() {
 				 			[
 								{
 									headerText : totalHeader[0],
-									dataField : "stkbPrevAmt",
+									dataField : "stkbPrev",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : totalHeader[1],
-									dataField : "stkbCurrAmt",
+									dataField : "stkbCurr",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}, {
 									headerText : "Gap",
-									dataField : "stkbGapAmt",
+									dataField : "stkbGap",
 									dataType : "numeric",
 									style : "my-columnRight"
 								}
@@ -646,60 +646,92 @@ function fnSetResult() {
 	
 	var krwList1	= new Array();
 	var myrList1	= new Array();
+	var qtyList1	= new Array();
 	
 	for ( var i = 0 ; i < sumObj.length ; i++ ) {
 		var temp	= new Object();
 		temp.stockTypeId	= sumObj[i].stockTypeId;
 		temp.stockTypeName	= sumObj[i].stockTypeName;
-		temp.totPrevAmt		= ((parseInt(sumObj[i].totPrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.totCurrAmt		= ((parseInt(sumObj[i].totCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.totGapAmt		= ((parseInt(sumObj[i].totGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.tranPrevAmt	= ((parseInt(sumObj[i].tranPrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.tranCurrAmt	= ((parseInt(sumObj[i].tranCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.tranGapAmt		= ((parseInt(sumObj[i].tranGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.handPrevAmt	= ((parseInt(sumObj[i].handPrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.handCurrAmt	= ((parseInt(sumObj[i].handCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.handGapAmt		= ((parseInt(sumObj[i].handGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.totPrev		= ((parseInt(sumObj[i].totPrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.totCurr		= ((parseInt(sumObj[i].totCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.totGap			= ((parseInt(sumObj[i].totGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.tranPrev		= ((parseInt(sumObj[i].tranPrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.tranCurr		= ((parseInt(sumObj[i].tranCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.tranGap		= ((parseInt(sumObj[i].tranGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.handPrev		= ((parseInt(sumObj[i].handPrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.handCurr		= ((parseInt(sumObj[i].handCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.handGap		= ((parseInt(sumObj[i].handGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
 		temp.daysPrevQty	= sumObj[i].daysPrevQty;
 		temp.daysCurrQty	= sumObj[i].daysCurrQty;
 		temp.daysGapQty		= sumObj[i].daysGapQty;
-		temp.agePrevAmt		= ((parseInt(sumObj[i].agePrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.ageCurrAmt		= ((parseInt(sumObj[i].ageCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.ageGapAmt		= ((parseInt(sumObj[i].ageGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.stkbPrevAmt	= ((parseInt(sumObj[i].stkbPrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.stkbCurrAmt	= ((parseInt(sumObj[i].stkbCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
-		temp.stkbGapAmt		= ((parseInt(sumObj[i].stkbGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.agePrev		= ((parseInt(sumObj[i].agePrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.ageCurr		= ((parseInt(sumObj[i].ageCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.ageGap			= ((parseInt(sumObj[i].ageGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.stkbPrev		= ((parseInt(sumObj[i].stkbPrevAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.stkbCurr		= ((parseInt(sumObj[i].stkbCurrAmt) * parseFloat(curr)) / 1000000).toFixed(1);
+		temp.stkbGap		= ((parseInt(sumObj[i].stkbGapAmt) * parseFloat(curr)) / 1000000).toFixed(1);
 		krwList1.push(temp);
 		
 		var temp1	= new Object();
 		temp1.stockTypeId	= sumObj[i].stockTypeId;
 		temp1.stockTypeName	= sumObj[i].stockTypeName;
-		temp1.totPrevAmt	= ((sumObj[i].totPrevAmt));
-		temp1.totCurrAmt	= ((sumObj[i].totCurrAmt));
-		temp1.totGapAmt		= ((sumObj[i].totGapAmt));
-		temp1.tranPrevAmt	= ((sumObj[i].tranPrevAmt));
-		temp1.tranCurrAmt	= ((sumObj[i].tranCurrAmt));
-		temp1.tranGapAmt	= ((sumObj[i].tranGapAmt));
-		temp1.handPrevAmt	= ((sumObj[i].handPrevAmt));
-		temp1.handCurrAmt	= ((sumObj[i].handCurrAmt));
-		temp1.handGapAmt	= ((sumObj[i].handGapAmt));
+		temp1.totPrev		= ((sumObj[i].totPrevAmt));
+		temp1.totCurr		= ((sumObj[i].totCurrAmt));
+		temp1.totGap		= ((sumObj[i].totGapAmt));
+		temp1.tranPrev		= ((sumObj[i].tranPrevAmt));
+		temp1.tranCurr		= ((sumObj[i].tranCurrAmt));
+		temp1.tranGap		= ((sumObj[i].tranGapAmt));
+		temp1.handPrev		= ((sumObj[i].handPrevAmt));
+		temp1.handCurr		= ((sumObj[i].handCurrAmt));
+		temp1.handGap		= ((sumObj[i].handGapAmt));
 		temp1.daysPrevQty	= sumObj[i].daysPrevQty;
 		temp1.daysCurrQty	= sumObj[i].daysCurrQty;
 		temp1.daysGapQty	= sumObj[i].daysGapQty;
-		temp1.agePrevAmt	= ((sumObj[i].agePrevAmt));
-		temp1.ageCurrAmt	= ((sumObj[i].ageCurrAmt));
-		temp1.ageGapAmt		= ((sumObj[i].ageGapAmt));
-		temp1.stkbPrevAmt	= ((sumObj[i].stkbPrevAmt));
-		temp1.stkbCurrAmt	= ((sumObj[i].stkbCurrAmt));
-		temp1.stkbGapAmt	= ((sumObj[i].stkbGapAmt));
+		temp1.agePrev		= ((sumObj[i].agePrevAmt));
+		temp1.ageCurr		= ((sumObj[i].ageCurrAmt));
+		temp1.ageGap		= ((sumObj[i].ageGapAmt));
+		temp1.stkbPrev		= ((sumObj[i].stkbPrevAmt));
+		temp1.stkbCurr		= ((sumObj[i].stkbCurrAmt));
+		temp1.stkbGap		= ((sumObj[i].stkbGapAmt));
 		myrList1.push(temp1);
+		
+		var temp2	= new Object();
+		temp2.stockTypeId	= sumObj[i].stockTypeId;
+		temp2.stockTypeName	= sumObj[i].stockTypeName;
+		temp2.totPrev		= sumObj[i].totPrevQty;
+		temp2.totCurr		= sumObj[i].totCurrQty;
+		temp2.totGap		= sumObj[i].totGapQty;
+		temp2.tranPrev		= sumObj[i].tranPrevQty;
+		temp2.tranCurr		= sumObj[i].tranCurrQty;
+		temp2.tranGap		= sumObj[i].tranGapQty;
+		temp2.handPrev		= sumObj[i].handPrevQty;
+		temp2.handCurr		= sumObj[i].handCurrQty;
+		temp2.handGap		= sumObj[i].handGapQty;
+		temp2.daysPrevQty	= sumObj[i].daysPrevQty;
+		temp2.daysCurrQty	= sumObj[i].daysCurrQty;
+		temp2.daysGapQty	= sumObj[i].daysGapQty;
+		temp2.agePrev		= sumObj[i].agePrevQty;
+		temp2.ageCurr		= sumObj[i].ageCurrQty;
+		temp2.ageGap		= sumObj[i].ageGapQty;
+		temp2.stkbPrev		= sumObj[i].stkbPrevQty;
+		temp2.stkbCurr		= sumObj[i].stkbCurrQty;
+		temp2.stkbGap		= sumObj[i].stkbGapQty;
+		qtyList1.push(temp2);
 	}
 	
 	if ( "1" == $("input[name='gbn']:checked").val() ) {
-		AUIGrid.setGridData(myGridID1, krwList1);
+		if ( "1" == $("input[name='gbn1']:checked").val() ) {
+			AUIGrid.setGridData(myGridID1, qtyList1);
+		} else {
+			AUIGrid.setGridData(myGridID1, krwList1);
+		}
 		AUIGrid.setGridData(myGridID2, krwList);
 	} else {
-		AUIGrid.setGridData(myGridID1, myrList1);
+		if ( "1" == $("input[name='gbn1']:checked").val() ) {
+			AUIGrid.setGridData(myGridID1, qtyList1);
+		} else {
+			AUIGrid.setGridData(myGridID1, myrList1);
+		}
 		AUIGrid.setGridData(myGridID2, myrList);
 	}
 }
@@ -967,24 +999,31 @@ $(document).ready(function() {
 			<caption>table</caption>
 				<colgroup>
 					<col style="width:140px" />
+					<col style="width:140px" />
+					<col style="width:140px" />
 					<col style="width:*" />
-					<col style="width:70px" />
-					<col style="width:*" />
+					<col style="width:140px" />
 					<col style="width:100px" />
-					<col style="width:*" />
+					<col style="width:88px" />
 				</colgroup>
 				<tbody>
 					<tr>
-						<th scope="row">Year &amp; Month</th>
+						<th scope="row">Month &amp; Year</th>
 						<td>
 							<input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="planYearMonth" name="planYearMonth" onchange="fnPlanYearMonthChange();" />
 						</td>
-						<th scope="row"></th>
+						<th scope="row">Currency</th>
 						<td>
 							<label><input type="radio" name="gbn" id="gbn" value="2" checked="checked" onclick="fnSetResult()"/><span>MYR</span></label>
 							<label><input type="radio" name="gbn" id="gbn" value="1" onclick="fnSetResult()" /><span>KRW (Million)</span></label>
 						</td>
-						<td colspan="2"></td>
+						<th scope="row">Currency Rate</th>
+						<td>
+							<input type="text" id="curr" name="curr" style="width:100px"/>
+						</td>
+						<td>
+							<p id="btnSave" class="btn_grid"><a onclick="fnSaveCurr();">Save</a></p>
+						</td>
 					</tr>
 				</tbody>
 			</table>						<!-- table type1 end -->
@@ -1021,18 +1060,47 @@ $(document).ready(function() {
 		</form>
 	</section>								<!-- section search_table end -->
 	<section class="search_result">				<!-- section search_result start -->
+		<table class="type1 mt10">				<!-- table start -->
+			<caption>table10</caption>
+			<colgroup>
+				<col style="width:100px" />
+				<col style="width:*" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row"><span id="teamLabel">Summary</span></th>
+					<td>
+						<label><input type="radio" name="gbn1" id="gbn1" value="2" checked="checked" onclick="fnSetResult()"/><span>AMT</span></label>
+						<label><input type="radio" name="gbn1" id="gbn1" value="1" onclick="fnSetResult()" /><span>QTY</span></label>
+					</td>
+				</tr>
+			</tbody>
+		</table>								<!-- table end -->
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
-			<!-- Monthly Grid -->
+			<!-- Summary Grid -->
 			<div id="inventory_report_total_wrap" style="height:186px;"></div>
 		</article>								<!-- article grid_wrap end -->
-		<ul class="right_btns">
-			<li><p id="btnExecute" class="btn_grid"><a onclick="fnExecuteBatch();">Execute Batch</a></p></li>
-			<li><input type="text" id="curr" name="curr" /></li>
-			<li><p id="btnSave" class="btn_grid"><a onclick="fnSaveCurr();">Save</a></p></li>
-			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'InventoryReport');">Excel</a></p></li>
-		</ul>
+		<table class="type1 mt10">				<!-- table start -->
+			<caption>table10</caption>
+			<colgroup>
+				<col style="width:100px" />
+				<col style="width:*" />
+				<col style="width:210px" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row"><span id="detail">Detail</span></th><td><span id="detail"></span></td>
+					<td align="rignt">
+						<ul class="right_btns">
+							<li><p id="btnExecute" class="btn_grid"><a onclick="fnExecuteBatch();">Execute Batch</a></p></li>
+							<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'InventoryReport');">Excel</a></p></li>
+						</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>								<!-- table end -->
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
-			<!-- Weekly Grid -->
+			<!-- Detail Grid -->
 			<div id="inventory_report_detail_wrap" style="height:471px;"></div>
 		</article>								<!-- article grid_wrap end -->
 	</section>									<!-- section search_result end -->

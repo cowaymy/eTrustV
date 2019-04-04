@@ -92,10 +92,10 @@ var team		= "";
 
 $(function(){
 	if ( 1 == $("input[name='gbn']:checked").val() ) {
-		$("#periodLabel").text("Year/Week");
+		$("#periodLabel").text("Week/Year");
 		$("#period").text(currWeek + "W / " + currYear);
 	} else {
-		$("#periodLabel").text("Year/Month");
+		$("#periodLabel").text("Month/Year");
 		$("#period").text(currMonth + "M / " + currYear);
 	}
 	fnScmTotalPeriod();
@@ -180,262 +180,262 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 							//	weekly summary
 							weeklySummaryLayout.push(
 								 	{	headerText : "Team",	dataField : "team",	style : "my-columnCenter"	},
-								 	{	headerText : "1W",		dataField : "w1",	dataType : "numeric",	
+								 	{	headerText : "W01",		dataField : "w1",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "2W",		dataField : "w2",	dataType : "numeric",	
+								 	},	{	headerText : "W02",		dataField : "w2",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "3W",		dataField : "w3",	dataType : "numeric",	
+								 	}, 	{	headerText : "W03",		dataField : "w3",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "4W",		dataField : "w4",	dataType : "numeric",	
+								 	}, 	{	headerText : "W04",		dataField : "w4",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "5W",		dataField : "w5",	dataType : "numeric",	
+								 	}, 	{	headerText : "W05",		dataField : "w5",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "6W",		dataField : "w6",	dataType : "numeric",	
+								 	}, 	{	headerText : "W06",		dataField : "w6",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "7W",		dataField : "w7",	dataType : "numeric",	
+								 	}, 	{	headerText : "W07",		dataField : "w7",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "8W",		dataField : "w8",	dataType : "numeric",	
+								 	}, 	{	headerText : "W08",		dataField : "w8",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "9W",		dataField : "w9",	dataType : "numeric",	
+								 	}, 	{	headerText : "W09",		dataField : "w9",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "10W",		dataField : "w10",	dataType : "numeric",	
+								 	}, 	{	headerText : "W10",		dataField : "w10",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "11W",		dataField : "w11",	dataType : "numeric",	
+								 	}, 	{	headerText : "W11",		dataField : "w11",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "12W",		dataField : "w12",	dataType : "numeric",	
+								 	}, 	{	headerText : "W12",		dataField : "w12",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "13W",		dataField : "w13",	dataType : "numeric",	
+								 	},	{	headerText : "W13",		dataField : "w13",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "14W",		dataField : "w14",	dataType : "numeric",	
+								 	},	{	headerText : "W14",		dataField : "w14",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "15W",		dataField : "w15",	dataType : "numeric",	
+								 	},	{	headerText : "W15",		dataField : "w15",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "16W",		dataField : "w16",	dataType : "numeric",	
+								 	},	{	headerText : "W16",		dataField : "w16",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "17W",		dataField : "w17",	dataType : "numeric",	
+								 	},	{	headerText : "W17",		dataField : "w17",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "18W",		dataField : "w18",	dataType : "numeric",	
+								 	}, 	{	headerText : "W18",		dataField : "w18",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "19W",		dataField : "w19",	dataType : "numeric",	
+								 	}, 	{	headerText : "W19",		dataField : "w19",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "20W",		dataField : "w20",	dataType : "numeric",	
+								 	},	{	headerText : "W20",		dataField : "w20",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "21W",		dataField : "w21",	dataType : "numeric",	
+								 	}, 	{	headerText : "W21",		dataField : "w21",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "22W",		dataField : "w22",	dataType : "numeric",	
+								 	}, 	{	headerText : "W22",		dataField : "w22",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "23W",		dataField : "w23",	dataType : "numeric",	
+								 	}, 	{	headerText : "W23",		dataField : "w23",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "24W",		dataField : "w24",	dataType : "numeric",	
+								 	},	{	headerText : "W24",		dataField : "w24",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "25W",		dataField : "w25",	dataType : "numeric",	
+								 	},	{	headerText : "W25",		dataField : "w25",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "26W",		dataField : "w26",	dataType : "numeric",	
+								 	}, 	{	headerText : "W26",		dataField : "w26",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "27W",		dataField : "w27",	dataType : "numeric",	
+								 	},	{	headerText : "W27",		dataField : "w27",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "28W",		dataField : "w28",	dataType : "numeric",	
+								 	},	{	headerText : "W28",		dataField : "w28",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "29W",		dataField : "w29",	dataType : "numeric",	
+								 	},	{	headerText : "W29",		dataField : "w29",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "30W",		dataField : "w30",	dataType : "numeric",	
+								 	}, 	{	headerText : "W30",		dataField : "w30",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "31W",		dataField : "w31",	dataType : "numeric",	
+								 	}, 	{	headerText : "W31",		dataField : "w31",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "32W",		dataField : "w32",	dataType : "numeric",	
+								 	}, 	{	headerText : "W32",		dataField : "w32",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "33W",		dataField : "w33",	dataType : "numeric",	
+								 	},	{	headerText : "W33",		dataField : "w33",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "34W",		dataField : "w34",	dataType : "numeric",	
+								 	},	{	headerText : "W34",		dataField : "w34",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "35W",		dataField : "w35",	dataType : "numeric",	
+								 	},	{	headerText : "W35",		dataField : "w35",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "36W",		dataField : "w36",	dataType : "numeric",	
+								 	}, 	{	headerText : "W36",		dataField : "w36",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "37W",		dataField : "w37",	dataType : "numeric",	
+								 	},	{	headerText : "W37",		dataField : "w37",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "38W",		dataField : "w38",	dataType : "numeric",	
+								 	}, 	{	headerText : "W38",		dataField : "w38",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "39W",		dataField : "w39",	dataType : "numeric",	
+								 	},	{	headerText : "W39",		dataField : "w39",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "40W",		dataField : "w40",	dataType : "numeric",	
+								 	},	{	headerText : "W40",		dataField : "w40",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "41W",		dataField : "w41",	dataType : "numeric",	
+								 	}, 	{	headerText : "W41",		dataField : "w41",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "42W",		dataField : "w42",	dataType : "numeric",	
+								 	}, 	{	headerText : "W42",		dataField : "w42",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "43W",		dataField : "w43",	dataType : "numeric",	
+								 	},	{	headerText : "W43",		dataField : "w43",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "44W",		dataField : "w44",	dataType : "numeric",	
+								 	}, 	{	headerText : "W44",		dataField : "w44",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "45W",		dataField : "w45",	dataType : "numeric",	
+								 	}, 	{	headerText : "W45",		dataField : "w45",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "46W",		dataField : "w46",	dataType : "numeric",	
+								 	}, 	{	headerText : "W46",		dataField : "w46",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "47W",		dataField : "w47",	dataType : "numeric",	
+								 	}, 	{	headerText : "W47",		dataField : "w47",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "48W",		dataField : "w48",	dataType : "numeric",	
+								 	}, 	{	headerText : "W48",		dataField : "w48",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "49W",		dataField : "w49",	dataType : "numeric",	
+								 	}, 	{	headerText : "W49",		dataField : "w49",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "50W",		dataField : "w50",	dataType : "numeric",	
+								 	}, 	{	headerText : "W50",		dataField : "w50",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	},	{	headerText : "51W",		dataField : "w51",	dataType : "numeric",	
+								 	},	{	headerText : "W51",		dataField : "w51",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
 								 		}
-								 	}, 	{	headerText : "52W",		dataField : "w52",	dataType : "numeric",	
+								 	}, 	{	headerText : "W52",		dataField : "w52",	dataType : "numeric",	
 								 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 								 			if ( headerText == weeklyHeader )	return	"my-currSummaryRight";
 								 			else						return	"my-columnRight";
@@ -445,6 +445,7 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 							);
 							myGridID1	= GridCommon.createAUIGrid("summary_wrap", weeklySummaryLayout, "", gridOption);
 							AUIGrid.bind(myGridID1, "cellClick", function(event) {
+								if ( 0 == event.columnIndex )	return	false;
 								if ( parseInt(currWeek) > event.columnIndex ) {
 									team	= AUIGrid.getCellValue(myGridID1, event.rowIndex, "team");
 									weeklyYear	= AUIGrid.getCellValue(myGridID1, event.rowIndex, "planYear");
@@ -461,7 +462,7 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									//console.log("weeklyYear : " + weeklyYear + ", weeklyWeek : " + weeklyWeek);
 									fnSalesPlanAccuracyDetailHeader("click");
 									
-									$("#period").text(event.columnIndex + "W / " + event.item.planYear);
+									$("#period").text("W" + event.columnIndex + " / " + event.item.planYear);
 									$("#team").text(event.item.team);
 								} else {
 									console.log("none");
@@ -893,6 +894,7 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 							);
 							myGridID2	= GridCommon.createAUIGrid("summary_wrap1", monthlySummaryLayout, "", gridOption);
 							AUIGrid.bind(myGridID2, "cellClick", function(event) {
+								if ( 0 == event.columnIndex )	return	false;
 								if ( parseInt(currWeek) > event.columnIndex ) {
 									team	= AUIGrid.getCellValue(myGridID2, event.rowIndex, "team");
 									monthlyYear	= AUIGrid.getCellValue(myGridID2, event.rowIndex, "planYear");
@@ -908,7 +910,20 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									}
 									fnSalesPlanAccuracyDetailHeader("click");
 									
-									$("#period").text(event.columnIndex + "M / " + event.item.planYear);
+									var currMonNm	= "";
+									if ( 1 == event.columnIndex )		currMonNm	= "Jan";
+									else if ( 2 == event.columnIndex )	currMonNm	= "Feb";
+									else if ( 3 == event.columnIndex )	currMonNm	= "Mar";
+									else if ( 4 == event.columnIndex )	currMonNm	= "Apr";
+									else if ( 5 == event.columnIndex )	currMonNm	= "May";
+									else if ( 6 == event.columnIndex )	currMonNm	= "Jun";
+									else if ( 7 == event.columnIndex )	currMonNm	= "Jul";
+									else if ( 8 == event.columnIndex )	currMonNm	= "Aug";
+									else if ( 9 == event.columnIndex )	currMonNm	= "Sep";
+									else if ( 10 == event.columnIndex )	currMonNm	= "Oct";
+									else if ( 11 == event.columnIndex )	currMonNm	= "Nov";
+									else if ( 12 == event.columnIndex )	currMonNm	= "Dec";
+									$("#period").text(currMonNm + " / " + event.item.planYear);
 									$("#team").text(event.item.team);
 								} else {
 									console.log("none");
@@ -1314,12 +1329,30 @@ function fnSearch() {
 			, "/scm/selectSalesPlanAccuracy.do"
 			, params
 			, function(result) {
+				AUIGrid.setGridData(myGridID, result.selectSalesPlanAccuracyMaster);
 				if ( "1" == $("input[name='gbn']:checked").val() ) {
 					AUIGrid.setGridData(myGridID1, result.selectSalesPlanAccuracySummary);
 					AUIGrid.setGridData(myGridID3, result.selectSalesPlanAccuracyDetail);
+					$("#periodLabel").text("Week / Year");
+					$("#period").text("W" + currWeek + " / " + currYear);
 				} else {
 					AUIGrid.setGridData(myGridID2, result.selectSalesPlanAccuracySummary);
 					AUIGrid.setGridData(myGridID4, result.selectSalesPlanAccuracyDetail);
+					var currMonNm	= "";
+					if ( 1 == currMonth )		currMonNm	= "Jan";
+					else if ( 2 == currMonth )	currMonNm	= "Feb";
+					else if ( 3 == currMonth )	currMonNm	= "Mar";
+					else if ( 4 == currMonth )	currMonNm	= "Apr";
+					else if ( 5 == currMonth )	currMonNm	= "May";
+					else if ( 6 == currMonth )	currMonNm	= "Jun";
+					else if ( 7 == currMonth )	currMonNm	= "Jul";
+					else if ( 8 == currMonth )	currMonNm	= "Aug";
+					else if ( 9 == currMonth )	currMonNm	= "Sep";
+					else if ( 10 == currMonth )	currMonNm	= "Oct";
+					else if ( 11 == currMonth )	currMonNm	= "Nov";
+					else if ( 12 == currMonth )	currMonNm	= "Dec";
+					$("#periodLabel").text("Month / Year");
+					$("#period").text(currMonNm + " / " + currYear);
 				}
 				//fnRadioButton($("input[name='gbn']:checked").val());
 				$("#team").text("ALL");
@@ -1358,6 +1391,31 @@ function fnSearchDetail() {
 			}
 			, ""
 			, { async : true, isShowLabel : false });
+}
+function fnSave() {
+	if ( false == fnValidation() ) {
+		return	false;
+	}
+	
+	Common.ajax("POST"
+			, "/scm/saveSalesPlanAccuracyMaster.do"
+			, GridCommon.getEditData(myGridID)
+			, function(result) {
+				Common.alert(result.data + "<spring:message code='sys.msg.saveCnt' />");
+				fnSearch();
+			}
+			, function(jqXHR, textStatus, errorThrown) {
+				try {
+					console.log("Fail Status : " + jqXHR.status);
+					console.log("code : " + jqXHR.responseJSON.code);
+					console.log("message : " + jqXHR.responseJSON.message);
+					console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+				} catch ( e ) {
+					console.log(e);
+				}
+				
+				Common.alert("Fail : " + jqXHR.responseJSON.message);
+			});
 }
 function fnMaster() {
 	var popUpObj	= Common.popupDiv("/scm/salesPlanAccuracyMasterPopup.do"
@@ -1498,11 +1556,22 @@ function getTimeStamp() {
 	
 	return	date + "_" + time;
 }
+function fnValidation() {
+	var result	= true;
+	var updList	= AUIGrid.getEditedRowItems(myGridID);
+	
+	if ( 0 == updList.length ) {
+		Common.alert("No Change");
+		return	false;
+	}
+	
+	return	result;
+}
 
 /*
  * Grid create & setting
  */
-var myGridID1, myGridID2, myGridID3, myGridID4;
+var myGridID, myGridID1, myGridID2, myGridID3, myGridID4;
 
 function fnCreateGrid() {
 	var gridOption	= {
@@ -1559,9 +1628,200 @@ function fnCreateGrid() {
 	$("#detail_wrap").show();	AUIGrid.resize(myGridID3);
 	$("#detail_wrap1").hide();
 }
+var masterOption	= {
+	usePaging : false,
+	useGroupingPanel : false,
+	showRowNumColumn : false,
+	showRowCheckColumn : false,
+	showStateColumn : false,
+	showEditedCellMarker : false,
+	showFooter : false,
+	editable : false,
+	enableCellMerge : true,
+	enableRestore : false,
+	//defaultColumnWidth : 10,
+	fixedColumnCount : 1
+};
+var masterLayout	=
+	[
+	 	{
+	 		headerText : "Master",
+	 		dataField : "gbnNm",
+	 		style : "my-columnCenter2"
+	 	},	{
+	 		headerText : "-1W",
+	 		dataField : "w1",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 1,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-2W",
+	 		dataField : "w2",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 2,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-3W",
+	 		dataField : "w3",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 3,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-4W",
+	 		dataField : "w4",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 4,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-5W",
+	 		dataField : "w5",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 5,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-6W",
+	 		dataField : "w6",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 6,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-7W",
+	 		dataField : "w7",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 7,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-8W",
+	 		dataField : "w8",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 8,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-9W",
+	 		dataField : "w9",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 9,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-10W",
+	 		dataField : "w10",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 10,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-11W",
+	 		dataField : "w11",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 11,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-12W",
+	 		dataField : "w12",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 12,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-13W",
+	 		dataField : "w13",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 13,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-14W",
+	 		dataField : "w14",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 14,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-15W",
+	 		dataField : "w15",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 15,
+	 			unCheckValue : 0
+	 		}
+	 	},	{
+	 		headerText : "-16W",
+	 		dataField : "w16",
+	 		renderer : {
+	 			type : "CheckBoxEditRenderer",
+	 			showLabel : false,
+	 			editable : true,
+	 			checkValue : 16,
+	 			unCheckValue : 0
+	 		}
+	 	}, {
+	 		headerText : "Year",
+	 		dataField : "year",
+	 		cellMerge : true,
+			mergePolicy : "restrict",
+			mergeRef : "year",
+	 		style : "my-columnCenter2",
+	 		visible : false
+	 	}
+	 ];
 
 $(document).ready(function() {
 	fnCreateGrid();
+	myGridID	= GridCommon.createAUIGrid("master_wrap", masterLayout, "", masterOption);
 });
 </script>
 
@@ -1598,7 +1858,7 @@ $(document).ready(function() {
 						<td>
 							<select class="sel_year" id="planYear" name="planYear"></select>
 						</td>
-						<th scope="row"></th>
+						<th scope="row"><span id="detail">Period</span></th>
 						<td>
 							<label><input type="radio" name="gbn" id="gbn" value="1" checked="checked" onclick="fnSalesPlanAccuracyDetailHeader('search')" /><span>Weeky</span></label>
 							<label><input type="radio" name="gbn" id="gbn" value="2" onclick="fnSalesPlanAccuracyDetailHeader('search')"/><span>Monthly</span></label>
@@ -1643,6 +1903,42 @@ $(document).ready(function() {
 		</form>
 	</section>								<!-- section search_table end -->
 	<section class="search_result">				<!-- section search_result start -->
+		<table class="type1 mt10">				<!-- table start -->
+			<caption>table10</caption>
+			<colgroup>
+				<col style="width:100px" />
+				<col style="width:*" />
+				<col style="width:88px" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row"><span id="teamLabel">Master</span></th>
+					<td></td>
+					<td align="rignt">
+						<ul class="right_btns">
+							<li><p class="btn_grid"><a onclick="fnSave()"><span class="save"></span>Save</a></p></li>
+						</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>								<!-- table end -->
+		<article class="grid_wrap">				<!-- article grid_wrap start -->
+			<!-- Summary Grid -->
+			<div id="master_wrap" style="height:80px;"></div>
+		</article>								<!-- article grid_wrap end -->
+		<table class="type1 mt10">				<!-- table start -->
+			<caption>table10</caption>
+			<colgroup>
+				<col style="width:100px" />
+				<col style="width:*" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row"><span id="teamLabel">Summary</span></th>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Summary Grid -->
 			<div id="summary_wrap" style="height:146px;"></div>
@@ -1655,17 +1951,19 @@ $(document).ready(function() {
 				<col style="width:100px" />
 				<col style="width:100px" />
 				<col style="width:100px" />
+				<col style="width:100px" />
+				<col style="width:100px" />
 				<col style="width:*" />
-				<col style="width:200px" />
+				<col style="width:88px" />
 			</colgroup>
 			<tbody>
 				<tr>
+					<th scope="row"><span id="detail">Detail</span></th><td><span id="detail"></span></td>
 					<th scope="row"><span id="teamLabel">Team</span></th><td><span id="team"></span></td>
 					<th scope="row"><span id="periodLabel"></span></th><td><span id="period"></span></td>
 					<td></td>
 					<td align="rignt">
 						<ul class="right_btns">
-							<li><p id="btnMaster" class="btn_grid"><a onclick="fnMaster();">Master</a></p></li>
 							<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'SalesPlanAccuracy');">Excel</a></p></li>
 						</ul>
 					</td>
@@ -1674,8 +1972,8 @@ $(document).ready(function() {
 		</table>								<!-- table end -->
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Detail Grid -->
-			<div id="detail_wrap" style="height:511px;width:100%;"></div>
-			<div id="detail_wrap1" style="height:511px;width:100%;"></div>
+			<div id="detail_wrap" style="height:425px;width:100%;"></div>
+			<div id="detail_wrap1" style="height:425px;width:100%;"></div>
 		</article>								<!-- article grid_wrap end -->
 	</section>									<!-- section search_result end -->
 </section>									<!-- section content end -->

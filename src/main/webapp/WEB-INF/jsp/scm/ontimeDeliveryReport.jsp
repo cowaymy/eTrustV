@@ -59,7 +59,20 @@ function fnSearch() {
 			, function(result) {
 				AUIGrid.setGridData(myGridID1, result.selectOntimeDeliverySummary);
 				AUIGrid.setGridData(myGridID2, result.selectOntimeDeliveryDetail);
-				$("#yearMonth").text(planMonth + "/" + AUIGrid.getCellValue(myGridID1, 0, "planYear"));
+				var planMonthNm	= "";
+				if ( 1 == planMonth )		planMonthNm	= "Jan";
+				else if ( 2 == planMonth )	planMonthNm	= "Feb";
+				else if ( 3 == planMonth )	planMonthNm	= "Mar";
+				else if ( 4 == planMonth )	planMonthNm	= "Apr";
+				else if ( 5 == planMonth )	planMonthNm	= "May";
+				else if ( 6 == planMonth )	planMonthNm	= "Jun";
+				else if ( 7 == planMonth )	planMonthNm	= "Jul";
+				else if ( 8 == planMonth )	planMonthNm	= "Aug";
+				else if ( 9 == planMonth )	planMonthNm	= "Sep";
+				else if ( 10 == planMonth )	planMonthNm	= "Oct";
+				else if ( 11 == planMonth )	planMonthNm	= "Nov";
+				else if ( 12 == planMonth )	planMonthNm	= "Dec";
+				$("#yearMonth").text(planMonthNm + " / " + AUIGrid.getCellValue(myGridID1, 0, "planYear"));
 				$("#issPoQty").text(AUIGrid.getCellValue(myGridID1, 0, currMonth));
 				$("#onTimeQty").text(AUIGrid.getCellValue(myGridID1, 1, currMonth));
 				$("#onTimeRate").text(AUIGrid.getCellValue(myGridID1, 2, currMonth));
@@ -196,7 +209,7 @@ var summaryOptions	= {
 var summaryLayout	= 
 	[
 	 	{
-	 		headerText : "",
+	 		headerText : " ",
 	 		dataField : "gbn",
 	 		style : "my-columnCenter"
 	 	}, {
@@ -362,7 +375,7 @@ $(document).ready(function() {
 	myGridID1	= GridCommon.createAUIGrid("#summary_wrap", summaryLayout, "", summaryOptions);
 	AUIGrid.bind(myGridID1, "cellClick", function(event) {
 		console.log("currYear : " + currYear);
-		
+		if ( 0 == event.columnIndex )	return	false;
 		if ( $("#planYear").val() < currYear ) {
 			planYear	= AUIGrid.getCellValue(myGridID1, event.rowIndex, "planYear");
 			planMonth	= event.columnIndex;
@@ -376,7 +389,20 @@ $(document).ready(function() {
 		} else {
 			
 		}
-		$("#yearMonth").text(event.columnIndex + "/" + event.item.planYear);
+		var planMonthNm	= "";
+		if ( 1 == event.columnIndex )		planMonthNm	= "Jan";
+		else if ( 2 == event.columnIndex )	planMonthNm	= "Feb";
+		else if ( 3 == event.columnIndex )	planMonthNm	= "Mar";
+		else if ( 4 == event.columnIndex )	planMonthNm	= "Apr";
+		else if ( 5 == event.columnIndex )	planMonthNm	= "May";
+		else if ( 6 == event.columnIndex )	planMonthNm	= "Jun";
+		else if ( 7 == event.columnIndex )	planMonthNm	= "Jul";
+		else if ( 8 == event.columnIndex )	planMonthNm	= "Aug";
+		else if ( 9 == event.columnIndex )	planMonthNm	= "Sep";
+		else if ( 10 == event.columnIndex )	planMonthNm	= "Oct";
+		else if ( 11 == event.columnIndex )	planMonthNm	= "Nov";
+		else if ( 12 == event.columnIndex )	planMonthNm	= "Dec";
+		$("#yearMonth").text(planMonthNm + " / " + event.item.planYear);
 		$("#issPoQty").text(AUIGrid.getCellValue(myGridID1, 0, event.columnIndex));
 		$("#onTimeQty").text(AUIGrid.getCellValue(myGridID1, 1, event.columnIndex));
 		$("#onTimeRate").text(AUIGrid.getCellValue(myGridID1, 2, event.columnIndex));
@@ -480,6 +506,19 @@ $(document).ready(function() {
 		</form>
 	</section>								<!-- section search_table end -->
 	<section class="search_result">				<!-- section search_result start -->
+		<table class="type1 mt10">				<!-- table start -->
+			<caption>table10</caption>
+			<colgroup>
+				<col style="width:100px" />
+				<col style="width:*" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row"><span id="teamLabel">Summary</span></th>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Summary Grid -->
 			<div id="summary_wrap" style="height:106px;"></div>
@@ -487,6 +526,8 @@ $(document).ready(function() {
 		<table class="type1 mt10">				<!-- table start -->
 			<caption>table10</caption>
 			<colgroup>
+				<col style="width:100px" />
+				<col style="width:100px" />
 				<col style="width:100px" />
 				<col style="width:*" />
 				<col style="width:100px" />
@@ -499,10 +540,11 @@ $(document).ready(function() {
 			</colgroup>
 			<tbody>
 				<tr>
-					<th scope="row">Year/Month</th><td><span id="yearMonth"></span></td>
+					<th scope="row"><span id="detail">Detail</span></th><td><span id="detail"></span></td>
+					<th scope="row">Month / Year</th><td><span id="yearMonth"></span></td>
 					<th scope="row">Issued PO</th><td><span id="issPoQty"></span></td>
 					<th scope="row">On-Time</th><td><span id="onTimeQty"></span></td>
-					<th scope="row">On-Time Delivery Rate</th><td><span id="onTimeRate"></span></td>
+					<th scope="row">On-Time Rate</th><td><span id="onTimeRate"></span></td>
 					<td>
 						<ul class="right_btns">
 							<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'OntimeDelivery Report');">Excel</a></p></li>

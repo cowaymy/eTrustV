@@ -109,14 +109,14 @@ var myGridID3Layout	=
 	 ];
 
 $(document).ready(function() {
-	myGridID3	= GridCommon.createAUIGrid("#midterm_gr_wrap", myGridID3Layout, "", myGridID3Option);
+	myGridID3	= GridCommon.createAUIGrid("#gr_wrap", myGridID3Layout, "", myGridID3Option);
 });	//$(document).ready
 </script>
 
 <body>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 	<header class="pop_header"><!-- pop_header start -->
-		<h1>Midterm GR</h1>
+		<h1>GR List</h1>
 		<ul class="right_opt">
 			<!-- <li><p class="btn_blue2"><a href="fnClose();">Close</a></p></li>
 			<li><p class="btn_blue"><a onclick="fnSearchPop();"><span class="search"></span>Search</a></p></li> -->
@@ -129,7 +129,7 @@ $(document).ready(function() {
 				<article class="tap_area"><!-- tap_area start -->
 					<article class="grid_wrap"><!-- grid_wrap start -->
 						<!-- 그리드 영역 1-->
-						<div id="midterm_gr_wrap"></div>
+						<div id="gr_wrap"></div>
 					</article><!-- grid_wrap end -->
 				</article><!-- tap_area end -->
 			</section><!-- tap_wrap end -->

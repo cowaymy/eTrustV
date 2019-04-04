@@ -10,9 +10,9 @@
 	text-align : center;
 	margin-top : -20px;
 }
-.my-columnCenter1 {
+.my-columnCenter0 {
 	text-align : center;
-	background : #CCCCFF;
+	background : #CCFFFF;
 	color : #000;
 }
 .my-columnRight {
@@ -57,53 +57,61 @@ function fnSearch() {
 				AUIGrid.setGridData(myGridID1, result.selectBusinessPlanSummary);
 				AUIGrid.setGridData(myGridID2, result.selectBusinessPlanDetail);
 				AUIGrid.setGridData(myGridID3, result.selectBusinessPlanDetail1);
+				//AUIGrid.clearGridData(myGridID2);
 				fnSwitch(false);
 			});
 }
 function fnSaveAll(obj) {
 	if ( true == $(obj).parents().hasClass("btn_disabled") )	return	false;
 	
-	Common.ajax("POST"
-			, "/scm/saveBusinessPlanAll.do"
-			, GridCommon.getGridData(myGridID2)
-			, function(result) {
-				Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-				fnSearch();
-			}
-			, function(jqXHR, textStatus, errorThrown) {
-				try {
-					console.log("HeaderFail Status : " + jqXHR.status);
-					console.log("code : "        + jqXHR.responseJSON.code);
-					console.log("message : "     + jqXHR.responseJSON.message);
-					console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-				} catch ( e ) {
-					console.log(e);
-				}
-				Common.alert("Fail : " + jqXHR.responseJSON.message);
-			});
+
 }
 function fnSave(obj) {
 	if ( true == $(obj).parents().hasClass("btn_disabled") )	return	false;
-	if ( false == fnValidation() )								return	false;
-	
-	Common.ajax("POST"
-			, "/scm/saveBusinessPlan.do"
-			, GridCommon.getEditData(myGridID3)
-			, function(result) {
-				Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-				fnSearch();
-			}
-			, function(jqXHR, textStatus, errorThrown) {
-				try {
-					console.log("HeaderFail Status : " + jqXHR.status);
-					console.log("code : "        + jqXHR.responseJSON.code);
-					console.log("message : "     + jqXHR.responseJSON.message);
-					console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-				} catch ( e ) {
-					console.log(e);
+	//
+	console.log($("#detail_wrap").is(":visible"));
+	if ( false == $("#detail_wrap").is(":visible") ) {
+		if ( false == fnValidation(false) )	return	false;
+		Common.ajax("POST"
+				, "/scm/saveBusinessPlan.do"
+				, GridCommon.getEditData(myGridID3)
+				, function(result) {
+					Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+					fnSearch();
 				}
-				Common.alert("Fail : " + jqXHR.responseJSON.message);
-			});
+				, function(jqXHR, textStatus, errorThrown) {
+					try {
+						console.log("HeaderFail Status : " + jqXHR.status);
+						console.log("code : "        + jqXHR.responseJSON.code);
+						console.log("message : "     + jqXHR.responseJSON.message);
+						console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+					} catch ( e ) {
+						console.log(e);
+					}
+					Common.alert("Fail : " + jqXHR.responseJSON.message);
+				});
+	} else {
+		if ( false == fnValidation(true) )	return	false;
+		Common.ajax("POST"
+				, "/scm/saveBusinessPlanAll.do"
+				, GridCommon.getGridData(myGridID2)
+				, function(result) {
+					Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+					fnSearch();
+				}
+				, function(jqXHR, textStatus, errorThrown) {
+					try {
+						console.log("HeaderFail Status : " + jqXHR.status);
+						console.log("code : "        + jqXHR.responseJSON.code);
+						console.log("message : "     + jqXHR.responseJSON.message);
+						console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+					} catch ( e ) {
+						console.log(e);
+					}
+					Common.alert("Fail : " + jqXHR.responseJSON.message);
+				});
+	}
+	return	false;
 }
 function fnUpload(obj) {
 	if ( true == $(obj).parents().hasClass("btn_disabled") )	return	false;
@@ -184,12 +192,24 @@ function fnPlanYear() {
 			}
 			, fnPlanVerCallback);
 }
-function fnValidation() {
-	var updList	= AUIGrid.getEditedRowItems(myGridID3);
-	
-	if ( 0 == updList.length ) {
-		Common.alert("No Change");
-		return	false;
+function fnValidation(bool) {
+	//	true : SaveAll
+	if ( bool ) {
+		var updList	= AUIGrid.getEditedRowItems(myGridID2);
+		var addList	= AUIGrid.getAddedRowItems(myGridID2);
+		console.log(updList.length + ", " + addList.length);
+		if ( 0 == updList.length && 0 == addList.length ) {
+			Common.alert("No Change added");
+			return	false;
+		}
+	} else {
+		var updList	= AUIGrid.getEditedRowItems(myGridID3);
+		var updList1	= AUIGrid.getEditedRowItems(myGridID3);
+		console.log(updList.length + ", " + updList1.length);
+		if ( 0 == updList.length ) {
+			Common.alert("No Change updated");
+			return	false;
+		}
 	}
 	
 	return	true;
@@ -224,19 +244,19 @@ function fnSwitch(bool) {
 	if ( bool ) {
 		$("#detail_wrap").show();	AUIGrid.resize(myGridID2);
 		$("#detail_wrap1").hide();
-		$("#btnSaveAll").removeClass("btn_disabled");
-		$("#btnSave").addClass("btn_disabled");
+		//$("#btnSaveAll").removeClass("btn_disabled");
+		//$("#btnSave").addClass("btn_disabled");
 	} else {
 		$("#detail_wrap").hide();
 		$("#detail_wrap1").show();	AUIGrid.resize(myGridID3);
-		$("#btnSaveAll").addClass("btn_disabled");
-		$("#btnSave").removeClass("btn_disabled");
+		//$("#btnSaveAll").addClass("btn_disabled");
+		//$("#btnSave").removeClass("btn_disabled");
 	}
 }
 /*
  * Grid create & setting
  */
-var myGridID1, myGridID2, myGridID3;
+var myGridID1, myGridID2, myGridID3, myGridID4;
 
 //	myGridTotal
 var summaryOptions	= {
@@ -268,13 +288,13 @@ var summaryLayout	=
 				}
 			}
 	 	}, {
-	 		headerText : "",
+	 		headerText : " ",
 	 		dataField : "gbnName",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnCenter";
 				} else {
-					return	"my-columnCenter1";
+					return	"my-columnCenter0";
 				}
 			}
 	 	}, {
@@ -282,10 +302,10 @@ var summaryLayout	=
 	 		dataField : "m01",
 	 		dataType : "numeric",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnRight";
 				} else {
-					return	"my-columnRight1";
+					return	"my-columnRight0";
 				}
 			}
 	 	}, {
@@ -293,10 +313,10 @@ var summaryLayout	=
 	 		dataField : "m02",
 	 		dataType : "numeric",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnRight";
 				} else {
-					return	"my-columnRight1";
+					return	"my-columnRight0";
 				}
 			}
 	 	}, {
@@ -304,10 +324,10 @@ var summaryLayout	=
 	 		dataField : "m03",
 	 		dataType : "numeric",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnRight";
 				} else {
-					return	"my-columnRight1";
+					return	"my-columnRight0";
 				}
 			}
 	 	}, {
@@ -315,10 +335,10 @@ var summaryLayout	=
 	 		dataField : "m04",
 	 		dataType : "numeric",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnRight";
 				} else {
-					return	"my-columnRight1";
+					return	"my-columnRight0";
 				}
 			}
 	 	}, {
@@ -326,10 +346,10 @@ var summaryLayout	=
 	 		dataField : "m05",
 	 		dataType : "numeric",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnRight";
 				} else {
-					return	"my-columnRight1";
+					return	"my-columnRight0";
 				}
 			}
 	 	}, {
@@ -337,10 +357,10 @@ var summaryLayout	=
 	 		dataField : "m06",
 	 		dataType : "numeric",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnRight";
 				} else {
-					return	"my-columnRight1";
+					return	"my-columnRight0";
 				}
 			}
 	 	}, {
@@ -348,10 +368,10 @@ var summaryLayout	=
 	 		dataField : "m07",
 	 		dataType : "numeric",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnRight";
 				} else {
-					return	"my-columnRight1";
+					return	"my-columnRight0";
 				}
 			}
 	 	}, {
@@ -359,10 +379,10 @@ var summaryLayout	=
 	 		dataField : "m08",
 	 		dataType : "numeric",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnRight";
 				} else {
-					return	"my-columnRight1";
+					return	"my-columnRight0";
 				}
 			}
 	 	}, {
@@ -370,10 +390,10 @@ var summaryLayout	=
 	 		dataField : "m09",
 	 		dataType : "numeric",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnRight";
 				} else {
-					return	"my-columnRight1";
+					return	"my-columnRight0";
 				}
 			}
 	 	}, {
@@ -381,10 +401,10 @@ var summaryLayout	=
 	 		dataField : "m10",
 	 		dataType : "numeric",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnRight";
 				} else {
-					return	"my-columnRight1";
+					return	"my-columnRight0";
 				}
 			}
 	 	}, {
@@ -392,10 +412,10 @@ var summaryLayout	=
 	 		dataField : "m11",
 	 		dataType : "numeric",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnRight";
 				} else {
-					return	"my-columnRight1";
+					return	"my-columnRight0";
 				}
 			}
 	 	}, {
@@ -403,10 +423,10 @@ var summaryLayout	=
 	 		dataField : "m12",
 	 		dataType : "numeric",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnRight";
 				} else {
-					return	"my-columnRight1";
+					return	"my-columnRight0";
 				}
 			}
 	 	}, {
@@ -414,10 +434,10 @@ var summaryLayout	=
 	 		dataField : "summ",
 	 		dataType : "numeric",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( "Total" != item.categoryName ) {
+				if ( "Business Plan" != item.gbnName ) {
 					return	"my-columnRight";
 				} else {
-					return	"my-columnRight1";
+					return	"my-columnRight0";
 				}
 			}
 	 	}
@@ -565,10 +585,16 @@ var detailLayout1	=
 			mergeRef : "Code",
 			editable : false
 	 	}, {
-	 		headerText : "",
+	 		headerText : " ",
 	 		dataField : "gbnName",
-	 		style : "my-columnCenter",
-			editable : false
+			editable : false,
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnCenter";
+				} else {
+					return	"my-columnCenter0";
+				}
+			}
 	 	}, {
 	 		headerText : "Jan",
 	 		dataField : "m01",
@@ -703,6 +729,17 @@ var detailLayout1	=
 					return	"my-columnRight0";
 				}
 			}
+	 	}, {
+	 		headerText : "Sum",
+	 		dataField : "summ",
+	 		dataType : "numeric",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( "Business Plan" != item.gbnName ) {
+					return	"my-columnRight";
+				} else {
+					return	"my-columnRight0";
+				}
+			}
 	 	}
 	 ];
 	
@@ -803,15 +840,42 @@ $(document).ready(function() {
 	</section>								<!-- section search_table end -->
 	
 	<section class="search_result">				<!-- section search_result start -->
+		<table class="type1 mt10">				<!-- table start -->
+			<caption>table10</caption>
+			<colgroup>
+				<col style="width:100px" />
+				<col style="width:*" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row"><span id="teamLabel">Summary</span></th>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Monthly Grid -->
 			<div id="summary_wrap" style="height:210px;"></div>
 		</article>								<!-- article grid_wrap end -->
-		<ul class="right_btns">
-			<li><p id="btnSaveAll" class="btn_grid btn_disabled"><a onclick="fnSaveAll(this);">Save All</a></p></li>
-			<li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSave(this);">Save</a></p></li>
-			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'Business Plan Upload Format');">Excel</a></p></li>
-		</ul>
+		<table class="type1 mt10">				<!-- table start -->
+			<caption>table10</caption>
+			<colgroup>
+				<col style="width:100px" />
+				<col style="width:*" />
+				<col style="width:244px" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row"><span id="detail">Detail</span></th><td><span id="detail"></span></td>
+					<td>
+						<ul class="right_btns">
+							<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'Business Plan Upload');">Business Plan Set Up</a></p></li>
+							<li><p id="btnSave" class="btn_grid"><a onclick="fnSave(this);">Save</a></p></li>
+						</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>								<!-- table end -->
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Weekly Grid -->
 			<div id="detail_wrap" style="height:447px;"></div>
