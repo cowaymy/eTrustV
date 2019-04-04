@@ -43,6 +43,9 @@
                 $("#orgCode").attr("class", "w100p readonly");
                 $("#orgCode").attr("readonly", "readonly");
 
+                $("#grpCode").val("${grpCode}");
+                $("#grpCode").attr("class", "w100p readonly");
+                $("#grpCode").attr("readonly", "readonly");
 
             }else if("${SESSION_INFO.memberLevel}" =="3"){
 
@@ -259,13 +262,25 @@
           , { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width:100}
           , { headerText : "Order Number", dataField : "salesOrdNo",       editable : false, width:100}
           , { headerText : "Status",          dataField : "stusName",     editable : false,width:150}
+          , { headerText : "PV Month", dataField : "pvMonth",   editable : false,width:200}
+          , { headerText : "PV Month", dataField : "pvYear",   editable : false,width:200}
           , { headerText : "Customer Name",   dataField : "custNm",     editable : false,width:300}
           , { headerText : "Area",             dataField : "area",     editable : false,width:450}
           , { headerText : "Posting Branch",             dataField : "soBrnchCode",     editable : false,width:100}
+          , { headerText : "Doc Submit",             dataField : "docSubmit",     editable : false,width:100}
+          , { headerText : "Submit Branch",             dataField : "submitBranch",     editable : false,width:100}
+          , { headerText : "Branch Location",             dataField : "branchLocation",     editable : false,width:300}
           , { headerText : "Product",         dataField : "product",    editable : false,width:450}
+          , { headerText : "Promo Code", dataField : "promoCode",   editable : false,width:200}
+          , { headerText : "Promotion Description ", dataField : "promoDesc",   editable : false,width:400}
           , { headerText : "Fail Reason Code", dataField : "rem1",     editable : false,width:500}
           , { headerText : "Fail Remark",         dataField : "rem2",     editable : false,width:750}
+          , { headerText : "Sales By", dataField : "salesUserId",   editable : false,width:100}
           , { headerText : "Creator",         dataField : "crtName",   editable : false,width:100}
+          , { headerText : "HP Name", dataField : "hpName",   editable : false,width:400}
+          , { headerText : "Organization Code", dataField : "orgCode",   editable : false,width:200}
+          , { headerText : "Group Code", dataField : "grpCode",   editable : false,width:200}
+          , { headerText : "Dept Code", dataField : "deptCode",   editable : false,width:200}
           , { headerText : "Last Update At (By)", dataField : "lastUpd",   editable : false,width:400}
             ];
 
@@ -299,6 +314,10 @@
         });
         $('#_btnFail').click(function() {
             if(fn_validStatus()){
+            	if(MEM_TYPE == 1 || MEM_TYPE == 2){
+	            	$('#_action').val("10").attr('selected','selected');
+	            	$('#_action').attr('disabled','disabled').addClass("disabled");
+            	}
             	$('#updFail_wrap').show();
             }
         });

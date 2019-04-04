@@ -26,6 +26,18 @@
              , T13.AREA
              , T13.SO_BRNCH_CODE
              , T12.AREA_ID
+             , T14.PV_MONTH
+             , T14.PV_YEAR
+             , T14.PROMO_CODE
+             , T14.PROMO_DESC
+             , T14.SALES_USER_ID
+             , T14.HP_NAME
+             , T14.ORG_CODE
+             , T14.GRP_CODE
+             , T14.DEPT_CODE
+             , CASE WHEN T15.DOC_SO_ID IS NULL THEN 'N' ELSE 'Y' END DOC_SUBMIT
+             , T15.SUBMIT_BRANCH
+             , T15.BRANCH_LOCATION
 		  FROM SAL0213M T1
 		 LEFT JOIN SYS0013M T2 ON T2.CODE = T1.CHNNL AND T2.CODE_MASTER_ID = 350
 		 LEFT JOIN SYS0013M T3 ON T3.CODE_ID = T1.APP_TYPE_ID AND T3.CODE_MASTER_ID = 10
@@ -39,6 +51,12 @@
 		 LEFT JOIN SAL0001D  T11 ON T1.SALES_ORD_ID = T11.SALES_ORD_ID
 		 LEFT JOIN SAL0023D T12 ON T12.CUST_ADD_ID = T1.INST_ADD_ID
          LEFT JOIN SYS0064M T13 ON T13.AREA_ID = T12.AREA_ID
+         LEFT JOIN REP0011S T14 ON T14.ORD_NO = T11.SALES_ORD_NO
+         LEFT JOIN ( SELECT
+                            DOC.DOC_SO_ID ,BRNCH.CODE SUBMIT_BRANCH, BRNCH.NAME BRANCH_LOCATION
+                          FROM ORG0010D DOC
+                          JOIN SYS0005M BRNCH ON DOC.DOC_SUB_BRNCH_ID = BRNCH.BRNCH_ID
+                          WHERE DOC_TYPE_ID = 3198 AND DOC.STUS_ID = 1  ) T15 ON T15.DOC_SO_ID = T11.SALES_ORD_ID
 		 WHERE 1 = 1
          <if test='_memCode != null and _memCode != ""'>
 		   AND T1.MEM_CODE = #{_memCode}

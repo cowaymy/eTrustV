@@ -281,7 +281,6 @@ public class PreOrderController {
 
 	@RequestMapping(value = "/updateFailPreOrderStatus.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateFailPreOrderFailStatus(@RequestBody Map<String, Object> params, SessionVO sessionVO) {
-		logger.debug("@@@@@@@@@@@@@@@@@@@" + params.toString());
 		preOrderService.updatePreOrderFailStatus(params, sessionVO);
 
 		String msg = "Order Status successfully updated.";

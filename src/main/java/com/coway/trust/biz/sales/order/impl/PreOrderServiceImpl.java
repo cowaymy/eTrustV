@@ -115,7 +115,6 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 
 	@Override
 	public void updatePreOrderFailStatus(Map<String, Object> params, SessionVO sessionVO) {
-		logger.debug("@@@@@@@@@IMPL@@@@@" + params.toString());
 		params.put("updUserId", sessionVO.getUserId());
 
 		preOrderMapper.updatePreOrderFailStatus(params);
