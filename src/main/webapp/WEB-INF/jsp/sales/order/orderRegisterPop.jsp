@@ -32,7 +32,7 @@
 
         //Payment Channel, Billing Detail TAB Visible False처리
         fn_tabOnOffSet('PAY_CHA', 'HIDE');
-        //fn_tabOnOffSet('BIL_DTL', 'HIDE'); //2018.01.01
+      //fn_tabOnOffSet('BIL_DTL', 'HIDE'); //2018.01.01
         fn_tabOnOffSet('REL_CER', 'HIDE');
 
         //Attach File
@@ -291,23 +291,23 @@
 
 
                 if(custInfo.areaId != undefined){
-	                console.log("custInfo.areaId.substring(0,2):"+custInfo.areaId.substring(0,2));
-	                if("DM" == custInfo.areaId.substring(0,2)) {
-	        		    Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />');
-	        		    /*
-	        		    fn_clearInstallAddr();
-	                    $('#liInstNewAddr').removeClass("blind");
-	                    $('#liInstSelAddr').removeClass("blind");
-	        		    return;
-	                    */
-	                    $("#validAreaIdYN").val("N");
-	        	    }
-	        	    else {
-	        	        $("#validAreaIdYN").val("Y");
-	        	    }
+                    console.log("custInfo.areaId.substring(0,2):"+custInfo.areaId.substring(0,2));
+                    if("DM" == custInfo.areaId.substring(0,2)) {
+                        Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />');
+                        /*
+                        fn_clearInstallAddr();
+                        $('#liInstNewAddr').removeClass("blind");
+                        $('#liInstSelAddr').removeClass("blind");
+                        return;
+                        */
+                        $("#validAreaIdYN").val("N");
+                    }
+                    else {
+                        $("#validAreaIdYN").val("Y");
+                    }
                 }else{
-                	Common.alert('<spring:message code="sal.alert.msg.invalidMagicAddress"/>',fn_orderRegPopClose());
-                	return false;
+                    Common.alert('<spring:message code="sal.alert.msg.invalidMagicAddress"/>',fn_orderRegPopClose());
+                    return false;
                 }
 
 
@@ -808,218 +808,247 @@
                 fn_loadThirdParty($('#thrdPartyId').val().trim(), 2);
             }
         });
-
         $('#appType').change(function() {
-          fn_tabOnOffSet('PAY_CHA', 'HIDE');
 
-          //Sales Order
-          $('#salesOrderForm').clearForm();
+            fn_tabOnOffSet('PAY_CHA', 'HIDE');
 
-          //CLEAR RENTAL PAY SETTING
-          $('#thrdParty').prop("checked", false);
+            //Sales Order
+            $('#salesOrderForm').clearForm();
 
-          fn_clearRentPayMode();
-          fn_clearRentPay3thParty();
-          fn_clearRentPaySetCRC();
-          fn_clearRentPaySetDD();
+            //CLEAR RENTAL PAY SETTING
+            $('#thrdParty').prop("checked", false);
 
-          //CLEAR BILLING GROUP
-          fn_clearBillGroup();
+            fn_clearRentPayMode();
+            fn_clearRentPay3thParty();
+            fn_clearRentPaySetCRC();
+            fn_clearRentPaySetDD();
 
-          //ClearControl_Sales();
-          fn_clearSales();
+            //CLEAR BILLING GROUP
+            fn_clearBillGroup();
 
-          //HIDE COMPONENT
-          fn_clearAddCpnt();
+            //ClearControl_Sales();
+            fn_clearSales();
 
-          $('[name="advPay"]').prop("disabled", true);
+            //HIDE COMPONENT
+            $('#compType').addClass("blind");
 
-          var idx = $("#appType option:selected").index();
-          var selVal = $("#appType").val();
-          var appSubType = '';
 
-          if(idx > 0) {
-            if(FormUtil.isEmpty($('#hiddenCustId').val())) {
-              $('#appType').val('');
-              Common.alert('<spring:message code="sal.alert.msg.plzSelCust" />');
+            $('[name="advPay"]').prop("disabled", true);
 
-               $('#aTabCS').click();
-            } else {
-              switch(selVal) {
-                case '66' : //RENTAL
-                  fn_tabOnOffSet('PAY_CHA', 'SHOW');
-                  //?FD문서에서 아래 항목 빠짐
-                  $('[name="advPay"]').removeAttr("disabled");
-                  $('#installDur').val('').prop("readonly", true).addClass("readonly");
+            var idx    = $("#appType option:selected").index();
+            var selVal = $("#appType").val();
+            var appSubType = '';
 
-                  $("#gstChk").val('0').removeAttr("disabled");
-                  $('#pBtnCal').addClass("blind");
-                  fn_tabOnOffSet('REL_CER', 'HIDE');
+            if(idx > 0) {
+                if(FormUtil.isEmpty($('#hiddenCustId').val())) {
+                    $('#appType').val('');
+                    Common.alert('<spring:message code="sal.alert.msg.plzSelCust" />');
 
-                  appSubType = '367';
-                  break;
-                case '67' : //OUTRIGHT
-                  if(GST_CHK == '1') {
-                    $("#gstChk").val('1').removeAttr("disabled");
-                    $("#pBtnCal").removeClass("blind");
-                    //fn_tabOnOffSet('REL_CER', 'SHOW');
-                    fn_tabOnOffSet('REL_CER', 'HIDE');
-                  } else {
-                    $("#gstChk").val('0').removeAttr("disabled");
-                    $('#pBtnCal').addClass("blind");
-                    fn_tabOnOffSet('REL_CER', 'HIDE');
-                  }
+                    $('#aTabCS').click();
+                }
+                else {
 
-                  appSubType = '368';
-                  break;
-                case '68' : //INSTALLMENT
-                  $('#installDur').removeAttr("readonly").removeClass("readonly");
-                  if(GST_CHK == '1') {
-                    $("#gstChk").val('1').removeAttr("disabled");
-                    $("#pBtnCal").removeClass("blind");
-                    //fn_tabOnOffSet('REL_CER', 'SHOW');
-                    fn_tabOnOffSet('REL_CER', 'HIDE');
-                  } else {
-                    $("#gstChk").val('0').removeAttr("disabled");
-                    $('#pBtnCal').addClass("blind");
-                    fn_tabOnOffSet('REL_CER', 'HIDE');
-                  }
+                    switch(selVal) {
+                        case '66' : //RENTAL
+                            fn_tabOnOffSet('PAY_CHA', 'SHOW');
+                            //?FD문서에서 아래 항목 빠짐
+                            $('[name="advPay"]').removeAttr("disabled");
+                            $('#installDur').val('').prop("readonly", true).addClass("readonly");
 
-                  appSubType = '369';
-                  break;
-                case '1412' : //Outright Plus
-                  $('#installDur').val("36").prop("readonly", true).removeClass("readonly");
-                  $('[name="advPay"]').removeAttr("disabled");
+                            $("#gstChk").val('0').removeAttr("disabled");
+                            $('#pBtnCal').addClass("blind");
+                            fn_tabOnOffSet('REL_CER', 'HIDE');
 
-                  if(GST_CHK == '1') {
-                    $("#gstChk").val('1').removeAttr("disabled");
-                    $("#pBtnCal").removeClass("blind");
-                    //fn_tabOnOffSet('REL_CER', 'SHOW');
-                     fn_tabOnOffSet('REL_CER', 'HIDE');
-                  } else {
-                    $("#gstChk").val('0').removeAttr("disabled");
-                    $('#pBtnCal').addClass("blind");
-                    fn_tabOnOffSet('REL_CER', 'HIDE');
-                  }
+                            appSubType = '367';
 
-                  fn_tabOnOffSet('PAY_CHA', 'SHOW');
+                            break;
 
-                  appSubType = '370';
-                  break;
-                case '142' : //Sponsor
-                  appSubType = '371';
+                        case '67' : //OUTRIGHT
+                            if(GST_CHK == '1') {
+                                $("#gstChk").val('1').removeAttr("disabled");
+                                $("#pBtnCal").removeClass("blind");
+                                //fn_tabOnOffSet('REL_CER', 'SHOW');
+                                fn_tabOnOffSet('REL_CER', 'HIDE');
+                            }
+                            else {
+                                $("#gstChk").val('0').removeAttr("disabled");
+                                $('#pBtnCal').addClass("blind");
+                                fn_tabOnOffSet('REL_CER', 'HIDE');
+                            }
 
-                  $("#gstChk").val('').prop("disabled", true);
-                  $('#pBtnCal').addClass("blind");
-                  fn_tabOnOffSet('REL_CER', 'HIDE');
-                  break;
-                case '143' : //Service
-                  appSubType = '372';
+                            appSubType = '368';
 
-                  $("#gstChk").val('').prop("disabled", true);
-                  $('#pBtnCal').addClass("blind");
-                  fn_tabOnOffSet('REL_CER', 'HIDE');
+                            break;
 
-                  break;
-                case '144' : //Education
-                  appSubType = '373';
+                        case '68' : //INSTALLMENT
+                            $('#installDur').removeAttr("readonly").removeClass("readonly");
 
-                  $("#gstChk").val('').prop("disabled", true);
-                  $('#pBtnCal').addClass("blind");
-                  fn_tabOnOffSet('REL_CER', 'HIDE');
+                            if(GST_CHK == '1') {
+                                $("#gstChk").val('1').removeAttr("disabled");
+                                $("#pBtnCal").removeClass("blind");
+                                //fn_tabOnOffSet('REL_CER', 'SHOW');
+                                fn_tabOnOffSet('REL_CER', 'HIDE');
+                            }
+                            else {
+                                $("#gstChk").val('0').removeAttr("disabled");
+                                $('#pBtnCal').addClass("blind");
+                                fn_tabOnOffSet('REL_CER', 'HIDE');
+                            }
 
-                  break;
-                case '145' : //Free Trial
-                  appSubType = '374';
+                            appSubType = '369';
 
-                  $("#gstChk").val('').prop("disabled", true);
-                  $('#pBtnCal').addClass("blind");
-                  fn_tabOnOffSet('REL_CER', 'HIDE');
+                            break;
 
-                  break;
-                default :
-                  $('#installDur').val('').prop("readonly", true).addClass("readonly");
-                  $("#gstChk").val('0');
-                  $('#pBtnCal').addClass("blind");
-                  fn_tabOnOffSet('REL_CER', 'HIDE');
-                  break;
-              }
+                        case '1412' : //Outright Plus
+                            $('#installDur').val("36").prop("readonly", true).removeClass("readonly");
 
-              var pType = $("#appType").val() == '66' ? '1' : '2';
-              var custTypeId  = $('#typeId').val();
-              var nationalityId = $('#nation').val();
+                            $('[name="advPay"]').removeAttr("disabled");
 
-              if (custTypeId != '964' || (custTypeId == '964' && nationalityId != '1') ) {
-                doGetComboData('/sales/order/selectServicePackageList2.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
-              } else {
-                //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
-                doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
-              }
-              $('#ordProudct ').removeAttr("disabled");
+                            if(GST_CHK == '1') {
+                                $("#gstChk").val('1').removeAttr("disabled");
+                                $("#pBtnCal").removeClass("blind");
+                                //fn_tabOnOffSet('REL_CER', 'SHOW');
+                                fn_tabOnOffSet('REL_CER', 'HIDE');
+                            }
+                            else {
+                                $("#gstChk").val('0').removeAttr("disabled");
+                                $('#pBtnCal').addClass("blind");
+                                fn_tabOnOffSet('REL_CER', 'HIDE');
+                            }
+
+                            fn_tabOnOffSet('PAY_CHA', 'SHOW');
+
+                            appSubType = '370';
+
+                            break;
+                        case '142' : //Sponsor
+                            appSubType = '371';
+
+                            $("#gstChk").val('').prop("disabled", true);
+                            $('#pBtnCal').addClass("blind");
+                            fn_tabOnOffSet('REL_CER', 'HIDE');
+
+                            break;
+                        case '143' : //Service
+                            appSubType = '372';
+
+                            $("#gstChk").val('').prop("disabled", true);
+                            $('#pBtnCal').addClass("blind");
+                            fn_tabOnOffSet('REL_CER', 'HIDE');
+
+                            break;
+                        case '144' : //Education
+                            appSubType = '373';
+
+                            $("#gstChk").val('').prop("disabled", true);
+                            $('#pBtnCal').addClass("blind");
+                            fn_tabOnOffSet('REL_CER', 'HIDE');
+
+                            break;
+                        case '145' : //Free Trial
+                            appSubType = '374';
+
+                            $("#gstChk").val('').prop("disabled", true);
+                            $('#pBtnCal').addClass("blind");
+                            fn_tabOnOffSet('REL_CER', 'HIDE');
+
+                            break;
+                        default :
+                            $('#installDur').val('').prop("readonly", true).addClass("readonly");
+                            $("#gstChk").val('0');
+                            $('#pBtnCal').addClass("blind");
+                            fn_tabOnOffSet('REL_CER', 'HIDE');
+
+                            break;
+                    }
+
+                    var pType = $("#appType").val() == '66' ? '1' : '2';
+                    var custTypeId  = $('#typeId').val();
+                    var nationalityId = $('#nation').val();
+
+
+                    if (custTypeId != '964' || (custTypeId == '964' && nationalityId != '1') )
+                    {
+                        doGetComboData('/sales/order/selectServicePackageList2.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
+
+                    }
+                    else
+                    {
+                    //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
+                    doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
+                    }
+                    $('#ordProudct ').removeAttr("disabled");
+                }
             }
-          } else {
-            $('#srvPacId option').remove();
-            $('#ordProudct').prop("disabled", true);
-          }
+            else {
+                $('#srvPacId option').remove();
+                // ONGHC - ADD
+                $('#ordProudct').prop("disabled", true);
+            }
 
-          $('#ordProudct option').remove();
-          $('#ordProudct optgroup').remove();
-          $('#ordPromo option').remove();
-          $('#ordPromo').prop("disabled", true);
-        });
-
-        $('#srvPacId').change(function() {
-          // ONGHC - ADD
-          $('#ordProudct option').remove();
-          $('#ordProudct optgroup').remove();
-          $('#ordPromo option').remove();
-          $('#ordPromo').prop("disabled", true);
-          fn_clearAddCpnt();
-
-          var idx = $("#srvPacId option:selected").index();
-          var selVal = $("#srvPacId").val();
-
-          if(idx > 0) {
-            var stkType = $("#appType").val() == '66' ? '1' : '2';
+            $('#ordProudct option').remove();
+            $('#ordProudct optgroup').remove();
             // ONGHC - ADD
-            $('#ordProudct').removeAttr("disabled");
-            //doGetProductCombo('/sales/order/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
-            doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass'); // Product 생성
-          } else {
-            $('#ordProudct').prop("disabled", true);
-          }
-        });
-
-        $('#ordProudct').change(function() {
-          if(FormUtil.checkReqValue($('#exTrade'))) {
-            Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.plzSelExTrade" />');
-            $('#ordProudct').val('');
-            return;
-          }
-
-          if(FormUtil.isEmpty($('#ordProudct').val())) {
             $('#ordPromo option').remove();
+            $('#ordPromo').prop("disabled", true);
+            $('#compType option').remove();
+            $('#compType').addClass("blind");
+        });
+        $('#srvPacId').change(function() {
+            // ONGHC - ADD
+            $('#ordProudct option').remove();
+            $('#ordProudct optgroup').remove();
+            $('#ordPromo option').remove();
+            $('#compType option').remove();
+            $('#ordPromo').prop("disabled", true);
+            $('#compType').addClass("blind");
 
-            $("#ordPrice").val('');
-            $("#ordPv").val('');
-            $("#ordPvGST").val('');
-            $("#ordRentalFees").val('');
-            $("#ordPriceId").val('');
+            var idx    = $("#srvPacId option:selected").index();
+            var selVal = $("#srvPacId").val();
 
-            $("#orgOrdPrice").val('');
-            $("#orgOrdPv").val('');
-            $("#orgOrdRentalFees").val('');
-            $("#orgOrdPriceId").val('');
+            if(idx > 0) {
+                var stkType = $("#appType").val() == '66' ? '1' : '2';
+                // ONGHC - ADD
+                $('#ordProudct').removeAttr("disabled");
+                //doGetProductCombo('/sales/order/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
 
-            $("#promoDiscPeriodTp").val('');
-            $("#promoDiscPeriod").val('');
+                doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
+            } else {
+                // ONGHC - ADD
+                $('#ordProudct').prop("disabled", true);
+            }
+        });
+        $('#ordProudct').change(function() {
 
-            return;
-          }
+            if(FormUtil.checkReqValue($('#exTrade'))) {
+                Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.plzSelExTrade" />');
+                $('#ordProudct').val('');
+                return;
+            }
 
-            // $('#ordCampgn option').remove();
-            // $('#ordCampgn').prop("readonly", true);
-            // $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+            if(FormUtil.isEmpty($('#ordProudct').val())) {
+                $('#ordPromo option').remove();
+
+                $("#ordPrice").val('');
+                $("#ordPv").val('');
+                $("#ordPvGST").val('');
+                $("#ordRentalFees").val('');
+                $("#ordPriceId").val('');
+
+                $("#orgOrdPrice").val('');
+                $("#orgOrdPv").val('');
+                $("#orgOrdRentalFees").val('');
+                $("#orgOrdPriceId").val('');
+
+                $("#promoDiscPeriodTp").val('');
+                $("#promoDiscPeriod").val('');
+
+                return;
+            }
+
+//          $('#ordCampgn option').remove();
+//          $('#ordCampgn').prop("readonly", true);
+//          $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
             $('#trialNoChk').prop("checked", false).prop("disabled", true);
             $('#trialNo').val('').addClass("readonly");
             $('#ordPrice').val('').addClass("readonly");
@@ -1029,69 +1058,85 @@
 
             var appTypeIdx = $("#appType option:selected").index();
             var appTypeVal = $("#appType").val();
-            var custTypeVal = $("#typeId").val();
-            var stkIdx = $("#ordProudct option:selected").index();
-            var stkIdVal = $("#ordProudct").val();
-            var empChk = $("#empChk").val();
-            var exTrade = $("#exTrade").val();
+            var custTypeVal= $("#typeId").val();
+            var stkIdx     = $("#ordProudct option:selected").index();
+            var stkIdVal   = $("#ordProudct").val();
+            var empChk     = $("#empChk").val();
+            var exTrade    = $("#exTrade").val();
+
             var srvPacId = 0;
 
-            if(appTypeVal == '66') {
-              srvPacId = $('#srvPacId').val();
-           }
-
-           if(stkIdx > 0) {
-            fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
-            fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
-           }
-
-           fn_clearAddCpnt();
-        });
-
-        $('#rentPayMode').change(function() {
-          fn_clearRentPaySetCRC();
-          fn_clearRentPaySetDD();
-
-          var rentPayModeIdx = $("#rentPayMode option:selected").index();
-          var rentPayModeVal = $("#rentPayMode").val();
-
-          if(rentPayModeIdx > 0) {
-            if(rentPayModeVal == '133' || rentPayModeVal == '134') {
-              // Common.alert('<b>Currently we are not provide ['+rentPayModeVal+'] service.</b>');
-              Common.alert('<spring:message code="sal.alert.msg.notProvideSvc" arguments="'+rentPayModeVal+'"/>');
-              fn_clearRentPayMode();
-            } else {
-              if (rentPayModeVal == '131') {
-                if ($('#thrdParty').is(":checked") && FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
-                  Common.alert('<spring:message code="sal.alert.msg.plzSelThirdPartyFirst" />');
-                } else {
-                  $('#sctCrCard').removeClass("blind");
+            if(appTypeVal == '66')
+                {
+                    srvPacId   = $('#srvPacId').val();
                 }
-              } else if(rentPayModeVal == '132') {
-                if($('#thrdParty').is(":checked") && FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
-                  Common.alert('<spring:message code="sal.alert.msg.plzSelThirdPartyFirst" />');
-                } else {
-                  $('#sctDirectDebit').removeClass("blind");
-                }
-              }
+
+
+            if(stkIdx > 0) {
+                fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
+                fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
             }
-          }
+
+            //if(stkIdVal == "1243") {
+                //$('#compType').removeClass("blind");
+                //fn_loadProductComponent(stkIdVal);
+            //}else{
+                //$('#compType').addClass("blind");
+            //}
+            fn_loadProductComponent(stkIdVal);
+            setTimeout(function() { fn_check(0) }, 200);
         });
+        $('#rentPayMode').change(function() {
 
+            console.log('rentPayMode click event');
+
+            fn_clearRentPaySetCRC();
+            fn_clearRentPaySetDD();
+
+            var rentPayModeIdx = $("#rentPayMode option:selected").index();
+            var rentPayModeVal = $("#rentPayMode").val();
+
+            if(rentPayModeIdx > 0) {
+                if(rentPayModeVal == '133' || rentPayModeVal == '134') {
+
+//                  Common.alert('<b>Currently we are not provide ['+rentPayModeVal+'] service.</b>');
+                    Common.alert('<spring:message code="sal.alert.msg.notProvideSvc" arguments="'+rentPayModeVal+'"/>');
+                    fn_clearRentPayMode();
+                }
+                else {
+                    if(rentPayModeVal == '131') {
+                        if($('#thrdParty').is(":checked") && FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
+                            Common.alert('<spring:message code="sal.alert.msg.plzSelThirdPartyFirst" />');
+                        }
+                        else {
+                            $('#sctCrCard').removeClass("blind");
+                        }
+                    }
+                    else if(rentPayModeVal == '132') {
+                        if($('#thrdParty').is(":checked") && FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
+                            Common.alert('<spring:message code="sal.alert.msg.plzSelThirdPartyFirst" />');
+                        }
+                        else {
+                            $('#sctDirectDebit').removeClass("blind");
+                        }
+                    }
+                }
+            }
+        });
         $('#exTrade').change(function() {
-          $('#ordPromo option').remove();
-          $('#ordPromo').prop("disabled", true);
-          fn_clearAddCpnt();
 
-          if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
-            //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
-            $('#btnRltdNo').removeClass("blind");
-          } else {
-            //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
-            $('#relatedNo').val('');
-            $('#btnRltdNo').addClass("blind");
-          }
-          $('#ordProudct').val('');
+            $('#ordPromo option').remove();
+
+            if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
+                //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
+                $('#btnRltdNo').removeClass("blind");
+            }
+            else {
+                //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+                $('#relatedNo').val('');
+                $('#btnRltdNo').addClass("blind");
+            }
+            $('#ordProudct').val('');
 
         });
         $('#btnCal').click(function() {
@@ -1148,45 +1193,42 @@
 
             Common.alert('<spring:message code="sal.alert.msg.gstAmount" />' + DEFAULT_DELIMITER + '<b>'+msg+'</b>');
         });
-
         $('#ordPromo').change(function() {
-          // $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
-          $('#trialNoChk').prop("checked", false).prop("disabled", true);
-          $('#trialNo').val('').addClass("readonly");
 
-          var appTypeIdx = $("#appType option:selected").index();
-          var appTypeVal = $("#appType").val();
-          var stkIdIdx = $("#ordProudct option:selected").index();
-          var stkIdVal = $("#ordProudct").val();
-          var promoIdIdx = $("#ordPromo option:selected").index();
-          var promoIdVal = $("#ordPromo").val();
-          var srvPacId = 0;
+//          $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+            $('#trialNoChk').prop("checked", false).prop("disabled", true);
+            $('#trialNo').val('').addClass("readonly");
 
-          if (appTypeVal == '66') {
-            srvPacId = $('#srvPacId').val();
-          }
+            var appTypeIdx = $("#appType option:selected").index();
+            var appTypeVal = $("#appType").val();
+            var stkIdIdx   = $("#ordProudct option:selected").index();
+            var stkIdVal   = $("#ordProudct").val();
+            var promoIdIdx = $("#ordPromo option:selected").index();
+            var promoIdVal = $("#ordPromo").val();
+            var srvPacId = 0;
 
-          if (promoIdIdx > 0 && promoIdVal != '0') {
-            /*
-              if($("#exTrade").val() == '1') {
-                  $('#relatedNo').removeAttr("readonly").removeClass("readonly");
-              }
-            */
+            if(appTypeVal == '66')
+                {
+                    srvPacId   = $('#srvPacId').val();
+                }
 
-            if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
-              $('#trialNoChk').removeAttr("disabled");
+
+            if(promoIdIdx > 0 && promoIdVal != '0') {
+/*
+                if($("#exTrade").val() == '1') {
+                    $('#relatedNo').removeAttr("readonly").removeClass("readonly");
+                }
+*/
+                if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
+                    $('#trialNoChk').removeAttr("disabled");
+                }
+
+                fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId);
             }
-
-            fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId);
-          } else {
-            fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
-          }
-
-          // COMPONENT
-          fn_loadProductComponent(appTypeVal, stkIdVal, promoIdVal);
-          setTimeout(function() { fn_check(0) }, 200);
+            else {
+                fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
+            }
         });
-
         $('[name="ordSaveBtn"]').click(function() {
             if(bulkOrderYn == 'Y' && FormUtil.checkReqValue($('#hiddenCopyQty'))) {
                 Common.popupDiv("/sales/order/copyOrderBulkPop.do");
@@ -1196,6 +1238,33 @@
             }
         });
     });
+
+    // ONGHC ADD
+    function fn_check(a) {
+      console.log("CURRENT LENGTH :: " + $('#compType option').length);
+      if ($('#compType option').length <= 0) {
+          console.log("WAITING RESPONE :: RETRY  TIMES :: " + a);
+          if (a == 3) {
+              return;
+          } else {
+            setTimeout(function() { fn_check( parseInt(a) + 1 ) }, 500);
+          }
+      } else if ($('#compType option').length <= 1) {
+        $('#compType').addClass("blind");
+        $('#compType').prop("disabled", true);
+      } else if ($('#compType option').length > 1) {
+        $('#compType').remove("blind");
+        $('#compType').removeAttr("disabled");
+
+        var key = 0;
+        Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProudct").val()}, function(defaultKey) {
+          if(defaultKey != null) {
+            key = defaultKey.code;
+          }
+          $('#compType').val(key).change();
+        });
+      }
+    }
 
     function fn_preCheckSave() {
         if(!fn_validCustomer()) {
@@ -1288,11 +1357,11 @@
                         if(result != null){
                             Common.confirm("<spring:message code='sal.alert.msg.existingHPCodyMobileForSales' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />",
                             function(){
-                            	if(docSelCnt <= 0){
-                            		Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
-                            	}else{
-                            		Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
-                            		}
+                                if(docSelCnt <= 0){
+                                    Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
+                                }else{
+                                    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+                                    }
                             });
                         }
                          else{
@@ -1302,39 +1371,39 @@
                 }
         }else{
 
-	        console.log('!@#### isValid'+isValid);
+            console.log('!@#### isValid'+isValid);
 
-	        if(!isValid) {
-	            Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
-	        }
-	        else {
+            if(!isValid) {
+                Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
+            }
+            else {
 
-	            if($("#ordPromo option:selected").index() > 0) {
-	                console.log('!@#### ordSaveBtn click START 00000');
-	                if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
-	                    console.log('!@#### ordSaveBtn click START 11111');
-	                    $('#txtOldOrderID').val();
-	                    $('#relatedNo').val();
-	                    Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val()}, null, true);
-	                }
-	                else {
-	                    console.log('!@#### ordSaveBtn click START 22222');
-	                    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
-	                }
-	            }
-	            else {
-	                console.log('!@#### ordSaveBtn click START 33333');
-	                Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
-	            }
-	        }
-	    }
+                if($("#ordPromo option:selected").index() > 0) {
+                    console.log('!@#### ordSaveBtn click START 00000');
+                    if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
+                        console.log('!@#### ordSaveBtn click START 11111');
+                        $('#txtOldOrderID').val();
+                        $('#relatedNo').val();
+                        Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val()}, null, true);
+                    }
+                    else {
+                        console.log('!@#### ordSaveBtn click START 22222');
+                        Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+                    }
+                }
+                else {
+                    console.log('!@#### ordSaveBtn click START 33333');
+                    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+                }
+            }
+        }
     }
 
-	function fn_popOrderDetail() {
-	    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
-	}
+    function fn_popOrderDetail() {
+        Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+    }
 
-	function fn_excludeGstAmt() {
+    function fn_excludeGstAmt() {
         //Amount before GST
         var oldPrice     = $('#orgOrdPrice').val();
         var newPrice     = $('#ordPrice').val();
@@ -1360,12 +1429,12 @@
         $('#ordPv').val(newPv);
 
         $('#pBtnCal').addClass("blind");
-	}
+    }
 
-	function fn_includeGstAmt() {
-	    $("#gstChk").val('0');
-	    $('#pBtnCal').addClass("blind");
-	}
+    function fn_includeGstAmt() {
+        $("#gstChk").val('0');
+        $('#pBtnCal').addClass("blind");
+    }
 
     function fn_selectCustInfo() {
         var strCustId = $('#custId').val();
@@ -1386,7 +1455,7 @@
         $('#ordPromo option').remove();
         $('#compType option').remove();
 
-        //$('#compType').addClass("blind");
+        $('#compType').addClass("blind");
         $('#srvPacId option').addClass("blind");
         $('#ordProudct').prop("disabled", true);
         $('#ordPromo').prop("disabled", true);
@@ -1458,7 +1527,7 @@
         var vBindingNo  = FormUtil.isNotEmpty($('#txtOldOrderID').val().trim()) ? $('#relatedNo').val().trim() : $('#hiddenOldOrderId').val().trim();
         var vCnvrSchemeId;
 console.log("vBindingNo" + vBindingNo);
-		if($('#trialNoChk').is(":checked")) {
+        if($('#trialNoChk').is(":checked")) {
             vBindingNo = $('#trialNo').val().trim();
             vCnvrSchemeId = $('#trialId').val().trim();
         }
@@ -1750,7 +1819,10 @@ console.log("vBindingNo" + vBindingNo);
             if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68' || appTypeVal == '1412') {
                 if(FormUtil.checkReqValue($('#refereNo'))) {
                     isValid = false;
-                    msg += '* <spring:message code="sal.alert.msg.plzSelReferNo" /><br>';
+                    msg += '* <spring:message code="sal.alert.msg.plzSel
+
+                    
+                    " /><br>';
                 }
             }
 /*
@@ -2030,26 +2102,26 @@ console.log("vBindingNo" + vBindingNo);
     }
 
     function fn_validHPCodyContactNumber(){
-    	var isValid = true, msg = "";
+        var isValid = true, msg = "";
 
         if($('#custCntcTelM').val() && $('#srvCntcTelM').val()){
 
 
             var contactNumber = {
-            		  contactNumber       : $('#custCntcTelM').val()
-            		, residenceNumber    : $('#custCntcTelR').val()
-            		, officeNumber          : $('#custCntcTelO').val()
-            		, faxNumber             : $('#custCntcTelF').val()
-            		, asContactNumber    : $('#srvCntcTelM').val()
-            		, asResidenceNumber : $('#srvCntcTelR').val()
-            		, asOfficeNumber       : $('#srvCntcTelO').val()
-            		, asFaxNumber          : $('#srvCntcTelF').val()
+                      contactNumber       : $('#custCntcTelM').val()
+                    , residenceNumber    : $('#custCntcTelR').val()
+                    , officeNumber          : $('#custCntcTelO').val()
+                    , faxNumber             : $('#custCntcTelF').val()
+                    , asContactNumber    : $('#srvCntcTelM').val()
+                    , asResidenceNumber : $('#srvCntcTelR').val()
+                    , asOfficeNumber       : $('#srvCntcTelO').val()
+                    , asFaxNumber          : $('#srvCntcTelF').val()
             };
 
             Common.ajax("GET", "/sales/customer/existingHPCodyMobile", contactNumber , function(result) {
                 if(result != null){
-                	isValid = false;
-                	msg += Common.
+                    isValid = false;
+                    msg += Common.
                     alert("<spring:message code='sal.alert.msg.existingHPCodyMobileForSales' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
 
                 }
@@ -2178,7 +2250,7 @@ console.log("vBindingNo" + vBindingNo);
 
         fn_clearOrderSalesman();
 
-		Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
+        Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
 
             if(memInfo == null) {
 //              Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
@@ -2250,6 +2322,20 @@ console.log("vBindingNo" + vBindingNo);
                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
             }
         });
+    }
+
+    //LoadProductComponent
+    function fn_loadProductComponent(stkId) {
+        $('#compType option').remove();
+        $('#compType').removeClass("blind");
+        $('#compType').removeClass("disabled");
+        console.log("fn_loadProductComponent ::: " + $('#compType option').length);
+
+        //$('#compType').addClass("blind");
+        //$('#compType').prop("disabled", true);
+
+        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', ''); //Common Code
+
     }
 
     //LoadProductPromotion
@@ -2500,49 +2586,42 @@ console.log("vBindingNo" + vBindingNo);
         }
     }
 
-  function fn_clearAddCpnt() {
-    $('#trCpntId').css("visibility","collapse");
-    $('#compType option').remove();
-  }
+    function fn_setDefaultCompId() {
+        var today = new Date();
 
-  function fn_loadProductComponent(appTyp, stkId, promoCde) {
-    $('#compType option').remove();
-    $('#compType').removeClass("blind");
-    $('#compType').removeClass("disabled");
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
 
-    console.log("fn_loadProductComponent appTyp ::: " + appTyp);
-    console.log("fn_loadProductComponent stkId ::: " + stkId);
-    console.log("fn_loadProductComponent promoCde ::: " + promoCde);
-
-    doGetComboData('/sales/order/selectProductComponent.do', { appTyp:appTyp, stkId:stkId, promoCde:promoCde}, '', 'compType', 'S', '');
-  }
-
-  function fn_check(a) {
-    if ($('#compType option').length <= 0) {
-      if (a == 3) {
-        return;
-      } else {
-        setTimeout(function() { fn_check( parseInt(a) + 1 ) }, 500);
-      }
-    } else if ($('#compType option').length <= 1) {
-      $('#trCpntId').css("visibility","collapse");
-      $('#compType option').remove();
-      $('#compType').addClass("blind");
-      $('#compType').prop("disabled", true);
-    } else if ($('#compType option').length > 1) {
-      $('#trCpntId').css("visibility","visible");
-      $('#compType').remove("blind");
-      $('#compType').removeAttr("disabled");
-
-      var key = 0;
-      Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProudct").val()}, function(defaultKey) {
-        if(defaultKey != null) {
-          key = defaultKey.code;
-          $('#compType').val(key).change();
+        if(dd < 10) {
+            dd = "0" + dd;
         }
-      });
+        if(mm < 10){
+            mm = "0" + mm
+        }
+
+        if($('#compType option').size() >= 2) {
+            if( parseInt(yyyy)*100 + parseInt(mm) < 201901){
+                $('#compType option:eq(3)').attr('selected', 'selected');               }
+            else{
+                $('#compType option:eq(1)').attr('selected', 'selected');               }
+
+        }
+
+        }
+
+    function fn_checkEkeyinSof(sofNo) {
+
+        if(sofNo != null){
+            Common.ajax("GET", "/sales/order/selectEKeyinSofCheck.do", {sofNo : sofNo}, function(result) {
+                if(result != null){
+                    Common.
+                    alert("<spring:message code='sal.alert.msg.sofUsed' arguments = '" + result.postingBrnch + " ; " + result.ekeyInStus + ";" + result.ordStus +"' htmlEscape='false' argumentSeparator=';' />");
+                }
+            });
+        }
     }
-  }
+
 
 </script>
 
@@ -2817,7 +2896,7 @@ console.log("vBindingNo" + vBindingNo);
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.refNo" /><span class="must">*</span></th>
-    <td><input id="refereNo" name="refereNo" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="refereNo" name="refereNo" type="text" title="" placeholder="" class="w100p" onblur="javascript:fn_checkEkeyinSof(this.value);"/></td>
     <th scope="row"><spring:message code="sal.text.salManCode" /><span class="must">*</span></th>
     <td><input id="salesmanCd" name="salesmanCd" type="text" title="" placeholder="" class="" />
         <input id="hiddenSalesmanId" name="salesmanId" type="hidden"  />
@@ -2832,7 +2911,8 @@ console.log("vBindingNo" + vBindingNo);
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.product" /><span class="must">*</span></th>
-    <td><select id="ordProudct" name="ordProudct" class="w100p" disabled></select></td>
+    <td><select id="ordProudct" name="ordProudct" class="w100p" disabled></select>
+            <select id="compType" name="compType" class="w100p blind" ></select></td>
     <th scope="row"><spring:message code="sal.text.salManName" /></th>
     <td><input id="salesmanNm" name="salesmanNm" type="text" title="" placeholder="Salesman Name" class="w100p readonly" readonly/></td>
 </tr>
@@ -2844,14 +2924,6 @@ console.log("vBindingNo" + vBindingNo);
     </td>
     <th scope="row"><spring:message code="sal.title.text.salesmanNric" /></th>
     <td><input id="salesmanNric" name="salesmanNric" type="text" title="" placeholder="Salesman NRIC" class="w100p readonly" readonly/></td>
-</tr>
-<tr id='trCpntId' style='visibility:collapse'>
-    <th scope="row"><spring:message code="sal.title.text.cpntId" /><span class="must">*</span></th>
-    <td>
-     <select id="compType" name="compType" class="w100p" ></select>
-    </td>
-    <th scope="row"></th>
-    <td></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>

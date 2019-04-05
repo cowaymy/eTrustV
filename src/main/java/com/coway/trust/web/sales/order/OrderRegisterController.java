@@ -494,4 +494,11 @@ logger.info("extrade :: " + params.get("exTrade"));
         // 데이터 리턴.
         return ResponseEntity.ok(defaultKey);
     }
+
+    @RequestMapping(value = "/selectEKeyinSofCheck.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectEKeyinSofCheck(@RequestParam Map<String, Object> params)
+    {
+        EgovMap sofNo = orderRegisterService.selectEKeyinSofCheck(params);
+        return ResponseEntity.ok(sofNo);
+    }
 }

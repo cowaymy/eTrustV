@@ -192,8 +192,8 @@
              , T1.MEM_ID
              , T1.BRNCH_ID
              , T1.APP_TYPE_ID
-             <!--, T1.DSCNT_AMT-->
-             <!--, T1.TAX_AMT-->
+         <!--, T1.DSCNT_AMT-->
+         <!--, T1.TAX_AMT-->
              , T1.TOT_AMT
              , T1.PROMO_ID
              , T1.BINDING_NO
@@ -225,7 +225,7 @@
              , T1.PAY_COM_DT
              , T1.DEF_RENT_AMT
              , T1.REF_DOC_ID
-             <!--, T1.RENT_PROMO_ID-->
+         <!--, T1.RENT_PROMO_ID-->
              , T1.SALES_HM_ID
              , T1.SALES_SM_ID
              , T1.SALES_GM_ID
@@ -235,11 +235,11 @@
              , T1.EMP_CHK
              , T1.EX_TRADE
              , T1.ECASH
-             <!--, T1.STK_LOC-->
+         <!--, T1.STK_LOC-->
              , T1.PROMO_DISC_PERIOD_TP
              , T1.PROMO_DISC_PERIOD
-             , NVL(T1.NOR_AMT, 0) AS NOR_AMT
-             , NVL(T1.NOR_RNT_FEE, 0) AS NOR_RNT_FEE
+             , NVL(T1.NOR_AMT,      0) AS NOR_AMT
+             , NVL(T1.NOR_RNT_FEE,  0) AS NOR_RNT_FEE
              , NVL(T1.DISC_RNT_FEE, 0) AS DISC_RNT_FEE
              , T1.GST_CHK
              , T2.TYPE_ID
@@ -1474,6 +1474,7 @@
 		     , UPD_USER_ID
 		     , UPD_DT
 		     , DOC_SUB_BATCH_ID
+		     , DOC_SUB_BRNCH_ID
 		     )
 		VALUES
 		     ( #{docSubId}
@@ -1489,6 +1490,7 @@
 		     , #{updUserId}
 		     , SYSDATE
 		     , #{docSubBatchId}
+		     , #{docSubBrnchId}
 		     )
     </insert>
 
@@ -2199,17 +2201,15 @@
 		   AND T1.STUS_CODE_ID = '4'
     </select>
 
-  <select id="selectProductComponent" parameterType="Map" resultType="egovMap">
-    SELECT B.ITM_CPNT_ID CODE,
-           B.ITM_CPNT_NAME CODE_NAME
-    FROM SAL0237M A JOIN SAL0223M B ON A.ITM_STK_ID = B.ITM_STK_ID
-              AND A.ITM_CPNT_ID = B.ITM_CPNT_ID
-    WHERE A.APP_TYPE_ID = #{appTyp}
-      AND A.ITM_STK_ID = #{stkId}
-      AND A.PROMO_ID = #{promoCde}
-      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(B.EXP_DT, 'DD/MM/YYYY'))
-      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
-  </select>
+    <select id="selectProductComponent" parameterType="Map" resultType="egovMap">
+        SELECT ITM_CPNT_ID CODE,
+                   ITM_CPNT_NAME CODE_NAME
+        FROM SAL0223M
+        WHERE ITM_STK_ID = #{stkId}
+        AND DISAB = 0
+        AND to_date(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(EFF_DT, 'DD/MM/YYYY') AND TO_DATE(EXP_DT, 'DD/MM/YYYY')
+
+    </select>
 
     <select id="selectProductComponentDefaultKey" parameterType="Map" resultType="egovMap">
         SELECT ITM_CPNT_ID CODE
@@ -2326,13 +2326,26 @@
          WHERE RENT_AMT IS NOT NULL
     </select>
 
-  <select id="chkCrtAS" parameterType="salesOrderDVO" resultType="int">
-    SELECT COUNT(*) AS cnt
-    FROM SAL0223M
-    WHERE ITM_STK_ID = #{itmStkId}
-      AND ITM_CPNT_ID = #{itmCompId}
-      AND AS_CRT = 'Y'
-      AND DISAB = '0'
-      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(EFF_DT, 'DD/MM/YYYY') AND TO_DATE(EXP_DT, 'DD/MM/YYYY'))
-  </select>
+    <select id="selectEKeyinSofCheck" parameterType="Map" resultType="egovMap">
+        SELECT
+		    EXTENT1.SOF_NO,
+		    EXTENT2.SALES_ORD_NO,
+		    EXTENT2.SALES_DT,
+		    CASE WHEN EXTENT4.CODE IS NULL THEN '-'
+                ELSE (EXTENT4.CODE || ' ' || EXTENT4.NAME) END POSTING_BRNCH,
+		    NVL(EXTENT5.NAME,'-') EKEY_IN_STUS,
+		    NVL(EXTENT6.NAME,'-') ORD_STUS
+        FROM SAL0213M EXTENT1
+		LEFT JOIN SAL0001D EXTENT2 ON EXTENT1.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+		LEFT JOIN ORG0010D EXTENT3 ON EXTENT2.SALES_ORD_ID = EXTENT3.DOC_SO_ID AND EXTENT3.DOC_TYPE_ID = 3198
+		LEFT JOIN SYS0005M EXTENT4 ON EXTENT3.DOC_SUB_BRNCH_ID = EXTENT4.BRNCH_ID
+		LEFT JOIN SYS0038M EXTENT5 ON EXTENT1.STUS_ID = EXTENT5.STUS_CODE_ID
+		LEFT JOIN SYS0038M EXTENT6 ON EXTENT2.STUS_CODE_ID = EXTENT6.STUS_CODE_ID
+        WHERE 1 = 1
+            AND EXTENT1.STUS_ID IN (1,4,21,104)
+            AND EXTENT2.STUS_CODE_ID IN (1,4)
+            AND EXTENT1.SOF_NO = #{sofNo}
+            AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
 </mapper>

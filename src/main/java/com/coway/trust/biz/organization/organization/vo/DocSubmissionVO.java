@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * The persistent class for the ORG0010D database table.
- * 
+ *
  */
 public class DocSubmissionVO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -37,12 +37,14 @@ public class DocSubmissionVO implements Serializable {
 	private Date updDt;
 
 	private int updUserId;
-	
+
 	private int codeId;
-	
+
 	private String typeDesc;
-	
+
 	private int chkfield;
+
+	private int docSubBrnchId;
 
 	public DocSubmissionVO() {
 	}
@@ -175,5 +177,12 @@ public class DocSubmissionVO implements Serializable {
 		this.chkfield = chkfield;
 	}
 
+	public int getDocSubBrnchId() {
+		return docSubBrnchId;
+	}
+
+	public void setDocSubBrnchId(int docSubBrnchId) {
+		this.docSubBrnchId = docSubBrnchId;
+	}
 
 }

@@ -989,6 +989,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     			docVO.setCrtUserId(sessionVO.getUserId());
     			docVO.setUpdUserId(sessionVO.getUserId());
     			docVO.setDocSubBatchId(0);
+    			docVO.setDocSubBrnchId(sessionVO.getUserBranchId());
 			}
 			else {
 				updateDocList.remove(i);
@@ -2016,5 +2017,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	public EgovMap selectProductComponentDefaultKey(Map<String, Object> params) {
 		EgovMap cpntKey = orderRegisterMapper.selectProductComponentDefaultKey(params);
 		return cpntKey;
+	}
+
+	@Override
+	public EgovMap selectEKeyinSofCheck(Map<String, Object> params) {
+	    return orderRegisterMapper.selectEKeyinSofCheck(params);
 	}
 }

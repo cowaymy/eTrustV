@@ -1761,12 +1761,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				docSubVO.setDocMemId(0);
 				docSubVO.setCrtUserId(sessionVO.getUserId());
 				docSubVO.setUpdUserId(sessionVO.getUserId());
+				docSubVO.setDocSubBrnchId(sessionVO.getUserBranchId());
 
 				memberListMapper.saveDocSubmission(docSubVO);
 			}
 			else {
 
 				docSubVO.setUpdUserId(sessionVO.getUserId());
+				docSubVO.setDocSubBrnchId(sessionVO.getUserBranchId());
 
 				memberListMapper.updateDocSubmissionDel(docSubVO);
 			}

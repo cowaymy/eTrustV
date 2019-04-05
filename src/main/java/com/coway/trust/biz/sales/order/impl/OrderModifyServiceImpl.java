@@ -278,12 +278,14 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 				docSubVO.setDocMemId(0);
 				docSubVO.setCrtUserId(sessionVO.getUserId());
 				docSubVO.setUpdUserId(sessionVO.getUserId());
+				docSubVO.setDocSubBrnchId(sessionVO.getUserBranchId());
 
 				orderModifyMapper.saveDocSubmission(docSubVO);
 			}
 			else {
 
 				docSubVO.setUpdUserId(sessionVO.getUserId());
+				docSubVO.setDocSubBrnchId(sessionVO.getUserBranchId());
 
 				orderModifyMapper.updateDocSubmissionDel(docSubVO);
 			}

@@ -162,4 +162,6 @@ public interface OrderRegisterMapper {
 
 	EgovMap selectOutrightPlusOutstandingAmt(int salesOrdId);
 
+	EgovMap selectEKeyinSofCheck(Map<String, Object> params);
+
 }

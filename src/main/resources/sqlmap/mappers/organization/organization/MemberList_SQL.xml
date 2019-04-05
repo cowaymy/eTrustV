@@ -2051,6 +2051,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	   , UPD_USER_ID
 	   , UPD_DT
 	   , DOC_SUB_BATCH_ID
+	   , DOC_SUB_BRNCH_ID
 	   )
 	  VALUES (
 	  ORG0010D_DOC_SUB_ID_SEQ.NEXTVAL
@@ -2066,6 +2067,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  , #{creator}
 	  , SYSDATE
 	  , #{docSubBatchId}
+	  , #{docSubBrnchId}
 	  )
   </insert>
 
@@ -4069,7 +4071,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
        , DOC_SO_ID, DOC_MEM_ID, DOC_SUB_DT
        , DOC_COPY_QTY, STUS_ID , CRT_USER_ID
        , CRT_DT, UPD_USER_ID, UPD_DT
-         , DOC_SUB_BATCH_ID
+         , DOC_SUB_BATCH_ID, DOC_SUB_BRNCH_ID
        )
       VALUES (
       ORG0010D_DOC_SUB_ID_SEQ.NEXTVAL , #{subTypeId}  , #{codeId}
@@ -4079,6 +4081,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
       , #{userId}
       , SYSDATE
       , 0
+      , #{docSubBrnchId}
       )
     </insert>
 

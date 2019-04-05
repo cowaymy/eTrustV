@@ -358,6 +358,7 @@
        UPDATE
           SET T1.DOC_COPY_QTY    = #{docCopyQty}
             , T1.UPD_USER_ID     = #{updUserId}
+            , T1.DOC_SUB_BRNCH_ID     = #{docSubBrnchId}
             , T1.UPD_DT          = SYSDATE
             , T1.STUS_ID         = 1
          WHEN NOT MATCHED THEN
@@ -375,6 +376,7 @@
             , T1.UPD_USER_ID
             , T1.UPD_DT
             , T1.DOC_SUB_BATCH_ID
+            , T1.DOC_SUB_BRNCH_ID
             )
        VALUES
             ( ORG0010D_DOC_SUB_ID_SEQ.NEXTVAL
@@ -390,6 +392,7 @@
             , #{updUserId}
             , SYSDATE
             , #{docSubBatchId}
+            , #{docSubBrnchId}
             )
     </update>
 
