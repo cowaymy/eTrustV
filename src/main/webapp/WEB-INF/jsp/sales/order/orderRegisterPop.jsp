@@ -1819,10 +1819,7 @@ console.log("vBindingNo" + vBindingNo);
             if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68' || appTypeVal == '1412') {
                 if(FormUtil.checkReqValue($('#refereNo'))) {
                     isValid = false;
-                    msg += '* <spring:message code="sal.alert.msg.plzSel
-
-                    
-                    " /><br>';
+                    msg += '* <spring:message code="sal.alert.msg.plzSelReferNo" /><br>';
                 }
             }
 /*
@@ -2619,7 +2616,8 @@ console.log("vBindingNo" + vBindingNo);
                     alert("<spring:message code='sal.alert.msg.sofUsed' arguments = '" + result.postingBrnch + " ; " + result.ekeyInStus + ";" + result.ordStus +"' htmlEscape='false' argumentSeparator=';' />");
                 }
             });
-        }
+    	    }
+	    }
     }
 
 
