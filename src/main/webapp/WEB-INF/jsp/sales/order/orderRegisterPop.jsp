@@ -2616,8 +2616,7 @@ console.log("vBindingNo" + vBindingNo);
                     alert("<spring:message code='sal.alert.msg.sofUsed' arguments = '" + result.postingBrnch + " ; " + result.ekeyInStus + ";" + result.ordStus +"' htmlEscape='false' argumentSeparator=';' />");
                 }
             });
-    	    }
-	    }
+       }
     }
 
 
