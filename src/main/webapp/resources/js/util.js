@@ -15,7 +15,7 @@ var FormUtil = {
 	 */
 	checkNum : function(obj) {
 		var flag = false;
-		if (isNaN(obj.val()) || obj.val().toUpperCase().includes("E") ) {
+		if (isNaN(obj.val())) {
 			obj.val("");
 			obj.focus();
 			flag = true;
