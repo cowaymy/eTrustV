@@ -20,47 +20,52 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 public interface OrderRegisterService {
 
-	EgovMap selectSrvCntcInfo(Map<String, Object> params);
+  EgovMap selectSrvCntcInfo(Map<String, Object> params);
 
-	EgovMap selectStockPrice(Map<String, Object> params);
+  EgovMap selectStockPrice(Map<String, Object> params);
 
-	List<EgovMap> selectDocSubmissionList(Map<String, Object> params);
+  List<EgovMap> selectDocSubmissionList(Map<String, Object> params);
 
-	List<EgovMap> selectPromotionByAppTypeStock(Map<String, Object> params);
+  List<EgovMap> selectPromotionByAppTypeStock(Map<String, Object> params);
 
-	List<EgovMap> selectPromotionByAppTypeStock2(Map<String, Object> params);
+  List<EgovMap> selectPromotionByAppTypeStock2(Map<String, Object> params);
 
-	EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params);
+  EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params);
 
-	EgovMap selectTrialNo(Map<String, Object> params);
+  EgovMap selectTrialNo(Map<String, Object> params);
 
-	EgovMap selectMemberByMemberIDCode(Map<String, Object> params);
+  EgovMap selectMemberByMemberIDCode(Map<String, Object> params);
 
-	List<EgovMap> selectMemberList(Map<String, Object> params);
+  List<EgovMap> selectMemberList(Map<String, Object> params);
 
-	public void registerOrder(OrderVO orderVO, SessionVO sessionVO) throws ParseException;
+  public void registerOrder(OrderVO orderVO, SessionVO sessionVO) throws ParseException;
 
-	EgovMap checkOldOrderId(Map<String, Object> params);
+  EgovMap checkOldOrderId(Map<String, Object> params);
 
-	EgovMap selectLoginInfo(Map<String, Object> params);
+  EgovMap selectLoginInfo(Map<String, Object> params);
 
-	EgovMap selectCheckAccessRight(Map<String, Object> params, SessionVO sessionVO);
+  EgovMap selectCheckAccessRight(Map<String, Object> params, SessionVO sessionVO);
 
-	List<EgovMap> selectProductCodeList(Map<String, Object> params);
+  List<EgovMap> selectProductCodeList(Map<String, Object> params);
 
-	List<EgovMap> selectServicePackageList(Map<String, Object> params);
+  List<EgovMap> selectServicePackageList(Map<String, Object> params);
 
-	List<EgovMap> selectServicePackageList2(Map<String, Object> params);
+  List<EgovMap> selectServicePackageList2(Map<String, Object> params);
 
-	List<EgovMap> selectPrevOrderNoList(Map<String, Object> params);
+  List<EgovMap> selectPrevOrderNoList(Map<String, Object> params);
 
-	EgovMap selectOldOrderId(Map<String, Object> params);
+  EgovMap selectOldOrderId(Map<String, Object> params);
 
-	List<EgovMap> selectProductComponent(Map<String, Object> params);
+  List<EgovMap> selectProductComponent(Map<String, Object> params);
 
-	EgovMap checkOldOrderIdICare(Map<String, Object> params);
+  EgovMap checkOldOrderIdICare(Map<String, Object> params);
 
-	EgovMap selectProductComponentDefaultKey(Map<String, Object> params);
+  EgovMap selectProductComponentDefaultKey(Map<String, Object> params);
 
-	EgovMap selectEKeyinSofCheck(Map<String, Object> params);
+  EgovMap selectEKeyinSofCheck(Map<String, Object> params);
+
+  List<EgovMap> mailAddrViewHistoryAjax(Map<String, Object> params);
+
+  List<EgovMap> instAddrViewHistoryAjax(Map<String, Object> params);
+
 }
