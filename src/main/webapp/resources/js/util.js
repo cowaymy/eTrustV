@@ -15,8 +15,7 @@ var FormUtil = {
 	 */
 	checkNum : function(obj) {
 		var flag = false;
-		var reg = new RegExp('/[^0-9]/');
-		console.log()
+		var reg = /[^\d]/;
 		//if (isNaN(obj.val())) {
 		if(reg.test(obj.val()) == true){
 			obj.val("");
