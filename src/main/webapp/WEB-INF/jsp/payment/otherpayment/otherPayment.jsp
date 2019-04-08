@@ -4364,9 +4364,9 @@ $.fn.clearForm = function() {
                             <th scope="row">Service Order No.</th>
                             <td>
                                 <input type="text" name="careSrvcOrdNo" id="careSrvcOrdNo" title="" placeholder="Order Number" class="" />
-                                    <p class="btn_sky">
+                                 <%--    <p class="btn_sky">
                                         <a href="javascript:fn_outConfirm();" id="confirm"><spring:message code='pay.btn.confirm'/></a>
-                                    </p>
+                                    </p> --%>
                                     <p class="btn_sky">
                                         <a href="javascript:fn_careSrvcOrderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
                                     </p>
