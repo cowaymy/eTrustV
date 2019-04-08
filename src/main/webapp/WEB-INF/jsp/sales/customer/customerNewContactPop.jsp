@@ -116,6 +116,18 @@ $(document).ready(function() {
                 }
             }
 
+            var contactNumber = {
+                    contactNumber       : $('#cntcTelm').val()
+                   , residenceNumber    : $('#cntcTelr').val()
+                   , officeNumber          : $('#cntcTelo').val()
+                   , faxNumber             : $('#cntcTelf').val()
+              };
+
+              Common.ajax("GET", "/sales/customer/existingHPCodyMobile", contactNumber , function(result) {
+                  if(result != null)
+                      Common
+                      .alert("<spring:message code='sal.alert.msg.existingHPCodyMobileForSales' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
+              });
         }// tel end
 
         //Ext
@@ -305,15 +317,15 @@ $(document).ready(function() {
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.telM" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"   id="cntcTelm" name="cntcTelm" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"   id="cntcTelm" name="cntcTelm" maxlength="11" /></td>
     <th scope="row"><spring:message code="sal.text.telO" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  id="cntcTelo" name="cntcTelo" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  id="cntcTelo" name="cntcTelo" maxlength="11" /></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.telR" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"   id="cntcTelr" name="cntcTelr" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"   id="cntcTelr" name="cntcTelr" maxlength="11" /></td>
     <th scope="row"><spring:message code="sal.text.telF" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p"   id="cntcTelf" name="cntcTelf" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
+    <td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p"   id="cntcTelf" name="cntcTelf" maxlength="11"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.dept" /></th>
