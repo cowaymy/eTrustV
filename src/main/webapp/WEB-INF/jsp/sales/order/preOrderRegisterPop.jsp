@@ -375,7 +375,7 @@
                 fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
             }
 
-            fn_loadProductComponent(stkIdVal);
+            fn_loadProductComponent(appTypeVal, stkIdVal);
             setTimeout(function() { fn_check(0) }, 200);
 
         });
@@ -965,32 +965,6 @@
     	return isValid;
     }
 
-    function fn_check(a) {
-        console.log("CURRENT LENGTH :: " + $('#compType option').length);
-        if ($('#compType option').length <= 0) {
-            console.log("WAITING RESPONE :: RETRY  TIMES :: " + a);
-            if (a == 3) {
-                return;
-            } else {
-              setTimeout(function() { fn_check( parseInt(a) + 1 ) }, 500);
-            }
-        } else if ($('#compType option').length <= 1) {
-          $('#compType').addClass("blind");
-          $('#compType').prop("disabled", true);
-        } else if ($('#compType option').length > 1) {
-          $('#compType').removeClass("blind");
-          $('#compType').removeAttr("disabled");
-
-          var key = 0;
-          Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProudct").val()}, function(defaultKey) {
-            if(defaultKey != null) {
-              key = defaultKey.code;
-            }
-            $('#compType').val(key).change();
-          });
-        }
-      }
-
     function fn_doSavePreOrder() {
 
         var vAppType    = $('#appType').val();
@@ -1235,11 +1209,6 @@
                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
             }
         });
-    }
-
-  //LoadProductComponent
-    function fn_loadProductComponent(stkId) {
-        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', ''); //Common Code
     }
 
     //LoadProductPromotion
@@ -1721,6 +1690,59 @@
             $('#otherFile2').change();
         }
     }
+
+  function fn_clearAddCpnt() {
+    $('#trCpntId').css("visibility","collapse");
+      $('#compType option').remove();
+    }
+
+  function fn_loadProductComponent(appTyp, stkId) {
+    $('#compType option').remove();
+    $('#compType').removeClass("blind");
+    $('#compType').removeClass("disabled");
+
+    doGetComboData('/sales/order/selectProductComponent.do', { appTyp:appTyp, stkId:stkId }, '', 'compType', 'S', '');
+  }
+
+  function fn_check(a) {
+    if ($('#compType option').length <= 0) {
+      if (a == 3) {
+        return;
+      } else {
+        setTimeout(function() { fn_check( parseInt(a) + 1 ) }, 500);
+      }
+    } else if ($('#compType option').length <= 1) {
+      $('#trCpntId').css("visibility","collapse");
+      $('#compType option').remove();
+      $('#compType').addClass("blind");
+      $('#compType').prop("disabled", true);
+    } else if ($('#compType option').length > 1) {
+      $('#trCpntId').css("visibility","visible");
+      $('#compType').remove("blind");
+      $('#compType').removeAttr("disabled");
+
+      var key = 0;
+      Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProudct").val()}, function(defaultKey) {
+        if(defaultKey != null) {
+          key = defaultKey.code;
+          $('#compType').val(key).change();
+          fn_reloadPromo();
+        }
+      });
+    }
+  }
+
+  function fn_reloadPromo() {
+    $('#ordPromo option').remove();
+    $('#ordPromo').removeClass("blind");
+    $('#ordPromo').removeClass("disabled");
+
+    var appTyp = $("#appType").val();
+    var stkId = $("#ordProudct").val();
+    var cpntId = $("#compType").val();
+
+    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId }, '', 'ordPromo', 'S', '');
+  }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -2096,7 +2118,12 @@
 <tr>
     <th scope="row">Product | Produk<span class="must">*</span></th>
     <td><select id="ordProudct" name="ordProudct" class="w50p" disabled></select>
-            <select id="compType" name="compType" class="w50p blind" ></select>
+    </td>
+</tr>
+<tr id='trCpntId' style='visibility:collapse'>
+    <th scope="row"><spring:message code="sal.title.text.cpntId" /> | Komponen Tambahan <span class="must">*</span></th>
+    <td>
+     <select id="compType" name="compType" class="w50p" onchange="fn_reloadPromo()"></select>
     </td>
 </tr>
 <tr>
