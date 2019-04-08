@@ -836,9 +836,7 @@
             //ClearControl_Sales();
             fn_clearSales();
 
-            //HIDE COMPONENT
-            $('#compType').addClass("blind");
-
+            fn_clearAddCpnt();
 
             $('[name="advPay"]').prop("disabled", true);
 
@@ -998,17 +996,15 @@
             // ONGHC - ADD
             $('#ordPromo option').remove();
             $('#ordPromo').prop("disabled", true);
-            $('#compType option').remove();
-            $('#compType').addClass("blind");
+            fn_clearAddCpnt();
         });
         $('#srvPacId').change(function() {
             // ONGHC - ADD
             $('#ordProudct option').remove();
             $('#ordProudct optgroup').remove();
             $('#ordPromo option').remove();
-            $('#compType option').remove();
             $('#ordPromo').prop("disabled", true);
-            $('#compType').addClass("blind");
+            fn_clearAddCpnt();
 
             var idx    = $("#srvPacId option:selected").index();
             var selVal = $("#srvPacId").val();
@@ -1078,19 +1074,12 @@
                     srvPacId   = $('#srvPacId').val();
                 }
 
-
             if(stkIdx > 0) {
                 fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
                 fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
             }
 
-            //if(stkIdVal == "1243") {
-                //$('#compType').removeClass("blind");
-                //fn_loadProductComponent(stkIdVal);
-            //}else{
-                //$('#compType').addClass("blind");
-            //}
-            fn_loadProductComponent(stkIdVal);
+            fn_loadProductComponent(appTypeVal, stkIdVal);
             setTimeout(function() { fn_check(0) }, 200);
         });
         $('#rentPayMode').change(function() {
@@ -1133,6 +1122,7 @@
         $('#exTrade').change(function() {
 
             $('#ordPromo option').remove();
+            fn_clearAddCpnt();
 
             if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
                 //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
@@ -1245,33 +1235,6 @@
             }
         });
     });
-
-    // ONGHC ADD
-    function fn_check(a) {
-      console.log("CURRENT LENGTH :: " + $('#compType option').length);
-      if ($('#compType option').length <= 0) {
-          console.log("WAITING RESPONE :: RETRY  TIMES :: " + a);
-          if (a == 3) {
-              return;
-          } else {
-            setTimeout(function() { fn_check( parseInt(a) + 1 ) }, 500);
-          }
-      } else if ($('#compType option').length <= 1) {
-        $('#compType').addClass("blind");
-        $('#compType').prop("disabled", true);
-      } else if ($('#compType option').length > 1) {
-        $('#compType').remove("blind");
-        $('#compType').removeAttr("disabled");
-
-        var key = 0;
-        Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProudct").val()}, function(defaultKey) {
-          if(defaultKey != null) {
-            key = defaultKey.code;
-          }
-          $('#compType').val(key).change();
-        });
-      }
-    }
 
     function fn_preCheckSave() {
         if(!fn_validCustomer()) {
@@ -1460,9 +1423,7 @@
         $('#ordProudct option').remove();
         $('#ordProudct optgroup').remove();
         $('#ordPromo option').remove();
-        $('#compType option').remove();
-
-        $('#compType').addClass("blind");
+        fn_clearAddCpnt();
         $('#srvPacId option').addClass("blind");
         $('#ordProudct').prop("disabled", true);
         $('#ordPromo').prop("disabled", true);
@@ -1629,7 +1590,7 @@ console.log("vBindingNo" + vBindingNo);
                 itmPrcId                : $('#ordPriceId').val().trim(),
                 itmPv                   : $('#ordPv').val().trim(),
                 itmStkId                : $('#ordProudct').val(),
-                itmCompId                : $('#compType').val(),
+                itmCompId               : $('#compType').val(),
             },
             installationVO : {
                 addId                   : $('#hiddenCustAddId').val(),
@@ -2300,20 +2261,6 @@ console.log("vBindingNo" + vBindingNo);
         });
     }
 
-    //LoadProductComponent
-    function fn_loadProductComponent(stkId) {
-        $('#compType option').remove();
-        $('#compType').removeClass("blind");
-        $('#compType').removeClass("disabled");
-        console.log("fn_loadProductComponent ::: " + $('#compType option').length);
-
-        //$('#compType').addClass("blind");
-        //$('#compType').prop("disabled", true);
-
-        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', ''); //Common Code
-
-    }
-
     //LoadProductPromotion
     function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade) {
         console.log('fn_loadProductPromotion --> appTypeVal:'+appTypeVal);
@@ -2562,30 +2509,6 @@ console.log("vBindingNo" + vBindingNo);
         }
     }
 
-    function fn_setDefaultCompId() {
-        var today = new Date();
-
-        var dd = today.getDate();
-        var mm = today.getMonth() + 1;
-        var yyyy = today.getFullYear();
-
-        if(dd < 10) {
-            dd = "0" + dd;
-        }
-        if(mm < 10){
-            mm = "0" + mm
-        }
-
-        if($('#compType option').size() >= 2) {
-            if( parseInt(yyyy)*100 + parseInt(mm) < 201901){
-                $('#compType option:eq(3)').attr('selected', 'selected');               }
-            else{
-                $('#compType option:eq(1)').attr('selected', 'selected');               }
-
-        }
-
-        }
-
     function fn_checkEkeyinSof(sofNo) {
 
         if(sofNo != null){
@@ -2598,7 +2521,58 @@ console.log("vBindingNo" + vBindingNo);
        }
     }
 
+  function fn_clearAddCpnt() {
+    $('#trCpntId').css("visibility","collapse");
+    $('#compType option').remove();
+  }
 
+  function fn_loadProductComponent(appTyp, stkId) {
+    $('#compType option').remove();
+    $('#compType').removeClass("blind");
+    $('#compType').removeClass("disabled");
+
+    doGetComboData('/sales/order/selectProductComponent.do', { appTyp:appTyp, stkId:stkId }, '', 'compType', 'S', '');
+  }
+
+  function fn_check(a) {
+    if ($('#compType option').length <= 0) {
+      if (a == 3) {
+        return;
+      } else {
+        setTimeout(function() { fn_check( parseInt(a) + 1 ) }, 500);
+      }
+    } else if ($('#compType option').length <= 1) {
+      $('#trCpntId').css("visibility","collapse");
+      $('#compType option').remove();
+      $('#compType').addClass("blind");
+      $('#compType').prop("disabled", true);
+    } else if ($('#compType option').length > 1) {
+      $('#trCpntId').css("visibility","visible");
+      $('#compType').remove("blind");
+      $('#compType').removeAttr("disabled");
+
+      var key = 0;
+      Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProudct").val()}, function(defaultKey) {
+        if(defaultKey != null) {
+          key = defaultKey.code;
+          $('#compType').val(key).change();
+          fn_reloadPromo();
+        }
+      });
+    }
+  }
+
+  function fn_reloadPromo() {
+    $('#ordPromo option').remove();
+    $('#ordPromo').removeClass("blind");
+    $('#ordPromo').removeClass("disabled");
+
+    var appTyp = $("#appType").val();
+    var stkId = $("#ordProudct").val();
+    var cpntId = $("#compType").val();
+
+    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId }, '', 'ordPromo', 'S', '');
+  }
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
@@ -2888,9 +2862,16 @@ console.log("vBindingNo" + vBindingNo);
 <tr>
     <th scope="row"><spring:message code="sal.text.product" /><span class="must">*</span></th>
     <td><select id="ordProudct" name="ordProudct" class="w100p" disabled></select>
-            <select id="compType" name="compType" class="w100p blind" ></select></td>
     <th scope="row"><spring:message code="sal.text.salManName" /></th>
     <td><input id="salesmanNm" name="salesmanNm" type="text" title="" placeholder="Salesman Name" class="w100p readonly" readonly/></td>
+</tr>
+<tr id='trCpntId' style='visibility:collapse'>
+    <th scope="row"><spring:message code="sal.title.text.cpntId" /><span class="must">*</span></th>
+    <td>
+     <select id="compType" name="compType" class="w100p" onchange="fn_reloadPromo()"></select>
+    </td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.promo" /><span class="must">*</span></th>
