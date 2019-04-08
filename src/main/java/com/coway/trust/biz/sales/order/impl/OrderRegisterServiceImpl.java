@@ -1676,7 +1676,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     }
 
     // AS ENTRY
-    if (itmCompId == 2 || itmCompId == 3 || itmCompId == 4) {
+    int count = orderRegisterMapper.chkCrtAS(salesOrderDVO);
+    if (count > 0) {
       ASEntryVO aSEntryVO = new ASEntryVO();
       this.preprocASEntry(aSEntryVO, sessionVO);
       String asNo = orderRegisterMapper.selectDocNo(DocTypeConstants.AS_ENTRY);
@@ -1977,7 +1978,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       orderRegisterMapper.insertGSTEURCertificate(gSTEURCertificateVO);
     }
 
-    if (compId == 2 || compId == 3 || compId == 4) {
+    //if (compId == 2 || compId == 3 || compId == 4) {
       if (asEntryVO != null) {
         // String asNo =
         // orderRegisterMapper.selectDocNo(DocTypeConstants.AS_ENTRY);
@@ -1985,7 +1986,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         asEntryVO.setAsSoId(salesOrdId);
         orderRegisterMapper.insertASEntry(asEntryVO);
       }
-    }
+    //}
   }
 
   @Override
@@ -2014,8 +2015,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
   public List<EgovMap> selectProductComponent(Map<String, Object> params) {
     // TODO Auto-generated method stub
-
     return orderRegisterMapper.selectProductComponent(params);
+  }
+
+  public List<EgovMap> selectPromoBsdCpnt(Map<String, Object> params) {
+    return orderRegisterMapper.selectPromoBsdCpnt(params);
   }
 
   @Override
