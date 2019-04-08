@@ -500,6 +500,12 @@ public class OrderRegisterController {
     return ResponseEntity.ok(defaultKey);
   }
 
+  @RequestMapping(value = "/selectPromoBsdCpnt.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectPromoBsdCpnt(@RequestParam Map<String, Object> params) {
+    List<EgovMap> codeList = orderRegisterService.selectPromoBsdCpnt(params);
+    return ResponseEntity.ok(codeList);
+  }
+
   @RequestMapping(value = "/selectEKeyinSofCheck.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> selectEKeyinSofCheck(@RequestParam Map<String, Object> params) {
     EgovMap sofNo = orderRegisterService.selectEKeyinSofCheck(params);
