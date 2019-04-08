@@ -2218,6 +2218,8 @@
     WHERE A.ITM_STK_ID = #{stkId}
       AND A.APP_TYPE_ID = #{appTyp}
       AND A.ITM_CPNT_ID = #{cpntId}
+      AND B.EMP_CHK = #{empInd}
+      AND B.EX_TRADE = #{exTrade}
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
     </select>
@@ -2390,8 +2392,8 @@
            D.POSTCODE,
            D.COUNTRY,
            E.NAME,
-           A.PRE_CALL_DT,
-           A.PRE_DT,
+           TO_CHAR(A.PRE_CALL_DT, 'dd-mm-yyyy') PRE_CALL_DT,
+           TO_CHAR(A.PRE_DT, 'dd-mm-yyyy') PRE_DT,
            A.INSTCT,
            F.CODE,
            A.PRE_TM
