@@ -730,30 +730,54 @@
               //  document.searchForm.submit();
            });
 
-           AUIGrid.bind(listGrid, "rowCheckClick",
-             function(event) {
-               var checklist = AUIGrid.getCheckedRowItemsAll(listGrid);
-               for (var i = 0; i < checklist.length; i++) {
-                 /*
-                 if (checklist[i].reqstno != event.item.reqstno){
-                     Common.alert("Request number is different.");
-                     AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
-                     return false;
-                 }
-                  */
-                 if (checklist[i].reqloc != event.item.reqloc) {
-                   Common.alert("Request To Location is different.");
-                   AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
-                   return false;
-                 }
-               }
+           AUIGrid.bind(listGrid, "rowCheckClick", function(event){
 
-               if (AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") <= 0
-                   || AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") < AUIGrid.getCellValue(listGrid, event.rowIndex, "indelyqty")) {
-                        Common.alert('Delivery Qty can not be greater than Request Qty.');
-                        AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
-                        return false;
-               }
+               var checked = AUIGrid.getCheckedRowItems(listGrid);
+               var reqno = AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno");
+
+                   for (var i = 0; i < checked.length; i++)
+                   {
+                       if(checked[i].item.reqloc != event.item.reqloc)
+                       {
+                             Common.alert("Request To Location is different.");
+
+                             var rown = AUIGrid.getRowIndexesByValue(listGrid, "reqstno" , reqno);
+
+                             for (var i = 0; i < rown.length; i++)
+                             {
+                                 AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+                             }
+                             return false;
+                       }
+                       else if(AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") <= 0 ||
+                                  AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") < AUIGrid.getCellValue(listGrid, event.rowIndex, "indelyqty"))
+                       {
+                             Common.alert("Delivery Qty can not be greater than Request Qty.");
+
+                             var rown = AUIGrid.getRowIndexesByValue(listGrid, "reqstno" , reqno);
+
+                             for (var i = 0; i < rown.length; i++)
+                             {
+                                 AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+                             }
+                             return false;
+                       }
+
+                       if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum))
+                       {
+                           AUIGrid.addCheckedRowsByValue(listGrid, "reqstno" , reqno);
+                       }
+                       else
+                       {
+                           var rown = AUIGrid.getRowIndexesByValue(listGrid, "reqstno" , reqno);
+
+                           for (var i = 0; i < rown.length; i++)
+                           {
+                               AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+                           }
+                       }
+
+                   }
              });
 
             AUIGrid.bind(serialGrid, "addRowFinish",
@@ -768,16 +792,15 @@
                 }
             });*/
 
-            AUIGrid.bind(listGrid, "ready",
-              function(event) {
+            AUIGrid.bind(listGrid, "ready", function(event) {
                 var rowCnt = AUIGrid.getRowCount(listGrid);
-                for (var i = 0; i < rowCnt; i++) {
-                  var qty = AUIGrid.getCellValue(listGrid, i, 'reqstqty') - AUIGrid.getCellValue(listGrid, i, 'delyqty');
-                  AUIGrid.setCellValue(listGrid, i, 'rmqty', qty);
-                  AUIGrid.setCellValue(listGrid, i, 'indelyqty', qty);
+                for (var i = 0 ; i < rowCnt ; i++){
+                    var qty = AUIGrid.getCellValue(listGrid , i , 'reqstqty') - AUIGrid.getCellValue(listGrid , i , 'delyqty');
+                    AUIGrid.setCellValue(listGrid, i, 'rmqty', qty);
+                    AUIGrid.setCellValue(listGrid, i, 'indelyqty', qty);
                 }
                 AUIGrid.resetUpdatedItems(listGrid, "all");
-              });
+            });
 
             //SearchListAjax();
             AUIGrid.bind(listGrid, "rowAllChkClick",
