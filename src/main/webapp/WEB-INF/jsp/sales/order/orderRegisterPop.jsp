@@ -1347,7 +1347,7 @@
         }
 
         if(convToOrdYn == 'Y'){// if it is eKeyin order
-                if($('#custCntcTelM').val() && $('#srvCntcTelM').val()){
+                if($('#custCntcTelM').val() != null && $('#srvCntcTelM').val() != null ){
 
                     var contactNumber = {
                               contactNumber       : $('#custCntcTelM').val()
@@ -2105,34 +2105,6 @@ console.log("vBindingNo" + vBindingNo);
         return isValid;
     }
 
-    function fn_validHPCodyContactNumber(){
-        var isValid = true, msg = "";
-
-        if($('#custCntcTelM').val() && $('#srvCntcTelM').val()){
-
-
-            var contactNumber = {
-                      contactNumber       : $('#custCntcTelM').val()
-                    , residenceNumber    : $('#custCntcTelR').val()
-                    , officeNumber          : $('#custCntcTelO').val()
-                    , faxNumber             : $('#custCntcTelF').val()
-                    , asContactNumber    : $('#srvCntcTelM').val()
-                    , asResidenceNumber : $('#srvCntcTelR').val()
-                    , asOfficeNumber       : $('#srvCntcTelO').val()
-                    , asFaxNumber          : $('#srvCntcTelF').val()
-            };
-
-            Common.ajax("GET", "/sales/customer/existingHPCodyMobile", contactNumber , function(result) {
-                if(result != null){
-                    isValid = false;
-                    msg += Common.
-                    alert("<spring:message code='sal.alert.msg.existingHPCodyMobileForSales' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />");
-
-                }
-           });
-        }
-        return isValid;
-    }
 /*******************************************************************************
     Validation Check Logic [END]
 *******************************************************************************/
