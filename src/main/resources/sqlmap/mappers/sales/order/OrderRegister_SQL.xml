@@ -2201,25 +2201,35 @@
 		   AND T1.STUS_CODE_ID = '4'
     </select>
 
-    <select id="selectProductComponent" parameterType="Map" resultType="egovMap">
-        SELECT ITM_CPNT_ID CODE,
-                   ITM_CPNT_NAME CODE_NAME
-        FROM SAL0223M
-        WHERE ITM_STK_ID = #{stkId}
-        AND DISAB = 0
-        AND to_date(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(EFF_DT, 'DD/MM/YYYY') AND TO_DATE(EXP_DT, 'DD/MM/YYYY')
+  <select id="selectProductComponent" parameterType="Map" resultType="egovMap">
+    SELECT ITM_CPNT_ID CODE,
+           ITM_CPNT_NAME CODE_NAME
+    FROM SAL0223M
+    WHERE ITM_STK_ID = #{stkId}
+      AND DISAB = 0
+      AND TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(EFF_DT, 'DD/MM/YYYY') AND TO_DATE(EXP_DT, 'DD/MM/YYYY')
+  </select>
 
+  <select id="selectPromoBsdCpnt" parameterType="Map" resultType="egovMap">
+    SELECT A.PROMO_ID CODE,
+           B.PROMO_CODE || '-' || PROMO_DESC CODE_NAME
+    FROM SAL0237M A
+    JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
+    WHERE A.APP_TYPE_ID = #{appTyp}
+      AND A.ITM_STK_ID = #{stkId}
+      AND A.ITM_CPNT_ID = #{cpntId}
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
     </select>
 
-    <select id="selectProductComponentDefaultKey" parameterType="Map" resultType="egovMap">
-        SELECT ITM_CPNT_ID CODE
-        FROM SAL0223M
-        WHERE ITM_STK_ID = #{stkId}
-          AND DEF_SEL = 1
-          AND DISAB = 0
-          AND to_date(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(EFF_DT, 'DD/MM/YYYY') AND TO_DATE(EXP_DT, 'DD/MM/YYYY')
-
-    </select>
+  <select id="selectProductComponentDefaultKey" parameterType="Map" resultType="egovMap">
+    SELECT ITM_CPNT_ID CODE
+    FROM SAL0223M
+    WHERE ITM_STK_ID = #{stkId}
+      AND DEF_SEL = 1
+      AND DISAB = 0
+      AND TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(EFF_DT, 'DD/MM/YYYY') AND TO_DATE(EXP_DT, 'DD/MM/YYYY')
+  </select>
 
       <insert id="insertASEntry" parameterType="asEntryVO">
       <selectKey keyProperty="asId" resultType="Integer" order="BEFORE">
@@ -2348,6 +2358,15 @@
             AND ROWNUM <![CDATA[<=]]> 1
     </select>
 
+  <select id="chkCrtAS" parameterType="salesOrderDVO" resultType="int">
+    SELECT COUNT(*) AS cnt
+    FROM SAL0223M
+    WHERE ITM_STK_ID = #{itmStkId}
+      AND ITM_CPNT_ID = #{itmCompId}
+      AND AS_CRT = 'Y'
+      AND DISAB = '0'
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(EFF_DT, 'DD/MM/YYYY') AND TO_DATE(EXP_DT, 'DD/MM/YYYY'))
+  </select>
 
   <select id="mailAddrViewHistoryAjax" parameterType="Map" resultType="egovMap">
     SELECT TO_CHAR(A.HIST_CRT_DT, 'dd-mm-yyyy') HIST_CRT_DT
@@ -2383,5 +2402,17 @@
     JOIN SAL0027D E ON E.CUST_CNTC_ID = A.CNT_ID
     JOIN SYS0005M F ON F.BRNCH_ID = A.BRNCH_ID
     WHERE A.SALES_ORD_ID = #{prm}
+  </select>
+
+  <select id="selectPromoBsdCpntId" parameterType="Map" resultType="egovMap">
+    SELECT B.ITM_CPNT_ID CODE,
+           B.ITM_CPNT_NAME CODE_NAME
+    FROM SAL0237M A JOIN SAL0223M B ON A.ITM_STK_ID = B.ITM_STK_ID
+              AND A.ITM_CPNT_ID = B.ITM_CPNT_ID
+    WHERE A.APP_TYPE_ID = #{appTyp}
+      AND A.ITM_STK_ID = #{stkId}
+      AND A.PROMO_ID = #{promoCde}
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(B.EXP_DT, 'DD/MM/YYYY'))
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
   </select>
 </mapper>
