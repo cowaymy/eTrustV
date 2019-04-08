@@ -406,6 +406,13 @@
                         }
                     }
                 }
+
+                if(convToOrdYn != 'Y'){
+                	if(vCodeId == '3198'){ // SOF Form, check default when it is not eKey-in
+                		AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
+                		if(docDefaultChk == false) docDefaultChk = true;
+                	}
+                }
             }
             else {
                  docDefaultChk = false;
