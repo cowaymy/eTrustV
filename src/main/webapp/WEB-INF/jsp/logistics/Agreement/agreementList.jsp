@@ -31,7 +31,7 @@ $(document).ready(function() {
                 $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105 || // DST Support
                 $("#userRole").val() == 166 || $("#userRole").val() == 167 || $("#userRole").val() == 261) { // DST Planning
 
-            $('#memTypeCom option[value="1"] ').attr("selected", true);;
+            $('#memTypeCom option[value="1"] ').attr("selected", true);
             $('#memTypeCom').attr("disabled", true);
 
             doGetCombo('/logistics/agreement/getAgreementVersion', '1', '' ,'agreementVersion' , 'S');
@@ -101,6 +101,8 @@ $(document).ready(function() {
             $("#grpCode").val(result.grpCode);
             $("#memStusCmb option[value='" + result.stus + "']").attr("selected", true);
             $("#memLevelCom option[value='" + result.memLvl + "']").attr("selected", true);
+            $("#joinDt").val(result.joinDt);
+            $("#cnfmDt").val(result.cnfmDt);
 
             if(memType == 1) {
                 $("#agreementVersion option[value='" + result.signDt +"']").attr("selected", true);
@@ -150,12 +152,26 @@ $(document).ready(function() {
         var expDay = "";
         var expMth = "";
 
-        if(mth <= "06") {
-            expDay = "30";
-            expMth = "06";
+        if($("#memTypeCom").val() == "01") {
+            if(mth <= "06") {
+                expDay = "30";
+                expMth = "06";
+            } else {
+                expDay = "31";
+                expMth = "12";
+            }
         } else {
             expDay = "31";
-            expMth = "12";
+            expMth = "03";
+
+            var expYYYY = year;
+
+            if(mth == "01" || mth == "02" || mth == "03") {
+                year = expYYYY;
+            } else {
+                year = Number(year) + 1;
+            }
+
         }
 
         $("#endDt").val(expDay + "/" + expMth + "/" + year);
@@ -317,8 +333,59 @@ function fn_downloadAgreement() {
             //if($("#agreementVersion").val() < signdt.substring(0, 3))
         //});
 
+        if(FormUtil.checkReqValue($("#startDt"))) {
+            Common.alert("Please key in contract start date.");
+            return false;
+        } else {
+            if($("#startDt").val() < "01/04/2018") {
+                Common.alert("Please contact admin for older versions agreement.");
+                return false;
+            }
+        }
+
+        var today = new Date();
+
+        var cYr = today.getFullYear();
+        var nYr = today.getFullYear() + 1;
+        var pYr = today.getFullYear() - 1;
+
+        var currPeriod = new Date(cYr +"-04-01");
+        var nextPeriod = new Date(nYr + "-04-01");
+        var prevPeriod = new Date(pYr + "-04-01");
+
+        var dt = $("#startDt").val().split("/");
+        var selStartDt = new Date(dt[2] + "-" + dt[1] + "-" + dt[0]);
+
+        dt = $("#cnfmDt").val().split("/");
+        var cnfmDt = new Date(dt[2] + "-" + dt[1] + "-" + dt[0]);
+
+        dt = $("#joinDt").val().split("/");
+        var joinDt = new Date(dt[2] + "-" + dt[1] + "-" + dt[0]);
+
+        if(cnfmDt == "1900-01-01") {
+            Common.alert("Agreement not accepted.");
+            return false;
+        } else {
+            if(selStartDt >= currPeriod && selStartDt < nextPeriod) {
+                $("#v_contractStartDt").val(currPeriod);
+            } else if(selStartDt < currPeriod && selStartDt >= joinDt && selStartDt >= "01/04/2018") {
+                $("#v_contractStartDt").val("01/04/2018");
+            } else if(joinDt > prevPeriod && joinDt < currPeriod) {
+                $("#v_contractStartDt").val(joinDt);
+            } else if(selStartDt > nextPeriod && cnfmDt < nextPeriod) {
+                Common.alert("Only 2018/04/01 to today is permitted.");
+                return false;
+            } else if(joinDt < "01/04/2018") {
+                Common.alert("Only 2018/04/01 to today is permitted.");
+                return false;
+            }
+        }
+
+        console.log("v_contractStartDt :: " + $("#v_contractStartDt").val());
+
         $("#reportFileName").val("/logistics/CodyAgreement_" + version + ".rpt");
         $("#reportDownFileName").val("CodyAgreement_" + code);
+
 
         Common.report("agreementReport", option);
     }
@@ -376,7 +443,14 @@ function createAUIGrid() {
         dataField : "promoDt",
         editable : false,
         visible : false
-    } ]; //visible : false
+    }, {
+        dataField : "joinDt",
+        visible : false
+    }, {
+        dataField : "cnfmDt",
+        visible : false
+    }
+    ]; //visible : false
 
     var gridPros = {
 
@@ -439,6 +513,8 @@ function createAUIGrid() {
 <form action="#" id="searchForm" method="post">
 
 <input type="hidden" id="promoDt" name="promoDt" value="" />
+<input type="hidden" id="joinDt" name="joinDt" />
+<input type="hidden" id="cnfmDt" name="cnfmDt" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

@@ -76,12 +76,18 @@
                 B.MEM_LVL MEMLVL,
                 A.STUS,
                 CASE
-                    WHEN C.UPD_DT <= TO_DATE('2017/05/01', 'YYYY/MM/DD') THEN '201604'
-                    WHEN C.UPD_DT >= TO_DATE('2017/05/02', 'YYYY/MM/DD') AND C.UPD_DT < TO_DATE('2018/05/01', 'YYYY/MM/DD') THEN '201704'
-                    WHEN C.UPD_DT >= TO_DATE('2018/05/01', 'YYYY/MM/DD') AND C.UPD_DT < TO_DATE('2018/06/09', 'YYYY/MM/DD') THEN '201805'
-                    WHEN C.UPD_DT >= TO_DATE('2018/06/09', 'YYYY/MM/DD') THEN '201806'
+                    WHEN A.MEM_TYPE = '1' THEN (
+                        CASE
+                            WHEN C.UPD_DT <= TO_DATE('2017/05/01', 'YYYY/MM/DD') THEN '201604'
+                            WHEN C.UPD_DT >= TO_DATE('2017/05/02', 'YYYY/MM/DD') AND C.UPD_DT < TO_DATE('2018/05/01', 'YYYY/MM/DD') THEN '201704'
+                            WHEN C.UPD_DT >= TO_DATE('2018/05/01', 'YYYY/MM/DD') AND C.UPD_DT < TO_DATE('2018/06/09', 'YYYY/MM/DD') THEN '201805'
+                            WHEN C.UPD_DT >= TO_DATE('2018/06/09', 'YYYY/MM/DD') THEN '201806'
+                        END)
+                    ELSE '-'
                 END AS CNFMDT,
-                NVL(TO_CHAR(A.PROMO_DT, 'DD/MM/YYYY'), '-') PROMO_DT
+                CASE WHEN A.MEM_TYPE = '2' THEN TO_CHAR(C.CNFM_DT, 'DD/MM/YYYY') END AS CD_CNFM_DT,
+                NVL(TO_CHAR(A.PROMO_DT, 'DD/MM/YYYY'), '-') PROMO_DT,
+                TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOIN_DT
             FROM ORG0001D A
             INNER JOIN ORG0005D B
                 ON A.MEM_ID = B.MEM_ID

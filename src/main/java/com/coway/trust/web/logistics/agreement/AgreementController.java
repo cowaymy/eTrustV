@@ -99,6 +99,8 @@ public class AgreementController {
         memInfo.put("stus", item.get("stus"));
         memInfo.put("signDt", item.get("cnfmdt"));
         memInfo.put("promoDt", item.get("promoDt"));
+        memInfo.put("cnfmDt", item.get("cdCnfmDt"));
+        memInfo.put("joinDt", item.get("joinDt"));
 
         // getMemHPpayment
         if("1".equals(params.get("memType"))) {
