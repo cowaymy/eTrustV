@@ -343,6 +343,8 @@ function fn_downloadAgreement() {
             }
         }
 
+        var dd, mm, yyyy;
+
         var today = new Date();
 
         var cYr = today.getFullYear();
@@ -367,14 +369,26 @@ function fn_downloadAgreement() {
             return false;
         } else {
             if(selStartDt >= currPeriod && selStartDt < nextPeriod) {
+                dd = currPeriod.getDate();
+                mm = currPeriod.getMonth() + 1;
+                yyyy = currPeriod.getFullYear();
+                currPeriod = yyyy + "-" + mm + "-" + dd;
                 $("#v_contractStartDt").val(currPeriod);
+
             } else if(selStartDt < currPeriod && selStartDt >= joinDt && selStartDt >= "01/04/2018") {
-                $("#v_contractStartDt").val("01/04/2018");
+                $("#v_contractStartDt").val("2018-04-01");
+
             } else if(joinDt > prevPeriod && joinDt < currPeriod) {
+            	dd = joinDt.getDate();
+                mm = joinDt.getMonth() + 1;
+                yyyy = joinDt.getFullYear();
+                joinDt = yyyy + "-" + mm + "-" + dd;
                 $("#v_contractStartDt").val(joinDt);
+
             } else if(selStartDt > nextPeriod && cnfmDt < nextPeriod) {
                 Common.alert("Only 2018/04/01 to today is permitted.");
                 return false;
+
             } else if(joinDt < "01/04/2018") {
                 Common.alert("Only 2018/04/01 to today is permitted.");
                 return false;
@@ -386,6 +400,7 @@ function fn_downloadAgreement() {
         $("#reportFileName").val("/logistics/CodyAgreement_" + version + ".rpt");
         $("#reportDownFileName").val("CodyAgreement_" + code);
 
+        console.log("reportFileName :: " + $("#reportFileName").val());
 
         Common.report("agreementReport", option);
     }
