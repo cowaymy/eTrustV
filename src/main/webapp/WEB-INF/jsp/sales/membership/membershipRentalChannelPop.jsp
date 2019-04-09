@@ -582,7 +582,9 @@ function fn_setSaveForm(){
 		}else {
 			_issuedNRIC = vmrOrderResultObj.orderInfo.custNric;
 		}
-	}
+	}else {
+        _issuedNRIC = vmrOrderResultObj.orderInfo.custNric;
+    }
 
 	var rentalChannelSaveForm ={
 			salesOrderID:'${srvCntrctOrdId}' ,
