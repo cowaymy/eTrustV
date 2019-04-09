@@ -140,13 +140,6 @@
       $("#installationNoteForm #viewType").val("PDF");
       $("#installationNoteForm #reportDownFileName").val("InstallationNote_" + day + month + date.getFullYear());
 
-      console.log("V_WHERESQL " + whereSeq);
-      console.log("V_WHERESQL2 " + whereSeq2);
-      console.log("V_ORDERBYSQL " + orderBySql);
-      console.log("V_SELECTSQL " + SelectSql);
-      console.log("V_FULLSQL " + FullSql);
-      console.log("V_INSTALLSTATUS " + installStatus);
-
       var option = {
         isProcedure : true,
       };
