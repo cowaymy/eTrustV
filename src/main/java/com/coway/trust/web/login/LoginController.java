@@ -373,6 +373,8 @@ LOGGER.debug(Integer.toString(joinDt.compareTo(currRenewalDt)));
                                 params.put("popType", "A");
                             } else if(cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) >= 0) {
                                 params.put("popType", "M");
+                            } else {
+                                params.put("popType", "-");
                             }
                         } catch(Exception e) {
                             LOGGER.error(e.toString());
