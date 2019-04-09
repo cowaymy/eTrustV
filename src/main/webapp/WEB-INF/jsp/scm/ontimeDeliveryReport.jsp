@@ -555,7 +555,7 @@ $(document).ready(function() {
 		</table>								<!-- table end -->
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Detail Grid -->
-			<div id="detail_wrap" style="height:541px;"></div>
+			<div id="detail_wrap" style="height:514px;"></div>
 		</article>								<!-- article grid_wrap end -->
 	</section>									<!-- section search_result end -->
 </section>									<!-- section content end -->

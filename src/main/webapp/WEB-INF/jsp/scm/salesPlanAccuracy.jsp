@@ -479,6 +479,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									dataField : result.selectSalesPlanAccuracyDetailHeader[0].stockCode,
 									style : "my-columnCenter"
 								}, {
+									headerText : "Name",
+									dataField : result.selectSalesPlanAccuracyDetailHeader[0].stockName,
+									style : "my-columnLeft"
+								}, {
 									headerText : "Ordered Qty",
 									dataField : result.selectSalesPlanAccuracyDetailHeader[0].salesOrdQty,
 									style : "my-columnRight"
@@ -940,6 +944,10 @@ function fnSalesPlanAccuracyDetailHeader(gbn) {
 									headerText : "Code",
 									dataField : result.selectSalesPlanAccuracyDetailHeader[0].stockCode,
 									style : "my-columnCenter"
+								}, {
+									headerText : "Name",
+									dataField : result.selectSalesPlanAccuracyDetailHeader[0].stockName,
+									style : "my-columnLeft"
 								}, {
 									headerText : "Ordered Qty",
 									dataField : result.selectSalesPlanAccuracyDetailHeader[0].salesOrdQty,
@@ -1972,8 +1980,8 @@ $(document).ready(function() {
 		</table>								<!-- table end -->
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Detail Grid -->
-			<div id="detail_wrap" style="height:425px;width:100%;"></div>
-			<div id="detail_wrap1" style="height:425px;width:100%;"></div>
+			<div id="detail_wrap" style="height:351px;width:100%;"></div>
+			<div id="detail_wrap1" style="height:351px;width:100%;"></div>
 		</article>								<!-- article grid_wrap end -->
 	</section>									<!-- section search_result end -->
 </section>									<!-- section content end -->

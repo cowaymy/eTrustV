@@ -1070,8 +1070,8 @@ $(document).ready(function() {
 				<tr>
 					<th scope="row"><span id="teamLabel">Summary</span></th>
 					<td>
-						<label><input type="radio" name="gbn1" id="gbn1" value="2" checked="checked" onclick="fnSetResult()"/><span>AMT</span></label>
-						<label><input type="radio" name="gbn1" id="gbn1" value="1" onclick="fnSetResult()" /><span>QTY</span></label>
+						<label><input type="radio" name="gbn1" id="gbn1" value="2" checked="checked" onclick="fnSetResult()"/><span>Amount</span></label>
+						<label><input type="radio" name="gbn1" id="gbn1" value="1" onclick="fnSetResult()" /><span>Quantity</span></label>
 					</td>
 				</tr>
 			</tbody>
@@ -1101,7 +1101,7 @@ $(document).ready(function() {
 		</table>								<!-- table end -->
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Detail Grid -->
-			<div id="inventory_report_detail_wrap" style="height:471px;"></div>
+			<div id="inventory_report_detail_wrap" style="height:432px;"></div>
 		</article>								<!-- article grid_wrap end -->
 	</section>									<!-- section search_result end -->
 </section>									<!-- section content end -->

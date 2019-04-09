@@ -878,8 +878,8 @@ $(document).ready(function() {
 		</table>								<!-- table end -->
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Weekly Grid -->
-			<div id="detail_wrap" style="height:447px;"></div>
-			<div id="detail_wrap1" style="height:447px;"></div>
+			<div id="detail_wrap" style="height:410px;"></div>
+			<div id="detail_wrap1" style="height:410px;"></div>
 		</article>								<!-- article grid_wrap end -->
 	</section>									<!-- section search_result end -->
 </section>									<!-- section content end -->
