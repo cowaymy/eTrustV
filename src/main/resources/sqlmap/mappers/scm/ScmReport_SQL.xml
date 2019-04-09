@@ -1241,8 +1241,8 @@ SELECT A.STOCK_TYPE_ID
              , SUM(A.HAND_QTY) * A.PURCH_PRC AS HAND_CURR_AMT
              , 0 AS AGE_PREV_QTY
              , 0 AS AGE_PREV_AMT
-             , SUM(F.AGE_QTY) AS AGE_CURR_QTY
-             , SUM(F.AGE_QTY) * A.PURCH_PRC AS AGE_CURR_AMT
+             , SUM(C.AGE_QTY) AS AGE_CURR_QTY
+             , SUM(C.AGE_QTY) * A.PURCH_PRC AS AGE_CURR_AMT
              , 0 AS STKB_PREV_QTY
              , 0 AS STKB_PREV_AMT
              , SUM(A.STKB_QTY) AS STKB_CURR_QTY
@@ -1270,8 +1270,8 @@ SELECT A.STOCK_TYPE_ID
              , SUM(A.HAND_QTY) * A.PURCH_PRC AS HAND_PREV_AMT
              , 0 AS HAND_CURR_QTY
              , 0 AS HAND_CURR_AMT
-             , SUM(F.AGE_QTY) AS AGE_PREV_QTY
-             , SUM(F.AGE_QTY) * A.PURCH_PRC AS AGE_PREV_AMT
+             , SUM(C.AGE_QTY) AS AGE_PREV_QTY
+             , SUM(C.AGE_QTY) * A.PURCH_PRC AS AGE_PREV_AMT
              , 0 AS AGE_CURR_QTY
              , 0 AS AGE_CURR_AMT
              , SUM(A.STKB_QTY) AS STKB_PREV_QTY
@@ -1307,8 +1307,8 @@ SELECT A.STOCK_TYPE_ID
              , SUM(A.HAND_QTY) * A.PURCH_PRC AS HAND_CURR_AMT
              , 0 AS AGE_PREV_QTY
              , 0 AS AGE_PREV_AMT
-             , SUM(F.AGE_QTY) AS AGE_CURR_QTY
-             , SUM(F.AGE_QTY) * A.PURCH_PRC AS AGE_CURR_AMT
+             , SUM(D.AGE_QTY) AS AGE_CURR_QTY
+             , SUM(D.AGE_QTY) * A.PURCH_PRC AS AGE_CURR_AMT
              , 0 AS STKB_PREV_QTY
              , 0 AS STKB_PREV_AMT
              , SUM(A.STKB_QTY) AS STKB_CURR_QTY
@@ -1341,8 +1341,8 @@ SELECT A.STOCK_TYPE_ID
              , SUM(A.HAND_QTY) * A.PURCH_PRC AS HAND_PREV_AMT
              , 0 AS HAND_CURR_QTY
              , 0 AS HAND_CURR_AMT
-             , SUM(F.AGE_QTY) AS AGE_PREV_QTY
-             , SUM(F.AGE_QTY) * A.PURCH_PRC AS AGE_PREV_AMT
+             , SUM(D.AGE_QTY) AS AGE_PREV_QTY
+             , SUM(D.AGE_QTY) * A.PURCH_PRC AS AGE_PREV_AMT
              , 0 AS AGE_CURR_QTY
              , 0 AS AGE_CURR_AMT
              , SUM(A.STKB_QTY) AS STKB_PREV_QTY
