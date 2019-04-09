@@ -63,8 +63,8 @@
 		         decode(nvl(#{staffmemo} , '0') , '0' , 0 , 1),
 		         decode(nvl(#{codymemo}  , '0') , '0' , 0 , 1),
 		         decode(nvl(#{hpmemo}    , '0') , '0' , 0 , 1),
-		         decode(nvl(#{htmemo}    , '0') , '0' , 0 , 1),
-		         #{usermaindeptid}, #{userid} , sysdate ,#{userid} , sysdate
+		         #{userid} , sysdate ,#{userid} , sysdate,
+		         #{usermaindeptid},decode(nvl(#{htmemo}    , '0') , '0' , 0 , 1)
 		   from dual
     </insert>
     <update id="memoUpdate" parameterType="Map">
