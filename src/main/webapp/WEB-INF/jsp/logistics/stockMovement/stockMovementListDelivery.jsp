@@ -1164,11 +1164,35 @@
       return false;
     }
 
+    if ($("#giptdate").val() < today) {
+        Common.alert("Cannot select back date.");
+        $("#giptdate").focus();
+        return false;
+      }
+
+    if ($("#giptdate").val() > today) {
+        Common.alert("Cannot select future date.");
+        $("#giptdate").focus();
+        return false;
+      }
+
     if ($("#gipfdate").val() == "") {
       Common.alert("Please select the GI Doc Date.");
       $("#gipfdate").focus();
       return false;
     }
+
+    if ($("#gipfdate").val() < today) {
+    	Common.alert("Cannot select back date.");
+        $("#gipfdate").focus();
+        return false;
+      }
+
+    if ($("#gipfdate").val() > today) {
+    	Common.alert("Cannot select future date.");
+        $("#gipfdate").focus();
+        return false;
+      }
 
     data.check = check;
     data.checked = check;
