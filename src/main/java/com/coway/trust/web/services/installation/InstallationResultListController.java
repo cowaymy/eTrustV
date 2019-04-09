@@ -42,6 +42,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 06/03/2019    ONGHC      1.0.3       - Create getSalStat
  * 18/03/2019    ONGHC      1.0.4       - Remove runInstSp 3rd Part
  * 22/03/2019    ONGHC      1.0.5       - Add Checking on SP_LOGISTIC_REQUEST's Data
+ * 09/04/2019    ONGHC      1.0.6       - Amend installationNotePop to add param
  *********************************************************************************************/
 
 @Controller
@@ -861,6 +862,16 @@ public class InstallationResultListController {
    */
   @RequestMapping(value = "/installationNotePop.do")
   public String installationNotePop(@RequestParam Map<String, Object> params, ModelMap model) {
+    List<EgovMap> instTypeList = installationResultListService.selectInstallationType();
+    List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
+
+    logger.debug("===========================installationNotePop.do=====================================");
+    logger.debug(" INSTALLATION TYPE : {}", instTypeList);
+    logger.debug(" INSTALLATION STATUS : {}", installStatus);
+    logger.debug("===========================installationNotePop.do=====================================");
+
+    model.addAttribute("instTypeList", instTypeList);
+    model.addAttribute("installStatus", installStatus);
     return "services/installation/installationNotePop";
   }
 
