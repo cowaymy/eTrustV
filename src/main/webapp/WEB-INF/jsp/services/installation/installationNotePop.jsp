@@ -6,7 +6,7 @@
  ----------------------------------------------------------------
  09/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  -->
- 
+
 <script type="text/javaScript">
   $(document).ready(
     function() {
@@ -139,6 +139,13 @@
       $("#installationNoteForm #reportFileName").val('/services/InstallationNote_WithOldOrderNo.rpt');
       $("#installationNoteForm #viewType").val("PDF");
       $("#installationNoteForm #reportDownFileName").val("InstallationNote_" + day + month + date.getFullYear());
+
+      console.log("V_WHERESQL " + whereSeq);
+      console.log("V_WHERESQL2 " + whereSeq2);
+      console.log("V_ORDERBYSQL " + orderBySql);
+      console.log("V_SELECTSQL " + SelectSql);
+      console.log("V_FULLSQL " + FullSql);
+      console.log("V_INSTALLSTATUS " + installStatus);
 
       var option = {
         isProcedure : true,
