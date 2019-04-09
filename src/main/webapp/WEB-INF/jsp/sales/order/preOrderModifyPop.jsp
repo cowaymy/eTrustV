@@ -453,6 +453,11 @@
                 return false;
             }
 
+            if(!fn_validFile()) {
+                $('#aTabFL').click();
+                return false;
+            }
+
             var formData = new FormData();
             formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
             formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
@@ -536,14 +541,18 @@
             var file = evt.target.files[0];
              if(file.name != sofFileName){
                  myFileCaches[1] = {file:file};
-                 update.push(sofFileId);
+                 if(sofFileName != ""){
+                     update.push(sofFileId);
+                 }
              }
         });
         $('#nricFile').change( function(evt) {
             var file = evt.target.files[0];
             if(file.name != nricFileName){
                 myFileCaches[2] = {file:file};
-                update.push(nricFileId);
+                if(nricFileName != ""){
+                    update.push(nricFileId);
+                }
             }
         });
         $('#payFile').change(function(evt) {
@@ -1945,6 +1954,22 @@
             $(".input_text[name='otherFileTxt2']").val("");
             $('#otherFile2').change();
         }
+    }
+
+    function fn_validFile() {
+        var isValid = true, msg = "";
+        if(FormUtil.isEmpty($('#sofFile').val().trim())) {
+            isValid = false;
+            msg += "* Please upload copy of SOF<br>";
+        }
+        if(FormUtil.isEmpty($('#nricFile').val().trim())) {
+            isValid = false;
+            msg += "* Please upload copy of NRIC<br>";
+        }
+
+        if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+        return isValid;
     }
 
 </script>
