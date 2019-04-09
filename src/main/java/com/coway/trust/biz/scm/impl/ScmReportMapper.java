@@ -50,4 +50,7 @@ public interface ScmReportMapper {
 	void updateScmCurrency(Map<String, Object> params);
 	void executeScmInventory(Map<String, Object> params);
 	void executeScmDaysInInventory(Map<String, Object> params);
+	
+	//	Aging Report
+	List<EgovMap> selectAgingInventory(Map<String, Object> params);
 }

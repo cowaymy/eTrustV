@@ -257,4 +257,10 @@ public class ScmReportServiceImpl implements ScmReportService {
 			e.printStackTrace();
 		}
 	}
+	
+	//	Aging Report
+	@Override
+	public List<EgovMap> selectAgingInventory(Map<String, Object> params) {
+		return	scmReportMapper.selectAgingInventory(params);
+	}
 }

@@ -47,4 +47,7 @@ public interface ScmReportService {
 	List<EgovMap> selectScmCurrency(Map<String, Object> params);
 	void updateScmCurrency(Map<String, Object> params);
 	void executeScmInventory(Map<String, Object> params);
+	
+	//	Aging Report
+	List<EgovMap> selectAgingInventory(Map<String, Object> params);
 }
