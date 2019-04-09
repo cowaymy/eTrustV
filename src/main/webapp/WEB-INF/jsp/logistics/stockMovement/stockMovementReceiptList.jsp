@@ -54,6 +54,7 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "rciptqty",headerText :"<spring:message code='log.head.grqty'/>"              ,width:120    ,height:30 , editalble:true},
                      {dataField: "docno",headerText :"<spring:message code='log.head.refdocno'/>"                 ,width:120    ,height:30                },
                      {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},
+                     {dataField: "serialcheck",headerText :"Serial Check"              ,width:120    ,height:30 , visible:false},
                      {dataField: "uomnm",headerText :"UOM"                ,width:120    ,height:30                },
                      {dataField: "crtdt",headerText :"Reqst. Create Date"                ,width:120    ,height:30                },
                      {dataField: "reqdt",headerText :"Reqst. Required Date"                ,width:120    ,height:30                },
@@ -332,7 +333,9 @@ $(function(){
                     	yn=true;
                     }
                 }
+                alert(yn);
                 if(yn){
+
 	        		$("#receipt_body").show();
 	        	    fn_gradComb();
 	        		AUIGrid.resize(gradeGrid);
@@ -547,17 +550,41 @@ function grFunc(){
 	graddata=GridCommon.getEditData(gradeGrid);
 	}
 
-		if ($("#giptdate").val() == "") {
-	        Common.alert("Please select the GR Posting Date.");
-	        $("#giptdate").focus();
-	        return false;
-	    }
+    if ($("#giptdate").val() == "") {
+        Common.alert("Please select the GI Posting Date.");
+        $("#giptdate").focus();
+        return false;
+      }
 
-	    if ($("#gipfdate").val() == "") {
-	        Common.alert("Please select the GR Doc Date.");
-	        $("#gipfdate").focus();
-	        return false;
-	    }
+      if ($("#giptdate").val() < today) {
+          Common.alert("Cannot select back date.");
+          $("#giptdate").focus();
+          return false;
+        }
+
+      if ($("#giptdate").val() > today) {
+          Common.alert("Cannot select future date.");
+          $("#giptdate").focus();
+          return false;
+        }
+
+      if ($("#gipfdate").val() == "") {
+        Common.alert("Please select the GI Doc Date.");
+        $("#gipfdate").focus();
+        return false;
+      }
+
+      if ($("#gipfdate").val() < today) {
+          Common.alert("Cannot select back date.");
+          $("#gipfdate").focus();
+          return false;
+        }
+
+      if ($("#gipfdate").val() > today) {
+          Common.alert("Cannot select future date.");
+          $("#gipfdate").focus();
+          return false;
+        }
 
 	 for (var i = 0 ; i < checkdata.length ; i++){
 	       if (checkdata[i].delydt == "" || checkdata[i].delydt == null){
