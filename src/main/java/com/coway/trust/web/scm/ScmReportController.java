@@ -87,6 +87,11 @@ public class ScmReportController {
 	public String inventoryReportView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return	"/scm/inventoryReport";
 	}
+	//	Aging Inventory
+	@RequestMapping(value = "/agingInventory.do")
+	public String agingInventory(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		return	"/scm/agingInventory";
+	}
 	
 	/*
 	 * Business Plan Report
@@ -501,5 +506,29 @@ public class ScmReportController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);
+	}
+	
+	/*
+	 * Aging Inventory
+	 */
+	//@RequestMapping(value = "/selectAgingInventory.do", method = RequestMethod.GET)
+	//public ResponseEntity<Map<String, Object>> selectAgingInventory(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+	@RequestMapping(value = "/selectAgingInventory.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectAgingInventory(@RequestBody Map<String, Object> params) {
+		
+		LOGGER.debug("selectAgingInventory : {}", params.toString());
+		String planYearMonth	= "";
+		
+		Map<String, Object> map	= new HashMap<>();
+		planYearMonth	= params.get("planYearMonth").toString();
+		planYearMonth	= planYearMonth.replace("/", "");
+		planYearMonth	= planYearMonth.substring(2, 6) + planYearMonth.substring(0, 2);
+		params.put("planYearMonth", planYearMonth);
+		
+		List<EgovMap> selectAgingInventory	= scmReportService.selectAgingInventory(params);
+		
+		map.put("selectAgingInventory", selectAgingInventory);
+		
+		return	ResponseEntity.ok(map);
 	}
 }
