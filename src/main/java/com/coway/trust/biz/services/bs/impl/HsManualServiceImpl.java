@@ -835,7 +835,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       sal0090.put("hscodyId", hsBasicmap.get("hscodyId"));
       // sal0090.put("SrvUpdateAt", SYSDATE);
 
-      hsManualMapper.updateHsSVC0006D(sal0090);
+      //hsManualMapper.updateHsSVC0006D(sal0090);
       cnt = hsManualMapper.updateHsConfigBasic(sal0090);
 
       // SrvConfigSetting --> Installation : 281
