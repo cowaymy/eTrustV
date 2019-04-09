@@ -571,17 +571,41 @@ function giFunc(){
 	    }
 
 
-     if ($("#giptdate").val() == "") {
-         Common.alert("Please select the GI Posting Date.");
-         $("#giptdate").focus();
-         return false;
-     }
+	 if ($("#giptdate").val() == "") {
+	      Common.alert("Please select the GI Posting Date.");
+	      $("#giptdate").focus();
+	      return false;
+	    }
 
-     if ($("#gipfdate").val() == "") {
-         Common.alert("Please select the GI Doc Date.");
-         $("#gipfdate").focus();
-         return false;
-     }
+	    if ($("#giptdate").val() < today) {
+	        Common.alert("Cannot select back date.");
+	        $("#giptdate").focus();
+	        return false;
+	      }
+
+	    if ($("#giptdate").val() > today) {
+	        Common.alert("Cannot select future date.");
+	        $("#giptdate").focus();
+	        return false;
+	      }
+
+	    if ($("#gipfdate").val() == "") {
+	      Common.alert("Please select the GI Doc Date.");
+	      $("#gipfdate").focus();
+	      return false;
+	    }
+
+	    if ($("#gipfdate").val() < today) {
+	        Common.alert("Cannot select back date.");
+	        $("#gipfdate").focus();
+	        return false;
+	      }
+
+	    if ($("#gipfdate").val() > today) {
+	        Common.alert("Cannot select future date.");
+	        $("#gipfdate").focus();
+	        return false;
+	      }
 
   for (var i = 0 ; i < checkdata.length ; i++){
         if (checkdata[i].delydt == "" || checkdata[i].delydt == null){
@@ -598,13 +622,13 @@ function giFunc(){
 	Common.ajax("POST", "/logistics/stocktransfer/StocktransferGoodIssue.do", data, function(result) {
 
 		var message =result.message;
-		
+
 		if("Already processed."== message){
-		 Common.alert(result.message);    	
+		 Common.alert(result.message);
 		}else{
-		 Common.alert(result.message + " <br/>"+ "MaterialDocumentNo : " + result.data);		
+		 Common.alert(result.message + " <br/>"+ "MaterialDocumentNo : " + result.data);
 		}
-		
+
 //         AUIGrid.setGridData(listGrid, result.data);
         $("#giptdate").val("");
         $("#gipfdate").val("");
