@@ -201,7 +201,7 @@
     </td>
     <th scope="row" ><spring:message code='service.title.LastHSDate'/></th>
     <td>
-    <input type="text" id="entry_lstHSDate" name="entry_lstHSDate" title="Create start Date" value="${configBasicOldInfo.bsOrderServiceSetting.setlDt}" placeholder="DD/MM/YYYY" class="j_date" />
+    <input type="text" id="entry_lstHSDate" name="entry_lstHSDate" title="Create start Date" value="${configBasicOldInfo.bsOrderServiceSetting.setlDt}" placeholder="DD/MM/YYYY" class="readonly " readonly="readonly" />
     </td>
 </tr>
 <tr>
