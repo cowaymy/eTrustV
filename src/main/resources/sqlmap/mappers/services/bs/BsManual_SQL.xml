@@ -2332,7 +2332,7 @@
                                             Project1.C1 C1  ,
                                             Project1.C2 C2  ,
                                             Project1.C3 C3  ,
-                                            Project1.C4 C4  ,
+                                            nvl(TO_CHAR(Project1.c4,'DD/MM/YYYY'),'-') C4  ,
                                             Project1.CONFIG_BS_REM CONFIG_BS_REM  ,
                                             Project1.CONFIG_SETT_AS CONFIG_SETT_AS  ,
                                             Project1.CONFIG_SETT_BS CONFIG_SETT_BS  ,
@@ -2361,7 +2361,7 @@
                                                  WHEN ( Extent3.MEM_ID IS NOT NULL ) THEN Extent3.NAME
                                             ELSE ''
                                                END C3  ,
-                                            to_char (Extent4.SETL_DT,'DD/MM/YYYY') C4,
+                                            Extent4.SETL_DT C4,
                                             Extent2.CONFIG_SETT_INS CONFIG_SETT_INS  ,
                                             Extent2.CONFIG_SETT_BS CONFIG_SETT_BS  ,
                                             Extent2.CONFIG_SETT_AS CONFIG_SETT_AS  ,
