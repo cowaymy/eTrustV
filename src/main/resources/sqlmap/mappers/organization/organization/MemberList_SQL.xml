@@ -130,46 +130,46 @@
     <!-- By KV started Position query -->
     <select id="selectMemberList" parameterType="Map" resultType="egovMap">
         <![CDATA[
-	       SELECT row_number,
-			Project1.MEM_ID MemberID,
-			Project1.MEM_TYPE  MemberType,
-			Project1.MEM_CODE MemberCode,
-			Project1.CODE_NAME CodeName,
-			Project1.NAME Name,
-			Project1.NRIC NRIC,
-			Project1.status_name,
-			Project1.UPD_DT Updated,
-			Project1.STUS Status,
+           SELECT row_number,
+            Project1.MEM_ID MemberID,
+            Project1.MEM_TYPE  MemberType,
+            Project1.MEM_CODE MemberCode,
+            Project1.CODE_NAME CodeName,
+            Project1.NAME Name,
+            Project1.NRIC NRIC,
+            Project1.status_name,
+            Project1.UPD_DT Updated,
+            Project1.STUS Status,
 
             /*By KV - Position*/
-			Project1.position_name,
-	        Project1.brnch_id,
-	        Project1.ct_sub_grp,
+            Project1.position_name,
+            Project1.brnch_id,
+            Project1.ct_sub_grp,
 
 
-			Project1.C1 C1,
-			project1.TRAINEE_TYPE,
-			project1.TEST_RESULT,
-			project1.approved_by,
+            Project1.C1 C1,
+            project1.TRAINEE_TYPE,
+            project1.TEST_RESULT,
+            project1.approved_by,
             project1.branch,
             project1.CRT_DT,
             project1.ADDRESS,
             project1.GRP_CODE
 
-			FROM ( SELECT Project1.C1 C1,
-			         Project1.MEM_ID MEM_ID,
-			         Project1.MEM_CODE MEM_CODE,
-			         Project1.MEM_TYPE MEM_TYPE,
-			         Project1.NAME NAME,
-			         Project1.NRIC NRIC,
-			         Project1.STUS STUS,
-			        TO_CHAR(Project1.UPD_DT,'DD-MM-YYYY') UPD_DT,
-			         Project1.CODE_NAME CODE_NAME,
-			         Project1.status_name,
+            FROM ( SELECT Project1.C1 C1,
+                     Project1.MEM_ID MEM_ID,
+                     Project1.MEM_CODE MEM_CODE,
+                     Project1.MEM_TYPE MEM_TYPE,
+                     Project1.NAME NAME,
+                     Project1.NRIC NRIC,
+                     Project1.STUS STUS,
+                    TO_CHAR(Project1.UPD_DT,'DD-MM-YYYY') UPD_DT,
+                     Project1.CODE_NAME CODE_NAME,
+                     Project1.status_name,
 
-			         /*By KV*/
-			         Project1.position_name,
-			         Project1.brnch_id,
+                     /*By KV*/
+                     Project1.position_name,
+                     Project1.brnch_id,
                     Project1.ct_sub_grp,
                     project1.TRAINEE_TYPE,
                     project1.TEST_RESULT,
@@ -179,65 +179,75 @@
                     project1.ADDRESS,
                     project1.GRP_CODE,
 
-			         row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
+                     row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
 
-			         FROM ( SELECT DISTINCT
-			        GroupBy1.A1 C1,
-			        Extent1.MEM_ID MEM_ID,
-			        Extent1.MEM_CODE MEM_CODE,
-			        Extent1.MEM_TYPE MEM_TYPE,
-			        Extent1.NAME NAME,
-			        Extent1.NRIC NRIC,
-			        Extent1.STUS STUS,
-			        Extent1.UPD_DT UPD_DT,
-			        Extent2.CODE_NAME CODE_NAME,
-			        Extent3.NAME as status_name,
-			        Extent1.brnch as brnch_id,
-			        Extent5.ct_sub_grp,
+                     FROM ( SELECT DISTINCT
+                    GroupBy1.A1 C1,
+                    Extent1.MEM_ID MEM_ID,
+                    Extent1.MEM_CODE MEM_CODE,
+                    Extent1.MEM_TYPE MEM_TYPE,
+                    Extent1.NAME NAME,
+                    Extent1.NRIC NRIC,
+                    Extent1.STUS STUS,
+                    Extent1.UPD_DT UPD_DT,
+                    Extent2.CODE_NAME CODE_NAME,
+                    Extent3.NAME as status_name,
+                    Extent1.brnch as brnch_id,
+                    Extent5.ct_sub_grp,
                     extent1.TRAINEE_TYPE,
-			        /*By KV*/
-			        Extend6.MEM_ORG_DESC position_name,
-			        CASE
-				        WHEN ( Extend8.COURS_TEST_RESULT = 'P' )
-				        THEN 'Pass'
-				        WHEN ( Extend8.COURS_TEST_RESULT = 'F' )
-				        THEN 'Fail'
-				        WHEN ( Extend8.COURS_TEST_RESULT = 'AB' )
-				        THEN 'Absent'
-			        ELSE ''
-			        END TEST_RESULT,
-			        Extent9.USER_NAME as approved_by,
+                    /*By KV*/
+                    Extend6.MEM_ORG_DESC position_name,
+                    CASE
+                        WHEN ( Extend8.COURS_TEST_RESULT = 'P' )
+                        THEN 'Pass'
+                        WHEN ( Extend8.COURS_TEST_RESULT = 'F' )
+                        THEN 'Fail'
+                        WHEN ( Extend8.COURS_TEST_RESULT = 'AB' )
+                        THEN 'Absent'
+                    ELSE ''
+                    END TEST_RESULT,
+                    Extent9.USER_NAME as approved_by,
                     Extent10.CODE as branch,
                     Extent1.CRT_DT,
-                    CASE
-                        WHEN ( Extent1.ADDR_DTL is null )
-                        THEN ''
-                    ELSE(Extent1.ADDR_DTL || ',' || Extent1.STREET || ',' || Extent11.AREA || ',' || Extent11.POSTCODE || ',' || Extent11.CITY || ',' || Extent11.STATE || ',' || Extent11.COUNTRY) END as ADDRESS,
+                    CASE WHEN Extent1.AREA_ID IS NOT NULL THEN (
+                            CASE
+                                WHEN ( Extent1.ADDR_DTL is null )
+                                THEN ''
+                            ELSE(Extent1.ADDR_DTL || ',' || Extent1.STREET || ',' || Extent11.AREA || ',' || Extent11.POSTCODE || ',' || Extent11.CITY || ',' || Extent11.STATE || ',' || Extent11.COUNTRY) END)
+                        ELSE Extent1.ADDR1 || ', ' || Extent1.ADDR2 || ', ' ||
+                            (CASE WHEN Extent1.ADDR3 IS NULL THEN '' ELSE Extent1.ADDR3 || ', ' END) ||
+                            (CASE WHEN Extent1.ADDR4 IS NULL THEN '' ELSE Extent1.ADDR4 || ', ' END) ||
+                            Extent1.POSTCODE || ' ' ||Extent15.AREA_NAME || ', ' || Extent14.NAME || ', ' || Extent13.NAME
+                        END
+                    as ADDRESS,
                     Extent12.GRP_CODE
 
-			        FROM   ORG0001D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
-			        INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
-			        INNER JOIN SYS0038M Extent3 ON Extent1.STUS = Extent3.STUS_CODE_ID   /*StatusCode	eg.active, not active*/
+                    FROM   ORG0001D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
+                    INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
+                    INNER JOIN SYS0038M Extent3 ON Extent1.STUS = Extent3.STUS_CODE_ID   /*StatusCode   eg.active, not active*/
 
-			         /* By KV - add Position*/
-			        LEFT JOIN ORG0005D Extent5 ON Extent5.MEM_ID = Extent1.MEM_ID          /*MemberOrganization eg.get mem_LVL*/
-			        LEFT JOIN ORG0012D Extend6 ON Extend6.MEM_TYPE_ID =  Extent1.MEM_TYPE and Extend6.MEM_ORG_LVL =  Extent5.MEM_LVL /* MemberOrganizationDesc eg get full desc of mem_type and mem_LVL*/
-			        LEFT JOIN SYS0047M Extent9 ON Extent1.CRT_USER_ID = Extent9.USER_ID
+                     /* By KV - add Position*/
+                    LEFT JOIN ORG0005D Extent5 ON Extent5.MEM_ID = Extent1.MEM_ID          /*MemberOrganization eg.get mem_LVL*/
+                    LEFT JOIN ORG0012D Extend6 ON Extend6.MEM_TYPE_ID =  Extent1.MEM_TYPE and Extend6.MEM_ORG_LVL =  Extent5.MEM_LVL /* MemberOrganizationDesc eg get full desc of mem_type and mem_LVL*/
+                    LEFT JOIN SYS0047M Extent9 ON Extent1.CRT_USER_ID = Extent9.USER_ID
                     LEFT JOIN SYS0005M Extent10 ON Extent1.BRNCH = Extent10.BRNCH_ID
                     LEFT JOIN SYS0064M Extent11 ON Extent1.AREA_ID = Extent11.AREA_ID
                     LEFT JOIN ORG1001V Extent12 ON Extent1.MEM_ID = Extent12.MEM_ID
+                    LEFT JOIN SYS0015M Extent13 ON Extent1.COUNTRY = Extent13.CNTY_ID
+                    LEFT JOIN SYS0035M Extent14 ON Extent1.STATE = Extent14.STATE_ID
+                    LEFT JOIN SYS0039M Extent15 ON Extent1.STATE = Extent15.AREA_STATE_ID AND Extent1.AREA = Extent15.AREA_ID
 
-			        CROSS JOIN  (SELECT
-			            COUNT(1) A1
-			            FROM ORG0001D Extent4,
-			            ORG0005D Extent7
+                    CROSS JOIN  (SELECT
+                        COUNT(1) A1
+                        FROM ORG0001D Extent4,
+                        ORG0005D Extent7
 
-			             WHERE 1=1
-			             ]]>
-			             <if test="memTypeCom != null and memTypeCom != ''">
-			               AND  Extent4.MEM_TYPE =  #{memTypeCom}
-			             </if>
-			             <if test="code != null and code != ''">
+                         WHERE 1=1
+                         ]]>
+                         <if test="memTypeCom != null and memTypeCom != ''">
+                           AND  Extent4.MEM_TYPE =  #{memTypeCom}
+                         </if>
+                         <if test="code != null and code != ''">
                            AND  UPPER(Extent4.MEM_CODE) LIKE  UPPER('%' ||  #{code} || '%')
                          </if>
                          <if test="name != null and name != ''">
@@ -277,29 +287,29 @@
                             AND Extent7.MEM_LVL= #{position}
                          </if>
                          <if test="code == null or code == ''">
-	                        <choose>
-	                                <when test="memberLevel == 1">
-	                                    AND Extent7.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
-	                                </when>
-	                                <when test="memberLevel == 2">
-	                                    AND Extent7.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )
-	                                </when>
-	                                <when test="memberLevel == 3">
-	                                    AND Extent7.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
-	                                </when>
-	                                <when test="memberLevel == 4">
-	                                    AND Extent4.MEM_CODE = #{userName}
-	                                </when>
-	                        </choose>
+                            <choose>
+                                    <when test="memberLevel == 1">
+                                        AND Extent7.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+                                    </when>
+                                    <when test="memberLevel == 2">
+                                        AND Extent7.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )
+                                    </when>
+                                    <when test="memberLevel == 3">
+                                        AND Extent7.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+                                    </when>
+                                    <when test="memberLevel == 4">
+                                        AND Extent4.MEM_CODE = #{userName}
+                                    </when>
+                            </choose>
                          </if>
-			            )  GroupBy1
-			            LEFT JOIN (  SELECT *
-							              FROM (SELECT A.*, ROW_NUMBER() OVER (PARTITION BY COURS_MEM_ID
-							                                                 ORDER BY COURS_ITM_ID DESC) ITM_ROWS
-							                    FROM MSC0009D A)
-							              WHERE ITM_ROWS = 1 ) Extend8 ON Extent1.MEM_ID = Extend8.COURS_MEM_ID
+                        )  GroupBy1
+                        LEFT JOIN (  SELECT *
+                                          FROM (SELECT A.*, ROW_NUMBER() OVER (PARTITION BY COURS_MEM_ID
+                                                                             ORDER BY COURS_ITM_ID DESC) ITM_ROWS
+                                                FROM MSC0009D A)
+                                          WHERE ITM_ROWS = 1 ) Extend8 ON Extent1.MEM_ID = Extend8.COURS_MEM_ID
 
-			            WHERE 1=1
+                        WHERE 1=1
 
                         <if test="memTypeCom != null and memTypeCom != ''">
                           AND   Extent1.MEM_TYPE =  #{memTypeCom}
@@ -344,10 +354,10 @@
                             AND Extent5.MEM_LVL= #{position}
                          </if>
 
-						<choose>
-						        <when test="memberLevel == 1">
+                        <choose>
+                                <when test="memberLevel == 1">
                                     AND Extent5.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
-						        </when>
+                                </when>
                                 <when test="memberLevel == 2">
                                     AND Extent5.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )
                                 </when>
@@ -361,11 +371,11 @@
                                 </when>
                         </choose>
                   <![CDATA[
-			    )   Project1
-			)  Project1
-			WHERE Project1.row_number >  0
-			ORDER BY Project1.MEM_CODE ASC
-			 ]]>
+                )   Project1
+            )  Project1
+            WHERE Project1.row_number >  0
+            ORDER BY Project1.MEM_CODE ASC
+             ]]>
     </select>
     <!-- By KV end - add Position query -->
 
@@ -589,13 +599,13 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.JOIN_DT ,
                 Extent1.GENDER GENDER  ,
                 Extent26.AREA_ID,
-                Extent1.STREET,
-                Extent1.ADDR_DTL,
-                Extent26.CITY,
-                Extent26.AREA,
-                Extent26.POSTCODE,
-                Extent26.STATE,
-                Extent26.COUNTRY,
+                NVL(Extent1.STREET, Extent1.ADDR1) STREET,
+                NVL(Extent1.ADDR_DTL, Extent1.ADDR2 || ' ' || Extent1.ADDR3 || ' ' || Extent1.ADDR4) ADDR_DTL,
+                NVL(Extent26.CITY, Extent33.CITY) CITY,
+                NVL(Extent26.AREA, Extent32.AREA_NAME) AREA,
+                NVL(Extent26.POSTCODE, Extent1.POSTCODE) POSTCODE,
+                NVL(Extent26.STATE, Extent31.NAME) STATE,
+                NVL(Extent26.COUNTRY, Extent30.NAME) COUNTRY,
                 Extent1.TEL_OFFICE TEL_OFFICE  ,
                 Extent1.TEL_HUSE TEL_HUSE  ,
                 Extent1.TEL_MOBILE TEL_MOBILE  ,
@@ -911,13 +921,13 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 ELSE Extent24.CODE_NAME
                    END C60,
                 CASE
-			         WHEN ( Extent27.CODE_NAME IS NULL ) THEN ''
-			      ELSE Extent27.CODE_NAME
-			    END RELIGION,
-			    CASE
-			         WHEN ( Extent28.CNFM_DT IS NULL ) THEN ''
-			      ELSE TO_CHAR(Extent28.CNFM_DT,'yyyy-mm-dd')
-			    END CNFM_DT,
+                     WHEN ( Extent27.CODE_NAME IS NULL ) THEN ''
+                  ELSE Extent27.CODE_NAME
+                END RELIGION,
+                CASE
+                     WHEN ( Extent28.CNFM_DT IS NULL ) THEN ''
+                  ELSE TO_CHAR(Extent28.CNFM_DT,'yyyy-mm-dd')
+                END CNFM_DT,
                 EXTENT1.MAIN_DEPT,
                 EXTENT1.SUB_DEPT,
                 BANK.NAME AS BANK_NAME,
@@ -953,16 +963,20 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 LEFT JOIN ORG0001D Extent20   ON Extent20.MEM_CODE = Extent1.SPONS_CODE
                 LEFT JOIN SYS0013M Extent21   ON Extent21.CODE_ID = TO_NUMBER(Extent1.MARTL,99999.99)
                 LEFT JOIN SYS0028M Extent22   ON ( Extent22.WH_LOC_CODE = Extent1.MEM_CODE )
-                AND ( Extent1.MEM_TYPE IN ( 2,3 )
-               )
-        LEFT JOIN SYS0013M Extent23   ON Extent23.CODE_ID = Extent1.RANK
+                    AND ( Extent1.MEM_TYPE IN ( 2,3 ))
+                LEFT JOIN SYS0013M Extent23   ON Extent23.CODE_ID = Extent1.RANK
                 LEFT JOIN SYS0013M Extent24   ON Extent24.CODE_ID = TO_NUMBER(Extent1.BIZ_TYPE,99999.99)
                 LEFT JOIN SYS0047M Extent25   ON Extent25.HR_CODE = Extent1.MEM_CODE
                 LEFT JOIN SYS0064M Extent26   ON Extent26.AREA_ID = Extent1.AREA_ID
-                 left join SYS0004M BANK  ON BANK.BANK_ID = Extent1.BANK
+                LEFT JOIN SYS0004M BANK        ON BANK.BANK_ID = Extent1.BANK
                 LEFT JOIN SYS0013M Extent27   ON Extent27.CODE_ID = Extent1.RELIGION
                 LEFT JOIN ORG0003D Extent28   ON Extent28.APLCTN_ID = Extent1.APLICNT_ID
-                LEFT JOIN SYS0089M Extent29 on Extent28.APLICNT_MEETPOINT = Extent29.MEET_POINT_ID
+                LEFT JOIN SYS0089M Extent29   ON Extent28.APLICNT_MEETPOINT = Extent29.MEET_POINT_ID
+                LEFT JOIN SYS0015M Extent30   ON Extent1.COUNTRY = Extent30.CNTY_ID
+                LEFT JOIN SYS0035M Extent31   ON Extent1.STATE = Extent31.STATE_ID
+                LEFT JOIN SYS0039M Extent32   ON Extent1.STATE = Extent32.AREA_STATE_ID
+                    AND Extent1.AREA = Extent32.AREA_ID
+                LEFT JOIN SYS0064M Extent33   ON Extent1.POSTCODE = Extent33.POSTCODE
           WHERE  Extent1.MEM_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>
