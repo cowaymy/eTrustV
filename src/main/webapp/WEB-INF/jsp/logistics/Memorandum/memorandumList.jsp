@@ -387,7 +387,7 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
                     <td id="vupddt" ></td>
                 </tr>
                 <tr>
-                    <td id="vmemo" colspan="4"></td>
+                    <td colspan="4"><span id="vmemo"></span></td>
                 </tr>
             </tbody>
             </table>
