@@ -158,9 +158,14 @@ function fnSetResult() {
 		temp.categoryName	= listObj[i].categoryName;
 		temp.stockCode	= listObj[i].stockCode;
 		temp.stockName	= listObj[i].stockName;
-		if ( 1 == listObj[i].seq )	temp.agingName	= "Aging";		else	temp.agingName	= "On-hand";
-		temp.aging		= listObj[i].aging;
-		if ( 1 == listObj[i].seq )	temp.monHis		= "Receiving";	else	temp.monHis		= "Forwarding";
+		//if ( 1 == listObj[i].seq )	temp.agingName	= "Aging (Receivinig)";		else	temp.agingName	= "On-hand (Forwarding)";
+		//temp.aging		= listObj[i].aging;
+		//if ( 1 == listObj[i].seq )	temp.monHis		= "Receiving";	else	temp.monHis		= "Forwarding";
+		temp.handQty	= listObj[i].handQty;
+		temp.ageOneSum	= listObj[i].ageOneSum;
+		temp.ageTwoSum	= listObj[i].ageTwoSum;
+		temp.ageThrSum	= listObj[i].ageThrSum;
+		temp.ovrThrSum	= listObj[i].ovrThrSum;
 		temp.m101		= listObj[i].m101;	temp.m102		= listObj[i].m102;	temp.m103		= listObj[i].m103;	temp.m104		= listObj[i].m104;	temp.m105		= listObj[i].m105;	temp.m106		= listObj[i].m106;
 		temp.m107		= listObj[i].m107;	temp.m108		= listObj[i].m108;	temp.m109		= listObj[i].m109;	temp.m110		= listObj[i].m110;	temp.m111		= listObj[i].m111;	temp.m112		= listObj[i].m112;
 		temp.m201		= listObj[i].m201;	temp.m202		= listObj[i].m202;	temp.m203		= listObj[i].m203;	temp.m204		= listObj[i].m204;	temp.m205		= listObj[i].m205;	temp.m206		= listObj[i].m206;
@@ -177,9 +182,14 @@ function fnSetResult() {
 		temp1.categoryName	= listObj[i].categoryName;
 		temp1.stockCode	= listObj[i].stockCode;
 		temp1.stockName	= listObj[i].stockName;
-		if ( 1 == listObj[i].seq )	temp1.agingName	= "Aging";		else	temp1.agingName	= "On-hand";
-		temp1.aging		= (parseInt(listObj[i].aging) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( 1 == listObj[i].seq )	temp1.monHis	= "Receiving";	else	temp1.monHis	= "Forwarding";
+		//if ( 1 == listObj[i].seq )	temp1.agingName	= "Aging (Receiving)";		else	temp1.agingName	= "On-hand (Forwarding)";
+		//temp1.aging		= (parseInt(listObj[i].aging) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		//if ( 1 == listObj[i].seq )	temp1.monHis	= "Receiving";	else	temp1.monHis	= "Forwarding";
+		temp1.handQty	= (parseInt(listObj[i].handQty) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( null == listObj[i].ageOneSum )	temp1.ageOneSum	= " ";	else	temp1.ageOneSum	= (parseInt(listObj[i].ageOneSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( null == listObj[i].ageTwoSum )	temp1.ageTwoSum	= " ";	else	temp1.ageTwoSum	= (parseInt(listObj[i].ageTwoSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( null == listObj[i].ageThrSum )	temp1.ageThrSum	= " ";	else	temp1.ageThrSum	= (parseInt(listObj[i].ageThrSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( null == listObj[i].ovrThrSum )	temp1.ovrThrSum	= " ";	else	temp1.ovrThrSum	= (parseInt(listObj[i].ovrThrSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
 		if ( null == listObj[i].m101 )	temp1.m101	= " ";	else	temp1.m101		= (parseInt(listObj[i].m101) * parseFloat(listObj[i].purchPrc)).toFixed(1);
 		if ( null == listObj[i].m102 )  temp1.m102  = " ";  else  temp1.m102		= (parseInt(listObj[i].m102) * parseFloat(listObj[i].purchPrc)).toFixed(1);
 		if ( null == listObj[i].m103 )  temp1.m103  = " ";  else  temp1.m103		= (parseInt(listObj[i].m103) * parseFloat(listObj[i].purchPrc)).toFixed(1);
@@ -276,20 +286,30 @@ var myLayout	=
 			mergeRef : "stockCode",
 	 		style : "my-columnLeft"
 	 	}, {
-	 		headerText : "Inventory",
-	 		dataField : "agingName",
-	 		//dataType : "numeric",
-	 		style : "my-columnLeft"
-	 	}, {
-	 		headerText : "Inventory",
-	 		dataField : "aging",
+	 		headerText : "On-hand",
+	 		dataField : "handQty",
 	 		dataType : "numeric",
 	 		style : "my-columnRight"
 	 	}, {
-	 		headerText : "Monthly His.",
-	 		dataField : "monHis",
-	 		//dataType : "numeric",
-	 		style : "my-columnLeft"
+	 		headerText : "~1Year",
+	 		dataField : "ageOneSum",
+	 		dataType : "numeric",
+	 		style : "my-columnRight"
+	 	}, {
+	 		headerText : "~2Year",
+	 		dataField : "ageTwoSum",
+	 		dataType : "numeric",
+	 		style : "my-columnRight"
+	 	}, {
+	 		headerText : "~3Year",
+	 		dataField : "ageThrSum",
+	 		dataType : "numeric",
+	 		style : "my-columnRight"
+	 	}, {
+	 		headerText : "3Year ~",
+	 		dataField : "ovrThrSum",
+	 		dataType : "numeric",
+	 		style : "my-columnRight"
 	 	},
 	 	{	headerText : "-1M",	dataField : "m101",	dataType : "numeric",	style : "my-columnRight"	},
 	 	{	headerText : "-2M",	dataField : "m102",	dataType : "numeric",	style : "my-columnRight"	},
