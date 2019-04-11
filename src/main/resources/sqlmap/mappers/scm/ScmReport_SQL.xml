@@ -465,7 +465,7 @@ SELECT TEAM
   FROM (
         SELECT DECODE(A.RNO, 1, '1', 2, '2', 3, '3', 4, '4', 5, '5', 6, '6', 7, '7', 8, '8', 9, '9'
                            , 10, '10', 11, '11', 12, '12', 13, '13', 14, '14', 15, '15', 16, '16') AS RNO
-             , A.TEAM, A.STOCK_CODE, A.SALES_ORD_QTY, A.SALES_ACC_PER, A.START_WEEK, A.END_WEEK, A.SCM_WEEK
+             , A.TEAM, A.STOCK_CODE, A.STOCK_NAME, A.SALES_ORD_QTY, A.SALES_ACC_PER, A.START_WEEK, A.END_WEEK, A.SCM_WEEK
           FROM (
                 SELECT ROW_NUMBER() OVER (PARTITION BY A.SCM ORDER BY A.SCM_YEAR DESC, A.SCM_WEEK DESC) AS RNO
                      , 'team' AS TEAM
