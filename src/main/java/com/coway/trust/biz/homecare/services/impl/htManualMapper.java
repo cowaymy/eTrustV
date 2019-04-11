@@ -130,7 +130,7 @@ public interface htManualMapper {
 
 	EgovMap selectSerMember(Map<String, Object> params);
 
-	public List<EgovMap> selectHSCodyList(Map<String, Object> params);
+	public List<EgovMap> selectHTMemberList(Map<String, Object> params);
 
 	String selectMemberId(Map<String, Object> params);
 
