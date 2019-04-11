@@ -947,9 +947,9 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
   }
 
   @Override
-  public List<EgovMap> selectHSCodyList(Map<String, Object> params) {
+  public List<EgovMap> selectHTMemberList(Map<String, Object> params) {
     // TODO Auto-generated method stub
-    return htManualMapper.selectHSCodyList(params);
+    return htManualMapper.selectHTMemberList(params);
   }
 
   @Override
