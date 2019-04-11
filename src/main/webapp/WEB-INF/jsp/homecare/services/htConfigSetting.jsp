@@ -43,61 +43,13 @@
                                     //headerText : "Sales Order",
                                     headerText : 'Care Service Order No',
                                     width : 200
-                                }, /*{
-                                    dataField : "hsDate",
-                                    headerText : "HS Date",
-                                    width : 120 ,
-                                    visible:false
                                 }, {
-                                    dataField : "no",
-                                    headerText : "HS Order",
-                                    width : 120,
-                                    visible:false
-                                }, {
-                                    dataField : "c5",
-                                    headerText : "Assign Cody",
-                                    width : 120,
-                                    visible:false
-                                }, {
-                                    dataField : "code",
-                                    headerText : "Cody Status",
-                                    width : 120,
-                                    visible:false
-                                }, {
-                                    dataField : "code1",
-                                    headerText : "HS Status",
-                                    width : 120,
-                                    visible:false
-                                }, {
-                                    dataField : "month",
-                                    headerText : "Complete Cody",
-                                    width : 120                             ,
-                                    visible:false
-                                }, {
-                                    dataField : "brnchId",
-                                    headerText : "Branch",
-                                    width : 120
-                                     ,
-                                    visible:false
-                                }, {
-                                    dataField : "schdulId",
-                                    headerText : "schdulId",
-                                    width : 120                                 ,
-                                    visible:false
-                                       ,
-                                    visible:false
-                                }, {
-                                    dataField : "salesOrdId",
-                                    headerText : "salesOrdId",
-                                    width : 120,
-                                    visible:false
-                                        },*/ {
-                                    dataField : "codyMangrUserId",
+                                    dataField : "memCode",
                                     //headerText : "Cody Manager",
-                                    headerText : '<spring:message code="service.grid.CodyManager" />',
-                                    width : 120
+                                    headerText : 'Homecare Technician',
+                                    width : 200
                                       }, {
-                                    dataField : "codyBrnchCode",
+                                    dataField : "code",
                                     //headerText : "Branch Code",
                                     headerText : '<spring:message code="service.grid.BranchCode" />',
                                     width : 120
@@ -138,14 +90,6 @@
             basicManagementGrid();
 
             AUIGrid.setSelectionMode(myGridID, "singleRow");
-
-            // 셀 더블클릭 이벤트 바인딩
-/*          AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-               salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
-    //                var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid;
-               Common.popupDiv("/bs/hsConfigBasicPop.do?&salesOrdId="+salesOrdId, null, null , true , '_ConfigBasicPop');
-            });    */
-
 
                 AUIGrid.bind(myGridID, "cellClick", function(event) {
                   salesOrdId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
