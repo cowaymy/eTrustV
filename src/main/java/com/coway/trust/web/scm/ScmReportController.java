@@ -511,8 +511,24 @@ public class ScmReportController {
 	/*
 	 * Aging Inventory
 	 */
-	//@RequestMapping(value = "/selectAgingInventory.do", method = RequestMethod.GET)
-	//public ResponseEntity<Map<String, Object>> selectAgingInventory(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+	@RequestMapping(value = "/selectAgingInventoryHeader.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectAgingInventoryHeader(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("selectAgingInventoryHeader : {}", params.toString());
+		String planYearMonth	= "";
+		
+		Map<String, Object> map	= new HashMap<>();
+		planYearMonth	= params.get("planYearMonth").toString();
+		planYearMonth	= planYearMonth.replace("/", "");
+		planYearMonth	= planYearMonth.substring(2, 6) + planYearMonth.substring(0, 2);
+		params.put("planYearMonth", planYearMonth);
+		
+		List<EgovMap> selectAgingInventoryHeader	= scmReportService.selectAgingInventoryHeader(params);
+		
+		map.put("selectAgingInventoryHeader", selectAgingInventoryHeader);
+		
+		return	ResponseEntity.ok(map);
+	}
 	@RequestMapping(value = "/selectAgingInventory.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectAgingInventory(@RequestBody Map<String, Object> params) {
 		
