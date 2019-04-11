@@ -14,6 +14,21 @@
 	text-align : right;
 	margin-top : -20px;
 }
+.my-columnRight1 {
+	text-align : right;
+	background : #CCCCFF;
+	color : #000;
+}
+.my-columnRight2 {
+	text-align : right;
+	background : #FFFFCC;
+	color : #000;
+}
+.my-columnRight3 {
+	text-align : right;
+	background : #FFCCCC;
+	color : #000;
+}
 .my-columnLeft {
 	text-align : left;
 	margin-top : -20px;
@@ -58,6 +73,11 @@ function fnSearch() {
 			, function(result) {
 				listObj	= result.selectAgingInventory;
 				fnSetResult();
+				if ( 0 < result.selectAgingInventory.length ) {
+					$("#btnExcel").removeClass("btn_disabled");
+				} else {
+					$("#btnExcel").addClass("btn_disabled");
+				}
 			}
 			, ""
 			, { async : true, isShowLabel : false });
@@ -158,9 +178,6 @@ function fnSetResult() {
 		temp.categoryName	= listObj[i].categoryName;
 		temp.stockCode	= listObj[i].stockCode;
 		temp.stockName	= listObj[i].stockName;
-		//if ( 1 == listObj[i].seq )	temp.agingName	= "Aging (Receivinig)";		else	temp.agingName	= "On-hand (Forwarding)";
-		//temp.aging		= listObj[i].aging;
-		//if ( 1 == listObj[i].seq )	temp.monHis		= "Receiving";	else	temp.monHis		= "Forwarding";
 		temp.handQty	= listObj[i].handQty;
 		temp.ageOneSum	= listObj[i].ageOneSum;
 		temp.ageTwoSum	= listObj[i].ageTwoSum;
@@ -182,51 +199,48 @@ function fnSetResult() {
 		temp1.categoryName	= listObj[i].categoryName;
 		temp1.stockCode	= listObj[i].stockCode;
 		temp1.stockName	= listObj[i].stockName;
-		//if ( 1 == listObj[i].seq )	temp1.agingName	= "Aging (Receiving)";		else	temp1.agingName	= "On-hand (Forwarding)";
-		//temp1.aging		= (parseInt(listObj[i].aging) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		//if ( 1 == listObj[i].seq )	temp1.monHis	= "Receiving";	else	temp1.monHis	= "Forwarding";
 		temp1.handQty	= (parseInt(listObj[i].handQty) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].ageOneSum )	temp1.ageOneSum	= " ";	else	temp1.ageOneSum	= (parseInt(listObj[i].ageOneSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].ageTwoSum )	temp1.ageTwoSum	= " ";	else	temp1.ageTwoSum	= (parseInt(listObj[i].ageTwoSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].ageThrSum )	temp1.ageThrSum	= " ";	else	temp1.ageThrSum	= (parseInt(listObj[i].ageThrSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].ovrThrSum )	temp1.ovrThrSum	= " ";	else	temp1.ovrThrSum	= (parseInt(listObj[i].ovrThrSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m101 )	temp1.m101	= " ";	else	temp1.m101		= (parseInt(listObj[i].m101) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m102 )  temp1.m102  = " ";  else  temp1.m102		= (parseInt(listObj[i].m102) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m103 )  temp1.m103  = " ";  else  temp1.m103		= (parseInt(listObj[i].m103) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m104 )  temp1.m104  = " ";  else  temp1.m104		= (parseInt(listObj[i].m104) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m105 )  temp1.m105  = " ";  else  temp1.m105		= (parseInt(listObj[i].m105) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m106 )  temp1.m106  = " ";  else  temp1.m106		= (parseInt(listObj[i].m106) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m107 )  temp1.m107  = " ";  else  temp1.m107		= (parseInt(listObj[i].m107) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m108 )  temp1.m108  = " ";  else  temp1.m108		= (parseInt(listObj[i].m108) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m109 )  temp1.m109  = " ";  else  temp1.m109		= (parseInt(listObj[i].m109) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m110 )  temp1.m110  = " ";  else  temp1.m110		= (parseInt(listObj[i].m110) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m111 )  temp1.m111  = " ";  else  temp1.m111		= (parseInt(listObj[i].m111) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m112 )  temp1.m112  = " ";  else  temp1.m112		= (parseInt(listObj[i].m112) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m201 )  temp1.m201  = " ";  else  temp1.m201		= (parseInt(listObj[i].m201) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m202 )  temp1.m202  = " ";  else  temp1.m202		= (parseInt(listObj[i].m202) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m203 )  temp1.m203  = " ";  else  temp1.m203		= (parseInt(listObj[i].m203) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m204 )  temp1.m204  = " ";  else  temp1.m204		= (parseInt(listObj[i].m204) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m205 )  temp1.m205  = " ";  else  temp1.m205		= (parseInt(listObj[i].m205) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m206 )  temp1.m206  = " ";  else  temp1.m206		= (parseInt(listObj[i].m206) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m207 )  temp1.m207  = " ";  else  temp1.m207		= (parseInt(listObj[i].m207) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m208 )  temp1.m208  = " ";  else  temp1.m208		= (parseInt(listObj[i].m208) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m209 )  temp1.m209  = " ";  else  temp1.m209		= (parseInt(listObj[i].m209) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m210 )  temp1.m210  = " ";  else  temp1.m210		= (parseInt(listObj[i].m210) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m211 )  temp1.m211  = " ";  else  temp1.m211		= (parseInt(listObj[i].m211) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m212 )  temp1.m212  = " ";  else  temp1.m312		= (parseInt(listObj[i].m212) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m301 )  temp1.m301  = " ";  else  temp1.m301		= (parseInt(listObj[i].m301) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m302 )  temp1.m302  = " ";  else  temp1.m302		= (parseInt(listObj[i].m302) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m303 )  temp1.m303  = " ";  else  temp1.m303		= (parseInt(listObj[i].m303) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m304 )  temp1.m304  = " ";  else  temp1.m304		= (parseInt(listObj[i].m304) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m305 )  temp1.m305  = " ";  else  temp1.m305		= (parseInt(listObj[i].m305) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m306 )  temp1.m306  = " ";  else  temp1.m306		= (parseInt(listObj[i].m306) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m307 )  temp1.m307  = " ";  else  temp1.m307		= (parseInt(listObj[i].m307) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m308 )  temp1.m308  = " ";  else  temp1.m308		= (parseInt(listObj[i].m308) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m309 )  temp1.m309  = " ";  else  temp1.m309		= (parseInt(listObj[i].m309) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m310 )  temp1.m310  = " ";  else  temp1.m310		= (parseInt(listObj[i].m310) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m311 )  temp1.m311  = " ";  else  temp1.m311		= (parseInt(listObj[i].m311) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m312 )  temp1.m312  = " ";  else  temp1.m312		= (parseInt(listObj[i].m312) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( null == listObj[i].m3Over )  temp1.m3Over  = " ";  temp1.m3Over	= (parseInt(listObj[i].m3Over) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].ageOneSum )	temp1.ageOneSum	= "-";	else	temp1.ageOneSum	= (parseInt(listObj[i].ageOneSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].ageTwoSum )	temp1.ageTwoSum	= "-";	else	temp1.ageTwoSum	= (parseInt(listObj[i].ageTwoSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].ageThrSum )	temp1.ageThrSum	= "-";	else	temp1.ageThrSum	= (parseInt(listObj[i].ageThrSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].ovrThrSum )	temp1.ovrThrSum	= "-";	else	temp1.ovrThrSum	= (parseInt(listObj[i].ovrThrSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m101 )	temp1.m101	= "-";	else	temp1.m101		= (parseInt(listObj[i].m101) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m102 )  temp1.m102  = "-";  else  temp1.m102		= (parseInt(listObj[i].m102) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m103 )  temp1.m103  = "-";  else  temp1.m103		= (parseInt(listObj[i].m103) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m104 )  temp1.m104  = "-";  else  temp1.m104		= (parseInt(listObj[i].m104) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m105 )  temp1.m105  = "-";  else  temp1.m105		= (parseInt(listObj[i].m105) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m106 )  temp1.m106  = "-";  else  temp1.m106		= (parseInt(listObj[i].m106) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m107 )  temp1.m107  = "-";  else  temp1.m107		= (parseInt(listObj[i].m107) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m108 )  temp1.m108  = "-";  else  temp1.m108		= (parseInt(listObj[i].m108) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m109 )  temp1.m109  = "-";  else  temp1.m109		= (parseInt(listObj[i].m109) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m110 )  temp1.m110  = "-";  else  temp1.m110		= (parseInt(listObj[i].m110) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m111 )  temp1.m111  = "-";  else  temp1.m111		= (parseInt(listObj[i].m111) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m112 )  temp1.m112  = "-";  else  temp1.m112		= (parseInt(listObj[i].m112) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m201 )  temp1.m201  = "-";  else  temp1.m201		= (parseInt(listObj[i].m201) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m202 )  temp1.m202  = "-";  else  temp1.m202		= (parseInt(listObj[i].m202) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m203 )  temp1.m203  = "-";  else  temp1.m203		= (parseInt(listObj[i].m203) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m204 )  temp1.m204  = "-";  else  temp1.m204		= (parseInt(listObj[i].m204) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m205 )  temp1.m205  = "-";  else  temp1.m205		= (parseInt(listObj[i].m205) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m206 )  temp1.m206  = "-";  else  temp1.m206		= (parseInt(listObj[i].m206) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m207 )  temp1.m207  = "-";  else  temp1.m207		= (parseInt(listObj[i].m207) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m208 )  temp1.m208  = "-";  else  temp1.m208		= (parseInt(listObj[i].m208) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m209 )  temp1.m209  = "-";  else  temp1.m209		= (parseInt(listObj[i].m209) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m210 )  temp1.m210  = "-";  else  temp1.m210		= (parseInt(listObj[i].m210) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m211 )  temp1.m211  = "-";  else  temp1.m211		= (parseInt(listObj[i].m211) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m212 )  temp1.m212  = "-";  else  temp1.m312		= (parseInt(listObj[i].m212) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m301 )  temp1.m301  = "-";  else  temp1.m301		= (parseInt(listObj[i].m301) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m302 )  temp1.m302  = "-";  else  temp1.m302		= (parseInt(listObj[i].m302) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m303 )  temp1.m303  = "-";  else  temp1.m303		= (parseInt(listObj[i].m303) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m304 )  temp1.m304  = "-";  else  temp1.m304		= (parseInt(listObj[i].m304) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m305 )  temp1.m305  = "-";  else  temp1.m305		= (parseInt(listObj[i].m305) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m306 )  temp1.m306  = "-";  else  temp1.m306		= (parseInt(listObj[i].m306) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m307 )  temp1.m307  = "-";  else  temp1.m307		= (parseInt(listObj[i].m307) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m308 )  temp1.m308  = "-";  else  temp1.m308		= (parseInt(listObj[i].m308) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m309 )  temp1.m309  = "-";  else  temp1.m309		= (parseInt(listObj[i].m309) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m310 )  temp1.m310  = "-";  else  temp1.m310		= (parseInt(listObj[i].m310) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m311 )  temp1.m311  = "-";  else  temp1.m311		= (parseInt(listObj[i].m311) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m312 )  temp1.m312  = "-";  else  temp1.m312		= (parseInt(listObj[i].m312) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m3Over )  temp1.m3Over  = "-";  temp1.m3Over	= (parseInt(listObj[i].m3Over) * parseFloat(listObj[i].purchPrc)).toFixed(1);
 		temp1.purchPrc	= listObj[i].purchPrc;
 		amtList.push(temp1);
 	}
@@ -253,7 +267,7 @@ var myOption	= {
 	editable : false,
 	enableCellMerge : true,
 	enableRestore : false,
-	fixedColumnCount : 7
+	fixedColumnCount : 9
 };
 var myLayout	= 
 	[
@@ -294,22 +308,22 @@ var myLayout	=
 	 		headerText : "~1Year",
 	 		dataField : "ageOneSum",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+	 		style : "my-columnRight1"
 	 	}, {
 	 		headerText : "~2Year",
 	 		dataField : "ageTwoSum",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+	 		style : "my-columnRight1"
 	 	}, {
 	 		headerText : "~3Year",
 	 		dataField : "ageThrSum",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+	 		style : "my-columnRight1"
 	 	}, {
 	 		headerText : "3Year ~",
 	 		dataField : "ovrThrSum",
 	 		dataType : "numeric",
-	 		style : "my-columnRight"
+	 		style : "my-columnRight1"
 	 	},
 	 	{	headerText : "-1M",	dataField : "m101",	dataType : "numeric",	style : "my-columnRight"	},
 	 	{	headerText : "-2M",	dataField : "m102",	dataType : "numeric",	style : "my-columnRight"	},
@@ -440,9 +454,12 @@ $(document).ready(function() {
 		</form>
 	</section>								<!-- section search_table end -->
 	<section class="search_result">				<!-- section search_result start -->
+		<ul class="right_btns">
+			<li><p id="btnExcel" class="btn_grid btn_disabled"><a onclick="fnExcel(this, 'Aging Inventory');">Excel</a></p></li>
+		</ul>
 		<article class="grid_wrap">				<!-- article grid_wrap start -->
 			<!-- Detail Grid -->
-			<div id="aging_wrap" style="height:694px;"></div>
+			<div id="aging_wrap" style="height:667px;"></div>
 		</article>								<!-- article grid_wrap end -->
 	</section>									<!-- section search_result end -->
 </section>									<!-- section content end -->
