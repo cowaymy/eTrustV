@@ -61,6 +61,8 @@
 	    var prodReturnColumnLayout = [
 	         {dataField : "retnNo", headerText : "<spring:message code='sal.title.text.returnNo' />", width : '15%'},
 	         {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '10%'},
+	         {dataField : "stkRetnRem", headerText : "<spring:message code='sal.text.remark' />", width : '40%'},
+	         {dataField : "stkRetnDt", headerText : "<spring:message code='sal.text.returnDate' />", width : '11%'},
 	         {dataField : "created1", headerText : "<spring:message code='sal.text.createDate' />", width : '11%'},
 	         {dataField : "username1", headerText : "<spring:message code='sal.text.creator' />", width : '11%'},
 	         {dataField : "memCodeName2", headerText : "<spring:message code='sal.title.text.assignCt' />"},
