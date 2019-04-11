@@ -82,6 +82,292 @@ function fnSearch() {
 			, ""
 			, { async : true, isShowLabel : false });
 }
+function fnSearchHeader() {
+	var myLayout	= [];
+	var myOption	= {};
+	
+	if ( AUIGrid.isCreated(myGridID) ) {
+		AUIGrid.destroy(myGridID);
+	}
+	myOption	= {
+		usePaging : false,
+		useGroupingPanel : false,
+		showRowNumColumn : false,
+		showRowCheckColumn : false,
+		showStateColumn : false,
+		showEditedCellMarker : false,
+		showFooter : false,
+		editable : false,
+		enableCellMerge : true,
+		enableRestore : false,
+		fixedColumnCount : 9
+	};
+	
+	var params	= {
+		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects"),
+		scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects")
+	};
+	params	= $.extend($("#MainForm").serializeJSON(), params);
+	
+	Common.ajax("GET"
+			, "/scm/selectAgingInventoryHeader.do"
+			, params
+			, function(result) {
+				if ( null == result.selectAgingInventoryHeader || 1 > result.selectAgingInventoryHeader.length ) {
+					if ( AUIGrid.isCreated(myGridID) ) {
+						AUIGrid.destroy(myGridID);
+					}
+					Common.alert("Calendar Information is wrong");
+					return	false;
+				}
+				
+				//	create layout
+				myLayout.push(
+						{
+							headerText : "Type",
+							dataField : result.selectAgingInventoryHeader[0].typeName,
+							style : "my-columnCenter"
+						}, {
+							headerText : "Category",
+							dataField : result.selectAgingInventoryHeader[0].categoryName,
+							style : "my-columnCenter"
+						}, {
+							headerText : "Code",
+							dataField : result.selectAgingInventoryHeader[0].stockCode,
+							style : "my-columnCenter"
+						}, {
+							headerText : "Name",
+							dataField : result.selectAgingInventoryHeader[0].stockName,
+							style : "my-columnLeft"
+						}, {
+							headerText : "On-hand",
+							dataField : result.selectAgingInventoryHeader[0].handQty,
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : "~1 Year",
+							dataField : result.selectAgingInventoryHeader[0].ageOneSum,
+							dataType : "numeric",
+							style : "my-columnRight2"
+						}, {
+							headerText : "~2 Year",
+							dataField : result.selectAgingInventoryHeader[0].ageTwoSum,
+							dataType : "numeric",
+							style : "my-columnRight2"
+						}, {
+							headerText : "~3 Year",
+							dataField : result.selectAgingInventoryHeader[0].ageThrSum,
+							dataType : "numeric",
+							style : "my-columnRight2"
+						}, {
+							headerText : "3 Year ~",
+							dataField : result.selectAgingInventoryHeader[0].ovrThrSum,
+							dataType : "numeric",
+							style : "my-columnRight2"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m101MmYear,
+							dataField : "m101",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m102MmYear,
+							dataField : "m102",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m103MmYear,
+							dataField : "m103",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m104MmYear,
+							dataField : "m104",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m105MmYear,
+							dataField : "m105",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m106MmYear,
+							dataField : "m106",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m107MmYear,
+							dataField : "m107",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m108MmYear,
+							dataField : "m108",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m109MmYear,
+							dataField : "m109",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m110MmYear,
+							dataField : "m110",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m111MmYear,
+							dataField : "m111",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m112MmYear,
+							dataField : "m112",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m201MmYear,
+							dataField : "m201",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m202MmYear,
+							dataField : "m202",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m203MmYear,
+							dataField : "m203",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m204MmYear,
+							dataField : "m204",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m205MmYear,
+							dataField : "m205",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m206MmYear,
+							dataField : "m206",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m207MmYear,
+							dataField : "m207",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m208MmYear,
+							dataField : "m208",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m209MmYear,
+							dataField : "m209",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m210MmYear,
+							dataField : "m210",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m211MmYear,
+							dataField : "m211",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m212MmYear,
+							dataField : "m212",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m301MmYear,
+							dataField : "m301",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m302MmYear,
+							dataField : "m302",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m303MmYear,
+							dataField : "m303",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m304MmYear,
+							dataField : "m304",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m305MmYear,
+							dataField : "m305",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m306MmYear,
+							dataField : "m306",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m307MmYear,
+							dataField : "m307",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m308MmYear,
+							dataField : "m308",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m309MmYear,
+							dataField : "m309",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m310MmYear,
+							dataField : "m310",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m311MmYear,
+							dataField : "m311",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m312MmYear,
+							dataField : "m312",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}, {
+							headerText : result.selectAgingInventoryHeader[0].m313MmYear,
+							dataField : "m3Over",
+							dataType : "numeric",
+							style : "my-columnRight"
+						}
+				);
+				
+				myGridID	= GridCommon.createAUIGrid("aging_wrap", myLayout, "", myOption);
+				
+				fnSearch();
+			}
+			, function(jqXHR, textStatus, errorThrown) {
+				try {
+					console.log("HeaderFail Status : " + jqXHR.status);
+					console.log("code : "        + jqXHR.responseJSON.code);
+					console.log("message : "     + jqXHR.responseJSON.message);
+					console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+				} catch ( e ) {
+					console.log(e);
+				}
+				Common.alert("Fail : " + jqXHR.responseJSON.message);
+			});
+}
 function fnExcel(obj, fileName) {
 	//	1. grid id
 	//	2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
@@ -204,43 +490,43 @@ function fnSetResult() {
 		if ( "-" == listObj[i].ageTwoSum )	temp1.ageTwoSum	= "-";	else	temp1.ageTwoSum	= (parseInt(listObj[i].ageTwoSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
 		if ( "-" == listObj[i].ageThrSum )	temp1.ageThrSum	= "-";	else	temp1.ageThrSum	= (parseInt(listObj[i].ageThrSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
 		if ( "-" == listObj[i].ovrThrSum )	temp1.ovrThrSum	= "-";	else	temp1.ovrThrSum	= (parseInt(listObj[i].ovrThrSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m101 )	temp1.m101	= "-";	else	temp1.m101		= (parseInt(listObj[i].m101) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m102 )  temp1.m102  = "-";  else  temp1.m102		= (parseInt(listObj[i].m102) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m103 )  temp1.m103  = "-";  else  temp1.m103		= (parseInt(listObj[i].m103) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m104 )  temp1.m104  = "-";  else  temp1.m104		= (parseInt(listObj[i].m104) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m105 )  temp1.m105  = "-";  else  temp1.m105		= (parseInt(listObj[i].m105) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m106 )  temp1.m106  = "-";  else  temp1.m106		= (parseInt(listObj[i].m106) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m107 )  temp1.m107  = "-";  else  temp1.m107		= (parseInt(listObj[i].m107) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m108 )  temp1.m108  = "-";  else  temp1.m108		= (parseInt(listObj[i].m108) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m109 )  temp1.m109  = "-";  else  temp1.m109		= (parseInt(listObj[i].m109) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m110 )  temp1.m110  = "-";  else  temp1.m110		= (parseInt(listObj[i].m110) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m111 )  temp1.m111  = "-";  else  temp1.m111		= (parseInt(listObj[i].m111) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m112 )  temp1.m112  = "-";  else  temp1.m112		= (parseInt(listObj[i].m112) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m201 )  temp1.m201  = "-";  else  temp1.m201		= (parseInt(listObj[i].m201) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m202 )  temp1.m202  = "-";  else  temp1.m202		= (parseInt(listObj[i].m202) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m203 )  temp1.m203  = "-";  else  temp1.m203		= (parseInt(listObj[i].m203) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m204 )  temp1.m204  = "-";  else  temp1.m204		= (parseInt(listObj[i].m204) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m205 )  temp1.m205  = "-";  else  temp1.m205		= (parseInt(listObj[i].m205) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m206 )  temp1.m206  = "-";  else  temp1.m206		= (parseInt(listObj[i].m206) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m207 )  temp1.m207  = "-";  else  temp1.m207		= (parseInt(listObj[i].m207) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m208 )  temp1.m208  = "-";  else  temp1.m208		= (parseInt(listObj[i].m208) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m209 )  temp1.m209  = "-";  else  temp1.m209		= (parseInt(listObj[i].m209) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m210 )  temp1.m210  = "-";  else  temp1.m210		= (parseInt(listObj[i].m210) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m211 )  temp1.m211  = "-";  else  temp1.m211		= (parseInt(listObj[i].m211) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m212 )  temp1.m212  = "-";  else  temp1.m312		= (parseInt(listObj[i].m212) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m301 )  temp1.m301  = "-";  else  temp1.m301		= (parseInt(listObj[i].m301) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m302 )  temp1.m302  = "-";  else  temp1.m302		= (parseInt(listObj[i].m302) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m303 )  temp1.m303  = "-";  else  temp1.m303		= (parseInt(listObj[i].m303) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m304 )  temp1.m304  = "-";  else  temp1.m304		= (parseInt(listObj[i].m304) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m305 )  temp1.m305  = "-";  else  temp1.m305		= (parseInt(listObj[i].m305) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m306 )  temp1.m306  = "-";  else  temp1.m306		= (parseInt(listObj[i].m306) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m307 )  temp1.m307  = "-";  else  temp1.m307		= (parseInt(listObj[i].m307) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m308 )  temp1.m308  = "-";  else  temp1.m308		= (parseInt(listObj[i].m308) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m309 )  temp1.m309  = "-";  else  temp1.m309		= (parseInt(listObj[i].m309) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m310 )  temp1.m310  = "-";  else  temp1.m310		= (parseInt(listObj[i].m310) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m311 )  temp1.m311  = "-";  else  temp1.m311		= (parseInt(listObj[i].m311) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m312 )  temp1.m312  = "-";  else  temp1.m312		= (parseInt(listObj[i].m312) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m3Over )  temp1.m3Over  = "-";  temp1.m3Over	= (parseInt(listObj[i].m3Over) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m101 )	temp1.m101	= "-";	else	temp1.m101	= (parseInt(listObj[i].m101) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m102 )  temp1.m102  = "-";	else	temp1.m102	= (parseInt(listObj[i].m102) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m103 )  temp1.m103  = "-";	else	temp1.m103	= (parseInt(listObj[i].m103) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m104 )  temp1.m104  = "-";	else	temp1.m104	= (parseInt(listObj[i].m104) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m105 )  temp1.m105  = "-";	else	temp1.m105	= (parseInt(listObj[i].m105) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m106 )  temp1.m106  = "-";	else	temp1.m106	= (parseInt(listObj[i].m106) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m107 )  temp1.m107  = "-";	else	temp1.m107	= (parseInt(listObj[i].m107) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m108 )  temp1.m108  = "-";	else	temp1.m108	= (parseInt(listObj[i].m108) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m109 )  temp1.m109  = "-";	else	temp1.m109	= (parseInt(listObj[i].m109) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m110 )  temp1.m110  = "-";	else	temp1.m110	= (parseInt(listObj[i].m110) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m111 )  temp1.m111  = "-";	else	temp1.m111	= (parseInt(listObj[i].m111) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m112 )  temp1.m112  = "-";	else	temp1.m112	= (parseInt(listObj[i].m112) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m201 )  temp1.m201  = "-";	else	temp1.m201	= (parseInt(listObj[i].m201) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m202 )  temp1.m202  = "-";	else	temp1.m202	= (parseInt(listObj[i].m202) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m203 )  temp1.m203  = "-";	else	temp1.m203	= (parseInt(listObj[i].m203) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m204 )  temp1.m204  = "-";	else	temp1.m204	= (parseInt(listObj[i].m204) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m205 )  temp1.m205  = "-";	else	temp1.m205	= (parseInt(listObj[i].m205) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m206 )  temp1.m206  = "-";	else	temp1.m206	= (parseInt(listObj[i].m206) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m207 )  temp1.m207  = "-";	else	temp1.m207	= (parseInt(listObj[i].m207) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m208 )  temp1.m208  = "-";	else	temp1.m208	= (parseInt(listObj[i].m208) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m209 )  temp1.m209  = "-";	else	temp1.m209	= (parseInt(listObj[i].m209) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m210 )  temp1.m210  = "-";	else	temp1.m210	= (parseInt(listObj[i].m210) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m211 )  temp1.m211  = "-";	else	temp1.m211	= (parseInt(listObj[i].m211) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m212 )  temp1.m212  = "-";	else	temp1.m312	= (parseInt(listObj[i].m212) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m301 )  temp1.m301  = "-";	else	temp1.m301	= (parseInt(listObj[i].m301) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m302 )  temp1.m302  = "-";	else	temp1.m302	= (parseInt(listObj[i].m302) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m303 )  temp1.m303  = "-";	else	temp1.m303	= (parseInt(listObj[i].m303) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m304 )  temp1.m304  = "-";	else	temp1.m304	= (parseInt(listObj[i].m304) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m305 )  temp1.m305  = "-";	else	temp1.m305	= (parseInt(listObj[i].m305) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m306 )  temp1.m306  = "-";	else	temp1.m306	= (parseInt(listObj[i].m306) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m307 )  temp1.m307  = "-";	else	temp1.m307	= (parseInt(listObj[i].m307) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m308 )  temp1.m308  = "-";	else	temp1.m308	= (parseInt(listObj[i].m308) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m309 )  temp1.m309  = "-";	else	temp1.m309	= (parseInt(listObj[i].m309) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m310 )  temp1.m310  = "-";	else	temp1.m310	= (parseInt(listObj[i].m310) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m311 )  temp1.m311  = "-";	else	temp1.m311	= (parseInt(listObj[i].m311) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m312 )  temp1.m312  = "-";	else	temp1.m312	= (parseInt(listObj[i].m312) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( "-" == listObj[i].m3Over )  temp1.m3Over  = "-";	else	temp1.m3Over	= (parseInt(listObj[i].m3Over) * parseFloat(listObj[i].purchPrc)).toFixed(1);
 		temp1.purchPrc	= listObj[i].purchPrc;
 		amtList.push(temp1);
 	}
@@ -256,116 +542,10 @@ function fnSetResult() {
  * Grid create & setting
  */
 var myGridID;
-var myOption	= {
-	usePaging : false,
-	useGroupingPanel : false,
-	showRowNumColumn : false,
-	showRowCheckColumn : false,
-	showStateColumn : false,
-	showEditedCellMarker : false,
-	showFooter : false,
-	editable : false,
-	enableCellMerge : true,
-	enableRestore : false,
-	fixedColumnCount : 9
-};
-var myLayout	= 
-	[
-	 	{
-	 		headerText : "Type",
-	 		dataField : "typeName",
-	 		cellMerge : true,
-			mergePolicy : "restrict",
-			mergeRef : "stockCode",
-	 		style : "my-columnCenter"
-	 	}, {
-	 		headerText : "Category",
-	 		dataField : "categoryName",
-	 		cellMerge : true,
-			mergePolicy : "restrict",
-			mergeRef : "stockCode",
-	 		style : "my-columnCenter"
-	 	}, {
-	 		headerText : "Code",
-	 		dataField : "stockCode",
-	 		cellMerge : true,
-			mergePolicy : "restrict",
-			mergeRef : "stockCode",
-	 		style : "my-columnCenter"
-	 	}, {
-	 		headerText : "Name",
-	 		dataField : "stockName",
-	 		cellMerge : true,
-			mergePolicy : "restrict",
-			mergeRef : "stockCode",
-	 		style : "my-columnLeft"
-	 	}, {
-	 		headerText : "On-hand",
-	 		dataField : "handQty",
-	 		dataType : "numeric",
-	 		style : "my-columnRight"
-	 	}, {
-	 		headerText : "~1Year",
-	 		dataField : "ageOneSum",
-	 		dataType : "numeric",
-	 		style : "my-columnRight1"
-	 	}, {
-	 		headerText : "~2Year",
-	 		dataField : "ageTwoSum",
-	 		dataType : "numeric",
-	 		style : "my-columnRight1"
-	 	}, {
-	 		headerText : "~3Year",
-	 		dataField : "ageThrSum",
-	 		dataType : "numeric",
-	 		style : "my-columnRight1"
-	 	}, {
-	 		headerText : "3Year ~",
-	 		dataField : "ovrThrSum",
-	 		dataType : "numeric",
-	 		style : "my-columnRight1"
-	 	},
-	 	{	headerText : "-1M",	dataField : "m101",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-2M",	dataField : "m102",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-3M",	dataField : "m103",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-4M",	dataField : "m104",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-5M",	dataField : "m105",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-6M",	dataField : "m106",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-7M",	dataField : "m107",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-8M",	dataField : "m108",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-9M",	dataField : "m109",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-10M",	dataField : "m110",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-11M",	dataField : "m111",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-12M",	dataField : "m112",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-13M",	dataField : "m201",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-14M",	dataField : "m202",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-15M",	dataField : "m203",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-16M",	dataField : "m204",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-17M",	dataField : "m205",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-18M",	dataField : "m206",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-19M",	dataField : "m207",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-20M",	dataField : "m208",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-21M",	dataField : "m209",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-22M",	dataField : "m210",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-23M",	dataField : "m211",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-24M",	dataField : "m212",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-25M",	dataField : "m301",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-26M",	dataField : "m302",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-27M",	dataField : "m300",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-28M",	dataField : "m304",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-29M",	dataField : "m305",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-30M",	dataField : "m306",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-31M",	dataField : "m307",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-32M",	dataField : "m308",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-33M",	dataField : "m309",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-34M",	dataField : "m310",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-35M",	dataField : "m311",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-36M",	dataField : "m312",	dataType : "numeric",	style : "my-columnRight"	},
-	 	{	headerText : "-36M Over",	dataField : "m3Over",	dataType : "numeric",	style : "my-columnRight"	}
-	 ];
+
 $(document).ready(function() {
 	//	Summary Grid
-	myGridID	= GridCommon.createAUIGrid("#aging_wrap", myLayout, "", myOption);
+	//myGridID	= GridCommon.createAUIGrid("#aging_wrap", myLayout, "", myOption);
 });
 </script>
 
@@ -380,7 +560,7 @@ $(document).ready(function() {
 		<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
 		<h2>Aging Inventory</h2>
 		<ul class="right_btns">
-			<li><p class="btn_blue"><a onclick="fnSearch();"><span class="search"></span>Search</a></p></li>
+			<li><p class="btn_blue"><a onclick="fnSearchHeader();"><span class="search"></span>Search</a></p></li>
 		</ul>
 	</aside>								<!-- aside title_line end -->
 	
