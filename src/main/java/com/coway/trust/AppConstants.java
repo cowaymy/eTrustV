@@ -178,4 +178,8 @@ public class AppConstants {
 
 	public static final int SIRIM_TRANSFER = 72;
 
+	public static final int RESPONSE_CODE_SUCCESS = 200;
+	public static final int RESPONSE_CODE_INVALID = 400;
+	public static final int RESPONSE_CODE_NOT_FOUND = 404;
+
 }

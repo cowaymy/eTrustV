@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.ApiMapper">
+
+<!--
+**************************************
+ * Author                  Date                    Remark
+ * Chew Kah Kit        2019/04/11           API for customer portal
+**************************************
+ -->
+
+	<select id="selectCowayCustNricOrPassport" parameterType="Map" resultType="egovMap">
+		SELECT EXTENT1.CUST_ID CowayCustId,
+		           EXTENT1.NRIC NricOrPassport,
+		           EXTENT2.TEL_M1 PhoneNumber,
+		           NVL(EXTENT2.EMAIL,'-') Email,
+		           EXTENT1.NAME FullName
+		FROM SAL0029D EXTENT1
+		JOIN SAL0027D EXTENT2 ON EXTENT1.CUST_ID = EXTENT2.CUST_ID AND EXTENT2.STUS_CODE_ID = 9
+		WHERE 1=1
+		AND ROWNUM <![CDATA[ <= ]]> 1
+        AND TYPE_ID = 964
+		AND EXTENT1.NRIC = #{nricOrPassport}
+	</select>
+
+	<insert id="insertApiAccessLog" parameterType="Map">
+   INSERT INTO SYS0097M
+   (
+        RESP_ID
+       ,REQ_PARAM
+       ,RESP_PARAM
+       ,RESP_CODE
+       ,RESP_TM
+       ,IP_ADDR
+       ,PGM_PATH
+       ,ERR_MSG
+       ,CRT_DT
+       ,CRT_USER_ID
+    ) VALUES (
+        SYS0097M_RESP_ID_SEQ.NEXTVAL
+        , #{reqParam}
+        , #{respParam}
+        , #{respCde}
+        , #{respTm}
+        , #{ipAddr}
+        , #{prgPath}
+        , #{errMsg}
+        , SYSDATE
+        , 100910
+    )
+
+</insert>
+
+</mapper>
