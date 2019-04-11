@@ -182,4 +182,8 @@ public class AppConstants {
 	public static final int RESPONSE_CODE_INVALID = 400;
 	public static final int RESPONSE_CODE_NOT_FOUND = 404;
 
+	public static final String RESPONSE_DESC_SUCCESS = "Successful Operation";
+    public static final String RESPONSE_DESC_INVALID = "Invalid NricOrPassport supplied";
+    public static final String RESPONSE_DESC_NOT_FOUND = "User not found";
+
 }

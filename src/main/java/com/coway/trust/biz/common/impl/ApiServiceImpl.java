@@ -52,16 +52,21 @@ public class ApiServiceImpl implements ApiService {
 
       if(custDetails.isEmpty()){
         params.put("respCde",AppConstants.RESPONSE_CODE_NOT_FOUND);;
+        params.put("respDesc",AppConstants.RESPONSE_DESC_NOT_FOUND);
       }else{
           params.put("respCde",AppConstants.RESPONSE_CODE_SUCCESS);;
+          params.put("respDesc",AppConstants.RESPONSE_DESC_SUCCESS);
       }
     }catch(Exception e){
       params.put("respCde",AppConstants.RESPONSE_CODE_INVALID);;
+      params.put("respDesc",AppConstants.RESPONSE_DESC_INVALID);;
       params.put("errMsg",StringUtils.substring(e.getMessage(), 0, 4000));
     }finally{
-      LOGGER.info(params.toString());
       apiMapper.insertApiAccessLog(params);
     }
+
+    custDetails.put("respCde", params.get("respCde").toString());
+    custDetails.put("respDesc",params.get("respDesc").toString());
 
 
     return custDetails;
