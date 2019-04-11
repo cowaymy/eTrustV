@@ -744,14 +744,14 @@ public class htManualController {
 		return ResponseEntity.ok(serMember);
 	}
 
-	@RequestMapping(value = "/selectHSCodyList.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/selectHTMemberList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectHSCodyList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		//params.put("codyMangrUserId", params.get("groupCode[codyMangrUserId]"));
 		//params.put("custId", params.get("groupCode[custId]"));
-		logger.debug("params(selectHSCodyList)============== {}", params);
-		List<EgovMap> hsCodyList = htManualService.selectHSCodyList(params) ;
-		logger.debug("hsCodyList(selectHSCodyList)============== {}", hsCodyList);
-		return ResponseEntity.ok( hsCodyList);
+		logger.debug("params(selectHTMemberList)============== {}", params);
+		List<EgovMap> htMemberList = htManualService.selectHTMemberList(params) ;
+		logger.debug("hsCodyList(selectHTMemberList)============== {}", htMemberList);
+		return ResponseEntity.ok(htMemberList);
 	}
 
 
