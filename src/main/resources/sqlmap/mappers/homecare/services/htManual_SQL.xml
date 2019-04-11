@@ -22,7 +22,7 @@
                 from SYS0005M s005m
                         ,SYS0013M s0013m
                 where s005m.type_id = s0013m.code_id
-                   and s005m.type_id in ( 42)
+                   and s005m.type_id in (42)
                  <choose>
                          <when test="memberLevel == 1">
                              AND S005M.CODE IN (
@@ -454,63 +454,28 @@
 <!-- cyc 2017- Nov- 13 -->
  <select id="selectHsConfigList" parameterType="Map" resultType="egovMap">
 
-                            SELECT   distinct C.CUST_ID CUST_ID
-                                        , C.NAME Name
-                                         ,SOM.SRV_ORD_NO SALES_ORD_NO
-                                          ,SOM.SRV_ORD_ID AS SALES_ORD_ID
-                                         , som.BRNCH_ID as brnch_id
-                                         <!-- ,HSM.MONTH
-                                         ,HSM.YEAR YEAR
-                                         ,HSM.MONTH || '/' || HSM.YEAR HS_DATE
-                                         ,HSM.NO
-                                         ,HSM.CODY_ID
-                                         ,HSM.STUS_CODE_ID STUS_CODE_ID
-                                         ,EXTENT2.CODE CODE -->
-<!--                                          ,sys064.CODY_BRNCH_CODE AS BRNCH_ID -->
-                                         <!-- ,SAL023.area_id,
-                                           sys064.area_id, -->
-                                           ,sys064.CODY_BRNCH_CODE
-                                           ,sys064.CODY_MANGR_USER_ID
-                                          <!-- (select  MEM_CODE
-                                                from ORG0001D ME
-                                                where 1=1
-                                                and ME.MEM_ID = HSM.cody_ID )AS c5,
-                                           HSM.STUS_CODE_ID STUS_CODE_ID,
-                                           EXTENT2.code,
-                                            sys064.CT_BRNCH_CODE,
-                                          SOM.SALES_ORD_ID AS SALES_ORD_ID,
-                                            sys064.CODY_MANGR_USER_ID,
-                                            som.BRNCH_ID as brnch_id -->
-                                FROM SAL0225D SOM
-                                        ,SAL0029D C
-                                        <!--,SYS0013M CORPTYPE -->
-                                        ,SVC0008D HSM
-                                        ,SYS0038M EXTENT2
-                                        ,sal0023d sal023
-                                        ,SYS0064M sys064
-                                        ,SAL0045D  sal45
-                                        <!--,SAL0090D sal090 -->
+    SELECT
+    DISTINCT
+    C.CUST_ID CUST_ID,
+    C.NAME NAME,
+    SOM.SRV_ORD_NO SALES_ORD_NO,
+    SOM.SRV_ORD_ID AS SALES_ORD_ID,
+    SOM.BRNCH_ID AS BRNCH_ID,
+    SAL90.SRV_CODY_ID,
+    ORG01.MEM_CODE,
+    ORG01.BRNCH,
+    BRANCH.CODE
+    FROM  SAL0225D SOM
+    LEFT JOIN SAL0029D C ON  SOM.CUST_ID = C.CUST_ID
+    LEFT JOIN SAL0090D SAL90 ON SAL90.SRV_SO_ID = SOM.SRV_ORD_ID
+    AND SAL90.SRV_STUS_ID NOT IN (8)
+    LEFT JOIN ORG0001D ORG01 ON ORG01.MEM_ID = SAL90.SRV_CODY_ID
+    LEFT JOIN SYS0005M BRANCH ON ORG01.BRNCH = BRANCH.BRNCH_ID
                                 WHERE 1=1
-                            AND SOM.CUST_ID = C.CUST_ID
-                                 /*  AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
-                                AND SOM.SRV_ORD_ID = HSM.SALES_ORD_ID(+)
-                                AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
-                                AND SOM.CUST_ADD_ID = sal023.CUST_ADD_ID
-                                and sal023.area_id = sys064.area_id*/
-                                <!-- AND SOM.CUST_ID = SAL023.CUST_ID -->
-                                AND SOM.SRV_ORD_ID = SAL45.SALES_ORD_ID
-                                AND SAL023.CUST_ADD_ID = SAL45.ADD_ID
-                                AND SAL023.AREA_ID = SYS064.AREA_ID
-                                <!--AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+) -->
-                                AND SOM.SRV_ORD_ID = HSM.SALES_ORD_ID(+)
-                                AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
-                                <!--and SOM.SALES_ORD_ID = SRV_SO_ID -->
+
                  <![CDATA[ AND SOM.STUS_CODE_ID <> 8
                                 and rownum  < 500 ]]>
-                             <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
-                                      AND  hsm.YEAR(+) = #{myBSYear}
-                                      AND  hsm.MONTH(+) = #{myBSMonth}
-                             </if>
+
                                <if test="ManuaSalesOrder != null and ManuaSalesOrder != ''">
                                       AND SOM.SRV_ORD_NO = #{ManuaSalesOrder}
                                </if>
@@ -2313,7 +2278,7 @@
 
 
                     <select id="selectConfigBasicInfo" parameterType="Map" resultType="egovMap">
-
+                    SELECT * FROM (
                      SELECT
                     Extent2.ORD_ID ORD_ID  ,
                     Extent2.ORD_NO ORD_NO  ,
@@ -2395,8 +2360,8 @@
 					        ) CUST_GENDER,
 					        NVL(RC.CODE_NAME,' ') CUST_RACE,
 					        NVL(C.EMAIL,' ') CUST_EMAIL,
-					        NVL(C.CUST_VA_NO,' ') CUST_VA_NO, --UTILS.CONVERT_TO_VARCHAR2(NVL(c.PAS_SPORT_EXPR, '01/01/1900'),200) CUST_PASSPORT_EXPR ,
-					        C.PAS_SPORT_EXPR CUST_PASSPORT_EXPR, --UTILS.CONVERT_TO_VARCHAR2(NVL(c.VISA_EXPR, '01/01/1900'),200) CUST_VISA_EXPR ,
+					        NVL(C.CUST_VA_NO,' ') CUST_VA_NO,
+					        C.PAS_SPORT_EXPR CUST_PASSPORT_EXPR,
 					        C.VISA_EXPR CUST_VISA_EXPR,
 					        NVL(SOM.PROMO_ID,0) ORD_PROMO_ID,
 					        NVL(PM.PROMO_CODE,' ') ORD_PROMO_CODE,
@@ -2491,6 +2456,9 @@
 					        LEFT JOIN ORG0001D Extent3   ON Extent2.CONFIG_BS_MEM_ID = Extent3.MEM_ID
 					        LEFT JOIN SVC0006D Extent4   ON ( Extent2.ORD_ID = Extent4.SALES_ORD_ID ) AND ( 4 = Extent4.RESULT_STUS_CODE_ID )
 					        WHERE  Extent2.ORD_ID = #{salesOrdId}
+
+					        ORDER BY Extent4.SETL_DT DESC )
+					      <![CDATA[                              WHERE ROWNUM <= 1 ]]>
          </select>
 
 
@@ -3116,16 +3084,19 @@
                             WHERE A.MEM_ID = B.MEM_ID AND A.STUS =  '1' AND B.DEPT_CODE = #{codyMangrUserId} AND B.MEM_LVL = '4'
                     </select> -->
 
-                    <select id="selectHSCodyList" parameterType="Map" resultType="egovMap">
+                    <select id="selectHTMemberList" parameterType="Map" resultType="egovMap">
                         SELECT DISTINCT D.MEM_CODE CODE_ID, D.MEM_CODE || '-' ||  D.NAME CODE_NAME
                         FROM (SELECT MEM_CODE, NAME, 1 AS QUERYNO
                               FROM ORG0001D
                               WHERE MEM_ID = (SELECT SRV_CODY_ID FROM SAL0090D WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{entry_orderNo}) AND SRV_STUS_ID = 1 )
                                union
-                              SELECT A.MEM_CODE, A.NAME , 2 AS QUERYNO
+                                SELECT A.MEM_CODE, A.NAME , 2 AS QUERYNO
                               FROM  ORG0001D A, ORG0005D B
-                              WHERE A.MEM_ID = B.MEM_ID AND A.STUS =  '1' AND B.DEPT_CODE = #{codyMangrUserId} AND B.MEM_LVL = '4'
-                              AND A.MEM_CODE NOT LIKE 'TR%'
+                              WHERE A.MEM_ID = B.MEM_ID AND A.STUS =  '1' AND B.MEM_LVL = '4'
+                              AND A.MEM_CODE LIKE 'HT%'
+                              <if test="memType != 4">
+                              AND B.MEM_UP_ID = #{htUserId}
+                              </if>
                               ORDER BY MEM_CODE
                               ) D
                               ORDER BY D.MEM_CODE
