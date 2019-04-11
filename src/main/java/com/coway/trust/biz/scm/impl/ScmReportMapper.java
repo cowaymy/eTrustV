@@ -52,5 +52,6 @@ public interface ScmReportMapper {
 	void executeScmDaysInInventory(Map<String, Object> params);
 	
 	//	Aging Report
+	List<EgovMap> selectAgingInventoryHeader(Map<String, Object> params);
 	List<EgovMap> selectAgingInventory(Map<String, Object> params);
 }

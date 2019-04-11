@@ -260,6 +260,10 @@ public class ScmReportServiceImpl implements ScmReportService {
 	
 	//	Aging Report
 	@Override
+	public List<EgovMap> selectAgingInventoryHeader(Map<String, Object> params) {
+		return	scmReportMapper.selectAgingInventoryHeader(params);
+	}
+	@Override
 	public List<EgovMap> selectAgingInventory(Map<String, Object> params) {
 		return	scmReportMapper.selectAgingInventory(params);
 	}
