@@ -1562,11 +1562,26 @@
     </update>
 
     <select id="selectProcessPaymentResult" parameterType="Map" resultType="egovMap">
-         SELECT
-            DISTINCT B.OR_NO, C.SALES_ORD_NO
-        FROM
-            PAY0252T A JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
-            LEFT JOIN SAL0001D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+        SELECT * FROM (
+            SELECT DISTINCT
+                B.OR_NO,
+                C.SALES_ORD_NO,
+                A.GROUP_SEQ
+            FROM
+            PAY0252T A
+            JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+            JOIN SAL0001D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+        UNION
+            SELECT DISTINCT
+                B.OR_NO,
+                T2.SRV_ORD_NO SALES_ORD_NO,
+                A.GROUP_SEQ
+            FROM
+            PAY0252T A
+            JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+            JOIN PAY0007D T7 ON B.BILL_ID = T7.BILL_ID
+            JOIN SAL0225D T2 ON T2.SRV_ORD_ID = T7.BILL_SO_ID
+        ) A
         WHERE
             A.GROUP_SEQ =   #{seq}
     </select>
