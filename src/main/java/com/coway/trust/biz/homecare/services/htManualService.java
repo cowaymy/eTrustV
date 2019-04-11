@@ -83,7 +83,7 @@ public interface htManualService {
 
 	EgovMap serMember(Map<String, Object> params);
 
-	List<EgovMap> selectHSCodyList(Map<String, Object> params);
+	List<EgovMap> selectHTMemberList(Map<String, Object> params);
 
 	String getSrvCodyIdbyMemcode(Map<String, Object> params);
 
