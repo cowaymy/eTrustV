@@ -2,45 +2,19 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript" language="javascript">
-
+var userId = '${SESSION_INFO.userId}';
+var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
 
 //doGetCombo('/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', '', '','entry_cmbServiceMem', 'S' , '');
         $(document).ready(function() {
 
-            //doGetCombo('/services/bs/selectHSCodyList.do', { codyMangrUserId : $("#codyMangrUserId").val(), custId : $("#custId").val()} , '', 'entry_cmbServiceMem' , 'S', '');
-
-            CommonCombo.make("entry_cmbServiceMem", '/homecare/services/selectHSCodyList.do', {codyMangrUserId : $("#codyMangrUserId").val(), entry_orderNo : $("#entry_orderNo").val()}, '${configBasicInfo.c2}', {isShowChoose: true});
-
-            //{ salesOrdNo :  $("#salesOrdNo").val() }
-            /* Common.ajax("GET",'/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', ' ',function(result) {
-
-                if(result != null && result.length != 0 ){
-                  var serMember =result.memCode;
-                  console.log("serMember:"+serMember);
-
-                  $('#entry_cmbServiceMem').val(serMember);
-                }
-              });  */
-
-
+        	     CommonCombo.make("entry_cmbServiceMem", '/homecare/services/selectHTMemberList.do', { htUserId : userId , entry_orderNo : $("#entry_orderNo").val() , memType : MEM_TYPE}, '${configBasicInfo.c2}', {isShowChoose: true});
 
            fn_getHSConfigBasicInfo();
-
 
                var configBsGen = ${configBasicInfo.configBsGen}
                $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);
 
-               //var srvMemId =  ${configBasicInfo.configBsMemId}
-             //$("#entry_cmbServiceMem").val($("entry_cmbServiceMem option:first").val());
-
-             //$("#entry_cmbServiceMem option:eq(0)").remove();
-
-             //var index = $("entry_cmbServiceMem").index($("entry_cmbServiceMem option:selected"));
-             //alert("index"+index);
-             //$("#entry_cmbServiceMem option").removeAttr('selected').find(':first').attr('selected','selected');
-             //alert($("entry_cmbServiceMem option").size());
-
-             //$("#orgGrCombo option:eq(1)").attr("selected", "selected");
         });
 
 
@@ -67,7 +41,7 @@
              var checkSuccess = {code: "00", message: "fail"};
 
               if(JSON.stringify(result) === JSON.stringify(checkSuccess) ) {
-                  Common.alert("Not Available to entry in the statue of the cody");
+                  Common.alert("Not Available to entry in the statue of the HT");
                   return;
 
               }
@@ -85,12 +59,12 @@
           var isValid = true, msg = "";
 
               if($('#entry_availability').val() <= -1 ){
-                    msg += "* Please select the BS availability.<br />";
+                    msg += "* Please select the Care Service availability.<br />";
                     isValid = false;
               }
 
               if ($('#entry_cmbServiceMem').val() <= -1){
-                    msg += "* Please select the BS incharge cody.<br />";
+                    msg += "* Please select the Homecare Technician incharge.<br />";
                     isValid = false;
               }
 
@@ -192,7 +166,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code='service.title.HSManagement'/> - <spring:message code='service.title.Configuration'/> - <spring:message code='service.title.BasicInfo'/></h1>
+<h1>Care Service- <spring:message code='service.title.Configuration'/> - <spring:message code='service.title.BasicInfo'/></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE'/></a></p></li>
 </ul>
@@ -262,7 +236,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row" ><spring:message code='service.title.HSCodyCode'/></th>
+    <th scope="row" >Homecare Technician Code</th>
     <td>
         <!-- <input type="text" id="entry_cmbServiceMem" name="entry_cmbServiceMem" title="Member Code"  class="w100p" /> -->
         <select class="w100p" id="entry_cmbServiceMem" name="entry_cmbServiceMem">
@@ -271,7 +245,7 @@
     </td>
     <th scope="row" ><spring:message code='service.title.LastHSDate'/></th>
     <td>
-    <input type="text" id="entry_lstHSDate" name="entry_lstHSDate" title="Create start Date" value="${configBasicInfo.c4}" placeholder="DD/MM/YYYY" class="j_date" />
+    <input type="text" id="entry_lstHSDate" name="entry_lstHSDate" title="Create start Date" value="${configBasicInfo.c4}" placeholder="DD/MM/YYYY"  class="readonly " readonly="readonly"  />
     </td>
 </tr>
 <tr>
