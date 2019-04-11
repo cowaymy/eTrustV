@@ -228,32 +228,6 @@ SELECT 2019 AS YEAR FROM DUAL UNION ALL
 SELECT 2019 AS YEAR FROM DUAL UNION ALL
 SELECT 2019 AS YEAR FROM DUAL
 </select>
-<!-- 
-<select id="selectBusinessPlanDetail" parameterType="Map" resultType="egovMap">
-SELECT A.YEAR
-     , A.CATEGORY_NAME
-     , A.STOCK_CODE
-     , A.STOCK_NAME
-     , A.M01, A.M02, A.M03, A.M04, A.M05, A.M06, A.M07, A.M08, A.M09, A.M10, A.M11, A.M12, A.SUMM
-  FROM (
-        SELECT A.YEAR
-             , C.CODE_NAME AS CATEGORY_NAME
-             , TO_CHAR(A.STOCK_CODE) AS STOCK_CODE
-             , TO_CHAR(B.STK_DESC) AS STOCK_NAME
-             , ROW_NUMBER() OVER (PARTITION BY A.YEAR ORDER BY B.STK_CTGRY_ID, A.STOCK_CODE) AS RN
-             , SUM(A.M01) AS M01, SUM(A.M02) AS M02, SUM(A.M03) AS M03, SUM(A.M04) AS M04, SUM(A.M05) AS M05, SUM(A.M06) AS M06
-             , SUM(A.M07) AS M07, SUM(A.M08) AS M08, SUM(A.M09) AS M09, SUM(A.M10) AS M10, SUM(A.M11) AS M11, SUM(A.M12) AS M12
-             , SUM(A.M01) + SUM(A.M02) + SUM(A.M03) + SUM(A.M04) + SUM(A.M05) + SUM(A.M06)
-             + SUM(A.M07) + SUM(A.M08) + SUM(A.M09) + SUM(A.M10) + SUM(A.M11) + SUM(A.M12) AS SUMM
-          FROM SCM0064S A
-          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
-          LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
-         WHERE A.YEAR = #{planYear}
-         GROUP BY A.YEAR, C.CODE_NAME, B.STK_CTGRY_ID, A.STOCK_CODE, B.STK_DESC
-        ) A
- ORDER BY A.RN
-</select>
- -->
 <select id="selectBusinessPlanDetail1" parameterType="Map" resultType="egovMap">
 SELECT A.YEAR, A.GBN, A.RN
      , CASE WHEN A.GBN = 1 THEN 'Business Plan'
@@ -1426,6 +1400,90 @@ UPDATE SYS0013M
 </select>
 
 <!-- Aging Inventory -->
+<select id="selectAgingInventoryHeader" parameterType="Map" resultType="egovMap">
+SELECT TYPE_NAME
+     , CATEGORY_NAME
+     , STOCK_CODE
+     , STOCK_NAME
+     , HAND_QTY
+     , AGE_ONE_SUM
+     , AGE_TWO_SUM
+     , AGE_THR_SUM
+     , OVR_THR_SUM
+     , M101_MM_YEAR, M102_MM_YEAR, M103_MM_YEAR, M104_MM_YEAR, M105_MM_YEAR, M106_MM_YEAR, M107_MM_YEAR, M108_MM_YEAR, M109_MM_YEAR, M110_MM_YEAR, M111_MM_YEAR, M112_MM_YEAR
+     , M201_MM_YEAR, M202_MM_YEAR, M203_MM_YEAR, M204_MM_YEAR, M205_MM_YEAR, M206_MM_YEAR, M207_MM_YEAR, M208_MM_YEAR, M209_MM_YEAR, M210_MM_YEAR, M211_MM_YEAR, M212_MM_YEAR
+     , M301_MM_YEAR, M302_MM_YEAR, M303_MM_YEAR, M304_MM_YEAR, M305_MM_YEAR, M306_MM_YEAR, M307_MM_YEAR, M308_MM_YEAR, M309_MM_YEAR, M310_MM_YEAR, M311_MM_YEAR, M312_MM_YEAR
+     , M313_MM_YEAR
+  FROM (
+        SELECT DECODE(A.RNO,  1,  '1',  2,  '2',  3,  '3',  4,  '4',  5,  '5',  6,  '6',  7,  '7',  8,  '8',  9,  '9', 10, '10', 11, '11', 12, '12'
+                           , 13, '13', 14, '14', 15, '15', 16, '16', 17, '17', 18, '18', 19, '19', 20, '20', 21, '21', 22, '22', 23, '23', 24, '24'
+                           , 25, '25', 26, '26', 27, '27', 28, '28', 29, '29', 30, '30', 31, '31', 32, '32', 33, '33', 34, '34', 35, '35', 36, '36'
+                           , 37, '37') AS RNO
+             , A.TYPE_NAME, A.CATEGORY_NAME, A.STOCK_CODE, A.STOCK_NAME, A.HAND_QTY, A.AGE_ONE_SUM, A.AGE_TWO_SUM, A.AGE_THR_SUM, A.OVR_THR_SUM, A.MM_YEAR
+          FROM (
+                SELECT ROW_NUMBER() OVER (PARTITION BY A.SCM ORDER BY A.SEQ) AS RNO
+                     , 'typeName' AS TYPE_NAME
+                     , 'categoryName' AS CATEGORY_NAME
+                     , 'stockCode' AS STOCK_CODE
+                     , 'stockName' AS STOCK_NAME
+                     , 'handQty' AS HAND_QTY
+                     , 'ageOneSum' AS AGE_ONE_SUM
+                     , 'ageTwoSum' AS AGE_TWO_SUM
+                     , 'ageThrSum' AS AGE_THR_SUM
+                     , 'ovrThrSum' AS OVR_THR_SUM
+                     , A.MM_YEAR
+                  FROM (
+                        SELECT A.MM_YEAR, A.SEQ, 1 AS SCM
+                          FROM (
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), - 0), 'MM/YYYY') AS MM_YEAR,  1 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), - 1), 'MM/YYYY') AS MM_YEAR,  2 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), - 2), 'MM/YYYY') AS MM_YEAR,  3 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), - 3), 'MM/YYYY') AS MM_YEAR,  4 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), - 4), 'MM/YYYY') AS MM_YEAR,  5 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), - 5), 'MM/YYYY') AS MM_YEAR,  6 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), - 6), 'MM/YYYY') AS MM_YEAR,  7 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), - 7), 'MM/YYYY') AS MM_YEAR,  8 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), - 8), 'MM/YYYY') AS MM_YEAR,  9 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), - 9), 'MM/YYYY') AS MM_YEAR, 10 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -10), 'MM/YYYY') AS MM_YEAR, 11 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -11), 'MM/YYYY') AS MM_YEAR, 12 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -12), 'MM/YYYY') AS MM_YEAR, 13 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -13), 'MM/YYYY') AS MM_YEAR, 14 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -14), 'MM/YYYY') AS MM_YEAR, 15 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -15), 'MM/YYYY') AS MM_YEAR, 16 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -16), 'MM/YYYY') AS MM_YEAR, 17 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -17), 'MM/YYYY') AS MM_YEAR, 18 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -18), 'MM/YYYY') AS MM_YEAR, 19 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -19), 'MM/YYYY') AS MM_YEAR, 20 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -20), 'MM/YYYY') AS MM_YEAR, 21 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -21), 'MM/YYYY') AS MM_YEAR, 22 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -22), 'MM/YYYY') AS MM_YEAR, 23 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -23), 'MM/YYYY') AS MM_YEAR, 24 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -24), 'MM/YYYY') AS MM_YEAR, 25 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -25), 'MM/YYYY') AS MM_YEAR, 26 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -26), 'MM/YYYY') AS MM_YEAR, 27 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -27), 'MM/YYYY') AS MM_YEAR, 28 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -28), 'MM/YYYY') AS MM_YEAR, 29 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -29), 'MM/YYYY') AS MM_YEAR, 30 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -30), 'MM/YYYY') AS MM_YEAR, 31 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -31), 'MM/YYYY') AS MM_YEAR, 32 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -32), 'MM/YYYY') AS MM_YEAR, 33 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -33), 'MM/YYYY') AS MM_YEAR, 34 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -34), 'MM/YYYY') AS MM_YEAR, 35 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -35), 'MM/YYYY') AS MM_YEAR, 36 AS SEQ FROM DUAL UNION ALL
+                                SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{planYearMonth} || '01', 'YYYYMMDD'), -36), 'MM/YYYY') || ' Over' AS MM_YEAR, 37 AS SEQ FROM DUAL
+                                ) A
+                        ) A
+                ) A
+        )
+ PIVOT (
+        MAX(MM_YEAR) MM_YEAR
+        FOR RNO IN ( 1 AS M101,  2 AS M102,  3 AS M103,  4 AS M104,  5 AS M105,  6 AS M106,  7 AS M107,  8 AS M108,  9 AS M109, 10 AS M110, 11 AS M111, 12 AS M112
+                  , 13 AS M201, 14 AS M202, 15 AS M203, 16 AS M204, 17 AS M205, 18 AS M206, 19 AS M207, 20 AS M208, 21 AS M209, 22 AS M210, 23 AS M211, 24 AS M212
+                  , 25 AS M301, 26 AS M302, 27 AS M303, 28 AS M304, 29 AS M305, 30 AS M306, 31 AS M307, 32 AS M308, 33 AS M309, 34 AS M310, 35 AS M311, 36 AS M312
+                  , 37 AS M313)
+        )
+</select>
 <select id="selectAgingInventory" parameterType="Map" resultType="egovMap">
 SELECT C.CODE_NAME AS TYPE_NAME
      , D.CODE_NAME AS CATEGORY_NAME
