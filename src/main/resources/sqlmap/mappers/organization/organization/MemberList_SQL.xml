@@ -211,11 +211,11 @@
                     Extent1.CRT_DT,
                     CASE WHEN (Extent1.AREA_ID IS NOT NULL OR Extent1.ADDR_DTL IS NOT NULL) THEN
                             (Extent1.ADDR_DTL || ' ' ||
-                            CASE WHEN (Extent1.STREET<> '' AND Extent1.STREET IS NOT NULL) THEN Extent1.STREET || ', ' ELSE '' END ||
-                            CASE WHEN (Extent11.AREA <> '' AND Extent11.AREA IS NOT NULL) THEN Extent11.AREA || ', ' ELSE '' END ||
-                            CASE WHEN (Extent11.POSTCODE <> '' AND Extent11.POSTCODE IS NOT NULL) THEN  Extent11.POSTCODE || ', ' ELSE '' END ||
-                            CASE WHEN (Extent11.CITY <> '' AND Extent11.CITY IS NOT NULL) THEN  Extent11.CITY || ', ' ELSE '' END ||
-                            CASE WHEN (Extent11.STATE <> '' AND Extent11.STATE IS NOT NULL) THEN  Extent11.STATE || ', ' ELSE '' END ||
+                            CASE WHEN Extent1.STREET IS NOT NULL THEN Extent1.STREET || ', ' ELSE '' END ||
+                            CASE WHEN Extent11.AREA IS NOT NULL THEN Extent11.AREA || ', ' ELSE '' END ||
+                            CASE WHEN Extent11.POSTCODE IS NOT NULL THEN  Extent11.POSTCODE || ', ' ELSE '' END ||
+                            CASE WHEN Extent11.CITY IS NOT NULL THEN  Extent11.CITY || ', ' ELSE '' END ||
+                            CASE WHEN Extent11.STATE IS NOT NULL THEN  Extent11.STATE || ', ' ELSE '' END ||
                             Extent11.COUNTRY)
                         ELSE Extent1.ADDR1 || ', ' || Extent1.ADDR2 || ', ' ||
                             (CASE WHEN Extent1.ADDR3 IS NULL THEN '' ELSE Extent1.ADDR3 || ', ' END) ||
