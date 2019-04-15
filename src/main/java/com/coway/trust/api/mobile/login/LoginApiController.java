@@ -30,67 +30,79 @@ import com.coway.trust.util.Precondition;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+/*********************************************************************************************
+ * DATE          PIC        VERSION     COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 15/04/2019    ONGHC      1.0.1       - Add e-agreement Validation
+ *********************************************************************************************/
+
 @Api(value = "Login api", description = "Login api")
 @RestController(value = "LoginApiController")
 @RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/login")
 public class LoginApiController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(LoginApiController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(LoginApiController.class);
 
-	@Resource(name = "loginService")
-	private LoginService loginService;
+  @Resource(name = "loginService")
+  private LoginService loginService;
 
-	@Autowired
-	private SessionHandler sessionHandler;
+  @Autowired
+  private SessionHandler sessionHandler;
 
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
+  @Autowired
+  private MessageSourceAccessor messageAccessor;
 
-	@ApiOperation(value = "Login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<LoginDto> login(@RequestBody LoginForm loginForm) throws Exception {
-		LOGGER.debug("login");
+  @ApiOperation(value = "Login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/login", method = RequestMethod.POST)
+  public ResponseEntity<LoginDto> login(@RequestBody LoginForm loginForm) throws Exception {
+    Map<String, Object> params = loginForm.createMap(loginForm);
 
-		Map<String, Object> params = loginForm.createMap(loginForm);
+    LOGGER.debug("=====================Login==========================");
+    LOGGER.debug(" PARAM : {} ", params);
 
-		Precondition.checkState(CommonUtils.isNotEmpty(params.get(LoginConstants.P_USER_ID)),
-				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "ID" }));
-		Precondition.checkState(CommonUtils.isNotEmpty(params.get(LoginConstants.P_USER_PW)),
-				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "PASSWORD" }));
+    Precondition.checkState(CommonUtils.isNotEmpty(params.get(LoginConstants.P_USER_ID)),
+        messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "ID" }));
+    Precondition.checkState(CommonUtils.isNotEmpty(params.get(LoginConstants.P_USER_PW)),
+        messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "PASSWORD" }));
 
-		if (loginForm.isCheckDeviceNumber()) {
-			Precondition.checkState(CommonUtils.isNotEmpty(params.get(LoginConstants.P_USER_MOBILE_NO)),
-					messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "DEVICE NUMBER" }));
-		}
+    if (loginForm.isCheckDeviceNumber()) {
+      Precondition.checkState(CommonUtils.isNotEmpty(params.get(LoginConstants.P_USER_MOBILE_NO)),
+          messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "DEVICE NUMBER" }));
+    }
 
-		LoginVO loginVO = loginService.loginByMobile(params);
+    LoginVO loginVO = loginService.loginByMobile(params);
 
-		if (loginVO == null || loginVO.getUserId() == 0) {
-			throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-		} else {
-			if (loginVO.getUserTypeId() == 2) {
-				if (!(loginVO.getAgrmt()).equals("1") && !(loginVO.getAgrmtAppStat().equals("5"))) {
-					LOGGER.debug("PLEASE CHECK AGREEMENT STATUS");
-					throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-				}
-			}
-			HttpSession session = sessionHandler.getCurrentSession();
-			session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
-		}
+    LOGGER.debug(" LOGIN INFO : {} ", loginVO);
 
-		return ResponseEntity.ok(LoginDto.create(loginVO));
-	}
+    if (loginVO == null || loginVO.getUserId() == 0) {
+      throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+    } else {
+      if (loginVO.getUserTypeId() == 2) {
+        if (!(loginVO.getAgrmt()).equals("1") && !(loginVO.getAgrmtAppStat().equals("5"))) {
+          LOGGER.debug("PLEASE CHECK AGREEMENT STATUS");
+          throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. Please sign e-agreement via eTRUST web application.");
+        }
+      }
+      HttpSession session = sessionHandler.getCurrentSession();
+      session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
+    }
 
-	@ApiOperation(value = "Logout", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/logout", method = RequestMethod.POST)
-	public void logout() throws Exception {
-		LOGGER.debug("logout");
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+    LOGGER.debug("=====================Login==========================");
 
-		if (sessionVO.getUserId() > 0) {
-			Map<String, Object> params = new HashMap<>();
-			params.put(LoginConstants.P_USER_ID, sessionVO.getUserName());
-			loginService.logoutByMobile(params);
-			sessionHandler.clearSessionInfo();
-		}
-	}
+    return ResponseEntity.ok(LoginDto.create(loginVO));
+  }
+
+  @ApiOperation(value = "Logout", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/logout", method = RequestMethod.POST)
+  public void logout() throws Exception {
+    LOGGER.debug("=====================Logout==========================");
+    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+
+    if (sessionVO.getUserId() > 0) {
+      Map<String, Object> params = new HashMap<>();
+      params.put(LoginConstants.P_USER_ID, sessionVO.getUserName());
+      loginService.logoutByMobile(params);
+      sessionHandler.clearSessionInfo();
+    }
+    LOGGER.debug("=====================Logout==========================");
+  }
 }
