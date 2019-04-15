@@ -10,299 +10,289 @@ import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
 //import com.coway.trust.api.mobile.common.MalfunctionCodeForm;
 import com.coway.trust.util.BeanConverter;
+import com.crystaldecisions.Utilities.Logger;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+/*********************************************************************************************
+ * DATE          PIC        VERSION     COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 10/04/2019    ONGHC      1.0.1       - Amend File Format
+ *********************************************************************************************/
+
 @ApiModel(value = "HeartServiceResultForm", description = "HeartServiceResultForm")
 public class HeartServiceResultForm {
 
-	@ApiModelProperty(value = "사용자 ID (예_CT123456)")
-	private String userId;
-	
-	@ApiModelProperty(value = "주문번호")
-	private String salesOrderNo;
-	
-	@ApiModelProperty(value = "EX_BS00000 / AS00000")
-	private String serviceNo;
-	
-	@ApiModelProperty(value = "Y/ N")
-	private String temperatureSetting;
-	
-	@ApiModelProperty(value = "결과 등록 메모")
-	private String resultRemark;
-	
-	@ApiModelProperty(value = "다음 작업 날짜(YYYYMMDD)")
-	private String nextAppointmentDate;
-	
-	@ApiModelProperty(value = "다음 작업 시간(HHMM)")
-	private String nextAppointmentTime;
-	
-	@ApiModelProperty(value = "결과 등록시, Owner Code")
-	private int ownerCode;
-	
-	@ApiModelProperty(value = "결과 등록시, Cust Name")
-	private String resultCustName;
-	
-	@ApiModelProperty(value = "결과 등록시, NrIc 또는 Mobile No")
-	private String resultIcMobileNo;
-	
-	@ApiModelProperty(value = "결과 등록시, Email_No")
-	private String resultReportEmailNo;
-	
-	@ApiModelProperty(value = "결과 등록시, Acceptance Name")
-	private String resultAcceptanceName;
-	
-	@ApiModelProperty(value = "")
-	private int rcCode;
+  @ApiModelProperty(value = "사용자 ID (예_CT123456)")
+  private String userId;
 
-	@ApiModelProperty(value = "base64 Data")
-	private String signData;
+  @ApiModelProperty(value = "주문번호")
+  private String salesOrderNo;
 
-	@ApiModelProperty(value = "")
-	private String signRegDate;
+  @ApiModelProperty(value = "EX_BS00000 / AS00000")
+  private String serviceNo;
 
-	@ApiModelProperty(value = "")
-	private String signRegTime;
-	
-	
-	@ApiModelProperty(value = "Transaction ID 값(체계 : USER_ID + SALES_ORDER_NO + SERVICE_NO + 현재시간_YYYYMMDDHHMMSS)")
-	private String transactionId;
-	
-	
-	private String checkInDate;
-	private String checkInTime;
-	private String checkInGps;
-	
-	
-	public String getCheckInDate() {
-		return checkInDate;
-	}
+  @ApiModelProperty(value = "Y/ N")
+  private String temperatureSetting;
 
-	public void setCheckInDate(String checkInDate) {
-		this.checkInDate = checkInDate;
-	}
+  @ApiModelProperty(value = "결과 등록 메모")
+  private String resultRemark;
 
-	public String getCheckInTime() {
-		return checkInTime;
-	}
+  @ApiModelProperty(value = "다음 작업 날짜(YYYYMMDD)")
+  private String nextAppointmentDate;
 
-	public void setCheckInTime(String checkInTime) {
-		this.checkInTime = checkInTime;
-	}
+  @ApiModelProperty(value = "다음 작업 시간(HHMM)")
+  private String nextAppointmentTime;
 
-	public String getCheckInGps() {
-		return checkInGps;
-	}
+  @ApiModelProperty(value = "결과 등록시, Owner Code")
+  private int ownerCode;
 
-	public void setCheckInGps(String checkInGps) {
-		this.checkInGps = checkInGps;
-	}
+  @ApiModelProperty(value = "결과 등록시, Cust Name")
+  private String resultCustName;
 
+  @ApiModelProperty(value = "결과 등록시, NrIc 또는 Mobile No")
+  private String resultIcMobileNo;
 
+  @ApiModelProperty(value = "결과 등록시, Email_No")
+  private String resultReportEmailNo;
 
+  @ApiModelProperty(value = "결과 등록시, Acceptance Name")
+  private String resultAcceptanceName;
 
+  @ApiModelProperty(value = "")
+  private int rcCode;
 
-	
-	
-	
-	
-	@ApiModelProperty(value = "heartDtails")
-	private List<HeartServiceResultDetailForm> heartDtails;
-	
-	
-	public String getSignRegDate() {
-		return signRegDate;
-	}
+  @ApiModelProperty(value = "base64 Data")
+  private String signData;
 
-	public void setSignRegDate(String signRegDate) {
-		this.signRegDate = signRegDate;
-	}
+  @ApiModelProperty(value = "")
+  private String signRegDate;
 
-	public String getSignRegTime() {
-		return signRegTime;
-	}
+  @ApiModelProperty(value = "")
+  private String signRegTime;
 
-	public void setSignRegTime(String signRegTime) {
-		this.signRegTime = signRegTime;
-	}
+  @ApiModelProperty(value = "Transaction ID 값(체계 : USER_ID + SALES_ORDER_NO + SERVICE_NO + 현재시간_YYYYMMDDHHMMSS)")
+  private String transactionId;
 
-	public String getUserId() {
-		return userId;
-	}
+  private String checkInDate;
+  private String checkInTime;
+  private String checkInGps;
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+  public String getCheckInDate() {
+    return checkInDate;
+  }
 
-	public String getSalesOrderNo() {
-		return salesOrderNo;
-	}
+  public void setCheckInDate(String checkInDate) {
+    this.checkInDate = checkInDate;
+  }
 
-	public void setSalesOrderNo(String salesOrderNo) {
-		this.salesOrderNo = salesOrderNo;
-	}
+  public String getCheckInTime() {
+    return checkInTime;
+  }
 
-	public String getServiceNo() {
-		return serviceNo;
-	}
+  public void setCheckInTime(String checkInTime) {
+    this.checkInTime = checkInTime;
+  }
 
-	public void setServiceNo(String serviceNo) {
-		this.serviceNo = serviceNo;
-	}
+  public String getCheckInGps() {
+    return checkInGps;
+  }
 
-	public String getTemperatureSetting() {
-		return temperatureSetting;
-	}
+  public void setCheckInGps(String checkInGps) {
+    this.checkInGps = checkInGps;
+  }
 
-	public void setTemperatureSetting(String temperatureSetting) {
-		this.temperatureSetting = temperatureSetting;
-	}
+  @ApiModelProperty(value = "heartDtails")
+  private List<HeartServiceResultDetailForm> heartDtails;
 
-	public String getResultRemark() {
-		return resultRemark;
-	}
+  public String getSignRegDate() {
+    return signRegDate;
+  }
 
-	public void setResultRemark(String resultRemark) {
-		this.resultRemark = resultRemark;
-	}
+  public void setSignRegDate(String signRegDate) {
+    this.signRegDate = signRegDate;
+  }
 
-	public String getNextAppointmentDate() {
-		return nextAppointmentDate;
-	}
+  public String getSignRegTime() {
+    return signRegTime;
+  }
 
-	public void setNextAppointmentDate(String nextAppointmentDate) {
-		this.nextAppointmentDate = nextAppointmentDate;
-	}
+  public void setSignRegTime(String signRegTime) {
+    this.signRegTime = signRegTime;
+  }
 
-	public String getNextAppointmentTime() {
-		return nextAppointmentTime;
-	}
+  public String getUserId() {
+    return userId;
+  }
 
-	public void setNextAppointmentTime(String nextAppointmentTime) {
-		this.nextAppointmentTime = nextAppointmentTime;
-	}
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
 
-	public int getOwnerCode() {
-		return ownerCode;
-	}
+  public String getSalesOrderNo() {
+    return salesOrderNo;
+  }
 
-	public void setOwnerCode(int ownerCode) {
-		this.ownerCode = ownerCode;
-	}
+  public void setSalesOrderNo(String salesOrderNo) {
+    this.salesOrderNo = salesOrderNo;
+  }
 
-	public String getResultCustName() {
-		return resultCustName;
-	}
+  public String getServiceNo() {
+    return serviceNo;
+  }
 
-	public void setResultCustName(String resultCustName) {
-		this.resultCustName = resultCustName;
-	}
+  public void setServiceNo(String serviceNo) {
+    this.serviceNo = serviceNo;
+  }
 
-	public String getResultIcMobileNo() {
-		return resultIcMobileNo;
-	}
+  public String getTemperatureSetting() {
+    return temperatureSetting;
+  }
 
-	public void setResultIcMobileNo(String resultIcMobileNo) {
-		this.resultIcMobileNo = resultIcMobileNo;
-	}
+  public void setTemperatureSetting(String temperatureSetting) {
+    this.temperatureSetting = temperatureSetting;
+  }
 
-	public String getResultReportEmailNo() {
-		return resultReportEmailNo;
-	}
+  public String getResultRemark() {
+    return resultRemark;
+  }
 
-	public void setResultReportEmailNo(String resultReportEmailNo) {
-		this.resultReportEmailNo = resultReportEmailNo;
-	}
+  public void setResultRemark(String resultRemark) {
+    this.resultRemark = resultRemark;
+  }
 
-	public String getResultAcceptanceName() {
-		return resultAcceptanceName;
-	}
+  public String getNextAppointmentDate() {
+    return nextAppointmentDate;
+  }
 
-	public void setResultAcceptanceName(String resultAcceptanceName) {
-		this.resultAcceptanceName = resultAcceptanceName;
-	}
+  public void setNextAppointmentDate(String nextAppointmentDate) {
+    this.nextAppointmentDate = nextAppointmentDate;
+  }
 
-	public int getRcCode() {
-		return rcCode;
-	}
+  public String getNextAppointmentTime() {
+    return nextAppointmentTime;
+  }
 
-	public void setRcCode(int rcCode) {
-		this.rcCode = rcCode;
-	}
+  public void setNextAppointmentTime(String nextAppointmentTime) {
+    this.nextAppointmentTime = nextAppointmentTime;
+  }
 
-	public String getSignData() {
-		return signData;
-	}
+  public int getOwnerCode() {
+    return ownerCode;
+  }
 
-	public void setSignData(String signData) {
-		this.signData = signData;
-	}
+  public void setOwnerCode(int ownerCode) {
+    this.ownerCode = ownerCode;
+  }
 
-	public String getTransactionId() {
-		return transactionId;
-	}
+  public String getResultCustName() {
+    return resultCustName;
+  }
 
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
-	}
+  public void setResultCustName(String resultCustName) {
+    this.resultCustName = resultCustName;
+  }
 
-	public List<HeartServiceResultDetailForm> getHeartDtails() {
-		return heartDtails;
-	}
+  public String getResultIcMobileNo() {
+    return resultIcMobileNo;
+  }
 
-	public void setHeartDtails(List<HeartServiceResultDetailForm> heartDtails) {
-		this.heartDtails = heartDtails;
-	}
-	
-	public List<Map<String, Object>> createMaps(HeartServiceResultForm heartServiceResultForm) {
+  public void setResultIcMobileNo(String resultIcMobileNo) {
+    this.resultIcMobileNo = resultIcMobileNo;
+  }
 
-		List<Map<String, Object>> list = new ArrayList<>();
+  public String getResultReportEmailNo() {
+    return resultReportEmailNo;
+  }
 
-		if (heartDtails != null && heartDtails.size() > 0) {
-			Map<String, Object> map;
-			for (HeartServiceResultDetailForm dtl : heartDtails) {
-				map = BeanConverter.toMap(heartServiceResultForm, "signData", "heartDtails");
-				map.put("signData", Base64.decodeBase64(heartServiceResultForm.getSignData()));
+  public void setResultReportEmailNo(String resultReportEmailNo) {
+    this.resultReportEmailNo = resultReportEmailNo;
+  }
 
-				// heartDtails
-				map.put("filterCode", dtl.getFilterCode());
-				map.put("exchangeId", dtl.getExchangeId());
-				map.put("filterChangeQty", dtl.getFilterChangeQty());
-				map.put("alternativeFilterCode", dtl.getAlternativeFilterCode());
-				map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
+  public String getResultAcceptanceName() {
+    return resultAcceptanceName;
+  }
 
-				list.add(map);
-			}
-		}
-		return list;
-	}
+  public void setResultAcceptanceName(String resultAcceptanceName) {
+    this.resultAcceptanceName = resultAcceptanceName;
+  }
 
+  public int getRcCode() {
+    return rcCode;
+  }
 
-	
-	public  List<Map<String, Object>>  createMaps1(HeartServiceResultForm heartServiceResultForm) {
+  public void setRcCode(int rcCode) {
+    this.rcCode = rcCode;
+  }
 
-		List<Map<String, Object>> list = new ArrayList<>();
-	
-		if (heartDtails != null && heartDtails.size() > 0) {
-			Map<String, Object> map;
-			map = BeanConverter.toMap(heartServiceResultForm, "signData");
-			map.put("signData", Base64.decodeBase64(heartServiceResultForm.getSignData()));
-			
-			for (HeartServiceResultDetailForm obj : heartDtails) {
-				map.put("filterCode", obj.getFilterCode());
-				map.put("exchangeId", obj.getExchangeId());
-				map.put("filterChangeQty", obj.getFilterChangeQty());
-				map.put("filterBarcdSerialNo", obj.getFilterBarcdSerialNo());
-				
-				list.add(map);
-			}
-		}
-		
-		return list;
-	}
-	
+  public String getSignData() {
+    return signData;
+  }
 
+  public void setSignData(String signData) {
+    this.signData = signData;
+  }
 
-	
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
+
+  public List<HeartServiceResultDetailForm> getHeartDtails() {
+    return heartDtails;
+  }
+
+  public void setHeartDtails(List<HeartServiceResultDetailForm> heartDtails) {
+    this.heartDtails = heartDtails;
+  }
+
+  public List<Map<String, Object>> createMaps(HeartServiceResultForm heartServiceResultForm) {
+
+    List<Map<String, Object>> list = new ArrayList<>();
+
+    if (heartDtails != null && heartDtails.size() > 0) {
+      Map<String, Object> map;
+      for (HeartServiceResultDetailForm dtl : heartDtails) {
+        map = BeanConverter.toMap(heartServiceResultForm, "signData", "heartDtails");
+        map.put("signData", Base64.decodeBase64(heartServiceResultForm.getSignData()));
+
+        // heartDtails
+        map.put("filterCode", dtl.getFilterCode());
+        map.put("exchangeId", dtl.getExchangeId());
+        map.put("filterChangeQty", dtl.getFilterChangeQty());
+        map.put("alternativeFilterCode", dtl.getAlternativeFilterCode());
+        map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
+
+        list.add(map);
+      }
+    }
+    return list;
+  }
+
+  public List<Map<String, Object>> createMaps1(HeartServiceResultForm heartServiceResultForm) {
+
+    List<Map<String, Object>> list = new ArrayList<>();
+
+    if (heartDtails != null && heartDtails.size() > 0) {
+      Map<String, Object> map;
+      map = BeanConverter.toMap(heartServiceResultForm, "signData");
+      map.put("signData", Base64.decodeBase64(heartServiceResultForm.getSignData()));
+
+      for (HeartServiceResultDetailForm obj : heartDtails) {
+        map.put("filterCode", obj.getFilterCode());
+        map.put("exchangeId", obj.getExchangeId());
+        map.put("filterChangeQty", obj.getFilterChangeQty());
+        map.put("filterBarcdSerialNo", obj.getFilterBarcdSerialNo());
+
+        list.add(map);
+      }
+    }
+
+    return list;
+  }
+
 }
