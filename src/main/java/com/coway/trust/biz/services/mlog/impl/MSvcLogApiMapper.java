@@ -8,196 +8,211 @@ import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
+/*********************************************************************************************
+ * DATE          PIC        VERSION     COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 10/04/2019    ONGHC      1.0.1       - Amend File Format
+ *********************************************************************************************/
+
 @Mapper("MSvcLogApiMapper")
 public interface MSvcLogApiMapper {
 
+  List<EgovMap> getHeartServiceJobList(Map<String, Object> params);
 
-	List<EgovMap> getHeartServiceJobList(Map<String, Object> params);
-	
-	List<EgovMap> getAfterServiceJobList(Map<String, Object> params);
-	
-	void insertHeatLog(Map<String, Object> log);
+  List<EgovMap> getAfterServiceJobList(Map<String, Object> params);
 
-	void updateSuccessStatus(String transactionId);
+  void insertHeatLog(Map<String, Object> log);
 
-	List<EgovMap> heartServiceParts(Map<String, Object> params);
+  void updateSuccessStatus(String transactionId);
 
-	List<EgovMap> afterServiceParts(Map<String, Object> params);
+  List<EgovMap> heartServiceParts(Map<String, Object> params);
 
-	int getNextSvc006dSeq();
+  List<EgovMap> afterServiceParts(Map<String, Object> params);
 
-	void insertHsResultD(Map<String, Object> insMap);
+  int getNextSvc006dSeq();
 
-	void insertHsResultSAL0090D(Map<String, Object> insMap);
+  void insertHsResultD(Map<String, Object> insMap);
 
-	void insertHsResultSVC0006D(Map<String, Object> insMap);
+  void insertHsResultSAL0090D(Map<String, Object> insMap);
 
-	int selectHSScheduleMCnt(Map<String, Object> insMap);
- 
-	EgovMap selectHSResultMList(Map<String, Object> insMap);
+  void insertHsResultSVC0006D(Map<String, Object> insMap);
 
-	void updateHsSVC0008D(Map<String, Object> insMap);
+  int selectHSScheduleMCnt(Map<String, Object> insMap);
 
-	EgovMap selectSrvConfiguration(Map<String, Object> insMap);
+  EgovMap selectHSResultMList(Map<String, Object> insMap);
 
-	EgovMap selectHsAssiinlList(Map<String, Object> insMap);
+  void updateHsSVC0008D(Map<String, Object> insMap);
 
-	String getUseridToMemid(Object object);
+  EgovMap selectSrvConfiguration(Map<String, Object> insMap);
 
-	List<EgovMap> getInstallationJobList(Map<String, Object> params);
+  EgovMap selectHsAssiinlList(Map<String, Object> insMap);
 
-	List<EgovMap> getProductRetrunJobList(Map<String, Object> params);
+  String getUseridToMemid(Object object);
 
-	void insertAsResultLog(Map<String, Object> asTransLog);
+  List<EgovMap> getInstallationJobList(Map<String, Object> params);
 
-	void updateSuccessASStatus(String transactionId);
-	
-	void updateSuccessInstallStatus(String transactionId);
-	
-	void updateSuccessErrInstallStatus(String transactionId);
+  List<EgovMap> getProductRetrunJobList(Map<String, Object> params);
 
-	void insertInstallServiceLog(Map<String, Object> params);
+  void insertAsResultLog(Map<String, Object> asTransLog);
 
-	EgovMap getInstallResultByInstallEntryID(Map<String, Object> params);
+  void updateSuccessASStatus(String transactionId);
 
-	void insertInstallResult(Map<String, Object> installResult);
+  void updateSuccessInstallStatus(String transactionId);
 
-	List<EgovMap> getRentalCustomerList(Map<String, Object> params);
+  void updateSuccessErrInstallStatus(String transactionId);
 
-	List<EgovMap> serviceHistory(Map<String, Object> params);
+  void insertInstallServiceLog(Map<String, Object> params);
 
-	List<EgovMap> getFilterHistoryDList(Map<String, Object> params);
+  EgovMap getInstallResultByInstallEntryID(Map<String, Object> params);
 
-	List<EgovMap> getPartsHistoryDList(Map<String, Object> params);
+  void insertInstallResult(Map<String, Object> installResult);
 
-	List<EgovMap> getHsPartsHistoryDList(Map<String, Object> params);
+  List<EgovMap> getRentalCustomerList(Map<String, Object> params);
 
-	List<EgovMap> getHsFilterHistoryDList(Map<String, Object> params);
+  List<EgovMap> serviceHistory(Map<String, Object> params);
 
-	List<EgovMap> getAsPartsHistoryDList(Map<String, Object> params);
+  List<EgovMap> getFilterHistoryDList(Map<String, Object> params);
 
-	List<EgovMap> getAsFilterHistoryDList(Map<String, Object> params);
+  List<EgovMap> getPartsHistoryDList(Map<String, Object> params);
 
-	EgovMap selectOutstandingResult(Map<String, Object> params);
-	
-	List<EgovMap> selectOutstandingResultDetailList(Map<String, Object> params);
+  List<EgovMap> getHsPartsHistoryDList(Map<String, Object> params);
 
-	Map<String, Object> getAsBasic(Map<String, Object> params);
+  List<EgovMap> getHsFilterHistoryDList(Map<String, Object> params);
 
-	void insertAsReServiceLog(Map<String, Object> params);
+  List<EgovMap> getAsPartsHistoryDList(Map<String, Object> params);
 
-	void insertAsReServiceLog(String transactionId);
+  List<EgovMap> getAsFilterHistoryDList(Map<String, Object> params);
 
-	void insertHsReServiceLog(String transactionId);
+  EgovMap selectOutstandingResult(Map<String, Object> params);
 
-	void insertInsReServiceLog(String transactionId);
+  List<EgovMap> selectOutstandingResultDetailList(Map<String, Object> params);
 
-	void insertHsReServiceLog(Map<String, Object> params);
+  Map<String, Object> getAsBasic(Map<String, Object> params);
 
-	void insertInsReServiceLog(Map<String, Object> params);
+  void insertAsReServiceLog(Map<String, Object> params);
 
-	void insertPrReServiceLog(Map<String, Object> params);
+  void insertAsReServiceLog(String transactionId);
 
-	Map<String, Object> getHsBasic(Map<String, Object> params);
+  void insertHsReServiceLog(String transactionId);
 
-	void insertPrFailServiceLog(Map<String, Object> params);
+  void insertInsReServiceLog(String transactionId);
 
-	void insertInssFailServiceLog(Map<String, Object> params);
+  void insertHsReServiceLog(Map<String, Object> params);
 
-	void insertAsFailServiceLog(Map<String, Object> params);
+  void insertInsReServiceLog(Map<String, Object> params);
 
-	void insertHsFailServiceLog(Map<String, Object> params);
+  void insertPrReServiceLog(Map<String, Object> params);
 
-	void insertCanSMSServiceLog(Map<String, Object> params);
+  Map<String, Object> getHsBasic(Map<String, Object> params);
 
-	void updateReApointResult(Map<String, Object> params);
+  void insertPrFailServiceLog(Map<String, Object> params);
 
-	EgovMap selectAsBasicInfo(Map<String, Object> params);
+  void insertInssFailServiceLog(Map<String, Object> params);
 
-	void updateInsReAppointmentReturnResult(Map<String, Object> params);
+  void insertAsFailServiceLog(Map<String, Object> params);
 
-	void updateHsReAppointmentReturnResult(Map<String, Object> params);
+  void insertHsFailServiceLog(Map<String, Object> params);
 
-	void updatePrReAppointmentReturnResult(Map<String, Object> params);
+  void insertCanSMSServiceLog(Map<String, Object> params);
 
-	void insertASRequestRegistrationLogs(Map<String, Object> params);
+  void updateReApointResult(Map<String, Object> params);
 
-	void updateSuccessRequestRegiStatus(String transactionId);
+  EgovMap selectAsBasicInfo(Map<String, Object> params);
 
-	void insertASRequestRegist(Map<String, Object> params);
+  void updateInsReAppointmentReturnResult(Map<String, Object> params);
 
-	void insertHsFailJobResult(Map<String, Object> params);
+  void updateHsReAppointmentReturnResult(Map<String, Object> params);
 
-	void insertAsFailJobResult(Map<String, Object> params);
+  void updatePrReAppointmentReturnResult(Map<String, Object> params);
 
-	void insertInstallFailJobResult(Map<String, Object> params);
+  void insertASRequestRegistrationLogs(Map<String, Object> params);
 
-	List<EgovMap> getASRequestResultList(Map<String, Object> params);
+  void updateSuccessRequestRegiStatus(String transactionId);
 
-	List<EgovMap> getASRequestCustList(Map<String, Object> params);
+  void insertASRequestRegist(Map<String, Object> params);
 
-	void upDateHsFailJobResultM(Map<String, Object> params);
+  void insertHsFailJobResult(Map<String, Object> params);
 
-	void upDatetAsFailJobResultM(Map<String, Object> params);
+  void insertAsFailJobResult(Map<String, Object> params);
 
-	void upDateInstallFailJobResultM(Map<String, Object> params);
+  void insertInstallFailJobResult(Map<String, Object> params);
 
-	void insertInsFailServiceLog(Map<String, Object> params);
-	
-	
-	/*ProductReturnResult  API*/
-	int  updateState_LOG0038D(Map<String, Object> params);
-	int  updateState_SAL0001D(Map<String, Object> params);
-	int  insert_SAL0009D(Map<String, Object> params);
-	int  updateState_SAL0020D(Map<String, Object> params);
-	int  updateState_SAL0071D(Map<String, Object> params);
-	
-	int  insert_SVC0026T(Map<String, Object> params);
-	int  insert_LOG0039D(Map<String, Object> params);
-	int  updateAppTm_LOG0038D(Map<String, Object> params);
-	int  insertFailed_LOG0039D(Map<String, Object> params);  
-	int  updateFailed_LOG0038D(Map<String, Object> params);
-	
-	String   getRetnCrtUserId(Map<String, Object> params);
+  List<EgovMap> getASRequestResultList(Map<String, Object> params);
 
-	void insertCancelSMS(Map<String, Object> params);
-	String getcancReqNo(Map<String, Object> params);
+  List<EgovMap> getASRequestCustList(Map<String, Object> params);
 
-	List<EgovMap> getHeartServiceJobList_b(Map<String, Object> params);
+  void upDateHsFailJobResultM(Map<String, Object> params);
 
-	List<EgovMap> getAfterServiceJobList_b(Map<String, Object> params);
+  void upDatetAsFailJobResultM(Map<String, Object> params);
 
-	List<EgovMap> heartServiceParts_b(Map<String, Object> params);
+  void upDateInstallFailJobResultM(Map<String, Object> params);
 
-	List<EgovMap> afterServiceParts_b(Map<String, Object> params);
+  void insertInsFailServiceLog(Map<String, Object> params);
 
-	List<EgovMap> getInstallationJobList_b(Map<String, Object> params);
+  /* ProductReturnResult API */
+  int updateState_LOG0038D(Map<String, Object> params);
 
-	List<EgovMap> getProductRetrunJobList_b(Map<String, Object> params);
-	  
-	// call SP_RETURN_BILLING_EARLY_TERMI( #{ORD_ID},#{USER_ID},#{SERVICE_NO} )
-	void SP_RETURN_BILLING_EARLY_TERMI ( Map<String, Object> params);
+  int updateState_SAL0001D(Map<String, Object> params);
 
-	String getInstallDate(Map<String, Object> insApiresult);
+  int insert_SAL0009D(Map<String, Object> params);
 
-	void insert_CCR0006D(Map<String, Object> params);
+  int updateState_SAL0020D(Map<String, Object> params);
 
-	String select_SeqCCR0006D(Map<String, Object> params);
+  int updateState_SAL0071D(Map<String, Object> params);
 
-	String select_SeqCCR0007D(Map<String, Object> params);
+  int insert_SVC0026T(Map<String, Object> params);
 
-	void insert_CCR0007D(Map<String, Object> params);
+  int insert_LOG0039D(Map<String, Object> params);
 
-	void updateFailed_SAL0020D(Map<String, Object> params);
-	
-	
-	void   updateErrStatus(String transactionId);
-	void   updateASErrStatus(String transactionId);
-	void   updatePRErrStatus(String transactionId);
-	void   updatePRStatus(String transactionId);
-	
-	int insert_SVC0066T(Map<String, Object> params);
-	int prdResultSync(Map<String, Object> params);
+  int updateAppTm_LOG0038D(Map<String, Object> params);
 
-	
+  int insertFailed_LOG0039D(Map<String, Object> params);
+
+  int updateFailed_LOG0038D(Map<String, Object> params);
+
+  String getRetnCrtUserId(Map<String, Object> params);
+
+  void insertCancelSMS(Map<String, Object> params);
+
+  String getcancReqNo(Map<String, Object> params);
+
+  List<EgovMap> getHeartServiceJobList_b(Map<String, Object> params);
+
+  List<EgovMap> getAfterServiceJobList_b(Map<String, Object> params);
+
+  List<EgovMap> heartServiceParts_b(Map<String, Object> params);
+
+  List<EgovMap> afterServiceParts_b(Map<String, Object> params);
+
+  List<EgovMap> getInstallationJobList_b(Map<String, Object> params);
+
+  List<EgovMap> getProductRetrunJobList_b(Map<String, Object> params);
+
+  // call SP_RETURN_BILLING_EARLY_TERMI( #{ORD_ID},#{USER_ID},#{SERVICE_NO} )
+  void SP_RETURN_BILLING_EARLY_TERMI(Map<String, Object> params);
+
+  String getInstallDate(Map<String, Object> insApiresult);
+
+  void insert_CCR0006D(Map<String, Object> params);
+
+  String select_SeqCCR0006D(Map<String, Object> params);
+
+  String select_SeqCCR0007D(Map<String, Object> params);
+
+  void insert_CCR0007D(Map<String, Object> params);
+
+  void updateFailed_SAL0020D(Map<String, Object> params);
+
+  void updateErrStatus(String transactionId);
+
+  void updateASErrStatus(String transactionId);
+
+  void updatePRErrStatus(String transactionId);
+
+  void updatePRStatus(String transactionId);
+
+  int insert_SVC0066T(Map<String, Object> params);
+
+  int prdResultSync(Map<String, Object> params);
+
 }
