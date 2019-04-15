@@ -1,5 +1,12 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+<!--
+ DATE        BY     VERSION        REMARK
+ ----------------------------------------------------------------
+ 15/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP and Add Order Number Search Criteria
+ -->
+
 <script type="text/javaScript">
   $(document).ready(
       function() {
@@ -92,8 +99,8 @@
           && $("#ordNumTo").val() != null) {
         ordNoFrom = $("#ordNumFr").val();
         ordNoTo = $("#ordNumTo").val();
-        whereSql += "and (O.SALES_ORD_NO >= '" + asNoFrom + "' AND O.SALES_ORD_NO <= '"
-            + asNoTo + "') ";
+        whereSql += "and (O.SALES_ORD_NO >= '" + ordNoFrom + "' AND O.SALES_ORD_NO <= '"
+            + ordNoTo + "') ";
       }
 
       if ($("#asNumFr").val() != '' && $("#asNumTo").val() != ''
