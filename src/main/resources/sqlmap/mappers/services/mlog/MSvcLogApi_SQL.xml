@@ -780,7 +780,7 @@
       FROM (SELECT ROW_NUMBER () OVER (PARTITION BY SAL0001D.SALES_ORD_NO ORDER BY SAL0095D.SRV_EXPR_DT DESC) rnum,
                    SAL0046D.INSTALL_ENTRY_NO AS service_No,
                    SAL0046D.STUS_CODE_ID AS job_Status,
-                   TO_CHAR (SAL0046D.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
+                   NVL (TO_CHAR (SAL0046D.APPNT_DT, 'YYYYMMDD'), '') AS appointment_Date,
                    CASE WHEN SAL0046D.APPNT_TM IS NULL
                       THEN DECODE (SAL0046D.SESION_CODE,
                                    'M', '1000',
@@ -789,57 +789,54 @@
                                    'O', '2000',
                                    '2000')
                       ELSE TO_CHAR (REPLACE (SUBSTR (SAL0046D.APPNT_TM, 0, 5), ':')) END appointment_Time,
-                   TO_CHAR (SAL0046D.INSTALL_DT, 'YYYY') AS plan_Year,
-                   TO_CHAR (SAL0046D.INSTALL_DT, 'MM') AS plan_Month,
+                   NVL (TO_CHAR (SAL0046D.INSTALL_DT, 'YYYY'), '') AS plan_Year,
+                   NVL (TO_CHAR (SAL0046D.INSTALL_DT, 'MM'), '') AS plan_Month,
                    CASE WHEN SAL0046D.SESION_CODE IS NULL
                      THEN 'O'
                      ELSE SAL0046D.SESION_CODE END AS job_Session,
                    (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID) AS hp_Name,
                    (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID) AS hp_Tel,
-                   CASE WHEN ORG1001V.LVL3_UP_ID = 0
+                   CASE WHEN TO_CHAR(ORG1001V.LVL3_UP_ID) = '0'
                      THEN (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID)
                      ELSE (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID) END AS hmName,
-                   CASE WHEN ORG1001V.LVL3_UP_ID = 0
+                   CASE WHEN TO_CHAR(ORG1001V.LVL3_UP_ID) = '0'
                      THEN (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = SAL0001D.MEM_ID)
                      ELSE (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID) END AS hmTel,
-                   CASE WHEN ORG1001V.LVL2_UP_ID = 0
+                   CASE WHEN TO_CHAR(ORG1001V.LVL2_UP_ID) = '0'
                      THEN (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID)
                      ELSE (SELECT NAME FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID) END AS smName,
-                   CASE WHEN ORG1001V.LVL2_UP_ID = 0
+                   CASE WHEN TO_CHAR(ORG1001V.LVL2_UP_ID) = '0'
                      THEN (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL3_UP_ID)
                      ELSE (SELECT TEL_MOBILE FROM ORG0001D WHERE ORG0001D.MEM_ID = ORG1001V.LVL2_UP_ID) END AS smTel,
-                   ORG0001D.MEM_CODE AS settled_By,
-                   SAL0001D.SALES_ORD_NO AS sales_Order_No,
-                   SAL0001D.CUST_ID AS customer_Id,
+                   NVL (ORG0001D.MEM_CODE, '') AS settled_By,
+                   NVL (SAL0001D.SALES_ORD_NO, '') AS sales_Order_No,
+                   NVL (SAL0001D.CUST_ID, '') AS customer_Id,
                    FN_GET_COMMCD (10, SAL0001D.APP_TYPE_ID) AS app_Type,
-                   SAL0001D.PROMO_ID AS sales_Promotion,
+                   NVL (SAL0001D.PROMO_ID, '') AS sales_Promotion,
                    NVL(TO_CHAR (SAL0001D.MTH_RENT_AMT), '0') AS monthly_Rental_Fees,
-                   SAL0001D.TOT_AMT AS registration_Fees,
-                   SAL0022D.CUST_ACC_BANK_ID AS bank_Code,
-                   SAL0022D.CUST_ACC_NO AS card_Account_No,
-                   SAL0024D.CUST_BILL_PAY_REF_NO1 AS customer_Jom_Pay_Ref_No,
-                   SAL0027D.TEL_M1 AS handphone_Tel,
-                   SAL0027D.TEL_R AS home_Tel,
-                   SAL0027D.TEL_O AS office_Tel,
-                   SAL0029D.NAME AS cust_Name,
-                   TO_CHAR (SAL0029D.TYPE_ID) AS customer_Type,
-                   SAL0029D.EMAIL AS mail_Address,
-                   SAL0029D.CUST_VA_NO AS customer_Va_No,
-                   SAL0047D.SIRIM_NO AS sirim_No,
-                   SAL0047D.SERIAL_NO AS serial_No,
-                   TO_CHAR (SAL0047D.INSTALL_DT, 'YYYYMMDD') AS settled_Date,
-                   TO_CHAR (SAL0095D.SRV_EXPR_DT, 'YYYYMMDD') AS expiry_Date,
-                   SAL0095D.SRV_DUR AS contract_Duration,
-                   /* FN_GET_SVC_MADDRESS (SAL0001D.SALES_ORD_NO, 'POST') postcode, */
-                   /* FN_GET_SVC_MADDRESS (SAL0001D.SALES_ORD_NO, 'STATE') service_State, */
-                   /* FN_GET_SVC_MADDRESS (SAL0001D.SALES_ORD_NO, 'FULL_ADDR') install_Address, */
+                   NVL (SAL0001D.TOT_AMT, '') AS registration_Fees,
+                   NVL (SAL0022D.CUST_ACC_BANK_ID, '') AS bank_Code,
+                   NVL (SAL0022D.CUST_ACC_NO, '') AS card_Account_No,
+                   NVL (SAL0024D.CUST_BILL_PAY_REF_NO1, '') AS customer_Jom_Pay_Ref_No,
+                   NVL (SAL0027D.TEL_M1, '') AS handphone_Tel,
+                   NVL (SAL0027D.TEL_R, '') AS home_Tel,
+                   NVL (SAL0027D.TEL_O, '') AS office_Tel,
+                   NVL (SAL0029D.NAME, '') AS cust_Name,
+                   NVL (TO_CHAR (SAL0029D.TYPE_ID), '') AS customer_Type,
+                   NVL (SAL0029D.EMAIL, '') AS mail_Address,
+                   NVL (SAL0029D.CUST_VA_NO, '') AS customer_Va_No,
+                   NVL (SAL0047D.SIRIM_NO, '') AS sirim_No,
+                   NVL (SAL0047D.SERIAL_NO, '') AS serial_No,
+                   NVL (TO_CHAR (SAL0047D.INSTALL_DT, 'YYYYMMDD'), '') AS settled_Date,
+                   NVL (TO_CHAR (SAL0095D.SRV_EXPR_DT, 'YYYYMMDD'), '') AS expiry_Date,
+                   NVL (SAL0095D.SRV_DUR, '') AS contract_Duration,
                    NVL(SYS0064M.POSTCODE, '') postcode,
                    NVL(SYS0064M.STATE, '') service_State,
                    (SAL0023D.ADDR_DTL || ' ' || SAL0023D.STREET || ' ' || SYS0064M.AREA || ' ' || SYS0064M.POSTCODE || ' ' || SYS0064M.CITY || ' ' || SYS0064M.STATE || ' ' || SYS0064M.COUNTRY) install_Address,
-                   SYS0026M.STK_DESC AS product_Name,
-                   SYS0026M.STK_CODE AS product_Code,
-                   SYS0005M.CODE AS dsc_Code,
-                   CCR0007D.CALL_REM AS instruction
+                   NVL (SYS0026M.STK_DESC, '') AS product_Name,
+                   NVL (SYS0026M.STK_CODE, '') AS product_Code,
+                   NVL (SYS0005M.CODE, '') AS dsc_Code,
+                   NVL (CCR0007D.CALL_REM, '') AS instruction
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
