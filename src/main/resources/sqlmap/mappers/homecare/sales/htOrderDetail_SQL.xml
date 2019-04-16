@@ -459,8 +459,9 @@
         JOIN PAY0064D T10
         ON T10.PAY_ID = T1.MTCH_ID
         AND 101 = T1.TYPE_ID
+        LEFT JOIN PAY0007D T11 ON  T11.BILL_ID = T1.BILL_ID
         WHERE (T1.SVC_CNTRCT_ID = 0 OR T1.SVC_CNTRCT_ID IS NULL)
-        AND T1.SALES_ORD_ID = #{salesOrderId}
+        AND T11.BILL_SO_ID = #{salesOrderId}
         )
         ORDER BY PAY_ID DESC
     </select>
