@@ -1540,7 +1540,7 @@
              ,'N'
              ,#{checkInDate}
              ,#{checkInTime}
-              #{checkInGps}
+             ,#{checkInGps}
     )
   </insert>
 
