@@ -1226,6 +1226,12 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     			hm = (HashMap<String, Object>) map;
     			hm.put("seq", seq);
     			commonPaymentMapper.insertTmpBillingInfo(hm);
+    			logger.debug("APP TYPE : " + hm.get("appType"));
+    			if("CARE_SRVC".equals(String.valueOf(hm.get("appType")))){
+    				hm.put("userId",paramMap.get("userid"));
+    				commonPaymentMapper.updateCareSalesMStatus(hm);
+    			}
+
     		}
     	}
 
@@ -1260,6 +1266,12 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     			hm = (HashMap<String, Object>) map;
     			hm.put("seq", seq);
     			commonPaymentMapper.insertTmpBillingInfo(hm);
+    			logger.debug("APP TYPE : " + hm.get("appType"));
+    			if("CARE_SRVC".equals(String.valueOf(hm.get("appType")))){
+    				hm.put("userId",paramMap.get("userid"));
+    				commonPaymentMapper.updateCareSalesMStatus(hm);
+    			}
+
     		}
     	}
 
@@ -1500,6 +1512,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 
 		return result;
 	}
+
 
 
 
