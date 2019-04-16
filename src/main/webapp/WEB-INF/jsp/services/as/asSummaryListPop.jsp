@@ -214,6 +214,9 @@
       $("#reportFormAS #V_ASSTATUS").val(asStus);
       $("#reportFormAS #V_ASGROUP").val(asGroup);
       $("#reportFormAS #V_ASTEMPSORT").val(asSort);
+      $("#reportFormAS #V_ORDNUMTO").val(ordNoTo);
+      $("#reportFormAS #V_ORDNUMFR").val(ordNoFrom);
+
 
       var option = {
         isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -258,7 +261,10 @@
      type="hidden" id="V_ASTYPEID" name="V_ASTYPEID" /> <input
      type="hidden" id="V_ASSTATUS" name="V_ASSTATUS" /> <input
      type="hidden" id="V_ASGROUP" name="V_ASGROUP" /> <input
+     type="hidden" id="V_ORDNUMTO" name="V_ORDNUMTO" /> <input
+     type="hidden" id="V_ORDNUMFR" name="V_ORDNUMFR" /> <input
      type="hidden" id="V_ASTEMPSORT" name="V_ASTEMPSORT" />
+
     <!--reportFileName,  viewType 모든 레포트 필수값 -->
     <input type="hidden" id="reportFileName" name="reportFileName" /> <input
      type="hidden" id="viewType" name="viewType" /> <input
