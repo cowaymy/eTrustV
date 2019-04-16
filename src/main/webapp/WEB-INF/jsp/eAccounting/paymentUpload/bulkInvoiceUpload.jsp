@@ -641,7 +641,7 @@
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newUpload('NEW')">New Upload</a></p></li>
             <li><p class="btn_blue"><a href="#" onclick="javascript:fn_searchUpload()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
-            <li><p class="btn_blue"><a href="#" onclick="javascript:fn_downloadCsv()">Download CSV</a></p></li>
+            <li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/eAccounting/Invoices_Batch.csv">Download Template</a></p></li>
         </ul>
     </aside><!-- title_line end -->
 
