@@ -1596,4 +1596,12 @@
             A.SALES_ORD_ID = #{orderId}
    </select>
 
+     <update id="updateCareSalesMStatus" parameterType="Map">
+        UPDATE SAL0225D
+           SET  UPD_USER_ID     = #{userId}
+                  , UPD_DT            = SYSDATE
+                 , STUS_CODE_ID  = 4
+         WHERE SRV_ORD_ID      = #{ordId}
+    </update>
+
 </mapper>
