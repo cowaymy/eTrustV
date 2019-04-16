@@ -431,9 +431,10 @@
      var memoColumnLayout = [
                     {dataField: "memoid",headerText :"<spring:message code='log.head.memoid'/>"           ,width:120    ,height:30 , visible:false},
                     {dataField: "memotitle",headerText :"<spring:message code='log.head.title'/>"              ,width:"30%"    ,height:30 , visible:true},
-                    {dataField: "stusname",headerText :"<spring:message code='log.head.statuscode'/>"        ,width:"20$"    ,height:30 , visible:true},
+                    {dataField: "stusname",headerText :"<spring:message code='log.head.statuscode'/>"        ,width:"20$"    ,height:30 , visible:false},
                     {dataField: "crtdt",headerText :"<spring:message code='log.head.createdate'/>"           ,width:"20%"    ,height:30 , visible:true},
                     {dataField: "crtusernm",headerText :"<spring:message code='log.head.creator'/>"          ,width:"20%"   ,height:30 , visible:true},
+                    {dataField: "department",headerText :"<spring:message code='log.head.department'/>"          ,width:"20%"    ,height:30 , visible:true},
                ];
 
     //AUIGrid 생성 후 반환 ID
