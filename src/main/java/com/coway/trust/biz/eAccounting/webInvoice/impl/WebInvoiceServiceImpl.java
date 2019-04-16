@@ -576,4 +576,9 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
     public EgovMap getFinApprover(Map<String, Object> params) {
         return webInvoiceMapper.getFinApprover(params);
     }
+
+    @Override
+    public String selectNextAppvIfKey() {
+        return webInvoiceMapper.selectNextAppvIfKey();
+    }
 }
