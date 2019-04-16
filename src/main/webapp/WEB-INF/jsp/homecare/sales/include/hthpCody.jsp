@@ -53,7 +53,7 @@
 </article>
 
 <article>
-<h3><spring:message code="sal.title.text.codyInfo" /></h3>
+<h3>HT Info</h3>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -73,15 +73,15 @@
     <td><span class="txt_box">${orderDetail.codyInfo.deptCode} (<spring:message code="sal.title.text.deptCode" />)<i>(${orderDetail.codyInfo.memCode1}) ${orderDetail.codyInfo.name1} - ${orderDetail.codyInfo.telMobile1}</i></span></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.codyCode" /></th>
+    <th scope="row">HT Code</th>
     <td><span>${orderDetail.codyInfo.memCode}</span></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.codyNm" /></th>
+    <th scope="row">HT Name</th>
     <td><span>${orderDetail.codyInfo.name}</span></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.codyNric" /></th>
+    <th scope="row">HT NRIC</th>
     <td><span>${orderDetail.codyInfo.nric}</span></td>
 </tr>
 <tr>
