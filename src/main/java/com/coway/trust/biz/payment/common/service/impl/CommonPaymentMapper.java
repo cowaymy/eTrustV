@@ -539,4 +539,7 @@ public interface CommonPaymentMapper {
 	 *
 	 */
 	List<EgovMap> selectProcessPaymentResult(Map<String, Object> params);
+
+	void updateCareSalesMStatus(Object object);
+
 }
