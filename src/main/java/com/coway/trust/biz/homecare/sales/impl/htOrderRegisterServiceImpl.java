@@ -1462,6 +1462,13 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		orderVO.setSalesOrdNo(salesOrdNo);
 		orderVO.setCrtUserId(sessionVO.getUserId());
         int salesOrdId = 0;
+        int stusCodeId = 0;
+        if (orderVO.getAppTypeId() == 3216 || orderVO.getAppTypeId() == 3217){
+        	stusCodeId = 1;
+        }else{
+        	stusCodeId = 4;
+        }
+        orderVO.setStusCodeId(stusCodeId);
 
      // SERVICE CARE ORDER - SAL0225D
      	htOrderRegisterMapper.insertSalesOrderM(orderVO);
