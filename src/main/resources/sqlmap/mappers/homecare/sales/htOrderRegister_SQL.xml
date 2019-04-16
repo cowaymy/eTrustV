@@ -971,7 +971,7 @@
              , #{rem}
              , 0
              , 0
-             , 1
+             , #{stusCodeId}
              , SYSDATE
              , #{updUserId}
              , #{syncChk}
