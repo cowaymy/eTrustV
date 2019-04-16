@@ -34,6 +34,7 @@ import io.swagger.annotations.ApiOperation;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 15/04/2019    ONGHC      1.0.1       - Add e-agreement Validation
+ * 16/04/2019    ONGHC      1.0.2       - Amend error message
  *********************************************************************************************/
 
 @Api(value = "Login api", description = "Login api")
@@ -79,7 +80,7 @@ public class LoginApiController {
       if (loginVO.getUserTypeId() == 2) {
         if (!(loginVO.getAgrmt()).equals("1") && !(loginVO.getAgrmtAppStat().equals("5"))) {
           LOGGER.debug("PLEASE CHECK AGREEMENT STATUS");
-          throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. Please sign e-agreement via eTRUST web application.");
+          throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. Please accept e-Agreement via eTRUST web application.");
         }
       }
       HttpSession session = sessionHandler.getCurrentSession();
