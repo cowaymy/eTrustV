@@ -83,7 +83,7 @@
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
     <li><a id="aTabBI" href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
-    <li><a href="#"><spring:message code="sal.title.text.hpCody" /></a></li>
+    <li><a href="#"> Salesman / HT Info</a></li>
     <li><a id="aTabCI" href="#" onClick="javascript:chgTab('custInfo');"><spring:message code="sal.title.text.custInfo" /></a></li>
     <li><a id="aTabIns" href="#">Care Service Address Info</a></li>
   <%--  <li><a id="aTabMA" href="#"><spring:message code="sal.title.text.maillingInfo" /></a></li>
