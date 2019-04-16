@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -89,6 +90,9 @@ public class BulkUploadController {
     public ResponseEntity<ReturnMessage> processBulkInvoice(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
         LOGGER.debug("========== processBulkInvoice.do ==========");
 
+        String result = AppConstants.SUCCESS;
+        ReturnMessage message = new ReturnMessage();
+
         int streamSeq = 1;
         String seq = request.getParameter("currSeq");
         EgovMap item = new EgovMap();
@@ -104,8 +108,13 @@ public class BulkUploadController {
 
         List<InvcBulkUploadVO> vos2 = (List<InvcBulkUploadVO>) cvsParam.get("voList");
 
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+
         List<Map> invcList = vos2.stream().map(r -> {
             Map<String, Object> map = BeanConverter.toMap(r);
+
+            atomicInteger.getAndIncrement();
+            LOGGER.debug("Stream seq :: " + atomicInteger.get());
 
             //map.put("grpSeq", Integer.toString(streamSeq));
             map.put("grpSeq", r.getDocNo());
@@ -128,25 +137,40 @@ public class BulkUploadController {
             EgovMap contentDtls = new EgovMap();
 
             contentDtls = (EgovMap) bulkUploadService.getSupplierDtls(hm);
-            map.put("supplier", contentDtls.get("memAccId"));
-            map.put("supplierNm", contentDtls.get("memAccName"));
+            if(contentDtls == null) {
+                message.setMessage("Invalid supplier code at Line " + atomicInteger.get());
+            } else {
+                map.put("supplier", contentDtls.get("memAccId"));
+                map.put("supplierNm", contentDtls.get("memAccName"));
+            }
 
             contentDtls = (EgovMap) bulkUploadService.getCcDtls(hm);
-            map.put("costCentrNm", contentDtls.get("costCenterText"));
+            if(contentDtls == null) {
+                message.setMessage("Invalid cost center code at Line " + atomicInteger.get());
+            } else {
+                map.put("costCentrNm", contentDtls.get("costCenterText"));
+            }
 
             contentDtls = (EgovMap) bulkUploadService.getBgtDtls(hm);
-            map.put("bgtCd", contentDtls.get("budgetCode"));
-            map.put("bgtNm", contentDtls.get("budgetCodeText"));
+            if(contentDtls == null) {
+                message.setMessage("Invalid Budget code at Line " + atomicInteger.get());
+            } else {
+                map.put("bgtCd", contentDtls.get("budgetCode"));
+                map.put("bgtNm", contentDtls.get("budgetCodeText"));
+            }
 
             contentDtls = (EgovMap) bulkUploadService.getGLDtls(hm);
-            map.put("glAccNo", contentDtls.get("glAccCode"));
-            map.put("glAccNm", contentDtls.get("glAccDesc"));
-            map.put("cntrlType", contentDtls.get("cntrlType"));
+            if(contentDtls == null) {
+                message.setMessage("Invalid Cost Center or Budget Code for GL Code at Line " + atomicInteger.get());
+            } else {
+                map.put("glAccNo", contentDtls.get("glAccCode"));
+                map.put("glAccNm", contentDtls.get("glAccDesc"));
+                map.put("cntrlType", contentDtls.get("cntrlType"));
+            }
 
             return map;
         }).collect(Collectors.toList());
 
-        String result = AppConstants.SUCCESS;
         int line = 1;
         String invalidMsg = "";
         String validMsg = "";
@@ -175,28 +199,28 @@ public class BulkUploadController {
             hm.put("memAccId", memAccId);
 
             LOGGER.debug("========== docNo ==========");
-            if("".equals(grpSeq)) {
+            if("".equals(grpSeq) || grpSeq == null || grpSeq == "null") {
                 invalidMsg = "Invalid Doc No at Line : " + line + "<br />";
                 result = AppConstants.FAIL;
                 break;
             }
 
             LOGGER.debug("========== costCenter ==========");
-            if("".equals(costCenter)) {
+            if("".equals(costCenter) || costCenter == null || costCenter == "null") {
                 invalidMsg = "Invalid Cost Center at Line : " + line + "<br />";
                 result = AppConstants.FAIL;
                 break;
             }
 
             LOGGER.debug("========== memAccId ==========");
-            if("".equals(memAccId)) {
+            if("".equals(memAccId) || memAccId == null || memAccId == "null") {
                 invalidMsg = "Invalid Supplier Code at Line : " + line + "<br />";
                 result = AppConstants.FAIL;
                 break;
             }
 
             LOGGER.debug("========== invcDt ==========");
-            if("".equals(invcDt)) {
+            if("".equals(invcDt) || invcDt == null || invcDt == "null") {
                 invalidMsg = "Invalid Invoice Date at Line : " + line + "<br />";
                 result = AppConstants.FAIL;
                 break;
@@ -209,7 +233,7 @@ public class BulkUploadController {
             }
 
             LOGGER.debug("========== payDueDt ==========");
-            if("".equals(payDueDt)) {
+            if("".equals(payDueDt) || payDueDt == null || payDueDt == "null") {
                 invalidMsg = "Invalid Payment Due Date at Line : " + line + "<br />";
                 result = AppConstants.FAIL;
                 break;
@@ -222,21 +246,21 @@ public class BulkUploadController {
             }
 
             LOGGER.debug("========== budgetCode ==========");
-            if("".equals(budgetCode)) {
+            if("".equals(budgetCode) || budgetCode == null || budgetCode == "null") {
                 invalidMsg = "Invalid Budget Code at Line : " + line + "<br />";
                 result = AppConstants.FAIL;
                 break;
             }
 
             LOGGER.debug("========== glAcc ==========");
-            if("".equals(glAcc)) {
+            if("".equals(glAcc) || glAcc == null || glAcc == "null") {
                 invalidMsg = "Invalid Cost Center and/or Budget Code at Line : " + line + "<br />";
                 result = AppConstants.FAIL;
                 break;
             }
 
             LOGGER.debug("========== cntrlType ==========");
-            if(!"".equals(cntrlType)) {
+            if(!"".equals(cntrlType) || cntrlType != null || cntrlType != "null") {
                 if("Y".equals(cntrlType)) {
                     invalidMsg = "Budget Code is of Controlled Type at Line : " + line + "<br />";
                     result = AppConstants.FAIL;
@@ -245,7 +269,7 @@ public class BulkUploadController {
             }
 
             LOGGER.debug("========== invcNo ==========");
-            if(!"".equals(invcNo)) {
+            if(!"".equals(invcNo) || invcNo != null || invcNo != "null") {
                 String claimNo = webInvoiceService.selectSameVender(hm);
                 if(!"".equals(claimNo) && claimNo != null) {
                     invalidMsg = "Same invoice number exist at Line : " + line + "<br />";
@@ -259,14 +283,14 @@ public class BulkUploadController {
             }
 
             LOGGER.debug("========== amt ==========");
-            if(amt < 0) {
+            if(amt < 0 || amt == null) {
                 invalidMsg = "Invalid amount at Line : " + line + "<br />";
                 result = AppConstants.FAIL;
                 break;
             }
 
             LOGGER.debug("========== expDesc ==========");
-            if("".equals(expDesc)) {
+            if("".equals(expDesc) || expDesc == null || expDesc == "null") {
                 invalidMsg = "Invalid expenses description at Line : " + line + "<br />";
                 result = AppConstants.FAIL;
                 break;
@@ -312,6 +336,9 @@ public class BulkUploadController {
                     }
                 }
             }
+
+
+
             line++;
         }
 
@@ -351,25 +378,9 @@ public class BulkUploadController {
 
         msg = result == AppConstants.SUCCESS ? validMsg : invalidMsg ;
 
-        ReturnMessage message = new ReturnMessage();
         message.setMessage(msg);
         message.setCode(result);
         message.setData(seq);
-
-        return ResponseEntity.ok(message);
-    }
-
-    @RequestMapping(value="/confirmInvcUpload.do", method=RequestMethod.POST)
-    public ResponseEntity<ReturnMessage> confirmInvcUpload(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) {
-        LOGGER.debug("========== confirmInvcUpload.do ==========");
-
-        // Get maximum batch number from FCM0023M
-        // Insert from FCM0022T to FCM0023M
-
-        ReturnMessage message = new ReturnMessage();
-        message.setCode(AppConstants.SUCCESS);
-        message.setData(params);
-        //message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
         return ResponseEntity.ok(message);
     }
@@ -411,23 +422,16 @@ public class BulkUploadController {
                 itemDetail = item.get(i);
 
                 if("R".equals((String)itemDetail.get("appvStus")) || "T".equals((String)itemDetail.get("appvStus"))) {
-                    appvPrcssStus += "\n- Pending By " + itemDetail.get("appvLineUserName") + " [" + itemDetail.get("appvDt") + "]";
                     appvPrcssStusList.add("- Pending By " + itemDetail.get("appvLineUserName") + " [" + itemDetail.get("appvDt") + "]");
                 } else if("A".equals((String)itemDetail.get("appvStus"))) {
-                    appvPrcssStus += "\n- Approved By " + itemDetail.get("appvLineUserName") + " [" + itemDetail.get("appvDt") + "]";
                     appvPrcssStusList.add("- Approved By " + itemDetail.get("appvLineUserName") + " [" + itemDetail.get("appvDt") + "]");
                 } else if("J".equals((String)itemDetail.get("appvStus"))) {
-                    appvPrcssStus += "\n- Rejected By " + itemDetail.get("appvLineUserName") + " [" + itemDetail.get("appvDt") + "]";
                     appvPrcssStusList.add("- Rejected By " + itemDetail.get("appvLineUserName") + " [" + itemDetail.get("appvDt") + "]");
                 }
             }
 
-            LOGGER.debug("appvPrcssStus :: " + appvPrcssStus);
-
             result.put("appvPrcssStus", appvPrcssStusList);
         }
-
-        //String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
 
         return ResponseEntity.ok(result);
     }
@@ -444,7 +448,6 @@ public class BulkUploadController {
         ReturnMessage message = new ReturnMessage();
         message.setCode(AppConstants.SUCCESS);
         message.setData(params);
-        //message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
         return ResponseEntity.ok(message);
     }
@@ -462,7 +465,6 @@ public class BulkUploadController {
 
         params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-        // serivce 에서 파일정보를 가지고, DB 처리.
         if (list.size() > 0) {
             webInvoiceApplication.insertWebInvoiceAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
         }
@@ -497,9 +499,7 @@ public class BulkUploadController {
         item = bulkUploadService.getBatchSeq();
         batchId = item.get("seq").toString();
 
-        //itemMap = bulkUploadService.getBulkMaster(params);
-
-        List<EgovMap> bulkDetailsList = bulkUploadService.getBulkDetails(params); // ensure ordered by group sequence
+        List<EgovMap> bulkDetailsList = bulkUploadService.getBulkDetails(params);
 
         for(int i = 0; i < bulkDetailsList.size(); i++) {
             Map<String, Object> bulkDetail = (Map<String, Object>) bulkDetailsList.get(i);
@@ -582,7 +582,6 @@ public class BulkUploadController {
         ReturnMessage message = new ReturnMessage();
         message.setCode(AppConstants.SUCCESS);
         message.setData(params);
-        //message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
         return ResponseEntity.ok(message);
     }
@@ -687,7 +686,6 @@ public class BulkUploadController {
             }
 
             if(Integer.parseInt(appvLineCnt) == Integer.parseInt(appvLineSeq)) {
-                // Query details to be inserted into itf700
                 List<EgovMap> bulkDetailsList = bulkUploadService.getBulkItfDtls(params);
 
                 for(int i = 0; i < bulkDetailsList.size(); i++) {
