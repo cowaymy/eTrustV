@@ -1,11 +1,12 @@
 package com.coway.trust.web.eAccounting.paymentUpload;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -41,6 +42,7 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.EgovFormBasedFileVo;
+import com.ibm.icu.util.Calendar;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -90,10 +92,19 @@ public class BulkUploadController {
     public ResponseEntity<ReturnMessage> processBulkInvoice(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
         LOGGER.debug("========== processBulkInvoice.do ==========");
 
+        String sdfPattern = "yyyyMMdd";
+        SimpleDateFormat sdf = new SimpleDateFormat(sdfPattern);
+        String rDate = "";
+
+
+        Calendar cal = Calendar.getInstance();
+        Date cDate = null;
+        cal.add(Calendar.YEAR, 1);
+        Date mDate = cal.getTime();
+
         String result = AppConstants.SUCCESS;
         ReturnMessage message = new ReturnMessage();
 
-        int streamSeq = 1;
         String seq = request.getParameter("currSeq");
         EgovMap item = new EgovMap();
         Map<String, Object> itemMap = new HashMap<String, Object>();
@@ -108,15 +119,9 @@ public class BulkUploadController {
 
         List<InvcBulkUploadVO> vos2 = (List<InvcBulkUploadVO>) cvsParam.get("voList");
 
-        AtomicInteger atomicInteger = new AtomicInteger(0);
-
         List<Map> invcList = vos2.stream().map(r -> {
             Map<String, Object> map = BeanConverter.toMap(r);
 
-            atomicInteger.getAndIncrement();
-            LOGGER.debug("Stream seq :: " + atomicInteger.get());
-
-            //map.put("grpSeq", Integer.toString(streamSeq));
             map.put("grpSeq", r.getDocNo());
             map.put("costCentr", r.getCostCentr());
             map.put("invcDt", r.getInvcDt());
@@ -136,36 +141,36 @@ public class BulkUploadController {
 
             EgovMap contentDtls = new EgovMap();
 
-            contentDtls = (EgovMap) bulkUploadService.getSupplierDtls(hm);
-            if(contentDtls == null) {
-                message.setMessage("Invalid supplier code at Line " + atomicInteger.get());
-            } else {
-                map.put("supplier", contentDtls.get("memAccId"));
-                map.put("supplierNm", contentDtls.get("memAccName"));
+            if(!"".equals(r.getSupplier())) {
+                contentDtls = (EgovMap) bulkUploadService.getSupplierDtls(hm);
+                if(contentDtls != null) {
+                    map.put("supplier", contentDtls.get("memAccId"));
+                    map.put("supplierNm", contentDtls.get("memAccName"));
+                }
             }
 
-            contentDtls = (EgovMap) bulkUploadService.getCcDtls(hm);
-            if(contentDtls == null) {
-                message.setMessage("Invalid cost center code at Line " + atomicInteger.get());
-            } else {
-                map.put("costCentrNm", contentDtls.get("costCenterText"));
+            if(!"".equals(r.getCostCentr())) {
+                contentDtls = (EgovMap) bulkUploadService.getCcDtls(hm);
+                if(contentDtls != null) {
+                    map.put("costCentrNm", contentDtls.get("costCenterText"));
+                }
             }
 
-            contentDtls = (EgovMap) bulkUploadService.getBgtDtls(hm);
-            if(contentDtls == null) {
-                message.setMessage("Invalid Budget code at Line " + atomicInteger.get());
-            } else {
-                map.put("bgtCd", contentDtls.get("budgetCode"));
-                map.put("bgtNm", contentDtls.get("budgetCodeText"));
+            if(!"".equals(r.getBgtCd())) {
+                contentDtls = (EgovMap) bulkUploadService.getBgtDtls(hm);
+                if(contentDtls != null) {
+                    map.put("bgtCd", contentDtls.get("budgetCode"));
+                    map.put("bgtNm", contentDtls.get("budgetCodeText"));
+                }
             }
 
-            contentDtls = (EgovMap) bulkUploadService.getGLDtls(hm);
-            if(contentDtls == null) {
-                message.setMessage("Invalid Cost Center or Budget Code for GL Code at Line " + atomicInteger.get());
-            } else {
-                map.put("glAccNo", contentDtls.get("glAccCode"));
-                map.put("glAccNm", contentDtls.get("glAccDesc"));
-                map.put("cntrlType", contentDtls.get("cntrlType"));
+            if(!"".equals(r.getCostCentr()) && !"".equals(r.getBgtCd())) {
+                contentDtls = (EgovMap) bulkUploadService.getGLDtls(hm);
+                if(contentDtls != null) {
+                    map.put("glAccNo", contentDtls.get("glAccCode"));
+                    map.put("glAccNm", contentDtls.get("glAccDesc"));
+                    map.put("cntrlType", contentDtls.get("cntrlType"));
+                }
             }
 
             return map;
@@ -174,6 +179,7 @@ public class BulkUploadController {
         int line = 1;
         int errLines = 0;
         String invalidMsg = "";
+        String invalidMsgDtl = "";
         String validMsg = "";
         String msg = "";
 
@@ -198,130 +204,173 @@ public class BulkUploadController {
             String glAcc = (String.valueOf(hm.get("glAccNo"))).trim();
             String cntrlType = (String.valueOf(hm.get("cntrlType"))).trim();
 
-            // Reassigned variable for invoice number checking purpose
+            String billPeriodFr = "";
+            String billPeriodTo = "";
+            if(hm.containsKey("billPeriodFr")) {
+                if(!"".equals(hm.get("billPeriodFr"))){
+                    billPeriodFr = (String.valueOf(hm.get("billPeriodFr"))).trim();
+                }
+            }
+
+            if(hm.containsKey("billPeriodTo")) {
+                if(!"".equals(hm.get("billPeriodTo"))){
+                    billPeriodTo = (String.valueOf(hm.get("billPeriodTo"))).trim();
+                }
+            }
+
             hm.put("memAccId", memAccId);
 
-            if(errCnt == errLines) {
-                result = AppConstants.FAIL;
+            if(errCnt == errLines){
                 break;
             }
 
             LOGGER.debug("========== docNo ==========");
             if("".equals(grpSeq) || grpSeq == null || grpSeq == "null") {
-                invalidMsg += "Invalid Doc No at Line : " + line + "<br />";
-                errLines++;
-                //result = AppConstants.FAIL;
-                //break;
+                invalidMsgDtl += " Doc No";
             }
 
             LOGGER.debug("========== costCenter ==========");
             if("".equals(costCenter) || costCenter == null || costCenter == "null") {
-                invalidMsg += "Invalid Cost Center at Line : " + line + "<br />";
-                errLines++;
-                //result = AppConstants.FAIL;
-                //break;
+                if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                    invalidMsgDtl += "Cost Center";
+                } else {
+                    invalidMsgDtl += ", Cost Center";
+                }
             }
 
             LOGGER.debug("========== memAccId ==========");
             if("".equals(memAccId) || memAccId == null || memAccId == "null") {
-                invalidMsg += "Invalid Supplier Code at Line : " + line + "<br />";
-                errLines++;
-                //result = AppConstants.FAIL;
-                //break;
+                if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                    invalidMsgDtl += "Supplier";
+                } else {
+                    invalidMsgDtl += ", Supplier";
+                }
             }
 
             LOGGER.debug("========== invcDt ==========");
             if("".equals(invcDt) || invcDt == null || invcDt == "null") {
-                invalidMsg += "Invalid Invoice Date at Line : " + line + "<br />";
-                errLines++;
-                //result = AppConstants.FAIL;
-                //break;
+                if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                    invalidMsgDtl += "Invoice Date";
+                } else {
+                    invalidMsgDtl += ", Invoice Date";
+                }
             } else {
                 if(invcDt.length() != 8) {
-                    invalidMsg += "Invalid Invoice Date format at Line : " + line + "<br />";
-                    errLines++;
-                    //result = AppConstants.FAIL;
-                    //break;
+                    if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                        invalidMsgDtl += "Invoice Date's Length";
+                    } else {
+                        invalidMsgDtl += ", Invoice Date's Length";
+                    }
+                } else {
+                    cDate = sdf.parse(invcDt);
+
+                    if(cDate.after(mDate)) {
+                        if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                            invalidMsgDtl += "Invoice Date";
+                        } else {
+                            invalidMsgDtl += ", Invoice Date";
+                        }
+                    }
                 }
             }
 
             LOGGER.debug("========== payDueDt ==========");
             if("".equals(payDueDt) || payDueDt == null || payDueDt == "null") {
-                invalidMsg += "Invalid Payment Due Date at Line : " + line + "<br />";
-                errLines++;
-                //result = AppConstants.FAIL;
-                //break;
+                if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                    invalidMsgDtl += "Payment Due Date";
+                } else {
+                    invalidMsgDtl += ", Payment Due Date";
+                }
             } else {
                 if(payDueDt.length() != 8) {
-                    invalidMsg += "Invalid Payment Due Date format at Line : " + line + "<br />";
-                    errLines++;
-                    //result = AppConstants.FAIL;
-                    //break;
+                    if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                        invalidMsgDtl += "Payment Due Date's Length";
+                    } else {
+                        invalidMsgDtl += ", Payment Due Date's Length";
+                    }
+                } else {
+                    cDate = sdf.parse(payDueDt);
+
+                    if(cDate.after(mDate)) {
+                        if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                            invalidMsgDtl += "Payment Due Date";
+                        } else {
+                            invalidMsgDtl += ", Payment Due Date";
+                        }
+                    }
                 }
             }
 
             LOGGER.debug("========== budgetCode ==========");
             if("".equals(budgetCode) || budgetCode == null || budgetCode == "null") {
-                invalidMsg += "Invalid Budget Code at Line : " + line + "<br />";
-                errLines++;
-                //result = AppConstants.FAIL;
-                //break;
+                if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                    invalidMsgDtl += "Budget Code";
+                } else {
+                    invalidMsgDtl += ", Budget Code";
+                }
             }
 
             LOGGER.debug("========== glAcc ==========");
             if("".equals(glAcc) || glAcc == null || glAcc == "null") {
-                invalidMsg += "Invalid Cost Center and/or Budget Code at Line : " + line + "<br />";
-                errLines++;
-                //result = AppConstants.FAIL;
-                //break;
+                if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                    invalidMsgDtl += "Budget Code/Cost Center (GL)";
+                } else {
+                    invalidMsgDtl += ", Budget Code/Cost Center (GL)";
+                }
             }
 
             LOGGER.debug("========== cntrlType ==========");
             if(!"".equals(cntrlType) || cntrlType != null || cntrlType != "null") {
                 if("Y".equals(cntrlType)) {
-                    invalidMsg += "Budget Code is of Controlled Type at Line : " + line + "<br />";
-                    errLines++;
-                    //result = AppConstants.FAIL;
-                    //break;
+                    if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                        invalidMsgDtl += "Controlled Budget Code";
+                    } else {
+                        invalidMsgDtl += ", Controlled Budget Code";
+                    }
                 }
             }
 
             LOGGER.debug("========== invcNo ==========");
             if("".equals(invcNo) || invcNo == null || invcNo == "null") {
-                invalidMsg += "Invoice number at Line : " + line + " is emtpy<br />";
-                errLines++;
-                //result = AppConstants.FAIL;
-                //break;
+                if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                    invalidMsgDtl += "Invoice No";
+                } else {
+                    invalidMsgDtl += ", Invoice No";
+                }
             } else {
                 String claimNo = webInvoiceService.selectSameVender(hm);
                 if(!"".equals(claimNo) && claimNo != null) {
-                    invalidMsg += "Same invoice number exist at Line : " + line + "<br />";
-                    errLines++;
-                    //result = AppConstants.FAIL;
-                    //break;
+                    if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                        invalidMsgDtl += "Invoice No Exist";
+                    } else {
+                        invalidMsgDtl += ", Invoice No Exist";
+                    }
                 }
             }
 
             LOGGER.debug("========== amt ==========");
-            if(amt < 0 || amt == null) {
-                invalidMsg += "Invalid amount at Line : " + line + "<br />";
-                errLines++;
-                //result = AppConstants.FAIL;
-                //break;
+            if(amt <= 0 || amt == null) {
+                if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                    invalidMsgDtl += "Amount";
+                } else {
+                    invalidMsgDtl += ", Amount";
+                }
             }
 
             LOGGER.debug("========== expDesc ==========");
             if("".equals(expDesc) || expDesc == null || expDesc == "null") {
-                invalidMsg += "Invalid expenses description at Line : " + line + "<br />";
-                errLines++;
-                //result = AppConstants.FAIL;
-                //break;
+                if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                    invalidMsgDtl += "Description";
+                } else {
+                    invalidMsgDtl += ", Description";
+                }
             } else {
                 if(expDesc.length() > 100) {
-                    invalidMsg += "Maximum 100 characters allowed for expenses description at Line : " + line + "<br />";
-                    errLines++;
-                    //result = AppConstants.FAIL;
-                    //break;
+                    if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                        invalidMsgDtl += "Description's length";
+                    } else {
+                        invalidMsgDtl += ", Description's length";
+                    }
                 }
             }
 
@@ -330,41 +379,104 @@ public class BulkUploadController {
                "06211".equals(budgetCode) || "06116".equals(budgetCode) || "06152".equals(budgetCode) || "06137".equals(budgetCode) ||
                "06148".equals(budgetCode) || "06157".equals(budgetCode)) {
 
-                String billPeriodFr = (String.valueOf(hm.get("billPeriodFr"))).trim();
-                String billPeriodTo = (String.valueOf(hm.get("billPeriodTo"))).trim();
+                //String billPeriodFr = (String.valueOf(hm.get("billPeriodFr"))).trim();
+                //String billPeriodTo = (String.valueOf(hm.get("billPeriodTo"))).trim();
 
                 LOGGER.debug("========== Utilities Budget :: billPeriodFr ==========");
                 if("".equals(billPeriodFr)) {
-                    invalidMsg = "Invalid billPeriodFr at Line : " + line + "<br />";
-                    errLines++;
-                    //result = AppConstants.FAIL;
-                    //break;
+                    if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                        invalidMsgDtl += "Billing Period From";
+                    } else {
+                        invalidMsgDtl += ", Billing Period From";
+                    }
                 } else {
                     if(billPeriodFr.length() != 8) {
-                        invalidMsg += "Invalid billPeriodFr format at Line : " + line + "<br />";
-                        errLines++;
-                        //result = AppConstants.FAIL;
-                        //break;
+                        if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                            invalidMsgDtl += "Billing Period From";
+                        } else {
+                            invalidMsgDtl += ", Billing Period From";
+                        }
+                    } else {
+                        cDate = sdf.parse(billPeriodFr);
+
+                        if(cDate.after(mDate)) {
+                            if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                                invalidMsgDtl += "Billing Period From";
+                            } else {
+                                invalidMsgDtl += ", Billing Period From";
+                            }
+                        }
                     }
                 }
 
                 LOGGER.debug("========== Utilities Budget :: billPeriodTo ==========");
                 if("".equals(billPeriodTo)) {
-                    invalidMsg += "Invalid billPeriodTo at Line : " + line + "<br />";
-                    errLines++;
-                    //result = AppConstants.FAIL;
-                    //break;
+                    if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                        invalidMsgDtl += "Billing Period To";
+                    } else {
+                        invalidMsgDtl += ", Billing Period To";
+                    }
                 } else {
                     if(billPeriodTo.length() != 8) {
-                        invalidMsg += "Invalid billPeriodTo format at Line : " + line + "<br />";
-                        errLines++;
-                        //result = AppConstants.FAIL;
-                        //break;
+                        if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                            invalidMsgDtl += "Billing Period To";
+                        } else {
+                            invalidMsgDtl += ", Billing Period To";
+                        }
+                    } else {
+                        cDate = sdf.parse(billPeriodTo);
+
+                        if(cDate.after(mDate)) {
+                            if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                                invalidMsgDtl += "Billing Period To";
+                            } else {
+                                invalidMsgDtl += ", Billing Period To";
+                            }
+                        }
                     }
                 }
             }
 
+            if(!"".equals(billPeriodFr)) {
+                cDate = sdf.parse(billPeriodFr);
+
+                if(cDate.after(mDate)) {
+                    if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                        invalidMsgDtl += "Billing Period From";
+                    } else {
+                        invalidMsgDtl += ", Billing Period From";
+                    }
+                }
+            }
+
+            if(!"".equals(billPeriodTo)) {
+                cDate = sdf.parse(billPeriodTo);
+
+                if(cDate.after(mDate)) {
+                    if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                        invalidMsgDtl += "Billing Period To";
+                    } else {
+                        invalidMsgDtl += ", Billing Period To";
+                    }
+                }
+            }
+
+            if(!"".equals(invalidMsgDtl)) {
+                if(invalidMsg == "") {
+                    invalidMsg = "Line " + line + " - " + invalidMsgDtl;
+                } else {
+                    invalidMsg += "<br />Line " + line + " - " + invalidMsgDtl;
+                }
+
+                invalidMsgDtl = "";
+                errLines++;
+            }
+
             line++;
+        }
+
+        if(errCnt == errLines || errCnt != 0) {
+            result = AppConstants.FAIL;
         }
 
         if("".equals(seq) || seq == null) {
@@ -583,7 +695,7 @@ public class BulkUploadController {
                     hm.put("memCode", (String.valueOf(hm.get("memCode"))).trim());
                     hm.put("userId", sessionVO.getUserId());
                     LOGGER.debug("insertApproveLineDetail =====================================>>  " + hm);
-                    // TODO appvLineDetailTable Insert
+
                     bulkUploadService.insertApproveLineDetail(hm);
 
                 }

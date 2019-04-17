@@ -309,33 +309,38 @@
             var message = "";
 
             if(result.code == 99){
-                Common.alert(result.message);
+                //Common.alert(result.message);
+                $("#error_wrap").show();
+                $("#errorPopHeader").text("File Upload Error")
+                $("#errorMessage").html(result.message);
             }else{
 
-                $("#batchInvcSeq").val(result.data);
+                Common.confirm(result.message, function(result2) {
+                    $("#batchInvcSeq").val(result.data);
 
-                // Retrieve uploaded content results
-                Common.ajax("GET", "/eAccounting/paymentUpload/uploadResultList", {seq : $("#batchInvcSeq").val()}, function(result2) {
-                    console.log(result2);
+                    // Retrieve uploaded content results
+                    Common.ajax("GET", "/eAccounting/paymentUpload/uploadResultList", {seq : $("#batchInvcSeq").val()}, function(result2) {
+                        console.log(result2);
 
-                    if(bulkInvcGrid == null) {
-                        bulkInvcGrid = GridCommon.createAUIGrid("#bulkInvcUp_grid_wrap", uploadItemLayout, null, gridoptions);
-                    }
+                        if(bulkInvcGrid == null) {
+                            bulkInvcGrid = GridCommon.createAUIGrid("#bulkInvcUp_grid_wrap", uploadItemLayout, null, gridoptions);
+                        }
 
-                    AUIGrid.setGridData(bulkInvcGrid, result2.resultList);
-                    AUIGrid.resize(bulkInvcGrid, 1195, 350);
+                        AUIGrid.setGridData(bulkInvcGrid, result2.resultList);
+                        AUIGrid.resize(bulkInvcGrid, 1195, 350);
 
-                    // Display content result
-                    $("#uploadContent").show();
-                    $("#bulkInvcUp_grid_wrap").show();
-                    $("#suppDocFile").show();
-                    $("#suppDocFileSelector").show();
-                    $("a#uploadBtn").text("Reupload");
-                    $("#proceedBtn").show();
+                        // Display content result
+                        $("#uploadContent").show();
+                        $("#bulkInvcUp_grid_wrap").show();
+                        $("#suppDocFile").show();
+                        $("#suppDocFileSelector").show();
+                        $("a#uploadBtn").text("Reupload");
+                        $("#proceedBtn").show();
 
-                    console.log("uploadResultList :: batchInvcSeq :: " + $("#batchInvcSeq").val());
+                        console.log("uploadResultList :: batchInvcSeq :: " + $("#batchInvcSeq").val());
 
-                    fn_searchUpload();
+                        fn_searchUpload();
+                    });
                 });
             }
         },  function(jqXHR, textStatus, errorThrown) {
@@ -824,16 +829,20 @@
 <!-------------------------------------------------------------------------------------
     POP-UP (VIEW UPLOADED BATCH)
 -------------------------------------------------------------------------------------->
-<div class="popup_wrap size_big" id="view_wrap" style="display: none;">
+<div class="popup_wrap" id="error_wrap" style="display: none;">
     <header class="pop_header">
-        <h1>Bulk Invoices Upload View</h1>
+        <h1 id="errorPopHeader">Error</h1>
         <ul class="right_opt">
             <li>
                 <p class="btn_blue2">
-                    <a href="#" onclick="javascript:fn_closeUpload()">CLOSE</a>
+                    <a href="#" onclick="">CLOSE</a>
                 </p>
             </li>
         </ul>
     </header>
+
+    <section class="pop_body">
+        <div id="errorMessage" style="padding:1%"></div>
+    </section>
 
 </div>
