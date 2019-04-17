@@ -50,8 +50,8 @@
 	        AND A.MBRSH_NO = UPPER(#{MBRSH_NO})
 	    </if>
 
-	    <if test="ORD_NO != null and ORD_NO != ''">
-	        AND A.ORD_NO = #{ORD_NO}
+	    <if test="ORD_ID != null and ORD_ID != ''">
+	        AND A.ORD_ID = #{ORD_ID}
 	    </if>
 
 	    <if test="MBRSH_CRT_USER_ID != null and MBRSH_CRT_USER_ID != ''">

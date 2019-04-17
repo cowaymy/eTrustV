@@ -2350,7 +2350,7 @@
 
     function fn_getMembershipPurchase() {
         var isExist = false;
-        Common.ajaxSync("GET", "/sales/membership/selectMembershipList", {ORD_NO : ORD_ID, MBRSH_STUS_ID : '1', MBRSH_STUS_ID : '4'}, function(result) {
+        Common.ajaxSync("GET", "/sales/membership/selectMembershipList", {ORD_ID : ORD_ID, MBRSH_STUS_ID : '1', MBRSH_STUS_ID : '4'}, function(result) {
             if(result != null && result.length > 0) {
                 isExist = true;
             }
