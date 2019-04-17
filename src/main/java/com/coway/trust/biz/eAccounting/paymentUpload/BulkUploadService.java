@@ -50,4 +50,6 @@ public interface BulkUploadService {
     void insertBulkItf(Map<String, Object> params);
 
     List<EgovMap> getApprDtl(Map<String, Object> params);
+
+    int getErrorCnt();
 }

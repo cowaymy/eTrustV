@@ -172,9 +172,12 @@ public class BulkUploadController {
         }).collect(Collectors.toList());
 
         int line = 1;
+        int errLines = 0;
         String invalidMsg = "";
         String validMsg = "";
         String msg = "";
+
+        int errCnt = bulkUploadService.getErrorCnt();
 
         Map<String, Object> hm = null;
         for(Object map : invcList) {
@@ -198,107 +201,127 @@ public class BulkUploadController {
             // Reassigned variable for invoice number checking purpose
             hm.put("memAccId", memAccId);
 
-            LOGGER.debug("========== docNo ==========");
-            if("".equals(grpSeq) || grpSeq == null || grpSeq == "null") {
-                invalidMsg = "Invalid Doc No at Line : " + line + "<br />";
+            if(errCnt == errLines) {
                 result = AppConstants.FAIL;
                 break;
+            }
+
+            LOGGER.debug("========== docNo ==========");
+            if("".equals(grpSeq) || grpSeq == null || grpSeq == "null") {
+                invalidMsg += "Invalid Doc No at Line : " + line + "<br />";
+                errLines++;
+                //result = AppConstants.FAIL;
+                //break;
             }
 
             LOGGER.debug("========== costCenter ==========");
             if("".equals(costCenter) || costCenter == null || costCenter == "null") {
-                invalidMsg = "Invalid Cost Center at Line : " + line + "<br />";
-                result = AppConstants.FAIL;
-                break;
+                invalidMsg += "Invalid Cost Center at Line : " + line + "<br />";
+                errLines++;
+                //result = AppConstants.FAIL;
+                //break;
             }
 
             LOGGER.debug("========== memAccId ==========");
             if("".equals(memAccId) || memAccId == null || memAccId == "null") {
-                invalidMsg = "Invalid Supplier Code at Line : " + line + "<br />";
-                result = AppConstants.FAIL;
-                break;
+                invalidMsg += "Invalid Supplier Code at Line : " + line + "<br />";
+                errLines++;
+                //result = AppConstants.FAIL;
+                //break;
             }
 
             LOGGER.debug("========== invcDt ==========");
             if("".equals(invcDt) || invcDt == null || invcDt == "null") {
-                invalidMsg = "Invalid Invoice Date at Line : " + line + "<br />";
-                result = AppConstants.FAIL;
-                break;
+                invalidMsg += "Invalid Invoice Date at Line : " + line + "<br />";
+                errLines++;
+                //result = AppConstants.FAIL;
+                //break;
             } else {
                 if(invcDt.length() != 8) {
-                    invalidMsg = "Invalid Invoice Date format at Line : " + line + "<br />";
-                    result = AppConstants.FAIL;
-                    break;
+                    invalidMsg += "Invalid Invoice Date format at Line : " + line + "<br />";
+                    errLines++;
+                    //result = AppConstants.FAIL;
+                    //break;
                 }
             }
 
             LOGGER.debug("========== payDueDt ==========");
             if("".equals(payDueDt) || payDueDt == null || payDueDt == "null") {
-                invalidMsg = "Invalid Payment Due Date at Line : " + line + "<br />";
-                result = AppConstants.FAIL;
-                break;
+                invalidMsg += "Invalid Payment Due Date at Line : " + line + "<br />";
+                errLines++;
+                //result = AppConstants.FAIL;
+                //break;
             } else {
                 if(payDueDt.length() != 8) {
-                    invalidMsg = "Invalid Payment Due Date format at Line : " + line + "<br />";
-                    result = AppConstants.FAIL;
-                    break;
+                    invalidMsg += "Invalid Payment Due Date format at Line : " + line + "<br />";
+                    errLines++;
+                    //result = AppConstants.FAIL;
+                    //break;
                 }
             }
 
             LOGGER.debug("========== budgetCode ==========");
             if("".equals(budgetCode) || budgetCode == null || budgetCode == "null") {
-                invalidMsg = "Invalid Budget Code at Line : " + line + "<br />";
-                result = AppConstants.FAIL;
-                break;
+                invalidMsg += "Invalid Budget Code at Line : " + line + "<br />";
+                errLines++;
+                //result = AppConstants.FAIL;
+                //break;
             }
 
             LOGGER.debug("========== glAcc ==========");
             if("".equals(glAcc) || glAcc == null || glAcc == "null") {
-                invalidMsg = "Invalid Cost Center and/or Budget Code at Line : " + line + "<br />";
-                result = AppConstants.FAIL;
-                break;
+                invalidMsg += "Invalid Cost Center and/or Budget Code at Line : " + line + "<br />";
+                errLines++;
+                //result = AppConstants.FAIL;
+                //break;
             }
 
             LOGGER.debug("========== cntrlType ==========");
             if(!"".equals(cntrlType) || cntrlType != null || cntrlType != "null") {
                 if("Y".equals(cntrlType)) {
-                    invalidMsg = "Budget Code is of Controlled Type at Line : " + line + "<br />";
-                    result = AppConstants.FAIL;
-                    break;
+                    invalidMsg += "Budget Code is of Controlled Type at Line : " + line + "<br />";
+                    errLines++;
+                    //result = AppConstants.FAIL;
+                    //break;
                 }
             }
 
             LOGGER.debug("========== invcNo ==========");
-            if(!"".equals(invcNo) || invcNo != null || invcNo != "null") {
+            if("".equals(invcNo) || invcNo == null || invcNo == "null") {
+                invalidMsg += "Invoice number at Line : " + line + " is emtpy<br />";
+                errLines++;
+                //result = AppConstants.FAIL;
+                //break;
+            } else {
                 String claimNo = webInvoiceService.selectSameVender(hm);
                 if(!"".equals(claimNo) && claimNo != null) {
-                    invalidMsg = "Same invoice number exist at Line : " + line + "<br />";
-                    result = AppConstants.FAIL;
-                    break;
+                    invalidMsg += "Same invoice number exist at Line : " + line + "<br />";
+                    errLines++;
+                    //result = AppConstants.FAIL;
+                    //break;
                 }
-            } else {
-                invalidMsg = "Invoice number at Line : " + line + " is emtpy<br />";
-                result = AppConstants.FAIL;
-                break;
             }
 
             LOGGER.debug("========== amt ==========");
             if(amt < 0 || amt == null) {
-                invalidMsg = "Invalid amount at Line : " + line + "<br />";
-                result = AppConstants.FAIL;
-                break;
+                invalidMsg += "Invalid amount at Line : " + line + "<br />";
+                errLines++;
+                //result = AppConstants.FAIL;
+                //break;
             }
 
             LOGGER.debug("========== expDesc ==========");
             if("".equals(expDesc) || expDesc == null || expDesc == "null") {
-                invalidMsg = "Invalid expenses description at Line : " + line + "<br />";
-                result = AppConstants.FAIL;
-                break;
+                invalidMsg += "Invalid expenses description at Line : " + line + "<br />";
+                errLines++;
+                //result = AppConstants.FAIL;
+                //break;
             } else {
                 if(expDesc.length() > 100) {
-                    invalidMsg = "Maximum 100 characters allowed for expenses description at Line : " + line + "<br />";
-                    result = AppConstants.FAIL;
-                    break;
+                    invalidMsg += "Maximum 100 characters allowed for expenses description at Line : " + line + "<br />";
+                    errLines++;
+                    //result = AppConstants.FAIL;
+                    //break;
                 }
             }
 
@@ -313,31 +336,33 @@ public class BulkUploadController {
                 LOGGER.debug("========== Utilities Budget :: billPeriodFr ==========");
                 if("".equals(billPeriodFr)) {
                     invalidMsg = "Invalid billPeriodFr at Line : " + line + "<br />";
-                    result = AppConstants.FAIL;
-                    break;
+                    errLines++;
+                    //result = AppConstants.FAIL;
+                    //break;
                 } else {
                     if(billPeriodFr.length() != 8) {
-                        invalidMsg = "Invalid billPeriodFr format at Line : " + line + "<br />";
-                        result = AppConstants.FAIL;
-                        break;
+                        invalidMsg += "Invalid billPeriodFr format at Line : " + line + "<br />";
+                        errLines++;
+                        //result = AppConstants.FAIL;
+                        //break;
                     }
                 }
 
                 LOGGER.debug("========== Utilities Budget :: billPeriodTo ==========");
                 if("".equals(billPeriodTo)) {
-                    invalidMsg = "Invalid billPeriodTo at Line : " + line + "<br />";
-                    result = AppConstants.FAIL;
-                    break;
+                    invalidMsg += "Invalid billPeriodTo at Line : " + line + "<br />";
+                    errLines++;
+                    //result = AppConstants.FAIL;
+                    //break;
                 } else {
                     if(billPeriodTo.length() != 8) {
-                        invalidMsg = "Invalid billPeriodTo format at Line : " + line + "<br />";
-                        result = AppConstants.FAIL;
-                        break;
+                        invalidMsg += "Invalid billPeriodTo format at Line : " + line + "<br />";
+                        errLines++;
+                        //result = AppConstants.FAIL;
+                        //break;
                     }
                 }
             }
-
-
 
             line++;
         }

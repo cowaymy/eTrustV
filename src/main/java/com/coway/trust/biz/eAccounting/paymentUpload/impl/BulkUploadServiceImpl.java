@@ -134,4 +134,9 @@ public class BulkUploadServiceImpl extends EgovAbstractServiceImpl implements Bu
     public List<EgovMap> getApprDtl(Map<String, Object> params) {
         return bulkUploadMapper.getApprDtl(params);
     }
+
+    @Override
+    public int getErrorCnt() {
+        return bulkUploadMapper.getErrorCnt();
+    }
 }

@@ -391,7 +391,7 @@
             A.APPV_LINE_CNT,
             A.APPV_LINE_PRCSS_CNT,
             B.APPV_LINE_SEQ,
-            TO_CHAR(B.APPV_DT, 'DD/MM/YYYY') APPV_DT,
+            NVL(TO_CHAR(B.APPV_DT, 'DD/MM/YYYY'), '-') APPV_DT,
             B.APPV_STUS,
             C.USER_NAME APPV_LINE_USER_NAME
         FROM FCM0025M M
@@ -534,4 +534,8 @@
             #{utlacno}
         )
     </insert>
+
+    <select id="getErrorCnt" parameterType="String" resultType="int">
+        SELECT CODE FROM SYS0094M WHERE IND = 'BULK_INVC'
+    </select>
 </mapper>
