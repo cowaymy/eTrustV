@@ -110,25 +110,25 @@
             headerText : "Payment Due Date",
             width: "8%",
             //height : 30,
-            visible : true,
-            dataType : "date",
-            formatString : "dd/mm/yyyy"
+            visible : true
+            //dataType : "date",
+            //formatString : "dd/mm/yyyy"
         },{
             dataField : "billPeriodFr",
             headerText : "Billing Period From",
             width : "8%",
             //height : 30,
             visible : true,
-            dataType : "date",
-            formatString : "dd/mm/yyyy"
+            //dataType : "date",
+            //formatString : "dd/mm/yyyy"
         },{
             dataField : "billPeriodTo",
             headerText : "Billing Period To",
             width : "8%",
             //height : 30,
-            visible : true,
-            dataType : "date",
-            formatString : "dd/mm/yyyy"
+            visible : true
+            //dataType : "date",
+            //formatString : "dd/mm/yyyy"
         },{
             dataField : "budget",
             headerText : "Budget",
