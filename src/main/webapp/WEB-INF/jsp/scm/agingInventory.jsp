@@ -144,12 +144,12 @@ function fnSearchHeader() {
 							dataField : result.selectAgingInventoryHeader[0].handQty,
 							dataType : "numeric",
 							style : "my-columnRight"
-						}, {
+						}, /*{
 							headerText : "~6 Month",
 							dataField : result.selectAgingInventoryHeader[0].ageSixSum,
 							dataType : "numeric",
 							style : "my-columnRight2"
-						}, {
+						}, */{
 							headerText : "~1 Year",
 							dataField : result.selectAgingInventoryHeader[0].ageOneSum,
 							dataType : "numeric",
@@ -464,6 +464,12 @@ function fnSetResult() {
 	var amtList	= new Array();
 	
 	for ( var i = 0 ; i < listObj.length ; i++ ) {
+		var v1	= 0;	var v2	= 0;	var	v3	= 0;
+		if ( "-" == listObj[i].ageOneSum )	v1	= 0;	else	v1	= listObj[i].ageOneSum;
+		if ( "-" == listObj[i].ageTwoSum )	v2	= 0;	else	v2	= listObj[i].ageTwoSum;
+		if ( "-" == listObj[i].ageThrSum )	v3	= 0;	else	v3	= listObj[i].ageThrSum;
+		var sum	= parseInt(v1) + parseInt(v2) + parseInt(v3);
+		
 		var temp	= new Object();
 		temp.typeName	= listObj[i].typeName;
 		temp.categoryName	= listObj[i].categoryName;
@@ -474,14 +480,19 @@ function fnSetResult() {
 		temp.ageOneSum	= listObj[i].ageOneSum;
 		temp.ageTwoSum	= listObj[i].ageTwoSum;
 		temp.ageThrSum	= listObj[i].ageThrSum;
-		temp.ovrThrSum	= listObj[i].ovrThrSum;
+		if ( parseInt(listObj[i].handQty) == parseInt(sum) ) {
+			temp.ovrThrSum	= listObj[i].ovrThrSum;
+		} else {
+			temp.ovrThrSum	= parseInt(listObj[i].handQty) - parseInt(sum);
+		}
 		temp.m101		= listObj[i].m101;	temp.m102		= listObj[i].m102;	temp.m103		= listObj[i].m103;	temp.m104		= listObj[i].m104;	temp.m105		= listObj[i].m105;	temp.m106		= listObj[i].m106;
 		temp.m107		= listObj[i].m107;	temp.m108		= listObj[i].m108;	temp.m109		= listObj[i].m109;	temp.m110		= listObj[i].m110;	temp.m111		= listObj[i].m111;	temp.m112		= listObj[i].m112;
 		temp.m201		= listObj[i].m201;	temp.m202		= listObj[i].m202;	temp.m203		= listObj[i].m203;	temp.m204		= listObj[i].m204;	temp.m205		= listObj[i].m205;	temp.m206		= listObj[i].m206;
 		temp.m207		= listObj[i].m207;	temp.m208		= listObj[i].m208;	temp.m209		= listObj[i].m209;	temp.m210		= listObj[i].m210;	temp.m211		= listObj[i].m211;	temp.m212		= listObj[i].m212;
 		temp.m301		= listObj[i].m301;	temp.m302		= listObj[i].m302;	temp.m303		= listObj[i].m303;	temp.m304		= listObj[i].m304;	temp.m305		= listObj[i].m305;	temp.m306		= listObj[i].m306;
 		temp.m307		= listObj[i].m307;	temp.m308		= listObj[i].m308;	temp.m309		= listObj[i].m309;	temp.m310		= listObj[i].m310;	temp.m311		= listObj[i].m311;	temp.m312		= listObj[i].m312;
-		temp.m3Over		= listObj[i].m3Over;
+		//temp.m3Over		= listObj[i].m3Over;
+		temp.m3Over	= temp.ovrThrSum;
 		
 		temp.purchPrc	= listObj[i].purchPrc;
 		qtyList.push(temp);
@@ -496,7 +507,18 @@ function fnSetResult() {
 		if ( "-" == listObj[i].ageOneSum )	temp1.ageOneSum	= "-";	else	temp1.ageOneSum	= (parseInt(listObj[i].ageOneSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
 		if ( "-" == listObj[i].ageTwoSum )	temp1.ageTwoSum	= "-";	else	temp1.ageTwoSum	= (parseInt(listObj[i].ageTwoSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
 		if ( "-" == listObj[i].ageThrSum )	temp1.ageThrSum	= "-";	else	temp1.ageThrSum	= (parseInt(listObj[i].ageThrSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].ovrThrSum )	temp1.ovrThrSum	= "-";	else	temp1.ovrThrSum	= (parseInt(listObj[i].ovrThrSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		if ( parseInt(listObj[i].handQty) == parseInt(sum) ) {
+			if ( "-" == listObj[i].ovrThrSum )	temp1.ovrThrSum	= "-";	else	temp1.ovrThrSum	= (parseInt(listObj[i].ovrThrSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+			//temp1.ovrThrSum	= (parseInt(listObj[i].ovrThrSum) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		} else {
+			//if ( "-" == listObj[i].ovrThrSum )
+			//	temp1.ovrThrSum	= "-";
+			//else {
+			//	temp1.ovrThrSum	= ((parseInt(listObj[i].handQty) - parseInt(sum)) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+			//}
+			temp1.ovrThrSum	= ((parseInt(listObj[i].handQty) - parseInt(sum)) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		}
+		
 		if ( "-" == listObj[i].m101 )	temp1.m101	= "-";	else	temp1.m101	= (parseInt(listObj[i].m101) * parseFloat(listObj[i].purchPrc)).toFixed(1);
 		if ( "-" == listObj[i].m102 )	temp1.m102  = "-";	else	temp1.m102	= (parseInt(listObj[i].m102) * parseFloat(listObj[i].purchPrc)).toFixed(1);
 		if ( "-" == listObj[i].m103 )	temp1.m103  = "-";	else	temp1.m103	= (parseInt(listObj[i].m103) * parseFloat(listObj[i].purchPrc)).toFixed(1);
@@ -533,7 +555,8 @@ function fnSetResult() {
 		if ( "-" == listObj[i].m310 )	temp1.m310  = "-";	else	temp1.m310	= (parseInt(listObj[i].m310) * parseFloat(listObj[i].purchPrc)).toFixed(1);
 		if ( "-" == listObj[i].m311 )	temp1.m311  = "-";	else	temp1.m311	= (parseInt(listObj[i].m311) * parseFloat(listObj[i].purchPrc)).toFixed(1);
 		if ( "-" == listObj[i].m312 )	temp1.m312  = "-";	else	temp1.m312	= (parseInt(listObj[i].m312) * parseFloat(listObj[i].purchPrc)).toFixed(1);
-		if ( "-" == listObj[i].m3Over )  temp1.m3Over  = "-";	else	temp1.m3Over	= (parseInt(listObj[i].m3Over) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		//if ( "-" == listObj[i].m3Over )  temp1.m3Over  = "-";	else	temp1.m3Over	= (parseInt(listObj[i].m3Over) * parseFloat(listObj[i].purchPrc)).toFixed(1);
+		temp1.m3Over	= temp1.ovrThrSum;
 		temp1.purchPrc	= listObj[i].purchPrc;
 		amtList.push(temp1);
 	}
