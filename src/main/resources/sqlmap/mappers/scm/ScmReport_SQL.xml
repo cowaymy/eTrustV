@@ -1406,6 +1406,7 @@ SELECT TYPE_NAME
      , STOCK_CODE
      , STOCK_NAME
      , HAND_QTY
+     , AGE_SIX_SUM
      , AGE_ONE_SUM
      , AGE_TWO_SUM
      , AGE_THR_SUM
@@ -1419,7 +1420,7 @@ SELECT TYPE_NAME
                            , 13, '13', 14, '14', 15, '15', 16, '16', 17, '17', 18, '18', 19, '19', 20, '20', 21, '21', 22, '22', 23, '23', 24, '24'
                            , 25, '25', 26, '26', 27, '27', 28, '28', 29, '29', 30, '30', 31, '31', 32, '32', 33, '33', 34, '34', 35, '35', 36, '36'
                            , 37, '37') AS RNO
-             , A.TYPE_NAME, A.CATEGORY_NAME, A.STOCK_CODE, A.STOCK_NAME, A.HAND_QTY, A.AGE_ONE_SUM, A.AGE_TWO_SUM, A.AGE_THR_SUM, A.OVR_THR_SUM, A.MM_YEAR
+             , A.TYPE_NAME, A.CATEGORY_NAME, A.STOCK_CODE, A.STOCK_NAME, A.HAND_QTY, A.AGE_SIX_SUM, A.AGE_ONE_SUM, A.AGE_TWO_SUM, A.AGE_THR_SUM, A.OVR_THR_SUM, A.MM_YEAR
           FROM (
                 SELECT ROW_NUMBER() OVER (PARTITION BY A.SCM ORDER BY A.SEQ) AS RNO
                      , 'typeName' AS TYPE_NAME
@@ -1427,6 +1428,7 @@ SELECT TYPE_NAME
                      , 'stockCode' AS STOCK_CODE
                      , 'stockName' AS STOCK_NAME
                      , 'handQty' AS HAND_QTY
+                     , 'ageSixSum' AS AGE_SIX_SUM
                      , 'ageOneSum' AS AGE_ONE_SUM
                      , 'ageTwoSum' AS AGE_TWO_SUM
                      , 'ageThrSum' AS AGE_THR_SUM
@@ -1491,6 +1493,8 @@ SELECT C.CODE_NAME AS TYPE_NAME
      , B.STK_DESC AS STOCK_NAME
      , A.HAND_QTY
      , A.AGE_QTY AS AGING
+     , A.PURCH_PRC
+     , A.AGE_6M_SUM AS AGE_SIX_SUM
      , A.AGE_1Y_SUM AS AGE_ONE_SUM
      , A.AGE_2Y_SUM AS AGE_TWO_SUM
      , A.AGE_3Y_SUM AS AGE_THR_SUM
@@ -1499,13 +1503,10 @@ SELECT C.CODE_NAME AS TYPE_NAME
      , A.M201, A.M202, A.M203, A.M204, A.M205, A.M206, A.M207, A.M208, A.M209, A.M210, A.M211, A.M212
      , A.M301, A.M302, A.M303, A.M304, A.M305, A.M306, A.M307, A.M308, A.M309, A.M310, A.M311, A.M312
      , A.M3_OVER
-     , TO_NUMBER(F.ZGUMAK) AS PURCH_PRC
   FROM SCM0059L A
   LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
   LEFT OUTER JOIN SYS0013M C ON (B.STK_TYPE_ID = C.CODE_ID AND C.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
   LEFT OUTER JOIN SYS0013M D ON (B.STK_CTGRY_ID = D.CODE_ID AND D.CODE_MASTER_ID = 11) /* 11 : Stock Category */
-  /*LEFT OUTER JOIN SCM0057L E ON (A.YEAR_MONTH = E.YEAR_MONTH AND A.STOCK_CODE = E.STOCK_CODE)*/
-  LEFT OUTER JOIN ITF0190M F ON (A.YEAR_MONTH = F.SPMON AND A.STOCK_CODE = F.MATNR)
  WHERE A.YEAR_MONTH = #{planYearMonth}
 	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
    AND B.STK_TYPE_ID IN
