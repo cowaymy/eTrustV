@@ -192,13 +192,17 @@ public class BulkUploadController {
 
             String grpSeq = (String.valueOf(hm.get("grpSeq"))).trim();
             String costCenter = (String.valueOf(hm.get("costCentr"))).trim();
+            String costCetnerDesc = (String.valueOf(hm.get("costCentrNm"))).trim();
             String memAccId = (String.valueOf(hm.get("supplier"))).trim();
+            String memAccDesc = (String.valueOf(hm.get("supplierNm"))).trim();
             String invcDt = (String.valueOf(hm.get("invcDt"))).trim();
             String invcNo = (String.valueOf(hm.get("invcNo"))).trim();
             String payDueDt = (String.valueOf(hm.get("payDueDt"))).trim();
             String budgetCode = (String.valueOf(hm.get("bgtCd"))).trim();
+            String budgetDesc = (String.valueOf(hm.get("bgtNm"))).trim();
             Double amt = Double.parseDouble((String.valueOf(hm.get("amt"))).trim());
             String expDesc = (String.valueOf(hm.get("expDesc"))).trim();
+            String utilNo = (String.valueOf(hm.get("utilNo"))).trim();
 
             // Queried variables
             String glAcc = (String.valueOf(hm.get("glAccNo"))).trim();
@@ -230,7 +234,7 @@ public class BulkUploadController {
             }
 
             LOGGER.debug("========== costCenter ==========");
-            if("".equals(costCenter) || costCenter == null || costCenter == "null") {
+            if(("".equals(costCenter) || costCenter == null || costCenter == "null") || ("".equals(costCetnerDesc) || costCetnerDesc == null || costCetnerDesc == "null")) {
                 if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                     invalidMsgDtl += "Cost Center";
                 } else {
@@ -239,7 +243,7 @@ public class BulkUploadController {
             }
 
             LOGGER.debug("========== memAccId ==========");
-            if("".equals(memAccId) || memAccId == null || memAccId == "null") {
+            if(("".equals(memAccId) || memAccId == null || memAccId == "null") || ("".equals(memAccDesc) || memAccDesc == null || memAccDesc == "null")) {
                 if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                     invalidMsgDtl += "Supplier";
                 } else {
@@ -302,7 +306,7 @@ public class BulkUploadController {
             }
 
             LOGGER.debug("========== budgetCode ==========");
-            if("".equals(budgetCode) || budgetCode == null || budgetCode == "null") {
+            if(("".equals(budgetCode) || budgetCode == null || budgetCode == "null") || ("".equals(budgetDesc) || budgetDesc == null || budgetDesc == "null")) {
                 if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                     invalidMsgDtl += "Budget Code";
                 } else {
@@ -379,9 +383,6 @@ public class BulkUploadController {
                "06211".equals(budgetCode) || "06116".equals(budgetCode) || "06152".equals(budgetCode) || "06137".equals(budgetCode) ||
                "06148".equals(budgetCode) || "06157".equals(budgetCode)) {
 
-                //String billPeriodFr = (String.valueOf(hm.get("billPeriodFr"))).trim();
-                //String billPeriodTo = (String.valueOf(hm.get("billPeriodTo"))).trim();
-
                 LOGGER.debug("========== Utilities Budget :: billPeriodFr ==========");
                 if("".equals(billPeriodFr)) {
                     if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
@@ -457,6 +458,17 @@ public class BulkUploadController {
                         invalidMsgDtl += "Billing Period To";
                     } else {
                         invalidMsgDtl += ", Billing Period To";
+                    }
+                }
+            }
+
+            if("06137".equals(budgetCode) || "06148".equals(budgetCode) || "06150".equals(budgetCode) || "06200".equals(budgetCode) ||
+               "06214".equals(budgetCode) || "06149".equals(budgetCode) || "03017".equals(budgetCode)) {
+                if("".equals(utilNo) || utilNo == null || utilNo == "null") {
+                    if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                        invalidMsgDtl += "Utility No";
+                    } else {
+                        invalidMsgDtl += ", Utility No";
                     }
                 }
             }
