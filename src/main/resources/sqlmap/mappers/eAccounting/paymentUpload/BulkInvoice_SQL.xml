@@ -104,6 +104,12 @@
 
     <select id="selectUploadResultList" parameterType="Map" resultType="egovMap">
         SELECT
+            <if test="batchId == null or batchId == ''">
+                '-' CLM_NO,
+            </if>
+            <if test="seq == null or seq == ''">
+                CLM_NO,
+            </if>
             COST_CENTER || ' - ' || COST_CENTER_NAME COST_CENTER,
             SUPPLIER || ' - ' || SUPPLIER_NAME SUPPLIER,
             INVC_NO,
