@@ -82,6 +82,10 @@
     // New Upload Result Layout
     var uploadItemLayout = [
         {
+            dataField : "clmNo",
+            headerText : "Claim No",
+            width : "10%"
+        }, {
             dataField : "costCenter",
             headerText : "Cost Center",
             width : "10%",
@@ -328,6 +332,7 @@
 
                         AUIGrid.setGridData(bulkInvcGrid, result2.resultList);
                         AUIGrid.resize(bulkInvcGrid, 1195, 350);
+                        AUIGrid.hideColumnByDataField(bulkInvcGrid, "clmNo");
 
                         // Display content result
                         $("#uploadContent").show();
@@ -373,9 +378,13 @@
             $("#viewAppvLbl").hide();
             $("#bulkAppvBtns").hide();
             $("#bulkFilesUploadRow").show();
+
+            AUIGrid.hideColumnByDataField(bulkInvcGrid, "clmNo");
         }
 
         if(val == "APPV") {
+            AUIGrid.showColumnByDataField(bulkInvcGrid, "clmNo");
+
             $("#new_pop_header").text("View Bulk Invoices Upload");
 
             $("#batchFileSelector").attr('readonly');
