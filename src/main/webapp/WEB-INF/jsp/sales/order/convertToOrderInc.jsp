@@ -101,7 +101,8 @@
                 doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.itmStkId}', 'ordProudct', 'S', 'fn_setOptGrpClass');//product ����
 
                 if('${preOrderInfo.cpntId}' != 0){
-                    $('#compType').removeClass("blind");
+                    //$('#compType').removeClass("blind");
+                    $('#trCpntId').css("visibility","visible");
                     doGetComboData('/sales/order/selectProductComponent.do', {stkId:'${preOrderInfo.itmStkId}'}, '${preOrderInfo.cpntId}', 'compType', 'S', ''); //Common Code
                 }
 
