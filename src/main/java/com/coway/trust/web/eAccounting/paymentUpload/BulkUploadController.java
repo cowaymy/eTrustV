@@ -475,7 +475,7 @@ public class BulkUploadController {
             line++;
         }
 
-        if(errCnt == errLines || errCnt != 0) {
+        if(errLines != 0) {
             result = AppConstants.FAIL;
         }
 
