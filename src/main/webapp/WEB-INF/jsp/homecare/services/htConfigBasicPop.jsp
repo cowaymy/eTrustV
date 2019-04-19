@@ -48,11 +48,7 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
               else  fn_doSaveBasicInfo();
            });
 
-
-
     }
-
-
 
      function fn_validBasicInfo(){
 
@@ -73,14 +69,9 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
                     $('#entry_lstHSDate').val("01/01/1900");
               }
 
-
-
                     if(!isValid) Common.alert("<b>" + message +  DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
                     return isValid;
-
-
-
 
     }
 
@@ -134,34 +125,7 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
     }
 
 
- /*     $('#btnSaveBasicInfo').click(function() {
-
-        if(!fn_hsBasicSave()) return false;
-
-         //   fn_doSaveBasicInfo();
-
-           alert(222222222);
-        Common.ajax("POST", "/services/saveHsConfigBasic.do",  $("#frmBasicInfo").serializeJSON(), function(result) {
-                        Common.alert("BS basic info setting successfully updated." + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
-
-            }, function(jqXHR, textStatus, errorThrown) {
-                try {
-                    Common.alert("Failed to save. Please try again later." + DEFAULT_DELIMITER + "<b>Failed To Save.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                }
-                catch(e) {
-                    console.log(e);
-                }
-            }
-        });
-
-    } */
-
-
-
 </script>
-
-
-
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
