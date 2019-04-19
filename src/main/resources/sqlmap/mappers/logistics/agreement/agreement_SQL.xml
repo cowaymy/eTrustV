@@ -13,7 +13,9 @@
             B.ORGCODE orgCode,
             E.ROLE_DESC userRole,
             F.NAME status,
-            NVL(TO_CHAR(A.PROMO_DT, 'DD/MM/YYYY'), '-') promoDt
+            NVL(TO_CHAR(A.PROMO_DT, 'DD/MM/YYYY'), '-') promoDt,
+            CASE WHEN A.MEM_TYPE = '2' THEN TO_CHAR(G.CNFM_DT, 'DD/MM/YYYY') END AS CD_CNFM_DT,
+            TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOIN_DT
         FROM ORG0001D A
         INNER JOIN (
             SELECT
@@ -33,6 +35,8 @@
             ON E.ROLE_ID = D.ROLE_ID
         INNER JOIN SYS0038M F
             ON F.STUS_CODE_ID = C.USER_STUS_ID
+        LEFT JOIN ORG0003D G
+            ON A.APLICNT_ID = G.APLCTN_ID
         WHERE
             A.MEM_TYPE = #{memTypeCom}
             <if test="code !=null and code !=''">

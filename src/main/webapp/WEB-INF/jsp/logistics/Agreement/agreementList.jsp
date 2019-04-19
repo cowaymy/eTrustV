@@ -4,6 +4,8 @@
 <script type="text/javaScript">
 var myGridID;
 
+var cnfmDt, joinDt;
+
 $(document).ready(function() {
 
     console.log("agreement");
@@ -73,6 +75,8 @@ $(document).ready(function() {
 
         AUIGrid.bind(myGridID, "cellClick", function(event) {
             memberid = AUIGrid.getCellValue(myGridID, event.rowIndex, "memcode");
+            joinDt = AUIGrid.getCellValue(myGridID, event.rowIndex, "joinDt");
+            cnfmDt = AUIGrid.getCellValue(myGridID, event.rowIndex, "cnfmDt");
     	});
 
     } else {
@@ -333,6 +337,13 @@ function fn_downloadAgreement() {
             //if($("#agreementVersion").val() < signdt.substring(0, 3))
         //});
 
+        var gridObj = AUIGrid.getSelectedItems(myGridID);
+        $("#joinDt").val(gridObj[0].item.joinDt);
+        $("#cnfmDt").val(gridObj[0].item.cdCnfmDt);
+
+        //$("#joinDt").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "joinDt"));
+        //$("#cnfmDt").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "cnfmDt"));
+
         if(FormUtil.checkReqValue($("#startDt"))) {
             Common.alert("Please key in contract start date.");
             return false;
@@ -355,6 +366,8 @@ function fn_downloadAgreement() {
         var nextPeriod = new Date(nYr + "-04-01");
         var prevPeriod = new Date(pYr + "-04-01");
 
+        var ePeriod = new Date('2018-04-01');
+
         var dt = $("#startDt").val().split("/");
         var selStartDt = new Date(dt[2] + "-" + dt[1] + "-" + dt[0]);
 
@@ -375,7 +388,7 @@ function fn_downloadAgreement() {
                 currPeriod = yyyy + "-" + mm + "-" + dd;
                 $("#v_contractStartDt").val(currPeriod);
 
-            } else if(selStartDt < currPeriod && selStartDt >= joinDt && selStartDt >= "01/04/2018") {
+            } else if(selStartDt < currPeriod && selStartDt >= joinDt && selStartDt >= ePeriod) {
                 $("#v_contractStartDt").val("2018-04-01");
 
             } else if(joinDt > prevPeriod && joinDt < currPeriod) {
@@ -389,7 +402,7 @@ function fn_downloadAgreement() {
                 Common.alert("Only 2018/04/01 to today is permitted.");
                 return false;
 
-            } else if(joinDt < "01/04/2018") {
+            } else if(joinDt < ePeriod) {
                 Common.alert("Only 2018/04/01 to today is permitted.");
                 return false;
             }
@@ -397,7 +410,7 @@ function fn_downloadAgreement() {
 
         console.log("v_contractStartDt :: " + $("#v_contractStartDt").val());
 
-        $("#reportFileName").val("/logistics/CodyAgreement_" + version + ".rpt");
+        $("#reportFileName").val("/logistics/CodyAgreement_2017.rpt");
         $("#reportDownFileName").val("CodyAgreement_" + code);
 
         console.log("reportFileName :: " + $("#reportFileName").val());
@@ -463,6 +476,9 @@ function createAUIGrid() {
         visible : false
     }, {
         dataField : "cnfmDt",
+        visible : false
+    }, {
+        dataField : "cdCnfmDt",
         visible : false
     }
     ]; //visible : false
