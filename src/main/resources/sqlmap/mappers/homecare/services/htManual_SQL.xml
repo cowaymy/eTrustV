@@ -97,7 +97,7 @@
             WHERE A.MEM_ID = B.MEM_ID
                 AND A.BRNCH_ID = C.BRNCH_ID
                 AND A.DEPT_CODE IS NOT NULL
-                AND B.MEM_TYPE = 2
+                AND B.MEM_TYPE = 7
             <if test="userType == '2'.toString()">
                     AND B.STUS IN (1,8)
                 <if test="memLevl == '1'.toString()">
@@ -303,152 +303,150 @@
 
 
           <select id="selectHsManualList" parameterType="Map" resultType="egovMap">
-
-<!-- CYC 20 NOV 2017 -->
-
-  SELECT   distinct C.CUST_ID CUST_ID
-                                        , C.NAME Name
-                                         ,SOM.SALES_ORD_NO SALES_ORD_NO
-                                         ,HSM.MONTH
-                                         ,HSM.YEAR YEAR
-                                         ,HSM.MONTH || '/' || HSM.YEAR HS_DATE
-                                         ,HSM.NO
-                                         ,HSM.CODY_ID
-                                         ,HSM.STUS_CODE_ID STUS_CODE_ID
-                                         ,EXTENT2.CODE CODE
-                                         ,SAL023.area_id,
-                                           sys064.area_id,
-                                           sys064.CODY_BRNCH_CODE,
-                                           sys064.CODY_MANGR_USER_ID,
-                                          (select  MEM_CODE
-                                                from ORG0001D ME
-                                                where 1=1
-                                                and ME.MEM_ID = HSM.cody_ID )AS c5,
-                                           HSM.STUS_CODE_ID STUS_CODE_ID,
-                                            sys064.CT_BRNCH_CODE,
-                                          SOM.SALES_ORD_ID AS SALES_ORD_ID,
-                                            sys064.CODY_MANGR_USER_ID,
-                                            som.BRNCH_ID as brnch_id
-                                            ,sal023.ADDR_DTL as address
-                                            ,stk.STK_DESC
-                                            ,SCP.SRV_PRD_DUR HS_FREQ
-                                            ,(CASE WHEN (EXTRACT(month from lAST_brm.SETL_DT)= extract(month from ADD_MONTHS(sysdate,-1)) and EXTRACT(YEAR FROM lAST_brm.SETL_DT) = extract(YEAR from ADD_MONTHS(sysdate,-1))) THEN STUS.CODE ELSE 'x' END) PREV_MTH_HS_STATUS
-                                          ,STUS1.CODE CODY_STATUS
-                                FROM    SAL0001D SOM
-                                        ,SAL0029D C
-                                        ,SYS0013M CORPTYPE
-                                        ,SVC0008D HSM
-                                        ,SYS0038M EXTENT2
-                                        ,SYS0064M sys064
-                                        ,SAL0002D sod
-                                        ,SYS0026M stk
-                                        ,SAL0045D i
-                                        ,sal0023d sal023
-                                        ,SVC0006D lAST_brm
-                                        ,SAL0090D SC
-                                        ,SAL0088D SCP
-                                        ,SYS0038M STUS
-                                        ,ORG0001D MEM
-                                        ,SYS0038M STUS1
-                                          ,SAL0095D SAL95D
-                                        ,SYS0064M S64M
-
-                                 WHERE 1=1
-                                AND SOM.CUST_ID = C.CUST_ID
-                                AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
-                                AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
-                                AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
-                                AND i.ADD_ID = sal023.CUST_ADD_ID
-                                and sal023.area_id = sys064.area_id
-                                and sod.SALES_ORD_ID = SOM.SALES_ORD_ID
-                                and stk.stk_id = sod.ITM_STK_ID
-                                and i.SALES_ORD_ID = SOM.SALES_ORD_ID
-                                and lAST_brm.SCHDUL_ID(+) = HSM.SCHDUL_ID
-                                and (lAST_brm.result_ID IS NULL OR lAST_brm.result_ID = (select Max(result_ID) from SVC0006D where HSM.SCHDUL_ID = SCHDUL_ID and result_stus_code_id = 4))
-                                AND SC.SRV_SO_ID(+) = SOM.SALES_ORD_ID
-                                AND SC.SRV_CONFIG_ID =SCP.SRV_CONFIG_ID(+)
-                                AND( scp.srv_prd_id is null or scp.srv_prd_id = (SELECT MAX(srv_prd_id)FROM sal0088d WHERE srv_config_id = sc.srv_config_id AND srv_prd_stus_id <!-- 20180320 Edit by Sun HanYi scp.srv_prd_stus_id --> = 1))
-                                AND STUS.STUS_CODE_ID(+) = LAST_BRM.RESULT_STUS_CODE_ID
-                               and mem.mem_id(+) = HSM.CODY_ID
-                               and Stus1.STUS_CODE_ID(+) = mem.stus
-                               and SOM.SALES_ORD_ID = SAL95D.SRV_SALES_ORD_ID(+)
-                               and sal023.AREA_ID = S64M.AREA_ID
+SELECT DISTINCT
+    C.CUST_ID CUST_ID,
+    C.NAME NAME,
+    SOM.SRV_ORD_NO SALES_ORD_NO,
+    HSM.MONTH,
+    HSM.YEAR YEAR,
+    HSM.MONTH
+    || '/'
+    || HSM.YEAR HS_DATE,
+    HSM.NO,
+    HSM.CODY_ID,
+    HSM.STUS_CODE_ID STUS_CODE_ID,
+    EXTENT2.CODE CODE,
+    SAL023.AREA_ID,
+    (
+        SELECT
+            MEM_CODE
+        FROM
+            ORG0001D ME
+        WHERE
+            1 = 1
+            AND   ME.MEM_ID = HSM.CODY_ID
+    ) AS C5,
+    SOM.SRV_ORD_ID AS SALES_ORD_ID,
+    SOM.BRNCH_ID AS BRNCH_ID,
+    SAL023.ADDR_DTL AS ADDRESS,
+    SOM.SALES_PROD_SZ,
+    SCP.SRV_PRD_DUR HS_FREQ,
+    (
+        CASE
+            WHEN (
+                EXTRACT(MONTH FROM LAST_BRM.SETL_DT) = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE,-1) )
+                AND EXTRACT(YEAR FROM LAST_BRM.SETL_DT) = EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE,-1) )
+            ) THEN STUS.CODE
+            ELSE 'X'
+        END
+    ) PREV_MTH_HS_STATUS,
+    STUS1.CODE HT_STATUS,
+    MEM2.DEPT_CODE ,
+    HSM.SCHDUL_ID ,
+    MEM3.MEM_CODE HT_MGR_CODE ,
+    BRNCH.CODE HT_BRNCH_CODE
+FROM
+    SAL0225D SOM
+    JOIN SVC0008D HSM ON SOM.SRV_ORD_ID = HSM.SALES_ORD_ID
+    LEFT JOIN SAL0029D C ON SOM.CUST_ID = C.CUST_ID
+    LEFT JOIN SYS0013M CORPTYPE ON C.CORP_TYPE_ID = CORPTYPE.CODE_ID
+    LEFT JOIN SYS0038M EXTENT2 ON HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID
+    LEFT JOIN SAL0045D I ON I.SALES_ORD_ID = SOM.SRV_ORD_ID
+    LEFT JOIN SAL0023D SAL023 ON I.ADD_ID = SAL023.CUST_ADD_ID
+    LEFT JOIN SVC0006D LAST_BRM ON LAST_BRM.SCHDUL_ID = HSM.SCHDUL_ID
+    LEFT JOIN SAL0090D SC ON SC.SRV_SO_ID = SOM.SRV_ORD_ID
+    LEFT JOIN SAL0088D SCP ON SC.SRV_CONFIG_ID = SCP.SRV_CONFIG_ID
+    LEFT JOIN SYS0038M STUS ON STUS.STUS_CODE_ID = LAST_BRM.RESULT_STUS_CODE_ID
+    LEFT JOIN ORG0001D MEM ON MEM.MEM_ID = HSM.CODY_ID
+    LEFT JOIN ORG0005D MEM2 ON MEM.MEM_ID = MEM2.MEM_ID
+    LEFT JOIN SYS0038M STUS1 ON STUS1.STUS_CODE_ID = MEM.STUS
+    LEFT JOIN ORG0001D MEM3 ON MEM2.MEM_UP_ID = MEM3.MEM_ID
+    LEFT JOIN SYS0005M BRNCH ON BRNCH.BRNCH_ID = MEM.BRNCH
+    LEFT JOIN SAL0095D SAL95D ON SOM.SRV_ORD_ID = SAL95D.SRV_SALES_ORD_ID
 
 
+    WHERE 1 = 1
 
-                      <!--      SELECT   distinct C.CUST_ID CUST_ID
-                                        , C.NAME Name
-                                         ,SOM.SALES_ORD_NO SALES_ORD_NO
-                                         ,HSM.MONTH
-                                         ,HSM.YEAR YEAR
-                                         ,HSM.MONTH || '/' || HSM.YEAR HS_DATE
-                                         ,HSM.NO
-                                         ,HSM.CODY_ID
-                                         ,HSM.STUS_CODE_ID STUS_CODE_ID
-                                         ,EXTENT2.CODE CODE -->
-<!--                                          ,sys064.CODY_BRNCH_CODE AS BRNCH_ID -->
-                                       <!--   ,SAL023.area_id,
-                                           sys064.area_id,
-                                           sys064.CODY_BRNCH_CODE,
-                                           sys064.CODY_MANGR_USER_ID,
-                                          (select  MEM_CODE
-                                                from ORG0001D ME
-                                                where 1=1
-                                                and ME.MEM_ID = HSM.cody_ID )AS c5,
-                                           HSM.STUS_CODE_ID STUS_CODE_ID,
-                                           EXTENT2.code,
-                                            sys064.CT_BRNCH_CODE,
-                                          SOM.SALES_ORD_ID AS SALES_ORD_ID,
-                                            sys064.CODY_MANGR_USER_ID,
-                                            som.BRNCH_ID as brnch_id
-                                FROM SAL0001D SOM
-                                        ,SAL0029D C
-                                        ,SYS0013M CORPTYPE -->
-<!--                                         ,SAL0002D SOD -->
-                                   <!--       ,SVC0008D HSM
-                                        ,SYS0038M EXTENT2
-                                        ,sal0023d sal023
-                                        ,SYS0064M sys064
-                                WHERE 1=1
-                                AND SOM.CUST_ID = C.CUST_ID
-                                AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)-->
-                                <!-- AND   SOM.SALES_ORD_ID = SOD.SALES_ORD_ID  -->
-                              <!--  AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
-                                AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)-->
-<!--                                 and som.cust_id = sal023.cust_id -->
-                               <!--  AND SOM.CUST_ADD_ID = sal023.CUST_ADD_ID
-                                and sal023.area_id = sys064.area_id -->
                  <![CDATA[ AND SOM.STUS_CODE_ID <> 8
                                 and rownum  < 500 ]]>
-                             <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
-                                      AND  hsm.YEAR(+) = #{myBSYear}
-                                      AND  hsm.MONTH(+) = #{myBSMonth}
-                             </if>
-                               <if test="ManuaSalesOrder != null and ManuaSalesOrder != ''">
-                                      AND SOM.SALES_ORD_NO = #{ManuaSalesOrder}
-                               </if>
-                               <if test="ManualCustomer != null and ManualCustomer != ''">
-                                      AND c.CUST_ID = #{ManualCustomer}
-                               </if>
-                               <if test="manualCustomer != null and manualCustomer != ''">
-                                      AND c.CUST_ID = #{manualCustomer}
-                               </if>
-                                <if test="saleOrdListSp != null and saleOrdListSp != '' ">
-                                    AND SOM.SALES_ORD_NO IN
-                                   <foreach item="item" collection="saleOrdListSp" index="index" open="(" separator="," close=")">
-                                    #{item}
-                                    </foreach>
-                                </if>
-                                <if test="cmdBranchCode1 != null and cmdBranchCode1 != ''">
-                                     AND sys064.CODY_BRNCH_CODE = SUBSTR(#{cmdBranchCode1},1,6)
-                               </if>
-                                <if test="cmdCdManager1 != null and cmdCdManager1 != ''">
-                                     AND sys064.CODY_MANGR_USER_ID = SUBSTR(#{cmdCdManager1},1,7)
-                               </if>
-                                <if test="userType == '3'.toString()">
-                                        AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
-                                </if>
 
+                 <if test="myBSMonth != null and myBSMonth != ''">
+                  AND HSM.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
+                  AND HSM.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
+                </if>
+
+                <choose>
+                  <when test="myBSMonth != ''">
+                    <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
+                      AND HSM.NO = #{txtHsOrderNo}
+                    </if>
+                  </when>
+                  <otherwise>
+                    <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
+                      HSM.NO = #{txtHsOrderNo}
+                    </if>
+                  </otherwise>
+                </choose>
+
+                <choose>
+                  <when test="myBSMonth != ''">
+                    <if test="txtSalesOrder != null and txtSalesOrder != ''">
+                      AND ( SOM.SRV_ORD_NO = #{txtSalesOrder})
+                    </if>
+                  </when>
+                  <otherwise>
+
+                    <choose>
+                      <when test="txtHsOrderNo != ''">
+                        <if test="txtSalesOrder != null and txtSalesOrder != ''">
+                          AND ( SOM.SRV_ORD_NO = #{txtSalesOrder})
+                        </if>
+                      </when>
+                      <otherwise>
+                        <if test="txtSalesOrder != null and txtSalesOrder != ''">
+                          ( SOM.SRV_ORD_NO = #{txtSalesOrder})
+                        </if>
+                      </otherwise>
+                    </choose>
+
+                  </otherwise>
+                </choose>
+
+                <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+                  AND MEM.MEM_CODE = #{txtAssigncodyCode}
+                </if>
+
+                <if test="myInstallMonth != null and myInstallMonth != ''">
+                  AND SOM.PV_MONTH = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
+                </if>
+
+                <if test="myInstallMonth != null and myInstallMonth != ''">
+                  AND SOM.PV_YEAR = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
+                </if>
+
+                <if test="cmbStatusType != null and cmbStatusType != ''">
+                  AND HSM.STUS_CODE_ID = #{cmbStatusType}
+                </if>
+
+                <if test="txtCustomer != null and txtCustomer != ''">
+                  AND SOM.CUST_ID  = #{txtCustomer}
+                </if>
+
+                <if test="cmdBranchCode != null and cmdBranchCode != ''">
+                  AND ( BRNCH.BRNCH_ID = #{cmdBranchCode})
+                </if>
+
+                <if test="cmdCdManager != null and cmdCdManager != ''">
+                  AND MEM3.MEM_ID =  #{cmdCdManager}
+                </if>
+
+                <if test="deptCode != null and deptCode != ''">
+                  AND MEM2.DEPT_CODE = #{deptCode}
+                </if>
+
+                <if test="userType == '3'.toString()">
+                  AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
+                </if>
           </select>
 
 <!-- cyc 2017- Nov- 13 -->
@@ -637,7 +635,7 @@
                         , Project2.CODY_MANGR_USER_ID
                         , Project2.Result as Result
                         , project2.dept_code
-          FROM (SELECT /*+ use_hash(br, hs) index(ad, SAL0023D_IDX5) */
+          FROM (SELECT
                        DISTINCT hs.no AS no
                               , hs.stus_code_id AS stus_code_id
                               , hs.month || '/' || hs.year AS hs_date
@@ -645,7 +643,7 @@
                               , hs.year
                               , st.code
                               , hr.no AS result
-                              , so.sales_ord_no
+                              , so.srv_ord_no sales_ord_no
                               , ap.code AS apptype
                               , cu.name
                               , cd.mem_code AS assign_cody
@@ -657,12 +655,12 @@
                               , STUS.CODE AS cody_status_nm
                               , br.brnch_id AS brnch_id
                               , hs.schdul_id schdul_id
-                              , so.sales_ord_id
+                              , so.srv_ord_id sales_ord_id
                               , mg.CODY_BRNCH_CODE AS branch_cd
                               , mg.cody_mangr_user_id
                               , og.dept_code
                 FROM SVC0008D hs
-                INNER JOIN SAL0001D so ON so.sales_ord_id = hs.sales_ord_id
+                INNER JOIN SAL0225D so ON so.srv_ord_id = hs.sales_ord_id
                 INNER JOIN SAL0045D ins ON ins.sales_ord_id = hs.sales_ord_id
                 INNER JOIN SAL0023D ad ON ad.cust_add_id = ins.add_id
                 INNER JOIN SYS0064M mg ON mg.area_id = ad.area_id
@@ -699,7 +697,7 @@
                 <choose>
                   <when test="myBSMonth != ''">
                     <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                      AND ( SO.SALES_ORD_NO = #{txtSalesOrder})
+                      AND ( SO.SRV_ORD_NO = #{txtSalesOrder})
                     </if>
                   </when>
                   <otherwise>
@@ -707,12 +705,12 @@
                     <choose>
                       <when test="txtHsOrderNo != ''">
                         <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                          AND ( SO.SALES_ORD_NO = #{txtSalesOrder})
+                          AND ( SO.SRV_ORD_NO = #{txtSalesOrder})
                         </if>
                       </when>
                       <otherwise>
                         <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                          ( SO.SALES_ORD_NO = #{txtSalesOrder})
+                          ( SO.SRV_ORD_NO = #{txtSalesOrder})
                         </if>
                       </otherwise>
                     </choose>
@@ -1404,9 +1402,9 @@
                               END C2  ,
                            Limit1.NAME NAME  ,
                            Limit1.NRIC NRIC  ,
-                           Limit1.STK_CODE STK_CODE  ,
+                        <!--    Limit1.STK_CODE STK_CODE  ,
                            Limit1.STK_DESC STK_DESC  ,
-                           Limit1.STK_ID STK_ID  ,
+                           Limit1.STK_ID STK_ID  , -->
                            Limit1.CODY_ID CODY_ID,
                             Limit1.CANC_REQ_NO
                       FROM ( SELECT Extent1.SCHDUL_ID SCHDUL_ID  ,
@@ -1417,11 +1415,11 @@
                                     Extent1.STUS_CODE_ID STUS_CODE_ID  ,
                                     Extent2.CODE_NAME CODE_NAME  ,
                                     Extent3.CODE CODE  ,
-                                    Extent4.SALES_ORD_ID SALES_ORD_ID  ,
-                                    Extent4.SALES_ORD_NO SALES_ORD_NO  ,
-                                    Extent6.STK_ID STK_ID  ,
+                                    Extent4.SRV_ORD_ID SALES_ORD_ID  ,
+                                    Extent4.SRV_ORD_NO SALES_ORD_NO  ,
+                                 <!--    Extent6.STK_ID STK_ID  ,
                                     Extent6.STK_CODE STK_CODE  ,
-                                    Extent6.STK_DESC STK_DESC  ,
+                                    Extent6.STK_DESC STK_DESC  , -->
                                     Extent7.NAME NAME  ,
                                     Extent7.NRIC NRIC  ,
                                     Extent8.SRV_REM SRV_REM  ,
@@ -1433,14 +1431,14 @@
                              FROM SVC0008D Extent1
                                     JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
                                     JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
-                                    JOIN SAL0001D Extent4   ON Extent1.SALES_ORD_ID = Extent4.SALES_ORD_ID
-                                    JOIN SAL0002D Extent5   ON Extent4.SALES_ORD_ID = Extent5.SALES_ORD_ID
-                                    JOIN SYS0026M Extent6   ON Extent5.ITM_STK_ID = Extent6.STK_ID
+                                    JOIN SAL0225D Extent4   ON Extent1.SALES_ORD_ID = Extent4.SRV_ORD_ID
+                                    <!-- JOIN SAL0002D Extent5   ON Extent4.SALES_ORD_ID = Extent5.SALES_ORD_ID -->
+                                    <!-- JOIN SYS0026M Extent6   ON Extent5.ITM_STK_ID = Extent6.STK_ID -->
                                     JOIN SAL0029D Extent7   ON Extent4.CUST_ID = Extent7.CUST_ID
-                                    LEFT  JOIN SAL0090D Extent8   ON ( Extent4.SALES_ORD_ID = Extent8.SRV_SO_ID )
+                                    LEFT  JOIN SAL0090D Extent8   ON ( Extent4.SRV_ORD_ID = Extent8.SRV_SO_ID )
                                     AND ( 1 = Extent8.SRV_STUS_ID )
                                     JOIN SYS0013M Extent9   ON Extent4.APP_TYPE_ID = Extent9.CODE_ID
-                                    JOIN SAL0045D Extent10   ON Extent4.SALES_ORD_ID = Extent10.SALES_ORD_ID
+                                    JOIN SAL0045D Extent10   ON Extent4.SRV_ORD_ID = Extent10.SALES_ORD_ID
                                     LEFT JOIN SVC0006D Extent11   ON ( Extent1.SCHDUL_ID = Extent11.SCHDUL_ID )
                                     AND ( 1 = Extent11.RESULT_IS_CURR )
                 <![CDATA[             WHERE  Extent1.SCHDUL_ID = #{schdulId} AND ROWNUM <= 1 ) Limit1 ]]>
@@ -1856,7 +1854,7 @@
 
          <select id="selectHsViewBasicInfo" parameterType="Map" resultType="egovMap">
 
-                    SELECT Limit1.SCHDUL_ID SCHDUL_ID  ,
+   SELECT Limit1.SCHDUL_ID SCHDUL_ID  ,
                            Limit1.NO NO  ,
                            Limit1.MONTH MONTH  ,
                            Limit1.YEAR YEAR  ,
@@ -1879,9 +1877,6 @@
                               END C2  ,
                            Limit1.NAME NAME  ,
                            Limit1.NRIC NRIC  ,
-                           Limit1.STK_CODE STK_CODE  ,
-                           Limit1.STK_DESC STK_DESC  ,
-                           Limit1.STK_ID STK_ID  ,
                            Limit1.CODY_ID CODY_ID,
                            Limit1.fail_resn_id fail_resn_id  ,
                            Limit1.fail_resn_id fail_resn_id  ,
@@ -1901,11 +1896,8 @@
                                     Extent1.STUS_CODE_ID STUS_CODE_ID  ,
                                     Extent2.CODE_NAME CODE_NAME  ,
                                     Extent3.CODE CODE  ,
-                                    Extent4.SALES_ORD_ID SALES_ORD_ID  ,
-                                    Extent4.SALES_ORD_NO SALES_ORD_NO  ,
-                                    Extent6.STK_ID STK_ID  ,
-                                    Extent6.STK_CODE STK_CODE  ,
-                                    Extent6.STK_DESC STK_DESC  ,
+                                    Extent4.SRV_ORD_ID SALES_ORD_ID  ,
+                                    Extent4.SRV_ORD_NO SALES_ORD_NO  ,
                                     Extent7.NAME NAME  ,
                                     Extent7.NRIC NRIC  ,
                                     Extent8.SRV_REM SRV_REM  ,
@@ -1921,24 +1913,19 @@
                                     Extent1.next_svc_area next_svc_area,
                                     Extent1.distance distance,
                                     Extent1.CANC_REQ_NO,
-                                    <!--  Extent10.INSTCT -->
-                                    <!-- [19-09-2018] GET INSTUCTION FROM SAL0090D RATHER THAN FROM SAL0045D  -->
                                     Extent8.SRV_REM AS INSTCT
                              FROM SVC0008D Extent1
                                     JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
-                                    JOIN  SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
-                                    JOIN SAL0001D Extent4   ON Extent1.SALES_ORD_ID = Extent4.SALES_ORD_ID
-                                    JOIN SAL0002D Extent5   ON Extent4.SALES_ORD_ID = Extent5.SALES_ORD_ID
-                                    JOIN SYS0026M Extent6   ON Extent5.ITM_STK_ID = Extent6.STK_ID
+                                    JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
+                                    JOIN SAL0225D Extent4   ON Extent1.SALES_ORD_ID = Extent4.SRV_ORD_ID
                                     JOIN SAL0029D Extent7   ON Extent4.CUST_ID = Extent7.CUST_ID
-                                    JOIN SAL0090D Extent8   ON ( Extent4.SALES_ORD_ID = Extent8.SRV_SO_ID )
+                                    JOIN SAL0090D Extent8   ON ( Extent4.SRV_ORD_ID = Extent8.SRV_SO_ID )
                                     AND ( 1 = Extent8.SRV_STUS_ID )
                                     JOIN SYS0013M Extent9   ON Extent4.APP_TYPE_ID = Extent9.CODE_ID
-                                    JOIN SAL0045D Extent10   ON Extent4.SALES_ORD_ID = Extent10.SALES_ORD_ID
+                                    JOIN SAL0045D Extent10   ON Extent4.SRV_ORD_ID = Extent10.SALES_ORD_ID
                                     LEFT JOIN SVC0006D Extent11   ON ( Extent1.SCHDUL_ID = Extent11.SCHDUL_ID )
                                     AND ( 1 = Extent11.RESULT_IS_CURR )
                                      JOIN SAL0023D B ON B.CUST_ADD_ID  = Extent10.ADD_ID
-                                     <!-- AND  Extent4.CUST_ID = B.CUST_ID-->
                                     LEFT JOIN SYS0064M C ON C.AREA_ID = B.AREA_ID
                                    WHERE  Extent1.SCHDUL_ID = #{schdulId}
                                    <![CDATA[            AND ROWNUM <= 1 ) Limit1 ]]>
