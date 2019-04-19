@@ -121,8 +121,6 @@
                 return ;
             }
 
-
-
                Common.popupDiv("/homecare/services/htConfigBasicPop.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId +"&codyMangrUserId="+codyMangrUserId+"&custId="+custId, null, null , true , '_ConfigBasicPop');
 
         }
@@ -130,11 +128,6 @@
 
 
     </script>
-
-
-
-
-
 
 <form action="#" id="searchForm" name="searchForm">
 
