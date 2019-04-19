@@ -208,8 +208,7 @@ public class htManualController {
 
 		params.put("user_id", sessionVO.getUserId());
 		params.put("userType",  sessionVO.getUserTypeId());
-
-		//params.put("userType",  "3");
+		logger.debug(" params :  " + params.toString());
 
         // 조회.
 		List<EgovMap> bsManagementList = htManualService.selectHsManualList(params);
@@ -225,9 +224,6 @@ public class htManualController {
 
 		return ResponseEntity.ok(bsManagementList);
 	}
-
-
-
 
 
 	/**
@@ -353,7 +349,7 @@ public class htManualController {
 
 
 
-	@RequestMapping(value = "/selectHsInitDetailPop.do")
+	@RequestMapping(value = "/selectCsInitDetailPop.do")
 	public String selectHsInitDetailPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {
 
 		params.put("schdulId", params.get("schdulId"));
@@ -377,9 +373,7 @@ public class htManualController {
 		model.addAttribute("failReasonList", failReasonList);
 //		model.addAttribute("serMemList", serMemList);
 
-
-
-		return "services/bs/hsDetailPop";
+		return "homecare/services/htDetailPop";
 
 	}
 
@@ -387,7 +381,7 @@ public class htManualController {
 
 
 
-	@RequestMapping(value = "/hsBasicInfoPop.do")
+	@RequestMapping(value = "/htBasicInfoPop.do")
 	public String selecthsBasicInfoPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {
 
 		EgovMap basicinfo = null;
@@ -403,7 +397,7 @@ public class htManualController {
 		basicinfo = htManualService.selectHsViewBasicInfo(params);
 		orderDetail = htOrderDetailService.selectOrderBasicInfo(params,sessionVO);
 
-		List<EgovMap>  cmbCollectTypeComboList = htManualService.cmbCollectTypeComboList(params);
+		//List<EgovMap>  cmbCollectTypeComboList = htManualService.cmbCollectTypeComboList(params);
 		List<EgovMap>  failReasonList = htManualService.failReasonList(params);
 		//List<EgovMap>  serMemList = htManualService.serMemList(params);
 
@@ -412,13 +406,13 @@ public class htManualController {
 		model.addAttribute("basicinfo", basicinfo);
 		logger.debug("basicinfo : {}", basicinfo);
 		model.addAttribute("orderDetail", orderDetail);
-		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
+		//model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
 		model.addAttribute("failReasonList", failReasonList);
 		model.addAttribute("MOD", params.get("MOD"));
 		//model.addAttribute("serMemList", serMemList);
 		model.addAttribute("ROW", params.get("ROW"));
 
-		return "services/bs/hsEditPop";
+		return "homecare/services/htEditPop";
 
 
 	}
@@ -541,72 +535,11 @@ public class htManualController {
 
 		if( null !=resultValue && status == 4 ){
 
-			HashMap   spMap =(HashMap)resultValue.get("spMap");
-
-			logger.debug("spMap :========>"+ spMap.toString());
-
-			if(! "000".equals(spMap.get("P_RESULT_MSG"))){
-
-				resultValue.put("logerr","Y");
-				msg = "Logistics call Error." ;
-			}else{
-
 				msg = "Complete to Add a HS Order : " + resultValue.get("resultId") ;
-			}
 
-			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 		} else if ( null !=resultValue && (status == 21 || status == 10) ) {
 
 			msg = "Complete to Add a HS Order : " + resultValue.get("resultId") ;
-
-		}
-
-		// CHECKING FILTER LIST IN SVC0007D
-		params.put("selSchdulId",formMap.get("hidschdulId").toString());
-		EgovMap useFilterList = htManualService.getBSFilterInfo(params);
-		//logger.debug("useFilterList : "+ useFilterList.toString());
-
-		// INSERT AS ENTRY FOR OMBAK  -- TPY
-		if(useFilterList != null){
-			String stkId = useFilterList.get("stkId").toString();
-			if(stkId.equals("1428")){  // 1428 - MINERAL FILTER
-		logger.debug("==================== saveASEntryResult [Start] ========================");
-		//logger.debug("saveASEntryResult params :"+ params.toString());
-
-		params.put("userId", sessionVO.getUserId());
-		params.put("salesOrdId", formMap.get("hidSalesOrdId").toString());
-		params.put("codyId", formMap.get("hidCodyId").toString());
-		params.put("settleDate", formMap.get("settleDate").toString());
-		params.put("stkId", useFilterList.get("stkId").toString());
-		params.put("stkCode", useFilterList.get("stkCode").toString());
-		params.put("stkDesc", useFilterList.get("stkDesc").toString());
-		params.put("stkQty", useFilterList.get("bsResultPartQty").toString());
-		params.put("amt", useFilterList.get("amt").toString());
-		params.put("totalAmt", useFilterList.get("totalAmt").toString());
-		params.put("no", useFilterList.get("no").toString());
-		//params.put("stkFilterId", useFilterList.get("srvFilterId").toString());
-		logger.debug("saveASEntryResult params :"+ params.toString());
-
-		Map<String, Object> sm = new HashMap<String, Object>();
-		sm =	htManualService.saveASEntryResult(params);
-		params.put("asNo", sm.get("asNo").toString());
-		params.put("asId", sm.get("asId").toString());
-		params.put("asResultNo", sm.get("asResultNo").toString());
-
-		logger.debug("==================== saveASEntryResult [End] ========================");
-
-
-		// INSERT TAX INVOICE FOR OMBAK -- TPY
-		logger.debug("==================== saveASTaxInvoice [Start] ========================");
-		logger.debug("saveASTaxInvoice params :"+ params.toString());
-		Map<String, Object> pb = new HashMap<String, Object>();
-		pb = htManualService.saveASTaxInvoice(params);
-
-		logger.debug("==================== saveASTaxInvoice [End] ========================");
-
-		msg = msg + "<br /> AS NO : " + sm.get("asNo").toString() + "<br /> AS REF : " + sm.get("asResultNo").toString() ;
-
-			}
 
 		}
 
@@ -635,10 +568,7 @@ public class htManualController {
 		boolean success = false;
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 
-		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
-		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
-		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 
 		logger.debug("UpdateHsResult2=============> in ");
 		logger.debug("["+params.toString()+"]");
@@ -646,9 +576,9 @@ public class htManualController {
 
 
 
-		resultValue = htManualService.UpdateHsResult2(formMap, insList, sessionVO);
+		resultValue = htManualService.UpdateHsResult2(params, insList, sessionVO);
 
-		message.setMessage("Complete to Update a HS Result : " + formMap.get("hidHsno") );
+		message.setMessage("Complete to Update a HS Result : " + params.get("hidHsno") );
 
 		return ResponseEntity.ok(message);
 	}
