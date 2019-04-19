@@ -1069,7 +1069,9 @@
     <select id="selectOrderConfigInfo" parameterType="Map"
         resultType="egovMap">
     <![CDATA[
-           SELECT T.ORD_ID
+           SELECT
+                DISTINCT
+                 T.ORD_ID
              , T.CONFIG_BS_GEN
              , T.SRV_MEM_FREQ
              , T.MEM_ID
