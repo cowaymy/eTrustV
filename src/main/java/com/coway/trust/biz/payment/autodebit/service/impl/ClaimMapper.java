@@ -271,4 +271,13 @@ public interface ClaimMapper {
   List<EgovMap> selectListing(Map<String, Object> params);
 
   List<EgovMap> selectAccBank(Map<String, Object> params);
+
+  List<EgovMap> selectVResClaimList(Map<String, Object> params);
+
+  List<EgovMap> selectVResListing(Map<String, Object> params);
+
+  Map<String, Object> createVResClaim(Map<String, Object> param);
+
+
+
 }

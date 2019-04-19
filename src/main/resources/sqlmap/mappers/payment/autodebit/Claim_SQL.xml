@@ -1210,4 +1210,143 @@
     AND A.DISB = 0
     ORDER BY B.NAME
   </select>
+
+  <select id="selectVResClaimList" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.CTRL_ID,
+    Extent1.CTRL_BATCH_NO,
+    Extent1.CTRL_BANK_ID,
+    NVL(TO_CHAR(Extent1.CTRL_BATCH_DT,'DD-MM-YYYY'),'01-01-1900') AS
+    CTRL_BATCH_DT,
+    NVL(Extent1.CTRL_BILL_AMT,0) AS CTRL_BILL_AMT,
+    NVL(Extent1.CTRL_BILL_PAY_AMT,0) AS CTRL_BILL_PAY_AMT,
+    NVL(Extent1.CTRL_IS_CLOS,0) AS CTRL_IS_CLOS,
+    NVL(Extent1.CTRL_STUS_ID,0) AS CTRL_STUS_ID,
+    Extent1.CRT_USER_ID,
+    Extent1.UPD_USER_ID,
+    TO_CHAR(Extent1.CRT_DT,'DD-MM-YYYY hh:mi:ss
+    A.M.') AS CRT_DT,
+    NVL(TO_CHAR(Extent1.UPD_DT,'DD-MM-YYYY hh:mi:ss
+    A.M.'),'01-01-1900 AM 00:00:00') AS UPD_DT,
+    Extent1.CTRL_IS_CRC,
+    (CASE WHEN 1 = Extent1.CTRL_IS_CRC THEN 'Credit Card'
+    WHEN 134 =
+    Extent1.CTRL_IS_CRC THEN 'FPX'
+    ELSE 'Direct Debit' END
+    ) AS
+    CTRL_IS_CRC_NAME,
+    Extent1.CTRL_REM,
+    NVL(Extent1.CTRL_FAIL_SMS_IS_PUMP,0) AS CTRL_FAIL_SMS_IS_PUMP,
+    Extent1.CTRL_TOT_ITM,
+    Extent1.CTRL_TOT_SUCCES,
+    Extent1.CTRL_TOT_FAIL,
+    Extent1.CTRL_WAIT_SYNC,
+    Extent2.CODE AS STUS_CODE ,
+    Extent2.NAME AS
+    STUS_NAME ,
+    Extent3.BANK_ID AS BANK_ID ,
+    CASE WHEN Extent3.BANK_ID IS
+    NOT NULL THEN Extent3.CODE ELSE ' ' END
+    BANK_CODE ,
+    CASE WHEN
+    Extent3.BANK_ID IS NOT NULL THEN Extent3.NAME ELSE ' ' END
+    BANK_NAME
+    ,
+    NVL(Extent4.USER_NAME,' ') AS CRT_USER_NAME,
+    NVL(Extent5.USER_NAME,' ') AS UPD_USER_NAME,
+    Extent1.CTRL_DDT_CHL,
+    Extent6.CODE_NAME
+    DDT_CHNL
+    FROM PAY0041D Extent1
+    JOIN SYS0038M Extent2 ON
+    Extent2.STUS_CODE_ID = Extent1.CTRL_STUS_ID
+    LEFT JOIN SYS0004M
+    Extent3 ON Extent3.BANK_ID = Extent1.CTRL_BANK_ID
+    LEFT JOIN SYS0047M
+    Extent4 ON Extent4.USER_ID = Extent1.CRT_USER_ID
+    LEFT JOIN SYS0047M
+    Extent5 ON Extent5.USER_ID = Extent1.UPD_USER_ID
+    LEFT JOIN SYS0013M
+    Extent6 ON Extent6.CODE_ID = Extent1.CTRL_DDT_CHL AND
+    Extent6.CODE_MASTER_ID = '403'
+    WHERE 1=1
+    AND Extent1.VRESCUE = 1
+    <if test="batchId != null and batchId != ''">
+      AND Extent1.CTRL_ID = #{batchId}
+    </if>
+    <if test="creator != null and creator != ''">
+      AND EXTENT4.USER_NAME =#{creator}
+    </if>
+    <if
+      test="createDt1 != null and createDt2 != null and createDt1 != '' and createDt2 != '' ">
+      AND Extent1.CRT_DT <![CDATA[   >= ]]>
+      TO_DATE(TO_CHAR(TO_DATE(#{createDt1},'DD/MM/YYYY'),'YYYYMMDD') ||
+      '000000','yyyymmddhh24miss')
+      AND Extent1.CRT_DT <![CDATA[   <   ]]>
+      TO_DATE(TO_CHAR(TO_DATE(#{createDt2},'DD/MM/YYYY'),'YYYYMMDD') ||
+      '000000','yyyymmddhh24miss') + 1
+    </if>
+    <if test="claimType != null and claimType != ''">
+      <choose>
+        <when test='claimType == "132" '>
+          AND Extent1.CTRL_IS_CRC = 0
+        </when>
+        <when test='claimType == "131" '>
+          AND Extent1.CTRL_IS_CRC = 1
+        </when>
+      </choose>
+    </if>
+    <if test="status != null and status != ''">
+      AND Extent1.CTRL_STUS_ID = #{status}
+    </if>
+    <if
+      test="debitDt1 != null and debitDt2 != null and debitDt1 != '' and debitDt2 != '' ">
+      AND Extent1.CTRL_BATCH_DT <![CDATA[   >= ]]>
+      TO_DATE(#{debitDt1},'DD/MM/YYYY')
+      AND Extent1.CTRL_BATCH_DT <![CDATA[   <= ]]>
+      TO_DATE(#{debitDt2},'DD/MM/YYYY')
+    </if>
+    <if test="smsSend != null and smsSend != ''">
+      AND Extent1.CTRL_FAIL_SMS_IS_PUMP = #{smsSend}
+    </if>
+    <if test="issueBank != null and issueBank != ''">
+      AND Extent1.CTRL_BANK_ID = #{issueBank}
+    </if>
+    <if test="ddtChnl != null and ddtChnl != ''">
+      AND Extent1.CTRL_DDT_CHL = #{ddtChnl}
+    </if>
+    <choose>
+      <when test="IS_GRP != null and IS_GRP != '' ">
+        AND Extent1.CTRL_GROUP = 1
+      </when>
+      <otherwise>
+        AND Extent1.CTRL_GROUP != 1
+      </otherwise>
+    </choose>
+    ORDER BY Extent1.CTRL_ID
+  </select>
+
+    <select id="selectVResListing" parameterType="Map" resultType="egovMap">
+    SELECT A.CODE CODE_ID,
+    A.CODE_NAME CODE_NAME
+    FROM SYS0094M A
+    WHERE
+    A.IND = #{ind}
+    AND A.DISB = 0
+    AND A.CODE != 134
+    ORDER BY CODE_ID
+  </select>
+
+   <resultMap id="resultClaimVRescueMap" type="egovMap" />
+  <select id="createVResClaim" statementType="CALLABLE"
+    parameterType="Map">
+    {
+    call SP_AUTO_DEBT_GENRT_CLM_VRESCUE(#{new_claimType} ,
+    #{new_issueBank},
+    #{new_cardType}, #{new_debitDate}, #{userId},
+    #{new_claimDay},
+    #{new_ddtChnl}, #{p1, mode=OUT, jdbcType=CURSOR,
+    javaType=ResultSet,
+    resultMap=resultClaimMap})
+    }
+  </select>
 </mapper>

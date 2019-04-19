@@ -28,7 +28,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @since 2014.01.24
  * @version 1.0
  * @see
- * 
+ *
  *      <pre>
  *  == 개정이력(Modification Information) ==
  *
@@ -40,17 +40,21 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 @Mapper("membershipRentalChannelMapper")
 public interface MembershipRentalChannelMapper {
-	
-	
+
+
 	List<EgovMap>   getLoadRejectReasonList(Map<String, Object> params);
-	
+
 	int  SAL0074D_update(Map<String, Object> params);
-	
+
 	int  SAL0077D_update(Map<String, Object> params);
-	
+
 	EgovMap  paymentServiceContract(Map<String, Object> params);
-	
+
 	EgovMap  paymentRentPaySet(Map<String, Object> params);
-	
-	
+
+	void insertDeductSAL0236D(Map<String, Object> params);
+
+	int crtSeqSAL0236D();
+
+	void updatePaymentChannelvRescue(Map<String, Object> params);
 }

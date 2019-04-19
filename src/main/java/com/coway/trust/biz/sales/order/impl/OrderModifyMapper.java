@@ -76,4 +76,12 @@ public interface OrderModifyMapper {
 	void updateECashInfo(SalesOrderMVO salesOrderMVO);
 
 	EgovMap getInstallDetail(Map<String, Object> params);
+
+	int selectPayModeId(RentPaySetVO rentPaySetVO);
+
+	void insertDeductSAL0236D(Map<String, Object> params);
+
+	int crtSeqSAL0236D();
+
+	void updatePaymentChannelvRescue(Map<String, Object> params);
 }

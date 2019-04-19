@@ -62,4 +62,15 @@ public interface OrderConversionMapper {
 	void updSrvCntrctCRCSAL0074D(Map<String, Object> params);
 
 	void updSrvCntrctDDSAL0074D(Map<String, Object> params);
+
+	void insertDeductSalesCRCSAL0236D(Map<String, Object> params);
+
+	void insertDeductSalesDDSAL0236D(Map<String, Object> params);
+
+	void insertDeductSrvCRCSAL0236D(Map<String, Object> params);
+
+	void insertDeductSrvDDSAL0236D(Map<String, Object> params);
+
+	int crtSeqSAL0236D();
+
 }

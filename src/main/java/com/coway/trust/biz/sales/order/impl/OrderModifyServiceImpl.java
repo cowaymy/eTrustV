@@ -296,12 +296,24 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 	public void updatePaymentChannel(Map<String, Object> params, SessionVO sessionVO) throws Exception {
 
 		logger.info("!@###### OrderModifyServiceImpl.updatePaymentChannel");
-
+		int rentPayMode = Integer.parseInt((String) params.get("rentPayMode"));
 		RentPaySetVO rentPaySetVO = new RentPaySetVO();
 
 		this.preprocRentPaySet(rentPaySetVO, params, sessionVO);
 
-		orderModifyMapper.updatePaymentChannel(rentPaySetVO);
+		int payModeId = orderModifyMapper.selectPayModeId(rentPaySetVO);
+		if((payModeId == 131 || payModeId == 132) && rentPayMode == 130){
+			int crtSeqSAL0236D = orderModifyMapper.crtSeqSAL0236D();
+			params.put("deductId", crtSeqSAL0236D);
+			params.put("rentPayId", Integer.parseInt((String) params.get("rentPayId")));
+			params.put("modeId", rentPayMode);
+			orderModifyMapper.insertDeductSAL0236D(params);
+			orderModifyMapper.updatePaymentChannelvRescue(params);
+		}
+		else{
+			orderModifyMapper.updatePaymentChannel(rentPaySetVO);
+
+		}
 
 		SalesOrderMVO salesOrderMVO = new SalesOrderMVO();
 

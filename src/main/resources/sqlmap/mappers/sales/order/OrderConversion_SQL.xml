@@ -504,7 +504,9 @@
                    DD_SUBMIT_DT = null,
                    DD_START_DT = null,
                    DD_REJCT_DT = null,
-                   FAIL_RESN_ID = null
+                   FAIL_RESN_ID = null,
+                   GRACE_PERIOD = 1,
+                   DEDUCT_ACC_ID = #{deductId}
 
          WHERE SALES_ORD_ID = #{ordId}
          AND MODE_ID = 131
@@ -520,7 +522,9 @@
                    DD_SUBMIT_DT = null,
                    DD_START_DT = null,
                    DD_REJCT_DT = null,
-                   FAIL_RESN_ID = null
+                   FAIL_RESN_ID = null,
+                   GRACE_PERIOD = 1,
+                   DEDUCT_ACC_ID = #{deductId}
 
          WHERE SALES_ORD_ID = #{ordId}
          AND MODE_ID = 132
@@ -544,7 +548,9 @@
                    DD_SUBMIT_DT = null,
                    DD_START_DT = null,
                    DD_REJCT_DT = null,
-                   FAIL_RESN_ID = null
+                   FAIL_RESN_ID = null,
+                   GRACE_PERIOD = 1,
+                   DEDUCT_ACC_ID = #{deductId}
 
          WHERE SVC_CNTRCT_ID = #{cntrctId}
          AND MODE_ID = 131
@@ -560,9 +566,120 @@
                    DD_SUBMIT_DT = null,
                    DD_START_DT = null,
                    DD_REJCT_DT = null,
-                   FAIL_RESN_ID = null
+                   FAIL_RESN_ID = null,
+                   GRACE_PERIOD = 1,
+                   DEDUCT_ACC_ID = #{deductId}
 
          WHERE SVC_CNTRCT_ID = #{cntrctId}
          AND MODE_ID = 132
     </update>
+
+    <insert id="insertDeductSalesCRCSAL0236D" parameterType="Map">
+        INSERT INTO SAL0236D(DEDUCTION_ACC_ID, SALES_ORD_ID, SRV_CNTRCT_ID, CRC_ID, BANK_ID, ACC_ID, DD_APPLY_DT,
+        DD_SUBMIT_DT, DD_START_DT, DD_REJCT_DT, STUS_ID, REMARK, CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT)
+        SELECT #{deductId},
+                   SALES_ORD_ID,
+                   SVC_CNTRCT_ID,
+                   CUST_CRC_ID,
+                   BANK_ID,
+                   CUST_ACC_ID,
+                   DD_APPLY_DT,
+                   DD_SUBMIT_DT,
+                   DD_START_DT,
+                   DD_REJCT_DT,
+                   STUS_CODE_ID,
+                   REM,
+                   #{userId},
+                   SYSDATE,
+                   #{userId},
+                   SYSDATE
+        FROM SAL0074D
+        WHERE SALES_ORD_ID = #{ordId}
+        AND MODE_ID = 131
+
+
+    </insert>
+
+        <insert id="insertDeductSalesDDSAL0236D" parameterType="Map">
+        INSERT INTO SAL0236D(DEDUCTION_ACC_ID, SALES_ORD_ID, SRV_CNTRCT_ID, CRC_ID, BANK_ID, ACC_ID, DD_APPLY_DT,
+        DD_SUBMIT_DT, DD_START_DT, DD_REJCT_DT, STUS_ID, REMARK, CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT)
+        SELECT #{deductId},
+                   SALES_ORD_ID,
+                   SVC_CNTRCT_ID,
+                   CUST_CRC_ID,
+                   BANK_ID,
+                   CUST_ACC_ID,
+                   DD_APPLY_DT,
+                   DD_SUBMIT_DT,
+                   DD_START_DT,
+                   DD_REJCT_DT,
+                   STUS_CODE_ID,
+                   REM,
+                   #{userId},
+                   SYSDATE,
+                   #{userId},
+                   SYSDATE
+        FROM SAL0074D
+        WHERE SALES_ORD_ID = #{ordId}
+        AND MODE_ID = 132
+
+
+    </insert>
+
+    <insert id="insertDeductSrvCRCSAL0236D" parameterType="Map">
+        INSERT INTO SAL0236D(DEDUCTION_ACC_ID, SALES_ORD_ID, SRV_CNTRCT_ID, CRC_ID, BANK_ID, ACC_ID, DD_APPLY_DT,
+        DD_SUBMIT_DT, DD_START_DT, DD_REJCT_DT, STUS_ID, REMARK, CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT)
+        SELECT #{deductId},
+                   SALES_ORD_ID,
+                   SVC_CNTRCT_ID,
+                   CUST_CRC_ID,
+                   BANK_ID,
+                   CUST_ACC_ID,
+                   DD_APPLY_DT,
+                   DD_SUBMIT_DT,
+                   DD_START_DT,
+                   DD_REJCT_DT,
+                   STUS_CODE_ID,
+                   REM,
+                   #{userId},
+                   SYSDATE,
+                   #{userId},
+                   SYSDATE
+        FROM SAL0074D
+        WHERE SVC_CNTRCT_ID = #{cntrctId}
+        AND MODE_ID = 131
+
+
+    </insert>
+
+        <insert id="insertDeductSrvDDSAL0236D" parameterType="Map">
+        INSERT INTO SAL0236D(DEDUCTION_ACC_ID, SALES_ORD_ID, SRV_CNTRCT_ID, CRC_ID, BANK_ID, ACC_ID, DD_APPLY_DT,
+        DD_SUBMIT_DT, DD_START_DT, DD_REJCT_DT, STUS_ID, REMARK, CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT)
+        SELECT #{deductId},
+                   SALES_ORD_ID,
+                   SVC_CNTRCT_ID,
+                   CUST_CRC_ID,
+                   BANK_ID,
+                   CUST_ACC_ID,
+                   DD_APPLY_DT,
+                   DD_SUBMIT_DT,
+                   DD_START_DT,
+                   DD_REJCT_DT,
+                   STUS_CODE_ID,
+                   REM,
+                   #{userId},
+                   SYSDATE,
+                   #{userId},
+                   SYSDATE
+        FROM SAL0074D
+        WHERE SVC_CNTRCT_ID = #{cntrctId}
+        AND MODE_ID = 132
+
+
+    </insert>
+
+    <select id="crtSeqSAL0236D" resultType="Integer">
+        SELECT SAL0236D_DEDUCTION_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
 </mapper>

@@ -554,4 +554,19 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
   public List<EgovMap> selectAccBank(Map<String, Object> param) {
     return claimMapper.selectAccBank(param);
   }
+
+  @Override
+  public List<EgovMap> selectVResClaimList(Map<String, Object> params) {
+    return claimMapper.selectVResClaimList(params);
+  }
+
+  @Override
+  public List<EgovMap> selectVResListing(Map<String, Object> param) {
+    return claimMapper.selectVResListing(param);
+  }
+
+  @Override
+  public Map<String, Object> createVResClaim(Map<String, Object> param) {
+    return claimMapper.createVResClaim(param);
+  }
 }

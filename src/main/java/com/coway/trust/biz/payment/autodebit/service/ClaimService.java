@@ -240,4 +240,12 @@ public interface ClaimService {
 
   String selectBnkCde(String params);
 
+  List<EgovMap> selectVResClaimList(Map<String, Object> params);
+
+  List<EgovMap> selectVResListing(Map<String, Object> param);
+
+  Map<String, Object> createVResClaim(Map<String, Object> param);
+
+
+
 }

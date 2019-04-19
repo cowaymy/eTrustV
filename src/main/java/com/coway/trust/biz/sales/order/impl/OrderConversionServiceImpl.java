@@ -270,23 +270,31 @@ public void savePayConvertList(Map<String, Object> params) {
 
 			orderConversionMapper.insertCnvrSAL0235D(params);
 
+			int crtSeqSAL0236D = orderConversionMapper.crtSeqSAL0236D();
+			params.put("deductId", crtSeqSAL0236D);
+
 			if(convertType == 1){
 				orderConversionMapper.updSAL0001D(params);
 				if("CRC".equals(convertFrom)){
+
+					orderConversionMapper.insertDeductSalesCRCSAL0236D(params);
 					orderConversionMapper.updSalesCRCSAL0074D(params);
 
 				}
 				else{
+					orderConversionMapper.insertDeductSalesDDSAL0236D(params);
 					orderConversionMapper.updSalesDDSAL0074D(params);
 				}
 			}
 			else{
 				orderConversionMapper.updSAL0077D(params);
 				if("CRC".equals(convertFrom)){
+					orderConversionMapper.insertDeductSrvCRCSAL0236D(params);
 					orderConversionMapper.updSrvCntrctCRCSAL0074D(params);
 
 				}
 				else{
+					orderConversionMapper.insertDeductSrvDDSAL0236D(params);
 					orderConversionMapper.updSrvCntrctDDSAL0074D(params);
 				}
 			}

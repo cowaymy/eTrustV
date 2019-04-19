@@ -2398,4 +2398,147 @@ public class ClaimController {
       }
   }
 
+  @RequestMapping(value = "/initVRescueClaimList.do")
+  public String initVRescueClaimList(@RequestParam Map<String, Object> params, ModelMap model) {
+    return "payment/autodebit/vRescue";
+  }
+
+  @RequestMapping(value = "/selectVResClaimList", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectVResClaimList(@RequestParam Map<String, Object> params, ModelMap model) {
+    // 조회.
+    List<EgovMap> resultList = claimService.selectVResClaimList(params);
+
+    // 조회 결과 리턴.
+    return ResponseEntity.ok(resultList);
+  }
+
+  @RequestMapping(value = "/selectVResClaimMasterById.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> selectVResClaimMasterById(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    EgovMap returnMap = null;
+    // 조회.
+    List<EgovMap> resultList = claimService.selectVResClaimList(params);
+
+    if (resultList != null && resultList.size() > 0) {
+      returnMap = resultList.get(0);
+
+      // CONVERT DECIMAL
+      if (returnMap.get("ctrlBillAmt") != null) {
+        returnMap.put("ctrlBillAmt", CommonUtils.getNumberFormat(returnMap.get("ctrlBillAmt").toString(), "#,##0.00"));
+      }
+      if (returnMap.get("ctrlBillPayAmt") != null) {
+        returnMap.put("ctrlBillPayAmt",
+            CommonUtils.getNumberFormat(returnMap.get("ctrlBillPayAmt").toString(), "#,##0.00"));
+      }
+    } else {
+      returnMap = new EgovMap();
+    }
+
+    // 조회 결과 리턴.
+    return ResponseEntity.ok(returnMap);
+  }
+
+  @RequestMapping(value = "/selectVResListing.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectVResListing(@RequestParam Map<String, Object> params) throws Exception {
+    List<EgovMap> codeList = claimService.selectVResListing(params);
+    return ResponseEntity.ok(codeList);
+  }
+
+  @RequestMapping(value = "/generateVResNewClaim.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> generateVResNewClaim(@RequestBody Map<String, ArrayList<Object>> params, Model model,
+      SessionVO sessionVO) {
+
+    List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터
+                                                                   // 가져오기
+    Map<String, Object> returnMap = new HashMap<String, Object>();
+    Map<String, Object> searchMap = null;
+    String returnCode = "";
+
+    // form 객체 값을 담을 Map
+    Map<String, Object> claim = new HashMap<String, Object>();
+
+    // form 객체 데이터 세팅
+    if (formList.size() > 0) {
+      formList.forEach(obj -> {
+        Map<String, Object> map = (Map<String, Object>) obj;
+        claim.put((String) map.get("name"), map.get("value"));
+      });
+    }
+    // 검색 파라미터 확인.(화면 Form객체 입력값)
+    LOGGER.debug("new_claimType : {}", claim.get("new_claimType"));
+    LOGGER.debug("new_claimDay : {}", claim.get("new_claimDay"));
+    LOGGER.debug("new_ddtChnl : {}", claim.get("new_ddtChnl"));
+    LOGGER.debug("new_issueBank : {}", claim.get("new_issueBank"));
+    LOGGER.debug("new_debitDate : {}", claim.get("new_debitDate"));
+
+    // HasActiveBatch : 동일한 bankId, Claim Type 에 해당하는 active 건이 있는지 확인한다.
+    searchMap = new HashMap<String, Object>();
+    searchMap.put("ddtChnl", claim.get("new_ddtChnl"));
+    searchMap.put("issueBank", claim.get("new_issueBank"));
+    searchMap.put("claimType", claim.get("new_claimType"));
+    searchMap.put("status", "1");
+
+    List<EgovMap> isActiveBatchList = claimService.selectVResClaimList(searchMap);
+
+    // Active인 배치가 있는 경우
+    if (isActiveBatchList.size() > 0) {
+      returnCode = "IS_BATCH";
+      returnMap = (Map<String, Object>) isActiveBatchList.get(0);
+    } else {
+
+      String isCRC = "131".equals((String.valueOf(claim.get("new_claimType")))) ? "1"
+          : "132".equals((String.valueOf(claim.get("new_claimType")))) ? "0" : "134";
+      String inputDate = CommonUtils.changeFormat(String.valueOf(claim.get("new_debitDate")), "dd/MM/yyyy", "yyyyMMdd");
+      String claimDay = CommonUtils.nvl(String.valueOf(claim.get("new_claimDay")));
+      String ddtChnl = CommonUtils.nvl(String.valueOf(claim.get("new_ddtChnl")));
+      String bankId = CommonUtils.nvl(String.valueOf(claim.get("new_issueBank")));
+      String cardType = CommonUtils.nvl(String.valueOf(claim.get("new_cardType")));
+
+      claim.put("new_claimType", isCRC);
+      claim.put("new_debitDate", inputDate);
+      claim.put("new_claimDay", claimDay);
+      claim.put("new_ddtChnl", ddtChnl);
+      claim.put("new_issueBank", bankId);
+      claim.put("new_cardType", cardType);
+      claim.put("userId", sessionVO.getUserId());
+
+      claimService.createVResClaim(claim); // 프로시저 함수 호출
+      List<EgovMap> resultMapList = (List<EgovMap>) claim.get("p1"); // 결과 뿌려보기
+                                                                     // : 프로시저에서
+                                                                     // p1이란
+                                                                     // key값으로
+                                                                     // 객체를
+                                                                     // 반환한다.
+
+      if (resultMapList.size() > 0) {
+        // 프로시저 결과 Map
+        returnMap = (Map<String, Object>) resultMapList.get(0);
+
+        // Calim Master 및 Detail 조회
+        // EgovMap claimMasterMap = claimService.selectClaimById(returnMap);
+        // List<EgovMap> claimDetailList =
+        // claimService.selectClaimDetailById(returnMap);
+
+        try {
+          // 파일 생성하기
+          // this.createClaimFileMain(claimMasterMap,claimDetailList);
+          returnCode = "FILE_OK";
+        } catch (Exception e) {
+          returnCode = "FILE_FAIL";
+        }
+      } else {
+        returnCode = "FAIL";
+      }
+    }
+
+    // 결과 만들기.
+    ReturnMessage message = new ReturnMessage();
+    message.setCode(returnCode);
+    message.setData(returnMap);
+    message.setMessage("Enrollment successfully saved. \n Enroll ID : ");
+
+    return ResponseEntity.ok(message);
+
+  }
+
 }
