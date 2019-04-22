@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -92,12 +93,14 @@ public class BulkUploadController {
     public ResponseEntity<ReturnMessage> processBulkInvoice(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
         LOGGER.debug("========== processBulkInvoice.do ==========");
 
+        final String amtRegExp = "(([1-9]\\d{0,2}(,\\d{3})*)|(([1-9]\\d*)?\\d))(\\.\\d\\d)?$";
+        //final Pattern amtPattern = Pattern.compile(amtRegExp);
+
         String sdfPattern = "yyyyMMdd";
         SimpleDateFormat sdf = new SimpleDateFormat(sdfPattern);
-        String rDate = "";
-
 
         Calendar cal = Calendar.getInstance();
+        Date currDate = new Date();
         Date cDate = null;
         cal.add(Calendar.YEAR, 1);
         Date mDate = cal.getTime();
@@ -200,7 +203,8 @@ public class BulkUploadController {
             String payDueDt = (String.valueOf(hm.get("payDueDt"))).trim();
             String budgetCode = (String.valueOf(hm.get("bgtCd"))).trim();
             String budgetDesc = (String.valueOf(hm.get("bgtNm"))).trim();
-            Double amt = Double.parseDouble((String.valueOf(hm.get("amt"))).trim());
+            //Double amt = Double.parseDouble((String.valueOf(hm.get("amt"))).trim());
+            String sAmt = (String.valueOf(hm.get("amt"))).trim();
             String expDesc = (String.valueOf(hm.get("expDesc"))).trim();
             String utilNo = (String.valueOf(hm.get("utilNo"))).trim();
 
@@ -295,7 +299,7 @@ public class BulkUploadController {
                 } else {
                     cDate = sdf.parse(payDueDt);
 
-                    if(cDate.after(mDate)) {
+                    if(cDate.after(mDate) || cDate.before(currDate)) {
                         if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                             invalidMsgDtl += "Payment Due Date";
                         } else {
@@ -335,7 +339,7 @@ public class BulkUploadController {
             }
 
             LOGGER.debug("========== invcNo ==========");
-            if("".equals(invcNo) || invcNo == null || invcNo == "null") {
+            if("".equals(invcNo) || invcNo == null || invcNo == "null" || invcNo.length() == 1) {
                 if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                     invalidMsgDtl += "Invoice No";
                 } else {
@@ -353,11 +357,20 @@ public class BulkUploadController {
             }
 
             LOGGER.debug("========== amt ==========");
-            if(amt <= 0 || amt == null) {
+            if(!Pattern.matches(amtRegExp, sAmt)) { //amt <= 0 || amt == null ||
                 if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                     invalidMsgDtl += "Amount";
                 } else {
                     invalidMsgDtl += ", Amount";
+                }
+            } else {
+                Double amt = Double.parseDouble(sAmt.replace(",", ""));
+                if(amt <= 0) {
+                    if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                        invalidMsgDtl += "Amount";
+                    } else {
+                        invalidMsgDtl += ", Amount";
+                    }
                 }
             }
 
@@ -439,6 +452,7 @@ public class BulkUploadController {
             }
 
             if(!"".equals(billPeriodFr)) {
+                LOGGER.debug("========== billPeriodFr ==========");
                 cDate = sdf.parse(billPeriodFr);
 
                 if(cDate.after(mDate)) {
@@ -451,6 +465,7 @@ public class BulkUploadController {
             }
 
             if(!"".equals(billPeriodTo)) {
+                LOGGER.debug("========== billPeriodTo ==========");
                 cDate = sdf.parse(billPeriodTo);
 
                 if(cDate.after(mDate)) {
@@ -465,6 +480,7 @@ public class BulkUploadController {
             if("06137".equals(budgetCode) || "06148".equals(budgetCode) || "06150".equals(budgetCode) || "06200".equals(budgetCode) ||
                "06214".equals(budgetCode) || "06149".equals(budgetCode) || "03017".equals(budgetCode)) {
                 if("".equals(utilNo) || utilNo == null || utilNo == "null") {
+                    LOGGER.debug("========== utilNo ==========");
                     if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                         invalidMsgDtl += "Utility No";
                     } else {
@@ -731,6 +747,7 @@ public class BulkUploadController {
         ReturnMessage message = new ReturnMessage();
         message.setCode(AppConstants.SUCCESS);
         message.setData(params);
+        message.setMessage(batchId);
 
         return ResponseEntity.ok(message);
     }
@@ -820,6 +837,10 @@ public class BulkUploadController {
             hm.put("appvLinePrcssCnt", Integer.parseInt(appvLinePrcssCnt) + 1);
             hm.put("userId", sessionVO.getUserId());
 
+            if(params.containsKey("rejctResn")) {
+                hm.put("rejctResn", params.get("rejctResn"));
+            }
+
             bulkUploadService.updateMasterAppr(hm);
 
             if(!"A".equals(appvStus) || !"J".equals(appvStus)) {
@@ -834,7 +855,7 @@ public class BulkUploadController {
                 }
             }
 
-            if(Integer.parseInt(appvLineCnt) == Integer.parseInt(appvLineSeq)) {
+            if(Integer.parseInt(appvLineCnt) == Integer.parseInt(appvLineSeq) && "A".equals(appvStus)) {
                 List<EgovMap> bulkDetailsList = bulkUploadService.getBulkItfDtls(params);
 
                 for(int i = 0; i < bulkDetailsList.size(); i++) {
