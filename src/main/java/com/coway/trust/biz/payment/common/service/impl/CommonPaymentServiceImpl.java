@@ -1212,12 +1212,17 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	 */
     public List<EgovMap>  savePayment(Map<String, Object> paramMap, List<Object> paramList ) {
 
+    	List<EgovMap> rcList = null;
+    	logger.debug("paramMap :" + paramMap );
+    	logger.debug("paramList :" + paramList );
+
     	//시퀀스 조회
     	Integer seq = commonPaymentMapper.getPayTempSEQ();
 
     	//payment 임시정보 등록
     	paramMap.put("seq", seq);
     	commonPaymentMapper.insertTmpPaymentInfo(paramMap);
+
 
 		//billing 임시정보 등록
     	if (paramList.size() > 0) {
@@ -1230,16 +1235,24 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     			if("CARE_SRVC".equals(String.valueOf(hm.get("appType")))){
     				hm.put("userId",paramMap.get("userid"));
     				commonPaymentMapper.updateCareSalesMStatus(hm);
+    				commonPaymentMapper.processPayment(paramMap);
+    				rcList = commonPaymentMapper.selectProcessCSPaymentResult(paramMap);
+    			}else{
+    				commonPaymentMapper.processPayment(paramMap);
+    				rcList = commonPaymentMapper.selectProcessPaymentResult(paramMap);
     			}
 
     		}
     	}
 
     	//payment 처리 프로시저 호출
-    	commonPaymentMapper.processPayment(paramMap);
+    	//commonPaymentMapper.processPayment(paramMap);
 
     	//WOR 번호 조회
-    	return commonPaymentMapper.selectProcessPaymentResult(paramMap);
+    	//return commonPaymentMapper.selectProcessPaymentResult(paramMap);
+    	return rcList;
+
+
     }
 
     /**
@@ -1258,6 +1271,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     	paramMap.put("seq", seq);
 
     	commonPaymentMapper.insertTmpNormalPaymentInfo(paramMap);
+    	Map<String, Object> procedureInfo = new HashMap<String, Object>();
 
     	//billing 임시정보 등록
     	if (paramList.size() > 0) {
@@ -1270,12 +1284,14 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     			if("CARE_SRVC".equals(String.valueOf(hm.get("appType")))){
     				hm.put("userId",paramMap.get("userid"));
     				commonPaymentMapper.updateCareSalesMStatus(hm);
+
     			}
+    				procedureInfo.put("appType",hm.get("appType"));
 
     		}
     	}
 
-    	Map<String, Object> procedureInfo = new HashMap<String, Object>();
+    	//Map<String, Object> procedureInfo = new HashMap<String, Object>();
     	procedureInfo.put("seq", seq);
     	procedureInfo.put("userid", paramMap.get("userid"));
     	procedureInfo.put("key", key);
@@ -1298,6 +1314,12 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     	//WOR 번호 조회
     	return commonPaymentMapper.selectProcessPaymentResult(paramMap);
     }
+
+    public List<EgovMap>  selectProcessCSPaymentResult(Map<String, Object> paramMap) {
+    	//WOR 번호 조회
+    	return commonPaymentMapper.selectProcessCSPaymentResult(paramMap);
+    }
+
 
     @Override
 	public EgovMap checkOrderOutstanding(Map<String, Object> params) {
