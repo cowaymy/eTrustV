@@ -190,7 +190,7 @@
                         Extent1.OLD_CODE_ID OLD_CODE_ID
                       FROM SYS0013M Extent1
                       WHERE ( Extent1.CODE_MASTER_ID = #{codeId} )
-                      AND ( 0 = Extent1.DISAB )
+                       AND CODE_ID IN  (3216,3217,145)
                       ) Project1
            ORDER BY Project1.CODE_NAME ASC
     </select>
