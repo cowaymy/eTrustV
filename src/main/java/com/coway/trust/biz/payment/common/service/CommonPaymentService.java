@@ -125,6 +125,8 @@ public interface CommonPaymentService{
    	 */
     List<EgovMap> selectProcessPaymentResult(Map<String, Object> paramMap);
 
+    List<EgovMap> selectProcessCSPaymentResult(Map<String, Object> paramMap);
+
 	EgovMap checkOrderOutstanding(Map<String, Object> params);
 
 	EgovMap checkHTOrderOutstanding(Map<String, Object> params);
