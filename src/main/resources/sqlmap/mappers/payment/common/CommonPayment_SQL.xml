@@ -1571,7 +1571,13 @@
             PAY0252T A
             JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
             LEFT JOIN SAL0001D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
-        UNION
+        ) A
+        WHERE
+            A.GROUP_SEQ =   #{seq}
+    </select>
+
+        <select id="selectProcessCSPaymentResult" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (
             SELECT DISTINCT
                 B.OR_NO,
                 T2.SRV_ORD_NO SALES_ORD_NO,
