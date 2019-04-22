@@ -1570,7 +1570,8 @@
             FROM
             PAY0252T A
             JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
-            LEFT JOIN SAL0001D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+            LEFT JOIN PAY0007D T7 ON B.BILL_ID = T7.BILL_ID
+            LEFT JOIN SAL0001D C ON T7.BILL_SO_ID = C.SALES_ORD_ID
         ) A
         WHERE
             A.GROUP_SEQ =   #{seq}
