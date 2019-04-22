@@ -2786,7 +2786,7 @@ function isDupOutSrvcToFinal(){
                 if(packageAmt > 0){
                     if(addedRows.length > 0) {
                         for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-                            if (AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"quotNo") == addedRows[addedIdx].billNo && 164 == addedRows[addedIdx].billTypeId) {
+                            if (AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"srvOrdNo") == addedRows[addedIdx].ordNo && 164 == addedRows[addedIdx].billTypeId) {
                                 dupCnt++;
                             }
                         }
@@ -2798,7 +2798,7 @@ function isDupOutSrvcToFinal(){
                 if(filterAmt > 0){
                     if(addedRows.length > 0) {
                         for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-                            if (AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"quotNo") == addedRows[addedIdx].billNo && 542 == addedRows[addedIdx].billTypeId) {
+                            if (AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"srvOrdNo") == addedRows[addedIdx].ordNo && 542 == addedRows[addedIdx].billTypeId) {
                                 dupCnt++;
                             }
                         }
