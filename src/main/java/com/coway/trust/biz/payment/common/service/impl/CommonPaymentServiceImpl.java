@@ -1221,7 +1221,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 
     	//payment 임시정보 등록
     	paramMap.put("seq", seq);
-    	commonPaymentMapper.insertTmpPaymentInfo(paramMap);
+    	//commonPaymentMapper.insertTmpPaymentInfo(paramMap);
 
 
 		//billing 임시정보 등록
