@@ -2564,7 +2564,7 @@ function fn_outConfirm(){
               if(packageAmt > 0){
                   if(addedRows.length > 0) {
                       for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-                          if (AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"quotNo") == addedRows[addedIdx].billNo && 164 == addedRows[addedIdx].billTypeId) {
+                          if (AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"srvOrdNo") == addedRows[addedIdx].ordNo && 164 == addedRows[addedIdx].billTypeId) {
                               dupCnt++;
                           }
                       }
@@ -2576,7 +2576,7 @@ function fn_outConfirm(){
               if(filterAmt > 0){
                   if(addedRows.length > 0) {
                       for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-                          if (AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"quotNo") == addedRows[addedIdx].billNo && 542 == addedRows[addedIdx].billTypeId) {
+                          if (AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"srvOrdNo") == addedRows[addedIdx].ordNo && 542 == addedRows[addedIdx].billTypeId) {
                               dupCnt++;
                           }
                       }
@@ -2951,7 +2951,23 @@ function srvcDiscountValue(){
 				Common.alert("<spring:message code='pay.alert.bankstmt.mapped'/>", function(){
 				  	document.location.href = '/payment/initOtherPayment.do';
 				});
-			}else{
+			}
+			else if (result.appType == "CARE_SRVC"){
+                Common.ajax("GET", "/payment/common/selectProcessCSPaymentResult.do", {seq : result.seq}, function(resultInfo) {
+                    var message = "<spring:message code='pay.alert.successProc'/>";
+
+                    if(resultInfo != null && resultInfo.length > 0){
+                        for(i=0 ; i < resultInfo.length ; i++){
+                            message += "<font color='red'>" + resultInfo[i].orNo + " (Order No: " + resultInfo[i].salesOrdNo +  ")</font><br>";
+                        }
+                    }
+
+                    Common.alert(message, function(){
+                        document.location.href = '/payment/initOtherPayment.do';
+                    });
+                });
+            }
+			else{
 				Common.ajax("GET", "/payment/common/selectProcessPaymentResult.do", {seq : result.seq}, function(resultInfo) {
 					var message = "<spring:message code='pay.alert.successProc'/>";
 
