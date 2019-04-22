@@ -314,9 +314,14 @@
 
             if(result.code == 99){
                 //Common.alert(result.message);
-                $("#error_wrap").show();
-                $("#errorPopHeader").text("File Upload Error")
+                $("#pop_up_3").show();
+                $("#pop3_closeBtn").attr('class', 'btn_blue2');
+                $("#popHeader3").text("File Upload Error")
+                $("#errorMessage").show();
                 $("#errorMessage").html(result.message);
+                $("#comUpload").hide();
+                $("#bulkInvcApprRegister").hide();
+                $("#bulkInvcRejctRegister").hide();
             }else{
 
                 Common.confirm(result.message, function(result2) {
@@ -495,6 +500,16 @@
                 Common.ajax("POST", "/eAccounting/paymentUpload/confirmBulkInvc.do", data, function(result2) {
                     console.log(result2)
 
+                    $("#pop_up_3").show();
+                    $("#pop_up_3").attr('class', 'popup_wrap msg_box');
+                    $("#comUpload").show();
+                    $("#popHeader3").text("Success");
+                    $("#uploadSuccMsg").text("Bulk Invoices upload completed. Batch ID : " + result2.message);
+                    //$("#batchIdSucc").text("Batch ID : " + result2.message);
+                    $("#errorMessage").hide();
+                    $("#bulkInvcApprRegister").hide();
+                    $("#bulkInvcRejctRegister").hide();
+
                     $("#appvLinePop").hide();
                     AUIGrid.destroy("#approveLine_grid_wrap");
 
@@ -548,10 +563,37 @@
     }
 
     function fn_appv(stus) {
-        var data = {
-            appvPrcssNo : selectAppvPrcssNo,
-            appvStus : stus
-        };
+        $("#pop_up_3").attr('class', 'popup_wrap msg_box');
+        $("#pop_up_3").show();
+        $("#errorMessage").hide();
+        $("#comUpload").hide();
+
+        if(stus == "A") {
+            $("#popHeader3").text("Approval of Bulk Invoices Upload");
+            $("#bulkInvcApprRegister").show();
+            $("#bulkInvcRejctRegister").hide();
+        } else if(stus = "J") {
+            $("#popHeader3").text("Rejection of Bulk Invoices Upload");
+            $("#bulkInvcApprRegister").hide();
+            $("#bulkInvcRejctRegister").show();
+        }
+    }
+
+    function fn_proceedAppv(stus) {
+        var data;
+
+        if(stus == "A") {
+            data = {
+                appvPrcssNo : selectAppvPrcssNo,
+                appvStus : stus
+            };
+        } else if(stus == "J") {
+            data = {
+                appvPrcssNo : selectAppvPrcssNo,
+                appvStus : stus,
+                rejctResn : $("#rejctResn").val()
+            };
+        }
 
         Common.ajax("GET", "/eAccounting/paymentUpload/getAppvInfo.do", data, function(result) {
             console.log(result);
@@ -563,6 +605,7 @@
                 fn_closeUpload();
                 fn_searchUpload();
             }
+            $("#pop_up_3").hide();
         });
     }
 
@@ -836,22 +879,47 @@
 </div><!-- popup_wrap end -->
 
 <!-------------------------------------------------------------------------------------
-    POP-UP (VIEW UPLOADED BATCH)
+    POP-UP (NEW UPLOADED BATCH ERROR)
 -------------------------------------------------------------------------------------->
-<div class="popup_wrap" id="error_wrap" style="display: none;">
+<div class="popup_wrap" id="pop_up_3" style="display: none;">
     <header class="pop_header">
-        <h1 id="errorPopHeader">Error</h1>
+        <h1 id="popHeader3">Error</h1>
         <ul class="right_opt">
             <li>
-                <p class="btn_blue2">
-                    <a href="#" onclick="">CLOSE</a>
+                <p class="pop_close" id="pop3_closeBtn">
+                    <a href="#">
+                        <spring:message code="newWebInvoice.btn.close" />
+                    </a>
                 </p>
             </li>
         </ul>
     </header>
 
     <section class="pop_body">
-        <div id="errorMessage" style="padding:1%"></div>
-    </section>
+        <div id="errorMessage" style="padding:1%; display:none"></div>
+        <div id="bulkInvcApprRegister" style="display : none">
+            <p class="msg_txt">Are you sure you want to approve this bulk invoice batch?</p>
+            <ul class="center_btns">
+                <li><p class="btn_blue2"><a href="javascript:fn_proceedAppv('A')" id="confirm_btn"><spring:message code="approvalWebInvoMsg.confirm" /></a></p></li>
+                <li><p class="btn_blue2"><a href="#" id="cancel_btn"><spring:message code="approvalWebInvoMsg.cancel" /></a></p></li>
+            </ul>
+        </div>
 
+        <div id="bulkInvcRejctRegister" style="display : none">
+            <p class="msg_txt">
+                <spring:message code="rejectionWebInvoiceMsg.registMsg" />
+                <br /><br />
+                <textarea cols="20" rows="5" id="rejctResn"></textarea>
+            </p>
+
+            <ul class="center_btns mt20">
+                <li><p class="btn_blue2"><a href="javascript:fn_proceedAppv('J')" id="rejct_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
+                <li><p class="btn_blue2"><a href="#" id="cancel_btn"><spring:message code="approvalWebInvoMsg.cancel" /></a></p></li>
+            </ul>
+        </div>
+
+        <div id="comUpload" style="display : none">
+            <p class="msg_txt" id="uploadSuccMsg"></p>
+        </div>
+    </section>
 </div>
