@@ -130,6 +130,10 @@ function fn_setDetail(gridID, rowIdx){
       $('#btnClear').click(function() {
           $('#listSearchForm').clearForm();
       });
+      $('#btnSof').click(function() {
+    	    Common.popupDiv("/homecare/sales/htOrderSOFListPop.do", null, null, true);
+    	});
+
   });
 
 function fn_validSearchList() {
@@ -286,7 +290,6 @@ $.fn.clearForm = function() {
         }
     });
 };
-
 
 
 </script>
@@ -448,21 +451,20 @@ $.fn.clearForm = function() {
 </tbody>
 </table><!-- table end -->
 
-<%-- <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-        <li><p class="link_btn type2"><a href="#" onClick="fn_rawData()"><spring:message code="sal.btn.requestRawData" /></a></p></li>
-    </c:if>
+
+        <li><p class="link_btn type2"><a href="#" id="btnSof">Care Service (SOF) List</a></p></li>
+
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
 </aside><!-- link_btns_wrap end -->
- --%>
 
 
 </form>
