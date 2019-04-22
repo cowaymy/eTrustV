@@ -1235,22 +1235,22 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     			if("CARE_SRVC".equals(String.valueOf(hm.get("appType")))){
     				hm.put("userId",paramMap.get("userid"));
     				commonPaymentMapper.updateCareSalesMStatus(hm);
-    				commonPaymentMapper.processPayment(paramMap);
-    				rcList = commonPaymentMapper.selectProcessCSPaymentResult(paramMap);
+    				//commonPaymentMapper.processPayment(paramMap);
+    				//rcList = commonPaymentMapper.selectProcessCSPaymentResult(paramMap);
     			}else{
-    				commonPaymentMapper.processPayment(paramMap);
-    				rcList = commonPaymentMapper.selectProcessPaymentResult(paramMap);
+    				//commonPaymentMapper.processPayment(paramMap);
+    				//rcList = commonPaymentMapper.selectProcessPaymentResult(paramMap);
     			}
 
     		}
     	}
 
     	//payment 처리 프로시저 호출
-    	//commonPaymentMapper.processPayment(paramMap);
+    	commonPaymentMapper.processPayment(paramMap);
 
     	//WOR 번호 조회
-    	//return commonPaymentMapper.selectProcessPaymentResult(paramMap);
-    	return rcList;
+    	return commonPaymentMapper.selectProcessPaymentResult(paramMap);
+    	//return rcList;
 
 
     }
