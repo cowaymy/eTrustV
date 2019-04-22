@@ -219,7 +219,7 @@ CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="sal.title.text.ordReportSalesOrdFromSofList" /></h1>
+<h1>CS Report - Care Service (CSO) List</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
