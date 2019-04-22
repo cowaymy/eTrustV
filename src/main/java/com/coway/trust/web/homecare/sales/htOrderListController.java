@@ -175,4 +175,10 @@ public class htOrderListController {
 		return ResponseEntity.ok(codeList);
 	}
 
+	@RequestMapping(value="/htOrderSOFListPop.do")
+	public String orderSOFListPop(){
+
+		return "homecare/sales/htOrderSOFListPop";
+	}
+
 }
