@@ -41,8 +41,8 @@ function fn_validRequiredField(orderId){
 	Common.ajax("GET", "/payment/checkExistOrderCancellationList.do", {"orderId" : orderId}, function(canResult) {
 		Common.ajax("GET", "/payment/checkExistPenaltyBill.do", {"orderId" : orderId}, function(penResult) {
 			console.log("canResult :" +canResult + ", penResult : " + penResult);
-			  if(canResult == false){
-				  
+			  if(canResult == true){
+
 				  valid = false;
 				  message += "<spring:message code='pay.alert.orderCancelGenerate'/>";
 			  }else{
@@ -51,7 +51,7 @@ function fn_validRequiredField(orderId){
 					  message += "<spring:message code='pay.alert.earlyTerminationBillGenerated'/>";
 				  }
 			  }
-			  
+
 			  if(!valid)
 				  Common.alert(message);
 			  else
@@ -104,7 +104,7 @@ function fn_createBills(){
 		return;
 	}
 
-	
+
 	Common.ajax("GET", "/payment/createBillsForEarlyTermination.do", $("#billingForm").serialize(), function(result) {
 		console.log(result);
 		if(result.message != ''){
@@ -114,7 +114,7 @@ function fn_createBills(){
 			$("#unbillMonth").val('');$("#unbillMonth1").val('');
 			$("#amount").val('');$("#amount1").val('');
 			$("#remark").val('');
-			
+
 			if(result.data != null){
 				$("#grid_wrap").show();
 				AUIGrid.setGridData(myGridID, result.data);
@@ -137,7 +137,7 @@ var errorMsg = function(){
             }
         }
     }
-    
+
     return errorMessage;
 }
 
