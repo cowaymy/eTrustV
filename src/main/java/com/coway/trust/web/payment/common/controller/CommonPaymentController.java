@@ -349,6 +349,7 @@ public class CommonPaymentController {
 		// 저장
 		Map<String, Object> resultList = commonPaymentService.saveNormalPayment(formInfo, gridList, key);
 
+		LOGGER.debug("resultList : " + resultList);
 		// 결과 만들기.
     	ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
@@ -368,6 +369,16 @@ public class CommonPaymentController {
 
 		// 조회.
 		List<EgovMap> resultList = commonPaymentService.selectProcessPaymentResult(params);
+
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+
+	@RequestMapping(value = "/selectProcessCSPaymentResult.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectProcessCSPaymentResult(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		// 조회.
+		List<EgovMap> resultList = commonPaymentService.selectProcessCSPaymentResult(params);
 
 		// 조회 결과 리턴.
 		return ResponseEntity.ok(resultList);
