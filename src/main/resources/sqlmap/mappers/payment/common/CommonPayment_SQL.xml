@@ -1565,13 +1565,15 @@
         SELECT * FROM (
             SELECT DISTINCT
                 B.OR_NO,
-                C.SALES_ORD_NO,
+                CASE WHEN C.SALES_ORD_NO IS NULL THEN D.SALES_ORD_NO
+                ELSE C.SALES_ORD_NO END AS SALES_ORD_NO,
                 A.GROUP_SEQ
             FROM
             PAY0252T A
             JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
             LEFT JOIN PAY0007D T7 ON B.BILL_ID = T7.BILL_ID
             LEFT JOIN SAL0001D C ON T7.BILL_SO_ID = C.SALES_ORD_ID
+            LEFT JOIN SAL0001D D ON D.SALES_ORD_ID = B.SALES_ORD_ID
         ) A
         WHERE
             A.GROUP_SEQ =   #{seq}
