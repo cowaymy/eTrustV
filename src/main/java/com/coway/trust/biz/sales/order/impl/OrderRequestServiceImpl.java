@@ -2309,6 +2309,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     String isInValid = "Valid", msgT = "", msg = "";
 
     EgovMap view = this.selectOrderSimulatorViewByOrderNo2(params);
+    EgovMap obligtPriod = this.selectObligtPriod(params);
     EgovMap RESULT = new EgovMap();
 
     int salesOrdId = Integer.parseInt(String.valueOf(view.get("salesOrdId")));
@@ -2352,7 +2353,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             msgT = "Unbill Amount Exist";
             msg = "This order come with un-bill amount. Contact CRT.";
             isInValid = "isInValid";
-          } else if (LastBillMth >= 24) {
+          } else if (LastBillMth >= Integer.parseInt(obligtPriod.get("obligtPriod").toString())) {
             msgT = "Exceed 24 Billing Month";
             msg = "This order exceeded 24th billing month. Contact CRT.";
             isInValid = "isInValid";
