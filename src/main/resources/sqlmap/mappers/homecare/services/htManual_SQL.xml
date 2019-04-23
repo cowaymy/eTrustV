@@ -3075,14 +3075,14 @@ FROM
                         SELECT DISTINCT D.MEM_CODE CODE_ID, D.MEM_CODE || '-' ||  D.NAME CODE_NAME
                         FROM (SELECT MEM_CODE, NAME, 1 AS QUERYNO
                               FROM ORG0001D
-                              WHERE MEM_ID = (SELECT SRV_CODY_ID FROM SAL0090D WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{entry_orderNo}) AND SRV_STUS_ID = 1 )
-                               union
+                              WHERE MEM_ID = (SELECT SRV_CODY_ID FROM SAL0090D WHERE SRV_SO_ID = (SELECT SRV_ORD_ID FROM SAL0225D WHERE SRV_ORD_NO = #{entry_orderNo}) AND SRV_STUS_ID = 1 )
+                               UNION
                                 SELECT A.MEM_CODE, A.NAME , 2 AS QUERYNO
                               FROM  ORG0001D A, ORG0005D B
                               WHERE A.MEM_ID = B.MEM_ID AND A.STUS =  '1' AND B.MEM_LVL = '4'
                               AND A.MEM_CODE LIKE 'HT%'
                               <if test="memType != 4">
-                              AND B.MEM_UP_ID = #{htUserId}
+                              AND B.MEM_UP_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = (SELECT HR_CODE FROM SYS0047M WHERE USER_ID = #{htUserId}))
                               </if>
                               ORDER BY MEM_CODE
                               ) D
