@@ -427,8 +427,6 @@ $(document).ready(function() {
 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
-	<input type="text" id="year" name="year" /></p>
-	<input type="text" id="week" name="week" /></p>
 	<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
