@@ -641,6 +641,7 @@ function fnSetResult() {
 		temp.m0PlanQty	= detObj[i].m0PlanQty;
 		temp.m1PlanQty	= detObj[i].m1PlanQty;
 		temp.m2PlanQty	= detObj[i].m2PlanQty;
+		temp.avgForwQty	= detObj[i].avgForwQty;
 		krwList.push(temp);
 	}
 	
