@@ -2355,7 +2355,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             isInValid = "isInValid";
           } else if (LastBillMth >= Integer.parseInt(obligtPriod.get("obligtPriod").toString())) {
             msgT = "Exceed 24 Billing Month";
-            msg = "This order exceeded 24th billing month. Contact CRT.";
+            msg = "This order exceeded "+Integer.parseInt(obligtPriod.get("obligtPriod").toString())+"th billing month. Contact CRT.";
             isInValid = "isInValid";
           } else if (Integer.parseInt(installDate) <= 19000101) {
             msgT = "Invalid Install Date";
