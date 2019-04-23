@@ -1604,7 +1604,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     int callEntryId = 0;
 
     if (orderExchangeMasterVO.getSoCurStusId() == 24) { // BEFORE INSTALL
-      params.put("opt", "2"); // TYPE ID - 257 (NEW INSTALLATION) STATUS - 1(ACTIVE), 19(RECALL), 30(WAITING FOR CANCEL)
+      params.put("opt", "1"); // TYPE ID - 257 (NEW INSTALLATION) & 258 (PRODUCT EXCHANGE) STATUS - 1(ACTIVE), 19(RECALL), 30(WAITING FOR CANCEL)
       EgovMap callEntryMap2 = orderRequestMapper.selectCallEntry(params); // GET LATEST CALLLOG FOR THIS ORDER NUMBER
 
       if (callEntryMap2 != null) {
@@ -1750,10 +1750,14 @@ public class OrderRequestServiceImpl implements OrderRequestService {
   @Override
   public ReturnMessage requestCancelOrder(Map<String, Object> params, SessionVO sessionVO) throws Exception {
 
-    // logger.info("!@###### OrderModifyServiceImpl.updateNric");
-
     EgovMap somMap = orderRegisterMapper.selectSalesOrderM(params);
     EgovMap sodMap = orderRequestMapper.selectSalesOrderD(params);
+
+    logger.debug("==========================requestCancelOrder===============================");
+    logger.debug("= PARAM {} ", params);
+    logger.debug("= SALES MASTER {} ", somMap);
+    logger.debug("= SALES SUB {} ", sodMap);
+    logger.debug("==========================requestCancelOrder===============================");
 
     int stusCodeId = CommonUtils.intNvl(String.valueOf((BigDecimal) somMap.get("stusCodeId")));
     int appTypeId = CommonUtils.intNvl(String.valueOf((BigDecimal) somMap.get("appTypeId")));
@@ -1761,23 +1765,27 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     // GET REQUEST NUMBER
     String reqNo = orderRegisterMapper.selectDocNo(DocTypeConstants.CANCEL_REQUEST);
 
-    logger.info("!@#### GET NEW REQ_NO  :" + reqNo);
+    logger.debug("= ORDER STATUS : " + stusCodeId);
+    logger.debug("= ORDER APPS. ID : " + appTypeId);
+    logger.debug("= CANCELLATION REQUEST NUMBER : " + reqNo);
 
     int LatestOrderCallEntryID = 0;
 
-    if (SalesConstants.STATUS_ACTIVE == stusCodeId) {
-      // Active
+    if (SalesConstants.STATUS_ACTIVE == stusCodeId) { // ACTIVE
       params.put("opt", "1");
+      // GET LATEST CALL LOG CCR0006D
       EgovMap callEntryMap1 = orderRequestMapper.selectCallEntry(params);
 
       if (callEntryMap1 != null) {
+        logger.debug("= CALL ENTRY ACTIVE : " + callEntryMap1);
         LatestOrderCallEntryID = CommonUtils.intNvl(callEntryMap1.get("callEntryId"));
       }
-    } else {
-      // Complete
+    } else { // COMPLETE
+      params.put("ORDER_BY", "DESC");
       EgovMap ineMap = orderRequestMapper.selectInstallEntry(params);
 
       if (ineMap != null) {
+        logger.debug("= CALL ENTRY COMPLETE : " + ineMap);
         LatestOrderCallEntryID = CommonUtils.intNvl(String.valueOf((BigDecimal) ineMap.get("callEntryId")));
       }
     }
@@ -1805,6 +1813,11 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     salesReqCancelVO.setSoReqNo(reqNo);
     // if(LatestOrderCallEntryID == 0) salesReqCancelVO.setSoReqStusId(32);
 
+    logger.debug("= REQUEST CANCELLATION VO : " + salesReqCancelVO);
+    logger.debug("= CALL ENTRY MASTER VO : " + callEntryMasterVO);
+    logger.debug("= CALL ENTRY RESULT VO : " + callResultVO);
+    logger.debug("= CANCELLATION RESULT VO : " + cancCallResultVO);
+
     orderRequestMapper.insertSalesReqCancel(salesReqCancelVO);
 
     // Added eCash validation - Kit - 2018/03/15
@@ -1825,19 +1838,17 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
         orderRequestMapper.updateCallEntry2(ccleMap);
       } else {
-        cancCallResultVO.setCallEntryId(LatestOrderCallEntryID);
-        orderRegisterMapper.insertCallResult(cancCallResultVO);
+        //
+        // cancCallResultVO.setCallEntryId(LatestOrderCallEntryID);
+        // orderRegisterMapper.insertCallResult(cancCallResultVO);
       }
     }
 
     // CANCELLATION CALL LOG
     callEntryMasterVO.setDocId(salesReqCancelVO.getSoReqId());
-
     orderRegisterMapper.insertCallEntry(callEntryMasterVO);
-
     callResultVO.setCallEntryId(callEntryMasterVO.getCallEntryId());
-
-    orderRegisterMapper.insertCallResult(callResultVO);
+    //orderRegisterMapper.insertCallResult(callResultVO);
 
     Map<String, Object> tempMap = new HashMap<String, Object>();
 
@@ -1849,20 +1860,13 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     callEntryMasterVO.setResultId(callResultVO.getCallResultId());
 
     orderRequestMapper.updateCallEntry(callEntryMasterVO);
-    // }else{
-    // params.put("updator",sessionVO.getUserId());
-    // //INSERT ORDER LOG >> CANCELLATION CALL LOG
-    // orderRequestMapper.updateSalesOrderLog(params);
-    // //UPDATE SALESORDERM STATUS TO CANCEL
-    // orderRequestMapper.updateSalesOrderMCanc(params);
-    // }
 
     // RENTAL SCHEME
     if (appTypeId == 66) {
       EgovMap stsMap = ccpCalculateMapper.rentalSchemeStatusByOrdId(params);
 
       if (stsMap != null) {
-        // String stus = LatestOrderCallEntryID != 0 ? "RET" : "CAN";
+        logger.debug("= RENTAL STATUS : " + stsMap);
 
         stsMap.put("stusCodeId", "RET");
         stsMap.put("isSync", SalesConstants.IS_FALSE);
@@ -1876,9 +1880,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     SalesOrderLogVO salesOrderLogVO = new SalesOrderLogVO();
 
     this.preprocSalesOrderLog(salesOrderLogVO, params, sessionVO, SalesConstants.ORDER_REQ_TYPE_CD_CANC);
-    // if(LatestOrderCallEntryID == 0 ) salesOrderLogVO.setPrgrsId(13);
     salesOrderLogVO.setRefId(callEntryMasterVO.getCallEntryId());
-
+    logger.debug("= SALES ORDER LOG : " + salesOrderLogVO);
     orderRegisterMapper.insertSalesOrderLog(salesOrderLogVO);
 
     String msg = "Order Number : " + (String) somMap.get("salesOrdNo")
@@ -1886,7 +1889,6 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
     ReturnMessage message = new ReturnMessage();
     message.setCode(AppConstants.SUCCESS);
-    // message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
     message.setMessage(msg);
 
     return message;
@@ -1920,9 +1922,11 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       callResultVO.setCallResultId(0);
       callResultVO.setCallEntryId(0);
       callResultVO.setCallStusId(SalesConstants.STATUS_CANCELLED);
-      callResultVO.setCallDt(SalesConstants.DEFAULT_DATE);
+      // callResultVO.setCallDt(SalesConstants.DEFAULT_DATE);
+      callResultVO.setCallDt((String) params.get("dpCallLogDate"));
       callResultVO.setCallActnDt(SalesConstants.DEFAULT_DATE);
       callResultVO.setCallFdbckId(0);
+      callResultVO.setCallFdbckId(CommonUtils.intNvl((String) params.get("cmbReason")));
       callResultVO.setCallCtId(0);
       callResultVO.setCallRem("(Call-log cancelled - Order Cancellation Request) " + (String) params.get("txtRemark"));
       callResultVO.setCallCrtUserId(sessionVO.getUserId());
