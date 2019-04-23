@@ -278,9 +278,12 @@ WHEN NOT MATCHED THEN
                     A.BUDGET_ADJ_YEAR ,
                     A.BUDGET_ADJ_MONTH
                 FROM FCM0103D A,
-                        FCM0102M B
+                        FCM0102M B,
+                        FCM0105M C
                 WHERE A.BUDGET_DOC_NO = B.BUDGET_DOC_NO
+                    AND A.BUDGET_DOC_NO = C.BUDGET_DOC_NO
                     AND B.APPV_STUS = 'C'
+                    AND C.APPV_PRCSS_STUS = 'A'
                 GROUP BY
                     A.BUDGET_ADJ_YEAR,
                     A.BUDGET_ADJ_MONTH ,
