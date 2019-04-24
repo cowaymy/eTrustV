@@ -534,32 +534,78 @@
         if(fileType == "batch") {
             console.log("download CSV");
             flId = $("#atchFileCSVId").val();
+
+            $("#reportFileName").val("/e-accounting/BulkInvcCsv.rpt");
+            $("#viewType").val("EXCEL");
+            $("#reportDownFileName").val("Bulk_Invoices_" + selectBatchId);
+            $("#V_BATCHID").val(selectBatchId);
+
+            fn_report();
         } else if(fileType == "supp") {
             console.log("download Supporting Doc Zipped");
             flId = $("#atchFileSuppId").val();
-        }
 
-        var data = {
-                atchFileGrpId : selectAtchGrpId,
-                atchFileId : flId
-        };
-        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-            console.log(result);
-            if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
-                // TODO View
-                var fileSubPath = result.fileSubPath;
-                fileSubPath = fileSubPath.replace('\', '/'');
-                console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-            } else {
-                var fileSubPath = result.fileSubPath;
-                fileSubPath = fileSubPath.replace('\', '/'');
-                console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
+            var data = {
+                    atchFileGrpId : selectAtchGrpId,
+                    atchFileId : flId
+            };
+
+            Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                console.log(result);
+                if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
+                    // TODO View
+                    var fileSubPath = result.fileSubPath;
+                    fileSubPath = fileSubPath.replace('\', '/'');
+                    window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                } else {
+                    var fileSubPath = result.fileSubPath;
+                    fileSubPath = fileSubPath.replace('\', '/'');
+                    window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
                         + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
-                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-            }
-        });
+                }
+            });
+        } else if(fileType == "payDoc") {
+            console.log("download payment document(s)");
+
+            $("#reportFileName").val("/e-accounting/BulkInvoice.rpt");
+            $("#viewType").val("PDF");
+
+            Common.ajax("GET", "/eAccounting/paymentUpload/getBatchClmNos.do", {batchId : selectBatchId}, function(result) {
+                console.log("getBatchClmNos :: " + result);
+
+                var clmNoList = result.resultList;
+
+                var i = clmNoList.length - 1;
+
+                bulkInvcInt = setInterval(function() {
+                    console.log(i);
+
+                    if(i>= 0) {
+                        var clmNo = clmNoList[i].clmNo;
+                        $("#V_BATCHID").val(selectBatchId);
+                        $("#_clmNo").val(clmNo);
+                        $("#reportDownFileName").val(clmNo);
+
+                        fn_report();
+
+                        i--;
+                    } else {
+                        fn_stopBulkinvc();
+                    }
+                }, 10000);
+            });
+        }
+    }
+
+    function fn_report() {
+        var option = {
+            isProcedure : false
+        };
+        Common.report("rptForm", option);
+    }
+
+    function fn_stopBulkinvc() {
+        clearInterval(bulkInvcInt);
     }
 
     function fn_appv(stus) {
@@ -675,6 +721,14 @@
 </script>
 </head>
 <body>
+
+<form id="rptForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+    <input type="hidden" id="_clmNo" name="V_CLMNO" />
+    <input type="hidden" id="V_BATCHID" name="V_BATCHID" />
+</form>
 
 <form id="dataForm">
     <input type="hidden" id="mode" name="mode" value="" />
@@ -842,6 +896,7 @@
         <ul class="center_btns" id="bulkAppvBtns">
             <li><p class="btn_blue2"><a href="javascript:fn_atchViewDown('batch');" id="dlCsvBtn">Download CSV</a></p></li>
             <li><p class="btn_blue2"><a href="javascript:fn_atchViewDown('supp');" id="dlSuppBtn">Download Supporting Doc</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_atchViewDown('payDoc');" id="dlPayBtn">Download Payment Doc</a></p></li>
             <li><p class="btn_blue2"><a href="javascript:fn_appv('A');" id="appvBtn">Approve</a></p></li>
             <li><p class="btn_blue2"><a href="javascript:fn_appv('J');" id="rejBtn">Reject</a></p></li>
         </ul>

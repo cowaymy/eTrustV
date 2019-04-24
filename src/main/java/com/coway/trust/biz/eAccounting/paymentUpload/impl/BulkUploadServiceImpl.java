@@ -139,4 +139,9 @@ public class BulkUploadServiceImpl extends EgovAbstractServiceImpl implements Bu
     public int getErrorCnt() {
         return bulkUploadMapper.getErrorCnt();
     }
+
+    @Override
+    public List<EgovMap> getBatchClmNos( Map<String, Object> params) throws Exception {
+        return bulkUploadMapper.getBatchClmNos(params);
+    }
 }

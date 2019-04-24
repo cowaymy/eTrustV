@@ -767,6 +767,21 @@ public class BulkUploadController {
         return ResponseEntity.ok(list);
     }
 
+    @RequestMapping(value = "/getBatchClmNos.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> getBatchClmNos (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+        LOGGER.debug("========== getBatchClmNos ==========");
+
+        LOGGER.debug("params ==========>>  " + params);
+        EgovMap result = new EgovMap();
+
+        List<EgovMap> resultList = null;
+        resultList = bulkUploadService.getBatchClmNos(params);
+
+        result.put("resultList", resultList);
+
+        return ResponseEntity.ok(result);
+    }
+
     @RequestMapping(value="/getAppvInfo.do", method = RequestMethod.GET)
     public ResponseEntity<ReturnMessage> getAppvInfo(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) {
 

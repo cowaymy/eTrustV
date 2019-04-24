@@ -544,4 +544,11 @@
     <select id="getErrorCnt" parameterType="String" resultType="int">
         SELECT CODE FROM SYS0094M WHERE IND = 'BULK_INVC'
     </select>
+
+    <select id="getBatchClmNos" parameterType="Map" resultType="egovMap">
+        SELECT
+            DISTINCT CLM_NO
+        FROM FCM0026D
+        WHERE BATCH_ID = #{batchId}
+    </select>
 </mapper>
