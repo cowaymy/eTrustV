@@ -1136,7 +1136,7 @@
     WHERE MEM_CODE =  #{userId}
   </select>
 
-  <select id="heartServiceParts" parameterType="Map" resultType="egovMap">
+  <select id="heartServiceParts_BAK" parameterType="Map" resultType="egovMap">
     SELECT *
     FROM (SELECT ROW_NUMBER () OVER (PARTITION BY S01A.SALES_ORD_NO,
                                                   S08A.NO,
@@ -1199,6 +1199,83 @@
             AND S08A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
             AND O1DA.MEM_CODE = #{userId})
     WHERE 1 = 1 AND rn = 1
+  </select>
+
+  <select id="heartServiceParts" parameterType="Map" resultType="egovMap">
+    SELECT A.*,
+           S06A.RESULT_ID,
+           S07A.BS_RESULT_PART_ID,
+           S07A.BS_RESULT_PART_QTY,
+           CASE WHEN TO_NUMBER(S07A.BS_RESULT_PART_QTY, '99999') > 0
+                  THEN 'Y'
+                  ELSE 'N' END AS chg_Y_N,
+           '' AS ex_Chgid,
+           TO_CHAR(S07A.BS_RESULT_PART_QTY) AS chg_Qty,
+           TO_CHAR (NVL (H.SERIALCHK, 'N')) AS filter_Barcd_Chk_Y_N,
+           1
+    FROM ( SELECT ROW_NUMBER () OVER (PARTITION BY S01A.SALES_ORD_NO,
+                                                   S08A.NO,
+                                                   S26A.STK_CODE,
+                                                   S26B.STK_CODE
+                                       ORDER BY S26B.STK_CODE DESC) rn,
+                  S01A.SALES_ORD_NO AS sales_Order_No,
+                  S08A.NO AS service_No,
+                  S08A.YEAR,
+                  S08A.MONTH,
+                  S26A.STK_CODE AS product_Code,
+                  S26B.STK_CODE AS part_Code,
+                  S26B.STK_DESC AS part_Name,
+                  S87A.SRV_FILTER_STK_ID AS part_Id,
+                  L44A.BOM_COMPNT,
+                  L44A.COMPNT_QTY AS quanity,
+                  /* S07A.EXCH_REASON_ID, */
+                  TO_CHAR (S87A.SRV_FILTER_PRV_CHG_DT, 'YYYYMMDD') AS last_Chg_Date,
+                  S87A.SRV_FILTER_PRIOD AS parts_Period,
+                  NVL2 (L44A.ALTER_ITM_GRP, 'N', 'Y') AS alternative_Y_N,
+                  --S06A.RESULT_ID,
+                  /*S07A.BS_RESULT_PART_ID,
+                  S07A.BS_RESULT_PART_QTY,
+                  CASE WHEN TO_NUMBER(S07A.BS_RESULT_PART_QTY, '99999') > 0
+                         THEN 'Y'
+                         ELSE 'N' END AS chg_Y_N,
+                  '' AS ex_Chgid,
+                  TO_char(S07A.BS_RESULT_PART_QTY) AS chg_Qty,*/
+                  TO_CHAR (S87A.SRV_FILTER_PRV_CHG_DT, 'HHMM') AS last_Chg_Time,
+                  NULL AS alternative_Used_Y_N,
+                  NULL AS alternative_Filter_Code,
+                  NULL AS alternative_Filter_Id,
+                  NULL AS alternative_Filter_Name,
+                  TO_CHAR (NVL (H.SERIALCHK, 'N')) AS filter_Barcd_Chk_Y_N,
+                  NULL AS filterBarcd_Serial_No,
+                  S90A.SRV_CODY_ID,
+                  S08A.SCHDUL_ID,
+                  S87A.SRV_FILTER_STK_ID,
+                  S08A.CODY_ID,
+                  S26B.STK_CODE
+           FROM SAL0001D S01A
+           INNER JOIN SAL0002D S02A ON S02A.SALES_ORD_ID = S01A.SALES_ORD_ID
+           INNER JOIN SYS0026M S26A ON S26A.STK_ID = S02A.ITM_STK_ID
+           INNER JOIN SAL0090D S90A ON S90A.SRV_SO_ID = S01A.SALES_ORD_ID
+           INNER JOIN SAL0087D S87A ON S87A.SRV_CONFIG_ID = S90A.SRV_CONFIG_ID AND S87A.SRV_FILTER_STUS_ID = 1
+           INNER JOIN SYS0026M S26B ON S26B.STK_ID = S87A.SRV_FILTER_STK_ID
+           INNER JOIN LOG0043M L43A ON L43A.MATRL_NO = S26A.STK_CODE OR L43A.MATRL_NO = (SELECT STK_CODE FROM SYS0026M WHERE STK_ID = S26A.MASTER_STK_ID)
+           INNER JOIN LOG0044D L44A ON S26B.STK_CODE = L44A.BOM_COMPNT AND L44A.BOM = L43A.BOM AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN TO_CHAR(L44A.VALID_FROM_DT, 'YYYYMMDD') AND TO_CHAR(L44A.VALID_TO_DT, 'YYYYMMDD')
+           INNER JOIN SVC0008D S08A ON S08A.SALES_ORD_ID = S01A.SALES_ORD_ID
+           INNER JOIN ORG0001D O1DA ON O1DA.MEM_ID = S08A.CODY_ID
+           WHERE S08A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
+            AND S08A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
+            AND O1DA.MEM_CODE = #{userId}
+    ) A LEFT JOIN SVC0006D S06A ON S06A.SCHDUL_ID = a.SCHDUL_ID
+        LEFT JOIN SVC0007D S07A ON S07A.BS_RESULT_ID = S06A.RESULT_ID
+                               AND a.SRV_FILTER_STK_ID = S07A.BS_RESULT_PART_ID
+        LEFT OUTER JOIN ( SELECT S26.STK_CODE,
+                                 NVL(S26.SERIAL_CHK , 'N') AS SERIALCHK
+                          FROM SYS0026M S26
+                          WHERE 1 = 1
+                            AND S26.STUS_CODE_ID = 1
+        ) H ON a.STK_CODE = H.STK_CODE
+    WHERE 1 = 1
+      AND rn = 1
   </select>
 
   <select id="heartServiceParts_b" parameterType="Map" resultType="egovMap">
