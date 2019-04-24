@@ -43,6 +43,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 18/03/2019    ONGHC      1.0.4       - Remove runInstSp 3rd Part
  * 22/03/2019    ONGHC      1.0.5       - Add Checking on SP_LOGISTIC_REQUEST's Data
  * 09/04/2019    ONGHC      1.0.6       - Amend installationNotePop to add param
+ * 24/04/2019    ONGHC      1.0.7       - Amend insertInstallationResult_2 to accept 741 code
  *********************************************************************************************/
 
 @Controller
@@ -680,11 +681,13 @@ public class InstallationResultListController {
       if (null != resultValue) {
         HashMap spMap = (HashMap) resultValue.get("spMap");
         logger.debug("spMap :" + spMap.toString());
-        if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
+        if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"741".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
           resultValue.put("logerr", "Y");
           message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS1): " + spMap.get("P_RESULT_MSG").toString());
         } else { // SUCCESS
-          servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+          if ("000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) {
+            servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+          }
           String ordStat = installationResultListService.getSalStat(params);
 
           if (!"1".equals(ordStat)) {
