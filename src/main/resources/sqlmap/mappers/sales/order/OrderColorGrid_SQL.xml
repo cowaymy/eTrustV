@@ -45,14 +45,14 @@
     FROM ( SELECT DISTINCT F1.OrderID1 ORD_ID ,
                            F1.ORD_NO ,
                            F1.APP_TYPE_CODE ,
-                           F1.CUST_NAME ,
-                           F1.CUST_IC ,
+                           UPPER(F1.CUST_NAME) CUST_NAME,
+                           UPPER(F1.CUST_IC) CUST_IC,
                            F1.STK_CODE ,
-                           F1.SALESMAN_CODE ,
+                           UPPER(F1.SALESMAN_CODE) SALESMAN_CODE ,
                            F1.TOP_ORG_CODE ,
-                           F1.ORG_CODE ,
-                           F1.GRP_CODE ,
-                           F1.DEPT_CODE ,
+                           UPPER(F1.ORG_CODE) ORG_CODE ,
+                           UPPER(F1.GRP_CODE) GRP_CODE ,
+                           UPPER(F1.DEPT_CODE) DEPT_CODE ,
                            F1.MEM_CODE ,
                            F1.IS_NET ,
                            F1.NET_MONTH ,
@@ -61,7 +61,7 @@
                            F1.INSTALL_FAIL_RESN ,
                            F1.COM_DT ,
                            F1.PAY_COM_DT ,
-                           F1.PROMO_CODE ,
+                           UPPER(F1.PROMO_CODE) PROMO_CODE ,
                            F1.PROMO_DESC ,
                       <!-- F1.MAIL_CNT_TEL_M ,
                            F1.MAIL_CNT_TEL_O ,
@@ -341,13 +341,13 @@
                        FROM SAL1006V vB ) E4 ON E4.ORD_ID = F1.OrderID1  -->
           WHERE 1 = 1
           <if test="orgCode != null and orgCode != ''">
-            AND F1.ORG_CODE = #{orgCode}
+            AND F1.ORG_CODE = UPPER(#{orgCode})
           </if>
           <if test="grpCode != null and grpCode != ''">
-            AND F1.GRP_CODE = #{grpCode}
+            AND F1.GRP_CODE = UPPER(#{grpCode})
           </if>
           <if test="deptCode != null and deptCode != ''">
-            AND F1.DEPT_CODE = #{deptCode}
+            AND F1.DEPT_CODE = UPPER(#{deptCode})
           </if>
           <if test="memCode != null and memCode != ''" >
             AND F1.MEM_CODE = #{memCode}
@@ -356,10 +356,10 @@
             AND F1.ORD_NO = #{ordNo}
           </if>
           <if test="custName != null and custName != ''">
-            AND F1.CUST_NAME LIKE '%'|| #{custName} || '%'
+            AND F1.CUST_NAME LIKE '%'|| UPPER(#{custName}) || '%'
           </if>
           <if test="custIc != null and custIc != ''">
-            AND F1.CUST_IC LIKE '%'|| #{custIc} || '%'
+            AND F1.CUST_IC LIKE '%'|| UPPER(#{custIc}) || '%'
           </if>
           <if test="createStDate != null and createStDate != ''">
             AND F1.ORD_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
@@ -377,10 +377,10 @@
             AND F1.PV_MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
           </if>
           <if test="salesmanCode != null and salesmanCode != ''">
-            AND F1.SALESMAN_CODE = #{salesmanCode}
+            AND F1.SALESMAN_CODE = UPPER(#{salesmanCode})
           </if>
           <if test="promoCode != null and promoCode != ''">
-            AND F1.PROMO_CODE = #{promoCode}
+            AND F1.PROMO_CODE = UPPER(#{promoCode})
           </if>
     ) D1
     ORDER BY D1.ORD_ID DESC
