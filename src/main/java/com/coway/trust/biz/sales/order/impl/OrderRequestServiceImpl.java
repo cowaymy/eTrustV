@@ -1839,8 +1839,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         orderRequestMapper.updateCallEntry2(ccleMap);
       } else {
         //
-        // cancCallResultVO.setCallEntryId(LatestOrderCallEntryID);
-        // orderRegisterMapper.insertCallResult(cancCallResultVO);
+        cancCallResultVO.setCallEntryId(LatestOrderCallEntryID);
+        orderRegisterMapper.insertCallResult(cancCallResultVO);
       }
     }
 
@@ -1848,7 +1848,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     callEntryMasterVO.setDocId(salesReqCancelVO.getSoReqId());
     orderRegisterMapper.insertCallEntry(callEntryMasterVO);
     callResultVO.setCallEntryId(callEntryMasterVO.getCallEntryId());
-    //orderRegisterMapper.insertCallResult(callResultVO);
+    orderRegisterMapper.insertCallResult(callResultVO);
 
     Map<String, Object> tempMap = new HashMap<String, Object>();
 
