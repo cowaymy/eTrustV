@@ -1232,8 +1232,8 @@
                   TO_CHAR (S87A.SRV_FILTER_PRV_CHG_DT, 'YYYYMMDD') AS last_Chg_Date,
                   S87A.SRV_FILTER_PRIOD AS parts_Period,
                   NVL2 (L44A.ALTER_ITM_GRP, 'N', 'Y') AS alternative_Y_N,
-                  --S06A.RESULT_ID,
-                  /*S07A.BS_RESULT_PART_ID,
+                  /*S06A.RESULT_ID,
+                  S07A.BS_RESULT_PART_ID,
                   S07A.BS_RESULT_PART_QTY,
                   CASE WHEN TO_NUMBER(S07A.BS_RESULT_PART_QTY, '99999') > 0
                          THEN 'Y'
