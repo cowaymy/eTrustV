@@ -617,6 +617,7 @@
             console.log('appTypeIdx : ' + appTypeIdx);
 
             if( appTypeIdx == 2 ){
+            	$('#ordQuantity').val("1");
                   $('#ordQuantity').removeAttr("disabled");
                   $("#refereNoLbl").append("<span class='must'>*</span>");
                   $("#ordPromoLbl").append("<span class='must'>*</span>");
@@ -774,6 +775,10 @@
 
 
     function fn_preCheckSave() {
+
+
+
+
         if(!fn_validCustomer()) {
             $('#aTabCS').click();
             return false;
@@ -847,6 +852,7 @@
         } */
 
         console.log('!@#### isValid'+isValid);
+
 
         if(!isValid) {
             Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
