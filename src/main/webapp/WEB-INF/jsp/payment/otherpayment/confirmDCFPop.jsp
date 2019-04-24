@@ -8,17 +8,17 @@ var myRequestDCFGridID;
 //Grid Properties 설정
 	var gridPros = {
 	        // 편집 가능 여부 (기본값 : false)
-	        editable : false,        
+	        editable : false,
 	        // 상태 칼럼 사용
 	        showStateColumn : false,
 	        // 기본 헤더 높이 지정
 	        headerHeight : 35,
-	        
+
 	        softRemoveRowMode:false
-	
+
 	};
 // AUIGrid 칼럼 설정
-var requestDcfColumnLayout = [ 
+var requestDcfColumnLayout = [
 	{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGroupNo'/>",width : 100 , editable : false, visible : false},
 	{dataField : "payItmModeId",headerText : "<spring:message code='pay.head.payTypeId'/>",width : 240 , editable : false, visible : false},
 	{dataField : "appType",headerText : "<spring:message code='pay.head.appType'/>",width : 130 , editable : false},
@@ -40,14 +40,14 @@ var requestDcfColumnLayout = [
 
 
 $(document).ready(function(){
-	
+
 	myRequestDCFGridID = GridCommon.createAUIGrid("grid_request_dcf_wrap", requestDcfColumnLayout,null,gridPros);
 	searchDCFList();
 });
 
 // ajax list 조회.
 function searchDCFList(){
-	Common.ajax("POST","/payment/selectRequestDCFByGroupSeq.do",$("#_dcfSearchForm").serializeJSON(), function(result){    		
+	Common.ajax("POST","/payment/selectRequestDCFByGroupSeq.do",$("#_dcfSearchForm").serializeJSON(), function(result){
 		AUIGrid.setGridData(myRequestDCFGridID, result);
 		recalculateTotalAmt();
 		searchReqDCFInfo();
@@ -56,11 +56,15 @@ function searchDCFList(){
 
 // confirm 창에서는 Request 정보 (reason / remark)를 조회하여 보여준다.
 function searchReqDCFInfo(){
-	Common.ajax("POST","/payment/selectReqDcfInfo.do",$("#_dcfSearchForm").serializeJSON(), function(result){    		
+	Common.ajax("POST","/payment/selectReqDcfInfo.do",$("#_dcfSearchForm").serializeJSON(), function(result){
 		$("#requestor").val(result.dcfCrtUserNm);
-		$("#reqReason").val(result.dcfResnCode);    
-		$("#reqDate").val(result.dcfCrtDt);  
-		$("#ReqRemark").val(result.dcfRem);    
+		$("#reqReason").val(result.dcfResnCode);
+		$("#reqDate").val(result.dcfCrtDt);
+		$("#ReqRemark").val(result.dcfRem);
+		if($("#dcfStusId").val() != 1 ){
+			$("#remark").val(result.dcfAppvRem);
+			$("#remark").prop("disabled", true);
+		}
 	});
 }
 
@@ -76,15 +80,15 @@ function recalculateTotalAmt(){
         }
     }
 
-	$("#totalAmt").val(totalAmt);    
-    $("#totalAmtTxt").val($.number(totalAmt,2));    
+	$("#totalAmt").val(totalAmt);
+    $("#totalAmtTxt").val($.number(totalAmt,2));
 }
 
 //승인처리
 function fn_approval(){
 
 	if($("#dcfStusId").val() != 1 ){
-        Common.alert("<spring:message code='pay.alert.approvalOnlyActive'/>");   
+        Common.alert("<spring:message code='pay.alert.approvalOnlyActive'/>");
         return;
 	}
 
@@ -101,14 +105,14 @@ function fn_approval(){
 	//저장처리
 	Common.confirm("<spring:message code='pay.alert.confirmDcf'/>",function (){
 
-	    
+
 	    Common.ajax("POST", "/payment/approvalDCF.do", $("#_dcfSearchForm").serializeJSON(), function(result) {
 			var message = "<spring:message code='pay.alert.dcfSuccessApproval'/>";
 
     		Common.alert(message, function(){
 				searchList();
-				$('#_confirmDCFPop').remove();    	      
-    		});        
+				$('#_confirmDCFPop').remove();
+    		});
 	    });
 	});
 }
@@ -116,7 +120,7 @@ function fn_approval(){
 //반려처리
 function fn_reject(){
 	if($("#dcfStusId").val() != 1 ){
-        Common.alert("<spring:message code='pay.alert.rejectOnlyActive'/>");   
+        Common.alert("<spring:message code='pay.alert.rejectOnlyActive'/>");
         return;
 	}
 
@@ -137,14 +141,14 @@ function fn_reject(){
 
     		Common.alert(message, function(){
 				searchList();
-				$('#_confirmDCFPop').remove();    	      
-    		});        
+				$('#_confirmDCFPop').remove();
+    		});
 	    });
 	});
 }
 
 
-</script>   
+</script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 	<header class="pop_header"><!-- pop_header start -->
@@ -218,6 +222,6 @@ function fn_reject(){
 		<ul class="center_btns">
 			<li><p class="btn_blue"><a href="javascript:fn_approval();"><spring:message code='pay.btn.approval'/></a></p></li>
 			<li><p class="btn_blue"><a href="javascript:fn_reject();"><spring:message code='pay.btn.reject'/></a></p></li>
-		</ul> 
+		</ul>
 	</section>
 </div>
