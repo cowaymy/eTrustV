@@ -278,14 +278,14 @@
                           LEFT OUTER JOIN SAL0046D IE ON IE.INSTALL_ENTRY_ID = IR.ENTRY_ID WHERE
                           <choose>
                             <when test='serialNo != null and serialNo != ""'>
-                              IR.SERIAL_NO = #{serialNo}
+                              UPPER(IR.SERIAL_NO) = UPPER(#{serialNo})
                               <if test='sirimNo != null and sirimNo != ""'>
-                                AND IR.SIRIM_NO = #{sirimNo}
+                                AND UPPER(IR.SIRIM_NO) = UPPER(#{sirimNo})
                               </if>
                             </when>
                             <otherwise>
                               <if test='sirimNo != null and sirimNo != ""'>
-                                IR.SIRIM_NO = #{sirimNo}
+                                IR.SIRIM_NO = UPPER(#{sirimNo})
                               </if>
                             </otherwise>
                           </choose>
@@ -330,16 +330,16 @@
              AND V1.CUST_ID = #{custId}
            </if>
            <if test='custName != null and custName != ""'>
-             AND V1.CUST_NAME LIKE '%'||#{custName}||'%'
+             AND V1.CUST_NAME LIKE '%'||UPPER(#{custName})||'%'
            </if>
            <if test='custIc != null and custIc != ""'>
-             AND V1.CUST_IC LIKE '%'||#{custIc}||'%'
+             AND V1.CUST_IC LIKE '%'||UPPER(#{custIc})||'%'
            </if>
            <if test='productId != null and productId != ""'>
              AND V1.PRODUCT_ID = #{productId}
            </if>
            <if test='salesmanCode != null and salesmanCode != ""'>
-             AND V1.SALESMAN_CODE = #{salesmanCode}
+             AND V1.SALESMAN_CODE = UPPER(#{salesmanCode})
            </if>
            <if test='arrRentStus != null and arrRentStus != ""'>
              AND V1.RENT_STUS IN
@@ -348,25 +348,25 @@
              </foreach>
            </if>
            <if test='refNo != null and refNo != ""'>
-             AND V1.REF_NO = #{refNo}
+             AND V1.REF_NO = UPPER(#{refNo})
            </if>
            <if test='poNo != null and poNo != ""'>
-             AND V1.PO_NO = #{poNo}
+             AND V1.PO_NO = UPPER(#{poNo})
            </if>
            <if test='contactNo != null and contactNo != ""'>
              AND #{contactNo} IN (V1.MAIL_TEL_MOB, V1.MAIL_TEL_OFF, V1.MAIL_TEL_RES)
            </if>
            <if test='vaNo != null and vaNo != ""'>
-             AND V1.CUST_VA_NO = #{vaNo}
+             AND V1.CUST_VA_NO = UPPER(#{vaNo})
            </if>
            <if test='crtUserId != null and crtUserId != ""'>
-             AND V1.CRT_USER_ID = #{crtUserId}
+             AND V1.CRT_USER_ID = UPPER(#{crtUserId})
            </if>
            <if test='promoCode != null and promoCode != ""'>
-             AND V1.PROMO_CODE = #{promoCode}
+             AND V1.PROMO_CODE = UPPER(#{promoCode})
            </if>
            <if test='relatedNo != null and relatedNo != ""'>
-             AND V1.RELATED_NO = #{relatedNo}
+             AND V1.RELATED_NO = UPPER(#{relatedNo})
            </if>
            <if test='invoicePoNo != null and invoicePoNo != ""'>
              AND V1.ORD_ID IN (SELECT DISTINCT PO_ORD_ID
