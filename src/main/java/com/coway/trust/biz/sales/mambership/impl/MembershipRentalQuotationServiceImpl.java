@@ -479,7 +479,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
     saveParam.put("srvMbrshId", 0);
     saveParam.put("srvPrdStartDt", SalesConstants.DEFAULT_DATE2);
     saveParam.put("srvPrdExprDt", SalesConstants.DEFAULT_DATE2);
-    saveParam.put("srcPrdDur", 24);
+    saveParam.put("srcPrdDur", 2);
     saveParam.put("srcPrdStusId", 1);
     saveParam.put("srcPrdRem", " ");
     saveParam.put("srvPrdCntrctId", getSrvCntrctIdSeq);
