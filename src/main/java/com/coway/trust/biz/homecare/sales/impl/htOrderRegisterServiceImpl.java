@@ -1428,6 +1428,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		HTOrderVO.setRaceId(custRaceId);
 		HTOrderVO.setsInstallDate(sInstallDate);
 		HTOrderVO.setdInstallDate(dInstallDate);
+		HTOrderVO.setBrnchId(sessionVO.getUserBranchId());
 
 		// DOCUMENT SUBMISSION
 /*		this.preprocDocumentList(docSubVOList, sessionVO);
@@ -1459,8 +1460,10 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		String salesOrdNo = "";
 		salesOrdNo =  htOrderRegisterMapper.selectDocNo(168);
 		logger.info("!@#### SERVICE CARE ORDER NO  :"+ salesOrdNo);
+		logger.info("##HTOrderVO## : " + HTOrderVO);
 		orderVO.setSalesOrdNo(salesOrdNo);
 		orderVO.setCrtUserId(sessionVO.getUserId());
+		orderVO.setBrnchId(sessionVO.getUserBranchId());
         int salesOrdId = 0;
         int stusCodeId = 0;
         if (orderVO.getAppTypeId() == 3216 || orderVO.getAppTypeId() == 3217){
