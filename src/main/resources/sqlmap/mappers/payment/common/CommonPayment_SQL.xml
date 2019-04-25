@@ -1562,22 +1562,31 @@
     </update>
 
     <select id="selectProcessPaymentResult" parameterType="Map" resultType="egovMap">
-        SELECT * FROM (
-           SELECT DISTINCT
-                B.OR_NO,
-                CASE WHEN C.SALES_ORD_NO IS NULL THEN D.SALES_ORD_NO
-                WHEN D.SALES_ORD_NO IS NULL THEN E.SRV_ORD_NO
-                ELSE C.SALES_ORD_NO END AS SALES_ORD_NO,
-                A.GROUP_SEQ
-            FROM
-            PAY0252T A
-            JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
-            LEFT JOIN PAY0007D T7 ON B.BILL_ID = T7.BILL_ID
-            LEFT JOIN SAL0001D C ON T7.BILL_SO_ID = C.SALES_ORD_ID
-            LEFT JOIN SAL0001D D ON D.SALES_ORD_ID = B.SALES_ORD_ID
-            LEFT JOIN SAL0225D E ON T7.BILL_SO_ID = E.SRV_ORD_ID
-        ) A
-        WHERE
+ SELECT
+    a.or_no,
+    CASE WHEN SALES_ORD_NO_1 IS NULL AND SALES_ORD_NO_3 IS NULL THEN SALES_ORD_NO_2
+         WHEN SALES_ORD_NO_2 IS NULL AND SALES_ORD_NO_1 IS NULL THEN SALES_ORD_NO_3
+         WHEN SALES_ORD_NO_3 IS NULL AND SALES_ORD_NO_2 IS NULL THEN SALES_ORD_NO_1
+         END AS SALES_ORD_NO ,
+         a.GROUP_SEQ
+FROM
+    (
+        SELECT DISTINCT
+            b.or_no,
+            c.SALES_ORD_NO SALES_ORD_NO_1,
+            d.SALES_ORD_NO SALES_ORD_NO_2,
+            e.SRV_ORD_NO SALES_ORD_NO_3,
+            a.group_seq
+        FROM
+            pay0252t a
+            JOIN pay0064d b ON a.pay_id = b.pay_id
+            LEFT JOIN pay0007d t7 ON b.bill_id = t7.bill_id
+            LEFT JOIN sal0001d c ON t7.bill_so_id = c.sales_ord_id
+            LEFT JOIN sal0001d d ON d.sales_ord_id = b.sales_ord_id
+            LEFT JOIN sal0225d e ON t7.bill_so_id = e.srv_ord_id
+
+    ) a
+WHERE
             A.GROUP_SEQ =   #{seq}
     </select>
 
