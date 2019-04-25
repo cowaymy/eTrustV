@@ -334,6 +334,44 @@
                 JOIN SAL0001D Extent6   ON Extent6.SALES_ORD_ID = Extent5.BILL_SO_ID
                 LEFT JOIN SYS0001M Extent7   ON Extent7.ACC_ID = Extent1.BANK_ACC_ID
                 LEFT JOIN SYS0004M Extent8   ON Extent8.BANK_ID = Extent1.ISS_BANK_ID
+                   WHERE  ( 0 = Extent1.DISAB )
+                   AND ( 1  <![CDATA[ <> ]]>  Extent1.VALID_STUS_ID )
+                   AND ( Extent1.BATCH_ID = #{batchId})
+
+         UNION ALL
+               SELECT Extent1.DET_ID DET_ID  ,
+                Extent1.BATCH_ID BATCH_ID  ,
+                Extent1.DISAB DISABLED  ,
+                Extent1.VALID_STUS_ID VALID_STUS_ID  ,
+                Extent1.VALID_REM VALID_REM  ,
+                Extent1.WOR_NO WOR_NO  ,
+                Extent1.AMT AMT  ,
+                Extent1.PAY_MODE PAY_MODE  ,
+                Extent1.PAY_TYPE_ID PAY_TYPE_ID  ,
+                Extent1.REF_NO REF_NO  ,
+                Extent1.CHQ_NO CHQ_NO  ,
+                Extent1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+                Extent1.CC_NO CC_NO  ,
+                Extent1.REFUND_REM REFUND_REM  ,
+                Extent1.REF_DT_MONTH REF_DT_MONTH  ,
+                Extent1.REF_DT_DAY REF_DT_DAY  ,
+                Extent1.REF_DT_YEAR REF_DT_YEAR  ,
+                Extent1.PAY_ITM_ID PAY_ITM_ID  ,
+                Extent6.SRV_ORD_NO SALES_ORD_NO  ,
+                Extent6.CUST_ID SALES_CUST_ID,
+                Extent7.ACC_CODE ACC_CODE  ,
+                Extent7.ACC_DESC ACC_DESC  ,
+                Extent8.NAME NAME
+         FROM PAY0045D Extent1
+                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.VALID_STUS_ID
+                JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent1.PAY_ITM_ID
+                JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID
+                JOIN PAY0007D Extent5   ON Extent5.BILL_ID = Extent4.BILL_ID
+                JOIN SAL0225D Extent6   ON Extent6.SRV_ORD_ID = Extent5.BILL_SO_ID
+                LEFT JOIN SYS0001M Extent7   ON Extent7.ACC_ID = Extent1.BANK_ACC_ID
+                LEFT JOIN SYS0004M Extent8   ON Extent8.BANK_ID = Extent1.ISS_BANK_ID
+
+
           WHERE  ( 0 = Extent1.DISAB )
                    AND ( 1  <![CDATA[ <> ]]>  Extent1.VALID_STUS_ID )
                    AND ( Extent1.BATCH_ID = #{batchId} )) Project1
