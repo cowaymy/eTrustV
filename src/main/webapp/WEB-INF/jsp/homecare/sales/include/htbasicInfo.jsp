@@ -13,7 +13,7 @@
 <tbody>
 <tr>
     <th scope="row">Service No</th>
-    <td>${orderDetail.basicInfo.ordNo}  <c:if test="${orderDetail.basicInfo.custNric == orderDetail.salesmanInfo.nric}">(${orderDetail.salesmanInfo.memCode})</c:if></td>
+    <td>${orderDetail.basicInfo.ordNo}</td>
     <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>${fn:substring(orderDetail.basicInfo.ordDt, 0, 19)}</td>
     <th scope="row"><spring:message code="sal.text.status" /></th>
@@ -33,7 +33,7 @@
     <th scope="row"><spring:message code="sal.title.text.poNumber" /></th>
     <td>${orderDetail.basicInfo.poNo}</td>
     <th scope="row"><spring:message code="sal.text.keyInBranch" /></th>
-    <td>(${orderDetail.basicInfo.keyinBrnchId} )${orderDetail.basicInfo.keyinBrnchName}</td>
+    <td>(${orderDetail.basicInfo.keyinBrnchId}) - ${orderDetail.basicInfo.keyinBrnchName}</td>
 </tr>
 <tr>
      <th scope="row">Brand</th>
