@@ -23,6 +23,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.SalesPlanManagementService;
 import com.coway.trust.biz.scm.SalesPlanMngementService;
 import com.coway.trust.biz.scm.ScmCommonService;
+import com.coway.trust.biz.scm.SupplyPlanManagementService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.Precondition;
@@ -39,7 +40,7 @@ public class SalesPlanManagementController {
 	private SalesPlanManagementService salesPlanManagementService;
 	
 	@Autowired
-	private SalesPlanMngementService salesPlanMngementService;
+	private SupplyPlanManagementService supplyPlanManagementService;
 	
 	@Autowired
 	private ScmCommonService scmCommonService;
@@ -196,9 +197,20 @@ public class SalesPlanManagementController {
 		List<EgovMap> selectSalesPlanHeader	= salesPlanManagementService.selectSalesPlanHeader(param1);
 		List<EgovMap> selectSalesPlanSummaryHeader	= salesPlanManagementService.selectSalesPlanSummaryHeader(param1);
 		
+		Map<String, Object> targetParams = new HashMap<String, Object>();
+		targetParams.put("planYear", selectScmTotalInfo.get(0).get("planYear"));
+		targetParams.put("planMonth", selectScmTotalInfo.get(0).get("planMonth"));
+		targetParams.put("planWeekTh", selectScmTotalInfo.get(0).get("planWeekTh"));
+		targetParams.put("planFstSpltWeek", selectScmTotalInfo.get(0).get("planFstSpltWeek"));
+		targetParams.put("planYearLstWeek", selectScmTotalInfo.get(0).get("planYearLstWeek"));
+		targetParams.put("leadTm", selectScmTotalInfo.get(0).get("leadTm"));
+		targetParams.put("planGrWeek", selectScmTotalInfo.get(0).get("planGrWeek"));
+		List<EgovMap> selectGetPoCntTargetCnt	= supplyPlanManagementService.selectGetPoCntTargetCnt(targetParams);
+		
 		map.put("selectScmTotalInfo", selectScmTotalInfo);
 		map.put("selectSalesPlanInfo", selectSalesPlanInfo);
 		map.put("selectSalesPlanHeader", selectSalesPlanHeader);
+		map.put("selectGetPoCntTargetCnt", selectGetPoCntTargetCnt);
 		map.put("selectSalesPlanSummaryHeader", selectSalesPlanSummaryHeader);
 		
 		return	ResponseEntity.ok(map);
@@ -399,31 +411,5 @@ public class SalesPlanManagementController {
 		map.put("selectSalesPlanSummaryList", selectSalesPlanSummaryList);
 		
 		return	ResponseEntity.ok(map);
-	}
-	
-	@RequestMapping(value = "/selectPeriodByYear.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectPeriodByYearList(@RequestParam Map<String, Object> params) {
-
-		LOGGER.debug("selectPeriodByYearList : {}", params.toString());
-
-		List<EgovMap> selectPeriodByYearList = salesPlanMngementService.selectPeriodByYear(params);
-		return ResponseEntity.ok(selectPeriodByYearList);
-	}
-	
-	@RequestMapping(value = "/selectStockCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectStockCode(@RequestParam Map<String, Object> params )
-	 {
-		LOGGER.debug("selectStockCode : {}", params.toString());
-
-		List<EgovMap> selectStockCodeList = salesPlanMngementService.selectStockCode(params);
-		return ResponseEntity.ok(selectStockCodeList);
-	}
-	@RequestMapping(value = "/selectMonthCombo.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMonthCombo(@RequestParam Map<String, Object> params) {
-
-		LOGGER.debug("selectMonthComboList : {}", params.toString());
-
-		List<EgovMap> selectMonthCombo = salesPlanMngementService.selectMonthCombo(params);
-		return ResponseEntity.ok(selectMonthCombo);
 	}
 }

@@ -39,9 +39,6 @@ public class SupplyPlanManagementController {
 	private SupplyPlanManagementService supplyPlanManagementService;
 
 	@Autowired
-	private SalesPlanManagementService salesPlanManagementService;
-
-	@Autowired
 	private ScmCommonService scmCommonService;
 
 	@Autowired

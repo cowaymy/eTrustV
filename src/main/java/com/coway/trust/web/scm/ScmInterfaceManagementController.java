@@ -139,7 +139,8 @@ public class ScmInterfaceManagementController {
 	
 	//	do interface
 	@RequestMapping(value = "/doInterface.do", method = {RequestMethod.GET, RequestMethod.POST})
-	public ResponseEntity<ReturnMessage> doInterface(@RequestBody Map<String, List<Map<String, Object>>> params) {
+	//public ResponseEntity<ReturnMessage> doInterface(@RequestBody Map<String, List<Map<String, Object>>> params) {
+	public ResponseEntity<ReturnMessage> doInterface(@RequestParam Map<String, List<Map<String, Object>>> params) {
 	
 		int totCnt	= 0;	int soCnt	= 0;	int ppCnt	= 0;	int giCnt	= 0;	int suppCnt	= 0;	int procCnt	= 0;
 		List<Map<String, Object>> chkList	= params.get(AppConstants.AUIGRID_CHECK);
@@ -273,7 +274,8 @@ public class ScmInterfaceManagementController {
 	}
 	
 	@RequestMapping(value = "/executeOtdSo.do", method = {RequestMethod.GET, RequestMethod.POST})
-	public ResponseEntity<ReturnMessage> executeOtdSo(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+	//public ResponseEntity<ReturnMessage> executeOtdSo(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+	public ResponseEntity<ReturnMessage> executeOtdSo(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) {
 		LOGGER.debug("executeOtdBatch : {}", params.toString());
 		int totCnt	= 0;
 		init();
@@ -323,7 +325,8 @@ public class ScmInterfaceManagementController {
 		return ResponseEntity.ok(message);
 	}
 	@RequestMapping(value = "/executeOtdPp.do", method = {RequestMethod.GET, RequestMethod.POST})
-	public ResponseEntity<ReturnMessage> executeOtdPp(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+	//public ResponseEntity<ReturnMessage> executeOtdPp(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+	public ResponseEntity<ReturnMessage> executeOtdPp(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) {
 		int totCnt	= 0;
 		init();
 		today	= sdf.format(cal.getTime());
@@ -372,7 +375,8 @@ public class ScmInterfaceManagementController {
 		return ResponseEntity.ok(message);
 	}
 	@RequestMapping(value = "/executeOtdGi.do", method = {RequestMethod.GET, RequestMethod.POST})
-	public ResponseEntity<ReturnMessage> executeOtdGi(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+	//public ResponseEntity<ReturnMessage> executeOtdGi(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+	public ResponseEntity<ReturnMessage> executeOtdGi(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) {
 		int totCnt	= 0;
 		init();
 		today	= sdf.format(cal.getTime());
@@ -419,7 +423,8 @@ public class ScmInterfaceManagementController {
 	}
 	
 	@RequestMapping(value = "/executeSupplyPlanRtp.do", method = {RequestMethod.GET, RequestMethod.POST})
-	public ResponseEntity<ReturnMessage> executeSupplyPlanRtp(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+	//public ResponseEntity<ReturnMessage> executeSupplyPlanRtp(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+	public ResponseEntity<ReturnMessage> executeSupplyPlanRtp(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) {
 		LOGGER.debug("executeSupplyPlanRtp : {}", params.toString());
 		int totCnt	= 0;
 		init();
