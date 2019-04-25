@@ -24,7 +24,7 @@ var budgetDocNo;
 var budgetGrpSeq;
 var budgetAdjType;
 
-var groupSeq = 1;
+var groupSeq;
 
 var budgetFlg = 'N';
 
@@ -836,7 +836,13 @@ function fn_AddRow()
         return false;
     }
 
-    item.grpSeq = groupSeq;
+    if(AUIGrid.getRowCount(adjPGridID) == 0) {
+        groupSeq =  1;
+    } else {
+    	groupSeq += 1;
+    }
+
+    item.budgetGrpSeq = groupSeq;
     item.budgetDocNo = $("#pBudgetDocNo").val();
     item.costCentr = $("#sendCostCenter").val();
     item.adjYearMonth = $("#sendYearMonth").val();
@@ -897,6 +903,7 @@ function fn_AddRow()
             return false;
         }
 
+        item2.budgetGrpSeq = groupSeq;
         item2.budgetDocNo = $("#pBudgetDocNo").val();
         item2.costCentr = $("#recvCostCenter").val();
         item2.adjYearMonth   =$("#recvYearMonth").val();
@@ -928,19 +935,15 @@ function fn_AddRow()
 	                }else{
 	                    AUIGrid.addRow(adjPGridID, item, 'last');
 	                    AUIGrid.addRow(adjPGridID, item2, 'last');
-	                    groupSeq += 1;
 	                }
 
-
 	            }else{
-
 	                if(result.data.send == "N"){
 	                    Common.alert('<spring:message code="budget.msg.NoPlan" />');
 	                }else{
 	                    AUIGrid.addRow(adjPGridID, item, 'last');
 	                }
 	            }
-
 	        },"", {async: false});
 	    }
 
