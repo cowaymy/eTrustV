@@ -581,7 +581,14 @@
            AND L56.LOC_ID = L75.LOC_ID(+)
            AND L56.STK_CODE = L75.ITM_CODE(+)
            AND S28.WH_LOC_ID = L56.LOC_ID
-           AND S28.wh_loc_stk_grad = 'A'
+           <choose>
+        	<when test="stock eq 'B'.toString()">
+          AND s28.WH_LOC_STK_GRAD = 'B'
+        	</when>
+        	<otherwise>
+          AND s28.WH_LOC_STK_GRAD = 'A'
+        	</otherwise>
+      	</choose>
            AND L56.STK_CODE = #{productCode}
            AND S28.WH_LOC_CODE IN (CRDC.WH_LOC_CODE, CRDC.CDC_CODE, CRDC.RDC_CODE)
            AND S28.WH_LOC_GB = '02'
