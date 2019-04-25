@@ -119,11 +119,24 @@
                   JOIN SAL0029D Extent6 ON Extent4.CUST_ID = Extent6.CUST_ID
                   LEFT JOIN ORG0001D Extent8 ON Extent1.AS_MEM_ID = Extent8.MEM_ID
                   LEFT JOIN SYS0005M Extent9 ON Extent9.BRNCH_ID = Extent8.BRNCH
-                  LEFT JOIN ( SELECT *
-                              FROM SVC0004D a
-                              WHERE AS_RESULT_ID IN ( SELECT MAX(AS_RESULT_ID)
-                                                      FROM SVC0004D WHERE ( 1 = as_result_is_curr ) group
-                                                      BY AS_ENTRY_ID )
+                  LEFT JOIN ( SELECT AS_RESULT_ID,
+                                     AS_RESULT_NO,
+                                     AS_TOT_AMT,
+                                     AS_SLUTN_RESN_ID,
+                                     IN_HUSE_REPAIR_REPLACE_YN,
+                                     AS_ENTRY_ID,
+                                     AS_RESULT_TYPE_ID,
+                                     AS_RESULT_IS_CURR
+                              FROM ( SELECT (ROW_NUMBER() OVER (PARTITION BY AS_ENTRY_ID ORDER BY AS_RESULT_ID DESC)) AS ranking,
+                                             AS_RESULT_ID,
+                                             AS_RESULT_NO,
+                                             AS_TOT_AMT,
+                                             AS_SLUTN_RESN_ID,
+                                             IN_HUSE_REPAIR_REPLACE_YN,
+                                             AS_ENTRY_ID,
+                                             AS_RESULT_TYPE_ID, AS_RESULT_IS_CURR
+                                     FROM SVC0004D a
+                                     WHERE ( 1 = as_result_is_curr ) ) WHERE ranking = 1
                   ) Extent7
                   ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
                  AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
@@ -2998,7 +3011,7 @@
     ) VALUES ( PAY0032D_SEQ.NEXTVAL,
                #{taxInvcId},
                #{invcItmType},
-               (SELECT SALES_ORD_NO FROM SAL0001D WHERE SALES_ORD_iID = #{invcItmOrdNo}),
+               (SELECT SALES_ORD_NO FROM SAL0001D WHERE SALES_ORD_ID = #{invcItmOrdNo}),
                #{invcItmPoNo},
                #{invcItmCode},
                #{invcItmDesc1},
