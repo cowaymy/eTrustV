@@ -1409,7 +1409,8 @@ function fnSave() {
 			, "/scm/saveSalesPlanAccuracyMaster.do"
 			, GridCommon.getEditData(myGridID)
 			, function(result) {
-				Common.alert(result.data + "<spring:message code='sys.msg.saveCnt' />");
+				//Common.alert(result.data + "<spring:message code='sys.msg.saveCnt' />");
+				Common.alert("Save completed");
 				fnSearch();
 			}
 			, function(jqXHR, textStatus, errorThrown) {
