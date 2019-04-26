@@ -306,9 +306,10 @@ $.fn.clearForm = function() {
 <h2>Care Service Order</h2>
 <ul class="right_btns">
 <c:if test="${SESSION_INFO.userIsExternal == '0'}">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
  <li><p class="btn_blue"><a id="btnNew" href="#" ><spring:message code='sales.btn.new'/></a></p></li>
   <li><p class="btn_blue"><a id="btnEdit" href="#"><spring:message code='sales.btn.edit'/></a></p></li>
- <%--   <li><p class="btn_blue"><a id="btnReq" href="#"><spring:message code='sales.btn.request'/></a></p></li> --%>
+  </c:if>
 </c:if>
     <li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span><spring:message code='sales.Search'/></a></p></li>
     <li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
