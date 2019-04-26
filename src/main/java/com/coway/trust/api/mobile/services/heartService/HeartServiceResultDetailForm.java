@@ -24,7 +24,7 @@ public class HeartServiceResultDetailForm {
   private int filterChangeQty;
 
   @ApiModelProperty(value = "필터 교체 수량 예) 20170827", example = "29092017")
-  private int filterChangeQtyTst;
+  private String filterChangeQtyTst;
 
   @ApiModelProperty(value = "대체 필터 코드(123456)", example = "")
   private int alternativeFilterCode;
@@ -72,11 +72,11 @@ public class HeartServiceResultDetailForm {
     this.filterChangeQty = filterChangeQty;
   }
 
-  public int getFilterChangeQtyTst() {
+  public String getFilterChangeQtyTst() {
     return filterChangeQtyTst;
   }
 
-  public void setFilterChangeQtyTst(int filterChangeQtyTst) {
+  public void setFilterChangeQtyTst(String filterChangeQtyTst) {
     this.filterChangeQtyTst = filterChangeQtyTst;
   }
 
