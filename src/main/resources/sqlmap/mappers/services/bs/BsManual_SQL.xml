@@ -3204,13 +3204,12 @@
 
 
 
-           <resultMap id="thSFilterUseHistoryMap" type="egovMap"></resultMap>
-           <select id="selecthSFilterUseHistorycall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
-                 {
-                    call  SP_GET_ORD_FLT_USE_HIST(#{OrderID},#{SrvFilterStkId},#{cv_1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=thSFilterUseHistoryMap})
-                 }
-            </select>
-
+  <resultMap id="resultSFilterUseHistorycallMap" type="egovMap"></resultMap>
+  <select id="selecthSFilterUseHistorycall"  statementType="CALLABLE" parameterType="Map" >
+    {
+      call SP_GET_ORD_FLT_USE_HIST(#{OrderID}, #{SrvFilterStkId}, #{cv_1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultSFilterUseHistorycallMap})
+    }
+  </select>
 
             <select id="isHsAlreadyResult" parameterType="Map" resultType="java.lang.Integer">
         <![CDATA[
