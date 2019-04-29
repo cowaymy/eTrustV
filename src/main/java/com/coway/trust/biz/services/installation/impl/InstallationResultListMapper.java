@@ -13,6 +13,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 06/03/2019    ONGHC      1.0.2       - Create getSalStat
  * 18/03/2019    ONGHC      1.0.3       - Create getINSNo
  * 27/03/2019    ONGHC      1.0.4       - Create insertExchangeResult and updateExchangeEntry_2
+ * 29/04/2019    ONGHC      1.0.5       - Create chkExgRsnCde
  *********************************************************************************************/
 
 @Mapper("installationResultListMapper")
@@ -195,6 +196,8 @@ public interface InstallationResultListMapper {
   String getInvoiceNum(Map<String, Object> params);
 
   String getSalStat(Map<String, Object> params);
+
+  int chkExgRsnCde(Map<String, Object> params);
 
   EgovMap selectInstallInfo(Map<String, Object> params);
 
