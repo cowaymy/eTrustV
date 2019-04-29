@@ -3201,10 +3201,7 @@
 
                      </update>
 
-
-
-
-  <resultMap id="resultSFilterUseHistorycallMap" type="egovMap"></resultMap>
+  <resultMap id="resultSFilterUseHistorycallMap" type="egovMap" />
   <select id="selecthSFilterUseHistorycall"  statementType="CALLABLE" parameterType="Map" >
     {
       call SP_GET_ORD_FLT_USE_HIST(#{OrderID}, #{SrvFilterStkId}, #{cv_1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultSFilterUseHistorycallMap})
