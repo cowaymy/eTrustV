@@ -692,31 +692,35 @@ public class InstallationResultListController {
 
           if (!"1".equals(ordStat)) {
             if (params.get("hidCallType").equals("258")) {
-              if (Integer.parseInt(params.get("installStatus").toString()) == 4) {
-                // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
-                resultValue = installationResultListService.runInstSp(params, sessionVO, "2");
+              int exgCode = installationResultListService.chkExgRsnCde(params);
+              // SKIP SOEXC009 - EXCHANGE (WITHOUT RETURN)
+              if (exgCode == 0) { // PEX EXCHANGE CODE NOT IN THE LIST
+                if (Integer.parseInt(params.get("installStatus").toString()) == 4) {
+                  // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
+                  resultValue = installationResultListService.runInstSp(params, sessionVO, "2");
 
-                if (null != resultValue) {
-                  spMap = (HashMap) resultValue.get("spMap");
-                  logger.debug("spMap :" + spMap.toString());
-                  if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
-                    resultValue.put("logerr", "Y");
-                    message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS2): " + spMap.get("P_RESULT_MSG").toString());
-                  } else {
-                    servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+                  if (null != resultValue) {
+                    spMap = (HashMap) resultValue.get("spMap");
+                    logger.debug("spMap :" + spMap.toString());
+                    if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
+                      resultValue.put("logerr", "Y");
+                      message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS2): " + spMap.get("P_RESULT_MSG").toString());
+                    } else {
+                      servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 
-                    //resultValue = installationResultListService.runInstSp(params, sessionVO, "3");
+                      //resultValue = installationResultListService.runInstSp(params, sessionVO, "3");
 
-                    //if (null != resultValue) {
-                      //spMap = (HashMap) resultValue.get("spMap");
-                      //logger.debug("spMap :" + spMap.toString());
-                      //if (!"000".equals(spMap.get("P_RESULT_MSG"))) { // FAIL
-                        //resultValue.put("logerr", "Y");
-                        //message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS3): " + spMap.get("P_RESULT_MSG").toString());
-                     //} else {
-                       //servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+                      //if (null != resultValue) {
+                        //spMap = (HashMap) resultValue.get("spMap");
+                        //logger.debug("spMap :" + spMap.toString());
+                        //if (!"000".equals(spMap.get("P_RESULT_MSG"))) { // FAIL
+                          //resultValue.put("logerr", "Y");
+                          //message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS3): " + spMap.get("P_RESULT_MSG").toString());
+                       //} else {
+                         //servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+                        //}
                       //}
-                    //}
+                    }
                   }
                 }
               }
