@@ -881,8 +881,8 @@
               AND ORG0001D.mem_code = #{userId}
               AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
               AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')))
-     WHERE rnum = 1
     ]]>
+    <!-- WHERE rnum = 1 -->
   </select>
 
   <select id="getInstallationJobList_b" parameterType="Map" resultType="egovMap">
