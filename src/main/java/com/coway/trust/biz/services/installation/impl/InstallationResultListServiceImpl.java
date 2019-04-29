@@ -39,6 +39,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 18/03/2019    ONGHC      1.0.4       - Set Previous INS number for OD55
  * 27/03/2019    ONGHC      1.0.5       - To Update and Insert LOG0038D and LOG0039D
  * 04/04/2019    ONGHC      1.0.6       - Amend insertInstallation_2
+ * 29/04/2019    ONGHC      1.0.7       - Create chkExgRsnCde
  *********************************************************************************************/
 
 @Service("installationResultListService")
@@ -3049,5 +3050,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     return installationResultListMapper.getSalStat(params);
   }
 
-
+  @Override
+  public int chkExgRsnCde(Map<String, Object> params) {
+    return installationResultListMapper.chkExgRsnCde(params);
+  }
 }
