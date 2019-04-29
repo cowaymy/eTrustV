@@ -2843,6 +2843,21 @@
     SELECT STUS_CODE_ID FROM SAL0001D WHERE SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0046D WHERE INSTALL_ENTRY_ID = #{installEntryId})
   </select>
 
+  <select id="chkExgRsnCde" parameterType="Map" resultType="int">
+    SELECT COUNT(CODE) AS CNT
+    FROM SYS0094M
+    WHERE IND = 'PEXBLKCDE'
+      AND CODE = (SELECT SO_EXCHG_RESN_ID
+                  FROM SAL0004D
+                  WHERE SO_EXCHG_ID IN ( SELECT A.DOC_ID
+                                         FROM ( SELECT DOC_ID
+                                                FROM CCR0006D
+                                                WHERE SALES_ORD_ID = #{hidSalesOrderId}
+                                                  AND TYPE_ID = 258
+                                                ORDER BY CALL_ENTRY_ID DESC
+                                         ) A WHERE ROWNUM = 1) AND SO_ID = #{hidSalesOrderId})
+  </select>
+
   <select id="selectDO" parameterType="Map" resultType="egovMap">
     SELECT *
     FROM ( SELECT Project1.MOV_ID MOV_ID
