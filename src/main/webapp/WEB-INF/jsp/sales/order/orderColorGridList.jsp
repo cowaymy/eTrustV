@@ -41,13 +41,13 @@
         if($("#memType").val() == 1 || $("#memType").val() == 2){
         	if("${SESSION_INFO.memberLevel}" =="1"){
 
-                $("#orgCode").val("${orgCode}");
+                $("#orgCode").val("${orgCode}".trim());
                 $("#orgCode").attr("class", "w100p readonly");
                 $("#orgCode").attr("readonly", "readonly");
 
             }else if("${SESSION_INFO.memberLevel}" =="2"){
 
-                $("#orgCode").val("${orgCode}");
+                $("#orgCode").val("${orgCode}".trim());
                 $("#orgCode").attr("class", "w100p readonly");
                 $("#orgCode").attr("readonly", "readonly");
 
@@ -57,7 +57,7 @@
 
             }else if("${SESSION_INFO.memberLevel}" =="3"){
 
-                $("#orgCode").val("${orgCode}");
+                $("#orgCode").val("${orgCode}".trim());
                 $("#orgCode").attr("class", "w100p readonly");
                 $("#orgCode").attr("readonly", "readonly");
 
@@ -71,7 +71,7 @@
 
             }else if("${SESSION_INFO.memberLevel}" =="4"){
 
-                $("#orgCode").val("${orgCode}");
+                $("#orgCode").val("${orgCode}".trim());
                 $("#orgCode").attr("class", "w100p readonly");
                 $("#orgCode").attr("readonly", "readonly");
 
