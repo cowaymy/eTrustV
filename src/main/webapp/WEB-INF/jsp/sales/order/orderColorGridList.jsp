@@ -38,6 +38,8 @@
             Common.popupDiv("/sales/order/orderDetailPop.do", $("#searchForm").serializeJSON(), null, true, 'dtPop');
         });
 
+        $("#orgCode").val($("#orgCode").val().trim());
+
         if($("#memType").val() == 1 || $("#memType").val() == 2){
         	if("${SESSION_INFO.memberLevel}" =="1"){
 
@@ -504,7 +506,7 @@
 <tr>
     <th scope="row"><spring:message code="sal.title.text.orgCode" /></th>
     <td>
-    <input type="text" title="" id="orgCode" name="orgCode" value="${orgCode }" placeholder="Organization Code" class="w100p" />
+    <input type="text" title="" id="orgCode" name="orgCode" value="${orgCode}" placeholder="Organization Code" class="w100p" />
     </td>
     <th scope="row"><spring:message code="sal.title.text.groupCode" /></th>
     <td>
