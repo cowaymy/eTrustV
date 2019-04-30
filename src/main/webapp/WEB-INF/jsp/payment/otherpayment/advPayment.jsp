@@ -925,7 +925,7 @@ function recalculateRentalTotalAmt(){
     var mstRowCnt = AUIGrid.getRowCount(targetRenMstGridID);
     var totalAmt = Number(0.00);
 
-    if(advMonth != '' && advMonth > 0){     //advMonth가 입력되어 있는 경우
+    if(advMonth != '' && advMonth >= 0){     //advMonth가 입력되어 있는 경우
         rentalDiscountValue();
     } else if(advMonth == 0 && $("#genAdvAmt").val() != "") {
     	$("#rentalTotalAmtTxt").text("RM " + $.number($("#genAdvAmt").val(),2));
@@ -995,13 +995,23 @@ function rentalDiscountValue(){
 			originalprice = mthRentAmt * advMonth;
 			discountrate = 10;
 		} else {
-			discountValue = mthRentAmt * advMonth;
-			originalprice = mthRentAmt * advMonth;
+			if(advMonth == 0) {
+			    discountValue = $("#genAdvAmt").val();
+			    originalprice = $("#genAdvAmt").val();
+			} else {
+				discountValue = mthRentAmt * advMonth;
+	            originalprice = mthRentAmt * advMonth;
+			}
 			discountrate = 0;
 		}
 	}else{
-		discountValue = mthRentAmt * advMonth;
-		originalprice = mthRentAmt * advMonth;
+		if(advMonth == 0) {
+            discountValue = $("#genAdvAmt").val();
+            originalprice = $("#genAdvAmt").val();
+        } else {
+            discountValue = mthRentAmt * advMonth;
+            originalprice = mthRentAmt * advMonth;
+        }
 		discountrate = 0;
 	}
 
@@ -1128,10 +1138,10 @@ function fn_rentalAdvMonth(){
 
 function fn_checkAdvAmt() {
     var advAmt = $.number($("#genAdvAmt").val(), 2);
-    if(advAmt > $.number(10000, 2)) {
+    /*if(advAmt > $.number(10000, 2)) {
         Common.alert("Amount cannot be greater than RM10,000.00");
         return false;
-    }
+    }*/
 }
 
 //Advance Month 변경시 이벤트
