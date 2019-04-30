@@ -221,9 +221,9 @@ function fn_complianceViewLimit() {
     <td>
         <select class="multy_select w100p" multiple="multiple" id="requestStatusId" name="requestStatusId">
 	        <option value="1">Active</option>
-	        <option value="44">Pending</option>
-	        <option value="5">Approved</option>
-	        <option value="6">Rejected</option>
+	        <option value="60">In Progress</option>
+	        <option value="36">Closed</option>
+	        <option value="10">Cancelled</option>
 	    </select>
     </td>
     <th scope="row">Order No</th>

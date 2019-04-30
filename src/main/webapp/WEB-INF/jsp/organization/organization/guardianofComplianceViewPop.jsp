@@ -121,7 +121,7 @@ function fn_validation(){
             Common.alert("Please select a status");
             return false;
     }
-    if($("#cmbreqStatus").val() == "44" || $("#cmbreqStatus").val() == "6"){
+    if($("#cmbreqStatus").val() == "60" || $("#cmbreqStatus").val() == "10"){
         if($("#complianceContent").val() == ""){
             Common.alert("Remark field is empty");
             return false;
@@ -133,7 +133,7 @@ function fn_validation(){
 
 function fn_save(){
     if(fn_validation()){
-    	if($("#cmbreqStatus").val() == '5'){
+    	if($("#cmbreqStatus").val() == '36'){
     		Common.ajax("POST", "/organization/compliance/saveGuardianCompliance2.do",$("#saveForm").serializeJSON() , function(result) {
                 console.log("성공.");
                 Common.alert("Compliance call Log saved.<br /> Case No : "+result.data+"<br />", fn_guardianViewPopClose());
@@ -339,9 +339,9 @@ function fn_memberListNew(){
     <th scope="row">Request Status</th>
     <td colspan="3">
     <select class="w100p"  id="cmbreqStatus" name="cmbreqStatus">
-        <option value="44">Pending</option>
-        <option value="5">Approve</option>
-        <option value="6">Reject</option>
+        <option value="60">In Progress</option>
+        <option value="36">Closed</option>
+        <option value="10">Cancelled</option>
 
     </select>
     </td>

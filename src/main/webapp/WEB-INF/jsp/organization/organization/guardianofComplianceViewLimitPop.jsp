@@ -19,7 +19,7 @@ $(document).ready(function(){
 
             var reqstStus = "${guardianofCompliance.reqstStusId}";
 
-                if(reqstStus == 5 || reqstStus == 6){
+                if(reqstStus == 36 || reqstStus == 10){
                     $('#complianceRem').addClass("readonly");
                     $('#save').addClass("blind");
                 }

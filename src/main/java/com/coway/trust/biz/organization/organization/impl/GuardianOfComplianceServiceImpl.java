@@ -289,7 +289,7 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
 	public EgovMap selectAttachDownload(Map<String, Object> params) {
 		return guardianOfComplianceMapper.selectAttachDownload(params);
 	}
-	
+
 	@Override
 	public boolean  updateGuardianCompliance(Map<String, Object> params,SessionVO sessionVo) {
 
@@ -306,11 +306,16 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
     		 //insert
     		guardianOfComplianceMapper.updateGuarContent(com);
 
-           
+
     		success = true;
 		}
 		return success;
 
+	}
+
+	@Override
+	public List<EgovMap> selectReasonCodeList(Map<String, Object> params) {
+		return guardianOfComplianceMapper.selectReasonCodeList(params);
 	}
 
 }

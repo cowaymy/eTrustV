@@ -78,7 +78,7 @@ public class GuardianOfComplianceController {
 		params.put("inputId", "1");
 		params.put("separator", "-");
 
-		List<EgovMap> caseCategoryCodeList = commonService.selectReasonCodeList(params);
+		List<EgovMap> caseCategoryCodeList = guardianOfComplianceService.selectReasonCodeList(params);
 		model.put("caseCategoryCodeList", caseCategoryCodeList);
 
 		// 호출될 화면
@@ -92,13 +92,13 @@ public class GuardianOfComplianceController {
 		params.put("inputId", "1");
 		params.put("separator", "-");
 
-		List<EgovMap> caseCategoryCodeList = commonService.selectReasonCodeList(params);
+		List<EgovMap> caseCategoryCodeList = guardianOfComplianceService.selectReasonCodeList(params);
 
 		params.put("typeId", "1390");
 		params.put("inputId", "1");
 		params.put("separator", "-");
 
-		List<EgovMap> documentsCodeList = commonService.selectReasonCodeList(params);
+		List<EgovMap> documentsCodeList = guardianOfComplianceService.selectReasonCodeList(params);
 
 		model.put("caseCategoryCodeList", caseCategoryCodeList);
 		model.put("documentsCodeList", documentsCodeList);
@@ -264,13 +264,13 @@ public class GuardianOfComplianceController {
 		params.put("inputId", "1");
 		params.put("separator", "-");
 
-		List<EgovMap> caseCategoryCodeList = commonService.selectReasonCodeList(params);
+		List<EgovMap> caseCategoryCodeList = guardianOfComplianceService.selectReasonCodeList(params);
 
 		params.put("typeId", "1390");
 		params.put("inputId", "1");
 		params.put("separator", "-");
 
-		List<EgovMap> documentsCodeList = commonService.selectReasonCodeList(params);
+		List<EgovMap> documentsCodeList = guardianOfComplianceService.selectReasonCodeList(params);
 
 		model.put("caseCategoryCodeList", caseCategoryCodeList);
 		model.put("documentsCodeList", documentsCodeList);
@@ -290,13 +290,13 @@ public class GuardianOfComplianceController {
 		params.put("inputId", "1");
 		params.put("separator", "-");
 
-		List<EgovMap> caseCategoryCodeList = commonService.selectReasonCodeList(params);
+		List<EgovMap> caseCategoryCodeList = guardianOfComplianceService.selectReasonCodeList(params);
 
 		params.put("typeId", "1390");
 		params.put("inputId", "1");
 		params.put("separator", "-");
 
-		List<EgovMap> documentsCodeList = commonService.selectReasonCodeList(params);
+		List<EgovMap> documentsCodeList = guardianOfComplianceService.selectReasonCodeList(params);
 
 		model.put("caseCategoryCodeList", caseCategoryCodeList);
 		model.put("documentsCodeList", documentsCodeList);

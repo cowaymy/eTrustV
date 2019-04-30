@@ -835,7 +835,7 @@
         FROM SYS0070M A LEFT JOIN SYS0071D B ON A.ATCH_FILE_ID = B.ATCH_FILE_ID
         WHERE ATCH_FILE_GRP_ID = #{cmplncAtchFileGrpId}
      </select>
-     
+
      <update id="updateGuarContent" parameterType="Map">
            UPDATE MSC0043M
            SET REQST_UPD_DT = sysdate,
@@ -843,4 +843,23 @@
                   REQST_UPD_USER_ID = #{guardianCreateBy}
            WHERE  ( REQST_ID = #{reqstId} )
      </update>
+
+         <select id="selectReasonCodeList" parameterType="Map" resultType="egovMap">
+        SELECT TT.CODE_ID
+             , TT.CODE_NAME
+          FROM
+             ( SELECT DISTINCT T.C1
+                    , T.CODE_ID
+                    , T.CODE_NAME
+                 FROM
+                    ( SELECT 1 C1
+                           , T1.RESN_ID CODE_ID
+                           , T1.CODE ||#{separator}|| T1.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T1
+                       WHERE T1.RESN_TYPE_ID = #{typeId}
+                         AND 1 = T1.STUS_CODE_ID
+
+                    ) T
+             ) TT ORDER BY CODE_NAME
+    </select>
 </mapper>
