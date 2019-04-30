@@ -927,7 +927,9 @@ function recalculateRentalTotalAmt(){
 
     if(advMonth != '' && advMonth > 0){     //advMonth가 입력되어 있는 경우
         rentalDiscountValue();
-    } else{                                             //advMonth가 입력되어 있지 않은 경우
+    } else if(advMonth == 0 && $("#genAdvAmt").val() != "") {
+    	$("#rentalTotalAmtTxt").text("RM " + $.number($("#genAdvAmt").val(),2));
+    }else{                                             //advMonth가 입력되어 있지 않은 경우
 
         if(mstRowCnt > 0){
             for(var i = 0; i < mstRowCnt; i++){
@@ -1097,17 +1099,21 @@ function fn_rentalAdvMonth(){
     var advMonth = $("#rentalAdvMonthType").val();
 
     if(advMonth == 99 ){
-        $("#rentalTxtAdvMonth").val(1);
+        $("#rentalTxtAdvMonth").val(0);
         $('#rentalTxtAdvMonth').removeClass("readonly");
         $("#rentalTxtAdvMonth").prop("readonly",false);
+        $('#genAdvAmt').removeClass("readonly");
+        $("#genAdvAmt").prop("readonly",false);
     }else{
         $("#rentalTxtAdvMonth").val(advMonth);
         $('#rentalTxtAdvMonth').addClass("readonly");
         $("#rentalTxtAdvMonth").prop("readonly",true);
+        $('#genAdvAmt').addClass("readonly");
+        $("#genAdvAmt").prop("readonly",true);
     }
 
     //Rental Adv Month가 0보다 크면 billing group 선택못합
-    if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0){
+    if(($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() == 0) || ($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0)){
         $("#isRentalBillGroup").attr("checked", false);
         $("#isRentalBillGroup").attr("disabled", true);
 
@@ -1120,6 +1126,13 @@ function fn_rentalAdvMonth(){
     }
 }
 
+function fn_checkAdvAmt() {
+    var advAmt = $.number($("#genAdvAmt").val(), 2);
+    if(advAmt > $.number(10000, 2)) {
+        Common.alert("Amount cannot be greater than RM10,000.00");
+        return false;
+    }
+}
 
 //Advance Month 변경시 이벤트
 function fn_rentalAdvMonthChangeTxt(){
@@ -1265,7 +1278,8 @@ function addRentalToFinal(){
                 }
 
                 //Advance Month
-                if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0){
+                if(($("#rentalTxtAdvMonth").val() != '' &&  $("#rentalTxtAdvMonth").val() == 0) || ($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0)){
+                //if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0){
                     var item = new Object();
 
                     item.procSeq = maxSeq;
@@ -1364,7 +1378,7 @@ function isDupRentalToFinal(){
                 }
 
                 //Advance Month
-                if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0){
+                if(($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() == 0) || ($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0)){
 					if(addedRows.length > 0) {
 						for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
 							if (AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId") == addedRows[addedIdx].ordId && 1032 == addedRows[addedIdx].billTypeId) {
@@ -2866,6 +2880,7 @@ $.fn.clearForm = function() {
                                     <option value="24">2 Years</option>
                                 </select>
                                 <input type="text" id="rentalTxtAdvMonth" name="rentalTxtAdvMonth" title="Advance Month" size="3" maxlength="2" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_rentalAdvMonthChangeTxt();"/>
+                                <input type="text" id="genAdvAmt" name="genAdvAmt" title="General Advance Amount" size="15" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_checkAdvAmt();"/>
                             </td>
                         </tr>
                         <tr>
