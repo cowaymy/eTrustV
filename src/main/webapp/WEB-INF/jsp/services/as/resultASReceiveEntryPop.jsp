@@ -7,6 +7,7 @@
  08/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  05/03/2019  ONGHC  1.0.1          AMEND REQUEST AND APPOINMENT DATE
  02/04/2019  ONGHC  1.0.2          ADD REQUEST AND APPOINTMENT DATE CHECKING
+ 30/04/2019  ONGHC  1.0.3          AMEND fn_cpDt
  -->
 
 <script type="text/javaScript">
@@ -604,8 +605,8 @@
       return false;
     }
 
-    var dt1 = new Date(obj1);
-    var dt2 = new Date(obj2);
+    var dt1 = new Date((obj1.replace(/[/]/g, '-')).replace( /(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3"))
+    var dt2 = new Date((obj2.replace(/[/]/g, '-')).replace( /(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3"));
 
     if (dt1 > dt2) {
       Common.alert("* " + txt_2 + " must be greater than or equal to " + txt_1);
