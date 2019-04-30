@@ -46,5 +46,9 @@ public interface GuardianOfComplianceMapper {
 
     List<EgovMap> selectReasonCodeList(Map<String, Object> params);
 
+	EgovMap selectDocNoExpand(String code);
+
+	void updateDocNo(Map<String, Object> params);
+
 }
 

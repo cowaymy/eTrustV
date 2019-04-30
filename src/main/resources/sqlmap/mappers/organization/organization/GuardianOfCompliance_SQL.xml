@@ -246,7 +246,7 @@
                         REQST_ATTACH,  REQST_OR_TYPE_ID, REQST_REM, REQST_STUS_ID, REQST_CRT_DT,
                         REQST_CRT_USER_ID, REQST_UPD_DT, REQST_UPD_USER_ID, REQST_ACTN_ID, REQST_ATCH_FILE_GRP_ID )
             VALUES (
-                         (SELECT MAX(REQST_ID) +1 FROM MSC0043M ), (SELECT 'PRZ'||  LPAD((SELECT MAX(SUBSTR(REQST_NO, 4)) +1  FROM MSC0043M), 7,0) FROM DUAL),  #{guardianCaseCategory}, #{guardianCaseDetail},
+                         MSC0043M_REQST_ID_SEQ.NEXTVAL,#{guardianNo} ,  #{guardianCaseCategory}, #{guardianCaseDetail},
                         #{orderId}, TO_DATE(#{complaintDate},'dd-mm-yyyy') , #{memberId}, #{complaintRemark},
                         #{hidFileName} , #{memTypeId}, null, '1', SYSDATE,
                         #{reqstCrtUserId}, SYSDATE, #{reqstUpdUserId}, #{ActionId}, #{groupId}
@@ -862,4 +862,28 @@
                     ) T
              ) TT ORDER BY CODE_NAME
     </select>
+
+        <select id="selectDocNoExpand" parameterType="String" resultType="egovMap">
+     <![CDATA[
+         SELECT Extent1.DOC_NO_ID DOC_NO_ID  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
+               ELSE ''
+                  END C1  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO_PREFIX IS NOT NULL ) THEN Extent1.DOC_NO_PREFIX
+               ELSE ''
+                  END C2
+          FROM SYS0082M Extent1
+         WHERE  Extent1.DOC_NO_ID =#{docNoId}  AND ROWNUM <= 1
+        ]]>
+    </select>
+
+         <update id="updateDocNo" parameterType="Map">
+     <![CDATA[
+        UPDATE SYS0082M
+         SET DOC_NO = #{nextDocNo}
+           WHERE  ( DOC_NO_ID = #{docNoId} )
+        ]]>
+    </update>
 </mapper>

@@ -51,6 +51,21 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
 
 		EgovMap saveView = new EgovMap();
 
+		EgovMap caseNo = null; // 각가 docNo, docNoId, prefix구함
+		String nextDocNo= "";
+		String guardianNo = "";
+		int ID = 0;
+
+		caseNo = getDocNoExpand("2");
+		guardianNo = caseNo.get("docNo").toString();
+		params.put("guardianNo", guardianNo);
+		ID=2;
+		nextDocNo = getNextDocNo("PRZ",caseNo.get("docNo").toString());
+		logger.debug("nextDocNo : {}",nextDocNo);
+		caseNo.put("nextDocNo", nextDocNo);
+		guardianOfComplianceMapper.updateDocNo(caseNo);
+
+		params.put("guardianNo",guardianNo);
 		params.put("guardianCaseCategory",params.get("caseCategory") != null && params.get("caseCategory") !=""  ? Integer.parseInt(params.get("caseCategory").toString()) : 0 );
 		params.put("guardianCaseDetail",params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
 		params.put("complaintDate", params.get("reqstRefDt").toString());
@@ -254,6 +269,30 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
 		}
 		return selectDocNo;
 	}
+
+	public EgovMap getDocNoExpand(String docNoId){
+		int tmp = Integer.parseInt(docNoId);
+		String docNo = "";
+		EgovMap selectDocNo = guardianOfComplianceMapper.selectDocNoExpand(docNoId);
+		logger.debug("selectDocNo : {}",selectDocNo);
+		String prefix = "";
+
+		if(Integer.parseInt((String) selectDocNo.get("docNoId").toString()) == tmp){
+
+			if(selectDocNo.get("c2") != null){
+				prefix = (String) selectDocNo.get("c2");
+			}else{
+				prefix = "";
+			}
+			docNo = prefix.trim()+(String) selectDocNo.get("c1");
+			//prefix = (selectDocNo.get("c2")).toString();
+			logger.debug("prefix : {}",prefix);
+			selectDocNo.put("docNo", docNo);
+			selectDocNo.put("prefix", prefix);
+		}
+		return selectDocNo;
+	}
+
 
 	public String getNextDocNo(String prefixNo,String docNo){
 		String nextDocNo = "";
