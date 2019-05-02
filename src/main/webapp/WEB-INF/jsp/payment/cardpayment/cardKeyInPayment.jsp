@@ -420,6 +420,10 @@ $(document).ready(function(){
         selectedGridValue = event.rowIndex;
     });
 
+    $("#genAdvAmt").blur(function() {
+        fn_checkAdvAmt();
+    });
+
 });
 
 function fn_chgAppType(){
@@ -937,7 +941,7 @@ function recalculateRentalTotalAmt(){
     var mstRowCnt = AUIGrid.getRowCount(targetRenMstGridID);
     var totalAmt = Number(0.00);
 
-    if(advMonth != '' && advMonth > 0){     //advMonth가 입력되어 있는 경우
+    if(advMonth != '' && advMonth >= 0){     //advMonth가 입력되어 있는 경우
         rentalDiscountValue();
     } else{                                             //advMonth가 입력되어 있지 않은 경우
 
@@ -1004,13 +1008,23 @@ function rentalDiscountValue(){
 	        originalprice = mthRentAmt * advMonth;
 	        discountrate = 10;
 	    } else {
-	        discountValue = mthRentAmt * advMonth;
-	        originalprice = mthRentAmt * advMonth;
+	    	if(advMonth == 0) {
+                discountValue = $("#genAdvAmt").val();
+                originalprice = $("#genAdvAmt").val();
+            } else {
+                discountValue = mthRentAmt * advMonth;
+                originalprice = mthRentAmt * advMonth;
+            }
 	        discountrate = 0;
 	    }
 	}else{
-		discountValue = mthRentAmt * advMonth;
-		originalprice = mthRentAmt * advMonth;
+		if(advMonth == 0) {
+            discountValue = $("#genAdvAmt").val();
+            originalprice = $("#genAdvAmt").val();
+        } else {
+            discountValue = mthRentAmt * advMonth;
+            originalprice = mthRentAmt * advMonth;
+        }
 		discountrate = 0;
 	}
 
@@ -1106,40 +1120,65 @@ function fn_rentalAdvMonth(){
     var advMonth = $("#rentalAdvMonthType").val();
 
     if(advMonth == 99 ){
-        $("#rentalTxtAdvMonth").val(1);
+        $("#rentalTxtAdvMonth").val(0);
         $('#rentalTxtAdvMonth').removeClass("readonly");
         $("#rentalTxtAdvMonth").prop("readonly",false);
+        $('#genAdvAmt').val(0);
+        $('#genAdvAmt').removeClass("readonly");
+        $("#genAdvAmt").prop("readonly",false);
     }else{
         $("#rentalTxtAdvMonth").val(advMonth);
         $('#rentalTxtAdvMonth').addClass("readonly");
         $("#rentalTxtAdvMonth").prop("readonly",true);
+        $('#genAdvAmt').val("");
+        $('#genAdvAmt').addClass("readonly");
+        $("#genAdvAmt").prop("readonly",true);
     }
 
     //Rental Adv Month가 0보다 크면 billing group 선택못합
-    if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0){
-        $("#isRentalBillGroup").attr("checked", false);
+    if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() >= 0){
+    	$("#genAdvAmt").focus();
+        /*$("#isRentalBillGroup").attr("checked", false);
         $("#isRentalBillGroup").attr("disabled", true);
 
         if($("#rentalOrdNo").val() != ''){
-        	fn_rentalConfirm();
-        }
+            fn_rentalConfirm();
+        }*/
     }else{
         $("#isRentalBillGroup").attr("disabled", false);
         recalculateRentalTotalAmt();
     }
 }
 
+function fn_checkAdvAmt() {
+    var advAmt = $("#genAdvAmt").val();
+    if($("#rentalAdvMonthType").val() == 99) {
+        if(advAmt > 10000 || advAmt <= 0) {
+            Common.alert("Amount must be greater than RM0.00 and lesser than RM10,000.00");
+            $("#genAdvAmt").val(0);
+            //return false;
+        } else if(advAmt <= 10000 && advAmt > 0){
+            $("#isRentalBillGroup").attr("checked", false);
+            $("#isRentalBillGroup").attr("disabled", true);
+
+            if($("#rentalOrdNo").val() != ''){
+                fn_rentalConfirm();
+            }
+        }
+    }
+}
 
 //Advance Month 변경시 이벤트
 function fn_rentalAdvMonthChangeTxt(){
   //Rental Membership Adv Month가 0보다 크면 billing group 선택못합
-  if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0){
-      $("#isRentalBillGroup").attr("checked", false);
+  if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() >= 0){
+	  $("#genAdvAmt").focus();
+      /*$("#isRentalBillGroup").attr("checked", false);
       $("#isRentalBillGroup").attr("disabled", true);
 
       if($("#rentalOrdNo").val() != ''){
           fn_rentalConfirm();
-      }
+      }*/
   }else{
       $("#isRentalBillGroup").attr("disabled", false);
       recalculateRentalTotalAmt();
@@ -1150,6 +1189,11 @@ function fn_rentalAdvMonthChangeTxt(){
 
 function addRentalToFinal(){
 	var addedCount = 0;
+
+	if($("#genAdvAmt").val() <= 0 || $("#genAdvAmt").val() > 10000) {
+        Common.alert("Amount must be greater than RM0.00 and lesser than RM10,000.00");
+        return;
+    }
 
 	if(isDupRentalToFinal() > 0){
     	Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
@@ -1273,7 +1317,7 @@ function addRentalToFinal(){
                 }
 
                 //Advance Month
-                if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0){
+                if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() >= 0){
                     var item = new Object();
 
                     item.procSeq = maxSeq;
@@ -1372,7 +1416,7 @@ function isDupRentalToFinal(){
                 }
 
                 //Advance Month
-                if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0){
+                if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() >= 0){
 					if(addedRows.length > 0) {
 						for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
 							if (AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId") == addedRows[addedIdx].ordId && 1032 == addedRows[addedIdx].billTypeId) {
@@ -2918,6 +2962,7 @@ function isDupOutSrvcToFinal(){
 	                                <option value="24">2 Years</option>
 	                            </select>
 	                            <input type="text" id="rentalTxtAdvMonth" name="rentalTxtAdvMonth" title="Advance Month" size="3" maxlength="2" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_rentalAdvMonthChangeTxt();"/>
+	                            <input type="text" id="genAdvAmt" name="genAdvAmt" title="General Advance Amount" size="15" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' />
 	                        </td>
 	                    </tr>
 	                    <tr>
