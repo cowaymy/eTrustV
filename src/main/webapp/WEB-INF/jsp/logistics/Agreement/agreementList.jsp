@@ -381,7 +381,14 @@ function fn_downloadAgreement() {
             Common.alert("Agreement not accepted.");
             return false;
         } else {
-            if(selStartDt >= currPeriod && selStartDt < nextPeriod) {
+            if(selStartDt <= joinDt && selStartDt < nextPeriod) {
+                dd = joinDt.getDate();
+                mm = joinDt.getMonth() + 1;
+                yyyy = joinDt.getFullYear();
+                joinDt = yyyy + "-" + mm + "-" + dd;
+                $("#v_contractStartDt").val(joinDt);
+
+            } else if(selStartDt >= currPeriod && selStartDt < nextPeriod) {
                 dd = currPeriod.getDate();
                 mm = currPeriod.getMonth() + 1;
                 yyyy = currPeriod.getFullYear();
