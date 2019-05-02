@@ -90,12 +90,17 @@ function fn_AcceptAgreement() {
                 }
 
                 // Redirect to login page
-                Common.alert(successMsg, function(event) {
+                if($('#loginForm #surveyStus').val() <= 0 ){
+                    $('#popForm').hide();
+                    fn_goSurveyForm();
+                }else{
+                    Common.alert(successMsg, function(event) {
                     $("#loginForm").attr({
-                        action: getContextPath() + "/common/main.do",
-                        method: "POST"
-                    }).submit();
-                });
+                            action: getContextPath() + "/common/main.do",
+                            method: "POST"
+                        }).submit();
+                    });
+                }
             }
         });
     });

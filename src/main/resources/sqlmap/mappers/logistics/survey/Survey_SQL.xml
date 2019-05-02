@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.survey.impl.SurveyMapper">
+
+<select id="verifyStatus" parameterType="Map" resultType="int">
+    SELECT COUNT(*) AS VALID FROM MSC0022D
+    WHERE 1 = 1
+    AND USER_ID = #{userId}
+    AND SURVEY_TYPE_ID = (SELECT CODE FROM SYS0094M WHERE IND = 'SURVEY')
+</select>
+
+<select id="getSurveyTitle" parameterType="Map" resultType="egovMap">
+    SELECT
+	    SURVEY_TYPE_ID,
+	    SURVEY_TITLE,
+	    SURVEY_MESSAGE
+    FROM MSC0047M
+    WHERE SURVEY_TYPE_ID = (SELECT CODE FROM SYS0094M WHERE IND = 'SURVEY')
+    AND STUS_CODE_ID = 1
+    AND ROWNUM <![CDATA[<=]]> 1
+</select>
+
+<select id="getSurveyQues" parameterType="Map" resultType="egovMap">
+    SELECT  EXTENT1.QUES_ID,
+                EXTENT2.QUES,
+                EXTENT1.SURVEY_TYPE_ID,
+                EXTENT1.SEQ,
+                EXTENT1.DISAB,
+                CASE WHEN EXTENT1.QUES_IS_SCRE = 1 THEN 'CHECKBOX'
+                        WHEN EXTENT1.QUES_IS_REM = 1 THEN 'TEXT'
+                        WHEN EXTENT2.IS_CUST_ANS = 1 THEN 'DROPDOWN'
+                ELSE 'CHECKBOX'
+                END INPUT_TYPE
+    FROM MSC0024D EXTENT1
+    JOIN MSC0025D EXTENT2 ON EXTENT1.QUES_ID = EXTENT2.QUES_ID
+        WHERE 1 = 1
+        AND EXTENT1.DISAB = 0
+        AND EXTENT1.SURVEY_TYPE_ID = (SELECT CODE FROM SYS0094M WHERE IND = 'SURVEY')
+        ORDER BY EXTENT1.SEQ
+</select>
+
+<select id="getSurveyTypeId" resultType="int">
+    SELECT CODE FROM SYS0094M WHERE IND = 'SURVEY'
+</select>
+
+<select id="getSurveyAns" parameterType="Map" resultType="egovMap">
+    SELECT ANS_ID CODE,
+               ANS_DESC CODE_NAME
+    FROM MSC0026D
+    WHERE STUS = 1
+        AND QUES_ID = #{quesId}
+        ORDER BY ANS_ID
+</select>
+
+<select id="selectSurveyMSeq" resultType="int">
+    SELECT MSC0022D_SURVEY_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insertSurveyM" parameterType="Map">
+    INSERT INTO MSC0022D
+        (SURVEY_ID ,
+         SURVEY_TYPE_ID ,
+         USER_ID ,
+         CRT_DT ,
+         DISAB ,
+         REM )
+    VALUES
+        (#{surveyId},
+         #{surveyTypeId},
+         #{userId},
+         SYSDATE,
+         0,
+         #{rem})
+</insert>
+
+
+<insert id="insertSurveyD" parameterType="Map">
+      <selectKey keyProperty="surveyItmIdSeq" resultType="Integer" order="BEFORE">
+        SELECT MSC0023D_SURVEY_ITM_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+      INSERT INTO MSC0023D (
+            SURVEY_ITM_ID ,
+			SURVEY_ID ,
+			QUES_ID ,
+			QUES_IS_SCRE ,
+			QUES_IS_REM ,
+			SCRE ,
+			REM ,
+			QUES_ANS_ID ,
+			QUES_IS_CUST_ANS)
+      VALUES
+			(#{surveyItmIdSeq} ,
+			#{surveyId} ,
+			#{quesId} ,
+			#{quesIsScre} ,
+			#{quesIsRem} ,
+			#{scre} ,
+			#{rem} ,
+			#{quesAnsId} ,
+			#{quesIsCustAns})
+</insert>
+
+
+</mapper>

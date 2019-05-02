@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.login.LoginHistory;
 import com.coway.trust.biz.login.LoginService;
+import com.coway.trust.biz.logistics.survey.SurveyService;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -45,6 +46,9 @@ public class LoginController {
 
 	@Autowired
 	private LoginService loginService;
+
+	@Autowired
+	private SurveyService surveyService;
 
 	@Autowired
 	private SessionHandler sessionHandler;
@@ -421,6 +425,9 @@ LOGGER.debug(Integer.toString(joinDt.compareTo(currRenewalDt)));
             popInfo.put("popExceptionMemroleCnt", "1");
         }
 
+        int verifySurveyStus = surveyService.verifyStatus(params, sessionVO);
+
+        popInfo.put("verifySurveyStus", verifySurveyStus);
         popInfo.put("retMsg", retMsg);
 
         return ResponseEntity.ok(popInfo);

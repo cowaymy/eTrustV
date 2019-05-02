@@ -84,6 +84,10 @@
         }).submit();
     }
 
+    function fn_goSurveyForm() {
+    	Common.popupDiv("/logistics/survey/surveyForm.do", $("#loginForm").serializeJSON(), null, false, '_surveyPop');
+    }
+
 
     function fnFindIdPopUp() {
         var popUpObj = Common.popupDiv(
@@ -252,14 +256,19 @@
                             $("#loginUserType").val(result.data.userTypeId);
 
                             if(aResult.retMsg == "") {
-                                if(aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0) {
+                                if((aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0) && aResult.verifySurveyStus > 0) {
                                     fn_goMain();
-                                } else {
+                                }
+                                else if ( (aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0) && aResult.verifySurveyStus <= 0 ){
+                                    fn_goSurveyForm();
+                                }
+                                else {
                                     $("#loginPdf").val(aResult.popFlName);
                                     $("#popType").val(aResult.popType);
                                     $("#popAck1").val(aResult.popAck1);
                                     $("#popAck2").val(aResult.popAck2);
                                     $("#popRejectFlg").val(aResult.popRejectFlg);
+                                    $("#surveyStus").val(aResult.verifySurveyStus);
                                     Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
                             	}
                             } else {
@@ -395,6 +404,7 @@
             <input type="hidden" id="popAck1" name="popAck1" value=""/>
             <input type="hidden" id="popAck2" name="popAck2" value=""/>
             <input type="hidden" id="popRejectFlg" name="popRejectFlg" value=""/>
+            <input type="hidden" id="surveyStus" name="surveyStus" value=""/>
 
             <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust.gif" alt="Coway"/></h2>
             <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value=""/></p>
