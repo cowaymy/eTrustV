@@ -529,10 +529,17 @@
             msg += "* Please select the free svc period.<br />";
         }
         */
-        if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.isEmpty($('#promoSrvMemPacId').val())) {
+/*         if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.isEmpty($('#promoSrvMemPacId').val())) {
             isValid = false;
             msg += "<spring:message code='sales.promo.msg17'/><br />";
-        }
+        } */
+
+        if($('#promoAppTypeId').val() != 3220 && $('#promoAppTypeId').val() != 3221 ){
+            if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.isEmpty($('#promoSrvMemPacId').val())) {
+                isValid = false;
+                msg += "<spring:message code='sales.promo.msg17'/><br /> ";
+            }
+            }
 
         if(!isValid) Common.alert("<spring:message code='sales.promo.msg18'/>" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
