@@ -669,7 +669,7 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
 
     logger.debug("hsResultM services ===>" + params);
     EgovMap selectConfigBasicInfoYn = htManualMapper.selectConfigBasicInfoYn(hsBasicmap);
-    
+
 
     if (selectConfigBasicInfoYn.size() > 0) {
       Map<String, Object> sal0090 = new HashMap<String, Object>();
@@ -1356,4 +1356,51 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
     return htManualMapper.checkStkDuration(params);
   }
 
+
+	@Override
+	public List<EgovMap> selectDeptCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return htManualMapper.selectDeptCodeList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectDscCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return htManualMapper.selectDscCodeList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectInsStatusList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return htManualMapper.selectInsStatusList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCodyCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return htManualMapper.selectCodyCodeList(params);
+	}
+
+
+	@Override
+	public List<EgovMap> selectAreaCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return htManualMapper.selectAreaCodeList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCodyCodeList_1(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return htManualMapper.selectCodyCodeList_1(params);
+	}
+
+	@Override
+	public List<EgovMap> selectHSReportSingle(Map<String, Object> params) {
+		return htManualMapper.selectHSReportSingle(params);
+	}
+
+	@Override
+	public List<EgovMap> selectHSReportGroup(Map<String, Object> params) {
+		return htManualMapper.selectHSReportGroup(params);
+	}
 }
