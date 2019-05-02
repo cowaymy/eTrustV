@@ -143,6 +143,22 @@ public interface htManualService {
 
 	EgovMap checkStkDuration(Map<String, Object> params);
 
+	List<EgovMap> selectDeptCodeList(Map<String, Object> params);
+
+	List<EgovMap> selectDscCodeList(Map<String, Object> params);
+
+	List<EgovMap> selectInsStatusList(Map<String, Object> params);
+
+	List<EgovMap> selectCodyCodeList(Map<String, Object> params);
+
+	List<EgovMap> selectCodyCodeList_1(Map<String, Object> params);
+
+	List<EgovMap> selectAreaCodeList(Map<String, Object> params);
+
+	List<EgovMap> selectHSReportSingle(Map<String, Object> params);
+
+	List<EgovMap> selectHSReportGroup(Map<String, Object> params);
+
 
 
 
