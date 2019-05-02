@@ -65,35 +65,39 @@
 	          ]]>
     </select>
 
-    <select id="selectUnbilledRentalBillingSchedule" parameterType="Map" resultType="egovMap">
-        SELECT Extent1.RENT_INST_ID RENT_INST_ID  ,
-               Extent1.SALES_ORD_ID SALES_ORD_ID  ,
-               Extent1.SALES_ORD_NO SALES_ORD_NO  ,
-               Extent1.INSTALLMENT INSTALLMENT  ,
-               Extent1.BILL_TYPE BILL_TYPE  ,
-               TO_CHAR(Extent1.SCHDUL_DT ,  'DD/MM/YYYY') SCHDUL_DT,
-               Extent1.BILL_AMT BILL_AMT  ,
-               Extent1.BILL_NO BILL_NO  ,
-               Extent1.BILLING_STUS BILLING_STUS  ,
-               Extent1.UPD_USER_ID UPD_USER_ID  ,
-               Extent1.UPD_DT UPD_DT
-          FROM ( SELECT RentalBillingScheduleView.RENT_INST_ID RENT_INST_ID  ,
-                        RentalBillingScheduleView.SALES_ORD_ID SALES_ORD_ID  ,
-                        RentalBillingScheduleView.SALES_ORD_NO SALES_ORD_NO  ,
-                        RentalBillingScheduleView.INSTALLMENT INSTALLMENT  ,
-                        RentalBillingScheduleView.BILL_TYPE BILL_TYPE  ,
-                        RentalBillingScheduleView.SCHDUL_DT SCHDUL_DT  ,
-                        RentalBillingScheduleView.BILL_AMT BILL_AMT  ,
-                        RentalBillingScheduleView.BILL_NO BILL_NO  ,
-                        RentalBillingScheduleView.BILLING_STUS BILLING_STUS  ,
-                        RentalBillingScheduleView.UPD_USER_ID UPD_USER_ID  ,
-                        RentalBillingScheduleView.UPD_DT UPD_DT
-                 FROM PAY1002V RentalBillingScheduleView ) Extent1
-         WHERE  Extent1.SALES_ORD_ID = #{salesOrdId}
-         AND Extent1.BILLING_STUS = 'Active'
-         AND Extent1.SCHDUL_DT  BETWEEN Extent1.SCHDUL_DT AND TO_DATE(TO_CHAR(SYSDATE,'YYYYMM')||'01', 'YYYY/MM/DD')
-         ORDER BY Extent1.INSTALLMENT
-    </select>
+  <select id="selectUnbilledRentalBillingSchedule" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.RENT_INST_ID RENT_INST_ID ,
+           Extent1.SALES_ORD_ID SALES_ORD_ID ,
+           Extent1.SALES_ORD_NO SALES_ORD_NO ,
+           Extent1.INSTALLMENT INSTALLMENT ,
+           Extent1.BILL_TYPE BILL_TYPE ,
+           TO_CHAR(Extent1.SCHDUL_DT , 'DD/MM/YYYY') SCHDUL_DT ,
+           Extent1.BILL_AMT BILL_AMT ,
+           Extent1.BILL_NO BILL_NO ,
+           Extent1.BILLING_STUS BILLING_STUS ,
+           Extent1.UPD_USER_ID UPD_USER_ID ,
+           Extent1.UPD_DT UPD_DT ,
+           Extent1.BILL_DT
+    FROM ( SELECT RentalBillingScheduleView.RENT_INST_ID RENT_INST_ID ,
+                  RentalBillingScheduleView.SALES_ORD_ID SALES_ORD_ID ,
+                  RentalBillingScheduleView.SALES_ORD_NO SALES_ORD_NO ,
+                  RentalBillingScheduleView.INSTALLMENT INSTALLMENT ,
+                  RentalBillingScheduleView.BILL_TYPE BILL_TYPE ,
+                  RentalBillingScheduleView.SCHDUL_DT SCHDUL_DT ,
+                  RentalBillingScheduleView.BILL_AMT BILL_AMT ,
+                  RentalBillingScheduleView.BILL_NO BILL_NO ,
+                  RentalBillingScheduleView.BILLING_STUS BILLING_STUS ,
+                  RentalBillingScheduleView.UPD_USER_ID UPD_USER_ID ,
+                  RentalBillingScheduleView.UPD_DT UPD_DT ,
+                  (CASE WHEN RC.REN_SCH_DT IS NULL THEN SYSDATE ELSE RC.REN_SCH_DT END) as BILL_DT
+           FROM PAY1002V RentalBillingScheduleView
+           LEFT JOIN SAL0071D RC ON RC.SALES_ORD_ID = RentalBillingScheduleView.SALES_ORD_ID
+                          AND RC.STUS_CODE_ID = 'WOF' ) Extent1
+    WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
+      AND Extent1.BILLING_STUS = 'Active'
+      AND Extent1.SCHDUL_DT BETWEEN Extent1.SCHDUL_DT AND TO_DATE(TO_CHAR(SYSDATE,'YYYYMM')||'01', 'YYYY/MM/DD')
+    ORDER BY Extent1.INSTALLMENT
+  </select>
 
     <select id="getTaskIdSeq_U"  resultType="int">
         SELECT PAY0047D_SEQ.NEXTVAL FROM DUAL
