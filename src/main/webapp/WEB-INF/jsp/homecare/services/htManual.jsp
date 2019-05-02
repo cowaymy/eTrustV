@@ -813,15 +813,15 @@
   }
 
   function fn_hsReportSingle() {
-    Common.popupDiv("/services/bs/report/hsReportSinglePop.do", null, null,
+    Common.popupDiv("/homecare/services/htReportSinglePop.do", null, null,
         true, '');
   }
   function fn_hsReportGroup() {
-    Common.popupDiv("/services/bs/report/hsReportGroupPop.do", null, null,
+    Common.popupDiv("/homecare/services/htReportGroupPop.do", null, null,
         true, '');
   }
   function fn_hsSummary() {
-    Common.popupDiv("/services/bs/report/bSSummaryList.do", null, null,
+    Common.popupDiv("/homecare/services/htSummaryList.do", null, null,
         true, '');
   }
 
@@ -1042,6 +1042,49 @@
     </tr> -->
    </tbody>
   </table>
+   <aside class="link_btns_wrap">
+       <!-- link_btns_wrap start -->
+       <!-- <p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p> -->
+       <p class="show_btn">
+        <a href="#"><img
+         src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif"
+         alt="link show" /></a>
+       </p>
+       <dl class="link_list">
+        <dt>Link</dt>
+        <dd>
+         <ul class="btns">
+
+          <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+
+           <li><p class="link_btn type2">
+             <a href="#" onclick="javascript:fn_hsSummary()">HS
+              Summary Listing</a>
+            </p></li>
+               <li><p class="link_btn type2">
+             <a href="#" onclick="javascript:fn_hsReportSingle()">HS
+              Report(Single)</a>
+            </p></li>
+
+                   <li><p class="link_btn type2">
+             <a href="#" onclick="javascript:fn_hsReportGroup()">HS
+              Report(Group)</a>
+            </p></li>
+
+          </c:if>
+
+         </ul>
+
+         <p class="hide_btn">
+          <a href="#"><img
+           src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
+           alt="hide" /></a>
+         </p>
+        </dd>
+       </dl>
+      </aside>
+      <!-- link_btns_wrap end -->
+
   <ul class="right_btns">
    <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
     <li><p class="btn_grid">
@@ -1070,5 +1113,7 @@
   </ul>
  </section>
  <!-- content end -->
+
+
 </form>
 
