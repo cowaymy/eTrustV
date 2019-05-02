@@ -1124,6 +1124,152 @@ public class htManualController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/htSummaryList.do")
+	public String bSSummaryList(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "homecare/services/htSummaryPop";
+	}
+
+
+	/**
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/deptCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectdeptCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap>  DeptCodeList = htManualService.selectDeptCodeList(params);
+		logger.debug("HSReportSingle {}", DeptCodeList);
+		return ResponseEntity.ok(DeptCodeList);
+	}
+
+
+
+
+
+	/**
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/dscCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDscCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap>  DscCode = htManualService.selectDscCodeList(params);
+		logger.debug("HSReportSingle {}", DscCode);
+		return ResponseEntity.ok(DscCode);
+	}
+
+
+
+
+	/**
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/insStatusCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectInsStatusList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap>  InsStatusList = htManualService.selectInsStatusList(params);
+		logger.debug("HSReportSingle {}", InsStatusList);
+		return ResponseEntity.ok(InsStatusList);
+	}
+
+
+
+
+	/**
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/codyCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCodyCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap>  CodyCodeList = htManualService.selectCodyCodeList(params);
+		logger.debug("HSReportSingle {}", CodyCodeList);
+		return ResponseEntity.ok(CodyCodeList);
+	}
+
+
+
+
+	/**
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/codyCode_1.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCodyCodeList_1(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap>  CodyCodeList = htManualService.selectCodyCodeList_1(params);
+		logger.debug("HSReportSingle {}", CodyCodeList);
+		return ResponseEntity.ok(CodyCodeList);
+	}
+
+
+
+
+
+
+	/**
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/areaCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAreaCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap>  AreaCodeList = htManualService.selectAreaCodeList(params);
+		logger.debug("HSReportSingle {}", AreaCodeList);
+		return ResponseEntity.ok(AreaCodeList);
+	}
+
+
+	@RequestMapping(value = "/selectHSReportSingle.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHSReportSingle(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap>  HSReportSingle = htManualService.selectHSReportSingle(params);
+		logger.debug("HSReportSingle {}", HSReportSingle);
+		return ResponseEntity.ok(HSReportSingle);
+	}
+
+	@RequestMapping(value = "/selectHSReportGroup.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHSReportGroup(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap>  HSReportGroup = htManualService.selectHSReportGroup(params);
+		logger.debug("HSReportGroup {}", HSReportGroup);
+		return ResponseEntity.ok(HSReportGroup);
+	}
+
+
+	@RequestMapping(value = "/htReportGroupPop.do")
+	public String htReportGroupPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "homecare/services/htReportGroupPop";
+	}
+
+	@RequestMapping(value = "/htReportSinglePop.do")
+	public String htReportSinglePop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "homecare/services/htReportSinglePop";
+	}
+
+
 }
 
 
