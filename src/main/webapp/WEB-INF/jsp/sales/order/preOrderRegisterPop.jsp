@@ -1456,8 +1456,8 @@
                     //$('#liMstCntcSelAddr2').addClass("blind");
 
                     fn_loadMainCntcPerson(custInfo.custCntcId);
-                    //fn_loadCntcPerson(custInfo.custCntcId);
-                    fn_loadSrvCntcPerson(custInfo.custCareCntId);
+                    fn_loadCntcPerson(custInfo.custCntcId);
+                    //fn_loadSrvCntcPerson(custInfo.custCareCntId);
                     //----------------------------------------------------------
                     // [Installation] : Installation Contact Person
                     //----------------------------------------------------------
