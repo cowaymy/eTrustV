@@ -500,10 +500,10 @@
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
 	   <li><p class="btn_blue"><a id="_btnConvOrder" href="#">Convert Order</a></p></li>
 	</c:if>
-    <c:if test="${(PAGE_AUTH.funcUserDefine3 == 'Y' and SESSION_INFO.memberLevel == '4' and SESSION_INFO.userTypeId == '1')}">
+    <c:if test="${(PAGE_AUTH.funcUserDefine3 == 'Y' or ( (SESSION_INFO.userTypeId != '1') or (SESSION_INFO.memberLevel == '4' and SESSION_INFO.userTypeId == '1')))}">
         <li><p class="btn_blue"><a id="_btnFail" href="#">Update Status</a></p></li>
     </c:if>
-	<c:if test="${(PAGE_AUTH.funcUserDefine1 == 'Y' and SESSION_INFO.memberLevel == '4' and SESSION_INFO.userTypeId == '1')}">
+	<c:if test="${(PAGE_AUTH.funcUserDefine1 == 'Y' or ( (SESSION_INFO.userTypeId != '1') or (SESSION_INFO.memberLevel == '4' and SESSION_INFO.userTypeId == '1')))}">
 	   <li><p class="btn_blue"><a id="_btnNew" href="#">NEW</a></p></li>
 	</c:if>
 	<c:if test="${PAGE_AUTH.funcView == 'Y'}">
