@@ -546,7 +546,7 @@ function createAUIGrid(){
                             {dataField : "codeName", headerText : '<spring:message code="sal.title.posType" />', width : '8%', editable : false},
                             {dataField : "codeName1", headerText : '<spring:message code="sal.title.salesType" />', width : '8%', editable : false},
                             {dataField : "taxInvcRefNo", headerText : '<spring:message code="sal.title.invoiceNo" />', width : '18%', editable : false},
-                            {dataField : "name", headerText : '<spring:message code="sal.text.custName" />', width : '8%', editable : false},
+                            {dataField : "posCustName", headerText : '<spring:message code="sal.text.custName" />', width : '8%', editable : false},
                             {dataField : "whLocCode", headerText : '<spring:message code="sal.text.branch" />', width : '8%' , style : 'left_style', editable : false},
                             {dataField : "whLocCode", headerText : '<spring:message code="sal.title.warehouse" />', width : '8%', editable : false},
                             {dataField : "posTotAmt", headerText : '<spring:message code="sal.text.totAmt" />', width : '8%', editable : false},
