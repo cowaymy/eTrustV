@@ -13,7 +13,7 @@
 	    || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC'
 	    || $('#callPrgm').val() == 'fn_loadCntcPerson'
 	    || $('#callPrgm').val() == 'fn_loadInstallationCntcPerson'
-	    ) {
+	    || $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
 	        createAUIGrid();
 	        fn_getCustomerContactAjax();
 
@@ -24,8 +24,7 @@
             });
 	    }
 	    else if($('#cnctSearchForm #callPrgm').val() == 'ORD_REGISTER_CNTC_ADD'
-	         || $('#cnctSearchForm #callPrgm').val() == 'ORD_REGISTER_BILL_PRF'
-	         || $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
+	         || $('#cnctSearchForm #callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
 	        createAUIGrid2();
 	        fn_getCustomerCareAjax();
 
@@ -39,10 +38,12 @@
 	});
 
 	function fn_setData(cntcId) {
-	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN' ) {
+	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN'
+	    		|| $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
+	    		|| $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
 	        fn_loadCntcPerson(cntcId);
 	    }
-	    else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD' || $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
+	    else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD') {
 	        fn_loadSrvCntcPerson(cntcId);
 	    }
 	    else if($('#callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {

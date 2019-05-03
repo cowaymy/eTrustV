@@ -188,8 +188,7 @@ $(document).ready(function() {
             }else{
                Common.alert(result.message, fn_parentReload);
             }
-            if('${callParam}' == 'ORD_REGISTER_CNTC_OWN' ) {
-            	//|| '${callParam}' == 'PRE_ORD_CNTC'
+            if('${callParam}' == 'ORD_REGISTER_CNTC_OWN'  || '${callParam}' == 'PRE_ORD_CNTC') {
                 fn_loadCntcPerson(result.data);
                 $("#_close1").click();
             }
