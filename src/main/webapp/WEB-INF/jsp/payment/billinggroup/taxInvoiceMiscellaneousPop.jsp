@@ -153,9 +153,13 @@ function fn_generateInvoice(){
                 else {
                 	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF.rpt');
                 }
-            case 408 :
-                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_CareService_PDF_SST.rpt');
                 break;
+            case 408 :
+            	if( parseInt(year)*100 + parseInt(month) >= 201809){
+                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_CareService_PDF_SST.rpt');
+
+            	}
+            	break;
             default:
                 break;
         }
