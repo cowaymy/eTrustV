@@ -32,7 +32,7 @@ function createHSGroupListAUIGrid() {
                 }else{
 
                     $("#searchHsGroupReport #V_CODYDEPTCODE").val(deptCode);
-                    $("#searchHsGroupReport #reportFileName").val('/services/BSReport_ByBSNo.rpt');
+                    $("#searchHsGroupReport #reportFileName").val('/homecare/CSReport_ByBSNo.rpt');
                     $("#searchHsGroupReport #viewType").val("PDF");
                     $("#searchHsGroupReport #reportDownFileName").val(fileName);
 
