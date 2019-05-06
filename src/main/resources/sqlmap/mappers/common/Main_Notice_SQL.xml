@@ -150,26 +150,27 @@ FROM VIEW_COUNT
 
     <select id="selectSalesOrgPerf" parameterType="Map" resultType="egovMap">
         <![CDATA[
-            SELECT
-			    CASE WHEN (YEAR <= TO_CHAR(SYSDATE, 'YYYY') AND MONTH < TO_CHAR(SYSDATE, 'MM')) THEN TO_CHAR(YEAR) || '/' || TO_CHAR(MONTH) ELSE 'CURRENT' END PERIOD,
-			    RANKING,
-			    SPONSOR,
-			    RECRUIT,
-			    ACT_MEM,
-			    PRODUCTIVITY,
-			    SALES,
-			    PV_VALUE,
-			    ACT_ORD,
-			    YS,
-			    ROUND(RC_RATE, 2) RC
-			FROM REP0080D
-			INNER JOIN ORG0001D
-			    ON REP0080D.MEM_ID = ORG0001D.MEM_ID
-			INNER JOIN SYS0047M
-			    ON ORG0001D.MEM_CODE = SYS0047M.USER_NAME
-			WHERE SYS0047M.USER_ID = #{userId}
-			AND ROWNUM <= 4
-			ORDER BY YEAR DESC, MONTH DESC
+            SELECT * FROM (
+	            SELECT
+				    CASE WHEN (YEAR <= TO_CHAR(SYSDATE, 'YYYY') AND MONTH < TO_CHAR(SYSDATE, 'MM')) THEN TO_CHAR(YEAR) || '/' || TO_CHAR(MONTH) ELSE 'CURRENT' END PERIOD,
+				    RANKING,
+				    SPONSOR,
+				    RECRUIT,
+				    ACT_MEM,
+				    PRODUCTIVITY,
+				    SALES,
+				    PV_VALUE,
+				    ACT_ORD,
+				    YS,
+				    ROUND(RC_RATE, 2) RC
+				FROM REP0080D
+				INNER JOIN ORG0001D
+				    ON REP0080D.MEM_ID = ORG0001D.MEM_ID
+				INNER JOIN SYS0047M
+				    ON ORG0001D.MEM_CODE = SYS0047M.USER_NAME
+				WHERE SYS0047M.USER_ID = #{userId}
+				ORDER BY YEAR DESC, MONTH DESC
+			) WHERE ROWNUM <= 4
         ]]>
     </select>
 
