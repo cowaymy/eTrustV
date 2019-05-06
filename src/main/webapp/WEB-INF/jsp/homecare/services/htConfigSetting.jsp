@@ -142,9 +142,9 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Care Service Configuration</h2>
 <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcView == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBasicListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
-</c:if>
+<%-- </c:if> --%>
 </ul>
 <!--조회조건 추가  -->
 <!--     <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
