@@ -237,7 +237,7 @@
         true, '_hsDetailPopDiv');
   }
 
-  function fn_codyChangeHQ() {
+  /* function fn_codyChangeHQ() {
     $("#_openGb").val("codyChange");
 
     var radioVal = $("input:radio[name='searchDivCd']:checked").val();
@@ -297,7 +297,7 @@
       Common
           .confirmCustomizingButton(
               "Do you want to transfer an assign cody<br>with this CM group?",
-              "Yes", "No", fn_originBrnchAssign, fn_selectBrnchCM);
+              "Yes", "No", fn_originBrnchAssign, fn_selectBrnchCM); */
 
       /*
 
@@ -331,7 +331,7 @@
       }
       */
 
-      function fn_originBrnchAssign() {
+    /*   function fn_originBrnchAssign() {
         var jsonObj = {
           "SaleOrdList" : saleOrdList,
           "BrnchId" : brnchId,
@@ -372,9 +372,9 @@
 
     }
 
-  }
+  } */
 
-  function fn_codyChange() {
+/*   function fn_codyChange() {
     $("#_openGb").val("codyChange");
 
     var radioVal = $("input:radio[name='searchDivCd']:checked").val();
@@ -388,7 +388,7 @@
     if (checkedItems.length <= 0) {
       Common.alert('No data selected.');
       return false;
-    } else {
+    } else { */
 
       /*
       if(checkedItems.length > 1){
@@ -397,7 +397,7 @@
       }
       */
 
-      var str = "";
+     /*  var str = "";
       var custStr = "";
       var rowItem;
       var brnchId = "";
@@ -421,7 +421,7 @@
         if (i != len - 1) {
           saleOrdList += ",";
           deptList += ",";
-        }
+        } */
 
         /*
         //동일 brnch 만 수정하도록
@@ -433,7 +433,7 @@
         ctBrnchCodeOld = rowItem.codyBrnchCode;
         */
 
-        if (i == 0) {
+      /*   if (i == 0) {
           brnchId = rowItem.branchCd;
         }
 
@@ -445,10 +445,10 @@
 
         dept = rowItem.deptCode;
 
-      }
+      } */
 
       //Common.confirmCustomizingButton("Do you want to transfer an assign cody<br>with this CM group?", "Yes", "No", fn_originBrnchAssign, fn_selectBrnchCM);
-      fn_originBrnchAssign();
+      //fn_originBrnchAssign();
 
       /*
       // deptCode의 MEM_UP_ID가 동일한 것만 수정 가능하도록
@@ -482,7 +482,7 @@
       }
       */
 
-      function fn_originBrnchAssign() {
+      /* function fn_originBrnchAssign() {
         var jsonObj = {
           "SaleOrdList" : saleOrdList,
           "BrnchId" : brnchId,
@@ -502,7 +502,7 @@
                 + $("#ManuaMyBSMonth").val()
                 + "&deptList="
                 + deptList);
-      }
+      } */
 
       /*
       function fn_selectBrnchCM(){
@@ -516,8 +516,8 @@
           Common.popupDiv("/services/bs/assignBrnchCMPop.do?JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId+"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()+"&deptList="+deptList);
       }
       */
-    }
-  }
+   // }
+  //}
 
   /*
   function fn_sameBrnchAssign(){
@@ -534,7 +534,7 @@
   function fn_otherBrnchAssign(){
   }
   */
-
+/*
   $(function() {
     $("#hSConfiguration")
         .click(
@@ -630,7 +630,7 @@
               }
             });
   });
-
+ */
   /*
     AUIGrid.bind(myGridID, "cellClick", function(event) {
       custId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "custId");
@@ -792,7 +792,7 @@
   }
 
 
-  function fn_checkboxChangeHandler(event) {
+/*   function fn_checkboxChangeHandler(event) {
 
     var radioVal = $("input:radio[name='searchDivCd']:checked").val();
 
@@ -805,12 +805,12 @@
       myGridID = GridCommon.createAUIGrid("grid_wrap",
           columnManualLayout, gridProsManual);
     }
-  }
+  } */
 
-  function fn_hsCountForecastListing() {
+/*   function fn_hsCountForecastListing() {
     Common.popupDiv("/services/bs/report/hsCountForecastListingPop.do",
         null, null, true, '');
-  }
+  } */
 
   function fn_hsReportSingle() {
     Common.popupDiv("/homecare/services/htReportSinglePop.do", null, null,
@@ -825,10 +825,10 @@
         true, '');
   }
 
-  function fn_filterForecastList() {
+/*   function fn_filterForecastList() {
     Common.popupDiv("/services/bs/report/filterForecastListingPop.do",
         null, null, true, '');
-  }
+  } */
 
   function fn_cmdBranchCode() {
     if ($("#memberLevel").val() == "3" || $("#memberLevel").val() == "4") {
@@ -854,19 +854,19 @@
     var radioVal = $("input:radio[name='searchDivCd']:checked").val();
 
     if (radioVal == 1) { // HS Order Search
-      GridCommon.exportTo("grid_wrap", "xlsx", "HS Order Search");
+      GridCommon.exportTo("grid_wrap", "xlsx", "CS Order Search");
     } else { // Manual HS
-      GridCommon.exportTo("grid_wrap", "xlsx", "Manual HS");
+      GridCommon.exportTo("grid_wrap", "xlsx", "Manual CS");
     }
   }
 
-  function fn_hsConfigOld() {
+/*   function fn_hsConfigOld() {
     window.open("/services/bs/hsManualOld.do", '_self');
-  }
+  } */
 
-  function fn_hsMonthlySetting() {
+/*   function fn_hsMonthlySetting() {
     window.open("/services/bs/hsMonthlyConfigOldVer.do", '_self');
-  }
+  } */
 
   function fn_cMyBSMonth(field) {
     $("#" + field + "").val("");
@@ -1058,16 +1058,16 @@
           <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 
            <li><p class="link_btn type2">
-             <a href="#" onclick="javascript:fn_hsSummary()">HS
+             <a href="#" onclick="javascript:fn_hsSummary()">CS
               Summary Listing</a>
             </p></li>
                <li><p class="link_btn type2">
-             <a href="#" onclick="javascript:fn_hsReportSingle()">HS
+             <a href="#" onclick="javascript:fn_hsReportSingle()">CS
               Report(Single)</a>
             </p></li>
 
                    <li><p class="link_btn type2">
-             <a href="#" onclick="javascript:fn_hsReportGroup()">HS
+             <a href="#" onclick="javascript:fn_hsReportGroup()">CS
               Report(Group)</a>
             </p></li>
 
