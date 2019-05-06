@@ -433,6 +433,8 @@ FROM
                 <if test="userType == '3'.toString()">
                   AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
                 </if>
+
+                ORDER BY SOM.SRV_ORD_NO
           </select>
 
 <!-- cyc 2017- Nov- 13 -->
