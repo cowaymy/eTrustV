@@ -477,7 +477,7 @@ FROM
                                     #{item}
                                     </foreach>
                                 </if>
-
+                ORDER BY SOM.SRV_ORD_NO
 
           </select>
 
