@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  01/04/2019  ONGHC  1.0.1          RE-STRUCTURE JSP AND ADD CHECKING FOR SETTLE DATE
+ 06/05/2019  ONGHC  1.0.2          Check Settle Date Only When Status Complete
  -->
 
 <script type="text/javascript">
@@ -760,31 +761,31 @@
       if (!fn_validRequiredField_Save_DefectiveInfo()) {
         return;
       }
-    }
 
-    var fmt = fn_valDtFmt();
-    if (!fmt) {
-      Common.alert("Sattle Date invalid date format.");
-      $("#dpSettleDate").val("");
-      return;
-    }
+      var fmt = fn_valDtFmt();
+      if (!fmt) {
+        Common.alert("Sattle Date invalid date format.");
+        $("#dpSettleDate").val("");
+        return;
+      }
 
-    var sDate = ($("#dpSettleDate").val()).split("/");
-    var tDate = new Date();
-    var tMth = tDate.getMonth();
-    var tYear = tDate.getFullYear();
-    var sMth = parseInt(sDate[1]);
-    var sYear = parseInt(sDate[2]);
+      var sDate = ($("#dpSettleDate").val()).split("/");
+      var tDate = new Date();
+      var tMth = tDate.getMonth();
+      var tYear = tDate.getFullYear();
+      var sMth = parseInt(sDate[1]);
+      var sYear = parseInt(sDate[2]);
 
-    if (tYear > sYear) {
-      Common.alert("* Sattle Date must be in current month and year");
-      $("#dpSettleDate").val("");
-      return;
-    } else {
-      if (tMth > sMth) {
+      if (tYear > sYear) {
         Common.alert("* Sattle Date must be in current month and year");
         $("#dpSettleDate").val("");
         return;
+      } else {
+        if (tMth > sMth) {
+          Common.alert("* Sattle Date must be in current month and year");
+          $("#dpSettleDate").val("");
+          return;
+        }
       }
     }
 
