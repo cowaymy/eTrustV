@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  01/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP AND APPOINMENT DATE
+ 07/05/2019  ONGHC  1.0.1          FIX ERROR MESSAGE ISSUE
  -->
 
 <script type="text/javaScript">
