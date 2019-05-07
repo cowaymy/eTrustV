@@ -777,8 +777,8 @@ var columnLayout = [
 				discountrate = 10;
 			} else {
 	            if(advMonth == 0) {
-	                discountValue = $("#genAdvAmt").val();
-	                originalprice = $("#genAdvAmt").val();
+	                discountValue = parseFloat($("#genAdvAmt").val());
+	                originalprice = parseFloat($("#genAdvAmt").val());
 	            } else {
 	                discountValue = mthRentAmt * advMonth;
 	                originalprice = mthRentAmt * advMonth;
@@ -787,8 +787,8 @@ var columnLayout = [
 			}
 		}else{
             if(advMonth == 0) {
-                discountValue = $("#genAdvAmt").val();
-                originalprice = $("#genAdvAmt").val();
+                discountValue = parseFloat($("#genAdvAmt").val());
+                originalprice = parseFloat($("#genAdvAmt").val());
             } else {
                 discountValue = mthRentAmt * advMonth;
                 originalprice = mthRentAmt * advMonth;
@@ -1060,10 +1060,12 @@ function fn_rentalAdvMonthChangeTxt(){
 	function addRentalToFinal(){
 		var addedCount = 0;
 
-		if($("#genAdvAmt").val() <= 0 || $("#genAdvAmt").val() > 10000) {
-		    Common.alert("Amount must be greater than RM0.00 and lesser than RM10,000.00");
-		    return;
-		}
+		if($("#rentalAdvMonthType").val() == 99 && $("#rentalTxtAdvMonth").val() == 0) {
+	        if($("#genAdvAmt").val() <= 0 || $("#genAdvAmt").val() > 10000) {
+	            Common.alert("Amount must be greater than RM0.00 and lesser than RM10,000.00");
+	            return;
+	        }
+	    }
 
 		if(isDupRentalToFinal() > 0){
 			Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
@@ -2914,7 +2916,7 @@ function srvcDiscountValue(){
 
   function fn_checkAdvAmt() {
 	    var advAmt = $("#genAdvAmt").val();
-	    if($("#rentalAdvMonthType").val() == 99) {
+	    if($("#rentalAdvMonthType").val() == 99 && $("#rentalTxtAdvMonth").val() == 0) {
 	        if(advAmt > 10000 || advAmt <= 0) {
 	            Common.alert("Amount must be greater than RM0.00 and lesser than RM10,000.00");
 	            $("#genAdvAmt").val(0);
