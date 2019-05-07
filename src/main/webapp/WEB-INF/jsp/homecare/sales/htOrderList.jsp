@@ -133,6 +133,9 @@ function fn_setDetail(gridID, rowIdx){
       $('#btnSof').click(function() {
     	    Common.popupDiv("/homecare/sales/htOrderSOFListPop.do", null, null, true);
     	});
+      $('#btnRaw').click(function() {
+          Common.popupDiv("/homecare/sales/htRawDataPop.do", null, null, true);
+      });
 
   });
 
@@ -460,6 +463,10 @@ $.fn.clearForm = function() {
     <ul class="btns">
         <li><p class="link_btn type2"><a href="#" id="btnSof">Mattress Care Service (MCS) List</a></p></li>
     </ul>
+        <ul class="btns">
+        <li><p class="link_btn type2"><a href="#" id="btnRaw">Mattress Care Service (MCS) Raw Data</a></p></li>
+    </ul>
+
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
