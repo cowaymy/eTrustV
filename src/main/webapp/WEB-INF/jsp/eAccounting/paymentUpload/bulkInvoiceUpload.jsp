@@ -11,12 +11,17 @@
 .aui-grid-user-custom-right {text-align:right;}
 
 .pop_body{max-height:535px; padding:10px; background:#fff; overflow-y:scroll;}
+
+.popup_wrap2{max-height:525px; position:fixed; top:20px; left:50%; z-index:1001; margin-left:-500px; width:1000px; background:#fff; border:1px solid #ccc;}
+.popup_wrap2:after{content:""; display:block; position:fixed; top:0; left:0; z-index:-1; width:100%; height:100%; background:rgba(0,0,0,0.6);}
+.popup_wrap2.size_big2{width:1240px!important; margin-left:-620px!important;}
+.pop_body2{height:505px; padding:10px; background:#fff; overflow-y:scroll;}
 </style>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 
-    var selectRowIdx, selectBatchId, selectAtchGrpId, selectAppvPrcssNo;
+    var selectRowIdx, selectBatchId, selectAtchGrpId, selectAppvPrcssNo, selectAppvPrcssStus;
     var mode;
 
     var attachList = null;
@@ -25,57 +30,84 @@
     // Grid Layout - Start
     // **************
 
-    var myGridID, bulkInvcGrid, approveLineGridID;
+    var myGridID, bulkInvcGrid, approveLineGridID, dtlSearchGrid, dtlExcelGrid;
 
     // Main Menu Grid Layout
     var columnLayout = [
         {
             dataField : "batchId",
             headerText : "Batch ID",
+            cellMerge : true,
+            //mergeRef : "appvPrcssNo",
             width : "10%",
-            height : 30,
+            height : 30
         },{
             dataField : "batchStusId",
             headerText : "Batch Status",
             width : "20%",
             height : 30,
-            visible : true
+            visible : true,
+            cellMerge : true,
+            //mergeRef : "batchId",
+            //mergePolicy : "restrict"
+        },{
+            dataField : "appvPrcssStus",
+            visible : false
         },{
             dataField : "totalClaims",
             headerText : "Total Claims",
             width : "10%",
             height : 30,
-            visible : true
+            visible : true,
+            cellMerge : true,
+            //mergeRef : "batchId",
+            //mergePolicy : "restrict"
         },{
             dataField : "crtDt",
             headerText : "Upload Date",
             width : "10%",
             height : 30,
-            visible : true
+            visible : true,
+            cellMerge : true,
+            mergeRef : "batchId",
+            //mergePolicy : "restrict"
         },{
             dataField : "crtUser",
             headerText : "Uploader",
             width : "20%",
             height : 30,
-            visible : true
+            visible : true,
+            cellMerge : true,
+            mergeRef : "batchId",
+            //mergePolicy : "restrict"
         },{
             dataField : "cnfmDt",
             headerText : "Approval Date",
             width : "10%",
             height : 30,
-            visible : true
+            visible : true,
+            cellMerge : true,
+            mergeRef : "batchId",
+            //mergePolicy : "restrict"
         },{
             dataField : "cnfmUserId",
             headerText : "Approval User",
             width : "20%",
             height : 30,
-            visible : true
+            visible : true,
+            cellMerge : true,
+            mergeRef : "batchId",
+            //mergePolicy : "restrict"
         }, {
             dataField : "atchFileGrpId",
-            visible : false
+            visible : false,
+            cellMerge : true,
+            mergeRef : "batchId",
         }, {
             dataField : "appvPrcssNo",
-            visible : false
+            visible : false,
+            cellMerge : true,
+            mergeRef : "batchId",
         }
     ];
 
@@ -176,12 +208,21 @@
     ];
 
     // Main Menu + Upload Result Grid Option
+    var mGridoptions = {
+        showStateColumn : false ,
+        editable : false,
+        pageRowCount : 20,
+        usePaging : true,
+        showPageRowSelect : true,
+        showRowNumColumn : false,
+        setColumnSizeList : true
+    };
+
     var gridoptions = {
         showStateColumn : false ,
         editable : false,
         pageRowCount : 10,
         usePaging : true,
-        useGroupingPanel : false,
         //wordWrap : true,
         showPageRowSelect : true,
         showRowNumColumn : false,
@@ -257,12 +298,65 @@
         selectionMode : "multipleCells"
     };
 
+    // Details Seach Grid Layout
+    var dtlSearchColLayout = [
+        {
+            dataField : "batchId",
+            headerText : "Batch ID",
+            width : "10%"
+        }, {
+            dataField : "clmNo",
+            headerText : "Claim No",
+            width : "15%"
+        }, {
+            dataField : "invcNo",
+            headerText : "Invoice No",
+            width : "20%"
+        }, {
+            dataField : "supplier",
+            headerText : "Supplier",
+            width : "30%"
+        }, {
+            dataField : "costCenter",
+            headerText : "Cost Center",
+            width : "30%"
+        }, {
+            dataField : "utilNo",
+            headerText : "Utility No",
+            width : "15%"
+        }, {
+            dataField : "batchStusId",
+            headerText : "Batch Status",
+            width : "10%"
+        }, {
+            dataField : "apprPrcssDt",
+            headerText : "Approval Date",
+            width : "8%"
+        }, {
+            dataField : "crtUser",
+            headerText : "Requestor",
+            width : "10%"
+        }
+    ]
+
+    // Details Seach Grid Option
+    var dtlSearchGridPros = {
+        usePaging : true,
+        pageRowCount : 20,
+        showStateColumn : false,
+        enableRestore : true,
+        showRowNumColumn : false,
+        selectionMode : "multipleCells"
+    };
+
     // **************
     // Grid Layout - End
     // **************
 
     $(document).ready(function(){
-        myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
+        //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
+        //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"appvPrcssNo", gridoptions);
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, mGridoptions);
         //bulkInvcGrid = GridCommon.createAUIGrid("#bulkInvcUp_grid_wrap", uploadItemLayout, null, gridoptions);
         approveLineGridID = GridCommon.createAUIGrid("#approveLine_grid_wrap", approveLineColumnLayout, null, approveLineGridPros);
 
@@ -287,19 +381,26 @@
             selectBatchId = event.item.batchId;
             selectAtchGrpId = event.item.atchFileGrpId;
             selectAppvPrcssNo = event.item.appvPrcssNo;
+            selectAppvPrcssStus = event.item.appvPrcssStus;
 
             fn_newUpload('APPV');
         });
+
+        $("#search_costCenter_btn").click(fn_costCenterSearchPop);
+        $("#search_supplier_btn").click(fn_supplierSearchPop);
     });
 
     function fn_searchUpload() {
         if(myGridID == null) {
-            myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
+            //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"appvPrcssNo", gridoptions);
+            myGridID = AUIGrid.create("#grid_wrap", columnLayout, mGridoptions);
         }
 
         Common.ajax("GET", "/eAccounting/paymentUpload/selectBulkInvcList.do",  $('#SearchForm').serialize(), function(result) {
             console.log(result);
             AUIGrid.setGridData(myGridID, result);
+
+            AUIGrid.setCellMerge(myGridID, true);
         });
     }
 
@@ -398,8 +499,21 @@
 
             var data = {
                 batchId : selectBatchId,
-                atchFileGrpId : selectAtchGrpId
+                atchFileGrpId : selectAtchGrpId,
+                appvPrcssStus : selectAppvPrcssStus,
+                appvPrcssNo : selectAppvPrcssNo
             };
+
+            $("#rejectRsnLbl").hide();
+
+            if(selectAppvPrcssStus == "A" || selectAppvPrcssStus == "J") {
+                $("#appvBtn").hide();
+                $("#rejBtn").hide();
+
+                if(selectAppvPrcssStus == "J") {
+                    $("#rejectRsnLbl").show();
+                }
+            }
 
             Common.ajax("GET", "/eAccounting/paymentUpload/uploadResultList", data, function(result) {
                 console.log(result);
@@ -436,6 +550,24 @@
                     }
                 }
 
+                if(result.appvAct == "Y") {
+                    if(selectAppvPrcssStus != "A" && selectAppvPrcssStus != "J") {
+                        $("#appvBtn").show();
+                        $("#rejBtn").show();
+                        $("#rejectRsnLbl").hide();
+                    }
+                } else {
+                    $("#appvBtn").hide();
+                    $("#rejBtn").hide();
+                }
+
+                if(selectAppvPrcssStus == "J") {
+                    $("#rejectRsnLbl").show();
+                    if(result.rejctResn != "") {
+                        $("#rejctRsn").text(result.rejctResn);
+                    }
+                }
+
                 $("#uploadContent").show();
                 $("#suppDocFile").show();
                 $("#suppDocFileSelector").show();
@@ -466,6 +598,9 @@
 
         $('#new_wrap').hide();
         $("#batchInvcSeq").val("");
+
+        $("#rejectRsnLbl").hide();
+        $("#rejctRsn").text('');
     }
 
     function fn_proceed() {
@@ -522,6 +657,173 @@
                 });
             });
         });
+    }
+
+    /***************************
+    Detail Search/Gen Excel Functions
+    ***************************/
+    function fn_dtlSrch() {
+        console.log("fn_dtlSrch");
+
+        dtlSearchGrid = GridCommon.createAUIGrid("#dtlSearch_grid_wrap", dtlSearchColLayout, null, dtlSearchGridPros);
+        AUIGrid.resize(dtlSearchGrid, 1195, 350);
+
+        $("#genExcelPop").show();
+        $("#dtlSearch_grid_wrap").show()
+    }
+
+    function fn_costCenterSearchPop() {
+        Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
+    }
+
+    function fn_setCostCenter() {
+        $("#costCenter").val($("#search_costCentr").val());
+        $("#costCenterText").val($("#search_costCentrName").val());
+    }
+
+    function fn_supplierSearchPop() {
+        Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM10"}, null, true, "supplierSearchPop");
+    }
+
+    function fn_setSupplier() {
+        $("#memAccId").val($("#search_memAccId").val());
+        $("#memAccName").val($("#search_memAccName").val());
+    }
+
+    function fn_dtlSearch() {
+        console.log("fn_dtlSearch");
+
+        $("#excelFlag").val("S");
+
+        Common.ajax("GET", "/eAccounting/paymentUpload/selectBulkInvcDtlList.do",  $('#DtlSearchForm').serialize(), function(result) {
+            console.log(result);
+            AUIGrid.setGridData(dtlSearchGrid, result);
+
+            //AUIGrid.setCellMerge(dtlSearchGrid, true);
+        });
+    }
+
+    function fn_closeDtlSearch() {
+        AUIGrid.destroy("#dtlSearch_grid_wrap");
+        dtlSearchGrid = null;
+
+        $("#genExcelPop").hide();
+        $("#dtlSearch_grid_wrap").hide()
+
+        AUIGrid.destroy("#bulkInvcUp_grid_wrap");
+        bulkInvcGrid = null;
+
+        $('#new_wrap').hide();
+        $("#batchInvcSeq").val("");
+    }
+
+    function fn_getAppvExcelInfo() {
+        var list = AUIGrid.getColumnValues(dtlSearchGrid, "appvPrcssNo", true);
+        console.log(list);
+
+        $("#excelFlag").val("E");
+
+        Common.ajax("GET", "/eAccounting/paymentUpload/selectBulkInvcDtlList.do",  $('#DtlSearchForm').serialize(), function(result) {
+            console.log(result);
+
+            //그리드 생성
+            fn_makeGrid();
+
+            AUIGrid.setGridData(dtlExcelGrid, result);
+
+            GridCommon.exportTo("excel_grid_wrap", 'xlsx', "BulkDetailRaw");
+            /*if(result.data.length > 0) {
+
+                GridCommon.exportTo("excel_grid_wrap", 'xlsx', clmNo + "_" + reqstDt);
+            } else {
+                Common.alert('There is no data to download.');
+            }*/
+        });
+    }
+
+    function fn_makeGrid() {
+        var excelColLayout = [
+            {
+                dataField : "batchId",
+                headerText : "Batch ID",
+                cellMerge : true
+            }, {
+                dataField : "clmNo",
+                headerText : "Claim No",
+                cellMerge : true
+            }, {
+                dataField : "reqstDt",
+                headerText : "Request Date",
+                cellMerge : true
+            }, {
+                dataField : "reqstUserId",
+                headerText : "Request User ID",
+                cellMerge : true
+            }, {
+                dataField : "apprPrcssDt",
+                headerText : "Approval Date",
+                cellMerge : true
+            }, {
+                dataField : "batchStusId",
+                headerText : "Approval Status",
+                cellMerge : true
+            }, {
+                dataField : "invcNo",
+                headerText : "Invoice No"
+            }, {
+                dataField : "invcDt",
+                headerText : "Invoice Date"
+            }, {
+                dataField : "payDt",
+                headerText : "Payment Due Date"
+            }, {
+                dataField : "supplier",
+                headerText : "Supplier Code"
+            }, {
+                dataField : "supplierName",
+                headerText : "Supplier Name"
+            }, {
+                dataField : "costCenter",
+                headerText : "Cost Center Code"
+            }, {
+                dataField : "costCenterName",
+                headerText : "Cost Center Name"
+            }, {
+                dataField : "budgetCode",
+                headerText : "Budget Code"
+            }, {
+                dataField : "budgetName",
+                headerText : "Budget Name"
+            }, {
+                dataField : "glAccNo",
+                headerText : "GL Account No"
+            }, {
+                dataField : "glAccName",
+                headerText : "GL Account Name"
+            }, {
+                dataField : "amt",
+                headerText : "Amount"
+            }, {
+                dataField : "utilNo",
+                headerText : "Utility No"
+            }, {
+                dataField : "jpayNo",
+                headerText : "Jompay No"
+            }, {
+                dataField : "expDesc",
+                headerText : "Expense Description"
+            }];
+
+        var excelOptions = {
+                enableCellMerge : true,
+                showStateColumn:false,
+                fixedColumnCount    : 6,
+                showRowNumColumn    : false,
+                //headerHeight : 100,
+                usePaging : false
+          };
+
+        dtlExcelGrid = GridCommon.createAUIGrid("#excel_grid_wrap", excelColLayout, "", excelOptions);
     }
 
     /*******************
@@ -718,6 +1020,7 @@
         }
     }
 
+
 </script>
 </head>
 <body>
@@ -752,6 +1055,7 @@
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newUpload('NEW')">New Upload</a></p></li>
             <li><p class="btn_blue"><a href="#" onclick="javascript:fn_searchUpload()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
+            <li><p class="btn_blue"><a href="#" onclick="javascript:fn_dtlSrch()">Detail Search</a></p></li>
             <li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/eAccounting/Invoices_Batch.csv">Download Template</a></p></li>
         </ul>
     </aside><!-- title_line end -->
@@ -860,6 +1164,10 @@
                             <th scope="row"><spring:message code="approveView.approveStatus" /></th>
                             <td colspan="3" style="height:60px" id="viewAppvStus"></td>
                         </tr>
+                        <tr id="rejectRsnLbl">
+                            <th scope="row">Reject</th>
+                            <td colspan="3" id="rejctRsn">
+                        </tr>
                     </tbody>
                 </table>
             </form>
@@ -932,6 +1240,119 @@
         </section><!-- search_result end -->
     </section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
+
+<!-------------------------------------------------------------------------------------
+    POP-UP (DETAILED UPLOAD GEN EXCEL)
+-------------------------------------------------------------------------------------->
+<div class="popup_wrap2 size_big2" id="genExcelPop" style="display: none;">
+
+    <input type="hidden" id="memAccName" name="memAccName">
+    <input type="hidden" id="costCenterText" name="costCenterText">
+
+    <header class="pop_header" id="pop_header">
+        <h1>Detail Gen</h1>
+        <ul class="right_opt">
+            <li>
+                <p class="btn_blue2">
+                    <a href="#" onclick="javascript:fn_closeDtlSearch()">CLOSE</a>
+                </p>
+            </li>
+        </ul>
+    </header>
+
+    <section class="pop_body2">
+        <form id="DtlSearchForm" name="DtlSearchForm" method="post">
+
+            <input type="hidden" id="excelFlag" name="excelFlag">
+
+            <table class="type1"><!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:175px" />
+                    <col style="width:*" />
+                    <col style="width:175px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">Claim No</th>
+                        <td>
+                            <div class="date_set w100p"><!-- date_set start -->
+                                <p><input type="text" title="Claim No Start" id="clmNoStart" name="clmNoStart" class="w100p" /></p>
+                                <span><spring:message code="webInvoice.to" /></span>
+                                <p><input type="text" title="Claim No End" id="clmNoEnd" name="clmNoEnd" class="w100p"  /></p>
+                            </div><!-- date_set end -->
+                        </td>
+                        <th scope="row">Invoice No</th>
+                        <td><input type="text" id="invcNo" name ="invcNo" title="" placeholder="" class="" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
+                        <td>
+                            <input type="text" title="" placeholder="" class="" id="costCenter" name="costCenter" />
+                            <a href="#" class="search_btn" id="search_costCenter_btn">
+                                <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                            </a>
+                        </td>
+                        <th scope="row">Supplier</th>
+                        <td>
+                            <input type="text" title="" placeholder="" class="" id="memAccId" name="memAccId" />
+                            <a href="#" class="search_btn" id="search_supplier_btn">
+                                <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Utility No</th>
+                        <td><input type="text" id="utilNo" name ="utilNo" title="" placeholder="" class="" /></td>
+                        <th scope="row"><spring:message code="webInvoice.status" /></th>
+                        <td>
+                            <select class="multy_select w100p" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
+                                <option value="A"><spring:message code="webInvoice.select.approved" /></option>
+                                <option value="R"><spring:message code="webInvoice.select.request" /></option>
+                                <option value="J"><spring:message code="pettyCashRqst.rejected" /></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Approval Date</th>
+                        <td>
+                            <div class="date_set w100p"><!-- date_set start -->
+                                <p><input type="text" title="Approval Start Date" placeholder="DD/MM/YYYY" class="j_date" id="appStartDt" name="appStartDt"/></p>
+                                <span><spring:message code="webInvoice.to" /></span>
+                                <p><input type="text" title="Approval End Date" placeholder="DD/MM/YYYY" class="j_date" id="appEndDt" name="appEndDt"/></p>
+                            </div><!-- date_set end -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table><!-- table end -->
+        </form>
+
+        <div id="dtlSrchContent">
+            <table class="type1">
+                <caption>table</caption>
+                <tbody>
+                    <tr>
+                        <td colspan='5'>
+                            <div id="dtlSearch_grid_wrap" style="width: 100%; height: 350px; margin: 0 auto; display: none"></div>
+                        </td>
+                    </tr>
+                </tbody>
+             </table>
+         <!-- table end -->
+         <!-- grid_wrap end -->
+        </div>
+
+        <article class="grid_wrap" id="excel_grid_wrap" ><!-- grid_wrap start    style="display: none;" -->
+        </article><!-- grid_wrap end -->
+
+        <ul class="center_btns" id="newBulkBtns">
+            <li><p class="btn_blue2"><a href="javascript:fn_dtlSearch();" id="dtlSearchBtn">Search</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_getAppvExcelInfo();" id="genExcelBtn">Gen Excel</a></p></li>
+        </ul>
+
+    </section>
+</div>
 
 <!-------------------------------------------------------------------------------------
     POP-UP (NEW UPLOADED BATCH ERROR)

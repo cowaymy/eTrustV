@@ -56,4 +56,8 @@ public interface BulkUploadMapper {
     int getErrorCnt();
 
     List<EgovMap> getBatchClmNos(Map<String, Object> params) throws Exception;
+
+    List<EgovMap> selectBulkInvcDtlList(Map<String, Object> params);
+
+    String getRejectRsn(Map<String, Object> params);
 }

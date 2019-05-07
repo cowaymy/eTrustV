@@ -477,6 +477,19 @@ public class BulkUploadController {
                 }
             }
 
+            if(!"".equals(billPeriodFr) && !"".equals(billPeriodTo)) {
+                Date bFrDate = sdf.parse(billPeriodFr);
+                Date bToDate = sdf.parse(billPeriodTo);
+
+                if(bToDate.before(bFrDate)) {
+                    if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                        invalidMsgDtl += "Billing Period(s)";
+                    } else {
+                        invalidMsgDtl += ", Billing Period(s)";
+                    }
+                }
+            }
+
             if("06137".equals(budgetCode) || "06148".equals(budgetCode) || "06150".equals(budgetCode) || "06200".equals(budgetCode) ||
                "06214".equals(budgetCode) || "06149".equals(budgetCode) || "03017".equals(budgetCode)) {
                 if("".equals(utilNo) || utilNo == null || utilNo == "null") {
@@ -551,7 +564,7 @@ public class BulkUploadController {
     }
 
     @RequestMapping(value = "/uploadResultList")
-    public ResponseEntity<EgovMap> uploadResultList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+    public ResponseEntity<EgovMap> uploadResultList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) throws Exception{
 
         LOGGER.debug("========== uploadResultList ==========");
 
@@ -579,10 +592,11 @@ public class BulkUploadController {
             //appvLineInfo
             itemDetail = item.get(0);
             ArrayList<String> appvPrcssStusList = new ArrayList<String>();
-            String appvPrcssStus = "- Request By " + (String) itemDetail.get("reqstUserId") + " [" + (String) itemDetail.get("reqstDt") + "]";
+            //String appvPrcssStus = "- Request By " + (String) itemDetail.get("reqstUserId") + " [" + (String) itemDetail.get("reqstDt") + "]";
 
             appvPrcssStusList.add("- Request By " + (String) itemDetail.get("reqstUserId") + " [" + (String) itemDetail.get("reqstDt") + "]");
 
+            String appvAct = "N";
             for(int i = 0; i < item.size(); i++) {
                 itemDetail = item.get(i);
 
@@ -593,10 +607,25 @@ public class BulkUploadController {
                 } else if("J".equals((String)itemDetail.get("appvStus"))) {
                     appvPrcssStusList.add("- Rejected By " + itemDetail.get("appvLineUserName") + " [" + itemDetail.get("appvDt") + "]");
                 }
+
+                if(sessionVO.getUserName().equals(itemDetail.get("appvLineUserName"))) {
+                    appvAct = "Y";
+                }
             }
 
+            result.put("appvAct", appvAct);
             result.put("appvPrcssStus", appvPrcssStusList);
         }
+
+        String rejctResn = "";
+        if(params.containsKey("appvPrcssStus")) {
+            if("J".equals(params.get("appvPrcssStus"))) {
+                rejctResn = bulkUploadService.getRejectRsn(params);
+
+            }
+        }
+
+        result.put("rejctResn", rejctResn);
 
         return ResponseEntity.ok(result);
     }
@@ -889,5 +918,20 @@ public class BulkUploadController {
         }
 
         return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/selectBulkInvcDtlList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectBulkInvcDtlList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+        LOGGER.debug("========== selectBulkInvcDtlList ==========");
+        LOGGER.debug("params ==========>>  " + params);
+
+        String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
+
+        params.put("appvPrcssStus", appvPrcssStus);
+
+        List<EgovMap> list = bulkUploadService.selectBulkInvcDtlList(params);
+
+        return ResponseEntity.ok(list);
     }
 }

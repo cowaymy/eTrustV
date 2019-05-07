@@ -144,4 +144,14 @@ public class BulkUploadServiceImpl extends EgovAbstractServiceImpl implements Bu
     public List<EgovMap> getBatchClmNos( Map<String, Object> params) throws Exception {
         return bulkUploadMapper.getBatchClmNos(params);
     }
+
+    @Override
+    public List<EgovMap> selectBulkInvcDtlList(Map<String, Object> params) {
+        return bulkUploadMapper.selectBulkInvcDtlList(params);
+    }
+
+    @Override
+    public String getRejectRsn(Map<String, Object> params) {
+        return bulkUploadMapper.getRejectRsn(params);
+    }
 }

@@ -323,24 +323,27 @@
                 WHEN B.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
                 WHEN B.APPV_PRCSS_STUS = 'R' THEN 'Request'
             END BATCH_STUS_ID,
+            B.APPV_PRCSS_STUS,
             A.TOTAL_CLAIMS,
             TO_CHAR(A.CRT_DT, 'DD-MM-YYYY') CRT_DT,
-            C.USER_NAME CRT_USER,
+            D.USER_NAME CRT_USER,
             CASE
                 WHEN B.APPV_PRCSS_STUS NOT IN ('A', 'J') THEN '-' ELSE TO_CHAR(B.APPV_PRCSS_DT, 'DD-MM-YYYY')
             END CNFM_DT,
             CASE
-                WHEN B.APPV_PRCSS_STUS NOT IN ('A', 'J') THEN '-' ELSE D.USER_NAME
+                WHEN B.APPV_PRCSS_STUS NOT IN ('A', 'J') THEN '-' ELSE E.USER_NAME
             END CNFM_USER_ID,
             ATCH_FILE_GRP_ID,
             A.APPV_PRCSS_NO
         FROM FCM0025M A
         INNER JOIN FCM0004M B
-        ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
-        LEFT JOIN SYS0047M C
-        ON A.CRT_USER_ID = C.USER_ID
+            ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+        INNER JOIN FCM0026D C
+            ON A.BATCH_ID = C.BATCH_ID
         LEFT JOIN SYS0047M D
-        ON B.UPD_USER_ID = D.USER_ID
+            ON A.CRT_USER_ID = D.USER_ID
+        LEFT JOIN SYS0047M E
+            ON B.UPD_USER_ID = E.USER_ID
         WHERE 1=1
         <if test="bchIdStart != null and bchIdStart != ''">
             <![CDATA[
@@ -368,6 +371,26 @@
                  AND A.CRT_DT <= TO_CHAR(#{endDt}, 'DD/MM/YYYY')
             ]]>
         </if>
+        GROUP BY
+            A.BATCH_ID,
+            B.APPV_PRCSS_STUS,
+            CASE
+                WHEN B.APPV_PRCSS_STUS = 'P' THEN 'Approval-In-Progress'
+                WHEN B.APPV_PRCSS_STUS = 'A' THEN 'Approved'
+                WHEN B.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
+                WHEN B.APPV_PRCSS_STUS = 'R' THEN 'Request'
+            END,
+            A.TOTAL_CLAIMS,
+            TO_CHAR(A.CRT_DT, 'DD-MM-YYYY'),
+            D.USER_NAME,
+            CASE
+                WHEN B.APPV_PRCSS_STUS NOT IN ('A', 'J') THEN '-' ELSE TO_CHAR(B.APPV_PRCSS_DT, 'DD-MM-YYYY')
+            END,
+            CASE
+                WHEN B.APPV_PRCSS_STUS NOT IN ('A', 'J') THEN '-' ELSE E.USER_NAME
+            END,
+            ATCH_FILE_GRP_ID,
+            A.APPV_PRCSS_NO
         ORDER BY A.BATCH_ID
     </select>
 
@@ -551,4 +574,108 @@
         FROM FCM0026D
         WHERE BATCH_ID = #{batchId}
     </select>
+
+    <select id="selectBulkInvcDtlList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.BATCH_ID,
+            CASE
+                WHEN B.APPV_PRCSS_STUS = 'P' THEN 'Approval-In-Progress'
+                WHEN B.APPV_PRCSS_STUS = 'A' THEN 'Approved'
+                WHEN B.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
+                WHEN B.APPV_PRCSS_STUS = 'R' THEN 'Request'
+            END BATCH_STUS_ID,
+            C.CLM_NO,
+            <if test="excelFlg = 'S' ">
+                D.USER_NAME CRT_USER,
+                C.COST_CENTER || ' - ' || C.COST_CENTER_NAME COST_CENTER,
+                C.SUPPLIER || ' - ' || C.SUPPLIER_NAME SUPPLIER,
+            </if>
+            <if test="excelFlg = 'E' ">
+                C.SUPPLIER,
+                C.SUPPLIER_NAME,
+                C.COST_CENTER,
+                C.COST_CENTER_NAME,
+            </if>
+            C.INVC_NO,
+            TO_CHAR(C.INVC_DT, 'DD-MM-YYYY') INVC_DT,
+            TO_CHAR(C.PAY_DT, 'DD-MM-YYYY') PAY_DT,
+            TO_CHAR(B.REQST_DT, 'DD-MM-YYYY') REQST_DT,
+            B.REQST_USER_ID,
+            C.BUDGET_CODE,
+            C.BUDGET_NAME,
+            C.GL_ACC_NO,
+            C.GL_ACC_NAME,
+            C.AMT,
+            C.UTIL_NO,
+            C.JPAY_NO,
+            TO_CHAR(C.BILL_PERIOD_FR, 'DD-MM-YYYY') BILL_PERIOD_FR,
+            TO_CHAR(C.BILL_PERIOD_TO, 'DD-MM-YYYY') BILL_PERIOD_TO,
+            C.EXP_DESC,
+            TO_CHAR(B.APPV_PRCSS_DT, 'DD/MM/YYYY') APPR_PRCSS_DT
+        FROM FCM0025M A
+        INNER JOIN FCM0004M B
+            ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+        INNER JOIN FCM0026D C
+            ON A.BATCH_ID = C.BATCH_ID
+        LEFT JOIN SYS0047M D
+            ON A.CRT_USER_ID = D.USER_ID
+        LEFT JOIN SYS0047M E
+            ON B.UPD_USER_ID = E.USER_ID
+        WHERE 1=1
+        <if test="clmNoStart != null and clmNoStart != ''">
+            <![CDATA[
+                 AND C.CLM_NO >= #{clmNoStart}
+            ]]>
+        </if>
+        <if test="clmNoEnd != null and clmNoEnd != ''">
+            <![CDATA[
+                 AND C.CLM_NO <= #{clmNoEnd}
+            ]]>
+        </if>
+        <if test="invcNo != null and invcNo != ''">
+            AND C.INVC_NO = #{invcNo}
+        </if>
+        <if test="costCenter != null and costCenter != ''">
+            AND C.COST_CENTER = #{costCenter}
+        </if>
+        <if test="memAccId != null and memAccId != ''">
+            AND C.SUPPLIER = #{memAccId}
+        </if>
+        <if test="utilNo != null and utilNo != ''">
+            AND C.UTIL_NO = #{utilNo}
+        </if>
+        <if test="appvPrcssStus != null and appvPrcssStus != ''">
+             AND B.APPV_PRCSS_STUS IN
+            <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="appStartDt != null and appStartDt != ''">
+            <![CDATA[
+                 AND A.CRT_DT >= TO_CHAR(#{appStartDt}, 'DD/MM/YYYY')
+            ]]>
+        </if>
+        <if test="appEndDt != null and appEndDt != ''">
+            <![CDATA[
+                 AND A.CRT_DT <= TO_CHAR(#{appEndDt}, 'DD/MM/YYYY')
+            ]]>
+        </if>
+        ORDER BY
+            A.BATCH_ID,
+            C.CLM_NO,
+            C.COST_CENTER,
+            C.SUPPLIER,
+            C.UTIL_NO
+    </select>
+
+    <select id="getRejectRsn" parameterType="Map" resultType="String">
+        SELECT
+            REJCT_RESN
+        FROM FCM0004M A,
+                FCM0005D B
+        WHERE A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+            AND A.APPV_PRCSS_NO = #{appvPrcssNo}
+            AND A.APPV_LINE_PRCSS_CNT = B.APPV_LINE_SEQ
+    </select>
+
 </mapper>
