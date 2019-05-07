@@ -176,7 +176,7 @@ function fn_report(viewType){
     if(date.toString().length == 1){
         date = "0" + date;
     }
-    $("#reportDownFileName").val("CareServiceOrderSOFList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+    $("#reportDownFileName").val("MattressCareServiceList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 
     if(viewType == "PDF"){
         $("#form #viewType").val("PDF");
