@@ -8,6 +8,7 @@
  05/03/2019  ONGHC  1.0.1          AMEND REQUEST AND APPOINMENT DATE
  02/04/2019  ONGHC  1.0.2          ADD REQUEST AND APPOINTMENT DATE CHECKING
  30/04/2019  ONGHC  1.0.3          AMEND fn_cpDt
+ 07/05/2019  ONGHC  1.0.4          FIX ERROR MESSAGE ISSUE
  -->
 
 <script type="text/javaScript">
@@ -48,7 +49,7 @@
   function fn_getErrMstList(_ordNo) {
     var SALES_ORD_NO = _ordNo;
     $("#errorCode option").remove();
-    doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO=' + SALES_ORD_NO, '', '', 'errorCode', 'S', '');
+    doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO=' + SALES_ORD_NO, '', '', 'errorCode', 'S', 'fn_errCde_SetVal');
   }
 
   function fn_errMst_SelectedIndexChanged() {
@@ -62,17 +63,30 @@
     $("#errorDesc").val(asMalfuncResnId);
   }
 
+  function fn_errCde_SetVal() {
+    $("#errorCode").val(asErrorCde);
+    fn_errMst_SelectedIndexChanged();
+  }
+
+  function fn_brCde_SetVal() {
+    $("#branchDSC").val(asBrCde);
+  }
+
   function fn_setComboBox() {
     doGetCombo('/common/selectCodeList.do', '24', '', 'requestor', 'S', '');
-    doGetCombo('/services/as/getBrnchId', '', '', 'branchDSC', 'S', '');
+    doGetCombo('/services/as/getBrnchId', '', '', 'branchDSC', 'S', 'fn_brCde_SetVal');
   }
 
   var asMalfuncResnId;
+  var asErrorCde;
+  var asBrCde;
   function fn_setEditValue() {
     Common.ajax("GET", "/services/as/selASEntryView.do", {
       AS_NO : '${AS_NO}'
     }, function(result) {
       var eOjb = result.asentryInfo;
+
+      //console.log(eOjb);
 
       $("#AS_PIC_ID").val(eOjb.asPicId);
       $("#AS_ID").val(eOjb.asId);
@@ -88,10 +102,14 @@
       $("#errorCode").val(eOjb.asMalfuncId);
       $("#errorDesc").val(eOjb.asMalfuncResnId);
 
+      //$("#branchDSC option[value=167]").attr('selected', 'selected');
+
       $("#errorCode").val(eOjb.asMalfuncId);
       $("#errorDesc").val(eOjb.asMalfuncResnId);
 
       asMalfuncResnId = eOjb.asMalfuncResnId;
+      asErrorCde = eOjb.asMalfuncId;
+      asBrCde = eOjb.asBrnchId;
       fn_errMst_SelectedIndexChanged(eOjb.asMalfuncResnId);
 
       $("#txtRequestor").val(eOjb.asRemReqster);
