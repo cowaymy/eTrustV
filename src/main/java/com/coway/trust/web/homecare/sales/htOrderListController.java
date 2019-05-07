@@ -181,4 +181,10 @@ public class htOrderListController {
 		return "homecare/sales/htOrderSOFListPop";
 	}
 
+	@RequestMapping(value="/htRawDataPop.do")
+	public String htRawDataPop(){
+
+		return "homecare/sales/htRawDataPop";
+	}
+
 }
