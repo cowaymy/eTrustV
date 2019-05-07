@@ -578,7 +578,7 @@
                #{stkRetnCrtUserId} ,
                #{stkRetnResultIsSynch},
                #{stkRetnAllowComm},
-               #{stkRetnCrtUserId},
+               #{stkRetnCtMemId},
                TO_CHAR( to_date(#{checkinDt},'DD/MM/YYYY') ,'yyyymmdd'),
                #{checkinTm},
                #{checkinGps},
