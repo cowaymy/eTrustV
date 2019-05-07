@@ -1958,11 +1958,12 @@
 
     function fn_validFile() {
         var isValid = true, msg = "";
-        if(FormUtil.isEmpty($('#sofFile').val().trim())) {
+
+        if(sofFileId == null) {
             isValid = false;
             msg += "* Please upload copy of SOF<br>";
         }
-        if(FormUtil.isEmpty($('#nricFile').val().trim())) {
+        if(nricFileId == null) {
             isValid = false;
             msg += "* Please upload copy of NRIC<br>";
         }
