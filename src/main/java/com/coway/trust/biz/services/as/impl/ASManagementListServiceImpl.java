@@ -1038,7 +1038,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
         a = ASManagementListMapper.insert_Pay0032d(pay32dMap);
 
-        LOGGER.debug("= NUMBER OF ROW AFFECTED :: ", a);
+        LOGGER.debug("= NUMBER OF ROW AFFECTED :: " + a);
         LOGGER.debug("========================setPay32dData - END ===========================");
       }
     }
@@ -1603,6 +1603,15 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                         filterCode = animals[0];
                         filterName = animals[1];
                       }
+                    } else { // MOBILE APPS
+                      String fltNm = ASManagementListMapper.getFltNm(CommonUtils.nvl(updateMap.get("filterId")) != "" ? CommonUtils.nvl(updateMap.get("filterId")) : CommonUtils.nvl(updateMap.get("filterID")));
+
+                      String[] animals = temp.split("-");
+
+                      if (animals.length > 0) {
+                        filterCode = animals[0];
+                        filterName = animals[1];
+                      }
                     }
                   }
                 }
@@ -1670,6 +1679,15 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                   if (null != temp) {
                     if (!temp.equals("API")) {
                       String[] animals = temp.split("-");
+                      if (animals.length > 0) {
+                        filterCode = animals[0];
+                        filterName = animals[1];
+                      }
+                    } else { // MOBILE APPS
+                      String fltNm = ASManagementListMapper.getFltNm(CommonUtils.nvl(updateMap.get("filterId")) != "" ? CommonUtils.nvl(updateMap.get("filterId")) : CommonUtils.nvl(updateMap.get("filterID")));
+
+                      String[] animals = temp.split("-");
+
                       if (animals.length > 0) {
                         filterCode = animals[0];
                         filterName = animals[1];
