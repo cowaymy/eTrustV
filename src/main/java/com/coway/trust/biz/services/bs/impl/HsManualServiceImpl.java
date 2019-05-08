@@ -632,6 +632,48 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     Map<String, Object> resultValue = new HashMap<String, Object>();
     resultValue.put("resultId", params.get("hidSalesOrdCd"));
     resultValue.put("spMap", logPram);
+
+    if ("API".equals(CommonUtils.nvl(params.get("stage")).toString())) { // MOBILE
+      params.put("selSchdulId",CommonUtils.nvl(params.get("hidschdulId")).toString());
+      EgovMap useFilterList = hsManualMapper.getBSFilterInfo(params);
+
+      // INSERT AS ENTRY FOR OMBAK  -- TPY
+      if(useFilterList != null){
+        String stkId = useFilterList.get("stkId").toString();
+        if(stkId.equals("1428")){  // 1428 - MINERAL FILTER
+          logger.debug("==================== saveASEntryResult [Start] ========================");
+
+          params.put("userId", params.get("hidCodyId").toString());
+          params.put("salesOrdId", params.get("hidSalesOrdId").toString());
+          params.put("codyId", params.get("hidCodyId").toString());
+          params.put("settleDate", params.get("settleDate").toString());
+          params.put("stkId", useFilterList.get("stkId").toString());
+          params.put("stkCode", useFilterList.get("stkCode").toString());
+          params.put("stkDesc", useFilterList.get("stkDesc").toString());
+          params.put("stkQty", useFilterList.get("bsResultPartQty").toString());
+          params.put("amt", useFilterList.get("amt").toString());
+          params.put("totalAmt", useFilterList.get("totalAmt").toString());
+          params.put("no", useFilterList.get("no").toString());
+          logger.debug("saveASEntryResult params :"+ params.toString());
+
+          Map<String, Object> sm = new HashMap<String, Object>();
+          sm = this.saveASEntryResult(params);
+          params.put("asNo", sm.get("asNo").toString());
+          params.put("asId", sm.get("asId").toString());
+          params.put("asResultNo", sm.get("asResultNo").toString());
+
+          logger.debug("==================== saveASEntryResult [End] ========================");
+
+          // INSERT TAX INVOICE FOR OMBAK -- TPY
+          logger.debug("==================== saveASTaxInvoice [Start] ========================");
+          logger.debug("saveASTaxInvoice params :"+ params.toString());
+          Map<String, Object> pb = new HashMap<String, Object>();
+          pb = this.saveASTaxInvoice(params);
+
+          logger.debug("==================== saveASTaxInvoice [End] ========================");
+        }
+      }
+    }
     return resultValue;
   }
 
@@ -1721,7 +1763,11 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     params2.put("AS_SETL_TM", "0");
     params2.put("AS_RESULT_STUS_ID", "4");
     params2.put("AS_BRNCH_ID", "0");
-    params2.put("AS_RESULT_REM", "");
+    if ("API".equals(CommonUtils.nvl(params.get("stage")).toString())) {
+      params2.put("AS_RESULT_REM", "SYSTEM AUTO INSERT VIA MOBILE ENTRY.");
+    } else {
+      params2.put("AS_RESULT_REM", "");
+    }
     // params2.put("AS_RESULT_CRT_DT", "");
     params2.put("updator", params.get("userId").toString());
     params2.put("AS_MALFUNC_ID", "9004100"); // GENERAL REQUEST
