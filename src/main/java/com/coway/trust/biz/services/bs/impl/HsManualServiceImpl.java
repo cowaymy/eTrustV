@@ -495,6 +495,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
           logger.debug("= INSERT LOG0082M VIA docSub2: {}", docSub2);
           hsManualMapper.insertUsedFilter(docSub2); // INSERT LOG0082M
 
+          docSub.put("hidOrdId", params.get("hidSalesOrdId"));
+
           String filterLastserial = "";
 
           if (!CommonUtils.nvl(docSub.get("srvFilterId")).equals("")) {
