@@ -504,7 +504,7 @@
                 appvPrcssNo : selectAppvPrcssNo
             };
 
-            $("#rejectRsnLbl").hide();
+            //$("#rejectRsnLbl").hide();
 
             if(selectAppvPrcssStus == "A" || selectAppvPrcssStus == "J") {
                 $("#appvBtn").hide();
@@ -554,7 +554,7 @@
                     if(selectAppvPrcssStus != "A" && selectAppvPrcssStus != "J") {
                         $("#appvBtn").show();
                         $("#rejBtn").show();
-                        $("#rejectRsnLbl").hide();
+                        //$("#rejectRsnLbl").hide();
                     }
                 } else {
                     $("#appvBtn").hide();
@@ -599,7 +599,7 @@
         $('#new_wrap').hide();
         $("#batchInvcSeq").val("");
 
-        $("#rejectRsnLbl").hide();
+        //$("#rejectRsnLbl").hide();
         $("#rejctRsn").text('');
     }
 
@@ -1164,7 +1164,7 @@
                             <th scope="row"><spring:message code="approveView.approveStatus" /></th>
                             <td colspan="3" style="height:60px" id="viewAppvStus"></td>
                         </tr>
-                        <tr id="rejectRsnLbl">
+                        <tr id="rejectRsnLbl" style="display:none">
                             <th scope="row">Reject</th>
                             <td colspan="3" id="rejctRsn">
                         </tr>
