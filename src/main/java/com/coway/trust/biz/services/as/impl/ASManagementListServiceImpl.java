@@ -31,6 +31,7 @@ import oracle.sql.DATE;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
+ * 08/05/2019    ONGHC      1.0.2       - Amend asResult_insert
  *********************************************************************************************/
 
 @Service("ASManagementListService")
@@ -276,9 +277,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
           LOGGER.debug(" ============= :: " + i);
           if (addListing.get(i) != null) {
             Map<String, Object> updateMap = (Map<String, Object>) addListing.get(i);
-            LOGGER.debug(" ============= :: " + updateMap.get("filterID").toString() + " = "
-                + fltConfLstMap.get("stkId").toString());
-            if ((updateMap.get("filterID").toString()).equals((fltConfLstMap.get("stkId")).toString())) {
+            LOGGER.debug(" ============= :: " + CommonUtils.nvl(updateMap.get("filterID")).toString() + " = "
+                + CommonUtils.nvl(fltConfLstMap.get("stkId")).toString());
+            if ((CommonUtils.nvl(updateMap.get("filterID")).toString()).equals((CommonUtils.nvl(fltConfLstMap.get("stkId"))).toString())) {
               fltSta = true;
               break;
             } else {
@@ -1000,17 +1001,13 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
   }
 
-  // invoiced
   public int setPay32dData(ArrayList<AsResultChargesViewVO> vewList, Map<String, Object> params) {
-    LOGGER.debug("									===> setPay32dData   out");
+    LOGGER.debug("========================setPay32dData - START ===========================");
     Map<String, Object> pay32dMap = new HashMap();
 
     int a = -1;
     if (vewList.size() > 0) {
-
       for (AsResultChargesViewVO vo : vewList) {
-
-        // pay32dMap.put("invcItmId", params.get("invcItmId") );
         pay32dMap.put("taxInvcId", params.get("taxInvcId"));
         pay32dMap.put("invcItmType", vo.getAsChargesTypeId());
         pay32dMap.put("invcItmOrdNo", params.get("AS_SO_ID"));
@@ -1037,15 +1034,14 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         pay32dMap.put("invcItmRetnDt", "");
         pay32dMap.put("invcItmBillRefNo", "");
 
-        LOGGER.debug(" pay32d {}", pay32dMap.toString());
+        LOGGER.debug("== PAY0032D {}", pay32dMap.toString());
 
         a = ASManagementListMapper.insert_Pay0032d(pay32dMap);
 
-        LOGGER.debug(" pay32d  결과 {}", a);
-        LOGGER.debug("									===> setPay32dData   out");
+        LOGGER.debug("= NUMBER OF ROW AFFECTED :: ", a);
+        LOGGER.debug("========================setPay32dData - END ===========================");
       }
     }
-
     return a;
   }
 
@@ -1572,13 +1568,13 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
       // isTaxCode 0
       if (isTaxCode_0) {
-
         // SETTING THE VALUE AFTER THE CALL
         svc0004dmap.put("TaxCode", filter_TAXCODE);
         svc0004dmap.put("TaxRate", filter_TAXRATE);
 
-        if (Double.parseDouble(String.valueOf(svc0004dmap.get("AS_FILTER_AMT"))) > 0) { // txtFilterCharge
+        if (Double.parseDouble(String.valueOf(svc0004dmap.get("AS_FILTER_AMT"))) > 0) {
           if (addItemList.size() > 0) {
+            LOGGER.debug("= START PREPARE DATE FOR FILTERS = NUMBER OF FILTER : " + addItemList.size());
             for (int i = 0; i < addItemList.size(); i++) {
               Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
               Map<String, Object> iMap = new HashMap();
@@ -1590,6 +1586,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
               }
 
               double ft = Double.parseDouble(CommonUtils.isEmpty(tempFilterTotal) == true ? "0" : tempFilterTotal);
+
+              LOGGER.debug("= FILTER AMOUNT : " + tempFilterTotal);
+              LOGGER.debug("= FILTER INFO : " + updateMap.toString());
+
               if (ft > 0) {
                 String filterCode = "";
                 String filterName = "";
@@ -1610,8 +1610,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                 String strFilterID1 = String.valueOf(updateMap.get("filterId"));
                 String strFilterID2 = String.valueOf(updateMap.get("filterID"));
 
-                String strFilterID = String.valueOf(updateMap.get("filterId")) != "null"
-                    ? String.valueOf(updateMap.get("filterId")) : String.valueOf(updateMap.get("filterID"));
+                //String strFilterID = String.valueOf(updateMap.get("filterId")) != "null"
+                    //? String.valueOf(updateMap.get("filterId")) : String.valueOf(updateMap.get("filterID"));
+
+                String strFilterID = CommonUtils.nvl(updateMap.get("filterId")) != ""
+                    ? CommonUtils.nvl(updateMap.get("filterId")) : CommonUtils.nvl(updateMap.get("filterID"));
+
                 // setAsChargesTypeId 1261
                 AsResultChargesViewVO vo_filter = null;
                 vo_filter = new AsResultChargesViewVO();
@@ -1641,8 +1645,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         svc0004dmap.put("TaxRate", filter_TAXRATE);
 
         // FILTER CHARGE
-        if (Double.parseDouble(String.valueOf(svc0004dmap.get("AS_FILTER_AMT"))) > 0) { // txtFilterCharge
+        if (Double.parseDouble(String.valueOf(svc0004dmap.get("AS_FILTER_AMT"))) > 0) {
           if (addItemList.size() > 0) {
+            LOGGER.debug("= START PREPARE DATE FOR FILTERS = NUMBER OF FILTER : " + addItemList.size());
             for (int i = 0; i < addItemList.size(); i++) {
               Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
               Map<String, Object> iMap = new HashMap();
@@ -1654,6 +1659,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
               }
 
               double ft = Double.parseDouble(tempFilterTotal);
+              LOGGER.debug("= FILTER AMOUNT : " + tempFilterTotal);
+              LOGGER.debug("= FILTER INFO : " + updateMap.toString());
 
               if (ft > 0) {
                 String filterCode = "";
@@ -1669,7 +1676,6 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                       }
                     }
                   }
-
                 }
 
                 // double t_SpareCharges = (ft *100/106); / 2018-05-24 - Kit Wai
@@ -1677,8 +1683,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                 double t_SpareCharges = ft;
                 double t_SpareTaxes = ft - t_SpareCharges;
 
-                String strFilterID = String.valueOf(updateMap.get("filterId")) != ""
-                    ? String.valueOf(updateMap.get("filterId")) : String.valueOf(updateMap.get("filterID"));
+                String strFilterID = CommonUtils.nvl(updateMap.get("filterId")) != ""
+                    ? CommonUtils.nvl(updateMap.get("filterId")) : CommonUtils.nvl(updateMap.get("filterID"));
 
                 // setAsChargesTypeId 1261
                 AsResultChargesViewVO vo_filter32 = null;
