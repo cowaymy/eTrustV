@@ -11,6 +11,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
+ * 08/05/2019    ONGHC      1.0.2       - Add getFltNm
  *********************************************************************************************/
 
 @Mapper("ASManagementListMapper")
@@ -296,5 +297,7 @@ public interface ASManagementListMapper {
   int selRcdTms(Map<String, Object> params);
 
   int chkRcdTms(Map<String, Object> params);
+
+  String getFltNm(String params);
 
 }
