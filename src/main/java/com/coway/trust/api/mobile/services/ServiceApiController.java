@@ -101,6 +101,7 @@ import io.swagger.annotations.ApiOperation;
  *--------------------------------------------------------------------------------------------
  * 10/04/2019    ONGHC      1.0.1       - Add Logs
  * 08/05/2019    ONGHC      1.0.2       - Amend Logs
+ * 08/05/2019    ONGHC      1.0.3       - Amend hsRegistration to add stage
  *********************************************************************************************/
 
 @Api(value = "service api", description = "service api")
@@ -492,6 +493,7 @@ public class ServiceApiController {
               params.put("resultRptEmailNo", String.valueOf(hsTransLogs1.get(i).get("resultReportEmailNo")));
               params.put("resultAceptName", hsTransLogs1.get(i).get("resultAcceptanceName"));
               params.put("sgnDt", hsTransLogs1.get(i).get("signData"));
+              params.put("stage", "API");
 
               LOGGER.debug("### HS PARAM : " + params.toString());
               LOGGER.debug("### HS PARAM FILTER : " + paramsDetailList.toString());
