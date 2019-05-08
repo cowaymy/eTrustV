@@ -205,6 +205,11 @@
         	return;
         }
          */
+        if(Number($("#totAdjustment").text()) == 0){
+            Common.alert("* Please fill in the total adjustment amount.");
+            return;
+        }
+
         //param data array
         var data = GridCommon.getGridData(myGridID);
         data.form = $("#searchForm").serializeJSON();
