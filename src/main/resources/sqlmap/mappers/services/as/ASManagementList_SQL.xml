@@ -2585,6 +2585,12 @@
       AND RCD_TMS = #{rcdTms}
   </select>
 
+  <select id="getFltNm" parameterType="Map" resultType="String">
+    SELECT STK_CODE || '-' || STK_DESC as flt
+    FROM SYS0026M
+    WHERE STK_ID = #{params}
+  </select>
+
   <!-- INSERT START -->
   <insert id="insertSVC0001D" parameterType="Map">
     <![CDATA[
