@@ -858,13 +858,13 @@ public class BulkUploadController {
             //bulkUploadService.getApprDtls(params);
 
             //String appvPrcssStus = apprDtls.get("appvPrcssStus").toString();
-            String appvLineCnt = apprDtls.get("appvLineCnt").toString();
-            String appvLinePrcssCnt = apprDtls.get("appvLinePrcssCnt").toString();
+            String appvLineCnt = apprDtls.get("appvLineCnt").toString(); // no of approvers
+            String appvLinePrcssCnt = apprDtls.get("appvLinePrcssCnt").toString(); // current no of approved
             String appvLineSeq = apprDtls.get("appvLineSeq").toString();
             String appvStus = apprDtls.get("appvStus").toString();
 
             hm.put("appvPrcssNo", params.get("appvPrcssNo"));
-            if(Integer.parseInt(appvLineCnt) > Integer.parseInt(appvLineSeq) + 1) {
+            if(Integer.parseInt(appvLineCnt) > Integer.parseInt(appvLineSeq)) {
                 if("J".equals(params.get("appvStus"))) {
                     hm.put("appvPrcssStus", "J");
                 } else {

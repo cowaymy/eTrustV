@@ -406,8 +406,9 @@
         FROM FCM0004M A
         INNER JOIN FCM0005D B
             ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+            AND B.APPV_STUS = 'R'
         WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
-           AND (A.APPV_LINE_PRCSS_CNT + 1) = b.APPV_LINE_SEQ
+           /*AND (A.APPV_LINE_PRCSS_CNT + 1) = b.APPV_LINE_SEQ*/
         ORDER BY B.APPV_LINE_SEQ
     </select>
 
@@ -633,7 +634,7 @@
             ]]>
         </if>
         <if test="invcNo != null and invcNo != ''">
-            AND C.INVC_NO = #{invcNo}
+            AND C.INVC_NO LIKE '%' || UPPER(#{invcNo}) || '%'
         </if>
         <if test="costCenter != null and costCenter != ''">
             AND C.COST_CENTER = #{costCenter}
@@ -642,7 +643,7 @@
             AND C.SUPPLIER = #{memAccId}
         </if>
         <if test="utilNo != null and utilNo != ''">
-            AND C.UTIL_NO = #{utilNo}
+            AND C.UTIL_NO LIKE '%' || UPPER(#{utilNo}) || '%'
         </if>
         <if test="appvPrcssStus != null and appvPrcssStus != ''">
              AND B.APPV_PRCSS_STUS IN
