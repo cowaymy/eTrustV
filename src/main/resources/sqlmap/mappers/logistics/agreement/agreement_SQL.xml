@@ -15,7 +15,8 @@
             F.NAME status,
             NVL(TO_CHAR(A.PROMO_DT, 'DD/MM/YYYY'), '-') promoDt,
             CASE WHEN A.MEM_TYPE = '2' THEN TO_CHAR(G.CNFM_DT, 'DD/MM/YYYY') END AS CD_CNFM_DT,
-            TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOIN_DT
+            TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOIN_DT,
+            G.CNFM AGMT_STUS
         FROM ORG0001D A
         INNER JOIN (
             SELECT
