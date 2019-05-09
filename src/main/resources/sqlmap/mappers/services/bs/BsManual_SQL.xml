@@ -4496,13 +4496,20 @@ ORDER BY CODE_NAME
         #{taxInvcType},
         #{taxInvcCustName},
         #{taxInvcCntcPerson},
-        #{taxInvcAddr1},
-        #{taxInvcAddr2},
-        #{taxInvcAddr3},
-        #{taxInvcAddr4},
-        #{taxInvcPostCode},
-        #{taxInvcStateName},
-        #{taxInvcCnty},
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id =#{AS_SO_ID})
+        ,'ADDR1')),
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id =#{AS_SO_ID})
+        ,'ADDR2')),
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id =#{AS_SO_ID})
+        ,'ADDR3')),
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id =#{AS_SO_ID})
+        ,'ADDR4')),
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id =#{AS_SO_ID})
+        ,'POST')),
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id =#{AS_SO_ID})
+        ,'STATE')),
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id =#{AS_SO_ID})
+        ,'CNTY')),
         #{taxInvcTaskId},
         #{taxInvcRem},
         #{taxInvcChrg},
@@ -4548,14 +4555,22 @@ ORDER BY CODE_NAME
         #{invcItmGstTxs},
         #{invcItmChrg},
         #{invcItmAmtDue},
-        #{invcItmAdd1},
-        #{invcItmAdd2},
-        #{invcItmAdd3},
-        #{invcItmAdd4},
-        #{invcItmPostCode},
-        #{invcItmAreaName},
-        #{invcItmStateName},
-        #{invcItmCnty},
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id
+        =#{invcItmOrdNo}) ,'ADDR1')),
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id
+        =#{invcItmOrdNo}) ,'ADDR2')),
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id
+        =#{invcItmOrdNo}) ,'ADDR3')),
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id
+        =#{invcItmOrdNo}) ,'ADDR4')),
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id
+        =#{invcItmOrdNo}) ,'POST')),
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id
+        =#{invcItmOrdNo}) ,'CITY')),
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id
+        =#{invcItmOrdNo}) ,'STATE')),
+        UPPER(FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id
+        =#{invcItmOrdNo}) ,'CNTY')),
         #{invcItmInstallDt},
         #{invcItmRetnDt},
         #{invcItmBillRefNo},
