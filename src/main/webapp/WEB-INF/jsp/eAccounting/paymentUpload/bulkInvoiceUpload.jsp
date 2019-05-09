@@ -440,6 +440,9 @@
                         AUIGrid.resize(bulkInvcGrid, 1195, 350);
                         AUIGrid.hideColumnByDataField(bulkInvcGrid, "clmNo");
 
+                        var amtArr = AUIGrid.getColumnValues(bulkInvcGrid, "amt", true);
+                        fn_sumUpload(amtArr);
+
                         // Display content result
                         $("#uploadContent").show();
                         $("#bulkInvcUp_grid_wrap").show();
@@ -484,6 +487,7 @@
             $("#viewAppvLbl").hide();
             $("#bulkAppvBtns").hide();
             $("#bulkFilesUploadRow").show();
+            $("#bulkGenDtls").hide();
 
             AUIGrid.hideColumnByDataField(bulkInvcGrid, "clmNo");
         }
@@ -496,6 +500,9 @@
             $("#batchFileSelector").attr('readonly');
             $("#suppDocFileSelector").attr('readonly');
             $("#newBulkBtns").hide();
+
+            $("#bulkGenDtls").show();
+            $("#newBatchId").text(selectBatchId);
 
             var data = {
                 batchId : selectBatchId,
@@ -568,6 +575,9 @@
                     }
                 }
 
+                var amtArr = AUIGrid.getColumnValues(bulkInvcGrid, "amt", true);
+                fn_sumUpload(amtArr);
+
                 $("#uploadContent").show();
                 $("#suppDocFile").show();
                 $("#suppDocFileSelector").show();
@@ -580,6 +590,14 @@
 
             });
         }
+    }
+
+    function fn_sumUpload(arr) {
+        var totalAmt = 0;
+        for(var a = 0; a < arr.length; a++) {
+            totalAmt += parseFloat(arr[a]);
+        }
+        $("#uploadAmt").text(totalAmt.toFixed(2));
     }
 
     function fn_closeUpload() {
@@ -601,6 +619,8 @@
 
         //$("#rejectRsnLbl").hide();
         $("#rejctRsn").text('');
+
+        $("#uploadAmt").text('');
     }
 
     function fn_proceed() {
@@ -1154,6 +1174,10 @@
                         <col style="width: *" />
                     </colgroup>
                     <tbody>
+                        <tr id="bulkGenDtls" style="display : none">
+                            <th scope="row" id="newBatchIdLbl">Batch ID</th>
+                            <td colspan="3" id="newBatchId"></td>
+                        </tr>
                         <tr id="bulkFilesUploadRow">
                             <th scope="row" id="invcFile">Batch File</th>
                             <td>
@@ -1193,6 +1217,9 @@
                 <header class="pop_header" id="pop_header">
                     <h1>Bulk Invoices Upload Content</h1>
                 </header>
+            </aside><!-- title_line end -->
+            <aside class="title_line"><!-- title_line start -->
+                <h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="uploadAmt"></span></h2>
             </aside><!-- title_line end -->
             <table class="type1">
                 <caption>table</caption>
