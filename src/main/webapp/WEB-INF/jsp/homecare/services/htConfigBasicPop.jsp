@@ -191,7 +191,7 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
     <td>
     <input type="text" title="" id="entry_nric" name="entry_nric"  value="${configBasicInfo.custNric}" placeholder="" class="readonly " readonly="readonly" style="width: 188px; "/>
     </td>
-    <th scope="row" ><spring:message code='service.title.HSAvailability'/></th>
+    <th scope="row" >CS Availability</th>
     <td>
 <%--    <input type="text" title="" id="entry_availability" name="entry_availability"  value="${BasicInfo.custNric}" placeholder="" class="readonly " readonly="readonly" style="width: 464px; "/> --%>
     <select class="w100p" id="entry_availability" name="entry_availability">
@@ -209,7 +209,7 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
         <!-- <option value="" selected="selected">dd</option>-->
         </select>
     </td>
-    <th scope="row" ><spring:message code='service.title.LastHSDate'/></th>
+    <th scope="row" >Last CS Date</th>
     <td>
     <input type="text" id="entry_lstHSDate" name="entry_lstHSDate" title="Create start Date" value="${configBasicInfo.c4}" placeholder="DD/MM/YYYY"  class="readonly " readonly="readonly"  />
     </td>
@@ -219,16 +219,16 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
     <td colspan="3">
      <textarea cols="20" rows="5" id="entry_remark" name="entry_remark" placeholder="" > ${configBasicInfo.configBsRem} </textarea>
 </tr>
-<tr>
+<%-- <tr>
     <th scope="row" ><spring:message code='service.title.HappyCallService'/></th>
     <td colspan="3">
     <label><input type="checkbox" id="entry_settIns" name="entry_settIns" <c:if test="${configBasicInfo.configSettIns == 1}">checked</c:if> /><span>Installation Type</span></label>
     <label><input type="checkbox" id="entry_settHs" name="entry_settHs" <c:if test="${configBasicInfo.configSettBs == 1}">checked</c:if>/><span>BS Type</span></label>
     <label><input type="checkbox" id="entry_settAs" name="entry_settAs" <c:if test="${configBasicInfo.configSettAs == 1}">checked</c:if>/><span>AS Type</span></label>
     </td>
-</tr>
+</tr> --%>
 <tr>
-    <th scope="row" ><spring:message code='service.title.PreferHSWeek'/></th>
+    <th scope="row" >Prefer CS Week</th>
     <td colspan="3">
     <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="0" <c:if test="${configBasicInfo.configBsWeek == 0}">checked</c:if> disabled/><span>None</span></label>
     <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="1" <c:if test="${configBasicInfo.configBsWeek == 1}">checked</c:if>/><span>Week 1</span></label>
