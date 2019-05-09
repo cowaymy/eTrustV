@@ -349,37 +349,6 @@ public class htManualController {
 
 
 
-	@RequestMapping(value = "/selectCsInitDetailPop.do")
-	public String selectHsInitDetailPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {
-
-		params.put("schdulId", params.get("schdulId"));
-		params.put("salesOrderId", params.get("salesOrdId"));
-
-		EgovMap  hsDefaultInfo = htManualService.selectHsInitDetailPop(params);
-		List<EgovMap>  cmbCollectTypeComboList = htManualService.cmbCollectTypeComboList(params);
-//		List<EgovMap>  cmbServiceMemList = htManualService.cmbServiceMemList(params);
-		EgovMap orderDetail = htOrderDetailService.selectOrderBasicInfo(params,sessionVO);//
-		List<EgovMap>  failReasonList = htManualService.failReasonList(params);
-//		List<EgovMap>  serMemList = htManualService.serMemList(params);
-
-
-		logger.debug(" params : " , params);
-		logger.debug("hsDefaultInfo : {}", hsDefaultInfo);
-
-		model.addAttribute("hsDefaultInfo", hsDefaultInfo);
-		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
-//		model.addAttribute("cmbServiceMemList", cmbServiceMemList);
-		model.addAttribute("orderDetail", orderDetail);
-		model.addAttribute("failReasonList", failReasonList);
-//		model.addAttribute("serMemList", serMemList);
-
-		return "homecare/services/htDetailPop";
-
-	}
-
-
-
-
 
 	@RequestMapping(value = "/htBasicInfoPop.do")
 	public String selecthsBasicInfoPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {
@@ -614,12 +583,7 @@ public class htManualController {
 		logger.debug("params(pop)================= : {}", params.toString());
 		params.put("orderNo", params.get("salesOrdId"));
 
-		//List<EgovMap>  cmbServiceMemList = htManualService.cmbServiceMemList(params);
 		EgovMap configBasicInfo = htManualService.selectConfigBasicInfo(params);
-		//EgovMap configBasicInfo = htManualService.selectConfigBasicInfo(params);
-	//	EgovMap serMember = htManualService.se ;
-//		EgovMap as_ord_basicInfo = htManualService.selectOrderBasicInfo(params);
-//		EgovMap asentryInfo =null;
 
 //		model.put("cmbServiceMemList", cmbServiceMemList);
 		model.put("configBasicInfo", configBasicInfo);
@@ -630,6 +594,7 @@ public class htManualController {
 		model.put("BRNCH_ID",(String) params.get("brnchId"));
 		model.put("CODY_MANGR_USER_ID", (String) params.get("codyMangrUserId"));
 		model.put("CUST_ID", (String) params.get("custId"));
+		model.put("SCHDUL_ID", params.get("schdulId"));
 
 		//logger.debug("configBasicInfo(pop)================= : {}", configBasicInfo);
 		//
@@ -826,6 +791,7 @@ public class htManualController {
 
 		logger.debug("params : {}", params);
         String srvCodyId = "";
+
         LinkedHashMap  hsResultM = (LinkedHashMap)params.get("hsResultM");
         hsResultM.put("hscodyId", hsResultM.get("cmbServiceMem"));
         srvCodyId =  htManualService.getSrvCodyIdbyMemcode(hsResultM);
@@ -833,14 +799,25 @@ public class htManualController {
         hsResultM.put("cmbServiceMem", srvCodyId);
         hsResultM.put("hscodyId", srvCodyId);
         logger.debug("hsResultM : {}", hsResultM);
-        htManualService.updateSrvCodyId(hsResultM);
+ //       htManualService.updateSrvCodyId(hsResultM);
 //		logger.debug("params111111111 : {}", params);
 //		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
-
+        String schdulId = (String) hsResultM.get("schdulId");
 
 		logger.debug("hsResultM ===>"+hsResultM.toString());
 
 		int resultValue = htManualService.updateHsConfigBasic(params, sessionVO);
+
+
+		//ADDED BY TPY FOR ASSIGN HT CODY_ID IN SVC0008D
+		logger.debug("schdulId ===>"+hsResultM.get("schdulId"));
+
+		if(schdulId != null && schdulId != ""){
+			params.put("updator",sessionVO.getUserId());
+			params.put("codyId",srvCodyId);
+			params.put("schdulId",schdulId);
+			htManualService.updateAssignHT(params);
+		}
 
 
 		if(resultValue >0 ){
@@ -1267,6 +1244,12 @@ public class htManualController {
 	public String htReportSinglePop(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
 		return "homecare/services/htReportSinglePop";
+	}
+
+	@RequestMapping(value = "/htConfigRawDataPop.do")
+	public String htConfigRawDataPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "homecare/services/htConfigRawDataPop";
 	}
 
 
