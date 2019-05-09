@@ -99,6 +99,10 @@
               });
 
 
+                $('#configInfo').click(function() {
+                    Common.popupDiv("/homecare/services/htConfigRawDataPop.do", null, null, true);
+                });
+
         });
 
 
@@ -196,6 +200,7 @@
                 <dd>
                 <ul class="btns">
                     <li><p class="link_btn"> <a href="javascript:fn_basicInfo()" id="basicInfo">Care Services Basic Info</a> </p></li>
+                      <li><p class="link_btn"> <a href="javascript:fn_configInfo()" id="configInfo">Care Services Configuration Raw Data</a> </p></li>
                 </ul>
                 <ul class="btns">
                 </ul>
