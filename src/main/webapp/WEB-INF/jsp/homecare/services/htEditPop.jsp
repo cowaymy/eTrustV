@@ -63,7 +63,8 @@ var myDetailGridData = null;
                                 headerText : "result_id",
                                 width : 140,
                                 visible:false
-                               }, {
+                               }
+/*                                , {
                                 dataField : "undefined",
                                 headerText : "View",
                                 width : 170,
@@ -83,13 +84,14 @@ var myDetailGridData = null;
                                                   $("#_brnchId").val(item.brnchId);
                                                */
 
-                                               var aaa = AUIGrid.getCellValue(myDetailGridID2, rowIndex,"resultId");
+                                            /*   var aaa = AUIGrid.getCellValue(myDetailGridID2, rowIndex,"resultId");
                                                $("#MresultId").val(AUIGrid.getCellValue(myDetailGridID2, rowIndex,"resultId"));
                                                Common.popupDiv("/services/bs/hSMgtResultViewResultPop.do", $("#viewHSResultForm").serializeJSON());
 
                                              }
                                 }
-                               }];
+                               } */
+                               ];
 
     // 그리드 속성 설정
     var gridPros = {
