@@ -72,7 +72,7 @@ var myDetailGridData = null;
                              renderer : {
                                         type : "CheckBoxEditRenderer",
                                         showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-                                        editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
+                                        editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
                                         checkValue : "1", // true, false 인 경우가 기본
                                         unCheckValue : "0"
                              }
@@ -146,13 +146,13 @@ var myDetailGridData = null;
         }
       }
 
-      if (event.columnIndex == 7) {
+      /*if (event.columnIndex == 7) {
         console.log("createAUIGrid :: event.item.stkId :: " + event.item.stkId);
         if((event.item.stkId) == 1428){
           Common.alert('* <b>' + event.item.stkDesc + '<br>is not allow to edit.</b>');
           AUIGrid.setCellValue(myDetailGridID, event.rowIndex, event.dataField, "");
         }
-      }
+      }*/
     });
   }
 
