@@ -324,4 +324,6 @@ public interface htManualMapper {
 
 	List<EgovMap> selectHSReportGroup(Map<String, Object> params);
 
+	void updateAssignHT(Map<String, Object> params);
+
 }
