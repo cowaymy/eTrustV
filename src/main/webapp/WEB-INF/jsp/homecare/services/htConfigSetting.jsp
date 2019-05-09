@@ -184,7 +184,7 @@
                 </td> -->
                 <th scope="row"><spring:message code='service.title.Customer'/></th>
                 <td>
-                    <input id="manualCustomer" name="manualCustomer"  type="text" title="" placeholder="Customer" class="w100p" />
+                    <input id="manualCustomer" name="manualCustomer"  type="text" title="" placeholder="Customer ID Only" class="w100p" />
                 </td>
 
             </tr>
