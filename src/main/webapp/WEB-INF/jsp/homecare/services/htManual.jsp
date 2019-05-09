@@ -191,6 +191,51 @@
       });
     }
 
+  function fn_htChange(){
+	  var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+
+	    if (checkedItems.length <= 0) {
+	      Common.alert('No data selected.');
+	      return;
+	    } else if (checkedItems.length >= 2) {
+	      Common.alert('Only availbale to entry a result with single CS order');
+	      return;
+	    } else if (checkedItems[0]["code"] != "ACT") {
+	      Common.alert('Only availbale to entry a result<br/>for the CS order status in Active');
+	      return;
+	    } else {
+	      var str = "";
+	      var custStr = "";
+	      var rowItem;
+	      var brnchId = "";
+	      var saleOrdList = "";
+	      var list = "";
+	      var brnchCnt = "";
+
+	      var saleOrd = {
+	        salesOrdNo : ""
+	      };
+
+	      for (var i = 0, len = checkedItems.length; i < len; i++) {
+	          rowItem = checkedItems[i];
+	          hsStuscd = rowItem.stusCodeId;
+	          schdulId = rowItem.schdulId;
+	          salesOrdId = rowItem.salesOrdId;
+	          custId = rowItem.custId;
+	          brnchId = rowItem.brnchId;
+	          codyMangrUserId = rowItem.c5 ;
+
+	          if (hsStuscd == 4) {
+	            Common.alert("CS result already COM. Assign HT Member is disallowed.");
+	            return;
+	          }
+	        }
+	      }
+
+	    		  Common.popupDiv("/homecare/services/htConfigBasicPop.do?isPop=true&schdulId="+ schdulId + "&salesOrdId="+salesOrdId +"&brnchId="+brnchId +"&codyMangrUserId="+codyMangrUserId+"&custId="+custId, null, null , true , '_ConfigBasicPop');
+
+  }
+
 
   function fn_getHSAddListAjax() {
     // Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
@@ -237,405 +282,6 @@
         true, '_hsDetailPopDiv');
   }
 
-  /* function fn_codyChangeHQ() {
-    $("#_openGb").val("codyChange");
-
-    var radioVal = $("input:radio[name='searchDivCd']:checked").val();
-    if (radioVal == '2') {
-      Common.alert("'Assign HT Transfer' is not allow in Manual CS");
-      return false;
-    }
-
-    var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
-
-    if (checkedItems.length <= 0) {
-      Common.alert('No data selected.');
-      return false;
-    } else {
-
-      var str = "";
-      var custStr = "";
-      var rowItem;
-      var brnchId = "";
-      var saleOrdList = "";
-      var list = "";
-      var brnchCnt = 0;
-      var ctBrnchCodeOld = "";
-      var dept = "";
-      var deptList = "";
-
-      //var saleOrdList = [];
-      var saleOrd = {
-        salesOrdNo : ""
-      };
-
-      for (var i = 0, len = checkedItems.length; i < len; i++) {
-        rowItem = checkedItems[i];
-        saleOrdList += rowItem.salesOrdNo;
-        deptList = deptList + rowItem.deptCode + ","
-            + rowItem.codyMangrUserId
-
-        if (i != len - 1) {
-          saleOrdList += ",";
-          deptList += ",";
-        }
-
-        if (i == 0) {
-          brnchId = rowItem.branchCd;
-        }
-
-        if (rowItem.stusCodeId == "4") {
-          Common
-              .alert('Not Allow to Cody Transfer for Complete HS Order');
-          return;
-        }
-
-        dept = rowItem.deptCode;
-
-      }
-
-      Common
-          .confirmCustomizingButton(
-              "Do you want to transfer an assign cody<br>with this CM group?",
-              "Yes", "No", fn_originBrnchAssign, fn_selectBrnchCM); */
-
-      /*
-
-      // deptCode의 MEM_UP_ID가 동일한 것만 수정 가능하도록
-      Common.ajax("GET", "/services/bs/assignDeptMemUp.do?deptList="+deptList, "" , function(result){
-        var memUpId = "";
-        var memUpCnt = 0;
-        for (var j=0; j<result.length; j++) {
-          if (j == 0) {
-            memUpId = result[j]["memUpId"];
-          } else if (j != 0){
-            if(memUpId != result[j]["memUpId"] ){
-              memUpCnt += 1 ;
-            }
-          }
-        }
-
-        if (memUpCnt != 0) {
-          // Department의 MEM_UP_ID가 다른 걸 한꺼번에 Assign Cody Transfer 하려고 할 때 alert 메시지
-          Common.alert("Not Avaialable to Assign Cody Transfer </br>With different assigned Cody's Group in Single Time.");
-          return;
-        } else {
-          Common.confirmCustomizingButton("같은 브랜치?", "Yes", "No", fn_sameBrnchAssign, fn_otherBrnchAssign);
-        }
-      }); */
-
-      /*
-      if(brnchCnt > 0 ){
-        Common.alert("Not Avaialable to Assign Cody Transfer With Several CDB in Single Time.");
-        return;
-      }
-      */
-
-    /*   function fn_originBrnchAssign() {
-        var jsonObj = {
-          "SaleOrdList" : saleOrdList,
-          "BrnchId" : brnchId,
-          "ManualCustId" : $("#manualCustomer").val(),
-          "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val(),
-          "department" : dept
-
-        };
-
-        Common
-            .popupDiv("/homecare/services/selecthSCodyChangePop.do?isPop=true&JsonObj="
-                + jsonObj
-                + "&CheckedItems="
-                + saleOrdList
-                + "&BrnchId="
-                + brnchId
-                + "&ManuaMyBSMonth="
-                + $("#ManuaMyBSMonth").val()
-                + "&deptList="
-                + deptList);
-      }
-
-      function fn_selectBrnchCM() {
-        var jsonObj = {
-          "SaleOrdList" : saleOrdList,
-          "BrnchId" : brnchId,
-          "ManualCustId" : $("#manualCustomer").val(),
-          "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val(),
-          "department" : dept
-
-        };
-
-        Common.popupDiv("/homecare/services/assignBrnchCMPop.do?JsonObj="
-            + jsonObj + "&CheckedItems=" + saleOrdList
-            + "&BrnchId=" + brnchId + "&ManuaMyBSMonth="
-            + $("#ManuaMyBSMonth").val() + "&deptList=" + deptList);
-      }
-
-    }
-
-  } */
-
-/*   function fn_codyChange() {
-    $("#_openGb").val("codyChange");
-
-    var radioVal = $("input:radio[name='searchDivCd']:checked").val();
-    if (radioVal == '2') {
-      Common.alert("'Assign Cody Transfer' is not allow in Manual HS");
-      return false;
-    }
-
-    var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
-
-    if (checkedItems.length <= 0) {
-      Common.alert('No data selected.');
-      return false;
-    } else { */
-
-      /*
-      if(checkedItems.length > 1){
-        Common.alert('please choose one data selected.');
-        return false;
-      }
-      */
-
-     /*  var str = "";
-      var custStr = "";
-      var rowItem;
-      var brnchId = "";
-      var saleOrdList = "";
-      var list = "";
-      var brnchCnt = 0;
-      var ctBrnchCodeOld = "";
-      var dept = "";
-      var deptList = "";
-
-      var saleOrd = {
-        salesOrdNo : ""
-      };
-
-      for (var i = 0, len = checkedItems.length; i < len; i++) {
-        rowItem = checkedItems[i];
-        saleOrdList += rowItem.salesOrdNo;
-        deptList = deptList + rowItem.deptCode + ","
-            + rowItem.codyMangrUserId
-
-        if (i != len - 1) {
-          saleOrdList += ",";
-          deptList += ",";
-        } */
-
-        /*
-        //동일 brnch 만 수정하도록
-        if(i !=0 ){
-          if(ctBrnchCodeOld != rowItem.codyBrnchCode ){
-            brnchCnt += 1 ;
-          }
-        }
-        ctBrnchCodeOld = rowItem.codyBrnchCode;
-        */
-
-      /*   if (i == 0) {
-          brnchId = rowItem.branchCd;
-        }
-
-        if (rowItem.stusCodeId == "4") {
-          Common
-              .alert('Not Allow to HT Transfer for Complete HS Order');
-          return;
-        }
-
-        dept = rowItem.deptCode;
-
-      } */
-
-      //Common.confirmCustomizingButton("Do you want to transfer an assign cody<br>with this CM group?", "Yes", "No", fn_originBrnchAssign, fn_selectBrnchCM);
-      //fn_originBrnchAssign();
-
-      /*
-      // deptCode의 MEM_UP_ID가 동일한 것만 수정 가능하도록
-      Common.ajax("GET", "/services/bs/assignDeptMemUp.do?deptList="+deptList, "" , function(result){
-        var memUpId = "";
-        var memUpCnt = 0;
-        for (var j=0; j<result.length; j++) {
-          if (j == 0) {
-            memUpId = result[j]["memUpId"];
-          } else if (j != 0){
-            if(memUpId != result[j]["memUpId"] ){
-              memUpCnt += 1 ;
-            }
-          }
-        }
-
-        if (memUpCnt != 0) {
-          // Department의 MEM_UP_ID가 다른 걸 한꺼번에 Assign Cody Transfer 하려고 할 때 alert 메시지
-          Common.alert("Not Avaialable to Assign Cody Transfer </br>With different assigned Cody's Group in Single Time.");
-          return;
-        } else {
-          Common.confirmCustomizingButton("같은 브랜치?", "Yes", "No", fn_sameBrnchAssign, fn_otherBrnchAssign);
-        }
-      });
-      */
-
-      /*
-      if(brnchCnt > 0 ){
-        Common.alert("Not Avaialable to Assign Cody Transfer With Several CDB in Single Time.");
-        return;
-      }
-      */
-
-      /* function fn_originBrnchAssign() {
-        var jsonObj = {
-          "SaleOrdList" : saleOrdList,
-          "BrnchId" : brnchId,
-          "ManualCustId" : $("#manualCustomer").val(),
-          "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val(),
-          "department" : dept
-        };
-
-        Common
-            .popupDiv("/homecare/services/selecthSCodyChangePop.do?isPop=true&JsonObj="
-                + jsonObj
-                + "&CheckedItems="
-                + saleOrdList
-                + "&BrnchId="
-                + brnchId
-                + "&ManuaMyBSMonth="
-                + $("#ManuaMyBSMonth").val()
-                + "&deptList="
-                + deptList);
-      } */
-
-      /*
-      function fn_selectBrnchCM(){
-        var jsonObj = { "SaleOrdList" : saleOrdList,
-                        "BrnchId": brnchId,
-                        "ManualCustId" : $("#manualCustomer").val(),
-                        "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val(),
-                        "department" : dept
-         };
-
-          Common.popupDiv("/services/bs/assignBrnchCMPop.do?JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId+"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()+"&deptList="+deptList);
-      }
-      */
-   // }
-  //}
-
-  /*
-  function fn_sameBrnchAssign(){
-  var jsonObj = { "SaleOrdList" : saleOrdList,
-                  "BrnchId": brnchId,
-                  "ManualCustId" : $("#manualCustomer").val(),
-                  "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val(),
-                  "department" : dept
-   };
-
-   Common.popupDiv("/services/bs/selecthSCodyChangePop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  +"&department="+ dept );
-  }
-
-  function fn_otherBrnchAssign(){
-  }
-  */
-/*
-  $(function() {
-    $("#hSConfiguration")
-        .click(
-            function() {
-              $("#_openGb").val("hsConfig");
-
-              var checkedItems = AUIGrid
-                  .getCheckedRowItemsAll(myGridID);
-
-              if (checkedItems.length <= 0) {
-                Common.alert('No data selected.');
-                return false;
-              } else {
-                var str = "";
-                var custStr = "";
-                var rowItem;
-                var brnchId = "";
-                var saleOrdList = "";
-                var list = "";
-                var brnchCnt = 0;
-                var ctBrnchCodeOld = "";
-                var saleOrd = {
-                  salesOrdNo : ""
-                };
-
-                for (var i = 0, len = checkedItems.length; i < len; i++) {
-                  rowItem = checkedItems[i];
-                  saleOrdList += rowItem.salesOrdNo;
-
-                  var hsStutus = rowItem.code;
-                  if (hsStutus == "COM") {
-                    Common.alert("<b>  do no has result COM..");
-                    return;
-                  }
-
-                  if (i != len - 1) {
-                    saleOrdList += ",";
-                  }
-
-                  if (i != 0) {
-                    if (ctBrnchCodeOld != rowItem.codyBrnchCode) {
-                      brnchCnt += 1;
-                    }
-                  }
-
-                  ctBrnchCodeOld = rowItem.codyBrnchCode;
-
-                  if (i == 0) {
-                    brnchId = rowItem.brnchId;
-                  }
-
-                }
-
-                if (brnchCnt > 0) {
-                  Common.alert("Not Avaialable to Create HS Order With Several CDB in Single Time.");
-                  return;
-                }
-
-                var jsonObj = {
-                  "SaleOrdList" : saleOrdList,
-                  "BrnchId" : brnchId,
-                  "ManualCustId" : $("#manualCustomer").val(),
-                  "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val()
-                };
-
-                Common
-                    .ajax(
-                        "GET",
-                        "/homecare/services/selectHsOrderInMonth.do?saleOrdList="
-                            + saleOrdList
-                            + "&ManuaMyBSMonth="
-                            + $("#ManuaMyBSMonth").val(),
-                        "",
-                        function(result) {
-                          console.log(result);
-                          if (result.message == "success") {
-                            Common.alert("There is already exist for HS order for this month");
-                            return;
-                          } else {
-                            Common
-                                .popupDiv("/homecare/services/selectHSConfigListPop.do?isPop=true&JsonObj="
-                                    + jsonObj
-                                    + "&CheckedItems="
-                                    + saleOrdList
-                                    + "&BrnchId="
-                                    + brnchId
-                                    + "&ManuaMyBSMonth="
-                                    + $(
-                                        "#ManuaMyBSMonth")
-                                        .val());
-                          }
-                        });
-              }
-            });
-  });
- */
-  /*
-    AUIGrid.bind(myGridID, "cellClick", function(event) {
-      custId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "custId");
-    });
-  */
 
   $(document).ready(
       function() {
@@ -792,26 +438,6 @@
   }
 
 
-/*   function fn_checkboxChangeHandler(event) {
-
-    var radioVal = $("input:radio[name='searchDivCd']:checked").val();
-
-    if (radioVal == 1) {
-      fn_destroyGrid();
-      myGridID = GridCommon.createAUIGrid("grid_wrap",
-          columnAssiinLayout, gridProsAssiin);
-    } else {
-      fn_destroyGrid();
-      myGridID = GridCommon.createAUIGrid("grid_wrap",
-          columnManualLayout, gridProsManual);
-    }
-  } */
-
-/*   function fn_hsCountForecastListing() {
-    Common.popupDiv("/services/bs/report/hsCountForecastListingPop.do",
-        null, null, true, '');
-  } */
-
   function fn_hsReportSingle() {
     Common.popupDiv("/homecare/services/htReportSinglePop.do", null, null,
         true, '');
@@ -824,11 +450,6 @@
     Common.popupDiv("/homecare/services/htSummaryList.do", null, null,
         true, '');
   }
-
-/*   function fn_filterForecastList() {
-    Common.popupDiv("/services/bs/report/filterForecastListingPop.do",
-        null, null, true, '');
-  } */
 
   function fn_cmdBranchCode() {
     if ($("#memberLevel").val() == "3" || $("#memberLevel").val() == "4") {
@@ -860,13 +481,6 @@
     }
   }
 
-/*   function fn_hsConfigOld() {
-    window.open("/services/bs/hsManualOld.do", '_self');
-  } */
-
-/*   function fn_hsMonthlySetting() {
-    window.open("/services/bs/hsMonthlyConfigOldVer.do", '_self');
-  } */
 
   function fn_cMyBSMonth(field) {
     $("#" + field + "").val("");
@@ -920,14 +534,11 @@
    <h2>Care Service Management</h2>
    <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
- <!--     <li><p class="btn_blue">
-       <a href="#" onclick="javascript:fn_codyChangeHQ();"
-        id="codyChangeHQ">Assign Cody Transfer HQ</a>
-      </p></li>
+
      <li><p class="btn_blue">
-       <a href="#" onclick="javascript:fn_codyChange();" id="codyChange">Assign
-        Cody Transfer</a>
-      </p></li> -->
+       <a href="#" onclick="javascript:fn_htChange();" id="htChange">Assign
+        HT Member</a>
+      </p></li>
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_getHSAddListAjax();"
         id="addResult">Add CS Result</a>
@@ -943,11 +554,7 @@
       </p></li>
     </c:if>
    </ul>
-   <!--조회조건 추가  -->
-   <!--
-    <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
-    <label><input type="radio" name="searchDivCd" value="2" onClick="fn_checkRadioButton('comm_stat_flag')" />Manual HS</label>
-   -->
+
   </aside>
   <!-- title_line end -->
   <div id="hsManagement" style="display: block;">
@@ -984,17 +591,17 @@
           class="w100p"></td>
          <th scope="row">Assign HT</th>
          <td><input id="txtAssigncodyCode" name="txtAssigncodyCode"
-          type="text" title="" placeholder="Cody" class="w100p" /> <!-- By Kv - Change cmbBox to text Box -->
+          type="text" title="" placeholder="HT" class="w100p" /> <!-- By Kv - Change cmbBox to text Box -->
           <!-- <select class="w100p" id="cmdcodyCode" name="cmdcodyCode" > -->
           <!-- <option value="">cody</option> --></td>
          <th scope="row">Complete HT</th>
          <td><input id="txtComcodyCode" name="txtComcodyCode"
-          type="text" title="" placeholder="Cody" class="w100p" /></td>
+          type="text" title="" placeholder="HT" class="w100p" /></td>
         </tr>
         <tr>
-         <th scope="row">CS Order</th>
+         <th scope="row">HCS Order</th>
          <td><input id="txtHsOrderNo" name="txtHsOrderNo"
-          type="text" title="" placeholder="HS Order" class="w100p" />
+          type="text" title="" placeholder="HCS Order" class="w100p" />
          </td>
          <th scope="row">CS Period</th>
          <td><p style="width:70%;">
@@ -1014,7 +621,7 @@
         <tr>
          <th scope="row">Care Service Order</th>
          <td><input id="txtSalesOrder" name="txtSalesOrder"
-          type="text" title="" placeholder="Sales Order" class="w100p" />
+          type="text" title="" placeholder="Care Service Order" class="w100p" />
          </td>
          <th scope="row">Install Month</th>
          <td><p style="width:70%"><input id="myInstallMonth" name="myInstallMonth"
