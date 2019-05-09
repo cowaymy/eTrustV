@@ -311,7 +311,7 @@ function fn_budgetAdjustmentPop(value) {
         $("#gridBudgetDocNo").val("");
         $("#atchFileGrpId").val("");
 	}
-    Common.popupDiv("/eAccounting/budget/budgetAdjustmentPop.do", $("#listSForm").serializeJSON(), fn_selectListAjax, true, "budgetAdjustmentPop");
+    Common.popupDiv("/eAccounting/budget/budgetAdjustmentPop.do", $("#listSForm").serializeJSON(), null, true, "budgetAdjustmentPop");
 }
 
 //그리드 헤더 클릭 핸들러
