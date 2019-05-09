@@ -225,7 +225,7 @@
         usePaging : true,
         //wordWrap : true,
         showPageRowSelect : true,
-        showRowNumColumn : false,
+        showRowNumColumn : true,
         setColumnSizeList : true
     };
 
@@ -346,7 +346,8 @@
         showStateColumn : false,
         enableRestore : true,
         showRowNumColumn : false,
-        selectionMode : "multipleCells"
+        selectionMode : "multipleCells",
+        showRowNumColumn : true
     };
 
     // **************
