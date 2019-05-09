@@ -1855,6 +1855,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
     Map<String, Object> param = new HashMap();
 
+    param.put("AS_SO_ID", params.get("salesOrdId").toString());
     param.put("taxInvcId", taxInvcId);
     param.put("taxInvcRefNo", String.valueOf(invoiceDocNo.get("asno")));
     param.put("taxInvcRefDt", "");
