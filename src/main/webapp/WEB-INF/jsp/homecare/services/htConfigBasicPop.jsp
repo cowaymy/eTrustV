@@ -93,7 +93,8 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
                    configId:                             $('#configId').val(),
                    hscodyId:                             $('#hscodyId').val(),
                    srvSoId:                                 $('#entry_orderNo').val(),
-                   entry_cmbServiceMem:           $('#entry_cmbServiceMem').val()
+                   entry_cmbServiceMem:           $('#entry_cmbServiceMem').val(),
+                   schdulId :                               $('#schdulId').val()
         }
 
 
@@ -107,7 +108,7 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
             console.log("saved.");
             console.log( result);
 
-            Common.alert("<b>HS result successfully saved.</b>", fn_close);
+            Common.alert("<b>CS Configuration successfully saved.</b>", fn_close);
                 //Common.alert(result.message, fn_parentReload);
                 //fn_DisablePageControl();
         });
@@ -147,6 +148,7 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
 <input type="hidden" name="configBsRem"  id="configBsRem" value="${configBasicInfo.configBsRem}"/>
 <input type="hidden" name="codyMangrUserId" id="codyMangrUserId" value="${CODY_MANGR_USER_ID}"/>
 <input type="hidden" name="custId" id="custId" value="${CUST_ID}"/>
+<input type="hidden" name="custId" id="schdulId" value="${SCHDUL_ID}"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
