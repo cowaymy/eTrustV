@@ -94,6 +94,7 @@ public class BulkUploadController {
         LOGGER.debug("========== processBulkInvoice.do ==========");
 
         final String amtRegExp = "(([1-9]\\d{0,2}(,\\d{3})*)|(([1-9]\\d*)?\\d))(\\.\\d\\d)?$";
+        final String amtRegExp1 = "(([1-9]\\d{0,2}(,\\d{3})*)|(([1-9]\\d*)?\\d))(\\.\\d)?$";
         //final Pattern amtPattern = Pattern.compile(amtRegExp);
 
         String sdfPattern = "yyyyMMdd";
@@ -357,7 +358,7 @@ public class BulkUploadController {
             }
 
             LOGGER.debug("========== amt ==========");
-            if(!Pattern.matches(amtRegExp, sAmt)) { //amt <= 0 || amt == null ||
+            if(!Pattern.matches(amtRegExp, sAmt) && !Pattern.matches(amtRegExp1, sAmt)) { //amt <= 0 || amt == null ||
                 if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                     invalidMsgDtl += "Amount";
                 } else {
