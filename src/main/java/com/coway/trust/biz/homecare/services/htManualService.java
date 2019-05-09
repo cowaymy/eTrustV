@@ -159,6 +159,7 @@ public interface htManualService {
 
 	List<EgovMap> selectHSReportGroup(Map<String, Object> params);
 
+	int updateAssignHT(Map<String, Object> params);
 
 
 
