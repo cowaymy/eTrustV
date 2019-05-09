@@ -309,9 +309,11 @@ var myDetailGridData = null;
     <th scope="row">CS Month</th>
     <td><span><c:out value="${basicinfo.monthy}"/></span></td>
     <th scope="row">CS Type</th>
-    <td colspan="3"><span><c:out value="${basicinfo.codeName}"/></span></td>
+    <td><span><c:out value="${basicinfo.codeName}"/></span></td>
+     <th scope="row">Current BSR No</th>
+    <td><span><c:out value="${basicinfo.c1}"/></span></td>
 </tr>
-<tr>
+<%-- <tr>
     <th scope="row">Current BSR No</th>
     <td><span><c:out value="${basicinfo.c1}"/></span></td>
     <th scope="row">Prev HS Area</th>
@@ -320,7 +322,7 @@ var myDetailGridData = null;
     <td><span><c:out value="${basicinfo.nextSvcArea}"/></span></td>
      <th scope="row">Distance</th>
     <td><span><c:out value="${basicinfo.distance}"/></span></td>
-</tr>
+</tr> --%>
 
 </tbody>
 </table><!-- table end -->
@@ -422,11 +424,11 @@ var myDetailGridData = null;
 
  <%--    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 4}">checked</c:if> disabled/><span>Week4</span></label> --%>
     </td>
-        <th scope="row" style="width: 186px; ">Cancel Request Number</th>
-    <td>
+    <%--    <th scope="row" style="width: 186px; ">Cancel Request Number</th>
+     <td>
         <input id="txtCancelRN" name="txtCancelRN"  type="text" title="" placeholder="N/A" class="w100p" value="${basicinfo.cancReqNo}"  readonly />
-        <%-- <span><c:out value="${basicinfo.cancReqNo}"/></span>  --%>
-    </td>
+        <span><c:out value="${basicinfo.cancReqNo}"/></span>
+    </td> --%>
 </tr>
 </tbody>
 </table><!-- table end -->
