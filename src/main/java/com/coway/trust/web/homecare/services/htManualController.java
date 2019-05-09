@@ -348,7 +348,33 @@ public class htManualController {
 	}
 
 
+	@RequestMapping(value = "/selectCsInitDetailPop.do")
+	public String selectHsInitDetailPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {
 
+		params.put("schdulId", params.get("schdulId"));
+		params.put("salesOrderId", params.get("salesOrdId"));
+
+		EgovMap  hsDefaultInfo = htManualService.selectHsInitDetailPop(params);
+		List<EgovMap>  cmbCollectTypeComboList = htManualService.cmbCollectTypeComboList(params);
+//		List<EgovMap>  cmbServiceMemList = htManualService.cmbServiceMemList(params);
+		EgovMap orderDetail = htOrderDetailService.selectOrderBasicInfo(params,sessionVO);//
+		List<EgovMap>  failReasonList = htManualService.failReasonList(params);
+//		List<EgovMap>  serMemList = htManualService.serMemList(params);
+
+
+		logger.debug(" params : " , params);
+		logger.debug("hsDefaultInfo : {}", hsDefaultInfo);
+
+		model.addAttribute("hsDefaultInfo", hsDefaultInfo);
+		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
+//		model.addAttribute("cmbServiceMemList", cmbServiceMemList);
+		model.addAttribute("orderDetail", orderDetail);
+		model.addAttribute("failReasonList", failReasonList);
+//		model.addAttribute("serMemList", serMemList);
+
+		return "homecare/services/htDetailPop";
+
+	}
 
 	@RequestMapping(value = "/htBasicInfoPop.do")
 	public String selecthsBasicInfoPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {
