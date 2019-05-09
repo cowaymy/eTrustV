@@ -842,7 +842,11 @@
             $("#reportDownFileName").val("Bulk_Invoices_" + selectBatchId);
             $("#V_BATCHID").val(selectBatchId);
 
-            fn_report();
+            var option = {
+                isProcedure : false
+            };
+
+            fn_report(option);
         } else if(fileType == "supp") {
             console.log("download Supporting Doc Zipped");
             flId = $("#atchFileSuppId").val();
@@ -872,8 +876,11 @@
             $("#reportFileName").val("/e-accounting/BulkInvoice.rpt");
             $("#viewType").val("PDF");
 
+            $("#V_BATCHID").val(selectBatchId);
+            console.log("V_BATCHID :: " + $("#V_BATCHID").val());
+
             Common.ajax("GET", "/eAccounting/paymentUpload/getBatchClmNos.do", {batchId : selectBatchId}, function(result) {
-                console.log("getBatchClmNos :: " + result);
+                console.log(result);
 
                 var clmNoList = result.resultList;
 
@@ -883,12 +890,20 @@
                     console.log(i);
 
                     if(i>= 0) {
-                        var clmNo = clmNoList[i].clmNo;
-                        $("#V_BATCHID").val(selectBatchId);
-                        $("#_clmNo").val(clmNo);
-                        $("#reportDownFileName").val(clmNo);
+                        //var clmNo = clmNoList[i].clmNo;
 
-                        fn_report();
+                        //console.log(clmNo);
+
+                        $("#V_CLMNO").val(clmNoList[i].clmNo);
+                        $("#reportDownFileName").val(clmNoList[i].clmNo);
+
+                        console.log("V_CLMNO :: " + $("#V_CLMNO").val());
+
+                        var option = {
+                            isProcedure : true
+                        };
+
+                        fn_report(option);
 
                         i--;
                     } else {
@@ -899,10 +914,7 @@
         }
     }
 
-    function fn_report() {
-        var option = {
-            isProcedure : false
-        };
+    function fn_report(option) {
         Common.report("rptForm", option);
     }
 
@@ -1029,7 +1041,7 @@
     <input type="hidden" id="reportFileName" name="reportFileName" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
-    <input type="hidden" id="_clmNo" name="V_CLMNO" />
+    <input type="hidden" id="V_CLMNO" name="V_CLMNO" />
     <input type="hidden" id="V_BATCHID" name="V_BATCHID" />
 </form>
 
