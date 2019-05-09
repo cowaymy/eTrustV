@@ -1056,6 +1056,15 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
     return htManualMapper.assignDeptMemUp(params);
   }
 
+
+  @Override
+  public int updateAssignHT(Map<String, Object> params) {
+	  int cnt = 0 ;
+
+	  htManualMapper.updateAssignHT(params);
+	  return cnt;
+  }
+
   @Override
   public List<EgovMap> selectCMList(Map<String, Object> params) {
     return htManualMapper.selectCMList(params);
