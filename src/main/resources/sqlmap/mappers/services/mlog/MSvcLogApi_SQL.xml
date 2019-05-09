@@ -843,7 +843,7 @@
                  ORG1001V,
                  SAL0001D,
                  SAL0002D,
-                 SAL0022D,
+                 (SELECT CUST_ID AS CUST_ID, MAX(CUST_ACC_BANK_ID) AS CUST_ACC_BANK_ID, MAX(CUST_ACC_NO) AS CUST_ACC_NO FROM SAL0022D GROUP BY CUST_ID) SAL0022D,
                  SAL0023D,
                  SAL0024D,
                  SAL0027D,
