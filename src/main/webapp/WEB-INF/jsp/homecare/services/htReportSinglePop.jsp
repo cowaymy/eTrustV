@@ -167,7 +167,7 @@ $.fn.clearForm = function() {
 <tbody>
 <tr>
     <th scope="row">CS Number</th>
-    <td><input type="text" title="HS Number" placeholder="HS Number" class="w100p" id="hsNumber" name="hsNumber"/></td>
+    <td><input type="text" title="HS Number" placeholder="CS Number" class="w100p" id="hsNumber" name="hsNumber"/></td>
     <th scope="row">CS Month</th>
     <td><input type="text" title="HS Month" placeholder="MM/YYYY" class="j_date2 w100p" id="hsMonth" name="hsMonth"/></td>
 </tr>
