@@ -344,11 +344,13 @@ function fn_downloadAgreement() {
         //$("#joinDt").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "joinDt"));
         //$("#cnfmDt").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "cnfmDt"));
 
+        console.log("startDt :: " + $("#startDt").val());
         if(FormUtil.checkReqValue($("#startDt"))) {
             Common.alert("Please key in contract start date.");
             return false;
         } else {
-            if($("#startDt").val() < "01/04/2018") {
+            var dt = $("#startDt").val().split("/");
+            if(new Date(dt[2] + "-" + dt[1] + "-" + dt[0]) < new Date("04/01/2018")) {
                 Common.alert("Please contact admin for older versions agreement.");
                 return false;
             }
