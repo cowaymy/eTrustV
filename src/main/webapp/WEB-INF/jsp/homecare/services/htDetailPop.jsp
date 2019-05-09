@@ -251,9 +251,9 @@
     <label><input type="radio" name="srvBsWeek"  value="3"/><span>Week 3</span></label>
     <label><input type="radio" name="srvBsWeek"  value="4"/><span>Week 4</span></label>
     </td>
-        <th scope="row" style="width: 91px; ">Cancel Request Number</th>
+    <%--     <th scope="row" style="width: 91px; ">Cancel Request Number</th>
     <td style="width: 242px; ">
-        <span><c:out value="${hsDefaultInfo.cancReqNo}"/></span>
+        <span><c:out value="${hsDefaultInfo.cancReqNo}"/></span> --%>
     </td>
 </tr>
 </tbody>
