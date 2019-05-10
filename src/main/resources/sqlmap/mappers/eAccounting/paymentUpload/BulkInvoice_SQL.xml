@@ -325,6 +325,7 @@
             END BATCH_STUS_ID,
             B.APPV_PRCSS_STUS,
             A.TOTAL_CLAIMS,
+            C1.AMT,
             TO_CHAR(A.CRT_DT, 'DD-MM-YYYY') CRT_DT,
             D.USER_NAME CRT_USER,
             CASE
@@ -340,6 +341,14 @@
             ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
         INNER JOIN FCM0026D C
             ON A.BATCH_ID = C.BATCH_ID
+        INNER JOIN (
+            SELECT
+                BATCH_ID,
+                SUM(AMT) AMT
+            FROM FCM0026D
+            GROUP BY BATCH_ID
+        ) C1
+            ON C.BATCH_ID = C1.BATCH_ID
         LEFT JOIN SYS0047M D
             ON A.CRT_USER_ID = D.USER_ID
         LEFT JOIN SYS0047M E
@@ -381,6 +390,7 @@
                 WHEN B.APPV_PRCSS_STUS = 'R' THEN 'Request'
             END,
             A.TOTAL_CLAIMS,
+            C1.AMT,
             TO_CHAR(A.CRT_DT, 'DD-MM-YYYY'),
             D.USER_NAME,
             CASE
@@ -660,6 +670,9 @@
             <![CDATA[
                  AND A.CRT_DT <= TO_CHAR(#{appEndDt}, 'DD/MM/YYYY')
             ]]>
+        </if>
+        <if test="expDesc != null and expDesc != ''">
+            AND UPPER(C.EXP_DESC) LIKE '%' || UPPER(#{expDesc}) || '%'
         </if>
         ORDER BY
             A.BATCH_ID,

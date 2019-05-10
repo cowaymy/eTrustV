@@ -44,7 +44,7 @@
         },{
             dataField : "batchStusId",
             headerText : "Batch Status",
-            width : "20%",
+            width : "15%",
             height : 30,
             visible : true,
             cellMerge : true,
@@ -63,6 +63,14 @@
             //mergeRef : "batchId",
             //mergePolicy : "restrict"
         },{
+            dataField : "amt",
+            headerText : "Batch Total",
+            style : "aui-grid-user-custom-right",
+            width : "10%",
+            visible : true,
+            dataType: "numeric",
+            formatString : "#,##0.00"
+        },{
             dataField : "crtDt",
             headerText : "Upload Date",
             width : "10%",
@@ -74,7 +82,7 @@
         },{
             dataField : "crtUser",
             headerText : "Uploader",
-            width : "20%",
+            width : "17%",
             height : 30,
             visible : true,
             cellMerge : true,
@@ -92,7 +100,7 @@
         },{
             dataField : "cnfmUserId",
             headerText : "Approval User",
-            width : "20%",
+            width : "17%",
             height : 30,
             visible : true,
             cellMerge : true,
@@ -336,6 +344,10 @@
             dataField : "crtUser",
             headerText : "Requestor",
             width : "10%"
+        }, {
+            dataField : "expDesc",
+            headerText : "Expenses Description",
+            width : "20%"
         }
     ]
 
@@ -1324,7 +1336,7 @@
                             </div><!-- date_set end -->
                         </td>
                         <th scope="row">Invoice No</th>
-                        <td><input type="text" id="invcNo" name ="invcNo" title="" placeholder="" class="" /></td>
+                        <td><input type="text" id="invcNo" name ="invcNo" title="" placeholder="" class="w100p" /></td>
                     </tr>
                     <tr>
                         <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
@@ -1344,7 +1356,7 @@
                     </tr>
                     <tr>
                         <th scope="row">Utility No</th>
-                        <td><input type="text" id="utilNo" name ="utilNo" title="" placeholder="" class="" /></td>
+                        <td><input type="text" id="utilNo" name ="utilNo" title="" placeholder="" class="w100p" /></td>
                         <th scope="row"><spring:message code="webInvoice.status" /></th>
                         <td>
                             <select class="multy_select w100p" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
@@ -1363,6 +1375,12 @@
                                 <p><input type="text" title="Approval End Date" placeholder="DD/MM/YYYY" class="j_date" id="appEndDt" name="appEndDt"/></p>
                             </div><!-- date_set end -->
                         </td>
+                        <th scope="row"></th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Expenses Description</th>
+                        <td colspan='3'><input type="text" id="utilNo" name ="expDesc" title="" placeholder="" class="w100p" /></td>
                     </tr>
                 </tbody>
             </table><!-- table end -->
@@ -1379,8 +1397,6 @@
                     </tr>
                 </tbody>
              </table>
-         <!-- table end -->
-         <!-- grid_wrap end -->
         </div>
 
         <article class="grid_wrap" id="excel_grid_wrap" ><!-- grid_wrap start    style="display: none;" -->
