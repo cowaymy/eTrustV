@@ -98,4 +98,6 @@ public interface htOrderDetailMapper {
 	EgovMap selectCurrentBSResultByBSNo(Map<String, Object> params); //Guarantee Info
 
 	List<EgovMap> selectASInfoList(Map<String, Object> params); //Last 6 Months Transaction
+
+	List<EgovMap> selectCovrgAreaList(Map<String, Object> params);
 }
