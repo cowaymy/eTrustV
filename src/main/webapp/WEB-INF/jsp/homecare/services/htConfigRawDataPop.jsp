@@ -160,7 +160,7 @@ function fn_report(viewType){
         whereSQL += " AND som.CRT_USER_ID = '"+$("#cmbUser :selected").val()+"'";
     }
 
-    if($("#entry_cmbServiceMem :selected").index() > -1){
+    if($("#entry_cmbServiceMem :selected").index() > 0){
     	whereSQL += " AND org01.MEM_CODE = '"+$("#entry_cmbServiceMem :selected").val()+"'";
 
     }
