@@ -135,9 +135,9 @@
                    DD_REJCT_DT,
                    STUS_CODE_ID,
                    REM,
-                   #{userId},
+                   #{updator},
                    SYSDATE,
-                   #{userId},
+                   #{updator},
                    SYSDATE
         FROM SAL0074D
         WHERE SVC_CNTRCT_ID = #{serviceContractID}
@@ -159,6 +159,8 @@
                    DD_START_DT = null,
                    DD_REJCT_DT = null,
                    FAIL_RESN_ID = null,
+                   UPD_USER_ID     = #{updator} ,
+                   UPD_DT             = sysdate,
                    GRACE_PERIOD = 1,
                    DEDUCT_ACC_ID = #{deductId}
            WHERE  1=1
