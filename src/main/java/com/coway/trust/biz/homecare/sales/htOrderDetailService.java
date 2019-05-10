@@ -45,4 +45,6 @@ public interface htOrderDetailService {
 	EgovMap selectCurrentBSResultByBSNo(Map<String, Object> params);
 
 	List<EgovMap> selectASInfoList(Map<String, Object> params);
+
+	List<EgovMap> selectCovrgAreaList(Map<String, Object> params);
 }
