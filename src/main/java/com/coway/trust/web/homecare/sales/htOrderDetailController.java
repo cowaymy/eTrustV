@@ -216,4 +216,27 @@ public class htOrderDetailController {
 		return "sales/order/include/hsEditPop";
 	}
 
+	@RequestMapping(value = "/htCvrgAreaList.do")
+	public String htCvrgAreaList(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "homecare/sales/htCvrgAreaList";
+	}
+
+	@RequestMapping(value = "/selectCovrgAreaList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHsBasicList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+
+		params.put("user_id", sessionVO.getUserId());
+
+        // 조회.
+		List<EgovMap> covrgAreaList = htOrderDetailService.selectCovrgAreaList(params);
+
+		//brnch 임시 셋팅
+		for (int i=0 ; i < covrgAreaList.size() ; i++){
+			EgovMap record = (EgovMap) covrgAreaList.get(i);//EgovMap으로 형변환하여 담는다.
+		}
+
+		return ResponseEntity.ok(covrgAreaList);
+	}
+
+
 }
