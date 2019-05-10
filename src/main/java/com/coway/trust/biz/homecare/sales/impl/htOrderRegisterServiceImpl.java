@@ -1568,15 +1568,27 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
 	    // TAX INVOICE
 	    // PAY0031D
-        Map<String, Object> params = null;
+/*        Map<String, Object> params = null;
         params = new HashMap<String, Object>();
 	    params.put("DOCNO", "133");
 	    params.put("CS_SO_ID", salesOrdId);
 	    EgovMap invoiceDocNo = htOrderRegisterMapper.getCSEntryDocNo(params);
 	    int taxInvcId = htOrderRegisterMapper.getSeqPay0031D();
-	    EgovMap taxPersonInfo = htOrderRegisterMapper.selectTaxInvoice(params);
+	    EgovMap taxPersonInfo = htOrderRegisterMapper.selectTaxInvoice(params);*/
+
+        String appTypeName= "";
+		String invDocNo = "";
+
 
 	    if (orderVO.getAppTypeId() == 3216 || orderVO.getAppTypeId() == 3217){  //CHECK APPLICATION TYPE = CARE SERVICE
+
+	    	Map<String, Object> params = null;
+	        params = new HashMap<String, Object>();
+	  	    params.put("DOCNO", "133");
+	  	    params.put("CS_SO_ID", salesOrdId);
+	  	    EgovMap invoiceDocNo = htOrderRegisterMapper.getCSEntryDocNo(params);
+	  	    int taxInvcId = htOrderRegisterMapper.getSeqPay0031D();
+	  	    EgovMap taxPersonInfo = htOrderRegisterMapper.selectTaxInvoice(params);
 
 	    Map<String, Object> param = new HashMap();
 
@@ -1728,11 +1740,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	    htOrderRegisterMapper.insertAccSrvMemLedger(param4);
 	    htOrderRegisterMapper.insert_Pay0007d(param5);
 
-        }
-
-		String appTypeName= "";
-		String invDocNo = "";
-		switch(orderVO.getAppTypeId()){
+	    switch(orderVO.getAppTypeId()){
 		case 3216 :
 			appTypeName = "Care Service 1 Time ";
 			invDocNo =  String.valueOf(invoiceDocNo.get("csno"));
@@ -1741,6 +1749,13 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			appTypeName = "Care Service 1 Year ";
 			invDocNo =  String.valueOf(invoiceDocNo.get("csno"));
 			break;
+	    }
+
+        }
+
+//		String appTypeName= "";
+//		String invDocNo = "";
+		switch(orderVO.getAppTypeId()){
 		case 145 :
 			appTypeName = "Free Trial (No Billing)";
 			invDocNo = "";
