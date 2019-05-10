@@ -72,8 +72,7 @@
                     //----------------------------------------------------------
 
                     fn_loadCntcPerson('${preOrderInfo.custCntcId}');
-                    fn_loadSrvCntcPerson('${preOrderInfo.custBillCustCareCntId}');
-
+                    fn_loadSrvCntcPersonEKey('${preOrderInfo.custCntcId}');
                     //----------------------------------------------------------
                     // [Installation] : Installation Contact Person
                     //----------------------------------------------------------
@@ -248,6 +247,20 @@
             else {
 //              Common.alert('<b>Customer not found.<br>Your input customer ID :'+$("#searchCustId").val()+'</b>');
                 Common.alert('<spring:message code="sal.alert.msg.custNotFound" arguments="'+_CUST_ID+'"/>');
+            }
+        });
+    }
+
+    function fn_loadSrvCntcPersonEKey(custCntcId ) {
+        Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", {custCntcId : custCntcId}, function(custCntcInfo) {
+
+            if(custCntcInfo != null) {
+                $("#srvCntcName").val(custCntcInfo.name1);
+                $("#srvCntcEmail").val(custCntcInfo.email);
+                $("#srvCntcTelM").val(custCntcInfo.telM1);
+                $("#srvCntcTelR").val(custCntcInfo.telR);
+                $("#srvCntcTelO").val(custCntcInfo.telO);
+                $("#srvCntcTelF").val(custCntcInfo.telf);
             }
         });
     }
