@@ -1647,4 +1647,48 @@
         ) T
         ORDER BY T.AS_ID
     </select>
+
+        <select id="selectCovrgAreaList" parameterType="Map" resultType="egovMap">
+
+   SELECT
+        cvrg.AREA_ID,
+        cvrg.STUS_CODE_ID,
+        C.NAME ,
+        B.COUNTRY ,
+        B.STATE,
+        B.POSTCODE,
+        B.CITY ,
+        B.AREA ,
+        CRT_DT ,
+        CRT_USER_ID
+        UPD_DT ,
+    UPD_USER_ID
+ FROM
+    SAL0233M cvrg
+    JOIN SYS0064M B ON cvrg.AREA_ID = B.AREA_ID
+    LEFT JOIN SYS0038M C ON cvrg.STUS_CODE_ID = C.STUS_CODE_ID
+    WHERE 1=1
+        <if test="area != null and area != ''">
+            AND UPPER(B.AREA) LIKE UPPER('%'||#{area}||'%')
+        </if>
+        <if test="areaID != null and areaID != ''">
+            AND REPLACE(B.AREA_ID, '-', '') =  REPLACE(#{areaID}, '-', '')
+        </if>
+        <if test="city != null and city != ''">
+            AND UPPER(B.CITY) LIKE UPPER('%'||#{city}||'%')
+        </if>
+        <if test="state != null and state != ''">
+            AND B.STATE = #{state}
+        </if>
+        <if test="postcode != null and postcode != ''">
+            AND B.POSTCODE = #{postcode}
+        </if>
+        <if test="status != null and status != ''">
+           AND cvrg.STUS_CODE_ID = #{stusCodeId}
+        </if>
+    ORDER BY cvrg.AREA_ID
+
+    </select>
+
+
 </mapper>
