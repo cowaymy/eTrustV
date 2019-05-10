@@ -14,7 +14,7 @@
 var adjGridID;
 
 $(document).ready(function(){
-    
+
      var adjPopColumnLayout = [ {
          dataField : "confirmDate",
          headerText : '<spring:message code="budget.ConfirmDate" />',
@@ -75,8 +75,8 @@ $(document).ready(function(){
          style : "aui-grid-user-custom-left",
          width : 150
      }];
-     
-     
+
+
     // 푸터 설정
      var footerObject = [ {
          labelText : "<spring:message code="budget.Total" />",
@@ -90,20 +90,21 @@ $(document).ready(function(){
          formatString : "#,##0.00",
          style : "my-right-style",
          expFunction : function(columnValues) {
-             
-             var idx = AUIGrid.getRowCount(adjGridID); 
+
+             var idx = AUIGrid.getRowCount(adjGridID);
              var amt = 0;
              for(var i = 0; i < idx; i++){
-                 if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") == '01'){
-                	 if(AUIGrid.getCellValue(adjGridID, i, "signal") =="+"){
-	                     amt += AUIGrid.getCellValue(adjGridID, i, "adjAmt");                		 
-                	 }else{
-                         amt -= AUIGrid.getCellValue(adjGridID, i, "adjAmt");      
-                	 }
+                if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") == '01'){
+                    var adjAmt = AUIGrid.getCellValue(adjGridID, i, "adjAmt");
+                    adjAmt = adjAmt.replace(/,/g, "");
+                    if(AUIGrid.getCellValue(adjGridID, i, "signal") =="+"){
+                         amt += parseFloat(adjAmt);
+                     } else {
+                         amt -= parseFloat(adjAmt);
+                     }
                  }
              }
-                         
-             return amt; 
+             return amt;
          }
      },{
          labelText:"<spring:message code="budget.decrement" />",
@@ -114,20 +115,21 @@ $(document).ready(function(){
          formatString : "#,##0.00",
          style : "my-right-style",
          expFunction : function(columnValues) {
-             
-             var idx = AUIGrid.getRowCount(adjGridID); 
+
+        	 var idx = AUIGrid.getRowCount(adjGridID);
              var amt = 0;
              for(var i = 0; i < idx; i++){
-                 if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") == '02'){
-                	 if(AUIGrid.getCellValue(adjGridID, i, "signal") =="+"){
-                         amt += AUIGrid.getCellValue(adjGridID, i, "adjAmt");                        
-                     }else{
-                         amt -= AUIGrid.getCellValue(adjGridID, i, "adjAmt");      
+                if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") == '02'){
+                    var adjAmt = AUIGrid.getCellValue(adjGridID, i, "adjAmt");
+                    adjAmt = adjAmt.replace(/,/g, "");
+                    if(AUIGrid.getCellValue(adjGridID, i, "signal") =="+"){
+                         amt += parseFloat(adjAmt);
+                     } else {
+                         amt -= parseFloat(adjAmt);
                      }
                  }
              }
-             
-             return amt; 
+             return amt;
          }
      },{
          labelText:"<spring:message code="budget.Transfer" />",
@@ -138,49 +140,51 @@ $(document).ready(function(){
          formatString : "#,##0.00",
          style : "my-right-style",
          expFunction : function(columnValues) {
-             
-             var idx = AUIGrid.getRowCount(adjGridID); 
+
+             var idx = AUIGrid.getRowCount(adjGridID);
              var amt = 0;
              for(var i = 0; i < idx; i++){
-                 if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") != '01' && AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") != '02'){
-                	 if(AUIGrid.getCellValue(adjGridID, i, "signal") =="+"){
-                         amt += AUIGrid.getCellValue(adjGridID, i, "adjAmt");                        
-                     }else{
-                         amt -= AUIGrid.getCellValue(adjGridID, i, "adjAmt");      
+                if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") != '01' && AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") != '02'){
+                    var adjAmt = AUIGrid.getCellValue(adjGridID, i, "adjAmt");
+                    adjAmt = adjAmt.replace(/,/g, "");
+                    if(AUIGrid.getCellValue(adjGridID, i, "signal") =="+"){
+                         amt += parseFloat(adjAmt);
+                     } else {
+                         amt -= parseFloat(adjAmt);
                      }
                  }
-             }             
-             return amt; 
+             }
+             return amt;
          }
      }];
-     
+
      var adjOptions = {
                 showStateColumn:false,
                 showRowNumColumn    : true,
                 usePaging : true,
                 showFooter : true,
                 editable : false
-          }; 
-     
+          };
+
         adjGridID = GridCommon.createAUIGrid("#adjGridID", adjPopColumnLayout, "", adjOptions);
-        
+
         fn_selectListAdjAjax();
-        
+
 
         // 푸터 객체 세팅
         AUIGrid.setFooter(adjGridID, footerObject);
 });
 
 //리스트 조회.
-function fn_selectListAdjAjax() {  
-     
+function fn_selectListAdjAjax() {
+
     Common.ajax("GET", "/eAccounting/budget/selectAdjustmentAmountList", $("#adjPForm").serialize(), function(result) {
-            
+
         console.log("성공.");
         console.log( result);
-           
+
         AUIGrid.setGridData(adjGridID, result);
-    }); 
+    });
 }
 
 function comma(str) {
