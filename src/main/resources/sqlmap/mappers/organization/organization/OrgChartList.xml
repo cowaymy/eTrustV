@@ -163,7 +163,9 @@
 							<![CDATA[			     WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
 										              </when>
 										              <otherwise>
-							<![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY') ]]>
+							<![CDATA[               WHERE (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDATE,'YYYYMM') AS INTEGER))
+							                             /*BY KV -WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY')*/
+							 ]]>
 										              </otherwise>
 										            </choose>
 										            ) Extent3
@@ -207,7 +209,9 @@
 <![CDATA[   									                                   WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
 													                                </when>
 													                                <otherwise>
-<![CDATA[   									                                   WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY') ]]>
+<![CDATA[   									                                   WHERE (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDATE,'YYYYMM') AS INTEGER))
+                                                                                       /*BY KV -WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY')*/
+                                                                                       ]]>
 													                                </otherwise>
 													                              </choose>
 													                              GROUP BY C.MEM_ID)
@@ -374,7 +378,9 @@
                             <![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
                                                       </when>
                                                       <otherwise>
-                            <![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY') ]]>
+                            <![CDATA[                WHERE (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDATE,'YYYYMM') AS INTEGER))
+                                                          /*BY KV -WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY')*/
+                             ]]>
                                                       </otherwise>
                                                     </choose>
                                                     ) Extent3
@@ -394,7 +400,9 @@
 <![CDATA[                                                                          WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
                                                                                     </when>
                                                                                     <otherwise>
-<![CDATA[                                                                          WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(sysdate,'MM/YYYY') ]]>
+<![CDATA[                                                                         WHERE (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDATE,'YYYYMM') AS INTEGER))
+                                                                                       /*BY KV -WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(sysdate,'MM/YYYY')*/
+ ]]>
                                                                                     </otherwise>
                                                                                   </choose>
                                                                                   GROUP BY C.MEM_ID)
@@ -908,7 +916,10 @@
                             <![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
                                                       </when>
                                                       <otherwise>
-                            <![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY') ]]>
+                            <![CDATA[
+                                                        WHERE (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDATE,'YYYYMM') AS INTEGER))
+                                                      /*BY KV -WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY')*/
+                                                       ]]>
                                                       </otherwise>
                                                     </choose>
                                                     ) Extent3
@@ -961,7 +972,10 @@
 <![CDATA[                                                                          WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
                                                                                     </when>
                                                                                     <otherwise>
-<![CDATA[                                                                          WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(sysdate,'MM/YYYY') ]]>
+<![CDATA[
+WHERE (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDATE,'YYYYMM') AS INTEGER))
+/*BY KV - WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(sysdate,'MM/YYYY')*/
+ ]]>
                                                                                     </otherwise>
                                                                                   </choose>
                                                                                   GROUP BY C.MEM_ID)
@@ -1081,7 +1095,10 @@
 																                                <![CDATA[    and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{resignDate} ]]>
 																                             </when>
 																                             <otherwise>
-																                               <![CDATA[     and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= to_char(SYSDATE, 'MM/YYYY' ) ]]>
+																                               <![CDATA[
+																                                and (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDATE,'YYYYMM') AS INTEGER))
+																                               /*BY KV - and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= to_char(SYSDATE, 'MM/YYYY' )*/
+																                                ]]>
 																                             </otherwise>
 																                             </choose>
 			                                                                                )
@@ -1114,7 +1131,9 @@
 														                                  <![CDATA[  and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) = #{evntDate} ]]>
 														                             </when>
 														                             <otherwise>
-														                               <![CDATA[     and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) = to_char(SYSDATE, 'MM/YYYY' ) ]]>
+														                               <![CDATA[
+														                               and (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDATE,'YYYYMM') AS INTEGER))
+														                               /*BY KV -and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) = to_char(SYSDATE, 'MM/YYYY' )*/ ]]>
 														                             </otherwise>
 														                             </choose>
 														                                 group by C.MEM_ID
