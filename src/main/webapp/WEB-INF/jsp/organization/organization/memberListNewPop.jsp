@@ -1424,7 +1424,7 @@ function checkBankAccNo() {
     <input type="text" title="" placeholder="NRIC (New)" id="nric" name="nric" class="w100p"  maxlength="12" onKeyDown="checkNRICEnter()"
         onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
-    <th scope="row">Marrital Status<span class="must">*</span></th>
+    <th scope="row">Marital Status<span class="must">*</span></th>
     <td>
     <select class="w100p" id="marrital" name="marrital" onchange="javascript : fn_onchangeMarrital()">
     </select>
@@ -1717,7 +1717,7 @@ function checkBankAccNo() {
 </table><!-- table end -->
 
 <aside class="title_line" ><!-- title_line start -->
-<h2>Agreedment</h2>
+<h2>Agreement</h2>
 </aside><!-- title_line end -->
 
 <table class="type1" id="hideContent"><!-- table start -->
