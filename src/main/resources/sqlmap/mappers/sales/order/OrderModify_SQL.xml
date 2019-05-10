@@ -622,6 +622,8 @@
                    DD_START_DT = null,
                    DD_REJCT_DT = null,
                    FAIL_RESN_ID = null,
+                   UPD_USER_ID     = #{userId},
+                   UPD_DT          = SYSDATE,
                    GRACE_PERIOD = 1,
                    DEDUCT_ACC_ID = #{deductId}
          WHERE RENT_PAY_ID     = #{rentPayId}
