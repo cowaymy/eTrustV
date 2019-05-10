@@ -581,4 +581,9 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 	public List<EgovMap> selectASInfoList(Map<String, Object> params) {
 		return htOrderDetailMapper.selectASInfoList(params);
 	}
+
+	@Override
+	public List<EgovMap> selectCovrgAreaList(Map<String, Object> params) {
+		return htOrderDetailMapper.selectCovrgAreaList(params);
+	}
 }
