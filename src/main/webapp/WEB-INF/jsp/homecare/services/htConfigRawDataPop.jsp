@@ -2,6 +2,15 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
+var userId = '${SESSION_INFO.userId}';
+var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
+
+$(document).ready(function() {
+
+    CommonCombo.make("entry_cmbServiceMem", '/homecare/services/selectHTMemberList.do', { htUserId : userId , entry_orderNo : $("#entry_orderNo").val() , memType : MEM_TYPE}, '${configBasicInfo.c2}', {isShowChoose: true});
+
+});
+
 
 $("#dataForm").empty();
 
@@ -150,6 +159,12 @@ function fn_report(viewType){
     if($("#cmbUser :selected").index() > 0){
         whereSQL += " AND som.CRT_USER_ID = '"+$("#cmbUser :selected").val()+"'";
     }
+
+    if($("#entry_cmbServiceMem :selected").index() > -1){
+    	whereSQL += " AND org01.MEM_CODE = '"+$("#entry_cmbServiceMem :selected").val()+"'";
+
+    }
+
     if($("#cmbSort :selected").index() > -1){
         sortBy = $("#cmbSort :selected").text();
 
@@ -165,6 +180,8 @@ function fn_report(viewType){
             orderBySQL = " ORDER BY c.NAME, som.SRV_ORD_NO";
         }
     }
+
+
 
     var date = new Date().getDate();
     if(date.toString().length == 1){
@@ -211,7 +228,7 @@ CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>CS Report - Mattress Care Service (MCS) Configuration Raw Data</h1>
+<h1>CS Report - Care Service Configuration Raw Data</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -272,6 +289,14 @@ CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
     </td>
 </tr>
 <tr>
+ <th scope="row" >Homecare Technician Code</th>
+    <td>
+        <!-- <input type="text" id="entry_cmbServiceMem" name="entry_cmbServiceMem" title="Member Code"  class="w100p" /> -->
+        <select class="w100p" id="entry_cmbServiceMem" name="entry_cmbServiceMem">
+        <!-- <option value="" selected="selected">dd</option>-->
+        </select>
+    </td>
+
     <th scope="row"><spring:message code="sal.title.text.sorting" /></th>
     <td>
     <select class="w100p" id="cmbSort">
@@ -282,8 +307,7 @@ CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
         <option value="5"><spring:message code="sal.combo.text.byCustName" /></option>
     </select>
     </td>
-    <th scope="row"></th>
-    <td></td>
+
 </tr>
 </tbody>
 </table><!-- table end -->
