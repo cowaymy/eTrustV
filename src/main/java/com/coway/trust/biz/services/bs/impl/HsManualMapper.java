@@ -224,6 +224,8 @@ public interface HsManualMapper {
 
   void updateQryFilter(Map<String, Object> params);
 
+  void updateIsReturn(Map<String, Object> params);
+
   void addBsResultDet_NoFilter(Map<String, Object> params);
 
   // add by hgham mobile 중복 처리
