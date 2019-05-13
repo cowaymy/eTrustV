@@ -317,6 +317,20 @@ public class BudgetController {
 			params.put("costCentr2", "A2101");
 		}
 
+		if(params.containsKey("stYearMonth") && params.containsKey("edYearMonth")) {
+		    String yyyyMM = "";
+
+		    String date1[] = params.get("stYearMonth").toString().split("/");
+		    yyyyMM = date1[1] + date1[0];
+
+		    params.put("stYearMonth", yyyyMM);
+
+		    String date2[] = params.get("edYearMonth").toString().split("/");
+		    yyyyMM = date2[1] + date2[0];
+
+		    params.put("edYearMonth", yyyyMM);
+		}
+
 		List<EgovMap> adjustmentList = null;
 
 		adjustmentList= budgetService.selectAdjustmentList(params);
@@ -623,6 +637,20 @@ public class BudgetController {
 		String[] budgetAdjType = request.getParameterValues("budgetAdjType");
 
 		params.put("budgetAdjType", budgetAdjType);
+
+		if(params.containsKey("stYearMonth") && params.containsKey("edYearMonth")) {
+            String yyyyMM = "";
+
+            String date1[] = params.get("stYearMonth").toString().split("/");
+            yyyyMM = date1[1] + date1[0];
+
+            params.put("stYearMonth", yyyyMM);
+
+            String date2[] = params.get("edYearMonth").toString().split("/");
+            yyyyMM = date2[1] + date2[0];
+
+            params.put("edYearMonth", yyyyMM);
+        }
 
 		List<EgovMap> apporvalList = null;
 

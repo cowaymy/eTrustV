@@ -700,7 +700,7 @@ WHERE 1=1
        WHERE  1=1
        ]]>
        <if test="stYearMonth != null and stYearMonth != ''">
-           AND TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR  BETWEEN #{stYearMonth} AND #{edYearMonth}
+           AND BUDGET_ADJ_YEAR || TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') BETWEEN #{stYearMonth} AND #{edYearMonth}
        </if>
        <if test="costCentr != null and costCentr != ''">
            AND B.COST_CENTR    = #{costCentr}
@@ -979,7 +979,7 @@ WHERE 1=1
       WHERE  1=1
       ]]>
         <if test="stYearMonth != null and stYearMonth != ''">
-        AND TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR  BETWEEN #{stYearMonth} AND #{edYearMonth}
+        AND BUDGET_ADJ_YEAR || TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') BETWEEN #{stYearMonth} AND #{edYearMonth}
          </if>
         <if test="costCentr != null and costCentr != ''">
           AND B.COST_CENTR    = #{costCentr}
