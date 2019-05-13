@@ -649,7 +649,7 @@ public class htManualController {
 //		List<EgovMap>  serMemList = htManualService.serMemList(params);
 //		model.addAttribute("serMemList", serMemList);
 
-		return "services/bs/hsConfigBasicPop";
+		return "homecare/services/htConfigBasicPop";
 	}
 
 
