@@ -3785,6 +3785,14 @@ AND RESULT_IS_CURR = 1
               and SRV_FILTER_STK_ID = #{BSResultPartID}
           </update>
 
+          <update id="updateIsReturn" parameterType="Map">
+            update SAL0087D
+            set IS_RETURN = #{isReturn}
+            where SRV_CONFIG_ID = #{srvConfigId}
+              and SRV_FILTER_STUS_ID = 1
+              and SRV_FILTER_STK_ID = #{stkId}
+          </update>
+
           <insert id="addBsResultDet_NoFilter" parameterType="Map">
             insert into SVC0007D
                 (BS_RESULT_ITM_ID
