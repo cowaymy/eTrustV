@@ -18,7 +18,7 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
         });
 
 
-     function fn_getHSConfigBasicInfo(){
+      function fn_getHSConfigBasicInfo(){
             Common.ajax("GET", "/homecare/services/getHSConfigBasicInfo.do", $("#frmBasicInfo").serialize(), function(result) {
             console.log("fn_getHSConfigBasicInfo.");
 
