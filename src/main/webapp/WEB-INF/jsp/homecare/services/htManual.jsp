@@ -613,7 +613,9 @@
          <th scope="row">CS Status</th>
          <td><select class="w100p" id="cmbStatusType"
           name="cmbStatusType">
-           <option value="">CS Status</option></td>
+           <option value="">CS Status</option>
+           </select>
+           </td>
          <th scope="row">Customer ID</th>
          <td><input id="txtCustomer" name="txtCustomer" type="text"
           title="" placeholder="Customer ID" class="w100p" /></td>
