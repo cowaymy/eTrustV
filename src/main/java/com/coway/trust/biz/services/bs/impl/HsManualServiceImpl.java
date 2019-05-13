@@ -1129,6 +1129,38 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
   @Override
   @Transactional
+  public String UpdateIsReturn(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws ParseException {
+    logger.debug("============================UpdateIsReturn - START =================================");
+    for (int i = 0; i < docType.size(); i++) {
+      Map<String, Object> docSub = (Map<String, Object>) docType.get(i);
+      logger.debug("= DOC SUB{} : " + docSub);
+
+      if ("1428".equals(CommonUtils.nvl(docSub.get("stkId")))) {
+        logger.debug("= PROCESS : " + CommonUtils.nvl(docSub.get("stkId")));
+
+        Map<String, Object> bsResultMas = new HashMap<String, Object>();
+        bsResultMas.put("SalesOrderId", String.valueOf(params.get("hidSalesOrdId")));
+
+        Map<String, Object> qryConfig = new HashMap<String, Object>();
+        qryConfig = hsManualMapper.selectQryConfig(bsResultMas);
+
+        Map<String, Object> value = new HashMap<String, Object>();
+        value.put("srvConfigId", CommonUtils.nvl(qryConfig.get("srvConfigId")));
+        value.put("isReturn", CommonUtils.nvl(docSub.get("isReturn")));
+        value.put("stkId", CommonUtils.nvl(docSub.get("stkId")));
+
+        hsManualMapper.updateIsReturn(value);
+      } else {
+        logger.debug("= SKIP : " + CommonUtils.nvl(docSub.get("stkId")));
+      }
+    }
+    logger.debug("============================UpdateIsReturn - END =================================");
+    return "";
+  }
+
+
+  @Override
+  @Transactional
   public Map<String, Object> UpdateHsResult2(Map<String, Object> params, List<Object> docType, SessionVO sessionVO)
       throws ParseException {
 
@@ -1148,6 +1180,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       bsd.put("BSResultPartID", String.valueOf(docSub.get("stkId")));
       bsd.put("BSResultPartDesc", String.valueOf(docSub.get("stkDesc")));
       bsd.put("BSResultPartQty", String.valueOf(docSub.get("name")));
+      bsd.put("BSResultPartIsRtrn", String.valueOf(docSub.get("isReturn")));
       bsd.put("BSResultRemark", "");
       // bsd.put("BSResultCreateAt",0 );
       bsd.put("BSResultCreateBy", String.valueOf(sessionVO.getUserId()));
@@ -1620,6 +1653,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
                                                                                             // 25-12
                                                                                             // -2017
           qryFilter_param.put("BSResultPartID", String.valueOf(bsResultDet.get(i).get("BSResultPartID")));
+          qryFilter_param.put("BSResultPartIsRtrn", bsResultDet.get(i).get("BSResultPartIsRtrn"));
           qryFilter_param.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
           qryFilter_param.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
           hsManualMapper.updateQryFilter(qryFilter_param);
