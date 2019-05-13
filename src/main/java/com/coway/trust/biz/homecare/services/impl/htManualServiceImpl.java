@@ -721,7 +721,7 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
           sal0089.put("srvSettRem", "");
           sal0089.put("srvSettCrtUserId", sessionVO.getUserId());
 
-          htManualMapper.updateHsconfigSetting(sal0089);
+         // htManualMapper.updateHsconfigSetting(sal0089);
 
         }
       }
