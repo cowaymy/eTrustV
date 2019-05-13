@@ -1051,7 +1051,7 @@ function checkBankAccNo() {
         "bankAccNo" : $("#bankAccNo").val()
     };
 
-    if($("#memberType").val() == "2803") {
+    if($("#memberType").val() == "2803" || $("#memberType").val() == "1") {
         Common.ajax("GET", "/organization/checkAccLen", jsonObj, function(resultM) {
             console.log(resultM);
 
