@@ -171,6 +171,7 @@ $(document).ready(function() {
 
     if($("#memberType").val() == "1" || $("#memberType").val() == "2803") {
         doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
+        doGetCombo('/organization/selectAccBank.do', '', '', 'issuedBank', 'S', '');
     }
 
     /*fill edit field*/
@@ -233,6 +234,20 @@ $(document).ready(function() {
     } else {
     	$("#joinDate").attr("disabled", true);
     }
+
+    $('#bankAccNo').blur(function() {
+        if($("#memberType").val() != "5") {
+           console.log("not trainee with -/0")
+           fmtNumber("#bankAccNo"); // 2018-06-21 - LaiKW - Added removal of special characters from bank account number
+           checkBankAccNo();
+        } else if($("#memberType").val() == "5") {
+           console.log("5");
+           console.log("bankaccno :: " + $("#bankAccNo").val());
+           if($("#bankAccNo").val() != "-"){
+               checkBankAccNo();
+           }
+        }
+    });
 });
 
 
@@ -1001,6 +1016,78 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
 
 }
 
+function fn_checkMobileNo() {
+    if(event.keyCode == 13) {
+        fmtNumber("#mobileNo");
+    }
+}
+
+function fmtNumber(field) {
+    var fld = $(field).val();
+    fld = fld.replace(/[^0-9]/g,"");
+
+    $(field).val(fld);
+}
+
+function checkBankAccNoEnter() {
+    if(event.keyCode == 13) {
+        if($("#memberType").val() != "5") {
+            console.log("not trainee with -/0")
+            fmtNumber("#bankAccNo"); // 2018-06-21 - LaiKW - Added removal of special characters from bank account number
+            checkBankAccNo();
+         } else if($("#memberType").val() == "5") {
+            console.log("bankaccno :: " + $("#bankAccNo").val());
+            if($("#bankAccNo").val() != "-"){
+                checkBankAccNo();
+            }
+         }
+    }
+}
+
+function checkBankAccNo() {
+    //var jsonObj = { "bank" : $("#issuedBank").val(), "bankAccNo" : $("#bankAccNo").val() };
+    var jsonObj = {
+        "bankId" : $("#issuedBank").val(),
+        "bankAccNo" : $("#bankAccNo").val()
+    };
+
+    if($("#memberType").val() == "2803") {
+        Common.ajax("GET", "/organization/checkAccLen", jsonObj, function(resultM) {
+            console.log(resultM);
+
+            if(resultM.message == "F") {
+                Common.alert("Invalid Account Length!");
+                $("#bankAccNo").val("");
+                return false;
+            } else if(resultM.message == "S") {
+
+                Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
+                    console.log(result);
+                    if(result.cnt1 == "0" && result.cnt2 == "0") {
+                        return true;
+                    } else {
+                        Common.alert("Bank account number has been registered.");
+                        //$("#issuedBank").val("");
+                        $("#bankAccNo").val("");
+                        return false;
+                    }
+                });
+            }
+        });
+    } else {
+        Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
+            console.log(result);
+            if(result.cnt1 == "0" && result.cnt2 == "0") {
+                return true;
+            } else {
+                Common.alert("Bank account number has been registered.");
+                //$("#issuedBank").val("");
+                $("#bankAccNo").val("");
+                return false;
+            }
+        });
+    }
+}
 
 </script>
 
@@ -1187,15 +1274,18 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
 <tr>
     <th scope="row">Mobile No.</th>
     <td>
-    <input type="text" title="" placeholder="Numberic Only" class="w100p" id="mobileNo" name="mobileNo"/>
+    <input type="text" title="" placeholder="Numeric Only" class="w100p" id="mobileNo" name="mobileNo" maxlength="11" onKeyDown="fn_checkMobileNo()"
+        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
     <th scope="row">Office No.</th>
     <td>
-    <input type="text" title="" placeholder="Numberic Only" class="w100p"  id="officeNo" name="officeNo"/>
+    <input type="text" title="" placeholder="Numberic Only" class="w100p"  id="officeNo" name="officeNo"
+        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
     <th scope="row">Residence No.</th>
     <td>
-    <input type="text" title="" placeholder="Numberic Only" class="w100p" id="residenceNo"  name="residenceNo"/>
+    <input type="text" title="" placeholder="Numberic Only" class="w100p" id="residenceNo"  name="residenceNo"
+        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
 </tr>
 <tr>
@@ -1379,7 +1469,8 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
     </td>
     <th scope="row">Bank Account No<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="Bank Account No" class="w100p" id="bankAccNo"  name="bankAccNo"/>
+    <input type="text" title="" placeholder="Bank Account No" class="w100p" id="bankAccNo"  name="bankAccNo" onKeyDown="checkBankAccNoEnter()"
+        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
 </tr>
 </tbody>
