@@ -530,11 +530,14 @@
   </select>
 
   <select id="getPrCTInfo" parameterType="Map" resultType="egovMap">
-    SELECT distinct   b.mem_id, b.mem_code , b.NAME
-    FROM LOG0038d a , org0001d b
-    WHERE CT_ID = mem_id
-      AND a.CALL_ENTRY_ID = '8332868'
-      AND STUS_CODE_ID = 1
+    SELECT DISTINCT b.MEM_ID,
+                    b.MEM_CODE,
+                    b.NAME
+    FROM LOG0038D a
+       , ORG0001D b
+    WHERE CT_ID = MEM_ID
+      AND a.CALL_ENTRY_ID = #{callEntryId}
+      AND a.STUS_CODE_ID = 1
   </select>
 
   <insert id="insert_LOG0039D" parameterType="Map">
