@@ -1651,8 +1651,10 @@
         <select id="selectCovrgAreaList" parameterType="Map" resultType="egovMap">
 
    SELECT
+        cvrg.AREA_COVRG_ID,
         cvrg.AREA_ID,
         cvrg.STUS_CODE_ID,
+        cvrg.AREA_REM,
         C.NAME ,
         B.COUNTRY ,
         B.STATE,
@@ -1689,6 +1691,42 @@
     ORDER BY cvrg.AREA_ID
 
     </select>
+
+   <select id="getHTCovrgAreaList" parameterType="Map" resultType="egovMap">
+
+   SELECT
+   cvrg.AREA_COVRG_ID,
+        cvrg.AREA_ID,
+        cvrg.STUS_CODE_ID,
+        cvrg.AREA_REM ,
+        C.NAME ,
+        B.COUNTRY ,
+        B.STATE,
+        B.POSTCODE,
+        B.CITY ,
+        B.AREA ,
+        CRT_DT ,
+        CRT_USER_ID
+        UPD_DT ,
+    UPD_USER_ID
+ FROM
+    SAL0233M cvrg
+    JOIN SYS0064M B ON cvrg.AREA_ID = B.AREA_ID
+    LEFT JOIN SYS0038M C ON cvrg.STUS_CODE_ID = C.STUS_CODE_ID
+    WHERE 1=1
+    AND cvrg.AREA_ID = #{areaId}
+
+    </select>
+
+                <update id="updateCovrgAreaStatus" parameterType="Map">
+               UPDATE SAL0233M
+                           SET STUS_CODE_ID = #{stusCodeId}
+                                ,AREA_REM = #{remark}
+                                ,UPD_DT = SYSDATE
+                                ,UPD_USER_ID = #{updUserId}
+                         WHERE   AREA_COVRG_ID = #{areaCovrgId}
+
+             </update>
 
 
 </mapper>
