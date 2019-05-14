@@ -771,7 +771,7 @@ var TODAY_DD      = "${toDay}";
                             + $("#ManuaMyBSMonth").val(),
                         "",
                         function(result) {
-                          console.log(result);
+                          console.log ('BS Month : ' +$("#ManuaMyBSMonth").val());
                           if (result.message == "success") {
                             Common.alert("There is already exist for HS order for this month");
                             return;
