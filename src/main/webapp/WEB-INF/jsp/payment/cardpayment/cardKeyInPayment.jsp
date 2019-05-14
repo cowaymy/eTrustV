@@ -424,7 +424,28 @@ $(document).ready(function(){
         fn_checkAdvAmt();
     });
 
+    $('#selCreditCardBtn').click(function() {
+        Common.popupDiv("/payment/customerCreditCardSearchPop.do", {rentalOrdId : $("#rentalOrdId").val(), callPrgm : "PAY_CRC_KEY_IN"}, null, true);
+    });
 });
+
+function fn_loadCreditCard(crcId) {
+	Common.ajax("GET", "/sales/order/selectCustomerCreditCardDetailView.do", {getparam : crcId}, function(rsltInfo) {
+		if(rsltInfo != null) {
+			$("#keyCrcCardType").val(rsltInfo.cardTypeId);
+			$("#keyInCrcType").val(rsltInfo.custCrcTypeId);
+
+			var custCrcNo = rsltInfo.custOriCrcNo;
+			$("#keyInCardNo1").val(rsltInfo.custOriCrcNo.substring(0, 4));
+			$("#keyInCardNo2").val(rsltInfo.custOriCrcNo.substring(4, 8));
+			$("#keyInCardNo3").val(rsltInfo.custOriCrcNo.substring(8, 12));
+			$("#keyInCardNo4").val(rsltInfo.custOriCrcNo.substring(12));
+			$("#keyInHolderNm").val(rsltInfo.custCrcOwner);
+			$("#keyInExpiryMonth").val(rsltInfo.custCrcExpr.substring(0, 2));
+			$("#keyInExpiryYear").val(rsltInfo.custCrcExpr.substring(2));
+		}
+	});
+}
 
 function fn_chgAppType(){
 	 var appType = $("#appType").val();
@@ -3512,6 +3533,7 @@ function isDupOutSrvcToFinal(){
         </ul>
 
 	<ul class="right_btns mt10">
+	   <li><p class="btn_grid"><a id="selCreditCardBtn" href="#">Select Customer Card</a></p></li>
 	   <li><p class="btn_grid"><a href="javascript:savePayment();"><spring:message code='sys.btn.save'/></a></p></li>
     </ul>
 

@@ -14,17 +14,17 @@ import com.coway.trust.biz.payment.cardpayment.service.CardStatementService;
 @Controller
 @RequestMapping(value = "/payment")
 public class CardKeyInPaymentController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(CardKeyInPaymentController.class);
-	
+
 	@Resource(name = "cardStatementService")
-	private CardStatementService cardStatementService;	
-		
+	private CardStatementService cardStatementService;
+
 	/******************************************************
-	 *  Card Key-IN Payment 
-	 *****************************************************/	
+	 *  Card Key-IN Payment
+	 *****************************************************/
 	/**
-	 *  Credit Card Key-IN Payment 초기화 화면 
+	 *  Credit Card Key-IN Payment 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -33,8 +33,17 @@ public class CardKeyInPaymentController {
 	public String initCardKeyInPayment(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/cardpayment/cardKeyInPayment";
 	}
-	
-	
-	
-	
+
+	  @RequestMapping(value = "/customerCreditCardSearchPop.do")
+	  public String customerCreditCardSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	    int custId = cardStatementService.getCustId(params);
+
+	    model.put("callPrgm", params.get("callPrgm"));
+	    model.put("custId", custId);
+
+	    return "sales/customer/customerCreditCardSearchPop";
+	  }
+
+
 }
