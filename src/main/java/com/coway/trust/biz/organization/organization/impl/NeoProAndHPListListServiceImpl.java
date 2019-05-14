@@ -32,12 +32,15 @@ public class NeoProAndHPListListServiceImpl extends EgovAbstractServiceImpl impl
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
-	
+
 	@Override
 	public List<EgovMap> selectNeoProAndHPList(Map<String, Object> params) {
-	
+
 		return neoProAndHPListMapper.selectNeoProAndHPList(params);
 	}
-	
 
+	@Override
+	public EgovMap checkHpType(Map<String, Object> params) {
+	    return neoProAndHPListMapper.checkHpType(params);
+	}
 }

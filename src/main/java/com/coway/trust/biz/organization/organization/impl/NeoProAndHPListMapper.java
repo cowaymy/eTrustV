@@ -10,5 +10,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface NeoProAndHPListMapper {
 
 	List<EgovMap> selectNeoProAndHPList(Map<String, Object> params);
-	
+
+	EgovMap checkHpType(Map<String, Object> params);
+
 }
