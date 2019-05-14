@@ -2529,6 +2529,7 @@ JOIN SYS0064M B ON cvrg.AREA_ID = B.AREA_ID
 WHERE
 addr.STUS_CODE_ID = 9 AND
 addr.CUST_ID  = #{custId}
+AND cvrg.STUS_CODE_ID = 1
 
     </select>
 
