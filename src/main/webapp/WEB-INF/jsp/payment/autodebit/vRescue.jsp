@@ -1235,11 +1235,18 @@
 
     var ctrlId = AUIGrid
         .getCellValue(myGridID, selectedGridValue, "ctrlId");
+    var payType = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrcName");
+    if (payType == "Credit Card"){
+    	var isCrc = 'crc';
+    }
+    else{
+    	var isCrc = 'dd';
+    }
 
     //param data array
     var data = {};
     data.form = [ {
-      "ctrlId" : ctrlId
+      "ctrlId" : ctrlId, "isCrc":isCrc
     } ];
 
     Common
