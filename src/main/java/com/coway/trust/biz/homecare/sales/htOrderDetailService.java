@@ -47,4 +47,8 @@ public interface htOrderDetailService {
 	List<EgovMap> selectASInfoList(Map<String, Object> params);
 
 	List<EgovMap> selectCovrgAreaList(Map<String, Object> params);
+
+	EgovMap getHTCovrgAreaList(Map<String, Object> params);
+
+	public Map<String, Object> updateCovrgAreaStatus(Map<String, Object> params);
 }
