@@ -100,4 +100,9 @@ public interface htOrderDetailMapper {
 	List<EgovMap> selectASInfoList(Map<String, Object> params); //Last 6 Months Transaction
 
 	List<EgovMap> selectCovrgAreaList(Map<String, Object> params);
+
+	EgovMap getHTCovrgAreaList(Map<String, Object> params);
+
+	void updateCovrgAreaStatus(Map<String, Object> params);
+
 }
