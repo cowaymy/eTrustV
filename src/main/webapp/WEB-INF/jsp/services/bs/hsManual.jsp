@@ -5,6 +5,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript" language="javascript">
+var TODAY_DD      = "${toDay}";
+
   var StatusTypeData = [ {
     "codeId" : "1",
     "codeName" : "Active"
@@ -686,6 +688,24 @@
               var checkedItems = AUIGrid
                   .getCheckedRowItemsAll(myGridID);
 
+             var radioVal = $("input:radio[name='searchDivCd']:checked").val();
+              var todayDD = Number(TODAY_DD.substr(0, 2));
+              var todayYY = Number(TODAY_DD.substr(6, 4));
+
+
+              if (radioVal == 2) {
+                  if(todayYY >= 2018) {
+                      if(todayDD >= 14) { // Block if date > 22th of the month
+                          var msg = 'Disallow Create HS Order After 22nd of the Month.';
+                          Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+                          return;
+                      }
+                  }
+              }
+
+
+
+
               if (checkedItems.length <= 0) {
                 Common.alert('No data selected.');
                 return false;
@@ -1095,6 +1115,10 @@
 
   function fn_cMyBSMonth(field) {
     $("#" + field + "").val("");
+  }
+
+  function fn_selfClose() {
+      $('#btnCloseReq').click();
   }
 
 </script>
