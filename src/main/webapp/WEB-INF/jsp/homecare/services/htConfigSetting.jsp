@@ -121,7 +121,7 @@
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             if(selectedItems.length  <= 0) {
                 //Common.alert("<b>No HS selected.</b>");
-                Common.alert("<b><spring:message code='service.msg.NoHSData'/><b> ");
+                Common.alert("<b>No CS Order selected.<b> ");
                 return ;
             }
 
