@@ -9,7 +9,7 @@
 	$(document).ready(function(){
 	    //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-        
+
         fn_getCreditCardAjax();
 
         // 셀 더블클릭 이벤트 바인딩
@@ -25,9 +25,9 @@
                       ,AUIGrid.getCellValue(crcGridID , event.rowIndex , "codeName")
                       );
         });
-	    
+
 	});
-	
+
 	function fn_setData(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName) {
 	    if($('#callPrgm').val() == 'ORD_REGISTER_PAYM_CRC') {
 	        fn_loadCreditCard2(custCrcId);
@@ -42,12 +42,15 @@
 	        console.log('callPrgm');
 	        fn_loadCreditCardPop(custCrcId);
 	    }
-	    
+	    else if($('#callPrgm').val() == 'PAY_CRC_KEY_IN') {
+	        console.log();
+	        fn_loadCreditCard(custCrcId);
+	    }
 	    $('#custPopCloseBtn').click();
 	}
-	
+
     function createAUIGrid() {
-        
+
         //AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : '<spring:message code="sal.text.cardType" />',      dataField : "codeName",      width : 120 }
@@ -64,19 +67,19 @@
         //그리드 속성 설정
         var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 0,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-    //        selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 0,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+    //        selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : true
         };
-        
+
         crcGridID = GridCommon.createAUIGrid("grid_crc_wrap", columnLayout, "", gridPros);
     }
 
@@ -85,14 +88,14 @@
 	        fn_getCreditCardAjax();
 	    });
 	});
-	
+
     //Get Credit Card by Ajax
     function fn_getCreditCardAjax(){
         Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", $("#creditCardSearchForm").serializeJSON(), function(result) {
             AUIGrid.setGridData(crcGridID, result);
         });
     }
-  
+
 </script>
 </head>
 
