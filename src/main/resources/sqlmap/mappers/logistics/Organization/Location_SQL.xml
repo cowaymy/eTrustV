@@ -153,7 +153,14 @@
             , RDC_CODE              = #{rdccode}
             , WH_LOC_MOBILE         = #{up_mobile}
             , PLANT                 = #{plant}
-            , SL_PLANT              = #{slplant}
+             <choose>
+            <when test="whlocgb eq '03'.toString() or whlocgb eq '04'.toString()">
+                , SL_PLANT              = #{rdccode}
+             </when>
+             <otherwise>
+                , SL_PLANT              = #{slplant}
+               </otherwise>
+      </choose>
             , WH_LOC_STUS_ID  = #{locstus}
             , WH_LOC_LANE = #{loclane}
         WHERE WH_LOC_ID = #{locid}
