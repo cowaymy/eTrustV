@@ -695,7 +695,7 @@ var TODAY_DD      = "${toDay}";
 
               if (radioVal == 2) {
                   if(todayYY >= 2018) {
-                      if(todayDD >= 14) { // Block if date > 22th of the month
+                      if(todayDD > 22) { // Block if date > 22th of the month
                           var msg = 'Disallow Create HS Order After 22nd of the Month.';
                           Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                           return;
