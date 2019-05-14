@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.payment.payment.service.impl.SearchPaymentMapper;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
@@ -586,4 +587,19 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 	public List<EgovMap> selectCovrgAreaList(Map<String, Object> params) {
 		return htOrderDetailMapper.selectCovrgAreaList(params);
 	}
+
+	@Override
+	public EgovMap getHTCovrgAreaList(Map<String, Object> params) {
+		return htOrderDetailMapper.getHTCovrgAreaList(params);
+	}
+
+	@Transactional
+	  public Map<String, Object> updateCovrgAreaStatus(Map<String, Object> params) {
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+		 htOrderDetailMapper.updateCovrgAreaStatus(params);
+
+		 return resultValue;
+	}
+
 }
