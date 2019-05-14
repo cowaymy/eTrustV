@@ -28,7 +28,9 @@ import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.organization.organization.MemberListController;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -76,6 +78,12 @@ public class HsManualController {
     		model.addAttribute("memberLevel", sessionVO.getMemberLevel());
     		model.addAttribute("userType",sessionVO.getUserTypeId());
     		//model.addAttribute("userType","3");
+
+    		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+    		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+    		model.put("bfDay", bfDay);
+    		model.put("toDay", toDay);
 
 		return "services/bs/hsManual";
     	}
