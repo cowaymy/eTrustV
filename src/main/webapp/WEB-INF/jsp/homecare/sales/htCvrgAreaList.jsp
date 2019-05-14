@@ -37,6 +37,15 @@ var columnLayout = [
         dataField : "name",
         headerText : "Status",
         width: 100
+    },  {
+        dataField : "areaRem",
+        headerText : "Remark",
+        width: 200
+    },  {
+        dataField : "areaCovrgId",
+        headerText : "ID",
+        width: 100,
+        visible : false
     }
 ];
 
@@ -64,6 +73,16 @@ function fn_searchCurrentCovrgArea() {
     });
 }
 
+function fn_updateCurrentCovrgArea() {
+	  var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
+	    if(selIdx > -1) {
+	        Common.popupDiv("/homecare/sales/htUpdateCovrgAreaStatusPop.do", { areaId : AUIGrid.getCellValue(myGridID, selIdx, "areaId")}, null , true);
+	    }
+	    else {
+	    	Common.alert('No data selected.');
+	    }
+}
+
 function fn_excelDown(){
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
     GridCommon.exportTo("grid_wrap", "xlsx", "Coverage Area Search");
@@ -84,6 +103,7 @@ function fn_excelDown(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Coverage Area Management</h2>
 <ul class="right_btns">
+<li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript:fn_updateCurrentCovrgArea()"><span class="update"></span>Update Status</a></p></li>
 <%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
   <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript:fn_searchCurrentCovrgArea()"><span class="search"></span>Search</a></p></li>
 <%-- </c:if> --%>
