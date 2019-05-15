@@ -27,7 +27,7 @@
         FROM ORG1003V
         WHERE 1=1
         <if test="hpCode != null and hpCode != ''">
-            AND MEM_CODE LIKE '%' || #{hpCode} || '%'
+            AND UPPER(MEM_CODE) LIKE UPPER('%' || #{hpCode} || '%')
         </if>
         <if test="hpType != null and hpType != ''">
             <if test="hpType == '0' ">
@@ -38,13 +38,13 @@
             </if>
         </if>
         <if test="orgCode != null and orgCode != ''">
-            AND ORG_CODE LIKE '%' || #{orgCode} || '%'
+            AND UPPER(ORG_CODE) LIKE UPPER('%' || #{orgCode} || '%')
         </if>
         <if test="grpCode != null and grpCode != ''">
-            AND GRP_CODE LIKE '%' || #{grpCode} || '%'
+            AND UPPER(GRP_CODE) LIKE UPPER('%' || #{grpCode} || '%')
         </if>
         <if test="deptCode != null and deptCode != ''">
-            AND DEPT_CODE LIKE '%' || #{deptCode} || '%'
+            AND UPPER(DEPT_CODE) LIKE UPPER('%' || #{deptCode} || '%')
         </if>
         <if test="prev3Mth != null and prev3Mth != ''">
             <if test="prev3Mth == 0 ">
