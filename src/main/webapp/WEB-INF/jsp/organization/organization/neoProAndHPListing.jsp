@@ -20,6 +20,7 @@
         if(userRole == 128 || userRole == 129 || userRole == 130 || // Administratior
            userRole == 166 || userRole == 167 || userRole == 261 || // Sales Planning
            userRole == 335 || userRole == 336 || userRole == 337 || // Org Interaction
+           userRole == 268 || userRole == 320 || // Organisation Development
            userRole == 106 || userRole == 109 || userRole == 111 || userRole == 112 || userRole == 113 || userRole == 114 || userRole == 115) { // Health Planner
 
             if(userRole == 106 || userRole == 109 || userRole == 111 || userRole == 112 || userRole == 113 || userRole == 114 || userRole == 115) {
