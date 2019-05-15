@@ -1905,6 +1905,10 @@
                             basicInfo.instlmtPriod);
                 }
 
+                if (basicInfo.appTypeId == '145') {
+                	$('span', '#salManCodeLbl').empty().remove();
+                }
+
                 $('#modSalesOrdNo').val(basicInfo.ordNo);
 
                 $('#modAppTypeId').val(basicInfo.appTypeId);
@@ -2314,7 +2318,7 @@
                 }
             }
         } else {
-            if ($('#modAppTypeId').val() != '143') {
+            if ($('#modAppTypeId').val() != '145') {
                 isValid = false;
                 msg += '<spring:message code="sal.alert.msg.plzSelectSalesman" />';
             }
@@ -2869,7 +2873,7 @@
         <td><input id="modInstallDur" name="installDur" type="text"
          title="" placeholder="Installment Duration (1-36 Months)"
          class="w100p" disabled /></td>
-        <th scope="row"><spring:message code="sal.text.salManCode" /><span
+        <th scope="row" id="salManCodeLbl"><spring:message code="sal.text.salManCode" /><span
          class="must">*</span></th>
         <td><input id="modSalesmanCd" name="salesmanCd" type="text"
          title="" placeholder="Salesman Code" class="" /> <a
