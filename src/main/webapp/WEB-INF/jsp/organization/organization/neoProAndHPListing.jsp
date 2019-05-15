@@ -21,6 +21,7 @@
            userRole == 166 || userRole == 167 || userRole == 261 || // Sales Planning
            userRole == 335 || userRole == 336 || userRole == 337 || // Org Interaction
            userRole == 268 || userRole == 320 || // Organisation Development
+           userRole == 95 || userRole == 96 || // Planning
            userRole == 106 || userRole == 109 || userRole == 111 || userRole == 112 || userRole == 113 || userRole == 114 || userRole == 115) { // Health Planner
 
             if(userRole == 106 || userRole == 109 || userRole == 111 || userRole == 112 || userRole == 113 || userRole == 114 || userRole == 115) {
@@ -40,12 +41,12 @@
                             $("#hpCode").val(userName);
                             $("#hpCode").attr("disabled", true);
 
-                            Common.ajax("GET", "/organization/checkHpType.do", {memCode : userName}, function(result1) {
+                            /*Common.ajax("GET", "/organization/checkHpType.do", {memCode : userName}, function(result1) {
                                 console.log(result1);
 
                                 $("#hpType").val(result1.hpType);
                                 $("#hpType").attr("disabled", true);
-                            });
+                            })*/;
                         }
                     } else if(userRole == 113) { // SM
                         $("#orgCode").val(result.orgCode);
@@ -157,7 +158,14 @@
     }
 
     function fn_genExcel() {
-        GridCommon.exportTo("grid_wrap", 'xlsx', "NEOPRO_HP_LISTING");
+        var dd, mm, yy;
+
+        var today = new Date();
+        dd = today.getDate();
+        mm = today.getMonth() + 1;
+        yy = today.getFullYear();
+
+        GridCommon.exportTo("grid_wrap", 'xlsx', "NEOPRO_HP_LISTING_" + yy + mm + dd + "_" + userName);
     }
 
 </script>
@@ -205,14 +213,8 @@
                         <td>
                             <input type="text" title="" placeholder="" class="w100p" id="hpCode" name="hpCode" />
                         </td>
-                        <th scope="row">HP Type</th>
-                        <td>
-                            <select id = "hpType" name = "hpType" class="w100p">
-                                <option value="" selected>Select Type</option>
-                                <option value="0">HP</option>
-                                <option value="1">NEOPRO</option>
-                            </select>
-                        </td>
+                        <th scope="row"></th>
+                        <td></td>
                         <th scope="row"></th>
                         <td></td>
                     </tr>
