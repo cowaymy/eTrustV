@@ -9,11 +9,13 @@
     var myGridID;
     var gridValue;
 
-    var userName = "${userName}";
-    var userRole = ${userRole};
-    var userType = ${userType};
+    var userName, userRole, userType;
 
-    $(document).ready(function(){
+    $(document).ready(function() {
+
+        userName = "${userName}";
+        userRole = ${userRole};
+        userType = ${userType};
 
         if(userRole == 128 || userRole == 129 || userRole == 130 || // Administratior
            userRole == 166 || userRole == 167 || userRole == 261 || // Sales Planning
