@@ -101,10 +101,14 @@ function fn_Generate(){
     if(date.getDate() < 10){
         day = "0"+date.getDate();
     }
+    if(date.getMonth()+1 < 10){
+        month = "0"+month;
+    }
+
     $("#searchHsReport #V_HSNO").val(BSNo);
     $("#searchHsReport #reportFileName").val('/homecare/CSReport_ByBSNo_Single.rpt');
     $("#searchHsReport #viewType").val("PDF");
-    $("#searchHsReport #reportDownFileName").val(BSNo + "_"+day+month+date.getFullYear());
+    $("#searchHsReport #reportDownFileName").val("CS_"+BSNo + "_"+day+month+date.getFullYear());
 
     var option = {
             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -166,7 +170,7 @@ $.fn.clearForm = function() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">CS Number</th>
+    <th scope="row">HCS Number</th>
     <td><input type="text" title="HS Number" placeholder="CS Number" class="w100p" id="hsNumber" name="hsNumber"/></td>
     <th scope="row">CS Month</th>
     <td><input type="text" title="HS Month" placeholder="MM/YYYY" class="j_date2 w100p" id="hsMonth" name="hsMonth"/></td>
