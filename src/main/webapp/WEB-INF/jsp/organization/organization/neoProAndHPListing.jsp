@@ -151,7 +151,11 @@
             console.log(result);
             AUIGrid.setGridData(myGridID, result);
         });
-}
+    }
+
+    function fn_genExcel() {
+        GridCommon.exportTo("grid_wrap", 'xlsx', "NEOPRO_HP_LISTING");
+    }
 
 </script>
 
