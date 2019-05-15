@@ -96,8 +96,8 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:1px solid #d3d9
 <caption>table</caption>
 <colgroup>
     <col style="width:5%" />
-    <col style="width:47%" />
-    <col style="width:47%" />
+    <col style="width:67%" />
+    <col style="width:27%" />
 </colgroup>
 <tbody>
 <tr>
