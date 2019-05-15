@@ -788,6 +788,8 @@ function savePayment(){
     		}
     	}
 
+    	fn_clearCrcDtls();
+
     	Common.alert(message, function(){
     	      document.location.href = '/payment/initCardKeyInPayment.do';
     	});
@@ -859,6 +861,8 @@ function fn_rentalConfirm(){
 	//Rental Grid Clear 처리
 	resetRentalGrid();
 
+	fn_clearCrcDtls();
+
 	var ordNo = $("#rentalOrdNo").val();
 
     if(ordNo != ''){
@@ -880,6 +884,7 @@ function fn_rentalConfirm(){
 //Search Order 팝업
 function fn_rentalOrderSearchPop(){
 	resetRentalGrid();
+	fn_clearCrcDtls();
     Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "RENTAL_PAYMENT", indicator : "SearchOrder"});
 }
 
@@ -895,6 +900,18 @@ function fn_callBackRentalOrderInfo(ordNo, ordId){
         //Order Info 및 Payment Info 조회
         fn_rentalOrderInfo();
     });
+}
+
+function fn_clearCrcDtls() {
+    $("#keyCrcCardType").val("");
+    $("#keyInCrcType").val("");
+    $("#keyInCardNo1").val("");
+    $("#keyInCardNo2").val("");
+    $("#keyInCardNo3").val("");
+    $("#keyInCardNo4").val("");
+    $("#keyInHolderNm").val("");
+    $("#keyInExpiryMonth").val("");
+    $("#keyInExpiryYear").val("");
 }
 
 //Rental Order Info 조회
