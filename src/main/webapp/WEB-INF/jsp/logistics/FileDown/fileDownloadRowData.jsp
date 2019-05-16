@@ -110,7 +110,7 @@ $(function(){
 	 console.log('div : ' + div);
 	 if("${SESSION_INFO.userId}" =="50461" && div == "BSRaw"){
 		 var msg = "Sorry. You have no access rights to download this file.";
-         Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
+         Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
          return false;
 	 }
 
