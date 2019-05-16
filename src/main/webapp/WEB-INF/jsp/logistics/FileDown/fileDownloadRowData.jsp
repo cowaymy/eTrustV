@@ -30,9 +30,9 @@ var rawFileGrid1;
 var rawFileGrid2;
 
 var columnLayout1 = [
-					{dataField: "orignlfilenm",headerText :"<spring:message code='log.head.filename'/>" ,width: "30%"   ,visible:true },                
-					{dataField: "updDt",headerText :"<spring:message code='log.head.writetime'/>"   ,width: "30%"   , dataType :    "date"    ,formatString :     "yyyy. mm. dd hh:MM TT"    ,visible:true },  
-					{dataField: "filesize",headerText :"<spring:message code='log.head.filesize'/>" ,width: "30%"   ,postfix :  "bytes"   ,dataType :    "numeric" ,visible:true},  
+					{dataField: "orignlfilenm",headerText :"<spring:message code='log.head.filename'/>" ,width: "30%"   ,visible:true },
+					{dataField: "updDt",headerText :"<spring:message code='log.head.writetime'/>"   ,width: "30%"   , dataType :    "date"    ,formatString :     "yyyy. mm. dd hh:MM TT"    ,visible:true },
+					{dataField: "filesize",headerText :"<spring:message code='log.head.filesize'/>" ,width: "30%"   ,postfix :  "bytes"   ,dataType :    "numeric" ,visible:true},
                     {
                         dataField : "",
                         headerText : "",
@@ -45,15 +45,15 @@ var columnLayout1 = [
                         }
                     , editable : false
                     },
-                    {dataField: "subpath",headerText :"<spring:message code='log.head.subpath'/>",width:120    ,height:30 , visible:false},                         
-                    {dataField: "filename",headerText :"<spring:message code='log.head.filename'/>",width:120    ,height:30 , visible:false},                               
-                    {dataField: "fileEt",headerText :"<spring:message code='log.head.fileet'/>",width:120    ,height:30 , visible:false}  
+                    {dataField: "subpath",headerText :"<spring:message code='log.head.subpath'/>",width:120    ,height:30 , visible:false},
+                    {dataField: "filename",headerText :"<spring:message code='log.head.filename'/>",width:120    ,height:30 , visible:false},
+                    {dataField: "fileEt",headerText :"<spring:message code='log.head.fileet'/>",width:120    ,height:30 , visible:false}
                     ];
-                    
+
 var columnLayout2 = [
-					{dataField: "orignlfilenm",headerText :"<spring:message code='log.head.filename'/>" ,width: "30%"   ,visible:true },                
-					{dataField: "updDt",headerText :"<spring:message code='log.head.writetime'/>"   ,width: "30%"   , dataType :     "date"     ,formatString :     "yyyy. mm. dd hh:MM TT"    ,visible:true },  
-					{dataField: "filesize",headerText :"<spring:message code='log.head.filesize'/>" ,width: "30%"   ,postfix :  "bytes"   ,dataType :     "numeric" ,visible:true},  
+					{dataField: "orignlfilenm",headerText :"<spring:message code='log.head.filename'/>" ,width: "30%"   ,visible:true },
+					{dataField: "updDt",headerText :"<spring:message code='log.head.writetime'/>"   ,width: "30%"   , dataType :     "date"     ,formatString :     "yyyy. mm. dd hh:MM TT"    ,visible:true },
+					{dataField: "filesize",headerText :"<spring:message code='log.head.filesize'/>" ,width: "30%"   ,postfix :  "bytes"   ,dataType :     "numeric" ,visible:true},
                     {
                         dataField : "",
                         headerText : "",
@@ -66,61 +66,63 @@ var columnLayout2 = [
                         }
                     , editable : false
                     },
-                    {dataField: "subpath",headerText :"<spring:message code='log.head.subpath'/>",width:120    ,height:30 , visible:false},                         
-                    {dataField: "filename",headerText :"<spring:message code='log.head.filename'/>",width:120    ,height:30 , visible:false},                               
-                    {dataField: "fileEt",headerText :"<spring:message code='log.head.fileet'/>",width:120    ,height:30 , visible:false}  
-                    ];                    
+                    {dataField: "subpath",headerText :"<spring:message code='log.head.subpath'/>",width:120    ,height:30 , visible:false},
+                    {dataField: "filename",headerText :"<spring:message code='log.head.filename'/>",width:120    ,height:30 , visible:false},
+                    {dataField: "fileEt",headerText :"<spring:message code='log.head.fileet'/>",width:120    ,height:30 , visible:false}
+                    ];
 
 
 
-                                    
+
 var gridoptions = {
-        showStateColumn : false , 
-        editable : false, 
-        pageRowCount : 10, 
-        usePaging : true, 
+        showStateColumn : false ,
+        editable : false,
+        pageRowCount : 10,
+        usePaging : true,
         useGroupingPanel : false,
         noDataMessage :  "<spring:message code='sys.info.grid.noDataMessage' />"
         };
-        
-        
+
+
 var paramdata;
 
 $(document).ready(function(){
 
     rawFileGrid1 = AUIGrid.create("#grid_wrap1", columnLayout1, gridoptions);
     rawFileGrid2 = AUIGrid.create("#grid_wrap2", columnLayout2, gridoptions);
-    
-    
+
+
     doGetCombo('/logistics/file/checkDirectory.do', 'PB', '','spublic', 'S' , ''); //File Type 리스트 조회
     doGetCombo('/logistics/file/checkDirectory.do', 'PR', '','scpublic', 'S' , ''); //File Type 리스트 조회
-    
- 
+
+
 });
 
 
 //btn clickevent
 $(function(){
-	
+
 	$("#grid_wrap1").hide();
 	$("#grid_wrap2").hide();
-	
+
  $('#spublic').change(function() {
 	 var div= $('#spublic').val();
+	 console.log('div : ' + div);
 	 $("#grid_wrap1").show();
 	   SearchListAjax1(div);
- 
+
 });
- 
+
  $('#scpublic').change(function() {
 	 var div= $('#scpublic').val();
+	 console.log('div : ' + div);
 	 $("#grid_wrap2").show();
 	 SearchListAjax2(div);
-	 
+
 	});
-	
-   
-   
+
+
+
 });
 
 
@@ -135,7 +137,7 @@ function SearchListAjax1(str) {
         // 차례로 Country, Name, Price 에 대하여 각각 오름차순, 내림차순, 오름차순 지정.
         sortingInfo[0] = { dataField : "updDt", sortType : -1 };
         AUIGrid.setSorting(rawFileGrid1, sortingInfo);
-        
+
     });
 }
 function SearchListAjax2(str) {
@@ -149,7 +151,7 @@ function SearchListAjax2(str) {
         // 차례로 Country, Name, Price 에 대하여 각각 오름차순, 내림차순, 오름차순 지정.
         sortingInfo[0] = { dataField : "updDt", sortType : -1 };
         AUIGrid.setSorting(rawFileGrid2, sortingInfo);
-        
+
     });
 }
 
@@ -164,7 +166,7 @@ function fileDown(rowIndex,str){
 	    subPath = "/resources/WebShare/RawData/Privacy/"+$('#scpublic').val();
 	    orignlFileNm = AUIGrid.getCellValue(rawFileGrid2 ,  rowIndex, "orignlfilenm");
 	}
-	
+
   window.open("${pageContext.request.contextPath}"+subPath + "/" + orignlFileNm);
 }
 </script>
