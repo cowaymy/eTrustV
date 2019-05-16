@@ -16,7 +16,7 @@
     SELECT *
     FROM (
     <choose>
-        <when test="userType == 2">
+        <when test="userType == 7">
             SELECT s005m.brnch_id AS CODE_ID
                     , s005m.code || '-' || s005m.name AS CODE_NAME
                 from SYS0005M s005m
@@ -98,7 +98,7 @@
                 AND A.BRNCH_ID = C.BRNCH_ID
                 AND A.DEPT_CODE IS NOT NULL
                 AND B.MEM_TYPE = 7
-            <if test="userType == '2'.toString()">
+            <if test="userType == '7'.toString()">
                     AND B.STUS IN (1,8)
                 <if test="memLevl == '1'.toString()">
                     AND A.MEM_LVL  = '3'
