@@ -200,6 +200,7 @@ function createAUIGrid() {
       , { headerText : "<spring:message code='sales.AppType'/>", dataField : "appTypeCode", editable : false, width : 80  }
       , { headerText : "<spring:message code='sales.ordDt'/>",   dataField : "ordDt",       editable : false, width : 100 }
       , { headerText : "<spring:message code='sales.refNo2'/>",  dataField : "refNo",       editable : false, width : 200  }
+      , { headerText : "Adjustment Note",  dataField : "adjnote",       editable : false, width : 200  }
       , { headerText : "Product Size",    dataField : "productName", editable : false, width : 150 }
       , { headerText : "Brand",                                               dataField : "brand", editable : false, width : 150 }
       , { headerText : "<spring:message code='sales.custId'/>",  dataField : "custId",      editable : false, width : 80  }
