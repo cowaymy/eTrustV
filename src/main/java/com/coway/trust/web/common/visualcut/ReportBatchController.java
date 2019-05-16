@@ -1288,6 +1288,24 @@ public class ReportBatchController {
     LOGGER.info("[END] SQLHs_and_Filter_RawData_Excel...");
   }
 
+  /*KV-Negative Stock Balance of the Month*/
+  @RequestMapping(value = "/Negative_StockB_OnMonth_Excel.do")
+  //@Scheduled(cron = " 0 30 1 * * 1") // Every Monday (weekly) 01:30am
+  public void Negative_StockB_OnMonth_Excel() throws IOException {
+    LOGGER.info("[START] Negative_StockB_OnMonth_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/Negative_StockBalance_On_Month.rpt");// visualcut
+                                                                     // rpt file
+                                                                     // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Monthly Negative Stock Balance Data" + File.separator + "Monthly_Negative_StockB" + CommonUtils.getNowDate() + ".xls");
+
+    this.view(null, null, params);
+    LOGGER.info("[END] Negative_StockB_OnMonth_Excel...");
+  }
+
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
