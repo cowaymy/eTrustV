@@ -15,6 +15,7 @@ var invoiceTypeData = [{"codeId": "1","codeName": "Outright Invoice"},
                        {"codeId": "123","codeName": "WholeSales Invoice"},
                        {"codeId": "124","codeName": "Product Lost Invoice"},
                        {"codeId": "125","codeName": "Early Termination Invoice"},
+                       {"codeId": "408","codeName": "Care Service Invoice"}
                        ];
 
 //AUIGrid 칼럼 설정
