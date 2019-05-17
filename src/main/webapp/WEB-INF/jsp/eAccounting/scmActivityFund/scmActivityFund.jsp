@@ -116,6 +116,8 @@ $(document).ready(function () {
     $("#appvPrcssStus").multipleSelect("checkAll");
 
     fn_setToMonth();
+
+    $("#editRejBtn").click(fn_editRejected);
 });
 
 function fn_setToMonth() {
@@ -899,6 +901,44 @@ function fn_report() {
     };
     Common.report("dataForm", option);
 }
+
+function fn_editRejected() {
+    console.log("fn_editRejected");
+
+    var gridObj = AUIGrid.getSelectedItems(staffClaimGridID);
+    var list = AUIGrid.getCheckedRowItems(staffClaimGridID);
+
+    if(gridObj != "" || list != "") {
+        var status;
+        var selClmNo;
+
+        if(list.length > 1) {
+            Common.alert("* Only 1 record is permitted. ");
+            return;
+        }
+
+        if(gridObj.length > 0) {
+            status = gridObj[0].item.appvPrcssStus;
+            selClmNo = gridObj[0].item.clmNo;
+        } else {
+            status = list[0].item.appvPrcssStus;
+            selClmNo = list[0].item.clmNo;
+        }
+
+        if(status == "Rejected") {
+            Common.ajax("POST", "/eAccounting/scmActivityFund/editRejected.do", {clmNo : selClmNo}, function(result1) {
+                console.log(result1);
+
+                Common.alert("New claim number : " + result1.data.newClmNo);
+            })
+        } else {
+            Common.alert("Only rejected claims are allowed to edit.");
+        }
+    } else {
+        Common.alert("* No Value Selected. ");
+        return;
+    }
+}
 </script>
 
 <!-- report Form -->
@@ -971,6 +1011,7 @@ function fn_report() {
             <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <li><p class="link_btn"><a href="#" id="_staffClaimBtn">SCM Activity Fund</a></p></li>
             </c:if>
+            <li><p class="link_btn"><a href="#" id="editRejBtn">Edit Rejected</a></p></li>
         </ul>
         <ul class="btns">
         </ul>
