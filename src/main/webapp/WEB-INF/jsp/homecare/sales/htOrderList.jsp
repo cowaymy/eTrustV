@@ -136,6 +136,9 @@ function fn_setDetail(gridID, rowIdx){
       $('#btnRaw').click(function() {
           Common.popupDiv("/homecare/sales/htRawDataPop.do", null, null, true);
       });
+      $("#btnPayList").click(function() {
+          Common.popupDiv("/homecare/sales/htOrderPaymentListingPop.do", '', null, null, true);
+     });
 
   });
 
@@ -466,6 +469,7 @@ $.fn.clearForm = function() {
     </ul>
         <ul class="btns">
         <li><p class="link_btn type2"><a href="#" id="btnRaw">Mattress Care Service (MCS) Raw Data</a></p></li>
+          <li><p class="link_btn type2"><a href="#" id="btnPayList">Mattress Care Service (MCS) Payment Listing</a></p></li>
     </ul>
 
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
