@@ -67,7 +67,7 @@ $(document).ready(function(){
     //paramdata = {locgb:'010205', grade:$("#locationType").val() }; // session 정보 등록
      doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
     */
-    paramdata = {stoIn:'01,02,05,06,07', grade:$("#locationType").val() }; //김덕호 파트너/G.Trust (2018-01-03)  요청 창고 타입  01, 02, 05, 07 열어 주세요.
+    paramdata = {stoIn:'01,02,05,06,07', grade:$("#locationType").val(),brnch : '${SESSION_INFO.userBranchId}' }; //김덕호 파트너/G.Trust (2018-01-03)  요청 창고 타입  01, 02, 05, 07 열어 주세요.
     doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
