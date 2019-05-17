@@ -5,36 +5,36 @@
 <select id="selectScmActivityFundList" parameterType="Map" resultType="egovMap">
 /* scmActivityFundMapper.selectScmActivityFundList */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT T.CLM_NO, 
-       T.MEM_ACC_ID, 
-       T.MEM_ACC_NAME, 
+SELECT T.CLM_NO,
+       T.MEM_ACC_ID,
+       T.MEM_ACC_NAME,
        TO_DATE(T.CLM_MONTH, 'YYYYMM') AS CLM_MONTH,
-       T.REQST_DT, 
-       'MYR' AS CUR, 
-       T.TOT_AMT, 
+       T.REQST_DT,
+       'MYR' AS CUR,
+       T.TOT_AMT,
        T.APPV_PRCSS_NO,
-       T.APPV_PRCSS_STUS_CODE, 
-       T.APPV_PRCSS_STUS, 
-       T.APPV_PRCSS_DT 
-FROM   (SELECT T1.CLM_NO, 
-               T1.MEM_ACC_ID, 
-               T2.MEM_ACC_NAME, 
-               T1.CLM_MONTH, 
-               T1.TOT_AMT, 
-               T1.APPV_PRCSS_NO, 
-               T4.REQST_DT, 
-               Nvl (T4.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE, 
-               Nvl (( CASE T4.APPV_PRCSS_STUS 
-                        WHEN 'R' THEN 'Request' 
-                        WHEN 'P' THEN 'Approve In-Progress' 
-                        WHEN 'A' THEN 'Approved' 
-                        WHEN 'J' THEN 'Rejected' 
-                      END ), 'Temporary Save') AS APPV_PRCSS_STUS, 
-               T4.APPV_PRCSS_DT 
-        FROM   FCM0019M T1 
-               LEFT JOIN FCM0006M T2 
-                      ON T1.MEM_ACC_ID = T2.MEM_ACC_ID 
-               LEFT JOIN FCM0004M T4 
+       T.APPV_PRCSS_STUS_CODE,
+       T.APPV_PRCSS_STUS,
+       T.APPV_PRCSS_DT
+FROM   (SELECT T1.CLM_NO,
+               T1.MEM_ACC_ID,
+               T2.MEM_ACC_NAME,
+               T1.CLM_MONTH,
+               T1.TOT_AMT,
+               T1.APPV_PRCSS_NO,
+               T4.REQST_DT,
+               Nvl (T4.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE,
+               Nvl (( CASE T4.APPV_PRCSS_STUS
+                        WHEN 'R' THEN 'Request'
+                        WHEN 'P' THEN 'Approve In-Progress'
+                        WHEN 'A' THEN 'Approved'
+                        WHEN 'J' THEN 'Rejected'
+                      END ), 'Temporary Save') AS APPV_PRCSS_STUS,
+               T4.APPV_PRCSS_DT
+        FROM   FCM0019M T1
+               LEFT JOIN FCM0006M T2
+                      ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
+               LEFT JOIN FCM0004M T4
                       ON T1.APPV_PRCSS_NO = T4.APPV_PRCSS_NO WHERE CLM_TYPE = 'J5'
           <if test="loginUserId != null and loginUserId != ''">
             AND T1.CRT_USER_ID = #{loginUserId}
@@ -42,10 +42,10 @@ FROM   (SELECT T1.CLM_NO,
             ) T
        WHERE 1=1
 <if test="clmMonth != null and clmMonth != ''">
-<![CDATA[ 
+<![CDATA[
 AND T.CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
 ]]>
-</if>       
+</if>
 <if test="memAccId != null and memAccId != ''">
 AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
 </if>
@@ -57,14 +57,14 @@ AND T.APPV_PRCSS_STUS_CODE IN
 <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
 #{item}
 </foreach>
-</if>  
-ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT          
+</if>
+ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
 </select>
 
 <select id="selectTaxCodeScmActivityFundFlag" resultType="egovMap">
 /* scmActivityFundMapper.selectTaxCodeScmActivityFundFlag */
     SELECT TAX_CODE ,
-                INDUSTRY_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME 
+                INDUSTRY_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME
     FROM FCM0007C
     WHERE SCM_FUND_FLAG = 'X'
 </select>
@@ -170,10 +170,10 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{glAccCodeName}
        ,#{budgetCode}
        ,#{budgetCodeName}
-       ,#{taxCode}
-       ,#{gstBeforAmt}
-       ,#{gstAmt}
-       ,#{taxNonClmAmt}
+       ,'VB'
+       ,#{totAmt}
+       ,0
+       ,0
        ,#{totAmt}
        ,#{atchFileGrpId}
        ,#{expDesc}
@@ -189,98 +189,98 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
 /* scmActivityFundMapper.selectScmActivityFundItems */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
 SELECT T1.CLM_SEQ,
-       T3.COST_CENTR, 
-       T3.COST_CENTR_NAME, 
-       T3.MEM_ACC_ID, 
-       T1.EXP_TYPE, 
-       T1.EXP_TYPE_NAME, 
-       T1.GL_ACC_CODE, 
-       T1.GL_ACC_CODE_NAME, 
-       T1.BUDGET_CODE, 
-       T1.BUDGET_CODE_NAME, 
+       T3.COST_CENTR,
+       T3.COST_CENTR_NAME,
+       T3.MEM_ACC_ID,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
        T4.MEM_ACC_ID AS SUPPLIR,
-       T1.SUPPLIR AS SUPPLIR_NAME, 
-       T1.INVC_TYPE, 
-       ( CASE T1.INVC_TYPE 
-           WHEN 'F' THEN 'Full Tax invoice' 
-           WHEN 'S' THEN 'Simplified Tax invoice' 
-         END )     AS INVC_TYPE_NAME, 
-       T1.INVC_NO, 
-       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY')                   AS INVC_DT,  
-       T1.GST_RGIST_NO, 
-       T1.TAX_CODE, 
-       T2.TAX_NAME, 
-       'MYR'       AS CUR, 
-       T1.NET_AMT AS GST_BEFOR_AMT, 
-       T1.TAX_AMT AS GST_AMT, 
+       T1.SUPPLIR AS SUPPLIR_NAME,
+       T1.INVC_TYPE,
+       ( CASE T1.INVC_TYPE
+           WHEN 'F' THEN 'Full Tax invoice'
+           WHEN 'S' THEN 'Simplified Tax invoice'
+         END )     AS INVC_TYPE_NAME,
+       T1.INVC_NO,
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY')                   AS INVC_DT,
+       T1.GST_RGIST_NO,
+       T1.TAX_CODE,
+       T2.TAX_NAME,
+       'MYR'       AS CUR,
+       T1.NET_AMT AS GST_BEFOR_AMT,
+       T1.TAX_AMT AS GST_AMT,
        T1.TAX_NON_CLM_AMT,
-       T1.TOT_AMT, 
-       T1.ATCH_FILE_GRP_ID, 
-       T1.EXP_DESC, 
-       T1.CLAM_UN, 
-       T3.TOT_AMT  AS ALL_TOT_AMT, 
-       T3.APPV_PRCSS_NO 
-FROM   FCM0020D T1 
-       LEFT JOIN FCM0007C T2 
-              ON T1.TAX_CODE = T2.TAX_CODE 
-       LEFT JOIN FCM0019M T3 
+       T1.TOT_AMT,
+       T1.ATCH_FILE_GRP_ID,
+       T1.EXP_DESC,
+       T1.CLAM_UN,
+       T3.TOT_AMT  AS ALL_TOT_AMT,
+       T3.APPV_PRCSS_NO
+FROM   FCM0020D T1
+       LEFT JOIN FCM0007C T2
+              ON T1.TAX_CODE = T2.TAX_CODE
+       LEFT JOIN FCM0019M T3
               ON T1.CLM_NO = T3.CLM_NO
-       LEFT JOIN FCM0006M T4 
+       LEFT JOIN FCM0006M T4
               ON T1.SUPPLIR = T4.MEM_ACC_NAME
-WHERE  T1.CLM_NO = #{clmNo} 
+WHERE  T1.CLM_NO = #{clmNo}
 ORDER  BY T1.CLM_SEQ
 </select>
 
 <select id="selectScmActivityFundInfo" parameterType="Map" resultType="egovMap">
 /* scmActivityFundMapper.selectScmActivityFundInfo */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT T1.CLM_SEQ, 
-       T3.COST_CENTR, 
-       T3.COST_CENTR_NAME, 
-       T3.MEM_ACC_ID, 
-       T4.MEM_ACC_NAME, 
-       T3.BANK_CODE, 
+SELECT T1.CLM_SEQ,
+       T3.COST_CENTR,
+       T3.COST_CENTR_NAME,
+       T3.MEM_ACC_ID,
+       T4.MEM_ACC_NAME,
+       T3.BANK_CODE,
        T4.BANK_NAME,
-       T3.BANK_ACC_NO, 
-       TO_CHAR(TO_DATE(T3.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH, 
-       T3.TOT_AMT                                          AS ALL_TOT_AMT, 
+       T3.BANK_ACC_NO,
+       TO_CHAR(TO_DATE(T3.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH,
+       T3.TOT_AMT                                          AS ALL_TOT_AMT,
        T3.APPV_PRCSS_NO,
-       T1.EXP_TYPE, 
-       T1.EXP_TYPE_NAME, 
-       T1.GL_ACC_CODE, 
-       T1.GL_ACC_CODE_NAME, 
-       T1.BUDGET_CODE, 
-       T1.BUDGET_CODE_NAME, 
-       T5.MEM_ACC_ID                                       AS SUPPLIR, 
-       T1.SUPPLIR                                          AS SUPPLIR_NAME, 
-       T1.INVC_TYPE, 
-       T1.INVC_NO, 
-       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY')                   AS INVC_DT, 
-       T1.GST_RGIST_NO, 
-       T1.TAX_CODE, 
-       'MYR'                                               AS CUR, 
-       T1.NET_AMT                                          AS GST_BEFOR_AMT, 
-       T1.TAX_AMT                                          AS GST_AMT, 
-       T1.TAX_NON_CLM_AMT, 
-       T1.TOT_AMT, 
-       T1.ATCH_FILE_GRP_ID, 
-       T1.EXP_DESC, 
-       T2.CAR_MILAG_DT, 
-       T2.LOC_FROM, 
-       T2.LOC_TO, 
-       T2.CAR_MILAG, 
-       T2.CAR_MILAG_AMT, 
-       T2.TOLL_AMT, 
-       T2.PARKING_AMT, 
-       T2.PURPOSE 
-FROM   FCM0020D T1 
-       LEFT JOIN FCM0021D T2 
-              ON T1.CLM_NO = T2.CLM_NO 
-       LEFT JOIN FCM0019M T3 
-              ON T1.CLM_NO = T3.CLM_NO 
-       LEFT JOIN FCM0006M T4 
-              ON T3.MEM_ACC_ID = T4.MEM_ACC_ID 
-       LEFT JOIN FCM0006M T5 
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T5.MEM_ACC_ID                                       AS SUPPLIR,
+       T1.SUPPLIR                                          AS SUPPLIR_NAME,
+       T1.INVC_TYPE,
+       T1.INVC_NO,
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY')                   AS INVC_DT,
+       T1.GST_RGIST_NO,
+       T1.TAX_CODE,
+       'MYR'                                               AS CUR,
+       T1.NET_AMT                                          AS GST_BEFOR_AMT,
+       T1.TAX_AMT                                          AS GST_AMT,
+       T1.TAX_NON_CLM_AMT,
+       T1.TOT_AMT,
+       T1.ATCH_FILE_GRP_ID,
+       T1.EXP_DESC,
+       T2.CAR_MILAG_DT,
+       T2.LOC_FROM,
+       T2.LOC_TO,
+       T2.CAR_MILAG,
+       T2.CAR_MILAG_AMT,
+       T2.TOLL_AMT,
+       T2.PARKING_AMT,
+       T2.PURPOSE
+FROM   FCM0020D T1
+       LEFT JOIN FCM0021D T2
+              ON T1.CLM_NO = T2.CLM_NO
+       LEFT JOIN FCM0019M T3
+              ON T1.CLM_NO = T3.CLM_NO
+       LEFT JOIN FCM0006M T4
+              ON T3.MEM_ACC_ID = T4.MEM_ACC_ID
+       LEFT JOIN FCM0006M T5
               ON T1.SUPPLIR = T4.MEM_ACC_NAME
 WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
 </select>
@@ -288,27 +288,27 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
 <select id="selectScmActivityFundItemGrp" parameterType="Map" resultType="egovMap">
 /* scmActivityFundMapper.selectScmActivityFundItemGrp */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT T1.CLM_SEQ, 
-       T1.EXP_TYPE, 
-       T1.EXP_TYPE_NAME, 
-       T1.GL_ACC_CODE, 
-       T1.GL_ACC_CODE_NAME, 
-       T1.BUDGET_CODE, 
-       T1.BUDGET_CODE_NAME, 
-       T1.TAX_CODE, 
-       T2.TAX_NAME, 
-       T2.TAX_RATE, 
-       'MYR' AS CUR, 
-       T1.NET_AMT AS GST_BEFOR_AMT, 
-       T1.TAX_AMT AS GST_AMT, 
-       T1.TAX_NON_CLM_AMT, 
-       T1.TOT_AMT, 
+SELECT T1.CLM_SEQ,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T1.TAX_CODE,
+       T2.TAX_NAME,
+       T2.TAX_RATE,
+       'MYR' AS CUR,
+       T1.NET_AMT AS GST_BEFOR_AMT,
+       T1.TAX_AMT AS GST_AMT,
+       T1.TAX_NON_CLM_AMT,
+       T1.TOT_AMT,
        T1.CLAM_UN,
        T1.ATCH_FILE_GRP_ID
-FROM   FCM0020D T1 
-       LEFT JOIN FCM0007C T2 
-              ON T1.TAX_CODE = T2.TAX_CODE 
-WHERE  T1.CLM_NO = #{clmNo} 
+FROM   FCM0020D T1
+       LEFT JOIN FCM0007C T2
+              ON T1.TAX_CODE = T2.TAX_CODE
+WHERE  T1.CLM_NO = #{clmNo}
        AND CLAM_UN = #{clamUn}
 </select>
 
@@ -321,7 +321,7 @@ WHERE  T1.CLM_NO = #{clmNo}
           LEFT JOIN SYS0071D T2
           ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
           WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
-          ORDER BY T1.ATCH_FILE_ID         
+          ORDER BY T1.ATCH_FILE_ID
 </select>
 
 <update id="updateScmActivityFundExp" parameterType="Map">
@@ -336,7 +336,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,TOT_AMT = #{allTotAmt}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
-    WHERE CLM_NO = #{clmNo}       
+    WHERE CLM_NO = #{clmNo}
 </update>
 
 <update id="updateScmActivityFundExpItem" parameterType="Map">
@@ -362,8 +362,8 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,EXP_DESC = #{expDesc}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
-    WHERE CLM_NO = #{clmNo}     
-    AND CLM_SEQ = #{clmSeq}  
+    WHERE CLM_NO = #{clmNo}
+    AND CLM_SEQ = #{clmSeq}
 </update>
 
 <insert id="insertApproveItems" parameterType="Map">
@@ -439,12 +439,12 @@ WHERE  T1.CLM_NO = #{clmNo}
    SET APPV_PRCSS_NO = #{appvPrcssNo}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
-    WHERE CLM_NO = #{clmNo}       
+    WHERE CLM_NO = #{clmNo}
 </update>
 
 <delete id="deleteScmActivityFundExpItem" parameterType="Map">
 /* staffClaimMapper.deleteScmActivityFundExpItem */
-   DELETE FROM FCM0020D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq} 
+   DELETE FROM FCM0020D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq}
 </delete>
 
 <update id="updateScmActivityFundExpTotAmt" parameterType="Map">
@@ -452,5 +452,123 @@ WHERE  T1.CLM_NO = #{clmNo}
    UPDATE FCM0019M SET TOT_AMT = #{allTotAmt} WHERE CLM_NO = #{clmNo}
 </update>
 
+<insert id="insertRejectM" parameterType="Map">
+   INSERT INTO FCM0019M
+   (
+        CLM_NO,
+        CLM_TYPE,
+        COST_CENTR,
+        COST_CENTR_NAME,
+        MEM_ACC_ID,
+        BANK_CODE,
+        BANK_ACC_NO,
+        CLM_MONTH,
+        TOT_AMT,
+        /*,APPV_PRCSS_NO*/
+        CRT_DT,
+        CRT_USER_ID,
+        UPD_DT,
+        UPD_USER_ID,
+        PREV_CLM_NO
+    )
+    SELECT
+        #{newClmNo},
+        CLM_TYPE,
+        COST_CENTR,
+        COST_CENTR_NAME,
+        MEM_ACC_ID,
+        BANK_CODE,
+        BANK_ACC_NO,
+        CLM_MONTH,
+        TOT_AMT,
+        /* APPV_PRCSS_NO */
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId},
+        CLM_NO AS PREV_CLM_NO
+    FROM
+        FCM0019M
+    WHERE
+        CLM_NO = #{clmNo}
+</insert>
+
+<insert id="insertRejectD" parameterType="Map">
+   INSERT INTO FCM0020D
+   (
+        CLM_NO
+        ,CLM_SEQ
+        ,INVC_DT
+        ,INVC_TYPE
+        ,INVC_NO
+        ,SUPPLIR
+        ,GST_RGIST_NO
+        ,INVC_REM
+        ,EXP_TYPE
+        ,EXP_TYPE_NAME
+        ,GL_ACC_CODE
+        ,GL_ACC_CODE_NAME
+        ,BUDGET_CODE
+        ,BUDGET_CODE_NAME
+        ,TAX_CODE
+        ,NET_AMT
+        ,TAX_AMT
+        ,TAX_NON_CLM_AMT
+        ,TOT_AMT
+        ,ATCH_FILE_GRP_ID
+        ,EXP_DESC
+        ,CLAM_UN
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+    )
+    SELECT
+        #{newClmNo},
+        CLM_SEQ,
+        INVC_DT,
+        INVC_TYPE,
+        INVC_NO,
+        SUPPLIR,
+        GST_RGIST_NO,
+        INVC_REM,
+        EXP_TYPE,
+        EXP_TYPE_NAME,
+        GL_ACC_CODE,
+        GL_ACC_CODE_NAME,
+        BUDGET_CODE,
+        BUDGET_CODE_NAME,
+        TAX_CODE,
+        NET_AMT,
+        TAX_AMT,
+        TAX_NON_CLM_AMT,
+        TOT_AMT,
+        ATCH_FILE_GRP_ID,
+        EXP_DESC,
+        CLAM_UN,
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId}
+    FROM
+        FCM0020D
+    WHERE
+        CLM_NO = #{clmNo}
+</insert>
+
+<select id="getOldDisClamUn" parameterType="Map" resultType="egovMap">
+    SELECT
+        CLAM_UN
+    FROM FCM0020D
+    WHERE CLM_NO = #{clmNo}
+    GROUP BY CLAM_UN
+</select>
+
+<update id="updateExistingClamUn" parameterType="Map">
+    UPDATE FCM0020D
+    SET CLAM_UN = #{newClamUn}
+    WHERE CLM_NO = #{clmNo}
+    and CLAM_UN = #{oldClamUn}
+</update>
 
 </mapper>
