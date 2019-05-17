@@ -37,4 +37,70 @@ public class ApiController {
     return ResponseEntity.ok(cowayCustDetails);
   }
 
+  @RequestMapping(value = "/customer/isNricOrPassportMatchInvoiceNo.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> isNricOrPassportMatchInvoiceNo(HttpServletRequest request,@RequestParam Map<String, Object> params) {
+    EgovMap isNricOrPassportMatchInvoiceNo = apiService.isNricOrPassportMatchInvoiceNo(request, params);
+    return ResponseEntity.ok(isNricOrPassportMatchInvoiceNo);
+  }
+
+  @RequestMapping(value = "/customer/getCustomerAccountCode.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getCustomerAccountCode(HttpServletRequest request,@RequestParam Map<String, Object> params) {
+    EgovMap custAccountNo = apiService.selectAccountCode(request, params);
+    return ResponseEntity.ok(custAccountNo);
+  }
+
+  @RequestMapping(value = "/customer/getCustTotalProductsCount.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getCustTotalProductsCount(HttpServletRequest request,@RequestParam Map<String, Object> params) {
+    EgovMap custTotalProducts = apiService.selectCustTotalProductsCount(request, params);
+    return ResponseEntity.ok(custTotalProducts);
+  }
+
+  @RequestMapping(value = "/customer/getCustTotalOutstanding.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getCustTotalOutstanding(HttpServletRequest request,@RequestParam Map<String, Object> params) {
+    EgovMap custOutStand = apiService.getCustTotalOutstanding(request, params);
+    return ResponseEntity.ok(custOutStand);
+  }
+
+  @RequestMapping(value = "/customer/getTotalMembershipExpired.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getTotalMembershipExpired(HttpServletRequest request,@RequestParam Map<String, Object> params) {
+    EgovMap totalMembershipExpired = apiService.getTotalMembershipExpired(request, params);
+    return ResponseEntity.ok(totalMembershipExpired);
+  }
+
+  @RequestMapping(value = "/customer/getCustVirtualAccountNumber.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getCustVirtualAccountNumber(HttpServletRequest request,@RequestParam Map<String, Object> params) {
+    EgovMap custVANo = apiService.selectCustVANo(request, params);
+    return ResponseEntity.ok(custVANo);
+  }
+
+  @RequestMapping(value = "/customer/getAutoDebitEnrolmentsList.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getAutoDebitEnrolmentsList(HttpServletRequest request,@RequestParam Map<String, Object> params) {
+    EgovMap autoDebitEnrolmentsList = apiService.selectAutoDebitEnrolmentsList(request, params);
+    return ResponseEntity.ok(autoDebitEnrolmentsList);
+  }
+
+  @RequestMapping(value = "/customer/getHeartServiceList.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getHeartServiceList(HttpServletRequest request,@RequestParam Map<String, Object> params) {
+    EgovMap heartServiceList = apiService.selectHeartServiceList(request, params);
+    return ResponseEntity.ok(heartServiceList);
+  }
+
+  @RequestMapping(value = "/customer/getTechnicianServicesList.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getTechnicianServicesList(HttpServletRequest request,@RequestParam Map<String, Object> params) {
+    EgovMap technicianServicesList = apiService.selectTechnicianServicesList(request, params);
+    return ResponseEntity.ok(technicianServicesList);
+  }
+
+  @RequestMapping(value = "/customer/isUserHasOrdNo.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> isUserHasOrdNo(HttpServletRequest request,@RequestParam Map<String, Object> params) {
+    EgovMap isUserHasOrdNo = apiService.isUserHasOrdNo(request, params);
+    return ResponseEntity.ok(isUserHasOrdNo);
+  }
+
+  @RequestMapping(value = "/customer/getMembershipProgrammesList.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getMembershipProgrammesList(HttpServletRequest request,@RequestParam Map<String, Object> params) {
+    EgovMap membershipProgrammesList = apiService.selectMembershipProgrammesList(request, params);
+    return ResponseEntity.ok(membershipProgrammesList);
+  }
+
 }

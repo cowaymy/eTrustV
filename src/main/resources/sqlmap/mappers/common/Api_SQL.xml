@@ -10,20 +10,133 @@
  -->
 
 	<select id="selectCowayCustNricOrPassport" parameterType="Map" resultType="egovMap">
-		SELECT EXTENT1.CUST_ID CowayCustId,
-		           EXTENT1.NRIC NricOrPassport,
-		           EXTENT2.TEL_M1 PhoneNumber,
-		           NVL(EXTENT2.EMAIL,'-') Email,
-		           EXTENT1.NAME FullName
-		FROM SAL0029D EXTENT1
-		JOIN SAL0027D EXTENT2 ON EXTENT1.CUST_ID = EXTENT2.CUST_ID AND EXTENT2.STUS_CODE_ID = 9
+		SELECT *
+		FROM CP01001V EXTENT1
 		WHERE 1=1
 		AND ROWNUM <![CDATA[ <= ]]> 1
-        AND TYPE_ID = 964
-		AND EXTENT1.NRIC = #{nricOrPassport}
+		AND EXTENT1.NRIC_OR_PASSPORT = #{nricOrPassport}
 	</select>
 
-	<insert id="insertApiAccessLog" parameterType="Map">
+    <select id="isNricOrPassportMatchInvoiceNo" parameterType="Map" resultType="egovMap">
+        SELECT
+            CASE WHEN COUNT(*) > 0 THEN 'YES' ELSE 'NO' END NRIC_MATCH_INVOICE
+        FROM SAL0029D EXTENT1
+		JOIN SAL0001D EXTENT2 ON EXTENT2.CUST_ID = EXTENT1.CUST_ID
+		JOIN (
+			SELECT RENT_SO_ID ORD_ID, RENT_DOC_NO INVOICE_NO FROM PAY0022D WHERE RENT_DOC_NO LIKE 'BR%'
+			UNION
+			SELECT SRV_SALES_ORD_ID ORD_ID, SRV_LDGR_REF_NO INVOICE_NO FROM PAY0023D WHERE SRV_LDGR_REF_NO LIKE 'BR%'
+			UNION
+			SELECT SRV_MEM_ORD_ID ORD_ID, SRV_MEM_BATCH_NO INVOICE_NO FROM PAY0024D WHERE SRV_MEM_BATCH_NO LIKE 'BR%'
+			UNION
+			SELECT TRADE_SO_ID ORD_ID, TRADE_DOC_NO INVOICE_NO FROM PAY0035D WHERE TRADE_DOC_NO LIKE 'BR%'
+			) EXTENT3 ON EXTENT3.ORD_ID = EXTENT2.SALES_ORD_ID
+		WHERE 1=1
+        AND EXTENT1.NRIC = #{nricOrPassport} AND EXTENT3.INVOICE_NO = #{invoiceNo};
+    </select>
+
+     <select id="selectAccountCode" parameterType="Map" resultType="egovMap">
+        SELECT CUST_BILL_GRP_NO
+        FROM SAL0024D
+            WHERE 1 = 1
+            AND CUST_BILL_CUST_ID = #{cowayCustId}
+            AND CUST_BILL_STUS_ID = 1
+    </select>
+
+    <select id="selectCustTotalProductsCount" parameterType="Map" resultType="egovMap">
+        SELECT COUNT(*) TOTAL_PRODUCT_COUNT
+        FROM SAL0001D
+            WHERE 1=1
+            AND ROWNUM <![CDATA[ <= ]]> 1
+            AND CUST_ID = #{cowayCustId}
+    </select>
+
+    <select id="getCustTotalOutstanding" parameterType="Map" resultType="egovMap">
+        SELECT
+            EXTENT1.OTSTND_AMT
+        FROM CP01007V EXTENT1
+        WHERE EXTENT1.CUST_ID = #{cowayCustId}
+    </select>
+
+    <select id="getTotalMembershipExpired" parameterType="Map" resultType="egovMap">
+        SELECT
+            EXTENT1.EXPIRED_MEMBERSHIP
+        FROM CP01008V EXTENT1
+        WHERE EXTENT1.CUST_ID = #{cowayCustId}
+    </select>
+
+	<select id="selectCustVANo" parameterType="Map" resultType="egovMap">
+        SELECT CUST_VA_NO CustomerVirtualAccountNumber
+        FROM SAL0029D EXTENT1
+        WHERE 1=1
+        AND ROWNUM <![CDATA[ <= ]]> 1
+        AND EXTENT1.CUST_ID = #{cowayCustId}
+    </select>
+
+    <select id="selectAutoDebitEnrolmentsList" parameterType="Map" resultType="egovMap">
+        SELECT
+			STATUS ,
+			ORDER_NO ,
+			CARD_NO ,
+			EFFECTIVE_DATE ,
+			PAYMENT_METHOD ,
+			SUBMISSION_DATE ,
+			TRANSACTION_AMOUNT ,
+			RENT_PAY_MODE_CODE ,
+			CODE_NAME
+         FROM CP01010V
+         WHERE CUST_ID = #{cowayCustId}
+     </select>
+
+    <select id="selectHeartServiceList" parameterType="Map" resultType="egovMap">
+        SELECT
+            BS_NO ,
+            CODY_NO ,
+            CODY_NAME ,
+            LAST_SERVICE_DATE
+         FROM CP01014V
+         WHERE ORD_NO = #{orderNo}
+    </select>
+
+    <select id="selectTechnicianServicesList" parameterType="Map" resultType="egovMap">
+        SELECT
+			AS_NO ,
+			CT_NAME ,
+			CT_NO ,
+			LAST_AS_DT
+		 FROM CP1015V
+         WHERE ORD_NO = #{orderNo}
+    </select>
+
+    <select id="isUserHasOrdNo" parameterType="Map" resultType="egovMap">
+        SELECT
+            CASE WHEN COUNT(*) > 0 THEN 'YES' ELSE 'NO' END IS_USER_HAS_ORD_NO
+        FROM SAL0001D
+        WHERE 1 = 1
+        AND CUST_ID = #{cowayCustId}
+        AND SALES_ORD_NO = #{orderNo}
+    </select>
+
+    <select id="selectMembershipProgrammesList" parameterType="Map" resultType="egovMap">
+	   SELECT * FROM CP01024V
+	</select>
+    <!-- SELECT *
+FROM SAL0001D EXTENT1
+JOIN (SELECT /*+rule*/ sales_ord_id, INSTALL_DT
+                             FROM (SELECT sales_ord_id, IR.INSTALL_DT,
+                                          RANK ()
+                                          OVER (
+                                             PARTITION BY sales_ord_id
+                                             ORDER BY install_entry_id DESC)
+                                             RANK
+                                     FROM sal0046D IE
+                                     JOIN SAL0047D IR ON IE.INSTALL_ENTRY_ID = IR.ENTRY_ID
+                                    WHERE IE.stus_code_id = 4)
+                            WHERE RANK = 1) EXTENT2 ON EXTENT1.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+JOIN SYS0013M EXTENT3
+WHERE 1=1
+AND CUST_ID = 2000; -->
+   <insert id="insertApiAccessLog" parameterType="Map">
    INSERT INTO SYS0097M
    (
         RESP_ID
@@ -49,6 +162,6 @@
         , 100910
     )
 
-</insert>
+    </insert>
 
 </mapper>
