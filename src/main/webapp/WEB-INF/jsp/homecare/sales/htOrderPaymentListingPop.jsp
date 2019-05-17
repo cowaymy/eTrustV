@@ -290,7 +290,7 @@ CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
 
 <ul class="center_btns">
 <%--     <li><p class="btn_blue2"><a href="#" onclick="javascript:btnGenerate_Click();"><spring:message code="sal.btn.genPDF" /></a></p></li> --%>
-    <li><p class="btn_blue2"><a href="#" onclick="javascript:btnGenerate_PDF_Click();"><spring:message code="sal.btn.genExcel" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:btnGenerate_PDF_Click();">Generate</a></p></li>
     <li><p class="btn_blue2"><a href="#" onclick="javascript:$('#form').clearForm();"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
