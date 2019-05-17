@@ -236,11 +236,10 @@ $(function(){
 	        doDefCombo([], '' ,'flocation', 'S', '');
 	        */
 	        if($("#movpath").val()=='02'){
-	        	  var paramdata = { stoIn:'02,05',  endlikeValue:$("#locationType").val() , grade:$("#locationType").val(), brnch : '${SESSION_INFO.userBranchId}'}; // session 정보 등록
+	        	  var paramdata = { stoIn:'02,05',  endlikeValue:$("#locationType").val() , grade:$("#locationType").val()}; // session 정보 등록
 
 	        }else{
-	        	  var paramdata = { locgb:$("#movpath").val(),  endlikeValue:$("#locationType").val(), grade:$("#locationType").val(), 
-	        			  brnch : '${SESSION_INFO.userBranchId}'}; // session 정보 등록
+	        	  var paramdata = { locgb:$("#movpath").val(),  endlikeValue:$("#locationType").val(), grade:$("#locationType").val()}; // session 정보 등록
 	        }
                   doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
 	              doDefCombo([], '' ,'flocation', 'S', '');
@@ -252,7 +251,7 @@ $(function(){
             doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
     	}else if($("#movpath").val() == "CTOR"){
             //var paramdata = { locgb:'02'}; // session 정보 등록
-            var paramdata = { stoIn:'02,05', brnch : '${SESSION_INFO.userBranchId}'}; // session 정보 등록
+            var paramdata = { stoIn:'02,05'}; // session 정보 등록
             doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
     	}else{
 	        var paramdata = { rdcloc:$("#tlocation").val() , locgb:'CT'}; // session 정보 등록
