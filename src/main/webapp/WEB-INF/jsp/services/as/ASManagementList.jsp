@@ -270,7 +270,7 @@
       }
     }
 
-    if (updDt != "" || updDt != null) {
+    if (updDt != "" && updDt != null) {
       var stat = true;
       var sDate = new Date(updDt);
       var tDate = new Date();
@@ -301,7 +301,7 @@
         Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
         return;
       }
-    } else if (lstUpdDt != "" || lstUpdDt != null) {
+    } else if (lstUpdDt != "" && lstUpdDt != null) {
       var stat = true;
       var sDate = new Date(lstUpdDt);
       var tDate = new Date();
