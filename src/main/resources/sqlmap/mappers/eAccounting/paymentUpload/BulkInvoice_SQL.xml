@@ -433,6 +433,7 @@
             B.APPV_LINE_SEQ,
             NVL(TO_CHAR(B.APPV_DT, 'DD/MM/YYYY'), '-') APPV_DT,
             B.APPV_STUS,
+            B.APPV_LINE_USER_ID,
             C.USER_NAME APPV_LINE_USER_NAME
         FROM FCM0025M M
         INNER JOIN FCM0004M A

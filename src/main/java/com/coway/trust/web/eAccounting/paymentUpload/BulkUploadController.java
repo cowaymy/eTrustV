@@ -586,6 +586,16 @@ public class BulkUploadController {
             result.put("attachmentList", webInvoiceAttachList);
         }
 
+        String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+        params.put("memCode", memCode);
+        EgovMap apprDtls = new EgovMap();
+        apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+
+        String sessionApprGrp = "";
+        if(apprDtls != null) {
+            sessionApprGrp = apprDtls.get("apprGrp").toString();
+        }
+
         if(params.containsKey("batchId")) {
             List<EgovMap> item = bulkUploadService.getApprDtl(params);
             EgovMap itemDetail = item.get(0);
@@ -611,6 +621,18 @@ public class BulkUploadController {
 
                 if(sessionVO.getUserName().equals(itemDetail.get("appvLineUserName"))) {
                     appvAct = "Y";
+                } else if(!sessionVO.getUserName().equals(itemDetail.get("appvLineUserName")) && "R".equals((String)itemDetail.get("appvStus"))) {
+                    Map<String, Object> hm = new HashMap<String, Object>();
+                    hm.put("memCode", itemDetail.get("appvLineUserId").toString());
+
+                    apprDtls = (EgovMap) webInvoiceService.getApprGrp(hm);
+
+                    if(apprDtls != null) {
+                        String lineApprGrp = apprDtls.get("apprGrp").toString();
+                        if(sessionApprGrp.equals(lineApprGrp)) {
+                            appvAct = "Y";
+                        }
+                    }
                 }
             }
 
