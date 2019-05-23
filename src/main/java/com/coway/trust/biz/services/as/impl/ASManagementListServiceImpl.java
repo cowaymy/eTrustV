@@ -32,6 +32,7 @@ import oracle.sql.DATE;
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
  * 08/05/2019    ONGHC      1.0.2       - Amend asResult_insert
+ * 23/05/2019    ONGHC      1.0.3       - Amend asResult_insert
  *********************************************************************************************/
 
 @Service("ASManagementListService")
@@ -1606,7 +1607,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                     } else { // MOBILE APPS
                       String fltNm = ASManagementListMapper.getFltNm(CommonUtils.nvl(updateMap.get("filterId")) != "" ? CommonUtils.nvl(updateMap.get("filterId")) : CommonUtils.nvl(updateMap.get("filterID")));
 
-                      String[] animals = temp.split("-");
+                      String[] animals = fltNm.split("[-]");
 
                       if (animals.length > 0) {
                         filterCode = animals[0];
@@ -1686,7 +1687,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                     } else { // MOBILE APPS
                       String fltNm = ASManagementListMapper.getFltNm(CommonUtils.nvl(updateMap.get("filterId")) != "" ? CommonUtils.nvl(updateMap.get("filterId")) : CommonUtils.nvl(updateMap.get("filterID")));
 
-                      String[] animals = temp.split("-");
+                      String[] animals = fltNm.split("[-]");
 
                       if (animals.length > 0) {
                         filterCode = animals[0];
