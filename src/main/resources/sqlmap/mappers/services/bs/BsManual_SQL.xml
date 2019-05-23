@@ -284,7 +284,8 @@
 
         </if>
                     ) a
-                 ORDER BY DEPT_CODE ASC, CODY_ID ASC
+                 <!-- ORDER BY DEPT_CODE ASC, CODY_ID ASC -->
+                 ORDER BY CODY_ID ASC
           </select>
 
 
