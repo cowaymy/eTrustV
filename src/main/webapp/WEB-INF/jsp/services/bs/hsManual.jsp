@@ -693,7 +693,7 @@ var TODAY_DD      = "${toDay}";
               var todayYY = Number(TODAY_DD.substr(6, 4));
 
 
-/*               if (radioVal == 2) {
+              if (radioVal == 2) {
                   if(todayYY >= 2018) {
                       if(todayDD > 22) { // Block if date > 22th of the month
                           var msg = 'Disallow Create HS Order After 22nd of the Month.';
@@ -702,7 +702,6 @@ var TODAY_DD      = "${toDay}";
                       }
                   }
               }
- */
 
 
 
