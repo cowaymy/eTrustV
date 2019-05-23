@@ -6,6 +6,7 @@
  ----------------------------------------------------------------
  20/03/2019  ONGHC  1.0.0          RE-STRUCTURE JSP AND ADD APPOINTMENT DATE
  01/04/2019  ONGHC  1.0.1          ADD Column CT Code
+ 01/04/2019  ONGHC  1.0.2          ADD Column Settle and Last Update Date
  -->
 
 <script type="text/javaScript">
@@ -257,6 +258,8 @@
     var asResultId = selectedItems[0].item.asResultId;
     var asTypeID = selectedItems[0].item.code;
     var rcdTms = selectedItems[0].item.rcdTms;
+    var updDt = selectedItems[0].item.asSetlDt;
+    var lstUpdDt = selectedItems[0].item.asResultCrtDt;
 
     if (asStusId == "ACT") {
       if (selectedItems[0].item.asSlutnResnId == '454') {
@@ -264,6 +267,70 @@
       } else {
         Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
         return;
+      }
+    }
+
+    if (updDt != "" || updDt != null) {
+      var stat = true;
+      var sDate = new Date(updDt);
+      var tDate = new Date();
+      tDate.setDate(tDate.getDate() - 7);
+
+      var tMth = tDate.getMonth();
+      var tYear = tDate.getFullYear();
+      var tDay = tDate.getDate();
+      var sMth = sDate.getMonth();
+      var sYear = sDate.getFullYear();
+      var sDay = sDate.getDate();
+
+      if (tYear > sYear) {
+        stat = false;
+      } else {
+        if (tMth > sMth) {
+          stat = false;
+        } else {
+          if (tDay > sDay) {
+            stat = false;
+          } else {
+            stat = true;
+          }
+        }
+      }
+
+      if (!stat) {
+        Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
+        return;
+      }
+    } else if (lstUpdDt != "" || lstUpdDt != null) {
+      var stat = true;
+      var sDate = new Date(lstUpdDt);
+      var tDate = new Date();
+      tDate.setDate(tDate.getDate() - 7);
+
+      var tMth = tDate.getMonth();
+      var tYear = tDate.getFullYear();
+      var tDay = tDate.getDate();
+      var sMth = sDate.getMonth();
+      var sYear = sDate.getFullYear();
+      var sDay = sDate.getDate();
+
+      if (tYear > sYear) {
+        stat = false;
+      } else {
+        if (tMth > sMth) {
+          stat = false;
+        } else {
+          if (tDay > sDay) {
+            stat = false;
+          } else {
+            stat = true;
+          }
+        }
+      }
+
+      if (!stat) {
+        Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
+         return;
       }
     }
 
@@ -362,6 +429,8 @@
     var asResultId = selectedItems[0].item.asResultId;
     var refReqst = selectedItems[0].item.refReqst;
     var rcdTms = selectedItems[0].item.rcdTms;
+    var updDt = selectedItems[0].item.asSetlDt;
+    var lstUpdDt = selectedItems[0].item.asResultCrtDt;
 
     if (asStusId == "ACT") {
       if (refReqst == "") {
@@ -373,6 +442,70 @@
     if (asResultNo == "") {
       Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
       return;
+    }
+
+    if (updDt != "" && updDt != null) {
+      var stat = true;
+      var sDate = new Date(updDt);
+      var tDate = new Date();
+      tDate.setDate(tDate.getDate() - 7);
+
+      var tMth = tDate.getMonth();
+      var tYear = tDate.getFullYear();
+      var tDay = tDate.getDate();
+      var sMth = sDate.getMonth();
+      var sYear = sDate.getFullYear();
+      var sDay = sDate.getDate();
+
+      if (tYear > sYear) {
+        stat = false;
+      } else {
+        if (tMth > sMth) {
+          stat = false;
+        } else {
+          if (tDay > sDay) {
+            stat = false;
+          } else {
+            stat = true;
+          }
+        }
+      }
+
+      if (!stat) {
+        Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
+        return;
+      }
+    } else if (lstUpdDt != "" && lstUpdDt != null) {
+      var stat = true;
+      var sDate = new Date(lstUpdDt);
+      var tDate = new Date();
+      tDate.setDate(tDate.getDate() - 7);
+
+      var tMth = tDate.getMonth();
+      var tYear = tDate.getFullYear();
+      var tDay = tDate.getDate();
+      var sMth = sDate.getMonth();
+      var sYear = sDate.getFullYear();
+      var sDay = sDate.getDate();
+
+      if (tYear > sYear) {
+        stat = false;
+      } else {
+        if (tMth > sMth) {
+          stat = false;
+        } else {
+          if (tDay > sDay) {
+            stat = false;
+          } else {
+            stat = true;
+          }
+        }
+      }
+
+      if (!stat) {
+        Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
+        return;
+      }
     }
 
     Common.ajax("POST", "/services/as/selRcdTms.do", {
@@ -485,6 +618,22 @@
         {
           dataField : "asAppntDt",
           headerText : "<spring:message code='service.grid.AppntDt'/>",
+          editable : false,
+          width : 110,
+          dataType : "date",
+          formatString : "dd/mm/yyyy"
+        },
+        {
+          dataField : "asSetlDt",
+          headerText : "<spring:message code='service.grid.SettleData'/>",
+          editable : false,
+          width : 110,
+          dataType : "date",
+          formatString : "dd/mm/yyyy"
+        },
+        {
+          dataField : "asResultCrtDt",
+          headerText : "<spring:message code='pay.head.lastUpdate'/>",
           editable : false,
           width : 110,
           dataType : "date",
