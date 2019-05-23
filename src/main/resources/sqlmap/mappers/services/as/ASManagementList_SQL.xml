@@ -4223,7 +4223,7 @@
                         SRV_FILTER_PREV_SERIAL = SRV_FILTER_LAST_SERIAL,
                         SRV_FILTER_UPD_DT = SYSDATE,
                         SRV_FILTER_UPD_USER_ID = #{updator}
-    WHERE SRV_CONFIG_ID =( SELECT SRV_CONFIG_ID
+    WHERE SRV_CONFIG_ID =( SELECT MAX(SRV_CONFIG_ID)
                            FROM SAL0090D
                            WHERE 1 = 1
                              AND SRV_SO_ID = #{SRV_SO_ID}
