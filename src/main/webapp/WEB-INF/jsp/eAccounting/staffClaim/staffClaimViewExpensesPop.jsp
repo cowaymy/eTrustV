@@ -97,7 +97,8 @@ var newGridColumnLayout = [ {
 }, {
     dataField : "invcTypeName",
     headerText : '<spring:message code="pettyCashNewExp.invcBrType" />',
-    style : "aui-grid-user-custom-left"
+    style : "aui-grid-user-custom-left",
+    visible : false
 }, {
     dataField : "invcNo",
     visible : false // Color 칼럼은 숨긴채 출력시킴
