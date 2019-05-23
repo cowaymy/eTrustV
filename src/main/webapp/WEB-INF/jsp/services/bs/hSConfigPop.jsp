@@ -22,7 +22,7 @@
 
      var myCdGridID;
     var myCustGridID;
-
+    var codyCd;
 
 
       // 체크된 아이템 얻기
@@ -324,7 +324,7 @@
     function fn_getselectPopUpListAjax(){
        // Common.ajax("GET", "/services/bs/selectPopUpCdList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}'}, function(result) {
 
-    	   debugger;
+
     	   Common.ajax("GET",
         			"/services/bs/selectPopUpCdList.do",
         			{SaleOrdList : '${ordCdList}',SalesOrderNo : '${SalesOrderNo}'},
@@ -334,7 +334,7 @@
 
                            AUIGrid.setGridData(myCdGridID, result);
 
-                           setCheckedRowsByIds();
+                           //setCheckedRowsByIds();
 	                }
             );
 
@@ -374,8 +374,15 @@
 
                 Common.ajax("POST", "/services/bs/hsOrderSave.do",  jsonObj , function(result) {
 
+                	  var checkedItems = AUIGrid.getCellValue(myCustGridID, 0, "codyCd");;
+                      if(checkedItems == null || checkedItems == "") {
+                          Common.alert("Please select Cody Code when Create HS Order.");
+                            return;
+                      }else{
                 Common.alert(result.message, fn_parentReload);
+                }
         });
+
     }
 
 
@@ -409,6 +416,7 @@
          if(checkedItems.length >= 0) {
              alert("aaaa");
          } */
+
 
 
 
