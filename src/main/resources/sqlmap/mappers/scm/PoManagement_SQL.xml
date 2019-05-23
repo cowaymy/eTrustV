@@ -122,6 +122,7 @@ SELECT '0' AS CHK
                         , ROW_NUMBER() OVER (PARTITION BY Z.VENDOR, Z.MATRL_MST, Z.PURCHS_ORG ORDER BY Z.SEQ_NO DESC) AS SN
                      FROM LOG0078M Z
                      LEFT OUTER JOIN SYS0013M X ON (Z.CUR = X.CODE_ID AND X.CODE_MASTER_ID = 94) /* 94 : Currency */
+                     <![CDATA[ WHERE Z.MARK_DEL <> 'X' ]]>
                    ) F ON (A.STOCK_CODE = F.STOCK_CODE AND F.SN = 1)
   LEFT OUTER JOIN SYS0013M G ON (G.CODE = #{scmCdcCbBox} AND G.CODE_MASTER_ID = 349) /* 349 : Supply CDC Code */
  WHERE 1 = 1
@@ -395,7 +396,7 @@ UPDATE SCM0053D
    SET PO_ITEM_STUS_ID = #{poItemStusId}
      , IF_DT = SYSDATE
      , UPD_DT = SYSDATE
-     , UPD_USER_ID = #{updUserId} 
+     , UPD_USER_ID = #{updUserId}
  WHERE PO_NO = #{poNo}
    AND USE_YN = 'Y'
 </update>
