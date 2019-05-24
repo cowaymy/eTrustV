@@ -501,7 +501,7 @@
                                       AND sal0045d.ADD_ID = sal0023d.cust_add_id
                                       AND sal0001d.cust_bill_id = sal0024d.cust_bill_id(+)
                                       AND sal0001d.cust_id = sal0024d.cust_bill_cust_id(+)
-                                      AND sal0045d.cnt_id = sal0027d.cust_cntc_id
+                                      AND sal0045d.cnt_id = sal0027d.cust_cntc_id(+)
                                       AND sal0001d.cust_id = sal0029d.cust_id
                                       AND sal0001d.sales_ord_id = sal0045d.sales_ord_id
                                       AND sal0001d.sales_ord_id = sal0046d.SALES_ORD_ID(+)
