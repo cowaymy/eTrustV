@@ -607,6 +607,8 @@ public class BulkUploadController {
 
             appvPrcssStusList.add("- Request By " + (String) itemDetail.get("reqstUserId") + " [" + (String) itemDetail.get("reqstDt") + "]");
 
+            result.put("finalAppr", (String) itemDetail.get("finalAppr"));
+
             String appvAct = "N";
             for(int i = 0; i < item.size(); i++) {
                 itemDetail = item.get(i);

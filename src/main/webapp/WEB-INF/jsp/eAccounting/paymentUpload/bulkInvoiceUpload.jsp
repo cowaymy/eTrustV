@@ -581,10 +581,14 @@
                     $("#rejBtn").hide();
                 }
 
-                if(selectAppvPrcssStus == "J") {
-                    $("#rejectRsnLbl").show();
-                    if(result.rejctResn != "") {
-                        $("#rejctRsn").text(result.rejctResn);
+                if(selectAppvPrcssStus == "A" || selectAppvPrcssStus == "J") {
+                    $("#finApprAct").show();
+
+                    if(selectAppvPrcssStus == "J") {
+                        $("#rejectRsnLbl").show();
+                        if(result.rejctResn != "") {
+                            $("#rejctRsn").text(result.rejctResn);
+                        }
                     }
                 }
 
@@ -600,6 +604,7 @@
                 $("#bulkFilesUploadRow").hide();
 
                 $("#viewAppvStus").html(appvPrcssStus);
+                $("#viewFinAppr").text(result.finalAppr);
 
             });
         }
@@ -1216,6 +1221,10 @@
                         <tr id="rejectRsnLbl" style="display:none">
                             <th scope="row">Reject</th>
                             <td colspan="3" id="rejctRsn">
+                        </tr>
+                        <tr id="finApprAct" style="display:none">
+                            <th scope="row">Final Approver</th>
+                            <td colspan="3" id="viewFinAppr"></td>
                         </tr>
                     </tbody>
                 </table>

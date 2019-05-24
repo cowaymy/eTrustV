@@ -434,7 +434,11 @@
             NVL(TO_CHAR(B.APPV_DT, 'DD/MM/YYYY'), '-') APPV_DT,
             B.APPV_STUS,
             B.APPV_LINE_USER_ID,
-            C.USER_NAME APPV_LINE_USER_NAME
+            C.USER_NAME APPV_LINE_USER_NAME,
+            CASE
+                WHEN D.APPV_STUS = 'A' THEN 'Approval By ' || F.NAME || ' [' || TO_CHAR(D.APPV_DT, 'DD/MM/YYYY') || ']'
+                WHEN D.APPV_STUS = 'J' THEN 'Reject By ' || F.NAME || ' [' || TO_CHAR(D.APPV_DT, 'DD/MM/YYYY') || ']'
+                ELSE '' END FINAL_APPR
         FROM FCM0025M M
         INNER JOIN FCM0004M A
             ON M.APPV_PRCSS_NO = A.APPV_PRCSS_NO
@@ -442,6 +446,13 @@
             ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
         INNER JOIN SYS0047M C
             ON B.APPV_LINE_USER_ID = C.HR_CODE
+        LEFT JOIN FCM0005D D
+            ON A.APPV_PRCSS_NO = D.APPV_PRCSS_NO
+            AND A.APPV_LINE_PRCSS_CNT = D.APPV_LINE_SEQ
+        LEFT JOIN SYS0047M E
+            ON D.UPD_USER_ID = E.USER_ID
+        LEFT JOIN ORG0001D F
+            ON E.HR_CODE = F.MEM_CODE
         WHERE M.BATCH_ID = #{batchId}
         ORDER BY B.APPV_LINE_SEQ
     </select>
