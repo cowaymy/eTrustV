@@ -1759,11 +1759,11 @@
                 $("#hiddenCustCntcId").val(custCntcInfo.custCntcId);
                 $("#custInitial").val(custCntcInfo.code);
                 $("#custEmail").val(custCntcInfo.email);
-                $("#custTelM").val(custCntcInfo.telM1);
+/*                 $("#custTelM").val(custCntcInfo.telM1);
                 $("#custTelR").val(custCntcInfo.telR);
                 $("#custTelO").val(custCntcInfo.telO);
                 $("#custTelF").val(custCntcInfo.telf);
-                $("#custExt").val(custCntcInfo.ext);
+                $("#custExt").val(custCntcInfo.ext); */
             }
         });
     }
@@ -2110,15 +2110,15 @@
     <th scope="row"><spring:message code="sal.title.text.email2" /><span class="must">*</span></th>
     <td><input id="custEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
-<tr>
+<!-- <tr>
     <th scope="row">Tel (Mobile)<span class="must">*</span></th>
     <td><input id="custTelM" name="custTelM" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Tel (Residence)<span class="must">*</span></th>
     <td><input id="custTelR" name="custTelR" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-<!--    <th scope="row">Tel (Fax)<span class="must">*</span></th>
-    <td><input id="custTelF" name="custTelF" type="text" title="" placeholder="" class="w100p readonly" readonly/></td> -->
+   <th scope="row">Tel (Fax)<span class="must">*</span></th>
+    <td><input id="custTelF" name="custTelF" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Tel (Office)<span class="must">*</span></th>
@@ -2127,7 +2127,7 @@
 <tr>
     <th scope="row">Ext No.</th>
     <td><input id="custExt" name="custExt" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr>
+</tr> -->
 </tbody>
 </table><!-- table end -->
 
