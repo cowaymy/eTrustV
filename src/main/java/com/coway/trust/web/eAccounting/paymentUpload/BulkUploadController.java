@@ -621,7 +621,10 @@ public class BulkUploadController {
 
                 if(sessionVO.getUserName().equals(itemDetail.get("appvLineUserName"))) {
                     appvAct = "Y";
-                } else if(!sessionVO.getUserName().equals(itemDetail.get("appvLineUserName")) && "R".equals((String)itemDetail.get("appvStus"))) {
+                } else if(!sessionVO.getUserName().equals(itemDetail.get("appvLineUserName")) &&
+                             "R".equals((String)itemDetail.get("appvStus")) &&
+                             !sessionVO.getUserName().equals(itemDetail.get("reqstUserId"))) {
+
                     Map<String, Object> hm = new HashMap<String, Object>();
                     hm.put("memCode", itemDetail.get("appvLineUserId").toString());
 
