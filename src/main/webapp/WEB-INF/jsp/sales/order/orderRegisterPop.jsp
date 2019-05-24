@@ -724,17 +724,23 @@
                 $('#sctThrdParty').addClass("blind");
             }
         });
-        $('#billMthdSms').click(function() {
-
+        $('#billMthdPost').change(function() {
+        	if($("#billMthdPost").is(":checked")) {
+        		$('#billMthdEstm').change();
+        		$('#billMthdSms').change();
+        	}
+        });
+        $('#billMthdSms').change(function() {
             $('#billMthdSms1').prop("checked", false).prop("disabled", true);
             $('#billMthdSms2').prop("checked", false).prop("disabled", true);
 
             if($("#billMthdSms").is(":checked")) {
+            	$('#billMthdEstm').change();
                 $('#billMthdSms1').removeAttr("disabled").prop("checked", true);
                 $('#billMthdSms2').removeAttr("disabled");
             }
         });
-        $('#billMthdEstm').click(function() {
+        $('#billMthdEstm').change(function() {
 
             $('#spEmail1').text("");
             $('#spEmail2').text("");
@@ -744,6 +750,7 @@
           //$('#billMthdEmailTxt2').val("").prop("disabled", true);
 
             if($("#billMthdEstm").is(":checked")) {
+            	$('#billMthdSms').change();
                 $('#spEmail1').text("*");
                 $('#spEmail2').text("*");
                 $('#billMthdEmail1').removeAttr("disabled").prop("checked", true);
@@ -3192,19 +3199,19 @@ console.log("vBindingNo" + vBindingNo);
 <tr>
     <th scope="row" rowspan="5"><spring:message code="sal.text.billingMethod" /><span class="must">*</span></th>
     <td colspan="3">
-    <label><input id="billMthdPost" name="billMthdPost" type="checkbox" /><span><spring:message code="sal.text.post" /></span></label>
+    <label><input id="billMthdPost" name="billMthd" type="radio" /><span><spring:message code="sal.text.post" /></span></label>
     </td>
 </tr>
 <tr>
     <td colspan="3">
-    <label><input id="billMthdSms" name="billMthdSms" type="checkbox" /><span><spring:message code="sal.text.sms" /></span></label>
+    <label><input id="billMthdSms" name="billMthd" type="radio" /><span><spring:message code="sal.text.sms" /></span></label>
     <label><input id="billMthdSms1" name="billMthdSms1" type="checkbox" disabled/><span><spring:message code="sal.text.mobile" /> 1</span></label>
     <label><input id="billMthdSms2" name="billMthdSms2" type="checkbox" disabled/><span><spring:message code="sal.text.mobile" /> 2</span></label>
     </td>
 </tr>
 <tr>
     <td>
-    <label><input id="billMthdEstm" name="billMthdEstm" type="checkbox" /><span><spring:message code="sal.text.eBilling" /></span></label>
+    <label><input id="billMthdEstm" name="billMthd" type="radio" /><span><spring:message code="sal.text.eBilling" /></span></label>
     <label><input id="billMthdEmail1" name="billMthdEmail1" type="checkbox" disabled/><span><spring:message code="sal.text.email" /> 1</span></label>
     <label><input id="billMthdEmail2" name="billMthdEmail2" type="checkbox" disabled/><span><spring:message code="sal.text.email" /> 2</span></label>
     </td>
