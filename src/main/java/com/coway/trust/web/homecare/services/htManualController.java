@@ -28,7 +28,9 @@ import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.homecare.services.htManualService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.organization.organization.MemberListController;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -77,21 +79,28 @@ public class htManualController {
     		model.addAttribute("userType",sessionVO.getUserTypeId());
     		//model.addAttribute("userType","3");
 
+    		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+    		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+    		model.put("bfDay", bfDay);
+    		model.put("toDay", toDay);
+
+
 		return "homecare/services/htManual";
     	}
 
 
 
 
-		@RequestMapping(value = "/selectHSConfigListPop.do")
-		public String selectHSConfigListPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
-			logger.debug("params 222 : {}", params);
+		@RequestMapping(value = "/selectCSConfigListPop.do")
+		public String selectCSConfigListPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+			logger.debug("selectCSConfigListPop : {}", params);
 			model.addAttribute("brnchCdList",  params.get("BrnchId"));
 			model.addAttribute("ordCdList",  params.get("CheckedItems"));
 			model.addAttribute("ManuaMyBSMonth",  params.get("ManuaMyBSMonth"));
 			model.addAttribute("SalesOrderNo",  params.get("SalesOrderNo"));
 
-			return "services/bs/hSConfigPop";
+			return "homecare/services/htConfigPop";
 		}
 
 
@@ -144,9 +153,7 @@ public class htManualController {
 			Map parameterMap = request.getParameterMap();
 			String[] nameParam = (String[])parameterMap.get("name");
 
-			logger.debug(" selectPopUpList in  ");
-			logger.debug(" 			: "+params.toString());
-			logger.debug(" selectPopUpList in  ");
+			logger.debug("selectPopUpCdList	: "+params.toString());
 
 			if(null != params.get("SaleOrdList")){
     			String olist = (String)params.get("SaleOrdList");
@@ -160,15 +167,11 @@ public class htManualController {
 				params.put("deptListSpl", spl);
 			}
 
-			logger.debug("params1 : {}", params);
+			logger.debug("selectPopUpCdList - params : {}", params);
 
-
-			//brnch to CodyList
 			List<EgovMap> resultList = htManualService.getCdList_1(params);
-			//model.addAttribute("brnchCdList1", resultList);
 
 			List<EgovMap> resultList1 = htManualService.selectHsManualListPop(params);
-			//model.addAttribute("ordCdList1", resultList1);
 
 			return ResponseEntity.ok(resultList);
 		}
@@ -181,9 +184,7 @@ public class htManualController {
 			Map parameterMap = request.getParameterMap();
 			String[] nameParam = (String[])parameterMap.get("name");
 
-			logger.debug(" selectPopUpList in  ");
-			logger.debug(" 			: "+params.toString());
-			logger.debug(" selectPopUpList in  ");
+			logger.debug(" selectPopUpCustList	: "+params.toString());
 
 			if(null != params.get("SaleOrdList")){
 
@@ -310,23 +311,12 @@ public class htManualController {
 		return ResponseEntity.ok(resultList);
 	}
 
-    /* BY KV - Change to textBox -  txtcodyCode and below code no more used.*/
-	/*@RequestMapping(value = "/getCdList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> getCdList(@RequestParam Map<String, Object>params) {
-        // Member Type 에 따른 Organization 조회.
-		List<EgovMap> resultList = htManualService.getCdList(params);
-
-		return ResponseEntity.ok(resultList);
-	}*/
-
-
-
 
 	@RequestMapping(value = "/hsOrderSave.do",method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertHsResult(@RequestBody Map<String, Object> params,SessionVO sessionVO) throws ParseException {
 		Boolean success = false;
 		String msg = "";
-
+		logger.debug("params : "+ params);
 
 		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
@@ -340,7 +330,7 @@ public class htManualController {
 
 
 
-		message.setMessage("Complete to Add a HS Order.  " + resultValue.get("docNo"));
+		message.setMessage("Complete to Add a HCS Order.  " + resultValue.get("docNo"));
 
 
 		return ResponseEntity.ok(message);
@@ -1022,7 +1012,7 @@ public class htManualController {
 	@RequestMapping(value = "/selectHsOrderInMonth.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> checkHsOrderInMonth(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
-		logger.debug("111params111 : {}", params);
+		logger.debug("selectHsOrderInMonth.do : {}", params);
 
 		EgovMap hsOrderInMonth = htManualService.selectHsOrderInMonth(params);
 
