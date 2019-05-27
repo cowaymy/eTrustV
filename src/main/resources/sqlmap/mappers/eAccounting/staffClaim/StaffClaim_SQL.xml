@@ -171,10 +171,10 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{glAccCodeName}
        ,#{budgetCode}
        ,#{budgetCodeName}
-       ,#{taxCode}
-       ,#{gstBeforAmt}
-       ,#{gstAmt}
-       ,#{taxNonClmAmt}
+       ,'VB'
+       ,#{totAmt}
+       ,0
+       ,0
        ,#{totAmt}
        ,#{atchFileGrpId}
        ,#{expDesc}
