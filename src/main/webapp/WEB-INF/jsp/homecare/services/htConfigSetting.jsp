@@ -31,7 +31,7 @@
                                       },*/ {
                                     dataField : "custId",
                                     //headerText : "Customer",
-                                    headerText : '<spring:message code="service.grid.Customer" />',
+                                    headerText : 'Customer ID',
                                     width : 120
                                 }, {
                                     dataField : "name",
@@ -89,7 +89,7 @@
             // AUIGrid 그리드를 생성합니다.
             basicManagementGrid();
 
-            AUIGrid.setSelectionMode(myGridID, "singleRow");
+            //AUIGrid.setSelectionMode(myGridID, "singleRow");
 
                 AUIGrid.bind(myGridID, "cellClick", function(event) {
                   salesOrdId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
@@ -182,7 +182,7 @@
                 <td>
                     <input id="ManuaMyBSMonth" name="ManuaMyBSMonth" type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" readonly />
                 </td> -->
-                <th scope="row"><spring:message code='service.title.Customer'/></th>
+                <th scope="row">Customer ID</th>
                 <td>
                     <input id="manualCustomer" name="manualCustomer"  type="text" title="" placeholder="Customer ID Only" class="w100p" />
                 </td>
