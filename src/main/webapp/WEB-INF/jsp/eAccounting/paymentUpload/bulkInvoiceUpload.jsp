@@ -671,27 +671,32 @@
                 }
 
                 Common.ajax("POST", "/eAccounting/paymentUpload/confirmBulkInvc.do", data, function(result2) {
-                    console.log(result2)
 
-                    $("#pop_up_3").show();
-                    $("#pop_up_3").attr('class', 'popup_wrap msg_box');
-                    $("#comUpload").show();
-                    $("#popHeader3").text("Success");
-                    $("#uploadSuccMsg").text("Bulk Invoices upload completed. Batch ID : " + result2.message);
-                    //$("#batchIdSucc").text("Batch ID : " + result2.message);
-                    $("#errorMessage").hide();
-                    $("#bulkInvcApprRegister").hide();
-                    $("#bulkInvcRejctRegister").hide();
+                    console.log(result2);
 
-                    $("#appvLinePop").hide();
-                    AUIGrid.destroy("#approveLine_grid_wrap");
+                    if(result2.code == "99") {
+                        Common.alert("Please select the relevant final approver.");
+                    } else {
+                        $("#pop_up_3").show();
+                        $("#pop_up_3").attr('class', 'popup_wrap msg_box');
+                        $("#comUpload").show();
+                        $("#popHeader3").text("Success");
+                        $("#uploadSuccMsg").text("Bulk Invoices upload completed. Batch ID : " + result2.message);
+                        //$("#batchIdSucc").text("Batch ID : " + result2.message);
+                        $("#errorMessage").hide();
+                        $("#bulkInvcApprRegister").hide();
+                        $("#bulkInvcRejctRegister").hide();
 
-                    fn_closeUpload();
+                        $("#appvLinePop").hide();
+                        AUIGrid.destroy("#approveLine_grid_wrap");
 
-                    AUIGrid.destroy("#grid_wrap");
-                    myGridID = null;
+                        fn_closeUpload();
 
-                    fn_searchUpload();
+                        AUIGrid.destroy("#grid_wrap");
+                        myGridID = null;
+
+                        fn_searchUpload();
+                    }
                 });
             });
         });

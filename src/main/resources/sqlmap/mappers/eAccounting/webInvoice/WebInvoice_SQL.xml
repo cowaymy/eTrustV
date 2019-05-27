@@ -1688,6 +1688,11 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
             AND R1 <> '0'
         ]]>
     </if>
+    <if test="clmType == 'Bulk_J1' ">
+        <![CDATA[
+            AND BULK_J1 <> '0'
+        ]]>
+    </if>
 </select>
 
 <update id="insMissAppr" parameterType="Map">

@@ -42,6 +42,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.util.BeanConverter;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.ibm.icu.util.Calendar;
 
@@ -706,6 +707,8 @@ public class BulkUploadController {
         LOGGER.debug("========== bulkInsert ==========");
         LOGGER.debug("params ==========>>  " + params);
 
+        ReturnMessage message = new ReturnMessage();
+
         int seq = 0;
         String batchId = "";
         String appvPrcssNo = "";
@@ -713,98 +716,121 @@ public class BulkUploadController {
         String clamUn = "";
         String grpSeq = "";
 
-        params.put("clmType", "J1");
+        List<Object> apprGridList = (List<Object>) params.get("apprGridList");
 
-        EgovMap item = new EgovMap();
-        Map<String, Object> itemMap = new HashMap<String, Object>();
+        if(apprGridList.size() > 0) {
+            Map apprHm = null;
+            List<String> appvLineUserId = new ArrayList<>();
 
-        item = bulkUploadService.getBatchSeq();
-        batchId = item.get("seq").toString();
-
-        List<EgovMap> bulkDetailsList = bulkUploadService.getBulkDetails(params);
-
-        for(int i = 0; i < bulkDetailsList.size(); i++) {
-            Map<String, Object> bulkDetail = (Map<String, Object>) bulkDetailsList.get(i);
-
-            if(i == 0) {
-                claimNo = webInvoiceService.selectNextClmNo();
-                grpSeq = bulkDetail.get("grpSeq").toString();
+            for(Object map : apprGridList) {
+                apprHm = (HashMap<String, Object>) map;
+                appvLineUserId.add(apprHm.get("memCode").toString());
             }
 
-            if(!grpSeq.equals(bulkDetail.get("grpSeq").toString())) {
-                claimNo = webInvoiceService.selectNextClmNo();
-                seq = 1;
-                grpSeq = bulkDetail.get("grpSeq").toString();
-            } else {
-                seq++;
-            }
+            params.put("clmType", "Bulk_J1");
+            EgovMap apprHm2 = webInvoiceService.getFinApprover(params);
+            String memCode = apprHm2.get("apprmemCode").toString();
 
-            String invcDt, payDt;
-            String billPeriodFr = "";
-            String billPeriodTo = "";
-            invcDt = bulkDetail.get("invcDt").toString().substring(0, 10);
-            payDt = bulkDetail.get("payDt").toString().substring(0, 10);
+            memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
 
-            if(bulkDetail.containsKey("billPeriodFr") && bulkDetail.containsKey("billPeriodTo")) {
-                billPeriodFr = bulkDetail.get("billPeriodFr").toString().substring(0, 10);
-                billPeriodTo = bulkDetail.get("billPeriodTo").toString().substring(0, 10);
-            }
+            if(appvLineUserId.contains(memCode)) {
+                params.put("clmType", "J1");
 
-            item = webInvoiceService.selectClamUn(params);
-            clamUn = item.get("clamUn").toString();
-            params.put("clamUn", clamUn);
-            webInvoiceService.updateClamUn(params);
+                EgovMap item = new EgovMap();
+                Map<String, Object> itemMap = new HashMap<String, Object>();
 
-            bulkDetail.put("batchId", batchId);
-            bulkDetail.put("clmNo", claimNo);
-            bulkDetail.put("seq", seq);
-            bulkDetail.put("invcDt", invcDt);
-            bulkDetail.put("payDt", payDt);
-            bulkDetail.put("billPeriodFr", billPeriodFr);
-            bulkDetail.put("billPeriodTo", billPeriodTo);
-            bulkDetail.put("clamUn", clamUn);
-            bulkDetail.put("userId", sessionVO.getUserId());
+                item = bulkUploadService.getBatchSeq();
+                batchId = item.get("seq").toString();
 
-            bulkUploadService.insertBulkDetail(bulkDetail);
+                List<EgovMap> bulkDetailsList = bulkUploadService.getBulkDetails(params);
 
-            if(i == bulkDetailsList.size() - 1) {
-                appvPrcssNo = webInvoiceService.selectNextAppvPrcssNo();
+                for(int i = 0; i < bulkDetailsList.size(); i++) {
+                    Map<String, Object> bulkDetail = (Map<String, Object>) bulkDetailsList.get(i);
 
-                Map<String, Object> hm = null;
-                List<Object> apprGridList = (List<Object>) params.get("apprLineGrid");
+                    if(i == 0) {
+                        claimNo = webInvoiceService.selectNextClmNo();
+                        grpSeq = bulkDetail.get("grpSeq").toString();
+                    }
 
-                for (Object map : apprGridList) {
-                    hm = (HashMap<String, Object>) map;
-                    hm.put("appvPrcssNo", appvPrcssNo);
-                    hm.put("approveNo", (String.valueOf(hm.get("approveNo"))).trim());
-                    hm.put("memCode", (String.valueOf(hm.get("memCode"))).trim());
-                    hm.put("userId", sessionVO.getUserId());
-                    LOGGER.debug("insertApproveLineDetail =====================================>>  " + hm);
+                    if(!grpSeq.equals(bulkDetail.get("grpSeq").toString())) {
+                        claimNo = webInvoiceService.selectNextClmNo();
+                        seq = 1;
+                        grpSeq = bulkDetail.get("grpSeq").toString();
+                    } else {
+                        seq++;
+                    }
 
-                    bulkUploadService.insertApproveLineDetail(hm);
+                    String invcDt, payDt;
+                    String billPeriodFr = "";
+                    String billPeriodTo = "";
+                    invcDt = bulkDetail.get("invcDt").toString().substring(0, 10);
+                    payDt = bulkDetail.get("payDt").toString().substring(0, 10);
 
+                    if(bulkDetail.containsKey("billPeriodFr") && bulkDetail.containsKey("billPeriodTo")) {
+                        billPeriodFr = bulkDetail.get("billPeriodFr").toString().substring(0, 10);
+                        billPeriodTo = bulkDetail.get("billPeriodTo").toString().substring(0, 10);
+                    }
+
+                    item = webInvoiceService.selectClamUn(params);
+                    clamUn = item.get("clamUn").toString();
+                    params.put("clamUn", clamUn);
+                    webInvoiceService.updateClamUn(params);
+
+                    bulkDetail.put("batchId", batchId);
+                    bulkDetail.put("clmNo", claimNo);
+                    bulkDetail.put("seq", seq);
+                    bulkDetail.put("invcDt", invcDt);
+                    bulkDetail.put("payDt", payDt);
+                    bulkDetail.put("billPeriodFr", billPeriodFr);
+                    bulkDetail.put("billPeriodTo", billPeriodTo);
+                    bulkDetail.put("clamUn", clamUn);
+                    bulkDetail.put("userId", sessionVO.getUserId());
+
+                    bulkUploadService.insertBulkDetail(bulkDetail);
+
+                    if(i == bulkDetailsList.size() - 1) {
+                        appvPrcssNo = webInvoiceService.selectNextAppvPrcssNo();
+
+                        Map<String, Object> hm = null;
+                        //List<Object> apprGridList = (List<Object>) params.get("apprLineGrid");
+
+                        for (Object map : apprGridList) {
+                            hm = (HashMap<String, Object>) map;
+                            hm.put("appvPrcssNo", appvPrcssNo);
+                            hm.put("approveNo", (String.valueOf(hm.get("approveNo"))).trim());
+                            hm.put("memCode", (String.valueOf(hm.get("memCode"))).trim());
+                            hm.put("userId", sessionVO.getUserId());
+                            LOGGER.debug("insertApproveLineDetail =====================================>>  " + hm);
+
+                            bulkUploadService.insertApproveLineDetail(hm);
+
+                        }
+
+                        params.put("appvPrcssNo", appvPrcssNo);
+                        params.put("clmNo", batchId);
+                        params.put("userName", sessionVO.getUserName());
+                        params.put("userId", sessionVO.getUserId());
+                        params.put("appvLineCnt", apprGridList.size());
+                        bulkUploadService.insertApproveManagement(params);
+
+                        int totCnt = i + 1;
+                        params.put("totCnt", totCnt);
+                        params.put("batchId", batchId);
+                        bulkUploadService.insertBulkMaster(params);
+                    }
                 }
 
-                params.put("appvPrcssNo", appvPrcssNo);
-                params.put("clmNo", batchId);
-                params.put("userName", sessionVO.getUserName());
-                params.put("userId", sessionVO.getUserId());
-                params.put("appvLineCnt", apprGridList.size());
-                bulkUploadService.insertApproveManagement(params);
+                bulkUploadService.clearBulkInvcTemp(params);
 
-                int totCnt = i + 1;
-                params.put("totCnt", totCnt);
-                params.put("batchId", batchId);
-                bulkUploadService.insertBulkMaster(params);
+                message.setCode(AppConstants.SUCCESS);
+                message.setData(params);
+                message.setMessage(batchId);
+            } else {
+                message.setCode(AppConstants.FAIL);
+                message.setData(params);
+                message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
             }
         }
-
-        bulkUploadService.clearBulkInvcTemp(params);
-
-        ReturnMessage message = new ReturnMessage();
-        message.setCode(AppConstants.SUCCESS);
-        message.setData(params);
-        message.setMessage(batchId);
 
         return ResponseEntity.ok(message);
     }
