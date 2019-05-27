@@ -390,7 +390,7 @@ FROM
                       </when>
                       <otherwise>
                         <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                          ( SOM.SRV_ORD_NO = #{txtSalesOrder})
+                        AND  ( SOM.SRV_ORD_NO = #{txtSalesOrder})
                         </if>
                       </otherwise>
                     </choose>
@@ -485,10 +485,12 @@ FROM
 
 
                     <select id="selectHsManualListPop" parameterType="Map" resultType="egovMap">
-                           SELECT   distinct HSM.SCHDUL_ID
+
+
+                            SELECT   distinct HSM.SCHDUL_ID
                                         ,C.NAME Name
-                                        , SOM.SRV_ORD_ID SALES_ORD_ID
-                                         ,SOM.SRV_ORD_NO SALES_ORD_NO
+                                        , SOM.Srv_ORD_ID SALES_ORD_ID
+                                         ,SOM.Srv_ORD_NO SALES_ORD_NO
                                          ,HSM.MONTH
                                          ,HSM.YEAR YEAR
                                          ,HSM.MONTH || '/' || HSM.YEAR HS_DATE
@@ -523,7 +525,7 @@ FROM
                                 AND SOM.CUST_ID = SAL023.CUST_ID
                                 AND SOM.SRV_ORD_ID = INS.SALES_ORD_ID
                                 AND SAL023.CUST_ADD_ID = INS.ADD_ID
-                                and sal023.area_id = sys064.area_id
+                                AND SAL023.AREA_ID = SYS064.AREA_ID
                  <![CDATA[ AND SOM.STUS_CODE_ID <> 8    ]]>
                              <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
                                       AND  hsm.YEAR(+) = #{myBSYear}
@@ -3699,10 +3701,10 @@ FROM
          WHERE 1=1
          AND YEAR(+) = #{myBSYear}
          AND Month(+) = #{myBSMonth}
-         AND SALES_ORD_ID IN(
-             select SALES_ORD_ID
-             from SAL0001D S1D
-             where S1D.SALES_ORD_NO= #{saleOrdList}
+         AND SALES_ORD_ID IN (
+             select SRV_ORD_ID
+             from SAL0225D S1D
+             where S1D.SRV_ORD_NO= #{saleOrdList}
          )
 
         </select>
