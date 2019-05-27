@@ -3,21 +3,45 @@
 <mapper namespace="com.coway.trust.biz.logistics.survey.impl.SurveyMapper">
 
 <select id="verifyStatus" parameterType="Map" resultType="int">
-    SELECT COUNT(*) AS VALID FROM MSC0022D
-    WHERE 1 = 1
-    AND USER_ID = #{userId}
-    AND SURVEY_TYPE_ID = (SELECT CODE FROM SYS0094M WHERE IND = 'SURVEY')
+    SELECT COUNT(*) AS VALID
+    FROM MSC0022D
+        WHERE 1 = 1
+        AND USER_ID = #{userId}
+        AND SURVEY_TYPE_ID = #{surveyTypeId}
+</select>
+
+<select id="isSurveyRequired" parameterType="Map" resultType="egovMap">
+    SELECT SURVEY_TYPE_ID
+    FROM MSC0047M
+        WHERE STUS_CODE_ID = 1
+        AND SYSDATE BETWEEN SURVEY_START_DT AND SURVEY_END_DT
+        <if test="userTypeId == 4 or userTypeId == 6">
+            AND IS_STAFF = 1
+         </if>
+         <if test="userTypeId == 1">
+            AND IS_HP = 1 AND MEM_LVL IN (0,#{userMemLvl})
+         </if>
+         <if test="userTypeId == 2">
+            AND IS_CD = 1 AND MEM_LVL IN (0,#{userMemLvl})
+         </if>
+         <if test="userTypeId == 3">
+            AND IS_CT = 1 AND MEM_LVL IN (0,#{userMemLvl})
+         </if>
+         <if test="userTypeId == 7">
+            AND IS_HT = 1 AND MEM_LVL IN (0,#{userMemLvl})
+         </if>
 </select>
 
 <select id="getSurveyTitle" parameterType="Map" resultType="egovMap">
-    SELECT
-	    SURVEY_TYPE_ID,
-	    SURVEY_TITLE,
-	    SURVEY_MESSAGE
-    FROM MSC0047M
-    WHERE SURVEY_TYPE_ID = (SELECT CODE FROM SYS0094M WHERE IND = 'SURVEY')
-    AND STUS_CODE_ID = 1
-    AND ROWNUM <![CDATA[<=]]> 1
+SELECT
+        EXTENT1.SURVEY_TYPE_ID,
+        EXTENT1.SURVEY_TITLE,
+        EXTENT2.SURVEY_MESSAGE,
+        EXTENT2.SURVEY_SUB_GRP
+    FROM MSC0047M EXTENT1
+    JOIN MSC0048D EXTENT2 ON EXTENT1.SURVEY_TYPE_ID = EXTENT2.SURVEY_TYPE_ID
+    WHERE EXTENT1.SURVEY_TYPE_ID = #{surveyTypeId}
+    AND EXTENT1.STUS_CODE_ID = 1
 </select>
 
 <select id="getSurveyQues" parameterType="Map" resultType="egovMap">
@@ -35,7 +59,8 @@
     JOIN MSC0025D EXTENT2 ON EXTENT1.QUES_ID = EXTENT2.QUES_ID
         WHERE 1 = 1
         AND EXTENT1.DISAB = 0
-        AND EXTENT1.SURVEY_TYPE_ID = (SELECT CODE FROM SYS0094M WHERE IND = 'SURVEY')
+        AND EXTENT1.SURVEY_TYPE_ID = #{surveyTypeId}
+        AND EXTENT1.SURVEY_QUES_GRP = #{surveyQuesGrp}
         ORDER BY EXTENT1.SEQ
 </select>
 

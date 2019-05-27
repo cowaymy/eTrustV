@@ -425,8 +425,13 @@ LOGGER.debug(Integer.toString(joinDt.compareTo(currRenewalDt)));
             popInfo.put("popExceptionMemroleCnt", "1");
         }
 
-        int verifySurveyStus = surveyService.verifyStatus(params, sessionVO);
+        int surveyTypeId = surveyService.isSurveyRequired(params,sessionVO);
+        if(surveyTypeId >= 0){
+          params.put("surveyTypeId",surveyTypeId);
+        }
+        int verifySurveyStus  = surveyService.verifyStatus(params, sessionVO);
 
+        popInfo.put("surveyTypeId", surveyTypeId);
         popInfo.put("verifySurveyStus", verifySurveyStus);
         popInfo.put("retMsg", retMsg);
 

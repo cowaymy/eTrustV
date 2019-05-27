@@ -16,11 +16,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface SurveyService {
   int verifyStatus(Map<String, Object> params,SessionVO sessionVO);
 
-  EgovMap getSurveyTitle(Map<String, Object> params);
+  int isSurveyRequired(Map<String, Object> params,SessionVO sessionVO);
+
+  List<EgovMap> getSurveyTitle(Map<String, Object> params);
 
   List<EgovMap> getSurveyQues(Map<String, Object> params);
 
   List<EgovMap> getSurveyAns(Map<String, Object> params);
 
   void saveSurvey(Map<String, ArrayList<Object>> params, SessionVO sessionVO);
+
+
 }

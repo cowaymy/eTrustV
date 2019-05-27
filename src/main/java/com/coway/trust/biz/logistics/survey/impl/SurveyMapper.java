@@ -7,6 +7,7 @@ package com.coway.trust.biz.logistics.survey.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
@@ -17,7 +18,9 @@ public interface SurveyMapper
 {
   int verifyStatus(Map<String, Object> params);
 
-  EgovMap getSurveyTitle(Map<String, Object> params);
+  EgovMap isSurveyRequired(Map<String, Object> params);
+
+  List<EgovMap> getSurveyTitle(Map<String, Object> params);
 
   List<EgovMap> getSurveyQues(Map<String, Object> params);
 

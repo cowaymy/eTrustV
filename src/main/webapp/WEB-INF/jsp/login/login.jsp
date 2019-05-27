@@ -256,10 +256,13 @@
                             $("#loginUserType").val(result.data.userTypeId);
 
                             if(aResult.retMsg == "") {
-                                if((aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0) && aResult.verifySurveyStus > 0) {
+                                if((aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0)
+                                	&& (aResult.surveyTypeId <= 0 || aResult.verifySurveyStus >= 1)){
                                     fn_goMain();
                                 }
-                                else if ( (aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0) && aResult.verifySurveyStus <= 0 ){
+                                else if ( (aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0)
+                                		&& (aResult.surveyTypeId > 0 && aResult.verifySurveyStus <= 0) ){
+                                	$("#surveyTypeId").val(aResult.surveyTypeId);
                                     fn_goSurveyForm();
                                 }
                                 else {
@@ -405,6 +408,7 @@
             <input type="hidden" id="popAck2" name="popAck2" value=""/>
             <input type="hidden" id="popRejectFlg" name="popRejectFlg" value=""/>
             <input type="hidden" id="surveyStus" name="surveyStus" value=""/>
+            <input type="hidden" id="surveyTypeId" name="surveyTypeId" value=""/>
 
             <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust.gif" alt="Coway"/></h2>
             <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value=""/></p>

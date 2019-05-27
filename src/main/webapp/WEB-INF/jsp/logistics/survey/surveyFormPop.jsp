@@ -5,9 +5,10 @@
 <script type="text/javaScript">
 var verCnt = 0;
 var userType = "";
+var surveyTypeId = 0;
 
 $(document).ready(function() {
-
+	surveyTypeId = $('#surveyTypeId').val();
 });
 
 function btnSubmit(){
@@ -38,13 +39,13 @@ function btnSubmit(){
     if(valid){
     	var data = {};
         data.form = formMaster;
-        data.rem = [{"rem":$("#comment").val()}];
+        data.etc = [{"rem":$("#comment").val()},{"surveyTypeId":surveyTypeId}];
 
         console.log(data);
 
     	Common.ajax("POST", "/logistics/survey/surveySave.do", data, function(result) {
-    		setTimeout(function(){ fn_goMain(),3000 });//Login after 3 sec
-    		Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_goMain());
+    		//setTimeout(function(){ fn_goMain(),3000 });//Login after 3 sec
+    		//Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_goMain());
         },  function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
@@ -77,7 +78,7 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:1px solid #d3d9
 <div id="popup_wrap" class="popup_wrap size_big"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>${title.surveyTitle}</h1>
+<h1>${title[0].surveyTitle}</h1>
 <%-- <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul> --%>
@@ -100,46 +101,50 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:1px solid #d3d9
     <col style="width:27%" />
 </colgroup>
 <tbody>
+<c:forEach items="${title}" var="title">
 <tr>
-    <th scope="row" colspan="3"><br><b>${title.surveyMessage}</b><br/></th>
-</tr>
-<tr>
+        <th scope="row" colspan="3"><br><b>${title.surveyMessage}</b><br/></th>
+        <tr>
     <th scope="row" colspan="3"><b>Score : 1 - Strongly Disagree | 2 - Disagree | 3 - Neutral | 4 - Agree | 5 - Strongly Agree</b></th>
 </tr>
     <tr>
+
         <th scope="row">No.</th>
         <th scope="row">Question</th>
         <th scope="row">Answer</th>
     </tr>
-    <c:forEach items="${ques}" var="ques">
+
+    <c:forEach items="${title.ques}" var="ques">
     <tr>
         <td>${ques.seq}</td>
         <td>${ques.ques}</td>
         <c:choose>
-	        <c:when test = "${ques.inputType eq 'CHECKBOX'}">
-	            <td><c:forEach var="score" begin="1" end = "5">
-	            <label><input type="radio" name="${ques.quesId}" value="${score}"/><span> ${score} </span></label>
-	            </c:forEach></td>
-	         </c:when>
+            <c:when test = "${ques.inputType eq 'CHECKBOX'}">
+                <td><c:forEach var="score" begin="1" end = "5">
+                <label><input type="radio" name="${ques.quesId}" value="${score}"/><span> ${score} </span></label>
+                </c:forEach></td>
+             </c:when>
 
-	         <c:when test = "${ques.inputType eq 'DROPDOWN'}">
-	            <script>
-	            doGetComboData('/logistics/survey/getSurveyAns.do', {quesId : '${ques.quesId}' },'', '${ques.quesId}','S', '');
-	            </script>
-	            <td><select id="${ques.quesId}" name="${ques.quesId}" class="w50p" ></select></td>
-	         </c:when>
+             <c:when test = "${ques.inputType eq 'DROPDOWN'}">
+                <script>
+                doGetComboData('/logistics/survey/getSurveyAns.do', {quesId : '${ques.quesId}' },'', '${ques.quesId}','S', '');
+                </script>
+                <td><select id="${ques.quesId}" name="${ques.quesId}" class="w50p" ></select></td>
+             </c:when>
 
-	         <c:when test = "${ques.inputType eq 'TEXT'}">
-	            <td><label><input type="text" title="" id="${ques.quesId}" name="${ques.quesId}" /></label></td>
-	         </c:when>
+             <c:when test = "${ques.inputType eq 'TEXT'}">
+                <td><label><input type="text" title="" id="${ques.quesId}" name="${ques.quesId}" /></label></td>
+             </c:when>
 
-	         <c:otherwise>
-	         <td><c:forEach var="score" begin="1" end = "5">
-	            <label><input type="radio" name="${ques.quesId}" value="${score}" /><span> ${score} </span></label>
-	            </c:forEach></td>
-	         </c:otherwise>
+             <c:otherwise>
+             <td><c:forEach var="score" begin="1" end = "5">
+                <label><input type="radio" name="${ques.quesId}" value="${score}" /><span> ${score} </span></label>
+                </c:forEach></td>
+             </c:otherwise>
          </c:choose>
     </tr>
+</c:forEach>
+</tr>
 </c:forEach>
 
 <tr>

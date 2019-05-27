@@ -25,7 +25,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class SurveyServiceImpl implements SurveyService
 {
 
-  private static final Logger logger = LoggerFactory.getLogger(SurveyController.class);
+  private static final Logger logger = LoggerFactory.getLogger(SurveyServiceImpl.class);
 
   @Autowired
   private SurveyMapper surveyMapper;
@@ -37,7 +37,18 @@ public class SurveyServiceImpl implements SurveyService
   }
 
   @Override
-  public EgovMap getSurveyTitle(Map<String, Object> params) {
+  public int isSurveyRequired(Map<String, Object> params,SessionVO sessionVO) {
+    params.put("userTypeId",sessionVO.getUserTypeId());
+    params.put("userMemLvl",sessionVO.getMemberLevel());
+    int surveyTypeId = 0;
+    if (surveyMapper.isSurveyRequired(params) != null){
+      surveyTypeId = Integer.parseInt(surveyMapper.isSurveyRequired(params).get("surveyTypeId").toString());
+    }
+    return surveyTypeId;
+  }
+
+  @Override
+  public List<EgovMap> getSurveyTitle(Map<String, Object> params) {
       return surveyMapper.getSurveyTitle(params);
   }
 
@@ -57,17 +68,18 @@ public class SurveyServiceImpl implements SurveyService
     try{
       List<Map<String, Object>> survey = new ArrayList<>();
 
-      List<Object> comment = params.get("rem");
-      Map<String, Object> commentMap = (Map<String, Object>)comment.get(0);
+      List<Object> etcMap = params.get("etc");
+      Map<String, Object> rem = (Map<String, Object>)etcMap.get(0);
+      Map<String, Object> surveyTypeIdMap = (Map<String, Object>)etcMap.get(1);
 
-      int surveyTypeId = surveyMapper.getSurveyTypeId();
+      int surveyTypeId = Integer.valueOf(surveyTypeIdMap.get("surveyTypeId").toString());
       int surveyId =surveyMapper.selectSurveyMSeq();
 
       Map<String, Object> surveyM = new HashMap<>();
       surveyM.put("surveyId", surveyId);
       surveyM.put("surveyTypeId", surveyTypeId);
       surveyM.put("userId", sessionVO.getUserId());
-      surveyM.put("rem", String.valueOf(commentMap.get("rem")));
+      surveyM.put("rem", String.valueOf(rem.get("rem")));
 
       surveyMapper.insertSurveyM(surveyM);
 

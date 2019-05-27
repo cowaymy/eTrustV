@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,13 +35,20 @@ public class SurveyController {
   @Resource(name = "SurveyService")
   private SurveyService surveyService;
 
-  @RequestMapping(value = "/surveyForm.do")
-  public String findIdPop(@RequestParam Map<String, Object> params, ModelMap model) {
+  private static final Logger logger = LoggerFactory.getLogger(SurveyController.class);
 
-    EgovMap title = surveyService.getSurveyTitle(params);
-    List<EgovMap> ques = surveyService.getSurveyQues(params);
-    model.put("title", title);
-    model.put("ques", ques);
+  @RequestMapping(value = "/surveyForm.do")
+  public String surveyForm(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    List<EgovMap> title = surveyService.getSurveyTitle(params);
+
+    title.forEach(obj -> {
+      Map<String, Object> map = (Map<String, Object>) obj;
+      params.put("surveyQuesGrp", map.get("surveySubGrp").toString());
+      List<EgovMap> ques = surveyService.getSurveyQues(params);
+      map.put("ques",ques);
+      model.put("title", title);
+    });
 
     return "logistics/survey/surveyFormPop";
   }
