@@ -1,6 +1,14 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 
+<style type="text/css">
+.my-row-style {
+    background:#fff64c;
+    font-weight:bold;
+    color:#f7ea00;
+}
+</style>
+
 <script type="text/javaScript">
 
     var noticeLayout = [{
@@ -57,145 +65,181 @@
 
     var hpDashboard = [{
         dataField: "period",
-        headerText: "Period"
+        headerText: "Period",
+        width : "7%"
     }, {
         dataField: "ranking",
-        headerText: "Rank"
+        headerText: "Rank",
+        width : "8%"
     }, {
         dataField: "sponsor",
-        headerText: "Self Sponsor",
+        headerText: "Self<br/>Sponsor",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "8%"
     }, {
         dataField: "actMem",
-        headerText: "Active HP",
+        headerText: "Active<br/>HP",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "8%"
     }, {
         dataField: "sales",
-        headerText: "Own Sales",
+        headerText: "Own<br/>Sales",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "10%"
     }, {
         dataField: "pvValue",
-        headerText: "PV Value",
+        headerText: "PV<br/>Value",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "10%"
     }, {
         dataField: "ys",
         headerText: "YS",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        visible : false
     }, {
         dataField: "actOrd",
-        headerText: "Active Order",
+        headerText: "Active<br/>Order",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        visible : false
     }, {
         dataField: "rc",
-        headerText: "SHI Index",
-        formatString : "#,##0.00"
+        headerText: "SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "7%"
     }];
 
     var salesManagerDashboard = [{
         dataField: "period",
-        headerText: "Period"
+        headerText: "Period",
+        width : "7%"
     }, {
         dataField: "ranking",
-        headerText: "Rank"
+        headerText: "Rank",
+        width : "6%"
     }, {
         dataField: "sponsor",
         headerText: "Sponsor",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "6%"
     }, {
         dataField: "recruit",
         headerText: "Recruit",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "6%"
     }, {
         dataField: "actMem",
-        headerText: "Active HP",
+        headerText: "Active<br/>HP",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "6%"
     }, {
         dataField: "productivity",
         headerText: "Productivity",
         dataType : "numeric",
-        formatString : "#,##0.0"
+        formatString : "#,##0.0",
+        width : "8%"
     }, {
         dataField: "sales",
-        headerText: "Group Sales",
+        headerText: "Group<br/>Sales",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "10%"
     }, {
         dataField: "pvValue",
-        headerText: "PV Value",
+        headerText: "PV<br/>Value",
         dataType : "numeric",
-        formatString : "#,##0"
-    }, {
-        dataField: "actOrd",
-        headerText: "Active Order",
-        dataType : "numeric",
-        formatString : "#,##0"
-    }, {
-        dataField: "ys",
-        headerText: "YS",
-        dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "10%"
     }, {
         dataField: "rc",
-        headerText: "SHI Index",
-        formatString : "#,##0.00"
+        headerText: "SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "7%"
     }];
 
     var sgmDashboard = [{
         dataField: "period",
-        headerText: "Period"
+        headerText: "Period",
+        width : "7%"
     }, {
         dataField: "sponsor",
         headerText: "Sponsor",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "6%"
     }, {
         dataField: "recruit",
         headerText: "Recruit",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "6%"
     }, {
         dataField: "actMem",
-        headerText: "Active HP with Net Sales",
+        headerText: "Active HP with<br/>Net Sales",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "10%"
     }, {
         dataField: "productivity",
         headerText: "Productivity",
         dataType : "numeric",
-        formatString : "#,##0.0"
+        formatString : "#,##0.0",
+        width : "8%"
     }, {
         dataField: "sales",
-        headerText: "Group Sales",
+        headerText: "Group<br/>Sales",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "10%"
     }, {
         dataField: "pvValue",
-        headerText: "PV Value (Net Sales)",
+        headerText: "PV Value<br/>(Net Sales)",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        width : "10%"
     }, {
         dataField: "actOrd",
-        headerText: "Active Order",
+        headerText: "Active<br/>Order",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        visible : false
     }, {
         dataField: "ys",
         headerText: "YS",
         dataType : "numeric",
-        formatString : "#,##0"
+        formatString : "#,##0",
+        visible : false
     }, {
         dataField: "rc",
-        headerText: "SHI Index",
-        formatString : "#,##0.00"
+        headerText: "SHI<br/>Index",
+        formatString : "#,##0.00",
+        width : "7%"
+    }];
+
+    var dailyPerfDashboard = [{
+        dataField: "period",
+        headerText: "Period",
+        width : "40%"
+    }, {
+        dataField: "actOrd",
+        headerText: "Active<br/>Order",
+        dataType : "numeric",
+        formatString : "#,##0",
+        width : "30%"
+    }, {
+        dataField: "ys",
+        headerText: "YS",
+        dataType : "numeric",
+        formatString : "#,##0",
+        width : "30%"
     }];
 /*
     var tagStatusColumnLayout =
@@ -438,7 +482,7 @@
                ];
 
     //AUIGrid 생성 후 반환 ID
-    var noticeGridID, detailGridID, statusCodeGridID, memoGridID;
+    var noticeGridID, detailGridID, statusCodeGridID, memoGridID, salesOrgPerfM, salesOrgPerfD;
 
     var gridOption = {
         showStateColumn : false,
@@ -464,34 +508,45 @@
         	roleType = result.roleType;
 
         	if(result.userTypeId == 1) {
-        		$("#notice").empty();
-        		$("#notice").append("Sales Organization Performance");
-        		$("#moreNotice").hide();
+        		$("#notice").remove();
+        		$("#noticeGrid").remove();
+
+        		$("#salesTable").css('border-top','0');
 
         		var salesGridOption = {
         			    usePaging : false,
         			    showStateColumn : false,
+        			    showRowNumColumn : false,
         			    pageRowCount : 4,
-        			    editable : false
+        			    editable : false,
+        			    headerHeight : 42
         			};
+
+        		salesOrgPerfD = GridCommon.createAUIGrid("salesOrgPerfD", dailyPerfDashboard, null, salesGridOption);
 
         		if(result.roleType == 115) {
         			console.log("else :: hpDashboard");
-        			noticeGridID = GridCommon.createAUIGrid("noticeGrid", hpDashboard, null, salesGridOption);
+        			salesOrgPerfM = GridCommon.createAUIGrid("salesOrgPerfM", hpDashboard, null, salesGridOption);
         		} else if(result.roleType == 111) {
         			console.log("else :: sgmDashboard");
-        			noticeGridID = GridCommon.createAUIGrid("noticeGrid", sgmDashboard, null, salesGridOption);
+        			salesOrgPerfM = GridCommon.createAUIGrid("salesOrgPerfM", sgmDashboard, null, salesGridOption);
         		} else {
         			console.log("else :: salesManagerDashboard");
-        			noticeGridID = GridCommon.createAUIGrid("noticeGrid", salesManagerDashboard, null, salesGridOption);
+        			salesOrgPerfM = GridCommon.createAUIGrid("salesOrgPerfM", salesManagerDashboard, null, salesGridOption);
         		}
+
+        		AUIGrid.resize(salesOrgPerfM, 1200, 150);
 
         		$("#memo").show();
         		memoGridID = GridCommon.createAUIGrid("memoGridID", memoColumnLayout, null, memoGridOption);
 
+        		fn_selectSalesDashboard(roleType);
+
         	} else {
         		noticeGridID = GridCommon.createAUIGrid("noticeGrid", noticeLayout, null, gridOption);
         		// 셀 더블클릭 이벤트 바인딩
+
+        		$("#salesOrg").remove();
 
         		if(result.userTypeId == 2){
         			$("#memo").show();
@@ -520,28 +575,37 @@
                         $("#vupddt").html(itm.upddt);
                         $("#vmemo").html(itm.memocntnt);
             });
+
+            if(result.roleType == 114 || result.roleType == 115) {
+                $("#dailyPerf").remove();
+                $("#detailGrid").remove();
+            } else {
+                /***********************************************[ DETAIL GRID] ************************************************/
+
+                var dtailOptions =
+                {
+                    usePaging: false,
+                    showRowNumColumn: false, // 그리드 넘버링
+                    showStateColumn : false,
+                    useGroupingPanel: false,
+                    editable: true,
+                 // 셀 병합 실행
+                    enableCellMerge : true,
+                    cellMergePolicy : "withNull",
+
+                    rowIdField : "divCode" // PK행 지정
+        /*             // 고정 칼럼 1개 적용시킴
+                    fixedColumnCount : 2 */
+                };
+
+                // detailGrid 생성
+                detailGridID = GridCommon.createAUIGrid("detailGrid", detailColumnLayout, "stusCodeId", dtailOptions);
+
+                fn_selectDailyPerformanceListAjax();
+            }
+
+            fn_selectMemoDashboard();
         });
-
-        /***********************************************[ DETAIL GRID] ************************************************/
-
-        var dtailOptions =
-        {
-            usePaging: false,
-            showRowNumColumn: false, // 그리드 넘버링
-            showStateColumn : false,
-            useGroupingPanel: false,
-            editable: true,
-         // 셀 병합 실행
-            enableCellMerge : true,
-            cellMergePolicy : "withNull",
-
-            rowIdField : "divCode" // PK행 지정
-/*             // 고정 칼럼 1개 적용시킴
-            fixedColumnCount : 2 */
-        };
-
-        // detailGrid 생성
-        detailGridID = GridCommon.createAUIGrid("detailGrid", detailColumnLayout, "stusCodeId", dtailOptions);
 
         /***********************************************[ CODE_ID GRID] ************************************************/
         /*
@@ -559,11 +623,6 @@
 
         fn_selectTagStatusListAjax("Y");
         */
-        fn_selectDailyPerformanceListAjax();
-
-        fn_selectSalesDashboard(roleType);
-
-        fn_selectMemoDashboard();
 
     });   //$(document).ready
 
@@ -577,7 +636,26 @@
 
     function fn_selectSalesDashboard(userRole) {
         Common.ajax("GET", "/common/getSalesOrgPerf.do", {}, function (result) {
-            AUIGrid.setGridData(noticeGridID, result);
+            AUIGrid.setGridData(salesOrgPerfM, result);
+            AUIGrid.setGridData(salesOrgPerfD, result);
+
+            AUIGrid.setProp(salesOrgPerfM, "rowStyleFunction", function(rowIndex, item) {;
+                if(item.period == "CURRENT") {
+                    return "my-row-style";
+                } else {
+                    return "";
+                }
+            });
+            AUIGrid.update(salesOrgPerfM);
+
+            AUIGrid.setProp(salesOrgPerfD, "rowStyleFunction", function(rowIndex, item) {
+                if(item.period == "CURRENT") {
+                    return "my-row-style";
+                } else {
+                    return "";
+                }
+            });
+            AUIGrid.update(salesOrgPerfD);
         });
     }
 
@@ -633,8 +711,8 @@
 </style>
 <section id="content"><!-- content start -->
 
-    <aside class="title_line main_title"><!-- title_line start -->
-        <h2 id="notice"><spring:message code='sys.label.notice'/></h2>
+    <aside  id="notice" class="title_line main_title"><!-- title_line start -->
+        <h2><spring:message code='sys.label.notice'/></h2>
         <p class="more" id="moreNotice"><a href="${pageContext.request.contextPath}/notice/noticeList.do"><spring:message code='sys.label.more'/> ></a></p>
     </aside><!-- title_line end -->
 
@@ -657,7 +735,30 @@
         </article>
 -->
 
-        <aside class="title_line main_title mt30"><!-- title_line start -->
+        <div id="salesOrg">
+            <table id="salesTable" class="type1">
+                <tbody>
+                    <tr>
+                        <td class="title_line main_title" colspan="3">
+                            <h2>Sales Organization Performance</h2>
+                        </td>
+                        <td class="title_line main_title" colspan="2">
+                            <h2>Daily Organization Performance</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <div id="salesOrgPerfM" style="width: 100%; height:150px; margin: 0 auto;"></div>
+                        </td>
+                        <td colspan="2">
+                            <div id="salesOrgPerfD" style="width: 100%; height:150px; margin: 0 auto;"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <aside id="dailyPerf"class="title_line main_title mt30"><!-- title_line start -->
             <h2>Daily Performance</h2>
             <%-- <p class="more"><a href="javascript:;"><spring:message code='sys.label.more'/> ></a></p> --%>
         </aside><!-- title_line end -->
