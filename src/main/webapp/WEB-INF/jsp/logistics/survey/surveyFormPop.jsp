@@ -44,8 +44,8 @@ function btnSubmit(){
         console.log(data);
 
     	Common.ajax("POST", "/logistics/survey/surveySave.do", data, function(result) {
-    		//setTimeout(function(){ fn_goMain(),3000 });//Login after 3 sec
-    		//Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_goMain());
+    		setTimeout(function(){ fn_goMain(),3000 });//Login after 3 sec
+    		Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_goMain());
         },  function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
