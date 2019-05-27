@@ -67,7 +67,7 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
         str1.hasMoreElements();
         String result = str1.nextToken("/"); // 특정문자로 자를시 사용
 
-        logger.debug("iiiii: {}", i);
+        logger.debug("selectHsConfigList : {}", i);
 
         if (i == 0) {
           params.put("myBSMonth", result);
@@ -160,7 +160,7 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
         str1.hasMoreElements();
         String result = str1.nextToken("/"); // 특정문자로 자를시 사용
 
-        logger.debug("iiiii: {}", i);
+        logger.debug("selectHsManualListPop : {}", i);
 
         if (i == 0) {
           params.put("myBSMonth", result);
@@ -195,12 +195,12 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
 
       Map<String, Object> docSub = (Map<String, Object>) docType.get(i);
 
-      int fomSalesOrdNo = Integer.parseInt((String) docSub.get("salesOrdNo"));
+      String fomSalesOrdNo = (String) docSub.get("salesOrdNo");
       // int nextSchId = (int) docSub.get("salesOrdNo");
       int nextSchId = htManualMapper.getNextSchdulId();
       String docNo = commonMapper.selectDocNo("10");
-
-      if (docSub.get("year") != null) {
+      String yyyyDD = docSub.get("year").toString();
+/*      if (docSub.get("year") != null) {
         StringTokenizer str1 = new StringTokenizer(docSub.get("year").toString());
 
         for (int k = 0; k <= 1; k++) {
@@ -218,22 +218,22 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
           }
         }
 
-      }
+      }*/
 
       docSub.put("no", docNo);
       docSub.put("schdulId", nextSchId);
       docSub.put("salesOrdId", docSub.get("salesOrdId"));
       docSub.put("resultID", 0);
       // hsResult.put("custId", (params.get("custId").toString()));
-      docSub.put("salesOrdNo", String.format("%08d", fomSalesOrdNo));
-      docSub.put("month", docSub.get("myBSMonth"));
-      docSub.put("year", docSub.get("myBSYear"));
+      //docSub.put("salesOrdNo", String.format("%08d", fomSalesOrdNo));
+      docSub.put("month", yyyyDD.substring(1, 2));
+      docSub.put("year", yyyyDD.substring(3, 7));
       docSub.put("typeId", "438");
       docSub.put("stus", docSub.get("stus"));
       docSub.put("lok", "4");
       docSub.put("lastSvc", "0");
       docSub.put("codyId", docSub.get("codyId"));
-      docSub.put("creator", "1111");
+      docSub.put("creator", "2222");
       docSub.put("created", new Date());
 
       htManualMapper.insertHsResult(docSub);
