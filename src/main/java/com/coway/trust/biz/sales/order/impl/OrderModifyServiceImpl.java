@@ -307,6 +307,7 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 			params.put("deductId", crtSeqSAL0236D);
 			params.put("rentPayId", Integer.parseInt((String) params.get("rentPayId")));
 			params.put("modeId", rentPayMode);
+			params.put("userId", sessionVO.getUserId());
 			orderModifyMapper.insertDeductSAL0236D(params);
 			orderModifyMapper.updatePaymentChannelvRescue(params);
 		}
