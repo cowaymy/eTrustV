@@ -5,6 +5,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript" language="javascript">
+var TODAY_DD      = "${toDay}";
+
   var StatusTypeData = [ {
     "codeId" : "1",
     "codeName" : "Active"
@@ -132,7 +134,7 @@
 
             if (item.code == "ACT") {
               Common
-                  .alert('Not able to EDIT for the CS order status in Active.');
+                  .alert('Not able to EDIT for the CS Order status in Active.');
               return false;
             }
 
@@ -198,10 +200,10 @@
 	      Common.alert('No data selected.');
 	      return;
 	    } else if (checkedItems.length >= 2) {
-	      Common.alert('Only availbale to entry a result with single CS order');
+	      Common.alert('Only allow to entry a result with single CS Order');
 	      return;
 	    } else if (checkedItems[0]["code"] != "ACT") {
-	      Common.alert('Only availbale to entry a result<br/>for the CS order status in Active');
+	      Common.alert('Only allow to entry a result<br/>for the CS Order status in Active');
 	      return;
 	    } else {
 	      var str = "";
@@ -245,10 +247,10 @@
       Common.alert('No data selected.');
       return;
     } else if (checkedItems.length >= 2) {
-      Common.alert('Only availbale to entry a result with single CS order');
+      Common.alert('Only allow to entry a result with single CS Order');
       return;
     } else if (checkedItems[0]["code"] != "ACT") {
-      Common.alert('Only availbale to entry a result<br/>for the CS order status in Active');
+      Common.alert('Only allow to entry a result<br/>for the CS Order status in Active');
       return;
     } else {
       var str = "";
@@ -270,7 +272,7 @@
         salesOrdId = rowItem.salesOrdId;
 
         if (hsStuscd == 4) {
-          Common.alert("already has result. Result entry is disallowed.");
+          Common.alert("CS result already COM. Result entry is disallowed.");
           return;
         }
       }
@@ -281,6 +283,118 @@
             + schdulId + "&salesOrdId=" + salesOrdId, null, null,
         true, '_hsDetailPopDiv');
   }
+
+  $(function() {
+	    $("#hSConfiguration")
+	        .click(
+	            function() {
+	              $("#_openGb").val("hsConfig");
+
+	              var todayDD = Number(TODAY_DD.substr(0, 2));
+	              var todayYY = Number(TODAY_DD.substr(6, 4));
+
+/* 	                  if(todayYY >= 2018) {
+	                      if(todayDD > 22) { // Block if date > 22th of the month
+	                          var msg = 'Disallow Create CS Order After 22nd of the Month.';
+	                          Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+	                          return;
+	                      }
+	                  } */
+
+	              var checkedItems = AUIGrid
+	                  .getCheckedRowItemsAll(myGridID);
+
+	              if (checkedItems.length <= 0) {
+	                Common.alert('No data selected.');
+	                return false;
+	               } else if (checkedItems.length >= 2) {
+	                  Common.alert('Only allow single CS Order created. ');
+	                  return;
+	                }else {
+	                var str = "";
+	                var custStr = "";
+	                var rowItem;
+	                var brnchId = "";
+	                var saleOrdList = "";
+	                var list = "";
+	                var brnchCnt = 0;
+	                var ctBrnchCodeOld = "";
+	                var saleOrd = {
+	                  salesOrdNo : ""
+	                };
+
+	                for (var i = 0, len = checkedItems.length; i < len; i++) {
+	                  rowItem = checkedItems[i];
+	                  saleOrdList += rowItem.salesOrdNo;
+	                  var brnchId = rowItem.brnchId;
+                      var custStr = rowItem.custId;
+                      var hsStatus = rowItem.code;
+
+	                  var hsStatus = rowItem.code;
+	                  if (hsStatus == "COM") {
+	                    Common.alert("<b>Create CS Order disallow due to CS Status is COM.");
+	                    return;
+	                  }
+
+	                  if (i != len - 1) {
+	                    saleOrdList += ",";
+	                  }
+
+	                  if (i != 0) {
+	                    if (ctBrnchCodeOld != rowItem.htBrnchCode) {
+	                      brnchCnt += 1;
+	                    }
+	                  }
+
+	                  ctBrnchCodeOld = rowItem.htBrnchCode;
+
+	                  if (i == 0) {
+	                    brnchId = rowItem.brnchId;
+	                  }
+
+	                }
+
+	                if (brnchCnt > 0) {
+	                  Common.alert("Not Available to Create CS Order With Several CDB in Single Time.");
+	                  return;
+	                }
+
+	                var jsonObj = {
+	                  "SaleOrdList" : saleOrdList,
+	                  "BrnchId" : brnchId,
+	                  "ManualCustId" : custStr,
+	                  "ManuaMyBSMonth" :  $.datepicker.formatDate('mm/yy', new Date())
+	                };
+
+	                Common
+	                    .ajax(
+	                        "GET",
+	                        "/homecare/services/selectHsOrderInMonth.do?saleOrdList="
+	                            + saleOrdList
+	                            + "&ManuaMyBSMonth="
+	                            + $.datepicker.formatDate('mm/yy', new Date()),
+	                        "",
+	                        function(result) {
+	                          console.log ('BS Month : ' +  $.datepicker.formatDate('mm/yy', new Date()));
+	                          if (result.message == "success") {
+	                            Common.alert("There is already exist for HCS for this month");
+	                            return;
+	                          } else {
+	                            Common
+	                                .popupDiv("/homecare/services/selectCSConfigListPop.do?isPop=true&JsonObj="
+	                                    + jsonObj
+	                                    + "&CheckedItems="
+	                                    + saleOrdList
+	                                    + "&BrnchId="
+	                                    + brnchId
+	                                    + "&ManuaMyBSMonth="
+	                                    +  $.datepicker.formatDate('mm/yy', new Date()));
+	                          }
+	                        });
+	              }
+	            });
+	  });
+
 
 
   $(document).ready(
@@ -486,6 +600,12 @@
     $("#" + field + "").val("");
   }
 
+
+
+
+
+
+
 </script>
 <form id="popEditForm" method="post">
  <input type="hidden" name="schdulId" id="_schdulId" />
@@ -496,7 +616,7 @@
  <!--   salesOrdId  -->
  <input type="hidden" name="brnchId" id="_brnchId" />
  <!-- salesOrdId  -->
- <input type="hidden" name="manuaMyBSMonth" id="_manuaMyBSMonth" />
+ <input type="hidden" name="myBSMonth" id="_myBSMonth" />
  <!-- salesOrdId  -->
  <input type="hidden" id="brnchId1" name="brnchId1">
  <!-- Manual branch -->
@@ -544,8 +664,8 @@
         id="addResult">Add CS Result</a>
       </p></li>
      <li><p class="btn_blue">
-   <!--     <a id="hSConfiguration" name="hSConfiguration">Create CS
-        Order</a> -->
+       <a id="hSConfiguration" name="hSConfiguration">Create CS
+        Order</a>
       </p></li>
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_getBSListAjax();"><span
