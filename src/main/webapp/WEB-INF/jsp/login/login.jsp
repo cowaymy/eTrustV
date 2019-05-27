@@ -272,6 +272,7 @@
                                     $("#popAck2").val(aResult.popAck2);
                                     $("#popRejectFlg").val(aResult.popRejectFlg);
                                     $("#surveyStus").val(aResult.verifySurveyStus);
+                                    $("#surveyTypeId").val(aResult.surveyTypeId);
                                     Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
                             	}
                             } else {
