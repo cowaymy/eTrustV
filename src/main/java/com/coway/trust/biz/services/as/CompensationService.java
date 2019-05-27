@@ -5,22 +5,50 @@ import java.util.Map;
 
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
+/*********************************************************************************************
+ * DATE          PIC        VERSION     COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 01/04/2019    ONGHC      1.0.1       - Restructure File
+ *********************************************************************************************/
+
 public interface CompensationService {
 
-	List<EgovMap> selCompensationList(Map<String, Object> params);
-	
-	public EgovMap selectCompenSationView(Map<String, Object> params);
-	
-	EgovMap insertCompensation(Map<String, Object> params);
-	
-	EgovMap updateCompensation(Map<String, Object> params);
-	
-	List<EgovMap> selectSalesOrdNoInfo(Map<String, Object> params);
-	
-	List<EgovMap> selectBranchWithNM();
-	
-	List<EgovMap> getAttachmentFileInfo(Map<String, Object> params);
+  List<EgovMap> selCompensationList(Map<String, Object> params);
+
+  public EgovMap selectCompenSationView(Map<String, Object> params);
+
+  public EgovMap selectOrdInfo(Map<String, Object> params);
+
+  EgovMap selectOrderBasicInfo(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
+  EgovMap insertCompensation(Map<String, Object> params);
+
+  EgovMap updateCompensation(Map<String, Object> params);
+
+  List<EgovMap> selectSalesOrdNoInfo(Map<String, Object> params);
+
+  List<EgovMap> selectBranchWithNM();
+
+  List<EgovMap> getAttachmentFileInfo(Map<String, Object> params);
+
+  List<EgovMap> selectCpsStatus();
+
+  List<EgovMap> selectCpsTyp();
+
+  List<EgovMap> selectCpsRespTyp();
+
+  List<EgovMap> selectCpsCocTyp();
+
+  List<EgovMap> selectCpsEvtTyp();
+
+  List<EgovMap> selectCpsDftTyp();
+
+  List<EgovMap> getMainDeptList();
+
+  int chkCpsRcd(Map<String, Object> params);
+
 }
