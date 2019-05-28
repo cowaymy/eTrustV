@@ -30,6 +30,91 @@ var TODAY_DD      = "${toDay}";
     height : "600px" // 창 세로 크기
   };
 
+  var columnManualLayout = [ {
+	    dataField : "rnum",
+	    headerText : "RowNum",
+	    width : 120,
+	    height : 30,
+	    visible : false
+	  }, {
+	    dataField : "custId",
+	    headerText : "Customer ID",
+	    width : 120
+	  }, {
+	    dataField : "name",
+	    headerText : "Customer Name",
+	    width : 120
+	  }, {
+	    dataField : "salesOrdNo",
+	    headerText : "Care Service Order",
+	    width : 120
+	  }, {
+	    dataField : "hsDate",
+	    headerText : "CS Date",
+	    width : 120,
+	    visible : false
+	  }, {
+	    dataField : "no",
+	    headerText : "HCS Order",
+	    width : 120
+	  }, {
+	    dataField : "c5",
+	    headerText : "Assign HT",
+	    width : 120
+	  }, {
+	    dataField : "htStatus",
+	    headerText : "HT Status",
+	    width : 120
+	  }, {
+	    dataField : "code",
+	    headerText : "CS Status",
+	    width : 120
+	  }, {
+	    dataField : "month",
+	    headerText : "Complete HT",
+	    width : 120,
+	    visible : false
+	  }, {
+	    dataField : "brnchId",
+	    headerText : "Branch",
+	    width : 120,
+	    visible : false
+	  }, {
+	    dataField : "schdulId",
+	    headerText : "schdulId",
+	    width : 120,
+	    visible : false
+	  }, {
+	    dataField : "salesOrdId",
+	    headerText : "salesOrdId",
+	    width : 120,
+	    visible : false
+	  }, {
+	    dataField : "htBrnchCode",
+	    headerText : "Branch Code",
+	    width : 120
+	  }, {
+	    dataField : "htMgrCode",
+	    headerText : "HT Manager",
+	    width : 120
+	  }, {
+	    dataField : "address",
+	    headerText : "Service Address",
+	    width : 120
+	  }, {
+	    dataField : "stkDesc",
+	    headerText : "Mattress Size",
+	    width : 120
+	  }, {
+	    dataField : "hsFreq",
+	    headerText : "CS Frequency",
+	    width : 120
+	  }, {
+	    dataField : "prevMthHsStatus",
+	    headerText : "Previous Month CS Result",
+	    width : 120
+	  } ];
+
   var columnAssiinLayout = [
       {
         dataField : "rnum",
@@ -161,6 +246,9 @@ var TODAY_DD      = "${toDay}";
 
   function fn_getBSListAjax() {
 
+	   var radioVal = $("input:radio[name='searchDivCd']:checked").val();
+	    if (radioVal == 1) { //HS NO CREATE BEFORE
+	        // HS PRERIOD ARE OPTIONAL IF SALES ORDER OR HS ORDER PROVIDED
       if ($("#myBSMonth").val() == "") {
         if ($("#txtSalesOrder").val() == "" && $("#txtHsOrderNo").val() == "") {
           Common.alert("CS Period or CS Order or Care Service Order are required.");
@@ -187,10 +275,64 @@ var TODAY_DD      = "${toDay}";
         }
       }
 
-      Common.ajax("GET", "/homecare/services/selectHsManualList.do", $(
+      Common.ajax("GET", "/homecare/services/selectHsAssiinlList.do", $(
       "#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
       });
+
+	    }else { //HS NO CREATE AFTER
+	        if ($("#ManuaMyBSMonth").val() == "") {
+	            if ($("#ManuaSalesOrder").val() == "") {
+	              Common.alert("HS Period or Sales Order are required.");
+	              return false;
+	            }
+	          }
+
+	          $("#brnchId1").val($("#cmdBranchCode1 option:selected").text());
+	          var HsCdBranch = $('#brnchId1').val();
+	          if ($('#brnchId1').val().substring(0, 3) != "CDB") {
+	            HsCdBranch = "";
+	          }
+
+	          $("#memId1").val($("#cmdCdManager1 option:selected").text());
+
+	          var memId = $("#memId1").val();
+	          if ($("#memId1").val().substring(0, 3) != "CHT") {
+	            memId = "";
+	          }
+
+	          if ($("#userType").val() != "4" && $("#userType").val() != "6") {
+	            if ($("#cmdBranchCode1").val() == ''
+	                || $("#cmdBranchCode1").val() == null) {
+	              Common.alert("Please Select 'Branch'");
+	              return false;
+	            }
+	          }
+
+	          if ($("#userType").val() == "2") {
+	            if ($("#memberLevel").val() == "3"
+	                || $("#memberLevel").val() == "4") {
+	              if ($("#cmdCdManager1").val() == ''
+	                  || $("#cmdCdManager1").val() == null) {
+	                Common.alert("Please Select 'HT Manager'");
+	                return false;
+	              }
+	            }
+	          }
+
+	          // Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:$("#brnchId1").val(),cmdCdManager1:$("#memId1").val()}, function(result) {
+	          Common.ajax("GET", "/homecare/services/selectHsManualList.do", {
+	            ManuaSalesOrder : $("#ManuaSalesOrder").val(),
+	            ManuaMyBSMonth : $("#ManuaMyBSMonth").val(),
+	            ManualCustomer : $("#manualCustomer").val(),
+	            cmdBranchCode1 : HsCdBranch,
+	            cmdCdManager1 : memId
+	          }, function(result) {
+	            AUIGrid.setGridData(myGridID, result);
+	          });
+	        }
+
+
     }
 
   function fn_htChange(){
@@ -460,7 +602,7 @@ var TODAY_DD      = "${toDay}";
 
 
 
-        //fn_checkRadioButton();
+        fn_checkRadioButton();
 
         AUIGrid.bind(myGridID, "cellClick", function(event) {
           schdulId = AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId");
@@ -471,6 +613,9 @@ var TODAY_DD      = "${toDay}";
 
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
           var radioVal = $("input:radio[name='searchDivCd']:checked").val();
+
+          if (radioVal == 1) {
+
 
             $("#_schdulId").val(
                 AUIGrid.getCellValue(myGridID, event.rowIndex,
@@ -494,6 +639,7 @@ var TODAY_DD      = "${toDay}";
                   true, '');
             }
 
+        }
         });
 
         if ($("#memberLevel").val() != "") {
@@ -600,10 +746,82 @@ var TODAY_DD      = "${toDay}";
     $("#" + field + "").val("");
   }
 
+  function fn_checkRadioButton(objName) {
 
+	    if (document.searchForm.elements['searchDivCd'][0].checked == true) {
+	      var divhsManuaObj = document.querySelector("#hsManua");
+	      divhsManuaObj.style.display = "none";
+	      $('#hSConfiguration').attr('disabled', true); //hSConfiguration 버튼 비활성화
 
+	      var divhsManagementObj = document.querySelector("#hsManagement");
+	      divhsManagementObj.style.display = "block";
 
+	      //$('#hSConfiguration').attr('disabled',true);
+	      //$('#hSConfiguration').attr('disabled',false);
+	      //
 
+	      //2번영역 데이터 클리어
+	      //fn_checkboxChangeHandler();
+	      fn_destroyGridA();
+
+	      //myGridID = GridCommon.createAUIGrid("grid_wrap", columnAssiinLayout ,gridProsAssiin);
+	      //createAssinAUIGrid(columnAssiinLayout);
+	    } else {
+
+	      var divhsManagementObj = document.querySelector("#hsManagement");
+	      divhsManagementObj.style.display = "none";
+	      $('#hSConfiguration').attr('disabled', false);
+
+	      var divhsManuaObj = document.querySelector("#hsManua");
+	      divhsManuaObj.style.display = "block";
+
+	      $("#addResult").attr("disabled", true);
+
+	      //1번영역 데이터 클리어
+	      $("#ManuaSalesOrder").val('');
+	      //$("#ManuaMyBSMonth").val('');
+	      $("#manualCustomer").val('');
+
+	      //fn_checkboxChangeHandler();
+	      fn_destroyGridM();
+	      //myGridID = GridCommon.createAUIGrid("grid_wrap", columnManualLayout ,gridProsManual);
+
+	    }
+	  }
+
+  function fn_destroyGridA() {
+	    myGridID = null;
+
+	    AUIGrid.setProp(myGridID, gridProsAssiin);
+	    AUIGrid.destroy("#grid_wrap");
+	    createAssinAUIGrid(columnAssiinLayout);
+
+	  }
+
+	  function fn_destroyGridM() {
+
+	    myGridID = null;
+
+	    AUIGrid.setProp(myGridID, gridProsManual);
+	    AUIGrid.destroy("#grid_wrap");
+	    createManualAUIGrid(columnManualLayout);
+
+	  }
+
+	  function fn_checkboxChangeHandler(event) {
+
+	    var radioVal = $("input:radio[name='searchDivCd']:checked").val();
+
+	    if (radioVal == 1) {
+	      fn_destroyGrid();
+	      myGridID = GridCommon.createAUIGrid("grid_wrap",
+	          columnAssiinLayout, gridProsAssiin);
+	    } else {
+	      fn_destroyGrid();
+	      myGridID = GridCommon.createAUIGrid("grid_wrap",
+	          columnManualLayout, gridProsManual);
+	    }
+	  }
 
 
 </script>
@@ -616,7 +834,7 @@ var TODAY_DD      = "${toDay}";
  <!--   salesOrdId  -->
  <input type="hidden" name="brnchId" id="_brnchId" />
  <!-- salesOrdId  -->
- <input type="hidden" name="myBSMonth" id="_myBSMonth" />
+ <input type="hidden" name="manuaMyBSMonth" id="_manuaMyBSMonth" />
  <!-- salesOrdId  -->
  <input type="hidden" id="brnchId1" name="brnchId1">
  <!-- Manual branch -->
@@ -654,8 +872,7 @@ var TODAY_DD      = "${toDay}";
    <h2>Care Service Management</h2>
    <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-
-     <li><p class="btn_blue">
+       <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_htChange();" id="htChange">Assign
         HT Member</a>
       </p></li>
@@ -674,7 +891,11 @@ var TODAY_DD      = "${toDay}";
       </p></li>
     </c:if>
    </ul>
-
+   <!--조회조건 추가  -->
+   <!--
+    <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
+    <label><input type="radio" name="searchDivCd" value="2" onClick="fn_checkRadioButton('comm_stat_flag')" />Manual HS</label>
+   -->
   </aside>
   <!-- title_line end -->
   <div id="hsManagement" style="display: block;">
@@ -711,17 +932,17 @@ var TODAY_DD      = "${toDay}";
           class="w100p"></td>
          <th scope="row">Assign HT</th>
          <td><input id="txtAssigncodyCode" name="txtAssigncodyCode"
-          type="text" title="" placeholder="HT" class="w100p" /> <!-- By Kv - Change cmbBox to text Box -->
+          type="text" title="" placeholder="Cody" class="w100p" /> <!-- By Kv - Change cmbBox to text Box -->
           <!-- <select class="w100p" id="cmdcodyCode" name="cmdcodyCode" > -->
           <!-- <option value="">cody</option> --></td>
          <th scope="row">Complete HT</th>
          <td><input id="txtComcodyCode" name="txtComcodyCode"
-          type="text" title="" placeholder="HT" class="w100p" /></td>
+          type="text" title="" placeholder="Cody" class="w100p" /></td>
         </tr>
         <tr>
          <th scope="row">HCS Order</th>
          <td><input id="txtHsOrderNo" name="txtHsOrderNo"
-          type="text" title="" placeholder="HCS Order" class="w100p" />
+          type="text" title="" placeholder="HS Order" class="w100p" />
          </td>
          <th scope="row">CS Period</th>
          <td><p style="width:70%;">
@@ -733,9 +954,7 @@ var TODAY_DD      = "${toDay}";
          <th scope="row">CS Status</th>
          <td><select class="w100p" id="cmbStatusType"
           name="cmbStatusType">
-           <option value="">CS Status</option>
-           </select>
-           </td>
+           <option value="">CS Status</option></td>
          <th scope="row">Customer ID</th>
          <td><input id="txtCustomer" name="txtCustomer" type="text"
           title="" placeholder="Customer ID" class="w100p" /></td>
@@ -743,16 +962,9 @@ var TODAY_DD      = "${toDay}";
         <tr>
          <th scope="row">Care Service Order</th>
          <td><input id="txtSalesOrder" name="txtSalesOrder"
-          type="text" title="" placeholder="Care Service Order" class="w100p" />
+          type="text" title="" placeholder="Sales Order" class="w100p" />
          </td>
-         <th scope="row">Install Month</th>
-         <td><p style="width:70%"><input id="myInstallMonth" name="myInstallMonth"
-          type="text" title="기준년월" placeholder="MM/YYYY"
-          class="j_date2 w100p" /></p>
-          <p class="btn_gray">
-           <a href="#" onclick="fn_cMyBSMonth('myInstallMonth')">Clear</a>
-          </p>
-          </td>
+
          <th scope="row">Dept. Code</th>
          <td><input id="deptCode" name="deptCode" type="text"
           title="" placeholder="Dept. Code" class="w100p" /></td>
@@ -761,17 +973,8 @@ var TODAY_DD      = "${toDay}";
         </tr>
        </tbody>
       </table>
-
-  <table class="type1">
-   <!-- table start -->
-  <tbody>
-<!--  <tr>
-     <td><label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
-       <label><input type="radio" name="searchDivCd" value="2" onClick="fn_checkRadioButton('comm_stat_flag')" />Manual HS</label></td>
-    </tr> -->
-   </tbody>
-  </table>
-   <aside class="link_btns_wrap">
+      <!-- table end -->
+      <aside class="link_btns_wrap">
        <!-- link_btns_wrap start -->
        <!-- <p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p> -->
        <p class="show_btn">
@@ -783,10 +986,8 @@ var TODAY_DD      = "${toDay}";
         <dt>Link</dt>
         <dd>
          <ul class="btns">
-
           <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-
-           <li><p class="link_btn type2">
+              <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsSummary()">CS
               Summary Listing</a>
             </p></li>
@@ -803,7 +1004,20 @@ var TODAY_DD      = "${toDay}";
           </c:if>
 
          </ul>
-
+         <!--
+           <ul class="btns">
+             <li><p class="link_btn"><a href="#">menu1</a></p></li>
+             <li><p class="link_btn"><a href="#">menu2</a></p></li>
+             <li><p class="link_btn"><a href="#">menu3</a></p></li>
+             <li><p class="link_btn"><a href="#">menu4</a></p></li>
+             <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
+             <li><p class="link_btn"><a href="#">menu6</a></p></li>
+             <li><p class="link_btn"><a href="#">menu7</a></p></li>
+             <li><p class="link_btn"><a href="#">menu8</a></p></li>
+           </ul>
+           <ul class="btns">
+           </ul>
+         -->
          <p class="hide_btn">
           <a href="#"><img
            src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
@@ -813,7 +1027,105 @@ var TODAY_DD      = "${toDay}";
        </dl>
       </aside>
       <!-- link_btns_wrap end -->
-
+     </form>
+    </section>
+    <!-- search_table end -->
+   </form>
+  </div>
+  <div id="hsManua" style="display: block;">
+   <form id="hsManua" method="post">
+    <section class="search_table">
+     <!-- search_table start -->
+     <form action="#" method="post">
+      <table class="type1">
+       <!-- table start -->
+       <caption>table</caption>
+       <colgroup>
+        <col style="width: 100px" />
+        <col style="width: *" />
+        <col style="width: 100px" />
+        <col style="width: *" />
+        <col style="width: 100px" />
+        <col style="width: *" />
+       </colgroup>
+       <tbody>
+        <tr>
+         <th scope="row">Sales Order</th>
+         <td><input id="ManuaSalesOrder" name="ManuaSalesOrder"
+          type="text" title="" placeholder="Sales Order" class="w100p" />
+         </td>
+         <th scope="row">HS Period</th>
+         <td><p style="width:70%"><input id="ManuaMyBSMonth" name="ManuaMyBSMonth"
+          type="text" title="기준년월" placeholder="MM/YYYY"
+          class="j_date2 w100p" readonly /></p>
+          <p class="btn_gray">
+           <a href="#" onclick="fn_cMyBSMonth('ManuaMyBSMonth')">Clear</a>
+          </p>
+         </td>
+         <th scope="row">Customer ID</th>
+         <td><input id="manualCustomer" name="manualCustomer"
+          type="text" title="" placeholder="Customer ID" class="w100p" />
+         </td>
+        </tr>
+        <tr>
+         <th scope="row">Branch<span class="must">*</span></th>
+         <td><select id="cmdBranchCode1" name="cmdBranchCode1"
+          class="w100p">
+           <option value="">Choose One</option>
+           <c:forEach var="list" items="${branchList }"
+            varStatus="status">
+            <option value="${list.codeId}">${list.codeName}</option>
+           </c:forEach>
+         </select></td>
+         <th scope="row">HT Manager</th>
+         <td colspan="3"><select id="cmdCdManager1"
+          name="cmdCdManager1" class=""></td>
+        </tr>
+       </tbody>
+      </table>
+      <!-- table end -->
+      <aside class="link_btns_wrap">
+       <!-- link_btns_wrap start -->
+       <%-- <p class="show_btn"><a href="#"><br><br><br><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p> --%>
+       <%-- <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p> --%>
+       <p class="show_btn">
+        <a href="#"><img
+         src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif"
+         alt="link show" /></a>
+       </p>
+       <dl class="link_list">
+        <dt>Link</dt>
+        <dd>
+         <ul class="btns">
+         </ul>
+         <ul class="btns">
+         </ul>
+         <p class="hide_btn">
+          <a href="#"><img
+           src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
+           alt="hide" /></a>
+         </p>
+        </dd>
+       </dl>
+      </aside>
+      <!-- link_btns_wrap end -->
+     </form>
+    </section>
+    <!-- search_table end -->
+   </form>
+  </div>
+  <table class="type1">
+   <!-- table start -->
+   <tbody>
+    <tr>
+     <td><label><input type="radio" name="searchDivCd"
+       value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />CS
+       Order Search</label> <label><input type="radio"
+       name="searchDivCd" value="2"
+       onClick="fn_checkRadioButton('comm_stat_flag')" />Manual CS</label></td>
+    </tr>
+   </tbody>
+  </table>
   <ul class="right_btns">
    <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
     <li><p class="btn_grid">
@@ -842,7 +1154,71 @@ var TODAY_DD      = "${toDay}";
   </ul>
  </section>
  <!-- content end -->
-
-
 </form>
+<!--
+<div class="popup_wrap" id="confiopenwindow" style="display:none">popup_wrap start
+  <header class="pop_header">pop_header start
+    <section id="content">content start
+      <ul class="path">
+        <li><img src="../images/common/path_home.gif" alt="Home" /></li>
+        <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+      </ul>
+  </header>pop_header end
+  <aside class="title_line">title_line start
+  <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+  <h2>BS Management</h2>
+  </aside>title_line end
+    <div class="divine_auto">divine_auto start
+      <div style="width:20%;">
+        <aside class="title_line">title_line start
+        <h3>Cody List</h3>
+        </aside>title_line end
+        <div class="border_box" style="height:400px">border_box start
+          <ul class="right_btns">
+            <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
+            <li><p class="btn_grid"><a href="#">NEW</a></p></li>
+          </ul>
+        <article class="grid_wrap">grid_wrap start
+        </article>grid_wrap end
+      </div>border_box end
+    </div>
 
+    <div style="width:50%;">
+      <aside class="title_line">title_line start
+      <h3>HS Order List</h3>
+      </aside>title_line end
+        <div class="border_box" style="height:400px">border_box start
+          <ul class="right_btns">
+            <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
+            <li><p class="btn_grid"><a href="#">NEW</a></p></li>
+          </ul>
+        <article class="grid_wrap">grid_wrap start
+        </article>grid_wrap end
+        <ul class="center_btns">
+          <li><p class="btn_blue2"><a href="#">Assign Cody Change</a></p></li>
+          <li><p class="btn_blue2"><a href="#">Cody Assign</a></p></li>
+          <li><p class="btn_blue2"><a href="#">HS Transfer</a></p></li>
+        </ul>
+      </div>border_box end
+    </div>
+
+    <div style="width:30%;">
+      <aside class="title_line">title_line start
+      <h3>Cody – HS Order</h3>
+      </aside>title_line end
+        <div class="border_box" style="height:400px">border_box start
+          <ul class="right_btns">
+            <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
+            <li><p class="btn_grid"><a href="#">NEW</a></p></li>
+          </ul>
+          <article class="grid_wrap">grid_wrap start
+          </article>grid_wrap end
+          <ul class="center_btns">
+            <li><p class="btn_blue2"><a href="#">Confirm</a></p></li>
+          </ul>
+        </div>border_box end
+      </div>
+    </div>divine_auto end
+  </section>content end
+</div>
+-->
