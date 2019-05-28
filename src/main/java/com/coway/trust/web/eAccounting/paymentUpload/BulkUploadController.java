@@ -716,7 +716,7 @@ public class BulkUploadController {
         String clamUn = "";
         String grpSeq = "";
 
-        List<Object> apprGridList = (List<Object>) params.get("apprGridList");
+        List<Object> apprGridList = (List<Object>) params.get("apprLineGrid");
 
         if(apprGridList.size() > 0) {
             Map apprHm = null;
@@ -729,7 +729,7 @@ public class BulkUploadController {
 
             params.put("clmType", "Bulk_J1");
             EgovMap apprHm2 = webInvoiceService.getFinApprover(params);
-            String memCode = apprHm2.get("apprmemCode").toString();
+            String memCode = apprHm2.get("apprMemCode").toString();
 
             memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
 
