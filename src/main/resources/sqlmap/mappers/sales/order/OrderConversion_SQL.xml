@@ -356,8 +356,10 @@
     </update>
 
     <select id="orderCnvrInfo" parameterType="Map" resultType="egovMap">
-        SELECT ORD_ID, ORD_NO, ORD_STUS_ID, ORD_STUS_CODE, APP_TYPE_ID, APP_TYPE_CODE, RENTAL_STUS
-		  FROM SAL1006V
+        SELECT a.ORD_ID, a.ORD_NO, a.ORD_STUS_ID, a.ORD_STUS_CODE, a.APP_TYPE_ID, a.APP_TYPE_CODE, a.RENTAL_STUS, c.CODE, c.CODE_NAME
+		  FROM SAL1006V a
+		  LEFT JOIN SAL0074D b on b.SALES_ORD_ID = a.ORD_ID
+		  LEFT JOIN SYS0013M c on c.CODE_ID = b.MODE_ID
 		 WHERE ORD_NO = #{ordNo}
     </select>
 
@@ -430,9 +432,11 @@
       </select>
 
     <select id="srvContractCnvrInfo" parameterType="Map" resultType="egovMap">
-        SELECT SRV_CNTRCT_ID, SRV_CNTRCT_REF_NO, SRV_CNTRCT_ORD_ID
-          FROM SAL0077D
-         WHERE SRV_CNTRCT_REF_NO = #{ordNo}
+        SELECT a.SRV_CNTRCT_ID, a.SRV_CNTRCT_REF_NO, a.SRV_CNTRCT_ORD_ID, c.CODE, c.CODE_NAME
+          FROM SAL0077D a
+          LEFT JOIN SAL0074D b on b.SVC_CNTRCT_ID = a.SRV_CNTRCT_ID
+          LEFT JOIN SYS0013M c on c.CODE_ID = b.MODE_ID
+         WHERE SRV_CNTRCT_REF_NO = 'SCS0' || TO_CHAR(SUBSTR(#{ordNo},1,7))
     </select>
 
     <select id="crtSeqSAL0234D" resultType="Integer">
@@ -505,6 +509,8 @@
                    DD_START_DT = null,
                    DD_REJCT_DT = null,
                    FAIL_RESN_ID = null,
+                   UPD_USER_ID = #{userId},
+                   UPD_DT = SYSDATE,
                    GRACE_PERIOD = 1,
                    DEDUCT_ACC_ID = #{deductId}
 
@@ -523,6 +529,8 @@
                    DD_START_DT = null,
                    DD_REJCT_DT = null,
                    FAIL_RESN_ID = null,
+                   UPD_USER_ID = #{userId},
+                   UPD_DT = SYSDATE,
                    GRACE_PERIOD = 1,
                    DEDUCT_ACC_ID = #{deductId}
 
@@ -549,6 +557,8 @@
                    DD_START_DT = null,
                    DD_REJCT_DT = null,
                    FAIL_RESN_ID = null,
+                   UPD_USER_ID = #{userId},
+                   UPD_DT = SYSDATE,
                    GRACE_PERIOD = 1,
                    DEDUCT_ACC_ID = #{deductId}
 
@@ -567,6 +577,8 @@
                    DD_START_DT = null,
                    DD_REJCT_DT = null,
                    FAIL_RESN_ID = null,
+                   UPD_USER_ID = #{userId},
+                   UPD_DT = SYSDATE,
                    GRACE_PERIOD = 1,
                    DEDUCT_ACC_ID = #{deductId}
 

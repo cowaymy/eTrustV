@@ -204,6 +204,8 @@ public class OrderConversionServiceImpl extends EgovAbstractServiceImpl implemen
 				((Map<String, Object>) obj).put("orderNo", info.get("ordNo"));
 				((Map<String, Object>) obj).put("orderId", info.get("ordId"));
 				((Map<String, Object>) obj).put("reason", ((Map<String, Object>) obj).get("1"));
+				((Map<String, Object>) obj).put("payModeId", info.get("code"));
+				((Map<String, Object>) obj).put("payModeName", info.get("codeName"));
 				logger.debug("info ================>>  " + info.get("ordNo"));
 				logger.debug("info ================>>  " + info.get("ordId"));
 				logger.debug("info ================>>  " + ((Map<String, Object>) obj).get("1"));
@@ -213,7 +215,8 @@ public class OrderConversionServiceImpl extends EgovAbstractServiceImpl implemen
             }
             else{
             	if(!StringUtils.isEmpty(params.get("ordNo"))){
-    				((Map<String, Object>) obj).put("ordNo",  String.format("%.11s", ((Map<String, Object>) obj).get("0").toString()));
+            		logger.debug("info ================>>  " + ((Map<String, Object>) obj).get("0").toString());
+    				((Map<String, Object>) obj).put("ordNo",  ((Map<String, Object>) obj).get("0").toString());
 
     				EgovMap info = orderConversionMapper.srvContractCnvrInfo(params);
 
@@ -221,6 +224,8 @@ public class OrderConversionServiceImpl extends EgovAbstractServiceImpl implemen
     				((Map<String, Object>) obj).put("srvCntrctRefNo", info.get("srvCntrctRefNo"));
     				((Map<String, Object>) obj).put("orderId", info.get("srvCntrctOrdId"));
     				((Map<String, Object>) obj).put("reason", ((Map<String, Object>) obj).get("1"));
+    				((Map<String, Object>) obj).put("payModeId", info.get("code"));
+    				((Map<String, Object>) obj).put("payModeName", info.get("codeName"));
     				logger.debug("info ================>>  " + info.get("srvCntrctId"));
     				logger.debug("info ================>>  " + info.get("srvCntrctRefNo"));
     				logger.debug("info ================>>  " + info.get("srvCntrctOrdId"));

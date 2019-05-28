@@ -9,7 +9,7 @@
         //setInputFile();
         creatGrid();
         $("#uploadGrid").hide();
-        $("#cnvrListGrid").hide();
+
 
 
 
@@ -81,7 +81,31 @@
             dataField : "reason",
             headerText : "reason",
             width : 100
-        }];
+        },{
+            dataField : "payModeId",
+            headerText : "Paymode Id",
+            width : 100,
+            visible : false
+        },{
+            dataField : "payModeName",
+            headerText : "Paymode",
+            width : 100
+        },{
+            dataField : "undefined",
+            headerText : "Action",
+            width : 170,
+            renderer : {
+                  type : "ButtonRenderer",
+                  labelText : "Remove",
+                  onclick : function(rowIndex, columnIndex, value, item) {
+                      AUIGrid.removeRow(cnvrListGrid, rowIndex);
+                      AUIGrid.removeSoftRows(cnvrListGrid);
+                  }
+           }
+       },{
+           dataField : "chkSaveRow",
+           visible : false
+       }];
 
         var upOptions = {
                    showStateColumn:false,
@@ -106,6 +130,16 @@
             console.log("data : " + result.data);
 
             AUIGrid.setGridData(cnvrListGrid, result.data);
+
+            AUIGrid.setProp(cnvrListGrid, "rowStyleFunction", function(rowIndex, item) {
+                if(item.payModeId != $("#payCnvrStusFrom").val()) {
+                    item.chkSaveRow = "N";
+                    return "my-row-style";
+                }
+
+                return "";
+
+            });
 
 
             AUIGrid.update(cnvrListGrid);
@@ -135,6 +169,17 @@
         data.form = $("#newCnvrForm").serializeJSON();
 
         var idx = AUIGrid.getRowCount(cnvrListGrid);
+        var cnt = 0;
+        for(var i=0; i < idx; i++){
+            if(AUIGrid.getCellValue(cnvrListGrid, i, "chkSaveRow") == "N"){
+                cnt++;
+            }
+        }
+
+        if(cnt > 0){
+            Common.alert("There are "+cnt+"invalid item(s) in this conversion batch</br> Confirm conversion batch is disallowed.");
+            return false;
+        }
 
 
 
