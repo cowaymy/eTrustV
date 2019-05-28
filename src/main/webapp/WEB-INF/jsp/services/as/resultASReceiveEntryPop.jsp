@@ -9,6 +9,7 @@
  02/04/2019  ONGHC  1.0.2          ADD REQUEST AND APPOINTMENT DATE CHECKING
  30/04/2019  ONGHC  1.0.3          AMEND fn_cpDt
  07/05/2019  ONGHC  1.0.4          FIX ERROR MESSAGE ISSUE
+ 28/05/2019  ONGHC  1.0.5          FIX LIST NOT DATA
  -->
 
 <script type="text/javaScript">
@@ -28,7 +29,7 @@
 
     fn_getASHistoryInfo();
     fn_getBSHistoryInfo();
-    fn_setComboBox();
+    fn_setComboBox1();
 
     fn_getErrMstList('${orderDetail.basicInfo.ordNo}');
 
@@ -44,6 +45,8 @@
     }
 
     $("#checkComm").prop("checked", true);
+
+    fn_setComboBox2();
   });
 
   function fn_getErrMstList(_ordNo) {
@@ -54,6 +57,9 @@
 
   function fn_errMst_SelectedIndexChanged() {
     var DEFECT_TYPE_CODE = $("#errorCode").val();
+    if (DEFECT_TYPE_CODE == "") {
+      DEFECT_TYPE_CODE = asMalfuncResnId;
+    }
 
     $("#errorDesc option").remove();
     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE=' + DEFECT_TYPE_CODE, '', '', 'errorDesc', 'S', 'fn_errDetail_SetVal');
@@ -72,14 +78,18 @@
     $("#branchDSC").val(asBrCde);
   }
 
-  function fn_setComboBox() {
+  function fn_setComboBox1() {
     doGetCombo('/common/selectCodeList.do', '24', '', 'requestor', 'S', '');
+  }
+
+  function fn_setComboBox2() {
     doGetCombo('/services/as/getBrnchId', '', '', 'branchDSC', 'S', 'fn_brCde_SetVal');
   }
 
   var asMalfuncResnId;
   var asErrorCde;
   var asBrCde;
+
   function fn_setEditValue() {
     Common.ajax("GET", "/services/as/selASEntryView.do", {
       AS_NO : '${AS_NO}'
@@ -876,17 +886,17 @@
       return false;
     }
 
-    if ($("#errorCode").val() == "") {
+    if ($("#errorCode").val() == "" || $("#errorCode").val() == null) {
       rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Error Code' htmlEscape='false'/> </br>";
       rtnValue = false;
     }
 
-    if ($("#errorDesc").val() == "") {
+    if ($("#errorDesc").val() == "" || $("#errorDesc").val() == null) {
       rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Error Description' htmlEscape='false'/> </br>";
       rtnValue = false;
     }
 
-    if ($("#branchDSC").val() == "") {
+    if ($("#branchDSC").val() == "" || $("#branchDSC").val() == null) {
       rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='DSC Branch' htmlEscape='false'/> </br>";
       rtnValue = false;
     }
@@ -898,17 +908,17 @@
     }
     */
 
-    if ($("#CTCode").val() == "") {
+    if ($("#CTCode").val() == "" || $("#branchDSC").val() == null) {
       rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT Code' htmlEscape='false'/> </br>";
       rtnValue = false;
     }
 
-    if ($("#CTID").val() == "") {
+    if ($("#CTID").val() == "" || $("#branchDSC").val() == null) {
       rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT ID' htmlEscape='false'/> </br>";
       rtnValue = false;
     }
 
-    if ($("#requestor").val() == "") {
+    if ($("#requestor").val() == ""  || $("#branchDSC").val() == null) {
       rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Requestor' htmlEscape='false'/> </br>";
       rtnValue = false;
     }
