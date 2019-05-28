@@ -166,7 +166,7 @@
             WHERE A.MEM_ID = B.MEM_ID
                 AND A.BRNCH_ID = C.BRNCH_ID
                 AND A.DEPT_CODE IS NOT NULL
-                AND B.MEM_TYPE = 2
+                AND B.MEM_TYPE = 7
             <if test="userType == '2'.toString()">
                     AND B.STUS IN (1,8)
                 <if test="memLevl == '1'.toString()">
@@ -315,7 +315,7 @@ SELECT DISTINCT
     SOM.SRV_ORD_ID AS SALES_ORD_ID,
     SOM.BRNCH_ID AS BRNCH_ID,
     SAL023.ADDR_DTL AS ADDRESS,
-    SOM.SALES_PROD_SZ,
+    SOM.SALES_PROD_SZ AS STK_DESC,
     SCP.SRV_PRD_DUR HS_FREQ,
     (
         CASE
@@ -333,7 +333,9 @@ SELECT DISTINCT
     BRNCH.CODE HT_BRNCH_CODE
 FROM
     SAL0225D SOM
-    JOIN SVC0008D HSM ON SOM.SRV_ORD_ID = HSM.SALES_ORD_ID
+    LEFT JOIN SVC0008D HSM ON SOM.SRV_ORD_ID = HSM.SALES_ORD_ID
+                                      AND  hsm.YEAR = #{myBSYear}
+                                      AND  hsm.MONTH = #{myBSMonth}
     LEFT JOIN SAL0029D C ON SOM.CUST_ID = C.CUST_ID
     LEFT JOIN SYS0013M CORPTYPE ON C.CORP_TYPE_ID = CORPTYPE.CODE_ID
     LEFT JOIN SYS0038M EXTENT2 ON HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID
@@ -347,6 +349,7 @@ FROM
     LEFT JOIN ORG0005D MEM2 ON MEM.MEM_ID = MEM2.MEM_ID
     LEFT JOIN SYS0038M STUS1 ON STUS1.STUS_CODE_ID = MEM.STUS
     LEFT JOIN ORG0001D MEM3 ON MEM2.MEM_UP_ID = MEM3.MEM_ID
+    LEFT JOIN ORG0005D MEM4 ON MEM3.MEM_ID = MEM4.MEM_ID
     LEFT JOIN SYS0005M BRNCH ON BRNCH.BRNCH_ID = MEM.BRNCH
     LEFT JOIN SAL0095D SAL95D ON SOM.SRV_ORD_ID = SAL95D.SRV_SALES_ORD_ID
 
@@ -356,85 +359,30 @@ FROM
                  <![CDATA[ AND SOM.STUS_CODE_ID <> 8
                                 and rownum  < 500 ]]>
 
-                 <if test="myBSMonth != null and myBSMonth != ''">
-                  AND HSM.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
-                  AND HSM.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
-                </if>
-
-                <choose>
-                  <when test="myBSMonth != ''">
-                    <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
-                      AND HSM.NO = #{txtHsOrderNo}
-                    </if>
-                  </when>
-                  <otherwise>
-                    <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
-                      HSM.NO = #{txtHsOrderNo}
-                    </if>
-                  </otherwise>
-                </choose>
-
-                <choose>
-                  <when test="myBSMonth != ''">
-                    <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                      AND ( SOM.SRV_ORD_NO = #{txtSalesOrder})
-                    </if>
-                  </when>
-                  <otherwise>
-
-                    <choose>
-                      <when test="txtHsOrderNo != ''">
-                        <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                          AND ( SOM.SRV_ORD_NO = #{txtSalesOrder})
-                        </if>
-                      </when>
-                      <otherwise>
-                        <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                        AND  ( SOM.SRV_ORD_NO = #{txtSalesOrder})
-                        </if>
-                      </otherwise>
-                    </choose>
-
-                  </otherwise>
-                </choose>
-
-                <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
-                  AND MEM.MEM_CODE = #{txtAssigncodyCode}
-                </if>
-
-                <if test="myInstallMonth != null and myInstallMonth != ''">
-                  AND SOM.PV_MONTH = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
-                </if>
-
-                <if test="myInstallMonth != null and myInstallMonth != ''">
-                  AND SOM.PV_YEAR = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
-                </if>
-
-                <if test="cmbStatusType != null and cmbStatusType != ''">
-                  AND HSM.STUS_CODE_ID = #{cmbStatusType}
-                </if>
-
-                <if test="txtCustomer != null and txtCustomer != ''">
-                  AND SOM.CUST_ID  = #{txtCustomer}
-                </if>
-
-                <if test="cmdBranchCode != null and cmdBranchCode != ''">
-                  AND ( BRNCH.BRNCH_ID = #{cmdBranchCode})
-                </if>
-
-                <if test="cmdCdManager != null and cmdCdManager != ''">
-                  AND MEM3.MEM_ID =  #{cmdCdManager}
-                </if>
-
-                <if test="deptCode != null and deptCode != ''">
-                  AND MEM2.DEPT_CODE = #{deptCode}
-                </if>
-
-                <if test="userType == '3'.toString()">
-                  AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
-                </if>
-
-                ORDER BY SOM.SRV_ORD_NO
+                               <if test="ManuaSalesOrder != null and ManuaSalesOrder != ''">
+                                      AND SOM.SRV_ORD_NO = #{ManuaSalesOrder}
+                               </if>
+                               <if test="ManualCustomer != null and ManualCustomer != ''">
+                                      AND c.CUST_ID = #{ManualCustomer}
+                               </if>
+                               <if test="manualCustomer != null and manualCustomer != ''">
+                                      AND c.CUST_ID = #{manualCustomer}
+                               </if>
+                                <if test="saleOrdListSp != null and saleOrdListSp != '' ">
+                                    AND SOM.SRV_ORD_NO IN
+                                   <foreach item="item" collection="saleOrdListSp" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                    </foreach>
+                                </if>
+                                <if test="cmdBranchCode1 != null and cmdBranchCode1 != ''">
+                                      AND ( BRNCH.CODE = SUBSTR(#{cmdBranchCode1},1,6))
+                               </if>
+                                <if test="cmdCdManager1 != null and cmdCdManager1 != ''">
+                                     AND MEM4.DEPT_CODE =  SUBSTR(#{cmdCdManager1},1,7)
+                               </if>
+<if test="userType == '3'.toString()">
+        AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
+</if>
           </select>
 
 <!-- cyc 2017- Nov- 13 -->
@@ -556,59 +504,61 @@ FROM
           SELECT DISTINCT Project2.No No
                         , Project2.HS_DATE HS_DATE
                         , Project2.STUS_CODE_ID STUS_CODE_ID
-                        , Project2.Code Code
+                        , Project2.Code CODE
                         , Project2.SALES_ORD_NO SALES_ORD_NO
                         , Project2.ASSIGN_CODY C5
                         , Project2.ACTION_CODY as ACTN_MEM_ID
                         , Project2.MEM_ID
                         , Project2.Name Name
                         , Project2.cust_id
-                        , Project2.cody_status_nm
+                        , Project2.HT_STATUS
                         , Project2.BRNCH_ID as BRNCH_ID
                         , Project2.SCHDUL_ID SCHDUL_ID
                         , Project2.SALES_ORD_ID
-                        , Project2.branch_cd
-                        , Project2.CODY_MANGR_USER_ID
+                        , Project2.HT_BRNCH_CODE
+                        , Project2.HT_MGR_CODE
                         , Project2.Result as Result
                         , project2.dept_code
           FROM (SELECT
-                       DISTINCT hs.no AS no
-                              , hs.stus_code_id AS stus_code_id
-                              , hs.month || '/' || hs.year AS hs_date
-                              , hs.month
-                              , hs.year
-                              , st.code
-                              , hr.no AS result
-                              , so.srv_ord_no sales_ord_no
-                              , ap.code AS apptype
-                              , cu.name
-                              , cd.mem_code AS assign_cody
-                              , cd.mem_id
-                              , ac.mem_code AS action_cody
-                              , mg.state
-                              , mg.area
-                              , cu.cust_id AS cust_id
-                              , STUS.CODE AS cody_status_nm
-                              , br.brnch_id AS brnch_id
-                              , hs.schdul_id schdul_id
-                              , so.srv_ord_id sales_ord_id
-                              , mg.CODY_BRNCH_CODE AS branch_cd
-                              , mg.cody_mangr_user_id
-                              , og.dept_code
-                FROM SVC0008D hs
-                INNER JOIN SAL0225D so ON so.srv_ord_id = hs.sales_ord_id
-                INNER JOIN SAL0045D ins ON ins.sales_ord_id = hs.sales_ord_id
-                INNER JOIN SAL0023D ad ON ad.cust_add_id = ins.add_id
-                INNER JOIN SYS0064M mg ON mg.area_id = ad.area_id
-                LEFT JOIN SVC0006D hr ON hr.schdul_id = hs.schdul_id
-                LEFT JOIN SYS0038M st ON st.stus_code_id = hs.stus_code_id
-                INNER JOIN SYS0013M ap ON ap.code_id = so.app_type_id
-                INNER JOIN SAL0029D cu ON cu.cust_id = so.cust_id
-                LEFT JOIN ORG0001D cd ON cd.mem_id = hs.cody_id
-                LEFT JOIN SYS0038M STUS ON STUS.stus_code_id = cd.stus
-                LEFT JOIN ORG0001D ac ON ac.mem_id = hs.CODY_ID
-                LEFT JOIN SYS0005M br ON br.brnch_id = ac.brnch
-                LEFT JOIN ORG0005D og ON og.MEM_ID = CD.MEM_ID
+                       DISTINCT HS.NO AS NO
+                              , HS.STUS_CODE_ID AS STUS_CODE_ID
+                              , HS.MONTH || '/' || HS.YEAR AS HS_DATE
+                              , HS.MONTH
+                              , HS.YEAR
+                              , ST.CODE
+                              , HR.NO AS RESULT
+                              , SO.SRV_ORD_NO AS SALES_ORD_NO
+                              , AP.CODE AS APPTYPE
+                              , CU.NAME
+                              , CD.MEM_CODE AS ASSIGN_CODY
+                              , CD.MEM_ID
+                              , AC.MEM_CODE AS ACTION_CODY
+                              , MG.STATE
+                              , MG.AREA
+                              , CU.CUST_ID AS CUST_ID
+                              , STUS.CODE AS HT_STATUS
+                              , BR.BRNCH_ID AS BRNCH_ID
+                              , HS.SCHDUL_ID SCHDUL_ID
+                              , SO.SRV_ORD_ID AS SALES_ORD_ID
+                              , BR.CODE AS HT_BRNCH_CODE
+                              , MEM3.MEM_CODE HT_MGR_CODE
+                              , OG.DEPT_CODE
+                FROM SVC0008D HS
+                JOIN SAL0225D SO ON SO.SRV_ORD_ID = HS.SALES_ORD_ID
+                INNER JOIN SAL0045D INS ON INS.SALES_ORD_ID = HS.SALES_ORD_ID
+                INNER JOIN SAL0023D AD ON AD.CUST_ADD_ID = INS.ADD_ID
+                INNER JOIN SYS0064M MG ON MG.AREA_ID = AD.AREA_ID
+                LEFT JOIN SVC0006D HR ON HR.SCHDUL_ID = HS.SCHDUL_ID
+                LEFT JOIN SYS0038M ST ON ST.STUS_CODE_ID = HS.STUS_CODE_ID
+                INNER JOIN SYS0013M AP ON AP.CODE_ID = SO.APP_TYPE_ID
+                INNER JOIN SAL0029D CU ON CU.CUST_ID = SO.CUST_ID
+                LEFT JOIN ORG0001D CD ON CD.MEM_ID = HS.CODY_ID
+                LEFT JOIN SYS0038M STUS ON STUS.STUS_CODE_ID = CD.STUS
+                LEFT JOIN ORG0001D AC ON AC.MEM_ID = HS.CODY_ID
+                LEFT JOIN SYS0005M BR ON BR.BRNCH_ID = AC.BRNCH
+                LEFT JOIN ORG0005D OG ON OG.MEM_ID = CD.MEM_ID
+                LEFT JOIN ORG0001D MEM3 ON OG.MEM_UP_ID = MEM3.MEM_ID
+
 
                 WHERE
 
@@ -658,9 +608,6 @@ FROM
                   AND CD.MEM_CODE = #{txtAssigncodyCode}
                 </if>
 
-                <if test="txtComcodyCode != null and txtComcodyCode != ''">
-                  AND AC.MEM_CODE = #{txtComcodyCode}
-                </if>
 
                 <if test="myInstallMonth != null and myInstallMonth != ''">
                   AND SO.PV_MONTH = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
@@ -683,15 +630,15 @@ FROM
                 </if>
 
                 <if test="cmdCdManager != null and cmdCdManager != ''">
-                  AND OG.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{cmdCdManager} )
+                  AND MEM3.MEM_ID =  #{cmdCdManager}
                 </if>
 
                 <if test="deptCode != null and deptCode != ''">
-                  AND OG.DEPT_CODE = #{deptCode}
+                   AND OG.DEPT_CODE = #{deptCode}
                 </if>
 
                 <if test="userType == '3'.toString()">
-                  AND CD.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
+                  AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
                 </if>
 
           )Project2
