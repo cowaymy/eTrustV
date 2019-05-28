@@ -323,6 +323,8 @@
     $("#cpsViewForm #V_ASSTATUS").val();
     $("#cpsViewForm #V_ASGROUP").val();
     $("#cpsViewForm #V_ASTEMPSORT").val();
+    $("#cpsViewForm #V_ORDNUMTO").val(ordNo);
+    $("#cpsViewForm #V_ORDNUMFR").val(ordNo);
 
     var option = {
       isProcedure : true,
@@ -650,6 +652,8 @@
       <input type="hidden" title="" id="V_ASTYPEID" name="V_ASTYPEID" placeholder="" class=" " />
       <input type="hidden" title="" id="V_ASSTATUS" name="V_ASSTATUS" placeholder="" class=" " />
       <input type="hidden" title="" id="V_ASGROUP" name="V_ASGROUP" placeholder="" class=" " />
+      <input type="hidden" title="" id="V_ORDNUMTO" name="V_ORDNUMTO" placeholder="" class=" " />
+      <input type="hidden" title="" id="V_ORDNUMFR" name="V_ORDNUMFR" placeholder="" class=" " />
       <input type="hidden" title="" id="V_ASTEMPSORT" name="V_ASTEMPSORT" placeholder="" class=" " />
       <!-- table end -->
      </form>
