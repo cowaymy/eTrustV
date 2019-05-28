@@ -89,11 +89,26 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
 
   @Override
   public List<EgovMap> selectHsManualList(Map<String, Object> params) {
-	    // TODO Auto-generated method stub
-	    logger.debug("myBSMonth : {}", params.get("myBSMonth"));
-	    StringTokenizer str1 = new StringTokenizer(params.get("myBSMonth").toString());
-	    logger.debug("myBSMonth : {}", params.get("myBSMonth"));
+	  if (params.get("ManuaMyBSMonth") != null) {
+	      if (!params.get("ManuaMyBSMonth").toString().equals("")) {
+	        StringTokenizer str1 = new StringTokenizer(params.get("ManuaMyBSMonth").toString());
+	        for (int i = 0; i <= 1; i++) {
+	          str1.hasMoreElements();
+	          String result = str1.nextToken("/");
+	          if (i == 0) {
+	            params.put("myBSMonth", result);
+	            logger.debug("myBSMonth : {}", params.get("myBSMonth"));
+	          } else {
+	            params.put("myBSYear", result);
+	            logger.debug("myBSYear : {}", params.get("myBSYear"));
+	          }
+	        }
+	      }
+	    }
 
+	    logger.debug("myBSMonth : {}", params.get("myBSMonth"));
+	    logger.debug("saleOrdListSp : {}", params.get("saleOrdListSp"));
+	    logger.debug("ManualCustId : {}", params.get("ManualCustId"));
 
     return htManualMapper.selectHsManualList(params);
   }
