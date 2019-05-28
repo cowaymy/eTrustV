@@ -3,16 +3,16 @@
 <mapper namespace="com.coway.trust.biz.organization.organization.impl.AllocationMapper">
 
     <select id="selectList" parameterType="Map" resultType="egovMap">
-              <![CDATA[ 
+              <![CDATA[
                 select   ct ,
                         (select MEM_CODE  from org0001d a  where   ct =a.MEM_ID )  MEM_CODE,
-                        C_DATE ,  
-                        to_char (to_date(C_DATE,'yyyy-mm-dd'),'dd/mm/yyyy') D_DATE, 
+                        C_DATE ,
+                        to_char (to_date(C_DATE,'yyyy-mm-dd'),'dd/mm/yyyy') D_DATE,
                         ASCNT||'-'||SUMSESION_CNT ascnt,
                         INSCNT||'-'||SUMSESION_CNT inscnt,
                         0||'-'||SUMSESION_CNT rtncnt
-                from (                        
-                        SELECT  MEM_ID  ct  ,  
+                from (
+                        SELECT  MEM_ID  ct  ,
                                 INS_DATE  C_DATE,
                                 (SELECT COUNT (*) CNT  FROM  SAL0046D  AA
                                  WHERE  1=1
@@ -24,17 +24,17 @@
                                  AND  AA.AS_MEM_ID =MEM_ID
                                  AND  AA.AS_STUS_ID =1
                                  AND  TO_CHAR (AA.AS_APPNT_DT,'YYYY-MM-DD'  )  = TO_CHAR( ( to_date(INS_DATE,'yyyy-mm-dd') ) ,'yyyy-mm-dd')   ) ASCNT,
-                                NVL(( SELECT  SUM(NVL(MORNG_SESION_INS,0) + NVL(AFTNON_SESION_INS,0) + NVL(EVNG_SESION_INS,0) ) SUMSESION_CNT  FROM ORG0015M S WHERE  S.CT_ID = MEM_ID ),0)SUMSESION_CNT 
-                 FROM     ( 
-                          select  
-                                distinct MEM_ID  
-                          from  ORG0005D t 
+                                NVL(( SELECT  SUM(NVL(MORNG_SESION_INS,0) + NVL(AFTNON_SESION_INS,0) + NVL(EVNG_SESION_INS,0) ) SUMSESION_CNT  FROM ORG0015M S WHERE  S.CT_ID = MEM_ID ),0)SUMSESION_CNT
+                 FROM     (
+                          select
+                                distinct MEM_ID
+                          from  ORG0005D t
                           where  CT_SUB_GRP in(
                                 SELECT
                                      F.CT_SUB_GRP
-                                FROM SAL0001D  A , 
+                                FROM SAL0001D  A ,
                                      SAL0045D B ,
-                                     SAL0023D E , 
+                                     SAL0023D E ,
                                      SYS0064M F
                                 WHERE 1=1
                                     AND A.SALES_ORD_ID =#{ORD_ID}
@@ -42,21 +42,21 @@
                                     AND B.ADD_ID = E.CUST_ADD_ID
                                     AND E.AREA_ID = F.AREA_ID
                            )
-                      )C ,(  SELECT   TO_CHAR( (SYSDATE -1) +level ,'yyyy-mm-dd') INS_DATE    FROM DUAL connect by level <= 14) TB  
+                      )C ,(  SELECT   TO_CHAR( (SYSDATE -1) +level ,'yyyy-mm-dd') INS_DATE    FROM DUAL connect by level <= 14) TB
                 ORDER BY MEM_ID  ,INS_DATE ASC
-                )                                           
-                
+                )
+
         ]]>
-        
+
     </select>
-    
-    
-    
-    
-    
+
+
+
+
+
     <select id="selectBaseList" parameterType="Map" resultType="egovMap">
-              <![CDATA[ 
-					              
+              <![CDATA[
+
 					  SELECT    MEM_ID CT,
 					           INS_DATE C_DATE,
 					           CT_SUB_GRP,
@@ -65,6 +65,8 @@
 					              FROM   SVC0054M T, ORG0001D TT
 					             WHERE       1 = 1
 					                     AND T.MEM_ID = TT.MEM_ID
+					                     /*BY KV*/
+					                     AND TT.STUS = 1
 					                     AND CT_SUB_GRP IN (SELECT  /*+ leading(E) INDEX(E SAL0023D_IDX5) USE_NL(A,B,E,F) */
 					                                                 F.CT_SUB_GRP
 					                                          FROM   SAL0001D A,
@@ -93,41 +95,41 @@
 					        (    SELECT   TO_CHAR ( (SYSDATE - 1) + LEVEL, 'YYYY-MM-DD') INS_DATE FROM   DUAL  CONNECT BY   LEVEL <= 14) TB
 					ORDER BY   MEM_ID, INS_DATE ASC
         ]]>
-        
+
     </select>
-    
+
     <select id="isSubGroupHoliDay" parameterType="Map" resultType="egovMap">
-              <![CDATA[ 
-					
-					SELECT 
+              <![CDATA[
+
+					SELECT
 				        C.MEM_CODE  ,C.MEM_ID
-				    FROM SYS0081M A, ORG0020D B, ORG0001D C ,SYS0005M D  
-				    WHERE A.HOLIDAY = B.HOLIDAY 
+				    FROM SYS0081M A, ORG0020D B, ORG0001D C ,SYS0005M D
+				    WHERE A.HOLIDAY = B.HOLIDAY
 				    AND   B.HOLIDAY_TYPE = B.HOLIDAY_TYPE
 				    AND   A.HOLIDAY_SEQ  = B.HOLIDAY_SEQ
 				    AND   B.CT_MEM_ID     = C.MEM_ID
-				    AND   B.BRNCH_CODE   = D.CODE  
+				    AND   B.BRNCH_CODE   = D.CODE
 				    AND   C.BRNCH      =#{brnchId}
 				    AND   TO_CHAR(A.HOLIDAY, 'YYYY-MM-DD') = #{holiday}
         ]]>
-        
+
     </select>
-    
-    
+
+
      <select id="selectVacationList" parameterType="Map" resultType="egovMap">
-              <![CDATA[ 
-					SELECT VACT_REPL_CT 
-					     FROM ORG0007D 
-					WHERE  1=1 
+              <![CDATA[
+					SELECT VACT_REPL_CT
+					     FROM ORG0007D
+					WHERE  1=1
 					    AND   MEM_ID  =#{vactReplCt}
-					    AND TO_CHAR( TO_DATE(#{rDate},'YYYY-MM-DD'),'YYYY-MM-DD')  BETWEEN  TO_CHAR(VACT_STD_DT,'YYYY-MM-DD')   AND  TO_CHAR(VACT_END_DT,'YYYY-MM-DD') 
+					    AND TO_CHAR( TO_DATE(#{rDate},'YYYY-MM-DD'),'YYYY-MM-DD')  BETWEEN  TO_CHAR(VACT_STD_DT,'YYYY-MM-DD')   AND  TO_CHAR(VACT_END_DT,'YYYY-MM-DD')
 					    AND STUS_ID = 4
 		       ]]>
     </select>
-    
-    
+
+
      <select id="makeViewList" parameterType="Map" resultType="egovMap">
-            <![CDATA[ 
+            <![CDATA[
 					SELECT CT,
                            DECODE (#{repla}, 'true', RE_MEM_CODE||'(REP)' , RE_MEM_CODE) as RE_MEM_CODE,
 					       MEM_CODE,
@@ -145,9 +147,9 @@
 					       #{cDate}    C_DATE,
 					       (SELECT DECODE (A.TRNSPRT, '254' , MEM_CODE||'(M)' , MEM_CODE) TR     FROM ORG0001D A  WHERE  #{ct}  =A.MEM_ID )  RE_MEM_CODE,
 					       (SELECT MEM_CODE  FROM ORG0001D A  WHERE   #{ct}  =A.MEM_ID )  MEM_CODE,
-					       TO_CHAR (TO_DATE(#{cDate},'YYYY-MM-DD'),'DD/MM/YYYY')      D_DATE, 
+					       TO_CHAR (TO_DATE(#{cDate},'YYYY-MM-DD'),'DD/MM/YYYY')      D_DATE,
 					       (SELECT COUNT (*) CNT  FROM  SAL0046D  AA
-					                                 WHERE  1=1 
+					                                 WHERE  1=1
 					                                 AND  AA.CT_ID =#{ct}
 					                                 AND  AA.STUS_CODE_ID =1
 					                                 AND  TO_CHAR (AA.INSTALL_DT,'YYYY-MM-DD'  ) = TO_CHAR( ( TO_DATE(#{cDate},'YYYY-MM-DD') ) ,'YYYY-MM-DD'))INSCNT,
@@ -159,100 +161,100 @@
 					                                 WHERE  1=1
 					                                 AND  AA.AS_MEM_ID =#{ct}
 					                                 AND  AA.AS_STUS_ID =1
-					                                 AND  TO_CHAR (AA.AS_APPNT_DT,'YYYY-MM-DD'  )  = TO_CHAR( ( TO_DATE(#{cDate},'YYYY-MM-DD') ) ,'YYYY-MM-DD'))ASCNT,     
+					                                 AND  TO_CHAR (AA.AS_APPNT_DT,'YYYY-MM-DD'  )  = TO_CHAR( ( TO_DATE(#{cDate},'YYYY-MM-DD') ) ,'YYYY-MM-DD'))ASCNT,
 		                    (SELECT COUNT (*) CNT  FROM  SVC0001D  AA
                                                   WHERE  1=1
                                                   AND  AA.AS_MEM_ID =#{ct}
-                                                  AND  AA.AS_STUS_ID =1)AS_SUM_CNT,   
+                                                  AND  AA.AS_STUS_ID =1)AS_SUM_CNT,
                              (SELECT COUNT (*) CNT  FROM  LOG0038D  AA
                                                      WHERE  1=1
                                                      AND  AA.CT_ID =#{ct}
                                                      AND  AA.STUS_CODE_ID =1
-                                                     AND  TO_CHAR (AA.APP_DT,'YYYY-MM-DD'  )  = TO_CHAR( ( TO_DATE(#{cDate},'YYYY-MM-DD') ) ,'YYYY-MM-DD'))RTNCNT,         
+                                                     AND  TO_CHAR (AA.APP_DT,'YYYY-MM-DD'  )  = TO_CHAR( ( TO_DATE(#{cDate},'YYYY-MM-DD') ) ,'YYYY-MM-DD'))RTNCNT,
                                (SELECT COUNT (*) CNT  FROM  LOG0038D  AA
                                                   WHERE  1=1
                                                   AND  AA.CT_ID =#{ct}
-                                                  AND  AA.STUS_CODE_ID =1)RTN_SUM_CNT,                        
+                                                  AND  AA.STUS_CODE_ID =1)RTN_SUM_CNT,
 					       NVL(( SELECT  SUM(NVL(MORNG_SESION_INS,0) + NVL(AFTNON_SESION_INS,0) + NVL(EVNG_SESION_INS,0) ) SUMSESION_CNT  FROM ORG0015M S WHERE  S.CT_ID = #{ct} ),0)  C_INS_SUM_CNT,
                            NVL(( SELECT  SUM(NVL(MORNG_SESION_AS,0) + NVL(AFTNON_SESION_AS,0) + NVL(EVNG_SESION_AS,0) ) SUMSESION_CNT  FROM ORG0015M S WHERE  S.CT_ID =#{ct} ),0)      C_AS_SUM_CNT,
                            NVL(( SELECT  SUM(NVL(MORNG_SESION_RTN,0) + NVL(AFTNON_SESION_RTN,0) + NVL(EVNG_SESION_RTN,0) ) SUMSESION_CNT  FROM ORG0015M S WHERE  S.CT_ID = #{ct} ),0) C_RTN_SUM_CNT
-					FROM DUAL    
-					)   
+					FROM DUAL
+					)
 		       ]]>
-		       
+
      </select>
-     
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
     <select id="selectDetailList" parameterType="Map" resultType="egovMap">
-    
+
                 SELECT MEM_ID,
 	                       MEM_CODE ,CT_SUB_GRP,
-	                       SUM_AS_CNT   ||'-'|| NVL(AS_15MT_SUM,0)         sumAsCnt, 
+	                       SUM_AS_CNT   ||'-'|| NVL(AS_15MT_SUM,0)         sumAsCnt,
 	                       SUM_INS_CNT  ||'-'|| NVL(INS_15MT_SUM ,0)       sumInsCnt,
 	                       SUM_RTN_CNT  ||'-'||NVL(RTN_15_SUM ,0)           sumRtnCnt,
-	                       
+
 	                       AS_M_CNT     ||'-'|| NVL(AS_MORNG_SESION_SUM,0)      morAsCnt,
 	                       INS_M_CNT    ||'-'|| NVL(INS_MORNG_SESION_SUM,0)      morInsCnt,
 	                       RTN_M_CNT    ||'-'||NVL(RTN_MORNG_SESION_SUM,0)      morRtnCnt,
-	                       
-	                       
+
+
 	                       AS_A_CNT     ||'-'||NVL(AS_AFTNON_SESION_SUM ,0)    aftAsCnt,
 	                       INS_A_CNT    ||'-'||NVL(INS_AFTNON_SESION_SUM ,0)    aftInsCnt,
 	                       RTN_A_CNT    ||'-'||NVL(RTN_AFTNON_SESION_SUM ,0)    aftRtnCnt,
-	                       
-	                       
+
+
 	                       AS_E_CNT     ||'-'||NVL(AS_EVNG_SESION_SUM,0)         evnAsCnt,
-	                       INS_E_CNT    ||'-'||NVL(INS_EVNG_SESION_SUM ,0)       evnInsCnt, 
+	                       INS_E_CNT    ||'-'||NVL(INS_EVNG_SESION_SUM ,0)       evnInsCnt,
 	                       RTN_E_CNT    ||'-'||NVL(RTN_EVNG_SESION_SUM,0)       evnRtnCnt,
-	                       
+
 	                       AS_O_CNT     ||'-'||NVL(0 ,0)      othAsCnt,
 	                       INS_O_CNT    ||'-'||NVL(0 ,0)      othInsCnt,
 	                       RTN_O_CNT    ||'-'||NVL(0 ,0)      othRtnCnt
-                FROM(   
+                FROM(
                         SELECT   #{CT_ID}  MEM_ID ,
                                 (SELECT MEM_CODE  FROM ORG0001D   where MEM_ID = #{CT_ID}) MEM_CODE ,
                                 (SELECT CT_SUB_GRP  FROM ORG0005D D5  WHERE D5.MEM_ID  =#{CT_ID}  ) CT_SUB_GRP ,
-                                
-                                (SELECT    nvl(MORNG_SESION_AS,0)+    
-                                               nvl(AFTNON_SESION_AS,0)+     
+
+                                (SELECT    nvl(MORNG_SESION_AS,0)+
+                                               nvl(AFTNON_SESION_AS,0)+
                                                nvl(EVNG_SESION_AS,0) as  AS_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})     AS_15MT_SUM,
-                                           
-                                (SELECT    nvl(MORNG_SESION_INS,0)+    
-                                               nvl(AFTNON_SESION_INS,0)+     
+
+                                (SELECT    nvl(MORNG_SESION_INS,0)+
+                                               nvl(AFTNON_SESION_INS,0)+
                                                nvl(EVNG_SESION_INS,0) as  INS_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   INS_15MT_SUM,
-                                           
-                                (SELECT    nvl(MORNG_SESION_RTN,0)+    
-                                               nvl(AFTNON_SESION_RTN,0)+     
+
+                                (SELECT    nvl(MORNG_SESION_RTN,0)+
+                                               nvl(AFTNON_SESION_RTN,0)+
                                                nvl(EVNG_SESION_RTN,0) as  RTN_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})  RTN_15_SUM,
-                                     
-                                (SELECT    nvl(MORNG_SESION_AS,0)    MORNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) AS_MORNG_SESION_SUM,  
-                                (SELECT    nvl(MORNG_SESION_INS,0)   MORNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) INS_MORNG_SESION_SUM,   
-                                (SELECT    nvl(MORNG_SESION_RTN,0)  MORNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) RTN_MORNG_SESION_SUM,  
-                                         
-                                (SELECT    nvl(AFTNON_SESION_AS,0)   AFTNON_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})  AS_AFTNON_SESION_SUM,  
-                                (SELECT    nvl(AFTNON_SESION_INS,0)  AFTNON_SESION_INS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) INS_AFTNON_SESION_SUM,   
-                                (SELECT    nvl(AFTNON_SESION_RTN,0)  AFTNON_SESION_RTN   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) RTN_AFTNON_SESION_SUM,          
-                                           
-                                (SELECT    nvl(EVNG_SESION_AS,0) EVNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})     AS_EVNG_SESION_SUM,  
-                                (SELECT    nvl(EVNG_SESION_INS,0)  EVNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   INS_EVNG_SESION_SUM,   
-                                (SELECT    nvl(EVNG_SESION_RTN,0)  EVNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   RTN_EVNG_SESION_SUM,     
-                                
-                                (SELECT    nvl(MORNG_SESION_AS,0)+    
-                                               nvl(MORNG_SESION_INS,0)+     
+
+                                (SELECT    nvl(MORNG_SESION_AS,0)    MORNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) AS_MORNG_SESION_SUM,
+                                (SELECT    nvl(MORNG_SESION_INS,0)   MORNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) INS_MORNG_SESION_SUM,
+                                (SELECT    nvl(MORNG_SESION_RTN,0)  MORNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) RTN_MORNG_SESION_SUM,
+
+                                (SELECT    nvl(AFTNON_SESION_AS,0)   AFTNON_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})  AS_AFTNON_SESION_SUM,
+                                (SELECT    nvl(AFTNON_SESION_INS,0)  AFTNON_SESION_INS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) INS_AFTNON_SESION_SUM,
+                                (SELECT    nvl(AFTNON_SESION_RTN,0)  AFTNON_SESION_RTN   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) RTN_AFTNON_SESION_SUM,
+
+                                (SELECT    nvl(EVNG_SESION_AS,0) EVNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})     AS_EVNG_SESION_SUM,
+                                (SELECT    nvl(EVNG_SESION_INS,0)  EVNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   INS_EVNG_SESION_SUM,
+                                (SELECT    nvl(EVNG_SESION_RTN,0)  EVNG_SESION_AS   FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID})   RTN_EVNG_SESION_SUM,
+
+                                (SELECT    nvl(MORNG_SESION_AS,0)+
+                                               nvl(MORNG_SESION_INS,0)+
                                                nvl(MORNG_SESION_RTN,0) as  MORNG_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) MORNG_SESION_SUM,
-                                           
-                                (SELECT    nvl(AFTNON_SESION_AS,0)+    
-                                               nvl(AFTNON_SESION_INS,0)+     
+
+                                (SELECT    nvl(AFTNON_SESION_AS,0)+
+                                               nvl(AFTNON_SESION_INS,0)+
                                                nvl(AFTNON_SESION_RTN,0) as  AFTNON_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) AFTNON_SESION_SUM,
-                                               
-                                (SELECT    nvl(EVNG_SESION_AS,0)+    
-                                               nvl(EVNG_SESION_INS,0)+     
+
+                                (SELECT    nvl(EVNG_SESION_AS,0)+
+                                               nvl(EVNG_SESION_INS,0)+
                                                nvl(EVNG_SESION_RTN,0) as   EVNG_SESION_SUM  FROM   ORG0015M  WHERE  CT_ID  = #{CT_ID}) EVNG_SESION_SUM,
                                 SUM_AS_CNT,
                                 SUM_INS_CNT,
@@ -270,15 +272,15 @@
                                 INS_O_CNT,
                                 RTN_O_CNT
                      FROM (
-                                SELECT  
+                                SELECT
                                         (MAX(A01)  +  MAX(A02) + MAX(A03))   SUM_AS_CNT ,
                                         (MAX(I01)  +  MAX(I02) + MAX(I03))   SUM_INS_CNT ,
                                         (MAX(R01)  +  MAX(R02) +MAX(R03))    SUM_RTN_CNT ,
                                         MAX(A01) AS_M_CNT  , MAX(A02)  AS_A_CNT,   MAX(A03)  AS_E_CNT , MAX(A04)  AS_O_CNT  ,
                                         MAX(I01) INS_M_CNT , MAX(I02)  INS_A_CNT , MAX(I03)  INS_E_CNT, MAX(I04)  INS_O_CNT ,
-                                        MAX(R01) RTN_M_CNT , MAX(R02)  RTN_A_CNT , MAX(R03)  RTN_E_CNT, MAX(R04)  RTN_O_CNT 
+                                        MAX(R01) RTN_M_CNT , MAX(R02)  RTN_A_CNT , MAX(R03)  RTN_E_CNT, MAX(R04)  RTN_O_CNT
                                 FROM(
-                                            SELECT 
+                                            SELECT
                                                  NVL(SUM(DECODE(B.AS_SESION_CODE,'M',1,0)),0)   A01 ,
                                                  NVL(SUM(DECODE(B.AS_SESION_CODE,'A',1,0)),0)   A02 ,
                                                  NVL(SUM(DECODE(B.AS_SESION_CODE,'E',1,0)),0)   A03 ,
@@ -290,14 +292,14 @@
                                                  0 R01 ,
                                                  0 R02 ,
                                                  0 R03 ,
-                                                 0 R04 
-                                              FROM SVC0001D B 
+                                                 0 R04
+                                              FROM SVC0001D B
                                             WHERE  1=1
-                                              AND to_char(B.AS_APPNT_DT,'YYYYMMDD')  =  TO_CHAR(TO_DATE(#{P_DATE},'YYYY-MM-DD'),'YYYYMMDD')  
-                                              AND B.AS_STUS_ID =1 
+                                              AND to_char(B.AS_APPNT_DT,'YYYYMMDD')  =  TO_CHAR(TO_DATE(#{P_DATE},'YYYY-MM-DD'),'YYYYMMDD')
+                                              AND B.AS_STUS_ID =1
                                               AND B.AS_MEM_ID = #{CT_ID}
-                                         UNION ALL    
-                                             SELECT 
+                                         UNION ALL
+                                             SELECT
                                                  0 A01,
                                                  0 A02,
                                                  0 A03,
@@ -309,14 +311,14 @@
                                                  0 R01 ,
                                                  0 R02 ,
                                                  0 R03 ,
-                                                 0 R04 
+                                                 0 R04
                                                FROM SAL0046D D
                                              WHERE 1=1
                                                 AND D.CT_ID = #{CT_ID}
-                                                AND D.STUS_CODE_ID =1  
-                                                AND to_char(D.INSTALL_DT,'YYYYMMDD')  =  TO_CHAR(TO_DATE(#{P_DATE},'YYYY-MM-DD'),'YYYYMMDD')  
-                                         UNION ALL    
-                                             SELECT 
+                                                AND D.STUS_CODE_ID =1
+                                                AND to_char(D.INSTALL_DT,'YYYYMMDD')  =  TO_CHAR(TO_DATE(#{P_DATE},'YYYY-MM-DD'),'YYYYMMDD')
+                                         UNION ALL
+                                             SELECT
                                                  0 A01,
                                                  0 A02,
                                                  0 A03,
@@ -332,13 +334,13 @@
                                                FROM LOG0038D D
                                              WHERE 1=1
                                                 AND D.CT_ID = #{CT_ID}
-                                                AND D.STUS_CODE_ID =1  
-                                                AND to_char(D.APP_DT,'YYYYMMDD')  =  TO_CHAR(TO_DATE(#{P_DATE},'YYYY-MM-DD'),'YYYYMMDD')         
+                                                AND D.STUS_CODE_ID =1
+                                                AND to_char(D.APP_DT,'YYYYMMDD')  =  TO_CHAR(TO_DATE(#{P_DATE},'YYYY-MM-DD'),'YYYYMMDD')
                                     )
                                   )
                              )
     </select>
-    
-    
-    
+
+
+
 </mapper>
