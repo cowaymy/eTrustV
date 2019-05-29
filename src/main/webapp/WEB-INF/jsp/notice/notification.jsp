@@ -102,14 +102,12 @@ $(document).ready(function() {
     });
 
     AUIGrid.bind(notificationGridID, "cellDoubleClick", function(event) {
-        console.log("cellDoubleClick :: " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-        console.log("event.item.clmNo :: " + event.item.ntfKey);
-        console.log("event.item.ntfKeyStus :: " + event.item.ntfKeyStus);
-        console.log("event.item.ntfType :: " + event.item.ntfType);
 
         $("#clmNo").val(event.item.ntfKey);
         $("#clmType1").val(event.item.ntfType);
         $("#period").val(event.item.period);
+
+        var url = getContextPath() + "/eAccounting/";
 
         var data = {
                 ntfId : event.item.ntfId,
@@ -119,19 +117,24 @@ $(document).ready(function() {
 
         if(event.item.ntfKeyStus == "R") {
 
+            var ntfType = event.item.ntfType;
+
+            if(ntfType != "Budget") {
+                url += "webInvoice/webInvoiceApprove.do";
+            } else {
+                url += "budget/budgetApprove.do";
+            }
 
             Common.ajax("GET", "/notice/updateNtf.do", data, function(result) {
                 console.log(result);
 
                 $("#ntfForm").attr({
-                    action: getContextPath() + "/eAccounting/webInvoice/webInvoiceApprove.do",
+                    action: url,
                     method: "POST"
                 }).submit();
             });
 
         } else if(event.item.ntfKeyStus == "J") {
-            var url = getContextPath() + "/eAccounting/";
-
             var ntfType = event.item.ntfType;
             if(ntfType == "J1") {
                 url += "webInvoice/webInvoice.do";
@@ -144,6 +147,9 @@ $(document).ready(function() {
 
             } else if(ntfType == "J4") {
                 url += "staffClaim/staffClaimMgmt.do";
+
+            } else if(ntfType == "Budget") {
+            	url += "budget/budgetAdjustmentList.do";
             }
 
             Common.ajax("GET", "/notice/updateNtf.do", data, function(result) {

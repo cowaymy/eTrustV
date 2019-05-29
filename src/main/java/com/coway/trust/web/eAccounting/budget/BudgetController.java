@@ -619,15 +619,23 @@ public class BudgetController {
 	}
 
 	@RequestMapping(value = "/budgetApprove.do")
-	public String budgetApprove (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+    public String budgetApprove(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 
-		String yearMonth =  CommonUtils.getNowDate().substring(4,6) +"/" +CommonUtils.getNowDate().substring(0,4);
+        String yearMonth = CommonUtils.getNowDate().substring(4, 6) + "/" + CommonUtils.getNowDate().substring(0, 4);
 
-		model.addAttribute("stYearMonth",  yearMonth );
-		model.addAttribute("edYearMonth",  yearMonth );
+        model.addAttribute("stYearMonth", yearMonth);
+        model.addAttribute("edYearMonth", yearMonth);
 
-		return "eAccounting/budget/budgetApprove";
-	}
+        if (params != null) {
+            String clmNo = (String) params.get("clmNo");
+            model.addAttribute("budgetDocNo", clmNo);
+
+            String year = CommonUtils.getNowDate().substring(0, 4);
+            model.addAttribute("budgetYear", year);
+        }
+
+        return "eAccounting/budget/budgetApprove";
+    }
 
 	@RequestMapping(value = "/selectApprovalList")
 	public ResponseEntity <List<EgovMap>>  selectApprovalList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{

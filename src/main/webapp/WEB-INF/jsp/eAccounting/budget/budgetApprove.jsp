@@ -22,16 +22,25 @@
 var appMGridID;
 var rowIndex = 0;
 
-$(document).ready(function(){
+console.log("budgetApprove");
 
+$(document).ready(function(){
     CommonCombo.make("budgetAdjType", "/common/selectCodeList.do", {groupCode:'347', orderValue:'CODE'}, "", {
         id: "code",
         name: "codeName",
         type:"M"
     });
 
-    $("#stYearMonth").val("${stYearMonth}");
-    $("#edYearMonth").val("${edYearMonth}");
+    if("${budgetDocNo}" != null || "${budgetDocNo}" != "") {
+        $("#budgetDocNo").val("${budgetDocNo}");
+        $("#stYearMonth").val("01/" + "${budgetYear}");
+        $("#edYearMonth").val("12/" + "${budgetYear}");
+
+        fn_selectListAjax();
+    } else {
+        $("#stYearMonth").val("${stYearMonth}");
+        $("#edYearMonth").val("${edYearMonth}");
+    }
 
     $("#btnSearch").click(fn_selectListAjax);
 
