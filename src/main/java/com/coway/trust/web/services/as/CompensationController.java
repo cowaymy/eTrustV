@@ -48,12 +48,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
+ * 29/05/2019    ONGHC      1.0.2       - Amend uploadDir
  *********************************************************************************************/
 
 public class CompensationController {
   private static final Logger logger = LoggerFactory.getLogger(CompensationController.class);
 
-  @Value("${com.file.upload.path}")
+  @Value("${web.resource.upload.file}")
   private String uploadDir;
 
   @Resource(name = "CompensationService")
@@ -289,7 +290,9 @@ public class CompensationController {
     int count = compensationService.chkCpsRcd(params);
 
     if (count == 0) {
-      List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "compensation" + File.separator + "DCF", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+      List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request,
+          uploadDir, File.separator + "compensation" + File.separator + "DCF",
+          AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 
       params.put("userId", sessionVO.getUserId());
       params.put("branchId", sessionVO.getUserBranchId());
