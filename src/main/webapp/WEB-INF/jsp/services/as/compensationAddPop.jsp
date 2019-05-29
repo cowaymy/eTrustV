@@ -601,10 +601,10 @@ var asrNo;
         <col style="width: *" />
         <col style="width: 150px" />
         <col style="width: *" />
-        <col style="width: 165px" />
+        <!-- <col style="width: 165px" />
         <col style="width: *" />
         <col style="width: 165px" />
-        <col style="width: *" />
+        <col style="width: *" /> -->
        </colgroup>
        <tbody>
         <tr>
@@ -704,10 +704,10 @@ var asrNo;
         <col style="width: *" />
         <col style="width: 150px" />
         <col style="width: *" />
-        <col style="width: 165px" />
+        <!-- <col style="width: 165px" />
         <col style="width: *" />
         <col style="width: 165px" />
-        <col style="width: *" />
+        <col style="width: *" /> -->
        </colgroup>
        <tbody>
         <tr>
