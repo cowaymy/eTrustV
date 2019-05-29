@@ -174,8 +174,11 @@
             NTF_REM,
             NTF_FLAG,
             CASE WHEN NTF_TYPE = 'J2' THEN a.CLM_MONTH WHEN NTF_TYPE = 'J4' THEN b.CLM_MONTH END PERIOD,
-            TO_CHAR(SYS0092M.CRT_DT, 'DD/MM/YYYY') CRT_DT
+            TO_CHAR(SYS0092M.CRT_DT, 'DD/MM/YYYY') CRT_DT,
+            C.USER_NAME
         FROM SYS0092M
+        INNER JOIN SYS0047M c
+            ON SYS0092M.CRT_USER = C.USER_ID
         LEFT JOIN FCM0013M a
             ON SYS0092M.NTF_KEY = a.CLM_NO
         LEFT JOIN FCM0019M b
@@ -192,12 +195,12 @@
         </if>
         <if test="createDate != null and createDate != ''">
         <![CDATA[
-             AND CRT_DT >= TO_DATE(#{createDate}, 'DD/MM/YYYY')
+             AND SYS0092M.CRT_DT >= TO_DATE(#{createDate}, 'DD/MM/YYYY')
         ]]>
         </if>
         <if test="endDate != null and endDate != ''">
         <![CDATA[
-             AND CRT_DT < TO_DATE(#{endDate}, 'DD/MM/YYYY') + 1
+             AND SYS0092M.CRT_DT < TO_DATE(#{endDate}, 'DD/MM/YYYY') + 1
         ]]>
         </if>
         ORDER BY SYS0092M.CRT_DT DESC
@@ -206,7 +209,9 @@
     <update id="updateNtfStus" parameterType="Map">
         <!-- deleteMasterClaim -->
         UPDATE SYS0092M
-        SET NTF_FLAG = #{ntfFlag}
+        SET
+            NTF_FLAG = #{ntfFlag},
+            UPD_USER = #{updUserId}
         WHERE NTF_ID = #{ntfId}
         AND NTF_KEY = #{ntfKey}
     </update>

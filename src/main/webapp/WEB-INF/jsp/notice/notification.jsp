@@ -73,6 +73,11 @@ var notificationColumnLayout = [
         style : "aui-grid-user-custom-left"
     },
     {
+        dataField : "userName",
+        headerText : "Notification Creator",
+        width : 160
+    },
+    {
         dataField : "crtDt",
         headerText : "Request Date",
         width : 120
@@ -147,6 +152,9 @@ $(document).ready(function() {
 
             } else if(ntfType == "J4") {
                 url += "staffClaim/staffClaimMgmt.do";
+
+            } else if(ntfType == "J5") {
+                url += "scmActivityFund/scmActivityFundMgmt.do";
 
             } else if(ntfType == "Budget") {
             	url += "budget/budgetAdjustmentList.do";
