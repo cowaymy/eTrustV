@@ -932,17 +932,17 @@ var TODAY_DD      = "${toDay}";
           class="w100p"></td>
          <th scope="row">Assign HT</th>
          <td><input id="txtAssigncodyCode" name="txtAssigncodyCode"
-          type="text" title="" placeholder="Cody" class="w100p" /> <!-- By Kv - Change cmbBox to text Box -->
+          type="text" title="" placeholder="HT" class="w100p" /> <!-- By Kv - Change cmbBox to text Box -->
           <!-- <select class="w100p" id="cmdcodyCode" name="cmdcodyCode" > -->
           <!-- <option value="">cody</option> --></td>
          <th scope="row">Complete HT</th>
          <td><input id="txtComcodyCode" name="txtComcodyCode"
-          type="text" title="" placeholder="Cody" class="w100p" /></td>
+          type="text" title="" placeholder="HT" class="w100p" /></td>
         </tr>
         <tr>
          <th scope="row">HCS Order</th>
          <td><input id="txtHsOrderNo" name="txtHsOrderNo"
-          type="text" title="" placeholder="HS Order" class="w100p" />
+          type="text" title="" placeholder="HCS Order" class="w100p" />
          </td>
          <th scope="row">CS Period</th>
          <td><p style="width:70%;">
@@ -962,7 +962,7 @@ var TODAY_DD      = "${toDay}";
         <tr>
          <th scope="row">Care Service Order</th>
          <td><input id="txtSalesOrder" name="txtSalesOrder"
-          type="text" title="" placeholder="Sales Order" class="w100p" />
+          type="text" title="" placeholder="CS Order" class="w100p" />
          </td>
 
          <th scope="row">Dept. Code</th>
@@ -1052,7 +1052,7 @@ var TODAY_DD      = "${toDay}";
         <tr>
          <th scope="row">Sales Order</th>
          <td><input id="ManuaSalesOrder" name="ManuaSalesOrder"
-          type="text" title="" placeholder="Sales Order" class="w100p" />
+          type="text" title="" placeholder="CS Order" class="w100p" />
          </td>
          <th scope="row">HS Period</th>
          <td><p style="width:70%"><input id="ManuaMyBSMonth" name="ManuaMyBSMonth"
