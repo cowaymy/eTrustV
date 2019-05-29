@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.biz.common.MainNoticeService;
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -39,12 +40,15 @@ public class MainNoticeController {
 	public ResponseEntity<List<EgovMap>> selectDailyCount(@RequestParam Map<String, Object> params, SessionVO sessionVO) {
 
 	    String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
-        params.put("memCode", memCode);
-        EgovMap apprDtls = new EgovMap();
-        apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
 
-	    if(apprDtls != null) {
-	        params.put("apprGrp", 1);
+	    if(!CommonUtils.containsEmpty(memCode)) {
+	        params.put("memCode", memCode);
+	        EgovMap apprDtls = new EgovMap();
+	        apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+
+	        if(apprDtls != null) {
+	            params.put("apprGrp", 1);
+	        }
 	    }
 
 	    params.put("userId", sessionVO.getUserName());

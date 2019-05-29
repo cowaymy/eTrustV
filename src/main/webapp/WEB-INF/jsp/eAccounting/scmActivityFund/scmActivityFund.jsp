@@ -118,6 +118,14 @@ $(document).ready(function () {
     fn_setToMonth();
 
     $("#editRejBtn").click(fn_editRejected);
+
+    if('${clmNo}' != null && '${clmNo}' != "") {
+        $("#clmMonth").val("");
+
+        $("#clmNo").val('${clmNo}');
+
+        fn_selectStaffClaimList();
+   }
 });
 
 function fn_setToMonth() {

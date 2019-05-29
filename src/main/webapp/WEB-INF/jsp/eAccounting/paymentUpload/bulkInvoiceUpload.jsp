@@ -823,14 +823,8 @@
                 dataField : "supplier",
                 headerText : "Supplier Code"
             }, {
-                dataField : "supplierName",
-                headerText : "Supplier Name"
-            }, {
                 dataField : "costCenter",
                 headerText : "Cost Center Code"
-            }, {
-                dataField : "costCenterName",
-                headerText : "Cost Center Name"
             }, {
                 dataField : "budgetCode",
                 headerText : "Budget Code"

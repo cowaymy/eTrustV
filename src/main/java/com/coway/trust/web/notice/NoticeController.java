@@ -28,6 +28,7 @@ import com.coway.trust.biz.notice.NoticeVO;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -174,12 +175,14 @@ public class NoticeController {
         LOGGER.debug("params :: " + params);
 
         String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
-        params.put("memCode", memCode);
-        EgovMap apprDtls = new EgovMap();
-        apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+        if(!CommonUtils.containsEmpty(memCode)) {
+            params.put("memCode", memCode);
+            EgovMap apprDtls = new EgovMap();
+            apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
 
-        if(apprDtls != null) {
-            params.put("apprGrp", 1);
+            if(apprDtls != null) {
+                params.put("apprGrp", 1);
+            }
         }
 
         params.put("userId", sessionVO.getUserName());
@@ -196,6 +199,8 @@ public class NoticeController {
 
         LOGGER.debug("updateNtf.do :: start");
         LOGGER.debug("params :: " + params);
+
+        params.put("updUserId", sessionVO.getUserId());
 
         noticeService.updateNtfStus(params);
 

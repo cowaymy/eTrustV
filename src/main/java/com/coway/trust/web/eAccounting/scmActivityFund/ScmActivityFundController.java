@@ -64,9 +64,14 @@ public class ScmActivityFundController {
 	private WebInvoiceService webInvoiceService;
 
 	@RequestMapping(value = "/scmActivityFundMgmt.do")
-	public String scmActivityFundMgmt(ModelMap model) {
-		return "eAccounting/scmActivityFund/scmActivityFund";
-	}
+    public String scmActivityFundMgmt(@RequestParam Map<String, Object> params, ModelMap model) {
+        if (params != null) {
+            String clmNo = (String) params.get("clmNo");
+            model.addAttribute("clmNo", clmNo);
+        }
+
+        return "eAccounting/scmActivityFund/scmActivityFund";
+    }
 
 	@RequestMapping(value = "/selectScmActivityFundList.do")
 	public ResponseEntity<List<EgovMap>> selectScmActivityFundList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
