@@ -1407,7 +1407,7 @@
              </table>
         </div>
 
-        <article class="grid_wrap" id="excel_grid_wrap" ><!-- grid_wrap start    style="display: none;" -->
+        <article class="grid_wrap" id="excel_grid_wrap"  style="display : none"><!-- grid_wrap start    style="display: none;" -->
         </article><!-- grid_wrap end -->
 
         <ul class="center_btns" id="newBulkBtns">
