@@ -439,10 +439,10 @@
         <col style="width: *" />
         <col style="width: 150px" />
         <col style="width: *" />
-        <col style="width: 165px" />
+        <!-- <col style="width: 165px" />
         <col style="width: *" />
         <col style="width: 165px" />
-        <col style="width: *" />
+        <col style="width: *" /> -->
        </colgroup>
        <tbody>
         <tr>
@@ -533,10 +533,10 @@
         <col style="width: *" />
         <col style="width: 150px" />
         <col style="width: *" />
-        <col style="width: 165px" />
+        <!-- <col style="width: 165px" />
         <col style="width: *" />
         <col style="width: 165px" />
-        <col style="width: *" />
+        <col style="width: *" /> -->
        </colgroup>
        <tbody>
         <tr>
