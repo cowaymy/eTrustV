@@ -245,6 +245,17 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 			if(overbudget.equals("N")){
 				budgetMapper.insertApprove(approvalMap);
 				budgetMapper.updateAdjustmentM(approvalMap);
+
+				Map ntf = new HashMap<String, Object>();
+				ntf.put("code", "Budget");
+				ntf.put("codeName", "Budget Adjustment");
+				ntf.put("clmNo", budgetDocNo.toString());
+				ntf.put("appvStus", "R");
+				ntf.put("rejctResn", "Pending Approval.");
+				ntf.put("reqstUserId", "BUDGET");
+				ntf.put("userId", params.get("userId"));
+
+				webInvoiceMapper.insertNotification(ntf);
 			}else{
 
 				params.put("totCnt", addCnt+updCnt+delCnt);
@@ -351,9 +362,23 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 						budgetMapper.updateAdjustmentM(approvalMap);
 					}
 
+					if("J".equals(params.get("appvPrcssStus").toString())) {
+					    Map ntf = new HashMap<String, Object>();
+
+					    ntf.put("budgetDocNo", budgetDocNo.toString());
+					    String reqstName = budgetMapper.getReqDtl(ntf);
+
+					    ntf.put("code", "Budget");
+		                ntf.put("codeName", "Budget Adjustment");
+		                ntf.put("clmNo", budgetDocNo.toString());
+		                ntf.put("appvStus", "J");
+		                ntf.put("rejctResn", params.get("rejectMsg"));
+		                ntf.put("reqstUserId", reqstName);
+		                ntf.put("userId", params.get("userId"));
+
+		                webInvoiceMapper.insertNotification(ntf);
+					}
 				}
-
-
 			}
 		}
 
