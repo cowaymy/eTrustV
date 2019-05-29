@@ -1,7 +1,10 @@
 package com.coway.trust.web.common;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.common.MainNoticeService;
+import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -28,8 +32,21 @@ public class MainNoticeController {
 	@Autowired
 	private MainNoticeService mainNoticeService;
 
+	@Resource(name = "webInvoiceService")
+    private WebInvoiceService webInvoiceService;
+
 	@RequestMapping(value = "/selectDailyCount.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectDailyCount(@RequestParam Map<String, Object> params, SessionVO sessionVO) {
+
+	    String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+        params.put("memCode", memCode);
+        EgovMap apprDtls = new EgovMap();
+        apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+
+	    if(apprDtls != null) {
+	        params.put("apprGrp", 1);
+	    }
+
 	    params.put("userId", sessionVO.getUserName());
 
 		List<EgovMap> selectDailyCountList = mainNoticeService.selectDailyCount(params);
