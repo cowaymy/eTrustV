@@ -536,11 +536,11 @@ function fn_destroyMyGrid() {
 
 function fn_addMyGridRow() {
     if(AUIGrid.getRowCount(myGridID) > 0) {
-        AUIGrid.addRow(myGridID, {clamUn:AUIGrid.getCellValue(myGridID, 0, "clamUn"),expGrp:$(":input:radio[name=expGrp]:checked").val(),cur:"MYR",gstBeforAmt:0,gstAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+        AUIGrid.addRow(myGridID, {clamUn:AUIGrid.getCellValue(myGridID, 0, "clamUn"),taxCode:"OP (Purchase(0%):Out of scope)",expGrp:$(":input:radio[name=expGrp]:checked").val(),cur:"MYR",gstBeforAmt:0,gstAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
     } else {
         Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J4"}, function(result) {
             console.log(result);
-            AUIGrid.addRow(myGridID, {clamUn:result.clamUn,expGrp:$(":input:radio[name=expGrp]:checked").val(),cur:"MYR",gstBeforAmt:0,gstAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+            AUIGrid.addRow(myGridID, {clamUn:result.clamUn,expGrp:$(":input:radio[name=expGrp]:checked").val(),taxCode:"OP (Purchase(0%):Out of scope)",cur:"MYR",gstBeforAmt:0,gstAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
         });
     }
 }
@@ -1458,7 +1458,6 @@ function fn_checkClmMonthAndMemAccId() {
             <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
             <li><p class="link_btn"><a href="#" id="_staffClaimBtn">Staff Claim</a></p></li>
             <%-- </c:if> --%>
-            <li><p class="link_btn"><a href="#" id="newExpStaffClaim">New Staff Claim (Submission Only)</a></p></li>
         </ul>
         <ul class="btns">
         </ul>

@@ -245,12 +245,12 @@ var myGridColumnLayout = [ {
 }, {
     dataField : "taxCode",
     headerText : '<spring:message code="newWebInvoice.taxCode" />',
-    renderer : {
+    /*renderer : {
         type : "DropDownListRenderer",
         list : keyValueList, //key-value Object 로 구성된 리스트
         keyField : "taxCode", // key 에 해당되는 필드명
         valueField : "taxName", // value 에 해당되는 필드명
-    }
+    }*/
 }, {
     dataField : "taxName",
     visible : false // Color 칼럼은 숨긴채 출력시킴
