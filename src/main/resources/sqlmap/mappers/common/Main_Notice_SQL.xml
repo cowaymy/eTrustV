@@ -38,10 +38,16 @@ WITH VIEW_COUNT AS
 
      (SELECT CUST_ACC_QTY
         FROM SAL0222M )  ACC_ACT_ACCOUNT,
-
+]]>
      (SELECT COUNT(*)
          FROM SYS0092M
-       WHERE NTF_USER_ID = #{userId}
+       WHERE
+       <if test="apprGrp == null or apprGrp == '' ">
+           NTF_USER_ID = #{userId}
+       </if>
+       <if test="apprGrp == 1 ">
+           NTF_USER_ID IN (#{userId}, (SELECT APPR_GRP FROM FCM0023M WHERE APPR_MEM_NAME = #{userId} and GRP_NTF = '1'))
+       </if>
            AND NTF_FLAG = '1') NTF_CNT
 FROM DUAL )
 
@@ -55,7 +61,7 @@ SELECT
        ACC_ACT_ACCOUNT,
        NTF_CNT
 FROM VIEW_COUNT
-	]]>
+
 	</select>
 
 

@@ -319,6 +319,7 @@ $(document).ready(function(){
 
     var adjPOptions = {
             enableCellMerge : true,
+            useGroupingPanel : false,
             showStateColumn:false,
             showRowNumColumn : true,
             showRowAllCheckBox : true,

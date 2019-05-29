@@ -180,7 +180,13 @@
             ON SYS0092M.NTF_KEY = a.CLM_NO
         LEFT JOIN FCM0019M b
             ON SYS0092M.NTF_KEY = b.CLM_NO
-        WHERE NTF_USER_ID = #{userId}
+        WHERE
+        <if test="apprGrp == null or apprGrp == '' ">
+           NTF_USER_ID = #{userId}
+       </if>
+       <if test="apprGrp == 1 ">
+           NTF_USER_ID IN (#{userId}, (SELECT APPR_GRP FROM FCM0023M WHERE APPR_MEM_NAME = #{userId} and GRP_NTF = '1'))
+       </if>
         <if test="ntfFlag != null and ntfFlag != '' ">
             AND NTF_FLAG = #{ntfFlag}
         </if>

@@ -334,15 +334,14 @@ function fn_budgetApproval(value){
                 textName : "promptText"
             };
 
+        $("#appvStus").val("C"); // adjustment Close
+        $("#appvPrcssStus").val("J"); //Approval
 
          Common.prompt("<spring:message code="budget.msg.reject" /> ", "", function(){
 
              $("#rejectMsg").val($("#promptText").val());
              fn_saveApprove(value);
          }, null, option);
-
-        $("#appvStus").val("C"); // adjustment Close
-        $("#appvPrcssStus").val("J"); //Approval
     }
 
 }

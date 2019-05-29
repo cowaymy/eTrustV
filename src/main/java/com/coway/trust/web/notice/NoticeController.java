@@ -3,6 +3,7 @@ package com.coway.trust.web.notice;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.biz.notice.NoticeService;
 import com.coway.trust.biz.notice.NoticeVO;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
@@ -49,6 +51,9 @@ public class NoticeController {
 
 	@Autowired
 	private FileApplication fileApplication;
+
+	@Resource(name = "webInvoiceService")
+    private WebInvoiceService webInvoiceService;
 
 	@RequestMapping(value = "/selectCodeList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params) {
@@ -168,7 +173,17 @@ public class NoticeController {
         LOGGER.debug("selectNtfList.do :: start");
         LOGGER.debug("params :: " + params);
 
+        String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+        params.put("memCode", memCode);
+        EgovMap apprDtls = new EgovMap();
+        apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+
+        if(apprDtls != null) {
+            params.put("apprGrp", 1);
+        }
+
         params.put("userId", sessionVO.getUserName());
+
         List<EgovMap> itemGrp = noticeService.selectNtfList(params);
 
         LOGGER.debug("selectNtfList.do :: end");
