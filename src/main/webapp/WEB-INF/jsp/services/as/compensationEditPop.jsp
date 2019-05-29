@@ -169,6 +169,8 @@
           var $this = $(this);
           var fileId = $this.attr("data-id");
 
+          alert("${pageContext.request.contextPath}");
+
           $.fileDownload("${pageContext.request.contextPath}/file/fileDown.do",
             { httpMethod : "POST",
               contentType : "application/json;charset=UTF-8",
@@ -678,10 +680,10 @@
         <col style="width: *" />
         <col style="width: 150px" />
         <col style="width: *" />
-        <col style="width: 165px" />
+        <!-- <col style="width: 165px" />
         <col style="width: *" />
         <col style="width: 165px" />
-        <col style="width: *" />
+        <col style="width: *" /> -->
        </colgroup>
        <tbody>
         <tr>
@@ -775,10 +777,10 @@
         <col style="width: *" />
         <col style="width: 150px" />
         <col style="width: *" />
-        <col style="width: 165px" />
+        <!-- <col style="width: 165px" />
         <col style="width: *" />
         <col style="width: 165px" />
-        <col style="width: *" />
+        <col style="width: *" /> -->
        </colgroup>
        <tbody>
         <tr>
