@@ -20,7 +20,7 @@
            J.CODE_DESC AS CSP_MLFNC_RSN_ID,
            H.CODE_DESC AS CSP_TYP_ID,
            I.CODE_DESC AS CSP_RESP_ID,
-           A.DEPT_TO_BEAR AS DEPT_TO_BEAR,
+           L.CODE_DESC AS DEPT_TO_BEAR,
            TO_CHAR(NVL(A.CSP_AMT, 0), '9,999,999,999,999.99') AS CSP_AMT,
            G.CODE_NAME AS STUS_CODE_ID,
            A.STUS_CODE_ID AS STUS_ID,
@@ -36,6 +36,7 @@
     LEFT JOIN SYS0013M I ON A.CSP_SLUTN_RSN_ID = I.CODE_ID AND I.CODE_MASTER_ID = '410'
     LEFT JOIN SYS0013M J ON A.CSP_MLFNC_RSN_ID = J.CODE_ID AND J.CODE_MASTER_ID = '411'
     LEFT JOIN SYS0013M K ON A.CSP_DFT_TYP_ID = K.CODE_ID AND K.CODE_MASTER_ID = '412'
+    LEFT JOIN SYS0013M L ON A.DEPT_TO_BEAR = L.CODE_ID AND L.CODE_MASTER_ID = '359'
     WHERE 1=1
 
     <if test="orderNum != null and orderNum != '' " >
@@ -69,7 +70,7 @@
       AND A.CSP_TYP_ID = #{cpsTyp}
     </if>
     <if test="respTyp != null and respTyp != '' " >
-      AND A.CSP_RESP_ID = #{respTyp}
+      AND A.DEPT_TO_BEAR = #{respTyp}
     </if>
     <if test="cause != null and cause != '' " >
       AND A.CSP_MLFNC_RSN_ID = #{cause}
@@ -711,7 +712,7 @@
          , A.CSP_MLFNC_RSN_ID AS CAUSE
          , A.CSP_SLUTN_RSN_ID AS SOLUTION_MTD
          , A.CSP_TYP_ID AS CSP_TYP_ID
-         , A.CSP_ITM AS CSP_TYP
+         , A.CSP_ITM AS CSP_ITM
          , A.CSP_ITM_OTH AS CSP_ITM_OTH
          , A.CSP_RMK AS CSP_RMK
          , A.CSP_AMT AS CSP_AMT
@@ -766,8 +767,8 @@
                #{cause},
                #{solutionMtd},
                #{cpsTyp},
-               '',
-               #{CpsTypRsn},
+               #{cpsItm},
+               #{searchdepartment},
                #{rmk},
                #{compTotAmt},
                #{atchFileGrpId},
@@ -792,8 +793,8 @@
                       , CSP_MLFNC_RSN_ID = #{cause}
                       , CSP_SLUTN_RSN_ID = #{solutionMtd}
                       , CSP_TYP_ID = #{cpsTyp}
-                      , CSP_ITM = ''
-                      , CSP_ITM_OTH = #{CpsTypRsn}
+                      , CSP_ITM = #{cspItm}
+                      , CSP_ITM_OTH = #{searchdepartment}
                       , CSP_RMK = #{rmk}
                       , CSP_AMT = #{compTotAmt}
                       , ATCH_FILE_GRP_ID = NVL(#{atchFileGrpId}, ATCH_FILE_GRP_ID)
@@ -884,7 +885,7 @@
   </select>
 
   <select id="selectMainDept"  resultType="egovMap">
-    SELECT CODE CODE_ID
+    SELECT CODE_ID CODE_ID
          , CODE || ' - ' || CODE_DESC CODE_NAME
     FROM GBSLCVD.SYS0013M
     WHERE CODE_MASTER_ID = 359
