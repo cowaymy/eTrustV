@@ -15,16 +15,29 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface ApiMapper {
   EgovMap selectCowayCustNricOrPassport(Map<String, Object> params);
   EgovMap isNricOrPassportMatchInvoiceNo(Map<String, Object> params);
+  List<EgovMap> selectInvoiceSubscriptionsList(Map<String, Object> params);
   List<EgovMap> selectAccountCode(Map<String, Object> params);
   EgovMap selectCustVANo(Map<String, Object> params);
   List<EgovMap> selectAutoDebitEnrolmentsList(Map<String, Object> params);
   EgovMap selectCustTotalProductsCount(Map<String, Object> params);
+  EgovMap selectLastPayment(Map<String, Object> params);
   EgovMap getCustTotalOutstanding(Map<String, Object> params);
   EgovMap getTotalMembershipExpired(Map<String, Object> params);
+  List<EgovMap> selectCowayAccountProductPreviewList(Map<String, Object> params);
+  List<EgovMap> selectCowayAccountProductPreviewListByAccountCode(Map<String, Object> params);
+  EgovMap selectProductDetail(Map<String, Object> params);
   EgovMap selectHeartServiceList(Map<String, Object> params);
   EgovMap selectTechnicianServicesList(Map<String, Object> params);
   EgovMap isUserHasOrdNo(Map<String, Object> params);
+  List<EgovMap> selectInvoiceListByOrderNumber(Map<String, Object> params);
+  List<EgovMap> selectTransactionHistoryList(Map<String, Object> params);
+  List<EgovMap> selectInvoiceDetailByTaxInvoiceRefNo(Map<String, Object> params);
+  EgovMap isUserHasTaxInvoiceRefNo(Map<String, Object> params);
   List<EgovMap> selectMembershipProgrammesList(Map<String, Object> params);
+  List<EgovMap> selectOrderNumberList(Map<String, Object> params);
+  int addOrEditPersonInCharge(Map<String, Object> params);
+  int addOrEditCustomerInfo(Map<String, Object> params);
+  int addEInvoiceSubscription(Map<String, Object> params);
 
   void insertApiAccessLog(Map<String, Object> params);
 

@@ -11,7 +11,7 @@
 
 	<select id="selectCowayCustNricOrPassport" parameterType="Map" resultType="egovMap">
 		SELECT *
-		FROM CP01001V EXTENT1
+		FROM CP1001V EXTENT1
 		WHERE 1=1
 		AND ROWNUM <![CDATA[ <= ]]> 1
 		AND EXTENT1.NRIC_OR_PASSPORT = #{nricOrPassport}
@@ -32,11 +32,21 @@
 			SELECT TRADE_SO_ID ORD_ID, TRADE_DOC_NO INVOICE_NO FROM PAY0035D WHERE TRADE_DOC_NO LIKE 'BR%'
 			) EXTENT3 ON EXTENT3.ORD_ID = EXTENT2.SALES_ORD_ID
 		WHERE 1=1
-        AND EXTENT1.NRIC = #{nricOrPassport} AND EXTENT3.INVOICE_NO = #{invoiceNo};
+        AND EXTENT1.NRIC = #{nricOrPassport} AND EXTENT3.INVOICE_NO = #{invoiceNo}
+    </select>
+
+     <select id="selectInvoiceSubscriptionsList" parameterType="Map" resultType="egovMap">
+       SELECT
+            EXTENT1.CUST_BILL_EMAIL EMAIL,
+            EXTENT2.NAME FULL_NAME
+		FROM SAL0024D EXTENT1
+		JOIN SAL0029D EXTENT2 ON EXTENT1.CUST_BILL_CUST_ID = EXTENT2.CUST_ID
+		WHERE EXTENT1.CUST_BILL_IS_ESTM = 1
+		AND EXTENT1.CUST_BILL_CUST_ID = #{cowayCustId}
     </select>
 
      <select id="selectAccountCode" parameterType="Map" resultType="egovMap">
-        SELECT CUST_BILL_GRP_NO
+        SELECT CUST_BILL_ID
         FROM SAL0024D
             WHERE 1 = 1
             AND CUST_BILL_CUST_ID = #{cowayCustId}
@@ -51,17 +61,30 @@
             AND CUST_ID = #{cowayCustId}
     </select>
 
+    <select id="selectLastPayment" parameterType="Map" resultType="egovMap">
+       SELECT TOT_AMT FROM (
+            SELECT EXTENT1.TOT_AMT,EXTENT2.CUST_ID,EXTENT3.CUST_BILL_ID,
+                RANK() OVER(PARTITION BY EXTENT2.CUST_ID ORDER BY EXTENT1.PAY_ID DESC) RANK
+            FROM PAY0064D EXTENT1
+            JOIN SAL0001D EXTENT2 ON EXTENT1.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+            JOIN SAL0024D EXTENT3 ON EXTENT3.CUST_BILL_ID = EXTENT2.CUST_BILL_ID
+        )
+        WHERE RANK = 1
+          AND CUST_ID = #{cowayCustId}
+          AND CUST_BILL_ID = #{accountCode}
+    </select>
+
     <select id="getCustTotalOutstanding" parameterType="Map" resultType="egovMap">
         SELECT
             EXTENT1.OTSTND_AMT
-        FROM CP01007V EXTENT1
+        FROM CP1007V EXTENT1
         WHERE EXTENT1.CUST_ID = #{cowayCustId}
     </select>
 
     <select id="getTotalMembershipExpired" parameterType="Map" resultType="egovMap">
         SELECT
             EXTENT1.EXPIRED_MEMBERSHIP
-        FROM CP01008V EXTENT1
+        FROM CP1008V EXTENT1
         WHERE EXTENT1.CUST_ID = #{cowayCustId}
     </select>
 
@@ -84,9 +107,70 @@
 			TRANSACTION_AMOUNT ,
 			RENT_PAY_MODE_CODE ,
 			CODE_NAME
-         FROM CP01010V
+         FROM CP1010V
          WHERE CUST_ID = #{cowayCustId}
      </select>
+
+     <select id="selectCowayAccountProductPreviewList" parameterType="Map" resultType="egovMap">
+		SELECT
+			NVL((PRODUCT_TOTAL_OUTSTANDING + MEMBERSHIP_OUTSTANDING),0) TOTAL_OUTSTANDING,
+			PRODUCT_TOTAL_OUTSTANDING,
+			MEMBERSHIP_OUTSTANDING,
+			ORDER_STUS,
+			INSTALL_DT ,
+			MEMBERSHIP_EXPIRY_DATE ,
+			LAST_SERVICE_DT ,
+			STK_CODE ,
+			STK_DESC ,
+			SALES_ORD_NO
+		FROM CP1013V
+		WHERE CUST_ID = #{cowayCustId}
+     </select>
+
+     <select id="selectCowayAccountProductPreviewListByAccountCode" parameterType="Map" resultType="egovMap">
+		SELECT
+			NVL((PRODUCT_TOTAL_OUTSTANDING + MEMBERSHIP_OUTSTANDING),0) TOTAL_OUTSTANDING,
+			LAST_SERVICE_DT ,
+			INSTALL_DT ,
+			MEMBERSHIPEXPIRYDATE ,
+			STK_CODE ,
+			STK_DESC ,
+			SALES_ORD_NO
+		FROM CP1013V
+		WHERE ACCOUNT_CODE = #{accountCode}
+     </select>
+
+     <select id="selectProductDetail" parameterType="Map" resultType="egovMap">
+        SELECT
+			PRODUCT_TOTAL_OUTSTANDING ,
+			MEMBERSHIP_OUTSTANDING ,
+			INSTALL_DT ,
+			LAST_SERVICE_DT ,
+			SALES_ORD_NO ,
+			STK_CODE ,
+			SERIAL_NO ,
+			STK_DESC ,
+			ADD1 ,
+			ADD2 ,
+			POSTCODE ,
+			AREA ,
+			STATE_NAME ,
+			BILLER_CODE ,
+			JOMPAY_REF ,
+			MEMBERSHIP_FEE ,
+			MONTHLY_RENTAL ,
+			MEMBER_SHIP_TYPE ,
+			CODY_CONTACT ,
+			CODY_NAME ,
+			MEMBERSHIPSTARTDATE ,
+			MEMBERSHIPEXPIRYDATE ,
+			MAIL_CNT_NAME ,
+			MAIL_CNT_TELM ,
+			MAIL_CNT_EMAIL ,
+			MAIL_CNT_NRIC
+		FROM CP1013V
+		WHERE SALES_ORD_NO = #{orderNo}
+    </select>
 
     <select id="selectHeartServiceList" parameterType="Map" resultType="egovMap">
         SELECT
@@ -94,7 +178,7 @@
             CODY_NO ,
             CODY_NAME ,
             LAST_SERVICE_DATE
-         FROM CP01014V
+         FROM CP1014V
          WHERE ORD_NO = #{orderNo}
     </select>
 
@@ -117,25 +201,177 @@
         AND SALES_ORD_NO = #{orderNo}
     </select>
 
+        <select id="selectInvoiceListByOrderNumber" parameterType="Map" resultType="egovMap">
+    <if test='type == "REN" or type == "RENSVM"'>
+        SELECT
+            EXTENT2.TAX_INVC_ID,EXTENT2.TAX_INVC_CHRG AMOUNT,EXTENT1.INVC_ITM_ORD_NO SALES_ORD_NO,EXTENT2.TAX_INVC_REF_DT INVOICE_DT, EXTENT2.TAX_INVC_REF_NO
+        FROM PAY0030D EXTENT1
+        JOIN PAY0029D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
+    </if>
+    <if test='type == "SVM"'>
+        SELECT
+           EXTENT2.TAX_INVC_ID,EXTENT2.TAX_INVC_CHRG AMOUNT,EXTENT1.INVC_ITM_ORD_NO SALES_ORD_NO,EXTENT2.TAX_INVC_REF_DT INVOICE_DT, EXTENT2.TAX_INVC_REF_NO
+        FROM PAY0032D EXTENT1
+        JOIN PAY0031D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
+    </if>
+    <if test='type == "OUT"'>
+        SELECT
+            EXTENT2.TAX_INVC_ID,EXTENT2.TAX_INVC_CHRG AMOUNT,EXTENT1.INVC_ITM_ORD_NO SALES_ORD_NO,EXTENT2.TAX_INVC_REF_DT INVOICE_DT, EXTENT2.TAX_INVC_REF_NO
+        FROM PAY0034D EXTENT1
+        JOIN PAY0031D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
+    </if>
+    WHERE 1 = 1
+    AND EXTENT2.INVC_ITM_ORD_NO = #{orderNo}
+        <if test='type == "REN"'>      AND TAX_INVC_BILL_TYPE = 133</if>
+        <if test='type == "RENSVM"'>AND TAX_INVC_BILL_TYPE = 134</if>
+    </select>
+
+    <select id="selectTransactionHistoryList" parameterType="Map" resultType="egovMap">
+	    SELECT
+			ACCOUNT_CODE ,
+			RECEIPT_NO ,
+			PAY_DATA ,
+			AMOUNT
+		FROM CP1018V
+		WHERE 1 = 1
+		AND SALES_ORD_NO = #{orderNo}
+    </select>
+
+    <select id="isUserHasTaxInvoiceRefNo" parameterType="Map" resultType="egovMap">
+		SELECT
+		   CASE WHEN COUNT(*) > 0 THEN 'YES' ELSE 'NO' END IS_USER_HAS_TAX_INVOICE_REF_NO
+		FROM
+		SAL0001D EXTENT1
+		JOIN (
+		SELECT TAX_INVC_REF_NO,INVC_ITM_ORD_NO
+		    FROM PAY0030D EXTENT1
+		    JOIN PAY0029D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
+		UNION
+		SELECT TAX_INVC_REF_NO,INVC_ITM_ORD_NO
+		    FROM PAY0032D EXTENT1
+		    JOIN PAY0031D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
+		UNION
+		SELECT TAX_INVC_REF_NO,INVC_ITM_ORD_NO
+		    FROM PAY0034D EXTENT1
+		    JOIN PAY0031D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
+		    )EXTENT2 ON EXTENT1.SALES_ORD_NO = EXTENT2.INVC_ITM_ORD_NO
+	    WHERE 1 = 1
+	       AND CUST_ID = #{cowayCustId}
+	       AND INVC_ITM_ORD_NO = #{orderNo}
+    </select>
+
+    <select id="selectInvoiceDetailByTaxInvoiceRefNo" parameterType="Map" resultType="egovMap">
+    <if test='type == "REN" or type == "RENSVM"'>
+        SELECT
+            EXTENT2.TAX_INVC_ID,EXTENT2.TAX_INVC_CHRG AMOUNT,EXTENT1.INVC_ITM_ORD_NO SALES_ORD_NO,EXTENT2.TAX_INVC_REF_DT INVOICE_DT, EXTENT2.TAX_INVC_REF_NO
+        FROM PAY0030D EXTENT1
+        JOIN PAY0029D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
+    </if>
+    <if test='type == "SVM"'>
+	    SELECT
+	       EXTENT2.TAX_INVC_ID,EXTENT2.TAX_INVC_CHRG AMOUNT,EXTENT1.INVC_ITM_ORD_NO SALES_ORD_NO,EXTENT2.TAX_INVC_REF_DT INVOICE_DT, EXTENT2.TAX_INVC_REF_NO
+	    FROM PAY0032D EXTENT1
+	    JOIN PAY0031D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
+    </if>
+    <if test='type == "OUT"'>
+        SELECT
+            EXTENT2.TAX_INVC_ID,EXTENT2.TAX_INVC_CHRG AMOUNT,EXTENT1.INVC_ITM_ORD_NO SALES_ORD_NO,EXTENT2.TAX_INVC_REF_DT INVOICE_DT, EXTENT2.TAX_INVC_REF_NO
+        FROM PAY0034D EXTENT1
+        JOIN PAY0031D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
+    </if>
+    WHERE 1 = 1
+    AND EXTENT2.TAX_INVC_REF_NO = #{taxInvcRefNo}
+        <if test='type == "REN"'>      AND TAX_INVC_BILL_TYPE = 133</if>
+        <if test='type == "RENSVM"'>AND TAX_INVC_BILL_TYPE = 134</if>
+    </select>
+
+    <select id="selectOrderNumberList" parameterType="Map" resultType="egovMap">
+        SELECT
+            TOTAL_OUTSTANDING ,
+            PRODUCT_TOTAL_OUTSTANDING ,
+            MEMBERSHIP_OUTSTANDING ,
+            ORDER_STATUS ,
+            SALES_ORD_NO
+        FROM CP1023V
+        WHERE CUST_ID = #{cowayCustId}
+    </select>
+
     <select id="selectMembershipProgrammesList" parameterType="Map" resultType="egovMap">
-	   SELECT * FROM CP01024V
+	   SELECT * FROM CP1024V
 	</select>
-    <!-- SELECT *
-FROM SAL0001D EXTENT1
-JOIN (SELECT /*+rule*/ sales_ord_id, INSTALL_DT
-                             FROM (SELECT sales_ord_id, IR.INSTALL_DT,
-                                          RANK ()
-                                          OVER (
-                                             PARTITION BY sales_ord_id
-                                             ORDER BY install_entry_id DESC)
-                                             RANK
-                                     FROM sal0046D IE
-                                     JOIN SAL0047D IR ON IE.INSTALL_ENTRY_ID = IR.ENTRY_ID
-                                    WHERE IE.stus_code_id = 4)
-                            WHERE RANK = 1) EXTENT2 ON EXTENT1.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
-JOIN SYS0013M EXTENT3
-WHERE 1=1
-AND CUST_ID = 2000; -->
+
+	<insert id="addOrEditPersonInCharge" parameterType="Map">
+		INSERT INTO CP0001T
+			(CP_ID ,
+			CUST_ID ,
+			PIC_NAME ,
+			PIC_NRIC ,
+			PIC_MOBILE ,
+			PIC_EMAIL ,
+			STUS_ID ,
+			CRT_USR_ID ,
+			CRT_DT,
+			CP_TYPE_ID
+		) VALUES(
+		   CP0001T_CP_ID_SEQ.NEXTVAL
+			, #{cowayCustId}
+			<choose><when test="picName != null and picName !=''">,#{picName}</when><otherwise>,NULL</otherwise></choose>
+            <choose><when test="picIcNric != null and picIcNric !=''">,#{picIcNric}</when><otherwise>,NULL</otherwise></choose>
+            <choose><when test="picMobile != null and picMobile !=''">,#{picMobile}</when><otherwise>,NULL</otherwise></choose>
+            <choose><when test="picEmail != null and picEmail !=''">,#{picEmail}</when><otherwise>,NULL</otherwise></choose>
+			, 1
+			, 100910
+			, SYSDATE
+			, 5502
+		)
+	</insert>
+
+	<insert id="addOrEditCustomerInfo" parameterType="Map">
+		INSERT INTO CP0001T
+	            (CP_ID ,
+	            CUST_ID ,
+	            CUST_MOBILE ,
+	            CUST_EMAIL ,
+	            STUS_ID ,
+	            CRT_USR_ID ,
+	            CRT_DT,
+	            CP_TYPE_ID
+	        ) VALUES(
+	           CP0001T_CP_ID_SEQ.NEXTVAL
+	            , #{cowayCustId}
+	            <choose><when test="cowayCustMobile != null and cowayCustMobile !=''">,#{cowayCustMobile}</when><otherwise>,NULL</otherwise></choose>
+	            <choose><when test="cowayCustEmail != null and cowayCustEmail !=''">,#{cowayCustEmail}</when><otherwise>,NULL</otherwise></choose>
+	            , 1
+	            , 100910
+	            , SYSDATE
+	            , 5503
+	        )
+    </insert>
+
+    <insert id="addEInvoiceSubscription" parameterType="Map">
+	    INSERT INTO CP0001T
+	                (CP_ID ,
+	                CUST_ID ,
+	                CUST_EMAIL ,
+	                CUST_NAME ,
+	                CUST_EMAIL_VERIFY_STUS ,
+	                STUS_ID ,
+	                CRT_USR_ID ,
+	                CRT_DT,
+	                CP_TYPE_ID
+	            ) VALUES(
+	               CP0001T_CP_ID_SEQ.NEXTVAL
+	                , #{cowayCustId}
+	                <choose><when test="mail != null and email !=''">,#{email}</when><otherwise>,NULL</otherwise></choose>
+	                <choose><when test="fullName != null and fullName !=''">,#{fullName}</when><otherwise>,NULL</otherwise></choose>
+	                <choose><when test="emailVerifyStatus != null and emailVerifyStatus !=''">,#{emailVerifyStatus}</when><otherwise>,NULL</otherwise></choose>
+	                , 1
+	                , 100910
+	                , SYSDATE
+	                , 5504
+	            )
+    </insert>
+
    <insert id="insertApiAccessLog" parameterType="Map">
    INSERT INTO SYS0097M
    (
