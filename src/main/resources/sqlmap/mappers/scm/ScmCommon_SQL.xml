@@ -135,7 +135,7 @@ SELECT DISTINCT A.ID
            AND B.STUS_CODE_ID = 1
            AND B.IS_NCV = 0
            AND C.DISAB = 0
-           AND C.CODE_ID IN (61, 62)
+           AND C.CODE_ID IN (61, 62, 1370)
         UNION ALL
         SELECT DISTINCT 'CS' AS TEAM
              , C.CODE_ID AS ID
