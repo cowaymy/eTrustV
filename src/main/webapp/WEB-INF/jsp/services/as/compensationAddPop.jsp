@@ -31,7 +31,7 @@ var asrNo;
 
       AUIGrid.setSelectionMode(asHistoryGrid, "singleRow");
       AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-        Common.popupDiv("/services/compensation/compensationViewPop.do?compNo=" + compNo, null, null, true, '_compensationViewPop');
+        Common.popupDiv("/services/compensation/compensationViewPop.do?cpsNo=" + cpsNo, null, null, true, '_compensationViewPop');
       });
 
       AUIGrid.bind(asHistoryGrid, "cellClick", function(event) {
@@ -62,6 +62,8 @@ var asrNo;
       $("#m11").hide();
       $("#m12").hide();
       $("#m13").hide();
+      $("#m14").hide();
+      $("#m15").hide();
 
       $("#stusCodeId").change(
         function() {
@@ -77,6 +79,8 @@ var asrNo;
             $("#m11").show();
             $("#m12").show();
             $("#m13").show();
+            $("#m14").show();
+            $("#m15").show();
           } else if ($("#stusCodeId").val() == "1" || $("#stusCodeId").val() == "44") {
             $("#m2").hide();
             $("#m4").hide();
@@ -89,6 +93,8 @@ var asrNo;
             $("#m11").hide();
             $("#m12").hide();
             $("#m13").hide();
+            $("#m14").hide();
+            $("#m15").hide();
           } else if ($("#stusCodeId").val() == "10" || $("#stusCodeId").val() == "36") {
             $("#m2").show();
             $("#m4").hide();
@@ -101,6 +107,8 @@ var asrNo;
             $("#m11").hide();
             $("#m12").hide();
             $("#m13").hide();
+            $("#m14").hide();
+            $("#m15").hide();
           }
         });
     });
@@ -264,6 +272,9 @@ var asrNo;
   }
 
   function fn_doSave() {
+    if (!fn_cmpDt()) {
+      return;
+    }
     if (!fn_validate_field()) {
       return;
     }
@@ -308,6 +319,16 @@ var asrNo;
         msg = msg + "<b>* <spring:message code='sys.msg.necessary' arguments= '" + field + "' htmlEscape='false'/></b><br/>" ;
         field = "";
       }
+      if ($("#comPensationInfoForm #asNo").val() == "" || $("#comPensationInfoForm #asNo").val() == null) {
+        field = "<spring:message code='service.grid.ASNo' />";
+        msg = msg + "<b>* <spring:message code='sys.msg.necessary' arguments= '" + field + "' htmlEscape='false'/></b><br/>" ;
+        field = "";
+      }
+      if ($("#comPensationInfoForm #asrNo").val() == "" || $("#comPensationInfoForm #asrNo").val() == null) {
+        field = "<spring:message code='service.grid.ASRs' />";
+        msg = msg + "<b>* <spring:message code='sys.msg.necessary' arguments= '" + field + "' htmlEscape='false'/></b><br/>" ;
+        field = "";
+      }
       if ($("#stusCodeId").val() == "" || $("#stusCodeId").val() == null) {
         field = "<spring:message code='service.text.Status' />";
         msg = msg + "<b>* <spring:message code='sys.msg.necessary' arguments= '" + field + "' htmlEscape='false'/></b><br/>" ;
@@ -328,7 +349,6 @@ var asrNo;
         msg = msg + "<b>* <spring:message code='sys.msg.necessary' arguments= '" + field + "' htmlEscape='false'/></b><br/>" ;
         field = "";
       }
-      alert($("#branchCde").val());
       if ($("#branchCde").val() == "" || $("#branchCde").val() == null) {
         field = "<spring:message code='service.grid.Branch' />";
         msg = msg + "<b>* <spring:message code='sys.msg.necessary' arguments= '" + field + "' htmlEscape='false'/></b><br/>" ;
@@ -495,6 +515,30 @@ var asrNo;
 
     Common.report("comPensationInfoForm", option);
   }
+
+  function fn_cmpDt() {
+    if ($("#asRqstDt").val() != "" && $("#issueDt").val() != "") {
+      var dt1 = getDateObj($("#asRqstDt").val());
+      var dt2 = getDateObj($("#issueDt").val());
+
+      if (dt1 < dt2) {
+        var field1 = "<spring:message code='service.text.AsRqstDt' />";
+        var field2 = "<spring:message code='service.grid.ReqstDt' />";
+
+        Common.alert("<b>* <spring:message code='sys.msg.LessThnEql' arguments= '" + field2 + " ; " + field1 + "' htmlEscape='false' argumentSeparator=';'/></b><br/>");
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function getDateObj(dateString) {
+    var parts = dateString.split('/');
+    var month = parts[1];
+    var date = parts[0];
+    var year = parts[2];
+    return new Date(year, month, date);
+  }
 </script>
 <body>
  <div id="popup_wrap" class="popup_wrap">
@@ -612,7 +656,7 @@ var asrNo;
          <td>
           <input type="text" title="Create start Date"
           placeholder="DD/MM/YYYY" name="asRqstDt" id="asRqstDt"
-          class="j_date" " />
+          class="j_date" onchange="setTimeout(fn_cmpDt, 500);" />
          </td>
          <th scope="row"><spring:message code='service.grid.CompDt' /><span id='m2' name='m2' class='must'> *</span></th>
          <td>
@@ -628,14 +672,14 @@ var asrNo;
 
         </tr>
         <tr>
-         <th scope="row"><spring:message code='service.grid.ASNo' /></th>
+         <th scope="row"><spring:message code='service.grid.ASNo' /><span id='m14' name='m14' class='must'> *</span></th>
          <td><input type="text" title="" id="asNo"
           name="asNo" placeholder="<spring:message code='service.grid.ASNo' />" class=" " disabled />
           <p class="btn_sky" id="rbt">
           <a href="#" onclick="javascript :fn_doClear()"><spring:message code='service.btn.Clear' /></a>
          </p>
          <span  style="color:red;display: inline-block; margin-top: 5px;"> Choose AS No. from After Service Tab above. </span></td>
-         <th scope="row"><spring:message code='service.grid.ASRs' /></th>
+         <th scope="row"><spring:message code='service.grid.ASRs' /><span id='m15' name='m15' class='must'> *</span></th>
          <td><input type="text" title="" id="asrNo"
           name="asrNo" placeholder="<spring:message code='service.grid.ASRs' />" class=" " disabled />
           </td>
@@ -660,11 +704,18 @@ var asrNo;
            <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
            <c:forEach var="list" items="${mainDeptList}"
             varStatus="status">
-            <option value="${list.codeId}">${list.codeName }</option>
+            <c:choose>
+             <c:when test="${list.codeId=='2862'}">
+              <option value="${list.codeId}" selected>${list.codeName}</option>
+             </c:when>
+             <c:otherwise>
+              <option value="${list.codeId}">${list.codeName}</option>
+             </c:otherwise>
+            </c:choose>
            </c:forEach>
          </select>
          </td>
-         <th scope="row"><spring:message code='service.text.InChrDept' /><span id='m6' name='m6' class='must'> *</span></th>
+         <th scope="row"><spring:message code='service.grid.RespTyp' /><span id='m6' name='m6' class='must'> *</span></th>
          <td><select id="inChrDept" name="inChrDept"
           class="w100p">
            <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
@@ -711,11 +762,11 @@ var asrNo;
        </colgroup>
        <tbody>
         <tr>
-         <th scope="row"><spring:message code='service.text.IssueDt' /><span id='m8' name='m8' class='must'> *</span></th>
+         <th scope="row"><spring:message code='service.grid.ReqstDt' /><span id='m8' name='m8' class='must'> *</span></th>
          <td>
           <input type="text" title="Create start Date"
           placeholder="DD/MM/YYYY" name="issueDt" id="issueDt"
-          class="j_date" " />
+          class="j_date" " onchange="setTimeout(fn_cmpDt, 500);"/>
          </td>
          <th scope="row"></th>
          <td></td>
@@ -771,6 +822,10 @@ var asrNo;
          <th scope="row"></th>
          <td><input type="text" title="" id="CpsTypRsn"
           name="CpsTypRsn" placeholder="" class=" " disabled /></td>
+        </tr>
+        <tr>
+         <th scope="row"><spring:message code='service.grid.CpsItm' /></th>
+         <td colspan="3"><textarea class="w100p" rows="3" style="height:auto" id=cpsItm name="cpsItm"/></td>
         </tr>
         <tr>
          <th scope="row"><spring:message code='service.title.Remark' /></th>
