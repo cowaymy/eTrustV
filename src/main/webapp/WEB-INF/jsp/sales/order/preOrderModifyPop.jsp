@@ -1493,7 +1493,7 @@
                 $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#custEmail").val(custInfo.email); //Email
-                $('#speclInstct').val('${preOrderInfo.instct}');
+                $('#speclInstct').val(`${preOrderInfo.instct}`);
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
@@ -1625,10 +1625,10 @@
                 $('#billMthdEstm').prop("checked", true);
                 $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                 $('#billMthdEmail2').removeAttr("disabled");
-                $('#billMthdEmailTxt1').removeAttr("disabled").val('${preOrderInfo.custBillEmail}');
-                $('#billMthdEmailTxt2').removeAttr("disabled").val('${preOrderInfo.custBillEmailAdd}');
+                $('#billMthdEmailTxt1').removeAttr("disabled").val("${preOrderInfo.custBillEmail}");
+                $('#billMthdEmailTxt2').removeAttr("disabled").val("${preOrderInfo.custBillEmailAdd}");
 
-                if(FormUtil.isNotEmpty('${preOrderInfo.custBillEmailAdd}')) {
+                if(FormUtil.isNotEmpty("${preOrderInfo.custBillEmailAdd}")) {
                     $('#billMthdEmail2').prop("checked", true);
                 }
             }
@@ -1638,12 +1638,12 @@
                 console.log("custCntcEmail : "+$('#custCntcEmail').val());
                 console.log(FormUtil.isNotEmpty($('#custCntcEmail').val().trim()));
 
-                if(FormUtil.isNotEmpty('${preOrderInfo.custBillEmail}')) {
+                if(FormUtil.isNotEmpty("${preOrderInfo.custBillEmail}")) {
 
                     $('#billMthdEstm').prop("checked", true);
                     $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                     $('#billMthdEmail2').removeAttr("disabled");
-                    $('#billMthdEmailTxt1').removeAttr("disabled").val('${preOrderInfo.custBillEmail}');
+                    $('#billMthdEmailTxt1').removeAttr("disabled").val("${preOrderInfo.custBillEmail}");
                     $('#billMthdEmailTxt2').removeAttr("disabled").val('${preOrderInfo.custBillEmailAdd}');
 
                     if(FormUtil.isNotEmpty('${preOrderInfo.custBillEmailAdd}')) {
