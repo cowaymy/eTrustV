@@ -78,6 +78,7 @@ public class CompensationController {
   @RequestMapping(value = "/compensationList.do")
   public String main(@RequestParam Map<String, Object> params, ModelMap model) {
     List<EgovMap> branchWithNMList = compensationService.selectBranchWithNM();
+    List<EgovMap> mainDeptList = compensationService.getMainDeptList();
     List<EgovMap> cpsStatus = compensationService.selectCpsStatus();
     List<EgovMap> cpsTyp = compensationService.selectCpsTyp();
     List<EgovMap> cpsRespTyp = compensationService.selectCpsRespTyp();
@@ -85,6 +86,7 @@ public class CompensationController {
     List<EgovMap> cpsEvtTyp = compensationService.selectCpsEvtTyp();
 
     model.put("branchWithNMList", branchWithNMList);
+    model.put("mainDeptList", mainDeptList);
     model.put("cpsStatus", cpsStatus);
     model.put("cpsTyp", cpsTyp);
     model.put("cpsRespTyp", cpsRespTyp);
