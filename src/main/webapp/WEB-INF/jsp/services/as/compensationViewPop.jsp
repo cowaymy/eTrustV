@@ -64,6 +64,8 @@
       $("#m11").hide();
       $("#m12").hide();
       $("#m13").hide();
+      $("#m14").hide();
+      $("#m15").hide();
 
       if ($("#stusCodeId").val() == "34" || $("#stusCodeId").val() == "35") {
         $("#m2").show();
@@ -77,6 +79,8 @@
         $("#m11").show();
         $("#m12").show();
         $("#m13").show();
+        $("#m14").show();
+        $("#m15").show();
       } else if ($("#stusCodeId").val() == "1" || $("#stusCodeId").val() == "44") {
         $("#m2").hide();
         $("#m4").hide();
@@ -89,6 +93,8 @@
         $("#m11").hide();
         $("#m12").hide();
         $("#m13").hide();
+        $("#m14").hide();
+        $("#m15").hide();
       } else if ($("#stusCodeId").val() == "10" || $("#stusCodeId").val() == "36") {
         $("#m2").show();
         $("#m4").hide();
@@ -101,6 +107,8 @@
         $("#m11").hide();
         $("#m12").hide();
         $("#m13").hide();
+        $("#m14").hide();
+        $("#m15").hide();
       }
 
       /*AttachFile values*/
@@ -450,7 +458,7 @@
          <td>
           <input type="text" title="Create start Date"
           placeholder="DD/MM/YYYY" name="asRqstDt" id="asRqstDt"
-          class="j_date" disabled />
+          class="j_date" value="${compensationView.asRqstDt}" disabled />
          </td>
          <th scope="row"><spring:message code='service.grid.CompDt' /><span id='m2' name='m2' class='must'> *</span></th>
          <td>
@@ -460,11 +468,11 @@
          </td>
         </tr>
         <tr>
-         <th scope="row"><spring:message code='service.grid.ASNo' /></th>
+         <th scope="row"><spring:message code='service.grid.ASNo' /><span id='m14' name='m14' class='must'> *</span></th>
          <td><input type="text" title="" id="asNo"
           name="asNo" placeholder="<spring:message code='service.grid.ASNo' />" class=" " disabled value="${compensationView.asNo}" disabled />
          </td>
-         <th scope="row"><spring:message code='service.grid.ASRs' /></th>
+         <th scope="row"><spring:message code='service.grid.ASRs' /><span id='m15' name='m15' class='must'> *</span></th>
          <td><input type="text" title="" id="asrNo"
           name="asrNo" placeholder="<spring:message code='service.grid.ASRs' />" class=" " disabled value="${compensationView.asrNo}" />
           </td>
@@ -493,7 +501,7 @@
            </c:forEach>
          </select>
          </td>
-         <th scope="row"><spring:message code='service.text.InChrDept' /><span id='m6' name='m6' class='must'> *</span></th>
+         <th scope="row"><spring:message code='service.grid.RespTyp' /><span id='m6' name='m6' class='must'> *</span></th>
          <td><select id="inChrDept" name="inChrDept"
           class="w100p" disabled>
            <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
@@ -540,7 +548,7 @@
        </colgroup>
        <tbody>
         <tr>
-         <th scope="row"><spring:message code='service.text.IssueDt' /><span id='m8' name='m8' class='must'> *</span></th>
+         <th scope="row"><spring:message code='service.grid.ReqstDt' /><span id='m8' name='m8' class='must'> *</span></th>
          <td>
           <input type="text" title="Create start Date"
           placeholder="DD/MM/YYYY" name="issueDt" id="issueDt"
@@ -601,6 +609,11 @@
          <td><input type="text" title="" id="CpsTypRsn"
           name="CpsTypRsn" placeholder="" class=" " disabled /></td>
         </tr>
+        <tr>
+         <th scope="row"><spring:message code='service.grid.CpsItm' /></th>
+         <td colspan="3"><textarea class="w100p" rows="3" style="height:auto" id=cspItm name="cspItm" disabled>${compensationView.cspItm}</textarea></td>
+        </tr>
+        <tr>
         <tr>
          <th scope="row"><spring:message code='service.title.Remark' /></th>
          <td colspan="3"><textarea class="w100p" rows="2" style="height:auto" id="rmk" name="rmk" disabled>${compensationView.cspRmk}</textarea></td>
