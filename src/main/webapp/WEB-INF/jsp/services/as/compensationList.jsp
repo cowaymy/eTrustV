@@ -48,11 +48,15 @@
 
   function cpsGrid() {
     var columnLayout = [ {
-      //dataField : "issueDt",
-      dataField : "asRqstDt",
-      headerText : "<spring:message code='service.grid.AppDt'/>",
+      dataField : "issueDt",
+      headerText : "<spring:message code='service.grid.ReqstDt'/>",
       editable : false,
       width : 150
+    }, {
+        dataField : "asRqstDt",
+        headerText : "<spring:message code='service.text.AsRqstDt'/>",
+        editable : false,
+        width : 150
     }, {
       dataField : "ordNo",
       headerText : "<spring:message code='service.grid.SalesOrder'/>",
@@ -86,7 +90,7 @@
       width : 200,
       style : "my-column",
     }, {
-      dataField : "cspRespId",
+      dataField : "deptToBear",
       headerText : "<spring:message code='service.grid.RespTyp'/>",
       editable : false,
       width : 200,
@@ -368,10 +372,10 @@
       <th scope="row"><spring:message code='service.grid.RespTyp'/></th>
       <td><select class="w100p" id="respTyp" name="respTyp">
         <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
-        <c:forEach var="list" items="${cpsRespTyp}"
-         varStatus="respTyp">
-         <option value="${list.codeId}">${list.codeName }</option>
-        </c:forEach>
+         <c:forEach var="list" items="${mainDeptList}"
+            varStatus="status">
+            <option value="${list.codeId}">${list.codeName }</option>
+         </c:forEach>
       </select>
       </td>
      </tr>
@@ -409,24 +413,16 @@
    <!-- table end -->
    <ul class="right_btns">
     <li><p class="btn_grid">
-      <!-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> -->
        <a href="#" onClick="fn_genAcptLetter()"><spring:message code='service.btn.AcptLetter'/></a>
-      <!--  </c:if> -->
      </p></li>
     <li><p class="btn_grid">
-      <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
        <a href="#" onClick="fn_addCompPop()"><spring:message code='service.btn.AddCase'/></a>
-      </c:if>
      </p></li>
     <li><p class="btn_grid">
-      <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
        <a href="#" onClick="fn_editCompPop()"><spring:message code='service.btn.EditCase'/></a>
-      </c:if>
      </p></li>
     <li><p class="btn_grid">
-      <!-- <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}"> -->
        <a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a>
-      <!-- </c:if> -->
      </p></li>
    </ul>
    <article class="grid_wrap">
