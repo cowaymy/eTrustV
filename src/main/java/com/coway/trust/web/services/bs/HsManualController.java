@@ -348,7 +348,7 @@ public class HsManualController {
 
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		ReturnMessage message = new ReturnMessage();
-		resultValue = hsManualService.insertHsResult(formMap, updList);
+		resultValue = hsManualService.insertHsResult(formMap, updList ,sessionVO);
 
 
 
@@ -1205,7 +1205,38 @@ public class HsManualController {
 		return ResponseEntity.ok(message);
 	}
 
-}
 
+
+/*	@RequestMapping(value = "/hsReversal.do")
+	public ResponseEntity<ReturnMessage> hsReversal( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		logger.debug("params {}", params);
+		String msg = "";
+		EgovMap stkInfo =  hsManualService.checkStkInfo(params);
+
+		if(stkInfo.get("itmStkId").toString() == "1427"){
+
+			// ADD FUNCTION TO REVERSE HS
+			Map<String, Object> hsReverse = new HashMap<String, Object>();
+			hsReverse = hsManualService.reverseHSResult(params);
+
+			// ADD FUNCTION TO CN BILLING AND INVOICE
+			// ADD FUNCTION TO REVERSE AS
+
+		 msg = "HS REVERSAL SUCCESSFUL. HS ORDER NO : " + stkInfo.get("salesOrdNo").toString() ;
+		}else{
+		 msg = "HS REVERSAL ONLY ALLOW FOR OMBAK PRODUCT.";
+		}
+
+		logger.debug("hsReversal - msg : " + msg + " Stock Id : " + stkInfo.get("itmStkId").toString());
+		message.setMessage(msg);
+		return ResponseEntity.ok(message);
+	}
+*/
+
+
+
+
+}
 
 
