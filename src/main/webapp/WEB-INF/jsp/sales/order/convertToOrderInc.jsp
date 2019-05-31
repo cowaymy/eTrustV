@@ -180,7 +180,7 @@
                         $('#billMthdEstm').prop("checked", true);
                         $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                         $('#billMthdEmail2').removeAttr("disabled");
-                        $('#billMthdEmailTxt1').removeAttr("disabled").val('${preOrderInfo.custBillEmail}');
+                        $('#billMthdEmailTxt1').removeAttr("disabled").val("${preOrderInfo.custBillEmail}");
                         $('#billMthdEmailTxt2').removeAttr("disabled").val('${preOrderInfo.custBillEmailAdd}');
 
                         if(FormUtil.isNotEmpty('${preOrderInfo.custBillEmailAdd}')) {
@@ -197,7 +197,7 @@
                             $('#billMthdEstm').prop("checked", true);
                             $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                             $('#billMthdEmail2').removeAttr("disabled");
-                            $('#billMthdEmailTxt1').removeAttr("disabled").val('${preOrderInfo.custBillEmail}');
+                            $('#billMthdEmailTxt1').removeAttr("disabled").val("${preOrderInfo.custBillEmail}");
                             $('#billMthdEmailTxt2').removeAttr("disabled").val('${preOrderInfo.custBillEmailAdd}');
 
                             if(FormUtil.isNotEmpty('${preOrderInfo.custBillEmailAdd}')) {
