@@ -326,7 +326,7 @@ public class htManualController {
 
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		ReturnMessage message = new ReturnMessage();
-		resultValue = htManualService.insertHsResult(formMap, updList);
+		resultValue = htManualService.insertHsResult(formMap, updList , sessionVO);
 
 
 
