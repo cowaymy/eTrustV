@@ -759,9 +759,9 @@ function fn_tempSave() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
+	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if> disabled/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 	<th scope="row"><spring:message code="staffClaim.staffCode" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
+	<td><input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if> disabled/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.bank" /></th>
