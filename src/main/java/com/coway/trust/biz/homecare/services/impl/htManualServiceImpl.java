@@ -195,7 +195,7 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
     return htManualMapper.selectHsManualListPop(params);
   }
 
-  public Map<String, Object> insertHsResult(Map<String, Object> params, List<Object> docType) {
+  public Map<String, Object> insertHsResult(Map<String, Object> params, List<Object> docType , SessionVO sessionVO) {
 
     Boolean success = false;
 
@@ -248,7 +248,7 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
       docSub.put("lok", "4");
       docSub.put("lastSvc", "0");
       docSub.put("codyId", docSub.get("codyId"));
-      docSub.put("creator", "2222");
+      docSub.put("creator", sessionVO.getUserId());
       docSub.put("created", new Date());
 
       htManualMapper.insertHsResult(docSub);
