@@ -608,12 +608,12 @@
                 WHEN B.APPV_PRCSS_STUS = 'R' THEN 'Request'
             END BATCH_STUS_ID,
             C.CLM_NO,
-            <if test="excelFlg = 'S' ">
+            <if test="excelFlag == 0">
                 D.USER_NAME CRT_USER,
                 C.COST_CENTER || ' - ' || C.COST_CENTER_NAME COST_CENTER,
                 C.SUPPLIER || ' - ' || C.SUPPLIER_NAME SUPPLIER,
             </if>
-            <if test="excelFlg = 'E' ">
+            <if test="excelFlag == 1">
                 C.SUPPLIER,
                 C.SUPPLIER_NAME,
                 C.COST_CENTER,

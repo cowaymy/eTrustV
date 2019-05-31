@@ -736,7 +736,7 @@
     function fn_dtlSearch() {
         console.log("fn_dtlSearch");
 
-        $("#excelFlag").val("S");
+        $("#excelFlag").val("0");
 
         Common.ajax("GET", "/eAccounting/paymentUpload/selectBulkInvcDtlList.do",  $('#DtlSearchForm').serialize(), function(result) {
             console.log(result);
@@ -764,7 +764,7 @@
         var list = AUIGrid.getColumnValues(dtlSearchGrid, "appvPrcssNo", true);
         console.log(list);
 
-        $("#excelFlag").val("E");
+        $("#excelFlag").val("1");
 
         Common.ajax("GET", "/eAccounting/paymentUpload/selectBulkInvcDtlList.do",  $('#DtlSearchForm').serialize(), function(result) {
             console.log(result);
@@ -823,8 +823,14 @@
                 dataField : "supplier",
                 headerText : "Supplier Code"
             }, {
+                dataField : "supplierName",
+                headerText : "Supplier Name"
+            }, {
                 dataField : "costCenter",
                 headerText : "Cost Center Code"
+            }, {
+                dataField : "costCenterName",
+                headerText : "Cost Center Name"
             }, {
                 dataField : "budgetCode",
                 headerText : "Budget Code"
