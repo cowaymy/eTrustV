@@ -23,6 +23,11 @@
     color:#000;
 }
 
+.tblFontCongf {
+    font-size:16px;
+    color:#0000FF;
+}
+
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
@@ -48,8 +53,8 @@ $(function(){
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Design</li>
     <li>Artwork Download</li>
+
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -66,7 +71,7 @@ $(function(){
             </colgroup>
             <tbody>
                 <tr>
-                    <td>Social Media</td>
+                    <td>Web & Social Media</td>
                     <td>Flyer</td>
                 </tr>
                 <tr>
@@ -77,34 +82,26 @@ $(function(){
                     <td width="313px"><img ID="RadImageTile2" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/WebShare/Artwork/Flyer-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
                 </tr>
                 <tr>
-	                <td>
-	                    <a href="https://drive.google.com/drive/folders/1lSC4KgzU02pLG52H_UocvO8tvLD-vbjZ?usp=sharing" target="_blank"><font color="#0000FF">Announcement</font></a>
+	                <td >
+	                    <a href="https://drive.google.com/open?id=1IEW-o9_sSLMTRnVsnMXvDfT1w7YTvbTX" target="_blank"><font class="tblFontCongf">Promotion</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/1ThDlCyUPZC2AtR-P9op8ePP3BzXg_fcO?usp=sharing" target="_blank"><font color="#0000FF">Company Profile</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/1XYAM8XZPN6TSmGOog4DlE97eL1vM6593?usp=sharing" target="_blank"><font color="#0000FF">Cover Photo</font></a>
+	                    <a href="https://drive.google.com/open?id=1s-1rApHlYW3XbI9voT02SbqoZRilhmNG" target="_blank"><font class="tblFontCongf">Product USP</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/1s-1rApHlYW3XbI9voT02SbqoZRilhmNG?usp=sharing" target="_blank"><font color="#0000FF">Product USP</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/1GJWyO9MOESxw0H6tJzbzmiihLmrgzP8z?usp=sharing" target="_blank"><font color="#0000FF">Profile Picture</font></a>
+	                    <a href="https://drive.google.com/open?id=1ThDlCyUPZC2AtR-P9op8ePP3BzXg_fcO" target="_blank"><font class="tblFontCongf">Company Profile</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/1IEW-o9_sSLMTRnVsnMXvDfT1w7YTvbTX?usp=sharing" target="_blank"><font color="#0000FF">Promotion</font></a>
 	                    <br />
+	                    <a href="https://drive.google.com/open?id=1w1Js3kDZ9MRBbBReFp8xAFpwAomwAiS0" target="_blank"><font class="tblFontCongf">Social Media</font></a>
 	                    <br />
 	                </td>
 	                <td>
-	                    <a href="https://drive.google.com/drive/folders/1yK9VBEMDUqlUCHoAWJo_HGXVqHLIB83_?usp=sharing" target="_blank"><font color="#0000FF">Cody Recruitment Flyer</font></a>
-	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/1a4gSm3Zz5CjtJ-R7W-1kn9hzcxjXBE5e?usp=sharing" target="_blank"><font color="#0000FF">HP Recruitment Flyer</font></a>
-	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/1aSaCNmNBgmMqD6dyIPblQx9f0FVB9Bnz" target="_blank"><font color="#0000FF">Roadshow Flyer 1</font></a>
-	                    <br />
-	                    <a href="https://drive.google.com/open?id=1Jz-6pPsjpNt3T7vbh5RVluCfPWsBjG4L" target="_blank"><font color="#0000FF">Roadshow Flyer 2</font></a>
-	                    <br />
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOc3Z6Qm9qa19TbTQ" target="_blank"><font color="#0000FF">Roadshow Flyer 3</font></a>
-	                    <br />
-	                    <br />
-	                    <br />
+	                    <a href="https://drive.google.com/open?id=1aSaCNmNBgmMqD6dyIPblQx9f0FVB9Bnz" target="_blank"><font class="tblFontCongf">Roadshow Flyer</font></a>
+                        <br />
+                        <br />
+                        <a href="https://drive.google.com/open?id=1a4gSm3Zz5CjtJ-R7W-1kn9hzcxjXBE5e" target="_blank"><font class="tblFontCongf">Recruitment Flyer</font></a>
+                        <br />
+                        <br />
 	                </td>
                 </tr>
                 <tr>
@@ -119,23 +116,21 @@ $(function(){
                 </tr>
                 <tr>
 	                <td>
-	                    <a href="https://drive.google.com/drive/folders/0B2Nvq8toyZOOLXJIeVF3dmQxYkE?usp=sharing" target="_blank"><font color="#0000FF">Branding Banner</font></a>
-	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/0B2Nvq8toyZOOdG52dTE2OGpnODg?usp=sharing" target="_blank"><font color="#0000FF">Cody Recruitment Banner</font></a>
-	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/0B2Nvq8toyZOOMEluYm1sSVBQZnM?usp=sharing" target="_blank"><font color="#0000FF">Generic Product Banner</font></a>
-	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/0B2Nvq8toyZOOdkFqN2ozR0dfWWc?usp=sharing" target="_blank"><font color="#0000FF">HP Recruitment Banner</font></a>
-	                </td>
+	                    <a href="https://drive.google.com/open?id=1EMiS3xJhGthcAi2w2auPjJZXtPzubYbb" target="_blank"><font class="tblFontCongf">Branding Banner</font></a>
+                        <br />
+                        <br />
+                        <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOdkFqN2ozR0dfWWc" target="_blank"><font class="tblFontCongf">Recruitment Banner</font></a>
+                        <br />
+                        <br />
+                    </td>
 	                <td>
-	                    <a href="https://drive.google.com/drive/folders/1Nc6ijqkYCVqqVScciu9hr-njGjVjFcQ7?usp=sharing" target="_blank"><font color="#0000FF">Branding Bunting</font></a>
-	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/1HkBdsfuComJ-ia2mFaakhM58JLR4i85i?usp=sharing" target="_blank"><font color="#0000FF">Cody Recruitment Bunting</font></a>
-	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/1wlv4pgRXfZ4tJ3FEYUtA1MgAmoTV3Jx7?usp=sharing" target="_blank"><font color="#0000FF">Generic Product Bunting</font></a>
-	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/1oPdCiPd8hAFiyQBWovZu_dIGwzA9c7OP?usp=sharing" target="_blank"><font color="#0000FF">HP Recruitment Bunting</font></a>
-	                </td>
+                        <a href="https://drive.google.com/open?id=1dvfgIUXnzBkgq-_baeZaxk3SGEJRHmuv" target="_blank"><font class="tblFontCongf">Branding Bunting</font></a>
+                        <br />
+                        <br />
+                        <a href="https://drive.google.com/open?id=1fn1fgPHgtSGo_MAN_JfIBp95N4Kj5YqX" target="_blank"><font class="tblFontCongf">Recruitment Bunting</font></a>
+                        <br />
+                        <br />
+                     </td>
                 </tr>
             </tbody>
          </table>
