@@ -196,7 +196,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     return hsManualMapper.selectHsManualListPop(params);
   }
 
-  public Map<String, Object> insertHsResult(Map<String, Object> params, List<Object> docType) {
+  public Map<String, Object> insertHsResult(Map<String, Object> params, List<Object> docType , SessionVO sessionVO) {
 
     Boolean success = false;
 
@@ -235,7 +235,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
         }
 
       }
-
+      logger.debug("docSub : " + docSub);
       docSub.put("no", docNo);
       docSub.put("schdulId", nextSchId);
       docSub.put("salesOrdId", docSub.get("salesOrdId"));
@@ -249,7 +249,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       docSub.put("lok", "4");
       docSub.put("lastSvc", "0");
       docSub.put("codyId", docSub.get("codyId"));
-      docSub.put("creator", "1111");
+      docSub.put("creator", sessionVO.getUserId());
       docSub.put("created", new Date());
 
       hsManualMapper.insertHsResult(docSub);
@@ -871,7 +871,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       sal0090.put("hscodyId", hsBasicmap.get("hscodyId"));
       // sal0090.put("SrvUpdateAt", SYSDATE);
 
-      hsManualMapper.updateHsSVC0006D(sal0090);
+      //hsManualMapper.updateHsSVC0006D(sal0090);
       cnt = hsManualMapper.updateHsConfigBasic(sal0090);
 
       // SrvConfigSetting --> Installation : 281
@@ -2036,5 +2036,17 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
   public EgovMap checkStkDuration(Map<String, Object> params) {
     return hsManualMapper.checkStkDuration(params);
   }
+
+/*  @Override
+  public EgovMap checkStkInfo(Map<String, Object> params) {
+    return hsManualMapper.checkStkInfo(params);
+  }
+
+
+  public Map<String, Object> reverseHSResult(Map<String, Object> params) {
+	  EgovMap hsInfo = new EgovMap();
+  return hsInfo;
+  }
+*/
 
 }
