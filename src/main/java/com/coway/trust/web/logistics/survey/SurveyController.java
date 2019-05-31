@@ -75,4 +75,21 @@ public class SurveyController {
       return ResponseEntity.ok(message);
   }
 
+  @RequestMapping(value = "/verifyStatus.do", method = RequestMethod.GET)
+  public ResponseEntity<ReturnMessage> verifyStatus(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO)
+          throws Exception {
+          int verifyStus = surveyService.verifyStatus(params,sessionVO);
+          String msg = null;
+
+          if(verifyStus == 1){
+            msg = "You done this survey before.<br/> To prevent duplicate survey result, please refresh and login again.";
+          }
+
+          ReturnMessage message = new ReturnMessage();
+          message.setCode(String.valueOf(verifyStus));
+          message.setMessage(msg);
+
+    return ResponseEntity.ok(message);
+  }
+
 }

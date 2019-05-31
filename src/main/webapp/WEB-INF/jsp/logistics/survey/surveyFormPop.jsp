@@ -43,26 +43,16 @@ function btnSubmit(){
 
         console.log(data);
 
-    	Common.ajax("POST", "/logistics/survey/surveySave.do", data, function(result) {
-    		setTimeout(function(){ fn_goMain(),3000 });//Login after 3 sec
-    		Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_goMain());
-        },  function(jqXHR, textStatus, errorThrown) {
-            try {
-                console.log("status : " + jqXHR.status);
-                console.log("code : " + jqXHR.responseJSON.code);
-                console.log("message : " + jqXHR.responseJSON.message);
-                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-
-//              Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.failSaveOrd" /></b>');
-            }
-            catch (e) {
-                console.log(e);
-//              alert("Saving data prepration failed.");
-            }
-
-            alert("Fail : " + jqXHR.responseJSON.message);
-      });
+        Common.ajax("GET", "/logistics/survey/verifyStatus.do", {surveyTypeId:surveyTypeId}, function(result) {
+        	if(result.code != '1'){
+		    	Common.ajax("POST", "/logistics/survey/surveySave.do", data, function(result) {
+		    		setTimeout(function(){ fn_goMain(),3000 });//Login after 3 sec
+		    		Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_goMain());
+		        });
+        	}else{
+        		Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+        	}
+        });
     }else{
     	Common.alert("Please fill up all survey questions.");
     }
