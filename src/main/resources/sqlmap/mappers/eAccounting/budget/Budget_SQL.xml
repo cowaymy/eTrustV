@@ -1414,4 +1414,15 @@ WHERE 1=1
         ON A.UPD_USER_ID = B.USER_ID
         WHERE BUDGET_DOC_NO = #{budgetDocNo}
     </select>
+
+    <select id="getReqDtl" parameterType="Map" resultType="String">
+        SELECT
+            C.NAME
+        FROM FCM0105M A
+        INNER JOIN SYS0047M B
+        ON A.REQST_USER_ID = B.USER_ID
+        INNER JOIN ORG0001D C
+        ON B.HR_CODE = C.MEM_CODE
+        WHERE A.BUDGET_DOC_NO = #{budgetDocNo}
+    </select>
 </mapper>
