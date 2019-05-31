@@ -41,7 +41,7 @@ public interface htManualService {
 
 	List<EgovMap> cmbServiceMemList(Map<String, Object> params);
 
-	Map<String, Object> insertHsResult(Map<String, Object> params, List<Object> docType);
+	Map<String, Object> insertHsResult(Map<String, Object> params, List<Object> docType , SessionVO sessionVO);
 
 	Map<String, Object> addIHsResult(Map<String, Object> params,  List<Object> docType, SessionVO sessionVO) throws Exception  ;
 
