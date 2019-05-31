@@ -42,7 +42,7 @@ public interface HsManualService {
 
   List<EgovMap> cmbServiceMemList(Map<String, Object> params);
 
-  Map<String, Object> insertHsResult(Map<String, Object> params, List<Object> docType);
+  Map<String, Object> insertHsResult(Map<String, Object> params, List<Object> docType , SessionVO sessionVO );
 
   Map<String, Object> addIHsResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO)
       throws Exception;
@@ -144,5 +144,11 @@ public interface HsManualService {
   Map<String, Object> saveASTaxInvoice(Map<String, Object> params);
 
   EgovMap checkStkDuration(Map<String, Object> params);
+
+  // REVERSE OMBAK -- TPY
+
+/*  EgovMap checkStkInfo(Map<String, Object> params);
+
+  Map<String, Object> reverseHSResult(Map<String, Object> params);*/
 
 }
