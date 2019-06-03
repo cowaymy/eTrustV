@@ -337,11 +337,16 @@ var TODAY_DD      = "${toDay}";
 
   function fn_htChange(){
 	  var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+	   var radioVal = $("input:radio[name='searchDivCd']:checked").val();
+
 
 	    if (checkedItems.length <= 0) {
 	      Common.alert('No data selected.');
 	      return;
-	    } else if (checkedItems.length >= 2) {
+	    } else if (radioVal == 2) {
+	    	 Common.alert('Not allow to Assign HT in Manual CS');
+	          return;
+	    }else if (checkedItems.length >= 2) {
 	      Common.alert('Only allow to entry a result with single CS Order');
 	      return;
 	    } else if (checkedItems[0]["code"] != "ACT") {
@@ -384,11 +389,16 @@ var TODAY_DD      = "${toDay}";
   function fn_getHSAddListAjax() {
     // Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
     var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+    var radioVal = $("input:radio[name='searchDivCd']:checked").val();
+
 
     if (checkedItems.length <= 0) {
       Common.alert('No data selected.');
       return;
-    } else if (checkedItems.length >= 2) {
+    } else if (radioVal == 2) {
+        Common.alert('Not allow to Add CS Result in Manual CS');
+        return;
+        }else if (checkedItems.length >= 2) {
       Common.alert('Only allow to entry a result with single CS Order');
       return;
     } else if (checkedItems[0]["code"] != "ACT") {
