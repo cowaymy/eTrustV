@@ -547,7 +547,7 @@ public class SearchPaymentController {
 			}
 			if(!isAOR)
 			{
-				if(String.valueOf(params.get("txtCCHolderName")).trim().equals("")){
+				if(String.valueOf(params.get("cmbCardTypeCC")).trim().equals("1241") &&String.valueOf(params.get("txtCCHolderName")).trim().equals("")){
 					valid = false;
 					message += "* Please key in the credit card holder.<br />";
 				}
@@ -1092,7 +1092,7 @@ public class SearchPaymentController {
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
 	}
-	
+
 	@RequestMapping(value = "/initRCByOrganization.do")
 	public String initRCByOrganization(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){

@@ -8,31 +8,31 @@
 var viewHistoryGridID_V;
 var payItemId = '${payItemId}';
 
-//Grid Properties 설정 
-var gridPros = {            
+//Grid Properties 설정
+var gridPros = {
         editable : false,                 // 편집 가능 여부 (기본값 : false)
         showStateColumn : false     // 상태 칼럼 사용
 };
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
-	
+
 	//IssuedBank 생성
-  doGetCombo('/common/getIssuedBankList.do', '' , ''   , 'sIssuedBankCh' , 'S', '');
-  doGetCombo('/common/getIssuedBankList.do', '' , ''   , 'cmbIssuedBankCC' , 'S', '');
-  doGetCombo('/common/getIssuedBankList.do', '' , ''   , 'cmbIssuedBankOn' , 'S', '');
-	
+  //doGetCombo('/common/getIssuedBankList.do', '' , ''   , 'sIssuedBankCh' , 'S', '');
+  //doGetCombo('/common/getIssuedBankList.do', '' , ''   , 'cmbIssuedBankCC' , 'S', '');
+  //doGetCombo('/common/getIssuedBankList.do', '' , ''   , 'cmbIssuedBankOn' , 'S', '');
+
   //CreditCardType 생성
-  doGetCombo('/common/selectCodeList.do', '21' , ''   ,'cmbCreditCardTypeCC', 'S' , '');
-  
+  //doGetCombo('/common/selectCodeList.do', '21' , ''   ,'cmbCreditCardTypeCC', 'S' , '');
+
 	showViewDetailHistory(payItemId);
 
 });
 
 
 function showViewDetailHistory(payItemId){
-	
-	  var defaultDate = new Date("01-01-1900");    
+
+	  var defaultDate = new Date("01-01-1900");
     Common.ajax("GET", "/payment/selectPaymentItem", {"payItemId" : payItemId}, function(result) {
 
       if(reconLock == 1){
@@ -41,12 +41,12 @@ function showViewDetailHistory(payItemId){
         $("#txtRunningNoCC").attr("readonly", true);
         $("#txtRunNoOn").attr("readonly", true);
       }
-      
+
       var payMode = result[0].payItmModeId;
       if(payMode == 105){ //cash
         $("#item_edit_cash").show();
-        $("#payItemId").val(payItemId);    
-        
+        $("#payItemId").val(payItemId);
+
         $("#paymentCa").text(result[0].codeName);
             $("#amountCa").text(result[0].payItmAmt);
             $("#bankAccCa").text(result[0].accId + result[0].accDesc);
@@ -58,14 +58,15 @@ function showViewDetailHistory(payItemId){
             $("#tareaRemarkCa").val(result[0].payItmRem);
       }else if(payMode == 106){//cheque
         $("#item_edit_cheque").show();
-      
-        $("#payItemIdCh").val(payItemId);  
-        
+
+        $("#payItemIdCh").val(payItemId);
+
         $("#paymentCh").text(result[0].codeName);
         $("#amountCh").text(result[0].payItmAmt);
         $("#bankAccCh").text(result[0].accId + result[0].accDesc);
-        
-        $("#sIssuedBankCh").val(result[0].payItmIssuBankId);
+
+        //$("#sIssuedBankCh").val(result[0].payItmIssuBankId);
+        doGetCombo('/common/getIssuedBankList.do', '' , result[0].payItmIssuBankId, 'sIssuedBankCh' , 'S', '');
         $("#chequeNumberCh").text(result[0].payItmChqNo);
         $("#chequeNoCh").val(result[0].payItmChqNo);//parameter
         $("#txtRefNumberCh").val(result[0].payItmRefNo);
@@ -77,18 +78,19 @@ function showViewDetailHistory(payItemId){
         $("#tareaRemarkCh").val(result[0].payItmRem);
      }else if(payMode == 107){//creditcard
          $("#payItemIdCC").val(payItemId);
-     
+
          $("#item_edit_credit").show();
-         
+
          $("#paymentCC").text(result[0].codeName);
          $("#amountCC").text(result[0].payItmAmt);
              $("#bankAccCC").text(result[0].accId + result[0].accDesc);
-             
-             $("#cmbIssuedBankCC").val(result[0].payItmIssuBankId);
+
+             //$("#creditCardForm #cmbIssuedBankCC").val(result[0].payItmIssuBankId);
+             doGetCombo('/common/getIssuedBankList.do', '' , result[0].payItmIssuBankId, 'cmbIssuedBankCC' , 'S', '');
              $("#CCNo").text(result[0].payItmOriCcNo);
              $("#txtCrcNo").val(result[0].payItmOriCcNo);
              $("#txtCCHolderName").val(result[0].payItmCcHolderName);
-             
+
              var exDt =  result[0].payItmCcExprDt;
              var exMonth = 0;
              var exYear = 0;
@@ -97,33 +99,36 @@ function showViewDetailHistory(payItemId){
                var expiryDate = exDt.split('/');
                exMonth = expiryDate[0];
                exYear = expiryDate[1];
-               
+
                if(exYear >= 90){
                  exYear = 1900 + Number(exYear);
                }else{
                  exYear = 2000 + Number(exYear);
                }
-               
+
                exDate.setFullYear(exYear);
                exDate.setMonth(exMonth);
                exDate.setDate("01");
-               
+
                var exMonthStr = exDate.getMonth() < 10 ? "0" + exDate.getMonth() : exDate.getMonth();
-               
+
                  if((exDate > defaultDate))
                      $("#txtCCExpiry").val("01" + "/" + (exMonthStr) + "/" + exDate.getFullYear());
                  else
                      $("#txtCCExpiry").val("");
              }
-             
+
              if(result[0].payItmCardTypeId > 0)
                $("#cmbCardTypeCC").val(result[0].payItmCardTypeId).prop("selected", true);
-             
-             $("#cmbCreditCardTypeCC").val(result[0].payItmCcTypeId).prop("selected", true);
-             if(result[0].isOnline == 'On')
+
+             //$("#cmbCreditCardTypeCC").val(result[0].payItmCcTypeId).prop("selected", true);
+             doGetCombo('/common/selectCodeList.do', '21' , result[0].payItmCcTypeId ,'cmbCreditCardTypeCC', 'S' , '');
+
+             /* if(result[0].isOnline == 'On')
                $("#creditCardModeCC").text('Online');
              else
-               $("#creditCardModeCC").text('Offline');
+               $("#creditCardModeCC").text('Offline'); */
+             $("#creditCardModeCC").text(result[0].payItmCardModeId);
              $("#approvalNumberCC").text(result[0].payItmAppvNo);
              $("#txtRefNoCC").val(result[0].payItmRefNo);
              var refDt = new Date(result[0].payItmRefDt);
@@ -136,21 +141,23 @@ function showViewDetailHistory(payItemId){
              $("#tareaRemarkCC").val(result[0].payItmRem);
       }else if(payMode == 108){//online
         $("#item_edit_online").show();
-      
+
         $("#payItemIdOn").val(payItemId);
-        
+
               $("#paymentOn").text(result[0].codeName);
               $("#amountOn").text(result[0].payItmAmt);
               $("#bankAccOn").text(result[0].accId + result[0].accDesc);
-              
-              $("#cmbIssuedBankOn").val(result[0].payItmIssuBankId);
+
+
+              //$("#cmbIssuedBankOn").val(result[0].payItmIssuBankId);
+              doGetCombo('/common/getIssuedBankList.do', '' , result[0].payItmIssuBankId, 'cmbIssuedBankOn' , 'S', '');
               $("#txtRefNoOn").val(result[0].payItmRefNo);
-              
+
               var refDate = new Date(result[0].payItmRefDt);
               if((refDate.getTime() > defaultDate.getTime())){
                   $("#txtRefDateOn").val(refDate.getDate() + "/" + (refDate.getMonth()+1) + "/" + refDate.getFullYear());
               }
-              
+
               $("#txtEFTNoOn").val(result[0].payItmEftNo);
               $("#txtRunNoOn").val(result[0].payItmRunngNo);
               $("#tareaRemarkOn").val(result[0].payItmRem);
@@ -160,7 +167,7 @@ function showViewDetailHistory(payItemId){
 
 function saveCash(){
 	   Common.ajax("GET", "/payment/saveCash", $("#cashForm").serialize(), function(result) {
-	     //Common.setMsg(result.message);  
+	     //Common.setMsg(result.message);
 	     Common.alert(result.message);
 	   });
 	}
@@ -249,7 +256,7 @@ function saveCash(){
             </td>
         </tr>
         <tr>
-            <td colspan="2"> 
+            <td colspan="2">
                 <ul class="center_btns">
                    <li><p class="btn_blue2"><a href="#" onclick="saveCheque()"><spring:message code='sys.btn.save'/></a></p></li>
                  </ul>
@@ -318,7 +325,7 @@ function saveCash(){
             </td>
         </tr>
         <tr>
-            <td colspan="2"> 
+            <td colspan="2">
               <ul class="center_btns">
                  <li><p class="btn_blue2"><a href="#" onclick="saveCash()"><spring:message code='sys.btn.save'/></a></p></li>
                </ul>
@@ -326,7 +333,7 @@ function saveCash(){
         </tr>
         </tbody>
     </table>
-    <input type="hidden" id="payItemId" name="payItemId"/>    
+    <input type="hidden" id="payItemId" name="payItemId"/>
     </form>
     </section>
     <!-- pop_body end -->
@@ -433,7 +440,7 @@ function saveCash(){
             </td>
         </tr>
         <tr>
-            <td colspan="2"> 
+            <td colspan="2">
                 <ul class="center_btns">
                    <li><p class="btn_blue2"><a href="#" onclick="saveCreditCard()"><spring:message code='sys.btn.save'/></a></p></li>
                  </ul>
@@ -514,7 +521,7 @@ function saveCash(){
             </td>
         </tr>
         <tr>
-            <td colspan="2"> 
+            <td colspan="2">
                 <ul class="center_btns">
                    <li><p class="btn_blue2"><a href="#" onclick="saveOnline()"><spring:message code='sys.btn.save'/></a></p></li>
                  </ul>
@@ -522,7 +529,7 @@ function saveCash(){
         </tr>
         </tbody>
     </table>
-    <input type="hidden" id="payItemIdOn" name="payItemIdOn"/>    
+    <input type="hidden" id="payItemIdOn" name="payItemIdOn"/>
     </form>
     </section>
     <!-- pop_body end -->

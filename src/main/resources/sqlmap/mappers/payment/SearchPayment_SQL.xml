@@ -1061,7 +1061,7 @@
 	       Limit1.C5 PAY_ITM_RUNNG_NO  ,
 	       Limit1.C6 PAY_ITM_CARD_TYPE_ID  ,
 	       Limit1.C7 CODE_ID  ,
-	       Limit1.C8 IS_ONLINE
+	       Limit1.C8 PAY_ITM_CARD_MODE_ID
 	  FROM ( SELECT Extent1.PAY_ITM_ID PAY_ITM_ID  ,
 	                Extent1.PAY_ID PAY_ID  ,
 	                Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
@@ -1100,12 +1100,7 @@
 	                CASE WHEN ( Extent1.PAY_ITM_RUNNG_NO IS NOT NULL ) THEN Extent1.PAY_ITM_RUNNG_NO ELSE ' ' END C5  ,
 	                CASE WHEN ( Extent1.PAY_ITM_CARD_TYPE_ID IS NOT NULL ) THEN Extent1.PAY_ITM_CARD_TYPE_ID ELSE 0 END C6  ,
 	                CASE WHEN ( Extent7.CODE_ID IS NOT NULL ) THEN Extent7.CODE_NAME ELSE ' ' END C7  ,
-	                CASE WHEN ( Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL ) THEN CASE
-	                        WHEN ( 1298 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'On'
-	                        WHEN ( 1299 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'Off'
-	                        WHEN ( 1300 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'PNP' ELSE '-' END
-	                     WHEN ( 1 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'On'
-	                     WHEN ( 0 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'Off' ELSE '-' END C8
+	                CASE WHEN ( Extent8.CODE_ID IS NOT NULL ) THEN Extent8.CODE_NAME ELSE ' ' END C8
 	               FROM PAY0065D Extent1
 		                LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.PAY_ITM_MODE_ID
 		                LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.PAY_ITM_CC_TYPE_ID
@@ -1113,6 +1108,7 @@
 		                LEFT JOIN SYS0001M Extent5   ON Extent5.ACC_ID = Extent1.PAY_ITM_BANK_ACC_ID
 		                LEFT JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.PAY_ITM_STUS_ID
 		                LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
+		                LEFT JOIN SYS0013M Extent8   ON Extent8.CODE_ID = Extent1.PAY_ITM_CARD_MODE_ID
 	               WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
 	                   AND ( Extent1.PAY_ITM_ID = #{value} ) AND ROWNUM <![CDATA[<]]>= 1 ) Limit1
 	</select>
