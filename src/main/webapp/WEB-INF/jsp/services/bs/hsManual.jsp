@@ -179,6 +179,11 @@ var TODAY_DD      = "${toDay}";
         width : 120
       },
       {
+          dataField : "crtUserId",
+          headerText : "Create User ID",
+          width : 200
+        },
+      {
         dataField : "stusCodeId",
         headerText : "HS Statuscd",
         width : 120,
@@ -692,8 +697,8 @@ var TODAY_DD      = "${toDay}";
               var todayDD = Number(TODAY_DD.substr(0, 2));
               var todayYY = Number(TODAY_DD.substr(6, 4));
 
-
-               if (radioVal == 2) {
+/*
+             if (radioVal == 2) {
                   if(todayYY >= 2018) {
                       if(todayDD > 22) { // Block if date > 22th of the month
                           var msg = 'Disallow Create HS Order After 22nd of the Month.';
@@ -702,7 +707,7 @@ var TODAY_DD      = "${toDay}";
                       }
                   }
               }
-
+*/
 
 
               if (checkedItems.length <= 0) {
@@ -1120,6 +1125,53 @@ var TODAY_DD      = "${toDay}";
       $('#btnCloseReq').click();
   }
 
+  function fn_parentReload() {
+      fn_getBSListAjax(); //parent Method (Reload)
+  }
+
+/*    function fn_hsReversal(){
+	  var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+
+	    if (checkedItems.length <= 0) {
+	      Common.alert('No data selected.');
+	      return;
+	    } else if (checkedItems.length >= 2) {
+	      Common.alert('Only available to reverse with single HS order');
+	      return;
+	    } else if (checkedItems[0]["code"] != "COM") {
+	      Common.alert('Only available to reverse for the HS order with COM status');
+	      return;
+	    } else {
+
+	    	var rowItem ;
+	      var salesOrdId = "";
+	      var schdulId = "";
+
+	      for (var i = 0, len = checkedItems.length; i < len; i++) {
+	    	  rowItem = checkedItems[i];
+	          schdulId = rowItem.schdulId;
+	          salesOrdId = rowItem.salesOrdId;
+
+
+	        }
+	      }
+
+        console.log("schdulId :: " + schdulId + "  salesOrdId :: "  + salesOrdId);
+       Common.ajax("GET", "/services/bs/hsReversal.do",  {schdulId : schdulId , salesOrdId : salesOrdId} , function(result) {
+
+             if(result == null || result == "") {
+                 Common.alert("HS Reverse Failed.");
+                   return;
+             }else{
+       Common.alert(result.message, fn_parentReload);
+       }
+             });
+
+	    } */
+
+
+
+
 </script>
 <form id="popEditForm" method="post">
  <input type="hidden" name="schdulId" id="_schdulId" />
@@ -1168,6 +1220,10 @@ var TODAY_DD      = "${toDay}";
    <h2>HS Management</h2>
    <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <!--  <li><p class="btn_blue">
+       <a href="#" onclick="javascript:fn_hsReversal();"
+        id="hsReversal">HS Reversal</a>
+      </p></li> -->
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_codyChangeHQ();"
         id="codyChangeHQ">Assign Cody Transfer HQ</a>
