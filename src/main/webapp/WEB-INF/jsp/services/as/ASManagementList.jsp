@@ -7,6 +7,7 @@
  20/03/2019  ONGHC  1.0.0          RE-STRUCTURE JSP AND ADD APPOINTMENT DATE
  01/04/2019  ONGHC  1.0.1          ADD Column CT Code
  01/04/2019  ONGHC  1.0.2          ADD Column Settle and Last Update Date
+ 03/06/2019  ONGHC  1.0.3          Amend 7 days checking logic
  -->
 
 <script type="text/javaScript">
@@ -283,16 +284,16 @@
       var sYear = sDate.getFullYear();
       var sDay = sDate.getDate();
 
-      if (tYear > sYear) {
-        stat = false;
+      if (sYear > tYear) {
+        stat = true;
       } else {
-        if (tMth > sMth) {
-          stat = false;
+        if (sMth > tMth) {
+          stat = true;
         } else {
-          if (tDay > sDay) {
-            stat = false;
-          } else {
+          if (sDay > tDay) {
             stat = true;
+          } else {
+            stat = false;
           }
         }
       }
@@ -314,16 +315,16 @@
       var sYear = sDate.getFullYear();
       var sDay = sDate.getDate();
 
-      if (tYear > sYear) {
-        stat = false;
+      if (sYear > tYear) {
+        stat = true;
       } else {
-        if (tMth > sMth) {
-          stat = false;
+        if (sMth > tMth) {
+          stat = true;
         } else {
-          if (tDay > sDay) {
-            stat = false;
-          } else {
+          if (sDay > tDay) {
             stat = true;
+           } else {
+            stat = false;
           }
         }
       }
