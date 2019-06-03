@@ -458,16 +458,16 @@
       var sYear = sDate.getFullYear();
       var sDay = sDate.getDate();
 
-      if (tYear > sYear) {
-        stat = false;
+      if (sYear > tYear) {
+        stat = true;
       } else {
-        if (tMth > sMth) {
-          stat = false;
+        if (sMth > tMth) {
+          stat = true;
         } else {
-          if (tDay > sDay) {
-            stat = false;
-          } else {
+          if (sDay > tDay) {
             stat = true;
+           } else {
+            stat = false;
           }
         }
       }
