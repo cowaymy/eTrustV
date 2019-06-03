@@ -2979,7 +2979,7 @@ console.log("vBindingNo" + vBindingNo);
         <input id="advPayNo" name="advPay" type="radio" value="0" disabled/><span>No</span></td>
 </tr>
 <tr>
-    <th scope="row">Corporate Customer Type</span></th>
+    <th scope="row">SST Type</span></th>
     <td><select id="corpCustType" name="corpCustType" class="w100p" disabled></select>
     <th scope="row">Agreement Type</span></th>
     <td><select id="agreementType" name="agreementType" class="w100p" disabled></select>
