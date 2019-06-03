@@ -676,6 +676,7 @@ AND SAL023.CUST_ADD_ID = INS.ADD_ID
                         , Project2.CODY_MANGR_USER_ID
                         , Project2.Result as Result
                         , project2.dept_code
+                        , project2.crt_user_id
           FROM (SELECT /*+ use_hash(br, hs) index(ad, SAL0023D_IDX5) */
                        DISTINCT hs.no AS no
                               , hs.stus_code_id AS stus_code_id
@@ -700,6 +701,7 @@ AND SAL023.CUST_ADD_ID = INS.ADD_ID
                               , mg.CODY_BRNCH_CODE AS branch_cd
                               , mg.cody_mangr_user_id
                               , og.dept_code
+                              , CASE WHEN HS.CRT_USER_ID = '1111' THEN '' ELSE USR.USER_NAME END AS CRT_USER_ID
                 FROM SVC0008D hs
                 INNER JOIN SAL0001D so ON so.sales_ord_id = hs.sales_ord_id
                 INNER JOIN SAL0045D ins ON ins.sales_ord_id = hs.sales_ord_id
@@ -714,6 +716,7 @@ AND SAL023.CUST_ADD_ID = INS.ADD_ID
                 LEFT JOIN ORG0001D ac ON ac.mem_id = hs.CODY_ID
                 LEFT JOIN SYS0005M br ON br.brnch_id = ac.brnch
                 LEFT JOIN ORG0005D og ON og.MEM_ID = CD.MEM_ID
+                LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
 
                 WHERE
 
@@ -4863,6 +4866,26 @@ ORDER BY CODE_NAME
             )
           </insert>
 
+<!--     <select id="checkStkInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
 
+			              SELECT svc.SALES_ORD_ID , som.SALES_ORD_NO , svc.NO  , svc.STUS_CODE_ID  , sod.ITM_STK_ID
+			FROM SVC0008D svc
+			LEFT JOIN SAL0001D som ON svc.SALES_ORD_ID = som.SALES_ORD_ID
+			LEFT JOIN SAL0002D sod ON som.SALES_ORD_ID = sod.SALES_ORD_ID
+			WHERE
+			som.STUS_CODE_ID = 4 AND
+			svc.SCHDUL_ID = #{schdulId}
+			AND svc.SALES_ORD_ID = #{salesOrdId}
+
+             ]]>
+     </select>
+
+
+      <select id="hsReversalCancelOD05"  statementType="CALLABLE" parameterType="Map" >
+    {
+      call SP_LOGISTICS_OD_FAILED_CANCEL(#{NO}, #{movType})
+    }
+  </select> -->
 
 </mapper>
