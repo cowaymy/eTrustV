@@ -1324,6 +1324,24 @@ public class ReportBatchController {
     LOGGER.info("[END] CSP_Raw_Data_Excel...");
   }
 
+  @RequestMapping(value = "/SST_Agreement_Raw_Data_Excel.do")
+  //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
+  public void SST_Agreement_Raw_Data_Excel() {
+    LOGGER.info("[START] SST_Agreement_Raw_Data_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/SSTAgreementRawData.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Legal" + File.separator + "SST_Agreement_Raw_Data" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] SST_Agreement_Raw_Data_Excel...");
+  }
+
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
