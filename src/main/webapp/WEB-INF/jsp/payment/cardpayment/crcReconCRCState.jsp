@@ -361,19 +361,33 @@ var crcStateLayout = [
 
 			stateRowItem = crcStateChkItem[0];
 
-			Common.confirm("Do you want to confirm the seleced item as income?",function (){
-				Common.ajax("GET","/payment/updIncomeCrcStatement.do", {"crcTrnscId" : stateRowItem.item.crcTrnscId, "grosAmt" : stateRowItem.item.grosAmt}, function(result){
+			$("#other_inc_pop").show();
+			$("#popCrcTrnscId").val(stateRowItem.item.crcTrnscId);
+            $("#crcStmtAmt").val(AUIGrid.formatNumber(stateRowItem.item.grosAmt, "#,##0.00"));
 
-					var message = "Success Income Process";
-					Common.alert(message, function(){
-						fn_getCrcReconStateList();
-		    		});
-
-				});
-			});
 		}else{
 			Common.alert("<spring:message code='pay.alert.crcStateData'/>");
 		}
+	}
+
+	function fn_saveIncomeProc() {
+		Common.confirm("Do you want to confirm the seleced item as income?",function (){
+
+		    Common.ajax("GET","/payment/updIncomeCrcStatement.do", {"crcTrnscId" : $("#popCrcTrnscId").val(), "grosAmt" : $("#crcStmtAmt").val(), "action" : $("#action").val()}, function(result){
+
+		    	var action;
+		    	if($("#action").val() == "INC") {
+		    		action = "Income";
+		    	} else {
+		    		action = "Contra";
+		    	}
+
+		        var message = "Success " + action +" Process";
+		        Common.alert(message, function(){
+		            fn_getCrcReconStateList();
+		        });
+            });
+        });
 	}
 
 </script>
@@ -452,7 +466,7 @@ var crcStateLayout = [
 
     <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-        <li><p class="btn_blue2"><a href="javascript:fn_incomeProc();" id="btnIncome">Income</a></p></li>
+        <li><p class="btn_blue2"><a href="javascript:fn_incomeProc();" id="btnIncome">Income/Contra</a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="btn_blue2"><a href="javascript:fn_mappingProc();" id="btnMapping"><spring:message code='pay.btn.mapping'/></a></p></li>
@@ -462,3 +476,51 @@ var crcStateLayout = [
     </c:if>
     </ul>
 </section><!-- content end -->
+
+<!-------------------------------------------------------------------------------------
+    POP-UP (NEW UPLOADED BATCH ERROR)
+-------------------------------------------------------------------------------------->
+<div class="popup_wrap size_mid" id="other_inc_pop" style="display: none;">
+    <header class="pop_header"><!-- pop_header start -->
+        <h1>Contra/Other Income</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
+        </ul>
+    </header><!-- pop_header end -->
+
+    <section class="pop_body"><!-- pop_body start -->
+        <input type="hidden" id="popCrcTrnscId" name="crcTrnscId">
+
+        <table class="type1"><!-- table start -->
+            <caption>table</caption>
+            <colgroup>
+                <col style="width:200px" />
+                <col style="width:*" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <th>Card Statement Amount</th>
+                    <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="crcStmtAmt" name="crcStmtAmt"/></td>
+                </tr>
+                <tr>
+                    <th>Action</th>
+                    <td colspan="3">
+                        <select class="w100p" id="action" name="action">
+                            <option value="" selected>Choose One</option>
+                            <option value="CTR">Contra</option>
+                            <option value="INC">Other Income</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Remark</th>
+                    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="expDesc" name="expDesc" /></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <ul class="center_btns" id="newBulkBtns">
+            <li><p class="btn_blue2"><a href="javascript:fn_saveIncomeProc();" id="proceedBtn">Save</a></p></li>
+        </ul>
+    </section>
+</div>

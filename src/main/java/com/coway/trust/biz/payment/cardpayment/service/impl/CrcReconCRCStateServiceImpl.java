@@ -21,14 +21,14 @@ public class CrcReconCRCStateServiceImpl extends EgovAbstractServiceImpl impleme
 	@Resource(name = "crcReconCRCStateMapper")
 	private CrcReconCRCStateMapper crcReconCRCStateMapper ;
 	private static final Logger logger = LoggerFactory.getLogger(AccountReconciliationServiceImpl.class);
-	
+
 	/**
 	 * selectCrcStatementMappingList
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
-	 */	
+	 */
 	@Override
 	public List<EgovMap> selectCrcStatementMappingList(Map<String, Object> params) {
 		return crcReconCRCStateMapper.selectCrcStatementMappingList(params);
@@ -36,11 +36,11 @@ public class CrcReconCRCStateServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/**
 	 * selectCrcKeyInList
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
-	 */	
+	 */
 	@Override
 	public List<EgovMap> selectCrcKeyInList(Map<String, Object> params) {
 		return crcReconCRCStateMapper.selectCrcKeyInList(params);
@@ -48,11 +48,11 @@ public class CrcReconCRCStateServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/**
 	 * selectCrcStateList
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
-	 */	
+	 */
 	@Override
 	public List<EgovMap> selectCrcStateList(Map<String, Object> params) {
 		return crcReconCRCStateMapper.selectCrcStateList(params);
@@ -61,14 +61,14 @@ public class CrcReconCRCStateServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public boolean updCrcReconState(int userId , List<Object> paramList) {
 		boolean isSucess = false;
-		
-    	if (paramList.size() > 0) {    		
+
+    	if (paramList.size() > 0) {
     		Map<String, Object> hm = null;
     		Map<String, Object> orNoMap = null;
     		for (Object map : paramList) {
-    			hm = (HashMap<String, Object>) map;  
+    			hm = (HashMap<String, Object>) map;
     			hm.put("userId", userId);
-    			
+
     			List<EgovMap> orNoList = crcReconCRCStateMapper.selectCrcKeyInOrNoList(hm);
     			for(int i = 0 ; i < orNoList.size() ; i++){
 					orNoMap = (Map<String, Object>)orNoList.get(i);
@@ -80,17 +80,20 @@ public class CrcReconCRCStateServiceImpl extends EgovAbstractServiceImpl impleme
     			}
     			crcReconCRCStateMapper.updCrcKeyIn(hm);
     			crcReconCRCStateMapper.updCrcStatement(hm);
-    			
+
     		}
     		isSucess = true;
     	}
     	return isSucess;
-    	
+
 	}
-	
+
 	@Override
 	public void updIncomeCrcStatement(Map<String, Object> params) {
 		crcReconCRCStateMapper.updCrcStatement(params);
-		crcReconCRCStateMapper.updIncomeCrcStatementIF(params);
+
+		if("INC".equals(params.get("action"))) {
+		    crcReconCRCStateMapper.updIncomeCrcStatementIF(params);
+		}
 	}
 }
