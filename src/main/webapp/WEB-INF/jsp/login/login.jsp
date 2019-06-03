@@ -262,7 +262,7 @@
                                 }
                                 else if ( (aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0)
                                 		&& (aResult.surveyTypeId > 0 && aResult.verifySurveyStus <= 0) ){
-                                	$("#surveyTypeId").val(aResult.surveyTypeId);
+                                	$("#loginForm surveyTypeId").val(aResult.surveyTypeId);
                                     fn_goSurveyForm();
                                 }
                                 else {
@@ -272,7 +272,7 @@
                                     $("#popAck2").val(aResult.popAck2);
                                     $("#popRejectFlg").val(aResult.popRejectFlg);
                                     $("#surveyStus").val(aResult.verifySurveyStus);
-                                    $("#surveyTypeId").val(aResult.surveyTypeId);
+                                    $("#loginForm surveyTypeId").val(aResult.surveyTypeId);
                                     Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
                             	}
                             } else {
