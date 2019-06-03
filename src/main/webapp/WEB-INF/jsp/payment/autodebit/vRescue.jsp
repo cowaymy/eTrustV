@@ -587,6 +587,7 @@
           $('#center_btns2').hide();
           $('#center_btns3').hide();
           $('#center_btns4').hide();
+          $('#center_btns5').show();
 
         } else if (val == "RESULT") {
           $('#pop_header h1').text(
@@ -595,6 +596,7 @@
           $('#center_btns2').hide();
           $('#center_btns3').hide();
           $('#center_btns4').hide();
+          $('#center_btns5').hide();
 
         } else if (val == "RESULTNEXT") {
           $('#pop_header h1').text(
@@ -603,6 +605,7 @@
           $('#center_btns2').show();
           $('#center_btns3').hide();
           $('#center_btns4').hide();
+          $('#center_btns5').hide();
 
         } else if (val == "FILE") {
           $('#pop_header h1').text(
@@ -611,6 +614,7 @@
           $('#center_btns2').hide();
           $('#center_btns3').show();
           $('#center_btns4').hide();
+          $('#center_btns5').hide();
 
         } else if (val == "SMS") {
           $('#pop_header h1').text(
@@ -619,6 +623,7 @@
           $('#center_btns2').hide();
           $('#center_btns3').hide();
           $('#center_btns4').show();
+          $('#center_btns5').hide();
         }
 
       } else {
@@ -1300,6 +1305,25 @@
       Common.alert("<spring:message code='pay.alert.noClaim'/>");
     }
   }
+
+  function fn_report(){
+
+	    var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+	    var date = new Date().getDate();
+	    if(date.toString().length == 1){
+	        date = "0" + date;
+	    }
+
+	    $("#excelForm #reportDownFileName").val("AutoDebitDetails_" + ctrlId + "_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+	    $("#excelForm #v_BANK_DTL_CTRL_ID").val(ctrlId);
+
+	    var option = {
+	            isProcedure : true
+	    };
+
+	    Common.report("excelForm", option);
+
+	}
 </script>
 <!-- content start -->
 <section id="content">
@@ -1487,6 +1511,15 @@
   </ul>
  </header>
  <!-- pop_header end -->
+
+ <form action="#" method="post" id="excelForm" name="excelForm">
+
+<input type="hidden" id="reportFileName" name="reportFileName" value="/payment/AutoDebitCreditCardDetails.rpt" />
+<input type="hidden" id="viewType" name="viewType" value="EXCEL" />
+<input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+<input type="hidden" id="v_BANK_DTL_CTRL_ID" name="v_BANK_DTL_CTRL_ID" value='$("#view_batchId").text()' />
+</form>
+
  <!-- pop_body start -->
  <section class="pop_body">
   <!-- search_table start -->
@@ -1604,6 +1637,9 @@
        code='pay.btn.sendFailDecductionSMS' /></a>
     </p></li>
   </ul>
+  <ul class="center_btns" id="center_btns5">
+            <li><p class="btn_blue2"><a href="javascript:fn_report();"><spring:message code='pay.btn.generateToExcel'/></a></p></li>
+        </ul>
  </section>
  <!-- pop_body end -->
 </div>
