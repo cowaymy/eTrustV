@@ -633,5 +633,19 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 	public EgovMap getInstallDetail(Map<String, Object> params) {
 		return orderModifyMapper.getInstallDetail(params);
 	}
+	
+	@Override
+	public void updateCcpOrderBasinInfo(Map<String, Object> params, SessionVO sessionVO) {
+
+		logger.info("!@###### OrderModifyServiceImpl.updateCcpOrderBasinInfo");
+
+		params.put("updUserId", sessionVO.getUserId());
+
+		if(Integer.valueOf((String)params.get("appTypeId")) != SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
+			params.put("installDur", 0);
+		}
+
+		orderModifyMapper.updateCcpSalesOrderM(params);
+	}
 
 }

@@ -132,6 +132,12 @@ function fn_goLedger2(){
     <th scope="row"><spring:message code="sal.title.text.ccpRem" /></th>
     <td colspan="5">${orderDetail.ccpInfo.ccpRem}</td>
 </tr>
+<tr>
+    <th scope="row">SST Type</th>
+    <td colspan="1">${orderDetail.basicInfo.corpCustType}</td>
+    <th scope="row">Agreement Type</th>
+    <td colspan="3">${orderDetail.basicInfo.agreementType}</td>
+</tr>
 </tbody>
 </table><!-- table end -->
 

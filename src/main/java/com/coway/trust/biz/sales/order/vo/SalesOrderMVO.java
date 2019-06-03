@@ -9,11 +9,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * The persistent class for the SAL0001D database table.
- * 
+ *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SalesOrderMVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private long salesOrdId;
@@ -117,26 +117,30 @@ public class SalesOrderMVO implements Serializable {
 	private Date updDt;
 
 	private int updUserId;
-	
+
 	private String billGroup;
 
 	private int empChk;
-	
+
 	private int exTrade;
-	
+
 	private int ecash;
-	
+
 	private int promoDiscPeriodTp;
-	
+
 	private int promoDiscPeriod;
-	
+
 	private BigDecimal norAmt;
-	
+
 	private BigDecimal norRntFee;
-	
+
 	private BigDecimal discRntFee;
-	
+
 	private int gstChk;
+
+	private int corpCustType;
+
+	private int agreementType;
 
 	public long getSalesOrdId() {
 		return salesOrdId;
@@ -625,5 +629,21 @@ public class SalesOrderMVO implements Serializable {
 	public void setSrvPacId(int srvPacId) {
 		this.srvPacId = srvPacId;
 	}
-	
+
+	public int getCorpCustType() {
+		return corpCustType;
+	}
+
+	public void setCorpCustType(int corpCustType) {
+		this.corpCustType = corpCustType;
+	}
+
+	public int getAgreementType() {
+		return agreementType;
+	}
+
+	public void setAgreementType(int agreementType) {
+		this.agreementType = agreementType;
+	}
+
 }

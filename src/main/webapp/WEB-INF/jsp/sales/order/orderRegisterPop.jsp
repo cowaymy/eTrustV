@@ -23,6 +23,8 @@
         doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'corpCustType',     'S', ''); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'agreementType',     'S', ''); //Common Code
         doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
@@ -872,6 +874,15 @@
                             fn_tabOnOffSet('REL_CER', 'HIDE');
 
                             appSubType = '367';
+                            var vCustType = $("#typeId").val();
+                            if (vCustType == '965' ){
+                            	$("#corpCustType").val('').removeAttr("disabled");
+                            	$("#agreementType").val('').removeAttr("disabled");
+                            }
+                            else{
+                            	$("#corpCustType").val('').prop("disabled", true);
+                                $("#agreementType").val('').prop("disabled", true);
+                            }
 
                             break;
 
@@ -879,6 +890,7 @@
                             if(GST_CHK == '1') {
                                 $("#gstChk").val('1').removeAttr("disabled");
                                 $("#pBtnCal").removeClass("blind");
+
                                 //fn_tabOnOffSet('REL_CER', 'SHOW');
                                 fn_tabOnOffSet('REL_CER', 'HIDE');
                             }
@@ -887,7 +899,8 @@
                                 $('#pBtnCal').addClass("blind");
                                 fn_tabOnOffSet('REL_CER', 'HIDE');
                             }
-
+                            $("#corpCustType").val('').prop("disabled", true);
+                            $("#agreementType").val('').prop("disabled", true);
                             appSubType = '368';
 
                             break;
@@ -906,7 +919,8 @@
                                 $('#pBtnCal').addClass("blind");
                                 fn_tabOnOffSet('REL_CER', 'HIDE');
                             }
-
+                            $("#corpCustType").val('').prop("disabled", true);
+                            $("#agreementType").val('').prop("disabled", true);
                             appSubType = '369';
 
                             break;
@@ -929,7 +943,8 @@
                             }
 
                             fn_tabOnOffSet('PAY_CHA', 'SHOW');
-
+                            $("#corpCustType").val('').prop("disabled", true);
+                            $("#agreementType").val('').prop("disabled", true);
                             appSubType = '370';
 
                             break;
@@ -938,6 +953,8 @@
 
                             $("#gstChk").val('').prop("disabled", true);
                             $('#pBtnCal').addClass("blind");
+                            $("#corpCustType").val('').prop("disabled", true);
+                            $("#agreementType").val('').prop("disabled", true);
                             fn_tabOnOffSet('REL_CER', 'HIDE');
 
                             break;
@@ -946,6 +963,8 @@
 
                             $("#gstChk").val('').prop("disabled", true);
                             $('#pBtnCal').addClass("blind");
+                            $("#corpCustType").val('').prop("disabled", true);
+                            $("#agreementType").val('').prop("disabled", true);
                             fn_tabOnOffSet('REL_CER', 'HIDE');
 
                             break;
@@ -954,6 +973,8 @@
 
                             $("#gstChk").val('').prop("disabled", true);
                             $('#pBtnCal').addClass("blind");
+                            $("#corpCustType").val('').prop("disabled", true);
+                            $("#agreementType").val('').prop("disabled", true);
                             fn_tabOnOffSet('REL_CER', 'HIDE');
 
                             break;
@@ -962,6 +983,8 @@
 
                             $("#gstChk").val('').prop("disabled", true);
                             $('#pBtnCal').addClass("blind");
+                            $("#corpCustType").val('').prop("disabled", true);
+                            $("#agreementType").val('').prop("disabled", true);
                             fn_tabOnOffSet('REL_CER', 'HIDE');
 
                             break;
@@ -969,6 +992,8 @@
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
                             $("#gstChk").val('0');
                             $('#pBtnCal').addClass("blind");
+                            $("#corpCustType").val('').prop("disabled", true);
+                            $("#agreementType").val('').prop("disabled", true);
                             fn_tabOnOffSet('REL_CER', 'HIDE');
 
                             break;
@@ -1591,6 +1616,8 @@ console.log("vBindingNo" + vBindingNo);
                 norRntFee               : $('#orgOrdRentalFees').val().trim(),
                 discRntFee              : $('#ordRentalFees').val().trim(),
                 gstChk                  : $('#gstChk').val(),
+                corpCustType         : $('#corpCustType').val(),
+                agreementType         : $('#agreementType').val(),
             },
             salesOrderDVO : {
                 itmPrc                  : $('#ordPrice').val().trim(),
@@ -1767,6 +1794,7 @@ console.log("vBindingNo" + vBindingNo);
         var appTypeVal = $("#appType").val();
         var srvPacIdx  = $("#srvPacId option:selected").index();
         var srvPacVal  = $("#srvPacId").val();
+        var custType = $("#typeId").val();
 
         if(appTypeIdx <= 0) {
             isValid = false;
@@ -1826,6 +1854,19 @@ console.log("vBindingNo" + vBindingNo);
             }
           }
         }
+
+        if (custType == '965' && appTypeVal == '66'){
+        	if ($("#corpCustType option:selected").index() <= 0) {
+        		isValid = false;
+                msg += '* Please select Corporate Customer Type<br>';
+        	}
+
+        	if ($("#agreementType option:selected").index() <= 0) {
+                isValid = false;
+                msg += '* Please select Agreement Type<br>';
+            }
+        }
+
 
         if(!FormUtil.checkReqValue($('#hiddenSalesmanId'))) {
 
@@ -2936,6 +2977,12 @@ console.log("vBindingNo" + vBindingNo);
     <td colspan="3"><span><spring:message code="sal.msg.6month" /></span>
         <input id="advPayYes" name="advPay" type="radio" value="1" disabled/><span>Yes</span>
         <input id="advPayNo" name="advPay" type="radio" value="0" disabled/><span>No</span></td>
+</tr>
+<tr>
+    <th scope="row">Corporate Customer Type</span></th>
+    <td><select id="corpCustType" name="corpCustType" class="w100p" disabled></select>
+    <th scope="row">Agreement Type</span></th>
+    <td><select id="agreementType" name="agreementType" class="w100p" disabled></select>
 </tr>
 </tbody>
 </table><!-- table end -->

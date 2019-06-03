@@ -65,5 +65,7 @@ public interface OrderModifyService {
 	void updateOrderMailingAddress2(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
 
 	EgovMap getInstallDetail(Map<String, Object> params);
+	
+	void updateCcpOrderBasinInfo(Map<String, Object> params, SessionVO sessionVO);
 
 }

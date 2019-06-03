@@ -19,6 +19,8 @@
              , SALES_HM_ID      = #{deptMemId}
              , SALES_SM_ID      = #{grpMemId}
              , SALES_GM_ID      = #{orgMemId}
+             , CORP_CUST_TYPE = #{corpCustType}
+             , AGREEMENT_TYPE = #{agreementType}
          WHERE SALES_ORD_ID     = #{salesOrdId}
     </update>
 
@@ -627,6 +629,13 @@
                    GRACE_PERIOD = 1,
                    DEDUCT_ACC_ID = #{deductId}
          WHERE RENT_PAY_ID     = #{rentPayId}
+    </update>
+    
+    <update id="updateCcpSalesOrderM" parameterType="Map">
+        UPDATE SAL0001D
+           SET CORP_CUST_TYPE = #{corpCustType}
+             , AGREEMENT_TYPE = #{agreementType}
+         WHERE SALES_ORD_ID     = #{salesOrdId}
     </update>
 
 </mapper>

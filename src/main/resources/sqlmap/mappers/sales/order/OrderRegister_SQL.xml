@@ -986,6 +986,8 @@
              , DISC_RNT_FEE
              , GST_CHK
              , SRV_PAC_ID
+             , CORP_CUST_TYPE
+             , AGREEMENT_TYPE
 		     )
 		VALUES
 		     ( #{salesOrdId}
@@ -1045,6 +1047,8 @@
              , #{discRntFee}
              , #{gstChk}
              , #{srvPacId}
+             , #{corpCustType}
+             , #{agreementType}
 		     )
     </insert>
 

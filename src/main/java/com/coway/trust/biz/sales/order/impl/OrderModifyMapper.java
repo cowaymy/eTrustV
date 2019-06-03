@@ -84,4 +84,6 @@ public interface OrderModifyMapper {
 	int crtSeqSAL0236D();
 
 	void updatePaymentChannelvRescue(Map<String, Object> params);
+	
+	void updateCcpSalesOrderM(Map<String, Object> params);
 }

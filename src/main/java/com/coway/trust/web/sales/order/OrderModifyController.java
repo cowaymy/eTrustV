@@ -103,6 +103,9 @@ public class OrderModifyController {
 		model.put("srvPacId",     basicInfo.get("srvPacId"));
 		model.put("callCenterYn", callCenterYn);
 		model.put("memType",      sessionVO.getUserTypeId());
+		model.put("ordPvMonth",     basicInfo.get("ordPvMonth"));
+		model.put("ordPvYear",     basicInfo.get("ordPvYear"));
+		model.put("typeId",     basicInfo.get("typeId"));
 
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### salesOrderId : "+model.get("salesOrderId"));
@@ -496,5 +499,19 @@ public class OrderModifyController {
 		EgovMap orderInstallDetail = orderModifyService.getInstallDetail(params);
 		logger.debug("orderInstallDetail : {}",orderInstallDetail);
 		return ResponseEntity.ok(orderInstallDetail);
+	}
+	
+	@RequestMapping(value = "/updateCcpOrderBasinInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateCcpOrderBasinInfo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		orderModifyService.updateCcpOrderBasinInfo(params, sessionVO);
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage("Order Number : " + params.get("salesOrdNo") + "</br>Information successfully updated.");
+
+		return ResponseEntity.ok(message);
 	}
 }

@@ -15,6 +15,9 @@
   var GST_CHK = "${orderDetail.basicInfo.gstChk}";
   var ADDR_ID = "${orderDetail.basicInfo.ordAddrId}";
   var ROLE_ID = "${SESSION_INFO.roleId}";
+  var PV_MONTH = "${ordPvMonth}";
+  var PV_YEAR = "${ordPvYear}";
+  var CUST_TYPE_ID = "${typeId}";
 
   var keyValueList = [];
 
@@ -43,6 +46,8 @@
       doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', 'eurcRliefAppTypeId', 'S', ''); //Common Code
       doGetComboOrder('/common/selectCodeList.do', '145', 'CODE_ID', '', 'eurcRliefTypeId', 'S', ''); //Common Code
       doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
+      doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'modCorpCustType',     'S', ''); //Common Code
+      doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'modAgreementType',     'S', ''); //Common Code
 
       fn_statusCodeSearch();
 
@@ -1913,6 +1918,13 @@
         $('#modOrgMemId').val(basicInfo.ordGmId);
 
         $('#modKeyInBranch').val(basicInfo.keyinBrnchId);
+
+        if (basicInfo.appTypeId == '66' && basicInfo.typeId == '965' && basicInfo.ordPvMonth == '0' && basicInfo.ordPvYear == '0') {
+            $('#modCorpCustType').removeAttr("disabled").val(basicInfo.corpCustTypeId);
+            $('#modAgreementType').removeAttr("disabled").val(basicInfo.agreementTypeId);
+
+          }
+
       }
     });
   }
@@ -2310,6 +2322,19 @@
     if ($("#modKeyInBranch option:selected").index() <= 0) {
       isValid = false;
       msg += '<spring:message code="sal.alert.msg.plzSelTheKeyinbrnch" />';
+    }
+
+    if (APP_TYPE_ID == '66' && CUST_TYPE_ID == '965' && PV_MONTH == '0' && PV_YEAR == '0') {
+    	if ($("#modCorpCustType option:selected").index() <= 0) {
+    	      isValid = false;
+    	      msg += '* Please select the Corporate Customer Type</br>';
+        }
+
+    	if ($("#modAgreementType option:selected").index() <= 0) {
+            isValid = false;
+            msg += '* Please select the Agreement Type</br>';
+        }
+
     }
 
     if (!isValid)
@@ -2916,6 +2941,16 @@
         <td><input id="modOrderOrgCode" name="orderOrgCode"
          type="text" title="" placeholder="Organization Code"
          class="readonly" readonly /></td>
+       </tr>
+       <tr>
+        <th scope="row">SST Type<span
+         class="must">*</span></th>
+        <td><select id="modCorpCustType" name="corpCustType"
+         class="w100p" disabled></select></td>
+        <th scope="row">Agreement Type<span
+         class="must">*</span></th>
+        <td><select id="modAgreementType" name="agreementType"
+         class="w100p" disabled></select></td>
        </tr>
       </tbody>
      </table>
@@ -3647,7 +3682,7 @@
         <th scope="row"><spring:message
           code="sal.text.rentalPaymode" /><span class="must">*</span></th>
         <td><select id="rentPayMode" name="rentPayMode"
-         class="w100p"></select></td>
+         class="w100p" ></select></td>
         <th scope="row"><spring:message
           code="sal.text.nricPassbook" /></th>
         <td><input id="rentPayIC" name="rentPayIC" type="text"

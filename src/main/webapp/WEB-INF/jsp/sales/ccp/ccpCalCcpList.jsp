@@ -10,97 +10,120 @@ var option = {
         height: "520px" // 창 세로 크기
          }
 $(document).ready(function() {
-	
-	createCalGrid();   
-	
+
+	createCalGrid();
+
 	doGetCombo('/sales/ccp/getBranchCodeList', '', '','_keyInBranch', 'M' , 'f_multiCombo'); //Branch
 	doGetCombo('/sales/ccp/selectDscCodeList', '', '','_keyInDscBranch', 'S' , 'f_multiCombo'); //Branch
-	
+
 	//doGetProductCombo('/common/selectProductCodeList.do', '', '', 'listProductId', 'S'); //Product Code
 	doGetComboWh('/sales/order/colorGridProductList.do', '', '', 'listProductId', '', ''); //Product Code
-	
+
 	doGetCombo('/common/selectCodeList.do', '51', '',  '_calCcpType', 'S'); // CCP Type Id
 	doGetCombo('/common/selectCodeList.do', '53', '',  '_calScheme', 'S'); // Scheme Type Id
 	doGetCombo('/sales/ccp/selectReasonCodeFbList', '', '','_reasonCode', 'M' , 'f_multiCombo'); //Reason
-	
+
 	//Search
 	$("#_calSearch").click(function() {
-		
+
 		Common.ajax("GET", "/sales/ccp/selectCalCcpListAjax", $("#_searchForm").serialize(), function(result) {
-			   AUIGrid.setGridData(calGrid, result); 
+			   AUIGrid.setGridData(calGrid, result);
 		   });
 	});
-	
-	
+
+
 	//Edit
 	 // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(calGrid, "cellDoubleClick", function(event){
-    	
+
     	if('${PAGE_AUTH.funcChange}' == 'Y'){
     		if(event.item.ccpStusId == 1){
                 $("#_ccpId").val(event.item.ccpId);
                 $("#_salesOrdId").val(event.item.salesOrdId);
                 $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
                 //Common.popupDiv("/sales/ccp/selectCalCcpViewEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewEditDiv'); //Edit
-               
+
                 Common.popupWin('_detailForm', "/sales/ccp/selectCalCcpViewEditPop.do", option);
-                
+
             }else{
                 $("#_ccpId").val(event.item.ccpId);
                 $("#_salesOrdId").val(event.item.salesOrdId);
                 $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
                 //Common.popupDiv("/sales/ccp/ccpCalCCpViewPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewDiv'); //View
-                
+
                 Common.popupWin('_detailForm', "/sales/ccp/ccpCalCCpViewPop.do", option);
             }
     	}else{
     		Common.alert('<spring:message code="sal.alert.msg.accessDeny" />');
     	}
     });
-	
+
 	//Update Pay Channel (_updPayBtn)############################### Pay
 	$("#_updPayBtn").click(function() {
-		//Validation 
+		//Validation
 		var selectedItem = AUIGrid.getSelectedItems(calGrid);
 		if(selectedItem.length <= 0){
 			Common.alert('<spring:message code="sal.alert.msg.noResultSelected" />');
             return;
 		}
-		
+
 		if(selectedItem[0].item.ccpStusId != 1){
 			Common.alert('<spring:message code="sal.alert.msg.ccpStusIsNotAct" />');
 			return;
 		}
-		
+
 		//PopUp
 		$("#_salesOrdId").val(selectedItem[0].item.salesOrdId);
         Common.popupDiv("/sales/order/orderRentPaySetLimitPop.do", $("#_detailForm").serializeJSON(), null , true , '_editDiv');
 	});
-	
+
 	//Update Cust Limit Info  (_updCustBtn)  ######################## Cust
 	$("#_updCustBtn").click(function() {
-        //Validation 
+        //Validation
         var selectedItem = AUIGrid.getSelectedItems(calGrid);
         if(selectedItem.length <= 0){
             Common.alert('<spring:message code="sal.alert.msg.noResultSelected" />');
             return;
         }
-        
+
         if(selectedItem[0].item.ccpStusId != 1){
             Common.alert('<spring:message code="sal.alert.msg.ccpStusIsNotAct" />');
             return;
         }
-        
+
         //PopUp
         $("#_custId").val(selectedItem[0].item.custId);
         Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#_detailForm").serializeJSON(), null , true , '_editDiv6');
     });
-	
+
+	$("#_updOrdBasicInfo").click(function() {
+        //Validation
+        var selectedItem = AUIGrid.getSelectedItems(calGrid);
+        var selIdx = AUIGrid.getSelectedIndex(calGrid)[0];
+        if(selectedItem.length <= 0){
+
+            Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
+        }
+        else {
+        	if(selectedItem[0].item.apptypeid == 66 && selectedItem[0].item.typeid == 965 && selectedItem[0].item.pvmonth == 0 && selectedItem[0].item.pvyear == 0){
+        		Common.popupDiv("/sales/ccp/ccpCalOrderModifyPop.do", { salesOrderId : AUIGrid.getCellValue(calGrid, selIdx, "salesOrdId") }, null , true);
+        	}
+        	else{
+        		Common.alert('Unable to edit due to this order already nett.');
+        	      //      return;
+        	}
+
+
+        }
+    });
+
+
+
 });//Doc Ready Func End
 
 //def Combo(select Box OptGrouping)
 function doGetComboWh(url, groupCd , selCode, obj , type, callbackFn){
-  
+
   $.ajax({
       type : "GET",
       url : url,
@@ -109,7 +132,7 @@ function doGetComboWh(url, groupCd , selCode, obj , type, callbackFn){
       contentType : "application/json;charset=UTF-8",
       success : function(data) {
          var rData = data;
-         Common.showLoader(); 
+         Common.showLoader();
          fn_otpGrouping(rData, obj)
       },
       error: function(jqXHR, textStatus, errorThrown){
@@ -118,34 +141,34 @@ function doGetComboWh(url, groupCd , selCode, obj , type, callbackFn){
       complete: function(){
           Common.removeLoader();
       }
-  }); 
+  });
 } ;
 
 function fn_otpGrouping(data, obj){
 
    var targetObj = document.getElementById(obj);
-   
+
    for(var i=targetObj.length-1; i>=0; i--) {
           targetObj.remove( i );
    }
-   
+
    obj= '#'+obj;
-   
+
    // grouping
    var count = 0;
    $.each(data, function(index, value){
-       
+
        if(index == 0){
           $("<option />", {value: "", text: 'Choose One'}).appendTo(obj);
        }
-       
+
        if(index > 0 && index != data.length){
            if(data[index].groupCd != data[index -1].groupCd){
                $(obj).append('</optgroup>');
                count = 0;
            }
        }
-       
+
        if(data[index].codeId == null  && count == 0){
            $(obj).append('<optgroup label="">');
            count++;
@@ -177,15 +200,15 @@ function fn_otpGrouping(data, obj){
        }
 
        $('<option />', {value : data[index].codeId, text: data[index].codeName}).appendTo(obj); // WH_LOC_ID
-       
-       
+
+
        if(index == data.length){
            $(obj).append('</optgroup>');
        }
    });
    //optgroup CSS
    $("optgroup").attr("class" , "optgroup_text");
-   
+
 }
 
 $.fn.clearForm = function() {
@@ -205,7 +228,7 @@ $.fn.clearForm = function() {
 };
 
 function createCalGrid(){
-	
+
 	var  columnLayout = [
 	                     {dataField : "salesOrdNo", headerText : '<spring:message code="sal.title.text.ordBrNo" />', width : "7%" , editable : false},
 	                     {dataField : "ccpIsHold", headerText : '<spring:message code="sal.title.text.hold" />', width : "4%" , editable : false,
@@ -215,6 +238,8 @@ function createCalGrid(){
 	                     {dataField : "name1", headerText : '<spring:message code="sal.text.branch" />', width : "7%" , editable : false},
 	                     {dataField : "keyAt", headerText : '<spring:message code="sal.title.text.keyAtBrBy" />', width : "10%" , editable : false},
 	                     {dataField : "name", headerText : '<spring:message code="sal.title.text.customerName" />', width : "9%" , editable : false},
+	                     {dataField : "corpcusttype", headerText : 'SST Type', width : "9%" , editable : false},
+	                     {dataField : "agreementtype", headerText : 'Agreement Type', width : "9%" , editable : false},
 	                     {dataField : "ccpTotScrePoint", headerText : '<spring:message code="sal.title.text.totBrPoint" />', width : "7%" , editable : false},
 	                     {dataField : "ccpStatus", headerText : '<spring:message code="sal.title.text.ccpBrStus" />', width : "7%" , editable : false},
 	                     {dataField : "name2", headerText : '<spring:message code="sal.title.text.ccpBrRjtBrStus" />', width : "7%" , editable : false},
@@ -223,49 +248,53 @@ function createCalGrid(){
 	                     {dataField : "updAt", headerText : '<spring:message code="sal.title.text.lastBrUpdAtBrBy" />', width : "10%" , editable : false},
 	                     {dataField : "ccpId", visible : false},
 	                     {dataField : "salesOrdId", visible : false},
-	                     {dataField : "ccpStusId", visible : false}, 
+	                     {dataField : "ccpStusId", visible : false},
 	                     {dataField : "ccpTotScrePoint", visible : false},
-	                     {dataField : "custId", visible : false}
-	                     
+	                     {dataField : "custId", visible : false},
+	                     {dataField : "apptypeid", visible : false},
+	                     {dataField : "pvmonth", visible : false},
+	                     {dataField : "pvyear", visible : false},
+	                     {dataField : "typeid", visible : false},
+
 	]
-	
+
 	//그리드 속성 설정
     var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 1,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-//            selectionMode       : "singleRow",  //"multipleCells",            
+            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+//            selectionMode       : "singleRow",  //"multipleCells",
             headerHeight        : 60,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             wordWrap :  true
         };
-	
+
 	calGrid = GridCommon.createAUIGrid("cal_grid_wrap", columnLayout,'', gridPros);
-	
+
 }
 
 // 조회조건 combo box
 function f_multiCombo(){
     $(function() {
         $('#_keyInBranch').change(function() {
-        
+
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '80%'
         });
         $('#_reasonCode').change(function() {
-            
+
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '80%'
         });
-       
+
     });
 }
 
@@ -276,14 +305,16 @@ function fn_underDevelop(){
 
 function popup(location){
     if(location == "listing"){
-        Common.popupDiv("/sales/ccp/ccpCalListingPop.do", $("#_searchForm").serializeJSON(), null, true); 
+        Common.popupDiv("/sales/ccp/ccpCalListingPop.do", $("#_searchForm").serializeJSON(), null, true);
     }else if(location == 'rawData'){
-    	Common.popupDiv("/sales/ccp/ccpCalRawDataPop.do", $("#_searchForm").serializeJSON(), null, true); 
+    	Common.popupDiv("/sales/ccp/ccpCalRawDataPop.do", $("#_searchForm").serializeJSON(), null, true);
     }else if(location == 'performance'){
     	Common.popupDiv("/sales/ccp/ccpCalPerformancePop.do", $("#_searchForm").serializeJSON(), null, true);
     }
-    
+
 }
+
+
 
 </script>
 <section id="content"><!-- content start -->
@@ -298,9 +329,12 @@ function popup(location){
 <h2><spring:message code="sal.title.text.custCredibPtList" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <li><p class="btn_blue type2"><a id="_updOrdBasicInfo">Edit Order Basic Info</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue type2"><a id="_updPayBtn"><spring:message code="sal.title.text.updPayChnnl" /></a></p></li>
     </c:if>
-    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}"> 
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue type2"><a id="_updCustBtn"><spring:message code="sal.title.text.updCustInfo" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
@@ -314,9 +348,9 @@ function popup(location){
     <input type="hidden" name="salesOrdId" id="_salesOrdId">
     <input type="hidden" name="ccpTotScrePoint" id="_ccpTotScrePoint">
     <input type="hidden" name="custId" id="_custId">
-    
+
     <input type="hidden" name="useDisable" value="1">
-    
+
 </form>
 
 <section class="search_table"><!-- search_table start -->
