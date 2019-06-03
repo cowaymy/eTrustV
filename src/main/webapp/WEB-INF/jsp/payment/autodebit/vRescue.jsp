@@ -541,6 +541,8 @@
             selectedGridValue, "stusName");
         var smsSend = AUIGrid.getCellValue(myGridID, selectedGridValue,
             "ctrlFailSmsIsPump");
+        var type = AUIGrid.getCellValue(myGridID, selectedGridValue,
+        "ctrlIsCrcName");
 
         if ((val == "RESULT" || val == "RESULTNEXT") && ctrlStusId != 1) {
           Common
@@ -587,7 +589,13 @@
           $('#center_btns2').hide();
           $('#center_btns3').hide();
           $('#center_btns4').hide();
-          $('#center_btns5').show();
+          if(type == "Credit Card"){
+        	  $('#center_btns5').show();
+          }
+          else{
+        	  $('#center_btns5').hide();
+          }
+
 
         } else if (val == "RESULT") {
           $('#pop_header h1').text(
