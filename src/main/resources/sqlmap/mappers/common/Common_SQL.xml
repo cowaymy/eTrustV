@@ -1402,7 +1402,7 @@
             </if>
             <if test="groupCode != null and groupCode == 'CRC2708' ">
                 AND IS_PAY_CRC = 1
-                AND ACC_ID IN (102,105)
+                AND ACC_ID IN (102,107)
             </if>
             <if test="groupCode != null and groupCode == 'CRC2709' ">
                 AND IS_PAY_CRC = 1
