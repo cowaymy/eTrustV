@@ -701,7 +701,7 @@
   function fn_uploadFile() {
 
     var ctrlId = AUIGrid
-        .getCellValue(myGridID, selectedGridValue, "ctrlId");1
+        .getCellValue(myGridID, selectedGridValue, "ctrlId");
     var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue,
         "ctrlIsCrc");
     var bankId = AUIGrid
@@ -970,11 +970,11 @@
                         } ];
 
                         //CALIM RESULT UPDATE
-                        if (updateResultItemKind == 'LIVE') {
+                        if (updateResultItemKind == 'LIVE' && ctrlIsCrc == '1') {
                           Common
                               .ajax(
                                   "POST",
-                                  "/payment/updateClaimResultLive.do",
+                                  "/payment/updateCreditCardResultLive.do",
                                   data,
                                   function(
                                       result) {
@@ -987,6 +987,24 @@
                                         .alert("<spring:message code='pay.alert.claimUpdateFail'/>");
                                   });
                         }
+
+                        if (updateResultItemKind == 'LIVE' && ctrlIsCrc == '0') {
+                            Common
+                                .ajax(
+                                    "POST",
+                                    "/payment/updateClaimResultLive.do",
+                                    data,
+                                    function(
+                                        result) {
+                                      Common
+                                          .alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
+                                    },
+                                    function(
+                                        result) {
+                                      Common
+                                          .alert("<spring:message code='pay.alert.claimUpdateFail'/>");
+                                    });
+                          }
 
                         //CALIM RESULT UPDATE NEXT DAY
                         if (updateResultItemKind == 'NEXT') {
