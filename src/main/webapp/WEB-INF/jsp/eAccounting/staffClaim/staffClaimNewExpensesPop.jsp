@@ -134,10 +134,10 @@ var newGridColumnLayout = [ {
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     //formatString : "#,##0.00",
-    /*expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
         return (item.gstBeforAmt + item.gstAmt + item.taxNonClmAmt);
-    },*/
+    },
     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
         if(item.yN == "N") {
             return "my-cell-style";
