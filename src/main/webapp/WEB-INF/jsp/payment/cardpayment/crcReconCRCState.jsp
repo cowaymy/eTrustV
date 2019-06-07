@@ -373,7 +373,7 @@ var crcStateLayout = [
 	function fn_saveIncomeProc() {
 		Common.confirm("Do you want to confirm the seleced item as income?",function (){
 
-		    Common.ajax("GET","/payment/updIncomeCrcStatement.do", {"crcTrnscId" : $("#popCrcTrnscId").val(), "grosAmt" : $("#crcStmtAmt").val(), "action" : $("#action").val()}, function(result){
+		    Common.ajax("GET","/payment/updIncomeCrcStatement", {"crcTrnscId" : $("#popCrcTrnscId").val(), "grosAmt" : $("#crcStmtAmt").val(), "action" : $("#action").val()}, function(result){
 
 		    	var action;
 		    	if($("#action").val() == "INC") {
