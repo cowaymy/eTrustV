@@ -1312,7 +1312,11 @@ function fn_mileageGridSetEvent() {
             var oriCarMilag = event.item.carMilag;
             var reCarMilag = 0;
             var totCarMilag = fn_getTotCarMilag(event.rowIndex);
-            if(totCarMilag > 600) {
+
+            // 2019-06-07 - New policy update
+            result = oriCarMilag * 0.7;
+
+            /*if(totCarMilag > 600) {
                 result = oriCarMilag * 0.5;
             } else {
             	if(totCarMilag == 0) {
@@ -1342,7 +1346,7 @@ function fn_mileageGridSetEvent() {
             			result = oriCarMilag * 0.7;
             		}
             	}
-            }
+            }*/
             AUIGrid.setCellValue(mileageGridID, event.rowIndex, "carMilagAmt", result);
         }
   });
