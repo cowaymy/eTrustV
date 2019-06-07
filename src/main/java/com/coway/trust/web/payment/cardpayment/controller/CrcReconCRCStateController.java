@@ -30,15 +30,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/payment")
 public class CrcReconCRCStateController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(CrcReconCRCStateController.class);
-	
+
 	@Resource(name = "crcReconCRCStateService")
-	private CrcReconCRCStateService crcReconCRCStateService ;	
-		
+	private CrcReconCRCStateService crcReconCRCStateService ;
+
 	/******************************************************
 	 *  Payment Key-In & Credit Card Statement
-	 *****************************************************/	
+	 *****************************************************/
 	/**
 	 *  Payment Key-In & Credit Card Statement 초기화면
 	 * @param params
@@ -49,78 +49,78 @@ public class CrcReconCRCStateController {
 	public String initUploadCardStatementList(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/cardpayment/crcReconCRCState";
 	}
-	
+
 	/**
 	 * Payment Key-In & Credit Card Statement 조회
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
-	 * @return 
+	 * @return
 	 * @return
 	 */
 	@RequestMapping(value = "/selectCrcReconCRCStateInfo.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> selectPaymentDocMs(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-				
+
 		List<EgovMap> mappingList = crcReconCRCStateService.selectCrcStatementMappingList(params);
 		List<EgovMap> keyInList = crcReconCRCStateService.selectCrcKeyInList(params);
 		List<EgovMap> stateList = crcReconCRCStateService.selectCrcStateList(params);
-		
+
 		resultMap.put("mappingList", mappingList);
 		resultMap.put("keyInList", keyInList);
 		resultMap.put("stateList", stateList);
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultMap);
 	}
-	
+
 	/**
 	 * Mapping List KnockOff 처리
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
-	 * @return 
+	 * @return
 	 * @return
 	 */
 	@RequestMapping(value = "/updCrcReconState.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updCrcReconState(@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
-		
+
 		ReturnMessage message = new ReturnMessage();
 		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
 		boolean updateResult = crcReconCRCStateService.updCrcReconState(sessionVO.getUserId(), gridList);
-		
+
 		if(updateResult){
 			message.setMessage("This Payment form has successfully been approved.");
 		}
-		
+
 		// 조회 결과 리턴.
     	message.setCode(AppConstants.SUCCESS);
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	/**
 	 * Mapping List Income 처리
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
-	 * @return 
+	 * @return
 	 * @return
 	 */
 	@RequestMapping(value = "/updIncomeCrcStatement", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> updIncomeCrcStatement(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-			
+
 		ReturnMessage message = new ReturnMessage();
 			int userId = sessionVO.getUserId();
-			params.put("userId", userId);			
-			
+			params.put("userId", userId);
+
 			crcReconCRCStateService.updIncomeCrcStatement(params);
-				
+
 			// 조회 결과 리턴.
 	    	message.setCode(AppConstants.SUCCESS);
-			
+
 			return ResponseEntity.ok(message);
 		}
-	
-	
+
+
 }
