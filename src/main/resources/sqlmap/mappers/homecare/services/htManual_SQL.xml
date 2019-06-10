@@ -519,6 +519,7 @@ FROM
                         , Project2.HT_MGR_CODE
                         , Project2.Result as Result
                         , project2.dept_code
+                         , project2.crt_user_id
           FROM (SELECT
                        DISTINCT HS.NO AS NO
                               , HS.STUS_CODE_ID AS STUS_CODE_ID
@@ -543,6 +544,7 @@ FROM
                               , BR.CODE AS HT_BRNCH_CODE
                               , MEM3.MEM_CODE HT_MGR_CODE
                               , OG.DEPT_CODE
+                               , CASE WHEN HS.CRT_USER_ID = '2222' THEN '' ELSE USR.USER_NAME END AS CRT_USER_ID
                 FROM SVC0008D HS
                 JOIN SAL0225D SO ON SO.SRV_ORD_ID = HS.SALES_ORD_ID
                 INNER JOIN SAL0045D INS ON INS.SALES_ORD_ID = HS.SALES_ORD_ID
@@ -558,6 +560,7 @@ FROM
                 LEFT JOIN SYS0005M BR ON BR.BRNCH_ID = AC.BRNCH
                 LEFT JOIN ORG0005D OG ON OG.MEM_ID = CD.MEM_ID
                 LEFT JOIN ORG0001D MEM3 ON OG.MEM_UP_ID = MEM3.MEM_ID
+                LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
 
 
                 WHERE
