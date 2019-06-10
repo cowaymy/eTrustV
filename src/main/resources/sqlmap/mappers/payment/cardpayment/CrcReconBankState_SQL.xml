@@ -11,8 +11,11 @@
             SubBank.F_TRNSC_ID,
             SubBank.CREDIT_AMT,
             TO_CHAR((SELECT sysdate FROM DUAL), 'DD/MM/YYYY') AS MAPPING_DATE,
-            (CASE WHEN   (NET_AMT -  CREDIT_AMT )  =0  THEN  'true' ELSE  'false'  END) AS is_Amt_Same ,
-            NET_AMT -  CREDIT_AMT  as  variance
+            (CASE WHEN   (NET_AMT -  CREDIT_AMT )  = 0  THEN  'true'
+                      WHEN   (ABS(NET_AMT) - DEBIT_AMT) = 0 THEN 'true'
+                      ELSE  'false'  END) AS is_Amt_Same ,
+            CASE WHEN NET_AMT > 0 THEN NET_AMT -  CREDIT_AMT
+                    WHEN NET_AMT <![CDATA[< ]]> 0 THEN ABS(NET_AMT) -  DEBIT_AMT END as  variance
         FROM(
                 SELECT
                         B.CRC_STATE_ID,
@@ -38,6 +41,7 @@
                         B.F_TRNSC_ID,
                         B.F_TRNSC_REF4 AS MID,
                         SUM(B.F_TRNSC_CRDIT_AMT) AS CREDIT_AMT,
+                        SUM(B.F_TRNSC_DEBT_AMT) AS DEBIT_AMT,
                         B.F_TRNSC_DT,
                         D.CODE_ID
                 FROM PAY0079D A JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
@@ -52,8 +56,10 @@
                     B.F_TRNSC_REF4,
                     B.F_TRNSC_DT,
                     D.CODE_ID ) SubBank
-        ON SubCrc.CRC_TRNSC_MID = SubBank.MID and SubCrc.NET_AMT = SubBank.CREDIT_AMT and SubCrc.CODE_ID = SubBank.CODE_ID  and SUBCRC.CRC_TRNSC_DT = SUBBANK.F_TRNSC_DT
+        ON SubCrc.CRC_TRNSC_MID = SubBank.MID and SubCrc.CODE_ID = SubBank.CODE_ID  and SUBCRC.CRC_TRNSC_DT = SUBBANK.F_TRNSC_DT AND
+        (SubCrc.NET_AMT = SubBank.CREDIT_AMT OR ABS(SubCrc.NET_AMT) = SubBank.DEBIT_AMT)
         WHERE 1=1
+        AND SubCrc.NET_AMT <![CDATA[<> ]]>  0
 		<if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
 		      AND SubBank.F_TRNSC_DT BETWEEN TO_DATE(#{tranDateFr}, 'DD/MM/YYYY') AND TO_DATE(#{tranDateTo}, 'DD/MM/YYYY')
 		</if>
@@ -66,7 +72,8 @@
          SubCrc.CRC_TRNSC_MID,
          SubCrc.NET_AMT,
          SubBank.F_TRNSC_ID,
-         SubBank.CREDIT_AMT
+         SubBank.CREDIT_AMT,
+         SubBank.DEBIT_AMT
     </select>
 
     <select id="selectUnMappedCrc" parameterType="Map" resultType="egovMap">
@@ -110,6 +117,7 @@
 		                        B.F_TRNSC_ID,
 		                        B.F_TRNSC_REF4 AS MID,
 		                        SUM(B.F_TRNSC_CRDIT_AMT) AS CREDIT_AMT,
+		                        SUM(B.F_TRNSC_DEBT_AMT) AS DEBIT_AMT,
 		                        B.F_TRNSC_DT,
 		                        D.CODE_ID
 		                FROM PAY0079D A JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
@@ -124,7 +132,8 @@
 		                    B.F_TRNSC_REF4,
 		                    B.F_TRNSC_DT,
 		                    D.CODE_ID ) SubBank
-		                ON SubCrc.CRC_TRNSC_MID = SubBank.MID and SubCrc.NET_AMT = SubBank.CREDIT_AMT and SubCrc.CODE_ID = SubBank.CODE_ID)
+		                ON SubCrc.CRC_TRNSC_MID = SubBank.MID and SubCrc.CODE_ID = SubBank.CODE_ID AND SubCrc.NET_AMT <![CDATA[<> ]]> 0
+		                AND (SubCrc.NET_AMT = SubBank.CREDIT_AMT or ABS(SubCrc.NET_AMT) = SubBank.DEBIT_AMT))
 		<if test="tranCrcDateFr != null and tranCrcDateFr != '' and tranCrcDateTo != null and tranCrcDateTo != '' ">
 		      AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{tranCrcDateFr}, 'DD/MM/YYYY') AND TO_DATE(#{tranCrcDateTo}, 'DD/MM/YYYY')
 		</if>
@@ -178,6 +187,7 @@
 			                        B.F_TRNSC_ID,
 			                        B.F_TRNSC_REF4 AS MID,
 			                        SUM(B.F_TRNSC_CRDIT_AMT) AS CREDIT_AMT,
+			                        SUM(B.F_TRNSC_DEBT_AMT) AS DEBIT_AMT,
 			                        B.F_TRNSC_DT,
 			                        D.CODE_ID
 			                FROM PAY0079D A JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
@@ -192,7 +202,8 @@
 			                    B.F_TRNSC_REF4,
 			                    B.F_TRNSC_DT,
 			                    D.CODE_ID) SubBank
-			            ON SubCrc.CRC_TRNSC_MID = SubBank.MID and SubCrc.NET_AMT = SubBank.CREDIT_AMT and SubCrc.CODE_ID = SubBank.CODE_ID)
+			            ON SubCrc.CRC_TRNSC_MID = SubBank.MID and SubCrc.CODE_ID = SubBank.CODE_ID  AND SubCrc.NET_AMT <![CDATA[<> ]]> 0
+                        AND (SubCrc.NET_AMT = SubBank.CREDIT_AMT or ABS(SubCrc.NET_AMT) = SubBank.DEBIT_AMT))
 		<if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
               AND B.F_TRNSC_DT BETWEEN TO_DATE(#{tranDateFr}, 'DD/MM/YYYY') AND TO_DATE(#{tranDateTo}, 'DD/MM/YYYY')
         </if>
