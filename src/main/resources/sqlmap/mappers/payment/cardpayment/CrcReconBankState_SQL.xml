@@ -10,9 +10,10 @@
             SubCrc.NET_AMT,
             SubBank.F_TRNSC_ID,
             SubBank.CREDIT_AMT,
+            SubBank.DEBIT_AMT,
             TO_CHAR((SELECT sysdate FROM DUAL), 'DD/MM/YYYY') AS MAPPING_DATE,
-            (CASE WHEN   (NET_AMT -  CREDIT_AMT )  = 0  THEN  'true'
-                      WHEN   (ABS(NET_AMT) - DEBIT_AMT) = 0 THEN 'true'
+            (CASE WHEN NET_AMT > 0 AND  (NET_AMT -  CREDIT_AMT )  = 0  THEN  'true'
+                     WHEN NET_AMT <![CDATA[< ]]> 0 AND  (ABS(NET_AMT) - DEBIT_AMT) = 0 THEN 'true'
                       ELSE  'false'  END) AS is_Amt_Same ,
             CASE WHEN NET_AMT > 0 THEN NET_AMT -  CREDIT_AMT
                     WHEN NET_AMT <![CDATA[< ]]> 0 THEN ABS(NET_AMT) -  DEBIT_AMT END as  variance
@@ -57,7 +58,7 @@
                     B.F_TRNSC_DT,
                     D.CODE_ID ) SubBank
         ON SubCrc.CRC_TRNSC_MID = SubBank.MID and SubCrc.CODE_ID = SubBank.CODE_ID  and SUBCRC.CRC_TRNSC_DT = SUBBANK.F_TRNSC_DT AND
-        (SubCrc.NET_AMT = SubBank.CREDIT_AMT OR ABS(SubCrc.NET_AMT) = SubBank.DEBIT_AMT)
+        ( (NET_AMT > 0 AND SubCrc.NET_AMT = SubBank.CREDIT_AMT) OR (NET_AMT <![CDATA[< ]]> 0 AND ABS(SubCrc.NET_AMT) = SubBank.DEBIT_AMT))
         WHERE 1=1
         AND SubCrc.NET_AMT <![CDATA[<> ]]>  0
 		<if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
