@@ -285,6 +285,10 @@ var TODAY_DD      = "${toDay}";
       Common.ajax("GET", "/services/bs/selectHsAssiinlList.do", $(
           "#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
+
+        if($("#userType").val() == "2" && $("#memberLevel").val() == "3") {
+            AUIGrid.hideColumnByDataField(myGridID, "undefined");
+        }
       });
     } else { //HS NO CREATE AFTER
       if ($("#ManuaMyBSMonth").val() == "") {
@@ -1014,6 +1018,10 @@ var TODAY_DD      = "${toDay}";
   function createAssinAUIGrid(columnAssiinLayout) {
     myGridID = AUIGrid.create("#grid_wrap", columnAssiinLayout,
         gridProsAssiin);
+
+    if($("#userType").val() == "2" && $("#memberLevel").val() == "3") {
+        AUIGrid.hideColumnByDataField(myGridID, "undefined");
+    }
   }
 
   // AUIGrid 를 생성합니다.
