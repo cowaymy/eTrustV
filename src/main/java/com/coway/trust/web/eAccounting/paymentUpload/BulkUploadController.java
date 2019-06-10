@@ -102,7 +102,7 @@ public class BulkUploadController {
         SimpleDateFormat sdf = new SimpleDateFormat(sdfPattern);
 
         Calendar cal = Calendar.getInstance();
-        Date currDate = new Date();
+        Date currDate = sdf.parse(sdf.format(new Date()));
         Date cDate = null;
         cal.add(Calendar.YEAR, 1);
         Date mDate = cal.getTime();
@@ -301,7 +301,7 @@ public class BulkUploadController {
                 } else {
                     cDate = sdf.parse(payDueDt);
 
-                    if(cDate.after(mDate) || cDate.before(currDate)) {
+                    if(cDate.compareTo(mDate) > 0 || cDate.compareTo(currDate) < 0) {
                         if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                             invalidMsgDtl += "Payment Due Date";
                         } else {
@@ -415,7 +415,7 @@ public class BulkUploadController {
                     } else {
                         cDate = sdf.parse(billPeriodFr);
 
-                        if(cDate.after(mDate)) {
+                        if(cDate.compareTo(mDate) > 0) {
                             if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                                 invalidMsgDtl += "Billing Period From";
                             } else {
@@ -442,7 +442,7 @@ public class BulkUploadController {
                     } else {
                         cDate = sdf.parse(billPeriodTo);
 
-                        if(cDate.after(mDate)) {
+                        if(cDate.compareTo(mDate) > 0) {
                             if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                                 invalidMsgDtl += "Billing Period To";
                             } else {
@@ -457,7 +457,7 @@ public class BulkUploadController {
                 LOGGER.debug("========== billPeriodFr ==========");
                 cDate = sdf.parse(billPeriodFr);
 
-                if(cDate.after(mDate)) {
+                if(cDate.compareTo(mDate) > 0) {
                     if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                         invalidMsgDtl += "Billing Period From";
                     } else {
@@ -470,7 +470,7 @@ public class BulkUploadController {
                 LOGGER.debug("========== billPeriodTo ==========");
                 cDate = sdf.parse(billPeriodTo);
 
-                if(cDate.after(mDate)) {
+                if(cDate.compareTo(mDate) > 0) {
                     if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                         invalidMsgDtl += "Billing Period To";
                     } else {
@@ -483,7 +483,7 @@ public class BulkUploadController {
                 Date bFrDate = sdf.parse(billPeriodFr);
                 Date bToDate = sdf.parse(billPeriodTo);
 
-                if(bToDate.before(bFrDate)) {
+                if(bToDate.compareTo(bFrDate) < 0) {
                     if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
                         invalidMsgDtl += "Billing Period(s)";
                     } else {
