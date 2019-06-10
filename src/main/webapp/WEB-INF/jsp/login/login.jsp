@@ -84,8 +84,8 @@
         }).submit();
     }
 
-    function fn_goSurveyForm() {
-    	Common.popupDiv("/logistics/survey/surveyForm.do", $("#loginForm").serializeJSON(), null, false, '_surveyPop');
+    function fn_goSurveyForm(surveyTypeId) {
+    	Common.popupDiv("/logistics/survey/surveyForm.do", {"surveyTypeId":surveyTypeId}, null, false, '_surveyPop');
     }
 
 
@@ -262,8 +262,9 @@
                                 }
                                 else if ( (aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0)
                                 		&& (aResult.surveyTypeId > 0 && aResult.verifySurveyStus <= 0) ){
+                                	console.log("aResult.surveyTypeId ::" + aResult.surveyTypeId + ".  aResult.verifySurveyStus ::" +  aResult.verifySurveyStus );
                                 	$("#loginForm surveyTypeId").val(aResult.surveyTypeId);
-                                    fn_goSurveyForm();
+                                    fn_goSurveyForm(aResult.surveyTypeId);
                                 }
                                 else {
                                     $("#loginPdf").val(aResult.popFlName);
