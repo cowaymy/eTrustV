@@ -179,6 +179,11 @@ var TODAY_DD      = "${toDay}";
         width : 120
       },
       {
+          dataField : "crtUserId",
+          headerText : "Create User ID",
+          width : 200
+        },
+      {
         dataField : "stusCodeId",
         headerText : "HT Status Code",
         width : 120,
