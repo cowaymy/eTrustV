@@ -8,7 +8,7 @@ var userType = "";
 var surveyTypeId = 0;
 
 $(document).ready(function() {
-	surveyTypeId = $('#surveyTypeId').val();
+	surveyTypeId = '${surveyTypeId}';
 });
 
 function btnSubmit(){

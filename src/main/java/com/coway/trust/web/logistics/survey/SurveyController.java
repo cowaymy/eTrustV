@@ -48,6 +48,7 @@ public class SurveyController {
       List<EgovMap> ques = surveyService.getSurveyQues(params);
       map.put("ques",ques);
       model.put("title", title);
+      model.put("surveyTypeId", params.get("surveyTypeId"));
     });
 
     return "logistics/survey/surveyFormPop";
