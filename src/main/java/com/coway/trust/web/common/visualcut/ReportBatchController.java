@@ -1189,7 +1189,7 @@ public class ReportBatchController {
   public void adminProductivityPreviousMonthCody() throws IOException {
     LOGGER.info("[START] AdminProductivityPreviousMonthCody2...");
     Map<String, Object> params = new HashMap<>();
-    params.put(REPORT_FILE_NAME, "/visualcut/AdminProductivityPreviousMonthCody2.rpt");// visualcut
+    params.put(REPORT_FILE_NAME, "/visualcut/AdminProductivityPrevoiusMonthCody2.rpt");// visualcut
                                                                                        // rpt
                                                                                        // file
                                                                                        // name.
@@ -1340,6 +1340,40 @@ public class ReportBatchController {
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] SST_Agreement_Raw_Data_Excel...");
+  }
+
+  @RequestMapping(value = "/AdminProductivitySO.do")
+  //@Scheduled(cron = "0 10 9 * * *")//Daily (9:10am)
+  public void AdminProductivitySO() throws IOException {
+    LOGGER.info("[START] AdminProductivitySO...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/AdminProductivitySO.rpt");// visualcut
+                                                                          // rpt
+                                                                          // file
+                                                                          // name.
+    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "AdminProductivitySO" + File.separator + "AdminProductivitySO" + CommonUtils.getNowDate() + ".pdf");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] AdminProductivitySO...");
+  }
+
+  @RequestMapping(value = "/AdminProductivityPreviousMonthSO.do")
+  //@Scheduled(cron = " 0 7 5 1 * ?")//Monthly (Day 1) 5:07am
+  public void AdminProductivityPreviousMonthSO() throws IOException {
+    LOGGER.info("[START] AdminProductivityPreviousMonthSO...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/AdminProductivityPreviousMonthSO.rpt");// visualcut
+                                                                                       // rpt
+                                                                                       // file
+                                                                                       // name.
+    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "AdminProductivityPreviousMonthSO" + File.separator
+        + "AdminProductivityPreviousMonthSO" + CommonUtils.getNowDate() + ".pdf");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] AdminProductivityPreviousMonthSO...");
   }
 
 
