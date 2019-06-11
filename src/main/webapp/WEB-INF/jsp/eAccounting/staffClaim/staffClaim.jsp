@@ -725,6 +725,8 @@ function fn_addRow() {
                             data.gridData.add[i].cur = data.cur;
                             data.gridData.add[i].expDesc = data.expDesc;
                             data.gridData.add[i].atchFileGrpId = data.atchFileGrpId;
+                            data.gridData.add[i].taxCode = "VB";
+                            data.gridData.add[i].taxName = "OP (Purchase(0%):Out of scope)";
                             AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                         }
                     }
@@ -783,6 +785,8 @@ function fn_addRow() {
                             data.gridData.add[i].cur = data.cur;
                             data.gridData.add[i].expDesc = data.expDesc;
                             data.gridData.add[i].atchFileGrpId = atchFileGrpId;
+                            data.gridData.add[i].taxCode = "VB";
+                            data.gridData.add[i].taxName = "OP (Purchase(0%):Out of scope)";
                             AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                         }
                     }
@@ -803,6 +807,8 @@ function fn_addRow() {
                             data.gridData.update[i].gstRgistNo = data.gstRgistNo;
                             data.gridData.update[i].cur = data.cur;
                             data.gridData.update[i].expDesc = data.expDesc;
+                            data.gridData.update[i].taxCode = "VB";
+                            data.gridData.update[i].taxName = "OP (Purchase(0%):Out of scope)";
                             AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
                         }
                     }
