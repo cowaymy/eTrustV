@@ -48,24 +48,24 @@
         if (date.getDate() < 10) {
           day = "0" + date.getDate();
         }
-        $("#reportForm11").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
-        $("#reportForm11").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
-        $("#reportForm11").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
-        $("#reportForm11").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
 
-        $("#reportForm11 #V_SELECTSQL").val(" ");
-        $("#reportForm11 #V_ORDERBYSQL").val(" ");
-        $("#reportForm11 #V_FULLSQL").val(" ");
-        $("#reportForm11 #V_WHERESQL").val(whereSql);
-        $("#reportForm11 #reportFileName").val('/services/ASRawData.rpt');
-        $("#reportForm11 #viewType").val("EXCEL");
-        $("#reportForm11 #reportDownFileName").val("ASRawData_" + day + month + date.getFullYear());
+        $("#reportForm1 #V_SELECTSQL").val(" ");
+        $("#reportForm1 #V_ORDERBYSQL").val(" ");
+        $("#reportForm1 #V_FULLSQL").val(" ");
+        $("#reportForm1 #V_WHERESQL").val(whereSql);
+        $("#reportForm1 #reportFileName").val('/services/ASRawData.rpt');
+        $("#reportForm1 #viewType").val("EXCEL");
+        $("#reportForm1 #reportDownFileName").val("ASRawData_" + day + month + date.getFullYear());
 
         var option = {
           isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
         };
 
-        Common.report("reportForm11", option);
+        Common.report("reportForm1", option);
       } else if ($("#reportType").val() == '3') {
         var date = new Date();
         var month = date.getMonth() + 1;
@@ -73,19 +73,19 @@
         if (date.getDate() < 10) {
           day = "0" + date.getDate();
         }
-        $("#reportForm11").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
-        $("#reportForm11").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
-        $("#reportForm11").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
-        $("#reportForm11").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
 
-        $("#reportForm11 #V_SELECTSQL").val(" ");
-        $("#reportForm11 #V_ORDERBYSQL").val(" ");
-        $("#reportForm11 #V_FULLSQL").val(" ");
-        $("#reportForm11 #V_WHERESQL").val(whereSql);
-        $("#reportForm11 #reportFileName").val('/services/ASRawPQC.rpt');
-        $("#reportForm11 #viewType").val("EXCEL");
-        $("#reportForm11 #reportDownFileName").val("ASRawPQCData_" + day + month + date.getFullYear());
-        $("#reportForm11 #V_DEPT").val("PQC");
+        $("#reportForm1 #V_SELECTSQL").val(" ");
+        $("#reportForm1 #V_ORDERBYSQL").val(" ");
+        $("#reportForm1 #V_FULLSQL").val(" ");
+        $("#reportForm1 #V_WHERESQL").val(whereSql);
+        $("#reportForm1 #reportFileName").val('/services/ASRawPQC.rpt');
+        $("#reportForm1 #viewType").val("EXCEL");
+        $("#reportForm1 #reportDownFileName").val("ASRawPQCData_" + day + month + date.getFullYear());
+        $("#reportForm1 #V_DEPT").val("PQC");
 
         var option = {
           isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
