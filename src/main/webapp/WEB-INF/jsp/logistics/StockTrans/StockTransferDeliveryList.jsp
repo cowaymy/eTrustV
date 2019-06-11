@@ -923,7 +923,7 @@ function f_addrow(){
     </div>
     <form id="printForm" name="printForm">
        <input type="hidden" id="viewType" name="viewType" value="WINDOW" />
-       <input type="hidden" id="V_REQST_NO" name="V_REQST_NO" value="" />
+       <input type="hidden" id="V_DELVRYNO" name="V_DELVRYNO" value="" />
        <input type="hidden" id="reportFileName" name="reportFileName" value="/logistics/Delivery_Note_for_Gl.rpt" /><br />
     </form>
 </section>

@@ -398,6 +398,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		// formMap.put("prgnm", params.get("prgnm"));
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
+		formMap.put("delyno", delno);
 
 		logger.info(" map:::!!! ??: {}", formMap);
 
@@ -406,6 +407,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			reVal = (String) formMap.get("rdata");
 		} else {
 			stocktran.StockTransferiSsue(formMap);
+			stocktran.updateDelivery54(formMap);
 			reVal = (String) formMap.get("rdata");
 		}
 		String returnValue[] = reVal.split("∈");

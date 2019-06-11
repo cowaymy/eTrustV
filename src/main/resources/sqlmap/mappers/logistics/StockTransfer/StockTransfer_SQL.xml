@@ -278,6 +278,7 @@
                               , TRNSC_TYPE
                               , TRNSC_TYPE_DTL
                               , DELVRY_DT
+                              , DOC_HDER_TXT
                               , CRT_USER_ID
                               , CRT_DT
                             ) VALUES(
@@ -285,6 +286,7 @@
                               , #{ttype}
                               , #{mtype}
                               , to_char(sysdate , 'yyyymmdd')
+                              , #{headtxt}
                               , #{userId}
                               , SYSDATE
                             )
@@ -610,6 +612,17 @@
     FROM LOG0054M
     WHERE DELVRY_NO=#{delyno}
     </select>
+    
+     <update id="updateDelivery54" parameterType="Map">
+	UPDATE LOG0054M
+	<if test="gtype !=null and gtype =='GI'">
+		SET DOC_GIHDER_TXT = #{doctext}
+	</if>
+	<if test="gtype !=null and gtype =='GR'">
+		SET DOC_GRHDER_TXT = #{doctext}
+	</if>
+	WHERE DELVRY_NO=#{delyno}
+</update>
 
 
 </mapper>

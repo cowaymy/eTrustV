@@ -77,5 +77,7 @@ public interface StockTransferMapper {
 	int selectAvaliableStockQty(Map<String, Object> param);
 	
 	Map<String, Object> selectDelvryGRcmplt(String delyno);
+
+	void updateDelivery54(Map<String, Object> formMap);
 	
 }
