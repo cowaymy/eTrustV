@@ -426,7 +426,8 @@ LOGGER.debug(Integer.toString(joinDt.compareTo(currRenewalDt)));
         }
 
         int surveyTypeId = surveyService.isSurveyRequired(params,sessionVO);
-        if(surveyTypeId >= 0){
+        LOGGER.info("surveyTypeId :: " + surveyTypeId);
+        if(surveyTypeId != 0){
           params.put("surveyTypeId",surveyTypeId);
         }
         int verifySurveyStus  = surveyService.verifyStatus(params, sessionVO);
