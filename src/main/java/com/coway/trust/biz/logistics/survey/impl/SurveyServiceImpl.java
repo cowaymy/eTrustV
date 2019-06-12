@@ -63,7 +63,7 @@ public class SurveyServiceImpl implements SurveyService
   }
 
   @Override
-  public void saveSurvey(Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+  public void saveSurvey(Map<String, ArrayList<Object>> params, SessionVO sessionVO, Map<String,Object> code) {
 
     try{
       List<Map<String, Object>> survey = new ArrayList<>();
@@ -104,9 +104,12 @@ public class SurveyServiceImpl implements SurveyService
           surveyMapper.insertSurveyD(map);
 
         });
+
+        code.put("code", "SUCCESS");
       }
 
     }catch(Exception e){
+      code.put("code", "FAIL");
       e.printStackTrace();
     }
   }
