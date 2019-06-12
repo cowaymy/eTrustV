@@ -1270,22 +1270,43 @@ public class ReportBatchController {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] dailyRentCollRtTrdCom...");
   }
+
   /*KV*/
-  @RequestMapping(value = "/SQLHs_and_Filter_RawData_Excel.do")
-  //@Scheduled(cron = " 0 30 0 7 * *") // Monthly (Day 7) 12:30am
-  public void SQLHs_and_Filter_RawData_Excel() throws IOException {
-    LOGGER.info("[START] SQLHs_and_Filter_RawData_Excel...");
+  @RequestMapping(value = "/SQLHs_and_Filter_RawDataWeekly_Excel.do")
+  //@Scheduled(cron = " 0 30 0 * * 5") // Weekly Friday 12:30am
+  public void SQLHs_and_Filter_RawDataWeekly_Excel() throws IOException {
+    LOGGER.info("[START] SQLHs_and_Filter_RawDataWeekly_Excel...");
     Map<String, Object> params = new HashMap<>();
     params.put(REPORT_FILE_NAME, "/visualcut/SQLHs_and_Filter_RawData_Excel.rpt");// visualcut
                                                                      // rpt file
                                                                      // name.
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put("V_TEMP", "TEMP");// parameter
+    params.put("V_IND", "0");
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "Monthly HS and Filter Raw Data" + File.separator + "MonthlyHSandFilter_RawData" + CommonUtils.getNowDate() + ".xls");
+        "Monthly HS and Filter Raw Data" + File.separator + "MonthlyHSandFilter_RawDataWeekly" + CommonUtils.getNowDate() + ".xls");
 
     this.view(null, null, params);
-    LOGGER.info("[END] SQLHs_and_Filter_RawData_Excel...");
+    LOGGER.info("[END] SQLHs_and_Filter_RawDataWeekly_Excel...");
+  }
+
+  /*KV*/
+  @RequestMapping(value = "/SQLHs_and_Filter_RawDataMonthly_Excel.do")
+  //@Scheduled(cron = " 0 0 1 1 * *") // Monthly 1st 1:00am
+  public void SQLHs_and_Filter_RawDataMontly_Excel() throws IOException {
+    LOGGER.info("[START] SQLHs_and_Filter_RawDataMonthly_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/SQLHs_and_Filter_RawData_Excel.rpt");// visualcut
+                                                                     // rpt file
+                                                                     // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put("V_IND", "-1");
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Monthly HS and Filter Raw Data" + File.separator + "MonthlyHSandFilter_RawDataMonthly" + CommonUtils.getNowDate() + ".xls");
+
+    this.view(null, null, params);
+    LOGGER.info("[END] SQLHs_and_Filter_RawDataMonthly_Excel...");
   }
 
   /*KV-Negative Stock Balance of the Month*/
