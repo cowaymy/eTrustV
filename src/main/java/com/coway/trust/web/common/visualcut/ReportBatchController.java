@@ -237,6 +237,24 @@ public class ReportBatchController {
     LOGGER.info("[END] RCM_Daily_2015_S1_2...");
   }
 
+  @RequestMapping(value = "/RCM_Daily_2015_S2_2.do")
+  //@Scheduled(cron = "0 0 5 * * *")//Daily (5:00am)
+  public void rcmDaily2015S2_2() {
+    LOGGER.info("[START] RCM_Daily_2015_S2_2...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_2015_S2_2.rpt");// visualcut
+                                                                       // rpt
+                                                                       // file
+                                                                       // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "RCM" + File.separator + "RCM_Daily_S3_2" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] RCM_Daily_2015_S2_2...");
+  }
+
   @RequestMapping(value = "/RCM_Daily_2015_Company.do")
   //@Scheduled(cron = "0 0 5 * * *")//Daily (5:00am)
   public void rcmDaily2015S2_Company() {
@@ -1168,7 +1186,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/AdminProductivityCody2.do")
-  //@Scheduled(cron = "0 0 4 * * *")//Daily (9:10am)
+  //@Scheduled(cron = "0 0 9 * * *")//Daily (9:10am)
   public void adminProductivityCody() throws IOException {
     LOGGER.info("[START] AdminProductivityCody2...");
     Map<String, Object> params = new HashMap<>();
@@ -1185,7 +1203,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/AdminProductivityPreviousMonthCody2.do")
-  //@Scheduled(cron = " 0 10 4 1 * ?")//Monthly (Day 1) 5:07am
+  //@Scheduled(cron = " 0 10 9 1 * ?")//Monthly (Day 1) 5:07am
   public void adminProductivityPreviousMonthCody() throws IOException {
     LOGGER.info("[START] AdminProductivityPreviousMonthCody2...");
     Map<String, Object> params = new HashMap<>();
@@ -1364,7 +1382,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/AdminProductivitySO.do")
-  //@Scheduled(cron = "0 30 4 * * *")//Daily (9:10am)
+  //@Scheduled(cron = "0 30 9 * * *")//Daily (9:10am)
   public void AdminProductivitySO() throws IOException {
     LOGGER.info("[START] AdminProductivitySO...");
     Map<String, Object> params = new HashMap<>();
@@ -1381,7 +1399,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/AdminProductivityPreviousMonthSO.do")
-  //@Scheduled(cron = " 0 40 4 1 * ?")//Monthly (Day 1) 5:07am
+  //@Scheduled(cron = " 0 40 9 1 * ?")//Monthly (Day 1) 5:07am
   public void AdminProductivityPreviousMonthSO() throws IOException {
     LOGGER.info("[START] AdminProductivityPreviousMonthSO...");
     Map<String, Object> params = new HashMap<>();
