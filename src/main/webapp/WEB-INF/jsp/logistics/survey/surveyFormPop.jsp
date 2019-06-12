@@ -46,8 +46,8 @@ function btnSubmit(){
         Common.ajax("GET", "/logistics/survey/verifyStatus.do", {surveyTypeId:surveyTypeId}, function(result) {
         	if(result.code != '1'){
 		    	Common.ajax("POST", "/logistics/survey/surveySave.do", data, function(result) {
-		    		setTimeout(function(){ fn_goMain(),3000 });//Login after 3 sec
-		    		Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_goMain());
+		    		Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", function(){fn_goMain(); });
+		    		setTimeout(function(){fn_goMain();},3000);
 		        });
         	}else{
         		Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
