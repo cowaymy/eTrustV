@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +83,7 @@ public class ApiServiceImpl implements ApiService {
       apiMapper.insertApiAccessLog(params);
 
       response.put("response", params.get("respCde").toString() + " - " + params.get("respDesc").toString());
-      if(custDetails.size() > 0) response.put("custDetails", custDetails.toString());
+      if(custDetails.size() > 0) response.put("custDetails", custDetails);
     }
 
     return response;
@@ -138,7 +139,7 @@ public class ApiServiceImpl implements ApiService {
       apiMapper.insertApiAccessLog(params);
 
       response.put("response", params.get("respCde").toString() + " - " + params.get("respDesc").toString());
-      if(custDetails != null) response.put("custDetails", custDetails.toString());
+      if(custDetails != null) response.put("custDetails", custDetails);
     }
 
     return response;
