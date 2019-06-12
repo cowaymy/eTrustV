@@ -6,6 +6,7 @@
  ----------------------------------------------------------------
  25/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  05/03/2019  ONGHC  1.0.1          Remove selection mode as singleRow
+ 12/06/2019  ONGHC  1.0.2          Add Column Update By
  -->
 
 <script type="text/javaScript">
@@ -160,6 +161,10 @@
     }, {
       dataField : "code1",
       headerText : '<spring:message code="service.grid.Status" />',
+      width : 130
+    }, {
+      dataField : "lstUpd",
+      headerText : '<spring:message code="service.grid.UpdateBy" />',
       width : 130
     }, {
       dataField : "installEntryId",
