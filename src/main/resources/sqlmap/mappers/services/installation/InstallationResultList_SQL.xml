@@ -94,6 +94,9 @@
                     , CE.DOC_ID C1
                     , I.BRNCH_ID
                     , BRANCH.CODE BRNCH_CODE
+                    , CASE WHEN ORG1.MEM_CODE IS NOT NULL
+                             THEN ORG1.MEM_CODE
+                             ELSE ORG2.USER_NAME END AS LST_UPD
                     , IE.RCD_TMS
       FROM SAL0001D som
       JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
@@ -109,6 +112,8 @@
       JOIN SYS0005M BRANCH ON BRANCH.BRNCH_ID = I.BRNCH_ID
       JOIN SAL0023D CUSTADD ON CUSTADD.CUST_ADD_ID = I.ADD_ID
       JOIN SAL0029D CUST ON CUST.CUST_ID = CUSTADD.CUST_ID
+      LEFT JOIN org0001d ORG1 ON ORG1.MEM_ID = ir.CRT_USER_ID and ORG1.MEM_TYPE > 2
+      LEFT JOIN SYS0047M ORG2 ON ORG2.USER_ID = ir.CRT_USER_ID AND ORG2.USER_TYPE_ID > 2
       WHERE 1 = 1
     ]]>
     <if test="installStatusList != null and installStatusList != '' ">
