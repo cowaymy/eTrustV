@@ -8,6 +8,7 @@
  01/04/2019  ONGHC  1.0.1          ADD Column CT Code
  01/04/2019  ONGHC  1.0.2          ADD Column Settle and Last Update Date
  03/06/2019  ONGHC  1.0.3          Amend 7 days checking logic
+ 03/06/2019  ONGHC  1.0.4          Add 2 Button for Manager Level to Handle 7 Days After AS
  -->
 
 <script type="text/javaScript">
@@ -237,7 +238,7 @@
     //Common.popupDiv("/services/as/ASReceiveEntryPop.do" ,$("#inHOForm").serializeJSON()  , null , true , '_newInHouseEntryDiv1');
   }
 
-  function fn_asResultEditPop() {
+  function fn_asResultEditPop(ind) {
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
     if (selectedItems.length <= 0) {
@@ -271,67 +272,69 @@
       }
     }
 
-    if (updDt != "" && updDt != null) {
-      var stat = true;
-      var sDate = new Date(updDt);
-      var tDate = new Date();
-      tDate.setDate(tDate.getDate() - 7);
+    if (ind == 0) {
+      if (updDt != "" && updDt != null) {
+        var stat = true;
+        var sDate = new Date(updDt);
+        var tDate = new Date();
+        tDate.setDate(tDate.getDate() - 7);
 
-      var tMth = tDate.getMonth();
-      var tYear = tDate.getFullYear();
-      var tDay = tDate.getDate();
-      var sMth = sDate.getMonth();
-      var sYear = sDate.getFullYear();
-      var sDay = sDate.getDate();
+        var tMth = tDate.getMonth();
+        var tYear = tDate.getFullYear();
+        var tDay = tDate.getDate();
+        var sMth = sDate.getMonth();
+        var sYear = sDate.getFullYear();
+        var sDay = sDate.getDate();
 
-      if (sYear > tYear) {
-        stat = true;
-      } else {
-        if (sMth > tMth) {
+        if (sYear > tYear) {
           stat = true;
         } else {
-          if (sDay > tDay) {
+          if (sMth > tMth) {
             stat = true;
           } else {
-            stat = false;
+            if (sDay > tDay) {
+              stat = true;
+            } else {
+              stat = false;
+            }
           }
         }
-      }
 
-      if (!stat) {
-        Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
-        return;
-      }
-    } else if (lstUpdDt != "" && lstUpdDt != null) {
-      var stat = true;
-      var sDate = new Date(lstUpdDt);
-      var tDate = new Date();
-      tDate.setDate(tDate.getDate() - 7);
+        if (!stat) {
+          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
+          return;
+        }
+      } else if (lstUpdDt != "" && lstUpdDt != null) {
+        var stat = true;
+        var sDate = new Date(lstUpdDt);
+        var tDate = new Date();
+        tDate.setDate(tDate.getDate() - 7);
 
-      var tMth = tDate.getMonth();
-      var tYear = tDate.getFullYear();
-      var tDay = tDate.getDate();
-      var sMth = sDate.getMonth();
-      var sYear = sDate.getFullYear();
-      var sDay = sDate.getDate();
+        var tMth = tDate.getMonth();
+        var tYear = tDate.getFullYear();
+        var tDay = tDate.getDate();
+        var sMth = sDate.getMonth();
+        var sYear = sDate.getFullYear();
+        var sDay = sDate.getDate();
 
-      if (sYear > tYear) {
-        stat = true;
-      } else {
-        if (sMth > tMth) {
+        if (sYear > tYear) {
           stat = true;
         } else {
-          if (sDay > tDay) {
+          if (sMth > tMth) {
             stat = true;
-           } else {
-            stat = false;
+          } else {
+            if (sDay > tDay) {
+              stat = true;
+             } else {
+              stat = false;
+            }
           }
         }
-      }
 
-      if (!stat) {
-        Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
-         return;
+        if (!stat) {
+          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
+           return;
+        }
       }
     }
 
@@ -408,7 +411,7 @@
     }
   }
 
-  function fn_asResultEditBasicPop() {
+  function fn_asResultEditBasicPop(ind) {
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
     if (selectedItems.length <= 0) {
@@ -445,67 +448,69 @@
       return;
     }
 
-    if (updDt != "" && updDt != null) {
-      var stat = true;
-      var sDate = new Date(updDt);
-      var tDate = new Date();
-      tDate.setDate(tDate.getDate() - 7);
+    if (ind == 0) {
+      if (updDt != "" && updDt != null) {
+        var stat = true;
+        var sDate = new Date(updDt);
+        var tDate = new Date();
+        tDate.setDate(tDate.getDate() - 7);
 
-      var tMth = tDate.getMonth();
-      var tYear = tDate.getFullYear();
-      var tDay = tDate.getDate();
-      var sMth = sDate.getMonth();
-      var sYear = sDate.getFullYear();
-      var sDay = sDate.getDate();
+        var tMth = tDate.getMonth();
+        var tYear = tDate.getFullYear();
+        var tDay = tDate.getDate();
+        var sMth = sDate.getMonth();
+        var sYear = sDate.getFullYear();
+        var sDay = sDate.getDate();
 
-      if (sYear > tYear) {
-        stat = true;
-      } else {
-        if (sMth > tMth) {
+        if (sYear > tYear) {
           stat = true;
         } else {
-          if (sDay > tDay) {
+          if (sMth > tMth) {
             stat = true;
-           } else {
-            stat = false;
+          } else {
+            if (sDay > tDay) {
+              stat = true;
+             } else {
+              stat = false;
+            }
           }
         }
-      }
 
-      if (!stat) {
-        Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
-        return;
-      }
-    } else if (lstUpdDt != "" && lstUpdDt != null) {
-      var stat = true;
-      var sDate = new Date(lstUpdDt);
-      var tDate = new Date();
-      tDate.setDate(tDate.getDate() - 7);
+        if (!stat) {
+          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
+          return;
+        }
+      } else if (lstUpdDt != "" && lstUpdDt != null) {
+        var stat = true;
+        var sDate = new Date(lstUpdDt);
+        var tDate = new Date();
+        tDate.setDate(tDate.getDate() - 7);
 
-      var tMth = tDate.getMonth();
-      var tYear = tDate.getFullYear();
-      var tDay = tDate.getDate();
-      var sMth = sDate.getMonth();
-      var sYear = sDate.getFullYear();
-      var sDay = sDate.getDate();
+        var tMth = tDate.getMonth();
+        var tYear = tDate.getFullYear();
+        var tDay = tDate.getDate();
+        var sMth = sDate.getMonth();
+        var sYear = sDate.getFullYear();
+        var sDay = sDate.getDate();
 
-      if (tYear > sYear) {
-        stat = false;
-      } else {
-        if (tMth > sMth) {
+        if (tYear > sYear) {
           stat = false;
         } else {
-          if (tDay > sDay) {
+          if (tMth > sMth) {
             stat = false;
           } else {
-            stat = true;
+            if (tDay > sDay) {
+              stat = false;
+            } else {
+              stat = true;
+            }
           }
         }
-      }
 
-      if (!stat) {
-        Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
-        return;
+        if (!stat) {
+          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
+          return;
+        }
       }
     }
 
@@ -935,16 +940,30 @@
    </c:if>
    <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="javascript:fn_asResultEditBasicPop()">EDIT(Basic)
+      <a href="#" onclick="javascript:fn_asResultEditBasicPop(0)">EDIT(Basic)
        AS Result</a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="javascript:fn_asResultEditPop()"> EDIT AS
+      <a href="#" onclick="javascript:fn_asResultEditPop(0)"> EDIT AS
        Result </a>
      </p></li>
    </c:if>
+
+   <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+    <li><p class="btn_blue">
+      <a href="#" onclick="javascript:fn_asResultEditBasicPop(1)">EDIT(Basic)
+       AS Result</a>
+     </p></li>
+   </c:if>
+   <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+    <li><p class="btn_blue">
+      <a href="#" onclick="javascript:fn_asResultEditPop(1)"> EDIT AS
+       Result</a>
+     </p></li>
+   </c:if>
+
    <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
     <li><p class="btn_blue">
       <a href="#" onclick="javascript:fn_asResultViewPop()"> VIEW AS
