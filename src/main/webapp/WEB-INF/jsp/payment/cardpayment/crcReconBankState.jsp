@@ -46,7 +46,7 @@
         {dataField : "netAmt",headerText : "<spring:message code='pay.head.crcNetAmount'/>",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
 
         {dataField : "fTrnscId",headerText : "<spring:message code='pay.head.bankStatementId'/>",width : 200 , editable : false},
-        {dataField : "debtAmt",headerText : "Debit <br>Amount",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "debitAmt",headerText : "Debit <br>Amount",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
 
         {dataField : "creditAmt",headerText : "<spring:message code='pay.head.creditAmount'/>",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
         {dataField : "mappingDate",headerText : "<spring:message code='pay.head.mappingDate'/>",width : 240 , editable : false},
