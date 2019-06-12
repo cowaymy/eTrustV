@@ -24,7 +24,7 @@ public interface SurveyService {
 
   List<EgovMap> getSurveyAns(Map<String, Object> params);
 
-  void saveSurvey(Map<String, ArrayList<Object>> params, SessionVO sessionVO);
+  void saveSurvey(Map<String, ArrayList<Object>> params, SessionVO sessionVO,Map<String, Object> message);
 
 
 }

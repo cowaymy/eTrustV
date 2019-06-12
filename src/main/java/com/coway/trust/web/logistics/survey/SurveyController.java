@@ -1,6 +1,7 @@
 package com.coway.trust.web.logistics.survey;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public class SurveyController {
       List<EgovMap> ques = surveyService.getSurveyQues(params);
       map.put("ques",ques);
       model.put("title", title);
-      model.put("surveyTypeId", params.get("surveyTypeId"));
+      model.put("surveyTypeId", params.get("surveyTypeId").toString());
     });
 
     return "logistics/survey/surveyFormPop";
@@ -64,13 +65,22 @@ public class SurveyController {
   public ResponseEntity<ReturnMessage> surveySave(@RequestBody Map<String, ArrayList<Object>> params, Model model, SessionVO sessionVO)
           throws Exception {
 
-      surveyService.saveSurvey(params,sessionVO);
+      Map<String,Object> code = new HashMap<>();
+      surveyService.saveSurvey(params,sessionVO,code);
 
-      String msg = "Thank you for completing our survey! <br/>"
-          + "You will be login to eTRUST in 3 sec or press 'OK' to login";
+      String msg = "";
+      String stus = "";
+      if(code.get("code").toString() != "FAIL"){
+        msg = "Thank you for completing our survey! <br/>"
+                  + "You will be login to eTRUST in 3 sec or press 'OK' to login";
+        stus = AppConstants.SUCCESS;
+      }else{
+        msg = "Error while saving survey. Please contact IT department.";
+        stus = AppConstants.FAIL;
+      }
 
       ReturnMessage message = new ReturnMessage();
-      message.setCode(AppConstants.SUCCESS);
+      message.setCode(stus);
       message.setMessage(msg);
 
       return ResponseEntity.ok(message);
