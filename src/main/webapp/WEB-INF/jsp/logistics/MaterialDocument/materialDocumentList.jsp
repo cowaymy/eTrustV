@@ -98,8 +98,7 @@ $(document).ready(function(){
     CommonCombo.make("searchMoveType", "/common/selectCodeList.do", { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:''}, "", {
         id: "code",
         name: "codeName",
-        type:"M",
-        isCheckAll:false
+        type:"M"
     });
     doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'sfrLoctype', 'M','f_frloctype');
     doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'stoLoctype', 'M','f_toloctype');
@@ -196,8 +195,7 @@ $(function(){
     	CommonCombo.make("searchMoveType", "/logistics/materialDoc/selectTrntype.do", $("#searchForm").serialize(), "", {
             id: "code",
             name: "codeName",
-            type:"M",
-            isCheckAll:false
+            type:"M"
         });
     });
     $("#searchMaterialCode").keypress(function(event) {
