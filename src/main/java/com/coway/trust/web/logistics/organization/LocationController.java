@@ -115,6 +115,14 @@ public class LocationController {
 			Model model) {
 
 		List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); // 수정 리스트 얻기
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = 0;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
 
 		Map hm = null;
 		int up_sync = 0;
@@ -134,8 +142,11 @@ public class LocationController {
 		
 		updateMap.put("up_sync", up_sync);
 		updateMap.put("up_mobile", up_mobile);
+		updateMap.put("up_user_id", loginId);
+		
 		
 		logger.debug("locstus    값 : {}", params.get("locstus"));
+
 
 		loc.updateLocationInfo(updateMap);
 

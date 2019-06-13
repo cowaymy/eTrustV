@@ -153,6 +153,7 @@
             , RDC_CODE              = #{rdccode}
             , WH_LOC_MOBILE         = #{up_mobile}
             , PLANT                 = #{plant}
+            , WH_LOC_UPD_USER_ID    = #{up_user_id}
              <choose>
             <when test="whlocgb eq '03'.toString() or whlocgb eq '04'.toString()">
                 , SL_PLANT              = #{rdccode}
