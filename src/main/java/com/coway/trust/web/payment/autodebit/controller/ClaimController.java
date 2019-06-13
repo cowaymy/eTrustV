@@ -2493,6 +2493,8 @@ public class ClaimController {
       String ddtChnl = CommonUtils.nvl(String.valueOf(claim.get("new_ddtChnl")));
       String bankId = CommonUtils.nvl(String.valueOf(claim.get("new_issueBank")));
       String cardType = CommonUtils.nvl(String.valueOf(claim.get("new_cardType")));
+      String issueBankId = CommonUtils.nvl(String.valueOf(claim.get("hiddenIssueBank")));
+
 
       claim.put("new_claimType", isCRC);
       claim.put("new_debitDate", inputDate);
@@ -2500,6 +2502,7 @@ public class ClaimController {
       claim.put("new_ddtChnl", ddtChnl);
       claim.put("new_issueBank", bankId);
       claim.put("new_cardType", cardType);
+      claim.put("new_merchantBank", issueBankId);
       claim.put("userId", sessionVO.getUserId());
 
       claimService.createVResClaim(claim); // 프로시저 함수 호출

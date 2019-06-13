@@ -40,6 +40,7 @@
               ind : 'CLM_DY'
             }, '', 'new_claimDay', 'S', '');
 
+
             //Claim Type Combo 변경시 Issue Bank Combo 변경
             $('#claimType')
                 .change(
@@ -114,6 +115,7 @@
                       $('#new_claimDay').val('');
                       $('#new_ddtChnl').val('');
                       $('#new_issueBank').val('');
+                      $('#new_merchantBank').val('');
                       $('#new_cardType').val('');
                       $('#new_claimDay').attr("disabled",
                           true);
@@ -121,6 +123,8 @@
                           true);
                       $('#new_issueBank').attr(
                           "disabled", true);
+                      $('#new_merchantBank').attr(
+                              "disabled", true);
                       $('#new_cardType').attr("disabled",
                           true);
                       $('#new_debitDate')
@@ -130,6 +134,7 @@
                       //NEW CLAIM 팝업에서 필수항목 표시 DEFAULT
                       $("#claimDayMust").hide();
                       $("#issueBankMust").hide();
+                      $("#merchantBankMust").hide();
                       $("#cardTypeMust").hide();
                       $("#ddtChnlMust").hide();
 
@@ -149,7 +154,10 @@
                           $("#cardTypeMust").show();
                           $('#new_issueBank').attr(
                               "disabled", false);
+                          $('#new_merchantBank').attr(
+                              "disabled", false);
                           $("#issueBankMust").show();
+                          $("#merchantBankMust").show();
                           $("#ddtChnlMust").show();
 
                           doGetComboCodeId(
@@ -159,6 +167,8 @@
                               }, '',
                               'new_issueBank',
                               'S', '');
+
+                          CommonCombo.make('new_merchantBank', '/sales/order/getBankCodeList', '' , '', {type: 'M', isCheckAll: false});
 
                           doGetComboCodeId(
                               '/payment/selectListing.do',
@@ -172,6 +182,9 @@
                         doDefCombo(emptyData, '',
                             'new_issueBank', 'S',
                             '');
+
+                        CommonCombo.make('new_merchantBank', '', '' , '', {type: 'M', isCheckAll: false});
+
                         // LOAD DEDUCTION CHANNEL LISTING
                         doGetComboCodeId(
                             '/sales/customer/selectDdlChnl.do',
@@ -181,9 +194,12 @@
                             'S', '');
                         $('#new_issueBank').attr(
                             "disabled", false);
+                        $('#new_merchantBank').attr(
+                            "disabled", false);
                         $('#new_ddtChnl').attr(
                             "disabled", false);
                         $("#issueBankMust").show();
+                        $("#merchantBankMust").show();
                         $("#ddtChnlMust").show();
                       }
 
@@ -645,6 +661,7 @@
       $("#newForm")[0].reset();
       $("#claimDayMust").hide();
       $("#issueBankMust").hide();
+      $("#merchantBankMust").hide();
       $("#cardTypeMust").hide();
       $("#ddtChnlMust").hide();
     }
@@ -1198,8 +1215,14 @@
 
         if ($("#new_issueBank option:selected").val() == '') {
           Common
-              .alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");
+              .alert(" * Please select a merchant bank ");
           return;
+        }
+
+        if ($("#new_merchantBank option:selected").val() == null) {
+            Common
+                .alert(" * Please select issue bank ");
+            return;
         }
       } else if ($("#new_claimType option:selected").val() == "132") {
         if ($("#new_issueBank option:selected").val() == '') {
@@ -1219,6 +1242,23 @@
       Common.alert("<spring:message code='pay.alert.insertDate'/>");
       return;
     }
+
+    var runNo1 = 0;
+    var merchantBank = "";
+
+    if($('#new_merchantBank :selected').length > 0){
+        $('#new_merchantBank :selected').each(function(i, mul){
+            if($(mul).val() != "0"){
+                if(runNo1 > 0){
+                	merchantBank += ", "+$(mul).val()+" ";
+                }else{
+                	merchantBank += " "+$(mul).val()+" ";
+                }
+                runNo1 += 1;
+            }
+        });
+    }
+    $("#hiddenIssueBank").val(merchantBank);
 
     //저장 처리
     var data = {};
@@ -1718,7 +1758,7 @@
         <span class="must" id="ddtChnlMust">*</span></th>
        <td><select id="new_ddtChnl" name="new_ddtChnl"
         class="w100p" disabled></select></td>
-       <th scope="row"><spring:message code='pay.text.issBnk' /> <span
+       <th scope="row">Merchant Bank<span
         class="must" id="issueBankMust">*</span></th>
        <td><select id="new_issueBank" name="new_issueBank"
         class="w100p" disabled></select></td>
@@ -1738,6 +1778,13 @@
          <option value="Visa Card">Visa Card</option>
          <option value="Master Card">Master Card</option> -->
        </select></td>
+      </tr>
+      <tr>
+      <th scope="row">Issue Bank <span class="must" id="merchantBankMust">*</span></th>
+           <td>
+                 <select class="multy_select w100p" multiple="multiple" id="new_merchantBank" data-placeholder="Bank Name"></select>
+                 <input type="hidden"  id="hiddenIssueBank" name="hiddenIssueBank"/>
+           </td>
       </tr>
      </tbody>
     </table>

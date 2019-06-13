@@ -116,6 +116,7 @@
         AND Extent1.CTRL_GROUP != 1
       </otherwise>
     </choose>
+    AND Extent1.VRESCUE = 0
     ORDER BY Extent1.CTRL_ID
   </select>
 
@@ -1314,14 +1315,7 @@
     <if test="ddtChnl != null and ddtChnl != ''">
       AND Extent1.CTRL_DDT_CHL = #{ddtChnl}
     </if>
-    <choose>
-      <when test="IS_GRP != null and IS_GRP != '' ">
-        AND Extent1.CTRL_GROUP = 1
-      </when>
-      <otherwise>
-        AND Extent1.CTRL_GROUP != 1
-      </otherwise>
-    </choose>
+
     ORDER BY Extent1.CTRL_ID
   </select>
 
@@ -1344,7 +1338,8 @@
     #{new_issueBank},
     #{new_cardType}, #{new_debitDate}, #{userId},
     #{new_claimDay},
-    #{new_ddtChnl}, #{p1, mode=OUT, jdbcType=CURSOR,
+    #{new_ddtChnl},
+    #{new_merchantBank}, #{p1, mode=OUT, jdbcType=CURSOR,
     javaType=ResultSet,
     resultMap=resultClaimMap})
     }
