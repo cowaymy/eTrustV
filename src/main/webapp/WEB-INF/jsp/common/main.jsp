@@ -1,14 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 
-<style type="text/css">
-.my-row-style {
-    background:#fff64c;
-    font-weight:bold;
-    color:#f7ea00;
-}
-</style>
-
 <script type="text/javaScript">
 
     var noticeLayout = [{
@@ -66,35 +58,35 @@
     var hpDashboard = [{
         dataField: "period",
         headerText: "Period",
-        width : "7%"
+        width : 75
     }, {
         dataField: "ranking",
         headerText: "Rank",
-        width : "8%"
+        width : 90
     }, {
         dataField: "sponsor",
         headerText: "Self<br/>Sponsor",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "8%"
+        width : 70
     }, {
         dataField: "actMem",
         headerText: "Active<br/>HP",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "8%"
+        width : 70
     }, {
         dataField: "sales",
         headerText: "Own<br/>Sales",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "10%"
+        width : 70
     }, {
         dataField: "pvValue",
         headerText: "PV<br/>Value",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "10%"
+        width : 80
     }, {
         dataField: "ys",
         headerText: "YS",
@@ -111,100 +103,100 @@
         dataField: "rc",
         headerText: "SHI<br/>Index",
         formatString : "#,##0.00",
-        width : "7%"
+        width : 70
     }];
 
     var salesManagerDashboard = [{
         dataField: "period",
         headerText: "Period",
-        width : "7%"
+        width : 75
     }, {
         dataField: "ranking",
         headerText: "Rank",
-        width : "6%"
+        width : 70
     }, {
         dataField: "sponsor",
         headerText: "Sponsor",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "6%"
+        width : 70
     }, {
         dataField: "recruit",
         headerText: "Recruit",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "6%"
+        width : 70
     }, {
         dataField: "actMem",
         headerText: "Active<br/>HP",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "6%"
+        width : 70
     }, {
         dataField: "productivity",
         headerText: "Productivity",
         dataType : "numeric",
         formatString : "#,##0.0",
-        width : "8%"
+        width : 100
     }, {
         dataField: "sales",
         headerText: "Group<br/>Sales",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "10%"
+        width : 70
     }, {
         dataField: "pvValue",
         headerText: "PV<br/>Value",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "10%"
+        width : 80
     }, {
         dataField: "rc",
         headerText: "SHI<br/>Index",
         formatString : "#,##0.00",
-        width : "7%"
+        width : 70
     }];
 
     var sgmDashboard = [{
         dataField: "period",
         headerText: "Period",
-        width : "7%"
+        width : 75
     }, {
         dataField: "sponsor",
         headerText: "Sponsor",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "6%"
+        width : 70
     }, {
         dataField: "recruit",
         headerText: "Recruit",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "6%"
+        width : 70
     }, {
         dataField: "actMem",
-        headerText: "Active HP with<br/>Net Sales",
+        headerText: "Active HP<br/>with<br/>Net Sales",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "10%"
+        width : 100
     }, {
         dataField: "productivity",
         headerText: "Productivity",
         dataType : "numeric",
         formatString : "#,##0.0",
-        width : "8%"
+        width : 100
     }, {
         dataField: "sales",
         headerText: "Group<br/>Sales",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "10%"
+        width : 70
     }, {
         dataField: "pvValue",
         headerText: "PV Value<br/>(Net Sales)",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "10%"
+        width : 90
     }, {
         dataField: "actOrd",
         headerText: "Active<br/>Order",
@@ -221,25 +213,25 @@
         dataField: "rc",
         headerText: "SHI<br/>Index",
         formatString : "#,##0.00",
-        width : "7%"
+        width : 70
     }];
 
     var dailyPerfDashboard = [{
         dataField: "period",
         headerText: "Period",
-        width : "40%"
+        width : 75
     }, {
         dataField: "actOrd",
         headerText: "Active<br/>Order",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "30%"
+        width : 75
     }, {
         dataField: "ys",
         headerText: "YS",
         dataType : "numeric",
         formatString : "#,##0",
-        width : "30%"
+        width : 75
     }];
 /*
     var tagStatusColumnLayout =
@@ -519,7 +511,7 @@
         			    showRowNumColumn : false,
         			    pageRowCount : 4,
         			    editable : false,
-        			    headerHeight : 42
+        			    headerHeight : 50
         			};
 
         		salesOrgPerfD = GridCommon.createAUIGrid("salesOrgPerfD", dailyPerfDashboard, null, salesGridOption);
@@ -535,7 +527,7 @@
         			salesOrgPerfM = GridCommon.createAUIGrid("salesOrgPerfM", salesManagerDashboard, null, salesGridOption);
         		}
 
-        		AUIGrid.resize(salesOrgPerfM, 1200, 150);
+        		AUIGrid.resize(salesOrgPerfM, 1200, 160);
 
         		$("#memo").show();
         		memoGridID = GridCommon.createAUIGrid("memoGridID", memoColumnLayout, null, memoGridOption);
@@ -708,6 +700,11 @@
 		background : #eeeeee;
 		color:#000;
 	}
+
+	.my-row-style {
+    background:#fff64c;
+    color:#f7ea00;
+}
 </style>
 <section id="content"><!-- content start -->
 
@@ -735,28 +732,24 @@
         </article>
 -->
 
-        <div id="salesOrg">
-            <table id="salesTable" class="type1">
-                <tbody>
-                    <tr>
-                        <td class="title_line main_title" colspan="3">
-                            <h2>Sales Organization Performance</h2>
-                        </td>
-                        <td class="title_line main_title" colspan="2">
-                            <h2>Daily Organization Performance</h2>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">
-                            <div id="salesOrgPerfM" style="width: 100%; height:150px; margin: 0 auto;"></div>
-                        </td>
-                        <td colspan="2">
-                            <div id="salesOrgPerfD" style="width: 100%; height:150px; margin: 0 auto;"></div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div id="salesOrg" class="divine_auto">
+            <div style="width:75%">
+                <aside class="title_line">
+                    <h2>Sales Organization Performance</h2>
+                </aside>
+
+                <div id="salesOrgPerfM" class="grid_wrap" style="width: 100%; height:160px; margin: 0 auto;"></div>
+            </div>
+
+            <div style="width:25%">
+                <aside class="title_line">
+                    <h2>Daily Organization Performance</h2>
+                </aside>
+
+                <div id="salesOrgPerfD" class="grid_wrap" style="width: 100%; height:160px; margin: 0 auto;"></div>
+            </div>
         </div>
+
 
         <aside id="dailyPerf"class="title_line main_title mt30"><!-- title_line start -->
             <h2>Daily Performance</h2>
