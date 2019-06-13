@@ -229,16 +229,34 @@
   </select>
 
     <select id="dscBranch" parameterType="Map" resultType="egovMap">
-          SELECT Project1.BRNCH_ID, Project1.BRNCH_NAME
-        FROM ( SELECT Extent1.BRNCH_ID,
-                          Extent1.CODE || ' - ' || Extent1.NAME BRNCH_NAME
-                 FROM SYS0005M Extent1
-                WHERE  ( 1 = Extent1.STUS_ID )
-                           AND ( Extent1.TYPE_ID IN ( 40,43 )
-                          ) ) Project1
-      ORDER BY Project1.BRNCH_NAME ASC
-    </select>
+    SELECT Project1.BRNCH_ID,
+           Project1.BRNCH_NAME
+    FROM ( SELECT Extent1.BRNCH_ID,
+                  Extent1.CODE || ' - ' || Extent1.NAME BRNCH_NAME
+           FROM SYS0005M Extent1
+           WHERE ( 1 = Extent1.STUS_ID )
+             AND ( Extent1.TYPE_ID IN ( 40,43 )
+         ) ) Project1
+    ORDER BY Project1.BRNCH_NAME ASC
+  </select>
 
+  <select id="callLogStat" parameterType="Map" resultType="egovMap">
+    SELECT CODE,
+           CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'CAN_STAT'
+      AND DISB = '0'
+    ORDER BY CODE
+  </select>
+
+  <select id="reqStg" parameterType="Map" resultType="egovMap">
+    SELECT CODE,
+           CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'REQ_STG'
+      AND DISB = '0'
+    ORDER BY CODE
+  </select>
     <select id="cancelReqInfo" parameterType="Map" resultType="egovMap">
         SELECT distinct A.REQ_ID ,
              A.REQ_NO ,
@@ -767,6 +785,14 @@ SELECT TT.CODE_ID
                     ) T
          ORDER BY CODE_NAME
     </select>
+
+  <select id="selRcdTms" parameterType="Map" resultType="int">
+    SELECT COUNT(*) COUNT
+    FROM SAL0020D
+    WHERE SO_REQ_SO_ID = #{orderId}
+      AND SO_REQ_CUR_CALL_ENTRY_ID = #{callEntryId}
+      AND RCD_TMS = #{rcdTms}
+  </select>
 
     <update id="updateCancelCCR0006D" parameterType="Map">
         UPDATE CCR0006D
