@@ -4,7 +4,7 @@
 
   <select id="getHeartServiceJobList" parameterType="Map" resultType="egovMap">
     SELECT A.*,
-           NVL(B.ACC_DEBT_SUB_CURR_OTSTND_AGING,0) AS outstanding
+           TO_CHAR (NVL(B.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
