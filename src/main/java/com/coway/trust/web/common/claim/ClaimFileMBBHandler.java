@@ -16,8 +16,8 @@ import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
 
 public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements ResultHandler<Map<String, Object>> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ClaimFileMBBHandler.class);	
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClaimFileMBBHandler.class);
+
 	// 헤더 작성을 위한 변수
 	String inputDate = "";
 	String strHeader = "";
@@ -28,7 +28,7 @@ public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements Res
 	String strHeaderBillDate = "";
 	String strHeaderOriginatorID = "";
 	String strHeaderBankUse = "";
-	
+
 	// 본문 작성을 위한 변수
 	String strRecord = "";
 	String strRecordFix = "";
@@ -42,11 +42,11 @@ public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements Res
 	String tmpStrRecordPayer = "";
 	String strRecordPayerName = "";
 	String strRecordBankUse3 = "";
-	
+
 	long iHashTot = 0;
 	long iTotalAmt = 0;
 	int iTotalCnt = 0;
-	
+
 	// footer 작성을 위한 변수
 	String strTrailer = "";
 	String strTrailerFix = "";
@@ -54,7 +54,7 @@ public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements Res
 	String strTrailerTotalAmount = "";
 	String strTrailerTotalHash = "";
 	String strTrailerBankUse = "";
-	
+
 	BigDecimal amount = null;
 	BigDecimal hunred = new BigDecimal(100);
 
@@ -86,11 +86,12 @@ public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements Res
 	private void writeHeader() throws IOException {
 		// 헤더 작성
 		inputDate = CommonUtils.nvl(params.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) params.get("ctrlBatchDt");
-		
+
 		strHeader = "";
 		strHeaderFix1 = "VOL1";
 		strHeaderFix2 = "NN";
-		strHeaderOriginatorName = StringUtils.rightPad("WJIN COWAY", 13, " ");
+		//strHeaderOriginatorName = StringUtils.rightPad("WJIN COWAY", 13, " ");
+		strHeaderOriginatorName = StringUtils.rightPad("Woongjin Coway (Malaysia) Sdn Bhd", 35, " ");
 
 		strHeaderBillDate = CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy");
 		strHeaderOriginatorID = "02172";
@@ -102,25 +103,25 @@ public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements Res
 		out.write(strHeader);
 		out.newLine();
 		out.flush();
-				
+
 		LOGGER.debug("write Header complete.....");
 	}
 
 	private void writeBody(ResultContext<? extends Map<String, Object>> result) throws IOException {
 		Map<String, Object> dataRow = result.getResultObject();
-		
+
 		strRecord = "";
 		strRecordFix = "00";
 
 		// 암호화는 나중에 하자
 		// String strRecord_Acc = EncryptionProvider.Decrypt(det.AccNo.Trim()).PadLeft(12, '0');
 		strRecordAcc = StringUtils.leftPad(String.valueOf(dataRow.get("bankDtlDrAccNo")) , 12, "0");
-		
-		//금액 계산		
+
+		//금액 계산
 		amount = (BigDecimal)dataRow.get("bankDtlAmt");
-		//strRecordBillAmt = StringUtils.leftPad(String.valueOf(((java.math.BigDecimal) dataRow.get("bankDtlAmt")).longValue() * 100), 12, "0");		
+		//strRecordBillAmt = StringUtils.leftPad(String.valueOf(((java.math.BigDecimal) dataRow.get("bankDtlAmt")).longValue() * 100), 12, "0");
 		strRecordBillAmt = StringUtils.leftPad(String.valueOf(amount.multiply(hunred).longValue()), 12, "0");
-		
+
 		tmpStrRecordNRIC = (String.valueOf(dataRow.get("bankDtlDrNric"))).trim();
 		strRecordNRIC = tmpStrRecordNRIC.length() > 8 ? CommonUtils.right(tmpStrRecordNRIC, 8) : StringUtils.leftPad(tmpStrRecordNRIC, 8, " ");
 		strRecordBankUse1 = StringUtils.leftPad("", 1, " ");
@@ -134,7 +135,7 @@ public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements Res
 		strRecord = strRecordFix + strRecordAcc + strRecordBillAmt + strRecordNRIC + strRecordBankUse1
 				+ strRecordBillNo + strRecordBankUse2 + strRecordPayerName + strRecordBankUse3;
 
-		
+
 		iHashTot = iHashTot + Long.parseLong(CommonUtils.right(String.valueOf(dataRow.get("bankDtlDrAccNo")).trim(), 4));
 		iTotalAmt = iTotalAmt + amount.multiply(hunred).longValue();
 		iTotalCnt++;
@@ -142,7 +143,7 @@ public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements Res
 		out.write(strRecord);
 		out.newLine();
 		out.flush();
-			
+
 	}
 
 	public void writeFooter() throws IOException {
