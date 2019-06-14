@@ -1415,6 +1415,24 @@ public class ReportBatchController {
     LOGGER.info("[END] AdminProductivityPreviousMonthSO...");
   }
 
+  @RequestMapping(value = "/SHI_Raw_Data_Excel.do")
+  //@Scheduled(cron = "0 30 4 * * *")//Daily (4:00am)
+  public void SHI_Raw_Data_Excel() {
+    LOGGER.info("[START] SHI_Raw_Data_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/SHIRawData.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "SHI" + File.separator + "SHI_Raw_Data" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] SHI_Raw_Data_Excel...");
+  }
+
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
