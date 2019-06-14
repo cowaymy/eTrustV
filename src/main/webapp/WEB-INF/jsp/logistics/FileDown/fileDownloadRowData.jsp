@@ -108,7 +108,7 @@ $(function(){
  $('#spublic').change(function() {
 	 var div= $('#spublic').val();
 	 console.log('div : ' + div);
-	 if("${SESSION_INFO.userId}" =="50461" && div == "BSRaw"){
+	 if("${SESSION_INFO.userId}" !="281" && div == "SHI"){
 		 var msg = "Sorry. You have no access rights to download this file.";
          Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
          return false;
@@ -123,6 +123,11 @@ $(function(){
  $('#scpublic').change(function() {
 	 var div= $('#scpublic').val();
 	 console.log('div : ' + div);
+	   if("${SESSION_INFO.userId}" !="281" && div == "SHI"){
+	         var msg = "Sorry. You have no access rights to download this file.";
+	         Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+	         return false;
+	     }
 	 $("#grid_wrap2").show();
 	 SearchListAjax2(div);
 
