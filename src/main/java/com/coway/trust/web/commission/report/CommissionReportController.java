@@ -247,8 +247,8 @@ public class CommissionReportController {
 				finalMap.put("deptCode",sDEPTCODE);
 				finalMap.put("memCode","");
 				finalMap.put("unit",sDUNIT);
-				finalMap.put("targetatmt",sDCOLLECTTARGET);
-				finalMap.put("collectamt",sDCOLLECT_AMT);
+				finalMap.put("targetatmt",df.format(sDCOLLECTTARGET));
+				finalMap.put("collectamt",df.format(sDCOLLECT_AMT));
 				finalMap.put("collectrate",sDCOLLECTTARGET > 0 ? df.format(100 *(sDCOLLECT_AMT / sDCOLLECTTARGET)) : df.format(0));
 				finalList.add(finalMap);
 
@@ -260,8 +260,8 @@ public class CommissionReportController {
 					finalMap.put("deptCode","");
 					finalMap.put("memCode","");
 					finalMap.put("unit",sGUNIT);
-					finalMap.put("targetatmt",sGCOLLECTTARGET);
-					finalMap.put("collectamt",sGCOLLECT_AMT);
+					finalMap.put("targetatmt",df.format(sGCOLLECTTARGET));
+					finalMap.put("collectamt",df.format(sGCOLLECT_AMT));
 					finalMap.put("collectrate",sGCOLLECTTARGET > 0 ? df.format((100 * (sGCOLLECT_AMT / sGCOLLECTTARGET))) : df.format(0));
 					finalList.add(finalMap);
 
@@ -273,8 +273,8 @@ public class CommissionReportController {
 						finalMap.put("deptCode","");
 						finalMap.put("memCode","");
 						finalMap.put("unit",sOUNIT);
-						finalMap.put("targetatmt",sOCOLLECTTARGET);
-						finalMap.put("collectamt",sOCOLLECT_AMT);
+						finalMap.put("targetatmt",df.format(sOCOLLECTTARGET));
+						finalMap.put("collectamt",df.format(sOCOLLECT_AMT));
 						finalMap.put("collectrate",sOCOLLECTTARGET > 0 ? df.format((100 *(sOCOLLECT_AMT / sOCOLLECTTARGET))) : df.format(0));
 						finalList.add(finalMap);
 
@@ -297,8 +297,8 @@ public class CommissionReportController {
 						finalMap.put("deptCode","");
 						finalMap.put("memCode","");
 						finalMap.put("unit",sTOPOUNIT);
-						finalMap.put("targetatmt",sTOPOCOLLECTTARGET);
-						finalMap.put("collectamt",sTOPOCOLLECT_AMT);
+						finalMap.put("targetatmt",df.format(sTOPOCOLLECTTARGET));
+						finalMap.put("collectamt",df.format(sTOPOCOLLECT_AMT));
 						finalMap.put("collectrate",sTOPOCOLLECTTARGET > 0 ? df.format((100 *(sTOPOCOLLECT_AMT / sTOPOCOLLECTTARGET))) : df.format(0));
 						finalList.add(finalMap);
 
@@ -343,8 +343,8 @@ public class CommissionReportController {
 				finalMap.put("deptCode","");
 				finalMap.put("memCode",list.get(i).get("memCode"));
 				finalMap.put("unit",list.get(i).get("unit"));
-				finalMap.put("targetatmt",list.get(i).get("targetatmt"));
-				finalMap.put("collectamt",list.get(i).get("collectamt"));
+				finalMap.put("targetatmt",df.format(list.get(i).get("targetatmt")));
+				finalMap.put("collectamt",df.format(list.get(i).get("collectamt")));
 				Double targetatmt = list.get(i).get("targetatmt") != null ? Double.parseDouble(list.get(i).get("targetatmt").toString()) : 0;
 				Double collectamt = list.get(i).get("collectamt") != null ? Double.parseDouble(list.get(i).get("collectamt").toString()) : 0;
 				finalMap.put("collectrate",targetatmt > 0 ? df.format((100 *( collectamt / targetatmt ))) : df.format(0));
@@ -418,8 +418,8 @@ public class CommissionReportController {
 			finalMap.put("deptCode",sDEPTCODE);
 			finalMap.put("memCode","");
 			finalMap.put("unit",sDUNIT);
-			finalMap.put("targetatmt",sDCOLLECTTARGET);
-			finalMap.put("collectamt",sDCOLLECT_AMT);
+			finalMap.put("targetatmt",df.format(sDCOLLECTTARGET));
+			finalMap.put("collectamt",df.format(sDCOLLECT_AMT));
 			finalMap.put("collectrate",sDCOLLECTTARGET != 0 ? df.format((100 * (sDCOLLECT_AMT / sDCOLLECTTARGET))) : df.format(0));
 			finalList.add(finalMap);
 
@@ -431,8 +431,8 @@ public class CommissionReportController {
 			finalMap.put("deptCode","");
 			finalMap.put("memCode","");
 			finalMap.put("unit",sGUNIT);
-			finalMap.put("targetatmt",sGCOLLECTTARGET);
-			finalMap.put("collectamt",sGCOLLECT_AMT);
+			finalMap.put("targetatmt",df.format(sGCOLLECTTARGET));
+			finalMap.put("collectamt",df.format(sGCOLLECT_AMT));
 			finalMap.put("collectrate",sGCOLLECTTARGET != 0 ? df.format((100 * (sGCOLLECT_AMT / sGCOLLECTTARGET))) : df.format(0));
 			finalList.add(finalMap);
 
@@ -444,8 +444,8 @@ public class CommissionReportController {
 			finalMap.put("deptCode","");
 			finalMap.put("memCode","");
 			finalMap.put("unit",sOUNIT);
-			finalMap.put("targetatmt",sOCOLLECTTARGET);
-			finalMap.put("collectamt",sOCOLLECT_AMT);
+			finalMap.put("targetatmt",df.format(sOCOLLECTTARGET));
+			finalMap.put("collectamt",df.format(sOCOLLECT_AMT));
 			finalMap.put("collectrate",sOCOLLECTTARGET != 0 ? df.format((100 * (sOCOLLECT_AMT / sOCOLLECTTARGET))) : df.format(0));
 			finalList.add(finalMap);
 
@@ -457,8 +457,8 @@ public class CommissionReportController {
 			finalMap.put("deptCode","");
 			finalMap.put("memCode","");
 			finalMap.put("unit",sTOPOUNIT);
-			finalMap.put("targetatmt",sTOPOCOLLECTTARGET);
-			finalMap.put("collectamt",sTOPOCOLLECT_AMT);
+			finalMap.put("targetatmt",df.format(sTOPOCOLLECTTARGET));
+			finalMap.put("collectamt",df.format(sTOPOCOLLECT_AMT));
 			finalMap.put("collectrate",sTOPOCOLLECTTARGET != 0 ? df.format((100 * (sTOPOCOLLECT_AMT / sTOPOCOLLECTTARGET))) : df.format(0));
 			finalList.add(finalMap);
         }
