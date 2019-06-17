@@ -600,7 +600,7 @@ function fn_addRow() {
                         		parkingAmt : gridDataList[i].parkingAmt,
                         		purpose : gridDataList[i].purpose,
                         		expDesc : gridDataList[i].expDesc,
-                        		gstBeforAmt : gridDataList[i].carMilagAmt + gridDataList[i].tollAmt + gridDataList[i].parkingAmt,
+                        		totAmt : gridDataList[i].carMilagAmt + gridDataList[i].tollAmt + gridDataList[i].parkingAmt,
                         		gstAmt : 0,
                         		taxNonClmAmt : 0
                         }
@@ -653,7 +653,7 @@ function fn_addRow() {
                                 parkingAmt : gridDataList[i].parkingAmt,
                                 purpose : gridDataList[i].purpose,
                                 expDesc : gridDataList[i].expDesc,
-                                gstBeforAmt : gridDataList[i].carMilagAmt + gridDataList[i].tollAmt + gridDataList[i].parkingAmt,
+                                totAmt : gridDataList[i].carMilagAmt + gridDataList[i].tollAmt + gridDataList[i].parkingAmt,
                                 gstAmt : 0,
                                 taxNonClmAmt : 0
                         }
