@@ -1291,7 +1291,7 @@ public class ReportBatchController {
 
   /*KV*/
   @RequestMapping(value = "/SQLHs_and_Filter_RawDataWeekly_Excel.do")
-  @Scheduled(cron = " 0 30 0 * * 5") // Weekly Friday 12:30am
+  //@Scheduled(cron = " 0 30 0 * * 5") // Weekly Friday 12:30am
   public void SQLHs_and_Filter_RawDataWeekly_Excel() throws IOException {
     LOGGER.info("[START] SQLHs_and_Filter_RawDataWeekly_Excel...");
     Map<String, Object> params = new HashMap<>();
@@ -1310,7 +1310,7 @@ public class ReportBatchController {
 
   /*KV*/
   @RequestMapping(value = "/SQLHs_and_Filter_RawDataMonthly_Excel.do")
-  @Scheduled(cron = " 0 0 1 1 * *") // Monthly 1st 1:00am
+  //@Scheduled(cron = " 0 0 1 1 * *") // Monthly 1st 1:00am
   public void SQLHs_and_Filter_RawDataMontly_Excel() throws IOException {
     LOGGER.info("[START] SQLHs_and_Filter_RawDataMonthly_Excel...");
     Map<String, Object> params = new HashMap<>();
