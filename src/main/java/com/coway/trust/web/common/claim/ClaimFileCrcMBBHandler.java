@@ -141,7 +141,7 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
         }
 		merOrg 			= StringUtils.rightPad(String.valueOf("001"), 3, " ");
 		merId 			= StringUtils.rightPad(String.valueOf("060012051"), 1, " ");
-		merName 		= StringUtils.rightPad(String.valueOf("COWAY (M) SDN BHD"), 20, " ");
+		merName 		= StringUtils.rightPad(String.valueOf("Woongjin Coway (Malaysia) Sdn Bhd"), 20, " ");
 		//merCode 		= StringUtils.rightPad(String.valueOf("7523"), 4, " ");
 		merCode 		= StringUtils.rightPad(String.valueOf("5722"), 4, " ");
 		noOfTrans 		= StringUtils.leftPad(String.valueOf(dataRow.get("totItm")), 6, "0");
