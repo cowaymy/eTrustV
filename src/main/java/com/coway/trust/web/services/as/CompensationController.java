@@ -1,6 +1,7 @@
 package com.coway.trust.web.services.as;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
  * 29/05/2019    ONGHC      1.0.2       - Amend uploadDir
+ * 18/06/2019    ONGHC      1.0.3       - Amend based on user request
  *********************************************************************************************/
 
 public class CompensationController {
@@ -122,6 +124,10 @@ public class CompensationController {
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
     EgovMap as_ord_basicInfo = ASManagementListService.selectOrderBasicInfo(params);
 
+    EgovMap tempMap = null;
+    tempMap = (EgovMap)orderDetail.get("basicInfo");
+    String stkCode = (String)tempMap.get("stockCode");
+
     List<EgovMap> branchWithNMList = compensationService.selectBranchWithNM();
     List<EgovMap> mainDeptList = compensationService.getMainDeptList();
     List<EgovMap> cpsStatus = compensationService.selectCpsStatus();
@@ -129,7 +135,7 @@ public class CompensationController {
     List<EgovMap> cpsRespTyp = compensationService.selectCpsRespTyp();
     List<EgovMap> cpsCocTyp = compensationService.selectCpsCocTyp();
     List<EgovMap> cpsEvtTyp = compensationService.selectCpsEvtTyp();
-    List<EgovMap> cpsDftTyp = compensationService.selectCpsDftTyp();
+    List<EgovMap> cpsDftTyp = compensationService.selectCpsDftTyp(stkCode);
 
     model.put("orderDetail", orderDetail);
     model.put("as_ord_basicInfo", as_ord_basicInfo);
@@ -190,6 +196,10 @@ public class CompensationController {
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
     EgovMap as_ord_basicInfo = ASManagementListService.selectOrderBasicInfo(params);
 
+    EgovMap tempMap = null;
+    tempMap = (EgovMap)orderDetail.get("basicInfo");
+    String stkCode = (String)tempMap.get("stockCode");
+
     List<EgovMap> files = compensationService.getAttachmentFileInfo(params);
     List<EgovMap> branchWithNMList = compensationService.selectBranchWithNM();
     List<EgovMap> mainDeptList = compensationService.getMainDeptList();
@@ -198,7 +208,7 @@ public class CompensationController {
     List<EgovMap> cpsRespTyp = compensationService.selectCpsRespTyp();
     List<EgovMap> cpsCocTyp = compensationService.selectCpsCocTyp();
     List<EgovMap> cpsEvtTyp = compensationService.selectCpsEvtTyp();
-    List<EgovMap> cpsDftTyp = compensationService.selectCpsDftTyp();
+    List<EgovMap> cpsDftTyp = compensationService.selectCpsDftTyp(stkCode);
 
     model.put("orderDetail", orderDetail);
     model.put("as_ord_basicInfo", as_ord_basicInfo);
@@ -232,6 +242,10 @@ public class CompensationController {
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
     EgovMap as_ord_basicInfo = ASManagementListService.selectOrderBasicInfo(params);
 
+    EgovMap tempMap = null;
+    tempMap = (EgovMap)orderDetail.get("basicInfo");
+    String stkCode = (String)tempMap.get("stockCode");
+
     List<EgovMap> files = compensationService.getAttachmentFileInfo(params);
     List<EgovMap> branchWithNMList = compensationService.selectBranchWithNM();
     List<EgovMap> mainDeptList = compensationService.getMainDeptList();
@@ -240,7 +254,7 @@ public class CompensationController {
     List<EgovMap> cpsRespTyp = compensationService.selectCpsRespTyp();
     List<EgovMap> cpsCocTyp = compensationService.selectCpsCocTyp();
     List<EgovMap> cpsEvtTyp = compensationService.selectCpsEvtTyp();
-    List<EgovMap> cpsDftTyp = compensationService.selectCpsDftTyp();
+    List<EgovMap> cpsDftTyp = compensationService.selectCpsDftTyp(stkCode);
 
     model.put("orderDetail", orderDetail);
     model.put("as_ord_basicInfo", as_ord_basicInfo);
