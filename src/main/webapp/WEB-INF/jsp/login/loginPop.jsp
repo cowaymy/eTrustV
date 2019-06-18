@@ -90,7 +90,7 @@ function fn_AcceptAgreement() {
                 }
 
                 // Redirect to login page
-                if($('#loginForm #surveyStus').val() <= 0 ){
+                if($("#loginForm #surveyStus").val() <= 0 && $("#loginForm surveyTypeId").val() > 0){
                     $('#popForm').hide();
                     fn_goSurveyForm();
                 }else{

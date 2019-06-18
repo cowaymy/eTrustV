@@ -490,7 +490,7 @@ public class EnrollController {
         String strHeaderOriginatorName = StringUtils.rightPad("WOONGJINCOWAY", 13, " ");
 
         String strHeaderEnrollDate = CommonUtils.changeFormat(String.valueOf(enrollMap.get("debtDtFrom")), "yyyy-MM-dd" , "ddMMyyyy");
-        String strHeaderFiller = StringUtils.rightPad("", 117, " ");
+        String strHeaderFiller = StringUtils.rightPad("", 114, " ");
 
         strHeader = strHeaderFix + strHeaderBankCode + strHeaderOriginatorID +
         					strHeaderOriginatorName + strHeaderEnrollDate + strHeaderFiller;
