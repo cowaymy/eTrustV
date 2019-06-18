@@ -90,7 +90,7 @@ public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements Res
 		strHeader = "";
 		strHeaderFix1 = "VOL1";
 		strHeaderFix2 = "NN";
-		strHeaderOriginatorName = StringUtils.rightPad("WOOJINCOWAY", 13, " ");
+		strHeaderOriginatorName = StringUtils.rightPad("WOONGJINCOWAY", 13, " ");
 
 		strHeaderBillDate = CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy");
 		strHeaderOriginatorID = "02172";
