@@ -414,16 +414,31 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       salesOrderMVO.setInstPriod(0);
       salesOrderMVO.setDoNo("");
       salesOrderMVO.setDeptCode("");
-      ;
       salesOrderMVO.setGrpCode("");
       salesOrderMVO.setOrgCode("");
       salesOrderMVO.setSalesOrdIdOld(0);
       salesOrderMVO.setEditTypeId(0);
-      salesOrderMVO
-          .setCustBillId(CommonUtils.intNvl(params.get("hiddenAppTypeID")) == SalesConstants.APP_TYPE_CODE_ID_RENTAL
-              ? "new".equals((String) params.get("btnBillGroup")) ? 0
-                  : CommonUtils.intNvl(params.get("txtHiddenBillGroupID"))
-              : 0);
+
+      /*KV WAYNE-GET CUST BIL ID WHEN SLECT EXIST BUTTON*/
+      int a;
+      String ind = "";
+      if (CommonUtils.intNvl(params.get("hiddenAppTypeID")) == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
+    	  if (params.get("btnBillGroup") != null) {
+    		  ind = (String) params.get("btnBillGroup");
+    	  } else {
+    		  ind = (String) params.get("grpOpt");
+    	  }
+
+    	  if ("new".equals(ind)) {
+    		 a = 0;
+    	  } else {
+    		 a = CommonUtils.intNvl(params.get("txtHiddenBillGroupID"));
+    	  }
+      } else {
+    	  a = 0;
+      }
+      salesOrderMVO.setCustBillId(a);
+
       salesOrderMVO.setMthRentAmt(BigDecimal.ZERO);
       salesOrderMVO.setLok(SalesConstants.IS_FALSE);
       salesOrderMVO.setAeonStusId(0);
