@@ -1704,7 +1704,7 @@ WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SVC0008D
              <select id="selectHSResultMCnt"  parameterType="Map" resultType="int">
                         SELECT count(*) cnt
                           FROM SVC0006D Extent1
-                        WHERE  Extent1.SCHDUL_ID = #{hidschdulId}
+                        WHERE  Extent1.SCHDUL_ID = #{hidschdulId} AND Extent1.RESULT_STUS_CODE_ID NOT IN (8)
 
               </select>
 
@@ -4313,7 +4313,8 @@ ORDER BY CODE_NAME
                                                    LEFT JOIN SAL0016M Extent5 ON Extent5.STK_ID = Extent3.STK_ID
                                              WHERE  ( 306 = Extent1.TYPE_ID )
                                                       AND ( 0 <> Extent2.BS_RESULT_PART_ID )
-                                                      AND ( Extent2.BS_RESULT_PART_QTY > 0 ) ) Filter1
+                                                      AND ( Extent2.BS_RESULT_PART_QTY > 0 )
+                                                      AND Extent1.RESULT_STUS_CODE_ID <> 8 ) Filter1
                                             LEFT JOIN SYS0047M Extent4   ON Filter1.RESULT_CRT_USER_ID = Extent4.USER_ID
                                       WHERE  Filter1.SCHDUL_ID = #{selSchdulId} ) Distinct1
                                       WHERE  Distinct1.STK_ID = 1428
@@ -4866,26 +4867,64 @@ ORDER BY CODE_NAME
             )
           </insert>
 
-<!--     <select id="checkStkInfo" parameterType="Map" resultType="egovMap">
+     <select id="checkHsBillASInfo" parameterType="Map" resultType="egovMap">
     <![CDATA[
-
-			              SELECT svc.SALES_ORD_ID , som.SALES_ORD_NO , svc.NO  , svc.STUS_CODE_ID  , sod.ITM_STK_ID
-			FROM SVC0008D svc
-			LEFT JOIN SAL0001D som ON svc.SALES_ORD_ID = som.SALES_ORD_ID
-			LEFT JOIN SAL0002D sod ON som.SALES_ORD_ID = sod.SALES_ORD_ID
-			WHERE
-			som.STUS_CODE_ID = 4 AND
-			svc.SCHDUL_ID = #{schdulId}
+SELECT
+    SVC.SALES_ORD_ID,
+    SOM.SALES_ORD_NO,
+    SOD.ITM_STK_ID ITM_STK_ID,
+    SVC.NO,
+    SVDD.BS_RESULT_PART_ID,
+    SVC.STUS_CODE_ID,
+    EXTENT1.TAX_INVC_ID TAXINVOICEID1,
+    EXTENT1.TAX_INVC_REF_NO BR_NO,
+    EXTENT2.INVC_ITM_ID TXINVOICEITEMID,
+    EXTENT2.INVC_ITM_TYPE TXINVOICEITEMTYPEID,
+    EXTENT2.INVC_ITM_ORD_NO INVC_ITM_ORD_NO,
+    EXTENT2.INVC_ITM_CODE INVC_ITM_CODE,
+    EXTENT2.INVC_ITM_DESC1 INVC_ITM_DESC1,
+    EXTENT2.INVC_ITM_QTY INVC_ITM_QTY,
+    EXTENT2.INVC_ITM_UNIT_PRC INVC_ITM_UNIT_PRC,
+    EXTENT2.INVC_ITM_GST_RATE INVC_ITM_GST_RATE,
+    EXTENT2.INVC_ITM_GST_TXS INVC_ITM_GST_TXS,
+    EXTENT2.INVC_ITM_CHRG INVC_ITM_CHRG,
+    EXTENT2.INVC_ITM_AMT_DUE INVC_ITM_AMT_DUE,
+    EXTENT1.TAX_INVC_SVC_NO INVC_SVC_NO,
+    EXTENT3.AS_ENTRY_ID AS_ID
+FROM
+   SVC0008D SVC
+    JOIN SAL0001D SOM ON SVC.SALES_ORD_ID = SOM.SALES_ORD_ID
+    JOIN SAL0002D SOD ON SOM.SALES_ORD_ID = SOD.SALES_ORD_ID
+    JOIN SVC0006D SVD ON SVD.RESULT_ID = (SELECT MAX(RESULT_ID) FROM SVC0006D WHERE SCHDUL_ID = SVC.SCHDUL_ID AND RESULT_STUS_CODE_ID = 4)
+    LEFT JOIN SVC0007D SVDD ON SVD.RESULT_ID = SVDD.BS_RESULT_ID AND SVDD.BS_RESULT_PART_ID = 1428
+    LEFT JOIN SVC0004D EXTENT3 ON EXTENT3.NO = SVD.NO
+                              AND AS_RESULT_STUS_ID = 4
+    LEFT JOIN PAY0031D EXTENT1 ON EXTENT1.TAX_INVC_SVC_NO = EXTENT3.AS_RESULT_NO
+    LEFT JOIN PAY0032D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
+WHERE
+            som.STUS_CODE_ID = 4
+              AND svc.MONTH = EXTRACT(MONTH FROM SYSDATE)
+             AND svc.YEAR = EXTRACT(YEAR FROM SYSDATE)
+            AND svc.SCHDUL_ID = #{schdulId}
 			AND svc.SALES_ORD_ID = #{salesOrdId}
 
              ]]>
      </select>
 
+      <update id="updateHsResultMas" parameterType="Map">
+          update SVC0006D
+               set RESULT_STUS_CODE_ID = #{ResultStatusCodeID}
+                    ,RESULT_IS_CURR = 0
+                  ,RESULT_UPD_USER_ID = #{ResultCreator}
+                  ,RESULT_UPD_DT = SYSDATE
+            where SCHDUL_ID = #{ScheduleID}
+          </update>
 
-      <select id="hsReversalCancelOD05"  statementType="CALLABLE" parameterType="Map" >
-    {
-      call SP_LOGISTICS_OD_FAILED_CANCEL(#{NO}, #{movType})
-    }
-  </select> -->
+          <update id="updateIsCurrent_SVC0004D" parameterType="Map">
+            UPDATE SVC0004D SET AS_RESULT_IS_CURR = 0
+            WHERE AS_ENTRY_ID = #{AS_ENTRY_ID}
+          </update>
+
+
 
 </mapper>
