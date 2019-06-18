@@ -10,6 +10,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  01/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP
+ 18/06/2019  ONGHC  1.0.1          AMENMENT BASED ON USER REQEST
  -->
 
 <script type="text/javaScript">
@@ -49,7 +50,7 @@
   function cpsGrid() {
     var columnLayout = [ {
       dataField : "issueDt",
-      headerText : "<spring:message code='service.grid.ReqstDt'/>",
+      headerText : "<spring:message code='service.text.IssueDt'/>",
       editable : false,
       width : 150
     }, {
@@ -77,6 +78,12 @@
       headerText : "<spring:message code='service.grid.Product'/>",
       editable : false,
       width : 200
+    }, {
+      dataField : "stkCde",
+      headerText : "<spring:message code='service.grid.Product'/>",
+      editable : false,
+      width : 200,
+      visible : false
     }, {
       dataField : "brchCde",
       headerText : "<spring:message code='service.grid.Branch'/>",
@@ -125,6 +132,22 @@
       headerText : "stusId",
       width : 100,
       visible : false
+    }, {
+      dataField : "crtDt",
+      headerText : "<spring:message code='service.grid.CrtDt'/>",
+      width : 100
+    }, {
+      dataField : "crtUserId",
+      headerText : "<spring:message code='service.grid.CrtBy'/>",
+      width : 100
+    }, {
+      dataField : "updDt",
+      headerText : "<spring:message code='service.title.UpdateDate'/>",
+      width : 100
+    }, {
+      dataField : "updUserId",
+      headerText : "<spring:message code='service.grid.UpdateBy'/>",
+      width : 100
     }, {
       dataField : "cpsNo",
       headerText : "cpsNo",
@@ -175,16 +198,18 @@
     Common.popupDiv("/services/compensation/compensationAddPop.do" + prm, null, null, true, '_resultNewEntryPopDiv1');
   }
 
-  function fn_editCompPop() {
+  function fn_editCompPop(ind) {
     var selectedItems = AUIGrid.getSelectedItems(myGridID);
     if (selectedItems.length <= 0) {
       Common.alert("<spring:message code='service.msg.selectRcd'/> ");
       return;
     }
 
-    if (selectedItems[0].item.stusId == "10" || selectedItems[0].item.stusId == "34" || selectedItems[0].item.stusId == "36") {
-      Common.alert("<spring:message code='service.msg.CpsEdtStatChk'/>" );
-      return;
+    if (ind == 0) {
+      if (selectedItems[0].item.stusId == "10" || selectedItems[0].item.stusId == "34" || selectedItems[0].item.stusId == "36") {
+        Common.alert("<spring:message code='service.msg.CpsEdtStatChk'/>" );
+        return;
+      }
     }
 
     Common.popupDiv("/services/compensation/compensationEditPop.do?cpsNo=" + cpsNo, null, null, true, '_compensationEditPop');
@@ -217,10 +242,10 @@
       return;
     }
 
-    if (selectedItems[0].item.stusId == "1") {
-      Common.alert("<spring:message code='service.msg.CpsGenAcptLetterChk'/>" );
-      return;
-    }
+    //if (selectedItems[0].item.stusId == "1") {
+      //Common.alert("<spring:message code='service.msg.CpsGenAcptLetterChk'/>" );
+      //return;
+    //}
 
     var cpsNo = selectedItems[0].item.cpsNo;
     var ordNo = selectedItems[0].item.ordNo;
@@ -313,7 +338,7 @@
       <td>
         <select id="prodId" name="prodId" class="w100p"></select>
       </td>
-      <th scope="row"><spring:message code='service.grid.AppDt'/></th>
+      <th scope="row"><spring:message code='service.text.IssueDt'/></th>
       <td>
        <div class="date_set w100p">
         <!-- date_set start -->
@@ -418,9 +443,16 @@
     <li><p class="btn_grid">
        <a href="#" onClick="fn_addCompPop()"><spring:message code='service.btn.AddCase'/></a>
      </p></li>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'N'}">
     <li><p class="btn_grid">
-       <a href="#" onClick="fn_editCompPop()"><spring:message code='service.btn.EditCase'/></a>
+       <a href="#" onClick="fn_editCompPop(0)"><spring:message code='service.btn.EditCase'/></a>
      </p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <li><p class="btn_grid">
+       <a href="#" onClick="fn_editCompPop(1)"><spring:message code='service.btn.EditCase'/></a>
+     </p></li>
+    </c:if>
     <li><p class="btn_grid">
        <a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a>
      </p></li>
