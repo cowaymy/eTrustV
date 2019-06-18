@@ -314,4 +314,12 @@ public interface HsManualMapper {
 
   void insertUsedFilter(Map<String, Object> params);
 
+  //HS REVERSE OMBAK -- ADDED BY TPY - 18/06/2019
+
+  EgovMap checkHsBillASInfo(Map<String, Object> params);
+
+  void updateHsResultMas(Map<String, Object> params);
+
+  void updateIsCurrent_SVC0004D(Map<String, Object> params);
+
 }
