@@ -31,11 +31,11 @@ public class InvcBulkUploadVO {
         vo.setPayDueDt(CSVRecord.get(6).trim());
         vo.setBillPeriodFr(CSVRecord.get(7).trim());
         vo.setBillPeriodTo(CSVRecord.get(8).trim());
-        vo.setBgtCd(CSVRecord.get(10).trim());
-        vo.setAmt(CSVRecord.get(11).trim());
-        vo.setUtilNo(CSVRecord.get(12).trim());
-        vo.setJPayNo(CSVRecord.get(13).trim());
-        vo.setExpDesc(CSVRecord.get(14).trim());
+        vo.setBgtCd(CSVRecord.get(9).trim());
+        vo.setAmt(CSVRecord.get(10).trim());
+        vo.setUtilNo(CSVRecord.get(11).trim());
+        vo.setJPayNo(CSVRecord.get(12).trim());
+        vo.setExpDesc(CSVRecord.get(13).trim());
 
         return vo;
     }
