@@ -953,7 +953,7 @@ public class BulkUploadController {
                 }
             }
 
-            if(Integer.parseInt(appvLineCnt) == Integer.parseInt(appvLineSeq) && "A".equals(appvStus)) {
+            if(Integer.parseInt(appvLineCnt) == Integer.parseInt(appvLineSeq) && "A".equals(params.get("appvStus"))) {
                 List<EgovMap> bulkDetailsList = bulkUploadService.getBulkItfDtls(params);
 
                 for(int i = 0; i < bulkDetailsList.size(); i++) {

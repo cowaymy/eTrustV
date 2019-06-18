@@ -886,7 +886,7 @@
             $("#V_BATCHID").val(selectBatchId);
 
             var option = {
-                isProcedure : false
+                isProcedure : true
             };
 
             fn_report(option);
