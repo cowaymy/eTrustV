@@ -84,7 +84,8 @@
            A.PRD_RTN_LST_UPD,
            CASE WHEN ( A.APP_DT IS NOT NULL )
                   THEN A.APP_DT
-                  ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END APP_DT
+                  ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END APP_DT,
+                  A.ASSIGN_CT
            <!--,
             A.RCD_TMS -->
     FROM ( SELECT V.REQ_ID ,
@@ -145,9 +146,10 @@
                   V.REF_ID ,
                   V.RSO_STUS,
                   NVL(V.PRD_RTN_LST_UPD, '-') AS PRD_RTN_LST_UPD,
-                  V.APP_DT AS APP_DT
+                  V.APP_DT AS APP_DT,
                   <!--,
                   V.RCD_TMS -->
+                  V.ASSIGN_CT
              FROM SAL1007V V) A
     WHERE 1 = 1
 
