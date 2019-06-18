@@ -13,6 +13,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
+ * 18/06/2019    ONGHC      1.0.2       - Amend based on user request
  *********************************************************************************************/
 
 public interface CompensationService {
@@ -45,7 +46,7 @@ public interface CompensationService {
 
   List<EgovMap> selectCpsEvtTyp();
 
-  List<EgovMap> selectCpsDftTyp();
+  List<EgovMap> selectCpsDftTyp(String stkCode);
 
   List<EgovMap> getMainDeptList();
 
