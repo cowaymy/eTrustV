@@ -15,6 +15,7 @@
            NVL(TO_CHAR(A.ISSUE_DT, 'DD/MM/YYYY'), '-') AS ISSUE_DT,
            F.CODE || '-' || F.NAME AS BRCH_CDE,
            E.STK_CODE || ' - ' || E.STK_DESC AS STK_DESC,
+           E.STK_CODE AS STK_CDE,
            A.CSP_ITM_PRT_ID AS CSP_ITM_PRT_ID,
            K.CODE_DESC AS CSP_PFT_TYP_ID,
            J.CODE_DESC AS CSP_MLFNC_RSN_ID,
@@ -24,6 +25,10 @@
            TO_CHAR(NVL(A.CSP_AMT, 0), '9,999,999,999,999.99') AS CSP_AMT,
            G.CODE_NAME AS STUS_CODE_ID,
            A.STUS_CODE_ID AS STUS_ID,
+           NVL(TO_CHAR(A.CRT_DT, 'DD/MM/YYYY'), '-') AS CRT_DT,
+           M.USER_NAME AS CRT_USER_ID,
+           NVL(TO_CHAR(A.UPD_DT, 'DD/MM/YYYY'), '-') AS UPD_DT,
+           N.USER_NAME AS UPD_USER_ID,
            A.RCD_TMS AS RCD_TMS
     FROM SVC0053M A
     JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
@@ -37,6 +42,8 @@
     LEFT JOIN SYS0013M J ON A.CSP_MLFNC_RSN_ID = J.CODE_ID AND J.CODE_MASTER_ID = '411'
     LEFT JOIN SYS0013M K ON A.CSP_DFT_TYP_ID = K.CODE_ID AND K.CODE_MASTER_ID = '412'
     LEFT JOIN SYS0013M L ON A.DEPT_TO_BEAR = L.CODE_ID AND L.CODE_MASTER_ID = '359'
+    LEFT JOIN SYS0047M M ON A.CRT_USER_ID = M.USER_ID
+    LEFT JOIN SYS0047M N ON A.UPD_USER_ID = N.USER_ID
     WHERE 1=1
 
     <if test="orderNum != null and orderNum != '' " >
@@ -768,7 +775,7 @@
                #{solutionMtd},
                #{cpsTyp},
                #{cpsItm},
-               #{searchdepartment},
+               '2862',
                #{rmk},
                #{compTotAmt},
                #{atchFileGrpId},
@@ -794,7 +801,7 @@
                       , CSP_SLUTN_RSN_ID = #{solutionMtd}
                       , CSP_TYP_ID = #{cpsTyp}
                       , CSP_ITM = #{cspItm}
-                      , CSP_ITM_OTH = #{searchdepartment}
+                      , CSP_ITM_OTH = '2862'
                       , CSP_RMK = #{rmk}
                       , CSP_AMT = #{compTotAmt}
                       , ATCH_FILE_GRP_ID = NVL(#{atchFileGrpId}, ATCH_FILE_GRP_ID)
@@ -875,13 +882,22 @@
   </select>
 
   <select id="selectCpsDftTyp"  parameterType="Map" resultType="egovMap">
-    SELECT B.CODE_ID CODE_ID,
-           B.CODE || ' - ' || B.CODE_NAME CODE_NAME
-    FROM SYS0012M A JOIN SYS0013M B ON A.CODE_MASTER_ID = B.CODE_MASTER_ID
-    WHERE A.DISAB = 0
-      AND B.DISAB = 0
-      AND A.CODE_MASTER_ID = 414
-    ORDER BY B.CODE
+    SELECT STK_ID AS CODE_ID,
+           STK_CODE || ' - ' || STK_DESC AS CODE_NAME
+    FROM SYS0026M
+    WHERE STK_CODE IN ( SELECT B.BOM_COMPNT
+                        FROM LOG0043M A JOIN LOG0044D b ON A.BOM = B.BOM
+                        WHERE A.MATRL_NO = #{stkCode}
+                          AND B.LEAD_TM_OFFSET > 0)
+    UNION
+    SELECT STK_ID AS CODE_ID,
+           STK_CODE || ' - ' || STK_DESC AS CODE_NAME
+    FROM SYS0026M
+    WHERE STK_CODE = #{stkCode}
+    UNION
+    SELECT 999 AS CODE_ID,
+           '999 - OTHER' AS CODE_NAME
+    FROM DUAL
   </select>
 
   <select id="selectMainDept"  resultType="egovMap">
