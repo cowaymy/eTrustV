@@ -9,6 +9,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  01/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP
+ 18/06/2019  ONGHC  1.0.1          AMENMENT BASED ON USER REQUEST
  -->
 
 <script type="text/javaScript" language="javascript">
@@ -182,8 +183,6 @@
 
           var $this = $(this);
           var fileId = $this.attr("data-id");
-
-          alert("${pageContext.request.contextPath}");
 
           $.fileDownload("${pageContext.request.contextPath}/file/fileDown.do",
             { httpMethod : "POST",
@@ -411,12 +410,12 @@
         msg = msg + "<b>* <spring:message code='sys.msg.necessary' arguments= '" + field + "' htmlEscape='false'/></b><br/>" ;
         field = "";
       }
-      if ($("#comPensationInfoForm #asNo").val() == "" || $("#comPensationInfoForm #asNo").val() == null) {
+      if ($("#cpsEdtForm #asNoHid").val() == "" || $("#cpsEdtForm #asNoHid").val() == null) {
         field = "<spring:message code='service.grid.ASNo' />";
         msg = msg + "<b>* <spring:message code='sys.msg.necessary' arguments= '" + field + "' htmlEscape='false'/></b><br/>" ;
         field = "";
       }
-      if ($("#comPensationInfoForm #asrNo").val() == "" || $("#comPensationInfoForm #asrNo").val() == null) {
+      if ($("#cpsEdtForm #asrNoHid").val() == "" || $("#cpsEdtForm #asrNoHid").val() == null) {
         field = "<spring:message code='service.grid.ASRs' />";
         msg = msg + "<b>* <spring:message code='sys.msg.necessary' arguments= '" + field + "' htmlEscape='false'/></b><br/>" ;
         field = "";
@@ -611,6 +610,7 @@
         var field2 = "<spring:message code='service.grid.ReqstDt' />";
 
         Common.alert("<b>* <spring:message code='sys.msg.LessThnEql' arguments= '" + field2 + " ; " + field1 + "' htmlEscape='false' argumentSeparator=';'/></b><br/>");
+        $("#issueDt").val("");
         return false;
       }
     }
@@ -780,7 +780,7 @@
         <tr>
          <th scope="row"><spring:message code='service.text.MngtDept' /><span id='m5' name='m5' class='must'> *</span></th>
          <td><select class="w100p"
-          id="searchdepartment" name="searchdepartment">
+          id="searchdepartment" name="searchdepartment" disabled>
            <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
            <c:forEach var="list" items="${mainDeptList}"
             varStatus="status1">
