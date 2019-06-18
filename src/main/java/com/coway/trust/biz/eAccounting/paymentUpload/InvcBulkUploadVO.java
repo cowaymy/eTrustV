@@ -5,6 +5,7 @@ import org.apache.commons.csv.CSVRecord;
 public class InvcBulkUploadVO {
 
     private String docNo;
+    private String clmSeq;
     private String costCentr;
     private String supplier;
     private String invcDt;
@@ -22,18 +23,19 @@ public class InvcBulkUploadVO {
         InvcBulkUploadVO vo = new InvcBulkUploadVO();
 
         vo.setDocNo(CSVRecord.get(0).trim());
-        vo.setCostCentr(CSVRecord.get(1).trim());
-        vo.setSupplier(CSVRecord.get(2).trim());
-        vo.setInvcDt(CSVRecord.get(3).trim());
-        vo.setInvcNo(CSVRecord.get(4).trim());
-        vo.setPayDueDt(CSVRecord.get(5).trim());
-        vo.setBillPeriodFr(CSVRecord.get(6).trim());
-        vo.setBillPeriodTo(CSVRecord.get(7).trim());
-        vo.setBgtCd(CSVRecord.get(8).trim());
-        vo.setAmt(CSVRecord.get(9).trim());
-        vo.setUtilNo(CSVRecord.get(10).trim());
-        vo.setJPayNo(CSVRecord.get(11).trim());
-        vo.setExpDesc(CSVRecord.get(12).trim());
+        vo.setClmSeq(CSVRecord.get(1).trim());
+        vo.setCostCentr(CSVRecord.get(2).trim());
+        vo.setSupplier(CSVRecord.get(3).trim());
+        vo.setInvcDt(CSVRecord.get(4).trim());
+        vo.setInvcNo(CSVRecord.get(5).trim());
+        vo.setPayDueDt(CSVRecord.get(6).trim());
+        vo.setBillPeriodFr(CSVRecord.get(7).trim());
+        vo.setBillPeriodTo(CSVRecord.get(8).trim());
+        vo.setBgtCd(CSVRecord.get(10).trim());
+        vo.setAmt(CSVRecord.get(11).trim());
+        vo.setUtilNo(CSVRecord.get(12).trim());
+        vo.setJPayNo(CSVRecord.get(13).trim());
+        vo.setExpDesc(CSVRecord.get(14).trim());
 
         return vo;
     }
@@ -44,6 +46,14 @@ public class InvcBulkUploadVO {
 
     public void setDocNo(String docNo) {
         this.docNo = docNo;
+    }
+
+    public String getClmSeq() {
+        return clmSeq;
+    }
+
+    public void setClmSeq(String clmSeq) {
+        this.clmSeq = clmSeq;
     }
 
     public String getCostCentr() {

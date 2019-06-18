@@ -128,6 +128,7 @@ public class BulkUploadController {
             Map<String, Object> map = BeanConverter.toMap(r);
 
             map.put("grpSeq", r.getDocNo());
+            map.put("clmSeq", r.getClmSeq());
             map.put("costCentr", r.getCostCentr());
             map.put("invcDt", r.getInvcDt());
             map.put("invcNo", r.getInvcNo());
@@ -196,6 +197,7 @@ public class BulkUploadController {
             hm = (HashMap<String, Object>) map;
 
             String grpSeq = (String.valueOf(hm.get("grpSeq"))).trim();
+            String clmSeq = (String.valueOf(hm.get("clmSeq"))).trim();
             String costCenter = (String.valueOf(hm.get("costCentr"))).trim();
             String costCetnerDesc = (String.valueOf(hm.get("costCentrNm"))).trim();
             String memAccId = (String.valueOf(hm.get("supplier"))).trim();
@@ -237,6 +239,15 @@ public class BulkUploadController {
             LOGGER.debug("========== docNo ==========");
             if("".equals(grpSeq) || grpSeq == null || grpSeq == "null") {
                 invalidMsgDtl += " Doc No";
+            }
+
+            LOGGER.debug("========== clmSeq ==========");
+            if("".equals(clmSeq) || clmSeq == null || clmSeq == "null") {
+                if(invalidMsgDtl.isEmpty() || invalidMsgDtl == "") {
+                    invalidMsgDtl += "Claim Sequence";
+                } else {
+                    invalidMsgDtl += ", Claim Sequence";
+                }
             }
 
             LOGGER.debug("========== costCenter ==========");

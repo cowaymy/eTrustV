@@ -47,6 +47,7 @@
         INSERT INTO FCM0024T (
             SEQ,
             GRP_SEQ,
+            CLM_SEQ,
             COST_CENTER,
             COST_CENTER_NAME,
             SUPPLIER,
@@ -73,6 +74,7 @@
             SELECT
                 #{seq},
                 #{item.grpSeq},
+                #{item.clmSeq},
                 #{item.costCentr},
                 #{item.costCentrNm},
                 #{item.supplier},
@@ -126,7 +128,7 @@
         <if test="batchId == null or batchId == ''">
             FROM FCM0024T
             WHERE SEQ = #{seq}
-            ORDER BY GRP_SEQ
+            ORDER BY GRP_SEQ, CLM_SEQ
         </if>
         <if test="seq == null or seq == ''">
             FROM FCM0026D
