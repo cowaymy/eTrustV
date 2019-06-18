@@ -15,19 +15,19 @@
     FROM MSC0047M
         WHERE STUS_CODE_ID = 1
         AND SYSDATE BETWEEN TO_DATE(SURVEY_START_DT,'YYYY/MM/DD') AND TO_DATE(SURVEY_END_DT,'YYYY/MM/DD')
-        <if test="userTypeId == 0004 or userTypeId == 0006">
+        <if test="userTypeId == 4 or userTypeId == 6">
             AND IS_STAFF = 1 AND ROLE_ID IN (0,#{roleType})
          </if>
-         <if test="userTypeId == 0001">
+         <if test="userTypeId == 1">
             AND IS_HP = 1 AND ROLE_ID IN (0,#{roleType})
          </if>
-         <if test="userTypeId == 0002">
+         <if test="userTypeId == 2">
             AND IS_CD = 1 AND ROLE_ID IN (0,#{roleType})
          </if>
-         <if test="userTypeId == 0003">
+         <if test="userTypeId == 3">
             AND IS_CT = 1 AND ROLE_ID IN (0,#{roleType})
          </if>
-         <if test="userTypeId == 0007">
+         <if test="userTypeId == 7">
             AND IS_HT = 1 AND ROLE_ID IN (0,#{roleType})
          </if>
 </select>

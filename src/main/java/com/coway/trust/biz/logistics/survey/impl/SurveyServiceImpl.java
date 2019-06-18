@@ -38,7 +38,7 @@ public class SurveyServiceImpl implements SurveyService
 
   @Override
   public int isSurveyRequired(Map<String, Object> params,SessionVO sessionVO) {
-    //params.put("userTypeId",sessionVO.getUserTypeId());
+    params.put("userTypeId",sessionVO.getUserTypeId());
     //params.put("userMemLvl",sessionVO.getMemberLevel());
     int surveyTypeId = 0;
     if (surveyMapper.isSurveyRequired(params) != null){
