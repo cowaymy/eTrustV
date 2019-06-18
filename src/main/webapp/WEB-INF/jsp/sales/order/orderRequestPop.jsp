@@ -1744,6 +1744,8 @@
 
         $('#dpPreferInstDateOwnt').val("${orderDetail.installationInfo.preferInstDt}");
         $('#tpPreferInstTimeOwnt').val("${orderDetail.installationInfo.preferInstTm}");
+        /*KV - previous without linkapptypeid*/
+        $('#hiddenAppTypeIDOwnt').val(APP_TYPE_ID);
 
         Common.ajax("GET", "/sales/order/selectInstallInfo.do", {salesOrderId : ORD_ID}, function(instInfo) {
 
