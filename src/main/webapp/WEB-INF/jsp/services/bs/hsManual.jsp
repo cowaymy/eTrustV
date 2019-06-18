@@ -1137,7 +1137,8 @@ var TODAY_DD      = "${toDay}";
       fn_getBSListAjax(); //parent Method (Reload)
   }
 
-/*    function fn_hsReversal(){
+
+    function fn_hsReversal(){ // ADDED BY TPY - 18/06/2019
 	  var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
 
 	    if (checkedItems.length <= 0) {
@@ -1163,8 +1164,9 @@ var TODAY_DD      = "${toDay}";
 
 	        }
 	      }
+	    Common.confirm("Are you sure want to reverse this HS ?", function() {
 
-        console.log("schdulId :: " + schdulId + "  salesOrdId :: "  + salesOrdId);
+	    	console.log("schdulId :: " + schdulId + "  salesOrdId :: "  + salesOrdId);
        Common.ajax("GET", "/services/bs/hsReversal.do",  {schdulId : schdulId , salesOrdId : salesOrdId} , function(result) {
 
              if(result == null || result == "") {
@@ -1175,7 +1177,8 @@ var TODAY_DD      = "${toDay}";
        }
              });
 
-	    } */
+	    });
+    }
 
 
 
@@ -1228,10 +1231,10 @@ var TODAY_DD      = "${toDay}";
    <h2>HS Management</h2>
    <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <!--  <li><p class="btn_blue">
+      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_hsReversal();"
         id="hsReversal">HS Reversal</a>
-      </p></li> -->
+      </p></li>
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_codyChangeHQ();"
         id="codyChangeHQ">Assign Cody Transfer HQ</a>
