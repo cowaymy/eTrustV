@@ -123,6 +123,11 @@
           width : 100,
           editable : false
         }, {
+            dataField : 'assignCt',
+            headerText : 'AssignCT',
+            width : 100,
+            editable : false
+        },{
           dataField : "callEntryId",
           visible : false
         }, {
