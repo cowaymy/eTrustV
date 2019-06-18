@@ -33,6 +33,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
+ * 18/06/2019    ONGHC      1.0.2       - Amend based on user request
  *********************************************************************************************/
 
 @Service("CompensationService")
@@ -231,8 +232,8 @@ public class CompensationServiceImpl extends EgovAbstractServiceImpl implements 
   }
 
   @Override
-  public List<EgovMap> selectCpsDftTyp() {
-    return compensationMapper.selectCpsDftTyp();
+  public List<EgovMap> selectCpsDftTyp(String stkCode) {
+    return compensationMapper.selectCpsDftTyp(stkCode);
   }
 
   @Override
