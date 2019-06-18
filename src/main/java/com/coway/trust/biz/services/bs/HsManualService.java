@@ -145,10 +145,15 @@ public interface HsManualService {
 
   EgovMap checkStkDuration(Map<String, Object> params);
 
-  // REVERSE OMBAK -- TPY
+  //HS REVERSE OMBAK -- ADDED BY TPY - 18/06/2019
 
-/*  EgovMap checkStkInfo(Map<String, Object> params);
+  EgovMap checkHsBillASInfo(Map<String, Object> params);
 
-  Map<String, Object> reverseHSResult(Map<String, Object> params);*/
+  String reverseHSResult(Map<String, Object> params , SessionVO sessionVO );
 
+  String createCreditNote(Map<String, Object> params , SessionVO sessionVO );
+
+  String createASResults(Map<String, Object> params , SessionVO sessionVO );
+
+  String createReverseASResults(Map<String, Object> params , SessionVO sessionVO );
 }
