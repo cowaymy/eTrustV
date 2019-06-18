@@ -1207,32 +1207,73 @@ public class HsManualController {
 
 
 
-/*	@RequestMapping(value = "/hsReversal.do")
+	@RequestMapping(value = "/hsReversal.do") // ADDED BY TPY - 18/06/2019
 	public ResponseEntity<ReturnMessage> hsReversal( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 		logger.debug("params {}", params);
 		String msg = "";
-		EgovMap stkInfo =  hsManualService.checkStkInfo(params);
+		String msg2 = "";
 
-		if(stkInfo.get("itmStkId").toString() == "1427"){
+		String hsResultNo = "";
+		String CNRefNo = "";
+		String ASResultNo = "";
+		String ReverseASResultNo = "";
+
+		EgovMap stkInfo =  hsManualService.checkHsBillASInfo(params);
+		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ITM_STK_ID : "+ stkInfo.get("itmStkId").toString() );
+		String stkItem = stkInfo.get("itmStkId").toString();
+		if(stkItem.equals("1243")){ // OMBAK STK ID
 
 			// ADD FUNCTION TO REVERSE HS
-			Map<String, Object> hsReverse = new HashMap<String, Object>();
-			hsReverse = hsManualService.reverseHSResult(params);
+			hsResultNo = hsManualService.reverseHSResult(params , sessionVO);
+			msg2 += "<br / > HS RESULT NO : " + hsResultNo;
 
-			// ADD FUNCTION TO CN BILLING AND INVOICE
-			// ADD FUNCTION TO REVERSE AS
+			if(  stkInfo.get("brNo") != null ){
+				params.put("memoAdjustInvoiceNo", stkInfo.get("brNo").toString());
+				params.put("memoAdjustTotalAmount", stkInfo.get("invcItmAmtDue").toString());
+				params.put("MemoItemInvoiceItemID", stkInfo.get("txinvoiceitemid").toString());
+				params.put("memoItemInvoiceItmQty", stkInfo.get("invcItmQty").toString());
+				params.put("memoItemCreditAccID", "");
+				params.put("memoItemDebitAccID", "");
+				params.put("memoItemTaxCodeID", 0);
+				params.put("memoItemStatusID", "4");
+				params.put("memoItemRemark", "HS REVERSAL");
+				params.put("memoItemGSTRate", stkInfo.get("invcItmGstRate").toString());
+				params.put("memoItemCharges", stkInfo.get("invcItmChrg").toString());
+				params.put("memoItemTaxes", stkInfo.get("invcItmGstTxs").toString());
+				params.put("memoItemAmount", stkInfo.get("invcItmAmtDue").toString());
 
-		 msg = "HS REVERSAL SUCCESSFUL. HS ORDER NO : " + stkInfo.get("salesOrdNo").toString() ;
+				params.put("invcSvcNo", stkInfo.get("invcSvcNo").toString());
+				params.put("asId", stkInfo.get("asId").toString());
+				params.put("bsResultPartId", stkInfo.get("bsResultPartId").toString());
+				params.put("invcItmUnitPrc", CommonUtils.nvl(stkInfo.get("invcItmUnitPrc")));
+				params.put("invcItmChrg", stkInfo.get("invcItmChrg").toString());
+				params.put("invcItmDesc1", stkInfo.get("invcItmDesc1").toString());
+
+				logger.debug("hsReversal params --- : " + params);
+
+				// ADD FUNCTION TO CREATE CN BILLING AND INVOICE
+				CNRefNo = hsManualService.createCreditNote(params , sessionVO);
+
+				// ADD FUNCTION TO REVERSE AS
+				ASResultNo = hsManualService.createASResults(params , sessionVO);
+
+				ReverseASResultNo = hsManualService.createReverseASResults(params, sessionVO);
+
+				msg2 += "<br /> CREDIT NOTE REF NO : " + CNRefNo + "<br /> AS REF : " + ReverseASResultNo;
+				}
+
+		 msg = "HS REVERSAL SUCCESSFUL. <br /> HS ORDER NO : " + stkInfo.get("salesOrdNo").toString() + "<br />  HS NO : " + stkInfo.get("no").toString() + msg2 ;
+
+
 		}else{
-		 msg = "HS REVERSAL ONLY ALLOW FOR OMBAK PRODUCT.";
+		 //msg = "HS REVERSAL ONLY ALLOW FOR OMBAK PRODUCT.";
+			msg = "HS REVERSAL IS NOT ALLOWED FOR THIS HS.";
 		}
-
-		logger.debug("hsReversal - msg : " + msg + " Stock Id : " + stkInfo.get("itmStkId").toString());
 		message.setMessage(msg);
 		return ResponseEntity.ok(message);
 	}
-*/
+
 
 
 
