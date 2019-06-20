@@ -1924,8 +1924,11 @@
         $('#modKeyInBranch').val(basicInfo.keyinBrnchCode + ' - ' + basicInfo.keyinBrnchName);
 
         if (basicInfo.appTypeId == '66' && basicInfo.typeId == '965' && basicInfo.ordPvMonth == '0' && basicInfo.ordPvYear == '0') {
-            $('#modCorpCustType').removeAttr("disabled").val(basicInfo.corpCustTypeId);
-            $('#modAgreementType').removeAttr("disabled").val(basicInfo.agreementTypeId);
+        	doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   basicInfo.corpCustTypeId, 'modCorpCustType',     'S', ''); //Common Code
+            $('#modCorpCustType').removeAttr("disabled");
+            doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   basicInfo.agreementTypeId, 'modAgreementType',     'S', ''); //Common Code
+            $('#modAgreementType').removeAttr("disabled");
+
 
           }
 
@@ -2328,7 +2331,7 @@
     if (APP_TYPE_ID == '66' && CUST_TYPE_ID == '965' && PV_MONTH == '0' && PV_YEAR == '0') {
         if ($("#modCorpCustType option:selected").index() <= 0) {
               isValid = false;
-              msg += 'Please select the Corporate Customer Type';
+              msg += 'Please select the SST Type';
         }
 
         if ($("#modAgreementType option:selected").index() <= 0) {

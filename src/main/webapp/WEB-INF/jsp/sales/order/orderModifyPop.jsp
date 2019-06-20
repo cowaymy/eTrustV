@@ -2327,7 +2327,7 @@
     if (APP_TYPE_ID == '66' && CUST_TYPE_ID == '965' && PV_MONTH == '0' && PV_YEAR == '0') {
     	if ($("#modCorpCustType option:selected").index() <= 0) {
     	      isValid = false;
-    	      msg += '* Please select the Corporate Customer Type</br>';
+    	      msg += '* Please select the SST Type</br>';
         }
 
     	if ($("#modAgreementType option:selected").index() <= 0) {
