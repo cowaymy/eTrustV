@@ -116,7 +116,7 @@
               //fn_loadProductPromotion('${preOrderInfo.appTypeId}', '${preOrderInfo.itmStkId}', '${preOrderInfo.empChk}', $("#typeId").val(), '${preOrderInfo.exTrade}');
 
                 $('#ordPromo').removeAttr("disabled");
-                doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${preOrderInfo.appTypeId}'
+                doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
                                                                                 ,stkId:'${preOrderInfo.itmStkId}'
                                                                                 ,empChk:'${preOrderInfo.empChk}'
                                                                                 ,promoCustType:$("#typeId").val()

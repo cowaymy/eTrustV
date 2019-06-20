@@ -30,6 +30,8 @@ public interface OrderRegisterService {
 
   List<EgovMap> selectPromotionByAppTypeStock2(Map<String, Object> params);
 
+  List<EgovMap> selectPromotionByAppTypeStockESales(Map<String, Object> params);
+
   EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params);
 
   EgovMap selectTrialNo(Map<String, Object> params);

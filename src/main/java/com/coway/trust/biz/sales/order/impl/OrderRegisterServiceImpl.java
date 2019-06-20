@@ -159,6 +159,15 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
   }
 
   @Override
+  public List<EgovMap> selectPromotionByAppTypeStockESales(Map<String, Object> params) {
+    // TODO Auto-generated method stub
+
+    params.put("appTypeId", CommonUtils.changePromoAppTypeId(Integer.parseInt((String) params.get("appTypeId"))));
+
+    return orderRegisterMapper.selectPromotionByAppTypeStockESales(params);
+  }
+
+  @Override
   public EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params) {
 
     BigDecimal orderPricePromo = BigDecimal.ZERO, orderPVPromo = BigDecimal.ZERO, orderPVPromoGST = BigDecimal.ZERO,

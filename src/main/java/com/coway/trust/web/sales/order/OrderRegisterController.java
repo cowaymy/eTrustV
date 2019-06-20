@@ -260,6 +260,12 @@ public class OrderRegisterController {
     return ResponseEntity.ok(codeList);
   }
 
+  @RequestMapping(value = "/selectPromotionByAppTypeStockESales.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectPromotionByAppTypeStockESales(@RequestParam Map<String, Object> params) {
+    List<EgovMap> codeList = orderRegisterService.selectPromotionByAppTypeStockESales(params);
+    return ResponseEntity.ok(codeList);
+  }
+
   @RequestMapping(value = "/selectProductPromotionPriceByPromoStockID.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> selectProductPromotionPriceByPromoStockID(@RequestParam Map<String, Object> params) {
     EgovMap priceInfo = orderRegisterService.selectProductPromotionPriceByPromoStockID(params);
