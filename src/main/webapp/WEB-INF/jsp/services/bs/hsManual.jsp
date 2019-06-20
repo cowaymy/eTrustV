@@ -1138,7 +1138,7 @@ var TODAY_DD      = "${toDay}";
   }
 
 
-    function fn_hsReversal(){ // ADDED BY TPY - 18/06/2019
+/*     function fn_hsReversal(){ // ADDED BY TPY - 18/06/2019
 	  var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
 
 	    if (checkedItems.length <= 0) {
@@ -1178,7 +1178,7 @@ var TODAY_DD      = "${toDay}";
              });
 
 	    });
-    }
+    } */
 
 
 
@@ -1231,10 +1231,10 @@ var TODAY_DD      = "${toDay}";
    <h2>HS Management</h2>
    <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-      <li><p class="btn_blue">
+<!--       <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_hsReversal();"
         id="hsReversal">HS Reversal</a>
-      </p></li>
+      </p></li> -->
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_codyChangeHQ();"
         id="codyChangeHQ">Assign Cody Transfer HQ</a>
@@ -1390,10 +1390,10 @@ var TODAY_DD      = "${toDay}";
              <a href="#" onclick="javascript:fn_hsConfigOld()">HS
               Config(Old system version)</a>
             </p></li>
-           <li><p class="link_btn type2">
+        <!--    <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsMonthlySetting()">HS
               Current Month Setting(Old system version)</a>
-            </p></li>
+            </p></li> -->
           </c:if>
          </ul>
          <!--
