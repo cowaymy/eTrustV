@@ -397,6 +397,7 @@
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
                 AND T2.PROMO_APP_TYPE_ID = #{appTypeId}
+                AND T2.E_SALES = 0
              ) T
          ORDER BY T.PROMO_DT_FROM DESC
     </select>
@@ -423,6 +424,7 @@
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
+                  AND T2.E_SALES = 0
                 UNION
                SELECT DISTINCT T2.PROMO_ID PROMO_ID
                     , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
@@ -455,6 +457,7 @@
                   AND T4.PAC_TYPE = '2'
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
+                  AND T2.E_SALES = 0
              ) T
          ORDER BY T.PROMO_DT_FROM DESC
     </select>
