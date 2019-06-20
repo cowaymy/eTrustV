@@ -1219,10 +1219,10 @@ public class HsManualController {
 		String ASResultNo = "";
 		String ReverseASResultNo = "";
 
-		EgovMap stkInfo =  hsManualService.checkHsBillASInfo(params);
+		EgovMap stkInfo =  hsManualService.checkHsBillASInfo(params); // CHECK HS / AS / BILL INFORMATION - ADDED BY TPY - 18/06/2019
 		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ITM_STK_ID : "+ stkInfo.get("itmStkId").toString() );
 		String stkItem = stkInfo.get("itmStkId").toString();
-		if(stkItem.equals("1243")){ // OMBAK STK ID
+		if(stkItem.equals("1243")){ // OMBAK -  STK ID
 
 			// ADD FUNCTION TO REVERSE HS
 			hsResultNo = hsManualService.reverseHSResult(params , sessionVO);
@@ -1233,11 +1233,11 @@ public class HsManualController {
 				params.put("memoAdjustTotalAmount", stkInfo.get("invcItmAmtDue").toString());
 				params.put("MemoItemInvoiceItemID", stkInfo.get("txinvoiceitemid").toString());
 				params.put("memoItemInvoiceItmQty", stkInfo.get("invcItmQty").toString());
-				params.put("memoItemCreditAccID", "");
-				params.put("memoItemDebitAccID", "");
+				params.put("memoItemCreditAccID", "39"); // TRADE RECEIVABLE - A/S
+				params.put("memoItemDebitAccID", "167");// SALES - A/S
 				params.put("memoItemTaxCodeID", 0);
 				params.put("memoItemStatusID", "4");
-				params.put("memoItemRemark", "HS REVERSAL");
+				params.put("memoItemRemark", "HS REVERSAL - OMBAK");
 				params.put("memoItemGSTRate", stkInfo.get("invcItmGstRate").toString());
 				params.put("memoItemCharges", stkInfo.get("invcItmChrg").toString());
 				params.put("memoItemTaxes", stkInfo.get("invcItmGstTxs").toString());
