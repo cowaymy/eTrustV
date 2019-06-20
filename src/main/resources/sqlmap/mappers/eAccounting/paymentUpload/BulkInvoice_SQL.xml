@@ -164,7 +164,7 @@
             JPAY_NO
         FROM FCM0024T
         WHERE SEQ = #{seq}
-        order by GRP_SEQ
+        order by GRP_SEQ, CLM_SEQ
     </select>
 
     <insert id="insertBulkMaster" parameterType="Map">
