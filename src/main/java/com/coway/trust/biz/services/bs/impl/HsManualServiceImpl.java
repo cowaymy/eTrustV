@@ -2088,7 +2088,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	      bsResultMas_Rev.put("SalesOrderId", String.valueOf(qryBS_Rev.get("salesOrdId")));
 	      bsResultMas_Rev.put("CodyID", String.valueOf(qryBS_Rev.get("codyId")));
 	      bsResultMas_Rev.put("SettleDate", String.valueOf(qryBS_Rev.get("setlDt")));
-	      bsResultMas_Rev.put("ResultStatusCodeID", "8");// RESULT_STUS_CODE_ID
+	      bsResultMas_Rev.put("ResultStatusCodeID", "12");// RESULT_STUS_CODE_ID -- 12 - REOPEN
 	      bsResultMas_Rev.put("FailReasonID", String.valueOf(qryBS_Rev.get("failResnId")));// FAIL_RESN_ID
 	      bsResultMas_Rev.put("RenCollectionID", String.valueOf(qryBS_Rev.get("renColctId")));// REN_COLCT_ID
 	      bsResultMas_Rev.put("WarehouseID", String.valueOf(qryBS_Rev.get("whId")));// WH_ID
@@ -2147,12 +2147,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	        usedFilter_Rev.put("PartId", CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartId")));
 	        if (String.valueOf(qryBS_Rev.get("resultId")) != null && String.valueOf(qryBS_Rev.get("resultId")) != "") {
 	          usedFilter_Rev.put("PartQty", CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartQty")) * -1);// BS_RESULT_PART_QTY
-	          // logger.debug("jinmu {}" +
-	          // String.valueOf(qryBS_Rev.get("resultId")));
+
 	        } else {
 	          usedFilter_Rev.put("PartQty", CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartQty")));
-	          // logger.debug("jinmu111 {}" +
-	          // String.valueOf(qryBS_Rev.get("resultId")));
+
 	        }
 	        usedFilter_Rev.put("SerialNo", String.valueOf(qryUsedFilter.get(i).get("serialNo")));
 	        usedFilter_Rev.put("CodyId", CommonUtils.intNvl(qryUsedFilter.get(i).get("codyId")));
@@ -2212,9 +2210,9 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
 		//마스터 정보 등록
 		masterParamMap.put("memoAdjustTypeID", 1293);
 		masterParamMap.put("memoAdjustInvoiceNo", params.get("memoAdjustInvoiceNo").toString());
-		masterParamMap.put("memoAdjustInvoiceTypeID",128);
+		masterParamMap.put("memoAdjustInvoiceTypeID",128); // Coway Misc Invoice
 		masterParamMap.put("memoAdjustStatusID", 4);
-		masterParamMap.put("memoAdjustReasonID",2038);
+		masterParamMap.put("memoAdjustReasonID",2038); // Invoice (Reversal)
 		masterParamMap.put("memoAdjustRemark", "HS REVERSAL - OMBAK");
 		masterParamMap.put("memoAdjustCreator", sessionVO.getUserId());
 		masterParamMap.put("batchId", 0);
@@ -2240,7 +2238,7 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
 		EgovMap masterData = invoiceMapper.selectAdjMasterForApprovalMisc(params);
 
 		masterData.put("noteId", noteId);
-		masterData.put("noteTypeId",1293);
+		masterData.put("noteTypeId",1293); // Credit Note
 		masterData.put("userId", params.get("userId"));
 
 		//마스터 정보 등록(PAY0027D)
@@ -2254,11 +2252,11 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
 			obj.put("noteId", noteId);
 			invoiceMapper.insertAccTaxDebitCreditNoteSub(obj);
 
-			if("459".equals(String.valueOf(obj.get("noteItmTypeId")))){
+			if("459".equals(String.valueOf(obj.get("noteItmTypeId")))){ // AS Change Filter
 				//AS
 				ledgerMap = new HashMap<String, Object>();
 				ledgerMap.put("asDocNo", masterData.get("noteRefNo"));
-				ledgerMap.put("asLgDocTypeId", 155);
+				ledgerMap.put("asLgDocTypeId", 155); // Credit Notes
 				ledgerMap.put("asLgAmt", Double.parseDouble(String.valueOf(obj.get("noteItmDueAmt")))  * -1.0  );
 				ledgerMap.put("asSoNo", obj.get("noteItmOrdNo"));
 				ledgerMap.put("asSoId", obj.get("noteItmOrdId"));
@@ -2456,8 +2454,6 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
 
 	    return AS_RESULT_NO2;
   }
-
-
 
   }
 
