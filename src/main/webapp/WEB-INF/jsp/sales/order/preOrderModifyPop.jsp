@@ -33,6 +33,8 @@
         doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '${preOrderInfo.exTrade}', 'exTrade', 'S'); //EX-TRADE
         /*doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '${preOrderInfo.gstChk}',  'gstChk',  'S'); //GST_CHK */
         /* doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '${preOrderInfo.promoDiscPeriodTp}', 'promoDiscPeriodTp', 'S'); //Discount period */
+        doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'corpCustType',     'S', ''); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'agreementType',     'S', ''); //Common Code
 
         //Attach File
         //$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
@@ -48,6 +50,17 @@
 
         if('${preOrderInfo.atchFileGrpId}' != 0){
         	fn_loadAtchment('${preOrderInfo.atchFileGrpId}');
+        }
+
+        var vCustType = $("#hiddenTypeId").val();
+        console.log("vCustType : " + vCustType);
+        if (vCustType == '965' && '${preOrderInfo.appTypeId}' ){
+            $("#corpCustType").removeAttr("disabled");
+            $("#agreementType").removeAttr("disabled");
+        }
+        else{
+            $("#corpCustType").prop("disabled", true);
+            $("#agreementType").prop("disabled", true);
         }
 
     });
@@ -187,6 +200,17 @@
                           //$('#pBtnCal').addClass("blind");
 
                             appSubType = '367';
+
+                            var vCustType = $("#hiddenTypeId").val();
+                            console.log("vCustType : " + vCustType);
+                            if (vCustType == '965' ){
+                                $("#corpCustType").removeAttr("disabled");
+                                $("#agreementType").removeAttr("disabled");
+                            }
+                            else{
+                                $("#corpCustType").prop("disabled", true);
+                                $("#agreementType").prop("disabled", true);
+                            }
 
                             break;
 
@@ -857,6 +881,7 @@
 
         var appTypeIdx = $("#appType option:selected").index();
         var appTypeVal = $("#appType").val();
+        var custType = $("#hiddenTypeId").val();
 
         if(appTypeIdx <= 0) {
             isValid = false;
@@ -894,6 +919,18 @@
             if(appTypeIdx > 0 && appTypeVal != 143) {
                 isValid = false;
                 msg += "* Please select a salesman.<br>";
+            }
+        }
+
+        if (custType == '965' && appTypeVal == '66'){
+            if ($("#corpCustType option:selected").index() <= 0) {
+                isValid = false;
+                msg += '* Please select SST Type<br>';
+            }
+
+            if ($("#agreementType option:selected").index() <= 0) {
+                isValid = false;
+                msg += '* Please select Agreement Type<br>';
             }
         }
 
@@ -1037,7 +1074,9 @@
                 custBillWebPortalUrl : $('#billGrpWebUrl').val().trim(),
                 custBillIsSms2       : $('#billMthdSms2').is(":checked") ? 1 : 0,
                 custBillCustCareCntId: $("#hiddenBPCareId").val(),
-                stusId                     : vStusId
+                stusId                     : vStusId,
+                corpCustType         : $('#corpCustType').val(),
+                agreementType         : $('#agreementType').val()
             };
 
         var formData = new FormData();
@@ -1493,7 +1532,14 @@
                 $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#custEmail").val(custInfo.email); //Email
-                $('#speclInstct').val(`${preOrderInfo.instct}`);
+                $('#speclInstct').val('${preOrderInfo.instct}');
+                if ('${preOrderInfo.appTypeId}' == '66' && custInfo.typeId == '965') {
+                	doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '${preOrderInfo.corpCustType}', 'corpCustType',     'S', ''); //Common Code
+                    $('#corpCustType').removeAttr("disabled");
+                    doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '${preOrderInfo.agreementType}', 'agreementType',     'S', ''); //Common Code
+                    $('#agreementType').removeAttr("disabled");
+
+                  }
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
@@ -2403,6 +2449,14 @@
     <th scope="row">Discount Type /  Period (month)</th>
     <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p></td>
+</tr>
+<tr>
+    <th scope="row">SST Type<span class="must">*</span></th>
+    <td><select id="corpCustType" name="corpCustType" class="w50p" disabled></select>
+</tr>
+<tr>
+    <th scope="row">Agreement Type<span class="must">*</span></th>
+    <td><select id="agreementType" name="agreementType" class="w50p" disabled></select>
 </tr>
 </tbody>
 </table><!-- table end -->

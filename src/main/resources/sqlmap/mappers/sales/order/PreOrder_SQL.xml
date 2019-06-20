@@ -172,6 +172,8 @@
 		     , T1.CRT_DT
 		     , T1.UPD_USER_ID
 		     , T1.UPD_DT
+		     , T1.CORP_CUST_TYPE
+		     , T1.AGREEMENT_TYPE
 		  FROM SAL0213M T1
 		 WHERE T1.PRE_ORD_ID = #{preOrdId}
     </select>
@@ -261,6 +263,8 @@
 		     , UPD_DT
 		     , TOT_PV_GST
 		     , CPNT_ID
+		     , CORP_CUST_TYPE
+		     , AGREEMENT_TYPE
 		     )
 		VALUES
 		     ( #{preOrdId}
@@ -325,6 +329,8 @@
 		     , SYSDATE
 		     , #{totPvGst}
 		     , #{itmCompId}
+		     , #{corpCustType}
+             , #{agreementType}
 		     )
     </insert>
 
@@ -386,6 +392,8 @@
              , UPD_DT                     = SYSDATE
              , STUS_ID = #{stusId}
              , CPNT_ID = #{itmCompId}
+             , CORP_CUST_TYPE = #{corpCustType}
+             , AGREEMENT_TYPE = #{agreementType}
          WHERE PRE_ORD_ID                 = #{preOrdId}
     </update>
 

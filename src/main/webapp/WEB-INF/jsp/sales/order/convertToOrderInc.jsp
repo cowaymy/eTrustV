@@ -37,7 +37,7 @@
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#email").val(custInfo.email); //Email
                 $("#custRem").val(custInfo.rem); //Remark
-                $("#ordRem").val(`${preOrderInfo.instct}`);
+                $("#ordRem").val('${preOrderInfo.instct}');
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
@@ -135,6 +135,8 @@
 		        $('#ordPv').val('${preOrderInfo.totPv}');
 		        $('#ordPvGST').val('${preOrderInfo.totPvGst}');
 		        $('#ordPriceId').val('${preOrderInfo.prcId}');
+		        $('#corpCustType').val('${preOrderInfo.corpCustType}');
+                $('#agreementType').val('${preOrderInfo.agreementType}');
 
                 $('[name="advPay"]').removeAttr("disabled");
                 $("input:radio[name='advPay']:radio[value='${preOrderInfo.advBill}']").prop("checked", true);

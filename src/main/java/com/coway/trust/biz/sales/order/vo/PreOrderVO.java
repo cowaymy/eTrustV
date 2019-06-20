@@ -140,6 +140,10 @@ public class PreOrderVO implements Serializable {
 
     private int itmCompId;
 
+    private int corpCustType;
+
+    private int agreementType;
+
 	public int getPreOrdId() {
 		return preOrdId;
 	}
@@ -642,6 +646,22 @@ public class PreOrderVO implements Serializable {
 
 	public void setItmCompId(int itmCompId) {
 		this.itmCompId = itmCompId;
+	}
+
+	public int getCorpCustType() {
+		return corpCustType;
+	}
+
+	public void setCorpCustType(int corpCustType) {
+		this.corpCustType = corpCustType;
+	}
+
+	public int getAgreementType() {
+		return agreementType;
+	}
+
+	public void setAgreementType(int agreementType) {
+		this.agreementType = agreementType;
 	}
 
 }
