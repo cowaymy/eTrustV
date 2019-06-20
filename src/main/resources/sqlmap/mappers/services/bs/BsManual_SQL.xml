@@ -4314,7 +4314,7 @@ ORDER BY CODE_NAME
                                              WHERE  ( 306 = Extent1.TYPE_ID )
                                                       AND ( 0 <> Extent2.BS_RESULT_PART_ID )
                                                       AND ( Extent2.BS_RESULT_PART_QTY > 0 )
-                                                      AND Extent1.RESULT_STUS_CODE_ID <> 8 ) Filter1
+                                                      AND Extent1.RESULT_STUS_CODE_ID <> 12 ) Filter1
                                             LEFT JOIN SYS0047M Extent4   ON Filter1.RESULT_CRT_USER_ID = Extent4.USER_ID
                                       WHERE  Filter1.SCHDUL_ID = #{selSchdulId} ) Distinct1
                                       WHERE  Distinct1.STK_ID = 1428
