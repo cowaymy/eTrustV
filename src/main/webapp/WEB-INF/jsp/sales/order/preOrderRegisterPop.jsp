@@ -2178,6 +2178,11 @@
     <td><p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></p></td>
 </tr>
 <tr>
+<th scope="row">PV<span class="must">*</span></th>
+    <td><input id="ordPv"    name="ordPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
+        <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
+</tr>
+<tr>
     <th scope="row">Advance Rental Payment*</th>
     <td><span>Does customer make advance rental payment for 12 months and above?</sapn>
         <input id="advPayYes" name="advPay" type="radio" value="1" /><span>Yes</span>
