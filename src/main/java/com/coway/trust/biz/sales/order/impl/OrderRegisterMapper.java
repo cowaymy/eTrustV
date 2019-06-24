@@ -158,6 +158,8 @@ public interface OrderRegisterMapper {
 
   List<EgovMap> selectPromoBsdCpnt(Map<String, Object> params);
 
+  List<EgovMap> selectPromoBsdCpntESales(Map<String, Object> params);
+
   EgovMap selectProductComponentDefaultKey(Map<String, Object> params);
 
   void insertASEntry(ASEntryVO asEntryVo);

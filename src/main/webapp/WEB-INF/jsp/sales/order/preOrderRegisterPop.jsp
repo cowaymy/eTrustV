@@ -1773,7 +1773,7 @@
     var empInd = 0;
     var exTrade = $("#exTrade").val();
 
-    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade }, '', 'ordPromo', 'S', '');
+    doGetComboData('/sales/order/selectPromoBsdCpntESales.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade }, '', 'ordPromo', 'S', '');
   }
 </script>
 
