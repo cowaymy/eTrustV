@@ -702,7 +702,7 @@ var TODAY_DD      = "${toDay}";
               var todayYY = Number(TODAY_DD.substr(6, 4));
 
 
-             if (radioVal == 2) {
+/*              if (radioVal == 2) {
                   if(todayYY >= 2018) {
                       if(todayDD > 22) { // Block if date > 22th of the month
                           var msg = 'Disallow Create HS Order After 22nd of the Month.';
@@ -710,7 +710,7 @@ var TODAY_DD      = "${toDay}";
                           return;
                       }
                   }
-              }
+              } */
 
 
 
@@ -1231,10 +1231,10 @@ var TODAY_DD      = "${toDay}";
    <h2>HS Management</h2>
    <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-<!--       <li><p class="btn_blue">
+       <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_hsReversal();"
         id="hsReversal">HS Reversal</a>
-      </p></li> -->
+      </p></li>
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_codyChangeHQ();"
         id="codyChangeHQ">Assign Cody Transfer HQ</a>
