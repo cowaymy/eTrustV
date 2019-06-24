@@ -62,7 +62,7 @@
            AND l48.itm_code       = l55.itm_code(+)
 		   and l47.reqst_stus     = reqs.code(+)
 		   <if test="streq !=null and streq !=''">
-		      and l47.reqst_no LIKE #{streq}||'%'
+		      and l55.reqst_no LIKE #{streq}||'%'
 		   </if>
 		   <if test="smtype !=null and smtype !=''">
               and l47.trnsc_type_dtl = #{smtype}
