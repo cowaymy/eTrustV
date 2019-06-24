@@ -1222,7 +1222,7 @@ public class HsManualController {
 		EgovMap stkInfo =  hsManualService.checkHsBillASInfo(params); // CHECK HS / AS / BILL INFORMATION - ADDED BY TPY - 18/06/2019
 		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ITM_STK_ID : "+ stkInfo.get("itmStkId").toString() );
 		String stkItem = stkInfo.get("itmStkId").toString();
-		if(stkItem.equals("1243")){ // OMBAK -  STK ID
+		if(stkItem.equals("1427")){ // OMBAK -  STK ID
 
 			// ADD FUNCTION TO REVERSE HS
 			hsResultNo = hsManualService.reverseHSResult(params , sessionVO);
