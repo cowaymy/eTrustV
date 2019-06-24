@@ -1138,7 +1138,7 @@ var TODAY_DD      = "${toDay}";
   }
 
 
-/*     function fn_hsReversal(){ // ADDED BY TPY - 18/06/2019
+    function fn_hsReversal(){ // ADDED BY TPY - 18/06/2019
 	  var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
 
 	    if (checkedItems.length <= 0) {
@@ -1178,7 +1178,7 @@ var TODAY_DD      = "${toDay}";
              });
 
 	    });
-    } */
+    }
 
 
 
