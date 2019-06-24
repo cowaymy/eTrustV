@@ -521,6 +521,8 @@
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
+                  AND T2.E_SALES = 1
+                  OR T2.PROMO_ID = 31691
                 UNION
                SELECT DISTINCT T2.PROMO_ID PROMO_ID
                     , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
@@ -554,6 +556,8 @@
                   AND T4.PAC_TYPE = '2'
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
+                  AND T2.E_SALES = 1
+                  OR T2.PROMO_ID = 31691
              ) T
          ORDER BY T.PROMO_DT_FROM DESC
     </select>
@@ -2297,7 +2301,21 @@
            B.PROMO_CODE || '-' || PROMO_DESC CODE_NAME
     FROM SAL0237M A
     JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
-    WHERE A.ITM_STK_ID = #{stkId}
+    WHERE B.E_SALES = 1
+      AND A.ITM_STK_ID = #{stkId}
+      AND A.APP_TYPE_ID = #{appTyp}
+      AND A.ITM_CPNT_ID = #{cpntId}
+      AND B.EMP_CHK = #{empInd}
+      AND B.EX_TRADE = #{exTrade}
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
+      union
+      SELECT A.PROMO_ID CODE,
+           B.PROMO_CODE || '-' || PROMO_DESC CODE_NAME
+    FROM SAL0237M A
+    JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
+    WHERE B.PROMO_ID = 31691
+      AND A.ITM_STK_ID = #{stkId}
       AND A.APP_TYPE_ID = #{appTyp}
       AND A.ITM_CPNT_ID = #{cpntId}
       AND B.EMP_CHK = #{empInd}
