@@ -1327,6 +1327,21 @@ public class ReportBatchController {
     LOGGER.info("[END] SQLHs_and_Filter_RawDataMonthly_Excel...");
   }
 
+  /* ONGHC - Generate HS Filter Changed Period Variance Data */
+  @RequestMapping(value = "/FltChgPrdDiff.do")
+  //@Scheduled(cron = " 0 0 2 1 * *") // Monthly 1st 2:00am
+  public void FltChgPrdDiff() throws IOException {
+    LOGGER.info("[START] FltChgPrdDiff...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/FltChgPrdDiff.rpt");
+    params.put(REPORT_VIEW_TYPE, "EXCEL");
+    params.put("V_TEMP", "TEMP");
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Monthly HS and Filter Raw Data" + File.separator + "MonthlyFilterPeriodVariance" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] FltChgPrdDiff...");
+  }
+
   /*KV-Negative Stock Balance of the Month*/
   @RequestMapping(value = "/Negative_StockB_OnMonth_Excel.do")
   //@Scheduled(cron = " 0 30 1 * * 1") // Every Monday (weekly) 01:30am
