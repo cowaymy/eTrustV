@@ -156,4 +156,14 @@ public interface HsManualService {
   String createASResults(Map<String, Object> params , SessionVO sessionVO );
 
   String createReverseASResults(Map<String, Object> params , SessionVO sessionVO );
+
+  //CREATE HS ORDER POP UP NOTIFICATION -- TPY 24/06/2019
+
+  EgovMap checkWarrentyStatus(Map<String, Object> params);
+
+  EgovMap checkSvcMembershipInfo(Map<String, Object> params);
+
+  EgovMap checkRentalStatusInfo(Map<String, Object> params);
+
+  EgovMap checkOrderStatusInfo(Map<String, Object> params);
 }
