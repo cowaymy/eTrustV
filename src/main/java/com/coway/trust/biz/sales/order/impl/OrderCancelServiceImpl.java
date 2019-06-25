@@ -53,6 +53,32 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 		return orderCancelMapper.orderCancellationList(params);
 	}
 
+	/**
+	 * 글 목록을 orderCancelStatus.
+	 *
+	 * @param searchVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	 /** KV cancellation status*/
+	public List<EgovMap> orderCancelStatus(Map<String, Object> params) {
+		return orderCancelMapper.orderCancelStatus(params);
+	}
+
+	/**
+	 * 글 목록을 	orderCancelFeedback.
+	 *
+	 * @param searchVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	 /** KV cancellation Feedback*/
+	public List<EgovMap> 	orderCancelFeedback(Map<String, Object> params) {
+		return orderCancelMapper.orderCancelFeedback(params);
+	}
+
 
 	/**
 	 * DSC BRANCH
