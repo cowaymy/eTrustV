@@ -688,6 +688,18 @@ var TODAY_DD      = "${toDay}";
   }
   */
 
+  //CREATE HS ORDER POP UP NOTIFICATION -- TPY 24/06/2019
+
+  function fn_createHSOrderChecking(salesOrdNo){
+	    Common.ajaxSync("GET", "/services/bs/createHSOrderChecking.do", { salesOrderNo : salesOrdNo
+	    }, function(result) {
+	      msg = result.message;
+	    });
+	    return msg;
+  }
+
+
+
   $(function() {
     $("#hSConfiguration")
         .click(
@@ -770,6 +782,8 @@ var TODAY_DD      = "${toDay}";
                   "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val()
                 };
 
+                var msg = fn_createHSOrderChecking(saleOrdList);
+
                 Common
                     .ajax(
                         "GET",
@@ -784,22 +798,36 @@ var TODAY_DD      = "${toDay}";
                             Common.alert("There is already exist for HS order for this month");
                             return;
                           } else {
-                            Common
-                                .popupDiv("/services/bs/selectHSConfigListPop.do?isPop=true&JsonObj="
-                                    + jsonObj
-                                    + "&CheckedItems="
-                                    + saleOrdList
-                                    + "&BrnchId="
-                                    + brnchId
-                                    + "&ManuaMyBSMonth="
-                                    + $(
-                                        "#ManuaMyBSMonth")
-                                        .val());
+                        	  msg += '<br/> Do you want to proceed ? <br/>';
+
+                              Common.confirm('Create HS Order Confirmation'
+                                               + DEFAULT_DELIMITER
+                                               + "<b>" + msg
+                                               + "</b>",
+                                               fn_selectHSConfigListPop(jsonObj, saleOrdList, brnchId) ,
+                                           fn_selfClose);
                           }
                         });
               }
             });
   });
+
+
+  function fn_selectHSConfigListPop(jsonObj, saleOrdList, brnchId) {
+
+	  Common
+      .popupDiv("/services/bs/selectHSConfigListPop.do?isPop=true&JsonObj="
+          + jsonObj
+          + "&CheckedItems="
+          + saleOrdList
+          + "&BrnchId="
+          + brnchId
+          + "&ManuaMyBSMonth="
+          + $(
+              "#ManuaMyBSMonth")
+              .val());
+  }
+
 
   /*
     AUIGrid.bind(myGridID, "cellClick", function(event) {
@@ -1130,7 +1158,8 @@ var TODAY_DD      = "${toDay}";
   }
 
   function fn_selfClose() {
-      $('#btnCloseReq').click();
+      $('#_close1').click();
+
   }
 
   function fn_parentReload() {
@@ -1230,11 +1259,13 @@ var TODAY_DD      = "${toDay}";
    </p>
    <h2>HS Management</h2>
    <ul class="right_btns">
-    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
        <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_hsReversal();"
         id="hsReversal">HS Reversal</a>
       </p></li>
+      </c:if>
+      <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_codyChangeHQ();"
         id="codyChangeHQ">Assign Cody Transfer HQ</a>
