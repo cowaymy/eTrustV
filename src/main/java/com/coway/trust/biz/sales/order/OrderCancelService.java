@@ -19,6 +19,29 @@ public interface OrderCancelService {
 
 
 	/**
+	 * 글 목록을 orderCancelStatus
+	 *
+	 * @param searchVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	 /** KV cancellation status*/
+	List<EgovMap> orderCancelStatus(Map<String, Object> params);
+
+	/**
+	 * 글 목록을 orderCancelFeedback.
+	 *
+	 * @param searchVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	 /** KV cancellation feedback*/
+	List<EgovMap> orderCancelFeedback(Map<String, Object> params);
+
+
+	/**
 	 * DSC BRANCH
 	 *
 	 * @param
