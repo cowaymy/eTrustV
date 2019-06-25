@@ -288,7 +288,7 @@
     		fdb = '5529';
     	}
     	if($("#addStatus").val() == '32'){     // Confirm To Cancel
-    		fdb = '5529';
+    		fdb = '5530';
     	}
         if($("#addStatus").val() == '31'){     // Reversal Of Cancellation
         	fdb = '5531';
