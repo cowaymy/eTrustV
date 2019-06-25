@@ -4925,6 +4925,43 @@ WHERE
             WHERE AS_ENTRY_ID = #{AS_ENTRY_ID}
           </update>
 
+       <select id="checkWarrentyStatus" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT SRV_MEM_NO ,
+             SRV_STUS_CODE_ID SRV_STUS
+      FROM SAL0095D
+      WHERE SRV_MEM_ID IN ( SELECT MAX(SRV_MEM_ID) FROM SAL0095D
+                   WHERE SRV_SALES_ORD_ID IN (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo})
+                   AND SYSDATE BETWEEN SRV_START_DT AND SRV_EXPR_DT GROUP BY SRV_SALES_ORD_ID)
+             ]]>
+  </select>
+
+    <select id="checkSvcMembershipInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+     SELECT MAX(SRV_MEM_ID)
+    FROM SAL0095D
+    WHERE SRV_SALES_ORD_ID IN (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo})
+    AND SRV_STUS_CODE_ID = 4
+    AND SRV_MEM_PAC_ID = 9
+    AND FN_GET_FIRST_DAY_MONTH(SYSDATE) BETWEEN FN_GET_FIRST_DAY_MONTH(SRV_START_DT) AND FN_GET_LAST_DAY_MONTH(SRV_EXPR_DT)
+
+             ]]>
+  </select>
+
+
+    <select id="checkRentalStatusInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    SELECT SALES_ORD_ID , STUS_CODE_ID FROM SAL0071D WHERE
+    SALES_ORD_ID IN (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo})
+    AND STUS_CODE_ID IN ('INV','SUS','RET','TER')
+             ]]>
+  </select>
+
+    <select id="checkOrderStatusInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    SELECT SALES_ORD_ID , STUS_CODE_ID  FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo} AND STUS_CODE_ID IN (1,10)
+             ]]>
+  </select>
 
 
 </mapper>
