@@ -21,6 +21,28 @@ public interface OrderCancelMapper {
 
 
 	/**
+	 * orderCancelStatus
+	 *
+	 * @param
+	 *            -
+	 * @return combo box
+	 * @exception Exception
+	 * KV cancellation status
+	 */
+	List<EgovMap> orderCancelStatus(Map<String, Object> params);
+
+	/**
+	 * orderCancelFeedback
+	 *
+	 * @param
+	 *            -
+	 * @return combo box
+	 * @exception Exception
+	 * KV cancellation Feedback
+	 */
+	List<EgovMap> orderCancelFeedback(Map<String, Object> params);
+
+	/**
 	 * DSC BRANCH
 	 *
 	 * @param
