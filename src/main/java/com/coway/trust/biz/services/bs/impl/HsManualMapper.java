@@ -322,4 +322,14 @@ public interface HsManualMapper {
 
   void updateIsCurrent_SVC0004D(Map<String, Object> params);
 
+  // CREATE HS ORDER POP UP NOTIFICATION -- TPY 24/06/2019
+
+  EgovMap checkWarrentyStatus(Map<String, Object> params);
+
+  EgovMap checkSvcMembershipInfo(Map<String, Object> params);
+
+  EgovMap checkRentalStatusInfo(Map<String, Object> params);
+
+  EgovMap checkOrderStatusInfo(Map<String, Object> params);
+
 }
