@@ -7,6 +7,9 @@
     var prodReturnGridID;      // Product Return Transaction list
 
     $(document).ready(function(){
+    	/* KV -cancellation status */
+    	doGetCombo('/sales/order/selectcancellationstatus.do', '', '', 'addStatus', 'S', '');
+
     	if($("#callStusId").val() == '1'){
     		$("#addDiv").css("display" , "none");
     		$("#callStusId").val('');
@@ -251,6 +254,51 @@
                 $("#addCallRecallDt").val('');
             }
         }
+    	if($("#addStatus").val() == '105'){     //Continue Rental
+            $("select[name=cmbAssignCt]").removeAttr("disabled");
+            $("select[name=cmbAssignCt]").removeClass("w100p disabled");
+            $("select[name=cmbAssignCt]").addClass("w100p");
+            $("select[name=cmbFeedbackCd]").removeAttr("disabled");
+            $("select[name=cmbFeedbackCd]").removeClass("w100p disabled");
+            $("select[name=cmbFeedbackCd]").addClass("w100p");
+            $("select[name=cmbCtGroup]").attr('disabled', 'disabled');
+            $("select[name=cmbCtGroup]").addClass("w100p disabled");
+            $("select[name=cmbCtGroup]").val('');
+            $("#addAppRetnDt").attr('disabled','disabled');
+            $("#addAppRetnDt").val('');
+            $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
+            $("select[name=cmbAssignCt]").addClass("w100p disabled");
+            $("#requestDate").attr('disabled','disabled');
+            $("#requestDate").val('');
+            if($("#reqStageId").val() == '24'){     // before installl
+                $("#addCallRecallDt").removeAttr("disabled");
+            }else{
+                $("#addCallRecallDt").attr('disabled','disabled');
+                $("#addCallRecallDt").val('');
+            }
+        }
+    }
+
+    /*KV - feedback code  */
+    function fn_feebackcode ()
+    {
+         var fdb ;
+
+    	if($("#addStatus").val() == '19'){     // Recall
+    		fdb = '5529';
+    	}
+    	if($("#addStatus").val() == '32'){     // Confirm To Cancel
+    		fdb = '5529';
+    	}
+        if($("#addStatus").val() == '31'){     // Reversal Of Cancellation
+        	fdb = '5531';
+    	}
+    	if($("#addStatus").val() == '105'){     //Continue Rental
+    		fdb = '5532';
+    	}
+
+    	 doGetCombo('/sales/order/selectcancellationfeedback.do', fdb, '', 'cmbFeedbackCd', 'S', '');
+
     }
 
     function fn_saveCancel(){
@@ -350,6 +398,36 @@
                   //}
               }
           }
+    	if($("#addStatus").val() == '105'){     // Continue Rental
+            if($("#reqStageId").val() == '24'){     // before installl
+                  if(addCallForm.cmbFeedbackCd.value == ""){
+                      Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
+                      return false;
+                  }
+                  if(addCallForm.addRem.value == ""){
+                      Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
+                      return false;
+                  }
+                  if(addCallForm.addCallRecallDt.value == ""){
+                      Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRecallDate' />");
+                      return false;
+                  }
+              }else{
+                  if(addCallForm.cmbFeedbackCd.value == ""){
+                      Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
+                      return false;
+                  }
+                  if(addCallForm.addRem.value == ""){
+                      Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
+                      return false;
+                  }
+                  //if(addCallForm.cmbAssignCt.value == ""){
+                  //    Common.alert("Please key in the Assign CT");
+                  //    return false;
+                  //}
+              }
+          }
+
     	Common.ajax("GET", "/sales/order/saveCancel.do", $("#addCallForm").serializeJSON(), function(result) {
             Common.alert(result.msg, fn_success);
 
@@ -379,7 +457,7 @@
 
     function fn_cancelReload(){
     	fn_orderCancelListAjax();
-    	if($("#addStatus").val() == '32' ||$("#addStatus").val() == '31'){
+    	if($("#addStatus").val() == '32' ||$("#addStatus").val() == '31' ||$("#addStatus").val() == '105'){
     		$("#callStusId").val(1);
     	}
 
@@ -767,20 +845,17 @@
 			<tr>
 			    <th scope="row"><spring:message code="sal.text.status" /><span class="must">*</span></th>
 			    <td>
-			    <select id="addStatus" name="addStatus" class="w100p" onchange="onChangeStatusType()">
-			        <option value=""><spring:message code="sal.title.text.callLogStus" /></option>
+			    <select id="addStatus" name="addStatus" class="w100p" onchange="onChangeStatusType();fn_feebackcode()">
+                   <%--  <option value=""><spring:message code="sal.title.text.callLogStus" /></option>
 			        <option value="19"><spring:message code="sal.combo.text.recall" /></option>
 			        <option value="32"><spring:message code="sal.combo.text.confirmToCancel" /></option>
-			        <option value="31"><spring:message code="sal.combo.text.reversalOfCancellation" /></option>
+			        <option value="31"><spring:message code="sal.combo.text.reversalOfCancellation" /></option>--%>
 			    </select>
 			    </td>
 			    <th scope="row"><spring:message code="sal.text.feddbackCode" /></th>
 			    <td>
-			    <select id="cmbFeedbackCd" name="cmbFeedbackCd" class="disabled" disabled="disabled">
+			    <select id="cmbFeedbackCd" name="cmbFeedbackCd" class="disabled" disabled="disabled" >
                     <option value="">Feedback Code</option>
-                    <c:forEach var="list" items="${selectFeedback }">
-                        <option value="${list.resnId}">${list.codeResnDesc}</option>
-                    </c:forEach>
 			    </select>
 			    </td>
 			</tr>
