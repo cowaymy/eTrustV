@@ -45,9 +45,6 @@ public class OrderCancelController {
 	private OrderDetailService orderDetailService;
 
 	@Autowired
-	private MessageSourceAccessor messageAccessor;
-
-	@Autowired
 	private SessionHandler sessionHandler;
 
 
@@ -72,6 +69,42 @@ public class OrderCancelController {
 
 		return "sales/order/orderCancelList";
 	}
+
+	 /**
+	 * Order Cancellation Status Code 데이터조회
+	 * @param params
+	 * @param model
+	 * @return
+	 * KV cancellation status
+	 */
+	@RequestMapping(value = "/selectcancellationstatus.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> orderCancelStatus(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		logger.debug("===========================/orderCancelStatus.do===============================");
+		logger.debug("== params " + params.toString());
+		logger.debug("===========================/orderCancelStatus.do===============================");
+		List<EgovMap> orderCancelStatus = orderCancelService.orderCancelStatus(params);
+		/*logger.debug("BRANCH {}", orderCancelStatus);*/
+		return ResponseEntity.ok(orderCancelStatus);
+	}
+
+	 /**
+		 * Order Cancellation Feedback Code 데이터조회
+		 * @param params
+		 * @param model
+		 * @return
+		 * KV cancellation status
+		 */
+		@RequestMapping(value = "/selectcancellationfeedback.do", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> orderCancelFeedback(@RequestParam Map<String, Object> params,
+				HttpServletRequest request, ModelMap model) {
+			logger.debug("===========================/orderCancelFeedback.do===============================");
+			logger.debug("== params " + params.toString());
+			logger.debug("===========================/orderCancelFeedback.do===============================");
+			List<EgovMap> orderCancelFeedback = orderCancelService.orderCancelFeedback(params);
+			logger.debug("BRANCH {}", orderCancelFeedback);
+			return ResponseEntity.ok(orderCancelFeedback);
+		}
 
 
 	/**
