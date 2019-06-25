@@ -1275,7 +1275,48 @@ public class HsManualController {
 	}
 
 
+	 // CREATE HS ORDER POP UP NOTIFICATION -- TPY 24/06/2019
+	  @RequestMapping(value = "/createHSOrderChecking.do", method = RequestMethod.GET)
+	  public ResponseEntity<ReturnMessage> createHSOrderChecking(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/createHSOrderChecking.do===============================");
+	    logger.debug("== params " + params.toString());
 
+	    ReturnMessage message = new ReturnMessage();
+	    String msg = "";
+
+	    EgovMap warrentyInfo = hsManualService.checkWarrentyStatus(params);
+	    EgovMap serviceMembershipInfo = hsManualService.checkSvcMembershipInfo(params);
+	    EgovMap rentalStatusInfo = hsManualService.checkRentalStatusInfo(params);
+	    EgovMap orderStatusInfo = hsManualService.checkOrderStatusInfo(params);
+
+	    if (warrentyInfo != null) {
+	      msg = msg + "";
+	    } else {
+	      msg = msg + "* This HS Order Membership is under Out of Warranty status.<br />";
+	    }
+
+	    if (serviceMembershipInfo != null) {
+	    	msg = msg + "* This HS Order Membership is under Coway Service Membership (non-starter package).<br />";
+		    } else {
+		    	msg = msg + "";
+		    }
+
+	    if (rentalStatusInfo != null) {
+	    	msg = msg + "* This HS Order Rental status is under INV / SUS / RET / TER .<br />";
+		    } else {
+		    	msg = msg + "";
+		    }
+
+	    if (orderStatusInfo != null) {
+	    	msg = msg + "* This HS Sales Order status is under ACT / CAN .<br />";
+		    } else {
+		    	msg = msg + "";
+		    }
+
+	    message.setMessage(msg);
+	    return ResponseEntity.ok(message);
+	  }
 
 
 }
