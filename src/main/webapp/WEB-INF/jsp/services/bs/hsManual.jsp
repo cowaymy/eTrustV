@@ -1259,7 +1259,7 @@ var TODAY_DD      = "${toDay}";
    </p>
    <h2>HS Management</h2>
    <ul class="right_btns">
-    <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+    <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
        <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_hsReversal();"
         id="hsReversal">HS Reversal</a>
