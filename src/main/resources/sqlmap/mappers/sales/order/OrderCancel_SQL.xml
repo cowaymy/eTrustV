@@ -230,6 +230,26 @@
     </if>
   </select>
 
+    <!-- KV cancellation status-->
+    <select id="orderCancelStatus" parameterType="Map" resultType="egovMap">
+         SELECT FBC.CODE AS CODE_ID,
+         FBC.CODE_NAME AS CODE_NAME
+         FROM SYS0094M  FBC
+         WHERE FBC.IND= 'CALL_STUS'
+         and FBC.DISB= 0
+    </select>
+
+        <!-- KV cancellation Feedback-->
+    <select id="orderCancelFeedback" parameterType="Map" resultType="egovMap">
+         SELECT D.RESN_ID AS CODE_ID ,
+                    D.CODE || ' - ' || INITCAP(D.RESN_DESC) AS CODE_NAME
+         FROM  SYS0013M A
+         JOIN SYS0033M B ON B.RESN_TYPE_ID = A.CODE_ID
+         JOIN SYS0034M C ON C.PARENT_RESN_ID = B.RESN_GRP_ID
+         JOIN SYS0032M D ON D.RESN_ID = C.RESN_ID
+         WHERE A.CODE_ID =  #{groupCode} AND D.STUS_CODE_ID=1
+    </select>
+
     <select id="dscBranch" parameterType="Map" resultType="egovMap">
     SELECT Project1.BRNCH_ID,
            Project1.BRNCH_NAME
