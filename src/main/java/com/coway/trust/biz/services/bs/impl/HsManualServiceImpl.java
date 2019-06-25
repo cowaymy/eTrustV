@@ -2455,6 +2455,30 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
 	    return AS_RESULT_NO2;
   }
 
+  //CREATE HS ORDER POP UP NOTIFICATION -- TPY 24/06/2019
+
+  public EgovMap checkWarrentyStatus(Map<String, Object> params) {
+	    // TODO Auto-generated method stub
+	    return hsManualMapper.checkWarrentyStatus(params);
+	  }
+
+  public EgovMap checkSvcMembershipInfo(Map<String, Object> params) {
+	    // TODO Auto-generated method stub
+	    return hsManualMapper.checkSvcMembershipInfo(params);
+	  }
+
+  public EgovMap checkRentalStatusInfo(Map<String, Object> params) {
+	    // TODO Auto-generated method stub
+	    return hsManualMapper.checkRentalStatusInfo(params);
+	  }
+
+  public EgovMap checkOrderStatusInfo(Map<String, Object> params) {
+	    // TODO Auto-generated method stub
+	    return hsManualMapper.checkOrderStatusInfo(params);
+	  }
+
+
+
   }
 
 
