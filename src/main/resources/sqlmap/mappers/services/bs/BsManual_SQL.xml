@@ -4948,12 +4948,29 @@ WHERE
              ]]>
   </select>
 
+      <select id="checkSvcRentalMembershipInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+
+           SELECT SC.SRV_CNTRCT_ORD_ID,
+                  SC.SRV_CNTRCT_ID ,
+                  SC.SRV_CNTRCT_REF_NO
+             FROM SAL0077D SC
+              LEFT JOIN SAL0088D P
+                     ON P.SRV_PRD_CNTRCT_ID = SC.SRV_CNTRCT_ID
+            WHERE SC.SRV_CNTRCT_ORD_ID  IN (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo})
+            AND SC.SRV_CNTRCT_STUS_ID = 4
+            AND SC.SRV_CNTRCT_PCKG_ID = 1
+            AND FN_GET_FIRST_DAY_MONTH(SYSDATE) BETWEEN FN_GET_FIRST_DAY_MONTH(SRV_PRD_START_DT) AND FN_GET_LAST_DAY_MONTH(SRV_PRD_EXPR_DT)
+
+             ]]>
+  </select>
+
 
     <select id="checkRentalStatusInfo" parameterType="Map" resultType="egovMap">
     <![CDATA[
     SELECT SALES_ORD_ID , STUS_CODE_ID FROM SAL0071D WHERE
     SALES_ORD_ID IN (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo})
-    AND STUS_CODE_ID IN ('INV','SUS','RET','TER')
+    AND STUS_CODE_ID IN ('INV','SUS','RET','TER','CAN','WOF')
              ]]>
   </select>
 
