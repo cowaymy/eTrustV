@@ -77,7 +77,7 @@ function fn_Validsave(){
     var prevAgentId = $("#prevAgentId").val();
     var currAgentId = $("#rosCaller2").val();
 	Common.ajax("GET", "/sales/rcms/checkCustAgent", $("#saveForm").serializeJSON(), function(result) {
-	if(result[0].agentId != currAgentId && FormUtil.isNotEmpty(currAgentId)){
+	if(result[0].agentId != 0 && result[0].agentId != currAgentId && FormUtil.isNotEmpty(currAgentId)){
 		Common.confirm("<spring:message code='sal.alert.msg.diffAgentSaved'/>",function(){fn_save()});
 		}else{
 			fn_save();
