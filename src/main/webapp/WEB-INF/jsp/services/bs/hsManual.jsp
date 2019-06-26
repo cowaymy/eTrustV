@@ -798,6 +798,23 @@ var TODAY_DD      = "${toDay}";
                             Common.alert("There is already exist for HS order for this month");
                             return;
                           } else {
+
+                        	  if(msg == ""){
+                        		  Common
+                        	      .popupDiv("/services/bs/selectHSConfigListPop.do?isPop=true&JsonObj="
+                        	          + jsonObj
+                        	          + "&CheckedItems="
+                        	          + saleOrdList
+                        	          + "&BrnchId="
+                        	          + brnchId
+                        	          + "&ManuaMyBSMonth="
+                        	          + $(
+                        	              "#ManuaMyBSMonth")
+                        	              .val());
+
+                        	  }
+                        	  else{
+
                         	  msg += '<br/> Do you want to proceed ? <br/>';
 
                               Common.confirm('Create HS Order Confirmation'
@@ -806,6 +823,7 @@ var TODAY_DD      = "${toDay}";
                                                + "</b>",
                                                fn_selectHSConfigListPop(jsonObj, saleOrdList, brnchId) ,
                                            fn_selfClose);
+                          }
                           }
                         });
               }
