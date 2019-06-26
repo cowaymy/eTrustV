@@ -1287,29 +1287,36 @@ public class HsManualController {
 
 	    EgovMap warrentyInfo = hsManualService.checkWarrentyStatus(params);
 	    EgovMap serviceMembershipInfo = hsManualService.checkSvcMembershipInfo(params);
+	    EgovMap serviceRentalMembershipInfo = hsManualService.checkSvcRentalMembershipInfo(params);
 	    EgovMap rentalStatusInfo = hsManualService.checkRentalStatusInfo(params);
 	    EgovMap orderStatusInfo = hsManualService.checkOrderStatusInfo(params);
 
 	    if (warrentyInfo != null) {
 	      msg = msg + "";
 	    } else {
-	      msg = msg + "* This HS Order Membership is under Out of Warranty status.<br />";
+	      msg = msg + "* This Order Membership is under Out of Sales Warranty status.<br />";
 	    }
 
 	    if (serviceMembershipInfo != null) {
-	    	msg = msg + "* This HS Order Membership is under Coway Service Membership (non-starter package).<br />";
+	    	msg = msg + "* This Sales Order Membership is under Coway Service Membership (non-starter package).<br />";
+		    } else {
+		    	msg = msg + "";
+		    }
+
+	    if (serviceRentalMembershipInfo != null) {
+	    	msg = msg + "* This Sales Order Membership is under Rental Membership (non-starter package).<br />";
 		    } else {
 		    	msg = msg + "";
 		    }
 
 	    if (rentalStatusInfo != null) {
-	    	msg = msg + "* This HS Order Rental status is under INV / SUS / RET / TER .<br />";
+	    	msg = msg + "* This Sales Order Rental status is under INV / SUS / RET / TER / CAN / WOF .<br />";
 		    } else {
 		    	msg = msg + "";
 		    }
 
 	    if (orderStatusInfo != null) {
-	    	msg = msg + "* This HS Sales Order status is under ACT / CAN .<br />";
+	    	msg = msg + "* This Sales Order status is under ACT / CAN .<br />";
 		    } else {
 		    	msg = msg + "";
 		    }
