@@ -45,6 +45,13 @@ public interface SearchPaymentService
     List<RentalCollectionByBSSearchVO> searchRentalCollectionByBSList(RentalCollectionByBSSearchVO searchVO);
 
     /**
+     * RentalCollectionByBS 조회
+     * @param params
+     * @return
+     */
+    List<RentalCollectionByBSSearchVO> searchRentalCollectionByBSNewList(RentalCollectionByBSSearchVO searchVO);
+
+    /**
 	 * MasterHistory 조회
 	 * @param params
 	 * @return
@@ -197,6 +204,13 @@ public interface SearchPaymentService
 	 * @return
 	 */
     List<RentalCollectionByBSSearchVO> searchRCByBSAgingMonthList(RentalCollectionByBSSearchVO searchVO);
+
+    /**
+     * RentalCollectionByBSAgingMonth 조회
+     * @param params
+     * @return
+     */
+    List<EgovMap> searchRCByBSAgingMonthNewList(Map<String, Object> params);
 
     /**
 	 * RentalCollectionByOrganization 조회

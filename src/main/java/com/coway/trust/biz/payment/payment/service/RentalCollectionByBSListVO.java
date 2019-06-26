@@ -3,7 +3,7 @@ package com.coway.trust.biz.payment.payment.service;
 import java.io.Serializable;
 
 public class RentalCollectionByBSListVO implements Serializable {
-	
+
 	private String sID;
 	private String tOrgCode;
 	private String tGrpCode;
@@ -20,7 +20,11 @@ public class RentalCollectionByBSListVO implements Serializable {
 	private String sAdj;
 	private String sOut;
 	private String sOutRate;
-	
+	private String indOrd;
+	private String corpOrd;
+	private String corpRatio;
+	private String rcPrct;
+
 	public String getsID() {
 		return sID;
 	}
@@ -117,6 +121,29 @@ public class RentalCollectionByBSListVO implements Serializable {
 	public void setsOutRate(String sOutRate) {
 		this.sOutRate = sOutRate;
 	}
-	
-	
+	public String getindOrd() {
+        return indOrd;
+    }
+    public void setindOrd(String indOrd) {
+        this.indOrd = sOutRate;
+    }
+    public String getcorpOrd() {
+        return corpOrd;
+    }
+    public void setcorpOrd(String corpOrd) {
+        this.corpOrd = corpOrd;
+    }
+    public String getcorpRatio() {
+        return corpRatio;
+    }
+    public void setcorpRatio(String corpRatio) {
+        this.corpRatio = corpRatio;
+    }
+    public String getrcPrct() {
+        return rcPrct;
+    }
+    public void setrcPrct(String rcPrct) {
+        this.rcPrct = rcPrct;
+    }
+
 }

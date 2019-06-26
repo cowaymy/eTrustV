@@ -381,6 +381,41 @@
        ORDER BY S_ID
     </select>
 
+    <select id="searchRentalCollectionByBSNewList" parameterType="rentalCollectionByBSSearchVO" resultType="rentalCollectionByBSListVO">
+       SELECT
+           S_ID AS sID,
+           T_ORG_CODE AS tOrgCode,
+           T_GRP_CODE AS tGrpCode,
+           T_DEPT_CODE AS tDeptCode,
+           ORG_CODE AS orgCode,
+           GRP_CODE AS grpCode,
+           DEPT_CODE AS deptCode,
+           MEM_CODE AS memCode,
+           S_UNIT AS sUnit,
+           IND_ORD AS indOrd,
+           CORP_ORD AS corpOrd,
+           CORP_RATIO AS corpRatio,
+           S_CL_CTG AS sClCtg,
+           S_COL AS sCol,
+           RC_PRCT AS rcPrct
+        FROM REP0085S
+        WHERE
+        1=1
+        <if test="orgCode != '' ">
+           AND T_ORG_CODE = #{orgCode}
+       </if>
+       <if test="grpCode != '' ">
+           AND T_GRP_CODE = #{grpCode}
+       </if>
+       <if test="deptCode != '' ">
+           AND T_DEPT_CODE = #{deptCode}
+       </if>
+       <if test="memCode != '' ">
+           AND MEM_CODE = #{memCode}
+       </if>
+       ORDER BY S_ID
+    </select>
+
      <select id="selectPaymentDetailViewer" parameterType="Map" resultType="egovMap">
           SELECT Extent1.TRX_ID TRX_ID  ,
 		       Extent1.TRX_DT TRX_DT  ,
@@ -1446,6 +1481,69 @@
        </if> -->
     </select>
 
+    <!-- RentalCollectionByBS 리스트 조회 -->
+    <select id="searchRCByBSAgingMonthNewList" parameterType="Map" resultType="egovMap">
+        SELECT
+            SALES_ORD_ID,
+            BS_MONTH,
+            REN_MEM,
+            SALES_ORD_NO,
+            CODY_CODE,
+            CODY_NAME,
+            CUST_NAME,
+            TEL_MOBILE,
+            TEL_HOME,
+            TEL_OFFICE,
+            PAY_MODE,
+            TARGET,
+            COLLECTION
+        FROM REP0087S A
+        INNER JOIN PAY0053S B
+            ON A.ACC_DEBT_SUB_ID = B.ACC_DEBT_SUB_ID
+        WHERE 1=1
+        <if test="orgCode != '' ">
+           AND A.ORG_CODE = #{orgCode}
+       </if>
+       <if test="grpCode != '' ">
+           AND A.GRP_CODE = #{grpCode}
+       </if>
+       <if test="deptCode != '' ">
+           AND A.DEPT_CODE = #{deptCode}
+       </if>
+        <if test="memCode != '' ">
+           AND A.CODY_CODE = #{memCode}
+       </if>
+       <if test="cmbOutstandMonth != '' and cmbOutstandMonth != 0">
+           AND B.ACC_DEBT_SUB_OPNG_OTSTND_AGING BETWEEN #{cmbOutstandMonth} AND (#{cmbOutstandMonth}+1)
+       </if>
+       <if test="cmbOpeningAging != '' and cmbOpeningAging != 0">
+           AND B.ACC_DEBT_SUB_CURR_OTSTND_AGING BETWEEN #{cmbOpeningAging} AND (#{cmbOpeningAging}+1)
+       </if>
+       <if test="cmbCustTypeId != '' ">
+           AND A.CUST_TYPE_ID = #{cmbCustTypeId}
+       </if>
+       <if test="cmbIsPaid != '' and cmbIsPaid != 0">
+            <if test="cmbIsPaid == 1 ">
+                AND (B.ACC_DEBT_SUB_CURR_ADJ + B.ACC_DEBT_SUB_CURR_COLCT + B.ACC_DEBT_SUB_OPNG_COLCT_TRGET ) = 0
+           </if>
+            <if test="cmbIsPaid == 2 ">
+                AND  (B.ACC_DEBT_SUB_CURR_ADJ + B.ACC_DEBT_SUB_CURR_COLCT + B.ACC_DEBT_SUB_OPNG_COLCT_TRGET ) <![CDATA[ > ]]> 0
+                AND B.ACC_DEBT_SUB_CURR_COLCT <![CDATA[ < ]]> 0
+           </if>
+            <if test="cmbIsPaid == 3 ">
+                AND B.ACC_DEBT_SUB_CURR_COLCT = 0
+           </if>
+       </if>
+       <if test="cmbPaymode != '' ">
+           AND A.PAY_MODE_ID = #{cmbPaymode}
+       </if>
+       <if test="cmbBsMonth != '' ">
+           AND A.BS_MONTH = #{cmbBsMonth}
+       </if>
+       <if test="renMem != '' ">
+           AND A.REN_MEM LIKE '%' || #{renMem} || '%'
+       </if>
+    </select>
 
         <select id="searchRCByOrganizationList" parameterType="rentalCollectionByOrganizationVO" resultType="egovMap">
        SELECT A.SALES_ORD_ID SALES_ORD_ID,

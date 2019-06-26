@@ -110,6 +110,16 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	/**
+     * RentalCollectionByBS 조회
+     * @param params
+     * @return
+     */
+    @Override
+    public List<RentalCollectionByBSSearchVO> searchRentalCollectionByBSNewList(RentalCollectionByBSSearchVO searchVO) {
+        return searchPaymentMapper.searchRentalCollectionByBSNewList(searchVO);
+    }
+
+	/**
 	 * SearchMaster 조회
 	 * @param params
 	 * @return
@@ -777,6 +787,16 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	public List<RentalCollectionByBSSearchVO> searchRCByBSAgingMonthList(RentalCollectionByBSSearchVO searchVO) {
 		return searchPaymentMapper.searchRCByBSAgingMonthList(searchVO);
 	}
+
+	/**
+     * RentalCollectionByBSAgingMonth 조회
+     * @param params
+     * @return
+     */
+    @Override
+    public List<EgovMap> searchRCByBSAgingMonthNewList(Map<String, Object> params) {
+        return searchPaymentMapper.searchRCByBSAgingMonthNewList(params);
+    }
 
 	@Override
 	public List<RentalCollectionByOrganizationVO> searchRCByOrganizationList(RentalCollectionByOrganizationVO searchVO) {

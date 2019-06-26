@@ -66,6 +66,13 @@ public interface SearchPaymentMapper {
 	List<RentalCollectionByBSSearchVO> searchRentalCollectionByBSList(RentalCollectionByBSSearchVO searchVO);
 
 	/**
+     * RentalCollectionByBS 조회
+     * @param params
+     * @return
+     */
+    List<RentalCollectionByBSSearchVO> searchRentalCollectionByBSNewList(RentalCollectionByBSSearchVO searchVO);
+
+	/**
 	 * MasterHistory 조회
 	 * @param params
 	 * @return
@@ -234,6 +241,13 @@ public interface SearchPaymentMapper {
 	 * @return
 	 */
 	List<RentalCollectionByBSSearchVO> searchRCByBSAgingMonthList(RentalCollectionByBSSearchVO searchVO);
+
+	/**
+     * RentalCollectionByBSAgingMonthNew 조회
+     * @param params
+     * @return
+     */
+    List<EgovMap> searchRCByBSAgingMonthNewList(Map<String, Object> params);
 
 	List<RentalCollectionByOrganizationVO> searchRCByOrganizationList(RentalCollectionByOrganizationVO orgVO);
 

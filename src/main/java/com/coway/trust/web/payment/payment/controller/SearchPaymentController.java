@@ -321,6 +321,35 @@ public class SearchPaymentController {
 	}
 
 	/**
+     * RentalCollectionByBSNew초기화 화면
+     * @param params
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/initRentalCollectionByBSNew.do")
+    public String initRentalCollectionByBSNew(@RequestParam Map<String, Object> params, ModelMap model) {
+        return "payment/payment/rentalCollectionByBSNew";
+    }
+
+	/**
+     * RentalCollectionByBS   조회
+     * @param searchVO
+     * @param params
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/selectRentalCollectionByBSNewList", method = RequestMethod.GET)
+    public ResponseEntity<List<RentalCollectionByBSSearchVO>> selectRentalCollectionByBSNewList(@ModelAttribute("searchVO")RentalCollectionByBSSearchVO searchVO
+                , @RequestParam Map<String, Object> params, ModelMap model) {
+
+        // 조회.
+        List<RentalCollectionByBSSearchVO> resultList = searchPaymentService.searchRentalCollectionByBSNewList(searchVO);
+
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(resultList);
+    }
+
+	/**
 	 * SearchMaster 조회
 	 * @param SearchVO
 	 * @param params
@@ -1092,6 +1121,45 @@ public class SearchPaymentController {
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
 	}
+
+	/**
+     * RentalCollectionByBS초기화 화면
+     * @param params
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/initRCByBSAgingMonthNew.do")
+    public String initRCByBSAgingMonthNew(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+        if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+
+            params.put("userId", sessionVO.getUserId());
+            EgovMap result =  salesCommonService.getUserInfo(params);
+
+            model.put("orgCode", result.get("orgCode"));
+            model.put("grpCode", result.get("grpCode"));
+            model.put("deptCode", result.get("deptCode"));
+            model.put("memCode", result.get("memCode"));
+        }
+
+        return "payment/payment/rentalCollectionByBSAgingMonthNew";
+    }
+
+    /**
+     * RentalCollectionByBS(Aging Month)   조회
+     * @param searchVO
+     * @param params
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/selectRCByBSAgingMonthNewList", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectRCByBSAgingMonthNewList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+        // 조회.
+        List<EgovMap> resultList = searchPaymentService.searchRCByBSAgingMonthNewList(params);
+
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(resultList);
+    }
 
 	@RequestMapping(value = "/initRCByOrganization.do")
 	public String initRCByOrganization(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
