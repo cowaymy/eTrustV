@@ -2467,11 +2467,6 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
 	    return hsManualMapper.checkSvcMembershipInfo(params);
 	  }
 
-  public EgovMap checkSvcRentalMembershipInfo(Map<String, Object> params) {
-	    // TODO Auto-generated method stub
-	    return hsManualMapper.checkSvcRentalMembershipInfo(params);
-	  }
-
   public EgovMap checkRentalStatusInfo(Map<String, Object> params) {
 	    // TODO Auto-generated method stub
 	    return hsManualMapper.checkRentalStatusInfo(params);
