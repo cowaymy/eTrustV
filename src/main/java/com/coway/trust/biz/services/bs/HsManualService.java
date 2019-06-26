@@ -163,8 +163,6 @@ public interface HsManualService {
 
   EgovMap checkSvcMembershipInfo(Map<String, Object> params);
 
-  EgovMap checkSvcRentalMembershipInfo(Map<String, Object> params);
-
   EgovMap checkRentalStatusInfo(Map<String, Object> params);
 
   EgovMap checkOrderStatusInfo(Map<String, Object> params);
