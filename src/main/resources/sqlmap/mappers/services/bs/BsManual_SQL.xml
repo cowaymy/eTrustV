@@ -4927,7 +4927,7 @@ WHERE
 
        <select id="checkWarrentyStatus" parameterType="Map" resultType="egovMap">
     <![CDATA[
-SELECT A.MEMBERSHIP_NO FROM (
+SELECT DISTINCT A.MEMBERSHIP_NO FROM (
     SELECT SRV_MEM_NO MEMBERSHIP_NO,
              SRV_STUS_CODE_ID SRV_STUS
       FROM SAL0095D
@@ -4954,7 +4954,7 @@ SELECT A.MEMBERSHIP_NO FROM (
 
     <select id="checkSvcMembershipInfo" parameterType="Map" resultType="egovMap">
     <![CDATA[
-SELECT A.ORD_ID FROM (
+SELECT DISTINCT A.ORD_ID FROM (
     SELECT MAX(SRV_SALES_ORD_ID) AS ORD_ID
     FROM SAL0095D
     WHERE SRV_SALES_ORD_ID IN (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo})
