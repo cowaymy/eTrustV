@@ -10,24 +10,24 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface RCMSAgentManageMapper {
 
 	List<EgovMap> selectAgentTypeList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectRosCaller(Map<String, Object> params);
 
 	List<EgovMap> selectAssignAgentList(Map<String, Object> params);
 
 	int updateAgent(Map<String, Object> updateMap);
-	
+
 	EgovMap chkUserNameByUserId(Map<String, Object> params);
-	
+
 	int getSeqSAL0148M();
-	
+
 	void insAgentMaster(Map<String, Object> params);
-	
+
 	void updAgentMaster(Map<String, Object> params);
-	
+
 	EgovMap chkDupWebId(Map<String, Object> params);
-	
-	List<EgovMap> selectAgentList(Map<String, Object> params);
+
+	List<EgovMap> selectAgentList(Map<String, Object> updateMap);
 
 	void updateCompany(Map<String, Object> updateMap);
 
@@ -39,9 +39,22 @@ public interface RCMSAgentManageMapper {
 
 	void updateRemark(Map<String, Object> params);
 
-	List<EgovMap> selectAssignedList(Map<String, Object> params);
+	List<EgovMap> selectAssignConvertList(Map<String, Object> params);
+
+	List<EgovMap> selectAssignConvertItemList(Map<String, Object> params);
 
 	List<EgovMap> selectRosCallDetailList(Map<String, Object> params);
-	
+
 	List<EgovMap> rentalStatusListForBadAcc(Map<String, Object> params);
+
+	List<EgovMap> checkCustAgent(Map<String, Object> params);
+
+	List<EgovMap> selectUploadedConversionList(Map<String, Object> params);
+
+	String select_SeqSAL0239D(Map<String, Object> params);
+
+	void insert_SAL0239D(Map<String, Object> params);
+
+	void insert_SAL0240D(Map<String, Object> params);
+
 }

@@ -3,42 +3,53 @@
 
 <script  type="text/javascript">
 var uploadGrid;
-var agentGrid;
+var uploadResultGrid;
 
 $(document).ready(function(){
 
 	setInputFile();
 	creatGrid();
-	
+
 	$("#uploadGrid").hide();
     $("#btnPopSave").hide();
-	
+
+    doGetCombo('/common/selectCodeList.do', '418', '2' ,'rcmsUploadType2', 'S' , '');
+
 	//**************************************************
 	//** 업로드 파일 내용을 Grid에 적용하기
 	//**************************************************
 	// 파일 선택하기
-	$('#fileSelector').on('change', function(evt) {
+
+	$('#rcmsUploadType2').change(function(){
+		if($('#rcmsUploadType2').val() == '' || $('#rcmsUploadType2').val() == null){
+	        $('#csvFile').hide();
+	    }else{
+	        $('#csvFile').show();
+	    }
+	});
+
+	$('#uploadfile').on('change', function(evt) {
 
 	        var data = null;
 	        var file = evt.target.files[0];
 	        if (typeof file == "undefined") {
 	            return;
 	        }
-	        
+
 	        var reader = new FileReader();
 	        //reader.readAsText(file); // 파일 내용 읽기
 	        reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
 	        reader.onload = function(event) {
 	            if (typeof event.target.result != "undefined") {
-	            		            	
+
 	                // 그리드 CSV 데이터 적용시킴
 	                AUIGrid.setCsvGridData(uploadGrid, event.target.result, false);
-	                
+
 	                //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
 	                AUIGrid.removeRow(uploadGrid,0);
-	                
+
 	                fn_checkAgentList();
-                    
+
 	            } else {
 	                Common.alert('<spring:message code="sal.alert.msg.noDataToImport" />');
 	            }
@@ -48,8 +59,8 @@ $(document).ready(function(){
 	        	Common.alert('<spring:message code="sal.alert.msg.unableToRead" />' + file.fileName);
 	        };
 
-	});  
-	
+	});
+
 });
 
 function setInputFile(){//인풋파일 세팅하기
@@ -60,59 +71,88 @@ function creatGrid(){
 
     var upColLayout = [ {
         dataField : "0",
-        headerText : '<spring:message code="sales.OrderNo" />',
         width : 100
     },{
         dataField : "1",
-        headerText : '<spring:message code="sal.title.agentId" />',
+        width : 150
+    },{
+        dataField : "2",
         width : 150
     }];
-    
+
     var agentLayout = [ {
-        dataField : "orderNo",
+        dataField : "salesOrdId",
+        headerText : '<spring:message code="sales.OrderId" />',
+        width : '10%',
+        visible : false
+    },{
+        dataField : "ordNo",
         headerText : '<spring:message code="sales.OrderNo" />',
-        width : 100
+        width : '10%'
     },{
-        dataField : "agentId",
-        headerText : '<spring:message code="sal.title.agentId" />',
-        width : 150
+        dataField : "itm",
+        headerText : '<spring:message code="sal.title.item" />',
+        width : '15%'
     },{
-        dataField : "msg",
-        headerText : '<spring:message code="sales.ErrorMessage" />'
-    }];
-    
+        dataField : "rem",
+        headerText : '<spring:message code="sal.title.remark" />',
+        	width : '20%'
+    }, {
+        dataField : "stusId",
+        headerText : '<spring:message code="sal.title.status" />',
+            width : '20%',
+            visible : false
+    },{
+        dataField : "stusCode",
+        headerText : '<spring:message code="sal.title.status" />',
+            width : '20%'
+    },{
+        dataField : "undefined",
+        headerText : "Action",
+        width : '20%',
+        renderer : {
+              type : "ButtonRenderer",
+              labelText : "Remove",
+              onclick : function(rowIndex, columnIndex, value, item) {
+                  AUIGrid.removeRow(uploadResultGrid, rowIndex);
+                  AUIGrid.removeSoftRows(uploadResultGrid);
+              }
+       }
+   }];
+
 
     var upOptions = {
                showStateColumn:false,
                showRowNumColumn    : false,
-               usePaging : false,
+               //usePaging : false,
                editable : false,
                headerHeight : 30,
                softRemoveRowMode:false
-         }; 
-    
-    uploadGrid = GridCommon.createAUIGrid("#uploadGrid", upColLayout, "", upOptions); 
-    agentGrid = GridCommon.createAUIGrid("#agentGrid", agentLayout, "", upOptions); 
+         };
+
+    uploadGrid = GridCommon.createAUIGrid("#uploadGrid", upColLayout, "", upOptions);
+    uploadResultGrid = GridCommon.createAUIGrid("#uploadResultGrid", agentLayout, "", upOptions);
 }
 
 
 function fn_checkAgentList(){
-    var data = GridCommon.getGridData(uploadGrid);
-    Common.ajax("POST", "/sales/rcms/checkAgentList", data, function(result)    {
+    var formData = new FormData();
 
-        AUIGrid.clearGridData(agentGrid);
+    formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
 
-        console.log("성공." + JSON.stringify(result));
-        console.log("data : " + result.data);              
-                                
+    	Common.ajaxFile("uploadRcmsConversionBulk.do", formData, function(result)    {
+        AUIGrid.clearGridData(uploadResultGrid);
+
+        console.log(JSON.stringify(result.data));
+
         if(result.data.length > 0){
-            AUIGrid.setGridData(agentGrid, result.data);
-            $("#btnPopSave").hide();
+        	$("#btnPopSave").show();
+            AUIGrid.setGridData(uploadResultGrid, result.data);
         }else{
-            $("#btnPopSave").show();
+        	$("#btnPopSave").hide();
         }
-               
-                
+
+
     }
     , function(jqXHR, textStatus, errorThrown){
          try {
@@ -130,16 +170,24 @@ function fn_checkAgentList(){
 }
 
 function fn_save(){
-    var data = GridCommon.getGridData(uploadGrid);
+    var data = GridCommon.getGridData(uploadResultGrid);
+    var formData = $("#UploadAssignAgentForm").serializeJSON();
+    data.formData = formData;
 
-    if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){        	
-        	
-        Common.ajax("POST", "/sales/rcms/saveAgentList", data, function(result){
+    if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
+
+//        Common.ajax("POST", "/sales/rcms/saveAgentList", data, function(result){
+	Common.ajax("POST", "/sales/rcms/saveConversionList", data, function(result){
 
             console.log("성공." + JSON.stringify(result));
             console.log("data : " + result.data);
 
-            Common.alert("Success To Save" + DEFAULT_DELIMITER + "Agent list successfully saved.");
+            Common.alert("Success To Save" + DEFAULT_DELIMITER + "Agency assignment successfully saved.",
+                function(){
+                     $('#popup_wrap').hide();
+                     fn_selectListAjax();
+                }
+            );
         }
         , function(jqXHR, textStatus, errorThrown){
             try {
@@ -170,7 +218,7 @@ function fn_save(){
 </header><!-- pop_header end -->
 
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
-<form action="#" method="post">
+<form action="#" method="post" id='UploadAssignAgentForm'>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -182,10 +230,16 @@ function fn_save(){
 </colgroup>
 <tbody>
 <tr>
+    <th scope="row"><spring:message code="sales.SelectRCMSUploadType" /><span class="must">*</span></th>
+    <td colspan="3">
+        <select class="" name="rcmsUploadType2" id="rcmsUploadType2"></select>
+    </td>
+</tr>
+<tr id="csvFile" style="display:none">
 	<th scope="row"><spring:message code="sales.SelectCSVFile" /><span class="must">*</span></th>
 	<td colspan="3">
 	<div class="auto_file"><!-- auto_file start -->
-	<input type="file" id="fileSelector" title="file add" /> 
+	<input type="file" id="uploadfile" name="uploadfile" title="file add"  accept=".csv"/>
 	</div><!-- auto_file end -->
 	<p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/sales/AssignToAgent_Format.csv"><spring:message code="sales.DownloadCSVFormat" /></a></p>
 	</td>
@@ -195,7 +249,7 @@ function fn_save(){
 
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="uploadGrid" style="width:100%; height:350px; margin:0 auto;"></div>
-    <div id="agentGrid" style="width:100%; height:310px; margin:0 auto;"></div>
+    <div id="uploadResultGrid" style="width:100%; height:310px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">

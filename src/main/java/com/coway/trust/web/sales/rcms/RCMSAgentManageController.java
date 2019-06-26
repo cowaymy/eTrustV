@@ -1,7 +1,10 @@
 package com.coway.trust.web.sales.rcms;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -18,13 +21,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.rcms.RCMSAgentManageService;
-
+import com.coway.trust.biz.sales.rcms.vo.uploadAssignConvertVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.BeanConverter;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -34,297 +41,366 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class RCMSAgentManageController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RCMSAgentManageController.class);
-	
+
 	@Resource(name = "rcmsAgentManageService")
 	private RCMSAgentManageService rcmsAgentService;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
+
+	@Autowired
+	private CsvReadComponent csvReadComponent;
+
 	@Autowired
 	private SessionHandler sessionHandler;
-	
-	
+
+
 	@RequestMapping(value = "/selectRcmsAgentList.do")
 	public String selectRcmsAgentList (@RequestParam Map<String, Object> params) throws Exception{
-		
+
 		return "sales/rcms/rcmsAgentManagementList";
 	}
-	
+
 	@RequestMapping(value = "/rcmsAssignAgentList.do")
 	public String rcmsAssignAgent (@RequestParam Map<String, Object> params) throws Exception{
-		
+
 		return "sales/rcms/rcmsAssignAgentList";
 	}
 	@RequestMapping(value = "/uploadAssignAgentPop.do")
 	public String uploadAgentPop (@RequestParam Map<String, Object> params) throws Exception{
-		
+
 		return "sales/rcms/uploadAssignAgentPop";
 	}
 	@RequestMapping(value = "/updateRemarkPop.do")
 	public String updateRemarkPop (@RequestParam Map<String, Object> params) throws Exception{
-		
+
 		return "sales/rcms/updateRemarkPop";
 	}
-	@RequestMapping(value = "/rcmsAssignedList.do")
+	@RequestMapping(value = "/rcmsAssignmentConversion.do")
 	public String rcmsAssignedList (@RequestParam Map<String, Object> params) throws Exception{
-		
-		return "sales/rcms/rcmsAssignedList";
+
+		return "sales/rcms/rcmsAssignmentConversion";
 	}
-	
+
 	@RequestMapping(value = "/selectAgentTypeList")
 	public ResponseEntity<List<EgovMap>> selectAgentTypeList (@RequestParam Map<String, Object> params) throws Exception{
-		
+
 		List<EgovMap> agentList = null;
-		
+
 		agentList = rcmsAgentService.selectAgentTypeList(params);
-		
+
 		return ResponseEntity.ok(agentList);
 	}
-	
-	
+
+
 	@RequestMapping(value = "/checkWebId")
 	public ResponseEntity<List<Object>> checkWebId (@RequestBody Map<String, Object> params) throws Exception{
-		
+
 		List<Object> resultList = rcmsAgentService.checkWebId(params);
-		
+
 		return ResponseEntity.ok(resultList);
 	}
-	
-	
-	
+
+
+
 	@RequestMapping(value = "/chkDupWebId")
 	public ResponseEntity<List<Object>> chkDupWebId (@RequestBody Map<String, Object> params) throws Exception{
-		
+
 		List<Object> resultList = rcmsAgentService.chkDupWebId(params);
-		
+
 		return ResponseEntity.ok(resultList);
 	}
-	
-	
+
+
 	@RequestMapping(value = "/insUpdAgent.do")
 	public ResponseEntity<ReturnMessage> insUpdAgent(@RequestBody Map<String, Object> params , SessionVO session) throws Exception{
-		
+
 		params.put("crtUserId", session.getUserId());
 		rcmsAgentService.insUpdAgent(params);
-		
+
 		//Return Message
 		ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
     	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		
-		
+
+
 		return ResponseEntity.ok(message);
 	}
-	
-	
+
+
 	@RequestMapping(value = "/selectAgentList")
 	public ResponseEntity<List<EgovMap>> selectAgentList (@RequestParam Map<String, Object> params, HttpServletRequest request) throws Exception{
-		
+
 		List<EgovMap> agentList = null;
-		
+
 		String typeArr[] =  request.getParameterValues("agentType");
 		String statusArr[] = request.getParameterValues("agentStatus");
-				
+
 		params.put("typeList", typeArr);
 		params.put("statusList", statusArr);
-		
+
 		agentList = rcmsAgentService.selectAgentList(params);
-		
+
 		return ResponseEntity.ok(agentList);
-		
+
 	}
-	
-	
+
+
 	@RequestMapping(value = "/selectRosCaller")
 	public ResponseEntity<List<EgovMap>> selectRosCaller (@RequestParam Map<String, Object> params) throws Exception{
 
 		LOGGER.debug("param ===================>>  " + params);
 		List<EgovMap> rosCallertList = null;
-		
+
 		rosCallertList = rcmsAgentService.selectRosCaller(params);
-		
+
 		return ResponseEntity.ok(rosCallertList);
-		
+
 	}
-	
+
 	@RequestMapping(value = "/selectAssignAgentList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectAssignAgentList (@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model) throws Exception{
 
 		LOGGER.debug("param ===================>>  " + params);
-		
+
 		String rentalStatus[] = request.getParameterValues("rentalStatus");
 		String companyType[] = request.getParameterValues("companyType");
 		String openMonth[] = request.getParameterValues("openMonth");
 		String rosCaller[] = request.getParameterValues("rosCaller");
-		
+
 		for (String str : openMonth){
-			
+
 			if("7".equals(str)){
 
 				params.put("month", "8");
 			}
-			
+
 		}
-		
+
 
 		params.put("rentalStatus", rentalStatus);
 		params.put("companyType", companyType);
 		params.put("openMonth", openMonth);
 		params.put("rosCaller", rosCaller);
 
-		
+
 		List<EgovMap> assignAgentList = null;
-		
+
 		assignAgentList = rcmsAgentService.selectAssignAgentList(params);
-		
+
 		return ResponseEntity.ok(assignAgentList);
-		
+
 	}
-	
+
 	@RequestMapping(value = "/saveAssignAgent", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveAssignAgent(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
-			
+
 		LOGGER.debug("param ===================>>  " + params);
-		
+
 		params.put("userId", sessionVO.getUserId());
-		
+
 		rcmsAgentService.saveAssignAgent(params);
-		
+
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData("");
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
-		return ResponseEntity.ok(message);  
-		
+		return ResponseEntity.ok(message);
+
 	}
-	
+
 	@RequestMapping(value = "/checkAgentList", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> checkAgentList(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
-		
+
 		LOGGER.debug("param ===================>>  " + params);
-				
+
 		List<EgovMap> chkList = rcmsAgentService.checkAssignAgentList(params);
-		
+
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(chkList);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		
-		return ResponseEntity.ok(message);  
-		
+
+		return ResponseEntity.ok(message);
+
 	}
-	
+
 	@RequestMapping(value = "/saveAgentList", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveAgentList(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
-		
+
 		LOGGER.debug("param ===================>>  " + params);
-		
+
 		params.put("userId", sessionVO.getUserId());
-		
+
 		rcmsAgentService.saveAgentList(params);
-		
+
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData("");
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		
-		return ResponseEntity.ok(message);  
-		
+
+		return ResponseEntity.ok(message);
+
 	}
-	
+
 	@RequestMapping(value = "/selectRcmsInfo", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> selectRcmsInfo(@RequestParam Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
-		
+
 		LOGGER.debug("param ===================>>  " + params);
-				
+
 		EgovMap result = rcmsAgentService.selectRcmsInfo(params);
-		
+
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(result);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		
-		return ResponseEntity.ok(message);  
-		
+
+		return ResponseEntity.ok(message);
+
 	}
-	
+
 	@RequestMapping(value = "/updateRemark", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateRemark(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
-		
+
 		LOGGER.debug("param ===================>>  " + params);
-		
+
 		params.put("userId", sessionVO.getUserId());
-		
+
 		rcmsAgentService.updateRemark(params);
-		
+
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData("");
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		
-		return ResponseEntity.ok(message);  
-		
+
+		return ResponseEntity.ok(message);
+
 	}
-	
-	@RequestMapping(value = "/selectAssignedList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectAssignedList (@RequestParam Map<String, Object> params,
+
+	@RequestMapping(value = "/selectAssignConversionList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAssignConversionList (@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model) throws Exception{
-		
+
 		LOGGER.debug("param ===================>>  " + params);
-		
-		String rentalStatus[] = request.getParameterValues("rentalStatus");
-		String companyType[] = request.getParameterValues("companyType");
-		String openMonth[] = request.getParameterValues("openMonth");
-		
-		for (String str : openMonth){
-			
-			if("7".equals(str)){
-				
-				params.put("month", "8");
-			}
-			
-		}
-		
-		params.put("rentalStatus", rentalStatus);
-		params.put("companyType", companyType);
-		params.put("openMonth", openMonth);
-		
-		
-		List<EgovMap> assignAgentList = null;
-		
-		assignAgentList = rcmsAgentService.selectAssignedList(params);
-		
-		return ResponseEntity.ok(assignAgentList);
-		
+
+		String batchStus[] = request.getParameterValues("batchStus");
+
+		params.put("batchStus", batchStus);
+
+		List<EgovMap> assignConvertList = null;
+
+		assignConvertList = rcmsAgentService.selectAssignConvertList(params);
+
+		return ResponseEntity.ok(assignConvertList);
+
 	}
-	
+
+	   @RequestMapping(value = "/selectAssignConversionItemList", method = RequestMethod.GET)
+	    public ResponseEntity<List<EgovMap>> selectAssignConversionItemList (@RequestParam Map<String, Object> params,
+	            HttpServletRequest request, ModelMap model) throws Exception{
+
+	        List<EgovMap> assignConvertItemList = rcmsAgentService.selectAssignConvertItemList(params);
+
+	        return ResponseEntity.ok(assignConvertItemList);
+
+	    }
+
 	@RequestMapping(value = "/selectRosCallDetailList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectRosCallDetailList (@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model) throws Exception{
-		
+
 		LOGGER.debug("param ===================>>  " + params);
-				
+
 		List<EgovMap> rosCallDetailList = rcmsAgentService.selectRosCallDetailList(params);
-		
+
 		return ResponseEntity.ok(rosCallDetailList);
-		
+
 	}
-	
+
 	@RequestMapping(value = "/badAccReportPop.do")
 	public String badAccReportPop(@RequestParam Map<String, Object> params) throws Exception{
 		return "sales/rcms/badAccReportPop";
 	}
-	
+
 	@RequestMapping(value = "/rentalStatusListForBadAcc")
 	public ResponseEntity<List<EgovMap>> rentalStatusListForBadAcc(@RequestParam Map<String, Object> params, @RequestParam(value="codeIn[]") String codeIn[]) throws Exception{
-		
+
 		params.put("codes", codeIn);
 		List<EgovMap> rtnList = null;
 		rtnList = rcmsAgentService.rentalStatusListForBadAcc(params);
-		
+
 		return ResponseEntity.ok(rtnList);
 	}
+
+	@RequestMapping(value = "/checkCustAgent", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> checkCustAgent (@RequestParam Map<String, Object> params) throws Exception{
+
+	    LOGGER.debug("param ===================>>  " + params.toString());
+	    List<EgovMap> custAgent = rcmsAgentService.checkCustAgent(params);
+	    return ResponseEntity.ok(custAgent);
+
+    }
+
+	@RequestMapping(value = "/uploadRcmsConversionBulk.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> updateECashDeductionResultItemBulk(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
+
+        //Master 정보 세팅
+        Map<String, Object> rcmsMap = new HashMap<String, Object>();
+
+        //CVS 파일 세팅
+        Map<String, MultipartFile> fileMap = request.getFileMap();
+        MultipartFile multipartFile = fileMap.get("csvFile");
+        List<uploadAssignConvertVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,uploadAssignConvertVO::create);
+
+        //CVS 파일 객체 세팅
+        Map<String, Object> cvsParam = new HashMap<String, Object>();
+        cvsParam.put("voList", vos);
+        cvsParam.put("userId", sessionVO.getUserId());
+
+        // cvs 파일 저장 처리
+        List<uploadAssignConvertVO> vos2 = (List<uploadAssignConvertVO>) cvsParam.get("voList");
+
+        List<Map> list = vos2.stream().map(r -> {
+            Map<String, Object> map = BeanConverter.toMap(r);
+            map.put("ordNo", r.getOrderNo());
+            map.put("itm", r.getItem());
+            map.put("rem", r.getRemark());
+            return map;
+        }).collect(Collectors.toList());
+
+        Map<String, Object> bulkMap = new HashMap<>();
+        bulkMap.put("list", list.stream().collect(Collectors.toCollection(ArrayList::new)));
+
+        List<EgovMap> uploadedList = null;
+        uploadedList = rcmsAgentService.selectUploadedConversionList(bulkMap);
+
+        // 결과 만들기.
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(uploadedList);
+        message.setMessage("Saved Successfully");
+
+        return ResponseEntity.ok(message);
+    }
+
+	   @RequestMapping(value = "/saveConversionList", method = RequestMethod.POST)
+	    public ResponseEntity<ReturnMessage> saveConversionList(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+
+	        LOGGER.debug("param ===================>>  " + params);
+
+	        params.put("userId", sessionVO.getUserId());
+
+	        rcmsAgentService.saveConversionList(params);
+
+	        ReturnMessage message = new ReturnMessage();
+	        message.setCode(AppConstants.SUCCESS);
+	        message.setData("");
+	        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+	        return ResponseEntity.ok(message);
+
+	    }
+
 }

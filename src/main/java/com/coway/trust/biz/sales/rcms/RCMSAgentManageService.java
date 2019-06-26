@@ -7,7 +7,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface RCMSAgentManageService {
 
-	
+
 	List<EgovMap> selectAgentTypeList(Map<String, Object> params)throws Exception;
 
 	List<EgovMap> selectRosCaller(Map<String, Object> params);
@@ -15,13 +15,13 @@ public interface RCMSAgentManageService {
 	List<EgovMap> selectAssignAgentList(Map<String, Object> params);
 
 	void saveAssignAgent(Map<String, Object> params);
-	
+
 	List<Object> checkWebId(Map<String, Object> params) throws Exception;
-	
+
 	List<Object> chkDupWebId(Map<String, Object> params) throws Exception;
-	
-	void insUpdAgent(Map<String, Object> params) throws Exception; 
-	
+
+	void insUpdAgent(Map<String, Object> params) throws Exception;
+
 	List<EgovMap> selectAgentList(Map<String, Object> params) throws Exception;
 
 	List<EgovMap> checkAssignAgentList(Map<String, Object> params);
@@ -32,9 +32,18 @@ public interface RCMSAgentManageService {
 
 	EgovMap selectRcmsInfo(Map<String, Object> params);
 
-	List<EgovMap> selectAssignedList(Map<String, Object> params);
+	List<EgovMap> selectAssignConvertList(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectAssignConvertItemList(Map<String, Object> params) throws Exception;
 
 	List<EgovMap> selectRosCallDetailList(Map<String, Object> params);
-	
+
 	List<EgovMap> rentalStatusListForBadAcc(Map<String, Object> params);
+
+	List<EgovMap> checkCustAgent(Map<String, Object> params);
+
+	List<EgovMap> selectUploadedConversionList(Map<String, Object> bulkMap);
+
+	void saveConversionList(Map<String, Object> params);
+
 }

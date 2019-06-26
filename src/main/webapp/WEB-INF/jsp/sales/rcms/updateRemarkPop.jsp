@@ -7,26 +7,38 @@
 var packageInfo={};
 
 $(document).ready(function(){
-    $("#sensitiveFg").val("0");
+
+	$("#sensitiveFg").val("0");
+    $("#etrFg").val("0");
 
     fn_selectAjax();
-   
+
 });
 
 //리스트 조회.
-function fn_selectAjax() {       
-	
+function fn_selectAjax() {
+
 	Common.ajax("GET", "/sales/rcms/selectRcmsInfo", {orderNo: $("#orderNo").val() }, function(result) {
-		
-	     console.log(result);
-	     
-	     $("#remark").val(result.data.rem);  
-	     $("#popOrderNo").val(result.data.salesOrdNo);  
+
+	     console.log(result.data);
+
+	     var currAgentId = result.data.agentId > 0 ? result.data.agentId.toString() : null;
+	     $("#remark").val(result.data.rem);
+	     $("#popOrderNo").val(result.data.salesOrdNo);
 	     $("#popOrdId").val(result.data.salesOrdId);
-	     
+	     $("#prevAgentId").val(result.data.agentId);
+	     $("#custId").val(result.data.custId);
+
+	     CommonCombo.make("rosCaller2", "/sales/rcms/selectRosCaller", {userId : '${SESSION_INFO.userName}'}, currAgentId,  {id:"agentId", name:"agentName", isShowChoose: true });
+
 	     if(result.data.sensitiveFg == "1"){
              $("#sensitiveFg").val(result.data.sensitiveFg);
              $("#chkSensitiveFg").attr("checked","checked");
+         }
+
+	     if(result.data.etrFg == "1"){
+             $("#etrFg").val(result.data.etrFg);
+             $("#chkEtrFg").attr("checked","checked");
          }
 
 	});
@@ -39,31 +51,39 @@ function fn_chk(){
 	}else{
         $("#sensitiveFg").val("0");
 	}
+
+	   if($("input:checkbox[id='chkEtrFg']").is(":checked")){
+	        $("#etrFg").val("1");
+	    }else{
+	        $("#etrFg").val("0");
+	    }
 }
 
 function fn_save(){
-		
-    Common.ajax("POST", "/sales/rcms/updateRemark", $("#saveForm").serializeJSON(), function(result) {
-        
-           Common.alert('<spring:message code="sal.alert.msg.successToSaved" />'+DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.rcmsItemSuccessSaved" />');
-
-           $("#updateRemarkPop").remove();
-           
-           fn_selectListAjax();
-           
-       }, function(jqXHR, textStatus, errorThrown) {
-    	   
-           console.log("실패하였습니다.");
-           console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-           
-           Common.alert('<spring:message code="sal.alert.title.saveFail" />'+DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.saveFail" />');
-
-           console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-           
-       }); 
-	
+		Common.ajax("POST", "/sales/rcms/updateRemark", $("#saveForm").serializeJSON(), function(result) {
+	           Common.alert('<spring:message code="sal.alert.msg.successToSaved" />'+DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.rcmsItemSuccessSaved" />');
+	           $("#updateRemarkPop").remove();
+	           fn_selectListAjax();
+	       }, function(jqXHR, textStatus, errorThrown) {
+	           console.log("실패하였습니다.");
+	           console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+	           Common.alert('<spring:message code="sal.alert.title.saveFail" />'+DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.saveFail" />');
+	           console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+	       });
 }
 
+function fn_Validsave(){
+
+    var prevAgentId = $("#prevAgentId").val();
+    var currAgentId = $("#rosCaller2").val();
+	Common.ajax("GET", "/sales/rcms/checkCustAgent", $("#saveForm").serializeJSON(), function(result) {
+	if(result[0].agentId != currAgentId && FormUtil.isNotEmpty(currAgentId)){
+		Common.confirm("<spring:message code='sal.alert.msg.diffAgentSaved'/>",function(){fn_save()});
+		}else{
+			fn_save();
+		}
+    });
+}
 </script>
 
 <div id="popup_wrap" class="popup_wrap size_small"><!-- popup_wrap start -->
@@ -81,6 +101,9 @@ function fn_save(){
 <form action="#" method="post" id="saveForm" name="saveForm">
     <input type="hidden" id="popOrdId" name="salesOrdId" />
     <input type="hidden" id="sensitiveFg" name="sensitiveFg" />
+    <input type="hidden" id="etrFg" name="etrFg" />
+    <input type="hidden" id="prevAgentId" name="prevAgentId" />
+    <input type="hidden" id="custId" name="custId" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -90,12 +113,20 @@ function fn_save(){
 	<col style="width:100px" />
 	<col style="width:*" />
 </colgroup>
-<tbody>         
+<tbody>
 <tr>
 	<th scope="row"><spring:message code="sal.title.text.ordNop" /></th>
-	<td><input type="text" title="" class="readonly" readonly="readonly" style="width: 100%" id="popOrderNo"  name="popOrderNo"/></td>
-	<th scope="row"><spring:message code="sal.title.text.sensitive" /><span class="must"></span></th>
-	<td><input type="checkbox"  id="chkSensitiveFg"  name="chkSensitiveFg" onclick="fn_chk()"/></td>
+	<td colspan=3><input type="text" title="" class="readonly" readonly="readonly" style="width: 100%" id="popOrderNo"  name="popOrderNo"/></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.title.text.rosCaller" /></th>
+    <td  colspan=3><select id="rosCaller2" name="rosCaller2" class="w100p" ></select></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.title.text.sensitive" /><span class="must"></span></th>
+    <td><input type="checkbox"  id="chkSensitiveFg"  name="chkSensitiveFg" onclick="fn_chk()"/></td>
+    <th scope="row"><spring:message code="sal.title.text.etr" /><span class="must"></span></th>
+    <td><input type="checkbox"  id="chkEtrFg"  name="chkEtrFg" onclick="fn_chk()"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.remark" /></th>
@@ -108,7 +139,7 @@ function fn_save(){
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" id='savebt'   onclick="javascript:fn_save()"><spring:message code="sal.btn.save" /></a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" id='savebt'   onclick="javascript:fn_Validsave()"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->
