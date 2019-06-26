@@ -468,6 +468,8 @@
           code="sal.combo.text.confirmToCancel" /></option>
         <option value="31"><spring:message
           code="sal.combo.text.reversalOfCancellation" /></option>
+        <option value="105"><spring:message
+          code="sal.combo.text.continueRental" /></option>  
       </select></td>
      </tr>
      <tr>
