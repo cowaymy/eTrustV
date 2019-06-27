@@ -125,7 +125,7 @@ public class RentalCollectionByBSListVO implements Serializable {
         return indOrd;
     }
     public void setindOrd(String indOrd) {
-        this.indOrd = sOutRate;
+        this.indOrd = indOrd;
     }
     public String getcorpOrd() {
         return corpOrd;
