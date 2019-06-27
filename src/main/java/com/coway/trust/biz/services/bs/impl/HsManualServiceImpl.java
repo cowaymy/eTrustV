@@ -2092,7 +2092,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	      bsResultMas_Rev.put("FailReasonID", String.valueOf(qryBS_Rev.get("failResnId")));// FAIL_RESN_ID
 	      bsResultMas_Rev.put("RenCollectionID", String.valueOf(qryBS_Rev.get("renColctId")));// REN_COLCT_ID
 	      bsResultMas_Rev.put("WarehouseID", String.valueOf(qryBS_Rev.get("whId")));// WH_ID
-	      bsResultMas_Rev.put("ResultRemark", String.valueOf(qryBS_Rev.get("resultRem")));// RESULT_REM
+	      bsResultMas_Rev.put("ResultRemark", String.valueOf(qryBS_Rev.get("resultRem") + " HS Reversal - OMBAK"));// RESULT_REM
 	      // bsResultMas_Rev.put("ResultCreated", "sysdate");
 	      bsResultMas_Rev.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
 	      bsResultMas_Rev.put("ResultIsSync", String.valueOf(1));
@@ -2136,7 +2136,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	          bsResultDet_Rev.put("BSResultPartQty", CommonUtils.intNvl(qryResultDet.get(i).get("bsResultPartQty")));
 	          logger.debug("jinmu111 {}" + String.valueOf(qryBS_Rev.get("resultId")));
 	        }
-	        bsResultDet_Rev.put("BSResultRemark", CommonUtils.nvl(qryResultDet.get(i).get("bsResultRem")));// BS_RESULT_REM
+	        bsResultDet_Rev.put("BSResultRemark", CommonUtils.nvl(qryResultDet.get(i).get("bsResultRem") + " HS Reversal - OMBAK"));// BS_RESULT_REM
 	        bsResultDet_Rev.put("BSResultCreateAt", "sysdate");// BS_RESULT_REM
 	        bsResultDet_Rev.put("BSResultCreateBy", String.valueOf(sessionVO.getUserId()));
 	        bsResultDet_Rev.put("BSResultFilterClaim", CommonUtils.intNvl(qryResultDet.get(i).get("bsResultFilterClm")));// BS_RESULT_FILTER_CLM
