@@ -573,12 +573,12 @@ public class BudgetController {
 
 	}
 
-/*	@RequestMapping(value = "/budgetCheck", method = RequestMethod.POST)
-	public ResponseEntity <EgovMap> budgetCheck(@RequestBody Map<String, Object> params, ModelMap model) throws Exception{
+	@RequestMapping(value = "/budgetCheck", method = RequestMethod.GET)
+	public ResponseEntity <EgovMap> budgetCheck(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 
 		LOGGER.debug("params =====================================>>  " + params);
 
-		params.put("month", params.get("sendYearMonth").toString().substring(0, 2));
+		params.put("month", Integer.toString(Integer.parseInt(params.get("sendYearMonth").toString().substring(0, 2))));
 		params.put("year", params.get("sendYearMonth").toString().substring(3));
 		params.put("budgetPlanMonth", params.get("sendYearMonth").toString().substring(0, 2));
 		params.put("budgetPlanYear", params.get("sendYearMonth").toString().substring(3));
@@ -592,7 +592,6 @@ public class BudgetController {
 
     	return ResponseEntity.ok(result);
 	}
-	*/
 
 	@RequestMapping(value = "/saveBudgetApprovalReq", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveBudgetApprovalReq (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{

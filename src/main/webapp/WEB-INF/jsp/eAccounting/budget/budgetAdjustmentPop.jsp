@@ -147,7 +147,28 @@ $(document).ready(function(){
         $("#sendAmount").val(str);
 
         if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
-            $("#recvAmount").val(str);
+
+            if(FormUtil.isEmpty(senderAmt)) {}
+        	
+            var data = {
+                    sendYearMonth : $("#sendYearMonth").val(),
+                    sendCostCenter : $("#sendCostCenter").val(),
+                    sendBudgetCode : $("#sendBudgetCode").val(),
+                    sendGlAccCode : $("#sendGlAccCode").val()
+            };
+
+            Common.ajax("GET", "/eAccounting/budget/budgetCheck", data, function(result) {
+                console.log(result);
+
+                if(parseFloat(result.availableAmt) < parseFloat(senderAmt)) {
+                    Common.alert("Insufficient budget for transfer");
+                    senderAmt = "";
+                    $("#sendAmount").val("");
+                    $("#recvAmount").val("");
+                } else {
+                    $("#recvAmount").val(str);
+                }
+            });
         }
    });
 
