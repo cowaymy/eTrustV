@@ -147,7 +147,7 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 		saveParam.put("salesOrdId", params.get("paramOrdId"));
 
 
-		int status = Integer.parseInt((String)params.get("addStatus"));	// recall, calcel, reversal cancel
+		int status = Integer.parseInt((String)params.get("addStatus"));	// recall, calcel, reversal cancel, continuerental
 		int appTypeId = Integer.parseInt((String)params.get("appTypeId"));
 		logger.info("####################### appTypeId ######## "+ params.get("appTypeId"));
 		int reqStageId = 0;	// before , after install
@@ -263,8 +263,8 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 			logger.info("####################### Confirm To Cancel save END!! #####################");
 
 
-		}else if(status == 31){	// Reversal Of Cancellation
-			logger.info("####################### Reversal Of Cancellation save Start!! #####################");
+		}else if(status == 31 || status == 105){	// Reversal Of Cancellation or Continue Rental
+ 			logger.info("####################### Reversal Of Cancellation or Continue Rental save Start!! #####################");
 			//해야함
 			if(reqStageId == 24){
 				saveParam.put("callDt", params.get("addCallRecallDt"));
