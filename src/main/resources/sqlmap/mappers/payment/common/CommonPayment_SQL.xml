@@ -1588,6 +1588,7 @@ FROM
     ) a
 WHERE
             A.GROUP_SEQ =   #{seq}
+ORDER BY a.or_no
     </select>
 
         <select id="selectProcessCSPaymentResult" parameterType="Map" resultType="egovMap">

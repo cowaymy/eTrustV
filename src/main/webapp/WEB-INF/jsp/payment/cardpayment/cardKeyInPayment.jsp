@@ -262,7 +262,7 @@ var targetFinalBillColumnLayout = [
 { dataField:"billAsId" ,headerText:"<spring:message code='pay.head.billAsId'/>" ,editable : false , width : 150 , visible : false },
 { dataField:"discountAmt" ,headerText:"<spring:message code='pay.head.discountAmt'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
 { dataField:"srvMemId" ,headerText:"<spring:message code='pay.head.serviceMembershipId'/>" ,editable : false , width : 150 , visible : false },
-{ dataField:"trNo" ,headerText:"TR No" ,editable : false , width : 150 },
+{ dataField:"trNo" ,headerText:"TR No" ,editable : true , width : 150 },
 { dataField:"trDt" ,headerText:"TR Issue Date" ,editable : false , width : 150 },
 { dataField:"collectorCode" ,headerText:"Collector Code" ,editable : false , width : 250 },
 { dataField:"collectorId" ,headerText:"Collector Id" ,editable : false , width : 150 ,visible : false},
