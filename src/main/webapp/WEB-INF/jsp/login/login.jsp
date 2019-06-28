@@ -85,7 +85,7 @@
     }
 
     function fn_goSurveyForm(surveyTypeId) {
-    	Common.popupDiv("/logistics/survey/surveyForm.do", {"surveyTypeId":surveyTypeId}, null, false, '_surveyPop');
+    	Common.popupDiv("/logistics/survey/surveyForm.do", {"surveyTypeId":surveyTypeId,"inWeb":"0"}, null, false, '_surveyPop');
     }
 
 

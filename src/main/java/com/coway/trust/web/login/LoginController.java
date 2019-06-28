@@ -425,8 +425,8 @@ LOGGER.debug(Integer.toString(joinDt.compareTo(currRenewalDt)));
             popInfo.put("popExceptionMemroleCnt", "1");
         }
 
+        params.put("inWeb","0");
         int surveyTypeId = surveyService.isSurveyRequired(params,sessionVO);
-        LOGGER.info("surveyTypeId :: " + surveyTypeId);
         if(surveyTypeId != 0){
           params.put("surveyTypeId",surveyTypeId);
         }

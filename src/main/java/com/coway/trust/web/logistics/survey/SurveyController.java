@@ -30,7 +30,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *
  ***************************************/
 @Controller
-@RequestMapping(value = "/logistics/survey")
+@RequestMapping(value = "/logistics/survey/")
 public class SurveyController {
 
   @Resource(name = "SurveyService")
@@ -49,6 +49,7 @@ public class SurveyController {
       List<EgovMap> ques = surveyService.getSurveyQues(params);
       map.put("ques",ques);
       model.put("title", title);
+      model.put("inWeb", params.get("inWeb").toString());
       model.put("surveyTypeId", params.get("surveyTypeId").toString());
     });
 
@@ -102,5 +103,30 @@ public class SurveyController {
 
     return ResponseEntity.ok(message);
   }
+
+  @RequestMapping(value = "/isSurveyRequired.do", method = RequestMethod.GET)
+  public ResponseEntity<ReturnMessage> isSurveyRequired(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO)
+          throws Exception {
+
+        params.put("inWeb","1");
+        params.put("roleType",sessionVO.getRoleId());
+
+        int surveyTypeId = surveyService.isSurveyRequired(params,sessionVO);
+
+        if(surveyTypeId != 0){
+          params.put("surveyTypeId",surveyTypeId);
+        }
+
+        int verifySurveyStus  = surveyService.verifyStatus(params, sessionVO);
+
+      params.put("surveyTypeId", surveyTypeId);
+      params.put("verifySurveyStus", verifySurveyStus);
+
+          ReturnMessage message = new ReturnMessage();
+          message.setData(params);
+
+    return ResponseEntity.ok(message);
+  }
+
 
 }

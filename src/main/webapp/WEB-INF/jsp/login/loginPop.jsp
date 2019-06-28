@@ -92,7 +92,7 @@ function fn_AcceptAgreement() {
                 // Redirect to login page
                 if($("#loginForm #surveyStus").val() <= 0 && $("#loginForm surveyTypeId").val() > 0){
                     $('#popForm').hide();
-                    fn_goSurveyForm();
+                    fn_goSurveyForm($("#loginForm surveyTypeId").val());
                 }else{
                     Common.alert(successMsg, function(event) {
                     $("#loginForm").attr({

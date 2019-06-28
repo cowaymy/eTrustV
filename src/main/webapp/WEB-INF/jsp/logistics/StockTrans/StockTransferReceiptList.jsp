@@ -193,6 +193,20 @@ function f_change(){
 	paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val() , codeIn:'US03,US93'};
     doGetComboData('/common/selectCodeList.do', paramdata, '','smtype', 'S' , '');
 }
+
+function fn_isSurveyRequired() {
+	Common.ajax("GET", "/logistics/survey/isSurveyRequired.do", '', function(result) {
+		console.log(result.data);
+	    if(result.data.verifySurveyStus == 0 && result.data.surveyTypeId > 0){
+	    	fn_goSurveyForm(result.data.surveyTypeId);//Put survey ID here.
+	    }
+	});
+}
+
+function fn_goSurveyForm(surveyTypeId) {
+    Common.popupDiv("/logistics/survey/surveyForm.do", {"surveyTypeId":surveyTypeId,"inWeb":"1"}, null, false, '_surveyPop');
+}
+
 //btn clickevent
 $(function(){
     $('#search').click(function() {
@@ -475,8 +489,11 @@ function grFunc(){
 
 	        if("Already processed."== message){
 	         Common.alert(result.message);
+
 	        }else{
 	            Common.alert(result.message + "<br/>MDN NO : " + result.data );
+
+	            //fn_isSurveyRequired();
 	        }
 
 //         AUIGrid.setGridData(listGrid, result.data);
@@ -493,6 +510,7 @@ function grFunc(){
         }
         Common.alert("Fail : " + jqXHR.responseJSON.message);
     });
+
 }
 </script>
 

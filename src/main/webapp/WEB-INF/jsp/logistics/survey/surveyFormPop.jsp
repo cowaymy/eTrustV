@@ -11,6 +11,9 @@ $(document).ready(function() {
 	surveyTypeId = '${surveyTypeId}';
 });
 
+function fn_close(){
+	$("#survey_popup_wrap").hide();
+}
 function btnSubmit(){
 
 	var valid = true, formMaster = [];
@@ -46,8 +49,12 @@ function btnSubmit(){
         Common.ajax("GET", "/logistics/survey/verifyStatus.do", {surveyTypeId:surveyTypeId}, function(result) {
         	if(result.code != '1'){
 		    	Common.ajax("POST", "/logistics/survey/surveySave.do", data, function(result) {
-		    		Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", function(){fn_goMain(); });
-		    		setTimeout(function(){fn_goMain();},3000);
+		    		if('${inWeb}' == '0'){
+			    		Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", function(){fn_goMain(); });
+			    		setTimeout(function(){fn_goMain();},3000);
+		    		}else{
+		    			Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+"Thank you for completing our survey!"+"</b>", function(){fn_close();});
+		    		}
 		        });
         	}else{
         		Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
@@ -65,7 +72,7 @@ table.type1 tbody th{height:20px; color:#333; font-weight:normal; line-height:15
 table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:1px solid #d3d9dd; border-left:1px solid #d3d9dd; border-right:1px solid #d3d9dd;}
 </style>
 
-<div id="popup_wrap" class="popup_wrap size_big"><!-- popup_wrap start -->
+<div id="survey_popup_wrap" class="popup_wrap size_big"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>${title[0].surveyTitle}</h1>
