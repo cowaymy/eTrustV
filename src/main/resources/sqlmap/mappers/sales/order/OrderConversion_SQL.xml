@@ -694,4 +694,122 @@
         SELECT SAL0236D_DEDUCTION_ID_SEQ.NEXTVAL FROM DUAL
     </select>
 
+        <select id="paymodeConversionList" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.PAY_CNVR_ID   ,
+                                  Extent1.PAY_CNVR_NO   ,
+                                  Extent1.PAY_STUS_ID   ,
+                                  Extent1.PAY_CNVR_STUS_ID   ,
+                                  Extent1.PAY_CNVR_STUS_FROM   ,
+                                  Extent1.PAY_CNVR_STUS_TO   ,
+                                  Extent1.PAY_CNVR_TOTAL_ITM   ,
+                                  Extent1.PAY_CNVR_CRT_USER_ID   ,
+                                  Extent1.PAY_CNVR_CRT_DT   ,
+                                  Extent1.PAY_CNVR_UPD_USER_ID   ,
+                                  Extent1.PAY_CNVR_UPD_DT   ,
+                                  Extent1.PAY_CNVR_REM   ,
+                                  Extent1.PAY_CNVR_ATTACH_URL   ,
+                                  Extent2.CODE CODE2  ,
+                                  Extent2.NAME NAME2  ,
+                                  Extent3.CODE CODE3  ,
+                                  Extent3.NAME NAME3  ,
+                                  Extent4.USER_ID USERID1  ,
+                                  Extent4.USER_NAME USERNAME1  ,
+                                  Extent5.USER_ID USERID2  ,
+                                  Extent5.USER_NAME USERNAME2
+                         FROM SAL0234D Extent1
+                                  JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.PAY_STUS_ID
+                                  JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.PAY_CNVR_STUS_ID
+                           LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.PAY_CNVR_CRT_USER_ID
+                           LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.PAY_CNVR_UPD_USER_ID
+
+                        WHERE 1=1
+
+                         <if test="convStusFrList != null and convStusFrList != ''">
+                             AND Extent1.PAY_CNVR_STUS_FROM IN
+                             <foreach item="item" collection="convStusFrList" index="index" open="(" separator="," close=")">
+                                 #{item}
+                             </foreach>
+                         </if>
+                         <if test="convStusToList != null and convStusToList != ''">
+                             AND Extent1.PAY_CNVR_STUS_TO IN
+                             <foreach item="item" collection="convStusFrList" index="index" open="(" separator="," close=")">
+                                 #{item}
+                             </foreach>
+                         </if>
+
+                 <if test="batchNo != null and batchNo != ''">
+                     AND UPPER(Extent1.PAY_CNVR_NO) = UPPER(#{batchNo})
+                 </if>
+                 <if test="createStDate != null and createStDate != ''">
+                     AND Extent1.PAY_CNVR_CRT_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+                 </if>
+                 <if test="createEnDate != null and createEnDate != ''">
+                     AND Extent1.PAY_CNVR_CRT_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+                 </if>
+                 <if test="crtUserName != null and crtUserName != ''">
+                     AND UPPER(Extent4.USER_NAME) LIKE '%' || UPPER(#{crtUserName}) || '%'
+                 </if>
+                 <if test="convRem != null and convRem != ''">
+                     AND UPPER(Extent1.PAY_CNVR_REM) LIKE '%' || UPPER(#{batchRem}) || '%'
+                 </if>
+        ORDER BY Extent1.PAY_CNVR_NO ASC
+    </select>
+
+    <select id="paymodeConversionView" parameterType="Map" resultType="egovMap">
+       SELECT Extent1.PAY_CNVR_ID   ,
+                                  Extent1.PAY_CNVR_NO   ,
+                                  Extent1.PAY_STUS_ID   ,
+                                  Extent1.PAY_CNVR_STUS_ID   ,
+                                  Extent1.PAY_CNVR_STUS_FROM   ,
+                                  Extent1.PAY_CNVR_STUS_TO   ,
+                                  Extent1.PAY_CNVR_TOTAL_ITM   ,
+                                  Extent1.PAY_CNVR_CRT_USER_ID   ,
+                                  TO_CHAR(Extent1.PAY_CNVR_CRT_DT , 'dd-mm-yyyy')  PAY_CNVR_CRT_DT ,
+                                  Extent1.PAY_CNVR_UPD_USER_ID   ,
+                                  TO_CHAR(Extent1.PAY_CNVR_UPD_DT , 'dd-mm-yyyy')  PAY_CNVR_UPD_DT ,
+                                  Extent1.PAY_CNVR_REM   ,
+                                  Extent1.PAY_CNVR_ATTACH_URL   ,
+                                  Extent2.CODE CODE2  ,
+                                  Extent2.NAME NAME2  ,
+                                  Extent3.CODE CODE3  ,
+                                  Extent3.NAME NAME3  ,
+                                  Extent4.USER_ID USERID1  ,
+                                  Extent4.USER_NAME USERNAME1  ,
+                                  Extent5.USER_ID USERID2  ,
+                                  Extent5.USER_NAME USERNAME2
+                         FROM SAL0234D Extent1
+                                  JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.PAY_STUS_ID
+                                  JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.PAY_CNVR_STUS_ID
+                           LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.PAY_CNVR_CRT_USER_ID
+                           LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.PAY_CNVR_UPD_USER_ID
+             WHERE  Extent1.PAY_CNVR_ID = #{payCnvrId}
+                      AND ROWNUM <![CDATA[ <= ]]> 1
+    </select>
+
+    <select id="paymodeConversionViewItmList" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.PAY_CNVR_ITM_ID   ,
+                   Extent1.PAY_CNVR_ID   ,
+                   Extent1.PAY_CNVR_ORDER_ID   ,
+                   Extent5.SALES_ORD_NO PAY_CNVR_ORDER_NO   ,
+                   Extent1.PAY_CNVR_SRV_CNTRCT_ID   ,
+                   Extent1.PAY_CNVR_SRV_CNTRCT_REF_NO   ,
+                   Extent1.PAY_CNVR_ITM_REM   ,
+                   Extent1.PAY_CNVR_ITM_STUS   ,
+                   Extent1.PAY_CNVR_ITM_CRT_USER_ID   ,
+                   TO_CHAR(Extent1.PAY_CNVR_ITM_CRT_DT, 'dd/mm/yyyy')  PAY_CNVR_ITM_CRT_DT  ,
+                   Extent1.PAY_CNVR_ITM_UPD_USER_ID   ,
+                   TO_DATE(Extent1.PAY_CNVR_ITM_UPD_DT, 'dd/mm/yyyy')  PAY_CNVR_ITM_UPD_DT  ,
+                   Extent2.CODE STATUS,
+                   Extent3.USER_NAME  CREATOR ,
+                   Extent4.USER_NAME  UPDATOR
+              FROM SAL0235D Extent1
+                     JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.PAY_CNVR_ITM_STUS
+                     LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.PAY_CNVR_ITM_CRT_USER_ID
+                     LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.PAY_CNVR_ITM_UPD_USER_ID
+                     LEFT JOIN SAL0001D Extent5 ON Extent5.SALES_ORD_ID = Extent1.PAY_CNVR_ORDER_ID
+             WHERE  ( Extent1.PAY_CNVR_ID = #{payCnvrId} )
+              ORDER BY Extent1.PAY_CNVR_ITM_ID ASC
+    </select>
+
+
 </mapper>

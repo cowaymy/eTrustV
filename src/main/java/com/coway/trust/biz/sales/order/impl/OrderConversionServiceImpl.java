@@ -307,4 +307,16 @@ public void savePayConvertList(Map<String, Object> params) {
 
 		}
 	}
+
+public List<EgovMap> paymodeConversionList(Map<String, Object> params) {
+	return orderConversionMapper.paymodeConversionList(params);
+}
+
+public EgovMap paymodeConversionView(Map<String, Object> params) {
+	return orderConversionMapper.paymodeConversionView(params);
+}
+
+public List<EgovMap> paymodeConversionViewItmList(Map<String, Object> params) {
+	return orderConversionMapper.paymodeConversionViewItmList(params);
+}
 }

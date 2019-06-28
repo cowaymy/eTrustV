@@ -73,4 +73,10 @@ public interface OrderConversionMapper {
 
 	int crtSeqSAL0236D();
 
+	List<EgovMap> paymodeConversionList(Map<String, Object> params);
+
+	EgovMap paymodeConversionView(Map<String, Object> params);
+	
+	List<EgovMap> paymodeConversionViewItmList(Map<String, Object> params);
+
 }

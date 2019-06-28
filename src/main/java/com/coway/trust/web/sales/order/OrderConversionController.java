@@ -243,11 +243,11 @@ public class OrderConversionController {
 		return "sales/order/orderConversionRawDataPop";
 	}
 
-	@RequestMapping(value = "/payModeConversion.do")
-	public String payModeConversion(@RequestParam Map<String, Object>params, ModelMap model) {
+	//@RequestMapping(value = "/payModeConversion.do")
+	//public String payModeConversion(@RequestParam Map<String, Object>params, ModelMap model) {
 
-		return "sales/order/payModeConversion";
-	}
+	//	return "sales/order/payModeConversion";
+	//}
 
 	@RequestMapping(value = "/savePayConvertList", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> savePayConvertList (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{
@@ -284,6 +284,64 @@ public class OrderConversionController {
 
     	return ResponseEntity.ok(message);
 
+	}
+
+	@RequestMapping(value = "/paymodeConversionList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> paymodeConversionList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+
+		String[] convStusFrList = request.getParameterValues("cmbStatusFr");
+		String[] convStusToList = request.getParameterValues("cmbStatusTo");
+		params.put("convStusFrList", convStusFrList);
+		params.put("convStusToList", convStusToList);
+
+		List<EgovMap> conversionList = orderConversionService.paymodeConversionList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(conversionList);
+	}
+
+	@RequestMapping(value = "/paymodeConversionList.do")
+	public String paymodeConversionList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		return "sales/order/payModeConversionList";
+	}
+
+	@RequestMapping(value = "/paymodeConversionDetailPop.do")
+	public String paymodeConversionDetailPop(@RequestParam Map<String, Object>params, ModelMap model) {
+		EgovMap cnvrInfo = orderConversionService.paymodeConversionView(params);
+
+		//List<EgovMap> orderCnvrInvalidItmList = orderConversionService.orderCnvrInvalidItmList(params);
+		//List<EgovMap> orderCnvrValidItmList = orderConversionService.orderCnvrValidItmList(params);
+		//List<EgovMap> conversionItmList = orderConversionService.orderConversionViewItmList(params);
+
+		//int invalidRows = orderCnvrInvalidItmList.size();
+		//int validRows = orderCnvrValidItmList.size();
+		//int allRows = conversionItmList.size();
+
+		//logger.info("##### invalidRows #####" +invalidRows);
+		//logger.info("##### validRows #####" +validRows);
+
+		model.addAttribute("cnvrInfo", cnvrInfo);
+		//model.addAttribute("invalidRows", invalidRows);
+		//model.addAttribute("validRows", validRows);
+		//model.addAttribute("allRows", allRows);
+
+		return "sales/order/paymodeConversionDetailPop";
+	}
+
+	@RequestMapping(value = "/paymodeConvertViewItmJsonList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> paymodeConvertViewItmJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> cnvrItmList = orderConversionService.paymodeConversionViewItmList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(cnvrItmList);
+	}
+
+	@RequestMapping(value = "/paymodeConversion.do")
+	public String paymodeConversion(@RequestParam Map<String, Object>params, ModelMap model) {
+		logger.info("###################### New ###############");
+		return "sales/order/paymodeConvertNewPop";
 	}
 
 }
