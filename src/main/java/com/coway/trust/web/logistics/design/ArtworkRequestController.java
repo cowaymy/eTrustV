@@ -33,8 +33,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/logistics/design")
 public class ArtworkRequestController {
-	
-	
+
+
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Value("${app.name}")
@@ -54,31 +54,37 @@ public class ArtworkRequestController {
 
 		return "logistics/Design/ArtworkRequestList";
 	}
-	
+
 	@RequestMapping(value = "/ArtworkDownloadList.do")
 	public String ArtworkDownloadList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		return "logistics/Design/ArtworkDownloadList";
 	}
-	
+
+	@RequestMapping(value = "/ArtworkPrintDownloadList.do")
+    public String ArtworkPrintDownloadList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        return "logistics/Design/ArtworkPrintDownloadList";
+    }
+
 	@RequestMapping(value = "/selectArtworkCategory.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectArtworkCateList(@RequestParam Map<String, Object> params,
 			ModelMap model) {
-		
+
 		logger.debug(" ::: {}" , params);
 
 		List<EgovMap> codeList = artservice.selectArtworkCategoryList(params);
-		
+
 		return ResponseEntity.ok(codeList);
 	}
-	
+
 	@RequestMapping(value = "/selectArtworkList.do", method = RequestMethod.POST)
 	public ResponseEntity<List<EgovMap>> selectArtworkList(@RequestBody Map<String, Object> params, Model model)
-			throws Exception {		
+			throws Exception {
 		logger.debug(" ::: {}" , params);
 
 		List<EgovMap> list = artservice.selectArtworkList(params);
-		
+
 		return ResponseEntity.ok(list);
 	}
 }

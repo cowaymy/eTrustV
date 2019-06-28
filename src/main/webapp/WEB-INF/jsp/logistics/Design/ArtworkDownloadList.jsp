@@ -72,14 +72,14 @@ $(function(){
             <tbody>
                 <tr>
                     <td>Web & Social Media</td>
-                    <td>Flyer</td>
+                    <td></td>
                 </tr>
                 <tr>
 
                <%--      <td width="313px"><img ID="RadImageTile1" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/images/Artwork/Social-Media-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
                     <td width="313px"><img ID="RadImageTile2" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/images/Artwork/Flyer-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>           --%>
                     <td width="313px"><img ID="RadImageTile1" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/WebShare/Artwork/Social-Media-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
-                    <td width="313px"><img ID="RadImageTile2" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/WebShare/Artwork/Flyer-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
+                    <td></td>
                 </tr>
                 <tr>
 	                <td >
@@ -95,42 +95,7 @@ $(function(){
 	                    <a href="https://drive.google.com/open?id=1w1Js3kDZ9MRBbBReFp8xAFpwAomwAiS0" target="_blank"><font class="tblFontCongf">Social Media</font></a>
 	                    <br />
 	                </td>
-	                <td>
-	                    <a href="https://drive.google.com/open?id=1aSaCNmNBgmMqD6dyIPblQx9f0FVB9Bnz" target="_blank"><font class="tblFontCongf">Roadshow Flyer</font></a>
-                        <br />
-                        <br />
-                        <a href="https://drive.google.com/open?id=1a4gSm3Zz5CjtJ-R7W-1kn9hzcxjXBE5e" target="_blank"><font class="tblFontCongf">Recruitment Flyer</font></a>
-                        <br />
-                        <br />
-	                </td>
-                </tr>
-                <tr>
-                    <td>BANNER</td>
-                    <td >BUNTING</td>
-                </tr>
-                <tr>
-                  <%--   <td width="313px"><img ID="RadImageTile3" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/images/Artwork/Banner-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
-                    <td width="313px"><img ID="RadImageTile4" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/images/Artwork/Bunting-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>                     --%>
-                    <td width="313px"><img ID="RadImageTile3" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/WebShare/Artwork/Banner-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
-                    <td width="313px"><img ID="RadImageTile4" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/WebShare/Artwork/Bunting-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
-                </tr>
-                <tr>
-	                <td>
-	                    <a href="https://drive.google.com/open?id=1EMiS3xJhGthcAi2w2auPjJZXtPzubYbb" target="_blank"><font class="tblFontCongf">Branding Banner</font></a>
-                        <br />
-                        <br />
-                        <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOdkFqN2ozR0dfWWc" target="_blank"><font class="tblFontCongf">Recruitment Banner</font></a>
-                        <br />
-                        <br />
-                    </td>
-	                <td>
-                        <a href="https://drive.google.com/open?id=1dvfgIUXnzBkgq-_baeZaxk3SGEJRHmuv" target="_blank"><font class="tblFontCongf">Branding Bunting</font></a>
-                        <br />
-                        <br />
-                        <a href="https://drive.google.com/open?id=1fn1fgPHgtSGo_MAN_JfIBp95N4Kj5YqX" target="_blank"><font class="tblFontCongf">Recruitment Bunting</font></a>
-                        <br />
-                        <br />
-                     </td>
+	                <td></td>
                 </tr>
             </tbody>
          </table>
