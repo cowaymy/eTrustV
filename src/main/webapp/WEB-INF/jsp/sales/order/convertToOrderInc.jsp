@@ -116,12 +116,24 @@
               //fn_loadProductPromotion('${preOrderInfo.appTypeId}', '${preOrderInfo.itmStkId}', '${preOrderInfo.empChk}', $("#typeId").val(), '${preOrderInfo.exTrade}');
 
                 $('#ordPromo').removeAttr("disabled");
-                doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
-                                                                                ,stkId:'${preOrderInfo.itmStkId}'
-                                                                                ,empChk:'${preOrderInfo.empChk}'
-                                                                                ,promoCustType:$("#typeId").val()
-                                                                                ,exTrade:'${preOrderInfo.exTrade}'
-                                                                                ,srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+                if('${preOrderInfo.month}' >= '7' && '${preOrderInfo.year}' == '2019') {
+                    doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
+                        ,stkId:'${preOrderInfo.itmStkId}'
+                        ,empChk:'${preOrderInfo.empChk}'
+                        ,promoCustType:$("#typeId").val()
+                        ,exTrade:'${preOrderInfo.exTrade}'
+                        ,srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+                }
+                else
+                {
+                    doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${preOrderInfo.appTypeId}'
+                        ,stkId:'${preOrderInfo.itmStkId}'
+                        ,empChk:'${preOrderInfo.empChk}'
+                        ,promoCustType:$("#typeId").val()
+                        ,exTrade:'${preOrderInfo.exTrade}'
+                        ,srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+                }
+
 
               //$('#ordPromo').val('${preOrderInfo.promoId}');
 

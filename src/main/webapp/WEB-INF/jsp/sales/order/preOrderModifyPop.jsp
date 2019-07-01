@@ -1302,7 +1302,16 @@
 
         $('#ordPromo').removeAttr("disabled");
 
-        doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
+        if('${preOrderInfo.month}' >= '7' && '${preOrderInfo.year}' == '2019') {
+            doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
+
+        }
+        else
+        {
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
+
+        }
+        //doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
     }
 
     //LoadProductPrice
@@ -1611,12 +1620,25 @@
         $('#refereNo').val('${preOrderInfo.sofNo}');
 
         $('#ordPromo').removeAttr("disabled");
-        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${preOrderInfo.appTypeId}'
-                                                                        ,stkId:'${preOrderInfo.itmStkId}'
-                                                                        ,empChk:'${preOrderInfo.empChk}'
-                                                                        ,promoCustType:vCustTypeId
-                                                                        ,exTrade:'${preOrderInfo.exTrade}'
-                                                                        ,srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+
+        if('${preOrderInfo.month}' >= '7' && '${preOrderInfo.year}' == '2019') {
+        	doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
+                ,stkId:'${preOrderInfo.itmStkId}'
+                ,empChk:'${preOrderInfo.empChk}'
+                ,promoCustType:vCustTypeId
+                ,exTrade:'${preOrderInfo.exTrade}'
+                ,srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+        }
+        else
+        {
+        	doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${preOrderInfo.appTypeId}'
+                ,stkId:'${preOrderInfo.itmStkId}'
+                ,empChk:'${preOrderInfo.empChk}'
+                ,promoCustType:vCustTypeId
+                ,exTrade:'${preOrderInfo.exTrade}'
+                ,srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+        }
+
 
 
         $('#ordRentalFees').val('${preOrderInfo.mthRentAmt}');

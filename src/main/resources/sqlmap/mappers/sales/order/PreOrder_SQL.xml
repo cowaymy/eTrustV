@@ -129,6 +129,8 @@
 		     , T1.INST_ADD_ID
 		     , T1.DSC_BRNCH_ID
 		     , TO_CHAR(T1.PRE_DT, 'DD/MM/YYYY') AS PRE_DT
+		     , EXTRACT(MONTH FROM T1.CRT_DT) AS MONTH
+		     , EXTRACT(YEAR FROM T1.CRT_DT) AS YEAR
 		     , T1.PRE_TM
 		     , T1.INSTCT
 		     , T1.EX_TRADE
