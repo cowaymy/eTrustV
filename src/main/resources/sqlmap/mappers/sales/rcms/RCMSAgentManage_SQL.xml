@@ -330,6 +330,7 @@
                 EXTENT1.RC_BATCH_NO ,
                 EXTENT2.NAME RC_STUS,
                 EXTENT3.CODE_NAME RC_TYPE,
+                EXTENT7.CODE_NAME AGENT_TYPE_UPL,
                 EXTENT6.TOTAL_ITEM,
                 EXTENT6.VALID_ITEM,
                 EXTENT6.INVALID_ITEM,
@@ -348,26 +349,27 @@
             LEFT JOIN SYS0013M EXTENT3 ON EXTENT1.RC_TYPE_ID = EXTENT3.CODE_ID
             LEFT JOIN SYS0047M EXTENT4 ON EXTENT1.RC_CRT_USER_ID = EXTENT4.USER_ID
             LEFT JOIN SYS0047M EXTENT5 ON EXTENT1.RC_UPD_USER_ID = EXTENT5.USER_ID
+            LEFT JOIN SYS0013M EXTENT7 ON EXTENT1.AGENT_TYP_UPL_ID = EXTENT7.CODE_ID
             WHERE
                 1 = 1
                 <if test=" batchId != null and batchId != '' ">
-                    AND EXTENT1.RC_BATCH_NO = {#batchId}
+                    AND EXTENT1.RC_BATCH_NO = #{batchId}
                 </if>
-                <if test=" batchId != null and batchId != '' ">
-                    AND EXTENT1.RC_BATCH_NO = {#batchId}
+                <if test=" rcmsUploadType != null and rcmsUploadType != '' ">
+                    AND EXTENT1.RC_TYPE_ID = #{rcmsUploadType}
                 </if>
-                <if test="statusList != null and statusList.length > 0">
-                     AND STUS_ID IN
-                     <foreach collection="statusList" item="item" open="(" separator="," close=")">
+                <if test="batchStus != null and batchStus.length > 0">
+                     AND RC_STUS_ID IN
+                     <foreach collection="batchStus" item="item" open="(" separator="," close=")">
                          #{item}
                      </foreach>
                 </if>
-                <if test=" userName != null and userName != '' ">
-                    AND EXTENT4.USER_NAME = {#batchId}
+                <if test=" crtUserName != null and crtUserName != '' ">
+                    AND EXTENT4.USER_NAME = #{crtUserName}
                 </if>
-                <if test="createDt1 != null and createDt2 != null and createDt1 != '' and createDt2 != '' ">
-                    AND Extent1.RC_CRT_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
-                    AND Extent1.RC_CRT_DT <![CDATA[   <   ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
+                <if test="createStDate != null and createEnDate != null and createStDate != '' and createEnDate != '' ">
+                    AND Extent1.RC_CRT_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createStDate},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                    AND Extent1.RC_CRT_DT <![CDATA[   <   ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createEnDate},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
                 </if>
     </select>
 
@@ -426,7 +428,7 @@
 	 <select id="checkCustAgent" parameterType="Map" resultType="egovMap">
         SELECT COUNT(CUST_ID) CNT,AGENT_ID
             FROM SAL0149D
-            WHERE CUST_ID = #{custId} AND AGENT_ID IS NOT NULL GROUP BY CUST_ID,AGENT_ID
+            WHERE CUST_ID = #{custId} AND AGENT_ID != 0  GROUP BY CUST_ID,AGENT_ID
     </select>
 
     <select id="selectUploadedConversionList" parameterType="java.util.List" resultType="egovMap">
@@ -434,6 +436,8 @@
         SELECT
             EXTENT2.SALES_ORD_ID as SALES_ORD_ID,
             EXTENT1.ORD_NO,
+            EXTENT1.AGENT_ID,
+            EXTENT1.REN_STUS,
             EXTENT1.ITM,
             EXTENT1.REM,
             CASE WHEN EXTENT2.SALES_ORD_ID IS NOT NULL THEN 4 ELSE 21 END STUS_ID,
@@ -441,6 +445,8 @@
             FROM
             (SELECT
             #{item.ordNo} as ORD_NO,
+            #{item.agentId} as AGENT_ID,
+            #{item.renStus} as REN_STUS,
             #{item.itm} as ITM,
             #{item.rem}  as REM
             FROM DUAL) EXTENT1
@@ -461,7 +467,8 @@
             RC_CRT_USER_ID ,
             RC_CRT_DT ,
             RC_UPD_USER_ID ,
-            RC_UPD_DT
+            RC_UPD_DT,
+            AGENT_TYP_UPL_ID
         )
         VALUES(
             #{rcBatchNo},
@@ -471,7 +478,8 @@
             #{userId},
             SYSDATE,
             #{userId},
-            SYSDATE
+            SYSDATE,
+            #{assignUploadType}
         )
     </insert>
 
@@ -494,8 +502,8 @@
 			, SYSDATE as RC_ITM_CRT_DT
 			, #{userId} as RC_ITM_UPD_USER_ID
 			, SYSDATE as RC_ITM_UPD_DT
-			, 1
-			, NULL
+			, 1 as RC_ITM_CNVR_STUS_ID
+			, NULL as RC_ITM_CNVR_REM
 		FROM DUAL
         </foreach>
         )

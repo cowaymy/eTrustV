@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.rcms.RCMSAgentManageService;
+import com.coway.trust.biz.sales.rcms.vo.uploadAssignAgentDataVO;
 import com.coway.trust.biz.sales.rcms.vo.uploadAssignConvertVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -285,7 +286,7 @@ public class RCMSAgentManageController {
 
 		LOGGER.debug("param ===================>>  " + params);
 
-		String batchStus[] = request.getParameterValues("batchStus");
+		String batchStus[] = request.getParameterValues("cmbBatchStatus");
 
 		params.put("batchStus", batchStus);
 
@@ -344,37 +345,66 @@ public class RCMSAgentManageController {
     }
 
 	@RequestMapping(value = "/uploadRcmsConversionBulk.do", method = RequestMethod.POST)
-    public ResponseEntity<ReturnMessage> updateECashDeductionResultItemBulk(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
+    public ResponseEntity<ReturnMessage> uploadRcmsConversionBulk(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
 
         //Master 정보 세팅
         Map<String, Object> rcmsMap = new HashMap<String, Object>();
-
+        String assignUploadType = request.getParameter("assignUploadType").toString();
         //CVS 파일 세팅
         Map<String, MultipartFile> fileMap = request.getFileMap();
         MultipartFile multipartFile = fileMap.get("csvFile");
-        List<uploadAssignConvertVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,uploadAssignConvertVO::create);
-
-        //CVS 파일 객체 세팅
-        Map<String, Object> cvsParam = new HashMap<String, Object>();
-        cvsParam.put("voList", vos);
-        cvsParam.put("userId", sessionVO.getUserId());
-
-        // cvs 파일 저장 처리
-        List<uploadAssignConvertVO> vos2 = (List<uploadAssignConvertVO>) cvsParam.get("voList");
-
-        List<Map> list = vos2.stream().map(r -> {
-            Map<String, Object> map = BeanConverter.toMap(r);
-            map.put("ordNo", r.getOrderNo());
-            map.put("itm", r.getItem());
-            map.put("rem", r.getRemark());
-            return map;
-        }).collect(Collectors.toList());
-
-        Map<String, Object> bulkMap = new HashMap<>();
-        bulkMap.put("list", list.stream().collect(Collectors.toCollection(ArrayList::new)));
 
         List<EgovMap> uploadedList = null;
-        uploadedList = rcmsAgentService.selectUploadedConversionList(bulkMap);
+LOGGER.debug("@@@@@@@@@@::" + assignUploadType);
+LOGGER.debug("@@@@@@@@@@::" + request.getParameter("assignUploadType"));
+        if(!assignUploadType.isEmpty()){
+          List<uploadAssignAgentDataVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,uploadAssignAgentDataVO::create);
+
+          //CVS 파일 객체 세팅
+          Map<String, Object> cvsParam = new HashMap<String, Object>();
+          cvsParam.put("voList", vos);
+          cvsParam.put("userId", sessionVO.getUserId());
+
+          // cvs 파일 저장 처리
+          List<uploadAssignAgentDataVO> vos2 = (List<uploadAssignAgentDataVO>) cvsParam.get("voList");
+
+          List<Map> list = vos2.stream().map(r -> {
+              Map<String, Object> map = BeanConverter.toMap(r);
+              map.put("ordNo", r.getOrderNo());
+              map.put("agentId", r.getCaller());
+              map.put("renStus", r.getRenStus());
+              return map;
+          }).collect(Collectors.toList());
+
+          Map<String, Object> bulkMap = new HashMap<>();
+          bulkMap.put("list", list.stream().collect(Collectors.toCollection(ArrayList::new)));
+
+          uploadedList = rcmsAgentService.selectUploadedConversionList(bulkMap);
+
+        }else{
+          List<uploadAssignConvertVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,uploadAssignConvertVO::create);
+
+          //CVS 파일 객체 세팅
+          Map<String, Object> cvsParam = new HashMap<String, Object>();
+          cvsParam.put("voList", vos);
+          cvsParam.put("userId", sessionVO.getUserId());
+
+          // cvs 파일 저장 처리
+          List<uploadAssignConvertVO> vos2 = (List<uploadAssignConvertVO>) cvsParam.get("voList");
+
+          List<Map> list = vos2.stream().map(r -> {
+              Map<String, Object> map = BeanConverter.toMap(r);
+              map.put("ordNo", r.getOrderNo());
+              map.put("itm", r.getItem());
+              map.put("rem", r.getRemark());
+              return map;
+          }).collect(Collectors.toList());
+
+          Map<String, Object> bulkMap = new HashMap<>();
+          bulkMap.put("list", list.stream().collect(Collectors.toCollection(ArrayList::new)));
+
+          uploadedList = rcmsAgentService.selectUploadedConversionList(bulkMap);
+        }
 
         // 결과 만들기.
         ReturnMessage message = new ReturnMessage();

@@ -313,6 +313,7 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
       List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
       Map<String, Object>  formData = (Map<String, Object>) params.get("formData");
       String rcmsUploadType = formData.get("rcmsUploadType2").toString();
+      String assignUploadType = formData.get("assignUploadType").toString();
 
       Map<String, Object> bulkMap = new HashMap<>();
 
@@ -320,6 +321,7 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
       params.put("rcBatchNo", seqSAL0239D);
       params.put("stusId", 1);
       params.put("rcmsUploadType", rcmsUploadType);
+      params.put("assignUploadType", assignUploadType);
 
       rcmsAgentManageMapper.insert_SAL0239D(params);
 

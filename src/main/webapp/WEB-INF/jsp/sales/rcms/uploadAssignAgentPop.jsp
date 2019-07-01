@@ -14,6 +14,7 @@ $(document).ready(function(){
     $("#btnPopSave").hide();
 
     doGetCombo('/common/selectCodeList.do', '418', '2' ,'rcmsUploadType2', 'S' , '');
+    doGetCombo('/common/selectCodeList.do', '422', '1' ,'assignUploadType', 'S' , '');
 
 	//**************************************************
 	//** 업로드 파일 내용을 Grid에 적용하기
@@ -21,11 +22,31 @@ $(document).ready(function(){
 	// 파일 선택하기
 
 	$('#rcmsUploadType2').change(function(){
-		if($('#rcmsUploadType2').val() == '' || $('#rcmsUploadType2').val() == null){
+		if($('#rcmsUploadType2').val() == 5525){
+			$('#assignUploadRow').show();
+		}else{
+			$('#assignUploadRow').hide();
+		}
+
+		if(($('#rcmsUploadType2').val() == 5525 && $('#assignUploadType').val() == '')
+				|| ($('#rcmsUploadType2').val() == '' || $('#rcmsUploadType2').val() == null)){
 	        $('#csvFile').hide();
+	        $('#assignUploadType').prop('selectedIndex', 0);
 	    }else{
 	        $('#csvFile').show();
 	    }
+
+		AUIGrid.clearGridData(uploadResultGrid);
+	});
+
+	$('#assignUploadType').change(function(){
+		if($('#rcmsUploadType2').val() == 5525 && $('#assignUploadType').val() == ''){
+			$('#csvFile').hide();
+			$('#assignUploadType').prop('selectedIndex', 0);
+		}else{
+			$('#csvFile').show();
+
+		}
 	});
 
 	$('#uploadfile').on('change', function(evt) {
@@ -41,6 +62,8 @@ $(document).ready(function(){
 	        reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
 	        reader.onload = function(event) {
 	            if (typeof event.target.result != "undefined") {
+
+	            	AUIGrid.clearGridData(uploadResultGrid);
 
 	                // 그리드 CSV 데이터 적용시킴
 	                AUIGrid.setCsvGridData(uploadGrid, event.target.result, false);
@@ -90,9 +113,17 @@ function creatGrid(){
         headerText : '<spring:message code="sales.OrderNo" />',
         width : '10%'
     },{
+        dataField : "agentId",
+        headerText : '<spring:message code="sal.title.agentId" />',
+        width : '15%'
+    },{
+        dataField : "renStus",
+        headerText : '<spring:message code="sal.title.text.rentalStatus" />',
+        width : '15%'
+    },{
         dataField : "itm",
         headerText : '<spring:message code="sal.title.item" />',
-        width : '15%'
+        width : '10%'
     },{
         dataField : "rem",
         headerText : '<spring:message code="sal.title.remark" />',
@@ -105,7 +136,7 @@ function creatGrid(){
     },{
         dataField : "stusCode",
         headerText : '<spring:message code="sal.title.status" />',
-            width : '20%'
+            width : '10%'
     },{
         dataField : "undefined",
         headerText : "Action",
@@ -139,6 +170,7 @@ function fn_checkAgentList(){
     var formData = new FormData();
 
     formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
+    formData.append("assignUploadType", $("#assignUploadType").val());
 
     	Common.ajaxFile("uploadRcmsConversionBulk.do", formData, function(result)    {
         AUIGrid.clearGridData(uploadResultGrid);
@@ -235,14 +267,25 @@ function fn_save(){
         <select class="" name="rcmsUploadType2" id="rcmsUploadType2"></select>
     </td>
 </tr>
+<tr id = "assignUploadRow" style="display:none">
+    <th scope="row"><spring:message code="sales.AssignUploadType" /><span class="must">*</span></th>
+    <td colspan="3">
+        <select class="" name="assignUploadType" id="assignUploadType"></select>
+    </td>
+</tr>
 <tr id="csvFile" style="display:none">
 	<th scope="row"><spring:message code="sales.SelectCSVFile" /><span class="must">*</span></th>
 	<td colspan="3">
 	<div class="auto_file"><!-- auto_file start -->
 	<input type="file" id="uploadfile" name="uploadfile" title="file add"  accept=".csv"/>
 	</div><!-- auto_file end -->
-	<p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/sales/AssignToAgent_Format.csv"><spring:message code="sales.DownloadCSVFormat" /></a></p>
 	</td>
+</tr>
+<tr>
+    <th scope="row">Upload Agent CSV Format</th>
+    <td><p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/sales/AssignToAgent_Format.csv"><spring:message code="sales.DownloadCSVFormat" /></a></p></td>
+    <th scope="row">Upload eTR/Sensitive Format</th>
+    <td><p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/sales/AssignEtrSensitive_Format.csv"><spring:message code="sales.DownloadCSVFormat" /></a></p></td>
 </tr>
 </tbody>
 </table><!-- table end -->
