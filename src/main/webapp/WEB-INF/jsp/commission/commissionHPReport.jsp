@@ -98,6 +98,13 @@
 					return;
 				}
 
+				var d = new Date();
+                var h = d.getHours();
+                if(h < 18){
+                    Common.alert("This report can only be generated from 6pm onwards");
+                    return;
+                }
+
 				  option = {
 	                      isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
 	                    };
