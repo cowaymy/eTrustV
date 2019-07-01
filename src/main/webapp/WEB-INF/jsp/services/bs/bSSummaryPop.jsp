@@ -63,11 +63,23 @@
 
 
 function fn_validation(){
-     if($("#cmbContent option:selected").length < 1)
+     if($("#cmbContent option:selected").index() < 1)
         {
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='Please select the report type' htmlEscape='false'/>");
             return false;
         }
+
+     if($("#cmbDeptCode option:selected").index() < 1){
+    	 Common.alert("Please select the department code.");
+         return false;
+     }
+
+    if($("#cmbCodyCode option:selected").index() < 1) {
+         Common.alert("Please select the Cody code.");
+         return false;
+     }
+
+
     return true;
 }
 
