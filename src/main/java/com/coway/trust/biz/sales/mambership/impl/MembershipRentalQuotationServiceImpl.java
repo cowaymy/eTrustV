@@ -528,8 +528,8 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
     saveParam.put("editTypeId", 0);
     saveParam.put("nricOld", params.get("rentPayIc") != null ? params.get("rentPayIc") : " ");
     saveParam.put("failResnId", 0);
-    saveParam.put("issuNric", params.get("rentPayIc") != null ? params.get("rentPayIc")
-        : params.get("thrdPartyNric") != null ? params.get("thrdPartyNric") : params.get("hiddenNRIC"));
+    saveParam.put("issuNric", params.get("rentPayIc").toString() != "" ? params.get("rentPayIc").toString()
+        : params.get("thrdPartyNric") != "" ? params.get("thrdPartyNric") : params.get("hiddenNRIC").toString());
     saveParam.put("aeonCnvr", 0);
     saveParam.put("rem", "");
     saveParam.put("lastApplyUser", 1);
