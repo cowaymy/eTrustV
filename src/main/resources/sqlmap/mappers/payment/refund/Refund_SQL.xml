@@ -31,7 +31,15 @@ SELECT A.ORD_ID                          ORD_ID,
        A.PAYBRANCHCODE                   PAY_BRANCH_CODE,
        A.INSTALL_STUS                    INSTALL_STUS,
        A.OCRREMARK                       OCR_REMARK,
-       A.MAILADDRESS                     MAIL_ADDRESS,
+       /*A.MAILADDRESS                     MAIL_ADDRESS,*/
+       A.MAIL_ADD1                            MAIL_ADD1,
+       A.MAIL_ADD2                            MAIL_ADD2,
+       A.MAIL_ADD3                            MAIL_ADD3,
+       A.AREA                                    MAIL_AREA,
+       A.POSTCODE                            MAIL_POSTCODE,
+       A.CITY                                    MAIL_CITY,
+       A.STATE                                  MAIL_STATE,
+       A.COUNTRY                            MAIL_COUNTRY,
        A.INSTADDRESS                     INST_ADDRESS,
        A.MOBILE_NO                       MOBILE_NO,
        A.OFFICE_NO                       OFFICE_NO,
@@ -90,7 +98,7 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                    ELSE NVL(IES.CODE, ' ')
                  END )                                  INSTALL_STUS,
                CR.SO_REQ_REM                            OCRREMARK,
-               ( CASE
+               /*( CASE
                    WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CA1.ADDR_DTL, '')
                                                   || ' '
                                                   || NVL(CA1.STREET, '')
@@ -117,7 +125,20 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                         || NVL(B.STATE, '')
                         || ' '
                         || NVL(B.COUNTRY, '')
-                 END )                                  MAILADDRESS,
+                 END )                                  MAILADDRESS,*/
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (CASE WHEN CA1.ADD1 IS NULL THEN CA1.ADDR_DTL ELSE NVL(CA1.ADD1, '') END) ELSE
+                   (CASE WHEN CA2.ADD1 IS NULL THEN CA2.ADDR_DTL ELSE NVL(CA2.ADD1, '') END) END MAIL_ADD1,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (CASE WHEN CA1.ADD2 IS NULL THEN CA1.STREET ELSE NVL(CA1.ADD2, '') END) ELSE
+                   (CASE WHEN CA2.ADD2 IS NULL THEN CA2.STREET ELSE NVL(CA2.ADD2, '') END) END MAIL_ADD2,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CA1.ADD3, '')
+                   ELSE NVL(CA2.ADD3, '') END MAIL_ADD3,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.AREA, '') || ' ' || NVL(A.POSTCODE, '') || ' ' || NVL(A.CITY, '') || ' ' || NVL(A.STATE, '') || ' ' || NVL(A.COUNTRY, ''))
+                   ELSE (NVL(B.AREA, '') || ' ' || NVL(B.POSTCODE, '') || ' ' || NVL(B.CITY, '') || ' ' || NVL(B.STATE, '') || ' ' || NVL(B.COUNTRY, '')) END MAIL_ADD4,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.AREA, '')) ELSE (NVL(B.AREA, '')) END AREA,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.POSTCODE, '')) ELSE (NVL(B.POSTCODE, '')) END POSTCODE,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.CITY, '')) ELSE (NVL(B.CITY, '')) END CITY,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.STATE, '')) ELSE (NVL(B.STATE, '')) END STATE,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.COUNTRY, '')) ELSE (NVL(B.COUNTRY, '')) END COUNTRY,
                NVL(CA3.ADDR_DTL, '')
                || ' '
                || NVL(CA3.STREET, '')
@@ -272,7 +293,7 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                NVL(SC.NAME, ' ')                        CCP_STUS,
                COALESCE(IES.CODE, ' ')                  INSTALL_STUS,
                CON.CNFM_REM                             OCRREMARK,
-               ( CASE
+               /*( CASE
                    WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CA1.ADDR_DTL, '')
                                                   || ' '
                                                   || NVL(CA1.STREET, '')
@@ -299,7 +320,20 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                         || NVL(B.STATE, '')
                         || ' '
                         || NVL(B.COUNTRY, '')
-                 END )                                  MAILADDRESS,
+                 END )                                  MAILADDRESS,*/
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (CASE WHEN CA1.ADD1 IS NULL THEN CA1.ADDR_DTL ELSE NVL(CA1.ADD1, '') END) ELSE
+                   (CASE WHEN CA2.ADD1 IS NULL THEN CA2.ADDR_DTL ELSE NVL(CA2.ADD1, '') END) END MAIL_ADD1,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (CASE WHEN CA1.ADD2 IS NULL THEN CA1.STREET ELSE NVL(CA1.ADD2, '') END) ELSE
+                   (CASE WHEN CA2.ADD2 IS NULL THEN CA2.STREET ELSE NVL(CA2.ADD2, '') END) END MAIL_ADD2,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CA1.ADD3, '')
+                   ELSE NVL(CA2.ADD3, '') END MAIL_ADD3,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.AREA, '') || ' ' || NVL(A.POSTCODE, '') || ' ' || NVL(A.CITY, '') || ' ' || NVL(A.STATE, '') || ' ' || NVL(A.COUNTRY, ''))
+                   ELSE (NVL(B.AREA, '') || ' ' || NVL(B.POSTCODE, '') || ' ' || NVL(B.CITY, '') || ' ' || NVL(B.STATE, '') || ' ' || NVL(B.COUNTRY, '')) END MAIL_ADD4,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.AREA, '')) ELSE (NVL(B.AREA, '')) END AREA,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.POSTCODE, '')) ELSE (NVL(B.POSTCODE, '')) END POSTCODE,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.CITY, '')) ELSE (NVL(B.CITY, '')) END CITY,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.STATE, '')) ELSE (NVL(B.STATE, '')) END STATE,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.COUNTRY, '')) ELSE (NVL(B.COUNTRY, '')) END COUNTRY,
                NVL(CA3.ADDR_DTL, '')
                || ' '
                || NVL(CA3.STREET, '')
@@ -439,7 +473,7 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                NVL(SC.NAME, ' ')                    CCP_STUS,
                COALESCE(IES.CODE, ' ')              INSTALL_STUS,
                COALESCE(SOE.SO_EXCHG_REM, ' ')      OCRREMARK,
-               ( CASE
+               /*( CASE
                    WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CA1.ADDR_DTL, '')
                                                   || ' '
                                                   || NVL(CA1.STREET, '')
@@ -466,7 +500,20 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                         || NVL(B.STATE, '')
                         || ' '
                         || NVL(B.COUNTRY, '')
-                 END )                              MAILADDRESS,
+                 END )                              MAILADDRESS,*/
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (CASE WHEN CA1.ADD1 IS NULL THEN CA1.ADDR_DTL ELSE NVL(CA1.ADD1, '') END) ELSE
+                   (CASE WHEN CA2.ADD1 IS NULL THEN CA2.ADDR_DTL ELSE NVL(CA2.ADD1, '') END) END MAIL_ADD1,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (CASE WHEN CA1.ADD2 IS NULL THEN CA1.STREET ELSE NVL(CA1.ADD2, '') END) ELSE
+                   (CASE WHEN CA2.ADD2 IS NULL THEN CA2.STREET ELSE NVL(CA2.ADD2, '') END) END MAIL_ADD2,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CA1.ADD3, '')
+                   ELSE NVL(CA2.ADD3, '') END MAIL_ADD3,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.AREA, '') || ' ' || NVL(A.POSTCODE, '') || ' ' || NVL(A.CITY, '') || ' ' || NVL(A.STATE, '') || ' ' || NVL(A.COUNTRY, ''))
+                   ELSE (NVL(B.AREA, '') || ' ' || NVL(B.POSTCODE, '') || ' ' || NVL(B.CITY, '') || ' ' || NVL(B.STATE, '') || ' ' || NVL(B.COUNTRY, '')) END MAIL_ADD4,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.AREA, '')) ELSE (NVL(B.AREA, '')) END AREA,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.POSTCODE, '')) ELSE (NVL(B.POSTCODE, '')) END POSTCODE,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.CITY, '')) ELSE (NVL(B.CITY, '')) END CITY,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.STATE, '')) ELSE (NVL(B.STATE, '')) END STATE,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.COUNTRY, '')) ELSE (NVL(B.COUNTRY, '')) END COUNTRY,
                NVL(CA3.ADDR_DTL, '')
                || ' '
                || NVL(CA3.STREET, '')
@@ -569,6 +616,9 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                   IES.CODE,
                   SOE.SO_EXCHG_REM,
                   SOM.APP_TYPE_ID,
+                  CA1.ADD1,
+                  CA1.ADD2,
+                  CA1.ADD3,
                   CA1.ADDR_DTL,
                   CA1.STREET,
                   A.AREA,
@@ -576,6 +626,9 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                   A.CITY,
                   A.STATE,
                   A.COUNTRY,
+                  CA2.ADD1,
+                  CA2.ADD2,
+                  CA2.ADD3,
                   CA2.ADDR_DTL,
                   CA2.STREET,
                   B.AREA,
@@ -662,7 +715,15 @@ GROUP  BY A.ORD_ID,
           A.REJECTID,
           A.INSTALL_STUS,
           A.OCRREMARK,
-          A.MAILADDRESS,
+          /*A.MAILADDRESS,*/
+          A.MAIL_ADD1,
+          A.MAIL_ADD2,
+          A.MAIL_ADD3,
+          A.AREA,
+          A.POSTCODE,
+          A.CITY,
+          A.STATE,
+          A.COUNTRY,
           A.INSTADDRESS,
           A.PAY_TYPE,
           A.PAYBRANCHCODE,

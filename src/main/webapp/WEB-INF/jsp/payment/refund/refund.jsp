@@ -122,8 +122,29 @@ var refundColumnLayout = [ {
     dataField : "ocrRemark",
     headerText : "OCR Remark"
 }, {
-    dataField : "mailAddress",
-    headerText : "Mailling Address"
+    dataField : "mailAdd1",
+    headerText : "Mailling<br/>Address 1"
+}, {
+    dataField : "mailAdd2",
+    headerText : "Mailling<br/>Address 2"
+}, {
+    dataField : "mailAdd3",
+    headerText : "Mailling<br/>Address 3"
+}, {
+    dataField : "mailArea",
+    headerText : "Mailling<br/>Area"
+}, {
+    dataField : "mailPostcode",
+    headerText : "Mailling<br/>Postcode"
+}, {
+    dataField : "mailCity",
+    headerText : "Mailling<br/>City"
+}, {
+    dataField : "mailState",
+    headerText : "Mailling<br/>State"
+}, {
+    dataField : "mailCountry",
+    headerText : "Mailling<br/>Country"
 }, {
     dataField : "instAddress",
     headerText : "Install Address"
@@ -187,7 +208,7 @@ var refundColumnLayout = [ {
 
 //그리드 속성 설정
 var refundGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -204,40 +225,40 @@ var refundGridID;
 
 $(document).ready(function () {
 	refundGridID = AUIGrid.create("#refund _grid_wrap", refundColumnLayout, refundGridPros);
-	
+
 	$("#refund_btn").click(fn_refundConfirmPop);
 	//$("#refund_btn").click(fn_showConfirmPop);
-	$('#excel_down_btn').click(function() {    
+	$('#excel_down_btn').click(function() {
         GridCommon.exportTo("refund _grid_wrap", 'xlsx', 'Refund List');
     });
-	
+
     CommonCombo.make("payMode", "/payment/selectCodeList.do", null, "", {
         id: "code",
         name: "codeName",
         type:"M"
     });
-    
+
 	$("#cancelMode").multipleSelect("checkAll");
-	
+
 	fn_setToDay();
-	
+
 	// ready 이벤트 바인딩
     AUIGrid.bind(refundGridID, "ready", function(event) {
         gridDataLength = AUIGrid.getGridData(refundGridID).length; // 그리드 전체 행수 보관
     });
-    
+
     // 헤더 클릭 핸들러 바인딩
     AUIGrid.bind(refundGridID, "headerClick", headerClickHandler);
-    
+
     // 셀 수정 완료 이벤트 바인딩
     AUIGrid.bind(refundGridID, "cellEditEnd", function(event) {
-        
+
         // isActive 칼럼 수정 완료 한 경우
         if(event.dataField == "isActive") {
-            
+
             // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
             var activeItems = AUIGrid.getItemsByValue(refundGridID, "isActive", "Active");
-            
+
             // 헤더 체크 박스 전체 체크 일치시킴.
             if(activeItems.length != gridDataLength) {
                 document.getElementById("allCheckbox").checked = false;
@@ -250,7 +271,7 @@ $(document).ready(function () {
 
 //그리드 헤더 클릭 핸들러
 function headerClickHandler(event) {
-    
+
     // isActive 칼럼 클릭 한 경우
     if(event.dataField == "isActive") {
         if(event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
@@ -263,34 +284,34 @@ function headerClickHandler(event) {
 
 // 전체 체크 설정, 전체 체크 해제 하기
 function checkAll(isChecked) {
-    
-     var idx = AUIGrid.getRowCount(refundGridID); 
-    
+
+     var idx = AUIGrid.getRowCount(refundGridID);
+
     // 그리드의 전체 데이터를 대상으로 isActive 필드를 "Active" 또는 "Inactive" 로 바꿈.
     if(isChecked) {
     	AUIGrid.updateAllToValue(refundGridID, "isActive", "Active");
     } else {
         AUIGrid.updateAllToValue(refundGridID, "isActive", "Inactive");
     }
-    
+
     // 헤더 체크 박스 일치시킴.
     document.getElementById("allCheckbox").checked = isChecked;
 }
 
 function fn_setToDay() {
     var today = new Date();
-    
+
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();
-    
+
     if(dd < 10) {
         dd = "0" + dd;
     }
     if(mm < 10){
         mm = "0" + mm
     }
-    
+
     today = dd + "/" + mm + "/" + yyyy;
     $("#startDt").val(today)
     $("#endDt").val(today)
@@ -309,7 +330,7 @@ function fn_showConfirmPop() {
     var checkList = AUIGrid.getItemsByValue(refundGridID, "isActive", "Active");
     //$("#conf_popup_wrap").show();
     console.log(checkList);
-    
+
     for(var i = 0; i < checkList.length; i++) {
     	checkList[i].refAmt = checkList[i].amt;
     	checkList[i].refModeCode = checkList[i].payModeCode;
@@ -321,7 +342,7 @@ function fn_showConfirmPop() {
     	checkList[i].bankAccName = checkList[i].bankAccName;
     	checkList[i].cardNo = checkList[i].ccnoPaytChannel;
     	checkList[i].cardHolder = checkList[i].ccholdernamePaytChannel;
-    	
+
     	if(checkList[i].payModeCode == "105") {
             checkList[i].refModeCode = "108";
             checkList[i].refModeName = "Online";
@@ -331,28 +352,28 @@ function fn_showConfirmPop() {
             checkList[i].bankAccName = "2710/010F - CIMB BHD (FINANCE)";
         }
     }
-    
+
     fn_createConfirmAUIGrid();
-    
+
     AUIGrid.setGridData(confirmGridID, checkList);
-    
+
     $("#totItem").text("-");
     $("#totValid").text("-");
     $("#totInvalid").text("-");
     $("#totRefAmt").text("-");
     $("#totValidAmt").text("-");
     $("#totInvalidAmt").text("-");
-    
+
  // 검색(search) Not Found 이벤트 바인딩
     AUIGrid.bind(confirmGridID, "notFound", function(event) {
 
     var term = event.term; // 찾는 문자열
     var wrapFound = event.wrapFound; // wrapSearch 한 경우 만족하는 term 이 그리드에 1개 있는 경우.
-    
+
     console.log("notFound");
     console.log(term);
     console.log(wrapFound);
-    
+
     if(wrapFound) {
         //Common.alert('Please enter the order number you would like to find.');
         Common.alert('The grid passed the last row, but the following string could not be found - ' + term );
