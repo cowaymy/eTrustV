@@ -22,15 +22,29 @@ $(document).ready(function(){
 	// 파일 선택하기
 
 	$('#rcmsUploadType2').change(function(){
-		if($('#rcmsUploadType2').val() == 5525){
+		var val = $('#rcmsUploadType2').val();
+		if(val == 5525){
 			$('#assignUploadRow').show();
+			$('#agentCsv').show();
 		}else{
 			$('#assignUploadRow').hide();
-		}
+			$('#agentCsv').hide();
 
-		if(($('#rcmsUploadType2').val() == 5525 && $('#assignUploadType').val() == '')
-				|| ($('#rcmsUploadType2').val() == '' || $('#rcmsUploadType2').val() == null)){
+			if(val == 5524){
+				$('#etrCsv').show();
+				$('#sensitiveCsv').hide();
+				$('#agentCsv').hide();
+			}else if(val == 5523){
+				$('#sensitiveCsv').show();
+				$('#etrCsv').hide();
+				$('#agentCsv').hide();
+			}
+		}
+		console.log("val :: " + val);
+		if((val == 5525 && $('#assignUploadType').val() == '') || (val == '')){
 	        $('#csvFile').hide();
+	        $('#etrCsv').hide();
+            $('#sensitiveCsv').hide();
 	        $('#assignUploadType').prop('selectedIndex', 0);
 	    }else{
 	        $('#csvFile').show();
@@ -42,6 +56,8 @@ $(document).ready(function(){
 	$('#assignUploadType').change(function(){
 		if($('#rcmsUploadType2').val() == 5525 && $('#assignUploadType').val() == ''){
 			$('#csvFile').hide();
+			$('#etrCsv').hide();
+            $('#sensitiveCsv').hide();
 			$('#assignUploadType').prop('selectedIndex', 0);
 		}else{
 			$('#csvFile').show();
@@ -279,13 +295,10 @@ function fn_save(){
 	<div class="auto_file"><!-- auto_file start -->
 	<input type="file" id="uploadfile" name="uploadfile" title="file add"  accept=".csv"/>
 	</div><!-- auto_file end -->
+	<p id="agentCsv" style="display:none" class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/sales/AssignToAgent_Format.csv"><spring:message code="sales.DownloadCSVFormat" /> (Agent)</a></p>
+    <p id="sensitiveCsv" style="display:none" class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/sales/AssignSensitive_Format.csv"><spring:message code="sales.DownloadCSVFormat" /> (Sensitive)</a></p>
+    <p id="etrCsv" style="display:none" class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/sales/AssignEtr_Format.csv"><spring:message code="sales.DownloadCSVFormat" /> (eTR)</a></p>
 	</td>
-</tr>
-<tr>
-    <th scope="row">Upload Agent CSV Format</th>
-    <td><p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/sales/AssignToAgent_Format.csv"><spring:message code="sales.DownloadCSVFormat" /></a></p></td>
-    <th scope="row">Upload eTR/Sensitive Format</th>
-    <td><p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/sales/AssignEtrSensitive_Format.csv"><spring:message code="sales.DownloadCSVFormat" /></a></p></td>
 </tr>
 </tbody>
 </table><!-- table end -->

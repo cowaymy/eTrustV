@@ -355,8 +355,8 @@ public class RCMSAgentManageController {
         MultipartFile multipartFile = fileMap.get("csvFile");
 
         List<EgovMap> uploadedList = null;
-LOGGER.debug("@@@@@@@@@@::" + assignUploadType);
-LOGGER.debug("@@@@@@@@@@::" + request.getParameter("assignUploadType"));
+
+        //__________________________________________________________________________________upload agent
         if(!assignUploadType.isEmpty()){
           List<uploadAssignAgentDataVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,uploadAssignAgentDataVO::create);
 
@@ -382,6 +382,7 @@ LOGGER.debug("@@@@@@@@@@::" + request.getParameter("assignUploadType"));
           uploadedList = rcmsAgentService.selectUploadedConversionList(bulkMap);
 
         }else{
+        //__________________________________________________________________________________upload etr/sensitive
           List<uploadAssignConvertVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,uploadAssignConvertVO::create);
 
           //CVS 파일 객체 세팅
