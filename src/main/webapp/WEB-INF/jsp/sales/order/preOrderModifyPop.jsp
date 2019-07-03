@@ -922,6 +922,11 @@
             }
         }
 
+        if($("#promoId option:selected").index() <= 0) {
+            isValid = false;
+            msg += "* Please select a promotion.<br>";
+        }
+
         //if (custType == '965' && appTypeVal == '66'){
          //   if ($("#corpCustType option:selected").index() <= 0) {
         //        isValid = false;
