@@ -94,12 +94,12 @@
                     return;
                 }
 
-                var d = new Date();
-                var h = d.getHours();
-                if(8 < h && h < 18){
-                	Common.alert("This report can only be generated from 6pm onwards");
-                	return;
-                }
+                //var d = new Date();
+                //var h = d.getHours();
+                //if(8 < h && h < 18){
+                //	Common.alert("This report can only be generated from 6pm onwards");
+                //	return;
+                //}
 
             if (month >= 10 && year >= 2018 || year >2018){
                 reportFileName = "/commission/CodyComm_PDF_201810.rpt"; //reportFileName
