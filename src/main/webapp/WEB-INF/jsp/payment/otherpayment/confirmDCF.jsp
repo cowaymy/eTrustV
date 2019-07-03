@@ -175,13 +175,13 @@
                         <td>
                             <input id="salesOrdNo" name="salesOrdNo" type="text" title="Order No" placeholder="<spring:message code='sales.OrderNo'/>" class="w100p" />
                         </td>
-                        <th scope="row">Key-In Branch</th>
+                        <th scope="row">Branch Code</th>
                         <td>
                                <select id="branchId" name="branchId" class="w100p"></select>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Key-In User</th>
+                        <th scope="row">Requestor</th>
                         <td>
                            <select id="userId" name="userId" class="w100p">
                            </select>
