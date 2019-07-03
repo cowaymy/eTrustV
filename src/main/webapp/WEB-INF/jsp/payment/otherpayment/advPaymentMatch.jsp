@@ -45,15 +45,25 @@ var advKeyInLayout = [
 ];
 
 var bankStmtLayout = [
-	{dataField : "fTrnscId",headerText : "<spring:message code='pay.head.id'/>",width : 150 , editable : false, visible : false},
-	{dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 100 , editable : false},
-	{dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.refCheqNo'/>",width : 120 , editable : false},
-	{dataField : "fTrnscRef1",headerText : "<spring:message code='pay.head.description'/>" , editable : false},
-	{dataField : "fTrnscRem",headerText : "<spring:message code='pay.head.type'/>",width : 100 , editable : false},
-	{dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.creditAmount'/>",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" },
-	{dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>",width : 100 , editable : false},
-	{dataField : "fTrnscNewChqNo",headerText : "<spring:message code='pay.head.chqNo'/>",width : 100 , editable : false},
-	{dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNo'/>",width : 100 , editable : false}
+    {dataField : "bankId",headerText : "<spring:message code='pay.head.bankId'/>",editable : false, visible : false},
+    {dataField : "bankAcc",headerText : "<spring:message code='pay.head.bankAccountCode'/>", editable : false, visible : false},
+    {dataField : "count",headerText : "", editable : false, visible : false},
+    {dataField : "fTrnscId",headerText : "<spring:message code='pay.head.tranxId'/>", editable : false},
+    {dataField : "bankName",headerText : "<spring:message code='pay.head.bank'/>", editable : false},
+    {dataField : "bankAccName",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},
+    {dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.dateTime'/>", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+    {dataField : "fTrnscTellerId",headerText : "<spring:message code='pay.head.refCheqNo'/>", editable : false},
+    {dataField : "fTrnscRef3",headerText : "<spring:message code='pay.head.description1'/>",editable : false},
+    {dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.description2'/>", editable : false},
+    {dataField : "fTrnscRef1",headerText : "<spring:message code='pay.head.ref5'/>", editable : false},
+    {dataField : "fTrnscRef2",headerText : "<spring:message code='pay.head.ref6'/>", editable : false},
+    {dataField : "fTrnscRef6",headerText : "<spring:message code='pay.head.ref7'/>", editable : false},
+    {dataField : "fTrnscRem",headerText : "<spring:message code='pay.head.type'/>", editable : false},
+    {dataField : "fTrnscDebtAmt",headerText : "<spring:message code='pay.head.debit'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+    {dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.credit'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+    {dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>", editable : false},
+    {dataField : "fTrnscNewChqNo",headerText : "<spring:message code='pay.head.chqNo'/>", editable : false},
+    {dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNumber'/>", editable : false}
 ];
 
 
