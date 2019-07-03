@@ -1280,10 +1280,10 @@ WHERE 1=1
                 SELECT
                     0 PLAN_AMT,
                     0 CHNG_AMT,
-                    BUDGET_ADJ_YEAR
-                    BUDGET_ADJ_MONTH
-                    COST_CENTR
-                    GL_ACC_CODE
+                    BUDGET_ADJ_YEAR,
+                    BUDGET_ADJ_MONTH,
+                    COST_CENTR,
+                    GL_ACC_CODE,
                     BUDGET_CODE
                 FROM (
                     SELECT
@@ -1307,13 +1307,13 @@ WHERE 1=1
     ) A
     LEFT OUTER JOIN (
         SELECT
-            SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END) AS PLUS_ADJ_AMT
-            SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) AS MINUS_ADJ_AMT
-            SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END)  - SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) TOTAL
-            A.COST_CENTR
-            A.BUDGET_CODE
-            A.GL_ACC_CODE
-            A.BUDGET_ADJ_YEAR
+            SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END) AS PLUS_ADJ_AMT,
+            SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) AS MINUS_ADJ_AMT,
+            SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END)  - SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) TOTAL,
+            A.COST_CENTR,
+            A.BUDGET_CODE,
+            A.GL_ACC_CODE,
+            A.BUDGET_ADJ_YEAR,
             A.BUDGET_ADJ_MONTH
         FROM FCM0103D A,
                 FCM0105M B
@@ -1328,12 +1328,12 @@ WHERE 1=1
         AND A.GL_ACC_CODE = B.GL_ACC_CODE
     LEFT OUTER JOIN (
         SELECT
-            A.COST_CENTR
-            A.BUDGET_CODE
-            A.GL_ACC_CODE
-            SUM(CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END ) AS PEND_APPV_AMT
-            SUM(CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END ) AS CONSUM_APPV_AMT
-            SUM(A.NET_AMT ) APP_AMT_TOTAL
+            A.COST_CENTR,
+            A.BUDGET_CODE,
+            A.GL_ACC_CODE,
+            SUM(CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END ) AS PEND_APPV_AMT,
+            SUM(CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END ) AS CONSUM_APPV_AMT,
+            SUM(A.NET_AMT ) APP_AMT_TOTAL,
             MAX(A.INVC_DT) AS INVC_DT
         FROM FCM0015D A,
                FCM0004M B
