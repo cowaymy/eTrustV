@@ -14,18 +14,18 @@
 
 	//Grid에서 선택된 RowID
 	var selectedGridValue;
-	
+
 	//Grid Properties 설정
 	var gridPros = {
 	        // 편집 가능 여부 (기본값 : false)
-	        editable : false,        
+	        editable : false,
 	        // 상태 칼럼 사용
 	        showStateColumn : false,
 	        // 기본 헤더 높이 지정
 	        headerHeight : 35,
-	        
+
 	        softRemoveRowMode:false
-	
+
 	};
 
 	//Default Combo Data
@@ -34,71 +34,78 @@
 					{"codeId": "6","codeName": "Rejected"}];
 
 	// AUIGrid 칼럼 설정
-	var columnLayout = [ 
-        {dataField : "dcfReqId",headerText : "<spring:message code='pay.head.dcfRequestNo'/>",width : 150 , editable : false},
-        {dataField : "grpSeq",headerText : "<spring:message code='pay.head.paymentGroupSeq'/>",width : 200 , editable : false},
-        {dataField : "dcfResnNm",headerText : "<spring:message code='pay.head.reason'/>",width : 240 , editable : false},
-        {dataField : "dcfCrtUserNm",headerText : "<spring:message code='pay.head.requestor'/>",width : 180 , editable : false},
-        {dataField : "dcfCrtDt",headerText : "<spring:message code='pay.head.requestDate'/>",width : 180 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+	var columnLayout = [
+        {dataField : "dcfReqId",headerText : "<spring:message code='pay.head.dcfRequestNo'/>",width : 135 , editable : false},
+        {dataField : "grpSeq",headerText : "<spring:message code='pay.head.paymentGroupSeq'/>",width : 165 , editable : false},
+        {dataField : "salesOrdNo",headerText : "Sales<br/>Order",width : 110 , editable : false},
+        {dataField : "dcfResnNm",headerText : "<spring:message code='pay.head.reason'/>",width : 250 , editable : false},
+        {dataField : "dcfCrtUserNm",headerText : "<spring:message code='pay.head.requestor'/>",width : 110 , editable : false},
+        {dataField : "reqstBrnch",headerText : "Branch Code<br/>(Requestor)",width : 200 , editable : false},
+        {dataField : "dcfCrtDt",headerText : "<spring:message code='pay.head.requestDate'/>",width : 110 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
         {dataField : "dcfStusId",headerText : "<spring:message code='pay.head.statusId'/>",width : 100 , editable : false, visible : false},
-        {dataField : "dcfStusNm",headerText : "<spring:message code='pay.head.status'/>",width : 150 , editable : false}
+        {dataField : "dcfStusNm",headerText : "<spring:message code='pay.head.status'/>",width : 110 , editable : false},
+        {dataField : "dcfAppvUserNm",headerText : "Approval",width : 110 , editable : false}
 	];
-	
-    
+
+
 	$(document).ready(function(){
 		doGetCombo('/common/selectCodeList.do', '392' , ''   , 'reason' , 'S', '');
 		doDefCombo(statusData, '' ,'status', 'S', '');
+		doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','branchId', 'S' , '');
+
+		$('#branchId').change(function (){
+	        doGetCombo('/common/getUsersByBranch.do', $(this).val() , ''   , 'userId' , 'S', '');
+	    });
 
 		//그리드 생성
 	    confirmDCFGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-		
+
 		// Master Grid 셀 클릭시 이벤트
-	    AUIGrid.bind(confirmDCFGridID, "cellClick", function( event ){ 
+	    AUIGrid.bind(confirmDCFGridID, "cellClick", function( event ){
 		    selectedGridValue = event.rowIndex;
 	    });
-	    
+
 	});
 
     // ajax list 조회.
     function searchList(){
 
-		if(FormUtil.checkReqValue($("#reqNo"))){			
-			if(FormUtil.checkReqValue($("#reqDateFr")) ||
-				FormUtil.checkReqValue($("#reqDateTo"))){
+		if(FormUtil.checkReqValue($("#reqNo"))){
+			if(FormUtil.checkReqValue($("#salesOrdNo")) && (FormUtil.checkReqValue($("#reqDateFr")) || FormUtil.checkReqValue($("#reqDateTo")))){
 	            Common.alert("<spring:message code='pay.alert.reqDate'/>");
 		        return;
-			}	
-		}        
-    	
-    	Common.ajax("POST","/payment/selectRequestDCFList.do",$("#searchForm").serializeJSON(), function(result){    		
+			}
+		}
+
+    	Common.ajax("POST","/payment/selectRequestDCFList.do",$("#searchForm").serializeJSON(), function(result){
     		AUIGrid.setGridData(confirmDCFGridID, result);
     	});
     }
-    
+
     // 화면 초기화
     function clear(){
     	//화면내 모든 form 객체 초기화
     	$("#searchForm")[0].reset();
-    	
+
     	//그리드 초기화
     	//AUIGrid.clearGridData(myGridID);
     }
-    
-    
+
+
 	//Request DCF 팝업
 	function fn_confirmDCFPop(){
 		var selectedItem = AUIGrid.getSelectedIndex(confirmDCFGridID);
-		
+
 		if (selectedItem[0] > -1){
 			var groupSeq = AUIGrid.getCellValue(confirmDCFGridID, selectedGridValue, "grpSeq");
 			var dcfReqId = AUIGrid.getCellValue(confirmDCFGridID, selectedGridValue, "dcfReqId");
 			var dcfStusId = AUIGrid.getCellValue(confirmDCFGridID, selectedGridValue, "dcfStusId");
-			
+
 			Common.popupDiv('/payment/initConfirmDCFPop.do', {"groupSeq" : groupSeq, "reqNo" : dcfReqId, "dcfStusId" : dcfStusId}, null , true ,'_confirmDCFPop');
-			
+
 		}else{
              Common.alert("<spring:message code='pay.alert.noDcf'/>");
-        }	
+        }
 	}
 
 </script>
@@ -114,8 +121,8 @@
         <h2>Confirm DCF</h2>
         <ul class="right_btns">
            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>     
-           </c:if> 
+            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+           </c:if>
             <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
@@ -161,6 +168,23 @@
 					    <th scope="row">Status</th>
                         <td>
 							<select id="status" name="status" class="w100p"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><spring:message code='sales.OrderNo'/></th>
+                        <td>
+                            <input id="salesOrdNo" name="salesOrdNo" type="text" title="Order No" placeholder="<spring:message code='sales.OrderNo'/>" class="w100p" />
+                        </td>
+                        <th scope="row">Key-In Branch</th>
+                        <td>
+                               <select id="branchId" name="branchId" class="w100p"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Key-In User</th>
+                        <td>
+                           <select id="userId" name="userId" class="w100p">
+                           </select>
                         </td>
                     </tr>
                 </tbody>

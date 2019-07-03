@@ -92,15 +92,20 @@ function fn_approval(){
         return;
 	}
 
-	if( FormUtil.byteLength($("#remark").val()) < 1 ){
-		Common.alert("<spring:message code='pay.alert.insertRemark'/>");
-    	return;
-    }
+	if(!FormUtil.isEmpty($("#remark").val())) {
+		if( FormUtil.byteLength($("#remark").val()) < 1 ){
+	        Common.alert("<spring:message code='pay.alert.insertRemark'/>");
+	        return;
+	    }
 
-	if( FormUtil.byteLength($("#remark").val()) > 3000 ){
-    	Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
-    	return;
-    }
+	    if( FormUtil.byteLength($("#remark").val()) > 3000 ){
+	        Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
+	        return;
+	    }
+	} else {
+		Common.alert("<spring:message code='pay.alert.insertRemark'/>");
+		return;
+	}
 
 	//저장처리
 	Common.confirm("<spring:message code='pay.alert.confirmDcf'/>",function (){
@@ -123,16 +128,20 @@ function fn_reject(){
         Common.alert("<spring:message code='pay.alert.rejectOnlyActive'/>");
         return;
 	}
+	if(!FormUtil.isEmpty($("#remark").val())) {
+		if(FormUtil.checkReqValue($("#remark"))){
+	        Common.alert("<spring:message code='pay.alert.inputRemark'/>");
+	        return;
+	    }
 
-    if(FormUtil.checkReqValue($("#remark"))){
-        Common.alert("<spring:message code='pay.alert.inputRemark'/>");
+	    if( FormUtil.byteLength($("#remark").val()) > 3000 ){
+	        Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
+	        return;
+	    }
+	} else {
+		Common.alert("<spring:message code='pay.alert.inputRemark'/>");
         return;
-    }
-
-	if( FormUtil.byteLength($("#remark").val()) > 3000 ){
-    	Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
-    	return;
-    }
+	}
 
 	//저장처리
 	Common.confirm("<spring:message code='pay.alert.wantToRejectDcf'/>",function (){
@@ -209,7 +218,7 @@ function fn_reject(){
 							</td>
 						</tr>
 						<tr>
-							<th scope="row">Remark</th>
+							<th scope="row" id="remarkLbl">Remark<span class='must'>*</span></th>
 							<td colspan="3">
 					            <textarea id="remark" name="remark"  cols="15" rows="3" placeholder=""></textarea>
 							</td>

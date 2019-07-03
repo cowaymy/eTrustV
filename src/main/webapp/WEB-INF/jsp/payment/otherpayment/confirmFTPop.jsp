@@ -9,7 +9,7 @@ $(document).ready(function(){
 
 // ajax list 조회.
 function searchFTList(){
-	Common.ajax("POST","/payment/selectReqFTInfo.do",$("#_ftSearchForm").serializeJSON(), function(result){    		
+	Common.ajax("POST","/payment/selectReqFTInfo.do",$("#_ftSearchForm").serializeJSON(), function(result){
 
 		$("#oldOrdNo").text(result.srcOrdNo);
 		$("#oldCustNm").text(result.srcCustName);
@@ -17,10 +17,10 @@ function searchFTList(){
 		$("#newOrdNo").text(result.ftOrdNo);
 		$("#newCustNm").text(result.ftCustName);
 		$("#newAmt").text(result.ftAmt);
-		$("#newReason").val(result.ftResn);    
-		$("#newRemark").val(result.ftRem);  
-		$("#newRequestor").text(result.ftCrtUserNm);    
-		$("#newRequestDt").text(result.ftCrtDt);    
+		$("#newReason").val(result.ftResn);
+		$("#newRemark").val(result.ftRem);
+		$("#newRequestor").text(result.ftCrtUserNm);
+		$("#newRequestDt").text(result.ftCrtDt);
 	});
 }
 
@@ -28,31 +28,40 @@ function searchFTList(){
 function fn_approval(){
 
 	if($("#ftStusId").val() != 1 ){
-        Common.alert("<spring:message code='pay.alert.onlyActiveReqApproval'/>");   
+        Common.alert("<spring:message code='pay.alert.onlyActiveReqApproval'/>");
         return;
 	}
 
-	if( FormUtil.byteLength($("#appvRemark").val()) < 1 ){
-		Common.alert("<spring:message code='pay.alert.insertRemark'/>");
-    	return;
+	if(!FormUtil.isEmpty($("#newReason").val())) {
+        Common.alert("Please select a reason.");
     }
 
-	if( FormUtil.byteLength($("#appvRemark").val()) > 3000 ){
-		Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
-    	return;
-    }
+	if(!FormUtil.isEmpty($("#appvRemark").val())) {
+		if( FormUtil.byteLength($("#appvRemark").val()) < 1 ){
+	        Common.alert("<spring:message code='pay.alert.insertRemark'/>");
+	        return;
+	    }
+
+	    if( FormUtil.byteLength($("#appvRemark").val()) > 3000 ){
+	        Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
+	        return;
+	    }
+	} else {
+		Common.alert("<spring:message code='pay.alert.insertRemark'/>");
+        return;
+	}
 
 	//저장처리
 	Common.confirm("<spring:message code='pay.alert.wantToReqFundTransfer'/>",function (){
 
-	    
+
 	    Common.ajax("POST", "/payment/approvalFT.do", $("#_ftSearchForm").serializeJSON(), function(result) {
 			var message = "<spring:message code='pay.alert.fundTransSuccess'/>";
 
     		Common.alert(message, function(){
 				searchList();
-				$('#_confirmFTPop').remove();    	      
-    		});        
+				$('#_confirmFTPop').remove();
+    		});
 	    });
 	});
 }
@@ -60,19 +69,28 @@ function fn_approval(){
 //반려처리
 function fn_reject(){
 	if($("#ftStusId").val() != 1 ){
-        Common.alert("<spring:message code='pay.alert.onlyActiveReqReject'/>");   
+        Common.alert("<spring:message code='pay.alert.onlyActiveReqReject'/>");
         return;
 	}
 
-    if(FormUtil.checkReqValue($("#appvRemark"))){
-    	Common.alert("<spring:message code='pay.alert.inputRemark'/>");
-        return;
+    if(!FormUtil.isEmpty($("#newReason").val())) {
+    	Common.alert("Please select a reason.");
     }
 
-	if( FormUtil.byteLength($("#appvRemark").val()) > 3000 ){
-		Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
-    	return;
-    }
+	if(!FormUtil.isEmpty($("#appvRemark").val())) {
+		if(FormUtil.checkReqValue($("#appvRemark"))){
+	        Common.alert("<spring:message code='pay.alert.inputRemark'/>");
+	        return;
+	    }
+
+	    if( FormUtil.byteLength($("#appvRemark").val()) > 3000 ){
+	        Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
+	        return;
+	    }
+	} else {
+		Common.alert("<spring:message code='pay.alert.inputRemark'/>");
+        return;
+	}
 
 	//저장처리
 	Common.confirm("<spring:message code='pay.alert.wanstToRejectFundTrans'/>",function (){
@@ -81,14 +99,14 @@ function fn_reject(){
 
     		Common.alert(message, function(){
 				searchList();
-				$('#_confirmFTPop').remove();    	      
-    		});        
+				$('#_confirmFTPop').remove();
+    		});
 	    });
 	});
 }
 
 
-</script>   
+</script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 	<header class="pop_header"><!-- pop_header start -->
@@ -117,9 +135,9 @@ function fn_reject(){
 					<caption>table</caption>
 					<colgroup>
 						<col style="width:140px" />
-						<col style="width:*" />		
+						<col style="width:*" />
 						<col style="width:140px" />
-						<col style="width:*" />	
+						<col style="width:*" />
 					</colgroup>
 					<tbody>
 						<tr>
@@ -148,9 +166,9 @@ function fn_reject(){
 					<caption>table</caption>
 					<colgroup>
 						<col style="width:140px" />
-						<col style="width:*" />		
+						<col style="width:*" />
 						<col style="width:140px" />
-						<col style="width:*" />					
+						<col style="width:*" />
 					</colgroup>
 					<tbody>
 						<tr>
@@ -165,7 +183,7 @@ function fn_reject(){
 							<th scope="row">Amount</th>
 							<td colspan="3" id="newAmt">
 							</td>
-						</tr>							
+						</tr>
 					</tbody>
 				</table>
 
@@ -179,20 +197,20 @@ function fn_reject(){
 					<caption>table</caption>
 					<colgroup>
 						<col style="width:140px" />
-						<col style="width:*" />		
+						<col style="width:*" />
 						<col style="width:140px" />
-						<col style="width:*" />					
+						<col style="width:*" />
 					</colgroup>
 					<tbody>
 						<tr>
 							<th scope="row">Requestor</th>
 							<td id="newRequestor">
 							</td>
-							<th scope="row">Reason</th>
+							<th scope="row">Reason<span class='must'>*</span></th>
 							<td>
 								<select id="newReason" name="newReason" class="w100p" disabled></select>
 							</td>
-						</tr>						
+						</tr>
 						<tr>
 							<th scope="row">Request Date</th>
 							<td id="newRequestDt" colspan="3">
@@ -206,7 +224,7 @@ function fn_reject(){
 							</td>
 						</tr>
 						<tr>
-							<th scope="row">Remark</th>
+							<th scope="row">Remark<span class='must'>*</span></th>
 							<td colspan="3">
 								<textarea id="appvRemark" name="appvRemark"  cols="15" rows="2" placeholder="" ></textarea>
 							</td>
@@ -219,6 +237,6 @@ function fn_reject(){
 		<ul class="center_btns">
 			<li><p class="btn_blue"><a href="javascript:fn_approval();"><spring:message code='pay.btn.approval'/></a></p></li>
 			<li><p class="btn_blue"><a href="javascript:fn_reject();"><spring:message code='pay.btn.reject'/></a></p></li>
-		</ul> 
+		</ul>
 	</section>
 </div>
