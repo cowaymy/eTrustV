@@ -922,7 +922,7 @@
             }
         }
 
-        if($("#promoId option:selected").index() <= 0) {
+        if($("#ordPromo option:selected").index() <= 0) {
             isValid = false;
             msg += "* Please select a promotion.<br>";
         }
