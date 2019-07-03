@@ -86,6 +86,9 @@
             <if test="vaAccount != null and vaAccount != '' ">
             AND B.F_TRNSC_REF_VA_NO = #{vaAccount}
             </if>
+            <if test="bnkCrAmt != null and bnkCrAmt != '' ">
+            AND B.F_TRNSC_CRDIT_AMT = #{bnkCrAmt}
+            </if>
             AND B.OTH_KEYIN_STUS_ID = 1
             AND B.OTH_KEYIN_BC_STUS_ID = 1
     </select>

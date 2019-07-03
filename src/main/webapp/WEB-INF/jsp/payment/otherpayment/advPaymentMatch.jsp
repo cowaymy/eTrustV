@@ -33,7 +33,7 @@ var gridPros1 = {
     showStateColumn : false         // 상태 칼럼 사용
 };
 
-var advKeyInLayout = [ 
+var advKeyInLayout = [
 	{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGroupNo'/>",width : 90 , editable : false},
 	{dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.paymentMode'/>",width : 90 , editable : false},
 	{dataField : "payItmRefDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 100 , editable : false},
@@ -58,30 +58,30 @@ var bankStmtLayout = [
 
 
 $(document).ready(function(){
-    
+
 	//CASH Bank Account combo box setting
 	doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
 	doGetCombo('/common/selectCodeList.do', '393' , ''   , 'accCode' , 'S', '');
-	
+
 	//Branch Combo 생성
 	doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','branchId', 'S' , '');
 
     advKeyInGridId = GridCommon.createAUIGrid("adv_keyin_grid_wrap", advKeyInLayout,"",gridPros1);
     bankStmtGridId = GridCommon.createAUIGrid("bank_stmt_grid_wrap", bankStmtLayout,"",gridPros2);
 
-	// 셀 더블클릭 이벤트 바인딩 : 상세 팝업 
+	// 셀 더블클릭 이벤트 바인딩 : 상세 팝업
 	AUIGrid.bind(advKeyInGridId, "cellDoubleClick", function(event) {
-		
-		var groupSeq = AUIGrid.getCellValue(advKeyInGridId , event.rowIndex , "groupSeq");	
+
+		var groupSeq = AUIGrid.getCellValue(advKeyInGridId , event.rowIndex , "groupSeq");
 		Common.popupDiv('/payment/initDetailGrpPaymentPop.do', {"groupSeq" : groupSeq}, null , true ,'_viewDtlGrpPaymentPop');
 
 	});
-    
+
 });
 
 function fn_payTypeChange(){
 	var payType = $("#payType").val();
-	
+
 	if(payType == '105'){
 		doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
 	}else if(payType == '106'){
@@ -92,12 +92,12 @@ function fn_payTypeChange(){
 }
 
 function fn_bankChange(){
-	
+
 	var bankType = $("#bankType").val();
-    
+
 	$("#vaAccount").val('');
 	$("#bankAcc").val('');
-	
+
 	if(bankType != "2730"){
 		$("#vaAccount").addClass("readonly");
 		$("#vaAccount").attr('readonly', true);
@@ -109,10 +109,10 @@ function fn_bankChange(){
 		$("#bankAcc").attr('disabled', true);
 		$("#bankAcc").addClass("w100p disabled");
 	}
- 
+
 }
 
-//조회버튼 클릭시 처리    
+//조회버튼 클릭시 처리
 function fn_searchAdvMatchList(){
 
 	if(FormUtil.checkReqValue($("#transDateFr")) ||
@@ -127,13 +127,13 @@ function fn_searchAdvMatchList(){
 		AUIGrid.setGridData(bankStmtGridId, result.stateList);
 	});
 }
-    
+
 function fn_clear(){
 	$("#searchForm")[0].reset();
 }
 
 
-function fn_mapping(){	
+function fn_mapping(){
 	var advKeyInItems = AUIGrid.getCheckedRowItems(advKeyInGridId);
 	var bankStmtItem = AUIGrid.getCheckedRowItems(bankStmtGridId);
 	var keyInRowItem;
@@ -163,8 +163,8 @@ function fn_mapping(){
 		if(keyInAmount != stmtAmount){
            	Common.alert("<spring:message code='pay.alert.transAmtNotSame'/>",
 				function (){
-					
-					$("#journal_entry_wrap").show();   					
+
+					$("#journal_entry_wrap").show();
 					$("#groupSeq").val(groupSeq);
 					$("#fTrnscId").val(fTrnscId);
 					$("#preKeyInAmt").val(keyInAmount);
@@ -191,7 +191,7 @@ function fn_mapping(){
 }
 
 function fn_saveMapping(withPop){
-	//Journal Entry 팝업을 띄웠을때만 validation check를 한다. 
+	//Journal Entry 팝업을 띄웠을때만 validation check를 한다.
 	if(withPop == 'Y'){
 		if(FormUtil.checkReqValue($("#accCode option:selected"))){
 			Common.alert("<spring:message code='pay.alert.accountCode'/>");
@@ -208,15 +208,15 @@ function fn_saveMapping(withPop){
     		return;
 	    }
 	}
-	
+
 	Common.confirm("<spring:message code='pay.alert.wantToSave'/>",function (){
 	    Common.ajax("POST", "/payment/saveAdvPaymentMapping.do", $("#entryForm").serializeJSON(), function(result) {
 			var message = "<spring:message code='pay.alert.mappingSuccess'/>";
 
     		Common.alert(message, function(){
 				fn_searchAdvMatchList();
-				$("#journal_entry_wrap").hide();                    
-    		});        
+				$("#journal_entry_wrap").hide();
+    		});
 	    });
 	});
 }
@@ -225,7 +225,7 @@ function fn_saveMapping(withPop){
 function fn_requestDCFPop(){
 	var advKeyInItems = AUIGrid.getCheckedRowItems(advKeyInGridId);
 	var keyInRowItem;
-	var groupSeq =0;	
+	var groupSeq =0;
 
 	if( advKeyInItems.length < 1){
 		Common.alert("<spring:message code='pay.alert.checkKeyInList'/>");
@@ -236,10 +236,10 @@ function fn_requestDCFPop(){
 		groupSeq = keyInRowItem.item.groupSeq;
 
 		Common.alert("<spring:message code='pay.alert.transAmtNotSame'/>",
-			function (){					
+			function (){
 				Common.popupDiv('/payment/initReqDCFWithAppvPop.do', {"groupSeq" : groupSeq}, null , true ,'_requestDCFWithAppvPop');
 			}
-		);  					
+		);
 	}
 }
 
@@ -247,7 +247,7 @@ function fn_saveReverse(){
     if(FormUtil.checkReqValue($("#revReason option:selected"))){
         Common.alert("<spring:message code='pay.alert.NoReasonSelected'/>");
         return;
-    }	
+    }
 
 	if( FormUtil.byteLength($("#revRemark").val()) > 3000 ){
     	Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
@@ -255,22 +255,22 @@ function fn_saveReverse(){
     }
 
 	//저장처리
-	Common.confirm("<spring:message code='pay.alert.wantToReverse'/>",function (){	    
+	Common.confirm("<spring:message code='pay.alert.wantToReverse'/>",function (){
 	    Common.ajax("POST", "/payment/requestDCFWithAppv.do", $("#reverseForm").serializeJSON(), function(result) {
 
-			
+
 			var message = "<spring:message code='pay.alert.successReverse' arguments='"+result.returnKey+"' htmlEscape='false'/>";
 
     		Common.alert(message, function(){
 				fn_searchAdvMatchList();
-				$("#reverse_wrap").hide();     	      
-    		});        
+				$("#reverse_wrap").hide();
+    		});
 	    });
 	});
 }
 
 
-function fn_debtor(){	
+function fn_debtor(){
 	var advKeyInItems = AUIGrid.getCheckedRowItems(advKeyInGridId);
 	var keyInRowItem;
 	var keyInAmount = 0;
@@ -285,12 +285,12 @@ function fn_debtor(){
 		groupSeq = keyInRowItem.item.groupSeq;
 
 		Common.alert("<spring:message code='pay.alert.bankStatementMissing'/>",
-			function (){				
-				$("#debtor_wrap").show();   					
-				$("#debtorGroupSeq").val(groupSeq);				
+			function (){
+				$("#debtor_wrap").show();
+				$("#debtorGroupSeq").val(groupSeq);
 				$("#debtorRemark").val('');
 			}
-		);		
+		);
 	}
 }
 
@@ -305,16 +305,16 @@ function fn_saveDebtor(){
 		Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
 		return;
 	}
-	
-	
+
+
 	Common.confirm("<spring:message code='pay.alert.wantToSave'/>",function (){
 	    Common.ajax("POST", "/payment/saveAdvPaymentDebtor.do", $("#debtorForm").serializeJSON(), function(result) {
 			var message = "<spring:message code='pay.alert.mappingSuccess'/>";
 
     		Common.alert(message, function(){
 				fn_searchAdvMatchList();
-				$("#debtor_wrap").hide();                    
-    		});        
+				$("#debtor_wrap").hide();
+    		});
 	    });
 	});
 }
@@ -325,7 +325,7 @@ function fn_saveDebtor(){
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     </ul>
-    
+
     <aside class="title_line"><!-- title_line start -->
         <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Advance Payment Matching</h2>
@@ -334,7 +334,7 @@ function fn_saveDebtor(){
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside><!-- title_line end -->
-    
+
     <section class="search_table"><!-- search_table start -->
         <form action="#" method="post" id="searchForm">
             <table class="type1"><!-- table start -->
@@ -357,12 +357,12 @@ function fn_saveDebtor(){
                             </div>
                             <!-- date_set end -->
                         </td>
-						            <th scope="row">KeyIn Branch</th>
+                            <th scope="row">KeyIn Branch</th>
                         <td>
-						              <select id="branchId" name="branchId"  class="w100p"></select>
-						            </td>
+                            <select id="branchId" name="branchId"  class="w100p"></select>
+                        </td>
                     </tr>
-					         <tr>
+                    <tr>
                         <th scope="row">Payment Type</th>
                         <td>
                             <select id="payType" name="payType" class="w100p"  onchange="javascript:fn_payTypeChange();">
@@ -371,47 +371,55 @@ function fn_saveDebtor(){
                                 <option value="108">Online</option>
                             </select>
                         </td>
-												<th scope="row">Bank Type</th>
-												<td>
-													<select id="bankType" name="bankType"  class="w100p" onchange="javascript:fn_bankChange();">
-														<option value="2728">JomPay</option>
-														<option value="2729">MBB CDM</option>
-														<option value="2730">VA</option>
-														<option value="2731">Others</option>
-													</select>
-												</td>
-					         </tr>
-									<tr>
-												<th scope="row">Bank Account</th>
-												<td>
-													<select id="bankAcc" name="bankAcc"  class="w100p"></select>
-												</td>
-												<th scope="row">VA Account</th>
-												<td>
-													<input type="text" id="vaAccount" name="vaAccount"  class="w100p readonly" readonly="readonly" />
-												</td>
-									</tr>
+                        <th scope="row">Bank Type</th>
+                        <td>
+                            <select id="bankType" name="bankType"  class="w100p" onchange="javascript:fn_bankChange();">
+                                <option value="2728">JomPay</option>
+                                <option value="2729">MBB CDM</option>
+                                <option value="2730">VA</option>
+                                <option value="2731">Others</option>
+                            </select>
+                       </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Bank Account</th>
+                        <td>
+                            <select id="bankAcc" name="bankAcc"  class="w100p"></select>
+                        </td>
+                        <th scope="row">VA Account</th>
+                        <td>
+                            <input type="text" id="vaAccount" name="vaAccount"  class="w100p readonly" readonly="readonly" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"></th>
+                        <td></td>
+                        <th scope="row">Amount</th>
+                        <td>
+                            <input type="text" id="bnkCrAmt" name="bnkCrAmt"  class="w100p" />
+                        </td>
+                    </tr>
                 </tbody>
             </table><!-- table end -->
-        </form> 
+        </form>
     </section><!-- search_table end -->
 
-	<!-- link_btns_wrap start -->
-	<aside class="link_btns_wrap">
-		<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-		<dl class="link_list">
-			<dt>Link</dt>
-			<dd>
-				<ul class="btns">
-					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();"><spring:message code='pay.btn.reverse'/></a></p></li>
-					<li><p class="link_btn"><a href="javascript:fn_debtor();"><spring:message code='pay.btn.debtor'/></a></p></li>
-					<li><p class="link_btn"><a href="javascript:fn_mapping();"><spring:message code='pay.btn.match'/></a></p></li>
-				</ul>
-				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-			</dd>
-		</dl>
-	</aside>
-	<!-- link_btns_wrap end -->
+    <!-- link_btns_wrap start -->
+    <aside class="link_btns_wrap">
+        <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+        <dl class="link_list">
+            <dt>Link</dt>
+            <dd>
+                <ul class="btns">
+                    <li><p class="link_btn"><a href="javascript:fn_requestDCFPop();"><spring:message code='pay.btn.reverse'/></a></p></li>
+                    <li><p class="link_btn"><a href="javascript:fn_debtor();"><spring:message code='pay.btn.debtor'/></a></p></li>
+                    <li><p class="link_btn"><a href="javascript:fn_mapping();"><spring:message code='pay.btn.match'/></a></p></li>
+                </ul>
+                <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+            </dd>
+        </dl>
+    </aside>
+    <!-- link_btns_wrap end -->
 
     <div class="divine_auto"><!-- divine_auto start -->
         <div style="width:50%;">
@@ -427,9 +435,9 @@ function fn_saveDebtor(){
             <article id="bank_stmt_grid_wrap" class="grid_wrap"></article>
         </div>
     </div>
-</section><!-- content end -->	
+</section><!-- content end -->
 
-<!--------------------------------------------------------------- 
+<!---------------------------------------------------------------
     POP-UP (JOURNAL ENTRY)
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
@@ -442,7 +450,7 @@ function fn_saveDebtor(){
         </ul>
     </header>
     <!-- pop_header end -->
-    
+
     <!-- pop_body start -->
     <form name="entryForm" id="entryForm"  method="post">
 	<input type="hidden" id="groupSeq" name="groupSeq" />
@@ -455,9 +463,9 @@ function fn_saveDebtor(){
                 <caption>table</caption>
                  <colgroup>
                     <col style="width:200px" />
-                    <col style="width:*" />                
+                    <col style="width:*" />
                 </colgroup>
-                
+
                 <tbody>
                     <tr>
                         <th scope="row">Pre Key In Amount (A)</th>
@@ -489,20 +497,20 @@ function fn_saveDebtor(){
 							<textarea id="remark" name="remark"  cols="10" rows="3" placeholder=""></textarea>
                         </td>
                     </tr>
-                   </tbody>  
+                   </tbody>
             </table>
         </section>
         <ul class="center_btns" >
             <li><p class="btn_blue2"><a href="javascript:fn_saveMapping('Y');"><spring:message code='sys.btn.save'/></a></p></li>
         </ul>
     </section>
-    </form>       
+    </form>
     <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
 
 
-<!--------------------------------------------------------------- 
+<!---------------------------------------------------------------
     POP-UP (Other Debtor With Ticket)
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
@@ -515,7 +523,7 @@ function fn_saveDebtor(){
         </ul>
     </header>
     <!-- pop_header end -->
-    
+
     <!-- pop_body start -->
     <form name="debtorForm" id="debtorForm"  method="post">
 	<input type="hidden" id="debtorGroupSeq" name="debtorGroupSeq" />
@@ -527,9 +535,9 @@ function fn_saveDebtor(){
                 <caption>table</caption>
                  <colgroup>
                     <col style="width:200px" />
-                    <col style="width:*" />                
+                    <col style="width:*" />
                 </colgroup>
-                
+
                 <tbody>
                     <tr>
                         <th scope="row">Remark</th>
@@ -537,14 +545,14 @@ function fn_saveDebtor(){
 							             <textarea id="debtorRemark" name="debtorRemark"  cols="10" rows="3" placeholder=""></textarea>
                         </td>
                     </tr>
-                   </tbody>  
+                   </tbody>
             </table>
         </section>
         <ul class="center_btns" >
             <li><p class="btn_blue2"><a href="javascript:fn_saveDebtor();"><spring:message code='sys.btn.save'/></a></p></li>
         </ul>
     </section>
-    </form>       
+    </form>
     <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
