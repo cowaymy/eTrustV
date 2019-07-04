@@ -7,7 +7,7 @@ var trBookGridID;
 $(document).ready(function(){
 
     creatGrid();
-    
+
     $('#summaryListing').click(function() {
         Common.popupDiv("/sales/trBook/trBookMgmtSummaryListingPop.do", null, null, true);
     });
@@ -17,13 +17,13 @@ $(document).ready(function(){
     $('#reqBatch').click(function() {
         Common.popupDiv("/sales/trBook/requestBahchListPop.do", null, null, true);
     });
-     
+
 });
 
 
 function creatGrid(){
 
-	    var trBookColLayout = [ 
+	    var trBookColLayout = [
 	          {dataField : "trBookId", headerText : "", width : 140	 , visible:false   },
 	          {dataField : "trBookNo", headerText : "<spring:message code="sal.title.bookNo" />", width : 140	    },
 	          {dataField : "trBookPrefix", headerText : "<spring:message code="sal.title.prefix" />", width : 110	    },
@@ -32,10 +32,10 @@ function creatGrid(){
 	          {dataField : "trBookPge", headerText : "<spring:message code="sal.title.sheet" />", width : 130	    },
 	          {dataField : "trBookStusCode", headerText : "<spring:message code="sal.title.status" />", width : 110	    },
 	          {dataField : "trHolder", headerText : "<spring:message code="sal.title.holder" />", width : 110	    },
-	          {dataField : "trHolderType", headerText : "<spring:message code="sal.title.holderType" />", width : 110	    }	,          
-	          {dataField : "boxNo", headerText : "", width : 110,	  visible:false   }         
+	          {dataField : "trHolderType", headerText : "<spring:message code="sal.title.holderType" />", width : 110	    }	,
+	          {dataField : "boxNo", headerText : "", width : 110,	  visible:false   }
 	          ];
-	    
+
 
 	    var trBookOptions = {
 	               showStateColumn:false,
@@ -43,35 +43,35 @@ function creatGrid(){
 	               usePaging : true,
 	               editable : false
 	               //selectionMode : "singleRow"
-	         }; 
-	    
+	         };
+
 	    trBookGridID = GridCommon.createAUIGrid("#trBookGridID", trBookColLayout, "", trBookOptions);
-	    
+
 	    // 셀 더블클릭 이벤트 바인딩
 	     AUIGrid.bind(trBookGridID, "cellDoubleClick", function(event){
-	         
+
 	          $("#trBookId").val(AUIGrid.getCellValue(trBookGridID , event.rowIndex , "trBookId"));
-	         
+
 	          Common.popupDiv("/sales/trBook/trBookMgmtDetailPop.do",$("#listSForm").serializeJSON(), null, true, "trBookMgmtDetailPop");
-	          
+
 	     });
 	    // 셀 클릭 이벤트 바인딩
 	     AUIGrid.bind(trBookGridID, "cellClick", function(event){
-	         
+
 	          $("#trBookId").val(AUIGrid.getCellValue(trBookGridID , event.rowIndex , "trBookId"));
-		          
+
 	     });
 }
 
 //리스트 조회.
 function fn_selectListAjax() {
 	$("#trBookId").val("");
-   	
+
   Common.ajax("GET", "/sales/trBook/selectTrBookMgmtList", $("#listSForm").serialize(), function(result) {
-      
+
        console.log("성공.");
        console.log( result);
-       
+
       AUIGrid.setGridData(trBookGridID, result);
 
   });
@@ -94,19 +94,19 @@ function fn_trBookTransaction(){
 }
 
 function fn_trBookAssign(){
-	
-	if($("#trBookId").val()==""){		
+
+	if($("#trBookId").val()==""){
 		   Common.alert("Book Missing" + DEFAULT_DELIMITER + "No TR book selected.");
-	}else{			
-		  
+	}else{
+
 		if(fn_getBookActionValidation()){
-			var selectedItems = AUIGrid.getSelectedItems(trBookGridID);        
+			var selectedItems = AUIGrid.getSelectedItems(trBookGridID);
             var first = selectedItems[0];
-            
+
             var bookNo = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookNo");
             var trHolder = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolder");
             var trHolderType = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolderType");
-            
+
             if(trHolderType != "Branch"){
                 Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.isHoldingBy" /> [" + trHolder +"]. <spring:message code="sal.alert.msg.bookAssignIsDisallowed" />");
                 return ;
@@ -115,29 +115,29 @@ function fn_trBookAssign(){
                 Common.popupDiv("/sales/trBook/trBookAssignPop.do",$("#listSForm").serializeJSON(), null, true, "trBookAssignPop");
               //  Common.popupDiv("/sales/trBook/trBookReturnPop.do",$("#listSForm").serializeJSON(), null, true, "trBookRetrunPop");
             }
-            
+
 		}
-		
+
 	}
-	
+
 }
 
 function fn_trBookReturn(){
-	
-    if($("#trBookId").val()==""){     
-    	
+
+    if($("#trBookId").val()==""){
+
         Common.alert("<spring:message code="sal.alert.title.bookMissing" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.noTrBookSelected" />");
-        
-    }else{  
-    	
+
+    }else{
+
     	if(fn_getBookActionValidation()){
-    		var selectedItems = AUIGrid.getSelectedItems(trBookGridID);        
+    		var selectedItems = AUIGrid.getSelectedItems(trBookGridID);
             var first = selectedItems[0];
-            
+
             var bookNo = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookNo");
             var trHolder = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolder");
             var trHolderType = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolderType");
-                    
+
             if(trHolderType != "Member"){
                 Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.isHoldingByBranch" /> [" + trHolder +"]. <spring:message code="sal.alert.msg.bookReturnIsDisallowed" />");
                 return ;
@@ -145,26 +145,26 @@ function fn_trBookReturn(){
                 Common.popupDiv("/sales/trBook/trBookReturnPop.do",$("#listSForm").serializeJSON(), null, true, "trBookRetrunPop");
             }
     	}
-		 
+
 	 }
 }
 
 function fn_trBookReport(){
-	
-    if($("#trBookId").val()==""){     
-    	
+
+    if($("#trBookId").val()==""){
+
         Common.alert("<spring:message code="sal.alert.title.bookMissing" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.noTrBookSelected" />");
-        
-    }else{  
-    	
+
+    }else{
+
     	if(fn_getBookActionValidation()){
-    		var selectedItems = AUIGrid.getSelectedItems(trBookGridID);        
+    		var selectedItems = AUIGrid.getSelectedItems(trBookGridID);
             var first = selectedItems[0];
-            
+
             var bookId = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookId");
             var bookStus = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookStusCode");
             var bookNo = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookNo");
-                    
+
             if(bookStus != "ACT"){
                 Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.reportLostIsDisallowed" />");
                 return ;
@@ -172,24 +172,24 @@ function fn_trBookReport(){
                 Common.popupDiv("/sales/trBook/reportLostViewPop.do",$("#listSForm").serializeJSON(), null, true, "reportLostViewPop");
             }
     	}
-		 
+
 	 }
 }
 
 function fn_trBookTranSingle(){
-    
-    if($("#trBookId").val()==""){       
+
+    if($("#trBookId").val()==""){
            Common.alert("<spring:message code="sal.alert.title.bookMissing" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.noTrBookSelected" />");
-    }else{          
-          
+    }else{
+
         if(fn_getBookActionValidation()){
-            var selectedItems = AUIGrid.getSelectedItems(trBookGridID);        
+            var selectedItems = AUIGrid.getSelectedItems(trBookGridID);
             var first = selectedItems[0];
-            
+
             var bookNo = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookNo");
             var trHolder = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolder");
             var trHolderType = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolderType");
-            
+
             if(trHolderType != "Branch"){
                 Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.isHoldingBy" /> [" + trHolder +"]. <spring:message code="sal.alert.msg.bookTransferIsDisallowed" />");
                 return ;
@@ -197,9 +197,9 @@ function fn_trBookTranSingle(){
                 Common.popupDiv("/sales/trBook/trBookTranSinglePop.do",$("#listSForm").serializeJSON(), null, true, "trBookTranSinglePop");
             }
         }
-        
+
     }
-    
+
 }
 
 function fn_trBookTranBulk(){
@@ -211,17 +211,17 @@ function fn_requestBatch(){
 }
 
 function fn_getBookActionValidation(){
-	
+
 	var valid = true;
-     
-    var selectedItems = AUIGrid.getSelectedItems(trBookGridID); 
-    
+
+    var selectedItems = AUIGrid.getSelectedItems(trBookGridID);
+
     var first = selectedItems[0];
-    
+
     var bookId = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookId");
     var bookStatus = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookStusCode");
     var bookNo = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookNo");
-   
+
     if ((bookStatus == "CLO") || (bookStatus == "CLOLOST"))
     {
         Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.bookHasReturnClosed" />");
@@ -232,24 +232,24 @@ function fn_getBookActionValidation(){
         Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.bookHasDeactivated" />");
         valid = false ;
     }
-    
+
     return valid;
 }
 
 function fn_trBookDeactivate(){
-	
-    if($("#trBookId").val()==""){       
+
+    if($("#trBookId").val()==""){
         Common.alert("<spring:message code="sal.alert.title.bookMissing" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.noTrBookSelected" />");
-	}else{          
-	       
+	}else{
+
 	     if(fn_getBookActionValidation()){
-	         var selectedItems = AUIGrid.getSelectedItems(trBookGridID);        
+	         var selectedItems = AUIGrid.getSelectedItems(trBookGridID);
 	         var first = selectedItems[0];
-	         
+
 	         var bookNo = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookNo");
 	         var trHolder = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolder");
 	         var trHolderType = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolderType");
-	         
+
 	         if(trHolderType != "Branch"){
 	             Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.isHoldingBy" /> [" + trHolder +"]. <spring:message code="sal.alert.msg.deactivationIsDisallowed" />");
 	             return ;
@@ -257,19 +257,19 @@ function fn_trBookDeactivate(){
 	             Common.popupDiv("/sales/trBook/trBookDeactivatePop.do",$("#listSForm").serializeJSON(), null, true, "trBookDeactivatePop");
 	         }
 	     }
-	     
+
 	 }
 }
 
 function fn_trBookKeep(){
-    if($("#trBookId").val()==""){       
+    if($("#trBookId").val()==""){
         Common.alert("<spring:message code="sal.alert.title.bookMissing" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.noTrBookSelected" />");
-    }else{    
-	
-	    var selectedItems = AUIGrid.getSelectedItems(trBookGridID); 
-	    
+    }else{
+
+	    var selectedItems = AUIGrid.getSelectedItems(trBookGridID);
+
 	    var first = selectedItems[0];
-	    
+
 	    var bookId = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookId");
 	    var bookStatus = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookStusCode");
 	    var bookNo = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookNo");
@@ -278,13 +278,13 @@ function fn_trBookKeep(){
 	    {
 
 	    	var boxNo = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "boxNo");
-	    	
-	    	if(boxNo == " "){	    		
+
+	    	if(boxNo == " "){
 	    		Common.popupDiv("/sales/trBook/trBookKeepBoxPop.do",$("#listSForm").serializeJSON(), null, true, "trBookKeepBoxPop");
 	    	}else{
 	    		Common.alert("<spring:message code="sal.alert.title.bookMissing" />" + DEFAULT_DELIMITER +"<spring:message code="sal.alert.msg.thisBookHasBeenKeptInBox" /> [" + boxNo + "].");
 	    	}
-	    	
+
 	    }else{
 	    	Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"+DEFAULT_DELIMITER+"<b>[" + BookNo + "] <spring:message code="sal.alert.msg.bookYetClosed" /></b>");
 	    }
@@ -365,6 +365,7 @@ function fn_trBookKeep(){
 			<option value="1" selected="selected"><spring:message code="sal.text.active" /></option>
 			<option value="36"><spring:message code="sal.text.close" /></option>
 			<option value="67"><spring:message code="sal.text.lost" /></option>
+			<option value="68">Close with lost</option>
 		</select>
 	</td>
 	<td colspan="4"></td>
