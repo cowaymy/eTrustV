@@ -378,9 +378,19 @@
             DCF_REQ_ID = #{reqNo}
     </update>
 
-    <update id="approvalDCF" statementType="CALLABLE" parameterType="Map">
+    <!--<update id="approvalDCF" statementType="CALLABLE" parameterType="Map">
         {call SP_INST_PAYMENT_REVRS(#{reqNo},#{groupSeq},#{remark}, #{userId} )}
-    </update>
+    </update>-->
+
+   <resultMap id="resultDCFMap" type="egovMap" />
+  <select id="approvalDCF" statementType="CALLABLE"
+    parameterType="Map">
+    {
+    call SP_INST_PAYMENT_REVRS(#{reqNo},#{groupSeq},#{remark}, #{userId}, #{p1, mode=OUT, jdbcType=CURSOR,
+    javaType=ResultSet,
+    resultMap=resultDCFMap})
+    }
+  </select>
 
 
     <select id="selectFTOldData" parameterType="Map" resultType="egovMap">

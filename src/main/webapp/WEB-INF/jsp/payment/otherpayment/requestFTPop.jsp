@@ -58,6 +58,7 @@ function searchFTList(){
 		$("#oldOrdNo").val(result.salesOrdNo);
 		$("#oldCustNm").val(result.custNm);
 		$("#oldAmt").val(result.totAmt);
+		$("#oldOrNo").val(result.orNo);
 
 		//AUIGrid.setGridData(myRequestFTOldGridID, result);
 		//recalculateTotalAmt();
@@ -79,10 +80,14 @@ function fn_FtClear(){
 function fn_FTRequest(){
 
 	//Merchant Bank 체크
-    if(FormUtil.checkReqValue($("#newReason option:selected"))){
+	if ($("#newReason option:selected").index() <= 0) {
         Common.alert("<spring:message code='pay.alert.noReasonSelected'/>");
-        return;
+	    return;
     }
+    //if(FormUtil.checkReqValue($("#newReason option:selected"))){
+    //    Common.alert("<spring:message code='pay.alert.noReasonSelected'/>");
+    //   return;
+    //}
 
 	if( Number($("#newAmt").val()) <= 0 ){
     	Common.alert("<spring:message code='pay.alert.totalAmtZero'/>");
@@ -211,9 +216,13 @@ function setTargetInfo(){
 						</tr>
 						<tr>
 							<th scope="row">Amount</th>
-							<td colspan="3">
+							<td>
 								 <input type="text" name="oldAmt" id="oldAmt" title="" placeholder="" class="readonly"  readonly  />
 							</td>
+							<th scope="row">OR No</th>
+                            <td>
+                                 <input type="text" name="oldOrNo" id="oldOrNo" title="" placeholder="" class="readonly"  readonly  />
+                            </td>
 						</tr>
 						</tbody>
 				  </table>
@@ -270,7 +279,7 @@ function setTargetInfo(){
 					</colgroup>
 					<tbody>
 						<tr>
-							<th scope="row">Reason</th>
+							<th scope="row">Reason<span class="must">*</span></th>
 							<td colspan="3">
 								<select id="newReason" name="newReason" class="w100p"></select>
 							</td>
