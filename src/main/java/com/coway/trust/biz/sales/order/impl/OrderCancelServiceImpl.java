@@ -176,12 +176,12 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 		} else if(status == 32){	// Confirm To Cancel
 			logger.info("####################### Confirm To Cancel save Start!! #####################");
 			saveParam.put("userId", params.get("userId"));
-			EgovMap getResultId = orderSuspensionMapper.newSuspendSearch2(saveParam);		// CallEntry
-			saveParam.put("resultId", getResultId.get("resultId"));
-
 			saveParam.put("callDt", SalesConstants.DEFAULT_DATE);
 			saveParam.put("callActnDt", SalesConstants.DEFAULT_DATE);
 			orderSuspensionMapper.insertCCR0007DSuspend(saveParam);									// CallResult
+
+	        EgovMap getResultId = orderSuspensionMapper.newSuspendSearch2(saveParam);       // CallEntry
+	        saveParam.put("resultId", getResultId.get("resultId"));
 			orderCancelMapper.updateCancelCCR0006D(saveParam);											// CallEntry
 
 			saveParam.put("soReqId", params.get("paramReqId"));
