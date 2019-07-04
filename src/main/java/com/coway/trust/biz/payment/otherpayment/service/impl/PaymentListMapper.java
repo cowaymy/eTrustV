@@ -156,9 +156,9 @@ public interface PaymentListMapper {
 	 * @param model
 	 * @return
 	 */
-	EgovMap approvalFT(Map<String, Object> params);
+	void approvalFT(Map<String, Object> params);
 
-	EgovMap getOrNo(Map<String, Object> params);
+
 
 
 }
