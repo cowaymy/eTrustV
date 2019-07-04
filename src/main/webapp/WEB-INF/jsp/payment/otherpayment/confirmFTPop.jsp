@@ -32,9 +32,9 @@ function fn_approval(){
         return;
 	}
 
-	if(!FormUtil.isEmpty($("#newReason").val())) {
+	/*if(!FormUtil.isEmpty($("#newReason").val())) {
         Common.alert("Please select a reason.");
-    }
+    }*/
 
 	if(!FormUtil.isEmpty($("#appvRemark").val())) {
 		if( FormUtil.byteLength($("#appvRemark").val()) < 1 ){
@@ -73,9 +73,9 @@ function fn_reject(){
         return;
 	}
 
-    if(!FormUtil.isEmpty($("#newReason").val())) {
+    /*if(!FormUtil.isEmpty($("#newReason").val())) {
     	Common.alert("Please select a reason.");
-    }
+    }*/
 
 	if(!FormUtil.isEmpty($("#appvRemark").val())) {
 		if(FormUtil.checkReqValue($("#appvRemark"))){
@@ -206,7 +206,7 @@ function fn_reject(){
 							<th scope="row">Requestor</th>
 							<td id="newRequestor">
 							</td>
-							<th scope="row">Reason<span class='must'>*</span></th>
+							<th scope="row">Reason</th>
 							<td>
 								<select id="newReason" name="newReason" class="w100p" disabled></select>
 							</td>
