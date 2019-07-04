@@ -5,6 +5,10 @@
 var assignGrid;
 var conversionBatchGrid;
 var assignConvertItemId;
+var excelGrid;
+
+//Grid에서 선택된 RowID
+var selectedGridValue;
 
 //ROS Call 화면에서 사용...
 var gridPros = {
@@ -31,6 +35,11 @@ $(document).ready(function(){
 
     createGrid();
 
+    //엑셀 다운
+    $('#excelDown').click(function() {
+       GridCommon.exportTo("#excelGrid", 'xlsx', "RCMS Assignment Conversion List");
+    });
+
 });
 
 function createGrid(){
@@ -51,11 +60,24 @@ function createGrid(){
         var assignConvertItemColumnLayout= [
                                          {dataField : "salesOrdNo", headerText : "Order No.", width : "10%", editable : false},
                                          {dataField : "rcItmStus", headerText : "Status", width : '10%'},
-                                         {dataField : "rcItmField", headerText : "Item", width : '10%'},
-                                         {dataField : "rcItmRem", headerText : "Remark", width : '10%'},
-                                         {dataField : "rcItmCnvrStus", headerText : "Conversion Status", width : '10%'},
-                                         {dataField : "rcItmCnvrRem", headerText : "Conversion Remark", width : '10%'}
+                                         {dataField : "rcItmField", headerText : "eTR / Sensitve", width : '10%'},
+                                         {dataField : "rcItmRem", headerText : "Remark", width : '20%'},
+                                         {dataField : "agentName", headerText : "Agent<br/>Name", width : '10%'},
+                                         {dataField : "rcItmRenStus", headerText : "Rental<br/>Status", width : '10%'},
+                                         {dataField : "stusName", headerText : "Conversion<br/>Status", width : '10%'},
+                                         {dataField : "rcItmCnvrRem", headerText : "Conversion Remark", width : '20%'}
                                          ];
+
+        var excelColLayout= [
+                                            {dataField : "salesOrdNo", headerText : "Order No.", width : 200, editable : false},
+                                            {dataField : "rcItmStus", headerText : "Status", width : 100},
+                                            {dataField : "rcItmField", headerText : "eTR / Sensitve", width : 100},
+                                            {dataField : "rcItmRem", headerText : "Remark", width : 400},
+                                            {dataField : "agentName", headerText : "Agent Name", width : 200},
+                                            {dataField : "rcItmRenStus", headerText : "Rental Status", width : 100},
+                                            {dataField : "stusName", headerText : "Conversion Status", width : 100},
+                                            {dataField : "rcItmCnvrRem", headerText : "Conversion Remark", width : 400}
+                                            ];
 
 
         var assignOptions = {
@@ -68,6 +90,14 @@ function createGrid(){
 
         assignGrid = GridCommon.createAUIGrid("#assignGrid", assignColLayout, "", assignOptions);
         assignConvertItemId = GridCommon.createAUIGrid("#assignConvertItem_grid_wrap", assignConvertItemColumnLayout,"",assignOptions);
+        excelGrid = GridCommon.createAUIGrid("#excelGrid", excelColLayout, "", assignOptions);
+
+        $("#view_wrap").hide();
+
+        // Master Grid 셀 클릭시 이벤트
+        AUIGrid.bind(assignGrid, "cellClick", function( event ){
+            selectedGridValue = event.rowIndex;
+        });
 
          // 셀 더블클릭 이벤트 바인딩
          AUIGrid.bind(assignGrid, "cellDoubleClick", function(event){
@@ -75,6 +105,7 @@ function createGrid(){
 
         	 Common.ajax("GET", "/sales/rcms/selectAssignConversionItemList.", {"batchId":rcBatchId}, function(result) {
         		 AUIGrid.setGridData(assignConvertItemId, result);
+        		 AUIGrid.setGridData(excelGrid, result);
                  $("#view_wrap").show();
         	 });
          });
@@ -98,6 +129,20 @@ function fn_clear(){
 function fn_uploadPop(){
     Common.popupDiv("/sales/rcms/uploadAssignAgentPop.do",null, fn_selectListAjax, true, "uploadAssignAgentPop");
 }
+
+function fn_getItmStatus(val){
+    var batchId = AUIGrid.getCellValue(assignGrid, selectedGridValue, "rcBatchId");
+
+    if(val == "4"){$('#pop_header h3').text('APPROVED TRANSACTION');}
+    else if(val == "21"){$('#pop_header h3').text('FAILED TRANSACTIONS');}
+    else{$('#pop_header h3').text('ALL TRANSACTIONS');}
+
+    Common.ajax("GET", "/sales/rcms/selectAssignConversionItemList", {"batchId":batchId,"stusId":val}, function(result) {
+        AUIGrid.setGridData(assignConvertItemId, result);
+        AUIGrid.setGridData(excelGrid, result);
+    });
+}
+
 
 //Layer close
 hideViewPopup=function(val){
@@ -204,7 +249,7 @@ hideViewPopup=function(val){
     POP-UP (VIEW CONVERSION)
 -------------------------------------------------------------------------------------->
 <!-- popup_wrap start -->
-<div class="popup_wrap" id="view_wrap" style="display: none;">
+<div class="popup_wrap" id="view_wrap">
     <!-- pop_header start -->
     <header class="pop_header" id="pop_header">
         <h1><spring:message code="sal.text.title.rcmsConvertItm"/></h1>
@@ -218,19 +263,22 @@ hideViewPopup=function(val){
 
     <!-- pop_body start -->
     <section class="pop_body">
-                    <aside class="title_line"><!-- title_line start -->
+    <h3></h3>
                     <header class="pop_header" id="pop_header">
-                    <h3></h3>
                         <ul class="right_btns">
                             <li><p class="btn_blue2"><a href="javascript:fn_getItmStatus('')">All Items</a></p></li>
                             <li><p class="btn_blue2"><a href="javascript:fn_getItmStatus(4)">Valid Items</a></p></li>
-                            <li><p class="btn_blue2"><a href="javascript:fn_getItmStatus(6)">Invalid Items</a></p></li>
+                            <li><p class="btn_blue2"><a href="javascript:fn_getItmStatus(21)">Invalid Items</a></p></li>
                         </ul>
                      </header>
 
 			<section class="search_result"><!-- search_result start -->
+			<ul class="right_btns mt10">
+			     <li><p class="btn_grid"><a href="#" id="excelDown"><spring:message code="sal.title.text.download" /></a></p></li>
+			</ul>
 			<article class="grid_wrap" ><!-- grid_wrap start -->
 			    <div id="assignConvertItem_grid_wrap" style="width: 100%; height: 360px; margin: 0px auto;"></div>
+			    <div id="excelGrid" style="width:100%; height:300px; margin:0 auto; display: none" ></div>
 			</article><!-- grid_wrap end -->
 			</section><!-- search_result end -->
 

@@ -377,11 +377,14 @@
     <select id="selectAssignConvertItemList" parameterType="Map" resultType="egovMap">
             SELECT
                 EXTENT2.SALES_ORD_NO ,
-                CASE WHEN RC_ITM_STUS_ID = 4 THEN 'VALID' ELSE 'INVALID' END RC_ITM_STUS,
-                RC_ITM_FIELD ,
-                RC_ITM_REM ,
+                CASE WHEN EXTENT1.RC_ITM_STUS_ID = 4 THEN 'VALID' ELSE 'INVALID' END RC_ITM_STUS,
+                EXTENT1.RC_ITM_FIELD ,
+                EXTENT1.RC_ITM_REM ,
                 EXTENT3.NAME STUS_NAME,
-                RC_ITM_CNVR_REM
+                EXTENT1.RC_ITM_REN_STUS,
+                EXTENT1.RC_ITM_AGENT_ID,
+                EXTENT1.RC_ITM_CNVR_STUS_ID,
+                EXTENT1.RC_ITM_CNVR_REM
             FROM SAL0240D EXTENT1
             LEFT JOIN SAL0001D EXTENT2 ON EXTENT1.RC_ITM_ORD_ID = EXTENT2.SALES_ORD_ID
             LEFT JOIN SYS0038M EXTENT3 ON EXTENT1.RC_ITM_CNVR_STUS_ID = EXTENT3.STUS_CODE_ID
@@ -390,7 +393,7 @@
                 AND EXTENT1.RC_BATCH_ID = #{batchId}
             </if>
             <if test=" stusId != null and stusId != '' ">
-                AND EXTENT1.RC_ITM_STUS_ID = #{stusId}
+                AND EXTENT1.RC_ITM_CNVR_STUS_ID = #{stusId}
             </if>
             ORDER BY RC_ITM_ID ASC
     </select>
