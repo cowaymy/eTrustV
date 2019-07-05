@@ -1164,9 +1164,13 @@
                        LEFT
                        JOIN ORG0001D T3
                          ON T2.CONFIG_BS_MEM_ID = T3.MEM_ID
+                       LEFT JOIN  SVC0008D T5 ON T2.ORD_ID = T5.SALES_ORD_ID
+                       AND MONTH = EXTRACT(MONTH FROM SYSDATE)
+                        AND YEAR = EXTRACT(YEAR FROM SYSDATE)
                        LEFT
                        JOIN SVC0006D T4
                          ON T2.ORD_ID = T4.SALES_ORD_ID
+                         AND T4.SCHDUL_ID = T5.SCHDUL_ID
                         AND 4 = T4.RESULT_STUS_CODE_ID
                       WHERE T2.ORD_ID = #{salesOrderId}
                     ) T
