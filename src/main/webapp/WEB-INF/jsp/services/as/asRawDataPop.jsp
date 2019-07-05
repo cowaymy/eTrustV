@@ -1,5 +1,11 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<!--
+ DATE        BY     VERSION        REMARK
+ ----------------------------------------------------------------
+ 25/06/2019  ONGHC  1.0.0          Amend Report Condition
+ -->
+
 <script type="text/javaScript">
   $(document).ready(function() {
 
@@ -38,7 +44,7 @@
       if ($("#reqstDateFr").val() != '' && $("#reqstDateTo").val() != ''
        && $("#reqstDateFr").val() != null
        && $("#reqstDateTo").val() != null) {
-        whereSql += " AND (TO_CHAR(AS_CRT_DT,'YYYY-MM-DD')) >= '" + keyInDateFrom1 + "' AND (TO_CHAR(AS_CRT_DT,'YYYY-MM-DD')) <= '" + keyInDateTo1 + "' ";
+        whereSql += " AND (TO_CHAR(A.AS_REQST_DT,'YYYY-MM-DD')) >= '" + keyInDateFrom1 + "' AND (TO_CHAR(A.AS_REQST_DT,'YYYY-MM-DD')) <= '" + keyInDateTo1 + "' ";
       }
 
       if ($("#reportType").val() == '1') {
@@ -172,7 +178,7 @@
      <tbody>
       <tr>
        <th scope="row">Report Type<span id='m1' name='m1' class='must'> *</span></th>
-       <td><select id="reportType">
+       <td><select id="reportType" class="w100p" >
          <option value="1">After Service (AS) Raw Data</option>
          <option value="2">After Service (AS) Spare Part Exchange Raw Data</option>
          <option value="3">After Service (AS) Raw Data (PQC)</option>
