@@ -102,6 +102,7 @@ import io.swagger.annotations.ApiOperation;
  * 10/04/2019    ONGHC      1.0.1       - Add Logs
  * 08/05/2019    ONGHC      1.0.2       - Amend Logs
  * 08/05/2019    ONGHC      1.0.3       - Amend hsRegistration to add stage
+ * 08/07/2019    ONGHC      1.0.4       - Amend asRegistration to fix Commission issue
  *********************************************************************************************/
 
 @Api(value = "service api", description = "service api")
@@ -761,9 +762,9 @@ public class ServiceApiController {
             params.put("AS_REN_COLCT_ID", 0);
 
             if (getAsBasic.get("asCmms") != null) {
-              params.put("AS_CMMS", "1");
+              params.put("AS_CMMS", String.valueOf(getAsBasic.get("asCmms")));
             } else {
-              params.put("AS_CMMS", "1");
+              params.put("AS_CMMS", "0");
             }
 
             if (getAsBasic.get("asBrnchId") != null) {
