@@ -405,4 +405,15 @@ public class PreOrderController {
 		return "sales/order/cnfmPreOrderDetailPop";
 	}
 
+	   @RequestMapping(value = "/selectPreOrderInfo.do")
+	    public ResponseEntity<ReturnMessage> selectPreOrderInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	        EgovMap result = preOrderService.selectPreOrderInfo(params);
+
+	        ReturnMessage message = new ReturnMessage();
+	        message.setData(result);
+
+	        return ResponseEntity.ok(message);
+	    }
+
 }

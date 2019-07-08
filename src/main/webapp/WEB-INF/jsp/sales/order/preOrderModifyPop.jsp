@@ -482,6 +482,12 @@
                 return false;
             }
 
+            if(fn_validPreOrderStus() == "4") {
+                $('#aTabBD').click();
+                return false;
+            }
+
+
             var formData = new FormData();
             formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
             formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
@@ -2044,6 +2050,22 @@
         if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
+    }
+
+    function fn_validPreOrderStus() {
+        var isValid = true, msg = "";
+
+        Common.ajaxSync("GET", "/sales/order/selectPreOrderInfo.do", $("#frmPreOrdReg").serialize(), function(result) {
+            if(result != null) {
+            	isValid = result.data.stusId;
+            	msg = "eKey-in converted to sales.<br/> Any edit is not allowed now."
+            }
+        });
+
+        if(isValid == "4") Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+        return isValid;
+
     }
 
 </script>
