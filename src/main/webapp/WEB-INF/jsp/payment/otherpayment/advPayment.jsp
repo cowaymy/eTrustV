@@ -264,6 +264,7 @@ var targetFinalBillColumnLayout = [
 { dataField:"billAsId" ,headerText:"<spring:message code='pay.head.billAsId'/>" ,editable : false , width : 150 , visible : false },
 { dataField:"discountAmt" ,headerText:"<spring:message code='pay.head.discountAmt'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##" , visible : false },
 { dataField:"srvMemId" ,headerText:"<spring:message code='pay.head.serviceMembershipId'/>" ,editable : false , width : 150 , visible : false },
+{ dataField:"refDtlsJPayRef" ,headerText:"Ref Details/JomPay Ref" ,editable : false , width : 150 },
 { dataField:"trNo" ,headerText:"TR No" ,editable : true , width : 150 },
 { dataField:"trDt" ,headerText:"TR Issue Date" ,editable : false , width : 150 },
 { dataField:"collectorCode" ,headerText:"Collector Code" ,editable : false , width : 250 },
@@ -724,6 +725,12 @@ function saveAdvPayment(){
              if(FormUtil.checkReqValue($("#onlineBankAcc"))){
             	 Common.alert("<spring:message code='pay.alert.noBankAccountSelected'/>");
                  return;
+             }
+
+             if(onlineBankType == "2728") {
+            	 if(FormUtil.isEmpty($("#onlineEft").val())) {
+            		 Common.alert("* No EFT/JomPayRef");
+            	 }
              }
          }
 
@@ -1256,6 +1263,7 @@ function addRentalToFinal(){
                      item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
                      item.collectorId = $("#rentalkeyInCollMemId").val() ;
                      item.allowComm = $("#rentalcashIsCommChk").val() ;
+                     item.refDtlsJPayRef = $("#rentalRefDtlsJompay").val();
 
                      AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1301,6 +1309,7 @@ function addRentalToFinal(){
 	                    item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
 	                    item.collectorId = $("#rentalkeyInCollMemId").val() ;
 	                    item.allowComm = $("#rentalcashIsCommChk").val() ;
+	                    item.refDtlsJPayRef = $("#rentalRefDtlsJompay").val();
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1342,6 +1351,7 @@ function addRentalToFinal(){
                     item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
                     item.allowComm = $("#rentalcashIsCommChk").val() ;
+                    item.refDtlsJPayRef = $("#rentalRefDtlsJompay").val();
 
                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1580,6 +1590,7 @@ function addOutToFinal(){
                 item.collectorCode = $("#outkeyInCollMemNm").val() ;
                 item.collectorId = $("#outkeyInCollMemId").val() ;
                 item.allowComm = $("#outcashIsCommChk").val() ;
+                item.refDtlsJPayRef = $("#outkeyRefDtlsJompay").val();
 
                 AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1977,12 +1988,13 @@ function addSrvcToFinal(){
                      item.targetAmt   = mstFilterCharges - mstFilterChargesPaid;
                      item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
                      item.billAsId    = 0;
- 					item.srvMemId	=0;
-                    item.trNo =  $("#srvckeyInTrNo").val() ;
-                    item.trDt =  $("#srvckeyInTrIssueDate").val() ;
-                    item.collectorCode = $("#srvckeyInCollMemNm").val() ;
-                    item.collectorId = $("#srvckeyInCollMemId").val() ;
-                    item.allowComm = $("#srvccashIsCommChk").val() ;
+ 					 item.srvMemId	=0;
+                     item.trNo =  $("#srvckeyInTrNo").val() ;
+                     item.trDt =  $("#srvckeyInTrIssueDate").val() ;
+                     item.collectorCode = $("#srvckeyInCollMemNm").val() ;
+                     item.collectorId = $("#srvckeyInCollMemId").val() ;
+                     item.allowComm = $("#srvccashIsCommChk").val() ;
+                     item.refDtlsJPayRef = $("#srvckeyRefDtlsJompay").val();
 
                      AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -2022,6 +2034,7 @@ function addSrvcToFinal(){
                     item.collectorCode = $("#srvckeyInCollMemNm").val() ;
                     item.collectorId = $("#srvckeyInCollMemId").val() ;
                     item.allowComm = $("#srvccashIsCommChk").val() ;
+                    item.refDtlsJPayRef = $("#srvckeyRefDtlsJompay").val();
 
                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -2062,6 +2075,7 @@ function addSrvcToFinal(){
                     item.collectorCode = $("#srvckeyInCollMemNm").val() ;
                     item.collectorId = $("#srvckeyInCollMemId").val() ;
                     item.allowComm = $("#srvccashIsCommChk").val() ;
+                    item.refDtlsJPayRef = $("#srvckeyRefDtlsJompay").val();
 
                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -2107,6 +2121,7 @@ function addSrvcToFinal(){
 	                    item.collectorCode = $("#srvckeyInCollMemNm").val() ;
 	                    item.collectorId = $("#srvckeyInCollMemId").val() ;
 	                    item.allowComm = $("#srvccashIsCommChk").val() ;
+	                    item.refDtlsJPayRef = $("#srvckeyRefDtlsJompay").val();
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -2345,6 +2360,7 @@ function addBillToFinal(){
                         item.collectorCode = $("#billkeyInCollMemNm").val() ;
                         item.collectorId = $("#billkeyInCollMemId").val() ;
                         item.allowComm = $("#billcashIsCommChk").val() ;
+                        item.refDtlsJPayRef = $("#billkeyRefDtlsJompay").val();
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -2441,6 +2457,9 @@ function fn_payTypeChange(){
         $("#cashBankType").append("<option value='2730'>VA</option>");
         $("#cashBankType").append("<option value='2731'>Others</option>");
 
+        $("#onlineEft").prop("required", false);
+        $('span', '#onlineEftLbl').empty().remove();
+
 		//CASH이고 APP_TYPE이 OUTRIGHT_MEMBERSHIP이면 BANK_ID 528 추가
 		if($("#appType").val() == 5){
 			$("#cashBankAcc").append("<option value='528'>2210/001 - OTHER RECEIVABLES - HR PAYROLL EXPENSES</option>");
@@ -2455,6 +2474,9 @@ function fn_payTypeChange(){
         $("#chequeBankType").append("<option value=''>Choose One</option>");
         $("#chequeBankType").append("<option value='2730'>VA</option>");
         $("#chequeBankType").append("<option value='2731'>Others</option>");
+
+        $("#onlineEft").prop("required", false);
+        $('span', '#onlineEftLbl').empty().remove();
     }else if(payType == "108"){//Online
         $("#cashSearch").hide();
         $("#chequeSearch").hide();
@@ -2465,6 +2487,9 @@ function fn_payTypeChange(){
         $("#onlineBankType").append("<option value='2728'>JomPay</option>");
         $("#onlineBankType").append("<option value='2730'>VA</option>");
         $("#onlineBankType").append("<option value='2731'>Others</option>");
+
+        $("#onlineEft").prop("required", true);
+        $("#onlineEftLbl").append("<span class='must'>*</span>");
     }
 }
 
@@ -2704,6 +2729,7 @@ function addOutSrvcToFinal(){
                 item.collectorCode = $("#outSrvckeyInCollMemNm").val() ;
                 item.collectorId = $("#outSrvckeyInCollMemId").val() ;
                 item.allowComm = $("#outSrvccashIsCommChk").val() ;
+                item.refDtlsJPayRef = $("#outSrvcRefDtlsJompay").val();
 
 	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	            addedCount++;
@@ -2743,6 +2769,7 @@ function addOutSrvcToFinal(){
                 item.collectorCode = $("#outSrvckeyInCollMemNm").val() ;
                 item.collectorId = $("#outSrvckeyInCollMemId").val() ;
                 item.allowComm = $("#outSrvccashIsCommChk").val() ;
+                item.refDtlsJPayRef = $("#outSrvcRefDtlsJompay").val();
 
 	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	            addedCount++;
@@ -2914,35 +2941,39 @@ $.fn.clearForm = function() {
                             </td>
                         </tr>
                         <tr>
-                  <th scope="row">TR No.</th>
-                        <td>
-                            <input id="rentalkeyInTrNo" name="rentalkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
-                        </td>
-
-              </tr>
-              <tr>
-                                <th scope="row">TR Issue Date</th>
-                        <td>
-                            <input id="rentalkeyInTrIssueDate" name="rentalkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
-                        </td>
+                            <th scope="row">Ref Details/JomPay Ref</th>
+                            <td>
+                                <input id="rentalRefDtlsJompay" name="rentalRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="10" />
+                            </td>
                         </tr>
-              <tr>
-                  <th scope="row">Collector</th>
-                  <td>
-                      <input id="rentalkeyInCollMemId" name="rentalkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                      <input id="rentalkeyInCollMemNm" name="rentalkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
-                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                      </a>
-                  </td>
-
-              </tr>
-              <tr>
-                      <th scope="row">Commission</th>
-                      <td>
-                            <label><input type="checkbox" id="rentalcashIsCommChk" name="rentalcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
-                      </td>
-             </tr>
+                        <tr>
+                            <th scope="row">TR No.</th>
+                            <td>
+                                <input id="rentalkeyInTrNo" name="rentalkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">TR Issue Date</th>
+                            <td>
+                                <input id="rentalkeyInTrIssueDate" name="rentalkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Collector</th>
+                            <td>
+                                <input id="rentalkeyInCollMemId" name="rentalkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
+                                <input id="rentalkeyInCollMemNm" name="rentalkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                                <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Commission</th>
+                            <td>
+                                <label><input type="checkbox" id="rentalcashIsCommChk" name="rentalcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <!-- table end -->
@@ -3004,36 +3035,40 @@ $.fn.clearForm = function() {
                                     </p>
                             </td>
                         </tr>
-                         <tr>
-                        <th scope="row">TR No.</th>
-                        <td>
-                            <input id="outkeyInTrNo" name="outkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
-                        </td>
-
-              </tr>
-              <tr>
-                                <th scope="row">TR Issue Date</th>
-                        <td>
-                            <input id="outkeyInTrIssueDate" name="outkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
-                        </td>
+                        <tr>
+                            <th scope="row">Ref Details/JomPay Ref</th>
+                            <td>
+                                <input id="outkeyRefDtlsJompay" name="outkeyRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="10" />
+                            </td>
                         </tr>
-              <tr>
-                  <th scope="row">Collector</th>
-                  <td>
-                      <input id="outkeyInCollMemId" name="outkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                      <input id="outkeyInCollMemNm" name="outkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
-                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                      </a>
-                  </td>
-
-              </tr>
-              <tr>
-                      <th scope="row">Commission</th>
-                      <td>
-                            <label><input type="checkbox" id="outcashIsCommChk" name="outcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
-                      </td>
-             </tr>
+                        <tr>
+                            <th scope="row">TR No.</th>
+                            <td>
+                                <input id="outkeyInTrNo" name="outkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">TR Issue Date</th>
+                            <td>
+                                <input id="outkeyInTrIssueDate" name="outkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Collector</th>
+                            <td>
+                                <input id="outkeyInCollMemId" name="outkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
+                                <input id="outkeyInCollMemNm" name="outkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                                <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Commission</th>
+                            <td>
+                                <label><input type="checkbox" id="outcashIsCommChk" name="outcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <!-- table end -->
@@ -3107,35 +3142,39 @@ $.fn.clearForm = function() {
                             </td>
                         </tr>
                         <tr>
-                  <th scope="row">TR No.</th>
-                        <td>
-                            <input id="srvckeyInTrNo" name="srvckeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
-                        </td>
-
-              </tr>
-              <tr>
-                                <th scope="row">TR Issue Date</th>
-                        <td>
-                            <input id="srvckeyInTrIssueDate" name="srvckeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
-                        </td>
+                            <th scope="row">Ref Details/JomPay Ref</th>
+                            <td>
+                                <input id="srvckeyRefDtlsJompay" name="srvckeyRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="10" />
+                            </td>
                         </tr>
-              <tr>
-                  <th scope="row">Collector</th>
-                  <td>
-                      <input id="srvckeyInCollMemId" name="srvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                      <input id="srvckeyInCollMemNm" name="srvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
-                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                      </a>
-                  </td>
-
-              </tr>
-              <tr>
-                      <th scope="row">Commission</th>
-                      <td>
-                            <label><input type="checkbox" id="srvccashIsCommChk" name="srvccashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
-                      </td>
-             </tr>
+                        <tr>
+                            <th scope="row">TR No.</th>
+                            <td>
+                                <input id="srvckeyInTrNo" name="srvckeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">TR Issue Date</th>
+                            <td>
+                                <input id="srvckeyInTrIssueDate" name="srvckeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Collector</th>
+                            <td>
+                                <input id="srvckeyInCollMemId" name="srvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
+                                <input id="srvckeyInCollMemNm" name="srvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                                <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Commission</th>
+                            <td>
+                                <label><input type="checkbox" id="srvccashIsCommChk" name="srvccashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <!-- table end -->
@@ -3203,35 +3242,39 @@ $.fn.clearForm = function() {
                             </td>
                         </tr>
                         <tr>
-                  <th scope="row">TR No.</th>
-                        <td>
-                            <input id="billkeyInTrNo" name="billkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
-                        </td>
-
-              </tr>
-              <tr>
-                                <th scope="row">TR Issue Date</th>
-                        <td>
-                            <input id="billkeyInTrIssueDate" name="billkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
-                        </td>
+                            <th scope="row">Ref Details/JomPay Ref</th>
+                            <td>
+                                <input id="billkeyRefDtlsJompay" name="billkeyRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="10" />
+                            </td>
                         </tr>
-              <tr>
-                  <th scope="row">Collector</th>
-                  <td>
-                      <input id="billkeyInCollMemId" name="billkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                      <input id="billkeyInCollMemNm" name="billkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
-                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                      </a>
-                  </td>
-
-              </tr>
-              <tr>
-                      <th scope="row">Commission</th>
-                      <td>
-                            <label><input type="checkbox" id="billcashIsCommChk" name="billcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
-                      </td>
-             </tr>
+                        <tr>
+                            <th scope="row">TR No.</th>
+                            <td>
+                                <input id="billkeyInTrNo" name="billkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">TR Issue Date</th>
+                            <td>
+                                <input id="billkeyInTrIssueDate" name="billkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Collector</th>
+                            <td>
+                                <input id="billkeyInCollMemId" name="billkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
+                                <input id="billkeyInCollMemNm" name="billkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                                <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Commission</th>
+                            <td>
+                                <label><input type="checkbox" id="billcashIsCommChk" name="billcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <!-- table end -->
@@ -3290,36 +3333,39 @@ $.fn.clearForm = function() {
                             </td>
                         </tr>
                         <tr>
-                  <th scope="row">TR No.</th>
-                        <td>
-                            <input id="outSrvckeyInTrNo" name="outSrvckeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
-                        </td>
-
-              </tr>
-              <tr>
-                                <th scope="row">TR Issue Date</th>
-                        <td>
-                            <input id="outSrvckeyInTrIssueDate" name="outSrvckeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
-                        </td>
+                            <th scope="row">Ref Details/JomPay Ref</th>
+                            <td>
+                                <input id="outSrvcRefDtlsJompay" name="outSrvcRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="10" />
+                            </td>
                         </tr>
-              <tr>
-                  <th scope="row">Collector</th>
-                  <td>
-                      <input id="outSrvckeyInCollMemId" name="outSrvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                      <input id="outSrvckeyInCollMemNm" name="outSrvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
-                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                      </a>
-                  </td>
-
-              </tr>
-              <tr>
-                      <th scope="row">Commission</th>
-                      <td>
-                            <label><input type="checkbox" id="outSrvccashIsCommChk" name="outSrvccashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
-                      </td>
-             </tr>
-
+                        <tr>
+                            <th scope="row">TR No.</th>
+                            <td>
+                                <input id="outSrvckeyInTrNo" name="outSrvckeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">TR Issue Date</th>
+                            <td>
+                                <input id="outSrvckeyInTrIssueDate" name="outSrvckeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Collector</th>
+                            <td>
+                                <input id="outSrvckeyInCollMemId" name="outSrvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
+                                <input id="outSrvckeyInCollMemNm" name="outSrvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                                <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Commission</th>
+                            <td>
+                                <label><input type="checkbox" id="outSrvccashIsCommChk" name="outSrvccashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <!-- table end -->
@@ -3665,7 +3711,7 @@ $.fn.clearForm = function() {
                             <td>
                                 <input id="onlineTransDate" name="onlineTransDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                             </td>
-                            <th scope="row">EFT</th>
+                            <th scope="row" id="onlineEftLbl">EFT</th>
                             <td>
                                 <input type="text" id="onlineEft" name="onlineEft" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' />
                             </td>
@@ -3675,10 +3721,14 @@ $.fn.clearForm = function() {
                             <td>
                                 <input type="text" id="onlinePayName" name="onlinePayName" class="w100p" />
                             </td>
+                            <th></th>
+                            <td></td>
+                            <!--
                             <th scope="row">Ref Details/Jompay Ref</th>
                             <td>
                                 <input type="text" id="onlineRefDetails" name="onlineRefDetails" class="w100p" />
                             </td>
+                             -->
                         </tr>
                         <tr>
                             <th scope="row">Bank Type<span class="must">*</span></th>

@@ -137,7 +137,8 @@
             TR_NO,
             COLL_MEM_ID,
             ALLOW_COMM,
-            TR_ISSU_DT
+            TR_ISSU_DT,
+            REF_DTL
         ) VALUES (
             PAY0241T_SEQ.NEXTVAL,
             #{seq},
@@ -168,7 +169,8 @@
             #{trNo},
             #{collectorId},
             #{allowComm},
-            TO_DATE(#{trDt}, 'DD/MM/YYYY')
+            TO_DATE(#{trDt}, 'DD/MM/YYYY'),
+            #{refDtlsJPayRef}
         )
     </insert>
 
