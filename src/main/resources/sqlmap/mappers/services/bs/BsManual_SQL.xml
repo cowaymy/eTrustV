@@ -3665,7 +3665,9 @@ SET SETL_DT = TO_DATE( NVL(#{SettleDate},'01/01/1900'), 'DD/MM/YYYY'),
     FAIL_RESN_ID = NVL(#{FailReasonID},'0'),
     REN_COLCT_ID = #{RenCollectionID},
     RESULT_REM = #{ResultRemark},
-    RESULT_STOCK_USE = #{ResultStockUse}
+    RESULT_STOCK_USE = #{ResultStockUse},
+    RESULT_UPD_DT = SYSDATE,
+    RESULT_UPD_USER_ID = #{ResultCreator}
 WHERE SCHDUL_ID = #{ScheduleID}
 AND RESULT_IS_CURR = 1
           </update>
@@ -3673,7 +3675,9 @@ AND RESULT_IS_CURR = 1
           <update id="updateQrySchedule" parameterType="Map">
           update SVC0008D
                set STUS_CODE_ID = #{ResultStatusCodeID}
-                  ,ACTN_MEM_ID = #{CodyID}
+                      ,ACTN_MEM_ID = #{CodyID}
+                      ,UPD_DT = SYSDATE
+                      ,UPD_USER_ID = #{ResultCreator}
             where SCHDUL_ID = #{ScheduleID}
           </update>
 
@@ -3683,6 +3687,8 @@ AND RESULT_IS_CURR = 1
            <!-- [19-09-2018] AMEND PARAMETER VALUE -->
            set SRV_REM = #{ResultInstRemark}
               ,SRV_BS_WEEK = #{bsPreferWeek}
+              ,SRV_UPD_DT = SYSDATE
+              ,SRV_UPD_USER_ID = #{ResultCreator}
         where SRV_STUS_ID = 1
           and SRV_SO_ID =#{SalesOrderId}
           </update>
@@ -3694,6 +3700,8 @@ AND RESULT_IS_CURR = 1
            set SRV_REM = #{ResultInstRemark}
               ,SRV_PREV_DT = TO_DATE(#{SettleDate}, 'DD/MM/YYYY')
               ,SRV_BS_WEEK = #{bsPreferWeek}
+              ,SRV_UPD_DT = SYSDATE
+              ,SRV_UPD_USER_ID = #{ResultCreator}
         where SRV_STUS_ID = 1
           and SRV_SO_ID =#{SalesOrderId}
           </update>
