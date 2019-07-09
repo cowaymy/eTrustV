@@ -2507,7 +2507,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
     return result;
   }
-
+   //BY KV order installation no yet complete (CallLog Type - 257, CCR0001D - 20, SAL00046 - Active )
   @Override
   public EgovMap validOCRStus(Map<String, Object> params) {
 
@@ -2538,6 +2538,36 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     if (callLogResult > 0) {
       result.put("callLogResult", 1);
       result.put("msg", "OCR is not allowed due to Order Status still [ACTIVE]");
+    }
+
+    return result;
+  }
+ //BY KV -order cancellation no yet complete sal0020d
+  @Override
+  public EgovMap validOCRStus3(Map<String, Object> params) {
+
+    EgovMap result = new EgovMap();
+
+    int callLogResult = orderRequestMapper.validOCRStus3(params);
+
+    if (callLogResult > 0) {
+      result.put("callLogResult", 1);
+      result.put("msg", "OCR is not allowed due to Cancellation Status still [ACTIVE]");
+    }
+
+    return result;
+  }
+  //By KV - order cancellation complete sal0020d ; log0038d active
+  @Override
+  public EgovMap validOCRStus4(Map<String, Object> params) {
+
+    EgovMap result = new EgovMap();
+
+    int callLogResult = orderRequestMapper.validOCRStus4(params);
+
+    if (callLogResult > 0) {
+      result.put("callLogResult", 1);
+      result.put("msg", "OCR is not allowed due to Cancellation Status still [ACTIVE]");
     }
 
     return result;
