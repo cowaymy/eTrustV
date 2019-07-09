@@ -1610,16 +1610,16 @@
         	}
         }
 
-        //Valid OCR Status - (CallLog Type - 257, Stus - 20, InstallResult Stus - Active )
+        //BY KV order installation no yet complete (CallLog Type - 257, CCR0001D - 20, SAL00046 - Active )
 	        Common.ajaxSync("GET", "/sales/order/validOCRStus.do", {salesOrdId : ORD_ID}, function(result) {
 	        	if(result.callLogResult == 1) {
                     isLock = true;
-                    msg = 'This order is under progress [ Ready to Install ].<br />' + result.msg + '.<br/>';
+                    msg = 'This order is under progress [ Call for Install ].<br />' + result.msg + '.<br/>';
                 }
 	        });
 
 	     /*BY KV - waiting call for installation, cant do product return , ccr0006d active but SAL0046D no record */
-	     //Valid OCR Status - (CallLog Type - 257, Stus - 1, SAL00046 - NO RECORD  )
+	     //Valid OCR Status - (CallLog Type - 257, CCR0001D - 1, SAL00046 - NO RECORD  )
             Common.ajaxSync("GET", "/sales/order/validOCRStus2.do", {salesOrdId : ORD_ID}, function(result) {
                 if(result.callLogResult == 1) {
                     isLock = true;
@@ -1627,7 +1627,21 @@
                 }
             });
 
+          //BY KV -order cancellation no yet complete sal0020d)
+            Common.ajaxSync("GET", "/sales/order/validOCRStus3.do", {salesOrdId : ORD_ID}, function(result) {
+                if(result.callLogResult == 1) {
+                    isLock = true;
+                    msg = 'This order is under progress [ Call for Cancel ].<br />' + result.msg + '.<br/>';
+                }
+            });
 
+            //By KV - Valid OCR Status - (CallLog Type - 259, SAL0020D - 32 LOG0038D Stus - Active )
+            Common.ajaxSync("GET", "/sales/order/validOCRStus4.do", {salesOrdId : ORD_ID}, function(result) {
+                if(result.callLogResult == 1) {
+                    isLock = true;
+                    msg = 'This order is under progress [Confirm To Cancel ].<br />' + result.msg + '.<br/>';
+                }
+            });
 
         if(isLock) {
             if(tabNm == 'CANC') {
