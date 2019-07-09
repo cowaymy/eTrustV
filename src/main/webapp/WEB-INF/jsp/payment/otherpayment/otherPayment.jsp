@@ -220,9 +220,6 @@ $(document).ready(function(){
 
              $("#online").find("#payType").val($('#payMode').val());
 
-             $("#eft").prop("required", true);
-             $("#eftLbl").append("<span class='must'>*</span>");
-
              doGetCombo('/common/getAccountList.do', 'ONLINE','', 'searchBankAcc', 'S', '' );
              $("#searchBankType option").remove();
              $("#searchBankType").append("<option value=''>Choose One</option>");
@@ -2023,6 +2020,11 @@ function isDupPOSToFinal(){
 	                 $("#bankAccOnline").val($("#searchBankAcc").val());
 	                 $("#online").find("#va").val($("#searchVa").val());
 
+	                 if($("#online").find("#bankType").val() == '2728') {
+                         $("#eft").prop("required", true);
+                         $("#eftLbl").append("<span class='must'>*</span>");
+                     }
+
 	               //선택한 BankType에 따라 필수조건 표시
 	                 if($("#online").find("#bankType").val() != ''){
                          if($("#online").find("#bankType").val() == '2730'){
@@ -2193,7 +2195,7 @@ function isDupPOSToFinal(){
                              return;
                         }
 
-                        if(onlineBankType == "2728") {
+                        if($("#bankType").val() == "2728") {
                             if(FormUtil.isEmpty($("#eft").val())) {
                                 Common.alert("* No EFT/JomPayRef");
                             }
