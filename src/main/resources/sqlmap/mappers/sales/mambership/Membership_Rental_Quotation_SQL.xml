@@ -14,12 +14,12 @@
 	                E3.SALES_ORD_NO   ,
 	                E4.NAME   ,
 	                E5.USER_NAME   ,
-	                CASE     WHEN ( to_date(E1.QOTAT_VAL_ID_DT ,'yyyy/mm/dd')<![CDATA[<]]>  to_date( SYSDATE ,'yyyy/mm/dd' )) THEN 82
+	                CASE     WHEN ( to_date(E1.QOTAT_VAL_ID_DT ,'dd/mm/yyyy')<![CDATA[<]]>  to_date( SYSDATE ,'dd/mm/yyyy' )) THEN 82
 	                            WHEN ( 4 = E1.QOTAT_STUS_ID ) THEN 81
 	                            ELSE E1.QOTAT_STUS_ID
 	                END C1  ,
 	                CASE
-		                     WHEN (  to_date(E1.QOTAT_VAL_ID_DT ,'yyyy/mm/dd')<![CDATA[<]]>  to_date( SYSDATE ,'yyyy/mm/dd' ) ) THEN 'EXP'
+		                     WHEN (  to_date(E1.QOTAT_VAL_ID_DT ,'dd/mm/yyyy')<![CDATA[<]]>  to_date( SYSDATE ,'dd/mm/yyyy' ) ) THEN 'EXP'
 		                     WHEN ( 4 = E1.QOTAT_STUS_ID ) THEN 'CON'
 		                     WHEN ( 1 = E1.QOTAT_STUS_ID ) THEN 'ACT'
 		                     WHEN ( 8 = E1.QOTAT_STUS_ID ) THEN 'DEA'
@@ -32,20 +32,18 @@
 	                JOIN SYS0047M E5   ON E5.USER_ID = E1.QOTAT_CRT_USER_ID
 
            <if test='userTypeId =="1" or userTypeId == "2" '>
-                   JOIN SYS0047M USR ON E1.QOTAT_SALESMAN_ID = USR.USER_ID
-                   JOIN ORG0001D B ON USR.USER_ID = B.MEM_ID
+                   JOIN ORG1001V B ON E1.QOTAT_SALESMAN_ID = B.MEM_ID
                                         <if test="memCode != null and memCode != '' ">
                                             AND B.MEM_CODE = #{memCode}
                                         </if>
-                   JOIN ORG0005D C ON B.MEM_ID = C.MEM_ID
                                           <if test="orgCode != null and orgCode != '' ">
-                                          AND C.LAST_ORG_CODE = #{orgCode}
+                                          AND B.ORG_CODE = #{orgCode}
                                           </if>
                                           <if test="grpCode != null and grpCode != '' ">
-                                          AND C.LAST_GRP_CODE = #{grpCode}
+                                          AND B.GRP_CODE = #{grpCode}
                                           </if>
                                           <if test="deptCode != null and deptCode != '' ">
-                                          AND C.LAST_GRP_CODE = #{deptCode}
+                                          AND B.DEPT_CODE = #{deptCode}
                                           </if>
             </if>
 	          WHERE 1=1
@@ -108,12 +106,12 @@
 						                E3.SALES_ORD_NO   ,
 						                E4.NAME   ,
 						                E5.USER_NAME   ,
-						                CASE     WHEN ( to_date(E1.QOTAT_VAL_ID_DT ,'yyyy/mm/dd')<![CDATA[<]]>  to_date( SYSDATE ,'yyyy/mm/dd' )) THEN 82
+						                CASE     WHEN ( to_date(E1.QOTAT_VAL_ID_DT ,'dd/mm/yyyy')<![CDATA[<]]>  to_date( SYSDATE ,'dd/mm/yyyy' )) THEN 82
 						                            WHEN ( 4 = E1.QOTAT_STUS_ID ) THEN 81
 						                            ELSE E1.QOTAT_STUS_ID
 						                END C1  ,
 						                CASE
-							                     WHEN (  to_date(E1.QOTAT_VAL_ID_DT ,'yyyy/mm/dd')<![CDATA[<]]>  to_date( SYSDATE ,'yyyy/mm/dd' ) ) THEN 'EXP'
+							                     WHEN (  to_date(E1.QOTAT_VAL_ID_DT ,'dd/mm/yyyy')<![CDATA[<]]>  to_date( SYSDATE ,'dd/mm/yyyy' ) ) THEN 'EXP'
 							                     WHEN ( 4 = E1.QOTAT_STUS_ID ) THEN 'CON'
 							                     WHEN ( 1 = E1.QOTAT_STUS_ID ) THEN 'ACT'
 							                     WHEN ( 8 = E1.QOTAT_STUS_ID ) THEN 'DEA'
@@ -887,12 +885,12 @@
                       END MEM_NAME  ,
                    Limit1.QOTAT_CNTRCT_FREQ QOTAT_CNTRCT_FREQ  ,
                    CASE
-                        WHEN ( to_date(Limit1.QOTAT_VAL_ID_DT,'yyyy/mm/dd') <![CDATA[<]]> to_date( SYSDATE ,'yyyy/mm/dd' ) ) THEN 82
+                        WHEN ( to_date(Limit1.QOTAT_VAL_ID_DT,'dd/mm/yyyy') <![CDATA[<]]> to_date( SYSDATE ,'dd/mm/yyyy' ) ) THEN 82
                         WHEN ( 4 = Limit1.QOTAT_STUS_ID ) THEN 81
                    ELSE Limit1.QOTAT_STUS_ID
                       END C5  ,
                    CASE
-                        WHEN ( to_date(Limit1.QOTAT_VAL_ID_DT,'yyyy/mm/dd') <![CDATA[<]]> to_date( SYSDATE ,'yyyy/mm/dd' ) ) THEN 'EXP'
+                        WHEN ( to_date(Limit1.QOTAT_VAL_ID_DT,'dd/mm/yyyy') <![CDATA[<]]> to_date( SYSDATE ,'dd/mm/yyyy' ) ) THEN 'EXP'
                         WHEN ( 4 = Limit1.QOTAT_STUS_ID ) THEN 'CON'
                         WHEN ( 1 = Limit1.QOTAT_STUS_ID ) THEN 'ACT'
                         WHEN ( 8 = Limit1.QOTAT_STUS_ID ) THEN 'DEA'
