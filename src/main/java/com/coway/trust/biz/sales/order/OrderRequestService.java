@@ -51,7 +51,13 @@ public interface OrderRequestService {
 
 	EgovMap checkeAutoDebitDeduction(Map<String, Object> params);
 
+	//BY KV order installation no yet complete (CallLog Type - 257, CCR0001D - 20, SAL00046 - Active )
 	EgovMap validOCRStus(Map<String, Object> params);
 
 	EgovMap validOCRStus2(Map<String, Object> params);
+	//BY KV -order cancellation no yet complete sal0020d
+	EgovMap validOCRStus3(Map<String, Object> params);
+	//By KV -order cancellation complete sal0020d ; log0038d active
+	EgovMap validOCRStus4(Map<String, Object> params);
+
 }
