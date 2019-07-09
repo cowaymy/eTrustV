@@ -15,10 +15,10 @@ $(document).ready(function() {
 	});
 
 	CommonCombo.make('cmbBranch', '/sales/ccp/getBranchCodeList', '' , '');
-//	CommonCombo.make('cmbCreateBy', '/sales/trBook/getCreateByList', '' , ''); 
-	
+//	CommonCombo.make('cmbCreateBy', '/sales/trBook/getCreateByList', '' , '');
+
 	setDefaultValue();
-	
+
 });
 
 function setDefaultValue(){
@@ -27,7 +27,7 @@ function setDefaultValue(){
     $("#cboOrganization").multipleSelect("disable");
     $("#cboMember").prop("disabled", true);
     $("#cboMember").addClass("disabled");
-    
+
 }
 
 function ddlHolderType_SelectedIndexChanged(){
@@ -39,85 +39,86 @@ function ddlHolderType_SelectedIndexChanged(){
 	}else{
 		$("#cboMember").prop("disabled", true);
 	    $("#cboMember").addClass("disabled");
+	    $("#cboMember").val(0);
         $("#cboOrganization").multipleSelect("uncheckAll");
 	    $("#cboOrganization").multipleSelect("disable");
 	    $("#cboGroup").multipleSelect("uncheckAll");
-	    $("#cboGroup").multipleSelect("disable");	
+	    $("#cboGroup").multipleSelect("disable");
 	    $("#cboDepartment").multipleSelect("uncheckAll");
-        $("#cboDepartment").multipleSelect("disable");  
-	}	
+        $("#cboDepartment").multipleSelect("disable");
+	}
 }
 
 function validRequiredField(){
-	
+
 	var valid = true;
 	var message = "";
-	
+
 	if(($("#dpUpdateFromDate").val() == null || $("#dpUpdateFromDate").val().length == 0) || ($("#dpUpdateToDate").val() == null || $("#dpUpdateToDate").val().length == 0)){
 		valid = false;
         message += "<spring:message code="sal.alert.msg.keyInDateFromTo" /></br>";
 	}
-	
-	/* 
+
+	/*
 	if($("#cmbBranch :selected").index() <= -1){
 		valid = false;
         message += "* Please select the key-in branch.\n";
 	}
-	*/	
-	
+	*/
+
 	if(valid == false){
 		Common.alert("<spring:message code="sal.alert.title.warning" />" + DEFAULT_DELIMITER + message);
 	}
-	
+
 	return valid;
-	
+
 }
 
 function btnGenerateExcel_Click(){
-	
+
 	if(validRequiredField()){
 		if($("#ddlHolderType :selected").text() == "Branch"){
 			fn_report("EXCEL");
 		}else if($("#cboMember :selected").index() > -1){
-			if($('#cboOrganization :selected').length > 0){
+			//if($('#cboOrganization :selected').length > 0){
 				fn_report("EXCEL");
-			}else{
-				Common.alert("<spring:message code="sal.alert.msg.organisationCodeToPrint" />");
-			}
+			//}else{
+			//	Common.alert("<spring:message code="sal.alert.msg.organisationCodeToPrint" />");
+			//}
 		}
 	}
 }
 
 function btnGeneratePDF_Click(){
-	
+
 	if(validRequiredField()){
         if($("#ddlHolderType :selected").text() == "Branch"){
             fn_report("PDF");
         }else if($("#cboMember :selected").index() > -1){
-            if($('#cboOrganization :selected').length > 0){
+            //if($('#cboOrganization :selected').length > 0){
                 fn_report("PDF");
-            }else{
-                Common.alert("<spring:message code="sal.alert.msg.organisationCodeToPrint" />");
-            }
+            //}else{
+            //    Common.alert("<spring:message code="sal.alert.msg.organisationCodeToPrint" />");
+            //}
         }
     }
 }
 
 function fn_report(viewType){
-	
+
 	$("#reportFileName").val("");
 	$("#viewType").val("");
 	$("#reportDownFileName").val("");
-	
+
 	var whereSQL = "";
 	var showDateFrom = "";
-	
+
 	if(!($("#dpUpdateFromDate").val() == null || $("#dpUpdateFromDate").val().length == 0) && !($("#dpUpdateToDate").val() == null || $("#dpUpdateToDate").val().length == 0)){
 		whereSQL += " WHERE M.TR_BOOK_UPD_DT BETWEEN TO_DATE('"+$("#dpUpdateFromDate").val()+"', 'dd/MM/YY') AND TO_DATE('"+$("#dpUpdateToDate").val()+"', 'dd/MM/YY')";
 		showDateFrom = $("#dpUpdateFromDate").val()+" To "+$("#dpUpdateToDate").val();
-	
+
 	}
-	
+
 	var showKeyInBranch = "";
 	if($("#cmbBranch :selected").index() > 0){
 		if($("#cmbBranch :selected").text() != ""){
@@ -125,82 +126,82 @@ function fn_report(viewType){
 		}
 		showKeyInBranch = $("#cmbBranch :selected").text();
 	}
-	
-	var showKeyDepartment = "-";
-	if($("#cboMember :selected").index() > 0){
-		var mbrID = "";
-		var mbrID1 = "";
-		var mbrID2 = "";
-		var mbrID3 = "";
-		
-		if(parseInt($("#cboMember :selected").val()) == 4){
-			var cnt = 0;
-			$('#cboDepartment :selected').each(function(j, mul){ 
-				if(cnt == 0){
-					mbrID += $(mul).val(); 	
-				}else{
-					mbrID += ", "+$(mul).val();
-				}
-				cnt += 1;
-				
-			});
-			whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";
-			
-		}else{
-			var cnt = 0;
-			if($('#cboOrganization :selected').length > 0){
-				$('#cboDepartment :selected').each(function(j, mul){
-					if(cnt == 0){
-						mbrID1 += " '"+$(mul).val().substring(0, 7)+"' ";
-					}else{
-						mbrID1 += ", '"+$(mul).val().substring(0, 7)+"' ";
-					}
-					cnt += 1;
-				});
-			//	whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";
-			}
-			
-			if($('#cboGroup :selected').length > 0){
-				$('#cboGroup :selected').each(function(j, mul){
-                    if(cnt == 0){
-                        mbrID2 += " '"+$(mul).val().substring(0, 7)+"' ";
-                    }else{
-                        mbrID2 += ", '"+$(mul).val().substring(0, 7)+"' ";
-                    }
-                    cnt += 1;
-                });
-            //  whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";
-			}
-			
-		    if($('#cboDepartment :selected').length > 0){
-		    	$('#cboDepartment :selected').each(function(j, mul){
-                    if(cnt == 0){
-                        mbrID3 += " '"+$(mul).val().substring(0, 7)+"' ";
-                    }else{
-                        mbrID3 += ", '"+$(mul).val().substring(0, 7)+"' ";
-                    }
-                    cnt += 1;
-                });
-            //  whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";
-            }
-		    
-		    showKeyDepartment = $("#cboDepartment :selected").text();
-		    whereSQL += " AND mbrOrg.DEPT_CODE IN ("+mbrID1+mbrID2+mbrID3+") ";
-		}
-	}
-	
-	/* 
+
+// 	var showKeyDepartment = "-";
+// 	if($("#cboMember :selected").index() > 0){
+// 		var mbrID = "";
+// 		var mbrID1 = "";
+// 		var mbrID2 = "";
+// 		var mbrID3 = "";
+
+// 		if(parseInt($("#cboMember :selected").val()) == 4){
+// 			var cnt = 0;
+// 			$('#cboDepartment :selected').each(function(j, mul){
+// 				if(cnt == 0){
+// 					mbrID += $(mul).val();
+// 				}else{
+// 					mbrID += ", "+$(mul).val();
+// 				}
+// 				cnt += 1;
+
+// 			});
+// 			whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";
+
+// 		}else{
+// 			var cnt = 0;
+// 			if($('#cboOrganization :selected').length > 0){
+// 				$('#cboDepartment :selected').each(function(j, mul){
+// 					if(cnt == 0){
+// 						mbrID1 += " '"+$(mul).val().substring(0, 7)+"' ";
+// 					}else{
+// 						mbrID1 += ", '"+$(mul).val().substring(0, 7)+"' ";
+// 					}
+// 					cnt += 1;
+// 				});
+// 			//	whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";
+// 			}
+
+// 			if($('#cboGroup :selected').length > 0){
+// 				$('#cboGroup :selected').each(function(j, mul){
+//                     if(cnt == 0){
+//                         mbrID2 += " '"+$(mul).val().substring(0, 7)+"' ";
+//                     }else{
+//                         mbrID2 += ", '"+$(mul).val().substring(0, 7)+"' ";
+//                     }
+//                     cnt += 1;
+//                 });
+//             //  whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";
+// 			}
+
+// 		    if($('#cboDepartment :selected').length > 0){
+// 		    	$('#cboDepartment :selected').each(function(j, mul){
+//                     if(cnt == 0){
+//                         mbrID3 += " '"+$(mul).val().substring(0, 7)+"' ";
+//                     }else{
+//                         mbrID3 += ", '"+$(mul).val().substring(0, 7)+"' ";
+//                     }
+//                     cnt += 1;
+//                 });
+//             //  whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";
+//             }
+
+// 		    showKeyDepartment = $("#cboDepartment :selected").text();
+// 		    whereSQL += " AND mbrOrg.DEPT_CODE IN ("+mbrID1+mbrID2+mbrID3+") ";
+// 		}
+// 	}
+
+	/*
 	if($("#cboDepartment :selected").index() > 0){
 		if(parseInt($("#cboMember :selected").val()) == 4){
 			whereSQL += " AND mbr.MEM_ID = '"+$("#cboDepartment :selected").val()+"' ";
 		}else{
 			whereSQL += " AND mbrOrg.DEPT_CODE = '"+$("#cboDepartment :selected").text().substring(0, 7)+"' ";
 			showKeyDepartment = $("#cboDepartment :selected").text();
-		
+
 		}
 	}
 	*/
-	
+
 	var showHolderType = "-";
 	if($("#ddlHolderType :selected").index() > 0){
 		if($("#ddlHolderType :selected").text() == "Branch"){
@@ -210,171 +211,175 @@ function fn_report(viewType){
 		}
 		showHolderType = $("#ddlHolderType :selected").text();
 	}
-	
+
 	var showCreateBy = "-";
 	if($("#txtCreator").val().trim() != ""){
 		whereSQL += " AND usr.USER_NAME = '"+$("#txtCreator").val()+"' ";
 		showCreateBy = $("#txtCreator").val();
 	}
-	
+
 	if($("#txtTRBookHolder").val().trim() != ""){
         whereSQL += " AND Grp1.TR_HOLDER = '"+$("#txtTRBookHolder").val()+"' ";
     }
-	
+
+    if($("#cboMember :selected").index() > 0){
+        whereSQL += " AND mbr.MEM_TYPE = '"+$("#cboMember").val()+"' ";
+    }
+
 	var showStatus = "-";
 	if($('#ddlBookStatus :selected').length > 0){
-		
+
 		var result = "";
 		$('#ddlBookStatus :selected').each(function(j, mul){
 			result += $(mul).val();
 		});
-		
+
 		if(result == "ACTCLOLOST"){
 			whereSQL += " AND (SC.CODE='ACT' OR SC.CODE='CLO' OR SC.CODE='LOST')";
-			showStatus = "ACT/CLO/LOST";	
-			
+			showStatus = "ACT/CLO/LOST";
+
 		}else if(result == "ACTCLO"){
 			whereSQL += " AND (SC.CODE='ACT' OR SC.CODE='CLO')";
             showStatus = "ACT/CLO";
-            
+
         }else if(result == "ACTLOST"){
         	whereSQL += " AND (SC.CODE='ACT' OR SC.CODE='LOST')";
             showStatus = "ACT/LOST";
-            
+
         }else if(result == "CLOLOST"){
         	whereSQL += " AND (SC.CODE='CLO' OR SC.CODE='LOST')";
             showStatus = "CLO/LOST";
-            
+
         }else if(result == "ACT"){
         	whereSQL += " AND SC.CODE='ACT'";
             showStatus = "ACT";
-            
+
         }else if(result == "CLO"){
         	whereSQL += " AND SC.CODE='CLO'";
             showStatus = "CLO";
-            
+
         }else if(result == "LOST"){
         	whereSQL += " AND SC.CODE='LOST'";
             showStatus = "LOST";
-            
-        }	
+
+        }
 	}
-	
+
 	var showBookNo = "-";
 	if($("#txtTRBookNo").val().trim() != ""){
         whereSQL += " AND M.TR_BOOK_NO = '"+$("#txtTRBookNo").val()+"' ";
         showBookNo = $("#txtTRBookNo").val();
     }
-	
+
 	var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
-    } 
+    }
     $("#reportDownFileName").val("TR Book Management Summary Listing_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     if(viewType == "PDF"){
     	$("#viewType").val("PDF");
         $("#reportFileName").val("/sales/CRGenerateTRBook_SummaryListing_PDF_1.rpt");
-    	
+
     }else{
     	$("#viewType").val("EXCEL");
         $("#reportFileName").val("/sales/CRGenerateTRBook_SummaryListing_Excel.rpt");
-    	
+
     }
-    
-    
+
+
     console.log(whereSQL);
-    
+
     $("#V_SHOWDATEFROM").val(showDateFrom);
     $("#V_SHOWKEYINBRANCH").val(showKeyInBranch);
     $("#V_SHOWSTATUS").val(showStatus);
     $("#V_SHOWHOLDERTYPE").val(showHolderType);
-    $("#V_SHOWDEPARTMENTCODE").val(showKeyDepartment);
-    $("#V_WHERESQL").val(whereSQL); 
-    
+    //$("#V_SHOWDEPARTMENTCODE").val(showKeyDepartment);
+    $("#V_WHERESQL").val(whereSQL);
+
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
             isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
     };
-    
+
     Common.report("form", option);
 }
 
-function cboMember_SelectedIndexChanged(){
-	
- 	setDefaultValue();
-    $("#cboOrganization").multipleSelect("uncheckAll");
-    $("#cboGroup").multipleSelect("uncheckAll");
-    $("#cboDepartment").multipleSelect("uncheckAll");
-    
-    if(parseInt($("#cboMember :selected").val()) < 4){
+// function cboMember_SelectedIndexChanged(){
 
-    	var arrparentID0 = 3487;
-        var arrparentID1 = 31983;
-        var arrparentID2 = 23259;
-        
-        if($("#cboMember :selected").val() == "1"){
-            CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1, parentID : arrparentID0}, '', {type:'M', isCheckAll:false});         
-        }else if($("#cboMember :selected").val() == "2"){
-            CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1, parentID : arrparentID1}, '', {type:'M', isCheckAll:false});
-        }else if($("#cboMember :selected").val() == "3"){
-            CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1, parentID : arrparentID2}, '', {type:'M', isCheckAll:false});
-        }
-        
-        $("#cboOrganization").multipleSelect("enable");
-        $("#cboMember").prop("disabled", false);
-        $("#cboMember").removeClass("disabled");
-        $("#cboGroup").multipleSelect("disable");
-        $("#cboGroup").multipleSelect("uncheckAll");
-        $("#cboDepartment").multipleSelect("uncheckAll");
-        
-    }else{
-    	
-    	var arrparentID0 = 0;  
-        CommonCombo.make('cboDepartment', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 4, parentID : arrparentID0}, '', {type:'M', isCheckAll:false});
-        
-        $("#cboDepartment").multipleSelect("enable");
-        $("#cboMember").prop("disabled", false);
-        $("#cboMember").removeClass("disabled");
-        $("#cboGroup").multipleSelect("uncheckAll");
-        $("#cboDepartment").multipleSelect("uncheckAll");
-        
-    } 
-}
+//  	setDefaultValue();
+//     $("#cboOrganization").multipleSelect("uncheckAll");
+//     $("#cboGroup").multipleSelect("uncheckAll");
+//     $("#cboDepartment").multipleSelect("uncheckAll");
+
+//     if(parseInt($("#cboMember :selected").val()) < 4){
+
+//     	var arrparentID0 = 3487;
+//         var arrparentID1 = 31983;
+//         var arrparentID2 = 23259;
+
+//         if($("#cboMember :selected").val() == "1"){
+//             CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1, parentID : arrparentID0}, '', {type:'M', isCheckAll:false});
+//         }else if($("#cboMember :selected").val() == "2"){
+//             CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1, parentID : arrparentID1}, '', {type:'M', isCheckAll:false});
+//         }else if($("#cboMember :selected").val() == "3"){
+//             CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1, parentID : arrparentID2}, '', {type:'M', isCheckAll:false});
+//         }
+
+//         $("#cboOrganization").multipleSelect("enable");
+//         $("#cboMember").prop("disabled", false);
+//         $("#cboMember").removeClass("disabled");
+//         $("#cboGroup").multipleSelect("disable");
+//         $("#cboGroup").multipleSelect("uncheckAll");
+//         $("#cboDepartment").multipleSelect("uncheckAll");
+
+//     }else{
+
+//     	var arrparentID0 = 0;
+//         CommonCombo.make('cboDepartment', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 4, parentID : arrparentID0}, '', {type:'M', isCheckAll:false});
+
+//         $("#cboDepartment").multipleSelect("enable");
+//         $("#cboMember").prop("disabled", false);
+//         $("#cboMember").removeClass("disabled");
+//         $("#cboGroup").multipleSelect("uncheckAll");
+//         $("#cboDepartment").multipleSelect("uncheckAll");
+
+//     }
+// }
 
 function cboOrganization_SelectedIndexChanged(){
-	
+
 	$("#cboDepartment").multipleSelect("disable");
-	
+
     var total_item = new Array();
     var i = 0;
-    $('#cboOrganization :selected').each(function(j, mul){ 
+    $('#cboOrganization :selected').each(function(j, mul){
         total_item[i] = $(mul).val();
         i++;
     });
-    
+
     CommonCombo.make('cboGroup', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 2, parentID : total_item}, '', {type:'M', isCheckAll:false});
-    
+
     if($('#cboOrganization :selected').length > 0){
         $("#cboGroup").multipleSelect("enable");
     }
-     
+
 }
 
 function cboGroup_SelectedIndexChanged(){
-	
+
     var total_item = new Array();
     var i = 0;
-    $('#cboGroup :selected').each(function(j, mul){ 
+    $('#cboGroup :selected').each(function(j, mul){
        total_item[i] = $(mul).val();
         i++;
     });
-  
+
     CommonCombo.make('cboDepartment', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 3, parentID : total_item}, '', {type:'M', isCheckAll:false});
-    
+
     if($('#cboGroup :selected').length > 0){
         $("#cboDepartment").multipleSelect("enable");
     }
-	
+
 }
 </script>
 
@@ -464,17 +469,17 @@ function cboGroup_SelectedIndexChanged(){
     </td>
     <th scope="row"><spring:message code="sal.text.organizationCode" /></th>
     <td>
-        <select class="multy_select w100p" multiple="multiple" id="cboOrganization" data-placeholder="Organization Code" onchange="cboOrganization_SelectedIndexChanged()"></select>
+        <select class="multy_select w100p" multiple="multiple" id="cboOrganization" data-placeholder="Organization Code" onchange="cboOrganization_SelectedIndexChanged()" disabled></select>
     </td>
     <th scope="row"><spring:message code="sal.text.GroupCode" /></th>
     <td>
-        <select class="multy_select w100p" multiple="multiple" id="cboGroup" data-placeholder="Group Code" onchange="cboGroup_SelectedIndexChanged()"></select>
+        <select class="multy_select w100p" multiple="multiple" id="cboGroup" data-placeholder="Group Code" onchange="cboGroup_SelectedIndexChanged()" disabled></select>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.departmentCode" /></th>
     <td>
-        <select class="multy_select w100p" multiple="multiple" id="cboDepartment" data-placeholder="Department Code"></select>
+        <select class="multy_select w100p" multiple="multiple" id="cboDepartment" data-placeholder="Department Code" disabled></select>
     </td>
     <td colspan="4"></td>
 </tr>
@@ -496,14 +501,14 @@ function cboGroup_SelectedIndexChanged(){
 <input type="hidden" id="V_SHOWKEYINBRANCH" name="V_SHOWKEYINBRANCH" value="" />
 <input type="hidden" id="V_SHOWSTATUS" name="V_SHOWSTATUS" value="" />
 <input type="hidden" id="V_SHOWHOLDERTYPE" name="V_SHOWHOLDERTYPE" value="" />
-<input type="hidden" id="V_SHOWDEPARTMENTCODE" name="V_SHOWDEPARTMENTCODE" value="" />
+<!-- <input type="hidden" id="V_SHOWDEPARTMENTCODE" name="V_SHOWDEPARTMENTCODE" value="" /> -->
 <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
 
 
 </form>
 
 </section><!-- content end -->
-     
+
 </section><!-- container end -->
 
 </div><!-- popup_wrap end -->
