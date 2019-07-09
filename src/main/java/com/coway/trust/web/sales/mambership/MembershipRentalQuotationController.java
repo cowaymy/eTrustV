@@ -73,9 +73,9 @@ public class  MembershipRentalQuotationController {
 			params.put("userId", sessionVO.getUserId());
 			EgovMap result =  salesCommonService.getUserInfo(params);
 
-			model.put("orgCode", result.get("lastOrgCode"));
-			model.put("grpCode", result.get("lastGrpCode"));
-			model.put("deptCode", result.get("lastDeptCode"));
+			model.put("orgCode", result.get("orgCode"));
+			model.put("grpCode", result.get("grpCode"));
+			model.put("deptCode", result.get("deptCode"));
 			model.put("memCode", result.get("memCode"));
 		}
 
