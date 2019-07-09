@@ -206,9 +206,16 @@ public interface OrderRequestMapper {
 
 	void updateSalesOrderMCanc(Map<String, Object> params);
 
+	//BY KV order installation no yet complete (CallLog Type - 257, CCR0001D - 20, SAL00046 - Active )
 	int validOCRStus(Map<String, Object> params);
-	/*BY KV - waiting call for installation, cant do product return , ccr0006d active but SAL0046D no record
+	/*BY KV -  installation cant do, ccr0006d - active  SAL0046D - no record
     Valid OCR Status - (CallLog Type - 257, Stus - 1, SAL00046 - NO RECORD  )*/
 	int validOCRStus2(Map<String, Object> params);
+
+	/*BY KV -order cancellation no yet complete sal0020d */
+	int validOCRStus3(Map<String, Object> params);
+
+	/*BY KV -order cancellation complete sal0020d ; log0038d active   */
+	int validOCRStus4(Map<String, Object> params);
 
 }
