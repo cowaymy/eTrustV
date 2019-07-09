@@ -208,13 +208,13 @@ public class OrderRequestController {
     	return ResponseEntity.ok(rslt);
     }
 
+  //BY KV order installation no yet complete (CallLog Type - 257, CCR0001D - 20, SAL00046 - Active )
     @RequestMapping(value = "/validOCRStus.do", method = RequestMethod.GET)
     public ResponseEntity<EgovMap> validOCRStus(@RequestParam Map<String, Object> params)    {
     	EgovMap rslt = orderRequestService.validOCRStus(params);
     	return ResponseEntity.ok(rslt);
     }
 
-    /*BY KV - waiting call for installation, cant do product return , ccr0006d active but SAL0046D no record */
     /* Valid OCR Status - (CallLog Type - 257, Stus - 1, SAL00046 - NO RECORD  )*/
     @RequestMapping(value = "/validOCRStus2.do", method = RequestMethod.GET)
     public ResponseEntity<EgovMap> validOCRStus2(@RequestParam Map<String, Object> params)    {
@@ -222,6 +222,18 @@ public class OrderRequestController {
     	return ResponseEntity.ok(rslt);
     }
 
+     //BY KV -order cancellation no yet complete sal0020d)
+    @RequestMapping(value = "/validOCRStus3.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> validOCRStus3(@RequestParam Map<String, Object> params)    {
+        EgovMap rslt = orderRequestService.validOCRStus3(params);
+        return ResponseEntity.ok(rslt);
+    }
 
+    //By KV - order cancellation complete sal0020d ; log0038d active
+    @RequestMapping(value = "/validOCRStus4.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> validOCRStus4(@RequestParam Map<String, Object> params)    {
+        EgovMap rslt = orderRequestService.validOCRStus4(params);
+        return ResponseEntity.ok(rslt);
+    }
 
 }
