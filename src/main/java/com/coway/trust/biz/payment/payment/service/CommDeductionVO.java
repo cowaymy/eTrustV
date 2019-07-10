@@ -7,6 +7,8 @@ public class CommDeductionVO {
 	private String mCode;
 	private double amount;
 	private int paidMonth;
+	private String deductCode;
+	private String appType;
 
 	public static CommDeductionVO create(CSVRecord CSVRecord) {
 		CommDeductionVO vo = new CommDeductionVO();
@@ -20,6 +22,10 @@ public class CommDeductionVO {
 		else {
 		vo.setPaidMonth(Integer.parseInt(CSVRecord.get(3)));
 		}
+
+		vo.setDeductCode(CSVRecord.get(4));
+		vo.setAppType(CSVRecord.get(5));
+
 		return vo;
 	}
 
@@ -47,6 +53,18 @@ public class CommDeductionVO {
 	public void setPaidMonth(int paidMonth) {
 		this.paidMonth = paidMonth;
 	}
+	public String getDeductCode() {
+      return deductCode;
+    }
+    public void setDeductCode(String deductCode) {
+        this.deductCode = deductCode;
+    }
+    public String getAppType() {
+      return appType;
+    }
+    public void setAppType(String appType) {
+        this.appType = appType;
+    }
 
 
 }

@@ -7,22 +7,25 @@ var subGrid1;
 var subGrid2;
 var subGrid3;
 var selectedGridValue;
+//Combo Data
+var memberTypeData = [{"codeId": "1","codeName": "Health Planner"},{"codeId": "2","codeName": "Coway Lady"}/* ,{"codeId": "3","codeName": "Coway Technician"},{"codeId": "7","codeName": "Homecare Technician"} */];
 
 $(document).ready(function(){
-    
+
+	doDefCombo(memberTypeData, '' ,'cmbMemberType', 'S', '');
+	doDefCombo(memberTypeData, '' ,'cmbMemberTypeNew', 'S', '');
+
     mainGrid = GridCommon.createAUIGrid("#grid_wrap_main", columnLayout, null, gridPros);
     subGrid1 = GridCommon.createAUIGrid("#grid_wrap_sub1", columnLayoutForSub1, null, gridProsForSub);
     subGrid2 = GridCommon.createAUIGrid("#grid_wrap_sub2", columnLayoutForSub2, null, gridProsForSub);
-    
-    Common.ajax("GET", "/payment/selectCommDeduction.do", {}, function(result){
-        AUIGrid.setGridData(mainGrid, result);
-    });
-    
+
+    fn_searchAjax();
+
     // Master Grid 셀 클릭시 이벤트
-    AUIGrid.bind(mainGrid, "cellClick", function( event ){ 
+    AUIGrid.bind(mainGrid, "cellClick", function( event ){
         selectedGridValue = event.rowIndex;
-    });  
-    
+    });
+
     AUIGrid.bind(subGrid2, "cellClick", function(event){
     	AUIGrid.destroy(subGrid3);
         $("#grid_wrap_sub3").show();
@@ -33,7 +36,7 @@ $(document).ready(function(){
             AUIGrid.resize(subGrid3);
         });
     });
-    
+
     $("#grid_wrap_sub1").hide();
     $("#grid_wrap_sub2").hide();
     $("#grid_wrap_sub3").hide();
@@ -56,6 +59,8 @@ var columnLayout=[
        {dataField:"fileId", headerText:"<spring:message code='pay.head.fileNo'/>"},
        {dataField:"fileName", headerText:"<spring:message code='pay.head.fileName'/>"},
        {dataField:"fileDt", headerText:"<spring:message code='pay.head.uploaddate'/>",dataType:"date",formatString:"dd-mm-yyyy"},
+       {dataField:"actnDt", headerText:"<spring:message code='pay.head.month'/>",dataType:"date",formatString:"dd-mm-yyyy"},
+       {dataField:"memType", headerText:"<spring:message code='commission.text.search.orgType'/>"},
        {dataField:"fileRefNo", headerText:"<spring:message code='pay.head.fileType'/>"},
        {dataField:"totRcord", headerText:"<spring:message code='pay.head.totalRecords'/>"},
        {dataField:"totAmt", headerText:"<spring:message code='pay.head.totalAmount'/>", dataType:"numeric", formatString:"#,##0.00"},
@@ -66,6 +71,8 @@ var columnLayoutForSub1=[
        {dataField:"fileId", headerText:"<spring:message code='pay.head.fileID'/>"},
        {dataField:"itmId", headerText:"<spring:message code='pay.head.itemId'/>"},
        {dataField:"ordNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
+       {dataField:"deductCode", headerText:"<spring:message code='pay.head.deductCode'/>"},
+       {dataField:"payType", headerText:"<spring:message code='pay.head.payType'/>"},
        {dataField:"memCode", headerText:"<spring:message code='pay.head.memberCode'/>"},
        {dataField:"amt", headerText:"<spring:message code='pay.head.amount'/>"},
        {dataField:"syncCmplt", headerText:"<spring:message code='pay.head.status'/>"}
@@ -111,9 +118,10 @@ var columnLayoutForSub3=[
 
 function fn_uploadFile(){
     var formData = new FormData();
-    
+
     formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
-    
+    formData.append("cmbMemberType", $("#cmbMemberTypeNew").val());
+
     Common.ajaxFile("/payment/csvUpload.do", formData, function(result){
         Common.alert(result.message);
     });
@@ -128,7 +136,7 @@ function fn_viewResult(){
         AUIGrid.setGridData(subGrid1, result);
         AUIGrid.resize(subGrid1);
     });
-    
+
 }
 
 function fn_createPayment(){
@@ -142,12 +150,22 @@ function fn_createPayment(){
     }
 }
 
+function fn_new(){
+    $("#new_wrap").show();
+}
+
+function fn_searchAjax(){
+	Common.ajax("GET", "/payment/selectCommDeduction.do", $("#myForm").serializeJSON(), function(result) {
+        AUIGrid.setGridData(mainGrid, result);
+    });
+}
+
 function fn_clickArea1(){
     $("#grid_wrap_sub3").hide();
 }
 
 function fn_clickArea2(){
-    
+
     if(selectedGridValue != undefined){
         AUIGrid.destroy(subGrid3);
         var fileNo = AUIGrid.getCellValue(mainGrid, selectedGridValue, "fileId");
@@ -155,7 +173,7 @@ function fn_clickArea2(){
             AUIGrid.setGridData(subGrid2, result);
             AUIGrid.resize(subGrid2);
         });
-        
+
     }else{
         Common.alert("<spring:message code='pay.alert.selectFile'/>");
     }
@@ -170,19 +188,55 @@ function fn_clickArea2(){
     <aside class="title_line"><!-- title_line start -->
         <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Commission Deduction</h2>
+
+        <ul class="right_btns">
+      <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+        <li><p class="btn_blue"><a href="javascript:fn_new();">New</a></p></li>
+        <li><p class="btn_blue"><a href="javascript:fn_createPayment();"><spring:message code='pay.btn.createPayment'/></a></p></li>
+      </c:if>
+      <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+        <li><p class="btn_blue"><a href="javascript:fn_viewResult();"><spring:message code='pay.btn.viewResult'/></a></p></li>
+        <li><p class="btn_blue"><a href="javascript:fn_searchAjax();"><spring:message code='sys.btn.search'/></a></p></li>
+      </c:if>
+    </ul>
     </aside><!-- title_line end -->
 
-    <ul class="right_btns">
-    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-        <li><p class="btn_blue"><a href="javascript:fn_createPayment();"><spring:message code='pay.btn.createPayment'/></a></p></li>
-     </c:if>  
-      <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-        <li><p class="btn_blue"><a href="javascript:fn_viewResult();"><spring:message code='pay.btn.viewResult'/></a></p></li>
-      </c:if>
-    </ul>         
+    <section class="search_table">
+        <!-- search_table start -->
+        <form action="#" method="post" name="myForm" id="myForm">
 
-    <ul class="left_btns mt20">
-    
+            <table class="type1">
+                <!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width: 120px" />
+                    <col style="width: *" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row"><spring:message code='commission.text.search.orgType'/></th>
+                        <td>
+                            <select class="" name="cmbMemberType" id="cmbMemberType">
+                            <option value=""></option>
+                                <c:forEach var="list" items="${memType }">
+                                    <option value="${list.cdid}">${list.cdnm}(${list.cd})</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><spring:message code='commission.text.search.targetMonth'/></th>
+                        <td><input type="text" title="기준년월" placeholder="MM/YY" class="j_date2 w25p" name="actionDate" id="actionDate" /></td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- table end -->
+        </form>
+    </section>
+    <!-- search_table end -->
+
+<%--     <ul class="left_btns mt20">
+
         <li>
             <div class="auto_file"><!-- auto_file start -->
                 <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".csv"/>
@@ -191,8 +245,8 @@ function fn_clickArea2(){
          <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
              <li><p class="btn_sky"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.upload'/></a></p></li>
          </c:if>
-        <!-- <li><p class="btn_sky"><a href="#">Download CSV Format</a></p></li> -->
-    </ul>
+        <li><p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/payment/CommDeduction.csv"><spring:message code="commission.button.dwCsvFormat" /></a></p></li>
+    </ul> --%>
 
     <section class="search_result mt20"><!-- search_result start -->
         <article class="grid_wrap" id="grid_wrap_main"><!-- grid_wrap start -->
@@ -209,7 +263,7 @@ function fn_clickArea2(){
             <article class="grid_wrap" id="grid_wrap_sub1"><!-- grid_wrap start -->
             </article><!-- grid_wrap end -->
         </article><!-- tap_area end -->
-        
+
         <article class="tap_area" id="tap_area2"><!-- tap_area start -->
             <article class="grid_wrap " id="grid_wrap_sub2"><!-- grid_wrap start -->
             </article><!-- grid_wrap end -->
@@ -218,3 +272,66 @@ function fn_clickArea2(){
         </article><!-- tap_area end -->
     </section><!-- tap_wrap end -->
 </section><!-- content end -->
+
+<!---------------------------------------------------------------
+    POP-UP (NEW COMMUSSION DEDUCTION)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="new_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="new_pop_header">
+        <h1>NEW COMMISSION DEDUCTION</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#new_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <!-- pop_body start -->
+    <form name="newForm" id="newForm"  method="post">
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />
+                </colgroup>
+
+                <tbody>
+                    <tr>
+                        <th scope="row"><spring:message code='commission.text.search.orgType'/></th>
+                        <td>
+                           <select class="" name="cmbMemberTypeNew" id="cmbMemberTypeNew">
+                           <option value=""></option>
+                            <c:forEach var="list" items="${memType }">
+                                <option value="${list.cdid}">${list.cdnm}(${list.cd})</option>
+                            </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><spring:message code="sales.SelectCSVFile" /></th>
+
+                        <td>
+            <div class="auto_file"><!-- auto_file start -->
+                <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".csv"/>
+            </div><!-- auto_file end -->
+                            <p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/payment/CommDeduction.csv"><spring:message code="commission.button.dwCsvFormat" /></a></p>
+                        </td>
+                    </tr>
+                   </tbody>
+            </table>
+        </section>
+        <!-- search_table end -->
+
+        <ul class="center_btns">
+            <li><p class="btn_blue2"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.upload'/></a></p></li>
+        </ul>
+    </section>
+    </form>
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->

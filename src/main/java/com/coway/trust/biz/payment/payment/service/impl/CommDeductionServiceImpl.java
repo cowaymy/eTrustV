@@ -62,31 +62,34 @@ public class CommDeductionServiceImpl extends EgovAbstractServiceImpl implements
 	public List<EgovMap> selectExistLogMList(Map<String, Object> params) {
 		return commDeductionMapper.selectExistLogMList(params);
 	}
-	@Override
-	@Transactional
-	public int addBulkData(Map<String, Object> master, List<Map<String, Object>> detail){
-		
-		List list = this.selectExistLogMList(master);
-		
-		String refNo = String.valueOf(master.get("fileRefNo"));
-		if(list != null && list.size() > 0){
-			int fileSuffixCount = list.size() + 1;
-			master.put("fileRefNo", refNo + String.valueOf(fileSuffixCount));
-		}else{
-			master.put("fileRefNo", refNo + "1");
-		}
-		
-		this.insertMaster(master);
-		
-		
-		for(int i=0; i<detail.size(); i++){
-			detail.get(i).put("fileId", master.get("fileId"));
-			detail.get(i).put("syncCompleted", false);
-			this.insertDetail(detail.get(i));		
-		}
-		
-		return Integer.parseInt(String.valueOf(master.get("fileId")));
-	}
+
+  @Override
+  @Transactional
+  public int addBulkData(Map<String, Object> master, List<Map<String, Object>> detail) {
+
+    List list = this.selectExistLogMList(master);
+    int exist = 0;
+    String refNo = String.valueOf(master.get("fileRefNo"));
+    /*
+     * if(list != null && list.size() > 0){ int fileSuffixCount = list.size() +
+     * 1; master.put("fileRefNo", refNo + String.valueOf(fileSuffixCount));
+     * }else{ master.put("fileRefNo", refNo + "1"); }
+     */
+    if (list.size() <= 0) {
+      master.put("fileRefNo", refNo);
+
+      this.insertMaster(master);
+
+      for (int i = 0; i < detail.size(); i++) {
+        detail.get(i).put("fileId", master.get("fileId"));
+        detail.get(i).put("syncCompleted", false);
+        this.insertDetail(detail.get(i));
+      }
+      exist = 1;
+    }
+
+    return exist;
+  }
 
 	@Override
 	public void insertMaster(Map<String, Object> params) {
