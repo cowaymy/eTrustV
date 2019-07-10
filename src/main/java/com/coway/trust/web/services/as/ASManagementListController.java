@@ -1267,4 +1267,17 @@ public class ASManagementListController {
     }
     return ResponseEntity.ok(message);
   }
+
+  @RequestMapping(value = "/getASEntryCommission", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getASEntryCommission(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    logger.debug("===========================/getASEntryCommission.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASEntryCommission.do===============================");
+
+    List<EgovMap> list = ASManagementListService.getASEntryCommission(params);
+
+    return ResponseEntity.ok(list);
+  }
+
 }
