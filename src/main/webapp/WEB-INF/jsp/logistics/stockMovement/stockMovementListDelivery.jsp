@@ -617,6 +617,8 @@
       $("#crtedt").val(nextDate);
       $("#reqsdt").val('${searchVal.reqsdt}');
       $("#reqedt").val('${searchVal.reqedt}');
+      $("#appntsdt").val('${searchVal.appntsdt}');
+      $("#appntedt").val('${searchVal.appntedt}');
 
       /**********************************
        * Header Setting End
@@ -1439,8 +1441,24 @@
        </div>
        <!-- date_set end -->
       </td>
-      <td colspan="2">&nbsp;</td>
-     </tr>
+						<th scope="row">Appointment Date</th>
+						<td>
+							<div class="date_set w100p">
+								<!-- date_set start -->
+								<p>
+									<input id="appntsdt" name="appntsdt" type="text"
+										title="Appointment Start Date" value="${searchVal.appntsdt}"
+										placeholder="DD/MM/YYYY" class="j_date">
+								</p>
+								<span> To </span>
+								<p>
+									<input id="appntedt" name="appntedt" type="text"
+										title="Appointment End Date" value="${searchVal.appntedt}"
+										placeholder="DD/MM/YYYY" class="j_date">
+								</p>
+							</div> <!-- date_set end -->
+						</td>
+					</tr>
      <tr>
       <th scope="row">Status</th>
       <td><select class="w100p" id="sstatus" name="sstatus"></select>

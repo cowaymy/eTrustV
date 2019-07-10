@@ -124,6 +124,12 @@
            <if test="reqedt !=null and reqedt !=''">
               and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{reqedt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
+            <if test="appntsdt !=null and appntsdt !=''">
+              and to_char(s46.APPNT_DT , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{appntsdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="appntedt !=null and appntedt !=''">
+              and to_char(s46.APPNT_DT , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{appntedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
            <if test="sstatus !=null and sstatus !=''">
               and l47.reqst_stus = #{sstatus}
            </if>
@@ -462,6 +468,12 @@
            </if>
            <if test="rcivedt !=null and rcivedt !=''">
               and l54.DELVRY_GR_DT <![CDATA[<=]]> to_char(to_date(#{rcivedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+            <if test="appntsdt !=null and appntsdt !=''">
+              and s46.appnt_dt  <![CDATA[>=]]> to_char(to_date(#{appntsdt},'dd/mm/yyyy'),'dd/mm/yyyy')
+           </if>
+           <if test="appntedt !=null and appntedt !=''">
+              and s46.appnt_dt  <![CDATA[<=]]> to_char(to_date(#{appntedt},'dd/mm/yyyy'),'dd/mm/yyyy')
            </if>
            <if test="gtype !=null and gtype =='receipt'">
               and L54.DELVRY_GI_CMPLT <![CDATA[=]]> 'Y'

@@ -333,7 +333,6 @@ $(function(){
                     	yn=true;
                     }
                 }
-                alert(yn);
                 if(yn){
 
 	        		$("#receipt_body").show();
@@ -821,13 +820,30 @@ function fn_gradComb(){
                         <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
                     </td>
                 </tr>
-                <tr>
-                      <th scope="row">Sales Order No.</th>
-                     <td ><input type="text" class="w100p" id="ordno" name="ordno"></td>
-
-                     <td colspan="4">&nbsp;</td>
-                </tr>
-            </tbody>
+					<tr>
+						<th scope="row">Sales Order No.</th>
+						<td><input type="text" class="w100p" id="ordno" name="ordno"></td>
+						<th scope="row">Appointment Date</th>
+						<td>
+							<div class="date_set w100p">
+								<!-- date_set start -->
+								<p>
+									<input id="appntsdt" name="appntsdt" type="text"
+										title="Appointment Start Date" placeholder="DD/MM/YYYY"
+										class="j_date">
+								</p>
+								<span> To </span>
+								<p>
+									<input id="appntedt" name="appntedt" type="text"
+										title="Appointment End Date" placeholder="DD/MM/YYYY"
+										class="j_date">
+								</p>
+							</div>
+							<!-- date_set end -->
+						</td>
+						<td colspan="2">&nbsp;</td>
+					</tr>
+				</tbody>
         </table><!-- table end -->
     </form>
 
