@@ -3222,4 +3222,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   public int chkRcdTms(Map<String, Object> params) {
     return ASManagementListMapper.chkRcdTms(params);
   }
+
+  @Override
+  public List<EgovMap> getASEntryCommission(Map<String, Object> params) {
+    return ASManagementListMapper.getASEntryCommission(params);
+  }
+
 }
