@@ -2599,6 +2599,14 @@
     WHERE STK_ID = #{params}
   </select>
 
+    <select id="getASEntryCommission" parameterType="Map" resultType="String">
+    SELECT AS_ALLOW_COMM AS COMM
+    FROM SVC0001D
+    WHERE
+    AS_SO_ID = #{ORD_ID}
+    AND AS_ID = #{AS_ID}
+  </select>
+
   <!-- INSERT START -->
   <insert id="insertSVC0001D" parameterType="Map">
     <![CDATA[
