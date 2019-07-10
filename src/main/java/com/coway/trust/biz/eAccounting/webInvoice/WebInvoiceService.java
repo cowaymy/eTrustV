@@ -88,4 +88,6 @@ public interface WebInvoiceService {
 	EgovMap getFinApprover(Map<String, Object> params);
 
 	String selectNextAppvIfKey();
+
+	int checkExistClmNo(String clmNo);
 }

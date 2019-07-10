@@ -131,4 +131,5 @@ public interface WebInvoiceMapper {
 
 	void insMissAppr(Map<String, Object> params);
 
+	int checkExistClmNo(String clmNo);
 }

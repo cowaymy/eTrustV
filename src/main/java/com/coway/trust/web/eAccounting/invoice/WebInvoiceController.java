@@ -915,31 +915,39 @@ public class WebInvoiceController {
 
 	        ReturnMessage message = new ReturnMessage();
 
-	        List<Object> apprGridList = (List<Object>) params.get("apprGridList");
+	        int subCount = webInvoiceService.checkExistClmNo(params.get("clmNo").toString());
 
-	        if (apprGridList.size() > 0) {
-	            Map hm = null;
-	            List<String> appvLineUserId = new ArrayList<>();
+	        if(subCount > 0) {
+	            message.setCode(AppConstants.FAIL);
+                message.setData(params);
+                message.setMessage("Claim has been submitted.");
+	        } else {
+	            List<Object> apprGridList = (List<Object>) params.get("apprGridList");
 
-	            for (Object map : apprGridList) {
-	                hm = (HashMap<String, Object>) map;
-	                appvLineUserId.add(hm.get("memCode").toString());
-	            }
+	            if (apprGridList.size() > 0) {
+	                Map hm = null;
+	                List<String> appvLineUserId = new ArrayList<>();
 
-	            params.put("clmType", params.get("clmNo").toString().substring(0, 2));
-	            EgovMap hm2 = webInvoiceService.getFinApprover(params);
-	            String memCode = hm2.get("apprMemCode").toString();
-	            LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
+	                for (Object map : apprGridList) {
+	                    hm = (HashMap<String, Object>) map;
+	                    appvLineUserId.add(hm.get("memCode").toString());
+	                }
 
-	            memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
-	            if(!appvLineUserId.contains(memCode)) {
-	                message.setCode(AppConstants.FAIL);
-	                message.setData(params);
-	                message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-	            } else {
-	                message.setCode(AppConstants.SUCCESS);
-	                message.setData(params);
-	                message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	                params.put("clmType", params.get("clmNo").toString().substring(0, 2));
+	                EgovMap hm2 = webInvoiceService.getFinApprover(params);
+	                String memCode = hm2.get("apprMemCode").toString();
+	                LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
+
+	                memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+	                if(!appvLineUserId.contains(memCode)) {
+	                    message.setCode(AppConstants.FAIL);
+	                    message.setData(params);
+	                    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	                } else {
+	                    message.setCode(AppConstants.SUCCESS);
+	                    message.setData(params);
+	                    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	                }
 	            }
 	        }
 

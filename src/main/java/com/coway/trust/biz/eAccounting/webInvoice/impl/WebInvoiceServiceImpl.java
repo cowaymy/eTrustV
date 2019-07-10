@@ -581,4 +581,9 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
     public String selectNextAppvIfKey() {
         return webInvoiceMapper.selectNextAppvIfKey();
     }
+
+    @Override
+    public int checkExistClmNo(String clmNo) {
+        return webInvoiceMapper.checkExistClmNo(clmNo);
+    }
 }

@@ -1619,7 +1619,13 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
     SELECT
         APPR_GRP
     FROM FCM0023M
-    WHERE APPR_MEM_CODE = #{memCode}
+    WHERE
+    <if test="memCode != null and memCode != '' ">
+        APPR_MEM_CODE = #{memCode}
+    </if>
+    <if test ="userId != null and userId != '' ">
+        APPR_MEM_NAME = #{userId}
+    </if>
         AND APPR_MEM_STUS = '1'
 </select>
 
@@ -1730,5 +1736,9 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         #{userId}
     )
 </update>
+
+<select id="checkExistClmNo" parameterType="String" resultType="int">
+    SELECT COUNT(*) AS CLM_NO_CNT FROM FCM0004M WHERE APPV_REQ_KEY_NO = #{clmNo}
+</select>
 
 </mapper>
