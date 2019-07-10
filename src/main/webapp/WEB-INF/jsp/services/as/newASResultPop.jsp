@@ -74,6 +74,7 @@
         AUIGrid.resize(myFltGrd10, 950, 200);
 
         fn_getASRulstSVC0004DInfo();
+        //fn_checkASEntryCommission();
         fn_getASRulstEditFilterInfo();
 
         if ('${REF_REQST}' > 0) {
@@ -89,9 +90,9 @@
 
         $("#ddlStatus").change(function() {
           if ($("#ddlStatus").val() == 4) {
-            $("#iscommission").prop("checked", true);
+            //$("#iscommission").prop("checked", true);
           } else {
-            $("#iscommission").prop("checked", false);
+           // $("#iscommission").prop("checked", false);
           }
        });
      });
@@ -144,8 +145,19 @@
     Common.ajax("GET", "/services/as/getASRulstSVC0004DInfo", $("#resultASForm").serialize(), function(result) {
       if (result != "") {
         fn_setSVC0004dInfo(result);
+      }else {
+    	  fn_checkASEntryCommission();
       }
     });
+  }
+
+  function fn_checkASEntryCommission(){
+	  Common.ajax("GET", "/services/as/getASEntryCommission", $("#resultASForm").serialize(), function(result) {
+			   if (result == "1") {
+				   $("#iscommission").prop("checked", true);
+				      //$("#iscommission").attr("checked", true);
+				    }
+	  });
   }
 
   function fn_setSVC0004dInfo(result) {
