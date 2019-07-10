@@ -547,7 +547,7 @@
 		       Extent1.PAY_ID PAY_ID  ,
 		       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
 		       Extent2.CODE_NAME CODE_NAME  ,
-		       Extent1.PAY_ITM_REF_NO PAY_ITM_REF_NO  ,
+		       CASE WHEN Extent1.PAY_ITM_REF_NO IS NULL then Extent8.REF_DTL ELSE Extent1.PAY_ITM_REF_NO END AS PAY_ITM_REF_NO  ,
 		       (CASE
                   WHEN Extent1.PAY_ITM_ORI_CC_NO IS NULL THEN ' '
                   WHEN LENGTH(Extent1.PAY_ITM_ORI_CC_NO) >= 13 THEN SUBSTR(Extent1.PAY_ITM_ORI_CC_NO,0,6)
@@ -625,6 +625,7 @@
 		         LEFT JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.PAY_ITM_STUS_ID
 		         LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
 		         LEFT JOIN SYS0013M CARDMODE ON Extent1.PAY_ITM_CARD_MODE_ID = CARDMODE.CODE_ID
+		         LEFT JOIN PAY0064D Extent8   ON Extent1.PAY_ID = Extent8.PAY_ID
 		 WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
 		          AND ( Extent1.PAY_ID = #{payId} )
      </select>
