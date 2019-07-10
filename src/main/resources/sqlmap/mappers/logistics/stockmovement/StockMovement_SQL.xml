@@ -470,10 +470,10 @@
               and l54.DELVRY_GR_DT <![CDATA[<=]]> to_char(to_date(#{rcivedt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
             <if test="appntsdt !=null and appntsdt !=''">
-              and s46.appnt_dt  <![CDATA[>=]]> to_char(to_date(#{appntsdt},'dd/mm/yyyy'),'dd/mm/yyyy')
+              and s46.appnt_dt  <![CDATA[>=]]> TO_DATE( #{appntsdt},'dd/mm/yyyy')
            </if>
            <if test="appntedt !=null and appntedt !=''">
-              and s46.appnt_dt  <![CDATA[<=]]> to_char(to_date(#{appntedt},'dd/mm/yyyy'),'dd/mm/yyyy')
+              and s46.appnt_dt  <![CDATA[<=]]> TO_DATE( #{appntedt},'dd/mm/yyyy')
            </if>
            <if test="gtype !=null and gtype =='receipt'">
               and L54.DELVRY_GI_CMPLT <![CDATA[=]]> 'Y'
