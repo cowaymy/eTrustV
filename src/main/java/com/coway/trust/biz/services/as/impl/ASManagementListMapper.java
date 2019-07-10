@@ -300,4 +300,6 @@ public interface ASManagementListMapper {
 
   String getFltNm(String params);
 
+  List<EgovMap> getASEntryCommission(Map<String, Object> params);
+
 }
