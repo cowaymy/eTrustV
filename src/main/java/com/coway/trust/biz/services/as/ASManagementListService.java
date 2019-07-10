@@ -156,4 +156,6 @@ public interface ASManagementListService {
   int selRcdTms(Map<String, Object> params);
 
   int chkRcdTms(Map<String, Object> params);
+
+  List<EgovMap> getASEntryCommission(Map<String, Object> params);
 }
