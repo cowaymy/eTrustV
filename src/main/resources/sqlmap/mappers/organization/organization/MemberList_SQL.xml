@@ -2432,21 +2432,27 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	 </update>
 	 <select id="selectSuperiorTeam" parameterType="Map" resultType="egovMap">
 	 <![CDATA[
-		 SELECT Distinct1.C1 C1  ,
-	       Distinct1.MEM_ID CODE_ID  ,
-	       Distinct1.DEPT_CODE DEPT_CODE  ,
-	       Distinct1.C2 CODE_NAME
-	     FROM ( SELECT DISTINCT Extent1.MEM_ID MEM_ID  ,
-                Extent2.DEPT_CODE DEPT_CODE  ,
-                1 C1  ,
-                Extent2.DEPT_CODE || ' - ' || Extent1.NAME C2
-         FROM ORG0001D Extent1
-                JOIN ORG0005D Extent2   ON ( Extent2.MEM_ID = Extent1.MEM_ID )
-                AND ( 1 = Extent2.ORG_STUS_CODE_ID )
-                AND ( Extent2.MEM_LVL = #{memberLvl} )
-          WHERE  ( Extent1.MEM_TYPE = #{memberType} )
+		 SELECT
+		       Distinct1.C1 C1  ,
+	           Distinct1.MEM_ID CODE_ID  ,
+	           Distinct1.DEPT_CODE DEPT_CODE  ,
+	           Distinct1.C2 CODE_NAME
+	     FROM (
+	           SELECT
+	               DISTINCT Extent1.MEM_ID MEM_ID  ,
+                   Extent2.DEPT_CODE DEPT_CODE  ,
+                   1 C1  ,
+                   Extent2.DEPT_CODE || ' - ' || Extent1.NAME C2
+                FROM ORG0001D Extent1
+                JOIN ORG0005D Extent2
+                    ON ( Extent2.MEM_ID = Extent1.MEM_ID )
+                    AND ( 1 = Extent2.ORG_STUS_CODE_ID )
+                    AND ( Extent2.MEM_LVL = #{memberLvl} )
+                WHERE  ( Extent1.MEM_TYPE = #{memberType} )
                    AND ( 1 = Extent1.STUS )
-                   AND ( Extent1.MEM_ID <> #{memberID} ) ) Distinct1
+                   AND ( Extent1.MEM_ID <> #{memberID} )
+         ) Distinct1
+         ORDER BY Distinct1.DEPT_CODE
         ]]>
         <!-- <if test="cmbSuperior != null and cmbSuperior != ''">
         WHERE Distinct1.MEM_ID = #{cmbSuperior}
