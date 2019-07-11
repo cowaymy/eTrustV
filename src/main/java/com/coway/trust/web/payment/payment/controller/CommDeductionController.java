@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -251,4 +252,20 @@ public class CommDeductionController {
 
     	return ResponseEntity.ok(mes);
 	}
+
+	   @RequestMapping(value = "/deactivateCommissionDeduction.do", method = RequestMethod.GET)
+	    public ResponseEntity<ReturnMessage> deactivateCommissionDeduction(@RequestParam Map<String, Object> params,
+	            Model model, SessionVO sessionVO) {
+
+	        params.put("userId", sessionVO.getUserId());
+	        // 처리.
+	        commDeductionService.deactivateCommissionDeductionStatus(params);
+
+	        // 결과 만들기.
+	        ReturnMessage message = new ReturnMessage();
+	        message.setCode(AppConstants.SUCCESS);
+	        message.setMessage("Saved Successfully");
+
+	        return ResponseEntity.ok(message);
+	    }
 }

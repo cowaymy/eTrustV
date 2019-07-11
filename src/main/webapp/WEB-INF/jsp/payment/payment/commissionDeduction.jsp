@@ -40,6 +40,7 @@ $(document).ready(function(){
     $("#grid_wrap_sub1").hide();
     $("#grid_wrap_sub2").hide();
     $("#grid_wrap_sub3").hide();
+
 });
 
 var gridPros = {
@@ -64,7 +65,8 @@ var columnLayout=[
        {dataField:"fileRefNo", headerText:"<spring:message code='pay.head.fileType'/>"},
        {dataField:"totRcord", headerText:"<spring:message code='pay.head.totalRecords'/>"},
        {dataField:"totAmt", headerText:"<spring:message code='pay.head.totalAmount'/>", dataType:"numeric", formatString:"#,##0.00"},
-       {dataField:"fileStus", headerText:"<spring:message code='pay.head.fileStatus'/>"}
+       {dataField:"fileStus", headerText:"<spring:message code='pay.head.fileStatus'/>",visible:false},
+       {dataField:"fileStusName", headerText:"<spring:message code='pay.head.fileStatus'/>"}
 ];
 
 var columnLayoutForSub1=[
@@ -121,10 +123,14 @@ function fn_uploadFile(){
 
     formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
     formData.append("cmbMemberType", $("#cmbMemberTypeNew").val());
-
-    Common.ajaxFile("/payment/csvUpload.do", formData, function(result){
-        Common.alert(result.message);
-    });
+    console.log($("#cmbMemberTypeNew").val());
+    if($("#cmbMemberTypeNew").val() != ""){
+    	Common.ajaxFile("/payment/csvUpload.do", formData, function(result){
+    		Common.alert(result.message);
+    	});
+    }else{
+    	Common.alert("Please select member type");
+    }
 }
 
 function fn_viewResult(){
@@ -152,6 +158,28 @@ function fn_createPayment(){
 
 function fn_new(){
     $("#new_wrap").show();
+}
+
+function fn_deactivate(){
+
+	if(selectedGridValue != undefined){
+		var fileId = AUIGrid.getCellValue(mainGrid, selectedGridValue, "fileId");
+		var stus = AUIGrid.getCellValue(mainGrid, selectedGridValue, "fileStus");
+console.log(stus);
+		if(stus == 1){
+			Common.confirm("<spring:message code='pay.alert.deactivateBatch'/>",function (){
+		        Common.ajax("GET", "/payment/deactivateCommissionDeduction.do", {"fileId":fileId}, function(result) {
+		            Common.alert("<b>This batch has been deactivated.</b>",function(){fn_searchAjax()});
+		        },function(result) {
+		            Common.alert("<b>Failed to deactivate this batch.<br />Please try again later.</b>");
+		        });
+	        });
+		}else{
+			Common.alert("Only [Active] batch can be deactivated");
+		}
+	}else{
+		Common.alert("<spring:message code='pay.alert.selectBatchId'/>");
+	}
 }
 
 function fn_searchAjax(){
@@ -234,6 +262,22 @@ function fn_clickArea2(){
         </form>
     </section>
     <!-- search_table end -->
+
+<!-- link_btns_wrap start -->
+            <aside class="link_btns_wrap">
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+                <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+                <dl class="link_list">
+                    <dt>Link</dt>
+                    <dd>
+                    <ul class="btns">
+                        <li><p class="link_btn"><a href="javascript:fn_deactivate();"><spring:message code='pay.btn.deactivate'/></a></p></li>
+                    </ul>
+                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+                    </dd>
+                </dl>
+            </c:if>
+            </aside><!-- link_btns_wrap end -->
 
 <%--     <ul class="left_btns mt20">
 

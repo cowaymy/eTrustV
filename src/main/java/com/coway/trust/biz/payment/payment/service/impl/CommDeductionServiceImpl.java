@@ -122,4 +122,9 @@ public class CommDeductionServiceImpl extends EgovAbstractServiceImpl implements
 		commDeductionMapper.createPaymentProcedure(params);
 	}
 
+	@Override
+    public void deactivateCommissionDeductionStatus(Map<String, Object> param){
+	  commDeductionMapper.deactivateCommissionDeductionStatus(param);
+    }
+
 }
