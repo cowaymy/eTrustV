@@ -476,6 +476,14 @@ function fn_onChange_cPromotionpac(o){
                   }
             }
 
+            if($("#cPromotionpac").val() == 31867 || $("#cPromotionpac").val() == 31871){
+            	if('${SESSION_INFO.userId}' == '102337' || '${SESSION_INFO.userId}' == '97507' || '${SESSION_INFO.userId}' == '80161'){
+            		  isProc =true;
+            	}else{
+            		  isProc =false;
+            	}
+            }
+
 
             if(isProc){
 
