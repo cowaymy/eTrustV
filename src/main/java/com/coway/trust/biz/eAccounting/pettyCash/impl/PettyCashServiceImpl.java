@@ -445,9 +445,9 @@ public class PettyCashServiceImpl implements PettyCashService {
             String oldClamUn = oldSeq1.get("clamUn").toString();
             LOGGER.debug("oldClamUn :: " + oldClamUn);
 
-            params.put("clmType", "J3");
+            params.put("clmType", "J2");
             EgovMap clamUn = webInvoiceMapper.selectClamUn(params);
-            clamUn.put("clmType", "J3");
+            clamUn.put("clmType", "J2");
 
             webInvoiceMapper.updateClamUn(clamUn);
 
