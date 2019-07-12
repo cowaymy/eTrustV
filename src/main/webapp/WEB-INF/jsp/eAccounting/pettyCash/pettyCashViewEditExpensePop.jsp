@@ -622,7 +622,7 @@ function fn_tempSave() {
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#" id="add_row"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
-    <li><p class="btn_grid"><a href="#" id="remove_row"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
+    <!-- <li><p class="btn_grid"><a href="#" id="remove_row"><spring:message code="newWebInvoice.btn.delete" /></a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
 </c:if>

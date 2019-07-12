@@ -25,21 +25,21 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("pettyCashApplication")
 public class PettyCashApplicationImpl implements PettyCashApplication {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl.class);
-	
+
 	@Value("${app.name}")
 	private String appName;
-	
+
 	@Autowired
 	private FileService fileService;
-	
+
 	@Autowired
 	private FileMapper fileMapper;
-	
+
 	@Autowired
 	private PettyCashService pettyCashService;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
@@ -47,14 +47,14 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 	public void insertCustodianBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		LOGGER.debug("list.size : {}", list.size());
 		if (list.size() > 0) {
 			int fileGroupKey = fileService.insertFiles(list, type, Integer.parseInt(String.valueOf(params.get("userId"))));
 			params.put("fileGroupKey", fileGroupKey);
 		}
-		
+
 		pettyCashService.insertCustodian(params);
 	}
 
@@ -62,9 +62,9 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 	public void updateCustodianBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		LOGGER.debug("list.size : {}", list.size());
-		
+
 		// 243,258
 		String update = (String) params.get("update");
 		String[] updateList = null;
@@ -99,7 +99,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 				}
 			}
 		}
-		
+
 		String remove = (String) params.get("remove");
 		String[] removeList = null;
 		if(!StringUtils.isEmpty(remove)) {
@@ -113,15 +113,15 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
 			}
 		}
-		
+
 		pettyCashService.updateCustodian(params);
 	}
-	
+
 	@Override
 	public void deleteCustodianBiz(FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		// custodianInfo get
 		// atchFileGrpId get
 		// file data delete
@@ -134,7 +134,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 			// TODO file delete
 			fileService.removeFilesByFileGroupId(type, Integer.parseInt(atchFileGrpId));
 		}
-		
+
 		pettyCashService.deleteCustodian(params);
 	}
 
@@ -142,9 +142,9 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 	public void insertPettyCashReqstBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		LOGGER.debug("list.size : {}", list.size());
-		
+
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		if (list.size() > 0) {
 			int fileGroupKey = fileService.insertFiles(list, type, Integer.parseInt(params.get("userId").toString()));
@@ -153,7 +153,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 
 		String clmNo = pettyCashService.selectNextRqstClmNo();
 		params.put("clmNo", clmNo);
-		
+
 		pettyCashService.insertPettyCashReqst(params);
 	}
 
@@ -161,9 +161,9 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 	public void updatePettyCashReqstBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		LOGGER.debug("list.size : {}", list.size());
-		
+
 		// 243,258
 		String update = (String) params.get("update");
 		String[] updateList = null;
@@ -198,7 +198,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 				}
 			}
 		}
-		
+
 		String remove = (String) params.get("remove");
 		String[] removeList = null;
 		if(!StringUtils.isEmpty(remove)) {
@@ -212,10 +212,10 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
 			}
 		}
-		
+
 		pettyCashService.updatePettyCashReqst(params);
 	}
-	
+
 	@Override
 	public void insertPettyCashAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -227,9 +227,9 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 	public void updatePettyCashAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		LOGGER.debug("list.size : {}", list.size());
-		
+
 		// 243,258
 		String update = (String) params.get("update");
 		String[] updateList = null;
@@ -264,7 +264,7 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 				}
 			}
 		}
-		
+
 		String remove = (String) params.get("remove");
 		String[] removeList = null;
 		if(!StringUtils.isEmpty(remove)) {
@@ -284,25 +284,17 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 	public void deletePettyCashAttachBiz(FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		if(CommonUtils.isEmpty(params.get("clmNo"))) {
+		//if(CommonUtils.isEmpty(params.get("clmNo"))) {
 			// Not Temp. Save
 			// 저장된 파일만 삭제
-			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
-		} else {
+			//fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
+		//} else {
 			// Temp. Save
 			// 저장된 파일 삭제 및 테이블 데이터 삭제
 			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
 			pettyCashService.deletePettyCashExpItem(params);
 			pettyCashService.updatePettyCashExpTotAmt(params);
-		}
+		//}
 	}
-	
-	
-	
-	
-
-	
-	
-	
 
 }
