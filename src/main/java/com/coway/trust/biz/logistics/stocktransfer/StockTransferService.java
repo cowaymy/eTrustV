@@ -43,5 +43,9 @@ public interface StockTransferService {
 	String selectMaxQtyCheck(Map<String, Object> param);
 	
 	Map<String, Object> selectDelvryGRcmplt(String delyno);
+
+	String defLoc(Map<String, Object> param);
+
+	String selectDefLocation(Map<String, Object> params);
 	
 }

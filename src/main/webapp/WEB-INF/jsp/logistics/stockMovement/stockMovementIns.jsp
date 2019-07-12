@@ -225,6 +225,8 @@ $(function(){
 
     });
     $("#movpath").change(function(){
+    	var brnch = '${SESSION_INFO.userBranchId}';
+
     	if($("#movpath").val() == ""){
     		doDefCombo([], '' ,'tlocation', 'S', '');
     		doDefCombo([], '' ,'flocation', 'S', '');
@@ -235,27 +237,36 @@ $(function(){
 	        doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
 	        doDefCombo([], '' ,'flocation', 'S', '');
 	        */
-	        if($("#movpath").val()=='02'){
-	        	  var paramdata = { stoIn:'02,05',  endlikeValue:$("#locationType").val() , grade:$("#locationType").val()}; // session 정보 등록
+    		if (($("#movpath").val()=='CTOR') && (brnch != '42' && brnch != '0')){
 
-	        }else{
-	        	  var paramdata = { locgb:$("#movpath").val(),  endlikeValue:$("#locationType").val(), grade:$("#locationType").val()}; // session 정보 등록
-	        }
-                  doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
-	              doDefCombo([], '' ,'flocation', 'S', '');
+	        	var paramdata = { locgb:$("#movpath").val(), grade:$("#locationType").val(), brnch : brnch}; 
+	        	doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
+	        	
+	        	var paramdata2 = {stoIn:'01,02,05,06,07', grade:$("#locationType").val() };
+	        	doGetComboCodeId('/common/selectStockLocationList.do', paramdata2, '','flocation', 'S', 'fn_setDefaultSelection');
+	        } else {
+	        	 if($("#movpath").val()=='02'){
+	        		 var paramdata = { stoIn:'02,05',  endlikeValue:$("#locationType").val() , grade:$("#locationType").val()}; // session 정보 등록
+	        	 }
+	        	 else {
+	        		 var paramdata = { locgb:$("#movpath").val(),  endlikeValue:$("#locationType").val(), grade:$("#locationType").val()}; // session 정보 등록
+	        	 }
+	        	 
+	        	 doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
+	        	 doDefCombo([], '' ,'flocation', 'S', '');
+	        }    
+	              
     	}
     });
     $("#tlocation").change(function(){
     	if ($("#movpath").val() == "CT"){
     		var paramdata = { ctloc:$("#tlocation").val() , locgb:'CT'}; // session 정보 등록
             doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
-    	}else if($("#movpath").val() == "CTOR"){
-            //var paramdata = { locgb:'02'}; // session 정보 등록
-            var paramdata = { stoIn:'02,05'}; // session 정보 등록
-            doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
-    	}else{
-	        var paramdata = { rdcloc:$("#tlocation").val() , locgb:'CT'}; // session 정보 등록
-	        doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
+    	} else{
+    		 if($("#movpath").val() != "CTOR"){
+    			 var paramdata = { rdcloc:$("#tlocation").val() , locgb:'CT'}; // session 정보 등록
+    		        doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
+    		 }
     	}
     });
     $("#rightbtn").click(function(){
@@ -462,6 +473,20 @@ function f_multiCombo() {
             selectAll : true
         });
     });
+}
+
+function fn_setDefaultSelection() {
+
+	Common.ajax("GET", "/logistics/stockMovement/selectDefToLocation.do", '',
+			function(result) {
+				//console.log(result.data);
+				if (result.data != null || result.data != "") {
+					$("#flocation option[value='" + result.data + "']").attr("selected", true);
+
+				} else {
+					$("#flocation option[value='']").attr("selected", true);
+				}
+			});
 }
 </script>
 

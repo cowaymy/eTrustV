@@ -525,5 +525,28 @@ public class StockMovementController {
 
 		return "logistics/stockMovement/stockMovementReport";
 	}
+	
+	@RequestMapping(value = "/selectDefToLocation.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> selectDefToLocation(@RequestParam Map<String, Object> params,
+			Model model,SessionVO sessionVo){
+
+		int userBrnchId = sessionVo.getUserBranchId();
+		
+		params.put("userBrnchId", userBrnchId);
+
+		logger.debug(" selectDefToLocation params {} ", params);
+
+		String defToLoc = stockMovementService.selectDefToLocation(params);
+		
+		logger.debug(" selectDefToLocation defToLoc {} ", defToLoc);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(defToLoc);
+		
+		return ResponseEntity.ok(message);
+	}
 
 }

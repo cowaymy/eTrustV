@@ -68,9 +68,10 @@ $(document).ready(function(){
      doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
     */
     paramdata = {stoIn:'01,02,05,06,07', grade:$("#locationType").val() }; //김덕호 파트너/G.Trust (2018-01-03)  요청 창고 타입  01, 02, 05, 07 열어 주세요.
-    doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
+    doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'fn_setDefaultSelection');
     doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
+    tlocationFunc();
 
     //doDefCombo(amdata, 'M' ,'sam', 'S', '');  Change Select condition From Manual to Auto  to avoid
     doDefCombo(amdata, 'A' ,'sam', 'S', '');
@@ -425,6 +426,22 @@ function f_multiCombo() {
         });//.multipleSelect("checkAll");
     });
 }
+
+
+	
+	function fn_setDefaultSelection() {
+
+		Common.ajax("GET", "/logistics/stocktransfer/selectDefLocation.do", '',
+				function(result) {
+					//console.log(result.data);
+					if (result.data != null || result.data != "") {
+						$("#tlocation option[value='" + result.data + "']").attr("selected", true);
+
+					} else {
+						$("#tlocation option[value='']").attr("selected", true);
+					}
+				});
+	}
 </script>
 
 <section id="content"><!-- content start -->

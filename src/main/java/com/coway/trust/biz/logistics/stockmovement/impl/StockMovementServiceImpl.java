@@ -587,6 +587,17 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 			stockMoveMapper.deleteStockBooking(reqsmono);
 		}
 	}
+	
+	@Override
+	public String selectDefToLocation(Map<String, Object> param) {
+		
+		return stockMoveMapper.selectDefToLocation(param);
 
+	}
 
+	@Override
+	public String defToLoc(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

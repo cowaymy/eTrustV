@@ -675,5 +675,26 @@ public class StocktransferController {
 
 		return ResponseEntity.ok(map);
 	}
+	
+	@RequestMapping(value = "/selectDefLocation.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> selectDefLocation(@RequestParam Map<String, Object> params,
+			Model model,SessionVO sessionVo) {
+		
+		int userBrnchId = sessionVo.getUserBranchId();
+		
+		params.put("userBrnchId", userBrnchId);
+
+		logger.debug(" selectDefLocation params {} ", params);
+
+		String defLoc = stock.selectDefLocation(params);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(defLoc);
+
+		return ResponseEntity.ok(message);
+	}
 
 }

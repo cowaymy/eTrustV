@@ -795,5 +795,18 @@
     FROM LOG0054M
     WHERE DELVRY_NO=#{delyno}
     </select>
+    
+    <select id="selectDefToLocation" parameterType="Map" resultType="String">
+
+	SELECT WH_LOC_ID FROM SYS0028M WHERE 1 = 1
+
+	AND WH_LOC_GB = '02'
+	AND
+	WH_LOC_STK_GRAD = 'A'
+	AND ROWNUM = 1
+	<if test="userBrnchId != null and userBrnchId != ''">
+		AND WH_LOC_BRNCH_ID = #{userBrnchId}
+	</if>
+</select>
 
 </mapper>

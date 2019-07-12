@@ -79,5 +79,7 @@ public interface StockTransferMapper {
 	Map<String, Object> selectDelvryGRcmplt(String delyno);
 
 	void updateDelivery54(Map<String, Object> formMap);
+
+	String selectDefLocation(Map<String, Object> param);
 	
 }

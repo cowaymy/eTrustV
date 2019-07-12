@@ -83,4 +83,6 @@ public interface StockMovementMapper {
 	
 	Map<String, Object> selectDelvryGRcmplt(String reqsmono);
 
+	String selectDefToLocation(Map<String, Object> param);
+
 }
