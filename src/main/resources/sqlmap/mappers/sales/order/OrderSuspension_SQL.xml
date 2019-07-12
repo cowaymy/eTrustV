@@ -497,7 +497,7 @@
 		                       Extent2.CALL_RESULT_ID IN (
 		                                  SELECT MAX (CALL_RESULT_ID)
 		                                  FROM CCR0007D
-		                                  WHERE CALL_ENTRY_ID =#{callEntryId} GROUP BY CALL_RESULT_ID)
+		                                  WHERE CALL_ENTRY_ID =#{callEntryId} GROUP BY CALL_ENTRY_ID)
 		WHERE Extent1.CALL_ENTRY_ID = #{callEntryId} AND ROWNUM <![CDATA[<=]]>	1
 	</select>
 
