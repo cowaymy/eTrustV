@@ -136,8 +136,7 @@ $(document).ready(function() {
         }
         // Validation Success
         // 2. Add
-      //fn_customerContactInfoAddAjax();
-        Common.alert("Success");
+      fn_customerContactInfoAddAjax();
 
     });
 
