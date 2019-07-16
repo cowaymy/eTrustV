@@ -136,7 +136,8 @@ $(document).ready(function() {
         }
         // Validation Success
         // 2. Add
-      fn_customerContactInfoAddAjax();
+      //fn_customerContactInfoAddAjax();
+        Common.alert("Success");
 
     });
 
@@ -153,7 +154,7 @@ $(document).ready(function() {
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
                    $("#cntcCmbInitialTypeId").val(data.custInitial);
-                   $("input[name='cntcGender']").val(data.gender);
+                   $("input[name='cntcGender']").val(data.gender != null ? data.gender : "M");
                    $("#cntcName").val(data.name1);
                    $("#cntcCmbRaceTypeId").val(data.raceId);
                    $("#cntcNric").val(data.nric);
