@@ -257,11 +257,11 @@
 		UNION
 		SELECT TAX_INVC_REF_NO,INVC_ITM_ORD_NO
 		    FROM PAY0034D EXTENT1
-		    JOIN PAY0032D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
+		    JOIN PAY0033D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
 		    )EXTENT2 ON EXTENT1.SALES_ORD_NO = EXTENT2.INVC_ITM_ORD_NO
 	    WHERE 1 = 1
 	       AND CUST_ID = #{cowayCustId}
-	       AND INVC_ITM_ORD_NO = #{orderNo}
+	       AND TAX_INVC_REF_NO = #{taxInvoiceRefNo}
     </select>
 
     <select id="selectInvoiceDetailByTaxInvoiceRefNo" parameterType="Map" resultType="egovMap">
@@ -284,7 +284,7 @@
         JOIN PAY0033D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
     </if>
     WHERE 1 = 1
-    AND EXTENT2.TAX_INVC_REF_NO = #{taxInvcRefNo}
+    AND EXTENT2.TAX_INVC_REF_NO = #{taxInvoiceRefNo}
         <if test='type == "REN"'>      AND TAX_INVC_BILL_TYPE = 133</if>
         <if test='type == "RENSVM"'>AND TAX_INVC_BILL_TYPE = 134</if>
     </select>
