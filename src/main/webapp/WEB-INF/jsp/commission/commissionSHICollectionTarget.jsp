@@ -238,12 +238,14 @@
           dataField : "targetatmt",
           headerText : "<spring:message code='commission.text.grid.target'/>",
           style : "right-column",
+          formatString : "#,##0.00",
           editable : false
         },
         {
           dataField : "collectamt",
           headerText : "<spring:message code='commission.text.grid.currentCollection'/>",
           style : "right-column",
+          formatString : "#,##0.00",
           editable : false
         },
         {
@@ -283,176 +285,177 @@
   }
 </script>
 <section id="content">
- <!-- content start -->
- <ul class="path">
-  <li><img
-   src="${pageContext.request.contextPath}/resources/images/common/path_home.gif"
-   alt="Home" /></li>
-  <li><spring:message code='commission.text.head.commission' /></li>
-  <li><spring:message code='commission.text.head.report' /></li>
-  <li><spring:message code='commission.text.head.shiIndex' /></li>
- </ul>
- <aside class="title_line">
-  <!-- title_line start -->
-  <p class="fav">
-   <a href="#" class="click_add_on">My menu</a>
-  </p>
-  <h2>
-   <spring:message code='commission.title.SHI' />
-  </h2>
-  <ul class="right_btns">
-   <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue">
-      <a href="#" id="search"><spring:message code='sys.btn.search' /></a>
-     </p></li>
-   </c:if>
-   <li><p class="btn_blue">
-     <a href="#" id="clear"><span class="clear"></span>
-     <spring:message code='sys.btn.clear' /></a>
-    </p></li>
-  </ul>
- </aside>
- <!-- title_line end -->
- <section class="search_table">
-  <!-- search_table start -->
-  <form name="reportForm" id="reportForm">
-   <input type="hidden" name="V_MEMCODE" id="mCode" /> <input
-    type="hidden" name="V_PVMTH" id="month" /> <input type="hidden"
-    name="V_PVYEAR" id="year" /> <input type="hidden" name="V_MEMLVL"
-    id="mLvl" /> <input type="hidden" name="V_MEMTYPE" id="mType" /> <input
-    type="hidden" name="V_DEPTCODE" id="deptCode" /> <input
-    type="hidden" name="reportDownFileName" id="reportDownFileName" /> <input
-    type="hidden" name="reportFileName" id="reportFileName" /> <input
-    type="hidden" name="viewType" id="viewType" />
-  </form>
-  <form action="#" method="post" name="myForm" id="myForm">
-   <table class="type1">
-    <!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-     <col style="width: 140px" />
-     <col style="width: *" />
-     <col style="width: 140px" />
-     <col style="width: *" />
-     <col style="width: 170px" />
-     <col style="width: *" />
-    </colgroup>
-    <tbody>
-     <tr>
-      <th scope="row"><spring:message
-        code='commission.text.search.orgType' /></th>
-      <td><select class="w100p" id="typeCode" name="typeCode"
-       disabled>
-        <c:forEach var="list" items="${memType}">
-         <option value="${list.cdid}"
-          <c:if test="${list.cdid == SESSION_INFO.userTypeId}"> selected</c:if>>
-          ${list.cdnm} (${list.cd})</option>
-        </c:forEach>
-      </select></td>
-      <th scope="row"><spring:message
-        code='commission.text.search.memCode' /></th>
-      <td><input type="text" title="" placeholder="" id="memCode"
-       name="memCode"
-       <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' && PAGE_AUTH.funcUserDefine2 != 'Y'}"> value="${loginId }" readonly </c:if> />
-       <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-        <a id="memBtn" href="#" class="search_btn"><img
-         src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-         alt="search" /></a>
-       </c:if></td>
-      <th scope="row"><spring:message
-        code='commission.text.search.commMonth' /></th>
-      <td><input type="text" title="기준년월" class="j_date2 w100p"
-       id="shiDate" name="shiDate" value="${searchDt }" /></td>
-     </tr>
-     <tr>
-      <th scope="row">* <spring:message
-        code='commission.text.search.teamCode' /></th>
-      <td><input type="text" title="" placeholder=""
-       class="w100p readonly" readonly="readonly" id="teamCode"
-       name="teamCode" /></td>
-      <th scope="row">* <spring:message
-        code='commission.text.search.level' /></th>
-      <td colspan="3"><input type="text" title="" placeholder=""
-       class="w100p readonly" readonly="readonly" readonly="readonly"
-       id="level" name="level" /></td>
-     </tr>
-     <tr>
-      <td colspan="6" class="col_all">
-       <p>
-        <span><spring:message code='commission.text.selectMonth' /></span>
-       </p>
-      </td>
-     </tr>
-     <tr>
-      <td colspan="6" class="col_all al_center">
-       <table class="type2" style="width: 460px;">
-        <!-- table start -->
-        <caption>table</caption>
-        <colgroup>
-         <col style="width: 340px" />
-         <col style="width: 120px" />
-        </colgroup>
-        <thead>
-         <tr>
-          <th scope="col" class="al_center">RC Rate</th>
-          <th scope="col" class="al_center">SHI Index</th>
-         </tr>
-        </thead>
-        <tbody>
-         <tr>
-          <td class="al_center"><span>90% ~ 100% Excellent</span></td>
-          <td class="al_center"><span>10%</span></td>
-         </tr>
-         <tr>
-          <td class="al_center"><span>80% ~ 89% Very Good
-            (target average)</span></td>
-          <td class="al_center"><span>5%</span></td>
-         </tr>
-         <tr>
-          <td class="al_center"><span>70% ~ 79% Good (above
-            average)</span></td>
-          <td class="al_center"><span>0%</span></td>
-         </tr>
-         <tr>
-          <td class="al_center"><span>60% ~ 69% Poor (below
-            average)</span></td>
-          <td class="al_center"><span>-10%</span></td>
-         </tr>
-         <tr>
-          <td class="al_center"><span>50% ~ 59% (serious)</span></td>
-          <td class="al_center"><span>-20%</span></td>
-         </tr>
-         <tr>
-          <td class="al_center"><span>0% ~ 49% (Worst)</span></td>
-          <td class="al_center"><span>-30%</span></td>
-         </tr>
-        </tbody>
-       </table>
-       <!-- table end -->
-      </td>
-     </tr>
-    </tbody>
-   </table>
-   <!-- table end -->
-  </form>
- </section>
- <!-- search_table end -->
- <section class="search_result">
-  <!-- search_result start -->
-  <ul class="right_btns">
-   <li><p class="btn_grid">
-     <a href="#" id="generate"><spring:message
-       code='commission.button.generate' /></a>
-    </p></li>
-  </ul>
-  <article class="grid_wrap">
-   <!-- grid_wrap start -->
-   <div id="grid_wrap"
-    style="width: 100%; height: 334px; margin: 0 auto;"></div>
-  </article>
-  <!-- grid_wrap end -->
- </section>
- <!-- search_result end -->
+    <!-- content start -->
+    <ul class="path">
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li><spring:message code='commission.text.head.commission' /></li>
+        <li><spring:message code='commission.text.head.report' /></li>
+        <li><spring:message code='commission.text.head.shiIndex' /></li>
+    </ul>
+    <aside class="title_line">
+    <!-- title_line start -->
+        <p class="fav">
+            <a href="#" class="click_add_on">My menu</a>
+        </p>
+        <h2>
+            <spring:message code='commission.title.SHI' />
+        </h2>
+        <ul class="right_btns">
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+                <li>
+                    <p class="btn_blue"><a href="#" id="search"><spring:message code='sys.btn.search' /></a></p>
+                </li>
+            </c:if>
+            <li>
+                <p class="btn_blue">
+                    <a href="#" id="clear"><span class="clear"></span>
+                    <spring:message code='sys.btn.clear' /></a>
+                </p>
+            </li>
+        </ul>
+    </aside>
+    <!-- title_line end -->
+    <section class="search_table">
+        <!-- search_table start -->
+        <form name="reportForm" id="reportForm">
+            <input type="hidden" name="V_MEMCODE" id="mCode" />
+            <input type="hidden" name="V_PVMTH" id="month" /> <input type="hidden" name="V_PVYEAR" id="year" />
+            <input type="hidden" name="V_MEMLVL" id="mLvl" /> <input type="hidden" name="V_MEMTYPE" id="mType" />
+            <input type="hidden" name="V_DEPTCODE" id="deptCode" />
+            <input type="hidden" name="reportDownFileName" id="reportDownFileName" />
+            <input type="hidden" name="reportFileName" id="reportFileName" />
+            <input type="hidden" name="viewType" id="viewType" />
+        </form>
+        <form action="#" method="post" name="myForm" id="myForm">
+            <table class="type1">
+            <!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width: 140px" />
+                    <col style="width: *" />
+                    <col style="width: 140px" />
+                    <col style="width: *" />
+                    <col style="width: 170px" />
+                    <col style="width: *" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row"><spring:message code='commission.text.search.orgType' /></th>
+                        <td>
+                            <select class="w100p" id="typeCode" name="typeCode" disabled>
+                                <c:forEach var="list" items="${memType}">
+                                    <option value="${list.cdid}" <c:if test="${list.cdid == SESSION_INFO.userTypeId}"> selected</c:if>>
+                                        ${list.cdnm} (${list.cd})
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                        <th scope="row"><spring:message code='commission.text.search.memCode' /></th>
+                        <td>
+                            <input type="text" title="" placeholder="" id="memCode" name="memCode"
+                                <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' && PAGE_AUTH.funcUserDefine2 != 'Y'}"> value="${loginId }" readonly </c:if>
+                            />
+                            <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+                                <a id="memBtn" href="#" class="search_btn">
+                                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                                </a>
+                            </c:if>
+                        </td>
+                        <th scope="row"><spring:message code='commission.text.search.commMonth' /></th>
+                        <td>
+                            <input type="text" title="기준년월" class="j_date2 w100p" id="shiDate" name="shiDate" value="${searchDt }" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">* <spring:message code='commission.text.search.teamCode' /></th>
+                        <td>
+                            <input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" id="teamCode" name="teamCode" />
+                        </td>
+                        <th scope="row">* <spring:message code='commission.text.search.level' /></th>
+                        <td>
+                            <input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" readonly="readonly" id="level" name="level" />
+                        </td>
+                        <th scope="row">Customer Type</th>
+                        <td>
+                            <select class="w100p" id="custType" name="custType">
+                                <option value="1">All</option>
+                                <option value="964">Individual</option>
+                                <option value="965">Company</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="col_all">
+                            <p>
+                                <span><spring:message code='commission.text.selectMonth' /></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="col_all al_center">
+                            <table class="type2" style="width: 460px;">
+                                <!-- table start -->
+                                <caption>table</caption>
+                                <colgroup>
+                                    <col style="width: 340px" />
+                                    <col style="width: 120px" />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="al_center">RC Rate</th>
+                                        <th scope="col" class="al_center">SHI Index</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="al_center"><span>90% ~ 100% Excellent</span></td>
+                                        <td class="al_center"><span>10%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="al_center"><span>80% ~ 89% Very Good (target average)</span></td>
+                                        <td class="al_center"><span>5%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="al_center"><span>70% ~ 79% Good (above average)</span></td>
+                                        <td class="al_center"><span>0%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="al_center"><span>60% ~ 69% Poor (below average)</span></td>
+                                        <td class="al_center"><span>-10%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="al_center"><span>50% ~ 59% (serious)</span></td>
+                                        <td class="al_center"><span>-20%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="al_center"><span>0% ~ 49% (Worst)</span></td>
+                                        <td class="al_center"><span>-30%</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- table end -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        <!-- table end -->
+        </form>
+    </section>
+    <!-- search_table end -->
+    <section class="search_result">
+        <!-- search_result start -->
+        <ul class="right_btns">
+            <li>
+                <p class="btn_grid"><a href="#" id="generate"><spring:message code='commission.button.generate' /></a></p>
+            </li>
+        </ul>
+        <article class="grid_wrap">
+        <!-- grid_wrap start -->
+            <div id="grid_wrap" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+        </article>
+        <!-- grid_wrap end -->
+    </section>
+<!-- search_result end -->
 </section>
 <!-- content end -->
 <hr />

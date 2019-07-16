@@ -189,12 +189,25 @@ public class CommissionReportController {
 	}
 
 	@RequestMapping(value = "commSPCRgenrawSHIIndex")
-	public ResponseEntity<List> commSPCRgenrawSHIIndex(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List> commSPCRgenrawSHIIndex(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+	    logger.debug("params =====================================>>  " + params);
+
 		String date = params.get("shiDate").toString();
 		String pvMonth =date.substring(0,2);
 		String pvYear=date.substring(date.indexOf("/")+1,date.length());
 		params.put("pvMonth",pvMonth);
 		params.put("pvYear",pvYear);
+
+		// 2019-07-16 - LaiKW - Added customer type
+		String custType = params.get("custType").toString();
+		if(Integer.parseInt(params.get("custType").toString()) == 1) {
+		    custType = "'964','965'";
+		} else {
+		    custType = "'" + custType + "'";
+		}
+
+		params.put("custType", custType);
 
 		commissionReportService.commSPCRgenrawSHIIndexCall(params);
 
