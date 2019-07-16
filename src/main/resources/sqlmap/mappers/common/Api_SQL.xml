@@ -366,7 +366,7 @@
 	            ) VALUES(
 	               CP0001T_CP_ID_SEQ.NEXTVAL
 	                , #{cowayCustId}
-	                <choose><when test="mail != null and email !=''">,#{email}</when><otherwise>,NULL</otherwise></choose>
+	                <choose><when test="email != null and email !=''">,#{email}</when><otherwise>,NULL</otherwise></choose>
 	                <choose><when test="fullName != null and fullName !=''">,#{fullName}</when><otherwise>,NULL</otherwise></choose>
 	                <choose><when test="emailVerifyStatus != null and emailVerifyStatus !=''">,#{emailVerifyStatus}</when><otherwise>,NULL</otherwise></choose>
 	                , 1
