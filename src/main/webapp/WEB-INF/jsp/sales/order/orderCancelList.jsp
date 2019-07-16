@@ -228,8 +228,15 @@
     }
 
     if (detailForm.paramReqStusCode.value == 'CC') {
-      Common
-          .alert("not available to use this function when Call Log Status in ‘CC’");
+      Common.alert("not available to use this function when Call Log Status in ‘CC’");
+      return false;
+    }
+    if (detailForm.paramReqStusCode.value == 'REV') {
+      Common.alert("Not available to use this function when Call Log Status in ‘REV’");
+      return false;
+    }
+    if (detailForm.paramReqStusCode.value == 'CONTR') {
+      Common.alert("Not available to use this function when Call Log Status in ‘CONTR’");
       return false;
     }
     //else{test--------
@@ -469,7 +476,7 @@
         <option value="31"><spring:message
           code="sal.combo.text.reversalOfCancellation" /></option>
         <option value="105"><spring:message
-          code="sal.combo.text.continueRental" /></option>  
+          code="sal.combo.text.continueRental" /></option>
       </select></td>
      </tr>
      <tr>
