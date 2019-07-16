@@ -247,12 +247,17 @@ $(function(){
 	        } else {
 	        	 if($("#movpath").val()=='02'){
 	        		 var paramdata = { stoIn:'02,05',  endlikeValue:$("#locationType").val() , grade:$("#locationType").val()}; // session 정보 등록
+	        		 doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'fn_setDefaultToSelection');
+	        		 
+	        		 var paramdata2 = { brnch : brnch , locgb:'CT'};
+	    		     doGetComboCodeId('/common/selectStockLocationList.do', paramdata2, '','flocation', 'S' , '');
 	        	 }
 	        	 else {
 	        		 var paramdata = { locgb:$("#movpath").val(),  endlikeValue:$("#locationType").val(), grade:$("#locationType").val()}; // session 정보 등록
+	        		 doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
 	        	 }
 	        	 
-	        	 doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
+	        	 
 	        	 doDefCombo([], '' ,'flocation', 'S', '');
 	        }    
 	              
@@ -485,6 +490,20 @@ function fn_setDefaultSelection() {
 
 				} else {
 					$("#flocation option[value='']").attr("selected", true);
+				}
+			});
+}
+
+function fn_setDefaultToSelection() {
+
+	Common.ajax("GET", "/logistics/stockMovement/selectDefToLocation.do", '',
+			function(result) {
+				console.log(result.data);
+				if (result.data != null || result.data != "") {
+					$("#tlocation option[value='" + result.data + "']").attr("selected", true);
+
+				} else {
+					$("#tlocation option[value='']").attr("selected", true);
 				}
 			});
 }
