@@ -529,9 +529,6 @@
 
         		AUIGrid.resize(salesOrgPerfM, 1200, 160);
 
-        		$("#memo").show();
-        		memoGridID = GridCommon.createAUIGrid("memoGridID", memoColumnLayout, null, memoGridOption);
-
         		fn_selectSalesDashboard(roleType);
 
         	} else {
@@ -539,11 +536,6 @@
         		// 셀 더블클릭 이벤트 바인딩
 
         		$("#salesOrg").remove();
-
-        		if(result.userTypeId == 2){
-        			$("#memo").show();
-        			memoGridID = GridCommon.createAUIGrid("memoGridID", memoColumnLayout, null, memoGridOption);
-        		}
 
 
                 AUIGrid.bind(noticeGridID, "cellDoubleClick", function (event) {
@@ -557,16 +549,22 @@
                 fn_selectNoticeListAjax();
         	}
 
-            AUIGrid.bind(memoGridID, "cellDoubleClick", function(event){
-                        $("#viewwindow").show();
-                        var itm = event.item;
-                        $("#vtitle").html(itm.memotitle);
-                        $("#vcrtnm").html(itm.crtusernm);
-                        $("#vcrtdt").html(itm.fcrtdt);
-                        $("#vupdnm").html(itm.updusernm);
-                        $("#vupddt").html(itm.upddt);
-                        $("#vmemo").html(itm.memocntnt);
-            });
+        	if(result.userTypeId == 1 || result.userTypeId == 2){
+                $("#memo").show();
+                memoGridID = GridCommon.createAUIGrid("memoGridID", memoColumnLayout, null, memoGridOption);
+                fn_selectMemoDashboard();
+
+                AUIGrid.bind(memoGridID, "cellDoubleClick", function(event){
+                    $("#viewwindow").show();
+                     var itm = event.item;
+                    $("#vtitle").html(itm.memotitle);
+                    $("#vcrtnm").html(itm.crtusernm);
+                    $("#vcrtdt").html(itm.fcrtdt);
+                    $("#vupdnm").html(itm.updusernm);
+                    $("#vupddt").html(itm.upddt);
+                    $("#vmemo").html(itm.memocntnt);
+                });
+            }
 
             if(result.roleType == 114 || result.roleType == 115) {
                 $("#dailyPerf").remove();
@@ -595,8 +593,6 @@
 
                 fn_selectDailyPerformanceListAjax();
             }
-
-            fn_selectMemoDashboard();
         });
 
         /***********************************************[ CODE_ID GRID] ************************************************/
