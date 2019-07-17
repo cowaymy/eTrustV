@@ -239,11 +239,12 @@ $(function(){
 	        */
     		if (($("#movpath").val()=='CTOR') && (brnch != '42' && brnch != '0')){
 
-	        	var paramdata = { locgb:$("#movpath").val(), grade:$("#locationType").val(), brnch : brnch}; 
-	        	doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
-	        	
 	        	var paramdata2 = {stoIn:'01,02,05,06,07', grade:$("#locationType").val() };
 	        	doGetComboCodeId('/common/selectStockLocationList.do', paramdata2, '','flocation', 'S', 'fn_setDefaultSelection');
+	        	alert($("#movpath").val());
+	        	var paramdata = { locgb:$("#movpath").val(), grade:$("#locationType").val(), brnch : brnch }; 
+	        	doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
+	        	
 	        } else {
 	        	 if($("#movpath").val()=='02'){
 	        		 var paramdata = { stoIn:'02,05',  endlikeValue:$("#locationType").val() , grade:$("#locationType").val()}; // session 정보 등록
