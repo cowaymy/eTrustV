@@ -212,6 +212,15 @@ public class ASManagementListController {
     model.put("BRANCH_NAME", sessionVO.getBranchName());
     model.put("BRANCH_ID", sessionVO.getUserBranchId());
 
+    String ind =  CommonUtils.nvl(params.get("IND"));
+
+    if(ind == null || ind == ""){
+    	ind = "0";
+    }
+    model.put("IND", ind);
+    logger.debug("##############IND : " + ind);
+
+
     /*
      * if("VIEW".equals(params.get("mod"))){ asentryInfo =
      * ASManagementListService.selASEntryView(params); model.put("asentryInfo",
