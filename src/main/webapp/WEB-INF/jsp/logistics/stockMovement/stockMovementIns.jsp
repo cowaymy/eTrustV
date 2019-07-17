@@ -241,7 +241,7 @@ $(function(){
 
 	        	var paramdata2 = {stoIn:'01,02,05,06,07', grade:$("#locationType").val() };
 	        	doGetComboCodeId('/common/selectStockLocationList.do', paramdata2, '','flocation', 'S', 'fn_setDefaultSelection');
-	        	alert($("#movpath").val());
+
 	        	var paramdata = { locgb:$("#movpath").val(), grade:$("#locationType").val(), brnch : brnch }; 
 	        	doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
 	        	
