@@ -151,45 +151,36 @@
                             .setMsg("<spring:message code='commission.alert.SHIIndex.member.noSelect'/>");
                       } else {
                         var date = $("#shiDate").val();
-                        var month = Number(date
-                            .substring(0, 2));
+                        var month = Number(date.substring(0, 2));
                         if (month < 10) {
                           month = "0" + month;
                         }
-                        var year = Number(date
-                            .substring(3));
+                        var year = Number(date.substring(3));
                         var memCd = $("#memCode").val();
-                        var typeCode = $("#typeCode")
-                            .val();
-                        var teamCode = $("#teamCode")
-                            .val();
+                        var typeCode = $("#typeCode").val();
+                        var teamCode = $("#teamCode").val();
                         var level = $("#level").val();
 
+                        var custType = $("#custType").val();
+                        if(custType == 1) {
+                            custType = "'964', '965'";
+                        }
+
                         var reportFileName = "/commission/SHIIndexExcelRaw.rpt"; //reportFileName
-                        var reportDownFileName = "SHIIndexExcelFile_"
-                            + today; //report name
+                        var reportDownFileName = "SHIIndexExcelFile_" + today; //report name
                         var reportViewType = "EXCEL"; //viewType
 
-                        $("#reportForm #mCode").val(
-                            memCd);
-                        $("#reportForm #month").val(
-                            month);
-                        $("#reportForm #year")
-                            .val(year);
-                        $("#reportForm #mLvl").val(
-                            level);
-                        $("#reportForm #mType").val(
-                            typeCode);
-                        $("#reportForm #deptCode").val(
-                            teamCode);
+                        $("#reportForm #mCode").val(memCd);
+                        $("#reportForm #month").val(month);
+                        $("#reportForm #year").val(year);
+                        $("#reportForm #mLvl").val(level);
+                        $("#reportForm #mType").val(typeCode);
+                        $("#reportForm #deptCode").val(teamCode);
+                        $("#reportForm #rptCustType").val(custType);
 
-                        $("#reportForm #reportFileName")
-                            .val(reportFileName);
-                        $(
-                            "#reportForm #reportDownFileName")
-                            .val(reportDownFileName);
-                        $("#reportForm #viewType").val(
-                            reportViewType);
+                        $("#reportForm #reportFileName").val(reportFileName);
+                        $("#reportForm #reportDownFileName").val(reportDownFileName);
+                        $("#reportForm #viewType").val(reportViewType);
 
                         //  report 호출
                         var option = {
@@ -322,6 +313,7 @@
             <input type="hidden" name="V_PVMTH" id="month" /> <input type="hidden" name="V_PVYEAR" id="year" />
             <input type="hidden" name="V_MEMLVL" id="mLvl" /> <input type="hidden" name="V_MEMTYPE" id="mType" />
             <input type="hidden" name="V_DEPTCODE" id="deptCode" />
+            <input type="hidden" name="V_CUST_TYPE" id="rptCustType" />
             <input type="hidden" name="reportDownFileName" id="reportDownFileName" />
             <input type="hidden" name="reportFileName" id="reportFileName" />
             <input type="hidden" name="viewType" id="viewType" />
