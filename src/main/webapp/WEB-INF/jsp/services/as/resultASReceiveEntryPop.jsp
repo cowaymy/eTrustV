@@ -47,6 +47,8 @@
     $("#checkComm").prop("checked", true);
 
     fn_setComboBox2();
+
+    fn_checkASReceiveEntryPop();
   });
 
   function fn_getErrMstList(_ordNo) {
@@ -1133,6 +1135,43 @@
    $('#sFm #requestDate').val(rqtDt);
   }
 
+
+// ADDED BY TPY - 2019/07/17
+  function fn_checkASReceiveEntry() {
+      Common.ajaxSync("GET", "/services/as/checkASReceiveEntry.do", { salesOrderNo : '${orderDetail.basicInfo.ordNo}'
+      }, function(result) {
+        msg = result.message;
+      });
+      return msg;
+    }
+
+  function fn_selfClose() {
+	    $('#btnClose').click();
+	    $("#_resultNewEntryPopDiv1").remove();
+	  }
+
+function fn_checkASReceiveEntryPop(){
+    if('${IND}' == "0"){
+        var msg = fn_checkASReceiveEntry();
+
+        if (msg == "") {
+
+          } else {
+
+             msg += '<br/> Do you want to proceed ? <br/>';
+
+             Common.confirm('AS Received Entry Confirmation - [TrustCenter]'
+                              + DEFAULT_DELIMITER
+                              + "<b>" + msg
+                              + "</b>",
+                              "",
+                          fn_selfClose);
+                }
+        }
+}
+
+
+
 </script>
 <div id="popup_wrap" class="popup_wrap ">
  <!-- popup_wrap start -->
@@ -1147,6 +1186,7 @@
      type="text" title="" id="sms_MemCode" name="sms_MemCode"> <input
      type="text" title="" id="sms_Message" name="sms_Message"> <input
      type="text" title="" id="sms_CustFulladdr" name="sms_CustFulladdr">
+      <input type="text" id="IND" name="IND" value = "${IND}" />
    </div>
   </form>
   <form action="#" method="post" id="sFm" name='sFm'>
@@ -1158,7 +1198,7 @@
     </h1>
     <ul class="right_opt">
      <li><p class="btn_blue2">
-       <a href="#"><spring:message code='sys.btn.close' /></a>
+       <a href="#" id="btnClose"><spring:message code='sys.btn.close' /></a>
       </p></li>
     </ul>
    </header>
