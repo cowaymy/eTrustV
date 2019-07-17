@@ -1263,7 +1263,7 @@ public class ClaimController {
     // claimService.insertClaimFileDownloadInfo(claimMap);
 
     // E-mail 전송하기
-    /*File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
+    File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
     EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
@@ -1272,7 +1272,7 @@ public class ClaimController {
     email.setText("Please find attached the claim file for your kind perusal.");
     email.addFile(file);
 
-    adaptorService.sendEmail(email, false);*/
+    adaptorService.sendEmail(email, false);
 
   }
 
