@@ -748,8 +748,8 @@
             $('#spEmail2').text("");
             $('#billMthdEmail1').prop("checked", false).prop("disabled", true);
             $('#billMthdEmail2').prop("checked", false).prop("disabled", true);
-          //$('#billMthdEmailTxt1').val("").prop("disabled", true);
-          //$('#billMthdEmailTxt2').val("").prop("disabled", true);
+            $('#billMthdEmailTxt1').val("").prop("disabled", true);
+            $('#billMthdEmailTxt2').val("").prop("disabled", true);
 
             if($("#billMthdEstm").is(":checked")) {
             	$('#billMthdSms').change();
