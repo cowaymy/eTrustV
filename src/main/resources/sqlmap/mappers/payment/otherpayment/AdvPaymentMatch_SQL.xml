@@ -23,7 +23,7 @@
         WHERE
             A.BANK_STATE_MAPPING_STUS_ID = 1
             AND A.BANK_CHG_MAPPING_STUS_ID = 1
-            AND A.REV_STUS_ID IS NULL
+            AND (A.REV_STUS_ID IS NULL OR A.REV_STUS_ID = 6)
             AND A.GROUP_SEQ IN (
                 SELECT
                     DISTINCT A.GROUP_SEQ
