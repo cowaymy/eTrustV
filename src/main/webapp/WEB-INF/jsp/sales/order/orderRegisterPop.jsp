@@ -1856,7 +1856,7 @@ console.log("vBindingNo" + vBindingNo);
           }
         }
 
-        if (custType == '965' && appTypeVal == '66'){
+        /* if (custType == '965' && appTypeVal == '66'){
         	if ($("#corpCustType option:selected").index() <= 0) {
         		isValid = false;
                 msg += '* Please select SST Type<br>';
@@ -1866,7 +1866,7 @@ console.log("vBindingNo" + vBindingNo);
                 isValid = false;
                 msg += '* Please select Agreement Type<br>';
             }
-        }
+        } */
 
 
         if(!FormUtil.checkReqValue($('#hiddenSalesmanId'))) {
