@@ -103,7 +103,7 @@
                 <choose>
                 <!-- 전체조회 -->
                   <when test ="branchTypeList[0].equals('11') ">
-                   ( '42', '43', '45')
+                   ( '42', '43', '45' , '48')
                    </when>
                 <otherwise>
                  <foreach item="item" collection="branchTypeList" index="index" open="(" separator="," close=")">
@@ -137,7 +137,8 @@
        CODY_MANGR_USER_ID CODY_MANGR_USER_ID,
         CT_BRNCH_CODE CT_BRNCH_CODE,
        CT_SUB_GRP CT_SUB_GRP,
-       SO_BRNCH_CODE
+       SO_BRNCH_CODE,
+       HT_CODE
         from SYS0064M
         where area_id in(select area_id from ORG0019M where reqst_no=#{reqstNo})
 	</select>
@@ -157,7 +158,8 @@
                   BRNCH_NAME,
                CT_BRNCH_CODE,
                CT_SUB_GRP,
-               SO_BRNCH_CODE
+               SO_BRNCH_CODE,
+               HT_CODE
           FROM ORG0019M
           WHERE REQST_NO=#{reqstNo}
 	</select>
@@ -226,6 +228,30 @@
         </foreach>
     </insert>
 
+
+        <insert id="insertHomecareTechnician" parameterType="java.util.List">
+        INSERT INTO ORG0019M(
+        REQST_NO
+        ,AREA_ID
+        ,REQST_DT
+        ,REQST_USER_ID
+        ,HT_CODE
+        ,BRNCH_TYPE
+        ,CNFM_STUS
+        )
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT #{item.reqstNo}
+            ,#{item.areaId}
+            ,SYSDATE
+            ,#{item.requester}
+            ,#{item.branch}
+            ,#{item.brnchId}
+            ,'1'
+            FROM DUAL
+        </foreach>
+    </insert>
+
+
 	<update id="updateSYS0064MDream" parameterType="Map">
        UPDATE SYS0064M SET
        CT_BRNCH_CODE =  #{ctBrnchCode},
@@ -238,6 +264,13 @@
        SO_BRNCH_CODE =  #{soBrnchCode}
        WHERE AREA_ID=#{areaId}
     </update>
+
+   <update id="updateSYS0064MHT" parameterType="Map">
+       UPDATE SYS0064M SET
+       HT_CODE = #{htCode}
+       WHERE AREA_ID=#{areaId}
+    </update>
+
 
     <select id="selectBranchCode"  parameterType="Map" resultType="egovMap">
 		SELECT CODE CODE_ID, CODE CODE_NAME
