@@ -40,6 +40,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 27/03/2019    ONGHC      1.0.5       - To Update and Insert LOG0038D and LOG0039D
  * 04/04/2019    ONGHC      1.0.6       - Amend insertInstallation_2
  * 29/04/2019    ONGHC      1.0.7       - Create chkExgRsnCde
+ * 18/07/2019    ONGHC      1.0.8       - Amend runInstSp
  *********************************************************************************************/
 
 @Service("installationResultListService")
@@ -1320,6 +1321,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
       if ("2".equals(no)) { //
         if (params.get("hidCallType").equals("258")) { // PRODUCT EXCHANGE RETURN OLD STOCK REQUEST
           p_ordID = installationResultListMapper.getINSNo(params);
+          logger.debug("== Param :: " + params.toString());
+          installationResultListMapper.updateExchangeEntryCt(params);
+
           logger.debug("== PREV. INSTALLATION NO :: " + p_ordID);
           if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
             retype = "SVO";
