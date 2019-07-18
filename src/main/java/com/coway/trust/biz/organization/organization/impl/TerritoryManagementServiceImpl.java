@@ -125,6 +125,23 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
 				territoryManagementMapper.insertSalesOffice(list45);
 			}
 			break;
+		case "48": // Homecare Technician
+
+			Map<String, Object> list48 = new HashMap<>();
+
+			for (int i = 0; i <= page; i++) {
+				start = i * size;
+				end = size;
+
+				if(i == page){
+					end = list.size();
+				}
+
+				list48.put("list",
+						list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+				territoryManagementMapper.insertHomecareTechnician(list48);
+			}
+			break;
 		default:
 			logger.info("Unknown type...... bType : {}", bType);
 			break;
@@ -195,6 +212,16 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
     		if(select19M.size() > 0){
     			for(int i=0; i<select19M.size(); i++){
     				territoryManagementMapper.updateSYS0064MSO(select19M.get(i));
+    				territoryManagementMapper.updateORG0019MFlag(select19M.get(i));
+    				territoryManagementMapper.updateORG0019M(select19M.get(i));
+    			}
+    		}
+		}else if(params.get("brnchType").toString().equals("48")){
+    		List<EgovMap> select19M = territoryManagementMapper.select19M(params);
+    		logger.debug("select19M {}", select19M);
+    		if(select19M.size() > 0){
+    			for(int i=0; i<select19M.size(); i++){
+    				territoryManagementMapper.updateSYS0064MHT(select19M.get(i));
     				territoryManagementMapper.updateORG0019MFlag(select19M.get(i));
     				territoryManagementMapper.updateORG0019M(select19M.get(i));
     			}
