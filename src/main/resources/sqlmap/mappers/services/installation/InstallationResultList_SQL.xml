@@ -4458,6 +4458,12 @@
       AND SALES_ORD_ID = #{salesOrdId}
   </update>
 
+  <update id="updateExchangeEntryCt" parameterType="Map">
+    UPDATE LOG0038D SET CT_ID = #{EXC_CT_ID}
+    WHERE STK_RETN_ID = (SELECT MAX(STK_RETN_ID) FROM LOG0038D WHERE SALES_ORD_ID = #{hidSalesOrderId} AND STUS_CODE_ID = '1')
+      AND SALES_ORD_ID = #{hidSalesOrderId}
+  </update>
+
   <update id="updateInstallEntryEdit" parameterType="Map">
     UPDATE SAL0046D SET UPD_DT = SYSDATE
                       , UPD_USER_ID = #{user_id}
