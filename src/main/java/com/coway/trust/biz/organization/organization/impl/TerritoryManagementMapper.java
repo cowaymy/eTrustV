@@ -45,4 +45,8 @@ public interface TerritoryManagementMapper {
 	List<EgovMap> selectState(Map<String, Object> params);
 
 	List<EgovMap> selectCurrentTerritory(Map<String, Object> params);
+
+	void insertHomecareTechnician(Map<String, Object> params);
+
+	void updateSYS0064MHT(EgovMap params);
 }
