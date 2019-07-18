@@ -14,6 +14,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 18/03/2019    ONGHC      1.0.3       - Create getINSNo
  * 27/03/2019    ONGHC      1.0.4       - Create insertExchangeResult and updateExchangeEntry_2
  * 29/04/2019    ONGHC      1.0.5       - Create chkExgRsnCde
+ * 18/07/2019    ONGHC      1.0.6       - Create updateExchangeEntryCt
  *********************************************************************************************/
 
 @Mapper("installationResultListMapper")
@@ -106,6 +107,8 @@ public interface InstallationResultListMapper {
   void updateInstallEntry_2(Map<String, Object> params);
 
   void updateExchangeEntry_2(Map<String, Object> params);
+
+  void updateExchangeEntryCt(Map<String, Object> params);
 
   void insertSirim(Map<String, Object> params);
 
