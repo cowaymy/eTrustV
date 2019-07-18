@@ -1649,6 +1649,7 @@ console.log("vBindingNo" + vBindingNo);
                 custBillCntId           : $("#hiddenCustCntcId").val().trim(),
                 custBillCustCareCntId   : $("#hiddenBPCareId").val().trim(),
                 custBillCustId          : $('#hiddenCustId').val().trim(),
+                custBillIsEstm          : $('#billMthdEstm').is(":checked") ? 1 : 0,
                 custBillEmail           : $('#billMthdEmailTxt1').val().trim(),
                 custBillEmailAdd        : $('#billMthdEmailTxt2').val().trim(),
                 custBillIsPost          : $('#billMthdPost').is(":checked") ? 1 : 0,
@@ -1701,7 +1702,7 @@ console.log("vBindingNo" + vBindingNo);
             },
             docSubmissionVOList         : GridCommon.getEditData(docGridID)
         };
-
+        console.log(orderVO.custBillMasterVO);
          Common.ajax("POST", "/sales/order/registerOrder.do", orderVO, function(result) {
 
             Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());

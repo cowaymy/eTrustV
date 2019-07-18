@@ -778,7 +778,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     custBillMasterVO.setCustBillCrtUserId(sessionVO.getUserId());
     custBillMasterVO.setCustBillPayTrm(0);
     custBillMasterVO.setCustBillInchgMemId(0);
-    custBillMasterVO.setCustBillIsEstm(0);
+    //custBillMasterVO.setCustBillIsEstm(0);
 
     /*
      * customerBillMaster.CustBillID = 0; customerBillMaster.CustBillSOID = 0;
