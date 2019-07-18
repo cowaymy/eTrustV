@@ -87,7 +87,8 @@ function createDetailAUIGrid() {
                             { dataField : "codyMangrUserId",  headerText  : "Cody Manager",   width          : 200,     editable       : false  },
                             { dataField : "ctBrnchCode",         headerText  : "DSC",   width          : 120,     editable       : false  },
                             { dataField : "ctSubGrp",  headerText  : "CT Sub Group",   width          : 200,     editable       : false  },
-                            { dataField : "soBrnchCode",  headerText  : "SO Group",   width          : 110,     editable       : false  }
+                            { dataField : "soBrnchCode",  headerText  : "SO Group",   width          : 110,     editable       : false  },
+                            { dataField : "htCode",  headerText  : "HT Code",   width          : 110,     editable       : false  }
 
        ];
 
@@ -240,6 +241,7 @@ function fn_Cancel(){
 		   <option value="42">Cody Branch</option>
           <option value="43">Dream Service Center</option>
           <option value="45">Sales Office</option>
+          <option value="48">Homecare</option>
 		</select>
 	</td>
 	<th scope="row">Assign Request Code</th>
