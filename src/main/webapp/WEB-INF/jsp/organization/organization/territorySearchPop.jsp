@@ -53,6 +53,10 @@ var columnLayout = [
         dataField : "soBrnchCode",
         headerText : "SO Group",
         width: 120
+    }, {
+        dataField : "htCode",
+        headerText : "HT Code",
+        width: 120
     },  {
         dataField : "status",
         headerText : "Status",
