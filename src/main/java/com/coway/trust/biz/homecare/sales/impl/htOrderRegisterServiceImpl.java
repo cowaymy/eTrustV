@@ -1535,6 +1535,7 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
     	if(srvConfigurationVO != null && srvConfigurationVO.getSrvStusId() > 0) {
     		srvConfigurationVO.setSrvSoId(salesOrdId);
     		srvConfigurationVO.setSrvBsGen(1);
+    		srvConfigurationVO.setSrvCodyId(CommonUtils.intNvl(memberPackageInfo.get("codyId")));
     		htOrderRegisterMapper.insertSrvConfiguration(srvConfigurationVO);
     	}
 
