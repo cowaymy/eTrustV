@@ -57,7 +57,7 @@
         SELECT COUNT(*) TOTAL_PRODUCT_COUNT
         FROM SAL0001D
             WHERE 1=1
-            AND ROWNUM <![CDATA[ <= ]]> 1
+            AND STUS_CODE_ID = 4
             AND CUST_ID = #{cowayCustId}
     </select>
 
@@ -354,15 +354,16 @@
 
     <insert id="addEInvoiceSubscription" parameterType="Map">
 	    INSERT INTO CP0001T
-	                (CP_ID ,
-	                CUST_ID ,
-	                CUST_EMAIL ,
-	                CUST_NAME ,
-	                CUST_EMAIL_VERIFY_STUS ,
-	                STUS_ID ,
-	                CRT_USR_ID ,
-	                CRT_DT,
-	                CP_TYPE_ID
+	                (CP_ID
+	               , CUST_ID
+	               , CUST_EMAIL
+	               , CUST_NAME
+	               , CUST_EMAIL_VERIFY_STUS
+	               , STUS_ID
+	               , CRT_USR_ID
+	               , CRT_DT
+	               , CP_TYPE_ID
+	               , ACTN_TYPE
 	            ) VALUES(
 	               CP0001T_CP_ID_SEQ.NEXTVAL
 	                , #{cowayCustId}
@@ -373,6 +374,7 @@
 	                , 100910
 	                , SYSDATE
 	                , 5504
+	                , UPPER(#{actionType})
 	            )
     </insert>
 
