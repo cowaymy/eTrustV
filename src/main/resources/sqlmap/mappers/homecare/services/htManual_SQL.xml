@@ -123,8 +123,10 @@
                     AND B.MEM_CODE  =#{userName}
                 </if>
                 <if test="memLevl == '4'.toString()">
+                    AND A.MEM_LVL = '3'
                     AND A.BRNCH_ID = #{groupCode}
-                    AND B.MEM_CODE  = #{userName}
+                   <!--  AND B.MEM_CODE  = #{userName} -->
+                     AND B.STUS = '1'
                 </if>
             </if>
             <if test="userType == '4'.toString() and groupCode != '151'.toString() ">
