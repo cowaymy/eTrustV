@@ -170,18 +170,16 @@
         whereSql += " AND ae.AS_STUS_ID IN (" + asStus + ") ";
       }
 
-      var asTypeId = "";
-      if ($("#asType").val() != '' && $("#asType").val() != null) {
-        asTypeId = $("#asType  option:selected").text();
-        if ($("#asType").val() == "0") {
+      var asType = "";
+      asType = $("#asTypeReport :selected").val();
+      if (asType != '' && asType != null) {
 
-          whereSql += "AND (ae.AS_TYPE_ID = 674 OR ae.AS_TYPE_ID = 675) ";
-        } else {
-
-          whereSql += "AND ae.AS_TYPE_ID = " + $("#asType").val()
+          whereSql += "AND ae.AS_TYPE_ID IN (" + asType +") "
               + " ";
+        }else{
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='AS type' htmlEscape='false'/>");
+            return false;
         }
-      }
 
       var asGroup = "";
       if ($("#CTGroup").val() != '' && $("#CTGroup").val() != null) {
@@ -210,7 +208,7 @@
       $("#reportFormAS #V_REQUESTDATETO").val(requestDateTo);
       $("#reportFormAS #V_APPOINDATEFROM").val(appointDateFrom);
       $("#reportFormAS #V_APPOINDATETO").val(appointDateTo);
-      $("#reportFormAS #V_ASTYPEID").val(asTypeId);
+      $("#reportFormAS #V_ASTYPEID").val(asType);
       $("#reportFormAS #V_ASSTATUS").val(asStus);
       $("#reportFormAS #V_ASGROUP").val(asGroup);
       $("#reportFormAS #V_ASTEMPSORT").val(asSort);
@@ -282,10 +280,11 @@
      <tbody>
       <tr>
        <th scope="row">AS Type <span class="must">*</span></th>
-       <td><select id="asType">
-         <option value="0">Both Normal & Auto AS</option>
-         <option value="674">Only Normal AS</option>
-         <option value="675">Only Auto AS</option>
+       <td><select class="multy_select w100p" multiple="multiple" id="asTypeReport">
+         <option value="674">Normal AS</option>
+         <option value="675">Auto AS</option>
+          <option value="3154">Add On AS</option>
+          <option value="2713">In House Repair AS</option>
        </select></td>
        <th scope="row">Order Number</th>
        <td>
