@@ -34,7 +34,7 @@
            B.CODE || ' - ' || B.NAME AS BR,
            A.ITM_CDE AS ITM_CDE,
            C.STK_CODE AS STK_CDE,
-           C.STK_DESC AS STK_DESC,
+           UPPER(C.STK_DESC) AS STK_DESC,
            QTY AS QTY,
            TO_CHAR(CRT_DT,'DD/MM/YYYY') AS CRT_DT,
            USER_NAME AS CRT_BY
@@ -105,7 +105,9 @@
   </select>
 
   <select id="getSrvItmRcd" parameterType="Map" resultType="egovMap">
-    SELECT TO_CHAR(B.TRX_DT, 'dd/mm/yyyy') AS TRX_DT,
+    SELECT H.CODE AS DSC,
+           TO_CHAR(B.TRX_DT, 'dd/mm/yyyy') AS TRX_DT,
+           UPPER(G.STK_DESC) AS STK_DESC,
            C.CODE_NAME AS MOV_TYP,
            B.MOV_TYP AS MOV_TYP_CDE,
            CASE WHEN B.MOV_TYP = 0 THEN
@@ -120,6 +122,8 @@
     LEFT JOIN SYS0013M D ON D.CODE_MASTER_ID = '420' AND D.CODE = B.MOV_DTL
     LEFT JOIN SYS0013M E ON E.CODE_MASTER_ID = '421' AND E.CODE = B.MOV_DTL
     LEFT JOIN SYS0047M F ON B.CRT_USR = F.USER_ID
+    LEFT JOIN SYS0026M G ON A.ITM_CDE = G.STK_ID
+    LEFT JOIN SYS0005M H ON A.BR_NO = H.BRNCH_ID
     WHERE ROWNUM <![CDATA[ <= ]]> 500
       AND A.BR_NO = #{BR}
       AND A.ITM_CDE = #{ITM_CDE}
