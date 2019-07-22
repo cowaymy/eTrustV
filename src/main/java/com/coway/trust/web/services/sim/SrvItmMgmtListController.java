@@ -37,6 +37,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - CREATE SERVICE ITEM MENAGEMENT FUNCTION
+ * 22/07/2019    ONGHC      1.0.2       - AMEND BAESD ON FEEDBACK
  *********************************************************************************************/
 
 @Controller
@@ -101,7 +102,13 @@ public class SrvItmMgmtListController {
     logger.debug("== params " + params.toString());
     logger.debug("===========================/srvItmAddPop.do===============================");
 
-    String brTyp =  SrvItmMgmtListService.getBchTypDesc(params.get("cboBchTyp").toString());
+    String brTyp = "";
+    if ((params.get("cboBchTyp").toString()).equals("")) {
+      brTyp =  SrvItmMgmtListService.getBrTypDesc((String) params.get("cboBch"));
+    } else {
+      brTyp =  SrvItmMgmtListService.getBchTypDesc(params.get("cboBchTyp").toString());
+    }
+
     String br =  SrvItmMgmtListService.getBchDesc(params.get("cboBch").toString());
     String itmCde =  SrvItmMgmtListService.getItmCde(params.get("cboItm").toString());
     String itmDesc =  SrvItmMgmtListService.getItmDesc(params.get("cboItm").toString());
