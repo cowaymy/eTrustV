@@ -529,7 +529,7 @@ function f_validatation(v){
     
     if (v == 'search'){
             if ($("#PosItemType").val() == null || $("#PosItemType").val() == undefined || $("#PosItemType").val() == ""){
-                Common.alert("Please Select PosItemType.");
+                Common.alert("Please Select Item Type.");
                 return false;
             }
             
@@ -541,32 +541,27 @@ function f_validatation(v){
     if(v == 'save'){
         
         if ($("#insReqType").val() == "") {
-            Common.alert("Please select the insReqType.");
+            Common.alert("Please select the Request Type.");
             $("#insReqType").focus();
             return false;
         }
         if ($("#insReqDate").val() == "") {
-            Common.alert("Please select the insReqDate.");
+            Common.alert("Please select the Request Date.");
             $("#insReqDate").focus();
             return false;
         }
         if ($("#insRequestor").val() == "") {
-            Common.alert("Please select the insRequestor.");
+            Common.alert("The Requestor field is mandatory.");
             $("#insRequestor").focus();
             return false;
         }
-//         if ($("#insSmo").val() == "") {
-//             Common.alert("Please enter the Stock Movement No.");
-//             $("#insSmo").focus();
-//             return false;
-//         }
         if ($("#insReqLoc").val() == "") {
-            Common.alert("Please select the insReqLoc.");
+            Common.alert("Please select the Request Location.");
             $("#insReqLoc").focus();
             return false;
         }
         if ($("#insRemark").val() == "") {
-            Common.alert("Please select the insRemark.");
+            Common.alert("Please select the Remark.");
             $("#insRemark").focus();
             return false;
         }
@@ -577,7 +572,7 @@ function f_validatation(v){
         }
 
         if ($('#insReqType').val() == "OI21" && $("#insSmo").val() == ""){
-            Common.alert("Ref.Doc No. field is mandatory");
+            Common.alert("Ref.Doc No. field is mandatory.");
             return false;
         }
         
@@ -944,7 +939,7 @@ function locationList(){
     </td>
     <th scope="row">Ref.Doc No.</th>
      <td colspan="3">
-    <input id="insSmo" name="insSmo" type="text" title="" placeholder="" class="w100p" />
+    <input id="insSmo" name="insSmo" type="text" title="" placeholder="" class="w100p" maxlength="16"/>
     </td> 
 </tr>
 <tr>

@@ -289,7 +289,7 @@ public class PointOfSalesController {
 		params.put("userId", loginId);
 		
 		if(poschk > 0 ){
-			logger.debug("이미진행중입니다.");	
+			logger.debug("It's already in progress..");	
 		}else{
 			 reVal = PointOfSalesService.insertGiInfo(params);
 		}
