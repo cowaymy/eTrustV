@@ -44,6 +44,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 22/03/2019    ONGHC      1.0.5       - Add Checking on SP_LOGISTIC_REQUEST's Data
  * 09/04/2019    ONGHC      1.0.6       - Amend installationNotePop to add param
  * 24/04/2019    ONGHC      1.0.7       - Amend insertInstallationResult_2 to accept 741 code
+ * 22/07/2019    ONGHC      1.0.8       - Amend insertInstallationResult_2 add installation stock checking
  *********************************************************************************************/
 
 @Controller
@@ -658,6 +659,8 @@ public class InstallationResultListController {
       EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
       logger.debug("INSTALLATION RESULT : {}" + installResult);
 
+      params.put("EXC_CT_ID", installResult.get("ctId"));
+
       Map<String, Object> locInfoEntry = new HashMap<String, Object>();
       locInfoEntry.put("CT_CODE", installResult.get("ctMemCode"));
       locInfoEntry.put("STK_CODE", installResult.get("installStkId"));
@@ -668,74 +671,82 @@ public class InstallationResultListController {
 
       logger.debug("LOC. INFO. : {}" + locInfo);
 
-      EgovMap validMap = installationResultListService.validationInstallationResult(params);
-      int resultCnt = ((BigDecimal) validMap.get("resultCnt")).intValue();
-
-      if (resultCnt > 0) {
-        message.setMessage("Record already exist. Please refer ResultID : " + validMap.get("resultId") + ".");
+      if(locInfo == null) {
+        message.setMessage("Fail to update result. [CT lack of stock]");
       } else {
-        // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
-        resultValue = installationResultListService.runInstSp(params, sessionVO, "1");
-      }
+        if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
+          message.setMessage("Fail to update result. [CT lack of stock]");
+        } else {
+          EgovMap validMap = installationResultListService.validationInstallationResult(params);
+          int resultCnt = ((BigDecimal) validMap.get("resultCnt")).intValue();
 
-      if (null != resultValue) {
-        HashMap spMap = (HashMap) resultValue.get("spMap");
-        logger.debug("spMap :" + spMap.toString());
-        if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"741".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
-          resultValue.put("logerr", "Y");
-          message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS1): " + spMap.get("P_RESULT_MSG").toString());
-        } else { // SUCCESS
-          if ("000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) {
-            servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+          if (resultCnt > 0) {
+            message.setMessage("Record already exist. Please refer ResultID : " + validMap.get("resultId") + ".");
+          } else {
+            // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
+            resultValue = installationResultListService.runInstSp(params, sessionVO, "1");
           }
-          String ordStat = installationResultListService.getSalStat(params);
 
-          if (!"1".equals(ordStat)) {
-            if (params.get("hidCallType").equals("258")) {
-              int exgCode = installationResultListService.chkExgRsnCde(params);
-              // SKIP SOEXC009 - EXCHANGE (WITHOUT RETURN)
-              if (exgCode == 0) { // PEX EXCHANGE CODE NOT IN THE LIST
-                if (Integer.parseInt(params.get("installStatus").toString()) == 4) {
-                  // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
-                  resultValue = installationResultListService.runInstSp(params, sessionVO, "2");
+          if (null != resultValue) {
+            HashMap spMap = (HashMap) resultValue.get("spMap");
+            logger.debug("spMap :" + spMap.toString());
+            if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"741".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
+              resultValue.put("logerr", "Y");
+              message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS1): " + spMap.get("P_RESULT_MSG").toString());
+            } else { // SUCCESS
+              if ("000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) {
+                servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+              }
+              String ordStat = installationResultListService.getSalStat(params);
 
-                  if (null != resultValue) {
-                    spMap = (HashMap) resultValue.get("spMap");
-                    logger.debug("spMap :" + spMap.toString());
-                    if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
-                      resultValue.put("logerr", "Y");
-                      message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS2): " + spMap.get("P_RESULT_MSG").toString());
-                    } else {
-                      servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+              if (!"1".equals(ordStat)) {
+                if (params.get("hidCallType").equals("258")) {
+                  int exgCode = installationResultListService.chkExgRsnCde(params);
+                  // SKIP SOEXC009 - EXCHANGE (WITHOUT RETURN)
+                  if (exgCode == 0) { // PEX EXCHANGE CODE NOT IN THE LIST
+                    if (Integer.parseInt(params.get("installStatus").toString()) == 4) {
+                      // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
+                      resultValue = installationResultListService.runInstSp(params, sessionVO, "2");
 
-                      //resultValue = installationResultListService.runInstSp(params, sessionVO, "3");
+                      if (null != resultValue) {
+                        spMap = (HashMap) resultValue.get("spMap");
+                        logger.debug("spMap :" + spMap.toString());
+                        if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
+                          resultValue.put("logerr", "Y");
+                          message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS2): " + spMap.get("P_RESULT_MSG").toString());
+                        } else {
+                          servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 
-                      //if (null != resultValue) {
-                        //spMap = (HashMap) resultValue.get("spMap");
-                        //logger.debug("spMap :" + spMap.toString());
-                        //if (!"000".equals(spMap.get("P_RESULT_MSG"))) { // FAIL
-                          //resultValue.put("logerr", "Y");
-                          //message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS3): " + spMap.get("P_RESULT_MSG").toString());
-                       //} else {
-                         //servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-                        //}
-                      //}
+                          //resultValue = installationResultListService.runInstSp(params, sessionVO, "3");
+
+                          //if (null != resultValue) {
+                            //spMap = (HashMap) resultValue.get("spMap");
+                            //logger.debug("spMap :" + spMap.toString());
+                            //if (!"000".equals(spMap.get("P_RESULT_MSG"))) { // FAIL
+                              //resultValue.put("logerr", "Y");
+                              //message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS3): " + spMap.get("P_RESULT_MSG").toString());
+                           //} else {
+                             //servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+                            //}
+                          //}
+                        }
+                      }
                     }
                   }
                 }
               }
+
+              resultValue = installationResultListService.insertInstallationResult_2(params, sessionVO);
+
+              message.setCode("1");
+              message.setData("Y");
+              if (Integer.parseInt(params.get("installStatus").toString()) == 21) {
+                message.setMessage("Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to " + resultValue.get("value") + ". Please proceed to Calllog function.");
+              } else {
+                message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
+                message.setMessage("Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to " + resultValue.get("value") + ".");
+              }
             }
-          }
-
-          resultValue = installationResultListService.insertInstallationResult_2(params, sessionVO);
-
-          message.setCode("1");
-          message.setData("Y");
-          if (Integer.parseInt(params.get("installStatus").toString()) == 21) {
-            message.setMessage("Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to " + resultValue.get("value") + ". Please proceed to Calllog function.");
-          } else {
-            message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
-            message.setMessage("Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to " + resultValue.get("value") + ".");
           }
         }
       }
