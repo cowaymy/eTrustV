@@ -899,7 +899,7 @@ var TODAY_DD      = "${toDay}";
        <a id="hSConfiguration" >Create CS
         Order</a>
       </p></li>
-         <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+         <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_getBSListAjax();"><span
         class="search"></span>
@@ -1009,7 +1009,7 @@ var TODAY_DD      = "${toDay}";
              <a href="#" onclick="javascript:fn_hsSummary()">CS
               Summary Listing</a>
             </p></li>
-            <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+            <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
                <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsReportSingle()">CS
               Report(Single)</a>
