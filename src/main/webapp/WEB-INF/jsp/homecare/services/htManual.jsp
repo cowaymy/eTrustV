@@ -896,14 +896,16 @@ var TODAY_DD      = "${toDay}";
         id="addResult">Add CS Result</a>
       </p></li>
      <li><p class="btn_blue">
-       <a id="hSConfiguration" name="hSConfiguration">Create CS
+       <a id="hSConfiguration" >Create CS
         Order</a>
       </p></li>
+         <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_getBSListAjax();"><span
         class="search"></span>
        <spring:message code='sys.btn.search' /></a>
       </p></li>
+    </c:if>
     </c:if>
    </ul>
    <!--조회조건 추가  -->
@@ -943,8 +945,8 @@ var TODAY_DD      = "${toDay}";
            </c:forEach>
          </select></td>
          <th scope="row">HT Manager</th>
-         <td><select id="cmdCdManager" name="cmdCdManager"
-          class="w100p"></td>
+         <td><select id="cmdCdManager" name="cmdCdManager" class="w100p">
+         </select></td>
          <th scope="row">Assign HT</th>
          <td><input id="txtAssigncodyCode" name="txtAssigncodyCode"
           type="text" title="" placeholder="HT" class="w100p" /> <!-- By Kv - Change cmbBox to text Box -->
@@ -969,7 +971,8 @@ var TODAY_DD      = "${toDay}";
          <th scope="row">CS Status</th>
          <td><select class="w100p" id="cmbStatusType"
           name="cmbStatusType">
-           <option value="">CS Status</option></td>
+           <option value="">CS Status</option>
+           </select></td>
          <th scope="row">Customer ID</th>
          <td><input id="txtCustomer" name="txtCustomer" type="text"
           title="" placeholder="Customer ID" class="w100p" /></td>
@@ -1006,11 +1009,12 @@ var TODAY_DD      = "${toDay}";
              <a href="#" onclick="javascript:fn_hsSummary()">CS
               Summary Listing</a>
             </p></li>
+            <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
                <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsReportSingle()">CS
               Report(Single)</a>
             </p></li>
-
+             </c:if>
                    <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsReportGroup()">CS
               Report(Group)</a>
@@ -1094,7 +1098,7 @@ var TODAY_DD      = "${toDay}";
          </select></td>
          <th scope="row">HT Manager</th>
          <td colspan="3"><select id="cmdCdManager1"
-          name="cmdCdManager1" class=""></td>
+          name="cmdCdManager1" class=""></select></td>
         </tr>
        </tbody>
       </table>
