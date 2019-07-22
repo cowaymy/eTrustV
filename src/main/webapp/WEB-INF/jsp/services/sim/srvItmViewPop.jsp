@@ -30,10 +30,22 @@
   function srvItmMgmtGrid() {
       var columnLayout = [
           {
+            dataField : "dsc",
+            headerText : "<spring:message code='service.title.DSCCode'/>",
+            editable : false,
+            width : 100
+          },
+          {
             dataField : "trxDt",
             headerText : "<spring:message code='service.grid.trxDt'/>",
             editable : false,
             width : 100
+          },
+          {
+            dataField : "stkDesc",
+            headerText : "<spring:message code='service.grid.itmCde'/>",
+            editable : false,
+            width : 300
           },
           {
             dataField : "movTyp",

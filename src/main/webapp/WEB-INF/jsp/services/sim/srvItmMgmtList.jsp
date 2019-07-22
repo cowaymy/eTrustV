@@ -90,6 +90,22 @@
             width : 100
           },
           {
+            dataField : "undefined",
+            headerText : "<spring:message code='sys.btn.edit'/>",
+            width : 170,
+            renderer : {
+              type : "ButtonRenderer",
+              labelText : "<spring:message code='sys.btn.edit'/>",
+              onclick : function(rowIndex, columnIndex, value, item) {
+
+                var BR_CDE = AUIGrid.getCellValue(myGridID, rowIndex, "brCde");
+                var ITM_CDE = AUIGrid.getCellValue(myGridID, rowIndex, "itmCde");
+
+                fn_addSrvItm("", BR_CDE, ITM_CDE);
+              }
+            }
+          },
+          {
             dataField : "rcdTms",
             headerText : "",
             width : 100,
