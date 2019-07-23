@@ -2977,9 +2977,9 @@ FROM
                               FROM  ORG0001D A, ORG0005D B
                               WHERE A.MEM_ID = B.MEM_ID AND A.STUS =  '1' AND B.MEM_LVL = '4'
                               AND A.MEM_CODE LIKE 'HT%'
-                              <if test="memType != 4">
+<!--                               <if test="memType != 4">
                               AND B.MEM_UP_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = (SELECT HR_CODE FROM SYS0047M WHERE USER_ID = #{htUserId}))
-                              </if>
+                              </if> -->
                               ORDER BY MEM_CODE
                               ) D
                               ORDER BY D.MEM_CODE
