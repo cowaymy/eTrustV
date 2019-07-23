@@ -3640,8 +3640,7 @@
     UPDATE LOG0038D SET STUS_CODE_ID   = '21',
                         UPD_DT  = sysdate,
                         UPD_USER_ID = (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId}),
-                        FAIL_RESN_ID =#{failReasonCode},
-                         CALL_ENTRY_ID = #{callEntryID}
+                        FAIL_RESN_ID =#{failReasonCode}
     WHERE  retn_no = #{serviceNo}
   </update>
 
