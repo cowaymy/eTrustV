@@ -876,6 +876,13 @@
             ]]>
     </select>
     
+    
+    <select id="saveCallResultSearchOrdId" parameterType="Map" resultType="Integer">
+        SELECT Count (SALES_ORD_ID) as CNT
+        FROM SAL0070D
+        WHERE SALES_ORD_ID = #{salesOrdId}
+    </select>
+    
     <update id="updateSAL0071D" parameterType="Map">
         UPDATE SAL0071D
 			 SET STUS_CODE_ID = #{rentalSchemeStusId},
