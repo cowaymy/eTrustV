@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.web.sales.order;
 
@@ -47,54 +47,54 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class OrderListController {
 
 	private static Logger logger = LoggerFactory.getLogger(OrderListController.class);
-	
+
 	@Resource(name = "orderListService")
 	private OrderListService orderListService;
-	
+
 	@Resource(name = "installationResultListService")
 	private InstallationResultListService installationResultListService;
-	
+
 	@Resource(name = "servicesLogisticsPFCService")
 	private ServicesLogisticsPFCService servicesLogisticsPFCService;
-	
 
-	
+
+
 	@RequestMapping(value = "/orderList.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
 		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
-		
+
 		model.put("bfDay", bfDay);
 		model.put("toDay", toDay);
-		
+
 		return "sales/order/orderList";
 	}
-	
+
 	@RequestMapping(value = "/selectOrderJsonList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectOrderJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
+
 		String[] arrAppType   = request.getParameterValues("appType"); //Application Type
-		String[] arrOrdStusId = request.getParameterValues("ordStusId"); //Order Status 
+		String[] arrOrdStusId = request.getParameterValues("ordStusId"); //Order Status
 		String[] arrKeyinBrnchId = request.getParameterValues("keyinBrnchId"); //Key-In Branch
-		String[] arrDscBrnchId = request.getParameterValues("dscBrnchId"); //DSC Branch 
+		String[] arrDscBrnchId = request.getParameterValues("dscBrnchId"); //DSC Branch
 		String[] arrRentStus = request.getParameterValues("rentStus"); //Rent Status
 
 		if(StringUtils.isEmpty(params.get("ordStartDt"))) params.put("ordStartDt", "01/01/1900");
     	if(StringUtils.isEmpty(params.get("ordEndDt")))   params.put("ordEndDt",   "31/12/9999");
-    	
+
     	params.put("ordStartDt", CommonUtils.changeFormat(String.valueOf(params.get("ordStartDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
     	params.put("ordEndDt", CommonUtils.changeFormat(String.valueOf(params.get("ordEndDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
-		
+
 		if(arrAppType      != null && !CommonUtils.containsEmpty(arrAppType))      params.put("arrAppType", arrAppType);
 		if(arrOrdStusId    != null && !CommonUtils.containsEmpty(arrOrdStusId))    params.put("arrOrdStusId", arrOrdStusId);
 		if(arrKeyinBrnchId != null && !CommonUtils.containsEmpty(arrKeyinBrnchId)) params.put("arrKeyinBrnchId", arrKeyinBrnchId);
 		if(arrDscBrnchId   != null && !CommonUtils.containsEmpty(arrDscBrnchId))   params.put("arrDscBrnchId", arrDscBrnchId);
 		if(arrRentStus     != null && !CommonUtils.containsEmpty(arrRentStus))     params.put("arrRentStus", arrRentStus);
-		
+
 		if(params.get("custIc") == null) {logger.debug("!@###### custIc is null");}
 		if("".equals(params.get("custIc"))) {logger.debug("!@###### custIc ''");}
-		
+
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### ordNo : "+params.get("ordNo"));
 		logger.debug("!@###### ordStartDt : "+params.get("ordStartDt"));
@@ -102,89 +102,89 @@ public class OrderListController {
 		logger.debug("!@###### ordDt : "+params.get("ordDt"));
 		logger.debug("!@###### custIc : "+params.get("custIc"));
 		logger.debug("!@##############################################################################");
-		
+
 		List<EgovMap> orderList = orderListService.selectOrderList(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(orderList);
 	}
-	
+
 	@RequestMapping(value = "/orderRentToOutrSimulPop.do")
 	public String orderRentToOutrSimulPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO session) {
-		
+
 		model.put("ordNo", params.get("ordNo"));
 		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT3));
-		
+
 		//Report Param
 		model.put("userName", session.getUserId());
-		model.put("brnchCode", session.getBranchName());  //AS-IS Brnch Code 
-		
+		model.put("brnchCode", session.getBranchName());  //AS-IS Brnch Code
+
 		return "sales/order/orderRentToOutrSimulPop";
 	}
-	
+
 	@RequestMapping(value="/orderRentalPaySettingUpdateListPop.do")
 	public String orderRentalPaySettingUpdateListPop(){
-		
+
 		return "sales/order/orderRentalPaySettingUpdateListPop";
 	}
-	
+
 	@RequestMapping(value="/orderSOFListPop.do")
 	public String orderSOFListPop(){
-		
+
 		return "sales/order/orderSOFListPop";
 	}
-	
+
 	@RequestMapping(value="/getApplicationTypeList")
 	public ResponseEntity<List<EgovMap>> getApplicationTypeList(@RequestParam Map<String, Object> params) throws Exception{
-	
+
 		List<EgovMap> applicationTypeList = null;
 		applicationTypeList = orderListService.getApplicationTypeList(params);
-	
-		return ResponseEntity.ok(applicationTypeList);	
+
+		return ResponseEntity.ok(applicationTypeList);
 	}
-	
+
 	@RequestMapping(value="/getUserCodeList")
 	public ResponseEntity<List<EgovMap>> getUserCodeList() throws Exception{
-	
+
 		List<EgovMap> userCodeList = null;
 		userCodeList = orderListService.getUserCodeList();
-		
+
 		return ResponseEntity.ok(userCodeList);
 	}
-	
+
 	@RequestMapping(value="/orderDDCRCListPop.do")
 	public String orderDDCRCListPop(){
-		
+
 		return "sales/order/orderDDCRCListPop";
 	}
-	
+
 	@RequestMapping(value="/orderASOSalesReportPop.do")
 	public String orderASOSalesReportPop(){
-		
+
 		return "sales/order/orderASOSalesReportPop";
 	}
-	
+
 	@RequestMapping(value="/orderSalesYSListingPop.do")
 	public String orderSalesYSListingPop(){
-		
+
 		return "sales/order/orderSalesYSListingPop";
 	}
-	
+
 	@RequestMapping(value="/getOrgCodeList")
 	public ResponseEntity<List<EgovMap>> getOrgCodeList(@RequestParam Map<String, Object> params) throws Exception{
-	
+
 		List<EgovMap> orgCodeList = null;
 		orgCodeList = orderListService.getOrgCodeList(params);
-		
+
 		return ResponseEntity.ok(orgCodeList);
 	}
-	
+
 	@RequestMapping(value="/getGrpCodeList")
 	public ResponseEntity<List<EgovMap>> getGrpCodeList(@RequestParam Map<String, Object> params) throws Exception{
-	
+
 		List<EgovMap> grpCodeList = null;
 		grpCodeList = orderListService.getGrpCodeList(params);
-		
+
 		return ResponseEntity.ok(grpCodeList);
 	}
 
@@ -195,19 +195,19 @@ public class OrderListController {
 
         return ResponseEntity.ok(result);
     }
-	
+
 	@RequestMapping(value="/getBankCodeList")
 	public ResponseEntity<List<EgovMap>> getBankCodeList(@RequestParam Map<String, Object> params) throws Exception{
-	
+
 		List<EgovMap> bankCodeList = null;
 		bankCodeList = orderListService.getBankCodeList(params);
-	
+
 		return ResponseEntity.ok(bankCodeList);
 	}
-	
-	
-	
-	
+
+
+
+
 	@RequestMapping(value = "/addProductReturnPopup.do")
 	public String addInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model) {
 		List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
@@ -215,13 +215,13 @@ public class OrderListController {
 		params.put("ststusCodeId", 1);
 		params.put("reasonTypeId", 172);
 		params.put("codeId", 257);
-		
+
 		EgovMap installParam   = orderListService.selectInstallParam(params);
-		
-		
+
+
 		params.put("installEntryId" ,  String.valueOf(installParam.get("installEntryId"))  );
 		logger.debug("params : {}",params);
-		
+
 		List<EgovMap> failReason = installationResultListService.selectFailReason(params);
 		EgovMap callType = installationResultListService.selectCallType(params);
 		EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
@@ -275,7 +275,7 @@ public class OrderListController {
 				promotionView.put("swapPormoPrice","0");
 			}
 		}
-		
+
 		logger.debug("paramsqqqq {}",params);
 		logger.debug("paramsqqqq {}",   installResult  );
 		Object custId =( orderInfo == null ? installResult.get("custId") :  orderInfo.get("custId") );
@@ -327,72 +327,73 @@ public class OrderListController {
 		model.addAttribute("promotionView", promotionView);
 		model.addAttribute("pRCtInfo", pRCtInfo);
 		model.addAttribute("callEntryId" , params.get("callEntryId"));
-		
+
 		// 호출될 화면
 		return "sales/order/addProductReturnResultPop";
 	}
-	
+
 	@RequestMapping(value = "/viewProductReturnSearch.do")
 	public ResponseEntity<List<EgovMap>> productReturnResultView(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model){
-		
+
 		logger.debug("params : {}", params);
 		List<EgovMap> viewProductReturn = orderListService.selectProductReturnView(params);
 		logger.debug("viewProductReturn : {}", viewProductReturn);
 		return ResponseEntity.ok(viewProductReturn);
-		
+
 	}
-	
+
 	@RequestMapping(value = "/addProductReturn.do",method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertProductReturnResult(@RequestBody Map<String, Object> params,SessionVO sessionVO) throws ParseException {
 		ReturnMessage message = new ReturnMessage();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		logger.debug("params : {}", params);
-		
+
 		EgovMap   pReturnParam =orderListService.getPReturnParam(params);
 		if(String.valueOf(params.get("returnStatus")).equals("4") ) { //성공시
-			Map<String, Object>    cvMp = new HashMap<String, Object>(); 
-			
-			
-			
-        	cvMp.put("stkRetnStusId",  			"4");  
-        	cvMp.put("stkRetnStkIsRet",  			"1");  
-        	cvMp.put("stkRetnRem",  			    String.valueOf(params.get("remark"))); 
+			Map<String, Object>    cvMp = new HashMap<String, Object>();
+
+		     int noRcd = orderListService.chkRcdTms(params);
+
+
+        	cvMp.put("stkRetnStusId",  			"4");
+        	cvMp.put("stkRetnStkIsRet",  			"1");
+        	cvMp.put("stkRetnRem",  			    String.valueOf(params.get("remark")));
         	cvMp.put("stkRetnResnId", 		    pReturnParam.get("soReqResnId"));   //?
         	cvMp.put("stkRetnCcId",  		     	"1781"); //?
         	cvMp.put("stkRetnCrtUserId",         sessionVO.getUserId());
-        	cvMp.put("stkRetnUpdUserId",        sessionVO.getUserId()); 
-        	cvMp.put("stkRetnResultIsSynch",   "0"); 
-        	cvMp.put("stkRetnAllowComm",  	"1"); 
-        	cvMp.put("stkRetnCtMemId",  		params.get("CTID")); 
-        	cvMp.put("checkinDt",  					String.valueOf( params.get("returnDate") ) ); 
-        	cvMp.put("checkinTm",  				""); 
-        	cvMp.put("checkinGps",  				""); 
-        	cvMp.put("signData",  					""); 
-        	cvMp.put("signRegDt",  			    String.valueOf( params.get("returnDate") ) );  
-        	cvMp.put("signRegTm",  				""); 
-        	cvMp.put("ownerCode",                String.valueOf(params.get("custRelationship"))); 
-        	cvMp.put("resultCustName",  		String.valueOf(params.get("hidCustomerName"))); 
-        	cvMp.put("resultIcmobileNo",  		String.valueOf(params.get("hidCustomerContact"))); 
-        	cvMp.put("resultRptEmailNo",  		""); 
-        	cvMp.put("resultAceptName",  		String.valueOf(params.get("custName"))); 
-        	cvMp.put("salesOrderNo",  String.valueOf(params.get("hidTaxInvDSalesOrderNo"))); 
-        	cvMp.put("userId",  sessionVO.getUserId()); 
-        	cvMp.put("serviceNo",  String.valueOf(pReturnParam.get("retnNo"))); 
-        	//cvMp.put("transactionId",  String.valueOf(paramsTran.get("transactionId"))); 
+        	cvMp.put("stkRetnUpdUserId",        sessionVO.getUserId());
+        	cvMp.put("stkRetnResultIsSynch",   "0");
+        	cvMp.put("stkRetnAllowComm",  	"1");
+        	cvMp.put("stkRetnCtMemId",  		params.get("CTID"));
+        	cvMp.put("checkinDt",  					String.valueOf( params.get("returnDate") ) );
+        	cvMp.put("checkinTm",  				"");
+        	cvMp.put("checkinGps",  				"");
+        	cvMp.put("signData",  					"");
+        	cvMp.put("signRegDt",  			    String.valueOf( params.get("returnDate") ) );
+        	cvMp.put("signRegTm",  				"");
+        	cvMp.put("ownerCode",                String.valueOf(params.get("custRelationship")));
+        	cvMp.put("resultCustName",  		String.valueOf(params.get("hidCustomerName")));
+        	cvMp.put("resultIcmobileNo",  		String.valueOf(params.get("hidCustomerContact")));
+        	cvMp.put("resultRptEmailNo",  		"");
+        	cvMp.put("resultAceptName",  		String.valueOf(params.get("custName")));
+        	cvMp.put("salesOrderNo",  String.valueOf(params.get("hidTaxInvDSalesOrderNo")));
+        	cvMp.put("userId",  sessionVO.getUserId());
+        	cvMp.put("serviceNo",  String.valueOf(pReturnParam.get("retnNo")));
+        	//cvMp.put("transactionId",  String.valueOf(paramsTran.get("transactionId")));
         	logger.debug("cvMp : {}", cvMp);
-        	
+
         		EgovMap  rtnValue = orderListService.productReturnResult(cvMp);
-			
+
 			if( null !=rtnValue){
 				HashMap   spMap =(HashMap)rtnValue.get("spMap");
-				logger.debug("spMap :"+ spMap.toString());   
+				logger.debug("spMap :"+ spMap.toString());
 				if(!"000".equals(spMap.get("P_RESULT_MSG"))){
 					rtnValue.put("logerr","Y");
 				}
 				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 			}
 			message.setMessage("Success : Product Return is Complete");
-        	
+
 		}
 
 		else{ // 실패시
@@ -402,16 +403,16 @@ public class OrderListController {
 			failParam.put("salesOrderNo",  params.get("hidTaxInvDSalesOrderNo") );
 			failParam.put("serviceNo",  pReturnParam.get("retnNo") );
 			failParam.put("failReasonCode",  params.get("failReason") );
-			
-			
-			orderListService.setPRFailJobRequest(params);		
+
+
+			orderListService.setPRFailJobRequest(params);
 			message.setMessage("Success : Product Return is Fail");
-			
+
 		}
-	
+
 		return ResponseEntity.ok(message);
 	}
-	
-	
-	
+
+
+
 }
