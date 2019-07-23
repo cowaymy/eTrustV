@@ -748,8 +748,7 @@
     SET STUS_CODE_ID = '21',
         UPD_DT = SYSDATE,
         UPD_USER_ID = #{userId},
-        FAIL_RESN_ID =#{failReasonCode},
-        CALL_ENTRY_ID = #{callEntryID}
+        FAIL_RESN_ID =#{failReasonCode}
     WHERE  retn_no = #{serviceNo}
   </update>
 
@@ -759,6 +758,18 @@
        , SO_REQ_UPD_DT = SYSDATE
        , SO_REQ_STUS_ID = 1
        , SO_REQ_CUR_CALL_ENTRY_ID = #{callEntryID}
-     WHERE SO_REQ_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo})
+     WHERE SO_REQ_ID = ( SELECT MAX (B.SO_REQ_ID)
+     FROM SAL0001D A
+      JOIN SAL0020D B ON B.SO_REQ_SO_ID = A.SALES_ORD_ID
+     WHERE A.SALES_ORD_NO = #{salesOrderNo})
+
+  </update>
+
+  <update id="chkRcdTms" parameterType="Map">
+    UPDATE SAL0020D
+    SET RCD_TMS = TO_CHAR(SYSTIMESTAMP,'ddmmyyyyHH24miss')
+    WHERE SO_REQ_SO_ID = #{orderId}
+      AND SO_REQ_CUR_CALL_ENTRY_ID = #{callEntryId}
+      AND RCD_TMS = #{rcdTms}
   </update>
 </mapper>
