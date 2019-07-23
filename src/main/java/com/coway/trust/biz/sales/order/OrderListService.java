@@ -14,17 +14,17 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 public interface OrderListService {
 	List<EgovMap> selectOrderList(Map<String, Object> params);
-	
+ 
 	List<EgovMap> getApplicationTypeList(Map<String, Object> params);
-	
+
 	List<EgovMap> getUserCodeList();
-	
+
 	List<EgovMap> getOrgCodeList(Map<String, Object> params);
-	
+
 	List<EgovMap> getGrpCodeList(Map<String, Object> params);
-	
+
 	EgovMap getMemberOrgInfo(Map<String, Object> params);
-	
+
 	List<EgovMap> getBankCodeList(Map<String, Object> params);
 
 	EgovMap selectInstallParam(Map<String, Object> params);
@@ -38,4 +38,6 @@ public interface OrderListService {
 	void setPRFailJobRequest(Map<String, Object> params);
 
 	EgovMap getPrCTInfo(Map<String, Object> params);
+
+	int chkRcdTms (Map<String, Object> params);
 }
