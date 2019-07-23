@@ -470,8 +470,7 @@
 		, CALL_CRT_USER_ID_DEPT, CALL_HC_ID, CALL_ROS_AMT, CALL_SMS,
 		CALL_SMS_REM )
 		VALUES ( CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL, #{callEntryId}, #{callStusId}
-		, TO_DATE(#{callDt}, 'DD/MM/YYYY'), TO_DATE(#{callActnDt},
-		'DD/MM/YYYY')
+		, SYSDATE, SYSDATE
 		, #{callFdbckId}, #{callCtId}, #{callRem}, #{callCrtUserId}, SYSDATE
 		, #{callCrtUserIdDept}, #{callHcId}, #{callRosAmt}, #{callSms},
 		#{callSmsRem} )
