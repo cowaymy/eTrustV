@@ -30,7 +30,6 @@ $(document).ready(function(){
     $("#cPromo").prop("disabled", true);
     $("#cPromo").attr("class", "disabled");
 
-
     $("#rbt").attr("style","display:none");
     $("#ORD_NO_RESULT").attr("style","display:none");
 
@@ -85,6 +84,13 @@ function fn_doConfirm (){
 
              fn_outspro();
 
+             if('${SESSION_INFO.userTypeId}' == 1 || '${SESSION_INFO.userTypeId}' == 2
+             || '${SESSION_INFO.userTypeId}' == 3 || '${SESSION_INFO.userTypeId}' == 7){
+                 $("#SALES_PERSON").val("${SESSION_INFO.userName}");
+                 $("#sale_confirmbt").hide();
+                 $("#sale_searchbt").hide();
+                 fn_goSalesConfirm();
+             }
 
          }
    });
@@ -945,7 +951,7 @@ function fn_goSalesConfirm(){
 
                      $("#sale_confirmbt").attr("style" ,"display:none");
                      $("#sale_searchbt").attr("style" ,"display:none");
-                     $("#sale_resetbt").attr("style" ,"display:inline");
+                     //$("#sale_resetbt").attr("style" ,"display:inline");
                      $("#SALES_PERSON").attr("class","readonly");
 
                  }else {

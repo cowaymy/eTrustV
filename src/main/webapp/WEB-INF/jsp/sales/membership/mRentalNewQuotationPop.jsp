@@ -84,6 +84,13 @@ function fn_doConfirm (){
              fn_getDataInfo(result[0].salesOrdId);
              fn_outspro(result[0].salesOrdId);
 
+             if('${SESSION_INFO.userTypeId}' == 1 || '${SESSION_INFO.userTypeId}' == 2
+             || '${SESSION_INFO.userTypeId}' == 3 || '${SESSION_INFO.userTypeId}' == 7){
+                      $("#SALES_PERSON").val("${SESSION_INFO.userName}");
+                      $("#sale_confirmbt").hide();
+                      $("#sale_searchbt").hide();
+                      fn_goSalesConfirm();
+                  }
          }
    });
 }
@@ -630,7 +637,7 @@ function fn_goSalesConfirm(){
 
                      $("#sale_confirmbt").attr("style" ,"display:none");
                      $("#sale_searchbt").attr("style" ,"display:none");
-                     $("#sale_resetbt").attr("style" ,"display:inline");
+                     //$("#sale_resetbt").attr("style" ,"display:inline");
                      $("#SALES_PERSON").attr("class","readonly");
 
                  }else {
