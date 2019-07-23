@@ -229,19 +229,25 @@ public class OrderCancelController {
 	public ResponseEntity<Map<String, Object>> saveCancel(@RequestParam Map<String, Object> params, ModelMap mode)
 			throws Exception {
 
+	    ReturnMessage message = new ReturnMessage();
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", sessionVO.getUserId());
 
 		logger.info("##### sessionVO.getUserId() #####" +sessionVO.getUserId());
 		logger.info("##### params ###############" +params.toString());
 		//String retMsg = AppConstants.MSG_SUCCESS;
-		String retMsg = "SUCCESS";
+		String retMsg = "Record updated successfully.";
 
 		Map<String, Object> map = new HashMap();
+	    int noRcd = orderCancelService.chkRcdTms(params);
 
+	    if (noRcd ==1){
 			orderCancelService.saveCancel(params);
-
 			map.put("msg", retMsg);
+	    } else {
+	      map.put("msg", "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+	    }
 
 		return ResponseEntity.ok(map);
 	}
@@ -322,6 +328,7 @@ public class OrderCancelController {
 		model.addAttribute("selectAssignCTList", selectAssignCTList);
 		model.addAttribute("selectFeedback", selectFeedback);
 		model.addAttribute("reqStageId", params.get("paramReqStageId"));
+	    model.addAttribute("rcdTms", params.get("rcdTms"));
 
 		logger.info("##### selectAssignCTList #####" +selectAssignCTList.get(0));
 		logger.info("##### selectAssignCTList #####" +selectAssignCTList.get(1));
@@ -469,8 +476,49 @@ public class OrderCancelController {
 		}else{
 			map.put("msg", failMsg);
 		}
-
-
 		return ResponseEntity.ok(map);
 	}
+
+	  @RequestMapping(value = "/selRcdTms.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> chkRcdTms(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	    ReturnMessage message = new ReturnMessage();
+
+	    logger.debug("==================/selRcdTms.do=======================");
+	    logger.debug("params : {}", params);
+	    logger.debug("==================/selRcdTms.do=======================");
+
+	    int noRcd = orderCancelService.selRcdTms(params);
+
+	    if (noRcd == 1) {
+	      message.setMessage("OK");
+	      message.setCode("1");
+	    } else {
+	      message.setMessage("Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+	      message.setCode("99");
+	    }
+	    return ResponseEntity.ok(message);
+	  }
+
+	   @RequestMapping(value = "/selRcdTms2.do", method = RequestMethod.POST)
+	      public ResponseEntity<ReturnMessage> chkRcdTms2(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	        ReturnMessage message = new ReturnMessage();
+
+	        logger.debug("==================/selRcdTms.do=======================");
+	        logger.debug("params : {}", params);
+	        logger.debug("==================/selRcdTms.do=======================");
+
+	        int noRcd = orderCancelService.selRcdTms(params);
+
+	        if (noRcd == 1) {
+	          message.setMessage("OK");
+	          message.setCode("1");
+	        } else {
+	          message.setMessage("Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+	          message.setCode("99");
+	        }
+	        return ResponseEntity.ok(message);
+	      }
+
+
+
 }
