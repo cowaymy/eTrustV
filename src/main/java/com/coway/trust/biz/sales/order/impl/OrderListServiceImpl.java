@@ -182,6 +182,11 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 		return orderListMapper.getPrCTInfo(params);
 	}
 
+	  @Override
+	  public int chkRcdTms(Map<String, Object> params) {
+	    return orderListMapper.chkRcdTms(params);
+	  }
+
 
 
 }
