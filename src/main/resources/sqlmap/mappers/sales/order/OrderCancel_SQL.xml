@@ -85,9 +85,9 @@
            CASE WHEN ( A.APP_DT IS NOT NULL )
                   THEN A.APP_DT
                   ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END APP_DT,
-                  A.ASSIGN_CT
-           <!--,
-            A.RCD_TMS -->
+           A.ASSIGN_CT,
+           A.RCD_TMS,
+           B.CODE AS DSC
     FROM ( SELECT V.REQ_ID ,
                   V.REQ_NO ,
                   V.ORD_ID ,
@@ -147,10 +147,10 @@
                   V.RSO_STUS,
                   NVL(V.PRD_RTN_LST_UPD, '-') AS PRD_RTN_LST_UPD,
                   V.APP_DT AS APP_DT,
-                  <!--,
-                  V.RCD_TMS -->
-                  V.ASSIGN_CT
+                  V.ASSIGN_CT,
+                  V.RCD_TMS
              FROM SAL1007V V) A
+             LEFT JOIN SYS0005M B ON B.BRNCH_ID = A.DSC_BRNCH_ID
     WHERE 1 = 1
 
     <if test="typeIdList != null and typeIdList != ''">
@@ -808,19 +808,28 @@ SELECT TT.CODE_ID
          ORDER BY CODE_NAME
     </select>
 
-  <select id="selRcdTms" parameterType="Map" resultType="int">
-    SELECT COUNT(*) COUNT
-    FROM SAL0020D
-    WHERE SO_REQ_SO_ID = #{orderId}
+    <select id="selRcdTms" parameterType="Map" resultType="int">
+      SELECT COUNT(*) COUNT
+      FROM SAL0020D
+      WHERE SO_REQ_SO_ID = #{orderId}
       AND SO_REQ_CUR_CALL_ENTRY_ID = #{callEntryId}
       AND RCD_TMS = #{rcdTms}
   </select>
+
+    <update id="chkRcdTms" parameterType="Map">
+    UPDATE SAL0020D
+    SET RCD_TMS = TO_CHAR(SYSTIMESTAMP,'ddmmyyyyHH24miss')
+    WHERE SO_REQ_SO_ID = #{paramOrdId}
+      AND SO_REQ_CUR_CALL_ENTRY_ID = #{paramCallEntryId}
+      AND RCD_TMS = #{rcdTms}
+  </update>
+
 
     <update id="updateCancelCCR0006D" parameterType="Map">
         UPDATE CCR0006D
          SET STUS_CODE_ID = #{callStusId},
                RESULT_ID = #{resultId},
-               CALL_DT = TO_DATE(#{callDt}, 'DD/MM/YYYY'),
+               <!-- CALL_DT = TO_DATE(#{callDt}, 'DD/MM/YYYY'), -->
                UPD_DT = SYSDATE,
                UPD_USER_ID = #{callCrtUserId}
      WHERE CALL_ENTRY_ID = #{callEntryId}
