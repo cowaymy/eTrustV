@@ -164,7 +164,7 @@
         }, {
           dataField : "rcdTms",
           headerText : "",
-          width : 100
+          width : 0
         } ];
 
     // 그리드 속성 설정
