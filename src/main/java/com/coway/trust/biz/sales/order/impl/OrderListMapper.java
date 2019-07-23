@@ -25,19 +25,19 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface OrderListMapper {
 
 	List<EgovMap> selectOrderList(Map<String, Object> params); //Referral Info
-	
+
 	List<EgovMap> getApplicationTypeList(Map<String, Object> params);
-	
+
 	List<EgovMap> getUserCodeList();
 
 	List<EgovMap> getOrgCodeList(Map<String, Object> params);
-	
+
 	List<EgovMap> getGrpCodeList(Map<String, Object> params);
-	
+
 	EgovMap getMemberOrgInfo(Map<String, Object> params);
-	
+
 	List<EgovMap> getBankCodeList(Map<String, Object> params);
-	
+
 	List<EgovMap> getOderLdgr(Map<String, Object> params);
 
 	EgovMap selectInstallParam(Map<String, Object> params);
@@ -75,4 +75,6 @@ public interface OrderListMapper {
 	int insertFailed_LOG0039D(Map<String, Object> params);
 
 	EgovMap getPrCTInfo(Map<String, Object> params);
+
+	int chkRcdTms(Map<String, Object> params);
 }
