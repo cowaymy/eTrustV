@@ -27,7 +27,7 @@ public interface ApiMapper {
   List<EgovMap> selectCowayAccountProductPreviewListByAccountCode(Map<String, Object> params);
   EgovMap selectProductDetail(Map<String, Object> params);
   EgovMap selectHeartServiceList(Map<String, Object> params);
-  EgovMap selectTechnicianServicesList(Map<String, Object> params);
+  List<EgovMap> selectTechnicianServicesList(Map<String, Object> params);
   EgovMap isUserHasOrdNo(Map<String, Object> params);
   List<EgovMap> selectInvoiceListByOrderNumber(Map<String, Object> params);
   List<EgovMap> selectTransactionHistoryList(Map<String, Object> params);

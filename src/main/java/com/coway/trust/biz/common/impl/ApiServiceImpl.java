@@ -230,7 +230,7 @@ public class ApiServiceImpl implements ApiService {
 
   @Override
   public EgovMap selectTechnicianServicesList(HttpServletRequest request, Map<String, Object> params) {
-    EgovMap technicianServicesList = apiMapper.selectTechnicianServicesList(params);
+    List<EgovMap> technicianServicesList = apiMapper.selectTechnicianServicesList(params);
     return displayResponseMessage(request, params,technicianServicesList);
   }
 
