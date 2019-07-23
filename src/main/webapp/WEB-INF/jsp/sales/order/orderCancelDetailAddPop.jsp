@@ -829,7 +829,7 @@
     <input id="paramStockId" name="paramStockId" type="hidden" value="${cancelReqInfo.stockId}">
     <input id="callStusId" name="callStusId" type="hidden" >
     <input id="appTypeId" name="appTypeId" type="hidden" value="${cancelReqInfo.appTypeId}">
-
+    <input id="rcdTms" name="rcdTms" type="hidden" value="${rcdTms}">
     <!--  add by hgham  -->
     <input id="ctId" name="ctId" type="hidden" >
 
