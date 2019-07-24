@@ -533,10 +533,7 @@
                     WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2
                ELSE ''
                   END USERNAME2  ,
-               CASE
-                    WHEN ( Filter1.MOV_ID1 IS NOT NULL ) THEN Filter1.MOV_TO_LOC_ID
-               ELSE 0
-                  END MOV_TO_LOC_ID  ,
+               filter1.mov_to_loc_id mov_to_loc_id,
                CASE
                     WHEN ( Extent9.WH_LOC_ID IS NOT NULL ) THEN Extent9.WH_LOC_CODE
                ELSE ''
@@ -584,8 +581,7 @@
                         Extent6.USER_NAME USERNAME1  ,
                         Extent7.USER_ID USERID2  ,
                         Extent7.USER_NAME USERNAME2  ,
-                        Extent8.MOV_ID MOV_ID8,
-                        Extent8.MOV_TO_LOC_ID,
+                        Extent8.REQST_CDC_RDC MOV_TO_LOC_ID,
                         Extent10.STK_RETN_REM,
                         Extent10.STK_RETN_DT
                  FROM LOG0038D Extent1
@@ -596,9 +592,7 @@
                         LEFT JOIN ORG0001D Extent5  ON Extent5.MEM_ID = Extent1.CT_ID
                         LEFT JOIN SYS0047M Extent6  ON Extent6.USER_ID = Extent1.CRT_USER_ID
                         LEFT JOIN SYS0047M Extent7  ON Extent7.USER_ID = Extent1.UPD_USER_ID
-                        LEFT JOIN LOG0013D Extent8   ON ( Extent8.MOV_ID = Extent1.MOV_ID )
-                        AND ( 4 = Extent8.MOV_STUS_ID )
-                        AND ( 1 = Extent8.MOV_CNFM )
+                        LEFT JOIN LOG0047M Extent8   ON ( extent8.REF_DOC_NO = extent1.RETN_NO )
                    <![CDATA[
                   WHERE  8 <> Extent1.STUS_CODE_ID ) Filter1
                   ]]>
