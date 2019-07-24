@@ -823,7 +823,7 @@ SELECT TT.CODE_ID
         UPDATE CCR0006D
          SET STUS_CODE_ID = #{callStusId},
                RESULT_ID = #{resultId},
-               <!-- CALL_DT = TO_DATE(#{callDt}, 'DD/MM/YYYY'), -->
+               CALL_DT = TO_DATE(#{callDt}, 'DD/MM/YYYY'),
                UPD_DT = SYSDATE,
                UPD_USER_ID = #{callCrtUserId}
      WHERE CALL_ENTRY_ID = #{callEntryId}
