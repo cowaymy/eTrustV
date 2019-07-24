@@ -16,7 +16,7 @@
 			       Filter1.INV_REQ_HAS_ATTACH ,
 			       Extent5.SALES_ORD_NO ,
 			       Filter1.INV_REQ_UPD_DT ,
-			       CASE 
+			       CASE
 			            WHEN ( Filter1.INV_REQ_ATTACH_FILE IS NULL ) THEN ''
 			       ELSE Filter1.INV_REQ_ATTACH_FILE
 			            END INV_REQ_ATTACH_FILE  ,
@@ -29,7 +29,7 @@
                    , Filter1.LAST_ORG_CODE
                    , Filter1.LAST_GRP_CODE
                    , Filter1.LAST_DEPT_CODE
-                   </if> 
+                   </if>
 		   FROM ( SELECT Extent1.INV_REQ_ID ,
 				                Extent1.INV_REQ_NO ,
 				                Extent1.SO_ID ,
@@ -60,14 +60,14 @@
 				                <if test="orgCode != null and orgCode != ''">
 				                LEFT JOIN (SELECT usr.USER_ID, A.LAST_ORG_CODE, A.LAST_GRP_CODE, A.LAST_DEPT_CODE
                                               FROM SYS0047M usr, ORG0005D A, ORG0001D B
-                                            WHERE usr.USER_NAME = B.MEM_CODE 
+                                            WHERE usr.USER_NAME = B.MEM_CODE
                                                AND B.MEM_ID = A.MEM_ID
                                                AND usr.USER_STUS_ID = 1
                                                AND B.STUS = 1
                                                AND A.ORG_STUS_CODE_ID = 1) Extent5 ON Extent1.INV_REQ_CRT_USER_ID = Extent5.USER_ID
-                                </if> 
+                                </if>
                  <![CDATA[
-				     WHERE  0 <> Extent1.INV_REQ_ID 
+				     WHERE  0 <> Extent1.INV_REQ_ID
 				 ]]>
 				    <if test="invReqStusIdList != null and invReqStusIdList != ''">
 				        AND  Extent1.INV_REQ_STUS_ID IN
@@ -86,7 +86,7 @@
 			        </if>
 			        <if test="startCrtDt != null and startCrtDt != ''">
 			             <![CDATA[
-			             AND Filter1.INV_REQ_CRT_DT >= TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') 
+			             AND Filter1.INV_REQ_CRT_DT >= TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
 			             ]]>
 			        </if>
 			        <if test="endCrtDt != null and endCrtDt != ''">
@@ -112,9 +112,9 @@
                     <if test="deptCode != null and deptCode != ''">
                          AND Filter1.LAST_DEPT_CODE = #{deptCode}
                     </if>
-			     
+
     </select>
-    
+
     <select id="orderInvestInfo" parameterType="Map" resultType="egovMap">
         SELECT Extent1.INV_REQ_ID ,
 			       Extent1.INV_REQ_NO ,
@@ -134,7 +134,7 @@
 			       Extent1.INV_REQ_REM ,
 			       Extent1.INV_REQ_USER_ID_AUTO ,
 			       Extent1.INV_REQ_HAS_ATTACH ,
-			       Extent1.INV_REQ_ATTACH_FILE   
+			       Extent1.INV_REQ_ATTACH_FILE
 			  FROM SAL0050D Extent1
 			         LEFT JOIN SAL0001D Extent2   ON Extent1.SO_ID = Extent2.SALES_ORD_ID
 			         LEFT JOIN SYS0038M Extent3   ON Extent1.INV_REQ_STUS_ID = Extent3.STUS_CODE_ID
@@ -142,7 +142,7 @@
 			         LEFT JOIN SYS0047M Extent5   ON Extent1.INV_REQ_CRT_USER_ID = Extent5.USER_ID
 			 WHERE  Extent1.INV_REQ_ID = #{invReqId}
     </select>
-    
+
     <select id="orderCustomerInfo" parameterType="Map" resultType="egovMap">
         SELECT Extent1.INV_REQ_ID ,
 			       Extent1.SO_ID ,
@@ -154,7 +154,7 @@
 			       Extent2.APP_TYPE_ID ,
 			       Extent6.CODE ,
 			       Extent6.CODE_NAME ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent7.STUS_CODE_ID IS NOT NULL ) THEN Extent7.STUS_CODE_ID
 			       ELSE ' '
 			          END STUS_CODE_NAME  ,
@@ -164,56 +164,56 @@
 			       Extent8.TYPE_ID   ,
 			       Extent9.CODE_DESC   ,
 			       Extent8.NRIC   ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent10.NAME IS NOT NULL ) THEN Extent10.NAME
 			       ELSE ''
 			          END CUSTCNT_ID_NAME  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent10.TEL_O IS NOT NULL ) THEN Extent10.TEL_O
 			       ELSE  ''
 			          END CUSTCNT_TEL_O  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent10.TEL_R IS NOT NULL ) THEN Extent10.TEL_R
 			       ELSE ''
 			          END CUSTCNT_TEL_R  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent10.TELF IS NOT NULL ) THEN Extent10.TELF
 			       ELSE ''
 			          END CUSTCNT_TELF  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent10.TEL_M1 IS NOT NULL ) THEN Extent10.TEL_M1
 			       ELSE ''
 			          END CUSTCNT_TEL_M1  ,
-			       CASE 
-			            WHEN ( Extent11.CUST_ADD_ID IS NOT NULL ) 
+			       CASE
+			            WHEN ( Extent11.CUST_ADD_ID IS NOT NULL )
 			            THEN Extent11.ADDR_DTL ||' '|| Extent11.STREET ||' '|| CUSTMADDR.AREA ||' '|| CUSTMADDR.POSTCODE ||' '|| CUSTMADDR.CITY ||' '|| CUSTMADDR.STATE ||' '|| CUSTMADDR.COUNTRY
 			       ELSE ''
 			          END CUSTADD_ADDR  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent13.NAME IS NOT NULL ) THEN Extent13.NAME
 			       ELSE ''
 			          END CNT_ID_NAME  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent13.TEL_O IS NOT NULL ) THEN Extent13.TEL_O
 			       ELSE ''
 			          END CNT_TEL_O  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent13.TEL_R IS NOT NULL ) THEN Extent13.TEL_R
 			       ELSE ''
 			          END CNT_TEL_R  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent13.TELF IS NOT NULL ) THEN Extent13.TELF
 			       ELSE ''
 			          END CNT_TELF  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent13.TEL_M1 IS NOT NULL ) THEN Extent13.TEL_M1
 			       ELSE ''
 			          END CNT_TEL_M1  ,
-			       CASE 
-			            WHEN ( Extent14.CUST_ADD_ID IS NOT NULL ) 
+			       CASE
+			            WHEN ( Extent14.CUST_ADD_ID IS NOT NULL )
 			            THEN Extent14.ADDR_DTL ||' '|| Extent14.STREET ||' '|| MADDR.AREA ||' '|| MADDR.POSTCODE ||' '|| MADDR.CITY ||' '|| MADDR.STATE ||' '|| MADDR.COUNTRY
 			       ELSE ''
-			          END ADD_ADDR  
+			          END ADD_ADDR
 			  FROM SAL0050D Extent1
 			         LEFT JOIN SAL0001D Extent2    ON Extent1.SO_ID = Extent2.SALES_ORD_ID
 			         LEFT JOIN SAL0002D Extent3    ON Extent2.SALES_ORD_ID = Extent3.SALES_ORD_ID
@@ -235,7 +235,7 @@
 			         LEFT JOIN SYS0064M CUSTMADDR  ON Extent11.AREA_ID = CUSTMADDR.AREA_ID
 			 WHERE  Extent1.INV_REQ_ID = #{invReqId}
     </select>
-    
+
     <select id="orderInvestInfoGrid" parameterType="Map" resultType="egovMap">
         SELECT Project1.INV_REQ_ID ,
 	                Project1.INV_REQ_ITM_STUS_ID ,
@@ -244,7 +244,7 @@
 	                Project1.INV_REQ_ITM_CRT_USER_ID ,
 	                Project1.CODE ,
 	                Project1.NAME NAME ,
-	                Project1.USER_NAME   
+	                Project1.USER_NAME
 	         FROM ( SELECT Extent1.INV_REQ_ID INV_REQ_ID  ,
 			                       Extent1.INV_REQ_ITM_STUS_ID INV_REQ_ITM_STUS_ID  ,
 			                       Extent1.INV_REQ_ITM_REM INV_REQ_ITM_REM  ,
@@ -252,32 +252,32 @@
 			                       Extent1.INV_REQ_ITM_CRT_USER_ID INV_REQ_ITM_CRT_USER_ID  ,
 			                       Extent2.CODE CODE  ,
 			                       Extent2.NAME NAME  ,
-			                       Extent3.USER_NAME USER_NAME  
+			                       Extent3.USER_NAME USER_NAME
 			               FROM SAL0051D Extent1
 			                       JOIN SYS0038M Extent2   ON Extent1.INV_REQ_ITM_STUS_ID = Extent2.STUS_CODE_ID
 			                       JOIN SYS0047M Extent3   ON Extent1.INV_REQ_ITM_CRT_USER_ID = Extent3.USER_ID
 			              WHERE  Extent1.INV_REQ_ID = #{gridInvReqId} ) Project1
 	                 WHERE  ROWNUM <![CDATA[ <= ]]> 3
-                ORDER BY Project1.INV_REQ_ITM_CRT_DT ASC 
+                ORDER BY Project1.INV_REQ_ITM_CRT_DT ASC
     </select>
-    
+
     <select id="cmbRejReasonList" parameterType="Map" resultType="egovMap">
-        SELECT 
-				RESN_ID , 
+        SELECT
+				RESN_ID ,
 				RESN_DESC
 	      FROM SYS0032M
 		WHERE RESN_TYPE_ID = 938
     </select>
-    
+
     <select id="inchargeList" parameterType="Map" resultType="egovMap">
 		SELECT Distinct1.C1 C1  ,
 			       Distinct1.USER_ID ,
 			       Distinct1.USER_NAME ,
-			       Distinct1.USER_FULL_NM  
+			       Distinct1.USER_FULL_NM
 			  FROM ( SELECT DISTINCT Extent2.USER_ID USER_ID  ,
 			                         Extent2.USER_NAME USER_NAME  ,
 			                         1 C1  ,
-			                         Extent2.USER_NAME || ' - ' || Extent2.USER_FULL_NAME USER_FULL_NM  
+			                         Extent2.USER_NAME || ' - ' || Extent2.USER_FULL_NAME USER_FULL_NM
 			         FROM SYS0045M Extent1
 			                JOIN SYS0047M Extent2   ON ( Extent2.USER_ID = Extent1.USER_ID )
 			                AND ( 1 = Extent1.STUS_ID )
@@ -285,7 +285,7 @@
 			          WHERE  Extent1.ROLE_ID = #{roleId} ) Distinct1
 		  ORDER BY Distinct1.USER_FULL_NM ASC
     </select>
-    
+
     <select id="searchBSScheduleM" parameterType="Map" resultType="Integer">
         SELECT
 				 COUNT(0)
@@ -295,7 +295,7 @@
 		 AND Extent1.YEAR = (SELECT TO_CHAR(SYSDATE, 'YYYY') FROM DUAL)
          AND Extent1.MONTH = (SELECT TO_CHAR(SYSDATE, 'mm') FROM DUAL)
     </select>
-    
+
     <select id="searchInvestigateReqM" parameterType="Map" resultType="egovMap">
         SELECT Extent1.INV_REQ_ID INV_REQ_ID  ,
 					Extent1.INV_REQ_NO INV_REQ_NO  ,
@@ -313,12 +313,12 @@
 					Extent1.INV_REQ_TYPE_ID INV_REQ_TYPE_ID  ,
 					Extent1.INV_REQ_HAS_ATTACH INV_REQ_HAS_ATTACH  ,
 					Extent1.INV_REQ_ATTACH_FILE INV_REQ_ATTACH_FILE  ,
-					Extent1.INV_REQ_REJCT_RESN_ID INV_REQ_REJCT_RESN_ID  
+					Extent1.INV_REQ_REJCT_RESN_ID INV_REQ_REJCT_RESN_ID
             FROM SAL0050D Extent1
-          WHERE Extent1.INV_REQ_ID = #{invReqId} 
+          WHERE Extent1.INV_REQ_ID = #{invReqId}
               AND ROWNUM <![CDATA[<=]]> 1
     </select>
-    
+
     <update id="updateInvestReqM" parameterType="Map">
         UPDATE SAL0050D
 			 SET INV_REQ_STUS_ID = #{statusPop},
@@ -327,7 +327,7 @@
 			       INV_REQ_REJCT_RESN_ID = #{invReqStusParam}
 		 WHERE INV_REQ_ID = #{gridInvReqId}
     </update>
-    
+
     <update id="updatePendingInvestReqM" parameterType="Map">
         UPDATE SAL0050D
              SET INV_REQ_STUS_ID = #{statusPop},
@@ -335,17 +335,17 @@
                    INV_REQ_UPD_USER_ID = #{userId}
          WHERE INV_REQ_ID = #{gridInvReqId}
     </update>
-    
+
     <insert id="insertInvestigateReqD" parameterType="Map">
         INSERT INTO SAL0051D
 		      ( INV_REQ_ITM_ID, INV_REQ_ID, INV_REQ_ITM_STUS_ID, INV_REQ_ITM_REM, INV_REQ_ITM_CRT_DT, INV_REQ_ITM_CRT_USER_ID )
-		VALUES 
+		VALUES
 		      ( SAL0051D_INV_REQ_ITM_ID_SEQ.NEXTVAL, #{gridInvReqId}, #{statusPop}, #{statusRem}, SYSDATE, #{userId} )
     </insert>
-    
+
     <select id="orderInvestClosedDateChk" resultType="Integer">
         SELECT count(0)
-           FROM SAL0053D 
+           FROM SAL0053D
         WHERE INV_REQ_SET_TYPE_ID = '777'
             AND 1 = INV_REQ_SET_STUS_ID
 			AND INV_REQ_SET_MONTH = (SELECT TO_CHAR(SYSDATE, 'mm') FROM DUAL)
@@ -353,7 +353,7 @@
 			AND INV_REQ_SET_CLOS_DAY <![CDATA[<]]> (SELECT TO_CHAR(SYSDATE, 'DD') FROM DUAL)
 			AND INV_REQ_SET_TYPE_ID = '777'
     </select>
-    
+
     <select id="orderNoChk" parameterType="Map" resultType="egovMap">
         SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
 			       Extent1.SALES_ORD_NO SALES_ORD_NO  ,
@@ -400,13 +400,13 @@
 			       Extent1.SALES_GM_ID SALES_GM_ID  ,
 			       Extent1.ADV_BILL ADV_BILL  ,
 			       Extent1.CNVR_SCHEME_ID CNVR_SCHEME_ID  ,
-			       Extent1.CUST_CARE_CNT_ID CUST_CARE_CNT_ID  
+			       Extent1.CUST_CARE_CNT_ID CUST_CARE_CNT_ID
 		  FROM SAL0001D Extent1
 	    WHERE Extent1.SALES_ORD_NO = #{salesOrdNo}
 		    AND 8 <![CDATA[<>]]> Extent1.STUS_CODE_ID
 		    AND 66 = Extent1.APP_TYPE_ID
     </select>
-    
+
     <select id="orderNoInfo" parameterType="Map" resultType="egovMap">
         SELECT Extent1.INV_REQ_ID INV_REQ_ID  ,
 			       Extent1.INV_REQ_NO INV_REQ_NO  ,
@@ -424,15 +424,15 @@
 			       Extent1.INV_REQ_TYPE_ID INV_REQ_TYPE_ID  ,
 			       Extent1.INV_REQ_HAS_ATTACH INV_REQ_HAS_ATTACH  ,
 			       Extent1.INV_REQ_ATTACH_FILE INV_REQ_ATTACH_FILE  ,
-			       Extent1.INV_REQ_REJCT_RESN_ID INV_REQ_REJCT_RESN_ID  
+			       Extent1.INV_REQ_REJCT_RESN_ID INV_REQ_REJCT_RESN_ID
 		   FROM SAL0050D Extent1
 	     WHERE Extent1.SO_ID = #{salesOrdNo}
-	             AND ( 1 = Extent1.INV_REQ_STUS_ID ) 
+	             AND ( 1 = Extent1.INV_REQ_STUS_ID )
 	             <![CDATA[
 	             AND ROWNUM <= 1
 	             ]]>
     </select>
-    
+
     <select id="singleInvestView" parameterType="Map" resultType="egovMap">
         SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
 			       Extent1.SALES_ORD_NO SALES_ORD_NO  ,
@@ -440,7 +440,7 @@
 			       Extent2.ITM_STK_ID ITM_STK_ID  ,
 			       Extent4.STK_CODE STK_CODE  ,
 			       Extent4.STK_DESC STK_DESC  ,
-			       TO_CHAR(Extent1.SALES_DT, 'dd/mm/yyyy') SALES_DT, 
+			       TO_CHAR(Extent1.SALES_DT, 'dd/mm/yyyy') SALES_DT,
 			       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
 			       Extent5.CODE CODE  ,
 			       Extent5.CODE_NAME CODE_NAME  ,
@@ -471,46 +471,46 @@
             AND ROWNUM <= 1
             ]]>
     </select>
-    
+
     <select id="getDocNo" parameterType="Map" resultType="java.lang.String">
         SELECT  FN_GET_DOCNO(#{docNoId}) FROM DUAL
     </select>
-    
+
     <select id="seqSAL0050D"  resultType="Integer">
         SELECT SAL0050D_INV_REQ_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <insert id="insertInvestReqM" parameterType="Map">
         INSERT INTO SAL0050D
-			  ( 
+			  (
 				  INV_REQ_ID, INV_REQ_NO, SO_ID, INV_REQ_STUS_ID, INV_REQ_PARTY_ID, INV_REQ_REM, INV_REQ_CRT_DT, INV_REQ_CRT_USER_ID
 				  , INV_REQ_UPD_DT, INV_REQ_UPD_USER_ID, INV_REQ_USER_ID_AUTO, INV_REQ_CALL_DT, INV_REQ_VISIT_DT, INV_REQ_TYPE_ID
-				  , INV_REQ_HAS_ATTACH, INV_REQ_ATTACH_FILE, INV_REQ_REJCT_RESN_ID 
+				  , INV_REQ_HAS_ATTACH, INV_REQ_ATTACH_FILE, INV_REQ_REJCT_RESN_ID
 			  )
         VALUES ( #{seqSAL0050D}, #{invReqNo}, #{soId}, #{invReqStusId}, #{invReqPartyId}, #{invReqRem}, SYSDATE, #{userId}
                     , SYSDATE, #{userId}, #{invReqUserIdAuto}, TO_DATE(#{insCallDt}, 'DD/MM/YYYY'), TO_DATE(#{insVisitDt}, 'DD/MM/YYYY'), #{invReqTypeId}
                     , #{invReqHasAttach}, #{invReqAttachFile}, #{invReqRejctResnId} )
     </insert>
-    
+
     <insert id="insertFileInvestReqM" parameterType="Map">
         INSERT INTO SAL0050D
-              ( 
+              (
                   INV_REQ_ID, INV_REQ_NO, SO_ID, INV_REQ_STUS_ID, INV_REQ_PARTY_ID, INV_REQ_REM, INV_REQ_CRT_DT, INV_REQ_CRT_USER_ID
                   , INV_REQ_UPD_DT, INV_REQ_UPD_USER_ID, INV_REQ_USER_ID_AUTO, INV_REQ_CALL_DT, INV_REQ_VISIT_DT, INV_REQ_TYPE_ID
-                  , INV_REQ_HAS_ATTACH, INV_REQ_ATTACH_FILE, INV_REQ_REJCT_RESN_ID 
+                  , INV_REQ_HAS_ATTACH, INV_REQ_ATTACH_FILE, INV_REQ_REJCT_RESN_ID
               )
         VALUES ( #{seqSAL0050D}, #{invReqNo}, #{soId}, #{invReqStusId}, #{invReqPartyId}, #{invReqRem}, SYSDATE, #{userId}
                     , SYSDATE, #{userId}, #{invReqUserIdAuto}, SYSDATE, SYSDATE, #{invReqTypeId}
                     , #{invReqHasAttach}, #{invReqAttachFile}, #{invReqRejctResnId} )
     </insert>
-    
+
     <insert id="insertSalesOrdLog" parameterType="Map">
         INSERT INTO SAL0009D
 			  ( LOG_ID, SALES_ORD_ID, PRGRS_ID, LOG_DT, REF_ID, IS_LOK, LOG_CRT_USER_ID, LOG_CRT_DT )
 	    VALUES ( SAL0009D_LOG_ID_SEQ.NEXTVAL, #{salesOrdId}, #{prgrsId}, SYSDATE, #{refId}
 	                , #{isLok}, #{userId}, SYSDATE )
     </insert>
-    
+
     <select id="orderInvestCallRecallList" parameterType="Map" resultType="egovMap">
         <![CDATA[
         SELECT Filter1.INV_ID INV_ID  ,
@@ -525,7 +525,7 @@
 			       Filter1.USERNAME2 USER_NAME  ,
 			       Filter1.USERNAME3 USERNAME1  ,
 			       Extent5.CODE CODE  ,
-			       Extent5.NAME NAME  
+			       Extent5.NAME NAME
 		  FROM ( SELECT Extent1.INV_ID INV_ID  ,
 				                Extent1.INV_NO INV_NO  ,
 				                Extent1.INV_STUS_ID INV_STUS_ID  ,
@@ -536,15 +536,15 @@
 				                Extent2.SALES_ORD_ID SALESORDERID1  ,
 				                Extent2.SALES_ORD_NO SALES_ORD_NO  ,
 				                Extent3.USER_NAME USERNAME2  ,
-				                Extent4.USER_NAME USERNAME3  
+				                Extent4.USER_NAME USERNAME3
 				        FROM SAL0049D Extent1
 				                JOIN SAL0001D Extent2   ON Extent1.SALES_ORD_ID = Extent2.SALES_ORD_ID
 				                LEFT JOIN SYS0047M Extent3   ON Extent1.INV_CRT_USER_ID = Extent3.USER_ID
 				                LEFT JOIN SYS0047M Extent4   ON Extent1.INV_UPD_USER_ID = Extent4.USER_ID
-			          WHERE 8 <> Extent1.INV_STUS_ID 
+			          WHERE 8 <> Extent1.INV_STUS_ID
 			          ]]>
 			          <if test="invStusList != null and invStusList != ''">
-			              AND Extent1.INV_STUS_ID IN 
+			              AND Extent1.INV_STUS_ID IN
 			              <foreach item="item" collection="invStusList" index="index" open="(" separator="," close=")">
 	                         #{item}
 	                     </foreach>
@@ -569,7 +569,7 @@
 	          AND Filter1.SALES_ORD_NO LIKE '%' || #{salesOrdNo} || '%'
 	          </if>
     </select>
-    
+
     <select id="investCallResultInfo" parameterType="Map" resultType="egovMap">
         SELECT Extent1.INV_ID INV_ID  ,
 			       Extent1.INV_NO INV_NO  ,
@@ -587,7 +587,7 @@
 			       Extent2.NO NO  ,
 			       Extent4.ROLE_ID ROLE_ID  ,
 			       Extent3.USER_ID USER_ID  ,
-			       Extent1.INV_CALL_ENTRY_ID INV_CALL_ENTRY_ID  
+			       Extent1.INV_CALL_ENTRY_ID INV_CALL_ENTRY_ID
 			  FROM SAL0049D Extent1
 			         LEFT JOIN SVC0008D Extent2   ON Extent1.INV_CANCL_BS_SCHDUL_ID = Extent2.SCHDUL_ID
 			         LEFT JOIN SAL0052D Extent3   ON Extent1.INV_ID = Extent3.INV_ENTRY_ID
@@ -601,7 +601,7 @@
 	             AND ROWNUM <= 1
 	            ]]>
     </select>
-    
+
     <select id="investCallResultCust" parameterType="Map" resultType="egovMap">
         SELECT Extent1.INV_ID INV_ID  ,
 			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
@@ -625,14 +625,14 @@
 			       Extent10.TEL_R TEL_R  ,
 			       Extent10.TELF TELF  ,
 			       Extent10.TEL_M1 TEL_M1  ,
-			       CASE WHEN ( Extent11.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent11.ADDR_DTL)) ELSE '' END ||' '|| 
+			       CASE WHEN ( Extent11.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent11.ADDR_DTL)) ELSE '' END ||' '||
                            NVL(Extent11.STREET, '') ||' '|| Extent15.AREA ||' '|| Extent15.POSTCODE ||' '|| Extent15.CITY ||' '|| Extent15.STATE AS MAILLING_ADDR,
 			       Extent13.NAME NAME2  ,
 			       Extent13.TEL_O TELO1  ,
 			       Extent13.TEL_R TELR1  ,
 			       Extent13.TELF TELF1  ,
 			       Extent13.TEL_M1 TELM11  ,
-			       CASE WHEN ( Extent14.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent14.ADDR_DTL)) ELSE '' END ||' '|| 
+			       CASE WHEN ( Extent14.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent14.ADDR_DTL)) ELSE '' END ||' '||
                            NVL(Extent14.STREET, '') ||' '|| Extent16.AREA ||' '|| Extent16.POSTCODE ||' '|| Extent16.CITY ||' '|| Extent16.STATE AS INSTALLATION_ADDR
 		   FROM SAL0049D Extent1
 			         LEFT JOIN SAL0001D Extent2   ON Extent1.SALES_ORD_ID = Extent2.SALES_ORD_ID
@@ -657,11 +657,11 @@
                  AND ROWNUM <= 1
                 ]]>
     </select>
-    
+
     <resultMap id="callLogClobMap" type="egovMap">
         <result property="callRem" column="CALL_REM" jdbcType="CLOB" javaType="string"/>
     </resultMap>
-    
+
     <select id="investCallResultLog" parameterType="Map" resultMap="callLogClobMap">
         SELECT Project1.INV_ID INV_ID  ,
 			       Project1.TYPE_ID TYPE_ID  ,
@@ -672,7 +672,7 @@
 			       Project1.CODE_NAME CODE_NAME  ,
 			       Project1.USER_NAME USER_NAME  ,
 			       Project1.CODE CODE  ,
-			       Project1.NAME NAME  
+			       Project1.NAME NAME
 		  FROM ( SELECT Extent1.INV_ID INV_ID  ,
 				                Extent2.TYPE_ID TYPE_ID  ,
 				                Extent3.CALL_STUS_ID CALL_STUS_ID  ,
@@ -682,7 +682,7 @@
 				                Extent4.CODE_NAME CODE_NAME  ,
 				                Extent6.USER_NAME USER_NAME  ,
 				                Extent7.CODE CODE  ,
-				                Extent7.NAME NAME  
+				                Extent7.NAME NAME
 				        FROM SAL0049D Extent1
 				                JOIN CCR0006D Extent2   ON Extent1.SALES_ORD_ID = Extent2.SALES_ORD_ID
 				                JOIN CCR0007D Extent3   ON Extent2.CALL_ENTRY_ID = Extent3.CALL_ENTRY_ID
@@ -693,7 +693,7 @@
 				      WHERE Extent1.INV_ID = #{callLogInvId} ) Project1
 		  ORDER BY Project1.CALL_CRT_DT DESC
     </select>
-    
+
     <select id="saveCallResultSearchFirst" parameterType="Map" resultType="egovMap">
         SELECT INV_ID   ,
 			       INV_NO   ,
@@ -709,12 +709,12 @@
 			       INV_REQ_TICKET_ID   ,
 			       INV_CALL_ENTRY_ID   ,
 			       INV_REQ_ID   ,
-			       INV_DT_AUTO   
-		   FROM SAL0049D 
-		 WHERE INV_ID = #{callResultInvId} 
+			       INV_DT_AUTO
+		   FROM SAL0049D
+		 WHERE INV_ID = #{callResultInvId}
 			 AND INV_STUS_ID IN ( '1', '29' )
     </select>
-    
+
     <select id="saveCallResultSearchSecond" parameterType="Map" resultType="egovMap">
         SELECT CALL_ENTRY_ID   ,
 			       SALES_ORD_ID   ,
@@ -729,16 +729,16 @@
 			       HAPY_CALLER_ID   ,
 			       UPD_DT   ,
 			       UPD_USER_ID   ,
-			       ORI_CALL_DT   
-		   FROM CCR0006D 
-         WHERE CALL_ENTRY_ID = #{callEntryId} 
+			       ORI_CALL_DT
+		   FROM CCR0006D
+         WHERE CALL_ENTRY_ID = #{callEntryId}
             <![CDATA[
              AND ROWNUM <= 1
             ]]>
     </select>
-    
+
     <select id="saveCallResultSearchThird" parameterType="Map" resultType="egovMap">
-        SELECT * 
+        SELECT *
 			  FROM ( SELECT Project1.CALL_RESULT_ID CALL_RESULT_ID  ,
 					                Project1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
 					                Project1.CALL_STUS_ID CALL_STUS_ID  ,
@@ -753,7 +753,7 @@
 					                Project1.CALL_HC_ID CALL_HC_ID  ,
 					                Project1.CALL_ROS_AMT CALL_ROS_AMT  ,
 					                Project1.CALL_SMS CALL_SMS  ,
-					                Project1.CALL_SMS_REM CALL_SMS_REM  
+					                Project1.CALL_SMS_REM CALL_SMS_REM
 						   FROM (SELECT Extent1.CALL_RESULT_ID CALL_RESULT_ID  ,
 								                Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
 								                Extent1.CALL_STUS_ID CALL_STUS_ID  ,
@@ -768,43 +768,43 @@
 								                Extent1.CALL_HC_ID CALL_HC_ID  ,
 								                Extent1.CALL_ROS_AMT CALL_ROS_AMT  ,
 								                Extent1.CALL_SMS CALL_SMS  ,
-								                Extent1.CALL_SMS_REM CALL_SMS_REM  
+								                Extent1.CALL_SMS_REM CALL_SMS_REM
 								       FROM CCR0007D Extent1
 								     WHERE Extent1.CALL_ENTRY_ID = #{callEntryId} ) Project1
-			ORDER BY Project1.CALL_RESULT_ID DESC ) 
+			ORDER BY Project1.CALL_RESULT_ID DESC )
             <![CDATA[
             WHERE ROWNUM <= 1
             ]]>
     </select>
-    
+
     <select id="getBSMonth" parameterType="Map" resultType="egovMap">
-        SELECT * 
+        SELECT *
 			  FROM ( SELECT Project1.SCHDUL_ID   ,
 					                Project1.STUS_CODE_ID   ,
 					                Project1.RESULT_ID   ,
 					                Project1.NO   ,
 					                Project1.RESULT_STUS_CODE_ID   ,
-					                Project1.FAIL_RESN_ID   
+					                Project1.FAIL_RESN_ID
 					       FROM ( SELECT Extent1.SCHDUL_ID SCHDUL_ID  ,
 								                Extent1.STUS_CODE_ID STUS_CODE_ID  ,
 								                Extent2.RESULT_ID RESULT_ID  ,
 								                Extent2.NO NO  ,
 								                Extent2.RESULT_STUS_CODE_ID RESULT_STUS_CODE_ID  ,
-								                Extent2.FAIL_RESN_ID FAIL_RESN_ID  
+								                Extent2.FAIL_RESN_ID FAIL_RESN_ID
 								       FROM SVC0008D Extent1
 								      LEFT JOIN SVC0006D Extent2   ON Extent1.SCHDUL_ID = Extent2.SCHDUL_ID
 								     WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
 						                 <![CDATA[
 						                 AND 8 <> Extent1.STUS_CODE_ID
 						                 AND ( Extent1.MONTH = (SELECT TO_CHAR(SYSDATE, 'mm') FROM DUAL) )
-						                 AND ( Extent1.YEAR = (SELECT TO_CHAR(SYSDATE, 'YYYY') FROM DUAL) ) 
+						                 AND ( Extent1.YEAR = (SELECT TO_CHAR(SYSDATE, 'YYYY') FROM DUAL) )
 						            ) Project1
 			  ORDER BY Project1.RESULT_ID DESC )
 			  WHERE ROWNUM <=]]> 1
     </select>
-    
+
     <select id="getBSScheduleStusCodeId" parameterType="Map" resultType="egovMap">
-        SELECT * 
+        SELECT *
            FROM (
 			        SELECT SCHDUL_ID   ,
 						       NO   ,
@@ -824,7 +824,7 @@
 						       SYNC_CHK   ,
 						       LOK   ,
 						       ACTN_MEM_ID   ,
-						       PREV_CODY_ID   
+						       PREV_CODY_ID
 					  FROM SVC0008D Extent1
 				    WHERE SALES_ORD_ID = #{salesOrdId}
 						AND 8 <![CDATA[ <> ]]> STUS_CODE_ID
@@ -832,9 +832,9 @@
 				    )
 		  WHERE ROWNUM <![CDATA[ <= ]]> 1
     </select>
-    
+
     <select id="getBSScheduleId" parameterType="Map" resultType="egovMap">
-        SELECT * 
+        SELECT *
            FROM (
                     SELECT SCHDUL_ID   ,
                                NO   ,
@@ -854,42 +854,43 @@
                                SYNC_CHK   ,
                                LOK   ,
                                ACTN_MEM_ID   ,
-                               PREV_CODY_ID   
+                               PREV_CODY_ID
                       FROM SVC0008D Extent1
                     WHERE SALES_ORD_ID = #{salesOrdId}
                      ORDER BY SCHDUL_ID DESC
                     )
           WHERE ROWNUM <![CDATA[ <= ]]> 1
     </select>
-    
+
     <select id="saveCallResultSearchFourth" parameterType="Map" resultType="egovMap">
         SELECT REN_SCH_ID   ,
 			       SALES_ORD_ID   ,
 			       STUS_CODE_ID   ,
 			       REN_SCH_DT   ,
 			       REN_SCH_TERMS   ,
-			       IS_SYNC   
-		  FROM SAL0071D 
+			       IS_SYNC
+		  FROM SAL0071D
 		WHERE SALES_ORD_ID = #{salesOrdId}
             <![CDATA[
              AND ROWNUM <= 1
             ]]>
     </select>
-    
-    
+
+
     <select id="saveCallResultSearchOrdId" parameterType="Map" resultType="Integer">
         SELECT Count (SALES_ORD_ID) as CNT
         FROM SAL0070D
-        WHERE SALES_ORD_ID = #{salesOrdId}
+        WHERE FN_GET_FIRST_DAY_MONTH(RENT_INST_DT) = FN_GET_FIRST_DAY_MONTH(SYSDATE)
+        AND SALES_ORD_ID = #{salesOrdId} AND RENT_INST_NO <![CDATA[<>]]>  0
     </select>
-    
+
     <update id="updateSAL0071D" parameterType="Map">
         UPDATE SAL0071D
 			 SET STUS_CODE_ID = #{rentalSchemeStusId},
 			       REN_SCH_DT = SYSDATE
 		 WHERE REN_SCH_ID = #{renSchId}
     </update>
-    
+
     <select id="saveCallResultSearchFifth" parameterType="Map" resultType="egovMap">
         SELECT INV_ID   ,
                    INV_NO   ,
@@ -905,11 +906,11 @@
                    INV_REQ_TICKET_ID   ,
                    INV_CALL_ENTRY_ID   ,
                    INV_REQ_ID   ,
-                   INV_DT_AUTO   
-           FROM SAL0049D 
+                   INV_DT_AUTO
+           FROM SAL0049D
          WHERE INV_ID = #{callResultInvId}
     </select>
-    
+
     <update id="updateSAL0049D" parameterType="Map">
         UPDATE SAL0049D
              SET INV_STUS_ID = #{callResultStus},
@@ -917,21 +918,21 @@
                    INV_UPD_USER_ID = #{userId}
          WHERE INV_ID = #{callResultInvId}
     </update>
-    
+
     <select id="monthYearChk" parameterType="Map" resultType="egovMap">
         SELECT Filter1.SRV_SALES_ORD_ID SRV_SALES_ORD_ID  ,
 			       Filter1.SRV_START_DT  ,
 			       Filter1.SRV_EXPR_DT ,
 			       Filter1.SRV_FREQ SRV_FREQ  ,
 			       Filter1.MONTH MONTH  ,
-			       Filter1.YEAR YEAR  
+			       Filter1.YEAR YEAR
 			  FROM ( SELECT Extent1.SRV_SALES_ORD_ID SRV_SALES_ORD_ID  ,
 			                Extent1.SRV_FREQ SRV_FREQ  ,
 			                Extent1.SRV_START_DT SRV_START_DT  ,
 			                Extent1.SRV_EXPR_DT SRV_EXPR_DT  ,
 			                Extent3.SCHDUL_ID SCHDUL_ID  ,
 			                Extent3.MONTH MONTH  ,
-			                Extent3.YEAR YEAR  
+			                Extent3.YEAR YEAR
 			         FROM SAL0095D Extent1
 			                JOIN SAL0090D Extent2   ON Extent1.SRV_SALES_ORD_ID = Extent2.SRV_SO_ID
 			                JOIN SVC0008D Extent3   ON Extent1.SRV_SALES_ORD_ID = Extent3.SALES_ORD_ID
@@ -939,26 +940,26 @@
 			                   AND ( 1 = Extent2.SRV_STUS_ID )
 			                   AND ( 4 = Extent1.SRV_STUS_CODE_ID )
 			                   AND ( 0 <![CDATA[<>]]> Extent1.SRV_FREQ ) ) Filter1
-			         JOIN ( SELECT ( SELECT MAX(Extent5.SCHDUL_ID)  A1  
+			         JOIN ( SELECT ( SELECT MAX(Extent5.SCHDUL_ID)  A1
 			                         FROM SVC0008D Extent5
 			                          WHERE  ( Extent5.SALES_ORD_ID = #{salesOrdId} )
 			                                   AND ( Project2.SALES_ORD_ID = Extent5.SALES_ORD_ID )
-			                                   AND ( 8 <![CDATA[<>]]> Extent5.STUS_CODE_ID ) ) C1  
+			                                   AND ( 8 <![CDATA[<>]]> Extent5.STUS_CODE_ID ) ) C1
 			                FROM ( SELECT #{salesOrdId} P_LINQ_0  ,
-			                              Distinct1.SALES_ORD_ID SALES_ORD_ID  
-			                       FROM ( SELECT DISTINCT Extent4.SALES_ORD_ID SALES_ORD_ID  
+			                              Distinct1.SALES_ORD_ID SALES_ORD_ID
+			                       FROM ( SELECT DISTINCT Extent4.SALES_ORD_ID SALES_ORD_ID
 			                              FROM SVC0008D Extent4
 			                               WHERE  Extent4.SALES_ORD_ID = #{salesOrdId} ) Distinct1 ) Project2 ) Project3   ON Filter1.SCHDUL_ID = Project3.C1
-			 WHERE  Filter1.SRV_SALES_ORD_ID = #{salesOrdId} 
+			 WHERE  Filter1.SRV_SALES_ORD_ID = #{salesOrdId}
               AND ROWNUM <![CDATA[<=]]> 1
     </select>
-    
+
     <select id="monthBetween" parameterType="Map" resultType="Integer">
-        SELECT 
+        SELECT
             MONTHS_BETWEEN( to_date( to_char(SYSDATE, 'YYYYmm') ||'01','yyyymmdd') ,to_date(#{EX_YYYY}||#{EX_MM}  ||'01','yyyymmdd')) expInt
         FROM DUAL
     </select>
-    
+
     <select id="saveSVC0008D" parameterType="Map" resultType="egovMap">
         SELECT Extent1.SCHDUL_ID SCHDUL_ID  ,
 			       Extent1.NO NO  ,
@@ -978,41 +979,41 @@
 			       Extent1.SYNC_CHK SYNC_CHK  ,
 			       Extent1.LOK LOK  ,
 			       Extent1.ACTN_MEM_ID ACTN_MEM_ID  ,
-			       Extent1.PREV_CODY_ID PREV_CODY_ID  
+			       Extent1.PREV_CODY_ID PREV_CODY_ID
 		   FROM SVC0008D Extent1
 		 WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
 	         AND 1 = Extent1.STUS_CODE_ID
 	         AND Extent1.YEAR = (SELECT TO_CHAR(SYSDATE, 'YYYY') FROM DUAL)
              AND Extent1.MONTH = (SELECT TO_CHAR(SYSDATE, 'mm') FROM DUAL)
     </select>
-    
+
     <select id="seqSAL0049D"  resultType="java.lang.String">
         SELECT SAL0049D_INV_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <insert id="insertInvestigate" parameterType="Map">
         INSERT INTO SAL0049D
 			  ( INV_ID, INV_NO, INV_STUS_ID, SALES_ORD_ID, INV_TO_CANCL_ACT_BS, INV_CANCL_BS_SCHDUL_ID
 			  , INV_CRT_DT, INV_CRT_USER_ID, INV_UPD_DT, INV_UPD_USER_ID, INV_TO_ACTVT_BS, INV_REQ_TICKET_ID
 			  , INV_CALL_ENTRY_ID, INV_REQ_ID, INV_DT_AUTO )
-	    VALUES 
+	    VALUES
 	          ( #{seqSAL0049D}, #{invNo}, #{invStusId}, #{salesOrdId}, #{invToCanclActBs}, #{invCanclBsSchdulId}
 	          , SYSDATE, #{userId}, SYSDATE, #{userId}, #{invToActvtBs}, #{invReqTicketId}
 	          , #{invCallEntryId}, #{gridInvReqId}, #{invDtAuto} )
     </insert>
-    
+
     <select id="seqSAL0052D"  resultType="java.lang.String">
         SELECT SAL0052D_INV_IN_PERSON_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <insert id="insertInvestInchargePerson" parameterType="Map">
         INSERT INTO SAL0052D
               ( INV_IN_PERSON_ID, INV_ENTRY_ID, USER_ID, INV_IN_PERSON_STUS_ID, INV_IN_PERSON_CRT_DT
               , INV_IN_PERSON_CRT_USER_ID, INV_IN_PERSON_UPD_DT, INV_IN_PERSON_UPD_USER_ID )
-        VALUES 
+        VALUES
               ( #{seqSAL0052D}, #{invEntryId}, #{inchargeNmId}, #{invInPersonStusId}, SYSDATE, #{userId}, SYSDATE, #{userId} )
     </insert>
-    
+
     <select id="saveSearchSAL0049D" parameterType="Map" resultType="egovMap">
         SELECT INV_ID   ,
                    INV_NO   ,
@@ -1028,14 +1029,14 @@
                    INV_REQ_TICKET_ID   ,
                    INV_CALL_ENTRY_ID   ,
                    INV_REQ_ID   ,
-                   INV_DT_AUTO   
-           FROM SAL0049D 
+                   INV_DT_AUTO
+           FROM SAL0049D
          WHERE INV_REQ_ID = #{invReqId}
               <![CDATA[
               AND ROWNUM <= 1
               ]]>
     </select>
-    
+
     <select id="saveSearchCCR0006DdocId" parameterType="Map" resultType="egovMap">
         SELECT Extent1.CALL_ENTRY_ID   ,
 	                Extent1.SALES_ORD_ID   ,
@@ -1050,23 +1051,23 @@
 	                Extent1.HAPY_CALLER_ID   ,
 	                Extent1.UPD_DT   ,
 	                Extent1.UPD_USER_ID   ,
-	                Extent1.ORI_CALL_DT   
+	                Extent1.ORI_CALL_DT
 	        FROM CCR0006D Extent1
 	      WHERE Extent1.DOC_ID = #{docId}
 	          AND 766 = Extent1.TYPE_ID
 	          <![CDATA[
 	          AND ROWNUM <= 1
 	          ]]>
-	       ORDER BY RESULT_ID DESC 
-            
+	       ORDER BY RESULT_ID DESC
+
     </select>
-    
+
     <update id="updateSAL0049DEntryId" parameterType="Map">
         UPDATE SAL0049D
     		 SET INV_CALL_ENTRY_ID = #{invCallEntryId}
 		 WHERE INV_ID = #{invId}
     </update>
-    
+
     <select id="saveSearchCCR0006D" parameterType="Map" resultType="egovMap">
         SELECT Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
 			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
@@ -1081,13 +1082,13 @@
 			       Extent1.HAPY_CALLER_ID HAPY_CALLER_ID  ,
 			       Extent1.UPD_DT UPD_DT  ,
 			       Extent1.UPD_USER_ID UPD_USER_ID  ,
-			       Extent1.ORI_CALL_DT ORI_CALL_DT  
+			       Extent1.ORI_CALL_DT ORI_CALL_DT
 		  FROM CCR0006D Extent1
-		WHERE  Extent1.CALL_ENTRY_ID = #{callEntryId} 
-			AND ROWNUM <![CDATA[<= ]]>1 
-            
+		WHERE  Extent1.CALL_ENTRY_ID = #{callEntryId}
+			AND ROWNUM <![CDATA[<= ]]>1
+
     </select>
-    
+
     <update id="updateSVC0008DBSSchd" parameterType="Map">
         UPDATE SVC0008D
 		     SET STUS_CODE_ID = #{stusCodeId},
@@ -1095,11 +1096,11 @@
 		           UPD_USER_ID = #{userId}
 		 WHERE SCHDUL_ID = #{schdulId}
     </update>
-    
+
     <select id="seqSVC0006D"  resultType="java.lang.String">
         SELECT SVC0006D_RESULT_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <insert id="insertSVC0006DBSSchd" parameterType="Map">
         INSERT INTO SVC0006D
 			  ( RESULT_ID, NO, TYPE_ID, SCHDUL_ID, SALES_ORD_ID, CODY_ID, SETL_DT, RESULT_STUS_CODE_ID, FAIL_RESN_ID
@@ -1110,7 +1111,7 @@
 	          , #{resultStusCodeId}, #{failResnId}, #{renColctId}, #{whId}, #{resultRem}, SYSDATE, #{userId}, SYSDATE, #{userId}
 	          , #{resultIsSync}, #{resultIsEdit}, #{resultStockUse}, #{resultIsCurr}, #{resultMtchId}, #{resultIsAd}, NULL, NULL )
     </insert>
-    
+
     <select id="saveSearchSVC0006D" parameterType="Map" resultType="egovMap">
         SELECT Extent1.RESULT_ID   ,
 			       Extent1.NO   ,
@@ -1135,17 +1136,17 @@
 			       Extent1.RESULT_MTCH_ID   ,
 			       Extent1.RESULT_IS_ADJ   ,
 			       Extent1.RESULT_ENTRY_POINT   ,
-			       Extent1.RESULT_MOBILE_ID   
+			       Extent1.RESULT_MOBILE_ID
 		  FROM SVC0006D Extent1
 		WHERE Extent1.SCHDUL_ID = #{schdulId}
-            AND ROWNUM <![CDATA[<= ]]>1 
-            
+            AND ROWNUM <![CDATA[<= ]]>1
+
     </select>
-    
+
     <select id="seqSVC0007D"  resultType="java.lang.String">
         SELECT SVC0007D_BS_RESULT_ITM_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <insert id="insertSVC0007DBSSchd" parameterType="Map">
         INSERT INTO SVC0007D
 			  ( BS_RESULT_ITM_ID, BS_RESULT_ID, BS_RESULT_PART_ID, BS_RESULT_PART_DESC, BS_RESULT_PART_QTY, BS_RESULT_REM
@@ -1153,11 +1154,11 @@
 		VALUES ( #{seqSVC0007D}, #{bsResultId}, #{bsResultPartId}, #{bsResultPartDesc}, #{bsResultPartQty}, #{bsResultRem}
 		      , SYSDATE, #{userId}, #{bsResultFilterClm} )
     </insert>
-    
+
     <select id="getSusIdSeq"  resultType="Integer">
         SELECT SAL0096D_SUS_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <insert id="insertSusSAL0096D" parameterType="Map">
         INSERT INTO SAL0096D
 			  ( SUS_ID, SALES_ORD_ID, SUS_STUS_ID, INV_ID, CALL_ENTRY_ID, RAF_AMT, SUS_CRT_DT, SUS_CRT_USER_ID
@@ -1166,19 +1167,19 @@
 	    VALUES ( #{getSusIdSeq}, #{salesOrdId}, #{susStusId}, #{callResultInvId}, #{susCallEntryId}, #{refAmt}, SYSDATE, #{userId}
 	          , SYSDATE, #{userId}, #{susNo}, #{susLastBillMonth}, #{susLastBillYear}, #{susLastBillNo}, #{susCurrBillInstNo}, #{susFromFb}, NULL )
     </insert>
-    
+
     <select id="getSusInPersonIdSeq"  resultType="Integer">
         SELECT SAL0097D_SUS_IN_PERSON_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <insert id="insertSusSAL0097D" parameterType="Map">
         INSERT INTO SAL0097D
 			  ( SUS_IN_PERSON_ID, SUS_ID, USER_ID, SUS_IN_PERSON_STUS_ID, SUS_IN_PERSON_CRT_DT
 			  , SUS_IN_PERSON_CRT_USER_ID, SUS_IN_PERSON_UPD_DT, SUS_IN_PERSON_UPD_USER_ID )
-		VALUES 
+		VALUES
 		      ( #{getSusInPersonIdSeq}, #{getSusIdSeq}, #{susUserId}, #{susInPersonStusId}, SYSDATE, #{userId}, SYSDATE, #{userId} )
     </insert>
-    
+
     <select id="callResultSearchCCR0006D" parameterType="Map" resultType="egovMap">
         SELECT Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
 			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
@@ -1193,21 +1194,21 @@
 			       Extent1.HAPY_CALLER_ID HAPY_CALLER_ID  ,
 			       Extent1.UPD_DT UPD_DT  ,
 			       Extent1.UPD_USER_ID UPD_USER_ID  ,
-			       Extent1.ORI_CALL_DT ORI_CALL_DT  
+			       Extent1.ORI_CALL_DT ORI_CALL_DT
 			  FROM CCR0006D Extent1
-			 WHERE Extent1.DOC_ID = #{docId} 
-                 AND ROWNUM <![CDATA[<= ]]>1 
-            
+			 WHERE Extent1.DOC_ID = #{docId}
+                 AND ROWNUM <![CDATA[<= ]]>1
+
     </select>
-    
+
     <update id="updateEntIdSAL0096D" parameterType="Map">
         UPDATE SAL0096D
              SET CALL_ENTRY_ID = #{infoCallEntryId}
-         WHERE SUS_ID = #{susId} 
-    </update> 
-    
+         WHERE SUS_ID = #{susId}
+    </update>
+
     <select id="callResultSearchCCTicket" parameterType="Map" resultType="egovMap">
-        SELECT * 
+        SELECT *
 		  FROM ( SELECT Project1.CC_TIC_ID   ,
 				                Project1.CC_TIC_CNT_INITIAL_ID   ,
 				                Project1.CC_TIC_CNT_NAME   ,
@@ -1230,7 +1231,7 @@
 				                Project1.CC_TIC_PRIO_LVL   ,
 				                Project1.CC_TIC_ENQUIRY_CAT_ID   ,
 				                Project1.CC_TIC_CNT_NRIC   ,
-				                Project1.CC_TIC_PASS_MEM_TYPE_ID   
+				                Project1.CC_TIC_PASS_MEM_TYPE_ID
 		               FROM ( SELECT Extent1.CC_TIC_ID   ,
 							                Extent1.CC_TIC_CNT_INITIAL_ID   ,
 							                Extent1.CC_TIC_CNT_NAME   ,
@@ -1253,14 +1254,14 @@
 							                Extent1.CC_TIC_PRIO_LVL   ,
 							                Extent1.CC_TIC_ENQUIRY_CAT_ID   ,
 							                Extent1.CC_TIC_CNT_NRIC   ,
-							                Extent1.CC_TIC_PASS_MEM_TYPE_ID   
+							                Extent1.CC_TIC_PASS_MEM_TYPE_ID
 							        FROM CCR0010M Extent1
 							      WHERE Extent1.CC_TIC_SO_ID = #{salesOrdId}
 							          AND 501 = Extent1.CC_TIC_ENQUIRY_TYPE_ID ) Project1
-		  ORDER BY Project1.CC_TIC_ID DESC ) 
-         WHERE ROWNUM <![CDATA[<= ]]>1 
+		  ORDER BY Project1.CC_TIC_ID DESC )
+         WHERE ROWNUM <![CDATA[<= ]]>1
     </select>
-    
+
     <select id="fileOrderInfo" parameterType="Map" resultType="egovMap">
         SELECT Extent1.SALES_ORD_ID   ,
 			       Extent1.SALES_ORD_NO   ,
@@ -1308,30 +1309,30 @@
 			       Extent1.SALES_GM_ID   ,
 			       Extent1.ADV_BILL   ,
 			       Extent1.CNVR_SCHEME_ID   ,
-			       Extent1.CUST_CARE_CNT_ID   
+			       Extent1.CUST_CARE_CNT_ID
 			  FROM SAL0001D Extent1
 			 WHERE  ( Extent1.SALES_ORD_NO = #{salesOrderNo} )
 			          AND ( 8 <![CDATA[<>]]> Extent1.STUS_CODE_ID )
 			          AND ( 66 = Extent1.APP_TYPE_ID )
     </select>
-    
+
     <select id="batchOrderREGChk" parameterType="Map" resultType="Integer">
-        SELECT COUNT(0) CNT  
+        SELECT COUNT(0) CNT
            FROM SAL0001D Extent1
-             JOIN SAL0071D Extent2   
+             JOIN SAL0071D Extent2
                ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
           WHERE 66 = Extent1.APP_TYPE_ID
               AND 'REG' = Extent2.STUS_CODE_ID
               AND Extent1.SALES_ORD_NO = #{salesOrdNo}
     </select>
-    
+
     <select id="batchOrderExistChk" parameterType="Map" resultType="Integer">
-        SELECT COUNT(0) CNT 
+        SELECT COUNT(0) CNT
 		   FROM SAL0001D Extent1
 			         JOIN SAL0050D Extent2   ON ( 1 = Extent2.INV_REQ_STUS_ID )
 			         AND ( Extent2.SO_ID = Extent1.SALES_ORD_ID )
 			         LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent2.INV_REQ_CRT_USER_ID
 		  WHERE Extent1.SALES_ORD_NO = #{salesOrdNo}
     </select>
-    
+
 </mapper>
