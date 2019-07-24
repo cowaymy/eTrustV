@@ -188,7 +188,7 @@ function fn_checkAgentList(){
     formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
     formData.append("assignUploadType", $("#assignUploadType").val());
 
-    	Common.ajaxFile("uploadRcmsConversionBulk.do", formData, function(result)    {
+    	Common.ajaxFile("/sales/rcms/uploadRcmsConversionBulk.do", formData, function(result)    {
         AUIGrid.clearGridData(uploadResultGrid);
 
         console.log(JSON.stringify(result.data));

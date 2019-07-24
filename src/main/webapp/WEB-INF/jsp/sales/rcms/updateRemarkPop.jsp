@@ -77,12 +77,17 @@ function fn_Validsave(){
     var prevAgentId = $("#prevAgentId").val();
     var currAgentId = $("#rosCaller2").val();
 	Common.ajax("GET", "/sales/rcms/checkCustAgent", $("#saveForm").serializeJSON(), function(result) {
-	if(result[0].agentId != 0 && result[0].agentId != currAgentId && FormUtil.isNotEmpty(currAgentId)){
-		Common.confirm("<spring:message code='sal.alert.msg.diffAgentSaved'/>",function(){fn_save()});
+		if(result.length != 0){
+			if(result[0].agentId != 0 && result[0].agentId != currAgentId && FormUtil.isNotEmpty(currAgentId)){
+			   Common.confirm("<spring:message code='sal.alert.msg.diffAgentSaved'/>",function(){fn_save()});
+			}else{
+			   fn_save();
+			}
 		}else{
 			fn_save();
 		}
-    });
+	});
+
 }
 </script>
 
@@ -125,12 +130,18 @@ function fn_Validsave(){
 <tr>
     <th scope="row"><spring:message code="sal.title.text.sensitive" /><span class="must"></span></th>
     <td><input type="checkbox"  id="chkSensitiveFg"  name="chkSensitiveFg" onclick="fn_chk()"/></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.title.text.sensitiveRem" /></th>
+    <td colspan="3"> <textarea cols="20" rows="3" id='remark'  name='remark' name='remark'></textarea></td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.title.text.etr" /><span class="must"></span></th>
     <td><input type="checkbox"  id="chkEtrFg"  name="chkEtrFg" onclick="fn_chk()"/></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.remark" /></th>
-    <td colspan="3"> <textarea cols="20" rows="5" id='remark'  name='remark' placeholder="Remark" name='remark'></textarea></td>
+    <th scope="row"><spring:message code="sal.title.text.etrRem" /></th>
+    <td colspan="3"> <textarea cols="20" rows="3" id='remark2'  name='remark2' name='remark2'></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->

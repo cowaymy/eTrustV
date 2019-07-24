@@ -167,6 +167,7 @@
 		        ,B.TYPE_ID
 		        ,TO_CHAR(A.UPD_AGENT_DT, 'dd/mm/yyyy') UPD_AGENT_DT
 		        ,A.REM
+		        ,A.ETR_REM
 		 FROM SAL0149D A JOIN SAL0029D B  ON A.CUST_ID = B.CUST_ID
 		    JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
         LEFT JOIN ( SELECT A.AGENT_ID ,B.CODE || '_'||A.AGENT_ID||'_'||A.AGENT_NAME AGENT_NAME
@@ -240,7 +241,13 @@
 
 		          <if test="assignYn != null and assignYn !='' ">
 		            AND A.AGENT_ID <![CDATA[<>]]> 0
-		            </if>
+		          </if>
+		          <if test="sensitiveYn != null and sensitiveYn !='' ">
+                    AND A.SENSITIVE_FG <![CDATA[<>]]> 0
+                    </if>
+                    <if test="etrYn != null and etrYn !='' ">
+                    AND A.ETR_FG <![CDATA[<>]]> 0
+                    </if>
 	            </otherwise>
 	            </choose>
 	      <!-- <if test="orderNo != null and orderNo !='' ">
@@ -275,6 +282,7 @@
     <update id="updateRemark" parameterType="Map">
 		UPDATE SAL0149D
 		   SET REM = #{remark},
+		       ETR_REM = #{remark2},
 		       AGENT_ID = #{rosCaller2},
                PREV_AGENT_ID = #{prevAgentId},
                UPD_AGENT_DT = SYSDATE,
@@ -316,6 +324,7 @@
                     A.REM,
                     A.SENSITIVE_FG,
                     A.ETR_FG,
+                    A.ETR_REM,
                     A.CUST_ID,
                     B.SALES_ORD_NO
           FROM SAL0149D A JOIN SAL0001D B

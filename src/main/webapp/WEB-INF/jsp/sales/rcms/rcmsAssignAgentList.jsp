@@ -147,6 +147,7 @@ function createGrid(){
               {dataField : "colctTrget", headerText : '<spring:message code="sal.title.text.openOsBrTarget" />', width : '10%'  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
               {dataField : "rentAmt", headerText : '<spring:message code="sal.title.text.currBrOs" />', width : '10%'  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
               {dataField : "openMthAging", headerText : '<spring:message code="sal.title.text.openAgingBrMonth" />', width : '7%'  , editable       : false      } ,
+              {dataField : "currRentalStus", headerText : '<spring:message code="sal.title.text.currRentStatus" />', width : '10%'  , editable       : false      } ,
               /*   ,{dataField : "suggestAgent", headerText : '<spring:message code="sal.title.text.suggestBrCaller" />', width : 90    , editable       : false     , style:"aui-grid-drop-list-ul"
             	  , labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
                   var retStr = value;
@@ -186,9 +187,10 @@ function createGrid(){
 	              }*/
 	            } ,
               {dataField : "assigned", headerText : '<spring:message code="sal.title.text.assigned" />', width : '7%'  , editable       : false, visible : false     } ,
-              {dataField : "etrFg", headerText : '<spring:message code="sal.title.text.etr" />', width : '5%'   ,editable       : false    },
               {dataField : "sensitiveFg", headerText : '<spring:message code="sal.title.text.sensitive" />', width : '5%'   ,editable       : false    },
-              {dataField : "rem", headerText : '<spring:message code="sal.title.remark" />', width : '10%'   ,editable       : false    }
+              {dataField : "rem", headerText : '<spring:message code="sal.title.remark" />', width : '10%'   ,editable       : false    },
+              {dataField : "etrFg", headerText : '<spring:message code="sal.title.text.etr" />', width : '5%'   ,editable       : false    },
+              {dataField : "etrRem", headerText : '<spring:message code="sal.title.remark" />', width : '10%'   ,editable       : false    }
               ];
 
         var excelColLayout = [
@@ -268,9 +270,10 @@ function createGrid(){
 	           } ,
               {dataField : "updAgentDt", headerText : '<spring:message code="sal.title.text.assignedDt" />', width : 100  , editable       : false     } ,
               {dataField : "assigned", headerText : '<spring:message code="sal.title.text.assigned" />', width : 70  , editable       : false, visible : false} ,
-              {dataField : "etrFg", headerText : '<spring:message code="sal.title.text.etr" />', width : '5%'   ,editable       : false    },
               {dataField : "sensitiveFg", headerText : '<spring:message code="sal.title.text.sensitive" />', width : 70   ,editable       : false    },
-              {dataField : "rem", headerText : '<spring:message code="sal.title.remark" />', width : 200   ,editable       : false  ,style :"my-left-style"  }
+              {dataField : "rem", headerText : '<spring:message code="sal.title.remark" />', width : 200   ,editable       : false  ,style :"my-left-style"  },
+              {dataField : "etrFg", headerText : '<spring:message code="sal.title.text.etr" />', width : '5%'   ,editable       : false    },
+              {dataField : "etrRem", headerText : '<spring:message code="sal.title.remark" />', width : '10%'   ,editable       : false    }
               ];
 
 
@@ -303,6 +306,7 @@ function createGrid(){
 
         // 에디팅 시작 이벤트 바인딩
         AUIGrid.bind(assignGrid, "cellEditBegin", auiCellEditignHandler);
+        AUIGrid.setFixedColumnCount(assignGrid, 4);
 }
 
 //AUIGrid 메소드
@@ -500,7 +504,13 @@ function fn_badAccReport(){
         <td>
         <input type="checkbox" id="assignYn" name="assignYn"  value="Y"/>
         </td>
-        <td colspan="4">
+        <th scope="row"><spring:message code="sal.title.text.sensitive" /></th>
+        <td>
+        <input type="checkbox" id="sensitiveYn" name="sensitiveYn"  value="Y"/>
+        </td>
+        <th scope="row"><spring:message code="sal.title.text.etr" /></th>
+        <td>
+        <input type="checkbox" id="etrYn" name="etrYn"  value="Y"/>
         </td>
     </tr>
     </tbody>

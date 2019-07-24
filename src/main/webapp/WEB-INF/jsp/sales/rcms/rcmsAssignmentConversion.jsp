@@ -40,6 +40,29 @@ $(document).ready(function(){
        GridCommon.exportTo("#excelGrid", 'xlsx', "RCMS Assignment Conversion List");
     });
 
+    $("#rawDownload").click(function() {
+        	if($("#crtDt").val()!= "") {
+        	var crtDt = $("#crtDt").val();
+            var arrCrtDt = crtDt.split("/");
+            crtDt = arrCrtDt[2] + "/" + arrCrtDt[1] + "/" + arrCrtDt[0];
+
+        	var date = new Date().getDate();
+            if(date.toString().length == 1){
+                date = "0" + date;
+            }
+
+            $("#form #V_DATE").val(crtDt);
+            $("#form #reportDownFileName").val("RCMS Conversion Failed Raw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+
+            var option = {
+                    isProcedure : true
+            };
+
+            Common.report("form", option);
+        }else{
+            Common.alert("Please select a date.");
+        }
+    });
 });
 
 function createGrid(){
@@ -62,7 +85,7 @@ function createGrid(){
                                          {dataField : "rcItmStus", headerText : "Status", width : '10%'},
                                          {dataField : "rcItmField", headerText : "eTR / Sensitve", width : '10%'},
                                          {dataField : "rcItmRem", headerText : "Remark", width : '20%'},
-                                         {dataField : "agentName", headerText : "Agent<br/>Name", width : '10%'},
+                                         {dataField : "rcItmAgentId", headerText : "Agent ID", width : '10%'},
                                          {dataField : "rcItmRenStus", headerText : "Rental<br/>Status", width : '10%'},
                                          {dataField : "stusName", headerText : "Conversion<br/>Status", width : '10%'},
                                          {dataField : "rcItmCnvrRem", headerText : "Conversion Remark", width : '20%'}
@@ -73,7 +96,7 @@ function createGrid(){
                                             {dataField : "rcItmStus", headerText : "Status", width : 100},
                                             {dataField : "rcItmField", headerText : "eTR / Sensitve", width : 100},
                                             {dataField : "rcItmRem", headerText : "Remark", width : 400},
-                                            {dataField : "agentName", headerText : "Agent Name", width : 200},
+                                            {dataField : "rcItmAgentId", headerText : "Agent ID", width : 200},
                                             {dataField : "rcItmRenStus", headerText : "Rental Status", width : 100},
                                             {dataField : "stusName", headerText : "Conversion Status", width : 100},
                                             {dataField : "rcItmCnvrRem", headerText : "Conversion Remark", width : 400}
@@ -93,6 +116,7 @@ function createGrid(){
         excelGrid = GridCommon.createAUIGrid("#excelGrid", excelColLayout, "", assignOptions);
 
         $("#view_wrap").hide();
+        $("#report_wrap").hide();
 
         // Master Grid 셀 클릭시 이벤트
         AUIGrid.bind(assignGrid, "cellClick", function( event ){
@@ -143,6 +167,9 @@ function fn_getItmStatus(val){
     });
 }
 
+function fn_report(){
+	$("#report_wrap").show();
+}
 
 //Layer close
 hideViewPopup=function(val){
@@ -220,20 +247,20 @@ hideViewPopup=function(val){
     </tbody>
     </table><!-- table end -->
 
-    <%-- <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
     <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
     <dl class="link_list">
         <dt><spring:message code="sal.title.text.link" /></dt>
         <dd>
         <ul class="btns">
-            <li><p class="link_btn"><a href="#" id="_custVALetterBtn"><spring:message code="sal.title.text.badaccRaw" /></a></p></li>
+            <li><p class="link_btn"><a href="javascript:fn_report();" id="_custVALetterBtn"><spring:message code="sal.title.text.rcmsCnvrFailRaw" /></a></p></li>
         </ul>
         <ul class="btns">
         </ul>
         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
         </dd>
     </dl>
-    </aside><!-- link_btns_wrap end --> --%>
+    </aside><!-- link_btns_wrap end -->
 
     </form>
 </section><!-- search_table end -->
@@ -283,6 +310,59 @@ hideViewPopup=function(val){
 			</section><!-- search_result end -->
 
 
+    </section>
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->
+
+<!-------------------------------------------------------------------------------------
+    POP-UP (RAW DATA)
+-------------------------------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap size_small" id="report_wrap">
+    <!-- pop_header start -->
+    <header class="pop_header" id="pop_header">
+        <h1><spring:message code="sal.title.text.rcmsCnvrFailRaw"/></h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2">
+                    <a href="#" onclick="hideViewPopup('#report_wrap')">CLOSE</a>
+                </p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <!-- pop_body start -->
+    <form action="#" method="post" id="form" name="form">
+    <section class="pop_body">
+    <h3></h3>
+
+                <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/RCMS_ConvertFail.rpt" />
+                <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
+                <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+                <input type="hidden" id="V_DATE" name="V_DATE" value="" />
+    <table class="type1"><!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+        <col style="width:180px" />
+        <col style="width:*" />
+    </colgroup>
+    <tbody>
+    <tr>
+            <th scope="row">Convertion Create Date</th>
+            <td>
+            <div class="date_set w100p"><!-- date_set start -->
+                <p><input id="crtDt" name="crtDt" type="text" value="" title="Start Date" placeholder="DD/MM/YYYY" class="j_date w100p" required/></p>
+            </div><!-- date_set end -->
+        </td>
+    </tbody>
+    </table>
+
+            <section class="search_result"><!-- search_result start -->
+            <ul class="center_btns">
+                 <li><p class="btn_blue"><a href="#" id="rawDownload"><spring:message code="sal.title.text.download" /></a></p></li>
+            </ul>
+            </section><!-- search_result end -->
+    </form>
     </section>
     <!-- pop_body end -->
 </div>
