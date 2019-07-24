@@ -382,6 +382,7 @@
            and l54.delvry_no = l55.delvry_no
            and l48.reqst_no  = l55.reqst_no
            and l47.reqst_no  = l48.reqst_no
+           AND NVL(l55.del_flag,'N') <![CDATA[<>]]> 'Y'
            <!-- AND NVL(L54.DELVRY_GR_CMPLT,'N') <![CDATA[<>]]> 'Y' -->
            <if test="reqstno != null and reqstno != ''">
               and l47.reqst_no  LIKE #{reqstno}||'%'
