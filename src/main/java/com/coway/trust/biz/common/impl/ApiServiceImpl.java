@@ -218,7 +218,12 @@ public class ApiServiceImpl implements ApiService {
 
   @Override
   public EgovMap selectProductDetail(HttpServletRequest request, Map<String, Object> params) {
+
     EgovMap productDetail = apiMapper.selectProductDetail(params);
+    EgovMap memDetail = apiMapper.selectLatestMembership(params);
+    LOGGER.info(productDetail.toString());
+    productDetail.putAll(memDetail);
+    LOGGER.info(memDetail.toString());
     return displayResponseMessage(request, params,productDetail);
   }
 

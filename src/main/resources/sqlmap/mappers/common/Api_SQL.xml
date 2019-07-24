@@ -141,38 +141,44 @@
 		WHERE ACCOUNT_CODE = #{accountCode}
      </select>
 
-     <select id="selectProductDetail" parameterType="Map" resultType="egovMap">
+    <select id="selectProductDetail" parameterType="Map" resultType="egovMap">
         SELECT
-			PRODUCT_TOTAL_OUTSTANDING ,
-			MEMBERSHIP_OUTSTANDING ,
-			INSTALL_DT ,
-			LAST_SERVICE_DT ,
-			SALES_ORD_NO ,
-			APP_TYPE ,
-			STK_CODE ,
-			SERIAL_NO ,
-			STK_DESC ,
-			ADD1 ,
-			ADD2 ,
-			POSTCODE ,
-			AREA ,
-			STATE_NAME ,
-			BILLER_CODE ,
-			JOMPAY_REF ,
-			MEMBERSHIP_FEE ,
-			MONTHLY_RENTAL ,
-			MEMBERSHIP_TYPE ,
-			CODY_CONTACT ,
-			CODY_NAME ,
-			MEMBERSHIP_START_DATE ,
-			MEMBERSHIP_EXPIRY_DATE ,
-			MAIL_CNT_NAME ,
-			MAIL_CNT_TELM ,
-			MAIL_CNT_EMAIL ,
-			MAIL_CNT_NRIC ,
-			ACCOUNT_CODE
-		FROM CP1013V
-		WHERE SALES_ORD_NO = #{orderNo}
+            PRODUCT_TOTAL_OUTSTANDING ,
+            MEMBERSHIP_OUTSTANDING ,
+            INSTALL_DT ,
+            LAST_SERVICE_DT ,
+            SALES_ORD_NO ,
+            APP_TYPE ,
+            STK_CODE ,
+            SERIAL_NO ,
+            STK_DESC ,
+            ADD1 ,
+            ADD2 ,
+            POSTCODE ,
+            AREA ,
+            STATE_NAME ,
+            BILLER_CODE ,
+            JOMPAY_REF ,
+            MONTHLY_RENTAL ,
+            CODY_CONTACT ,
+            CODY_NAME ,
+            MAIL_CNT_NAME ,
+            MAIL_CNT_TELM ,
+            MAIL_CNT_EMAIL ,
+            MAIL_CNT_NRIC ,
+            ACCOUNT_CODE
+        FROM CP1013V
+        WHERE SALES_ORD_NO = #{orderNo}
+    </select>
+
+    <select id="selectLatestMembership" parameterType="Map" resultType="egovMap">
+         SELECT
+                MEMBERSHIP_TYPE ,
+                MEMBERSHIP_START_DATE ,
+                MEMBERSHIP_EXPIRY_DATE ,
+                MEMBERSHIP_FEE
+            FROM CP1025V
+        WHERE SALES_ORD_NO = #{orderNo}
     </select>
 
     <select id="selectHeartServiceList" parameterType="Map" resultType="egovMap">
