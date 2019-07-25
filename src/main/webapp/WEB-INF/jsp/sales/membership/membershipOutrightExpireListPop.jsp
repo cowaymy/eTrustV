@@ -4,13 +4,13 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-    
+
 	if("${SESSION_INFO.userTypeId}" == "1" ){
         $("#cmbCodyStatus").prop("disabled", true);
 	}
-	
+
     $("#reportInvoiceForm").empty();
-    
+
     /* 멀티셀렉트 플러그인 start */
     $('.multy_select').change(function() {
        //console.log($(this).val());
@@ -22,7 +22,7 @@ $(document).ready(function() {
     var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
-    } 
+    }
     $("#mypExpireMonthFr").val((new Date().getMonth()+1)+"/"+new Date().getFullYear());
     var month = new Date();
     month.setMonth(month.getMonth()+3);
@@ -31,22 +31,22 @@ $(document).ready(function() {
     	year += 1;
     }
     $("#mypExpireMonthTo").val((month.getMonth()+1)+"/"+year); //now+AddMonths(3)
-    
+
 });
 
 
 function validRequiredField(){
-	
+
 	var valid = true;
 	var message = "";
-	/* 
+	/*
 	if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) || !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
 		if(($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) || ($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
 	        valid = false;
 	        message += "* Please select the order date (From & To).\n";
 	    }
 	}
-	
+
 	if(!($("#mypExpireMonthFr").val() == null || $("#mypExpireMonthFr").val().length == 0) || !($("#mypExpireMonthTo").val() == null || $("#mypExpireMonthTo").val().length == 0)){
         if(($("#mypExpireMonthFr").val() == null || $("#mypExpireMonthFr").val().length == 0) || ($("#mypExpireMonthTo").val() == null || $("#mypExpireMonthTo").val().length == 0)){
             valid = false;
@@ -54,53 +54,53 @@ function validRequiredField(){
         }
     }
 	*/
-	
+
 	if(($("#mypExpireMonthFr").val() == null || $("#mypExpireMonthFr").val().length == 0) || ($("#mypExpireMonthTo").val() == null || $("#mypExpireMonthTo").val().length == 0)){
         valid = false;
         message += "<spring:message code="sal.alert.msg.expiredMonth" />";
     }
-	
+
 	var frArr = $("#mypExpireMonthFr").val().split("/");
     var toArr = $("#mypExpireMonthTo").val().split("/");
 	var mypExpireMonthFr = new Date(frArr[1]+"-"+frArr[0]+"-01");
 	mypExpireMonthFr.setMonth(mypExpireMonthFr.getMonth() + 3) //AddMonths(3)
 	var mypExpireMonthTo = new Date(toArr[1]+"-"+toArr[0]+"-01");
 
-	if(mypExpireMonthFr < mypExpireMonthTo){		
+	if(mypExpireMonthFr < mypExpireMonthTo){
 		valid = false;
         message += "<spring:message code="sal.alert.msg.monthInterval3" />";
 	}
-	
+
 	if(valid == false){
 		Common.alert("<spring:message code="sal.alert.title.reportGenSummary" />" + DEFAULT_DELIMITER + message);
 	}
-	
+
 	return valid;
 }
 
 function btnGeneratePDF_Click(){
-	
+
 	if(validRequiredField()){
-		
+
 		$("#reportFileName").val("");
         $("#viewType").val("");
         $("#reportDownFileName").val("");
-		
+
 		var appType = "-";
 	    var rentalStatus = "-";
 	    var expireMonth = "-";
 	    var codyStatus = "-";
 	    var userName = $("#userName").val();
 	    var whereSQL = "";
-		
-	    
+
+
 	    if(!($("#txtOrderNo").val().trim() == null || $("#txtOrderNo").val().trim().length == 0)){
-	    	whereSQL += " AND som.SALES_ORD_NO = '"+$("#txtOrderNo").val().trim()+"' ";	    	 
+	    	whereSQL += " AND som.SALES_ORD_NO = '"+$("#txtOrderNo").val().trim()+"' ";
 	    }
 	    /*
 	    if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) && !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
 	    	whereSQL += " AND som.SALES_DT BETWEEN TO_DATE('"+$("#dpOrderDateFr").val()+"', 'dd/MM/YY') AND TO_DATE('"+$("#dpOrderDateTo").val()+"', 'dd/MM/YY')";
-	    } 
+	    }
 	    */
 	    if(!($("#mypExpireMonthFr").val() == null || $("#mypExpireMonthFr").val().length == 0)){
 	    	whereSQL += " AND TRUNC(sm.SRV_EXPR_DT, 'month') >= TRUNC(TO_DATE('"+$("#mypExpireMonthFr").val()+"','MM/yyyy'), 'month')"; //GetFirstDayOfMonth
@@ -113,7 +113,7 @@ function btnGeneratePDF_Click(){
 	    if($("input:checkbox[id='btnOnlyExpire']").is(":checked")){
 	    	whereSQL += " AND LAST_DAY(sm.SRV_EXPR_DT) < sysdate"; //GetLastDayOfMonth
 	    }
-	    
+
 	    if($('#cmbAppType :selected').length > 0){
 	    	whereSQL += " AND (";
 	    	 var runNo = 0;
@@ -159,56 +159,92 @@ function btnGeneratePDF_Click(){
              });
              whereSQL += ") ";
         }
-	    
-		
+
+	 // ADDED BY TPY - 25/07/2019 [SCR]
+	  var memType = "${SESSION_INFO.userTypeId}";
+	  var memLevel = "${SESSION_INFO.memberLevel}";
+	  var orgCode =  $('#orgCode').val();
+      var grpCode =  $('#grpCode').val();
+      var deptCode =  $('#deptCode').val();
+      var memCode = $('#memCode').val();
+
+	  if(memType == 2 || memType == 3){ // CHECK MEMBER TYPE
+
+	  if(orgCode == null || orgCode == ""){
+		  whereSQL += " ";
+	  }else{
+		  whereSQL += " AND v.ORG_CODE = '" + orgCode + "' ";
+	  }
+
+	  if(grpCode == null || grpCode == ""){
+		  whereSQL += " ";
+      }else{
+    	  whereSQL += " AND v.GRP_CODE = '" + grpCode + "' ";
+      }
+
+      if(deptCode == null || deptCode == ""){
+    	  whereSQL += " ";
+      }else{
+    	  whereSQL += " AND v.DEPT_CODE = '" + deptCode + "' ";
+      }
+
+       if(memLevel == 4){
+    	  whereSQL += " AND v.MEM_CODE = '" + memCode + "' ";
+      }else{
+    	  whereSQL += " ";
+      }
+
+	  }
+
+
 	    $("#V_WHERESQL").val(whereSQL);
 		$("#V_APPTYPE").val(appType);
 		$("#V_RENTALSTATUS").val(rentalStatus);
 		$("#V_EXPIREMONTH").val(expireMonth);
 		$("#V_CODYSTATUS").val(codyStatus);
 		$("#V_USERNAME").val(userName);
-		    
+
 		var date = new Date().getDate();
 	    if(date.toString().length == 1){
 	        date = "0" + date;
-	    } 
+	    }
 		$("#reportDownFileName").val("MembershipExpireList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 	    $("#viewType").val("PDF");
 		$("#reportFileName").val("/membership/MembershipExpiredSummaryListingPDF.rpt");
 	//  $("#reportFileName").val("/membership/MembershipExpireList.rpt");
-		            
+
 		// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
 		var option = {
 		        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.
 		};
-		        
+
 		Common.report("form", option);
 	}
 }
 
 function btnGenerateExcel_Click(){
-	
+
 	if(validRequiredField()){
-		
+
 		$("#reportFileName").val("");
 	    $("#viewType").val("");
 	    $("#reportDownFileName").val("");
-	    
+
 		var appType = "-";
 		var rentalStatus = "-";
 		var expireMonth = "-";
 		var codyStatus = "-";
 		var userName = $("#userName").val();
 		var whereSQL = "";
-		
-		
+
+
 		if(!($("#txtOrderNo").val().trim() == null || $("#txtOrderNo").val().trim().length == 0)){
-            whereSQL += " AND som.SALES_ORD_NO = '"+$("#txtOrderNo").val().trim()+"' ";          
+            whereSQL += " AND som.SALES_ORD_NO = '"+$("#txtOrderNo").val().trim()+"' ";
         }
         /*
         if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) && !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
             whereSQL += " AND som.SALES_DT BETWEEN TO_DATE('"+$("#dpOrderDateFr").val()+"', 'dd/MM/YY') AND TO_DATE('"+$("#dpOrderDateTo").val()+"', 'dd/MM/YY')";
-        } 
+        }
         */
         if(!($("#mypExpireMonthFr").val() == null || $("#mypExpireMonthFr").val().length == 0)){
             whereSQL += " AND TRUNC(sm.SRV_EXPR_DT, 'month') >= TRUNC(TO_DATE('"+$("#mypExpireMonthFr").val()+"','MM/yyyy'), 'month')"; //GetFirstDayOfMonth
@@ -221,7 +257,7 @@ function btnGenerateExcel_Click(){
         if($("input:checkbox[id='btnOnlyExpire']").is(":checked")){
             whereSQL += " AND LAST_DAY(sm.SRV_EXPR_DT) < sysdate"; //GetLastDayOfMonth
         }
-        
+
         if($('#cmbAppType :selected').length > 0){
             whereSQL += " AND (";
              var runNo = 0;
@@ -267,30 +303,66 @@ function btnGenerateExcel_Click(){
              });
              whereSQL += ") ";
         }
-		
+
+        // ADDED BY TPY - 25/07/2019 [SCR]
+        var memType = "${SESSION_INFO.userTypeId}";
+        var memLevel = "${SESSION_INFO.memberLevel}";
+        var orgCode =  $('#orgCode').val();
+        var grpCode =  $('#grpCode').val();
+        var deptCode =  $('#deptCode').val();
+        var memCode = $('#memCode').val();
+
+        if(memType == 2 || memType == 3){ // CHECK MEMBER TYPE
+
+        if(orgCode == null || orgCode == ""){
+            whereSQL += " ";
+        }else{
+            whereSQL += " AND v.ORG_CODE = '" + orgCode + "' ";
+        }
+
+        if(grpCode == null || grpCode == ""){
+            whereSQL += " ";
+        }else{
+            whereSQL += " AND v.GRP_CODE = '" + grpCode + "' ";
+        }
+
+        if(deptCode == null || deptCode == ""){
+            whereSQL += " ";
+        }else{
+            whereSQL += " AND v.DEPT_CODE = '" + deptCode + "' ";
+        }
+
+         if(memLevel == 4){
+            whereSQL += " AND v.MEM_CODE = '" + memCode + "' ";
+        }else{
+            whereSQL += " ";
+        }
+
+        }
+
 		$("#V_WHERESQL").val(whereSQL);
 		$("#V_APPTYPE").val(appType);
 		$("#V_RENTALSTATUS").val(rentalStatus);
 		$("#V_EXPIREMONTH").val(expireMonth);
 		$("#V_CODYSTATUS").val(codyStatus);
 		$("#V_USERNAME").val(userName);
-		
+
 		var date = new Date().getDate();
 	    if(date.toString().length == 1){
 	        date = "0" + date;
-	    } 
+	    }
 		$("#reportDownFileName").val("MembershipExpireList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 		$("#viewType").val("EXCEL");
 		$("#reportFileName").val("/membership/MembershipExpireSummaryRawData.rpt");
 	//	$("#reportFileName").val("/membership/MembershipExpireList.rpt");
-		        
+
 		// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
 		var option = {
 		        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.
 		};
-		    
+
 		Common.report("form", option);
-	}	
+	}
 }
 
 
@@ -398,7 +470,7 @@ function btnGenerateExcel_Click(){
 </form>
 
 </section><!-- content end -->
-     
+
 </section><!-- container end -->
 
 </div><!-- popup_wrap end -->
