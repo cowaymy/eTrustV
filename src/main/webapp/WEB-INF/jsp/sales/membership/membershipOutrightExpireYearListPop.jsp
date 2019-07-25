@@ -5,49 +5,49 @@
 
 
 $(document).ready(function() {
-    
+
     $("#reportInvoiceForm").empty();
-    
+
 });
 
 function validRequiredField(){
-	
+
 	var valid = true;
 	var message = "";
-	
+
 	if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) || !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
 		if(($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) || ($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
 			valid = false;
             message += "<spring:message code="sal.alert.msg.selectOrdDate" />";
 	    }
 	}
-	
+
 	if(!($("#mypExpireMonthFr").val() == null || $("#mypExpireMonthFr").val().length == 0) || !($("#mypExpireMonthTo").val() == null || $("#mypExpireMonthTo").val().length == 0)){
         if(($("#mypExpireMonthFr").val() == null || $("#mypExpireMonthFr").val().length == 0) || ($("#mypExpireMonthTo").val() == null || $("#mypExpireMonthTo").val().length == 0)){
             valid = false;
             message += "<spring:message code="sal.alert.msg.expiredMonth" />";
         }
     }
-	
+
 	if(valid == false){
 		Common.alert("<spring:message code="sal.alert.title.reportGenSummary" />" + DEFAULT_DELIMITER + message);
 	}
-	
+
 	return valid;
 }
 
 function btnGenerate_Click(){
-	
+
 	if(validRequiredField()){
-	
+
 		$("#reportFileName").val("");
         $("#viewType").val("");
         $("#reportDownFileName").val("");
-		
+
 		var whereSQL = "";
-		
+
 		if(!($("#txtOrderNo").val().trim() == null || $("#txtOrderNo").val().trim().length == 0)){
-            whereSQL += " AND som.SALES_ORD_NO = '"+$("#txtOrderNo").val().trim()+"' ";          
+            whereSQL += " AND som.SALES_ORD_NO = '"+$("#txtOrderNo").val().trim()+"' ";
         }
 		if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) && !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
             whereSQL += " AND som.SALES_DT BETWEEN TO_DATE('"+$("#dpOrderDateFr").val()+"', 'dd/MM/YY') AND TO_DATE('"+$("#dpOrderDateTo").val()+"', 'dd/MM/YY')";
@@ -58,24 +58,61 @@ function btnGenerate_Click(){
 		if(!($("#mypExpireMonthTo").val() == null || $("#mypExpireMonthTo").val().length == 0)){
             whereSQL += " AND TRUNC(sm.SRV_EXPR_DT, 'month') <= TRUNC(TO_DATE('"+$("#mypExpireMonthTo").val()+"','MM/yyyy'), 'month')";
         }
-		
+
+	     // ADDED BY TPY - 25/07/2019 [SCR]
+	      var memType = "${SESSION_INFO.userTypeId}";
+	      var memLevel = "${SESSION_INFO.memberLevel}";
+	      var orgCode =  $('#orgCode').val();
+	      var grpCode =  $('#grpCode').val();
+	      var deptCode =  $('#deptCode').val();
+	      var memCode = $('#memCode').val();
+
+	      if(memType == 2 || memType == 3){ // CHECK MEMBER TYPE
+
+	      if(orgCode == null || orgCode == ""){
+	          whereSQL += " ";
+	      }else{
+	          whereSQL += " AND v.ORG_CODE = '" + orgCode + "' ";
+	      }
+
+	      if(grpCode == null || grpCode == ""){
+	          whereSQL += " ";
+	      }else{
+	          whereSQL += " AND v.GRP_CODE = '" + grpCode + "' ";
+	      }
+
+	      if(deptCode == null || deptCode == ""){
+	          whereSQL += " ";
+	      }else{
+	          whereSQL += " AND v.DEPT_CODE = '" + deptCode + "' ";
+	      }
+
+	       if(memLevel == 4){
+	          whereSQL += " AND v.MEM_CODE = '" + memCode + "' ";
+	      }else{
+	          whereSQL += " ";
+	      }
+
+	      }
+
+
         $("#V_WHERESQL").val(whereSQL);
-            
+
         var date = new Date().getDate();
         if(date.toString().length == 1){
             date = "0" + date;
-        } 
+        }
         $("#reportDownFileName").val("MembershipExpireListMoreThanYear_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#viewType").val("EXCEL");
         $("#reportFileName").val("/membership/MembershipExpireList_Year.rpt");
-                    
+
         // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
         var option = {
                 isProcedure : true // procedure 로 구성된 리포트 인경우 필수.
         };
-                
+
         Common.report("form", option);
-		
+
 	}
 }
 
@@ -151,7 +188,7 @@ function btnGenerate_Click(){
 </form>
 
 </section><!-- content end -->
-     
+
 </section><!-- container end -->
 
 </div><!-- popup_wrap end -->
