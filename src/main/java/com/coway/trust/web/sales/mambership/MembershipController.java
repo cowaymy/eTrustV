@@ -614,15 +614,44 @@ public class MembershipController {
 	}
 
 	@RequestMapping(value="/membershipOutrightExpireListPop.do")
-	public String membershipOutrightExpireListPop(ModelMap model, SessionVO sessionVO) {
+	public String membershipOutrightExpireListPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
-		model.put("userTypeId", sessionVO.getUserTypeId());
+		// ADDED BY TPY - 25/07/2019 [SCR]
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+
+			params.put("userId", sessionVO.getUserId());
+			EgovMap result =  salesCommonService.getUserInfo(params);
+
+			model.put("orgCode", result.get("orgCode"));
+			model.put("grpCode", result.get("grpCode"));
+			model.put("deptCode", result.get("deptCode"));
+			model.put("memCode", result.get("memCode"));
+
+			logger.debug("membershipOutrightExpireListPop - model : " + model);
+		}
+
+		//model.put("userTypeId", sessionVO.getUserTypeId());
 
 		return "sales/membership/membershipOutrightExpireListPop";
 	}
 
 	@RequestMapping(value="/membershipOutrightExpireYearListPop.do")
-	public String membershipOutrightExpireYearListPop(){
+	public String membershipOutrightExpireYearListPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO){
+
+		// ADDED BY TPY - 25/07/2019 [SCR]
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+
+			params.put("userId", sessionVO.getUserId());
+			EgovMap result =  salesCommonService.getUserInfo(params);
+
+			model.put("orgCode", result.get("orgCode"));
+			model.put("grpCode", result.get("grpCode"));
+			model.put("deptCode", result.get("deptCode"));
+			model.put("memCode", result.get("memCode"));
+
+			logger.debug("membershipOutrightExpireYearListPop - model : " + model);
+		}
+
 
 		return "sales/membership/membershipOutrightExpireYearListPop";
 	}
