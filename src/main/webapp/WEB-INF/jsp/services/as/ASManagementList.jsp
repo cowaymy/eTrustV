@@ -325,10 +325,15 @@
     var rcdTms = selectedItems[0].item.rcdTms;
     var asRst = selectedItems[0].item.c3;
 
-    if (asStusId != "ACT") {
-      Common.alert("<b>[" + asNo + "] already has [" + asStusId + "] result.  .</br> Result entry is disallowed.</b>");
+    if (asRst != '-') {
+      Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
       return;
     }
+
+    //if (asStusId != "ACT") {
+      //Common.alert("<b>[" + asNo + "] already has [" + asStusId + "] result.  .</br> Result entry is disallowed.</b>");
+      //return;
+    //}
 
     Common.ajax("POST", "/services/as/selRcdTms.do", {
         asNo : asNo,
@@ -470,13 +475,18 @@
     var updDt = selectedItems[0].item.asSetlDt;
     var lstUpdDt = selectedItems[0].item.asResultCrtDt;
 
-    if (asStusId == "ACT") {
+    if (asResultNo == "-") {
+      Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+      return;
+    }
+
+    /*if (asStusId == "ACT") {
       if (selectedItems[0].item.asSlutnResnId == '454') {
       } else {
         Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
         return;
       }
-    }
+    }*/
 
     if (ind == 0) {
       if (updDt != "" && updDt != null) {
