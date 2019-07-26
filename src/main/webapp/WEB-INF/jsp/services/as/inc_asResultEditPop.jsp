@@ -6,87 +6,103 @@
  ----------------------------------------------------------------
  01/04/2019  ONGHC  1.0.1          RE-STRUCTURE JSP AND ADD CHECKING FOR SETTLE DATE
  06/05/2019  ONGHC  1.0.2          Check Settle Date Only When Status Complete
+ 26/04/2019  ONGHC  1.0.3          ADD RECALL STATUS
  -->
 
+<!-- AS ORDER > AS MANAGEMENT > EDIT / VIEW AS ENTRY PLUG IN -->
 <script type="text/javascript">
   var myFltGrd10;
+
+  var failRsn;
+  var errCde;
   var asMalfuncResnId;
+  var currentStatus;
+  var asRslt;
+  var ops;
 
   $(document).ready(
-      function() {
-        createCFilterAUIGrid();
+    function() {
+      createCFilterAUIGrid();
 
-        doGetCombo('/services/as/getASFilterInfo.do?AS_ID=${AS_ID}', '', '', 'ddlFilterCode', 'S', '');
-        doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '', 'ddlFilterExchangeCode', 'S', '');
-        doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '', 'ddlFailReason', 'S', '');
-        //doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , 'fn_setCTcodeValue');
-        //doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');
-        doGetCombo('/services/as/inHouseGetProductMasters.do', '', '', 'productGroup', 'S', '');
-        fn_getErrMstList('${ORD_NO}');
+      doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '', 'ddlFilterExchangeCode', 'S', ''); // FILTER CHARGE EXCHANGE CODE
+      doGetCombo('/services/as/getBrnchId', '', '', 'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
+      doGetCombo('/services/as/inHouseGetProductMasters.do', '', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT GROUP
 
-        AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
-        AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
+      AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
+      AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
 
-        var isF = true;
-        AUIGrid.bind(myFltGrd10, "rowStateCellClick", function(event) {
-          if (event.marker == "added") {
-            if (event.item.filterType == "CHG") {
-              var fChage = Number($("#txtFilterCharge").val());
-              var totchrge = Number($("#txtTotalCharge").val());
+      var isF = true;
+      AUIGrid.bind(myFltGrd10, "rowStateCellClick", function(event) {
+        if (event.marker == "added") {
+          /*if (event.item.filterType == "CHG") {
+            var fChage = Number($("#txtFilterCharge").val());
+            var totchrge = Number($("#txtTotalCharge").val());
 
-              $("#txtFilterCharge").val(fChage - Number(event.item.filterTotal));
-              $("#txtTotalCharge").val(totchrge - Number(event.item.filterTotal));
-            }
-          } else if (event.marker == "removed") {
-            if (event.item.filterType == "CHG") {
-              var fChage = Number($("#txtFilterCharge").val());
-              var totchrge = Number($("#txtTotalCharge").val());
+            $("#txtFilterCharge").val(fChage - Number(event.item.filterTotal));
+            $("#txtTotalCharge").val(totchrge - Number(event.item.filterTotal));
+          }*/
+        } else if (event.marker == "removed") {
+          if (event.item.filterType == "CHG") {
+            var fChage = Number($("#txtFilterCharge").val());
+            var totchrge = Number($("#txtTotalCharge").val());
 
-              $("#txtFilterCharge").val(fChage + Number(event.item.filterTotal));
-              $("#txtTotalCharge").val(totchrge + Number(event.item.filterTotal));
-            }
+            fChage = (fChage + Number(event.item.filterTotal)).toFixed(2);
+            totchrge = (totchrge + Number(event.item.filterTotal)).toFixed(2);
 
-          } else if (event.marker == "added-edited") {
+            $("#txtFilterCharge").val(fChage);
+            $("#txtTotalCharge").val(totchrge);
           }
-        });
+        } else if (event.marker == "added-edited") {
+        }
       });
+    });
+
+  function trim(text) {
+    return String(text).replace(/^\s+|\s+$/g, '');
+  }
 
   function createCFilterAUIGrid() {
     var clayout = [ {
       dataField : "filterType",
-      headerText : "Type",
+      headerText : "<spring:message code='service.grid.ASNo'/>",
       editable : false
     }, {
       dataField : "filterDesc",
-      headerText : "Description",
+      headerText : "<spring:message code='service.grid.ASFltDesc'/>",
       width : 200
     }, {
       dataField : "filterExCode",
-      headerText : "Exchange Code ",
+      headerText : "<spring:message code='service.grid.ASFltCde'/>",
       width : 80
     }, {
       dataField : "filterQty",
-      headerText : "Qty",
+      headerText : "<spring:message code='service.grid.Quantity'/>",
       width : 80
     }, {
       dataField : "filterPrice",
-      headerText : "Price",
+      headerText : "<spring:message code='service.title.Price'/>",
       width : 80,
       dataType : "number",
       formatString : "#,000.00",
       editable : false
     }, {
       dataField : "filterTotal",
-      headerText : "Total",
+      headerText : "<spring:message code='sal.title.total'/>",
       width : 80,
       dataType : "number",
       formatString : "#,000.00",
       editable : false
     }, {
       dataField : "filterRemark",
-      headerText : "Remark",
+      headerText : "<spring:message code='service.title.Remark'/>",
       width : 200,
       editable : false
+    }, {
+      dataField : "srvFilterLastSerial",
+      headerText : "<spring:message code='service.title.SerialNo'/>",
+      editable : false,
+      width : 200,
+      editable : true
     }, {
       dataField : "undefined",
       headerText : " ",
@@ -128,82 +144,91 @@
       var fChage = Number($("#txtFilterCharge").val());
       var totchrge = Number($("#txtTotalCharge").val());
 
-      $("#txtFilterCharge").val(fChage - Number(event.items[0].filterTotal));
-      $("#txtTotalCharge").val(totchrge - Number(event.items[0].filterTotal));
+      if (fChage.toFixed(2) != "0.00") {
+        fChage = (fChage - Number(event.items[0].filterTotal)).toFixed(2);
+        totchrge = (totchrge - Number(event.items[0].filterTotal)).toFixed(2);
+
+        $("#txtFilterCharge").val(fChage);
+        $("#txtTotalCharge").val(totchrge);
+      }
     }
   }
 
-  function fn_setASRulstSVC0004DInfo() {
-  }
-
-  function fn_getErrMstList(_ordNo) {
-    var SALES_ORD_NO = _ordNo;
-    $("#ddlErrorCode option").remove();
-    doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO=' + SALES_ORD_NO, '', '', 'ddlErrorCode', 'S', 'fn_errCallbackFun');
-  }
-
-  function fn_errMst_SelectedIndexChanged() {
-    var DEFECT_TYPE_CODE = $("#ddlErrorCode").val();
-
-    $("#ddlErrorDesc option").remove();
-    doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE=' + DEFECT_TYPE_CODE, '', '', 'ddlErrorDesc', 'S', '');
-  }
-
-  function fn_getASRulstEditFilterInfo() {
-    Common.ajax("GET", "/services/as/getASRulstEditFilterInfo", {
-      AS_RESULT_NO : $('#asData_AS_RESULT_NO').val()
-    }, function(result) {
-      AUIGrid.setGridData(myFltGrd10, result);
-    });
-  }
-
-  function fn_getASRulstSVC0004DInfo() {
-    Common.ajax("GET", "/services/as/getASRulstSVC0004DInfo", {
-      AS_RESULT_NO : $('#asData_AS_RESULT_NO').val()
-    }, function(result) {
-      if (result != "") {
-        fn_setSVC0004dInfo(result);
-      }
-    });
+  // RE-INSERT BACK VALUE
+  function fn_setErrCde() {
+    $("#ddlErrorCode").val(errCde);
   }
 
   function fn_callback_ddlErrorDesc() {
     $("#ddlErrorDesc").val(asMalfuncResnId);
   }
 
+  function fn_callback_ddlFailRsn() {
+    $("#ddlFailReason").val(failRsn);
+  }
+
+  function fn_setCTcodeValue() {
+    $("#ddlCTCode").val($("#CTID").val());
+  }
+
+  // RELOAD DATA
+  function fn_getErrMstList(_ordNo) {
+    $("#ddlErrorCode option").remove();
+    doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO=' + _ordNo, '', '', 'ddlErrorCode', 'S', 'fn_setErrCde');
+  }
+
+  function fn_errMst_SelectedIndexChanged() {
+    $("#ddlErrorDesc option").remove();
+    doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE=' + errCde, '', '', 'ddlErrorDesc', 'S', 'fn_callback_ddlErrorDesc');
+  }
+
+  // GET FILTER INFO.
+  function fn_getASRulstEditFilterInfo() {
+    Common.ajax("GET", "/services/as/getASRulstEditFilterInfo", { AS_RESULT_NO : $('#asData_AS_RESULT_NO').val() },
+      function(result) {
+        console.log(result);
+        AUIGrid.setGridData(myFltGrd10, result);
+      });
+  }
+
+  // GET AS RESULT INFO
+  function fn_getASRulstSVC0004DInfo() {
+    Common.ajax("GET", "/services/as/getASRulstSVC0004DInfo", { AS_RESULT_NO : $('#asData_AS_RESULT_NO').val() },
+    function(result) {
+      if (result != "") {
+        // SUCCESS
+        fn_setSVC0004dInfo(result);
+      }
+    });
+  }
+
   function fn_setSVC0004dInfo(result) {
-    $("#creator").val(result[0].c28);
-    $("#creatorat").val(result[0].asResultCrtDt);
-    $("#txtResultNo").val(result[0].asResultNo);
-    if (result[0].asResultStusId == "1") {
-      $("#ddlStatus").val("");
-    } else {
-      $("#ddlStatus").val(result[0].asResultStusId);
-    }
-    $("#dpSettleDate").val(result[0].asSetlDt);
-    $("#ddlFailReason").val(result[0].c2);
-    $("#tpSettleTime").val(result[0].asSetlTm);
-    $("#ddlDSCCode").val(result[0].asBrnchId);
+    currentStatus = result[0].asResultStusId; // SET BEFORE STATUS
+    asRslt = result[0]; // SET 1ST IMAGE VALUE SET FOR LATER USE
 
-    $("#ddlErrorCode").val(result[0].asMalfuncId);
-    $("#ddlErrorDesc").val(result[0].asMalfuncResnId);
+    console.log("----");
+    console.log(asRslt);
 
-    asMalfuncResnId = result[0].asMalfuncResnId;
+    $("#ddlStatus").val(result[0].asResultStusId);
 
-    if (result[0].asMalfuncId != "") {
-      $("#ddlErrorDesc option").remove();
-      doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE=' + result[0].asMalfuncId, '', '', 'ddlErrorDesc', 'S', 'fn_callback_ddlErrorDesc');
-    }
+    $("#creator").val(result[0].c28); // CREATOR
+    $("#creatorat").val(result[0].asResultCrtDt); // CREATE ON
+    $("#txtResultNo").val(result[0].asResultNo);// REUSLT NO
+
+    $("#dpSettleDate").val(result[0].asSetlDt); // SETTLE DATE
+    $("#tpSettleTime").val(result[0].asSetlTm); // SETTLE TIME
+    failRsn = result[0].c2; // FAIL REASON
+    $("#ddlDSCCode").val(result[0].asBrnchId); // DCS BRANCH
+
+    errCde = result[0].asMalfuncId; // ERROR CODE
+    asMalfuncResnId = result[0].asMalfuncResnId; // ERROR DESCRIPTION
+
+    // GET ERROR CODE LISTING
+    fn_getErrMstList('${ORD_NO}');
+    fn_errMst_SelectedIndexChanged();
 
     //$("#ddlCTCodeText").val( result[0].c12);
     //$("#ddlCTCode").val( result[0].c11);
-
-    /*
-    c11: 35530
-    c12: "CT100528"
-    asBrnchId: 77
-    c5: "DSC-16"
-     */
 
     /*
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
@@ -248,28 +273,39 @@
     var v = /^(\d+)([.]\d{0,2})$/;
     var regexp = new RegExp(v);
 
-    var toamt = "" + result[0].asTotAmt;
-    var tWork = "" + result[0].asWorkmnsh;
-    var tFilterAmt = "" + result[0].asFilterAmt;
+    var toamt = "0.00";
+    var tWork = "0.00";
+    var tFilterAmt = "0.00";
 
-    if (regexp.test(toamt)) {
+    toamt = result[0].asTotAmt;
+    tWork = result[0].asWorkmnsh;
+    tFilterAmt = result[0].asFilterAmt;
+
+    /*if (regexp.test(toamt)) {
       $('#txtTotalCharge').val(toamt);
     } else {
       $('#txtTotalCharge').val(toamt + ".00");
-    }
+    }*/
 
-    if (regexp.test(tWork)) {
+    $('#txtTotalCharge').val(toamt.toFixed(2));
+
+    /*if (regexp.test(tWork)) {
       $('#txtLabourCharge').val(tWork);
     } else {
       $('#txtLabourCharge').val(tWork + ".00");
-    }
+    }*/
 
-    if (regexp.test(tFilterAmt)) {
+    $('#txtLabourCharge').val(tWork.toFixed(2));
+
+    /*if (regexp.test(tFilterAmt)) {
       $('#txtFilterCharge').val(tFilterAmt);
     } else {
       $('#txtFilterCharge').val(tFilterAmt + ".00");
-    }
+    }*/
 
+    $('#txtFilterCharge').val(tFilterAmt.toFixed(2));
+
+     // IN HOUSE REPAIR
     if (result[0].inHuseRepairReplaceYn == "1") {
       $("input:radio[name='replacement']:radio[value='1']").attr('checked', true); // 원하는 값(Y)을 체크
       fn_replacement('1');
@@ -300,10 +336,12 @@
       }
       $("#inHouseRepair_div").attr("style", "display:inline");
     }
-  }
 
-  function fn_setCTcodeValue() {
-    $("#ddlCTCode").val($("#CTID").val());
+    if ($("#ddlStatus").val() == 4) {
+      $("#ddlStatus").attr("disabled", "disabled");
+    }
+
+    fn_ddlStatus_SelectedIndexChanged();
   }
 
   function fn_getASReasonCode2(_obj, _tobj, _v) {
@@ -369,6 +407,16 @@
   }
 
   function fn_ddlStatus_SelectedIndexChanged() {
+    // STATUS CHANGE FAIL REASON CODE CHANGED
+    if ($("#ddlStatus").val() == 19) { // RECALL
+      doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=5551', '', '', 'ddlFailReason', 'S', 'fn_callback_ddlFailRsn');
+    } else if ($("#ddlStatus").val() == 10) { // CANCEL
+      doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=5550', '', '', 'ddlFailReason', 'S', 'fn_callback_ddlFailRsn');
+    } else {
+      doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=0', '', '', 'ddlFailReason', 'S', 'fn_callback_ddlFailRsn');
+      $("#ddlFailReason").attr("disabled", true);
+    }
+
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
     $("#ddlCTCode").val(selectedItems[0].item.asMemId);
     $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
@@ -379,14 +427,38 @@
     case "4":
       //COMPLETE
       fn_openField_Complete();
+      $("#defEvt_div").attr("style", "display:block");
+      $("#chrFee_div").attr("style", "display:block");
+      $("#recall_div").attr("style", "display:none");
+      break;
+    case "1":
+      // ACTIVE
+      fn_openField_Complete();
+      $("#defEvt_div").attr("style", "display:block");
+      $("#chrFee_div").attr("style", "display:block");
+      $("#recall_div").attr("style", "display:none");
       break;
     case "10":
       //CANCEL
       fn_openField_Cancel();
+      $("#recall_div").attr("style", "display:none");
+      $("#defEvt_div").attr("style", "display:none");
+      $("#chrFee_div").attr("style", "display:none");
+      break;
+    case "19":
+      // RECALL
+      fn_openField_Recall();
+      fn_getRclData();
+      $("#recall_div").attr("style", "display:block");
+      $("#defEvt_div").attr("style", "display:none");
+      $("#chrFee_div").attr("style", "display:none");
       break;
     case "21":
       //FAILED
       fn_openField_Fail();
+      $("#recall_div").attr("style", "display:none");
+      $("#defEvt_div").attr("style", "display:none");
+      $("#chrFee_div").attr("style", "display:none");
       break;
     default:
       $("#m2").hide();
@@ -407,6 +479,62 @@
   }
 
   function fn_openField_Complete() {
+    failRsn = "";
+
+    // SET BACK DATA TO EACH FIELD
+    $('#dpSettleDate').val(asRslt.asSetlDt);
+    $('#tpSettleTime').val(asRslt.asSetlTm);
+
+    //$("#ddlCTCode").val(asRslt.c11);
+    //$("#ddlDSCCode").val(asRslt.asBrnchId);
+    //$("#ddlCTCodeText").val(asRslt.c12);
+    $//("#ddlDSCCodeText").val(asRslt.c5);
+
+    $("#ddlWarehouse").val(asRslt.asWhId);
+    $("#txtRemark").val(asRslt.asResultRem);
+
+    if (asRslt.c27 == "1") {
+      $("#iscommission").attr("checked", true);
+    } else {
+      $("#iscommission").attr("checked", false);
+    }
+
+    $('#def_type').val(this.trim(asRslt.c16));
+    $('#def_type_text').val(this.trim(asRslt.c17));
+    $('#def_type_id').val(this.trim(asRslt.asDefectTypeId));
+
+    $('#def_code').val(this.trim(asRslt.c18));
+    $('#def_code_text').val(this.trim(asRslt.c19));
+    $('#def_code_id').val(this.trim(asRslt.asDefectId));
+
+    $('#def_def').val(this.trim(asRslt.c22));
+    $('#def_def_text').val(this.trim(asRslt.c23));
+    $('#def_def_id').val(this.trim(asRslt.asDefectDtlResnId));
+
+    $('#def_part').val(this.trim(asRslt.c20));
+    $('#def_part_text').val(this.trim(asRslt.c21));
+    $('#def_part_id').val(this.trim(asRslt.asDefectPartId));
+
+    $('#solut_code').val(this.trim(asRslt.c25));
+    $('#solut_code_text').val(this.trim(asRslt.c26));
+    $('#solut_code_id').val(this.trim(asRslt.c24));
+
+     if (asRslt.asWorkmnsh > 0) {
+       $("#txtLabourch").prop("checked", true);
+       $('#cmbLabourChargeAmt').val(asRslt.asWorkmnsh);
+     } else {
+       $("#txtLabourch").prop("checked", false);
+       $('#cmbLabourChargeAmt').val("");
+     }
+
+    $("#appDate").val("");
+    $("#CTSSessionCode").val("");
+    $("#branchDSC").val("");
+
+    $("#CTCode").val("");
+    $("#CTGroup").val("");
+    $("#callRem").val("");
+
     // OPEN MANDATORY
     $("#m2").show();
     $("#m3").hide();
@@ -421,59 +549,96 @@
     $("#m12").show();
     $("#m13").show();
 
-    $("#btnSaveDiv").attr("style", "display:inline");
-    $("#addDiv").attr("style", "display:inline");
+    if (this.ops.MOD == "RESULTVIEW") {
+      $("#btnSaveDiv").hide()
+      $("#addDiv").hide();
 
-    $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
-    $('#tpSettleTime').removeAttr("disabled").removeClass("readonly");
-    $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");
-    $('#ddlCTCode').removeAttr("disabled").removeClass("readonly");
-    $('#ddlErrorCode').removeAttr("disabled").removeClass("readonly");
-    $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");
-    $('#txtRemark').removeAttr("disabled").removeClass("readonly");
-    $('#iscommission').removeAttr("disabled").removeClass("readonly");
+      $('#dpSettleDate').attr("disabled", true);
+      $('#tpSettleTime').attr("disabled", true);
+      $('#ddlDSCCode').attr("disabled", true);
+      $('#ddlCTCode').attr("disabled", true);
+      $('#ddlErrorCode').attr("disabled", true);
+      $('#ddlErrorDesc').attr("disabled", true);
+      $('#txtRemark').attr("disabled", true);
+      $("#iscommission").attr("disabled", true);
 
-    $('#def_type').removeAttr("disabled").removeClass("readonly");
-    $('#def_code').removeAttr("disabled").removeClass("readonly");
-    $('#def_part').removeAttr("disabled").removeClass("readonly");
-    $('#def_def').removeAttr("disabled").removeClass("readonly");
-    //$('#def_type_text').removeAttr("disabled").removeClass("readonly");
-    //$('#def_code_text').removeAttr("disabled").removeClass("readonly");
-    //$('#def_part_text').removeAttr("disabled").removeClass("readonly");
-    //$('#def_def_text').removeAttr("disabled").removeClass("readonly");
+      $('#def_type').attr("disabled", true);
+      $('#def_code').attr("disabled", true);
+      $('#def_part').attr("disabled", true);
+      $('#def_def').attr("disabled", true);
+      $('#solut_code').attr("disabled", true);
 
-    $("#txtFilterCharge").attr("disabled", false);
-    $("#txtLabourCharge").attr("disabled", false);
-    $("#cmbLabourChargeAmt").attr("disabled", false);
-    $("#ddlFilterCode").attr("disabled", false);
-    $("#ddlFilterQty").attr("disabled", false);
-    $("#ddlFilterPayType").attr("disabled", false);
-    $("#ddlFilterExchangeCode").attr("disabled", false);
-    $("#txtFilterRemark").attr("disabled", false);
-    fn_clearPanelField_ASChargesFees();
+      $("#txtLabourch").attr("disabled", true);
+      $("#cmbLabourChargeAmt").attr("disabled", true);
+      $("#ddlFilterCode").attr("disabled", true);
+      $("#ddlFilterQty").attr("disabled", true);
+      $("#ddlFilterPayType").attr("disabled", true);
+      $("#ddlFilterExchangeCode").attr("disabled", true);
+      $("#txtFilterRemark").attr("disabled", true);
 
-    //$("#txtRemark").val(asDataInfo[0].callRem);
-    //$("#ddlErrorCode").val(asDataInfo[0].c12);
-    //$("#ddlErrorDesc").val(asDataInfo[0].c15);
-    //$("#ddlCTCode").val(asDataInfo[0].c9);
-    //$("#ddlDSCCode").val(asDataInfo[0].c6);
+      $("#serialNo").attr("disabled", true);
+    } else {
+      $("#btnSaveDiv").show()
+      $("#addDiv").show();
 
-    $("#serialNo").attr("disabled", false);
+      $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
+      $('#tpSettleTime').removeAttr("disabled").removeClass("readonly");
+      $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");
+      $('#ddlCTCode').removeAttr("disabled").removeClass("readonly");
+      $('#ddlErrorCode').removeAttr("disabled").removeClass("readonly");
+      $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");
+      $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+      //$('#iscommission').removeAttr("disabled").removeClass("readonly");
+      $("#iscommission").attr("disabled", false);
 
-    if (asDataInfo[0].asAllowComm == "1") {
-      $("#iscommission").attr("checked", true);
+      $('#def_type').removeAttr("disabled").removeClass("readonly");
+      $('#def_code').removeAttr("disabled").removeClass("readonly");
+      $('#def_part').removeAttr("disabled").removeClass("readonly");
+      $('#def_def').removeAttr("disabled").removeClass("readonly");
+      $('#solut_code').removeAttr("disabled").removeClass("readonly");
+
+      //$("#txtFilterCharge").attr("disabled", false);
+      //$("#txtLabourCharge").attr("disabled", false);
+      $("#txtLabourch").attr("disabled", false);
+
+
+      if (asRslt.asWorkmnsh > 0) {
+        $("#cmbLabourChargeAmt").attr("disabled", false);
+      } else {
+        $("#cmbLabourChargeAmt").attr("disabled", true);
+      }
+
+      $("#ddlFilterCode").attr("disabled", false);
+      $("#ddlFilterQty").attr("disabled", false);
+      $("#ddlFilterPayType").attr("disabled", false);
+      $("#ddlFilterExchangeCode").attr("disabled", false);
+      $("#txtFilterRemark").attr("disabled", false);
+      fn_clearPanelField_ASChargesFees();
+
+      //$("#txtRemark").val(asDataInfo[0].callRem);
+      //$("#ddlErrorCode").val(asDataInfo[0].c12);
+      //$("#ddlErrorDesc").val(asDataInfo[0].c15);
+      //$("#ddlCTCode").val(asDataInfo[0].c9);
+      //$("#ddlDSCCode").val(asDataInfo[0].c6);
+
+      $("#serialNo").attr("disabled", false);
+
+      if (asDataInfo[0].asAllowComm == "1") {
+        $("#iscommission").attr("checked", true);
+      }
+
+      //if (asDataInfo[0].asStusId != 1) {
+        //Common.alert("AS Not Active" + DEFAULT_DELIMITER + "<b>AS is no longer active. Result key-in is disallowed.</b>");
+        //$("#btnSaveDiv").attr("style", "display:none");
+      //}
+
+      $("#mInH3").show();
     }
-
-    if (asDataInfo[0].asStusId != 1) {
-      Common.alert("AS Not Active" + DEFAULT_DELIMITER + "<b>AS is no longer active. Result key-in is disallowed.</b>");
-      $("#btnSaveDiv").attr("style", "display:none");
-    }
-
-    $("#mInH3").show();
   }
 
-  function fn_openField_Cancel() {
+  function fn_openField_Recall() {
     fn_clearPageField();
+    //failRsn = "";
 
     // OPEN MANDATORY
     $("#m2").hide();
@@ -489,9 +654,156 @@
     $("#m12").hide();
     $("#m13").hide();
 
-    $("#btnSaveDiv").attr("style", "display:inline");
-    $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
-    $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+    if (this.ops.MOD == "RESULTVIEW") {
+      $("#btnSaveDiv").hide();
+      $('#ddlFailReason').attr("disabled", true);
+      $('#txtRemark').attr("disabled", true);
+
+      $('#appDate').attr("disabled", true);
+      $('#CTGroup').attr("disabled", true);
+      $('#callRem').attr("disabled", true);
+    } else {
+      $("#btnSaveDiv").show();
+      $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
+      $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+
+      $('#appDate').removeAttr("disabled").removeClass("readonly");
+      $('#CTGroup').removeAttr("disabled").removeClass("readonly");
+      $('#callRem').removeAttr("disabled").removeClass("readonly");
+
+      // CLEAR DATE
+      $('#dpSettleDate').val("");
+      $('#tpSettleTime').val("");
+    }
+  }
+
+  function fn_getRclData() {
+  Common.ajax("GET", "/services/as/getASRclInfo.do", $("#resultASForm").serialize(), function(result) {
+      $("#appDate").val(result[0].appDt);
+      $("#CTSSessionCode").val(result[0].appSess);
+      $("#branchDSC").val(result[0].dscCde);
+
+      $("#CTCode").val(result[0].memId);
+      $("#CTGroup").val(result[0].memGrp);
+      $("#callRem").val(result[0].rclRmk);
+    });
+  }
+
+  function fn_openField_Cancel() {
+    // failRsn = "";
+
+    if (this.ops.MOD == "RESULTVIEW") {
+      $('#dpSettleDate').attr("disabled", true);
+      $('#tpSettleTime').attr("disabled", true);
+      $("#iscommission").attr("disabled", true);
+
+      $("#appDate").attr("disabled", true);
+      $("#CTSSessionCode").attr("disabled", true);
+      $("#branchDSC").attr("disabled", true);
+      $("#CTCode").attr("disabled", true);
+      $("#CTGroup").attr("disabled", true);
+      $("#callRem").attr("disabled", true);
+
+      $("#def_type").attr("disabled", true);
+      $("#def_type_text").attr("disabled", true);
+      $("#def_code").attr("disabled", true);
+      $("#def_code_text").attr("disabled", true);
+      $("#def_part").attr("disabled", true);
+      $("#def_part_text").attr("disabled", true);
+      $("#def_def").attr("disabled", true);
+      $("#def_def_text").attr("disabled", true);
+      $("#solut_code").attr("disabled", true);
+      $("#solut_code_text").attr("disabled", true);
+
+      $("#txtLabourch").attr("disabled", true);
+      $("#cmbLabourChargeAmt").attr("disabled", true);
+      $("#ddlFilterCode").attr("disabled", true);
+      $("#ddlFilterQty").attr("disabled", true);
+      $("#ddlFilterPayType").attr("disabled", true);
+      $("#ddlFilterExchangeCode").attr("disabled", true);
+      $("#txtFilterRemark").attr("disabled", true);
+      $("#txtLabourCharge").attr("disabled", true);
+      $("#txtFilterCharge").attr("disabled", true);
+      $("#txtTotalCharge").attr("disabled", true);
+
+      $("#promisedDate").attr("disabled", true);
+      $("#productGroup").attr("disabled", true);
+      $("#productCode").attr("disabled", true);
+      $("#serialNo").attr("disabled", true);
+      $("#inHouseRemark").attr("disabled", true);
+      $("#inHouseRepair_div").attr("style", "display:none");
+    } else {
+      $('#dpSettleDate').val("").attr("disabled", true);
+      $('#tpSettleTime').val("").attr("disabled", true);
+      $("#iscommission").attr("disabled", true);
+
+      $("#appDate").val("");
+      $("#CTSSessionCode").val("");
+      $("#branchDSC").val("");
+      $("#CTCode").val("");
+      $("#CTGroup").val("");
+      $("#callRem").val("");
+
+      $("#def_type").val("").attr("disabled", true);
+      $("#def_type_id").val("");
+      $("#def_type_text").val("").attr("disabled", true);
+      $("#def_code").val("").attr("disabled", true);
+      $("#def_code_id").val("");
+      $("#def_code_text").val("").attr("disabled", true);
+      $("#def_part").val("").attr("disabled", true);
+      $("#def_part_id").val("");
+      $("#def_part_text").val("").attr("disabled", true);
+      $("#def_def").val("").attr("disabled", true);
+      $("#def_def_text").val("");
+      $("#def_def_text").val("").attr("disabled", true);
+      $("#solut_code").val("").attr("disabled", true);
+      $("#solut_code_id").val("");
+      $("#solut_code_text").val("").attr("disabled", true);
+
+      fn_clearPanelField_ASChargesFees();
+
+      $("#txtLabourch").prop("checked", false).attr("disabled", true);
+      $("#cmbLabourChargeAmt").val("").attr("disabled", true);
+      $("#ddlFilterCode").val("").attr("disabled", true);
+      $("#ddlFilterQty").val("").attr("disabled", true);
+      $("#ddlFilterPayType").val("").attr("disabled", true);
+      $("#ddlFilterExchangeCode").val("").attr("disabled", true);
+      $("#txtFilterRemark").val("").attr("disabled", true);
+      $("#txtLabourCharge").val("0.00").attr("disabled", true);
+      $("#txtFilterCharge").val("0.00").attr("disabled", true);
+      $("#txtTotalCharge").val("0.00").attr("disabled", true);
+
+      $("input:radio[name='replacement']").removeAttr('checked');
+      $("#promisedDate").val("").attr("disabled", "disabled");
+      $("#productGroup").val("").attr("disabled", "disabled");
+      $("#productCode").val("").attr("disabled", "disabled");
+      $("#serialNo").val("").attr("disabled", "disabled");
+      $("#inHouseRemark").val("").attr("disabled", "disabled");
+      $("#inHouseRepair_div").attr("style", "display:none");
+      fn_replacement(0);
+
+      $("#btnSaveDiv").show();
+      $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
+      $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+
+      $('#appDate').removeAttr("disabled").removeClass("readonly");
+      $('#CTGroup').removeAttr("disabled").removeClass("readonly");
+      $('#callRem').removeAttr("disabled").removeClass("readonly");
+    }
+
+    // OPEN MANDATORY
+    $("#m2").hide();
+    $("#m3").show();
+    $("#m4").hide();
+    $("#m5").show();
+    $("#m6").hide();
+    $("#m7").show();
+    $("#m8").hide();
+    $("#m9").hide();
+    $("#m10").hide();
+    $("#m11").hide();
+    $("#m12").hide();
+    $("#m13").hide();
   }
 
   function fn_openField_Fail() {
@@ -509,9 +821,15 @@
     $("#m12").hide();
     $("#m13").hide();
 
-    $("#btnSaveDiv").attr("style", "display:inline");
-    $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
-    $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+    if (this.ops.MOD == "RESULTVIEW") {
+      $("#btnSaveDiv").hide();
+      $('#ddlFailReason').attr("disabled", true);
+      $('#txtRemark').attr("disabled", true);
+    } else {
+      $("#btnSaveDiv").show();
+      $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
+      $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+    }
   }
 
   function fn_clearPageField() {
@@ -522,9 +840,9 @@
     $('#ddlFailReason').val("").attr("disabled", true);
     $('#tpSettleTime').val("").attr("disabled", true);
     $('#ddlDSCCode').val("").attr("disabled", true);
-    $('#ddlErrorCode').val("").attr("disabled", true);
+    //$('#ddlErrorCode').val("").attr("disabled", true);
     $('#ddlCTCode').val("").attr("disabled", true);
-    $('#ddlErrorDesc').val("").attr("disabled", true);
+    //$('#ddlErrorDesc').val("").attr("disabled", true);
     $('#ddlWarehouse').val("").attr("disabled", true);
     $('#txtRemark').val("").attr("disabled", true);
     $("#iscommission").attr("disabled", true);
@@ -573,20 +891,22 @@
 
   function fn_LabourCharge_CheckedChanged(_obj) {
     if (_obj.checked) {
-      $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");
-      $("#cmbLabourChargeAmt").val("60");
-      $("#txtLabourCharge").val("60.00");
-    } else {
-      $("#txtLabourCharge").val("0.00");
-      $("#cmbLabourChargeAmt").val("");
-      $("#cmbLabourChargeAmt").attr("disabled", true);
-    }
+        $("#fcm1").show();
+        $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");
+        $("#cmbLabourChargeAmt").val("");
+        $("#txtLabourCharge").val("0.00");
+      } else {
+        $("#fcm1").hide();
+        $("#cmbLabourChargeAmt").val("");
+        $("#cmbLabourChargeAmt").attr("disabled", true);
+        $("#txtLabourCharge").val("0.00");
+      }
 
-    fn_calculateTotalCharges();
+      fn_calculateTotalCharges();
   }
 
   function fn_calculateTotalCharges() {
-    var labourCharges = 0;
+    /*var labourCharges = 0;
     var filterCharges = 0;
     var totalCharges = 0;
 
@@ -597,17 +917,35 @@
     labourCharges = Number(labourCharges.replace(/,/gi, ""));
     totalCharges = labourCharges + filterCharges;
 
-    $("#txtTotalCharge").val(totalCharges);
+    $("#txtTotalCharge").val(totalCharges);*/
+    var labourCharges = 0;
+    var filterCharges = 0;
+    var totalCharges = 0;
+
+    labourCharges = $("#txtLabourCharge").val();
+    filterCharges = $("#txtFilterCharge").val();
+    totalCharges = parseFloat(labourCharges) + parseFloat(filterCharges);
+
+    $("#txtTotalCharge").val(totalCharges.toFixed(2));
   }
 
   function fn_cmbLabourChargeAmt_SelectedIndexChanged() {
-    var v = $("#cmbLabourChargeAmt").val();
+    // var v = $("#cmbLabourChargeAmt option:selected").text();
+    // $("#txtLabourCharge").val(v.toFixed(2));
+    // lfn_calculateTotalCharges();
+
+    var v = "0.00";
+    if ($("#cmbLabourChargeAmt").val() != "") {
+      v = $("#cmbLabourChargeAmt option:selected").text();
+    } else {
+      v = "0.00";
+    }
     $("#txtLabourCharge").val(v);
     fn_calculateTotalCharges();
   }
 
   function fn_cmbPaymentType() {
-    if ($('#ddlFilterCode').val() != "") {
+    /*if ($('#ddlFilterCode').val() != "") {
       if ($("#ddlFilterPayType").val() == "CHG") {
         var pCode = $("#ddlFilterCode").val();
 
@@ -616,35 +954,50 @@
         }, function(result) {
           var pPrice = result.FilPrice.filterprice;
           //Common.alert("aa "+pPrice + pPrice);
-          $("#txtFilterCharge").val(pPrice + ".00");
+          $("#txtFilterCharge").val(pPrice.toFixed(2));
         });
       } else {
         $("#txtFilterCharge").val("0.00");
       }
     }
-    fn_calculateTotalCharges();
+    fn_calculateTotalCharges();*/
   }
 
   function fn_onChangeddlFilterCode() {
-    $("#ddlFilterPayType").val("");
-    $("#txtFilterCharge").val("0.00");
-    fn_calculateTotalCharges();
+    //$("#ddlFilterPayType").val("");
+    //$("#txtFilterCharge").val("0.00");
+    //fn_calculateTotalCharges();
   }
 
   function fn_filterAddVaild() {
+    var msg = "";
+    var text = "";
     if (FormUtil.checkReqValue($("#ddlFilterCode option:selected"))) {
-      return false;
+      text = "<spring:message code='service.title.FilterCode'/>";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
     }
-
     if (FormUtil.checkReqValue($("#ddlFilterQty option:selected"))) {
-      return false;
+      text = "<spring:message code='service.grid.Quantity'/>";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
     }
-
     if (FormUtil.checkReqValue($("#ddlFilterPayType option:selected"))) {
-      return false;
+      text = "<spring:message code='service.text.asPmtTyp'/>";
+     msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+    }
+    if (FormUtil.checkReqValue($("#ddlFilterExchangeCode option:selected"))) {
+      text = "<spring:message code='service.text.asExcRsn'/>";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
     }
 
-    if (FormUtil.checkReqValue($("#ddlFilterExchangeCode option:selected"))) {
+    if ($("#txtLabourch").is(':checked')) {
+      if (FormUtil.checkReqValue($("#cmbLabourChargeAmt option:selected"))) {
+        text = "<spring:message code='service.text.asLbrChr'/>";
+        msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+      }
+    }
+
+    if (msg != ""){
+      Common.alert(msg);
       return false;
     }
   }
@@ -688,7 +1041,6 @@
     }
 
     if (fn_filterAddVaild() == false) {
-      Common.alert('*<b>Please fill up the compulsory fields to add the filter.</b>');
       return false;
     }
 
@@ -699,37 +1051,53 @@
     fitem.filterExCode = $("#ddlFilterExchangeCode").val();
     fitem.filterQty = $("#ddlFilterQty").val();
     fitem.filterRemark = $("#txtFilterRemark").val();
-    fitem.filterID = $("#ddlFilterCode").val();
-    //fitem.filterCODE =$("#ddlFilterCode").va();
+    fitem.filterId = $("#ddlFilterCode").val();
+    //fitem.filterCODE =$("#ddlFilterCode").val();
+    fitem.srvFilterLastSerial = $("#ddSrvFilterLastSerial").val();
 
     var chargePrice = 0;
-    if (fitem.filterType == "CHG") {
-      chargePrice = getASStockPrice(fitem.filterID);
-    }
-
-    if (chargePrice == 0) {
-      //Common.alert("<b>SAL0016M(StockPrice) no data  </br>");
-      // return ;
-    }
-
-    fitem.filterPrice = Number(chargePrice);
-
     var chargeTotalPrice = 0;
 
-    chargeTotalPrice = Number($("#ddlFilterQty").val()) * chargePrice;
-    fitem.filterTotal = Number(chargeTotalPrice);
+    if (fitem.filterType == "CHG") {
+      chargePrice = getASStockPrice(fitem.filterId);
 
-    var v = Number($("#txtFilterCharge").val()) + chargeTotalPrice;
-    //$("#txtFilterCharge").val( v);
+      if (chargePrice == 0) {
+        Common.alert("<b>SAL0016M(StockPrice) no data  </br>");
+        return ;
+      }
+    }
 
-    if (AUIGrid.isUniqueValue(myFltGrd10, "filterID", fitem.filterID)) {
+    fitem.filterPrice = parseInt(chargePrice, 10).toFixed(2);
+
+    chargeTotalPrice = Number($("#ddlFilterQty").val()) * Number((chargePrice));
+    fitem.filterTotal = Number(chargeTotalPrice).toFixed(2);
+
+    if (AUIGrid.isUniqueValue(myFltGrd10, "filterId", fitem.filterId)) {
       fn_addRow(fitem);
+
+      var v = Number($("#txtFilterCharge").val()) + Number(chargeTotalPrice);
+      $("#txtFilterCharge").val(v.toFixed(2));
     } else {
-      Common.alert("<b>This filter/spart part is existing. </br>");
+      Common.alert("<spring:message code='service.msg.rcdExist'/>");
       return;
     }
 
     fn_calculateTotalCharges();
+    fn_filterClear();
+  }
+
+  function fn_filterClear() {
+    $("#ddlFilterCode").val("");
+    $("#ddlFilterQty").val("");
+    $("#ddlFilterPayType").val("");
+    $("#ddlFilterExchangeCode").val("");
+    $("#ddSrvFilterLastSerial").val("");
+    $("#txtFilterRemark").val("");
+
+    $("#fcm3").hide();
+    $("#fcm4").hide();
+    $("#fcm5").hide();
+
   }
 
   function fn_addRow(gItem) {
@@ -751,6 +1119,11 @@
     return ret;
   }
 
+  function fn_valDtFmt(val) {
+    var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+    return dateRegex.test(val);
+  }
+
   function fn_doSave() {
     if (!fn_validRequiredField_Save_ResultInfo()) {
       return;
@@ -762,7 +1135,7 @@
         return;
       }
 
-      var fmt = fn_valDtFmt();
+      var fmt = fn_valDtFmt($("#dpSettleDate").val());
       if (!fmt) {
         Common.alert("Sattle Date invalid date format.");
         $("#dpSettleDate").val("");
@@ -777,12 +1150,12 @@
       var sYear = parseInt(sDate[2]);
 
       if (tYear > sYear) {
-        Common.alert("* Sattle Date must be in current month and year");
+        Common.alert("* " + "<spring:message code='service.grid.SettleDate' /> " + " <spring:message code='service.msg.inCrnYrMth' />");
         $("#dpSettleDate").val("");
         return;
       } else {
         if (tMth > sMth) {
-          Common.alert("* Sattle Date must be in current month and year");
+          Common.alert("* " + "<spring:message code='service.grid.SettleDate' /> " + " <spring:message code='service.msg.inCrnYrMth' />");
           $("#dpSettleDate").val("");
           return;
         }
@@ -859,7 +1232,7 @@
       rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='AS Status' htmlEscape='false'/> </br>";
       rtnValue = false;
     } else {
-      if ($("#ddlStatus").val() == 4) {
+      if ($("#ddlStatus").val() == 4 || $("#ddlStatus").val() == 1) {
         if (FormUtil.checkReqValue($("#dpSettleDate"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Settle Date' htmlEscape='false'/> </br>";
           rtnValue = false;
@@ -904,7 +1277,32 @@
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT Code' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
-      } else {
+      } else if ($("#ddlStatus").val() == 19) { // RECALL
+        if (FormUtil.checkReqValue($("#ddlFailReason"))) { // FAIL REASON
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Fail Reason' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
+        if (FormUtil.checkReqValue($("#appDate"))) { // APPOINTMENT DATE
+          text = "<spring:message code='service.title.AppointmentDate'/>";
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
+        if (FormUtil.checkReqValue($("#branchDSC"))) { // DSC CODE
+          text = "<spring:message code='service.title.DSCBranch'/>";
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
+        if (FormUtil.checkReqValue($("#CTCode"))) { // ASSIGN CT CODE
+          text = "<spring:message code='service.grid.AssignCT'/>";
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
+        if (FormUtil.checkReqValue($("#callRem"))) { // CALL REMARK
+          text = "<spring:message code='service.title.Remark'/>";
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
+      } else { // CANCEL
         if (FormUtil.checkReqValue($("#ddlFailReason"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Fail Reason' htmlEscape='false'/> </br>";
           rtnValue = false;
@@ -921,10 +1319,13 @@
 
   function fn_productGroup_SelectedIndexChanged() {
     var STK_CTGRY_ID = $("#productGroup").val();
-    $("#serialNo").val("");
-    $("#productCode option").remove();
 
-    doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID=' + STK_CTGRY_ID, '', '', 'productCode', 'S', '');
+    if (STK_CTGRY_ID != null) {
+      $("#serialNo").val("");
+      $("#productCode option").remove();
+
+      doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID=' + STK_CTGRY_ID, '', '', 'productCode', 'S', '');
+    }
   }
 
   function fn_productGroup_SelectedIndexChanged_2(val) {
@@ -948,7 +1349,13 @@
       inHseRprInd = 0;
     }
 
+    // TEMPORARY OPEN LABOUR CHARGE, FILTER CHARGE, TOTAL CHARGE
+    $('#txtLabourCharge').attr("disabled", false);
+    $('#txtFilterCharge').attr("disabled", false);
+    $('#txtTotalCharge').attr("disabled", false);
+
     var asResultM = {
+      // GENERAL DATA
       AS_ENTRY_ID : $("#asData_AS_ID").val(),
       AS_SO_ID : $("#asData_AS_SO_ID").val(),
       AS_ORD_NO : $("#asData_AS_ORD_NO").val(),
@@ -964,6 +1371,16 @@
       AS_RESULT_REM : $('#txtRemark').val(),
       AS_MALFUNC_ID : $('#ddlErrorCode').val(),
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
+
+      // AS RECALL ENTRY
+      AS_APP_DT : $("#appDate").val(),
+      AS_APP_SESS : $("#CTSSessionCode").val(),
+      AS_RCL_ASG_DSC : $("#branchDSC").val(),
+      AS_RCL_ASG_CT : $("#CTCode").val(),
+      AS_RCL_ASG_CT_GRP : $("#CTGroup").val(),
+      AS_RCL_RMK : $("#callRem").val(),
+
+      // AS DEFECT ENTRY
       AS_DEFECT_TYPE_ID : $('#ddlStatus').val() == 4 ? $('#def_type_id').val() : '0',
       AS_DEFECT_GRP_ID : 0,
       AS_DEFECT_ID : $('#ddlStatus').val() == 4 ? $('#def_code_id').val() : '0',
@@ -971,13 +1388,15 @@
       AS_DEFECT_PART_ID : $('#ddlStatus').val() == 4 ? $('#def_part_id').val() : '0',
       AS_DEFECT_DTL_RESN_ID : $('#ddlStatus').val() == 4 ? $('#def_def_id').val() : '0',
       AS_SLUTN_RESN_ID : $('#ddlStatus').val() == 4 ? $('#solut_code_id').val() : '0',
+
+      // AS FILTER FEE CHARGES
       AS_WORKMNSH : $('#txtLabourCharge').val(),
       AS_FILTER_AMT : $('#txtFilterCharge').val(),
       AS_ACSRS_AMT : 0,
       AS_TOT_AMT : $('#txtTotalCharge').val(),
       AS_RESULT_IS_SYNCH : 0,
       AS_RCALL : 0,
-      AS_RESULT_STOCK_USE : addedRowItems.length > 0 ? 1 : 0,//detail 리스트 카운트
+      AS_RESULT_STOCK_USE : addedRowItems.length > 0 ? 1 : 0,
       AS_RESULT_TYPE_ID : 457,
       AS_RESULT_IS_CURR : 1,
       AS_RESULT_MTCH_ID : 0,
@@ -986,6 +1405,8 @@
       AS_WORKMNSH_TAX_CODE_ID : 0,
       AS_WORKMNSH_TXS : 0,
       AS_RESULT_MOBILE_ID : 0,
+
+      // OTHER
       AS_RESULT_NO : $('#asData_AS_RESULT_NO').val(),
       AS_RESULT_ID : $('#asData_AS_RESULT_ID').val(),
       AS_NO : asDataInfo[0].asNo,
@@ -994,6 +1415,8 @@
       ACC_INVOICE_NO : asDataInfo[0].c20,
       TAX_INVOICE_CUST_NAME : $("#txtCustName").text(),
       TAX_INVOICE_CONT_PERS : $("#txtContactPerson").text(),
+
+      // AS IN HOUSE REPAIR
       productCode : aSOrderInfo.stockCode,
       productName : aSOrderInfo.stockDesc,
       serialNo : aSOrderInfo.lastInstallSerialNo,
@@ -1006,7 +1429,7 @@
     }
 
     var saveForm;
-    if ($("#requestMod").val() == "INHOUSE") {
+    if ($("#requestMod").val() == "INHOUSE") { // IN HOUSE SESSION
       saveForm = {
         "asResultM" : asResultM,
         "add" : addedRowItems,
@@ -1014,18 +1437,13 @@
         "remove" : removedRowItems
       }
 
-      Common
-          .ajax(
-              "POST",
-              "/services/inhouse/save.do",
-              saveForm,
-              function(result) {
-                if (result.asNo != "") {
-                  Common
-                      .alert("<b>AS result successfully saved.</b>");
-                  fn_DisablePageControl();
-                }
-              });
+      Common.ajax("POST", "/services/inhouse/save.do", saveForm,
+        function(result) {
+          if (result.asNo != "") {
+            Common.alert("<spring:message code='service.msg.updSucc'/>");
+            fn_DisablePageControl();
+          }
+        });
     } else {
       if ($("#requestMod").val() == "NEW") {
         saveForm = {
@@ -1035,17 +1453,13 @@
           "remove" : removedRowItems
         }
 
-        Common
-            .ajax(
-                "POST",
-                "/services/as/newResultAdd.do",
-                saveForm,
-                function(result) {
-                  if (result.asNo != "") {
-                    Common.alert("<b>AS result successfully saved.</b>");
-                    fn_DisablePageControl();
-                  }
-                });
+        Common.ajax("POST", "/services/as/newResultAdd.do", saveForm,
+          function(result) {
+            if (result.asNo != "") {
+              Common.alert("<spring:message code='service.msg.updSucc'/>");
+              fn_DisablePageControl();
+            }
+          });
 
       } else if ($("#requestMod").val() == "RESULTEDIT") {
         if (addedRowItems != "" || removedRowItems != "") {
@@ -1065,12 +1479,11 @@
           }
         }
 
-        /* if ($("#solut_code").val() == "B8" || $("#solut_code").val() == "B6") { // INHOUSE
-        Common.ajax("POST", "/services/as/newASInHouseAdd.do", saveForm,
+        Common.ajax("POST", "/services/as/newResultUpdate_1.do", saveForm,
           function(result) {
             if (result.data != "") {
               $("#newResultNo").html("<B>" + result.data + "</B>");
-              Common.alert("<b>AS result successfully saved.</b>");
+              Common.alert("<spring:message code='service.msg.updSucc'/>");
               //fn_DisablePageControl();
               fn_asResult_viewPageContral();
               $("#btnSaveDiv").attr("style", "display:none");
@@ -1078,31 +1491,17 @@
 
             try {
               fn_searchASManagement();
-              $("#_newASResultDiv1").remove();
+               $("#_newASResultDiv1").remove();
             } catch (e) {
             }
-          });
-        } else { */
-          //Common.ajax("POST", "/services/as/newResultUpdate.do", saveForm, function(result)
-          Common.ajax("POST", "/services/as/newResultUpdate_1.do", saveForm,
-            function(result) {
-              if (result.data != "") {
-                $("#newResultNo").html("<B>" + result.data + "</B>");
-                  Common.alert("<b>AS result successfully saved.</b>");
-                  //fn_DisablePageControl();
-                  fn_asResult_viewPageContral();
-                   $("#btnSaveDiv").attr("style", "display:none");
-                  }
-
-                  try {
-                    fn_searchASManagement();
-                    $("#_newASResultDiv1").remove();
-                  } catch (e) {
-                  }
-                });
-        }
+        });
       }
-    //}
+    }
+
+    // DISABLE LABOUR CHARGE, FILTER CHARGE, TOTAL CHARGE
+    $('#txtLabourCharge').attr("disabled", true);
+    $('#txtFilterCharge').attr("disabled", true);
+    $('#txtTotalCharge').attr("disabled", true);
   }
 
   function fn_asResult_editPageContral(_type) {
@@ -1139,9 +1538,9 @@
     //$('#def_def_text').removeAttr("disabled").removeClass("readonly");
 
     $('#txtLabourch').removeAttr("disabled").removeClass("readonly");
-    $('#txtTotalCharge').removeAttr("disabled").removeClass("readonly");
-    $('#txtFilterCharge').removeAttr("disabled").removeClass("readonly");
-    $('#txtLabourCharge').removeAttr("disabled").removeClass("readonly");
+    //$('#txtTotalCharge').removeAttr("disabled").removeClass("readonly");
+    //$('#txtFilterCharge').removeAttr("disabled").removeClass("readonly");
+    //$('#txtLabourCharge').removeAttr("disabled").removeClass("readonly");
     $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");
     $('#ddlFilterCode').removeAttr("disabled").removeClass("readonly");
     $('#ddlFilterQty').removeAttr("disabled").removeClass("readonly");
@@ -1168,6 +1567,7 @@
   }
 
   function fn_setASDataInit(ops) {
+    this.ops = ops;
     $("#asData_AS_ID").val(ops.AS_ID);
     $("#asData_AS_SO_ID").val(ops.AS_SO_ID);
     $("#asData_AS_ORD_NO").val(ops.ORD_NO);
@@ -1176,23 +1576,24 @@
     $("#requestMod").val(ops.MOD);
 
     fn_getASRulstEditFilterInfo(); //AS_RESULT_NO
-    fn_getASRulstSVC0004DInfo(); //AS_RESULT_NO
+    // fn_getASRulstSVC0004DInfo(); //AS_RESULT_NO
     // fn_setCTcodeValue();
 
-    //as result edit
+    // AS EDIT
     if (ops.MOD == "RESULTEDIT") {
-      fn_getErrMstList('${ORD_NO}', 'fn_errCallbackFun');
+      //fn_getErrMstList('${ORD_NO}', 'fn_errCallbackFun');
+      fn_errCallbackFun();
       fn_HasFilterUnclaim();
 
     } else if (ops.MOD == "RESULTVIEW") {
-      fn_getErrMstList('${ORD_NO}', 'fn_errCallbackFun');
+      //fn_getErrMstList('${ORD_NO}', 'fn_errCallbackFun');
+      fn_errCallbackFun();
 
-      $("#asResultForm").find("input, textarea, button, select").attr(
-          "disabled", true);
+      $("#asResultForm").find("input, textarea, button, select").attr("disabled", true);
       $("#btnSaveDiv").attr("style", "display:none");
 
       // fn_HasFilterUnclaim();
-      //  fn_asResult_viewPageContral();
+      // fn_asResult_viewPageContral();
 
       $("#btnSaveDiv").attr("style", "display:none");
       $("#addDiv").attr("style", "display:none");
@@ -1263,6 +1664,108 @@
     }
   }
 
+  function fn_secChk(obj){
+    if (obj.id == "recall_dt") {
+      if ($("#ddlStatus").val() != '19') {
+        Common.alert("This section only applicable for <b>Recall</b> status");
+        return;
+      }
+    }
+    if (obj.id == "defEvt_dt" || obj.id == "chrFee_dt") {
+      if ($("#ddlStatus").val() != '4') {
+        Common.alert("This section only applicable for <b>Complete</b> status");
+        return;
+      }
+    }
+    if (obj.id == "defEvt_dt" || obj.id == "chrFee_dt") {
+      if ($("#ddlStatus").val() != '4') {
+        Common.alert("This section only applicable for <b>Complete</b> status");
+        return;
+      }
+    }
+    /*if (obj.id == "inHouse_dt" || obj.id == "inHouse_dt") {
+      if ($("#ddlStatus").val() != '4') {
+        Common.alert("This section only applicable for <b>Complete</b> status");
+        return;
+      }
+    }*/
+  }
+
+  function fn_valDtFmt(val) {
+    var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+    return dateRegex.test(val);
+  }
+
+  function fn_doAllaction(obj) {
+    var ord_id = $("#ORD_ID").val();
+
+    var vdte = obj.value;
+    var text = "<spring:message code='service.grid.AppntDt' />";
+
+    var fmt = fn_valDtFmt(vdte);
+    if (!fmt) {
+      Common.alert("* " + text + " <spring:message code='service.msg.invalidDate' />");
+      $(obj).val("");
+      return;
+    }
+
+    var sDate = (vdte).split("/");
+    var tDate = new Date();
+    var tMth = tDate.getMonth() + 1;
+    var tYear = tDate.getFullYear();
+    var sMth = parseInt(sDate[1]);
+    var sYear = parseInt(sDate[2]);
+
+    if (tYear > sYear) {
+      Common.alert("* " + text + " <spring:message code='service.msg.inCrnYrMth' />");
+      $(obj).val("");
+      return;
+    } else {
+      if (tMth > sMth) {
+        Common.alert("* " + text + " <spring:message code='service.msg.inCrnYrMth' />");
+        $(obj).val("");
+        return;
+      }
+    }
+
+    var options = {
+      ORD_ID : ord_id,
+      S_DATE : vdte,
+      CTCodeObj : 'CTCodeObj',
+      CTIDObj : 'CTIDObj',
+      CTgroupObj : 'CTgroupObj'
+    }
+
+    Common.popupDiv("/organization/allocation/allocation.do", {
+      ORD_ID : ord_id,
+      S_DATE : vdte,
+      OPTIONS : options,
+      TYPE : 'AS'
+    }, null, true, '_doAllactionDiv');
+  }
+
+  function fn_setMand(obj) {
+    if (obj.value != "") {
+      $("#fcm3").show();
+      $("#fcm4").show();
+      $("#fcm5").show();
+
+      $("#ddlFilterQty").val("");
+      $("#ddlFilterPayType").val("");
+      $("#ddlFilterExchangeCode").val("");
+      $("#ddSrvFilterLastSerial").val("");
+    } else {
+      $("#fcm3").hide();
+      $("#fcm4").hide();
+      $("#fcm5").hide();
+
+      $("#ddlFilterQty").val("");
+      $("#ddlFilterPayType").val("");
+      $("#ddlFilterExchangeCode").val("");
+      $("#ddSrvFilterLastSerial").val("");
+    }
+  }
+
   setPopData();
 </script>
 <form id="asDataForm" method="post">
@@ -1280,21 +1783,21 @@
   <!-- acodi_wrap start -->
   <dl>
    <dt class="click_add_on on">
-    <a href="#">AS Result Information</a>
+    <a href="#"><spring:message code='service.title.asRstDtl' /></a>
    </dt>
    <dd>
     <table class="type1">
      <!-- table start -->
      <caption>table</caption>
      <colgroup>
-      <col style="width: 150px" />
-      <col style="width: *" />
-      <col style="width: 110px" />
-      <col style="width: *" />
+       <col style="width: 150px" />
+       <col style="width: *" />
+       <col style="width: 110px" />
+       <col style="width: *" />
      </colgroup>
      <tbody>
       <tr>
-       <th scope="row">New Result No</th>
+       <th scope="row"><spring:message code='service.grid.ResultNo' /></th>
        <td colspan="3">
         <div id='newRno' style='display: none'>
          <span id='newResultNo'> </span>
@@ -1302,137 +1805,163 @@
        </td>
       </tr>
       <tr>
-       <th scope="row">Result No</th>
-       <td><input type="text" title="" placeholder="" class=""
-        id='txtResultNo' name='txtResultNo' disabled /></td>
-       <th scope="row">Status <span id='m1' name='m1' class="must">*</span>
+       <th scope="row"><spring:message code='service.grid.ResultNo' /></th>
+       <td><input type="text" title="" placeholder="" class="w100p" id='txtResultNo' name='txtResultNo' disabled /></td>
+       <th scope="row"><spring:message code='sys.title.status'/><span id='m1' name='m1' class="must">*</span>
        </th>
-       <td><select class="w100p" id="ddlStatus" name="ddlStatus"
-        onChange="fn_ddlStatus_SelectedIndexChanged()">
-         <option value="" selected>Choose One</option>
-         <option value="4">Complete</option>
-         <option value="10">Cancel</option>
-         <option value="21">Failure</option>
+       <td><select class="w100p" id="ddlStatus" name="ddlStatus" onChange="fn_ddlStatus_SelectedIndexChanged()">
+         <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+         <c:forEach var="list" items="${asCrtStat}" varStatus="status">
+           <option value="${list.codeId}">${list.codeName}</option>
+         </c:forEach>
        </select></td>
       </tr>
       <tr>
-       <th scope="row">Settle Date <span id='m2' name='m2' class="must" style="display:none">*</span>
+       <th scope="row"><spring:message code='service.grid.SettleDate' /><span id='m2' name='m2' class="must" style="display:none">*</span>
        </th>
-       <td><input type="text" title="Create start Date"
-        id='dpSettleDate' name='dpSettleDate' placeholder="DD/MM/YYYY"
-        class="readonly j_date" disabled="disabled" /></td>
-       <th scope="row">Fail Reason <span id='m3' name='m3' class="must" style="display:none">*</span></th>
-       <td><select id='ddlFailReason' name='ddlFailReason'
-        disabled="disabled"></select></td>
+       <td><input type="text" title="Create start Date" id='dpSettleDate' name='dpSettleDate' placeholder="DD/MM/YYYY" class="readonly j_date" disabled="disabled" /></td>
+       <th scope="row"><spring:message code='service.grid.FailReason' /><span id='m3' name='m3' class="must" style="display:none">*</span></th>
+       <td>
+         <select id='ddlFailReason' name='ddlFailReason' disabled="disabled"  class="w100p">
+           <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+         </select>
+       </td>
       </tr>
       <tr>
-       <th scope="row">Settle Time <span id='m4' name='m4' class="must" style="display:none">*</span>
+       <th scope="row"><spring:message code='service.grid.SettleTm' /><span id='m4' name='m4' class="must" style="display:none">*</span>
        </th>
        <td>
         <div class="time_picker">
-         <!-- time_picker start -->
-         <input type="text" title="" placeholder="" id='tpSettleTime'
-          name='tpSettleTime' class="readonly time_date"
-          disabled="disabled" />
+         <input type="text" title="" placeholder="" id='tpSettleTime' name='tpSettleTime' class="readonly time_date" disabled="disabled" />
          <ul>
-          <li>Time Picker</li>
-          <li><a href="#">12:00 AM</a></li>
-          <li><a href="#">01:00 AM</a></li>
-          <li><a href="#">02:00 AM</a></li>
-          <li><a href="#">03:00 AM</a></li>
-          <li><a href="#">04:00 AM</a></li>
-          <li><a href="#">05:00 AM</a></li>
-          <li><a href="#">06:00 AM</a></li>
-          <li><a href="#">07:00 AM</a></li>
-          <li><a href="#">08:00 AM</a></li>
-          <li><a href="#">09:00 AM</a></li>
-          <li><a href="#">10:00 AM</a></li>
-          <li><a href="#">11:00 AM</a></li>
-          <li><a href="#">12:00 PM</a></li>
-          <li><a href="#">01:00 PM</a></li>
-          <li><a href="#">02:00 PM</a></li>
-          <li><a href="#">03:00 PM</a></li>
-          <li><a href="#">04:00 PM</a></li>
-          <li><a href="#">05:00 PM</a></li>
-          <li><a href="#">06:00 PM</a></li>
-          <li><a href="#">07:00 PM</a></li>
-          <li><a href="#">08:00 PM</a></li>
-          <li><a href="#">09:00 PM</a></li>
-          <li><a href="#">10:00 PM</a></li>
-          <li><a href="#">11:00 PM</a></li>
+          <li><spring:message code='service.text.timePick' /></li>
+          <c:forEach var="list" items="${timePick}" varStatus="status">
+            <li><a href="#">${list.codeName}</a></li>
+          </c:forEach>
          </ul>
         </div>
         <!-- time_picker end -->
        </td>
-       <th scope="row">DSC Code <span id='m5' name='m5' class="must" style="display:none">*</span>
+       <th scope="row"><spring:message code='service.title.DSCCode' /><span id='m5' name='m5' class="must" style="display:none">*</span>
        </th>
-       <td><input type="hidden" title="" placeholder="" class=""
-        id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}' /> <input
-        type="text" title="" placeholder="" class="readonly"
-        id='ddlDSCCodeText' name='ddlDSCCodeText' value='${BRANCH_NAME}' />
+       <td>
+         <input type="hidden" title="" placeholder="" class="" id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}' />
+         <input type="text" title="" placeholder="" class="readonly w100p" id='ddlDSCCodeText' name='ddlDSCCodeText' value='${BRANCH_NAME}'/>
        </td>
       </tr>
       <tr>
-       <th scope="row">Error Code <span id='m6' name='m6' class="must" style="display:none">*</span>
-       </th>
-       <td><select disabled="disabled" id='ddlErrorCode'
-        name='ddlErrorCode' onChange="fn_errMst_SelectedIndexChanged()">
-       </select></td>
-       <th scope="row">CT Code <span id='m7' name='m7' class="must" style="display:none">*</span>
+       <th scope="row"><spring:message code='service.grid.ErrCde' /><span id='m6' name='m6' class="must" style="display:none">*</span>
        </th>
        <td>
-        <!--
-          <select  disabled="disabled" id='ddlCTCode' name='ddlCTCode'>
-          <input type="hidden" title="" placeholder="" class=""  id='CTID' name='CTID'/>
-           </select>
-         --> <input type="hidden" title="" placeholder="ddlCTCode"
-        class="" id='ddlCTCode' name='ddlCTCode' /> <input type="text"
-        title="" placeholder="" class="readonly" id='ddlCTCodeText'
-        name='ddlCTCodeText' /> <!--
-         <input type="hidden" title="" placeholder="ddlCTCode" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
-         <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
+         <select disabled="disabled" id='ddlErrorCode' name='ddlErrorCode' onChange="fn_errMst_SelectedIndexChanged()" class="w100p"></select>
+       </td>
+       <th scope="row"><spring:message code='service.grid.CTCode' /><span id='m7' name='m7' class="must" style="display:none">*</span>
+       </th>
+       <td>
+         <input type="hidden" title="" placeholder="ddlCTCode" class="" id='ddlCTCode' name='ddlCTCode' />
+         <input type="text" title="" placeholder="" class="readonly w100p" id='ddlCTCodeText' name='ddlCTCodeText'/>
+         <!--
+           <input type="hidden" title="" placeholder="ddlCTCode" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
+           <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
          -->
        </td>
       </tr>
       <tr>
-       <th scope="row">Error Description <span id='m8' name='m8' class="must" style="display:none">*</span>
+       <th scope="row"><spring:message code='service.grid.ErrDesc' /><span id='m8' name='m8' class="must" style="display:none">*</span>
        </th>
-       <td><select id='ddlErrorDesc' name='ddlErrorDesc'>
-       </select></td>
-       <th scope="row">Warehouse</th>
-       <td><select class="disabled" disabled="disabled"
-        id='ddlWarehouse' name='ddlWarehouse'>
-       </select></td>
-      </tr>
-      <tr>
-       <th scope="row">Remark</th>
-       <td colspan="3"><textarea cols="20" rows="5" placeholder=""
-         id='txtRemark' name='txtRemark'></textarea></td>
-      </tr>
-      <tr>
-       <th scope="row">Commission</th>
-       <td colspan="3"><label><input type="checkbox"
-         disabled="disabled" id='iscommission' name='iscommission' /><span>Has
-          commission ? </span></label></td>
-      </tr>
-      <tr>
-       <th scope="row">Result Creator</th>
-       <td><input type="text" title="" placeholder=""
-        class="disabled" disabled="disabled" id='creator' name='creator' />
+       <td>
+         <select id='ddlErrorDesc' name='ddlErrorDesc'  class="w100p"></select>
        </td>
-       <th scope="row">Result Create Date</th>
-       <td><input type="text" title="" placeholder=""
-        class="disabled" disabled="disabled" id='creatorat'
-        name='creatorat' /></td>
+       <th scope="row"><spring:message code='sal.title.warehouse' /></th>
+       <td>
+         <select class="disabled w100p" disabled="disabled" id='ddlWarehouse' name='ddlWarehouse'>
+           <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+         </select>
+       </td>
+      </tr>
+      <tr>
+       <th scope="row"><spring:message code='service.title.Remark' /></th>
+       <td colspan="3">
+         <textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtRemark' name='txtRemark'></textarea></td>
+      </tr>
+      <tr>
+       <th scope="row"><spring:message code='sal.text.commission' /></th>
+       <td colspan="3">
+         <label>
+           <input type="checkbox" disabled="disabled" id='iscommission' name='iscommission' />
+           <span><spring:message code='sal.text.commissionApplied' /></span></label></td>
+      </tr>
+      <tr>
+       <th scope="row"><spring:message code='service.grid.CrtBy' /></th>
+       <td>
+         <input type="text" title="" placeholder="<spring:message code='service.grid.CrtBy' />" class="disabled w100p" disabled="disabled" id='creator' name='creator'/>
+       </td>
+       <th scope="row"><spring:message code='service.grid.CrtDt' /></th>
+       <td>
+         <input type="text" title="" placeholder="<spring:message code='service.grid.CrtDt' />" class="disabled w100p" disabled="disabled" id='creatorat' name='creatorat'/>
+       </td>
       </tr>
      </tbody>
     </table>
     <!-- table end -->
    </dd>
-   <dt class="click_add_on">
-    <a href="#">AS Defective Event</a>
+
+   <dt class="click_add_on" id='recall_dt' onclick="fn_secChk(this);">
+     <a href="#"><spring:message code='service.title.asCallLog' /></a>
    </dt>
-   <dd>
+   <dd id='recall_div' style="display: none">
+     <table class="type1">
+      <caption>table</caption>
+      <colgroup>
+       <col style="width: 140px" />
+       <col style="width: *" />
+       <col style="width: 140px" />
+       <col style="width: *" />
+      </colgroup>
+      <tbody>
+       <tr>
+         <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
+         <td>
+          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " readonly="readonly" id="appDate" name="appDate" onChange="fn_doAllaction(this)"/>
+         </td>
+         <th scope="row"><spring:message code='service.title.AppointmentSessione' /><span class="must">*</span></th>
+         <td>
+           <input type="text" title="" placeholder="<spring:message code='service.title.AppointmentDate' />" id="CTSSessionCode" name="CTSSessionCode" class="readonly w100p" readonly="readonly" />
+         </td>
+       </tr>
+       <tr>
+         <th scope="row"><spring:message code='service.title.DSCBranch' /><span class="must">*</span></th>
+         <td>
+           <select class="w100p" id="branchDSC" name="branchDSC" class="" disabled="disabled"></select>
+         </td>
+         <th scope="row"><spring:message code='service.grid.AssignCT' /><span class="must">*</span></th>
+         <td>
+           <input type="text" title="" placeholder="<spring:message code='service.grid.AssignCT' />" id="CTCode" name="CTCode" class="readonly w100p" readonly="readonly" onchange="fn_changeCTCode(this)" />
+         </td>
+       </tr>
+       <tr>
+         <th scope="row"><spring:message code='service.title.CTGroup' /></th>
+         <td colspan="3">
+           <input type="text" title="<spring:message code='service.title.CTGroup' />" placeholder="<spring:message code='service.title.CTGroup' />" class="w100p" id="CTGroup" name="CTGroup" />
+         </td>
+       </tr>
+       <tr>
+         <th scope="row"><spring:message code='service.grid.Remark' /><span class="must">*</span></th>
+         <td colspan="3">
+           <textarea id='callRem' name='callRem' rows='5' placeholder="<spring:message code='service.title.Remark' />" class="w100p"></textarea>
+         </td>
+       </tr>
+
+      </tbody>
+     </table>
+     <!-- table end -->
+    </dd>
+
+
+   <dt class="click_add_on" id='defEvt_dt' onclick="fn_secChk(this);">
+    <a href="#"><spring:message code='service.title.asDefEnt' /></a>
+   </dt>
+   <dd id='defEvt_div' style="display: none">
     <table class="type1">
      <!-- table start -->
      <caption>table</caption>
@@ -1442,38 +1971,38 @@
      </colgroup>
      <tbody>
       <tr>
-       <th scope="row">Defect Type <span id='m9' name='m9' class="must" style="display:none">*</span>
+       <th scope="row"><spring:message code='service.text.defTyp' /><span id='m9' name='m9' class="must" style="display:none">*</span>
        </th>
-       <td><input type="text" title="" id='def_type' disabled="disabled" name='def_type' placeholder="ex) DT3" class="" onblur="fn_getASReasonCode2(this, 'def_type' ,'387')" onkeyup="this.value = this.value.toUpperCase();" />
-        <input type="hidden" title="" id='def_type_id' name='def_type_id' placeholder="" class="" />
+       <td><input type="text" title="" id='def_type' disabled="disabled" name='def_type' placeholder="e.g. DT3" class="" onblur="fn_getASReasonCode2(this, 'def_type' ,'387')" onkeyup="this.value = this.value.toUpperCase();" />
+        <input type="hidden" title="" id='def_type_id' name='def_type_id' placeholder="e.g. DT3" class="" />
         <input type="text" title="" placeholder="" id='def_type_text' name='def_type_text'  disabled style="width:60%;"/>
        </td>
       </tr>
       <tr>
-       <th scope="row">Defect Code <span id='m10' name='m10' class="must" style="display:none">*</span>
+       <th scope="row"><spring:message code='service.text.defCde' /><span id='m10' name='m10' class="must" style="display:none">*</span>
        </th>
-       <td><input type="text" title="" placeholder="ex) FF" disabled="disabled" id='def_code' name='def_code' class="" onblur="fn_getASReasonCode2(this, 'def_code', '303')"  onkeyup="this.value = this.value.toUpperCase();" />
+       <td><input type="text" title="" placeholder="e.g. FF" disabled="disabled" id='def_code' name='def_code' class="" onblur="fn_getASReasonCode2(this, 'def_code', '303')"  onkeyup="this.value = this.value.toUpperCase();" />
        <input type="hidden" title="" placeholder="" id='def_code_id' name='def_code_id' class="" />
        <input type="text" title="" placeholder="" id='def_code_text' name='def_code_text' disabled style="width:60%;"/></td>
       </tr>
       <tr>
-       <th scope="row">Defect Part <span id='m11' name='m11' class="must" style="display:none">*</span>
+       <th scope="row"><spring:message code='service.text.defPrt' /><span id='m11' name='m11' class="must" style="display:none">*</span>
        </th>
-       <td><input type="text" title="" placeholder="ex) FE12" disabled="disabled" id='def_part' name='def_part' class="" onblur="fn_getASReasonCode2(this, 'def_part' ,'305')" onkeyup="this.value = this.value.toUpperCase();" />
+       <td><input type="text" title="" placeholder="e.g. FE12" disabled="disabled" id='def_part' name='def_part' class="" onblur="fn_getASReasonCode2(this, 'def_part' ,'305')" onkeyup="this.value = this.value.toUpperCase();" />
        <input type="hidden" title="" placeholder="" id='def_part_id' name='def_part_id' class="" />
        <input type="text" title="" placeholder="" id='def_part_text' name='def_part_text' disabled style="width:60%;"/></td>
       </tr>
       <tr>
-       <th scope="row">Detail of Defect <span id='m12' name='m12' class="must" style="display:none">*</span>
+       <th scope="row"><spring:message code='service.text.dtlDef' /><span id='m12' name='m12' class="must" style="display:none">*</span>
        </th>
-       <td><input type="text" title="" placeholder="ex) 18 " disabled="disabled" id='def_def' name='def_def' class="" onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')" onkeyup="this.value = this.value.toUpperCase();" />
+       <td><input type="text" title="" placeholder="e.g. 18" disabled="disabled" id='def_def' name='def_def' class="" onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')" onkeyup="this.value = this.value.toUpperCase();" />
        <input type="hidden" title="" placeholder="" id='def_def_id' name='def_def_id' class="" />
        <input type="text" title="" placeholder="" id='def_def_text' name='def_def_text' disabled style="width:60%;"/></td>
       </tr>
       <tr>
-       <th scope="row">Solution Code <span id='m13' name='m13' class="must" style="display:none">*</span>
+       <th scope="row"><spring:message code='service.text.sltCde' /><span id='m13' name='m13' class="must" style="display:none">*</span>
        </th>
-       <td><input type="text" title="" placeholder="ex) A9" class="" disabled="disabled" id='solut_code' name='solut_code' onblur="fn_getASReasonCode2(this, 'solut_code'  ,'337')" onkeyup="this.value = this.value.toUpperCase();" />
+       <td><input type="text" title="" placeholder="e.g. A9" class="" disabled="disabled" id='solut_code' name='solut_code' onblur="fn_getASReasonCode2(this, 'solut_code'  ,'337')" onkeyup="this.value = this.value.toUpperCase();" />
        <input type="hidden" title="" placeholder="" class="" id='solut_code_id' name='solut_code_id' />
        <input type="text" title="" placeholder="" class="" id='solut_code_text' name='solut_code_text' disabled style="width:60%;"/></td>
       </tr>
@@ -1481,10 +2010,11 @@
     </table>
     <!-- table end -->
    </dd>
-   <dt class="click_add_on">
-    <a href="#">AS Charges Fees</a>
+
+   <dt class="click_add_on" id='chrFee_dt' onclick="fn_secChk(this);">
+    <a href="#"><spring:message code='service.title.asPrtChr' /></a>
    </dt>
-   <dd>
+   <dd id='chrFee_div' style="display: none">
     <table class="type1">
      <!-- table start -->
      <caption>table</caption>
@@ -1496,86 +2026,95 @@
      </colgroup>
      <tbody>
       <tr>
-       <th scope="row">Labour Charge</th>
-       <td><label><input type="checkbox" id='txtLabourch'
-         name='txtLabourch'
-         '  onChange="fn_LabourCharge_CheckedChanged(this)" /></label></td>
-       <th scope="row">Labour Charge</th>
-       <td><input type="text" id='txtLabourCharge'
-        name='txtLabourCharge' value='0.00' /></td>
+       <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
+       <td>
+         <label>
+           <input type="checkbox" id='txtLabourch' name='txtLabourch' onChange="fn_LabourCharge_CheckedChanged(this)" disabled />
+         </label>
+       </td>
+       <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
+       <td>
+         <input type="text" id='txtLabourCharge' name='txtLabourCharge' value='0.00' class='readonly' readonly/></td>
       </tr>
       <tr>
-       <th scope="row">Labour Charge Amt</th>
-       <td><select id='cmbLabourChargeAmt'
-        name='cmbLabourChargeAmt'
-        onChange="fn_cmbLabourChargeAmt_SelectedIndexChanged()">
-         <option value=""></option>
-         <option value="60">RM 60.00</option>
-         <option value="100">RM 100.00</option>
-         <option value="120">RM 120.00</option>
-       </select></td>
-       <th scope="row">Filter Charge</th>
-       <td><input type="text" id='txtFilterCharge'
-        name='txtFilterCharge' value='0.00' /></td>
+       <th scope="row"><spring:message code='service.text.asLbrChr' /> (RM) <span id="fcm1" name="fcm1" class="must" style="display:none">*</span></th>
+       <td>
+         <select id='cmbLabourChargeAmt' name='cmbLabourChargeAmt' onChange="fn_cmbLabourChargeAmt_SelectedIndexChanged()" disabled>
+           <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+           <c:forEach var="list" items="${lbrFeeChr}" varStatus="status">
+             <option value="${list.codeId}">${list.codeName}</option>
+           </c:forEach>
+         </select>
+       </td>
+       <th scope="row"><spring:message code='service.text.asfltChr' /></th>
+       <td>
+         <input type="text" id='txtFilterCharge' name='txtFilterCharge' value='0.00' class='readonly' readonly/></td>
       </tr>
       <tr>
        <th scope="row"></th>
        <td></td>
-       <th scope="row">Total Charge</th>
-       <td><input type="text" id='txtTotalCharge'
-        name='txtTotalCharge' value='0.00' /></td>
+       <th scope="row"><b><spring:message code='service.text.asTtlChr' /></b></th>
+       <td>
+         <input type="text" id='txtTotalCharge' name='txtTotalCharge' value='0.00' class='readonly' readonly/></td>
       </tr>
       <tr>
-       <th scope="row">Filter Code</th>
-       <td><select id='ddlFilterCode' name='ddlFilterCode'
-        onChange="fn_onChangeddlFilterCode()">
-       </select></td>
-       <th scope="row">Quantity</th>
-       <td><select id='ddlFilterQty' name='ddlFilterQty'>
-         <option value="">Choose One</option>
-         <option value="1" selected>1</option>
-         <option value="2">2</option>
-         <option value="3">3</option>
-         <option value="4">4</option>
-         <option value="5">5</option>
-         <option value="6">6</option>
-         <option value="7">7</option>
-         <option value="8">8</option>
-         <option value="9">9</option>
-         <option value="10">10</option>
-         <option value="11">11</option>
-         <option value="12">12</option>
-       </select></td>
+       <th scope="row"><spring:message code='service.grid.FilterCode' /><span id="fcm2" name="fcm2" class="must" style="display:none">*</span></th>
+       <td>
+         <select id='ddlFilterCode' name='ddlFilterCode' onChange="fn_setMand(this);fn_onChangeddlFilterCode()"></select>
+       </td>
+       <th scope="row"><spring:message code='service.grid.Quantity' /><span id="fcm3" name="fcm3" class="must" style="display:none">*</span></th>
+       <td>
+         <select id='ddlFilterQty' name='ddlFilterQty'>
+         <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+          <c:forEach var="list" items="${fltQty}" varStatus="status">
+            <option value="${list.codeId}">${list.codeName}</option>
+          </c:forEach>
+         </select>
+       </td>
       </tr>
       <tr>
-       <th scope="row">Payment Type</th>
-       <td><select id='ddlFilterPayType' name='ddlFilterPayType'
-        onChange="fn_cmbPaymentType()">
-         <option value="">Choose One</option>
-         <option value="FOC">Free of Charge</option>
-         <option value="CHG">Charge</option>
-       </select></td>
-       <th scope="row">Exchange Code</th>
-       <td><select id='ddlFilterExchangeCode'
-        name='ddlFilterExchangeCode'>
-       </select></td>
+       <th scope="row"><spring:message code='service.text.asPmtTyp' /><span id="fcm4" name="fcm4" class="must" style="display:none">*</span></th>
+       <td>
+         <select id='ddlFilterPayType' name='ddlFilterPayType' onChange="fn_cmbPaymentType()">
+           <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+           <c:forEach var="list" items="${fltPmtTyp}" varStatus="status">
+             <option value="${list.codeId}">${list.codeName}</option>
+           </c:forEach>
+         </select>
+       </td>
+       <th scope="row"><spring:message code='service.text.asExcRsn' /><span id="fcm5" name="fcm5" class="must" style="display:none">*</span></th>
+       <td>
+         <select id='ddlFilterExchangeCode' name='ddlFilterExchangeCode'></select>
+       </td>
       </tr>
       <tr>
-       <th scope="row">Remark</th>
-       <td colspan="3"><textarea cols="20" rows="5" placeholder=""
-         id='txtFilterRemark' name='txtFilterRemark'></textarea></td>
+        <th scope="row"><spring:message code='service.title.SerialNo' /></th>
+        <td colspan="3">
+          <input type="text" id='ddSrvFilterLastSerial' name='ddSrvFilterLastSerial' />
+        </td>
       </tr>
+      <tr>
+       <th scope="row"><spring:message code='service.title.Remark' /></th>
+       <td colspan="3">
+         <textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtFilterRemark' name='txtFilterRemark'></textarea>
+       </td>
+      </tr>
+      <td colspan="4">
+        <span style="color:red;font-style: italic;"><spring:message code='service.msg.msgFltTtlAmt' /></span>
+      </td>
      </tbody>
     </table>
     <!-- table end -->
-    <ul class="center_btns" id='addDiv'>
+    <div id='addDiv'>
+    <ul class="center_btns">
      <li><p class="btn_blue2">
-       <a href="#" onclick="fn_filterAdd()">Add Filter</a>
+       <a href="#" onclick="fn_filterAdd()"><spring:message code='sys.btn.add' /></a>
       </p></li>
      <li><p class="btn_blue2">
-       <a href="#" onclick="fn_clearPanelField_ASChargesFees()">Clear</a>
+       <a href="#" onclick="fn_clearPanelField_ASChargesFees()"><spring:message code='sys.btn.clear' /></a>
       </p></li>
     </ul>
+    </div>
     <article class="grid_wrap">
      <!-- grid_wrap start -->
      <div id="asfilter_grid_wrap"
@@ -1583,8 +2122,9 @@
     </article>
     <!-- grid_wrap end -->
    </dd>
+
    <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
-   <dt class="click_add_on">
+   <dt class="click_add_on" id='inHouse_dt' onclick="fn_secChk(this);">
     <a href="#">In-House Repair Entry</a>
    </dt>
    <dd id='inHouseRepair_div' style="display: none">
