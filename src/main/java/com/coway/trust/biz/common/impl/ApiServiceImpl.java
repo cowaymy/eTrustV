@@ -207,12 +207,26 @@ public class ApiServiceImpl implements ApiService {
   @Override
   public EgovMap selectCowayAccountProductPreviewList(HttpServletRequest request, Map<String, Object> params) {
     List<EgovMap> cowayAccountProductPreviewList = apiMapper.selectCowayAccountProductPreviewList(params);
+
+    cowayAccountProductPreviewList.forEach(obj -> {
+      Map<String, Object> map = (Map<String, Object>) obj;
+      EgovMap membershipExpiredDate = apiMapper.selectMembershipExpiredDate(map);
+      map.put("membershipExpiryDate",membershipExpiredDate.get("membershipExpiryDate"));
+    });
+
     return displayResponseMessage(request, params,cowayAccountProductPreviewList);
   }
 
   @Override
   public EgovMap selectCowayAccountProductPreviewListByAccountCode(HttpServletRequest request, Map<String, Object> params) {
     List<EgovMap> cowayAccountProductPreviewListByAccountCode = apiMapper.selectCowayAccountProductPreviewListByAccountCode(params);
+
+    cowayAccountProductPreviewListByAccountCode.forEach(obj -> {
+      Map<String, Object> map = (Map<String, Object>) obj;
+      EgovMap membershipExpiredDate = apiMapper.selectMembershipExpiredDate(map);
+      map.put("membershipExpiryDate",membershipExpiredDate.get("membershipExpiryDate"));
+    });
+
     return displayResponseMessage(request, params,cowayAccountProductPreviewListByAccountCode);
   }
 
@@ -221,9 +235,7 @@ public class ApiServiceImpl implements ApiService {
 
     EgovMap productDetail = apiMapper.selectProductDetail(params);
     EgovMap memDetail = apiMapper.selectLatestMembership(params);
-    LOGGER.info(productDetail.toString());
     productDetail.putAll(memDetail);
-    LOGGER.info(memDetail.toString());
     return displayResponseMessage(request, params,productDetail);
   }
 

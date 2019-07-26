@@ -119,7 +119,7 @@
 			MEMBERSHIP_OUTSTANDING,
 			ORDER_STUS,
 			INSTALL_DT ,
-			MEMBERSHIP_EXPIRY_DATE ,
+
 			LAST_SERVICE_DT ,
 			STK_CODE ,
 			STK_DESC ,
@@ -133,7 +133,7 @@
 			NVL((PRODUCT_TOTAL_OUTSTANDING + MEMBERSHIP_OUTSTANDING),0) TOTAL_OUTSTANDING,
 			LAST_SERVICE_DT ,
 			INSTALL_DT ,
-			MEMBERSHIP_EXPIRY_DATE ,
+
 			STK_CODE ,
 			STK_DESC ,
 			SALES_ORD_NO
@@ -179,6 +179,13 @@
                 MEMBERSHIP_FEE
             FROM CP1025V
         WHERE SALES_ORD_NO = #{orderNo}
+    </select>
+
+    <select id="selectMembershipExpiredDate" parameterType="Map" resultType="egovMap">
+         SELECT
+                MEMBERSHIP_EXPIRY_DATE
+            FROM CP1025V
+        WHERE SALES_ORD_NO = #{salesOrdNo}
     </select>
 
     <select id="selectHeartServiceList" parameterType="Map" resultType="egovMap">
