@@ -103,6 +103,7 @@ import io.swagger.annotations.ApiOperation;
  * 08/05/2019    ONGHC      1.0.2       - Amend Logs
  * 08/05/2019    ONGHC      1.0.3       - Amend hsRegistration to add stage
  * 08/07/2019    ONGHC      1.0.4       - Amend asRegistration to fix Commission issue
+ * 26/07/2019    ONGHC      1.0.5       - Amend asRegistration to fix Commission and Update User issue
  *********************************************************************************************/
 
 @Api(value = "service api", description = "service api")
@@ -762,11 +763,11 @@ public class ServiceApiController {
             params.put("AS_REN_COLCT_ID", 0);
 
             if (getAsBasic.get("asCmms") != null) {
-              //params.put("AS_CMMS", String.valueOf(getAsBasic.get("asCmms")));
-              params.put("AS_CMMS", "1");
+              params.put("AS_CMMS", String.valueOf(getAsBasic.get("asCmms")));
+              //params.put("AS_CMMS", "1");
             } else {
               //params.put("AS_CMMS", "0");
-              params.put("AS_CMMS", "1");
+              params.put("AS_CMMS", "0");
             }
 
             if (getAsBasic.get("asBrnchId") != null) {
@@ -978,7 +979,7 @@ public class ServiceApiController {
             Map<String, Object> asResultInsert = new HashMap();
 
             asResultInsert.put("asResultM", params);
-            asResultInsert.put("updator", getAsBasic.get("userId"));
+            asResultInsert.put("updator", getAsBasic.get("updUsrId"));
             asResultInsert.put("add", paramsDetailCvt); // FILTER LIST
 
             LOGGER.debug("### AS INSERT : " + asResultInsert.toString());
@@ -1031,7 +1032,6 @@ public class ServiceApiController {
       }
     }
     LOGGER.debug("==================================[MB]AFTER SERVICE RESULT - END - ====================================");
-
     return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
   }
 
