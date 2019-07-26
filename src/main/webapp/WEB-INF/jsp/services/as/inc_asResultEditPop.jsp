@@ -589,6 +589,7 @@
       $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");
       $('#txtRemark').removeAttr("disabled").removeClass("readonly");
       //$('#iscommission').removeAttr("disabled").removeClass("readonly");
+
       $("#iscommission").attr("disabled", false);
 
       $('#def_type').removeAttr("disabled").removeClass("readonly");
@@ -666,6 +667,9 @@
       $("#btnSaveDiv").show();
       $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
       $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+
+
+      $('#iscommission').attr("disabled", false);
 
       $('#appDate').removeAttr("disabled").removeClass("readonly");
       $('#CTGroup').removeAttr("disabled").removeClass("readonly");
@@ -1308,6 +1312,11 @@
           rtnValue = false;
         }
       }
+
+      if (FormUtil.checkReqValue($("#txtRemark"))) {
+        rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
+        rtnValue = false;
+      }
     }
 
     if (rtnValue == false) {
@@ -1330,10 +1339,13 @@
 
   function fn_productGroup_SelectedIndexChanged_2(val) {
     var STK_CTGRY_ID = $("#productGroup").val();
-    $("#serialNo").val("");
-    $("#productCode option").remove();
 
-    doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID=' + STK_CTGRY_ID, '', val, 'productCode', 'S', '');
+    if (STK_CTGRY_ID != null) {
+      $("#serialNo").val("");
+      $("#productCode option").remove();
+
+      doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID=' + STK_CTGRY_ID, '', val, 'productCode', 'S', '');
+    }
   }
 
   function fn_setSaveFormData() {
@@ -1766,6 +1778,34 @@
     }
   }
 
+  function fn_chkDt2(obj) {
+    var crtDt = new Date();
+    var apptDt = $("#appDate").val();
+    var date = apptDt.substring(0, 2);
+    var month = apptDt.substring(3, 5);
+    var year = apptDt.substring(6, 10);
+
+    var dd = String(crtDt.getDate()).padStart(2, '0');
+    var mm = String(crtDt.getMonth() + 1).padStart(2, '0');
+    var yyyy = crtDt.getFullYear();
+
+    var strdate = yyyy + mm + dd;
+    var enddate = year + month + date;
+
+    if (enddate < strdate) {
+      alert("Appointment Date must be greater or equal to Current Date ");
+      $("#appDate").val("");
+      $("#CTSSessionCode").val("");
+      $("#branchDSC").val("");
+      $("#CTCode").val("");
+      $("#CTGroup").val("");
+      $("#callRem").val("");
+      return;
+    } else {
+      fn_doAllaction(obj);
+    }
+  }
+
   setPopData();
 </script>
 <form id="asDataForm" method="post">
@@ -1880,7 +1920,7 @@
        </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code='service.title.Remark' /></th>
+       <th scope="row"><spring:message code='service.title.Remark' /><span class="must">*</span></th>
        <td colspan="3">
          <textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtRemark' name='txtRemark'></textarea></td>
       </tr>
@@ -1896,7 +1936,7 @@
        <td>
          <input type="text" title="" placeholder="<spring:message code='service.grid.CrtBy' />" class="disabled w100p" disabled="disabled" id='creator' name='creator'/>
        </td>
-       <th scope="row"><spring:message code='service.grid.CrtDt' /></th>
+       <th scope="row"><spring:message code='service.grid.CrtDt' /><span class="must">*</span></th>
        <td>
          <input type="text" title="" placeholder="<spring:message code='service.grid.CrtDt' />" class="disabled w100p" disabled="disabled" id='creatorat' name='creatorat'/>
        </td>
@@ -1922,7 +1962,7 @@
        <tr>
          <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
          <td>
-          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " readonly="readonly" id="appDate" name="appDate" onChange="fn_doAllaction(this)"/>
+          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " readonly="readonly" id="appDate" name="appDate" onChange="fn_chkDt2(this);"/>
          </td>
          <th scope="row"><spring:message code='service.title.AppointmentSessione' /><span class="must">*</span></th>
          <td>
