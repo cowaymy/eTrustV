@@ -6,8 +6,10 @@
  ----------------------------------------------------------------
  01/04/2019  ONGHC  1.0.1          RE-STRUCTURE JSP AND ADD IN HOUSE REPAIR FUNCTION
  02/04/2019  ONGHC  1.0.2          Inherit Error Code and Error Desc.
+ 26/04/2019  ONGHC  1.0.3          ADD RECALL STATUS
  -->
 
+<!-- AS ORDER > AS MANAGEMENT > VIEW / ADD AS ENTRY -->
 <script type="text/javaScript">
   var regGridID;
   var myFltGrd10;
@@ -15,87 +17,75 @@
   var asMalfuncResnId;
 
   $(document).ready(
-      function() {
-        createAUIGrid();
-        createCFilterAUIGrid();
+    function() {
+      createAUIGrid();
+      createCFilterAUIGrid();
 
-        //add_CreateAUIGrid();
-        AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
-        AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
+      //add_CreateAUIGrid();
+      AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
+      AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
 
-        var isF = true;
-        AUIGrid.bind(myFltGrd10, "rowStateCellClick", function(event) {
-          if (event.marker == "added") {
-            if (event.item.filterType == "CHG") {
-              var fChage = Number($("#txtFilterCharge").val());
-              var totchrge = Number($("#txtTotalCharge").val());
+      var isF = true;
+      AUIGrid.bind(myFltGrd10, "rowStateCellClick", function(event) {
+        if (event.marker == "added") {
+          if (event.item.filterType == "CHG") {
+            /*var fChage = Number($("#txtFilterCharge").val());
+            var totchrge = Number($("#txtTotalCharge").val());
 
-              $("#txtFilterCharge").val(fChage - Number(event.item.filterTotal));
-              $("#txtTotalCharge").val(totchrge - Number(event.item.filterTotal));
-            }
-          } else if (event.marker == "removed") {
-            if (event.item.filterType == "CHG") {
-              var fChage = Number($("#txtFilterCharge").val());
-              var totchrge = Number($("#txtTotalCharge").val());
+            fChage = (fChage - Number(event.item.filterTotal)).toFixed(2);
+            totchrge = (totchrge - Number(event.item.filterTotal)).toFixed(2);
 
-              $("#txtFilterCharge").val(fChage + Number(event.item.filterTotal));
-              $("#txtTotalCharge").val(totchrge + Number(event.item.filterTotal));
-            }
-
-          } else if (event.marker == "added-edited") {
-
+            $("#txtFilterCharge").val(fChage);
+            $("#txtTotalCharge").val(totchrge);*/
           }
+        } else if (event.marker == "removed") {
+          if (event.item.filterType == "CHG") {
+            var fChage = Number($("#txtFilterCharge").val());
+            var totchrge = Number($("#txtTotalCharge").val());
 
-          $("#ddlStatus").change(function() {
-            if ($("#ddlStatus").val() == 4) {
-              $("#iscommission").attr("checked", true);
-            } else {
-              $("#iscommission").attr("checked", false);
-            }
-          });
-        });
+            fChage = (fChage + Number(event.item.filterTotal)).toFixed(2);
+            totchrge = (totchrge + Number(event.item.filterTotal)).toFixed(2);
 
-        fn_getErrMstList('${ORD_NO}');
-
-        doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '', 'ddlFilterExchangeCode', 'S', '');
-        doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '', 'ddlFailReason', 'S', '');
-        // doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , '');
-        // doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');
-
-        doGetCombo('/services/as/inHouseGetProductMasters.do', '', '', 'productGroup', 'S', '');
-
-        fn_getASOrderInfo();
-        fn_getASEvntsInfo();
-        fn_getASHistoryInfo();
-
-        fn_DisablePageControl();
-        $("#ddlStatus").attr("disabled", false);
-
-        AUIGrid.resize(myFltGrd10, 950, 200);
-
-        fn_getASRulstSVC0004DInfo();
-        //fn_checkASEntryCommission();
-        fn_getASRulstEditFilterInfo();
-
-        if ('${REF_REQST}' > 0) {
-          //fn_getASRulstSVC0004DInfo();
-          //fn_getASRulstEditFilterInfo();
-          $("#IN_HOUSE_CLOSE").val("Y");
-          //$("#btnSaveDiv").attr("style", "display:inline");
+            $("#txtFilterCharge").val(fChage);
+            $("#txtTotalCharge").val(totchrge);
+          }
+        } else if (event.marker == "added-edited") {
         }
 
-        if ('${IS_AUTO}' == "true") {
-          $("#inHouseRepair_div").attr("style", "display:none");
-        }
+      });
 
-        $("#ddlStatus").change(function() {
-          if ($("#ddlStatus").val() == 4) {
-            //$("#iscommission").prop("checked", true);
-          } else {
-           // $("#iscommission").prop("checked", false);
-          }
-       });
-     });
+      fn_getErrMstList('${ORD_NO}');
+
+      doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '', 'ddlFilterExchangeCode', 'S', ''); // FITLER EXCHANGE CODE
+      doGetCombo('/services/as/getBrnchId', '', '', 'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
+      doGetCombo('/services/as/inHouseGetProductMasters.do', '', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT CODE
+      // doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '', 'ddlFailReason', 'S', '');
+      // doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , '');
+      // doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');
+
+      fn_getASOrderInfo(); // GET AS ORDER INFOR.
+      fn_getASEvntsInfo(); // GET AS EVENT INFOR.
+      fn_getASHistoryInfo(); // GET AS HISTORY INFOR
+
+      fn_DisablePageControl(); // DISABLE ALL THE FIELD
+      $("#ddlStatus").attr("disabled", false); // ENABLE BACK STATUS
+
+      AUIGrid.resize(myFltGrd10, 950, 200);
+
+      fn_getASRulstSVC0004DInfo();
+      fn_getASRulstEditFilterInfo();
+
+      if ('${REF_REQST}' > 0) { // TO BE REMOVE
+        //fn_getASRulstSVC0004DInfo();
+        //fn_getASRulstEditFilterInfo();
+        $("#IN_HOUSE_CLOSE").val("Y");
+        //$("#btnSaveDiv").attr("style", "display:inline");
+      }
+
+      if ('${IS_AUTO}' == "true") { // TO BE REMOVE
+        $("#inHouseRepair_div").attr("style", "display:none");
+      }
+    });
 
   function fn_inHouseAutoClose() {
     if ('${IS_AUTO}' == "true") {
@@ -145,19 +135,20 @@
     Common.ajax("GET", "/services/as/getASRulstSVC0004DInfo", $("#resultASForm").serialize(), function(result) {
       if (result != "") {
         fn_setSVC0004dInfo(result);
-      }else {
-    	  fn_checkASEntryCommission();
+      } else {
+        fn_checkASEntryCommission();
       }
     });
   }
 
   function fn_checkASEntryCommission(){
-	  Common.ajax("GET", "/services/as/getASEntryCommission", $("#resultASForm").serialize(), function(result) {
-			   if (result == "1") {
-				   $("#iscommission").prop("checked", true);
-				      //$("#iscommission").attr("checked", true);
-				    }
-	  });
+    Common.ajax("GET", "/services/as/getASEntryCommission", $("#resultASForm").serialize(), function(result) {
+      if (result == "1") {
+        $("#iscommission").prop("checked", true);
+      } else {
+        $("#iscommission").prop("checked", false);
+      }
+    });
   }
 
   function fn_setSVC0004dInfo(result) {
@@ -266,8 +257,13 @@
       var fChage = Number($("#txtFilterCharge").val());
       var totchrge = Number($("#txtTotalCharge").val());
 
-      $("#txtFilterCharge").val(fChage - Number(event.items[0].filterTotal));
-      $("#txtTotalCharge").val(totchrge - Number(event.items[0].filterTotal));
+      if (fChage.toFixed(2) != "0.00") {
+        fChage = (fChage - Number(event.items[0].filterTotal)).toFixed(2);
+        totchrge = (totchrge - Number(event.items[0].filterTotal)).toFixed(2);
+
+        $("#txtFilterCharge").val(fChage);
+        $("#txtTotalCharge").val(totchrge);
+      }
     }
   }
 
@@ -350,31 +346,38 @@
     }, {
       dataField : "filterDesc",
       headerText : "<spring:message code='service.grid.ASFltDesc'/>",
-      width : 80
+      editable : false,
+      width : 250
     }, {
       dataField : "filterExCode",
       headerText : "<spring:message code='service.grid.ASFltCde'/>",
-      width : 80
+      editable : false,
+      width : 150
     }, {
       dataField : "filterQty",
       headerText : "<spring:message code='service.grid.Quantity'/>",
+      editable : false,
       width : 100
     }, {
       dataField : "filterPrice",
       headerText : "<spring:message code='service.title.Price'/>",
+      editable : false,
       width : 100
     }, {
       dataField : "filterTotal",
       headerText : "<spring:message code='sal.title.total'/>",
+      editable : false,
       width : 150
     }, {
       dataField : "filterRemark",
       headerText : "<spring:message code='service.title.Remark'/>",
+      editable : false,
       width : 150,
       editable : false
     }, {
       dataField : "srvFilterLastSerial",
       headerText : "<spring:message code='service.title.SerialNo'/>",
+      editable : false,
       width : 200,
       editable : true
     }, {
@@ -437,9 +440,7 @@
       $("#txtMembership").text(result[0].c5);
       $("#txtExpiredDate").text(result[0].c6);
 
-      var prdctCd = $("#txtProductCode").text();
-      doGetCombo('/services/as/getASFilterInfo.do?prdctCd=' + prdctCd, '', '', 'ddlFilterCode', 'S', '');
-
+      doGetCombo('/services/as/getASFilterInfo.do?prdctCd=' + result[0].stockCode, '', '', 'ddlFilterCode', 'S', '');
     });
   }
 
@@ -523,9 +524,7 @@
 
   function getASStockPrice(_PRC_ID) {
     var ret = 0;
-    Common.ajaxSync("GET", "/services/as/getASStockPrice.do", {
-      PRC_ID : _PRC_ID
-    }, function(result) {
+    Common.ajaxSync("GET", "/services/as/getASStockPrice.do", { PRC_ID : _PRC_ID }, function(result) {
       try {
         ret = parseInt(result[0].amt, 10);
       } catch (e) {
@@ -540,31 +539,31 @@
   function fn_chStock() {
     var ct = $("#ddlCTCodeText").val();
     var sk = $("#ddlFilterCode").val();
+
     var availQty = isstckOk(ct, sk);
 
     if (availQty == 0) {
-      Common.alert("<spring:message code='service.msg.NoStkAvl'/>");
+      Common.alert("<spring:message code='service.msg.NoStkAvl' arguments='<b>" + $("#ddlCTCodeText option:selected").text() + "</b> ; <b>" + ct +"</b>' htmlEscape='false' argumentSeparator=';' />");
       fn_filterClear();
       return false;
     } else {
 
       if (availQty < Number($("#ddlFilterQty").val())) {
-        Common.alert('*<b> Not enough available stock to the member.  <br> availQty[' + availQty + '] </b>');
+        Common.alert("<spring:message code='service.msg.lessStkQty' arguments='<b>" + $("#ddlCTCodeText option:selected").text() + "</b> ; <b>" + ct +"</b>' htmlEscape='false' argumentSeparator=';' />");
         fn_filterClear();
         return false;
       }
       return true;
-    }
+     }
   }
 
   function isstckOk(ct, sk) {
-
+    // COUNT STOCK
     var availQty = 0;
 
-    Common.ajaxSync("GET", "/services/as/getSVC_AVAILABLE_INVENTORY.do", {
-      CT_CODE : ct,
-      STK_CODE : sk
+    Common.ajaxSync("GET", "/services/as/getSVC_AVAILABLE_INVENTORY.do", { CT_CODE : ct, STK_CODE : sk
     }, function(result) {
+      // RETURN AVAILABLE STOCK
       availQty = result.availQty;
     });
 
@@ -572,32 +571,45 @@
   }
 
   function fn_filterAddVaild() {
-
+    var msg = "";
+    var text = "";
     if (FormUtil.checkReqValue($("#ddlFilterCode option:selected"))) {
-      return false;
+      text = "<spring:message code='service.title.FilterCode'/>";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
     }
-
     if (FormUtil.checkReqValue($("#ddlFilterQty option:selected"))) {
-      return false;
+      text = "<spring:message code='service.grid.Quantity'/>";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
     }
-
     if (FormUtil.checkReqValue($("#ddlFilterPayType option:selected"))) {
-      return false;
+      text = "<spring:message code='service.text.asPmtTyp'/>";
+     msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+    }
+    if (FormUtil.checkReqValue($("#ddlFilterExchangeCode option:selected"))) {
+      text = "<spring:message code='service.text.asExcRsn'/>";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
     }
 
-    if (FormUtil.checkReqValue($("#ddlFilterExchangeCode option:selected"))) {
+    if ($("#txtLabourch").is(':checked')) {
+      if (FormUtil.checkReqValue($("#cmbLabourChargeAmt option:selected"))) {
+        text = "<spring:message code='service.text.asLbrChr'/>";
+        msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+      }
+    }
+
+    if (msg != ""){
+      Common.alert(msg);
       return false;
     }
   }
 
   function fn_filterAdd() {
-
+    // CHECK AVAILABLE STOCK
     if (fn_chStock() == false) {
       return;
     }
 
     if (fn_filterAddVaild() == false) {
-      Common.alert('*<b>Please fill up the compulsory fields to add the filter.</b>');
       return false;
     }
 
@@ -612,42 +624,44 @@
     //fitem.filterCODE =$("#ddlFilterCode").va();
     fitem.srvFilterLastSerial = $("#ddSrvFilterLastSerial").val();
 
+    // CHECK PRICE
     var chargePrice = 0;
-    if (fitem.filterType == "CHG") {
-      chargePrice = getASStockPrice(fitem.filterID);
-    }
-
-    fitem.filterPrice = Number(chargePrice);
-
     var chargeTotalPrice = 0;
 
-    chargeTotalPrice = Number($("#ddlFilterQty").val()) * Number(chargePrice);
-    fitem.filterTotal = Number(chargeTotalPrice);
+    if (fitem.filterType == "CHG") {
+      chargePrice = getASStockPrice(fitem.filterID);
+      if (chargePrice == 0) {
+        Common.alert("<b>SAL0016M(StockPrice) no data  </br>");
+        return ;
+      }
+    }
 
-    var v = Number($("#txtFilterCharge").val()) + chargeTotalPrice;
-    $("#txtFilterCharge").val(v);
+    fitem.filterPrice = parseInt(chargePrice, 10).toFixed(2);
+
+    chargeTotalPrice = Number($("#ddlFilterQty").val()) * Number((chargePrice));
+    fitem.filterTotal = Number(chargeTotalPrice).toFixed(2);
+
+    var v = Number($("#txtFilterCharge").val()) + Number(chargeTotalPrice);
+    $("#txtFilterCharge").val(v.toFixed(2));
 
     if (AUIGrid.isUniqueValue(myFltGrd10, "filterID", fitem.filterID)) {
       fn_addRow(fitem);
     } else {
-      Common.alert("<b>This filter/spart part is existing. </br>");
+      Common.alert("<spring:message code='service.msg.rcdExist'/>");
       return;
     }
 
     fn_calculateTotalCharges();
+    fn_filterClear();
   }
 
   function fn_filterClear() {
-
     $("#ddlFilterCode").val("");
-    $("#ddlFilterQty").val("1");
-    $("#ddlFilterPayType").val("1");
+    $("#ddlFilterQty").val("");
+    $("#ddlFilterPayType").val("");
     $("#ddlFilterExchangeCode").val("");
     $("#ddSrvFilterLastSerial").val("");
     $("#txtFilterRemark").val("");
-
-    //AUIGrid.clearGridData(myFltGrd10);
-
   }
 
   function fn_addRow(gItem) {
@@ -655,14 +669,16 @@
   }
 
   function fn_LabourCharge_CheckedChanged(_obj) {
-
     if (_obj.checked) {
+      $("#fcm1").show();
       $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");
-      $("#cmbLabourChargeAmt").val("50");
-      $("#txtLabourCharge").val("50.00");
+      $("#cmbLabourChargeAmt").val("");
+      $("#txtLabourCharge").val("0.00");
     } else {
+      $("#fcm1").hide();
       $("#cmbLabourChargeAmt").val("");
       $("#cmbLabourChargeAmt").attr("disabled", true);
+      $("#txtLabourCharge").val("0.00");
     }
 
     fn_calculateTotalCharges();
@@ -675,27 +691,40 @@
 
     labourCharges = $("#txtLabourCharge").val();
     filterCharges = $("#txtFilterCharge").val();
-    totalCharges = Number(labourCharges) + Number(filterCharges);
+    totalCharges = parseFloat(labourCharges) + parseFloat(filterCharges);
 
-    $("#txtTotalCharge").val(totalCharges);
+    $("#txtTotalCharge").val(totalCharges.toFixed(2));
   }
 
   function fn_cmbLabourChargeAmt_SelectedIndexChanged() {
-    var v = $("#cmbLabourChargeAmt").val();
+    var v = "0.00";
+    if ($("#cmbLabourChargeAmt").val() != "") {
+      v = $("#cmbLabourChargeAmt option:selected").text();
+    } else {
+      v = "0.00";
+    }
     $("#txtLabourCharge").val(v);
     fn_calculateTotalCharges();
   }
 
   function fn_ddlStatus_SelectedIndexChanged(ind) {
-
-    //fn_clearPageField();
+    // STATUS CHANGE FAIL REASON CODE CHANGED
+    if ($("#ddlStatus").val() == 19) { // RECALL
+      doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=5551', '', '', 'ddlFailReason', 'S', '');
+    } else if ($("#ddlStatus").val() == 10) { // CANCEL
+      doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=5550', '', '', 'ddlFailReason', 'S', '');
+    } else {
+      doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=0', '', '', 'ddlFailReason', 'S', '');
+      $("#ddlFailReason").attr("disabled", true);
+    }
 
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-    console.log(selectedItems);
+
     $("#ddlCTCode").val(selectedItems[0].item.asMemId);
     $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
     $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
     $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
+
     if (selectedItems[0].item.asMalfuncId != "") {
       $("#ddlErrorCode").val(selectedItems[0].item.asMalfuncId);
       asMalfuncResnId = selectedItems[0].item.asMalfuncResnId;
@@ -704,24 +733,63 @@
 
     switch ($("#ddlStatus").val()) {
     case "4":
-      //COMPLETE
+      // COMPLETE
       fn_openField_Complete();
+      // RESET SECTION
+      fn_rstRecall(); //RECALL
+      $("#defEvt_div").attr("style", "display:block");
+      $("#chrFee_div").attr("style", "display:block");
+      $("#recall_div").attr("style", "display:none");
       break;
 
-    case "1": //INHOUSE ACTIVE
+    case "1":
+      // INHOUSE ACTIVE
       fn_openField_Complete();
+      // RESET SECTION
+      fn_rstRecall(); //RECALL
+      //fn_rstDftEnt(); //DEFECT ENTRY
+      fn_rstChrFee(); //FEE CAHRGE
+      $("#defEvt_div").attr("style", "display:block");
+      $("#chrFee_div").attr("style", "display:none");
+      $("#recall_div").attr("style", "display:none");
       break;
 
     case "10":
-      //CANCEL
+      // CANCEL
       fn_clearPageField();
       fn_openField_Cancel();
+      // RESET SECTION
+      fn_rstRecall(); //RECALL
+      fn_rstDftEnt(); //DEFECT ENTRY
+      fn_rstChrFee(); //FEE CAHRGE
+      $("#recall_div").attr("style", "display:none");
+      $("#defEvt_div").attr("style", "display:none");
+      $("#chrFee_div").attr("style", "display:none");
       break;
 
     case "21":
-      //FAILED
+      // FAILED
       fn_clearPageField();
       fn_openField_Fail();
+      // RESET SECTION
+      fn_rstRecall(); //RECALL
+      fn_rstDftEnt(); //DEFECT ENTRY
+      fn_rstChrFee(); //FEE CAHRGE
+      $("#recall_div").attr("style", "display:none");
+      $("#defEvt_div").attr("style", "display:none");
+      $("#chrFee_div").attr("style", "display:none");
+      break;
+
+    case "19":
+      // RECALL
+      fn_clearPageField();
+      fn_openField_Cancel();
+      fn_getRclData();
+      fn_rstDftEnt(); //DEFECT ENTRY
+      fn_rstChrFee(); //FEE CAHRGE
+      $("#recall_div").attr("style", "display:block");
+      $("#defEvt_div").attr("style", "display:none");
+      $("#chrFee_div").attr("style", "display:none");
       break;
 
     default:
@@ -739,6 +807,74 @@
       $("#m13").hide();
       break;
     }
+  }
+
+  function fn_getRclData() {
+  Common.ajax("GET", "/services/as/getASRclInfo.do", $("#resultASForm").serialize(), function(result) {
+      $("#appDate").val(result[0].appDt);
+      $("#CTSSessionCode").val(result[0].appSess);
+      $("#branchDSC").val(result[0].dscCde);
+
+      $("#CTCode").val(result[0].memId);
+      $("#CTGroup").val(result[0].memGrp);
+      $("#callRem").val(result[0].rclRmk);
+    });
+  }
+
+  function fn_rstChrFee() {
+    $("#txtLabourCharge").val("0.00");
+    $("#cmbLabourChargeAmt").val("");
+    $("#txtFilterCharge").val("0.00");
+    $("#txtTotalCharge").val("0.00");
+
+    $("#ddlFilterCode").val("");
+    $("#ddlFilterQty").val("");
+    $("#ddlFilterPayType").val("");
+    $("#ddlFilterExchangeCode").val("");
+    $("#ddSrvFilterLastSerial").val("");
+    $("#txtFilterRemark").val("");
+
+    $("#fcm1").hide();
+    $("#fcm2").hide();
+    $("#fcm3").hide();
+    $("#fcm4").hide();
+    $("#fcm5").hide();
+
+    var allRowItems = AUIGrid.getGridData(myFltGrd10);
+    if (allRowItems.length > 0) {
+      AUIGrid.clearGridData(myFltGrd10);
+    }
+  }
+
+  function fn_rstRecall() {
+    $("#appDate").val("");
+    $("#CTSSessionCode").val("");
+    $("#branchDSC").val("");
+    $("#CTCode").val("");
+    $("#CTGroup").val("");
+    $("#callRem").val("");
+  }
+
+  function fn_rstDftEnt() {
+    $("#def_type").val("");
+    $("#def_type_id").val("");
+    $("#def_type_text").val("");
+
+    $("#def_code").val("");
+    $("#def_code_id").val("");
+    $("#def_code_text").val("");
+
+    $("#def_part").val("");
+    $("#def_part_id").val("");
+    $("#def_part_text").val("");
+
+    $("#def_def").val("");
+    $("#def_def_id").val("");
+    $("#def_def_text").val("");
+
+    $("#solut_code").val("");
+    $("#solut_code_id").val("");
+    $("#solut_code_text").val("");
   }
 
   function fn_openField_Complete() {
@@ -777,18 +913,19 @@
     //$('#solut_code_text').removeAttr("disabled").removeClass("readonly");
     //$('#def_def_text').removeAttr("disabled").removeClass("readonly");
 
-    $("#txtFilterCharge").attr("disabled", false);
-    $("#txtLabourCharge").attr("disabled", false);
-    $("#cmbLabourChargeAmt").attr("disabled", false);
+    //$("#txtFilterCharge").attr("disabled", false);
+    //$("#txtLabourCharge").attr("disabled", false);
+    //$("#cmbLabourChargeAmt").attr("disabled", false);
     $("#ddlFilterCode").attr("disabled", false);
     $("#ddlFilterQty").attr("disabled", false);
     $("#ddlFilterPayType").attr("disabled", false);
     $("#ddlFilterExchangeCode").attr("disabled", false);
+    $("#ddSrvFilterLastSerial").attr("disabled", false);
     $("#txtFilterRemark").attr("disabled", false);
     fn_clearPanelField_ASChargesFees();
 
-    $("#ddlFilterQty").val("1");
-    $("#ddlFilterPayType").val("FOC");
+    //$("#ddlFilterQty").val("1");
+    //$("#ddlFilterPayType").val("FOC");
 
     if ($('#solut_code').val() == "B8" || $('#solut_code').val() == "B6") {
       if ($("input[name='replacement'][value='1']").prop("checked")) {
@@ -818,9 +955,15 @@
     $("#def_def").attr("disabled", "disabled");
     $("#solut_code").attr("disabled", "disabled");
 
-    $("#btnSaveDiv").attr("style", "display:inline");
+    $("#dpSettleDate").val("");
+    $("#tpSettleTime").val("");
+
+    $( "#txtLabourch" ).prop( "checked", false );
+
     $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
     $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+
+    $("#btnSaveDiv").attr("style", "display:inline");
   }
 
   function fn_openField_Fail() {
@@ -843,6 +986,11 @@
     $("#def_part").attr("disabled", "disabled");
     $("#def_def").attr("disabled", "disabled");
     $("#solut_code").attr("disabled", "disabled");
+
+    $("#dpSettleDate").val("");
+    $("#tpSettleTime").val("");
+
+    $( "#txtLabourch" ).prop( "checked", false );
 
     $("#btnSaveDiv").attr("style", "display:inline");
     $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
@@ -935,7 +1083,7 @@
       return;
     }
 
-    if ($("#ddlStatus").val() == 4 || $("#ddlStatus").val() == 1) {
+    if ($("#ddlStatus").val() == 4 || $("#ddlStatus").val() == 1) { // COMPLETE OR ACTIVE
       // AS DEFECTIVE EVENT
       if (!fn_validRequiredField_Save_DefectiveInfo()) {
         return;
@@ -963,9 +1111,9 @@
   };
 
   function fn_setSaveFormData() {
-    var addedRowItems = AUIGrid.getAddedRowItems(myFltGrd10);
-    var editedRowItems = AUIGrid.getEditedRowItems(myFltGrd10);
-    var removedRowItems = AUIGrid.getRemovedItems(myFltGrd10);
+    var addedRowItems = AUIGrid.getAddedRowItems(myFltGrd10); // FEE CHARGE ADD SET
+    var editedRowItems = AUIGrid.getEditedRowItems(myFltGrd10); // FEE CHARGE EDIT SET
+    var removedRowItems = AUIGrid.getRemovedItems(myFltGrd10); // FEE CHARGE DELETE SET
 
     var _AS_DEFECT_TYPE_ID = 0;
     var _AS_DEFECT_GRP_ID = 0;
@@ -975,6 +1123,7 @@
     var _AS_DEFECT_DTL_RESN_ID = 0;
     var _AS_SLUTN_RESN_ID = 0;
 
+    // DEFECT ENTRY
     if ($('#ddlStatus').val() == '4' || $('#ddlStatus').val() == '1') {
       _AS_DEFECT_TYPE_ID = $('#def_type_id').val();
       _AS_DEFECT_ID = $('#def_code_id').val();
@@ -983,6 +1132,7 @@
       _AS_SLUTN_RESN_ID = $('#solut_code_id').val();
     }
 
+    // IN HOUSE
     var inHInd = "";
     if ($('#ddlStatus').val() == '4') {
       if ($('#solut_code').val() == 'B8' || $('#solut_code').val() == 'B6') {
@@ -1002,6 +1152,7 @@
     }
 
     var asResultM = {
+      // GENERAL DATA
       AS_NO : "${AS_NO}",
       AS_ENTRY_ID : "${AS_ID}",
       AS_SO_ID : $("#ORD_ID").val(),
@@ -1018,6 +1169,16 @@
       AS_RESULT_REM : $('#txtRemark').val(),
       AS_MALFUNC_ID : $('#ddlErrorCode').val(),
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
+
+      // AS RECALL ENTRY
+      AS_APP_DT : $("#appDate").val(),
+      AS_APP_SESS : $("#CTSSessionCode").val(),
+      AS_RCL_ASG_DSC : $("#branchDSC").val(),
+      AS_RCL_ASG_CT : $("#CTCode").val(),
+      AS_RCL_ASG_CT_GRP : $("#CTGroup").val(),
+      AS_RCL_RMK : $("#callRem").val(),
+
+      // AS DEFECT ENTRY
       AS_DEFECT_TYPE_ID : _AS_DEFECT_TYPE_ID,
       AS_DEFECT_GRP_ID : _AS_DEFECT_GRP_ID,
       AS_DEFECT_ID : _AS_DEFECT_ID,
@@ -1025,13 +1186,15 @@
       AS_DEFECT_PART_ID : _AS_DEFECT_PART_ID,
       AS_DEFECT_DTL_RESN_ID : _AS_DEFECT_DTL_RESN_ID,
       AS_SLUTN_RESN_ID : _AS_SLUTN_RESN_ID,
+
+      // AS FILTER FEE CHARGES
       AS_WORKMNSH : $('#txtLabourCharge').val(),
       AS_FILTER_AMT : $('#txtFilterCharge').val(),
       AS_ACSRS_AMT : 0,
       AS_TOT_AMT : $('#txtTotalCharge').val(),
       AS_RESULT_IS_SYNCH : 0,
       AS_RCALL : 0,
-      AS_RESULT_STOCK_USE : addedRowItems.length > 0 ? 1 : 0,//detail 리스트 카운트
+      AS_RESULT_STOCK_USE : addedRowItems.length > 0 ? 1 : 0,
       AS_RESULT_TYPE_ID : 457,
       AS_RESULT_IS_CURR : 1,
       AS_RESULT_MTCH_ID : 0,
@@ -1040,6 +1203,8 @@
       AS_WORKMNSH_TAX_CODE_ID : 0,
       AS_WORKMNSH_TXS : 0,
       AS_RESULT_MOBILE_ID : 0,
+
+      // AS IN HOUSE REPAIR
       IN_HUSE_REPAIR_REM : $("#inHouseRemark").val(),
       IN_HUSE_REPAIR_REPLACE_YN : inHseRprInd,
       IN_HUSE_REPAIR_PROMIS_DT : $("#promisedDate").val(),
@@ -1048,10 +1213,10 @@
       IN_HUSE_REPAIR_SERIAL_NO : $("#serialNo").val(),
       CHANGBN : inHInd,
       IN_HOUSE_CLOSE : $("#IN_HOUSE_CLOSE").val(),
+
+      // OTHER
       RCD_TMS : $("#RCD_TMS").val()
     }
-
-    console.log(asResultM);
 
     var saveForm = {
       "asResultM" : asResultM,
@@ -1060,23 +1225,25 @@
       "remove" : removedRowItems
     }
 
+    // SAVE RESULT
     Common.ajax("POST", "/services/as/newASInHouseAdd.do", saveForm,
       function(result) {
-        console.log(result);
-        console.log("result.data ::" + result.data);
         if (result.data != "" && result.data != null && result.data != "null") {
           Common.alert("<b>AS result save successfully.</b></br> New AS Result Number : <b>" + result.data + " </b>");
           $("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
           fn_DisablePageControl();
           $("#_newASResultDiv1").remove();
+          fn_searchASManagement();
         } else {
           Common.alert("<b>AS result save successfully.</b>");
           $("#txtResultNo").html("<font size='3' color='red'> <b> " + $("#txtResultNo").val() + " </b></font>");
           fn_DisablePageControl();
           $("#_newASResultDiv1").remove();
+          fn_searchASManagement();
         }
       }, function() {
         $("#_newASResultDiv1").remove();
+        fn_searchASManagement();
       });
   }
 
@@ -1128,6 +1295,7 @@
     $("#ddlFilterQty").attr("disabled", true);
     $("#ddlFilterPayType").attr("disabled", true);
     $("#ddlFilterExchangeCode").attr("disabled", true);
+    $("#ddSrvFilterLastSerial").attr("disabled", true);
     $("#txtFilterRemark").attr("disabled", true);
     fn_clearPanelField_ASChargesFees();
 
@@ -1163,7 +1331,7 @@
       rtnValue = false;
     }
 
-    if ($("#ddlStatus").val() == 4) {
+    if ($("#ddlStatus").val() == 4) { // IN HOUSE REPAIR
       if ($("#solut_code").val() == "B8" || $("#solut_code").val() == "B6") {
        if ($("input[name='replacement'][value='1']").prop("checked")) {
           if (FormUtil.checkReqValue($("#serialNo"))) {
@@ -1182,19 +1350,22 @@
   }
 
   function fn_validRequiredField_Save_ResultInfo() {
+    var text = "";
     var rtnMsg = "";
     var rtnValue = true;
 
     if (FormUtil.checkReqValue($("#ddlStatus"))) {
-      rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='AS Status' htmlEscape='false'/> </br>";
+      text = "<spring:message code='service.grid.Status'/>";
+      rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
       rtnValue = false;
     } else {
-      if ($("#ddlStatus").val() == 4 || $("#ddlStatus").val() == 1) {
-        if (FormUtil.checkReqValue($("#dpSettleDate"))) {
-          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Settle Date' htmlEscape='false'/> </br>";
+      if ($("#ddlStatus").val() == 4 || $("#ddlStatus").val() == 1) { // COMPLETE OR ACTIVE
+        if (FormUtil.checkReqValue($("#dpSettleDate"))) { // IF SATTLE DATE IS EMPTY
+          text = "<spring:message code='service.grid.SettleDate'/>";
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
           rtnValue = false;
         } else {
-          var asno = $("#txtASNo").val();
+          var asno = $("#txtASNo").val(); // AS NO.
           if (asno.match("AS")) {
             var nowdate = $.datepicker.formatDate($.datepicker.ATOM, new Date());
             var nowdateArry = nowdate.split("-");
@@ -1211,33 +1382,57 @@
           }
         }
 
-        if (FormUtil.checkReqValue($("#tpSettleTime"))) {
+        if (FormUtil.checkReqValue($("#tpSettleTime"))) { // SETTLE TIME
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Settle Time' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
 
-        if (FormUtil.checkReqValue($("#ddlErrorCode"))) {
+        if (FormUtil.checkReqValue($("#ddlErrorCode"))) { // ERROR CODE
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Error Code' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
 
-        if (FormUtil.checkReqValue($("#ddlErrorDesc"))) {
+        if (FormUtil.checkReqValue($("#ddlErrorDesc"))) { // ERROR DESCRIPTION
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Error Description' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
 
-        if (FormUtil.checkReqValue($("#ddlDSCCode"))) {
+        if (FormUtil.checkReqValue($("#ddlDSCCode"))) { // DSC CODE
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='DSC Code' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
 
-        if (FormUtil.checkReqValue($("#ddlCTCode"))) {
+        if (FormUtil.checkReqValue($("#ddlCTCode"))) { // CT CODE
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT Code' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
-      } else {
-
-        if (FormUtil.checkReqValue($("#ddlFailReason"))) {
+      } else if ($("#ddlStatus").val() == 19) { // RECALL
+        if (FormUtil.checkReqValue($("#ddlFailReason"))) { // FAIL REASON
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Fail Reason' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
+        if (FormUtil.checkReqValue($("#appDate"))) { // APPOINTMENT DATE
+          text = "<spring:message code='service.title.AppointmentDate'/>";
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
+        if (FormUtil.checkReqValue($("#branchDSC"))) { // DSC CODE
+          text = "<spring:message code='service.title.DSCBranch'/>";
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
+        if (FormUtil.checkReqValue($("#CTCode"))) { // ASSIGN CT CODE
+          text = "<spring:message code='service.grid.AssignCT'/>";
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
+        if (FormUtil.checkReqValue($("#callRem"))) { // CALL REMARK
+          text = "<spring:message code='service.title.Remark'/>";
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
+      } else { // CANCEL
+        if (FormUtil.checkReqValue($("#ddlFailReason"))) { // FAIL REASON
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Fail Reason' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
@@ -1336,11 +1531,12 @@
   function fn_productGroup_SelectedIndexChanged() {
     var STK_CTGRY_ID = $("#productGroup").val();
 
-    $("#serialNo").val("");
-    $("#productCode option").remove();
+    if (STK_CTGRY_ID != null) {
+      $("#serialNo").val("");
+      $("#productCode option").remove();
 
-    doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID='
-        + STK_CTGRY_ID, '', '', 'productCode', 'S', '');
+      doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID=' + STK_CTGRY_ID, '', '', 'productCode', 'S', '');
+    }
   }
 
   function fn_replacement(val) {
@@ -1450,6 +1646,109 @@
     }
   }
 
+  function fn_doAllaction(obj) {
+    var ord_id = '${orderDetail.basicInfo.ordId}';
+
+    var vdte = $(obj).val();
+    var text = "";
+
+    if ($(obj).attr('id') == "requestDate") {
+      text = "<spring:message code='service.title.RequestDate' />";
+    } else {
+      text = "<spring:message code='service.grid.AppntDt' />";
+    }
+
+    var fmt = fn_valDtFmt(vdte);
+    if (!fmt) {
+      Common.alert("* " + text + " <spring:message code='service.msg.invalidDate' />");
+      $(obj).val("");
+      return;
+    }
+
+    var sDate = (vdte).split("/");
+    var tDate = new Date();
+    var tMth = tDate.getMonth() + 1;
+    var tYear = tDate.getFullYear();
+    var sMth = parseInt(sDate[1]);
+    var sYear = parseInt(sDate[2]);
+
+    if (tYear > sYear) {
+      Common.alert("* " + text + " <spring:message code='service.msg.inCrnYrMth' />");
+      $(obj).val("");
+      return;
+    } else {
+      if (tMth > sMth) {
+        Common.alert("* " + text + " <spring:message code='service.msg.inCrnYrMth' />");
+        $(obj).val("");
+        return;
+      }
+    }
+
+    var options = {
+      ORD_ID : ord_id,
+      S_DATE : vdte,
+      CTCodeObj : 'CTCodeObj',
+      CTIDObj : 'CTIDObj',
+      CTgroupObj : 'CTgroupObj'
+    }
+
+    Common.popupDiv("/organization/allocation/allocation.do", {
+      ORD_ID : ord_id,
+      S_DATE : vdte,
+      OPTIONS : options,
+      TYPE : 'AS'
+    }, null, true, '_doAllactionDiv');
+  }
+
+  function fn_secChk(obj){
+    if (obj.id == "recall_dt") {
+      if ($("#ddlStatus").val() != '19') {
+        Common.alert("This section only applicable for <b>Recall</b> status");
+        return;
+      }
+    }
+    if (obj.id == "defEvt_dt" || obj.id == "chrFee_dt") {
+      if ($("#ddlStatus").val() != '4') {
+        Common.alert("This section only applicable for <b>Complete</b> status");
+        return;
+      }
+    }
+    if (obj.id == "defEvt_dt" || obj.id == "chrFee_dt") {
+      if ($("#ddlStatus").val() != '4') {
+        Common.alert("This section only applicable for <b>Complete</b> status");
+        return;
+      }
+    }
+    /*if (obj.id == "inHouse_dt" || obj.id == "inHouse_dt") {
+      if ($("#ddlStatus").val() != '4') {
+        Common.alert("This section only applicable for <b>Complete</b> status");
+        return;
+      }
+    }*/
+  }
+
+  function fn_setMand(obj) {
+    if (obj.value != "") {
+      $("#fcm3").show();
+      $("#fcm4").show();
+      $("#fcm5").show();
+
+      $("#ddlFilterQty").val("");
+      $("#ddlFilterPayType").val("");
+      $("#ddlFilterExchangeCode").val("");
+      $("#ddSrvFilterLastSerial").val("");
+    } else {
+      $("#fcm3").hide();
+      $("#fcm4").hide();
+      $("#fcm5").hide();
+
+      $("#ddlFilterQty").val("");
+      $("#ddlFilterPayType").val("");
+      $("#ddlFilterExchangeCode").val("");
+      $("#ddSrvFilterLastSerial").val("");
+    }
+  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -1457,22 +1756,22 @@
   <!-- content start -->
   <form id="resultASForm" method="post">
    <div style="display: none">
-    <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" /> <input
-     type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" /> <input
-     type="text" name="AS_NO" id="AS_NO" value="${AS_NO}" /> <input
-     type="text" name="AS_ID" id="AS_ID" value="${AS_ID}" /> <input
-     type="text" name="REF_REQST" id="REF_REQST" value="${REF_REQST}" />
-     <input type="text" name="RCD_TMS" id="RCD_TMS" value="${RCD_TMS}" />
-     <input type="text" name="AS_RESULT_NO" id="RCD_TMS" value="${AS_RESULT_NO}" />
-     <input type="text" name="IN_HOUSE_CLOSE" id="IN_HOUSE_CLOSE" />
+    <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" />
+    <input type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" />
+    <input type="text" name="AS_NO" id="AS_NO" value="${AS_NO}" />
+    <input type="text" name="AS_ID" id="AS_ID" value="${AS_ID}" />
+    <input type="text" name="REF_REQST" id="REF_REQST" value="${REF_REQST}" />
+    <input type="text" name="RCD_TMS" id="RCD_TMS" value="${RCD_TMS}" />
+    <input type="text" name="AS_RESULT_NO" id="RCD_TMS" value="${AS_RESULT_NO}" />
+    <input type="text" name="IN_HOUSE_CLOSE" id="IN_HOUSE_CLOSE" />
    </div>
   </form>
   <header class="pop_header">
    <!-- pop_header start -->
-   <h1>New AS Result Entry</h1>
+   <h1><spring:message code='service.btn.addtAs'/></h1>
    <ul class="right_opt">
     <li><p class="btn_blue2">
-      <a href="#">CLOSE</a>
+      <a href="#"><spring:message code='sys.btn.close' /></a>
      </p></li>
    </ul>
   </header>
@@ -1483,12 +1782,9 @@
     <section class="tap_wrap">
      <!-- tap_wrap start -->
      <ul class="tap_type1">
-      <li><a href="#" class="on">Basic Info</a></li>
-      <li><a href="#">Product Info</a></li>
-      <li><a href="#">AS Events</a></li>
-      <li><a href="#"
-       onclick=" javascirpt:AUIGrid.resize(regGridID, 950,300);  ">After
-        Service</a></li>
+      <li><a href="#" class="on"><spring:message code='service.title.General' /></a></li>
+      <li><a href="#"><spring:message code='service.title.OrderInformation' /></a></li>
+      <li><a href="#" onclick=" javascirpt:AUIGrid.resize(regGridID, 950,300); "><spring:message code='service.title.asPassEvt' /></a></li>
      </ul>
      <article class="tap_area">
       <!-- tap_area start -->
@@ -1496,54 +1792,85 @@
        <!-- table start -->
        <caption>table</caption>
        <colgroup>
-        <col style="width: 180px" />
+        <col style="width: 150px" />
         <col style="width: *" />
-        <col style="width: 140px" />
+        <col style="width: 150px" />
         <col style="width: *" />
-        <col style="width: 170px" />
+        <col style="width: 150px" />
         <col style="width: *" />
        </colgroup>
        <tbody>
         <tr>
-         <th scope="row">AS No</th>
-         <td><span id="txtASNo">AS No</span></td>
-         <th scope="row">Order No</th>
+         <th scope="row"><spring:message code='service.grid.ASNo' /></th>
+         <td><span id="txtASNo"></span></td>
+         <th scope="row"><spring:message code='service.grid.SalesOrder' /></th>
          <td><span id="txtOrderNo"></span></td>
-         <th scope="row">Application Type</th>
+         <th scope="row"><spring:message code='service.title.ApplicationType' /></th>
          <td><span id="txtAppType"></span></td>
         </tr>
         <tr>
-         <th scope="row">Customer Name</th>
+         <th scope="row"><spring:message code='service.title.asStatus' /></th>
+         <td><span id='txtASStatus'></span></td>
+         <th scope="row">Malfunction Code</th>
+         <td><span id='txtMalfunctionCode'></span></td>
+         <th scope="row">Malfunction Reason</th>
+         <td><span id='txtMalfunctionReason'></span></td>
+        </tr>
+        <tr>
+         <th scope="row"></th>
+         <td><span id='txtProdCde'></span></td>
+         <th scope="row"><spring:message code='service.grid.ReqstDt' /></th>
+         <td><span id='txtRequestDate'></span></td>
+         <th scope="row"><spring:message code='service.title.ReqstTm' /></th>
+         <td><span id='txtRequestTime'></span></td>
+        </tr>
+        <tr>
+         <th scope="row"></th>
+         <td><span></span></td>
+         <th scope="row"><spring:message code='service.title.AppointmentDate' /></th>
+         <td><span id='txtAppDt'></span></td>
+         <th scope="row"><spring:message code='service.title.AppointmentTm' /></th>
+         <td><span id='txtAppTm'></span></td>
+        </tr>
+        <tr>
+         <th scope="row"><spring:message code='service.title.DSCCode' /></th>
+         <td><span id='txtDSCCode'></span></td>
+         <th scope="row"><spring:message code='service.title.InchargeCT' /></th>
+         <td colspan="3"><span id='txtInchargeCT'></span></td>
+        </tr>
+
+        <tr>
+         <th scope="row"><spring:message code='service.title.CustomerName' /></th>
          <td colspan="3"><span id="txtCustName"></span></td>
-         <th scope="row">NRIC/Company Np</th>
+         <th scope="row"><spring:message code='service.title.NRIC_CompanyNo' /></th>
          <td><span id="txtCustIC"></span></td>
         </tr>
         <tr>
-         <th scope="row">Contact Person</th>
+         <th scope="row"><spring:message code='service.title.ContactNo' /></th>
          <td colspan="5"><span id="txtContactPerson"></span></td>
         </tr>
         <tr>
-         <th scope="row">Tel (Mobile)</th>
+         <th scope="row"><spring:message code='sal.text.telM' /></th>
          <td><span id="txtTelMobile"></span></td>
-         <th scope="row">Tel (Residence)</th>
+         <th scope="row"><spring:message code='sal.text.telR' /></th>
          <td><span id="txtTelResidence"></span></td>
-         <th scope="row">Tel (Office)</th>
+         <th scope="row"><spring:message code='sal.text.telO' /></th>
          <td><span id="txtTelOffice"></span></td>
         </tr>
         <tr>
-         <th scope="row">Installation Address</th>
+         <th scope="row"><spring:message code='service.title.InstallationAddress' /></th>
          <td colspan="5"><span id="txtInstallAddress"></span></td>
         </tr>
         <tr>
-         <th scope="row">Requestor</th>
+         <th scope="row"><spring:message code='service.title.Rqst' /></th>
          <td colspan="3"><span id="txtRequestor"></span></td>
-         <th scope="row">AS Key By</th>
+         <th scope="row"><spring:message code='service.grid.CrtBy' /></th>
          <td></td>
         </tr>
         <tr>
-         <th scope="row">Requestor Contact</th>
+         <th scope="row"><spring:message code='service.title.RqstCtc' /></th>
          <td colspan="3"><span id="txtRequestorContact"></span></td>
-         <th scope="row">AS Key At</th>
+         <th scope="row"><spring:message code='sal.text.createDate' /></th>
          <td><span id="txtASKeyAt"></span></td>
         </tr>
        </tbody>
@@ -1552,101 +1879,15 @@
      </article>
      <!-- tap_area end -->
      <article class="tap_area">
-      <!-- tap_area start -->
-      <table class="type1">
-       <!-- table start -->
-       <caption>table</caption>
-       <colgroup>
-        <col style="width: 130px" />
-        <col style="width: *" />
-        <col style="width: 130px" />
-        <col style="width: *" />
-        <col style="width: 130px" />
-        <col style="width: *" />
-       </colgroup>
-       <tbody>
-        <tr>
-         <th scope="row">Product Code</th>
-         <td><span id="txtProductCode"></span></td>
-         <th scope="row">Product Name</th>
-         <td colspan="3"><span id="txtProductName"></span></td>
-        </tr>
-        <tr>
-         <th scope="row">Sirim No</th>
-         <td><span id="txtSirimNo"></span></td>
-         <th scope="row">Serial No</th>
-         <td><span id="txtSerialNo"></span></td>
-         <th scope="row">Category</th>
-         <td><span id="txtCategory"></span></td>
-        </tr>
-        <tr>
-         <th scope="row">Install No</th>
-         <td><span id="txtInstallNo"></span></td>
-         <th scope="row">Install Date</th>
-         <td><span id="txtInstallDate"></span></td>
-         <th scope="row">Install By</th>
-         <td><span id="txtInstallBy"></span></td>
-        </tr>
-        <tr>
-         <th scope="row">Instruction</th>
-         <td colspan="5"><span id="txtInstruction"></span></td>
-        </tr>
-        <tr>
-         <th scope="row">Membership</th>
-         <td colspan="3"><span id="txtMembership"></span></td>
-         <th scope="row">Expired Date</th>
-         <td><span id="txtExpiredDate"></span></td>
-        </tr>
-       </tbody>
-      </table>
-      <!-- table end -->
+       <!------------------------------------------------------------------------------
+          Order Detail Page Include START
+         ------------------------------------------------------------------------------->
+         <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
+       <!------------------------------------------------------------------------------
+          Order Detail Page Include END
+         ------------------------------------------------------------------------------->
      </article>
-     <!-- tap_area end -->
-     <article class="tap_area">
-      <!-- tap_area start -->
-      <table class="type1">
-       <!-- table start -->
-       <caption>table</caption>
-       <colgroup>
-        <col style="width: 160px" />
-        <col style="width: *" />
-        <col style="width: 180px" />
-        <col style="width: *" />
-        <col style="width: 150px" />
-        <col style="width: *" />
-       </colgroup>
-       <tbody>
-        <tr>
-         <th scope="row">AS Status</th>
-         <td><span id='txtASStatus'></span></td>
-         <th scope="row">Request Date</th>
-         <td><span id='txtRequestDate'></span></td>
-         <th scope="row">Request Time</th>
-         <td><span id='txtRequestTime'></span></td>
-        </tr>
-         <tr>
-         <th scope="row"></th>
-         <td><span></span></td>
-         <th scope="row">Appointment Date</th>
-         <td><span id='txtAppDt'></span></td>
-         <th scope="row">Appointment Time</th>
-         <td><span id='txtAppTm'></span></td>
-        </tr>
-        <tr>
-         <th scope="row">Malfunction Code</th>
-         <td><span id='txtMalfunctionCode'></span></td>
-         <th scope="row">Malfunction Reason</th>
-         <td colspan="3"><span id='txtMalfunctionReason'></span></td>
-        </tr>
-        <tr>
-         <th scope="row">DSC Code</th>
-         <td><span id='txtDSCCode'></span></td>
-         <th scope="row">Incharge Technician</th>
-         <td colspan="3"><span id='txtInchargeCT'></span></td>
-        </tr>
-       </tbody>
-      </table>
-      <!-- table end -->
+
       <article class="grid_wrap">
        <!-- grid_wrap start -->
       </article>
@@ -1666,15 +1907,12 @@
     </section>
     <!-- tap_wrap end -->
     <aside class="title_line">
-     <!-- title_line start -->
-     <h3 class="red_text">Fill the result at below :</h3>
+     <h3 class="red_text"><spring:message code='service.msg.msgFillIn' /></h3>
     </aside>
-    <!-- title_line end -->
     <article class="acodi_wrap">
-     <!-- acodi_wrap start -->
      <dl>
       <dt class="click_add_on on">
-       <a href="#">AS Result Information</a>
+       <a href="#"><spring:message code='service.title.asRstDtl' /></a>
       </dt>
       <dd>
        <table class="type1">
@@ -1688,128 +1926,154 @@
         </colgroup>
         <tbody>
          <tr>
-          <th scope="row">Result No</th>
+          <th scope="row"><spring:message code='service.grid.ResultNo' /></th>
           <td><span id='txtResultNo'></span></td>
-          <th scope="row">Status <span id='m1' name='m1' class="must">*</span>
+          <th scope="row"><spring:message code='sys.title.status'/><span id='m1' name='m1' class="must">*</span>
           </th>
-          <td><select class="w100p" id="ddlStatus" name="ddlStatus"
-           onChange="fn_ddlStatus_SelectedIndexChanged()">
-            <option value="">Choose One</option>
-            <option value="1">Active</option>
-            <option value="4">Complete</option>
-            <option value="10">Cancel</option>
-            <option value="21">Failure</option>
-          </select></td>
+          <td>
+            <select class="w100p" id="ddlStatus" name="ddlStatus" onChange="fn_ddlStatus_SelectedIndexChanged()">
+              <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+              <c:forEach var="list" items="${asCrtStat}" varStatus="status">
+                <option value="${list.codeId}">${list.codeName}</option>
+              </c:forEach>
+            </select>
+          </td>
          </tr>
          <tr>
-          <th scope="row">Settle Date <span id='m2' name='m2' class="must" style="display:none">*</span>
+          <th scope="row"><spring:message code='service.grid.SettleDate' /><span id='m2' name='m2' class="must" style="display:none">*</span>
           </th>
-          <td><input type="text" title="Create start Date"
-           id='dpSettleDate' name='dpSettleDate'
-           placeholder="DD/MM/YYYY" class="readonly j_date"
-           disabled="disabled" onChange="fn_chkDt('#dpSettleDate')"/></td>
-          <th scope="row">Fail Reason <span id='m3' name='m3' class="must" style="display:none">*</span></th>
-          <td><select id='ddlFailReason' name='ddlFailReason'
-           disabled="disabled"></select></td>
+          <td>
+            <input type="text" title="Create start Date" id='dpSettleDate' name='dpSettleDate' placeholder="DD/MM/YYYY" class="readonly j_date" disabled="disabled" onChange="fn_chkDt('#dpSettleDate')"/>
+          </td>
+          <th scope="row"><spring:message code='service.grid.FailReason' /><span id='m3' name='m3' class="must" style="display:none">*</span></th>
+          <td>
+            <select id='ddlFailReason' name='ddlFailReason' disabled="disabled" class="w100p">
+              <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+            </select>
+          </td>
          </tr>
          <tr>
-          <th scope="row">Settle Time <span id='m4' name='m4' class="must" style="display:none">*</span>
+          <th scope="row"><spring:message code='service.grid.SettleTm' /><span id='m4' name='m4' class="must" style="display:none">*</span>
           </th>
           <td>
            <div class="time_picker">
-            <!-- time_picker start -->
-            <input type="text" title="" placeholder="Settle Time" id='tpSettleTime'
-             name='tpSettleTime' class="readonly time_date"
-             disabled="disabled" />
+            <input type="text" title="" placeholder="Settle Time" id='tpSettleTime' name='tpSettleTime' class="readonly time_date" disabled="disabled" />
             <ul>
-             <li>Time Picker</li>
-             <li><a href="#">12:00 AM</a></li>
-             <li><a href="#">01:00 AM</a></li>
-             <li><a href="#">02:00 AM</a></li>
-             <li><a href="#">03:00 AM</a></li>
-             <li><a href="#">04:00 AM</a></li>
-             <li><a href="#">05:00 AM</a></li>
-             <li><a href="#">06:00 AM</a></li>
-             <li><a href="#">07:00 AM</a></li>
-             <li><a href="#">08:00 AM</a></li>
-             <li><a href="#">09:00 AM</a></li>
-             <li><a href="#">10:00 AM</a></li>
-             <li><a href="#">11:00 AM</a></li>
-             <li><a href="#">12:00 PM</a></li>
-             <li><a href="#">01:00 PM</a></li>
-             <li><a href="#">02:00 PM</a></li>
-             <li><a href="#">03:00 PM</a></li>
-             <li><a href="#">04:00 PM</a></li>
-             <li><a href="#">05:00 PM</a></li>
-             <li><a href="#">06:00 PM</a></li>
-             <li><a href="#">07:00 PM</a></li>
-             <li><a href="#">08:00 PM</a></li>
-             <li><a href="#">09:00 PM</a></li>
-             <li><a href="#">10:00 PM</a></li>
-             <li><a href="#">11:00 PM</a></li>
+             <li><spring:message code='service.text.timePick' /></li>
+             <c:forEach var="list" items="${timePick}" varStatus="status">
+              <li><a href="#">${list.codeName}</a></li>
+             </c:forEach>
             </ul>
            </div>
            <!-- time_picker end -->
           </td>
-          <th scope="row">DSC Code <span id='m5' name='m5' class="must" style="display:none">*</span>
+          <th scope="row"><spring:message code='service.title.DSCCode' /><span id='m5' name='m5' class="must" style="display:none">*</span>
           </th>
           <td>
-           <!--  <select  disabled="disabled" id='ddlDSCCode' name='ddlDSCCode' > -->
-           <!--
-         <input type="hidden" title="" placeholder="" class=""  id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}'/>
-         <input type="text" title=""    placeholder="" class="readonly"   id='ddlDSCCodeText' name='ddlDSCCodeText'  value='${BRANCH_NAME}''/>
-          --> <input type="hidden" title="" placeholder="DSC Code" class=""
-           id='ddlDSCCode' name='ddlDSCCode' /> <input type="text"
-           title="" placeholder="" class="readonly" disabled="disabled"
-           id='ddlDSCCodeText' name='ddlDSCCodeText' />
+           <!-- <select  disabled="disabled" id='ddlDSCCode' name='ddlDSCCode' > -->
+           <!-- <input type="hidden" title="" placeholder="" class="" id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}'/>
+                <input type="text" title=""    placeholder="" class="readonly"   id='ddlDSCCodeText' name='ddlDSCCodeText'  value='${BRANCH_NAME}''/> -->
+           <input type="hidden" title="" placeholder="<spring:message code='service.title.DSCCode' />" class="" id='ddlDSCCode' name='ddlDSCCode' />
+           <input type="text" title="" placeholder="" class="readonly" disabled="disabled" id='ddlDSCCodeText' name='ddlDSCCodeText' />
           </td>
          </tr>
          <tr>
-          <th scope="row">Error Code <span id='m6' name='m6' class="must" style="display:none">*</span>
+          <th scope="row"><spring:message code='service.grid.ErrCde' /><span id='m6' name='m6' class="must" style="display:none">*</span>
           </th>
-          <td><select disabled="disabled" id='ddlErrorCode'
-           name='ddlErrorCode'
-           onChange="fn_errMst_SelectedIndexChanged()">
-          </select></td>
-          <th scope="row">CT Code <span id='m7' name='m7' class="must" style="display:none">*</span>
+          <td>
+            <select disabled="disabled" id='ddlErrorCode' name='ddlErrorCode' onChange="fn_errMst_SelectedIndexChanged()" class="w100p"></select>
+          </td>
+          <th scope="row"><spring:message code='service.grid.CTCode' /><span id='m7' name='m7' class="must" style="display:none">*</span>
           </th>
-          <td><input type="hidden" title="" placeholder="CT Code" class=""
-           id='ddlCTCode' name='ddlCTCode' /> <input type="text"
-           title="" placeholder="" disabled="disabled"
-           id='ddlCTCodeText' name='ddlCTCodeText' /> <!--
-         <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
-         <input type="text" title=""    placeholder="" class="readonly"    id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
-          --></td>
+          <td>
+            <input type="hidden" title="" placeholder="<spring:message code='service.grid.CTCode' />" class="" id='ddlCTCode' name='ddlCTCode' />
+            <input type="text" title="" placeholder="" disabled="disabled" id='ddlCTCodeText' name='ddlCTCodeText' />
+            <!-- <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
+                 <input type="text" title="" placeholder="" class="readonly" id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
+             -->
+          </td>
          </tr>
          <tr>
-          <th scope="row">Error Description <span id='m8' name='m8' class="must" style="display:none">*</span>
+          <th scope="row"><spring:message code='service.grid.ErrDesc' /><span id='m8' name='m8' class="must" style="display:none">*</span>
           </th>
-          <td><select id='ddlErrorDesc' name='ddlErrorDesc'>
-          </select></td>
-          <th scope="row">Warehouse</th>
-          <td><select class="disabled" disabled="disabled"
-           id='ddlWarehouse' name='ddlWarehouse'>
-          </select></td>
+          <td>
+            <select id='ddlErrorDesc' name='ddlErrorDesc' class="w100p"></select>
+          </td>
+          <th scope="row"><spring:message code='sal.title.warehouse' /></th>
+          <td>
+            <select disabled="disabled" id='ddlWarehouse' name='ddlWarehouse' class="w100p"></select>
+          </td>
          </tr>
          <tr>
-          <th scope="row">Remark</th>
-          <td colspan="3"><textarea cols="20" rows="5"
-            placeholder="Remark" id='txtRemark' name='txtRemark'></textarea></td>
+          <th scope="row"><spring:message code='service.title.Remark' /></th>
+          <td colspan="3">
+            <textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtRemark' name='txtRemark'></textarea>
+          </td>
          </tr>
          <tr>
-          <th scope="row">Commission</th>
-          <td colspan="3"><label><input type="checkbox"
-            disabled="disabled" id='iscommission' name='iscommission' /><span>Has
-             commission ? </span></label></td>
+          <th scope="row"><spring:message code='sal.text.commission' /></th>
+          <td colspan="3">
+            <label><input type="checkbox" disabled="disabled" id='iscommission' name='iscommission' /><span><spring:message code='sal.text.commissionApplied' /></span></label></td>
          </tr>
+        </tbody>
+       </table>
+      </dd>
+
+      <dt class="click_add_on" id='recall_dt' onclick="fn_secChk(this);">
+       <a href="#"><spring:message code='service.title.asCallLog' /></a>
+      </dt>
+      <dd id='recall_div' style="display: none">
+       <table class="type1">
+        <caption>table</caption>
+        <colgroup>
+         <col style="width: 140px" />
+         <col style="width: *" />
+         <col style="width: 140px" />
+         <col style="width: *" />
+        </colgroup>
+        <tbody>
+         <tr>
+           <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
+           <td>
+            <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " readonly="readonly" id="appDate" name="appDate" onChange="fn_doAllaction('#appDate')"/>
+           </td>
+           <th scope="row"><spring:message code='service.title.AppointmentSessione' /><span class="must">*</span></th>
+           <td>
+             <input type="text" title="" placeholder="<spring:message code='service.title.AppointmentDate' />" id="CTSSessionCode" name="CTSSessionCode" class="readonly w100p" readonly="readonly" />
+           </td>
+         </tr>
+         <tr>
+           <th scope="row"><spring:message code='service.title.DSCBranch' /><span class="must">*</span></th>
+           <td>
+             <select class="w100p" id="branchDSC" name="branchDSC" class="" disabled="disabled"></select>
+           </td>
+           <th scope="row"><spring:message code='service.grid.AssignCT' /><span class="must">*</span></th>
+           <td>
+             <input type="text" title="" placeholder="<spring:message code='service.grid.AssignCT' />" id="CTCode" name="CTCode" class="readonly" readonly="readonly" onchange="fn_changeCTCode(this)" />
+           </td>
+         </tr>
+         <tr>
+           <th scope="row"><spring:message code='service.title.CTGroup' /></th>
+           <td colspan="3">
+             <input type="text" title="<spring:message code='service.title.CTGroup' />" placeholder="<spring:message code='service.title.CTGroup' />" class="w100p" id="CTGroup" name="CTGroup" />
+           </td>
+         </tr>
+         <tr>
+           <th scope="row"><spring:message code='service.grid.Remark' /><span class="must">*</span></th>
+           <td colspan="3">
+             <textarea id='callRem' name='callRem' rows='5' placeholder="<spring:message code='service.title.Remark' />" class="w100p"></textarea>
+           </td>
+         </tr>
+
         </tbody>
        </table>
        <!-- table end -->
       </dd>
-      <dt class="click_add_on">
-       <a href="#">AS Defective Event</a>
+
+      <dt class="click_add_on" id='defEvt_dt' onclick="fn_secChk(this);">
+       <a href="#"><spring:message code='service.title.asDefEnt' /></a>
       </dt>
-      <dd id='defEvt_div'>
+      <dd id='defEvt_div' style="display: none">
        <table class="type1">
         <!-- table start -->
         <caption>table</caption>
@@ -1819,44 +2083,44 @@
         </colgroup>
         <tbody>
          <tr>
-          <th scope="row">Defect Type <span id='m9' name='m9' class="must" style="display:none">*</span></th>
-          <td><input type="text" title="" id='def_type' name='def_type' placeholder="ex) DT3" class="" onblur="fn_getASReasonCode2(this, 'def_type' ,'387')" onkeyup="this.value = this.value.toUpperCase();" />
+          <th scope="row"><spring:message code='service.text.defTyp' /><span id='m9' name='m9' class="must" style="display:none">*</span></th>
+          <td><input type="text" title="" id='def_type' name='def_type' placeholder="e.g. DT3" class="" onblur="fn_getASReasonCode2(this, 'def_type' ,'387')" onkeyup="this.value = this.value.toUpperCase();" />
           <input type="hidden" title="" id='def_type_id' name='def_type_id' placeholder="" class="" />
           <input type="text" title="" placeholder="" id='def_type_text' name='def_type_text' class="" disabled style="width:60%;"/></td>
          </tr>
          <tr>
-          <th scope="row">Defect Code <span id='m10' name='m10' class="must" style="display:none">*</span></th>
-          <td><input type="text" title="" placeholder="ex) FF" disabled="disabled" id='def_code' name='def_code' class="" onblur="fn_getASReasonCode2(this, 'def_code', '303')" onkeyup="this.value = this.value.toUpperCase();"/>
+          <th scope="row"><spring:message code='service.text.defCde' /><span id='m10' name='m10' class="must" style="display:none">*</span></th>
+          <td><input type="text" title="" placeholder="e.g. FF" disabled="disabled" id='def_code' name='def_code' class="" onblur="fn_getASReasonCode2(this, 'def_code', '303')" onkeyup="this.value = this.value.toUpperCase();"/>
           <input type="hidden" title="" placeholder="" id='def_code_id' name='def_code_id' class="" />
           <input type="text" title="" placeholder="" id='def_code_text' name='def_code_text' class="" disabled style="width:60%;"/></td>
          </tr>
          <tr>
-          <th scope="row">Defect Part <span id='m11' name='m11' class="must" style="display:none">*</span></th>
-          <td><input type="text" title="" placeholder="ex) FE12" disabled="disabled" id='def_part' name='def_part' class="" onblur="fn_getASReasonCode2(this, 'def_part' ,'305')" onkeyup="this.value = this.value.toUpperCase();"/>
+          <th scope="row"><spring:message code='service.text.defPrt' /><span id='m11' name='m11' class="must" style="display:none">*</span></th>
+          <td><input type="text" title="" placeholder="e.g. FE12" disabled="disabled" id='def_part' name='def_part' class="" onblur="fn_getASReasonCode2(this, 'def_part' ,'305')" onkeyup="this.value = this.value.toUpperCase();"/>
           <input type="hidden" title="" placeholder="" id='def_part_id' name='def_part_id' class="" />
           <input type="text" title="" placeholder="" id='def_part_text' name='def_part_text' class="" disabled style="width:60%;"/></td>
          </tr>
          <tr>
-          <th scope="row">Detail of Defect <span id='m12' name='m12' class="must" style="display:none">*</span></th>
-          <td><input type="text" title="" placeholder="ex) 18 " disabled="disabled" id='def_def' name='def_def' class="" onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')" onkeyup="this.value = this.value.toUpperCase();"/>
+          <th scope="row"><spring:message code='service.text.dtlDef' /><span id='m12' name='m12' class="must" style="display:none">*</span></th>
+          <td><input type="text" title="" placeholder="e.g. 18" disabled="disabled" id='def_def' name='def_def' class="" onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')" onkeyup="this.value = this.value.toUpperCase();"/>
           <input type="hidden" title="" placeholder="" id='def_def_id' name='def_def_id' class="" />
           <input type="text" title="" placeholder="" id='def_def_text' name='def_def_text' class="" disabled style="width:60%;"/>
           </td>
          </tr>
          <tr>
-          <th scope="row">Solution Code <span id='m13' name='m13' class="must" style="display:none">*</span></th>
-          <td><input type="text" title="" placeholder="ex) A9" class="" disabled="disabled" id='solut_code' name='solut_code' onblur="fn_getASReasonCode2(this, 'solut_code'  ,'337')" onkeyup="this.value = this.value.toUpperCase();"/>
+          <th scope="row"><spring:message code='service.text.sltCde' /><span id='m13' name='m13' class="must" style="display:none">*</span></th>
+          <td><input type="text" title="" placeholder="e.g. A9" class="" disabled="disabled" id='solut_code' name='solut_code' onblur="fn_getASReasonCode2(this, 'solut_code'  ,'337')" onkeyup="this.value = this.value.toUpperCase();"/>
           <input type="hidden" title="" placeholder="" class="" id='solut_code_id' name='solut_code_id' />
           <input type="text" title="" placeholder="" class="" id='solut_code_text' name='solut_code_text' disabled style="width:60%;"/></td>
          </tr>
         </tbody>
        </table>
-       <!-- table end -->
       </dd>
-      <dt class="click_add_on">
-       <a href="#">AS Charges Fees</a>
+
+      <dt class="click_add_on" id='chrFee_dt' onclick="fn_secChk(this);">
+       <a href="#"><spring:message code='service.title.asPrtChr' /></a>
       </dt>
-      <dd id='chrFee_div'>
+      <dd id='chrFee_div' style="display: none">
        <table class="type1">
         <!-- table start -->
         <caption>table</caption>
@@ -1868,75 +2132,76 @@
         </colgroup>
         <tbody>
          <tr>
-          <th scope="row">Labour Charge</th>
-          <td><label><input type="checkbox"
-            id='txtLabourch' name='txtLabourch'
-            onChange="fn_LabourCharge_CheckedChanged(this)" /></label></td>
-          <th scope="row">Labour Charge</th>
-          <td><input type="text" id='txtLabourCharge'
-           name='txtLabourCharge' value='0.00' /></td>
+          <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
+          <td>
+            <label><input type="checkbox" id='txtLabourch' name='txtLabourch' onChange="fn_LabourCharge_CheckedChanged(this)" /></label>
+          </td>
+          <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
+          <td><input type="text" id='txtLabourCharge' name='txtLabourCharge' value='0.00' disabled/></td>
          </tr>
          <tr>
-          <th scope="row">Labour Charge Amt</th>
-          <td><select id='cmbLabourChargeAmt'
-           name='cmbLabourChargeAmt'
-           onChange="fn_cmbLabourChargeAmt_SelectedIndexChanged()">
-            <option value="60">RM 60.00</option>
-            <option value="100">RM 100.00</option>
-            <option value="120">RM 120.00</option>
-          </select></td>
-          <th scope="row">Filter Charge</th>
-          <td><input type="text" id='txtFilterCharge'
-           name='txtFilterCharge' value='0.00' /></td>
+          <th scope="row"><spring:message code='service.text.asLbrChr' /> (RM) <span id="fcm1" name="fcm1" class="must" style="display:none">*</span></th>
+          <td>
+            <select id='cmbLabourChargeAmt' name='cmbLabourChargeAmt' onChange="fn_cmbLabourChargeAmt_SelectedIndexChanged()" disabled>
+              <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+              <c:forEach var="list" items="${lbrFeeChr}" varStatus="status">
+                <option value="${list.codeId}">${list.codeName}</option>
+              </c:forEach>
+            </select>
+          </td>
+          <th scope="row"><spring:message code='service.text.asfltChr' /> </th>
+          <td>
+            <input type="text" id='txtFilterCharge' name='txtFilterCharge' value='0.00' disabled/></td>
          </tr>
          <tr>
           <th scope="row"></th>
           <td></td>
-          <th scope="row">Total Charge</th>
-          <td><input type="text" id='txtTotalCharge'
-           name='txtTotalCharge' value='0.00' /></td>
-         </tr>
-         <tr>
-          <th scope="row">Filter Code</th>
-          <td><select id='ddlFilterCode' name='ddlFilterCode'>
-          </select></td>
-          <th scope="row">Quantity</th>
-          <td><select id='ddlFilterQty' name='ddlFilterQty'>
-            <option value="1" selected>1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-          </select></td>
-         </tr>
-         <tr>
-          <th scope="row">Payment Type</th>
-          <td><select id='ddlFilterPayType' name='ddlFilterPayType'>
-            <option value="FOC" selected>Free of Charge</option>
-            <option value="CHG">Charge</option>
-          </select></td>
-          <th scope="row">Exchange Code</th>
-          <td><select id='ddlFilterExchangeCode'
-           name='ddlFilterExchangeCode'>
-          </select></td>
-         </tr>
-         <tr>
-          <th scope="row">Serial No</th>
-          <td colspan="3"><input type="text"
-           id='ddSrvFilterLastSerial' name='ddSrvFilterLastSerial' />
+          <th scope="row"><b><spring:message code='service.text.asTtlChr' /></b></th>
+          <td>
+            <input type="text" id='txtTotalCharge' name='txtTotalCharge' value='0.00' disabled/>
           </td>
          </tr>
          <tr>
-          <th scope="row">Remark</th>
+          <th scope="row"><spring:message code='service.grid.FilterCode' /><span id="fcm2" name="fcm2" class="must" style="display:none">*</span></th>
+          <td>
+            <select id='ddlFilterCode' name='ddlFilterCode' onchange="fn_setMand(this)"></select>
+          </td>
+          <th scope="row"><spring:message code='service.grid.Quantity' /><span id="fcm3" name="fcm3" class="must" style="display:none">*</span></th>
+          <td><select id='ddlFilterQty' name='ddlFilterQty'>
+            <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+            <c:forEach var="list" items="${fltQty}" varStatus="status">
+              <option value="${list.codeId}">${list.codeName}</option>
+            </c:forEach>
+          </select></td>
+         </tr>
+         <tr>
+          <th scope="row"><spring:message code='service.text.asPmtTyp' /><span id="fcm4" name="fcm4" class="must" style="display:none">*</span></th>
+          <td><select id='ddlFilterPayType' name='ddlFilterPayType'>
+            <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+            <c:forEach var="list" items="${fltPmtTyp}" varStatus="status">
+              <option value="${list.codeId}">${list.codeName}</option>
+            </c:forEach>
+          </select></td>
+          <th scope="row"><spring:message code='service.text.asExcRsn' /><span id="fcm5" name="fcm5" class="must" style="display:none">*</span></th>
+          <td><select id='ddlFilterExchangeCode' name='ddlFilterExchangeCode'>
+              </select>
+          </td>
+         </tr>
+         <tr>
+          <th scope="row"><spring:message code='service.title.SerialNo' /></th>
+          <td colspan="3">
+            <input type="text" id='ddSrvFilterLastSerial' name='ddSrvFilterLastSerial' />
+          </td>
+         </tr>
+         <tr>
+          <th scope="row"><spring:message code='service.title.Remark' /></th>
           <td colspan="3"><textarea cols="20" rows="5"
-            placeholder="" id='txtFilterRemark' name='txtFilterRemark'></textarea>
+            placeholder="<spring:message code='service.title.Remark' />" id='txtFilterRemark' name='txtFilterRemark'></textarea>
+          </td>
+         </tr>
+         <tr>
+          <td colspan="4">
+           <span style="color:red;font-style: italic;"><spring:message code='service.msg.msgFltTtlAmt' /></span>
           </td>
          </tr>
         </tbody>
@@ -1944,10 +2209,10 @@
        <!-- table end -->
        <ul class="center_btns">
         <li><p class="btn_blue2">
-          <a href="#" onclick="fn_filterAdd()">Add Filter</a>
+          <a href="#" onclick="fn_filterAdd()"><spring:message code='sys.btn.add' /></a>
          </p></li>
         <li><p class="btn_blue2">
-          <a href="#" onclick="fn_filterClear()">Clear</a>
+          <a href="#" onclick="fn_filterClear()"><spring:message code='sys.btn.clear' /></a>
          </p></li>
        </ul>
        <article class="grid_wrap">
@@ -1957,8 +2222,9 @@
        </article>
        <!-- grid_wrap end -->
       </dd>
+
       <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
-      <dt class="click_add_on">
+      <dt class="click_add_on" id='inHouse_dt' onclick="fn_secChk(this);">
        <a href="#">In-House Repair Entry</a>
       </dt>
       <dd id='inHouseRepair_div' style="display: none">
@@ -2008,27 +2274,26 @@
        </table>
        <!-- table end -->
       </dd>
-      <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
+
      </dl>
     </article>
-    <!-- acodi_wrap end -->
+
     <ul class="center_btns mt20" id='btnSaveDiv'>
      <li><p class="btn_blue2 big">
-       <a href="#" onclick="fn_doSave()">Save</a>
-      </p></li>
-     <li><p class="btn_blue2 big">
-       <a href="#"
-        onclick="javascript:$('#resultASAllForm').clearForm();">Clear</a>
-      </p></li>
-     <!-- <li><p class="btn_blue2 big"><a href="#"    onClick="fn_doClear()" >Clear</a></p></li> -->
+       <a href="#" onclick="fn_doSave()"><spring:message code='sys.btn.save' /></a>
+      </p>
+     </li>
+     <li>
+       <p class="btn_blue2 big">
+         <a href="#" onclick="javascript:$('#resultASAllForm').clearForm();"><spring:message code='sys.btn.clear' /></a>
+      </p>
+     </li>
     </ul>
+
    </section>
-   <!-- content end -->
   </form>
  </section>
- <!-- content end -->
 </div>
-<!-- popup_wrap end -->
 <script type="text/javaScript">
 
 </script>
