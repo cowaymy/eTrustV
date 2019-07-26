@@ -34,6 +34,7 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -41,6 +42,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
+ * 26/07/2019    ONGHC      1.0.2       - Add Recall Status
  *********************************************************************************************/
 
 @Controller
@@ -74,6 +76,23 @@ public class ASManagementListController {
     logger.debug("===========================/initASManagementList.do===============================");
     logger.debug("== params " + params.toString());
     logger.debug("===========================/initASManagementList.do===============================");
+
+    // GET SEARCH DATE RANGE
+    String range = ASManagementListService.getSearchDtRange();
+
+    List<EgovMap> asTyp = ASManagementListService.selectAsTyp();
+    List<EgovMap> asStat = ASManagementListService.selectAsStat();
+
+    model.put("DT_RANGE", CommonUtils.nvl(range));
+    model.put("asTyp", asTyp);
+    model.put("asStat", asStat);
+
+    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+    model.put("bfDay", bfDay);
+    model.put("toDay", toDay);
+
     return "services/as/ASManagementList";
   }
 
@@ -96,6 +115,22 @@ public class ASManagementListController {
     model.put("BRANCH_NAME", sessionVO.getBranchName());
     model.put("BRANCH_ID", sessionVO.getUserBranchId());
     model.put("ORD_NO", params.get("ord_No"));
+
+    List<EgovMap> asCrtStat = ASManagementListService.selectAsCrtStat();
+    model.addAttribute("asCrtStat", asCrtStat);
+
+    List<EgovMap> timePick = ASManagementListService.selectTimePick();
+    model.addAttribute("timePick", timePick);
+
+    List<EgovMap> lbrFeeChr = ASManagementListService.selectLbrFeeChr();
+    model.addAttribute("lbrFeeChr", lbrFeeChr);
+
+    List<EgovMap> fltQty = ASManagementListService.selectFltQty();
+    model.addAttribute("fltQty", fltQty);
+
+    List<EgovMap> fltPmtTyp = ASManagementListService.selectFltPmtTyp();
+    model.addAttribute("fltPmtTyp", fltPmtTyp);
+
     return "services/as/inc_asResultEditPop";
   }
 
@@ -157,7 +192,7 @@ public class ASManagementListController {
   }
 
   @RequestMapping(value = "/asResultViewPop.do")
-  public String asResultViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+  public String asResultViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
     logger.debug("===========================/asResultViewPop.do===============================");
     logger.debug("== params " + params.toString());
     logger.debug("===========================/asResultViewPop.do===============================");
@@ -169,6 +204,10 @@ public class ASManagementListController {
 
     EgovMap AsEventInfo = ASManagementListService.getAsEventInfo(params);
     model.put("AsEventInfo", AsEventInfo);
+
+    EgovMap orderDetail = null;
+    orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+    model.addAttribute("orderDetail", orderDetail);
 
     return "services/as/asResultViewPop";
   }
@@ -195,10 +234,12 @@ public class ASManagementListController {
 
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
     EgovMap as_ord_basicInfo = ASManagementListService.selectOrderBasicInfo(params);
-    EgovMap asentryInfo = null;
+
+    List<EgovMap> timePick = ASManagementListService.selectTimePick();
 
     model.put("orderDetail", orderDetail);
     model.put("as_ord_basicInfo", as_ord_basicInfo);
+    model.put("timePick", timePick);
     model.put("AS_NO", (String) params.get("AS_NO"));
     model.put("AS_ID", (String) params.get("AS_ID"));
     model.put("MOD", (String) params.get("mod"));
@@ -212,20 +253,18 @@ public class ASManagementListController {
     model.put("BRANCH_NAME", sessionVO.getBranchName());
     model.put("BRANCH_ID", sessionVO.getUserBranchId());
 
-    String ind =  CommonUtils.nvl(params.get("IND"));
-
-    if(ind == null || ind == ""){
-    	ind = "0";
-    }
-    model.put("IND", ind);
-    logger.debug("##############IND : " + ind);
-
-
     /*
      * if("VIEW".equals(params.get("mod"))){ asentryInfo =
      * ASManagementListService.selASEntryView(params); model.put("asentryInfo",
      * asentryInfo); }
      */
+
+    String ind =  CommonUtils.nvl(params.get("IND"));
+
+    if (CommonUtils.nvl(params.get("IND")).equals("")){
+      ind = "0";
+    }
+    model.put("IND", ind);
 
     if (as_ord_basicInfo != null) {
       logger.debug("Basic Info :: " + as_ord_basicInfo.toString());
@@ -299,11 +338,9 @@ public class ASManagementListController {
   @RequestMapping(value = "/updateASEntry.do", method = RequestMethod.POST)
   public ResponseEntity<EgovMap> updateASEntry(@RequestBody Map<String, Object> params, ModelMap model,
       SessionVO sessionVO) {
-    ReturnMessage message = new ReturnMessage();
-
-    logger.debug("===========================/updateASInHouseEntry.do===============================");
+    logger.debug("===========================/updateASEntry.do===============================");
     logger.debug("== params " + params.toString());
-    logger.debug("===========================/updateASInHouseEntry.do===============================");
+    logger.debug("===========================/updateASEntry.do===============================");
 
     params.put("USER_ID", sessionVO.getUserId());
     EgovMap sm = ASManagementListService.updateASEntry(params);
@@ -343,6 +380,22 @@ public class ASManagementListController {
     }
     model.addAttribute("orderDetail", orderDetail);
 
+    List<EgovMap> asCrtStat = ASManagementListService.selectAsCrtStat();
+    model.addAttribute("asCrtStat", asCrtStat);
+
+    List<EgovMap> timePick = ASManagementListService.selectTimePick();
+    model.addAttribute("timePick", timePick);
+
+    List<EgovMap> lbrFeeChr = ASManagementListService.selectLbrFeeChr();
+    model.addAttribute("lbrFeeChr", lbrFeeChr);
+
+    List<EgovMap> fltQty = ASManagementListService.selectFltQty();
+    model.addAttribute("fltQty", fltQty);
+
+    List<EgovMap> fltPmtTyp = ASManagementListService.selectFltPmtTyp();
+    model.addAttribute("fltPmtTyp", fltPmtTyp);
+
+    // IN HOUSE SETTING (PROMISE DAYS)
     String days = ASManagementListService.getInHseLmtDy();
     model.addAttribute("inHseLmtDy", days);
 
@@ -350,7 +403,7 @@ public class ASManagementListController {
   }
 
   @RequestMapping(value = "/asResultEditViewPop.do")
-  public String asResultEditViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+  public String asResultEditViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
     logger.debug("===========================/asResultEditViewPop.do===============================");
     logger.debug("== params " + params.toString());
     logger.debug("===========================/asResultEditViewPop.do===============================");
@@ -368,12 +421,18 @@ public class ASManagementListController {
 
     model.put("BRANCH_NAME", sessionVO.getBranchName());
     model.put("BRANCH_ID", sessionVO.getUserBranchId());
+
+    params.put("salesOrderId", (String) params.get("ord_Id"));
+    EgovMap orderDetail = null;
+    // basicinfo = hsManualService.selectHsViewBasicInfo(params);
+    orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+    model.addAttribute("orderDetail", orderDetail);
 
     return "services/as/asResultEditViewPop";
   }
 
   @RequestMapping(value = "/asResultEditBasicPop.do")
-  public String asResultEditBasicPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+  public String asResultEditBasicPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
     logger.debug("===========================/asResultEditBasicPop.do===============================");
     logger.debug("== params " + params.toString());
     logger.debug("===========================/asResultEditBasicPop.do===============================");
@@ -391,6 +450,19 @@ public class ASManagementListController {
 
     model.put("BRANCH_NAME", sessionVO.getBranchName());
     model.put("BRANCH_ID", sessionVO.getUserBranchId());
+
+    List<EgovMap> asCrtStat = ASManagementListService.selectAsCrtStat();
+    model.addAttribute("asCrtStat", asCrtStat);
+
+    List<EgovMap> timePick = ASManagementListService.selectTimePick();
+    model.addAttribute("timePick", timePick);
+
+    EgovMap orderDetail;
+    params.put("salesOrderId", (String) params.get("ord_Id"));
+
+    orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+    model.put("orderDetail", orderDetail);
+
 
     return "services/as/asResultEditBasicPop";
   }
@@ -500,6 +572,18 @@ public class ASManagementListController {
     logger.debug("===========================/getASOrderInfo.do===============================");
 
     List<EgovMap> list = ASManagementListService.getASOrderInfo(params);
+
+    return ResponseEntity.ok(list);
+  }
+
+  @RequestMapping(value = "/getASRclInfo", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getASRclInfo(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    logger.debug("===========================/getASRclInfo.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASRclInfo.do===============================");
+
+    List<EgovMap> list = ASManagementListService.getASRclInfo(params);
 
     return ResponseEntity.ok(list);
   }
@@ -674,7 +758,7 @@ public class ASManagementListController {
 
     if (isAsCnt == 0) {
       EgovMap rtnValue = ASManagementListService.asResult_insert(params);
-      if (null != rtnValue) {
+      if (null != rtnValue) { // LOGISTIC STEP DONE
         HashMap spMap = (HashMap) rtnValue.get("spMap");
         logger.debug("spMap :" + spMap.toString());
         if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
@@ -689,7 +773,7 @@ public class ASManagementListController {
     } else {
       message.setCode("98");
       message.setData(asResultM.get("AS_NO"));
-      message.setMessage("There is complete result exist already");
+      message.setMessage("Result already exist with Complete status.");
     }
 
     return ResponseEntity.ok(message);
@@ -741,7 +825,6 @@ public class ASManagementListController {
     List<EgovMap> update = (List<EgovMap>) params.get("update");
     // List<EgovMap> all = (List<EgovMap>) params.get("all");
 
-    // logger.debug("test ===>"+params.get("test").toString());
     logger.debug("== asResultM = " + asResultM.toString());
     logger.debug("== ADD = " + add.toString());
     logger.debug("== REMOVE = " + remove.toString());
@@ -750,7 +833,7 @@ public class ASManagementListController {
 
     EgovMap rtnValue = ASManagementListService.asResult_update_1(params);
 
-    logger.debug("newResultUpdate   done!!--->" + rtnValue.toString());
+    logger.debug("newResultUpdate == " + rtnValue.toString());
 
     boolean rst = ASManagementListService.insertOptFlt(params);
 
@@ -772,9 +855,9 @@ public class ASManagementListController {
 
     params.put("updator", sessionVO.getUserId());
 
-    LinkedHashMap asResultM = (LinkedHashMap) params.get("asResultM");
+    LinkedHashMap<?, ?> asResultM = (LinkedHashMap<?, ?>) params.get("asResultM");
 
-    logger.debug("asResultM ===>" + asResultM.toString());
+    logger.debug("== asResultM : " + asResultM.toString());
 
     int rtnValue = ASManagementListService.asResultBasic_update(params);
 
@@ -951,8 +1034,8 @@ public class ASManagementListController {
     params.put("updator", sessionVO.getUserId());
     ReturnMessage message = new ReturnMessage();
 
-    HashMap mp = new HashMap();
-    Map svc0004dmap = (Map) params.get("asResultM");
+    HashMap<String, Object> mp = new HashMap<String, Object>();
+    Map<?, ?> svc0004dmap = (Map<?, ?>) params.get("asResultM");
     mp.put("serviceNo", svc0004dmap.get("AS_NO"));
 
     params.put("asNo", svc0004dmap.get("AS_NO"));
@@ -971,15 +1054,16 @@ public class ASManagementListController {
         if (null != rtnValue) {
           HashMap spMap = (HashMap) rtnValue.get("spMap");
           logger.debug("spMap :" + spMap.toString());
-          if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-            rtnValue.put("logerr", "Y");
+          if (!spMap.isEmpty()) {
+            if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
+              rtnValue.put("logerr", "Y");
+            }
+            servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+            logger.debug("SP_SVC_LOGISTIC_REQUEST===> " + spMap.toString());
           }
 
           // ONGHC ADD FOR OPTIONAL FILTER
           boolean rst = ASManagementListService.insertOptFlt(params);
-
-          servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-          logger.debug("SP_SVC_LOGISTIC_REQUEST===> " + spMap.toString());
         }
 
         message.setCode(AppConstants.SUCCESS);
@@ -989,7 +1073,7 @@ public class ASManagementListController {
       } else {
         message.setCode("98");
         message.setData(svc0004dmap.get("AS_NO"));
-        message.setMessage("There is complete result exist already");
+        message.setMessage("Result already exist with Complete Status.");
       }
     } else {
       message.setMessage(
@@ -1208,8 +1292,8 @@ public class ASManagementListController {
     logger.debug("== params " + params.toString());
     logger.debug("===========================/checkASReceiveEntry.do===============================");
 
-    ReturnMessage message = new ReturnMessage();
     String msg = "";
+    ReturnMessage message = new ReturnMessage();
     EgovMap asReceiveInfo = ASManagementListService.checkASReceiveEntry(params);
     EgovMap hsInfo = ASManagementListService.checkHSStatus(params);
     EgovMap warrentyInfo = ASManagementListService.checkWarrentyStatus(params);
@@ -1288,5 +1372,4 @@ public class ASManagementListController {
 
     return ResponseEntity.ok(list);
   }
-
 }
