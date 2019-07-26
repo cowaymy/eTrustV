@@ -9,595 +9,54 @@
  01/04/2019  ONGHC  1.0.2          ADD Column Settle and Last Update Date
  03/06/2019  ONGHC  1.0.3          Amend 7 days checking logic
  03/06/2019  ONGHC  1.0.4          Add 2 Button for Manager Level to Handle 7 Days After AS
+ 26/07/2019  ONGHC  1.0.5          Add Recall Status
  -->
 
 <script type="text/javaScript">
   var option = {
-    width : "1200px", // 창 가로 크기
-    height : "500px" // 창 세로 크기
+    width : "1200px",
+    height : "500px"
   };
 
   var myGridID;
-
-  function fn_searchASManagement() {
-    var startDate = $('#createStrDate').val();
-    var endDate = $('#createEndDate').val();
-
-    if (fn_getDateGap(startDate, endDate) > 180) {
-      Common.alert('Start date can not be more than 180 days before the end date.');
-      return;
-    }
-
-    Common.ajax("GET", "/services/as/searchASManagementList.do", $("#ASForm").serialize(), function(result) {
-      AUIGrid.setGridData(myGridID, result);
-    });
-  }
-
-  function fn_newASPop() {
-    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-    var ordno;
-
-    /*if (selectedItems.length > 0) {
-      if ("ASR" != selectedItems[0].item.code) {
-        Common.alert("<spring:message code='service.msg.NoRcd'/>");
-        return;
-      }
-      ordno = selectedItems[0].item.salesOrdNo;
-    }*/
-
-    Common.popupDiv("/services/as/ASReceiveEntryPop.do", {in_ordNo : ordno}, null, true, '_NewEntryPopDiv1');
-  }
-
-  function fn_viewASResultPop() {
-    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-
-    if (selectedItems.length <= 0) {
-      Common.alert("<spring:message code='service.msg.NoRcd'/>");
-      return;
-    }
-
-    if (selectedItems.length > 1) {
-      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
-      return;
-    }
-
-    var AS_ID = selectedItems[0].item.asId;
-    var AS_NO = selectedItems[0].item.asNo;
-    var asStusId = selectedItems[0].item.code1;
-    var ordno = selectedItems[0].item.salesOrdNo;
-    var ordId = selectedItems[0].item.asSoId;
-
-    if (asStusId != "ACT") {
-      Common.alert("AS Info Edit Restrict</br>" + DEFAULT_DELIMITER + "<b>[" + AS_NO + "]  is not in active status.</br> AS information edit is disallowed.</b>");
-      return;
-    }
-
-    Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId=" + ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO + '&AS_ID=' + AS_ID, null, null, true, '_viewEntryPopDiv1');
-  }
-
-  function fn_resultASPop(ordId, ordNo) {
-    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-    var mafuncId = "";
-    var mafuncResnId = "";
-    var asId = "";
-
-    if (selectedItems.length > 0) {
-      /*if ("ASR" != selectedItems[0].item.code) {
-        Common.alert("<spring:message code='service.msg.NoRcd'/>");
-        return;
-      }*/
-      mafuncId = selectedItems[0].item.asMalfuncId;
-      mafuncResnId = selectedItems[0].item.asMalfuncResnId;
-      asId = selectedItems[0].item.asId;
-    }
-
-    var pram = "?salesOrderId=" + ordId + "&ordNo=" + ordNo + "&mafuncId=" + mafuncId + "&mafuncResnId=" + mafuncResnId + "&AS_ID=" + asId + "&IND= 1" ;
-
-    Common.popupDiv("/services/as/resultASReceiveEntryPop.do" + pram, null, null, true, '_resultNewEntryPopDiv1');
-  }
-
-  function fn_newASResultPop() {
-    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-
-    if (selectedItems.length <= 0) {
-      Common.alert("<spring:message code='service.msg.NoRcd'/>");
-      return;
-    }
-
-    if (selectedItems.length > 1) {
-      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
-      return;
-    }
-
-    var asId = selectedItems[0].item.asId;
-    var asNo = selectedItems[0].item.asNo;
-    var asStusId = selectedItems[0].item.code1;
-    var salesOrdNo = selectedItems[0].item.salesOrdNo;
-    var salesOrdId = selectedItems[0].item.asSoId;
-    var refReqst = selectedItems[0].item.refReqst;
-    var rcdTms = selectedItems[0].item.rcdTms;
-    var asRst = selectedItems[0].item.c3;
-
-    if (asStusId != "ACT") {
-      Common.alert("<b>[" + asNo + "] already has [" + asStusId + "] result.  .</br> Result entry is disallowed.</b>");
-      return;
-    }
-
-    Common.ajax("POST", "/services/as/selRcdTms.do", {
-        asNo : asNo,
-        asId : asId,
-        salesOrdNo : salesOrdNo,
-        salesOrderId : salesOrdId,
-        rcdTms : rcdTms
-    }, function(result) {
-      if (result.code == "99") {
-        Common.alert(result.message);
-        return;
-      } else {
-        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms;
-        Common.popupDiv("/services/as/ASNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
-      }
-    });
-  }
-
-  function fn_asAppViewPop() {
-    var selectedItems = AUIGrid.getSelectedItems(myGridID);
-
-    if (selectedItems.length <= 0) {
-      Common.alert("<spring:message code='service.msg.NoRcd'/>");
-      return;
-    }
-
-    if (selectedItems.length > 1) {
-      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
-      return;
-    }
-
-    var asid = selectedItems[0].item.asId;
-    var asNo = selectedItems[0].item.asNo;
-    var asStusId = selectedItems[0].item.code1;
-    var salesOrdNo = selectedItems[0].item.salesOrdNo;
-    var salesOrdId = selectedItems[0].item.asSoId;
-
-    var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asid;
-    Common.popupDiv("/services/as/asResultViewPop.do" + param, null, null, true, '_newASResultDiv1');
-  }
-
-  function fn_asResultViewPop() {
-    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-
-    if (selectedItems.length <= 0) {
-      Common.alert("<spring:message code='service.msg.NoRcd'/>");
-      return;
-    }
-
-    if (selectedItems.length > 1) {
-      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
-      return;
-    }
-
-    var asid = selectedItems[0].item.asId;
-    var asNo = selectedItems[0].item.asNo;
-    var asStusId = selectedItems[0].item.code1;
-    var salesOrdNo = selectedItems[0].item.salesOrdNo;
-    var salesOrdId = selectedItems[0].item.asSoId;
-    var asResultNo = selectedItems[0].item.c3;
-
-    if (asStusId == "ACT") {
-      Common.alert("<b>[" + asNo + "] do no has any result yet..</br> Result view is disallowed.");
-      return;
-    }
-
-    if (asResultNo == "") {
-      Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
-      return;
-    }
-
-    var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo+ "&as_No=" + asNo + "&as_Id=" + asid + "&mod=RESULTVIEW&as_Result_No=" + asResultNo;
-
-    Common.popupDiv("/services/as/asResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
-  }
-
-  function fn_asInhouseAddOrderPop() {
-    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-
-    if (selectedItems.length <= 0) {
-      Common.alert("<spring:message code='service.msg.NoRcd'/>");
-      return;
-    }
-
-    if (selectedItems.length > 1) {
-      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
-      return;
-    }
-
-    var asid = selectedItems[0].item.asId;
-    var asNo = selectedItems[0].item.asNo;
-
-    var asStusId = selectedItems[0].item.code1;
-    var salesOrdNo = selectedItems[0].item.salesOrdNo;
-    var salesOrdId = selectedItems[0].item.asSoId;
-    var apptype = selectedItems[0].item.code;
-    var asResultNo = selectedItems[0].item.c3;
-    var asResultId = selectedItems[0].item.asResultId;
-
-    if (apptype != "IHR") {
-      Common.alert("only select for In-House Repair ");
-      return;
-    }
-
-    // if(asStusId  !="ACT"){
-    //     Common.alert("<b> already has [" + asResultNo + "] result.  .</br> Result entry is disallowed.</b>");
-    //    return ;
-    //}
-
-    //$("#in_asResultId").val(asResultId);
-    //$("#in_asResultNo").val(asResultNo);
-
-    Common.popupDiv("/services/as/resultASReceiveEntryPop.do?salesOrderId=" + salesOrdId + "&ordNo=" + salesOrdNo + "&asResultId=" + asResultId, null, null, true, '_resultNewEntryPopDiv1');
-    //Common.popupDiv("/services/as/ASReceiveEntryPop.do" ,$("#inHOForm").serializeJSON()  , null , true , '_newInHouseEntryDiv1');
-  }
-
-  function fn_asResultEditPop(ind) {
-    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-
-    if (selectedItems.length <= 0) {
-      Common.alert("<spring:message code='service.msg.NoRcd'/>");
-      return;
-    }
-
-    if (selectedItems.length > 1) {
-      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
-      return;
-    }
-
-    var asId = selectedItems[0].item.asId;
-    var asNo = selectedItems[0].item.asNo;
-    var asStusId = selectedItems[0].item.code1;
-    var salesOrdNo = selectedItems[0].item.salesOrdNo;
-    var salesOrdId = selectedItems[0].item.asSoId;
-    var asResultNo = selectedItems[0].item.c3;
-    var asResultId = selectedItems[0].item.asResultId;
-    var asTypeID = selectedItems[0].item.code;
-    var rcdTms = selectedItems[0].item.rcdTms;
-    var updDt = selectedItems[0].item.asSetlDt;
-    var lstUpdDt = selectedItems[0].item.asResultCrtDt;
-
-    if (asStusId == "ACT") {
-      if (selectedItems[0].item.asSlutnResnId == '454') {
-
-      } else {
-        Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
-        return;
-      }
-    }
-
-    if (ind == 0) {
-      if (updDt != "" && updDt != null) {
-        var stat = true;
-        var sDate = new Date(updDt);
-        var tDate = new Date();
-        tDate.setDate(tDate.getDate() - 7);
-
-        var tMth = tDate.getMonth();
-        var tYear = tDate.getFullYear();
-        var tDay = tDate.getDate();
-        var sMth = sDate.getMonth();
-        var sYear = sDate.getFullYear();
-        var sDay = sDate.getDate();
-
-        if (sYear > tYear) {
-          stat = true;
-        } else {
-          if (sMth > tMth) {
-            stat = true;
-          } else {
-            if (sDay > tDay) {
-              stat = true;
-            } else {
-              stat = false;
-            }
-          }
-        }
-
-        if (!stat) {
-          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
-          return;
-        }
-      } else if (lstUpdDt != "" && lstUpdDt != null) {
-        var stat = true;
-        var sDate = new Date(lstUpdDt);
-        var tDate = new Date();
-        tDate.setDate(tDate.getDate() - 7);
-
-        var tMth = tDate.getMonth();
-        var tYear = tDate.getFullYear();
-        var tDay = tDate.getDate();
-        var sMth = sDate.getMonth();
-        var sYear = sDate.getFullYear();
-        var sDay = sDate.getDate();
-
-        if (sYear > tYear) {
-          stat = true;
-        } else {
-          if (sMth > tMth) {
-            stat = true;
-          } else {
-            if (sDay > tDay) {
-              stat = true;
-             } else {
-              stat = false;
-            }
-          }
-        }
-
-        if (!stat) {
-          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
-           return;
-        }
-      }
-    }
-
-    if (asTypeID == "AOAS") {
-      // ADD CHECKING
-      Common.ajax("GET", "/services/as/checkAOASRcdStat", { ORD_NO : salesOrdNo },
-        function(result) {
-          var stat = 0;
-            if (result != "") {
-              if (result.length > 0) {
-                for (var a = 0; a < result.length; a++) {
-                  if (result[a].occur > 1) {
-                    if (result[a].no != "") {
-                      Common.alert("<b>[" + asNo + "] is not allow to edit.</br> AS information edit is disallowed.");
-                      return;
-                    }
-                  }
-                }
-              }
-            }
-
-            if (asResultNo == "") {
-              Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
-              return;
-            }
-
-            Common.ajax("POST", "/services/as/selRcdTms.do", {
-                asNo : asNo,
-                asId : asId,
-                salesOrdNo : salesOrdNo,
-                salesOrderId : salesOrdId,
-                rcdTms : rcdTms
-            }, function(result) {
-              if (result.code == "99") {
-                Common.alert(result.message);
-                return;
-              } else {
-                var param = "?ord_Id=" + salesOrdId
-                          + "&ord_No=" + salesOrdNo + "&as_No="
-                          + asNo + "&as_Id=" + asId
-                          + "&mod=RESULTEDIT&as_Result_No="
-                          + asResultNo + "&as_Result_Id="
-                          + asResultId;
-
-                Common.popupDiv("/services/as/asResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
-              }
-            });
-        });
-    } else {
-      if (asResultNo == "") {
-        Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
-        return;
-      }
-
-      Common.ajax("POST", "/services/as/selRcdTms.do", {
-          asNo : asNo,
-          asId : asId,
-          salesOrdNo : salesOrdNo,
-          salesOrderId : salesOrdId,
-          rcdTms : rcdTms
-      }, function(result) {
-        if (result.code == "99") {
-          Common.alert(result.message);
-          return;
-        } else {
-          var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo
-                    + "&as_No=" + asNo + "&as_Id=" + asId
-                    + "&mod=RESULTEDIT&as_Result_No=" + asResultNo
-                    + "&as_Result_Id=" + asResultId;
-
-          Common.popupDiv("/services/as/asResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
-        }
-      });
-    }
-  }
-
-  function fn_asResultEditBasicPop(ind) {
-    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-
-    if (selectedItems.length <= 0) {
-      Common.alert("<spring:message code='service.msg.NoRcd'/>");
-      return;
-    }
-
-    if (selectedItems.length > 1) {
-      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
-      return;
-    }
-
-    var asId = selectedItems[0].item.asId;
-    var asNo = selectedItems[0].item.asNo;
-    var asStusId = selectedItems[0].item.code1;
-    var salesOrdNo = selectedItems[0].item.salesOrdNo;
-    var salesOrdId = selectedItems[0].item.asSoId;
-    var asResultNo = selectedItems[0].item.c3;
-    var asResultId = selectedItems[0].item.asResultId;
-    var refReqst = selectedItems[0].item.refReqst;
-    var rcdTms = selectedItems[0].item.rcdTms;
-    var updDt = selectedItems[0].item.asSetlDt;
-    var lstUpdDt = selectedItems[0].item.asResultCrtDt;
-
-    if (asStusId == "ACT") {
-      if (refReqst == "") {
-        Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
-        return;
-      }
-    }
-
-    if (asResultNo == "") {
-      Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
-      return;
-    }
-
-    if (ind == 0) {
-      if (updDt != "" && updDt != null) {
-        var stat = true;
-        var sDate = new Date(updDt);
-        var tDate = new Date();
-        tDate.setDate(tDate.getDate() - 7);
-
-        var tMth = tDate.getMonth();
-        var tYear = tDate.getFullYear();
-        var tDay = tDate.getDate();
-        var sMth = sDate.getMonth();
-        var sYear = sDate.getFullYear();
-        var sDay = sDate.getDate();
-
-        if (sYear > tYear) {
-          stat = true;
-        } else {
-          if (sMth > tMth) {
-            stat = true;
-          } else {
-            if (sDay > tDay) {
-              stat = true;
-             } else {
-              stat = false;
-            }
-          }
-        }
-
-        if (!stat) {
-          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
-          return;
-        }
-      } else if (lstUpdDt != "" && lstUpdDt != null) {
-        var stat = true;
-        var sDate = new Date(lstUpdDt);
-        var tDate = new Date();
-        tDate.setDate(tDate.getDate() - 7);
-
-        var tMth = tDate.getMonth();
-        var tYear = tDate.getFullYear();
-        var tDay = tDate.getDate();
-        var sMth = sDate.getMonth();
-        var sYear = sDate.getFullYear();
-        var sDay = sDate.getDate();
-
-        if (tYear > sYear) {
-          stat = false;
-        } else {
-          if (tMth > sMth) {
-            stat = false;
-          } else {
-            if (tDay > sDay) {
-              stat = false;
-            } else {
-              stat = true;
-            }
-          }
-        }
-
-        if (!stat) {
-          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
-          return;
-        }
-      }
-    }
-
-    Common.ajax("POST", "/services/as/selRcdTms.do", {
-        asNo : asNo,
-        asId : asId,
-        salesOrdNo : salesOrdNo,
-        salesOrderId : salesOrdId,
-        rcdTms : rcdTms
-    }, function(result) {
-      if (result.code == "99") {
-        Common.alert(result.message);
-        return;
-      } else {
-        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo
-                  + "&as_No=" + asNo + "&as_Id=" + asId
-                  + "&mod=edit&as_Result_No=" + asResultNo + "&as_Result_Id="
-                  + asResultId;
-
-        Common.popupDiv("/services/as/asResultEditBasicPop.do" + param, null, null, true, '_newASResultBasicDiv1');
-      }
-    });
-  }
-
-  function fn_assginCTTransfer() {
-    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-
-    if (selectedItems.length <= 0) {
-      Common.alert("<spring:message code='service.msg.NoRcd'/>");
-      return;
-    }
-
-    var asBrnchId = selectedItems[0].item.asBrnchId;
-
-    for ( var i in selectedItems) {
-      if ("ACT" != selectedItems[i].item.code1) {
-        Common.alert("<b>[" + selectedItems[i].item.asNo + "] do no has any result yet. .</br> Result view is disallowed.");
-        return;
-      }
-
-      if (asBrnchId != selectedItems[i].item.asBrnchId) {
-        Common.alert("<b>Can't CT tranfer in multiple branch selection.</b>");
-        return;
-      }
-    }
-
-    Common.popupDiv("/services/as/assignCTTransferPop.do", null, null, true, '_assginCTTransferDiv');
-  }
+  var gridPros = {
+    usePaging : true,
+    pageRowCount : 20,
+    editable : true,
+    fixedColumnCount : 1,
+    showStateColumn : true,
+    displayTreeOpen : true,
+    selectionMode : "singleRow",
+    headerHeight : 30,
+    useGroupingPanel : true,
+    skipReadonlyColumns : true,
+    wrapSelectionMove : true,
+    showRowNumColumn : false,
+  };
 
   $(document).ready(
       function() {
         asManagementGrid();
-        //AUIGrid.setSelectionMode(myGridID, "singleRow");
-        doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbbranchId', 'S', '');
+        doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbbranchId', 'S', ''); // DSC BRANCH
 
-        $("#cmbbranchId").change(function() { doGetCombo('/services/as/selectCTByDSC.do', $("#cmbbranchId").val(), '', 'cmbctId', 'S', ''); });
+        $("#cmbbranchId").change(function() { doGetCombo('/services/as/selectCTByDSC.do', $("#cmbbranchId").val(), '', 'cmbctId', 'S', ''); }); // INCHARGE CT
 
-        AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+        AUIGrid.bind(myGridID, "cellDoubleClick", function(event) { // AS ENTRY VIEW DOUBLE CLICK
           var asid = AUIGrid.getCellValue(myGridID, event.rowIndex, "asId");
           var asNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "asNo");
           var asStusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "asStusId");
           var salesOrdNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
           var salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "asSoId");
 
-          var param = "?ord_Id=" + salesOrdId + "&ord_No="
-                     + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asid;
+          var param =  "?salesOrderId=" + salesOrdId
+                    + "&ord_Id=" + salesOrdId
+                    + "&ord_No=" + salesOrdNo
+                    + "&as_No=" + asNo
+                    + "&as_Id=" + asid;
 
           Common.popupDiv("/services/as/asResultViewPop.do" + param, null, null, true, '_newASResultDiv1');
         });
-
-        var objDate = new Date();
-        var year = objDate.getFullYear();
-        var month = addZeroInDate(objDate.getMonth());
-        var date = addZeroInDate(objDate.getDate());
-        var month2 = addZeroInDate(objDate.getMonth() + 1);
-
-        $("#createStrDate").val(date + '/' + month + '/' + year);
-        $("#createEndDate").val(date + '/' + month2 + '/' + year);
-
       });
-
-  function addZeroInDate(value) {
-    if (value < 10) {
-      value = "0" + value;
-    }
-    return value
-  }
 
   function asManagementGrid() {
     var columnLayout = [
@@ -735,12 +194,14 @@
               var ordno = AUIGrid.getCellValue(myGridID, rowIndex, "salesOrdNo");
               var ordId = AUIGrid.getCellValue(myGridID, rowIndex, "asSoId");
 
-              if (asStusId != "ACT") {
-                Common.alert("AS Info Edit Restrict</br>"
+              if (asStusId != "ACT" && asStusId != "RCL") {
+                /*Common.alert("AS Info Edit Restrict</br>"
                            + DEFAULT_DELIMITER
                            + "<b>["
                            + AS_NO
                            + "]  is not in active status.</br> AS information edit is disallowed.</b>");
+                return;*/
+                Common.alert("<spring:message code='service.msg.asEdtChk' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
                 return;
               }
 
@@ -775,20 +236,544 @@
     myGridID = AUIGrid.create("#grid_wrap_asList", columnLayout, gridPros);
   }
 
-  var gridPros = {
-    usePaging : true,
-    pageRowCount : 20,
-    editable : true,
-    fixedColumnCount : 1,
-    showStateColumn : true,
-    displayTreeOpen : true,
-    selectionMode : "singleRow",
-    headerHeight : 30,
-    useGroupingPanel : true,
-    skipReadonlyColumns : true,
-    wrapSelectionMove : true,
-    showRowNumColumn : false,
-  };
+  function fn_searchASManagement() { // SEARCH AS
+    var startDate = $('#createStrDate').val();
+    var endDate = $('#createEndDate').val();
+    var dt_range = $('#dt_range').val();
+
+    if (dt_range != "") {
+      if (fn_getDateGap(startDate, endDate) > dt_range) {
+        var fName = "<b><spring:message code='service.grid.ReqstDt'/></b>";
+
+        Common.alert("<spring:message code='service.msg.asSearchDtRange' arguments='" + fName + " ; <b>" + dt_range +"</b>' htmlEscape='false' argumentSeparator=';' />");
+        return false;
+      }
+    }
+
+    Common.ajax("GET", "/services/as/searchASManagementList.do", $("#ASForm").serialize(), function(result) {
+      AUIGrid.setGridData(myGridID, result);
+    });
+  }
+
+  function fn_newASPop() { // CREATE AS
+    Common.popupDiv("/services/as/ASReceiveEntryPop.do", {in_ordNo : ""}, null, true, '_NewEntryPopDiv1');
+  }
+
+  function fn_viewASResultPop() { // VIEW RESULT
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+    if (selectedItems.length <= 0) {
+      Common.alert("<spring:message code='service.msg.NoRcd'/>");
+      return;
+    }
+
+    if (selectedItems.length > 1) {
+      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
+      return;
+    }
+
+    var AS_ID = selectedItems[0].item.asId;
+    var AS_NO = selectedItems[0].item.asNo;
+    var asStusId = selectedItems[0].item.code1;
+    var ordno = selectedItems[0].item.salesOrdNo;
+    var ordId = selectedItems[0].item.asSoId;
+
+    if (asStusId != "ACT") {
+      Common.alert("AS Info Edit Restrict</br>" + DEFAULT_DELIMITER + "<b>[" + AS_NO + "]  is not in active status.</br> AS information edit is disallowed.</b>");
+      return;
+    }
+
+    Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId=" + ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO + '&AS_ID=' + AS_ID, null, null, true, '_viewEntryPopDiv1');
+  }
+
+  function fn_resultASPop(ordId, ordNo) {
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+    var mafuncId = "";
+    var mafuncResnId = "";
+    var asId = "";
+
+    if (selectedItems.length > 0) {
+      mafuncId = selectedItems[0].item.asMalfuncId;
+      mafuncResnId = selectedItems[0].item.asMalfuncResnId;
+      asId = selectedItems[0].item.asId;
+    }
+
+    var pram = "?salesOrderId=" + ordId + "&ordNo=" + ordNo + "&mafuncId=" + mafuncId + "&mafuncResnId=" + mafuncResnId + "&AS_ID=" + asId + "&IND= 1";
+
+    Common.popupDiv("/services/as/resultASReceiveEntryPop.do" + pram, null, null, true, '_resultNewEntryPopDiv1');
+  }
+
+  function fn_newASResultPop() {
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+    if (selectedItems.length <= 0) {
+      Common.alert("<spring:message code='service.msg.NoRcd'/>");
+      return;
+    }
+
+    if (selectedItems.length > 1) {
+      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
+      return;
+    }
+
+    var asId = selectedItems[0].item.asId;
+    var asNo = selectedItems[0].item.asNo;
+    var asStusId = selectedItems[0].item.code1;
+    var salesOrdNo = selectedItems[0].item.salesOrdNo;
+    var salesOrdId = selectedItems[0].item.asSoId;
+    var refReqst = selectedItems[0].item.refReqst;
+    var rcdTms = selectedItems[0].item.rcdTms;
+    var asRst = selectedItems[0].item.c3;
+
+    if (asStusId != "ACT") {
+      Common.alert("<b>[" + asNo + "] already has [" + asStusId + "] result.  .</br> Result entry is disallowed.</b>");
+      return;
+    }
+
+    Common.ajax("POST", "/services/as/selRcdTms.do", {
+        asNo : asNo,
+        asId : asId,
+        salesOrdNo : salesOrdNo,
+        salesOrderId : salesOrdId,
+        rcdTms : rcdTms
+    }, function(result) {
+      if (result.code == "99") {
+        Common.alert(result.message);
+        return;
+      } else {
+        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + "&refReqst=" + refReqst + "&as_Rst=" + asRst + "&rcdTms=" + rcdTms;
+        Common.popupDiv("/services/as/ASNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
+      }
+    });
+  }
+
+  function fn_asAppViewPop() {
+    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+
+    if (selectedItems.length <= 0) {
+      Common.alert("<spring:message code='service.msg.NoRcd'/>");
+      return;
+    }
+
+    if (selectedItems.length > 1) {
+      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
+      return;
+    }
+
+    var asid = selectedItems[0].item.asId;
+    var asNo = selectedItems[0].item.asNo;
+    var asStusId = selectedItems[0].item.code1;
+    var salesOrdNo = selectedItems[0].item.salesOrdNo;
+    var salesOrdId = selectedItems[0].item.asSoId;
+
+    var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asid;
+    Common.popupDiv("/services/as/asResultViewPop.do" + param, null, null, true, '_newASResultDiv1');
+  }
+
+  function fn_asResultViewPop() {
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+    if (selectedItems.length <= 0) {
+      Common.alert("<spring:message code='service.msg.NoRcd'/>");
+      return;
+    }
+
+    if (selectedItems.length > 1) {
+      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
+      return;
+    }
+
+    var asid = selectedItems[0].item.asId;
+    var asNo = selectedItems[0].item.asNo;
+    var asStusId = selectedItems[0].item.code1;
+    var salesOrdNo = selectedItems[0].item.salesOrdNo;
+    var salesOrdId = selectedItems[0].item.asSoId;
+    var asResultNo = selectedItems[0].item.c3;
+
+    if (asStusId == "ACT") {
+      Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+      return;
+    }
+
+    if (asResultNo == "") {
+      Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+      return;
+    }
+
+    var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo+ "&as_No=" + asNo + "&as_Id=" + asid + "&mod=RESULTVIEW&as_Result_No=" + asResultNo;
+
+    Common.popupDiv("/services/as/asResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
+  }
+
+  function fn_asInhouseAddOrderPop() {
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+    if (selectedItems.length <= 0) {
+      Common.alert("<spring:message code='service.msg.NoRcd'/>");
+      return;
+    }
+
+    if (selectedItems.length > 1) {
+      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
+      return;
+    }
+
+    var asid = selectedItems[0].item.asId;
+    var asNo = selectedItems[0].item.asNo;
+
+    var asStusId = selectedItems[0].item.code1;
+    var salesOrdNo = selectedItems[0].item.salesOrdNo;
+    var salesOrdId = selectedItems[0].item.asSoId;
+    var apptype = selectedItems[0].item.code;
+    var asResultNo = selectedItems[0].item.c3;
+    var asResultId = selectedItems[0].item.asResultId;
+
+    if (apptype != "IHR") {
+      Common.alert("only select for In-House Repair ");
+      return;
+    }
+
+    // if(asStusId  !="ACT"){
+    //     Common.alert("<b> already has [" + asResultNo + "] result.  .</br> Result entry is disallowed.</b>");
+    //    return ;
+    //}
+
+    //$("#in_asResultId").val(asResultId);
+    //$("#in_asResultNo").val(asResultNo);
+
+    Common.popupDiv("/services/as/resultASReceiveEntryPop.do?salesOrderId=" + salesOrdId + "&ordNo=" + salesOrdNo + "&asResultId=" + asResultId, null, null, true, '_resultNewEntryPopDiv1');
+    //Common.popupDiv("/services/as/ASReceiveEntryPop.do" ,$("#inHOForm").serializeJSON()  , null , true , '_newInHouseEntryDiv1');
+  }
+
+  function fn_asResultEditPop(ind) {
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+    if (selectedItems.length <= 0) {
+      Common.alert("<spring:message code='service.msg.NoRcd'/>");
+      return;
+    }
+
+    if (selectedItems.length > 1) {
+      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
+      return;
+    }
+
+    var asId = selectedItems[0].item.asId;
+    var asNo = selectedItems[0].item.asNo;
+    var asStusId = selectedItems[0].item.code1;
+    var salesOrdNo = selectedItems[0].item.salesOrdNo;
+    var salesOrdId = selectedItems[0].item.asSoId;
+    var asResultNo = selectedItems[0].item.c3;
+    var asResultId = selectedItems[0].item.asResultId;
+    var asTypeID = selectedItems[0].item.code;
+    var rcdTms = selectedItems[0].item.rcdTms;
+    var updDt = selectedItems[0].item.asSetlDt;
+    var lstUpdDt = selectedItems[0].item.asResultCrtDt;
+
+    if (asStusId == "ACT") {
+      if (selectedItems[0].item.asSlutnResnId == '454') {
+      } else {
+        Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+        return;
+      }
+    }
+
+    if (ind == 0) {
+      if (updDt != "" && updDt != null) {
+        var stat = true;
+        var sDate = new Date(updDt);
+        var tDate = new Date();
+        tDate.setDate(tDate.getDate() - 7);
+
+        var tMth = tDate.getMonth();
+        var tYear = tDate.getFullYear();
+        var tDay = tDate.getDate();
+        var sMth = sDate.getMonth();
+        var sYear = sDate.getFullYear();
+        var sDay = sDate.getDate();
+
+        if (sYear > tYear) {
+          stat = true;
+        } else {
+          if (sMth > tMth) {
+            stat = true;
+          } else {
+            if (sDay > tDay) {
+              stat = true;
+            } else {
+              stat = false;
+            }
+          }
+        }
+
+        if (!stat) {
+          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
+          return;
+        }
+      } else if (lstUpdDt != "" && lstUpdDt != null) {
+        var stat = true;
+        var sDate = new Date(lstUpdDt);
+        var tDate = new Date();
+        tDate.setDate(tDate.getDate() - 7);
+
+        var tMth = tDate.getMonth();
+        var tYear = tDate.getFullYear();
+        var tDay = tDate.getDate();
+        var sMth = sDate.getMonth();
+        var sYear = sDate.getFullYear();
+        var sDay = sDate.getDate();
+
+        if (sYear > tYear) {
+          stat = true;
+        } else {
+          if (sMth > tMth) {
+            stat = true;
+          } else {
+            if (sDay > tDay) {
+              stat = true;
+             } else {
+              stat = false;
+            }
+          }
+        }
+
+        if (!stat) {
+          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
+           return;
+        }
+      }
+    }
+
+    if (asTypeID == "AOAS") {
+      // ADD CHECKING
+      Common.ajax("GET", "/services/as/checkAOASRcdStat", { ORD_NO : salesOrdNo },
+        function(result) {
+          var stat = 0;
+            if (result != "") {
+              if (result.length > 0) {
+                for (var a = 0; a < result.length; a++) {
+                  if (result[a].occur > 1) {
+                    if (result[a].no != "") {
+                      Common.alert("<spring:message code='service.msg.asEdtFail' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+                      return;
+                    }
+                  }
+                }
+              }
+            }
+
+            if (asResultNo == "") {
+              Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+              return;
+            }
+
+            Common.ajax("POST", "/services/as/selRcdTms.do", {
+                asNo : asNo,
+                asId : asId,
+                salesOrdNo : salesOrdNo,
+                salesOrderId : salesOrdId,
+                rcdTms : rcdTms
+            }, function(result) {
+              if (result.code == "99") {
+                Common.alert(result.message);
+                return;
+              } else {
+                var param = "?ord_Id=" + salesOrdId
+                          + "&ord_No=" + salesOrdNo + "&as_No="
+                          + asNo + "&as_Id=" + asId
+                          + "&mod=RESULTEDIT&as_Result_No="
+                          + asResultNo + "&as_Result_Id="
+                          + asResultId;
+
+                Common.popupDiv("/services/as/asResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
+              }
+            });
+        });
+    } else {
+      if (asResultNo == "") {
+        Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+        return;
+      }
+
+      Common.ajax("POST", "/services/as/selRcdTms.do", {
+          asNo : asNo,
+          asId : asId,
+          salesOrdNo : salesOrdNo,
+          salesOrderId : salesOrdId,
+          rcdTms : rcdTms
+      }, function(result) {
+        if (result.code == "99") {
+          Common.alert(result.message);
+          return;
+        } else {
+          var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo
+                    + "&as_No=" + asNo + "&as_Id=" + asId
+                    + "&mod=RESULTEDIT&as_Result_No=" + asResultNo
+                    + "&as_Result_Id=" + asResultId;
+
+          Common.popupDiv("/services/as/asResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
+        }
+      });
+    }
+  }
+
+  function fn_asResultEditBasicPop(ind) {
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+    if (selectedItems.length <= 0) {
+      Common.alert("<spring:message code='service.msg.NoRcd'/>");
+      return;
+    }
+
+    if (selectedItems.length > 1) {
+      Common.alert("<spring:message code='service.msg.onlyPlz'/>");
+      return;
+    }
+
+    var asId = selectedItems[0].item.asId;
+    var asNo = selectedItems[0].item.asNo;
+    var asStusId = selectedItems[0].item.code1;
+    var salesOrdNo = selectedItems[0].item.salesOrdNo;
+    var salesOrdId = selectedItems[0].item.asSoId;
+    var asResultNo = selectedItems[0].item.c3;
+    var asResultId = selectedItems[0].item.asResultId;
+    var refReqst = selectedItems[0].item.refReqst;
+    var rcdTms = selectedItems[0].item.rcdTms;
+    var updDt = selectedItems[0].item.asSetlDt;
+    var lstUpdDt = selectedItems[0].item.asResultCrtDt;
+
+    // ONLY APPLICABLE TO COMPLETE AND CANCEL AS
+    if (asStusId != "CAN" && asStusId != "COM") {
+      Common.alert("<spring:message code='service.msg.asEdtBscChk' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+      return;
+    }
+
+    if (asStusId == "ACT") { // STILL ACTIVE
+      if (refReqst == "") {
+        Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+        return;
+      }
+    }
+
+    if (asResultNo == "") { // NO RESULT
+      Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+      return;
+    }
+
+    // CHECKING 7 DAYS ONLY MOD LEVEL CAN HELP EDIT
+    if (ind == 0) {
+      if (updDt != "" && updDt != null) {
+        var stat = true;
+        var sDate = new Date(updDt);
+        var tDate = new Date();
+        tDate.setDate(tDate.getDate() - 7);
+
+        var tMth = tDate.getMonth();
+        var tYear = tDate.getFullYear();
+        var tDay = tDate.getDate();
+        var sMth = sDate.getMonth();
+        var sYear = sDate.getFullYear();
+        var sDay = sDate.getDate();
+
+        if (sYear > tYear) {
+          stat = true;
+        } else {
+          if (sMth > tMth) {
+            stat = true;
+          } else {
+            if (sDay > tDay) {
+              stat = true;
+             } else {
+              stat = false;
+            }
+          }
+        }
+
+        if (!stat) {
+          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
+          return;
+        }
+      } else if (lstUpdDt != "" && lstUpdDt != null) {
+        var stat = true;
+        var sDate = new Date(lstUpdDt);
+        var tDate = new Date();
+        tDate.setDate(tDate.getDate() - 7);
+
+        var tMth = tDate.getMonth();
+        var tYear = tDate.getFullYear();
+        var tDay = tDate.getDate();
+        var sMth = sDate.getMonth();
+        var sYear = sDate.getFullYear();
+        var sDay = sDate.getDate();
+
+        if (tYear > sYear) {
+          stat = false;
+        } else {
+          if (tMth > sMth) {
+            stat = false;
+          } else {
+            if (tDay > sDay) {
+              stat = false;
+            } else {
+              stat = true;
+            }
+          }
+        }
+
+        if (!stat) {
+          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
+          return;
+        }
+      }
+    }
+
+    Common.ajax("POST", "/services/as/selRcdTms.do", { // CHECK TIMESTAMP
+        asNo : asNo,
+        asId : asId,
+        salesOrdNo : salesOrdNo,
+        salesOrderId : salesOrdId,
+        rcdTms : rcdTms
+    }, function(result) {
+      if (result.code == "99") {
+        Common.alert(result.message);
+        return;
+      } else {
+        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo
+                  + "&as_No=" + asNo + "&as_Id=" + asId
+                  + "&mod=edit&as_Result_No=" + asResultNo + "&as_Result_Id="
+                  + asResultId;
+
+        Common.popupDiv("/services/as/asResultEditBasicPop.do" + param, null, null, true, '_newASResultBasicDiv1');
+      }
+    });
+  }
+
+  function fn_assginCTTransfer() {
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+    if (selectedItems.length <= 0) {
+      Common.alert("<spring:message code='service.msg.NoRcd'/>");
+      return;
+    }
+
+    var asBrnchId = selectedItems[0].item.asBrnchId;
+
+    for ( var i in selectedItems) {
+      if ("ACT" != selectedItems[i].item.code1 && "RCL" != selectedItems[i].item.code1) {
+        Common.alert("<spring:message code='service.msg.asCTTrfChk' arguments='<b>" + selectedItems[i].item.asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+        return;
+      }
+
+      if (asBrnchId != selectedItems[i].item.asBrnchId) {
+        Common.alert("<b>Can't CT tranfer in multiple branch selection.</b>");
+        return;
+      }
+    }
+
+    Common.popupDiv("/services/as/assignCTTransferPop.do", null, null, true, '_assginCTTransferDiv');
+  }
+
+
 
   function fn_excelDown() {
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
@@ -827,7 +812,7 @@
       var AS_NO = selectedItems[0].item.asNo;
 
       if (asStusId == "ACT") {
-        Common.alert("<b>[" + AS_NO + "] do no has any result yet. Ledger view is disallowed.</b>");
+        Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
       } else {
         Common.popupDiv("/services/as/report/asLedgerPop.do?ASRNO=" + asrNo, null, null, true, '');
       }
@@ -854,10 +839,10 @@
     }
 
     if (asStusId != "COM") {
-      Common.alert("<b>[" + AS_NO + "] is not in complete status. Print invoice is disallowed.</b>");
+      Common.alert("<spring:message code='service.msg.asInvCom' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
     } else {
       if (asTotalAmt <= 0) {
-        Common.alert("<b>[" + AS_NO + "] has no charges. Print invoice is disallowed.</b>");
+        Common.alert("<spring:message code='service.msg.asInvNoChr' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
       } else {
         $("#reportForm #V_RESULTID").val(asrId);
         $("#reportForm #reportFileName").val('/services/ASInvoice.rpt');
@@ -874,7 +859,6 @@
   }
 
   function fn_getDateGap(sdate, edate) {
-
     var startArr, endArr;
 
     startArr = sdate.split('/');
@@ -882,7 +866,6 @@
 
     var keyStartDate = new Date(startArr[2], startArr[1], startArr[0]);
     var keyEndDate = new Date(endArr[2], endArr[1], endArr[0]);
-
     var gap = (keyEndDate.getTime() - keyStartDate.getTime()) / 1000 / 60 / 60 / 24;
 
     return gap;
@@ -892,98 +875,76 @@
 <section id="content">
  <!-- content start -->
  <ul class="path">
-  <li><img
-   src="${pageContext.request.contextPath}/resources/images/common/path_home.gif"
-   alt="Home" /></li>
+  <!-- <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
   <li>Sales</li>
-  <li>Order list</li>
+  <li>Order list</li> -->
  </ul>
  <aside class="title_line">
   <!-- title_line start -->
   <p class="fav">
    <a href="#" class="click_add_on">My menu</a>
   </p>
-  <h2>AS Management</h2>
+  <h2><spring:message code='service.title.AsMgmt'/></h2>
   <form action="#" id="inHOForm">
    <div style="display: none">
-    <input type="text" id="in_asId" name="in_asId" /> <input
-     type="text" id="in_asNo" name="in_asNo" /> <input type="text"
-     id="in_ordId" name="in_ordId" /> <input type="text"
-     id="in_asResultId" name="in_asResultId" /> <input type="text"
-     id="in_asResultNo" name="in_asResultNo" />
+    <input type="text" id="in_asId" name="in_asId" />
+    <input type="text" id="in_asNo" name="in_asNo" />
+    <input type="text" id="in_ordId" name="in_ordId" />
+    <input type="text" id="in_asResultId" name="in_asResultId" />
+    <input type="text" id="in_asResultNo" name="in_asResultNo" />
+    <input type="text" id="dt_range" name="dt_range" value="${DT_RANGE}" />
    </div>
   </form>
-  <!--
-<ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:()">ADD AS Order</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASResultPop()">ADD AS Result</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultEditBasicPop()">EDIT AS Result</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultViewPop()"> VIEW AS Result</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_assginCTTransfer()">Assign CT Transfer</a></p></li>
-</ul>
-<br> -->
   <ul class="right_btns">
-   <!--
-<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asInhouseAddOrderPop()">IHR ADD AS Order</a></p></li>
-</c:if>     -->
    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="javascript:fn_newASPop()">ADD AS Order</a>
+      <a href="#" onclick="fn_newASPop()"><spring:message code='service.btn.crtAs'/></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="javascript:fn_newASResultPop()">ADD AS
-       Result</a>
+      <a href="#" onclick="fn_newASResultPop()"><spring:message code='service.btn.addtAs'/></a>
      </p></li>
    </c:if>
+   <!-- FUNCTION WHICH ALLOW EDIT RECORD WHICH MORE THAN 7 DAYS -->
    <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="javascript:fn_asResultEditBasicPop(0)">EDIT(Basic)
-       AS Result</a>
+      <a href="#" onclick="fn_asResultEditBasicPop(0)"><spring:message code='service.btn.edtBsAs'/></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="javascript:fn_asResultEditPop(0)"> EDIT AS
-       Result </a>
+      <a href="#" onclick="fn_asResultEditPop(0)"><spring:message code='service.btn.edtAs'/></a>
      </p></li>
    </c:if>
-
+   <!-- FUNCTION WHICH ALLOW EDIT RECORD WITHIN 7 DAYS -->
    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="javascript:fn_asResultEditBasicPop(1)">EDIT(Basic)
-       AS Result</a>
+      <a href="#" onclick="fn_asResultEditBasicPop(1)"><spring:message code='service.btn.edtBsAs'/></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="javascript:fn_asResultEditPop(1)"> EDIT AS
-       Result</a>
+      <a href="#" onclick="fn_asResultEditPop(1)"><spring:message code='service.btn.edtAs'/></a>
      </p></li>
    </c:if>
-
    <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="javascript:fn_asResultViewPop()"> VIEW AS
-       Result</a>
+      <a href="#" onclick="fn_asResultViewPop()"><spring:message code='service.btn.viewAS'/></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="javascript:fn_assginCTTransfer()">Assign
-       CT Transfer</a>
+      <a href="#" onclick="fn_assginCTTransfer()"><spring:message code='service.btn.ctTrans'/></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onClick="javascript:fn_searchASManagement()"><span
-       class="search"></span>Search</a>
+      <a href="#" onClick="fn_searchASManagement()"><span class="search"></span><spring:message code='sys.btn.search'/></a>
      </p></li>
    </c:if>
    <li><p class="btn_blue">
-     <a href="#"><span class="clear"></span>Clear</a>
+     <a href="#"><span class="clear"></span><spring:message code='service.btn.Clear'/></a>
     </p></li>
   </ul>
  </aside>
@@ -1004,95 +965,84 @@
     </colgroup>
     <tbody>
      <tr>
-      <th scope="row">AS Type</th>
-      <td><select class="multy_select w100p" multiple="multiple"
-       id="asType" name="asType">
-        <option value="675">Auto AS</option>
-        <option value="674">Normal AS</option>
-        <option value="2703">Request AS</option>
-        <option value="2713">InHouseRepair</option>
-        <option value="3154">Add-On AS</option>
+      <th scope="row"><spring:message code='service.grid.ASTyp'/></th>
+      <td><select class="multy_select w100p" multiple="multiple" id="asType" name="asType">
+        <c:forEach var="list" items="${asTyp}" varStatus="status">
+          <option value="${list.codeId}">${list.codeName}</option>
+        </c:forEach>
       </select></td>
-      <th scope="row">AS Status</th>
-      <td><select class="multy_select w100p" multiple="multiple"
-       id="asStatus" name="asStatus">
-        <option value="1" selected>Active</option>
-        <option value="4">Completed</option>
-        <option value="21">Fail</option>
-        <option value="10">Cancelled</option>
+      <th scope="row"><spring:message code='service.title.Status'/></th>
+      <td><select class="multy_select w100p" multiple="multiple" id="asStatus" name="asStatus">
+        <c:forEach var="list" items="${asStat}" varStatus="status">
+         <c:choose>
+           <c:when test="${list.codeId=='1'}">
+             <option value="${list.codeId}" selected>${list.codeName}</option>
+           </c:when>
+           <c:when test="${list.codeId=='19'}">
+             <option value="${list.codeId}" selected>${list.codeName}</option>
+           </c:when>
+           <c:otherwise>
+             <option value="${list.codeId}">${list.codeName}</option>
+           </c:otherwise>
+         </c:choose>
+        </c:forEach>
       </select></td>
-      <th scope="row">Request Date</th>
+      <th scope="row"><spring:message code='service.title.RequestDate'/></th>
       <td>
        <div class="date_set w100p">
-        <!-- date_set start -->
         <p>
-         <input type="text" title="Create start Date"
-          placeholder="DD/MM/YYYY" class="j_date" id="createStrDate"
-          name="createStrDate" />
+         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="createStrDate" name="createStrDate" value="${bfDay}"/>
         </p>
-        <span>To</span>
+        <span><spring:message code='pay.text.to'/></span>
         <p>
-         <input type="text" title="Create end Date"
-          placeholder="DD/MM/YYYY" class="j_date" id="createEndDate"
-          name="createEndDate" />
+         <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="createEndDate" name="createEndDate" value="${toDay}"/>
         </p>
-       </div> <!-- date_set end -->
+       </div>
       </td>
      </tr>
      <tr>
-      <th scope="row">AS Number</th>
-      <td><input type="text" title="" placeholder="AS Number"
+      <th scope="row"><spring:message code='service.grid.ASNo'/></th>
+      <td><input type="text" title="" placeholder="<spring:message code='service.grid.ASNo'/>"
        class="w100p" id="asNum" name="asNum" /></td>
-      <th scope="row">Result Number</th>
-      <td><input type="text" title="" placeholder="Result Number"
+      <th scope="row"><spring:message code='service.grid.ResultNo'/></th>
+      <td><input type="text" title="" placeholder="<spring:message code='service.grid.ResultNo'/>"
        class="w100p" id="resultNum" name="resultNum" /></td>
-      <th scope="row">Order Number</th>
-      <td><input type="text" title="" placeholder="Order Number"
+      <th scope="row"><spring:message code='service.title.OrderNumber'/></th>
+      <td><input type="text" title="" placeholder="<spring:message code='service.title.OrderNumber'/>"
        class="w100p" id="orderNum" name="orderNum" /></td>
      </tr>
      <tr>
-      <th scope="row">DSC</th>
+      <th scope="row"><spring:message code='service.title.ASBrch'/></th>
       <td><select id="cmbbranchId" name="cmbbranchId" class="w100p">
-        <%-- <option value="">Choose One</option>
-         <c:forEach var="list" items="${ssCapacityCtList }">
-            <option value="${list.codeId }">${list.codeName }</option>
-            <option value="${list.codeId }">${list.codeName }</option>
-         </c:forEach> --%>
       </select></td>
-      <th scope="row">CT</th>
+      <th scope="row"><spring:message code='service.grid.CTCode'/></th>
       <td><select id="cmbctId" name="cmbctId" class="w100p">
-        <%-- <option value="">Choose One</option>
-         <c:forEach var="list" items="${selectCTSubGroupDscList }">
-            <option value="${list.codeId }">${list.codeName }</option>
-         </c:forEach> --%>
+        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
       </select></td>
-      <th scope="row">Appointment Date</th>
+      <th scope="row"><spring:message code='service.title.AppointmentDate'/></th>
       <td>
        <div class="date_set w100p">
-        <!-- date_set start -->
         <p>
          <input type="text" title="Create start Date"
           placeholder="DD/MM/YYYY" class="j_date" id="appDtFrm"
           name="appDtFrm" />
         </p>
-        <span>To</span>
+        <span><spring:message code='pay.text.to'/></span>
         <p>
          <input type="text" title="Create end Date"
           placeholder="DD/MM/YYYY" class="j_date" id="appDtTo"
           name="appDtTo" />
         </p>
-       </div> <!-- date_set end -->
+       </div>
       </td>
      </tr>
      <tr>
-      <th scope="row">Customer Name</th>
-      <td colspan="3"><input type="text" title=""
-       placeholder="Customer Name" class="w100p" id="custName"
-       name="custName" /></td>
-      <th scope="row">NRIC/Company No</th>
-      <td><input type="text" title=""
-       placeholder="NRIC/Company Number" class="w100p" id="nricNum"
-       name="nricNum" /></td>
+      <th scope="row"><spring:message code='service.grid.CustomerName'/></th>
+      <td colspan="3">
+        <input type="text" title="" placeholder="<spring:message code='service.grid.CustomerName'/>" class="w100p" id="custName" name="custName" /></td>
+      <th scope="row"><spring:message code='service.title.NRIC_CompanyNo'/></th>
+      <td>
+        <input type="text" title="" placeholder="<spring:message code='service.title.NRIC_CompanyNo'/>" class="w100p" id="nricNum" name="nricNum" /></td>
      </tr>
     </tbody>
    </table>
@@ -1100,53 +1050,35 @@
    <aside class="link_btns_wrap">
     <!-- link_btns_wrap start -->
     <p class="show_btn">
-     <a href="#"><img
-      src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif"
-      alt="link show" /></a>
+     <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a>
     </p>
     <dl class="link_list">
-     <dt>Link</dt>
+     <dt><spring:message code='sales.Link'/></dt>
      <dd>
       <ul class="btns">
-       <!-- <li><p class="link_btn"><a href="#" ondblclick="javascript:fn_asAppViewPop()"> AS Application View</a></p></li> -->
-       <!-- <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewASResultPop()"> AS Application Edit</a></p></li> -->
-       <!-- <li><p class="link_btn"><a href="#" onclick="javascript:fn_newASResultPop()">New AS Result</a></p></li>
-        <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultViewPop()"> AS Result  View</a></p></li>
-
-        <li><p class="link_btn"><a href="#" onclick="javascript:fn_assginCTTransfer()"> AssginCTTransfer</a></p></li> -->
-       <!--  <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
       </ul>
       <ul class="btns">
        <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_ASReport()">AS Report</a>
+          <a href="#" onclick="fn_ASReport()"><spring:message code='service.btn.asRpt'/></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_asLogBookList()">AS Log
-           Book List</a>
+          <a href="#" onclick="fn_asLogBookList()"><spring:message code='service.btn.asLogBook'/></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_asRawData()">AS Raw
-           Data</a>
+          <a href="#" onclick="fn_asRawData()"><spring:message code='service.btn.asRawData'/></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_asSummaryList()">AS
-           Summary List</a>
+          <a href="#" onclick="fn_asSummaryList()"><spring:message code='service.btn.asSumLst'/></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_asYsList()">AS YS List</a>
+          <a href="#" onclick="fn_asYsList()"><spring:message code='service.btn.asYsLst'/></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_ledger()">View Ledger</a>
+          <a href="#" onclick="fn_ledger()"><spring:message code='service.btn.asLdg'/></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_invoice()">AS Invoice</a>
+          <a href="#" onclick="fn_invoice()"><spring:message code='service.btn.asInvc'/></a>
          </p></li>
        </c:if>
       </ul>
@@ -1162,16 +1094,9 @@
    <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
      <li><p class="btn_grid">
-       <a href="#" onClick="fn_excelDown()">GENERATE</a>
+       <a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a>
       </p></li>
     </c:if>
-    <!-- <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-    <li><p class="btn_grid"><a href="#">NEW</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li> -->
    </ul>
    <article class="grid_wrap">
     <!-- grid_wrap start -->
@@ -1181,11 +1106,10 @@
    <!-- grid_wrap end -->
   </form>
   <form action="#" id="reportForm" method="post">
-   <input type="hidden" id="V_RESULTID" name="V_RESULTID" /> <input
-    type="hidden" id="reportFileName" name="reportFileName" /> <input
-    type="hidden" id="viewType" name="viewType" /> <input type="hidden"
-    id="reportDownFileName" name="reportDownFileName"
-    value="DOWN_FILE_NAME" />
+   <input type="hidden" id="V_RESULTID" name="V_RESULTID" />
+   <input type="hidden" id="reportFileName" name="reportFileName" />
+   <input type="hidden" id="viewType" name="viewType" />
+   <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
   </form>
  </section>
  <!-- search_table end -->
