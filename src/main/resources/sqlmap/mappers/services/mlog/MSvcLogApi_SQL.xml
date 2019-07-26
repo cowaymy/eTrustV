@@ -720,7 +720,9 @@
                , Extent7.AS_RESULT_STUS_ID
                , Extent7.AS_FAIL_RESN_ID
                , Extent7.AS_REN_COLCT_ID
-               , Extent7.AS_CMMS
+               , CASE WHEN Extent7.AS_CMMS IS NULL
+                      THEN Extent1.AS_ALLOW_COMM
+                      ELSE Extent7.AS_CMMS END AS AS_CMMS
                , Extent7.AS_BRNCH_ID
                , Extent7.AS_WH_ID
                , Extent7.AS_RESULT_REM
@@ -769,6 +771,9 @@
                , (SELECT MEM_ID
                   FROM ORG0001D
                   WHERE mem_code = #{userId}) as user_id
+               , (SELECT USER_ID
+                  FROM SYS0047M
+                  WHERE USER_NAME = #{userId}) as upd_usr_id
           FROM SVC0001D Extent1
              , SVC0004D Extent7
              , SAL0001D Extent4
