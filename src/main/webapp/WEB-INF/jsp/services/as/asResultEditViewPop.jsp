@@ -5,10 +5,13 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  01/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP
+ 26/04/2019  ONGHC  1.0.1          ADD RECALL STATUS
  -->
 
+<!-- AS ORDER > AS MANAGEMENT > VIEW / EDIT AS ENTRY -->
 <script type="text/javaScript">
   var regGridID;
+  var actPrdCode;
 
   $(document).ready(function() {
 
@@ -24,55 +27,55 @@
 
     var columnLayout = [ {
       dataField : "asNo",
-      headerText : "Type",
+      headerText : "<spring:message code='service.grid.ASTyp'/>",
       editable : false
     }, {
       dataField : "c2",
-      headerText : "ASR No",
+      headerText : "<spring:message code='service.grid.ASRs'/>",
       width : 80,
       editable : false,
       dataType : "date",
       formatString : "dd/mm/yyyy"
     }, {
       dataField : "code",
-      headerText : "Status ",
+      headerText : "<spring:message code='service.grid.Status'/>",
       width : 80
     },
     //{ dataField : "asReqstDt",       headerText  : "Request Date",  width  : 100 ,editable       : false  ,dataType : "date", formatString : "dd/mm/yyyy"},
     //{ dataField : "asSetlDt",       headerText  : "Settle Date",  width  : 100 ,editable       : false  ,dataType : "date", formatString : "dd/mm/yyyy"},
     {
       dataField : "asReqstDt",
-      headerText : "Request Date",
+      headerText : "<spring:message code='service.grid.ReqstDt'/>",
       width : 100,
       editable : false
     }, {
       dataField : "asSetlDt",
-      headerText : "Settle Date",
+      headerText : "<spring:message code='service.grid.SettleDate'/>",
       width : 100,
       editable : false
     }, {
       dataField : "c3",
-      headerText : "Error Code",
+      headerText : "<spring:message code='service.grid.ErrCde'/>",
       width : 150,
       editable : false
     }, {
       dataField : "c4",
-      headerText : "Error Desc",
+      headerText : "<spring:message code='service.grid.ErrDesc'/>",
       width : 150,
       editable : false
     }, {
       dataField : "c5",
-      headerText : "CT Code",
+      headerText : "<spring:message code='service.grid.CTCode'/>",
       width : 150,
       editable : false
     }, {
       dataField : "c6",
-      headerText : "Solution",
+      headerText : "<spring:message code='service.grid.Solution'/>",
       width : 150,
       editable : false
     }, {
       dataField : "c7",
-      headerText : "Amount",
+      headerText : "<spring:message code='service.grid.ASAmt'/>",
       width : 150,
       dataType : "numeric",
       formatString : "#,##0.00",
@@ -121,10 +124,8 @@
       $("#txtMembership").text(result[0].c5);
       $("#txtExpiredDate").text(result[0].c6);
 
-      var prdctCd = $("#txtProductCode").text();
-      doGetCombo('/services/as/getASFilterInfo.do?prdctCd=' + prdctCd,
-          '', '', 'ddlFilterCode', 'S', '');
-
+      actPrdCode = result[0].stockCode;
+      doGetCombo('/services/as/getASFilterInfo.do?prdctCd=' + actPrdCode, '', '', 'ddlFilterCode', 'S', '');
     });
   }
 
@@ -249,12 +250,12 @@
    <!-- pop_header start -->
    <h1>
     <spain id='title_spain'> <c:if
-     test="${MOD eq  'RESULTVIEW' }"> View AS Result Entry </c:if> <c:if
-     test="${MOD eq  'RESULTEDIT' }"> Edit AS Result Entry </c:if> </spain>
+     test="${MOD eq  'RESULTVIEW' }"> <spring:message code='service.btn.viewAs' /> </c:if> <c:if
+     test="${MOD eq  'RESULTEDIT' }"> <spring:message code='service.btn.editAs' /> </c:if> </spain>
    </h1>
    <ul class="right_opt">
     <li><p class="btn_blue2">
-      <a href="#">CLOSE</a>
+      <a href="#"><spring:message code='sys.btn.close' /></a>
      </p></li>
    </ul>
   </header>
@@ -264,12 +265,9 @@
    <section class="tap_wrap">
     <!-- tap_wrap start -->
     <ul class="tap_type1">
-     <li><a href="#" class="on">Basic Info</a></li>
-     <li><a href="#">Product Info</a></li>
-     <li><a href="#">AS Events</a></li>
-     <li><a href="#"
-      onclick=" javascirpt:AUIGrid.resize(regGridID, 950,300);  ">After
-       Service</a></li>
+      <li><a href="#" class="on"><spring:message code='service.title.General' /></a></li>
+      <li><a href="#"><spring:message code='service.title.OrderInformation' /></a></li>
+      <li><a href="#" onclick=" javascirpt:AUIGrid.resize(regGridID, 950,300); "><spring:message code='service.title.asPassEvt' /></a></li>
     </ul>
     <article class="tap_area">
      <!-- tap_area start -->
@@ -277,197 +275,142 @@
       <!-- table start -->
       <caption>table</caption>
       <colgroup>
-       <col style="width: 180px" />
-       <col style="width: *" />
-       <col style="width: 140px" />
-       <col style="width: *" />
-       <col style="width: 170px" />
-       <col style="width: *" />
+        <col style="width: 150px" />
+        <col style="width: *" />
+        <col style="width: 150px" />
+        <col style="width: *" />
+        <col style="width: 150px" />
+        <col style="width: *" />
       </colgroup>
       <tbody>
-       <tr>
-        <th scope="row">AS No</th>
-        <td><span id="txtASNo"></span></td>
-        <th scope="row">Order No</th>
-        <td><span id="txtOrderNo"></span></td>
-        <th scope="row">Application Type</th>
-        <td><span id="txtAppType"></span></td>
-       </tr>
-       <tr>
-        <th scope="row">Customer Name</th>
-        <td colspan="3"><span id="txtCustName"></span></td>
-        <th scope="row">NRIC/Company Np</th>
-        <td><span id="txtCustIC"></span></td>
-       </tr>
-       <tr>
-        <th scope="row">Contact Person</th>
-        <td colspan="5"><span id="txtContactPerson"></span></td>
-       </tr>
-       <tr>
-        <th scope="row">Tel (Mobile)</th>
-        <td><span id="txtTelMobile"></span></td>
-        <th scope="row">Tel (Residence)</th>
-        <td><span id="txtTelResidence"></span></td>
-        <th scope="row">Tel (Office)</th>
-        <td><span id="txtTelOffice"></span></td>
-       </tr>
-       <tr>
-        <th scope="row">Installation Address</th>
-        <td colspan="5"><span id="txtInstallAddress"></span></td>
-       </tr>
-       <tr>
-        <th scope="row">Requestor</th>
-        <td colspan="3"><span id="txtRequestor"></span></td>
-        <th scope="row">AS Key By</th>
-        <td></td>
-       </tr>
-       <tr>
-        <th scope="row">Requestor Contact</th>
-        <td colspan="3"><span id="txtRequestorContact"></span></td>
-        <th scope="row">AS Key At</th>
-        <td><span id="txtASKeyAt"></span></td>
-       </tr>
-      </tbody>
+        <tr>
+         <th scope="row"><spring:message code='service.grid.ASNo' /></th>
+         <td><span id="txtASNo"></span></td>
+         <th scope="row"><spring:message code='service.grid.SalesOrder' /></th>
+         <td><span id="txtOrderNo"></span></td>
+         <th scope="row"><spring:message code='service.title.ApplicationType' /></th>
+         <td><span id="txtAppType"></span></td>
+        </tr>
+        <tr>
+         <th scope="row"><spring:message code='service.title.asStatus' /></th>
+         <td><span id='txtASStatus'></span></td>
+         <th scope="row">Malfunction Code</th>
+         <td><span id='txtMalfunctionCode'></span></td>
+         <th scope="row">Malfunction Reason</th>
+         <td><span id='txtMalfunctionReason'></span></td>
+        </tr>
+        <tr>
+         <th scope="row"></th>
+         <td><span></span></td>
+         <th scope="row"><spring:message code='service.grid.ReqstDt' /></th>
+         <td><span id='txtRequestDate'></span></td>
+         <th scope="row"><spring:message code='service.title.ReqstTm' /></th>
+         <td><span id='txtRequestTime'></span></td>
+        </tr>
+        <tr>
+         <th scope="row"></th>
+         <td><span></span></td>
+         <th scope="row"><spring:message code='service.title.AppointmentDate' /></th>
+         <td><span id='txtAppDt'></span></td>
+         <th scope="row"><spring:message code='service.title.AppointmentTm' /></th>
+         <td><span id='txtAppTm'></span></td>
+        </tr>
+        <tr>
+         <th scope="row"><spring:message code='service.title.DSCCode' /></th>
+         <td><span id='txtDSCCode'></span></td>
+         <th scope="row"><spring:message code='service.title.InchargeCT' /></th>
+         <td colspan="3"><span id='txtInchargeCT'></span></td>
+        </tr>
+
+        <tr>
+         <th scope="row"><spring:message code='service.title.CustomerName' /></th>
+         <td colspan="3"><span id="txtCustName"></span></td>
+         <th scope="row"><spring:message code='service.title.NRIC_CompanyNo' /></th>
+         <td><span id="txtCustIC"></span></td>
+        </tr>
+        <tr>
+         <th scope="row"><spring:message code='service.title.ContactNo' /></th>
+         <td colspan="5"><span id="txtContactPerson"></span></td>
+        </tr>
+        <tr>
+         <th scope="row"><spring:message code='sal.text.telM' /></th>
+         <td><span id="txtTelMobile"></span></td>
+         <th scope="row"><spring:message code='sal.text.telR' /></th>
+         <td><span id="txtTelResidence"></span></td>
+         <th scope="row"><spring:message code='sal.text.telO' /></th>
+         <td><span id="txtTelOffice"></span></td>
+        </tr>
+        <tr>
+         <th scope="row"><spring:message code='service.title.InstallationAddress' /></th>
+         <td colspan="5"><span id="txtInstallAddress"></span></td>
+        </tr>
+        <tr>
+         <th scope="row"><spring:message code='service.title.Rqst' /></th>
+         <td colspan="3"><span id="txtRequestor"></span></td>
+         <th scope="row"><spring:message code='service.grid.CrtBy' /></th>
+         <td></td>
+        </tr>
+        <tr>
+         <th scope="row"><spring:message code='service.title.RqstCtc' /></th>
+         <td colspan="3"><span id="txtRequestorContact"></span></td>
+         <th scope="row"><spring:message code='sal.text.createDate' /></th>
+         <td><span id="txtASKeyAt"></span></td>
+        </tr>
+       </tbody>
      </table>
      <!-- table end -->
     </article>
     <!-- tap_area end -->
     <article class="tap_area">
-     <!-- tap_area start -->
-     <table class="type1">
-      <!-- table start -->
-      <caption>table</caption>
-      <colgroup>
-       <col style="width: 130px" />
-       <col style="width: *" />
-       <col style="width: 130px" />
-       <col style="width: *" />
-       <col style="width: 130px" />
-       <col style="width: *" />
-      </colgroup>
-      <tbody>
-       <tr>
-        <th scope="row">Product Code</th>
-        <td><span id="txtProductCode"></span></td>
-        <th scope="row">Product Name</th>
-        <td colspan="3"><span id="txtProductName"></span></td>
-       </tr>
-       <tr>
-        <th scope="row">Sirim No</th>
-        <td><span id="txtSirimNo"></span></td>
-        <th scope="row">Serial No</th>
-        <td><span id="txtSerialNo"></span></td>
-        <th scope="row">Category</th>
-        <td><span id="txtCategory"></span></td>
-       </tr>
-       <tr>
-        <th scope="row">Install No</th>
-        <td><span id="txtInstallNo"></span></td>
-        <th scope="row">Install Date</th>
-        <td><span id="txtInstallDate"></span></td>
-        <th scope="row">Install By</th>
-        <td><span id="txtInstallBy"></span></td>
-       </tr>
-       <tr>
-        <th scope="row">Instruction</th>
-        <td colspan="5"><span id="txtInstruction"></span></td>
-       </tr>
-       <tr>
-        <th scope="row">Membership</th>
-        <td colspan="3"><span id="txtMembership"></span></td>
-        <th scope="row">Expired Date</th>
-        <td><span id="txtExpiredDate"></span></td>
-       </tr>
-      </tbody>
-     </table>
-     <!-- table end -->
-    </article>
-    <!-- tap_area end -->
-    <article class="tap_area">
-     <!-- tap_area start -->
-     <table class="type1">
-      <!-- table start -->
-      <caption>table</caption>
-      <colgroup>
-       <col style="width: 160px" />
-       <col style="width: *" />
-       <col style="width: 180px" />
-       <col style="width: *" />
-       <col style="width: 150px" />
-       <col style="width: *" />
-      </colgroup>
-      <tbody>
-       <tr>
-        <th scope="row">AS Status</th>
-        <td><span id='txtASStatus'></span></td>
-        <th scope="row">Request Date</th>
-        <td><span id='txtRequestDate'></span></td>
-        <th scope="row">Request Time</th>
-        <td><span id='txtRequestTime'></span></td>
-       </tr>
-       <tr>
-        <th scope="row"></th>
-        <td><span></span></td>
-        <th scope="row">Appointment Date</th>
-        <td><span id='txtAppDt'></span></td>
-        <th scope="row">Appointment Time</th>
-        <td><span id='txtAppTm'></span></td>
-       </tr>
-       <tr>
-        <th scope="row">Malfunction Code</th>
-        <td><span id='txtMalfunctionCode'></span></td>
-        <th scope="row">Malfunction Reason</th>
-        <td colspan="3"><span id='txtMalfunctionReason'></span></td>
-       </tr>
-       <tr>
-        <th scope="row">DSC Code</th>
-        <td><span id='txtDSCCode'></span></td>
-        <th scope="row">Incharge Technician</th>
-        <td colspan="3"><span id='txtInchargeCT'></span></td>
-       </tr>
-      </tbody>
-     </table>
-     <!-- table end -->
-     <article class="grid_wrap">
-      <!-- grid_wrap start -->
+       <!------------------------------------------------------------------------------
+          Order Detail Page Include START
+         ------------------------------------------------------------------------------->
+         <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
+       <!------------------------------------------------------------------------------
+          Order Detail Page Include END
+         ------------------------------------------------------------------------------->
      </article>
-     <!-- grid_wrap end -->
-    </article>
     <!-- tap_area end -->
-    <article class="tap_area">
-     <!-- tap_area start -->
-     <article class="grid_wrap">
-      <!-- grid_wrap start -->
-      <div id="reg_grid_wrap"
-       style="width: 100%; height: 300px; margin: 0 auto;"></div>
+    <article class="grid_wrap">
+       <!-- grid_wrap start -->
+      </article>
+      <!-- grid_wrap end -->
      </article>
-     <!-- grid_wrap end -->
-    </article>
+     <!-- tap_area end -->
+     <article class="tap_area">
+      <!-- tap_area start -->
+      <article class="grid_wrap">
+       <!-- grid_wrap start -->
+       <div id="reg_grid_wrap"
+        style="width: 100%; height: 300px; margin: 0 auto;"></div>
+      </article>
+      <!-- grid_wrap end -->
+     </article>
     <!-- tap_area end -->
    </section>
    <!-- tap_wrap end -->
    <aside class="title_line">
     <!-- title_line start -->
-    <h3 class="red_text">Fill the result at below :</h3>
+    <h3 class="red_text"><spring:message code='service.msg.msgFillIn' /></h3>
    </aside>
    <!-- title_line end -->
    <!-- asResultInfo info tab  start...-->
-   <jsp:include
-    page='${pageContext.request.contextPath}/services/as/asResultInfoEdit.do' />
+   <jsp:include page='${pageContext.request.contextPath}/services/as/asResultInfoEdit.do' />
    <!-- asResultInfo info tab  end...-->
    <script>
-
-      </script>
+   </script>
    </article>
    <!-- acodi_wrap end -->
-   <ul class="center_btns mt20" id='btnSaveDiv'>
+   <div id='btnSaveDiv'>
+   <ul class="center_btns mt20">
     <li><p class="btn_blue2 big">
-      <a href="#" onclick="fn_doSave()">Save</a>
+      <a href="#" onclick="fn_doSave()"><spring:message code='sys.btn.save' /></a>
      </p></li>
     <li><p class="btn_blue2 big">
-      <a href="#" onClick="fn_doClear()">Clear</a>
+      <a href="#" onClick="fn_doClear()"><spring:message code='sys.btn.clear' /></a>
      </p></li>
    </ul>
+   </div>
   </section>
   <!-- content end -->
  </section>
