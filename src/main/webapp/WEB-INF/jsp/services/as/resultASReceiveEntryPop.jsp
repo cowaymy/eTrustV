@@ -10,12 +10,17 @@
  30/04/2019  ONGHC  1.0.3          AMEND fn_cpDt
  07/05/2019  ONGHC  1.0.4          FIX ERROR MESSAGE ISSUE
  28/05/2019  ONGHC  1.0.5          FIX LIST NOT DATA
+ 26/04/2019  ONGHC  1.0.6          ADD RECALL STATUS
  -->
 
 <script type="text/javaScript">
   var asHistoryGrid;
   var bsHistoryGrid;
   var ascallLogGridID;
+
+  var asMalfuncResnId;
+  var asErrorCde;
+  var asBrCde;
 
   $(document).ready(function() {
     fn_keyEvent();
@@ -88,17 +93,11 @@
     doGetCombo('/services/as/getBrnchId', '', '', 'branchDSC', 'S', 'fn_brCde_SetVal');
   }
 
-  var asMalfuncResnId;
-  var asErrorCde;
-  var asBrCde;
-
   function fn_setEditValue() {
     Common.ajax("GET", "/services/as/selASEntryView.do", {
       AS_NO : '${AS_NO}'
     }, function(result) {
       var eOjb = result.asentryInfo;
-
-      //console.log(eOjb);
 
       $("#AS_PIC_ID").val(eOjb.asPicId);
       $("#AS_ID").val(eOjb.asId);
@@ -171,6 +170,13 @@
         });
         $("#rbt").attr("hidden", false);
       }
+
+      // DISABLE FIELD
+      $("#appDate").attr("disabled", true);
+      $("#errorCode").attr("disabled", true);
+      $("#errorDesc").attr("disabled", true);
+      $("#CTGroup").attr("disabled", true);
+      $("#callRem").attr("disabled", true);
 
       fn_getCallLog();
     });
@@ -342,14 +348,14 @@
     var text = "";
 
     if ($(obj).attr('id') == "requestDate") {
-      text = "Request Date";
+      text = "<spring:message code='service.title.RequestDate' />";
     } else {
-      text = "Appointment Date";
+      text = "<spring:message code='service.grid.AppntDt' />";
     }
 
     var fmt = fn_valDtFmt(vdte);
     if (!fmt) {
-      Common.alert("* " + text + " invalid date format.");
+      Common.alert("* " + text + " <spring:message code='service.msg.invalidDate' />");
       $(obj).val("");
       return;
     }
@@ -362,12 +368,12 @@
     var sYear = parseInt(sDate[2]);
 
     if (tYear > sYear) {
-      Common.alert("* " + text + " must be in current month and year");
+      Common.alert("* " + text + " <spring:message code='service.msg.inCrnYrMth' />");
       $(obj).val("");
       return;
     } else {
       if (tMth > sMth) {
-        Common.alert("* " + text + " must be in current month and year");
+        Common.alert("* " + text + " <spring:message code='service.msg.inCrnYrMth' />");
         $(obj).val("");
         return;
       }
@@ -556,9 +562,10 @@
 
       Common.ajax("POST", "/services/as/updateASEntry.do", updateForm,
           function(result) {
-            Common.alert("Record update successfully.");
+            Common.alert("<spring:message code='service.msg.updSucc' />");
             $("#sFm").find("input, textarea, button, select").attr("disabled", true);
             $("#save_bt_div").hide();
+            $("#_viewEntryPopDiv1").remove();
           });
     }
   }
@@ -577,14 +584,14 @@
     }
 
     if ($(obj).attr('id') == "requestDate") {
-      text = "Request Date";
+      text = "<spring:message code='service.title.RequestDate' />";
     } else {
-      text = "Appointment Date";
+      text = "<spring:message code='service.grid.AppntDt' />";
     }
 
     var fmt = fn_valDtFmt(vdte);
     if (!fmt) {
-      Common.alert("* " + text + " invalid date format.");
+      Common.alert("* " + text + " <spring:message code='service.msg.invalidDate' />");
       $(obj).val("");
       return;
     }
@@ -597,12 +604,12 @@
     var sYear = parseInt(sDate[2]);
 
     if (tYear > sYear) {
-      Common.alert("* " + text + " must be in current month and year");
+      Common.alert("* " + text + " <spring:message code='service.msg.inCrnYrMth' />");
       $(obj).val("");
       return;
     } else {
       if (tMth > sMth) {
-        Common.alert("* " + text + " must be in current month and year");
+        Common.alert("* " + text + " <spring:message code='service.msg.inCrnYrMth' />");
         $(obj).val("");
         return;
       }
@@ -617,20 +624,20 @@
       return false;
     }
 
-    var txt_1 = "Request Date";
-    var txt_2 = "Appointment Date";
+    var txt_1 = "<spring:message code='service.title.RequestDate' />";;
+    var txt_2 = "<spring:message code='service.grid.AppntDt' />";
 
     // VALIDATE 2 FILED FORMAT
     var fmt = fn_valDtFmt(obj1);
     if (!fmt) {
-      Common.alert("* " + txt_1 + " invalid date format.");
+      Common.alert("* " + txt_1 + " <spring:message code='service.msg.invalidDate' />");
       $(obj_1).val("");
       return false;
     }
 
     fmt = fn_valDtFmt(obj2);
     if (!fmt) {
-      Common.alert("* " + txt_2 + " invalid date format.");
+      Common.alert("* " + txt_2 + " <spring:message code='service.msg.invalidDate' />");
       $(obj_2).val("");
       return false;
     }
@@ -1122,21 +1129,39 @@
   }
 
   function fn_addRemark() {
-    Common.popupDiv("/services/as/addASRemarkPop.do", {
-      AS_ID : $("#AS_ID").val()
-    }, null, true, '_addASRemarkPopDiv');
+    Common.popupDiv("/services/as/addASRemarkPop.do", { AS_ID : $("#AS_ID").val() }, null, true, '_addASRemarkPopDiv');
   }
 
   function fn_rstFrm() {
-   var rqtDt = $('#sFm #requestDate').val();
    var ordNo = $('#sFm #entry_orderNo').val();
+
    $('#sFm').clearForm();
    $('#sFm #entry_orderNo').val(ordNo);
-   $('#sFm #requestDate').val(rqtDt);
+  }
+
+  function fn_selfClose() {
+    $('#btnClose').click();
+    $("#_resultNewEntryPopDiv1").remove();
+  }
+
+  function fn_checkASReceiveEntryPop() {
+    if('${IND}' == "0") { // REQUEST COME FROM TRUST CENTER
+      var msg = fn_checkASReceiveEntry();
+      if (msg == "") {
+      } else {
+        msg += '<br/> Do you want to proceed ? <br/>';
+        Common.confirm('AS Received Entry Confirmation - [TrustCenter]'
+                        + DEFAULT_DELIMITER
+                        + "<b>" + msg
+                        + "</b>",
+                        "",
+                        fn_selfClose);
+      }
+    }
   }
 
 
-// ADDED BY TPY - 2019/07/17
+  // ADDED BY TPY - 2019/07/17
   function fn_checkASReceiveEntry() {
       Common.ajaxSync("GET", "/services/as/checkASReceiveEntry.do", { salesOrderNo : '${orderDetail.basicInfo.ordNo}'
       }, function(result) {
@@ -1144,33 +1169,6 @@
       });
       return msg;
     }
-
-  function fn_selfClose() {
-	    $('#btnClose').click();
-	    $("#_resultNewEntryPopDiv1").remove();
-	  }
-
-function fn_checkASReceiveEntryPop(){
-    if('${IND}' == "0"){
-        var msg = fn_checkASReceiveEntry();
-
-        if (msg == "") {
-
-          } else {
-
-             msg += '<br/> Do you want to proceed ? <br/>';
-
-             Common.confirm('AS Received Entry Confirmation - [TrustCenter]'
-                              + DEFAULT_DELIMITER
-                              + "<b>" + msg
-                              + "</b>",
-                              "",
-                          fn_selfClose);
-                }
-        }
-}
-
-
 
 </script>
 <div id="popup_wrap" class="popup_wrap ">
@@ -1180,25 +1178,32 @@ function fn_checkASReceiveEntryPop(){
   <!-- sms -->
   <form action="#" method="post" id="smsForm" name='smsForm'>
    <div style="display: none">
-    <input type="text" title="" id="sms_AsNo" name="sms_AsNo"> <input
-     type="text" title="" id="sms_AsId" name="sms_AsId"> <input
-     type="text" title="" id="sms_MemId" name="sms_MemId"> <input
-     type="text" title="" id="sms_MemCode" name="sms_MemCode"> <input
-     type="text" title="" id="sms_Message" name="sms_Message"> <input
-     type="text" title="" id="sms_CustFulladdr" name="sms_CustFulladdr">
-      <input type="text" id="IND" name="IND" value = "${IND}" />
+    <input type="text" title="" id="sms_AsNo" name="sms_AsNo">
+    <input type="text" title="" id="sms_AsId" name="sms_AsId">
+    <input type="text" title="" id="sms_MemId" name="sms_MemId">
+    <input type="text" title="" id="sms_MemCode" name="sms_MemCode">
+    <input type="text" title="" id="sms_Message" name="sms_Message">
+    <input type="text" title="" id="sms_CustFulladdr" name="sms_CustFulladdr">
+    <input type="text" id="IND" name="IND" value = "${IND}" />
    </div>
   </form>
   <form action="#" method="post" id="sFm" name='sFm'>
    <header class="pop_header">
     <!-- pop_header start -->
     <h1>
-     <c:if test="${MOD eq 'VIEW'}"> <spring:message code='service.grid.Edit' /> </c:if>
+     <c:choose>
+       <c:when test="${MOD eq 'VIEW'}">
+         <spring:message code='service.grid.Edit' />
+       </c:when>
+       <c:otherwise>
+         <spring:message code='sys.btn.create' />
+       </c:otherwise>
+     </c:choose>
      <spring:message code='service.title.ASRcvEnt' />
     </h1>
     <ul class="right_opt">
      <li><p class="btn_blue2">
-       <a href="#" id="btnClose"><spring:message code='sys.btn.close' /></a>
+       <a href="#"  id="btnClose"><spring:message code='sys.btn.close' /></a>
       </p></li>
     </ul>
    </header>
@@ -1217,12 +1222,13 @@ function fn_checkASReceiveEntryPop(){
       <tbody>
        <tr>
         <th scope="row"><spring:message code='service.placeHolder.ordNo' /></th>
-        <td><input type="text" title="" id="entry_orderNo"
-         name="entry_orderNo" value="${orderDetail.basicInfo.ordNo}"
-         placeholder="<spring:message code='service.placeHolder.ordNo' />" class="readonly " readonly="readonly" />
-        <p class="btn_sky" id="rbt">
-          <a href="#" onclick="javascript :fn_doReset()"><spring:message code='sal.btn.reselect' /></a>
-         </p></td>
+        <td>
+         <input type="text" title="" id="entry_orderNo" name="entry_orderNo" value="${orderDetail.basicInfo.ordNo}"
+          placeholder="<spring:message code='service.placeHolder.ordNo' />" class="readonly " readonly="readonly" />
+          <p class="btn_sky" id="rbt">
+           <a href="#" onclick="fn_doReset()"><spring:message code='sal.btn.reselect' /></a>
+          </p>
+        </td>
        </tr>
       </tbody>
      </table>
@@ -1239,17 +1245,19 @@ function fn_checkASReceiveEntryPop(){
         <li><a href="#" onclick="fn_gird_resize()"><spring:message code='sal.title.text.afterService' /></a></li>
         <li><a href="#" onclick="fn_gird_resize()"><spring:message code='sal.title.text.beforeService' /></a></li>
        </ul>
+
        <article class="tap_area">
         <!-- tap_area start -->
         <!------------------------------------------------------------------------------
-    Order Detail Page Include START
-------------------------------------------------------------------------------->
+           Order Detail Page Include START
+         ------------------------------------------------------------------------------->
         <%@ include
          file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
         <!------------------------------------------------------------------------------
-    Order Detail Page Include END
-------------------------------------------------------------------------------->
+           Order Detail Page Include END
+         ------------------------------------------------------------------------------->
        </article>
+
        <!-- tap_area end -->
        <article class="tap_area">
         <!-- tap_area start -->
@@ -1284,60 +1292,36 @@ function fn_checkASReceiveEntryPop(){
        <colgroup>
         <col style="width: 130px" />
         <col style="width: *" />
-        <col style="width: 140px" />
+        <col style="width: 150px" />
         <col style="width: *" />
-        <col style="width: 130px" />
+        <col style="width: 150px" />
         <col style="width: *" />
-        <col style="width: 130px" />
+        <col style="width: 100px" />
         <col style="width: *" />
        </colgroup>
        <tbody>
         <tr>
          <th scope="row"><spring:message code='service.grid.ReqstDt' /><span class="must">*</span></th>
-         <td><input type="text" title="Create start Date"
-          placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate"
-          name="requestDate" onChange="fn_doAllaction('#requestDate')"/></td>
+         <td>
+          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate" onChange="fn_doAllaction('#requestDate')"/>
+         </td>
          <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
-         <td><input type="text" title="Create start Date"
-          placeholder="DD/MM/YYYY" class="j_date w100p"
-          readonly="readonly" id="appDate" name="appDate" onChange="fn_chkDt('#appDate')"/></td>
+         <td>
+          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" readonly="readonly" id="appDate" name="appDate" onChange="fn_chkDt('#appDate')"/>
+         </td>
          <th scope="row"><spring:message code='service.title.AppointmentSessione' /><span class="must">*</span></th>
-         <td><input type="text" title="" placeholder="<spring:message code='service.title.AppointmentDate' />"
-          id="CTSSessionCode" name="CTSSessionCode"
-          class="readonly w100p" readonly="readonly" />
+         <td>
+          <input type="text" title="" placeholder="<spring:message code='service.title.AppointmentSessione' />" id="CTSSessionCode" name="CTSSessionCode" class="readonly w100p" readonly="readonly" />
           <div class="time_picker w100p" style="display: none">
-           <!-- time_picker start -->
-           <input type="text" title="" placeholder=""
-            class="time_date w100p" id="requestTime" name="requestTime" />
+           <input type="text" title="" placeholder="" class="time_date w100p" id="requestTime" name="requestTime" />
            <ul>
-            <li>Time Picker</li>
-            <li><a href="#">12:00 AM</a></li>
-            <li><a href="#">01:00 AM</a></li>
-            <li><a href="#">02:00 AM</a></li>
-            <li><a href="#">03:00 AM</a></li>
-            <li><a href="#">04:00 AM</a></li>
-            <li><a href="#">05:00 AM</a></li>
-            <li><a href="#">06:00 AM</a></li>
-            <li><a href="#">07:00 AM</a></li>
-            <li><a href="#">08:00 AM</a></li>
-            <li><a href="#">09:00 AM</a></li>
-            <li><a href="#">10:00 AM</a></li>
-            <li><a href="#">11:00 AM</a></li>
-            <li><a href="#">12:00 PM</a></li>
-            <li><a href="#">01:00 PM</a></li>
-            <li><a href="#">02:00 PM</a></li>
-            <li><a href="#">03:00 PM</a></li>
-            <li><a href="#">04:00 PM</a></li>
-            <li><a href="#">05:00 PM</a></li>
-            <li><a href="#">06:00 PM</a></li>
-            <li><a href="#">07:00 PM</a></li>
-            <li><a href="#">08:00 PM</a></li>
-            <li><a href="#">09:00 PM</a></li>
-            <li><a href="#">10:00 PM</a></li>
-            <li><a href="#">11:00 PM</a></li>
+            <li><spring:message code='service.text.timePick' /></li>
+            <c:forEach var="list" items="${timePick}" varStatus="status">
+              <li><a href="#">${list.codeName}</a></li>
+            </c:forEach>
            </ul>
           </div>
-          <!-- time_picker end --></td>
+          </td>
          <th scope="row"></th>
          <td>
           <div class="time_picker w100p" style="display: none">
@@ -1345,31 +1329,10 @@ function fn_checkASReceiveEntryPop(){
            <input type="text" title="" placeholder=""
             class="time_date w100p" id="appTime" name="appTime" />
            <ul>
-            <li>Time Picker</li>
-            <li><a href="#">12:00 AM</a></li>
-            <li><a href="#">01:00 AM</a></li>
-            <li><a href="#">02:00 AM</a></li>
-            <li><a href="#">03:00 AM</a></li>
-            <li><a href="#">04:00 AM</a></li>
-            <li><a href="#">05:00 AM</a></li>
-            <li><a href="#">06:00 AM</a></li>
-            <li><a href="#">07:00 AM</a></li>
-            <li><a href="#">08:00 AM</a></li>
-            <li><a href="#">09:00 AM</a></li>
-            <li><a href="#">10:00 AM</a></li>
-            <li><a href="#">11:00 AM</a></li>
-            <li><a href="#">12:00 PM</a></li>
-            <li><a href="#">01:00 PM</a></li>
-            <li><a href="#">02:00 PM</a></li>
-            <li><a href="#">03:00 PM</a></li>
-            <li><a href="#">04:00 PM</a></li>
-            <li><a href="#">05:00 PM</a></li>
-            <li><a href="#">06:00 PM</a></li>
-            <li><a href="#">07:00 PM</a></li>
-            <li><a href="#">08:00 PM</a></li>
-            <li><a href="#">09:00 PM</a></li>
-            <li><a href="#">10:00 PM</a></li>
-            <li><a href="#">11:00 PM</a></li>
+            <li><spring:message code='service.text.timePick' /></li>
+            <c:forEach var="list" items="${timePick}" varStatus="status">
+              <li><a href="#">${list.codeName}</a></li>
+            </c:forEach>
            </ul>
           </div>
           <!-- time_picker end -->
@@ -1377,94 +1340,93 @@ function fn_checkASReceiveEntryPop(){
         </tr>
         <tr>
          <th scope="row"><spring:message code='service.grid.ErrCde' /><span class="must">*</span></th>
-         <td colspan="3"><select class="w100p" id="errorCode"
-          name="errorCode" onChange="fn_errMst_SelectedIndexChanged()">
-         </select></td>
+         <td colspan="3">
+           <select class="w100p" id="errorCode" name="errorCode" onChange="fn_errMst_SelectedIndexChanged()">
+           </select>
+         </td>
          <th scope="row"><spring:message code='service.grid.ErrDesc' /><span class="must">*</span></th>
-         <td colspan="3"><select class="w100p" id="errorDesc"
-          name="errorDesc">
-         </select></td>
+         <td colspan="3">
+           <select class="w100p" id="errorDesc" name="errorDesc">
+           </select>
+         </td>
         </tr>
         <tr>
          <th scope="row"><spring:message code='service.title.DSCBranch' /><span class="must">*</span></th>
          <td colspan="3">
-          <!--  <input type="text" title="" placeholder="" class="w100p" id="branchDSC" name="branchDSC"  disabled="disabled" /> -->
-          <select class="w100p" id="branchDSC" name="branchDSC"
-          class="" disabled="disabled">
-         </select>
+          <select class="w100p" id="branchDSC" name="branchDSC" class="" disabled="disabled">
+           </select>
          </td>
          <th scope="row"><spring:message code='service.title.CTGroup' /></th>
-         <td><input type="text" title="<spring:message code='service.title.CTGroup' />" placeholder="<spring:message code='service.title.CTGroup' />"
-          class="w100p" id="CTGroup" name="CTGroup" /></td>
+         <td>
+           <input type="text" title="<spring:message code='service.title.CTGroup' />" placeholder="<spring:message code='service.title.CTGroup' />" class="w100p" id="CTGroup" name="CTGroup" />
+         </td>
          <th scope="row"><spring:message code='service.title.HSWth30Dy' /></th>
-         <td><label><input type="checkbox" id="checkBS"
-           name="checkBS" /></label></td>
+         <td><label><input type="checkbox" id="checkBS" name="checkBS" /></label></td>
         </tr>
         <tr>
          <th scope="row"><spring:message code='service.grid.AssignCT' /><span class="must">*</span></th>
-         <td colspan="3"><input type="text" title="" placeholder=""
-          id="CTCode" name="CTCode" class="readonly" readonly="readonly"
+         <td colspan="3">
+           <input type="text" title="" placeholder="<spring:message code='service.grid.AssignCT' />" id="CTCode" name="CTCode" class="readonly" readonly="readonly"
           onchange="fn_changeCTCode(this)" /></td>
          <th scope="row"><spring:message code='service.title.MobileNo' /></th>
-         <td><input type="text" title="<spring:message code='service.title.MobileNo' />" placeholder="<spring:message code='service.title.MobileNo' />"
-          class="w100p" id="mobileNo" name="mobileNo" /></td>
+         <td>
+           <input type="text" title="<spring:message code='service.title.MobileNo' />" placeholder="<spring:message code='service.title.MobileNo' />" class="w100p" id="mobileNo" name="mobileNo" />
+         </td>
          <th scope="row"><spring:message code='service.title.Sms' /></th>
-         <td><label><input type="checkbox" id="checkSms"
-           name="checkSms" onclick="fn_mobilesmschange(this)" /></label></td>
+         <td><label><input type="checkbox" id="checkSms" name="checkSms" onclick="fn_mobilesmschange(this)" /></label></td>
         </tr>
         <tr>
          <th scope="row"><spring:message code='service.title.Pic' /></th>
-         <td colspan="3"><input type="text" title="<spring:message code='service.title.Pic' />" placeholder="<spring:message code='service.title.Pic' />"
-          class="readonly w100p" id="perIncharge" name="perIncharge" />
+         <td colspan="3">
+           <input type="text" title="<spring:message code='service.title.Pic' />" placeholder="<spring:message code='service.title.Pic' />" class="readonly w100p" id="perIncharge" name="perIncharge" />
          </td>
          <th scope="row"><spring:message code='service.title.PicCtc' /></th>
-         <td colspan="3"><input type="text" title="<spring:message code='service.title.PicCtc' />" placeholder="<spring:message code='service.title.PicCtc' />"
-          class="readonly w100p" id="perContact" name="perContact" /></td>
+         <td colspan="3">
+           <input type="text" title="<spring:message code='service.title.PicCtc' />" placeholder="<spring:message code='service.title.PicCtc' />" class="readonly w100p" id="perContact" name="perContact" />
+         </td>
         </tr>
         <tr>
          <th scope="row" rowspan="3"><spring:message code='service.title.Rqst' /><span class="must">*</span></th>
-         <td colspan="3"><select class="w100p" id="requestor"
-          name="requestor">
-         </select></td>
+         <td colspan="3">
+           <select class="w100p" id="requestor" name="requestor">
+           </select>
+         </td>
          <th scope="row"><spring:message code='service.title.RqstCtc' /></th>
-         <td><input type="text" title="<spring:message code='service.title.RqstCtc' />" placeholder="<spring:message code='service.title.RqstCtc' />"
-          class="w100p" id="requestorCont" name="requestorCont"
-          onchange="fn_changeRequestorCont(this)" /></td>
+         <td>
+           <input type="text" title="<spring:message code='service.title.RqstCtc' />" placeholder="<spring:message code='service.title.RqstCtc' />" class="w100p" id="requestorCont" name="requestorCont" onchange="fn_changeRequestorCont(this)" />
+         </td>
          <th scope="row"><spring:message code='service.title.Sms' /></th>
-         <td><label><input type="checkbox"
-           disabled="disabled" id="checkSms1" name="checkSms1" /></label></td>
+         <td><label><input type="checkbox" disabled="disabled" id="checkSms1" name="checkSms1" /></label></td>
         </tr>
         <tr>
-         <td colspan="3"><input type="text" title="" placeholder=""
-          id='txtRequestor' name='txtRequestor' class="w100p"
-          maxlength="4000" /> <!-- onchage="fn_changetxtRequestor(this)" -->
+         <td colspan="3">
+           <input type="text" title="" placeholder="<spring:message code='service.title.Rqst' />" id='txtRequestor' name='txtRequestor' class="w100p" maxlength="4000" /> <!-- onchage="fn_changetxtRequestor(this)" -->
          </td>
          <th scope="row"><spring:message code='service.title.AddCtc' /></th>
-         <td><input type="text" title="<spring:message code='service.title.AddCtc' />" placeholder="<spring:message code='service.title.AddCtc' />"
-          class="w100p" id="additionalCont" name="additionalCont"
-          onchange="fn_changeAdditionalCont(this)" /></td>
+         <td>
+           <input type="text" title="<spring:message code='service.title.AddCtc' />" placeholder="<spring:message code='service.title.AddCtc' />" class="w100p" id="additionalCont" name="additionalCont" onchange="fn_changeAdditionalCont(this)" />
+          </td>
          <th scope="row"><spring:message code='service.title.Sms' /></th>
-         <td><label><input type="checkbox"
-           disabled="disabled" id="checkSms2" name="checkSms2" /></label></td>
+         <td><label><input type="checkbox" disabled="disabled" id="checkSms2" name="checkSms2" /></label></td>
         </tr>
         <tr>
          <td colspan="3"></td>
          <th scope="row"><spring:message code='service.title.AllowComm' /></th>
-         <td colspan="3"><label><input type="checkbox"
-           id="checkComm" name="checkComm" /></label></td>
+         <td colspan="3"><label><input type="checkbox" id="checkComm" name="checkComm" /></label></td>
         </tr>
         <tr>
          <th scope="row"><spring:message code='service.title.Remark' /></th>
-         <td colspan="7"><textarea id='callRem' name='callRem'
-           rows='5' placeholder="<spring:message code='service.title.Remark' />" class="w100p"></textarea></td>
+         <td colspan="7">
+           <textarea id='callRem' name='callRem' rows='5' placeholder="<spring:message code='service.title.Remark' />" class="w100p"></textarea>
+         </td>
         </tr>
         <!--  <c:if test="${MOD eq 'VIEW'}">  -->
-        <tr>
+        <!-- <tr>
          <th scope="row"></th>
          <td colspan="7"><p class="btn_sky">
            <a href="#" onclick="fn_addRemark()"><spring:message code='service.title.AddRmk' /></a>
           </p></td>
-        </tr>
+        </tr> -->
         <!-- </c:if>  -->
         <!-- <c:if test="${MOD eq ''}"> -->
         <!--</c:if>   -->
@@ -1484,26 +1446,21 @@ function fn_checkASReceiveEntryPop(){
       <!-- grid_wrap end -->
       <!--</c:if> -->
       <div style="display: none">
-       <input type="text" title="" placeholder="ISRAS" id="ISRAS"
-        name="ISRAS" /> <input type="text" title="" placeholder="AS_ID"
-        id="AS_ID" name="AS_ID" value="${AS_ID}" /> <input type="text"
-        title="" placeholder="AS_PIC_ID" id="AS_PIC_ID" name="AS_PIC_ID" />
-       <input type="text" title="" placeholder="CTID" id="CTID"
-        name="CTID" /> <input type="text" title=""
-        placeholder="IN_AsResultId" id="IN_AsResultId"
-        name="IN_AsResultId" value="${IN_AsResultId}" /> <input
-        type="text" title="" placeholder="mafuncResnId"
-        id="mafuncResnId" name="mafuncResnId" value="${mafuncResnId}" />
-       <input type="text" title="" placeholder="mafuncId" id="mafuncId"
-        name="mafuncId" value="${mafuncId}" />
+       <input type="text" title="" placeholder="ISRAS" id="ISRAS" name="ISRAS" />
+       <input type="text" title="" placeholder="AS_ID" id="AS_ID" name="AS_ID" value="${AS_ID}" />
+       <input type="text" title="" placeholder="AS_PIC_ID" id="AS_PIC_ID" name="AS_PIC_ID" />
+       <input type="text" title="" placeholder="CTID" id="CTID" name="CTID" />
+       <input type="text" title="" placeholder="IN_AsResultId" id="IN_AsResultId" name="IN_AsResultId" value="${IN_AsResultId}" />
+       <input type="text" title="" placeholder="mafuncResnId" id="mafuncResnId" name="mafuncResnId" value="${mafuncResnId}" />
+       <input type="text" title="" placeholder="mafuncId" id="mafuncId" name="mafuncId" value="${mafuncId}" />
       </div>
       <ul class="center_btns" id='save_bt_div'>
        <li><p class="btn_blue2 big">
          <a href="#" onClick="fn_doSave()"><spring:message code='service.btn.Save' /></a>
         </p></li>
-       <li><p class="btn_blue2 big">
+       <!-- <li><p class="btn_blue2 big">
          <a href="#" onClick="fn_rstFrm()"><spring:message code='service.btn.Clear' /></a>
-        </p></li>
+        </p></li> -->
       </ul>
      </section>
      <!-- search_result end -->
