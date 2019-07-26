@@ -1,59 +1,62 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
 <!--
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  15/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP and Add Order Number Search Criteria
+ 26/04/2019  ONGHC  1.0.1          ADD RECALL STATUS
  -->
-
 <script type="text/javaScript">
   $(document).ready(
-      function() {
-        $('.multy_select').on("change", function() {
-        }).multipleSelect({});
+    function() {
+      $('.multy_select').on("change", function() {
+    }).multipleSelect({});
 
-        doGetCombo('/services/as/report/selectMemberCodeList.do', '',
-            '', 'CTCode', 'S', '');
-        doGetComboSepa("/common/selectBranchCodeList.do", 5, '-', '',
-            'branch', 'S', '');
-      });
+    //doGetCombo('/services/as/report/selectMemberCodeList.do', '', '', 'CTCode', 'S', '');
+    doGetComboSepa("/common/selectBranchCodeList.do", 5, '-', '', 'branch', 'S', '');
+  });
 
   function fn_validation() {
     if ($("#asType").val() == '') {
-      Common.alert("<spring:message code='sys.common.alert.validation' arguments='AS type' htmlEscape='false'/>");
+      var text = "<spring:message code='service.grid.ASTyp' />";
+      Common.alert("* <spring:message code='sys.msg.necessary' arguments='"+ text + "' htmlEscape='false'/>");
       return false;
     }
 
     if ($("#ordNumFr").val() != '' || $("#ordNumTo").val() != '') {
       if ($("#ordNumFr").val() == '' || $("#ordNumTo").val() == '') {
-        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Order number (From & To)' htmlEscape='false'/>");
+        var text = "<spring:message code='service.placeHolder.ordNo' />";
+        Common.alert("* <spring:message code='sys.msg.necessary' arguments='"+ text + "' htmlEscape='false'/>");
         return false;
       }
     }
 
     if ($("#asNumFr").val() != '' || $("#asNumTo").val() != '') {
       if ($("#asNumFr").val() == '' || $("#asNumTo").val() == '') {
-        Common.alert("<spring:message code='sys.common.alert.validation' arguments='AS number (From & To)' htmlEscape='false'/>");
+        var text = "<spring:message code='service.grid.ASNo' />";
+        Common.alert("* <spring:message code='sys.msg.necessary' arguments='"+ text + "' htmlEscape='false'/>");
         return false;
       }
     }
 
     if ($("#reqDtFr").val() != '' || $("#reqDtTo").val() != '') {
       if ($("#reqDtFr").val() == '' || $("#reqDtTo").val() == '') {
-        Common.alert("<spring:message code='sys.common.alert.validation' arguments='request date (From & To)' htmlEscape='false'/>");
+        var text = "<spring:message code='service.grid.ReqstDt' />";
+        Common.alert("* <spring:message code='sys.msg.necessary' arguments='"+ text + "' htmlEscape='false'/>");
         return false;
       }
     }
     if ($("#asResultNoFr").val() != '' || $("#asResultNoTo").val() != '') {
       if ($("#asResultNoFr").val() == '' || $("#asResultNoTo").val() == '') {
-        Common.alert("<spring:message code='sys.common.alert.validation' arguments='result number (From & To)' htmlEscape='false'/>");
+        var text = "<spring:message code='service.grid.ResultNo' />";
+        Common.alert("* <spring:message code='sys.msg.necessary' arguments='"+ text + "' htmlEscape='false'/>");
         return false;
       }
     }
     if ($("#appDtFr").val() != '' || $("#appDtTo2").val() != '') {
       if ($("#appDtFr").val() == '' || $("#appDtTo2").val() == '') {
-        Common.alert("<spring:message code='sys.common.alert.validation' arguments='appointment date (From & To)' htmlEscape='false'/>");
+        var text = "<spring:message code='service.grid.AppntDt' />";
+        Common.alert("* <spring:message code='sys.msg.necessary' arguments='"+ text + "' htmlEscape='false'/>");
         return false;
       }
     }
@@ -65,7 +68,6 @@
     var month = date.getMonth() + 1;
     var day = date.getDate();
 
-    /* by KV- change selection button */
     var runNo1 = 0;
     var asStus = "";
 
@@ -78,7 +80,6 @@
       var asNoFrom = "";
       var asNoTo = "";
 
-      /* By KV - change selection button */
       if ($("#asStatus1 :checked").length > 0) {
         $("#asStatus1 :checked").each(function(i, mul) {
           if ($(mul).val() != "0") {
@@ -99,8 +100,8 @@
           && $("#ordNumTo").val() != null) {
         ordNoFrom = $("#ordNumFr").val();
         ordNoTo = $("#ordNumTo").val();
-        whereSql += "and (O.SALES_ORD_NO >= '" + ordNoFrom + "' AND O.SALES_ORD_NO <= '"
-            + ordNoTo + "') ";
+        whereSql += "AND (O.SALES_ORD_NO >= '" + ordNoFrom
+            + "' AND O.SALES_ORD_NO <= '" + ordNoTo + "') ";
       }
 
       if ($("#asNumFr").val() != '' && $("#asNumTo").val() != ''
@@ -108,9 +109,10 @@
           && $("#asNumTo").val() != null) {
         asNoFrom = $("#asNumFr").val();
         asNoTo = $("#asNumTo").val();
-        whereSql += "and (ae.AS_No >= '" + asNoFrom + "' AND ae.AS_No <= '"
-            + asNoTo + "') ";
+        whereSql += "AND (ae.AS_No >= '" + asNoFrom
+            + "' AND ae.AS_No <= '" + asNoTo + "') ";
       }
+
       var asRnoFrom = "";
       var asRnoTo = "";
       if ($("#asResultNoFr").val() != ''
@@ -122,11 +124,13 @@
         whereSql += "and (am.AS_RESULT_NO >= '" + asRnoFrom
             + "' AND am.AS_RESULT_NO <= '" + asRnoTo + "') ";
       }
+
       var ctCode = "";
       if ($("#CTCode").val() != '' && $("#CTCode").val() != null) {
         ctCode = $("#CTCode option:selected").text();
         whereSql += "AND mr.Mem_ID = " + $("#CTCode").val() + " ";
       }
+
       var dscCode = "";
       if ($("#branch").val() != '' && $("#branch").val() != null) {
         dscCode = $("#branch  option:selected").text();
@@ -174,12 +178,12 @@
       asType = $("#asTypeReport :selected").val();
       if (asType != '' && asType != null) {
 
-          whereSql += "AND ae.AS_TYPE_ID IN (" + asType +") "
-              + " ";
-        }else{
-            Common.alert("<spring:message code='sys.common.alert.validation' arguments='AS type' htmlEscape='false'/>");
-            return false;
-        }
+        whereSql += "AND ae.AS_TYPE_ID IN (" + asType + ") " + " ";
+      } else {
+        var text = "<spring:message code='service.grid.ASTyp' />";
+        Common.alert("* <spring:message code='sys.msg.necessary' arguments='"+ text + "' htmlEscape='false'/>");
+        return false;
+      }
 
       var asGroup = "";
       if ($("#CTGroup").val() != '' && $("#CTGroup").val() != null) {
@@ -189,10 +193,8 @@
       }
       var asSort = "";
 
-      $("#reportFormAS #reportFileName").val(
-          '/services/ASSummaryList.rpt');
-      $("#reportFormAS #reportDownFileName").val(
-          "ASSummaryList_" + day + month + date.getFullYear());
+      $("#reportFormAS #reportFileName").val('/services/ASSummaryList.rpt');
+      $("#reportFormAS #reportDownFileName").val("ASSummaryList_" + day + month + date.getFullYear());
       $("#reportFormAS #viewType").val("PDF");
       $("#reportFormAS #V_SELECTSQL").val();
       $("#reportFormAS #V_WHERESQL").val(whereSql);
@@ -215,7 +217,6 @@
       $("#reportFormAS #V_ORDNUMTO").val(ordNoTo);
       $("#reportFormAS #V_ORDNUMFR").val(ordNoFrom);
 
-
       var option = {
         isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
       };
@@ -224,15 +225,20 @@
 
     }
   }
+
+  function fn_changeCT() {
+    var branchCd = $("#branch").val();
+    doGetCombo('/services/as/report/selectMemberCodeList.do', branchCd, '', 'CTCode', 'S', '');
+  }
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
  <header class="pop_header">
   <!-- pop_header start -->
-  <h1>AS Summary List</h1>
+  <h1><spring:message code='service.btn.asSumLst'/></h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">
-     <a href="#">CLOSE</a>
+     <a href="#"><spring:message code='sys.btn.close' /></a>
     </p></li>
   </ul>
  </header>
@@ -262,7 +268,6 @@
      type="hidden" id="V_ORDNUMTO" name="V_ORDNUMTO" /> <input
      type="hidden" id="V_ORDNUMFR" name="V_ORDNUMFR" /> <input
      type="hidden" id="V_ASTEMPSORT" name="V_ASTEMPSORT" />
-
     <!--reportFileName,  viewType 모든 레포트 필수값 -->
     <input type="hidden" id="reportFileName" name="reportFileName" /> <input
      type="hidden" id="viewType" name="viewType" /> <input
@@ -272,73 +277,65 @@
      <!-- table start -->
      <caption>table</caption>
      <colgroup>
-      <col style="width: 170px" />
+      <col style="width: 150px" />
       <col style="width: *" />
-      <col style="width: 130px" />
+      <col style="width: 150px" />
       <col style="width: *" />
      </colgroup>
      <tbody>
       <tr>
-       <th scope="row">AS Type <span class="must">*</span></th>
+       <th scope="row"><spring:message code='service.grid.ASTyp' /><span class="must">*</span></th>
        <td><select class="multy_select w100p" multiple="multiple" id="asTypeReport">
-         <option value="674">Normal AS</option>
-         <option value="675">Auto AS</option>
-          <option value="3154">Add On AS</option>
-          <option value="2713">In House Repair AS</option>
+         <c:forEach var="list" items="${asSumTyp}" varStatus="status">
+           <option value="${list.codeId}" selected>${list.codeName}</option>
+         </c:forEach>
        </select></td>
-       <th scope="row">Order Number</th>
+       <th scope="row"><spring:message code='service.grid.SalesOrder' /></th>
        <td>
         <div class="date_set">
          <!-- date_set start -->
          <p>
-          <input type="text" title="" placeholder="" class="w100p"
-           id="ordNumFr" />
+          <input type="text" title="" placeholder="<spring:message code='svc.hs.reversal.from' />" class="w100p" id="ordNumFr" />
          </p>
-         <span>To</span>
+         <span><spring:message code='svc.hs.reversal.to' /></span>
          <p>
-          <input type="text" title="" placeholder="" class="w100p"
-           id="ordNumTo" />
+          <input type="text" title="" placeholder="<spring:message code='svc.hs.reversal.to' />" class="w100p" id="ordNumTo" />
          </p>
-        </div>
-        <!-- date_set end -->
+        </div> <!-- date_set end -->
        </td>
       </tr>
       <tr>
-       <th scope="row">AS Number</th>
+       <th scope="row"><spring:message code='service.grid.ASNo' /></th>
        <td>
         <div class="date_set">
          <!-- date_set start -->
          <p>
-          <input type="text" title="" placeholder="" class="w100p"
-           id="asNumFr" />
+          <input type="text" title="" placeholder="<spring:message code='svc.hs.reversal.from' />" class="w100p" id="asNumFr" />
          </p>
-         <span>To</span>
+         <span><spring:message code='svc.hs.reversal.to' /></span>
          <p>
-          <input type="text" title="" placeholder="" class="w100p"
-           id="asNumTo" />
+          <input type="text" title="" placeholder="<spring:message code='svc.hs.reversal.to' />" class="w100p" id="asNumTo" />
          </p>
-        </div>
-        <!-- date_set end -->
+        </div> <!-- date_set end -->
        </td>
-       <th scope="row">AS Result No.</th>
+       <th scope="row"><spring:message code='service.grid.ResultNo' /></th>
        <td>
         <div class="date_set">
          <!-- date_set start -->
          <p>
-          <input type="text" title="" placeholder="" class="w100p"
+          <input type="text" title="" placeholder="<spring:message code='svc.hs.reversal.from' />" class="w100p"
            id="asResultNoFr" />
          </p>
          <span>To</span>
          <p>
-          <input type="text" title="" placeholder="" class="w100p"
+          <input type="text" title="" placeholder="<spring:message code='svc.hs.reversal.to' />" class="w100p"
            id="asResultNoTo" />
          </p>
-        </div>
-        <!-- date_set end -->
+        </div> <!-- date_set end -->
        </td>
       </tr>
       <tr>
-       <th scope="row">Request Date</th>
+       <th scope="row"><spring:message code='service.grid.ReqstDt' /></th>
        <td>
         <div class="date_set">
          <!-- date_set start -->
@@ -346,15 +343,14 @@
           <input type="text" title="Create start Date"
            placeholder="DD/MM/YYYY" class="j_date" id="reqDtFr" />
          </p>
-         <span>To</span>
+         <span><spring:message code='svc.hs.reversal.to' /></span>
          <p>
           <input type="text" title="Create end Date"
            placeholder="DD/MM/YYYY" class="j_date" id="reqDtTo" />
          </p>
-        </div>
-        <!-- date_set end -->
+        </div> <!-- date_set end -->
        </td>
-       <th scope="row">Appointment Date</th>
+       <th scope="row"><spring:message code='service.title.AppointmentDate' /></th>
        <td>
         <div class="date_set">
          <!-- date_set start -->
@@ -362,42 +358,41 @@
           <input type="text" title="Create start Date"
            placeholder="DD/MM/YYYY" class="j_date" id="appDtFr" />
          </p>
-         <span>To</span>
+         <span><spring:message code='svc.hs.reversal.to' /></span>
          <p>
           <input type="text" title="Create end Date"
            placeholder="DD/MM/YYYY" class="j_date" id="appDtTo2" />
          </p>
-        </div>
-        <!-- date_set end -->
+        </div> <!-- date_set end -->
        </td>
       </tr>
       <tr>
-       <th scope="row">DSC Code</th>
-       <td><select ID="branch">
+       <th scope="row"><spring:message code='service.title.DSCCode' /></th>
+       <td><select id="branch" class="w100p"  onchange="fn_changeCT()">
        </select></td>
-       <th scope="row">Status</th>
+        <th scope="row"><spring:message code='service.title.CTCode' /></th>
        <td>
-        <!-- Edit by KV change to edit button--> <select
-        class="multy_select w100p" multiple="multiple" id="asStatus1"
-        name="asStatus1">
-         <option value="1">Active</option>
-         <option value="4">Complete</option>
-         <option value="21">Fail</option>
-         <option value="10">Cancel</option>
+       <select id="CTCode" class="w100p">
+        <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+       </select></td>
+      </tr>
+      <tr>
+       <th scope="row"><spring:message code='service.title.CTGroup' /></th>
+       <td><select id="CTGroup" class="w100p">
+        <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+        <c:forEach var="list" items="${asSumGrp}" varStatus="status">
+          <option value="${list.codeId}">${list.codeName}</option>
+        </c:forEach>
+       </select></td>
+       <th scope="row"><spring:message code='service.text.Status' /></th>
+       <td>
+        <!-- Edit by KV change to edit button-->
+        <select class="multy_select w100p" multiple="multiple" id="asStatus1" name="asStatus1">
+         <c:forEach var="list" items="${asSumStat}" varStatus="status">
+           <option value="${list.codeId}" selected>${list.codeName}</option>
+         </c:forEach>
        </select>
        </td>
-      </tr>
-      <tr>
-       <th scope="row">CT Code</th>
-       <td><select id="CTCode">
-       </select></td>
-       <th scope="row">CT Group</th>
-       <td><select id="CTGroup">
-         <option value="">Choose One</option>
-         <option value="A">A</option>
-         <option value="B">B</option>
-         <option value="C">C</option>
-       </select></td>
       </tr>
      </tbody>
     </table>
@@ -407,10 +402,10 @@
   <!-- search_table end -->
   <ul class="center_btns">
    <li><p class="btn_blue2 big">
-     <a href="#" onclick="javascript:fn_openGenerate()">Generate</a>
+     <a href="#" onclick="javascript:fn_openGenerate()"><spring:message code='service.btn.Generate' /></a>
     </p></li>
    <li><p class="btn_blue2 big">
-     <a href="#" onclick="javascript:$('#reportFormAS').clearForm();">Clear</a>
+     <a href="#" onclick="javascript:$('#reportFormAS').clearForm();"><spring:message code='service.btn.Clear' /></a>
     </p></li>
   </ul>
  </section>
