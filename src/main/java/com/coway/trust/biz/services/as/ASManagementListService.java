@@ -12,6 +12,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
+ * 26/07/2019    ONGHC      1.0.2       - Add Recall Status
  *********************************************************************************************/
 
 public interface ASManagementListService {
@@ -64,6 +65,8 @@ public interface ASManagementListService {
 
   List<EgovMap> getASOrderInfo(Map<String, Object> params);
 
+  List<EgovMap> getASRclInfo(Map<String, Object> params);
+
   List<EgovMap> getASEvntsInfo(Map<String, Object> params);
 
   List<EgovMap> getASHistoryInfo(Map<String, Object> params);
@@ -106,10 +109,8 @@ public interface ASManagementListService {
 
   List<EgovMap> selectCTByDSC(Map<String, Object> params);
 
-  // add by hgham mobile 중복 처리
   int isAsAlreadyResult(Map<String, Object> params);
 
-  // add by hgham mobile 중복 처리
   int asResultSync(Map<String, Object> params);
 
   String getCustAddressInfo(Map<String, Object> params);
@@ -156,6 +157,22 @@ public interface ASManagementListService {
   int selRcdTms(Map<String, Object> params);
 
   int chkRcdTms(Map<String, Object> params);
+
+  String getSearchDtRange();
+
+  List<EgovMap> selectAsTyp();
+
+  List<EgovMap> selectAsStat();
+
+  List<EgovMap> selectAsCrtStat();
+
+  List<EgovMap> selectTimePick();
+
+  List<EgovMap> selectLbrFeeChr();
+
+  List<EgovMap> selectFltQty();
+
+  List<EgovMap> selectFltPmtTyp();
 
   List<EgovMap> getASEntryCommission(Map<String, Object> params);
 }
