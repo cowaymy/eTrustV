@@ -949,6 +949,8 @@
     $("#m12").hide();
     $("#m13").hide();
 
+    $("#iscommission").attr("disabled", false);
+
     $("#def_type").attr("disabled", "disabled");
     $("#def_code").attr("disabled", "disabled");
     $("#def_part").attr("disabled", "disabled");
@@ -1437,6 +1439,11 @@
           rtnValue = false;
         }
       }
+
+      if (FormUtil.checkReqValue($("#txtRemark"))) {
+        rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
+        rtnValue = false;
+      }
     }
 
     if (rtnValue == false) {
@@ -1749,6 +1756,34 @@
     }
   }
 
+  function fn_chkDt2() {
+    var crtDt = new Date();
+    var apptDt = $("#appDate").val();
+    var date = apptDt.substring(0, 2);
+    var month = apptDt.substring(3, 5);
+    var year = apptDt.substring(6, 10);
+
+    var dd = String(crtDt.getDate()).padStart(2, '0');
+    var mm = String(crtDt.getMonth() + 1).padStart(2, '0');
+    var yyyy = crtDt.getFullYear();
+
+    var strdate = yyyy + mm + dd;
+    var enddate = year + month + date;
+
+    if (enddate < strdate) {
+      alert("Appointment Date must be greater or equal to Current Date ");
+      $("#appDate").val("");
+      $("#CTSSessionCode").val("");
+      $("#branchDSC").val("");
+      $("#CTCode").val("");
+      $("#CTGroup").val("");
+      $("#callRem").val("");
+      return;
+    } else {
+      fn_doAllaction('#appDate');
+    }
+  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -2005,7 +2040,7 @@
           </td>
          </tr>
          <tr>
-          <th scope="row"><spring:message code='service.title.Remark' /></th>
+          <th scope="row"><spring:message code='service.title.Remark' /><span class="must">*</span></th>
           <td colspan="3">
             <textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtRemark' name='txtRemark'></textarea>
           </td>
@@ -2035,7 +2070,7 @@
          <tr>
            <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
            <td>
-            <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " readonly="readonly" id="appDate" name="appDate" onChange="fn_doAllaction('#appDate')"/>
+            <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " readonly="readonly" id="appDate" name="appDate" onChange="fn_chkDt2();"/>
            </td>
            <th scope="row"><spring:message code='service.title.AppointmentSessione' /><span class="must">*</span></th>
            <td>
