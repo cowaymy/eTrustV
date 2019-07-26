@@ -12,6 +12,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
  * 08/05/2019    ONGHC      1.0.2       - Add getFltNm
+ * 26/07/2019    ONGHC      1.0.3       - Add Recall Status
  *********************************************************************************************/
 
 @Mapper("ASManagementListMapper")
@@ -55,6 +56,8 @@ public interface ASManagementListMapper {
 
   int updateSVC0001D(Map<String, Object> params);
 
+  int updateSVC0001D_RCL(Map<String, Object> params);
+
   int updateStateSVC0001D(Map<String, Object> params);
 
   int updateAS_TYPE_ID_SVC0001D(Map<String, Object> params);
@@ -64,6 +67,8 @@ public interface ASManagementListMapper {
   int updateSVC0003D(Map<String, Object> params);
 
   List<EgovMap> getASOrderInfo(Map<String, Object> params);
+
+  List<EgovMap> getASRclInfo(Map<String, Object> params);
 
   List<EgovMap> getASEvntsInfo(Map<String, Object> params);
 
@@ -299,6 +304,22 @@ public interface ASManagementListMapper {
   int chkRcdTms(Map<String, Object> params);
 
   String getFltNm(String params);
+
+  String getSearchDtRange();
+
+  List<EgovMap> selectAsTyp();
+
+  List<EgovMap> selectAsStat();
+
+  List<EgovMap> selectAsCrtStat();
+
+  List<EgovMap> selectTimePick();
+
+  List<EgovMap> selectLbrFeeChr();
+
+  List<EgovMap> selectFltQty();
+
+  List<EgovMap> selectFltPmtTyp();
 
   List<EgovMap> getASEntryCommission(Map<String, Object> params);
 
