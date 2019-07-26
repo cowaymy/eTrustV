@@ -5,8 +5,10 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  01/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP
+ 26/04/2019  ONGHC  1.0.1          ADD RECALL STATUS
  -->
 
+<!-- AS ORDER > AS MANAGEMENT > CREATE AS ENTRY POP -->
 <script type="text/javaScript">
   function fn_ASSave() {
     Common.ajax("GET", "/services/as/addASNo.do", {}, function(result) {
@@ -14,30 +16,23 @@
   }
 
   function fn_confirmOrder() {
-
     if ($("#entry_orderNo").val() == "") {
-      Common.alert("Order Number Missing" + DEFAULT_DELIMITER
-          + "<b>Please insert order number.</b>");
+      var field = "<spring:message code='service.title.OrderNo' />";
+      Common.alert("<spring:message code='sys.msg.necessary' arguments='* <b>" +field + "</b>' htmlEscape='false'/>");
       return;
     }
 
-    Common
-        .ajax(
-            "GET",
-            "/services/as/searchOrderNo",
-            {
-              orderNo : $("#entry_orderNo").val()
-            },
-            function(result) {
-              if (result == null) {
-                Common.alert("Order Not Found" + DEFAULT_DELIMITER + "<b>No order found or this order is not under complete status or CCP Status is rejected.</b>");
-                $("#Panel_AS").attr("style", "display:none");
-                return;
-              } else {
-                fn_resultASPop(result.ordId, result.ordNo);
-                $("#_NewEntryPopDiv1").remove();
-              }
-            });
+    Common.ajax("GET", "/services/as/searchOrderNo", { orderNo : $("#entry_orderNo").val() },
+      function(result) {
+        if (result == null) {
+          Common.alert("<spring:message code='service.msg.asOrdNtFound' />");
+          $("#Panel_AS").attr("style", "display:none");
+          return;
+        } else {
+          fn_resultASPop(result.ordId, result.ordNo);
+          $("#_NewEntryPopDiv1").remove();
+        }
+      });
   }
 
   $(document).ready(function() {
@@ -52,8 +47,7 @@
   });
 
   function fn_getOrderDetailListAjax() {
-    Common.ajax("GET", "/sales/order/orderTabInfo", { salesOrderId : _selSalesOrdId
-    }, function(result) {
+    Common.ajax("GET", "/sales/order/orderTabInfo", { salesOrderId : _selSalesOrdId }, function(result) {
     });
   }
 
@@ -109,7 +103,6 @@
     ddlRequestor.DataValueField = "CodeID";
     ddlRequestor.DataSource = rql.OrderBy(itm => itm.CodeName);
     ddlRequestor.DataBind();
-
      */
   }
 
@@ -124,14 +117,15 @@
 
   function fn_checkASReceiveEntryConfirmation() {
     if ($("#entry_orderNo").val() == "") {
-      Common.alert("Order Number Missing" + DEFAULT_DELIMITER + "<b>Please insert order number.</b>");
+      var field = "<spring:message code='service.title.OrderNo' />";
+      Common.alert("<spring:message code='sys.msg.necessary' arguments='* <b>" +field + "</b>' htmlEscape='false'/>");
       return;
     }
 
     Common.ajax("GET", "/services/as/searchOrderNo", { orderNo : $("#entry_orderNo").val() },
       function(result) {
         if (result == null) {
-          Common.alert("Order Not Found" + DEFAULT_DELIMITER + "<b>No order found or this order is not under complete status or CCP Status is rejected.</b>");
+          Common.alert("<spring:message code='service.msg.asOrdNtFound' />");
           $("#Panel_AS").attr("style", "display:none");
           return;
         } else {
@@ -141,24 +135,24 @@
             fn_resultASPop(result.ordId, result.ordNo);
             $("#_NewEntryPopDiv1").remove();
           } else {
-             msg += '<br/> Do you want to proceed ? <br/>';
+             msg += "<br/> <spring:message code='service.msg.doPrc' /> <br/>";
 
-             Common.confirm('AS Received Entry Confirmation'
+             Common.confirm("<spring:message code='service.title.asRecvEntConf' />"
                               + DEFAULT_DELIMITER
                               + "<b>" + msg
                               + "</b>",
-                          fn_resultASPop(
-                              result.ordId,
-                              result.ordNo),
-                          fn_selfClose);
-                }
-              }
-            });
+                            fn_resultASPop(result.ordId, result.ordNo),
+                            fn_selfClose);
+          }
+          $("#_NewEntryPopDiv1").remove()
+        }
+      });
   }
 
   function fn_selfClose() {
     $('#btnClose').click();
-    $("#_resultNewEntryPopDiv1").remove();
+    //$("#_resultNewEntryPopDiv1").remove();
+    $("#_NewEntryPopDiv1").remove();
   }
 
 </script>
@@ -168,10 +162,10 @@
   <!-- content start -->
   <header class="pop_header">
    <!-- pop_header start -->
-   <h1>AS ReceiveEntry</h1>
+   <h1><spring:message code='service.btn.crtAs'/></h1>
    <ul class="right_opt">
     <li><p class="btn_blue2">
-      <a id="btnClose" href="#">CLOSE</a>
+      <a id="btnClose" href="#" ><spring:message code='sys.btn.close'/></a>
      </p></li>
    </ul>
   </header>
@@ -185,22 +179,20 @@
       <!-- table start -->
       <caption>table</caption>
       <colgroup>
-       <col style="width: 100px" />
+       <col style="width: 150px" />
        <col style="width: *" />
       </colgroup>
       <tbody>
        <tr>
-        <th scope="row">Order No</th>
-        <!--    <td><input type="text" title="" placeholder="" class="" id="entry_orderNo" name="entry_orderNo"/><p class="btn_sky"><a href="#" onClick="fn_confirmOrder()">Confirm</a></p><p class="btn_sky"><a href="#"  onclick="fn_goCustSearch()">Search</a></p></td>
- -->
-        <td><input type="text" title="" placeholder="" class=""
-         id="entry_orderNo" name="entry_orderNo" />
-        <p class="btn_sky">
-          <a href="#" onClick="fn_checkASReceiveEntryConfirmation()">Confirm</a>
-         </p>
-         <p class="btn_sky">
-          <a href="#" onclick="fn_goCustSearch()">Search</a>
-         </p></td>
+        <th scope="row"><spring:message code='service.title.OrderNo'/><span class="must">*</span></th>
+        <td>
+          <input type="text" title="" placeholder="" class="" id="entry_orderNo" name="entry_orderNo" />
+          <p class="btn_sky">
+            <a href="#" onClick="fn_checkASReceiveEntryConfirmation()"><spring:message code='pay.combo.confirm'/></a>
+           </p>
+           <p class="btn_sky">
+            <a href="#" onclick="fn_goCustSearch()"><spring:message code='sys.btn.search'/></a>
+           </p></td>
        </tr>
       </tbody>
      </table>
