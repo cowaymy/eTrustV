@@ -5,14 +5,25 @@
 
     $(document).ready(function(){
 
-     doGetCombo('/homecare/services/deptCode.do', 3, '','cmbDeptCode', 'S');
+    $('#hsMonth').val($.datepicker.formatDate('mm/yy', new Date()));
+
+     var memType = "${SESSION_INFO.userTypeId}";
+     var memLevel = "${SESSION_INFO.memberLevel}";
+     var htCode = "${SESSION_INFO.userName}";
+
      doGetCombo('/homecare/services/dscCode.do', 3, '','cmbDSC', 'S');
      doGetCombo('/homecare/services/insStatusCode.do', 1, '','cmbInsStatus', 'S');
-     doGetCombo('/homecare/services/codyCode.do', 3, '','cmbCodyCode', 'S');
      doGetCombo('/homecare/services/areaCode.do', 3, '','cmbArea', 'S');
 
-     $('#hsMonth').val($.datepicker.formatDate('mm/yy', new Date()));
+     if(memType == 7 && memLevel == 4){
 
+         doGetCombo('/homecare/services/HTCode.do', htCode, '','cmbCodyCode', 'S' , 'fn_getValue');
+         $("#cmbDeptCode").attr("disabled",true);
+
+     }else{
+
+         doGetCombo('/homecare/services/deptCode.do', 3, '','cmbDeptCode', 'S');
+         doGetCombo('/homecare/services/codyCode.do', 3, '','cmbCodyCode', 'S');
 
         $("#cmbDeptCode").change(function() {
 
@@ -27,11 +38,11 @@
 
         });
 
+        }
 
         $("#cmbContent").change(function() {
 
-
-          if($(this).val() ==3) {
+          if($(this).val() ==0) {
             $("#cmbDSC").val("");
             $("#cmbStatus").val("");
             $("#cmbInsStatus").val("");
@@ -54,20 +65,27 @@
 
     });
 
-
-
-
-
-
-
+    function fn_getValue(){
+    	var htCode = "${SESSION_INFO.userName}";
+    	console.log("htCode : " + htCode);
+    	$("#cmbCodyCode").val(htCode);
+    }
 
 
 function fn_validation(){
-     if($("#cmbContent option:selected").length < 1)
+     if($("#cmbContent option:selected").index() < 1)
         {
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='Please select the report type' htmlEscape='false'/>");
             return false;
         }
+
+     if( '${SESSION_INFO.memberLevel}' == 4){
+           if($("#cmbCodyCode option:selected").index() < 1)
+	   {
+           Common.alert("<spring:message code='sys.common.alert.validation' arguments='Please select the HT Code.' htmlEscape='false'/>");
+           return false;
+	   }
+     }
     return true;
 }
 
@@ -97,7 +115,7 @@ function fn_Generate(){
         $("#summaryform #viewType").val("PDF");
 
 
-        if(cmid!=3){
+        if(cmid == 1){
 
 
              var whereSql ="";
@@ -134,7 +152,7 @@ function fn_Generate(){
              $("#summaryform #V_WHERESQL").val(whereSql);
              $("#summaryform #V_GROUPBYSQL").val("");
              $("#summaryform #V_FULLSQL").val("");
-         }else {
+         }else if (cmid == 2){
 
                  var month = $("#hsMonth").val().substring(0,2);
                  var year= $("#hsMonth").val().substring(3,7);
@@ -216,7 +234,7 @@ function fn_Generate(){
     <th scope="row">Type</th>
     <td>
     <select id="cmbContent" name="cmbContent">
-        <option value="">Choose one</option>
+        <option value="0">Choose one</option>
         <option value="1">Monthly CS Summary Report</option>
         <option value="2">Monthly CS Remark Listing</option>
 
