@@ -31,6 +31,7 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.organization.organization.MemberListController;
 import com.coway.trust.web.sales.SalesConstants;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -48,6 +49,9 @@ public class htManualController {
 
 	@Resource(name = "servicesLogisticsPFCService")
 	private ServicesLogisticsPFCService servicesLogisticsPFCService;
+
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
 
 
 	@Autowired
@@ -1268,6 +1272,12 @@ public class htManualController {
 		return "homecare/services/htConfigRawDataPop";
 	}
 
+	@RequestMapping(value = "/HTCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHTCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+		logger.debug("selectHTCodeList - params : " + params);
+		List<EgovMap> HTCodeList = htManualService.selectHTCodeListByHTCode(params);
+		return ResponseEntity.ok(HTCodeList);
+	}
 
 }
 
