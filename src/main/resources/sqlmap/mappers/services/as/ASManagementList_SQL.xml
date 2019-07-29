@@ -8,6 +8,7 @@
   </resultMap>
 
   <!-- SELECT START -->
+  <!--  NVL(DECODE(S.AS_IF_FLAG, 'E' ,'logistics err' ,''), '-') AS_IF_FLAG, -->
   <select id="selectASManagementList" parameterType="Map" resultType="egovMap">
     SELECT S.AS_ID ,
            S.AS_NO ,
@@ -36,12 +37,12 @@
            S.REF_REQST,
            S.AS_MALFUNC_ID,
            S.AS_MALFUNC_RESN_ID,
-           NVL(DECODE(S.AS_IF_FLAG, 'E' ,'logistics err' ,''), '-') AS_IF_FLAG,
+
            NVL(MEM_CODE, '-') MEM_CODE,
            S.RCD_TMS,
            S.AS_SETL_DT,
            S.AS_RESULT_CRT_DT,
-           S.CMS AS CMS
+           S.CMS AS AS_IF_FLAG
     FROM ( SELECT DISTINCT E.AS_ID AS_ID ,
                            E.AS_NO AS_NO ,
                            E.ASSOID1 AS_SO_ID ,
