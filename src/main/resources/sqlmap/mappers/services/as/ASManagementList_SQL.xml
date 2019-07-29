@@ -8,8 +8,7 @@
   </resultMap>
 
   <!-- SELECT START -->
-  <!--  NVL(DECODE(S.AS_IF_FLAG, 'E' ,'logistics err' ,''), '-') AS_IF_FLAG, -->
-  <select id="selectASManagementList" parameterType="Map" resultType="egovMap">
+<select id="selectASManagementList" parameterType="Map" resultType="egovMap">
     SELECT S.AS_ID ,
            S.AS_NO ,
            S.AS_SO_ID ,
@@ -219,7 +218,6 @@
             AND ( E.NRIC LIKE '%'||#{nricNum}||'%' )
            </if>
     )S
-
   </select>
 
   <select id="selectASManagementList2" parameterType="Map" resultType="egovMap">
@@ -949,25 +947,6 @@
                   WHERE E.ORD_ID = #{ORD_ID} AND ROWNUM <![CDATA[ <= ]]> 1 ) S
   </select>
 
-  <select id="getASRclInfo" parameterType="Map" resultType="egovMap">
-    SELECT * FROM (
-      SELECT TO_CHAR(A.AS_APPNT_DT,'dd/mm/yyyy') APP_DT,
-             A.AS_SESION_CODE APP_SESS,
-             A.AS_BRNCH_ID AS DSC_CDE,
-             D.CODE BR_CDE,
-             E.MEM_CODE MEM_ID,
-             A.AS_MEM_GRP MEM_GRP,
-             NVL(DBMS_LOB.substr(C.CALL_REM, 3000), '') RCL_RMK
-      FROM SVC0001D A
-      JOIN CCR0006D B ON A.AS_CALLLOG_ID = B.CALL_ENTRY_ID
-      JOIN CCR0007D C ON B.CALL_ENTRY_ID = C.CALL_ENTRY_ID
-      JOIN SYS0005M D ON A.AS_BRNCH_ID = D.BRNCH_ID
-      JOIN ORG0001D E ON E.MEM_ID = A.AS_MEM_ID
-      WHERE A.AS_ID = #{AS_ID}
-      ORDER BY C.CALL_RESULT_ID DESC) A
-    WHERE ROWNUM = 1
-  </select>
-
   <select id="getASEvntsInfo" parameterType="Map" resultType="egovMap">
     SELECT S.AS_ID AS_ID ,
            S.AS_ALLOW_COMM AS_ALLOW_COMM ,
@@ -1207,19 +1186,18 @@
   </select>
 
   <select id="getASReasonCode" parameterType="Map" resultType="egovMap">
-    SELECT DISTINCT RESN_DESC,
-                    RESN_TYPE_ID,
-                    CODE_ID,
-                    CODE_NAME,
+    SELECT Distinct RESN_DESC ,
+                    RESN_TYPE_ID ,
+                    code_Id ,
+                    code_Name,
                     RESN_ID
     FROM ( SELECT RESN_TYPE_ID ,
                   RESN_ID code_Id,
                   RESN_DESC ,
-                  CODE || ' - ' || RESN_DESC CODE_Name,
-                  RESN_ID
+                  CODE||'-'||RESN_DESC code_Name,RESN_ID
            FROM SYS0032M WHERE RESN_TYPE_ID = #{RESN_TYPE_ID}
-                           AND STUS_CODE_ID = 1
-           ORDER BY RESN_ID)
+                           AND STUS_CODE_ID =1
+           ORDER BY RESN_DESC DESC )
   </select>
 
   <select id="getASReasonCode2" parameterType="Map" resultType="egovMap">
@@ -1299,8 +1277,8 @@
                 AND A.MATRL_NO = C.STK_CODE
                 AND B.BOM_COMPNT = D.STK_CODE
                 AND C.STK_CODE = #{prdctCd}
-                AND B.VALID_FROM_DT <= SYSDATE
-                AND B.VALID_TO_DT >= SYSDATE
+                AND B.VALID_FROM_DT < SYSDATE
+                AND B.VALID_TO_DT > SYSDATE
               ORDER BY D.STK_CODE
     ]]>
   </select>
@@ -2625,81 +2603,12 @@
     WHERE STK_ID = #{params}
   </select>
 
-  <select id="getSearchDtRange" parameterType="Map" resultType="String">
-    SELECT CODE
-    FROM SYS0094M
-    WHERE IND = 'AS_DT_RGN'
-      AND DISB = '0'
-  </select>
-
-  <select id="selectAsTyp"  parameterType="Map" resultType="egovMap">
-    SELECT CODE_ID AS CODE_ID,
-           CODE_NAME AS CODE_NAME
-    FROM SYS0013M
-    WHERE CODE_MASTER_ID = '58'
-      AND DISAB = 0
-    ORDER BY CODE_ID
-  </select>
-
-  <select id="selectAsStat"  parameterType="Map" resultType="egovMap">
-    SELECT CODE AS CODE_ID,
-           CODE_NAME AS CODE_NAME
-    FROM SYS0094M
-    WHERE IND = 'AS_STAT'
-      AND DISB = 0
-    ORDER BY LPAD(CODE,4)
-  </select>
-
-  <select id="selectAsCrtStat"  parameterType="Map" resultType="egovMap">
-    SELECT CODE AS CODE_ID,
-           CODE_NAME AS CODE_NAME
-    FROM SYS0094M
-    WHERE IND = 'AS_CRTSTAT'
-      AND DISB = 0
-    ORDER BY LPAD(CODE,4)
-  </select>
-
-  <select id="selectTimePick"  parameterType="Map" resultType="egovMap">
-    SELECT CODE AS CODE_ID,
-           CODE_NAME AS CODE_NAME
-    FROM SYS0094M
-    WHERE IND = 'TIME_PICK'
-      AND DISB = '0'
-    ORDER BY LPAD(CODE,4)
-  </select>
-
-  <select id="selectLbrFeeChr"  parameterType="Map" resultType="egovMap">
-    SELECT CODE AS CODE_ID,
-           CODE_NAME AS CODE_NAME
-    FROM SYS0094M
-    WHERE IND = 'AS_LBR_CHR'
-      AND DISB = '0'
-    ORDER BY LPAD(CODE,4)
-  </select>
-
-  <select id="selectFltQty"  parameterType="Map" resultType="egovMap">
-    SELECT CODE AS CODE_ID,
-           CODE_NAME AS CODE_NAME
-    FROM SYS0094M
-    WHERE IND = 'AS_FLT_QTY'
-      AND DISB = '0'
-    ORDER BY LPAD(CODE,4)
-  </select>
-
-  <select id="selectFltPmtTyp"  parameterType="Map" resultType="egovMap">
-    SELECT CODE AS CODE_ID,
-           CODE_NAME AS CODE_NAME
-    FROM SYS0094M
-    WHERE IND = 'AS_PMT_TYP'
-      AND DISB = '0'
-    ORDER BY LPAD(CODE,4)
-  </select>
-
-  <select id="getASEntryCommission" parameterType="Map" resultType="String">
+    <select id="getASEntryCommission" parameterType="Map" resultType="String">
     SELECT AS_ALLOW_COMM AS COMM
     FROM SVC0001D
-    WHERE AS_SO_ID = #{ORD_ID}
-      AND AS_ID = #{AS_ID}
+    WHERE
+    AS_SO_ID = #{ORD_ID}
+    AND AS_ID = #{AS_ID}
   </select>
 
   <!-- INSERT START -->
@@ -4143,16 +4052,16 @@
 
   <!-- UPDATE START -->
   <update id="updateSVC0001D" parameterType="Map">
-    UPDATE SVC0001D SET
-                        <!-- AS_MEM_ID = #{AS_MEM_ID},
+    UPDATE SVC0001D SET AS_MEM_ID = #{AS_MEM_ID},
                         AS_MEM_GRP = #{AS_MEM_GRP},
                         AS_REQST_DT = TO_DATE(#{AS_REQST_DT},'DD/MM/YYYY'),
                         AS_REQST_TM = #{AS_REQST_TM},
-                        AS_APPNT_DT = TO_DATE(#{AS_APPNT_DT},'DD/MM/YYYY'),
+                        AS_APPNT_DT =
+                        TO_DATE(#{AS_APPNT_DT},'DD/MM/YYYY'),
                         AS_APPNT_TM = #{AS_APPNT_TM},
                         AS_BRNCH_ID = #{AS_BRNCH_ID},
                         AS_MALFUNC_ID = #{AS_MALFUNC_ID},
-                        AS_MALFUNC_RESN_ID = #{AS_MALFUNC_RESN_ID},  -->
+                        AS_MALFUNC_RESN_ID = #{AS_MALFUNC_RESN_ID},
                         AS_REM_REQSTER = #{AS_REM_REQSTER},
                         AS_REM_REQSTER_CNTC = #{AS_REM_REQSTER_CNTC},
                         <!-- AS_CALLLOG_ID = #{AS_CALLLOG_ID}, AS_STUS_ID = #{AS_STUS_ID}, AS_SMS
@@ -4169,18 +4078,6 @@
                         AS_SESION_CODE = #{AS_SESION_CODE},
                         CALL_MEM = #{CALL_MEMBER},
                         REF_REQST = #{REF_REQUEST}
-    WHERE AS_ID = #{AS_ID}
-  </update>
-
-  <update id="updateSVC0001D_RCL" parameterType="Map">
-    UPDATE SVC0001D SET AS_MEM_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{AS_MEM_ID}),
-                        AS_MEM_GRP = #{AS_MEM_GRP},
-                        AS_APPNT_DT = TO_DATE(#{AS_APP_DT},'DD/MM/YYYY'),
-                        AS_APPNT_TM = #{AS_APP_SESS},
-                        AS_BRNCH_ID = #{AS_RCL_ASG_DSC},
-                        AS_SESION_CODE = #{AS_APP_SESS},
-                        AS_UPD_USER_ID = #{updator},
-                        AS_UPD_DT = SYSDATE
     WHERE AS_ID = #{AS_ID}
   </update>
 
@@ -4233,8 +4130,7 @@
                         AS_DEFECT_ID = NVL(#{AS_DEFECT_ID}, 0),
                         AS_DEFECT_PART_ID = NVL(#{AS_DEFECT_PART_ID}, 0),
                         AS_DEFECT_DTL_RESN_ID = NVL(#{AS_DEFECT_DTL_RESN_ID}, 0),
-                        AS_SLUTN_RESN_ID = NVL(#{AS_SLUTN_RESN_ID}, 0),
-                        AS_FAIL_RESN_ID = NVL(#{AS_FAIL_RSN}, 0)
+                        AS_SLUTN_RESN_ID = NVL(#{AS_SLUTN_RESN_ID}, 0)
     WHERE AS_RESULT_ID = #{AS_RESULT_ID}
   </update>
 
