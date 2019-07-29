@@ -326,4 +326,6 @@ public interface htManualMapper {
 
 	void updateAssignHT(Map<String, Object> params);
 
+	List<EgovMap> selectHTCodeListByHTCode(Map<String, Object> params);
+
 }
