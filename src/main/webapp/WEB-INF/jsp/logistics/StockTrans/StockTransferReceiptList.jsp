@@ -691,7 +691,7 @@ function grFunc(){
 		</section>
     </div>
     <form id="printForm" name="printForm">
-       <input type="hidden" id="viewType" name="viewType" value="WINDOW" />
+       <input type="hidden" id="viewType" name="viewType" value="PDF" />
        <input type="hidden" id="V_DELVRYNO" name="V_DELVRYNO" value="" />
        <input type="hidden" id="reportFileName" name="reportFileName" value="/logistics/Delivery_Note_for_GR.rpt" /><br />
     </form>

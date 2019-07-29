@@ -365,7 +365,7 @@ $(function(){
         }else{
         	for (var i = 0 ; i < checkedItems.length ; i++){
                 if(checkedItems[i].grcmplt == 'Y'){
-                    Common.alert('Already processed.');
+                    Common.alert('Good Receipt already processed. Unable to Issue Cancel.');
                     return false;
                     break;
                 }
@@ -417,7 +417,7 @@ $(function(){
         }else{
             for (var i = 0 ; i < checkedItems.length ; i++){
                 if(checkedItems[i].gicmplt == 'Y'){
-                    Common.alert('Already Good Issue processed.');
+                    Common.alert('Good Issue already processed. Unable to Delete Delivery.');
                     return false;
                     break;
                 }
@@ -922,7 +922,7 @@ function f_addrow(){
 		</section>
     </div>
     <form id="printForm" name="printForm">
-       <input type="hidden" id="viewType" name="viewType" value="WINDOW" />
+       <input type="hidden" id="viewType" name="viewType" value="PDF" />
        <input type="hidden" id="V_DELVRYNO" name="V_DELVRYNO" value="" />
        <input type="hidden" id="reportFileName" name="reportFileName" value="/logistics/Delivery_Note_for_Gl.rpt" /><br />
     </form>
