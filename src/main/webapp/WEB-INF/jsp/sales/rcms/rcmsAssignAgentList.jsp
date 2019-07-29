@@ -60,6 +60,7 @@ $(document).ready(function(){
              });
     //RosCaller
     CommonCombo.make("rosCaller", "/sales/rcms/selectRosCaller", {stus:'1'}, '',  {id:"agentId", name:"agentName", isCheckAll : false, isShowChoose: false , type: "M"});
+    doGetCombo('/common/selectCodeList.do', '2', '',    'cmbRaceId',    'S', ''); //Common Code
 
     $("#companyType").multipleSelect("disable");
     fn_companyList();
@@ -144,8 +145,9 @@ function createGrid(){
 	                  valueField : "codeName" // value 에 해당되는 필드명
 	              } */
               },
-              {dataField : "colctTrget", headerText : '<spring:message code="sal.title.text.openOsBrTarget" />', width : '10%'  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
-              {dataField : "rentAmt", headerText : '<spring:message code="sal.title.text.currBrOs" />', width : '10%'  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
+              {dataField : "race", headerText : '<spring:message code="sal.text.race" />', width : '7%',       editable       : false},
+              {dataField : "colctTrget", headerText : '<spring:message code="sal.title.text.openOsBrTarget" />', width : '7%'  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
+              {dataField : "rentAmt", headerText : '<spring:message code="sal.title.text.currBrOs" />', width : '7%'  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
               {dataField : "openMthAging", headerText : '<spring:message code="sal.title.text.openAgingBrMonth" />', width : '7%'  , editable       : false      } ,
               {dataField : "currRentalStus", headerText : '<spring:message code="sal.title.text.currRentStatus" />', width : '10%'  , editable       : false      } ,
               /*   ,{dataField : "suggestAgent", headerText : '<spring:message code="sal.title.text.suggestBrCaller" />', width : 90    , editable       : false     , style:"aui-grid-drop-list-ul"
@@ -215,6 +217,7 @@ function createGrid(){
 	                  valueField : "codeName" // value 에 해당되는 필드명
 	              }
               },
+              {dataField : "race", headerText : '<spring:message code="sal.text.race" />', width : '10%',       editable       : false},
               {dataField : "colctTrget", headerText : '<spring:message code="sal.title.text.openOsBrTarget" />', width : 80  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
               {dataField : "rentAmt", headerText : '<spring:message code="sal.title.text.currBrOs" />', width : 75  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
               {dataField : "openMthAging", headerText : '<spring:message code="sal.title.text.openAgingBrMonth" />', width : 95  , editable       : false      } ,
@@ -272,8 +275,8 @@ function createGrid(){
               {dataField : "assigned", headerText : '<spring:message code="sal.title.text.assigned" />', width : 70  , editable       : false, visible : false} ,
               {dataField : "sensitiveFg", headerText : '<spring:message code="sal.title.text.sensitive" />', width : 70   ,editable       : false    },
               {dataField : "rem", headerText : '<spring:message code="sal.title.remark" />', width : 200   ,editable       : false  ,style :"my-left-style"  },
-              {dataField : "etrFg", headerText : '<spring:message code="sal.title.text.etr" />', width : '5%'   ,editable       : false    },
-              {dataField : "etrRem", headerText : '<spring:message code="sal.title.remark" />', width : '10%'   ,editable       : false    }
+              {dataField : "etrFg", headerText : '<spring:message code="sal.title.text.etr" />', width : 70   ,editable       : false    },
+              {dataField : "etrRem", headerText : '<spring:message code="sal.title.remark" />', width : 300   ,editable       : false    }
               ];
 
 
@@ -494,9 +497,22 @@ function fn_badAccReport(){
         <td>
         <input type="text" title="" placeholder="" class="w100p" id="orderNo" name="orderNo"/>
         </td>
+        <th scope="row">Over 60 months</th>
+        <td>
+        <input type="checkbox" id="over60" name="over60"  value="Y"/>
+        </td>
+    </tr>
+    <tr>
         <th scope="row"><spring:message code="sal.text.customerId" /></th>
         <td>
         <input type="text" title="" placeholder="" class="w100p" id="customerId" name="customerId" />
+        </td>
+        <th scope="row"><spring:message code="sal.text.race"/></th>
+        <td>
+            <select id="cmbRaceId" name="raceId" class="w100p"></select>
+        </td>
+        <th scope="row"></th>
+        <td>
         </td>
     </tr>
     <tr>
