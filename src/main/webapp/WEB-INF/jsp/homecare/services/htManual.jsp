@@ -1028,6 +1028,10 @@ var TODAY_DD      = "${toDay}";
           </c:if>
 
               <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+             <li><p class="link_btn type2">
+             <a href="#" onclick="javascript:fn_hsSummary()">CS
+              Summary Listing</a>
+            </p></li>
                <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsReportSingle()">CS
               Report(Single)</a>
