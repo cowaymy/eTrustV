@@ -1427,4 +1427,11 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
 	public List<EgovMap> selectHSReportGroup(Map<String, Object> params) {
 		return htManualMapper.selectHSReportGroup(params);
 	}
+
+	@Override
+	public List<EgovMap> selectHTCodeListByHTCode(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return htManualMapper.selectHTCodeListByHTCode(params);
+	}
+
 }
