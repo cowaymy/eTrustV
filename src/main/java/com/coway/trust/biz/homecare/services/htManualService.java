@@ -161,8 +161,6 @@ public interface htManualService {
 
 	int updateAssignHT(Map<String, Object> params);
 
-
-
-
+	List<EgovMap> selectHTCodeListByHTCode(Map<String, Object> params);
 
 }
