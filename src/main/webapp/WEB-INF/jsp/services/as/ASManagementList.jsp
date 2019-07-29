@@ -162,6 +162,11 @@
           width : 80
         },
         {
+            dataField : "cms",
+            headerText : "Commission",
+            width : 80
+          },
+        {
           dataField : "asBrnchId",
           headerText : "<spring:message code='service.title.ASBrchId'/>",
           width : 100,
