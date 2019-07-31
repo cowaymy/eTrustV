@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.biz.sales.order;
 
@@ -14,7 +14,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 public interface OrderListService {
 	List<EgovMap> selectOrderList(Map<String, Object> params);
- 
+
 	List<EgovMap> getApplicationTypeList(Map<String, Object> params);
 
 	List<EgovMap> getUserCodeList();
@@ -40,4 +40,7 @@ public interface OrderListService {
 	EgovMap getPrCTInfo(Map<String, Object> params);
 
 	int chkRcdTms (Map<String, Object> params);
+
+	List<EgovMap> selectOrderListVRescue(Map<String, Object> params);
+
 }

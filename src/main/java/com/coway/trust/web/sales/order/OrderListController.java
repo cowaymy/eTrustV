@@ -414,5 +414,42 @@ public class OrderListController {
 	}
 
 
+	@RequestMapping(value = "/selectOrderJsonListVRescue", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectOrderJsonListVRescue(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+
+		String[] arrAppType   = request.getParameterValues("appType"); //Application Type
+		String[] arrOrdStusId = request.getParameterValues("ordStusId"); //Order Status
+		String[] arrKeyinBrnchId = request.getParameterValues("keyinBrnchId"); //Key-In Branch
+		String[] arrDscBrnchId = request.getParameterValues("dscBrnchId"); //DSC Branch
+		String[] arrRentStus = request.getParameterValues("rentStus"); //Rent Status
+
+		if(StringUtils.isEmpty(params.get("ordStartDt"))) params.put("ordStartDt", "01/01/1900");
+    	if(StringUtils.isEmpty(params.get("ordEndDt")))   params.put("ordEndDt",   "31/12/9999");
+
+    	params.put("ordStartDt", CommonUtils.changeFormat(String.valueOf(params.get("ordStartDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+    	params.put("ordEndDt", CommonUtils.changeFormat(String.valueOf(params.get("ordEndDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+
+		if(arrAppType      != null && !CommonUtils.containsEmpty(arrAppType))      params.put("arrAppType", arrAppType);
+		if(arrOrdStusId    != null && !CommonUtils.containsEmpty(arrOrdStusId))    params.put("arrOrdStusId", arrOrdStusId);
+		if(arrKeyinBrnchId != null && !CommonUtils.containsEmpty(arrKeyinBrnchId)) params.put("arrKeyinBrnchId", arrKeyinBrnchId);
+		if(arrDscBrnchId   != null && !CommonUtils.containsEmpty(arrDscBrnchId))   params.put("arrDscBrnchId", arrDscBrnchId);
+		if(arrRentStus     != null && !CommonUtils.containsEmpty(arrRentStus))     params.put("arrRentStus", arrRentStus);
+
+		if(params.get("custIc") == null) {logger.debug("!@###### custIc is null");}
+		if("".equals(params.get("custIc"))) {logger.debug("!@###### custIc ''");}
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### ordNo : "+params.get("ordNo"));
+		logger.debug("!@###### ordStartDt : "+params.get("ordStartDt"));
+		logger.debug("!@###### ordEndDt : "+params.get("ordEndDt"));
+		logger.debug("!@###### ordDt : "+params.get("ordDt"));
+		logger.debug("!@###### custIc : "+params.get("custIc"));
+		logger.debug("!@##############################################################################");
+
+		List<EgovMap> orderList = orderListService.selectOrderListVRescue(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(orderList);
+	}
 
 }

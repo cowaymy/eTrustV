@@ -67,6 +67,7 @@ import com.coway.trust.web.common.claim.ClaimFileRHBHandler;
 import com.coway.trust.web.common.claim.CreditCardFileCIMBHandler;
 import com.coway.trust.web.common.claim.CreditCardFileMBBHandler;
 
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
@@ -2543,5 +2544,30 @@ public class ClaimController {
     return ResponseEntity.ok(message);
 
   }
+
+  @RequestMapping(value = "/initVRescueManagement.do")
+  public String initVRescueManagement(@RequestParam Map<String, Object> params, ModelMap model) {
+    return "payment/autodebit/vRescueManagement";
+  }
+
+  @RequestMapping(value = "/saveVRescueUpdate.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> saveVRescueUpdate(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+
+	  LOGGER.debug("params :"+ params.toString());
+	  params.put("userId", sessionVO.getUserId());
+
+
+
+	  claimService.saveVRescueUpdate(params);
+
+	  ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData("");
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+
+		return ResponseEntity.ok(message);
+
+	}
 
 }

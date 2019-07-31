@@ -77,4 +77,6 @@ public interface OrderListMapper {
 	EgovMap getPrCTInfo(Map<String, Object> params);
 
 	int chkRcdTms(Map<String, Object> params);
+
+	List<EgovMap> selectOrderListVRescue(Map<String, Object> params);
 }

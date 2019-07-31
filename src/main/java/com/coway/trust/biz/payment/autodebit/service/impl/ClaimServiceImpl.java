@@ -15,9 +15,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
 import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.BeanConverter;
+import com.coway.trust.web.payment.autodebit.controller.ClaimController;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -42,6 +45,8 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 
   @Resource(name = "claimMapper")
   private ClaimMapper claimMapper;
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ClaimServiceImpl.class);
 
   /**
    * Auto Debit - Claim List 리스트 조회
@@ -569,4 +574,33 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
   public Map<String, Object> createVResClaim(Map<String, Object> param) {
     return claimMapper.createVResClaim(param);
   }
+
+  //public void saveVRescueUpdate(Map<String, Object> params) {
+
+	// claimMapper.saveVRescueUpdate(params);
+  //}
+
+  @Override
+	public int  saveVRescueUpdate(Map<String, Object> params) {
+
+		List<EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
+
+
+		int o=0;
+  	if (updateItemList.size() > 0) {
+			for (int i = 0; i < updateItemList.size(); i++) {
+				Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
+
+				int check = Integer.parseInt(String.valueOf(updateMap.get("btnCheck")));
+				updateMap.put("userId", params.get("userId"));
+
+			if(check == 1){
+				 claimMapper.saveVRescueUpdate(updateMap) ;
+			}
+			}
+		}
+
+
+		return o ;
+	}
 }

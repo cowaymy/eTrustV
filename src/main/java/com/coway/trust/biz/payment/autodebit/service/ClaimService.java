@@ -1,7 +1,10 @@
 package com.coway.trust.biz.payment.autodebit.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -246,6 +249,9 @@ public interface ClaimService {
 
   Map<String, Object> createVResClaim(Map<String, Object> param);
 
+  //void saveVRescueUpdate(Map<String, Object> params);
+  
+  int  saveVRescueUpdate(Map<String, Object> params);
 
 
 }

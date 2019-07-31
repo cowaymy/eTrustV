@@ -278,6 +278,8 @@ public interface ClaimMapper {
 
   Map<String, Object> createVResClaim(Map<String, Object> param);
 
-
+  //void saveVRescueUpdate(Map<String, Object> params);	
+  
+  int  saveVRescueUpdate(Map<String, Object> params);
 
 }

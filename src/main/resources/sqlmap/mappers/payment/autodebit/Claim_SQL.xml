@@ -1344,4 +1344,15 @@
     resultMap=resultClaimMap})
     }
   </select>
+
+  <update id="saveVRescueUpdate" parameterType="Map">
+
+  UPDATE SAL0074D
+            SET  GRACE_PERIOD             = 0,
+                   DEDUCT_ACC_ID               = 0,
+                   UPD_USER_ID                 = #{userId},
+                   UPD_DT                         = SYSDATE
+
+            WHERE  RENT_PAY_ID         = #{rentPayId}
+</update>
 </mapper>
