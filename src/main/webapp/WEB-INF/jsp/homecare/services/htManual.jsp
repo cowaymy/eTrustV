@@ -899,20 +899,12 @@ var TODAY_DD      = "${toDay}";
        <a id="hSConfiguration" >Create CS
         Order</a>
       </p></li>
+      </c:if>
            <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_getBSListAjax();"><span
         class="search"></span>
        <spring:message code='sys.btn.search' /></a>
       </p></li>
-
-      </c:if>
-         <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-     <li><p class="btn_blue">
-       <a href="#" onclick="javascript:fn_getBSListAjax();"><span
-        class="search"></span>
-       <spring:message code='sys.btn.search' /></a>
-      </p></li>
-    </c:if>
 
    </ul>
    <!--조회조건 추가  -->
