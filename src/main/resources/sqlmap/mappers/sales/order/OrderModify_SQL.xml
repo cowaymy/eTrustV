@@ -346,6 +346,7 @@
 		     , ISSU_NRIC       = #{issuNric}
 		     , LAST_APPLY_USER = #{lastApplyUser}
 		     , PAY_TRM         = #{payTrm}
+		     , GRACE_PERIOD = 0
 		 WHERE RENT_PAY_ID     = #{rentPayId}
     </update>
 
@@ -630,7 +631,7 @@
                    DEDUCT_ACC_ID = #{deductId}
          WHERE RENT_PAY_ID     = #{rentPayId}
     </update>
-    
+
     <update id="updateCcpSalesOrderM" parameterType="Map">
         UPDATE SAL0001D
            SET CORP_CUST_TYPE = #{corpCustType}
