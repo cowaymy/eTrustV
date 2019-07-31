@@ -526,7 +526,7 @@ function grFunc(){
         }
 
        if(delychek != check[i].item.delyno){
-    	   Common.alert("Deliveryno Is Different.");
+    	   Common.alert("Delivery No Is Different.");
     	   return false;
        }
 
@@ -933,7 +933,7 @@ function fn_gradComb(){
     <input type="hidden" id="svalue" name="svalue">
 </form>
 <form id="printForm" name="printForm">
-       <input type="hidden" id="viewType" name="viewType" value="WINDOW" />
+       <input type="hidden" id="viewType" name="viewType" value="PDF" />
        <input type="hidden" id="V_DELVRYNO" name="V_DELVRYNO" value="" />
        <input type="hidden" id="reportFileName" name="reportFileName" value="/logistics/Delivery_Note_for_GR.rpt" /><br />
     </form>

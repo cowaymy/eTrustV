@@ -844,8 +844,8 @@
 
          <insert id="nonvalueItemPriceins" parameterType="Map">
             INSERT INTO SAL0016M (PRC_ID, MEM_PAC_ID , STK_ID, AMT, UOM_ID, UOM_CONV, START_DT, END_DT, CNTY_ID , APP_TYPE_ID, CRT_USER_ID, CRT_DT)
-                           VALUES((SELECT MAX(PRC_ID)+1 FROM SAL0016M),
-                                  #{stkid} , 0 ,#{insnp} , #{insUom} , 1 , sysdate , to_date('209912312359','yyyymmddhh24miss'),0,#{istockType} , #{loginId} , sysdate
+                           VALUES((SELECT MAX(PRC_ID)+1 FROM SAL0016M), 0
+                                  #{stkid} , #{insnp} , #{insUom} , 1 , sysdate , to_date('209912312359','yyyymmddhh24miss'),0,#{istockType} , #{loginId} , sysdate
                                  )
          </insert>
          <select id="stockSTKIDsearch" resultType="int">
