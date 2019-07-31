@@ -4,18 +4,18 @@
 
 var optionUnit = { isShowChoose: false};
 var optionModule = {
-        type: "S",                  
-        isShowChoose: false  
+        type: "S",
+        isShowChoose: false
 };
 
 
 $(function() {
     $('#_updSmsMsg').keyup(function (e){
-        
+
         var content = $(this).val();
-        
+
        // $(this).height(((content.split('\n').length + 1) * 2) + 'em');
-        
+
         $('#_charCounter').html('Total Character(s) : '+content.length);
     });
     $('#_updSmsMsg').keyup();
@@ -23,31 +23,31 @@ $(function() {
 
 
 $(document).ready(function() {
-    
+
    /*  //to List
     $("#_btnList").click(function() {
     	window.close();
     }); */
-    
+
     $("#_btnClose").click(function() {
     	window.close();
 	});
-    
+
     //Init
     var mst = getMstId();
     var ordUnitSelVal = $("#_ordUnitSelVal").val();
     var rosUnitSelVal = $("#_rosUnitSelVal").val();
     var susUnitSelVal = $("#_susUnitSelVal").val();
     var custUnitSelVal = $("#_custUnitSelVal").val();
-    
+
     getUnitCombo(mst, 212  , ordUnitSelVal , '_ordUnit');
     getUnitCombo(mst, 213  , rosUnitSelVal , '_ordMth');
     getUnitCombo(mst, 216  , susUnitSelVal , '_ordSuspen');
-    getUnitCombo(mst, 210  , custUnitSelVal , '_ordExistingCust');  
-   
+    getUnitCombo(mst, 210  , custUnitSelVal , '_ordExistingCust');
+
     //Income Range ComboBox
     var ccpId = $("#_editCcpId").val();
-    
+
     var rentPayModeId = $("#_rentPayModeId").val();
     var applicantTypeId = $("#_applicantTypeId").val();
     console.log("applicantTypeId : " + applicantTypeId);
@@ -62,25 +62,25 @@ $(document).ready(function() {
     }
     //doGetCombo('/sales/ccp/getLoadIncomeRange', {editCcpId : ccpId} , selVal ,'_incomeRangeEdit', 'S');
     CommonCombo.make('_incomeRangeEdit', '/sales/ccp/getLoadIncomeRange' , {editCcpId : ccpId}, selVal , optionModule);
-    
+
     //Ccp Status
     var ccpStus = $("#_ccpStusId").val();
-    doGetCombo('/sales/ccp/getCcpStusCodeList', '', ccpStus,'_statusEdit', 'S'); 
+    doGetCombo('/sales/ccp/getCcpStusCodeList', '', ccpStus,'_statusEdit', 'S');
     //Reject
     doGetCombo('/sales/ccp/getCcpRejectCodeList', '', '','_rejectStatusEdit', 'S'); //Status
     //Feedback
     var selReasonCode = $("#_ccpResnId").val();
     doGetCombo('/sales/ccp/selectReasonCodeFbList', '', selReasonCode,'_reasonCodeEdit', 'S'); //Reason
-    
+
     //Bind Filed
     bind_RetrieveData();
-    
+
     //Disabled ComboBox
     $("#_ordUnit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_ordMth").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_ordSuspen").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_ordExistingCust").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-     
+
     //SMS Checked
     // Consignment Change
     $("#_updSmsChk").change(function() {
@@ -92,17 +92,17 @@ $(document).ready(function() {
                 $("#_updSmsMsg").attr("disabled" , false);
                 setSMSMessage();
             } */
-            
+
             var currStus = $("#_statusEdit").val();
             if(currStus != null && currStus != ''){
-            	fn_ccpStatusChangeFunc(currStus);	
+            	fn_ccpStatusChangeFunc(currStus);
             }
         }
     });
-    
+
     //Save
     $("#_calBtnSave").click(function() {
-    
+
         //Validation
         if( null == $("#_statusEdit").val() || '' == $("#_statusEdit").val()){
              Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Status'/>");
@@ -134,35 +134,35 @@ $(document).ready(function() {
                 return;
             }
         }
-        
+
         //Validation (Call Entry Count)
         var ccpOrdEditId = $("#_editOrdId").val();
         var salData = {salesOrdId : ccpOrdEditId};
         console.log(salData);
         var callEntCount = 0;
-        Common.ajax("GET", "/sales/ccp/countCallEntry", salData , function(result) {
+        Common.ajaxSync("GET", "/sales/ccp/countCallEntry", salData , function(result) {
             callEntCount = result.totCount;
             console.log("Call Entry Count : " + callEntCount);
         });
-        
+
         if(callEntCount > 0){
             Common.alert('<spring:message code="sal.alert.msg.existInCallEtry" />');
             return;
         }
        //Validation Success - Save
-       //Check box params Setting 
+       //Check box params Setting
        //_letterOfUdt
        if($("#_letterOfUdt").is(":checked") == true){
            $("#_letterOfUdt").val("1");
        }else{
            $("#_letterOfUdt").val("0");
        }
-       //_summon  
+       //_summon
        if($("#_summon").is(":checked") == true){
            $("#_summon").val("1");
        }else{
            $("#_summon").val("0");
-       } 
+       }
        //_onHoldCcp
        if($("#_onHoldCcp").is(":checked") == true){
            $("#_onHoldCcp").val("1");
@@ -172,118 +172,118 @@ $(document).ready(function() {
        //SMS
        if($("#_updSmsChk").is(":checked") == true){
            $("#_isChkSms").val("1");
-           
+
            //msg setting
            var realMsg =   $("#_updSmsMsg").val();
            $("#_hiddenUpdSmsMsg").val(realMsg); //msg contents
            var salesmanPhNum = $("#_editSalesManTelMobile").val();
            $("#_hiddenSalesMobile").val(salesmanPhNum);
-           
+
        }else{
            $("#_isChkSms").val("0");
        }
        calSave();
-        
+
     });//Save End
-    
-    
+
+
 });//Doc Ready Func End
 
 function calSave(){
-    
+
     var ordUnit = $("#_ordUnit").val();
     var rosUnit = $("#_ordMth").val();
     var susUnit = $("#_ordSuspen").val();
     var custUnit = $("#_ordExistingCust").val();
-    
+
     $("#_saveOrdUnit").val(ordUnit);
     $("#_saveRosUnit").val(rosUnit);
     $("#_saveSusUnit").val(susUnit);
     $("#_saveCustUnit").val(custUnit);
-    
+
     Common.ajax("POST", "/sales/ccp/calSave", $("#calSaveForm").serializeJSON() , function(result) {
-        
+
         var msg = "";
-        
+
         msg += '<spring:message code="sal.alert.msg.successBr" />';
         msg += result.message; //SMS Result
-        
+
         Common.alert(msg);
         //Btn Disabled
         $("#_calBtnSave").css("display" , "none");
-        
+
         //Make View
         $("#_ordUnit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_ordMth").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_ordSuspen").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_ordExistingCust").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-        
+
         $("#_statusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_incomeRangeEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_reasonCodeEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_spcialRem").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_pncRem").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-        
+
         $("#_letterOfUdt").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_summon").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_onHoldCcp").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_updSmsChk").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_updSmsMsg").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_ficoScore").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-        
+
         $("#_calSearch").click();
     });
-    
+
 }
 
 
 
 
 function fn_ccpStatusChangeFunc(getVal){
-    
+
 	var isHold = $("#_onHoldCcp").is("checked") == true? 1 : 0;
 	var ficoScre = '${ccpInfoMap.ccpFico}'; //FICO SCORE
 	var bankrupt = '${ccpInfoMap.ctosBankrupt}'; //BANKRUPT  //CTOS_BANKRUPT
-	
+
     //Init
     $("#_smsDiv").css("display" , "none");
     $("#_updSmsChk").attr("checked" , false);
     $("#_updSmsMsg").val('');
     $("#_updSmsMsg").attr("disabled" , "disabled");
-    
-    
+
+
     if(getVal != null && getVal != ''){
-        
+
         if(getVal == '1'){  //ACTIVE
-            
-            //field 
+
+            //field
             $("#_incomeRangeEdit").attr("disabled" , false);
             $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
             $("#_reasonCodeEdit").attr("disabled" , false);
             $("#_spcialRem").attr("disabled" , false);
             $("#_pncRem").attr("disabled" , false);
-            
+
            if($("#_editCustTypeId").val() == '964' && $("#_editCustNation").val() == 'MALAYSIA'){
                $("#_ficoScore").attr("disabled" , false);
            }else{
                $("#_ficoScore").val("0");
                $("#_ficoScore").attr("disabled" , "disabled");
            }
-           
+
              //chkbox
             $("#_onHoldCcp").attr("disabled" , false);
             $("#_summon").attr("disabled" , false);
             $("#_letterOfUdt").attr("disabled" , false);
-            
+
            /*  if(isAllowSendSMS() == true){
-                
+
                 $("#_smsDiv").css("display" , "");
                 $("#_updSmsChk").prop('checked', true) ;
                 $("#_updSmsMsg").attr("disabled" , false);
                 setSMSMessage();
             } */
-            
+
             //sms  changed by Lee(2018/01/18)
             if(ficoScre >= 350 && ficoScre <= 450){
                 if(isHold == 0){   ////on hold
@@ -295,7 +295,7 @@ function fn_ccpStatusChangeFunc(getVal){
                         setSMSMessage('Pending' , $("#_reasonCodeEdit option:selected").text());
                     }
                 } //
-            }else if(ficoScre >= 451 && ficoScre <= 500){  
+            }else if(ficoScre >= 451 && ficoScre <= 500){
                 if(bankrupt == 1 && isHold == 0){
                     if(isAllowSendSMS() == true){
                         $("#_smsDiv").css("display" , "");
@@ -317,7 +317,7 @@ function fn_ccpStatusChangeFunc(getVal){
                 }
             }
         }else if(getVal == '5'){  // APPROVE
-            
+
              //field //FICO it doesn`t work
              $("#_incomeRangeEdit").attr("disabled" , false);
              $("#_rejectStatusEdit").val('');
@@ -325,13 +325,13 @@ function fn_ccpStatusChangeFunc(getVal){
              $("#_reasonCodeEdit").attr("disabled" , false);
              $("#_spcialRem").attr("disabled" , false);
              $("#_pncRem").attr("disabled" , false);
-             
+
               //chkbox
              $("#_onHoldCcp").attr("checked" , false);
              $("#_onHoldCcp").attr("disabled" , "disabled");
              $("#_summon").attr("disabled" , false);
              $("#_letterOfUdt").attr("disabled" , false);
-            
+
              //Fico Ajax Call
              var ccpid = $("#_editCcpId").val();
              var data = {ccpId : ccpid};
@@ -339,7 +339,7 @@ function fn_ccpStatusChangeFunc(getVal){
                  $("#_ficoScore").val(result.ccpFico);
                  $("#_ficoScore").attr("disabled" , false);
              });
-             
+
              //sms Changed by Lee (2018/01/18)
              if(isAllowSendSMS() == true){
                  if(isHold == 0){
@@ -348,11 +348,11 @@ function fn_ccpStatusChangeFunc(getVal){
                      //$("#_updSmsChk").prop('checked', true) ;
                      $("#_updSmsChk").prop('checked', true) ;
                      $("#_reasonCodeEdit").val('');
-                     setSMSMessage('Approved' , ' ');  
+                     setSMSMessage('Approved' , ' ');
                  }
              }
         }else if(getVal == '6'){  //CANCEL
-            
+
             //field
             $("#_incomeRangeEdit").attr("disabled" , false);
             $("#_rejectStatusEdit").attr({"disabled" : false , "class" : "w100p"});
@@ -364,14 +364,14 @@ function fn_ccpStatusChangeFunc(getVal){
             $("#_onHoldCcp").attr("disabled" , "disabled");
             $("#_summon").attr("disabled" , false);
             $("#_letterOfUdt").attr("disabled" , false);
-            
+
             $("#_ficoScore").val("0");
             $("#_ficoScore").attr("disabled" , "disabled");
-            
+
         }
-        
+
     }
-    
+
 }
 
 function  bind_RetrieveData(){
@@ -380,7 +380,7 @@ function  bind_RetrieveData(){
     var ficoScre = '${ccpInfoMap.ccpFico}'; //FICO SCORE
     var bankrupt = '${ccpInfoMap.ctosBankrupt}'; //BANKRUPT  //CTOS_BANKRUPT
     var ccpHold = '${ccpInfoMap.ccpIsHold}';  // 0 , 1
-    
+
     console.log("ccpStus : " + ccpStus +", ficoScre : " + ficoScre + " , bankrupt : " + bankrupt + ", ccpHold : " + ccpHold);
     //pre Value
     $("#_isPreVal").val("1");
@@ -393,7 +393,7 @@ function  bind_RetrieveData(){
      }
     //bind and Setting by CcpStatus
     if(ccpStus == "1"){
-        
+
         //field
         $("#_incomeRangeEdit").attr("disabled" , false);
         $("#_rejectStatusEdit").val('');
@@ -405,17 +405,17 @@ function  bind_RetrieveData(){
         $("#_onHoldCcp").attr("disabled" , false);
         $("#_summon").attr("disabled" , false);
         $("#_letterOfUdt").attr("disabled" , false);
-        
+
         /* if(isAllowSendSMS() == true){
-            
+
             $("#_smsDiv").css("display" , "");
             $("#_updSmsChk").prop('checked', true) ;
             $("#_updSmsMsg").attr("disabled" , false);
             setSMSMessage();
         } */
-        
+
         //sms  changed by Lee(2018/01/18)
-        
+
         if(ficoScre >= 350 && ficoScre <= 450){
             if(ccpHold == 0){   ////on hold
             	if(isAllowSendSMS() == true){
@@ -426,7 +426,7 @@ function  bind_RetrieveData(){
                     setSMSMessage('Pending' , 'FAILED CTOS SCORE');
                 }
             }
-        }else if(ficoScre >= 451 && ficoScre <= 500){  
+        }else if(ficoScre >= 451 && ficoScre <= 500){
             if(bankrupt == 1 && ccpHold == 0){
             	if(isAllowSendSMS() == true){
                     $("#_smsDiv").css("display" , "");
@@ -447,9 +447,9 @@ function  bind_RetrieveData(){
                 }
         	}
         }
-        
+
     }else if(ccpStus == "5"){
-        
+
         //field
         $("#_incomeRangeEdit").attr("disabled" , false);
         $("#_rejectStatusEdit").val('');
@@ -462,15 +462,15 @@ function  bind_RetrieveData(){
         $("#_onHoldCcp").attr("disabled" , "disabled");
         $("#_summon").attr("disabled" , false);
         $("#_letterOfUdt").attr("disabled" , false);
-        
+
         /* if(isAllowSendSMS() == true){
-            
+
             $("#_smsDiv").css("display" , "");
             $("#_updSmsChk").prop('checked', true) ;
             $("#_updSmsMsg").attr("disabled" , false);
             setSMSMessage();
         } */
-        
+
         //sms  changed by Lee(2018/01/18)
        /*  if(ficoScre >= 501 && ficoScre <= 850){
         	if(ccpHold == 0){   ////on hold
@@ -500,9 +500,9 @@ function  bind_RetrieveData(){
                 }
             }
         } */
-        
+
     }else if(ccpStus == "6"){
-        
+
         //field
         $("#_incomeRangeEdit").attr("disabled" , false);
         $("#_rejectStatusEdit").attr("disabled" , false);
@@ -514,41 +514,41 @@ function  bind_RetrieveData(){
         $("#_onHoldCcp").attr("disabled" , "disabled");
         $("#_summon").attr("disabled" , false);
         $("#_letterOfUdt").attr("disabled" , false);
-        
+
     }
-    
+
     //Set Check Box
     var ccpIsHold = $("#_ccpIsHold").val() == '1' ? true : false;
     var ccpIsSaman = $("#_ccpIsSaman").val() == '1' ? true : false;
     var ccpIsLou = $("#_ccpIsLou").val() == '1' ? true : false;
-    
-    
+
+
     if(ccpIsHold == true){
         $("#_onHoldCcp").attr("checked" , true);
     }
-    
+
     if(ccpIsSaman == true){
         $("#_summon").attr("checked" , true);
     }
-    
+
     if(ccpIsLou == true){
         $("#_letterOfUdt").attr("checked" , true);
     }
-    
+
 }// bindData
 
 //changed by Lee (2018/01/18)
 function setSMSMessage(status, remark){
-	
+
     var salesmanMemTypeID  = $("#_editSalesMemTypeId").val();
     var custName = $("#_editCustName").val().substr(0 , 15).trim();
     var ordNo = $("#_editOrdNo").val();
     //var ccpStatus = $("#_statusEdit").val() == '1' ? "Pending" : "Approved";
     var webSite = salesmanMemTypeID == '1'?  "hp.coway.com.my" : "cody.coway.com.my";
     var message = "Order : " + ordNo + "\n" + "Name : " + custName + "\n" + "CCPstatus : " + status + "\n" + "Remark :"+ remark + "\n" + webSite;
-    
+
     $("#_updSmsMsg").val(message);
-    
+
     //Msg Count Init
     $('#_charCounter').html('Total Character(s) : '+ message.length);
 }
@@ -558,7 +558,7 @@ function  isValidMobileNo(inputContact){
     if(isNaN(inputContact) == true){
         return false;
     }
-    
+
     if(inputContact.length != 10 && inputContact.length != 11){
         return false;
     }
@@ -571,29 +571,29 @@ function  isValidMobileNo(inputContact){
         inputContact.substr(0 , 3) != '016' &&
         inputContact.substr(0 , 3) != '017' &&
         inputContact.substr(0 , 3) != '018' &&
-        inputContact.substr(0 , 3) != '019' 
+        inputContact.substr(0 , 3) != '019'
       ){
         return false;
     }
-    
+
     return true;
 
 }
 
 
 function isAllowSendSMS(){
-    
+
     var salesmanMemTypeID  = $("#_editSalesMemTypeId").val();
     var editSalesManTelMobile = $("#_editSalesManTelMobile").val();
-    
+
     if(salesmanMemTypeID != 1 && salesmanMemTypeID != 2){
-        
+
         Common.alert('<spring:message code="sal.alert.msg.notHpCody" />');
         return false;
     }else{
-        
+
         if(isValidMobileNo(editSalesManTelMobile) == false){
-            
+
             Common.alert('<spring:message code="sal.alert.msg.salesmanNumInvalid" />');
             return false;
         }
@@ -605,26 +605,26 @@ function isAllowSendSMS(){
 
 
 function getMstId(){
-    
+
     var mstId = $("#_ccpMasterId").val();
     if(mstId == 0){
         mstId = 1;
     }else{
         mstId = 2;
     }
-    
+
     return mstId;
 }
 
 function getUnitCombo(mst , ctgryVal, selVal ,comId){
-    
+
     /* var unitJson = {ccpMasterId : mst ,  screCtgryTypeId : ctgryVal};
     var optionUnit = { isShowChoose: false};
-    var selectVal = ''; 
+    var selectVal = '';
     selectVal = selVal.trim();
     CommonCombo.make(comId, "/sales/ccp/getOrderUnitList", unitJson, selectVal , optionUnit);  */
     unitCombo("/sales/ccp/getOrderUnitList", mst, ctgryVal , selVal, comId, 'S');
-    
+
 }
 
 function unitCombo(url, mst , ctgryVal , selCode, obj , type, callbackFn){
@@ -655,19 +655,19 @@ function unitCombo(url, mst , ctgryVal , selCode, obj , type, callbackFn){
 //그리드 속성 설정
 var gridPros = {
     usePaging           : true,         //페이징 사용
-    pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-    editable            : false,            
-    fixedColumnCount    : 0,            
-    showStateColumn     : true,             
-    displayTreeOpen     : false,            
-//    selectionMode       : "singleRow",  //"multipleCells",            
-    headerHeight        : 30,       
+    pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+    editable            : false,
+    fixedColumnCount    : 0,
+    showStateColumn     : true,
+    displayTreeOpen     : false,
+//    selectionMode       : "singleRow",  //"multipleCells",
+    headerHeight        : 30,
     useGroupingPanel    : false,        //그룹핑 패널 사용
     skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
     showRowNumColumn    : true
 };
-    
+
 function chgTab(tabNm) {
     switch(tabNm) {
         case 'custInfo' :
@@ -723,7 +723,7 @@ function chgTab(tabNm) {
 
 
  function fn_displayReport(viewType){
-    
+
     var isRe = false;
     Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
         console.log("result : " + result);
@@ -734,13 +734,13 @@ function chgTab(tabNm) {
             isRe  = true;
         }
     },'',{async : false});
-    
+
     if(isRe == true){
         Common.alert('<spring:message code="sal.alert.msg.noResultCTOS" />');
         return;
     }
  }
- 
+
  function fn_suggestRem(text){
 	 var textarr = text.split('-');
 	 console.log("textarr  : " + JSON.stringify(textarr));
@@ -750,10 +750,10 @@ function chgTab(tabNm) {
 			rtnStr += textarr[idx];
 		}
 	}
-	 
+
 	 return rtnStr;
  }
- 
+
  function fn_chgFunFeedBack(val){
 	 var suggRem = fn_suggestRem($("#_reasonCodeEdit option:selected").text());
 	 //$("#_reasonCodeEdit").val(val);
@@ -766,7 +766,7 @@ function chgTab(tabNm) {
 	 }
 	  setSMSMessage(rtnstr , suggRem);
  }
- 
+
  function fn_installationArea(){
      Common.popupDiv("/sales/ccp/ccpCalInstallationAreaPop.do", '', null, true, "_instPopDiv");
  }
@@ -782,49 +782,49 @@ function chgTab(tabNm) {
 <section class="pop_body"><!-- pop_body start -->
 <form id="_editForm">
     <input type="hidden" name="editCcpId" id="_editCcpId" value="${ccpId}"/>
-    
+
     <!--  from Basic -->
     <input type="hidden"  name="editOrdId" id="_editOrdId" value="${orderDetail.basicInfo.ordId}">
     <input type="hidden" name="editAppTypeCode" value="${orderDetail.basicInfo.appTypeCode }">
     <input type="hidden" name="editOrdStusId" value="${orderDetail.basicInfo.ordStusId}">
-    <input type="hidden"  id="_editCustName" value="${orderDetail.basicInfo.custName}"> 
-    <input type="hidden" id="_editOrdNo" value="${orderDetail.basicInfo.ordNo}">  
+    <input type="hidden"  id="_editCustName" value="${orderDetail.basicInfo.custName}">
+    <input type="hidden" id="_editOrdNo" value="${orderDetail.basicInfo.ordNo}">
     <input type="hidden" id="_editCustTypeId" value="${orderDetail.basicInfo.custTypeId}">
     <input type="hidden" id="_editCustNation" value="${orderDetail.basicInfo.custNation}">
     <!-- from SalesMan (HP/CODY) -->
     <input type="hidden" name="editSalesMemTypeId" id="_editSalesMemTypeId" value="${salesMan.memType}">
-    <input type="hidden" id="_editSalesManTelMobile" name="editSalesManTelMobile"  value="${salesMan.telMobile}"> 
-    
+    <input type="hidden" id="_editSalesManTelMobile" name="editSalesManTelMobile"  value="${salesMan.telMobile}">
+
     <!-- from GSTCertInfo -->
     <input type="hidden" name="editEurcFilePathName" value="${orderDetail.gstCertInfo.eurcFilePathName}">
-    
+
     <!-- Cust Type Id  > Ccp Master Id -->
     <input type="hidden" name="ccpMasterId" value="${ccpMasterId}" id="_ccpMasterId">
-    
+
     <!-- from FieldMap -->
     <input type="hidden" id="_ordUnitSelVal" value="${fieldMap.ordUnitSelVal}">
     <input type="hidden" id="_rosUnitSelVal" value="${fieldMap.rosUnitSelVal}">
     <input type="hidden" id="_susUnitSelVal" value="${fieldMap.susUnitSelVal}">
     <input type="hidden" id="_custUnitSelVal" value="${fieldMap.custUnitSelVal}">
-    
+
      <!-- from IncomMap -->
      <input type="hidden" id="_rentPayModeId" name="rentPayModeId" value="${incomMap.rentPayModeId}">
      <input type="hidden" id="_applicantTypeId" name="applicantTypeId" value="${incomMap.applicantTypeId}">
-     
+
      <!-- from ccpInfoMap  -->
      <input type="hidden" id="_ccpStusId" name="ccpStusId" value="${ccpInfoMap.ccpStusId}">
      <input type="hidden" id="_ccpIncRngId" value="${ccpInfoMap.ccpIncomeRangeId}">
-     <input type="hidden" id="_ccpResnId" value="${ccpInfoMap.resnId}"> 
-     
+     <input type="hidden" id="_ccpResnId" value="${ccpInfoMap.resnId}">
+
      <input type="hidden" id="_ccpIsHold" value="${ccpInfoMap.ccpIsHold}">
      <input type="hidden" id="_ccpIsSaman" value="${ccpInfoMap.ccpIsSaman}">
      <input type="hidden" id="_ccpIsLou" value="${ccpInfoMap.ccpIsLou}">
-    
+
     <!-- previous -->
     <input type="hidden" id="_isPreVal" >
-    
+
     <!-- cust ID  -->
-    <input type="hidden"  id="_editCustId" value="${orderDetail.basicInfo.custId}"> 
+    <input type="hidden"  id="_editCustId" value="${orderDetail.basicInfo.custId}">
 </form>
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num5">
@@ -885,8 +885,8 @@ function chgTab(tabNm) {
 <h3><spring:message code="sal.title.text.ccpScorePoint" /></h3>
 <ul class="right_btns">
     <li><p class="btn_blue2"><a onclick="javascript: fn_installationArea()"><spring:message code="sal.title.text.installArea" /></a></p></li>
-    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')"><spring:message code="sal.title.text.ficoReport" /></a></p></li>  
-    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('CTOS_VIEW')"><spring:message code="sal.title.text.ctosReport" /></a></p></li> 
+    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')"><spring:message code="sal.title.text.ficoReport" /></a></p></li>
+    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('CTOS_VIEW')"><spring:message code="sal.title.text.ctosReport" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -907,7 +907,7 @@ function chgTab(tabNm) {
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ordUnit" /></th>
     <td>
-        <select class="w100p" name="ordUnit" id="_ordUnit"></select> 
+        <select class="w100p" name="ordUnit" id="_ordUnit"></select>
     </td>
     <th scope="row"><spring:message code="sal.title.text.count" /></th>
     <td><span><b>${fieldMap.ordUnitCount }</b></span></td>
@@ -920,11 +920,11 @@ function chgTab(tabNm) {
     <th scope="row"><spring:message code="sal.title.text.count" /></th>
     <td><span><b>${fieldMap.rosCount}</b></span></td>
     <th scope="row"><spring:message code="sal.title.text.point" /></th>
-    <td><span><b>${fieldMap.rosUnitPoint}</b></span></td> 
+    <td><span><b>${fieldMap.rosUnitPoint}</b></span></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.suspensionTermination" /></th> 
-    <td> <select class="w100p" name="ordSuspen" id="_ordSuspen"></select></td> 
+    <th scope="row"><spring:message code="sal.title.text.suspensionTermination" /></th>
+    <td> <select class="w100p" name="ordSuspen" id="_ordSuspen"></select></td>
     <th scope="row"><spring:message code="sal.title.text.count" /></th>
     <td><span><b>${fieldMap.susUnitCount}</b></span></td>
     <th scope="row"><spring:message code="sal.title.text.point" /></th>
@@ -968,7 +968,7 @@ function chgTab(tabNm) {
 <input type="hidden" name="saveRosPoint"  value="${fieldMap.rosUnitPoint}">
 
 <!-- Suspension/Termination  -->
-<input type="hidden" name="saveSusUnit"  id="_saveSusUnit"> 
+<input type="hidden" name="saveSusUnit"  id="_saveSusUnit">
 <input type="hidden" name="saveSusCount"  value="${fieldMap.susUnitCount}">
 <input type="hidden" name="saveSusPoint"  value="${fieldMap.susUnitPoint}">
 
@@ -978,7 +978,7 @@ function chgTab(tabNm) {
 <input type="hidden" name="saveCustPoint"  value="${fieldMap.custUnitPoint}">
 
 <!-- check box(sms) -->
-<input type="hidden" name="isChkSms" id="_isChkSms"> 
+<input type="hidden" name="isChkSms" id="_isChkSms">
 <input type="hidden" name="hiddenUpdSmsMsg" id="_hiddenUpdSmsMsg">
 <input type="hidden" name="hiddenSalesMobile" id="_hiddenSalesMobile">
 <table class="type1"><!-- table start -->
@@ -1006,7 +1006,7 @@ function chgTab(tabNm) {
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ccpFeedbackCode" /></th>
-    <td colspan="5"><span><select class="w100p" name="reasonCodeEdit" id="_reasonCodeEdit" onchange="javascript: fn_chgFunFeedBack(this.value)"></select></span></td>  
+    <td colspan="5"><span><select class="w100p" name="reasonCodeEdit" id="_reasonCodeEdit" onchange="javascript: fn_chgFunFeedBack(this.value)"></select></span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.specialRem" /></th>
@@ -1014,7 +1014,7 @@ function chgTab(tabNm) {
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.pncRem" /></th>
-    <td colspan="5"><textarea cols="20" rows="5" id="_pncRem" name="pncRem" maxlength="4000">${ccpInfoMap.ccpPncRem}</textarea></td> 
+    <td colspan="5"><textarea cols="20" rows="5" id="_pncRem" name="pncRem" maxlength="4000">${ccpInfoMap.ccpPncRem}</textarea></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.letterOfUnder" /></th>
