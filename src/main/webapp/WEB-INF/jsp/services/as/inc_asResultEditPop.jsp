@@ -473,6 +473,7 @@
       $("#m11").hide();
       $("#m12").hide();
       $("#m13").hide();
+      $("#m14").hide();
       $("#mInH3").hide();
       break;
     }
@@ -548,6 +549,7 @@
     $("#m11").show();
     $("#m12").show();
     $("#m13").show();
+    $("#m14").show();
 
     if (this.ops.MOD == "RESULTVIEW") {
       $("#btnSaveDiv").hide()
@@ -654,6 +656,7 @@
     $("#m11").hide();
     $("#m12").hide();
     $("#m13").hide();
+    $("#m14").hide();
 
     if (this.ops.MOD == "RESULTVIEW") {
       $("#btnSaveDiv").hide();
@@ -808,6 +811,7 @@
     $("#m11").hide();
     $("#m12").hide();
     $("#m13").hide();
+    $("#m14").show();
   }
 
   function fn_openField_Fail() {
@@ -824,6 +828,7 @@
     $("#m11").hide();
     $("#m12").hide();
     $("#m13").hide();
+    $("#m14").show();
 
     if (this.ops.MOD == "RESULTVIEW") {
       $("#btnSaveDiv").hide();
@@ -1281,6 +1286,11 @@
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT Code' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
+
+        if (FormUtil.checkReqValue($("#txtRemark"))) {
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
       } else if ($("#ddlStatus").val() == 19) { // RECALL
         if (FormUtil.checkReqValue($("#ddlFailReason"))) { // FAIL REASON
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Fail Reason' htmlEscape='false'/> </br>";
@@ -1311,11 +1321,11 @@
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Fail Reason' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
-      }
 
-      if (FormUtil.checkReqValue($("#txtRemark"))) {
-        rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
-        rtnValue = false;
+        if (FormUtil.checkReqValue($("#txtRemark"))) {
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
       }
     }
 
@@ -1853,6 +1863,14 @@
          <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
          <c:forEach var="list" items="${asCrtStat}" varStatus="status">
            <option value="${list.codeId}">${list.codeName}</option>
+           <c:choose>
+           <c:when test="${list.code=='1'}">
+             <!-- <option value="${list.code}">${list.codeName}</option>  -->
+           </c:when>
+           <c:otherwise>
+             <option value="${list.code}">${list.codeName}</option>
+           </c:otherwise>
+         </c:choose>
          </c:forEach>
        </select></td>
       </tr>
@@ -1986,7 +2004,7 @@
          </td>
        </tr>
        <tr>
-         <th scope="row"><spring:message code='service.grid.Remark' /><span class="must">*</span></th>
+         <th scope="row"><spring:message code='service.grid.Remark' /><span id='m14' name='m14' class="must" style="display:none">*</span></th>
          <td colspan="3">
            <textarea id='callRem' name='callRem' rows='5' placeholder="<spring:message code='service.title.Remark' />" class="w100p"></textarea>
          </td>
