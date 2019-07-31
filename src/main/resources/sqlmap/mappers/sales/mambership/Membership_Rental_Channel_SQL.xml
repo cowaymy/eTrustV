@@ -44,7 +44,9 @@
 			         ISSU_NRIC          = #{issuedNRIC},
 			         AEON_CNVR         = decode(#{aeonConvert},'true' ,1,0),
 			         LAST_APPLY_USER =#{updator},
-			         PAY_TRM              = #{payTerm}
+			         PAY_TRM              = #{payTerm},
+			         GRACE_PERIOD      = 0
+			         
 		   WHERE  1=1
 		      AND  SVC_CNTRCT_ID = #{serviceContractID}
 			  AND  SALES_ORD_ID   = #{salesOrderID}
