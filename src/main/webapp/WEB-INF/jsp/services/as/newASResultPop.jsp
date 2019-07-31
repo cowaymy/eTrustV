@@ -805,6 +805,7 @@
       $("#m11").hide();
       $("#m12").hide();
       $("#m13").hide();
+      $("#m14").hide();
       break;
     }
   }
@@ -891,6 +892,7 @@
     $("#m11").show();
     $("#m12").show();
     $("#m13").show();
+    $("#m14").show();
 
     $("#btnSaveDiv").attr("style", "display:inline");
     $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
@@ -948,6 +950,7 @@
     $("#m11").hide();
     $("#m12").hide();
     $("#m13").hide();
+    $("#m14").show();
 
     $("#iscommission").attr("disabled", false);
 
@@ -982,6 +985,7 @@
     $("#m11").hide();
     $("#m12").hide();
     $("#m13").hide();
+    $("#m14").show();
 
     $("#def_type").attr("disabled", "disabled");
     $("#def_code").attr("disabled", "disabled");
@@ -1408,6 +1412,11 @@
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT Code' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
+
+        if (FormUtil.checkReqValue($("#txtRemark"))) {
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
       } else if ($("#ddlStatus").val() == 19) { // RECALL
         if (FormUtil.checkReqValue($("#ddlFailReason"))) { // FAIL REASON
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Fail Reason' htmlEscape='false'/> </br>";
@@ -1438,11 +1447,11 @@
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Fail Reason' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
-      }
 
-      if (FormUtil.checkReqValue($("#txtRemark"))) {
-        rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
-        rtnValue = false;
+        if (FormUtil.checkReqValue($("#txtRemark"))) {
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
       }
     }
 
@@ -2040,7 +2049,7 @@
           </td>
          </tr>
          <tr>
-          <th scope="row"><spring:message code='service.title.Remark' /><span class="must">*</span></th>
+          <th scope="row"><spring:message code='service.title.Remark' /><span id='m14' name='m14' class="must"  style="display:none">*</span></th>
           <td colspan="3">
             <textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtRemark' name='txtRemark'></textarea>
           </td>
