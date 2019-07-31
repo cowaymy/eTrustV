@@ -60,6 +60,36 @@
 
   function asManagementGrid() {
     var columnLayout = [
+         {
+           dataField : "undefined",
+           headerText : "<spring:message code='sys.btn.edit'/>",
+           width : 170,
+           renderer : {
+                        type : "ButtonRenderer",
+                        labelText : "<spring:message code='sys.btn.edit'/>",
+                        onclick : function(rowIndex, columnIndex, value, item) {
+
+                            var AS_ID = AUIGrid.getCellValue(myGridID, rowIndex, "asId");
+                            var AS_NO = AUIGrid.getCellValue(myGridID, rowIndex, "asNo");
+                            var asStusId = AUIGrid.getCellValue(myGridID, rowIndex, "code1");
+                            var ordno = AUIGrid.getCellValue(myGridID, rowIndex, "salesOrdNo");
+                            var ordId = AUIGrid.getCellValue(myGridID, rowIndex, "asSoId");
+
+                            if (asStusId != "ACT" && asStusId != "RCL") {
+                                /*Common.alert("AS Info Edit Restrict</br>"
+                                + DEFAULT_DELIMITER
+                                + "<b>["
+                                + AS_NO
+                                + "]  is not in active status.</br> AS information edit is disallowed.</b>");
+                                return;*/
+                                Common.alert("<spring:message code='service.msg.asEdtChk' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
+                                return;
+                            }
+
+                            Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId=" + ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO, null, null, true, '_viewEntryPopDiv1');
+                        }
+           }
+        },
         {
           dataField : "code",
           headerText : "<spring:message code='service.grid.ASTyp'/>",
@@ -183,36 +213,6 @@
           headerText : "<spring:message code='service.title.ASRstId'/>",
           width : 100,
           visible : false
-        },
-        {
-          dataField : "undefined",
-          headerText : "<spring:message code='sys.btn.edit'/>",
-          width : 170,
-          renderer : {
-            type : "ButtonRenderer",
-            labelText : "<spring:message code='sys.btn.edit'/>",
-            onclick : function(rowIndex, columnIndex, value, item) {
-
-              var AS_ID = AUIGrid.getCellValue(myGridID, rowIndex, "asId");
-              var AS_NO = AUIGrid.getCellValue(myGridID, rowIndex, "asNo");
-              var asStusId = AUIGrid.getCellValue(myGridID, rowIndex, "code1");
-              var ordno = AUIGrid.getCellValue(myGridID, rowIndex, "salesOrdNo");
-              var ordId = AUIGrid.getCellValue(myGridID, rowIndex, "asSoId");
-
-              if (asStusId != "ACT" && asStusId != "RCL") {
-                /*Common.alert("AS Info Edit Restrict</br>"
-                           + DEFAULT_DELIMITER
-                           + "<b>["
-                           + AS_NO
-                           + "]  is not in active status.</br> AS information edit is disallowed.</b>");
-                return;*/
-                Common.alert("<spring:message code='service.msg.asEdtChk' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
-                return;
-              }
-
-              Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId=" + ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO, null, null, true, '_viewEntryPopDiv1');
-            }
-          }
         },
         {
           dataField : "refReqst",
@@ -933,7 +933,7 @@
      </p></li>
    </c:if>
    <!-- FUNCTION WHICH ALLOW EDIT RECORD WITHIN 7 DAYS -->
-   <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+   <!-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <li><p class="btn_blue">
       <a href="#" onclick="fn_asResultEditBasicPop(1)"><spring:message code='service.btn.edtBsAs'/></a>
      </p></li>
@@ -942,7 +942,7 @@
     <li><p class="btn_blue">
       <a href="#" onclick="fn_asResultEditPop(1)"><spring:message code='service.btn.edtAs'/></a>
      </p></li>
-   </c:if>
+   </c:if> -->
    <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
     <li><p class="btn_blue">
       <a href="#" onclick="fn_asResultViewPop()"><spring:message code='service.btn.viewAS'/></a>
