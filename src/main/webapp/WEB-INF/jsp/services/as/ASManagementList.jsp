@@ -52,7 +52,8 @@
                     + "&ord_Id=" + salesOrdId
                     + "&ord_No=" + salesOrdNo
                     + "&as_No=" + asNo
-                    + "&as_Id=" + asid;
+                    + "&as_Id=" + asid
+                    + "&IND= 1";;
 
           Common.popupDiv("/services/as/asResultViewPop.do" + param, null, null, true, '_newASResultDiv1');
         });
@@ -63,7 +64,7 @@
          {
            dataField : "undefined",
            headerText : "<spring:message code='sys.btn.edit'/>",
-           width : 170,
+           width : 100,
            renderer : {
                         type : "ButtonRenderer",
                         labelText : "<spring:message code='sys.btn.edit'/>",
