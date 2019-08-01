@@ -239,7 +239,7 @@
     }
 
     if (detailForm.paramReqStusCode.value == 'CC') {
-      Common.alert("not available to use this function when Call Log Status in ‘CC’");
+      Common.alert("Not available to use this function when Call Log Status in ‘CC’");
       return false;
     }
     if (detailForm.paramReqStusCode.value == 'REV') {
