@@ -1180,6 +1180,8 @@ public class ServiceApiController {
 
         MSvcLogApiService.insert_SVC0066T(m);
       }
+
+      LOGGER.debug("### INSTALLATION FINAL PARAM : " + params.toString());
     }
     LOGGER.debug("==================================[MB]INSTALLATION RESULT REGISTRATION - END - ====================================");
 

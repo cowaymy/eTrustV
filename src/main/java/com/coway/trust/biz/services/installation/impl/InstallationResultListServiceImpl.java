@@ -1498,6 +1498,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     double outrightTotalPrice = Double.parseDouble(tAmt == "" ? "0" : tAmt);
     double outrightBalance = outrightTotalPrice - outright35dAmount;
 
+    logger.debug("outrightTotalPrice : " + outrightTotalPrice + ", outright35dAmount : " + outright35dAmount + ", outrightBalance :" + outrightBalance );
+    params.put("outrightTotalPrice", outrightTotalPrice);
+    params.put("outright35dAmount", outright35dAmount);
+    params.put("outrightBalance", outrightBalance);
+
     double outrightSubProcessing = 0;
     double outrightSubBalance = 0;
 
@@ -2052,6 +2057,12 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
         .parseDouble(String.valueOf(CommonUtils.intNvl(outRightAmount35d.get("SUMTRADE_AMT"))));
     double outrightTotalPrice = Double.parseDouble(tAmt == "" ? "0" : tAmt);
     double outrightBalance = outrightTotalPrice - outright35dAmount;
+
+    logger.debug("outrightTotalPrice : " + outrightTotalPrice + ", outright35dAmount : " + outright35dAmount + ", outrightBalance :" + outrightBalance );
+    params.put("outrightTotalPrice", outrightTotalPrice);
+    params.put("outright35dAmount", outright35dAmount);
+    params.put("outrightBalance", outrightBalance);
+
     double outrightSubProcessing = 0;
     double outrightSubBalance = 0;
 
