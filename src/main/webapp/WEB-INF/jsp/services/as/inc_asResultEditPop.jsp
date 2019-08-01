@@ -1775,6 +1775,7 @@
 
     if (enddate < strdate) {
       Common.alert(text + " must be greater or equal to Current Date ");
+      $(obj).val("");
       return;
     }
 
