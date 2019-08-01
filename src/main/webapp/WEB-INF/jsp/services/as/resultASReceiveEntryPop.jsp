@@ -360,7 +360,7 @@
       return;
     }
 
-    var sDate = (vdte).split("/");
+    /* var sDate = (vdte).split("/");
     var tDate = new Date();
     var tMth = tDate.getMonth() + 1;
     var tYear = tDate.getFullYear();
@@ -377,6 +377,24 @@
         $(obj).val("");
         return;
       }
+    } */
+
+    var crtDt = new Date();
+    var apptDt = vdte;
+    var date = apptDt.substring(0, 2);
+    var month = apptDt.substring(3, 5);
+    var year = apptDt.substring(6, 10);
+
+    var dd = String(crtDt.getDate()).padStart(2, '0');
+    var mm = String(crtDt.getMonth() + 1).padStart(2, '0');
+    var yyyy = crtDt.getFullYear();
+
+    var strdate = yyyy + mm + dd;
+    var enddate = year + month + date;
+
+    if (enddate < strdate) {
+      Common.alert(text + " must be greater or equal to Current Date ");
+      return;
     }
 
     var options = {
@@ -596,7 +614,7 @@
       return;
     }
 
-    var sDate = (vdte).split("/");
+    /* var sDate = (vdte).split("/");
     var tDate = new Date();
     var tMth = tDate.getMonth() + 1;
     var tYear = tDate.getFullYear();
@@ -613,6 +631,24 @@
         $(obj).val("");
         return;
       }
+    } */
+
+    var crtDt = new Date();
+    var apptDt = vdte;
+    var date = apptDt.substring(0, 2);
+    var month = apptDt.substring(3, 5);
+    var year = apptDt.substring(6, 10);
+
+    var dd = String(crtDt.getDate()).padStart(2, '0');
+    var mm = String(crtDt.getMonth() + 1).padStart(2, '0');
+    var yyyy = crtDt.getFullYear();
+
+    var strdate = yyyy + mm + dd;
+    var enddate = year + month + date;
+
+    if (enddate < strdate) {
+      Common.alert(text + " must be greater or equal to Current Date ");
+      return;
     }
   }
 
