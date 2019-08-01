@@ -191,6 +191,7 @@
     	if($("#addStatus").val() == '19'){     // Recall
     		$("select[name=cmbAssignCt]").attr('disabled', 'disabled');
             $("select[name=cmbAssignCt]").addClass("w100p disabled");
+            $("select[name=cmbAssignCt]").val('');
             $("#requestDate").attr('disabled','disabled');
             $("#requestDate").val('');
             $("select[name=cmbFeedbackCd]").removeAttr("disabled");
@@ -207,6 +208,8 @@
             $("select[name=cmbFeedbackCd]").removeAttr("disabled");
             $("select[name=cmbFeedbackCd]").removeClass("w100p disabled");
             $("select[name=cmbFeedbackCd]").addClass("w100p");
+            $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
+            $("select[name=cmbAssignCt]").addClass("w100p disabled");
             $("#addCallRecallDt").attr('disabled','disabled');
             $("#addCallRecallDt").val('');
             if($("#reqStageId").val() == '24'){     // before installl
@@ -215,8 +218,8 @@
                 $("select[name=cmbCtGroup]").val('');
                 $("#addAppRetnDt").attr('disabled','disabled');
                 $("#addAppRetnDt").val('');
-                $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
-                $("select[name=cmbAssignCt]").addClass("w100p disabled");
+/*                 $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
+                $("select[name=cmbAssignCt]").addClass("w100p disabled"); */
                 $("#requestDate").attr('disabled','disabled');
                 $("#requestDate").val('');
             }else{
@@ -224,9 +227,9 @@
                 $("select[name=cmbCtGroup]").removeClass("w100p disabled");
                 $("select[name=cmbCtGroup]").addClass("w100p");
                 //$("#addAppRetnDt").removeAttr("disabled");
-                $("select[name=cmbAssignCt]").removeAttr("disabled");
+/*                 $("select[name=cmbAssignCt]").removeAttr("disabled");
                 $("select[name=cmbAssignCt]").removeClass("w100p disabled");
-                $("select[name=cmbAssignCt]").addClass("w100p");
+                $("select[name=cmbAssignCt]").addClass("w100p"); */
                 $("#requestDate").removeAttr("disabled");
             }
 
@@ -235,6 +238,7 @@
             $("select[name=cmbAssignCt]").removeAttr("disabled");
             $("select[name=cmbAssignCt]").removeClass("w100p disabled");
             $("select[name=cmbAssignCt]").addClass("w100p");
+            $("select[name=cmbAssignCt]").val('');
             $("select[name=cmbFeedbackCd]").removeAttr("disabled");
             $("select[name=cmbFeedbackCd]").removeClass("w100p disabled");
             $("select[name=cmbFeedbackCd]").addClass("w100p");
@@ -258,6 +262,7 @@
             $("select[name=cmbAssignCt]").removeAttr("disabled");
             $("select[name=cmbAssignCt]").removeClass("w100p disabled");
             $("select[name=cmbAssignCt]").addClass("w100p");
+            $("select[name=cmbAssignCt]").val('');
             $("select[name=cmbFeedbackCd]").removeAttr("disabled");
             $("select[name=cmbFeedbackCd]").removeClass("w100p disabled");
             $("select[name=cmbFeedbackCd]").addClass("w100p");
@@ -324,7 +329,14 @@
 //    		}
     	}
     	if($("#addStatus").val() == '32'){     // Confirm To Cancel
-
+    	    if(addCallForm.requestDate.value == ""){
+    	    	Common.alert("<spring:message code='sal.alert.msg.plzSelInputReqDate' />");
+                   return false;
+               }
+            if(addCallForm.cmbAssignCt.value == ""){
+                Common.alert("<spring:message code='sal.alert.msg.plzReSelReqDate' />");
+                return false;
+            }
           if($("#reqStageId").val() == '24'){     // before installl
         	  console.log("before : " + $("#reqStageId").val());
                 if(addCallForm.cmbFeedbackCd.value == ""){
