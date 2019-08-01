@@ -1862,13 +1862,12 @@
        <td><select class="w100p" id="ddlStatus" name="ddlStatus" onChange="fn_ddlStatus_SelectedIndexChanged()">
          <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
          <c:forEach var="list" items="${asCrtStat}" varStatus="status">
-           <option value="${list.codeId}">${list.codeName}</option>
            <c:choose>
-           <c:when test="${list.code=='1'}">
-             <!-- <option value="${list.code}">${list.codeName}</option>  -->
+           <c:when test="${list.codeId=='1'}">
+             <!-- <option value="${list.codeId}">${list.codeName}</option>  -->
            </c:when>
            <c:otherwise>
-             <option value="${list.code}">${list.codeName}</option>
+             <option value="${list.codeId}">${list.codeName}</option>
            </c:otherwise>
          </c:choose>
          </c:forEach>
