@@ -765,6 +765,8 @@
       $("#recall_div").attr("style", "display:none");
       $("#defEvt_div").attr("style", "display:none");
       $("#chrFee_div").attr("style", "display:none");
+
+      $("#m14").show();
       break;
 
     case "21":
@@ -790,6 +792,10 @@
       $("#recall_div").attr("style", "display:block");
       $("#defEvt_div").attr("style", "display:none");
       $("#chrFee_div").attr("style", "display:none");
+
+      $("#m14").hide();
+      $("#txtRemark").val("");
+      $("#txtRemark").attr("disabled", "disabled");
       break;
 
     default:
@@ -805,7 +811,7 @@
       $("#m11").hide();
       $("#m12").hide();
       $("#m13").hide();
-      $("#m14").hide();
+      $("#").hide();
       break;
     }
   }
@@ -892,7 +898,7 @@
     $("#m11").show();
     $("#m12").show();
     $("#m13").show();
-    $("#m14").show();
+    $("#").show();
 
     $("#btnSaveDiv").attr("style", "display:inline");
     $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
@@ -950,7 +956,6 @@
     $("#m11").hide();
     $("#m12").hide();
     $("#m13").hide();
-    $("#m14").show();
 
     $("#iscommission").attr("disabled", false);
 
@@ -985,7 +990,7 @@
     $("#m11").hide();
     $("#m12").hide();
     $("#m13").hide();
-    $("#m14").show();
+    $("#").show();
 
     $("#def_type").attr("disabled", "disabled");
     $("#def_code").attr("disabled", "disabled");
@@ -1997,7 +2002,14 @@
             <select class="w100p" id="ddlStatus" name="ddlStatus" onChange="fn_ddlStatus_SelectedIndexChanged()">
               <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
               <c:forEach var="list" items="${asCrtStat}" varStatus="status">
-                <option value="${list.codeId}">${list.codeName}</option>
+                <c:choose>
+                  <c:when test="${list.codeId=='1'}">
+                    <!-- <option value="${list.codeId}">${list.codeName}</option>  -->
+                  </c:when>
+                  <c:otherwise>
+                    <option value="${list.codeId}">${list.codeName}</option>
+                  </c:otherwise>
+                </c:choose>
               </c:forEach>
             </select>
           </td>
@@ -2068,7 +2080,7 @@
           </td>
          </tr>
          <tr>
-          <th scope="row"><spring:message code='service.title.Remark' /><span id='m14' name='m14' class="must"  style="display:none">*</span></th>
+          <th scope="row"><spring:message code='service.title.Remark' /><span id='' name='' class="must"  style="display:none">*</span></th>
           <td colspan="3">
             <textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtRemark' name='txtRemark'></textarea>
           </td>

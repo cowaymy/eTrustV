@@ -61,36 +61,6 @@
 
   function asManagementGrid() {
     var columnLayout = [
-         {
-           dataField : "undefined",
-           headerText : "<spring:message code='sys.btn.edit'/>",
-           width : 100,
-           renderer : {
-                        type : "ButtonRenderer",
-                        labelText : "<spring:message code='sys.btn.edit'/>",
-                        onclick : function(rowIndex, columnIndex, value, item) {
-
-                            var AS_ID = AUIGrid.getCellValue(myGridID, rowIndex, "asId");
-                            var AS_NO = AUIGrid.getCellValue(myGridID, rowIndex, "asNo");
-                            var asStusId = AUIGrid.getCellValue(myGridID, rowIndex, "code1");
-                            var ordno = AUIGrid.getCellValue(myGridID, rowIndex, "salesOrdNo");
-                            var ordId = AUIGrid.getCellValue(myGridID, rowIndex, "asSoId");
-
-                            if (asStusId != "ACT" && asStusId != "RCL") {
-                                /*Common.alert("AS Info Edit Restrict</br>"
-                                + DEFAULT_DELIMITER
-                                + "<b>["
-                                + AS_NO
-                                + "]  is not in active status.</br> AS information edit is disallowed.</b>");
-                                return;*/
-                                Common.alert("<spring:message code='service.msg.asEdtChk' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
-                                return;
-                            }
-
-                            Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId=" + ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO + "&IND= 1", null, null, true, '_viewEntryPopDiv1');
-                        }
-           }
-        },
         {
           dataField : "code",
           headerText : "<spring:message code='service.grid.ASTyp'/>",
@@ -98,10 +68,32 @@
           width : 100
         },
         {
+          dataField : "code2",
+          headerText : "<spring:message code='service.title.ApplicationType'/>",
+          width : 100
+        },
+        {
           dataField : "asNo",
           headerText : "<spring:message code='service.grid.ASNo'/>",
           editable : false,
           width : 100
+        },
+        {
+          dataField : "code1",
+          headerText : "<spring:message code='service.grid.Status'/>",
+          editable : false,
+          width : 80
+        },
+        {
+          dataField : "salesOrdNo",
+          headerText : "<spring:message code='service.title.SalesOrder'/>",
+          editable : false,
+          width : 100
+        },
+        {
+          dataField : "name",
+          headerText : "<spring:message code='service.title.CustomerName'/>",
+          width : 200
         },
         {
           dataField : "asReqstDt",
@@ -136,12 +128,6 @@
           formatString : "dd/mm/yyyy"
         },
         {
-          dataField : "code1",
-          headerText : "<spring:message code='service.grid.Status'/>",
-          editable : false,
-          width : 80
-        },
-        {
           dataField : "c3",
           headerText : "<spring:message code='service.grid.ResultNo'/>",
           editable : false,
@@ -149,8 +135,8 @@
           width : 100
         },
         {
-          dataField : "c4",
-          headerText : "<spring:message code='service.grid.CrtBy'/>",
+          dataField : "asResultCrtUserId",
+          headerText : "<spring:message code='service.grid.asRsltEntCreator'/>",
           editable : false,
           width : 100
         },
@@ -161,42 +147,65 @@
           width : 100
         },
         {
-          dataField : "salesOrdNo",
-          headerText : "<spring:message code='service.title.SalesOrder'/>",
-          editable : false,
-          width : 100
-
-        },
-        {
-          dataField : "code2",
-          headerText : "<spring:message code='service.title.ApplicationType'/>",
-          width : 100
-        },
-        {
-          dataField : "name",
-          headerText : "<spring:message code='service.title.CustomerName'/>",
-          width : 200
-        },
-        {
-          dataField : "nric",
-          headerText : "<spring:message code='service.title.NRIC_CompanyNo'/>",
-          width : 100
-        },
-        {
           dataField : "brnchCode",
           headerText : "<spring:message code='service.title.ASBrch'/>",
           width : 100
         },
         {
-          dataField : "asIfFlag",
-          headerText : "<spring:message code='service.title.ASFlg'/>",
+          dataField : "cms",
+          headerText : "<spring:message code='service.title.AllowComm'/>",
           width : 80
         },
         {
-            dataField : "cms",
-            headerText : "Commission",
-            width : 80
-          },
+          dataField : "c4",
+          headerText : "<spring:message code='service.grid.asEntCreator'/>",
+          editable : false,
+          width : 100
+        },
+        {
+          dataField : "undefined",
+          headerText : "<spring:message code='sys.btn.edit'/>",
+          width : 100,
+          renderer : {
+                       type : "ButtonRenderer",
+                       labelText : "<spring:message code='sys.btn.edit'/>",
+                       onclick : function(rowIndex, columnIndex, value, item) {
+
+                           var AS_ID = AUIGrid.getCellValue(myGridID, rowIndex, "asId");
+                           var AS_NO = AUIGrid.getCellValue(myGridID, rowIndex, "asNo");
+                           var asStusId = AUIGrid.getCellValue(myGridID, rowIndex, "code1");
+                           var ordno = AUIGrid.getCellValue(myGridID, rowIndex, "salesOrdNo");
+                           var ordId = AUIGrid.getCellValue(myGridID, rowIndex, "asSoId");
+
+                           if (asStusId != "ACT" && asStusId != "RCL") {
+                               /*Common.alert("AS Info Edit Restrict</br>"
+                               + DEFAULT_DELIMITER
+                               + "<b>["
+                               + AS_NO
+                               + "]  is not in active status.</br> AS information edit is disallowed.</b>");
+                               return;*/
+                               Common.alert("<spring:message code='service.msg.asEdtChk' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
+                               return;
+                           }
+
+                           Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId=" + ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO + "&IND= 1", null, null, true, '_viewEntryPopDiv1');
+                       }
+          }
+        },
+        {
+          dataField : "nric",
+          headerText : "<spring:message code='service.title.NRIC_CompanyNo'/>",
+          width : 100,
+          visible : false
+        },
+
+        {
+          dataField : "asIfFlag",
+          headerText : "<spring:message code='service.title.ASFlg'/>",
+          width : 80,
+          visible : false
+        },
+
         {
           dataField : "asBrnchId",
           headerText : "<spring:message code='service.title.ASBrchId'/>",
@@ -331,15 +340,15 @@
     var rcdTms = selectedItems[0].item.rcdTms;
     var asRst = selectedItems[0].item.c3;
 
-    if (asRst != '-') {
-      Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-      return;
-    }
-
-    //if (asStusId != "ACT") {
-      //Common.alert("<b>[" + asNo + "] already has [" + asStusId + "] result.  .</br> Result entry is disallowed.</b>");
+    //if (asRst != '-') {
+      //Common.alert("<spring:message code='service.msg.asAddHvRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
       //return;
     //}
+
+    if (asStusId != "ACT") {
+      Common.alert("<spring:message code='service.msg.asAddHvRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+      return;
+    }
 
     Common.ajax("POST", "/services/as/selRcdTms.do", {
         asNo : asNo,

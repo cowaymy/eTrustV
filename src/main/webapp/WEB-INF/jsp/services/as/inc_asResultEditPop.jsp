@@ -455,8 +455,6 @@
       $("#recall_div").attr("style", "display:block");
       $("#defEvt_div").attr("style", "display:none");
       $("#chrFee_div").attr("style", "display:none");
-
-      $("#reminder").hide();
       break;
     case "21":
       //FAILED
@@ -665,7 +663,11 @@
     $("#m11").hide();
     $("#m12").hide();
     $("#m13").hide();
+
+    $("#reminder").hide();
     $("#m14").hide();
+    $("#txtRemark").val("");
+    $("#txtRemark").attr("disabled", "disabled");
 
     if (this.ops.MOD == "RESULTVIEW") {
       $("#btnSaveDiv").hide();
@@ -678,7 +680,7 @@
     } else {
       $("#btnSaveDiv").show();
       $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
-      $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+      //$('#txtRemark').removeAttr("disabled").removeClass("readonly");
 
 
       $('#iscommission').attr("disabled", false);
@@ -1967,7 +1969,7 @@
        </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code='service.title.Remark' /><span class="must">*</span></th>
+       <th scope="row"><spring:message code='service.title.Remark' /><span id='m14' name='m14' class="must">*</span></th>
        <td colspan="3">
          <textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtRemark' name='txtRemark'></textarea></td>
       </tr>
@@ -2033,7 +2035,7 @@
          </td>
        </tr>
        <tr>
-         <th scope="row"><spring:message code='service.grid.Remark' /><span id='m14' name='m14' class="must" style="display:none">*</span></th>
+         <th scope="row"><spring:message code='service.grid.Remark' /><span class="must">*</span></th>
          <td colspan="3">
            <textarea id='callRem' name='callRem' rows='5' placeholder="<spring:message code='service.title.Remark' />" class="w100p"></textarea>
          </td>
