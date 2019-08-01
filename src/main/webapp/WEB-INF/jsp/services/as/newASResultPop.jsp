@@ -605,9 +605,9 @@
 
   function fn_filterAdd() {
     // CHECK AVAILABLE STOCK
-    if (fn_chStock() == false) {
-      return;
-    }
+    //if (fn_chStock() == false) {
+      //return;
+    //}
 
     if (fn_filterAddVaild() == false) {
       return false;
@@ -631,7 +631,7 @@
     if (fitem.filterType == "CHG") {
       chargePrice = getASStockPrice(fitem.filterID);
       if (chargePrice == 0) {
-        Common.alert("<b>SAL0016M(StockPrice) no data  </br>");
+        Common.alert("<spring:message code='service.msg.stkNoPrice'/>");
         return ;
       }
     }
