@@ -186,7 +186,6 @@
   function fn_getASRulstEditFilterInfo() {
     Common.ajax("GET", "/services/as/getASRulstEditFilterInfo", { AS_RESULT_NO : $('#asData_AS_RESULT_NO').val() },
       function(result) {
-        console.log(result);
         AUIGrid.setGridData(myFltGrd10, result);
       });
   }
@@ -430,6 +429,8 @@
       $("#defEvt_div").attr("style", "display:block");
       $("#chrFee_div").attr("style", "display:block");
       $("#recall_div").attr("style", "display:none");
+
+      $("#reminder").show();
       break;
     case "1":
       // ACTIVE
@@ -437,6 +438,8 @@
       $("#defEvt_div").attr("style", "display:block");
       $("#chrFee_div").attr("style", "display:block");
       $("#recall_div").attr("style", "display:none");
+
+      $("#reminder").hide();
       break;
     case "10":
       //CANCEL
@@ -452,6 +455,8 @@
       $("#recall_div").attr("style", "display:block");
       $("#defEvt_div").attr("style", "display:none");
       $("#chrFee_div").attr("style", "display:none");
+
+      $("#reminder").hide();
       break;
     case "21":
       //FAILED
@@ -459,6 +464,8 @@
       $("#recall_div").attr("style", "display:none");
       $("#defEvt_div").attr("style", "display:none");
       $("#chrFee_div").attr("style", "display:none");
+
+      $("#reminder").hide();
       break;
     default:
       $("#m2").hide();
@@ -475,6 +482,8 @@
       $("#m13").hide();
       $("#m14").hide();
       $("#mInH3").hide();
+
+      $("#reminder").hide();
       break;
     }
   }
@@ -1045,9 +1054,10 @@
   }
 
   function fn_filterAdd() {
-    if (fn_chStock() == false) {
-      return;
-    }
+    // TEMP. CLOSE FOR DEVELOPMENT
+    //if (fn_chStock() == false) {
+      //return;
+    //}
 
     if (fn_filterAddVaild() == false) {
       return false;
@@ -1071,7 +1081,7 @@
       chargePrice = getASStockPrice(fitem.filterId);
 
       if (chargePrice == 0) {
-        Common.alert("<b>SAL0016M(StockPrice) no data  </br>");
+        Common.alert("<spring:message code='service.msg.stkNoPrice'/>");
         return ;
       }
     }
@@ -1847,11 +1857,12 @@
      </colgroup>
      <tbody>
       <tr>
-       <th scope="row"><spring:message code='service.grid.ResultNo' /></th>
+       <th scope="row"><!--<spring:message code='service.grid.ResultNo' /> --></th>
        <td colspan="3">
         <div id='newRno' style='display: none'>
          <span id='newResultNo'> </span>
         </div>
+        <span id='reminder' style="color:red;font-style:italic;display:none"><spring:message code='service.alert.msg.AsEditPrdChk' /></span>
        </td>
       </tr>
       <tr>
