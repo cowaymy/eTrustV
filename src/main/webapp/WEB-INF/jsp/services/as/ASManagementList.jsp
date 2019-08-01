@@ -87,7 +87,7 @@
                                 return;
                             }
 
-                            Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId=" + ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO, null, null, true, '_viewEntryPopDiv1');
+                            Common.popupDiv("/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId=" + ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO + "&IND= 1", null, null, true, '_viewEntryPopDiv1');
                         }
            }
         },
