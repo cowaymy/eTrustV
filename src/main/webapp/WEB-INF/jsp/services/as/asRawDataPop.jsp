@@ -59,6 +59,8 @@
         $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
 
+        whereSql += " AND H.TYPE_ID = 339 ";
+
         $("#reportForm1 #V_SELECTSQL").val(" ");
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
         $("#reportForm1 #V_FULLSQL").val(" ");
