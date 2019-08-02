@@ -33,7 +33,8 @@ import oracle.sql.DATE;
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
  * 08/05/2019    ONGHC      1.0.2       - Amend asResult_insert
  * 23/05/2019    ONGHC      1.0.3       - Amend asResult_insert
- * 26/07/2019    ONGHC      1.0.2       - Add Recall Status
+ * 26/07/2019    ONGHC      1.0.4       - Add Recall Status
+ * 26/07/2019    ONGHC      1.0.5       - Remove In House SMO
  *********************************************************************************************/
 
 @Service("ASManagementListService")
@@ -1417,48 +1418,48 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
     // IN HOUSE REPAIR BACK RESULT FROM MOBILE TO COMPLETE THE LOGISTIC SVC
     // REQUEST
-    if (chkInHouseOpenComp(svc0004dmap)) {
+    //if (chkInHouseOpenComp(svc0004dmap)) {
       /*
        * ===================================== SOLUTION CODE DESCRIPTIION
        * ===================================== 454 REPAIR 452 REPAIR OUT
        * =====================================
        */
-      String retype = "";
-      if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("452")) {
-        retype = "REPAIROUT";
-      } else {
-        retype = "REPAIRIN";
-      }
+      //String retype = "";
+      //if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("452")) {
+      //  retype = "REPAIROUT";
+      //} else {
+      //  retype = "REPAIRIN";
+      //}
 
-      Map<String, Object> logPram = null;
+      //Map<String, Object> logPram = null;
 
       ///////////////////////// LOGISTIC SP CALL /////////////////////////
       /*
        * OD03 - Order-AS
        */
-      logPram = new HashMap<String, Object>();
-      logPram.put("ORD_ID", svc0004dmap.get("AS_NO"));
-      logPram.put("RETYPE", retype);
-      logPram.put("P_TYPE", "OD03");
-      logPram.put("P_PRGNM", "ASCOM_1");
-      logPram.put("USERID", String.valueOf(svc0004dmap.get("updator")));
+      //logPram = new HashMap<String, Object>();
+      //logPram.put("ORD_ID", svc0004dmap.get("AS_NO"));
+      //logPram.put("RETYPE", retype);
+      //logPram.put("P_TYPE", "OD03");
+      //logPram.put("P_PRGNM", "ASCOM_1");
+      //logPram.put("USERID", String.valueOf(svc0004dmap.get("updator")));
 
-      Map SRMap = new HashMap();
-      LOGGER.debug("== IN HOUSE REPAIR SP PARAM = " + logPram.toString());
-      servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
-      LOGGER.debug("== IN HOUSE REPAIR SP RETURN PARAM = " + logPram.toString());
-      logPram.put("P_RESULT_TYPE", "AS");
-      logPram.put("P_RESULT_MSG", logPram.get("p1"));
+      //Map SRMap = new HashMap();
+      //LOGGER.debug("== IN HOUSE REPAIR SP PARAM = " + logPram.toString());
+      //servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+      //LOGGER.debug("== IN HOUSE REPAIR SP RETURN PARAM = " + logPram.toString());
+      //logPram.put("P_RESULT_TYPE", "AS");
+      //logPram.put("P_RESULT_MSG", logPram.get("p1"));
 
       ///////////////////////// LOGISTIC SP CALL //////////////////////
 
-      EgovMap em = new EgovMap();
-      em.put("AS_NO", String.valueOf(svc0004dmap.get("asno")));
-      em.put("SP_MAP", logPram);
+      //EgovMap em = new EgovMap();
+      //em.put("AS_NO", String.valueOf(svc0004dmap.get("asno")));
+      //em.put("SP_MAP", logPram);
 
-      LOGGER.debug("================asResult_insert - END ================");
-      return em;
-    }
+      //LOGGER.debug("================asResult_insert - END ================");
+      //return em;
+    //}
 
     params.put("DOCNO", "21");
     EgovMap eMap = ASManagementListMapper.getASEntryDocNo(params);
@@ -1821,58 +1822,78 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
     // LOGISTIC REQUEST
     Map<String, Object> logPram = new HashMap<String, Object>();
-    if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454")) { // REPAIR
-      if (svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN") != null) {
-        if ((svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN").toString().trim()).equals("1")) { // Y
-                                                                                            // -
-          // TO REPAIR
-          if (svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length() == 0) {
-            svc0004dmap.put("AS_RESULT_STUS_ID", "1");
-            this.updateStateSVC0001D(svc0004dmap);
-            ///////////////////////// LOGISTIC SP CALL //////////////////////
-            logPram.put("ORD_ID", svc0004dmap.get("AS_NO"));
-            logPram.put("RETYPE", "SVO");
-            logPram.put("P_TYPE", "OD03");
-            logPram.put("P_PRGNM", "ASCOM_2");
-            logPram.put("USERID", String.valueOf(params.get("updator")));
 
-            Map SRMap = new HashMap();
-            LOGGER.debug("== asResult_insert IN HOUSE SP REQUEST PARAM ===>" + logPram.toString());
-            servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
-            LOGGER.debug("== asResult_insert IN HOUSE SP LOGISTIC SP CALL PARAM ===>" + logPram.toString());
-            logPram.put("P_RESULT_TYPE", "AS");
-            logPram.put("P_RESULT_MSG", logPram.get("p1"));
-            ///////////////////////// LOGISTIC SP CALL END
-            ///////////////////////// //////////////////////
-          }
-        }
-      }
-    } else {
-      // IN HOUSE RESULT REGISTRATION
-      if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("452")) { // REPAIR
-                                                                               // OUT
-        svc0004dmap.put("AS_RESULT_STUS_ID", "1"); // SET ACTIVE
-      }
+    this.updateStateSVC0001D(svc0004dmap);
 
-      this.updateStateSVC0001D(svc0004dmap);
+    if (String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4")) {
+      ///////////////////////// LOGISTIC SP CALL //////////////////////
+      logPram.put("ORD_ID", svc0004dmap.get("AS_NO"));
+      logPram.put("RETYPE", "COMPLET");
+      logPram.put("P_TYPE", "OD03");
+      logPram.put("P_PRGNM", "ASCOM_3");
+      logPram.put("USERID", String.valueOf(params.get("updator")));
 
-      if (String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4")) {
-        ///////////////////////// LOGISTIC SP CALL //////////////////////
-        logPram.put("ORD_ID", svc0004dmap.get("AS_NO"));
-        logPram.put("RETYPE", "COMPLET");
-        logPram.put("P_TYPE", "OD03");
-        logPram.put("P_PRGNM", "ASCOM_3");
-        logPram.put("USERID", String.valueOf(params.get("updator")));
-
-        Map SRMap = new HashMap();
-        LOGGER.debug("asResult_insert PARAM ===>" + logPram.toString());
-        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
-        LOGGER.debug("asResult_insert PARAM ===>" + logPram.toString());
-        logPram.put("P_RESULT_TYPE", "AS");
-        logPram.put("P_RESULT_MSG", logPram.get("p1"));
-        ///////////////////////// LOGISTIC SP CALL END //////////////////////
-      }
+      Map SRMap = new HashMap();
+      LOGGER.debug("asResult_insert PARAM ===>" + logPram.toString());
+      servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+      LOGGER.debug("asResult_insert PARAM ===>" + logPram.toString());
+      logPram.put("P_RESULT_TYPE", "AS");
+      logPram.put("P_RESULT_MSG", logPram.get("p1"));
+      ///////////////////////// LOGISTIC SP CALL END //////////////////////
     }
+
+    //if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454")) { // REPAIR
+    //  if (svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN") != null) {
+    //    if ((svc0004dmap.get("IN_HUSE_REPAIR_REPLACE_YN").toString().trim()).equals("1")) { // Y
+    //                                                                                        // -
+    //      // TO REPAIR
+    //      if (svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length() == 0) {
+    //        svc0004dmap.put("AS_RESULT_STUS_ID", "1");
+    //        this.updateStateSVC0001D(svc0004dmap);
+    //        ///////////////////////// LOGISTIC SP CALL //////////////////////
+    //        logPram.put("ORD_ID", svc0004dmap.get("AS_NO"));
+    //        logPram.put("RETYPE", "SVO");
+    //        logPram.put("P_TYPE", "OD03");
+    //        logPram.put("P_PRGNM", "ASCOM_2");
+    //        logPram.put("USERID", String.valueOf(params.get("updator")));
+
+    //        Map SRMap = new HashMap();
+    //        LOGGER.debug("== asResult_insert IN HOUSE SP REQUEST PARAM ===>" + logPram.toString());
+    //        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+    //        LOGGER.debug("== asResult_insert IN HOUSE SP LOGISTIC SP CALL PARAM ===>" + logPram.toString());
+    //        logPram.put("P_RESULT_TYPE", "AS");
+    //        logPram.put("P_RESULT_MSG", logPram.get("p1"));
+    //        ///////////////////////// LOGISTIC SP CALL END
+    //        ///////////////////////// //////////////////////
+    //      }
+    //    }
+    //  }
+    //} else {
+    //  // IN HOUSE RESULT REGISTRATION
+    //  if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("452")) { // REPAIR
+    //                                                                           // OUT
+    //    svc0004dmap.put("AS_RESULT_STUS_ID", "1"); // SET ACTIVE
+    // }
+
+    //  this.updateStateSVC0001D(svc0004dmap);
+
+    //  if (String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4")) {
+    //    ///////////////////////// LOGISTIC SP CALL //////////////////////
+    //    logPram.put("ORD_ID", svc0004dmap.get("AS_NO"));
+    //    logPram.put("RETYPE", "COMPLET");
+    //    logPram.put("P_TYPE", "OD03");
+    //    logPram.put("P_PRGNM", "ASCOM_3");
+    //    logPram.put("USERID", String.valueOf(params.get("updator")));
+
+    //    Map SRMap = new HashMap();
+    //    LOGGER.debug("asResult_insert PARAM ===>" + logPram.toString());
+    //    servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+    //    LOGGER.debug("asResult_insert PARAM ===>" + logPram.toString());
+    //    logPram.put("P_RESULT_TYPE", "AS");
+    //    logPram.put("P_RESULT_MSG", logPram.get("p1"));
+    //    ///////////////////////// LOGISTIC SP CALL END //////////////////////
+    //  }
+    //}
 
     EgovMap em = new EgovMap();
     em.put("AS_NO", String.valueOf(eMap.get("asno")));
