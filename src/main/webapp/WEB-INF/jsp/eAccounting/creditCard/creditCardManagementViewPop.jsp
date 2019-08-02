@@ -20,7 +20,7 @@ $(document).ready(function () {
     if(attachmentList.length <= 0) {
         setInputFile2();
     }
-    
+
     $("#holder_search_btn").click(function() {
         clickType = "newHolder";
         fn_searchUserIdPop();
@@ -31,7 +31,7 @@ $(document).ready(function () {
     });
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
     $("#save_btn").click(fn_saveViewMgmt);
-    
+
  // 파일 다운
     $(".auto_file2 :text").dblclick(function() {
         var oriFileName = $(this).val();
@@ -61,7 +61,7 @@ $(document).ready(function () {
     $(".auto_file2 a:contains('Delete')").click(function() {
         var div = $(this).parents(".auto_file2");
         var oriFileName = div.find(":text").val();
-        console.log(oriFileName);   
+        console.log(oriFileName);
         for(var i = 0; i < attachmentList.length; i++) {
             if(attachmentList[i].atchFileName == oriFileName) {
                 remove.push(attachmentList[i].atchFileId);
@@ -69,51 +69,51 @@ $(document).ready(function () {
             }
         }
     });
-    
-    $("#crditCardNoTd").keydown(function (event) { 
-        
+
+    $("#crditCardNoTd").keydown(function (event) {
+
         var code = window.event.keyCode;
-        
+
         if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
         {
          window.event.returnValue = true;
          return;
         }
         window.event.returnValue = false;
-        
+
    });
-    
-    $("#appvCrditLimit").keydown(function (event) { 
-        
+
+    $("#appvCrditLimit").keydown(function (event) {
+
         var code = window.event.keyCode;
-        
+
         if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
         {
          window.event.returnValue = true;
          return;
         }
         window.event.returnValue = false;
-        
+
    });
-   
-   $("#appvCrditLimit").click(function () { 
+
+   $("#appvCrditLimit").click(function () {
        var str = $("#appvCrditLimit").val().replace(/,/gi, "");
-       $("#appvCrditLimit").val(str);      
+       $("#appvCrditLimit").val(str);
   });
-   $("#appvCrditLimit").blur(function () { 
+   $("#appvCrditLimit").blur(function () {
        var str = $("#appvCrditLimit").val().replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-       $("#appvCrditLimit").val(str);      
+       $("#appvCrditLimit").val(str);
   });
-   
+
     $("#appvCrditLimit").change(function(){
        var str =""+ Math.floor($("#appvCrditLimit").val() * 100)/100;
-       
+
        var str2 = str.split(".");
-      
+
        if(str2.length == 1){
            str2[1] = "00";
        }
-       
+
        if(str2[0].length > 11){
            Common.alert('<spring:message code="pettyCashNewCustdn.Amt.msg" />');
            str = "";
@@ -121,20 +121,22 @@ $(document).ready(function () {
            str = str2[0].substr(0, 11)+"."+str2[1];
        }
        str = str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-       
-       
+
+
        $("#appvCrditLimit").val(str);
    });
-    
+
     CommonCombo.make("bankCode", "/eAccounting/creditCard/selectBankCode.do", null, "${crditCardInfo.bankCode}", {
         id: "code",
         name: "name",
         type:"S"
     });
-    
+
     fn_setCostCenterEvent();
-    
+
     fn_setValues();
+
+    $("#crditCardType option[value='${crditCardInfo.crditCardType}']").attr('selected', 'selected');
 });
 
 /* 인풋 파일(멀티) */
@@ -144,17 +146,17 @@ function setInputFile2(){//인풋파일 세팅하기
 
 function fn_setValues() {
 	var crditCardNo = "${crditCardInfo.crditCardNo}"
-	
+
 	var crditCardNo1 = crditCardNo.substr(0, 4);
     var crditCardNo2 = crditCardNo.substr(4, 4);
     var crditCardNo3 = crditCardNo.substr(8, 4);
     var crditCardNo4 = crditCardNo.substr(12);
-    
+
     $("#crditCardNo1").val(crditCardNo1);
     $("#crditCardNo2").val(crditCardNo2);
     $("#crditCardNo3").val(crditCardNo3);
     $("#crditCardNo4").val(crditCardNo4);
-    
+
     var appvCrditLimit = "${crditCardInfo.appvCrditLimit}";
     $("#appvCrditLimit").val(appvCrditLimit.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
 }
@@ -238,7 +240,7 @@ function fn_saveViewMgmt() {
 	</td>
 	<th scope="row"><spring:message code="crditCardNewMgmt.cardType" /></th>
 	<td>
-		<select class="multy_select" id="crditCardType" name="crditCardType" value="${crditCardInfo.crditCardType}" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">disabled</c:if>>
+		<select class="multy_select" id="crditCardType" name="crditCardType" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">disabled</c:if>>
 		<option value="CC"><spring:message code="crditCardNewMgmt.visa" /></option>
 		<option value="DC"><spring:message code="crditCardNewMgmt.masterCard" /></option>
 		</select>

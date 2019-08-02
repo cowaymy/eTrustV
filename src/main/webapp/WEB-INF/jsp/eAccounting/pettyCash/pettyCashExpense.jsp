@@ -483,9 +483,33 @@ function fn_addRow() {
     // 파일 업로드 후 그룹 아이디 값을 받아서 Add
     if(fn_checkEmpty()) {
         var formData = Common.getFormData("form_newExpense");
-        if(clmSeq == 0) {
-        	console.log("fn_addrow clmseq 0");
-        	var data = {
+
+        if(c1 != 0 || c2 != 0 || c3 != 0 || c4 != 0 || c5 != 0 || c6 != 0 || c7 != 0 || c8 != 0) {
+            var data = {
+                    costCentr : $("#newCostCenter").val()
+                    ,costCentrName : $("#newCostCenterText").val()
+                    ,memAccId : $("#newMemAccId").val()
+                    ,custdnNric : $("#custdnNric").val()
+                    ,bankCode : $("#bankCode").val()
+                    ,bankAccNo : $("#bankAccNo").val()
+                    ,clmMonth : $("#newClmMonth").val()
+                    ,sMemAccId : $("#sMemAccId").val()
+                    ,sMemAccName : $("#sMemAccName").val()
+                    ,gstRgistNo : $("#gstRgistNo").val()
+                    ,invcType : $("#invcType").val()
+                    ,invcTypeName : $("#invcType option:selected").text()
+                    ,invcNo : $("#invcNo").val()
+                    ,invcDt : $("#invcDt").val()
+                    ,cur : "MYR"
+                    ,expDesc : $("#expDesc").val()
+                    ,utilNo : $("#utilNo").val()
+                    ,jPayNo : $("#jPayNo").val()
+                    ,bilPeriodF : $("#bilPeriodF").val()
+                    ,bilPeriodT : $("#bilPeriodT").val()
+                    ,gridData : AUIGrid.getGridData(myGridID)
+            };
+        } else {
+            var data = {
                     costCentr : $("#newCostCenter").val()
                     ,costCentrName : $("#newCostCenterText").val()
                     ,memAccId : $("#newMemAccId").val()
@@ -508,7 +532,10 @@ function fn_addRow() {
                     ,bilPeriodT : $("#bilPeriodT").val()
                     ,gridData : GridCommon.getEditData(myGridID)
             };
+        }
 
+        // New add
+        if(clmSeq == 0) {
         	Common.ajaxFile("/eAccounting/pettyCash/attachFileUpload.do", formData, function(result) {
                 console.log(result);
 
@@ -537,7 +564,7 @@ function fn_addRow() {
                 		data.gridData.add[i].cur = data.cur;
                 		data.gridData.add[i].expDesc = data.expDesc;
                 		data.gridData.add[i].utilNo = data.utilNo;
-                		data.gridData.add[i].jPayNo = data.jPayNo;
+                		//data.gridData.add[i].jPayNo = data.jPayNo;
                 		data.gridData.add[i].bilPeriodF = data.bilPeriodF;
                 		data.gridData.add[i].bilPeriodT = data.bilPeriodT;
                 		data.gridData.add[i].atchFileGrpId = data.atchFileGrpId;
@@ -549,32 +576,9 @@ function fn_addRow() {
 
                 fn_getAllTotAmt();
             });
-        } else {
-        	console.log("fn_addrow clmseq > 0");
-        	var data = {
-        			costCentr : $("#newCostCenter").val()
-                    ,costCentrName : $("#newCostCenterText").val()
-                    ,memAccId : $("#newMemAccId").val()
-                    ,custdnNric : $("#custdnNric").val()
-                    ,bankCode : $("#bankCode").val()
-                    ,bankAccNo : $("#bankAccNo").val()
-                    ,clmMonth : $("#newClmMonth").val()
-                    ,sMemAccId : $("#sMemAccId").val()
-                    ,sMemAccName : $("#sMemAccName").val()
-                    ,gstRgistNo : $("#gstRgistNo").val()
-                    ,invcType : $("#invcType").val()
-                    ,invcTypeName : $("#invcType option:selected").text()
-                    ,invcNo : $("#invcNo").val()
-                    ,invcDt : $("#invcDt").val()
-                    ,cur : "MYR"
-                    ,expDesc : $("#expDesc").val()
-                    ,utilNo : $("#utilNo").val()
-                    ,jPayNo : $("#jPayNo").val()
-                    ,bilPeriodF : $("#bilPeriodF").val()
-                    ,bilPeriodT : $("#bilPeriodT").val()
-                    ,gridData : GridCommon.getEditData(myGridID)
-            };
 
+        // Edit
+        } else {
             $("#attachTd").html("");
             $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
 
@@ -588,60 +592,90 @@ function fn_addRow() {
 
                 console.log(data);
 
-                if(data.gridData.add.length > 0) {
-                    for(var i = 0; i < data.gridData.add.length; i++) {
-                        data.gridData.add[i].costCentr = data.costCentr;
-                        data.gridData.add[i].costCentrName = data.costCentrName;
-                        data.gridData.add[i].memAccId = data.memAccId;
-                        data.gridData.add[i].custdnNric = data.custdnNric;
-                        data.gridData.add[i].bankCode = data.bankCode;
-                        data.gridData.add[i].bankAccNo = data.bankAccNo;
-                        data.gridData.add[i].clmMonth = data.clmMonth;
-                        data.gridData.add[i].sMemAccId = data.sMemAccId;
-                        data.gridData.add[i].sMemAccName = data.sMemAccName;
-                        data.gridData.add[i].gstRgistNo = data.gstRgistNo;
-                        data.gridData.add[i].invcDt = data.invcDt;
-                        data.gridData.add[i].invcNo = data.invcNo;
-                        data.gridData.add[i].invcType = data.invcType;
-                        data.gridData.add[i].invcTypeName = data.invcTypeName;
-                        data.gridData.add[i].cur = data.cur;
-                        data.gridData.add[i].expDesc = data.expDesc;
-                        data.gridData.add[i].utilNo = data.utilNo;
-                        data.gridData.add[i].jPayNo = data.jPayNo;
-                        data.gridData.add[i].bilPeriodF = data.bilPeriodF;
-                        data.gridData.add[i].bilPeriodT = data.bilPeriodT;
-                        data.gridData.add[i].atchFileGrpId = atchFileGrpId;
-                        AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
+                if(c1 == 0 && c2 == 0 && c3 == 0 && c4 == 0 && c5 == 0 && c6 == 0 && c7 == 0 && c8 == 0) {
+                    if(data.gridData.add.length > 0) {
+                        for(var i = 0; i < data.gridData.add.length; i++) {
+                            data.gridData.add[i].costCentr = data.costCentr;
+                            data.gridData.add[i].costCentrName = data.costCentrName;
+                            data.gridData.add[i].memAccId = data.memAccId;
+                            data.gridData.add[i].custdnNric = data.custdnNric;
+                            data.gridData.add[i].bankCode = data.bankCode;
+                            data.gridData.add[i].bankAccNo = data.bankAccNo;
+                            data.gridData.add[i].clmMonth = data.clmMonth;
+                            data.gridData.add[i].sMemAccId = data.sMemAccId;
+                            data.gridData.add[i].sMemAccName = data.sMemAccName;
+                            //data.gridData.add[i].gstRgistNo = data.gstRgistNo;
+                            data.gridData.add[i].invcDt = data.invcDt;
+                            data.gridData.add[i].invcNo = data.invcNo;
+                            data.gridData.add[i].invcType = data.invcType;
+                            data.gridData.add[i].invcTypeName = data.invcTypeName;
+                            data.gridData.add[i].cur = data.cur;
+                            data.gridData.add[i].expDesc = data.expDesc;
+                            data.gridData.add[i].utilNo = data.utilNo;
+                            //data.gridData.add[i].jPayNo = data.jPayNo;
+                            data.gridData.add[i].bilPeriodF = data.bilPeriodF;
+                            data.gridData.add[i].bilPeriodT = data.bilPeriodT;
+                            data.gridData.add[i].atchFileGrpId = atchFileGrpId;
+                            AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
+                        }
+                    }
+                    if(data.gridData.update.length > 0) {
+                        for(var i = 0; i < data.gridData.update.length; i++) {
+                            data.gridData.update[i].costCentr = data.costCentr;
+                            data.gridData.update[i].costCentrName = data.costCentrName;
+                            data.gridData.update[i].memAccId = data.memAccId;
+                            data.gridData.update[i].custdnNric = data.custdnNric;
+                            data.gridData.update[i].bankCode = data.bankCode;
+                            data.gridData.update[i].bankAccNo = data.bankAccNo;
+                            data.gridData.update[i].clmMonth = data.clmMonth;
+                            data.gridData.update[i].sMemAccId = data.sMemAccId;
+                            data.gridData.update[i].sMemAccName = data.sMemAccName;
+                            //data.gridData.update[i].gstRgistNo = data.gstRgistNo;
+                            data.gridData.update[i].invcDt = data.invcDt;
+                            data.gridData.update[i].invcNo = data.invcNo;
+                            data.gridData.update[i].invcType = data.invcType;
+                            data.gridData.update[i].invcTypeName = data.invcTypeName;
+                            data.gridData.update[i].cur = data.cur;
+                            data.gridData.update[i].expDesc = data.expDesc;
+                            data.gridData.update[i].utilNo = data.utilNo;
+                            //data.gridData.update[i].jPayNo = data.jPayNo;
+                            data.gridData.update[i].bilPeriodF = data.bilPeriodF;
+                            data.gridData.update[i].bilPeriodT = data.bilPeriodT;
+                            AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
+                        }
+                    }
+                    if(data.gridData.remove.length > 0) {
+                        for(var i = 0; i < data.gridData.remove.length; i++) {
+                            AUIGrid.removeRow(newGridID, AUIGrid.rowIdToIndex(newGridID, data.gridData.remove[i].clmSeq));
+                        }
                     }
                 }
-                if(data.gridData.update.length > 0) {
-                    for(var i = 0; i < data.gridData.update.length; i++) {
-                        data.gridData.update[i].costCentr = data.costCentr;
-                        data.gridData.update[i].costCentrName = data.costCentrName;
-                        data.gridData.update[i].memAccId = data.memAccId;
-                        data.gridData.update[i].custdnNric = data.custdnNric;
-                        data.gridData.update[i].bankCode = data.bankCode;
-                        data.gridData.update[i].bankAccNo = data.bankAccNo;
-                        data.gridData.update[i].clmMonth = data.clmMonth;
-                        data.gridData.update[i].sMemAccId = data.sMemAccId;
-                        data.gridData.update[i].sMemAccName = data.sMemAccName;
-                        data.gridData.update[i].gstRgistNo = data.gstRgistNo;
-                        data.gridData.update[i].invcDt = data.invcDt;
-                        data.gridData.update[i].invcNo = data.invcNo;
-                        data.gridData.update[i].invcType = data.invcType;
-                        data.gridData.update[i].invcTypeName = data.invcTypeName;
-                        data.gridData.update[i].cur = data.cur;
-                        data.gridData.update[i].expDesc = data.expDesc;
-                        data.gridData.update[i].utilNo = data.utilNo;
-                        data.gridData.update[i].jPayNo = data.jPayNo;
-                        data.gridData.update[i].bilPeriodF = data.bilPeriodF;
-                        data.gridData.update[i].bilPeriodT = data.bilPeriodT;
-                        AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
-                    }
-                }
-                if(data.gridData.remove.length > 0) {
-                    for(var i = 0; i < data.gridData.remove.length; i++) {
-                    	AUIGrid.removeRow(newGridID, AUIGrid.rowIdToIndex(newGridID, data.gridData.remove[i].clmSeq));
+
+                if(c1 != 0 || c2 != 0 || c3 != 0 || c4 != 0 || c5 != 0 || c6 != 0 || c7 != 0 || c8 != 0) {
+                    if(data.gridData.length > 0) {
+                    	for(var i = 0; i < data.gridData.length; i++) {
+                            data.gridData[i].costCentr = data.costCentr;
+                            data.gridData[i].costCentrName = data.costCentrName;
+                            data.gridData[i].memAccId = data.memAccId;
+                            data.gridData[i].custdnNric = data.custdnNric;
+                            data.gridData[i].bankCode = data.bankCode;
+                            data.gridData[i].bankAccNo = data.bankAccNo;
+                            data.gridData[i].clmMonth = data.clmMonth;
+                            data.gridData[i].sMemAccId = data.sMemAccId;
+                            data.gridData[i].sMemAccName = data.sMemAccName;
+                            //data.gridData[i].gstRgistNo = data.gstRgistNo;
+                            data.gridData[i].invcDt = data.invcDt;
+                            data.gridData[i].invcNo = data.invcNo;
+                            data.gridData[i].invcType = data.invcType;
+                            data.gridData[i].invcTypeName = data.invcTypeName;
+                            data.gridData[i].cur = data.cur;
+                            data.gridData[i].expDesc = data.expDesc;
+                            data.gridData[i].utilNo = data.utilNo;
+                            //data.gridData[i].jPayNo = data.jPayNo;
+                            data.gridData[i].bilPeriodF = data.bilPeriodF;
+                            data.gridData[i].bilPeriodT = data.bilPeriodT;
+                            AUIGrid.updateRow(newGridID, data.gridData[i], AUIGrid.rowIdToIndex(newGridID, data.gridData[i].clmSeq));
+                        }
                     }
                 }
 
@@ -737,6 +771,17 @@ function fn_selectExpenseInfo() {
         $("#newCrtUserName").val(result.userName);
 
         AUIGrid.setGridData(myGridID, result.itemGrp);
+
+        if(result.appvPrcssNo == null || result.appvPrcssNo == "") {
+            $("#hNewClmMonth").val(result.clmMonth);
+            $("#hInvcDt").val(result.invcDt);
+            $("#hInvcNo").val(result.invcNo);
+            $("#hSMemAccName").val(result.sMemAccName);
+            $("#hUtilNo").val(result.utilNo);
+            $("#hBilPeriodF").val(result.bilPeriodF);
+            $("#hBilPeriodT").val(result.bilPeriodT);
+            $("#hExpDesc").val(result.expDesc);
+        }
 
         // TODO attachFile
         attachList = result.attachList;

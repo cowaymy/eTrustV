@@ -484,30 +484,59 @@ function fn_addRow() {
     // 파일 업로드 후 그룹 아이디 값을 받아서 Add
     if(fn_checkEmpty()) {
         var formData = Common.getFormData("form_newReimbursement");
-        var data = {
-                bankCode : $("#bankCode").val()
-                ,bankName : $("#bankName").val()
-                ,crditCardUserId : $("#newCrditCardUserId").val()
-                ,crditCardUserName : $("#newCrditCardUserName").val()
-                ,crditCardNo : $("#newCrditCardNo").val()
-                ,chrgUserId : $("#newChrgUserId").val()
-                ,chrgUserName : $("#newChrgUserName").val()
-                ,costCentr : $("#newCostCenter").val()
-                ,clmMonth : $("#clmMonth").val()
-                ,invcDt : $("#invcDt").val()
-                ,costCentrName : $("#newCostCenterText").val()
-                ,sCostCentr : $("#sCostCentr").val()
-                ,sCostCentrName : $("#sCostCentrName").val()
-                ,supply : $("#newSupply").val()
-                ,supplyName : $("#newSupplyName").val()
-                ,gstRgistNo : $("#gstRgistNo").val()
-                ,invcNo : $("#invcNo").val()
-                ,invcType : $("#invcType").val()
-                ,invcTypeName : $("#invcType option:selected").text()
-                ,cur : "MYR"
-                ,expDesc : $("#expDesc").val()
-                ,gridData : GridCommon.getEditData(myGridID)
-        };
+
+        if(c1 != 0 || c2 != 0 || c3 != 0 || c4 != 0 || c5 != 0 || c6 != 0) {
+            var data = {
+                    bankCode : $("#bankCode").val()
+                    ,bankName : $("#bankName").val()
+                    ,crditCardUserId : $("#newCrditCardUserId").val()
+                    ,crditCardUserName : $("#newCrditCardUserName").val()
+                    ,crditCardNo : $("#newCrditCardNo").val()
+                    ,chrgUserId : $("#newChrgUserId").val()
+                    ,chrgUserName : $("#newChrgUserName").val()
+                    ,costCentr : $("#newCostCenter").val()
+                    ,clmMonth : $("#clmMonth").val()
+                    ,invcDt : $("#invcDt").val()
+                    ,costCentrName : $("#newCostCenterText").val()
+                    ,sCostCentr : $("#sCostCentr").val()
+                    ,sCostCentrName : $("#sCostCentrName").val()
+                    ,supply : $("#newSupply").val()
+                    ,supplyName : $("#newSupplyName").val()
+                    ,gstRgistNo : $("#gstRgistNo").val()
+                    ,invcNo : $("#invcNo").val()
+                    ,invcType : $("#invcType").val()
+                    ,invcTypeName : $("#invcType option:selected").text()
+                    ,cur : "MYR"
+                    ,expDesc : $("#expDesc").val()
+                    ,gridData : AUIGrid.getGridData(myGridID)
+            };
+        } else {
+            var data = {
+                    bankCode : $("#bankCode").val()
+                    ,bankName : $("#bankName").val()
+                    ,crditCardUserId : $("#newCrditCardUserId").val()
+                    ,crditCardUserName : $("#newCrditCardUserName").val()
+                    ,crditCardNo : $("#newCrditCardNo").val()
+                    ,chrgUserId : $("#newChrgUserId").val()
+                    ,chrgUserName : $("#newChrgUserName").val()
+                    ,costCentr : $("#newCostCenter").val()
+                    ,clmMonth : $("#clmMonth").val()
+                    ,invcDt : $("#invcDt").val()
+                    ,costCentrName : $("#newCostCenterText").val()
+                    ,sCostCentr : $("#sCostCentr").val()
+                    ,sCostCentrName : $("#sCostCentrName").val()
+                    ,supply : $("#newSupply").val()
+                    ,supplyName : $("#newSupplyName").val()
+                    ,gstRgistNo : $("#gstRgistNo").val()
+                    ,invcNo : $("#invcNo").val()
+                    ,invcType : $("#invcType").val()
+                    ,invcTypeName : $("#invcType option:selected").text()
+                    ,cur : "MYR"
+                    ,expDesc : $("#expDesc").val()
+                    ,gridData : GridCommon.getEditData(myGridID)
+            };
+        }
+
         if(clmSeq == 0) {
             Common.ajaxFile("/eAccounting/creditCard/attachFileUpload.do", formData, function(result) {
                 console.log(result);
@@ -588,6 +617,7 @@ function fn_addRow() {
                         AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                     }
                 }
+
                 if(data.gridData.update.length > 0) {
                     for(var i = 0; i < data.gridData.update.length; i++) {
                     	data.gridData.update[i].bankCode = data.bankCode;
@@ -614,9 +644,39 @@ function fn_addRow() {
                         AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
                     }
                 }
+
                 if(data.gridData.remove.length > 0) {
                     for(var i = 0; i < data.gridData.remove.length; i++) {
                         AUIGrid.removeRow(newGridID, AUIGrid.rowIdToIndex(newGridID, data.gridData.remove[i].clmSeq));
+                    }
+                }
+
+                if(c1 != 0 || c2 != 0 || c3 != 0 || c4 != 0 || c5 != 0 || c6 != 0) {
+                    if(data.gridData.length > 0) {
+                        for(var i = 0; i < data.gridData.length; i++) {
+                            data.gridData[i].bankCode = data.bankCode;
+                            data.gridData[i].bankName = data.bankName;
+                            data.gridData[i].crditCardNo = data.crditCardNo;
+                            data.gridData[i].crditCardUserId = data.crditCardUserId;
+                            data.gridData[i].crditCardUserName = data.crditCardUserName;
+                            data.gridData[i].chrgUserId = data.chrgUserId;
+                            data.gridData[i].chrgUserName = data.chrgUserName;
+                            data.gridData[i].costCentr = data.costCentr;
+                            data.gridData[i].costCentrName = data.costCentrName;
+                            data.gridData[i].sCostCentr = data.sCostCentr;
+                            data.gridData[i].sCostCentrName = data.sCostCentrName;
+                            data.gridData[i].clmMonth = data.clmMonth;
+                            data.gridData[i].supply = data.supply;
+                            data.gridData[i].supplyName = data.supplyName;
+                            data.gridData[i].gstRgistNo = data.gstRgistNo;
+                            data.gridData[i].invcDt = data.invcDt;
+                            data.gridData[i].invcNo = data.invcNo;
+                            data.gridData[i].invcType = data.invcType;
+                            data.gridData[i].invcTypeName = data.invcTypeName;
+                            data.gridData[i].cur = data.cur;
+                            data.gridData[i].expDesc = data.expDesc;
+                            AUIGrid.updateRow(newGridID, data.gridData[i], AUIGrid.rowIdToIndex(newGridID, data.gridData[i].clmSeq));
+                        }
                     }
                 }
 
@@ -726,6 +786,15 @@ function fn_selectReimbursementInfo() {
         $("#expDesc").val(result.expDesc);
 
         AUIGrid.setGridData(myGridID, result.itemGrp);
+
+        if(result.appvPrcssNo == null || result.appvPrcssNo == "") {
+            $("#hClmMonth").val(result.clmMonth);
+            $("#hInvcDt").val(result.invcDt);
+            $("#hInvcNo").val(result.invcNo);
+            $("#hSCostCentr").val(result.sCostCentr);
+            $("#hNewSupplyName").val(result.supplyName);
+            $("#hExpDesc").val(result.expDesc);
+        }
 
         // TODO attachFile
         attachList = result.attachList;

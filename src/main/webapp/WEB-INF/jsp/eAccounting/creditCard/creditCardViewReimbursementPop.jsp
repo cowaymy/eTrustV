@@ -31,6 +31,14 @@ var callType = "${callType}";
 var keyValueList = $.parseJSON('${taxCodeList}');
 var selectRowIdx;
 var deleteRowIdx;
+
+var c1 = 0;
+var c2 = 0;
+var c3 = 0;
+var c4 = 0;
+var c5 = 0;
+var c6 = 0;
+
 //file action list
 var update = new Array();
 var remove = new Array();
@@ -503,6 +511,54 @@ $(document).ready(function () {
     if(appvPrcssNo != null || appvPrcssNo != ""){
     	$("#maskingNo").unbind("click");
     }
+
+    $("#clmMonth").change(function() {
+        if($("#clmMonth").val() != $("#hClmMonth").val()) {
+            c1 = 1;
+        } else {
+            c1 = 0;
+        }
+    });
+
+    $("#invcDt").change(function() {
+    	if($("#invcDt").val() != $("#hInvcDt").val()) {
+            c2 = 1;
+        } else {
+            c2 = 0;
+        }
+    });
+
+    $("#invcNo").change(function() {
+    	if($("#invcNo").val() != $("#hInvcNo").val()) {
+            c3 = 1;
+        } else {
+            c3 = 0;
+        }
+    });
+
+    $("#sCostCentr").change(function() {
+    	if($("#sCostCentr").val() != $("#hSCostCentr").val()) {
+            c4 = 1;
+        } else {
+            c4 = 0;
+        }
+    });
+
+    $("#newSupplyName").change(function() {
+    	if($("#newSupplyName").val() != $("#hNewSupplyName").val()) {
+            c5 = 1;
+        } else {
+            c5 = 0;
+        }
+    });
+
+    $("#expDesc").change(function() {
+    	if($("#expDesc").val() != $("#hExpDesc").val()) {
+            c6 = 1;
+        } else {
+            c6 = 0;
+        }
+    });
 });
 
 /* 인풋 파일(멀티) */
@@ -541,6 +597,13 @@ function fn_tempSave() {
 <input type="hidden" id="budgetCode" name="budgetCode">
 <input type="hidden" id="budgetCodeName" name="budgetCodeName">
 <input type="hidden" id="taxRate">
+
+<input type="hidden" id="hClmMonth" name="hClmMonth">
+<input type="hidden" id="hInvcDt" name="hInvcDt">
+<input type="hidden" id="hInvcNo" name="hInvcNo">
+<input type="hidden" id="hSCostCentr" name="hSCostCentr">
+<input type="hidden" id="hNewSupplyName" name="hNewSupplyName">
+<input type="hidden" id="hExpDesc" name="hExpDesc">
 
 <c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}">
 <ul class="right_btns mb10">

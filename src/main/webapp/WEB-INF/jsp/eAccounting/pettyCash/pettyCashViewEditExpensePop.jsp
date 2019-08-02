@@ -31,7 +31,17 @@ var attachList;
 var callType = "${callType}";
 var keyValueList = $.parseJSON('${taxCodeList}');
 var selectRowIdx;
-var deleteRowIdx;
+var deleteRowIdx;;
+
+var c1 = 0;
+var c2 = 0;
+var c3 = 0;
+var c4 = 0;
+var c5 = 0;
+var c6 = 0;
+var c7 = 0;
+var c8 = 0;
+
 //file action list
 var update = new Array();
 var remove = new Array();
@@ -455,6 +465,34 @@ $(document).ready(function () {
             {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 console.log("CellDoubleClick clmNo : " + event.item.clmNo + " CellDoubleClick clmSeq : " + event.item.clmSeq);
+
+                // Reset changes flag
+                c1 = 0;
+                c2 = 0;
+                c3 = 0;
+                c4 = 0;
+                c5 = 0;
+                c6 = 0;
+                c7 = 0;
+                c8 = 0;
+
+                // Reset hidden values and text boxes
+                $("#invcDt").val("");
+                $("#invcNo").val("");
+                $("#sMemAccName").val("");
+                $("#utilNo").val("");
+                $("#bilPeriodF").val("");
+                $("#bilPeriodT").val("");
+                $("#expDesc").val("");
+
+                $("#hInvcDt").val("");
+                $("#hInvcNo").val("");
+                $("#hSMemAccName").val("");
+                $("#hUtilNo").val("");
+                $("#hBilPeriodF").val("");
+                $("#hBilPeriodT").val("");
+                $("#hExpDesc").val("");
+
                 // TODO pettyCash Expense Info GET
                 if(clmNo != null && clmNo != "") {
                 	selectRowIdx = event.rowIndex;
@@ -482,6 +520,79 @@ $(document).ready(function () {
     fn_myGridSetEvent();
 
     fn_setEvent();
+
+    $("#newClmMonth").click(function() {gChgFlag = 1});
+    $("#invcDt").click(function() {gChgFlag = 1});
+    $("#invcNo").click(function() {gChgFlag = 1});
+    $("#sMemAccName").click(function() {gChgFlag = 1});
+    $("#utilNo").click(function() {gChgFlag = 1});
+    $("#bilPeriodF").click(function() {gChgFlag = 1});
+    $("#bilPeriodT").click(function() {gChgFlag = 1});
+    $("#expDesc").click(function() {gChgFlag = 1});
+
+    $("#newClmMonth").change(function() {
+    	if($("#newClmMonth").val() != $("#hNewClmMonth").val()) {
+    		c1 = 1;
+    	} else {
+            c1 = 0;
+        }
+    });
+
+    $("#invcDt").change(function() {
+        if($("#invcDt").val() != $("#hInvcDt").val()) {
+            c2 = 1;
+        } else {
+        	c2 = 0;
+        }
+    });
+
+    $("#invcNo").change(function() {
+        if($("#invcNo").val() != $("#hInvcNo").val()) {
+            c3 = 1;
+        } else {
+            c3 = 0;
+        }
+    });
+
+    $("#sMemAccName").change(function() {
+        if($("#sMemAccName").val() != $("#hSMemAccName").val()) {
+            c4 = 1;
+        } else {
+            c4 = 0;
+        }
+    });
+
+    $("#utilNo").change(function() {
+        if($("#utilNo").val() != $("#hUtilNo").val()) {
+            c5 = 1;
+        } else {
+            c5 = 0;
+        }
+    });
+
+    $("#bilPeriodF").change(function() {
+        if($("#bilPeriodF").val() != $("#hBilPeriodF").val()) {
+            c6 = 1;
+        } else {
+            c6 = 0;
+        }
+    });
+
+    $("#bilPeriodT").change(function() {
+        if($("#bilPeriodT").val() != $("#hBilPeriodT").val()) {
+            c7 = 1;
+        } else {
+            c7 = 0;
+        }
+    });
+
+    $("#expDesc").change(function() {
+        if($("#expDesc").val() != $("#hExpDesc").val()) {
+            c8 = 1;
+        } else {
+            c8 = 0;
+        }
+    });
 
 });
 
@@ -517,6 +628,15 @@ function fn_tempSave() {
 <input type="hidden" id="budgetCode" name="budgetCode">
 <input type="hidden" id="glAccCode" name="glAccCode">
 <input type="hidden" id="taxRate">
+
+<input type="hidden" id="hNewClmMonth" name="hNewClmMonth">
+<input type="hidden" id="hInvcDt" name="hInvcDt">
+<input type="hidden" id="hInvcNo" name="hInvcNo">
+<input type="hidden" id="hSMemAccName" name="hSMemAccName">
+<input type="hidden" id="hUtilNo" name="hUtilNo">
+<input type="hidden" id="hBilPeriodF" name="hBilPeriodF">
+<input type="hidden" id="hBilPeriodT" name="hBilPeriodT">
+<input type="hidden" id="hExpDesc" name="hExpDesc">
 
 <c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}">
 <ul class="right_btns mb10">
@@ -600,8 +720,10 @@ function fn_tempSave() {
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="bilPeriodT" name="bilPeriodT" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">JomPAY No</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="jPayNo" name="jPayNo" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/></td>
+    <th></th>
+    <td></td>
+    <!-- <th scope="row">JomPAY No</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="jPayNo" name="jPayNo" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/></td> -->
 </tr>
 <tr>
     <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>

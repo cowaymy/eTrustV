@@ -381,12 +381,23 @@ $(document).ready(function () {
     var clmNo = myGridData[0].clmNo
     var clmType = clmNo.substr(0, 2);
     if(clmType == "J3") {
-    	$("#viewMemAccNameTh").html('<spring:message code="crditCardNewReim.crditCardNo" />');
-    	$("#viewMemAccNameTd").text(myGridData[0].crditCardNo);
+        $("#viewMemAccNameTh").html('<spring:message code="crditCardNewReim.crditCardNo" />');
+        $("#viewMemAccNameTd").text(myGridData[0].crditCardNo);
+        $("#paydueDtLbl").empty();
+        $("#viewPayDueDt").empty();
+        $("#invcDtLbl").html("Claim Month");
+        $("#viewInvcDt").text(myGridData[0].clmMonth);
     } else {
-    	$("#viewMemAccNameTh").html('<spring:message code="invoiceApprove.member" />');
-    	$("#viewMemAccId").val(myGridData[0].memAccId);
+        $("#viewMemAccNameTh").html('<spring:message code="invoiceApprove.member" />');
+        $("#viewMemAccId").val(myGridData[0].memAccId);
         $("#viewMemAccNameTd").text(myGridData[0].memAccId + " / " + myGridData[0].memAccName);
+
+        if(clmType == "J2") {
+            $("#paydueDtLbl").empty();
+            $("#viewPayDueDt").empty();
+            $("#invcDtLbl").html("Claim Month");
+            $("#viewInvcDt").text(myGridData[0].clmMonth);
+        }
     }
     $("#viewPayDueDt").text(myGridData[0].payDueDt);
 
@@ -509,10 +520,8 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
                 $("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
                 $("#supplirTd").text(result.data.supplier);
                 $("#crcInfo").hide();
-                $("#payInfo1").show();
-                $("#payInfo2").show();
-                $("#utilNo").text(result.data.utilNo);
-                $("#jPayNo").text(result.data.jPayNo);
+                $("#payInfo3").show();
+                $("#payInfo3InvcDt").text(result.data.invcDt);
                 var bilPeriod = "";
                 if(!FormUtil.isEmpty(result.data.bilPeriodF) && !FormUtil.isEmpty(result.data.bilPeriodT)) {
                     bilPeriod = result.data.bilPeriodF + " - " + result.data.bilPeriodT;
@@ -524,7 +533,9 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
                         bilPeriod = " - " + result.data.bilPeriodT;
                     }
                 }
-                $("#bilPeriod").text(bilPeriod);
+                $("#payInfo3bilPeriod").text(bilPeriod);
+                $("#payInfo4").show();
+                $("#payInfo4utilNo").text(result.data.utilNo);
             } else if(clmType == "J3"){
                 $("#ccInvcInfo").hide();
                 $("#crcInfo").show();
@@ -691,7 +702,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <tr id="ccInvcInfo">
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td id="viewCostCentr"></td>
-	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
+	<th scope="row" id="invcDtLbl"><spring:message code="webInvoice.invoiceDate" /></th>
 	<td id="viewInvcDt"></td>
 </tr>
 <tr>
@@ -747,7 +758,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
     <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
     <td id="gstRgistNo"></td>
 </tr> -->
-<tr id="payInfo1">
+<tr id="payInfo1" style="display: none;">
     <th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
     <td id="utilNo"></td>
     <th scope="row">Billing Period</th>
@@ -756,6 +767,18 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <tr id="payInfo2" style="display: none;">
     <th scope="row">JomPAY No</th>
     <td id="jPayNo"></td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
+<tr id="payInfo3" style="display: none;">
+    <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
+    <td id="payInfo3InvcDt"></td>
+    <th scope="row">Billing Period</th>
+    <td id="payInfo3bilPeriod"></td>
+</tr>
+<tr id="payInfo4" style="display: none;">
+    <th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
+    <td id="payInfo4utilNo"></td>
     <th scope="row"></th>
     <td></td>
 </tr>

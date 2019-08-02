@@ -504,8 +504,10 @@ function fn_tempSave() {
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="bilPeriodT" name="bilPeriodT"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">JomPAY No</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="jPayNo" name="jPayNo"/></td>
+    <th></th>
+    <td></td>
+    <!-- <th scope="row">JomPAY No</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="jPayNo" name="jPayNo"/></td> -->
 </tr>
 <tr>
     <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
