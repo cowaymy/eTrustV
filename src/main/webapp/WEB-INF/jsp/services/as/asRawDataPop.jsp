@@ -116,10 +116,10 @@
           $("#reportForm1 #V_ORDERBYSQL").val(" ");
           $("#reportForm1 #V_FULLSQL").val(" ");
           $("#reportForm1 #V_WHERESQL").val(whereSql);
-          $("#reportForm1 #reportFileName").val('/services/ASRawPQC.rpt');
+          $("#reportForm1 #reportFileName").val('/services/ASRawData.rpt');
           $("#reportForm1 #viewType").val("EXCEL");
           $("#reportForm1 #reportDownFileName").val("ASRawDataAOAS_" + day + month + date.getFullYear());
-          $("#reportForm1 #V_DEPT").val("PQC");
+          //$("#reportForm1 #V_DEPT").val("PQC");
 
           var option = {
             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
