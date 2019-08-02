@@ -549,6 +549,8 @@ $(document).ready(function(){
      }
 
      function fn_plantchk(id , take){
+    	 
+    	 var slplant = (take == "i" ) ? $("#inwarecd").val() : $("#mwarecd").val() ;
 
     	 if($("#"+id).val() == '03'){
     		 $("#"+take+"plant").val('6000');
@@ -562,6 +564,7 @@ $(document).ready(function(){
         	 $("#"+take+"plant").attr("disabled"   , false);
         	 if ($("#"+id).val() == '02'){
         		 $("#"+take+"slplant").attr("disabled" , true);
+        		 $("#"+take+"slplant").val(slplant);
         	 }else{
         		 $("#"+take+"slplant").attr("disabled" , false);
         	 }
@@ -590,13 +593,6 @@ $(document).ready(function(){
          Common.alert("Plant in ECC Please enter.");
          return false;
      }
-
-     if ($("#slplant").val() == null || $("#slplant").val() == undefined || $("#slplant").val() == ""){
-         Common.alert("S/L in ECC Please enter.");
-         return false;
-     }
-
-
 
         return true;
     }

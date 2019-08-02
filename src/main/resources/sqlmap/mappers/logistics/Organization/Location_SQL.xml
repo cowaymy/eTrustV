@@ -159,7 +159,7 @@
                 , SL_PLANT              = #{rdccode}
              </when>
              <otherwise>
-                , SL_PLANT              = #{slplant}
+                , SL_PLANT              = #{loccd}
                </otherwise>
       </choose>
             , WH_LOC_STUS_ID  = #{locstus}
