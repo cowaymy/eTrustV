@@ -4159,9 +4159,9 @@
                         AS_REQST_TM = #{AS_REQST_TM},
                         AS_APPNT_DT = TO_DATE(#{AS_APPNT_DT},'DD/MM/YYYY'),
                         AS_APPNT_TM = #{AS_APPNT_TM},
-                        AS_BRNCH_ID = #{AS_BRNCH_ID},
+                        AS_BRNCH_ID = #{AS_BRNCH_ID}, -->
                         AS_MALFUNC_ID = #{AS_MALFUNC_ID},
-                        AS_MALFUNC_RESN_ID = #{AS_MALFUNC_RESN_ID},  -->
+                        AS_MALFUNC_RESN_ID = #{AS_MALFUNC_RESN_ID},
                         AS_REM_REQSTER = #{AS_REM_REQSTER},
                         AS_REM_REQSTER_CNTC = #{AS_REM_REQSTER_CNTC},
                         <!-- AS_CALLLOG_ID = #{AS_CALLLOG_ID}, AS_STUS_ID = #{AS_STUS_ID}, AS_SMS
