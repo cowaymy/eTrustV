@@ -23,21 +23,21 @@ import com.coway.trust.util.CommonUtils;
 
 @Service("creditCardApplication")
 public class CreditCardApplicationImpl implements CreditCardApplication {
-	
+
 private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl.class);
-	
+
 	@Value("${app.name}")
 	private String appName;
-	
+
 	@Autowired
 	private FileService fileService;
-	
+
 	@Autowired
 	private FileMapper fileMapper;
-	
+
 	@Autowired
 	private CreditCardService creditCardService;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
@@ -45,32 +45,32 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 	public void insertCreditCardBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		LOGGER.debug("list.size : {}", list.size());
 		if (list.size() > 0) {
 			int fileGroupKey = fileService.insertFiles(list, type, Integer.parseInt(String.valueOf(params.get("userId"))));
 			params.put("fileGroupKey", fileGroupKey);
 		}
-		
+
 		creditCardService.insertCreditCard(params);
-		
+
 		String ifKey = creditCardService.selectNextIfKey();
 		params.put("ifKey", ifKey);
-		
+
 		int seq = creditCardService.selectNextSeq(ifKey);
 		params.put("seq", seq);
-		
+
 		String crditCardNo = (String) params.get("crditCardNo");
 		String agentNo = "CC" + crditCardNo.substring(0, 4) + crditCardNo.substring(crditCardNo.length() - 4, crditCardNo.length());
 		params.put("agentNo", agentNo);
-		
+
 		String crditCardUserId = (String) params.get("crditCardUserId");
 		String agentNm = "Corporate_" + crditCardUserId;
 		params.put("agentNm", agentNm);
-		
+
 		params.put("acctSt", "01");
-		
+
 		creditCardService.insertCrditCardInterface(params);
 	}
 
@@ -78,9 +78,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 	public void updateCreditCardBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		LOGGER.debug("list.size : {}", list.size());
-		
+
 		// 243,258
 		String update = (String) params.get("update");
 		String[] updateList = null;
@@ -115,7 +115,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 				}
 			}
 		}
-		
+
 		String remove = (String) params.get("remove");
 		String[] removeList = null;
 		if(!StringUtils.isEmpty(remove)) {
@@ -129,25 +129,25 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
 			}
 		}
-		
+
 		creditCardService.updateCreditCard(params);
-		
+
 		String ifKey = creditCardService.selectNextIfKey();
 		params.put("ifKey", ifKey);
-		
+
 		int seq = creditCardService.selectNextSeq(ifKey);
 		params.put("seq", seq);
-		
+
 		String crditCardNo = (String) params.get("crditCardNo");
 		String agentNo = "CC" + crditCardNo.substring(0, 4) + crditCardNo.substring(crditCardNo.length() - 4, crditCardNo.length());
 		params.put("agentNo", agentNo);
-		
+
 		String crditCardUserId = (String) params.get("crditCardUserId");
 		String agentNm = "Corporate_" + crditCardUserId;
 		params.put("agentNm", agentNm);
-		
+
 		params.put("acctSt", "02");
-		
+
 		creditCardService.insertCrditCardInterface(params);
 	}
 
@@ -155,28 +155,28 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 	public void removeCreditCardBiz(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		creditCardService.removeCreditCard(params);
-		
+
 		String ifKey = creditCardService.selectNextIfKey();
 		params.put("ifKey", ifKey);
-		
+
 		int seq = creditCardService.selectNextSeq(ifKey);
 		params.put("seq", seq);
-		
+
 		String crditCardNo = (String) params.get("crditCardNo");
 		String agentNo = "CC" + crditCardNo.substring(0, 4) + crditCardNo.substring(crditCardNo.length() - 4, crditCardNo.length());
 		params.put("agentNo", agentNo);
-		
+
 		String crditCardUserId = String.valueOf(params.get("crditCardUserId"));
 		String agentNm = "Corporate_" + crditCardUserId;
 		params.put("agentNm", agentNm);
-		
+
 		params.put("acctSt", "03");
-		
+
 		creditCardService.insertCrditCardInterface(params);
 	}
-	
+
 	@Override
 	public void insertReimbursementAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -188,9 +188,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 	public void updateReimbursementAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		LOGGER.debug("list.size : {}", list.size());
-		
+
 		// 243,258
 		String update = (String) params.get("update");
 		String[] updateList = null;
@@ -225,7 +225,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 				}
 			}
 		}
-		
+
 		String remove = (String) params.get("remove");
 		String[] removeList = null;
 		if(!StringUtils.isEmpty(remove)) {
@@ -245,21 +245,21 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl
 	public void deleteReimbursementAttachBiz(FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		if(CommonUtils.isEmpty(params.get("clmNo"))) {
+		//if(CommonUtils.isEmpty(params.get("clmNo"))) {
 			// Not Temp. Save
 			// 저장된 파일만 삭제
-			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
-		} else {
+//			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
+		//} else {
 			// Temp. Save
 			// 저장된 파일 삭제 및 테이블 데이터 삭제
 			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
 			creditCardService.deleteReimbursement(params);
 			creditCardService.updateReimbursementTotAmt(params);
-		}
+		//}
 	}
-	
-	
 
-	
+
+
+
 
 }
