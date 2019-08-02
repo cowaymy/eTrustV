@@ -898,7 +898,7 @@
     $("#m11").show();
     $("#m12").show();
     $("#m13").show();
-    $("#").show();
+    $("#m14").show();
 
     $("#btnSaveDiv").attr("style", "display:inline");
     $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
@@ -2080,7 +2080,7 @@
           </td>
          </tr>
          <tr>
-          <th scope="row"><spring:message code='service.title.Remark' /><span id='' name='' class="must"  style="display:none">*</span></th>
+          <th scope="row"><spring:message code='service.title.Remark' /><span id='m14' name='m14' class="must" style="display:none">*</span></th>
           <td colspan="3">
             <textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtRemark' name='txtRemark'></textarea>
           </td>
