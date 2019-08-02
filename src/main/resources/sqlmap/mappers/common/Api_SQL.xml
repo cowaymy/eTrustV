@@ -252,6 +252,7 @@
 		FROM CP1018V
 		WHERE 1 = 1
 		AND SALES_ORD_NO = #{orderNo}
+		AND ROWNUM <![CDATA[ <= ]]> 6
     </select>
 
     <select id="isUserHasTaxInvoiceRefNo" parameterType="Map" resultType="egovMap">
