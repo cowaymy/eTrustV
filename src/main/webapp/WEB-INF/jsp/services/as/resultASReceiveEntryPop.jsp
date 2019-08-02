@@ -173,8 +173,8 @@
 
       // DISABLE FIELD
       $("#appDate").attr("disabled", true);
-      $("#errorCode").attr("disabled", true);
-      $("#errorDesc").attr("disabled", true);
+      //$("#errorCode").attr("disabled", true);
+      //$("#errorDesc").attr("disabled", true);
       $("#CTGroup").attr("disabled", true);
       $("#callRem").attr("disabled", true);
 
