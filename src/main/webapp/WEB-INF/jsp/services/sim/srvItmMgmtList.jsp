@@ -18,8 +18,9 @@
   $(document).ready( function() {
     srvItmMgmtGrid(); // GRID VIEW COLUMN CONFIGURATION
     // SET CBO LISING HERE --
-    doGetCombo('/services/sim/getBchTyp.do', '', '', 'cboBchTyp', 'S', ''); // BRANCH TYPE
+    doGetCombo('/services/sim/getBchTyp.do', '', '42', 'cboBchTyp', 'S', 'fn_onChgBch'); // BRANCH TYPE
     doGetCombo('/services/sim/getItm.do', '', '', 'cboItm', 'S', ''); // ITEM TYPE
+
 
     // SET TRIGGER FUNCTION HERE --
     $("#cboBchTyp").change(function() {
@@ -36,6 +37,11 @@
       Common.popupDiv("/services/sim/srvItmView.do" + param, null, null, true, '_srvItmViewDiv1');
     });
   });
+
+  function fn_onChgBch() {
+     $("#cboBchTyp").val('42');
+     doGetCombo('/services/sim/getBch.do', $("#cboBchTyp").val(), '${SESSION_INFO.userBranchId}', 'cboBch', 'S', '');
+  }
 
   function srvItmMgmtGrid() {
       var columnLayout = [
@@ -220,10 +226,10 @@
     <tbody>
      <tr>
       <th scope="row"><spring:message code='service.grid.brchTyp'/></th> <!-- BRANCH TYPE -->
-      <td><select id="cboBchTyp" name="cboBchTyp" class="w100p" /></td>
+      <td><select id="cboBchTyp" name="cboBchTyp" class="w100p" disabled /></td>
 
       <th scope="row"><spring:message code='service.grid.bch'/></th>
-      <td><select id="cboBch" name="cboBch" class="w100p" >
+      <td><select id="cboBch" name="cboBch" class="w100p" disabled>
         <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
       </select></td>
 
