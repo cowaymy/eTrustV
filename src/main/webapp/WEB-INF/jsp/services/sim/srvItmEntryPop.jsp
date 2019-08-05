@@ -10,7 +10,7 @@
 <script type="text/javaScript">
   $(document).ready( function() {
     // SET CBO LISING HERE --
-    doGetCombo('/services/sim/getBchTyp.do', '', '', 'cboBchTypPop', 'S', ''); // BRANCH TYPE
+    doGetCombo('/services/sim/getBchTyp.do', '', '42', 'cboBchTypPop', 'S', 'fn_onChgBch'); // BRANCH TYPE
     doGetCombo('/services/sim/getItm.do', '', '', 'cboItmPop', 'S', ''); // ITEM TYPE
 
     // SET TRIGGER FUNCTION HERE --
@@ -18,6 +18,11 @@
       doGetCombo('/services/sim/getBch.do', $("#cboBchTypPop").val(), '', 'cboBchPop', 'S', '');
     });
   });
+
+  function fn_onChgBch() {
+    $("#cboBchTyp").val('42');
+    doGetCombo('/services/sim/getBch.do', $("#cboBchTypPop").val(), '${SESSION_INFO.userBranchId}', 'cboBchPop', 'S', '');
+  }
 
   function fn_next() {
     // VALIDATION BEFORE NEXT
@@ -76,12 +81,12 @@
       <tbody>
        <tr>
         <th scope="row"><spring:message code='service.grid.brchTyp'/><span class='must'> *</span></th>
-        <td><select id="cboBchTypPop" name="cboBchTypPop" class="w100p" /></td>
+        <td><select id="cboBchTypPop" name="cboBchTypPop" class="w100p" disabled/></td>
        </tr>
        <tr>
          <th scope="row"><spring:message code='service.grid.bch'/><span class='must'> *</span></th>
           <td>
-            <select id="cboBchPop" name="cboBchPop" class="w100p" >
+            <select id="cboBchPop" name="cboBchPop" class="w100p" disabled >
               <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
             </select>
           </td>
