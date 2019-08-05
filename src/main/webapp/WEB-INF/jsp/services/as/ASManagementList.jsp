@@ -943,7 +943,7 @@
      </p></li>
    </c:if>
    <!-- FUNCTION WHICH ALLOW EDIT RECORD WITHIN 7 DAYS -->
-   <!-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+   <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <li><p class="btn_blue">
       <a href="#" onclick="fn_asResultEditBasicPop(1)"><spring:message code='service.btn.edtBsAs'/></a>
      </p></li>
@@ -952,7 +952,7 @@
     <li><p class="btn_blue">
       <a href="#" onclick="fn_asResultEditPop(1)"><spring:message code='service.btn.edtAs'/></a>
      </p></li>
-   </c:if> -->
+   </c:if>
    <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
     <li><p class="btn_blue">
       <a href="#" onclick="fn_asResultViewPop()"><spring:message code='service.btn.viewAS'/></a>
