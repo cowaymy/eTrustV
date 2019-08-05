@@ -9,7 +9,7 @@
 
 <script type="text/javaScript">
   $(document).ready( function() {
-    doGetCombo('/services/sim/getBchTyp.do', '', '', 'cboBchTypRaw', 'S', ''); // BRANCH TYPE
+    doGetCombo('/services/sim/getBchTyp.do', '', '42', 'cboBchTypRaw', 'S', 'fn_onChgBch'); // BRANCH TYPE
     doGetCombo('/services/sim/getItm.do', '', '', 'cboItmPopRaw', 'S', ''); // ITEM TYPE
 
     // SET TRIGGER FUNCTION HERE --
@@ -18,6 +18,11 @@
     });
 
   });
+
+  function fn_onChgBch() {
+    $("#cboBchTyp").val('42');
+    doGetCombo('/services/sim/getBch.do', $("#cboBchTypRaw").val(), '${SESSION_INFO.userBranchId}', 'cboBchPopRaw', 'S', '');
+  }
 
   function fn_openGenerate() {
     var text = "";
@@ -163,13 +168,13 @@
          <tr>
            <th scope="row"><spring:message code='service.grid.brchTyp'/></th>
            <td>
-            <select id="cboBchTypRaw" name="cboBchTypRaw" class="w100p" />
+            <select id="cboBchTypRaw" name="cboBchTypRaw" class="w100p" disabled />
            </td>
          </tr>
          <tr>
            <th scope="row"><spring:message code='service.grid.bch'/></th>
            <td>
-            <select id="cboBchPopRaw" name="cboBchPopRaw" class="w100p" >
+            <select id="cboBchPopRaw" name="cboBchPopRaw" class="w100p" disabled>
               <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
             </select>
            </td>
