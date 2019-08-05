@@ -605,9 +605,9 @@
 
   function fn_filterAdd() {
     // CHECK AVAILABLE STOCK
-    //if (fn_chStock() == false) {
-      //return;
-    //}
+    if (fn_chStock() == false) {
+      return;
+    }
 
     if (fn_filterAddVaild() == false) {
       return false;
