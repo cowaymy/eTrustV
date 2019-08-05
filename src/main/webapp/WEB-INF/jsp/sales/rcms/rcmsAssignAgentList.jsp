@@ -19,9 +19,13 @@ var excelGrid;
 var companyList = [];
 var agentList = [];
 var suggestList = [];
+var ynData = [{"codeId": "1","codeName": "YES"},{"codeId": "0","codeName": "NO"}];
+
 
 $(document).ready(function(){
 
+	doDefCombo(ynData, '' ,'etrYn', 'S', '');                 //Status 생성
+	doDefCombo(ynData, '' ,'sensitiveYn', 'S', '');                 //Status 생성
     //Application Type
     CommonCombo.make("appType", "/common/selectCodeList.do", {groupCode : '10'}, '66',
     		{
@@ -60,8 +64,15 @@ $(document).ready(function(){
              });
     //RosCaller
     CommonCombo.make("rosCaller", "/sales/rcms/selectRosCaller", {stus:'1'}, '',  {id:"agentId", name:"agentName", isCheckAll : false, isShowChoose: false , type: "M"});
-    doGetCombo('/common/selectCodeList.do', '2', '',    'cmbRaceId',    'S', ''); //Common Code
-
+    //doGetCombo('/common/selectCodeList.do', '2', '',    'cmbRaceId',    'S', ''); //Common Code
+    CommonCombo.make('cmbRaceId', "/common/selectCodeList.do", {groupCode : '2'} , '',
+            {
+                id: "codeId",              // 콤보박스 value 에 지정할 필드명.
+                name: "codeName",  // 콤보박스 text 에 지정할 필드명.
+                isShowChoose: false,
+                isCheckAll : true,
+                type : 'M'
+                });
     $("#companyType").multipleSelect("disable");
     fn_companyList();
     fn_agentList();
@@ -149,6 +160,7 @@ function createGrid(){
               {dataField : "colctTrget", headerText : '<spring:message code="sal.title.text.openOsBrTarget" />', width : '7%'  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
               {dataField : "rentAmt", headerText : '<spring:message code="sal.title.text.currBrOs" />', width : '7%'  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
               {dataField : "openMthAging", headerText : '<spring:message code="sal.title.text.openAgingBrMonth" />', width : '7%'  , editable       : false      } ,
+              {dataField : "unBillAmt", headerText : '<spring:message code="sal.text.unbillAmount" />', width : '10%'  , editable       : false      } ,
               {dataField : "currRentalStus", headerText : '<spring:message code="sal.title.text.currRentStatus" />', width : '10%'  , editable       : false      } ,
               /*   ,{dataField : "suggestAgent", headerText : '<spring:message code="sal.title.text.suggestBrCaller" />', width : 90    , editable       : false     , style:"aui-grid-drop-list-ul"
             	  , labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
@@ -169,6 +181,7 @@ function createGrid(){
 	              }
 	            } , */
 	          {dataField : "prevAgentId", headerText : "", width : 90    ,   visible:false ,   editable       : false},
+	          {dataField : "oriPrevAgentId", headerText : '<spring:message code="sal.title.text.prevCaller" />', width : '14%'    ,    editable       : false } ,
               {dataField : "agentId", headerText : '<spring:message code="sal.title.text.rosCaller" />', width : '14%'    ,     editable       : false ,
 	        	  /* style:"aui-grid-drop-list-ul"
                   , labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
@@ -190,9 +203,9 @@ function createGrid(){
 	            } ,
               {dataField : "assigned", headerText : '<spring:message code="sal.title.text.assigned" />', width : '7%'  , editable       : false, visible : false     } ,
               {dataField : "sensitiveFg", headerText : '<spring:message code="sal.title.text.sensitive" />', width : '5%'   ,editable       : false    },
-              {dataField : "rem", headerText : '<spring:message code="sal.title.remark" />', width : '10%'   ,editable       : false    },
+              {dataField : "rem", headerText : '<spring:message code="sal.title.text.sensitiveRem" />', width : '10%'   ,editable       : false    },
               {dataField : "etrFg", headerText : '<spring:message code="sal.title.text.etr" />', width : '5%'   ,editable       : false    },
-              {dataField : "etrRem", headerText : '<spring:message code="sal.title.remark" />', width : '10%'   ,editable       : false    }
+              {dataField : "etrRem", headerText : '<spring:message code="sal.title.text.otrRem" />', width : '10%'   ,editable       : false    }
               ];
 
         var excelColLayout = [
@@ -221,37 +234,9 @@ function createGrid(){
               {dataField : "colctTrget", headerText : '<spring:message code="sal.title.text.openOsBrTarget" />', width : 80  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
               {dataField : "rentAmt", headerText : '<spring:message code="sal.title.text.currBrOs" />', width : 75  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
               {dataField : "openMthAging", headerText : '<spring:message code="sal.title.text.openAgingBrMonth" />', width : 95  , editable       : false      } ,
-              /* {dataField : "oriPrevAgentId", headerText : '<spring:message code="sal.title.text.prevCaller" />', width : 150    ,    editable       : false,  style:"aui-grid-drop-list-ul"
-            	  , labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
-                      var retStr = value;
-                      for(var i=0,len=suggestList.length; i<len; i++) {
-                          if(suggestList[i]["agentId"] == value) {
-                              retStr = suggestList[i]["agentName"];
-                              break;
-                          }
-                      }
-                                      return retStr;
-                  }
-              },
-              {dataField : "suggestAgent", headerText : '<spring:message code="sal.title.text.suggestCaller" />', width : 150    , editable       : false     ,  style:"aui-grid-drop-list-ul"
-            	  , labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
-                  var retStr = value;
-                  for(var i=0,len=suggestList.length; i<len; i++) {
-                      if(suggestList[i]["agentId"] == value) {
-                          retStr = suggestList[i]["agentName"];
-                          break;
-                      }
-                  }
-	                              return retStr;
-	              }
-               , editRenderer : {
-	                  type       : "DropDownListRenderer",
-	                  list       : agentList, //key-value Object 로 구성된 리스트
-	                  keyField   : "agentId", // key 에 해당되는 필드명
-	                  valueField : "agentName" // value 에 해당되는 필드명
-	              }
-	            } ,
-	          {dataField : "prevAgentId", headerText : '<spring:message code="sal.title.text.callerId" />', width : 90    ,      editable       : false},
+              {dataField : "unBillAmt", headerText : '<spring:message code="sal.text.unbillAmount" />', width : 125  , editable       : false      } ,
+              {dataField : "oriPrevAgentId", headerText : '<spring:message code="sal.title.text.prevCaller" />', width : 150    ,    editable       : false } ,
+	          /*{dataField : "prevAgentId", headerText : '<spring:message code="sal.title.text.callerId" />', width : 90    ,      editable       : false},
 	          */
               {dataField : "agentId", headerText : '<spring:message code="sal.title.text.rosCaller" />', width : 150    ,     editable       : true ,  style:"aui-grid-drop-list-ul"
                   , labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
@@ -274,9 +259,9 @@ function createGrid(){
               {dataField : "updAgentDt", headerText : '<spring:message code="sal.title.text.assignedDt" />', width : 100  , editable       : false     } ,
               {dataField : "assigned", headerText : '<spring:message code="sal.title.text.assigned" />', width : 70  , editable       : false, visible : false} ,
               {dataField : "sensitiveFg", headerText : '<spring:message code="sal.title.text.sensitive" />', width : 70   ,editable       : false    },
-              {dataField : "rem", headerText : '<spring:message code="sal.title.remark" />', width : 200   ,editable       : false  ,style :"my-left-style"  },
+              {dataField : "rem", headerText : '<spring:message code="sal.title.text.sensitiveRem" />', width : 200   ,editable       : false  ,style :"my-left-style"  },
               {dataField : "etrFg", headerText : '<spring:message code="sal.title.text.etr" />', width : 70   ,editable       : false    },
-              {dataField : "etrRem", headerText : '<spring:message code="sal.title.remark" />', width : 300   ,editable       : false    }
+              {dataField : "etrRem", headerText : '<spring:message code="sal.title.text.otrRem" />', width : 300   ,editable       : false    }
               ];
 
 
@@ -509,7 +494,7 @@ function fn_badAccReport(){
         </td>
         <th scope="row"><spring:message code="sal.text.race"/></th>
         <td>
-            <select id="cmbRaceId" name="raceId" class="w100p"></select>
+            <select id="cmbRaceId" name="raceId" class="multy_select w100p"  multiple="multiple" ></select>
         </td>
         <th scope="row"></th>
         <td>
@@ -522,11 +507,11 @@ function fn_badAccReport(){
         </td>
         <th scope="row"><spring:message code="sal.title.text.sensitive" /></th>
         <td>
-        <input type="checkbox" id="sensitiveYn" name="sensitiveYn"  value="Y"/>
+        <p><select id="sensitiveYn" name="sensitiveYn" class="w100p"></select></p>
         </td>
         <th scope="row"><spring:message code="sal.title.text.etr" /></th>
         <td>
-        <input type="checkbox" id="etrYn" name="etrYn"  value="Y"/>
+        <p><select id="etrYn" name="etrYn" class="w100p"></select></p>
         </td>
     </tr>
     </tbody>

@@ -140,7 +140,7 @@ function fn_Validsave(){
     <td><input type="checkbox"  id="chkEtrFg"  name="chkEtrFg" onclick="fn_chk()"/></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.etrRem" /></th>
+    <th scope="row"><spring:message code="sal.title.text.otrRem" /></th>
     <td colspan="3"> <textarea cols="20" rows="3" id='remark2'  name='remark2' name='remark2'></textarea></td>
 </tr>
 </tbody>

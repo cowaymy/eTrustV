@@ -150,6 +150,7 @@
 		        ,B.NAME
 		        ,CASE WHEN B.CORP_TYPE_ID = 0 THEN null ELSE B.CORP_TYPE_ID  END  CORP_TYPE_ID
 		        ,A.COLCT_TRGET
+
 		         <choose>
                   <when test="appType == 66">
                       ,(SELECT SUM(RENT_AMT) AS CURRENT_OS
@@ -180,6 +181,7 @@
 		        ,A.REM
 		        ,A.ETR_REM
 		        ,F.CODE_DESC RACE
+		        ,A.UN_BILL_AMT
 		 FROM SAL0149D A JOIN SAL0029D B  ON A.CUST_ID = B.CUST_ID
 		    JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
         LEFT JOIN ( SELECT A.AGENT_ID ,B.CODE || '_'||A.AGENT_ID||'_'||A.AGENT_NAME AGENT_NAME
@@ -257,13 +259,16 @@
 		            AND A.AGENT_ID <![CDATA[<>]]> 0
 		          </if>
 		          <if test="sensitiveYn != null and sensitiveYn !='' ">
-                    AND A.SENSITIVE_FG <![CDATA[<>]]> 0
+                    AND A.SENSITIVE_FG  = #{sensitiveYn}
                     </if>
                     <if test="etrYn != null and etrYn !='' ">
-                    AND A.ETR_FG <![CDATA[<>]]> 0
+                    AND A.ETR_FG = #{etrYn}
                     </if>
                     <if test="raceId != null and raceId !='' ">
-                    AND B.RACE_ID = #{raceId}
+                      AND B.RACE_ID IN
+                    <foreach item="item" collection="raceId" index="index" open="(" separator="," close=")">
+                      #{item}
+                    </foreach>
                     </if>
                     <if test="over60 != null and over60 !='' ">
                     AND G.INSTALL_DT <![CDATA[ < ]]> ADD_MONTHS(SYSDATE, -60)
@@ -366,7 +371,8 @@
                 EXTENT4.USER_NAME RC_CRT_USER_NAME,
                 nvl(TO_CHAR(extent1.RC_CRT_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS RC_CRT_DT,
                 EXTENT5.USER_NAME RC_UPD_USER_NAME,
-                nvl(TO_CHAR(extent1.RC_UPD_DT ,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS RC_UPD_DT
+                CASE WHEN EXTENT1.RC_STUS_ID = 4 THEN nvl(TO_CHAR(extent1.RC_UPD_DT ,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')
+                ELSE ' - ' END AS RC_UPD_DT
             FROM SAL0239D EXTENT1
             JOIN (SELECT RC_BATCH_ID,
                   COUNT(RC_BATCH_ID) TOTAL_ITEM,
