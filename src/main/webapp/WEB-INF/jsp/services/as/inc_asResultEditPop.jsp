@@ -1057,9 +1057,9 @@
 
   function fn_filterAdd() {
     // TEMP. CLOSE FOR DEVELOPMENT
-    //if (fn_chStock() == false) {
-      //return;
-    //}
+    if (fn_chStock() == false) {
+      return;
+    }
 
     if (fn_filterAddVaild() == false) {
       return false;
