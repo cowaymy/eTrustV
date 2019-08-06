@@ -818,13 +818,37 @@
 
   function fn_getRclData() {
   Common.ajax("GET", "/services/as/getASRclInfo.do", $("#resultASForm").serialize(), function(result) {
-      $("#appDate").val(result[0].appDt);
-      $("#CTSSessionCode").val(result[0].appSess);
-      $("#branchDSC").val(result[0].dscCde);
 
-      $("#CTCode").val(result[0].memId);
-      $("#CTGroup").val(result[0].memGrp);
-      $("#callRem").val(result[0].rclRmk);
+        if (result[0].appDt != null) {
+          $("#appDate").val(result[0].appDt);
+        } else {
+          $("#appDate").val("");
+        }
+        if (result[0].appSess != null) {
+          $("#CTSSessionCode").val(result[0].appSess);
+        } else {
+          $("#CTSSessionCode").val("");
+        }
+        if (result[0].dscCde != null) {
+          $("#branchDSC").val(result[0].dscCde);
+        }
+
+        if (result[0].memId != null) {
+          $("#CTCode").val(result[0].memId);
+        } else {
+          $("#CTCode").val("");
+        }
+        if (result[0].memGrp != null){
+          $("#CTGroup").val(result[0].memGrp);
+        } else {
+          $("#CTGroup").val("");
+        }
+        if (result[0].rclRmk != null) {
+          $("#callRem").val(result[0].rclRmk);
+        } else {
+          $("#callRem").val("");
+        }
+      }
     });
   }
 
