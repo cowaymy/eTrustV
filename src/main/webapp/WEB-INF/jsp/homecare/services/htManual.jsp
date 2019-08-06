@@ -1003,31 +1003,24 @@ var TODAY_DD      = "${toDay}";
         <dt>Link</dt>
         <dd>
          <ul class="btns">
-          <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-              <li><p class="link_btn type2">
+
+          <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsSummary()">CS
               Summary Listing</a>
             </p></li>
-               <li><p class="link_btn type2">
+           <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsReportSingle()">CS
               Report(Single)</a>
             </p></li>
-                   <li><p class="link_btn type2">
+
+          <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+              <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsReportGroup()">CS
               Report(Group)</a>
             </p></li>
-
           </c:if>
-
               <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-             <li><p class="link_btn type2">
-             <a href="#" onclick="javascript:fn_hsSummary()">CS
-              Summary Listing</a>
-            </p></li>
-               <li><p class="link_btn type2">
-             <a href="#" onclick="javascript:fn_hsReportSingle()">CS
-              Report(Single)</a>
-            </p></li>
+
              </c:if>
 
          </ul>
