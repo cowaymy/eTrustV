@@ -1195,7 +1195,7 @@
                         "",
                         fn_selfClose);
       }
-      $("#checkComm").attr("disabled", true);
+      $("#checkComm").attr("readonly", true);
     }
   }
 
