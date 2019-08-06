@@ -2254,7 +2254,7 @@
     <![CDATA[
       SELECT COUNT(AS_ID)
       FROM SVC0001D
-      WHERE  AS_NO =#{serviceNo} AND AS_STUS_ID <> '1'
+      WHERE  AS_NO =#{serviceNo} AND AS_STUS_ID NOT IN ('1', '19')
     ]]>
   </select>
 
