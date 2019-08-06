@@ -4185,12 +4185,13 @@
     UPDATE SVC0001D SET AS_MEM_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{AS_MEM_ID}),
                         AS_MEM_GRP = #{AS_MEM_GRP},
                         AS_APPNT_DT = TO_DATE(#{AS_APP_DT},'DD/MM/YYYY'),
-                        AS_APPNT_TM = #{AS_APP_SESS},
                         AS_BRNCH_ID = #{AS_RCL_ASG_DSC},
                         AS_SESION_CODE = #{AS_APP_SESS},
                         AS_UPD_USER_ID = #{updator},
                         AS_UPD_DT = SYSDATE
     WHERE AS_ID = #{AS_ID}
+
+    <!-- AS_APPNT_TM = #{AS_APP_SESS}, -->
   </update>
 
   <update id="updateSVC0004D" parameterType="Map">
