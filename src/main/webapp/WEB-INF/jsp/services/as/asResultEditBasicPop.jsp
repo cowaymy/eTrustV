@@ -598,7 +598,7 @@
     $("#btnSaveDiv").attr("style", "display:none");
     $("#addDiv").attr("style", "display:none");
 
-    fn_clearPanelField_ASChargesFees();
+    //fn_clearPanelField_ASChargesFees();
 
   }
 
@@ -927,7 +927,7 @@
     $("#ddlFilterExchangeCode").attr("disabled", false);
     $("#ddSrvFilterLastSerial").attr("disabled", false);
     $("#txtFilterRemark").attr("disabled", false);
-    fn_clearPanelField_ASChargesFees();
+    //fn_clearPanelField_ASChargesFees();
 
     //$("#ddlFilterQty").val("1");
     //$("#ddlFilterPayType").val("FOC");
