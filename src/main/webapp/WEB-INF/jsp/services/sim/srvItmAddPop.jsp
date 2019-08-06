@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  27/06/2019  ONGHC  1.0.0          CREATE FOR SERVICE ITEM MANEGEMENT
+ 06/08/2019  ONGHC  1.0.1          ADD CHECKING USER BRANCH VS RECORD BRANCH
  -->
 
 <style type="text/css">
@@ -38,6 +39,7 @@
         }
         doGetCombo('/services/sim/getMovDtl.do', ind, '', 'cboMovDtl', 'S', '');
       });
+
     });
 
   function srvItmMgmtGrid() {
@@ -182,7 +184,6 @@
 
   function getSrvItm() {
     Common.ajax("GET", "/services/sim/getSrvItmRcd.do", $("#srvItmPreForm").serialize(), function(result) {
-        console.log(result);
         AUIGrid.setGridData(myGridIDPop, result);
 
         AUIGrid.setProp(myGridIDPop, "rowStyleFunction", function(rowIndex, item) {
@@ -263,6 +264,12 @@
   }
 
   function fn_doSave() {
+    if ("${BR}" != '${SESSION_INFO.userBranchId}') {
+      Common.confirm("<spring:message code='service.msg.simBchChk'/>", fn_doSaveCont);
+    }
+  }
+
+  function fn_doSaveCont() {
     var allRowItems = AUIGrid.getGridData(myGridIDPopAdd);
     var resultMst = { BR_TYP : $("#BR_TYP").val(),
                       BR : $("#BR").val(),
