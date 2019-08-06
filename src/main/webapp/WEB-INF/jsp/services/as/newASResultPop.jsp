@@ -818,7 +818,7 @@
 
   function fn_getRclData() {
   Common.ajax("GET", "/services/as/getASRclInfo.do", $("#resultASForm").serialize(), function(result) {
-
+      if (result.length != 0) {
         if (result[0].appDt != null) {
           $("#appDate").val(result[0].appDt);
         } else {
