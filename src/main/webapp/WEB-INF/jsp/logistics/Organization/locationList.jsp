@@ -262,7 +262,7 @@ $(document).ready(function(){
     	$("#maddr1").val(AUIGrid.getCellValue(myGridID ,rowid,'locdtl'));
     	$("#mcontact1").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel1'));
     	$("#mcontact2").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel2'));
-    	$("#streetDtl").val(AUIGrid.getCellValue(myGridID ,rowid,'street'));
+    	$("#street").val(AUIGrid.getCellValue(myGridID ,rowid,'street'));
     	$("#mareaId").val(AUIGrid.getCellValue(myGridID ,rowid,'areaid'));
     	$("#plant").val(AUIGrid.getCellValue(myGridID ,rowid,'plant'));
     	$("#slplant").val(AUIGrid.getCellValue(myGridID ,rowid,'slplant'));
@@ -434,7 +434,7 @@ $(document).ready(function(){
         item.loctel2  = $("#mcontact2").val();
         item.locgrad  = $("#mstockgrade").val();
         item.areaid   = $("#mareaId").val();
-        item.street   = $("#streetDtl").val();
+        item.street   = $("#street").val();
         item.locbranch1 = $("#mwarebranch1").val();
         item.locbranch2 = $("#mwarebranch2").val();
         item.locbranch3 = $("#mwarebranch3").val();
@@ -795,9 +795,11 @@ $(document).ready(function(){
 </tr>
 <tr>
    <th scope="row">Area(4)<span class="must">*</span></th>
-	<td colspan="3">
+	<td>
 	<select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId('m')"></select>
 	</td>
+	 <th scope="row">Street</th>
+    <td><input type="text" title="" id="street" name="street" placeholder="Detail Address" class="w100p"  /></td>
 </tr>
 <tr>
 	 <th scope="row">City(2)<span class="must">*</span></th>
