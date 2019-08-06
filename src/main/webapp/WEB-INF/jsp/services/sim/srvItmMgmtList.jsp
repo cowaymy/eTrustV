@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  20/06/2019  ONGHC  1.0.0          CREATE SERVICE ITEM MANAGEMENT LISTING
+ 06/08/2019  ONGHC  1.0.1          REMOVE DISABLE ATTRIBUTE FOR BRANCH
  -->
 
 <script type="text/javaScript">
@@ -229,7 +230,7 @@
       <td><select id="cboBchTyp" name="cboBchTyp" class="w100p" disabled /></td>
 
       <th scope="row"><spring:message code='service.grid.bch'/></th>
-      <td><select id="cboBch" name="cboBch" class="w100p" disabled>
+      <td><select id="cboBch" name="cboBch" class="w100p">
         <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
       </select></td>
 
