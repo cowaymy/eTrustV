@@ -33,6 +33,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 10/04/2019    ONGHC      1.0.1       - Amend File Format
+ * 29/07/2019    ONGHC      1.0.2       - Add Function
+ * 29/07/2019    ONGHC      1.0.3       - Amend productReturnResult to Add Status Checking
  *********************************************************************************************/
 
 @Service("MSvcLogApiService")
@@ -415,6 +417,16 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     logger.debug("====================productReturnResult=====================");
 
     return rMp;
+  }
+
+  @Override
+  public int isPrdRtnAlreadyResult(Map<String, Object> params) {
+    return MSvcLogApiMapper.isPrdRtnAlreadyResult(params);
+  }
+
+  @Override
+  public int updFctExch(Map<String, Object> params) {
+    return MSvcLogApiMapper.updFctExch(params);
   }
 
   @Override
