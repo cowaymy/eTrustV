@@ -104,6 +104,7 @@ import io.swagger.annotations.ApiOperation;
  * 08/05/2019    ONGHC      1.0.3       - Amend hsRegistration to add stage
  * 08/07/2019    ONGHC      1.0.4       - Amend asRegistration to fix Commission issue
  * 26/07/2019    ONGHC      1.0.5       - Amend asRegistration to fix Commission and Update User issue
+ * 29/07/2019    ONGHC      1.0.6       - Amend productReturnResult to Add Status Checking
  *********************************************************************************************/
 
 @Api(value = "service api", description = "service api")
@@ -464,6 +465,14 @@ public class ServiceApiController {
               String userId = MSvcLogApiService.getUseridToMemid(params);
               sessionVO.setUserId(Integer.parseInt(userId));
 
+              // UPDATE FAUCET EXCHANGE
+              if (params.get("warranty") != null) {
+                if ("1".equals(CommonUtils.nvl(params.get("warranty").toString()))) {
+                  int cnt = MSvcLogApiService.updFctExch(params);
+                  LOGGER.debug("### FAUCET EXCHANGE UPDATE COUNT : " + cnt);
+                }
+              }
+
               Map<String, Object> getHsBasic = MSvcLogApiService.getHsBasic(params);
               LOGGER.debug("### HS BASIC INFO : " + getHsBasic.toString());
 
@@ -499,6 +508,52 @@ public class ServiceApiController {
 
               LOGGER.debug("### HS PARAM : " + params.toString());
               LOGGER.debug("### HS PARAM FILTER : " + paramsDetailList.toString());
+
+              // STOCK CHECKING
+              //for (int x = 0; x < paramsDetailList.size(); x++) {
+                //Map<String, Object> filterLst = (Map<String, Object>) paramsDetailList.get(x);
+
+                //if (filterLst.get("filterCode") != null || !("".equals(filterLst.get("filterCode")))) {
+                  //Map<String, Object> locInfoEntry = new HashMap<String, Object>();
+                  //locInfoEntry.put("CT_CODE", CommonUtils.nvl(params.get("userId").toString()));
+                  //locInfoEntry.put("STK_CODE", CommonUtils.nvl(filterLst.get("filterCode").toString()));
+
+                  //EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
+
+                  //LOGGER.debug("LOC. INFO. : {}" + locInfo);
+                  //if (locInfo != null) {
+                    //if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
+                      // FAIL CT NOT ENOUGH STOCK
+                      //MSvcLogApiService.updateErrStatus(transactionId);
+
+                      //Map<String, Object> m = new HashMap();
+                      //m.put("APP_TYPE", "HS");
+                      //m.put("SVC_NO", params.get("serviceNo"));
+                      //m.put("ERR_CODE", "03");
+                      //m.put("ERR_MSG", "[API] [" + params.get("userId") + "] STOCK FOR [" + filterLst.get("filterCode") + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
+                      //m.put("TRNSC_ID", transactionId);
+
+                      //MSvcLogApiService.insert_SVC0066T(m);
+
+                      //return ResponseEntity.ok(HeartServiceResultDto.create(transactionId));
+                    //}
+                  //} else {
+                    // FAIL CT NOT ENOUGH STOCK
+                    //MSvcLogApiService.updateErrStatus(transactionId);
+
+                    //Map<String, Object> m = new HashMap();
+                    //m.put("APP_TYPE", "HS");
+                    //m.put("SVC_NO", params.get("serviceNo"));
+                    //m.put("ERR_CODE", "03");
+                    //m.put("ERR_MSG", "[API] [" + params.get("userId") + "] STOCK FOR [" + filterLst.get("filterCode") + "] IS UNAVAILABLE. ");
+                    //m.put("TRNSC_ID", transactionId);
+
+                    //MSvcLogApiService.insert_SVC0066T(m);
+
+                    //return ResponseEntity.ok(HeartServiceResultDto.create(transactionId));
+                  //}
+                //}
+              //}
 
               // SERVICE TO VALUE SETTING
               Map<String, Object> asResultInsert = new HashMap();
@@ -651,6 +706,48 @@ public class ServiceApiController {
 
             LOGGER.debug("### AS PART SIZE : " + paramsDetail.size());
             for (int x = 0; x < paramsDetail.size(); x++) {
+
+              // CHECKING STOCK
+              //if (paramsDetail.get(x).get("filterCode") != null || !("".equals(paramsDetail.get(x).get("filterCode")))) {
+                //Map<String, Object> locInfoEntry = new HashMap<String, Object>();
+                //locInfoEntry.put("CT_CODE", CommonUtils.nvl(asTransLogs1.get(i).get("userId").toString()));
+                //locInfoEntry.put("STK_CODE", CommonUtils.nvl(paramsDetail.get(x).get("filterCode").toString()));
+
+                //EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
+
+                //LOGGER.debug("LOC. INFO. : {}" + locInfo);
+                //if (locInfo != null) {
+                  //if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
+                    // FAIL CT NOT ENOUGH STOCK
+                    //MSvcLogApiService.updateASErrStatus(transactionId);
+
+                    //Map<String, Object> m = new HashMap();
+                    //m.put("APP_TYPE", "AS");
+                    //m.put("SVC_NO", asTransLogs1.get(i).get("serviceNo"));
+                    //m.put("ERR_CODE", "03");
+                    //m.put("ERR_MSG", "[API] [" + asTransLogs1.get(i).get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode") + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
+                    //m.put("TRNSC_ID", transactionId);
+
+                    //MSvcLogApiService.insert_SVC0066T(m);
+
+                    //return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
+                  //}
+                //} else {
+                   // FAIL CT NOT ENOUGH STOCK
+                  //MSvcLogApiService.updateASErrStatus(transactionId);
+
+                  //Map<String, Object> m = new HashMap();
+                  //m.put("APP_TYPE", "AS");
+                  //m.put("SVC_NO", asTransLogs1.get(i).get("serviceNo"));
+                  //m.put("ERR_CODE", "03");
+                  //m.put("ERR_MSG", "[API] [" + asTransLogs1.get(i).get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode") + "] IS UNAVAILABLE. ");
+                  //m.put("TRNSC_ID", transactionId);
+
+                  //MSvcLogApiService.insert_SVC0066T(m);
+
+                  //return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
+                //}
+              //}
 
               Map<String, Object> map = new HashMap<String, Object>();
 
@@ -1096,6 +1193,50 @@ public class ServiceApiController {
 
           EgovMap orderInfo = installationResultListService.getOrderInfo(params);
 
+          LOGGER.debug("### INSTALLATION STOCK : " + orderInfo.get("stkId"));
+          if (orderInfo.get("stkId") != null || !("".equals(orderInfo.get("stkId")))) {
+            // CHECK STOCK QUANTITY
+            Map<String, Object> locInfoEntry = new HashMap<String, Object>();
+            locInfoEntry.put("CT_CODE", CommonUtils.nvl(insTransLogs.get(i).get("userId").toString()));
+            locInfoEntry.put("STK_CODE", CommonUtils.nvl(orderInfo.get("stkId").toString()));
+
+            LOGGER.debug("LOC. INFO. ENTRY : {}" + locInfoEntry);
+
+            EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
+
+            LOGGER.debug("LOC. INFO. : {}" + locInfo);
+
+            if (locInfo != null) {
+              if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
+                MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+
+                Map<String, Object> m = new HashMap();
+                m.put("APP_TYPE", "INS");
+                m.put("SVC_NO", insTransLogs.get(i).get("serviceNo"));
+                m.put("ERR_CODE", "03");
+                m.put("ERR_MSG", "[API] [" + insTransLogs.get(i).get("userId") + "] PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
+                m.put("TRNSC_ID", transactionId);
+
+                MSvcLogApiService.insert_SVC0066T(m);
+
+                return ResponseEntity.ok(InstallationResultDto.create(transactionId));
+              }
+            } else {
+              MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+
+              Map<String, Object> m = new HashMap();
+              m.put("APP_TYPE", "INS");
+              m.put("SVC_NO", insTransLogs.get(i).get("serviceNo"));
+              m.put("ERR_CODE", "03");
+              m.put("ERR_MSG", "[API] [" + insTransLogs.get(i).get("userId") + "] PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. ");
+              m.put("TRNSC_ID", transactionId);
+
+              MSvcLogApiService.insert_SVC0066T(m);
+
+              return ResponseEntity.ok(InstallationResultDto.create(transactionId));
+            }
+          }
+
           String userId = MSvcLogApiService.getUseridToMemid(params);
           String installDate = MSvcLogApiService.getInstallDate(insApiresult);
 
@@ -1295,28 +1436,41 @@ public class ServiceApiController {
       int memCnt = MSvcLogApiService.prdResultSync(cvMp);
 
       if (memCnt > 0) {
-        try {
-          EgovMap rtnValue = MSvcLogApiService.productReturnResult(cvMp);
+        int isPrdRtnCnt = MSvcLogApiService.isPrdRtnAlreadyResult(cvMp);
+        if (isPrdRtnCnt == 0) {
+          try {
+            EgovMap rtnValue = MSvcLogApiService.productReturnResult(cvMp);
 
-          if (null != rtnValue) {
-            HashMap spMap = (HashMap) rtnValue.get("spMap");
-            if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-              rtnValue.put("logerr", "Y");
+            if (null != rtnValue) {
+              HashMap spMap = (HashMap) rtnValue.get("spMap");
+              if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
+                rtnValue.put("logerr", "Y");
+              }
+              servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
             }
-            servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-          }
-        } catch (Exception ee) {
-          MSvcLogApiService.updatePRErrStatus(transactionId);
+          } catch (Exception ee) {
+            MSvcLogApiService.updatePRErrStatus(transactionId);
 
+            Map<String, Object> m = new HashMap();
+            m.put("APP_TYPE", "PR");
+            m.put("SVC_NO", cvMp.get("serviceNo"));
+            m.put("ERR_CODE", "02");
+            m.put("ERR_MSG", "[API] " + ee.toString());
+            m.put("TRNSC_ID", transactionId);
+
+            MSvcLogApiService.insert_SVC0066T(m);
+            return ResponseEntity.ok(ProductReturnResultDto.create(transactionId));
+          }
+        } else {
+          MSvcLogApiService.updatePRErrStatus(transactionId);
           Map<String, Object> m = new HashMap();
           m.put("APP_TYPE", "PR");
           m.put("SVC_NO", cvMp.get("serviceNo"));
-          m.put("ERR_CODE", "02");
-          m.put("ERR_MSG", "[API] " + ee.toString());
+          m.put("ERR_CODE", "04");
+          m.put("ERR_MSG", "[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT IN ACTIVE STATUS. ");
           m.put("TRNSC_ID", transactionId);
 
           MSvcLogApiService.insert_SVC0066T(m);
-          return ResponseEntity.ok(ProductReturnResultDto.create(transactionId));
         }
       } else {
         MSvcLogApiService.updatePRErrStatus(transactionId);
