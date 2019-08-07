@@ -192,9 +192,13 @@ hideViewPopup=function(val){
 <h2><spring:message code="sal.title.text.rcmsAssignConvert" /></h2>
 
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#"  id="btnUpload" onclick="javascript:fn_uploadPop();"></span><spring:message code="sal.title.text.uploadAssign" /></a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="btnSave" onclick="javascript:fn_selectListAjax();"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     <li><p class="btn_blue"><a href="#" id="btnClear" onclick="javascript:fn_clear();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
+    </c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -248,6 +252,7 @@ hideViewPopup=function(val){
     </tbody>
     </table><!-- table end -->
 
+    <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
     <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
     <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
     <dl class="link_list">
@@ -262,6 +267,7 @@ hideViewPopup=function(val){
         </dd>
     </dl>
     </aside><!-- link_btns_wrap end -->
+    </c:if>
 
     </form>
 </section><!-- search_table end -->

@@ -181,7 +181,8 @@
 		        ,A.REM
 		        ,A.ETR_REM
 		        ,F.CODE_DESC RACE
-		        ,A.UN_BILL_AMT
+		        ,cD.UN_BILL_AMT
+		        ,C.MTH_RENT_AMT
 		 FROM SAL0149D A JOIN SAL0029D B  ON A.CUST_ID = B.CUST_ID
 		    JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
         LEFT JOIN ( SELECT A.AGENT_ID ,B.CODE || '_'||A.AGENT_ID||'_'||A.AGENT_NAME AGENT_NAME
@@ -199,6 +200,7 @@
         LEFT JOIN SAL0071D E ON A.SALES_ORD_ID = E.SALES_ORD_ID
         LEFT JOIN SYS0013M F ON F.CODE_ID = B.RACE_ID
         LEFT JOIN FIRST_INSTALL G ON A.SALES_ORD_ID = G.SALES_ORD_ID
+        JOIN REP0010S cD ON a.SALES_ORD_ID = cD.ORD_ID AND cd.SRV_CNTRCT_ID = 0
 		WHERE 1=1
 		<choose>
             <when test="orderNo != null and orderNo !=''">
@@ -229,6 +231,10 @@
 				    AND B.TYPE_ID = #{customerType}
 				  </if>
 
+				  <if test="nric != null and nric !='' ">
+                    AND B.NRIC = #{nric}
+                  </if>
+
 				  <if test='customerType== "965" '>
 					  <if test="companyType != null and companyType != ''">
 				          AND B.CORP_TYPE_ID IN
@@ -255,9 +261,15 @@
 			        </foreach>
 			      </if>
 
-		          <if test="assignYn != null and assignYn !='' ">
-		            AND A.AGENT_ID <![CDATA[<>]]> 0
-		          </if>
+                  <if test="assignYn != null and assignYn != ''">
+			          <if test="assignYn == 1">
+			            AND A.AGENT_ID <![CDATA[<>]]> 0
+			          </if>
+			          <if test="assignYn == 0">
+	                    AND A.AGENT_ID = 0
+	                  </if>
+                  </if>
+
 		          <if test="sensitiveYn != null and sensitiveYn !='' ">
                     AND A.SENSITIVE_FG  = #{sensitiveYn}
                     </if>
@@ -273,6 +285,8 @@
                     <if test="over60 != null and over60 !='' ">
                     AND G.INSTALL_DT <![CDATA[ < ]]> ADD_MONTHS(SYSDATE, -60)
                     </if>
+
+
 	            </otherwise>
 	            </choose>
 	      <!-- <if test="orderNo != null and orderNo !='' ">
