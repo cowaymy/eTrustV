@@ -20,8 +20,7 @@
         , l59.trnsc_type_code
         , l60.MATRL_DOC_ITM
         , l60.delvry_no
-        , l59.MAIN_SALES_ORD_NO ordno
-        , l59.REF_DOC_NO
+        , (SELECT SALES_ORD_NO FROM SAL0001D WHERE SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0046D WHERE INSTALL_ENTRY_NO = l60.sales_ord_no)) ordno
         , l60.STOCK_TRNSFR_REQST
         , tt.code_name trantype
         , l60.INVNTRY_MOV_TYPE

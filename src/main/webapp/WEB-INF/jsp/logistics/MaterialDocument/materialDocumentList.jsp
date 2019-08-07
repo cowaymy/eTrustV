@@ -47,21 +47,20 @@ var columnLayout = [{dataField: "matrlNo",headerText :"<spring:message code='log
 							{dataField: "postingdate",headerText :"<spring:message code='log.head.postingdate'/>"                  ,width:120    ,height:30 , visible:true},
 							{dataField: "delvryNo",headerText :"<spring:message code='log.head.deliveryno'/>"                   ,width:120    ,height:30 , visible:true},
 							{dataField: "ordno",headerText :"Order No."        ,width:120    ,height:30                },
-							{dataField: "refDocNo",headerText :"<spring:message code='log.head.refdocno'/>"                 ,width:120    ,height:30 , visible:true},
+							{dataField: "salesOrdNo",headerText :"Ref.DOC. No"                ,width: "15%"     ,height:30 , visible:true},
 							{dataField: "stockTrnsfrReqst",headerText :"<spring:message code='log.head.requestno'/>"                    ,width:120    ,height:30 , visible:true},
 							{dataField: "rcivCdcRdc",headerText :"Req_F_Loc"                    ,width:120    ,height:30 , visible:true},
 							{dataField: "reqstCdcRdc",headerText :"Req_T_Loc"                    ,width:120    ,height:30 , visible:true},
 							{dataField: "debtCrditIndict",headerText :"<spring:message code='log.head.debit/credit'/>"                 ,width:120    ,height:30 , visible:true},
 							{dataField: "autoCrtItm",headerText :"<spring:message code='log.head.auto/manual'/>"                    ,width:120    ,height:30 , visible:true},
 							{dataField: "codeName",headerText :"<spring:message code='log.head.uom'/>"                ,width: "15%"     ,height:30 , visible:true},
-							{dataField: ""  ,headerText:    ""                             ,width:  "15%"     ,height:30 , visible:false},
+							/*{dataField: ""  ,headerText:    ""                             ,width:  "15%"     ,height:30 , visible:false},
 							{dataField: "dcfreqapproveremark",headerText :"<spring:message code='log.head.dcfreqapproveremark'/>"           ,width: "15%"     ,height:30 , visible:false},
 							{dataField: "dcfreqapproveby",headerText :"<spring:message code='log.head.dcfreqapproveby'/>"               ,width: "15%"     ,height:30 , visible:false},
 							{dataField: "reasondesc1",headerText :"<spring:message code='log.head.reason(approververified)'/>"   ,width:    "15%"     ,height:30 , visible:false},
 							{dataField: "c7",headerText :"<spring:message code='log.head.approvalstatus'/>"             ,width: "15%"     ,height:30 , visible:false},
 							{dataField: "c2",headerText :"<spring:message code='log.head.approveat'/>"                   ,width:    "15%"     ,height:30 , visible:false},
-							{dataField: "dcfreqstatusid",headerText :"<spring:message code='log.head.dcf_req_stus_id'/>"                ,width: "15%"     ,height:30 , visible:false},
-							{dataField: "salesOrdNo",headerText :"Ref.DOC.no_2"                ,width: "15%"     ,height:30 , visible:true},
+							{dataField: "dcfreqstatusid",headerText :"<spring:message code='log.head.dcf_req_stus_id'/>"                ,width: "15%"     ,height:30 , visible:false}, */
 							{dataField: "userName",headerText :"Creator"        ,width:120    ,height:30 }
                    ];
 
@@ -78,7 +77,7 @@ var reqop = {editable : false,usePaging : false ,showStateColumn : false};
 var gridoptions = {showStateColumn : false , editable : false, usePaging : false, useGroupingPanel : false };
 var paramdata;
 
-var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Manaual"}];
+var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Manual"}];
 var paramdata;
 $(document).ready(function(){
 
@@ -422,9 +421,9 @@ function f_multiCombos() {
                         <select id="searchMoveType" name="searchMoveType" class="multy_select w100p" multiple="multiple"></select>
                     </td>
                    <!--  <td colspan="2">&nbsp;</td> -->
-                    <th scope="row">Mat. Doc</th>
+                    <th scope="row">Mat. Doc. No</th>
                      <td>
-                        <input type="text" id="searchMaterialDoc" name="searchMaterialDoc" title="" class="w100p" />
+                        <input type="text" id="searchMaterialDoc" name="searchMaterialDoc" placeholder="Material Document No" title="" class="w100p" />
                     </td>
                 </tr>
                 <tr>
@@ -492,10 +491,6 @@ function f_multiCombos() {
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Ref.Doc No</th>
-                    <td>
-                        <input type="text" id="sdocno" name="sdocno" title="" placeholder="Material Document No" class="w100p" />
-                    </td>
                     <th scope="row">Request No</th>
                     <td>
                         <input type="text" id="sreqstno" name="sreqstno" title="" placeholder="Request No" class="w100p" />
@@ -504,18 +499,18 @@ function f_multiCombos() {
                     <td>
                         <input type="text" id="sdelvno" name="sdelvno" title="" placeholder="Delivery No" class="w100p" />
                     </td>
+                    <th scope="row">Sales Order No</th>
+                     <td ><input type="text" class="w100p" id="ordno" name="ordno" placeholder="Sales Order No"></td>
                 </tr>
                  <tr>
-                    <th scope="row">Ref.DOC.no_2</th>
+                    <th scope="row">Ref. Doc. No</th>
                     <td>
-                        <input type="text" id="sordno" name="sordno" title="" placeholder="Material Document No" class="w100p" />
+                        <input type="text" id="sordno" name="sordno" title="" placeholder="Reference Document No" class="w100p" />
                     </td>
                     <th scope="row">Main Location</th>
                     <td>
                         <input type="text" id="mainloc" name="mainloc" title="" placeholder="Location Code" class="w100p" />
                     </td>
-                      <th scope="row">Sales Order No.</th>
-                     <td ><input type="text" class="w100p" id="ordno" name="ordno"></td>
                 </tr>
             </tbody>
         </table><!-- table end -->
