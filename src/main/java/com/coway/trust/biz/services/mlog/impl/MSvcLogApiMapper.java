@@ -12,6 +12,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 10/04/2019    ONGHC      1.0.1       - Amend File Format
+ * 29/07/2019    ONGHC      1.0.2       - Add Function
+ * 29/07/2019    ONGHC      1.0.3       - Amend productReturnResult to Add Status Checking
  *********************************************************************************************/
 
 @Mapper("MSvcLogApiMapper")
@@ -169,6 +171,12 @@ public interface MSvcLogApiMapper {
   int insertFailed_LOG0039D(Map<String, Object> params);
 
   int updateFailed_LOG0038D(Map<String, Object> params);
+
+  int isPrdRtnAlreadyResult(Map<String, Object> params);
+
+  int updFctExch(Map<String, Object> params);
+
+  void updateSuccessPrdRtnStatus(String transactionId);
 
   String getRetnCrtUserId(Map<String, Object> params);
 
