@@ -1455,6 +1455,25 @@
           text = "<spring:message code='service.title.AppointmentDate'/>";
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
           rtnValue = false;
+        } else {
+          var crtDt = new Date();
+          var apptDt = $("#appDate").val();
+          var date = apptDt.substring(0, 2);
+          var month = apptDt.substring(3, 5);
+          var year = apptDt.substring(6, 10);
+
+          var dd = String(crtDt.getDate()).padStart(2, '0');
+          var mm = String(crtDt.getMonth() + 1).padStart(2, '0');
+          var yyyy = crtDt.getFullYear();
+
+          var strdate = yyyy + mm + dd;
+          var enddate = year + month + date;
+
+          if (enddate < strdate) {
+            text = "<spring:message code='service.title.AppointmentDate'/>";
+            rtnMsg += "* " + text + " must be greater or equal to Current Date  </br>";
+            rtnValue = false;
+          }
         }
         if (FormUtil.checkReqValue($("#branchDSC"))) { // DSC CODE
           text = "<spring:message code='service.title.DSCBranch'/>";
