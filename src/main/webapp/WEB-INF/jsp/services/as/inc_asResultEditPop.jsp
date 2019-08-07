@@ -179,6 +179,13 @@
 
   function fn_errMst_SelectedIndexChanged() {
     $("#ddlErrorDesc option").remove();
+    if ($("#ddlErrorCode").val() != "" || $("#ddlErrorCode").val() != null) {
+      errCde = $("#ddlErrorCode").val();
+    } else {
+      if (errCde == "" || errCde == null) {
+        errCde = $("#ddlErrorCode").val();
+      }
+    }
     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE=' + errCde, '', '', 'ddlErrorDesc', 'S', 'fn_callback_ddlErrorDesc');
   }
 
