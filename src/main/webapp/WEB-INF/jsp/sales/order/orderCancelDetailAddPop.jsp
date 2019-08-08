@@ -214,8 +214,6 @@
 
       $("#m7").show();
       $("#m9").show();
-      $("#m3").show();
-      $("#m3").show();
 
     } else if($("#addStatus").val() == '32') { // COMFIRM TO CANCEL
       $("select[name=cmbFeedbackCd]").removeAttr("disabled");
@@ -933,23 +931,23 @@
       <td>
         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate"  onChange="fn_doAllaction()"/>
       </td>
-      <th scope="row"><spring:message code="sal.text.appointmentDate" /><span id='m5' name='m5' class="must">*</span></th>
+      <th scope="row"><spring:message code="sal.text.appointmentDate" /><span id='m6' name='m6' class="must">*</span></th>
       <td>
          <input type="text" id="addAppRetnDt" name="addAppRetnDt" title="Create start Date" placeholder="DD/MM/YYYY" readonly="readonly"    class="j_date readonly"  />
       </td>
     </tr>
     <tr>
-      <th scope="row"><spring:message code="sal.title.text.reCallDate" /><span id='m6' name='m6' class="must">*</span></th>
+      <th scope="row"><spring:message code="sal.title.text.reCallDate" /><span id='m7' name='m7' class="must">*</span></th>
       <td>
         <input type="text" id="addCallRecallDt" name="addCallRecallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" disabled="disabled" />
       </td>
-      <th scope="row">Appointment <br> Session <span id='m7' name='m7' class="must">*</span></th>
+      <th scope="row">Appointment <br> Session <span id='m8' name='m8' class="must">*</span></th>
       <td>
          <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode" class="readonly"  readonly="readonly" />
       </td>
     </tr>
     <tr>
-      <th scope="row"><spring:message code="sal.text.remark" /><span id='m8' name='m8' class="must">*</span></th>
+      <th scope="row"><spring:message code="sal.text.remark" /><span id='m9' name='m9' class="must">*</span></th>
       <td colspan="3">
         <textarea id="addRem" name="addRem" cols="20" rows="5"></textarea>
       </td>
