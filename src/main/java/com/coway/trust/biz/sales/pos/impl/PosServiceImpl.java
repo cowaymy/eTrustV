@@ -2667,7 +2667,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
         		}
 		}
 
-      		Map<String, Object> accBillingMap = new HashMap<String, Object>();
+   /*   		Map<String, Object> accBillingMap = new HashMap<String, Object>();
       		int posBillSeq = posMapper.getSeqPay0007D();
       		accBillingMap.put("posBillSeq", posBillSeq);  // accbilling.BillID = 0;
       		accBillingMap.put("posBillTypeId", SalesConstants.POS_BILL_TYPE_ID); //accbilling.BillTypeID = 569;
@@ -2736,9 +2736,9 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     		accTaxInvoiceMiscellaneouMap.put("posTaxInvTaxes", rtnTax); //InvMiscMaster.TaxInvoiceTaxes = Convert.ToDecimal(string.Format("{0:0.00}", decimal.Parse(totalcharges) - (decimal.Parse(totalcharges) * 100 / 106)));
     		accTaxInvoiceMiscellaneouMap.put("posTaxInvTotalCharges", rtnAmt); //InvMiscMaster.TaxInvoiceAmountDue = decimal.Parse(totalcharges);
     		accTaxInvoiceMiscellaneouMap.put("userId", params.get("userId"));
-    		posMapper.insertPosTaxInvcMisc(accTaxInvoiceMiscellaneouMap);
+    		posMapper.insertPosTaxInvcMisc(accTaxInvoiceMiscellaneouMap);*/
 
-    		int invItemTypeID = 5552;
+    	/*	int invItemTypeID = 5552;
 
             for (int idx = 0; idx < basketGrid.size(); idx++) {
             	Map<String, Object> invDetailMap  = new HashMap<String, Object>();
@@ -2755,8 +2755,8 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
              	invDetailMap.put("posTaxInvSubGSTRate", 0);  //InvMiscD.InvoiceItemGSTRate = 6;
             	posMapper.insertPosTaxInvcMiscSub(invDetailMap);
 			}
-
-            if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType")))){  //2390 -- POS SALES
+*/
+  /*          if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType")))){  //2390 -- POS SALES
 
             	String trxNo = "";
             	String worNo = "";
@@ -2847,9 +2847,9 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
             	paymMap.put("svcCntrctId", SalesConstants.POS_SERVICE_CONTRACT_ID);
             	paymMap.put("batchPayId", SalesConstants.POS_BATCH_PAYMEMNT_ID);
 
-            	posMapper.insertPayMaster(paymMap);
+            	posMapper.insertPayMaster(paymMap);*/
 
-            	for (int idx = 0; idx < payGrid.size(); idx++) {
+            	/*for (int idx = 0; idx < payGrid.size(); idx++) {
             		Map<String, Object> paydMap = new HashMap<String, Object>();
 
             		paydMap = (Map<String, Object>)payGrid.get(idx);
@@ -2865,8 +2865,8 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
             			payRefNo = payRefNo.toUpperCase();
             			paydMap.put("transactionRefNo", payRefNo);
             		}
-
-            		if(paydMap.get("payCrcMode") != null && "" != paydMap.get("payCrcMode")){
+*/
+          /*  		if(paydMap.get("payCrcMode") != null && "" != paydMap.get("payCrcMode")){
             			String payCrcMode = "";
             			payCrcMode = String.valueOf(paydMap.get("payCrcMode"));
 
@@ -2895,7 +2895,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
             	}//Loop End
             	//PAYMENT GRID 가져옴
-            }
+           }*/
             Map<String, Object> rtnMap = new HashMap<String, Object>();
             rtnMap.put("reqDocNo", docNoPsn);
 
