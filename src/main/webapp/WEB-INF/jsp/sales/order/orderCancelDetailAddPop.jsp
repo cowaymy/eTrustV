@@ -2,57 +2,59 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
 
-    //AUIGrid 생성 후 반환 ID
-    var cancelLogGridID;       // Cancellation Log Transaction list
-    var prodReturnGridID;      // Product Return Transaction list
+  //AUIGrid 생성 후 반환 ID
+  var cancelLogGridID;       // Cancellation Log Transaction list
+  var prodReturnGridID;      // Product Return Transaction list
 
-    $(document).ready(function(){
-      /* KV -cancellation status */
-      doGetCombo('/sales/order/selectcancellationstatus.do', '', '', 'addStatus', 'S', '');
+  $(document).ready(function(){
+    /* KV -cancellation status */
+    doGetCombo('/sales/order/selectcancellationstatus.do', '', '', 'addStatus', 'S', '');
 
-      if($("#callStusId").val() == '1'){
-        $("#addDiv").css("display" , "none");
-        $("#callStusId").val('');
-      }
-        //AUIGrid 그리드를 생성합니다.
-        cancelLogGrid();
-        prodReturnGrid();
+    if($("#callStusId").val() == '1'){
+      $("#addDiv").css("display" , "none");
+      $("#callStusId").val('');
+    }
 
-       /*  AUIGrid.setSelectionMode(addrGridID, "singleRow"); */
-        //Call Ajax
-        fn_cancelLogTransList();
-        fn_productReturnTransList();
+    // AUIGrid 그리드를 생성합니다.
+    cancelLogGrid();
+    prodReturnGrid();
 
-        //j_date
-        var pickerOpts={
-                changeMonth:true,
-                changeYear:true,
-                dateFormat: "dd/mm/yy"
-        };
+    /* AUIGrid.setSelectionMode(addrGridID, "singleRow"); */
+    //Call Ajax
+    fn_cancelLogTransList();
+    fn_productReturnTransList();
 
-        $(".j_date").datepicker(pickerOpts);
+    // j_date
+    var pickerOpts = { changeMonth:true,
+                       changeYear:true,
+                       dateFormat: "dd/mm/yy"
+                     };
 
-        var monthOptions = {
-            pattern: 'mm/yyyy',
-            selectedYear: 2017,
-            startYear: 2007,
-            finalYear: 2027
-        };
+    $(".j_date").datepicker(pickerOpts);
 
-        $(".j_date2").monthpicker(monthOptions);
-//        alert(("#callStusId").val());
-//        if($("#callStusId").val() == '32' || $("#callStusId").val() == '31'){
-//            $("#addDiv").css("display" , "none");
-//          $("#addDiv").hide();
-//        }
+    var monthOptions = { pattern: 'mm/yyyy',
+                         selectedYear: 2017,
+                         startYear: 2007,
+                         finalYear: 2027
+                       };
 
-        //Btn Auth
-        if(basicAuth == true){
-            $("#_basicUpdBtn").css("display" , "");
-        }else{
-            $("#_basicUpdBtn").css("display" , "none");
-        }
-    });
+    $(".j_date2").monthpicker(monthOptions);
+
+    // Btn Auth
+    if (basicAuth == true) {
+      $("#_basicUpdBtn").css("display" , "");
+    } else {
+      $("#_basicUpdBtn").css("display" , "none");
+    }
+
+    $("#m3").hide(); // ASSIGN CT
+    $("#m4").hide(); // DSC BRANCH
+    $("#m5").hide(); // REQUEST DATE
+    $("#m6").hide(); // APPOINTMENT DATE
+    $("#m7").hide(); // RECALL DATE
+    $("#m8").hide(); // APPOINTMENT SESSION
+    $("#m9").hide(); // REMARK
+  });
 
     function cancelLogGrid(){
         // Cancellation Log Transaction Column
@@ -235,11 +237,6 @@
         $("#requestDate").attr('disabled','disabled');
         $("#requestDate").val('');
 
-        $("#m3").show();
-        $("#m4").show();
-        $("#m5").show();
-        $("#m6").show();
-        $("#m8").show();
         $("#m9").show();
       } else {
         $("select[name=cmbCtGroup]").removeAttr("disabled");
@@ -903,7 +900,7 @@
       </td>
     </tr>
     <tr>
-      <th scope="row"><spring:message code="sal.title.text.assignCt" /><span id='m3' name='m3' class="must">*</span></th>
+      <th scope="row"><spring:message code="sal.title.text.assignCt" /><span id='m3' name='m3' class="must" >*</span></th>
       <td>
         <select id="cmbAssignCt" name="cmbAssignCt" class="w100p" disabled="disabled">
           <option value=""></option>
