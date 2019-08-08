@@ -1,5 +1,6 @@
 package com.coway.trust.biz.sales.pos.impl;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.coway.trust.biz.sales.pos.vo.PosGridVO;
 import com.coway.trust.biz.sales.pos.vo.PosMasterVO;
 import com.coway.trust.biz.sales.pos.vo.PosMemberVO;
 import com.coway.trust.cmmn.model.GridDataSet;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.web.sales.SalesConstants;
 import com.ibm.icu.math.BigDecimal;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -2527,4 +2529,414 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
 		return posMapper.getPosBillingDetailList(params);
 	}
+
+	@Override
+	public List<EgovMap> selectPosFlexiJsonList(Map<String, Object> params) throws Exception {
+
+		return posMapper.selectPosFlexiJsonList(params);
+	}
+
+	@Override
+	public Map<String, Object> insertPosFlexi(Map<String, Object> params) throws Exception {
+
+		String docNoPsn = ""; //returnValue
+		String docNoInvoice = "";
+
+		//Form
+		Map<String, Object> posMap = (Map<String, Object>)params.get("form");
+		//Grid1
+		List<Object> basketGrid = (List<Object>)params.get("prch");
+		//Grid2
+		List<Object> serialGrid = (List<Object>)params.get("serial");
+		//Grid3
+		List<Object> memGird = (List<Object>)params.get("mem");
+		//Grid4
+		List<Object> payGrid = (List<Object>)params.get("pay");
+		//pay Form
+		Map<String, Object> payFormMap = (Map<String, Object>)params.get("payform");
+
+
+		params.put("docNoId", SalesConstants.POS_DOC_NO_PSN_NO);
+		docNoPsn = posMapper.getDocNo(params); ////////////////////////      PSN (144)
+		params.put("docNoId", SalesConstants.POS_DOC_NO_INVOICE_NO);
+		docNoInvoice = posMapper.getDocNo(params); ////////////////////   INVOICE (143)
+
+		EgovMap nameMAp = null;
+		nameMAp = posMapper.getUserFullName(posMap);
+		BigDecimal tempTotalAmt = new BigDecimal("0");
+		BigDecimal tempTotalTax = new BigDecimal("0");;
+		BigDecimal tempTotalCharge = new BigDecimal("0");;
+		BigDecimal calHundred = new BigDecimal("100");
+		BigDecimal calGst = new BigDecimal(SalesConstants.POS_INV_ITM_GST_RATE);
+		BigDecimal tempCal = calHundred.add(calGst);
+
+		for (int i = 0; i < basketGrid.size(); i++) {
+			Map<String, Object> amtMap  = null;
+
+			amtMap = (Map<String, Object>)basketGrid.get(i);
+			BigDecimal tempQty = new BigDecimal(String.valueOf(amtMap.get("inputQty")));
+			BigDecimal tempUnitPrc = new BigDecimal(String.valueOf(amtMap.get("amt")));
+
+			BigDecimal tempCurAmt = tempUnitPrc.multiply(tempQty); // Prc * Qty
+			BigDecimal tempCurCharge = tempCurAmt; //Charges
+			BigDecimal tempCurTax =  tempCurAmt.subtract(tempCurCharge); // Tax
+
+			LOGGER.info("__________________________________________________________________________________________");
+			LOGGER.info("_____________NO.["+ i +"] =  prc : " + tempUnitPrc + ",  qty : " + tempQty + " , total Amt : " + tempCurAmt + " , total Tax : " + tempCurTax + " , total Charges : " + tempCurCharge);
+			LOGGER.info("__________________________________________________________________________________________");
+
+			tempTotalAmt = tempTotalAmt.add(tempCurAmt);
+			tempTotalTax = tempTotalTax.add(tempCurTax);
+			tempTotalCharge = tempTotalCharge.add(tempCurCharge);
+
+		}
+
+		double rtnAmt = tempTotalAmt.doubleValue();
+		double rtnTax = tempTotalTax.doubleValue();
+		double rtnCharge = tempTotalCharge.doubleValue();
+
+		LOGGER.info("_____________________________________________________________________________________");
+		LOGGER.info("_______________________ TOTAL PRICE : " + rtnAmt + " , TOTAL TAX : " + rtnTax + " , TOTAL CHARGES : " + rtnCharge);
+		LOGGER.info("_____________________________________________________________________________________");
+
+		int posMasterSeq = posMapper.getSeqSal0057D(); //master Sequence
+		EgovMap memCodeMap = null;
+		memCodeMap = posMapper.selectMemberByMemberIDCode(params);
+
+		posMap.put("drAccId", SalesConstants.POS_DRACC_ID_ITEMBANK); //540  //122111
+		posMap.put("crAccId", SalesConstants.POS_CRACC_ID_ITEMBANK); //549  //601510
+		posMap.put("posMasterSeq", posMasterSeq); //posId = 0   -- 시퀀스
+		posMap.put("docNoPsn", docNoPsn); //posNo = 0  --문서채번
+		posMap.put("posBillId", SalesConstants.POS_BILL_ID); //pos Bill Id // 0
+		posMap.put("posTotalAmt", rtnAmt);
+		posMap.put("posCharge", rtnCharge);
+		posMap.put("posTaxes", rtnTax);
+		posMap.put("posDiscount", 0);
+
+		if(posMap.get("hidLocId") == null){
+			posMap.put("hidLocId", "0");
+		}
+
+		posMap.put("posMtchId", 0);
+		posMap.put("posCustomerId", SalesConstants.POS_CUST_ID);  //107205
+		posMap.put("userId", params.get("userId"));
+		posMap.put("userDeptId", 0);
+
+		if(params.get("userDeptId") == null){
+			params.put("userDeptCode", " ");
+		}
+
+		posMap.put("posCustName", nameMAp.get("name"));
+		posMap.put("userDeptCode", params.get("userDeptId"));
+		posMap.put("posStusId", 107); // Pending for Approve
+		posMap.put("userId", params.get("userId"));
+
+		if(posMap.get("posReason") == null || String.valueOf(posMap.get("posReason")).equals("")){
+			posMap.put("posReason", "0");
+		}
+
+		//Pos Master Insert
+		posMapper.insertPosMaster(posMap);
+
+		if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType"))) //2390
+				){
+                for (int idx = 0; idx < basketGrid.size(); idx++) {  //basket Grid
+                	Map<String, Object> itemMap = 	(Map<String, Object>)basketGrid.get(idx);
+
+                	int posDetailSeq = posMapper.getSeqSal0058D(); //detail Sequence
+                	itemMap.put("posDetailSeq", posDetailSeq);
+                	itemMap.put("posMasterSeq", posMasterSeq);
+                	itemMap.put("posItemTaxCodeId", SalesConstants.POS_ITM_TAX_CODE_ID); //32
+                	itemMap.put("posMemId", posMap.get("salesmanPopId")); //MEM_ID
+                	itemMap.put("posRcvStusId", 1); //Active
+                	itemMap.put("userId", params.get("userId"));
+                	posMapper.insertPosDetail(itemMap);
+        		}//Detail Insert End
+
+                //Serial Insert
+                if(serialGrid != null){
+        			for (int i = 0; i < serialGrid.size(); i++) {
+        				Map<String, Object> serialMap = (Map<String, Object>)serialGrid.get(i);
+        				int serialSeq =  posMapper.getSeqSal0147M();
+        				serialMap.put("serialSeq", serialSeq);
+        				serialMap.put("posMasterSeq", posMasterSeq);
+        				serialMap.put("userId", params.get("userId"));
+        				posMapper.insertSerialNo(serialMap);
+
+    				}
+        		}
+		}
+
+      		Map<String, Object> accBillingMap = new HashMap<String, Object>();
+      		int posBillSeq = posMapper.getSeqPay0007D();
+      		accBillingMap.put("posBillSeq", posBillSeq);  // accbilling.BillID = 0;
+      		accBillingMap.put("posBillTypeId", SalesConstants.POS_BILL_TYPE_ID); //accbilling.BillTypeID = 569;
+      		accBillingMap.put("posBillSoId", 0); //   accbilling.BillSOID = 0;
+      		accBillingMap.put("posBillMemId", posMap.get("salesmanPopId")); // accbilling.BillMemID = 0;
+      		accBillingMap.put("posBillAsId", 0);  //accbilling.BillASID = 0;
+      		accBillingMap.put("posBillPayTypeId", 0);  //accbilling.BillPayTypeID = 0;
+      		accBillingMap.put("docNoPsn", docNoPsn); // accbilling.BillNo = ""; //update later //POS RefNo.
+      		accBillingMap.put("posMemberShipNo", ""); //accbilling.BillMemberShipNo = "";
+      		accBillingMap.put("posBillAmt", rtnAmt); // accbilling.BillAmt = Convert.ToDouble(totalcharges);
+      		accBillingMap.put("posBillRem", posMap.get("posRemark")); //accbilling.BillRemark = this.txtRemark.Text.Trim();
+      		accBillingMap.put("posBillIsPaid", 1); //accbilling.BillIsPaid = true;
+      		accBillingMap.put("posBillIsComm", 0); // accbilling.BillIsComm = false;
+      		accBillingMap.put("userId", params.get("userId"));
+      		accBillingMap.put("posSyncChk", 1); //accbilling.SyncCheck = true;
+      		accBillingMap.put("posCourseId", 0); //accbilling.CourseID = 0;
+      		accBillingMap.put("posStatusId", 1);// accbilling.StatusID = 1;
+
+      		posMapper.insertPosBilling(accBillingMap);
+
+      		Map<String, Object> posUpMap = new HashMap<String, Object>();
+      		posUpMap.put("posBillSeq", posBillSeq);
+      		posUpMap.put("posMasterSeq", posMasterSeq);
+      		posMapper.updatePosMasterPosBillId(posUpMap);
+
+    		Map<String, Object> accOrdBillingMap = new HashMap<String, Object>();
+    		int accOrderBillSeq = posMapper.getSeqPay0016D();
+
+    		accOrdBillingMap.put("posOrderBillSeq", accOrderBillSeq); //accorderbill.AccBillID = 0;
+    		accOrdBillingMap.put("posOrdBillTaskId", 0);  // accorderbill.AccBillTaskID = 0;
+    		accOrdBillingMap.put("posOrdBillRefNo",  "1000"); //accorderbill.AccBillRefNo = "1000"; //update later //at db
+    		accOrdBillingMap.put("posOrdBillOrdId", 0); //accorderbill.AccBillOrderID = 0;
+    		accOrdBillingMap.put("posOrdBillOrdNo", ""); //accorderbill.AccBillOrderNo = "";
+    		accOrdBillingMap.put("posOrdBillTypeId", SalesConstants.POS_ORD_BILL_TYPE_ID); //accorderbill.AccBillTypeID = 1159; //System Generate Bill
+    		accOrdBillingMap.put("posOrdBillModeId", SalesConstants.POS_ORD_BILL_MODE_ID); //accorderbill.AccBillModeID = 1351; //SOI Bill (POS New Version)
+    		accOrdBillingMap.put("posOrdBillScheduleId", 0); // accorderbill.AccBillScheduleID = 0;
+    		accOrdBillingMap.put("posOrdBillSchedulePeriod", 0); //accorderbill.AccBillSchedulePeriod = 0;
+    		accOrdBillingMap.put("posOrdBillAdjustmentId", 0); //accorderbill.AccBillAdjustmentID = 0;
+    		accOrdBillingMap.put("posOrdBillScheduleAmt", rtnAmt); //accorderbill.AccBillScheduleAmount = decimal.Parse(totalcharges);
+    		accOrdBillingMap.put("posOrdBillAdjustmentAmt", 0); //accorderbill.AccBillAdjustmentAmount = 0;
+    		accOrdBillingMap.put("posOrdBillTaxesAmt", rtnTax); //accorderbill.AccBillTaxesAmount = Convert.ToDecimal(string.Format("{0:0.00}", decimal.Parse(totalcharges) - (System.Convert.ToDecimal(totalcharges) * 100 / 106)));
+    		accOrdBillingMap.put("posOrdBillNetAmount", rtnAmt); // accorderbill.AccBillNetAmount = decimal.Parse(totalcharges);
+    		accOrdBillingMap.put("posOrdBillStatus", 1); //accorderbill.AccBillStatus = 1;
+    		accOrdBillingMap.put("posOrdBillRem", docNoInvoice); //accorderbill.AccBillRemark = ""; //Invoice No.
+    		accOrdBillingMap.put("userId", params.get("userId"));
+    		accOrdBillingMap.put("posOrdBillGroupId", 0); //accorderbill.AccBillGroupID = 0;
+    		accOrdBillingMap.put("posOrdBillTaxCodeId", SalesConstants.POS_ORD_BILL_TAX_CODE_ID); //accorderbill.AccBillTaxCodeID = 32;
+    		accOrdBillingMap.put("posOrdBillTaxRate", 0); //accorderbill.AccBillTaxRate = 6;
+    		accOrdBillingMap.put("posOrdBillAcctCnvr", 0); //TODO ASIS 소스 없음
+    		accOrdBillingMap.put("posOrdBillCntrctId", 0); //TODO ASIS 소스 없음
+
+    		posMapper.insertPosOrderBilling(accOrdBillingMap);
+
+    		Map<String, Object> accTaxInvoiceMiscellaneouMap = new HashMap<String, Object>();
+    		int accTaxInvMiscSeq = posMapper.getSeqPay0031D();
+
+    		accTaxInvoiceMiscellaneouMap.put("accTaxInvMiscSeq", accTaxInvMiscSeq); //InvMiscMaster.TaxInvoiceID = 0;
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvRefNo", docNoInvoice); //InvMiscMaster.TaxInvoiceRefNo = ""; //update later
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvSvcNo", docNoPsn); //InvMiscMaster.TaxInvoiceServiceNo = ""; //SOI No.
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvType", SalesConstants.POS_TAX_INVOICE_TYPE); //  InvMiscMaster.TaxInvoiceType = 142; //pos new version
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvCustName", nameMAp.get("name")); //   InvMiscMaster.TaxInvoiceCustName = this.txtCustName.Text.Trim();
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvCntcPerson", nameMAp.get("name")); // InvMiscMaster.TaxInvoiceContactPerson = this.txtCustName.Text.Trim();
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvTaskId", 0); //InvMiscMaster.TaxInvoiceTaskID = 0;
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvUserName", params.get("userName")); // InvMiscMaster.TaxInvoiceRemark = li.LoginID;
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvCharges", rtnCharge); //  InvMiscMaster.TaxInvoiceCharges = Convert.ToDecimal(string.Format("{0:0.00}", (decimal.Parse(totalcharges) * 100 / 106)));
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvTaxes", rtnTax); //InvMiscMaster.TaxInvoiceTaxes = Convert.ToDecimal(string.Format("{0:0.00}", decimal.Parse(totalcharges) - (decimal.Parse(totalcharges) * 100 / 106)));
+    		accTaxInvoiceMiscellaneouMap.put("posTaxInvTotalCharges", rtnAmt); //InvMiscMaster.TaxInvoiceAmountDue = decimal.Parse(totalcharges);
+    		accTaxInvoiceMiscellaneouMap.put("userId", params.get("userId"));
+    		posMapper.insertPosTaxInvcMisc(accTaxInvoiceMiscellaneouMap);
+
+    		int invItemTypeID = 5552;
+
+            for (int idx = 0; idx < basketGrid.size(); idx++) {
+            	Map<String, Object> invDetailMap  = new HashMap<String, Object>();
+            	invDetailMap = (Map<String, Object>)basketGrid.get(idx);
+            	int invDetailSeq = posMapper.getSeqPay0032D();
+
+            	invDetailMap.put("invDetailSeq", invDetailSeq); //InvMiscD.InvocieItemID = 0;
+            	invDetailMap.put("accTaxInvMiscSeq", accTaxInvMiscSeq); //InvMiscD.TaxInvoiceID = 0; //update later
+            	invDetailMap.put("invItemTypeID", invItemTypeID); //InvMiscD.InvoiceItemType = invItemTypeID;
+            	invDetailMap.put("posTaxInvSubOrdNo", ""); //InvMiscD.InvoiceItemOrderNo = "";
+            	invDetailMap.put("posTaxInvSubItmPoNo", ""); //InvMiscD.InvoiceItemPONo = "";
+            	invDetailMap.put("posTaxInvSubDescSub", ""); //InvMiscD.InvoiceItemDescription2 = "";
+            	invDetailMap.put("posTaxInvSubSerialNo", ""); //InvMiscD.InvoiceItemSerialNo = "";
+             	invDetailMap.put("posTaxInvSubGSTRate", 0);  //InvMiscD.InvoiceItemGSTRate = 6;
+            	posMapper.insertPosTaxInvcMiscSub(invDetailMap);
+			}
+
+            if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType")))){  //2390 -- POS SALES
+
+            	String trxNo = "";
+            	String worNo = "";
+            	int trxSeq = 0;
+            	int groupSeq = 0;
+
+            	Map<String, Object> trxMap = new HashMap<String, Object>();
+
+            	//DOC(23)
+            	//TODO 문서 채번 후 미사용
+            	params.put("docNoId", SalesConstants.POS_DOC_NO_TRX_NO); //(23)
+            	trxNo = posMapper.getDocNo(params);
+
+            	//DOC(3)
+            	params.put("docNoId", SalesConstants.POS_DOC_NO_WOR_NO); //(3)
+            	worNo = posMapper.getDocNo(params);
+
+            	//Seq
+            	trxSeq = posMapper.getSeqPay0069D();
+            	groupSeq = posMapper.getSeqPay0240T();
+
+            	trxMap.put("trxSeq", trxSeq);
+            	trxMap.put("trxType", SalesConstants.POS_TRX_TYPE_ID);
+            	trxMap.put("trxAmt", payFormMap.get("hidTotPayAmt"));
+            	trxMap.put("trxMatchNo", "");
+
+            	posMapper.insertPayTrx(trxMap);
+
+            	Map<String, Object> paymMap = new HashMap<String, Object>();
+
+            	int payMseq = posMapper.getSeqPay0064D();
+
+            	paymMap.put("payMseq", payMseq);
+            	paymMap.put("orNo", worNo); //doc
+            	paymMap.put("salesOrdId", SalesConstants.POS_TEMP_SALES_ORDER_ID); //0
+            	paymMap.put("billId", posBillSeq); //accbilling.billId  ( payM.BillID = accbilling.BillID;)
+
+            	String trNo = "";
+            	if(payFormMap.get("payTrRefNo") != null){
+            		trNo = String.valueOf(payFormMap.get("payTrRefNo"));
+            		trNo = trNo.trim().toUpperCase();
+            	}else{
+            		trNo = " ";
+            	}
+            	paymMap.put("trNo", trNo);  //payM.TRNo = (!string.IsNullOrEmpty(this.txtTrRefNo.Text.Trim())) ? this.txtTrRefNo.Text.ToUpper() : "";
+            	paymMap.put("typeId", SalesConstants.POS_PAY_MASTER_TYPE_ID); // 577
+            	paymMap.put("bankChgAmt", SalesConstants.POS_BANK_CHARGE_AMOUNT);
+            	paymMap.put("bankChgAccId", SalesConstants.POS_BANK_CHARGE_ACCOUNT_ID);
+            	paymMap.put("collMemId", SalesConstants.POS_COLL_MEMBER_ID);
+
+            	//brnchId
+            	paymMap.put("brnchId", payFormMap.get("payBrnchCode"));
+
+            	//Debtor Acc.
+            	paymMap.put("bankAccId", payFormMap.get("payDebtorAcc"));
+
+            	paymMap.put("allowComm", SalesConstants.POS_PAY_ALLOW_COMM);
+            	paymMap.put("stusCodeId", SalesConstants.POS_PAY_STATUS_ID);
+
+            	//userId
+            	paymMap.put("updUserId", params.get("userId"));
+
+            	paymMap.put("syncCheck", SalesConstants.POS_PAY_SYNC_CHECK);
+            	paymMap.put("thirdPartyCustId", SalesConstants.POS_THIRD_PARTY_CUST_ID);
+
+            	//total Amt
+            	paymMap.put("totAmt", payFormMap.get("hidTotPayAmt"));
+            	paymMap.put("matchId", SalesConstants.POS_MATCH_ID);
+
+            	//userId
+            	paymMap.put("crtUserId", params.get("userId"));
+            	paymMap.put("isAllowRevMulti", SalesConstants.POS_IS_ALLOW_REV_MULTY);
+            	paymMap.put("isGlPostClm", SalesConstants.POS_IS_GL_POST_CLAIM);
+            	paymMap.put("glPostClmDt", SalesConstants.DEFAULT_DATE);
+            	paymMap.put("trxSeq", trxSeq); //trxId
+            	paymMap.put("advMonth", SalesConstants.POS_ADV_MONTH);
+            	paymMap.put("orderBillId", accOrderBillSeq); //    payM.AccBillID = accorderbill.AccBillID;
+
+            	//TR Issued Date
+            	if(payFormMap.get("payTrIssueDate") != null){
+            		paymMap.put("trIssuDt", payFormMap.get("payTrIssueDate"));
+            	}else{
+            		paymMap.put("trIssuDt", SalesConstants.DEFAULT_DATE);
+            	}
+
+            	paymMap.put("payInvIsGen", SalesConstants.POS_TAX_INVOICE_GENERATED);
+            	paymMap.put("taxInvcRefNo", docNoInvoice); //payM.TaxInvoiceRefNo = InvoiceNum;
+            	paymMap.put("svcCntrctId", SalesConstants.POS_SERVICE_CONTRACT_ID);
+            	paymMap.put("batchPayId", SalesConstants.POS_BATCH_PAYMEMNT_ID);
+
+            	posMapper.insertPayMaster(paymMap);
+
+            	for (int idx = 0; idx < payGrid.size(); idx++) {
+            		Map<String, Object> paydMap = new HashMap<String, Object>();
+
+            		paydMap = (Map<String, Object>)payGrid.get(idx);
+
+            		int posDSeq = 0;
+            		posDSeq = posMapper.getSeqPay0065D();
+            		paydMap.put("payItemId", posDSeq);
+            		paydMap.put("payId", payMseq);
+
+            		if(paydMap.get("transactionRefNo") != null && "" != paydMap.get("transactionRefNo")){
+            			String payRefNo = "";
+            			payRefNo = String.valueOf(paydMap.get("transactionRefNo"));
+            			payRefNo = payRefNo.toUpperCase();
+            			paydMap.put("transactionRefNo", payRefNo);
+            		}
+
+            		if(paydMap.get("payCrcMode") != null && "" != paydMap.get("payCrcMode")){
+            			String payCrcMode = "";
+            			payCrcMode = String.valueOf(paydMap.get("payCrcMode"));
+
+            			if(("ONLINE").equals(payCrcMode)){
+            				paydMap.put("payCrcMode", "1");
+            			}else{
+            				paydMap.put("payCrcMode", "0");
+            			}
+            		}else{
+            			paydMap.put("payCrcMode", "0");
+            		}
+
+            		if(paydMap.get("payRefDate") == null || paydMap.get("payRefDate") == "" ){
+            			paydMap.put("payRefDate", SalesConstants.DEFAULT_DATE);
+            		}
+
+            		paydMap.put("payItmStusId", SalesConstants.POS_PAY_STATUS_ID);
+
+            		paydMap.put("payItmIsLok", SalesConstants.POS_PAY_ITEM_IS_LOCK);
+            		paydMap.put("payItmIsThirdParty", SalesConstants.POS_PAY_ITEM_IS_THIRD_PARTY);
+            		paydMap.put("isFundTrnsfr", SalesConstants.POS_IS_FUND_TRANS_FR);
+            		paydMap.put("skipRecon", SalesConstants.POS_SKIP_RECON);
+
+            		posMapper.insertPayDetail(paydMap);
+
+
+            	}//Loop End
+            	//PAYMENT GRID 가져옴
+            }
+            Map<String, Object> rtnMap = new HashMap<String, Object>();
+            rtnMap.put("reqDocNo", docNoPsn);
+
+            LOGGER.info("##################### POS Request Success!!! ######################################");
+
+		    rtnMap.put("logError", "000");
+
+         return rtnMap;
+	}
+
+	@Override
+	public List<EgovMap> selectPosFlexiItmList(Map<String, Object> params) throws Exception {
+
+		return posMapper.selectPosFlexiItmList(params);
+	}
+
+	@Override
+	public List<EgovMap> chkFlexiStockList(Map<String, Object> params) throws Exception {
+
+		List<EgovMap> retunList = null;
+
+		retunList = posMapper.chkFlexiStockList(params);
+
+		return retunList;
+	}
+
+	@Override
+	public EgovMap posFlexiDetail(Map<String, Object> params) throws Exception {
+
+		return posMapper.posFlexiDetail(params);
+	}
+
+	@Override
+	@Transactional
+	public  Map<String, Object> updatePosFlexiStatus(Map<String, Object> params , SessionVO sessionVO)  throws ParseException  {
+
+		LOGGER.debug("params : " + params);
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		params.put("approvalUserId", sessionVO.getUserId());
+		posMapper.updatePosFlexiStatus(params);
+		return resultValue;
+	}
+
 }
