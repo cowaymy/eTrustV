@@ -7,13 +7,13 @@
     var prodReturnGridID;      // Product Return Transaction list
 
     $(document).ready(function(){
-    	/* KV -cancellation status */
-    	doGetCombo('/sales/order/selectcancellationstatus.do', '', '', 'addStatus', 'S', '');
+      /* KV -cancellation status */
+      doGetCombo('/sales/order/selectcancellationstatus.do', '', '', 'addStatus', 'S', '');
 
-    	if($("#callStusId").val() == '1'){
-    		$("#addDiv").css("display" , "none");
-    		$("#callStusId").val('');
-    	}
+      if($("#callStusId").val() == '1'){
+        $("#addDiv").css("display" , "none");
+        $("#callStusId").val('');
+      }
         //AUIGrid 그리드를 생성합니다.
         cancelLogGrid();
         prodReturnGrid();
@@ -155,28 +155,28 @@
 
 
 
-	//add by hgham
-	function fn_doAllaction(){
+  //add by hgham
+  function fn_doAllaction(){
 
-	    var ord_id ='${cancelReqInfo.ordId}'   ;// '143486';
-	    var  vdte   =$("#requestDate").val();
+      var ord_id ='${cancelReqInfo.ordId}'   ;// '143486';
+      var  vdte   =$("#requestDate").val();
 
-	    var options ={
-	            ORD_ID: ord_id,
-	            S_DATE: vdte,
-	            CallBackFun:'fn_allactionFun'
-	    }
+      var options ={
+              ORD_ID: ord_id,
+              S_DATE: vdte,
+              CallBackFun:'fn_allactionFun'
+      }
 
-	    Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options ,TYPE:'RTN'}, null , true , '_doAllactionDiv');
-	}
+      Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options ,TYPE:'RTN'}, null , true , '_doAllactionDiv');
+  }
 
 
 
-	function fn_allactionFun(obj){
+  function fn_allactionFun(obj){
 
-		   console.log(obj);
-		   $("#addAppRetnDt").val(obj.dDate);
-	       $("#ctId").val(obj.ct);
+       console.log(obj);
+       $("#addAppRetnDt").val(obj.dDate);
+         $("#ctId").val(obj.ct);
            $("select[name=cmbAssignCt]").val(obj.ct);
            $("select[name=cmbAssignCt]").addClass("w100p disabled");
            $("select[name=cmbAssignCt]").attr('disabled','disabled');
@@ -187,303 +187,341 @@
    }
 
 
-    function onChangeStatusType(){
-    	if($("#addStatus").val() == '19'){     // Recall
-    		$("select[name=cmbAssignCt]").attr('disabled', 'disabled');
-            $("select[name=cmbAssignCt]").addClass("w100p disabled");
-            $("select[name=cmbAssignCt]").val('');
-            $("#requestDate").attr('disabled','disabled');
-            $("#requestDate").val('');
-            $("select[name=cmbFeedbackCd]").removeAttr("disabled");
-            $("select[name=cmbFeedbackCd]").removeClass("w100p disabled");
-            $("select[name=cmbFeedbackCd]").addClass("w100p");
-            $("select[name=cmbCtGroup]").attr('disabled', 'disabled');
-            $("select[name=cmbCtGroup]").addClass("w100p disabled");
-            $("select[name=cmbCtGroup]").val('');
-            $("#addAppRetnDt").attr('disabled','disabled');
-            $("#addAppRetnDt").val('');
-            $("#addCallRecallDt").removeAttr("disabled");
-    	}
-    	if($("#addStatus").val() == '32'){     // Confirm To Cancel
-            $("select[name=cmbFeedbackCd]").removeAttr("disabled");
-            $("select[name=cmbFeedbackCd]").removeClass("w100p disabled");
-            $("select[name=cmbFeedbackCd]").addClass("w100p");
-            $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
-            $("select[name=cmbAssignCt]").addClass("w100p disabled");
-            $("#addCallRecallDt").attr('disabled','disabled');
-            $("#addCallRecallDt").val('');
-            if($("#reqStageId").val() == '24'){     // before installl
-            	$("select[name=cmbCtGroup]").attr('disabled', 'disabled');
-                $("select[name=cmbCtGroup]").addClass("w100p disabled");
-                $("select[name=cmbCtGroup]").val('');
-                $("#addAppRetnDt").attr('disabled','disabled');
-                $("#addAppRetnDt").val('');
-/*                 $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
-                $("select[name=cmbAssignCt]").addClass("w100p disabled"); */
-                $("#requestDate").attr('disabled','disabled');
-                $("#requestDate").val('');
-            }else{
-            	$("select[name=cmbCtGroup]").removeAttr("disabled");
-                $("select[name=cmbCtGroup]").removeClass("w100p disabled");
-                $("select[name=cmbCtGroup]").addClass("w100p");
-                //$("#addAppRetnDt").removeAttr("disabled");
-/*                 $("select[name=cmbAssignCt]").removeAttr("disabled");
-                $("select[name=cmbAssignCt]").removeClass("w100p disabled");
-                $("select[name=cmbAssignCt]").addClass("w100p"); */
-                $("#requestDate").removeAttr("disabled");
-            }
+  function onChangeStatusType(){
+    $("#m3").hide(); // ASSIGN CT
+    $("#m4").hide(); // DSC BRANCH
+    $("#m5").hide(); // REQUEST DATE
+    $("#m6").hide(); // APPOINTMENT DATE
+    $("#m7").hide(); // RECALL DATE
+    $("#m8").hide(); // APPOINTMENT SESSION
+    $("#m9").hide(); // REMARK
 
-        }
-    	if($("#addStatus").val() == '31'){     // Reversal Of Cancellation
-            $("select[name=cmbAssignCt]").removeAttr("disabled");
-            $("select[name=cmbAssignCt]").removeClass("w100p disabled");
-            $("select[name=cmbAssignCt]").addClass("w100p");
-            $("select[name=cmbAssignCt]").val('');
-            $("select[name=cmbFeedbackCd]").removeAttr("disabled");
-            $("select[name=cmbFeedbackCd]").removeClass("w100p disabled");
-            $("select[name=cmbFeedbackCd]").addClass("w100p");
-            $("select[name=cmbCtGroup]").attr('disabled', 'disabled');
-            $("select[name=cmbCtGroup]").addClass("w100p disabled");
-            $("select[name=cmbCtGroup]").val('');
-            $("#addAppRetnDt").attr('disabled','disabled');
-            $("#addAppRetnDt").val('');
-            $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
-            $("select[name=cmbAssignCt]").addClass("w100p disabled");
-            $("#requestDate").attr('disabled','disabled');
-            $("#requestDate").val('');
-            if($("#reqStageId").val() == '24'){     // before installl
-            	$("#addCallRecallDt").removeAttr("disabled");
-            }else{
-            	$("#addCallRecallDt").attr('disabled','disabled');
-                $("#addCallRecallDt").val('');
-            }
-        }
-    	if($("#addStatus").val() == '105'){     //Continue Rental
-            $("select[name=cmbAssignCt]").removeAttr("disabled");
-            $("select[name=cmbAssignCt]").removeClass("w100p disabled");
-            $("select[name=cmbAssignCt]").addClass("w100p");
-            $("select[name=cmbAssignCt]").val('');
-            $("select[name=cmbFeedbackCd]").removeAttr("disabled");
-            $("select[name=cmbFeedbackCd]").removeClass("w100p disabled");
-            $("select[name=cmbFeedbackCd]").addClass("w100p");
-            $("select[name=cmbCtGroup]").attr('disabled', 'disabled');
-            $("select[name=cmbCtGroup]").addClass("w100p disabled");
-            $("select[name=cmbCtGroup]").val('');
-            $("#addAppRetnDt").attr('disabled','disabled');
-            $("#addAppRetnDt").val('');
-            $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
-            $("select[name=cmbAssignCt]").addClass("w100p disabled");
-            $("#requestDate").attr('disabled','disabled');
-            $("#requestDate").val('');
-            if($("#reqStageId").val() == '24'){     // before installl
-                $("#addCallRecallDt").removeAttr("disabled");
-            }else{
-                $("#addCallRecallDt").attr('disabled','disabled');
-                $("#addCallRecallDt").val('');
-            }
-        }
-    }
+    if($("#addStatus").val() == '19'){ // RECALL
+      $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
+      $("select[name=cmbAssignCt]").addClass("w100p disabled");
+      $("select[name=cmbAssignCt]").val('');
+      $("#requestDate").attr('disabled','disabled');
+      $("#requestDate").val('');
+      $("select[name=cmbFeedbackCd]").removeAttr("disabled");
+      $("select[name=cmbFeedbackCd]").removeClass("w100p disabled");
+      $("select[name=cmbFeedbackCd]").addClass("w100p");
+      $("select[name=cmbCtGroup]").attr('disabled', 'disabled');
+      $("select[name=cmbCtGroup]").addClass("w100p disabled");
+      $("select[name=cmbCtGroup]").val('');
+      $("#addAppRetnDt").attr('disabled','disabled');
+      $("#addAppRetnDt").val('');
+      $("#addCallRecallDt").removeAttr("disabled");
+
+      $("#m7").show();
+      $("#m9").show();
+      $("#m3").show();
+      $("#m3").show();
+
+    } else if($("#addStatus").val() == '32') { // COMFIRM TO CANCEL
+      $("select[name=cmbFeedbackCd]").removeAttr("disabled");
+      $("select[name=cmbFeedbackCd]").removeClass("w100p disabled");
+      $("select[name=cmbFeedbackCd]").addClass("w100p");
+      $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
+      $("select[name=cmbAssignCt]").addClass("w100p disabled");
+      $("#addCallRecallDt").attr('disabled','disabled');
+      $("#addCallRecallDt").val('');
+
+      if($("#reqStageId").val() == '24') { // BEFORE INSTALL
+        $("select[name=cmbCtGroup]").attr('disabled', 'disabled');
+        $("select[name=cmbCtGroup]").addClass("w100p disabled");
+        $("select[name=cmbCtGroup]").val('');
+        $("#addAppRetnDt").attr('disabled','disabled');
+        $("#addAppRetnDt").val('');
+        /* $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
+           $("select[name=cmbAssignCt]").addClass("w100p disabled"); */
+        $("#requestDate").attr('disabled','disabled');
+        $("#requestDate").val('');
+
+        $("#m3").show();
+        $("#m4").show();
+        $("#m5").show();
+        $("#m6").show();
+        $("#m8").show();
+        $("#m9").show();
+      } else {
+        $("select[name=cmbCtGroup]").removeAttr("disabled");
+        $("select[name=cmbCtGroup]").removeClass("w100p disabled");
+        $("select[name=cmbCtGroup]").addClass("w100p");
+        /* $("#addAppRetnDt").removeAttr("disabled");
+           $("select[name=cmbAssignCt]").removeAttr("disabled");
+           $("select[name=cmbAssignCt]").removeClass("w100p disabled");
+           $("select[name=cmbAssignCt]").addClass("w100p"); */
+        $("#requestDate").removeAttr("disabled");
+
+        $("#m3").show();
+        $("#m4").show();
+        $("#m5").show();
+        $("#m6").show();
+        $("#m8").show();
+        $("#m9").show();
+      }
+    } else if($("#addStatus").val() == '31'){ // Reversal Of Cancellation
+      $("select[name=cmbAssignCt]").removeAttr("disabled");
+      $("select[name=cmbAssignCt]").removeClass("w100p disabled");
+      $("select[name=cmbAssignCt]").addClass("w100p");
+      $("select[name=cmbAssignCt]").val('');
+      $("select[name=cmbFeedbackCd]").removeAttr("disabled");
+      $("select[name=cmbFeedbackCd]").removeClass("w100p disabled");
+      $("select[name=cmbFeedbackCd]").addClass("w100p");
+      $("select[name=cmbCtGroup]").attr('disabled', 'disabled');
+      $("select[name=cmbCtGroup]").addClass("w100p disabled");
+      $("select[name=cmbCtGroup]").val('');
+      $("#addAppRetnDt").attr('disabled','disabled');
+      $("#addAppRetnDt").val('');
+      $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
+      $("select[name=cmbAssignCt]").addClass("w100p disabled");
+      $("#requestDate").attr('disabled','disabled');
+      $("#requestDate").val('');
+
+      if($("#reqStageId").val() == '24'){ // BEFORE INSTALL
+        $("#addCallRecallDt").removeAttr("disabled");
+      } else {
+        $("#addCallRecallDt").attr('disabled','disabled');
+        $("#addCallRecallDt").val('');
+      }
+
+      $("#m9").show();
+    } else if($("#addStatus").val() == '105'){ // CONTINUE RENTEL
+       $("select[name=cmbAssignCt]").removeAttr("disabled");
+       $("select[name=cmbAssignCt]").removeClass("w100p disabled");
+       $("select[name=cmbAssignCt]").addClass("w100p");
+       $("select[name=cmbAssignCt]").val('');
+       $("select[name=cmbFeedbackCd]").removeAttr("disabled");
+       $("select[name=cmbFeedbackCd]").removeClass("w100p disabled");
+       $("select[name=cmbFeedbackCd]").addClass("w100p");
+       $("select[name=cmbCtGroup]").attr('disabled', 'disabled');
+       $("select[name=cmbCtGroup]").addClass("w100p disabled");
+       $("select[name=cmbCtGroup]").val('');
+       $("#addAppRetnDt").attr('disabled','disabled');
+       $("#addAppRetnDt").val('');
+       $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
+       $("select[name=cmbAssignCt]").addClass("w100p disabled");
+       $("#requestDate").attr('disabled','disabled');
+       $("#requestDate").val('');
+
+       if($("#reqStageId").val() == '24'){ // BEFORE INSTALL
+         $("#addCallRecallDt").removeAttr("disabled");
+       } else {
+         $("#addCallRecallDt").attr('disabled','disabled');
+         $("#addCallRecallDt").val('');
+       }
+       $("#m9").show();
+     }
+  }
 
     /*KV - feedback code  */
     function fn_feebackcode ()
     {
          var fdb ;
 
-    	if($("#addStatus").val() == '19'){     // Recall
-    		fdb = '5529';
-    	}
-    	if($("#addStatus").val() == '32'){     // Confirm To Cancel
-    		fdb = '5530';
-    	}
+      if($("#addStatus").val() == '19'){     // Recall
+        fdb = '5529';
+      }
+      if($("#addStatus").val() == '32'){     // Confirm To Cancel
+        fdb = '5530';
+      }
         if($("#addStatus").val() == '31'){     // Reversal Of Cancellation
-        	fdb = '5531';
-    	}
-    	if($("#addStatus").val() == '105'){     //Continue Rental
-    		fdb = '5532';
-    	}
+          fdb = '5531';
+      }
+      if($("#addStatus").val() == '105'){     //Continue Rental
+        fdb = '5532';
+      }
 
-    	 doGetCombo('/sales/order/selectcancellationfeedback.do', fdb, '', 'cmbFeedbackCd', 'S', '');
+       doGetCombo('/sales/order/selectcancellationfeedback.do', fdb, '', 'cmbFeedbackCd', 'S', '');
 
     }
 
-    function fn_saveCancel(){
-    	if(addCallForm.addStatus.value == ""){
-    		Common.alert("<spring:message code='sal.alert.msg.pleaseSelectTheStatus' />");
-    		return false;
-    	}
-    	console.log("status : " + $("#reqStageId").val());
-    	if($("#addStatus").val() == '19'){     // Recall
-//    		if($("#reqStageId").val() == '24'){     // before installl
-    			if(addCallForm.cmbFeedbackCd.value == ""){
-    				Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
-    				return false;
-    			}
-    			if(addCallForm.addCallRecallDt.value == ""){
-                    Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRecallDate' />");
-                    return false;
-                }
-    			if(addCallForm.addRem.value == ""){
-                    Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
-                    return false;
-                }
-//    		}
-    	}
-    	if($("#addStatus").val() == '32'){     // Confirm To Cancel
-    	    if(addCallForm.requestDate.value == ""){
-    	    	Common.alert("<spring:message code='sal.alert.msg.plzSelInputReqDate' />");
-                   return false;
-               }
-            if(addCallForm.cmbAssignCt.value == ""){
-                Common.alert("<spring:message code='sal.alert.msg.plzReSelReqDate' />");
-                return false;
-            }
-          if($("#reqStageId").val() == '24'){     // before installl
-        	  console.log("before : " + $("#reqStageId").val());
-                if(addCallForm.cmbFeedbackCd.value == ""){
-                    Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
-                    return false;
-                }
-                if(addCallForm.addRem.value == ""){
-                    Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
-                    return false;
-                }
-            }else if($("#reqStageId").val() == '25'){
-            	console.log("after : " + $("#reqStageId").val());
-            	if(addCallForm.cmbFeedbackCd.value == ""){
-                    Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
-                    return false;
-                }
-                if(addCallForm.cmbAssignCt.value == ""){
-                    Common.alert("<spring:message code='sal.pleaseKeyInTheAssignCT' />");
-                    return false;
-                }
-                if(addCallForm.cmbCtGroup.value == ""){
-                   // Common.alert("Please key in the CT Group");
-                   // return false;
-                }
-                if(addCallForm.addAppRetnDt.value == ""){
-                    Common.alert("<spring:message code='sal.pleaseKeyInTheAppointmentDate' />");
-                    return false;
-                }
-                if(addCallForm.addRem.value == ""){
-                    Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
-                    return false;
-                }
-            }else{
-            	console.log("else : " + $("#reqStageId").val());
-            	if(addCallForm.cmbFeedbackCd.value == ""){
-                    Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
-                    return false;
-                }
-            	if(addCallForm.addRem.value == ""){
-                    Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
-                    return false;
-                }
-            }
+  function fn_saveCancel(){
+    if(addCallForm.addStatus.value == ""){
+      Common.alert("<spring:message code='sal.alert.msg.pleaseSelectTheStatus' />");
+      return false;
+    }
+
+    if($("#addStatus").val() == '19'){ // RECALL
+      // if($("#reqStageId").val() == '24'){ // BEFORE INSTALL
+      if(addCallForm.cmbFeedbackCd.value == "" || addCallForm.cmbFeedbackCd.value  == null){
+        Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
+        return false;
+      }
+
+      if(addCallForm.addCallRecallDt.value == "" || addCallForm.addCallRecallDt.value == null){
+        Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRecallDate' />");
+        return false;
+      }
+
+      if(addCallForm.addRem.value == ""){
+        Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
+        return false;
+      }
+      // }
+    }
+
+    if($("#addStatus").val() == '32'){ // CONFIRM TO CANCEL
+      if($("#reqStageId").val() == '24'){ // BEFORE INSTALL
+        if(addCallForm.cmbFeedbackCd.value == "" || addCallForm.cmbFeedbackCd.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
+          return false;
         }
-    	if($("#addStatus").val() == '31'){     // Reversal Of Cancellation
-            if($("#reqStageId").val() == '24'){     // before installl
-                  if(addCallForm.cmbFeedbackCd.value == ""){
-                      Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
-                      return false;
-                  }
-                  if(addCallForm.addRem.value == ""){
-                      Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
-                      return false;
-                  }
-                  if(addCallForm.addCallRecallDt.value == ""){
-                      Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRecallDate' />");
-                      return false;
-                  }
-              }else{
-                  if(addCallForm.cmbFeedbackCd.value == ""){
-                      Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
-                      return false;
-                  }
-                  if(addCallForm.addRem.value == ""){
-                      Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
-                      return false;
-                  }
-                  //if(addCallForm.cmbAssignCt.value == ""){
-                  //    Common.alert("Please key in the Assign CT");
-                  //    return false;
-                  //}
-              }
-          }
-    	if($("#addStatus").val() == '105'){     // Continue Rental
-            if($("#reqStageId").val() == '24'){     // before installl
-                  if(addCallForm.cmbFeedbackCd.value == ""){
-                      Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
-                      return false;
-                  }
-                  if(addCallForm.addRem.value == ""){
-                      Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
-                      return false;
-                  }
-                  if(addCallForm.addCallRecallDt.value == ""){
-                      Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRecallDate' />");
-                      return false;
-                  }
-              }else{
-                  if(addCallForm.cmbFeedbackCd.value == ""){
-                      Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
-                      return false;
-                  }
-                  if(addCallForm.addRem.value == ""){
-                      Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
-                      return false;
-                  }
-                  //if(addCallForm.cmbAssignCt.value == ""){
-                  //    Common.alert("Please key in the Assign CT");
-                  //    return false;
-                  //}
-              }
-          }
 
-    	Common.ajax("GET", "/sales/order/saveCancel.do", $("#addCallForm").serializeJSON(), function(result) {
-            Common.alert(result.msg, fn_success);
+        if(addCallForm.addRem.value == "" || addCallForm.addRem.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
+          return false;
+        }
 
-        }, function(jqXHR, textStatus, errorThrown) {
-                try {
-                    console.log("status : " + jqXHR.status);
-                    console.log("code : " + jqXHR.responseJSON.code);
-                    console.log("message : " + jqXHR.responseJSON.message);
-                    console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+      } else if($("#reqStageId").val() == '25'){
+        if(addCallForm.requestDate.value == "" || addCallForm.requestDate.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.plzSelInputReqDate' />");
+          return false;
+        }
 
-                    Common.alert("Failed to order invest reject.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                    }
-                catch (e) {
-                    console.log(e);
-                    alert("Saving data prepration failed.");
-                }
-                alert("Fail : " + jqXHR.responseJSON.message);
-        });
+        if(addCallForm.cmbAssignCt.value == "" || addCallForm.cmbAssignCt.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.plzReSelReqDate' />");
+          return false;
+        }
+
+        if(addCallForm.cmbFeedbackCd.value == ""){
+          Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
+          return false;
+        }
+
+        if(addCallForm.cmbAssignCt.value == "" || addCallForm.cmbAssignCt.value == null){
+          Common.alert("<spring:message code='sal.pleaseKeyInTheAssignCT' />");
+          return false;
+        }
+
+        if(addCallForm.cmbCtGroup.value == "" || addCallForm.cmbCtGroup.value == null){
+          // Common.alert("Please key in the CT Group");
+          // return false;
+        }
+
+        if(addCallForm.addAppRetnDt.value == "" || addCallForm.addAppRetnDt.value == null){
+          Common.alert("<spring:message code='sal.pleaseKeyInTheAppointmentDate' />");
+          return false;
+        }
+
+        if(addCallForm.addRem.value == "" || addCallForm.addRem.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
+          return false;
+        }
+      } else {
+        if(addCallForm.cmbFeedbackCd.value == "" || addCallForm.cmbFeedbackCd.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
+          return false;
+        }
+
+        if(addCallForm.addRem.value == "" || addCallForm.addRem.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
+          return false;
+        }
+      }
     }
 
-//    function fn_reloadPage(){
-        //Parent Window Method Call
-//        fn_orderCancelListAjax();
-//        Common.popupDiv('/sales/order/cancelReqInfoPop.do', $('#detailForm').serializeJSON(), null , true, '_editDiv2');
-//        $("#_close").click();
-//    }
+    if($("#addStatus").val() == '31'){ // REVERSAL OF CANCELLATION
+      if($("#reqStageId").val() == '24'){ // BEFORE INSTALL
+        if(addCallForm.cmbFeedbackCd.value == "" || addCallForm.cmbFeedbackCd.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
+          return false;
+        }
+
+        if(addCallForm.addRem.value == "" || addCallForm.addRem.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
+          return false;
+        }
+
+        if(addCallForm.addCallRecallDt.value == "" || addCallForm.addCallRecallDt.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRecallDate' />");
+          return false;
+        }
+      } else {
+        if(addCallForm.cmbFeedbackCd.value == "" || addCallForm.cmbFeedbackCd.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
+          return false;
+        }
+
+        if(addCallForm.addRem.value == "" || addCallForm.addRem.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
+          return false;
+        }
+
+        //if(addCallForm.cmbAssignCt.value == ""){
+        //    Common.alert("Please key in the Assign CT");
+        //    return false;
+        //}
+      }
+    }
+
+    if($("#addStatus").val() == '105') { // Continue Rental
+      if($("#reqStageId").val() == '24' ){ // before installl
+        if(addCallForm.cmbFeedbackCd.value == "" || addCallForm.cmbFeedbackCd.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
+          return false;
+        }
+
+        if(addCallForm.addRem.value == "" || addCallForm.addRem.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
+          return false;
+        }
+
+        if(addCallForm.addCallRecallDt.value == "" || addCallForm.addCallRecallDt.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRecallDate' />");
+          return false;
+        }
+      } else {
+        if(addCallForm.cmbFeedbackCd.value == "" || addCallForm.cmbFeedbackCd.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
+          return false;
+        }
+
+        if(addCallForm.addRem.value == "" || addCallForm.addRem.value == null){
+          Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
+          return false;
+        }
+
+        //if(addCallForm.cmbAssignCt.value == ""){
+        //    Common.alert("Please key in the Assign CT");
+        //    return false;
+        //}
+      }
+    }
+
+    Common.ajax("GET", "/sales/order/saveCancel.do", $("#addCallForm").serializeJSON(), function(result) {
+      Common.alert(result.msg, fn_success);
+    }, function(jqXHR, textStatus, errorThrown) {
+      try {
+        Common.alert("Failed to order invest reject.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+      } catch (e) {
+        alert("Saving data prepration failed.");
+      }
+      alert("Fail : " + jqXHR.responseJSON.message);
+    });
+  }
+
+  // function fn_reloadPage(){
+       //Parent Window Method Call
+  //   fn_orderCancelListAjax();
+  //   Common.popupDiv('/sales/order/cancelReqInfoPop.do', $('#detailForm').serializeJSON(), null , true, '_editDiv2');
+  //    $("#_close").click();
+  //   }
 
     function fn_cancelReload(){
-    	fn_orderCancelListAjax();
-    	if($("#addStatus").val() == '32' ||$("#addStatus").val() == '31' ||$("#addStatus").val() == '105'){
-    		$("#callStusId").val(1);
-    	}
+      fn_orderCancelListAjax();
+      if($("#addStatus").val() == '32' ||$("#addStatus").val() == '31' ||$("#addStatus").val() == '105'){
+        $("#callStusId").val(1);
+      }
 
-    	$("#_close").click();
-    	Common.popupDiv("/sales/order/cancelNewLogResultPop.do", $("#detailForm").serializeJSON(), null , true, '_newDiv');
-
-
-
+      $("#_close").click();
+      Common.popupDiv("/sales/order/cancelNewLogResultPop.do", $("#detailForm").serializeJSON(), null , true, '_newDiv');
     }
 
     function fn_success(){
-//    	fn_cancelReload();
+//      fn_cancelReload();
         fn_orderCancelListAjax();
-    	$("#_close").click();
+      $("#_close").click();
     }
 
   //그리드 속성 설정
@@ -831,115 +869,98 @@
 
 <section class="search_table"><!-- search_table start -->
 <form id="addCallForm" name="addCallForm" action="#" method="post">
-    <input id="paramdocId" name="paramdocId" type="hidden" value="${paramDocId}">
-    <input id="paramtypeId" name="paramtypeId" type="hidden" value="${paramTypeId}">
-    <input id="paramrefId" name="paramrefId" type="hidden" value="${paramRefId}">
-    <input id="reqStageId" name="reqStageId" type="hidden" value="${cancelReqInfo.reqStageId}">
-    <input id="paramCallEntryId" name="paramCallEntryId" type="hidden" value="${cancelReqInfo.callEntryId}">
-    <input id="paramReqId" name="paramReqId" type="hidden" value="${cancelReqInfo.reqId}">
-    <input id="paramOrdId" name="paramOrdId" type="hidden" value="${cancelReqInfo.ordId}">
-    <input id="paramStockId" name="paramStockId" type="hidden" value="${cancelReqInfo.stockId}">
-    <input id="callStusId" name="callStusId" type="hidden" >
-    <input id="appTypeId" name="appTypeId" type="hidden" value="${cancelReqInfo.appTypeId}">
-    <input id="rcdTms" name="rcdTms" type="hidden" value="${rcdTms}">
-    <!--  add by hgham  -->
-    <input id="ctId" name="ctId" type="hidden" >
+  <input id="paramdocId" name="paramdocId" type="hidden" value="${paramDocId}">
+  <input id="paramtypeId" name="paramtypeId" type="hidden" value="${paramTypeId}">
+  <input id="paramrefId" name="paramrefId" type="hidden" value="${paramRefId}">
+  <input id="reqStageId" name="reqStageId" type="hidden" value="${cancelReqInfo.reqStageId}">
+  <input id="paramCallEntryId" name="paramCallEntryId" type="hidden" value="${cancelReqInfo.callEntryId}">
+  <input id="paramReqId" name="paramReqId" type="hidden" value="${cancelReqInfo.reqId}">
+  <input id="paramOrdId" name="paramOrdId" type="hidden" value="${cancelReqInfo.ordId}">
+  <input id="paramStockId" name="paramStockId" type="hidden" value="${cancelReqInfo.stockId}">
+  <input id="callStusId" name="callStusId" type="hidden" >
+  <input id="appTypeId" name="appTypeId" type="hidden" value="${cancelReqInfo.appTypeId}">
+  <input id="rcdTms" name="rcdTms" type="hidden" value="${rcdTms}">
+  <!--  add by hgham  -->
+  <input id="ctId" name="ctId" type="hidden" >
 
-	<table class="type1"><!-- table start -->
-	<caption>table</caption>
-	<colgroup>
-	    <col style="width:160px" />
-	    <col style="width:*" />
-	    <col style="width:180px" />
-	    <col style="width:*" />
-	</colgroup>
-		<tbody>
-			<tr>
-			    <th scope="row"><spring:message code="sal.text.status" /><span class="must">*</span></th>
-			    <td>
-			    <select id="addStatus" name="addStatus" class="w100p" onchange="onChangeStatusType();fn_feebackcode()">
-                   <%--  <option value=""><spring:message code="sal.title.text.callLogStus" /></option>
-			        <option value="19"><spring:message code="sal.combo.text.recall" /></option>
-			        <option value="32"><spring:message code="sal.combo.text.confirmToCancel" /></option>
-			        <option value="31"><spring:message code="sal.combo.text.reversalOfCancellation" /></option>--%>
-			    </select>
-			    </td>
-			    <th scope="row"><spring:message code="sal.text.feddbackCode" /></th>
-			    <td>
-			    <select id="cmbFeedbackCd" name="cmbFeedbackCd" class="disabled" disabled="disabled" >
-                    <option value="">Feedback Code</option>
-			    </select>
-			    </td>
-			</tr>
-			<tr>
-			    <th scope="row"><spring:message code="sal.title.text.assignCt" /></th>
-			    <td>
-			    <select id="cmbAssignCt" name="cmbAssignCt" class="w100p" disabled="disabled">
-			        <option value=""></option>
-                     <c:forEach var="list" items="${selectAssignCTList }">
-                        <option value="${list.memId}">${list.memCodeName}</option>
-                    </c:forEach>
-			    </select>
-			    </td>
-
-			    <th scope="row"><spring:message code="sal.title.text.dscBrnch" /></th>
-				    <td>
-				            <input type="text" title="" placeholder=""  id="CTGroup" name="CTGroup" class="readonly "    readonly="readonly"  />
-				            <input type="hidden" title="" placeholder="" class="disabled" id="brnchId" name="brnchId"  class="readonly"    readonly="readonly" />
-				          <div  style="display:none">
-						   <select id="cmbCtGroup" name="cmbCtGroup" class="disabled" disabled="disabled">
-			                    <option value="">CT Group</option>
-			                    <option value="A">Group A</option>
-			                    <option value="B">Group B</option>
-			                    <option value="C">Group C</option>
-		                  </select>
-		                </div>
-				</td>
-			</tr>
-
-
-           <tr>
-	                <th scope="row"><spring:message code="sal.text.requestDate" /><span class="must">*</span></th>
-				    <td>
-				    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate"  onChange="fn_doAllaction()"/>
-				    </td>
-
-
-	                <th scope="row"><spring:message code="sal.text.appointmentDate" /></th>
-	                <td>
-	                  <input type="text" id="addAppRetnDt" name="addAppRetnDt" title="Create start Date" placeholder="DD/MM/YYYY" readonly="readonly"    class="j_date readonly"  />
-	                </td>
-            </tr>
-			<tr>
-			       <th scope="row"><spring:message code="sal.title.text.reCallDate" /></th>
-				    <td>
-				      <input type="text" id="addCallRecallDt" name="addCallRecallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" disabled="disabled" />
-				    </td>
-
-				      <th scope="row">Appointment <br> Sessione </th>
-                    <td>
-                          <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode" class="readonly"    readonly="readonly"  />
-                    </td>
-
-			</tr>
-
-			<tr>
-			    <th scope="row"><spring:message code="sal.text.remark" /><span class="must">*</span></th>
-			    <td colspan="3">
-	                <textarea id="addRem" name="addRem" cols="20" rows="5"></textarea>
-	            </td>
-			</tr>
-		</tbody>
-	</table><!-- table end -->
-
+  <table class="type1"><!-- table start -->
+  <caption>table</caption>
+  <colgroup>
+    <col style="width:160px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+  </colgroup>
+  <tbody>
+    <tr>
+      <th scope="row"><spring:message code="sal.text.status" /><span id='m1' name='m1' class="must">*</span></th>
+      <td>
+        <select id="addStatus" name="addStatus" class="w100p" onchange="onChangeStatusType();fn_feebackcode()" />
+      </td>
+      <th scope="row"><spring:message code="sal.text.feddbackCode" /><span id='m2' name='m2' class="must">*</span></th>
+      <td>
+        <select id="cmbFeedbackCd" name="cmbFeedbackCd" class="disabled" disabled="disabled" >
+          <option value="">Feedback Code</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row"><spring:message code="sal.title.text.assignCt" /><span id='m3' name='m3' class="must">*</span></th>
+      <td>
+        <select id="cmbAssignCt" name="cmbAssignCt" class="w100p" disabled="disabled">
+          <option value=""></option>
+          <c:forEach var="list" items="${selectAssignCTList }">
+            <option value="${list.memId}">${list.memCodeName}</option>
+          </c:forEach>
+        </select>
+      </td>
+      <th scope="row"><spring:message code="sal.title.text.dscBrnch" /><span id='m4' name='m4' class="must">*</span></th>
+      <td>
+        <input type="text" title="" placeholder=""  id="CTGroup" name="CTGroup" class="readonly " readonly="readonly" />
+        <input type="hidden" title="" placeholder="" class="disabled" id="brnchId" name="brnchId"  class="readonly"    readonly="readonly" />
+        <div  style="display:none">
+          <select id="cmbCtGroup" name="cmbCtGroup" class="disabled" disabled="disabled">
+            <option value="">CT Group</option>
+            <option value="A">Group A</option>
+            <option value="B">Group B</option>
+            <option value="C">Group C</option>
+          </select>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row"><spring:message code="sal.text.requestDate" /><span id='m5' name='m5' class="must">*</span></th>
+      <td>
+        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate"  onChange="fn_doAllaction()"/>
+      </td>
+      <th scope="row"><spring:message code="sal.text.appointmentDate" /><span id='m5' name='m5' class="must">*</span></th>
+      <td>
+         <input type="text" id="addAppRetnDt" name="addAppRetnDt" title="Create start Date" placeholder="DD/MM/YYYY" readonly="readonly"    class="j_date readonly"  />
+      </td>
+    </tr>
+    <tr>
+      <th scope="row"><spring:message code="sal.title.text.reCallDate" /><span id='m6' name='m6' class="must">*</span></th>
+      <td>
+        <input type="text" id="addCallRecallDt" name="addCallRecallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" disabled="disabled" />
+      </td>
+      <th scope="row">Appointment <br> Session <span id='m7' name='m7' class="must">*</span></th>
+      <td>
+         <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode" class="readonly"  readonly="readonly" />
+      </td>
+    </tr>
+    <tr>
+      <th scope="row"><spring:message code="sal.text.remark" /><span id='m8' name='m8' class="must">*</span></th>
+      <td colspan="3">
+        <textarea id="addRem" name="addRem" cols="20" rows="5"></textarea>
+      </td>
+    </tr>
+  </tbody>
+  </table><!-- table end -->
 </form>
 </section><!-- search_table end -->
-
-
 <ul class="center_btns mt20">
     <li><p class="btn_blue2 big"><a href="#" onClick="fn_saveCancel()"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
-
 </div>
 </section><!-- pop_body end -->
 </div>
