@@ -226,7 +226,7 @@
       $("#addCallRecallDt").attr('disabled','disabled');
       $("#addCallRecallDt").val('');
 
-      if($("#reqStageId").val() == '24') { // BEFORE INSTALL
+      if("${cancelReqInfo.reqStageId}" == '24') { // BEFORE INSTALL
         $("select[name=cmbCtGroup]").attr('disabled', 'disabled');
         $("select[name=cmbCtGroup]").addClass("w100p disabled");
         $("select[name=cmbCtGroup]").val('');
@@ -273,7 +273,7 @@
       $("#requestDate").attr('disabled','disabled');
       $("#requestDate").val('');
 
-      if($("#reqStageId").val() == '24'){ // BEFORE INSTALL
+      if("${cancelReqInfo.reqStageId}" == '24'){ // BEFORE INSTALL
         $("#addCallRecallDt").removeAttr("disabled");
       } else {
         $("#addCallRecallDt").attr('disabled','disabled');
@@ -299,7 +299,7 @@
        $("#requestDate").attr('disabled','disabled');
        $("#requestDate").val('');
 
-       if($("#reqStageId").val() == '24'){ // BEFORE INSTALL
+       if("${cancelReqInfo.reqStageId}" == '24'){ // BEFORE INSTALL
          $("#addCallRecallDt").removeAttr("disabled");
        } else {
          $("#addCallRecallDt").attr('disabled','disabled');
@@ -338,7 +338,7 @@
     }
 
     if($("#addStatus").val() == '19'){ // RECALL
-      // if($("#reqStageId").val() == '24'){ // BEFORE INSTALL
+      // if("${cancelReqInfo.reqStageId}" == '24'){ // BEFORE INSTALL
       if(addCallForm.cmbFeedbackCd.value == "" || addCallForm.cmbFeedbackCd.value  == null){
         Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
         return false;
@@ -357,7 +357,7 @@
     }
 
     if($("#addStatus").val() == '32'){ // CONFIRM TO CANCEL
-      if($("#reqStageId").val() == '24'){ // BEFORE INSTALL
+      if("${cancelReqInfo.reqStageId}" == '24'){ // BEFORE INSTALL
         if(addCallForm.cmbFeedbackCd.value == "" || addCallForm.cmbFeedbackCd.value == null){
           Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
           return false;
@@ -368,7 +368,7 @@
           return false;
         }
 
-      } else if($("#reqStageId").val() == '25'){
+      } else if("${cancelReqInfo.reqStageId}" == '25'){
         if(addCallForm.requestDate.value == "" || addCallForm.requestDate.value == null){
           Common.alert("<spring:message code='sal.alert.msg.plzSelInputReqDate' />");
           return false;
@@ -379,7 +379,7 @@
           return false;
         }
 
-        if(addCallForm.cmbFeedbackCd.value == ""){
+        if(addCallForm.cmbFeedbackCd.value == "" || addCallForm.cmbFeedbackCd.value == null){
           Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
           return false;
         }
@@ -417,7 +417,7 @@
     }
 
     if($("#addStatus").val() == '31'){ // REVERSAL OF CANCELLATION
-      if($("#reqStageId").val() == '24'){ // BEFORE INSTALL
+      if("${cancelReqInfo.reqStageId}" == '24'){ // BEFORE INSTALL
         if(addCallForm.cmbFeedbackCd.value == "" || addCallForm.cmbFeedbackCd.value == null){
           Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
           return false;
@@ -451,7 +451,7 @@
     }
 
     if($("#addStatus").val() == '105') { // Continue Rental
-      if($("#reqStageId").val() == '24' ){ // before installl
+      if("${cancelReqInfo.reqStageId}" == '24' ){ // before installl
         if(addCallForm.cmbFeedbackCd.value == "" || addCallForm.cmbFeedbackCd.value == null){
           Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
           return false;
@@ -912,7 +912,7 @@
       <th scope="row"><spring:message code="sal.title.text.dscBrnch" /><span id='m4' name='m4' class="must">*</span></th>
       <td>
         <input type="text" title="" placeholder=""  id="CTGroup" name="CTGroup" class="readonly " readonly="readonly" />
-        <input type="hidden" title="" placeholder="" class="disabled" id="brnchId" name="brnchId"  class="readonly"    readonly="readonly" />
+        <input type="hidden" title="" placeholder="" class="disabled" id="brnchId" name="brnchId"  class="readonly" readonly="readonly" />
         <div  style="display:none">
           <select id="cmbCtGroup" name="cmbCtGroup" class="disabled" disabled="disabled">
             <option value="">CT Group</option>
@@ -926,7 +926,7 @@
     <tr>
       <th scope="row"><spring:message code="sal.text.requestDate" /><span id='m5' name='m5' class="must">*</span></th>
       <td>
-        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate"  onChange="fn_doAllaction()"/>
+        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate"  onChange="fn_doAllaction()" disabled="disabled"/>
       </td>
       <th scope="row"><spring:message code="sal.text.appointmentDate" /><span id='m6' name='m6' class="must">*</span></th>
       <td>
