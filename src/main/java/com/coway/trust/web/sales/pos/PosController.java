@@ -1,5 +1,7 @@
 package com.coway.trust.web.sales.pos;
 
+import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -667,6 +669,150 @@ public class PosController {
 		return ResponseEntity.ok(detailList);
 	}
 
+
+	@RequestMapping(value = "/selectPosFlexList.do")
+	public String selectPosFlexList(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		//TODO 유저 권한에 따라 리스트 검색 조건 변경 (추후)
+
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-7), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+		model.put("bfDay", bfDay);
+		model.put("toDay", toDay);
+
+		return "sales/pos/posFlexiList";
+	}
+
+
+	@RequestMapping(value = "/selectPosFlexiJsonList")
+	public ResponseEntity<List<EgovMap>> selectPosFlexiJsonList (@RequestParam Map<String, Object> params, HttpServletRequest request) throws Exception{
+
+		List<EgovMap> listMap = null;
+
+		//params
+		String systemArray[] = request.getParameterValues("posTypeId");
+		String statusArray[] = request.getParameterValues("posStatusId");
+
+		params.put("systemArray", systemArray);
+		params.put("statusArray", statusArray);
+
+		listMap = posService.selectPosFlexiJsonList(params);
+
+		return ResponseEntity.ok(listMap);
+
+	}
+
+	@RequestMapping(value = "/posFlexiSystemPop.do")
+	public String posFlexiSystemPop(@RequestParam Map<String, Object> params,  ModelMap model) throws Exception{
+
+	   SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+
+		params.put("userId", sessionVO.getUserId());
+
+		return "sales/pos/posFlexiSystemPop";
+	}
+
+	@RequestMapping(value = "/insertPosFlexi.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> insertPosFlexi(@RequestBody Map<String, Object> params) throws Exception{
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		params.put("userDeptId", sessionVO.getUserDeptId());
+		params.put("userName", sessionVO.getUserName());
+		Map<String, Object> retunMap = null;
+		retunMap = posService.insertPosFlexi(params);
+
+		return ResponseEntity.ok(retunMap);
+
+	}
+
+	@RequestMapping(value = "/posFlexiItmSrchPop.do")
+	public String posFlexiItmSrchPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+
+		//Params translate
+		model.addAttribute("posSystemModuleType", params.get("insPosModuleType"));
+		model.addAttribute("posSystemType", params.get("insPosSystemType"));
+		model.addAttribute("whBrnchId", params.get("hidLocId"));
+		//model.addAttribute("", params.get("hidLocDesc"));
+
+		return "sales/pos/posFlexiItmSrchPop";
+
+	}
+
+	@RequestMapping(value = "/selectPosFlexiItmList")
+	public ResponseEntity<List<EgovMap>> selectPosFlexiItmList(@RequestParam Map<String, Object> params) throws Exception{
+
+		List<EgovMap> codeList = null;
+
+		params.put("stkTypeId", SalesConstants.POS_SALES_NOT_BANK); //2687
+		codeList = posService.selectPosFlexiItmList(params);
+		return ResponseEntity.ok(codeList);
+
+	}
+
+	@RequestMapping(value = "/chkFlexiStockList")
+	public ResponseEntity<List<EgovMap>> chkFlexiStockList (@RequestParam Map<String, Object> params , HttpServletRequest request) throws Exception{
+
+
+		String stkId[] = request.getParameterValues("itmLists");
+		params.put("stkId", stkId);
+
+		List<EgovMap> stokList = null;
+		stokList = posService.chkFlexiStockList(params);
+
+		return ResponseEntity.ok(stokList);
+	}
+
+	@RequestMapping(value = "/posFlexiConfirmPop.do")
+	public String posFlexiConfirmPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+
+		EgovMap posDetailMap = null;
+
+		posDetailMap = posService.posFlexiDetail(params);
+		params.put("posNo", posDetailMap.get("posNo"));
+
+
+		model.addAttribute("posDetailMap", posDetailMap);
+
+
+		return "sales/pos/posFlexiConfirmPop";
+
+	}
+
+	@RequestMapping(value= "/confirmPosFlexi.do" , method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> confirmPosFlexi(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception{
+
+		ReturnMessage message = new ReturnMessage();
+		LOGGER.info("params : " + params);
+
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		params.put("posFlexiStatusCode", "4");
+		resultValue = posService.updatePosFlexiStatus(params , sessionVO);
+
+			message.setMessage("POS No. : [" + params.get("posFlexiNo") + "] successful approved." );
+
+
+		return ResponseEntity.ok(message);
+
+	}
+
+	@RequestMapping(value= "/rejectPosFlexi.do" , method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage>  rejectPosFlexi (@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception{
+
+		ReturnMessage message = new ReturnMessage();
+		LOGGER.info("params : " + params.toString());
+
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		params.put("posFlexiStatusCode", "10");
+		resultValue = posService.updatePosFlexiStatus(params , sessionVO);
+
+			message.setMessage("POS No. : [" + params.get("posFlexiNo") + "] successful rejected." );
+
+
+		return ResponseEntity.ok(message);
+	}
 
 
 }
