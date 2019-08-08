@@ -3,7 +3,7 @@
 <mapper namespace="com.coway.trust.biz.services.mlog.impl.MSvcLogApiMapper">
 
   <select id="getHeartServiceJobList" parameterType="Map" resultType="egovMap">
-  <!-- A.warranty, -->
+    <!-- A.warranty, -->
     SELECT A.appointment_Date,
            A.service_No,
            A.job_Status,
@@ -3800,7 +3800,7 @@
     <![CDATA[
       SELECT COUNT (STK_RETN_ID) CNT
       FROM LOG0038D
-      WHERE STK_RETN_ID = #{serviceNo} AND STUS_CODE_ID <> '1'
+      WHERE RETN_NO = #{serviceNo} AND STUS_CODE_ID <> '1'
     ]]>
   </select>
 
