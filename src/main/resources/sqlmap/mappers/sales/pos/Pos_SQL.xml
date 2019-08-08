@@ -84,6 +84,7 @@
                         Extent1.POS_MODULE_TYPE_ID  ,
                         TO_CHAR(Extent1.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT  ,
                         Extent1.STUS_ID,
+                        EXTENT11.NAME STUS_DESC ,
                         Extent1.POS_WH_ID  ,
                         Extent1.POS_MEM_ID  ,
                         Extent1.POS_CRT_USER_ID  ,
@@ -106,6 +107,7 @@
                         LEFT JOIN PAY0031D Extent7   ON Extent7.TAX_INVC_SVC_NO = Extent1.POS_NO
                         LEFT JOIN SYS0005M Extent9   ON Extent9.BRNCH_ID = Extent1.BRNCH_ID
                          LEFT JOIN PAY0011D extent10 ON extent10.MEMO_ADJ_INVC_NO = extent7.tax_invc_ref_no AND MEMO_ADJ_STUS_ID = 4
+                         LEFT JOIN SYS0038M EXTENT11 ON EXTENT1.STUS_ID = EXTENT11.STUS_CODE_ID
                         <if test="(deducMem != null and deducMem != '') or (deducMemNric != null and deducMemNric != '' )">
                             LEFT JOIN (SELECT DISTINCT POS_ID, MEM_CODE, NRIC FROM SAL0058D) Extent8   ON Extent8.POS_ID = Extent1.POS_ID
                         </if>
@@ -1152,6 +1154,7 @@
                 T1.POS_ITM_TXS TXS,
                 T1.MEM_ID,
                 T1.RCV_STUS_ID,
+                T4.NAME STUS_DESC,
                 T3. POS_TYPE_ID,
                 T3.POS_MODULE_TYPE_ID
             FROM
@@ -1164,6 +1167,7 @@
                     LEFT JOIN LOG0026D T2 ON T2.ITM_ID = T1.POS_ITM_STOCK_ID
                 </if> -->
                 LEFT JOIN SAL0057D T3 ON T3.POS_ID = T1.POS_ID
+                LEFT JOIN SYS0038M T4 ON T1.RCV_STUS_ID = T4.STUS_CODE_ID
             WHERE
                T1.POS_ID = #{rePosId}
                <if test=" null != memId and '' != memId">
@@ -3287,4 +3291,255 @@
 
     </select>
 
+      <select id="selectPosFlexiJsonList" parameterType="Map" resultType="egovMap">
+        SELECT  Extent1.POS_ID ,
+                        Extent1.POS_NO ,
+                        Extent1.POS_CUST_NAME ,
+                        TO_CHAR(Extent1.POS_DT, 'DD-MM-YYYY') POS_DT,
+                        Extent1.POS_TYPE_ID   ,
+                        Extent1.POS_MODULE_TYPE_ID  ,
+                        TO_CHAR(Extent1.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT  ,
+                        Extent1.STUS_ID,
+                        extent11.NAME STUS_DESC,
+                        Extent1.POS_WH_ID  ,
+                        Extent1.POS_MEM_ID  ,
+                        Extent1.POS_CRT_USER_ID  ,
+                        Extent2.CODE_NAME  ,
+                        Extent3.CODE_NAME CODE_NAME1 ,
+                        Extent6.USER_NAME  ,
+                        CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
+                        CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_DESC ELSE NULL END WH_LOC_DESC ,
+                        CASE WHEN  (Extent4.MEM_ID IS NOT NULL) THEN  Extent4.MEM_CODE || ' - ' || Extent4.NAME ELSE 'CASH' END NAME ,
+                       <!--  CASE WHEN ( NOT ( ( Extent7.TAX_INVC_ID IS NULL ) AND ( Extent7.TAX_INVC_REF_NO IS NULL ) ) ) THEN Extent7.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO,-->
+                        <!-- extent10.MEMO_ADJ_REF_NO, -->
+                        Extent1.BRNCH_ID,
+                        Extent9.CODE BRNCH_DESC,
+                        Extent1.APV_USER_ID ,
+                        extent12.USER_NAME APV_USER_NAME ,
+                        TO_CHAR(Extent1.APV_DT, 'DD-MM-YYYY') APV_DT
+                FROM SAL0057D Extent1
+                        JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
+                        JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
+                        LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.POS_MEM_ID
+                        LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
+                        JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
+                        LEFT JOIN PAY0031D Extent7   ON Extent7.TAX_INVC_SVC_NO = Extent1.POS_NO
+                        LEFT JOIN SYS0005M Extent9   ON Extent9.BRNCH_ID = Extent1.BRNCH_ID
+                         LEFT JOIN PAY0011D extent10 ON extent10.MEMO_ADJ_INVC_NO = extent7.tax_invc_ref_no AND MEMO_ADJ_STUS_ID = 4
+                        LEFT JOIN SYS0038M extent11 ON Extent1.STUS_ID = extent11.STUS_CODE_ID
+                        LEFT JOIN SYS0047M extent12 ON Extent1.APV_USER_ID = extent12.USER_ID
+                WHERE  1=1
+               <if test=" null != posModuleTypeId and '' != posModuleTypeId">
+                   AND  Extent1.POS_MODULE_TYPE_ID = #{posModuleTypeId}
+                </if>
+
+                <if test=" null != systemArray and systemArray.length > 0">
+                   AND Extent1.POS_TYPE_ID IN
+                    <foreach collection="systemArray" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+
+                <if test=" null != statusArray and statusArray.length > 0">
+                    AND Extent1.STUS_ID IN
+                    <foreach collection="statusArray" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+
+                <if test="posNo != nul and posNo != '' ">
+                    AND  UPPER(Extent1.POS_NO) = UPPER(#{posNo})
+                </if>
+
+                <if test="sDate != null and sDate != '' ">
+                    <![CDATA[
+                    AND  Extent1.POS_DT >=  TO_DATE(#{sDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+                     ]]>
+                </if>
+
+                <if test="eDate != null and eDate != '' ">
+                   <![CDATA[
+                    AND  Extent1.POS_DT <= TO_DATE(#{eDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+                    ]]>
+                </if>
+                <if test="brnchId != null and brnchId != '' ">
+                    AND Extent1.BRNCH_ID = #{brnchId}
+                </if>
+                <if test=" null != salesmanId and '' != salesmanId">
+                    AND Extent1.POS_MEM_ID = #{salesmanId}
+                </if>
+
+                <if test=" null != posCustName and '' != posCustName">
+                    AND  Extent1.POS_CUST_NAME  = #{posCustName}
+                </if>
+
+                ORDER BY Extent1.POS_NO DESC
+    </select>
+
+
+ <select id="selectPosFlexiItmList" parameterType="Map" resultType="egovMap">
+        SELECT
+            Project1.CODE_NAME,
+            Project1.STK_CODE,
+            Project1.CODE_ID,
+            Project1.STK_DESC,
+            Project1.STK_CTGRY_ID,
+            Project1.STK_TYPE_ID,
+            Project1.STK_GRAD,
+            Project1. ALLOW_SALES,
+            Project1.STUS_CODE_ID
+        FROM
+        (SELECT
+                T1.STK_CODE || ' - ' || T1.STK_DESC CODE_NAME,
+                T1.STK_ID CODE_ID,
+                T1.STK_CODE,
+                T1.STK_DESC,
+                T1.STK_CTGRY_ID,
+                T1.STK_TYPE_ID,
+                T1.STK_GRAD,
+                T1.ALLOW_SALES,
+                T1.STUS_CODE_ID
+            FROM
+                SYS0026M T1
+                LEFT JOIN SYS0013M T2  ON T1.STK_TYPE_ID = T2.CODE_ID
+            WHERE
+                61 != STK_TYPE_ID  OR ( 61 = STK_TYPE_ID  AND  '600052' = STK_CODE  )) Project1
+
+             <!-- Item Bank -->
+             <if test=" null != posItm and '' != posItm">
+                WHERE
+                     Project1. ALLOW_SALES = 1
+                AND
+                     Project1.STUS_CODE_ID = 1
+                AND
+                     Project1.STK_CTGRY_ID = #{itemType}
+                 AND
+                     Project1.STK_TYPE_ID = #{stkTypeId}
+             </if>
+
+                  ORDER BY Project1.STK_CODE ASC
+     </select>
+
+
+
+     <select id="chkFlexiStockList" parameterType="Map" resultType="egovMap">
+                        SELECT
+                        Project1.LOC_ID,
+                        Project1.STK_ID,
+                        Project1.STK_CODE,
+                        Project1.STK_DESC,
+                        Project1.STK_TYPE_ID,
+                        Project1.STK_CTGRY_ID,
+                        <!-- NVL(Project1.QTY, 0 ) QTY, -->
+                        CASE WHEN Project1.STK_CODE IN ('M500097','M500140','M500139','M500083','M500167') THEN
+                        25000 ELSE
+                        999 END AS QTY,
+                        Project1.MOV_QTY,
+<!--                         NVL(Project1.AMT , 0) AMT,
+                        (AMT * 100) / 100 SUB_CHANGES,
+                        AMT - ((AMT * 100) / 100) TAXES, -->
+                        0 AS AMT ,
+                        0 AS SUB_CHARGES,
+                        0 AS TAXES,
+                        Project1.SERIAL_CHK
+                    FROM (
+                            SELECT
+                                NVL(Extent2.LOC_ID, 0) LOC_ID,
+                                Extent1.STK_ID,
+                                Extent1.STK_CODE,
+                                Extent1.STK_DESC,
+                                Extent1.STK_TYPE_ID,
+                                Extent1.STK_CTGRY_ID,
+                                (Extent2.QTY - NVL(Extent4.BOOKQTY , 0)) AS QTY ,
+                                Extent2.MOV_QTY,
+                                <!-- NVL(Extent3.AMT, 0) AMT, -->
+                                NVL(Extent3.AMT, 0) AMT ,
+                                Extent1.SERIAL_CHK
+                            FROM
+                                SYS0026M Extent1
+                            LEFT JOIN
+                                LOG0056M Extent2 ON Extent2.STK_CODE = Extent1.STK_CODE AND Extent2.LOC_ID = #{locId}
+                            LEFT JOIN
+                               <!-- Price  -->
+                               <!-- <![CDATA[
+                               (SELECT STK_ID , AMT FROM  SAL0016M WHERE APP_TYPE_ID = 67 AND STUS_CODE_ID = 1) Extent3 ON Extent3.STK_ID = Extent1.STK_ID
+                               ]]>       -->
+                               <![CDATA[
+                                (SELECT
+                                         T1.STK_ID, T1.AMT
+                                       FROM
+                                          (SELECT
+                                              STK_ID, AMT, UPD_DT, ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY UPD_DT DESC) CNT
+                                           FROM SAL0016M
+                                           WHERE MEM_PAC_ID = 0
+                                           AND APP_TYPE_ID = 67
+                                           AND STUS_CODE_ID = 1
+                                          ) T1
+                                    WHERE T1.CNT <= 1)
+                                                                              Extent3 ON Extent3.STK_ID = Extent1.STK_ID
+                                 ]]>
+
+                             <![CDATA[
+                            LEFT JOIN
+                                (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <> 'Y'  GROUP BY LOC_ID , ITM_CODE ) Extent4
+                                 ON Extent2.STK_CODE = Extent4.ITM_CODE  AND Extent2.LOC_ID = Extent4.LOC_ID
+                             ]]>
+                         ) Project1
+                    WHERE   1 = 1
+                    <if test=" null != stkId and stkId.length > 0">
+                              AND Project1.STK_ID IN
+                              <foreach collection="stkId" item="item" open="(" separator="," close=")">
+                                  #{item}
+                              </foreach>
+                    </if>
+     </select>
+
+         <select id="posFlexiDetail" parameterType="Map" resultType="egovMap">
+                SELECT
+                        T1.POS_ID,
+                        T1.POS_NO,
+                        T1.POS_BILL_ID,
+                        T1.POS_CUST_NAME,
+                        TO_CHAR(T1.POS_DT, 'DD/MM/YYYY') POS_DT,
+                        T1.POS_TYPE_ID,
+                        T1.POS_MODULE_TYPE_ID,
+                        T1.POS_TOT_AMT,
+                        T1.POS_TOT_CHRG,
+                        T1.POS_TOT_TXS,
+                        T1.POS_TOT_DSCNT,
+                        T1.POS_WH_ID,
+                        T1.POS_REM,
+                        T1.POS_MEM_ID,
+                        T2.MEM_CODE,
+                        T1.POS_RESN_ID,
+                        T1.BRNCH_ID,
+                        T1.CR_ACC_ID,
+                        T1.DR_ACC_ID,
+                        T1.STUS_ID,
+                        T1.POS_RCV_DT,
+                        T3.CODE
+                    FROM
+                        SAL0057D T1
+                    LEFT JOIN ORG0001D T2 ON T2.MEM_ID = T1.POS_MEM_ID
+                    LEFT JOIN SYS0005M T3 ON T3.BRNCH_ID = T2.BRNCH
+                    WHERE
+                        POS_ID = #{posId}
+                    AND
+                    <![CDATA[
+                        ROWNUM <= 1
+                     ]]>
+    </select>
+
+        <update id="updatePosFlexiStatus" parameterType="Map">
+                UPDATE
+                    SAL0057D
+                SET
+                    APV_DT = SYSDATE ,
+                    APV_USER_ID = #{approvalUserId} ,
+                    APV_REM = #{posFlexiRemark} ,
+                    STUS_ID = #{posFlexiStatusCode}
+
+                WHERE
+                    POS_ID = #{posFlexiId}
+    </update>
 </mapper>
