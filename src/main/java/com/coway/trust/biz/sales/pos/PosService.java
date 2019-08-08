@@ -1,9 +1,11 @@
 package com.coway.trust.biz.sales.pos;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.biz.sales.pos.vo.PosGridVO;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -84,4 +86,17 @@ public interface PosService {
 	List<EgovMap> getPosBillingDetailList(Map<String, Object> params)throws Exception;
 
 	EgovMap insertPosReversalItemBank(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectPosFlexiJsonList(Map<String, Object> params) throws Exception;
+
+	Map<String, Object> insertPosFlexi(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectPosFlexiItmList(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> chkFlexiStockList(Map<String, Object> params) throws Exception;
+
+	EgovMap posFlexiDetail(Map<String, Object> params) throws Exception;
+
+	Map<String, Object> updatePosFlexiStatus(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
+
 }
