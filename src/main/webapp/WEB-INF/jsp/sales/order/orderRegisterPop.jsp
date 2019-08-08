@@ -3247,7 +3247,7 @@ console.log("vBindingNo" + vBindingNo);
 <tr>
     <th scope="row" rowspan="5"><spring:message code="sal.text.billingMethod" /><span class="must">*</span></th>
     <td colspan="3">
-    <label><input id="billMthdPost" name="billMthd" type="radio" /><span><spring:message code="sal.text.post" /></span></label>
+    <label><input id="billMthdPost" name="billMthd" type="radio" disabled/><span><spring:message code="sal.text.post" /></span></label>
     </td>
 </tr>
 <tr>
