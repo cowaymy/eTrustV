@@ -135,6 +135,12 @@ $(document).ready(function() { //***********************************************
             return;
         }
 
+        var stusId = clickChk[0].item.stusId;
+        if(stusId != 107 ){
+        	  Common.alert("Invalid status for POS Convert.");
+              return;
+        }
+
 
         var convertForm = { posId : clickChk[0].item.posId };
         Common.popupDiv("/sales/pos/posFlexiConfirmPop.do", convertForm , null , true , "_revDiv");
@@ -381,7 +387,8 @@ function createAUIGrid(){
                             {dataField : "apvDt", headerText : "Approve Date", width : '8%', editable : false},
                             {dataField : "posId", visible : false},
                             {dataField : "posModuleTypeId", visible : false},
-                            {dataField : "posTypeId", visible : false}
+                            {dataField : "posTypeId", visible : false},
+                            {dataField : "stusId", visible : false}
                            ];
 
     //그리드 속성 설정
