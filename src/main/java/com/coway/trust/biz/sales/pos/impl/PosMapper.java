@@ -232,4 +232,15 @@ public interface PosMapper {
 	int getSeqPay0240T();
 
 	List<EgovMap> getPosBillingDetailList(Map<String, Object> params);
+
+	List<EgovMap> selectPosFlexiJsonList(Map<String, Object> params);
+
+	List<EgovMap> selectPosFlexiItmList(Map<String, Object> params);
+
+	List<EgovMap> chkFlexiStockList(Map<String, Object> params);
+
+	EgovMap posFlexiDetail(Map<String, Object> params);
+
+	void updatePosFlexiStatus(Map<String, Object> params);
+
 }
