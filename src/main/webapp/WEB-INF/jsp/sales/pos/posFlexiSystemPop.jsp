@@ -770,7 +770,7 @@ function fn_inputAmt(obj){
 
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>POS Flexi Request</h1>
+<h1>POS - Flexi Point Request</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a id="_systemClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
