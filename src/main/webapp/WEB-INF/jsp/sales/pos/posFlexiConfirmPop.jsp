@@ -205,7 +205,7 @@ function fn_parentReload() {
 
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>POS - Flexi Point Confirmation</h1>
+<h1>POS - Flexi Point Convert</h1>
 <ul class="right_opt">
 
     <li><p class="btn_blue2"><a id="_rejectBtn" onclick="fn_UpdatePosFlexiStatusReject()">REJECT</a></p></li>
@@ -309,7 +309,7 @@ function fn_parentReload() {
 </section><!-- tap_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>POS - Flexi Point Confirmation Remark </h2>
+<h2>POS - Flexi Point Convert Remark </h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
