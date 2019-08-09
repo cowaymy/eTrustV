@@ -57,4 +57,8 @@ public interface RCMSAgentManageMapper {
 
 	void insert_SAL0240D(Map<String, Object> params);
 
+	void insertUploadedConversionList(Map<String, Object> params);
+
+	void deleteUploadedConversionList(Map<String, Object> params);
+
 }

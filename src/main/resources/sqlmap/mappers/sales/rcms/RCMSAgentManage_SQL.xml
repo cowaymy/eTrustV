@@ -182,7 +182,7 @@
 		        ,A.ETR_REM
 		        ,F.CODE_DESC RACE
 		        ,cD.UN_BILL_AMT
-		        ,C.MTH_RENT_AMT
+		        ,(C.MTH_RENT_AMT - NVL(REBATE_AMT_PER_INSTLMT,0)) MTH_RENT_AMT
 		 FROM SAL0149D A JOIN SAL0029D B  ON A.CUST_ID = B.CUST_ID
 		    JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
         LEFT JOIN ( SELECT A.AGENT_ID ,B.CODE || '_'||A.AGENT_ID||'_'||A.AGENT_NAME AGENT_NAME
@@ -201,6 +201,7 @@
         LEFT JOIN SYS0013M F ON F.CODE_ID = B.RACE_ID
         LEFT JOIN FIRST_INSTALL G ON A.SALES_ORD_ID = G.SALES_ORD_ID
         JOIN REP0010S cD ON a.SALES_ORD_ID = cD.ORD_ID AND cd.SRV_CNTRCT_ID = 0
+        LEFT JOIN PAY0286D gstRb ON C.SALES_ORD_ID = gstRb.ORD_ID AND gstRb.CNTRCT_ID = 0
 		WHERE 1=1
 		<choose>
             <when test="orderNo != null and orderNo !=''">
@@ -484,7 +485,7 @@
             WHERE CUST_ID = #{custId} AND AGENT_ID != 0  GROUP BY CUST_ID,AGENT_ID
     </select>
 
-    <select id="selectUploadedConversionList" parameterType="java.util.List" resultType="egovMap">
+ <!--    <select id="selectUploadedConversionList" parameterType="java.util.List" resultType="egovMap">
     <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
         SELECT
             EXTENT2.SALES_ORD_ID as SALES_ORD_ID,
@@ -505,7 +506,41 @@
             FROM DUAL) EXTENT1
             LEFT JOIN SAL0001D EXTENT2 ON EXTENT1.ORD_NO = EXTENT2.SALES_ORD_NO
         </foreach>
+    </select> -->
+
+    <select id="selectUploadedConversionList" parameterType="java.util.List" resultType="egovMap">
+        SELECT
+            EXTENT2.SALES_ORD_ID as SALES_ORD_ID,
+            EXTENT1.ORD_NO,
+            EXTENT1.AGENT_ID,
+            EXTENT1.REN_STUS,
+            EXTENT1.ITM,
+            EXTENT1.REM,
+            CASE WHEN EXTENT2.SALES_ORD_ID IS NOT NULL THEN 4 ELSE 21 END STUS_ID,
+            CASE WHEN EXTENT2.SALES_ORD_ID IS NOT NULL THEN 'VALID' ELSE 'INVALID' END STUS_CODE
+            FROM SAL0241T EXTENT1
+            LEFT JOIN SAL0001D EXTENT2 ON EXTENT2.SALES_ORD_NO = EXTENT1.ORD_NO
     </select>
+
+
+
+    <insert id="insertUploadedConversionList" parameterType="java.util.List">
+    INSERT INTO SAL0241T (ORD_NO,AGENT_ID,REN_STUS,ITM,REM)
+    <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            (SELECT
+            #{item.ordNo} as ORD_NO,
+            #{item.agentId} as AGENT_ID,
+            #{item.renStus} as REN_STUS,
+            #{item.itm} as ITM,
+            #{item.rem}  as REM
+            FROM DUAL)
+        </foreach>
+    </insert>
+
+    <insert id="deleteUploadedConversionList" parameterType="Map">
+        DELETE FROM SAL0241T
+    </insert>
+
 
    <select id="select_SeqSAL0239D" parameterType="Map" resultType="java.lang.String">
         select SAL0239D_RC_BATCH_ID_SEQ.NEXTVAL from dual
@@ -542,27 +577,11 @@
         (RC_ITM_ID ,RC_BATCH_ID ,RC_ITM_ORD_ID ,RC_ITM_STUS_ID ,RC_ITM_FIELD ,RC_ITM_REM
         ,RC_ITM_CRT_USER_ID ,RC_ITM_CRT_DT ,RC_ITM_UPD_USER_ID ,RC_ITM_UPD_DT
         ,RC_ITM_CNVR_STUS_ID,RC_ITM_CNVR_REM,RC_ITM_AGENT_ID,RC_ITM_REN_STUS)
-        SELECT
-        SAL0240D_RC_ITM_ID_SEQ.NEXTVAL ,RC_BATCH_ID ,RC_ITM_ORD_ID ,RC_ITM_STUS_ID ,RC_ITM_FIELD ,RC_ITM_REM
-        ,RC_ITM_CRT_USER_ID ,RC_ITM_CRT_DT ,RC_ITM_UPD_USER_ID ,RC_ITM_UPD_DT
-        ,RC_ITM_CNVR_STUS_ID,RC_ITM_CNVR_REM,RC_ITM_AGENT_ID,RC_ITM_REN_STUS FROM (
-        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
-        SELECT
-			  #{seq} as RC_BATCH_ID
-			, #{item.salesOrdId} as RC_ITM_ORD_ID
-			, #{item.stusId} as RC_ITM_STUS_ID
-			, #{item.itm} as RC_ITM_FIELD
-			, #{item.rem} as RC_ITM_REM
-			, #{userId} as RC_ITM_CRT_USER_ID
-			, SYSDATE as RC_ITM_CRT_DT
-			, #{userId} as RC_ITM_UPD_USER_ID
-			, SYSDATE as RC_ITM_UPD_DT
-			, 1 as RC_ITM_CNVR_STUS_ID
-			, NULL as RC_ITM_CNVR_REM
-			, #{item.agentId} as RC_ITM_AGENT_ID
-			, #{item.renStus} as RC_ITM_REN_STUS
-		FROM DUAL
-        </foreach>
-        )
+
+        SELECT   SAL0240D_RC_ITM_ID_SEQ.NEXTVAL ,#{seq} ,EXTENT2.SALES_ORD_ID ,CASE WHEN EXTENT2.SALES_ORD_ID IS NOT NULL THEN 4 ELSE 21 END,EXTENT1.ITM ,EXTENT1.REM
+        ,#{userId} ,SYSDATE ,#{userId} ,SYSDATE
+        , 1 ,null,EXTENT1.AGENT_ID,EXTENT1.REN_STUS
+        FROM SAL0241T EXTENT1
+        LEFT JOIN SAL0001D EXTENT2 ON EXTENT2.SALES_ORD_NO = EXTENT1.ORD_NO
     </insert>
 </mapper>

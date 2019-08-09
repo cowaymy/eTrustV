@@ -380,8 +380,27 @@ public class RCMSAgentManageController {
           }).collect(Collectors.toList());
 
           Map<String, Object> bulkMap = new HashMap<>();
-          bulkMap.put("list", list.stream().collect(Collectors.toCollection(ArrayList::new)));
+          //bulkMap.put("list", list.stream().collect(Collectors.toCollection(ArrayList::new)));
 
+          rcmsAgentService.deleteUploadedConversionList(bulkMap);
+
+          int size = 10000;
+          int page = list.size() / size;
+          int start;
+          int end;
+
+          for (int i = 0; i <= page; i++) {
+            start = i * size;
+            end = size;
+
+            if (i == page) {
+              end = list.size();
+            }
+            if(list.stream().skip(start).limit(end).count() != 0){
+                bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+                rcmsAgentService.insertUploadedConversionList(bulkMap);
+            }
+          }
           uploadedList = rcmsAgentService.selectUploadedConversionList(bulkMap);
 
         }else{
@@ -405,8 +424,25 @@ public class RCMSAgentManageController {
           }).collect(Collectors.toList());
 
           Map<String, Object> bulkMap = new HashMap<>();
-          bulkMap.put("list", list.stream().collect(Collectors.toCollection(ArrayList::new)));
+          rcmsAgentService.deleteUploadedConversionList(bulkMap);
 
+          int size = 10000;
+          int page = list.size() / size;
+          int start;
+          int end;
+
+          for (int i = 0; i <= page; i++) {
+            start = i * size;
+            end = size;
+
+            if (i == page) {
+              end = list.size();
+            }
+            if(list.stream().skip(start).limit(end).count() != 0){
+                bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+                rcmsAgentService.insertUploadedConversionList(bulkMap);
+            }
+          }
           uploadedList = rcmsAgentService.selectUploadedConversionList(bulkMap);
         }
 
@@ -419,22 +455,20 @@ public class RCMSAgentManageController {
         return ResponseEntity.ok(message);
     }
 
-	   @RequestMapping(value = "/saveConversionList", method = RequestMethod.POST)
-	    public ResponseEntity<ReturnMessage> saveConversionList(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+	@RequestMapping(value = "/saveConversionList", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveConversionList(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
 
-	        LOGGER.debug("param ===================>>  " + params);
+	    params.put("userId", sessionVO.getUserId());
 
-	        params.put("userId", sessionVO.getUserId());
+	    rcmsAgentService.saveConversionList(params);
 
-	        rcmsAgentService.saveConversionList(params);
+	    ReturnMessage message = new ReturnMessage();
+	    message.setCode(AppConstants.SUCCESS);
+	    message.setData("");
+	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
-	        ReturnMessage message = new ReturnMessage();
-	        message.setCode(AppConstants.SUCCESS);
-	        message.setData("");
-	        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	    return ResponseEntity.ok(message);
 
-	        return ResponseEntity.ok(message);
-
-	    }
+	}
 
 }

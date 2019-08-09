@@ -303,6 +303,16 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
   }
 
   @Override
+  public void insertUploadedConversionList(Map<String, Object> params) {
+    rcmsAgentManageMapper.insertUploadedConversionList(params);
+  }
+
+  @Override
+  public void deleteUploadedConversionList(Map<String, Object> params) {
+    rcmsAgentManageMapper.deleteUploadedConversionList(params);
+  }
+
+  @Override
   public List<EgovMap> selectUploadedConversionList(Map<String, Object> params) {
     return rcmsAgentManageMapper.selectUploadedConversionList(params);
   }
@@ -327,8 +337,6 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
 
       bulkMap.put("seq", seqSAL0239D);
       bulkMap.put("userId", params.get("userId"));
-      bulkMap.put("list", list.stream().collect(Collectors.toCollection(ArrayList::new)));
-
       rcmsAgentManageMapper.insert_SAL0240D(bulkMap);
 
   }

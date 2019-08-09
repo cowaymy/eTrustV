@@ -46,4 +46,8 @@ public interface RCMSAgentManageService {
 
 	void saveConversionList(Map<String, Object> params);
 
+	void insertUploadedConversionList(Map<String, Object> params);
+
+	void deleteUploadedConversionList(Map<String, Object> params);
+
 }

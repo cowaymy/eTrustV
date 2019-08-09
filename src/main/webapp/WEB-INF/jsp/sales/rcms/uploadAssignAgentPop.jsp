@@ -153,7 +153,8 @@ function creatGrid(){
         dataField : "stusCode",
         headerText : '<spring:message code="sal.title.status" />',
             width : '10%'
-    },{
+    }
+    /* ,{
         dataField : "undefined",
         headerText : "Action",
         width : '20%',
@@ -164,8 +165,8 @@ function creatGrid(){
                   AUIGrid.removeRow(uploadResultGrid, rowIndex);
                   AUIGrid.removeSoftRows(uploadResultGrid);
               }
-       }
-   }];
+        }
+   }*/];
 
 
     var upOptions = {
@@ -190,8 +191,6 @@ function fn_checkAgentList(){
 
     	Common.ajaxFile("/sales/rcms/uploadRcmsConversionBulk.do", formData, function(result)    {
         AUIGrid.clearGridData(uploadResultGrid);
-
-        console.log(JSON.stringify(result.data));
 
         if(result.data.length > 0){
         	$("#btnPopSave").show();
@@ -226,9 +225,6 @@ function fn_save(){
 
 //        Common.ajax("POST", "/sales/rcms/saveAgentList", data, function(result){
 	Common.ajax("POST", "/sales/rcms/saveConversionList", data, function(result){
-
-            console.log("성공." + JSON.stringify(result));
-            console.log("data : " + result.data);
 
             Common.alert("Success To Save" + DEFAULT_DELIMITER + "Agency assignment successfully saved.",
                 function(){
