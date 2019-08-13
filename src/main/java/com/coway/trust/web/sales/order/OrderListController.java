@@ -452,4 +452,10 @@ public class OrderListController {
 		return ResponseEntity.ok(orderList);
 	}
 
+	@RequestMapping(value="/orderEKeyInListPop.do")
+	public String orderEKeyInListPop(){
+
+		return "sales/order/orderEKeyInListingPop";
+	}
+
 }

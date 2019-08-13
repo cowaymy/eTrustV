@@ -142,6 +142,9 @@
 	        }
 
         });
+        $('#btnEKeyIn').click(function() {
+            Common.popupDiv("/sales/order/orderEKeyInListPop.do", null, null, true);
+        });
         $('#btnRentalPaySet').click(function() {
         	Common.popupDiv("/sales/order/orderRentalPaySettingUpdateListPop.do", null, null, true);
         });
@@ -675,6 +678,9 @@
       <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
 		<li><p class="link_btn"><a href="#" id="btnExport"><spring:message code='sales.btn.exptSrchList'/></a></p></li>
 	  </c:if>
+      <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
+        <li><p class="link_btn"><a href="#" id="btnEKeyIn">eKey-In Listing</a></p></li>
+      </c:if>
 	</ul>
 	<ul class="btns">
       <c:if test="${PAGE_AUTH.funcUserDefine21 == 'Y'}">
