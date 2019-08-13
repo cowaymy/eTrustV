@@ -228,7 +228,7 @@ function fn_save(){
 
             Common.alert("Success To Save" + DEFAULT_DELIMITER + "Agency assignment successfully saved.",
                 function(){
-                     $('#popup_wrap').hide();
+                     $('#popup_wrap').remove();
                      fn_selectListAjax();
                 }
             );
