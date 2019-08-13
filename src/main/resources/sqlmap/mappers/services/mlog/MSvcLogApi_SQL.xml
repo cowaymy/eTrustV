@@ -918,7 +918,8 @@
                  SAL0029D,
                  SAL0045D,
                  SAL0047D,
-                 SAL0095D,
+                 (SELECT SRV_SALES_ORD_ID AS SRV_SALES_ORD_ID, SRV_DUR AS SRV_DUR, SRV_EXPR_DT AS SRV_EXPR_DT FROM SAL0095D WHERE SRV_MEM_ID IN (
+                  SELECT MAX(SRV_MEM_ID) AS SRV_MEM_ID FROM SAL0095D WHERE SRV_STUS_CODE_ID = 4 GROUP BY SRV_SALES_ORD_ID)) SAL0095D,
                  SYS0005M,
                  SYS0026M,
                  CCR0006D,
