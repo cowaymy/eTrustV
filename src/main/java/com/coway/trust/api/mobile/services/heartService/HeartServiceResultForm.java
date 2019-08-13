@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 10/04/2019    ONGHC      1.0.1       - Amend File Format
+ * 13/08/2019    ONGHC      1.0.2       - Add Variable faucetExch
  *********************************************************************************************/
 
 @ApiModel(value = "HeartServiceResultForm", description = "HeartServiceResultForm")
@@ -35,6 +36,9 @@ public class HeartServiceResultForm {
 
   @ApiModelProperty(value = "Y/ N")
   private String temperatureSetting;
+
+  @ApiModelProperty(value = "0/ 1")
+  private String faucetExch;
 
   @ApiModelProperty(value = "결과 등록 메모")
   private String resultRemark;
@@ -152,6 +156,14 @@ public class HeartServiceResultForm {
 
   public void setTemperatureSetting(String temperatureSetting) {
     this.temperatureSetting = temperatureSetting;
+  }
+
+  public String getFaucetExch() {
+    return faucetExch;
+  }
+
+  public void setFaucetExch(String faucetExch) {
+    this.faucetExch = faucetExch;
   }
 
   public String getResultRemark() {
