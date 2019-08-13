@@ -687,67 +687,69 @@
 
     // CHECKING 7 DAYS ONLY MOD LEVEL CAN HELP EDIT
     if (ind == 0) {
-      if (updDt != "" && updDt != null) {
-        var stat = true;
-        var sDate = new Date(updDt);
-        var tDate = new Date();
-        tDate.setDate(tDate.getDate() - 7);
+      if (asStusId != "RCL") {
+        if (updDt != "" && updDt != null) {
+          var stat = true;
+          var sDate = new Date(updDt);
+          var tDate = new Date();
+          tDate.setDate(tDate.getDate() - 7);
 
-        var tMth = tDate.getMonth();
-        var tYear = tDate.getFullYear();
-        var tDay = tDate.getDate();
-        var sMth = sDate.getMonth();
-        var sYear = sDate.getFullYear();
-        var sDay = sDate.getDate();
+          var tMth = tDate.getMonth();
+          var tYear = tDate.getFullYear();
+          var tDay = tDate.getDate();
+          var sMth = sDate.getMonth();
+          var sYear = sDate.getFullYear();
+          var sDay = sDate.getDate();
 
-        if (sYear > tYear) {
-          stat = true;
-        } else {
-          if (sMth > tMth) {
+          if (sYear > tYear) {
             stat = true;
           } else {
-            if (sDay > tDay) {
+            if (sMth > tMth) {
               stat = true;
-             } else {
-              stat = false;
+            } else {
+              if (sDay > tDay) {
+                stat = true;
+               } else {
+                stat = false;
+              }
             }
           }
-        }
 
-        if (!stat) {
-          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
-          return;
-        }
-      } else if (lstUpdDt != "" && lstUpdDt != null) {
-        var stat = true;
-        var sDate = new Date(lstUpdDt);
-        var tDate = new Date();
-        tDate.setDate(tDate.getDate() - 7);
+          if (!stat) {
+            Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
+            return;
+          }
+        } else if (lstUpdDt != "" && lstUpdDt != null) {
+          var stat = true;
+          var sDate = new Date(lstUpdDt);
+          var tDate = new Date();
+          tDate.setDate(tDate.getDate() - 7);
 
-        var tMth = tDate.getMonth();
-        var tYear = tDate.getFullYear();
-        var tDay = tDate.getDate();
-        var sMth = sDate.getMonth();
-        var sYear = sDate.getFullYear();
-        var sDay = sDate.getDate();
+          var tMth = tDate.getMonth();
+          var tYear = tDate.getFullYear();
+          var tDay = tDate.getDate();
+          var sMth = sDate.getMonth();
+          var sYear = sDate.getFullYear();
+          var sDay = sDate.getDate();
 
-        if (tYear > sYear) {
-          stat = false;
-        } else {
-          if (tMth > sMth) {
+          if (tYear > sYear) {
             stat = false;
           } else {
-            if (tDay > sDay) {
+            if (tMth > sMth) {
               stat = false;
             } else {
-              stat = true;
+              if (tDay > sDay) {
+                stat = false;
+              } else {
+                stat = true;
+              }
             }
           }
-        }
 
-        if (!stat) {
-          Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
-          return;
+          if (!stat) {
+            Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
+            return;
+          }
         }
       }
     }
