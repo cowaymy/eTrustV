@@ -975,9 +975,9 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
     } else {
       bsResultMas.put("CodyID", String.valueOf(params.get("cmbServiceMem")));
     }
-    //logger.debug(">>>>>>settleDt isEmpty : " + StringUtils.isEmpty(String.valueOf(params.get("settleDt")).trim()));
-    if (params.get("setlDt") != null || params.get("setlDt") != "") {
-      bsResultMas.put("SettleDate", String.valueOf(params.get("setlDt")));
+
+    if (params.get("settleDt") != null || params.get("settleDt") != "") {
+      bsResultMas.put("SettleDate", String.valueOf(params.get("settleDt")));
     } else {
       bsResultMas.put("SettleDate", "01/01/1900");
     }
@@ -1007,6 +1007,11 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
     bsResultMas.put("ResultIsAdjust", String.valueOf(1));
     bsResultMas.put("bsPreferWeek", String.valueOf(params.get("srvBsWeek")));
 
+    if(bsResultMas.get("settleDate") == null || bsResultMas.get("settleDate") == "" ){
+    	bsResultMas.put("SettleDate", "01/01/1900");
+    }
+
+    logger.debug("bsResultMas : "+ bsResultMas);
     htManualMapper.updatebsResultMas(bsResultMas); // UPDATE SVC0006D
 
     htManualMapper.updateQrySchedule(bsResultMas); // UPDATE SVC0008D
@@ -1016,7 +1021,6 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
       } else {
     	  htManualMapper.updateQryConfig(bsResultMas);
       }
-
 
     return resultValue;
   }
