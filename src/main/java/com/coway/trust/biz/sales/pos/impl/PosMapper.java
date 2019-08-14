@@ -243,4 +243,6 @@ public interface PosMapper {
 
 	void updatePosFlexiStatus(Map<String, Object> params);
 
+	List<EgovMap> selectWhSOBrnchList();
+
 }
