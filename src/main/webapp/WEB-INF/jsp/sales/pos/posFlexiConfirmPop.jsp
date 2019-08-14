@@ -137,10 +137,10 @@ function fn_reSizeAllGrid(){
 function fn_UpdatePosFlexiStatusApprove(){
 	var posFlexiRemark = $("#_confirmRem").val();
 
-	   if (posFlexiRemark == null || posFlexiRemark == ""){
+/* 	   if (posFlexiRemark == null || posFlexiRemark == ""){
 	        Common.alert("* Please fill in the Remark.");
 	        return false;
-	    }
+	    } */
 
 var params =  {"posFlexiId" : '${posDetailMap.posId}', "posFlexiNo" : '${posDetailMap.posNo}' , "posFlexiRemark" : $("#_confirmRem").val()};
 
@@ -154,10 +154,10 @@ var params =  {"posFlexiId" : '${posDetailMap.posId}', "posFlexiNo" : '${posDeta
 function fn_UpdatePosFlexiStatusReject(){
     var posFlexiRemark = $("#_confirmRem").val();
 
-       if (posFlexiRemark == null || posFlexiRemark == ""){
+  /*      if (posFlexiRemark == null || posFlexiRemark == ""){
             Common.alert("* Please fill in the Remark.");
             return false;
-        }
+        } */
 var params =  {"posFlexiId" : '${posDetailMap.posId}', "posFlexiNo" : '${posDetailMap.posNo}' , "posFlexiRemark" : $("#_confirmRem").val()};
 
     Common.ajax("POST", "/sales/pos/rejectPosFlexi.do", params , function(result) {
