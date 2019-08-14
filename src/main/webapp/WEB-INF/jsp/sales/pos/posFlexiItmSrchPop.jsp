@@ -543,12 +543,13 @@ function fn_initField(){
 
             $("#_gridArea").css("display" , "none");  //Serial Grid Display None
             //Type
-            var codes = [1345 , 1346 , 1347 , 1348 , 1362];
+            //var codes = [1345 , 1346 , 1347 , 1348 , 1362];
+            var codes = [1346 ,1348];
             var codeM = {codeM : 11 , codes : codes};
             CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
             //Itm List
-            var itmType = {itemType : 1345 , posItm : 1};
-            CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
+            var itmType = {itemType : 1346 , posItm : 1};
+            CommonCombo.make('_purcItems', "/sales/pos/selectPosFlexiItmList", itmType , '', ItmOption);
         }
     }
 
