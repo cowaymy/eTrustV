@@ -58,6 +58,7 @@
            A.service_State,
            A.install_Address,
            A.need_Filter,
+           A.warranty,
            TO_CHAR (NVL(B.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding
     FROM ( SELECT appointment_Date,
                   service_No,
