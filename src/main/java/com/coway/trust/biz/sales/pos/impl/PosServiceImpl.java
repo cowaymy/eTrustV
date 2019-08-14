@@ -2939,4 +2939,10 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		return resultValue;
 	}
 
+	@Override
+	public List<EgovMap> selectWhSOBrnchList() throws Exception {
+
+		return posMapper.selectWhSOBrnchList();
+	}
+
 }
