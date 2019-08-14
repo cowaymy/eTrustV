@@ -99,4 +99,6 @@ public interface PosService {
 
 	Map<String, Object> updatePosFlexiStatus(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
 
+	List<EgovMap> selectWhSOBrnchList() throws Exception;
+
 }
