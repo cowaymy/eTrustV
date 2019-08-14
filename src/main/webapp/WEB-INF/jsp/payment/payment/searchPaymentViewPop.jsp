@@ -13,8 +13,8 @@ var viewPopSlaveGridID_V;
 //Grid에서 선택된 RowID
 var selectedGridValue;
 
-//Grid Properties 설정 
-var gridPros = {            
+//Grid Properties 설정
+var gridPros = {
         editable : false,                 // 편집 가능 여부 (기본값 : false)
         showStateColumn : false     // 상태 칼럼 사용
 };
@@ -25,23 +25,23 @@ $(document).ready(function(){
 
 });
 
-var popColumnLayout = [  
+var popColumnLayout = [
      { dataField:"history" ,
          width: 30,
-         headerText:" ", 
+         headerText:" ",
          renderer : {
              type : "IconRenderer",
              iconTableRef :  {
                  "default" : "${pageContext.request.contextPath}/resources/images/common/search.png"// default
-             },         
+             },
              iconWidth : 16,
              iconHeight : 16,
              onclick : function(rowIndex, columnIndex, value, item) {
                  showViewDetailHistory_V(item.payItmId);
-                 
-             } 
+
+             }
           }
-     }, 
+     },
      { dataField:"payId" ,headerText:"",editable : false , visible : false },
      { dataField:"codeName" ,headerText:"<spring:message code='pay.head.mode'/>",editable : false},
      { dataField:"payItmRefNo" ,headerText:"<spring:message code='pay.head.refNo'/>",editable : false },
@@ -50,7 +50,7 @@ var popColumnLayout = [
      { dataField:"payItmCcExprDt" ,headerText:"<spring:message code='pay.head.CCExpiryDate'/>" ,editable : false },
      { dataField:"payItmCcNo" ,headerText:"<spring:message code='pay.head.CRCNo'/>" ,editable : false },
      { dataField:"payItmChqNo" ,headerText:"<spring:message code='pay.head.chequeNo'/>" ,editable : false },
-     { dataField:"name" ,headerText:"<spring:message code='pay.head.issueBank'/>" ,editable : false },                   
+     { dataField:"name" ,headerText:"<spring:message code='pay.head.issueBank'/>" ,editable : false },
      { dataField:"payItmAmt" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false },
      { dataField:"c8" ,headerText:"<spring:message code='pay.head.CRCMode'/>" ,editable : false },
      { dataField:"accDesc" ,headerText:"<spring:message code='pay.head.bankAccount'/>" ,editable : false },
@@ -62,8 +62,8 @@ var popColumnLayout = [
      { dataField:"payItmBankChrgAmt" ,headerText:"<spring:message code='pay.head.bankCharge'/>" ,editable : false },
      { dataField:"payItmId" ,headerText:"<spring:message code='pay.head.payItemId'/>" ,editable : false, visible:false }
      ];
-     
-var popSlaveColumnLayout = [ 
+
+var popSlaveColumnLayout = [
     { dataField:"trxId" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false},
     { dataField:"trxDt" ,headerText:"<spring:message code='pay.head.trxDate'/>",editable : false  },
     { dataField:"trxAmt" ,headerText:"<spring:message code='pay.head.trxTotal'/>",editable : false },
@@ -74,7 +74,7 @@ var popSlaveColumnLayout = [
     { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false },
     { dataField:"appTypeName" ,headerText:"<spring:message code='pay.head.appType'/>" ,editable : false },
     { dataField:"productDesc" ,headerText:"<spring:message code='pay.head.product'/>" ,editable : false },
-    { dataField:"custName" ,headerText:"<spring:message code='pay.head.customer'/>" ,editable : false },                   
+    { dataField:"custName" ,headerText:"<spring:message code='pay.head.customer'/>" ,editable : false },
     { dataField:"custIc" ,headerText:"<spring:message code='pay.head.ICCONo'/>" ,editable : false },
     { dataField:"keyinBrnchName" ,headerText:"<spring:message code='pay.head.branch'/>" ,editable : false },
     { dataField:"keyinUserName" ,headerText:"<spring:message code='pay.head.userName'/>" ,editable : false }
@@ -90,7 +90,7 @@ var viewHistoryLayout=[
 
 
 function fn_openDivViewPop(){
-          
+
           Common.ajax("GET", "/payment/selectPaymentDetailViewer.do", $("#viewDetailForm").serialize(), function(result) {
 
               viewPopMasterGridID_V = GridCommon.createAUIGrid("popList_wrap", popColumnLayout,null,gridPros);
@@ -114,27 +114,28 @@ function fn_openDivViewPop(){
               }else{
                 $('#txtOrderProgressStatus').text("");
               }
-              
+
               $('#txtInstallNo').text('');
               $('#txtNRIC').text(result.viewMaster.custIc);
               $('#txtPayType').text(result.viewMaster.payTypeName);
               $('#txtAdvMth').text(result.viewMaster.advMonth);
               $('#txtPayDate').text(result.viewMaster.payDt);
+              $('#txtPayCreateDate').text(result.viewMaster.payCrtDt);
               $('#txtHPCode').text(result.viewMaster.hpCode);
               $('#txtHPName').text(result.viewMaster.hpName);
               $('#txtBatchPaymentID').text(result.viewMaster.batchPayId);
-               
+
               //Collector Information
               $('#txtCollectorCode').text(result.viewMaster.clctrCode);
               $('#txtSalesPerson').text(result.viewMaster.salesMemCode + "(" + result.viewMaster.salesMemName+")");
               $('#txtBranch').text(result.viewMaster.clctrBrnchCode + "(" + result.viewMaster.clctrBrnchName+")");
               $('#txtDebtor').text(result.viewMaster.debtorAccCode + "(" + result.viewMaster.debtorAccDesc+")");
               $("#gridTitle").css("color","red");
-              
+
               //팝업그리드 뿌리기
               AUIGrid.setGridData(viewPopMasterGridID_V, result.selectPaymentDetailView);
               AUIGrid.setGridData(viewPopSlaveGridID_V, result.selectPaymentDetailSlaveList);
-              
+
           });
 }
 
@@ -156,7 +157,7 @@ function showViewHistory_V(){
         <li><p class="btn_blue2"><a href="#" onclick="" id="_viewClose"><spring:message code='sys.btn.close'/></a></p></li>
     </ul>
   </header><!-- pop_header end -->
-  
+
   <section class="pop_body"><!-- pop_body start -->
       <aside class="title_line"><!-- title_line start -->
           <h2>Payment Information</h2>
@@ -193,14 +194,14 @@ function showViewHistory_V(){
                           <td id="txtProductCategory"></td>
                           <th scope="row">Product Name</th>
                           <td id="txtProductName"></td>
-                          
+
                       </tr>
                       <tr>
                           <th scope="row">Application Type</th>
                           <td id="txtAppType"></td>
                           <th scope="row">Customer Name</th>
                           <td id="txtCustomerName"></td>
-                          
+
                       </tr>
                       <tr>
                           <th scope="row">Customer Type</th>
@@ -235,6 +236,8 @@ function showViewHistory_V(){
                       <tr>
                           <th scope="row">Batch Payment ID</th>
                           <td id="txtBatchPaymentID"></td>
+                          <th scope="row">Payment Create Date</th>
+                          <td id="txtPayCreateDate"></td>
                       </tr>
                   </tbody>
       </table>
@@ -286,4 +289,4 @@ function showViewHistory_V(){
     <input type="hidden" name="payId" id="payId" value="${payId}" />
     <input type="hidden" name="salesOrdId" id="salesOrdId" value="${salesOrdId}" />
     <input type="hidden" name="callPrgm" id="callPrgm" value="${callPrgm}" />
-</form>      
+</form>
