@@ -466,8 +466,8 @@ public class ServiceApiController {
               sessionVO.setUserId(Integer.parseInt(userId));
 
               // UPDATE FAUCET EXCHANGE
-              if (params.get("warranty") != null) {
-                if ("1".equals(CommonUtils.nvl(params.get("warranty").toString()))) {
+              if (params.get("faucetExch") != null) {
+                if ("1".equals(CommonUtils.nvl(params.get("faucetExch").toString()))) {
                   int cnt = MSvcLogApiService.updFctExch(params);
                   LOGGER.debug("### FAUCET EXCHANGE UPDATE COUNT : " + cnt);
                 }
