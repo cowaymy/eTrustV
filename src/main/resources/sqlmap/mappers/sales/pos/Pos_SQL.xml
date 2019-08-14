@@ -3415,6 +3415,29 @@
                      Project1.STK_CTGRY_ID = #{itemType}
                  AND
                      Project1.STK_TYPE_ID = #{stkTypeId}
+                       AND
+                    Project1.STK_CODE IN (
+                    'M500010',
+                    'M500013',
+                    'M500018',
+                    'M500019',
+                    'M500067',
+                    'M500079',
+                    'M500080',
+                    'M500113',
+                    'M500115',
+                    'M500133',
+                    'M500134',
+                    'M500135',
+                    'M500136',
+                    'M500137',
+                    'M500138',
+                    'M500141',
+                    'M500142',
+                    'M500143',
+                    'M500166'
+                    )
+
              </if>
 
                   ORDER BY Project1.STK_CODE ASC
@@ -3542,4 +3565,25 @@
                 WHERE
                     POS_ID = #{posFlexiId}
     </update>
+
+    <select id="selectWhSOBrnchList" resultType="egovMap">
+           SELECT
+                S5.BRNCH_ID CODE_ID,
+                S5.CODE || '-' || S5.NAME CODE_NAME,
+                S5.NAME ,
+                S5.CODE ,
+                S28.WH_LOC_ID ,
+                S28.WH_LOC_CODE ,
+                S28.WH_LOC_DESC ,
+                S28.WH_LOC_GB ,
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
+            FROM
+                SYS0005M S5 ,SYS0028M S28
+            WHERE
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
+            AND S28.WH_LOC_STK_GRAD = 'A'
+            AND S28.WH_LOC_GB IN ('08')
+            ORDER BY   S5.CODE
+   </select>
+
 </mapper>
