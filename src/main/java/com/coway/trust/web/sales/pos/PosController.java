@@ -814,5 +814,15 @@ public class PosController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/selectWhSOBrnchList")
+	public ResponseEntity<List<EgovMap>> selectWhSOBrnchList () throws Exception{
+
+		List<EgovMap> codeList = null;
+
+		codeList = posService.selectWhSOBrnchList();
+
+		return ResponseEntity.ok(codeList);
+
+	}
 
 }
