@@ -86,7 +86,7 @@
        <tr>
          <th scope="row"><spring:message code='service.grid.bch'/><span class='must'> *</span></th>
           <td>
-            <select id="cboBchPop" name="cboBchPop" class="w100p" disabled >
+            <select id="cboBchPop" name="cboBchPop" class="w100p" >
               <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
             </select>
           </td>
