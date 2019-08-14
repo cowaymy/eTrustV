@@ -28,7 +28,7 @@ $(document).ready(function() {
     //branch List
     var selVal = $("#_memBrnch").val().trim();
     console.log('membrnch : [' + selVal+ ']');
-    CommonCombo.make('_cmbWhBrnchIdPop', "/sales/pos/selectWhBrnchList", '' , selVal, '');
+    CommonCombo.make('_cmbWhBrnchIdPop', "/sales/pos/selectWhSOBrnchList", '' , selVal, '');
 
     //Payment
     CommonCombo.make('_payBrnchCode', "/sales/pos/getpayBranchList", '', selVal, '');
