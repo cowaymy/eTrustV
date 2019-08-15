@@ -3,7 +3,7 @@
 
 <script type="text/javascript">
 
-$("#dataForm").empty();
+ $("#dataForm").empty();
 
 var date = new Date().getDate();
 if(date.toString().length == 1){
@@ -13,12 +13,14 @@ $("#dpOrderDateFr").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFul
 $("#dpOrderDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
 
 /* 멀티셀렉트 플러그인 start */
+
 $('.multy_select').change(function() {
    //console.log($(this).val());
 })
 .multipleSelect({
    width: '100%'
 });
+
 
 $.fn.clearForm = function() {
     $("#cmbAppType").multipleSelect("checkAll");
@@ -97,6 +99,7 @@ function fn_report(viewType){
     var extraWhereSQL = "";
     var orderBySQL = "";
     var custName = "";
+    var stusCode = "";
     var runNo = 0;
 
 
@@ -147,9 +150,15 @@ function fn_report(viewType){
         custName = $("#txtCustName").val().trim();
         whereSQL += " AND c.NAME LIKE '%"+custName.replace("'", "''")+"%' ";
     }
-    if($("#cmbUser :selected").index() > 0){
+
+    if($("#cmbStatus").val() != '' && $("#cmbStatus").val() != null) {
+        whereSQL += " AND som.STUS_CODE_ID = '" + $("#cmbStatus").val() + "'";
+     }
+
+
+/*     if($("#cmbUser :selected").index() > 0){
         whereSQL += " AND som.CRT_USER_ID = '"+$("#cmbUser :selected").val()+"'";
-    }
+    } */
     if($("#cmbSort :selected").index() > -1){
         sortBy = $("#cmbSort :selected").text();
 
@@ -205,7 +214,7 @@ function fn_report(viewType){
 
 CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
 CommonCombo.make('cmbAppType', '/homecare/sales/getApplicationTypeList', {codeId : 10} , '', {type: 'M'});
-CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
+//CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -266,9 +275,15 @@ CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
 <tr>
     <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="txtCustName"/></td>
-    <th scope="row"><spring:message code="sal.text.keyInUser" /></th>
+   <th scope="row">Status</th>
     <td>
-    <select class="w100p" id="cmbUser"></select>
+    <select id="cmbStatus" name="cmbStatus">
+        <option value="">Choose one</option>
+        <option value="1">Active</option>
+        <option value="4">Complete</option>
+        <option value="10">Cancel</option>
+        <option value="21">Fail</option>
+    </select>
     </td>
 </tr>
 <tr>
@@ -282,8 +297,6 @@ CommonCombo.make('cmbUser', '/homecare/sales/getUserCodeList', '' , '');
         <option value="5"><spring:message code="sal.combo.text.byCustName" /></option>
     </select>
     </td>
-    <th scope="row"></th>
-    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
