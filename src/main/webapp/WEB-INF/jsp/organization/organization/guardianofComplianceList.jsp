@@ -158,6 +158,12 @@ function fn_complianceViewLimit() {
     Common.popupDiv("/organization/compliance/guardianofComplianceViewLimitPop.do?reqstId=" + requestid, null, null, true, '_compensationEditPop');
 
 }
+
+$(function() {
+$("#download").click(function() {
+    GridCommon.exportTo("grid_wrap_complianceList", 'xlsx', "Guardian of Coway List")
+});
+});
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -256,6 +262,12 @@ function fn_complianceViewLimit() {
 
 <section class="search_result"><!-- search_result start -->
 
+<ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+         <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</c:if>
+<!--          <li><p class="btn_grid"><a id="insert">INS</a></p></li>             -->
+</ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="grid_wrap_complianceList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
