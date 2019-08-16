@@ -54,6 +54,8 @@ public interface ASManagementListMapper {
 
   int insertSVC0001D(Map<String, Object> params);
 
+  //int insertSVC0108D(Map<String, Object> params);
+
   int updateSVC0001D(Map<String, Object> params);
 
   int updateSVC0001D_RCL(Map<String, Object> params);
@@ -97,6 +99,8 @@ public interface ASManagementListMapper {
   int update_Filter_SAL0087D(Map<String, Object> params);
 
   int insertSVC0004D(Map<String, Object> params);
+
+  int updateSVC0004DIsCur(Map<String, Object> params);
 
   int updateSVC0004D(Map<String, Object> params);
 
