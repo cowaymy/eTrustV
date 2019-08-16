@@ -6,57 +6,57 @@
 function fn_save(){
 	var msg = "";
 
-	if($("#description").val() == ""){		
+	if($("#description").val() == ""){
 		msg += '<spring:message code="sal.alert.msg.plzKeyInDesc" />';
 	}
 	if($("#feedback").val() == ""){
         msg += '<spring:message code="sal.alert.msg.plzSelTheReason" />';
 	}
-	
+
 	if(msg != ""){
 	    Common.alert(msg);
 	    return;
 	}
-	
+
     $("#saveDescription").val($("#description").val() );
     $("#saveFeedback").val($("#feedback").val() );
-	
+
     Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
         Common.ajax("POST", "/sales/trBook/saveReportLost", $("#saveLostForm").serializeJSON(), function(result) { // Common.alert(result.message);
-        
+
         	 if(result.dcfInfo != null){
         		 Common.alert("This TR Book is under request [" + result.dcfInfo.defReqNo + "]");
              }else{
             	 if(result.success){
             		 $("#saveDocNo").val(result.docNo);
             		 $("#saveDcfReqEntryId").val(result.dcfReqEntryId);
-            		 
+
             	        console.log("성공." + JSON.stringify(result));
-            	        
+
             		 Common.confirm("<spring:message code="sal.alert.title.reportSummary" /> "+DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.reportSummary" /></b>", go_uploadPage , null);
-            		 
+
             		 $("#savebt").hide();
             	 }else{
             		 Common.alert(result.massage);
             	 }
              }
-            
+
         }, function(jqXHR, textStatus, errorThrown) {
             console.log("실패하였습니다.");
             console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
             console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-            
+
             Common.alert("<spring:message code="sal.alert.title.saveFail" />"+DEFAULT_DELIMITER + "<b><spring:message code="sal.alert.msg.saveFail" /></b>");
-            
-            
+
+
         });
-      
+
     });
-       
+
 }
 
 
-function go_uploadPage(){	
+function go_uploadPage(){
     Common.popupDiv("/sales/trBook/reportLostUploadPop.do", {"docNo" : $("#saveDocNo").val(), "dcfReqEntryId" : $("#saveDcfReqEntryId").val()}, null, true, "fileUploadPop");
 }
 
@@ -68,6 +68,7 @@ function go_uploadPage(){
 <input type="hidden" id="saveTrHolderType" name="trHolderType"  >
 <input type="hidden" id="saveMemCode" name="memCode"  >
 <input type="hidden" id="saveTrBookNo" name="trBookNo"  >
+<input type="hidden" id="saveTrHolder" name="trHolder"  >
 
 <input type="hidden" id="saveDocNo" name="docNo"  >
 <input type="hidden" id="saveDcfReqEntryId" name="dcfReqEntryId"  >
@@ -96,14 +97,14 @@ function go_uploadPage(){
 </ul>
 
 
- 
+
 <!-- inc_dcfInfo  tab  start...-->
-     <jsp:include page ='${pageContext.request.contextPath}/sales/trBook/inc_dcfInfoPop.do'/>   
+     <jsp:include page ='${pageContext.request.contextPath}/sales/trBook/inc_dcfInfoPop.do'/>
 <!-- inc_dcfInfo  tab  start...-->
 
 
 <!-- inc_lostInfo tab  start...-->
-   <jsp:include page ='${pageContext.request.contextPath}/sales/trBook/inc_lostInfoPop.do'/>   
+   <jsp:include page ='${pageContext.request.contextPath}/sales/trBook/inc_lostInfoPop.do'/>
 <!-- inc_lostInfo tab  start...-->
 
 

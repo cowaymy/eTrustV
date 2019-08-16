@@ -2,18 +2,19 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script  type="text/javascript">
 
-$(document).ready(function(){  
+$(document).ready(function(){
 
 	if("${dcfInfo}" != null && "${dcfInfo}" != ""){
-		
+
 		$("#savebt").hide();
 		Common.alert("<b><spring:message code="sal.alert.msg.underDCF" /> [ ${dcfInfo.defReqNo} ].<br /><spring:message code="sal.alert.msg.noOtherAction" /></b>");
 	}
-    
+
     $("#saveTrHolderType").val("${lostInfo.trHolderType }");
     $("#saveMemCode").val("${memberInfo.memCode }");
     $("#saveTrBookNo").val("${lostInfo.trBookNo }");
-    
+    $("#saveTrHolder").val("${lostInfo.trHolder }");
+
 });
 
 
@@ -52,6 +53,10 @@ $(document).ready(function(){
     <td><span>${memberInfo.name }</span></td>
     <th scope="row"><spring:message code="sal.text.holderNric" /></th>
     <td><span>${memberInfo.nric }</span></td>
+</tr>
+<tr>
+    <th scope="row">Holder Branch Code</th>
+    <td><span>${lostInfo.trHolder }</span></td>
 </tr>
 
 

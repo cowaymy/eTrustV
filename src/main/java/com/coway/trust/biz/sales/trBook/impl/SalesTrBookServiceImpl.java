@@ -200,6 +200,7 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 
 	@Override
 	public String saveReTrBook(Map<String, Object> params) {
+		logger.debug("params =====================================>>  " + params);
 		params.put("docNoId", 70);
 		String docNo=salesTrBookMapper.getDocNo(params);
 
@@ -543,6 +544,9 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 	@Override
 	public EgovMap saveReportLost(Map<String, Object> params) {
 
+		String holderType = params.get("trHolderType").toString();
+		logger.debug("params =====================================>>  " + params);
+
 		params.put("docNoId", 48);
 		String docNo=salesTrBookMapper.getDocNo(params);
 
@@ -562,7 +566,16 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 		salesTrBookMapper.insertRequestComField(cf1);
 
 		cf1.put("typeId", 3);
-		cf1.put("refNo", params.get("memCode"));
+		logger.debug("params =====================================>>  " + holderType);
+		if("Branch".equals(holderType))
+		{
+			cf1.put("refNo", params.get("trHolder"));
+		}
+		else
+		{
+			cf1.put("refNo", params.get("memCode"));
+
+		}
 		salesTrBookMapper.insertRequestComField(cf1);
 
 		cf1.put("typeId", 7);
