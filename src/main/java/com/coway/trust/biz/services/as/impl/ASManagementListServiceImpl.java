@@ -713,6 +713,17 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     return a;
   }
 
+  public int updateSVC0004DIsCur(Map<String, Object> params) {
+    LOGGER.debug("== updateSVC0004DIsCur - START");
+    LOGGER.debug("== PARAMS {} ", params);
+
+    int a = ASManagementListMapper.updateSVC0004DIsCur(params);
+
+    LOGGER.debug("== updateSVC0004DIsCur - END");
+
+    return a;
+  }
+
   /**
    * SVC0004D insert
    *
@@ -1802,6 +1813,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       }
       svc0004dmap.put("AS_WORKMNSH_TXS", Double.toString(labourTaxes));
     }
+
+    // CHECK ANY AS_RESULT_IS_CURR
+    int z = this.updateSVC0004DIsCur(svc0004dmap);
 
     // INSERT SVC0004D
     int c = this.insertSVC0004D(svc0004dmap);
@@ -3279,5 +3293,46 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   @Override
   public List<EgovMap> getASEntryCommission(Map<String, Object> params) {
     return ASManagementListMapper.getASEntryCommission(params);
+  }
+
+  @Override
+  public int saveASEntryInHouse(Map<String, Object> params) {
+    //params.put("REF_REQUEST", (String) ((Map) params.get("asResultM")).get("AS_ENTRY_ID")); // REFER ID
+
+    //params.put("DOCNO", "17");
+    //EgovMap eMap = ASManagementListMapper.getASEntryDocNo(params); // GET NEW AS NO
+
+    //EgovMap seqMap = ASManagementListMapper.getASEntryId(params); // GET NEW AS ENTRY NO
+    //EgovMap ccrSeqMap = ASManagementListMapper.getCCR0006D_CALL_ENTRY_ID_SEQ(params);
+
+    //params.put("AS_ID", String.valueOf(seqMap.get("seq")).trim());
+    //params.put("AS_NO", String.valueOf(eMap.get("asno")).trim());
+    // params.put("AS_CALLLOG_ID", String.valueOf(ccrSeqMap.get("seq")).trim());
+
+    //int a = ASManagementListMapper.insertSVC0108D(params);
+    // int b = 0;
+
+    // 콜로그생성
+    // int c6d = ASManagementListMapper.insertCCR0006D(setCCR000Data(params));
+    // int c7d = ASManagementListMapper.insertCCR0007D(setCCR000Data(params));
+
+    // String PIC_NAME = String.valueOf(params.get("PIC_NAME"));
+    // String PIC_CNTC = String.valueOf(params.get("PIC_CNTC"));
+
+    // f (PIC_NAME.length() > 0 || PIC_CNTC.length() > 0) {
+      // b = ASManagementListMapper.insertSVC0003D(params);
+    // }
+
+    // RAS 상태 업데이트
+    // if ("RAS".equals(params.get("ISRAS"))) {
+      // HashMap<Object, String> rasMap = new HashMap<Object, String>();
+      // rasMap.put("AS_ENTRY_ID", ARS_AS_ID);
+      // rasMap.put("USER_ID", String.valueOf(params.get("updator")));
+      // rasMap.put("AS_RESULT_STUS_ID", "4");
+      // ASManagementListMapper.updateStateSVC0001D(params);
+    // }
+
+    //return a;
+    return 0;
   }
 }
