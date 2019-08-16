@@ -751,7 +751,7 @@
 
   <select id="getASEntryId" parameterType="Map" resultType="egovMap">
     <![CDATA[
-      SELECT  SVC0001D_AS_ID_SEQ.nextval   seq FROM DUAL
+      SELECT  SVC0001D_AS_ID_SEQ.nextval seq FROM DUAL
     ]]>
   </select>
 
@@ -2786,6 +2786,79 @@
         ]]>
   </insert>
 
+  <insert id="insertSVC0108D" parameterType="Map">
+    <![CDATA[
+      INSERT INTO SVC0108D (AS_ID
+                          , AS_NO
+                          , AS_SO_ID
+                          , AS_MEM_ID
+                          , AS_MEM_GRP
+                          , AS_REQST_DT
+                          , AS_REQST_TM
+                          , AS_APPNT_DT
+                          , AS_APPNT_TM
+                          , AS_BRNCH_ID
+                          , AS_MALFUNC_ID
+                          , AS_MALFUNC_RESN_ID
+                          , AS_REM_REQSTER
+                          , AS_REM_REQSTER_CNTC
+                          , AS_CALLLOG_ID
+                          , AS_STUS_ID
+                          , AS_SMS
+                          , AS_CRT_USER_ID
+                          , AS_CRT_DT
+                          , AS_UPD_USER_ID
+                          , AS_UPD_DT
+                          , AS_ENTRY_IS_SYNCH
+                          , AS_ENTRY_IS_EDIT
+                          , AS_TYPE_ID
+                          , AS_REQSTER_TYPE_ID
+                          , AS_IS_BS_WITHIN_30DAYS
+                          , AS_ALLOW_COMM
+                          , AS_PREV_MEM_ID
+                          , AS_REM_ADD_CNTC
+                          , AS_REM_REQSTER_CNTC_SMS
+                          , AS_REM_ADD_CNTC_SMS
+                          , AS_SESION_CODE
+                          , CALL_MEM
+                          , REF_REQST
+      ) SELECT #{AS_ID},
+               #{AS_NO},
+               AS_SO_ID,
+               AS_MEM_ID,
+               AS_MEM_GRP,
+               AS_REQST_DT,
+               AS_REQST_TM,
+               AS_APPNT_DT,
+               AS_APPNT_TM,
+               AS_BRNCH_ID,
+               AS_MALFUNC_ID,
+               AS_MALFUNC_RESN_ID,
+               AS_REM_REQSTER,
+               AS_REM_REQSTER_CNTC,
+               AS_CALLLOG_ID,
+               '1',
+               AS_SMS,
+               #{updator},
+               SYSDATE,
+               #{updator},
+               SYSDATE,
+               AS_ENTRY_IS_SYNCH,
+               AS_ENTRY_IS_EDIT,
+               '2713',
+               AS_REQSTER_TYPE_ID,
+               AS_IS_BS_WITHIN_30DAYS,
+               AS_ALLOW_COMM,
+               AS_PREV_MEM_ID,
+               AS_REM_ADD_CNTC,
+               AS_REM_REQSTER_CNTC_SMS,
+               AS_REM_ADD_CNTC_SMS,
+               AS_SESION_CODE,
+               CALL_MEM,
+               #{REF_REQUEST} FROM SVC0001D WHERE AS_ID = #{REF_REQUEST}
+    ]]>
+  </insert>
+
   <insert id="insertSVC0003D" parameterType="Map">
     <![CDATA[
       INSERT INTO SVC0003D ( AS_PIC_ID,
@@ -4349,6 +4422,11 @@
                         UPD_DT = SYSDATE
     WHERE HC_TYPE_NO = #{HC_TYPE_NO}
       AND HC_STUS_ID='33'
+  </update>
+
+  <update id="updateSVC0004DIsCur" parameterType="Map">
+    UPDATE SVC0004D SET AS_RESULT_IS_CURR = 0
+    WHERE AS_ENTRY_ID = #{AS_ENTRY_ID} AND AS_RESULT_IS_CURR = 1
   </update>
 
   <update id="update_SAL0087D" parameterType="Map">
