@@ -175,4 +175,6 @@ public interface ASManagementListService {
   List<EgovMap> selectFltPmtTyp();
 
   List<EgovMap> getASEntryCommission(Map<String, Object> params);
+
+  int saveASEntryInHouse(Map<String, Object> params);
 }
