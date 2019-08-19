@@ -26,10 +26,10 @@ public class PaymentListingController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentListingController.class);
 
 	/******************************************************
-	 * Payment Listing   
-	 *****************************************************/	
+	 * Payment Listing
+	 *****************************************************/
 	/**
-	 * Payment Listing 초기화 화면 
+	 * Payment Listing 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -38,10 +38,10 @@ public class PaymentListingController {
 	public String initPaymentListing(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/payment/paymentListing";
 	}
-	
-	
+
+
 	/**
-     * Payment Listing - 크리스탈 레포트 호출 
+     * Payment Listing - 크리스탈 레포트 호출
      * @param params
      * @param model
      * @return
@@ -50,9 +50,9 @@ public class PaymentListingController {
     @RequestMapping(value = "/generateReportParam.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> generateReportParam(@RequestBody Map<String, Object> params,
     		Model model) {
-    	
+
     	LOGGER.debug("params : {}",params);
-    	
+
     	//레포트 표지에 보여질 데이터
     	String showPaymentDate = "";
     	String showKeyInBranch = "";
@@ -60,37 +60,37 @@ public class PaymentListingController {
     	String showReceiptNo = "";
     	String showTRNo = "";
     	String showKeyInUser = "";
-    	
+
     	//쿼리 조건절
     	String whereSQL = "";
     	int runNo = 0;
-    	
+
     	if(!"".equals(String.valueOf(params.get("payDate1"))) &&  !"".equals(String.valueOf(params.get("payDate2")))){
     		whereSQL += " AND pm.CRT_DT  >= TO_DATE(TO_CHAR(TO_DATE('" + params.get("payDate1") + "','DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')";
     		whereSQL += " AND pm.CRT_DT  < TO_DATE(TO_CHAR(TO_DATE('" + params.get("payDate2") + "','DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1";
-    		
+
     		showPaymentDate = params.get("payDate1") + " To " + params.get("payDate2");
     	}
-    	
+
     	if(!"".equals(String.valueOf(params.get("branchId")))){
     		whereSQL += " AND pm.BRNCH_ID  = " + params.get("branchId");
     		showKeyInBranch = String.valueOf(params.get("branchName"));
     	}
-    	
+
     	if("2".equals(String.valueOf(params.get("paymentType")))){
     		// 화면에서 같은 이름으로 파라미터를 넘기는 경우 처리.
     		List<String> paymentItems = (List<String>) params.get("paymentItem");
     		List<String> payTypeList = new ArrayList<String>();
-    		
+
     		if(paymentItems != null && paymentItems.size() > 0){
     			for (String classId : paymentItems) {
     				this.getPayType(classId,payTypeList);
     			}
     		}
-    		
-    		if(payTypeList.size() > 0){    			
+
+    		if(payTypeList.size() > 0){
     			whereSQL += " AND pm.TYPE_ID IN (";
-    			for (String typeId : payTypeList) {    				
+    			for (String typeId : payTypeList) {
     				  if (runNo > 0){
     					  whereSQL += "," + typeId;
     				  }else{
@@ -100,11 +100,11 @@ public class PaymentListingController {
     			}
     			whereSQL += ") ";
     		}
-    		
+
     		if(paymentItems != null && paymentItems.size() > 0){
     			if (paymentItems.size() > 1){
     				if (!paymentItems.contains("1308")){
-    					whereSQL += " AND (pm.SVC_CNTRCT_ID = 0 OR pm.SVC_CNTRCT_ID IS NULL) ";
+    					whereSQL += " AND (pm.SVC_CNTRCT_ID = 0 OR pm.SVC_CNTRCT_ID IS NULL)  ";
     				}
     			} else {
     				if (!"1308".equals(paymentItems.get(0))){
@@ -113,38 +113,50 @@ public class PaymentListingController {
     					whereSQL += " AND pm.SVC_CNTRCT_ID <> 0 ";
     				}
     			}
+
+				if (!paymentItems.contains("223")){
+					whereSQL += " ";
+				}
+			 else {
+				if (!"223".equals(paymentItems.get(0))){
+					whereSQL += " ";
+				}else if ("223".equals(paymentItems.get(0))){
+					whereSQL += " AND BILL_SO_ID NOT IN (SELECT SRV_ORD_ID FROM SAL0225D) ";
+				}
+			}
     		}
+
          }
-    	
+
     	if(!"".equals(String.valueOf(params.get("batchId")))){
     		showBatchID = String.valueOf(params.get("batchId"));
-    		
+
     		if ("Payment".equals(String.valueOf(params.get("batchType")))){
     			whereSQL += " AND pm.BATCH_PAY_ID = '" + params.get("batchId") + "' ";
             } else {
             	whereSQL += " AND brd.BATCH_ID = '" + params.get("batchId") + "' ";
             }
     	}
-    	
-    	if(!"".equals(String.valueOf(params.get("receiptNoFr"))) && !"".equals(String.valueOf(params.get("receiptNoTo")))){        	
-        	showReceiptNo = params.get("receiptNoFr") + " To " + params.get("receiptNoTo");        	
+
+    	if(!"".equals(String.valueOf(params.get("receiptNoFr"))) && !"".equals(String.valueOf(params.get("receiptNoTo")))){
+        	showReceiptNo = params.get("receiptNoFr") + " To " + params.get("receiptNoTo");
         	whereSQL += "AND (pm.OR_NO BETWEEN '" + params.get("receiptNoFr") + "' AND '" + params.get("receiptNoTo") + "') ";
         }
-    	
-        if (!"".equals(String.valueOf(params.get("trNoFr"))) && !"".equals(String.valueOf(params.get("trNoTo")))) {        	
-            showTRNo = params.get("trNoFr") + " To " + params.get("trNoTo");            
+
+        if (!"".equals(String.valueOf(params.get("trNoFr"))) && !"".equals(String.valueOf(params.get("trNoTo")))) {
+            showTRNo = params.get("trNoFr") + " To " + params.get("trNoTo");
             whereSQL += "AND (pm.TR_NO BETWEEN '" + params.get("trNoFr") + "' AND '" + params.get("trNoTo") + "') ";
         }
-        
+
         if (!"".equals(String.valueOf(params.get("collector")))) {
         	whereSQL += " AND m.MEM_CODE = '" + params.get("collector") + "' ";
         }
-        
-        if (!"".equals(String.valueOf(params.get("userId")))) {        
+
+        if (!"".equals(String.valueOf(params.get("userId")))) {
             showKeyInUser = String.valueOf(params.get("userNm"));
             whereSQL += "AND pm.CRT_USER_ID = " + params.get("userId") + " ";
         }
-        
+
     	//결과 데이터 만들기
     	Map<String, Object> returnMap = new HashMap<String,Object>();
     	returnMap.put("showPaymentDate", showPaymentDate);
@@ -153,20 +165,20 @@ public class PaymentListingController {
     	returnMap.put("showReceiptNo", showReceiptNo);
     	returnMap.put("showTRNo", showTRNo);
     	returnMap.put("showKeyInUser", showKeyInUser);
-    	returnMap.put("docVal", String.valueOf(params.get("docVal")));    	
+    	returnMap.put("docVal", String.valueOf(params.get("docVal")));
     	returnMap.put("whereSQL", whereSQL);
-    	
+
         // 결과 만들기.
         ReturnMessage message = new ReturnMessage();
-        message.setCode(AppConstants.SUCCESS);    	
+        message.setCode(AppConstants.SUCCESS);
         message.setData(returnMap);
         message.setMessage("Saved Successfully");
-        
+
         return ResponseEntity.ok(message);
     }
-    
-    
-    
+
+
+
     /**
      * Type ID 세팅
      * @param classID
