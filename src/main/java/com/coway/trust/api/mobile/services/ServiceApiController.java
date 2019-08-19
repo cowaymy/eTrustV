@@ -708,46 +708,46 @@ public class ServiceApiController {
             for (int x = 0; x < paramsDetail.size(); x++) {
 
               // CHECKING STOCK
-              //if (paramsDetail.get(x).get("filterCode") != null || !("".equals(paramsDetail.get(x).get("filterCode")))) {
-                //Map<String, Object> locInfoEntry = new HashMap<String, Object>();
-                //locInfoEntry.put("CT_CODE", CommonUtils.nvl(asTransLogs1.get(i).get("userId").toString()));
-                //locInfoEntry.put("STK_CODE", CommonUtils.nvl(paramsDetail.get(x).get("filterCode").toString()));
+              if (paramsDetail.get(x).get("filterCode") != null || !("".equals(paramsDetail.get(x).get("filterCode")))) {
+                Map<String, Object> locInfoEntry = new HashMap<String, Object>();
+                locInfoEntry.put("CT_CODE", CommonUtils.nvl(asTransLogs1.get(i).get("userId").toString()));
+                locInfoEntry.put("STK_CODE", CommonUtils.nvl(paramsDetail.get(x).get("filterCode").toString()));
 
-                //EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
+                EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
 
-                //LOGGER.debug("LOC. INFO. : {}" + locInfo);
-                //if (locInfo != null) {
-                  //if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
+                LOGGER.debug("LOC. INFO. : {}" + locInfo);
+                if (locInfo != null) {
+                  if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
                     // FAIL CT NOT ENOUGH STOCK
-                    //MSvcLogApiService.updateASErrStatus(transactionId);
+                    MSvcLogApiService.updateASErrStatus(transactionId);
 
-                    //Map<String, Object> m = new HashMap();
-                    //m.put("APP_TYPE", "AS");
-                    //m.put("SVC_NO", asTransLogs1.get(i).get("serviceNo"));
-                    //m.put("ERR_CODE", "03");
-                    //m.put("ERR_MSG", "[API] [" + asTransLogs1.get(i).get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode") + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
-                    //m.put("TRNSC_ID", transactionId);
+                    Map<String, Object> m = new HashMap();
+                    m.put("APP_TYPE", "AS");
+                    m.put("SVC_NO", asTransLogs1.get(i).get("serviceNo"));
+                    m.put("ERR_CODE", "03");
+                    m.put("ERR_MSG", "[API] [" + asTransLogs1.get(i).get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode") + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
+                    m.put("TRNSC_ID", transactionId);
 
-                    //MSvcLogApiService.insert_SVC0066T(m);
+                    MSvcLogApiService.insert_SVC0066T(m);
 
-                    //return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
-                  //}
-                //} else {
-                   // FAIL CT NOT ENOUGH STOCK
-                  //MSvcLogApiService.updateASErrStatus(transactionId);
+                    return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
+                  }
+                } else {
+                  // FAIL CT NOT ENOUGH STOCK
+                  MSvcLogApiService.updateASErrStatus(transactionId);
 
-                  //Map<String, Object> m = new HashMap();
-                  //m.put("APP_TYPE", "AS");
-                  //m.put("SVC_NO", asTransLogs1.get(i).get("serviceNo"));
-                  //m.put("ERR_CODE", "03");
-                  //m.put("ERR_MSG", "[API] [" + asTransLogs1.get(i).get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode") + "] IS UNAVAILABLE. ");
-                  //m.put("TRNSC_ID", transactionId);
+                  Map<String, Object> m = new HashMap();
+                  m.put("APP_TYPE", "AS");
+                  m.put("SVC_NO", asTransLogs1.get(i).get("serviceNo"));
+                  m.put("ERR_CODE", "03");
+                  m.put("ERR_MSG", "[API] [" + asTransLogs1.get(i).get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode") + "] IS UNAVAILABLE. ");
+                  m.put("TRNSC_ID", transactionId);
 
-                  //MSvcLogApiService.insert_SVC0066T(m);
+                  MSvcLogApiService.insert_SVC0066T(m);
 
-                  //return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
-                //}
-              //}
+                  return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
+                }
+              }
 
               Map<String, Object> map = new HashMap<String, Object>();
 
