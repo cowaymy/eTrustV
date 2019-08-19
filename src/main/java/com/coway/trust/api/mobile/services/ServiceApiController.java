@@ -708,7 +708,7 @@ public class ServiceApiController {
             for (int x = 0; x < paramsDetail.size(); x++) {
 
               // CHECKING STOCK
-              if (paramsDetail.get(x).get("filterCode") != null || !("".equals(paramsDetail.get(x).get("filterCode")))) {
+              if (paramsDetail.get(x).get("filterCode") != null || !("".equals((paramsDetail.get(x).get("filterCode").toString())))) {
                 Map<String, Object> locInfoEntry = new HashMap<String, Object>();
                 locInfoEntry.put("CT_CODE", CommonUtils.nvl(asTransLogs1.get(i).get("userId").toString()));
                 locInfoEntry.put("STK_CODE", CommonUtils.nvl(paramsDetail.get(x).get("filterCode").toString()));
@@ -725,7 +725,7 @@ public class ServiceApiController {
                     m.put("APP_TYPE", "AS");
                     m.put("SVC_NO", asTransLogs1.get(i).get("serviceNo"));
                     m.put("ERR_CODE", "03");
-                    m.put("ERR_MSG", "[API] [" + asTransLogs1.get(i).get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode") + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
+                    m.put("ERR_MSG", "[API] [" + asTransLogs1.get(i).get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
                     m.put("TRNSC_ID", transactionId);
 
                     MSvcLogApiService.insert_SVC0066T(m);
@@ -740,7 +740,7 @@ public class ServiceApiController {
                   m.put("APP_TYPE", "AS");
                   m.put("SVC_NO", asTransLogs1.get(i).get("serviceNo"));
                   m.put("ERR_CODE", "03");
-                  m.put("ERR_MSG", "[API] [" + asTransLogs1.get(i).get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode") + "] IS UNAVAILABLE. ");
+                  m.put("ERR_MSG", "[API] [" + asTransLogs1.get(i).get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode").toString() + "] IS UNAVAILABLE. ");
                   m.put("TRNSC_ID", transactionId);
 
                   MSvcLogApiService.insert_SVC0066T(m);
