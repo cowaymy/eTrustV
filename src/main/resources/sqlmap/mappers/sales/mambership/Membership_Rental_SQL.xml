@@ -116,7 +116,7 @@
                     </if>
 
                    <if test="custNRIC != null and custNRIC != ''">
-                            AND UPPER(E17.NRIC) LIKE '%'||UPPER(#{NRIC})||'%')
+                            AND UPPER(E17.NRIC) LIKE '%'||UPPER(#{custNRIC})||'%'
                    </if>
                 ) FL
                 JOIN SYS0047M Extent18   ON Extent18.USER_ID = FL.QOTAT_CRT_USER_ID

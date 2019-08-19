@@ -171,7 +171,7 @@ function fn_clear(){
 // 리스트 조회.
 function fn_selectListAjax() {
 
-    if( $("#sRVContrtNo").val() ==""  &&  $("#salesDate").val() ==""  &&  $("#orderNo").val() ==""  ){
+    if( $("#sRVContrtNo").val() ==""  &&  $("#salesDate").val() ==""  &&  $("#orderNo").val() ==""  && $("#custNRIC").val() ==""){
 
         Common.alert("<spring:message code="sal.text.mustKeyIn3" />");
          return ;
