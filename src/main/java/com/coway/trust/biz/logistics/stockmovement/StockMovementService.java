@@ -41,9 +41,12 @@ public interface StockMovementService {
 	
 	void deleteSmoNo(Map<String, Object> param);
 
-
 	String selectDefToLocation(Map<String, Object> param);
 
 	String defToLoc(Map<String, Object> param);
+
+	List<EgovMap> SelectStockfromForecast(Map<String, Object> smap);
+
+	String insertStockMovementbyForecast(Map<String, Object> param);
 
 }

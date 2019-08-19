@@ -407,11 +407,11 @@ public class StockMovementController {
 		params.put("userId", loginId);
 		Map<String, Object> rmap = new HashMap<>();
 		ReturnMessage message = new ReturnMessage();
-
+		logger.debug("StockMovementGoodIssue.do :::: params {} " , params);
 		rmap = stockMovementService.stockMovementDeliveryIssue(params);
 
 		// 결과 만들기 예.
-		logger.debug(" :::: {} " , rmap);
+		logger.debug("StockMovementGoodIssue.do :::: rmap {} " , rmap);
 		if ("fail".equals((String)rmap.get("retMsg"))){
 			message.setCode(AppConstants.FAIL);
     		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
@@ -537,15 +537,85 @@ public class StockMovementController {
 		logger.debug(" selectDefToLocation params {} ", params);
 
 		String defToLoc = stockMovementService.selectDefToLocation(params);
-		
-		logger.debug(" selectDefToLocation defToLoc {} ", defToLoc);
 
-		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		message.setData(defToLoc);
 		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/StockMovementIns2.do")
+	public String stockInsByForecast(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		return "logistics/stockMovement/stockMovementInsByForecast";
+	}
+	
+	@RequestMapping(value = "/SelectStockfromForecast.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> SelectStockfromForecast(Model model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		
+		String[] type = request.getParameterValues("cType");
+		String[] catetype = request.getParameterValues("catetype");
+		String toloc = request.getParameter("slocation");
+		String cdloc = request.getParameter("cdlocation");
+		String mcode = request.getParameter("materialCode");
+
+		 logger.debug(" SelectStockfromForecast type : {}", type);
+		 logger.debug(" SelectStockfromForecast catetype : {}",catetype);
+		 logger.debug(" SelectStockfromForecast toloc : {}", toloc);
+		 logger.debug(" SelectStockfromForecast cdloc : {}", cdloc);
+		 logger.debug(" SelectStockfromForecast mcode : {}",mcode);
+		Map<String, Object> smap = new HashMap();
+		smap.put("ctype", type);
+		smap.put("catetype", catetype);
+		smap.put("toloc", toloc);
+		smap.put("cdloc", cdloc);
+		smap.put("mcode", mcode);
+
+		List<EgovMap> list = stockMovementService.SelectStockfromForecast(smap);
+
+		smap.put("data", list);
+
+		return ResponseEntity.ok(smap);
+	}
+	
+	@RequestMapping(value = "/StockMovementAddbyForecast.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> StockMovementAddbyForecast(@RequestBody Map<String, Object> params, Model model) {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+
+		Map<String, Object> param = new HashMap();
+		param.put("add", insList);
+		param.put("form", formMap);
+		param.put("userId", loginId);
+		String reqNo =stockMovementService.insertStockMovementbyForecast(param);
+
+		
+		ReturnMessage message = new ReturnMessage();
+		if (reqNo != null && !"".equals(reqNo)){
+			
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+
+		message.setData(reqNo);
+
 		return ResponseEntity.ok(message);
 	}
 

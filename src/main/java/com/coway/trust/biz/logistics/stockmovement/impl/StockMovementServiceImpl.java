@@ -385,7 +385,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 
 
 		if("RC".equals(gtype)){
-
+			logger.info("stockMovementDeliveryIssue RC: {}", gtype);
 			String[] delvcd = delyCd.split("∈");
 
 			formMap.put("parray", delvcd);
@@ -599,5 +599,52 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	public String defToLoc(Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public List<EgovMap> SelectStockfromForecast(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stockMoveMapper.SelectStockfromForecast(params);
+	}
+	
+	@Override
+	public String insertStockMovementbyForecast(Map<String, Object> params) {
+		List<Object> insList = (List<Object>) params.get("add");
+		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
+
+		if (insList.size() > 0) {
+			for (int i = 0; i < insList.size(); i++) {
+				Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
+
+				insMap.put("tlocation", fMap.get("tlocation"));
+				insMap.put("rqty", insMap.get("itmfcastqty"));
+
+				int iCnt = stockMoveMapper.selectAvaliableStockQty(insMap);
+				if (iCnt == 1 ){
+					return "";
+				}
+			}
+		}
+
+		String reqNo = stockMoveMapper.selectStockMovementSeq();
+
+		fMap.put("reqno", reqNo);
+		fMap.put("userId", params.get("userId"));
+
+		stockMoveMapper.insStockMovementHead(fMap);
+
+		if (insList.size() > 0) {
+			for (int i = 0; i < insList.size(); i++) {
+				Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
+				insMap.put("reqno", reqNo);
+				insMap.put("userId", params.get("userId"));
+				stockMoveMapper.insStockMovement(insMap);
+			}
+		}
+
+		insertStockBooking(fMap);
+
+		return reqNo;
+
 	}
 }

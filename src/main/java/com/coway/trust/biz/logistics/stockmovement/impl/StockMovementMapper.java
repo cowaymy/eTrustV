@@ -85,4 +85,6 @@ public interface StockMovementMapper {
 
 	String selectDefToLocation(Map<String, Object> param);
 
+	List<EgovMap> SelectStockfromForecast(Map<String, Object> params);
+
 }
