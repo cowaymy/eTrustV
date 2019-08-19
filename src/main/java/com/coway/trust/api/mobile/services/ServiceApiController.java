@@ -708,7 +708,7 @@ public class ServiceApiController {
             for (int x = 0; x < paramsDetail.size(); x++) {
 
               // CHECKING STOCK
-              if (paramsDetail.get(x).get("filterCode") != null || !("".equals((paramsDetail.get(x).get("filterCode").toString())))) {
+              if (paramsDetail.get(x).get("filterCode") != null || !("".equals(CommonUtils.nvl(paramsDetail.get(x).get("filterCode").toString())))) {
                 Map<String, Object> locInfoEntry = new HashMap<String, Object>();
                 locInfoEntry.put("CT_CODE", CommonUtils.nvl(asTransLogs1.get(i).get("userId").toString()));
                 locInfoEntry.put("STK_CODE", CommonUtils.nvl(paramsDetail.get(x).get("filterCode").toString()));
