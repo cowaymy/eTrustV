@@ -54,7 +54,7 @@ public interface ASManagementListMapper {
 
   int insertSVC0001D(Map<String, Object> params);
 
-  //int insertSVC0108D(Map<String, Object> params);
+  int insertSVC0108D(Map<String, Object> params);
 
   int updateSVC0001D(Map<String, Object> params);
 
