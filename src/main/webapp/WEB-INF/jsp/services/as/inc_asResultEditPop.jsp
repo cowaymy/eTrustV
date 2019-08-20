@@ -157,6 +157,7 @@
   // RE-INSERT BACK VALUE
   function fn_setErrCde() {
     $("#ddlErrorCode").val(errCde);
+    fn_errMst_SelectedIndexChanged();
   }
 
   function fn_callback_ddlErrorDesc() {
@@ -231,7 +232,7 @@
 
     // GET ERROR CODE LISTING
     fn_getErrMstList('${ORD_NO}');
-    fn_errMst_SelectedIndexChanged();
+    //fn_errMst_SelectedIndexChanged();
 
     //$("#ddlCTCodeText").val( result[0].c12);
     //$("#ddlCTCode").val( result[0].c11);
