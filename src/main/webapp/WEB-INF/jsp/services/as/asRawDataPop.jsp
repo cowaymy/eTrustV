@@ -4,6 +4,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  25/06/2019  ONGHC  1.0.0          Amend Report Condition
+ 20/08/2019  ONGHC  1.0.1          Add Date Option Filter
  -->
 
 <script type="text/javaScript">
@@ -17,6 +18,10 @@
       Common.alert("<spring:message code='sys.common.alert.validation' arguments='type' htmlEscape='false'/>");
       return false;
     }
+    if ($("#dateType").val() == '') {
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='type' htmlEscape='false'/>");
+        return false;
+      }
     if ($("#reqstDateFr").val() == '' || $("#reqstDateTo").val() == '') {
       Common.alert("<spring:message code='sys.common.alert.validation' arguments='request date (From & To)' htmlEscape='false'/>");
       return false;
@@ -44,7 +49,12 @@
       if ($("#reqstDateFr").val() != '' && $("#reqstDateTo").val() != ''
        && $("#reqstDateFr").val() != null
        && $("#reqstDateTo").val() != null) {
-        whereSql += " AND (TO_CHAR(A.AS_REQST_DT,'YYYY-MM-DD')) >= '" + keyInDateFrom1 + "' AND (TO_CHAR(A.AS_REQST_DT,'YYYY-MM-DD')) <= '" + keyInDateTo1 + "' ";
+
+        if ($("#dateType").val() == '1') {
+          whereSql += " AND (TO_CHAR(A.AS_CRT_DT,'YYYY-MM-DD')) >= '" + keyInDateFrom1 + "' AND (TO_CHAR(A.AS_CRT_DT,'YYYY-MM-DD')) <= '" + keyInDateTo1 + "' ";
+        } else {
+          whereSql += " AND (TO_CHAR(A.AS_REQST_DT,'YYYY-MM-DD')) >= '" + keyInDateFrom1 + "' AND (TO_CHAR(A.AS_REQST_DT,'YYYY-MM-DD')) <= '" + keyInDateTo1 + "' ";
+        }
       }
 
       if ($("#reportType").val() == '1') {
@@ -214,8 +224,15 @@
          <option value="3">After Service (AS) Raw Data (PQC)</option>
          <option value="4">After Service (AS) Raw Data (AOAS)</option>
        </select></td>
-       <th scope="row">Request Date<span id='m2' name='m2' class='must'> *</span></th>
-       <td>
+       <th scope="row">Date Option<span id='m3' name='m3' class='must'> *</span></th>
+       <td><select id="dateType" class="w100p" >
+         <option value="1" selected>Register Date</option>
+         <option value="2">Request Date</option>
+       </select></td>
+      </tr>
+      <tr>
+      <th scope="row">Request Date<span id='m2' name='m2' class='must'> *</span></th>
+       <td colspan='3'>
         <div class="date_set">
          <!-- date_set start -->
          <p>
