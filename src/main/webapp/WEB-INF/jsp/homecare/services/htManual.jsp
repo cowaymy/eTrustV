@@ -386,7 +386,7 @@ var TODAY_DD      = "${toDay}";
 	        }
 	      }
 
-	    		  Common.popupDiv("/homecare/services/htConfigBasicPop.do?isPop=true&schdulId="+ schdulId + "&salesOrdId="+salesOrdId +"&brnchId="+brnchId +"&codyMangrUserId="+codyMangrUserId+"&custId="+custId, null, null , true , '_ConfigBasicPop');
+	    		  Common.popupDiv("/homecare/services/htConfigBasicPop.do?isPop=true&schdulId="+ schdulId + "&salesOrdId="+salesOrdId +"&brnchId="+brnchId +"&codyMangrUserId="+codyMangrUserId+"&custId="+custId +"&indicator=1", null, null , true , '_ConfigBasicPop');
 
   }
 
