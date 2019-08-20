@@ -265,7 +265,7 @@
             #{item}
            </foreach>
 
-           <if test = "item == 'CTS2044'  ">
+           <if test = "item == 'CTS3167'  ">
             UNION
                     SELECT DISTINCT b.dept_code,
                        b.mem_id,
