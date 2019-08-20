@@ -125,7 +125,7 @@
                 return ;
             }
 
-               Common.popupDiv("/homecare/services/htConfigBasicPop.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId +"&codyMangrUserId="+codyMangrUserId+"&custId="+custId, null, null , true , '_ConfigBasicPop');
+               Common.popupDiv("/homecare/services/htConfigBasicPop.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId +"&codyMangrUserId="+codyMangrUserId+"&custId="+custId +"&indicator=0", null, null , true , '_ConfigBasicPop');
 
         }
 
