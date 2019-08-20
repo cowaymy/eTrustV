@@ -615,7 +615,7 @@ public class htManualController {
 		model.put("CODY_MANGR_USER_ID", (String) params.get("codyMangrUserId"));
 		model.put("CUST_ID", (String) params.get("custId"));
 		model.put("SCHDUL_ID", params.get("schdulId"));
-
+		model.put("IND", params.get("indicator"));
 		//logger.debug("configBasicInfo(pop)================= : {}", configBasicInfo);
 		//
 
