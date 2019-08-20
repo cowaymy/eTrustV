@@ -109,6 +109,9 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
             console.log( result);
 
             Common.alert("<b>CS Configuration successfully saved.</b>", fn_close);
+            if($('#ind').val() == "1"){
+            	 fn_getBSListAjax();
+            }
                 //Common.alert(result.message, fn_parentReload);
                 //fn_DisablePageControl();
         });
@@ -149,6 +152,7 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
 <input type="hidden" name="codyMangrUserId" id="codyMangrUserId" value="${CODY_MANGR_USER_ID}"/>
 <input type="hidden" name="custId" id="custId" value="${CUST_ID}"/>
 <input type="hidden" name="custId" id="schdulId" value="${SCHDUL_ID}"/>
+<input type="hidden" name="ind" id="ind" value="${IND}"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
