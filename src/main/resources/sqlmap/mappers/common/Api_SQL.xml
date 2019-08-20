@@ -243,16 +243,25 @@
     </select>
 
     <select id="selectTransactionHistoryList" parameterType="Map" resultType="egovMap">
-	    SELECT
-	        SALES_ORD_NO,
-			ACCOUNT_CODE ,
-			RECEIPT_NO ,
-			PAY_DATE ,
-			AMOUNT
-		FROM CP1018V
-		WHERE 1 = 1
+    SELECT
+	    SALES_ORD_NO ,
+	    ACCOUNT_CODE ,
+	    RECEIPT_NO ,
+	    TO_CHAR(PAY_DATE,'YYYY/MM/DD HH24:MI:SS')  PAY_DATE,
+	    AMOUNT
+        FROM (
+            SELECT
+                SALES_ORD_NO,
+                ACCOUNT_CODE ,
+                RECEIPT_NO ,
+                PAY_DATE,
+                AMOUNT,
+                MAX(PAY_DATE) OVER (PARTITION BY SALES_ORD_NO,ACCOUNT_CODE) LAST_PAY_DATE
+            FROM CP1018V
+            WHERE 1 = 1
+		) WHERE TO_DATE(PAY_DATE,'DD/MM/YYYY') >= ADD_MONTHS(TO_DATE(LAST_PAY_DATE,'DD/MM/YYYY'), -5)
 		AND SALES_ORD_NO = #{orderNo}
-		AND ROWNUM <![CDATA[ <= ]]> 6
+		ORDER BY PAY_DATE DESC
     </select>
 
     <select id="isUserHasTaxInvoiceRefNo" parameterType="Map" resultType="egovMap">
