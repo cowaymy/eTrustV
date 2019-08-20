@@ -110,7 +110,9 @@ function fn_report(viewType){
         var dpOrderDateFr = frArr[1]+"/"+frArr[0]+"/"+frArr[2]; // MM/dd/yyyy
         var dpOrderDateTo = toArr[1]+"/"+toArr[0]+"/"+toArr[2];
 
-        whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+dpOrderDateFr+" 00:00:00', 'MM/dd/YY HH24:MI:SS') AND TO_DATE('"+dpOrderDateTo+" 23:59:59', 'MM/dd/YY HH24:MI:SS'))";
+        //whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+dpOrderDateFr+" 00:00:00', 'MM/dd/YY HH24:MI:SS') AND TO_DATE('"+dpOrderDateTo+" 23:59:59', 'MM/dd/YY HH24:MI:SS'))";
+        whereSQL += " AND (pm.CRT_DT BETWEEN TO_DATE('"+dpOrderDateFr+" 00:00:00', 'MM/dd/YY HH24:MI:SS') AND TO_DATE('"+dpOrderDateTo+" 23:59:59', 'MM/dd/YY HH24:MI:SS'))";
+
     }
 
     if($('#cmbAppType :selected').length > 0){
