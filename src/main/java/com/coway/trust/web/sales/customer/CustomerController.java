@@ -21,6 +21,7 @@ import java.util.Scanner;
 import java.util.StringJoiner;
 
 import javax.annotation.Resource;
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -2224,7 +2225,7 @@ public class CustomerController {
           //URL url = new URL(urlReq);
           URL url = new URL(params.get("urlReq").toString());
           URLConnection con = url.openConnection();
-          HttpURLConnection http = (HttpURLConnection) con;
+          HttpsURLConnection http = (HttpsURLConnection) con;
           http.setRequestMethod("POST");
           http.setDoOutput(true);
 
