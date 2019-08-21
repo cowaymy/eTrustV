@@ -2218,6 +2218,7 @@ public class CustomerController {
       Map<String, Object> result = new HashMap();
 
       if(!"".equals(params.get("tknId").toString())) {
+          LOGGER.debug("1");
 
           // Requesting tokenization from RazerPay
           //URL url = new URL(urlReq);
@@ -2239,12 +2240,14 @@ public class CustomerController {
           requestParam.put("tokenType", "1");
           requestParam.put("signature", params.get("signature").toString());
 
+          LOGGER.debug("2");
           StringJoiner sj = new StringJoiner("&");
           for(Map.Entry<String,String> entry : requestParam.entrySet())
               sj.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "=" + URLEncoder.encode(entry.getValue(), "UTF-8"));
           byte[] out = sj.toString().getBytes(StandardCharsets.UTF_8);
           int length = out.length;
 
+          LOGGER.debug("3");
           http.setFixedLengthStreamingMode(length);
           http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
           http.connect();
@@ -2252,9 +2255,12 @@ public class CustomerController {
               os.write(out);
           }
 
+          LOGGER.debug("4");
           BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
           String inputLine = in.readLine();
           in.close();
+
+          LOGGER.debug("5");
 
           Map<String, Object> retResult = new HashMap();
 
