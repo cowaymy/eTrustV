@@ -21,7 +21,12 @@ import java.util.Scanner;
 import java.util.StringJoiner;
 
 import javax.annotation.Resource;
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -2223,9 +2228,30 @@ public class CustomerController {
 
           // Requesting tokenization from RazerPay
           //URL url = new URL(urlReq);
+          TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                }
+          } };
+          SSLContext sslContext = SSLContext.getInstance("SSL");
+          sslContext.init(null, trustAllCerts, null);
+
           URL url = new URL(null, params.get("urlReq").toString(), new sun.net.www.protocol.https.Handler());
           URLConnection con = url.openConnection();
           HttpsURLConnection http = (HttpsURLConnection) con;
+          http.setSSLSocketFactory(sslContext.getSocketFactory());
+          http.setHostnameVerifier(new HostnameVerifier() {
+              @Override
+              public boolean verify(String s, SSLSession sslSession) {
+                  return true;
+              }
+          } );
           http.setRequestMethod("POST");
           http.setDoOutput(true);
 
@@ -2251,7 +2277,7 @@ public class CustomerController {
           LOGGER.debug("3");
           http.setFixedLengthStreamingMode(length);
           LOGGER.debug("3.1");
-          http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+          http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
           LOGGER.debug("3.2");
           http.connect();
           LOGGER.debug("3.3");
