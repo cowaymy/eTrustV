@@ -118,6 +118,7 @@
                       type : "ButtonRenderer",
                       labelText : "Edit",
                       onclick : function(rowIndex, columnIndex, value, item) {
+                    	  console.log("edit :: " + item.nric);
                            //pupupWin
                           $("#_custId").val(item.custId);
                           $("#_custAddId").val(item.custAddId);
@@ -280,6 +281,7 @@
     <input type="hidden" name="editCustCntcId" id="_editCustCntcId">
     <input type="hidden" name="editCustBankId" id="_editCustBankId">
     <input type="hidden" name="editCustCardId" id="_editCustCardId">
+    <input type="hidden" name="editCustNric" id="_editCustNric">
 </form>
 <!-- report Form -->
 <form id="dataForm">
