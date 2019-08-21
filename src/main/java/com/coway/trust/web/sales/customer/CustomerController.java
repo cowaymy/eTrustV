@@ -2249,11 +2249,16 @@ public class CustomerController {
 
           LOGGER.debug("3");
           http.setFixedLengthStreamingMode(length);
+          LOGGER.debug("3.1");
           http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+          LOGGER.debug("3.2");
           http.connect();
+          LOGGER.debug("3.3");
           try(OutputStream os = http.getOutputStream()) {
               os.write(out);
+              LOGGER.debug("3.3.1");
           }
+          LOGGER.debug("3.4");
 
           LOGGER.debug("4");
           BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
