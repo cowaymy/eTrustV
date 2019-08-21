@@ -2223,7 +2223,7 @@ public class CustomerController {
 
           // Requesting tokenization from RazerPay
           //URL url = new URL(urlReq);
-          URL url = new URL(params.get("urlReq").toString());
+          URL url = new URL(null, params.get("urlReq").toString(), new sun.net.www.protocol.http.Handler());
           URLConnection con = url.openConnection();
           HttpsURLConnection http = (HttpsURLConnection) con;
           http.setRequestMethod("POST");
