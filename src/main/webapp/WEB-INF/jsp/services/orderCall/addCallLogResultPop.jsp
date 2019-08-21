@@ -6,6 +6,7 @@
  ----------------------------------------------------------------
  08/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  03/04/2019  ONGHC  1.0.1          ADD CREATE & UPDATE DATETIME
+ 21/08/2019  ONGHC  1.0.2          Amend RDC Stock Checking
  -->
 
 <script type="text/javaScript">
@@ -16,10 +17,22 @@
     }
 
     if ($("#callStatus").val() == 20) {
-      if ($("#rdc").text() == '' || $("#rdc").text() == "0" || $("#rdc").text() == " ") {
+      var rdcStk = $("#rdc").text();
+      if (rdcStk.trim() != '' || rdcStk != null) {
+        rdcStk = Number(rdcStk);
+      } else {
+        rdcStk = Number(0);
+      }
+
+      if (rdcStk <= 0) {
         // Common.alert("There is no available inventory in RDC to create installation order ");
         msg += "* There is no available inventory in RDC to create installation order </br>";
       }
+
+      //if ($("#rdc").text() == '' || $("#rdc").text() == "0" || $("#rdc").text() == " ") {
+        // Common.alert("There is no available inventory in RDC to create installation order ");
+        //msg += "* There is no available inventory in RDC to create installation order </br>";
+      //}
 
       if ($("#requestDate").val() == '') {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Request Date' htmlEscape='false'/> </br>";
