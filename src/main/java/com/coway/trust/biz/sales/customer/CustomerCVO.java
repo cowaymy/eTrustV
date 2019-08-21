@@ -7,7 +7,7 @@ import java.util.Date;
 public class CustomerCVO implements Serializable {
 
 	private static final long serialVersionUID = -9093717560087654282L;
-	
+
 	private int crcType;						// Customer ID
 	private int bank;								// Customer ID
 //	private int creditCardNo;					// Customer ID
@@ -26,7 +26,8 @@ public class CustomerCVO implements Serializable {
 	private int crcIdOld;
 	private int soId;
 	private int crcIdcm;
-	
+	private String crcToken;
+
 	public int getCrcType() {
 		return crcType;
 	}
@@ -129,6 +130,12 @@ public class CustomerCVO implements Serializable {
 	public void setCrcIdcm(int crcIdcm) {
 		this.crcIdcm = crcIdcm;
 	}
-	
-	
+	// LaiKW 2019-08-01 Tokenization - Start
+	public void setCrcToken(String crcToken) {
+	    this.crcToken = crcToken;
+	}
+	public String getCrcToken() {
+	    return crcToken;
+	}
+	// LaiKW 2019-08-01 Tokenization - End
 }

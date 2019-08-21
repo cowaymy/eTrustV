@@ -208,6 +208,10 @@
                 dataField : "cardRem",
                 headerText : '<spring:message code="sal.title.remark" />',
                 editable : true
+            }, {
+                dataField : "crcToken",
+                editable : false,
+                visible : false
             }];
 
         // bank account
@@ -373,6 +377,8 @@
 
         console.log("saveNewCustomer()");
 
+        var custId;
+
             var customerForm = {
                 dataSet     : GridCommon.getEditData(myGridID),
                 dataSetBank     : GridCommon.getEditData(myGridID1),
@@ -421,6 +427,7 @@
             		Common.alert('<spring:message code="sal.alert.msg.dupNricNum" />');
             		return;
             	}
+
                 Common.alert("<spring:message code='sys.msg.success'/><br/>" + " Customer ID : " + result , fn_winClose);
 
                 if('${callPrgm}' == 'ORD_REGISTER') {
@@ -683,11 +690,11 @@
         $("#_asEmail_").val($("#email").val());
     }
 
-    function fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,cardRem){
+    function fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,cardRem, crcToken){
 
         var item = new Object();
 
-        if(ccType != "" && iBank != "" && cardNo != "" && expDate != "" && nameCard != "" && cType != ""){
+        if(ccType != "" && iBank != "" && cardNo != "" && expDate != "" && nameCard != "" && cType != "" && crcToken != ""){
             item.crcType = ccType;
             item.bank = iBank;
             item.creditCardNo = cardNo;
@@ -695,6 +702,7 @@
             item.nmCard = nameCard;
             item.cardType = cType;
             item.cardRem = cardRem;
+            item.crcToken = crcToken;
             AUIGrid.addRow(myGridID, item, "last");
         }
     }

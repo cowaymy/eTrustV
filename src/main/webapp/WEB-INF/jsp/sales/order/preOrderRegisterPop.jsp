@@ -527,7 +527,8 @@
         });
         $('#addCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
-            Common.popupDiv("/sales/customer/customerCreditCardeSalesAddPop.do", {custId : vCustId, callPrgm : "PRE_ORD"}, null, true);
+            var custNric = $('#thrdParty').is(":checked") ? "" : $('#nric').val();
+            Common.popupDiv("/sales/customer/customerCreditCardeSalesAddPop.do", {custId : vCustId, callPrgm : "PRE_ORD", nric : custNric}, null, true);
         });
         $('#selCreditCardBtn').click(function() {
 

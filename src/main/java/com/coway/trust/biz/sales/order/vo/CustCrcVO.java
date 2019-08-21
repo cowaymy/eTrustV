@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * The persistent class for the CCR0006D database table.
- * 
+ *
  */
 public class CustCrcVO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -15,40 +15,42 @@ public class CustCrcVO implements Serializable {
 	private int custCrcId;
 
 	private int custId;
-	
+
 	private String custCrcNo;
-	
+
 	private String custOriCrcNo;
-	
+
 	private String custEncryptCrcNo;
-	
+
 	private String custCrcOwner;
-	
+
 	private int custCrcTypeId;
-	
+
 	private int custCrcBankId;
-	
+
 	private int custCrcStusId;
-	
+
 	private String custCrcRem;
-	
+
 	private int custCrcUpdUserId;
-	
+
 	private Date custCrcUpdDt;
-	
+
 	private String custCrcExpr;
-	
+
 	private int custCrcIdOld;
-	
+
 	private int soId;
-	
+
 	private int custCrcIdcm;
-	
+
 	private int custCrcCrtUserId;
-	
+
 	private Date custCrcCrtDt;
-	
+
 	private int cardTypeId;
+
+	private String crcToken;
 
 	public int getCustCrcId() {
 		return custCrcId;
@@ -201,5 +203,13 @@ public class CustCrcVO implements Serializable {
 	public void setCardTypeId(int cardTypeId) {
 		this.cardTypeId = cardTypeId;
 	}
+
+	public String getCrcToken() {
+        return crcToken;
+    }
+
+    public void setCrcToken(String crcToken) {
+        this.crcToken = crcToken;
+    }
 
 }

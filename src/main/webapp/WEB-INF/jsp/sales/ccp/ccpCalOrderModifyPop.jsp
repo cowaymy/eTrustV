@@ -448,14 +448,16 @@
             Common.popupDiv(
                 "/sales/customer/customerCreditCardAddPop.do",
                 {
-                  custId : $('#hiddenThrdPartyId').val()
+                  custId : $('#hiddenThrdPartyId').val(),
+                  nric : $("#thrdPartyNric").val()
                 }, null, true);
 
           } else {
             Common.popupDiv(
                 "/sales/customer/customerCreditCardAddPop.do",
                 {
-                  custId : CUST_ID
+                  custId : CUST_ID,
+                  nric : CUST_NRIC
                 }, null, true);
 
           }

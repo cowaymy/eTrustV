@@ -1,13 +1,30 @@
 package com.coway.trust.web.sales.customer;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.StringJoiner;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -220,6 +237,7 @@ public class CustomerController {
 
     model.put("custId", params.get("custId"));
     model.put("callPrgm", params.get("callPrgm"));
+    model.put("nric", params.get("nric"));
 
     return "sales/customer/customerCreditCardeSalesAddPop";
   }
@@ -244,17 +262,20 @@ public class CustomerController {
   public ResponseEntity<ReturnMessage> insertCreditCardInfo2(@RequestBody Map<String, Object> params, ModelMap model,
       SessionVO sessionVO) throws ParseException {
 
-    int custCrcId = customerService.insertCreditCardInfo2(params, sessionVO);
-    ;
+      params.put("cardNo", params.get("custCrcNoMask"));
 
-    // 결과 만들기
-    ReturnMessage message = new ReturnMessage();
-    message.setCode(AppConstants.SUCCESS);
-    // message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-    message.setMessage("New credit card added.");
-    message.setData(custCrcId);
+      int custCrcId = customerService.insertCreditCardInfo2(params, sessionVO);
 
-    return ResponseEntity.ok(message);
+      customerService.tokenCrcUpdate(params);
+
+      // 결과 만들기
+      ReturnMessage message = new ReturnMessage();
+      message.setCode(AppConstants.SUCCESS);
+      // message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+      message.setMessage("New credit card added.");
+      message.setData(custCrcId);
+
+      return ResponseEntity.ok(message);
   }
 
   /**
@@ -766,6 +787,7 @@ public class CustomerController {
         customerCVO.setCrcStusId(1); // 고정
         customerCVO.setCrcUpdId(sessionVo.getUserId()); // 임시
         customerCVO.setCrcCrtId(sessionVo.getUserId()); // 임시
+        customerCVO.setCrcToken(form.getCrcToken());    // LaiKW 2019-08-01 Tokenization
 
         String cardExpiry = form.getCardExpiry();
         if (cardExpiry != null) {
@@ -784,6 +806,11 @@ public class CustomerController {
 
       customerService.insertCreditCardInfo(customerCardVOList);
       LOGGER.info("추가 : {}", addList.toString());
+
+      Map<String, Object> tokenCrcParam = new HashMap<>();
+      tokenCrcParam.put("custId", customerId);
+      tokenCrcParam.put("userId", sessionVo.getUserId());
+      customerService.tokenCrcUpdate(tokenCrcParam);
     }
 
     // insert Bank Account Info
@@ -1255,6 +1282,7 @@ public class CustomerController {
     model.addAttribute("custAddId", params.get("custAddId"));
     model.addAttribute("custCntcId", params.get("custCntcId"));
     model.addAttribute("selectParam", params.get("selectParam"));
+    model.addAttribute("custNric", params.get("_custNric"));
     // infomation param
     model.addAttribute("result", basicinfo);
     model.addAttribute("addresinfo", addresinfo);
@@ -1565,6 +1593,7 @@ public class CustomerController {
 
     model.addAttribute("detailcard", detailcard);
     model.addAttribute("custId", params.get("custId"));
+    model.addAttribute("custNric", params.get("editCustNric"));
 
     return "sales/customer/customerCreditCardEditInfoPop";
 
@@ -1954,6 +1983,8 @@ public class CustomerController {
     params.put("userId", sessionVO.getUserId());
     customerService.insertCustomerCardAddAf(params);
 
+    customerService.tokenCrcUpdate(params);
+
     // 결과 만들기 예.
     ReturnMessage message = new ReturnMessage();
     message.setCode(AppConstants.SUCCESS);
@@ -2069,6 +2100,246 @@ public class CustomerController {
     return "sales/customer/customerBankAccountMemPop";
   }
 
+  @RequestMapping(value="/tokenPubKey.do", method=RequestMethod.GET)
+  public ResponseEntity<EgovMap> tokenPubKey(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+      EgovMap pKey = customerService.getPubKey();
+
+      return ResponseEntity.ok(pKey);
+  }
+
+  @RequestMapping(value="/tokenLogging.do", method = RequestMethod.GET)
+  public ResponseEntity<Map<String, Object>> tokenLogging(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
+
+      int tknId = 0;
+      String refNo;
+      Map<String, Object> result = new HashMap();
+
+      LOGGER.debug("params :: " + params);
+
+      String nric = params.get("nric").toString();
+
+      if(!"".equals(nric)) {
+
+          SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+          params.put("userId", sessionVO.getUserId());
+
+          // Get token ID
+          tknId = (Integer) customerService.getTokenID();
+          result.put("tknId", tknId);
+
+          // Construct RefNO for tokenization's reference
+          /*
+           * NN :: New Customer > New CRC :: NRIC
+           * EN :: Edit Customer > New CRC :: NRIC + Cust ID
+           * EE :: Edit Customer > Edit CRC :: NRIC + Cust ID + Cust CRC ID
+           */
+
+          String r1 = "";
+          String r2 = "";
+          String r3= "";
+
+          if(nric.length() < 12) {
+              r1 = StringUtils.leftPad(nric, 12, "0");
+          } else {
+              r1 = nric.substring(nric.length() - 12);
+          }
+
+          if("NN".equals(params.get("etyPoint").toString())) {
+              r2 = StringUtils.leftPad("", 10, "0");
+              r3 = StringUtils.leftPad("", 10, "0");
+
+          } else if("EN".equals(params.get("etyPoint").toString()) || "EE".equals(params.get("etyPoint").toString())) {
+              if(params.get("custId").toString().length() < 10) {
+                  r2 = StringUtils.leftPad(params.get("custId").toString(), 10, "0");
+                  r3 = StringUtils.leftPad("", 10, "0");
+              } else {
+                  r2 = params.get("custId").toString();
+                  r3 = StringUtils.leftPad("", 10, "0");
+              }
+
+              if("EE".equals(params.get("etyPoint").toString())) {
+                  if(params.get("custCrcId").toString().length() < 10) {
+                      r3 = StringUtils.leftPad(params.get("custCrcId").toString(), 10, "0");
+                  } else {
+                      r3 = params.get("custCrcId").toString();
+                  }
+              }
+          }
+
+          refNo = r1 + r2 + r3;
+          result.put("refNo", refNo);
+
+          // Creating reference number
+          EgovMap tokenSettings = customerService.getTokenSettings();
+          String urlReq = tokenSettings.get("tknzUrl").toString();
+          String merchantId = tokenSettings.get("tknzMerchantId").toString();
+          String verfKey = tokenSettings.get("tknzVerfKey").toString();
+
+          // Get Encrypted credit card information
+          String ccNum = params.get("PAN").toString();
+          String expYear = params.get("EXPYEAR").toString();
+          String expMonth = params.get("EXPMONTH").toString();
+
+          // Hashing SHA-256 - Start
+          String signature = merchantId + refNo + ccNum + expMonth + expYear + "1" + verfKey;
+
+          MessageDigest md = MessageDigest.getInstance("SHA-256");
+          byte[] hashInBytes = md.digest(signature.getBytes(StandardCharsets.UTF_8));
+
+          StringBuilder sb = new StringBuilder();
+          for(byte b : hashInBytes) {
+              sb.append(String.format("%02x", b));
+          }
+
+          signature = sb.toString();
+          // Hashing SHA-256 - End
+
+          params.put("tknId", tknId);
+          params.put("refNo", refNo);
+          params.put("signature", signature);
+
+          // Insert Log
+          customerService.insertTokenLogging(params);
+
+          result.put("urlReq", urlReq);
+          result.put("merchantId", merchantId);
+          result.put("signature", signature);
+      }
+
+      return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/tokenizationProcess.do", method = RequestMethod.GET)
+  public ResponseEntity <Map<String, Object>> tokenizationProcess(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+
+      LOGGER.debug("params :: " + params);
+
+      Map<String, Object> result = new HashMap();
+
+      if(!"".equals(params.get("tknId").toString())) {
+
+          // Requesting tokenization from RazerPay
+          //URL url = new URL(urlReq);
+          URL url = new URL(params.get("urlReq").toString());
+          URLConnection con = url.openConnection();
+          HttpURLConnection http = (HttpURLConnection) con;
+          http.setRequestMethod("POST");
+          http.setDoOutput(true);
+
+          Map<String, String> requestParam = new HashMap<>();
+          requestParam.put("merchantID", params.get("merchantId").toString());
+          requestParam.put("referenceNo", params.get("refNo").toString());
+          requestParam.put("billingName", params.get("nameCard").toString());
+          requestParam.put("billingEmail", params.get("nameCard").toString()); // << Change
+          requestParam.put("billingMobile", params.get("nameCard").toString()); // << Change
+          requestParam.put("creditCardNo", params.get("PAN").toString());
+          requestParam.put("expMonth", params.get("EXPMONTH").toString());
+          requestParam.put("expYear", params.get("EXPYEAR").toString());
+          requestParam.put("tokenType", "1");
+          requestParam.put("signature", params.get("signature").toString());
+
+          StringJoiner sj = new StringJoiner("&");
+          for(Map.Entry<String,String> entry : requestParam.entrySet())
+              sj.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "=" + URLEncoder.encode(entry.getValue(), "UTF-8"));
+          byte[] out = sj.toString().getBytes(StandardCharsets.UTF_8);
+          int length = out.length;
+
+          http.setFixedLengthStreamingMode(length);
+          http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+          http.connect();
+          try(OutputStream os = http.getOutputStream()) {
+              os.write(out);
+          }
+
+          BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+          String inputLine = in.readLine();
+          in.close();
+
+          Map<String, Object> retResult = new HashMap();
+
+          retResult.put("tknId", params.get("tknId"));
+          retResult.put("resText", inputLine);
+          inputLine = inputLine.replaceAll("[\\{\"\\}]", "");
+
+          String[] arr1 = inputLine.split(",");
+
+          for(int i = 0; i < arr1.length; i++) {
+              String[] arr2 = arr1[i].split(":");
+              retResult.put(arr2[0], arr2[1]);
+          }
+
+          if(!retResult.containsKey("error_code")) {
+              LOGGER.debug("successful tokenization");
+              retResult.put("stus", "1");
+
+              customerService.updateTokenLogging(retResult);
+
+              result.put("stus", "1");
+
+              String crcNo = retResult.get("BIN").toString() + "******" + retResult.get("cclast4").toString();
+              result.put("crcNo", crcNo);
+              result.put("token", retResult.get("token").toString());
+
+              Map<String, Object> crcParam = new HashMap<>();
+              crcParam.put("cardNo", retResult.get("BIN").toString() + "%" + retResult.get("cclast4").toString());
+              crcParam.put("nric", params.get("refNo").toString().substring(0, 12));
+
+              // Check CRC's 1st 6 digits, last 4 digits
+              // Pending to check if needed to add expiry date + name for checking
+              int step1 = (Integer) customerService.checkCRC1(crcParam);
+              if (step1 != 0) {
+                  int step2 = (Integer) customerService.checkCRC2(crcParam);
+
+                  if (step2 >= 1) {
+                      crcParam.put("step", "3");
+                      int step3 = (Integer) customerService.checkCRC2(crcParam);
+
+                      if (step3 >= 1) {
+                          result.put("crcCheck", "3");
+                          result.put("errorDesc", "This Bank card number is used by another customer.</br>Please inform respective HP/Cody.");
+
+                      } else {
+                          result.put("crcCheck", "0");
+                      }
+                  } else {
+                      result.put("crcCheck", "0");
+                  }
+              } else {
+                  result.put("crcCheck", "0");
+              }
+
+          } else {
+              LOGGER.debug("failed tokenization");
+              retResult.put("stus", "21");
+
+              customerService.updateTokenLogging(retResult);
+              customerService.insertTokenError(retResult);
+
+              result.put("stus", "21");
+              result.put("errorDesc", retResult.get("error_desc"));
+          }
+      }
+
+      return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/tokenCrcUpdate.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> tokenCrcUpdate(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) throws Exception{
+      LOGGER.debug("params :: " + params);
+
+      SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+      params.put("userId", sessionVO.getUserId());
+
+      customerService.tokenCrcUpdate(params);
+
+      ReturnMessage message = new ReturnMessage();
+      message.setCode(AppConstants.SUCCESS);
+      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+      return ResponseEntity.ok(message);
+  }
+
   @RequestMapping(value = "/checkCrc.do", method = RequestMethod.GET)
   public ResponseEntity<Integer> checkCrc(@RequestParam Map<String, Object> params, HttpServletRequest request,
       ModelMap model) throws Exception {
@@ -2088,20 +2359,20 @@ public class CustomerController {
      * Step 1 - Check Credit Card number count If Credit Card count > 0, proceed
      * saving Else proceed step 2
      */
-    LOGGER.info("checkCRC :: step 1");
-    EgovMap step1 = (EgovMap) customerService.checkCRC1(params);
-    LOGGER.info("checkCRC :: step 1 :: " + step1.get("cnt").toString());
-    if (!"0".equals(step1.get("cnt").toString())) {
+    //LOGGER.info("checkCRC :: step 1");
+    //EgovMap step1 = (EgovMap) customerService.checkCRC1(params);
+    //LOGGER.info("checkCRC :: step 1 :: " + step1.get("cnt").toString());
+    //if (!"0".equals(step1.get("cnt").toString())) {
 
       /*
        * Step 2 - Check Credit Card number's cust_id's NRIC If Existing Credit
        * card belongs to > 1 cust nric, stop Else proceed step 3
        */
 
-      LOGGER.info("checkCRC :: step 2");
-      EgovMap step2 = (EgovMap) customerService.checkCRC2(params);
-      LOGGER.info("checkCRC :: step 2 :: " + step2.get("cnt").toString());
-      if ("1".equals(step2.get("cnt").toString())) {
+      //LOGGER.info("checkCRC :: step 2");
+      //EgovMap step2 = (EgovMap) customerService.checkCRC2(params);
+      //LOGGER.info("checkCRC :: step 2 :: " + step2.get("cnt").toString());
+      //if ("1".equals(step2.get("cnt").toString())) {
 
         /*
          * Step 3 - Check Credit Card number's to PASSED IN nric If Existing
@@ -2110,17 +2381,17 @@ public class CustomerController {
 
         params.put("step", "3");
 
-        LOGGER.info("checkCRC :: step 3");
-        EgovMap step3 = (EgovMap) customerService.checkCRC2(params);
-        LOGGER.info("checkCRC :: step 3 :: " + step3.get("cnt").toString());
-        if (!"1".equals(step3.get("cnt").toString())) {
+        //LOGGER.info("checkCRC :: step 3");
+        //EgovMap step3 = (EgovMap) customerService.checkCRC2(params);
+        //LOGGER.info("checkCRC :: step 3 :: " + step3.get("cnt").toString());
+        //if (!"1".equals(step3.get("cnt").toString())) {
           // 0 = NRIC does not match; 1 = NRIC match
-          rtnCrc = 3;
-        }
-      } else {
-        rtnCrc = 2;
-      }
-    }
+          //rtnCrc = 3;
+        //}
+      //} else {
+        //rtnCrc = 2;
+      //}
+    //}
 
     LOGGER.info("checkCRC :: rtnCrc :: " + rtnCrc);
 

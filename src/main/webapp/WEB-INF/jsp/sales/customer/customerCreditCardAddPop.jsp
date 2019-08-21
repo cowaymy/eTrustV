@@ -1,14 +1,34 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://sandbox.molpay.com/MOLPay/API/cse/checkout_dev.js"></script>
 <script type="text/javaScript" language="javascript">
 
-  	//AUIGrid ���� �� ��ȯ ID
+      //AUIGrid ���� �� ��ȯ ID
 
     $(document).ready(function(){
         doGetCombo('/common/selectCodeList.do', '21',  '','cmbCreditCardType', 'S', ''); // Add Card Type Combo Box
         doGetCombo('/sales/customer/selectAccBank.do',  '', '', 'cmbIssBank',  'S', ''); //Issue Bank)
         doGetCombo('/common/selectCodeList.do', '115', '','cmbCardType',       'S', ''); // Add Card Type Combo Box
+
+        $("#_expMonth_").blur(function() {
+            var expMonth = $("#_expMonth_").val();
+
+            if(expMonth.length == "") {
+                Common.alert("Please key in expiry month.");
+                return false;
+            } else {
+                if(expMonth.length < 2) {
+                    $("#_expMonth_").val("0" + expMonth);
+                    $("#hExpMonth").val("0" + expMonth);
+                } else {
+                    if(parseInt(expMonth) > 12) {
+                        Common.alert("Please rekey expiry month");
+                    }
+                }
+            }
+        });
     });
 
     $(function(){
@@ -53,6 +73,8 @@
             if(!FormUtil.checkSpecialChar($('#nameOnCard').val())) {
                 isValid = false;
                 msg += "<spring:message code='sal.alert.NameOnCardCannotContainOfSpecChr' />";
+            } else {
+                $("#nameCard").val($("#nameOnCard").val());
             }
         }
 
@@ -99,9 +121,51 @@
             }
         }
 
-        if(FormUtil.isEmpty($('#expDate').val())) {
-            isValid = false;
-            msg += "<spring:message code='sal.alert.msg.pleaseSelectCreditCardExpDate' />";
+        var expMonth = $("#_expMonth_").val();
+        var expYear = $("#_expYear_").val();
+
+        //Exp Date
+        if(expMonth == ""){
+            Common.alert("Please key in expiry month.");
+            return false;
+        } else {
+            if(expMonth.length < 2) {
+                $("#_expMonth_").val("0" + expMonth);
+                $("#hExpMonth").val("0" + expMonth);
+            } else {
+                if(parseInt(expMonth) > 12) {
+                    Common.alert("Please key in expiry month.");
+                    $("#_expMonth_").val("");
+                    return false;
+                } else {
+                    $("#hExpMonth").val(expMonth);
+                }
+            }
+        }
+
+        if(expYear == ""){
+            Common.alert("Please key in expiry year.");
+            return false;
+        } else {
+            $("#hExpYear").val(expYear);
+        }
+
+        if(expMonth != "" && expYear != "") {
+            var cMonYear = new Date();
+            cMonYear.setMonth(cMonYear.getMonth() + 3);
+
+            var iMonYear = new Date(expYear + "/" + expMonth + "/" + 01);
+
+            if(cMonYear > iMonYear) {
+                Common.alert("Invalid credit card expiry date!");
+                $("#_expMonth_").val("");
+                $("#_expYear_").val("")
+                $("#hExpMonth").val("");;
+                $("#hExpYear").val("");
+                return false;
+            } else {
+                $("#expDate").val(expMonth + "/" + expYear);
+            }
         }
 
         if($("#cmbCardType option:selected").index() <= 0) {
@@ -133,114 +197,163 @@
     function fn_doSaveCreditCard() {
         console.log('fn_doSaveBankAcc() START');
 
-        var checkCrc = {
-                //ccType : $("#cmbCrcTypeId").val(),
-                //ccBank : $("#cmbCrcBankId").val(),
-                cardNo : $("#cardNo").val(),
-                //expDate : $("#expDate").val(),
-                //nameCard : $("#custCrcOwner").val(),
-                //cType : $("#cmbCardTypeId").val(),
-                nric : "${insNric}",
-                src : "EC"
-            };
+        Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {;
+            var pub = "-----BEGIN PUBLIC KEY-----" + result.pubKey + "-----END PUBLIC KEY-----";
+            var molpay = MOLPAY.encrypt( pub );
 
-        console.log(checkCrc);
+            form = document.getElementById('frmCrCard');
+            molpay.encryptForm(form);
+            var form = $("#frmCrCard").serialize();
 
-        Common.ajax("GET", "/sales/customer/checkCrc.do", checkCrc, function(result) {
-            console.log(result);
 
-            if(result != "0") {
-                Common.alert("<b>WARNING!</b></br>This Bank card number is used by another customer.</br>Please inform respective HP/Cody.");
-            } else {
-                Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
+            $.ajax({
+                url : "/sales/customer/tokenLogging.do",
+                data : form,
+                success : function(tlResult) {
+                    if(result.tknId != 0) {
+                        $("#tknId").val(tlResult.tknId);
+                        $("#refNo").val(tlResult.refNo);
+                        $("#urlReq").val(tlResult.urlReq);
+                        $("#merchantId").val(tlResult.merchantId);
+                        $("#signature").val(tlResult.signature);
 
-                        Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+                        Common.ajax("GET", "/sales/customer/tokenizationProcess.do", $("#frmCrCard").serialize(), function(tResult) {
+                        	if(tResult.stus == "1" && tResult.crcCheck == "0") {
+                                console.log("order edit new :: " + tResult.token);
+                                $("#custCrcExpr").val($("#_expMonth_").val() + $("#_expYear_").val().substring(2));
+                                $("#custCrcNoMask").val(tResult.crcNo);
+                                $("#token").val(tResult.token);
 
-                        if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC' || '${callPrgm}' == 'PRE_ORD') {
-                            fn_loadCreditCard2(result.data);
-                            $('#addCrcCloseBtn').click();
-                        }
+                                Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
 
-                    }, function(jqXHR, textStatus, errorThrown) {
-                        try {
-                             Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save credit card. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                        }
-                        catch(e) {
-                            console.log(e);
-                        }
+                                    Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+
+                                    if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC' || '${callPrgm}' == 'PRE_ORD') {
+                                        fn_loadCreditCard2(result.data);
+                                        $('#addCrcCloseBtn').click();
+                                    }
+
+                                }, function(jqXHR, textStatus, errorThrown) {
+                                    try {
+                                         Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save credit card. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                                    }
+                                    catch(e) {
+                                        console.log(e);
+                                    }
+                                }
+                            );
+
+                                $("#addCrcCloseBtn").click();
+                            } else {
+                                Common.alert(tResult.errorDesc);
+                            }
+                        });
+                    } else {
+                        console.log("tknId 0");
+                        Common.alert("Tokenization error!");
                     }
-                );
-            }
-        });
+                }
+            });
+     });
     }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
-<header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="sal.page.title.addCreditCard" /></h1>
-<ul class="right_opt">
-	<li><p class="btn_blue2"><a id="addCrcCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
-</ul>
-</header><!-- pop_header end -->
+    <header class="pop_header"><!-- pop_header start -->
+        <h1><spring:message code="sal.page.title.addCreditCard" /></h1>
+        <ul class="right_opt">
+           <li><p class="btn_blue2"><a id="addCrcCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
+        </ul>
+    </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
-<form id="frmCrCard" method="post">
-<input type="hidden" id="custId" name="custId" value="${custId}" />
-<input type="hidden" id="nric" name="nric" value="${nric}" />
+    <section class="pop_body"><!-- pop_body start -->
+        <form id="frmCrCard" method="post">
+            <input type="hidden" id="custId" name="custId" value="${custId}" />
+            <input type="hidden" id="nric" name="nric" value="${nric}" />
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:180px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row"><spring:message code="sal.text.type" /><span class="must">*</span></th>
-	<td>
-	    <select class="w100p" id="cmbCreditCardType" name="creditCardType" disabled></select>
-	</td>
-	<th scope="row"><spring:message code="sal.text.issueBank" /><span class="must">*</span></th>
-	<td>
-	<select id="cmbIssBank" name="issBank" class="w100p"></select>
-	</td>
-</tr>
-<tr>
-	<th scope="row"><spring:message code="sal.text.creditCardNo" /><span class="must">*</span></th>
-	<td>
-	    <input id="cardNo" name="cardNo" type="text" title="" placeholder="Credit Card Number" class="w100p" />
-	</td>
-	<th scope="row"><spring:message code="sal.text.expiryDate" /><span class="must">*</span></th>
-	<td>
-	    <input id="expDate" name="expDate" type="text" title="Create start Date" placeholder="MM/YYYY" class="j_date2" />
-	</td>
-</tr>
-<tr>
-	<th scope="row"><spring:message code="sal.text.nameOnCard" /><span class="must">*</span></th>
-	<td>
-	    <input id="nameOnCard" name="nameOnCard" type="text" title="" placeholder="Name On Card" class="w100p" />
-	</td>
-	<th scope="row"><spring:message code="sal.text.cardType" /><span class="must">*</span></th>
-	<td>
-	    <select class="w100p" id="cmbCardType" name="cardType"></select>
-	</td>
-</tr>
-<tr>
-	<th scope="row"><spring:message code="sal.text.remark" /></th>
-	<td colspan="3">
-	    <textarea id="cardRem" name="cardRem" cols="20" rows="5" placeholder="Remark"></textarea>
-	</td>
-</tr>
-</tbody>
-</table><!-- table end -->
-</form>
+            <input type="hidden" id="etyPoint" name="etyPoint" value="EN">
+            <input type="hidden" id="tknId" name="tknId">
+            <input type="hidden" id="refNo" name="refNo">
+            <input type="hidden" id="urlReq" name="urlReq">
+            <input type="hidden" id="merchantId" name="merchantId">
+            <input type="hidden" id="signature" name="signature">
+            <input type="hidden" id="token" name="token">
+            <input type="hidden" id="expDate" name="expDate">
+            <input type="hidden" id="hExpMonth" name="hExpMonth">
+            <input type="hidden" id="hExpYear" name="hExpYear">
 
-<ul class="center_btns">
-	<li><p class="btn_blue2 big"><a id="btnAddCreditCard" href="#"><spring:message code="sal.btn.addCreditCard" /></a></p></li>
-</ul>
-</section><!-- pop_body end -->
+            <input type="hidden" id="custCrcOwner" name="custCrcOwner">
+            <input type="hidden" id="custCrcExpr" name="custCrcExpr">
+            <input type="hidden" id="custCrcNoMask" name="custCrcNoMask">
+            <input type="hidden" id="nameCard" name="nameCard">
+
+            <table class="type1"><!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:180px" />
+                    <col style="width:*" />
+                    <col style="width:180px" />
+                    <col style="width:*" />
+                </colgroup>
+
+                <tbody>
+                    <tr>
+                        <th scope="row"><spring:message code="sal.text.issueBank" /><span class="must">*</span></th>
+                        <td>
+                            <select id="cmbIssBank" name="issBank" class="w100p"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><spring:message code="sal.text.type" /><span class="must">*</span></th>
+                        <td>
+                            <select class="w100p" id="cmbCreditCardType" name="creditCardType" disabled></select>
+                        </td>
+                        <th scope="row"><spring:message code="sal.text.cardType" /><span class="must">*</span></th>
+                        <td>
+                            <select class="w100p" id="cmbCardType" name="cardType"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><spring:message code="sal.text.creditCardNo" /><span class="must">*</span></th>
+                        <!-- <td>
+                            <input id="cardNo" name="cardNo" type="text" title="" placeholder="Credit Card Number" class="w100p" />
+                        </td> -->
+                        <td>
+                            <input type="text" class="w100p" id="cardNo" data-encrypted-name="PAN" placeholder="Credit Card Number" maxlength="16" required/>
+                        </td>
+                        <th scope="row"><spring:message code="sal.text.nameOnCard" /><span class="must">*</span></th>
+                        <td>
+                            <input id="nameOnCard" name="nameOnCard" type="text" title="" placeholder="Name On Card" class="w100p" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- <th scope="row"><spring:message code="sal.text.expiryDate" /><span class="must">*</span></th>
+                        <td>
+                            <input id="expDate" name="expDate" type="text" title="Create start Date" placeholder="MM/YYYY" class="j_date2" />
+                        </td> -->
+                        <th scope="row">Expiry Month<span class="must">*</span></th>
+                        <td>
+                            <input class="w100p" id="_expMonth_" type="text" size="20" data-encrypted-name="EXPMONTH" placeholder="Expiry Month (MM)" maxlength="2" required/>
+                        </td>
+                        <th scope="row">Expiry Year<span class="must">*</span></th>
+                        <td>
+                            <input class="w100p" id="_expYear_" type="text" size="20" data-encrypted-name="EXPYEAR" placeholder="Expiry Year (YYYY)" min="4" maxlength="4" required/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><spring:message code="sal.text.remark" /></th>
+                        <td colspan="3">
+                            <textarea id="cardRem" name="cardRem" cols="20" rows="5" placeholder="Remark"></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table><!-- table end -->
+        </form>
+
+        <ul class="center_btns">
+            <li><p class="btn_blue2 big"><a id="btnAddCreditCard" href="#"><spring:message code="sal.btn.addCreditCard" /></a></p></li>
+        </ul>
+    </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->

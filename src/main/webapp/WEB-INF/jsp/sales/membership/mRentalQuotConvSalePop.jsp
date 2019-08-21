@@ -60,7 +60,8 @@ var option = {
 
         $('#addCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
-            Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId}, null, true);
+            var vCustNric = $('#thrdParty').is(":checked") ? $('#thrdPartyNric').val() : $('#hiddenNRIC').val();
+            Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId, nric : vCustNric}, null, true);
         });
 
         $('#selCreditCardBtn').click(function() {

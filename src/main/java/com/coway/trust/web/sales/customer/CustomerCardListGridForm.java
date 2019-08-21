@@ -25,8 +25,9 @@ public class CustomerCardListGridForm extends BasicData{
 	private int crcIdOld;
 	private int soId;
 	private int crcIdcm;
-	
-	
+	private String crcToken;
+
+
 	public int getCrcType() {
 		return crcType;
 	}
@@ -135,6 +136,13 @@ public class CustomerCardListGridForm extends BasicData{
 	public void setCrcIdcm(int crcIdcm) {
 		this.crcIdcm = crcIdcm;
 	}
-	
-	
+	// LaiKW 2019-08-01 Tokenization - Start
+	public String getCrcToken() {
+	    return crcToken;
+	}
+	public void setCrcToken(String crcToken) {
+	    this.crcToken = crcToken;
+	}
+	// LaiKW 2019-08-01 Tokenization- End
+
 }
