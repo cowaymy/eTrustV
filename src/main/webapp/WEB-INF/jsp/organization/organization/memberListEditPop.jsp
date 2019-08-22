@@ -739,39 +739,51 @@ function fn_saveValidation(){
     }
     //endregion
 
+    if($("#issuedBank").val()=="")
+    {
+        valid = false;
+        message += "* Please select the issued bank.<br/>";
+    }
+
+    if (!(jQuery.trim($("#bankAccNo").val())).length>0)
+    {
+        valid = false;
+        message += "* Please key in the bank account no.<br/>";
+    }
+
     //region Check Bank Account && Department && Branch && Transport
     //issuedBank
-    switch (action)
-    {
-        case "1":
-        	if($("#issuedBank").val()=="")
-            {
-                valid = false;
-                message += "* Please select the issued bank.<br/>";
-            }
-            if (!(jQuery.trim($("#bankAccNo").val())).length>0)
-            {
-                valid = false;
-                message += "* Please key in the bank account no.<br/>";
-            }
+    //switch (action)
+    //{
+        //case "1":
+        	//if($("#issuedBank").val()=="")
+            //{
+                //valid = false;
+                //message += "* Please select the issued bank.<br/>";
+            //}
+            //if (!(jQuery.trim($("#bankAccNo").val())).length>0)
+            //{
+                //valid = false;
+                //message += "* Please key in the bank account no.<br/>";
+            //}
 
             //if (cmbMemDepCode.SelectedIndex <= -1)
             //{
             //    valid = false;
             //    message += "* Please select the department code.<br />";
             //}
-            break;
-        case "2":
-        	if($("#issuedBank").val()=="")
-            {
-                valid = false;
-                message += "* Please select the issued bank.<br/>";
-            }
-        	if (!(jQuery.trim($("#bankAccNo").val())).length>0)
-            {
-                valid = false;
-                message += "* Please key in the bank account no.<br/>";
-            }
+            //break;
+        //case "2":
+        	//if($("#issuedBank").val()=="")
+            //{
+                //valid = false;
+                //message += "* Please select the issued bank.<br/>";
+            //}
+        	//if (!(jQuery.trim($("#bankAccNo").val())).length>0)
+            //{
+                //valid = false;
+                //message += "* Please key in the bank account no.<br/>";
+            //}
         	/* if($("#transportCd").val()=="")
             {
                 valid = false;
@@ -783,22 +795,22 @@ function fn_saveValidation(){
             //    valid = false;
             //    message += "* Please select the department code.<br />";
             //}
-            break;
-        case "3":
+            //break;
+        //case "3":
 
             //if (cmbMemDepCode.SelectedIndex <= -1)
             //{
             //    valid = false;
             //    message += "* Please select the department code.<br />";
             //}
-            break;
-        case "4":
+            //break;
+        //case "4":
 
 
-            break;
-        default:
-            break;
-    }
+            //break;
+        //default:
+            //break;
+    //}
     //endregion
 
     //region Document Submission

@@ -274,6 +274,10 @@
                                     $("#popRejectFlg").val(aResult.popRejectFlg);
                                     $("#surveyStus").val(aResult.verifySurveyStus);
                                     $("#loginForm surveyTypeId").val(aResult.surveyTypeId);
+                                    $("#verName").val(aResult.verName);
+                                    $("#verNRIC").val(aResult.verNRIC);
+                                    $("#verBankAccNo").val(aResult.verBankAccNo);
+                                    $("#verBankName").val(aResult.verBankName);
                                     Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
                             	}
                             } else {
@@ -411,6 +415,10 @@
             <input type="hidden" id="popRejectFlg" name="popRejectFlg" value=""/>
             <input type="hidden" id="surveyStus" name="surveyStus" value=""/>
             <input type="hidden" id="surveyTypeId" name="surveyTypeId" value=""/>
+            <input type="hidden" id="verName" name="verName" value=""/>
+            <input type="hidden" id="verNRIC" name="verNRIC" value=""/>
+            <input type="hidden" id="verBankAccNo" name="verBankAccNo" value=""/>
+            <input type="hidden" id="verBankName" name="verBankName" value=""/>
 
             <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust.gif" alt="Coway"/></h2>
             <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value=""/></p>

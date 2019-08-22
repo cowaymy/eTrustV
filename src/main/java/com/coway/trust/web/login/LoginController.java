@@ -239,6 +239,10 @@ public class LoginController {
         model.put("popAck1", params.get("popAck1"));
         model.put("popAck2", params.get("popAck2"));
         model.put("popRejectFlg", params.get("popRejectFlg"));
+        model.put("verName", params.get("verName"));
+        model.put("verNRIC", params.get("verNRIC"));
+        model.put("verBankAccNo", params.get("verBankAccNo"));
+        model.put("verBankName", params.get("verBankName"));
 
         return "/login/loginPop";
     }
@@ -298,6 +302,11 @@ public class LoginController {
                 String stusId = item1.get("stusId").toString();
                 String cnfm = item1.get("cnfm").toString();
                 String cnfmDt = item1.get("cnfmDt").toString().substring(0, 10);
+
+                popInfo.put("verName", item1.get("name"));
+                popInfo.put("verNRIC", item1.get("nric"));
+                popInfo.put("verBankAccNo", item1.get("bankAccNo"));
+                popInfo.put("verBankName", item1.get("bankName"));
 
                 // Pending
                 if("44".equals(stusId) && "0".equals(cnfm) && "1900-01-01".equals(cnfmDt)) {
@@ -371,8 +380,7 @@ public class LoginController {
                             cal.setTime(currDate);
 
                             currRenewalDt = sdf.parse(Integer.toString(cal.get(Calendar.YEAR)) + "-04-01");
-LOGGER.debug(Integer.toString(cnfmDate.compareTo(currRenewalDt)));
-LOGGER.debug(Integer.toString(joinDt.compareTo(currRenewalDt)));
+
                             if(cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) < 0) {
                                 params.put("popType", "A");
                             } else if(cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) >= 0) {

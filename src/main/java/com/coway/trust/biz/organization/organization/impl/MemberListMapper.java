@@ -149,6 +149,8 @@ public interface MemberListMapper {
 
 	int memberListUpdate_member(Map<String, Object> params);
 
+	int updateMemberName(Map<String, Object> params);
+
 	int traineeUpdateInfo(Map<String, Object> params);
 
 	int traineeInsertInfor(Map<String, Object> params);
@@ -257,6 +259,8 @@ public interface MemberListMapper {
 
 	EgovMap verifyAccess(Map<String, Object> params);
 
+	EgovMap getApplicantDetails(Map<String, Object> params);
+
 	EgovMap checkBankAcc(Map<String, Object> params);
 
 	EgovMap getUserRole(Map<String, Object> params);
@@ -294,4 +298,6 @@ public interface MemberListMapper {
 	EgovMap checkAccLen(Map<String, Object> params);
 
 	List<EgovMap> selectAccBank(Map<String, Object> params);
+
+	void updateAplctDtls(Map<String, Object> params);
 }

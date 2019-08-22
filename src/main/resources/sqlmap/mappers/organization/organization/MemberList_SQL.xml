@@ -3053,7 +3053,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         SET
 
               NAME = #{memberNm},
-              FULL_NAME = #{fullName},
+              FULL_NAME = #{memberNm},
               DOB = TO_DATE(#{Birth},'DD-MM-YYYY'),
               GENDER = #{gender},
               RACE=TO_NUMBER(TRIM(#{cmbRace})),
@@ -3129,6 +3129,23 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
         WHERE  ( MEM_ID = TO_NUMBER(TRIM(#{MemberID})) )
 
+    </update>
+
+    <update id="updateMemberName" parameterType="Map">
+        MERGE INTO ORG0003D A
+        USING (
+            SELECT
+                APLICNT_ID,
+                NAME
+            FROM ORG0001D
+            WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+        ) SRC
+        ON (A.APLCTN_ID = SRC.APLICNT_ID)
+        WHEN MATCHED THEN UPDATE
+        SET APLICNT_NAME = SRC.NAME,
+        APLICNT_FULL_NAME = SRC.NAME,
+        UPD_DT = SYSDATE,
+        UPD_USER_ID = TO_NUMBER(TRIM(#{user_id}))
     </update>
 
     <update id="updateDocSubmissionDel" parameterType="docSubmissionVO">
@@ -4465,6 +4482,20 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         WHERE APLCTN_ID = #{memberID}
             AND APLICNT_IDNTFC = #{identification}
             AND APLICNT_NRIC = #{nric}
+      </select>
+
+      <select id="getApplicantDetails" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.APLICNT_NAME,
+            A.APLICNT_NRIC,
+            B.NAME BANK_NAME,
+            A.APLICNT_BANK_ACC_NO
+        FROM ORG0003D A
+        LEFT JOIN SYS0004M B
+            ON A.APLICNT_BANK_ID = B.BANK_ID
+        WHERE A.APLCTN_ID = #{memberID}
+            AND A.APLICNT_IDNTFC = #{identification}
+            AND A.APLICNT_NRIC = #{nric}
       </select>
 
       <select id="checkBankAcc" parameterType="Map" resultType="egovMap">

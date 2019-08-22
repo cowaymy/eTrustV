@@ -89,6 +89,8 @@ public interface MemberListService {
 
 	int memberListUpdate_member(Map<String, Object> params);
 
+	int updateMemberName(Map<String, Object> params);
+
 	int traineeUpdateInfo(Map<String, Object> params,SessionVO sessionVO);
 
 	boolean updateMember(Map<String, Object> params, List<Object> docType,SessionVO sessionVO);
@@ -169,6 +171,8 @@ public interface MemberListService {
 
     EgovMap verifyAccess(Map<String, Object> params);
 
+    EgovMap getApplicantDetails(Map<String, Object> params);
+
     EgovMap checkBankAcc(Map<String, Object> params);
 
     EgovMap getUserRole(Map<String, Object> params);
@@ -194,4 +198,6 @@ public interface MemberListService {
 	EgovMap checkAccLen(Map<String, Object> params);
 
 	List<EgovMap> selectAccBank(Map<String, Object> params);
+
+	void updateAplctDtls(Map<String, Object> params);
 }

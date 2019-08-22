@@ -1581,6 +1581,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 
 	@Override
+	public int updateMemberName(Map<String, Object> params) {
+	    return memberListMapper.updateMemberName(params);
+	}
+
+	@Override
 	public  int    UpdateMemberValidate(Map<String, Object> params) {
 		return memberListMapper.updateMemberValidate(params);
 	}
@@ -2384,6 +2389,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     }
 
 	@Override
+	public EgovMap getApplicantDetails(Map<String, Object> params) {
+	    return memberListMapper.getApplicantDetails(params);
+	}
+
+	@Override
     public EgovMap checkBankAcc(Map<String, Object> params) {
         return memberListMapper.checkBankAcc(params);
     }
@@ -2439,5 +2449,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public List<EgovMap> selectAccBank(Map<String, Object> params) {
 	    return memberListMapper.selectAccBank(params);
     }
+
+	@Override
+	public void updateAplctDtls(Map<String, Object> params) {
+	    memberListMapper.updateAplctDtls(params);
+	}
 
 }

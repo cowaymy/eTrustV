@@ -67,16 +67,21 @@ function fn_cont() {
 function fn_AcceptAgreement() {
     console.log("Accept.");
 
-    if($("#ack1").prop('checked') == false) {
+    if($("#ackMemInfoCheckbox").is(":checked") == false) {
+        Common.alert("* Please check your personal information.");
+        return false;
+    }
+
+    if($("#ack1Checkbox").is(":checked") == false) {
         Common.alert("* Please agree the terms and conditions.");
         return false;
     }
 
-    if($("#ack2").prop('checked')  == false) {
+    if($("#ack2Checkbox").is(":checked")  == false) {
         Common.alert("* Please agree the personal data protection.");
         return false;
     }
-
+/*
     Common.confirm("Are you sure want to confirm this application?", function() {
         // Update applicant status
         Common.ajax("GET", "/organization/updateCodyCfm.do", {choice:"Y"}, function(result) {
@@ -103,7 +108,7 @@ function fn_AcceptAgreement() {
                 }
             }
         });
-    });
+    });*/
 }
 
 function fn_RejectAgreement() {
@@ -202,6 +207,9 @@ input {
 .login_pop.pop_win .login_header{cursor: default;position: fixed;width:100%;z-index:10}
 .login_pop.pop_win .login_header .right_opt{margin-right:20px;}
 .login_pop.pop_win .login_body{max-height:none; padding:10px; background:#fff; overflow-y:hidden;padding-top: 60px}
+
+table.type1 tbody th{height:20px; color:#333; font-weight:normal; line-height:15px; background:#e9f0f4; border-bottom:none; border-left:none; border-right:none;}
+table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:none; border-left:none; border-right:none;}
 </style>
 
 <!-- --------------------------------------DESIGN------------------------------------------------ -->
@@ -222,23 +230,46 @@ input {
 
 <form id="popForm" style="width: 100%">
 
-    <div id="PDF" style="height: 550px">
+    <div id="PDF" style="height: 500px">
         <!-- <script>PDFObject.embed("/resources/report/prd/organization/2019_Half_Yearly_Incentive_Trip_v2.pdf", "#PDF");</script> -->
         <embed src="${pdfNm}" style="overflow: auto; width: 100%; height: 100%;" type="application/pdf">
     </div>
 
-    <div id="ack1Div" style="padding-top:1%; padding-left: 5%; padding-right: 5%">
-        <label for="ack1">
-            <input type="checkbox" id="ack1Checkbox" name="ack1Checkbox" value="1" />
-            ${popAck1}
-        </label>
-    </div>
-
-    <div id="ack2Div" style="padding-top:1%; padding-left: 5%; padding-right: 5%">
-        <label for="ack2">
-            <input type="checkbox" id="ack2Checkbox" name="ack2Checkbox" value="1" />
-            ${popAck2}
-        </label>
+    <div id="acknowledgement" style="padding-top:1%; padding-left: 1%; padding-right: 1%">
+        <table class="type1" style="border: none"><!-- table start -->
+            <tbody>
+                <tr>
+                    <td style="width : 10px"><input type="checkbox" id="ackMemInfoCheckbox" name="ackMemInfoCheckbox" value="1" /></td>
+                    <td colspan="4">
+                        I hereby confirm the below information as stated
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width : 10px"></td>
+                    <td><b>Name :</b></td>
+                    <td>${verName}</td>
+                    <td><b>NRIC :</b></td>
+                    <td>${verNRIC}</td>
+                </tr>
+                <tr>
+                    <td style="width : 10px"></td>
+                    <td style="padding-bottom:0.6%"><b>Commision's Bank-In Account No : </b></td>
+                    <td colspan="3">${verBankAccNo} ( ${verBankName} )</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="ack1Checkbox" name="ack1Checkbox" value="1" />
+                    </td>
+                    <td colspan="4" style="padding-top:0.6%; padding-bottom:0.6%;">${popAck1}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="ack2Checkbox" name="ack2Checkbox" value="1" />
+                    </td>
+                    <td colspan="4" style="padding-top:0.6%; padding-bottom:0.6%;">${popAck2}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <ul class="center_btns" id="memoButton" style="padding: 10px">

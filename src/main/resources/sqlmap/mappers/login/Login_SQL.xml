@@ -281,7 +281,11 @@
             D.STUS_ID,
             D.CNFM,
             D.CNFM_DT,
-            C.JOIN_DT
+            C.JOIN_DT,
+            C.NAME,
+            C.NRIC,
+            E.NAME BANK_NAME,
+            C.BANK_ACC_NO
         FROM SYS0047M A
         INNER JOIN SYS0045M B
             ON A.USER_ID = B.USER_ID and B.STUS_ID NOT IN ('8')
@@ -296,6 +300,8 @@
         </choose>
         LEFT JOIN ORG0003D D
             ON C.APLICNT_ID = D.APLCTN_ID
+        LEFT JOIN SYS0004M E
+            ON NVL(C.BANK, D.APLICNT_BANK_ID) = E.BANK_ID
         WHERE A.USER_ID = #{userId}
     </select>
 

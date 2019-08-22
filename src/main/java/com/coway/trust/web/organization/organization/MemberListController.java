@@ -951,10 +951,12 @@ public class MemberListController {
         int resultUpc3 = 0;
         int resultUpc4 = 0;
         int resultUpc5 = 0;
+        int resultUpc6 = 0;
         if (!formMap.get("memberType").toString().equals("2803")) {// hp가아닐때
             resultUpc1 = memberListService.memberListUpdate_user(formMap);
             resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
             resultUpc3 = memberListService.memberListUpdate_member(formMap);
+            resultUpc6 = memberListService.updateMemberName(formMap);
             if (formMap.get("memberType").toString().equals("2")) {
                 memberListService.memberCodyPaUpdate(formMap);
             }
@@ -975,8 +977,13 @@ public class MemberListController {
                 memberListService.updateMeetpoint(formMap);
             }
 
+            if(memType.trim().equals("2")) {
+                // Update ORG0003D CD agreement details
+                memberListService.updateAplctDtls(formMap);
+            }
+
             logger.debug("result UPC : " + Integer.toString(resultUpc1) + " , " + Integer.toString(resultUpc2) + " , "
-                    + Integer.toString(resultUpc3) + " , ");
+                    + Integer.toString(resultUpc3) + " , " + Integer.toString(resultUpc6) + " , " );
         }
 
         else {
@@ -1732,10 +1739,21 @@ logger.debug("params : {}", params);
         EgovMap item = new EgovMap();
         item = (EgovMap) memberListService.verifyAccess(params);
 
-        Map<String, Object> access = new HashMap();
-        access.put("cnt", item.get("cnt"));
+        Map<String, Object> verAccess = new HashMap();
+        verAccess.put("cnt", item.get("cnt"));
 
-        return ResponseEntity.ok(access);
+        // 2019-08-22 - LaiKW - CR Cody/HP personal details verification
+        if("1".equals(item.get("cnt").toString())) {
+            EgovMap item2 = new EgovMap();
+            item2 = (EgovMap) memberListService.getApplicantDetails(params);
+
+            verAccess.put("verName", item2.get("aplicntName"));
+            verAccess.put("verNRIC", item2.get("aplicntNric"));
+            verAccess.put("verBankName", item2.get("bankName"));
+            verAccess.put("verBankAccNo", item2.get("aplicntBankAccNo"));
+         }
+
+        return ResponseEntity.ok(verAccess);
     }
 
     @RequestMapping(value = "/checkBankAcc", method = RequestMethod.GET)

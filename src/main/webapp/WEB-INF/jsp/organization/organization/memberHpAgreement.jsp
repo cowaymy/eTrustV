@@ -52,6 +52,10 @@ function fn_aplicantSearch() {
             $("#personalDataDiv").attr("hidden", false);
             $("#agreementChoices").attr("hidden", false);
 
+            $("#verName").val(result.verName);
+            $("#verNric").val(result.verNRIC);
+            $("#verBankAccNo").val(result.verBankAccNo + " (" + result.verBankName + ")");
+
             // Upon success, check device type to control elements shown
             var isMobile = false;
 
@@ -251,9 +255,52 @@ input {
         </a>
     </div>
 
+    <div id="acknowledgementTbl" style="padding-top:1%; padding-left: 5%; padding-right: 5%">
+        <table class="type1" style="border: none">
+            <tbody>
+                <tr>
+                    <td style="width : 10px"><input type="checkbox" id="ackMemInfoCheckbox" name="ackMemInfoCheckbox" value="1" /></td>
+                    <td colspan="4">
+                        I hereby confirm the below information as stated
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width : 10px"></td>
+                    <td><b>Name :</b></td>
+                    <td><input type="text" title="IC Number" placeholder="" id="verName" name="verName" disabled /></td>
+                    <td><b>NRIC :</b></td>
+                    <td><input type="text" title="IC Number" placeholder="" id="verNric" name="verNric" disabled /></td>
+                </tr>
+                <tr>
+                    <td style="width : 10px"></td>
+                    <td style="padding-bottom:0.6%"><b>Commision's Bank-In Account No : </b></td>
+                    <td colspan="3"><input type="text" placeholder="" id="verBankAccNo" name="verBankAccNo" disabled /></td>
+                </tr>
+                <tr>
+                    <td style="width : 10px"><input type="checkbox" id="ackMemInfoCheckbox" name="ackMemInfoCheckbox" value="1" /></td>
+                    <td colspan="4">
+                        I hereby acknowledged that I have read and understood the terms and conditions as stated
+                        in agree to the above Coway (M) Sdn Bhd Health Planner Agreement and I hereby agree to the terms
+                        and conditions therein.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width : 10px"><input type="checkbox" id="ackMemInfoCheckbox" name="ackMemInfoCheckbox" value="1" /></td>
+                    <td colspan="4">
+                        I hereby agree and consent that my personal data may be collected, used, processed and
+                        disclosed by Coway (M) Sdn Bhd as described in Schedule 3 of the HP Agreement for the purpose
+                        of processing my registration, as well as for the programme delivery involved with the above
+                        event, in accordance with the Personal Data Protection Act 2012 and all subsidiary legislation
+                        related thereto.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <!--  2018-05-04 - LaiKW - Start
     - Add TNC and personal data protection agreement -->
-    <div id="acknowledgementDiv" name="acknowledgementDiv" style="padding-top:1%; padding-left: 5%; padding-right: 5%">
+    <!-- <div id="acknowledgementDiv" name="acknowledgementDiv" style="padding-top:1%; padding-left: 5%; padding-right: 5%">
         <label for="acknowledgeAgreement">
             <input type="checkbox" id="acknowledgeAgreement" name="acknowledgeAgreement" value="1" />
             I hereby acknowledged that I have read and understood the terms and conditions as stated
@@ -271,7 +318,7 @@ input {
             event, in accordance with the Personal Data Protection Act 2012 and all subsidiary legislation
             related thereto.
         </label>
-    </div>
+    </div> -->
     <!--  2018-05-04 - LaiKW - End -->
 
     <ul class="center_btns" id="agreementChoices">
