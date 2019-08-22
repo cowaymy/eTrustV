@@ -20,7 +20,7 @@ $(document).ready(function() {
     CommonCombo.make('_cmbSalesTypeId', "/sales/pos/selectPosModuleCodeList", systemParam , '', optionModule);
 
     //branch List
-    CommonCombo.make('_cmbWhBrnchId', "/sales/pos/selectWhBrnchList", '' , '', '');
+    CommonCombo.make('_cmbWhBrnchId', "/sales/pos/selectWhSOBrnchList", '' , '', '');
 
     ///getReasonCodeList
     var rsnParam = {masterCode : 1363};
