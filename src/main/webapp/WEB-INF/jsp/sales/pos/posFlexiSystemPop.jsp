@@ -22,7 +22,7 @@ $(document).ready(function() {
     CommonCombo.make('_insPosModuleType', "/sales/pos/selectPosModuleCodeList", modulePopParam , '', optionModule);
 
     //PosSystemTypeComboBox
-    var systemPopParam = {groupCode : 140 , codeIn : [5552]};
+    var systemPopParam = {groupCode : 140 , codeIn : [5570]};
     CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
 
     //branch List
@@ -109,7 +109,7 @@ $(document).ready(function() {
                     type: "M",
                     isShowChoose: false
             };
-            var systemPopParam = {groupCode : 140 , codeIn : [5552]};
+            var systemPopParam = {groupCode : 140 , codeIn : [5570]};
             CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
             //PAYMENT TAB DISPLAY
             $("#_purchaseTab").click();
