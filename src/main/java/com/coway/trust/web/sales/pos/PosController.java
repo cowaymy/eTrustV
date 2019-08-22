@@ -825,4 +825,16 @@ public class PosController {
 
 	}
 
+	@RequestMapping(value = "/posFlexiRawDataPop.do")
+	public String posFlexiRawDataPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-7), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+		model.put("bfDay", bfDay);
+		model.put("toDay", toDay);
+
+		return "sales/pos/posFlexiRawDataPop";
+	}
+
 }
