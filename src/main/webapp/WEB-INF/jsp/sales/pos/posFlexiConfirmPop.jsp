@@ -26,7 +26,7 @@ $(document).ready(function() {
     CommonCombo.make('_confirmPosModuleTypeId', "/sales/pos/selectPosModuleCodeList", moduleParam , moduleSelVal, optionModule);
 
     //PosSystemTypeComboBox
-    var systemParam = {groupCode : 140 , codeIn : [5552]};
+    var systemParam = {groupCode : 140 , codeIn : [5570]};
     var systemSelVal = $("#_PosFlexiSysTypeId").val();
     CommonCombo.make('_confirmPosTypeId', "/sales/pos/selectPosModuleCodeList", systemParam , systemSelVal, optionSystem);
 
