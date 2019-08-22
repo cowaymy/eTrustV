@@ -199,5 +199,5 @@ public interface MemberListService {
 
 	List<EgovMap> selectAccBank(Map<String, Object> params);
 
-	void updateAplctDtls(Map<String, Object> params);
+	//void updateAplctDtls(Map<String, Object> params);
 }

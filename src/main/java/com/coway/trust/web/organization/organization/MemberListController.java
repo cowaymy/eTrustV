@@ -977,10 +977,10 @@ public class MemberListController {
                 memberListService.updateMeetpoint(formMap);
             }
 
-            if(memType.trim().equals("2")) {
+            /*if(memType.trim().equals("2")) {
                 // Update ORG0003D CD agreement details
                 memberListService.updateAplctDtls(formMap);
-            }
+            }*/
 
             logger.debug("result UPC : " + Integer.toString(resultUpc1) + " , " + Integer.toString(resultUpc2) + " , "
                     + Integer.toString(resultUpc3) + " , " + Integer.toString(resultUpc6) + " , " );

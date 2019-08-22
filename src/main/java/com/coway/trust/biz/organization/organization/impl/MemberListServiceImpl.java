@@ -2450,9 +2450,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    return memberListMapper.selectAccBank(params);
     }
 
-	@Override
+	/*@Override
 	public void updateAplctDtls(Map<String, Object> params) {
 	    memberListMapper.updateAplctDtls(params);
-	}
+	}*/
 
 }
