@@ -39,7 +39,7 @@ $(document).ready(function() { //***********************************************
     CommonCombo.make('cmbPosTypeId', "/sales/pos/selectPosModuleCodeList", moduleParam , '', optionModule);
 
     //PosSystemTypeComboBox
-    var systemParam = {groupCode : 140 , codeIn : [5552]};
+    var systemParam = {groupCode : 140 , codeIn : [5570]};
 
     CommonCombo.make('cmbSalesTypeId', "/sales/pos/selectPosModuleCodeList", systemParam , '', optionSystem);
 
@@ -77,7 +77,7 @@ $(document).ready(function() { //***********************************************
         var tempVal = $(this).val();
 
 
-            var systemParam = {groupCode : 140 , codeIn : [5552]};
+            var systemParam = {groupCode : 140 , codeIn : [5570]};
             var optionSystem = {
                     type: "M",
                     isShowChoose: false
@@ -212,8 +212,8 @@ $(document).ready(function() { //***********************************************
 
 
      /***  Report ***/
-     $("#_posRawDataBtn").click(function() {
-         Common.popupDiv("/sales/pos/posRawDataPop.do", '', null, null, true);
+     $("#_posFlexiRawDataBtn").click(function() {
+         Common.popupDiv("/sales/pos/posFlexiRawDataPop.do", '', null, null, true);
     });
 
 });//Doc ready Func End ****************************************************************************************************************************************
@@ -487,6 +487,7 @@ function fn_insTransactionLog(posNo, posTypeId){
 
 
 
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 </script>
@@ -619,6 +620,7 @@ function fn_insTransactionLog(posNo, posTypeId){
     <ul class="btns">
         <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="link_btn"><a href="#" onclick="javascript : fn_posReceipt()"><spring:message code="sal.title.text.posReceipt" /></a></p></li>
+                <li><p class="link_btn type2"><a id="_posFlexiRawDataBtn">Pos Flexi Raw Data</a></p></li>
         </c:if>
     </ul>
   <%--   <ul class="btns">
