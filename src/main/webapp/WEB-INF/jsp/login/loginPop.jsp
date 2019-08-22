@@ -81,7 +81,7 @@ function fn_AcceptAgreement() {
         Common.alert("* Please agree the personal data protection.");
         return false;
     }
-/*
+
     Common.confirm("Are you sure want to confirm this application?", function() {
         // Update applicant status
         Common.ajax("GET", "/organization/updateCodyCfm.do", {choice:"Y"}, function(result) {
@@ -108,7 +108,7 @@ function fn_AcceptAgreement() {
                 }
             }
         });
-    });*/
+    });
 }
 
 function fn_RejectAgreement() {
