@@ -846,6 +846,28 @@ var TODAY_DD      = "${toDay}";
               .val());
   }
 
+  function fn_HSMobileFailureListing()
+  {
+	  var date = new Date();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+
+      if (date.getDate() < 10) {
+        day = "0" + date.getDate();
+      }
+
+      $("#reportForm #reportFileName").val('/services/HS_Mobile_Fail_excel.rpt');
+      $("#reportForm #viewType").val("EXCEL");
+      $("#reportForm #V_TEMP").val("");
+      $("#reportForm #reportDownFileName").val(
+          "HSMobileFailureListing_" + day + month + date.getFullYear());
+
+      var option = {
+                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+              };
+
+    Common.report("reportForm", option);
+  }
 
   /*
     AUIGrid.bind(myGridID, "cellClick", function(event) {
@@ -1252,6 +1274,12 @@ var TODAY_DD      = "${toDay}";
  <input type="hidden" id="userName" name="userName" value="${userName}">
  <input type="hidden" id="userType" name="userType" value="${userType}">
 </form>
+  <form id='reportForm' method="post" name='reportForm' action="#">
+    <input type='hidden' id='reportFileName' name='reportFileName'/>
+    <input type='hidden' id='viewType' name='viewType'/>
+    <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
+    <input type='hidden' id='V_TEMP' name='V_TEMP'/>
+  </form>
 <%--
   <form id="popEditViewForm" method="post">
     <input type="hidden" name="schdulId"  id="_schdulIdView"/>  <!-- schdulId  -->
@@ -1439,6 +1467,14 @@ var TODAY_DD      = "${toDay}";
              <a href="#" onclick="javascript:fn_hsConfigOld()">HS
               Config(Old system version)</a>
             </p></li>
+            <!-- By KV - HS Mobile Failure Listing -->
+            <li><p class="link_btn type2">
+               <a href="#" onclick="javascript:fn_HSMobileFailureListing()"><spring:message
+                   code='service.btn.MobileFailListHS' /></a>
+              </p>
+          </li>
+
+
         <!--    <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsMonthlySetting()">HS
               Current Month Setting(Old system version)</a>
