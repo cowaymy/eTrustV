@@ -259,6 +259,28 @@
     Common.popupDiv("/services/installationNotePop.do", null, null, true,
         '');
   }
+  /* By KV - Install Mobile Failure Listing*/
+  function fn_InstallMobileFailureListing() {
+	  var date = new Date();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+
+      if (date.getDate() < 10) {
+        day = "0" + date.getDate();
+      }
+
+      $("#reportForm #reportFileName").val('/services/Installation_Mobile_Fail_excel.rpt');
+      $("#reportForm #viewType").val("EXCEL");
+      $("#reportForm #V_TEMP").val("");
+      $("#reportForm #reportDownFileName").val(
+          "InstallMobileFailureListing_" + day + month + date.getFullYear());
+
+      var option = {
+    	        isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+    	      };
+
+    Common.report("reportForm", option);
+  }
 
   function fn_doActiveList() {
     Common.popupDiv("/services/doActiveListPop.do", null, null, true, '');
@@ -404,6 +426,13 @@
  <!-- title_line end -->
  <section class="search_table">
   <!-- search_table start -->
+  <form id='reportForm' method="post" name='reportForm' action="#">
+    <input type='hidden' id='reportFileName' name='reportFileName'/>
+    <input type='hidden' id='viewType' name='viewType'/>
+    <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
+    <input type='hidden' id='V_TEMP' name='V_TEMP'/>
+  </form>
+
   <form action="#" method="post" id="searchForm">
    <table class="type1">
     <!-- table start -->
@@ -627,6 +656,15 @@
          </p></li>
        </c:if>
       </ul>
+       <ul class="btns">
+         <!-- By KV - Install Mobile Failure Listing -->
+             <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+         <li><p class="link_btn type2">
+               <a href="#" onclick="javascript:fn_InstallMobileFailureListing()"><spring:message
+                   code='service.btn.MobileFailListInst' /></a>
+              </p></li>
+          </c:if>
+       </ul>
       <p class="hide_btn">
        <a href="#"><img
         src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
