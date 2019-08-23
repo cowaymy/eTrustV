@@ -55,10 +55,11 @@
 
     <select id="selectCustTotalProductsCount" parameterType="Map" resultType="egovMap">
         SELECT COUNT(*) TOTAL_PRODUCT_COUNT
-        FROM SAL0001D
+            FROM SAL0001D EXTENT1
+            JOIN CP1013V EXTENT2 ON EXTENT2.CUST_ID = EXTENT1.CUST_ID AND EXTENT2.SALES_ORD_ID = EXTENT1.SALES_ORD_ID
             WHERE 1=1
-            AND STUS_CODE_ID = 4
-            AND CUST_ID = #{cowayCustId}
+            AND (EXTENT1.STUS_CODE_ID = 4 OR (PRODUCT_TOTAL_OUTSTANDING + MEMBERSHIP_OUTSTANDING) > 0 )
+            AND EXTENT1.CUST_ID#{cowayCustId}
     </select>
 
     <select id="selectLastPayment" parameterType="Map" resultType="egovMap">
@@ -77,7 +78,7 @@
 
     <select id="getCustTotalOutstanding" parameterType="Map" resultType="egovMap">
         SELECT
-            EXTENT1.OTSTND_AMT
+            TO_CHAR(EXTENT1.OTSTND_AMT,'fm9,999,990.00') OTSTND_AMT
         FROM CP1007V EXTENT1
         WHERE EXTENT1.CUST_ID = #{cowayCustId}
     </select>
