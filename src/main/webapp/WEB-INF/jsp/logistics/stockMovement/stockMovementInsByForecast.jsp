@@ -229,15 +229,15 @@
 				Common.searchpopupWin("popupForm", "/common/searchPopList.do", "stocklist");
 			}
 
-			if (event.dataField == "rqty") {
-				if (AUIGrid.getCellValue(reqGrid, event.rowIndex, "rqty") > AUIGrid.getCellValue(reqGrid, event.rowIndex, "aqty")) {
-					Common.alert('The requested quantity is up to ' + AUIGrid.getCellValue(reqGrid, event.rowIndex, "aqty") + '.');
+			if (event.dataField == "itmfcastqty") {
+				if (AUIGrid.getCellValue(reqGrid, event.rowIndex, "itmfcastqty") > AUIGrid.getCellValue(reqGrid, event.rowIndex, "aqty")) {
+					Common.alert('The requested forecast quantity is more than ' + AUIGrid.getCellValue(reqGrid, event.rowIndex, "aqty") + '.');
 					AUIGrid.setCellValue(reqGrid, event.rowIndex, "rqty", 0);
 					return false;
 				}
-				if (AUIGrid.getCellValue(reqGrid, event.rowIndex, "rqty") < 0) {
-					Common.alert('The requested quantity is less than zero.');
-					AUIGrid.setCellValue(reqGrid, event.rowIndex, "rqty", 0);
+				if (AUIGrid.getCellValue(reqGrid, event.rowIndex, "itmfcastqty") < 0) {
+					Common.alert('The requested forecast quantity is less than zero.');
+					AUIGrid.setCellValue(reqGrid, event.rowIndex, "itmfcastqty", 0);
 					return false;
 
 				}
@@ -284,8 +284,8 @@
 			var items = GridCommon.getEditData(reqGrid);
 			var bool = true;
 			for (var i = 0; i < items.add.length; i++) {
-				//console.log(items.add[i].typeid);
-				if (items.add[i].itmtype == '61') {
+				console.log(items.add[i].itmtype);
+				if (items.add[i].itmtype == 'Stock') {
 					Common.alert('Stock is not allow to Request.');
 					bool = false;
 					break;
