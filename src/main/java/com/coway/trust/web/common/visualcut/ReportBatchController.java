@@ -1448,6 +1448,24 @@ public class ReportBatchController {
     LOGGER.info("[END] SHI_Raw_Data_Excel...");
   }
 
+  @RequestMapping(value = "/govAgreementRaw.do")
+  //@Scheduled(cron = "0 30 4 * * *")//Daily (4:00am)
+  public void govAgreementRaw() {
+    LOGGER.info("[START] govAgreementRaw...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/sales/GovContratAgrRaw.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Legal" + File.separator + "AgreementRaw_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] govAgreementRaw...");
+  }
+
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
