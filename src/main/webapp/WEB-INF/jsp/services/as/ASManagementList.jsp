@@ -58,6 +58,28 @@
           Common.popupDiv("/services/as/asResultViewPop.do" + param, null, null, true, '_newASResultDiv1');
         });
       });
+  /* By KV - AS Mobile Failure Listing*/
+  function fn_ASMobileFailureListing(){
+	  var date = new Date();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+
+      if (date.getDate() < 10) {
+        day = "0" + date.getDate();
+      }
+
+      $("#reportForm #reportFileName").val('/services/AS_Mobile_Fail_excel.rpt');
+      $("#reportForm #viewType").val("EXCEL");
+      $("#reportForm #V_TEMP").val("");
+      $("#reportForm #reportDownFileName").val(
+          "ASMobileFailureListing_" + day + month + date.getFullYear());
+
+      var option = {
+                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+              };
+
+    Common.report("reportForm", option);
+  }
 
   function asManagementGrid() {
     var columnLayout = [
@@ -1109,6 +1131,12 @@
         <li><p class="link_btn type2">
           <a href="#" onclick="fn_invoice()"><spring:message code='service.btn.asInvc'/></a>
          </p></li>
+          <!-- By KV - AS Mobile Failure Listing -->
+         <li><p class="link_btn type2">
+               <a href="#" onclick="javascript:fn_ASMobileFailureListing()"><spring:message
+                   code='service.btn.MobileFailListAS' /></a>
+              </p>
+          </li>
        </c:if>
       </ul>
       <p class="hide_btn">
@@ -1134,11 +1162,11 @@
    </article>
    <!-- grid_wrap end -->
   </form>
-  <form action="#" id="reportForm" method="post">
-   <input type="hidden" id="V_RESULTID" name="V_RESULTID" />
-   <input type="hidden" id="reportFileName" name="reportFileName" />
-   <input type="hidden" id="viewType" name="viewType" />
-   <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
+  <form id='reportForm' method="post" name='reportForm' action="#">
+    <input type='hidden' id='reportFileName' name='reportFileName'/>
+    <input type='hidden' id='viewType' name='viewType'/>
+    <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
+    <input type='hidden' id='V_TEMP' name='V_TEMP'/>
   </form>
  </section>
  <!-- search_table end -->
