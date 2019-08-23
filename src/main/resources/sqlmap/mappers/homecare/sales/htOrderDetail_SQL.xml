@@ -1690,7 +1690,7 @@
             AND B.POSTCODE = #{postcode}
         </if>
         <if test="status != null and status != ''">
-           AND cvrg.STUS_CODE_ID = #{stusCodeId}
+           AND cvrg.STUS_CODE_ID = #{status}
         </if>
     ORDER BY cvrg.AREA_ID
 
