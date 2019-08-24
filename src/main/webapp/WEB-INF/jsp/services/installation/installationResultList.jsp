@@ -261,23 +261,23 @@
   }
   /* By KV - Install Mobile Failure Listing*/
   function fn_InstallMobileFailureListing() {
-	  var date = new Date();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
+    var date = new Date();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
 
-      if (date.getDate() < 10) {
-        day = "0" + date.getDate();
-      }
+    if (date.getDate() < 10) {
+      day = "0" + date.getDate();
+    }
 
-      $("#reportForm #reportFileName").val('/services/Installation_Mobile_Fail_excel.rpt');
-      $("#reportForm #viewType").val("EXCEL");
-      $("#reportForm #V_TEMP").val("");
-      $("#reportForm #reportDownFileName").val(
-          "InstallMobileFailureListing_" + day + month + date.getFullYear());
+    $("#reportForm #reportFileName").val('/services/Installation_Mobile_Fail_excel.rpt');
+    $("#reportForm #viewType").val("EXCEL");
+    $("#reportForm #V_TEMP").val("");
+    $("#reportForm #reportDownFileName").val(
+        "InstallMobileFailureListing_" + day + month + date.getFullYear());
 
-      var option = {
-    	        isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-    	      };
+    var option = {
+      isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+    };
 
     Common.report("reportForm", option);
   }
@@ -626,10 +626,10 @@
           <a href="#" onclick="javascript:fn_doActiveList()"><spring:message
             code='service.btn.DOActiveList' /></a>
          </p></li>
-        <li><p class="link_btn type2">
+        <!-- <li><p class="link_btn type2"> -- TMP REMOVE
           <a href="#" onclick="javascript:fn_installNoteListing()"><spring:message
             code='service.btn.InstallationNoteListing' /></a>
-         </p></li>
+         </p></li> -->
         <li><p class="link_btn type2">
           <a href="#" onclick="javascript:fn_installationNote()"><spring:message
             code='service.btn.InstallationNote' /></a>
