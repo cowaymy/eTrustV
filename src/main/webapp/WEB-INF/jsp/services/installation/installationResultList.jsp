@@ -426,7 +426,7 @@
  <!-- title_line end -->
  <section class="search_table">
   <!-- search_table start -->
-  <form id='reportFormInstLst' method="post" name='reportForm' action="#">
+  <form id='reportFormInstLst' method="post" name='reportFormInstLst' action="#">
     <input type='hidden' id='reportFileName' name='reportFileName'/>
     <input type='hidden' id='viewType' name='viewType'/>
     <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
