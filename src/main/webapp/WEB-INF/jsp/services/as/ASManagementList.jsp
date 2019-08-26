@@ -68,17 +68,17 @@
         day = "0" + date.getDate();
       }
 
-      $("#reportForm #reportFileName").val('/services/AS_Mobile_Fail_excel.rpt');
-      $("#reportForm #viewType").val("EXCEL");
-      $("#reportForm #V_TEMP").val("");
-      $("#reportForm #reportDownFileName").val(
+      $("#reportFormASLst #reportFileName").val('/services/AS_Mobile_Fail_excel.rpt');
+      $("#reportFormASLst #viewType").val("EXCEL");
+      $("#reportFormASLst #V_TEMP").val("");
+      $("#reportFormASLst #reportDownFileName").val(
           "ASMobileFailureListing_" + day + month + date.getFullYear());
 
       var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
               };
 
-    Common.report("reportForm", option);
+    Common.report("reportFormASLst", option);
   }
 
   function asManagementGrid() {
@@ -1162,7 +1162,7 @@
    </article>
    <!-- grid_wrap end -->
   </form>
-  <form id='reportForm' method="post" name='reportForm' action="#">
+  <form id='reportFormASLst' method="post" name='reportFormASLst' action="#">
     <input type='hidden' id='reportFileName' name='reportFileName'/>
     <input type='hidden' id='viewType' name='viewType'/>
     <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
