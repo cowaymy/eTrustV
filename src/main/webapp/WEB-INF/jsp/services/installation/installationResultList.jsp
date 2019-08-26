@@ -269,17 +269,17 @@
       day = "0" + date.getDate();
     }
 
-    $("#reportForm #reportFileName").val('/services/Installation_Mobile_Fail_excel.rpt');
-    $("#reportForm #viewType").val("EXCEL");
-    $("#reportForm #V_TEMP").val("");
-    $("#reportForm #reportDownFileName").val(
+    $("#reportFormInstLst #reportFileName").val('/services/Installation_Mobile_Fail_excel.rpt');
+    $("#reportFormInstLst #viewType").val("EXCEL");
+    $("#reportFormInstLst #V_TEMP").val("");
+    $("#reportFormInstLst #reportDownFileName").val(
         "InstallMobileFailureListing_" + day + month + date.getFullYear());
 
     var option = {
       isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
     };
 
-    Common.report("reportForm", option);
+    Common.report("reportFormInstLst", option);
   }
 
   function fn_doActiveList() {
@@ -426,7 +426,7 @@
  <!-- title_line end -->
  <section class="search_table">
   <!-- search_table start -->
-  <form id='reportForm' method="post" name='reportForm' action="#">
+  <form id='reportFormInstLst' method="post" name='reportForm' action="#">
     <input type='hidden' id='reportFileName' name='reportFileName'/>
     <input type='hidden' id='viewType' name='viewType'/>
     <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
@@ -626,10 +626,10 @@
           <a href="#" onclick="javascript:fn_doActiveList()"><spring:message
             code='service.btn.DOActiveList' /></a>
          </p></li>
-        <!-- <li><p class="link_btn type2"> -- TMP REMOVE
+         <li><p class="link_btn type2">
           <a href="#" onclick="javascript:fn_installNoteListing()"><spring:message
             code='service.btn.InstallationNoteListing' /></a>
-         </p></li> -->
+         </p></li>
         <li><p class="link_btn type2">
           <a href="#" onclick="javascript:fn_installationNote()"><spring:message
             code='service.btn.InstallationNote' /></a>
