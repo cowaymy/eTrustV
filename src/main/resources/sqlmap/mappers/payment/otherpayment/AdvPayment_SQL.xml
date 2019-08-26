@@ -166,7 +166,7 @@
             #{srvcContractID},
             #{billAsId},
             #{srvMemId},
-            #{trNo},
+            REGEXP_REPLACE(#{trNo}, '[[:space:]]', ''),
             #{collectorId},
             #{allowComm},
             TO_DATE(#{trDt}, 'DD/MM/YYYY'),
