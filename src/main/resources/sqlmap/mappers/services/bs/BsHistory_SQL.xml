@@ -45,18 +45,18 @@ SELECT
                                  Distinct1.SETL_DT SETL_DT,
                                  Distinct1.FAIL_RESN FAIL_RESN,
                                  Distinct1.COLL_RESN COLL_RESN,
-                                 Distinct1.STOCK_ID,
-                                 Distinct1.STOCK_CODE,
-                                 Distinct1.STOCK_DESC,
-                                 Distinct1.CUSTOMER_ADDRESS,
-                                 Distinct1.INSTALL_ADDRESS,
-                                 Distinct1.MAIL_CNT_TEL_M,
-                                 Distinct1.MAIL_CNT_TEL_R,
-                                 Distinct1.MAIL_CNT_TEL_O,
-                                 Distinct1.MAIL_CNT_TEL_F,
-                                 Distinct1.CUST_VA_NO,
-                                 Distinct1.JOM_PAY_REF,
-                                 Distinct1.CUST_TYPE
+                                 vOrderBasicInfo.STOCK_ID STOCK_ID  ,
+                                 vOrderBasicInfo.STOCK_CODE STOCK_CODE  ,
+                                 vOrderBasicInfo.STOCK_DESC STOCK_DESC  ,
+                                 vOrderMailingInfo.ADDR_DTL||' '||vOrderMailingInfo.STREET||' '||vOrderMailingInfo.MAIL_POST_CODE||' '||vOrderMailingInfo.MAIL_AREA||' '||vOrderMailingInfo.MAIL_STATE||' '||vOrderMailingInfo.MAIL_CNTY AS CUSTOMER_ADDRESS,
+                                 Distinct1.INSTALL_ADDRESS ,
+                                 vOrderMailingInfo.MAIL_CNT_TEL_M,
+                                 vOrderMailingInfo.MAIL_CNT_TEL_R,
+                                 vOrderMailingInfo.MAIL_CNT_TEL_O,
+                                 vOrderMailingInfo.MAIL_CNT_TEL_F,
+                                 vOrderBasicInfo.CUST_VA_NO,
+                                 vOrderBasicInfo.JOM_PAY_REF,
+                                 vOrderBasicInfo.CUST_TYPE
                         FROM
                             (SELECT
 /*+ leading(Extent3) use_hash( vOrderMailingInfo,  vOrderBasicInfo, Extent6 , Extent3  )   */
@@ -75,18 +75,6 @@ SELECT
                                  TO_CHAR (Extent10.SETL_DT, 'DD/MM/YYYY') SETL_DT ,
                                  Extent11.RESN_DESC FAIL_RESN ,
                                  Extent12.RESN_DESC COLL_RESN ,
-                                 vOrderBasicInfo.STOCK_ID STOCK_ID  ,
-                                 vOrderBasicInfo.STOCK_CODE STOCK_CODE  ,
-                                 vOrderBasicInfo.STOCK_DESC STOCK_DESC  ,
-                                 vOrderMailingInfo.ADDR_DTL||' '||vOrderMailingInfo.STREET||' '||vOrderMailingInfo.MAIL_POST_CODE||' '||vOrderMailingInfo.MAIL_AREA||' '||vOrderMailingInfo.MAIL_STATE||' '||vOrderMailingInfo.MAIL_CNTY AS CUSTOMER_ADDRESS,
-                                 NVL (ca1.addr_dtl, ' ')||' '||NVL (ca1.street, ' ')||' '||NVL (ma1.postcode, ' ')||' '||NVL (ma1.state,' ')||' '||NVL (ma1.country, ' ') AS INSTALL_ADDRESS,
-                                 vOrderMailingInfo.MAIL_CNT_TEL_M,
-                                 vOrderMailingInfo.MAIL_CNT_TEL_R,
-                                 vOrderMailingInfo.MAIL_CNT_TEL_O,
-                                 vOrderMailingInfo.MAIL_CNT_TEL_F,
-                                 vOrderBasicInfo.CUST_VA_NO,
-                                 vOrderBasicInfo.JOM_PAY_REF,
-                                 vOrderBasicInfo.CUST_TYPE,
                                  1 C1 ,
                                 CASE
                                 WHEN ( Extent7.RESULT_ID IS NOT NULL ) THEN
@@ -121,7 +109,9 @@ SELECT
                                 WHEN ( Extent9.MEM_ID IS NOT NULL ) THEN
                                 Extent9.MEM_CODE
                                 ELSE ''
-                                END CODY_CODE
+                                END CODY_CODE ,
+                                NVL (ca1.addr_dtl, ' ')||' '||NVL (ca1.street, ' ')||' '||NVL (ma1.postcode, ' ')||' '||NVL (ma1.state,' ')||' '||NVL (ma1.country, ' ') AS INSTALL_ADDRESS
+
                             FROM SVC0008D Extent1
                             JOIN SYS0038M Extent2
                             ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
@@ -155,13 +145,14 @@ SELECT
                                 ON Extent8.MEM_ID = Extent1.CODY_ID
                             LEFT JOIN ORG0001D Extent9
                                 ON Extent9.MEM_ID = Extent7.CODY_ID
-                            JOIN SAL1011V vOrderMailingInfo
-                             ON      Extent1.SALES_ORD_ID =  vOrderMailingInfo.ORD_ID
-                             JOIN SAL1006V vOrderBasicInfo
-                            ON      Extent1.SALES_ORD_ID =  vOrderBasicInfo.ORD_ID
+
                                 WHERE 1=1
-                                             AND Extent3.Sales_Ord_No LIKE  '%' ||#{orderNumber}
+                                             AND Extent3.Sales_Ord_No = #{orderNumber}
                                                  ) Distinct1
+                              JOIN SAL1011V vOrderMailingInfo
+                             ON      Distinct1.SALES_ORD_ID =  vOrderMailingInfo.ORD_ID
+                             JOIN SAL1006V vOrderBasicInfo
+                            ON      Distinct1.SALES_ORD_ID =  vOrderBasicInfo.ORD_ID
                   ORDER BY Distinct1.SCHDUL_ID ASC
                   ]]>
         </select>
