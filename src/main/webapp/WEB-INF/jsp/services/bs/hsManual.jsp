@@ -856,17 +856,17 @@ var TODAY_DD      = "${toDay}";
         day = "0" + date.getDate();
       }
 
-      $("#reportForm #reportFileName").val('/services/HS_Mobile_Fail_excel.rpt');
-      $("#reportForm #viewType").val("EXCEL");
-      $("#reportForm #V_TEMP").val("");
-      $("#reportForm #reportDownFileName").val(
+      $("#reportFormHSLst #reportFileName").val('/services/HS_Mobile_Fail_excel.rpt');
+      $("#reportFormHSLst #viewType").val("EXCEL");
+      $("#reportFormHSLst #V_TEMP").val("");
+      $("#reportFormHSLst #reportDownFileName").val(
           "HSMobileFailureListing_" + day + month + date.getFullYear());
 
       var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
               };
 
-    Common.report("reportForm", option);
+    Common.report("reportFormHSLst", option);
   }
 
   /*
@@ -1274,7 +1274,7 @@ var TODAY_DD      = "${toDay}";
  <input type="hidden" id="userName" name="userName" value="${userName}">
  <input type="hidden" id="userType" name="userType" value="${userType}">
 </form>
-  <form id='reportForm' method="post" name='reportForm' action="#">
+  <form id='reportFormHSLst' method="post" name='reportFormHSLst' action="#">
     <input type='hidden' id='reportFileName' name='reportFileName'/>
     <input type='hidden' id='viewType' name='viewType'/>
     <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
