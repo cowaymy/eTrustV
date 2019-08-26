@@ -58,8 +58,8 @@
             FROM SAL0001D EXTENT1
             JOIN CP1013V EXTENT2 ON EXTENT2.CUST_ID = EXTENT1.CUST_ID AND EXTENT2.SALES_ORD_ID = EXTENT1.SALES_ORD_ID
             WHERE 1=1
-            AND (EXTENT1.STUS_CODE_ID = 4 OR (PRODUCT_TOTAL_OUTSTANDING + MEMBERSHIP_OUTSTANDING) > 0 )
-            AND EXTENT1.CUST_ID#{cowayCustId}
+            AND (EXTENT1.STUS_CODE_ID = 4 OR (PRODUCT_TOTAL_OUTSTANDING + MEMBERSHIP_OUTSTANDING) <![CDATA[ > ]]> 0 )
+            AND EXTENT1.CUST_ID = #{cowayCustId}
     </select>
 
     <select id="selectLastPayment" parameterType="Map" resultType="egovMap">
