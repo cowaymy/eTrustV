@@ -1449,7 +1449,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/govAgreementRaw.do")
-  //@Scheduled(cron = "0 30 4 * * *")//Daily (4:00am)
+  //@Scheduled(cron = "0 0 5 * * *")//Daily (6:00am)
   public void govAgreementRaw() {
     LOGGER.info("[START] govAgreementRaw...");
     Map<String, Object> params = new HashMap<>();
@@ -1459,6 +1459,7 @@ public class ReportBatchController {
                                                                                   // name.
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put("V_TEMP", "TEMP");// parameter
+    params.put("v_WhereSQL","");
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "Legal" + File.separator + "AgreementRaw_" + CommonUtils.getNowDate() + ".xls");
 
