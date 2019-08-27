@@ -3,52 +3,58 @@
 <mapper namespace="com.coway.trust.biz.services.bs.impl.HsManualOldMapper">
 
 	<select id="selectHsOldConfigList" parameterType="Map" resultType="egovMap">
-    SELECT
-	    SOM.SALES_ORD_ID,
-	    SOM.SALES_ORD_NO,
-	    TO_CHAR(TO_DATE(SOM.SALES_DT),'DD/MM/YYYY') SALES_DT,
-	    SOM.APP_TYPE_ID,
-	    CD.CODE APP_TYPE,
-	    C.NAME CUST_NM,
-	    C.NRIC,
-	    S.CODE as ORD_STUS,
-	    V2.INST_AREA,
-	    V2.INST_STATE,
-	    TO_CHAR(TO_DATE(V2.FIRST_INSTALL_DT,'DD/MM/YYYY'),'DD/MM/YYYY') FIRST_INSTALL_DT,
-	    CG.SRV_CODY_ID,
-	    MEM.MEM_CODE,
-	    MEM.NAME MEM_NM,
-	    MEM.STUS MEM_STUS,
+SELECT
+ Extent1.SALES_ORD_ID,
+ Extent1.SALES_ORD_NO,
+ Extent1.SALES_DT,
+ Extent1.APP_TYPE_ID,
+ Extent1.APP_TYPE,
+ Extent1.CUST_NM,
+ Extent1.NRIC,
+ Extent1.ORD_STUS,
+ Extent1.SRV_CODY_ID,
+ Extent1.MEM_CODE,
+ Extent1.MEM_NM,
+ Extent1.MEM_STUS,
+ Extent1.SRV_BS_GEN,
+ Extent1.SRV_CONFIG_ID,
+ V2.INST_AREA,
+ V2.INST_STATE,
+ TO_CHAR(TO_DATE(V2.FIRST_INSTALL_DT,'DD/MM/YYYY'),'DD/MM/YYYY') FIRST_INSTALL_DT
+FROM (
+SELECT
+        SOM.SALES_ORD_ID,
+        SOM.SALES_ORD_NO,
+        TO_CHAR(TO_DATE(SOM.SALES_DT),'DD/MM/YYYY') SALES_DT,
+        SOM.APP_TYPE_ID,
+        CD.CODE APP_TYPE,
+        C.NAME CUST_NM,
+        C.NRIC,
+        S.CODE as ORD_STUS,
+        CG.SRV_CODY_ID,
+        MEM.MEM_CODE,
+        MEM.NAME MEM_NM,
+        MEM.STUS MEM_STUS,
         CG.SRV_BS_GEN,
         CG.SRV_CONFIG_ID
     FROM SAL0001D SOM
-	    JOIN SYS0013M CD ON CD.CODE_ID = SOM.APP_TYPE_ID
-	    JOIN SAL0029D C ON C.CUST_ID = SOM.CUST_ID
-	    JOIN SYS0038M S ON S.STUS_CODE_ID = SOM.STUS_CODE_ID
-	    JOIN SAL1010V_V2 V2 ON V2.ORD_ID = SOM.SALES_ORD_ID
-	    JOIN SAL0090D CG ON CG.SRV_SO_ID = SOM.SALES_ORD_ID AND CG.SRV_STUS_ID = 1
-	    LEFT JOIN ORG0001D MEM ON MEM.MEM_ID = CG.SRV_CODY_ID
-	    WHERE 1 = 1
+        JOIN SYS0013M CD ON CD.CODE_ID = SOM.APP_TYPE_ID
+        JOIN SAL0029D C ON C.CUST_ID = SOM.CUST_ID
+        JOIN SYS0038M S ON S.STUS_CODE_ID = SOM.STUS_CODE_ID
+        JOIN SAL0090D CG ON CG.SRV_SO_ID = SOM.SALES_ORD_ID AND CG.SRV_STUS_ID = 1
+        LEFT JOIN ORG0001D MEM ON MEM.MEM_ID = CG.SRV_CODY_ID
+        WHERE 1= 1
         <if test="salesOrdNo != null and salesOrdNo != ''">
             AND SOM.SALES_ORD_NO= #{salesOrdNo}
         </if>
         <if test="appType != null and appType != ''">
             AND SOM.APP_TYPE_ID = #{appType}
         </if>
-        <if test="instState != null and instState != ''">
-            AND UPPER(V2.INST_STATE) = UPPER(#{instState})
-        </if>
         <if test="CustNm != null and CustNm != ''">
             AND C.NAME = #{CustNm}
         </if>
         <if test="NRIC != null and NRIC != ''">
             AND C.NRIC = #{NRIC}
-        </if>
-        <if test="instArea != null and instArea != ''">
-            AND UPPER(V2.INST_AREA) LIKE UPPER(#{instArea})
-        </if>
-        <if test="instMonth != null and instMonth != ''">
-            AND TO_CHAR(TO_DATE(V2.FIRST_INSTALL_DT,'DD/MM/YYYY'),'MM/YYYY') = #{instMonth}
         </if>
         <if test="bSService != null and bSService != ''">
             AND CG.SRV_BS_GEN = 1
@@ -59,6 +65,20 @@
         <if test="inchargeMem != null and inchargeMem != ''">
             AND MEM.MEM_CODE = #{inchargeMem}
         </if>
+
+        ) Extent1
+        LEFT JOIN SAL1010V_V2 V2 ON V2.ORD_ID = Extent1.SALES_ORD_ID
+        WHERE 1=1
+          <if test="instState != null and instState != ''">
+            AND UPPER(V2.INST_STATE) = UPPER(#{instState})
+        </if>
+         <if test="instArea != null and instArea != ''">
+            AND UPPER(V2.INST_AREA) LIKE UPPER(#{instArea})
+        </if>
+        <if test="instMonth != null and instMonth != ''">
+            AND TO_CHAR(TO_DATE(V2.FIRST_INSTALL_DT,'DD/MM/YYYY'),'MM/YYYY') = #{instMonth}
+        </if>
+
 	    ORDER BY SALES_ORD_NO
     </select>
 
