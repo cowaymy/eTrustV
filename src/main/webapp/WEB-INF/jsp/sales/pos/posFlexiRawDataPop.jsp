@@ -6,6 +6,14 @@ var reasonOption = {
         type: "M",
         isCheckAll: false
 };
+var optionModule = {
+        type: "S",
+        isShowChoose: false
+};
+var optionSystem = {
+        type: "M",
+        isShowChoose: false
+};
 $(document).ready(function() {
 
      /*######################## Init Combo Box ########################*/
@@ -27,6 +35,11 @@ $(document).ready(function() {
     //CommonCombo.make('_purcReason', "/sales/pos/getReasonCodeList", rsnParam , '', optionReasonChoose); //Reason Code List
     CommonCombo.make('_purcReason', "/sales/pos/getReasonCodeList", rsnParam , '', reasonOption); //Reason Code List
     /*######################## Init Combo Box ########################*/
+
+    var statusParam = {groupCode : 30};
+    CommonCombo.make('_cmbStatusTypeId', "/sales/pos/selectStatusCodeList", statusParam , '', '');
+
+
 
 });
 
@@ -89,6 +102,10 @@ function fn_posRawData(){
 
     if($("#_hidMemberCode").val() != null && $("#_hidMemberCode").val() != ''){
         whereSql += " AND M.POS_MEM_ID = " + $("#_memberCode").text() + " ";
+    }
+
+    if($("#_cmbStatusTypeId").val() != null && $("#_cmbStatusTypeId").val() != '' ){
+        whereSql += " AND M.STUS_ID  = " + $("#_cmbStatusTypeId").val();
     }
 
     console.log("whereSql : " + whereSql);
@@ -281,6 +298,14 @@ function fn_insTransactionLogRaw(whereSql){
     <input type="text" title="" placeholder="Member Code" class="w100p" id="_memberCode" />
     <input type="hidden" id="_hidMemberCode">
     </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.title.status" /></th>
+    <td>
+        <select class="w100p" id="_cmbStatusTypeId"></select>
+    </td>
+    <th></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
