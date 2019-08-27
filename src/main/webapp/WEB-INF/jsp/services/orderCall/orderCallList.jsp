@@ -213,6 +213,11 @@
       editable : false,
       width : 180
     }, {
+      dataField : "dscBrnchId",
+      headerText : '<spring:message code="service.grid.Branch" />',
+      editable : false,
+      width : 180
+    }, {
       dataField : "isWaitCancl",
       headerText : '<spring:message code="service.grid.WaitCancel" />',
       width : 180
