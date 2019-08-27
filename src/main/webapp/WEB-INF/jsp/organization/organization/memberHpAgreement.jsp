@@ -33,8 +33,7 @@ $(document).ready(function() {
     // Require level 2 NRIC verification to enable elements
     $("#agreementPDF").attr("hidden", true);
     $("#dlPDF").attr("hidden", true);
-    $("#acknowledgementDiv").attr("hidden", true);
-    $("#personalDataDiv").attr("hidden", true);
+    $("#acknowledgementTbl").attr("hidden", true);
     $("#agreementChoices").attr("hidden", true);
 });
 
@@ -48,8 +47,7 @@ function fn_aplicantSearch() {
         if(result.cnt == "1") {
 
         	$("#verificationBody").attr("hidden", true);
-            $("#acknowledgementDiv").attr("hidden", false);
-            $("#personalDataDiv").attr("hidden", false);
+            $("#acknowledgementTbl").attr("hidden", false);
             $("#agreementChoices").attr("hidden", false);
 
             $("#verName").val(result.verName);

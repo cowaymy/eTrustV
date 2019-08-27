@@ -33,15 +33,13 @@ console.log("loginPop.jsp");
         $("#memoButton").attr("hidden", false);
         $("#agreementButton").attr("hidden", true);
 
-        $("#ack1Div").attr("hidden", true);
-        $("#ack2Div").attr("hidden", true);
+        $("#acknowledgement").attr("hidden", true);
     }
     if("${popType}" == "A") {
         $("#agreementButton").attr("hidden", false);
         $("#memoButton").attr("hidden", true);
 
-        $("#ack1Div").attr("hidden", false);
-        $("#ack2Div").attr("hidden", false);
+        $("#acknowledgement").attr("hidden", false);
 
         if("${popRejectFlg}" == "X") {
             $("#agreementRejectBtn").attr("hidden", false);
