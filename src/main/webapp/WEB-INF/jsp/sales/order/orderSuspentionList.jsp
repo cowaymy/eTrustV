@@ -126,7 +126,7 @@
         }else if(detailForm.renStus.value == "TER" || detailForm.renStus.value == "WOF" || detailForm.renStus.value == "WOF_1"){
         	Common.alert('<spring:message code="sales.msg.renStusChk2" />');
             return false;
-        }else if(detailForm.renStus.value == "SUS"){
+        }else if(detailForm.renStus.value == "RET"){
         	Common.confirm('<spring:message code="sales.msg.renStusSusWarn" />', function() {
         		Common.popupDiv("/sales/order/orderSuspendNewResultPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
         	});
