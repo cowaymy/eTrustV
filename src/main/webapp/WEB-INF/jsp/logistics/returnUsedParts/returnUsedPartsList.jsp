@@ -29,7 +29,7 @@
 var listGrid;
 var subGrid;
 var userCode;
-var comboData = [{"codeId": "N","codeName": "Not yet"},{"codeId": "Y","codeName": "Done"}];
+var comboData = [{"codeId": "Y","codeName": "Yes"}, {"codeId": "N","codeName": "No"}];
 var comboData1 = [{"codeId": "62","codeName": "Filter"},{"codeId": "63","codeName": "Spare Part"}];
 var comboData2 = [{"codeId": "03","codeName": "CT"},{"codeId": "04","codeName": "CODY"}];
 var comboData3 = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
@@ -295,11 +295,12 @@ $(document).ready(function(){
 
 		});//insert
 
+		/* 20190827 vannie hide delete button due to not needed at the moment
 		$('#delete').click(function() {
 
 			deltestFunc();
 
-        });//delete
+        });//delete */
 
 		$('#complete').click(function() {
 			 var chkfalg;
@@ -322,7 +323,7 @@ $(document).ready(function(){
 	                  }
 
 	                   if (checkedItems[i].materialCode =="" || checkedItems[i].materialCode == undefined){
-	                	   Common.alert("Please Enter materialCode");
+	                	   Common.alert("Please Enter Material Code.");
 	                	   return false;
 	                   }
 	                 }
@@ -353,19 +354,12 @@ $(document).ready(function(){
 
     $('#searchBranch').change(function(){
     	if ($('#searchBranch').val() != null && $('#searchBranch').val() != "" ){
+    		
         var searchlocgb = $('#searchlocgb').val();
         var searchBranch = $('#searchBranch').val();
-        //alert("searchBranch :  "+searchBranch);
-//         var locgbparam = "";
-//         for (var i = 0 ; i < searchlocgb.length ; i++){
-//             if (locgbparam == ""){
-//                 locgbparam = searchlocgb[i];
-//             }else{
-//                 locgbparam = searchlocgb[i];
-//             }
-//         }
-        //alert("searchlocgb :  "+searchlocgb);
+        
         if ($('#searchlocgb').val() == null || $('#searchlocgb').val() == "" ){
+        	
         	Common.alert("Please select Location Type");
         	doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
         	return false;
@@ -381,41 +375,27 @@ $(document).ready(function(){
 
     $('#searchlocgrade').change(function(){
         var searchlocgb = $('#searchlocgb').val();
-
-//         var locgbparam = "";
-//         for (var i = 0 ; i < searchlocgb.length ; i++){
-//             if (locgbparam == ""){
-//                 locgbparam = searchlocgb[i];
-//             }else{
-//                 locgbparam = searchlocgb[i];
-//             }
-//         }
-
         var param = {searchlocgb:searchlocgb , grade:$('#searchlocgrade').val()}
         doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
     });
 
 
-    $('#searchlocgb').change(function() {
-        console.log('1');
-        if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
-             var searchlocgb = $('#searchlocgb').val();
-             //alert("searchlocgb :  "+searchlocgb);
+   
+	$('#searchlocgb').change(function() {
+		var searchlocgb = $('#searchlocgb').val();
+			//console.log('1 '+searchlocgb);
+			if ($('#searchBranch').val() != null && $('#searchBranch').val() != "") {
+				var searchBranch = $('#searchBranch').val();
+				var param = {
+					searchlocgb : searchlocgb,
+					grade : $('#searchlocgrade').val(),
+					searchBranch : searchBranch
+				}
+				doGetComboData('/common/selectStockLocationList3.do', param, '', 'searchLoc', 'M', 'f_multiComboType');
+			}
+		});
 
-//                 var locgbparam = "";
-//                 for (var i = 0 ; i < searchlocgb.length ; i++){
-//                     if (locgbparam == ""){
-//                         locgbparam = searchlocgb[i];
-//                     }else{
-//                         locgbparam = searchlocgb[i];
-//                     }
-//                 }
-                var param = {searchlocgb:searchlocgb , grade:$('#searchlocgrade').val()}
-                doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
-        }
-        });
-
-});
+	});
 
 	function testFunc() {
 		var url = "/logistics/returnusedparts/ReturnUsedPartsTest.do";
@@ -428,17 +408,16 @@ $(document).ready(function(){
 		});
 	}
 
+	/* function deltestFunc() {
+		var url = "/logistics/returnusedparts/ReturnUsedPartsDelTest.do";
+		var param = "param=BS8362776";
 
-	function deltestFunc() {
-        var url = "/logistics/returnusedparts/ReturnUsedPartsDelTest.do";
-        var param = "param=BS8362776";
-
-        Common.ajax("GET", url, param, function(data) {
-            //AUIGrid.setGridData(listGrid, data.data);
-            alert(data);
-            $("#search").click();
-        });
-    }
+		Common.ajax("GET", url, param, function(data) {
+			//AUIGrid.setGridData(listGrid, data.data);
+			alert(data);
+			$("#search").click();
+		});
+	} */
 
 	function SearchListAjax() {
 		var url = "/logistics/returnusedparts/returnPartsSearchList.do";
@@ -473,8 +452,7 @@ $(document).ready(function(){
 				});
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
-				Common.alert("Draw ComboBox['" + obj
-						+ "'] is failed. \n\n Please try again.");
+				Common.alert("Draw ComboBox['" + obj + "'] is failed. \n\n Please try again.");
 			},
 			complete : function() {
 			}
@@ -489,27 +467,28 @@ $(document).ready(function(){
 		var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
 		data.checked = checkdata;
 
-		Common.ajax("POST","/logistics/returnusedparts/returnPartsUpdate.do", data, function(result) {
-			if(result.data==0 ){
+		Common.ajax("POST", "/logistics/returnusedparts/returnPartsUpdate.do", data, function(result) {
+			if (result.data == 0) {
 				Common.alert(result.message);
-			   $("#search").click();
-			}else{
+				$("#search").click();
+			}
+			else {
 				Common.alert('Already processed.');
 			}
 
 		})
-	 }
+	}
 	function cancleReturnParts() {
 
-       var data = {};
-       var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
-       data.checked = checkdata;
+		var data = {};
+		var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+		data.checked = checkdata;
 
-       Common.ajax("POST","/logistics/returnusedparts/returnPartsCanCle.do", data, function(result) {
+		Common.ajax("POST", "/logistics/returnusedparts/returnPartsCanCle.do", data, function(result) {
 
-                   Common.alert(result.message);
+			Common.alert(result.message);
 
-       })
+		})
 	}
 
 	function f_validatation(v) {
@@ -526,38 +505,49 @@ $(document).ready(function(){
 		}
 	}
 
-	   function validMatCodeAjax(matcode,indexnum) {
-	        var url = "/logistics/returnusedparts/validMatCodeSearch.do";
-	        var param = {"matcode":matcode};
+	function validMatCodeAjax(matcode, indexnum) {
+		var url = "/logistics/returnusedparts/validMatCodeSearch.do";
+		var param = {
+			"matcode" : matcode
+		};
 
-	        Common.ajax("GET", url, param, function(data) {
+		Common.ajax("GET", url, param, function(data) {
 
-	        	if(data.data == 0){
-	        		Common.alert("The product code is incorrect.");
-	        		AUIGrid.setCellValue(listGrid , indexnum , "materialCode" , "" );
-	        	}
-	        	//$("#search").click();
-	        });
-	    }
+			if (data.data == 0) {
+				Common.alert("The product code is incorrect.");
+				AUIGrid.setCellValue(listGrid, indexnum, "materialCode", "");
+			}
+			//$("#search").click();
+		});
+	}
 
-	   function f_multiComboType() {
-		    $(function() {
-		        $('#searchLoc').change(function() {
-		        }).multipleSelect({
-		            selectAll : true
-		        });
-		    });
+	function f_multiComboType() {
+		$(function() {
+			$('#searchLoc').change(function() {
+			}).multipleSelect({
+				selectAll : true
+			});
+		});
+	}
+
+	function validation() {//
+		if ($("#searchlocgb").val() == '' || $("#searchlocgb").val() == undefined) {
+			Common.alert('Please select Location Type.');
+			return false;
 		}
-
-	   function validation() {
-		    if ($("#searchLoc").val() == '' ||$("#searchLoc").val() == undefined){
-		        Common.alert('Please Location selected.');
-		        return false;
-		    } else {
-		        return true;
-		    }
+		else if ($("#searchBranch").val() == '' || $("#searchBranch").val() == undefined) {
+			Common.alert('Please select Branch.');
+			return false;
 		}
+		else if ($("#searchLoc").val() == '' || $("#searchLoc").val() == undefined) {
+			Common.alert('Please select Location.');
+			return false;
 
+		}
+		else {
+			return true;
+		}
+	}
 </script>
 
 <section id="content"><!-- content start -->
@@ -578,7 +568,8 @@ $(document).ready(function(){
 <h3>Header Info</h3>
     <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-      <li><p class="btn_blue"><a id="delete"><span class="delete"></span>Delete</a></p></li>
+      <!-- 20190827 vannie hide delete button due to not needed at the moment
+      <li><p class="btn_blue"><a id="delete"><span class="delete"></span>Delete</a></p></li> -->
 </c:if>
       <!-- <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
@@ -609,9 +600,9 @@ $(document).ready(function(){
                    <td>
                         <select class="w100p" id="searchlocgb" name="searchlocgb"></select>
                    </td>
-                    <th scope="row">Location Grade</th>
+                   <th scope="row">Branch</th>
                    <td>
-                        <select class="w100p" id="searchlocgrade" name="searchlocgrade"></select>
+                        <select class="w100p" id="searchBranch"  name="searchBranch"></select>
                    </td>
                    <th scope="row">Location</th>
                    <td>
@@ -620,15 +611,15 @@ $(document).ready(function(){
                    </td>
                 </tr>
                 <tr>
-                    <th scope="row">Branch</th>
+                    <th scope="row">Location Grade</th>
                    <td>
-                        <select class="w100p" id="searchBranch"  name="searchBranch"></select>
+                        <select class="w100p" id="searchlocgrade" name="searchlocgrade"></select>
                    </td>
-                   <th scope="row">Oder</th>
+                   <th scope="row">Service Order</th>
                    <td>
                         <INPUT type="text"   class="w100p" id="searchOder" name="searchOder">
                    </td>
-                   <th scope="row">Customer</th>
+                   <th scope="row">Customer Name</th>
                    <td>
                         <INPUT type="text"   class="w100p" id="searchCustomer" name="searchCustomer">
                    </td>
@@ -663,7 +654,7 @@ $(document).ready(function(){
                    <td >
                       <select class="w100p" id="searchMaterialType" name="searchMaterialType"></select>
                    </td>
-                   <th scope="row">Complete</th>
+                   <th scope="row">Return Complete</th>
                    <td>
                        <select class="w100p" id="searchComplete" name="searchComplete"></select>
                    </td>
