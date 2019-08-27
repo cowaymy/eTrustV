@@ -266,6 +266,8 @@
   function fn_doSave() {
     if ("${BR}" != '${SESSION_INFO.userBranchId}') {
       Common.confirm("<spring:message code='service.msg.simBchChk'/>", fn_doSaveCont);
+    } else {
+      fn_doSaveCont();
     }
   }
 
