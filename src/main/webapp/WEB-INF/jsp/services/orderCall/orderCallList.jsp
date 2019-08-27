@@ -488,7 +488,7 @@
 
         <c:forEach var="list" items="${callLogSrt}" varStatus="status">
          <c:choose>
-           <c:when test="${list.code=='0'}">
+           <c:when test="${list.code=='4'}">
              <option value="${list.code}" selected>${list.codeName}</option>
            </c:when>
            <c:otherwise>
