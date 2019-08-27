@@ -89,6 +89,7 @@
                    , vCallLogOrderCall.CALL_FDBCK_CODE CALL_FDBCK_CODE
                    , vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC
                    , vCallLogOrderCall.RCD_TMS RCD_TMS
+                   , vCallLogOrderCall.UPD_DT UPD_DT
                    , area.state
                    , area.area
                    , area.postcode
@@ -177,6 +178,12 @@
     </if>
     <if test="sortBy != null and sortBy != '' and sortBy == 2 ">
       ORDER BY Extent1.CUST_NAME
+    </if>
+    <if test="sortBy != null and sortBy != '' and sortBy == 3 ">
+      ORDER BY Extent1.CALL_LOG_DT DESC
+    </if>
+    <if test="sortBy != null and sortBy != '' and sortBy == 4 ">
+      ORDER BY Extent1.UPD_DT DESC
     </if>
   </select>
 
