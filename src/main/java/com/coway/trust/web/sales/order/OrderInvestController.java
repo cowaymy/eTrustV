@@ -182,14 +182,13 @@ public class OrderInvestController {
 		Map<String, Object> map = new HashMap();
 
 		try{
-			int orderInvestClosedDateChk = orderInvestService.orderInvestClosedDateChk();
+			int orderInvestClosedDateChk = 0;//= orderInvestService.orderInvestClosedDateChk();
 
 			if(orderInvestClosedDateChk < 1){
 				EgovMap orderNoChk = orderInvestService.orderNoChk(params);
 				logger.debug("##### orderNoChk #####" +orderNoChk.toString());
 				logger.debug("##### orderNoChk #####" +orderNoChk);
 				if(orderNoChk != null && !"".equals(orderNoChk)){
-					retMsg = "OK";
 					EgovMap singleInvestView = orderInvestService.singleInvestView(params);
 					map.put("salesOrdId", singleInvestView.get("salesOrdId"));
 					map.put("salesOrdNo", singleInvestView.get("salesOrdNo"));
@@ -201,6 +200,14 @@ public class OrderInvestController {
 					map.put("stkDesc", singleInvestView.get("stkDesc"));
 					map.put("name1", singleInvestView.get("name1"));
 					map.put("nric", singleInvestView.get("nric"));
+
+					if(singleInvestView.get("stusCodeId").equals("WOF") || singleInvestView.get("stusCodeId").equals("WOF_1") || singleInvestView.get("stusCodeId").equals("TER")){
+					  retMsg = "TER";
+					}else if(singleInvestView.get("stusCodeId").equals("RET")){
+					  retMsg = "RET";
+					}else{
+					  retMsg = "OK";
+					}
 				}else{
 					retMsg = "NO";
 				}

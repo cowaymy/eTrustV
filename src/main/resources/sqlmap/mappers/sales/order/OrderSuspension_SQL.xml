@@ -40,7 +40,8 @@
 		       CASE
 		            WHEN ( Extent6.USER_ID IS NOT NULL ) THEN Extent6.USER_NAME
 		       ELSE ''
-		          END SUS_UPD_USER_NAME
+		          END SUS_UPD_USER_NAME  ,
+		       REN_STUS
 		  FROM ( SELECT Extent1.SUS_ID   ,
 		                Extent1.SALES_ORD_ID SALESORDERID1  ,
 		                Extent1.SUS_STUS_ID   ,
@@ -64,12 +65,14 @@
 		                Extent4.INV_ID INVID2  ,
 		                Extent4.INV_NO   ,
 		                Extent5.USER_ID   ,
-		                Extent5.USER_NAME
+		                Extent5.USER_NAME   ,
+		                Extent6.STUS_CODE_ID REN_STUS
 		         FROM SAL0096D Extent1
 		                JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
 		                JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.SUS_STUS_ID
 		                LEFT JOIN SAL0049D Extent4   ON Extent4.INV_ID = Extent1.INV_ID
 		                LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.SUS_CRT_USER_ID
+		                JOIN SAL0071D Extent6 ON Extent6.SALES_ORD_ID = Extent2.SALES_ORD_ID
 		        WHERE  ( 8 <> Extent1.SUS_STUS_ID )
 		        ]]>
 		<if test="susStusList != null and susStusList != ''">

@@ -5,33 +5,35 @@
 
 	//AUIGrid 생성 후 반환 ID
 	var myGridID;
-	
+
 	$(document).ready(function(){
-	    
-		
+
+
 	    // AUIGrid 그리드를 생성합니다.
 	    createAUIGrid();
-	    
+
 	  //AUIGrid.setSelectionMode(myGridID, "singleRow");
-	    
+
 	    // 셀 더블클릭 이벤트 바인딩
 	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
 	        $("#salesOrdId").val(event.item.salesOrdId);
 	        $("#susId").val(event.item.susId);
+	        $("#renStus").val(event.item.renStus);
 	        Common.popupDiv("/sales/order/orderSuspensionDetailPop.do", $("#detailForm").serializeJSON());
 	    });
 	    // 셀 클릭 이벤트 바인딩
 	    AUIGrid.bind(myGridID, "cellClick", function(event){
             $("#salesOrdId").val(event.item.salesOrdId);
             $("#susId").val(event.item.susId);
+            $("#renStus").val(event.item.renStus);
 //            Common.popupDiv("/sales/order/orderSuspendNewResultPop.do", $("#detailForm").serializeJSON());
             gridValue =  AUIGrid.getCellValue(myGridID, event.rowIndex, $("#detailForm").serializeJSON());
         });
 	});
-	
+
 	function createAUIGrid() {
         // AUIGrid 칼럼 설정
-        
+
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
@@ -70,62 +72,69 @@
                 dataField : "susId",
                 visible : false
             }];
-       
+
         // 그리드 속성 설정
         var gridPros = {
-            
-            // 페이징 사용       
+
+            // 페이징 사용
             usePaging : true,
-            
+
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
-            
+
             editable : true,
-            
+
             fixedColumnCount : 1,
-            
-            showStateColumn : false, 
-            
+
+            showStateColumn : false,
+
             displayTreeOpen : true,
-            
+
             selectionMode : "multipleCells",
-            
+
             headerHeight : 30,
-            
+
             // 그룹핑 패널 사용
             useGroupingPanel : false,
-            
+
             // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             skipReadonlyColumns : true,
-            
+
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
-            
+
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : true,
-            
+
             groupingMessage : "Here groupping"
         };
-        
+
         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
         myGridID = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
     }
-	
+
 	function fn_searchListAjax(){
         Common.ajax("GET", "/sales/order/orderSuspensionJsonList", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
         });
     }
-	
+
 	function fn_newSuspend(){
 		if(detailForm.susId.value == ""){
             Common.alert('<spring:message code="sal.alert.msg.noSuspendRecordSelected" />');
             return false;
+        }else if(detailForm.renStus.value == "TER" || detailForm.renStus.value == "WOF" || detailForm.renStus.value == "WOF_1"){
+        	Common.alert('<spring:message code="sales.msg.renStusChk2" />');
+            return false;
+        }else if(detailForm.renStus.value == "SUS"){
+        	Common.confirm('<spring:message code="sales.msg.renStusSusWarn" />', function() {
+        		Common.popupDiv("/sales/order/orderSuspendNewResultPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
+        	});
         }else{
             Common.popupDiv("/sales/order/orderSuspendNewResultPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
         }
 	}
-	
+
 	function fn_assignIncharge(){
 //		Common.alert('The program is under development.');
 		if(detailForm.susId.value == ""){
@@ -167,6 +176,7 @@
 <form id="detailForm" name="detailForm" method="GET">
     <input type="hidden" id="susId" name="susId">
     <input type="hidden" id="salesOrdId" name="salesOrdId">
+    <input type="hidden" id="renStus" name=""renStus">
 </form>
 
 <section class="search_table"><!-- search_table start -->
@@ -222,7 +232,7 @@
 </tr>
 </tbody>
 </table><!-- table end -->
-<!-- link_btns_wrap start 
+<!-- link_btns_wrap start
 <aside class="link_btns_wrap">
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
@@ -257,7 +267,7 @@
 </form>
 </section><!-- search_table end -->
 
-<section class="search_result"><!-- search_result start 
+<section class="search_result"><!-- search_result start
 
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>

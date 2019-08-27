@@ -79,6 +79,23 @@
                     $("#custName").html(result.name1);
                     $("#nric").html(result.nric);
                     $("#searchOrdDt").show();
+                }else if(result.msg == "RET"){
+                	Common.confirm('<spring:message code="sales.msg.renStusSusWarn" />', function() {
+                		var prod = result.stkCode + ' - ' + result.stkDesc;
+                        $("#salesOrdId").val(result.salesOrdId);
+                        $("#ordId").val(result.salesOrdId);
+                        $("#ordNo").html(result.salesOrdNo);
+                        $("#salesDt").html(result.salesDt);
+                        $("#orderStus").html(result.name);
+                        $("#renStus").html(result.stusCodeId);
+                        $("#appType").html(result.codeName);
+                        $("#prod").html(prod);
+                        $("#custName").html(result.name1);
+                        $("#nric").html(result.nric);
+                        $("#searchOrdDt").show();
+                    });
+                }else if(result.msg == "TER"){
+                    Common.alert('<spring:message code="sales.msg.renStusChk2" />');
                 }else if(result.msg == "Err"){
                     Common.alert("* No such sales order found. Only Rental order is allow to request for investigation.");
                     $("#searchOrdDt").hide();
