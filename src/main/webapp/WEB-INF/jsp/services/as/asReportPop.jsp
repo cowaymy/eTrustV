@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  26/04/2019  ONGHC  1.0.0          ADD RECALL STATUS
+ 28/08/2019  ONGHC  1.0.1          AMEND LAYOUT
  -->
 
 <script type="text/javaScript">
@@ -19,18 +20,60 @@
     });
 
   function fn_validation() {
+    if ($("#asAppDtFr").val() == '' && $("#asAppDtTo").val() == '') {
+       if ($("#reqStrDate").val() == '' && $("#reqEndDate").val() == '') {
+         Common.alert("<spring:message code='sys.common.alert.validation' arguments='either AS request date or AS Appointment date (From & To)' htmlEscape='false'/>");
+         return false;
+       }
+    }
+    if ($("#reqStrDate").val() == '' && $("#reqEndDate").val() == '') {
+      if ($("#asAppDtFr").val() == '' && $("#asAppDtTo").val() == '') {
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='either AS request date or AS Appointment date (From & To)' htmlEscape='false'/>");
+        return false;
+      }
+    }
+    if ($("#asAppDtFr").val() != '') {
+      if ($("#asAppDtTo").val() == '') {
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Appointment Date' htmlEscape='false'/>");
+        return false;
+      }
+    }
+    if ($("#asAppDtTo").val() != '') {
+      if ($("#asAppDtFr").val() == '') {
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Appointment Date' htmlEscape='false'/>");
+        return false;
+      }
+    }
+    if ($("#reqStrDate").val() != '') {
+      if ($("#reqEndDate").val() == '') {
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Request Date' htmlEscape='false'/>");
+        return false;
+      }
+    }
+    if ($("#reqEndDate").val() != '') {
+      if ($("#reqStrDate").val() == '') {
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Request Date' htmlEscape='false'/>");
+        return false;
+      }
+    }
+
     if ($("#reqStrDate").val() != '' && $("#asAppDtFr").val() != '') {
       Common.alert("<spring:message code='sys.common.alert.validation' arguments='either AS request date or AS Appointment date (From & To)' htmlEscape='false'/>");
       return false;
     }
 
-    if ($("#orderNumFrom").val() == '' || $("#orderNumTo").val() == '') {
+    /*if ($("#orderNumFrom").val() == '' || $("#orderNumTo").val() == '') {
       Common.alert("<spring:message code='sys.common.alert.validation' arguments='order number (From & To)' htmlEscape='false'/>");
       return false;
     }
 
     if ($("#CTCodeFrom").val() == '' || $("#CTCodeTo").val() == '') {
       Common.alert("<spring:message code='sys.common.alert.validation' arguments='CT code (From & To)' htmlEscape='false'/>");
+      return false;
+    }*/
+
+    if ($("#branch").val() == '' || $("#branch").val() == null) {
+      Common.alert("<spring:message code='sys.common.alert.validation' arguments='DSC Branch' htmlEscape='false'/>");
       return false;
     }
     return true;
@@ -164,7 +207,7 @@
      <tbody>
       <tr>
        <th scope="row"><spring:message code='service.grid.ReqstDt' /></th>
-       <td>
+       <td  colspan="3">
         <div class="date_set">
          <!-- date_set start -->
          <p>
@@ -181,10 +224,9 @@
         </div>
         <!-- date_set end -->
        </td>
-       <th scope="row"><spring:message code='service.title.OrderNo' /><span class='must'> *</span></th>
+       <!-- <th scope="row"><spring:message code='service.title.OrderNo' /><span class='must'> *</span></th>
        <td>
         <div class="date_set">
-         <!-- date_set start -->
          <p>
           <input type="text" title="" placeholder="<spring:message code='svc.hs.reversal.from' />" class="w100p"
            id="orderNumFrom" name="orderNumFrom" value="${orderNum.c1}" />
@@ -195,17 +237,16 @@
            id="orderNumTo" name="orderNumTo" value="${orderNum.c2}" />
          </p>
         </div>
-        <!-- date_set end -->
-       </td>
+       </td> -->
       </tr>
-      <tr>
+      <!-- <tr>
        <th scope="row"><spring:message code='service.title.CTCode' /> (<spring:message code='svc.hs.reversal.from' />) <span class='must'> *</span></th>
        <td><select id="CTCodeFrom" name="CTCodeFrom">
        </select></td>
        <th scope="row"><spring:message code='service.title.CTCode' /> (<spring:message code='svc.hs.reversal.to' />) <span class='must'> *</span></th>
        <td><select id="CTCodeTo" name="CTCodeTo">
        </select></td>
-      </tr>
+      </tr>  -->
       <tr>
        <th scope="row"><spring:message code='service.title.AppointmentDate' /></th>
        <td>
@@ -221,7 +262,7 @@
         </div>
         <!-- date_set end -->
        </td>
-       <th scope="row"><spring:message code='service.title.DSCBranch' /></th>
+       <th scope="row"><spring:message code='service.title.DSCBranch' /> <span class='must'> *</span></th>
        <td><select id="branch" name="branch">
        </select></td>
       </tr>
