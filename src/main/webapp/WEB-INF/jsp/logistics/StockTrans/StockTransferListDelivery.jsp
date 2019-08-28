@@ -251,488 +251,537 @@ $(document).ready(function(){
 //     	document.searchForm.submit();
     });
 
-    AUIGrid.bind(listGrid, "rowCheckClick", function(event){
+   
+	AUIGrid.bind(listGrid, "rowCheckClick", function(event) {
 
-    	if (AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") <= 0 || AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") < AUIGrid.getCellValue(listGrid, event.rowIndex, "delyqty")){
-            Common.alert('Delivery Qty can not be greater than Request Qty.');
-            AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
-            return false;
-        }
+					var checked = AUIGrid.getCheckedRowItems(listGrid);
+					var reqno = AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno");
 
-    });
+					if (AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") <= 0
+							|| AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") < AUIGrid.getCellValue(listGrid, event.rowIndex, "delyqty")) {
+						Common.alert('Delivery Qty can not be greater than Request Qty.');
+						AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
+						return false;
+					}
+					if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)) {
+						AUIGrid.addCheckedRowsByValue(listGrid, "reqstno", reqno);
+					}
+					else {
+						var rown = AUIGrid.getRowIndexesByValue(listGrid, "reqstno", reqno);
 
-    AUIGrid.bind(listGrid, "ready", function(event) {
-    	var rowCnt = AUIGrid.getRowCount(listGrid);
-    	for (var i = 0 ; i < rowCnt ; i++){
-    		var qty = AUIGrid.getCellValue(listGrid , i , 'reqstqty') - AUIGrid.getCellValue(listGrid , i , 'delyqty');
-    		AUIGrid.setCellValue(listGrid, i, 'rmqty', qty);
-    	}
-    	AUIGrid.resetUpdatedItems(listGrid, "all");
-    });
+						for (var i = 0; i < rown.length; i++) {
+							AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+						}
+					}
+					for (var i = 0; i < checked.length; i++) {
+						if (checked[i].item.reqloc != event.item.reqloc) {
+							Common.alert("Request To Location is different.");
 
-});
-function f_change(){
-	paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val() , codeIn:'US03,US93'};
-    doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
-}
-//btn clickevent
-$(function(){
-    $('#search').click(function() {
-    	if(validation()) {
-    	      SearchListAjax();
-    	}
-    });
-    $('#clear').click(function() {
-        $('#streq').val('');
-        $('#tlocationnm').val('');
-        $('#flocationnm').val('');
-        $('#crtsdt').val('');
-        $('#crtedt').val('');
-        $('#reqsdt').val('');
-        $('#reqedt').val('');
-        $('#sstatus').val('');
-        $('#sam').val('');
-        $('#refdocno').val('');
-        paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val(), codeIn:'US03,US93'};
-        doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
-    });
-    $("#sttype").change(function(){
-        paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val(), codeIn:'US03,US93'};
-        doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
-    });
-//     $('#delivery').click(function(){
-//     	var checkDelqty= false;
-//     	var serialChkfalg;
-//     	var chkfalg;
-//     	var rowItem;
-// //    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-//     	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+							var rown = AUIGrid.getRowIndexesByValue(listGrid, "reqstno", reqno);
 
-//     	if(checkedItems.length <= 0) {
-//     		Common.alert('No data selected.');
-//     		return false;
-//     	}else{
+							for (var i = 0; i < rown.length; i++) {
+								AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+							}
+							return false;
+						}
+					}
 
-//     	for(var i=0, len = checkedItems.length; i<len; i++) {
-//     		rowItem = checkedItems[i];
-//     	  if (rowItem.item.delyqty > 0 ){
-//                   chkfalg="Y";
-//                   break;
-//                 }else{
-//                    chkfalg="N";
-//                 }
-//     	  }
+				});
 
-//     if(chkfalg=="Y"){
+				AUIGrid.bind(listGrid, "ready", function(event) {
+					var rowCnt = AUIGrid.getRowCount(listGrid);
+					for (var i = 0; i < rowCnt; i++) {
+						var qty = AUIGrid.getCellValue(listGrid, i, 'reqstqty') - AUIGrid.getCellValue(listGrid, i, 'delyqty');
+						AUIGrid.setCellValue(listGrid, i, 'rmqty', qty);
+					}
+					AUIGrid.resetUpdatedItems(listGrid, "all");
+				});
 
-//        for (var i = 0 ; i < checkedItems.length ; i++){
-//     	   rowItem = checkedItems[i];
-//            if (rowItem.item.serialchk == 'Y'){
-//            	serialChkfalg="Y";
-//                break;
-//           }else{
-//        	   serialChkfalg ="N";
-//           }
+				AUIGrid.bind(listGrid, "rowAllChkClick", function(event) {
+					if (true == event.checked) {
+						$("#allChk").val(event.checked);
+					}
+					else {
+						$("#allChk").val(event.checked);
+					}
+				});
 
-//         }
-
-//        if (serialChkfalg == 'Y'){
-//     	   serialchk=true;
-//        var str = "";
-//        var rowItem;
-//        for(var i=0, len = checkedItems.length; i<len; i++) {
-//            rowItem = checkedItems[i];
-//            if(rowItem.item.delyqty==0){
-//             str += "Please Check Delivery Qty of  " + rowItem.item.reqstno   + ", " + rowItem.item.itmname + "<br />";
-//             checkDelqty= true;
-//           }
-//        }
-//        if(checkDelqty){
-//            var option = {
-//                content : str,
-//                isBig:true
-//            };
-//            Common.alertBase(option);
-//        }else{
-// 	        $("#giopenwindow").show();
-// 	        $("#giptdate").val("");
-// 	        $("#gipfdate").val("");
-// 	        $("#doctext").val("");
-// 	        doSysdate(0 , 'giptdate');
-// 	        doSysdate(0 , 'gipfdate');
-// 	        AUIGrid.clearGridData(serialGrid);
-// 	        AUIGrid.resize(serialGrid);
-// 	        fn_itempopList_T(checkedItems);
-//        }
-
-//        }else{
-//     	   giFunc();
-//     	   $("#serial_grid_wrap").hide();
-//        }
-
-//     }else{
-//     	Common.alert('Please Enter Delivered Qty');
-//      }
-
-//     	}
-//     });
-
-    $("#download").click(function() {
-    	GridCommon.exportTo("main_grid_wrap", "xlsx", "Stock Transfer Delivery List");
-    });
-    $('#delivery').click(function(){
-        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-//      if(checkedItems.length <= 0) {
-//             return false;
-//         }else{
-//             var data = {};
-//             data.checked = checkedItems;
-//             Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
-//                 Common.alert(result.message);
-//                 AUIGrid.resetUpdatedItems(listGrid, "all");
-//             },  function(jqXHR, textStatus, errorThrown) {
-//                 try {
-//                 } catch (e) {
-//                 }
-//                 Common.alert("Fail : " + jqXHR.responseJSON.message);
-//             });
-//             for (var i = 0 ; i < checkedItems.length ; i++){
-//                 AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
-//             }
-//         }
-        var chkfalg;
-        if(checkedItems.length <= 0) {
-            Common.alert('No data selected.');
-            return false;
-        }else{
-
-        for(var i=0, len = checkedItems.length; i<len; i++) {
-        	  if (checkedItems[i].delyqty > 0 ){
-                  chkfalg="Y";
-              }else{
-                  chkfalg="N";
-                  break;
-              }
-          }
-        /*******여기부터************/
-        var bool = true;
-        bool = fnQtyChk(checkedItems);
-        if (!bool){
-        	Common.alert('There are Not Enough Stocks. Please Check Available Stocks Qty. ');
-        	return false;
-        }
-        
-        /*******여기까지************/
-        if(chkfalg=="Y"){
-            var data = {};
-            data.checked = checkedItems;
-            
-            Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
-            	if("dup"==result.data){
-	            	Common.alert( " Not enough Qty, Please search again. ");
-            	}else{
-	            	Common.alert(result.message+"</br> Created : "+result.data, SearchListAjax);
-	                AUIGrid.resetUpdatedItems(listGrid, "all");
-            	}
-              //  Common.alert(result.message , SearchListAjax);
-            },  function(jqXHR, textStatus, errorThrown) {
-                try {
-                } catch (e) {
-                }
-                Common.alert("Fail : " + jqXHR.responseJSON.message);
-            });
-            for (var i = 0 ; i < checkedItems.length ; i++){
-                AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
-            }
-          } else{
-              Common.alert('Please Enter Delivered Qty');
-          }
-        }
-    });
-
-
-    $("#tlocationnm").keypress(function(event) {
-        $('#tlocation').val('');
-        if (event.which == '13') {
-            $("#stype").val('tlocation');
-            $("#svalue").val($('#tlocationnm').val());
-            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
-
-            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
-        }
-    });
-    $("#flocationnm").keypress(function(event) {
-        $('#flocation').val('');
-        if (event.which == '13') {
-            $("#stype").val('flocation');
-            $("#svalue").val($('#flocationnm').val());
-            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
-
-            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
-        }
-    });
-});
-
-function fnQtyChk(data){
-	
-	var rowPos = "first";
-	var rowList = [];
-	
-	for (var i = 0 ; i < data.length ; i++){
-		rowList [i] = {
-		itmcd   : data[i].itmcd,
-		delyqty : data[i].delyqty,
-        reqloc  : data[i].rcvloc
+			});
+	function f_change() {
+		paramdata = {
+			groupCode : '308',
+			orderValue : 'CODE_ID',
+			likeValue : $("#sttype").val(),
+			codeIn : 'US03,US93'
 		};
+		doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}', 'smtype', 'S', '');
 	}
-	
-	AUIGrid.setGridData(reqGrid, rowList);
-	
-	AUIGrid.setGroupBy(reqGrid, ["itmcd"], {
-        dataFields : [ "delyqty" ]
-    } );
-	
-	var rdata = AUIGrid.getGridData(reqGrid);
-	var bool = true;
-	for (var i = 0 ; i < rdata.length ; i++){
-// 		console.log(rdata[i].itmcd);
-// 		console.log(rdata[i].children[0].reqloc);
-// 		console.log(rdata[i].children[rdata[i].children.length -1 ].delyqty);
+	//btn clickevent
+	$(function() {
+		$('#search').click(function() {
+			if (validation()) {
+				SearchListAjax();
+			}
+		});
+		$('#clear').click(function() {
+			$('#streq').val('');
+			$('#tlocationnm').val('');
+			$('#flocationnm').val('');
+			$('#crtsdt').val('');
+			$('#crtedt').val('');
+			$('#reqsdt').val('');
+			$('#reqedt').val('');
+			$('#sstatus').val('');
+			$('#sam').val('');
+			$('#refdocno').val('');
+			paramdata = {
+				groupCode : '308',
+				orderValue : 'CODE_ID',
+				likeValue : $("#sttype").val(),
+				codeIn : 'US03,US93'
+			};
+			doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}', 'smtype', 'S', '');
+		});
+		$("#sttype").change(function() {
+			paramdata = {
+				groupCode : '308',
+				orderValue : 'CODE_ID',
+				likeValue : $("#sttype").val(),
+				codeIn : 'US03,US93'
+			};
+			doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}', 'smtype', 'S', '');
+		});
+		//     $('#delivery').click(function(){
+		//     	var checkDelqty= false;
+		//     	var serialChkfalg;
+		//     	var chkfalg;
+		//     	var rowItem;
+		// //    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+		//     	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+
+		//     	if(checkedItems.length <= 0) {
+		//     		Common.alert('No data selected.');
+		//     		return false;
+		//     	}else{
+
+		//     	for(var i=0, len = checkedItems.length; i<len; i++) {
+		//     		rowItem = checkedItems[i];
+		//     	  if (rowItem.item.delyqty > 0 ){
+		//                   chkfalg="Y";
+		//                   break;
+		//                 }else{
+		//                    chkfalg="N";
+		//                 }
+		//     	  }
+
+		//     if(chkfalg=="Y"){
+
+		//        for (var i = 0 ; i < checkedItems.length ; i++){
+		//     	   rowItem = checkedItems[i];
+		//            if (rowItem.item.serialchk == 'Y'){
+		//            	serialChkfalg="Y";
+		//                break;
+		//           }else{
+		//        	   serialChkfalg ="N";
+		//           }
+
+		//         }
+
+		//        if (serialChkfalg == 'Y'){
+		//     	   serialchk=true;
+		//        var str = "";
+		//        var rowItem;
+		//        for(var i=0, len = checkedItems.length; i<len; i++) {
+		//            rowItem = checkedItems[i];
+		//            if(rowItem.item.delyqty==0){
+		//             str += "Please Check Delivery Qty of  " + rowItem.item.reqstno   + ", " + rowItem.item.itmname + "<br />";
+		//             checkDelqty= true;
+		//           }
+		//        }
+		//        if(checkDelqty){
+		//            var option = {
+		//                content : str,
+		//                isBig:true
+		//            };
+		//            Common.alertBase(option);
+		//        }else{
+		// 	        $("#giopenwindow").show();
+		// 	        $("#giptdate").val("");
+		// 	        $("#gipfdate").val("");
+		// 	        $("#doctext").val("");
+		// 	        doSysdate(0 , 'giptdate');
+		// 	        doSysdate(0 , 'gipfdate');
+		// 	        AUIGrid.clearGridData(serialGrid);
+		// 	        AUIGrid.resize(serialGrid);
+		// 	        fn_itempopList_T(checkedItems);
+		//        }
+
+		//        }else{
+		//     	   giFunc();
+		//     	   $("#serial_grid_wrap").hide();
+		//        }
+
+		//     }else{
+		//     	Common.alert('Please Enter Delivered Qty');
+		//      }
+
+		//     	}
+		//     });
+
+		$("#download").click(function() {
+			GridCommon.exportTo("main_grid_wrap", "xlsx", "Stock Transfer Delivery List");
+		});
+
 		
-		var param = "itmcd="+rdata[i].itmcd+"&reqloc="+rdata[i].children[0].reqloc+"&delyqty="+rdata[i].children[rdata[i].children.length -1 ].delyqty;
-		
-		Common.ajax("GET" , "/logistics/stocktransfer/stockMaxQtyCheck.do" , param , function(result){
-	        //AUIGrid.setGridData(resGrid, result.data);
-	        if (result.chkyn == 'N'){
-	        	bool = false;
-	        }else{
-	        	bool = true;
-	        }
-	    },null, {async : false});
-		//console.log(bool);
-		if (!bool){
-			break;
+	$('#delivery').click(function() {
+			if ("true" == $("#allChk").val()) {
+				Common.alert("Not Allow to Select All.");
+				return false;
+			}
+			var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+			var chkfalg;
+			if (checkedItems.length <= 0) {
+				Common.alert('No data selected.');
+				return false;
+			}
+			else {
+
+				for (var i = 0, len = checkedItems.length; i < len; i++) {
+					if (checkedItems[i].delyqty > 0) {
+						chkfalg = "Y";
+					}
+					else {
+						chkfalg = "N";
+						break;
+					}
+				}
+				/*******여기부터************/
+				var bool = true;
+				bool = fnQtyChk(checkedItems);
+				if (!bool) {
+					Common.alert('There are Not Enough Stocks. Please Check Available Stocks Qty. ');
+					return false;
+				}
+
+				/*******여기까지************/
+				if (chkfalg == "Y") {
+					var data = {};
+					data.checked = checkedItems;
+
+					Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
+						if ("dup" == result.data) {
+							Common.alert(" Not enough Qty, Please search again. ");
+						}
+						else {
+							Common.alert(result.message + "</br> Created : " + result.data, SearchListAjax);
+							AUIGrid.resetUpdatedItems(listGrid, "all");
+						}
+						//  Common.alert(result.message , SearchListAjax);
+					}, function(jqXHR, textStatus, errorThrown) {
+						try {
+						}
+						catch (e) {
+						}
+						Common.alert("Fail : " + jqXHR.responseJSON.message);
+					});
+					for (var i = 0; i < checkedItems.length; i++) {
+						AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
+					}
+				}
+				else {
+					Common.alert('Please Enter Delivered Qty');
+				}
+			}
+		});
+
+		$("#tlocationnm").keypress(function(event) {
+			$('#tlocation').val('');
+			if (event.which == '13') {
+				$("#stype").val('tlocation');
+				$("#svalue").val($('#tlocationnm').val());
+				$("#sUrl").val("/logistics/organization/locationCdSearch.do");
+
+				Common.searchpopupWin("searchForm", "/common/searchPopList.do", "location");
+			}
+		});
+		$("#flocationnm").keypress(function(event) {
+			$('#flocation').val('');
+			if (event.which == '13') {
+				$("#stype").val('flocation');
+				$("#svalue").val($('#flocationnm').val());
+				$("#sUrl").val("/logistics/organization/locationCdSearch.do");
+
+				Common.searchpopupWin("searchForm", "/common/searchPopList.do", "location");
+			}
+		});
+	});
+
+	function fnQtyChk(data) {
+
+		var rowPos = "first";
+		var rowList = [];
+
+		for (var i = 0; i < data.length; i++) {
+			rowList[i] = {
+				itmcd : data[i].itmcd,
+				delyqty : data[i].delyqty,
+				reqloc : data[i].rcvloc
+			};
+		}
+
+		AUIGrid.setGridData(reqGrid, rowList);
+
+		AUIGrid.setGroupBy(reqGrid, [ "itmcd" ], {
+			dataFields : [ "delyqty" ]
+		});
+
+		var rdata = AUIGrid.getGridData(reqGrid);
+		var bool = true;
+		for (var i = 0; i < rdata.length; i++) {
+			// 		console.log(rdata[i].itmcd);
+			// 		console.log(rdata[i].children[0].reqloc);
+			// 		console.log(rdata[i].children[rdata[i].children.length -1 ].delyqty);
+
+			var param = "itmcd=" + rdata[i].itmcd + "&reqloc=" + rdata[i].children[0].reqloc + "&delyqty=" + rdata[i].children[rdata[i].children.length - 1].delyqty;
+
+			Common.ajax("GET", "/logistics/stocktransfer/stockMaxQtyCheck.do", param, function(result) {
+				//AUIGrid.setGridData(resGrid, result.data);
+				if (result.chkyn == 'N') {
+					bool = false;
+				}
+				else {
+					bool = true;
+				}
+			}, null, {
+				async : false
+			});
+			//console.log(bool);
+			if (!bool) {
+				break;
+			}
+		}
+		return bool;
+	}
+
+	function fn_itempopList(data) {
+
+		var rtnVal = data[0].item;
+
+		if ($("#stype").val() == "flocation") {
+			$("#flocation").val(rtnVal.locid);
+			$("#flocationnm").val(rtnVal.locdesc);
+		}
+		else {
+			$("#tlocation").val(rtnVal.locid);
+			$("#tlocationnm").val(rtnVal.locdesc);
+		}
+
+		$("#svalue").val();
+	}
+
+	function validation() {
+		if ($("#reqsdt").val() == '' || $("#reqedt").val() == '') {
+			Common.alert('Please enter Required Date.');
+			return false;
+		}
+		else {
+			return true;
 		}
 	}
-	return bool;
-}
 
-function fn_itempopList(data){
+	function SearchListAjax() {
+		if ($("#flocationnm").val() == "") {
+			$("#flocation").val('');
+		}
+		if ($("#tlocationnm").val() == "") {
+			$("#tlocation").val('');
+		}
 
-    var rtnVal = data[0].item;
+		if ($("#flocation").val() == "") {
+			$("#flocation").val($("#flocationnm").val());
+		}
+		if ($("#tlocation").val() == "") {
+			$("#tlocation").val($("#tlocationnm").val());
+		}
 
-    if ($("#stype").val() == "flocation" ){
-        $("#flocation").val(rtnVal.locid);
-        $("#flocationnm").val(rtnVal.locdesc);
-    }else{
-        $("#tlocation").val(rtnVal.locid);
-        $("#tlocationnm").val(rtnVal.locdesc);
-    }
+		var url = "/logistics/stocktransfer/StocktransferSearchList.do";
+		var param = $('#searchForm').serializeJSON();
 
-    $("#svalue").val();
-}
+		Common.ajax("POST", url, param, function(data) {
+			AUIGrid.setGridData(listGrid, data.data);
+		});
+	}
 
-function validation() {
-    if ($("#reqsdt").val() == '' ||$("#reqedt").val() == ''){
-        Common.alert('Please enter Required Date.');
-        return false;
-    } else {
-        return true;
-    }
-}
+	function f_getTtype(g, v) {
+		var rData = new Array();
+		$.ajax({
+			type : "GET",
+			url : "/common/selectCodeList.do",
+			data : {
+				groupCode : g,
+				orderValue : 'CRT_DT',
+				likeValue : v
+			},
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			async : false,
+			success : function(data) {
+				$.each(data, function(index, value) {
+					var list = new Object();
+					list.code = data[index].code;
+					list.codeId = data[index].codeId;
+					list.codeName = data[index].codeName;
+					rData.push(list);
+				});
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				Common.alert("Draw ComboBox['" + obj + "'] is failed. \n\n Please try again.");
+			},
+			complete : function() {
+			}
+		});
 
-function SearchListAjax() {
-	if ($("#flocationnm").val() == ""){
-        $("#flocation").val('');
-    }
-    if ($("#tlocationnm").val() == ""){
-        $("#tlocation").val('');
-    }
+		return rData;
+	}
 
-    if ($("#flocation").val() == ""){
-        $("#flocation").val($("#flocationnm").val());
-    }
-    if ($("#tlocation").val() == ""){
-        $("#tlocation").val($("#tlocationnm").val());
-    }
+	// function giFunc(){
+	//     var data = {};
+	//     var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+	//     var checkedItems     = AUIGrid.getCheckedRowItems(listGrid);
+	// //    var serials   = AUIGrid.getAddedRowItems(serialGrid);
 
-    var url = "/logistics/stocktransfer/StocktransferSearchList.do";
-    var param = $('#searchForm').serializeJSON();
+	// //     if (serialchk){
+	// //         for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+	// //             if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
+	// //                 Common.alert("Please check the serial.")
+	// //                 return false;
+	// //             }
 
-    Common.ajax("POST" , url , param , function(data){
-        AUIGrid.setGridData(listGrid, data.data);
-    });
-}
+	// //             if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
+	// //                 Common.alert("Please check the serial.")
+	// //                 return false;
+	// //             }
+	// //         }
 
-function f_getTtype(g , v){
-    var rData = new Array();
-    $.ajax({
-           type : "GET",
-           url : "/common/selectCodeList.do",
-           data : { groupCode : g , orderValue : 'CRT_DT' , likeValue:v},
-           dataType : "json",
-           contentType : "application/json;charset=UTF-8",
-           async:false,
-           success : function(data) {
-              $.each(data, function(index,value) {
-                  var list = new Object();
-                  list.code = data[index].code;
-                  list.codeId = data[index].codeId;
-                  list.codeName = data[index].codeName;
-                  rData.push(list);
-                });
-           },
-           error: function(jqXHR, textStatus, errorThrown){
-        	   Common.alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
-           },
-           complete: function(){
-           }
-       });
+	// //         if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
+	// //             Common.alert("Please check the serial.")
+	// //             return false;
+	// //         }
+	// //     }
 
-    return rData;
-}
+	//     data.checked = checkedItems;
+	// //    data.add = serials;
+	//     data.form    = $("#giForm").serializeJSON();
+	//     console.log(data);
+	//     Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
+	//     	    Common.alert(result.message+"</br> Created : "+result.data, SearchListAjax);
+	//             AUIGrid.resetUpdatedItems(listGrid, "all");
+	//         $("#giopenwindow").hide();
+	//         $('#search').click();
 
-// function giFunc(){
-//     var data = {};
-//     var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
-//     var checkedItems     = AUIGrid.getCheckedRowItems(listGrid);
-// //    var serials   = AUIGrid.getAddedRowItems(serialGrid);
+	//     },  function(jqXHR, textStatus, errorThrown) {
+	//         try {
+	//         } catch (e) {
+	//         }
+	//         Common.alert("Fail : " + jqXHR.responseJSON.message);
+	//     });
+	//         for (var i = 0 ; i < checkdata.length ; i++){
+	//             AUIGrid.addUncheckedRowsByIds(listGrid, checkdata[i].rnum);
+	//         }
+	// }
 
-// //     if (serialchk){
-// //         for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
-// //             if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
-// //                 Common.alert("Please check the serial.")
-// //                 return false;
-// //             }
+	function fn_itempopList_T(data) {
 
-// //             if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
-// //                 Common.alert("Please check the serial.")
-// //                 return false;
-// //             }
-// //         }
+		var itm_temp = "";
+		var itm_qty = 0;
+		var itmdata = [];
+		var reqQty;
 
-// //         if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
-// //             Common.alert("Please check the serial.")
-// //             return false;
-// //         }
-// //     }
+		for (var i = 0; i < data.length; i++) {
+			if (data[i].item.serialchk == 'Y') {
+				reqQty = data[i].item.delyqty;
+				itm_qty += parseInt(reqQty);
+				$("#reqstno").val(data[i].item.reqstno)
+			}
+		}
 
-//     data.checked = checkedItems;
-// //    data.add = serials;
-//     data.form    = $("#giForm").serializeJSON();
-//     console.log(data);
-//     Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
-//     	    Common.alert(result.message+"</br> Created : "+result.data, SearchListAjax);
-//             AUIGrid.resetUpdatedItems(listGrid, "all");
-//         $("#giopenwindow").hide();
-//         $('#search').click();
+		$("#serialqty").val(itm_qty);
 
-//     },  function(jqXHR, textStatus, errorThrown) {
-//         try {
-//         } catch (e) {
-//         }
-//         Common.alert("Fail : " + jqXHR.responseJSON.message);
-//     });
-//         for (var i = 0 ; i < checkdata.length ; i++){
-//             AUIGrid.addUncheckedRowsByIds(listGrid, checkdata[i].rnum);
-//         }
-// }
+		f_addrow();
+	}
 
-function fn_itempopList_T(data){
+	function f_addrow() {
+		var rowPos = "last";
+		var item = new Object();
+		AUIGrid.addRow(serialGrid, item, rowPos);
+		return false;
+	}
 
-    var itm_temp = "";
-    var itm_qty  = 0;
-    var itmdata = [];
-    var reqQty;
+	// function fn_serialChck(rowindex , rowitem , str){
+	//     var schk = true;
+	//     var ichk = true;
+	//     var slocid = '';//session.locid;
+	//     var data = { serial : str , locid : slocid};
+	//     Common.ajaxSync("GET", "/logistics/stockMovement/StockMovementSerialCheck.do", data, function(result) {
+	//         if (result.data[0] == null){
+	//             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
+	//             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , "" );
+	//             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
+	//             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
+	//             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
 
-    for (var i = 0 ; i < data.length ; i++){
-    	 if (data[i].item.serialchk == 'Y'){
-             reqQty =data[i].item.delyqty;
-             itm_qty +=parseInt(reqQty);
-             $("#reqstno").val(data[i].item.reqstno)
-         }
-    }
+	//             schk = false;
+	//             ichk = false;
 
-    $("#serialqty").val(itm_qty);
+	//         }else{
+	//              AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , result.data[0].STKCODE );
+	//              AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , result.data[0].STKDESC );
+	//              AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , result.data[0].L61CNT );
+	//              AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
+	//              AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
 
+	//              if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0 || result.data[0].L63CNT > 0){
+	//                  schk = false;
+	//              }else{
+	//                  schk = true;
+	//              }
 
-    f_addrow();
-}
+	//              var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
 
-function f_addrow(){
-    var rowPos = "last";
-    var item = new Object();
-    AUIGrid.addRow(serialGrid, item, rowPos);
-    return false;
-}
+	//              for (var i = 0 ; i < checkedItems.length ; i++){
+	//                  if (result.data[0].STKCODE == checkedItems[i].itmcd){
+	//                      //AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+	//                      ichk = true;
+	//                      break;
+	//                  }else{
+	//                      ichk = false;
+	//                  }
+	//              }
+	//         }
 
+	//          if (schk && ichk){
+	//              AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+	//          }else{
+	//              AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
+	//          }
 
-// function fn_serialChck(rowindex , rowitem , str){
-//     var schk = true;
-//     var ichk = true;
-//     var slocid = '';//session.locid;
-//     var data = { serial : str , locid : slocid};
-//     Common.ajaxSync("GET", "/logistics/stockMovement/StockMovementSerialCheck.do", data, function(result) {
-//         if (result.data[0] == null){
-//             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
-//             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , "" );
-//             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
-//             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
-//             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
+	//           //Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. " , function(){AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);});
+	//           AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
 
-//             schk = false;
-//             ichk = false;
+	//               if (item.statustype  == 'N'){
+	//                   return "my-row-style";
+	//               }
+	//           });
+	//           AUIGrid.update(serialGrid);
 
-//         }else{
-//              AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , result.data[0].STKCODE );
-//              AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , result.data[0].STKDESC );
-//              AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , result.data[0].L61CNT );
-//              AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
-//              AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
+	//     },  function(jqXHR, textStatus, errorThrown) {
+	//         try {
+	//         } catch (e) {
+	//         }
+	//         Common.alert("Fail : " + jqXHR.responseJSON.message);
 
-//              if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0 || result.data[0].L63CNT > 0){
-//                  schk = false;
-//              }else{
-//                  schk = true;
-//              }
-
-//              var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-
-//              for (var i = 0 ; i < checkedItems.length ; i++){
-//                  if (result.data[0].STKCODE == checkedItems[i].itmcd){
-//                      //AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
-//                      ichk = true;
-//                      break;
-//                  }else{
-//                      ichk = false;
-//                  }
-//              }
-//         }
-
-//          if (schk && ichk){
-//              AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
-//          }else{
-//              AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
-//          }
-
-//           //Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. " , function(){AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);});
-//           AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
-
-//               if (item.statustype  == 'N'){
-//                   return "my-row-style";
-//               }
-//           });
-//           AUIGrid.update(serialGrid);
-
-//     },  function(jqXHR, textStatus, errorThrown) {
-//         try {
-//         } catch (e) {
-//         }
-//         Common.alert("Fail : " + jqXHR.responseJSON.message);
-
-//     });
-// }
-
+	//     });
+	// }
 </script>
 
 <section id="content"><!-- content start -->
@@ -763,8 +812,8 @@ function f_addrow(){
         <input type="hidden" id="svalue" name="svalue"/>
         <input type="hidden" id="sUrl"   name="sUrl"  />
         <input type="hidden" id="stype"  name="stype" />
-
         <input type="hidden" name="rStcode" id="rStcode" />
+        <input type="hidden" name="allChk" id="allChk" value="false" />
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
