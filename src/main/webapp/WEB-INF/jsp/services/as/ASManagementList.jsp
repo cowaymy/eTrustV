@@ -367,10 +367,10 @@
       //return;
     //}
 
-    if (asStusId != "ACT") {
-      Common.alert("<spring:message code='service.msg.asAddHvRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-      return;
-    }
+    //if (asStusId != "ACT") {
+      //Common.alert("<spring:message code='service.msg.asAddHvRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+      //return;
+    //}
 
     Common.ajax("POST", "/services/as/selRcdTms.do", {
         asNo : asNo,
@@ -1161,6 +1161,12 @@
      style="width: 100%; height: 500px; margin: 0 auto;"></div>
    </article>
    <!-- grid_wrap end -->
+  </form>
+  <form action="#" id="reportForm" method="post">
+   <input type="hidden" id="V_RESULTID" name="V_RESULTID" />
+   <input type="hidden" id="reportFileName" name="reportFileName" />
+   <input type="hidden" id="viewType" name="viewType" />
+   <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
   </form>
   <form id='reportFormASLst' method="post" name='reportFormASLst' action="#">
     <input type='hidden' id='reportFileName' name='reportFileName'/>
