@@ -56,24 +56,19 @@
     <select id="selectCustTotalProductsCount" parameterType="Map" resultType="egovMap">
         SELECT COUNT(*) TOTAL_PRODUCT_COUNT
             FROM SAL0001D EXTENT1
-            JOIN CP1013V EXTENT2 ON EXTENT2.CUST_ID = EXTENT1.CUST_ID AND EXTENT2.SALES_ORD_ID = EXTENT1.SALES_ORD_ID
+            JOIN CP1023V EXTENT2 ON EXTENT2.CUST_ID = EXTENT1.CUST_ID AND EXTENT2.SALES_ORD_NO = EXTENT1.SALES_ORD_NO
             WHERE 1=1
-            AND (EXTENT1.STUS_CODE_ID = 4 OR (PRODUCT_TOTAL_OUTSTANDING + MEMBERSHIP_OUTSTANDING) <![CDATA[ > ]]> 0 )
+            AND (EXTENT1.STUS_CODE_ID = 4 OR (TOTAL_OUTSTANDING) <![CDATA[ > ]]> 0 )
             AND EXTENT1.CUST_ID = #{cowayCustId}
     </select>
 
     <select id="selectLastPayment" parameterType="Map" resultType="egovMap">
-       SELECT TOT_AMT,PAY_DATE FROM (
-            SELECT EXTENT1.TOT_AMT,EXTENT2.CUST_ID,EXTENT3.CUST_BILL_ID,
-                TO_CHAR(EXTENT1.PAY_DATA,'YYYY/MM/DD HH24:MI:SS') PAY_DATE,
-                RANK() OVER(PARTITION BY EXTENT2.CUST_ID ORDER BY EXTENT1.PAY_ID DESC) RANK
-            FROM PAY0064D EXTENT1
-            JOIN SAL0001D EXTENT2 ON EXTENT1.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
-            JOIN SAL0024D EXTENT3 ON EXTENT3.CUST_BILL_ID = EXTENT2.CUST_BILL_ID
-        )
-        WHERE RANK = 1
-          AND CUST_ID = #{cowayCustId}
-          AND CUST_BILL_ID = #{accountCode}
+    SELECT TOT_AMT, PAY_DATE FROM (
+        SELECT AMOUNT TOT_AMT,TO_CHAR(PAY_DATE,'YYYY/MM/DD HH24:MI:SS') PAY_DATE,
+        RANK() OVER(PARTITION BY CUST_ID ORDER BY PAY_ID DESC) RANK
+     FROM CP1018V
+        WHERE CUST_ID = #{cowayCustId} AND ACCOUNT_CODE = #{accountCode}
+     ) WHERE RANK = 1
     </select>
 
     <select id="getCustTotalOutstanding" parameterType="Map" resultType="egovMap">
@@ -208,6 +203,7 @@
 			LAST_AS_DT
 		 FROM CP1015V
          WHERE ORD_NO = #{orderNo}
+         ORDER BY
     </select>
 
     <select id="isUserHasOrdNo" parameterType="Map" resultType="egovMap">
@@ -258,12 +254,13 @@
                 RECEIPT_NO ,
                 PAY_DATE,
                 AMOUNT,
-                MAX(PAY_DATE) OVER (PARTITION BY SALES_ORD_NO,ACCOUNT_CODE) LAST_PAY_DATE
+                MAX(PAY_DATE) OVER (PARTITION BY SALES_ORD_NO,ACCOUNT_CODE) LAST_PAY_DATE,
+                PAY_ID
             FROM CP1018V
             WHERE 1 = 1
 		) WHERE TO_CHAR(PAY_DATE,'YYYYMM') >= TO_CHAR(ADD_MONTHS(TO_DATE(LAST_PAY_DATE), -5),'YYYYMM')
 		AND SALES_ORD_NO = #{orderNo}
-		ORDER BY PAY_DATE DESC
+		ORDER BY PAY_ID DESC
     </select>
 
     <select id="isUserHasTaxInvoiceRefNo" parameterType="Map" resultType="egovMap">
@@ -316,9 +313,9 @@
 
     <select id="selectOrderNumberList" parameterType="Map" resultType="egovMap">
         SELECT
-            TOTAL_OUTSTANDING ,
-            PRODUCT_TOTAL_OUTSTANDING ,
-            MEMBERSHIP_OUTSTANDING ,
+            TO_CHAR(TOTAL_OUTSTANDING,'999,990.00') TOTAL_OUTSTANDING,
+            TO_CHAR(PRODUCT_TOTAL_OUTSTANDING,'999,990.00') PRODUCT_TOTAL_OUTSTANDING,
+            TO_CHAR(MEMBERSHIP_OUTSTANDING,'999,990.00') MEMBERSHIP_OUTSTANDING,
             ORDER_STATUS ,
             SALES_ORD_NO
         FROM CP1023V
