@@ -37,6 +37,7 @@
           , Extent1.CALL_TYPE_NAME CALL_TYPE_NAME
           , Extent1.RCD_TMS RCD_TMS
           , Extent1.POSTCODE POSTCODE
+          , Extent1.DSC_CODE DSC_CODE
           , CASE WHEN ( Extent1.APP_TYPE_ID IS NOT NULL )
                    THEN Extent1.APP_TYPE_ID
                  ELSE 0
@@ -93,8 +94,11 @@
                    , area.state
                    , area.area
                    , area.postcode
+                   , dsc.CODE DSC_CODE
             FROM CCR1002V vCallLogOrderCall
-            JOIN SYS0064M area on area.AREA_ID = vcalllogordercall.INSTALL_AREA_ID) Extent1
+            JOIN SYS0064M area on area.AREA_ID = vcalllogordercall.INSTALL_AREA_ID
+            JOIN SYS0005M dsc on dsc.BRNCH_ID = vcalllogordercall.DSC_BRNCH_ID
+            ) Extent1
      WHERE  1=1
     ]]>
 
@@ -180,10 +184,10 @@
       ORDER BY Extent1.CUST_NAME
     </if>
     <if test="sortBy != null and sortBy != '' and sortBy == 3 ">
-      ORDER BY Extent1.CALL_LOG_DT DESC
+      ORDER BY Extent1.CALL_LOG_DT ASC
     </if>
     <if test="sortBy != null and sortBy != '' and sortBy == 4 ">
-      ORDER BY Extent1.UPD_DT DESC
+      ORDER BY Extent1.UPD_DT ASC
     </if>
   </select>
 
