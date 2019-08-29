@@ -54,12 +54,9 @@
     </select>
 
     <select id="selectCustTotalProductsCount" parameterType="Map" resultType="egovMap">
-        SELECT COUNT(*) TOTAL_PRODUCT_COUNT
-            FROM SAL0001D EXTENT1
-            JOIN CP1023V EXTENT2 ON EXTENT2.CUST_ID = EXTENT1.CUST_ID AND EXTENT2.SALES_ORD_NO = EXTENT1.SALES_ORD_NO
-            WHERE 1=1
-            AND (EXTENT1.STUS_CODE_ID = 4 OR (TOTAL_OUTSTANDING) <![CDATA[ > ]]> 0 )
-            AND EXTENT1.CUST_ID = #{cowayCustId}
+        SELECT TOTAL_PRODUCT_COUNT
+            FROM CP1005V EXTENT1
+            WHERE EXTENT1.CUST_ID = #{cowayCustId}
     </select>
 
     <select id="selectLastPayment" parameterType="Map" resultType="egovMap">
@@ -203,7 +200,6 @@
 			LAST_AS_DT
 		 FROM CP1015V
          WHERE ORD_NO = #{orderNo}
-         ORDER BY
     </select>
 
     <select id="isUserHasOrdNo" parameterType="Map" resultType="egovMap">
