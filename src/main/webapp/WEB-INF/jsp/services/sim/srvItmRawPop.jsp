@@ -10,7 +10,7 @@
 
 <script type="text/javaScript">
   $(document).ready( function() {
-    doGetCombo('/services/sim/getBchTyp.do', '', '42', 'cboBchTypRaw', 'S', 'fn_onChgBch'); // BRANCH TYPE
+    doGetCombo('/services/sim/getBchTyp.do', '', '${BR_TYP_ID}', 'cboBchTypRaw', 'S', 'fn_onChgBch'); // BRANCH TYPE
     doGetCombo('/services/sim/getItm.do', '', '', 'cboItmPopRaw', 'S', ''); // ITEM TYPE
 
     // SET TRIGGER FUNCTION HERE --
@@ -21,8 +21,11 @@
   });
 
   function fn_onChgBch() {
-    $("#cboBchTyp").val('42');
     doGetCombo('/services/sim/getBch.do', $("#cboBchTypRaw").val(), '${SESSION_INFO.userBranchId}', 'cboBchPopRaw', 'S', '');
+
+    if($("#cboBchTypRaw option[value='${BR_TYP_ID}']").length == 0) {
+      $('#cboBchTypRaw').removeAttr("disabled");
+    }
   }
 
   function fn_openGenerate() {
@@ -86,14 +89,25 @@
       day = "0" + date.getDate();
     }
 
+    var rptTyp = $("input[name='fileTypOpt']:checked").val();
+    var rptNm = "/services/SrvItmRawData.rpt";
+
+    if (rptTyp == "EXCEL2") {
+      rptTyp = "EXCEL";
+      rptNm = "/services/SrvItmRawDataNoGrp.rpt"
+    } else if (rptTyp == "PDF2") {
+      rptTyp = "PDF";
+      rptNm = "/services/SrvItmRawDataNoGrp.rpt"
+    }
+
     $("#srvItmRawForm #V_SELECTSQL").val(" ");
     $("#srvItmRawForm #V_ORDERBYSQL").val(" ");
     $("#srvItmRawForm #V_FULLSQL").val(" ");
     $("#srvItmRawForm #V_WHERESQL").val(whereSql);
     $("#srvItmRawForm #V_TRXSTRDT").val(keyInDateFrom);
     $("#srvItmRawForm #V_TRXENDDT").val(keyInDateTo);
-    $("#srvItmRawForm #reportFileName").val('/services/SrvItmRawData.rpt');
-    $("#srvItmRawForm #viewType").val($("input[name='fileTypOpt']:checked").val());
+    $("#srvItmRawForm #reportFileName").val(rptNm);
+    $("#srvItmRawForm #viewType").val(rptTyp);
     $("#srvItmRawForm #reportDownFileName").val("ServiceItemRaw_" + day + month + date.getFullYear());
 
     var option = {
@@ -189,8 +203,10 @@
          <tr>
            <th scope="row"><spring:message code='service.btn.fileFmt'/></th>
            <td>
-             <input type="radio" value="PDF" name="fileTypOpt"> <label for="fileTypOpt">PDF</label>
-             <input type="radio" value="EXCEL" name="fileTypOpt" checked> <label for="fileTypOpt">EXCEL</label>
+             <input type="radio" value="PDF" name="fileTypOpt"> <label for="fileTypOpt">PDF(Grouping)</label>
+             <input type="radio" value="EXCEL" name="fileTypOpt"> <label for="fileTypOpt">EXCEL(Grouping)</label>
+             <input type="radio" value="PDF2" name="fileTypOpt" checked> <label for="fileTypOpt">PDF</label>
+             <input type="radio" value="EXCEL2" name="fileTypOpt" checked> <label for="fileTypOpt">EXCEL</label>
            </td>
          </tr>
       </tbody>
