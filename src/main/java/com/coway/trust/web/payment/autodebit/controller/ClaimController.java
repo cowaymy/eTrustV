@@ -771,12 +771,18 @@ public class ClaimController {
       String issueBankId = CommonUtils.nvl(String.valueOf(claim.get("hiddenIssueBank")));
       String bankId = CommonUtils.nvl(String.valueOf(claim.get("new_merchantBank")));
       String cardType = CommonUtils.nvl(String.valueOf(claim.get("new_cardType")));
+      String mayBank = CommonUtils.nvl(String.valueOf(claim.get("_mayBank")));
+      String installMonth = CommonUtils.nvl(String.valueOf(claim.get("hiddenMonth")));
+
 
       claim.put("new_claimType", isCRC);
       claim.put("new_debitDate", inputDate);
       claim.put("new_issueBankId", issueBankId);
       claim.put("new_merchantBank", bankId);
       claim.put("new_cardType", cardType);
+      claim.put("new_issueBankId", issueBankId);
+      claim.put("mayBank", mayBank);
+      claim.put("installMonth", installMonth);
       claim.put("userId", sessionVO.getUserId());
 
       claimService.createClaimCreditCard(claim); // 프로시저 함수 호출

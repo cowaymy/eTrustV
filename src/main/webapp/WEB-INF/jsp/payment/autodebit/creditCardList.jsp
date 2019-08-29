@@ -644,6 +644,14 @@ function fn_genClaim(){
         Common.alert(" * Please select a merchant bank ");
         return;
    }
+    if ($("#_mayBank option:selected").val() == '') {
+        Common.alert(" * Please select Maybank checking ");
+        return;
+   }
+    if ($("#_month option:selected").val() == null) {
+        Common.alert(" * Please select a install month");
+        return;
+   }
 
     var runNo1 = 0;
     var issueBank = "";
@@ -662,6 +670,23 @@ function fn_genClaim(){
     }
     $("#hiddenIssueBank").val(issueBank);
 
+    var runNo2 = 0;
+    var month = "";
+
+    if($('#_month :selected').length > 0){
+        $('#_month :selected').each(function(i, mul){
+            if($(mul).val() != "0"){
+                if(runNo2 > 0){
+                	month += ","+$(mul).val()+"";
+                }else{
+                	month += ""+$(mul).val()+"";
+                }
+                runNo2 += 1;
+            }
+        });
+    }
+    $("#hiddenMonth").val(month);
+
     //저장 처리
     var data = {};
     var formList = $("#newForm").serializeArray();       //폼 데이터
@@ -669,6 +694,7 @@ function fn_genClaim(){
     if(formList.length > 0) data.form = formList;
     else data.form = [];
 
+    console.log(data);
 
     Common.ajax("POST", "/payment/generateNewCreditCardClaim.do", data,
             function(result) {
@@ -1076,11 +1102,9 @@ function fn_report(){
                         </td>
                     </tr>
                      <tr>
-                     <th scope="row">Issue Bank <span class="must">*</span></th>
+                     <th scope="row">Merchant Bank <span class="must">*</span></th>
                         <td>
-                            <select class="multy_select w100p" multiple="multiple" id="new_issueBank" data-placeholder="Bank Name"></select>
-                            <input type="hidden"  id="hiddenIssueBank" name="hiddenIssueBank"/>
-                        </td>
+                            <select id="new_merchantBank" name="new_merchantBank" class="w100p"></select>
                         <th scope="row">Card Type<span class="must" id="cardTypeMust">*</span></th>
                         <td>
                             <select id="new_cardType" name="new_cardType" class="w100p">
@@ -1092,9 +1116,39 @@ function fn_report(){
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Merchant Bank <span class="must">*</span></th>
+                    <th scope="row">Issue Bank <span class="must">*</span></th>
                         <td>
-                            <select id="new_merchantBank" name="new_merchantBank" class="w100p"></select>
+                            <select class="multy_select w100p" multiple="multiple" id="new_issueBank" data-placeholder="Bank Name"></select>
+                            <input type="hidden"  id="hiddenIssueBank" name="hiddenIssueBank"/>
+                        </td>
+                    <th scope="row">Maybank (463225, 428332)<span class="must">*</span></th>
+                        <td>
+                            <select id="_mayBank" name="_mayBank" class="w100p">
+                                <option value="">Choose One</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Install Month<span class="must">*</span></th>
+                        <td>
+                            <select id="_month" name="_month" class="multy_select w100p" multiple="multiple">
+                                <option value="01">JANUARY</option>
+                                <option value="02">FEBUARY</option>
+                                <option value="03">MARCH</option>
+                                <option value="04">APRIL</option>
+                                <option value="05">MAY</option>
+                                <option value="06">JUNE</option>
+                                <option value="07">JULY</option>
+                                <option value="08">AUGUST</option>
+                                <option value="09">SEPTEMBER</option>
+                                <option value="10">OCTOBER</option>
+                                <option value="11">NOVEMBER</option>
+                                <option value="12">DECEMBER</option>
+                            </select>
+                            <input type="hidden"  id="hiddenMonth" name="hiddenMonth"/>
+                        </td>
                         </td>
                         <td  colspan="2"></td>
                     </tr>

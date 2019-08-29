@@ -814,7 +814,7 @@
     call SP_AUTO_DEBT_GENRT_CLM_CCD(#{new_claimType} ,
     #{new_merchantBank},
     #{new_cardType}, #{new_debitDate}, #{userId},
-    #{new_issueBankId},
+    #{new_issueBankId},#{mayBank},#{installMonth},
     #{p1, mode=OUT, jdbcType=CURSOR,
     javaType=ResultSet,
     resultMap=resultClaimMap})
