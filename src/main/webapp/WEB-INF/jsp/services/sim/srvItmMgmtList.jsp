@@ -6,6 +6,7 @@
  ----------------------------------------------------------------
  20/06/2019  ONGHC  1.0.0          CREATE SERVICE ITEM MANAGEMENT LISTING
  06/08/2019  ONGHC  1.0.1          REMOVE DISABLE ATTRIBUTE FOR BRANCH
+ 29/08/2019  ONGHC  1.0.2          Enhance to Support DSC Branch
  -->
 
 <script type="text/javaScript">
@@ -19,7 +20,7 @@
   $(document).ready( function() {
     srvItmMgmtGrid(); // GRID VIEW COLUMN CONFIGURATION
     // SET CBO LISING HERE --
-    doGetCombo('/services/sim/getBchTyp.do', '', '42', 'cboBchTyp', 'S', 'fn_onChgBch'); // BRANCH TYPE
+    doGetCombo('/services/sim/getBchTyp.do', '', '${BR_TYP_ID}', 'cboBchTyp', 'S', 'fn_onChgBch'); // BRANCH TYPE
     doGetCombo('/services/sim/getItm.do', '', '', 'cboItm', 'S', ''); // ITEM TYPE
 
 
@@ -40,8 +41,11 @@
   });
 
   function fn_onChgBch() {
-     $("#cboBchTyp").val('42');
-     doGetCombo('/services/sim/getBch.do', $("#cboBchTyp").val(), '${SESSION_INFO.userBranchId}', 'cboBch', 'S', '');
+    if($("#cboBchTyp option[value='${BR_TYP_ID}']").length == 0) {
+      $('#cboBchTyp').removeAttr("disabled");
+    }
+
+    doGetCombo('/services/sim/getBch.do', $("#cboBchTyp").val(), '${SESSION_INFO.userBranchId}', 'cboBch', 'S', '');
   }
 
   function srvItmMgmtGrid() {
@@ -153,9 +157,16 @@
       return;
     }*/
 
+    $('#cboBchTyp').removeAttr("disabled");
+
     Common.ajax("GET", "/services/sim/searchSrvItmLst.do", $("#srvItmForm").serialize(), function(result) {
       AUIGrid.setGridData(myGridID, result);
     });
+
+    if($("#cboBchTyp option[value='${BR_TYP_ID}']").length != 0) {
+    	$("#cboBchTyp").attr("disabled", true);
+    }
+
     return;
   }
 
@@ -227,7 +238,7 @@
     <tbody>
      <tr>
       <th scope="row"><spring:message code='service.grid.brchTyp'/></th> <!-- BRANCH TYPE -->
-      <td><select id="cboBchTyp" name="cboBchTyp" class="w100p" disabled /></td>
+      <td><select id="cboBchTyp" name="cboBchTyp" class="w100p" disabled/></td>
 
       <th scope="row"><spring:message code='service.grid.bch'/></th>
       <td><select id="cboBch" name="cboBch" class="w100p">
