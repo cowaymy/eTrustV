@@ -38,6 +38,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - CREATE SERVICE ITEM MENAGEMENT FUNCTION
  * 22/07/2019    ONGHC      1.0.2       - AMEND BAESD ON FEEDBACK
+ * 29/08/2019    ONGHC      1.0.3       - Enhance to Support DSC Branch
  *********************************************************************************************/
 
 @Controller
@@ -49,28 +50,38 @@ public class SrvItmMgmtListController {
   private SrvItmMgmtListService SrvItmMgmtListService;
 
   @RequestMapping(value = "/srvItmMgmt.do")
-  public String initSrvItmMgmttList(@RequestParam Map<String, Object> params, ModelMap model) {
+  public String initSrvItmMgmttList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
     logger.debug("===========================/srvItmMgmt.do===============================");
     logger.debug("== params " + params.toString());
     logger.debug("===========================/srvItmMgmt.do===============================");
+
+    String brTypId =  SrvItmMgmtListService.getBrTypId(sessionVO.getUserName());
+    model.put("BR_TYP_ID", brTypId);
 
     return "services/sim/srvItmMgmtList";
   }
 
   @RequestMapping(value = "/srvItmRawPop.do")
-  public String srvItmRawPop(@RequestParam Map<String, Object> params, ModelMap model) {
+  public String srvItmRawPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
     logger.debug("===========================/srvItmRawPop.do===============================");
     logger.debug("== params " + params.toString());
     logger.debug("===========================/srvItmRawPop.do===============================");
+
+    String brTypId =  SrvItmMgmtListService.getBrTypId(sessionVO.getUserName());
+    model.put("BR_TYP_ID", brTypId);
 
     return "services/sim/srvItmRawPop";
   }
 
   @RequestMapping(value = "/srvItmEntryPop.do")
-  public String srvItmMgntAddPop(@RequestParam Map<String, Object> params, ModelMap model) {
+  public String srvItmMgntAddPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
     logger.debug("===========================/srvItmEntryPop.do===============================");
     logger.debug("== params " + params.toString());
     logger.debug("===========================/srvItmEntryPop.do===============================");
+
+    String brTypId =  SrvItmMgmtListService.getBrTypId(sessionVO.getUserName());
+
+    model.put("BR_TYP_ID", brTypId);
 
     return "services/sim/srvItmEntryPop";
   }
