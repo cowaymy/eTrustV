@@ -62,6 +62,10 @@
     LEFT JOIN SYS0047M D ON A.CRT_USR = D.USER_ID
     WHERE 1 = 1
 
+    <if test="cboBchTyp != null and cboBchTyp !='' ">
+      <![CDATA[ AND B.TYPE_ID = #{cboBchTyp} ]]>
+    </if>
+
     <if test="cboBch != null and cboBch !='' ">
       <![CDATA[ AND A.BR_NO = #{cboBch} ]]>
     </if>
@@ -77,6 +81,14 @@
       <![CDATA[ AND ( A.CRT_DT <= TO_DATE( #{trxEndDate},'dd/mm/yyyy') + 1 )]]>
     </if>
   </select>
+
+  <select id="getBrTypId" parameterType="String" resultType="String">
+    SELECT B.TYPE_ID
+    FROM SYS0047M A
+    JOIN SYS0005M B ON A.USER_BRNCH_ID = B.BRNCH_ID
+    WHERE A.USER_NAME = #{params}
+  </select>
+
 
   <select id="getBchTypDesc" parameterType="String" resultType="String">
     SELECT CODE_NAME
