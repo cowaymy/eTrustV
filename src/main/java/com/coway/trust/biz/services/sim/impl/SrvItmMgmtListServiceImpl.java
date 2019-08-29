@@ -28,6 +28,7 @@ import oracle.sql.DATE;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 20/06/2019    ONGHC      1.0.1       - CREATE SERVICE ITEM MANAGEMENT
+ * 29/08/2019    ONGHC      1.0.2       - Enhance to Support DSC Branch
  *********************************************************************************************/
 
 @Service("SrvItmMgmtListService")
@@ -61,6 +62,11 @@ public class SrvItmMgmtListServiceImpl extends EgovAbstractServiceImpl implement
   @Override
   public String getBchTypDesc(String params) {
     return SrvItmMgmtListMapper.getBchTypDesc(params);
+  }
+
+  @Override
+  public String getBrTypId(String params) {
+    return SrvItmMgmtListMapper.getBrTypId(params);
   }
 
   @Override
