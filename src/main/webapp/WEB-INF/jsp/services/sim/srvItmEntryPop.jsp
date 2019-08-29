@@ -5,12 +5,13 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  27/06/2019  ONGHC  1.0.0          CREATE FOR SERVICE ITEM MANEGEMENT
+ 29/08/2019  ONGHC  1.0.1          Enhance to Support DSC Branch
  -->
 
 <script type="text/javaScript">
   $(document).ready( function() {
     // SET CBO LISING HERE --
-    doGetCombo('/services/sim/getBchTyp.do', '', '42', 'cboBchTypPop', 'S', 'fn_onChgBch'); // BRANCH TYPE
+    doGetCombo('/services/sim/getBchTyp.do', '', '${BR_TYP_ID}', 'cboBchTypPop', 'S', 'fn_onChgBch'); // BRANCH TYPE
     doGetCombo('/services/sim/getItm.do', '', '', 'cboItmPop', 'S', ''); // ITEM TYPE
 
     // SET TRIGGER FUNCTION HERE --
@@ -20,8 +21,11 @@
   });
 
   function fn_onChgBch() {
-    $("#cboBchTyp").val('42');
     doGetCombo('/services/sim/getBch.do', $("#cboBchTypPop").val(), '${SESSION_INFO.userBranchId}', 'cboBchPop', 'S', '');
+
+    if($("#cboBchTypPop option[value='${BR_TYP_ID}']").length == 0) {
+      $('#cboBchTypPop').removeAttr("disabled");
+    }
   }
 
   function fn_next() {
