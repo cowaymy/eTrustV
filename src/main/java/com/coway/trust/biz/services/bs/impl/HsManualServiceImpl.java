@@ -1284,7 +1284,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     docNo = hsManualMapper.GetDocNo(bsResultMas_Rev);
     bsResultMas_Rev.put("docNo", docNo);
 
-    String BS_RESULT_BSR = "BSR";
+    String BS_RESULT_BSR = "HSR";
 
     String nextNo = getNextDocNo(BS_RESULT_BSR, docNo);
     /*
@@ -2065,7 +2065,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	    docNo = hsManualMapper.GetDocNo(bsResultMas_Rev);
 	    bsResultMas_Rev.put("docNo", docNo);
 
-	    String BS_RESULT_BSR = "BSR";
+	    String BS_RESULT_BSR = "HSR";
 
 	    String nextNo = getNextDocNo(BS_RESULT_BSR, docNo);
 
