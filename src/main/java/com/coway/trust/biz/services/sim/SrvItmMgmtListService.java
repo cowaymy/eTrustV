@@ -12,6 +12,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
+ * 29/08/2019    ONGHC      1.0.2       - Enhance to Support DSC Branch
  *********************************************************************************************/
 
 public interface SrvItmMgmtListService {
@@ -24,6 +25,8 @@ public interface SrvItmMgmtListService {
   List<EgovMap> searchSrvItmLst(Map<String, Object> params);
 
   String getBchTypDesc(String params);
+
+  String getBrTypId(String params);
 
   String getBchDesc(String params);
 
