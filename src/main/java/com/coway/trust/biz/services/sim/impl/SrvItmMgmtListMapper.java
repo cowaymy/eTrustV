@@ -11,6 +11,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 20/06/2019    ONGHC      1.0.1       - CREATE SERVICE ITEM MANAGEMENT
+ * 29/08/2019    ONGHC      1.0.2       - Enhance to Support DSC Branch
  *********************************************************************************************/
 
 @Mapper("SrvItmMgmtListMapper")
@@ -25,6 +26,8 @@ public interface SrvItmMgmtListMapper {
   List<EgovMap> searchSrvItmLst(Map<String, Object> params);
 
   String getBchTypDesc(String param);
+
+  String getBrTypId(String param);
 
   String getBchDesc(String param);
 
