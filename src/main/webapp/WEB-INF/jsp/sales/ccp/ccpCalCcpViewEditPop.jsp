@@ -138,12 +138,24 @@ $(document).ready(function() {
         //Validation (Call Entry Count)
         var ccpOrdEditId = $("#_editOrdId").val();
         var salData = {salesOrdId : ccpOrdEditId};
+        var sst = '${orderDetail.basicInfo.corpCustTypeId}';
+
         console.log(salData);
         var callEntCount = 0;
+
+        if(sst == 5495 || sst == 5496){
+        	callEntCount = 0;
+        }
+        else{
         Common.ajaxSync("GET", "/sales/ccp/countCallEntry", salData , function(result) {
             callEntCount = result.totCount;
             console.log("Call Entry Count : " + callEntCount);
         });
+        }
+
+
+
+
 
         if(callEntCount > 0){
             Common.alert('<spring:message code="sal.alert.msg.existInCallEtry" />');
