@@ -5,6 +5,9 @@
 	//AUIGrid 생성 후 반환 ID
 	var myGridID;
 	var basicAuth = false;
+	var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
+	var TODAY_DD      = "${toDay}";
+
 
 	$(document).ready(function() {
 
@@ -18,13 +21,13 @@
 			$("#invReqId").val(event.item.invReqId);
 			Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#popForm").serializeJSON(), null, true, 'dtPop');
 		});
-	    
+
 		if($("#memType").val() == 1 || $("#memType").val() == 2){
 			$("#orgTable").show();
 		}else{
 			$("#orgTable").hide();
 		}
-		
+
 		if($("#memType").val() == 1){
             $("#grpCode").removeAttr("readonly");
         }else if($("#memType").val() == 2){
@@ -78,7 +81,7 @@
 		// 그리드 속성 설정
 		var gridPros = {
 
-			// 페이징 사용       
+			// 페이징 사용
 			usePaging : true,
 
 			// 한 화면에 출력되는 행 개수 20(기본값:20)
@@ -117,12 +120,12 @@
 
 	// 리스트 조회.
 	function fn_orderInvestigationListAjax() {
-		
+
 //		if( $("#salesOrdNo").val() ==""  &&  $("#invReqNo").val() ==""  &&  $("#invReqCrtUserName").val() ==""  ){
 //            Common.alert("You must key-in at least one of Order No / Request No / Request User");
 //            return ;
 //        }
-		
+
 		Common.ajax("GET", "/sales/order/orderInvestJsonList", $("#searchForm").serialize(), function(result) {
 			AUIGrid.setGridData(myGridID, result);
 		}
@@ -139,11 +142,31 @@
 		$("#invReqPartyId").val('');
 	}
 
+
+
+
+
 	function fn_goSingle() {
 //		$("#searchForm").attr({
 //			"target" : "_self",
 //			"action" : getContextPath() + "/sales/order/orderNewRequestSingleList.do"
 //		}).submit();
+
+         var todayDD = Number(TODAY_DD.substr(0, 2));
+              var todayYY = Number(TODAY_DD.substr(6, 4));
+
+
+              if (MEM_TYPE == 2) {
+                  if(todayYY >= 2018) {
+                      if(todayDD > 25) { // Block if date > 25th of the month
+                          var msg = 'Disallow to create new request for Order Investigation after 25nd of the Month.';
+                          Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+                          return;
+                      }
+                  }
+              }
+
+
 		Common.popupDiv("/sales/order/orderNewRequestSingleListPop.do", $("#popForm").serializeJSON(), null, true, 'singlePop');
 	}
 
@@ -154,11 +177,11 @@
 	function fn_rawData() {
 		Common.popupDiv("/sales/order/orderInvestigationRequestRawDataPop.do", null, null, true);
 	}
-	
+
 	function fn_goCallResult(){
 	    location.replace("/sales/order/orderInvestCallRecallList.do");
 	}
-	
+
 	$.fn.clearForm = function() {
         return this.each(function() {
             var type = this.type, tag = this.tagName.toLowerCase();
@@ -343,7 +366,7 @@
 	<section class="search_result">
 		<!-- search_result start -->
 
-		<!-- title_line start 
+		<!-- title_line start
 <aside class="title_line">
 <h3>Request Raw Data</h3>
 </aside>!-- title_line end -->
