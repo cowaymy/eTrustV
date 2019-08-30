@@ -165,6 +165,7 @@
                 $("#custId").val(custInfo.custId); //Customer ID
                 $("#custTypeNm").val(custInfo.codeName1); //Customer Name
                 $("#typeId").val(custInfo.typeId); //Type
+                $("#corpTypeId").val(custInfo.corpTypeId); //Corp Type
                 $("#name").val(custInfo.name); //Name
                 $("#nric").val(custInfo.nric); //NRIC/Company No
                 $("#nationNm").val(custInfo.name2); //Nationality
@@ -549,6 +550,12 @@
                 $('#billMthdEmail2').removeAttr("disabled");
                 $('#billMthdEmailTxt1').removeAttr("disabled");
                 $('#billMthdEmailTxt2').removeAttr("disabled");
+
+                if($("#corpTypeId").val() == 1151 || $("#corpTypeId").val() ==1154 || $("#corpTypeId").val() == 1333){
+                	$('#billMthdPost').removeAttr("disabled");
+                }else{
+                	$('#billMthdPost').prop("disabled",true);
+                }
             }
             else if($('#typeId').val() == '964') { //Individual
 
@@ -570,6 +577,7 @@
                     $('#billMthdEmail2').removeAttr("disabled");
                     $('#billMthdEmailTxt1').removeAttr("disabled");
                     $('#billMthdEmailTxt2').removeAttr("disabled");
+                    $('#billMthdPost').removeAttr("disabled");
                 }
 
                 $('#billMthdSms').prop("checked", true);
@@ -677,10 +685,10 @@
         });
         $('#addCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
-            var vCustNric = $('#thrdParty').is(":checked") ? $('#thrdPartyNric').val() : $('#nric').val();
+            //var vCustNric = $('#thrdParty').is(":checked") ? $('#thrdPartyNric').val() : $('#nric').val();
             //Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_PAYM_CRC", nric : $('#nric').val()}, null, true);
-            //Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_PAYM_CRC"}, null, true);
-            Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_PAYM_CRC", nric : vCustNric}, null, true);
+            Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_PAYM_CRC"}, null, true);
+            //Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_PAYM_CRC", nric : vCustNric}, null, true);
         });
         $('#selCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
@@ -2686,6 +2694,7 @@ console.log("vBindingNo" + vBindingNo);
     <th scope="row"><spring:message code="sal.text.type" /></th>
     <td><input id="custTypeNm" name="custTypeNm" type="text" title="" placeholder="Customer Type" class="w100p" readonly/>
         <input id="typeId" name="typeId" type="hidden"/>
+        <input id="corpTypeId" name="corpTypeId" type="hidden"/>
     </td>
 </tr>
 <tr>
