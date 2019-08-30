@@ -885,17 +885,17 @@
             msg += "* Please select a promotion.<br>";
         }
 
-        if (custType == '965' && appTypeVal == '66'){
-            if ($("#corpCustType option:selected").index() <= 0) {
-                isValid = false;
-                msg += '* Please select SST Type<br>';
-            }
+        //if (custType == '965' && appTypeVal == '66'){
+        //    if ($("#corpCustType option:selected").index() <= 0) {
+        //        isValid = false;
+        //        msg += '* Please select SST Type<br>';
+        //    }
 
-            if ($("#agreementType option:selected").index() <= 0) {
-                isValid = false;
-                msg += '* Please select Agreement Type<br>';
-            }
-        }
+        //    if ($("#agreementType option:selected").index() <= 0) {
+        //        isValid = false;
+        //        msg += '* Please select Agreement Type<br>';
+        //    }
+        //}
 
 /*         if(!$('#pBtnCal').hasClass("blind")) {
             isValid = false;
@@ -2224,11 +2224,11 @@
     <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p></td>
 </tr>
-<tr>
+<tr style="display:none;">
     <th scope="row">SST Type<span class="must">*</span></th>
     <td><select id="corpCustType" name="corpCustType" class="w50p" disabled></select>
 </tr>
-<tr>
+<tr style="display:none;">
     <th scope="row">Agreement Type<span class="must">*</span></th>
     <td><select id="agreementType" name="agreementType" class="w50p" disabled></select>
 </tr>
