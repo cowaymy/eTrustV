@@ -442,9 +442,18 @@
                     vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
              FROM SAL1006V vOrderBasicInfo ) Extent1
              LEFT JOIN SAL0102D Extent2 ON Extent2.CCP_SALES_ORD_ID = Extent1.ORD_ID
+             LEFT JOIN (SELECT LOG_ID,
+                               SALES_ORD_ID,
+                               PRGRS_ID
+                        FROM (SELECT ROW_NUMBER () OVER (PARTITION BY SALES_ORD_ID ORDER BY LOG_ID DESC) RNN,
+                                     LOG_ID,
+                                     SALES_ORD_ID,
+                                     PRGRS_ID
+                              FROM SAL0009D )
+                              WHERE RNN = 1) Extent3 ON Extent3.SALES_ORD_ID = Extent1.ORD_ID
              WHERE ( Extent1.ORD_NO = #{orderNo} )
                 AND ( Extent1.ORD_STUS_ID = 4 ) AND (Extent1.RENTAL_STUS NOT IN ('WOF','SUS','RET'))
-                AND (Extent2.CCP_STUS_ID = 5 OR Extent2.CCP_STUS_ID IS NULL)
+                AND ((Extent2.CCP_STUS_ID = 5 OR Extent2.CCP_STUS_ID IS NULL) OR (Extent3.PRGRS_ID = 5))
                 AND ROWNUM <= 1
     ]]>
   </select>
@@ -752,6 +761,12 @@
   <select id="getASEntryId" parameterType="Map" resultType="egovMap">
     <![CDATA[
       SELECT  SVC0001D_AS_ID_SEQ.nextval seq FROM DUAL
+    ]]>
+  </select>
+
+  <select id="getIHREntryId" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT SVC0108D_AS_ID_SEQ.nextval seq FROM DUAL
     ]]>
   </select>
 
@@ -2848,7 +2863,7 @@
                '2713',
                AS_REQSTER_TYPE_ID,
                AS_IS_BS_WITHIN_30DAYS,
-               AS_ALLOW_COMM,
+               0,
                AS_PREV_MEM_ID,
                AS_REM_ADD_CNTC,
                AS_REM_REQSTER_CNTC_SMS,
@@ -2857,6 +2872,7 @@
                CALL_MEM,
                #{REF_REQUEST} FROM SVC0001D WHERE AS_ID = #{REF_REQUEST}
     ]]>
+    <!-- AS_ALLOW_COMM -->
   </insert>
 
   <insert id="insertSVC0003D" parameterType="Map">
