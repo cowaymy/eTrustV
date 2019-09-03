@@ -38,6 +38,7 @@ public interface ApiMapper {
   List<EgovMap> selectInvoiceDetailByTaxInvoiceRefNo(Map<String, Object> params);
   EgovMap isUserHasTaxInvoiceRefNo(Map<String, Object> params);
   List<EgovMap> selectMembershipProgrammesList(Map<String, Object> params);
+  List<EgovMap> selectProductList(Map<String, Object> params);
   List<EgovMap> selectOrderNumberList(Map<String, Object> params);
   int addOrEditPersonInCharge(Map<String, Object> params);
   int addOrEditCustomerInfo(Map<String, Object> params);

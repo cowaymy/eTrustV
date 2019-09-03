@@ -211,7 +211,8 @@ public class ApiServiceImpl implements ApiService {
     cowayAccountProductPreviewList.forEach(obj -> {
       Map<String, Object> map = (Map<String, Object>) obj;
       EgovMap membershipExpiredDate = apiMapper.selectMembershipExpiredDate(map);
-      map.put("membershipExpiryDate",membershipExpiredDate.get("membershipExpiryDate"));
+      if(membershipExpiredDate != null)
+        map.put("membershipExpiryDate",membershipExpiredDate.get("membershipExpiryDate"));
     });
 
     return displayResponseMessage(request, params,cowayAccountProductPreviewList);
@@ -224,7 +225,8 @@ public class ApiServiceImpl implements ApiService {
     cowayAccountProductPreviewListByAccountCode.forEach(obj -> {
       Map<String, Object> map = (Map<String, Object>) obj;
       EgovMap membershipExpiredDate = apiMapper.selectMembershipExpiredDate(map);
-      map.put("membershipExpiryDate",membershipExpiredDate.get("membershipExpiryDate"));
+      if(membershipExpiredDate != null)
+        map.put("membershipExpiryDate",membershipExpiredDate.get("membershipExpiryDate"));
     });
 
     return displayResponseMessage(request, params,cowayAccountProductPreviewListByAccountCode);
@@ -284,6 +286,12 @@ public class ApiServiceImpl implements ApiService {
   @Override
   public EgovMap selectMembershipProgrammesList(HttpServletRequest request, Map<String, Object> params) {
     List<EgovMap> membershipProgrammesList = apiMapper.selectMembershipProgrammesList(params);
+    return displayResponseMessage(request, params,membershipProgrammesList);
+  }
+
+  @Override
+  public EgovMap selectProductList(HttpServletRequest request, Map<String, Object> params) {
+    List<EgovMap> membershipProgrammesList = apiMapper.selectProductList(params);
     return displayResponseMessage(request, params,membershipProgrammesList);
   }
 

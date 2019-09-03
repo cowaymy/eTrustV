@@ -163,6 +163,12 @@ public class ApiController {
     return ResponseEntity.ok(orderNumberList);
   }
 
+  @RequestMapping(value = "/customer/getProductList.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getProductList(HttpServletRequest request,@RequestParam Map<String, Object> params) {
+    EgovMap productList = apiService.selectProductList(request, params);
+    return ResponseEntity.ok(productList);
+  }
+
   @RequestMapping(value = "/customer/addOrEditPersonInCharge.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> addOrEditPersonInCharge(HttpServletRequest request,@RequestParam Map<String, Object> params) {
     EgovMap addOrEditPersonInCharge = apiService.addOrEditPersonInCharge(request, params);

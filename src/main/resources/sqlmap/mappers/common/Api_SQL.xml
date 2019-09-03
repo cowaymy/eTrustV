@@ -322,6 +322,10 @@
 	   SELECT * FROM CP1024V
 	</select>
 
+	<select id="selectProductList" parameterType="Map" resultType="egovMap">
+       SELECT * FROM CP1026V
+    </select>
+
 	<insert id="addOrEditPersonInCharge" parameterType="Map">
 		INSERT INTO CP0001T
 			(CP_ID ,
