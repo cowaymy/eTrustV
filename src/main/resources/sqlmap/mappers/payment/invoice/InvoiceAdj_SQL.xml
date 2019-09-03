@@ -1654,7 +1654,7 @@
     </select>
 
     <select id="selectAdjBatchApprovalPopDetail" parameterType="Map" resultType="egovMap">
-        SELECT
+        SELECT DISTINCT
 		    tb1.BATCH_ID,
 		    tb1.MEMO_ADJ_ID,
 		    tb1.MEMO_ADJ_INVC_TYPE_ID,
