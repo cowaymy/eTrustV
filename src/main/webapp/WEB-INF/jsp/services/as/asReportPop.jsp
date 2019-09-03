@@ -15,8 +15,13 @@
       }).multipleSelect({});
 
       doGetComboSepa("/common/selectBranchCodeList.do", 5, '-', '', 'branch', 'S', '');
-      doGetCombo('/services/as/report/selectMemCodeList.do', '', '', 'CTCodeFrom', 'S', '');
-      doGetCombo('/services/as/report/selectMemCodeList.do', '', '', 'CTCodeTo', 'S', '');
+/*       doGetCombo('/services/as/report/selectMemCodeList.do', '', '', 'CTCodeFrom', 'S', '');
+      doGetCombo('/services/as/report/selectMemCodeList.do', '', '', 'CTCodeTo', 'S', ''); */
+
+      doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbbranchId2', 'S', ''); // DSC BRANCH
+
+      $("#cmbbranchId2").change(function() { doGetCombo('/services/as/selectCTByDSC.do', $("#cmbbranchId2").val(), '', 'cmbctId2', 'S', ''); }); // INCHARGE CT
+
     });
 
   function fn_validation() {
@@ -62,6 +67,17 @@
       return false;
     }
 
+
+/*     if ($("#cmbctId2").val() == '' ) {
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='CT code' htmlEscape='false'/>");
+        return false;
+      } */
+
+    if ($("#cmbbranchId2").val() == '' ) {
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='DSC Branch' htmlEscape='false'/>");
+        return false;
+      }
+
     /*if ($("#orderNumFrom").val() == '' || $("#orderNumTo").val() == '') {
       Common.alert("<spring:message code='sys.common.alert.validation' arguments='order number (From & To)' htmlEscape='false'/>");
       return false;
@@ -70,12 +86,12 @@
     if ($("#CTCodeFrom").val() == '' || $("#CTCodeTo").val() == '') {
       Common.alert("<spring:message code='sys.common.alert.validation' arguments='CT code (From & To)' htmlEscape='false'/>");
       return false;
-    }*/
+    }
 
     if ($("#branch").val() == '' || $("#branch").val() == null) {
       Common.alert("<spring:message code='sys.common.alert.validation' arguments='DSC Branch' htmlEscape='false'/>");
       return false;
-    }
+    }*/
     return true;
   }
 
@@ -91,6 +107,13 @@
       var appDate2 = "";
       var whereSql = "";
       var dscBranch = "";
+
+      //Added by TPY - 20190903
+      var orderNo = $("#orderNumFrom").val();
+      var ctCode = $("#cmbctId2").val();
+      var dscBranchCode = $("#cmbbranchId2").val();
+      var asNumber = $("#asNum").val();
+
       var orderBy = " t1.F_MEM_CODE ";
 
       if ($("#asAppDtFr").val() != '') {
@@ -118,9 +141,31 @@
         orderBy = " t1.AS_NO ";
       }
 
-      if ($("#branch").val() != '' && $("#branch").val() != null) {
+   /*    if ($("#branch").val() != '' && $("#branch").val() != null) {
         dscBranch = " WHERE t1.Brnch_Code LIKE '" + $("#branch option:selected").text().substring(0, 6) + "%' ";
+      } */
+
+
+      //Added by TPY - 20190903
+
+      if($("#orderNumFrom").val() != '' ){
+    	  whereSql += " AND AE.AS_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = '" + orderNo + "')  ";
       }
+
+      if($("#asNum").val() != '' ){
+          whereSql += " AND AE.AS_NO =  '" + asNumber + "'  ";
+      }
+
+      if($("#cmbctId2").val() != '' ){
+    	  whereSql += " AND AE.AS_MEM_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE =  '" + ctCode + "')  " ;
+      }
+
+      if($("#cmbbranchId2").val() != '' ){
+          whereSql += " AND AE.AS_BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE =  '" + dscBranchCode + "' AND TYPE_ID= 43 )  ";
+      }
+
+
+
 
       var date = new Date();
       var month = date.getMonth() + 1;
@@ -207,7 +252,7 @@
      <tbody>
       <tr>
        <th scope="row"><spring:message code='service.grid.ReqstDt' /></th>
-       <td  colspan="3">
+       <td>
         <div class="date_set">
          <!-- date_set start -->
          <p>
@@ -224,31 +269,9 @@
         </div>
         <!-- date_set end -->
        </td>
-       <!-- <th scope="row"><spring:message code='service.title.OrderNo' /><span class='must'> *</span></th>
-       <td>
-        <div class="date_set">
-         <p>
-          <input type="text" title="" placeholder="<spring:message code='svc.hs.reversal.from' />" class="w100p"
-           id="orderNumFrom" name="orderNumFrom" value="${orderNum.c1}" />
-         </p>
-         <span><spring:message code='svc.hs.reversal.to' /></span>
-         <p>
-          <input type="text" title="" placeholder="<spring:message code='svc.hs.reversal.to' />" class="w100p"
-           id="orderNumTo" name="orderNumTo" value="${orderNum.c2}" />
-         </p>
-        </div>
-       </td> -->
-      </tr>
-      <!-- <tr>
-       <th scope="row"><spring:message code='service.title.CTCode' /> (<spring:message code='svc.hs.reversal.from' />) <span class='must'> *</span></th>
-       <td><select id="CTCodeFrom" name="CTCodeFrom">
-       </select></td>
-       <th scope="row"><spring:message code='service.title.CTCode' /> (<spring:message code='svc.hs.reversal.to' />) <span class='must'> *</span></th>
-       <td><select id="CTCodeTo" name="CTCodeTo">
-       </select></td>
-      </tr>  -->
-      <tr>
-       <th scope="row"><spring:message code='service.title.AppointmentDate' /></th>
+
+
+          <th scope="row"><spring:message code='service.title.AppointmentDate' /></th>
        <td>
         <div class="date_set">
          <!-- date_set start -->
@@ -262,9 +285,62 @@
         </div>
         <!-- date_set end -->
        </td>
-       <th scope="row"><spring:message code='service.title.DSCBranch' /> <span class='must'> *</span></th>
-       <td><select id="branch" name="branch">
+      </tr>
+      <tr>
+        <th scope="row"><spring:message code='service.title.OrderNo' /></th>
+       <td>
+        <div class="date_set">
+        <!-- date_set start -->
+        <input type="text" title="" placeholder="Order No" class="w100p"
+           id="orderNumFrom" name="orderNumFrom" value="${orderNum.c1}" />
+        </div>
+        <!-- date_set end -->
+       </td>
+        <th scope="row"><spring:message code='service.grid.ASNo'/></th>
+      <td>
+      <div class="date_set">
+      <input type="text" title="" placeholder="<spring:message code='service.grid.ASNo'/>"
+       class="w100p" id="asNum" name="asNum" />
+       </div>
+       </td>
+      </tr>
+      <tr>
+<%--        <th scope="row"><spring:message code='service.title.CTCode' /> (<spring:message code='svc.hs.reversal.from' />) <span class='must'> *</span></th>
+       <td><select id="CTCodeFrom" name="CTCodeFrom">
        </select></td>
+       <th scope="row"><spring:message code='service.title.CTCode' /> (<spring:message code='svc.hs.reversal.to' />) <span class='must'> *</span></th>
+       <td><select id="CTCodeTo" name="CTCodeTo">
+       </select></td> --%>
+
+      <th scope="row"><spring:message code='service.title.DSCBranch' /> <span class='must'> *</span></th>
+      <td><select id="cmbbranchId2" name="cmbbranchId2">
+      </select></td>
+      <th scope="row"><spring:message code='service.grid.CTCode'/></th>
+      <td><select id="cmbctId2" name="cmbctId2" >
+        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
+      </select></td>
+
+
+
+      </tr>
+      <tr>
+    <%--    <th scope="row"><spring:message code='service.title.AppointmentDate' /></th>
+       <td>
+        <div class="date_set">
+         <!-- date_set start -->
+         <p>
+          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="asAppDtFr" name="asAppDtFr" />
+         </p>
+         <span><spring:message code='svc.hs.reversal.to' /></span>
+         <p>
+          <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="asAppDtTo" name="asAppDtTo" />
+         </p>
+        </div>
+        <!-- date_set end -->
+       </td> --%>
+<%--        <th scope="row"><spring:message code='service.title.DSCBranch' /> <span class='must'> *</span></th>
+       <td><select id="branch" name="branch">
+       </select></td> --%>
       </tr>
       <tr>
        <td colspan="2">
