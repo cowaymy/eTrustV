@@ -1181,46 +1181,47 @@ public class MemberListController {
 
 		if (checkNRIC2.size() > 0) {
 			memType = checkNRIC2.get(0).get("memType").toString();
-			resignDt = checkNRIC2.get(0).get("resignDt").toString();
 			status = checkNRIC2.get(0).get("stus").toString();
 
 			logger.debug("memType : " + memType);
-			logger.debug("resignDt : " + resignDt);
 			logger.debug("status : " + status);
 
-			// 2019-02-12 - LaiKW - Amend checking for 6 months resignation allow rejoin
-            try{
-                String strDt = CommonUtils.getNowDate().substring(0,6) + "01";
-
-                // Current date - 6 months
-                Date cDt = new SimpleDateFormat("yyyyMMdd").parse(strDt);
-                Calendar cCal = Calendar.getInstance();
-                cCal.setTime(cDt);
-                cCal.add(Calendar.MONTH, -6);
-
-                logger.debug("M-6 :: " + new SimpleDateFormat("dd-MMM-yyyy").format(cCal.getTime()));
-
-                Date rDt = new SimpleDateFormat("yyyyMMdd").parse(resignDt);
-                Calendar rCal = Calendar.getInstance();
-                rCal.setTime(rDt);
-
-                logger.debug("Resign :: " + new SimpleDateFormat("dd-MMM-yyyy").format(rCal.getTime()));
-
-                if(rCal.before(cCal)) {
-                    // Resignation Date is before 6 months before current date
-                    resignDtFlg = "Y";
-                }
-            } catch(Exception ex) {
-                ex.printStackTrace();
-                logger.error(ex.toString());
-            }
-
 			if(status.equals("51")) {
-			    if(resignDtFlg.equals("Y")) {
-			        message.setMessage("pass");
-			    } else {
-			        message.setMessage("This member resigned less than 6 months.");
-			    }
+			    resignDt = checkNRIC2.get(0).get("resignDt").toString();
+			    logger.debug("resignDt : " + resignDt);
+
+			    // 2019-02-12 - LaiKW - Amend checking for 6 months resignation allow rejoin
+	            try{
+	                String strDt = CommonUtils.getNowDate().substring(0,6) + "01";
+
+	                // Current date - 6 months
+	                Date cDt = new SimpleDateFormat("yyyyMMdd").parse(strDt);
+	                Calendar cCal = Calendar.getInstance();
+	                cCal.setTime(cDt);
+	                cCal.add(Calendar.MONTH, -6);
+
+	                logger.debug("M-6 :: " + new SimpleDateFormat("dd-MMM-yyyy").format(cCal.getTime()));
+
+	                Date rDt = new SimpleDateFormat("yyyyMMdd").parse(resignDt);
+	                Calendar rCal = Calendar.getInstance();
+	                rCal.setTime(rDt);
+
+	                logger.debug("Resign :: " + new SimpleDateFormat("dd-MMM-yyyy").format(rCal.getTime()));
+
+	                if(rCal.before(cCal)) {
+	                    // Resignation Date is before 6 months before current date
+	                    resignDtFlg = "Y";
+	                }
+	            } catch(Exception ex) {
+	                ex.printStackTrace();
+	                logger.error(ex.toString());
+	            }
+
+	            if(resignDtFlg.equals("Y")) {
+                    message.setMessage("pass");
+                } else {
+                    message.setMessage("This member resigned less than 6 months.");
+                }
 			} else {
 			    message.setMessage("This member is of active/terminate status.");
 			}
