@@ -317,7 +317,7 @@
          <!-- date_set start -->
          <input type="text" title="" placeholder="Order No"
           class="w100p" id="orderNumFrom" name="orderNumFrom"
-          value="${orderNum.c1}" />
+           />
         </div> <!-- date_set end -->
        </td>
        <th scope="row"><spring:message code='service.grid.ASNo' /></th>
