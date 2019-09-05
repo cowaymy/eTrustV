@@ -346,7 +346,7 @@ function viewRentalLedger(){
     	console.log(gridObj[0].item.salesOrdId);
         var orderid = gridObj[0].item.salesOrdId;
         $("#ledgerForm #ordId").val(orderid);
-        Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+        Common.popupWin("ledgerForm", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
     }else{
         Common.alert("<spring:message code='pay.alert.selectTheOrderFirst'/>");
         return;
