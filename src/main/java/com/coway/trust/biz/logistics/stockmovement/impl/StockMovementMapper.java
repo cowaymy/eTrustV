@@ -87,4 +87,12 @@ public interface StockMovementMapper {
 
 	List<EgovMap> SelectStockfromForecast(Map<String, Object> params);
 
+	void insStockMovementHeadForOnLoanUnit(Map<String, Object> fMap);
+
+	void insSVC0111D(Map<String, Object> fMap);
+
+	void insSVC0112D(Map<String, Object> fMap);
+
+	int crtSeqSVC0111D();
+
 }

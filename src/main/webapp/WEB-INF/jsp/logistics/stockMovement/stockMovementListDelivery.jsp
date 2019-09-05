@@ -707,7 +707,8 @@
                }
 
                if (tvalue) {
-                 fn_serialChck(event.rowIndex, event.item, serial)
+            	   /*20190903 VANNIE COMMENT TO SKIP CHECKING UNTIL FULLY UNDERSTAND THE CHECKING PURPOSE
+                   fn_serialChck(event.rowIndex, event.item, serial) */
                } else {
                  AUIGrid.setCellValue(serialGrid, event.rowIndex, "statustype", 'N');
                  AUIGrid.setProp(serialGrid, "rowStyleFunction",
@@ -887,16 +888,15 @@
              checkDelqty = true;
           }
 
-          // ONGHC - TAKE OUT SERIAL NUMBER CHECKING FOR IN HOUSE REPAIR
-          /*if (rowItem.item.docno !='' && rowItem.item.reqsttype =='OD' && rowItem.item.reqsttypedtl =='OD03'){
+          if (rowItem.item.docno !='' && rowItem.item.reqsttype =='OD' && rowItem.item.reqsttypedtl =='OD03'){
             serialchk = true;
-          }*/
+          }
 
-          /*if (rowItem.item.serialchk =='Y'){
+         /*  if (rowItem.item.serialchk =='Y'){
             serialchk = true;
-          }*//*else{
+          } else{
             serialchk = false;
-          }*/
+          } */
         }
 
         if (checkDelqty) {
@@ -1098,230 +1098,243 @@
     AUIGrid.addRow(serialGrid, rowList, rowPos);
   }
 
-  function fn_itempopList_T(data) {
-    var itm_temp = "";
-    var itm_qty = 0;
-    var itmdata = [];
-    for (var i = 0; i < data.length; i++) {
-      if (data[i].item.serialchk == 'Y') {
-        itm_qty = itm_qty + data[i].item.indelyqty;
-        $("#reqstno").val(data[i].item.reqstno);
-      }
-    }
-    $("#serialqty").val(itm_qty);
+  
+	function fn_itempopList_T(data) {
+		var itm_temp = "";
+		var itm_qty = 0;
+		var itmdata = [];
+		var f_itmcd = "";
+		var f_itmname = "";
 
-    f_addrow();
-  }
+		for (var i = 0; i < data.length; i++) {
+			if (data[i].item.serialchk == 'Y') {
+				itm_qty = itm_qty + data[i].item.indelyqty;
+				$("#reqstno").val(data[i].item.reqstno);
+			}
+			
+			if (data[i].item.reqsttype == 'OD' && data[i].item.reqsttypedtl == 'OD03') {
+				itmdata[i] = {
+					itmcd : data[i].item.itmcd,
+					itmname : data[i].item.itmname,
+					serial : "",
+					cnt61 : "",
+					cnt62 : "",
+					cnt63 : "",
+					statustype : "",
+					scanno : ""
 
-  function f_addrow() {
-    var rowPos = "last";
-    var item = new Object();
-    item = {
-      "itmcd" : "",
-      "itmname" : "",
-      "serial" : "",
-      "cnt61" : "",
-      "cnt62" : "",
-      "cnt63" : "",
-      "statustype" : "",
-      "scanno" : ""
-    };
-    AUIGrid.addRow(serialGrid, item, rowPos);
-    return false;
-  }
+				};
+				f_addrow(itmdata);
+				itm_qty = itm_qty + data[i].item.indelyqty;
+			}
+			else {
+				f_addrow();
 
-  function giFunc() {
-    var data = {};
-    var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
-    var check = AUIGrid.getCheckedRowItems(listGrid);
-    //var serials   = AUIGrid.getAddedRowItems(serialGrid);
-    var serials = AUIGrid.getGridData(serialGrid);
+			}
+			$("#serialqty").val(itm_qty);
+		}
 
-    if (serialchk) {
-      if ($("#ascyn").val() == "Y") {
-        console.log('111');
-      } else {
-        for (var i = 0; i < AUIGrid.getRowCount(serialGrid); i++) {
-          if (AUIGrid.getCellValue(serialGrid, i, "statustype") == 'N') {
-            Common.alert("Please check the serial.")
-            return false;
-          }
+	}
 
-          if (AUIGrid.getCellValue(serialGrid, i, "serial") == undefined
-              || AUIGrid.getCellValue(serialGrid, i, "serial") == "undefined") {
-            Common.alert("Please check the serial.")
-            return false;
-          }
-        }
-      }
-      if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)) {
-        Common.alert("Please check the serial.")
-        return false;
-      }
-    }
+	function f_addrow() {
+		var rowPos = "last";
+		var item = new Object();
+		item = {
+			"itmcd" : "",
+			"itmname" : "",
+			"serial" : "",
+			"cnt61" : "",
+			"cnt62" : "",
+			"cnt63" : "",
+			"statustype" : "",
+			"scanno" : ""
+		};
+		AUIGrid.addRow(serialGrid, item, rowPos);
+		return false;
+	}
+	
+	function f_addrow(itmdata) {
+		var rowPos = "last";
+		AUIGrid.addRow(serialGrid, itmdata, rowPos);
+		return false;
+	}
 
-    if ($("#giptdate").val() == "") {
-      Common.alert("Please select the GI Posting Date.");
-      $("#giptdate").focus();
-      return false;
-    }
+	function giFunc() {
+		var data = {};
+		var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+		var check = AUIGrid.getCheckedRowItems(listGrid);
+		//var serials   = AUIGrid.getAddedRowItems(serialGrid);
+		var serials = AUIGrid.getGridData(serialGrid);
 
-    if ($("#giptdate").val() < today) {
-        Common.alert("Cannot select back date.");
-        $("#giptdate").focus();
-        return false;
-      }
+		if (serialchk) {
+			if ($("#ascyn").val() == "Y") {
+				console.log('111');
+			}
+			else {
+				for (var i = 0; i < AUIGrid.getRowCount(serialGrid); i++) {
+				
+					if (AUIGrid.getCellValue(serialGrid, i, "statustype") == 'N') {
+						Common.alert("Please check the serial.")
+						return false;
+					}
 
-    if ($("#giptdate").val() > today) {
-        Common.alert("Cannot select future date.");
-        $("#giptdate").focus();
-        return false;
-      }
+					if (AUIGrid.getCellValue(serialGrid, i, "serial") == undefined || AUIGrid.getCellValue(serialGrid, i, "serial") == "") {
+						Common.alert("Please enter the serial.")
+						return false;
+					}
+				}
+			}
+			if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)) {
+				Common.alert("Please check the serial.")
+				return false;
+			}
+		}
 
-    if ($("#gipfdate").val() == "") {
-      Common.alert("Please select the GI Doc Date.");
-      $("#gipfdate").focus();
-      return false;
-    }
+		if ($("#giptdate").val() == "") {
+			Common.alert("Please select the GI Posting Date.");
+			$("#giptdate").focus();
+			return false;
+		}
 
-    if ($("#gipfdate").val() < today) {
-    	Common.alert("Cannot select back date.");
-        $("#gipfdate").focus();
-        return false;
-      }
+		if ($("#giptdate").val() < today) {
+			Common.alert("Cannot select back date.");
+			$("#giptdate").focus();
+			return false;
+		}
 
-    if ($("#gipfdate").val() > today) {
-    	Common.alert("Cannot select future date.");
-        $("#gipfdate").focus();
-        return false;
-      }
+		if ($("#giptdate").val() > today) {
+			Common.alert("Cannot select future date.");
+			$("#giptdate").focus();
+			return false;
+		}
 
-    data.check = check;
-    data.checked = check;
-    data.add = serials;
-    data.form = $("#giForm").serializeJSON();
+		if ($("#gipfdate").val() == "") {
+			Common.alert("Please select the GI Doc Date.");
+			$("#gipfdate").focus();
+			return false;
+		}
 
-    Common.ajax("POST",
-        "/logistics/stockMovement/StockMovementReqDelivery.do", data,
-        function(result) {
-          if ("dup" == result.data[1]) {
-            Common.alert(" Not enough Qty, Please search again. ");
-            $("#giopenwindow").hide();
-          } else {
-            var msg = result.message + "<br>MDN NO : "
-                + result.data[1];
-            Common.alert(msg, SearchListAjax);
-            AUIGrid.resetUpdatedItems(listGrid, "all");
-            $("#giopenwindow").hide();
-            $('#search').click();
+		if ($("#gipfdate").val() < today) {
+			Common.alert("Cannot select back date.");
+			$("#gipfdate").focus();
+			return false;
+		}
 
-          }
+		if ($("#gipfdate").val() > today) {
+			Common.alert("Cannot select future date.");
+			$("#gipfdate").focus();
+			return false;
+		}
 
-        }, function(jqXHR, textStatus, errorThrown) {
-          try {
-          } catch (e) {
-          }
-          Common.alert("Fail : " + jqXHR.responseJSON.message);
-        });
-    for (var i = 0; i < checkdata.length; i++) {
-      AUIGrid.addUncheckedRowsByIds(listGrid, checkdata[i].rnum);
-    }
+		data.check = check;
+		data.checked = check;
+		data.add = serials;
+		data.form = $("#giForm").serializeJSON();
 
-    serialchk = false;
-  }
+		Common.ajax("POST", "/logistics/stockMovement/StockMovementReqDelivery.do", data, function(result) {
+			if ("dup" == result.data[1]) {
+				Common.alert(" Not enough Qty, Please search again. ");
+				$("#giopenwindow").hide();
+			}
+			else {
+				var msg = result.message + "<br>MDN NO : " + result.data[1];
+				Common.alert(msg, SearchListAjax);
+				AUIGrid.resetUpdatedItems(listGrid, "all");
+				$("#giopenwindow").hide();
+				$('#search').click();
 
-  function fn_serialChck(rowindex, rowitem, str) {
-    var schk = true;
-    var ichk = true;
-    var slocid = '';//session.locid;
-    var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+			}
 
-    var data = {
-      serial : str,
-      locid : slocid
-    };
-    Common
-        .ajaxSync(
-            "GET",
-            "/logistics/stockMovement/StockMovementSerialCheck.do",
-            data,
-            function(result) {
-              if (result.data[0] == null) {
-                AUIGrid.setCellValue(serialGrid, rowindex,
-                    "itmcd", "");
-                AUIGrid.setCellValue(serialGrid, rowindex,
-                    "itmname", "");
-                AUIGrid.setCellValue(serialGrid, rowindex,
-                    "cnt61", 0);
-                AUIGrid.setCellValue(serialGrid, rowindex,
-                    "cnt62", 0);
-                AUIGrid.setCellValue(serialGrid, rowindex,
-                    "cnt63", 0);
+		}, function(jqXHR, textStatus, errorThrown) {
+			try {
+			}
+			catch (e) {
+			}
+			Common.alert("Fail : " + jqXHR.responseJSON.message);
+		});
+		for (var i = 0; i < checkdata.length; i++) {
+			AUIGrid.addUncheckedRowsByIds(listGrid, checkdata[i].rnum);
+		}
 
-                schk = false;
-                ichk = false;
+		serialchk = false;
+	}
 
-              } else {
-                AUIGrid.setCellValue(serialGrid, rowindex,
-                    "itmcd", result.data[0].STKCODE);
-                AUIGrid.setCellValue(serialGrid, rowindex,
-                    "itmname", result.data[0].STKDESC);
-                AUIGrid.setCellValue(serialGrid, rowindex,
-                    "cnt61", result.data[0].L61CNT);
-                AUIGrid.setCellValue(serialGrid, rowindex,
-                    "cnt62", result.data[0].L62CNT);
-                AUIGrid.setCellValue(serialGrid, rowindex,
-                    "cnt63", result.data[0].L63CNT);
+	function fn_serialChck(rowindex, rowitem, str) {
+		var schk = true;
+		var ichk = true;
+		var slocid = '';//session.locid;
+		var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
 
-                if (result.data[0].L61CNT > 0
-                    || result.data[0].L62CNT == 0) {//} || result.data[0].L63CNT > 0){
-                  schk = false;
-                } else {
-                  schk = true;
-                }
+		var data = {
+			serial : str,
+			locid : slocid
+		};
+		Common.ajaxSync("GET", "/logistics/stockMovement/StockMovementSerialCheck.do", data, function(result) {
+			if (result.data[0] == null) {
+				 AUIGrid.setCellValue(serialGrid, rowindex, "itmcd", "");
+				AUIGrid.setCellValue(serialGrid, rowindex, "itmname", "");
+				AUIGrid.setCellValue(serialGrid, rowindex, "cnt61", 0);
+				AUIGrid.setCellValue(serialGrid, rowindex, "cnt62", 0);
+				AUIGrid.setCellValue(serialGrid, rowindex, "cnt63", 0); 
 
-                var checkedItems = AUIGrid
-                    .getCheckedRowItemsAll(listGrid);
+				schk = false;
+				ichk = false;
 
-                for (var i = 0; i < checkedItems.length; i++) {
-                  if (result.data[0].STKCODE == checkedItems[i].itmcd) {
-                    //AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
-                    ichk = true;
-                    break;
-                  } else {
-                    ichk = false;
-                  }
-                }
-              }
+			}
+			else {
+				
+				AUIGrid.setCellValue(serialGrid, rowindex, "itmcd", result.data[0].STKCODE);
+				AUIGrid.setCellValue(serialGrid, rowindex, "itmname", result.data[0].STKDESC);
+				AUIGrid.setCellValue(serialGrid, rowindex, "cnt61", result.data[0].L61CNT);
+				AUIGrid.setCellValue(serialGrid, rowindex, "cnt62", result.data[0].L62CNT);
+				AUIGrid.setCellValue(serialGrid, rowindex, "cnt63", result.data[0].L63CNT);
 
-              if (schk && ichk) {
-                AUIGrid.setCellValue(serialGrid, rowindex,
-                    "statustype", 'Y');
-              } else {
-                AUIGrid.setCellValue(serialGrid, rowindex,
-                    "statustype", 'N');
-              }
+				if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0) {//} || result.data[0].L63CNT > 0){
+					schk = false;
+				}
+				else {
+					schk = true;
+				}
 
-              //Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. " , function(){AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);});
-              AUIGrid.setProp(serialGrid, "rowStyleFunction",
-                  function(rowIndex, item) {
+				var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
 
-                    if (item.statustype == 'N') {
-                      return "my-row-style";
-                    }
-                  });
-              AUIGrid.update(serialGrid);
+				for (var i = 0; i < checkedItems.length; i++) {
+					if (result.data[0].STKCODE == checkedItems[i].itmcd) {
+						//AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+						ichk = true;
+						break;
+					}
+					else {
+						ichk = false;
+					}
+				}
+			}
 
-            }, function(jqXHR, textStatus, errorThrown) {
-              try {
-              } catch (e) {
-              }
-              Common
-                  .alert("Fail : "
-                      + jqXHR.responseJSON.message);
+			if (schk && ichk) {
+				AUIGrid.setCellValue(serialGrid, rowindex, "statustype", 'Y');
+			}
+			else {
+				AUIGrid.setCellValue(serialGrid, rowindex, "statustype", 'N');
+			}
 
-            });
-  }
+			//Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. " , function(){AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);});
+			/* AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
+
+				if (item.statustype == 'N') {
+					return "my-row-style";
+				}
+			});
+			AUIGrid.update(serialGrid); */
+
+		}, function(jqXHR, textStatus, errorThrown) {
+			try {
+			}
+			catch (e) {
+			}
+			Common.alert("Fail : " + jqXHR.responseJSON.message);
+
+		});
+	}
 </script>
 <section id="content">
  <!-- content start -->

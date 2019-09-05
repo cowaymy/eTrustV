@@ -261,6 +261,11 @@ $(function(){
         document.searchForm.action = '/logistics/stockMovement/StockMovementIns2.do';
         document.searchForm.submit();
     });
+    
+    $('#new3').click(function(){
+        document.searchForm.action = '/logistics/stockMovement/StockMovementIns3.do';
+        document.searchForm.submit();
+    });
 
 
     $("#tlocationnm").keypress(function(event) {
@@ -550,6 +555,7 @@ function locationList(){
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 		    <li><p class="btn_grid"><a id="insert">New</a></p></li>
 		    <li><p class="btn_grid"><a id="new2">New SMO By Forecast Report</a></p></li>
+		    <li><p class="btn_grid"><a id="new3">New SMO for On-Loan Unit</a></p></li>
 		    <li><p class="btn_grid"><a id="delete">Delete/Cancel</a></p></li>
 </c:if>
         </ul>

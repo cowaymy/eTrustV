@@ -49,4 +49,6 @@ public interface StockMovementService {
 
 	String insertStockMovementbyForecast(Map<String, Object> param);
 
+	String insertStockMovementForOnLoanUnit(Map<String, Object> param);
+
 }

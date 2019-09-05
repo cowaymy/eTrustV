@@ -795,17 +795,22 @@
     FROM LOG0054M
     WHERE DELVRY_NO=#{delyno}
     </select>
-    
-    <select id="selectDefToLocation" parameterType="Map" resultType="String">
+
+	<select id="selectDefToLocation" parameterType="Map" resultType="String">
 
 	SELECT WH_LOC_ID FROM SYS0028M WHERE 1 = 1
-
 	AND WH_LOC_GB = '02'
-	AND
-	WH_LOC_STK_GRAD = 'A'
 	AND ROWNUM = 1
 	<if test="userBrnchId != null and userBrnchId != ''">
 		AND WH_LOC_BRNCH_ID = #{userBrnchId}
+		<choose>
+			<when test='locStkGrd !=null and locStkGrd == "B"'>
+				AND WH_LOC_STK_GRAD = 'B'
+			</when>
+			<otherwise>
+				AND WH_LOC_STK_GRAD = 'A'
+			</otherwise>
+		</choose>
 	</if>
 </select>
 
@@ -872,5 +877,103 @@
 	WHERE QTY  <![CDATA[>]]> 0
 
 </select>
+
+<update id="insStockMovementHeadForOnLoanUnit" parameterType="Map">
+        MERGE INTO LOG0047M  a
+             USING dual
+                on (a.REQST_NO=#{reqno})
+              WHEN MATCHED THEN
+                   UPDATE SET
+                          a.REQST_CRT_DT    =   to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss')
+                       ,  a.DOC_HDER_TXT    =   #{dochdertxt}
+                       ,  a.CRT_USER_ID     =   #{userId}
+                       ,  a.CRT_DT          =   SYSDATE
+              WHEN NOT MATCHED THEN
+                       INSERT (REQST_NO,
+                              TRNSC_TYPE,
+                              TRNSC_TYPE_DTL,
+                              PRIDIC_FRQNCY,
+                              REQST_CRT_DT,
+                              REQST_REQUIRE_DT,
+                              REF_DOC_NO,
+                              DOC_HDER_TXT,
+                              RCIV_CDC_RDC,
+                              REQST_CDC_RDC,
+                              REQST_STUS,
+                              CRT_USER_ID,
+                              CRT_DT,
+                              REQST_TYPE,
+                              REQST_TYPE_DTL
+                              )
+                            VALUES (  #{reqno}
+                                    , #{sttype}
+                                    , #{smtype}
+                                    , #{pridic}
+                                    , SYSDATE
+                                    , to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss')
+                                    , #{asno}
+                                    , #{dochdertxt}
+                                    , #{tlocation}
+                                    , #{flocation}
+                                    , 'O'
+                                    , #{userId}
+                                    , SYSDATE
+                                    , SUBSTR (#{reqstTypDtl}, 0, 2)
+                                    , #{reqstTypDtl}
+                                    )
+    </update>
+    
+    <select id="crtSeqSVC0111D"  resultType="Integer">
+        SELECT SVC0111D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+	<insert id="insSVC0111D" parameterType="Map">
+		INSERT INTO SVC0111D
+		(SEQ,
+		SALES_ORD_ID,
+		AS_NO,
+		DISB,
+		CRT_DT,
+		UPD_DT,
+		CRT_BY,
+		UPD_BY) VALUES
+		(#{seqSVC111D}, (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{orderno}), #{asno}, '0', SYSDATE, SYSDATE, #{userId},
+		#{userId}
+		)
+	</insert>
+	
+	<insert id="insSVC0112D" parameterType="Map">
+	INSERT INTO SVC0112D
+	(SEQ,
+	REQST_NO,
+	TRNSC_TYPE,
+	TRNSC_TYPE_DTL,
+	PRIDIC_FRQNCY,
+	REQST_CRT_DT,
+	REQST_REQUIRE_DT,
+	REF_DOC_NO,
+	DOC_HDER_TXT,
+	RCIV_CDC_RDC,
+	REQST_CDC_RDC,
+	CRT_USER_ID,
+	CRT_DT,
+	REQST_STUS,
+	REQST_TYPE,
+	REQST_TYPE_DTL) VALUES
+	(#{seqSVC111D}, #{reqno}, #{sttype}, #{smtype}, #{pridic}
+	, SYSDATE
+	, to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss')
+	, 'dd/mm/yyyyhh24miss')
+	, #{asno}
+	, #{dochdertxt}
+	, #{tlocation}
+	, #{flocation}
+	, #{userId}
+	, SYSDATE
+	, 'O'
+	, SUBSTR (#{reqstTypDtl}, 0, 2)
+	, #{reqstTypDtl}
+	)
+</insert>
 
 </mapper>

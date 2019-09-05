@@ -647,4 +647,54 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		return reqNo;
 
 	}
+	
+	@Override
+	public String insertStockMovementForOnLoanUnit(Map<String, Object> params) {
+		List<Object> insList = (List<Object>) params.get("add");
+		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
+		String reqstTypDtl = "OD03";
+
+		if (insList.size() > 0) {
+			for (int i = 0; i < insList.size(); i++) {
+				Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
+
+				insMap.put("tlocation", fMap.get("tlocation"));
+
+				int iCnt = stockMoveMapper.selectAvaliableStockQty(insMap);
+				if (iCnt == 1 ){
+					return "";
+				}
+			}
+		}
+
+		String reqNo = stockMoveMapper.selectStockMovementSeq();
+
+		fMap.put("reqno", reqNo);
+		fMap.put("userId", params.get("userId"));
+		fMap.put("reqstTypDtl", reqstTypDtl);
+
+		stockMoveMapper.insStockMovementHeadForOnLoanUnit(fMap);
+		
+		if (insList.size() > 0) {
+			for (int i = 0; i < insList.size(); i++) {
+				Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
+				insMap.put("reqno", reqNo);
+				insMap.put("userId", params.get("userId"));
+				stockMoveMapper.insStockMovement(insMap);
+			}
+		}
+
+		insertStockBooking(fMap);
+		
+		//insert new table, get from Wayne.
+		int seqSVC111D = stockMoveMapper.crtSeqSVC0111D();
+		fMap.put("seqSVC111D", seqSVC111D);
+		
+		stockMoveMapper.insSVC0111D(fMap);
+		
+		stockMoveMapper.insSVC0112D(fMap);
+
+		return reqNo;
+
+	}
 }
