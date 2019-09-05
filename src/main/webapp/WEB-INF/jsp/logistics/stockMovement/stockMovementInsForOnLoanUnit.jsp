@@ -343,6 +343,7 @@
 		});
 		
 	
+	
 	$("#movpath").change(function() {
 			var brnch = '${SESSION_INFO.userBranchId}';
 			var paramdata;
@@ -373,6 +374,21 @@
 							brnch : brnch
 						};
 						doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '', 'tlocation', 'S', '');
+					}
+					else {
+
+						paramdata = {
+							locgb : $("#movpath").val(),
+							grade : 'A'
+						};
+						doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '', 'tlocation', 'S', '');
+
+						paramdata2 = {
+							stoIn : '02,05',
+							endlikeValue : $("#locationType").val(),
+							grade : $("#locationType").val()
+						};
+						doGetComboCodeId('/common/selectStockLocationList.do', paramdata2, '', 'flocation', 'S', '');
 					}
 
 				}
@@ -437,20 +453,20 @@
 
 				var boolitem = true;
 				var k = 0;
-				
+
 				for (var i = 0; i < checkedItems.length; i++) {
-					if(checkedItems.length > 1){
+					if (checkedItems.length > 1) {
 						boolitem = false;
 						Common.alert("Only allow to select one Material.");
 						break;
 					}
-					
-					if(checkedItems[i].qty == 0){
+
+					if (checkedItems[i].qty == 0) {
 						boolitem = false;
 						Common.alert("Stock is insufficient to request.");
 						break;
 					}
-					if(reqitms.length >= 1){
+					if (reqitms.length >= 1) {
 						boolitem = false;
 						Common.alert("Only allow to request one Material.");
 						break;
@@ -462,7 +478,7 @@
 							boolitem = false;
 							break;
 						}
-						
+
 					}
 
 					if (boolitem) {
@@ -518,13 +534,13 @@
 				Common.alert("Header Text can be up to 50 digits.");
 				return false;
 			}
-			
-			if ($("#asno").val()== null || $("#asno").val() == undefined || $("#asno").val() == "") {
+
+			if ($("#asno").val() == null || $("#asno").val() == undefined || $("#asno").val() == "") {
 				Common.alert("Please enter AS No.");
 				return false;
-			} 
-			
-			if ($("#orderno").val()== null || $("#orderno").val() == undefined|| $("#orderno").val() == "") {
+			}
+
+			if ($("#orderno").val() == null || $("#orderno").val() == undefined || $("#orderno").val() == "") {
 				Common.alert("Please enter Order No.");
 				return false;
 			}
@@ -684,12 +700,10 @@
 			$("#cType").prop("disabled", false);
 			$("#catetype").prop("disabled", false);
 		}
-		if (ind == "save"){
+		if (ind == "save") {
 			$("#sttype").prop("disabled", false);
 			$("#smtype").prop("disabled", false);
 		}
-
-		
 
 	}
 </script>
