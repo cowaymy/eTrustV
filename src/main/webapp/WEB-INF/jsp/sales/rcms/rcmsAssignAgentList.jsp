@@ -21,8 +21,23 @@ var agentList = [];
 var suggestList = [];
 var ynData = [{"codeId": "1","codeName": "YES"},{"codeId": "0","codeName": "NO"}];
 
+var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
+var userName      = '${SESSION_INFO.userName}';
+var agentId = null;
 
 $(document).ready(function(){
+
+    if(MEM_TYPE == '6' || MEM_TYPE == '4'){
+        $("#rosCaller").multipleSelect("enable");
+    }else{
+        $("#rosCaller").multipleSelect("disable");
+
+        Common.ajax("GET", "/sales/rcms/selectRosCaller", {userName:userName}, function(result) {
+            if(result.length > 0){
+              agentId =  "" +result[0].agentId + "|!|";
+            }
+        }, null, {async : false});
+    }
 
 	doDefCombo(ynData, '' ,'etrYn', 'S', '');
 	doDefCombo(ynData, '' ,'sensitiveYn', 'S', '');
@@ -53,7 +68,7 @@ $(document).ready(function(){
     //Customer Type
     CommonCombo.make("customerType", "/common/selectCodeList.do", {groupCode : '8'}, '964', {isShowChoose: false});
     //Company Type
-    CommonCombo.make("companyType", "/common/selectCodeList.do", {groupCode : '95'}, '', {isShowChoose: false , isCheckAll : false, type: "M"});
+    CommonCombo.make("companyType", "/common/selectCodeList.do", {groupCode : '95'}, null, {isShowChoose: false , isCheckAll : false, type: "M"});
     //Opening Aging Month
     CommonCombo.make("openMonth", "/common/selectCodeList.do", {groupCode : '330'}, '4|!|5|!|6',
     		{
@@ -64,7 +79,7 @@ $(document).ready(function(){
                 type: "M"
              });
     //RosCaller
-    CommonCombo.make("rosCaller", "/sales/rcms/selectRosCaller", {stus:'1'}, '',  {id:"agentId", name:"agentName", isCheckAll : false, isShowChoose: false , type: "M"});
+    CommonCombo.make("rosCaller", "/sales/rcms/selectRosCaller", {stus:'1'}, agentId,  {id:'agentId', name:"agentName", isShowChoose: false,isCheckAll : false , type: "M"});
     //doGetCombo('/common/selectCodeList.do', '2', '',    'cmbRaceId',    'S', ''); //Common Code
     CommonCombo.make('cmbRaceId', "/common/selectCodeList.do", {groupCode : '2'} , '',
             {
@@ -80,18 +95,6 @@ $(document).ready(function(){
     fn_suggestList();
 
     createGrid();
-
-   /*  $("#customerType").on("change", function () {
-    	 var $this = $(this);
-
-         if ($this.val() == 965) {
-             $("#companyType").attr("disabled", false);
-             $("#companyType").attr("class" , "");
-         }else{
-        	 $("#companyType").attr("disabled", true);
-        	 $("#companyType").attr("class" , "disabled");
-         }
-    }); */
 
     //엑셀 다운
     $('#excelDown').click(function() {
@@ -147,7 +150,7 @@ function createGrid(){
               {dataField : "unBillAmt", headerText : '<spring:message code="sal.text.unbillAmount" />', width : '10%'  , editable       : false      } ,
               /* {dataField : "currRentalStus", headerText : '<spring:message code="sal.title.text.currRentStatus" />', width : '10%'  , editable       : false      } , */
 	          {dataField : "prevAgentId", headerText : "", width : 90    ,   visible:false ,   editable       : false},
-	          {dataField : "oriPrevAgentId", headerText : '<spring:message code="sal.title.text.prevCaller" />', width : '14%'    ,    editable       : false } ,
+	          //{dataField : "oriPrevAgentId", headerText : '<spring:message code="sal.title.text.prevCaller" />', width : '14%'    ,    editable       : false } ,
               {dataField : "agentId", headerText : '<spring:message code="sal.title.text.rosCaller" />', width : '14%'    ,     editable       : false },
               {dataField : "assigned", headerText : '<spring:message code="sal.title.text.assigned" />', width : '7%'  , editable       : false, visible : false     } ,
               {dataField : "sensitiveFg", headerText : '<spring:message code="sal.title.text.sensitive" />', width : '5%'   ,editable       : false    },
@@ -240,6 +243,14 @@ function fn_selectListAjax() {
 	        return ;
 	 }
 
+
+	 if(!(MEM_TYPE == '4' || MEM_TYPE == '6')){
+		 if($("#rosCaller").val() == null){
+			 Common.alert('<spring:message code="sal.alert.msg.rosCaller" />');
+	         return ;
+		 }
+	 }
+
 	if($("#customerType").val() == "964"){
           $("#companyType").val("");
     }
@@ -307,10 +318,26 @@ function fn_edit(){
 	Common.popupDiv("/sales/rcms/updateRemarkPop.do",null, '', true, "updateRemarkPop");
 }
 
-/* Report */
+/* Report Start*/
 function fn_badAccReport(){
 	Common.popupDiv("/sales/rcms/badAccReportPop.do",null, null , true, "badReportPop");
 }
+
+function fn_assignListReport(){
+    Common.popupDiv("/sales/rcms/assignListReportPop.do",null, null , true, "assignListReportPop");
+}
+
+function fn_eTRSummaryListReport(){
+    Common.popupDiv("/sales/rcms/eTRSummaryListReportPop.do",null, null , true, "eTRSummaryListReportPop");
+}
+
+function fn_assignSummaryListReport(){
+    Common.popupDiv("/sales/rcms/assignSummaryListReportPop.do",null, null , true, "assignSummaryListReportPop");
+}
+
+/* Report End*/
+
+
 
 function viewRentalLedger(){
     var gridObj = AUIGrid.getSelectedItems(assignGrid);
@@ -448,14 +475,21 @@ function viewRentalLedger(){
     </tbody>
     </table><!-- table end -->
 
-    <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+
     <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
     <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
     <dl class="link_list">
         <dt><spring:message code="sal.title.text.link" /></dt>
         <dd>
         <ul class="btns">
+        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+            <li><p class="link_btn type2"><a onclick="javascript: fn_assignListReport()"><spring:message code="sal.title.text.assignListRaw" /></a></p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="link_btn type2"><a onclick="javascript: fn_badAccReport()"><spring:message code="sal.title.text.badaccRaw" /></a></p></li>
+            <li><p class="link_btn type2"><a onclick="javascript: fn_eTRSummaryListReport()"><spring:message code="sal.title.text.etrSummaryListRaw" /></a></p></li>
+            <li><p class="link_btn type2"><a onclick="javascript: fn_assignSummaryListReport()"><spring:message code="sal.title.text.assignSummaryListRaw" /></a></p></li>
+        </c:if>
         </ul>
         <ul class="btns">
         </ul>
@@ -463,7 +497,7 @@ function viewRentalLedger(){
         </dd>
     </dl>
     </aside><!-- link_btns_wrap end -->
-    </c:if>
+
 
     </form>
 </section><!-- search_table end -->

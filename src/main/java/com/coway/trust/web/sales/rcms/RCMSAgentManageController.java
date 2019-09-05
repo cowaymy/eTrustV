@@ -328,6 +328,21 @@ public class RCMSAgentManageController {
 		return "sales/rcms/badAccReportPop";
 	}
 
+	@RequestMapping(value = "/assignListReportPop.do")
+    public String assignListReportPop(@RequestParam Map<String, Object> params) throws Exception{
+        return "sales/rcms/assignListReportPop";
+    }
+
+	@RequestMapping(value = "/eTRSummaryListReportPop.do")
+    public String eTRSummaryListReportPop(@RequestParam Map<String, Object> params) throws Exception{
+        return "sales/rcms/eTRSummaryListReportPop";
+    }
+
+	@RequestMapping(value = "/assignSummaryListReportPop.do")
+    public String assignSummaryListReportPop(@RequestParam Map<String, Object> params) throws Exception{
+        return "sales/rcms/assignSummaryListReportPop";
+    }
+
 	@RequestMapping(value = "/rentalStatusListForBadAcc")
 	public ResponseEntity<List<EgovMap>> rentalStatusListForBadAcc(@RequestParam Map<String, Object> params, @RequestParam(value="codeIn[]") String codeIn[]) throws Exception{
 
