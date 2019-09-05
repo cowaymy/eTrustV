@@ -700,11 +700,12 @@ function fn_genClaim(){
             function(result) {
                  var message = "";
 
-                 if(result.code == "IS_BATCH"){
+/*                  if(result.code == "IS_BATCH"){
                      message += "<spring:message code='pay.alert.claimIsBatch' arguments='"+result.data.ctrlId+" ; "+
                      result.data.crtUserName+" ; "+result.data.crtDt+"' htmlEscape='false' argumentSeparator=';' />";
 
-                 }else if(result.code == "FILE_OK"){
+                 }else  */
+                if(result.code == "FILE_OK"){
                      message += "<spring:message code='pay.alert.claimFileOk' arguments='"+result.data.ctrlId+" ; "+result.data.ctrlBillAmt+" ; "+result.data.ctrlTotItm+" ; "+
                      result.data.crtUserId+" ; "+result.data.crtDt+"' htmlEscape='false' argumentSeparator=';' />";
 

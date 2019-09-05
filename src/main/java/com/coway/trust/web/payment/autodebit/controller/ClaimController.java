@@ -755,13 +755,13 @@ public class ClaimController {
     searchMap.put("status", "1");
     searchMap.put("IS_GRP", "1");
 
-    List<EgovMap> isActiveBatchList = claimService.selectClaimList(searchMap);
+    //List<EgovMap> isActiveBatchList = claimService.selectClaimList(searchMap);
 
     // Active인 배치가 있는 경우
-    if (isActiveBatchList.size() > 0) {
+/*    if (isActiveBatchList.size() > 0) {
       returnCode = "IS_BATCH";
       returnMap = (Map<String, Object>) isActiveBatchList.get(0);
-    } else {
+    } else {*/
 
       String isCRC = "131".equals((String.valueOf(claim.get("new_claimType")))) ? "1"
           : "132".equals((String.valueOf(claim.get("new_claimType")))) ? "0" : "134";
@@ -803,7 +803,7 @@ public class ClaimController {
       } else {
         returnCode = "FAIL";
       }
-    }
+    //}
 
     // 결과 만들기.
     ReturnMessage message = new ReturnMessage();
