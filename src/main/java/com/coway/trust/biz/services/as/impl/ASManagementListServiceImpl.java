@@ -35,6 +35,7 @@ import oracle.sql.DATE;
  * 23/05/2019    ONGHC      1.0.3       - Amend asResult_insert
  * 26/07/2019    ONGHC      1.0.4       - Add Recall Status
  * 26/07/2019    ONGHC      1.0.5       - Remove In House SMO
+ * 05/09/2019    ONGHC      1.0.6       - Create saveASEntryInHouse
  *********************************************************************************************/
 
 @Service("ASManagementListService")
@@ -1846,12 +1847,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     }
 
     // HERE INSERT NEW IN HOUSE DATA.
-    //LOGGER.debug("= PARAMS {}" + params);
-    //if (String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4")) {
-      //if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454")) {
-        //this.saveASEntryInHouse(params);
-      //}
-    //}
+    LOGGER.debug("= PARAMS {}" + params);
+    if (String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4")) {
+      if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454")) {
+        this.saveASEntryInHouse(params);
+      }
+    }
 
     LOGGER.debug("================asResult_insert - END ================");
     return em;
@@ -1861,11 +1862,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   public int saveASEntryInHouse(Map<String, Object> params) {
     params.put("REF_REQUEST", (String) ((Map) params.get("asResultM")).get("AS_ENTRY_ID")); // REFER ID
 
-    params.put("DOCNO", "17");
+    params.put("DOCNO", "169");
     EgovMap eMap = ASManagementListMapper.getASEntryDocNo(params); // GET NEW AS NO
 
-    EgovMap seqMap = ASManagementListMapper.getASEntryId(params); // GET NEW AS ENTRY NO
-    EgovMap ccrSeqMap = ASManagementListMapper.getCCR0006D_CALL_ENTRY_ID_SEQ(params);
+    EgovMap seqMap = ASManagementListMapper.getIHREntryId(params); // GET NEW AS ENTRY NO
+    // EgovMap ccrSeqMap = ASManagementListMapper.getCCR0006D_CALL_ENTRY_ID_SEQ(params);
 
     params.put("AS_ID", String.valueOf(seqMap.get("seq")).trim());
     params.put("AS_NO", String.valueOf(eMap.get("asno")).trim());
