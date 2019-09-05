@@ -13,6 +13,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
  * 08/05/2019    ONGHC      1.0.2       - Add getFltNm
  * 26/07/2019    ONGHC      1.0.3       - Add Recall Status
+ * 05/09/2019    ONGHC      1.0.4       - Create Function for In-House Repair
  *********************************************************************************************/
 
 @Mapper("ASManagementListMapper")
@@ -112,7 +113,6 @@ public interface ASManagementListMapper {
 
   int insertSVC0005D(Map<String, Object> params);
 
-  // 콜로그
   int insertCCR0006D(Map<String, Object> params);
 
   int insertCCR0007D(Map<String, Object> params);
@@ -123,17 +123,17 @@ public interface ASManagementListMapper {
 
   int updateAssignCT(Map<String, Object> params);
 
-  // 물류 처리 프로시져
   Map<String, Object> callSP_LOGISTIC_REQUEST(Map<String, Object> param);
 
-  // 시퀀스
   EgovMap getASEntryDocNo(Map<String, Object> params);
 
-  EgovMap getCCR0006D_CALL_ENTRY_ID_SEQ(Map<String, Object> params); // CCR0006D_CALL_ENTRY_ID_SEQ
+  EgovMap getCCR0006D_CALL_ENTRY_ID_SEQ(Map<String, Object> params);
 
-  EgovMap getASEntryId(Map<String, Object> params); // SVC0001D_AS_ID_SEQ
+  EgovMap getASEntryId(Map<String, Object> params);
 
-  EgovMap getResultASEntryId(Map<String, Object> params); // SVC0004D_AS_RESULT_ID_SEQ
+  EgovMap getIHREntryId(Map<String, Object> params);
+
+  EgovMap getResultASEntryId(Map<String, Object> params);
 
   List<EgovMap> assignCtList(Map<String, Object> params);
 
@@ -157,7 +157,6 @@ public interface ASManagementListMapper {
 
   int updateSTATE_CCR0006D(Map<String, Object> params);
 
-  // update
   EgovMap getPAY0017SEQ(Map<String, Object> params);
 
   EgovMap getLOG0015DSEQ(Map<String, Object> params);
@@ -190,13 +189,11 @@ public interface ASManagementListMapper {
 
   List<EgovMap> getResult_PAY0065D(Map<String, Object> params);
 
-  int reverse_SVC0004D(Map<String, Object> params); // reverse_SVC0004D 기존 금액
-                                                    // -처리
+  int reverse_SVC0004D(Map<String, Object> params);
 
-  int reverse_CURR_SVC0004D(Map<String, Object> params); // CURR false 처리
+  int reverse_CURR_SVC0004D(Map<String, Object> params);
 
-  int reverse_CURR_SVC0005D(Map<String, Object> params); // reverse_SVC0005D 기존
-                                                         // 수량 -처리
+  int reverse_CURR_SVC0005D(Map<String, Object> params);
 
   int insert_LOG0015D(Map<String, Object> params);
 
@@ -220,27 +217,27 @@ public interface ASManagementListMapper {
 
   int update_SAL0087D(Map<String, Object> params);
 
-  int reverse_PAY0007D(Map<String, Object> params); // UPDATE
+  int reverse_PAY0007D(Map<String, Object> params);
 
-  int reverse_PAY0016D(Map<String, Object> params); // UPDATE
+  int reverse_PAY0016D(Map<String, Object> params);
 
-  int reverse_PAY0012D(Map<String, Object> params); // UPDATE
+  int reverse_PAY0012D(Map<String, Object> params);
 
-  int reverse_PAY0027D(Map<String, Object> params); // UPDATE
+  int reverse_PAY0027D(Map<String, Object> params);
 
-  int reverse_PAY0028D(Map<String, Object> params); // UPDATE
+  int reverse_PAY0028D(Map<String, Object> params);
 
-  int reverse_PAY0006D(Map<String, Object> params); // UPDATE
+  int reverse_PAY0006D(Map<String, Object> params);
 
-  int reverse_DocNo_PAY0006D(Map<String, Object> params); // UPDATE
+  int reverse_DocNo_PAY0006D(Map<String, Object> params);
 
-  int reverse_StateUpPAY0007D(Map<String, Object> params); // UPDATE
+  int reverse_StateUpPAY0007D(Map<String, Object> params);
 
   int reverse_State_CCR0001D(Map<String, Object> params);
 
   int reverse_updatePAY0016D(Map<String, Object> params);
 
-  EgovMap getLog0016DCount(Map<String, Object> params); // log0016d count
+  EgovMap getLog0016DCount(Map<String, Object> params);
 
   List<EgovMap> selectCTByDSC(Map<String, Object> params);
 
@@ -254,7 +251,6 @@ public interface ASManagementListMapper {
 
   int updateState_SERIAL_NO_SVC0004D(Map<String, Object> params);
 
-  // add by hgham mobile 중복 처리
   int isAsAlreadyResult(Map<String, Object> params);
 
   int asResultSync(Map<String, Object> params);
