@@ -251,6 +251,7 @@ function fn_selectListAjax() {
 		 }
 	 }
 
+	 console.log($("#rosCaller").val());
 	if($("#customerType").val() == "964"){
           $("#companyType").val("");
     }
@@ -332,7 +333,8 @@ function fn_eTRSummaryListReport(){
 }
 
 function fn_assignSummaryListReport(){
-    Common.popupDiv("/sales/rcms/assignSummaryListReportPop.do",null, null , true, "assignSummaryListReportPop");
+	Common.alert("In development");
+    //Common.popupDiv("/sales/rcms/assignSummaryListReportPop.do",null, null , true, "assignSummaryListReportPop");
 }
 
 /* Report End*/
@@ -477,6 +479,19 @@ function fn_invoicePop() {
         <p><select id="etrYn" name="etrYn" class="w100p"></select></p>
         </td>
     </tr>
+    <tr>
+        <th scope="row"><spring:message code="sal.text.custName" /></th>
+        <td>
+            <input type="text" title="" placeholder="" class="w100p" id="custName" name="custName" />
+        </td>
+        <th scope="row"><spring:message code="sales.vaNum" /></th>
+        <td>
+            <input type="text" title="" placeholder="" class="w100p" id="vaNo" name="vaNo" />
+        </td>
+        <th scope="row"></th>
+        <td></td>
+    </tr>
+
     </tbody>
     </table><!-- table end -->
 
