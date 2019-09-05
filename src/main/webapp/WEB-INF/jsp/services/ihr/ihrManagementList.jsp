@@ -885,9 +885,9 @@
         Common.alert("<spring:message code='service.msg.asInvNoChr' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
       } else {
         $("#reportForm #V_RESULTID").val(asrId);
-        $("#reportForm #reportFileName").val('/services/ASInvoice.rpt');
+        $("#reportForm #reportFileName").val('/services/IHInvoice.rpt');
         $("#reportForm #viewType").val("PDF");
-        $("#reportForm #reportDownFileName").val("ASInvoice_" + day + month + date.getFullYear());
+        $("#reportForm #reportDownFileName").val("IHInvoice_" + day + month + date.getFullYear());
 
         var option = {
           isProcedure : true,
