@@ -7,6 +7,7 @@
  01/04/2019  ONGHC  1.0.1          RE-STRUCTURE JSP AND ADD CHECKING FOR SETTLE DATE
  06/05/2019  ONGHC  1.0.2          Check Settle Date Only When Status Complete
  26/04/2019  ONGHC  1.0.3          ADD RECALL STATUS
+ 05/09/2019  ONGHC  1.0.4          REMOVE IN-HOUSE REPAIR SECTION
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > EDIT / VIEW AS ENTRY PLUG IN -->
@@ -175,7 +176,7 @@
   // RELOAD DATA
   function fn_getErrMstList(_ordNo) {
     $("#ddlErrorCode option").remove();
-    doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO=' + _ordNo, '', '', 'ddlErrorCode', 'S', 'fn_setErrCde');
+    doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO=' + _ordNo, '', errCde, 'ddlErrorCode', 'S', 'fn_setErrCde');
   }
 
   function fn_errMst_SelectedIndexChanged() {
@@ -313,7 +314,7 @@
     $('#txtFilterCharge').val(tFilterAmt.toFixed(2));
 
      // IN HOUSE REPAIR
-    if (result[0].inHuseRepairReplaceYn == "1") {
+    /* if (result[0].inHuseRepairReplaceYn == "1") {
       $("input:radio[name='replacement']:radio[value='1']").attr('checked', true); // 원하는 값(Y)을 체크
       fn_replacement('1');
     } else if (result[0].inHuseRepairReplaceYn == "0") {
@@ -342,7 +343,7 @@
         $("#inHouseRemark").attr("disabled", false);
       }
       $("#inHouseRepair_div").attr("style", "display:inline");
-    }
+    }*/
 
     if ($("#ddlStatus").val() == 4) {
       $("#ddlStatus").attr("disabled", "disabled");
@@ -363,7 +364,7 @@
         $("#" + _tobj + "_text").val((result[0].resnDesc.trim()).trim());
         $("#" + _tobj + "_id").val(result[0].resnId);
 
-        if ('337' == _v) {
+        /*if ('337' == _v) {
           if (result[0].codeId.trim() == 'B8' || result[0].codeId.trim() == 'B6') {
             $("#replacement").attr("disabled", "disabled");
             $("#promisedDate").attr("disabled", "disabled");
@@ -382,17 +383,17 @@
             $("#inHouseRepair_div").attr("style", "display:none");
             fn_replacement(0);
           }
-        }
+        }*/
       } else {
         $("#" + _tobj + "_text").val( "* No such detail of defect found.");
-        $("#promisedDate").val("").attr("disabled", "disabled");
+        /* $("#promisedDate").val("").attr("disabled", "disabled");
         $("#productGroup").val("").attr("disabled", "disabled");
         $("#productCode").val("").attr("disabled", "disabled");
         $("#serialNo").val("").attr("disabled", "disabled");
         $("#inHouseRemark").val("").attr("disabled", "disabled");
         $("#inHouseRepair_div").attr("style", "display:none");
         $("input:radio[name='replacement']").removeAttr('checked');
-        fn_replacement(0);
+        fn_replacement(0); */
       }
     });
   }
@@ -824,14 +825,14 @@
       $("#txtFilterCharge").val("0.00").attr("disabled", true);
       $("#txtTotalCharge").val("0.00").attr("disabled", true);
 
-      $("input:radio[name='replacement']").removeAttr('checked');
+      /*$("input:radio[name='replacement']").removeAttr('checked');
       $("#promisedDate").val("").attr("disabled", "disabled");
       $("#productGroup").val("").attr("disabled", "disabled");
       $("#productCode").val("").attr("disabled", "disabled");
       $("#serialNo").val("").attr("disabled", "disabled");
       $("#inHouseRemark").val("").attr("disabled", "disabled");
       $("#inHouseRepair_div").attr("style", "display:none");
-      fn_replacement(0);
+      fn_replacement(0);*/
 
       $("#btnSaveDiv").show();
       $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
@@ -931,14 +932,14 @@
       $("#solut_code_id").val("");
       $("#solut_code_text").val("").attr("disabled", true);
 
-      $("input:radio[name='replacement']").removeAttr('checked');
+      /* $("input:radio[name='replacement']").removeAttr('checked');
       $("#promisedDate").val("").attr("disabled", "disabled");
       $("#productGroup").val("").attr("disabled", "disabled");
       $("#productCode").val("").attr("disabled", "disabled");
       $("#serialNo").val("").attr("disabled", "disabled");
       $("#inHouseRemark").val("").attr("disabled", "disabled");
       $("#inHouseRepair_div").attr("style", "display:none");
-      fn_replacement(0);
+      fn_replacement(0);*/
     }
   }
 
@@ -1252,7 +1253,7 @@
         rtnValue = false;
     }
 
-    if ($("#solut_code_id").val() == "454") { // RETURN PRODUCT BACK TO FACTORY
+    /*if ($("#solut_code_id").val() == "454") { // RETURN PRODUCT BACK TO FACTORY
       if ($("input:radio[name='replacement']:checked").val() == "1") {
         if (FormUtil.checkReqValue($("#productGroup"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Loan Product Category' htmlEscape='false'/> </br>";
@@ -1269,7 +1270,7 @@
           rtnValue = false;
         }
       }
-    }
+    } */
 
     if (rtnValue == false) {
       Common.alert(rtnMsg);
@@ -1427,12 +1428,12 @@
     var editedRowItems = AUIGrid.getEditedRowColumnItems(myFltGrd10);
     var removedRowItems = AUIGrid.getRemovedItems(myFltGrd10);
 
-    var inHseRprInd = "";
+    /*var inHseRprInd = "";
     if ($("input[name='replacement'][value='1']").prop("checked")) {
       inHseRprInd = 1;
     } else {
       inHseRprInd = 0;
-    }
+    }*/
 
     // TEMPORARY OPEN LABOUR CHARGE, FILTER CHARGE, TOTAL CHARGE
     $('#txtLabourCharge').attr("disabled", false);
@@ -1502,7 +1503,7 @@
       TAX_INVOICE_CONT_PERS : $("#txtContactPerson").text(),
 
       // AS IN HOUSE REPAIR
-      productCode : aSOrderInfo.stockCode,
+      /* productCode : aSOrderInfo.stockCode,
       productName : aSOrderInfo.stockDesc,
       serialNo : aSOrderInfo.lastInstallSerialNo,
       IN_HUSE_REPAIR_REM : $("#inHouseRemark").val(),
@@ -1510,7 +1511,17 @@
       IN_HUSE_REPAIR_PROMIS_DT : $("#promisedDate").val(),
       IN_HUSE_REPAIR_GRP_CODE : $("#productGroup").val(),
       IN_HUSE_REPAIR_PRODUCT_CODE : $("#productCode").val(),
-      IN_HUSE_REPAIR_SERIAL_NO : $("#serialNo").val()
+      IN_HUSE_REPAIR_SERIAL_NO : $("#serialNo").val() */
+
+      productCode : "",
+      productName : "",
+      serialNo : "",
+      IN_HUSE_REPAIR_REM : "",
+      IN_HUSE_REPAIR_REPLACE_YN : 0,
+      IN_HUSE_REPAIR_PROMIS_DT : "",
+      IN_HUSE_REPAIR_GRP_CODE : "",
+      IN_HUSE_REPAIR_PRODUCT_CODE : "",
+      IN_HUSE_REPAIR_SERIAL_NO : ""
     }
 
     var saveForm;
@@ -2264,12 +2275,11 @@
    </dd>
 
    <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
-   <dt class="click_add_on" id='inHouse_dt' onclick="fn_secChk(this);">
+   <!-- <dt class="click_add_on" id='inHouse_dt' onclick="fn_secChk(this);">
     <a href="#">In-House Repair Entry</a>
    </dt>
    <dd id='inHouseRepair_div' style="display: none">
     <table class="type1">
-     <!-- table start -->
      <caption>table</caption>
      <colgroup>
       <col style="width: 170px" />
@@ -2310,8 +2320,7 @@
       </tr>
      </tbody>
     </table>
-    <!-- table end -->
-   </dd>
+   </dd> -->
    <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
   </dl>
  </article>
