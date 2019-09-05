@@ -7,6 +7,7 @@
  01/04/2019  ONGHC  1.0.1          RE-STRUCTURE JSP AND ADD IN HOUSE REPAIR FUNCTION
  02/04/2019  ONGHC  1.0.2          Inherit Error Code and Error Desc.
  26/04/2019  ONGHC  1.0.3          ADD RECALL STATUS
+ 05/09/2019  ONGHC  1.0.4          REMOVE IN-HOUSE REPAIR SECTION
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > VIEW / ADD AS ENTRY -->
@@ -211,7 +212,7 @@
       $("#inHouseRepair_div").attr("style", "display:inline");
     }
 
-    if (result[0].inHuseRepairReplaceYn == "1") {
+    /*if (result[0].inHuseRepairReplaceYn == "1") {
       $("input:radio[name='replacement']:radio[value='1']").attr(
           'checked', true);
       fn_replacement(1);
@@ -219,7 +220,7 @@
       $("input:radio[name='replacement']:radio[value='0']").attr(
           'checked', true);
       fn_replacement(0);
-    }
+    }*/
 
     $("#promisedDate").val(result[0].inHuseRepairPromisDt);
     $("#productGroup").val(result[0].inHuseRepairGrpCode);
@@ -486,37 +487,37 @@
           $("#" + _tobj + "_text").val((result[0].resnDesc.trim()).trim());
           $("#" + _tobj + "_id").val(result[0].resnId);
 
-          if ('337' == _v) {
+          /*if ('337' == _v) {
             if (result[0].codeId.trim() == 'B8' || result[0].codeId.trim() == 'B6') {
-                $("#replacement").attr("disabled", false);
-                $("#promisedDate").attr("disabled", false);
-                $("#productGroup").attr("disabled", false);
-                $("#productCode").attr("disabled", false);
-                $("#serialNo").attr("disabled", false);
-                $("#inHouseRemark").attr("disabled", false);
-                $("#inHouseRepair_div").attr("style", "display:inline");
-              } else {
-                $("input:radio[name='replacement']").removeAttr('checked');
-                $("#promisedDate").val("").attr("disabled", true);
-                $("#productGroup").val("").attr("disabled", true);
-                $("#productCode").val("").attr("disabled", true);
-                $("#serialNo").val("").attr("disabled", true);
-                $("#inHouseRemark").val("").attr("disabled", true);
-                $("#inHouseRepair_div").attr("style", "display:none");
+              $("#replacement").attr("disabled", false);
+              $("#promisedDate").attr("disabled", false);
+              $("#productGroup").attr("disabled", false);
+              $("#productCode").attr("disabled", false);
+              $("#serialNo").attr("disabled", false);
+              $("#inHouseRemark").attr("disabled", false);
+              $("#inHouseRepair_div").attr("style", "display:inline");
+            } else {
+              $("input:radio[name='replacement']").removeAttr('checked');
+              $("#promisedDate").val("").attr("disabled", true);
+              $("#productGroup").val("").attr("disabled", true);
+              $("#productCode").val("").attr("disabled", true);
+              $("#serialNo").val("").attr("disabled", true);
+              $("#inHouseRemark").val("").attr("disabled", true);
+              $("#inHouseRepair_div").attr("style", "display:none");
 
-                fn_replacement(0);
-              }
+              fn_replacement(0);
             }
+          }*/
           } else {
             $("#" + _tobj + "_text").val("<spring:message code='service.msg.NoDfctCode'/>");
-            $("#promisedDate").val("").attr("disabled", true);
+            /*$("#promisedDate").val("").attr("disabled", true);
             $("#productGroup").val("").attr("disabled", true);
             $("#productCode").val("").attr("disabled", true);
             $("#serialNo").val("").attr("disabled", true);
             $("#inHouseRemark").val("").attr("disabled", true);
             $("#inHouseRepair_div").attr("style", "display:none");
             $("input:radio[name='replacement']").removeAttr('checked');
-            fn_replacement(0);
+            fn_replacement(0);*/
           }
         });
 
@@ -959,11 +960,11 @@
     //$("#ddlFilterQty").val("1");
     //$("#ddlFilterPayType").val("FOC");
 
-    if ($('#solut_code').val() == "B8" || $('#solut_code').val() == "B6") {
+    /*if ($('#solut_code').val() == "B8" || $('#solut_code').val() == "B6") {
       if ($("input[name='replacement'][value='1']").prop("checked")) {
         fn_replacement($("#replacement").val());
       }
-    }
+    }*/
   }
 
   function fn_openField_Cancel() {
@@ -1179,12 +1180,12 @@
       inHInd = 'WEB';
     }
 
-    var inHseRprInd = "";
+    /*var inHseRprInd = "";
     if ($("input[name='replacement'][value='1']").prop("checked")) {
       inHseRprInd = 1;
     } else {
       inHseRprInd = 0;
-    }
+    }*/
 
     var asResultM = {
       // GENERAL DATA
@@ -1240,14 +1241,23 @@
       AS_RESULT_MOBILE_ID : 0,
 
       // AS IN HOUSE REPAIR
-      IN_HUSE_REPAIR_REM : $("#inHouseRemark").val(),
+      /*IN_HUSE_REPAIR_REM : $("#inHouseRemark").val(),
       IN_HUSE_REPAIR_REPLACE_YN : inHseRprInd,
       IN_HUSE_REPAIR_PROMIS_DT : $("#promisedDate").val(),
       IN_HUSE_REPAIR_GRP_CODE : $("#productGroup").val(),
       IN_HUSE_REPAIR_PRODUCT_CODE : $("#productCode").val(),
       IN_HUSE_REPAIR_SERIAL_NO : $("#serialNo").val(),
       CHANGBN : inHInd,
-      IN_HOUSE_CLOSE : $("#IN_HOUSE_CLOSE").val(),
+      IN_HOUSE_CLOSE : $("#IN_HOUSE_CLOSE").val(),*/
+
+      IN_HUSE_REPAIR_REM : "",
+      IN_HUSE_REPAIR_REPLACE_YN : 0,
+      IN_HUSE_REPAIR_PROMIS_DT : "",
+      IN_HUSE_REPAIR_GRP_CODE : "",
+      IN_HUSE_REPAIR_PRODUCT_CODE : "",
+      IN_HUSE_REPAIR_SERIAL_NO : "",
+      CHANGBN : inHInd,
+      IN_HOUSE_CLOSE : "",
 
       // OTHER
       RCD_TMS : $("#RCD_TMS").val()
@@ -2342,12 +2352,11 @@
       </dd>
 
       <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
-      <dt class="click_add_on" id='inHouse_dt' onclick="fn_secChk(this);">
+      <!-- <dt class="click_add_on" id='inHouse_dt' onclick="fn_secChk(this);">
        <a href="#">In-House Repair Entry</a>
       </dt>
       <dd id='inHouseRepair_div' style="display: none">
        <table class="type1">
-        <!-- table start -->
         <caption>table</caption>
         <colgroup>
          <col style="width: 170px" />
@@ -2390,9 +2399,7 @@
          </tr>
         </tbody>
        </table>
-       <!-- table end -->
-      </dd>
-
+      </dd> -->
      </dl>
     </article>
 
