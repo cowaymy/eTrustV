@@ -48,7 +48,8 @@ $(document).ready(function() { //***********************************************
     CommonCombo.make('cmbStatusTypeId', "/sales/pos/selectStatusCodeList", statusParam , '', optionSystem);
 
     //branch List
-    CommonCombo.make('cmbWhBrnchId', "/sales/pos/selectWhBrnchList", '' , '', '');
+    CommonCombo.make('cmbWhBrnchId', "/sales/pos/selectWhSOBrnchList", '' , '', '');
+
 
     //Wh List
     $("#cmbWhBrnchId").change(function() {
