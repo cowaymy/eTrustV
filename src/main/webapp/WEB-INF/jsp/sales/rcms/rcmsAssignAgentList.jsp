@@ -354,6 +354,10 @@ function viewRentalLedger(){
 
 }
 
+function fn_invoicePop() {
+    Common.popupDiv("/payment/initTaxInvoiceRentalPop.do", '', null, true);
+}
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -370,6 +374,7 @@ function viewRentalLedger(){
 
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+        <li><p class="btn_blue"><a href="#" onClick="fn_invoicePop()"><spring:message code="sal.btn.taxInvoice" /></a></p></li>
         <li><p class="btn_blue"><a href="#" onClick="viewRentalLedger()"><span class="search"></span><spring:message code='pay.btn.viewLedger'/></a></p></li>
         <li><p class="btn_blue"><a href="#" id="btnSearch" onclick="javascript:fn_selectListAjax();"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
         <li><p class="btn_blue"><a href="#" id="btnClear" onclick="javascript:fn_clear();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
