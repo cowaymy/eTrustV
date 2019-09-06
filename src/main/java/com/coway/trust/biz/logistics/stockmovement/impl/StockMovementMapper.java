@@ -9,90 +9,96 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("stockMoveMapper")
 public interface StockMovementMapper {
 
-	String selectStockMovementSeq();
+  String selectStockMovementSeq();
 
-	void insStockMovementHead(Map<String, Object> fMap);
+  void insStockMovementHead(Map<String, Object> fMap);
 
-	void insStockMovement(Map<String, Object> insMap);
+  void insStockMovement(Map<String, Object> insMap);
 
-	List<EgovMap> selectStockMovementNoList();
+  List<EgovMap> selectStockMovementNoList();
 
-	List<EgovMap> selectDeliveryNoList();
+  List<EgovMap> selectDeliveryNoList();
 
-	List<EgovMap> selectStockMovementMainList(Map<String, Object> params);
+  List<EgovMap> selectStockMovementMainList(Map<String, Object> params);
 
-	List<EgovMap> selectStockMovementDeliveryList(Map<String, Object> params);
+  List<EgovMap> selectStockMovementDeliveryList(Map<String, Object> params);
 
-	List<EgovMap> selectStockMovementToItem(Map<String, Object> params);
+  List<EgovMap> selectStockMovementToItem(Map<String, Object> params);
 
-	Map<String, Object> selectStockMovementItemDeliveryQty(Map<String, Object> params);
+  Map<String, Object> selectStockMovementItemDeliveryQty(Map<String, Object> params);
 
-	List<EgovMap> selectStockMovementItem(String param);
+  List<EgovMap> selectStockMovementItem(String param);
 
-	Map<String, Object> selectStockMovementHead(String param);
+  Map<String, Object> selectStockMovementHead(String param);
 
-	void deleteStockMovementItm(Map<String, Object> insMap);
+  void deleteStockMovementItm(Map<String, Object> insMap);
 
-	void deleteDeliveryStockMovementItm(Map<String, Object> insMap);
+  void deleteDeliveryStockMovementItm(Map<String, Object> insMap);
 
-	String selectDeliveryStockMovementSeq();
+  String selectDeliveryStockMovementSeq();
 
-	void insertDeliveryStockMovementDetail(Map<String, Object> insMap);
+  void insertDeliveryStockMovementDetail(Map<String, Object> insMap);
 
-	void insertDeliveryStockMovement(Map<String, Object> insMap);
+  void insertDeliveryStockMovement(Map<String, Object> insMap);
 
-	List<EgovMap> selectStockMovementSerial(Map<String, Object> params);
+  List<EgovMap> selectStockMovementSerial(Map<String, Object> params);
 
-	void insertMovementSerial();
+  void insertMovementSerial();
 
-	List<EgovMap> selectNewDeliveryNoITM(Map<String, Object> params);
+  List<EgovMap> selectNewDeliveryNoITM(Map<String, Object> params);
 
-	int insertMovementSerial(Map<String, Object> insSerial);
+  int insertMovementSerial(Map<String, Object> insSerial);
 
-	void StockMovementCancelIssue(Map<String, Object> formMap);
+  void StockMovementCancelIssue(Map<String, Object> formMap);
 
-	void StockMovementIssue(Map<String, Object> formMap);
+  void StockMovementIssue(Map<String, Object> formMap);
 
-	List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params);
+  List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params);
 
-	List<EgovMap> selectStockMovementMtrDocInfoList(Map<String, Object> params);
+  List<EgovMap> selectStockMovementMtrDocInfoList(Map<String, Object> params);
 
-	void updateRequestMovement(String param);
+  void updateRequestMovement(String param);
 
-	void insertStockBooking(Map<String, Object> params);
+  void insertStockBooking(Map<String, Object> params);
 
-	int selectDelvryNoItmQeury(Map<String, Object> params);
+  int selectDelvryNoItmQeury(Map<String, Object> params);
 
-	void insertReturnGrade(Map<String, Object> setmap);
+  void insertReturnGrade(Map<String, Object> setmap);
 
-	List<EgovMap> selectGetSerialDataCall(Map<String, Object> params);
+  List<EgovMap> selectGetSerialDataCall(Map<String, Object> params);
 
-	void updateMovementSerialScan(String param);
+  void updateMovementSerialScan(String param);
 
-	String getReceiptFlag(String delno);
+  String getReceiptFlag(String delno);
 
-	List<EgovMap> selectDeliverydupCheck(Map<String, Object> insMap);
-	
-	void updateStockHead(String reqsmono);
-	
-	void deleteStockDelete(String reqsmono);
-	
-	void deleteStockBooking(String reqsmono);
-	
-	int selectAvaliableStockQty(Map<String, Object> param);
-	
-	Map<String, Object> selectDelvryGRcmplt(String reqsmono);
+  List<EgovMap> selectDeliverydupCheck(Map<String, Object> insMap);
 
-	String selectDefToLocation(Map<String, Object> param);
+  void updateStockHead(String reqsmono);
 
-	List<EgovMap> SelectStockfromForecast(Map<String, Object> params);
+  void deleteStockDelete(String reqsmono);
 
-	void insStockMovementHeadForOnLoanUnit(Map<String, Object> fMap);
+  void deleteStockBooking(String reqsmono);
 
-	void insSVC0111D(Map<String, Object> fMap);
+  int selectAvaliableStockQty(Map<String, Object> param);
 
-	void insSVC0112D(Map<String, Object> fMap);
+  Map<String, Object> selectDelvryGRcmplt(String reqsmono);
 
-	int crtSeqSVC0111D();
+  String selectDefToLocation(Map<String, Object> param);
+
+  List<EgovMap> SelectStockfromForecast(Map<String, Object> params);
+
+  void insStockMovementHeadForOnLoanUnit(Map<String, Object> fMap);
+
+  void insSVC0111D(Map<String, Object> fMap);
+
+  void insSVC0112D(Map<String, Object> fMap);
+
+  int crtSeqSVC0111D();
+
+  int getASNo(Map<String, Object> params);
+
+  int getIHNo(Map<String, Object> params);
+
+  int chkASNoExist(Map<String, Object> params);
 
 }
