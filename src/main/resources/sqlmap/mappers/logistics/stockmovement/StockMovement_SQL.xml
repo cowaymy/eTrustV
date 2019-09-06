@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.stockmovement.impl.StockMovementMapper">
 
-    <select id="selectStockMovementSeq" resultType="String">
+  <select id="selectStockMovementSeq" resultType="String">
 <!--         SELECT -->
 <!--                'SMO' -->
 <!--                ||TO_CHAR (SYSDATE, 'YYMMDD') -->
@@ -10,8 +10,9 @@
 <!--           FROM LOG0047M -->
 <!--           WHERE SUBSTR (REQST_NO, 1, 9) =  'SMO'||TO_CHAR (SYSDATE, 'YYMMDD') -->
         SELECT  'SMO'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(SMO_SEQ.NEXTVAL, 5, '0') FROM  DUAL
-    </select>
-    <select id="selectStockMovementMainList" parameterType="Map" resultType="egovMap">
+  </select>
+
+  <select id="selectStockMovementMainList" parameterType="Map" resultType="egovMap">
         select ROWNUM rnum , l47.REQST_STUS     status
 <!--              , reqs.code_name     staname -->
              , (case when l48.FINAL_CMPLT = 'Y' then 'Complete' else 'Open' end) staname
@@ -146,9 +147,9 @@
                 AND s1.SALES_ORD_NO = #{ordno}
            </if>
            ORDER by l47.CRT_DT desc
-    </select>
+  </select>
 
-    <insert id="insStockMovement" parameterType="Map">
+  <insert id="insStockMovement" parameterType="Map">
         MERGE INTO LOG0048D A
              USING DUAL
                 ON (A.REQST_NO = #{reqno} and REQST_NO_ITM = #{resnoitm})
@@ -163,9 +164,9 @@
                         ,ITM_CODE, ITM_NAME, REQST_QTY, UOM, CRT_USER_ID, CRT_DT)
                 VALUES ( #{reqno} , (select decode(count(reqst_no_itm) , 0 , 1 , max(reqst_no_itm +1)) from log0048d where REQST_NO = #{reqno})
                         ,#{itmcd} , #{itmname}, #{rqty} ,#{uom} , #{userId}       , SYSDATE)
-    </insert>
+  </insert>
 
-    <update id="insStockMovementHead" parameterType="Map">
+  <update id="insStockMovementHead" parameterType="Map">
         MERGE INTO LOG0047M  a
              USING dual
                 on (a.REQST_NO=#{reqno})
@@ -206,11 +207,11 @@
                                     , #{sttype}
                                     , #{smtype}
                                     )
-    </update>
+  </update>
 
-    <select id="selectStockMovementNoList" parameterType="Map" resultType="egovMap">
+  <select id="selectStockMovementNoList" parameterType="Map" resultType="egovMap">
         SELECT REQST_NO CODE_ID , REQST_NO CODE_NAME FROM log0047m where reqst_no in (select reqst_no from log0048d) AND SUBSTR(REQST_NO , 0,3) <![CDATA[<>]]> 'STO' AND NVL(REQST_DEL , 'N') = 'N'  ORDER BY CRT_DT DESC
-    </select>
+  </select>
 
     <select id="selectDeliveryNoList" parameterType="Map" resultType="egovMap">
         SELECT DELVRY_NO CODE_ID , DELVRY_NO CODE_NAME FROM log0054m  where nvl(DELVRY_GR_CMPLT , 'N') <![CDATA[<>]]> 'Y' ORDER BY CRT_DT DESC
@@ -922,58 +923,97 @@
                                     , #{reqstTypDtl}
                                     )
     </update>
-    
+
     <select id="crtSeqSVC0111D"  resultType="Integer">
         SELECT SVC0111D_SEQ.NEXTVAL FROM DUAL
     </select>
 
-	<insert id="insSVC0111D" parameterType="Map">
-		INSERT INTO SVC0111D
-		(SEQ,
-		SALES_ORD_ID,
-		AS_NO,
-		DISB,
-		CRT_DT,
-		UPD_DT,
-		CRT_BY,
-		UPD_BY) VALUES
-		(#{seqSVC111D}, (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{orderno}), #{asno}, '0', SYSDATE, SYSDATE, #{userId},
-		#{userId}
-		)
-	</insert>
-	
-	<insert id="insSVC0112D" parameterType="Map">
-	INSERT INTO SVC0112D
-	(SEQ,
-	REQST_NO,
-	TRNSC_TYPE,
-	TRNSC_TYPE_DTL,
-	PRIDIC_FRQNCY,
-	REQST_CRT_DT,
-	REQST_REQUIRE_DT,
-	REF_DOC_NO,
-	DOC_HDER_TXT,
-	RCIV_CDC_RDC,
-	REQST_CDC_RDC,
-	CRT_USER_ID,
-	CRT_DT,
-	REQST_STUS,
-	REQST_TYPE,
-	REQST_TYPE_DTL) VALUES
-	(#{seqSVC111D}, #{reqno}, #{sttype}, #{smtype}, #{pridic}
-	, SYSDATE
-	, to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss')
-	, 'dd/mm/yyyyhh24miss')
-	, #{asno}
-	, #{dochdertxt}
-	, #{tlocation}
-	, #{flocation}
-	, #{userId}
-	, SYSDATE
-	, 'O'
-	, SUBSTR (#{reqstTypDtl}, 0, 2)
-	, #{reqstTypDtl}
-	)
-</insert>
+  <insert id="insSVC0111D" parameterType="Map">
+    INSERT INTO SVC0111D ( SEQ,
+                           SALES_ORD_ID,
+                           AS_NO,
+                           DISB,
+                           CRT_DT,
+                           UPD_DT,
+                           CRT_BY,
+                           UPD_BY,
+                           SMO_NO,
+                           SMO_TYP
+    ) VALUES ( #{seqSVC111D},
+               (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{orderno}),
+               #{asno},
+               '0',
+               SYSDATE,
+               SYSDATE,
+               #{userId},
+               #{userId},
+               #{reqno},
+               CASE WHEN #{reqno} = 'UM93' THEN '2' ELSE '1' END
+    )
+  </insert>
+
+  <insert id="insSVC0112D" parameterType="Map">
+    INSERT INTO SVC0112D ( SEQ,
+                           REQST_NO,
+                           TRNSC_TYPE,
+                           TRNSC_TYPE_DTL,
+                           PRIDIC_FRQNCY,
+                           REQST_CRT_DT,
+                           REQST_REQUIRE_DT,
+                           REF_DOC_NO,
+                           DOC_HDER_TXT,
+                           RCIV_CDC_RDC,
+                           REQST_CDC_RDC,
+                           CRT_USER_ID,
+                           CRT_DT,
+                           REQST_STUS,
+                           REQST_TYPE,
+                           REQST_TYPE_DTL
+    ) VALUES (#{seqSVC111D},
+              #{reqno},
+              #{sttype},
+              #{smtype},
+              #{pridic},
+              SYSDATE,
+              to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss'), 'dd/mm/yyyyhh24miss'),
+              #{asno},
+              #{dochdertxt},
+              #{tlocation},
+              #{flocation},
+              #{userId},
+              SYSDATE,
+              'O',
+              SUBSTR (#{reqstTypDtl}, 0, 2),
+              #{reqstTypDtl}
+    )
+  </insert>
+
+  <select id="getASNo" resultType="Integer">
+   SELECT COUNT(AS_ID)
+   FROM SVC0001D A
+   JOIN SVC0004D B ON B.AS_RESULT_ID = (SELECT MAX(AS_RESULT_ID)
+                                        FROM SVC0004D
+                                        WHERE AS_ENTRY_ID = A.AS_ID
+                                          AND AS_RESULT_STUS_ID = 4
+                                        GROUP BY AS_SO_ID)
+    WHERE B.AS_SLUTN_RESN_ID = #{SOLCDE}
+      AND A.AS_NO = #{ASNO}
+  </select>
+
+  <select id="getIHNo" resultType="Integer">
+    SELECT COUNT(AS_ID)
+    FROM SVC0108D A
+    JOIN SVC0109D B ON B.AS_RESULT_ID = (SELECT MAX(AS_RESULT_ID)
+                                         FROM SVC0109D
+                                         WHERE AS_ENTRY_ID = A.AS_ID
+                                           AND AS_RESULT_STUS_ID = 4
+                                         GROUP BY AS_SO_ID)
+     WHERE B.AS_SLUTN_RESN_ID = #{SOLCDE}
+       AND A.AS_NO = #{ASNO}
+  </select>
+
+  <select id="chkASNoExist" resultType="Integer">
+    SELECT COUNT(SEQ) FROM SVC0111D WHERE AS_NO = #{ASNO}
+  </select>
 
 </mapper>
