@@ -132,6 +132,7 @@
                     <option value="62"><spring:message code="sal.combo.text.filter" /></option>
                     <option value="63"><spring:message code="sal.combo.text.sparePart" /></option>
                     <option value="64"><spring:message code="sal.combo.text.miscellaneous" /></option>
+                    <option value="1370"><spring:message code="sal.combo.text.consignmenttool" /></option>
                 </select>
             </td>
         </tr>
