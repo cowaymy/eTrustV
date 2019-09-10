@@ -170,6 +170,7 @@
         whereSql += " AND AE.AS_NO =  '" + asNumber + "' ";
       }
 
+      if($("#cmbctId2").val() != ''){
       if (ctCode.length > 0) {
         for (var a = 0; a < ctCode.length; a++) {
           if (a == 0) {
@@ -181,10 +182,11 @@
         whereSql += " AND AE.AS_MEM_ID IN (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE IN ("
             + ctCodeLst + ")) ";
       }
+    }
 
       if ($("#cmbbranchId2").val() != '') {
         whereSql += " AND AE.AS_BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '"
-            + dscBranchCode + "' AND TYPE_ID = 43 ) ";
+            + dscBranchCode + "' AND TYPE_ID = 43 AND STUS_ID = 1 ) ";
       }
 
       var date = new Date();
