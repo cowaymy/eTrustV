@@ -66,7 +66,7 @@ var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Care Service- <spring:message code='service.title.Configuration'/> - <spring:message code='service.title.BasicInfo'/> - Group</h1>
+<h1>Assign HT Member - Group</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE'/></a></p></li>
 </ul>
