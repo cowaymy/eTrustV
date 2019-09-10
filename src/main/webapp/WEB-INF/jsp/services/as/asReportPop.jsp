@@ -76,7 +76,7 @@
       return false;
     }
 
-    /* if ($("#cmbctId2").val() == '' ) {
+/*     if ($("#cmbctId2").val() == '' || $("#cmbctId2").val() == null) {
          Common.alert("<spring:message code='sys.common.alert.validation' arguments='CT code' htmlEscape='false'/>");
           return false;
        } */
@@ -170,7 +170,7 @@
         whereSql += " AND AE.AS_NO =  '" + asNumber + "' ";
       }
 
-      if($("#cmbctId2").val() != ''){
+      if($("#cmbctId2 option:selected").index() > 0 ){
       if (ctCode.length > 0) {
         for (var a = 0; a < ctCode.length; a++) {
           if (a == 0) {
