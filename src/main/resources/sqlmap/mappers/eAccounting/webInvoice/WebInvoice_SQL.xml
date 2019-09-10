@@ -1035,7 +1035,12 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
                     || '('
                     || T8.CRDIT_CARD_USER_NAME
                     || ')' ), '')    AS CRDIT_CARD_NO
+                ,TO_CHAR(TO_DATE(T8.CLM_MONTH, 'YYYYMM'), 'MON-YYYY')
             </if>
+            ,CASE WHEN (SUBSTR(T1.APPV_REQ_KEY_NO, 1, 2)) = 'J2' THEN TO_CHAR(TO_DATE(T9.CLM_MONTH, 'YYYYMM'), 'MON-YYYY')
+                    WHEN (SUBSTR(T1.APPV_REQ_KEY_NO, 1, 2)) = 'J4' THEN TO_CHAR(TO_DATE(T12.CLM_MONTH, 'YYYYMM'), 'MON-YYYY')
+                    ELSE ''
+            END AS CLM_MONTH
         FROM FCM0004M T1 /*LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO*/
         LEFT JOIN FCM0015D T3 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
         LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
@@ -1049,6 +1054,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
         LEFT JOIN (
             SELECT
                 A.APPV_PRCSS_NO,
+                A.CLM_MONTH,
                 B.*
             FROM FCM0013M A
             INNER JOIN FCM0014D B ON A.CLM_NO = B.CLM_NO
@@ -1060,6 +1066,8 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
         AND T3.APPV_ITM_SEQ = T9.CLM_SEQ
         AND T3.EXP_TYPE = T9.EXP_TYPE
         AND T3.ATCH_FILE_GRP_ID = T9.ATCH_FILE_GRP_ID
+        LEFT JOIN FCM0019M T12
+        ON T1.APPV_PRCSS_NO = T12.APPV_PRCSS_NO
         JOIN (
             SELECT
                 T1.APPV_PRCSS_NO,
@@ -1342,7 +1350,7 @@ WHERE  CLM_TYPE = #{clmType}
         <if test="supplier != null and supplier != '' ">
             AND UPPER(A.MEM_ACC_ID) = UPPER(#{supplier})
         </if>
-        AND A.INVC_NO = #{invcNo}
+        AND A.INVC_NO = REGEXP_REPLACE(#{invcNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
         <if test="clmNo != null and clmNo != ''">
             AND A.CLM_NO != #{clmNo}
         </if>
@@ -1363,7 +1371,7 @@ WHERE  CLM_TYPE = #{clmType}
         <if test="supplier != null and supplier != '' ">
             AND UPPER(B.SUPPLIER) = UPPER(#{supplier})
         </if>
-        AND B.INVC_NO = #{invcNo}
+        AND B.INVC_NO = REGEXP_REPLACE(#{invcNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
 </select>
 
 <select id="getAppvExcelInfo" parameterType="Map" resultType="egovMap">
@@ -1619,12 +1627,12 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
     SELECT
         APPR_GRP
     FROM FCM0023M
-    WHERE
+    WHERE 1=1
     <if test="memCode != null and memCode != '' ">
-        APPR_MEM_CODE = #{memCode}
+        AND APPR_MEM_CODE = #{memCode}
     </if>
     <if test ="userId != null and userId != '' ">
-        APPR_MEM_NAME = #{userId}
+        AND APPR_USER_ID = #{userId}
     </if>
         AND APPR_MEM_STUS = '1'
 </select>
