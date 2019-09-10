@@ -390,6 +390,58 @@ var TODAY_DD      = "${toDay}";
 
   }
 
+  function fn_htMultipleChange(){
+      var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+       var radioVal = $("input:radio[name='searchDivCd']:checked").val();
+
+
+        if (checkedItems.length <= 0) {
+          Common.alert('No data selected.');
+          return;
+        } else if (radioVal == 2) {
+             Common.alert('Not allow to Assign HT in Manual CS');
+              return;
+        } else if (checkedItems[0]["code"] != "ACT") {
+          Common.alert('Only allow to entry a result<br/>for the CS Order status in Active');
+          return;
+        } else {
+          var str = "";
+          var custStr = "";
+          var rowItem;
+          var brnchId = "";
+          var saleOrdList = "";
+          var list = "";
+          var brnchCnt = "";
+          var schdulId = "";
+
+
+
+          for (var i = 0, len = checkedItems.length; i < len; i++) {
+              rowItem = checkedItems[i];
+              hsStuscd = rowItem.stusCodeId;
+              schdulId += rowItem.schdulId;
+              saleOrdList += rowItem.salesOrdId;
+              custId = rowItem.custId;
+              brnchId = rowItem.brnchId;
+              codyMangrUserId = rowItem.c5 ;
+
+              if (i != len - 1) {
+            	  saleOrdList += ",";
+            	  schdulId +=",";
+                }
+
+              if (hsStuscd == 4) {
+                Common.alert("CS result already COM. Assign HT Member is disallowed.");
+                return;
+              }
+            }
+          }
+
+                  Common.popupDiv("/homecare/services/htConfigBasicMultiplePop.do?isPop=true&schdulId="+ schdulId + "&salesOrdId="+saleOrdList  +"&indicator=1", null, null , true , '_ConfigBasicPop');
+  }
+
+
+
 
   function fn_getHSAddListAjax() {
     // Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
@@ -890,6 +942,10 @@ var TODAY_DD      = "${toDay}";
        <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_htChange();" id="htChange">Assign
         HT Member</a>
+      </p></li>
+      <li><p class="btn_blue">
+       <a href="#" onclick="javascript:fn_htMultipleChange();" id="htMultipleChange">Assign
+        HT Member (Group)</a>
       </p></li>
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_getHSAddListAjax();"
