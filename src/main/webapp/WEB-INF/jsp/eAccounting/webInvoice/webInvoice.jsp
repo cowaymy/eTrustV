@@ -653,6 +653,7 @@ function fn_setNewGridEvent() {
 		                            Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
 		                            console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
 		                            AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
+		                            AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
 
 		                            var totAmt = fn_getTotalAmount();
 		                            $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
@@ -674,14 +675,18 @@ function fn_setNewGridEvent() {
 
 		                            if(result.totalAvailable < availableAmtCp) {
 		                                console.log("else :: result.totalAvailable < availableAmtCp");
+
 		                                Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
 		                                console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
 		                                AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
+		                                AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
 
 		                                var totAmt = fn_getTotalAmount();
 		                                $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
 		                                console.log(totAmt);
 		                                $("#totAmt").val(totAmt);
+
+
 		                            }
 		                        }
 		                    });
