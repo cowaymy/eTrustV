@@ -1279,6 +1279,59 @@ public class htManualController {
 		return ResponseEntity.ok(HTCodeList);
 	}
 
+	@RequestMapping(value = "/htConfigBasicMultiplePop.do	" )
+	public String hsConfigBasicMultiplePop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
+
+		logger.debug("htConfigBasicMultiplePop.do	 ================= : {}", params.toString());
+
+		model.put("SALEORD_ID",params.get("salesOrdId"));
+		model.put("SCHDUL_ID", params.get("schdulId"));
+
+		return "homecare/services/htConfigBasicMultiplePop";
+	}
+
+	@RequestMapping(value = "/saveHsConfigBasicMultiple.do",method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveHsConfigBasicMultiple(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
+		ReturnMessage message = new ReturnMessage();
+
+		logger.debug("saveHsConfigBasicMultiple - params : {}", params);
+
+		if(null != params.get("salesOrderId")){
+			String olist = (String)params.get("salesOrderId");
+			String[] spl = olist.split(",");
+			params.put("salesOrdListSp", spl);
+		}
+
+		if(null != params.get("schdulId")){
+			String deptList = (String)params.get("schdulId");
+			String[] spl = deptList.split(",");
+			params.put("schdulListSp", spl);
+		}
+
+		params.put("memCode", (String)params.get("cmbServiceMem"));
+
+
+		logger.debug("saveHsConfigBasicMultiple - params : {}", params);
+
+		// UPDATE SAL0090D - SRV_MEM_ID
+		// UPDATE SVC0008D - MEM_ID
+		int resultValue = htManualService.updateHsConfigBasicMultiple(params, sessionVO);
+
+		//int resultValue = 0;
+
+		if(resultValue >0 ){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		return ResponseEntity.ok(message);
+
+	}
+
+
+
 }
 
 
