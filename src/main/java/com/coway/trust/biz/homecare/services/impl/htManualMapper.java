@@ -328,4 +328,11 @@ public interface htManualMapper {
 
 	List<EgovMap> selectHTCodeListByHTCode(Map<String, Object> params);
 
+	int  updateHsConfigBasicMultiple(Map<String, Object> params);
+
+	void updateHTConfigBasicMultiple(Map<String, Object> params);
+
+	void updateAssignHTMultiple(Map<String, Object> params);
+
+
 }
