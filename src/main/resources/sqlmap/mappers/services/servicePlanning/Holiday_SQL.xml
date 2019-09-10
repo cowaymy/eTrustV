@@ -272,7 +272,7 @@
                     CODE || '-' || NAME  CODE_NAME
         FROM SYS0005M
         WHERE 1=1
-          AND TYPE_ID= 43
+          AND TYPE_ID= 43 AND STUS_ID = 1
         ORDER BY CODE
     </select>
  <select id="selectBeforeToday"  parameterType="Map" resultType="egovMap">
@@ -321,7 +321,7 @@
 	, #{holidaySeq}
 	, #{branchName}
 	, #{applType}
-	
+
 	)
 
 
