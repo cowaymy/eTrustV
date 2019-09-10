@@ -5122,5 +5122,33 @@ FROM
             ORDER BY A.MEM_CODE
        </select>
 
+                   <update id="updateHTConfigBasicMultiple" parameterType="Map">
+                       UPDATE SAL0090D
+                           SET SRV_CODY_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{memCode} ),
+                               SRV_REM = #{remark},
+                               SRV_UPD_USER_ID = #{updUserId},
+                               SRV_UPD_DT = SYSDATE
+                         WHERE   SRV_STUS_ID = 1
+                         AND SRV_SO_ID IN
+                         <foreach item="item" collection="salesOrdListSp" index="index" open="(" separator="," close=")">
+                          #{item}
+                           </foreach>
+
+                     </update>
+
+                     <update id="updateAssignHTMultiple" parameterType="Map">
+                       UPDATE SVC0008D
+                           SET CODY_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{memCode} ),
+                               REM = #{remark},
+                               UPD_USER_ID = #{updUserId},
+                               UPD_DT = SYSDATE
+                         WHERE   STUS_CODE_ID = 1
+                         AND SCHDUL_ID IN
+                         <foreach item="item" collection="schdulListSp" index="index" open="(" separator="," close=")">
+                          #{item}
+                           </foreach>
+
+                     </update>
+
 
 </mapper>
