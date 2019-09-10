@@ -1438,4 +1438,16 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
 		return htManualMapper.selectHTCodeListByHTCode(params);
 	}
 
+	 @Override
+	  public int updateHsConfigBasicMultiple(Map<String, Object> params, SessionVO sessionVO) {
+	    // TODO Auto-generated method stub
+	    int cnt = 0;
+
+	    params.put("updUserId", sessionVO.getUserId());
+	    htManualMapper.updateHTConfigBasicMultiple(params);
+	    htManualMapper.updateAssignHTMultiple(params);
+
+	    return cnt;
+	 }
+
 }
