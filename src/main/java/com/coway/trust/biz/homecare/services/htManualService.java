@@ -163,4 +163,7 @@ public interface htManualService {
 
 	List<EgovMap> selectHTCodeListByHTCode(Map<String, Object> params);
 
+	int updateHsConfigBasicMultiple(Map<String, Object> params, SessionVO sessionVO);
+
+
 }
