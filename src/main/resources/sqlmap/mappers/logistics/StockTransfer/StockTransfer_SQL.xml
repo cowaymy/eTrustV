@@ -61,7 +61,7 @@
 		   AND l48.reqst_no       = l55.reqst_no(+)
            AND l48.itm_code       = l55.itm_code(+)
 		   and l47.reqst_stus     = reqs.code(+)
-		   AND NVL(l47.REQST_DEL , 'N') = 'N'
+		   AND NVL(l48.REQST_DEL , 'N') = 'N'
 		   <if test="streq !=null and streq !=''">
 		      and l47.reqst_no LIKE #{streq}||'%'
 		   </if>

@@ -455,13 +455,13 @@ $(document).ready(function(){
 						break;
 					}
 				}
-				/*******여기부터************/
-				var bool = true;
+				/*20190910 vannie remove checking due to added line to insert booking table*/
+				/* var bool = true;
 				bool = fnQtyChk(checkedItems);
 				if (!bool) {
 					Common.alert('There are Not Enough Stocks. Please Check Available Stocks Qty. ');
 					return false;
-				}
+				} */
 
 				/*******여기까지************/
 				if (chkfalg == "Y") {

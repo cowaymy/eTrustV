@@ -83,7 +83,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			}
 		}
 		// booking insert
-		if ("M".equals((String)fMap.get("sam"))){
+		if ("M".equals((String)fMap.get("pridic"))){
 			insertStockBooking(fMap);
 		}
 
