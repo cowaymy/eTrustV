@@ -996,7 +996,7 @@ function fnDelete(obj) {
 	var data	= {};
 	var chkList	= AUIGrid.getCheckedRowItemsAll(myGridID3);
 	
-	if ( 0 > chkList ) {
+	if ( 0 >= chkList ) {
 		Common.alert("<spring:message code='expense.msg.NoData' htmlEscape='false'/>");
 		return	false;
 	}
