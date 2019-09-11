@@ -168,6 +168,10 @@ function fn_excelDown(){
         </select>
     </td>
 </tr>
+<tr>
+    <th scope="row">HT Code</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="htCode" name="htCode" /></td>
+</tr>
 </tbody>
 </table><!-- table end -->
 
