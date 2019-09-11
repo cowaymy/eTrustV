@@ -327,6 +327,10 @@
                 AND (CODY_BRNCH_CODE IS NOT NULL AND CT_BRNCH_CODE IS NOT NULL)
             </if>
 		</if>
+		        <if test="htCode != null and htCode != ''">
+            AND UPPER(A.HT_CODE) LIKE UPPER('%'||#{htCode}||'%')
+        </if>
+
     </select>
 
 </mapper>
