@@ -72,6 +72,7 @@ function tagMgmtGrid() {
                        ,{dataField: "customerName",headerText: "Customer",width:200 ,height:80}
                        ,{dataField: "mainInquiry",headerText: "Main Inquiry",width:200 ,height:80}
                        ,{dataField: "subInquiry",headerText: "Sub Inquiry",width:200 ,height:80}
+                       ,{dataField: "feedbackCode",headerText: "Feedback Code",width:200 ,height:80}
                        ,{dataField: "mainDept",headerText: "Main Department",width:200 ,height:80}
                        ,{dataField: "subDept",headerText: "Sub Department",width:200 ,height:80}
                        ,{dataField: "updDt",headerText: "Update Date",width:150 ,height:80}
