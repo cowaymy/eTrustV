@@ -861,4 +861,46 @@ public class CommissionReportController {
 		return "commission/commissionCDIncomeStatement";
 	}
 
+	@RequestMapping(value = "/commissionHTReport.do")
+	public String commissionHTReport(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);
+		String dt = CommonUtils.getCalMonth(-1);
+		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
+		String loginId = String.valueOf(sessionVO.getUserName());	//member code
+
+		model.addAttribute("memberType", 7);
+		model.addAttribute("today", today);
+		model.addAttribute("cmmDt", dt);
+		model.addAttribute("loginId",loginId);
+
+		// 호출될 화면
+		return "commission/commissionHTReport";
+	}
+
+	@RequestMapping(value = "/commissionHTIncomeStatement.do")
+	public String commissionHTIncomeStatement(@RequestParam Map<String, Object> params, ModelMap model , SessionVO sessionVO) {
+		Date date = new Date();
+		String loginId = String.valueOf(sessionVO.getUserName());	//member code
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);
+
+		List<EgovMap> yearList = new ArrayList <EgovMap> ();
+		int year = Integer.parseInt(today.substring(4));
+		int startYear = year-5 > CommissionConstants.COMIS_INCO_YEAR ?year-5:CommissionConstants.COMIS_INCO_YEAR ;
+
+		for(int i=startYear ;i<year;i++){	//Start From 2016 Year
+			EgovMap em = new EgovMap();
+			em.put("cmmYear" ,String.valueOf(i));
+			yearList.add(em);
+		}
+
+		model.addAttribute("yearList", yearList);
+		model.addAttribute("today", today);
+		model.addAttribute("loginId", loginId);
+		// 호출될 화면
+		return "commission/commissionHTIncomeStatement";
+	}
+
 }
