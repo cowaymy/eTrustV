@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  15/08/2019  ONGHC  1.0.0          CREATE IHR FUNCTION
+ 13/08/2019  ONGHC  1.0.1          CREATE FUNCTION FOR TRANSFER CT
  -->
 
 <script type="text/javaScript">
@@ -973,11 +974,11 @@
       <a href="#" onclick="fn_asResultViewPop()"><spring:message code='service.btn.viewAS'/></a>
      </p></li>
    </c:if>
-   <!-- <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
+   <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
     <li><p class="btn_blue">
       <a href="#" onclick="fn_assginCTTransfer()"><spring:message code='service.btn.ctTrans'/></a>
      </p></li>
-   </c:if> -->
+   </c:if>
    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue">
       <a href="#" onClick="fn_searchASManagement()"><span class="search"></span><spring:message code='sys.btn.search'/></a>
