@@ -36,6 +36,7 @@ import oracle.sql.DATE;
  * 26/07/2019    ONGHC      1.0.4       - Add Recall Status
  * 26/07/2019    ONGHC      1.0.5       - Remove In House SMO
  * 05/09/2019    ONGHC      1.0.6       - Create saveASEntryInHouse
+ * 05/09/2019    ONGHC      1.0.7       - Amend In House Call Log Result
  *********************************************************************************************/
 
 @Service("ASManagementListService")
@@ -1849,7 +1850,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     // HERE INSERT NEW IN HOUSE DATA.
     LOGGER.debug("= PARAMS {}" + params);
     if (String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4")) {
-      if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454")) {
+      if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454") || String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("7018") ) {
+
+        params.put("AS_SO_ID", svc0004dmap.get("AS_SO_ID"));
         this.saveASEntryInHouse(params);
       }
     }
@@ -1866,18 +1869,18 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     EgovMap eMap = ASManagementListMapper.getASEntryDocNo(params); // GET NEW AS NO
 
     EgovMap seqMap = ASManagementListMapper.getIHREntryId(params); // GET NEW AS ENTRY NO
-    // EgovMap ccrSeqMap = ASManagementListMapper.getCCR0006D_CALL_ENTRY_ID_SEQ(params);
+    EgovMap ccrSeqMap = ASManagementListMapper.getCCR0006D_CALL_ENTRY_ID_SEQ(params);
 
     params.put("AS_ID", String.valueOf(seqMap.get("seq")).trim());
     params.put("AS_NO", String.valueOf(eMap.get("asno")).trim());
-    // params.put("AS_CALLLOG_ID", String.valueOf(ccrSeqMap.get("seq")).trim());
+    params.put("AS_CALLLOG_ID", String.valueOf(ccrSeqMap.get("seq")).trim());
 
     int a = ASManagementListMapper.insertSVC0108D(params);
     // int b = 0;
 
     // 콜로그생성
-    // int c6d = ASManagementListMapper.insertCCR0006D(setCCR000Data(params));
-    // int c7d = ASManagementListMapper.insertCCR0007D(setCCR000Data(params));
+    int c6d = ASManagementListMapper.insertCCR0006D(setCCR000Data(params));
+    int c7d = ASManagementListMapper.insertCCR0007D(setCCR000Data(params));
 
     // String PIC_NAME = String.valueOf(params.get("PIC_NAME"));
     // String PIC_CNTC = String.valueOf(params.get("PIC_CNTC"));
@@ -3249,4 +3252,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   public List<EgovMap> getASEntryCommission(Map<String, Object> params) {
     return ASManagementListMapper.getASEntryCommission(params);
   }
+
+  //@Override
+  //public List<EgovMap> getDftTyp(Map<String, Object> params) {
+    //return ASManagementListMapper.getDftTyp(params);
+  //}
+
 }
