@@ -169,7 +169,7 @@
                                     CASE WHEN C.AS_ID IS NULL THEN D.AS_ID
                                     ELSE C.AS_ID END AS_ID
                              FROM SVC0111D A
-                             JOIN LOG0047M B ON B.REF_DOC_NO = A.AS_NO
+                             JOIN LOG0047M B ON B.REQST_NO = (SELECT MAX(REQST_NO) FROM LOG0047M WHERE REF_DOC_NO = A.AS_NO GROUP BY REF_DOC_NO)
                              JOIN LOG0048D C ON C.REQST_NO = B.REQST_NO
                              LEFT JOIN SVC0001D C ON A.AS_NO = C.AS_NO
                              LEFT JOIN SVC0108D D ON A.AS_NO = D.AS_NO) Extent9 ON Extent1.REF_REQST = Extent9.AS_ID
