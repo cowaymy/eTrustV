@@ -54,7 +54,9 @@
 							{dataField: "c9",headerText :"<spring:message code='log.head.stk_comm_os_bs'/>"         ,width:100 ,height:30},
 							{dataField: "c10",headerText :"<spring:message code='log.head.stk_comm_ins'/>"          ,width:100 ,height:30},
 							{dataField: "c11",headerText :"<spring:message code='log.head.stk_comm_os_ins'/>"           ,width:100 ,height:30},
-							{dataField: "stkoldcd",headerText :"<spring:message code='log.head.stk_old_cd'/>"           ,width:100 ,height:30}
+							{dataField: "stkoldcd",headerText :"<spring:message code='log.head.stk_old_cd'/>"           ,width:100 ,height:30},
+							{dataField: "stkexttype",headerText :"<spring:message code='log.head.stk_ext_type'/>"           ,width:100 ,height:30},
+							{dataField: "stklchdt",headerText :"<spring:message code='log.head.stk_lch_dt'/>"           ,width:100 ,height:30}
 
                        ];
 

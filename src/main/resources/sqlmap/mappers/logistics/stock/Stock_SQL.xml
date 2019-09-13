@@ -32,7 +32,9 @@
 			    Project1.BSPoint AS BSPoint,
 			    Project1.UnitValue AS UnitValue,
 			    Project1.StkOldCd as StkOldCd ,
-                Project1.C2 AS C2,
+			    project1.stkexttype AS stkexttype,
+    			TO_CHAR(TO_DATE(project1.stklchdt,'YYYYMMDD'),'DD/MM/YYYY') stklchdt,
+          Project1.C2 AS C2,
 			    Project1.C3 AS C3,
 			    Project1.C4 AS C4,
 			    Project1.C5 AS C5,
@@ -62,6 +64,8 @@
 			       stk.BS_POINT AS BSPoint,
 			       stk.UNIT_VALU AS UnitValue,
 			       stk.STK_OLD_CODE AS StkOldCd,
+			       stk.stk_ext_type AS stkexttype,
+             stk.stk_lch_dt AS stklchdt,
                    (SELECT CODE_NAME
 			          FROM SYS0013M
 			         WHERE CODE_ID = stk.STK_CTGRY_ID)
