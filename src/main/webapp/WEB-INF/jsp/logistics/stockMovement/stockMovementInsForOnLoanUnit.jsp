@@ -839,12 +839,12 @@
     }
 
     if (obj.value != "" && obj.value != null) {
-      Common.ajax("GET", "/logistics/stockMovement/chkASNoExist.do", { ASNO : obj.value }, function(result) {
-        if (result >= 1) {
-          Common.alert("AS No. already exist.");
-          obj.value = "";
-          return;
-        } else {
+      //Common.ajax("GET", "/logistics/stockMovement/chkASNoExist.do", { ASNO : obj.value }, function(result) {
+        //if (result >= 1) {
+          //Common.alert("AS No. already exist.");
+          //obj.value = "";
+          //return;
+        //} else {
           Common.ajax("GET", "/logistics/stockMovement/chkASNo.do", { ASNO : obj.value, SOLCDE : solCde, IND : 0 }, function(result) {
             if (result == 0) {
               Common.ajax("GET", "/logistics/stockMovement/chkASNo.do", { ASNO : obj.value, SOLCDE : solCde , IND : 1 }, function(result) {
@@ -859,8 +859,8 @@
              return;
             }
           });
-        }
-      });
+        //}
+      //});
     }
   }
 </script>
