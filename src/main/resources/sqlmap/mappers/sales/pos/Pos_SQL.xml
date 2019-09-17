@@ -3416,26 +3416,8 @@
                  AND
                      Project1.STK_TYPE_ID = #{stkTypeId}
                        AND
-                    Project1.STK_CODE IN (
-                    'M500010',
-                    'M500013',
-                    'M500018',
-                    'M500019',
-                    'M500067',
-                    'M500079',
-                    'M500080',
-                    'M500113',
-                    'M500115',
-                    'M500133',
-                    'M500134',
-                    'M500135',
-                    'M500136',
-                    'M500137',
-                    'M500138',
-                    'M500141',
-                    'M500142',
-                    'M500143',
-                    'M500166'
+                    Project1.CODE_ID IN (
+                   SELECT STK_ID FROM LOG0092D WHERE STUS_CODE_ID = 1 AND STK_GRP_ID = 5570
                     )
 
              </if>
