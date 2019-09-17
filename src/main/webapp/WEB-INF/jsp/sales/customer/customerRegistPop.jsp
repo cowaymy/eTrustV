@@ -208,10 +208,6 @@
                 dataField : "cardRem",
                 headerText : '<spring:message code="sal.title.remark" />',
                 editable : true
-            }, {
-                dataField : "crcToken",
-                editable : false,
-                visible : false
             }];
 
         // bank account
@@ -308,6 +304,10 @@
             $("input:radio[name='gender']").attr("disabled" , "disabled");
             $("#genderForm").attr('checked', false);
             $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+
+            // LaiKW - 20190903 - Added to hide centralize and ePortal VIP company type, disallow user to select the mentioned company types
+            $("#_cmbCorpTypeId_ option[value='1174']").remove();
+            $("#_cmbCorpTypeId_ option[value='1333']").remove();
         }else if($("#_cmbTypeId_").val() == '964'){
             $("#_cmbCorpTypeId_").val('');
             $("#_cmbNation_").val('1');
@@ -377,8 +377,6 @@
 
         console.log("saveNewCustomer()");
 
-        var custId;
-
             var customerForm = {
                 dataSet     : GridCommon.getEditData(myGridID),
                 dataSetBank     : GridCommon.getEditData(myGridID1),
@@ -427,7 +425,6 @@
             		Common.alert('<spring:message code="sal.alert.msg.dupNricNum" />');
             		return;
             	}
-
                 Common.alert("<spring:message code='sys.msg.success'/><br/>" + " Customer ID : " + result , fn_winClose);
 
                 if('${callPrgm}' == 'ORD_REGISTER') {
@@ -690,11 +687,11 @@
         $("#_asEmail_").val($("#email").val());
     }
 
-    function fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,cardRem, crcToken){
+    function fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,cardRem){
 
         var item = new Object();
 
-        if(ccType != "" && iBank != "" && cardNo != "" && expDate != "" && nameCard != "" && cType != "" && crcToken != ""){
+        if(ccType != "" && iBank != "" && cardNo != "" && expDate != "" && nameCard != "" && cType != ""){
             item.crcType = ccType;
             item.bank = iBank;
             item.creditCardNo = cardNo;
@@ -702,7 +699,6 @@
             item.nmCard = nameCard;
             item.cardType = cType;
             item.cardRem = cardRem;
-            item.crcToken = crcToken;
             AUIGrid.addRow(myGridID, item, "last");
         }
     }
