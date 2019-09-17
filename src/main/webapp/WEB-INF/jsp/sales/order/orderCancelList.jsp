@@ -106,13 +106,13 @@
           dataField : "callRecallDt",
           headerText : "<spring:message code='sal.title.text.reCallDate' />",
           dataType : "date",
-          formatString : "dd-mm-yyyy",
+          formatString : "dd/mm/yyyy",
           editable : false
         }, {
           dataField : "appDt",
           headerText : "<spring:message code='service.grid.AppntDt' />",
           dataType : "date",
-          formatString : "dd-mm-yyyy",
+          formatString : "dd/mm/yyyy",
           editable : false
         }, {
           dataField : 'rsoStus',
