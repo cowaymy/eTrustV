@@ -11,7 +11,7 @@
  03/06/2019  ONGHC  1.0.4          Add 2 Button for Manager Level to Handle 7 Days After AS
  26/07/2019  ONGHC  1.0.5          Add Recall Status
  17/09/2019  ONGHC  1.0.6          Amend fn_ledger to Pass AS no. rather than ASR no.
-
+ 17/09/2019  ONGHC  1.0.7          Show Total AS Ledger
  -->
 
 <script type="text/javaScript">
@@ -184,6 +184,13 @@
           dataField : "c4",
           headerText : "<spring:message code='service.grid.asEntCreator'/>",
           editable : false,
+          width : 100
+        },
+        {
+          dataField : "totalAs",
+          headerText : "<spring:message code='service.grid.asTotalLdg'/>",
+          editable : false,
+          dataType : "numeric",
           width : 100
         },
         {
