@@ -83,6 +83,8 @@
               WHERE m.BOM  = d.BOM
               AND d.BOM_COMPNT = m2.STK_CODE
               AND sm.CODE_ID = m2.STK_TYPE_ID
+              <!-- Added for excluding Deleted records by Hui Ding, 7/8/2019 -->
+              AND NVL(d.DEL_INDICT , 'N') <![CDATA[<>]]> 'Y'
             <choose>
                 <when test="bom != null and categoryid != null">
                   AND m.BOM=#{bom}
