@@ -42,7 +42,8 @@
            S.AS_SETL_DT,
            S.AS_RESULT_CRT_DT,
            S.CMS AS CMS,
-           S.AS_RESULT_CRT_USER_ID
+           S.AS_RESULT_CRT_USER_ID,
+           NVL(S.TOTAL_AS, 0) TOTAL_AS
     FROM ( SELECT DISTINCT E.AS_ID AS_ID ,
                            E.AS_NO AS_NO ,
                            E.ASSOID1 AS_SO_ID ,
@@ -91,7 +92,8 @@
                            E.AS_SETL_DT,
                            E.AS_RESULT_CRT_DT,
                            E.CMS,
-                           E.AS_RESULT_CRT_USER_ID
+                           E.AS_RESULT_CRT_USER_ID,
+                           X.TOTAL_AS
            FROM ( SELECT Extent1.AS_ID AS_ID ,
                          Extent1.AS_NO AS_NO ,
                          Extent1.AS_SO_ID ASSOID1 ,
@@ -189,6 +191,10 @@
                  </if>
 
           ) E LEFT JOIN SYS0047M Extent8 ON E.AS_CRT_USER_ID = Extent8.USER_ID
+          LEFT JOIN (SELECT AS_ID,
+                            SUM(AS_LG_AMT) TOTAL_AS
+                     FROM PAY0006D
+                     GROUP BY AS_ID) X ON X.AS_ID = E.AS_ID
           WHERE 1=1
 
           <if test=" createStrDate  != null  and createStrDate !=''  ">
@@ -1238,7 +1244,7 @@
                   RESN_ID
            FROM SYS0032M WHERE RESN_TYPE_ID = #{RESN_TYPE_ID}
                            AND STUS_CODE_ID = 1
-           ORDER BY RESN_ID)
+           ORDER BY RESN_ID) ORDER BY CODE_ID
   </select>
 
   <select id="getASReasonCode2" parameterType="Map" resultType="egovMap">
