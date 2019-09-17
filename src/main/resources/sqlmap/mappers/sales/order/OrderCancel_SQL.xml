@@ -58,22 +58,22 @@
            A.ATTACH ATTACH ,
            CASE WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL )
                   THEN A.ACTUAL_CANCL_DT
-                  ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END ACTUAL_CANCL_DT ,
+                  ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END ACTUAL_CANCL_DT ,
            CASE WHEN ( A.APP_RETN_DT IS NOT NULL )
                   THEN A.APP_RETN_DT
-                  ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END APP_RETN_DT ,
+                  ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END APP_RETN_DT ,
            CASE WHEN ( A.CALL_RECALL_DT IS NOT NULL )
-                  THEN TO_CHAR(A.CALL_RECALL_DT,'dd-MM-YYYY')
-                  ELSE '1900-01-01' END CALL_RECALL_DT ,
+                  THEN A.CALL_RECALL_DT
+                  ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END CALL_RECALL_DT ,
            CASE WHEN ( A.CRT_DT IS NOT NULL )
-                  THEN A.CRT_DT
-                  ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END CRT_DT ,
+                  THEN TO_DATE(A.CRT_DT, 'dd/mm/yyyy')
+                  ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END CRT_DT ,
            CASE WHEN ( A.DSC_BRNCH_ID IS NOT NULL )
                   THEN A.DSC_BRNCH_ID
                   ELSE 0 END DSC_BRNCH_ID ,
            CASE WHEN ( A.UPD_DT IS NOT NULL )
                   THEN A.UPD_DT
-                  ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END UPD_DT,
+                  ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END UPD_DT,
            A.TYPE_ID,
            A.DOC_ID,
            A.REF_ID,
