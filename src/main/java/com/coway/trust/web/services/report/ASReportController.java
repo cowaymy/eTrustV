@@ -25,6 +25,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 26/07/2019    ONGHC      1.0.1       - Add Recall Status
+ * 17/09/2019    ONGHC      1.0.2       - Amend asLedgerPop
  *********************************************************************************************/
 
 @Controller
@@ -112,7 +113,7 @@ public class ASReportController {
   public String asLedgerPop(@RequestParam Map<String, Object> params, ModelMap model) {
     logger.debug("params {}", params);
 
-    model.addAttribute("ASRNo", params.get("ASRNO"));
+    model.addAttribute("ASNo", params.get("ASNO"));
     // 호출될 화면
     return "services/as/asLedgerPop";
   }
