@@ -10,6 +10,8 @@
  03/06/2019  ONGHC  1.0.3          Amend 7 days checking logic
  03/06/2019  ONGHC  1.0.4          Add 2 Button for Manager Level to Handle 7 Days After AS
  26/07/2019  ONGHC  1.0.5          Add Recall Status
+ 17/09/2019  ONGHC  1.0.6          Amend fn_ledger to Pass AS no. rather than ASR no.
+
  -->
 
 <script type="text/javaScript">
@@ -367,10 +369,10 @@
       //return;
     //}
 
-    //if (asStusId != "ACT") {
-      //Common.alert("<spring:message code='service.msg.asAddHvRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-      //return;
-    //}
+    if (asStusId != "ACT") {
+      Common.alert("<spring:message code='service.msg.asAddHvRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+      return;
+    }
 
     Common.ajax("POST", "/services/as/selRcdTms.do", {
         asNo : asNo,
@@ -865,7 +867,7 @@
       if (asStusId == "ACT") {
         Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
       } else {
-        Common.popupDiv("/services/as/report/asLedgerPop.do?ASRNO=" + asrNo, null, null, true, '');
+        Common.popupDiv("/services/as/report/asLedgerPop.do?ASNO=" + AS_NO, null, null, true, '');
       }
     }
   }
