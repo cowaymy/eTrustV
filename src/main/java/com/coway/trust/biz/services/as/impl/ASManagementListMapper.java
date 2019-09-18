@@ -14,6 +14,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 08/05/2019    ONGHC      1.0.2       - Add getFltNm
  * 26/07/2019    ONGHC      1.0.3       - Add Recall Status
  * 05/09/2019    ONGHC      1.0.4       - Create Function for In-House Repair
+ * 17/09/2019    ONGHC      1.0.5       - Create getDftTyp
  *********************************************************************************************/
 
 @Mapper("ASManagementListMapper")
@@ -322,5 +323,7 @@ public interface ASManagementListMapper {
   List<EgovMap> selectFltPmtTyp();
 
   List<EgovMap> getASEntryCommission(Map<String, Object> params);
+
+  List<EgovMap> getDftTyp(Map<String, Object> params);
 
 }
