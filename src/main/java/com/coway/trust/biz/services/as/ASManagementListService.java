@@ -13,6 +13,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
  * 26/07/2019    ONGHC      1.0.2       - Add Recall Status
+ * 17/09/2019    ONGHC      1.0.3       - Add getDftTyp
  *********************************************************************************************/
 
 public interface ASManagementListService {
@@ -177,4 +178,6 @@ public interface ASManagementListService {
   List<EgovMap> getASEntryCommission(Map<String, Object> params);
 
   int saveASEntryInHouse(Map<String, Object> params);
+
+  List<EgovMap> getDftTyp(Map<String, Object> params);
 }
