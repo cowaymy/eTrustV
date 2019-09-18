@@ -138,7 +138,7 @@
 
             } else if (type == "4") {
 
-                reportFileName = "/commission/CommCaHTRawData_Excel.rpt"; //reportFileName
+                reportFileName = "/commission/CommCalHTRawData_Excel.rpt"; //reportFileName
                 reportDownFileName = "CommCalHTRawData_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
