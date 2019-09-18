@@ -43,6 +43,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *--------------------------------------------------------------------------------------------
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
  * 26/07/2019    ONGHC      1.0.2       - Add Recall Status
+ * 17/07/2019    ONGHC      1.0.3       - Add dftTypPop and getDftTyp
  *********************************************************************************************/
 
 @Controller
@@ -1371,5 +1372,25 @@ public class ASManagementListController {
     List<EgovMap> list = ASManagementListService.getASEntryCommission(params);
 
     return ResponseEntity.ok(list);
+  }
+
+  @RequestMapping(value = "/dftTypPop.do")
+  public String dftTypPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    model.put("callPrgm", params.get("callPrgm"));
+    model.put("prodCde", params.get("prodCde"));
+    model.put("ddCde", params.get("ddCde"));
+    return "services/as/dftTypPop";
+  }
+
+  @RequestMapping(value = "/getDftTyp.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getDftTyp(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+    logger.debug("===========================/getDftTyp.do===============================");
+    logger.debug("== params " + params.toString());
+
+    List<EgovMap> dftCde = ASManagementListService.getDftTyp(params);
+
+    logger.debug("== dftCde : {}", dftCde);
+    logger.debug("===========================/getDftTyp.do===============================");
+    return ResponseEntity.ok(dftCde);
   }
 }
