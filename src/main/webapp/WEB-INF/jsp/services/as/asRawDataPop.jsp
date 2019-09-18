@@ -5,6 +5,7 @@
  ----------------------------------------------------------------
  25/06/2019  ONGHC  1.0.0          Amend Report Condition
  20/08/2019  ONGHC  1.0.1          Add Date Option Filter
+ 17/09/2019  ONGHC  1.0.2          AMEND DEFECT DETAIL SECTION
  -->
 
 <script type="text/javaScript">
@@ -110,7 +111,62 @@
         };
 
         Common.report("reportForm1", option);
-      }  else if ($("#reportType").val() == '4') {
+      } else if ($("#reportType").val() == '4') {
+        var date = new Date();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        if (date.getDate() < 10) {
+          day = "0" + date.getDate();
+        }
+        $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
+
+        whereSql += " AND A.AS_TYPE_ID IN (3154) ";
+
+        $("#reportForm1 #V_SELECTSQL").val(" ");
+        $("#reportForm1 #V_ORDERBYSQL").val(" ");
+        $("#reportForm1 #V_FULLSQL").val(" ");
+        $("#reportForm1 #V_WHERESQL").val(whereSql);
+        $("#reportForm1 #reportFileName").val('/services/ASRawData.rpt');
+        $("#reportForm1 #viewType").val("EXCEL");
+        $("#reportForm1 #reportDownFileName").val("ASRawDataAOAS_" + day + month + date.getFullYear());
+        //$("#reportForm1 #V_DEPT").val("PQC");
+
+        var option = {
+          isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+        };
+
+        Common.report("reportForm1", option);
+      } else if ($("#reportType").val() == '5') {
+        var date = new Date();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        if (date.getDate() < 10) {
+          day = "0" + date.getDate();
+        }
+        $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
+
+        //whereSql += " AND A.AS_TYPE_ID = 339 ";
+
+        $("#reportForm1 #V_SELECTSQL").val(" ");
+        $("#reportForm1 #V_ORDERBYSQL").val(" ");
+        $("#reportForm1 #V_FULLSQL").val(" ");
+        $("#reportForm1 #V_WHERESQL").val(whereSql);
+        $("#reportForm1 #reportFileName").val('/services/ASRawDataKOR.rpt');
+        $("#reportForm1 #viewType").val("EXCEL");
+        $("#reportForm1 #reportDownFileName").val("ASRawDataKOR_" + day + month + date.getFullYear());
+
+        var option = {
+          isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+        };
+
+        Common.report("reportForm1", option);
+      } else if ($("#reportType").val() == '6') {
           var date = new Date();
           var month = date.getMonth() + 1;
           var day = date.getDate();
@@ -128,17 +184,16 @@
           $("#reportForm1 #V_ORDERBYSQL").val(" ");
           $("#reportForm1 #V_FULLSQL").val(" ");
           $("#reportForm1 #V_WHERESQL").val(whereSql);
-          $("#reportForm1 #reportFileName").val('/services/ASRawData.rpt');
+          $("#reportForm1 #reportFileName").val('/services/ASRawDataKOR.rpt');
           $("#reportForm1 #viewType").val("EXCEL");
-          $("#reportForm1 #reportDownFileName").val("ASRawDataAOAS_" + day + month + date.getFullYear());
-          //$("#reportForm1 #V_DEPT").val("PQC");
+          $("#reportForm1 #reportDownFileName").val("ASRawDataAOASKOR_" + day + month + date.getFullYear());
 
           var option = {
             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
           };
 
           Common.report("reportForm1", option);
-        } else {
+      } else {
         var date = new Date();
         var month = date.getMonth() + 1;
         var day = date.getDate();
@@ -220,9 +275,11 @@
        <th scope="row">Report Type<span id='m1' name='m1' class='must'> *</span></th>
        <td><select id="reportType" class="w100p" >
          <option value="1">After Service (AS) Raw Data</option>
+         <option value="5">After Service (AS) Raw Data [New]</option>
          <option value="2">After Service (AS) Spare Part Exchange Raw Data</option>
          <option value="3">After Service (AS) Raw Data (PQC)</option>
          <option value="4">After Service (AS) Raw Data (AOAS)</option>
+         <option value="6">After Service (AS) Raw Data (AOAS) [New]</option>
        </select></td>
        <th scope="row">Date Option<span id='m3' name='m3' class='must'> *</span></th>
        <td><select id="dateType" class="w100p" >
