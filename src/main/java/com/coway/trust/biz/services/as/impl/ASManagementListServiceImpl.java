@@ -37,6 +37,7 @@ import oracle.sql.DATE;
  * 26/07/2019    ONGHC      1.0.5       - Remove In House SMO
  * 05/09/2019    ONGHC      1.0.6       - Create saveASEntryInHouse
  * 05/09/2019    ONGHC      1.0.7       - Amend In House Call Log Result
+ * 17/09/2019    ONGHC      1.0.8       - Create getDftTyp
  *********************************************************************************************/
 
 @Service("ASManagementListService")
@@ -3254,8 +3255,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   }
 
   //@Override
-  //public List<EgovMap> getDftTyp(Map<String, Object> params) {
-    //return ASManagementListMapper.getDftTyp(params);
-  //}
+  public List<EgovMap> getDftTyp(Map<String, Object> params) {
+    return ASManagementListMapper.getDftTyp(params);
+  }
 
 }
