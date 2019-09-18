@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 /**
  * @author methree
@@ -70,7 +70,7 @@ public class LocationController {
 		String branchId = request.getParameter("branchid");
 		String locdesc  = request.getParameter("locdesc");
 		String loccd    = request.getParameter("loccd");
-		
+
 		String[] loctype    = request.getParameterValues("loctype");
 		String locgrad    = request.getParameter("locgrad");
 
@@ -79,7 +79,7 @@ public class LocationController {
 		smap.put("status"  , statusCd);
 		smap.put("locdesc" , locdesc);
 		smap.put("loccd"   , loccd);
-		                   
+
 		smap.put("loctype" , loctype);
 		smap.put("locgrad" , locgrad);
 
@@ -115,7 +115,7 @@ public class LocationController {
 			Model model) {
 
 		List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); // 수정 리스트 얻기
-		
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = 0;
 		if (sessionVO == null) {
@@ -139,12 +139,12 @@ public class LocationController {
 		}
 
 		Map<String, Object> updateMap = (Map<String, Object>) updateList.get(0);
-		
+
 		updateMap.put("up_sync", up_sync);
 		updateMap.put("up_mobile", up_mobile);
 		updateMap.put("up_user_id", loginId);
-		
-		
+
+
 		logger.debug("locstus    값 : {}", params.get("locstus"));
 
 
@@ -174,10 +174,10 @@ public class LocationController {
 		} else {
 			loginId = sessionVO.getUserId();
 		}
-		
+
 		String inwarecd      = (String) params.get("inwarecd");
 		String inwarenm      = (String) params.get("inwarenm");
-		
+
 		String incontact1    = (String) params.get("incontact1");
 		String incontact2    = (String) params.get("incontact2");
 		String instockgrade  = (String) params.get("instockgrade");
@@ -185,21 +185,21 @@ public class LocationController {
 		String inwarebranch1 = (String) params.get("inwarebranch1");
 		String inwarebranch2 = (String) params.get("inwarebranch2");
 		String inwarebranch3 = (String) params.get("inwarebranch3");
-		
+
 		String iareaId       = (String) params.get("iareaId");
 		String iaddrdtl      = (String) params.get("iaddrdtl");
 		String istreet       = (String) params.get("istreet");
-		
+
 		String ipdchk        = (String) params.get("ipdchk");
 		String iftchk        = (String) params.get("iftchk");
 		String iptchk        = (String) params.get("iptchk");
-		
+
 		String cdccode       = (String) params.get("icdccode");
 		String rdccode       = (String) params.get("irdccode");
-		
+
 		String plant         = (String) params.get("iplant");
 		String slplant         = (String) params.get("islplant");
-		
+
 		if (ipdchk != null && "on".equals(ipdchk)){
 				ipdchk = "Y";
 		}
@@ -221,27 +221,27 @@ public class LocationController {
 		insmap.put("ingrad"      , instockgrade);
 		insmap.put("indesc2"     , inwarenm);
 		insmap.put("inup_user_id", loginId);
-		
+
 		insmap.put("branch1"     , inwarebranch1);
 		insmap.put("branch2"     , inwarebranch2);
 		insmap.put("branch3"     , inwarebranch3);
-		                         
+
 		insmap.put("pdchk"       , ipdchk);
 		insmap.put("ftchk"       , iftchk);
 		insmap.put("ptchk"       , iptchk);
-		                         
-		insmap.put("areaid "     , iareaId );
+
+		insmap.put("areaid"     , iareaId );
 		insmap.put("addrdtl"     , iaddrdtl);
-		insmap.put("street "     , istreet );
-		
+		insmap.put("street"     , istreet );
+
 		insmap.put("locationtype", ilocationtype);
-		
+
 		insmap.put("cdccode"     , cdccode);
 		insmap.put("rdccode"     , rdccode);
-		
+
 		insmap.put("inis_sync"   , inis_sync);
 		insmap.put("inmobile"    , inmobile);
-		
+
 		insmap.put("plant"       , plant);
 		insmap.put("slplant"     , slplant);
 
@@ -275,7 +275,7 @@ public class LocationController {
 	@RequestMapping(value = "/locationCdSearch.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> selectLocationCodeList(@RequestBody Map<String, Object> params, Model model)
 			throws Exception {
-		
+
 		if (params.get("locgb") != null ){
     		List<String> list = (List)params.get("locgb");
     		if (!list.isEmpty()){
@@ -294,34 +294,34 @@ public class LocationController {
 
 		return ResponseEntity.ok(map);
 	}
-	
-	
+
+
 	@RequestMapping(value = "/locationchk.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> locationchk(@RequestBody Map<String, Object> params, ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		
+
 		//String loccode = request.getParameter("loccode");
-		
+
 		String loccode = (String) params.get("loccode");
-		
+
 		logger.debug("loccode    값 : {}", loccode);
-		
+
 		int loccnt = loc.selectLocationChk(loccode);
 
 		logger.debug("loccnt    값 : {}", loccnt);
-		
+
 		Map<String, Object> map = new HashMap();
 		map.put("loccnt", loccnt);
 
 		return ResponseEntity.ok(map);
 	}
-	
+
 	@RequestMapping(value = "/selectLocStatusList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectLocStatusList(@RequestParam Map<String, Object> params) {
 		List<EgovMap> statusList = loc.selectLocStatusList(params);
 		return ResponseEntity.ok(statusList);
 	}
-	
-	
+
+
 
 }

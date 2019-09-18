@@ -142,7 +142,7 @@ $(document).ready(function(){
             if (event.rowIndex > -1){
                 fn_modyWare(event.rowIndex);
             }else{
-                Common.alert('Choice Data please..');
+                Common.alert('Please select record.');
             }
         });
 
@@ -200,7 +200,8 @@ $(document).ready(function(){
             if (selectedItem[0] > -1){
                 fn_modyWare(selectedItem[0]);
             }else{
-            Common.alert('Choice Data please..');
+            //Common.alert('Choice Data please..');
+            Common.alert('Please select data to update.');
             }
             //AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
         });
@@ -234,12 +235,24 @@ $(document).ready(function(){
             //	Common.confirm("<spring:message code='sys.common.alert.delete'/>",fn_deleteAjax(selectedItem[0]));
             	fn_deleteWare(selectedItem[0]);
             }else{
-            Common.alert('Choice Data please..');
+            Common.alert('Please select record for deletion.');
             }
 
         });
-        $("#icdccode").change(function(){
+        // Commented for removing relationship between CDC & RDC code selection by Hui Ding, 17/9/2019
+        /* $("#icdccode").change(function(){
         	rdccodeFunc();
+        }); */
+
+        $("#irdccode ,#mrdccode").change(function(){
+
+        	if($("#ilocationtype").val() == '03' || $("#ilocationtype").val() == '04'){
+        		var irdcCode = $("#irdccode").val();
+                $("#islplant").val(irdcCode);
+        	} else if ($("#locationtype").val() == '03' || $("#locationtype").val() == '04'){
+        		var rdcCode = $("#mrdccode").val();
+                $("#slplant").val(rdcCode);
+        	}
         });
 
     });
@@ -354,9 +367,12 @@ $(document).ready(function(){
         doGetComboData('/common/selectStockLocationList.do', paramdata, '','icdccode', 'S' , '');
         doGetComboData('/common/selectStockLocationList.do', { locgb : '02'}, '','irdccode', 'S' , '');
     }
-  function rdccodeFunc(){
+
+  //Commented for removing relationship between CDC & RDC code selection by Hui Ding, 17/9/2019
+  /* function rdccodeFunc(){
 	    doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02' , cdcloc:$("#icdccode").val()}, '','irdccode', 'S' , '');
-  }
+  } */
+
   function fn_deleteWare(rowid){
 	  var locid=AUIGrid.getCellValue(myGridID ,rowid,'locid');
      // var param = "?locid="+locid;
@@ -364,60 +380,122 @@ $(document).ready(function(){
     	  Common.alert(result.message);
         $("#search").click();
       }, function(jqXHR, textStatus, errorThrown) {
-          Common.alert("실패하였습니다.");
+          //Common.alert("실패하였습니다.");
+          Common.alert('Failed to delete record.');
 
           alert(jqXHR.responseJSON.message);
 
       });
   }
-  function inValidation(){
+  function validate(action){
 
-	   var inwarecd     = $("#inwarecd").val().trim();
-	   var inwarenm     = $("#inwarenm").val().trim();
-	   var instockgrade = $("#instockgrade").val().trim();
-	   var inwarebranch = $("#inwarebranch1").val().trim();
-	   var incontact1   = $("#incontact1").val().trim();
-	   var incontact2   = $("#incontact2").val().trim();
+	   var warecd;
+	   var warenm;
+	   var stockgrade;
+	   var warebranch1;
+	   var warebranch2;
+	   var warebranch3;
+	   var contact1;
+	   var contact2;
+	   var plant;
+	   var slPlant;
+	   var country;
+	   var state;
+	   var city;
+	   var postcode;
+	   var area;
+	   var addrDtl;
 
-	   fn_locchk(inwarecd);
+	   var locType;
 
-	   if(locchkcnt > 0){
-		   Common.alert('Location Code Duplicate,Please Check code!');
-		   return false;
+	   if (action == "i"){
+		   warecd = $("#inwarecd").val().trim();
+		   warenm = $("#inwarenm").val().trim();
+		   stockgrade = $("#instockgrade").val().trim();
+		   warebranch1 = $("#inwarebranch1").val().trim();
+		   warebranch2 = $("#inwarebranch2").val().trim();
+		   warebranch3 = $("#inwarebranch3").val().trim();
+		   contact1 = $("#incontact1").val().trim();
+		   contact2 = $("#incontact2").val().trim();
+		   country = $("#iCountry").val().trim();
+		   city = $("#iCity").val().trim();
+		   state = $("#iState").val().trim();
+		   postcode = $("#iPostCd").val().trim();
+		   area = $("#iareaId").val().trim();
+		   locType = $("#ilocationtype").val().trim();
+		   addrDtl = $("#iaddrdtl").val().trim();
+
+		   fn_locchk(warecd);
+
+		   if(locchkcnt > 0){
+	           Common.alert('Duplicated Location Code.');
+	           return false;
+		   }
+
+	   } else if (action == "m"){
+		   warecd = $("#mwarecd").val().trim();
+           warenm = $("#mwarenm").val().trim();
+           stockgrade = $("#mstockgrade").val().trim();
+           warebranch1 = $("#mwarebranch1").val().trim();
+           warebranch2 = $("#mwarebranch2").val().trim();
+           warebranch3 = $("#mwarebranch3").val().trim();
+           contact1 = $("#mcontact1").val().trim();
+           contact2 = $("#mcontact2").val().trim();
+           plant = $("#plant").val();
+           slPlant = $("#slplant").val();
+           country = $("#mCountry").val().trim();
+           city = $("#mCity").val().trim();
+           state = $("#mState").val().trim();
+           postcode = $("#mPostCd").val().trim();
+           area = $("#mareaId").val().trim();
+           locType = $("#locationtype").val().trim();
+           addrDtl = $("#maddr1").val().trim();
+
+           if ($("#plant").val() == null || $("#plant").val() == undefined || $("#plant").val() == ""){
+               Common.alert("Please enter Plant in ECC.");
+               return false;
+           }
 	   }
 
-	   if(inwarecd == null || inwarecd == "" ){
-           Common.alert('Some required fields are empty. Please fill up all the required fields. ');
-           $("#inwarecd").focus();
+	 if (warecd == null || warecd == "" ){
+           //Common.alert('Some required fields are empty. Please fill up all the required fields. ');
+           Common.alert('Location Code is required.');
+           //$("#inwarecd").focus();
            return false;
-     }
-	   if(inwarenm == null || inwarenm == "" ){
-           Common.alert('Some required fields are empty. Please fill up all the required fields. ');
-           $("#inwarenm").focus();
+     } else if (warenm == null || warenm == "" ){
+           //Common.alert('Some required fields are empty. Please fill up all the required fields. ');
+           Common.alert('Location Name is required.');
+           //$("#inwarenm").focus();
            return false;
-     }
-	   if(instockgrade == null || instockgrade == "" ){
-           Common.alert('Some required fields are empty. Please fill up all the required fields. ');
-           $("#instockgrade").focus();
+     } else if (stockgrade == null || stockgrade == "" ){
+           //Common.alert('Some required fields are empty. Please fill up all the required fields. ');
+           Common.alert('Location Grade is required.');
+           //$("#instockgrade").focus();
            return false;
-     }
-
-	   if(inwarebranch == null || inwarebranch == "" ){
-           Common.alert('Some required fields are empty. Please fill up all the required fields. ');
-           $("#inwarebranch1").focus();
+     }else if(contact1 == null || contact1 == "" ){
+           //Common.alert('Some required fields are empty. Please fill up all the required fields. ');
+           Common.alert('Please fill in at least 1 contact no.');
+           //$("#incontact1").focus();
            return false;
-     }
-
-       if(incontact1 == null || incontact1 == "" ){
-           Common.alert('Some required fields are empty. Please fill up all the required fields. ');
-           $("#incontact1").focus();
-           return false;
-     }
-
-  	   if(isNaN(incontact1) || isNaN(incontact2) ){
+     }else if(isNaN(contact1) || isNaN(contact2) ){
            Common.alert('Contact number is invalid. Please key in only number in contact field.');
            return false;
+     } else if (locType != null && locType != "" && (locType == '01' || locType == '02')) {
+    	   if ((country == null || country == "") || (city == null || city == "") || (state == null || state == "") ||
+    			  (postcode == null || postcode == "") || (area == null || area == "") || (addrDtl == null || addrDtl == "")){
+    		   Common.alert('Please complete the address.');
+    		   return false;
+    	   }
+
+     } else {
+    	 if((warebranch1 == null || warebranch1 == "") && (warebranch2 == null || warebranch2 == "") && (warebranch3 == null || warebranch3 == "")){
+             //Common.alert('Some required fields are empty. Please fill up all the required fields. ');
+             Common.alert('Reminder:\nIt is not recommend to leave Branch field empty.\nPlease edit it after saved.');
+            // $("#inwarebranch1").focus();
+             //return false;
+       }
      }
+
   	   return true;
   }
 
@@ -452,8 +530,8 @@ $(document).ready(function(){
         item.plant   = $("#plant").val();
         item.slplant = $("#slplant").val();
 
-        if(f_validatation()){
-        AUIGrid.updateRow(myGridID, item, selectedItem[0]);
+        if(validate("m")){
+            AUIGrid.updateRow(myGridID, item, selectedItem[0]);
         }
 
     }
@@ -471,7 +549,8 @@ $(document).ready(function(){
                 fn_detailView(_data);
             },
             error: function(jqXHR, textStatus, errorThrown){
-                alert("실패하였습니다.");
+                //alert("실패하였습니다.");
+                alert('Failed to load data.');
             }
         });
     }
@@ -517,7 +596,11 @@ $(document).ready(function(){
 
      function fn_insertGrid(){
 
-    	 if(inValidation()){
+    	 if(validate('i')){
+
+    		 // Added to set plant & slplant attribute back to available before save.
+    		 $("#iplant").attr("disabled"   , false);
+             $("#islplant").attr("disabled" , false);
 
     		 console.log($("#insForm").serialize());
              //$('#instockgrade').attr("disabled",false)
@@ -528,7 +611,8 @@ $(document).ready(function(){
                 $('#insForm')[0].reset();
 
                 }, function(jqXHR, textStatus, errorThrown) {
-                    Common.alert("실패하였습니다.");
+                    //Common.alert("실패하였습니다.");
+                    Common.alert('Failed to insert record.');
 
                     alert(jqXHR.responseJSON.message);
 
@@ -549,17 +633,29 @@ $(document).ready(function(){
      }
 
      function fn_plantchk(id , take){
-    	 
+
     	 var slplant = (take == "i" ) ? $("#inwarecd").val() : $("#mwarecd").val() ;
+    	 var rdcSlPlant = ($("#"+take+"rdccode").val() != null) ? $("#"+take+"rdccode").val() : $("#mrdccode").val();
+
+    	 // Added for resetting plant value when location type onchange. By Hui Ding, 17/9/2019
+    	 $("#"+take+"plant").val('');
+    	 $("#"+take+"slplant").val('');
 
     	 if($("#"+id).val() == '03'){
     		 $("#"+take+"plant").val('6000');
     		 $("#"+take+"plant").attr("disabled"   , true);
     		 $("#"+take+"slplant").attr("disabled" , true);
+
+    		 // Added for auto pollulating slPlant value when location type onchance. By Hui Ding, 17/9/2019
+    		 $("#"+take+"slplant").val(rdcSlPlant);
+
          }else if($("#"+id).val() == '04'){
              $("#"+take+"plant").val('5000');
              $("#"+take+"plant").attr("disabled"   , true);
              $("#"+take+"slplant").attr("disabled" , true);
+
+             // Added for auto pollulating slPlant value when location type onchance. By Hui Ding, 17/9/2019
+             $("#"+take+"slplant").val(rdcSlPlant);
          }else{
         	 $("#"+take+"plant").attr("disabled"   , false);
         	 if ($("#"+id).val() == '02'){
@@ -585,18 +681,13 @@ $(document).ready(function(){
 
     }
 
-
-    function f_validatation(){
-
-
-     if ($("#plant").val() == null || $("#plant").val() == undefined || $("#plant").val() == ""){
-         Common.alert("Plant in ECC Please enter.");
-         return false;
-     }
-
+    /* function f_validatation(){
+	    if ($("#plant").val() == null || $("#plant").val() == undefined || $("#plant").val() == ""){
+	        Common.alert("Please enter Plant in ECC.");
+	        return false;
+	    }
         return true;
-    }
-
+    } */
 
 
 </script>
@@ -730,7 +821,7 @@ $(document).ready(function(){
      </td>
 </tr>
 <tr>
-    <th scope="row">Location Code</th>
+    <th scope="row">Location Code<span class="must">*</span></th>
     <td><input type="text" name="mwarecd" id="mwarecd"  class="w100p"/></td>
     <th scope="row">Serial Check</th>
     <td>
@@ -740,7 +831,7 @@ $(document).ready(function(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Location Name</th>
+    <th scope="row">Location Name<span class="must">*</span></th>
     <td colspan="3"><input type="text" name="mwarenm" id="mwarenm" class="w100p"/></td>
 </tr>
 <tr>
@@ -752,7 +843,7 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Location Type</th>
     <td><select id="locationtype" name="locationtype"  class="w100p" onchange="fn_plantchk(this.id , '')"></select></td>
-    <th scope="row">Location Grade</th>
+    <th scope="row">Location Grade<span class="must">*</span></th>
     <td><select id="mstockgrade" class="w100p"></select></td>
 </tr>
 <tr>
@@ -760,13 +851,13 @@ $(document).ready(function(){
     <td colspan='3'><select id="mwarebranch1" style="width: 273px!important"  ></select><select id="mwarebranch2" style="width: 273px!important" class="ml5"></select><select id="mwarebranch3" style="width: 273px!important" class="ml5"></select></td>
 </tr>
 <tr>
-    <th scope="row">Contact No (1)</th>
+    <th scope="row">Contact No (1)<span class="must">*</span></th>
     <td><input type="text" name="mcontact1" id="mcontact1"  class="w100p"/></td>
     <th scope="row">Contact No (2)</th>
     <td><input type="text" name="mcontact2" id="mcontact2"  class="w100p"/></td>
 </tr>
 <tr>
-    <th scope="row">Plant in ECC</th>
+    <th scope="row">Plant in ECC<span class="must">*</span></th>
     <td >
         <input type="text" title="" id="plant" name="plant" placeholder="" class="w100p" />
     </td>
@@ -776,7 +867,7 @@ $(document).ready(function(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Street search<span class="must">*</span></th>
+    <th scope="row">Street search</th>
 
     <td colspan='3'>
     <div class="search_100p"><!-- search_100p start -->
@@ -794,7 +885,7 @@ $(document).ready(function(){
 	<!-- <td colspan="3"> -->
 </tr>
 <tr>
-   <th scope="row">Area(4)<span class="must">*</span></th>
+   <th scope="row">Area(4)</span></th>
 	<td>
 	<select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId('m')"></select>
 	</td>
@@ -802,21 +893,21 @@ $(document).ready(function(){
     <td><input type="text" title="" id="street" name="street" placeholder="Detail Address" class="w100p"  /></td>
 </tr>
 <tr>
-	 <th scope="row">City(2)<span class="must">*</span></th>
+	 <th scope="row">City(2)</th>
 	<td>
 	<select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value , 'm')"></select>
 	</td>
-	<th scope="row">PostCode(3)<span class="must">*</span></th>
+	<th scope="row">PostCode(3)</th>
 	<td>
 	<select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value , 'm')"></select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">State(1)<span class="must">*</span></th>
+	<th scope="row">State(1)</th>
 	<td>
 	<select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value , 'm')"></select>
 	</td>
-	<th scope="row">Country<span class="must">*</span></th>
+	<th scope="row">Country</th>
 	<td>
 	<input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
 	</td>
@@ -857,11 +948,11 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Location Code</th>
+    <th scope="row">Location Code<span class="must">*</span></th>
     <td colspan="3"><input type="text" name="inwarecd" id="inwarecd" maxlength="10" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Location Name</th>
+    <th scope="row">Location Name<span class="must">*</span></th>
     <td colspan="3"><input type="text" name="inwarenm" id="inwarenm" class="w100p"/></td>
 </tr>
 <tr>
@@ -873,7 +964,7 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Location Type</th>
     <td><select id="ilocationtype" name="ilocationtype"  class="w100p" onchange="fn_plantchk(this.id , 'i')"></select></td>
-    <th scope="row">Location Grade</th>
+    <th scope="row">Location Grade<span class="must">*</span></th>
     <td><select id="instockgrade" name="instockgrade" class="w100p"></select></td>
 </tr>
 <tr>
@@ -931,7 +1022,7 @@ $(document).ready(function(){
     <td><input type="text" title="" id="istreet" name="istreet" placeholder="Detail Address" class="w100p"  /></td>
 </tr>
 <tr>
-    <th scope="row">Contact No (1)</th>
+    <th scope="row">Contact No (1)<span class="must">*</span></th>
     <td><input type="text" name="incontact1" id="incontact1" class="w100p" /></td>
     <th scope="row">Contact No (2)</th>
     <td><input type="text" name="incontact2" id="incontact2" class="w100p" /></td>
@@ -1020,7 +1111,7 @@ $(document).ready(function(){
                  if (result != null){
                 	 $("#"+d+"areaId").val(result.areaId);
                  }else{
-                	 Common.alert("Address research please!");
+                	 Common.alert("Invalid Area.");
                  }
              });
 
