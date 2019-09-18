@@ -54,8 +54,9 @@ SELECT
                 EXTENT1.SEQ,
                 EXTENT1.DISAB,
                 CASE WHEN EXTENT1.QUES_IS_SCRE = 1 THEN 'CHECKBOX'
-                        WHEN EXTENT1.QUES_IS_REM = 1 THEN 'TEXT'
-                        WHEN EXTENT2.IS_CUST_ANS = 1 THEN 'DROPDOWN'
+                        WHEN EXTENT1.QUES_IS_REM = 1 AND EXTENT2.IS_CUST_ANS = 1 THEN 'DROPTEXT'
+                        WHEN EXTENT1.QUES_IS_REM = 1 AND EXTENT2.IS_CUST_ANS = 0 THEN 'TEXT'
+                        WHEN EXTENT1.QUES_IS_REM = 0 AND EXTENT2.IS_CUST_ANS = 1 THEN 'DROPDOWN'
                 ELSE 'CHECKBOX'
                 END INPUT_TYPE
     FROM MSC0024D EXTENT1

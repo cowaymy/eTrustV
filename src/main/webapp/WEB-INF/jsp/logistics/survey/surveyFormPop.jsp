@@ -22,17 +22,19 @@ function btnSubmit(){
     	var form = {};
 
     	if( (!FormUtil.isEmpty($(this).val()) && this.type != 'radio') || (this.type == 'radio' && this.checked != false) ){
-    		if((this.type == 'radio' || this.type == 'text' || this.tagName.toLowerCase() == 'select' ) || (this.type == 'radio' && this.checked == true) ){
+    		if((this.type == 'radio' || this.type == 'text' || this.tagName.toLowerCase() == 'select' || this.type == 'textarea' )
+    		|| (this.type == 'radio' && this.checked == true) ){
             form = {
                         id     : $(this).attr("name") ,
                         val   :  $(this).val(),
                         type : this.tagName.toLowerCase() == 'select' ? this.tagName.toLowerCase() : this.type
                       }
             formMaster.push(form);
+            console.log(form);
             }
 
     	}else{
-    		if(this.type != 'textarea' && !$('input:radio[name='+this.name+']').is(':checked')){
+    		if(this.name != 'comment' && !$('input:radio[name='+this.name+']').is(':checked')){
     			console.log(this.name);
     			valid = false;
     		}
@@ -51,7 +53,7 @@ function btnSubmit(){
 		    	Common.ajax("POST", "/logistics/survey/surveySave.do", data, function(result) {
 		    		if('${inWeb}' == '0'){
 			    		Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", function(){fn_goMain(); });
-			    		setTimeout(function(){fn_goMain();},3000);
+			    		//setTimeout(function(){fn_goMain();},3000);
 		    		}else{
 		    			Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+"Thank you for completing our survey!"+"</b>", function(){fn_close();});
 		    		}
@@ -94,15 +96,15 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:1px solid #d3d9
 <caption>table</caption>
 <colgroup>
     <col style="width:5%" />
-    <col style="width:67%" />
-    <col style="width:27%" />
+    <col style="width:60%" />
+    <col style="width:35%" />
 </colgroup>
 <tbody>
 <c:forEach items="${title}" var="title">
 <tr>
         <th scope="row" colspan="3"><br><b>${title.surveyMessage}</b><br/></th>
         <tr>
-    <th scope="row" colspan="3"><b>Score : 1 - Strongly Disagree | 2 - Disagree | 3 - Neutral | 4 - Agree | 5 - Strongly Agree</b></th>
+    <!-- <th scope="row" colspan="3"><b>Score : 1 - Strongly Disagree | 2 - Disagree | 3 - Neutral | 4 - Agree | 5 - Strongly Agree</b></th> -->
 </tr>
     <tr>
 
@@ -130,7 +132,19 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:1px solid #d3d9
              </c:when>
 
              <c:when test = "${ques.inputType eq 'TEXT'}">
-                <td><label><input type="text" title="" id="${ques.quesId}" name="${ques.quesId}" /></label></td>
+                <%-- <td><input class="w100p"type="text" title="" id="${ques.quesId}" name="${ques.quesId}" /></td> --%>
+                <td><textarea  id="${ques.quesId}" name="${ques.quesId}" cols="20" rows="5" ></textarea></td>
+             </c:when>
+
+             <c:when test = "${ques.inputType eq 'DROPTEXT'}">
+                <script>
+                doGetComboData('/logistics/survey/getSurveyAns.do', {quesId : '${ques.quesId}' },'', '${ques.quesId}','S', '');
+                </script>
+                <td>
+                    <label><select id="${ques.quesId}" name="${ques.quesId}" class="w50p" ></select></label>
+                    <br/>
+                    <label><input type="text" title="" id="${ques.quesId}" name="${ques.quesId}" /></label>
+                </td>
              </c:when>
 
              <c:otherwise>

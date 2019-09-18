@@ -97,7 +97,7 @@ public class SurveyServiceImpl implements SurveyService
           }else if(map.get("type").equals("select")){
             map.put("quesIsCustAns", 1);
             map.put("quesAnsId", map.get("val"));
-          }else if(map.get("type").equals("text")){
+          }else if(map.get("type").equals("text") || map.get("type").equals("textarea")){
             map.put("quesIsRem", 1);
             map.put("rem", map.get("val"));
           }
