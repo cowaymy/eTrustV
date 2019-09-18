@@ -6,6 +6,7 @@
  ----------------------------------------------------------------
  01/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP
  26/04/2019  ONGHC  1.0.1          ADD RECALL STATUS
+ 17/09/2019  ONGHC  1.0.2          AMEND DEFECT DETAIL SECTION
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > VIEW / EDIT AS ENTRY -->
@@ -125,6 +126,7 @@
       $("#txtExpiredDate").text(result[0].c6);
 
       actPrdCode = result[0].stockCode;
+      $("#PROD_CDE").val(result[0].stockCode);
       doGetCombo('/services/as/getASFilterInfo.do?prdctCd=' + actPrdCode, '', '', 'ddlFilterCode', 'S', '');
     });
   }
@@ -236,14 +238,14 @@
   <!-- content start -->
   <form id="resultASForm" method="post">
    <div style="display: none">
-    <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" /> <input
-     type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" /> <input
-     type="text" name="AS_NO" id="AS_NO" value="${AS_NO}" /> <input
-     type="text" name="AS_ID" id="AS_ID" value="${AS_ID}" /> <input
-     type="text" name="MOD" id="MOD" value="${MOD}" /> <input
-     type="text" name="AS_RESULT_NO" id="AS_RESULT_NO"
-     value="${AS_RESULT_NO}" /> <input type="text" name="AS_RESULT_ID"
-     id="AS_RESULT_ID" value="${AS_RESULT_ID}" />
+    <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" />
+    <input type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" />
+    <input type="text" name="AS_NO" id="AS_NO" value="${AS_NO}" />
+    <input type="text" name="AS_ID" id="AS_ID" value="${AS_ID}" />
+    <input type="text" name="MOD" id="MOD" value="${MOD}" />
+    <input type="text" name="AS_RESULT_NO" id="AS_RESULT_NO" value="${AS_RESULT_NO}" />
+    <input type="text" name="AS_RESULT_ID" id="AS_RESULT_ID" value="${AS_RESULT_ID}" />
+    <input type="text" name="PROD_CDE" id="PROD_CDE" />
    </div>
   </form>
   <header class="pop_header">
