@@ -7,6 +7,7 @@
  01/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP AND APPOINMENT DATE
  07/05/2019  ONGHC  1.0.1          FIX ERROR MESSAGE ISSUE
  26/04/2019  ONGHC  1.0.2          ADD RECALL STATUS
+ 17/09/2019  ONGHC  1.0.3          AMEND DEFECT DETAIL SECTION
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > EDIT BASIC AS ENTRY -->
@@ -356,8 +357,9 @@
       $("#txtMembership").text(result[0].c5);
       $("#txtExpiredDate").text(result[0].c6);
 
-      fn_getErrMstList(result[0].ordNo);
+      $("#PROD_CDE").val(result[0].stockCode);
 
+      fn_getErrMstList(result[0].ordNo);
     });
   }
 
@@ -517,16 +519,16 @@
     $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");
     $('#txtRemark').removeAttr("disabled").removeClass("readonly");
     $('#iscommission').removeAttr("disabled").removeClass("readonly");
-    $('#def_type').removeAttr("disabled").removeClass("readonly");
-    $('#def_code').removeAttr("disabled").removeClass("readonly");
-    $('#def_part').removeAttr("disabled").removeClass("readonly");
-    $('#solut_code').removeAttr("disabled").removeClass("readonly");
-    $('#def_def').removeAttr("disabled").removeClass("readonly");
-    $('#def_type_id').removeAttr("disabled").removeClass("readonly");
-    $('#def_code_id').removeAttr("disabled").removeClass("readonly");
-    $('#def_part_id').removeAttr("disabled").removeClass("readonly");
-    $('#solut_code_id').removeAttr("disabled").removeClass("readonly");
-    $('#def_def_id').removeAttr("disabled").removeClass("readonly");
+    //$('#def_type').removeAttr("disabled").removeClass("readonly");
+    //$('#def_code').removeAttr("disabled").removeClass("readonly");
+    //$('#def_part').removeAttr("disabled").removeClass("readonly");
+    //$('#solut_code').removeAttr("disabled").removeClass("readonly");
+    //$('#def_def').removeAttr("disabled").removeClass("readonly");
+    //$('#def_type_id').removeAttr("disabled").removeClass("readonly");
+    //$('#def_code_id').removeAttr("disabled").removeClass("readonly");
+    //$('#def_part_id').removeAttr("disabled").removeClass("readonly");
+    //$('#solut_code_id').removeAttr("disabled").removeClass("readonly");
+    //$('#def_def_id').removeAttr("disabled").removeClass("readonly");
 
     //$('#def_type_text').removeAttr("disabled").removeClass("readonly");
     //$('#def_code_text').removeAttr("disabled").removeClass("readonly");
@@ -906,11 +908,11 @@
     $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");
     $('#txtRemark').removeAttr("disabled").removeClass("readonly");
     $('#iscommission').removeAttr("disabled").removeClass("readonly");
-    $('#def_type').removeAttr("disabled").removeClass("readonly");
-    $('#def_code').removeAttr("disabled").removeClass("readonly");
-    $('#def_part').removeAttr("disabled").removeClass("readonly");
-    $('#solut_code').removeAttr("disabled").removeClass("readonly");
-    $('#def_def').removeAttr("disabled").removeClass("readonly");
+    //$('#def_type').removeAttr("disabled").removeClass("readonly");
+    //$('#def_code').removeAttr("disabled").removeClass("readonly");
+    //$('#def_part').removeAttr("disabled").removeClass("readonly");
+    //$('#solut_code').removeAttr("disabled").removeClass("readonly");
+    //$('#def_def').removeAttr("disabled").removeClass("readonly");
 
     //$('#def_type_text').removeAttr("disabled").removeClass("readonly");
     //$('#def_code_text').removeAttr("disabled").removeClass("readonly");
@@ -971,6 +973,53 @@
 
     $("#btnSaveDiv").attr("style", "display:inline");
   }
+
+  function fn_dftTyp(dftTyp){
+    var ddCde = "";
+    if (dftTyp == "DC") {
+      if ($("#def_def_id").val() == "" || $("#def_def_id").val() == null) {
+        var text = "<spring:message code='service.text.dtlDef' />";
+        var msg = "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+        Common.alert(msg);
+        return false;
+      } else {
+        ddCde = $("#def_def_id").val();
+      }
+    }
+    Common.popupDiv("/services/as/dftTypPop.do", {callPrgm : dftTyp, prodCde : $("#PROD_CDE").val(), ddCde: ddCde}, null, true);
+  }
+
+  function fn_loadDftCde(itm, prgmCde) {
+    if (itm != null) {
+      if (prgmCde == 'DT') {
+        $("#def_type").val(itm.code);
+        $("#def_type_id").val(itm.id);
+        $("#def_type_text").val(itm.descp);
+      } else if (prgmCde == 'DC') {
+        $("#def_code").val(itm.code);
+        $("#def_code_id").val(itm.id);
+        $("#def_code_text").val(itm.descp);
+      } else if (prgmCde == 'DP') {
+        $("#def_part").val(itm.code);
+        $("#def_part_id").val(itm.id);
+        $("#def_part_text").val(itm.descp);
+      } else if (prgmCde == 'DD') {
+        $("#def_def").val(itm.code);
+        $("#def_def_id").val(itm.id);
+        $("#def_def_text").val(itm.descp);
+
+        // DEPENDENCY
+        $("#def_code").val("");
+        $("#def_code_id").val("");
+        $("#def_code_text").val("");
+      } else if (prgmCde == 'SC') {
+        $("#solut_code").val(itm.code);
+        $("#solut_code_id").val(itm.id);
+        $("#solut_code_text").val(itm.descp);
+      }
+    }
+  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -978,14 +1027,14 @@
   <!-- content start -->
   <form id="resultASForm" method="post">
    <div style="display: none">
-    <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" /> <input
-     type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" /> <input
-     type="text" name="AS_NO" id="AS_NO" value="${AS_NO}" /> <input
-     type="text" name="AS_ID" id="AS_ID" value="${AS_ID}" /> <input
-     type="text" name="MOD" id="MOD" value="${MOD}" /> <input
-     type="text" name="AS_RESULT_NO" id="AS_RESULT_NO"
-     value="${AS_RESULT_NO}" /> <input type="text" name="AS_RESULT_ID"
-     id="AS_RESULT_ID" value="${AS_RESULT_ID}" />
+    <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" />
+    <input type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" />
+    <input type="text" name="AS_NO" id="AS_NO" value="${AS_NO}" />
+    <input type="text" name="AS_ID" id="AS_ID" value="${AS_ID}" />
+    <input type="text" name="MOD" id="MOD" value="${MOD}" />
+    <input type="text" name="AS_RESULT_NO" id="AS_RESULT_NO" value="${AS_RESULT_NO}" />
+    <input type="text" name="AS_RESULT_ID" id="AS_RESULT_ID" value="${AS_RESULT_ID}" />
+    <input type="text" name="PROD_CDE" id="PROD_CDE" />
    </div>
   </form>
   <header class="pop_header">
@@ -1316,43 +1365,41 @@
        </colgroup>
        <tbody>
         <tr>
-         <th scope="row"><spring:message code='service.text.defTyp' /><span id='m9' name='m9' class="must">*</span>
-         </th>
-         <td>
-           <input type="text" title="" id='def_type' name='def_type' placeholder="e.g. DT3" class="" onChange="fn_getASReasonCode2(this, 'def_type' ,'387')" />
-           <input type="hidden" title="" id='def_type_id' name='def_type_id' placeholder="" class="" />
-           <input type="text" title="" placeholder="" id='def_type_text' name='def_type_text' class="" style="width:60%;" disabled/>
-         </td>
-        </tr>
-        <tr>
-         <th scope="row"><spring:message code='service.text.defCde' /><span id='m10' name='m10' class="must">*</span>
-         </th>
-         <td>
-           <input type="text" title="" placeholder="e.g. FF" id='def_code' name='def_code' class="" onChange="fn_getASReasonCode2(this, 'def_code', '303')" />
-           <input type="hidden" title="" placeholder="" id='def_code_id' name='def_code_id' class="" />
-           <input type="text" title="" placeholder="" id='def_code_text' name='def_code_text' class="" style="width:60%;" disabled/></td>
-        </tr>
-        <tr>
-         <th scope="row"><spring:message code='service.text.defPrt' /><span id='m11' name='m11' class="must">*</span>
-         </th>
-         <td><input type="text" title="" placeholder="e.g. FE12" id='def_part' name='def_part' class="" onChange="fn_getASReasonCode2(this, 'def_part' ,'305')" />
-         <input type="hidden" title="" placeholder="" id='def_part_id' name='def_part_id' class="" />
-         <input type="text" title="" placeholder="" id='def_part_text' name='def_part_text' class="" style="width:60%;" disabled/></td>
-        </tr>
-        <tr>
-         <th scope="row"><spring:message code='service.text.dtlDef' /><span id='m12' name='m12' class="must">*</span></th>
-         <td><input type="text" title="" placeholder="e.g. 18" id='def_def' name='def_def' class="" onChange="fn_getASReasonCode2(this, 'def_def'  ,'304')" />
-         <input type="hidden" title="" placeholder="" id='def_def_id' name='def_def_id' class="" />
-         <input type="text" title="" placeholder="" id='def_def_text' name='def_def_text' class="" style="width:60%;" disabled/>
-         </td>
-        </tr>
-        <tr>
-         <th scope="row"><spring:message code='service.text.sltCde' /><span id='m13' name='m13' class="must">*</span>
-         </th>
-         <td><input type="text" title="" placeholder="e.g. A9" class="" id='solut_code' name='solut_code' onChange="fn_getASReasonCode2(this, 'solut_code'  ,'337')" />
+          <th scope="row"><spring:message code='service.text.defPrt' /><span id='m11' name='m11' class="must" style="display:none">*</span></th>
+          <td><input type="text" title="" placeholder="" disabled="disabled" id='def_part' name='def_part' class="" onblur="fn_getASReasonCode2(this, 'def_part' ,'305')" onkeyup="this.value = this.value.toUpperCase();"/>
+          <a class="search_btn" id="DP" onclick="fn_dftTyp('DP')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+          <input type="hidden" title="" placeholder="" id='def_part_id' name='def_part_id' class="" />
+          <input type="text" title="" placeholder="" id='def_part_text' name='def_part_text' class="" disabled style="width:60%;"/></td>
+         </tr>
+         <tr>
+          <th scope="row"><spring:message code='service.text.dtlDef' /><span id='m12' name='m12' class="must" style="display:none">*</span></th>
+          <td><input type="text" title="" placeholder="" disabled="disabled" id='def_def' name='def_def' class="" onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')" onkeyup="this.value = this.value.toUpperCase();"/>
+          <a class="search_btn" id="DD" onclick="fn_dftTyp('DD')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+          <input type="hidden" title="" placeholder="" id='def_def_id' name='def_def_id' class="" />
+          <input type="text" title="" placeholder="" id='def_def_text' name='def_def_text' class="" disabled style="width:60%;"/>
+          </td>
+         </tr>
+         <tr>
+          <th scope="row"><spring:message code='service.text.defCde' /><span id='m10' name='m10' class="must" style="display:none">*</span></th>
+          <td><input type="text" title="" placeholder="" disabled="disabled" id='def_code' name='def_code' class="" onblur="fn_getASReasonCode2(this, 'def_code', '303')" onkeyup="this.value = this.value.toUpperCase();"/>
+          <a class="search_btn" id="DC" onclick="fn_dftTyp('DC')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+          <input type="hidden" title="" placeholder="" id='def_code_id' name='def_code_id' class="" />
+          <input type="text" title="" placeholder="" id='def_code_text' name='def_code_text' class="" disabled style="width:60%;"/></td>
+         </tr>
+         <tr>
+          <th scope="row"><spring:message code='service.text.defTyp' /><span id='m9' name='m9' class="must" style="display:none">*</span></th>
+          <td><input type="text" title="" id='def_type' name='def_type' placeholder="" disabled="disabled"  class="" onblur="fn_getASReasonCode2(this, 'def_type' ,'387')" onkeyup="this.value = this.value.toUpperCase();"/>
+          <a class="search_btn" id="DT" onclick="fn_dftTyp('DT')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+          <input type="hidden" title="" id='def_type_id' name='def_type_id' placeholder="" class="" />
+          <input type="text" title="" placeholder="" id='def_type_text' name='def_type_text' class="" disabled style="width:60%;"/></td>
+         </tr>
+         <tr>
+          <th scope="row"><spring:message code='service.text.sltCde' /><span id='m13' name='m13' class="must" style="display:none">*</span></th>
+          <td><input type="text" title="" placeholder="" class="" disabled="disabled" id='solut_code' name='solut_code' onblur="fn_getASReasonCode2(this, 'solut_code'  ,'337')" onkeyup="this.value = this.value.toUpperCase();"/>
+          <a class="search_btn" id="SC" onclick="fn_dftTyp('SC')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
           <input type="hidden" title="" placeholder="" class="" id='solut_code_id' name='solut_code_id' />
-          <input type="text" title="" placeholder="" class="" id='solut_code_text' name='solut_code_text' style="width:60%;" disabled/></td>
-        </tr>
+          <input type="text" title="" placeholder="" class="" id='solut_code_text' name='solut_code_text' disabled style="width:60%;"/></td>
+         </tr>
        </tbody>
       </table>
       <!-- table end -->
