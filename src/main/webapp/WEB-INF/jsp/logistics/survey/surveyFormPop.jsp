@@ -53,7 +53,7 @@ function btnSubmit(){
 		    	Common.ajax("POST", "/logistics/survey/surveySave.do", data, function(result) {
 		    		if('${inWeb}' == '0'){
 			    		Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", function(){fn_goMain(); });
-			    		//setTimeout(function(){fn_goMain();},3000);
+			    		setTimeout(function(){fn_goMain();},3000);
 		    		}else{
 		    			Common.alert('<spring:message code="sys.title.surveySaved" />' + DEFAULT_DELIMITER + "<b>"+"Thank you for completing our survey!"+"</b>", function(){fn_close();});
 		    		}
