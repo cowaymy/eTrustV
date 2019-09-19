@@ -57,15 +57,38 @@
     </select>
 
     <insert id="memoSave" parameterType="Map">
-         insert into MSC0010D
-		 select (select decode(count(1) , 0 , 1 , max(MEMO_ID)+1) from MSC0010D),
-		         1 , #{etitle} , #{hedtor},
-		         decode(nvl(#{staffmemo} , '0') , '0' , 0 , 1),
-		         decode(nvl(#{codymemo}  , '0') , '0' , 0 , 1),
-		         decode(nvl(#{hpmemo}    , '0') , '0' , 0 , 1),
-		         #{userid} , sysdate ,#{userid} , sysdate,
-		         #{usermaindeptid},decode(nvl(#{htmemo}    , '0') , '0' , 0 , 1)
-		   from dual
+         INSERT
+INTO    MSC0010D                                                                --
+(
+        MEMO_ID                                                                 -- ASIS_COLUMN : MemoID
+    ,   STUS_CODE_ID                                                            -- ASIS_COLUMN : StatusCodeID
+    ,   MEMO_TITLE                                                              -- ASIS_COLUMN : MemoTitle
+    ,   MEMO_CNTNT                                                              -- ASIS_COLUMN : MemoContent
+    ,   IS_STAFF_MEMO                                                           -- ASIS_COLUMN : IsStaffMemo
+    ,   IS_CODY_MEMO                                                            -- ASIS_COLUMN : IsCodyMemo
+    ,   IS_HP_MEMO                                                              -- ASIS_COLUMN : IsHPMemo
+    ,   IS_HT_MEMO                                                              --
+    ,   CRT_DEPT_ID                                                             --
+    ,   CRT_USER_ID                                                             -- ASIS_COLUMN : Creator
+    ,   CRT_DT                                                                  -- ASIS_COLUMN : Created
+    ,   UPD_USER_ID                                                             -- ASIS_COLUMN : Updator
+    ,   UPD_DT                                                                  -- ASIS_COLUMN : Updated
+)VALUES(
+        (SELECT DECODE(COUNT(1) , 0 , 1 , MAX(MEMO_ID)+1) FROM MSC0010D)        -- ASIS_COLUMN : MemoID
+    ,   1                                                                       -- ASIS_COLUMN : StatusCodeID
+    ,   #{etitle}                                                               -- ASIS_COLUMN : MemoTitle
+    ,   #{hedtor}                                                               -- ASIS_COLUMN : MemoContent
+    ,   DECODE(NVL(#{staffmemo} , '0') , '0' , 0 , 1)                           -- ASIS_COLUMN : IsStaffMemo
+    ,   DECODE(NVL(#{codymemo}  , '0') , '0' , 0 , 1)                           -- ASIS_COLUMN : IsCodyMemo
+    ,   DECODE(NVL(#{hpmemo}    , '0') , '0' , 0 , 1)                           -- ASIS_COLUMN : IsHPMemo
+    ,   DECODE(NVL(#{htmemo}    , '0') , '0' , 0 , 1)                           --
+    ,   #{userMainDeptId}                                                       --
+    ,   #{userid}                                                               -- ASIS_COLUMN : Creator
+    ,   SYSDATE                                                                 -- ASIS_COLUMN : Created
+    ,   #{userid}                                                               -- ASIS_COLUMN : Updator
+    ,   SYSDATE                                                                -- ASIS_COLUMN : Updated
+)
+
     </insert>
     <update id="memoUpdate" parameterType="Map">
         UPDATE MSC0010D
