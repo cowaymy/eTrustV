@@ -220,7 +220,9 @@ $(document).ready(function(){
 
 		fn_newGetExpDate(result);
 		//20190917 Vannie add to get min period for earlybird promo
-		fn_getMaxPeriodEarlyBirdPromo(result.srvconfig.lastSrvMemExprDate);
+		if (result.srvconfig.lastSrvMemExprDate != undefined){
+			fn_getMaxPeriodEarlyBirdPromo(result.srvconfig.lastSrvMemExprDate);
+		}
 		fn_setTerm();
 		fn_getDataCPerson();
 		fn_getDatabsHistory();
@@ -357,7 +359,7 @@ $(document).ready(function(){
 
 	/*fn_getMaxPeriodEarlyBirdPromo*/
 	function fn_getMaxPeriodEarlyBirdPromo(old_result) {
-		console.log(old_result);
+
 		$("#MBSH_EXP_DT").val(old_result.substring(6, 10) + old_result.substring(3, 5));
 
 		var str1 = $("#MBSH_EXP_DT").val().substring(0, 4) + "-" + $("#MBSH_EXP_DT").val().substring(4);
@@ -387,7 +389,6 @@ $(document).ready(function(){
 
 			console.log($("#hiddenEarlyBirdPromo").val());
 		});
-
 	}
 
 	/*oList*/
