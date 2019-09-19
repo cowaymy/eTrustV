@@ -275,7 +275,7 @@
        <th scope="row">Report Type<span id='m1' name='m1' class='must'> *</span></th>
        <td><select id="reportType" class="w100p" >
          <option value="1">After Service (AS) Raw Data</option>
-         <option value="5">After Service (AS) Raw Data [New]</option>
+         <option value="5" selected>After Service (AS) Raw Data [New]</option>
          <option value="2">After Service (AS) Spare Part Exchange Raw Data</option>
          <option value="3">After Service (AS) Raw Data (PQC)</option>
          <option value="4">After Service (AS) Raw Data (AOAS)</option>
