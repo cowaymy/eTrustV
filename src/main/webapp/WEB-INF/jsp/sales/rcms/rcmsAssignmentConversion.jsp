@@ -74,8 +74,8 @@ function createGrid(){
               {dataField : "rcType", headerText : '<spring:message code="sales.title.text.uploadType" />', width : "10%" , editable       : false       },
               {dataField : "agentTypeUpl", headerText : '<spring:message code="sales.AssignUploadType" />', width : "10%" , editable       : false       },
               {dataField : "totalItem", headerText : '<spring:message code="sal.title.text.totItem" />', width : "10%" , editable       : false       },
-              {dataField : "validItem", headerText : '<spring:message code="sal.text.totalValidItem" />', width : "10%" , editable       : false       },
-              {dataField : "invalidItem", headerText : '<spring:message code="sal.text.totalInvalidItem" />', width : "10%" , editable       : false       },
+              {dataField : "validItem", headerText : '<spring:message code="sal.title.text.totalSuccess" />', width : "10%" , editable       : false       },
+              {dataField : "invalidItem", headerText : '<spring:message code="sal.title.text.totalFail" />', width : "10%" , editable       : false       },
               {dataField : "rcCrtUserName", headerText : '<spring:message code="sales.CreateBy" />', width : "7%" , editable       : false       },
               {dataField : "rcCrtDt", headerText : '<spring:message code="sales.CreateAt" />', width : "13%" , editable       : false        },
               {dataField : "rcUpdDt", headerText : '<spring:message code="sal.title.text.confirmDate" />', width : "13%" , editable       : false        }

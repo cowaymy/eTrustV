@@ -86,7 +86,7 @@ $(document).ready(function(){
                 id: "codeId",              // 콤보박스 value 에 지정할 필드명.
                 name: "codeName",  // 콤보박스 text 에 지정할 필드명.
                 isShowChoose: false,
-                isCheckAll : true,
+                isCheckAll : false,
                 type : 'M'
                 });
     $("#companyType").multipleSelect("disable");

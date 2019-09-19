@@ -57,7 +57,7 @@ function fn_genReport(){
     }
 
     if($("#_etrYn option:selected").val() != ""){
-    	whereSql += "AND RCMS.ETR_FG = " + $("#_sensitiveYn option:selected").val() + " ";
+    	whereSql += "AND RCMS.ETR_FG = " + $("#_etrYn option:selected").val() + " ";
     }
 
     if(($("#etrStartDt").val() == null || $("#etrStartDt").val() == '') && !($("#etrEndDt").val() == null || $("#etrEndDt").val() == '')){
@@ -104,7 +104,7 @@ function fn_genReport(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="sal.title.text.badAccount" /></h1>
+<h1><spring:message code="sal.title.text.etrSummaryListRaw" /></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="_AddPopclose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -112,7 +112,7 @@ function fn_genReport(){
 
 <section class="pop_body"><!-- pop_body start -->
 <aside class="title_line"><!-- title_line start -->
-<h3><spring:message code="sal.title.text.badAccRpt" /></h3>
+<h3><spring:message code="sal.title.text.etrSummaryListRaw" /></h3>
 </aside><!-- title_line end -->
 
 <form id="etrReport">
