@@ -1339,6 +1339,10 @@
                 SELECT FN_GET_DOCNO(#{DOCNO})  docno  FROM DUAL
         ]]>
      </select>
+     
+     <select id="getMaxPeriodEarlyBirdPromo" parameterType="Map" resultType="egovMap">
+					select to_char(add_months( to_date( #{MBSH_EXP_DT},'yyyymm'), -4 ),'MM-dd-yyyy') strPrmoDt from dual
+		 </select>
 
 
 </mapper>

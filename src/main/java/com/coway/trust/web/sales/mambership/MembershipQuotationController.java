@@ -499,7 +499,25 @@ public class  MembershipQuotationController {
 
 		return ResponseEntity.ok(message);
 	}
+	
 
+  @RequestMapping(value = "/getMaxPeriodEarlyBirdPromo")
+  public ResponseEntity<Map> getMaxPeriodEarlyBirdPromo(@RequestParam Map<String, Object> params, Model model)
+      throws Exception {
+    
+    EgovMap getMaxPeriodEarlyBirdPromo = null;
+    
+    logger.debug("getMaxPeriodEarlyBirdPromo prams: " + params.toString());
+    
+    getMaxPeriodEarlyBirdPromo = membershipQuotationService.getMaxPeriodEarlyBirdPromo(params);
+    
+    logger.debug("getMaxPeriodEarlyBirdPromo: " + getMaxPeriodEarlyBirdPromo);
+    
+    Map<String, Object> map = new HashMap();
+    map.put("getMaxPeriodEarlyBirdPromo", getMaxPeriodEarlyBirdPromo);
+    
+    return ResponseEntity.ok(map);
+  }
 
 
 }

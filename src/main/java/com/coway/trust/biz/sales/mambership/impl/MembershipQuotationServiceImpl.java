@@ -425,6 +425,12 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 		  membershipQuotationMapper.update_SAL0093D_Stus(params);
 
 	}
+	
+	@Override
+    public  EgovMap getMaxPeriodEarlyBirdPromo(Map<String, Object> params) {
+        return membershipQuotationMapper.getMaxPeriodEarlyBirdPromo(params);
+    }
+
 
 
 }
