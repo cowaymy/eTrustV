@@ -181,7 +181,7 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
             	}
 
             	$("#editwindow").hide();
-
+            	SearchListAjax();
             });
         });
     	$("#vdelete").click(function(){
