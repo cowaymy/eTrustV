@@ -661,7 +661,8 @@ var TODAY_DD      = "${toDay}";
                 return;
               }
               if ($("#userType").val() != "3") {
-                doGetCombo('/homecare/services/getCdDeptList.do', $(
+                //doGetCombo('/homecare/services/getCdDeptList.do', $(
+                doGetCombo('/homecare/services/getCdUpMemList.do', $(
                     this).val(), '', 'cmdCdManager1', 'S',
                     'fn_cmdBranchCode1');
               }
