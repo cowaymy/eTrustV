@@ -1096,9 +1096,8 @@
       }
     }
     AUIGrid.addRow(serialGrid, rowList, rowPos);
-  }
-
-  
+  }  
+	
 	function fn_itempopList_T(data) {
 		var itm_temp = "";
 		var itm_qty = 0;
@@ -1111,7 +1110,7 @@
 				itm_qty = itm_qty + data[i].item.indelyqty;
 				$("#reqstno").val(data[i].item.reqstno);
 			}
-			
+
 			if (data[i].item.reqsttype == 'OD' && data[i].item.reqsttypedtl == 'OD03') {
 				itmdata[i] = {
 					itmcd : data[i].item.itmcd,
@@ -1125,7 +1124,9 @@
 
 				};
 				f_addrow(itmdata);
-				itm_qty = itm_qty + data[i].item.indelyqty;
+				if (data[i].item.serialchk != 'Y') {
+					itm_qty = itm_qty + data[i].item.indelyqty;
+				}
 			}
 			else {
 				f_addrow();
@@ -1152,7 +1153,7 @@
 		AUIGrid.addRow(serialGrid, item, rowPos);
 		return false;
 	}
-	
+
 	function f_addrow(itmdata) {
 		var rowPos = "last";
 		AUIGrid.addRow(serialGrid, itmdata, rowPos);
@@ -1172,7 +1173,7 @@
 			}
 			else {
 				for (var i = 0; i < AUIGrid.getRowCount(serialGrid); i++) {
-				
+
 					if (AUIGrid.getCellValue(serialGrid, i, "statustype") == 'N') {
 						Common.alert("Please check the serial.")
 						return false;
@@ -1271,18 +1272,18 @@
 		};
 		Common.ajaxSync("GET", "/logistics/stockMovement/StockMovementSerialCheck.do", data, function(result) {
 			if (result.data[0] == null) {
-				 AUIGrid.setCellValue(serialGrid, rowindex, "itmcd", "");
+				AUIGrid.setCellValue(serialGrid, rowindex, "itmcd", "");
 				AUIGrid.setCellValue(serialGrid, rowindex, "itmname", "");
 				AUIGrid.setCellValue(serialGrid, rowindex, "cnt61", 0);
 				AUIGrid.setCellValue(serialGrid, rowindex, "cnt62", 0);
-				AUIGrid.setCellValue(serialGrid, rowindex, "cnt63", 0); 
+				AUIGrid.setCellValue(serialGrid, rowindex, "cnt63", 0);
 
 				schk = false;
 				ichk = false;
 
 			}
 			else {
-				
+
 				AUIGrid.setCellValue(serialGrid, rowindex, "itmcd", result.data[0].STKCODE);
 				AUIGrid.setCellValue(serialGrid, rowindex, "itmname", result.data[0].STKDESC);
 				AUIGrid.setCellValue(serialGrid, rowindex, "cnt61", result.data[0].L61CNT);
