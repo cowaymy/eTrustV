@@ -1,5 +1,7 @@
 $(document).ready(function(){
 /* 제이쿼리 ui달력 start*/
+// calendar : remove autocomplete
+$('.j_date,.j_date2,.j_date3').attr('autocomplete','off');
 
 var holidays = {//휴일 세팅 하기
     /*"0809":{type:0, title:"신정", year:"2017"}*/
@@ -181,7 +183,7 @@ $(document).on(
 	//console.log($(this).val());
 }).multipleSelect({
 	width: '100%',
-	// Callback 
+	// Callback
 	onOpen: function() {
 		// 팝업의 세로길이가 짧아서 Select 박스가 가려질 경우
 		if($("#popup_wrap").is(":visible")){
@@ -244,7 +246,7 @@ $(document).on(
 	}
 });
 
-/* 레프트메뉴 3뎁스 하위메뉴 (4뎁스)가 있을 경우 앞에 화살표 표시 on/off */ 
+/* 레프트메뉴 3뎁스 하위메뉴 (4뎁스)가 있을 경우 앞에 화살표 표시 on/off */
 $(document).ready(function(){
 	var depth3 = $(".inb_menu").children("li").children("ul").children("li").children("ul").children("li");
 
@@ -288,7 +290,7 @@ function setTree(){//트리메뉴 세팅
 			}else{
 				thisLi.children("a").before("<img src='../images/common/btn_plus.gif' alt='하위메뉴 보기' />");
 			}
-			
+
 		}
 	}
 }
@@ -349,7 +351,7 @@ $(document).on(//인풋파일 실행
 	"click", ".label_text a", function(){
 	var thisFileInput=$(this).parent().parent().prev(":file");
 
-	thisFileInput.click();	
+	thisFileInput.click();
 	return false;
 });
 
@@ -437,7 +439,7 @@ $(".popup_wrap").draggable({handle: ".pop_header",containment: "html"});
  }
  $(document).on("click",function(e){
  	if($(e.target).parent().attr("id") === "popup_wrap"){
- 		var target = $(e.target).parent().find(".pop_header .right_opt a:contains('CLOSE') ,.pop_close");	
+ 		var target = $(e.target).parent().find(".pop_header .right_opt a:contains('CLOSE') ,.pop_close");
  		popupKeyEvent(target);
 	}
  });
