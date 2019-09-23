@@ -37,7 +37,7 @@
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#email").val(custInfo.email); //Email
                 $("#custRem").val(custInfo.rem); //Remark
-                $("#ordRem").val(`${preOrderInfo.instct}`);
+                $("#ordRem").val('${preOrderInfo.instct}');
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
