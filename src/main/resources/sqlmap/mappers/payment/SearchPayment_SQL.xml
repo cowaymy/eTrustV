@@ -1442,6 +1442,16 @@
 		    DEDUCT_STUS,
 		    BANK_DTL_DR_BANK_TYPE_ID
         FROM PAY1012V
+        INNER JOIN (
+            SELECT
+                SALES_ORD_ID,
+                MAX(RENT_INST_NO) RENT_INST_NO,
+                MAX(RENT_INST_DT) RENT_INST_DT
+            FROM SAL0070D
+            GROUP BY SALES_ORD_ID
+        ) SAL0070D
+        ON ACC_DEBT_ORD_ID = SALES_ORD_ID
+        AND SYSDATE <![CDATA[ <= ]]> FN_GET_FIRST_DAY_MONTH(ADD_MONTHS(SAL0070D.RENT_INST_DT, 6))
         WHERE 1=1
         <if test="orgCode != '' ">
            AND ORG_CODE = #{orgCode}
