@@ -6,18 +6,18 @@
 var rcvBookGridID;
 
 $(document).ready(function() {
-	
+
 	CreateGrid();
-	
+
 	CommonCombo.make("_trBranch", "/sales/trBookRecv/getbrnchList", '', '', {isShowChoose: true, chooseMessage: "Select the Branch"});
 });
 
 function CreateGrid(){
-	 var rcvBookColLayout = [ 
-	                      {dataField : "trBookNo", headerText : '<spring:message code="sal.title.text.trBook" />', width : '15%'}, 
+	 var rcvBookColLayout = [
+	                      {dataField : "trBookNo", headerText : '<spring:message code="sal.title.text.trBook" />', width : '15%'},
 	                      {dataField : "trReciptNoStr", headerText : '<spring:message code="sal.title.text.receiptStart" />', width : '15%'},
 	                      {dataField : "trReciptNoEnd", headerText : '<spring:message code="sal.title.text.receiptEnd" />', width : '15%'},
-	                      {dataField : "trClosDt", headerText : '<spring:message code="sal.title.text.recvDate" />', width : '25%'}, 
+	                      {dataField : "trClosDt", headerText : '<spring:message code="sal.title.text.recvDate" />', width : '25%'},
 	                      {dataField : "trTrnsitFrom", headerText : '<spring:message code="sal.title.text.loctionFrom" />', width : '15%'},
 	                      {dataField : "trTrnsitTo", headerText : '<spring:message code="sal.title.text.locationTo" />', width : '15%'}
 	                      ];
@@ -28,8 +28,8 @@ function CreateGrid(){
                   usePaging : true,
                   editable : false//,
                   //selectionMode : "singleRow"
-            }; 
-       
+            };
+
        rcvBookGridID = GridCommon.createAUIGrid("#_rcv_book_grid", rcvBookColLayout, "", rcvBookOptions);
 }
 
@@ -51,12 +51,12 @@ function fn_bookList(){
 		Common.alert('<spring:message code="sal.title.text.plzKeyInBranchBr" />');
 		return;
 	}
-	
+
 	if($("#_transitNo").val() == null || $("#_transitNo").val() == ''){
         Common.alert('<spring:message code="sal.title.text.plzKeyInTransitNo" />');
         return;
     }
-	
+
 	//Validation Pass
 	Common.ajax("GET", "/sales/trBookRecv/trBookSummaryListing", {trnsitTo : $("#_trBranch").val(), trTrnsitId : $("#_transitNo").val()}, function(result){
 		AUIGrid.setGridData(rcvBookGridID, result);
@@ -64,34 +64,34 @@ function fn_bookList(){
 }
 
 function fn_getReport(){
-	
+
 	//validation
 	if($("#_trBranch").val() == null || $("#_trBranch").val() == ''){
 		Common.alert('<spring:message code="sal.title.text.plzKeyInBranchBr" />');
 		return;
 	}
-	
+
 	if($("#_transitNo").val() == null || $("#_transitNo").val() == ''){
         Common.alert('<spring:message code="sal.title.text.plzKeyInTransitNo" />');
         return;
     }
-	
+
 	//Generate Report
 	$("#reportFileName").val('/sales/TRbookSummaryListing_PDF.rpt');
 	$("#viewType").val('PDF');
-	
+
 	//title
     var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
     }
-    var title = "RentalBadAccountRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear();
+    var title = "TRbookSummaryListing_"+date+(new Date().getMonth()+1)+new Date().getFullYear();
     $("#reportDownFileName").val(title); //Download File Name
-    
+
     //Params
     $("#Branchcode").val($("#_trBranch").val());
     $("#TransitID").val($("#_transitNo").val());
-    
+
     //Gen Report
     var option = {
             isProcedure : false // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
