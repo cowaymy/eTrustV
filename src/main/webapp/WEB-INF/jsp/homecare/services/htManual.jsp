@@ -58,6 +58,10 @@ var TODAY_DD      = "${toDay}";
 	    headerText : "HCS Order",
 	    width : 120
 	  }, {
+	        dataField : "apptype",
+	        headerText : "Application Type",
+	        width : 120
+	      }, {
 	    dataField : "c5",
 	    headerText : "Assign HT",
 	    width : 120
@@ -148,6 +152,11 @@ var TODAY_DD      = "${toDay}";
         headerText : "CS Order",
         width : 120
       },
+      {
+          dataField : "apptype",
+          headerText : "Application Type",
+          width : 120
+        },
       {
         dataField : "c5",
         headerText : "Assign HT",
