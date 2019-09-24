@@ -382,12 +382,7 @@
 				doDefCombo([], '' ,'flocation', 'S', '');
 				 */
 				if (($("#movpath").val() == 'CTOR')) {
-					var paramdata3 = {
-			                groupCode : '308',
-			                orderValue : 'CODE_NAME',
-			                likeValue : $("#sttype").val()
-			              };
-			              doGetComboData('/common/selectCodeList.do', paramdata3, 'UM93', 'smtype', 'S', '');
+					$("#smtype").val('UM93');
 					if ((brnch != '42' && brnch != '0')) {
 						var paramdata2 = {
 							stoIn : '01,02,05,06,07',
@@ -421,12 +416,7 @@
 
 				}
 				else {
-					paramdata3 = {
-			                groupCode : '308',
-			                orderValue : 'CODE_NAME',
-			                likeValue : $("#sttype").val()
-			              };
-			              doGetComboData('/common/selectCodeList.do', paramdata3, 'UM03', 'smtype', 'S', '');
+					$("#smtype").val('UM03');
 					if ($("#movpath").val() == '02') {
 						var paramdata = {
 							stoIn : '02,05',
@@ -558,7 +548,7 @@
 			return false;
 		}
 		if ($("#smtype").val() == null || $("#smtype").val() == undefined || $("#smtype").val() == "") {
-			Common.alert("Please select one of Movement Type Detail.");
+			Common.alert("Please select one of Movement Type.");
 			return false;
 		}
 		if ($("#tlocation").val() == null || $("#tlocation").val() == undefined || $("#tlocation").val() == "") {
@@ -778,7 +768,7 @@
 							name="movpath"></select></td>
 					</tr>
 					<tr>
-						<th scope="row">Movement Type</th>
+						<th scope="row">Transaction Type</th>
 						<td colspan="3"><select class="w100p" id="sttype"
 							name="sttype"></select></td>
 						<th scope="row">Movement Type</th>
