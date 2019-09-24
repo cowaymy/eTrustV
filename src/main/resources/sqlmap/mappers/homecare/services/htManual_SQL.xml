@@ -332,7 +332,8 @@ SELECT DISTINCT
     MEM2.DEPT_CODE ,
     HSM.SCHDUL_ID ,
     MEM3.MEM_CODE HT_MGR_CODE ,
-    BRNCH.CODE HT_BRNCH_CODE
+    BRNCH.CODE HT_BRNCH_CODE ,
+    AP.CODE AS APPTYPE
 FROM
     SAL0225D SOM
     LEFT JOIN SVC0008D HSM ON SOM.SRV_ORD_ID = HSM.SALES_ORD_ID
@@ -354,7 +355,7 @@ FROM
     LEFT JOIN ORG0005D MEM4 ON MEM3.MEM_ID = MEM4.MEM_ID
     LEFT JOIN SYS0005M BRNCH ON BRNCH.BRNCH_ID = MEM.BRNCH
     LEFT JOIN SAL0095D SAL95D ON SOM.SRV_ORD_ID = SAL95D.SRV_SALES_ORD_ID
-
+    LEFT JOIN SYS0013M AP ON SOM.APP_TYPE_ID = AP.CODE_ID
 
     WHERE 1 = 1
 
@@ -522,6 +523,7 @@ FROM
                         , Project2.Result as Result
                         , project2.dept_code
                          , project2.crt_user_id
+                         , Project2.APPTYPE
           FROM (SELECT
                        DISTINCT HS.NO AS NO
                               , HS.STUS_CODE_ID AS STUS_CODE_ID
