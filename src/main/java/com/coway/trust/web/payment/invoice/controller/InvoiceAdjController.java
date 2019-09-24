@@ -1,5 +1,6 @@
 package com.coway.trust.web.payment.invoice.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,20 +13,33 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.LargeExcelService;
+import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceApplication;
+import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
+import com.coway.trust.biz.payment.invoice.service.InvoiceAdjApplication;
 import com.coway.trust.biz.payment.invoice.service.InvoiceAdjService;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.common.excel.download.ExcelDownloadFormDef;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
 import com.coway.trust.web.common.excel.download.ExcelDownloadVO;
@@ -38,11 +52,23 @@ public class InvoiceAdjController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InvoiceAdjController.class);
 
+	@Value("${web.resource.upload.file}")
+    private String uploadDir;
+
 	@Resource(name = "invoiceAdjService")
 	private InvoiceAdjService invoiceService;
 
 	@Autowired
 	private LargeExcelService largeExcelService;
+
+	@Autowired
+	private InvoiceAdjApplication invoiceAdjApplication;
+
+	@Autowired
+    private MessageSourceAccessor messageAccessor;
+
+	@Resource(name = "webInvoiceService")
+    private WebInvoiceService webInvoiceService;
 
 	/******************************************************
 	 *   AdjustmentCNDN
@@ -59,7 +85,16 @@ public class InvoiceAdjController {
 	}
 
 	@RequestMapping(value = "/selectAdjustmentList.do")
-	public ResponseEntity<List<EgovMap>> selectInvoiceList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectInvoiceList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+	    String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+	    params.put("memCode", memCode);
+
+	    EgovMap apprDtls = new EgovMap();
+        apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+        if(apprDtls != null && "AO".equals(apprDtls.get("apprGrp").toString())) {
+            params.put("apprGrp", apprDtls.get("apprGrp"));
+        }
 
 		List<EgovMap> list = invoiceService.selectInvoiceAdj(params);
 		return ResponseEntity.ok(list);
@@ -98,7 +133,7 @@ public class InvoiceAdjController {
 	 * @return
 	 */
 	@RequestMapping(value = "/selectAdjustmentDetailPop.do", method = RequestMethod.GET)
-	public ResponseEntity<HashMap<String,Object>> selectAdjustmentDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<HashMap<String,Object>> selectAdjustmentDetailPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		LOGGER.debug("adjId : {}", params.toString());
 		LOGGER.debug("adjId : {}", params.get("adjId"));
 		LOGGER.debug("invNo : {}", params.get("invNo"));
@@ -111,10 +146,51 @@ public class InvoiceAdjController {
 		    List<EgovMap> detailList = invoiceService.selectAdjDetailPopList(params);		//상세 리스트 조회
 		    List<EgovMap> histlList = invoiceService.selectAdjDetailPopHist(params);		//히스토리 조회
 
+		    String atchFileGrpId = String.valueOf(master.get("atchFileGrpId"));
+
 		    HashMap <String, Object> returnValue = new HashMap<String, Object>();
 			returnValue.put("master", master);
 			returnValue.put("detailList", detailList);
 			returnValue.put("histlList", histlList);
+			if(atchFileGrpId != "null") {
+                List<EgovMap> adjAttachList = webInvoiceService.selectAttachList(atchFileGrpId);
+                returnValue.put("attachList", adjAttachList);
+            }
+
+			EgovMap apprResult = new EgovMap();
+			String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+	        params.put("memCode", memCode);
+	        EgovMap apprDtls = new EgovMap();
+	        apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+
+	        String sessionApprGrp = "";
+	        if(apprDtls != null) {
+	            sessionApprGrp = apprDtls.get("apprGrp").toString();
+	        }
+
+	        List<EgovMap> apprList = invoiceService.selectAppvLineInfo(params);
+	        EgovMap apprDetail = apprList.get(0);
+
+	        ArrayList<String> appvPrcssStusList = new ArrayList<String>();
+	        //ArrayList<Map> appvPrcssStusList = new ArrayList<Map> ();
+	        HashMap<String, Object> appvHm = new HashMap<String, Object>();
+
+	        appvPrcssStusList.add("- Request By " + (String) apprDetail.get("memoReqstUserId") + " [" + (String) apprDetail.get("reqstDt") + "]");
+
+	        for(int i = 0; i < apprList.size(); i++) {
+	            apprDetail = apprList.get(i);
+
+	            if("R".equals((String)apprDetail.get("memoAppvStus")) || "T".equals((String)apprDetail.get("memoAppvStus"))) {
+	                appvPrcssStusList.add("- Pending By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "]");
+	            } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
+	                appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "]");
+	            } else if("J".equals((String)apprDetail.get("memoAppvStus"))) {
+	                appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "]");
+	            }
+	        }
+
+	        apprResult.put("appvPrcssStus", appvPrcssStusList);
+	        returnValue.put("apprList", apprResult);
 
 			return ResponseEntity.ok(returnValue);
 
@@ -144,7 +220,7 @@ public class InvoiceAdjController {
 	 * @return
 	 */
 	@RequestMapping(value = "/selectAdjustmentBatchApprovalPop.do", method = RequestMethod.GET)
-	public ResponseEntity<HashMap<String,Object>> selectAdjustmentBatchApprovalPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<HashMap<String,Object>> selectAdjustmentBatchApprovalPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
 		LOGGER.debug("batchId : {}", params.get("batchId"));
 
@@ -152,10 +228,51 @@ public class InvoiceAdjController {
 		List<EgovMap> detailList = invoiceService.selectAdjBatchApprovalPopDetail(params);		//상세 리스트 조회
 		List<EgovMap> histlList = invoiceService.selectAdjBatchApprovalPopHist(params);		//히스토리 조회
 
+		String atchFileGrpId = String.valueOf(master.get("atchFileGrpId"));
+
 		HashMap <String, Object> returnValue = new HashMap<String, Object>();
 		returnValue.put("master", master);
 		returnValue.put("detailList", detailList);
 		returnValue.put("histlList", histlList);
+		if(atchFileGrpId != "null") {
+            List<EgovMap> batchAdjAttachList = webInvoiceService.selectAttachList(atchFileGrpId);
+            returnValue.put("attachList", batchAdjAttachList);
+        }
+
+		EgovMap apprResult = new EgovMap();
+		String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+        params.put("memCode", memCode);
+        EgovMap apprDtls = new EgovMap();
+        apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+
+        String sessionApprGrp = "";
+        if(apprDtls != null) {
+            sessionApprGrp = apprDtls.get("apprGrp").toString();
+        }
+
+		List<EgovMap> apprList = invoiceService.selectAppvLineInfo(params);
+		EgovMap apprDetail = apprList.get(0);
+
+		ArrayList<String> appvPrcssStusList = new ArrayList<String>();
+		//ArrayList<Map> appvPrcssStusList = new ArrayList<Map> ();
+		HashMap<String, Object> appvHm = new HashMap<String, Object>();
+
+		appvPrcssStusList.add("- Request By " + (String) apprDetail.get("memoReqstUserId") + " [" + (String) apprDetail.get("reqstDt") + "]");
+
+		for(int i = 0; i < apprList.size(); i++) {
+		    apprDetail = apprList.get(i);
+
+		    if("R".equals((String)apprDetail.get("memoAppvStus")) || "T".equals((String)apprDetail.get("memoAppvStus"))) {
+                appvPrcssStusList.add("- Pending By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "]");
+            } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
+                appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "]");
+            } else if("J".equals((String)apprDetail.get("memoAppvStus"))) {
+                appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "]");
+            }
+		}
+
+		apprResult.put("appvPrcssStus", appvPrcssStusList);
+		returnValue.put("apprList", apprResult);
 
 		return ResponseEntity.ok(returnValue);
 	}
@@ -215,7 +332,10 @@ public class InvoiceAdjController {
 	@RequestMapping(value = "/saveNewAdjList.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveNewAdjList(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {
 
+	    LOGGER.debug("params =====================================>>  " + params);
+
 		List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+		List<Object> apprGridList = (List<Object>) params.get("apprGridList"); // 그리드 데이터 가져오기
 		Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
 
 		//마스터 데이터
@@ -223,6 +343,7 @@ public class InvoiceAdjController {
 		String invoiceType = String.valueOf(formData.get("hiddenInvoiceType"));
 		String memoReason = String.valueOf(formData.get("adjReason"));
 		String memoRemark = String.valueOf(formData.get("remark"));
+		String atchFileGrpId = String.valueOf(formData.get("atchFileGrpId"));
 		int conversion = Integer.parseInt(String.valueOf(formData.get("hiddenAccountConversion")));
 
 		//parameter 변수 선언
@@ -239,7 +360,9 @@ public class InvoiceAdjController {
 		masterParamMap.put("memoAdjustReasonID",memoReason);
 		masterParamMap.put("memoAdjustRemark", memoRemark);
 		masterParamMap.put("memoAdjustCreator", sessionVO.getUserId());
+		masterParamMap.put("memoAdjustCreatorName", sessionVO.getUserName());
 		masterParamMap.put("batchId", 0);
+		masterParamMap.put("atchFileGrpId", Integer.parseInt(atchFileGrpId));
 
 		double totalTaxes = 0.0D;
 		double totalAmount = 0.0D;
@@ -281,7 +404,7 @@ public class InvoiceAdjController {
 		masterParamMap.put("memoAdjustTotalAmount", totalAmount);
 
 		//저장처리
-		String returnStr = invoiceService.saveNewAdjList(false,Integer.parseInt(memoTypeId), masterParamMap, detailParamList);
+		String returnStr = invoiceService.saveNewAdjList(false,Integer.parseInt(memoTypeId), masterParamMap, detailParamList, apprGridList);
 
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
@@ -332,11 +455,13 @@ public class InvoiceAdjController {
 
 		List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
 		Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+		List<Object> apprGridList = null;
 
 		//마스터 데이터
 		String memoTypeId = String.valueOf(formData.get("newAdjType"));
 		String memoReason = String.valueOf(formData.get("newAdjReason"));
 		String memoRemark = String.valueOf(formData.get("newRemark"));
+		String atchFileGrpId = String.valueOf(formData.get("atchFileGrpId"));
 
 		//파일 업로드된 grid 변수
 		String memoAdjustInvoiceNo = "";
@@ -399,6 +524,7 @@ public class InvoiceAdjController {
 				masterParamMap.put("memoAdjustRemark", memoRemark);																				//화면에서 입력받은 값
 				masterParamMap.put("memoAdjustCreator", sessionVO.getUserId());																	//세션값
 				masterParamMap.put("batchId", batchId);
+				masterParamMap.put("atchFileGrpId", Integer.parseInt(atchFileGrpId));
 
 				//Detail 데이터 세팅
 				if (detail.size() > 0) {
@@ -438,10 +564,44 @@ public class InvoiceAdjController {
 				masterParamMap.put("memoAdjustTotalAmount", totalAmount);
 
 				//저장처리
-				invoiceService.saveNewAdjList(true,Integer.parseInt(memoTypeId), masterParamMap, detailParamList);
+				invoiceService.saveNewAdjList(true,Integer.parseInt(memoTypeId), masterParamMap, detailParamList, apprGridList);
 
 			}
 		}
+
+		apprGridList = (List<Object>) params.get("apprGridList");
+        if(apprGridList.size() > 0) {
+            HashMap<String, Object> hm = null;
+            for(Object apprMap : apprGridList) {
+                hm = (HashMap<String, Object>) apprMap;
+
+                hm.put("userId", sessionVO.getUserId());
+                hm.put("userName", sessionVO.getUserName());
+                hm.put("memoAdjustId", "BCH" + String.valueOf(batchId));
+
+                if("1".equals(hm.get("approveNo").toString())) {
+                    hm.put("appvStus", "R");
+
+                    String nextApprover = invoiceService.nextApprover(hm);
+
+                    // insert notification
+                    Map ntf = new HashMap<String, Object>();
+                    ntf.put("code", "Batch Adj");
+                    ntf.put("codeName", "CN/DN Batch Adjustment");
+                    ntf.put("clmNo", "Batch Adj - " + String.valueOf(batchId));
+                    ntf.put("appvStus", "R");
+                    ntf.put("rejctResn", "Pending Approval.");
+                    ntf.put("reqstUserId", nextApprover);
+                    ntf.put("userId", sessionVO.getUserId());
+
+                    invoiceService.insertNotification(ntf);
+                } else {
+                    hm.put("appvStus", "T");
+                }
+
+                invoiceService.insertAdjReqAppv(hm);
+            }
+        }
 
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
@@ -489,11 +649,43 @@ public class InvoiceAdjController {
 	@RequestMapping(value = "/approvalAdjustment.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> approvalAdjustment(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {
 
+	    String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+
 		//세션 정보
 		params.put("userId", sessionVO.getUserId());
+		params.put("memCode", memCode);
 
-		//승인 or 반려 처리
-		invoiceService.approvalAdjustment(params);
+        params.put("appvStus", "APPROVE".equals(String.valueOf(params.get("process"))) ? "A" : "J");
+
+        params.put("mode", "S");
+        invoiceService.updateAdjApprovalLine(params);
+
+        params.put("mode", "");
+        invoiceService.updateAdjApprovalLine(params);
+
+        invoiceService.updateAdjNextAppvLine(params);
+
+        params.put("mode", "C");
+        EgovMap apprLineList = (EgovMap) invoiceService.getAdjApprLine(params);
+        if("A".equals(apprLineList.get("memoAppvStus")) || "J".equals(apprLineList.get("memoAppvStus"))) {
+            //승인 or 반려 처리
+            invoiceService.approvalAdjustment(params);
+        }
+
+        params.put("mode", "F");
+        apprLineList = (EgovMap) invoiceService.getAdjApprLine(params);
+        if(apprLineList != null) {
+            Map ntf = new HashMap<String, Object>();
+            ntf.put("code", "Batch Adj");
+            ntf.put("codeName", "CN/DN Adjustment");
+            ntf.put("clmNo", apprLineList.get("memoAdjRefNo"));
+            ntf.put("appvStus", "R");
+            ntf.put("rejctResn", "Pending Approval.");
+            ntf.put("reqstUserId", apprLineList.get("memoApprUserName"));
+            ntf.put("userId", sessionVO.getUserId());
+
+            invoiceService.insertNotification(ntf);
+        }
 
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
@@ -510,34 +702,73 @@ public class InvoiceAdjController {
 	* @param model
 	* @return
 	*/
-	@RequestMapping(value = "/approvalBatchAdjustment.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> approvalBatchAdjustment(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {
+    @RequestMapping(value = "/approvalBatchAdjustment.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> approvalBatchAdjustment(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {
 
-		List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
-		Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+        String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
 
-		Map<String, Object> approvaParam = null;
+        List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+        Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
 
-		LOGGER.debug("process : {}", formData.get("process"));
+        Map<String, Object> approvaParam = null;
 
-		//Detail 데이터 세팅
-		if (gridList.size() > 0) {
-			for (int i = 0; i < gridList.size(); i++) {
-				Map<String, Object> gridMap = (Map<String, Object>) gridList.get(i);
+        LOGGER.debug("process : {}", formData.get("process"));
 
-				approvaParam = new HashMap<String, Object>();
+        //Detail 데이터 세팅
+        if (gridList.size() > 0) {
+            Map<String, Object> apprMap = new HashMap<String, Object>();
+            Map<String, Object> apprLineGridMap = (Map<String, Object>) gridList.get(0);
+            String apprBatchId = "BCH" + apprLineGridMap.get("batchId").toString();
+            apprMap.put("batchId", apprBatchId);
+            apprMap.put("memCode", memCode);
+            apprMap.put("appvStus", "APPROVE".equals(formData.get("process").toString()) ? "A" : "J");
+            apprMap.put("userId", sessionVO.getUserId());
 
-				approvaParam.put("adjId", gridMap.get("memoAdjId"));
-				approvaParam.put("invoiceType", gridMap.get("memoAdjInvcTypeId"));
-				approvaParam.put("memoAdjTypeId", gridMap.get("memoAdjTypeId"));
-				approvaParam.put("invoiceNo", gridMap.get("memoAdjInvcNo"));
-				approvaParam.put("process", formData.get("process"));
-				approvaParam.put("userId", sessionVO.getUserId());
+            apprMap.put("mode", "S");
+            invoiceService.updateAdjApprovalLine(apprMap);
 
-				//승인 or 반려 처리
-				invoiceService.approvalAdjustment(approvaParam);
-			}
-		}
+            apprMap.put("mode", "");
+            invoiceService.updateAdjApprovalLine(apprMap);
+
+            invoiceService.updateAdjNextAppvLine(apprMap);
+
+            apprMap.put("mode", "C");
+            EgovMap apprLineList = (EgovMap) invoiceService.getAdjApprLine(apprMap);
+            if("A".equals(apprLineList.get("memoAppvStus")) || "J".equals(apprLineList.get("memoAppvStus"))) {
+                  for (int i = 0; i < gridList.size(); i++) {
+                        Map<String, Object> gridMap = (Map<String, Object>) gridList.get(i);
+
+                        approvaParam = new HashMap<String, Object>();
+
+                        approvaParam.put("batchId", gridMap.get("batchId"));
+                        approvaParam.put("adjId", gridMap.get("memoAdjId"));
+                        approvaParam.put("invoiceType", gridMap.get("memoAdjInvcTypeId"));
+                        approvaParam.put("memoAdjTypeId", gridMap.get("memoAdjTypeId"));
+                        approvaParam.put("invoiceNo", gridMap.get("memoAdjInvcNo"));
+                        approvaParam.put("process", formData.get("process"));
+                        approvaParam.put("userId", sessionVO.getUserId());
+                        approvaParam.put("memCode", memCode);
+
+                        //승인 or 반려 처리
+                        invoiceService.approvalAdjustment(approvaParam);
+                    }
+            }
+
+            apprMap.put("mode", "F");
+            apprLineList = (EgovMap) invoiceService.getAdjApprLine(apprMap);
+            if(apprLineList != null) {
+                Map ntf = new HashMap<String, Object>();
+                ntf.put("code", "Batch Adj");
+                ntf.put("codeName", "CN/DN Batch Adjustment");
+                ntf.put("clmNo", "Batch Adj - " + apprLineGridMap.get("batchId").toString());
+                ntf.put("appvStus", "R");
+                ntf.put("rejctResn", "Pending Approval.");
+                ntf.put("reqstUserId", apprLineList.get("memoApprUserName"));
+                ntf.put("userId", sessionVO.getUserId());
+
+                invoiceService.insertNotification(ntf);
+            }
+        }
 
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
@@ -771,4 +1002,66 @@ public class InvoiceAdjController {
 		int cnt = invoiceService.countAdjustmentExcelList(params);
 		return ResponseEntity.ok(cnt);
 	}
+
+    @RequestMapping(value = "/attachmentUpload.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> attachmentUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
+        LOGGER.debug("========== attachmentUpload ==========");
+        LOGGER.debug("params ==========>>  " + params);
+
+        List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+                File.separator + "payment" + File.separator + "invoicesAdj", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+
+        LOGGER.debug("list.size : {}", list.size());
+
+        params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+        if (list.size() > 0) {
+            invoiceAdjApplication.insertInvoiceAdjAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
+        }
+
+        params.put("attachmentList", list);
+
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+        return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/checkFinAppr.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> checkFinAppr(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+        LOGGER.debug("params =====================================>>  " + params);
+
+        ReturnMessage message = new ReturnMessage();
+
+        List<Object> apprGridList = (List<Object>) params.get("apprGridList");
+
+        if(apprGridList.size() > 0) {
+            Map hm = null;
+            List<String> appvLineUserId = new ArrayList<>();
+
+            for(Object map : apprGridList) {
+                hm = (HashMap<String, Object>) map;
+                appvLineUserId.add(hm.get("memCode").toString());
+            }
+
+            EgovMap hm2 = invoiceService.getFinApprover();
+            String memCode = hm2.get("apprMemCode").toString();
+
+            memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+            if(!appvLineUserId.contains(memCode)) {
+                message.setCode(AppConstants.FAIL);
+                message.setData(params);
+                message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+            } else {
+                message.setCode(AppConstants.SUCCESS);
+                message.setData(params);
+                message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+            }
+        }
+
+        return ResponseEntity.ok(message);
+    }
 }

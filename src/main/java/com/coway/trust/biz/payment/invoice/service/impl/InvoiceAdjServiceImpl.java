@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.common.impl.CommonMapper;
+import com.coway.trust.biz.eAccounting.webInvoice.impl.WebInvoiceMapper;
 import com.coway.trust.biz.payment.invoice.service.InvoiceAdjService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -19,6 +20,9 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
 
 	@Resource(name = "invoiceAdjMapper")
 	private InvoiceAdjMapper invoiceMapper;
+
+	@Resource(name = "webInvoiceMapper")
+    private WebInvoiceMapper webInvoiceMapper;
 
 	@Resource(name = "commonMapper")
 	private CommonMapper commonMapper;
@@ -59,7 +63,7 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
 	 * @return
 	 */
 	@Override
-	public String saveNewAdjList(boolean isBatch, int adjustmentType , Map<String, Object> masterParamMap, List<Object> detailParamList){
+	public String saveNewAdjList(boolean isBatch, int adjustmentType , Map<String, Object> masterParamMap, List<Object> detailParamList, List<Object> apprGridList){
 
 		int memoAdjustmentId = invoiceMapper.getAdjustmentId();
 		String reportNo = commonMapper.selectDocNo("18");
@@ -97,7 +101,59 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
     	//히스토리 정보 등록
     	invoiceMapper.saveNewAdjHist(masterParamMap);
 
+    	// 2019-09-11 - LaiKW - New Adjustment Approval insert
+    	if(apprGridList != null) {
+    	    if(apprGridList.size() > 0) {
+                HashMap<String, Object> hm = null;
+                for(Object map : apprGridList) {
+                    hm = (HashMap<String, Object>) map;
+
+                    hm.put("memoAdjustId", memoAdjustmentId);
+                    hm.put("memoAdjustRefNo", adjustmentNo);
+                    hm.put("userName", masterParamMap.get("memoAdjustCreatorName"));
+                    hm.put("userId", masterParamMap.get("memoAdjustCreator"));
+
+                    if("1".equals(hm.get("approveNo").toString())) {
+                        hm.put("appvStus", "R");
+
+                        String nextApprover = invoiceMapper.nextApprover(hm);
+
+                        // insert notification
+                        Map ntf = new HashMap<String, Object>();
+                        ntf.put("code", "New Adj");
+                        ntf.put("codeName", "CN/DN Adjustment");
+                        ntf.put("clmNo", adjustmentNo);
+                        ntf.put("appvStus", "R");
+                        ntf.put("rejctResn", "Pending Approval.");
+                        ntf.put("reqstUserId", nextApprover);
+                        ntf.put("userId", masterParamMap.get("memoAdjustCreator"));
+
+                        webInvoiceMapper.insertNotification(ntf);
+                    } else {
+                        hm.put("appvStus", "T");
+                    }
+
+                    invoiceMapper.insertAdjReqAppv(hm);
+                }
+            }
+    	}
+
     	return adjustmentNo + " / " + reportNo;
+	}
+
+	@Override
+	public void insertNotification(Map<String, Object> params) {
+	    webInvoiceMapper.insertNotification(params);
+	}
+
+	@Override
+    public EgovMap getFinApprover() {
+        return invoiceMapper.getFinApprover();
+    }
+
+	@Override
+	public void insertAdjReqAppv(Map<String, Object> params) {
+	    invoiceMapper.insertAdjReqAppv(params);
 	}
 
 	/**
@@ -140,6 +196,16 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
 		return invoiceMapper.selectAdjDetailPopHist(params);
 	}
 
+	@Override
+	public void updateAdjApprovalLine(Map<String, Object> params) {
+	    invoiceMapper.updateAdjApprovalLine(params);
+	}
+
+	@Override
+    public void updateAdjNextAppvLine(Map<String, Object> params) {
+        invoiceMapper.updateAdjNextAppvLine(params);
+    }
+
 	/**
 	* Approval Adjustment  - Approva / Reject
 	* @param params
@@ -165,6 +231,10 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
 		historyMap.put("memoAdjustCreator", params.get("userId"));
 
     	invoiceMapper.saveNewAdjHist(historyMap);
+
+    	//invoiceMapper.updateAdjApprovalLine(params);
+
+    	// If batch - Last sequence only proceed
 
 		//승인 처리시 데이터 처리
 		if(status == 4){
@@ -427,5 +497,21 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
 	@Override
 	public List<EgovMap> selectAdjDetailPopListOld(Map<String, Object> params) {
 		return invoiceMapper.selectAdjDetailPopListOld(params);
+	}
+
+	@Override
+    public EgovMap getAdjApprLine(Map<String, Object> params) {
+        return invoiceMapper.getAdjApprLine(params);
+    }
+
+	@Override
+    public List<EgovMap> selectAppvLineInfo(Map<String, Object> params) {
+        // TODO Auto-generated method stub
+        return invoiceMapper.selectAppvLineInfo(params);
+    }
+
+	@Override
+	public String nextApprover(Map<String, Object> params) {
+	    return invoiceMapper.nextApprover(params);
 	}
 }

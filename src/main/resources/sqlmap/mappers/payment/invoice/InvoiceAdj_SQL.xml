@@ -78,6 +78,19 @@
 			                       LEFT JOIN SYS0038M Extent8   ON Extent8.STUS_CODE_ID = Extent1.MEMO_ADJ_STUS_ID
 			                       LEFT JOIN SYS0040M Extent9   ON Extent7.USER_DEPT_ID = Extent9.DEPT_ID
 			                       LEFT JOIN SYS0047M Extent71  ON Extent71.USER_ID = Extent1.MEMO_ADJ_UPD_USER_ID
+			                       INNER JOIN PAY0292D extent232
+			                       ON (extent1.BATCH_ID = LTRIM(extent232.MEMO_ADJ_ID, 'BCH') OR TO_CHAR(extent1.MEMO_ADJ_ID) = LTRIM(extent232.MEMO_ADJ_ID, 'BCH'))
+			                       AND extent232.MEMO_APPV_STUS IN ('R','A','J')
+			                       <if test="apprGrp == null or apprGrp == '' ">
+			                           AND extent232.MEMO_APPR_USER_ID = #{memCode}
+			                       </if>
+			                       <if test="apprGrp != null and apprGrp != '' ">
+			                           AND extent232.MEMO_APPR_USER_ID IN (
+			                               SELECT APPR_MEM_CODE
+			                               FROM FCM0023M
+			                               WHERE APPR_GRP = #{apprGrp}
+			                           )
+                                   </if>
 			                WHERE 1=1
 			                        <if test="orderNo != null and orderNo != '' " >
 								    AND Extent6.INVC_ITM_ORD_NO = #{orderNo}
@@ -141,6 +154,19 @@
 			                       LEFT JOIN SYS0038M Extent16   ON Extent16.STUS_CODE_ID = Extent9.MEMO_ADJ_STUS_ID
 			                       LEFT JOIN SYS0040M Extent17   ON Extent15.USER_DEPT_ID = Extent17.DEPT_ID
 			                       LEFT JOIN SYS0047M Extent151  ON Extent151.USER_ID = Extent9.MEMO_ADJ_UPD_USER_ID
+			                       INNER JOIN PAY0292D extent233
+			                       ON (extent9.BATCH_ID = LTRIM(extent233.MEMO_ADJ_ID, 'BCH') OR TO_CHAR(extent9.MEMO_ADJ_ID) = LTRIM(extent233.MEMO_ADJ_ID, 'BCH'))
+			                       AND extent233.MEMO_APPV_STUS IN ('R','A','J')
+                                   <if test="apprGrp == null or apprGrp == '' ">
+                                       AND extent233.MEMO_APPR_USER_ID = #{memCode}
+                                   </if>
+                                   <if test="apprGrp != null and apprGrp != '' ">
+                                       AND extent233.MEMO_APPR_USER_ID IN (
+                                           SELECT APPR_MEM_CODE
+                                           FROM FCM0023M
+                                           WHERE APPR_GRP = #{apprGrp}
+                                       )
+                                   </if>
 			                 WHERE 1=1
                                     <if test="orderNo != null and orderNo != '' " >
                                     AND Extent14.INVC_ITM_ORD_NO = #{orderNo}
@@ -203,6 +229,18 @@
                             LEFT JOIN SYS0040M Extent31   ON Extent29.USER_DEPT_ID = Extent31.DEPT_ID
                             LEFT JOIN SYS0047M Extent32  ON Extent32.USER_ID = Extent25.ADJ_ENTRY_UPD_USER_ID
                             LEFT JOIN SAL0001D Extent33  ON Extent33.SALES_ORD_ID = Extent25.ADJ_ENTRY_SO_ID
+                            INNER JOIN PAY0292D extent234 ON extent25.ADJ_ENTRY_ID = LTRIM(extent234.MEMO_ADJ_ID, 'BCH')
+                            AND extent234.MEMO_APPV_STUS IN ('R','A','J')
+                            <if test="apprGrp == null or apprGrp == '' ">
+                                AND extent234.MEMO_APPR_USER_ID = #{memCode}
+                            </if>
+                            <if test="apprGrp != null and apprGrp != '' ">
+                                AND extent234.MEMO_APPR_USER_ID IN (
+                                           SELECT APPR_MEM_CODE
+                                           FROM FCM0023M
+                                           WHERE APPR_GRP = #{apprGrp}
+                                       )
+                            </if>
                     WHERE 1=1
                                      <if test="orderNo != null and orderNo != '' " >
                                     AND Extent33.SALES_ORD_NO = #{orderNo}
@@ -227,7 +265,9 @@
                                         Extent25.ADJ_ENTRY_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY')
                                         AND Extent25.ADJ_ENTRY_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1
                                     </if>
-
+                                    <if test="batchId != null and batchId != '' ">
+                                    AND Extent25.ADJ_ENTRY_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
+                                    </if>
                                     <if test="deptNm != null and deptNm != '' ">
                                     AND Extent31.DEPT_NAME LIKE '%' || #{deptNm} || '%' ESCAPE '~'
                                     </if>
@@ -266,6 +306,19 @@
 			                LEFT JOIN SYS0038M Extent24   ON Extent24.STUS_CODE_ID = Extent17.MEMO_ADJ_STUS_ID
 			                LEFT JOIN SYS0040M Extent9   ON Extent23.USER_DEPT_ID = Extent9.DEPT_ID
 			                LEFT JOIN SYS0047M Extent231  ON Extent231.USER_ID = Extent17.MEMO_ADJ_UPD_USER_ID
+			                INNER JOIN PAY0292D extent235
+			                ON (extent17.memo_adj_id = LTRIM(extent235.MEMO_ADJ_ID, 'BCH') OR TO_CHAR(extent17.memo_adj_id) = LTRIM(extent235.MEMO_ADJ_ID, 'BCH'))
+			                AND extent235.MEMO_APPV_STUS IN ('R','A','J')
+                            <if test="apprGrp == null or apprGrp == '' ">
+                                AND extent235.MEMO_APPR_USER_ID = #{memCode}
+                            </if>
+                            <if test="apprGrp != null and apprGrp != '' ">
+                                AND extent235.MEMO_APPR_USER_ID IN (
+                                           SELECT APPR_MEM_CODE
+                                           FROM FCM0023M
+                                           WHERE APPR_GRP = #{apprGrp}
+                                       )
+                            </if>
 			        WHERE 1=1
 			                         <if test="orderNo != null and orderNo != '' " >
                                     AND Extent22.INVC_ITM_ORD_NO = #{orderNo}
@@ -832,35 +885,38 @@
      <insert id="saveNewAdjMaster" parameterType="Map">
         INSERT INTO PAY0011D
             (MEMO_ADJ_ID,
-			MEMO_ADJ_REF_NO,
-			MEMO_ADJ_RPT_NO,
-			MEMO_ADJ_TYPE_ID,
-			MEMO_ADJ_INVC_NO,
-			MEMO_ADJ_INVC_TYPE_ID,
-			MEMO_ADJ_STUS_ID,
-			MEMO_ADJ_RESN_ID,
-			MEMO_ADJ_REM,
-			MEMO_ADJ_TXS_AMT,
-			MEMO_ADJ_TOT_AMT,
-			MEMO_ADJ_CRT_DT,
-			MEMO_ADJ_CRT_USER_ID,
-			BATCH_ID)
-		VALUES
-		  (
-		      #{memoAdjustId},
-		      #{memoAdjustRefNo},
-		      #{memoAdjustReportNo},
-		      #{memoAdjustTypeID},
-		      #{memoAdjustInvoiceNo},
-		      #{memoAdjustInvoiceTypeID},
-		      #{memoAdjustStatusID},
-		      #{memoAdjustReasonID},
-		      #{memoAdjustRemark},
-		      #{memoAdjustTaxesAmount},
-		      #{memoAdjustTotalAmount},
-		      SYSDATE,
-		      #{memoAdjustCreator},
-		      #{batchId}
+            MEMO_ADJ_REF_NO,
+            MEMO_ADJ_RPT_NO,
+            MEMO_ADJ_TYPE_ID,
+            MEMO_ADJ_INVC_NO,
+            MEMO_ADJ_INVC_TYPE_ID,
+            MEMO_ADJ_STUS_ID,
+            MEMO_ADJ_RESN_ID,
+            MEMO_ADJ_REM,
+            MEMO_ADJ_TXS_AMT,
+            MEMO_ADJ_TOT_AMT,
+            MEMO_ADJ_CRT_DT,
+            MEMO_ADJ_CRT_USER_ID,
+            BATCH_ID,
+            ATCH_FILE_GRP_ID
+            )
+        VALUES
+          (
+              #{memoAdjustId},
+              #{memoAdjustRefNo},
+              #{memoAdjustReportNo},
+              #{memoAdjustTypeID},
+              #{memoAdjustInvoiceNo},
+              #{memoAdjustInvoiceTypeID},
+              #{memoAdjustStatusID},
+              #{memoAdjustReasonID},
+              #{memoAdjustRemark},
+              #{memoAdjustTaxesAmount},
+              #{memoAdjustTotalAmount},
+              SYSDATE,
+              #{memoAdjustCreator},
+              #{batchId},
+              #{atchFileGrpId}
         )
     </insert>
 
@@ -997,8 +1053,8 @@
         CASE
             WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(TO_CHAR(company.TAX_INVC_REF_DT,'YYYY'))
             WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(TO_CHAR(out.TAX_INVC_REF_DT,'YYYY'))
-            ELSE TO_NUMBER(TO_CHAR(misc.TAX_INVC_REF_DT,'YYYY')) END year
-
+            ELSE TO_NUMBER(TO_CHAR(misc.TAX_INVC_REF_DT,'YYYY')) END year,
+        mst.ATCH_FILE_GRP_ID
     FROM
         PAY0011D mst
         /* LEFT JOIN PAY0012D sub ON mst.MEMO_ADJ_ID = sub.MEMO_ADJ_ID */
@@ -1561,7 +1617,8 @@
             MEMO_ADJ_CRT_DT,
             RESN_DESC,
             MEMO_ADJ_REM,
-            SUM(MEMO_ADJ_TOT_AMT) AS MEMO_ADJ_TOT_AMT
+            SUM(MEMO_ADJ_TOT_AMT) AS MEMO_ADJ_TOT_AMT,
+            ATCH_FILE_GRP_ID
         FROM
             (
             SELECT
@@ -1625,7 +1682,8 @@
 				rsn.RESN_DESC RESN_DESC ,
 				mst.MEMO_ADJ_CRT_USER_ID,
 				userinfo.USER_NAME MEMO_ADJ_CRT_USER_NM ,
-				dept.DEPT_NAME
+				dept.DEPT_NAME,
+				mst.ATCH_FILE_GRP_ID
             FROM
                 PAY0011D mst
                 /* LEFT JOIN PAY0012D sub ON mst.MEMO_ADJ_ID = sub.MEMO_ADJ_ID */
@@ -1650,7 +1708,8 @@
 		        MEMO_ADJ_STUS_NM,
 		        MEMO_ADJ_CRT_DT,
 		        RESN_DESC,
-		        MEMO_ADJ_REM
+		        MEMO_ADJ_REM,
+		        ATCH_FILE_GRP_ID
     </select>
 
     <select id="selectAdjBatchApprovalPopDetail" parameterType="Map" resultType="egovMap">
@@ -1802,6 +1861,174 @@
             LEFT JOIN SYS0032M cc ON cc.RESN_ID = bb.RESN_ID
             LEFT JOIN SAL0001D dd ON dd.SALES_ORD_ID = mst.ADJ_ENTRY_SO_ID
         WHERE mst.ADJ_ENTRY_ID = #{adjId}
+    </select>
+
+    <select id="getFinApprover" parameterType="Map" resultType="egovMap">
+        SELECT
+            APPR_MEM_CODE
+        FROM FCM0023M
+        WHERE APPR_MEM_STUS = '1'
+        AND INVC_ADJ = '1'
+    </select>
+
+    <insert id="insertAdjReqAppv" parameterType="Map">
+        INSERT INTO PAY0292D (
+            MEMO_ADJ_ID,
+            MEMO_ADJ_REF_NO,
+            MEMO_REQST_DT,
+            MEMO_APPV_PRCSS_STUS,
+            MEMO_REQST_USER_ID,
+            MEMO_APPR_USER_ID,
+            MEMO_APPR_SEQ,
+            MEMO_APPV_STUS,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
+        ) VALUES (
+            #{memoAdjustId},
+            #{memoAdjustRefNo},
+            SYSDATE,
+            'R',
+            #{userName},
+            #{memCode},
+            #{approveNo},
+            #{appvStus},
+            SYSDATE,
+            #{userId},
+            SYSDATE,
+            #{userId}
+        )
+    </insert>
+
+    <update id="updateAdjApprovalLine" parameterType="Map">
+        UPDATE PAY0292D SET
+            <choose>
+                <when test='mode == "S" '>
+                    MEMO_APPV_STUS = #{appvStus},
+                    MEMO_APPV_DT = SYSDATE,
+                </when>
+                <otherwise>
+                    MEMO_APPV_PRCSS_STUS = 'R',
+                </otherwise>
+            </choose>
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{userId}
+        WHERE 1=1
+        <if test='mode == "S" '>
+            AND MEMO_APPR_USER_ID = #{memCode}
+        </if>
+        <choose>
+            <when test="batchId != null and batchId != '' ">
+                AND MEMO_ADJ_ID = #{batchId}
+            </when>
+            <otherwise>
+                AND MEMO_ADJ_ID = #{adjId}
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updateAdjNextAppvLine" parameterType="Map">
+        MERGE INTO PAY0292D A
+		USING (
+		    SELECT MEMO_ADJ_ID, MAX(MEMO_APPR_SEQ) MAX_SEQ
+		    FROM PAY0292D
+		    WHERE 1=1
+		    AND MEMO_APPV_DT IS NOT NULL
+		    <choose>
+                <when test="batchId != null and batchId != '' ">
+                    AND MEMO_ADJ_ID = #{batchId}
+                </when>
+                <otherwise>
+                    AND MEMO_ADJ_ID = #{adjId}
+                </otherwise>
+            </choose>
+		    GROUP BY MEMO_ADJ_ID
+		) SRC
+		ON(A.MEMO_ADJ_ID = SRC.MEMO_ADJ_ID AND A.MEMO_APPR_SEQ = SRC.MAX_SEQ + 1)
+		WHEN MATCHED THEN UPDATE SET
+		    MEMO_APPV_STUS = 'R',
+		    UPD_DT = SYSDATE,
+		    UPD_USER_ID = #{userId}
+    </update>
+
+    <select id="getAdjApprLine" parameterType="Map" resultType="egovMap">
+        SELECT A.*,
+                   C.NAME MEMO_APPR_USER_NAME
+        FROM PAY0292D A
+        INNER JOIN (
+            SELECT MEMO_ADJ_ID, MAX(MEMO_APPR_SEQ) MAX_SEQ
+            FROM PAY0292D
+            WHERE 1=1
+            <if test='mode == "F" '>
+                AND MEMO_APPV_STUS = 'R'
+            </if>
+            <if test='mode == "C" '>
+                AND MEMO_APPV_DT IS NOT NULL
+            </if>
+            GROUP BY MEMO_ADJ_ID
+        ) B
+            ON A.MEMO_ADJ_ID = B.MEMO_ADJ_ID
+            AND A.MEMO_APPR_SEQ = B.MAX_SEQ
+        INNER JOIN ORG0001D C
+            ON A.MEMO_APPR_USER_ID = C.MEM_CODE
+        WHERE 1=1
+            <choose>
+                <when test="batchId != null and batchId != '' ">
+                    AND A.MEMO_ADJ_ID = #{batchId}
+                </when>
+                <otherwise>
+                    AND A.MEMO_ADJ_ID = #{adjId}
+                </otherwise>
+            </choose>
+    </select>
+
+    <select id="nextApprover" parameterType="Map" resultType="String">
+        SELECT
+            USER_NAME APPV_NAME
+        FROM SYS0047M
+        WHERE HR_CODE = #{memCode}
+    </select>
+
+    <select id="selectAppvLineInfo" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (
+			SELECT
+			    DISTINCT
+			    A.MEMO_REQST_USER_ID,
+			    TO_CHAR(A.MEMO_REQST_DT, 'DD/MM/YYYY') REQST_DT,
+			    A.MEMO_APPV_PRCSS_STUS,
+			    A.MEMO_APPR_SEQ,
+			    A.MEMO_APPR_USER_ID,
+			    B.NAME APPV_LINE_USER_NAME,
+			    A.MEMO_APPV_STUS,
+			    NVL(TO_CHAR(A.MEMO_APPV_DT, 'DD/MM/YYYY'), '-') APPV_DT
+			FROM PAY0011D M
+			INNER JOIN PAY0292D A
+			<choose>
+                <when test="batchId != null and batchId != '' ">
+                    ON M.BATCH_ID = LTRIM(A.MEMO_ADJ_ID, 'BCH')
+                </when>
+                <otherwise>
+                    ON M.MEMO_ADJ_ID = LTRIM(A.MEMO_ADJ_ID, 'BCH')
+                </otherwise>
+            </choose>
+			INNER JOIN ORG0001D B
+			ON A.MEMO_APPR_USER_ID = B.MEM_CODE
+			/*INNER JOIN SYS0047M C
+			ON A.UPD_USER_ID = C.USER_ID
+			INNER JOIN ORG0001D D
+			ON C.HR_CODE = D.MEM_CODE*/
+			WHERE 1 = 1
+			<choose>
+                <when test="batchId != null and batchId != '' ">
+                    AND M.BATCH_ID = #{batchId}
+                </when>
+                <otherwise>
+                    AND M.MEMO_ADJ_ID = #{adjId}
+                </otherwise>
+            </choose>
+		)
+        ORDER BY MEMO_APPR_SEQ
     </select>
 
 </mapper>

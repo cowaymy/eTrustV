@@ -43,7 +43,7 @@ var columnLayout=[
     { dataField:"memoAdjRefNo" ,headerText:"<spring:message code='pay.head.cnDnNo'/>" ,editable : false },
     { dataField:"memoAdjInvcNo" ,headerText:"<spring:message code='pay.head.invoiceNo'/>" ,editable : false },
     { dataField:"invcItmOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false},
-    { dataField:"memoItmAmt" ,headerText:"<spring:message code='pay.head.adjustmentAmount'/>" ,editable : false },
+    { dataField:"memoItmAmt" ,headerText:"<spring:message code='pay.head.adjustmentAmount'/>" ,editable : false, formatString : "#,##0.00"},
     { dataField:"resnDesc" ,headerText:"<spring:message code='pay.head.reason'/>" ,editable : false },
     { dataField:"userName" ,headerText:"<spring:message code='pay.head.requestor'/>" ,editable : false },
     { dataField:"deptName" ,headerText:"<spring:message code='pay.head.department'/>" ,editable : false },
@@ -54,13 +54,13 @@ var columnLayout=[
 // 리스트 조회.
 function fn_getAdjustmentListAjax() {
 
-    if(FormUtil.checkReqValue($("#orderNo")) &&
+    /*if(FormUtil.checkReqValue($("#orderNo")) &&
             FormUtil.checkReqValue($("#invoiceNo")) &&
             FormUtil.checkReqValue($("#batchId")) &&
             FormUtil.checkReqValue($("#adjNo"))){
         Common.alert("<spring:message code='pay.alert.oneEntry'/>");
         return;
-    }
+    }*/
 
     Common.ajax("GET", "/payment/selectAdjustmentList.do", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);

@@ -196,4 +196,17 @@ public interface InvoiceAdjMapper {
 
     List<EgovMap> selectAdjDetailPopListOld(Map<String, Object> params);
 
+    EgovMap getFinApprover();
+
+    void insertAdjReqAppv(Map<String, Object> params);
+
+    void updateAdjApprovalLine(Map<String, Object> params);
+
+    void updateAdjNextAppvLine(Map<String, Object> params);
+
+    EgovMap getAdjApprLine(Map<String, Object> params);
+
+    List<EgovMap> selectAppvLineInfo(Map<String, Object> params);
+
+    String nextApprover(Map<String, Object> params);
 }

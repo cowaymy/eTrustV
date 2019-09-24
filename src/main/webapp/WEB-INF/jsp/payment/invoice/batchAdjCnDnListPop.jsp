@@ -3,7 +3,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 
-var myGridID,newBatchAdjGridID;
+var newBatchGridID, newBatchAdjGridID, approveLineGridID;
+var selectRowIdx;
 
 //Default Combo Data
 var adjStatusData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"}];
@@ -40,6 +41,73 @@ var newBatchColLayout = [
     {dataField : "3", headerText : "<spring:message code='pay.head.adjustmentAmount'/>", editable : true, dataType : "numeric", formatString : "#,##0.00"}
     ];
 
+var approveLineColumnLayout = [
+    {
+        dataField : "approveNo",
+        headerText : '<spring:message code="approveLine.approveNo" />',
+        dataType: "numeric",
+        expFunction : function( rowIndex, columnIndex, item, dataField ) {
+            return rowIndex + 1;
+        }
+    }, {
+        dataField : "memCode",
+        headerText : '<spring:message code="approveLine.userId" />',
+        colSpan : 2
+    }, {
+        dataField : "",
+        headerText : '',
+        width: 30,
+        renderer : {
+            type : "IconRenderer",
+            iconTableRef :  {
+                "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"
+                    },
+            iconWidth : 24,
+            iconHeight : 24,
+            onclick : function(rowIndex, columnIndex, value, item) {
+                console.log("selectRowIdx : " + selectRowIdx);
+                selectRowIdx = rowIndex;
+                fn_searchUserIdPop();
+            }
+        },
+        colSpan : -1
+    },{
+        dataField : "name",
+        headerText : '<spring:message code="approveLine.name" />',
+        style : "aui-grid-user-custom-left"
+    }, {
+        dataField : "",
+        headerText : '<spring:message code="approveLine.addition" />',
+        renderer : {
+            type : "IconRenderer",
+            iconTableRef :  {
+                "default" : "${pageContext.request.contextPath}/resources/images/common/btn_plus.gif"// default
+            },
+            iconWidth : 12,
+            iconHeight : 12,
+            onclick : function(rowIndex, columnIndex, value, item) {
+                var rowCount = AUIGrid.getRowCount(approveLineGridID);
+                if (rowCount > 3) {
+                    Common.alert('<spring:message code="approveLine.appvLine.msg" />');
+                } else {
+                    fn_appvLineGridAddRow();
+                }
+            }
+        }
+    }];
+
+    // Approval line Grid Option
+var approveLineGridPros = {
+    usePaging : true,
+    pageRowCount : 20,
+    showStateColumn : true,
+    enableRestore : true,
+    showRowNumColumn : false,
+    softRemovePolicy : "exceptNew",
+    softRemoveRowMode : false,
+    selectionMode : "multipleCells"
+};
+
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
 
@@ -60,9 +128,9 @@ $(document).ready(function(){
     });
 
     //Grid 생성
-	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+	newBatchGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 	newBatchAdjGridID = GridCommon.createAUIGrid("newBatchAdj_grid_wrap", newBatchColLayout,null,gridPros);
-
+	approveLineGridID = GridCommon.createAUIGrid("approveLine_grid_wrap", approveLineColumnLayout, null, approveLineGridPros);
 
 
     // 파일 선택하기
@@ -99,6 +167,13 @@ $(document).ready(function(){
         }
 
         });
+
+    AUIGrid.bind(approveLineGridID, "cellClick", function( event ) {
+        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        selectRowIdx = event.rowIndex;
+    });
+
+    fn_appvLineGridAddRow();
 
 });
 
@@ -157,7 +232,7 @@ function fn_getAdjustmentListAjax() {
     }
 
     Common.ajax("GET", "/payment/selectAdjustmentList.do", $("#searchForm").serialize(), function(result) {
-        AUIGrid.setGridData(myGridID, result);
+        AUIGrid.setGridData(newBatchGridID, result);
     });
 }
 
@@ -169,9 +244,15 @@ function fn_openDivPop(){
 
 //Layer close
 hideViewPopup=function(val){
-	AUIGrid.destroy(newBatchAdjGridID);
-	newBatchAdjGridID = GridCommon.createAUIGrid("newBatchAdj_grid_wrap", newBatchColLayout,null,gridPros);
-	$("#newBatchAdjForm")[0].reset();
+	if(val == "#newBatchAdj_wrap") {
+		AUIGrid.destroy(newBatchAdjGridID);
+	    newBatchAdjGridID = GridCommon.createAUIGrid("newBatchAdj_grid_wrap", newBatchColLayout,null,gridPros);
+	    $("#newBatchAdjForm")[0].reset();
+	} else if(val == "#appvLinePop") {
+		AUIGrid.destroy(approveLineGridID);
+        approveLineGridID = GridCommon.createAUIGrid("approveLine_grid_wrap", approveLineColumnLayout, null, approveLineGridPros);
+        $("#appvLinePop")[0].reset();
+	}
     $(val).hide();
 }
 
@@ -203,7 +284,20 @@ function fn_batchAdjFileUp(){
         return;
     }
 
+    if($("input[name=fileSelector2]")[0].files[0] == "" || $("input[name=fileSelector2]")[0].files[0] == null) {
+        Common.alert("Please attach supporting document!")
+        return false;
+    }
+
+    $("#fileSelector").val("");
+
+    $("#appvLinePop").show();
+    AUIGrid.resize(approveLineGridID, 565, $(".approveLine_grid_wrap").innerHeight());
+
     //Ajax 호출
+    //Common.ajaxFile()
+
+    /*
     Common.ajax("POST", "/payment/saveBatchNewAdjList.do", data, function(result) {
     	var returnMsg = "<spring:message code='pay.alert.saveBatchNewAdjList' arguments='"+result.data+"' htmlEscape='false'/>";
 
@@ -222,44 +316,156 @@ function fn_batchAdjFileUp(){
         }
         Common.alert("Fail : " + jqXHR.responseJSON.message);
     });
-
+*/
 }
+
+function fn_submit() {
+    console.log("fn_submit");
+
+    var obj = $("#searchForm").serializeJSON();
+    obj.apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
+
+    Common.ajax("POST", "/payment/checkFinAppr.do", obj, function(resultFinAppr) {
+        console.log(resultFinAppr);
+
+        if(resultFinAppr.code == "99") {
+            Common.alert("Please select the relevant final approver.");
+        } else {
+            var formData = Common.getFormData("newBatchAdjForm");
+
+            Common.ajaxFile("/payment/attachmentUpload.do", formData, function(uResult) {
+                console.log(uResult);
+
+                $("#atchFileGrpId").val(uResult.data.fileGroupKey);
+
+                var data = GridCommon.getGridData(newBatchAdjGridID)
+                data.form = $("#newBatchAdjForm").serializeJSON();
+                data.apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
+
+                Common.ajax("POST", "/payment/saveBatchNewAdjList.do", data, function(result) {
+                    var returnMsg = "<spring:message code='pay.alert.saveBatchNewAdjList' arguments='"+result.data+"' htmlEscape='false'/>";
+
+                    Common.alert(returnMsg, function (){
+                        hideViewPopup('#appvLinePop');
+                        hideViewPopup('#newBatchAdj_wrap');
+                    });
+
+                },  function(jqXHR, textStatus, errorThrown) {
+                    try {
+                        console.log("status : " + jqXHR.status);
+                        console.log("code : " + jqXHR.responseJSON.code);
+                        console.log("message : " + jqXHR.responseJSON.message);
+                        console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                    Common.alert("Fail : " + jqXHR.responseJSON.message);
+                });
+            });
+        }
+    });
+}
+
+/*******************
+Approval Line Functions
+*******************/
+function fn_appvLineGridAddRow() {
+   AUIGrid.addRow(approveLineGridID, {}, "first");
+}
+
+function fn_appvLineGridDeleteRow() {
+   AUIGrid.removeRow(approveLineGridID, selectRowIdx);
+}
+
+function fn_searchUserIdPop() {
+   Common.popupDiv("/common/memberPop.do", {callPrgm:"NRIC_VISIBLE"}, null, true);
+}
+
+function fn_newRegistMsgPop() {
+   var length = AUIGrid.getGridData(approveLineGridID).length;
+   var checkMemCode = true;
+   console.log(length);
+   // 1개의 default Line 존재
+   if(length >= 1) {
+       for(var i = 0; i < length; i++) {
+           if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
+               Common.alert('<spring:message code="approveLine.userId.msg" />' + (i +1) + ".");
+               checkMemCode = false;
+           }
+       }
+   }
+   console.log(checkMemCode);
+   if(checkMemCode) {
+       Common.popupDiv("/eAccounting/webInvoice/newRegistMsgPop.do", null, null, true, "registMsgPop");
+   }
+}
+
+function fn_loadOrderSalesman(memId, memCode) {
+   var result = true;
+   var list = AUIGrid.getColumnValues(approveLineGridID, "memCode", true);
+
+   if(list.length > 0) {
+       for(var i = 0; i < list.length; i ++) {
+           if(memCode == list[i]) {
+               result = false;
+           }
+       }
+   }
+
+   if(result) {
+       Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
+
+           if(memInfo == null) {
+               Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+           }
+           else {
+               console.log(memInfo);
+               AUIGrid.setCellValue(approveLineGridID, selectRowIdx, "memCode", memInfo.memCode);
+               AUIGrid.setCellValue(approveLineGridID, selectRowIdx, "name", memInfo.name);
+           }
+       });
+   } else {
+       Common.alert('Not allowed to select same User ID in Approval Line');
+   }
+}
+
+
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
-	<header class="pop_header"><!-- pop_header start -->
-		<h1>Batch Invoice Adjustment (CN / DN)</h1>
-		<ul class="right_opt">
+    <header class="pop_header"><!-- pop_header start -->
+        <h1>Batch Invoice Adjustment (CN / DN)</h1>
+        <ul class="right_opt">
             <li><p class="btn_blue"><a href="javascript:fn_getAdjustmentListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
-		</ul>
-	</header><!-- pop_header end -->
+        </ul>
+    </header><!-- pop_header end -->
 
-	<section class="pop_body"><!-- pop_body start -->
-		<form name="searchForm" id="searchForm"  method="post">
+    <section class="pop_body"><!-- pop_body start -->
+        <form name="searchForm" id="searchForm"  method="post">
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
-				<colgroup>
-				    <col style="width:180px" />
-				    <col style="width:*" />
-				    <col style="width:180px" />
-				    <col style="width:*" />
-				</colgroup>
-				<tbody>
-				    <tr>
-				        <th scope="row">Batch ID.</th>
-					    <td>
-					       <input id="batchId" name="batchId" type="text" placeholder="Batch Id." class="w100p" />
-					    </td>
-					    <th scope="row">Adjustment Status</th>
+                <colgroup>
+                    <col style="width:180px" />
+                    <col style="width:*" />
+                    <col style="width:180px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">Batch ID.</th>
+                        <td>
+                           <input id="batchId" name="batchId" type="text" placeholder="Batch Id." class="w100p" />
+                        </td>
+                        <th scope="row">Adjustment Status</th>
                         <td>
                             <select id="status" name="status" class="w100p"></select>
                         </td>
                     </tr>
-					<tr>
-					   <th scope="row">Request Name</th>
-					   <td>
-					       <input id="creator" name="creator" type="text" placeholder="Request Name." class="w100p" />
+                    <tr>
+                       <th scope="row">Request Name</th>
+                       <td>
+                           <input id="creator" name="creator" type="text" placeholder="Request Name." class="w100p" />
                         </td>
-					    <th scope="row">Department Name</th>
+                        <th scope="row">Department Name</th>
                         <td>
                            <input id="deptNm" name="deptNm" type="text" placeholder="Department Name" class="w100p" />
                         </td>
@@ -283,9 +489,9 @@ function fn_batchAdjFileUp(){
             <!-- link_btns_wrap end -->
         </form>
 
-		<article id="grid_wrap" class="grid_wrap"></article>
+        <article id="grid_wrap" class="grid_wrap"></article>
 
-	</section><!-- pop_body end -->
+    </section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
 
 <!---------------------------------------------------------------
@@ -304,6 +510,7 @@ function fn_batchAdjFileUp(){
 
     <!-- pop_body start -->
     <form name="newBatchAdjForm" id="newBatchAdjForm"  method="post">
+    <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" />
     <section class="pop_body">
         <!-- search_table start -->
         <section class="search_table">
@@ -343,6 +550,14 @@ function fn_batchAdjFileUp(){
                            <!-- auto_file end -->
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
+                        <td colspan="3" id="attachTd">
+                            <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
+                                <input type="file" title="file add" style="width:300px" id="fileSelector2" name="fileSelector2" />
+                            </div><!-- auto_file end -->
+                        </td>
+                    </tr>
                    </tbody>
             </table>
         </section>
@@ -362,3 +577,31 @@ function fn_batchAdjFileUp(){
     <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
+<!-------------------------------------------------------------------------------------
+    POP-UP (APPROVAL LINE)
+-------------------------------------------------------------------------------------->
+    <!-- popup_wrap start -->
+    <div class="popup_wrap size_mid2" id="appvLinePop" style="display: none;">
+        <header class="pop_header"><!-- pop_header start -->
+            <h1><spring:message code="approveLine.title" /></h1>
+            <ul class="right_opt">
+                <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#appvLinePop')"><spring:message code='sys.btn.close'/></a></p></li>
+            </ul>
+        </header><!-- pop_header end -->
+
+        <section class="pop_body"><!-- pop_body start -->
+            <section class="search_result"><!-- search_result start -->
+                <ul class="right_btns">
+                    <li><p class="btn_grid"><a href="javascript:fn_appvLineGridDeleteRow()" id="lineDel_btn"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
+                </ul>
+
+                <article class="grid_wrap" id="approveLine_grid_wrap"><!-- grid_wrap start -->
+                </article><!-- grid_wrap end -->
+
+                <ul class="center_btns">
+                    <li><p class="btn_blue2"><a href="javascript:fn_submit()" id="submit"><spring:message code="newWebInvoice.btn.submit" /></a></p></li>
+                </ul>
+
+            </section><!-- search_result end -->
+        </section><!-- pop_body end -->
+    </div><!-- popup_wrap end -->

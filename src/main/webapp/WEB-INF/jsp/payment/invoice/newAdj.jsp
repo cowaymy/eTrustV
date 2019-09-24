@@ -3,7 +3,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 
-    var myGridID;
+    var newAdjGridID, approveLineGridID;
+    var selectRowIdx;
 
     //Default Combo Data
     var adjTypeData = [{"codeId": "1293","codeName": "Credit Note"},{"codeId": "1294","codeName": "Debit Note"}];
@@ -44,6 +45,73 @@
             }
         }];
 
+    var approveLineColumnLayout = [
+    {
+        dataField : "approveNo",
+        headerText : '<spring:message code="approveLine.approveNo" />',
+        dataType: "numeric",
+        expFunction : function( rowIndex, columnIndex, item, dataField ) {
+            return rowIndex + 1;
+        }
+    }, {
+        dataField : "memCode",
+        headerText : '<spring:message code="approveLine.userId" />',
+        colSpan : 2
+    }, {
+        dataField : "",
+        headerText : '',
+        width: 30,
+        renderer : {
+            type : "IconRenderer",
+            iconTableRef :  {
+                "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"
+            },
+            iconWidth : 24,
+            iconHeight : 24,
+            onclick : function(rowIndex, columnIndex, value, item) {
+                console.log("selectRowIdx : " + selectRowIdx);
+                selectRowIdx = rowIndex;
+                fn_searchUserIdPop();
+            }
+        },
+        colSpan : -1
+    },{
+        dataField : "name",
+        headerText : '<spring:message code="approveLine.name" />',
+        style : "aui-grid-user-custom-left"
+    }, {
+        dataField : "",
+        headerText : '<spring:message code="approveLine.addition" />',
+        renderer : {
+            type : "IconRenderer",
+            iconTableRef :  {
+                "default" : "${pageContext.request.contextPath}/resources/images/common/btn_plus.gif"// default
+            },
+            iconWidth : 12,
+            iconHeight : 12,
+            onclick : function(rowIndex, columnIndex, value, item) {
+                var rowCount = AUIGrid.getRowCount(approveLineGridID);
+                if (rowCount > 3) {
+                    Common.alert('<spring:message code="approveLine.appvLine.msg" />');
+                } else {
+                    fn_appvLineGridAddRow();
+                }
+            }
+        }
+    }];
+
+    // Approval line Grid Option
+    var approveLineGridPros = {
+            usePaging : true,
+            pageRowCount : 20,
+            showStateColumn : true,
+            enableRestore : true,
+            showRowNumColumn : false,
+            softRemovePolicy : "exceptNew",
+            softRemoveRowMode : false,
+            selectionMode : "multipleCells"
+    };
+
     // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
     $(document).ready(function(){
 
@@ -61,15 +129,16 @@
         });
 
         //그리드 생성
-        myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+        newAdjGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+        approveLineGridID = GridCommon.createAUIGrid("#approveLine_grid_wrap", approveLineColumnLayout, null, approveLineGridPros);
 
         //Cell Edit Event : adjustment 금액은 total amount를 초과할수 없음.
-        AUIGrid.bind(myGridID, "cellEditEnd", function( event ) {
-            var charge = AUIGrid.getCellValue(myGridID, event.rowIndex, "billitemamount"); //invoice charge
-            var totamount = AUIGrid.getCellValue(myGridID, event.rowIndex, "totamount"); //transfer amount
+        AUIGrid.bind(newAdjGridID, "cellEditEnd", function( event ) {
+            var charge = AUIGrid.getCellValue(newAdjGridID, event.rowIndex, "billitemamount"); //invoice charge
+            var totamount = AUIGrid.getCellValue(newAdjGridID, event.rowIndex, "totamount"); //transfer amount
 
             if(charge < totamount){
-                AUIGrid.setCellValue(myGridID, event.rowIndex, 'totamount', charge);
+                AUIGrid.setCellValue(newAdjGridID, event.rowIndex, 'totamount', charge);
             }
 
             //그리드에서 수정된 총 금액 계산
@@ -79,6 +148,13 @@
         //초기화면 로딩시 조회
         $("#invoiceNo").val("${refNo}");
         confirmList();
+
+        AUIGrid.bind(approveLineGridID, "cellClick", function( event ) {
+            console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+            selectRowIdx = event.rowIndex;
+        });
+
+        fn_appvLineGridAddRow();
     });
 
     function getAdjustmentInfo(refNo){
@@ -110,7 +186,7 @@
                 $("#tDue").text(result.master.amountdue);
 
                 //Detail데이터 출력
-                AUIGrid.setGridData(myGridID, result.detail);
+                AUIGrid.setGridData(newAdjGridID, result.detail);
 
                 $("#invoiceNo").addClass('readonly');
                 $("#invoiceNo").prop('readonly', true);
@@ -123,7 +199,7 @@
 
     //Total Adjustment Amount 계산
     function auiGridSelectionChangeHandler(event) {
-        var allList = AUIGrid.getGridData(myGridID);
+        var allList = AUIGrid.getGridData(newAdjGridID);
         var val;
         var sum = 0;
 
@@ -133,7 +209,7 @@
         }
 
         for(i=0; i<allList.length; i++) {
-            val = String(AUIGrid.getCellValue(myGridID, i, "totamount")).replace(",", ""); // 컴마 모두 제거
+            val = String(AUIGrid.getCellValue(newAdjGridID, i, "totamount")).replace(",", ""); // 컴마 모두 제거
             val = Number(val);
 
             if(isNaN(val)) {
@@ -210,32 +286,160 @@
             return;
         }
 
-        //param data array
-        var data = GridCommon.getGridData(myGridID);
-        data.form = $("#searchForm").serializeJSON();
+         if($("input[name=fileSelector]")[0].files[0] == "" || $("input[name=fileSelector]")[0].files[0] == null) {
+             Common.alert("Please attach supporting document!")
+             return false;
+         }
 
-        //Ajax 호출
-        Common.ajax("POST", "/payment/saveNewAdjList.do", data, function(result) {
-        	var returnMsg = "<spring:message code='pay.alert.saveBatchNewAdjList' arguments='"+result.data+"' htmlEscape='false'/>";
+         $("#appvLinePop").show();
+         AUIGrid.resize(approveLineGridID, 565, $(".approveLine_grid_wrap").innerHeight());
 
-        	Common.alert(returnMsg, function (){
-        		location.href = "/payment/initAdjCnDn.do";
+         /*
+        var formData = Common.getFormData("searchForm");
 
-        	});
+        Common.ajaxFile("/payment/attachmentUpload.do", formData, function(uResult) {
+            console.log(uResult);
 
-        },  function(jqXHR, textStatus, errorThrown) {
-            try {
-                console.log("status : " + jqXHR.status);
-                console.log("code : " + jqXHR.responseJSON.code);
-                console.log("message : " + jqXHR.responseJSON.message);
-                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-            } catch (e) {
-                console.log(e);
-            }
-            Common.alert("Fail : " + jqXHR.responseJSON.message);
-        });
+            $("#atchFileGrpId").val(uResult.data.fileGroupKey);
 
+          //param data array
+            var data = GridCommon.getGridData(myGridID);
+            data.form = $("#searchForm").serializeJSON();
+
+            //Ajax 호출
+            Common.ajax("POST", "/payment/saveNewAdjList.do", data, function(result) {
+                var returnMsg = "<spring:message code='pay.alert.saveBatchNewAdjList' arguments='"+result.data+"' htmlEscape='false'/>";
+
+                Common.alert(returnMsg, function (){
+                    location.href = "/payment/initAdjCnDn.do";
+
+                });
+
+            },  function(jqXHR, textStatus, errorThrown) {
+                try {
+                    console.log("status : " + jqXHR.status);
+                    console.log("code : " + jqXHR.responseJSON.code);
+                    console.log("message : " + jqXHR.responseJSON.message);
+                    console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                } catch (e) {
+                    console.log(e);
+                }
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+            });
+        });*/
     }
+
+    function fn_submit() {
+        var obj = $("#searchForm").serializeJSON();
+        obj.apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
+
+        Common.ajax("POST", "/payment/checkFinAppr.do", obj, function(resultFinAppr) {
+            console.log(resultFinAppr);
+
+            if(resultFinAppr.code == "99") {
+                Common.alert("Please select the relevant final approver.");
+            } else {
+                //var formData = Common.getFormData("searchForm");
+                var formData = Common.getFormData("searchForm");
+
+                Common.ajaxFile("/payment/attachmentUpload.do", formData, function(uResult) {
+                    console.log(uResult);
+
+                    $("#atchFileGrpId").val(uResult.data.fileGroupKey);
+
+                  //param data array
+                    var data = GridCommon.getGridData(newAdjGridID);
+                    data.apprGridList = AUIGrid.getOrgGridData(approveLineGridID);;
+                    data.form = $("#searchForm").serializeJSON();
+
+                    //Ajax 호출
+                    Common.ajax("POST", "/payment/saveNewAdjList.do", data, function(result) {
+                        var returnMsg = "<spring:message code='pay.alert.saveBatchNewAdjList' arguments='"+result.data+"' htmlEscape='false'/>";
+
+                        Common.alert(returnMsg, function (){
+                            location.href = "/payment/initAdjCnDn.do";
+
+                        });
+
+                    },  function(jqXHR, textStatus, errorThrown) {
+                        try {
+                            console.log("status : " + jqXHR.status);
+                            console.log("code : " + jqXHR.responseJSON.code);
+                            console.log("message : " + jqXHR.responseJSON.message);
+                            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                        } catch (e) {
+                            console.log(e);
+                        }
+                        Common.alert("Fail : " + jqXHR.responseJSON.message);
+                    });
+                });
+            }
+        });
+    }
+
+    /*******************
+    Approval Line Functions
+    *******************/
+   function fn_appvLineGridAddRow() {
+       AUIGrid.addRow(approveLineGridID, {}, "first");
+   }
+
+   function fn_appvLineGridDeleteRow() {
+       AUIGrid.removeRow(approveLineGridID, selectRowIdx);
+   }
+
+   function fn_searchUserIdPop() {
+       Common.popupDiv("/common/memberPop.do", {callPrgm:"NRIC_VISIBLE"}, null, true);
+   }
+
+   function fn_newRegistMsgPop() {
+       var length = AUIGrid.getGridData(approveLineGridID).length;
+       var checkMemCode = true;
+       console.log(length);
+       // 1개의 default Line 존재
+       if(length >= 1) {
+           for(var i = 0; i < length; i++) {
+               if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
+                   Common.alert('<spring:message code="approveLine.userId.msg" />' + (i +1) + ".");
+                   checkMemCode = false;
+               }
+           }
+       }
+       console.log(checkMemCode);
+       if(checkMemCode) {
+           Common.popupDiv("/eAccounting/webInvoice/newRegistMsgPop.do", null, null, true, "registMsgPop");
+       }
+   }
+
+   function fn_loadOrderSalesman(memId, memCode) {
+       var result = true;
+       var list = AUIGrid.getColumnValues(approveLineGridID, "memCode", true);
+
+       if(list.length > 0) {
+           for(var i = 0; i < list.length; i ++) {
+               if(memCode == list[i]) {
+                   result = false;
+               }
+           }
+       }
+
+       if(result) {
+           Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
+
+               if(memInfo == null) {
+                   Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+               }
+               else {
+                   console.log(memInfo);
+                   AUIGrid.setCellValue(approveLineGridID, selectRowIdx, "memCode", memInfo.memCode);
+                   AUIGrid.setCellValue(approveLineGridID, selectRowIdx, "name", memInfo.name);
+               }
+           });
+       } else {
+           Common.alert('Not allowed to select same User ID in Approval Line');
+       }
+   }
+
 </script>
 
 <!-- content start -->
@@ -264,6 +468,7 @@
             <input type="hidden" id="hiddenSalesOrderId" name="hiddenSalesOrderId" />
             <input type="hidden" id="hiddenInvoiceType" name="hiddenInvoiceType" />
             <input type="hidden" id="hiddenAccountConversion" name="hiddenAccountConversion" />
+            <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" />
 
             <!-- table start -->
             <table class="type1">
@@ -383,6 +588,14 @@
 	                    <th scope="row">Total Adjustment(RM)</th>
 	                    <td id="totAdjustment">0.00</td>
 	                </tr>
+	                <tr>
+                        <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
+                        <td colspan="3" id="attachTd">
+                            <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
+                                <input type="file" title="file add" style="width:300px" id="fileSelector" name="fileSelector" />
+                            </div><!-- auto_file end -->
+                        </td>
+                    </tr>
 	            </tbody>
 	        </table>
         </form>
@@ -400,4 +613,33 @@
         </section>
         <!-- search_result end -->
     </section>
+
+<!-------------------------------------------------------------------------------------
+    POP-UP (APPROVAL LINE)
+-------------------------------------------------------------------------------------->
+    <!-- popup_wrap start -->
+    <div class="popup_wrap size_mid2" id="appvLinePop" style="display: none;">
+        <header class="pop_header"><!-- pop_header start -->
+            <h1><spring:message code="approveLine.title" /></h1>
+            <ul class="right_opt">
+                <li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
+            </ul>
+        </header><!-- pop_header end -->
+
+        <section class="pop_body"><!-- pop_body start -->
+            <section class="search_result"><!-- search_result start -->
+                <ul class="right_btns">
+                    <li><p class="btn_grid"><a href="javascript:fn_appvLineGridDeleteRow()" id="lineDel_btn"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
+                </ul>
+
+                <article class="grid_wrap" id="approveLine_grid_wrap"><!-- grid_wrap start -->
+                </article><!-- grid_wrap end -->
+
+                <ul class="center_btns">
+                    <li><p class="btn_blue2"><a href="javascript:fn_submit()" id="submit"><spring:message code="newWebInvoice.btn.submit" /></a></p></li>
+                </ul>
+
+            </section><!-- search_result end -->
+        </section><!-- pop_body end -->
+    </div><!-- popup_wrap end -->
 </section>

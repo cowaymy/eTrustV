@@ -28,21 +28,21 @@ public interface InvoiceMapper {
 	 * @return
 	 */
 	List<EgovMap> selectInvoiceList(Map<String, Object> params);
-	
+
 	/**
 	 * Invoice Master 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectInvoiceMaster(Map<String, Object> params);
-	
+
 	/**
 	 * Invoice Detail 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectInvoiceDetail(Map<String, Object> params);
-	
+
 	/**
 	 * Invoice Detai 전체 건수 조회
 	 * @param params

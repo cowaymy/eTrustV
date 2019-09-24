@@ -3,7 +3,7 @@
 <script type="text/javascript">
 //AUIGrid 그리드 객체
 var myPopGridID;
-
+var attachList = null;
 
 //AUIGrid 칼럼 설정
 var myPopLayout = [
@@ -113,11 +113,72 @@ function selectAdjustmentDetailPop(adjId, invNo){
             $("#totalChrg").text("Total Charges: RM" + totalChrg.toFixed(2));
             $("#totalGST").text("Total GST: RM" + totalGST.toFixed(2));
             $("#totalAmt").text("Total Amount: RM" + totalAmt.toFixed(2));
+
+            attachList = result.attachList;
+            console.log(attachList);
+            if(attachList) {
+                if(attachList.length > 0) {
+                    $("#attachTd").html("");
+                    for(var i = 0; i < attachList.length; i++) {
+                        //$("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+                        var atchTdId = "atchId" + (i+1);
+                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
+                        $(".input_text[name='" + atchTdId + "']").val(attachList[i].atchFileName);
+                    }
+
+                    // 파일 다운
+                    $(".input_text").dblclick(function() {
+                        var oriFileName = $(this).val();
+                        var fileGrpId;
+                        var fileId;
+                        for(var i = 0; i < attachList.length; i++) {
+                            if(attachList[i].atchFileName == oriFileName) {
+                                fileGrpId = attachList[i].atchFileGrpId;
+                                fileId = attachList[i].atchFileId;
+                            }
+                        }
+                        fn_atchViewDown(fileGrpId, fileId);
+                    });
+                }
+            }
+
+            var appvPrcssStus;
+            for(var i = 0; i < result.apprList.appvPrcssStus.length; i++) {
+                if(appvPrcssStus == null) {
+                    appvPrcssStus = result.apprList.appvPrcssStus[i];
+                } else {
+                    appvPrcssStus += "<br />" + result.apprList.appvPrcssStus[i];
+                }
+            }
+            $("#viewAppvStus").html(appvPrcssStus);
         }
     });
 
 }
 
+function fn_atchViewDown(fileGrpId, fileId) {
+    var data = {
+            atchFileGrpId : fileGrpId,
+            atchFileId : fileId
+    };
+    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+        console.log(result);
+        if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
+            // TODO View
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+        } else {
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
+                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
+                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        }
+    });
+}
 
 //크리스탈 레포트
 function fn_generateReport(){
@@ -352,6 +413,24 @@ function fn_approve(process){
                     <th scope="row">Remark</th>
                     <td colspan="3"  id="tInvoiceRemark"></td>
                 </tr>
+                <tr>
+                    <th scope="row"><spring:message code="approveView.approveStatus" /></th>
+                    <!-- <td colspan="3" style="height:60px" id="viewAppvStus"></td> -->
+                    <td colspan="3" style="height:60px">
+                        <div class="w100p"><!-- tran_list start -->
+                            <ul id="viewAppvStus">
+                            </ul>
+                        </div><!-- tran_list end -->
+                    </td>
+                </tr>
+                <tr>
+				    <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
+				    <td colspan="3" id="attachTd">
+				        <div class="auto_file2 auto_file3"><!-- auto_file start -->
+				            <input type="file" title="file add" />
+				        </div><!-- auto_file end -->
+				    </td>
+				</tr>
             </tbody>
         </table><!-- table end -->
 
