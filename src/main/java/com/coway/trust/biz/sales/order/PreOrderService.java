@@ -35,4 +35,6 @@ public interface PreOrderService {
 	int selectExistingMember(Map<String, Object> params);
 
 	List<EgovMap> getAttachList(Map<String, Object> params);
+
+	int selRcdTms(Map<String, Object> params);
 }

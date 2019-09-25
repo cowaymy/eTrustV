@@ -48,4 +48,6 @@ public interface PreOrderMapper {
 	int selectNextFileId();
 
 	void insertFileDetail(Map<String, Object> flInfo);
+
+	int selRcdTms(Map<String, Object> params);
 }

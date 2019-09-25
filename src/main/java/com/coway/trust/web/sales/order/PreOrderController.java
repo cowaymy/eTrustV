@@ -405,15 +405,22 @@ public class PreOrderController {
 		return "sales/order/cnfmPreOrderDetailPop";
 	}
 
-	   @RequestMapping(value = "/selectPreOrderInfo.do")
-	    public ResponseEntity<ReturnMessage> selectPreOrderInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+	   @RequestMapping(value = "/selRcdTms.do", method = RequestMethod.GET)
+	   public ResponseEntity<ReturnMessage> chkRcdTms(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	     ReturnMessage message = new ReturnMessage();
 
-	        EgovMap result = preOrderService.selectPreOrderInfo(params);
+	     logger.debug("params : {}", params);
 
-	        ReturnMessage message = new ReturnMessage();
-	        message.setData(result);
+	     int noRcd = preOrderService.selRcdTms(params);
 
-	        return ResponseEntity.ok(message);
-	    }
+	     if (noRcd == 1) {
+	       message.setMessage("OK");
+	       message.setCode("1");
+	     } else {
+	       message.setMessage("Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+	       message.setCode("99");
+	     }
+	     return ResponseEntity.ok(message);
+	   }
 
 }

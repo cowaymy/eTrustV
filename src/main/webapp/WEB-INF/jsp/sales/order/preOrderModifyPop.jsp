@@ -482,11 +482,10 @@
                 return false;
             }
 
-            if(fn_validPreOrderStus() == "4") {
+            if(!fn_validRcdTms()) {
                 $('#aTabBD').click();
                 return false;
             }
-
 
             var formData = new FormData();
             formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
@@ -2053,17 +2052,17 @@
         return isValid;
     }
 
-    function fn_validPreOrderStus() {
+    function fn_validRcdTms() {
         var isValid = true, msg = "";
 
-        Common.ajaxSync("GET", "/sales/order/selectPreOrderInfo.do", $("#frmPreOrdReg").serialize(), function(result) {
-            if(result != null) {
-            	isValid = result.data.stusId;
-            	msg = "eKey-in converted to sales.<br/> Any edit is not allowed now."
+        Common.ajaxSync("GET", "/sales/order/selRcdTms.do", $("#frmPreOrdReg").serialize(), function(result) {
+            if(result.code == "99"){
+                isValid = false;
+                msg = result.message;
             }
         });
 
-        if(isValid == "4") Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
 
@@ -2130,6 +2129,7 @@
     <input id="hiddenTypeId" name="typeId" type="hidden"/>
     <input id="hiddenCustCntcId" name="custCntcId" type="hidden" />
     <input id="hiddenCustAddId" name="custAddId" type="hidden" />
+    <input id="hiddenRcdTms" name="rcdTms" type="hidden" value="${preOrderInfo.updDt}" />
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Customer information</h3>

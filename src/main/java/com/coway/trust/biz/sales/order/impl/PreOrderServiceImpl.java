@@ -158,4 +158,8 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 	public List<EgovMap> getAttachList(Map<String, Object> params) {
 		return preOrderMapper.selectAttachList(params);
 	}
+
+	public int selRcdTms(Map<String, Object> params) {
+	    return preOrderMapper.selRcdTms(params);
+	  }
 }

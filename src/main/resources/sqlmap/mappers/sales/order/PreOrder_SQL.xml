@@ -468,4 +468,10 @@
         ,#{fileKeySeq}
         )
     </insert>
+
+    <select id="selRcdTms" parameterType="Map" resultType="int">
+      SELECT COUNT(*) COUNT
+        FROM SAL0213M
+      WHERE PRE_ORD_ID = #{preOrdId} AND UPD_DT = TO_DATE(SUBSTR(#{rcdTms},1,19), 'YYYY-MM-DD HH24:MI:SS')
+  </select>
 </mapper>

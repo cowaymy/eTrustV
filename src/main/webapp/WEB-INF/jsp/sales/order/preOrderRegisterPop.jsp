@@ -474,6 +474,8 @@
                 return false;
             }
 
+            if(fn_isExistESalesNo() == 'true') return false;
+
             Common.popupDiv("/sales/order/cnfmPreOrderDetailPop.do");
             //fn_doSavePreOrder();
 
