@@ -20,6 +20,7 @@ var bsHistoryGridID;
 
 var resultBasicObject;
 var resultSrvconfigObject;
+var resultInstallationObject;
 
 
 $(document).ready(function(){
@@ -115,10 +116,25 @@ function  fn_isActiveMembershipQuotationInfoByOrderNo(){
 
 function fn_getDataInfo (_ordid){
     Common.ajax("GET", "/sales/membership/selectMembershipFreeDataInfo",    {ORD_ID : _ordid }, function(result) {
-        console.log( "fn_getDataInfo===>"+result);
         console.log( result);
+        
+        resultInstallationObject = result.installation;
+        resultBasicObject = result.basic;
+        var billMonth = getOrderCurrentBillMonth();
 
-        if(FormUtil.isNotEmpty(result.installation.areaId)){
+        if(fn_CheckRentalOrder(billMonth)){
+            $("#cbt").attr("style","display:none");
+            $("#ORD_NO_P").attr("style","display:none");
+            $("#sbt").attr("style","display:none");
+            $("#rbt").attr("style","display:inline");
+            $("#ORD_NO_RESULT").attr("style","display:inline");
+            $("#resultcontens").attr("style","display:inline");
+
+            setText(result);
+            setPackgCombo();
+        }
+
+        /* if(FormUtil.isNotEmpty(result.installation.areaId)){
 
             if("DM" == result.installation.areaId.substring(0,2)){
 
@@ -126,25 +142,8 @@ function fn_getDataInfo (_ordid){
 
                 return;
 
-            }else{
-
-                resultBasicObject = result.basic;
-		        var billMonth = getOrderCurrentBillMonth();
-
-                if(fn_CheckRentalOrder(billMonth)){
-                    $("#cbt").attr("style","display:none");
-                    $("#ORD_NO_P").attr("style","display:none");
-                    $("#sbt").attr("style","display:none");
-                    $("#rbt").attr("style","display:inline");
-                    $("#ORD_NO_RESULT").attr("style","display:inline");
-                    $("#resultcontens").attr("style","display:inline");
-
-                    setText(result);
-                    setPackgCombo();
-                }
-
             }
-        }
+        } */
     });
  }
 
@@ -224,7 +223,7 @@ function setText(result){
     $("#expire").html( result.srvconfig.lastSrvMemExprDate);
 
 
-    fn_newGetExpDate(result);
+    //fn_newGetExpDate(result);
     fn_setTerm();
 
 
@@ -478,7 +477,7 @@ function fn_getFilterChargeList(){
 
     $("#txtFilterCharge").val("");
 
-    if($("#HiddenIsCharge").val() != "0"){
+    //if($("#HiddenIsCharge").val() != "0"){
 
        	 if($('#cTPackage').val() != ""){
 
@@ -508,7 +507,7 @@ function fn_getFilterChargeList(){
                     }
                 });
        	 }
-    }
+  // }
 }
 
 
@@ -698,621 +697,607 @@ function fn_save(){
 }
 
 
+	function fn_validRequiredField_Save() {
 
-function  fn_validRequiredField_Save(){
+		var rtnMsg = "";
+		var rtnValue = true;
 
-    var rtnMsg ="";
-    var rtnValue=true ;
+		if (FormUtil.checkReqValue($("#cTPackage"))) {
+			rtnMsg += "* Please select the type of package.<br />";
+			rtnValue = false;
+		}
 
-
-    if(FormUtil.checkReqValue($("#cTPackage"))){
-           rtnMsg  +="* Please select the type of package.<br />" ;
-           rtnValue =false;
-    }
-
-
-/*
-    if($("#packpro").prop("checked")){
-          if(FormUtil.checkReqValue($("#cPromotionpac"))){
-               rtnMsg  +=" Please select the package promotion.<br />" ;
-               rtnValue =false;
-        }
-     }
+		/*
+		 if($("#packpro").prop("checked")){
+		 if(FormUtil.checkReqValue($("#cPromotionpac"))){
+		 rtnMsg  +=" Please select the package promotion.<br />" ;
+		 rtnValue =false;
+		 }
+		 }
 
 
 
-     //if ($("#cPromoCombox").prop("checked")){
-    //       if(FormUtil.checkReqValue($("#cPromo"))){
-               // rtnMsg +="Please select the promotion.<br>";
-                //rtnValue =false;
-     //      }
-    //  }
+		 //if ($("#cPromoCombox").prop("checked")){
+		 //       if(FormUtil.checkReqValue($("#cPromo"))){
+		 // rtnMsg +="Please select the promotion.<br>";
+		 //rtnValue =false;
+		 //      }
+		 //  }
 
-     */
+		 */
 
-    if( ! FormUtil.checkReqValue($("#SALES_PERSON"))){
-        if($("#hiddenSalesPersonID").val() ==""){
-               rtnMsg  +="* You must confirm the sales person since you have key-in sales person code.<br />" ;
-               rtnValue =false;
-        }
-    }
+		if (!FormUtil.checkReqValue($("#SALES_PERSON"))) {
+			if ($("#hiddenSalesPersonID").val() == "") {
+				rtnMsg += "* You must confirm the sales person since you have key-in sales person code.<br />";
+				rtnValue = false;
+			}
+		}
 
-     if( rtnValue ==false ){
-         Common.alert("Save Quotation Summary" +DEFAULT_DELIMITER +rtnMsg );
-     }
+		//20190925 Vannie add checking on Cust Area ID
+		if (FormUtil.isNotEmpty(resultInstallationObject.areaId)) {
 
-     return  rtnValue;
-}
+			if ("DM" == resultInstallationObject.areaId.substring(0, 2)) {
 
-function getOrderCurrentBillMonth (){
-	   var billMonth =0;
+				rtnMsg += "<spring:message code="sal.alert.msg.customerAddrChange" /><br>";
+				rtnValue = false;
 
-	   Common.ajaxSync("GET", "/sales/membership/getOrderCurrentBillMonth", { ORD_ID: $("#ORD_ID").val() } , function(result) {
-	        console.log( result);
+			}
+		}
 
-	        if(result.length > 0 ){
-	              if(   parseInt( result[0].nowDate ,10) > parseInt( result[0].rentInstDt ,10)   ){
+		if (rtnValue == false) {
+			Common.alert("Save Quotation Summary" + DEFAULT_DELIMITER + rtnMsg);
+		}
 
-	                  billMonth =61;
-	                  console.log( "==========billMonth============"+billMonth);
+		return rtnValue;
+	}
 
-	                  return billMonth ;
+	function getOrderCurrentBillMonth() {
+		var billMonth = 0;
 
-	              }else{
-	                  Common.ajaxSync("GET", "/sales/membership/getOrderCurrentBillMonth",{ ORD_ID: $("#ORD_ID").val() , RENT_INST_DT : 'SYSDATE'  }  , function(_result) {
+		Common.ajaxSync("GET", "/sales/membership/getOrderCurrentBillMonth", {
+			ORD_ID : $("#ORD_ID").val()
+		}, function(result) {
+			console.log(result);
 
-	                      console.log( "==========2============");
-	                      console.log( _result);
+			if (result.length > 0) {
+				if (parseInt(result[0].nowDate, 10) > parseInt(result[0].rentInstDt, 10)) {
 
-	                      if(_result.length > 0 ){
-	                          billMonth = _result[0].rentInstNo;
-	                      }
+					billMonth = 61;
+					console.log("==========billMonth============" + billMonth);
 
-	                      console.log( "==========2 end ============["+billMonth+"]");
+					return billMonth;
 
-	                  });
-	              }
-	        }
-	   });
+				}
+				else {
+					Common.ajaxSync("GET", "/sales/membership/getOrderCurrentBillMonth", {
+						ORD_ID : $("#ORD_ID").val(),
+						RENT_INST_DT : 'SYSDATE'
+					}, function(_result) {
 
-	   return billMonth;
+						console.log("==========2============");
+						console.log(_result);
+
+						if (_result.length > 0) {
+							billMonth = _result[0].rentInstNo;
+						}
+
+						console.log("==========2 end ============[" + billMonth + "]");
+
+					});
+				}
+			}
+		});
+
+		return billMonth;
+	}
+
+	function fn_CheckRentalOrder(billMonth) {
+
+		var rtnMsg = "";
+		var rtnValue = true;
+
+		if (resultBasicObject.appTypeId == 66) {
+
+			if (resultBasicObject.rentalStus == "REG" || resultBasicObject.rentalStus == "INV") {
+
+				if (billMonth > 60) {
+					Common.ajaxSync("GET", "/sales/membership/getOderOutsInfo", $("#getDataForm").serialize(), function(result) {
+						console.log("==========3===");
+						console.log(result);
+						if (result != null) {
+							if (result.ordTotOtstnd > 0) {
+								rtnMsg += "* This order has outstanding. Membership purchase is disallowed.<br/>";
+								rtnValue = false;
+							}
+						}
+
+					}, function(jqXHR, textStatus, errorThrown) {
+						try {
+							console.log("status : " + jqXHR.status);
+							console.log("code : " + jqXHR.responseJSON.code);
+							console.log("message : " + jqXHR.responseJSON.message);
+							console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+						}
+						catch (e) {
+							console.log(e);
+						}
+
+						rtnMsg += jqXHR.responseJSON.message;
+						rtnValue = false;
+					});
+				}
+
+			}
+			else {
+				rtnMsg += "Only [REG] or [INV] rental order is allowed to purchase membership.<br>";
+				rtnValue = false;
+			}
+		}
+
+		if (rtnValue == false) {
+			Common.alert("Rental Order Validation" + DEFAULT_DELIMITER + rtnMsg);
+		}
+
+		return rtnValue;
+	}
+
+	function fn_CheckSalesPersonCode() {
+
+		if ($("#SALES_PERSON").val() == "") {
+
+			Common.alert("Please Key-In Sales Person Code. ");
+			return false;
+		}
+		return true;
+	}
+
+	function fn_unconfirmSalesPerson() {
+
+		if ($("#hiddenSalesPersonID").val() == "") {
+			Common.alert("Sales Person Confirmation" + DEFAULT_DELIMITER + "You must confirm the sales person since you have key-in sales person code.");
+			return false;
+
+		}
+		else {
+			Common.popupDiv("/sales/membership/mNewQuotationSavePop.do", null, null, true, '_saveDiv1');
+		}
+	}
+
+	function fn_SaveProcess_Click(_saveOption) {
+
+		/*
+		if(_saveOption == "1"){
+
+		     //SAVE & PROCEED TO PAYMEMT
+		    this.DisablePageControl_Page();
+		    RadWindowManager1.RadAlert("<b>Quotation successfully saved.<br />Quotation number : " + retQuot.SrvMemQuotNo + "<br />System will auto redirect to payment process after 3 seconds.</b>", 450, 160, "Quotation Saved & Proceed To Payment", "callBackFn", null);
+		    hiddenQuotID.Value = retQuot.SrvMemQuotID.ToString();
+		    Timer1.Enabled = true;
+
+		}else if(_saveOption == "2"){
+		     //SAVE QUOTATION ONLY
+		    this.DisablePageControl_Page();
+		    RadWindowManager1.RadAlert("<b>Quotation successfully saved.<br />Quotation number : " + retQuot.SrvMemQuotNo + "</b>", 450, 160, "Quotation Saved", "callBackFn", null);
+
+		}else {
+		     RadWindowManager1.RadAlert("<b>Failed to save. Please try again later.</b>", 450, 160, "Failed To Save", "callBackFn", null);
+		}*/
+	}
+
+	function fn_DoSaveProcess(_saveOption) {
+
+		var sData = {
+			qotatRefNo : "", //Update later
+			qotatOrdId : resultBasicObject.ordId,
+			qotatRem : $("#txtRemark").val(),
+			qotatStusId : "1",
+			qotatPacPromoId : $("#cPromotionpac").val() == "null" ? "0" : $("#cPromotionpac").val(),
+			qotatFilPromoId : $("#cPromo").val() == "null" ? "0" : $("#cPromo").val(),
+			qotatPckgId : $("#cTPackage").val(),
+			qotatProductId : resultBasicObject.stockId,
+			qotatRentalAmt : $("#txtMonthlyFee").val(),
+			qotatExpFilterAmt : $("#txtFilterCharge").val(),
+			qotatCntrctDur : "24",
+			qotatCntrctFreq : $("#hiddentxtBSFreq").val() == "" ? "0" : $("#hiddentxtBSFreq").val(),
+			qotatSalesmanId : $("#hiddenSalesPersonID").val(),
+			//qotatGstRate   :"6", -- without GST 6% edited by TPY 01/06/2018
+			qotatGstRate : "0",
+			empChk : $("#cEmplo").val() == "" ? "0" : $("#cEmplo").val()
+		}
+
+		var saveForm = {
+			"saveData" : sData,
+			"isFilterChange" : $("#HiddenHasFilterCharge").val() == "1" ? "true" : "false"
+		}
+
+		Common.ajax("POST", "/sales/membershipRentalQut/mNewQuotationSave.do", saveForm, function(result) {
+
+			console.log("mNewQuotationSave.do====>");
+			console.log(result);
+
+			if (result.code == "00") {
+				if (_saveOption == "1") {
+					Common.alert("Quotation Saved & Proceed To Payment" + DEFAULT_DELIMITER + " <b> Quotation successfully saved.<br/> Quotation number : " + result.data.qotatRefNo
+							+ "<br/> System will auto redirect to payment process after 3 seconds. ");
+					setTimeout(function() {
+						fn_saveResultTrans(result.data.qotatId);
+					}, 3000);
+					$("#_NewQuotDiv1").remove();
+
+				}
+				else {
+					Common.alert("Quotation Saved" + DEFAULT_DELIMITER + " <b> Quotation successfully saved.<br /> Quotation number : " + result.data.qotatRefNo + "<br /> ");
+
+					$("#_NewQuotDiv1").remove();
+					//fn_selectListAjax();
+				}
+			}
+			else {
+				Common.alert("Failed To Save" + DEFAULT_DELIMITER + " b>Failed to save. Please try again later.</b> ");
+				$("#_NewQuotDiv1").remove();
+			}
+		});
+	}
+
+	function fn_saveResultTrans(quot_id) {
+		$("#_alertOk").click();
+		$("#_NewQuotDiv1").remove();
+
+		Common.popupDiv("/sales/membershipRentalQut/mRentalQuotConvSalePop.do", {
+			QUOT_ID : quot_id
+		}, null, true, '_mConvSaleDiv1');
+
+	}
+
+	/*
+	 private Boolean CheckRentalOrder()
+	 {
+	 Boolean valid = true;
+	 string message = "";
+	 int OrderID = int.Parse(hiddenOrderID.Value);
+
+	 if (int.Parse(hiddenAppTypeID.Value) == 66)
+	 {
+	 if (txtRentStatus.Text.Trim() == "REG" || txtRentStatus.Text.Trim() == "INV")
+	 {
+	 Sales.Orders oo = new Sales.Orders();
+	 int CurrentBillMth = oo.GetOrderCurrentBillMonth(OrderID);
+	 if (CurrentBillMth > 60)
+	 {
+	 Data.spGetOrderOutstandingInfo_Result oi = new Data.spGetOrderOutstandingInfo_Result();
+	 oi = oo.GetOrderOutstandingInfo(int.Parse(hiddenOrderID.Value));
+	 if (oi.Order_TotalOutstanding > 0)
+	 {
+	 valid = false;
+	 message += "* This order has outstanding. Membership purchase is disallowed.<br />";
 	 }
-
-
-function fn_CheckRentalOrder(billMonth){
-
-    var rtnMsg ="";
-    var rtnValue=true ;
-
-    if(resultBasicObject.appTypeId == 66 ){
-
-        if(resultBasicObject.rentalStus == "REG" ||resultBasicObject.rentalStus == "INV" ){
-
-            if(billMonth > 60){
-                        Common.ajaxSync("GET", "/sales/membership/getOderOutsInfo", $("#getDataForm").serialize(), function(result) {
-                            console.log( "==========3===");
-                            console.log(result);
-                            if(result != null ){
-                                if(result.ordTotOtstnd  >0){
-                                     rtnMsg += "* This order has outstanding. Membership purchase is disallowed.<br/>" ;
-                                     rtnValue =false;
-                                }
-                            }
-
-                        }, function(jqXHR, textStatus, errorThrown) {
-                                try {
-                                    console.log("status : " + jqXHR.status);
-                                    console.log("code : " + jqXHR.responseJSON.code);
-                                    console.log("message : " + jqXHR.responseJSON.message);
-                                    console.log("detailMessage : "+ jqXHR.responseJSON.detailMessage);
-                                } catch (e) {
-                                    console.log(e);
-                                }
-
-                                rtnMsg += jqXHR.responseJSON.message;
-                                rtnValue =false;
-                        });
-            }
-
-
-        }else {
-             rtnMsg += "Only [REG] or [INV] rental order is allowed to purchase membership.<br>";
-             rtnValue =false;
-        }
-    }
-
-
-    if( rtnValue ==false ){
-        Common.alert("Rental Order Validation" +DEFAULT_DELIMITER +rtnMsg );
-    }
-
-    return  rtnValue;
-}
-
-
-function fn_CheckSalesPersonCode(){
-
-    if($("#SALES_PERSON").val() =="") {
-
-             Common.alert("Please Key-In Sales Person Code. ");
-             return   false;
-     }
-     return true;
-}
-
-
-function fn_unconfirmSalesPerson(){
-
-    if($("#hiddenSalesPersonID").val() =="") {
-         Common.alert("Sales Person Confirmation" +DEFAULT_DELIMITER+"You must confirm the sales person since you have key-in sales person code.");
-         return   false;
-
-    }else{
-         Common.popupDiv("/sales/membership/mNewQuotationSavePop.do" ,null ,null , true , '_saveDiv1');
-    }
-}
-
-
-
-
-function  fn_SaveProcess_Click(_saveOption){
-
-
-
-    /*
-    if(_saveOption == "1"){
-
-         //SAVE & PROCEED TO PAYMEMT
-        this.DisablePageControl_Page();
-        RadWindowManager1.RadAlert("<b>Quotation successfully saved.<br />Quotation number : " + retQuot.SrvMemQuotNo + "<br />System will auto redirect to payment process after 3 seconds.</b>", 450, 160, "Quotation Saved & Proceed To Payment", "callBackFn", null);
-        hiddenQuotID.Value = retQuot.SrvMemQuotID.ToString();
-        Timer1.Enabled = true;
-
-    }else if(_saveOption == "2"){
-         //SAVE QUOTATION ONLY
-        this.DisablePageControl_Page();
-        RadWindowManager1.RadAlert("<b>Quotation successfully saved.<br />Quotation number : " + retQuot.SrvMemQuotNo + "</b>", 450, 160, "Quotation Saved", "callBackFn", null);
-
-    }else {
-         RadWindowManager1.RadAlert("<b>Failed to save. Please try again later.</b>", 450, 160, "Failed To Save", "callBackFn", null);
-    }*/
-}
-
-function  fn_DoSaveProcess(_saveOption){
-
-
-    var sData = {
-                qotatRefNo : "" ,  //Update later
-                qotatOrdId : resultBasicObject.ordId  ,
-                qotatRem : $("#txtRemark").val(),
-                qotatStusId : "1",
-                qotatPacPromoId: $("#cPromotionpac").val()  == "null" ? "0" : $("#cPromotionpac").val(),
-                qotatFilPromoId : $("#cPromo").val()  == "null" ? "0" : $("#cPromo").val(),
-                qotatPckgId  : $("#cTPackage").val(),
-                qotatProductId  :resultBasicObject.stockId,
-                qotatRentalAmt  : $("#txtMonthlyFee").val(),
-                qotatExpFilterAmt  : $("#txtFilterCharge").val(),
-                qotatCntrctDur   : "24",
-                qotatCntrctFreq : $("#hiddentxtBSFreq").val() =="" ? "0" :$("#hiddentxtBSFreq").val() ,
-                qotatSalesmanId : $("#hiddenSalesPersonID").val(),
-                //qotatGstRate   :"6", -- without GST 6% edited by TPY 01/06/2018
-                qotatGstRate   :"0",
-                empChk : $("#cEmplo").val() =="" ? "0" :$("#cEmplo").val()
-    }
-
-    var saveForm ={
-                "saveData" : sData,
-                "isFilterChange" : $("#HiddenHasFilterCharge").val() =="1" ? "true" : "false"
-    }
-
-    Common.ajax("POST", "/sales/membershipRentalQut/mNewQuotationSave.do",saveForm , function(result) {
-
-        console.log( "mNewQuotationSave.do====>");
-        console.log( result);
-
-         if(result.code =="00"){
-             if(_saveOption == "1"){
-                  Common.alert("Quotation Saved & Proceed To Payment" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br/> Quotation number : " + result.data.qotatRefNo + "<br/> System will auto redirect to payment process after 3 seconds. ");
-                   setTimeout(function(){ fn_saveResultTrans(result.data.qotatId) ;}, 3000);
-                  $("#_NewQuotDiv1").remove();
-
-             }else{
-                  Common.alert("Quotation Saved" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br /> Quotation number : " + result.data.qotatRefNo + "<br /> ");
-
-                  $("#_NewQuotDiv1").remove();
-                  fn_selectListAjax();
-             }
-         }else{
-              Common.alert("Failed To Save" +DEFAULT_DELIMITER+" b>Failed to save. Please try again later.</b> ");
-              $("#_NewQuotDiv1").remove();
-         }
-    });
-}
-
-
-
-
-function fn_saveResultTrans(quot_id){
-    $("#_alertOk").click();
-    $("#_NewQuotDiv1").remove();
-
-    Common.popupDiv("/sales/membershipRentalQut/mRentalQuotConvSalePop.do" ,{QUOT_ID : quot_id}, null , true , '_mConvSaleDiv1');
-
-}
-
-
-/*
-private Boolean CheckRentalOrder()
-{
-    Boolean valid = true;
-    string message = "";
-    int OrderID = int.Parse(hiddenOrderID.Value);
-
-    if (int.Parse(hiddenAppTypeID.Value) == 66)
-    {
-        if (txtRentStatus.Text.Trim() == "REG" || txtRentStatus.Text.Trim() == "INV")
-        {
-            Sales.Orders oo = new Sales.Orders();
-            int CurrentBillMth = oo.GetOrderCurrentBillMonth(OrderID);
-            if (CurrentBillMth > 60)
-            {
-                Data.spGetOrderOutstandingInfo_Result oi = new Data.spGetOrderOutstandingInfo_Result();
-                oi = oo.GetOrderOutstandingInfo(int.Parse(hiddenOrderID.Value));
-                if (oi.Order_TotalOutstanding > 0)
-                {
-                    valid = false;
-                    message += "* This order has outstanding. Membership purchase is disallowed.<br />";
-                }
-            }
-        }
-        else
-        {
-            valid = false;
-            message += "* Only [REG] or [INV] rental order is allowed to purchase membership.<br />";
-        }
-    }
-    if (!valid)
-        RadWindowManager1.RadAlert("<b>" + message + "</b>", 450, 160, "Rental Order Validation", "callBackFn", null);
-
-    return valid;
-
-}
-*/
-
-
-function createAUIGridHList() {
-
-    //AUIGrid 칼럼 설정
-    var columnLayout = [
-                        {     dataField     : "no",
-                               headerText  : "BS No",
-                               width          : 90,
-                               editable       : false
-                        },
-                        {     dataField     : "month",
-                               headerText  : "BS Month",
-                               width          : 80,
-                               editable       : false
-                        },
-                        {     dataField     : "code",
-                               headerText  : "Type",
-                               width          : 70,
-                               editable       : false
-                        },
-                        {      dataField     : "code1",
-                                headerText  : "Status",
-                                width          :70,
-                                editable       : false
-                        },
-                        {      dataField       : "no1",
-                            headerText   : "BSR No",
-                            width           : 100,
-                            editable        : false
-                     },
-                    {      dataField       : "c1",
-                                headerText   : "Settle Date",
-                                width           : 170,
-                                editable        : false
-                         },
-                         {      dataField       : "memCode",
-                             headerText   : "Cody Code",
-                             width           : 90,
-                             editable        : false
-                      },
-                      {      dataField       : "code3",
-                          headerText   : "Fail Reason",
-                          width           :105,
-                          editable        : false
-                   },
-                   {      dataField       : "code2",
-                       headerText   : "Collection<br/> Reason",
-                       width           : 100,
-                       editable        : false
-                }
-
-   ];
-
-    //그리드 속성 설정
-    var gridPros = {
-        usePaging           : true,             //페이징 사용
-        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
-        editable                : false,
-        fixedColumnCount    : 1,
-        headerHeight        : 30,
-        //selectionMode       : "singleRow",  //"multipleCells",
-        showRowNumColumn    : true         //줄번호 칼럼 렌더러 출력
-
-    };
-
-    bsHistoryGridID = GridCommon.createAUIGrid("hList_grid_wrap", columnLayout, "", gridPros);
-}
-
-
-
-
-
-function createAUIGridOList() {
-
-    //AUIGrid 칼럼 설정
-    var columnLayout = [
-                        {     dataField     : "stkCode",
-                               headerText  : "Code",
-                               width          : "12%",
-                               editable       : false
-                        },
-                        {     dataField     : "stkDesc",
-                               headerText  : "Name",
-                               width          : "50%",
-                               editable       : false,
-                               style           : 'left_style'
-                        },
-                        {     dataField     : "code",
-                               headerText  : "Type",
-                               width          : "12%",
-                               editable       : false
-                        },
-                        {      dataField     : "srvFilterPriod",
-                                headerText  : "Change Period",
-                                width          : "12%",
-                                editable       : false
-                        },
-                    {      dataField       : "srvFilterPrvChgDt",
-                                headerText   : "Last Change",
-                                width           : "12%",
-                                editable        : false
-                         }
-
-   ];
-
-    //그리드 속성 설정
-    var gridPros = {
-        usePaging           : true,             //페이징 사용
-        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
-        editable                : false,
-        fixedColumnCount    : 1,
-        showStateColumn     : true,
-        displayTreeOpen     : false,
-        //selectionMode       : "singleRow",  //"multipleCells",
-        headerHeight        : 30,
-        useGroupingPanel    : false,        //그룹핑 패널 사용
-        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        showRowNumColumn    : true,
-
-
-        // row Styling 함수
-        rowStyleFunction : function(rowIndex, item) {
-
-            return "";
-        }
-    };
-
-    oListGridID = GridCommon.createAUIGrid("oList_grid_wrap", columnLayout, "", gridPros);
-}
-
-
-
-
-function fn_cPromotionpacChgEvt(){
-
-      $("#txtMonthlyFee").val($("#hiddenOriFees").val());
-
-      Common.ajax("GET", "/sales/membership/getPromoPricePercent",{PROMO_ID: $("#cPromotionpac").val() }, function(result) {
-         console.log( result);
-
-         if(result.length>0){
-
-	            // var oriprice                 = Number($("#hiddenOriFees").val()) ;
-	             var oriprice                 = Number($("#hiddenNomalFees").val()) ;
-	             var promoPrcPrcnt       = Number( result[0]. promoPrcPrcnt) ;
-	             var promoAddDiscPrc   = Number( result[0]. promoAddDiscPrc) ;
-
-                 $("#txtMonthlyFee").val("");
-	             if(result[0].promoDiscType =="0"){       //%
-
-                      /*  var t1=    oriprice -( oriprice * ( promoPrcPrcnt /100 ) );
-                       var t2=    t1 -  promoAddDiscPrc;
-                       var t3 = Math.floor( t2);
-                       $("#txtMonthlyFee").val(t3);  */
-
-                       var t1 = oriprice - ( oriprice * ( promoPrcPrcnt /100 ) );
-                       var t2 = 0;
-                       if($("#eurCertYn").val() == "N"){
-                           //t2 =    (t1 -  promoAddDiscPrc) * 100 /106; -- without GST 6% edited by TPY 01/06/2018
-                    	   t2 =    (t1 -  promoAddDiscPrc);
-                       }else{
-                           t2 = t1 -  promoAddDiscPrc;
-                       }
-                       var t3 = Math.floor( t2);
-                       $("#txtMonthlyFee").val( Number(t3));
-
-
-                 }else if(result[0].promoDiscType =="1"){  //amt
-                     /* $("#txtMonthlyFee").val(   Math.floor(   ( oriprice - promoPrcPrcnt) -promoAddDiscPrc  ));  */
-
-                     var t1 =  ( oriprice - promoPrcPrcnt) -promoAddDiscPrc;
-                     var t2 = 0;
-
-                     if($("#eurCertYn").val() == "N"){
-                         //t2 = t1 *100 / 106; -- without GST 6% edited by TPY 01/06/2018
-                    	 t2 = t1;
-                     }else{
-                         t2 = t1;
-                     }
-                     var t3 = Math.floor( t2);
-
-                     $("#txtMonthlyFee").val( Number(t3));
-
-                 }else{
-                     Common.alert('promoDiscType err ');
-                     return ;
-                 }
-         }
-      });
-
-
-
-}
-
-
-
-function   fn_getMembershipPackageFilterInfo(){
-
-    $('#txtFilterCharge').html("");
-    $("#cPromoCombox").attr("checked",false);
-
-    //TODO
-    if($("#HiddenIsCharge").val() != "0"){
-        $("#cPromo").prop("disabled", false);
-        $("#cPromo").attr("class", "");
-    }
-
-
-    $("#cPromoCombox").removeAttr("disabled");
-
-
-    $("#cPromo").val("");
-
-    var SRV_MEM_PAC_ID = $("#cTPackage").val();
-    doGetCombo('/sales/membershipRentalQut/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID='+SRV_MEM_PAC_ID+"&E_YN="+ $("#cEmplo").val(), '', '','cPromo', 'S' , '');            // Customer Type Combo Box
-
-
-
-}
-
-
-
-function fn_InintMembershipPackageInfo(){
-
-
-
-    $("#cPromotionpac").val("");
-
-    var SALES_ORD_ID = $("#ORD_ID").val() ;
-    var SRV_MEM_PAC_ID = $("#cTPackage").val();
-    var E_YN = $("#cEmplo").val();
-
-    var pram = "?SALES_ORD_ID="+SALES_ORD_ID+"&SRV_MEM_PAC_ID="+SRV_MEM_PAC_ID+"&E_YN="+E_YN;
-
-
-     doGetCombo('/sales/membershipRentalQut/getPromotionCode'+pram, '', '','cPromotionpac', 'S' , '');
-
-
-
-}
-
-function   fn_LoadRentalSVMPackage(_packId){
-
-    var vstkId  = resultBasicObject.stockId;
-    var vpackId = _packId;
-    var SALES_ORD_ID = $("#ORD_ID").val() ;
-
-     Common.ajax("GET", "/sales/membershipRentalQut/mRPackageInfo",{ packId : vpackId  , stockId: vstkId, SALES_ORD_ID: SALES_ORD_ID}, function(result) {
-
-         console.log("fn_LoadRentalSVMPackage");
-         console.log(result);
-
-
-         //if(result !=null){
-
-         if( result.packageInfo.srvCntrctPacId !=null  ||  result.packageInfo.srvCntrctPacId !=""){
-
-             $("#hiddenNomalFees").val(result.packageInfo.srvPacItmRental);
-             $("#txtBSFreq").text(result.packageInfo.c1 +"month(s)");
-             $("#hiddentxtBSFreq").val(result.packageInfo.c1);
-
-             $("#zeroRatYn").val(result.packageInfo.zeroRatYn);
-             $("#eurCertYn").val(result.packageInfo.eurCertYn);
-
-        	 if($("#eurCertYn").val() == "N"){
-                 $("#hiddenOriFees").val(Math.floor(result.packageInfo.srvPacItmRental *100 /106));
-                 $("#txtMonthlyFee").val(Math.floor(result.packageInfo.srvPacItmRental *100 /106));
-        	 }else{
-                 $("#hiddenOriFees").val(result.packageInfo.srvPacItmRental);
-                 $("#txtMonthlyFee").val( result.packageInfo.srvPacItmRental);
-        	 }
-         }else{
-             $("#txtBSFreq").text("");
-             $("#txtMonthlyFee").val("00");
-         }
-
-
-         $("#packpro").attr("checked",true);
-         $("#cPromotionpac").removeAttr("disabled");
-         $("#cPromotionpac").attr("class" ,"");
-
-         if ($("#HiddenHasFilterCharge") .val() == "1") {
-             $("#btnViewFilterCharge").attr("style","display:inline");
-         }
-
-         fn_getFilterChargeList();
-     });
-}
-
-
-function fn_getFilterPromotionAmt(){
-
-	 if($("#HiddenIsCharge").val() != "0"){
-	    Common.ajax("GET", "/sales/membershipRentalQut/getFilterPromotionAmt.do", {SALES_ORD_NO: resultBasicObject.ordNo ,SRV_PAC_ID :$('#cTPackage').val() }, function(result) {
-	         console.log( result);
-
-	         if(null != result){
-	             $("#txtFilterCharge").val(result.normaAmt );
-
-	         }
-
-	    });
 	 }
-}
+	 }
+	 else
+	 {
+	 valid = false;
+	 message += "* Only [REG] or [INV] rental order is allowed to purchase membership.<br />";
+	 }
+	 }
+	 if (!valid)
+	 RadWindowManager1.RadAlert("<b>" + message + "</b>", 450, 160, "Rental Order Validation", "callBackFn", null);
 
+	 return valid;
 
+	 }
+	 */
 
+	function createAUIGridHList() {
 
+		//AUIGrid 칼럼 설정
+		var columnLayout = [ {
+			dataField : "no",
+			headerText : "BS No",
+			width : 90,
+			editable : false
+		}, {
+			dataField : "month",
+			headerText : "BS Month",
+			width : 80,
+			editable : false
+		}, {
+			dataField : "code",
+			headerText : "Type",
+			width : 70,
+			editable : false
+		}, {
+			dataField : "code1",
+			headerText : "Status",
+			width : 70,
+			editable : false
+		}, {
+			dataField : "no1",
+			headerText : "BSR No",
+			width : 100,
+			editable : false
+		}, {
+			dataField : "c1",
+			headerText : "Settle Date",
+			width : 170,
+			editable : false
+		}, {
+			dataField : "memCode",
+			headerText : "Cody Code",
+			width : 90,
+			editable : false
+		}, {
+			dataField : "code3",
+			headerText : "Fail Reason",
+			width : 105,
+			editable : false
+		}, {
+			dataField : "code2",
+			headerText : "Collection<br/> Reason",
+			width : 100,
+			editable : false
+		}
 
+		];
 
+		//그리드 속성 설정
+		var gridPros = {
+			usePaging : true, //페이징 사용
+			pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
+			editable : false,
+			fixedColumnCount : 1,
+			headerHeight : 30,
+			//selectionMode       : "singleRow",  //"multipleCells",
+			showRowNumColumn : true
+		//줄번호 칼럼 렌더러 출력
 
+		};
 
-function fn_cTPackageChanged(){
+		bsHistoryGridID = GridCommon.createAUIGrid("hList_grid_wrap", columnLayout, "", gridPros);
+	}
 
-	 if($('#cTPackage').val().trim() > 0)  {
+	function createAUIGridOList() {
 
-	     $("#txtFilterCharge").val("");
-	     $("#txtMonthlyFee").val("" );
+		//AUIGrid 칼럼 설정
+		var columnLayout = [ {
+			dataField : "stkCode",
+			headerText : "Code",
+			width : "12%",
+			editable : false
+		}, {
+			dataField : "stkDesc",
+			headerText : "Name",
+			width : "50%",
+			editable : false,
+			style : 'left_style'
+		}, {
+			dataField : "code",
+			headerText : "Type",
+			width : "12%",
+			editable : false
+		}, {
+			dataField : "srvFilterPriod",
+			headerText : "Change Period",
+			width : "12%",
+			editable : false
+		}, {
+			dataField : "srvFilterPrvChgDt",
+			headerText : "Last Change",
+			width : "12%",
+			editable : false
+		}
 
+		];
 
-         fn_InintMembershipPackageInfo();
-         fn_LoadRentalSVMPackage($('#cTPackage').val().trim());
+		//그리드 속성 설정
+		var gridPros = {
+			usePaging : true, //페이징 사용
+			pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
+			editable : false,
+			fixedColumnCount : 1,
+			showStateColumn : true,
+			displayTreeOpen : false,
+			//selectionMode       : "singleRow",  //"multipleCells",
+			headerHeight : 30,
+			useGroupingPanel : false, //그룹핑 패널 사용
+			skipReadonlyColumns : true, //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+			wrapSelectionMove : true, //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+			showRowNumColumn : true,
 
-         //fn_getFilterPromotionAmt();
-         //fn_getFilterChargeList();
+			// row Styling 함수
+			rowStyleFunction : function(rowIndex, item) {
 
+				return "";
+			}
+		};
 
-         fn_getMembershipPackageFilterInfo();
-     }
+		oListGridID = GridCommon.createAUIGrid("oList_grid_wrap", columnLayout, "", gridPros);
+	}
 
-}
+	function fn_cPromotionpacChgEvt() {
 
+		$("#txtMonthlyFee").val($("#hiddenOriFees").val());
 
+		Common.ajax("GET", "/sales/membership/getPromoPricePercent", {
+			PROMO_ID : $("#cPromotionpac").val()
+		}, function(result) {
+			console.log(result);
+
+			if (result.length > 0) {
+
+				// var oriprice                 = Number($("#hiddenOriFees").val()) ;
+				var oriprice = Number($("#hiddenNomalFees").val());
+				var promoPrcPrcnt = Number(result[0].promoPrcPrcnt);
+				var promoAddDiscPrc = Number(result[0].promoAddDiscPrc);
+
+				$("#txtMonthlyFee").val("");
+				if (result[0].promoDiscType == "0") { //%
+
+					/*  var t1=    oriprice -( oriprice * ( promoPrcPrcnt /100 ) );
+					 var t2=    t1 -  promoAddDiscPrc;
+					 var t3 = Math.floor( t2);
+					 $("#txtMonthlyFee").val(t3);  */
+
+					var t1 = oriprice - (oriprice * (promoPrcPrcnt / 100));
+					var t2 = 0;
+					if ($("#eurCertYn").val() == "N") {
+						//t2 =    (t1 -  promoAddDiscPrc) * 100 /106; -- without GST 6% edited by TPY 01/06/2018
+						t2 = (t1 - promoAddDiscPrc);
+					}
+					else {
+						t2 = t1 - promoAddDiscPrc;
+					}
+					var t3 = Math.floor(t2);
+					$("#txtMonthlyFee").val(Number(t3));
+
+				}
+				else if (result[0].promoDiscType == "1") { //amt
+					/* $("#txtMonthlyFee").val(   Math.floor(   ( oriprice - promoPrcPrcnt) -promoAddDiscPrc  ));  */
+
+					var t1 = (oriprice - promoPrcPrcnt) - promoAddDiscPrc;
+					var t2 = 0;
+
+					if ($("#eurCertYn").val() == "N") {
+						//t2 = t1 *100 / 106; -- without GST 6% edited by TPY 01/06/2018
+						t2 = t1;
+					}
+					else {
+						t2 = t1;
+					}
+					var t3 = Math.floor(t2);
+
+					$("#txtMonthlyFee").val(Number(t3));
+
+				}
+				else {
+					Common.alert('promoDiscType err ');
+					return;
+				}
+			}
+		});
+
+	}
+
+	function fn_getMembershipPackageFilterInfo() {
+
+		$('#txtFilterCharge').html("");
+		$("#cPromoCombox").attr("checked", false);
+
+		//TODO
+		if ($("#HiddenIsCharge").val() != "0") {
+			$("#cPromo").prop("disabled", false);
+			$("#cPromo").attr("class", "");
+		}
+
+		$("#cPromoCombox").removeAttr("disabled");
+
+		$("#cPromo").val("");
+
+		var SRV_MEM_PAC_ID = $("#cTPackage").val();
+		doGetCombo('/sales/membershipRentalQut/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID=' + SRV_MEM_PAC_ID + "&E_YN=" + $("#cEmplo").val(), '', '', 'cPromo', 'S', ''); // Customer Type Combo Box
+
+	}
+
+	function fn_InintMembershipPackageInfo() {
+
+		$("#cPromotionpac").val("");
+
+		var SALES_ORD_ID = $("#ORD_ID").val();
+		var SRV_MEM_PAC_ID = $("#cTPackage").val();
+		var E_YN = $("#cEmplo").val();
+
+		var pram = "?SALES_ORD_ID=" + SALES_ORD_ID + "&SRV_MEM_PAC_ID=" + SRV_MEM_PAC_ID + "&E_YN=" + E_YN;
+
+		doGetCombo('/sales/membershipRentalQut/getPromotionCode' + pram, '', '', 'cPromotionpac', 'S', '');
+
+	}
+
+	function fn_LoadRentalSVMPackage(_packId) {
+
+		var vstkId = resultBasicObject.stockId;
+		var vpackId = _packId;
+		var SALES_ORD_ID = $("#ORD_ID").val();
+
+		Common.ajax("GET", "/sales/membershipRentalQut/mRPackageInfo", {
+			packId : vpackId,
+			stockId : vstkId,
+			SALES_ORD_ID : SALES_ORD_ID
+		}, function(result) {
+
+			console.log("fn_LoadRentalSVMPackage");
+			console.log(result);
+
+			//if(result !=null){
+
+			if (result.packageInfo.srvCntrctPacId != null || result.packageInfo.srvCntrctPacId != "") {
+
+				$("#hiddenNomalFees").val(result.packageInfo.srvPacItmRental);
+				$("#txtBSFreq").text(result.packageInfo.c1 + "month(s)");
+				$("#hiddentxtBSFreq").val(result.packageInfo.c1);
+
+				$("#zeroRatYn").val(result.packageInfo.zeroRatYn);
+				$("#eurCertYn").val(result.packageInfo.eurCertYn);
+
+				if ($("#eurCertYn").val() == "N") {
+					$("#hiddenOriFees").val(Math.floor(result.packageInfo.srvPacItmRental * 100 / 106));
+					$("#txtMonthlyFee").val(Math.floor(result.packageInfo.srvPacItmRental * 100 / 106));
+				}
+				else {
+					$("#hiddenOriFees").val(result.packageInfo.srvPacItmRental);
+					$("#txtMonthlyFee").val(result.packageInfo.srvPacItmRental);
+				}
+			}
+			else {
+				$("#txtBSFreq").text("");
+				$("#txtMonthlyFee").val("00");
+			}
+
+			$("#packpro").attr("checked", true);
+			$("#cPromotionpac").removeAttr("disabled");
+			$("#cPromotionpac").attr("class", "");
+
+			if ($("#HiddenHasFilterCharge").val() == "1") {
+				$("#btnViewFilterCharge").attr("style", "display:inline");
+			}
+
+			fn_getFilterChargeList();
+		});
+	}
+
+	function fn_getFilterPromotionAmt() {
+
+		if ($("#HiddenIsCharge").val() != "0") {
+			Common.ajax("GET", "/sales/membershipRentalQut/getFilterPromotionAmt.do", {
+				SALES_ORD_NO : resultBasicObject.ordNo,
+				SRV_PAC_ID : $('#cTPackage').val()
+			}, function(result) {
+				console.log(result);
+
+				if (null != result) {
+					$("#txtFilterCharge").val(result.normaAmt);
+
+				}
+
+			});
+		}
+	}
+
+	function fn_cTPackageChanged() {
+
+		if ($('#cTPackage').val().trim() > 0) {
+
+			$("#txtFilterCharge").val("");
+			$("#txtMonthlyFee").val("");
+
+			fn_InintMembershipPackageInfo();
+			fn_LoadRentalSVMPackage($('#cTPackage').val().trim());
+
+			//fn_getFilterPromotionAmt();
+			//fn_getFilterChargeList();
+
+			fn_getMembershipPackageFilterInfo();
+		}
+
+	}
 </script>
 
 

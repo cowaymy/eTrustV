@@ -20,6 +20,7 @@ var bsHistoryGridID;
 
 var resultBasicObject;
 var resultSrvconfigObject;
+var resultInstallationObject;
 
 
 $(document).ready(function(){
@@ -117,37 +118,23 @@ $(document).ready(function(){
 		Common.ajax("GET", "/sales/membership/selectMembershipFreeDataInfo", $("#getDataForm").serialize(), function(result) {
 			console.log(result);
 
-			if (FormUtil.isNotEmpty(result.installation.areaId)) {
+			resultInstallationObject = result.installation;
+			resultBasicObject = result.basic;
 
-				if ("DM" == result.installation.areaId.substring(0, 2)) {
+			var billMonth = getOrderCurrentBillMonth();
 
-					Common.alert("<spring:message code="sal.alert.msg.customerAddrChange" />");
+			if (fn_CheckRentalOrder(billMonth)) {
+				$("#cbt").attr("style", "display:none");
+				$("#ORD_NO").attr("style", "display:none");
+				$("#sbt").attr("style", "display:none");
 
-					return;
+				$("#rbt").attr("style", "display:inline");
+				$("#ORD_NO_RESULT").attr("style", "display:inline");
+				$("#resultcontens").attr("style", "display:inline");
 
-				}
-				else {
-
-					resultBasicObject = result.basic;
-
-					var billMonth = getOrderCurrentBillMonth();
-
-					if (fn_CheckRentalOrder(billMonth)) {
-						$("#cbt").attr("style", "display:none");
-						$("#ORD_NO").attr("style", "display:none");
-						$("#sbt").attr("style", "display:none");
-
-						$("#rbt").attr("style", "display:inline");
-						$("#ORD_NO_RESULT").attr("style", "display:inline");
-						$("#resultcontens").attr("style", "display:inline");
-
-						setText(result);
-						setPackgCombo();
-					}
-
-				}
+				setText(result);
+				setPackgCombo();
 			}
-
 		});
 	}
 
@@ -1140,6 +1127,17 @@ $(document).ready(function(){
 			rtnMsg += "<spring:message code="sal.alert.msg.NOearlyBirdPromo" /><br>";
 			rtnValue = false;
 
+		}
+
+		//20190925 Vannie add checking on Cust Area ID
+		if (FormUtil.isNotEmpty(resultInstallationObject.areaId)) {
+
+			if ("DM" == resultInstallationObject.areaId.substring(0, 2)) {
+
+				rtnMsg += "<spring:message code="sal.alert.msg.customerAddrChange" /><br>";
+				rtnValue = false;
+
+			}
 		}
 
 		//if ($("#cPromoCombox").prop("checked")){
