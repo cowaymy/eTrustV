@@ -1907,6 +1907,7 @@
                 <when test='mode == "S" '>
                     MEMO_APPV_STUS = #{appvStus},
                     MEMO_APPV_DT = SYSDATE,
+                    MEMO_REM = #{appvRem},
                 </when>
                 <otherwise>
                     MEMO_APPV_PRCSS_STUS = 'R',
@@ -1960,7 +1961,7 @@
             SELECT MEMO_ADJ_ID, MAX(MEMO_APPR_SEQ) MAX_SEQ
             FROM PAY0292D
             WHERE 1=1
-            <if test='mode == "F" '>
+            <if test='mode == "NTF" '>
                 AND MEMO_APPV_STUS = 'R'
             </if>
             <if test='mode == "C" '>

@@ -320,7 +320,8 @@ function fn_approve(process){
 			           "process" : process,
 			           "invoiceType" : invoiceType,
 			           "memoAdjTypeId" : memoAdjTypeId,
-			           "invoiceNo" : memoInvoiceNo};
+			           "invoiceNo" : memoInvoiceNo,
+			           "appvRem" : $("#appvRem").val()};
 
     Common.ajax("POST", "/payment/approvalAdjustment.do", param, function(result) {
         Common.alert("Invoice Adjustment successfully confirmed.<br />",function(){
@@ -431,6 +432,10 @@ function fn_approve(process){
 				        </div><!-- auto_file end -->
 				    </td>
 				</tr>
+				<tr>
+                    <th scope="row">Approver Remark</th>
+                    <td colspan="3"><textarea class="w100p" rows="2" style="height:auto" id="appvRem" name="appvRem"></textarea></td>
+                </tr>
             </tbody>
         </table><!-- table end -->
 

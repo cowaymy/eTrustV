@@ -591,7 +591,7 @@
 	                <tr>
                         <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
                         <td colspan="3" id="attachTd">
-                            <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
+                            <div class="auto_file w100p"><!-- auto_file start -->
                                 <input type="file" title="file add" style="width:300px" id="fileSelector" name="fileSelector" />
                             </div><!-- auto_file end -->
                         </td>

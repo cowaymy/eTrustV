@@ -665,23 +665,36 @@ public class InvoiceAdjController {
 
         invoiceService.updateAdjNextAppvLine(params);
 
-        params.put("mode", "C");
         EgovMap apprLineList = (EgovMap) invoiceService.getAdjApprLine(params);
-        if("A".equals(apprLineList.get("memoAppvStus")) || "J".equals(apprLineList.get("memoAppvStus"))) {
+        String finalAppvStus = apprLineList.get("memoAppvStus").toString();
+
+        params.put("mode", "C");
+        apprLineList = (EgovMap) invoiceService.getAdjApprLine(params);
+        String currentAppvStus = apprLineList.get("memoAppvStus").toString();
+
+        if("A".equals(finalAppvStus) || "J".equals(currentAppvStus)) {
             //승인 or 반려 처리
             invoiceService.approvalAdjustment(params);
         }
 
-        params.put("mode", "F");
+        params.put("mode", "NTF");
         apprLineList = (EgovMap) invoiceService.getAdjApprLine(params);
         if(apprLineList != null) {
             Map ntf = new HashMap<String, Object>();
             ntf.put("code", "Batch Adj");
             ntf.put("codeName", "CN/DN Adjustment");
             ntf.put("clmNo", apprLineList.get("memoAdjRefNo"));
-            ntf.put("appvStus", "R");
-            ntf.put("rejctResn", "Pending Approval.");
-            ntf.put("reqstUserId", apprLineList.get("memoApprUserName"));
+
+            if(currentAppvStus != "J") {
+                ntf.put("appvStus", "R");
+                ntf.put("rejctResn", "Pending Approval.");
+                ntf.put("reqstUserId", apprLineList.get("memoApprUserName"));
+            } else {
+                ntf.put("appvStus", "J");
+                ntf.put("rejctResn", params.get("appvRem").toString());
+                ntf.put("reqstUserId", apprLineList.get("memoReqstUserId"));
+            }
+
             ntf.put("userId", sessionVO.getUserId());
 
             invoiceService.insertNotification(ntf);
@@ -723,6 +736,7 @@ public class InvoiceAdjController {
             apprMap.put("memCode", memCode);
             apprMap.put("appvStus", "APPROVE".equals(formData.get("process").toString()) ? "A" : "J");
             apprMap.put("userId", sessionVO.getUserId());
+            apprMap.put("appvRem", formData.get("appvRem").toString());
 
             apprMap.put("mode", "S");
             invoiceService.updateAdjApprovalLine(apprMap);
@@ -732,9 +746,14 @@ public class InvoiceAdjController {
 
             invoiceService.updateAdjNextAppvLine(apprMap);
 
-            apprMap.put("mode", "C");
             EgovMap apprLineList = (EgovMap) invoiceService.getAdjApprLine(apprMap);
-            if("A".equals(apprLineList.get("memoAppvStus")) || "J".equals(apprLineList.get("memoAppvStus"))) {
+            String finalAppvStus = apprLineList.get("memoAppvStus").toString();
+
+            apprMap.put("mode", "C");
+            apprLineList = (EgovMap) invoiceService.getAdjApprLine(apprMap);
+            String currentAppvStus = apprLineList.get("memoAppvStus").toString();
+
+            if("A".equals(finalAppvStus) || "J".equals(currentAppvStus)) {
                   for (int i = 0; i < gridList.size(); i++) {
                         Map<String, Object> gridMap = (Map<String, Object>) gridList.get(i);
 
@@ -754,16 +773,24 @@ public class InvoiceAdjController {
                     }
             }
 
-            apprMap.put("mode", "F");
+            apprMap.put("mode", "NTF");
             apprLineList = (EgovMap) invoiceService.getAdjApprLine(apprMap);
             if(apprLineList != null) {
                 Map ntf = new HashMap<String, Object>();
                 ntf.put("code", "Batch Adj");
                 ntf.put("codeName", "CN/DN Batch Adjustment");
                 ntf.put("clmNo", "Batch Adj - " + apprLineGridMap.get("batchId").toString());
-                ntf.put("appvStus", "R");
-                ntf.put("rejctResn", "Pending Approval.");
-                ntf.put("reqstUserId", apprLineList.get("memoApprUserName"));
+
+                if(currentAppvStus != "J") {
+                    ntf.put("appvStus", "R");
+                    ntf.put("rejctResn", "Pending Approval.");
+                    ntf.put("reqstUserId", apprLineList.get("memoApprUserName"));
+                } else {
+                    ntf.put("appvStus", "J");
+                    ntf.put("rejctResn", formData.get("appvRem").toString());
+                    ntf.put("reqstUserId", apprLineList.get("memoReqstUserId"));
+                }
+
                 ntf.put("userId", sessionVO.getUserId());
 
                 invoiceService.insertNotification(ntf);

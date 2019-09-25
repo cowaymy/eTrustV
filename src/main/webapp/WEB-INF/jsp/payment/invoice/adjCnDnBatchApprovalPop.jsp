@@ -131,7 +131,8 @@ function fn_atchViewDown(fileGrpId, fileId) {
 
 function fn_approve(process){
 	var param = {
-			           "process" : process
+			           "process" : process,
+			           "appvRem" : $("#appvRem").val()
 			           };
 
 	  //param data array
@@ -222,6 +223,10 @@ function fn_approve(process){
                             <input type="file" title="file add" />
                         </div><!-- auto_file end -->
                     </td>
+                </tr>
+                <tr>
+                    <th scope="row">Approver Remark</th>
+                    <td colspan="3"><textarea class="w100p" rows="2" style="height:auto" id="appvRem" name="appvRem"></textarea></td>
                 </tr>
             </tbody>
         </table><!-- table end -->
