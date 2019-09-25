@@ -1113,6 +1113,10 @@ WHERE (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDA
 						                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 3) then 'CTL'
 						                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 2) then 'CTM'
 						                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 1) then 'RM'
+
+						                                when ( ABC.MEM_TYPE_ID=7 and ABC.MEM_LVL_TO = 3) then 'HTM'
+                                                       when ( ABC.MEM_TYPE_ID=7 and ABC.MEM_LVL_TO = 2) then 'SHTM'
+                                                       when ( ABC.MEM_TYPE_ID=7 and ABC.MEM_LVL_TO = 1) then 'GHTM'
 						                    else ABC.CODE1
 						                    end CODE
 						                     from (
