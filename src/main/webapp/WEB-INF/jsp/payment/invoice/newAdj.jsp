@@ -330,6 +330,11 @@
     }
 
     function fn_submit() {
+    	if($("input[name=fileSelector]")[0].files[0] == "" || $("input[name=fileSelector]")[0].files[0] == null) {
+            Common.alert("Please attach supporting document!");
+            return false;
+        }
+
         var obj = $("#searchForm").serializeJSON();
         obj.apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
 

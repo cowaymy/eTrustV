@@ -321,6 +321,10 @@ function fn_batchAdjFileUp(){
 
 function fn_submit() {
     console.log("fn_submit");
+    if($("input[name=fileSelector2]")[0].files[0] == "" || $("input[name=fileSelector2]")[0].files[0] == null) {
+        Common.alert("Please attach supporting document!");
+        return false;
+    }
 
     var obj = $("#searchForm").serializeJSON();
     obj.apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
