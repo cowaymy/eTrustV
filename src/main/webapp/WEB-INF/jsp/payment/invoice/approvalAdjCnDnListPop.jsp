@@ -80,6 +80,7 @@ function fn_getAdjustmentListAjax() {
 	<section class="pop_body"><!-- pop_body start -->
 		<form name="searchForm" id="searchForm"  method="post">
             <input type="hidden" name="status" id="status" value="1" />
+            <input type="hidden" name="mode" id="mode" value="APPROVAL" />
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>

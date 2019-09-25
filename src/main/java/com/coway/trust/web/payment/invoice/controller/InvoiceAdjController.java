@@ -87,14 +87,16 @@ public class InvoiceAdjController {
 	@RequestMapping(value = "/selectAdjustmentList.do")
 	public ResponseEntity<List<EgovMap>> selectInvoiceList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
-	    String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
-	    params.put("memCode", memCode);
+	    if(params.containsKey("mode") && "APPROVAL".equals(params.get("mode").toString())) {
+	        String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+	        params.put("memCode", memCode);
 
-	    EgovMap apprDtls = new EgovMap();
-        apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
-        if(apprDtls != null && "AO".equals(apprDtls.get("apprGrp").toString())) {
-            params.put("apprGrp", apprDtls.get("apprGrp"));
-        }
+	        EgovMap apprDtls = new EgovMap();
+	        apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+	        if(apprDtls != null && "AO".equals(apprDtls.get("apprGrp").toString())) {
+	            params.put("apprGrp", apprDtls.get("apprGrp"));
+	        }
+	    }
 
 		List<EgovMap> list = invoiceService.selectInvoiceAdj(params);
 		return ResponseEntity.ok(list);
@@ -181,11 +183,11 @@ public class InvoiceAdjController {
 	            apprDetail = apprList.get(i);
 
 	            if("R".equals((String)apprDetail.get("memoAppvStus")) || "T".equals((String)apprDetail.get("memoAppvStus"))) {
-	                appvPrcssStusList.add("- Pending By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "]");
+	                appvPrcssStusList.add("- Pending By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
 	            } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
-	                appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "]");
+	                appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
 	            } else if("J".equals((String)apprDetail.get("memoAppvStus"))) {
-	                appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "]");
+	                appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
 	            }
 	        }
 
@@ -263,11 +265,11 @@ public class InvoiceAdjController {
 		    apprDetail = apprList.get(i);
 
 		    if("R".equals((String)apprDetail.get("memoAppvStus")) || "T".equals((String)apprDetail.get("memoAppvStus"))) {
-                appvPrcssStusList.add("- Pending By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "]");
+                appvPrcssStusList.add("- Pending By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
             } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
-                appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "]");
+                appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
             } else if("J".equals((String)apprDetail.get("memoAppvStus"))) {
-                appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "]");
+                appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
             }
 		}
 
@@ -681,7 +683,7 @@ public class InvoiceAdjController {
         apprLineList = (EgovMap) invoiceService.getAdjApprLine(params);
         if(apprLineList != null) {
             Map ntf = new HashMap<String, Object>();
-            ntf.put("code", "Batch Adj");
+            ntf.put("code", "New Adj");
             ntf.put("codeName", "CN/DN Adjustment");
             ntf.put("clmNo", apprLineList.get("memoAdjRefNo"));
 

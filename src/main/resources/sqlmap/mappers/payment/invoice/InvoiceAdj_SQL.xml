@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.invoice.service.impl.InvoiceAdjMapper">
     <select id="selectInvoiceAdjList" parameterType="Map" resultType="egovMap">
-        SELECT UnionAll2.MEMO_ADJ_ID MEMO_ADJ_ID  ,
+        SELECT 'A1123456' xxxx,
+        UnionAll2.MEMO_ADJ_ID MEMO_ADJ_ID  ,
 			       UnionAll2.MEMOADJUSTID1 MEMOADJUSTID1  ,
 			       UnionAll2.MEMO_ADJ_REF_NO MEMO_ADJ_REF_NO  ,
 			       UnionAll2.MEMO_ADJ_INVC_NO MEMO_ADJ_INVC_NO  ,
@@ -78,19 +79,21 @@
 			                       LEFT JOIN SYS0038M Extent8   ON Extent8.STUS_CODE_ID = Extent1.MEMO_ADJ_STUS_ID
 			                       LEFT JOIN SYS0040M Extent9   ON Extent7.USER_DEPT_ID = Extent9.DEPT_ID
 			                       LEFT JOIN SYS0047M Extent71  ON Extent71.USER_ID = Extent1.MEMO_ADJ_UPD_USER_ID
-			                       INNER JOIN PAY0292D extent232
-			                       ON (extent1.BATCH_ID = LTRIM(extent232.MEMO_ADJ_ID, 'BCH') OR TO_CHAR(extent1.MEMO_ADJ_ID) = LTRIM(extent232.MEMO_ADJ_ID, 'BCH'))
-			                       AND extent232.MEMO_APPV_STUS IN ('R','A','J')
-			                       <if test="apprGrp == null or apprGrp == '' ">
-			                           AND extent232.MEMO_APPR_USER_ID = #{memCode}
+			                       <if test="mode == 'APPROVAL' ">
+				                       INNER JOIN PAY0292D extent232
+	                                   ON (extent1.BATCH_ID = LTRIM(extent232.MEMO_ADJ_ID, 'BCH') OR TO_CHAR(extent1.MEMO_ADJ_ID) = LTRIM(extent232.MEMO_ADJ_ID, 'BCH'))
+	                                   AND extent232.MEMO_APPV_STUS IN ('R','A','J')
+	                                   <if test="apprGrp == null or apprGrp == '' ">
+	                                       AND extent232.MEMO_APPR_USER_ID = #{memCode}
+	                                   </if>
+	                                   <if test="apprGrp != null and apprGrp != '' ">
+	                                       AND extent232.MEMO_APPR_USER_ID IN (
+	                                           SELECT APPR_MEM_CODE
+	                                           FROM FCM0023M
+	                                           WHERE APPR_GRP = #{apprGrp}
+	                                       )
+	                                   </if>
 			                       </if>
-			                       <if test="apprGrp != null and apprGrp != '' ">
-			                           AND extent232.MEMO_APPR_USER_ID IN (
-			                               SELECT APPR_MEM_CODE
-			                               FROM FCM0023M
-			                               WHERE APPR_GRP = #{apprGrp}
-			                           )
-                                   </if>
 			                WHERE 1=1
 			                        <if test="orderNo != null and orderNo != '' " >
 								    AND Extent6.INVC_ITM_ORD_NO = #{orderNo}
@@ -154,18 +157,20 @@
 			                       LEFT JOIN SYS0038M Extent16   ON Extent16.STUS_CODE_ID = Extent9.MEMO_ADJ_STUS_ID
 			                       LEFT JOIN SYS0040M Extent17   ON Extent15.USER_DEPT_ID = Extent17.DEPT_ID
 			                       LEFT JOIN SYS0047M Extent151  ON Extent151.USER_ID = Extent9.MEMO_ADJ_UPD_USER_ID
-			                       INNER JOIN PAY0292D extent233
-			                       ON (extent9.BATCH_ID = LTRIM(extent233.MEMO_ADJ_ID, 'BCH') OR TO_CHAR(extent9.MEMO_ADJ_ID) = LTRIM(extent233.MEMO_ADJ_ID, 'BCH'))
-			                       AND extent233.MEMO_APPV_STUS IN ('R','A','J')
-                                   <if test="apprGrp == null or apprGrp == '' ">
-                                       AND extent233.MEMO_APPR_USER_ID = #{memCode}
-                                   </if>
-                                   <if test="apprGrp != null and apprGrp != '' ">
-                                       AND extent233.MEMO_APPR_USER_ID IN (
-                                           SELECT APPR_MEM_CODE
-                                           FROM FCM0023M
-                                           WHERE APPR_GRP = #{apprGrp}
-                                       )
+			                       <if test="mode == 'APPROVAL' ">
+				                       INNER JOIN PAY0292D extent233
+	                                   ON (extent9.BATCH_ID = LTRIM(extent233.MEMO_ADJ_ID, 'BCH') OR TO_CHAR(extent9.MEMO_ADJ_ID) = LTRIM(extent233.MEMO_ADJ_ID, 'BCH'))
+	                                   AND extent233.MEMO_APPV_STUS IN ('R','A','J')
+	                                   <if test="apprGrp == null or apprGrp == '' ">
+	                                       AND extent233.MEMO_APPR_USER_ID = #{memCode}
+	                                   </if>
+	                                   <if test="apprGrp != null and apprGrp != '' ">
+	                                       AND extent233.MEMO_APPR_USER_ID IN (
+	                                           SELECT APPR_MEM_CODE
+	                                           FROM FCM0023M
+	                                           WHERE APPR_GRP = #{apprGrp}
+	                                       )
+	                                   </if>
                                    </if>
 			                 WHERE 1=1
                                     <if test="orderNo != null and orderNo != '' " >
@@ -229,17 +234,19 @@
                             LEFT JOIN SYS0040M Extent31   ON Extent29.USER_DEPT_ID = Extent31.DEPT_ID
                             LEFT JOIN SYS0047M Extent32  ON Extent32.USER_ID = Extent25.ADJ_ENTRY_UPD_USER_ID
                             LEFT JOIN SAL0001D Extent33  ON Extent33.SALES_ORD_ID = Extent25.ADJ_ENTRY_SO_ID
-                            INNER JOIN PAY0292D extent234 ON extent25.ADJ_ENTRY_ID = LTRIM(extent234.MEMO_ADJ_ID, 'BCH')
-                            AND extent234.MEMO_APPV_STUS IN ('R','A','J')
-                            <if test="apprGrp == null or apprGrp == '' ">
-                                AND extent234.MEMO_APPR_USER_ID = #{memCode}
-                            </if>
-                            <if test="apprGrp != null and apprGrp != '' ">
-                                AND extent234.MEMO_APPR_USER_ID IN (
-                                           SELECT APPR_MEM_CODE
-                                           FROM FCM0023M
-                                           WHERE APPR_GRP = #{apprGrp}
-                                       )
+                            <if test="mode == 'APPROVAL' ">
+	                            INNER JOIN PAY0292D extent234 ON extent25.ADJ_ENTRY_ID = LTRIM(extent234.MEMO_ADJ_ID, 'BCH')
+	                            AND extent234.MEMO_APPV_STUS IN ('R','A','J')
+	                            <if test="apprGrp == null or apprGrp == '' ">
+	                                AND extent234.MEMO_APPR_USER_ID = #{memCode}
+	                            </if>
+	                            <if test="apprGrp != null and apprGrp != '' ">
+	                                AND extent234.MEMO_APPR_USER_ID IN (
+	                                           SELECT APPR_MEM_CODE
+	                                           FROM FCM0023M
+	                                           WHERE APPR_GRP = #{apprGrp}
+	                                       )
+	                            </if>
                             </if>
                     WHERE 1=1
                                      <if test="orderNo != null and orderNo != '' " >
@@ -306,18 +313,20 @@
 			                LEFT JOIN SYS0038M Extent24   ON Extent24.STUS_CODE_ID = Extent17.MEMO_ADJ_STUS_ID
 			                LEFT JOIN SYS0040M Extent9   ON Extent23.USER_DEPT_ID = Extent9.DEPT_ID
 			                LEFT JOIN SYS0047M Extent231  ON Extent231.USER_ID = Extent17.MEMO_ADJ_UPD_USER_ID
-			                INNER JOIN PAY0292D extent235
-			                ON (extent17.memo_adj_id = LTRIM(extent235.MEMO_ADJ_ID, 'BCH') OR TO_CHAR(extent17.memo_adj_id) = LTRIM(extent235.MEMO_ADJ_ID, 'BCH'))
-			                AND extent235.MEMO_APPV_STUS IN ('R','A','J')
-                            <if test="apprGrp == null or apprGrp == '' ">
-                                AND extent235.MEMO_APPR_USER_ID = #{memCode}
-                            </if>
-                            <if test="apprGrp != null and apprGrp != '' ">
-                                AND extent235.MEMO_APPR_USER_ID IN (
-                                           SELECT APPR_MEM_CODE
-                                           FROM FCM0023M
-                                           WHERE APPR_GRP = #{apprGrp}
-                                       )
+			                <if test="mode == 'APPROVAL' ">
+				                INNER JOIN PAY0292D extent235
+	                            ON (extent17.memo_adj_id = LTRIM(extent235.MEMO_ADJ_ID, 'BCH') OR TO_CHAR(extent17.memo_adj_id) = LTRIM(extent235.MEMO_ADJ_ID, 'BCH'))
+	                            AND extent235.MEMO_APPV_STUS IN ('R','A','J')
+	                            <if test="apprGrp == null or apprGrp == '' ">
+	                                AND extent235.MEMO_APPR_USER_ID = #{memCode}
+	                            </if>
+	                            <if test="apprGrp != null and apprGrp != '' ">
+	                                AND extent235.MEMO_APPR_USER_ID IN (
+	                                           SELECT APPR_MEM_CODE
+	                                           FROM FCM0023M
+	                                           WHERE APPR_GRP = #{apprGrp}
+	                                       )
+	                            </if>
                             </if>
 			        WHERE 1=1
 			                         <if test="orderNo != null and orderNo != '' " >
@@ -2002,7 +2011,8 @@
 			    A.MEMO_APPR_USER_ID,
 			    B.NAME APPV_LINE_USER_NAME,
 			    A.MEMO_APPV_STUS,
-			    NVL(TO_CHAR(A.MEMO_APPV_DT, 'DD/MM/YYYY'), '-') APPV_DT
+			    NVL(TO_CHAR(A.MEMO_APPV_DT, 'DD/MM/YYYY'), '-') APPV_DT,
+			    A.MEMO_REM
 			FROM PAY0011D M
 			INNER JOIN PAY0292D A
 			<choose>
