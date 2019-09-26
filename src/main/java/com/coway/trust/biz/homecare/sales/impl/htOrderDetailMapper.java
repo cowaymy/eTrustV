@@ -105,4 +105,10 @@ public interface htOrderDetailMapper {
 
 	void updateCovrgAreaStatus(Map<String, Object> params);
 
+	List<EgovMap> selectCovrgAreaListByGrp(Map<String, Object> params);
+
+	int  updateCoverageAreaActive(Map<String, Object> params);
+
+	int  updateCoverageAreaInactive(Map<String, Object> params);
+
 }
