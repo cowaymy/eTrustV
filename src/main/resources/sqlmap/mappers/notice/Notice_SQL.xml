@@ -203,6 +203,12 @@
              AND SYS0092M.CRT_DT < TO_DATE(#{endDate}, 'DD/MM/YYYY') + 1
         ]]>
         </if>
+        <if test="clmType != null and clmType != ''">
+             AND SYS0092M.NTF_TYPE IN
+         <foreach item="item" collection="clmType" index="index" open="(" separator="," close=")">
+             #{item}
+         </foreach>
+        </if>
         ORDER BY SYS0092M.CRT_DT DESC
     </select>
 
