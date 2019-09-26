@@ -126,7 +126,7 @@ $(document).ready(function() {
 
             if(ntfType != "Budget") {
                 url += "webInvoice/webInvoiceApprove.do";
-            } else {
+            } else if(ntfType == "Budget") {
                 url += "budget/budgetApprove.do";
             }
 
@@ -157,7 +157,7 @@ $(document).ready(function() {
                 url += "scmActivityFund/scmActivityFundMgmt.do";
 
             } else if(ntfType == "Budget") {
-            	url += "budget/budgetAdjustmentList.do";
+                url += "budget/budgetAdjustmentList.do";
             }
 
             Common.ajax("GET", "/notice/updateNtf.do", data, function(result) {

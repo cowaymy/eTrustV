@@ -174,6 +174,9 @@ public class NoticeController {
         LOGGER.debug("selectNtfList.do :: start");
         LOGGER.debug("params :: " + params);
 
+        String[] pClmType = request.getParameterValues("clmType");
+        params.put("clmType", pClmType);
+
         String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
         if(!CommonUtils.containsEmpty(memCode)) {
             params.put("memCode", memCode);

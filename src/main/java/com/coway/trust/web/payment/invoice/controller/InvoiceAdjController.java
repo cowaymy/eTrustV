@@ -187,10 +187,10 @@ public class InvoiceAdjController {
 	                appvPrcssStusList.add("- Pending By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
 	            } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
 	                appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
-	                finalAppr = "- Approved By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "] - " + apprDetail.get("memoRem");
+	                finalAppr = "- Approved By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";
 	            } else if("J".equals((String)apprDetail.get("memoAppvStus"))) {
 	                appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
-	                finalAppr = "- Rejected By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "] - " + apprDetail.get("memoRem");
+	                finalAppr = "- Rejected By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";
 	            }
 	        }
 
@@ -273,10 +273,10 @@ public class InvoiceAdjController {
                 appvPrcssStusList.add("- Pending By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
             } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
                 appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
-                finalAppr = "- Approved By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "] - " + apprDetail.get("memoRem");
+                finalAppr = "- Approved By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";
             } else if("J".equals((String)apprDetail.get("memoAppvStus"))) {
                 appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
-                finalAppr = "- Rejected By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "] - " + apprDetail.get("memoRem");
+                finalAppr = "- Rejected By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";
             }
 		}
 
