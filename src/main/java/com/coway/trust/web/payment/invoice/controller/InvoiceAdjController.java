@@ -656,6 +656,10 @@ public class InvoiceAdjController {
 		//세션 정보
 		params.put("userId", sessionVO.getUserId());
 		params.put("memCode", memCode);
+		EgovMap apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+        if(apprDtls != null && "AO".equals(apprDtls.get("apprGrp").toString())) {
+            params.put("apprGrp", apprDtls.get("apprGrp"));
+        }
 
         params.put("appvStus", "APPROVE".equals(String.valueOf(params.get("process"))) ? "A" : "J");
 
@@ -721,6 +725,11 @@ public class InvoiceAdjController {
     public ResponseEntity<ReturnMessage> approvalBatchAdjustment(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {
 
         String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+        params.put("memCode", memCode);
+        EgovMap apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
+        if(apprDtls != null && "AO".equals(apprDtls.get("apprGrp").toString())) {
+            params.put("apprGrp", apprDtls.get("apprGrp"));
+        }
 
         List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
         Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
