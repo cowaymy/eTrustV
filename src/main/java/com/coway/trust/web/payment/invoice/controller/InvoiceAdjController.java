@@ -179,6 +179,7 @@ public class InvoiceAdjController {
 
 	        appvPrcssStusList.add("- Request By " + (String) apprDetail.get("memoReqstUserId") + " [" + (String) apprDetail.get("reqstDt") + "]");
 
+	        String finalAppr = "";
 	        for(int i = 0; i < apprList.size(); i++) {
 	            apprDetail = apprList.get(i);
 
@@ -186,13 +187,16 @@ public class InvoiceAdjController {
 	                appvPrcssStusList.add("- Pending By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
 	            } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
 	                appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
+	                finalAppr = "- Approved By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "] - " + apprDetail.get("memoRem");
 	            } else if("J".equals((String)apprDetail.get("memoAppvStus"))) {
 	                appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
+	                finalAppr = "- Rejected By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "] - " + apprDetail.get("memoRem");
 	            }
 	        }
 
 	        apprResult.put("appvPrcssStus", appvPrcssStusList);
 	        returnValue.put("apprList", apprResult);
+	        returnValue.put("finalAppr", finalAppr);
 
 			return ResponseEntity.ok(returnValue);
 
@@ -261,6 +265,7 @@ public class InvoiceAdjController {
 
 		appvPrcssStusList.add("- Request By " + (String) apprDetail.get("memoReqstUserId") + " [" + (String) apprDetail.get("reqstDt") + "]");
 
+		String finalAppr = "";
 		for(int i = 0; i < apprList.size(); i++) {
 		    apprDetail = apprList.get(i);
 
@@ -268,13 +273,16 @@ public class InvoiceAdjController {
                 appvPrcssStusList.add("- Pending By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
             } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
                 appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
+                finalAppr = "- Approved By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "] - " + apprDetail.get("memoRem");
             } else if("J".equals((String)apprDetail.get("memoAppvStus"))) {
                 appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
+                finalAppr = "- Rejected By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "] - " + apprDetail.get("memoRem");
             }
 		}
 
 		apprResult.put("appvPrcssStus", appvPrcssStusList);
 		returnValue.put("apprList", apprResult);
+		returnValue.put("finalAppr", finalAppr);
 
 		return ResponseEntity.ok(returnValue);
 	}

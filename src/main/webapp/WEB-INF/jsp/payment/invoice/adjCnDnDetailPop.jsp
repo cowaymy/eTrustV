@@ -90,6 +90,7 @@ function selectAdjustmentDetailPop(adjId, invNo){
             $("#tContactPerson").text(result.master.taxInvcCntcPerson);
             $("#tAddr").text(result.master.address);
             $("#tInvoiceRemark").text(result.master.taxInvcRem);
+            $("#finalAppv").text(result.finalAppr);
 
             //Detail데이터 출력
             AUIGrid.setGridData(myPopGridID, result.detailList);
@@ -423,6 +424,10 @@ function fn_approve(process){
                             </ul>
                         </div><!-- tran_list end -->
                     </td>
+                </tr>
+                <tr>
+                    <th scope="row">Final Approver</th>
+                    <td colspan="3"  id="finalAppv"></td>
                 </tr>
                 <tr>
 				    <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
