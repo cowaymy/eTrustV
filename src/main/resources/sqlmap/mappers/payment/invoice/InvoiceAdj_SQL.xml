@@ -2023,7 +2023,7 @@
 			    A.MEMO_APPV_STUS,
 			    NVL(TO_CHAR(A.MEMO_APPV_DT, 'DD/MM/YYYY'), '-') APPV_DT,
 			    NVL(A.MEMO_REM, '-') MEMO_REM,
-			    C.USER_NAME FINAL_APPR_USER,
+			    C.FULL_NAME FINAL_APPR_USER,
                 C.FINAL_APPV_DT
 			FROM PAY0011D M
 			INNER JOIN PAY0292D A
@@ -2040,13 +2040,15 @@
 			LEFT JOIN (
                 SELECT
                     A.MEMO_ADJ_ID,
-                    C.USER_NAME,
+                    D.FULL_NAME,
                     TO_CHAR(A.MEMO_APPV_DT, 'DD/MM/YYYY') FINAL_APPV_DT
                 FROM PAY0292D A
                 INNER JOIN (SELECT MEMO_ADJ_ID, MAX(MEMO_APPR_SEQ) MEMO_APPR_SEQ FROM PAY0292D WHERE MEMO_APPV_DT IS NOT NULL GROUP BY MEMO_ADJ_ID) B
                 ON A.MEMO_ADJ_ID = B.MEMO_ADJ_ID AND A.MEMO_APPR_SEQ = B.MEMO_APPR_SEQ
                 INNER JOIN SYS0047M C
                 ON A.UPD_USER_ID = C.USER_ID
+                INNER JOIN ORG0001D D
+                ON C.HR_CODE = D.MEM_CODE
             ) C
             ON A.MEMO_ADJ_ID = C.MEMO_ADJ_ID
 			/*INNER JOIN SYS0047M C
