@@ -602,4 +602,27 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 		 return resultValue;
 	}
 
+	@Override
+	public List<EgovMap> selectCovrgAreaListByGrp(Map<String, Object> params) {
+		return htOrderDetailMapper.selectCovrgAreaListByGrp(params);
+	}
+
+	 @Override
+	  public int updateCoverageAreaActive(Map<String, Object> params, SessionVO sessionVO) {
+	    // TODO Auto-generated method stub
+	    int cnt = 0;
+	    params.put("updUserId", sessionVO.getUserId());
+	    htOrderDetailMapper.updateCoverageAreaActive(params);
+	    return cnt;
+	 }
+
+	 @Override
+	  public int updateCoverageAreaInactive(Map<String, Object> params, SessionVO sessionVO) {
+	    // TODO Auto-generated method stub
+	    int cnt = 0;
+	    params.put("updUserId", sessionVO.getUserId());
+	    htOrderDetailMapper.updateCoverageAreaInactive(params);
+	    return cnt;
+	 }
+
 }
