@@ -272,4 +272,83 @@ public class htOrderDetailController {
 
 	}
 
+
+	@RequestMapping(value = "/htUpdateCovrgAreaStatusByGrpPop.do")
+	public String htUpdateCovrgAreaStatusByGrpPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "homecare/sales/htUpdateCovrgAreaStatusByGrpPop";
+	}
+
+	@RequestMapping(value = "/selectCovrgAreaListByGrp.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCovrgAreaListByGrp(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+
+		params.put("user_id", sessionVO.getUserId());
+
+        // 조회.
+		List<EgovMap> covrgAreaList = htOrderDetailService.selectCovrgAreaListByGrp(params);
+
+		return ResponseEntity.ok(covrgAreaList);
+	}
+
+	@RequestMapping(value = "/updateCoverageAreaActive.do",method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateCoverageAreaActive(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
+		ReturnMessage message = new ReturnMessage();
+
+		logger.debug("updateCoverageAreaActive - params : {}", params);
+
+		if(null != params.get("areaId")){
+			String olist = (String)params.get("areaId");
+			String[] spl = olist.split(",");
+			params.put("areaIdListSp", spl);
+		}
+
+		logger.debug("updateCoverageAreaActive - params : {}", params);
+
+		// UPDATE SAL0233M
+		int resultValue = htOrderDetailService.updateCoverageAreaActive(params, sessionVO);
+
+		//int resultValue = 0;
+
+		if(resultValue >0 ){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		return ResponseEntity.ok(message);
+
+	}
+
+	@RequestMapping(value = "/updateCoverageAreaInactive.do",method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateCoverageAreaInactive(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
+		ReturnMessage message = new ReturnMessage();
+
+		logger.debug("updateCoverageAreaInactive - params : {}", params);
+
+		if(null != params.get("areaId")){
+			String olist = (String)params.get("areaId");
+			String[] spl = olist.split(",");
+			params.put("areaIdListSp", spl);
+		}
+
+		logger.debug("updateCoverageAreaInactive - params : {}", params);
+
+		// UPDATE SAL0233M
+		int resultValue = htOrderDetailService.updateCoverageAreaInactive(params, sessionVO);
+
+		//int resultValue = 0;
+
+		if(resultValue >0 ){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		return ResponseEntity.ok(message);
+
+	}
+
+
 }
