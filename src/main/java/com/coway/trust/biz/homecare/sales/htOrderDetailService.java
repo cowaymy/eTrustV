@@ -51,4 +51,10 @@ public interface htOrderDetailService {
 	EgovMap getHTCovrgAreaList(Map<String, Object> params);
 
 	public Map<String, Object> updateCovrgAreaStatus(Map<String, Object> params);
+
+	List<EgovMap> selectCovrgAreaListByGrp(Map<String, Object> params);
+
+	int updateCoverageAreaActive(Map<String, Object> params, SessionVO sessionVO);
+
+	int updateCoverageAreaInactive(Map<String, Object> params, SessionVO sessionVO);
 }
