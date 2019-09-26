@@ -38,6 +38,10 @@ var columnLayout = [
         headerText : "Status",
         width: 100
     },  {
+        dataField : "htCode",
+        headerText : "HT Code",
+        width: 100
+    }, {
         dataField : "areaRem",
         headerText : "Remark",
         width: 200
@@ -83,6 +87,11 @@ function fn_updateCurrentCovrgArea() {
 	    }
 }
 
+function fn_updateCovrgAreaByGrp(){
+    Common.popupDiv("/homecare/sales/htUpdateCovrgAreaStatusByGrpPop.do", null, null , true);
+
+}
+
 function fn_excelDown(){
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
     GridCommon.exportTo("grid_wrap", "xlsx", "Coverage Area Search");
@@ -104,6 +113,8 @@ function fn_excelDown(){
 <h2>Coverage Area Management</h2>
 <ul class="right_btns">
 <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript:fn_updateCurrentCovrgArea()"><span class="update"></span>Update Status</a></p></li>
+
+<li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript:fn_updateCovrgAreaByGrp()"><span class="update"></span>Update Status (Group)</a></p></li>
 <%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
   <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript:fn_searchCurrentCovrgArea()"><span class="search"></span>Search</a></p></li>
 <%-- </c:if> --%>
