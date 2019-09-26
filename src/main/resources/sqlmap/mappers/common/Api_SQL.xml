@@ -60,12 +60,10 @@
     </select>
 
     <select id="selectLastPayment" parameterType="Map" resultType="egovMap">
-    SELECT TOT_AMT, PAY_DATE FROM (
-        SELECT AMOUNT TOT_AMT,TO_CHAR(PAY_DATE,'YYYY/MM/DD HH24:MI:SS') PAY_DATE,
-        RANK() OVER(PARTITION BY CUST_ID ORDER BY PAY_ID DESC) RANK
-     FROM CP1018V
+     SELECT SUM(AMOUNT) TOT_AMT, TO_CHAR(PAY_DATE,'YYYY/MM/DD HH24:MI:SS') PAY_DATE
+        FROM CP1018V
         WHERE CUST_ID = #{cowayCustId} AND ACCOUNT_CODE = #{accountCode}
-     ) WHERE RANK = 1
+        GROUP BY CUST_ID,ACCOUNT_CODE,PAY_DATE
     </select>
 
     <select id="getCustTotalOutstanding" parameterType="Map" resultType="egovMap">
@@ -170,7 +168,8 @@
                 MEMBERSHIP_START_DATE ,
                 MEMBERSHIP_EXPIRY_DATE ,
                 MEMBERSHIP_FEE ,
-                MEMBERSHIP_YEAR
+                MEMBERSHIP_YEAR ,
+                IS_CHARGE
             FROM CP1025V
         WHERE SALES_ORD_NO = #{orderNo}
     </select>
