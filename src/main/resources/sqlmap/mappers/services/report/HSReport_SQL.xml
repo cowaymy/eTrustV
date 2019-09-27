@@ -231,7 +231,7 @@
 			                       vMemberOrg.LVL0_UP_ID LVL0_UP_ID
 			                FROM ORG1001V vMemberOrg ) Extent2   ON ( Extent2.MEM_ID = Extent1.MEM_ID )
 			         AND ( Extent2.LVL3_UP_ID = #{groupCode} )
-			 WHERE  1 = Extent1.STUS
+			 WHERE  1 = Extent1.STUS AND Extent1.MEM_TYPE IN (2,3)
 		</select>
 		<select id="selectReportBranchCodeList" parameterType="Map" resultType="egovMap">
 		      SELECT Project1.BRNCH_ID CODE_ID  ,
