@@ -333,8 +333,7 @@ function fn_eTRSummaryListReport(){
 }
 
 function fn_assignSummaryListReport(){
-	Common.alert("In development");
-    //Common.popupDiv("/sales/rcms/assignSummaryListReportPop.do",null, null , true, "assignSummaryListReportPop");
+    Common.popupDiv("/sales/rcms/assignSummaryListReportPop.do",null, null , true, "assignSummaryListReportPop");
 }
 
 /* Report End*/
@@ -502,7 +501,7 @@ function fn_invoicePop() {
         <dt><spring:message code="sal.title.text.link" /></dt>
         <dd>
         <ul class="btns">
-        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <li><p class="link_btn type2"><a onclick="javascript: fn_assignListReport()"><spring:message code="sal.title.text.assignListRaw" /></a></p></li>
         </c:if>
         <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
