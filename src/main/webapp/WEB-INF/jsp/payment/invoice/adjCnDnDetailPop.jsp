@@ -36,7 +36,7 @@ $(document).ready(function(){
     	$("#centerBtn1").show();
     }else if("${mode}" == "APPROVAL"){
         $("#centerBtn2").show();
-        $("#appvRemTxt").hide();
+        $("#appvRemTxt").show();
     }
 
 });
