@@ -29,6 +29,7 @@ import oracle.sql.DATE;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 05/09/2019    ONGHC      1.0.1       - CREATE FOR IN-HOUSE REPAIR
+ * 30/09/2019    ONGHC      1.0.2       - AMEND IN-HOUSE DOC.NO.
  *********************************************************************************************/
 
 @Service("InHouseRepairService")
@@ -454,7 +455,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
       params.put("REF_REQUEST", ARS_AS_ID);
     }
 
-    params.put("DOCNO", "17");
+    params.put("DOCNO", "169");
     EgovMap eMap = inHouseRepairMapper.getASEntryDocNo(params);
 
     EgovMap seqMap = inHouseRepairMapper.getASEntryId(params);
@@ -524,7 +525,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
 
     String AS_NO = "";
 
-    params.put("DOCNO", "17");
+    params.put("DOCNO", "169");
     EgovMap eMap = inHouseRepairMapper.getASEntryDocNo(params);
     EgovMap seqMap = inHouseRepairMapper.getASEntryId(params);
 
@@ -535,7 +536,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
     SVC0109Dmap.put("AS_ID", String.valueOf(seqMap.get("seq")).trim());
     SVC0109Dmap.put("AS_NO", String.valueOf(eMap.get("asno")).trim());
 
-    params.put("DOCNO", "21");
+    params.put("DOCNO", "170");
     EgovMap eMap_result = inHouseRepairMapper.getASEntryDocNo(params);
     EgovMap seqMap_result = inHouseRepairMapper.getResultASEntryId(params);
     String AS_RESULT_ID = String.valueOf(seqMap_result.get("seq"));
@@ -1915,7 +1916,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
   public int saveASEntryInHouse(Map<String, Object> params) {
     params.put("REF_REQUEST", (String) ((Map) params.get("asResultM")).get("AS_ENTRY_ID")); // REFER ID
 
-    params.put("DOCNO", "17");
+    params.put("DOCNO", "169");
     EgovMap eMap = inHouseRepairMapper.getASEntryDocNo(params); // GET NEW AS NO
 
     EgovMap seqMap = inHouseRepairMapper.getASEntryId(params); // GET NEW AS ENTRY NO
@@ -1982,7 +1983,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
     ACC_INV_VOID_ID = String.valueOf(seqpay17Map.get("seq"));
     params.put("ACC_INV_VOID_ID", ACC_INV_VOID_ID);
 
-    params.put("DOCNO", "21");
+    params.put("DOCNO", "170");
     eASEntryDocNo = inHouseRepairMapper.getASEntryDocNo(params);
     asResultASEntryId = inHouseRepairMapper.getResultASEntryId(params);
 
@@ -2513,7 +2514,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
     ACC_INV_VOID_ID = String.valueOf(seqpay17Map.get("seq"));
     params.put("ACC_INV_VOID_ID", ACC_INV_VOID_ID);
 
-    params.put("DOCNO", "21");
+    params.put("DOCNO", "170");
     eASEntryDocNo = inHouseRepairMapper.getASEntryDocNo(params);
     asResultASEntryId = inHouseRepairMapper.getResultASEntryId(params);
 
