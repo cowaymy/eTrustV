@@ -1179,26 +1179,21 @@
                   Extent8.WH_LOC_ID WH_LOC_ID ,
                   Extent8.WH_LOC_CODE WH_LOC_CODE ,
                   Extent8.WH_LOC_DESC WH_LOC_DESC ,
-                  Extent9.RESN_ID REASONID3 ,
-                  Extent9.CODE CODE5 ,
-                  Extent9.RESN_DESC
-                  REASONDESC3 ,
-                  E0.RESN_ID REASONID4 ,
-                  E0.CODE CODE6 ,
-                  E0.RESN_DESC
-                  REASONDESC4 ,
-                  E1.RESN_ID REASONID5 ,
-                  E1.CODE CODE7 ,
-                  E1.RESN_DESC
-                  REASONDESC5 ,
-                  E2.RESN_ID REASONID6 ,
-                  E2.CODE CODE8 ,
-                  E2.RESN_DESC
-                  REASONDESC6 ,
-                  E3.RESN_ID REASONID7 ,
-                  E3.CODE CODE9 ,
-                  E3.RESN_DESC
-                  REASONDESC7 ,
+                  Extent9.DEFECT_ID REASONID3 ,
+                  Extent9.DEFECT_CODE CODE5 ,
+                  Extent9.DEFECT_DESC REASONDESC3 ,
+                  E0.DEFECT_ID REASONID4 ,
+                  E0.DEFECT_CODE CODE6 ,
+                  E0.DEFECT_DESC REASONDESC4 ,
+                  E1.DEFECT_ID REASONID5 ,
+                  E1.DEFECT_CODE CODE7 ,
+                  E1.DEFECT_DESC REASONDESC5 ,
+                  E2.DEFECT_ID REASONID6 ,
+                  E2.DEFECT_CODE CODE8 ,
+                  E2.DEFECT_DESC REASONDESC6 ,
+                  E3.DEFECT_ID REASONID7 ,
+                  E3.DEFECT_CODE CODE9 ,
+                  E3.DEFECT_DESC REASONDESC7 ,
                   E4.USER_ID USER_ID ,
                   E4.USER_NAME USER_NAME ,
                   E.IN_HUSE_REPAIR_REM,
@@ -1216,11 +1211,11 @@
     LEFT JOIN SYS0032M Extent6 ON Extent6.RESN_ID = E.AS_MALFUNC_RESN_ID
     LEFT JOIN ORG0001D Extent7 ON Extent7.MEM_ID = E.AS_CT_ID
     LEFT JOIN SYS0028M Extent8 ON Extent8.WH_LOC_ID = E.AS_WH_ID
-    LEFT JOIN SYS0032M Extent9 ON Extent9.RESN_ID = E.AS_DEFECT_TYPE_ID
-    LEFT JOIN SYS0032M E0 ON E0.RESN_ID = E.AS_DEFECT_ID
-    LEFT JOIN SYS0032M E1 ON E1.RESN_ID = E.AS_DEFECT_PART_ID
-    LEFT JOIN SYS0032M E2 ON E2.RESN_ID = E.AS_DEFECT_DTL_RESN_ID
-    LEFT JOIN SYS0032M E3 ON E3.RESN_ID = E.AS_SLUTN_RESN_ID
+    LEFT JOIN SYS0100M Extent9 ON Extent9.DEFECT_ID = E.AS_DEFECT_TYPE_ID AND Extent9.DEFECT_TYP = 'DT'
+    LEFT JOIN SYS0100M E0 ON E0.DEFECT_ID = E.AS_DEFECT_ID AND E0.DEFECT_TYP = 'DC'
+    LEFT JOIN SYS0100M E1 ON E1.DEFECT_ID = E.AS_DEFECT_PART_ID AND E1.DEFECT_TYP = 'DP'
+    LEFT JOIN SYS0100M E2 ON E2.DEFECT_ID = E.AS_DEFECT_DTL_RESN_ID AND E2.DEFECT_TYP = 'DD'
+    LEFT JOIN SYS0100M E3 ON E3.DEFECT_ID = E.AS_SLUTN_RESN_ID AND E3.DEFECT_TYP = 'SC'
     LEFT JOIN SYS0047M E4 ON E4.USER_ID = E.AS_RESULT_CRT_USER_ID
     WHERE E.AS_RESULT_ID = NVL( #{REF_REQST} , (SELECT AS_RESULT_ID
                                                 FROM SVC0109D
