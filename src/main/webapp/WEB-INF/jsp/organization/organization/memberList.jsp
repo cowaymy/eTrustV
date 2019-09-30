@@ -137,7 +137,7 @@ function fn_requestVacationPop(){
              //Common.alert(" New Cody registration has been completed from "+membercode+" to "+ result.message);
                  if ( traineeType == 2) {
                     Common.alert(" Cody registration has been completed. "+membercode+" to "+ result.memCode);
-                    sms = 'Your Cody Code: ' + result.memCode + ' is successfully created. Password: Last 6 digits of your NRIC No. Kindly log in to e-Trust for activation in 2 days. TQ.';
+                    sms = 'Your Cody Code: ' + result.memCode + ' is created. PW: Last 6 digits of your NRIC No. Kindly login to e-Trust for activation & confirm Bank acc. no. in 2 days. TQ';
                 }
 
                 if ( traineeType == 3) {
