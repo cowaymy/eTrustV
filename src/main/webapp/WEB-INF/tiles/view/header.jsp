@@ -22,7 +22,7 @@
 		<c:otherwise>
 		<ul class="left_opt">
         <li><a href="javascript:void(0);"><span id="header_refresh"><img src="${pageContext.request.contextPath}/resources/images/common/icon_refresh.png" alt="Refresh" /></span></a></li>
-        <!-- <li>Neo(Mega Deal): <a href="javascript:void(0);"><span id="header_neo">-</span></a></li> -->
+        <li>Neo(Key-in): <a href="javascript:void(0);"><span id="header_neo">-</span></a></li>
         <li>Sales(Key In): <a href="javascript:void(0);"><span id="header_sales">-</span></a></li>
         <!--   <li>Net Qty[<a href="javascript:void(0);"><span id="header_netQty"></span></a></li> -->
         <li>Net Qty [Outright : <a href="javascript:void(0);"><span id="header_outRight">-</span></a></li>
