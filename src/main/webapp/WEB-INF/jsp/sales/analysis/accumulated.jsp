@@ -4,14 +4,14 @@
 <script type="text/javaScript" language="javascript">
 
 function fn_report(type) {
-	
+
 	if($("#yyyymmDate").val() == null || $("#yyyymmDate").val() == ''){
 		Common.alert('<spring:message code="sal.alert.msg.keyInDate" />');
 		return;
 	}
-	
+
 	$("#V_INPUTDATE").val("01/"+$("#yyyymmDate").val());
-	
+
 	if(type == "PDF"){
 		$("#viewType").val('PDF');
 	}else if(type == "EXCEL"){
@@ -19,22 +19,25 @@ function fn_report(type) {
 	}else{
 		return false;
 	}
-	
+
 	if(dataForm.reportType.value=="0"){
-		$("#reportFileName").val('/sales/AccumulatedAccReport_PDF.rpt');
+		$("#reportFileName").val('/sales/AccumulatedAccReport_PDF_ver2.rpt');
 		$("#reportDownFileName").val("AccumulatedAccReport_" + $("#V_INPUTDATE").val());
 	}else if(dataForm.reportType.value=="1"){
-		$("#reportFileName").val('/sales/AccumulatedAccReport_REN_Details_PDF.rpt');
-        $("#reportDownFileName").val("AccumulatedAccReportRenDetails_" + $("#V_INPUTDATE").val());
+		$("#reportFileName").val('/sales/AccumulatedAccReport_REN_Opt_Details_PDF.rpt');
+        $("#reportDownFileName").val("AccumulatedAccReportRenOperationLeaseDetails_" + $("#V_INPUTDATE").val());
 	}else if(dataForm.reportType.value=="2"){
+        $("#reportFileName").val('/sales/AccumulatedAccReport_REN_Fin_Details_PDF.rpt');
+        $("#reportDownFileName").val("AccumulatedAccReportRenFinanceLeaseDetails_" + $("#V_INPUTDATE").val());
+	}else if(dataForm.reportType.value=="3"){
 		$("#reportFileName").val('/sales/AccMembershipDetail_PDF.rpt');
         $("#reportDownFileName").val("AccumulatedMembershipReportDetails_" + $("#V_INPUTDATE").val());
 	}
-	
+
 //	alert($("#V_INPUTDATE").val());
-	
+
 	var option = {
-        isProcedure : true 
+        isProcedure : true
     };
 
     Common.report("dataForm", option);
@@ -71,8 +74,9 @@ function fn_report(type) {
     <td>
     <select class="w100p" id="reportType" name="reportType">
         <option value="0"><spring:message code="sal.combo.text.rptAccumulatedAcc" /></option>
-        <option value="1"><spring:message code="sal.combo.text.rptRenDetAcc" /></option>
-        <option value="2"><spring:message code="sal.combo.text.rptMemDetAcc" /></option>
+        <option value="1">Accumulated Account Report (Rental Operation Lease)</option>
+        <option value="2">Accumulated Account Report (Rental Finance Lease)</option>
+        <option value="3"><spring:message code="sal.combo.text.rptMemDetAcc" /></option>
     </select>
     </td>
 </tr>
