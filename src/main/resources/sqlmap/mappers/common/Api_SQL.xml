@@ -60,11 +60,11 @@
     </select>
 
     <select id="selectLastPayment" parameterType="Map" resultType="egovMap">
-     SELECT * FROM 
+     SELECT * FROM
      (SELECT SUM(AMOUNT) TOT_AMT, TO_CHAR(PAY_DATE,'YYYY/MM/DD HH24:MI:SS') PAY_DATE
         FROM CP1018V
-        WHERE CUST_ID = #{cowayCustId} AND ACCOUNT_CODE = #{accountCode}
-        GROUP BY CUST_ID,ACCOUNT_CODE,PAY_DATE
+        WHERE CUST_ID = #{cowayCustId}
+        GROUP BY CUST_ID,PAY_DATE
         ORDER BY PAY_DATE DESC
         ) WHERE ROWNUM <![CDATA[ <= ]]> 1
     </select>
