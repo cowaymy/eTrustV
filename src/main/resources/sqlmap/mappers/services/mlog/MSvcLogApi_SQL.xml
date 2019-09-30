@@ -444,7 +444,6 @@
                                       result_Acceptance_Name,
                                       product_Name,
                                       product_Code,
-                                      product_Cat,
                                       dsc_Code,
                                       reqRefNo,
                                       as_type_id,
@@ -485,7 +484,6 @@
                                            sal0024d.cust_bill_pay_ref_no1 AS customer_Jom_Pay_Ref_No,
                                            sys0026m.stk_desc AS product_Name,
                                            sys0026m.stk_code AS product_Code,
-                                           TO_CHAR (sys0026m.stk_ctgry_id) AS product_Cat,
                                            Fn_get_commcd (10, sal0001d.app_type_id) AS app_Type,
                                            (SELECT promo_desc
                                             FROM sal0017d
@@ -1408,7 +1406,6 @@
            TO_CHAR (CUST_JOM_PAY_REF_NO) AS customer_Jom_Pay_Ref_No,
            TO_CHAR (PRODUCT_NAME) AS product_Name,
            TO_CHAR (PRODUCT_CODE) AS product_Code,
-           TO_CHAR('54') AS product_Cat,
            TO_CHAR (APP_TYPE) AS app_Type,
            TO_CHAR (INSTCT) AS instruction,
            TO_CHAR (SALES_PROMT) AS sales_Promotion,
