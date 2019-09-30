@@ -74,8 +74,8 @@ function fn_report(type) {
     <td>
     <select class="w100p" id="reportType" name="reportType">
         <option value="0"><spring:message code="sal.combo.text.rptAccumulatedAcc" /></option>
-        <option value="1">Accumulated Account Report (Rental Operation Lease)</option>
-        <option value="2">Accumulated Account Report (Rental Finance Lease)</option>
+        <option value="1">Report Rental Operation Lease Details Account</option>
+        <option value="2">Report Rental Finance Lease Details Account</option>
         <option value="3"><spring:message code="sal.combo.text.rptMemDetAcc" /></option>
     </select>
     </td>
