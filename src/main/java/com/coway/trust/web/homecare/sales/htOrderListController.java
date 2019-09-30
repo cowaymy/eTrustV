@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.biz.sales.common.SalesCommonService;
+//import com.coway.trust.biz.sales.common.impl.SalesCommonMapper;
 import com.coway.trust.biz.homecare.sales.htOrderListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
@@ -32,6 +35,7 @@ import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 import com.crystaldecisions.jakarta.poi.util.StringUtil;
@@ -51,16 +55,34 @@ public class htOrderListController {
 	@Resource(name = "htOrderListService")
 	private htOrderListService htOrderListService;
 
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
+
 	@Resource(name = "installationResultListService")
 	private InstallationResultListService installationResultListService;
 
 	@Resource(name = "servicesLogisticsPFCService")
 	private ServicesLogisticsPFCService servicesLogisticsPFCService;
 
-
+	@Autowired
+	private SessionHandler sessionHandler;
 
 	@RequestMapping(value = "/htOrderList.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+			model.put("memType", getUserInfo.get("memType"));
+			model.put("orgCode", getUserInfo.get("orgCode"));
+			model.put("grpCode", getUserInfo.get("grpCode"));
+			model.put("deptCode", getUserInfo.get("deptCode"));
+			model.put("memCode", getUserInfo.get("memCode"));
+			logger.info("memType ##### " + getUserInfo.get("memType"));
+		}
+
 
 		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
 		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
