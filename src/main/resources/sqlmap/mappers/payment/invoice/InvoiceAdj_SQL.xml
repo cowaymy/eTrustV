@@ -2030,14 +2030,7 @@
                 C.FINAL_APPV_DT
 			FROM PAY0011D M
 			INNER JOIN PAY0292D A
-			<choose>
-                <when test="batchId != null and batchId != '' ">
-                    ON M.BATCH_ID = LTRIM(A.MEMO_ADJ_ID, 'BCH')
-                </when>
-                <otherwise>
-                    ON M.MEMO_ADJ_ID = LTRIM(A.MEMO_ADJ_ID, 'BCH')
-                </otherwise>
-            </choose>
+            ON (M.MEMO_ADJ_ID = LTRIM(A.MEMO_ADJ_ID, 'BCH') OR M.BATCH_ID = LTRIM(A.MEMO_ADJ_ID, 'BCH'))
 			INNER JOIN ORG0001D B
 			ON A.MEMO_APPR_USER_ID = B.MEM_CODE
 			LEFT JOIN (

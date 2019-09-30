@@ -54,17 +54,23 @@ var columnLayout=[
 // 리스트 조회.
 function fn_getAdjustmentListAjax() {
 
-    /*if(FormUtil.checkReqValue($("#orderNo")) &&
+    if(FormUtil.checkReqValue($("#orderNo")) &&
             FormUtil.checkReqValue($("#invoiceNo")) &&
             FormUtil.checkReqValue($("#batchId")) &&
-            FormUtil.checkReqValue($("#adjNo"))){
+            FormUtil.checkReqValue($("#adjNo")) &&
+            (FormUtil.checkReqValue($("#date1")) ||
+            FormUtil.checkReqValue($("#date2"))) ) {
         Common.alert("<spring:message code='pay.alert.oneEntry'/>");
         return;
-    }*/
+    }
 
     Common.ajax("GET", "/payment/selectAdjustmentList.do", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
+}
+
+function fn_genExcel() {
+    GridCommon.exportTo("grid_wrap", 'xlsx', "AdjustmentRaw");
 }
 
 </script>
@@ -73,6 +79,7 @@ function fn_getAdjustmentListAjax() {
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Approval Adjustment (CN / DN)</h1>
 		<ul class="right_opt">
+		    <li><p class="btn_blue"><a href="javascript:fn_genExcel();">Generate Excel</a></p></li>
 			<li><p class="btn_blue"><a href="javascript:fn_getAdjustmentListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
@@ -109,6 +116,18 @@ function fn_getAdjustmentListAjax() {
                         <td>
                            <input id="adjNo" name="adjNo" type="text" placeholder="Adjustment No." class="w100p" />
                         </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Create Date</th>
+                        <td>
+                            <div class="date_set w100p"><!-- date_set start -->
+                                <p><input type="text" title="Adjustment Create Start Date" placeholder="DD/MM/YYYY" class="j_date" id="date1" name="date1"/></p>
+                                    <span><spring:message code="webInvoice.to" /></span>
+                                <p><input type="text" title="Adjustment Create End Date" placeholder="DD/MM/YYYY" class="j_date" id="date2" name="date2"/></p>
+                            </div><!-- date_set end -->
+                        </td>
+                        <th scope="row"></th>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
