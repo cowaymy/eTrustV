@@ -699,7 +699,7 @@ public class InvoiceAdjController {
             ntf.put("codeName", "CN/DN Adjustment");
             ntf.put("clmNo", apprLineList.get("memoAdjRefNo"));
 
-            if(currentAppvStus != "J") {
+            if(!"J".equals(currentAppvStus)) {
                 ntf.put("appvStus", "R");
                 ntf.put("rejctResn", "Pending Approval.");
                 ntf.put("reqstUserId", apprLineList.get("memoApprUserName"));
@@ -801,7 +801,7 @@ public class InvoiceAdjController {
                 ntf.put("codeName", "CN/DN Batch Adjustment");
                 ntf.put("clmNo", "Batch Adj - " + apprLineGridMap.get("batchId").toString());
 
-                if(currentAppvStus != "J") {
+                if(!"J".equals(currentAppvStus)) {
                     ntf.put("appvStus", "R");
                     ntf.put("rejctResn", "Pending Approval.");
                     ntf.put("reqstUserId", apprLineList.get("memoApprUserName"));

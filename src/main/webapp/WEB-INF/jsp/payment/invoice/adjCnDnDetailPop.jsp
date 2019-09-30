@@ -318,6 +318,11 @@ function fn_generateReport(){
  }
 
 function fn_approve(process){
+	if($("#appvRem").val() == "") {
+		Common.alert("Approver remark cannot be empty!");
+		return false;
+	}
+
 	var param = {"adjId":"${adjId}" ,
 			           "process" : process,
 			           "invoiceType" : invoiceType,
