@@ -2,8 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.invoice.service.impl.InvoiceAdjMapper">
     <select id="selectInvoiceAdjList" parameterType="Map" resultType="egovMap">
-        SELECT 'A1123456' xxxx,
-        UnionAll2.MEMO_ADJ_ID MEMO_ADJ_ID  ,
+        SELECT UnionAll2.MEMO_ADJ_ID MEMO_ADJ_ID  ,
 			       UnionAll2.MEMOADJUSTID1 MEMOADJUSTID1  ,
 			       UnionAll2.MEMO_ADJ_REF_NO MEMO_ADJ_REF_NO  ,
 			       UnionAll2.MEMO_ADJ_INVC_NO MEMO_ADJ_INVC_NO  ,
@@ -87,6 +86,7 @@
 	                                       AND extent232.MEMO_APPR_USER_ID = #{memCode}
 	                                   </if>
 	                                   <if test="apprGrp != null and apprGrp != '' ">
+	                                       AND extent232.MEMO_APPV_STUS = 'R'
 	                                       AND extent232.MEMO_APPR_USER_ID IN (
 	                                           SELECT APPR_MEM_CODE
 	                                           FROM FCM0023M
@@ -165,6 +165,7 @@
 	                                       AND extent233.MEMO_APPR_USER_ID = #{memCode}
 	                                   </if>
 	                                   <if test="apprGrp != null and apprGrp != '' ">
+	                                       AND extent233.MEMO_APPV_STUS = 'R'
 	                                       AND extent233.MEMO_APPR_USER_ID IN (
 	                                           SELECT APPR_MEM_CODE
 	                                           FROM FCM0023M
@@ -241,6 +242,7 @@
 	                                AND extent234.MEMO_APPR_USER_ID = #{memCode}
 	                            </if>
 	                            <if test="apprGrp != null and apprGrp != '' ">
+	                               AND extent234.MEMO_APPV_STUS = 'R'
 	                                AND extent234.MEMO_APPR_USER_ID IN (
 	                                           SELECT APPR_MEM_CODE
 	                                           FROM FCM0023M
@@ -321,6 +323,7 @@
 	                                AND extent235.MEMO_APPR_USER_ID = #{memCode}
 	                            </if>
 	                            <if test="apprGrp != null and apprGrp != '' ">
+	                                AND extent235.MEMO_APPV_STUS = 'R'
 	                                AND extent235.MEMO_APPR_USER_ID IN (
 	                                           SELECT APPR_MEM_CODE
 	                                           FROM FCM0023M

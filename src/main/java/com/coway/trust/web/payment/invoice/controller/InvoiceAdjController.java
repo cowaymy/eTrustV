@@ -735,9 +735,6 @@ public class InvoiceAdjController {
         String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
         params.put("memCode", memCode);
         EgovMap apprDtls = (EgovMap) webInvoiceService.getApprGrp(params);
-        if(apprDtls != null && "AO".equals(apprDtls.get("apprGrp").toString())) {
-            params.put("apprGrp", apprDtls.get("apprGrp"));
-        }
 
         List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
         Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
@@ -756,6 +753,10 @@ public class InvoiceAdjController {
             apprMap.put("appvStus", "APPROVE".equals(formData.get("process").toString()) ? "A" : "J");
             apprMap.put("userId", sessionVO.getUserId());
             apprMap.put("appvRem", formData.get("appvRem").toString());
+
+            if(apprDtls != null && "AO".equals(apprDtls.get("apprGrp").toString())) {
+                apprMap.put("apprGrp", apprDtls.get("apprGrp"));
+            }
 
             apprMap.put("mode", "S");
             invoiceService.updateAdjApprovalLine(apprMap);

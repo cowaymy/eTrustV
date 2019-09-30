@@ -36,6 +36,7 @@ $(document).ready(function(){
     	$("#centerBtn1").show();
     }else if("${mode}" == "APPROVAL"){
         $("#centerBtn2").show();
+        $("#appvRemTxt").hide();
     }
 
 });
@@ -437,7 +438,7 @@ function fn_approve(process){
 				        </div><!-- auto_file end -->
 				    </td>
 				</tr>
-				<tr>
+				<tr id="appvRemTxt" style="display: none">
                     <th scope="row">Approver Remark</th>
                     <td colspan="3"><textarea class="w100p" rows="2" style="height:auto" id="appvRem" name="appvRem"></textarea></td>
                 </tr>
