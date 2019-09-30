@@ -344,6 +344,7 @@ $(document).ready(function(){
 
 	}
 
+	
 	/*fn_getMaxPeriodEarlyBirdPromo*/
 	function fn_getMaxPeriodEarlyBirdPromo(old_result) {
 
@@ -362,12 +363,15 @@ $(document).ready(function(){
 			var dateNow = new Date();
 			var lastDayofDtNow = new Date(dateNow.getFullYear(), dateNow.getMonth() + 1, 0);
 
-			/* var dateNowMth = dateNow.getMonth() + 1;
-			dateNowMth = (dateNowMth < 10) ? '0' + dateNowMth : '' + dateNowMth;
-			dateNow = dateNow.getFullYear() + "-" + dateNowMth; */
+			dateOne = formatDate(dateOne.toDateString());
+			dateNow = formatDate(dateNow.toDateString());
+			lastDayofDt2 = formatDate(lastDayofDt2.toDateString());
+			lastDayofDtNow = formatDate(lastDayofDtNow.toDateString());
 
-			console.log(dateOne.toDateString() +" "+ dateTwo.toDateString() +" "+ dateNow.toDateString() + " "+ lastDayofDtNow.toDateString());
-			if (dateNow.toDateString() <= lastDayofDt2.toDateString() && dateNow.toDateString() <= lastDayofDtNow.toDateString()) { //eligible for earlybird promo
+			console.log(dateOne + " " + dateNow + " " + lastDayofDt2 + " " + lastDayofDtNow);
+			console.log(dateNow <= lastDayofDt2);
+			console.log(dateNow <= lastDayofDtNow);
+			if (dateNow <= lastDayofDt2 && dateNow <= lastDayofDtNow) { //eligible for earlybird promo
 				$("#hiddenEarlyBirdPromo").val(1);
 			}
 			else {
@@ -376,6 +380,17 @@ $(document).ready(function(){
 
 			console.log($("#hiddenEarlyBirdPromo").val());
 		});
+	}
+
+	function formatDate(date) {
+		var d = new Date(date), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
+
+		if (month.length < 2)
+			month = '0' + month;
+		if (day.length < 2)
+			day = '0' + day;
+
+		return [ year, month, day ].join('-');
 	}
 
 	/*oList*/
