@@ -105,6 +105,7 @@ import io.swagger.annotations.ApiOperation;
  * 08/07/2019    ONGHC      1.0.4       - Amend asRegistration to fix Commission issue
  * 26/07/2019    ONGHC      1.0.5       - Amend asRegistration to fix Commission and Update User issue
  * 29/07/2019    ONGHC      1.0.6       - Amend productReturnResult to Add Status Checking
+ * 30/07/2019    ONGHC      1.0.7       - Amend asRegistration
  *********************************************************************************************/
 
 @Api(value = "service api", description = "service api")
@@ -636,6 +637,7 @@ public class ServiceApiController {
     SimpleDateFormat transFormatYY = new SimpleDateFormat("yyyymmdd");
     SimpleDateFormat transFormat1 = new SimpleDateFormat("ddmmyyyy");
     SimpleDateFormat transFormatHH = new SimpleDateFormat("HHmmss");
+    SimpleDateFormat transFormatAMPM = new SimpleDateFormat("hh:mm aa");
 
     DateFormat sdFormat = new SimpleDateFormat("ddMMyyyy");
     DateFormat sdFormat1 = new SimpleDateFormat("dd-MM-yyyy");
@@ -643,7 +645,7 @@ public class ServiceApiController {
 
     String ddMMCurDate = transFormat.format(new Date());
     String curDate = transFormatYY.format(new Date());
-    String curTime = transFormatHH.format(new Date());
+    String curTime = transFormatAMPM.format(new Date());
 
     // CURRENT YEAR, MONTH, DAY
     int year = cal.get(cal.YEAR);
