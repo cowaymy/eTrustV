@@ -366,8 +366,8 @@ $(document).ready(function(){
 			dateNowMth = (dateNowMth < 10) ? '0' + dateNowMth : '' + dateNowMth;
 			dateNow = dateNow.getFullYear() + "-" + dateNowMth; */
 
-			//console.log(dateOne +" "+ dateTwo +" "+ dateNow + " "+ lastDayofDtNow);
-			if (dateOne <= dateNow && dateNow <= lastDayofDt2 && dateNow <= lastDayofDtNow) { //eligible for earlybird promo
+			console.log(dateOne.toDateString() +" "+ dateTwo.toDateString() +" "+ dateNow.toDateString() + " "+ lastDayofDtNow.toDateString());
+			if (dateNow.toDateString() <= lastDayofDt2.toDateString() && dateNow.toDateString() <= lastDayofDtNow.toDateString()) { //eligible for earlybird promo
 				$("#hiddenEarlyBirdPromo").val(1);
 			}
 			else {
