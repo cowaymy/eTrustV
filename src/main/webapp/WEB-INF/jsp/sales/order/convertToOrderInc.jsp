@@ -116,7 +116,7 @@
               //fn_loadProductPromotion('${preOrderInfo.appTypeId}', '${preOrderInfo.itmStkId}', '${preOrderInfo.empChk}', $("#typeId").val(), '${preOrderInfo.exTrade}');
 
                 $('#ordPromo').removeAttr("disabled");
-                if('${preOrderInfo.month}' >= '7' && '${preOrderInfo.year}' == '2019') {
+                if('${preOrderInfo.month}' >= '07' && '${preOrderInfo.year}' == '2019') {
                     doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
                         ,stkId:'${preOrderInfo.itmStkId}'
                         ,empChk:'${preOrderInfo.empChk}'
