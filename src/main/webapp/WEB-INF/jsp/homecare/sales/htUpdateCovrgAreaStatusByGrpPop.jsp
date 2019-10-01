@@ -196,6 +196,12 @@ function fn_excelDown(){
         <select class="w100p"  id="stateArea" name="state">
         </select>
     </td>
+    <th scope="row">Status</th>
+    <td>
+        <select id="statusId" name="statusId" class="w100p">
+        <option value="1">Active</option>
+        <option value="8">Inactive</option>
+    </select>
 
 </tr>
 
