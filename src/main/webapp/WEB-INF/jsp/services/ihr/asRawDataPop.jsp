@@ -102,9 +102,9 @@
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
         $("#reportForm1 #V_FULLSQL").val(" ");
         $("#reportForm1 #V_WHERESQL").val(whereSql);
-        $("#reportForm1 #reportFileName").val('/services/ASRawDataKOR.rpt');
+        $("#reportForm1 #reportFileName").val('/services/IHRawDataKOR.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
-        $("#reportForm1 #reportDownFileName").val("ASRawDataKOR_" + day + month + date.getFullYear());
+        $("#reportForm1 #reportDownFileName").val("IHRawDataKOR_" + day + month + date.getFullYear());
 
         var option = {
           isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -220,7 +220,7 @@
        <th scope="row">Report Type<span id='m1' name='m1' class='must'> *</span></th>
        <td><select id="reportType" class="w100p" >
          <option value="1">In-House (IHR) Raw Data</option>
-         <option value="3">In-House (IHR) Raw Data [New]</option>
+         <option value="3" selected>In-House (IHR) Raw Data [New]</option>
          <option value="2">In-House (IHR) Spare Part Exchange Raw Data</option>
          <!-- <option value="3">After Service (AS) Raw Data (PQC)</option>  -->
          <!-- <option value="4">After Service (AS) Raw Data (AOAS)</option>  -->
