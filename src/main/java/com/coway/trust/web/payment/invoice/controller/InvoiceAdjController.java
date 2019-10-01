@@ -177,14 +177,14 @@ public class InvoiceAdjController {
 	        //ArrayList<Map> appvPrcssStusList = new ArrayList<Map> ();
 	        HashMap<String, Object> appvHm = new HashMap<String, Object>();
 
-	        appvPrcssStusList.add("- Request By " + (String) apprDetail.get("memoReqstUserId") + " [" + (String) apprDetail.get("reqstDt") + "]");
+	        appvPrcssStusList.add("- Requested By " + (String) apprDetail.get("memoReqstUserId") + " [" + (String) apprDetail.get("reqstDt") + "]");
 
 	        String finalAppr = "";
 	        for(int i = 0; i < apprList.size(); i++) {
 	            apprDetail = apprList.get(i);
 
 	            if("R".equals((String)apprDetail.get("memoAppvStus")) || "T".equals((String)apprDetail.get("memoAppvStus"))) {
-	                appvPrcssStusList.add("- Pending By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
+	                appvPrcssStusList.add("- Pending for Approval By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
 	            } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
 	                appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
 	                finalAppr = "- Approved By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";
@@ -263,14 +263,14 @@ public class InvoiceAdjController {
 		//ArrayList<Map> appvPrcssStusList = new ArrayList<Map> ();
 		HashMap<String, Object> appvHm = new HashMap<String, Object>();
 
-		appvPrcssStusList.add("- Request By " + (String) apprDetail.get("memoReqstUserId") + " [" + (String) apprDetail.get("reqstDt") + "]");
+		appvPrcssStusList.add("- Requested By " + (String) apprDetail.get("memoReqstUserId") + " [" + (String) apprDetail.get("reqstDt") + "]");
 
 		String finalAppr = "";
 		for(int i = 0; i < apprList.size(); i++) {
 		    apprDetail = apprList.get(i);
 
 		    if("R".equals((String)apprDetail.get("memoAppvStus")) || "T".equals((String)apprDetail.get("memoAppvStus"))) {
-                appvPrcssStusList.add("- Pending By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
+                appvPrcssStusList.add("- Pending for Approval By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
             } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
                 appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
                 finalAppr = "- Approved By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";

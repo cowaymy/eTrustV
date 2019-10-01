@@ -422,7 +422,7 @@ function fn_approve(process){
                     <td colspan="3"  id="tInvoiceRemark"></td>
                 </tr>
                 <tr>
-                    <th scope="row"><spring:message code="approveView.approveStatus" /></th>
+                    <th scope="row">Approval Status</th>
                     <!-- <td colspan="3" style="height:60px" id="viewAppvStus"></td> -->
                     <td colspan="3" style="height:60px">
                         <div class="w100p"><!-- tran_list start -->
@@ -444,7 +444,7 @@ function fn_approve(process){
 				    </td>
 				</tr>
 				<tr id="appvRemTxt" style="display: none">
-                    <th scope="row">Approver Remark</th>
+                    <th scope="row">Approver Comment</th>
                     <td colspan="3"><textarea class="w100p" rows="2" style="height:auto" id="appvRem" name="appvRem"></textarea></td>
                 </tr>
             </tbody>
