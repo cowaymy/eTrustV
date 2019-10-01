@@ -7,7 +7,7 @@ var attachList = null;
 
 //AUIGrid 칼럼 설정
 var myPopLayout = [
-    { dataField:"billItmType" ,headerText:"<spring:message code='pay.head.billType'/>",width: 200 , editable : false},
+    { dataField:"billItmType" ,headerText:"Sales Type",width: 200 , editable : false},
     { dataField:"billItmRefNo" ,headerText:"<spring:message code='pay.head.orderNumber'/>",width: 200 , editable : false},
     { dataField:"memoItmChrg" ,headerText:"<spring:message code='pay.head.amount'/>", editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120},
     { dataField:"memoItmTxs" ,headerText:"<spring:message code='pay.head.gst'/>", editable : false ,dataType : "numeric",formatString : "#,##0.00" ,width : 120},
@@ -378,15 +378,15 @@ function fn_approve(process){
                     <td colspan="3" id="tDept"></td>
                 </tr>
                 <tr>
-                    <th scope="row">Adjustment Type</th>
+                    <th scope="row">Adjustment Number</th>
                     <td id="tRefNo"></td>
                     <th scope="row">Report No.</th>
                     <td id="tReportNo"></td>
                 </tr>
                 <tr>
-                    <th scope="row">Memo Type</th>
+                    <th scope="row">Adjustment Type</th>
                     <td id="tType"></td>
-                    <th scope="row">Memo Reason</th>
+                    <th scope="row">Reason</th>
                     <td id="tReason"></td>
                 </tr>
                 <tr>
@@ -402,7 +402,7 @@ function fn_approve(process){
                     <td id="tOrderNo"></td>
                 </tr>
                 <tr>
-                    <th scope="row">Memo Remark</th>
+                    <th scope="row">Description</th>
                     <td colspan="3"  id="tMemoRemark"></td>
                 </tr>
                 <tr>
@@ -410,16 +410,8 @@ function fn_approve(process){
                     <td colspan="3"  id="tCustNmt"></td>
                 </tr>
                 <tr>
-                    <th scope="row">Contact Person</th>
-                    <td colspan="3"  id="tContactPerson"></td>
-                </tr>
-                <tr>
                     <th scope="row">Address</th>
                     <td colspan="3"  id="tAddr"></td>
-                </tr>
-                <tr>
-                    <th scope="row">Remark</th>
-                    <td colspan="3"  id="tInvoiceRemark"></td>
                 </tr>
                 <tr>
                     <th scope="row">Approval Status</th>

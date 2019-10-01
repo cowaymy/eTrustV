@@ -181,9 +181,9 @@
                 $("#tContactPerson").text(result.master.cntcPerson);
                 $("#tAddress").text(result.master.address);
                 $("#tRemark").text(result.master.rem);
-                $("#tOverdue").text(result.master.overdue);
-                $("#tTaxes").text(result.master.taxes);
-                $("#tDue").text(result.master.amountdue);
+                $("#tOverdue").text(result.master.overdue.toFixed(2));
+                $("#tTaxes").text(result.master.taxes.toFixed(2));
+                $("#tDue").text(result.master.amountdue.toFixed(2));
 
                 //Detail데이터 출력
                 AUIGrid.setGridData(newAdjGridID, result.detail);
@@ -545,13 +545,9 @@
 	                    <td id="tAddress" colspan="5"></td>
 	                </tr>
 	                <tr>
-	                    <th scope="row">Remark</th>
-	                    <td id="tRemark" colspan="5"></td>
-	                </tr>
-	                <tr>
-	                    <th scope="row">Overdue Amount(RM)</th>
+	                    <th scope="row">Total Amount(RM)</th>
 	                    <td id="tOverdue"></td>
-	                    <th scope="row">Taxes Amount(RM)</th>
+	                    <th scope="row">GST Amount(RM)</th>
 	                    <td id="tTaxes"></td>
 	                    <th scope="row">Amount Due(RM)</th>
 	                    <td id="tDue"></td>
@@ -584,7 +580,7 @@
 	                    </td>
 	                </tr>
 	                <tr>
-	                    <th scope="row">Remark</th>
+	                    <th scope="row">Description</th>
 	                    <td>
 	                        <textarea id="remark" name="remark"></textarea>
 	                    </td>
@@ -595,7 +591,7 @@
 	                </tr>
 	                <tr>
                         <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
-                        <td colspan="3" id="attachTd">
+                        <td id="attachTd">
                             <div class="auto_file w100p"><!-- auto_file start -->
                                 <input type="file" title="file add" style="width:300px" id="fileSelector" name="fileSelector" />
                             </div><!-- auto_file end -->

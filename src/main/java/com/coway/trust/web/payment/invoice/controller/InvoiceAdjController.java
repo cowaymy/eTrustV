@@ -691,8 +691,11 @@ public class InvoiceAdjController {
             invoiceService.approvalAdjustment(params);
         }
 
-        params.put("mode", "NTF");
-        apprLineList = (EgovMap) invoiceService.getAdjApprLine(params);
+        if(!"A".equals(finalAppvStus) && !"J".equals(finalAppvStus)) {
+            params.put("mode", "NTF");
+            apprLineList = (EgovMap) invoiceService.getAdjApprLine(params);
+        }
+
         if(apprLineList != null) {
             Map ntf = new HashMap<String, Object>();
             ntf.put("code", "New Adj");
@@ -793,8 +796,11 @@ public class InvoiceAdjController {
                     }
             }
 
-            apprMap.put("mode", "NTF");
-            apprLineList = (EgovMap) invoiceService.getAdjApprLine(apprMap);
+            if(!"A".equals(finalAppvStus) && !"J".equals(finalAppvStus)) {
+                apprMap.put("mode", "NTF");
+                apprLineList = (EgovMap) invoiceService.getAdjApprLine(apprMap);
+            }
+
             if(apprLineList != null) {
                 Map ntf = new HashMap<String, Object>();
                 ntf.put("code", "Batch Adj");
