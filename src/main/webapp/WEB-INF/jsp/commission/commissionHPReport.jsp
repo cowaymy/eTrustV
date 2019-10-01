@@ -105,6 +105,13 @@
                 //    return;
                 //}
 
+                var d = new Date();
+                var h = d.getDate();
+                if(h = 1){
+                    Common.alert("This report cannot be generated on first day of every month");
+                    return;
+                }
+
 				  option = {
 	                      isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
 	                    };

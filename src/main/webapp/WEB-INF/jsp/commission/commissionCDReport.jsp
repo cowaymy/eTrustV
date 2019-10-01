@@ -101,6 +101,13 @@
                 //	return;
                 //}
 
+                var d = new Date();
+                var h = d.getDate();
+                if(h == 1){
+                    Common.alert("This report cannot be generated on first day of every month");
+                    return;
+                }
+
             if (month >= 10 && year >= 2018 || year >2018){
                 reportFileName = "/commission/CodyComm_PDF_201810.rpt"; //reportFileName
             }
