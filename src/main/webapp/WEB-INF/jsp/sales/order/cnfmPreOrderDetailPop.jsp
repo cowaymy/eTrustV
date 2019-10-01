@@ -38,7 +38,7 @@
 
   $(function(){
     $('#btnConfirm_RW').click(function() {
-      console.log('!@# fn_doSaveOrder before call');
+    	if(fn_isExistESalesNo() == 'true') return false;
       fn_doSavePreOrder();
 	});
   });
