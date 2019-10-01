@@ -828,9 +828,9 @@
     var err = false;
     if ($("#movpath").val() != "") {
       if ($("#movpath").val() == "02") {
-        solCde = "454";
+        solCde = "454, 7018";
       } else {
-        solCde = "452";
+        solCde = "452, 7019";
       }
     } else {
       Common.alert("Movement Path is required.");
