@@ -241,8 +241,8 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
       docSub.put("resultID", 0);
       // hsResult.put("custId", (params.get("custId").toString()));
       //docSub.put("salesOrdNo", String.format("%08d", fomSalesOrdNo));
-      docSub.put("month", yyyyDD.substring(1, 2));
-      docSub.put("year", yyyyDD.substring(3, 7));
+      docSub.put("month", yyyyDD.substring(0,yyyyDD.indexOf("/")));
+      docSub.put("year", yyyyDD.substring(yyyyDD.lastIndexOf("/")+1));
       docSub.put("typeId", "438");
       docSub.put("stus", docSub.get("stus"));
       docSub.put("lok", "4");
