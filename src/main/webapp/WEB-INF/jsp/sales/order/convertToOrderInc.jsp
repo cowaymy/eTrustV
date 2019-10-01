@@ -115,8 +115,13 @@
               //fn_loadProductPrice('${preOrderInfo.appTypeId}', '${preOrderInfo.itmStkId}');
               //fn_loadProductPromotion('${preOrderInfo.appTypeId}', '${preOrderInfo.itmStkId}', '${preOrderInfo.empChk}', $("#typeId").val(), '${preOrderInfo.exTrade}');
 
+              var month = '${preOrderInfo.month}';
+              var year = '${preOrderInfo.year}';
+              var date = year + month;
+
                 $('#ordPromo').removeAttr("disabled");
-                if('${preOrderInfo.month}' >= '07' && '${preOrderInfo.year}' == '2019') {
+                //if('${preOrderInfo.month}' >= '07' && '${preOrderInfo.year}' == '2019') {
+                if(date >= 201907) {
                     doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
                         ,stkId:'${preOrderInfo.itmStkId}'
                         ,empChk:'${preOrderInfo.empChk}'
