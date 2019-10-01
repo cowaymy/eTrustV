@@ -62,6 +62,8 @@
            AND l48.itm_code       = l55.itm_code(+)
 		   and l47.reqst_stus     = reqs.code(+)
 		   AND NVL(l48.REQST_DEL , 'N') = 'N'
+		   <!-- Added for solving removed SMO/STO still appear in search list issue. By Hui Ding, 01/10/2019 -->
+		   AND NVL(l47.REQST_DEL , 'N') = 'N'
 		   <if test="streq !=null and streq !=''">
 		      and l47.reqst_no LIKE #{streq}||'%'
 		   </if>
@@ -614,7 +616,7 @@
     FROM LOG0054M
     WHERE DELVRY_NO=#{delyno}
     </select>
-    
+
      <update id="updateDelivery54" parameterType="Map">
 	UPDATE LOG0054M
 	<if test="gtype !=null and gtype =='GI'">
