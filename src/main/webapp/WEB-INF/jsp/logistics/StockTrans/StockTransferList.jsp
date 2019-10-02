@@ -34,11 +34,15 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "status",headerText :"<spring:message code='log.head.status'/>",width:120    ,height:30 , visible:false},
                      {dataField: "reqstno",headerText :"STO No."           ,width:120    ,height:30                },
                      {dataField: "staname",headerText :"<spring:message code='log.head.status'/>",width:120    ,height:30                },
-                     {dataField: "reqloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
-                     {dataField: "reqlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},
+                     /* {dataField: "reqloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
+                     {dataField: "reqlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false}, */
+                     {dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
+                     {dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                    ,width:120    ,height:30 , visible:false},
                      {dataField: "rcvlocdesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30                },
-                     {dataField: "rcvloc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30 , visible:false},
-                     {dataField: "rcvlocnm",headerText :"<spring:message code='log.head.tolocation'/>"                    ,width:120    ,height:30 , visible:false},
+                     /* {dataField: "rcvloc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30 , visible:false},
+                     {dataField: "rcvlocnm",headerText :"<spring:message code='log.head.tolocation'/>"                    ,width:120    ,height:30 , visible:false}, */
+                     {dataField: "reqloc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30 , visible:false},
+                     {dataField: "reqlocnm",headerText :"<spring:message code='log.head.tolocation'/>"                ,width:120    ,height:30 , visible:false},
                      {dataField: "reqlocdesc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30                },
                      {dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"                   ,width:120    ,height:30 , visible:true },
                      {dataField: "itmname",headerText :"Mat. Name"                 ,width:120    ,height:30                },
@@ -237,7 +241,7 @@ $(function(){
 /*     $('#com_rmk_info').click(function(){
         mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", reqcolumnLayout ,"", reqop);
     }); */
-    
+
     $('#delete').click(function(){
         var selectedItem = AUIGrid.getSelectedItems(listGrid);
          if(selectedItem.length <= 0){
@@ -254,15 +258,15 @@ $(function(){
             		Common.alert("No Delete STO No.");
             		return false;
             	 }else{
-            		 Common.confirm("<spring:message code='sys.common.alert.delete'/></br> "+reqstono,fn_delete); 
-            		  
-            	 }	 
+            		 Common.confirm("<spring:message code='sys.common.alert.delete'/></br> "+reqstono,fn_delete);
+
+            	 }
                  //fn_deleteAjax(reqsmono);
              }
-        }     
+        }
     });
-    
-    
+
+
     $("#tlocationnm").keypress(function(event) {
     	$('#tlocation').val('');
         if (event.which == '13') {
@@ -383,16 +387,16 @@ function fn_delete(){
     var reqstono=selectedItem[0].item.reqstno;
     //alert("reqsmono ???  "+reqsmono);
     fn_deleteAjax(reqstono)
-         
+
 }
 
 function fn_deleteAjax(reqstono){
-    
+
     var url = "/logistics/stocktransfer/deleteStoNo.do";
     Common.ajax("GET", url , {"reqstono":reqstono} , function(result)    {
         Common.alert(""+result.message+"</br> Delete : "+reqstono, locationList);
     });
-         
+
 }
 
 function locationList(){
@@ -401,25 +405,25 @@ function locationList(){
 
 
 function fn_selectdelivery(reqstono){
-    
+
 	var chkflag = false;
-	
+
     var url = "/logistics/stocktransfer/selectDelNo.do";
     Common.ajaxSync("GET", url , {"reqstono":reqstono} , function(result)    {
     	//alert("result.data?  :  "+result.data);
     	deliverychk = result.data;
-    	
+
         if(result.data > 0){
             chkflag = true;
         }else{
             chkflag = false;
-        }  
-    	
+        }
+
         //Common.alert(""+result.message+"</br> Delete : "+reqstono, locationList);
     });
-    
+
     return chkflag;
-         
+
 }
 
 
