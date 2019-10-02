@@ -107,7 +107,7 @@
 
                 var d = new Date();
                 var h = d.getDate();
-                if(h = 1){
+                if(h == 1){
                     Common.alert("This report cannot be generated on first day of every month");
                     return;
                 }
