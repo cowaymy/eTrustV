@@ -7,6 +7,7 @@
  20/08/2019  ONGHC  1.0.1          Add Date Option Filter
  17/09/2019  ONGHC  1.0.2          AMEND DEFECT DETAIL SECTION
  03/10/2019  ONGHC  1.0.3          Set Date Range Control
+ 03/10/2019  ONGHC  1.0.4          Add AS Raw Report for 31Days
  -->
 
 <script type="text/javaScript">
@@ -29,7 +30,15 @@
       return false;
     }
 
-    // VALIDATE DATE RANGE OF 7 DAYS
+    var dtRange = 0;
+
+    if ($("#ind").val() == 1) {
+      dtRange = 31;
+    } else {
+      dtRange = 7;
+    }
+
+    // VALIDATE DATE RANGE OF 7 DAYS OR 31 DAYS
     if ($("#reportType").val() == '1' || $("#reportType").val() == '5' || $("#reportType").val() == '3' || $("#reportType").val() == '4' || $("#reportType").val() == '6') {
       if ($("#reqstDateFr").val() != '' || $("#reqstDateTo").val() != '') {
         var keyInDateFrom = $("#reqstDateFr").val().substring(3, 5) + "/"
@@ -47,8 +56,8 @@
 
         var diff_in_days = diff_in_time / (1000 * 3600 * 24);
 
-        if (diff_in_days > 7) {
-          Common.alert("<spring:message code='sys.common.alert.dtRangeNtMore' arguments='7' htmlEscape='false'/>");
+        if (diff_in_days > dtRange) {
+          Common.alert("<spring:message code='sys.common.alert.dtRangeNtMore' arguments='" + dtRange + "' htmlEscape='false'/>");
           return false;
         }
       }
@@ -260,7 +269,7 @@
       } else if (type === 'checkbox' || type === 'radio') {
         this.checked = false;
       } else if (tag === 'select') {
-        this.selectedIndex = 0;
+        this.selectedIndex = 1;
       }
 
     });
@@ -270,7 +279,16 @@
  <!-- popup_wrap start -->
  <header class="pop_header">
   <!-- pop_header start -->
-  <h1>AS Raw Data</h1>
+  <h1>AS Raw Data
+   <c:choose>
+    <c:when test="${ind=='1'}">
+     <span style="color:red">( <spring:message code='service.message.dtRange31'/> )</span>
+    </c:when>
+    <c:otherwise>
+     <span style="color:red">( <spring:message code='service.message.dtRange7'/> )</span>
+    </c:otherwise>
+   </c:choose>
+  </h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">
      <a href="#">CLOSE</a>
@@ -284,10 +302,10 @@
    <!-- search_table start -->
    <form action="#" id="reportForm1">
     <!--reportFileName,  viewType 모든 레포트 필수값 -->
-    <input type="hidden" id="reportFileName" name="reportFileName" /> <input
-     type="hidden" id="viewType" name="viewType" /> <input
-     type="hidden" id="reportDownFileName" name="reportDownFileName"
-     value="DOWN_FILE_NAME" />
+    <input type="hidden" id="reportFileName" name="reportFileName" />
+    <input type="hidden" id="viewType" name="viewType" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
+    <input type="hidden" id="ind" name="ind" value="${ind}"/>
     <table class="type1">
      <!-- table start -->
      <caption>table</caption>
