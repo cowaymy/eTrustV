@@ -908,9 +908,12 @@ function locationList(){
          <li><p class="btn_grid"><a id="insert">New</a></p></li>
          <li><p class="btn_grid"><a id="delete">Delete</a></p></li>
 </c:if>
-         <li><p class="btn_grid"><a id="goodIssue">GI/GR</a></p></li>
-         <li><p class="btn_grid"><a id="issueCancel">GI/GR Cancel</a></p></li>
-        </ul>
+			<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+				<li><p class="btn_grid"><a id="goodIssue">GI/GR</a></p></li>
+				<li><p class="btn_grid"><a id="issueCancel">GI/GR Cancel</a></p></li>
+			</c:if>
+
+		</ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:400px"></div>
 
