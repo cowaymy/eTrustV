@@ -38,7 +38,6 @@
 
         //Attach File
         //$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
-
         fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
 
         if('${preOrderInfo.stusId}' == 4 || '${preOrderInfo.stusId}' == 10 ){
@@ -1315,7 +1314,6 @@
 
         if('${preOrderInfo.month}' >= '7' && '${preOrderInfo.year}' == '2019') {
             doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
-
         }
         else
         {
@@ -1644,7 +1642,9 @@
                 ,empChk:'${preOrderInfo.empChk}'
                 ,promoCustType:vCustTypeId
                 ,exTrade:'${preOrderInfo.exTrade}'
-                ,srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+                ,srvPacId:'${preOrderInfo.srvPacId}'
+                ,promoId:'${preOrderInfo.promoId}'}
+                ,'${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
         }
         else
         {

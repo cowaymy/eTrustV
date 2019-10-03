@@ -127,7 +127,9 @@
                         ,empChk:'${preOrderInfo.empChk}'
                         ,promoCustType:$("#typeId").val()
                         ,exTrade:'${preOrderInfo.exTrade}'
-                        ,srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+                        ,srvPacId:'${preOrderInfo.srvPacId}'
+                        ,promoId:'${preOrderInfo.promoId}'}
+                        , '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
                 }
                 else
                 {
