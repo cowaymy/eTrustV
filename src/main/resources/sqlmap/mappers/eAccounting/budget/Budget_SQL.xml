@@ -1130,9 +1130,9 @@ WHERE 1=1
                     A.BUDGET_ADJ_YEAR,
                     A.BUDGET_ADJ_MONTH
                 FROM FCM0103D A,
-                        FCM0102M B
+                        FCM0105M B
                 WHERE A.BUDGET_DOC_NO = B.BUDGET_DOC_NO
-                    AND B.APPV_STUS = 'C'
+                    AND B.APPV_PRCSS_STUS = 'A'
                 GROUP BY A.BUDGET_ADJ_YEAR,
                               A.BUDGET_ADJ_MONTH,
                               A.COST_CENTR,
