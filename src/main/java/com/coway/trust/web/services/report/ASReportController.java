@@ -26,6 +26,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *--------------------------------------------------------------------------------------------
  * 26/07/2019    ONGHC      1.0.1       - Add Recall Status
  * 17/09/2019    ONGHC      1.0.2       - Amend asLedgerPop
+ * 03/10/2019    ONGHC      1.0.3       - Add AS Raw Report for 31Days
  *********************************************************************************************/
 
 @Controller
@@ -70,7 +71,7 @@ public class ASReportController {
 
   @RequestMapping(value = "/asRawDataPop.do")
   public String asRawDataPop(@RequestParam Map<String, Object> params, ModelMap model) {
-    // 호출될 화면
+    model.addAttribute("ind", params.get("ind"));
     return "services/as/asRawDataPop";
   }
 
