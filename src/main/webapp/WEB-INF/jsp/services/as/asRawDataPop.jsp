@@ -6,6 +6,7 @@
  25/06/2019  ONGHC  1.0.0          Amend Report Condition
  20/08/2019  ONGHC  1.0.1          Add Date Option Filter
  17/09/2019  ONGHC  1.0.2          AMEND DEFECT DETAIL SECTION
+ 03/10/2019  ONGHC  1.0.3          Set Date Range Control
  -->
 
 <script type="text/javaScript">
@@ -27,6 +28,32 @@
       Common.alert("<spring:message code='sys.common.alert.validation' arguments='request date (From & To)' htmlEscape='false'/>");
       return false;
     }
+
+    // VALIDATE DATE RANGE OF 7 DAYS
+    if ($("#reportType").val() == '1' || $("#reportType").val() == '5' || $("#reportType").val() == '3' || $("#reportType").val() == '4' || $("#reportType").val() == '6') {
+      if ($("#reqstDateFr").val() != '' || $("#reqstDateTo").val() != '') {
+        var keyInDateFrom = $("#reqstDateFr").val().substring(3, 5) + "/"
+                          + $("#reqstDateFr").val().substring(0, 2) + "/"
+                          + $("#reqstDateFr").val().substring(6, 10);
+
+        var keyInDateTo = $("#reqstDateTo").val().substring(3, 5) + "/"
+                        + $("#reqstDateTo").val().substring(0, 2) + "/"
+                        + $("#reqstDateTo").val().substring(6, 10);
+
+        var date1 = new Date(keyInDateFrom);
+        var date2 = new Date(keyInDateTo);
+
+        var diff_in_time = date2.getTime() - date1.getTime();
+
+        var diff_in_days = diff_in_time / (1000 * 3600 * 24);
+
+        if (diff_in_days > 7) {
+          Common.alert("<spring:message code='sys.common.alert.dtRangeNtMore' arguments='7' htmlEscape='false'/>");
+          return false;
+        }
+      }
+    }
+
     return true;
   }
 
