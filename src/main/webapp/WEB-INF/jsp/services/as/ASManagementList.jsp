@@ -12,6 +12,7 @@
  26/07/2019  ONGHC  1.0.5          Add Recall Status
  17/09/2019  ONGHC  1.0.6          Amend fn_ledger to Pass AS no. rather than ASR no.
  17/09/2019  ONGHC  1.0.7          Show Total AS Ledger
+ 03/10/2019  ONGHC  1.0.8          Add AS Raw Report for 31Days
  -->
 
 <script type="text/javaScript">
@@ -848,8 +849,8 @@
     Common.popupDiv("/services/as/report/asLogBookListPop.do", null, null, true, '');
   }
 
-  function fn_asRawData() {
-    Common.popupDiv("/services/as/report/asRawDataPop.do", null, null, true, '');
+  function fn_asRawData(ind) {
+    Common.popupDiv("/services/as/report/asRawDataPop.do", {ind: ind}, null, true, '');
   }
 
   function fn_asSummaryList() {
@@ -1126,8 +1127,15 @@
           <a href="#" onclick="fn_asLogBookList()"><spring:message code='service.btn.asLogBook'/></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="fn_asRawData()"><spring:message code='service.btn.asRawData'/></a>
+          <a href="#" onclick="fn_asRawData(0)"><spring:message code='service.btn.asRawData'/></a>
          </p></li>
+        <c:if test="${PAGE_AUTH.funcUserDefine11 == 'Y'}">
+         <li>
+          <p class="link_btn type2">
+           <a href="#" onclick="fn_asRawData(1)"><spring:message code='service.btn.asRawData'/> (31 Day(s))</a>
+          </p>
+         </li>
+        </c:if>
         <li><p class="link_btn type2">
           <a href="#" onclick="fn_asSummaryList()"><spring:message code='service.btn.asSumLst'/></a>
          </p></li>
