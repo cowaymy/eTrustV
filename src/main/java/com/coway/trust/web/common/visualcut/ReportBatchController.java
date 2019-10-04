@@ -1360,6 +1360,44 @@ public class ReportBatchController {
     LOGGER.info("[END] Negative_StockB_OnMonth_Excel...");
   }
 
+  /*ONGHC*/
+  @RequestMapping(value = "/Gen_AS_Raw_CurrentMth.do")
+  //@Scheduled(cron = " 0 0 8 * * *") // EVERYDAY 8AM
+  public void Gen_AS_Raw_CurrentMth() throws IOException {
+    LOGGER.info("[START] Gen_AS_Raw_CurrentMth_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/ASRawData.rpt");// visualcut
+                                                             // rpt file
+                                                             // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put("V_IND", "0"); // CURRENT MONTH
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "AS Raw Data (Daily)" + File.separator + "AS_RAW_DATA_DAILY_AS_AT_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] Gen_AS_Raw_CurrentMth_Excel...");
+  }
+
+  /*ONGHC*/
+  @RequestMapping(value = "/Gen_AS_Raw_PassMth.do")
+  //@Scheduled(cron = " 0 30 8 * * 1") // Monthly 1st 1:00am
+  public void Gen_AS_Raw_PassMth() throws IOException {
+    LOGGER.info("[START] Gen_AS_Raw_PassMth_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/ASRawData.rpt");// visualcut
+                                                                     // rpt file
+                                                                     // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put("V_IND", "-2"); // PASS 2 MONTH
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "AS Raw Data (Pass Month)" + File.separator + "AS_RAW_DATA_PASSMTH_AS_AT_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] Gen_AS_Raw_PassMth_Excel...");
+  }
+
   @RequestMapping(value = "/CSP_Raw_Data_Excel.do")
   //@Scheduled(cron = "0 0 3 * * *")//Daily (3:00am)
   public void CSP_Raw_Data_Excel() {
