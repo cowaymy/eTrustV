@@ -280,7 +280,7 @@
 			            AND A.AGENT_ID <![CDATA[<>]]> 0
 			          </if>
 			          <if test="assignYn == 0">
-	                    AND A.AGENT_ID = 0
+	                    AND (A.AGENT_ID = 0 OR A.AGENT_ID IS NULL)
 	                  </if>
                   </if>
 
