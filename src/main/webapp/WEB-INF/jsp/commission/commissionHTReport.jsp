@@ -119,7 +119,7 @@
                 $($reportForm).append('<input type="hidden" id="HT" name="HT" value="" /> ');
                 $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
 
-                $("#reportForm #HT").val(memberType);
+                $("#reportForm #HT").val("7");
                 $("#reportForm #TaskID").val(taskID);
 
 
@@ -133,7 +133,7 @@
                 $($reportForm).append('<input type="hidden" id="HTM" name="HTM" value="" /> ');
                 $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
 
-                $("#reportForm #HTM").val("2");
+                $("#reportForm #HTM").val("7");
                 $("#reportForm #TaskID").val(taskID);
 
             } else if (type == "4") {
