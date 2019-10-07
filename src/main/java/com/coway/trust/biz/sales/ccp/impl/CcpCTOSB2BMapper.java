@@ -9,11 +9,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("ccpCTOSB2BMapper")
 public interface CcpCTOSB2BMapper {
 
-	
+
 	List<EgovMap> selectCTOSB2BList(Map<String, Object> params);
-	
+
 	List<EgovMap> getCTOSDetailList(Map<String, Object> params);
-	
+
 	EgovMap getResultRowForCTOSDisplay(Map<String, Object> params);
+
+	int  savePromoB2BUpdate(Map<String, Object> params);
 	
+	int  savePromoB2BUpdate2(Map<String, Object> params);
+
 }

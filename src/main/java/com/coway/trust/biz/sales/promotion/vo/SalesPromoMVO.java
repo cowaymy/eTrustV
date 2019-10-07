@@ -8,72 +8,74 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * The persistent class for the SAL0017D database table.
- * 
+ *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SalesPromoMVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private int promoId;
 
 	private int promoMtchId;
-	
+
 	private String promoCode;
-	
+
 	private String promoDesc;
-	
+
 	private int promoTypeId;
-	
+
 	private int promoAppTypeId;
-	
+
 	private int promoSrvMemPacId;
-	
+
 	private String promoDtFrom;
-	
+
 	private String promoDtEnd;
-	
+
 	private int promoStusId;
-	
+
 	private Date promoUpdDt;
-	
+
 	private int promoUpdUserId;
-	
+
 	private int promoIsTrialCnvr;
-	
+
 	private int promoPrcPrcnt;
-	
+
 	private int promoCustType;
-	
+
 	private int promoDiscType;
-	
+
 	private int promoRpfDiscAmt;
-	
+
 	private int promoDiscPeriodTp;
-	
+
 	private int promoDiscPeriod;
-	
+
 	private int promoFreesvcPeriodTp;
-	
+
 	private int promoAddDiscPrc;
-	
+
 	private int promoAddDiscPv;
-	
+
 	private int empChk;
-	
+
 	private int exTrade;
 
 	private int crtUserId;
-	
+
 	private Date crtDt;
-    
+
 	private int updUserId;
-    
+
     private Date updDt;
-    
+
 	private int isNew;
 
 	private int megaDeal;
+
+	private int b2b;
 
 	public int getPromoId() {
 		return promoId;
@@ -314,5 +316,13 @@ public class SalesPromoMVO implements Serializable {
 	public void setMegaDeal(int megaDeal) {
 		this.megaDeal = megaDeal;
 	}
-	
+
+	public int getB2b() {
+		return b2b;
+	}
+
+	public void setB2b(int b2b) {
+		this.b2b = b2b;
+	}
+
 }

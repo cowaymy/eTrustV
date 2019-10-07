@@ -29,6 +29,8 @@
              , T1.PROMO_ADD_DISC_PV
              , T1.EMP_CHK
              , T1.EX_TRADE
+             , T1.B2B
+             , T4.NAME STATUS
           FROM SAL0017D T1
           LEFT OUTER
           JOIN SYS0013M T2
@@ -38,6 +40,8 @@
           JOIN SYS0013M T3
             ON T1.PROMO_TYPE_ID = T3.CODE_ID
            AND T3.CODE_MASTER_ID = '76'
+           LEFT OUTER JOIN SYS0038M T4
+           ON T4.STUS_CODE_ID = T1.PROMO_STUS_ID
          WHERE 1 = 1
          <if test='arrPromoAppTypeId != null and arrPromoAppTypeId != ""'>
            AND T1.PROMO_APP_TYPE_ID IN

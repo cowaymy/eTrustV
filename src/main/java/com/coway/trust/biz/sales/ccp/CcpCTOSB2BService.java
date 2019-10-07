@@ -7,10 +7,12 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface CcpCTOSB2BService {
 
-	
+
 	List<EgovMap> selectCTOSB2BList(Map<String, Object> params)throws Exception;
-	
+
 	List<EgovMap> getCTOSDetailList(Map<String, Object> params)throws Exception;
-	
+
 	Map<String, Object> getResultRowForCTOSDisplay(Map<String, Object> params)throws Exception;
+
+	int  savePromoB2BUpdate(Map<String, Object> params);
 }
