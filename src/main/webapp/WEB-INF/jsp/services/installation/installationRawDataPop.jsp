@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  08/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
+ 07/10/2019  ONGHC  1.0.1          AMEND CONDITION OF ORDER START AND END DATE
  -->
 
 <script type="text/javaScript">
@@ -47,26 +48,25 @@
           && $("#orderStrDt").val() != null
           && $("#orderEndDt").val() != null) {
 
-        whereSql += " AND to_date(som.sales_dt) between to_date('"
-                 + $("#orderStrDt").val()
-                 + "', 'DD/MM/YYYY') AND to_date('"
-                 + $("#orderEndDt").val() + "', 'DD/MM/YYYY') ";
+        whereSql += " AND TO_DATE(SOM.SALES_DT) >= TO_DATE('" + $("#orderStrDt").val() + "', 'DD/MM/YYYY') "
+                  + " AND TO_DATE(SOM.SALES_DT) <= TO_DATE('" + $("#orderEndDt").val() + "', 'DD/MM/YYYY') ";
 
       } else {
-        whereSql += "AND to_date(som.sales_dt) >= to_date(ADD_MONTHS(FN_GET_FIRST_DAY_MONTH(SYSDATE), -2))";
+        whereSql += "AND TO_DATE(SOM.SALES_DT) >= TO_DATE(ADD_MONTHS(FN_GET_FIRST_DAY_MONTH(SYSDATE), -2))";
       }
 
       if ($("#pvMonth").val() != '' && $("#pvMonth").val() != null) {
-        whereSql += "AND som.pv_month = '"
+        whereSql += "AND SOM.PV_MONTH = '"
                  + $("#pvMonth").val().substring(0, 2)
-                 + "' and som.pv_year = '"
+                 + "' AND SOM.PV_YEAR = '"
                  + $("#pvMonth").val().substring(3, 7) + "' ";
       }
 
       if ($("#appliType").val() != '' && $("#appliType").val() != null) {
-        whereSql += " AND som.App_Type_ID In (" + $("#appliType").val()
-            + ") ";
+        whereSql += " AND SOM.APP_TYPE_ID In (" + $("#appliType").val() + ") ";
       }
+
+      console.log("w " + whereSql);
 
       $("#installationRawDataForm #V_WHERESQL").val(whereSql);
       $("#installationRawDataForm #V_SELECTSQL").val('');
