@@ -38,6 +38,7 @@ import oracle.sql.DATE;
  * 05/09/2019    ONGHC      1.0.6       - Create saveASEntryInHouse
  * 05/09/2019    ONGHC      1.0.7       - Amend In House Call Log Result
  * 17/09/2019    ONGHC      1.0.8       - Create getDftTyp
+ * 08/10/2019    ONGHC      1.0.9       - Amend asResultBasic_update
  *********************************************************************************************/
 
 @Service("ASManagementListService")
@@ -3020,6 +3021,13 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       ASManagementListMapper.updateBasicInhouseSVC0001D(svc0004dmap);
     } else { // OTHER STATUS
       c = ASManagementListMapper.updateBasicSVC0004D(svc0004dmap);
+      if (svc0004dmap.get("AS_RESULT_STUS_ID").equals("4")) {
+        if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454") || String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("7018") ) {
+          params.put("AS_SO_ID", svc0004dmap.get("AS_SO_ID"));
+          this.saveASEntryInHouse(params);
+        }
+      }
+
       if (CommonUtils.nvl(svc0004dmap.get("AS_REPLACEMENT")).equals("0")) { // REPLACE A NEW UNIT?
         ASManagementListMapper.updateInHouseNOReplaceMentSVC0004D(svc0004dmap);
         ASManagementListMapper.updateBasicInhouseSVC0001D(svc0004dmap);
