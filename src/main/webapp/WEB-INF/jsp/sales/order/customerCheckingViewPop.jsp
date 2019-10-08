@@ -14,10 +14,10 @@ $(document).ready(function(){
 
 
 </script>
-<div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap size_big"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>View I-Care Programme Qualification</h1>
+<h1>I-Care Eligibility</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -47,7 +47,7 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Customer Name</th>
     <td>${result.custName }</td>
-    <th scope="row">Account Status</th>
+    <th scope="row">Rental Status</th>
     <td>${result.rentStus }</td>
 </tr>
 <tr>
@@ -69,10 +69,29 @@ $(document).ready(function(){
     <td>${aging.agingMth }</td>
 </tr>
 <tr>
-    <th scope="row">Eligible for I-Care</th>
+    <th scope="row">I-Care Eligibility</th>
     <td>${verify }</td>
+    <th scope="row">Unit Count</th>
+    <td>${result.untCnt}</td>
+</tr>
+<tr>
+    <th scope="row">Own Purchase</th>
+    <td>${result.ownPurchse}</td>
+</tr>
+<tr>
     <th scope="row">Installation Address</th>
-    <td>${address }</td>
+    <td colspan="3">${result.instAdd }</td>
+</tr>
+<tr>
+   <th colspan="4">
+        <span class="must">
+        <br/>
+            CCP APPROVAL SUBJECT TO CREDIBILITY CHECK ON PAYMENT PATTERN, RENTAL STATUS, PAYMENT MODE AND INSTALLATION ADDRESS TO ALL EXISTING UNITS.<br/>
+            MANAGEMENT RESERVE THE RIGHT TO REJECT APPLICATION IF ANY OF THE CONDITION DOES NOT MEET.<br/><br/>
+        </span>
+
+    </th>
+
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -2469,7 +2469,7 @@ public class CustomerController {
     BigDecimal rentInstNo;
     int oldId;
     String icare;
-    String instAdd;
+    String instAdd = "";
 
     LOGGER.info("##### customeView START #####");
     basicinfo = customerService.selectCustomerCheckingListPop(params);
@@ -2486,10 +2486,10 @@ public class CustomerController {
       String salesOrdNo = resultMap.get("salesOrdNo").toString();
 
       icare = "Yes (Order No: " + salesOrdNo + ")";
-      instAdd = address;
+      //instAdd = address;
     } else {
       icare = "No";
-      instAdd = "";
+      //instAdd = "";
     }
     String rentStatus = (String) basicinfo.get("rentStus");
     String stkCategory = (String) basicinfo.get("stkCategory");
@@ -2526,7 +2526,7 @@ public class CustomerController {
     model.addAttribute("aging", agingmonth);
     model.addAttribute("verify", valid);
     model.addAttribute("icare", icare);
-    model.addAttribute("address", instAdd);
+    //model.addAttribute("address", instAdd);
 
     return "sales/order/customerCheckingViewPop";
   }

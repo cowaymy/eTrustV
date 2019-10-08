@@ -167,12 +167,12 @@
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Sales</li>
     <li>Order</li>
-    <li>I-Care Programme Qualification</li>
+    <li>I-Care Eligibility</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>I-Care Programme Qualification</h2>
+<h2>I-Care Eligibility</h2>
 
 <ul class="right_btns">
 
@@ -190,17 +190,13 @@
     <colgroup>
         <col style="width:140px" />
         <col style="width:*" />
-        <col style="width:130px" />
-        <col style="width:*" />
-        <col style="width:170px" />
-        <col style="width:*" />
     </colgroup>
     <tbody>
     <tr>
 
         <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
         <td>
-        <input type="text" title="NRIC/Company No" id="_nric" name="nric" placeholder="NRIC / Company Number" class="w100p" " />
+        <input type="text" title="NRIC/Company No" id="_nric" name="nric" placeholder="NRIC / Company Number"/>
         </td>
     </tr>
 
