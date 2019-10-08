@@ -8,6 +8,7 @@
  07/05/2019  ONGHC  1.0.1          FIX ERROR MESSAGE ISSUE
  26/04/2019  ONGHC  1.0.2          ADD RECALL STATUS
  17/09/2019  ONGHC  1.0.3          AMEND DEFECT DETAIL SECTION
+ 08/10/2019  ONGHC  1.0.4          AMEND SAVE FUNCTION TO ADD 1 PARAM AS_ENTRY_ID
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > EDIT BASIC AS ENTRY -->
@@ -464,6 +465,8 @@
       AS_RESULT_REM : $('#txtRemark').val(),
       AS_CMMS : $("#iscommission").prop("checked") ? '1' : '0',
       AS_FAIL_RSN : $('#ddlFailReason').val(),
+
+      AS_ENTRY_ID : $('#AS_ID').val(),
 
       // AS RECALL ENTRY
       /*AS_APP_DT : $("#appDate").val(),
