@@ -467,6 +467,9 @@ var TODAY_DD      = "${toDay}";
         }else if (checkedItems.length >= 2) {
       Common.alert('Only allow to entry a result with single CS Order');
       return;
+        }else if (checkedItems[0]["c5"] == null || checkedItems[0]["c5"] == "") {
+            Common.alert('Please assign HT member.');
+            return;
     } else if (checkedItems[0]["code"] != "ACT") {
       Common.alert('Only allow to entry a result<br/>for the CS Order status in Active');
       return;
