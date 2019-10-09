@@ -592,7 +592,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 
     custAccVO.setCustId(Integer.parseInt((String) params.get("custId")));
     custAccVO.setCustAccNo((String) params.get("accNo"));
-    custAccVO.setCustEncryptAccNo(null);
+    custAccVO.setCustEncryptAccNo((String) params.get("accNo"));
     custAccVO.setCustAccOwner((String) params.get("accName"));
     custAccVO.setCustAccTypeId(Integer.parseInt((String) params.get("bankType")));
     custAccVO.setCustAccBankId(Integer.parseInt((String) params.get("accBank")));
@@ -633,7 +633,6 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     custCrcVO.setCustCrcRem((String) params.get("cardRem"));
     custCrcVO.setCustCrcUpdUserId(sessionVO.getUserId());
     custCrcVO.setCustCrcExpr(expDate);
-    custCrcVO.setCrcToken((String) params.get("token"));
     ;
     custCrcVO.setCustCrcIdOld(0);
     custCrcVO.setSoId(0);
@@ -826,12 +825,12 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
   }
 
   @Override
-  public int checkCRC1(Map<String, Object> params) {
+  public EgovMap checkCRC1(Map<String, Object> params) {
     return customerMapper.checkCRC1(params);
   }
 
   @Override
-  public int checkCRC2(Map<String, Object> params) {
+  public EgovMap checkCRC2(Map<String, Object> params) {
     return customerMapper.checkCRC2(params);
   }
 
@@ -877,38 +876,4 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     return customerMapper.existingHPCodyMobile(params);
   }
 
-  @Override
-  public int getTokenID() {
-      return customerMapper.getTokenID();
-  }
-
-  @Override
-  public void insertTokenLogging(Map<String, Object> params) {
-      customerMapper.insertTokenLogging(params);
-  }
-
-  @Override
-  public EgovMap getTokenSettings() {
-      return customerMapper.getTokenSettings();
-  }
-
-  @Override
-  public void updateTokenLogging(Map<String, Object> params) {
-      customerMapper.updateTokenLogging(params);
-  }
-
-  @Override
-  public void insertTokenError(Map<String, Object> params) {
-      customerMapper.insertTokenError(params);
-  }
-
-  @Override
-  public EgovMap getPubKey() {
-      return customerMapper.getPubKey();
-  }
-
-  @Override
-  public void tokenCrcUpdate(Map<String, Object> params) {
-      customerMapper.tokenCrcUpdate(params);
-  }
 }
