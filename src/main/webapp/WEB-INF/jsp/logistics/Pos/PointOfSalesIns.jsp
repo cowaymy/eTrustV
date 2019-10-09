@@ -226,10 +226,10 @@
     $('#m3').show();
     $('#m4').show();
     $('#m5').show();
-    $('#m6').hide();
+    $('#m6').show();
     $('#m7').show();
     $('#m8').show();
-    $('#m9').hide();
+    $('#m9').show();
     $('#m10').show();
 
     $('#m11').show();
@@ -466,11 +466,11 @@
       $('#reqadd').hide();
     }
 
-    if ("OI21" == searchReqType) {
+    /*if ("OI21" == searchReqType) {
       $('#m6').show();
     } else {
-      $('#m6').hide();
-    }
+      $('#m6').show();
+    }*/
 
     if ("OG53" == searchReqType) {
       $('#m11').hide();
@@ -786,7 +786,8 @@
         Common.alert("Header Text can be up to 50 digits.");
         return false;
       }
-      if ($('#insReqType').val() == "OI21" && $("#insSmo").val() == "") {
+      //if ($('#insReqType').val() == "OI21" && $("#insSmo").val() == "") {
+      if ($("#insSmo").val() == "") {
         text = "<spring:message code='log.label.refDocNo'/>";
         Common.alert("<spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/>");
         return false;
@@ -1126,6 +1127,8 @@
     };
 
     Common.ajax("GET", "/logistics/pos/getAttch.do", data, function(result) {
+      console.log(result);
+
       if (result != null) {
         var fileSubPath = result.fileSubPath;
         fileSubPath = fileSubPath.replace('\', '/'');
