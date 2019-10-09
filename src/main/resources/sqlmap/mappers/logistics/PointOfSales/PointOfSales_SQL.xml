@@ -64,7 +64,7 @@
          , l47.REQST_FILE
          , adjRsn.CODE || '-' || adjRsn.CODE_DESC AS adjRsn
          , DBMS_LOB.SUBSTR (l47.REQST_REM_, 4000) AS REQST_REM
-
+         , SYS47M.USER_NAME AS CRT_USR
     FROM log0047m l47
        , log0048d l48
        , (SELECT * FROM sys0013m WHERE code_master_id = 306) tran
@@ -82,6 +82,7 @@
           WHERE NVL (DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
           GROUP BY reqst_no , itm_code )l55
        , (SELECT * FROM sys0013m WHERE code_master_id in (433, 434)) adjRsn
+       , SYS0047M SYS47M
     WHERE 1 = 1
       AND l47.reqst_no = l48.reqst_no
       AND l47.trnsc_type  = tran.code(+)
@@ -94,6 +95,7 @@
       AND l47.reqst_stus = reqs.code(+)
       AND l48.itm_code=S26.STK_CODE(+)
       AND l47.ADJ_RSN=adjRsn.CODE_ID(+)
+      AND l47.CRT_USER_ID =SYS47M.USER_ID
 
       <choose>
         <when test="searchTransType != null and searchTransType !=''">
