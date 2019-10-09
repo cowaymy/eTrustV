@@ -566,6 +566,11 @@
           GridCommon.exportTo("main_grid_wrap", 'xlsx', "Other GI/GR Request List");
         });
 
+      $("#download2").click(
+        function() {
+          GridCommon.exportTo("mdc_grid", 'xlsx', "Material Document Listing");
+        });
+
       // ADJUSTMENT NOTE BUTTTON
       $("#adjNote").click(
         function() {
@@ -1368,7 +1373,15 @@
    <!-- tap_area start -->
    <article class="grid_wrap">
     <!-- grid_wrap start -->
-    <div id="mdc_grid" class="mt10" style="height: 150px"></div>
+
+    <div id="mdc_grid" class="mt10" style="height: 150px">
+     <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+      <p class="btn_grid" style="width: 100%;text-align:right;">
+       <a id="download2"><spring:message code='sys.btn.excel.dw' /></a>
+      </p>
+      <br/>
+     </c:if>
+    </div>
    </article>
    <!-- grid_wrap end -->
   </article>
