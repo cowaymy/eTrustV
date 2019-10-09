@@ -6,7 +6,7 @@
  ----------------------------------------------------------------
  09/10/2019  ONGHC  1.0.0          AMEND FOR LATEST CHANGES
  -->
- 
+
 <style type="text/css">
 
 /* Define Custom Column Styles */
@@ -594,7 +594,7 @@
                 day = "0" + date.getDate();
               }
 
-              $("#searchForm #reqNo").val(param);
+              $("#searchForm #V_REQNO").val(param);
               $("#searchForm #reportFileName").val('/logistics/AdjustmentNoteRpt.rpt');
               $("#searchForm #viewType").val("PDF");
               $("#searchForm #reportDownFileName").val("AdjustmentNote_" + day + month + date.getFullYear());
@@ -1162,11 +1162,10 @@
    <input type="hidden" id="svalue" name="svalue" />
    <input type="hidden" id="sUrl" name="sUrl" />
    <input type="hidden" id="stype" name="stype" />
-
    <input type="hidden" id="reportFileName" name="reportFileName" />
    <input type="hidden" id="viewType" name="viewType" />
    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
-   <input type="hidden" id="reqNo" name="reqNo" />
+   <input type="hidden" id="V_REQNO" name="V_REQNO" />
 
    <table class="type1">
     <!-- table start -->
