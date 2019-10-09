@@ -1607,7 +1607,6 @@
   </update>
 
   <insert id="insertCreditCardInfo">
-  /* insertCreditCardInfo customermapper23 */
     INSERT INTO SAL0028D (CUST_CRC_ID, CUST_ID,
     CUST_CRC_NO,
     CUST_ORI_CRC_NO,
@@ -1625,8 +1624,7 @@
     CUST_CRC_IDCM,
     CUST_CRC_CRT_USER_ID,
     CUST_CRC_CRT_DT,
-    CARD_TYPE_ID,
-    CUST_CRC_TOKEN)
+    CARD_TYPE_ID)
     VALUES (
     SAL0028D_CUST_CRC_ID_SEQ.NEXTVAL ,
     #{getCustId},
@@ -1646,8 +1644,7 @@
     #{crcIdcm},
     #{crcCrtId},
     SYSDATE,
-    #{cardType},
-    #{crcToken})
+    #{cardType})
   </insert>
 
   <insert id="insertCreditCardInfo2" parameterType="custCrcVO">
@@ -1676,14 +1673,13 @@
     , CUST_CRC_CRT_USER_ID
     , CUST_CRC_CRT_DT
     , CARD_TYPE_ID
-    , CUST_CRC_TOKEN
     )
     VALUES
     ( #{custCrcId}
     , #{custId}
     , #{custCrcNo}
     , #{custOriCrcNo}
-    , NULL
+    , #{custEncryptCrcNo}
     , #{custCrcOwner}
     , #{custCrcTypeId}
     , #{custCrcBankId}
@@ -1698,7 +1694,6 @@
     , #{custCrcCrtUserId}
     , SYSDATE
     , #{cardTypeId}
-    , #{crcToken}
     )
   </insert>
 
@@ -1938,12 +1933,11 @@
     CUST_CRC_UPD_DT = SYSDATE,
     CUST_CRC_TYPE_ID = #{custCrcTypeId},
     CUST_CRC_BANK_ID = #{custCrcBankId},
-    CUST_ORI_CRC_NO = #{custCrcNoMask},
+    CUST_ORI_CRC_NO = #{custOriCrcNo},
     CUST_CRC_EXPR = #{custCrcExpr},
     CUST_CRC_OWNER = #{custCrcOwner},
     CARD_TYPE_ID = #{cardTypeId},
-    CUST_CRC_REM = #{custCrcRem},
-    CUST_CRC_TOKEN = #{token}
+    CUST_CRC_REM = #{custCrcRem}
     WHERE
     CUST_CRC_ID = #{custCrcId}
   </update>
@@ -2184,13 +2178,12 @@
     CUST_CRC_IDCM,
     CUST_CRC_CRT_USER_ID,
     CUST_CRC_CRT_DT,
-    CARD_TYPE_ID,
-    CUST_CRC_TOKEN)
+    CARD_TYPE_ID)
     VALUES (
     SAL0028D_CUST_CRC_ID_SEQ.NEXTVAL ,
-    #{custId},
+    #{insCustId},
     NULL ,
-    #{custCrcNoMask},
+    #{custOriCrcNo},
     NULL ,
     #{custCrcOwner},
     #{custCrcTypeId},
@@ -2205,8 +2198,7 @@
     0 ,
     #{userId} , <!-- SESSION -->
     SYSDATE,
-    #{cardTypeId},
-    #{token})
+    #{cardTypeId})
   </insert>
 
   <select id="selectCustomerMainAddr" parameterType="Map"
@@ -2362,7 +2354,7 @@
     AND ADD_ID = #{getparam}
   </select>
 
-  <select id="checkCRC1" parameterType="Map" resultType="Integer">
+  <select id="checkCRC1" parameterType="Map" resultType="egovMap">
     SELECT
     COUNT(*) CNT
     FROM SAL0028D A
@@ -2374,11 +2366,11 @@
     GROUP BY CUST_ORI_CRC_NO
     ) B
     ON A.CUST_ORI_CRC_NO = B.CUST_ORI_CRC_NO
-    WHERE A.CUST_ORI_CRC_NO LIKE #{cardNo}
+    WHERE A.CUST_ORI_CRC_NO = #{cardNo}
     AND A.CUST_CRC_STUS_ID = '1'
   </select>
 
-  <select id="checkCRC2" parameterType="Map" resultType="Integer">
+  <select id="checkCRC2" parameterType="Map" resultType="egovMap">
     SELECT
     COUNT(DISTINCT(NRIC)) CNT
     FROM SAL0029D A
@@ -2396,7 +2388,7 @@
     GROUP BY CUST_ORI_CRC_NO
     ) B1
     ON A1.CUST_ORI_CRC_NO = B1.CUST_ORI_CRC_NO
-    WHERE A1.CUST_ORI_CRC_NO LIKE #{cardNo}
+    WHERE A1.CUST_ORI_CRC_NO = #{cardNo}
     AND A1.CUST_CRC_STUS_ID = '1'
     ) B
     ON A.CUST_ID = B.CUST_ID
@@ -2623,108 +2615,4 @@
 	 )
 	   WHERE ROWNUM <![CDATA[<= 1 ]]>
   </select>
-
-  <select id="getTokenID" resultType="Integer">
-    SELECT SAL0242D_ID_SEQ.NEXTVAL SEQ FROM DUAL
-  </select>
-
-  <insert id="insertTokenLogging" parameterType="Map">
-    INSERT INTO SAL0242D (
-        TKN_ID,
-        REF_NO,
-        BILL_NM,
-        EXP_MONTH,
-        EXP_YEAR,
-        TKN_TYPE,
-        SIGNATURE_REQ,
-        STATUS,
-        CRT_DT,
-        CRT_USER_ID,
-        UPD_DT,
-        UPD_USER_ID
-        <if test="etyPoint == 'EE'">
-            , CUST_CRC_ID
-        </if>
-    )
-    VALUES
-    (
-        #{tknId},
-        #{refNo},
-        #{nameCard},
-        #{hExpMonth},
-        #{hExpYear},
-        1,
-        #{signature},
-        44,
-        SYSDATE,
-        #{userId},
-        SYSDATE,
-        #{userId}
-        <if test="etyPoint == 'EE'">
-            , #{custCrcId}
-        </if>
-    )
-  </insert>
-
-  <select id="getPubKey" resultType="egovMap">
-    SELECT PARAM_VAL PUB_KEY FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_PUB'
-  </select>
-
-  <select id="getTokenSettings" resultType="egovMap">
-    SELECT
-        (SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_URL') TKNZ_URL,
-        (SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_MERCHANT_ID') TKNZ_MERCHANT_ID,
-        (SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_VERF_KEY') TKNZ_VERF_KEY
-    FROM DUAL
-  </select>
-
-  <update id="updateTokenLogging" parameterType="Map">
-    UPDATE SAL0242D
-         SET BIN = #{BIN},
-               CCLAST4 = #{cclast4},
-               TOKEN = #{token},
-               SIGNATURE_RES = #{signature},
-               RES_TEXT = #{resText},
-               STATUS = #{stus},
-               UPD_DT = SYSDATE
-     WHERE TKN_ID = #{tknId}
-         AND REF_NO = #{referenceNo}
-  </update>
-
-  <insert id="insertTokenError" parameterType="Map">
-    INSERT INTO SAL0243D VALUES
-    (
-        #{tknId},
-        #{error_code},
-        #{error_desc},
-        #{src},
-        SYSDATE,
-        #{userId},
-        SYSDATE,
-        #{userId}
-    )
-  </insert>
-
-  <update id="tokenCrcUpdate" parameterType="Map">
-    MERGE INTO SAL0242D A
-    USING (
-        SELECT
-            CUST_CRC_ID,
-            CUST_ID,
-            SUBSTR(CUST_ORI_CRC_NO, 1, 6) BIN,
-            SUBSTR(CUST_ORI_CRC_NO, 13, 4) CCLAST4,
-            CUST_CRC_TOKEN
-        FROM SAL0028D
-        WHERE CUST_ID = #{custId}
-    ) SRC
-    ON (A.TOKEN = SRC.CUST_CRC_TOKEN AND A.BIN = SRC.BIN AND A.CCLAST4 = SRC.CCLAST4
-    <if test="tknId != null and tknId != '' ">
-         AND A.TKN_ID = #{tknId}
-    </if>
-    )
-    WHEN MATCHED THEN UPDATE
-        SET A.CUST_CRC_ID = SRC.CUST_CRC_ID,
-              A.UPD_DT = SYSDATE,
-              A.UPD_USER_ID = #{userId}
-  </update>
 </mapper>
