@@ -96,6 +96,9 @@ public class htOrderListController {
 	@RequestMapping(value = "/selectHTOrderJsonList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectHTOrderJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("memLevel", sessionVO.getMemberLevel());
+
 		String[] arrAppType   = request.getParameterValues("appType"); //Application Type
 		String[] arrOrdStusId = request.getParameterValues("ordStusId"); //Order Status
 		String[] arrKeyinBrnchId = request.getParameterValues("keyinBrnchId"); //Key-In Branch
@@ -130,6 +133,7 @@ public class htOrderListController {
 		logger.debug("!@###### custIc : "+params.get("custIc"));
 		logger.debug("!@##############################################################################");
 
+		 logger.debug("##### params : " + params);
 		List<EgovMap> orderList = htOrderListService.selectOrderList(params);
 
 		// 데이터 리턴.
