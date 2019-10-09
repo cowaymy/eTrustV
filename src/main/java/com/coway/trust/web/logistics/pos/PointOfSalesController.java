@@ -393,7 +393,7 @@ public class PointOfSalesController {
       Model model, SessionVO sessionVO) throws Exception {
 
     //List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, "FileUpload", 1024 * 1024 * 5);
-    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "GIGRADJ" + File.separator + "DCF", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDirWeb, File.separator + "GIGRADJ" + File.separator + "DCF", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 
     String upId = (String) params.get("upId");
     logger.debug("upId : {}", upId);
