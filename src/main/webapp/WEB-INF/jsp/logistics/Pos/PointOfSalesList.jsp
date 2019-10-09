@@ -250,6 +250,11 @@
         headerText : "<spring:message code='log.label.rmk'/>",
         width : 120,
         height : 30,
+      }, {
+        dataField : "crtUsr",
+        headerText : "<spring:message code='log.head.createuser'/>",
+        width : 120,
+        height : 30,
       } ];
 
   var mtrcolumnLayout = [
@@ -888,11 +893,11 @@
     var text;
 
     if (v == 'search') {
-      if ($("#searchTransType").val() == "") {
-        text = "<spring:message code='log.label.trxTyp'/>";
-        Common.alert("<spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/>");
-        return false
-      }
+      //if ($("#searchTransType").val() == "") {
+        //text = "<spring:message code='log.label.trxTyp'/>";
+        //Common.alert("<spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/>");
+        //return false
+      //}
 
       if ($("#reqsdt").val() == "" || $("#reqsdt").val() == null) {
         text = "<spring:message code='log.head.requestdate'/>";
