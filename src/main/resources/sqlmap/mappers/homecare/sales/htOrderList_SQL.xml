@@ -182,6 +182,11 @@
               <if test="deptCode != null and deptCode != ''">
                   AND UPPER(F1.LAST_DEPT_CODE) = UPPER(#{deptCode})
               </if>
+               <if test="memLevel == 4  and memType == 7 ">
+                  AND V1.SALESMAN_MEM_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{memCode})
+              </if>
+
+
 
            ORDER BY V1.ORD_NO ASC
     </select>
