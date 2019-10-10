@@ -6,6 +6,7 @@
  ----------------------------------------------------------------
  15/08/2019  ONGHC  1.0.0          CREATE IHR FUNCTION
  13/08/2019  ONGHC  1.0.1          CREATE FUNCTION FOR TRANSFER CT
+ 13/08/2019  ONGHC  1.0.2          AMEND TO ADD AUTHORITY TO MANAGER TO AMEND PASS 7 DAYS RECORD
  -->
 
 <script type="text/javaScript">
@@ -530,16 +531,16 @@
           var sYear = sDate.getFullYear();
           var sDay = sDate.getDate();
 
-          if (sYear > tYear) {
-            stat = true;
+          if (tYear > sYear) {
+            stat = false;
           } else {
-            if (sMth > tMth) {
-              stat = true;
+            if (tMth > sMth) {
+              stat = false;
             } else {
-              if (sDay > tDay) {
-                stat = true;
-              } else {
+              if (tDay > sDay) {
                 stat = false;
+              } else {
+                stat = true;
               }
             }
           }
@@ -561,16 +562,16 @@
           var sYear = sDate.getFullYear();
           var sDay = sDate.getDate();
 
-          if (sYear > tYear) {
-            stat = true;
+          if (tYear > sYear) {
+            stat = false;
           } else {
-            if (sMth > tMth) {
-              stat = true;
+            if (tMth > sMth) {
+              stat = false;
             } else {
-              if (sDay > tDay) {
-                stat = true;
-               } else {
+              if (tDay > sDay) {
                 stat = false;
+              } else {
+                stat = true;
               }
             }
           }
@@ -959,7 +960,7 @@
      </p></li>
    </c:if>
    <!-- FUNCTION WHICH ALLOW EDIT RECORD WITHIN 7 DAYS -->
-   <!-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+   <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <li><p class="btn_blue">
       <a href="#" onclick="fn_asResultEditBasicPop(1)"><spring:message code='service.btn.edtBsAs'/></a>
      </p></li>
@@ -968,7 +969,7 @@
     <li><p class="btn_blue">
       <a href="#" onclick="fn_asResultEditPop(1)"><spring:message code='service.btn.edtAs'/></a>
      </p></li>
-   </c:if> -->
+   </c:if>
    <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
     <li><p class="btn_blue">
       <a href="#" onclick="fn_asResultViewPop()"><spring:message code='service.btn.viewAS'/></a>
