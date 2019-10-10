@@ -32,6 +32,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 31/01/2019    ONGHC      1.0.1       - Restructure File
  * 05/03/2019    ONGHC      1.0.2       - To Show Error Code for SP
  * 03/04/2019    ONGHC      1.0.3       - Amend selectCallResultPop to retrieve Call Log Date Time
+ * 10/10/2019    ONGHC      1.0.4       - Amend insertCallResult_2 to Check Available Stock
  *********************************************************************************************/
 
 @Controller
@@ -227,21 +228,39 @@ public class OrderCallListController {
     int noRcd = orderCallListService.chkRcdTms(params);
 
     if (noRcd == 1) { // RECORD ABLE TO UPDATE
-      resultValue = orderCallListService.insertCallResult_2(params, sessionVO);
 
-      if (null != resultValue) {
-        if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
-          if ("1".equals(resultValue.get("logStat"))) {
-            message.setMessage("Error Encounter. Please Contact Administrator. Error Code(CL): " + resultValue.get("logStat").toString());
-            message.setCode("99");
-          } else {
-            message.setMessage("Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo"));
-            message.setCode("1");
+      EgovMap orderCall = orderCallListService.getOrderCall(params);
+      String productCode = orderCall.get("productCode").toString();
+      params.put("productCode", productCode);
+
+      EgovMap rdcStock = orderCallListService.selectRdcStock(params);
+
+      logger.debug("rdcStock : {}", rdcStock);
+      if (rdcStock != null) {
+        if (Integer.parseInt(rdcStock.get("availQty").toString()) > 0) {
+          resultValue = orderCallListService.insertCallResult_2(params, sessionVO);
+
+          if (null != resultValue) {
+            if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
+              if ("1".equals(resultValue.get("logStat"))) {
+                message.setMessage("Error Encounter. Please Contact Administrator. Error Code(CL): " + resultValue.get("logStat").toString());
+                message.setCode("99");
+              } else {
+                message.setMessage("Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo"));
+                message.setCode("1");
+              }
+            } else {
+              message.setMessage("Record updated successfully.</br> ");
+              message.setCode("1");
+            }
           }
         } else {
-          message.setMessage("Record updated successfully.</br> ");
-          message.setCode("1");
+          message.setMessage("Fail to update due to RDC out of stock. ");
+          message.setCode("99");
         }
+      } else {
+        message.setMessage("Fail to update due to RDC out of stock. ");
+        message.setCode("99");
       }
     } else {
       message.setMessage("Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
@@ -333,7 +352,7 @@ public class OrderCallListController {
   }
 
   @RequestMapping(value = "/selRcdTms.do", method = RequestMethod.POST)
-  public ResponseEntity<ReturnMessage> chkRcdTms(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+  public ResponseEntity<ReturnMessage> selRcdTms(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
     ReturnMessage message = new ReturnMessage();
 
     logger.debug("==================/selRcdTms.do=======================");
