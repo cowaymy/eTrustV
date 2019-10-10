@@ -1769,8 +1769,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     params.put("AS_REQST_DT", params.get("settleDate").toString());
     params.put("AS_APPNT_DT", params.get("settleDate").toString());
     params.put("AS_BRNCH_ID", "0");
-    params.put("AS_MALFUNC_ID", "9004100");// GENERAL REQUEST
-    params.put("AS_MALFUNC_RESN_ID", "2");// AS DURING INSTALLATION
+    params.put("AS_MALFUNC_ID", "9001700");// GENERAL REQUEST
+    params.put("AS_MALFUNC_RESN_ID", "5");// AS DURING INSTALLATION
     // params.put("AS_REM_REQSTER", "716");
     params.put("AS_STUS_ID", "4");
     params.put("AS_SMS", "0");
@@ -1810,8 +1810,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     }
     // params2.put("AS_RESULT_CRT_DT", "");
     params2.put("updator", params.get("userId").toString());
-    params2.put("AS_MALFUNC_ID", "9004100"); // GENERAL REQUEST
-    params2.put("AS_MALFUNC_RESN_ID", "2"); // AS DURING INSTALLATION
+    params2.put("AS_MALFUNC_ID", "9001700"); // GENERAL REQUEST
+    params2.put("AS_MALFUNC_RESN_ID", "5"); // AS DURING INSTALLATION
     params2.put("AS_FILTER_AMT", params.get("amt").toString());
     params2.put("AS_TOT_AMT", params.get("totalAmt").toString());
     params2.put("AS_RESULT_TYPE_ID", "457"); // AFTER SERVICE
@@ -2306,8 +2306,8 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
 
 	    // params2.put("AS_RESULT_CRT_DT", "");
 	    params2.put("updator", sessionVO.getUserId());
-	    params2.put("AS_MALFUNC_ID", "9004100"); // GENERAL REQUEST
-	    params2.put("AS_MALFUNC_RESN_ID", "2"); // AS DURING INSTALLATION
+	    params2.put("AS_MALFUNC_ID", "9001700"); // GENERAL REQUEST
+	    params2.put("AS_MALFUNC_RESN_ID", "5"); // AS DURING INSTALLATION
 	    params2.put("AS_FILTER_AMT", CommonUtils.intNvl(params.get("invcItmChrg")) * -1);
 	    params2.put("AS_TOT_AMT", CommonUtils.intNvl(params.get("invcItmChrg")) * -1) ;
 	    params2.put("AS_RESULT_TYPE_ID", "457"); // AFTER SERVICE
@@ -2417,8 +2417,8 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
 
 	    // params2.put("AS_RESULT_CRT_DT", "");
 	    params4.put("updator", sessionVO.getUserId());
-	    params4.put("AS_MALFUNC_ID", "9004100"); // GENERAL REQUEST
-	    params4.put("AS_MALFUNC_RESN_ID", "2"); // AS DURING INSTALLATION
+	    params4.put("AS_MALFUNC_ID", "9001700"); // GENERAL REQUEST
+	    params4.put("AS_MALFUNC_RESN_ID", "5"); // AS DURING INSTALLATION
 	    params4.put("AS_FILTER_AMT", "0");
 	    params4.put("AS_TOT_AMT", "0") ;
 	    params4.put("AS_RESULT_TYPE_ID", "457"); // AFTER SERVICE
