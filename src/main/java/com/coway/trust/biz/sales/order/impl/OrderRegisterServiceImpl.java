@@ -1434,8 +1434,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     // aSEntryVO.setAsAppntDt();
     // aSEntryVO.setAsAppntTm();
     aSEntryVO.setAsBrnchId(0);
-    aSEntryVO.setAsMalfuncId(9004100);
-    aSEntryVO.setAsMalfuncResnId(2);
+    aSEntryVO.setAsMalfuncId(9001700);
+    aSEntryVO.setAsMalfuncResnId(5);
     aSEntryVO.setAsRemReqster("");
     aSEntryVO.setAsRemReqsterCntc("");
     aSEntryVO.setAsCalllogId(0);
