@@ -62,6 +62,10 @@ var TODAY_DD      = "${toDay}";
 	        headerText : "Application Type",
 	        width : 120
 	      }, {
+	            dataField : "salesProdSz",
+	            headerText : "Bed Size",
+	            width : 120
+	          },{
 	    dataField : "c5",
 	    headerText : "Assign HT",
 	    width : 120
@@ -157,6 +161,12 @@ var TODAY_DD      = "${toDay}";
           headerText : "Application Type",
           width : 120
         },
+        {
+            dataField : "salesProdSz",
+            headerText : "Bed Size",
+            width : 120
+          },
+
       {
         dataField : "c5",
         headerText : "Assign HT",
