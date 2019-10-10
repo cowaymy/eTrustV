@@ -114,17 +114,21 @@
                 $('#ordPromo').removeAttr("disabled");
                 var month = '${orderInfo.basicInfo.month}';
                 var year = '${orderInfo.basicInfo.year}';
+                var date = year + month;
                 var ekeyCrtUser = '${orderInfo.basicInfo.ekeyCrtUser}';
                 console.log("aaa:"+month);
                 console.log("aaa:"+year);
                 console.log("aaa:"+ekeyCrtUser);
-                if(month >= '7' && year == '2019' && ekeyCrtUser != null) {
+                if(date >= 201907 && ekeyCrtUser != null) {
+                //if(month >= '7' && year == '2019' ) {
                 	doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${orderInfo.basicInfo.appTypeId}'
                         ,stkId:'${orderInfo.basicInfo.stockId}'
                         ,empChk:'${orderInfo.basicInfo.empChk}'
                         ,promoCustType:$("#typeId").val()
                         ,exTrade:'${orderInfo.basicInfo.exTrade}'
-                        ,srvPacId:'${orderInfo.basicInfo.srvPacId}'}, '${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
+                        ,srvPacId:'${orderInfo.basicInfo.srvPacId}'
+                	    ,promoId:'${orderInfo.basicInfo.ordPromoId}'}
+                	    ,'${orderInfo.basicInfo.ordPromoId}', 'ordPromo', 'S', ''); //Common Code
                 }
                 else
                 {
