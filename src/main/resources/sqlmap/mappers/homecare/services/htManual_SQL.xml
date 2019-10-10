@@ -333,7 +333,8 @@ SELECT DISTINCT
     HSM.SCHDUL_ID ,
     MEM3.MEM_CODE HT_MGR_CODE ,
     BRNCH.CODE HT_BRNCH_CODE ,
-    AP.CODE AS APPTYPE
+    AP.CODE AS APPTYPE ,
+    SOM.SALES_PROD_SZ
 FROM
     SAL0225D SOM
     LEFT JOIN SVC0008D HSM ON SOM.SRV_ORD_ID = HSM.SALES_ORD_ID
@@ -524,6 +525,7 @@ FROM
                         , project2.dept_code
                          , project2.crt_user_id
                          , Project2.APPTYPE
+                         , Project2.SALES_PROD_SZ
           FROM (SELECT
                        DISTINCT HS.NO AS NO
                               , HS.STUS_CODE_ID AS STUS_CODE_ID
@@ -534,6 +536,7 @@ FROM
                               , HR.NO AS RESULT
                               , SO.SRV_ORD_NO AS SALES_ORD_NO
                               , AP.CODE AS APPTYPE
+                              , SO.SALES_PROD_SZ
                               , CU.NAME
                               , CD.MEM_CODE AS ASSIGN_CODY
                               , CD.MEM_ID
