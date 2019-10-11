@@ -215,7 +215,7 @@
                         Extent1.OLD_CODE_ID OLD_CODE_ID
                       FROM SYS0013M Extent1
                       WHERE ( Extent1.CODE_MASTER_ID = #{codeId} )
-                       AND CODE_ID IN  (3216,3217,145)
+                       AND CODE_ID IN  (3216,3217,5702,5701)
                       ) Project1
            ORDER BY Project1.CODE_NAME ASC
     </select>
@@ -572,7 +572,7 @@
         </if>-->
 
 
-            AND CODE IN ('CS1T','CS1Y','TRL')
+            AND CODE IN ('CS1T','CS1Y','FT1Y','FT1T')
 
 
 
