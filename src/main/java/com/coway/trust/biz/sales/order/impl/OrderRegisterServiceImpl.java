@@ -628,6 +628,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     return orderRegisterMapper.selectMemberList(params);
   }
 
+  @Override
+  public EgovMap checkRC(Map<String, Object> params) {
+    // TODO Auto-generated method stub
+    return orderRegisterMapper.checkRC(params);
+  }
+
   private void preprocSalesOrderMaster(SalesOrderMVO salesOrderMVO, SessionVO sessionVO) {
 
     salesOrderMVO.setSalesOrdId(0);

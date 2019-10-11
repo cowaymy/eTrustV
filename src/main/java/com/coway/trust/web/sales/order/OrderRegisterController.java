@@ -32,6 +32,7 @@ import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
@@ -65,6 +66,9 @@ public class OrderRegisterController {
 
   @Resource(name = "orderDetailService")
   private OrderDetailService orderDetailService;
+
+  @Resource(name = "webInvoiceService")
+  private WebInvoiceService webInvoiceService;
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
@@ -281,6 +285,17 @@ public class OrderRegisterController {
   @RequestMapping(value = "/selectMemberByMemberIDCode.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> selectMemberByMemberIDCode(@RequestParam Map<String, Object> params) {
     EgovMap result = orderRegisterService.selectMemberByMemberIDCode(params);
+    return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/checkRC.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> checkRC(@RequestParam Map<String, Object> params, SessionVO sessionVO) {
+
+      if(!params.containsKey("memCode")) {
+          String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+          params.put("memCode", memCode);
+      }
+    EgovMap result = orderRegisterService.checkRC(params);
     return ResponseEntity.ok(result);
   }
 

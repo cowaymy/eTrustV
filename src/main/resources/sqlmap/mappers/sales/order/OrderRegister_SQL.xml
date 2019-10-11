@@ -930,6 +930,32 @@
 		        AND ROWNUM &lt;= 1 ) T
     </select>
 
+    <select id="checkRC" parameterType="Map" resultType="egovMap">
+		SELECT
+		    SAL0248M.MEM_ID,
+		    SAL0248M.MEM_CODE,
+		    ORG0001D.NAME,
+		    SAL0248M.TARGET_TOT,
+		    SAL0248M.COLLECT_TOT,
+		    SAL0248M.RC_PRCT,
+		    SAL0001D.CNT
+		FROM SAL0248M
+		JOIN ORG0001D
+		    ON SAL0248M.MEM_CODE = ORG0001D.MEM_CODE
+		JOIN (
+		    SELECT
+		        MEM_ID,
+		        COUNT(*) CNT
+		    FROM SAL0001D
+		    WHERE TO_CHAR(SALES_DT, 'YYYYMM') = TO_CHAR(SYSDATE, 'YYYYMM')
+		    GROUP BY MEM_ID
+		) SAL0001D ON ORG0001D.MEM_ID = SAL0001D.MEM_ID
+		WHERE SAL0248M.MONTH = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE, -1))
+		    AND SAL0248M.YEAR = EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE, -1))
+		    /* AND MEM_ID = 106421 */
+		    AND ORG0001D.MEM_CODE = #{memCode} /*584581*/
+    </select>
+
     <select id="selectMemberList" parameterType="Map" resultType="egovMap">
 		SELECT TT.MEM_ID
 		     , TT.MEM_CODE

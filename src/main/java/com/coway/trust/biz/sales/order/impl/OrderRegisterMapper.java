@@ -68,6 +68,8 @@ public interface OrderRegisterMapper {
 
   EgovMap selectMemberByMemberIDCode(Map<String, Object> paraselectVerifyOldSalesOrderNoValidityICarems);
 
+  EgovMap checkRC(Map<String, Object> params);
+
   List<EgovMap> selectMemberList(Map<String, Object> params);
 
   EgovMap selectBankById(Map<String, Object> params);

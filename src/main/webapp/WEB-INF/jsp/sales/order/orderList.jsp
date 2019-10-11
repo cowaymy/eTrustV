@@ -74,7 +74,16 @@
     function fn_copyChangeOrderPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
-            Common.popupDiv("/sales/order/copyChangeOrder.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+            var memCode = AUIGrid.getcellValue(listMyGridId, selIdx, "salesmanCode");
+            Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
+                console.log("checkRC");
+
+                if(memRc.rcPrct < 30 && memRc.cnt >= 3) {
+                    Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
+                } else {
+                    Common.popupDiv("/sales/order/copyChangeOrder.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+                }
+            });
         }
         else {
             Common.alert('<spring:message code="sal.alert.msg.preOrdMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noPreOrdSel" /></b>');
@@ -310,6 +319,7 @@
           , { headerText : "<spring:message code='sales.pvYear'/>",  dataField : "pvYear",      editable : false, width : 60  }
           , { headerText : "<spring:message code='sales.pvMth'/>",   dataField : "pvMonth",     editable : false, width : 60  }
           , { headerText : "ordId",                                  dataField : "ordId",       visible  : false }
+          , { headerText : "salesmanCode",                                  dataField : "salesmanCode",       visible  : false }
             ];
 
         //그리드 속성 설정
