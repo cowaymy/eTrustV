@@ -602,7 +602,7 @@
       	</choose>
            AND L56.STK_CODE = #{productCode}
            AND S28.WH_LOC_CODE IN (CRDC.WH_LOC_CODE, CRDC.CDC_CODE, CRDC.RDC_CODE)
-           AND S28.WH_LOC_GB = '02'
+           AND S28.WH_LOC_GB IN ('02' ,'05')
   </select>
 
   <select id="getRdcInCdc" parameterType="Map" resultType="egovMap">
