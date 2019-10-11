@@ -86,11 +86,11 @@
     <td><span id="txtPromotion_RW"></span></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.hpCodyCd" /></th>
+    <th scope="row">HP / Cody / HT Code</th>
     <td><span id="txtMemberCode_RW"></span></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.hpCodyNm" /></th>
+    <th scope="row">HP / Cody / HT Name</th>
     <td><span id="txtMemberName_RW"></span></td>
 </tr>
 <tr id="tr1" class="blind">
