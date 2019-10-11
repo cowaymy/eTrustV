@@ -547,6 +547,7 @@
     WITH CRDC AS (SELECT s28.WH_LOC_CODE
                        , s28.CDC_CODE
                        , s28.RDC_CODE
+                       , s28.WH_LOC_GB
                   FROM SYS0028M s28,SYS0005M s05
                   WHERE 1=1
       <!-- and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2 ,s28.wh_loc_brnch_id3)
@@ -602,6 +603,7 @@
       	</choose>
            AND L56.STK_CODE = #{productCode}
            AND S28.WH_LOC_CODE IN (CRDC.WH_LOC_CODE, CRDC.CDC_CODE, CRDC.RDC_CODE)
+           AND s28.WH_LOC_GB = CRDC.WH_LOC_GB
            AND S28.WH_LOC_GB IN ('02' ,'05')
   </select>
 
