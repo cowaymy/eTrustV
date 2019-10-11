@@ -1757,8 +1757,12 @@ public class htOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 //		String appTypeName= "";
 //		String invDocNo = "";
 		switch(orderVO.getAppTypeId()){
-		case 145 :
-			appTypeName = "Free Trial (No Billing)";
+		case 5702 :
+			appTypeName = "Free Trial 1 Year (No Billing)";
+			invDocNo = "";
+			break;
+		case 5701 :
+			appTypeName = "Free Trial 1 Time (No Billing)";
 			invDocNo = "";
 			break;
 		default :
