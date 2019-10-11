@@ -3,7 +3,7 @@
 <!--
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
- 11/10/2019  ONGHC  1.0.0          AMEND LAYOUT
+ 11/10/2019  ONGHC  1.0.0          AMEND NOT USING BETWEEN FOR SEARCH INSTALLATION DATE
  -->
 <script type="text/javaScript">
   $(document).ready(
@@ -98,8 +98,8 @@
       var whereSql = "";
       if ($("#strDt").val() != '' && $("#endDt").val() != ''
           && $("#strDt").val() != null && $("#endDt").val() != null) {
-        whereSql += " AND (ie.Install_DT between to_date('"
-            + $("#strDt").val() + "', 'DD/MM/YYYY') AND to_date('"
+        whereSql += " AND (ie.Install_DT >= TO_DATE('"
+            + $("#strDt").val() + "', 'DD/MM/YYYY') AND ie.Install_DT <= TO_DATE('"
             + $("#endDt").val() + "', 'DD/MM/YYYY') ) ";
       }
       if ($("#CTCodeFr").val() != '' && $("#CTCodeTo").val() != ''
