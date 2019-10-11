@@ -23,7 +23,7 @@
         }
 
         //doGetCombo('/common/selectCodeList.do', '10', selVal, 'popAppType', 'S'); //Common Code
-        CommonCombo.make("popAppType", "/homecare/sales/selectCodeList.do", {groupCode : '10', codeIn : 'CS1T,CS1Y,TRL'}, "", {
+        CommonCombo.make("popAppType", "/homecare/sales/selectCodeList.do", {groupCode : '10', codeIn : 'CS1T,CS1Y,FT1T,FT1Y'}, "", {
             id: "codeId",
             name: "codeName",
             type:"S"
