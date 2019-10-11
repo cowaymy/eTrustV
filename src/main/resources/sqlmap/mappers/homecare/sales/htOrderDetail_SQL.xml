@@ -95,7 +95,7 @@
         NVL(C.EMAIL,' ') CUST_EMAIL,
         C.PAS_SPORT_EXPR CUST_PASSPORT_EXPR,
         C.VISA_EXPR CUST_VISA_EXPR,
-          NVL (som.BRNCH_ID, 0) KEYIN_BRNCH_ID,
+          NVL (B.CODE, 0) KEYIN_BRNCH_ID,
           NVL(B.NAME,' ') KEYIN_BRNCH_NAME,
           TO_DATE(NVL(TO_CHAR(som.SALES_DT,'DD/MM/YYYY'), '01/01/1900'),'DD/MM/YYYY') ORD_DT,
           som.SALES_DT,
@@ -909,7 +909,7 @@
              FROM SAL0095D sm
                   JOIN SAL0225D orm
                      ON orm.SRV_ORD_ID = sm.SRV_SALES_ORD_ID
-                        AND orm.APP_TYPE_ID IN (3216,3217,145)
+                        AND orm.APP_TYPE_ID IN (3216,3217,5701,5702)
                         AND orm.SALES_DT >=
                                TO_DATE ('2018-01-01', 'YYYY-MM-DD')
                   JOIN SYS0038M sta
