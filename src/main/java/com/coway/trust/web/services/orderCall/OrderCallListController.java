@@ -33,6 +33,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 05/03/2019    ONGHC      1.0.2       - To Show Error Code for SP
  * 03/04/2019    ONGHC      1.0.3       - Amend selectCallResultPop to retrieve Call Log Date Time
  * 10/10/2019    ONGHC      1.0.4       - Amend insertCallResult_2 to Check Available Stock
+ * 11/10/2019    ONGHC      1.0.5       - Amend insertCallResult_2 to Check Available Stock By Status
  *********************************************************************************************/
 
 @Controller
@@ -237,7 +238,50 @@ public class OrderCallListController {
 
       logger.debug("rdcStock : {}", rdcStock);
       if (rdcStock != null) {
-        if (Integer.parseInt(rdcStock.get("availQty").toString()) > 0) {
+        if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
+          logger.debug("CHECK QUANTITY~~");
+          if (Integer.parseInt(rdcStock.get("availQty").toString()) > 0) {
+            resultValue = orderCallListService.insertCallResult_2(params, sessionVO);
+
+            if (null != resultValue) {
+              if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
+                if ("1".equals(resultValue.get("logStat"))) {
+                  message.setMessage("Error Encounter. Please Contact Administrator. Error Code(CL): " + resultValue.get("logStat").toString());
+                  message.setCode("99");
+                } else {
+                  message.setMessage("Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo"));
+                  message.setCode("1");
+                }
+              } else {
+                message.setMessage("Record updated successfully.</br> ");
+                message.setCode("1");
+              }
+            }
+          } else {
+            message.setMessage("Fail to update due to RDC out of stock. ");
+            message.setCode("99");
+          }
+        } else {
+          logger.debug("BY PASS CHECK QUANTITY~~");
+          resultValue = orderCallListService.insertCallResult_2(params, sessionVO);
+
+          if (null != resultValue) {
+            if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
+              if ("1".equals(resultValue.get("logStat"))) {
+                message.setMessage("Error Encounter. Please Contact Administrator. Error Code(CL): " + resultValue.get("logStat").toString());
+                message.setCode("99");
+              } else {
+                message.setMessage("Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo"));
+                message.setCode("1");
+              }
+            } else {
+              message.setMessage("Record updated successfully.</br> ");
+              message.setCode("1");
+            }
+          }
+        }
+
+        /*if (Integer.parseInt(rdcStock.get("availQty").toString()) > 0) {
           resultValue = orderCallListService.insertCallResult_2(params, sessionVO);
 
           if (null != resultValue) {
@@ -257,7 +301,7 @@ public class OrderCallListController {
         } else {
           message.setMessage("Fail to update due to RDC out of stock. ");
           message.setCode("99");
-        }
+        }*/
       } else {
         message.setMessage("Fail to update due to RDC out of stock. ");
         message.setCode("99");
