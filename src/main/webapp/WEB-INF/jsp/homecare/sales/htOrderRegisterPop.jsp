@@ -21,7 +21,7 @@
         fn_selectDocSubmissionList();
 
         //doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
-        CommonCombo.make("appType", "/homecare/sales/selectCodeList.do", {groupCode : '10', codeIn : 'CS1T,CS1Y,TRL'}, "", {
+        CommonCombo.make("appType", "/homecare/sales/selectCodeList.do", {groupCode : '10', codeIn : 'CS1T,CS1Y,FT1T,FT1Y'}, "", {
             id: "codeId",
             name: "codeName",
             type:"S"
@@ -1132,7 +1132,7 @@
 
 
 
-        if(!FormUtil.checkReqValue($('#hiddenSalesmanId'))) {
+/*         if(!FormUtil.checkReqValue($('#hiddenSalesmanId'))) {
 
             if($('#hiddenSalesmanId').val() == '1' || $('#hiddenSalesmanId').val() == '2') {
 
@@ -1154,6 +1154,16 @@
                 isValid = false;
                 msg += '<spring:message code="sal.alert.msg.plzSelectSalesman" />';
             }
+        } */
+
+
+        if($('#salesmanCd').val() == '' || $('#salesmanCd').val() == null ){
+        	if(appTypeVal == 5701 || appTypeVal == 5702){
+
+        	}else {
+        	       isValid = false;
+        	         msg += '<spring:message code="sal.alert.msg.plzSelectSalesman" />';
+        	}
         }
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
