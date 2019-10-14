@@ -15,7 +15,7 @@
     var GST_MANNUAL = 'N';
 
     $(document).ready(function(){
-
+console.log("orderRegisterPop.jsp");
         createAUIGrid();
 
         fn_selectDocSubmissionList();
