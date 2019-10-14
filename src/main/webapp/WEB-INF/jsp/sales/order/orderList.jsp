@@ -74,7 +74,7 @@
     function fn_copyChangeOrderPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
-            var memCode = AUIGrid.getcellValue(listMyGridId, selIdx, "salesmanCode");
+            var memCode = AUIGrid.getcellValue(listMyGridID, selIdx, "salesmanCode");
             Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
                 console.log("checkRC");
 
