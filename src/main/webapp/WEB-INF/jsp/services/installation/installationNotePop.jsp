@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  09/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
+ 14/10/2019  ONGHC  1.0.1          Amend Layout
  -->
 
 <script type="text/javaScript">
@@ -13,28 +14,61 @@
       $('.multy_select').on("change", function() {
       }).multipleSelect({});
 
-      doGetCombo('/common/selectCodeList.do', '10', '', 'appliType', 'S', '');
-      doGetComboSepa("/common/selectBranchCodeList.do", 5, '-', '', 'branch', 'S', '');
+      doGetCombo('/common/selectCodeList.do', '10', '', 'appliType', 'M', 'fn_multiCombo');
+      //doGetComboSepa("/common/selectBranchCodeList.do", 5, '-', '', 'branch', 'S', '');
+      doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'branch', 'S', ''); // DSC BRANCH
+
+      $("#branch").change(
+        function() {
+          doGetCombo('/services/as/selectCTByDSC.do', $("#branch").val(), '', 'CTCode', 'M', 'fn_multiCombo');
+        });
     });
+
+  function fn_multiCombo() {
+    $('#CTCode').change(function() {
+    }).multipleSelect({
+      selectAll : true, // 전체선택
+      width : '100%'
+    });
+
+    $('#appliType').change(function() {
+    }).multipleSelect({
+      selectAll : false, // 전체선택
+      width : '100%'
+    }).multipleSelect("checkAll"); ;
+  }
 
   function fn_validation() {
     var msg = "";
+    var text = "";
 
     // INSTALLATION TYPE
     if ($("#instalType option:selected").length < 1) {
-      msg += "* <spring:message code='sys.msg.necessary' arguments='Installation Type' htmlEscape='false'/> </br>";
+      text = "<spring:message code='service.title.InstallationType' />";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
     }
     // INSTALL DATE FROM
     if ($("#instalDtFrom").val() == '') {
-      msg += "* <spring:message code='sys.msg.necessary' arguments='Installation Date (From)' htmlEscape='false'/> </br>";
-    }
-    // INSTALL DATE TO
-    if ($("#instalDtFrom").val() == '') {
-      msg += "* <spring:message code='sys.msg.necessary' arguments='Installation Date (To)' htmlEscape='false'/> </br>";
+      text = "<spring:message code='service.title.InstallDate' />";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+    } else if ($("#instalDtTo").val() == '') {  // INSTALL DATE TO
+      text = "<spring:message code='service.title.InstallDate' />";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
     }
     // INSTALL STATUS
     if ($("#instalStatus").val() == '') {
-      msg += "* <spring:message code='sys.msg.necessary' arguments='Install Status' htmlEscape='false'/> </br>";
+      text = "<spring:message code='service.title.InstallStatus' />";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+    }
+    // DSC BRANCH
+    if ($("#branch").val() == '') {
+      text = "<spring:message code='service.title.DSCBranch' />";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+    }
+    // SORT BY
+    if ($("#sortType").val() == '') {
+      text = "<spring:message code='service.title.SortBy' />";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
     }
 
     if (msg != '') {
@@ -43,30 +77,32 @@
     }
 
     msg = "";
+    text = "";
 
-    if ($("#orderNoFrom").val() != '' || $("#orderNoTo").val() != '') {
+    /*if ($("#orderNoFrom").val() != '' || $("#orderNoTo").val() != '') {
       if ($("#orderNoFrom").val() == '' || $("#orderNoTo").val() == '') {
         msg += "* <spring:message code='sys.common.alert.validation' arguments='Order Number (From & To)' htmlEscape='false'/> ";
       }
-    }
+    }*/
 
-    if ($("#instalNoFrom").val() != '' || $("#instalNoTo").val() != '') {
+    /*if ($("#instalNoFrom").val() != '' || $("#instalNoTo").val() != '') {
       if ($("#instalNoFrom").val() == '' || $("#instalNoTo").val() == '') {
         msg += "* <spring:message code='sys.common.alert.validation' arguments='Installation Number (From & To)' htmlEscape='false'/> ";
       }
-    }
+    }*/
 
     if ($("#instalDtFrom").val() != '' || $("#instalDtTo").val() != '') {
       if ($("#instalDtFrom").val() == '' || $("#instalDtTo").val() == '') {
-        msg += "* <spring:message code='sys.common.alert.validation' arguments='Install Date (From & To)' htmlEscape='false'/>";
+        text = "<spring:message code='service.title.InstallDate' />";
+        msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
       }
     }
 
-    if ($("#CTCodeFrom").val() != '' || $("#CTCodeTo").val() != '') {
+    /*if ($("#CTCodeFrom").val() != '' || $("#CTCodeTo").val() != '') {
       if ($("#CTCodeFrom").val() == '' || $("#CTCodeTo").val() == '') {
         msg += "* <spring:message code='sys.common.alert.validation' arguments='CT code (From & To)' htmlEscape='false'/>";
       }
-    }
+    }*/
 
     if (msg != '') {
       Common.alert(msg);
@@ -93,27 +129,27 @@
       }
 
       if ($("#instalStatus").val() != '' && $("#instalStatus").val() != null) {
-        whereSeq += "AND B.STUS_CODE_ID = " + $("#instalStatus").val() + " ";
+        whereSeq += "AND B.STUS_CODE_ID IN (" + $("#instalStatus").val() + ") ";
       }
 
-      if ($("#orderNoFrom").val() != '' && $("#orderNoTo").val() != '' && $("#orderNoFrom").val() != null && $("#orderNoTo").val() != null) {
-        whereSeq += "AND (A.SALES_ORD_NO >= '" + $("#orderNoFrom").val() + "' AND A.SALES_ORD_NO <='" + $("#orderNoTo").val() + "') ";
+      if ($("#orderNoPop").val() != '' && $("#orderNoPop").val() != null) {
+        whereSeq += "AND A.SALES_ORD_NO = '" + $("#orderNoPop").val() + "' ";
       }
 
       if ($("#instalDtFrom").val() != '' && $("#instalDtTo").val() != '' && $("#instalDtFrom").val() != null && $("#instalDtTo").val() != null) {
-        whereSeq += "AND (B.INSTALL_DT >= TO_DATE('" + $("#instalDtFrom").val() + "' , 'DD/MM/YYYY') AND B.INSTALL_DT <= TO_DATE('" + $("#instalDtTo").val() + "', 'DD/MM/YYYY') ) ";
+        whereSeq += "AND (B.INSTALL_DT >= TO_DATE('" + $("#instalDtFrom").val() + "' , 'DD/MM/YYYY') AND B.INSTALL_DT <= TO_DATE('" + $("#instalDtTo").val() + "', 'DD/MM/YYYY')) ";
       }
 
       if ($("#appliType").val() != '' && $("#appliType").val() != null) {
-        whereSeq += "AND A.APP_TYPE_ID = " + $("#appliType").val() + " ";
+        whereSeq += "AND A.APP_TYPE_ID IN (" + $("#appliType").val() + ") ";
       }
 
-      if ($("#instalNoFrom").val() != '' && $("#instalNoTo").val() != '' && $("#instalNoFrom").val() != null && $("#instalNoTo").val() != null) {
-        whereSeq += "AND (B.INSTALL_ENTRY_NO >= '" + $("#instalNoFrom").val() + "' AND B.INSTALL_ENTRY_NO <= '" + $("#instalNoTo").val() + "') ";
+      if ($("#instalNo").val() != '' && $("#instalNo").val() != null) {
+        whereSeq += "AND B.INSTALL_ENTRY_NO = '" + $("#instalNo").val() + "' ";
       }
 
-      if ($("#CTCodeFrom").val() != '' && $("#CTCodeTo").val() != '' && $("#CTCodeFrom").val() != null && $("#CTCodeTo").val() != null) {
-        whereSeq2 += "AND (CTMEM.MEM_CODE >= '" + $("#CTCodeFrom").val() + "' AND CTMEM.MEM_CODE <= '" + $("#CTCodeTo").val() + "') ";
+      if ($("#CTCode").val() != '' && $("#CTCode").val() != null) {
+        whereSeq2 += "AND CTMEM.MEM_CODE IN (" + $("#CTCode").val() + ") ";
       }
 
       if ($("#instalType").val() != '' && $("#instalType").val() != null) {
@@ -121,7 +157,7 @@
       }
 
       if ($("#branch").val() != '' && $("#branch").val() != null) {
-        whereSeq2 += "AND INSTALL.BRNCH_ID = " + $("#branch").val() + "  ";
+        whereSeq2 += "AND INSTALL.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '" + $("#branch").val() + "') ";
       }
 
       if ($("#sortType").val() == "2") {
@@ -129,6 +165,10 @@
       } else {
         orderBySql = "ORDER BY MAIN.INSTALL_ENTRY_ID ";
       }
+
+      console.log(whereSeq);
+      console.log(whereSeq2);
+      console.log(orderBySql);
 
       $("#installationNoteForm #V_WHERESQL").val(whereSeq);
       $("#installationNoteForm #V_WHERESQL2").val(whereSeq2);
@@ -150,16 +190,13 @@
 
   function fn_clear() {
     $("#instalStatus").val('');
-    $("#orderNoFrom").val('');
-    $("#orderNoTo").val('');
+    $("#orderNoPop").val('');
     $("#instalDtFrom").val('');
     $("#instalDtTo").val('');
     $("#appliType").val('');
     $("#branch").val('');
-    $("#instalNoFrom").val('');
-    $("#instalNoTo").val('');
-    $("#CTCodeFrom").val('');
-    $("#CTCodeTo").val('');
+    $("#instalNo").val('');
+    $("#CTCode").val('');
     $("#instalType").val('');
     $("#sortType").val('1');
     $("#V_WHERESQL").val('');
@@ -170,6 +207,8 @@
     $("#V_FULLSQL").val('');
     $("#reportFileName").val('');
     $("#viewType").val('');
+
+    doGetCombo('/services/as/selectCTByDSC.do', '-', '', 'CTCode', 'M', 'fn_multiCombo');
   }
 
 </script>
@@ -203,17 +242,17 @@
     <tbody>
      <tr>
       <th scope="row"><spring:message code='service.title.InstallationType' /><span name="m1" id="m1" class="must">*</span></th>
-      <td><select class="multy_select w100p" multiple="multiple"
-       id="instalType" name="instalType">
+      <td>
+       <select class="multy_select w100p" multiple="multiple" id="instalType" name="instalType">
        <c:forEach var="list" items="${instTypeList}" varStatus="status">
          <option value="${list.codeId}" selected>${list.codeName}</option>
         </c:forEach>
-      </select></td>
-      <th scope="row"><spring:message
-        code='service.title.OrderNumber' /></th>
+       </select>
+      </td>
+      <th scope="row"><spring:message code='service.title.OrderNumber' /></th>
       <td>
-       <div class="date_set">
-        <!-- date_set start -->
+
+       <!-- <div class="date_set">
         <p>
          <input type="text" title="" placeholder="From" class="w100p"
           id="orderNoFrom" name="orderNoFrom" />
@@ -223,20 +262,20 @@
          <input type="text" title="" placeholder="To" class="w100p"
           id="orderNoTo" name="orderNoTo" />
         </p>
-       </div>
-       <!-- date_set end -->
+       </div> -->
+
+       <input type="text" title="" placeholder="<spring:message code='service.title.OrderNumber' />" class="w100p" id="orderNoPop" name="orderNoPop" />
       </td>
      </tr>
      <tr>
-      <th scope="row"><spring:message
-        code='service.title.ApplicationType' /></th>
-      <td><select id="appliType" name="appType">
-      </select></td>
-      <th scope="row"><spring:message
-        code='service.title.InstallationNo' /></th>
+      <th scope="row"><spring:message code='service.title.ApplicationType' /></th>
       <td>
-       <div class="date_set">
-        <!-- date_set start -->
+       <select id="appliType" name="appType" class="multy_select w100p"></select>
+      </td>
+      <th scope="row"><spring:message code='service.title.InstallationNo' /></th>
+      <td>
+
+       <!-- <div class="date_set">
         <p>
          <input type="text" title="" placeholder="From" class="w100p"
           id="instalNoFrom" name="instalNoFrom" />
@@ -246,38 +285,29 @@
          <input type="text" title="" placeholder="To" class="w100p"
           id="instalNoTo" name="instalNoTo" />
         </p>
-       </div>
-       <!-- date_set end -->
+       </div> -->
+
+       <input type="text" title="" placeholder="<spring:message code='service.title.InstallationNo' />" class="w100p" id="instalNo" name="instalNo" />
       </td>
      </tr>
      <tr>
-      <th scope="row"><spring:message
-        code='service.title.InstallDate' /><span name="m2" id="m2" class="must">*</span></th>
+      <th scope="row"><spring:message code='service.title.InstallDate' /><span name="m2" id="m2" class="must">*</span></th>
       <td>
        <div class="date_set">
-        <!-- date_set start -->
         <p>
-         <input type="text" title="Create start Date"
-          placeholder="DD/MM/YYYY" class="j_date" id="instalDtFrom"
-          name="instalDtFrom" />
+         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="instalDtFrom" name="instalDtFrom" />
         </p>
         <span>To</span>
         <p>
-         <input type="text" title="Create end Date"
-          placeholder="DD/MM/YYYY" class="j_date" id="instalDtTo"
-          name="instalDtTo" />
+         <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="instalDtTo" name="instalDtTo" />
         </p>
        </div>
-       <!-- date_set end -->
       </td>
-      <th scope="row"><spring:message
-        code='service.title.InstallStatus' /> <span name="m3" id="m3" class="must">*</span></th>
-      <td><select id="instalStatus" name="instalStatus">
-        <option value="">Choose One</option>
-        <c:forEach var="list" items="${installStatus }"
-         varStatus="status">
+      <th scope="row"><spring:message code='service.title.InstallStatus' /> <span name="m3" id="m3" class="must">*</span></th>
+      <td><select id="instalStatus" name="instalStatus" class="multy_select w100p">
+        <c:forEach var="list" items="${installStatus }" varStatus="status">
          <c:choose>
-          <c:when test="${list.codeId=='4'}">
+          <c:when test="${list.codeId=='1'}">
             <option value="${list.codeId}" selected>${list.codeName}</option>
           </c:when>
           <c:otherwise>
@@ -288,14 +318,14 @@
       </select></td>
      </tr>
      <tr>
-      <th scope="row"><spring:message
-        code='service.title.DSCBranch' /></th>
-      <td><select id="branch" name="branch">
-      </select></td>
-      <th scope="row"><spring:message code='service.title.CTCode' /></th>
+      <th scope="row"><spring:message code='service.title.DSCBranch' /> <span name="m4" id="m4" class="must">*</span></th>
+      <td>
+       <select id="branch" name="branch" class="w100p"></select>
+      </td>
+
+      <!-- <th scope="row"><spring:message code='service.title.CTCode' /></th>
       <td>
        <div class="date_set">
-        <!-- date_set start -->
         <p>
          <input type="text" title="" placeholder="From" class="w100p"
           id="CTCodeFrom" name="CTCodeFrom" />
@@ -306,14 +336,20 @@
           id="CTCodeTo" name="CTCodeTo" />
         </p>
        </div>
-       <!-- date_set end -->
-      </td>
+      </td> -->
+
+      <th scope="row"><spring:message code='service.grid.CTCode' /></th>
+       <td>
+        <select id="CTCode" name="CTCode" class="multy_select w100p" multiple="multiple">
+        </select>
+       </td>
      </tr>
      <tr>
-      <th scope="row"><spring:message code='service.title.SortBy' /></th>
+      <th scope="row"><spring:message code='service.title.SortBy' /> <span name="m5" id="m5" class="must">*</span></th>
       <td colspan="3"><select id="sortType" name="sortType">
+        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
         <option value="1">Installation Number</option>
-        <option value="2">CT Code</option>
+        <option value="2" selected>CT Code</option>
       </select></td>
      </tr>
     </tbody>
