@@ -65,11 +65,11 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Pair with I-Care</th>
     <td>${icare }</td>
-    <th scope="row">Aging Month</th>
+    <th scope="row">Aging Month (Avg. Last 6 mth)</th>
     <td>${aging.agingMth }</td>
 </tr>
 <tr>
-    <th scope="row">I-Care Eligibility</th>
+    <th scope="row">Eligible for Key In</th>
     <td>${verify }</td>
     <th scope="row">Unit Count</th>
     <td>${result.untCnt}</td>
