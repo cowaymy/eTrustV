@@ -132,7 +132,8 @@
 		     , TO_CHAR(T1.CRT_DT, 'mm') AS MONTH
 		     , EXTRACT(YEAR FROM T1.CRT_DT) AS YEAR
 		     , T1.PRE_TM
-		     , T1.INSTCT
+		     <!--,  T1.INSTCT -->
+		     , REPLACE(T1.INSTCT, CHR(10), '\n') AS INSTCT
 		     , T1.EX_TRADE
 		     , T1.ITM_STK_ID
 		     , T1.CPNT_ID

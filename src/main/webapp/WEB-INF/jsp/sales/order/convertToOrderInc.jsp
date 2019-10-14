@@ -37,7 +37,7 @@
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#email").val(custInfo.email); //Email
                 $("#custRem").val(custInfo.rem); //Remark
-                $("#ordRem").val(`${preOrderInfo.instct}`);
+                $("#ordRem").html('${preOrderInfo.instct}');
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
@@ -94,7 +94,7 @@
 
               //$('#srvPacId').val('${preOrderInfo.srvPacId}');
 
-                $('#ordProudct').removeAttr("disabled");
+                //$('#ordProudct').removeAttr("disabled");
 
                 var stkType = $("#appType").val() == '66' ? '1' : '2';
                 doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.itmStkId}', 'ordProudct', 'S', 'fn_setOptGrpClass');//product ����
@@ -119,7 +119,7 @@
               var year = '${preOrderInfo.year}';
               var date = year + month;
 
-                $('#ordPromo').removeAttr("disabled");
+                //$('#ordPromo').removeAttr("disabled");
                 //if('${preOrderInfo.month}' >= '07' && '${preOrderInfo.year}' == '2019') {
                 if(date >= 201907) {
                     doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
