@@ -32,7 +32,7 @@ var Common = {
         } else {
             _params = _jsonObj ? JSON.stringify(_jsonObj) : '';
         }
-		
+
         //add timeout defalut : 0
         var option = {
             async: true,
@@ -327,6 +327,7 @@ var Common = {
                 /* 팝업 드래그 start */
                 try{
                     $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header',containment: "html"});
+                    $("#popup_wrap, .popup_wrap").resizable({containment: "html"});	// div popup resize : zaza 20190812
                 }catch(e){
                     console.log("[popup.draggable...] " + e);
                 }
@@ -702,7 +703,7 @@ var Common = {
         }, okCallback, cancelCallback);
 
     },
-    
+
     /**
      * confirm 대체용. -> 버튼 이름 변경 가능
      * 예) Common.confirm("save ??", function(){...}, function{...});
@@ -827,7 +828,7 @@ var Common = {
             if (okCallback) {
                 okCallback();
             }
-            
+
             if(option.isManual){
                 console.log("this confirm is manual mode....");
             }else{
@@ -851,8 +852,8 @@ var Common = {
         //     width: 400
         // });
     },
-    
-    
+
+
     /**
      * 공통 confirm BASE.... -> 버튼 이름 변경 가능
      * @param option
@@ -914,7 +915,7 @@ var Common = {
             if (okCallback) {
                 okCallback();
             }
-            
+
             if(option.isManual){
                 console.log("this confirm is manual mode....");
             }else{

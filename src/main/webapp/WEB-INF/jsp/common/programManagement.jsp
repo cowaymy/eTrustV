@@ -14,6 +14,46 @@
   background:#efcefc;
 }
 
+/* Grid - Input Column Header Display */
+.aui-grid-header-input-icon {
+    background: url("../../resources/AUIGrid/images/grid_input_ico.png") no-repeat  , linear-gradient(to bottom, #f8f8f8, #eee);
+    z-index: 9999999;
+    width: 12px;
+    height: 12px;
+    /* position: relative;*/
+
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1em;
+    background-color: #eee;
+
+    cursor: pointer;
+}
+
+/* Grid - Input Column Header Display - hover */
+.aui-grid-header-input-icon:hover {
+    background: url("../../resources/AUIGrid/images/grid_input_ico.png") no-repeat , linear-gradient(to bottom, #f8f8f8, #dadada);
+    z-index: 9999999;
+    width: 12px;
+    height: 12px;
+   /* position: relative;*/
+
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1em;
+    background-color: #dadada;
+
+    cursor: pointer;
+}
+
+/* Grid - Mandatory Input Column Header Display */
+.aui-grid-header-input-essen > .aui-grid-renderer-base > span::after{
+    color:#ff0000;
+    margin-left:5px;
+
+    content : '*';
+}
+
 </style>
 <script type="text/javaScript">
 
@@ -41,16 +81,19 @@ var MainColumnLayout =
         },{
             dataField : "pgmName",
             headerText : "<spring:message code='sys.generalCode.grid1.NAME'/>",
+            headerStyle : "aui-grid-header-input-icon aui-grid-header-input-essen",
             style : "aui-grid-left-column",
             width : "25%",
         }, {
             dataField : "pgmPath",
             headerText : "<spring:message code='sys.progmanagement.grid1.Path'/>",
+            headerStyle : "aui-grid-header-input-icon aui-grid-header-input-essen",
             styleFunction : cellStyleFunction,
             width : "40%",
         }, {
             dataField : "pgmDesc",
             headerText : "<spring:message code='sys.progmanagement.grid1.Description'/>",
+            headerStyle : "aui-grid-header-input-icon aui-grid-header-input-essen",
             style : "aui-grid-left-column",
             width : "25%",
         }

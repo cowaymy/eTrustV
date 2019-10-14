@@ -10,6 +10,8 @@
     <link href="${pageContext.request.contextPath}/resources/AUIGrid/AUIGrid_custom_style.css" rel="stylesheet"> <!--  aui grid 관련 재정의 클래스. -->
     <link href="${pageContext.request.contextPath}/resources/css/select2.min.css" rel="stylesheet">
 
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/jquery-ui-resize.css" />    <!--  div popup resize : zaza 20190812 -->
+
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-2.2.4.min.js"></script>
     <!-- <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.min.js"></script>  -->
@@ -25,6 +27,9 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.serializejson.js"></script> <!-- Form to jsonObject -->
 
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/gridCommon.js"></script>    <!-- AUIGrid 공통함수. 같이 추가해 보아요~ -->
+
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-ui_resize.js"></script> <!--  div popup resize : zaza 20190812 -->
+
 
 <!-- AUIGrid -->
     <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
