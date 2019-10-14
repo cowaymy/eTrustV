@@ -120,7 +120,7 @@ function fn_report(viewType){
         var dpSubmitDateFr = frArr[1]+"/"+frArr[0]+"/"+frArr[2]; // MM/dd/yyyy
         var dpSubmitDateTo = toArr[1]+"/"+toArr[0]+"/"+toArr[2];
 
-        whereSQL += " AND (SM.DOC_SUB_DT BETWEEN TO_DATE('"+dpSubmitDateFr+" 00:00:00', 'MM/dd/YY HH24:MI:SS') AND TO_DATE('"+dpSubmitDateTo+" 23:59:59', 'MM/dd/YY HH24:MI:SS'))";
+        whereSQL += " AND (doc.DOC_SUB_DT BETWEEN TO_DATE('"+dpSubmitDateFr+" 00:00:00', 'MM/dd/YY HH24:MI:SS') AND TO_DATE('"+dpSubmitDateTo+" 23:59:59', 'MM/dd/YY HH24:MI:SS'))";
     }
 
     if($('#_brnchId :selected').length > 0){
