@@ -1550,7 +1550,7 @@
                 $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#custEmail").val(custInfo.email); //Email
-                $('#speclInstct').val('${preOrderInfo.instct}');
+                $('#speclInstct').html('${preOrderInfo.instct}');
                 if ('${preOrderInfo.appTypeId}' == '66' && custInfo.typeId == '965') {
                 	doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '${preOrderInfo.corpCustType}', 'corpCustType',     'S', ''); //Common Code
                     $('#corpCustType').removeAttr("disabled");
