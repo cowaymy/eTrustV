@@ -6,6 +6,7 @@
  ----------------------------------------------------------------
  09/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  14/10/2019  ONGHC  1.0.1          Amend Layout
+ 15/10/2019  ONGHC  1.0.2          Amend branch Condition
  -->
 
 <script type="text/javaScript">
@@ -157,7 +158,7 @@
       }
 
       if ($("#branch").val() != '' && $("#branch").val() != null) {
-        whereSeq2 += "AND INSTALL.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '" + $("#branch").val() + "') ";
+        whereSeq2 += "AND INSTALL.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '" + $("#branch").val() + "' AND STUS_ID = 1) ";
       }
 
       if ($("#sortType").val() == "2") {
