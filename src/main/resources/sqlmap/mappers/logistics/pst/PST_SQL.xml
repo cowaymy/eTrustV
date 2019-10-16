@@ -19,7 +19,7 @@
 	     , S63.PST_ITM_STK_ID itmid , S26.STK_CODE itmcd , s26.STK_DESC itmnm , S26.UOM uom , UOM.CODE uomcd
 	     , S63.PST_ITM_REQ_QTY qty  , S63.PST_ITM_DO_QTY doqty, S63.PST_ITM_BAL_QTY balqty , S63.PST_ITM_PRC itmprc
 	     , 0 reqqty , S62.CRT_USER_ID userid , S26.SERIAL_CHK serialchk , S62.PST_CUR_RATE pcr
-	     , S62.PST_CUR_TYPE_ID pcti, CUR.CODE pctcd , S32.CNT_NAME cntname
+	     , S62.PST_CUR_TYPE_ID pcti, CUR.CODE pctcd , S32.CNT_NAME cntname, S62.PST_INVC_TYPE invtype
 
 	  FROM SAL0062D S62
 	     , SAL0063D S63
@@ -82,12 +82,12 @@
     INSERT INTO LOG0047M (REQST_NO, TRNSC_TYPE, TRNSC_TYPE_DTL, PRIDIC_FRQNCY, REQST_CRT_DT, REQST_REQUIRE_DT,REF_DOC_NO ,DOC_HDER_TXT
                         , REQST_CDC_RDC
                         , CRT_USER_ID, CRT_DT, REQST_STUS, REQST_TYPE, REQST_TYPE_DTL)
-                  VALUES (#{reqno}, 'OD' , #{movetype} ,'M' , to_date(#{crtdt1} , 'YYYYMMDDhh24miss') , sysdate , #{psono} ,#{htext}, #{locid} , #{userid} , sysdate , 'C', 'OD' , #{movetype} )
+                  VALUES (#{reqno}, #{movetypecode} , #{movetype} ,'M' , to_date(#{crtdt1} , 'YYYYMMDDhh24miss') , sysdate , #{psono} ,#{htext}, #{locid} , #{userid} , sysdate , 'C', #{movetypecode} , #{movetype} )
   </insert>
 
   <insert id="insertMovementSerial" parameterType="Map">
     INSERT INTO LOG0061D (SERIAL_NO, DELVRY_NO, PDELVRY_NO_ITM, TTYPE, CRT_DT, CRT_USER_ID)
-             VALUES  (#{serial} , #{reqstno} , 1 , 'OD' , SYSDATE , #{userid})
+             VALUES  (#{serial} , #{reqstno} , 1 , #{movetypecode} , SYSDATE , #{userid})
   </insert>
 
   <insert id="pstRequestInsertDetail" parameterType="Map">
@@ -257,7 +257,7 @@
                        ACC_BILL_REM,ACC_BILL_CRT_DT,ACC_BILL_CRT_USER_ID,ACC_BILL_GRP_ID,
                        ACC_BILL_TAX_RATE,ACC_BILL_TAX_CODE_ID)
    values ( PAY0016D_SEQ.NEXTVAL ,0 ,sysdate,'1000',
-            0 , '' , 1159 , 1271 ,
+            0 , '' , 1159 , #{invtype} ,
             0 , 0 , 0 , #{schaount} ,
             0 , #{billnet} ,#{schaount} , 1 ,
             #{invoiceno} , sysdate , #{userid} , 0 ,
@@ -274,7 +274,7 @@
 	       TAX_INVC_TASK_ID, TAX_INVC_REM,
 	       TAX_INVC_CHRG, TAX_INVC_TXS, TAX_INVC_AMT_DUE, TAX_INVC_CRT_DT,
 	       TAX_INVC_CRT_USER_ID)
-	   values (#{invoicetaxid} , #{invoiceno} , SYSDATE , 'PST'||LPAD((select max(PST_DO_ID) from SAL0059D) , 7 , 0) , 123 ,
+	   values (#{invoicetaxid} , #{invoiceno} , SYSDATE , 'PST'||LPAD((select max(PST_DO_ID) from SAL0059D) , 7 , 0) , #{invtype} ,
 	           #{dealernm} , #{cntname} ,
 	           #{addr1} ,#{addr2} ,#{addr3} ,#{addr4} ,#{post} ,#{state} ,#{cnty} ,
 	           0 , #{pctcd} ,
@@ -285,7 +285,7 @@
     select FN_GET_DOCNO(#{docno}) from dual
  </select>
  <select id="selectinvoiceItemId" resultType="String">
-    select PAY0031D_SEQ.NEXTVAL from dual
+    select PAY0032D_SEQ.NEXTVAL from dual
  </select>
  <insert id="InvoiceDListInsert" parameterType="Map">
     insert into PAY0032D( INVC_ITM_ID, TAX_INVC_ID, INVC_ITM_TYPE, INVC_ITM_ORD_NO, INVC_ITM_PO_NO,

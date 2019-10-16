@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.biz.sales.pst;
 
@@ -15,10 +15,10 @@ import java.util.Date;
 public class PSTSalesMVO implements Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2594924121072384758L;
-	
+
 	private int pstSalesOrdId;
 	private String pstItmId;
 	private String pstTrnsitId;
@@ -47,7 +47,10 @@ public class PSTSalesMVO implements Serializable{
 	private String pstCustPo;
 	private String ssID;
 	private int curType;
-	
+	private int pstInvcType;
+	private String pstAttach;
+	private int pstAttachFileGrpId;
+
 	public String getSsID() {
 		return ssID;
 	}
@@ -216,6 +219,24 @@ public class PSTSalesMVO implements Serializable{
 	public void setCurType(int curType) {
 		this.curType = curType;
 	}
-	
-	
+	public int getPstInvcType() {
+		return pstInvcType;
+	}
+	public void setPstInvcType(int pstInvcType) {
+		this.pstInvcType = pstInvcType;
+	}
+	public String getPstAttach() {
+		return pstAttach;
+	}
+	public void setPstAttach(String pstAttach) {
+		this.pstAttach = pstAttach;
+	}
+	public int getPstAttachFileGrpId() {
+		return pstAttachFileGrpId;
+	}
+	public void setPstAttachFileGrpId(int pstAttachFileGrpId) {
+		this.pstAttachFileGrpId = pstAttachFileGrpId;
+	}
+
+
 }

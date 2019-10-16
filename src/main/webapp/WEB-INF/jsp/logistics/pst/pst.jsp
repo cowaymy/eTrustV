@@ -184,6 +184,7 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                             { dataField : "pic"       , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
                             { dataField : "pcr"       , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
                             { dataField : "pcti"      , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
+                            { dataField : "pctcd"     , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
                             { dataField : "pctcd"     , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false }
                           ];
         var serialcolumn =[ {dataField:"itmcd"        , headerText : "<spring:message code='log.head.materialcode'/>" ,width:"20%" ,height:30 },
@@ -741,9 +742,9 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
          <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
          </article><!-- grid_wrap end -->
          <ul class="center_btns">
-         <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+         <!--<c:if test="${PAGE_AUTH.funcChange == 'Y'}">-->
              <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li>
-         </c:if>
+         <!--</c:if>-->
          </ul>
          </form>
 

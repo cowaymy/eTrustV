@@ -42,7 +42,7 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 		int totalPrice = 0;
 		if (checkList.size() > 0) {
 			Map<String, Object> insMap = null;
-			Map<String, Object> mainDMap = new HashMap();
+			Map<String, Object> mainDMap = new HashMap<String, Object>();
 			Map<String, Object> mainMap = new HashMap();
 			String tmpPstid = "";
 			boolean bool = true;
@@ -52,6 +52,8 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 				insMap = (Map<String, Object>)tmp.get("item");
 
 				String movtype = "";
+				String movtypecode = "";
+				if ((int)insMap.get("invtype")==5708){
 				if ((int)insMap.get("psttypeid")==2577){
 					movtype = "OD17";
 				}else if((int)insMap.get("psttypeid")==2578){
@@ -61,7 +63,22 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 				}else{
 					movtype = "OD20";
 				}
+				movtypecode = "OD";
+				}
+				if ((int)insMap.get("invtype")==5709){
+					if ((int)insMap.get("psttypeid")==2577){
+						movtype = "PS01";
+					}else if((int)insMap.get("psttypeid")==2578){
+						movtype = "PS02";
+					}else if((int)insMap.get("psttypeid")==2579){
+						movtype = "PS03";
+					}else{
+						movtype = "PS04";
+					}
+					movtypecode = "PS";
+				}
 				insMap.put("movetype" , movtype);
+				insMap.put("movetypecode" , movtypecode);
 				insMap.put("userid"   , userId);
 				insMap.put("htext", formMap.get("doctext"));
 				if (!tmpPstid.equals((String)insMap.get("psono"))){
@@ -226,6 +243,9 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 		int reqqty = 0;
 		double charge = 0.0;
 		double incharge = 0.0;
+		int pstinvtype = 0;
+		int wholesale = 0;
+		int compensation = 0;
 
 		//Map<String , Object> invoiceD = new HashMap();
 
@@ -244,6 +264,7 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 			psoid   = (int)insMap.get("psoid");
 			psttype = (int)insMap.get("psttypeid");
 			reqqty  = Integer.parseInt((String)insMap.get("reqqty"));
+			pstinvtype = (int)insMap.get("invtype");
 			ordMap  = insMap;
 			if (psttype == 2577 || 2579 == psttype){
 				if (reqqty > 0 ){
@@ -317,6 +338,14 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 			ordMap.put("taxrate", taxrate);
 			ordMap.put("taxcodeid", taxcodeid);
 			ordMap.put("invoiceno", invoiceno);
+			if (pstinvtype == 5708){
+				wholesale = 1271;
+				ordMap.put("invtype", wholesale);
+			}
+			else{
+				compensation = 5704;
+				ordMap.put("invtype", compensation);
+			}
 
 			//orderbill
 			pst.BillOrderInsert(ordMap);
@@ -327,6 +356,15 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 			ordMap.put("ammount", incharge+taxed);//dddd
 
 			ordMap.put("reqstno", reqstSeq);
+
+			if (pstinvtype == 5708){
+				wholesale = 123;
+				ordMap.put("invtype", wholesale);
+			}
+			else{
+				compensation = 440;
+				ordMap.put("invtype", compensation);
+			}
 
 			Map<String , Object> addMap = pst.selectDealerAddressMasic((int)ordMap.get("dealerid"));
 			String invoicetaxid = pst.selectinvoiceTaxId();
@@ -365,6 +403,15 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 				}
 				indmap.put("taxinvoidid" , invoicetaxid);
 				indmap.put("invoiceitmid", invoiceoitmid);
+
+				if (pstinvtype == 5708){
+					wholesale = 1272;
+					indmap.put("itemtype", wholesale);
+				}
+				else{
+					compensation = 5703;
+					indmap.put("itemtype", compensation);
+				}
 				logger.debug(" :::!!!!!???? {} ", indmap);
 				pst.InvoiceDListInsert(indmap);
 			}

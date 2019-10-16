@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
 
-var optionUnit = { 
+var optionUnit = {
 isShowChoose: true,
 //type : 'M'
 };
@@ -11,12 +11,12 @@ isShowChoose: true,
     var myStkGridID;
     var totUnitVal = 0;
     var totAmountVal = 0;
-    
+
     $(document).ready(function(){
 
         //Call Ajax
 //      fn_getDealerListAjax();
-        
+
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         CommonCombo.make("cmbPstIncharge", "/sales/pst/getInchargeList", '', $("#userId").val(), {
@@ -25,7 +25,8 @@ isShowChoose: true,
             type:"S"
         });//Incharge Person
         doGetCombo('/common/selectCodeList.do', '357', '','cmbNewDealerType', 'S' , '');     // Dealer Type Combo Box
-        
+        doGetCombo('/common/selectCodeList.do', '441', '','invoiceType', 'S' , '');
+
         if(insertForm.dealerTypeFlag.value == "REQ"){
         	CommonCombo.make("cmbLocation", "/common/selectCodeList.do", {groupCode:'361'}, "", {
                 id: "code",
@@ -39,16 +40,16 @@ isShowChoose: true,
                 type:"S"
             });     // WH LOC Combo Box
         }
-        
-        
+
+
 //        fn_dealerToDealer('2575');
     });
 
-    
-    
+
+
     function createAUIGrid() {
         // AUIGrid 칼럼 설정
-        
+
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [{
@@ -74,17 +75,17 @@ isShowChoose: true,
                 dataField : "pstItmStkId",
                 visible : false
             }];
-       
+
         // 그리드 속성 설정
         var gridPros = {
-            // 페이징 사용       
+            // 페이징 사용
             usePaging : true,
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            fixedColumnCount    : 1,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-//            selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+//            selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
@@ -94,15 +95,15 @@ isShowChoose: true,
             noDataMessage       : "No Item found.",
             groupingMessage     : "Here groupping"
         };
-        
+
         myStkGridID = GridCommon.createAUIGrid("#addStock_grid_wrap", columnLayout, '', gridPros);
-        
+
     }
-    
+
     function fn_dealerInfo(){
 
         insertForm.dealerId.value = insertForm.cmbDealer.value;
-        
+
         Common.ajax("GET", "/sales/pst/dealerInfo.do", $("#insertForm").serializeJSON(), function(result) {
             $("#dealerEmail").val(result.dealerEmail);
             $("#dealerNric").val(result.dealerNric);
@@ -117,7 +118,7 @@ isShowChoose: true,
             $("#newMailpostcode").val(result.postcode);
             $("#newMailstate").val(result.state);
             $("#newMailcountry").val(result.country);
-            
+
             $("#delvryDealerAddId").val(result.dealerAddId);
             $("#delvryAddrAreaId").val(result.areaId);
             $("#newDelvryaddrDtl").val(result.addrDtl);
@@ -127,7 +128,7 @@ isShowChoose: true,
             $("#newDelvrypostcode").val(result.postcode);
             $("#newDelvrystate").val(result.state);
             $("#newDelvrycountry").val(result.country);
-            
+
             $("#mailDealerCntId").val(result.dealerCntId);
             $("#newMailContCntName").val(result.cntName);
             $("#newMailContDealerIniCd").val(result.dealerIniCd);
@@ -138,7 +139,7 @@ isShowChoose: true,
             $("#newMailContTelM1").val(result.telM1);
             $("#newMailContTelR").val(result.telR);
             $("#newMailContTelO").val(result.telO);
-            
+
             $("#delvryDealerCntId").val(result.dealerCntId);
             $("#newDelvryContCntName").val(result.cntName);
             $("#newDelvryContDealerIniCd").val(result.dealerIniCd);
@@ -149,11 +150,11 @@ isShowChoose: true,
             $("#newDelvryContTelM1").val(result.telM1);
             $("#newDelvryContTelR").val(result.telR);
             $("#newDelvryContTelO").val(result.telO);
-            
+
             doGetCombo('/sales/pst/pstNewCmbDealerBrnchList', result.dealerBrnchId, result.brnchId,'cmbPstBranch', 'S' , ''); //Incharge Person
-            
+
             console.log("data : " + result);
-            
+
         },  function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
@@ -166,23 +167,23 @@ isShowChoose: true,
               Common.alert('<spring:message code="sal.alert.msg.liarDataSrchFailed" />');
           }
 
-          alert("Fail : " + jqXHR.responseJSON.message);          
+          alert("Fail : " + jqXHR.responseJSON.message);
       });
     }
-    
+
     function fn_addStockItemPop(){
         Common.popupDiv("/sales/pst/addStockItempPop.do", $("#insertForm").serialize(), null , true, '_stockItemDiv');
     }
-    
+
     function fn_addStockItemInfo(type, category, stkItem, qty, price, totPrice, stkId){
-        
-        for(var j = 0; j < AUIGrid.getRowCount(myStkGridID); j++) {                    
+
+        for(var j = 0; j < AUIGrid.getRowCount(myStkGridID); j++) {
             if(stkId == AUIGrid.getCellValue(myStkGridID, j, "pstItmStkId")) {
                 Common.alert('<spring:message code="sal.title.text.thisStokItmisExist" />');
                 return false;
             }
         }
-        
+
         var item = new Object();
             item.pstItmStkId = stkId;
             item.pstItmStkDesc = stkItem;
@@ -193,15 +194,15 @@ isShowChoose: true,
 /*
             totUnitVal = totUnitVal + Number(qty);
             totAmountVal = totAmountVal + Number(totPrice);
-            
+
             $("#totUnit").val(totUnitVal);
             $("#totAmount").val(totAmountVal);
 */
-            AUIGrid.addRow(myStkGridID, item, "last"); 
+            AUIGrid.addRow(myStkGridID, item, "last");
 
             calcTotal();
     }
-    
+
     // save
     function fn_saveNewPstRequest(){
     	if(insertForm.cmbDealer.value == ""){
@@ -220,11 +221,16 @@ isShowChoose: true,
             Common.alert('<spring:message code="sal.alert.msg.plzSelWhLocation" />');
             return false;
         }
+
+        if(FormUtil.isEmpty($('#invoiceType').val())){
+            Common.alert("Please select invoice type");
+            return false;
+        }
 //    	if(insertForm.totUnit.value == ""){
 //            Common.alert("* Please select Delivery Stock.");
 //            return false;
 //        }
-    	
+
             var pstRequestDOForm = {
                 dataSet     : GridCommon.getGridData(myStkGridID),
                 pstSalesMVO : {
@@ -264,10 +270,13 @@ isShowChoose: true,
 //                    telF : insertForm.newMailContTelO.value,
 //                    telO : insertForm.newMailContTelF.value
                     // Delivery Contact Person 해야함.
-                    pstDealerDelvryCntId : $("#delvryDealerCntId").val()
+                    pstDealerDelvryCntId : $("#delvryDealerCntId").val(),
+                    pstInvcType : $("#invoiceType").val(),
+                    pstAttach : $("#hidFileName").val(),
+                    pstAttachFileGrpId : $("#groupId").val(),
                 }
             };
-            
+
             Common.ajax("POST", "/sales/pst/insertNewRequestDO.do", pstRequestDOForm, function(result) {
                 Common.alert('<spring:message code="sal.alert.msg.savePstReqDo" />', fn_success);
 
@@ -275,37 +284,37 @@ isShowChoose: true,
                 Common.alert("실패하였습니다.");
                 console.log("실패하였습니다.");
                 console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-                
+
                 alert(jqXHR.responseJSON.message);
                 console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-                
+
             });
-        
+
     }
-    
+
     function fn_itemDel() {
-        AUIGrid.removeCheckedRows(myStkGridID);        
+        AUIGrid.removeCheckedRows(myStkGridID);
         calcTotal();
     }
-    
-    function calcTotal() {        
+
+    function calcTotal() {
         var totQty = 0;
         var totPrc = 0;
-        
-        for(var j = 0; j < AUIGrid.getRowCount(myStkGridID); j++) {                    
+
+        for(var j = 0; j < AUIGrid.getRowCount(myStkGridID); j++) {
             totQty += Number(AUIGrid.getCellValue(myStkGridID, j, "pstItmReqQty"));
             totPrc += Number(AUIGrid.getCellValue(myStkGridID, j, "pstItmTotPrc"));
         }
-        
+
         $("#totUnit").val(totQty);
         $("#totAmount").val(totPrc);
     }
-    
+
     function fn_success(){
     	$("#newPopClose").click();
     	fn_selectPstRequestDOListAjax();
     }
-    
+
     function fn_getRate() {
         if($("#curTypeCd").val() == 1148){
         	$("#curRate").val($("#insRate").val());
@@ -315,7 +324,7 @@ isShowChoose: true,
         	$("#curRate").val('1.00');
         }
     }
-    
+
     function fn_dealerToDealer(str){
 
 
@@ -348,9 +357,13 @@ isShowChoose: true,
 //      CommonCombo.make('cmbPstType', '/common/selectCodeList.do', {codeId : $("#cmbDealerType").val()} , '', {type: 'M'});
         CommonCombo.make("cmbDealer", "/sales/pst/pstNewDealerInfo.do", {cmbNewDealerType : $("#cmbNewDealerType").val()} , '' , optionUnit); //Status
     }
-    
+
     function chgTab() {
         AUIGrid.resize(myStkGridID, 950, 300);
+    }
+
+    function fn_uploadfile(){
+        Common.popupDiv("/sales/pst/uploadPSTAttachPop.do"  , null, null , true , 'fileUploadPop');
     }
 </script>
 
@@ -658,6 +671,8 @@ isShowChoose: true,
 <section class="search_table"><!-- search_table start -->
 
 <table class="type1"><!-- table start -->
+<input type="hidden" title="" placeholder="" class="" id="hidFileName" name="hidFileName"/>
+<input type="hidden" title="" placeholder="" class="" id="groupId" name="groupId"/>
 <caption>table</caption>
 <colgroup>
     <col style="width:180px" />
@@ -686,6 +701,12 @@ isShowChoose: true,
     <th scope="row"><spring:message code="sal.text.totAmt" /></th>
     <td><input type="text" id="totAmount" name="totAmount" title="" placeholder="" class="" readonly/></td>
 </tr>
+<tr>
+    <th scope="row">Invoice Type<span class="must">*</span></th>
+    <td>
+        <select class="select w100p" id="invoiceType" name="invoiceType" ></select>
+    </td>
+</tr>
 </tbody>
 </table><!-- table end -->
 
@@ -697,7 +718,7 @@ isShowChoose: true,
     <li><p class="btn_blue2"><a href="#" onclick="fn_itemDel()"><spring:message code="sal.title.text.deleteStockItm" /></a></p></li>
 </ul>
 
-<section class="search_result"><!-- search_result start 
+<section class="search_result"><!-- search_result start
 
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
@@ -720,6 +741,7 @@ isShowChoose: true,
 </section><!-- tap_wrap end -->
 
 <ul class="center_btns mt20">
+    <li><p class="btn_blue2"><a href="#" onClick="javascript:fn_uploadfile()">Upload Attachment</a></p></li>
     <li><p class="btn_blue2"><a href="#" onclick="fn_saveNewPstRequest()"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
