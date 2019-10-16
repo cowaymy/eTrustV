@@ -1977,7 +1977,7 @@
 
     <select id="getAdjApprLine" parameterType="Map" resultType="egovMap">
         SELECT A.*,
-                   C.NAME MEMO_APPR_USER_NAME
+                   C.USER_NAME MEMO_APPR_USER_NAME
         FROM PAY0292D A
         INNER JOIN (
             SELECT MEMO_ADJ_ID, MAX(MEMO_APPR_SEQ) MAX_SEQ
@@ -1993,8 +1993,9 @@
         ) B
             ON A.MEMO_ADJ_ID = B.MEMO_ADJ_ID
             AND A.MEMO_APPR_SEQ = B.MAX_SEQ
-        INNER JOIN ORG0001D C
-            ON A.MEMO_APPR_USER_ID = C.MEM_CODE
+        INNER JOIN SYS0047M C
+            /*ON A.MEMO_APPR_USER_ID = C.MEM_CODE*/
+            ON A.MEMO_APPR_USER_ID = C.HR_CODE
         WHERE 1=1
             <choose>
                 <when test="batchId != null and batchId != '' ">

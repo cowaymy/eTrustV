@@ -145,14 +145,16 @@ function selectAdjustmentDetailPop(adjId, invNo){
             }
 
             var appvPrcssStus;
-            for(var i = 0; i < result.apprList.appvPrcssStus.length; i++) {
-                if(appvPrcssStus == null) {
-                    appvPrcssStus = result.apprList.appvPrcssStus[i];
-                } else {
-                    appvPrcssStus += "<br />" + result.apprList.appvPrcssStus[i];
+            if(result.apprList) {
+                for(var i = 0; i < result.apprList.appvPrcssStus.length; i++) {
+                    if(appvPrcssStus == null) {
+                        appvPrcssStus = result.apprList.appvPrcssStus[i];
+                    } else {
+                        appvPrcssStus += "<br />" + result.apprList.appvPrcssStus[i];
+                    }
                 }
+                $("#viewAppvStus").html(appvPrcssStus);
             }
-            $("#viewAppvStus").html(appvPrcssStus);
         }
     });
 
