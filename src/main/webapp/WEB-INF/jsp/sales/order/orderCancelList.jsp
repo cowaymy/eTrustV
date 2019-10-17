@@ -124,6 +124,11 @@
             headerText : 'AssignCT',
             width : 100,
             editable : false
+        }, {
+            dataField : 'ordOtstnd',
+            headerText : 'Outstanding Amt',
+            width : 100,
+            editable : false
         },{
             dataField : 'dsc',
             headerText : 'DSC',
