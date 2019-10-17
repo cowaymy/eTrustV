@@ -25,9 +25,11 @@
     fn_productReturnTransList();
 
     // j_date
+    var dateToday = new Date();
     var pickerOpts = { changeMonth:true,
                        changeYear:true,
-                       dateFormat: "dd/mm/yy"
+                       dateFormat: "dd/mm/yy",
+                    	   minDate: dateToday
                      };
 
     $(".j_date").datepicker(pickerOpts);
