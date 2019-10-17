@@ -1212,6 +1212,7 @@ public class ReportBatchController {
                                                                                        // file
                                                                                        // name.
     params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME, "AdminProductivityPreviousMonthCody" + File.separator
         + "AdminProductivityPreviousMonthCody" + CommonUtils.getNowDate() + ".pdf");
 
