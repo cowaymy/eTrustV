@@ -30,6 +30,19 @@
                var configBsGen = ${configBasicInfo.configBsGen}
                $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);
 
+
+               var checkProduct = ${configBasicInfo.stockCode}
+               if(checkProduct != 112789){  // PRODUCT - OMBAK THEN DISPLAY FAUCET CHECKBOX
+            	   $('#faucetTitle').hide();
+            	   $('#faucet_exch').hide();
+
+               }
+
+               var checked = ${configBasicInfo.faucetExch}
+               if(checked == 1){ // DISABLE EDIT CHECKBOX IF CHECKED = 1
+            	   $("#faucet_exch").prop("disabled",true);
+               }
+
 	           //var srvMemId =  ${configBasicInfo.configBsMemId}
              //$("#entry_cmbServiceMem").val($("entry_cmbServiceMem option:first").val());
 
@@ -128,7 +141,9 @@
                    configId:                             $('#configId').val(),
                    hscodyId:                             $('#hscodyId').val(),
                    srvSoId:                                 $('#entry_orderNo').val(),
-                   entry_cmbServiceMem:           $('#entry_cmbServiceMem').val()
+                   entry_cmbServiceMem:           $('#entry_cmbServiceMem').val(),
+                   faucetExch:                              $('#faucet_exch').prop("checked") ? '1': '0' ,
+
         }
 
 
@@ -223,33 +238,37 @@
     <th scope="row" ><spring:message code='service.title.OrderNo'/></th>
    <%--  <td><span><c:out value="${basicInfo.ordNo}"/></span> --%>
     <td>
-    <input type="text" title="" id="entry_orderNo" name="entry_orderNo"  value="${configBasicInfo.ordNo}" placeholder="" class="readonly " readonly="readonly" style="width: 188px; " />
+    <input type="text" title="" id="entry_orderNo" name="entry_orderNo"  value="${configBasicInfo.ordNo}" placeholder="" class="w100p readonly " readonly="readonly" style="width: 188px; " />
     </td>
     <th scope="row" ><spring:message code='service.title.ApplicationType'/></th>
     <td>
-    <input type="text" title="" id="entry_appType" name="entry_appType"  value="${configBasicInfo.appTypeCode}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    <input type="text" title="" id="entry_appType" name="entry_appType"  value="${configBasicInfo.appTypeCode}" placeholder="" class="w100p readonly " readonly="readonly" style="width: 157px; "/>
     </td>
 </tr>
 <tr>
     <th scope="row" ><spring:message code='service.title.InstallationAddress'/></th>
-    <td colspan="3">
-    <input type="text" title="" id="entry_address" name="entry_address"  value="${configBasicInfo.appTypeCode}" placeholder="" class="readonly " readonly="readonly" style="width: 188px; "/>
+    <td >
+    <input type="text" title="" id="entry_address" name="entry_address"  value="${configBasicInfo.appTypeCode}" placeholder="" class="w100p readonly " readonly="readonly" style="width: 188px; "/>
+    </td>
+        <th scope="row" ><spring:message code='service.title.CustomerName'/></th>
+    <td>
+    <input type="text" title="" id="entry_custName" name="entry_custName"  value="${configBasicInfo.custName}" placeholder="" class="w100p readonly " readonly="readonly" style="width: 157px; "/>
     </td>
 </tr>
 <tr>
     <th scope="row" ><spring:message code='service.title.Product'/></th>
     <td>
-    <input type="text" title="" id="entry_product" name="entry_product"  value="${configBasicInfo.stock}" placeholder="" class="readonly " readonly="readonly" style="width: 188px; "/>
+    <input type="text" title="" id="entry_product" name="entry_product"  value="${configBasicInfo.stock}" placeholder="" class="w100p readonly " readonly="readonly" style="width: 188px; "/>
     </td>
-    <th scope="row" ><spring:message code='service.title.CustomerName'/></th>
-    <td>
-    <input type="text" title="" id="entry_custName" name="entry_custName"  value="${configBasicInfo.custName}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    <th id = "faucetTitle" scope="row" >Body Ambient Assy Replacement</th>
+   <td >
+    <label><input type="checkbox" id="faucet_exch" name="faucet_exch" <c:if test="${configBasicInfo.faucetExch == 1}">checked</c:if> /></label>
     </td>
 </tr>
 <tr>
     <th scope="row" ><spring:message code='service.title.NRIC_CompanyNo'/></th>
     <td>
-    <input type="text" title="" id="entry_nric" name="entry_nric"  value="${configBasicInfo.custNric}" placeholder="" class="readonly " readonly="readonly" style="width: 188px; "/>
+    <input type="text" title="" id="entry_nric" name="entry_nric"  value="${configBasicInfo.custNric}" placeholder="" class="w100p readonly " readonly="readonly" style="width: 188px; "/>
     </td>
     <th scope="row" ><spring:message code='service.title.HSAvailability'/></th>
     <td>
@@ -271,7 +290,7 @@
     </td>
     <th scope="row" ><spring:message code='service.title.LastHSDate'/></th>
     <td>
-    <input type="text" id="entry_lstHSDate" name="entry_lstHSDate" title="Create start Date" value="${configBasicInfo.c4}" placeholder="DD/MM/YYYY" class="readonly " readonly="readonly" />
+    <input type="text" id="entry_lstHSDate" name="entry_lstHSDate" title="Create start Date" value="${configBasicInfo.c4}" placeholder="DD/MM/YYYY" class="w100p readonly " readonly="readonly" />
     </td>
 </tr>
 <tr>
