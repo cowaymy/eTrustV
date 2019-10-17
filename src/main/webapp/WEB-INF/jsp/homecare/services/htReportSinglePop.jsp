@@ -7,6 +7,9 @@ $(document).ready(function(){
      AUIGrid.bind(myGridID, "cellClick", function(event) {
             BSNo =  AUIGrid.getCellValue(myGridID, event.rowIndex, "no");
         });
+
+     $('#hsMonth').val(
+             $.datepicker.formatDate('mm/yy', new Date()));
 });
 
 var myGridID;
