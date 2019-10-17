@@ -273,7 +273,7 @@ isShowChoose: true,
                     pstDealerDelvryCntId : $("#delvryDealerCntId").val(),
                     pstInvcType : $("#invoiceType").val(),
                     pstAttach : $("#hidFileName").val(),
-                    pstAttachFileGrpId : $("#groupId").val(),
+                    pstAttachFileGrpId : $("#groupId").val()
                 }
             };
 
