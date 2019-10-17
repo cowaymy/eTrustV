@@ -3,10 +3,15 @@
 <script type="text/javaScript">
 $(document).ready(function(){
 	createHSReportListAUIGrid();
-	
+
 	 AUIGrid.bind(myGridID, "cellClick", function(event) {
 	        BSNo =  AUIGrid.getCellValue(myGridID, event.rowIndex, "no");
 	    });
+
+     $('#hsMonth').val(
+             $.datepicker.formatDate('mm/yy', new Date()));
+
+
 });
 
 var myGridID;
@@ -48,15 +53,15 @@ function createHSReportListAUIGrid() {
         headerText : "App Type",
         editable : false,
         width : 150
-        
+
     }, {
         dataField : "c8",
         headerText : "Inchange Member",
         editable : false,
         width : 100
     }];
-  
-    
+
+
 
     // 그리드 속성 설정
    var gridPros = {
@@ -72,13 +77,21 @@ function createHSReportListAUIGrid() {
            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
            showRowNumColumn    : true       //줄번호 칼럼 렌더러 출력
    };
-    
-    
+
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID = AUIGrid.create("#grid_wrap_HSReportList", columnLayout, gridPros);
 }
 
 function fn_HSReportList(){
+
+    if ($("#hsMonth").val() == "") {
+        if ($("#orderNumber").val() == "" && $("#hsNumber").val() == "") {
+          Common.alert("HS Month or HS Order or Sales Order are required.");
+          return false;
+        }
+      }
+
 	Common.ajax("GET", "/services/bs/report/selectHSReportSingle.do", $("#searchHsReport").serialize(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
@@ -87,14 +100,14 @@ function fn_HSReportList(){
 }
 
 function fn_Generate(){
-	
+
 	 var selectedItems = AUIGrid.getSelectedItems(myGridID);
-	
+
 	    if(selectedItems.length  <= 0) {
 	        Common.alert("<b>No HS selected.</b>");
 	        return ;
 	    }
-	    
+
 	var date = new Date();
     var month = date.getMonth()+1;
     var day = date.getDate();
@@ -105,11 +118,11 @@ function fn_Generate(){
 	$("#searchHsReport #reportFileName").val('/services/BSReport_ByBSNo_Single.rpt');
     $("#searchHsReport #viewType").val("PDF");
     $("#searchHsReport #reportDownFileName").val(BSNo + "_"+day+month+date.getFullYear());
-    
+
     var option = {
             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
     };
-    
+
     Common.report("searchHsReport", option);
 }
 
@@ -126,7 +139,7 @@ $.fn.clearForm = function() {
         }else if (tag === 'select'){
             this.selectedIndex = -1;
         }
-        
+
     });
 };
 </script>
