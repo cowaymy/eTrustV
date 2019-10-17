@@ -2368,7 +2368,8 @@ WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SVC0008D
                                             Project1.CUST_NAME CUST_NAME  ,
                                             Project1.CUST_NRIC CUST_NRIC  ,
                                             Project1.CONFIG_ID,
-                                            Project1.CONFIG_BS_MEM_ID
+                                            Project1.CONFIG_BS_MEM_ID,
+                                            Project1.FAUCET_EXCH
                               FROM ( SELECT Extent1.ORD_ID ORD_ID  ,
                                             Extent1.ORD_NO ORD_NO  ,
                                             Extent1.APP_TYPE_CODE APP_TYPE_CODE  ,
@@ -2397,7 +2398,8 @@ WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SVC0008D
                                             Extent2.CONFIG_BS_REM CONFIG_BS_REM  ,
                                             Extent2.SRV_MEM_FREQ SRV_MEM_FREQ  ,
                                             Extent2.CONFIG_ID,
-                                            Extent2.CONFIG_BS_MEM_ID
+                                            Extent2.CONFIG_BS_MEM_ID,
+                                            Extent2.FAUCET_EXCH
                                      FROM ( SELECT vOrderBasicInfo.ORD_ID ORD_ID  ,
                                                    vOrderBasicInfo.ORD_NO ORD_NO  ,
                                                    vOrderBasicInfo.RENTAL_STUS RENTAL_STUS  ,
@@ -2490,7 +2492,8 @@ WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SVC0008D
                                                                vOrderSrvMemConfigInfo.SRV_MEM_SALESMAN_NAME SRV_MEM_SALESMAN_NAME  ,
                                                                vOrderSrvMemConfigInfo.LAST_SRV_MEM_ID LAST_SRV_MEM_ID  ,
                                                                vOrderSrvMemConfigInfo.LAST_SRV_MEM_START_DATE LAST_SRV_MEM_START_DATE  ,
-                                                               vOrderSrvMemConfigInfo.LAST_SRV_MEM_EXPR_DATE LAST_SRV_MEM_EXPR_DATE
+                                                               vOrderSrvMemConfigInfo.LAST_SRV_MEM_EXPR_DATE LAST_SRV_MEM_EXPR_DATE,
+                                                               vOrderSrvMemConfigInfo.FAUCET_EXCH FAUCET_EXCH
                                                         FROM SAL1014V vOrderSrvMemConfigInfo ) Extent2   ON Extent1.ORD_ID = Extent2.ORD_ID
                                             LEFT JOIN ORG0001D Extent3   ON Extent2.CONFIG_BS_MEM_ID = Extent3.MEM_ID
                                             LEFT JOIN SVC0006D Extent4   ON ( Extent1.ORD_ID = Extent4.SALES_ORD_ID )
@@ -2520,6 +2523,7 @@ WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SVC0008D
                                SRV_REM = #{remark},
                                SRV_BS_WEEK = #{srvBsWeek},
                                SRV_BS_GEN = #{availability},
+                               FAUCET_EXCH = #{faucetExch},
                                <!-- Added By Chew Kah Kit -->
                                SRV_UPD_USER_ID = #{SrvUpdateAt},
                                SRV_UPD_DT = SYSDATE
