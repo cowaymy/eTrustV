@@ -471,7 +471,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/RentalAging12Month.do")
-  // //NO NEED SCHEDULE
+  // @Scheduled(cron = "0 0 2 2 * *")//2nd day of the month (2am)
   public void RentalAging12Month() {
     LOGGER.info("[START] RentalAging12Month...");
     Map<String, Object> params = new HashMap<>();
@@ -491,7 +491,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/RentalAgingReport.do")
-  // //NO NEED SCHEDULE
+  // @Scheduled(cron = "0 0 3 2 * *")//2nd day of the month (3am)
   public void RentalAgingReport() {
     LOGGER.info("[START] RentalAgingReport...");
     Map<String, Object> params = new HashMap<>();
@@ -508,7 +508,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/OutrightPlusAgingCollection_12Month.do")
-  // //NO NEED SCHEDULE
+  // @Scheduled(cron = "0 0 4 2 * *")//2nd day of the month (4am)
   public void OutrightPlusAgingCollection_12Month() {
     LOGGER.info("[START] OutrightPlusAgingCollection_12Month...");
     Map<String, Object> params = new HashMap<>();
@@ -527,7 +527,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/OutrightPlusAging_12Month.do")
-  // //NO NEED SCHEDULE
+  // @Scheduled(cron = "0 30 4 2 * *")//2nd day of the month (4.30am)
   public void OutrightPlusAging_12Month() {
     LOGGER.info("[START] OutrightPlusAging_12Month...");
     Map<String, Object> params = new HashMap<>();
