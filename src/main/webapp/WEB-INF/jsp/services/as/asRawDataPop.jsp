@@ -8,6 +8,7 @@
  17/09/2019  ONGHC  1.0.2          AMEND DEFECT DETAIL SECTION
  03/10/2019  ONGHC  1.0.3          Set Date Range Control
  03/10/2019  ONGHC  1.0.4          Add AS Raw Report for 31Days
+ 17/10/2019  ONGHC  1.0.5          Add After Service (AS) Spare Part Exchange Raw Data [New]
  -->
 
 <script type="text/javaScript">
@@ -39,7 +40,7 @@
     }
 
     // VALIDATE DATE RANGE OF 7 DAYS OR 31 DAYS
-    if ($("#reportType").val() == '1' || $("#reportType").val() == '5' || $("#reportType").val() == '3' || $("#reportType").val() == '4' || $("#reportType").val() == '6') {
+    if ($("#reportType").val() == '1' || $("#reportType").val() == '5' || $("#reportType").val() == '3' || $("#reportType").val() == '4' || $("#reportType").val() == '6' || $("#reportType").val() == '7') {
       if ($("#reqstDateFr").val() != '' || $("#reqstDateTo").val() != '') {
         var keyInDateFrom = $("#reqstDateFr").val().substring(3, 5) + "/"
                           + $("#reqstDateFr").val().substring(0, 2) + "/"
@@ -229,6 +230,33 @@
           };
 
           Common.report("reportForm1", option);
+      } else if ($("#reportType").val() == '7') {
+          var date = new Date();
+          var month = date.getMonth() + 1;
+          var day = date.getDate();
+          if (date.getDate() < 10) {
+            day = "0" + date.getDate();
+          }
+          $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
+
+          //whereSql += " AND A.AS_TYPE_ID = 339 ";
+
+          $("#reportForm1 #V_SELECTSQL").val(" ");
+          $("#reportForm1 #V_ORDERBYSQL").val(" ");
+          $("#reportForm1 #V_FULLSQL").val(" ");
+          $("#reportForm1 #V_WHERESQL").val(whereSql);
+          $("#reportForm1 #reportFileName").val('/services/ASRawDataSprPrtKOR.rpt');
+          $("#reportForm1 #viewType").val("EXCEL");
+          $("#reportForm1 #reportDownFileName").val("ASRawDataSprPrtKOR_" + day + month + date.getFullYear());
+
+          var option = {
+            isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+          };
+
+          Common.report("reportForm1", option);
       } else {
         var date = new Date();
         var month = date.getMonth() + 1;
@@ -322,6 +350,7 @@
          <option value="1">After Service (AS) Raw Data</option>
          <option value="5" selected>After Service (AS) Raw Data [New]</option>
          <option value="2">After Service (AS) Spare Part Exchange Raw Data</option>
+         <option value="7">After Service (AS) Spare Part Exchange Raw Data [New]</option>
          <option value="3">After Service (AS) Raw Data (PQC)</option>
          <option value="4">After Service (AS) Raw Data (AOAS)</option>
          <option value="6">After Service (AS) Raw Data (AOAS) [New]</option>
