@@ -1207,7 +1207,7 @@ public class ReportBatchController {
   public void adminProductivityPreviousMonthCody() throws IOException {
     LOGGER.info("[START] AdminProductivityPreviousMonthCody2...");
     Map<String, Object> params = new HashMap<>();
-    params.put(REPORT_FILE_NAME, "/visualcut/AdminProductivityPrevoiusMonthCody2.rpt");// visualcut
+    params.put(REPORT_FILE_NAME, "/visualcut/AdminProductivityPrevoiusMonthCody3.rpt");// visualcut
                                                                                        // rpt
                                                                                        // file
                                                                                        // name.
@@ -1381,7 +1381,7 @@ public class ReportBatchController {
 
   /*ONGHC*/
   @RequestMapping(value = "/Gen_AS_Raw_PassMth.do")
-  //@Scheduled(cron = " 0 30 8 * * 1") // Monthly 1st 1:00am
+  //@Scheduled(cron = " 0 30 8 * * 1") // EVERY MONDAY 8:30
   public void Gen_AS_Raw_PassMth() throws IOException {
     LOGGER.info("[START] Gen_AS_Raw_PassMth_Excel...");
     Map<String, Object> params = new HashMap<>();
