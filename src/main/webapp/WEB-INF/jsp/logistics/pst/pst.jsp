@@ -185,7 +185,7 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                             { dataField : "pcr"       , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
                             { dataField : "pcti"      , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
                             { dataField : "pctcd"     , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
-                            { dataField : "invtype"     , headerText : "Invoice Type"                       , width : 140, editable : false, visible: false }
+                            { dataField : "invtype"     , headerText : "Invoice Type"                      , width : 140, editable : false, visible: false }
                           ];
         var serialcolumn =[ {dataField:"itmcd"        , headerText : "<spring:message code='log.head.materialcode'/>" ,width:"20%" ,height:30 },
                             {dataField:"itmname"      , headerText : "<spring:message code='log.head.materialname'/>" ,width:"25%" ,height:30 },
