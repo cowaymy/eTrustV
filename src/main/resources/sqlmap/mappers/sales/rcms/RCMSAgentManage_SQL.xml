@@ -216,6 +216,16 @@
                       #{item}
                     </foreach>
                   </if>
+                  <if test="nric != null and nric !='' ">
+                    AND B.NRIC = #{nric}
+                  </if>
+                  <if test="custName != null and custName !='' ">
+                    AND UPPER(B.NAME) LIKE '%'||#{custName}||'%'
+                    </if>
+                  <if test="vaNo != null and vaNo !='' ">
+                    AND B.CUST_VA_NO = #{vaNo}
+                  </if>
+
             </when>
             <when test="customerId != null and customerId !='' ">
                 AND A.CUST_ID = #{customerId}
@@ -225,6 +235,16 @@
                       #{item}
                     </foreach>
                   </if>
+                  <if test="nric != null and nric !='' ">
+                    AND B.NRIC = #{nric}
+                  </if>
+                  <if test="custName != null and custName !='' ">
+                    AND UPPER(B.NAME) LIKE '%'||#{custName}||'%'
+                  </if>
+                  <if test="vaNo != null and vaNo !='' ">
+                    AND B.CUST_VA_NO = #{vaNo}
+                  </if>
+
             </when>
             <otherwise>
 				  <if test="appType != null and appType !='' ">
