@@ -21,6 +21,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipConvSaleMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipRentalQuotationMapper;
+import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -41,6 +42,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 04/04/2019    ONGHC      1.0.6       - Amend insertInstallation_2
  * 29/04/2019    ONGHC      1.0.7       - Create chkExgRsnCde
  * 18/07/2019    ONGHC      1.0.8       - Amend runInstSp
+ * 18/10/2019    ONGHC      1.0.9       - Amend insertInstallationResult to Cater Mobile Product Exchange
  *********************************************************************************************/
 
 @Service("installationResultListService")
@@ -65,6 +67,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
   @Resource(name = "membershipRentalQuotationMapper")
   private MembershipRentalQuotationMapper membershipRentalQuotationMapper;
+
+  @Resource(name = "servicesLogisticsPFCService")
+  private ServicesLogisticsPFCService servicesLogisticsPFCService;
 
   @Override
   public List<EgovMap> selectInstallationType() {
@@ -1416,8 +1421,51 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   public Map<String, Object> insertInstallationResult(Map<String, Object> params, SessionVO sessionVO)
       throws ParseException {
     Map<String, Object> resultValue = new HashMap<String, Object>();
+
     if (sessionVO != null) {
-      resultValue = Save(true, params, sessionVO);
+
+      // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
+      resultValue = this.runInstSp(params, sessionVO, "1");
+
+      if (null != resultValue) {
+        HashMap spMap = (HashMap) resultValue.get("spMap");
+        logger.debug("spMap :" + spMap.toString());
+        if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"741".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
+          resultValue.put("logerr", "Y");
+        } else { // SUCCESS
+          if ("000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) {
+            servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+          }
+          String ordStat = this.getSalStat(params);
+
+          if (!"1".equals(ordStat)) {
+            if (params.get("hidCallType").equals("258")) {
+              int exgCode = this.chkExgRsnCde(params);
+              // SKIP SOEXC009 - EXCHANGE (WITHOUT RETURN)
+              if (exgCode == 0) { // PEX EXCHANGE CODE NOT IN THE LIST
+                if (Integer.parseInt(params.get("installStatus").toString()) == 4) {
+                  // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
+                  resultValue = this.runInstSp(params, sessionVO, "2");
+
+                  if (null != resultValue) {
+                    spMap = (HashMap) resultValue.get("spMap");
+                    logger.debug("spMap :" + spMap.toString());
+                    if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
+                      resultValue.put("logerr", "Y");
+                    } else {
+                      servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          //resultValue = this.insertInstallationResult_2(params, sessionVO);
+          //resultValue = Save_2(true, params, sessionVO);
+          Save_2(true, params, sessionVO);
+        }
+      }
     }
     return resultValue;
   }
