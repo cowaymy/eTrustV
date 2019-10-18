@@ -885,7 +885,7 @@
                    NVL (SAL0001D.SALES_ORD_NO, '') AS sales_Order_No,
                    NVL (SAL0001D.CUST_ID, '') AS customer_Id,
                    FN_GET_COMMCD (10, SAL0001D.APP_TYPE_ID) AS app_Type,
-                   NVL (SAL0001D.PROMO_ID, '') AS sales_Promotion,
+                   NVL (TO_CHAR (SAL0001D.PROMO_ID), '') AS sales_Promotion,
                    NVL(TO_CHAR (SAL0001D.MTH_RENT_AMT), '0') AS monthly_Rental_Fees,
                    NVL (SAL0001D.TOT_AMT, '') AS registration_Fees,
                    NVL (SAL0022D.CUST_ACC_BANK_ID, '') AS bank_Code,
@@ -2062,7 +2062,8 @@
            CASE WHEN ( Extent3.CUST_BILL_ID IS NOT NULL )
              THEN Extent3.CUST_BILL_ID
              ELSE 0 END C7  ,
-           Extent6.CODE_NAME CODENAME2
+           Extent6.CODE_NAME CODENAME2,
+           Extent4.TYPE_ID TYPE_ID
     FROM SAL0046D Extent1
     LEFT JOIN SAL0047D Extent2 ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
     JOIN SAL0001D Extent3 ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
