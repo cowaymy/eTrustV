@@ -106,6 +106,7 @@ import io.swagger.annotations.ApiOperation;
  * 26/07/2019    ONGHC      1.0.5       - Amend asRegistration to fix Commission and Update User issue
  * 29/07/2019    ONGHC      1.0.6       - Amend productReturnResult to Add Status Checking
  * 30/07/2019    ONGHC      1.0.7       - Amend asRegistration
+ * 18/10/2019    ONGHC      1.0.8       - Amend Installation for Product Exchange
  *********************************************************************************************/
 
 @Api(value = "service api", description = "service api")
@@ -1255,6 +1256,7 @@ public class ServiceApiController {
           params.put("hidSirimTypeId", String.valueOf(installResult.get("stkCtgryId")));
           params.put("hiddeninstallEntryNo", String.valueOf(installResult.get("installEntryNo")));
           params.put("hidTradeLedger_InstallNo", String.valueOf(installResult.get("installEntryNo")));
+          params.put("hidCallType", String.valueOf(installResult.get("typeId")));
 
           params.put("installDate", installDate);
           params.put("CTID", String.valueOf(userId));
@@ -1281,7 +1283,6 @@ public class ServiceApiController {
 
           try {
             Map rtnValue = installationResultListService.insertInstallationResult(params, sessionVO1);
-
             if (null != rtnValue) {
               HashMap spMap = (HashMap) rtnValue.get("spMap");
               if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
@@ -1722,15 +1723,19 @@ public class ServiceApiController {
       params.put("hidSirimTypeId", String.valueOf(installResult.get("stkCtgryId")));
       params.put("hiddeninstallEntryNo", String.valueOf(installResult.get("installEntryNo")));
       params.put("hidTradeLedger_InstallNo", String.valueOf(installResult.get("installEntryNo")));
-      params.put("hidCallType", "257"); // fail시 전화타입 257
+      //params.put("hidCallType", "257"); // fail시 전화타입 257
+      params.put("hidCallType", String.valueOf(installResult.get("typeId")));
       params.put("CTID", String.valueOf(userId));
       params.put("installDate", "");
       params.put("updator", String.valueOf(userId));
       params.put("nextCallDate", todayPlusOne);
       params.put("refNo1", "0");
       params.put("refNo2", "0");
-      params.put("codeId", String.valueOf(installResult.get("257")));
+      //params.put("codeId", String.valueOf(installResult.get("257")));
+      params.put("codeId", String.valueOf(installResult.get("typeId")));
       params.put("failReason", String.valueOf(params.get("failReasonCode")));
+      params.put("sirimNo", "");
+      params.put("serialNo", "");
 
       if (orderInfo != null) {
         params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
