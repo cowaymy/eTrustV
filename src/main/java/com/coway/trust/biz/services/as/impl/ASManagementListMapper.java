@@ -15,6 +15,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 26/07/2019    ONGHC      1.0.3       - Add Recall Status
  * 05/09/2019    ONGHC      1.0.4       - Create Function for In-House Repair
  * 17/09/2019    ONGHC      1.0.5       - Create getDftTyp
+ * 21/10/2019    ONGHC      1.0.6       - Amend chkPmtMap and Un-map Payment Function
  *********************************************************************************************/
 
 @Mapper("ASManagementListMapper")
@@ -301,6 +302,14 @@ public interface ASManagementListMapper {
   String getInHseLmtDy();
 
   int selRcdTms(Map<String, Object> params);
+
+  int chkPmtMap(Map<String, Object> params);
+
+  int bckupPAY0252T(Map<String, Object> params);
+
+  int rmvPAY0252T(Map<String, Object> params);
+
+  int updPAY0081D(Map<String, Object> params);
 
   int chkRcdTms(Map<String, Object> params);
 
