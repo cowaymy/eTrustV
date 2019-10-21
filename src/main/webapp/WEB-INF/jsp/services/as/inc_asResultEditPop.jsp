@@ -9,6 +9,7 @@
  26/04/2019  ONGHC  1.0.3          ADD RECALL STATUS
  05/09/2019  ONGHC  1.0.4          REMOVE IN-HOUSE REPAIR SECTION
  17/09/2019  ONGHC  1.0.5          AMEND DEFECT DETAIL SECTION
+ 21/10/2019  ONGHC  1.0.6          ADD CHECKING FOR AS PAYMENT MAPPING
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > EDIT / VIEW AS ENTRY PLUG IN -->
@@ -1220,7 +1221,8 @@
       }
     }
 
-    fn_setSaveFormData();
+    //fn_setSaveFormData();
+    fn_chkPmtMap() // CHECK PAYMENT MAPPING
   }
 
   function fn_valDtFmt() {
@@ -1424,6 +1426,20 @@
 
       doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID=' + STK_CTGRY_ID, '', val, 'productCode', 'S', '');
     }
+  }
+
+  function fn_chkPmtMap() {
+    Common.ajax("POST", "/services/as/chkPmtMap.do", {
+        AS_ENTRY_ID : asDataInfo[0].asId,
+        AS_RESULT_NO : $('#asData_AS_RESULT_NO').val(),
+      }, function(result) {
+        if (result.code == "99") {
+          // PAYMENT MAPPED
+          Common.confirm("<spring:message code='service.msg.confirmPmtMap'/>", fn_setSaveFormData);
+        } else {
+          fn_setSaveFormData();
+        }
+      });
   }
 
   function fn_setSaveFormData() {
