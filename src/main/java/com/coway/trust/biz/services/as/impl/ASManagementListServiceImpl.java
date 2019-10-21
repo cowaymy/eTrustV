@@ -39,6 +39,7 @@ import oracle.sql.DATE;
  * 05/09/2019    ONGHC      1.0.7       - Amend In House Call Log Result
  * 17/09/2019    ONGHC      1.0.8       - Create getDftTyp
  * 08/10/2019    ONGHC      1.0.9       - Amend asResultBasic_update
+ * 21/10/2019    ONGHC      1.0.10      - Amend chkPmtMap and Un-map Payment Function
  *********************************************************************************************/
 
 @Service("ASManagementListService")
@@ -2423,6 +2424,23 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     // REVERSE HAPPY CALL
     svc0004dmap.put("HC_TYPE_NO", svc0004dmap.get("AS_NO"));
     int reverse_State_CCR0001D_cnt = ASManagementListMapper.reverse_State_CCR0001D(svc0004dmap);
+
+    // UNMAP PAYMENT
+    if (ASManagementListMapper.chkPmtMap(svc0004dmap) >= 1) {
+      LOGGER.debug(" =================== START TO UNMAP PAYMENT =================== ");
+      // PAYMENT HAD MAPPED.
+      // INSERT BACKUP
+      LOGGER.debug(" =================== 1. BACKUP =================== ");
+      ASManagementListMapper.bckupPAY0252T(svc0004dmap);
+      // REMOVE DATA
+      LOGGER.debug(" =================== 2. REMOVE =================== ");
+      ASManagementListMapper.rmvPAY0252T(svc0004dmap);
+      // UPDATE STATUS
+      LOGGER.debug(" =================== 3. UPDATE =================== ");
+      ASManagementListMapper.updPAY0081D(svc0004dmap);
+      LOGGER.debug(" =================== END TO UNMAP PAYMENT =================== ");
+    }
+
     // REINSERT
     ((Map) params.get("asResultM")).put("AUTOINSERT", "TRUE");// hash
     EgovMap returnemp = this.asResult_insert(params);
@@ -3210,6 +3228,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   @Override
   public int selRcdTms(Map<String, Object> params) {
     return ASManagementListMapper.selRcdTms(params);
+  }
+
+  @Override
+  public int chkPmtMap(Map<String, Object> params) {
+    return ASManagementListMapper.chkPmtMap(params);
   }
 
   @Override
