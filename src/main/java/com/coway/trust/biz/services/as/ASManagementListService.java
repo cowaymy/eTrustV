@@ -14,6 +14,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
  * 26/07/2019    ONGHC      1.0.2       - Add Recall Status
  * 17/09/2019    ONGHC      1.0.3       - Add getDftTyp
+ * 21/10/2019    ONGHC      1.0.4       - Add chkPmtMap
  *********************************************************************************************/
 
 public interface ASManagementListService {
@@ -156,6 +157,8 @@ public interface ASManagementListService {
   String getInHseLmtDy();
 
   int selRcdTms(Map<String, Object> params);
+
+  int chkPmtMap(Map<String, Object> params);
 
   int chkRcdTms(Map<String, Object> params);
 
