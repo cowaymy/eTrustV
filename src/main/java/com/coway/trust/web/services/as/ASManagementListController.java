@@ -44,6 +44,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 01/04/2019    ONGHC      1.0.1       - Restructure File
  * 26/07/2019    ONGHC      1.0.2       - Add Recall Status
  * 17/07/2019    ONGHC      1.0.3       - Add dftTypPop and getDftTyp
+ * 21/10/2019    ONGHC      1.0.4       - Add chkPmtMap
  *********************************************************************************************/
 
 @Controller
@@ -167,7 +168,7 @@ public class ASManagementListController {
 
     List<EgovMap> ASMList = ASManagementListService.selectASManagementList(params);
 
-    logger.debug("== ASMList : {}", ASMList);
+    //logger.debug("== ASMList : {}", ASMList);
     logger.debug("===========================/searchASManagementList.do===============================");
     return ResponseEntity.ok(ASMList);
   }
@@ -1361,6 +1362,29 @@ public class ASManagementListController {
     }
     return ResponseEntity.ok(message);
   }
+
+  @RequestMapping(value = "/chkPmtMap.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> chkPmtMap(@RequestBody Map<String, Object> params, ModelMap model,
+      SessionVO sessionVO) {
+    ReturnMessage message = new ReturnMessage();
+
+    logger.debug("==================/chkPmtMap.do=======================");
+    logger.debug("params : {}", params);
+
+    int noRcd = ASManagementListService.chkPmtMap(params);
+    logger.debug("noRcd : ", noRcd);
+    logger.debug("==================/chkPmtMap.do=======================");
+    if (noRcd == 0) {
+      message.setMessage("OK");
+      message.setCode("1");
+    } else {
+      message.setMessage(
+          "Payment of This AS Already Map");
+      message.setCode("99");
+    }
+    return ResponseEntity.ok(message);
+  }
+
 
   @RequestMapping(value = "/getASEntryCommission", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getASEntryCommission(@RequestParam Map<String, Object> params,
