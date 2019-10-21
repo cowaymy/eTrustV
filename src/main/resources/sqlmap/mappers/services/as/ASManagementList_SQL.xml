@@ -2643,6 +2643,22 @@
       AND RCD_TMS = #{rcdTms}
   </select>
 
+  <select id="chkPmtMap" parameterType="Map" resultType="int">
+    SELECT COUNT(*) COUNT
+    FROM PAY0081D
+    WHERE F_TRNSC_ID IN ( SELECT BANK_STATE_MAPPING_ID
+                          FROM PAY0252T
+                          WHERE PAY_ID IN ( SELECT PAY_ID
+                                            FROM PAY0064D
+                                            WHERE OR_NO IN ( SELECT AS_DOC_NO
+                                                             FROM PAY0006D
+                                                             WHERE AS_ID = #{AS_ENTRY_ID}
+                                                               AND AS_RESULT_NO = #{AS_RESULT_NO}
+                                                               AND AS_DOC_NO LIKE 'WOR%'))
+                            AND APP_TYPE = 'AS')
+      AND OTH_KEYIN_STUS_ID = '4'
+  </select>
+
   <select id="getFltNm" parameterType="Map" resultType="String">
     SELECT STK_CODE || '[-]' || STK_DESC as flt
     FROM SYS0026M
@@ -3645,7 +3661,7 @@
            SYSDATE
     FROM LOG0015D
     WHERE 1 = 1
-      AND STK_REQ_ID = ( SELECT DISRINCT REQ_ID
+      AND STK_REQ_ID = ( SELECT DISTINCT REQ_ID
                          FROM LOG0016D
                          WHERE REQ_ITM_REF_ID = #{OLD_AS_RESULT_ID}
       AND REQ_ITM_TYPE_ID ='457'
@@ -4273,6 +4289,20 @@
     )
   </insert>
 
+  <insert id="bckupPAY0252T" parameterType="Map">
+    INSERT INTO PAY0293T
+    SELECT *
+    FROM PAY0252T
+    WHERE PAY_ID IN ( SELECT PAY_ID
+                      FROM PAY0064D
+                      WHERE OR_NO IN ( SELECT AS_DOC_NO
+                                       FROM PAY0006D
+                                       WHERE AS_ID = #{AS_ENTRY_ID}
+                                         AND AS_RESULT_NO = #{AS_RESULT_NO}
+                                         AND AS_DOC_NO LIKE 'WOR%' ))
+      AND APP_TYPE = 'AS'
+  </insert>
+
   <!-- UPDATE START -->
   <update id="updateSVC0001D" parameterType="Map">
     UPDATE SVC0001D SET
@@ -4593,6 +4623,22 @@
       AND RCD_TMS = #{rcdTms}
   </update>
 
+  <update id="updPAY0081D" parameterType="Map">
+    UPDATE PAY0081D
+    SET OTH_KEYIN_STUS_ID = 1
+    WHERE F_TRNSC_ID IN ( SELECT BANK_STATE_MAPPING_ID
+                          FROM PAY0252T
+                          WHERE PAY_ID IN ( SELECT PAY_ID
+                                            FROM PAY0064D
+                                            WHERE OR_NO IN ( SELECT AS_DOC_NO
+                                                             FROM PAY0006D
+                                                             WHERE AS_ID = #{AS_ENTRY_ID}
+                                                               AND AS_RESULT_NO = #{AS_RESULT_NO}
+                                                               AND AS_DOC_NO LIKE 'WOR%'))
+                            AND APP_TYPE = 'AS')
+      AND OTH_KEYIN_STUS_ID = '4'
+  </update>
+
   <!-- DELETE START -->
   <delete id="deleteSVC0005D" parameterType="Map">
     DELETE SVC0005D
@@ -4603,4 +4649,18 @@
     DELETE SVC0005D
     WHERE ASR_ITM_ID = #{ASR_ITM_ID}
   </delete>
+
+  <delete id="rmvPAY0252T" parameterType="Map">
+    DELETE
+    FROM PAY0252T
+    WHERE PAY_ID IN ( SELECT PAY_ID
+                      FROM PAY0064D
+                      WHERE OR_NO IN ( SELECT AS_DOC_NO
+                                       FROM PAY0006D
+                                       WHERE AS_ID = #{AS_ENTRY_ID}
+                                         AND AS_RESULT_NO = #{AS_RESULT_NO}
+                                         AND AS_DOC_NO LIKE 'WOR%' ))
+      AND APP_TYPE = 'AS'
+  </delete>
+
 </mapper>
