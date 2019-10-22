@@ -144,9 +144,9 @@ function createGrid(){
               {dataField : "name", headerText : '<spring:message code="sal.text.custName" />', width : '15%' , editable       : false        },
               {dataField : "corpTypeId", headerText : '<spring:message code="sal.title.text.companyBrType" />', width : '10%', 	  editable       : false},
               /* {dataField : "race", headerText : '<spring:message code="sal.text.race" />', width : '7%',       editable       : false}, */
-              {dataField : "colctTrget", headerText : '<spring:message code="sal.title.text.openOsBrTarget" />', width : '7%'  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
+              /* {dataField : "colctTrget", headerText : '<spring:message code="sal.title.text.openOsBrTarget" />', width : '7%'  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", }, */
               {dataField : "rentAmt", headerText : '<spring:message code="sal.title.text.currBrOs" />', width : '7%'  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
-              {dataField : "openMthAging", headerText : '<spring:message code="sal.title.text.openAgingBrMonth" />', width : '7%'  , editable       : false      } ,
+              /* {dataField : "openMthAging", headerText : '<spring:message code="sal.title.text.openAgingBrMonth" />', width : '7%'  , editable       : false      } , */
               {dataField : "unBillAmt", headerText : '<spring:message code="sal.text.unbillAmount" />', width : '10%'  , editable       : false      } ,
               /* {dataField : "currRentalStus", headerText : '<spring:message code="sal.title.text.currRentStatus" />', width : '10%'  , editable       : false      } , */
 	          {dataField : "prevAgentId", headerText : "", width : 90    ,   visible:false ,   editable       : false},
