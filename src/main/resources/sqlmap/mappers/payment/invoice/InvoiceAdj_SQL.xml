@@ -317,7 +317,7 @@
 			                LEFT JOIN SYS0047M Extent231  ON Extent231.USER_ID = Extent17.MEMO_ADJ_UPD_USER_ID
 			                <if test="mode == 'APPROVAL' ">
 				                INNER JOIN PAY0292D extent235
-	                            ON (extent17.memo_adj_id = LTRIM(extent235.MEMO_ADJ_ID, 'BCH') OR TO_CHAR(extent17.memo_adj_id) = LTRIM(extent235.MEMO_ADJ_ID, 'BCH'))
+	                            ON (extent17.BATCH_ID = LTRIM(extent235.MEMO_ADJ_ID, 'BCH') OR TO_CHAR(extent17.memo_adj_id) = LTRIM(extent235.MEMO_ADJ_ID, 'BCH'))
 	                            <if test="apprGrp == null or apprGrp == '' ">
 	                                AND extent235.MEMO_APPV_STUS = 'R'
 	                                AND extent235.MEMO_APPR_USER_ID = #{memCode}
@@ -1977,7 +1977,7 @@
 
     <select id="getAdjApprLine" parameterType="Map" resultType="egovMap">
         SELECT A.*,
-                   C.USER_NAME MEMO_APPR_USER_NAME
+                   C.NAME MEMO_APPR_USER_NAME
         FROM PAY0292D A
         INNER JOIN (
             SELECT MEMO_ADJ_ID, MAX(MEMO_APPR_SEQ) MAX_SEQ
@@ -1993,9 +1993,8 @@
         ) B
             ON A.MEMO_ADJ_ID = B.MEMO_ADJ_ID
             AND A.MEMO_APPR_SEQ = B.MAX_SEQ
-        INNER JOIN SYS0047M C
-            /*ON A.MEMO_APPR_USER_ID = C.MEM_CODE*/
-            ON A.MEMO_APPR_USER_ID = C.HR_CODE
+        INNER JOIN ORG0001D C
+            ON A.MEMO_APPR_USER_ID = C.MEM_CODE
         WHERE 1=1
             <choose>
                 <when test="batchId != null and batchId != '' ">
