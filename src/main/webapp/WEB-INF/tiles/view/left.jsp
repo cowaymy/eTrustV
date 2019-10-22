@@ -85,11 +85,14 @@
     }
 
     // 선택한 메뉴화면으로 이동.
-    function fn_menu(obj, menuCode, menuPath, fullPath, myMenuGroupCode){
+    function fn_menu(obj, menuCode, menuPath, fullPath, myMenuGroupCode, fromDtType, fromDtFieldNm, fromDtVal, toDtType, toDtFieldNm, toDtVal){
 
         if(FormUtil.isEmpty(menuPath) || $(obj).hasClass("disabled")){
             return;
         }
+
+        // 20190903 KR-OHK : default date setting( from~to date)
+        fn_setDefaultDate(fromDtType, fromDtFieldNm, fromDtVal, toDtType, toDtFieldNm, toDtVal);
 
         $("#CURRENT_MENU_CODE").val(menuCode);
 
@@ -106,6 +109,84 @@
             action : getContextPath() + menuPath,
             method : "POST"
         }).submit();
+    }
+
+ // 20190903 KR-OHK : default date setting( from~to date)
+    function fn_setDefaultDate (fromDtType, fromDtFieldNm, fromDtVal, toDtType, toDtFieldNm, toDtVal) {
+
+        var fromDtType =fromDtType;
+        var fromDtFieldNm =fromDtFieldNm;
+        var fromDtVal = FormUtil.isEmpty(fromDtVal)?Number("0"):Number(fromDtVal);
+        var toDtType = toDtType;
+        var toDtFieldNm =toDtFieldNm;
+        var toDtVal = FormUtil.isEmpty(toDtVal)?Number("0"):Number(toDtVal);
+
+        if(FormUtil.isNotEmpty(fromDtType) && FormUtil.isNotEmpty(toDtType) && FormUtil.isNotEmpty(fromDtFieldNm) && FormUtil.isNotEmpty(toDtFieldNm)) {
+            var currDt = new Date();
+            var currYear  = currDt.getFullYear();
+            var currMonth = currDt.getMonth();
+            var fromDay =  currDt.getDate() + fromDtVal;
+            var toDay = currDt.getDate() + toDtVal;
+
+            var dt = new Date();
+            var firstDt = new Date( dt.getFullYear(), dt.getMonth() , 1 );
+            var lastDtOfPreMonth = new Date ( firstDt.setDate( firstDt.getDate() - 1 ) );
+            var preYear = lastDtOfPreMonth.getFullYear();
+            var preMonth = lastDtOfPreMonth.getMonth();
+
+            var setFromDt = "";
+            var setToDt = "";
+
+            if(fromDtType == "D1") {             // Today
+                setFromYY = currYear;
+                setFromMM = currMonth;
+                setFromDD = fromDay;
+            } else if(fromDtType == "M1") {   // First day of This Month
+                 setFromYY = currYear;
+                 setFromMM = currMonth;
+                 setFromDD = "1";
+            } else if(fromDtType == "M2") {   // First day of Pre Month
+                setFromYY = preYear;
+                setFromMM = preMonth;
+                setFromDD = "1";
+            } else if(fromDtType == "Y1") {   // January 1st of This Year
+                setFromYY = currYear;
+                setFromMM = "0";
+                setFromDD = "1";
+            } else {
+                setFromYY = currYear;
+                setFromMM = currMonth;
+                setFromDD = fromDay;
+            }
+
+            if(toDtType == "D1") {              // Today
+                setToYY = currYear;
+                setToMM = currMonth;
+                setToDD = toDay;
+            } else if(toDtType == "M1") {   // First day of This Month
+                setToYY = currYear;
+                setToMM = currMonth;
+                setToDD = "1";
+            } else if(toDtType == "M2") {   // First day of Pre Month
+                setToYY = preYear;
+                setToMM = preMonth;
+                setToDD = "1";
+            } else if(toDtType == "Y1") {   // January 1st of This Year
+                setToYY = currYear;
+                setToMM = "0";
+                setToDD = "1";
+            } else {
+                setToYY = currYear;
+                setToMM = currMonth;
+                setToDD = toDay;
+            }
+
+            $("#FROM_FIELD_NM").val(fromDtFieldNm);
+            $("#TO_FIELD_NM").val(toDtFieldNm);
+            $("#FROM_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setFromYY, setFromMM, setFromDD)));
+            $("#TO_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setToYY, setToMM, setToDD)));
+
+        }
     }
 </script>
 
@@ -176,7 +257,7 @@
             <c:choose>
             <c:when test="${ list.menuLvl == 1}">
             <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
+                <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" class="${menuStatusClass}">${list.menuName}</a>
                 </c:when>
                 <c:otherwise>
 
@@ -184,11 +265,11 @@
                 <c:when test="${preMenuCode != '' && preMenuLvl < list.menuLvl}">
                 <ul>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
+                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" class="${menuStatusClass}">${list.menuName}</a>
                         </c:when>
                         <c:otherwise>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}');" class="${menuStatusClass}">${list.menuName}</a>
+                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" class="${menuStatusClass}">${list.menuName}</a>
                         </c:otherwise>
                         </c:choose>
 
@@ -241,7 +322,7 @@
                                                 <ul>
                                             </c:if>
                                             <li  id="li_${menuList.menuCode}${groupList.mymenuCode}" group_my_menu_code="${groupList.mymenuCode}">
-                                                <a id="a_${menuList.menuCode}${groupList.mymenuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${menuList.menuCode}', '${menuList.pgmPath}', '${menuList.pathName}', '${groupList.mymenuCode}');">${menuList.menuName}</a>
+                                                <a id="a_${menuList.menuCode}${groupList.mymenuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${menuList.menuCode}', '${menuList.pgmPath}', '${menuList.pathName}', '${groupList.mymenuCode}', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');">${menuList.menuName}</a>
                                             </li>
                                             <c:set var="groupPerMenuCnt" value="${groupPerMenuCnt + 1}" />
                                         </c:when>
@@ -276,4 +357,9 @@
         <input type="hidden" id="CURRENT_MENU_FULL_PATH_NAME" name="CURRENT_MENU_FULL_PATH_NAME" value="${param.CURRENT_MENU_FULL_PATH_NAME}"/>
         <input type="hidden" id="CURRENT_GROUP_MY_MENU_CODE" name="CURRENT_GROUP_MY_MENU_CODE" value="${param.CURRENT_GROUP_MY_MENU_CODE}"/>
         <input type="hidden" id="CURRENT_MENU_TYPE" name="CURRENT_MENU_TYPE" value="${param.CURRENT_MENU_TYPE}"/>
+        <!--  20190903 KR-OHK :  default date setting( from~to date) -->
+        <input type="hidden" id="FROM_DT" name="FROM_DT"/>
+        <input type="hidden" id="FROM_FIELD_NM" name="FROM_FIELD_NM"/>
+        <input type="hidden" id="TO_DT" name="TO_DT"/>
+        <input type="hidden" id="TO_FIELD_NM" name="TO_FIELD_NM"/>
     </form>

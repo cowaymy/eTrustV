@@ -22,7 +22,7 @@ var validTo;
 
 $(function()
 {
-	fnSearchBtnClickAjax();
+    fnSearchBtnClickAjax();
 });
 
 var MainColumnLayout =
@@ -111,7 +111,7 @@ var AuthColumnLayout =
               showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
               }
         },{
-        	  dataField : "userId",
+              dataField : "userId",
             headerText : "<spring:message code='sys.userexcept.grid1.userId' />",
             editable   : false,
             width : 0
@@ -733,21 +733,21 @@ $(document).ready(function()
 </colgroup>
 <tbody>
  <tr>
-	<th scope="row">USER</th>
-	 <td>
-	   <input type="text" id="txtUserId" name="txtUserId" title=""		placeholder="User Id or Name" class="" />
-	</td>
-<!-- 	<th scope="row">USER Name</th>
-	 <td><input type="text" id="userNm" name="userNm" title=""		placeholder="" class="" />
-	</td> -->
+    <th scope="row">USER</th>
+     <td>
+       <input type="text" id="txtUserId" name="txtUserId" title=""      placeholder="User Id or Name" class="" />
+    </td>
+<!--    <th scope="row">USER Name</th>
+     <td><input type="text" id="userNm" name="userNm" title=""      placeholder="" class="" />
+    </td> -->
  </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn">
-<%-- 	<a href="javascript:;">
-	    <img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" />
+<%--    <a href="javascript:;">
+        <img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" />
   </a> --%>
 </p>
 <dl class="link_list">
@@ -795,7 +795,7 @@ $(document).ready(function()
 
 <article class="grid_wrap" ><!-- grid_wrap start -->
 <!-- 그리드 영역 1-->
- <div id="grid_wrap" style="height:420px;"></div>
+ <div id="grid_wrap" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
@@ -817,7 +817,7 @@ $(document).ready(function()
 
 <article class="grid_wrap" ><!-- grid_wrap start -->
 <!-- 그리드 영역 2-->
- <div id="auth_grid_wrap" style="height:420px;"></div>
+ <div id="auth_grid_wrap" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->

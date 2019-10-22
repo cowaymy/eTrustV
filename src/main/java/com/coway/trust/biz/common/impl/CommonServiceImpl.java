@@ -24,8 +24,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommStatusFormVO;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.util.BeanConverter;
 import com.coway.trust.web.common.CommStatusGridData;
@@ -123,6 +125,7 @@ public class CommonServiceImpl implements CommonService {
 		return commonMapper.selectUserExceptAdjustList(params);
 	}
 
+	/*
 	@Override
 	public int insertUserExceptAuthMapping(List<Object> addList, Integer crtUserId) {
 		int saveCnt = 0;
@@ -154,10 +157,9 @@ public class CommonServiceImpl implements CommonService {
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 
 			LOGGER.debug(" >>>>> updateUserExceptAuthMapping ");
-			/*
-			 * LOGGER.debug(" hidden : {}", ((Map<String, Object>) obj).get("hidden")); ((Map<String, Object>)
-			 * obj).put("userId", ((Map<String, Object>) obj).get("hidden") );
-			 */
+
+			 // LOGGER.debug(" hidden : {}", ((Map<String, Object>) obj).get("hidden")); ((Map<String, Object>)
+			 // obj).put("userId", ((Map<String, Object>) obj).get("hidden") );
 
 			LOGGER.debug("UserId : {}", ((Map<String, Object>) obj).get("userId"));
 
@@ -189,6 +191,70 @@ public class CommonServiceImpl implements CommonService {
 
 		return delCnt;
 	}
+	*/
+
+	/**
+	 * Insert, Update, Delete UserExceptional Auth Mapping List : insertUserExceptAuthMapping+updateUserExceptAuthMapping+deleteUserExceptAuthMapping => Change One Transaction
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param delList
+	 * @param userId
+	 * @return
+	 * @see com.coway.trust.biz.common.CommonService#saveUserExceptAuthMapping(java.util.List, java.util.List, java.util.List, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int saveUserExceptAuthMapping(List<Object> addList, List<Object> udtList, List<Object> delList, Integer userId) {
+		int saveCnt = 0;
+
+		// insert
+		for (Object obj : addList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> saveUserExceptAuthMapping insertUserExceptAuthMapping ");
+			LOGGER.debug(" userId : {}", ((Map<String, Object>) obj).get("userId"));
+
+			saveCnt++;
+
+			commonMapper.insertUserExceptAuthMapping((Map<String, Object>) obj);
+		}
+
+		// update
+		for (Object obj : udtList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> saveUserExceptAuthMapping updateUserExceptAuthMapping ");
+			/*
+			 * LOGGER.debug(" hidden : {}", ((Map<String, Object>) obj).get("hidden")); ((Map<String, Object>)
+			 * obj).put("userId", ((Map<String, Object>) obj).get("hidden") );
+			 */
+
+			LOGGER.debug("UserId : {}", ((Map<String, Object>) obj).get("userId"));
+
+			saveCnt++;
+
+			commonMapper.updateUserExceptAuthMapping((Map<String, Object>) obj);
+		}
+
+		// delete
+		for (Object obj : delList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> saveUserExceptAuthMapping deleteUserExceptAuthMapping ");
+			LOGGER.debug("UserId : {}", ((Map<String, Object>) obj).get("userId"));
+
+			saveCnt++;
+
+			commonMapper.deleteUserExceptAuthMapping((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
 
 	/************************** Role Auth Mapping ****************************/
 
@@ -212,6 +278,7 @@ public class CommonServiceImpl implements CommonService {
 		return commonMapper.selectRoleAuthMappingList(params);
 	}
 
+	/*
 	@Override
 	public int insertRoleAuthMapping(List<Object> addList, Integer crtUserId) {
 		int saveCnt = 0;
@@ -281,6 +348,78 @@ public class CommonServiceImpl implements CommonService {
 
 		return delCnt;
 	}
+	*/
+
+	/**
+	 * Insert, Update, Delete Role Auth Mapping List : insertRoleAuthMapping+updateRoleAuthMapping+deleteRoleAuthMapping => Change One Transaction
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param delList
+	 * @param userId
+	 * @return
+	 * @see com.coway.trust.biz.common.CommonService#saveRoleAuthMapping(java.util.List, java.util.List, java.util.List, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int saveRoleAuthMapping(List<Object> addList, List<Object> udtList, List<Object> delList, Integer userId) {
+		int saveCnt = 0;
+
+		// insert
+		for (Object obj : addList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> saveRoleAuthMapping insertRoleAuthMapping ");
+			LOGGER.debug(" hidden : {}", ((Map<String, Object>) obj).get("hidden"));
+
+			String tmpStr = (String) ((Map<String, Object>) obj).get("hidden");
+
+			saveCnt++;
+
+			commonMapper.insertRoleAuthMapping((Map<String, Object>) obj);
+		}
+
+		// update
+		for (Object obj : udtList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> saveRoleAuthMapping updateRoleAuthMapping ");
+			LOGGER.debug(" authCode : {}", ((Map<String, Object>) obj).get("authCode"));
+
+			saveCnt++;
+
+			commonMapper.updateRoleAuthMapping((Map<String, Object>) obj);
+		}
+
+		// delete
+		for (Object obj : delList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> saveRoleAuthMapping deleteRoleAuthMapping ");
+			LOGGER.debug(" authCode : {}", ((Map<String, Object>) obj).get("authCode"));
+
+			saveCnt++;
+
+			if (((Map<String, Object>) obj).get("authCode").equals("INT")) {
+				LOGGER.debug(" >>>>> saveRoleAuthMapping deleteRoleAuthMapping_MGR_AuthCode : {}", ((Map<String, Object>) obj).get("authCode"));
+
+				((Map<String, Object>) obj).put("oldRoleId",
+						String.valueOf(((Map<String, Object>) obj).get("oldRoleId")));
+
+				commonMapper.deleteMGRRoleAuthMapping((Map<String, Object>) obj);
+			} else {
+				commonMapper.deleteRoleAuthMapping((Map<String, Object>) obj);
+			}
+		}
+
+		return saveCnt;
+	}
+
+
 
 	@Override
 	public int deleteMGRRoleAuthMapping(List<Object> delList, Integer crtUserId) {
@@ -316,6 +455,7 @@ public class CommonServiceImpl implements CommonService {
 		return commonMapper.selectAuthList(params);
 	}
 
+	/*
 	@Override
 	public int insertAuth(List<Object> addList, Integer crtUserId) {
 		int saveCnt = 0;
@@ -375,14 +515,75 @@ public class CommonServiceImpl implements CommonService {
 
 		return delCnt;
 	}
+	*/
 
+	/**
+	 * Insert, Update, Delete Auth List : insertAuth+updateAuth+deleteAuth => Change One Transaction
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param delList
+	 * @param userId
+	 * @return
+	 * @see com.coway.trust.biz.common.CommonService#saveAuth(java.util.List, java.util.List, java.util.List, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int saveAuth(List<Object> addList, List<Object> udtList, List<Object> delList, Integer userId) {
+		int saveCnt = 0;
+
+		// insert
+		for (Object obj : addList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> saveAuth insertAuth ");
+			LOGGER.debug(" hidden : {}", ((Map<String, Object>) obj).get("hidden"));
+
+			String tmpStr = (String) ((Map<String, Object>) obj).get("hidden");
+
+			saveCnt++;
+
+			commonMapper.insertAuth((Map<String, Object>) obj);
+		}
+
+		// update
+		for (Object obj : udtList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> saveAuth updateAuth ");
+			LOGGER.debug(" authCode : {}", ((Map<String, Object>) obj).get("authCode"));
+
+			saveCnt++;
+
+			commonMapper.updateAuth((Map<String, Object>) obj);
+
+		}
+
+		// delete
+		for (Object obj : delList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> saveAuth deleteAuthCode ");
+			LOGGER.debug(" authCode : {}", ((Map<String, Object>) obj).get("authCode"));
+
+			saveCnt++;
+
+			commonMapper.deleteAuth((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
 	/************************** Menu Management ****************************/
 
 	@Override
 	public List<EgovMap> selectMenuList(Map<String, Object> params) {
 		return commonMapper.selectMenuList(params);
 	}
-
+/*
 	@Override
 	public int deleteMenuId(List<Object> delList, Integer crtUserId) {
 		int delCnt = 0;
@@ -440,6 +641,64 @@ public class CommonServiceImpl implements CommonService {
 
 		return saveCnt;
 	}
+*/
+	/**
+	 * Insert, Update, Delete Menu List : insertMenuCode+updateMenuCode+deleteMenuId => Change One Transaction
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param delList
+	 * @param userId
+	 * @return
+	 * @see com.coway.trust.biz.common.CommonService#saveMenuId(java.util.List, java.util.List, java.util.List, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int saveMenuId(List<Object> addList, List<Object> udtList, List<Object> delList, Integer userId) {
+		int saveCnt = 0;
+
+		// insert
+		for (Object obj : addList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> saveMenuId insertMenuCode ");
+			LOGGER.debug(" menuCode : {}", ((Map<String, Object>) obj).get("menuCode"));
+
+			saveCnt++;
+
+			commonMapper.insertMenuCode((Map<String, Object>) obj);
+		}
+
+		// update
+		for (Object obj : udtList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> saveMenuId updateMenuCode ");
+			LOGGER.debug(" menuCode : {}", ((Map<String, Object>) obj).get("menuCode"));
+
+			saveCnt++;
+
+			commonMapper.updateMenuCode((Map<String, Object>) obj);
+		}
+
+		// delete
+		for (Object obj : delList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> saveMenuId deleteMenuId ");
+			LOGGER.debug(" menuId : {}", ((Map<String, Object>) obj).get("menuCode"));
+
+			saveCnt++;
+
+			commonMapper.deleteMenuId((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
 
 	/************************** Program Management ****************************/
 	@Override
@@ -451,7 +710,7 @@ public class CommonServiceImpl implements CommonService {
 	public List<EgovMap> selectPgmTranList(Map<String, Object> params) {
 		return commonMapper.selectPgmTranList(params);
 	}
-
+	/*
 	@Override
 	public int deletePgmId(List<Object> delList, Integer crtUserId) {
 		int delCnt = 0;
@@ -558,6 +817,156 @@ public class CommonServiceImpl implements CommonService {
 
 		return saveCnt;
 	}
+	*/
+
+	/**
+	 * Insert, Update, Delete Program List : insertPgmId+updatePgmId+deletePgmId => Change One Transaction
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param delList
+	 * @param userId
+	 * @return
+	 * @see com.coway.trust.biz.common.CommonService#savePgmId(java.util.List, java.util.List, java.util.List, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int savePgmId(List<Object> addList, List<Object> udtList, List<Object> delList, Integer userId) {
+		int saveCnt = 0;
+
+		// insert
+		for (Object obj : addList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> savePgmId InsertPgmId ");
+			LOGGER.debug(" orgCode : {}", ((Map<String, Object>) obj).get("orgCode"));
+			LOGGER.debug(" pgmName : {}", ((Map<String, Object>) obj).get("pgmName"));
+			LOGGER.debug(" pgmPath : {}", ((Map<String, Object>) obj).get("pgmPath"));
+			LOGGER.debug(" pgmDesc : {}", ((Map<String, Object>) obj).get("pgmDesc"));
+
+			saveCnt++;
+
+			commonMapper.insertPgmId((Map<String, Object>) obj);
+		}
+
+		// update
+		for (Object obj : udtList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> savePgmId updPgmIdTrans ");
+			LOGGER.debug(" pgmCode : {}", ((Map<String, Object>) obj).get("pgmCode"));
+			LOGGER.debug(" pgmName : {}", ((Map<String, Object>) obj).get("pgmName"));
+			LOGGER.debug(" pgmPath : {}", ((Map<String, Object>) obj).get("pgmPath"));
+			LOGGER.debug(" pgmDesc : {}", ((Map<String, Object>) obj).get("pgmDesc"));
+
+			saveCnt++;
+
+			commonMapper.updatePgmId((Map<String, Object>) obj);
+		}
+
+		// delete
+		for (Object obj : delList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			if (String.valueOf(((Map<String, Object>) obj).get("pgmCode")).length() == 0
+					|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("pgmCode")))) {
+				continue;
+			}
+
+			LOGGER.debug(" >>>>> savePgmId deletePgmId ");
+			LOGGER.debug(" pgmCode : {}", ((Map<String, Object>) obj).get("pgmCode"));
+
+			saveCnt++;
+
+			commonMapper.deletePgmId((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
+
+	/**
+	 * Update Program Trans List : updatePgmIdTrans => Change One Transaction
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param userId
+	 * @return
+	 * @see com.coway.trust.biz.common.CommonService#savePgmIdTrans(java.util.List, java.util.List, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int savePgmIdTrans(List<Object> addList, List<Object> udtList, Integer userId) {
+		int saveCnt = 0;
+
+		for (Object obj : addList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			if (String.valueOf(((Map<String, Object>) obj).get("pgmCode")).length() == 0) {
+				continue;
+			}
+
+			LOGGER.debug(" ========= savePgmIdTrans [addList] ============== ");
+			LOGGER.debug(" pgmCode : {}", ((Map<String, Object>) obj).get("pgmCode"));
+			LOGGER.debug(" pgmName : {}", ((Map<String, Object>) obj).get("pgmName"));
+			LOGGER.debug(" funcView : {}", ((Map<String, Object>) obj).get("funcView"));
+			LOGGER.debug(" funcChng : {}", ((Map<String, Object>) obj).get("funcChng"));
+			LOGGER.debug(" funcPrt : {}", ((Map<String, Object>) obj).get("funcPrt"));
+			LOGGER.debug(" funcUserDfn1 : {}", ((Map<String, Object>) obj).get("funcUserDfn1"));
+			LOGGER.debug(" descUserDfn1 : {}", ((Map<String, Object>) obj).get("descUserDfn1"));
+			LOGGER.debug(" funcUserDfn2 : {}", ((Map<String, Object>) obj).get("funcUserDfn2"));
+			LOGGER.debug(" descUserDfn2 : {}", ((Map<String, Object>) obj).get("descUserDfn2"));
+			LOGGER.debug(" funcUserDfn3 : {}", ((Map<String, Object>) obj).get("funcUserDfn3"));
+			LOGGER.debug(" descUserDfn3 : {}", ((Map<String, Object>) obj).get("descUserDfn3"));
+			LOGGER.debug(" funcUserDfn4 : {}", ((Map<String, Object>) obj).get("funcUserDfn4"));
+			LOGGER.debug(" descUserDfn4 : {}", ((Map<String, Object>) obj).get("descUserDfn4"));
+			LOGGER.debug(" funcUserDfn5 : {}", ((Map<String, Object>) obj).get("funcUserDfn5"));
+			LOGGER.debug(" descUserDfn5 : {}", ((Map<String, Object>) obj).get("descUserDfn5"));
+
+			saveCnt++;
+
+			commonMapper.updPgmIdTrans((Map<String, Object>) obj);
+
+		}
+
+		for (Object obj : udtList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			if (String.valueOf(((Map<String, Object>) obj).get("pgmCode")).length() == 0) {
+				continue;
+			}
+
+			LOGGER.debug(" ========= savePgmIdTrans [udtList] ============== ");
+			LOGGER.debug(" pgmCode : {}", ((Map<String, Object>) obj).get("pgmCode"));
+			LOGGER.debug(" pgmName : {}", ((Map<String, Object>) obj).get("pgmName"));
+			LOGGER.debug(" funcView : {}", ((Map<String, Object>) obj).get("funcView"));
+			LOGGER.debug(" funcChng : {}", ((Map<String, Object>) obj).get("funcChng"));
+			LOGGER.debug(" funcPrt : {}", ((Map<String, Object>) obj).get("funcPrt"));
+			LOGGER.debug(" funcUserDfn1 : {}", ((Map<String, Object>) obj).get("funcUserDfn1"));
+			LOGGER.debug(" descUserDfn1 : {}", ((Map<String, Object>) obj).get("descUserDfn1"));
+			LOGGER.debug(" funcUserDfn2 : {}", ((Map<String, Object>) obj).get("funcUserDfn2"));
+			LOGGER.debug(" descUserDfn2 : {}", ((Map<String, Object>) obj).get("descUserDfn2"));
+			LOGGER.debug(" funcUserDfn3 : {}", ((Map<String, Object>) obj).get("funcUserDfn3"));
+			LOGGER.debug(" descUserDfn3 : {}", ((Map<String, Object>) obj).get("descUserDfn3"));
+			LOGGER.debug(" funcUserDfn4 : {}", ((Map<String, Object>) obj).get("funcUserDfn4"));
+			LOGGER.debug(" descUserDfn4 : {}", ((Map<String, Object>) obj).get("descUserDfn4"));
+			LOGGER.debug(" funcUserDfn5 : {}", ((Map<String, Object>) obj).get("funcUserDfn5"));
+			LOGGER.debug(" descUserDfn5 : {}", ((Map<String, Object>) obj).get("descUserDfn5"));
+
+			saveCnt++;
+
+			commonMapper.updPgmIdTrans((Map<String, Object>) obj);
+
+		}
+
+		return saveCnt;
+	}
 
 	/************************** Status Code ****************************/
 	// StatusCategory
@@ -578,6 +987,7 @@ public class CommonServiceImpl implements CommonService {
 		return commonMapper.selectStatusCodeList(params);
 	}
 
+	/*
 	@Override
 	public int insertStatusCategory(List<Object> addList, Integer crtUserId) {
 		int saveCnt = 0;
@@ -656,6 +1066,85 @@ public class CommonServiceImpl implements CommonService {
 
 		return delCnt;
 	}
+	*/
+
+	/**
+	 * Insert, Update, Delete Status Category List : insertStatusCategory+updateStatusCategory+deleteStatusCategoryCode => Change One Transaction
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param delList
+	 * @param userId
+	 * @return
+	 * @see com.coway.trust.biz.common.CommonService#saveStatusCategory(java.util.List, java.util.List, java.util.List, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int saveStatusCategory(List<Object> addList, List<Object> udtList, List<Object> delList, Integer userId) {
+		int saveCnt = 0;
+
+		// insert
+		for (Object obj : addList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			if (String.valueOf(((Map<String, Object>) obj).get("stusCtgryName")).length() == 0) {
+				continue;
+			}
+
+			LOGGER.debug("  >>>>>  saveStatusCategory InsertSatusCategory ");
+			LOGGER.debug(" stusCtgryId : {}", ((Map<String, Object>) obj).get("stusCtgryId"));
+			LOGGER.debug(" stusCtgryName : {}", ((Map<String, Object>) obj).get("stusCtgryName"));
+			LOGGER.debug(" stusCtgryDesc : {}", ((Map<String, Object>) obj).get("stusCtgryDesc"));
+			LOGGER.debug(" crtUserId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			LOGGER.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));
+
+			saveCnt++;
+
+			commonMapper.insertStatusCategory((Map<String, Object>) obj);
+		}
+
+		// update
+		for (Object obj : udtList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			if (String.valueOf(((Map<String, Object>) obj).get("stusCtgryName")).length() == 0) {
+				continue;
+			}
+
+			LOGGER.debug(" >>>>> saveStatusCategory UpdateSatusCategory ");
+			LOGGER.debug(" stusCtgryId : {}", ((Map<String, Object>) obj).get("stusCtgryId"));
+			LOGGER.debug(" stusCtgryName : {}", ((Map<String, Object>) obj).get("stusCtgryName"));
+			LOGGER.debug(" stusCtgryDesc : {}", ((Map<String, Object>) obj).get("stusCtgryDesc"));
+			LOGGER.debug(" crtUserId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			LOGGER.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));
+
+			saveCnt++;
+
+			commonMapper.updateStatusCategory((Map<String, Object>) obj);
+		}
+
+		// delete
+		for (Object obj : delList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug(" >>>>> saveStatusCategory DeleteStatusCategoryCode ");
+			LOGGER.debug("stusCtgryId : {}", ((Map<String, Object>) obj).get("stusCtgryId"));
+
+			saveCnt++;
+
+			// SYS0037M
+			commonMapper.deleteStatusCategoryCode((Map<String, Object>) obj);
+			// SYS0036M
+			commonMapper.deleteStatusCategoryMst((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
+
 
 	@Override
 	public int deleteStatusCategoryMst(List<Object> delList, Integer crtUserId) {
@@ -677,6 +1166,7 @@ public class CommonServiceImpl implements CommonService {
 		return delCnt;
 	}
 
+	/*
 	@Override
 	public int insertStatusCode(List<Object> addList, Integer crtUserId) {
 		int saveCnt = 0;
@@ -705,6 +1195,54 @@ public class CommonServiceImpl implements CommonService {
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 
 			LOGGER.debug(" updateStatusCode ");
+			LOGGER.debug(" stusCodeId : {}", ((Map<String, Object>) obj).get("stusCodeId"));
+			LOGGER.debug(" codeName : {}", ((Map<String, Object>) obj).get("codeName"));
+			LOGGER.debug(" code : {}", ((Map<String, Object>) obj).get("code"));
+
+			saveCnt++;
+
+			commonMapper.updateStatusCode((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
+	*/
+
+	/**
+	 * Insert, Update Status Code List : insertStatusCode+updateStatusCode => Change One Transaction
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param userId
+	 * @return
+	 * @see com.coway.trust.biz.common.CommonService#saveStatusCode(java.util.List, java.util.List, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int saveStatusCode(List<Object> addList, List<Object> udtList, Integer userId) {
+		int saveCnt = 0;
+
+		// insert
+		for (Object obj : addList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug("  >>>>> saveStatusCode insertStatusCode ");
+			LOGGER.debug(" codeName : {}", ((Map<String, Object>) obj).get("codeName"));
+			LOGGER.debug(" code : {}", ((Map<String, Object>) obj).get("code"));
+
+			saveCnt++;
+
+			commonMapper.insertStatusCode((Map<String, Object>) obj);
+		}
+
+		// update
+		for (Object obj : udtList) {
+			((Map<String, Object>) obj).put("crtUserId", userId);
+			((Map<String, Object>) obj).put("updUserId", userId);
+
+			LOGGER.debug("  >>>>>  saveStatusCode updateStatusCode ");
 			LOGGER.debug(" stusCodeId : {}", ((Map<String, Object>) obj).get("stusCodeId"));
 			LOGGER.debug(" codeName : {}", ((Map<String, Object>) obj).get("codeName"));
 			LOGGER.debug(" code : {}", ((Map<String, Object>) obj).get("code"));
@@ -821,6 +1359,60 @@ public class CommonServiceImpl implements CommonService {
 		return commonMapper.getDetailCommonCodeList(params);
 	}
 
+	/**
+	 * Insert, Update Group Code list : addCommCodeGrid+udtCommCodeGrid => Change One Transaction
+	 * @Author KR-MIN
+	 * @Date 2019. 9. 5.
+	 * @param addList
+	 * @param crtUserId
+	 * @param udtList
+	 * @param updUserId
+	 * @return
+	 * @see com.coway.trust.biz.common.CommonService#saveCommCodeGrid(java.util.List, java.lang.Integer, java.util.List, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int saveCommCodeGrid(List<Object> addList, Integer crtUserId, List<Object> udtList, Integer updUserId) {
+		int saveCnt = 0;
+
+		for (Object obj : addList) {
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+
+			LOGGER.debug(" InsertMstCommCd ");
+			LOGGER.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
+			LOGGER.debug(" disabled : {}", ((Map<String, Object>) obj).get("disabled"));
+			LOGGER.debug(" codeMasterName : {}", ((Map<String, Object>) obj).get("codeMasterName"));
+			LOGGER.debug(" codeDesc : {}", ((Map<String, Object>) obj).get("codeDesc"));
+			LOGGER.debug(" createName : {}", ((Map<String, Object>) obj).get("createName"));
+			LOGGER.debug(" crtDt : {}", ((Map<String, Object>) obj).get("crtDt"));
+
+			saveCnt++;
+
+			commonMapper.addCommCodeGrid((Map<String, Object>) obj);
+		}
+
+		for (Object obj : udtList) {
+			((Map<String, Object>) obj).put("crtUserId", updUserId);
+			((Map<String, Object>) obj).put("updUserId", updUserId);
+
+			LOGGER.debug(" update CommCode");
+			LOGGER.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
+			LOGGER.debug(" disabled : {}", ((Map<String, Object>) obj).get("disabled"));
+			LOGGER.debug(" codeMasterName : {}", ((Map<String, Object>) obj).get("codeMasterName"));
+			LOGGER.debug(" codeDesc : {}", ((Map<String, Object>) obj).get("codeDesc"));
+			LOGGER.debug(" createName : {}", ((Map<String, Object>) obj).get("createName"));
+			LOGGER.debug(" crtDt : {}", ((Map<String, Object>) obj).get("crtDt"));
+
+			saveCnt++;
+
+			commonMapper.updCommCodeGrid((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
+
+	/*
 	@SuppressWarnings("unchecked")
 	@Override
 	public int addCommCodeGrid(List<Object> addList, Integer crtUserId) {
@@ -867,8 +1459,65 @@ public class CommonServiceImpl implements CommonService {
 			commonMapper.updCommCodeGrid((Map<String, Object>) obj);
 		}
 		return saveCnt;
+	}*/
+
+	/**
+	 * Insert, Update Code list : addDetailCommCodeGrid+udtDetailCommCodeGrid => Change One Transaction
+	 * @Author KR-MIN
+	 * @Date 2019. 9. 5.
+	 * @param addList
+	 * @param crtUserId
+	 * @param udtList
+	 * @param updUserId
+	 * @return
+	 * @see com.coway.trust.biz.common.CommonService#saveDetailCommCodeGrid(java.util.List, java.lang.Integer, java.util.List, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int saveDetailCommCodeGrid(List<Object> addList, Integer crtUserId, List<Object> udtList, Integer updUserId) {
+		int saveCnt = 0;
+
+		// add list
+		for (Object obj : addList) {
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+
+			LOGGER.debug(" [[Insert Deatail]] ");
+			LOGGER.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
+			LOGGER.debug(" detailcode : {}", ((Map<String, Object>) obj).get("detailcode"));
+			LOGGER.debug(" detailcodename : {}", ((Map<String, Object>) obj).get("detailcodename"));
+			LOGGER.debug(" detailcodedesc : {}", ((Map<String, Object>) obj).get("detailcodedesc"));
+			LOGGER.debug(" detaildisabled : {}", ((Map<String, Object>) obj).get("detaildisabled"));
+			LOGGER.debug(" crtUserId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			LOGGER.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));
+
+			saveCnt++;
+
+			commonMapper.addDetailCommCodeGrid((Map<String, Object>) obj);
+		}
+
+		// update list
+		for (Object obj : udtList) {
+			((Map<String, Object>) obj).put("crtUserId", updUserId);
+			((Map<String, Object>) obj).put("updUserId", updUserId);
+
+			LOGGER.debug(" update_Detail ");
+			LOGGER.debug(" detailcode : {}", ((Map<String, Object>) obj).get("detailcode"));
+			LOGGER.debug(" detailcodename : {}", ((Map<String, Object>) obj).get("detailcodename"));
+			LOGGER.debug(" detailcodedesc : {}", ((Map<String, Object>) obj).get("detailcodedesc"));
+			LOGGER.debug(" detaildisabled : {}", ((Map<String, Object>) obj).get("detaildisabled"));
+			LOGGER.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));
+			LOGGER.debug(" detailcodeid : {}", ((Map<String, Object>) obj).get("detailcodeid"));
+
+			saveCnt++;
+
+			commonMapper.updDetailCommCodeGrid((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
 	}
 
+	/*
 	@SuppressWarnings("unchecked")
 	@Override
 	public int addDetailCommCodeGrid(List<Object> addList, Integer crtUserId) {
@@ -918,6 +1567,7 @@ public class CommonServiceImpl implements CommonService {
 
 		return saveCnt;
 	}
+	*/
 
 	@Override
 	public List<EgovMap> selectBranchList(Map<String, Object> params) {
@@ -928,7 +1578,7 @@ public class CommonServiceImpl implements CommonService {
 	public List<EgovMap> selectBankAccountList(Map<String, Object> params) {
 		return commonMapper.selectBankAccountList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectReasonCodeList(Map<String, Object> params) {
 		return commonMapper.selectReasonCodeList(params);
@@ -936,7 +1586,7 @@ public class CommonServiceImpl implements CommonService {
 
 	/**
 	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -947,7 +1597,7 @@ public class CommonServiceImpl implements CommonService {
 
 	/**
 	 * Branch ID로 User 정보 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -960,17 +1610,17 @@ public class CommonServiceImpl implements CommonService {
 	public List<EgovMap> selectCountryList(Map<String, Object> params) {
 		return commonMapper.selectCountryList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectStateList(Map<String, Object> params) {
 		return commonMapper.selectStateList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectAreaList(Map<String, Object> params) {
 		return commonMapper.selectAreaList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectPostCdList(Map<String, Object> params) {
 		return commonMapper.selectPostCdList(params);
@@ -1031,7 +1681,7 @@ public class CommonServiceImpl implements CommonService {
 
 	/**
 	 * Payment - Adjustment CN/DN : Adjustment Reason 정보 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */

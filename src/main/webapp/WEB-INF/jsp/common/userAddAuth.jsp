@@ -77,16 +77,16 @@ function checkAll(isChecked) {
 //         AUIGrid.updateAllToValue(grdAddAuth, "funcYn", "Y");
         var item = { funcYn : "Y" };
         for(idx = 0 ; idx < gridDetailDataLength ; idx++){
-        	if(AUIGrid.getItemByRowIndex(grdAddAuth,idx).existYn == "N"){
-        	    AUIGrid.updateRow(grdAddAuth, item, idx);
-        	}
+            if(AUIGrid.getItemByRowIndex(grdAddAuth,idx).existYn == "N"){
+                AUIGrid.updateRow(grdAddAuth, item, idx);
+            }
         }
     } else {
-    	var item = { funcYn : "N" };
-    	for(idx = 0 ; idx < gridDetailDataLength ; idx++){
-    		if(AUIGrid.getItemByRowIndex(grdAddAuth,idx).existYn == "N"){
-    			AUIGrid.updateRow(grdAddAuth, item, idx);
-    		}
+        var item = { funcYn : "N" };
+        for(idx = 0 ; idx < gridDetailDataLength ; idx++){
+            if(AUIGrid.getItemByRowIndex(grdAddAuth,idx).existYn == "N"){
+                AUIGrid.updateRow(grdAddAuth, item, idx);
+            }
         }
 //         AUIGrid.updateAllToValue(grdAddAuth, "funcYn", "N");
     }
@@ -129,12 +129,12 @@ function fn_checkChangeRows(gridId,mandatoryItems){
     var totalLength = 0;
     totalLength = addList.length + updateList.length + removeList.length;
 
-	if(totalLength == 0){
-		Common.alert("<spring:message code='sys.common.alert.noChange'/>");
-		return true; /* Failed */
-	}
+    if(totalLength == 0){
+        Common.alert("<spring:message code='sys.common.alert.noChange'/>");
+        return true; /* Failed */
+    }
 
-	return false; /* Success */
+    return false; /* Success */
 }
 
 
@@ -147,18 +147,18 @@ function popupCallback(result){
 /****************************Transaction Start********************************/
 
 function fn_search(){
-	Common.ajax(
-		    "GET",
-		    "/common/selectUserList.do",
-		    $("#searchForm").serialize(),
-		    function(data, textStatus, jqXHR){ // Success
-		    	AUIGrid.clearGridData(grdAddAuth);
-		    	AUIGrid.setGridData(grdUser, data);
-		    },
-		    function(jqXHR, textStatus, errorThrown){ // Error
-		    	Common.alert("Fail : " + jqXHR.responseJSON.message);
-		    }
-	)
+    Common.ajax(
+            "GET",
+            "/common/selectUserList.do",
+            $("#searchForm").serialize(),
+            function(data, textStatus, jqXHR){ // Success
+                AUIGrid.clearGridData(grdAddAuth);
+                AUIGrid.setGridData(grdUser, data);
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+            }
+    )
 };
 
 function fn_detailSearch(userId){
@@ -167,35 +167,35 @@ function fn_detailSearch(userId){
             "/common/selectUserAddAuthList.do",
             "userId="+userId,
             function(data, textStatus, jqXHR){ // Success
-//             	alert(JSON.stringify(data));
+//              alert(JSON.stringify(data));
                 AUIGrid.setGridData(grdAddAuth, data);
             },
             function(jqXHR, textStatus, errorThrown){ // Error
-            	Common.alert("Fail : " + jqXHR.responseJSON.message);
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
             }
     )
 };
 
 function fn_detailSave(){
-	if(fn_checkChangeRows(grdAddAuth)){
-		return;
-	}
+    if(fn_checkChangeRows(grdAddAuth)){
+        return;
+    }
 
     var addList = AUIGrid.getAddedRowItems(grdAddAuth);
     if(addList.length > 0){
         for(var idx = 0 ; idx < addList.length ; idx++){
-        	if(addList[idx].authDivCode == "" || typeof(addList[idx].authDivCode) == "undefined"){
+            if(addList[idx].authDivCode == "" || typeof(addList[idx].authDivCode) == "undefined"){
                 AUIGrid.selectRowsByRowId(grdAddAuth, addList[idx].rowId);
                 Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Div Code' htmlEscape='false'/>");
                 sys.msg.necessary
                 return;
             }
-        	if(addList[idx].authCode == "" || typeof(addList[idx].authCode) == "undefined"){
+            if(addList[idx].authCode == "" || typeof(addList[idx].authCode) == "undefined"){
                 AUIGrid.selectRowsByRowId(grdAddAuth, addList[idx].rowId);
                 Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Code' htmlEscape='false'/>");
                 return;
             }
-        	if(addList[idx].validDtFrom == "" || typeof(addList[idx].validDtFrom) == "undefined"){
+            if(addList[idx].validDtFrom == "" || typeof(addList[idx].validDtFrom) == "undefined"){
                 AUIGrid.selectRowsByRowId(grdAddAuth, addList[idx].rowId);
                 Common.alert("<spring:message code='sys.msg.necessary' arguments='From Date' htmlEscape='false'/>");
                 return;
@@ -214,11 +214,11 @@ function fn_detailSave(){
                 "/common/saveUserAddAuthList.do",
                 GridCommon.getEditData(grdAddAuth),
                 function(data, textStatus, jqXHR){ // Success
-                	Common.alert("<spring:message code='sys.msg.success' htmlEscape='false'/>");
+                    Common.alert("<spring:message code='sys.msg.success' htmlEscape='false'/>");
                     fn_search();
                 },
                 function(jqXHR, textStatus, errorThrown){ // Error
-                	Common.alert("Fail : " + jqXHR.responseJSON.message);
+                    Common.alert("Fail : " + jqXHR.responseJSON.message);
                 }
         )
     });
@@ -230,7 +230,7 @@ function fn_commCodesearch(){
             "/common/selectCommonCodeList.do",
             $("#searchForm").serialize(),
             function(data, textStatus, jqXHR){ // Success
-            	keyValueList = data;
+                keyValueList = data;
             },
             function(jqXHR, textStatus, errorThrown){ // Error
                 Common.alert("Fail : " + jqXHR.responseJSON.message);
@@ -243,13 +243,13 @@ function fn_commCodesearch(){
 var gridUserColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
     /*
-	{
+    {
         dataField : "chkAll",
         headerText : "<input type='checkbox' id='allCheckbox' style='width:15px;height:15px;''>",
         width:"8%",
@@ -281,7 +281,7 @@ fn_commCodesearch();
 //selectionMode (String) : 설정하고자 하는 selectionMode(유효값 : singleCell, singleRow, multipleCells, multipleRows, none)
 var options =
 {
-		editable : false,
+        editable : false,
         usePaging : true, //페이징 사용
         pagingMode : "simple",
         showPageButtonCount : 3 ,
@@ -297,12 +297,12 @@ var options =
 var gridAddAuthColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
-	 {
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
+     {
          dataField : "authDivCode",
          headerText : "Div",
          width:"15%",
@@ -323,7 +323,7 @@ var gridAddAuthColumnLayout =
              valueField : "value" // value 에 해당되는 필드명
          }
      },
-	 {
+     {
         dataField : "authCode",
         /* dataType : "string", */
         headerText : "Code",
@@ -341,11 +341,11 @@ var gridAddAuthColumnLayout =
                   if(AUIGrid.isAddedById("#grdAddAuth", item.rowId)) {
                       _popSelectedRow = rowIndex;
                       if(item.authDivCode == "0"){
-                    	  _queryId = "selectDepartmentList";
+                          _queryId = "selectDepartmentList";
                       }else if(item.authDivCode ==  "1"){
-                    	  _queryId = "selectBranchList";
+                          _queryId = "selectBranchList";
                       }else{
-                    	  _queryId = "";
+                          _queryId = "";
                       }
                       var popUpObj = Common.popupDiv
                       (
@@ -359,7 +359,7 @@ var gridAddAuthColumnLayout =
                   }
                }
            }
-	    },
+        },
     {
         dataField : "authName",
         headerText : "Name",
@@ -406,7 +406,7 @@ var gridAddAuthColumnLayout =
         }
     },
     {
-    	dataField: "validDtTo",
+        dataField: "validDtTo",
         headerText: "To",
         dataType : "date",
         formatString : "yyyy-mm-dd",
@@ -430,11 +430,11 @@ var gridAddAuthColumnLayout =
                 }
 
                 if(isValid){
-                	var dtFrom = Number(rowItem.validDtFrom.toString().replace(/\//g,""));
+                    var dtFrom = Number(rowItem.validDtFrom.toString().replace(/\//g,""));
                     var dtTo = Number(rowItem.validDtTo.toString().replace(/\//g,""));
                     if(dtFrom != 0 && dtTo != 0 && dtFrom > dtTo){
-                    	msg = "Start date can not be greater than End date.";
-                    	isValid = false;
+                        msg = "Start date can not be greater than End date.";
+                        isValid = false;
                     }
                 }
                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
@@ -519,7 +519,7 @@ var gridAddAuthColumnLayout =
 
 var detailOptions =
 {
-		editable : true,
+        editable : true,
         usePaging : true, //페이징 사용
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
@@ -550,17 +550,17 @@ $(document).ready(function(){
 
     grdAddAuth = GridCommon.createAUIGrid("grdAddAuth", gridAddAuthColumnLayout,"", detailOptions);
     AUIGrid.bind(grdAddAuth, ["cellDoubleClick"], function(event) {
-//     	if(event.dataField == "validDtFrom" || event.dataField == "validDtTo") {
-//     		AUIGrid.setCellValue(grdAddAuth, event.rowIndex, event.dataField, "");
+//      if(event.dataField == "validDtFrom" || event.dataField == "validDtTo") {
+//          AUIGrid.setCellValue(grdAddAuth, event.rowIndex, event.dataField, "");
 //         }
     });
 
     AUIGrid.bind(grdAddAuth, "ready", function(event) {
-    	gridDetailDataLength = AUIGrid.getGridData(grdAddAuth).length; // 그리드 전체 행수 보관
+        gridDetailDataLength = AUIGrid.getGridData(grdAddAuth).length; // 그리드 전체 행수 보관
 
-//     	for(var idx = 0 ; idx < gridDetailDataLength ; idx++){
+//      for(var idx = 0 ; idx < gridDetailDataLength ; idx++){
 
-//     	}
+//      }
     });
 
     // 헤더 클릭 핸들러 바인딩(checkAll)
@@ -569,7 +569,7 @@ $(document).ready(function(){
     AUIGrid.bind(grdAddAuth, ["cellEditBegin"], function(event) {
         // ExistYn 가 "Y" 인 경우, validDtTo, validDtTo 수정 못하게 하기
         if(event.dataField == "authDivCode" || event.dataField == "authCode" || event.dataField == "validDtFrom") {
-        	if(AUIGrid.isAddedById(event.pid, event.item.rowId)) {
+            if(AUIGrid.isAddedById(event.pid, event.item.rowId)) {
                 return true;
             } else {
                 return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임)
@@ -593,35 +593,35 @@ $(document).ready(function(){
 
      // ExistYn 가 "Y" 인 경우, validDtTo, validDtTo 수정 못하게 하기
         if(event.dataField == "validDtFrom" || event.dataField == "validDtTo"){
-        	var dtFrom = event.item.validDtFrom;
-        	var dtTo = event.item.validDtTo;
-        	var oldValue = event.oldValue;
+            var dtFrom = event.item.validDtFrom;
+            var dtTo = event.item.validDtTo;
+            var oldValue = event.oldValue;
 
-        	if(typeof(event.item.validDtFrom) == "undefined") dtFrom = "";
-        	if(typeof(event.item.validDtTo) == "undefined") dtTo = "";
-        	if(typeof(event.item.oldValue) == "undefined") oldValue = "";
+            if(typeof(event.item.validDtFrom) == "undefined") dtFrom = "";
+            if(typeof(event.item.validDtTo) == "undefined") dtTo = "";
+            if(typeof(event.item.oldValue) == "undefined") oldValue = "";
 
-        	dtFrom = dtFrom.toString().replace(/\//g,"");
-        	dtTo = dtTo.toString().replace(/\//g,"");
+            dtFrom = dtFrom.toString().replace(/\//g,"");
+            dtTo = dtTo.toString().replace(/\//g,"");
 
-        	var numDtFrom = Number(dtFrom.toString().replace(/\//g,""));
-        	var numDtTo = Number(dtTo.toString().replace(/\//g,""));
+            var numDtFrom = Number(dtFrom.toString().replace(/\//g,""));
+            var numDtTo = Number(dtTo.toString().replace(/\//g,""));
 
-        	if(numDtFrom != 0 && numDtTo != 0 && numDtFrom > numDtTo){
-        		Common.alert("Start date can not be greater than End date.");
-        		AUIGrid.setCellValue(grdAddAuth, event.rowIndex, event.dataField, event.oldValue);
-        	}else{
-        		if(event.dataField == "validDtFrom"){
-        			 AUIGrid.setCellValue(grdAddAuth, event.rowIndex, event.dataField, dtFrom);
-        		}else if(event.dataField == "validDtTo"){
+            if(numDtFrom != 0 && numDtTo != 0 && numDtFrom > numDtTo){
+                Common.alert("Start date can not be greater than End date.");
+                AUIGrid.setCellValue(grdAddAuth, event.rowIndex, event.dataField, event.oldValue);
+            }else{
+                if(event.dataField == "validDtFrom"){
+                     AUIGrid.setCellValue(grdAddAuth, event.rowIndex, event.dataField, dtFrom);
+                }else if(event.dataField == "validDtTo"){
                      AUIGrid.setCellValue(grdAddAuth, event.rowIndex, event.dataField, dtTo);
-        		}
+                }
 
-        	}
+            }
         }
      /*
         if(event.dataField == "validDtTo") {
-        	var dtFrom = event.item.validDtFrom;
+            var dtFrom = event.item.validDtFrom;
             var dtTo = event.item.validDtTo;
             if(typeof(event.item.validDtFrom) == "undefined") dtFrom = "";
             if(typeof(event.item.validDtTo) == "undefined") dtTo = "";
@@ -749,7 +749,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grdUser"  style="height:425px;"></div>
+    <div id="grdUser" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
@@ -769,7 +769,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap autoHeight"><!-- grid_wrap start -->
-    <div id="grdAddAuth"  style="height:425px;"></div>
+    <div id="grdAddAuth" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->

@@ -58,12 +58,12 @@ function fn_checkChangeRows(gridId,mandatoryItems){
     var totalLength = 0;
     totalLength = addList.length + updateList.length + removeList.length;
 
-	if(totalLength == 0){
-		alert("No Change Data.");
-		return true; /* Failed */
-	}
+    if(totalLength == 0){
+        alert("No Change Data.");
+        return true; /* Failed */
+    }
 
-	return false; /* Success */
+    return false; /* Success */
 }
 
 
@@ -76,29 +76,29 @@ function popupCallback(result){
 /****************************Transaction Start********************************/
 
 function fn_search(){
-	Common.ajax(
-		    "GET",
-		    "/common/selectInterfaceManagementList.do",
-		    $("#searchForm").serialize(),
-		    function(data, textStatus, jqXHR){ // Success
-		    	AUIGrid.clearGridData(grdIf);
-		    	AUIGrid.setGridData(grdIf, data);
-		    },
-		    function(jqXHR, textStatus, errorThrown){ // Error
-		    	alert("Fail : " + jqXHR.responseJSON.message);
-		    }
-	)
+    Common.ajax(
+            "GET",
+            "/common/selectInterfaceManagementList.do",
+            $("#searchForm").serialize(),
+            function(data, textStatus, jqXHR){ // Success
+                AUIGrid.clearGridData(grdIf);
+                AUIGrid.setGridData(grdIf, data);
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                alert("Fail : " + jqXHR.responseJSON.message);
+            }
+    )
 };
 
 function fn_detailSave(){
-	if(fn_checkChangeRows(grdIf)){
-		return;
-	}
+    if(fn_checkChangeRows(grdIf)){
+        return;
+    }
 
     var addList = AUIGrid.getAddedRowItems(grdIf);
     if(addList.length > 0){
         for(var idx = 0 ; idx < addList.length ; idx++){
-        	if(addList[idx].ifType == "" || typeof(addList[idx].ifType) == "undefined"){
+            if(addList[idx].ifType == "" || typeof(addList[idx].ifType) == "undefined"){
                 AUIGrid.selectRowsByRowId(grdIf, addList[idx].rowId);
                 alert("IF TYPE is essential field.");
                 return;
@@ -128,7 +128,7 @@ function fn_commCodesearch(){
             "/common/selectCommonCodeList.do",
             $("#searchForm").serialize(),
             function(data, textStatus, jqXHR){ // Success
-            	keyValueList = data;
+                keyValueList = data;
             },
             function(jqXHR, textStatus, errorThrown){ // Error
                 alert("Fail : " + jqXHR.responseJSON.message);
@@ -141,12 +141,12 @@ function fn_commCodesearch(){
 var gridIfColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
-	 {
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
+     {
          dataField : "ifType",
          headerText : "IF TYPE",
          width:"7%",
@@ -166,7 +166,7 @@ var gridIfColumnLayout =
              }
          }
      },
-	 {
+     {
         dataField : "ifTypeNm",
         headerText : "IF TYPE NAME",
         width : "20%",
@@ -185,7 +185,7 @@ var gridIfColumnLayout =
                 return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
             }
         }
-	},
+    },
     {
        dataField : "ifSnd",
        headerText : "Sender",
@@ -306,7 +306,7 @@ var gridIfColumnLayout =
 
 var detailOptions =
 {
-		editable : true,
+        editable : true,
         usePaging : true, //페이징 사용
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
@@ -324,17 +324,17 @@ var detailOptions =
 $(document).ready(function(){
     grdIf = GridCommon.createAUIGrid("grdIf", gridIfColumnLayout,"", detailOptions);
     AUIGrid.bind(grdIf, ["cellDoubleClick"], function(event) {
-//     	if(event.dataField == "validDtFrom" || event.dataField == "validDtTo") {
-//     		AUIGrid.setCellValue(grdIf, event.rowIndex, event.dataField, "");
+//      if(event.dataField == "validDtFrom" || event.dataField == "validDtTo") {
+//          AUIGrid.setCellValue(grdIf, event.rowIndex, event.dataField, "");
 //         }
     });
 
     AUIGrid.bind(grdIf, "ready", function(event) {
-    	gridDataLength = AUIGrid.getGridData(grdIf).length; // 그리드 전체 행수 보관
+        gridDataLength = AUIGrid.getGridData(grdIf).length; // 그리드 전체 행수 보관
 
-//     	for(var idx = 0 ; idx < gridDataLength ; idx++){
+//      for(var idx = 0 ; idx < gridDataLength ; idx++){
 
-//     	}
+//      }
     });
 
     // 헤더 클릭 핸들러 바인딩(checkAll)
@@ -343,7 +343,7 @@ $(document).ready(function(){
     AUIGrid.bind(grdIf, ["cellEditBegin"], function(event) {
         // ExistYn 가 "Y" 인 경우, validDtTo, validDtTo 수정 못하게 하기
         if(event.dataField == "ifType") {
-        	if(AUIGrid.isAddedById(event.pid, event.item.rowId)) {
+            if(AUIGrid.isAddedById(event.pid, event.item.rowId)) {
                 return true;
             } else {
                 return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임)
@@ -476,7 +476,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap autoHeight"><!-- grid_wrap start -->
-    <div id="grdIf"  style="height:425px;"></div>
+    <div id="grdIf"  class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 <!-- </div> -->

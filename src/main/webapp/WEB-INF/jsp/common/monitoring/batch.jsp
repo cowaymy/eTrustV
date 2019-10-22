@@ -213,7 +213,7 @@
             </aside><!-- title_line end -->
 
             <article class="grid_wrap autoHeight"><!-- grid_wrap start -->
-                <div id="grdBatchID" style="height:390px;"></div>
+                <div id="grdBatchID" class="autoGridHeight"></div>
             </article><!-- grid_wrap end -->
 
         </div><!-- divine_auto end -->

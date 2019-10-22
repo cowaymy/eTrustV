@@ -19,14 +19,14 @@
 
 var gSelRowIdx = 0;
 
-var mstColumnLayout = 
-    [ 
-        {    
+var mstColumnLayout =
+    [
+        {
             dataField : "codeMasterId",
             headerText : "<spring:message code='sys.generalCode.grid1.MASTER_ID' />",
             width : "8%",
         }, {
-            dataField : "codeMasterName", 
+            dataField : "codeMasterName",
             headerText : "<spring:message code='sys.generalCode.grid1.MASTER_NAME' />",
             style : "aui-grid-left-column",
             width : "25%",
@@ -55,15 +55,15 @@ var mstColumnLayout =
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                 listFunction : function(rowIndex, columnIndex, item, dataField) {
                    var list = getDisibledComboList();
-                   return list;                 
+                   return list;
                 },
                 keyField : "id"
             }
         }
     ];
 
-var detailColumnLayout = 
-    [ 
+var detailColumnLayout =
+    [
         {
             dataField : "detailcodeid",
             headerText : "<spring:message code='sys.generalCode.grid1.CODE_ID' />",
@@ -86,13 +86,13 @@ var detailColumnLayout =
             dataField : "detaildisabled",
             headerText : "<spring:message code='sys.generalCode.grid1.DISABLED'/>",
             width : "10%",
-            editRenderer : 
+            editRenderer :
             {
                type : "ComboBoxRenderer",
                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                listFunction : function(rowIndex, columnIndex, item, dataField) {
                   var list = getDisibledComboList();
-                  return list;                 
+                  return list;
                },
                keyField : "id"
             }
@@ -108,36 +108,36 @@ var detailColumnLayout =
 
 //ajax list 조회.
 
-function fn_getMstCommCdListAjax() 
-{        
+function fn_getMstCommCdListAjax()
+{
   Common.ajax("GET", "/general/selectMstCodeList.do"
-  	   , $("#MainForm").serialize()
-  	   , function(result) 
-	     {
-	        console.log("성공." + $("#crtDtFrom").val() );
-	        console.log("data : " + result);
-	        AUIGrid.setGridData(myGridID, result);
-	        AUIGrid.clearGridData(detailGridID);
-	        
-	        if(result != null && result.length > 0)
-		      {
-	        	//fn_getDetailCode(myGridID, 0);
-	        	//fn_setDetail(myGridID, 0);
-	        	fn_DetailGetInfo();
-	        }
-	     });
+       , $("#MainForm").serialize()
+       , function(result)
+         {
+            console.log("성공." + $("#crtDtFrom").val() );
+            console.log("data : " + result);
+            AUIGrid.setGridData(myGridID, result);
+            AUIGrid.clearGridData(detailGridID);
+
+            if(result != null && result.length > 0)
+              {
+                //fn_getDetailCode(myGridID, 0);
+                //fn_setDetail(myGridID, 0);
+                fn_DetailGetInfo();
+            }
+         });
 }
 
 function fn_DetailGetInfo()
 {
    Common.ajax("GET", "/general/selectDetailCodeList.do"
-		    , $("#MainForm").serialize()
-		    , function(result) 
-			   {
-			       console.log("성공.");
-			       console.log("data : " + result);
-			       AUIGrid.setGridData(detailGridID, result);
-			   });
+            , $("#MainForm").serialize()
+            , function(result)
+               {
+                   console.log("성공.");
+                   console.log("data : " + result);
+                   AUIGrid.setGridData(detailGridID, result);
+               });
 }
 
 function fnValidationDetailCheck()
@@ -146,36 +146,36 @@ function fnValidationDetailCheck()
     var addList = AUIGrid.getAddedRowItems(detailGridID);
     var udtList = AUIGrid.getEditedRowItems(detailGridID);
     var delList = AUIGrid.getRemovedItems(detailGridID);
-        
-    if (addList.length == 0  && udtList.length == 0 && delList.length == 0) 
+
+    if (addList.length == 0  && udtList.length == 0 && delList.length == 0)
     {
       Common.alert("No Change");
       return false;
     }
 
-    for (var i = 0; i < addList.length; i++) 
+    for (var i = 0; i < addList.length; i++)
     {
       var detailcode      = addList[i].detailcode;
       var codeMasterId    = addList[i].codeMasterId;
       var detailcodename  = addList[i].detailcodename;
-      
-      if (detailcode == "" || detailcode.length == 0) 
+
+      if (detailcode == "" || detailcode.length == 0)
       {
         result = false;
         // {0} is required.
         Common.alert("<spring:message code='sys.msg.necessary' arguments='Detail Code' htmlEscape='false'/>");
         break;
       }
-      
-      if (codeMasterId == "" || codeMasterId.length == 0) 
+
+      if (codeMasterId == "" || codeMasterId.length == 0)
       {
         result = false;
         // {0} is required.
         Common.alert("<spring:message code='sys.msg.necessary' arguments='Detail Code Master' htmlEscape='false'/>");
         break;
       }
-      
-      if (detailcodename == "" || detailcodename.length == 0) 
+
+      if (detailcodename == "" || detailcodename.length == 0)
       {
         result = false;
         // {0} is required.
@@ -184,20 +184,20 @@ function fnValidationDetailCheck()
       }
     }
 
-    for (var i = 0; i < udtList.length; i++) 
+    for (var i = 0; i < udtList.length; i++)
     {
       var codeMasterId  = udtList[i].codeMasterId;
       var detailcode    = udtList[i].detailcode;
-      
-      if (codeMasterId == "" || codeMasterId.length == 0) 
+
+      if (codeMasterId == "" || codeMasterId.length == 0)
       {
         result = false;
         // {0} is required.
         Common.alert("<spring:message code='sys.msg.necessary' arguments='Code Master Id' htmlEscape='false'/>");
         break;
       }
-      
-      if (detailcode == "" || detailcode.length == 0) 
+
+      if (detailcode == "" || detailcode.length == 0)
       {
         result = false;
         // {0} is required.
@@ -210,56 +210,56 @@ function fnValidationDetailCheck()
     return result;
 }
 
-function fnValidationCheck() 
+function fnValidationCheck()
 {
     var result = true;
     var addList = AUIGrid.getAddedRowItems(myGridID);
     var udtList = AUIGrid.getEditedRowItems(myGridID);
     var delList = AUIGrid.getRemovedItems(myGridID);
-        
-    if (addList.length == 0  && udtList.length == 0 && delList.length == 0) 
+
+    if (addList.length == 0  && udtList.length == 0 && delList.length == 0)
     {
       Common.alert("No Change");
       return false;
     }
 
-    for (var i = 0; i < addList.length; i++) 
+    for (var i = 0; i < addList.length; i++)
     {
       var codeMasterName  = addList[i].codeMasterName;
-      
-	    if (codeMasterName == "" || codeMasterName.length == 0) 
-	    {
-	      result = false;
-	      // {0} is required.
-	      Common.alert("<spring:message code='sys.msg.necessary' arguments='Code Master Name' htmlEscape='false'/>");
-	      break;
-	    }
+
+        if (codeMasterName == "" || codeMasterName.length == 0)
+        {
+          result = false;
+          // {0} is required.
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='Code Master Name' htmlEscape='false'/>");
+          break;
+        }
     }
 
-    for (var i = 0; i < udtList.length; i++) 
+    for (var i = 0; i < udtList.length; i++)
     {
       var codeMasterName  = udtList[i].codeMasterName;
-      
-	    if (codeMasterName == "" || codeMasterName.length == 0) 
-	    {
-	      result = false;
-	      // {0} is required.
-	      Common.alert("<spring:message code='sys.msg.necessary' arguments='Code Master Name' htmlEscape='false'/>");
-	      break;
-	    }
+
+        if (codeMasterName == "" || codeMasterName.length == 0)
+        {
+          result = false;
+          // {0} is required.
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='Code Master Name' htmlEscape='false'/>");
+          break;
+        }
     }
 
-    for (var i = 0; i < delList.length; i++) 
+    for (var i = 0; i < delList.length; i++)
     {
       var codeMasterName  = delList[i].codeMasterName;
-      
-	    if (codeMasterName == "" || codeMasterName.length == 0) 
-	    {
-	      result = false;
-	      // {0} is required.
-	      Common.alert("<spring:message code='sys.msg.necessary' arguments='Code Master Name' htmlEscape='false'/>");
-	      break;
-	    }
+
+        if (codeMasterName == "" || codeMasterName.length == 0)
+        {
+          result = false;
+          // {0} is required.
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='Code Master Name' htmlEscape='false'/>");
+          break;
+        }
     }
 
     return result;
@@ -268,116 +268,116 @@ function fnValidationCheck()
 
 
 // 마스터저장 서버 전송.
-function fnSaveGridMap() 
+function fnSaveGridMap()
 {
   if (fnValidationCheck() == false)
   {
     return false;
   }
-	
+
   Common.ajax("POST", "/general/saveGeneralCode.do"
-		    , GridCommon.getEditData(myGridID)
-		    , function(result) 
-		     {
-		        Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-		        fn_getMstCommCdListAjax() ;
-		        
-		        console.log("성공." + JSON.stringify(result));
-		        console.log("data : " + result.data);
-		     } 
-		   , function(jqXHR, textStatus, errorThrown) 
-	      {
-	        try 
-		      {
-		        console.log("Fail Status : " + jqXHR.status);
-		        console.log("code : "        + jqXHR.responseJSON.code);
-		        console.log("message : "     + jqXHR.responseJSON.message);
-		        console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-		      } 
-		      catch (e) 
-		      {
-		        console.log(e);
-		      }
-		      Common.alert("Fail : " + jqXHR.responseJSON.message);
-	      }); 
+            , GridCommon.getEditData(myGridID)
+            , function(result)
+             {
+                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+                fn_getMstCommCdListAjax() ;
+
+                console.log("성공." + JSON.stringify(result));
+                console.log("data : " + result.data);
+             }
+           , function(jqXHR, textStatus, errorThrown)
+          {
+            try
+              {
+                console.log("Fail Status : " + jqXHR.status);
+                console.log("code : "        + jqXHR.responseJSON.code);
+                console.log("message : "     + jqXHR.responseJSON.message);
+                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+              }
+              catch (e)
+              {
+                console.log(e);
+              }
+              Common.alert("Fail : " + jqXHR.responseJSON.message);
+          });
 }
 
 // 상세데이타 서버로 전송.
-function fnSaveDetailGridMap() 
+function fnSaveDetailGridMap()
 {
   if (fnValidationDetailCheck() == false)
   {
     return false;
   }
-	
+
   Common.ajax("POST", "/general/saveDetailCommCode.do"
-	     , GridCommon.getEditData(detailGridID), function(result) 
-	       {
-	        Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-          fn_getMstCommCdListAjax() ;     
+         , GridCommon.getEditData(detailGridID), function(result)
+           {
+            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+          fn_getMstCommCdListAjax() ;
           console.log("성공.");
           console.log("data : " + result);
-         } 
+         }
 
-       , function(jqXHR, textStatus, errorThrown) 
+       , function(jqXHR, textStatus, errorThrown)
          {
-	          try 
-	          {
-	            console.log("Fail Status : " + jqXHR.status);
-	            console.log("code : "        + jqXHR.responseJSON.code);
-	            console.log("message : "     + jqXHR.responseJSON.message);
-	            console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-	          } 
-	          catch (e) 
-	          {
-	            console.log(e);
-	          }
-         
-	          Common.alert("Fail : " + jqXHR.responseJSON.message);
-        }); 
+              try
+              {
+                console.log("Fail Status : " + jqXHR.status);
+                console.log("code : "        + jqXHR.responseJSON.code);
+                console.log("message : "     + jqXHR.responseJSON.message);
+                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+              }
+              catch (e)
+              {
+                console.log(e);
+              }
+
+              Common.alert("Fail : " + jqXHR.responseJSON.message);
+        });
 }
 
 //컬럼 선택시 상세정보 세팅.
 function fn_setDetail(selGrdidID, rowIdx)  //cdMstId
-{     
+{
    $("#mstCdId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "codeMasterId"));
-   $("#mstDisabled").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "disabled"));  
+   $("#mstDisabled").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "disabled"));
 
-   console.log("mstCdId: "+ $("#mstCdId").val() + " mstDisabled: " + $("#mstDisabled").val() + " codeMasterName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "codeMasterName") );                
+   console.log("mstCdId: "+ $("#mstCdId").val() + " mstDisabled: " + $("#mstDisabled").val() + " codeMasterName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "codeMasterName") );
 }
 
-function auiCellEditignHandler(event) 
+function auiCellEditignHandler(event)
 {
-    if(event.type == "cellEditBegin") 
+    if(event.type == "cellEditBegin")
     {
         console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-    } 
-    else if(event.type == "cellEditEnd") 
+    }
+    else if(event.type == "cellEditEnd")
     {
         console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-    } 
-    else if(event.type == "cellEditCancel") 
+    }
+    else if(event.type == "cellEditCancel")
     {
         console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
     }
-	
+
 }
 
 //행 추가 이벤트 핸들러
-function auiAddRowHandler(event) 
+function auiAddRowHandler(event)
 {
   console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length);
 }
 
 // MstGrid 행 추가, 삽입
-function addRow() 
+function addRow()
 {
   var item = new Object();
 
     item.codeMasterId  ="";
     item.disabled      ="N";
     item.codeMasterName =""  ;
-    item.codeDesc       ="";  
+    item.codeDesc       ="";
     item.createName     ="";
     item.crtDt          ="";
     // parameter
@@ -386,7 +386,7 @@ function addRow()
     AUIGrid.addRow(myGridID, item, "first");
 }
 
-function addRowDetail() 
+function addRowDetail()
 {
   var item = new Object();
 
@@ -394,8 +394,8 @@ function addRowDetail()
     item.detailcode      ="";
     item.detailcodename  ="";
     item.detailcodedesc  ="";
-    item.detaildisabled  ="N";  
-    item.codeMasterId    = $("#mstCdId").val(); 
+    item.detaildisabled  ="N";
+    item.codeMasterId    = $("#mstCdId").val();
     // parameter
     // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
     // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
@@ -403,28 +403,28 @@ function addRowDetail()
 }
 
 //행 삭제 이벤트 핸들러
-function auiRemoveRowHandler(event) 
+function auiRemoveRowHandler(event)
 {
     console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
 //행 삭제 이벤트 핸들러
-function auiRemoveRowHandlerDetail(event) 
+function auiRemoveRowHandlerDetail(event)
 {
     console.log (event.type + " 이벤트상세 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
 // 행 삭제 메소드
-function removeRow() 
+function removeRow()
 {
-    console.log("removeRowMst: " + gSelRowIdx);    
+    console.log("removeRowMst: " + gSelRowIdx);
     AUIGrid.removeRow(myGridID,gSelRowIdx);
 }
 
 //Make Use_yn ComboList, tooltip
 function getDisibledComboList()
-{     
-  var list =  ["N", "Y"];   
+{
+  var list =  ["N", "Y"];
   return list;
 }
 
@@ -439,73 +439,73 @@ var myGridID, detailGridID;
 
 $(document).ready(function()
 {
-  
-	$("#cdMstId").focus();
-	  
-  $("#cdMstId").keydown(function(key) 
+
+    $("#cdMstId").focus();
+
+  $("#cdMstId").keydown(function(key)
   {
-    if (key.keyCode == 13) 
+    if (key.keyCode == 13)
     {
-    	fn_getMstCommCdListAjax();
+        fn_getMstCommCdListAjax();
     }
-	});
-	  
-  $("#cdMstNm").keydown(function(key) 
+    });
+
+  $("#cdMstNm").keydown(function(key)
   {
-    if (key.keyCode == 13) 
+    if (key.keyCode == 13)
     {
-    	fn_getMstCommCdListAjax();
+        fn_getMstCommCdListAjax();
     }
-	});
-	  
-  $("#cdMstDesc").keydown(function(key) 
+    });
+
+  $("#cdMstDesc").keydown(function(key)
   {
-    if (key.keyCode == 13) 
+    if (key.keyCode == 13)
     {
-    	fn_getMstCommCdListAjax();
+        fn_getMstCommCdListAjax();
     }
-	});
-	  
-  $("#createID").keydown(function(key) 
+    });
+
+  $("#createID").keydown(function(key)
   {
-    if (key.keyCode == 13) 
+    if (key.keyCode == 13)
     {
-    	fn_getMstCommCdListAjax();
+        fn_getMstCommCdListAjax();
     }
-	});
-	
-	var options = {
-								  usePaging : true,
-								  useGroupingPanel : false,
-								  showRowNumColumn : false, // 순번 칼럼 숨김
-								};
-    
+    });
+
+    var options = {
+                                  usePaging : true,
+                                  useGroupingPanel : false,
+                                  showRowNumColumn : false, // 순번 칼럼 숨김
+                                };
+
     // masterGrid 그리드를 생성합니다.
     myGridID = GridCommon.createAUIGrid("grid_wrap", mstColumnLayout,"codeMasterId", options);
     // AUIGrid 그리드를 생성합니다.
-    
+
 
     // 푸터 객체 세팅
     //AUIGrid.setFooter(myGridID, footerObject);
-    
+
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
-    
+
     // 에디팅 정상 종료 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditignHandler);
-    
+
     // 에디팅 취소 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditignHandler);
-    
-    // 행 추가 이벤트 바인딩 
+
+    // 행 추가 이벤트 바인딩
     AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);
-    
-    // 행 삭제 이벤트 바인딩 
+
+    // 행 삭제 이벤트 바인딩
     AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
 
 
     // cellClick event.
-    AUIGrid.bind(myGridID, "cellClick", function( event ) 
+    AUIGrid.bind(myGridID, "cellClick", function( event )
     {
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         gSelRowIdx = event.rowIndex;
@@ -514,52 +514,52 @@ $(document).ready(function()
                 || String(event.value).length < 1)
             {
                     return false;
-            } 
+            }
 
             $("#mstCdId").val( event.value);
-            
+
             fn_getDetailCode(myGridID, event.rowIndex);
 
-        
+
     });
 
  // 셀 더블클릭 이벤트 바인딩
-    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
+    AUIGrid.bind(myGridID, "cellDoubleClick", function(event)
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
 
 
-    });    
+    });
 
 /***********************************************[ DETAIL GRID] ************************************************/
 
-    var dtailOptions = 
+    var dtailOptions =
         {
             usePaging : true,
             useGroupingPanel : false,
             showRowNumColumn : false, // 순번 칼럼 숨김
         };
- 
+
     // detailGrid 생성
     detailGridID = GridCommon.createAUIGrid("detailGrid", detailColumnLayout,"detailcodeid", dtailOptions);
 
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(detailGridID, "cellEditBegin", auiCellEditignHandler);
-    
+
     // 에디팅 정상 종료 이벤트 바인딩
     AUIGrid.bind(detailGridID, "cellEditEnd", auiCellEditignHandler);
-    
+
     // 에디팅 취소 이벤트 바인딩
     AUIGrid.bind(detailGridID, "cellEditCancel", auiCellEditignHandler);
-    
-    // 행 추가 이벤트 바인딩 
+
+    // 행 추가 이벤트 바인딩
     AUIGrid.bind(detailGridID, "addRow", auiAddRowHandler);
-    
-    // 행 삭제 이벤트 바인딩 
+
+    // 행 삭제 이벤트 바인딩
     AUIGrid.bind(detailGridID, "removeRow", auiRemoveRowHandlerDetail);
-    
+
     // cellClick event.
-    AUIGrid.bind(detailGridID, "cellClick", function( event ) 
+    AUIGrid.bind(detailGridID, "cellClick", function( event )
     {
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         gSelRowIdx = event.rowIndex;
@@ -572,9 +572,9 @@ $(document).ready(function()
 
 <section id="content"><!-- content start -->
 <ul class="path">
-	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+    <li>Sales</li>
+    <li>Order list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -595,43 +595,43 @@ $(document).ready(function()
 <table class="type1"><!-- table start -->
 <caption>search table</caption>
 <colgroup>
-	<col style="width:100px" />
-	<col style="width:*" />
-	<col style="width:120px" />
-	<col style="width:*" />
-	<col style="width:110px" />
-	<col style="width:*" />
+    <col style="width:100px" />
+    <col style="width:*" />
+    <col style="width:120px" />
+    <col style="width:*" />
+    <col style="width:110px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Master ID</th>
-	<td><input type="text" title="Master ID" placeholder="Master ID" id="cdMstId" name="cdMstId" class="w100p" /></td>
-	<th scope="row">Name</th>
-	<td><input type="text" id="cdMstNm" name="cdMstNm" title="Name" placeholder="Name" class="w100p" /></td>
-	<th scope="row">Description</th>
-	<td><input type="text" id="cdMstDesc" name="cdMstDesc" title="Description" placeholder="Description" class="w100p" /></td>
+    <th scope="row">Master ID</th>
+    <td><input type="text" title="Master ID" placeholder="Master ID" id="cdMstId" name="cdMstId" class="w100p" /></td>
+    <th scope="row">Name</th>
+    <td><input type="text" id="cdMstNm" name="cdMstNm" title="Name" placeholder="Name" class="w100p" /></td>
+    <th scope="row">Description</th>
+    <td><input type="text" id="cdMstDesc" name="cdMstDesc" title="Description" placeholder="Description" class="w100p" /></td>
 </tr>
 <tr>
-	<th scope="row">Creator</th> 
-	<td><input type="text" id="createID" name="createID" title="Creator" placeholder="Creator Username" class="w100p" /></td>
-	<th scope="row">Create Date</th>
-	<td>
+    <th scope="row">Creator</th>
+    <td><input type="text" id="createID" name="createID" title="Creator" placeholder="Creator Username" class="w100p" /></td>
+    <th scope="row">Create Date</th>
+    <td>
 
-	<div class="date_set w100p"><!-- date_set start -->
-	<p><input type="text" id="crtDtFrom" name="crtDtFrom" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>   
-	<span>To</span>
-	<p><input type="text" id="crtDtTo" name="crtDtTo" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	</div><!-- date_set end -->
+    <div class="date_set w100p"><!-- date_set start -->
+    <p><input type="text" id="crtDtFrom" name="crtDtFrom" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <span>To</span>
+    <p><input type="text" id="crtDtTo" name="crtDtTo" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    </div><!-- date_set end -->
 
-	</td>
-	<th scope="row">Disabled</th>
-	<td>
-	<select class="w100p" id="cdMstDisabled" name="cdMstDisabled">
-	   <option value="" selected>All</option>
-	   <option value="1">Y</option>
-	   <option value="0">N</option>
-	</select>
-	</td>
+    </td>
+    <th scope="row">Disabled</th>
+    <td>
+    <select class="w100p" id="cdMstDisabled" name="cdMstDisabled">
+       <option value="" selected>All</option>
+       <option value="1">Y</option>
+       <option value="0">N</option>
+    </select>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -687,9 +687,9 @@ $(document).ready(function()
 <article class="grid_wrap">
 <!-- grid_wrap start -->
 <!-- 그리드 영역1 -->
- <div id="grid_wrap"></div>
+ <div id="grid_wrap"  class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
-
+<div class="autoFixArea">
 <aside class="title_line"><!-- title_line start -->
 <h3>Detail</h3>
 
@@ -700,21 +700,21 @@ $(document).ready(function()
        <option value="" selected>All</option>
        <option value="1">Y</option>
        <option value="0">N</option>
-    </select>   
+    </select>
     </li>
     <li><p class="btn_grid"><a onclick="fn_DetailGetInfo();"><span class="search"></span>FILTER</a></p></li>
-    <li><p class="btn_grid"><a onclick="addRowDetail();">Add</a></p></li>   
+    <li><p class="btn_grid"><a onclick="addRowDetail();">Add</a></p></li>
     <li><p class="btn_grid"><a onclick="fnSaveDetailGridMap();">Save</a></p></li>
 </ul>
 
 </aside><!-- title_line end -->
 
-<article class="grid_wrap" style="height:200px;"><!-- grid_wrap start -->
+<article class="grid_wrap" ><!-- grid_wrap start -->
 <!--  그리드 영역2  -->
-  <div id="detailGrid"></div> 
+  <div id="detailGrid" style="height:200px;"></div>
 </article><!-- grid_wrap end -->
 
-
+</div>
 </section><!-- search_result end -->
 </form>
 <!--  detail Form -->

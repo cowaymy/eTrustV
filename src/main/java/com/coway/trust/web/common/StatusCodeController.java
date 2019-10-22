@@ -75,6 +75,7 @@ public class StatusCodeController {
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid delList
 
+		/*
 		int tmpCnt = 0;
 		int totCnt = 0;
 		if (addList.size() > 0) {
@@ -86,11 +87,15 @@ public class StatusCodeController {
 			tmpCnt = commonService.updateStatusCategory(udtList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
 		}
-		
+
 		if (delList.size() > 0) {
 			tmpCnt = commonService.deleteStatusCategoryCode(delList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
 		}
+		*/
+
+		// 20190910 KR-OHK : insertStatusCategory+updateStatusCategory+deleteStatusCategoryCode => Change One Transaction
+		int totCnt = commonService.saveStatusCategory(addList, udtList, delList, sessionVO.getUserId());
 
 		// 콘솔로 찍어보기
 		LOGGER.info("StatusCategory_수정 : {}", udtList.toString());
@@ -134,6 +139,7 @@ public class StatusCodeController {
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 
+		/*
 		int tmpCnt = 0;
 		int totCnt = 0;
 		if (addList.size() > 0) {
@@ -145,6 +151,10 @@ public class StatusCodeController {
 			tmpCnt = commonService.updateStatusCode(udtList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
 		}
+		*/
+
+		// 20190910 KR-OHK : insertStatusCode+updateStatusCode => Change One Transaction
+		int totCnt = commonService.saveStatusCode(addList, udtList, sessionVO.getUserId());
 
 		// 콘솔로 찍어보기
 		LOGGER.info("StatusCode_수정 : {}", udtList.toString());

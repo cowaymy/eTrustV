@@ -85,6 +85,7 @@ public class ProgramController {
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
 
+		/*
 		int tmpCnt = 0;
 		int totCnt = 0;
 		if (addList.size() > 0) {
@@ -100,7 +101,10 @@ public class ProgramController {
 		if (delList.size() > 0) {
 			tmpCnt = commonService.deletePgmId(delList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
-		}
+		}*/
+
+		// 20190910 KR-OHK : insertPgmId+updatePgmId+deletePgmId => Change One Transaction
+		int totCnt = commonService.savePgmId(addList, udtList, delList, sessionVO.getUserId());
 
 		// 콘솔로 찍어보기
 		LOGGER.info("PgmId_수정 : {}", udtList.toString());
@@ -123,9 +127,11 @@ public class ProgramController {
 			SessionVO sessionVO) {
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+
+		/*
 		int tmpCnt = 0;
 		int totCnt = 0;
-		
+
 		if (addList.size() > 0) {
 			tmpCnt = commonService.updPgmIdTrans(addList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
@@ -134,7 +140,10 @@ public class ProgramController {
 		if (udtList.size() > 0) {
 			tmpCnt = commonService.updPgmIdTrans(udtList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
-		}
+		}*/
+
+		// 20190910 KR-OHK : updPgmIdTrans => Change One Transaction
+		int totCnt = commonService.savePgmIdTrans(addList, udtList, sessionVO.getUserId());
 
 		// 콘솔로 찍어보기
 		LOGGER.info("PgmId_수정 : {}", udtList.toString());

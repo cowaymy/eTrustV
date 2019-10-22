@@ -32,16 +32,16 @@ function checkAll(isChecked) {
     if(isChecked) {
         var item = { funcYn : "Y" };
         for(idx = 0 ; idx < gridDetailDataLength ; idx++){
-        	if(AUIGrid.getItemByRowIndex(grdMenuMapping,idx).existYn == "N"){
-        	    AUIGrid.updateRow(grdMenuMapping, item, idx);
-        	}
+            if(AUIGrid.getItemByRowIndex(grdMenuMapping,idx).existYn == "N"){
+                AUIGrid.updateRow(grdMenuMapping, item, idx);
+            }
         }
     } else {
-    	var item = { funcYn : "N" };
-    	for(idx = 0 ; idx < gridDetailDataLength ; idx++){
-    		if(AUIGrid.getItemByRowIndex(grdMenuMapping,idx).existYn == "N"){
-    			AUIGrid.updateRow(grdMenuMapping, item, idx);
-    		}
+        var item = { funcYn : "N" };
+        for(idx = 0 ; idx < gridDetailDataLength ; idx++){
+            if(AUIGrid.getItemByRowIndex(grdMenuMapping,idx).existYn == "N"){
+                AUIGrid.updateRow(grdMenuMapping, item, idx);
+            }
         }
     }
 
@@ -83,12 +83,12 @@ function fn_checkChangeRows(gridId,mandatoryItems){
     var totalLength = 0;
     totalLength = addList.length + updateList.length + removeList.length;
 
-	if(totalLength == 0){
-		Common.alert("<spring:message code='sys.common.alert.noChange'/>");
-		return true; /* Failed */
-	}
+    if(totalLength == 0){
+        Common.alert("<spring:message code='sys.common.alert.noChange'/>");
+        return true; /* Failed */
+    }
 
-	return false; /* Success */
+    return false; /* Success */
 }
 
 function fn_openPopup_New() {
@@ -104,11 +104,11 @@ function fn_openPopup_New() {
 }
 
 function fn_openPopup_Edit(_popDivCd) {
-	 if(AUIGrid.getSelectedIndex(grdUser)[0] < 0 ){
-		 Common.alert("<spring:message code='sys.info.grid.selectMessage'/>"+" Grid");
+     if(AUIGrid.getSelectedIndex(grdUser)[0] < 0 ){
+         Common.alert("<spring:message code='sys.info.grid.selectMessage'/>"+" Grid");
          return;
      }
-	popDivCd = _popDivCd;
+    popDivCd = _popDivCd;
     var popUpObj = Common.popupDiv
     (
          "/common/userManagement/userManagementEdit.do"
@@ -123,17 +123,17 @@ function fn_openPopup_Edit(_popDivCd) {
 /****************************Transaction Start********************************/
 
 function fn_search(){
-	Common.ajax(
-		    "GET",
-		    "/common/userManagement/selectUserList.do",
-		    $("#searchForm").serialize(),
-		    function(data, textStatus, jqXHR){ // Success
-		    	AUIGrid.setGridData(grdUser, data);
-		    },
-		    function(jqXHR, textStatus, errorThrown){ // Error
-		    	alert("Fail : " + jqXHR.responseJSON.message);
-		    }
-	)
+    Common.ajax(
+            "GET",
+            "/common/userManagement/selectUserList.do",
+            $("#searchForm").serialize(),
+            function(data, textStatus, jqXHR){ // Success
+                AUIGrid.setGridData(grdUser, data);
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                alert("Fail : " + jqXHR.responseJSON.message);
+            }
+    )
 };
 
 
@@ -142,11 +142,11 @@ function fn_search(){
 var gridAuthColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
     {
         dataField : "userId",
         /* dataType : "string", */
@@ -241,8 +241,8 @@ var gridAuthColumnLayout =
 
 var options =
 {
-		editable : false,
-// 		pagingMode : "simple",
+        editable : false,
+//      pagingMode : "simple",
         usePaging : true, //페이징 사용
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
@@ -257,25 +257,25 @@ var options =
 var gridMenuMappingColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
-	{
-	    dataField : "menuLvl",
-	    /* dataType : "string", */
-	    headerText : "Lvl",
-	    editable : false, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
-	    width : "8%"
-	},
-	{
-	    dataField : "menuName",
-	    headerText : "Menu Name",
-	    width : "30%",
-	    editable : false,
-	    style : "aui-grid-user-custom-left"
-	},
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
+    {
+        dataField : "menuLvl",
+        /* dataType : "string", */
+        headerText : "Lvl",
+        editable : false, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
+        width : "8%"
+    },
+    {
+        dataField : "menuName",
+        headerText : "Menu Name",
+        width : "30%",
+        editable : false,
+        style : "aui-grid-user-custom-left"
+    },
     {
         dataField : "pgmName",
         headerText : "Program Name",
@@ -364,7 +364,7 @@ var gridMenuMappingColumnLayout =
 
 var detailOptions =
 {
-		editable : true,
+        editable : true,
         usePaging : true, //페이징 사용
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
@@ -389,8 +389,8 @@ $(document).ready(function(){
 
     // click 이벤트 바인딩
     AUIGrid.bind(grdUser, ["cellClick"], function(event) {
-    	selectedRow = event.rowIndex;
-//     	fn_detailSearch(event.item.authCode);
+        selectedRow = event.rowIndex;
+//      fn_detailSearch(event.item.authCode);
     });
 /*
 //     grdMenuMapping = GridCommon.createAUIGrid("grdMenuMapping", gridMenuMappingColumnLayout,"", detailOptions);
@@ -400,11 +400,11 @@ $(document).ready(function(){
 //     });
 
 //     AUIGrid.bind(grdMenuMapping, "ready", function(event) {
-//     	gridDetailDataLength = AUIGrid.getGridData(grdMenuMapping).length; // 그리드 전체 행수 보관
+//      gridDetailDataLength = AUIGrid.getGridData(grdMenuMapping).length; // 그리드 전체 행수 보관
 
-//     	for(var idx = 0 ; idx < gridDetailDataLength ; idx++){
+//      for(var idx = 0 ; idx < gridDetailDataLength ; idx++){
 
-//     	}
+//      }
 //     });
 
     // 헤더 클릭 핸들러 바인딩(checkAll)
@@ -559,7 +559,7 @@ $(document).ready(function(){
 <section class="search_result"><!-- search_result start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grdUser" style="height:385px"></div>
+    <div id="grdUser" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

@@ -26,12 +26,12 @@ $(function()
 
 var MainColumnLayout =
 [
-	     /* PK , rowid 용 칼럼*/
-	     {
-	         dataField : "rowId",
-	         dataType : "string",
-	         visible : true
-	     },
+         /* PK , rowid 용 칼럼*/
+         {
+             dataField : "rowId",
+             dataType : "string",
+             visible : true
+         },
         {
             dataField : "authCode",
             headerText : "<spring:message code='sys.auth.grid1.Code'/>",
@@ -63,7 +63,7 @@ var MainColumnLayout =
                   }
                   else
                   {
-                  	return "${pageContext.request.contextPath}/resources/images/common/normal_search.png";
+                    return "${pageContext.request.contextPath}/resources/images/common/normal_search.png";
                   }
 
                 } ,// end of iconFunction
@@ -169,7 +169,7 @@ function auiCellEditignHandler(event)
 
       if (AUIGrid.isAddedById(myGridID,authSeq) == false && authSeq.indexOf("Input authCode") == -1 && event.columnIndex == 0 )// edit
       {
-    	  return false;  // edit모드일 때만 authCode를 수정할수 있다.
+          return false;  // edit모드일 때만 authCode를 수정할수 있다.
       } */
   }
   else if(event.type == "cellEditEnd")
@@ -186,7 +186,7 @@ function auiCellEditignHandler(event)
 //행 추가 이벤트 핸들러
 function auiAddRowHandler(event)
 {
-	  console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length);
+      console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length);
 }
 
 //MstGrid 행 추가, 삽입
@@ -194,17 +194,17 @@ function fnAddRow()
 {
   var item = new Object();
 
-		  item.authCode ="";
-		  item.authName ="";
-		  item.roleId   ="";
-		  item.roleLvl  ="";
-		  item.roleId1  ="";
-		  item.roleId2  ="";
-		  item.roleId3  ="";
-		  // parameter
-		  // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
-		  // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-		  AUIGrid.addRow(myGridID, item, 3);
+          item.authCode ="";
+          item.authName ="";
+          item.roleId   ="";
+          item.roleLvl  ="";
+          item.roleId1  ="";
+          item.roleId2  ="";
+          item.roleId3  ="";
+          // parameter
+          // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
+          // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+          AUIGrid.addRow(myGridID, item, 3);
 }
 
 //Make Use_yn ComboList, tooltip
@@ -218,16 +218,16 @@ function auiRemoveRowHandler(event)
   var authCode =  AUIGrid.getCellValue(myGridID, gSelMainRowIdx, "authCode");
 
   if (authCode != null)
-	{
-	  if (authCode == "INT" || authCode == "MGR" || authCode == "EXT" || authCode == "TLD")
-		{
-		//Common.alert("Can't Select UpperAuth In 'Lvl 1.' ");
+    {
+      if (authCode == "INT" || authCode == "MGR" || authCode == "EXT" || authCode == "TLD")
+        {
+        //Common.alert("Can't Select UpperAuth In 'Lvl 1.' ");
        Common.alert("<spring:message code='sys.msg.cannot' arguments='Delete  ; [INT ,MGR ,EXT,TLD] AuthCode' htmlEscape='false' argumentSeparator=';'/>");
       // removeAllCancel();
       AUIGrid.restoreSoftRows(myGridID, "all");
        return false;
-		}
-	}
+        }
+    }
 
   //$("#delCancel").show();
 }
@@ -270,11 +270,11 @@ function fnSelectAuthListAjax()
            , "authCodeName="+$("#authCode").val()
            , function(result)
            {
-	           AUIGrid.setGridData(myGridID, result);
-	           if(result != null && result.length > 0)
-	           {
-	             //fnSetSelectedColumn(myGridID, 0);
-	           }
+               AUIGrid.setGridData(myGridID, result);
+               if(result != null && result.length > 0)
+               {
+                 //fnSetSelectedColumn(myGridID, 0);
+               }
            });
 }
 
@@ -514,9 +514,9 @@ $(document).ready(function()
 
 <section id="content"><!-- content start -->
 <ul class="path">
-	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+    <li>Sales</li>
+    <li>Order list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -524,8 +524,8 @@ $(document).ready(function()
 <h2>Authorization Management</h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-	<li><p class="btn_blue"><a onclick="fnSelectAuthListAjax();"><span class="search"></span>Search</a></p></li>
-	</c:if>
+    <li><p class="btn_blue"><a onclick="fnSelectAuthListAjax();"><span class="search"></span>Search</a></p></li>
+    </c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -540,23 +540,23 @@ $(document).ready(function()
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:110px" />
-	<col style="width:*" />
-	<!-- <col style="width:110px" />
-	<col style="width:*" /> -->
+    <col style="width:110px" />
+    <col style="width:*" />
+    <!-- <col style="width:110px" />
+    <col style="width:*" /> -->
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Auth</th>
-	<td>
-	<input type="text" id="authCode" name="authCode"  title="" placeholder="Auth Code or Name" class="" />
+    <th scope="row">Auth</th>
+    <td>
+    <input type="text" id="authCode" name="authCode"  title="" placeholder="Auth Code or Name" class="" />
 
     <input type="text" title="" id="hiddenInput" name="hiddenInput" placeholder="hiddenInput" style="display:none;" class="" />
-	</td>
-	<!-- <th scope="row">Auth Name</th>
-	<td>
-	<input type="text" id="authName" name="authName"  title="" placeholder="" class="" />
-	</td> -->
+    </td>
+    <!-- <th scope="row">Auth Name</th>
+    <td>
+    <input type="text" id="authName" name="authName"  title="" placeholder="" class="" />
+    </td> -->
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -568,30 +568,30 @@ $(document).ready(function()
   </a>  --%>
 </p>
 <dl class="link_list">
-	<dt>Link</dt>
-	<dd>
-	<ul class="btns">
-		<li><p class="link_btn"><a href="javascript:;">menu1</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">menu2</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">menu3</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">menu4</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">Search Payment</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">menu6</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">menu7</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">menu8</a></p></li>
-	</ul>
-	<ul class="btns">
-		<li><p class="link_btn type2"><a href="javascript:;">menu1</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">menu3</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">menu4</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">menu6</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">menu7</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">menu8</a></p></li>
-	</ul>
-	<%-- <p class="hide_btn"><a href="javascript:;"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p> --%>
-	</dd>
+    <dt>Link</dt>
+    <dd>
+    <ul class="btns">
+        <li><p class="link_btn"><a href="javascript:;">menu1</a></p></li>
+        <li><p class="link_btn"><a href="javascript:;">menu2</a></p></li>
+        <li><p class="link_btn"><a href="javascript:;">menu3</a></p></li>
+        <li><p class="link_btn"><a href="javascript:;">menu4</a></p></li>
+        <li><p class="link_btn"><a href="javascript:;">Search Payment</a></p></li>
+        <li><p class="link_btn"><a href="javascript:;">menu6</a></p></li>
+        <li><p class="link_btn"><a href="javascript:;">menu7</a></p></li>
+        <li><p class="link_btn"><a href="javascript:;">menu8</a></p></li>
+    </ul>
+    <ul class="btns">
+        <li><p class="link_btn type2"><a href="javascript:;">menu1</a></p></li>
+        <li><p class="link_btn type2"><a href="javascript:;">Search Payment</a></p></li>
+        <li><p class="link_btn type2"><a href="javascript:;">menu3</a></p></li>
+        <li><p class="link_btn type2"><a href="javascript:;">menu4</a></p></li>
+        <li><p class="link_btn type2"><a href="javascript:;">Search Payment</a></p></li>
+        <li><p class="link_btn type2"><a href="javascript:;">menu6</a></p></li>
+        <li><p class="link_btn type2"><a href="javascript:;">menu7</a></p></li>
+        <li><p class="link_btn type2"><a href="javascript:;">menu8</a></p></li>
+    </ul>
+    <%-- <p class="hide_btn"><a href="javascript:;"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p> --%>
+    </dd>
 </dl>
 </aside><!-- link_btns_wrap end -->
 
@@ -614,7 +614,7 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 1-->
- <div id="grid_wrap" style="height:420px;"></div>
+ <div id="grid_wrap" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

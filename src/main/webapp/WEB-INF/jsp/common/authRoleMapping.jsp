@@ -35,24 +35,24 @@ var validTo;
 
 $(function()
 {
-	fnSelectJustRoleListAjax();
+    fnSelectJustRoleListAjax();
 });
 
 var MainColumnLayout =
     [
         {
-        	  dataField : "roleId",
+              dataField : "roleId",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleId' />",
             editable : false,
             width : "20%",
         }, {
-        	  dataField : "roleName",
+              dataField : "roleName",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleName' />",
             style : "aui-grid-left-column",
             editable : false,
             width : "60%",
         }, {
-        	  dataField : "roleLev",
+              dataField : "roleLev",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleLevel' />",
             editable : false,
             width : "20%",
@@ -118,7 +118,7 @@ var AuthColumnLayout =
             editable : false,
             width : 0,
         },{
-        	  dataField : "roleLvl",
+              dataField : "roleLvl",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleLevel' />",
             editable : false,
             width : "13%"
@@ -149,24 +149,24 @@ var AuthColumnLayout =
               showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
               }
         },{
-	            dataField : "hidden",  //oldAuthCode
-	            headerText : "hidden",
-	            editable   : false,
-	            width : 0
+                dataField : "hidden",  //oldAuthCode
+                headerText : "hidden",
+                editable   : false,
+                width : 0
         } , {     // PK , rowid 용 칼럼
-	            dataField : "rowId",
-	            dataType : "string",
-	            visible : false
+                dataField : "rowId",
+                dataType : "string",
+                visible : false
         },  {
-	            dataField : "oldRoleId",
-	            headerText : "oldRoleId",
-	            editable : false,
-	            width : 0,
+                dataField : "oldRoleId",
+                headerText : "oldRoleId",
+                editable : false,
+                width : 0,
         },  {
-	            dataField : "oldFromDt",
-	            headerText : "oldFromDt",
-	            editable : false,
-	            width : 0,
+                dataField : "oldFromDt",
+                headerText : "oldFromDt",
+                editable : false,
+                width : 0,
         }
     ];
 
@@ -258,7 +258,7 @@ function fnSearchBtnClickAjax()
     }
     else
     {
-    	 $("#roleId").val("");
+         $("#roleId").val("");
     }
 
     fnSelectJustRoleListAjax();
@@ -300,7 +300,7 @@ function auiCellEditignHandler(event)
          && (event.item.rowId != "PkAddNew")   //수정모드
          && (gSelMstRolLvl  != gSelAuthRolLvl ) ) // 같지 않으면 다 상위레벨.
       {
-    	  Common.alert("<spring:message code='sys.roleAuthMapping.grid1.chkLevel' />");
+          Common.alert("<spring:message code='sys.roleAuthMapping.grid1.chkLevel' />");
         AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "all"] );
         return false;
       }
@@ -358,7 +358,7 @@ function auiCellEditignHandler(event)
 
              if (selAuthCode == gridAuthCode1 || selAuthCode == gridAuthCode2)
              {
-           	  Common.alert("<spring:message code='sys.msg.already.Registered' arguments='Auth Code' htmlEscape='false'/>");
+              Common.alert("<spring:message code='sys.msg.already.Registered' arguments='Auth Code' htmlEscape='false'/>");
                AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
                return false;
              }
@@ -373,7 +373,7 @@ function auiCellEditignHandler(event)
 
               if (selAuthCode == gridAuthCode1 || selAuthCode == gridAuthCode2 )
               {
-              	Common.alert("<spring:message code='sys.msg.already.Registered' arguments='Auth Code' htmlEscape='false'/>");
+                Common.alert("<spring:message code='sys.msg.already.Registered' arguments='Auth Code' htmlEscape='false'/>");
                 AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
                 return false;
               }
@@ -422,7 +422,7 @@ function auiCellEditignHandler(event)
               }
 
               if(selAuthCode == "INT" && authData.indexOf("EXT") > -1){
-            	  Common.alert("<spring:message code='sys.msg.already.Registered' arguments='EXT' htmlEscape='false'/>");
+                  Common.alert("<spring:message code='sys.msg.already.Registered' arguments='EXT' htmlEscape='false'/>");
                   AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
                   AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
                   return false;
@@ -437,7 +437,7 @@ function auiCellEditignHandler(event)
               }
 
               if(selAuthCode == "MGR" && authData.indexOf("EXT") > -1){
-            	//The {0} Must Exist.
+                //The {0} Must Exist.
                   Common.alert("<spring:message code='sys.msg.Exists' arguments='INT' htmlEscape='false'/>");
                   AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
                   AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
@@ -445,7 +445,7 @@ function auiCellEditignHandler(event)
               }
 
               if(selAuthCode == "MGR" && authData.indexOf("INT") == -1){
-            	//The {0} Must Exist.
+                //The {0} Must Exist.
                   Common.alert("<spring:message code='sys.msg.Exists' arguments='INT' htmlEscape='false'/>");
                   AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
                   AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
@@ -456,7 +456,7 @@ function auiCellEditignHandler(event)
           //INT와 EXT는 같이 등록 안됨
           if (selAuthCode == "INT")
           {
-           	if (gridAuthCode1 == "EXT" || gridAuthCode2 == "EXT" )
+            if (gridAuthCode1 == "EXT" || gridAuthCode2 == "EXT" )
              {
                Common.alert("<spring:message code='sys.msg.already.Registered' arguments='EXT' htmlEscape='false'/>");
                AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
@@ -466,7 +466,7 @@ function auiCellEditignHandler(event)
           }
           else if (selAuthCode == "EXT")
           {
-           	if (gridAuthCode1 == "INT" || gridAuthCode2 == "INT" )
+            if (gridAuthCode1 == "INT" || gridAuthCode2 == "INT" )
             {
                Common.alert("<spring:message code='sys.msg.already.Registered' arguments='INT' htmlEscape='false'/>");
                AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
@@ -481,10 +481,10 @@ function auiCellEditignHandler(event)
               // INT만이 MGR 등록이 가능하다.
               if (gridAuthCode1 != "INT" && gridAuthCode2 != "INT" )
               {
-              	//The {0} Must Exist.
-              	Common.alert("<spring:message code='sys.msg.Exists' arguments='INT' htmlEscape='false'/>");
-              	AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
-              	AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
+                //The {0} Must Exist.
+                Common.alert("<spring:message code='sys.msg.Exists' arguments='INT' htmlEscape='false'/>");
+                AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
+                AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
                 return false;
               }
           }
@@ -498,13 +498,13 @@ function auiCellEditignHandler(event)
           }
           else if (selAuthCode == "MGR")
           {
-          	AUIGrid.setCellValue(AuthGridID, event.rowIndex, 1, "Base Auth - Manager");
-          	AUIGrid.setCellValue(AuthGridID, event.rowIndex, 2,  $("#roleId").val());
+            AUIGrid.setCellValue(AuthGridID, event.rowIndex, 1, "Base Auth - Manager");
+            AUIGrid.setCellValue(AuthGridID, event.rowIndex, 2,  $("#roleId").val());
           }
           else if (selAuthCode == "INT")
           {
-          	AUIGrid.setCellValue(AuthGridID, event.rowIndex, 1, "Base Auth - Staff");
-          	AUIGrid.setCellValue(AuthGridID, event.rowIndex, 2,  $("#roleId").val());
+            AUIGrid.setCellValue(AuthGridID, event.rowIndex, 1, "Base Auth - Staff");
+            AUIGrid.setCellValue(AuthGridID, event.rowIndex, 2,  $("#roleId").val());
           }
           else if (selAuthCode == "TLD")
           {
@@ -524,22 +524,22 @@ function auiCellEditignHandler(event)
 
         if ( validFrom == undefined || validFrom == "")
         {
-        	validFrom = AUIGrid.getCellValue(AuthGridID, event.rowIndex, "fromDt");
+            validFrom = AUIGrid.getCellValue(AuthGridID, event.rowIndex, "fromDt");
         }
 
         if ( validTo == undefined || validTo == "")
         {
-        	validTo = AUIGrid.getCellValue(AuthGridID, event.rowIndex, "toDt");
+            validTo = AUIGrid.getCellValue(AuthGridID, event.rowIndex, "toDt");
         }
 
         if (validFrom != "")
         {
-        	validFrom = validFrom.split("/").join("");
+            validFrom = validFrom.split("/").join("");
         }
 
         if (validTo != "")
         {
-        	validTo = validTo.split("/").join("");
+            validTo = validTo.split("/").join("");
         }
 
         if ( (validFrom != undefined && validTo != undefined ) || (validFrom != "" && validTo != "") )
@@ -553,8 +553,8 @@ function auiCellEditignHandler(event)
             }
             else
             {
-            	 AUIGrid.setCellValue(AuthGridID, event.rowIndex, 4, validFrom);
-            	 AUIGrid.setCellValue(AuthGridID, event.rowIndex, 5, validTo);
+                 AUIGrid.setCellValue(AuthGridID, event.rowIndex, 4, validFrom);
+                 AUIGrid.setCellValue(AuthGridID, event.rowIndex, 5, validTo);
             }
         }
 
@@ -606,17 +606,17 @@ function auiRemoveRowHandler(event)
   //$("#delCancel").show();
 
   if (gSelMstRolLvl != "1")
-	{
-	  if (gSelMstRolLvl != gSelAuthRolLvl)
-	  {
-		  //Common.alert("Can't Select UpperAuth In 'Lvl 1.' ");
-	    Common.alert("<spring:message code='sys.msg.cannot' arguments='Delete  ; Wrong Level' htmlEscape='false' argumentSeparator=';'/>");
-	    //AUIGrid.restoreSoftRows(AuthGridID, "all");
-	    AUIGrid.restoreSoftRows(AuthGridID, "selectedIndex");
+    {
+      if (gSelMstRolLvl != gSelAuthRolLvl)
+      {
+          //Common.alert("Can't Select UpperAuth In 'Lvl 1.' ");
+        Common.alert("<spring:message code='sys.msg.cannot' arguments='Delete  ; Wrong Level' htmlEscape='false' argumentSeparator=';'/>");
+        //AUIGrid.restoreSoftRows(AuthGridID, "all");
+        AUIGrid.restoreSoftRows(AuthGridID, "selectedIndex");
 
-	    return false;
-	  }
-	}
+        return false;
+      }
+    }
 }
 
 //행 삭제 이벤트 핸들러
@@ -635,18 +635,18 @@ function fnAuthGridIDRemoveRow()
 function fnSearchAuthRoleMappingPopUp()
 {
    if ($("#roleId").val().length < 1)
-	 {
+     {
      //Common.alert("Role을 먼저 선택하시기 바랍니다.");
      Common.alert("<spring:message code='sys.msg.first.Select' arguments='Role' htmlEscape='false'/>");
      return false;
-	 }
+     }
 
    var popUpObj = Common.popupDiv("/authorization/searchRoleAuthMappingPop.do"
-	       , $("#MainForm").serializeJSON()
-	       , null
-	       , true
-	       , "searchRoleAuthMappingPop"
-	       );
+           , $("#MainForm").serializeJSON()
+           , null
+           , true
+           , "searchRoleAuthMappingPop"
+           );
 
 }
 
@@ -810,7 +810,7 @@ var myGridID, AuthGridID;
 
 $(document).ready(function()
 {
-	$("#txtRoleId").focus();
+    $("#txtRoleId").focus();
 
   $("#txtRoleId").bind("keyup", function()
   {
@@ -819,18 +819,18 @@ $(document).ready(function()
 
   $("#txtRoleId").keydown(function(key)
   {
-	  if (key.keyCode == 13)
+      if (key.keyCode == 13)
     {
-		  if ($("#txtRoleId").val().length > 0)
-		  {
-		    $("#roleId").val($("#txtRoleId").val() );
-		  }
-		  else
-			{
-			  $("#roleId").val("");
-		  }
+          if ($("#txtRoleId").val().length > 0)
+          {
+            $("#roleId").val($("#txtRoleId").val() );
+          }
+          else
+            {
+              $("#roleId").val("");
+          }
 
-		  fnSearchBtnClickAjax();
+          fnSearchBtnClickAjax();
     }
 
   });
@@ -838,9 +838,9 @@ $(document).ready(function()
 /***************************************************[ Role Auth Mapping GRID] ***************************************************/
 
     var options = {
-    		          usePaging : true,
-    		          // 페이징을 간단한 유형으로 나오도록 설정
-    		          pagingMode : "simple",
+                      usePaging : true,
+                      // 페이징을 간단한 유형으로 나오도록 설정
+                      pagingMode : "simple",
                   useGroupingPanel : false,
                   showRowNumColumn : false, // 순번 칼럼 숨김
                   selectionMode : "multipleRows",
@@ -900,7 +900,7 @@ $(document).ready(function()
 /***************************************************[ Auth GRID] ***************************************************/
 
     var AuthGridOptions = {
-    		          //rowIdField : "rowId", // PK행 지정
+                      //rowIdField : "rowId", // PK행 지정
                   usePaging : true,
                   showRowNumColumn : false, // 순번 칼럼 숨김
                   useGroupingPanel : false,
@@ -917,7 +917,7 @@ $(document).ready(function()
                   {
                     if(item.roleLvl != gSelMstRolLvl)
                     {
-                    	return "my-row-style";
+                        return "my-row-style";
                     }
                     return "";
                   }
@@ -1070,7 +1070,7 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 1-->
- <div id="grid_wrap" style="height:420px;"></div>
+ <div id="grid_wrap" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
@@ -1094,7 +1094,7 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 2-->
- <div id="auth_grid_wrap" style="height:420px;"></div>
+ <div id="auth_grid_wrap" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->

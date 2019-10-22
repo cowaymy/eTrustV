@@ -59,12 +59,12 @@ function fn_checkChangeRows(gridId,mandatoryItems){
     var totalLength = 0;
     totalLength = addList.length + updateList.length + removeList.length;
 
-	if(totalLength == 0){
-		alert("No Change Data.");
-		return true; /* Failed */
-	}
+    if(totalLength == 0){
+        alert("No Change Data.");
+        return true; /* Failed */
+    }
 
-	return false; /* Success */
+    return false; /* Success */
 }
 
 
@@ -84,38 +84,38 @@ function lpad(param, length, str) {
 
 function fn_search(){
 
-	var changeDate = "";
-	var param = "";
+    var changeDate = "";
+    var param = "";
 
     changeDate = $("#searchDate").val().replace("/","");
     changeDate = changeDate.substring(2,8) + changeDate.substring(0,2) ;
 
     param = "ifType="+$("#ifType").val()+"&tranStatusCd="+$("#tranStatusCd").val()+"&searchDate="+changeDate;
 
-	Common.ajax(
-		    "GET",
-		    "/common/selectInterfaceMonitoringList.do",
-		    param,
-		    function(data, textStatus, jqXHR){ // Success
-		    	//AUIGrid.clearGridData(grdIf);
-		    	AUIGrid.setGridData(grdIf, data);
-		    },
-		    function(jqXHR, textStatus, errorThrown){ // Error
-		    	alert("Fail : " + jqXHR.responseJSON.message);
-		    }
-	)
+    Common.ajax(
+            "GET",
+            "/common/selectInterfaceMonitoringList.do",
+            param,
+            function(data, textStatus, jqXHR){ // Success
+                //AUIGrid.clearGridData(grdIf);
+                AUIGrid.setGridData(grdIf, data);
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                alert("Fail : " + jqXHR.responseJSON.message);
+            }
+    )
 };
 
 
 function fn_detailSave(){
-	if(fn_checkChangeRows(grdIf)){
-		return;
-	}
+    if(fn_checkChangeRows(grdIf)){
+        return;
+    }
 
     var addList = AUIGrid.getAddedRowItems(grdIf);
     if(addList.length > 0){
         for(var idx = 0 ; idx < addList.length ; idx++){
-        	if(addList[idx].ifType == "" || typeof(addList[idx].ifType) == "undefined"){
+            if(addList[idx].ifType == "" || typeof(addList[idx].ifType) == "undefined"){
                 AUIGrid.selectRowsByRowId(grdIf, addList[idx].rowId);
                 alert("IF TYPE is essential field.");
                 return;
@@ -145,9 +145,9 @@ function fn_commCodesearch(){
             "/common/selectCommonCodeStatusList.do",
             $("#searchForm").serialize(),
             function(data, textStatus, jqXHR){ // Success
-            	 for(var idx = 0 ; idx < data.length ; idx++){
-            		 $("#tranStatusCd").append("<option value='"+data[idx].code+"'>"+data[idx].value+"</option>");
-            	 }
+                 for(var idx = 0 ; idx < data.length ; idx++){
+                     $("#tranStatusCd").append("<option value='"+data[idx].code+"'>"+data[idx].value+"</option>");
+                 }
             },
             function(jqXHR, textStatus, errorThrown){ // Error
                 alert("Fail : " + jqXHR.responseJSON.message);
@@ -176,12 +176,12 @@ function fn_commItfTypeSearch(){
 var gridIfColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
-	 {
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
+     {
          dataField : "ifType",
          headerText : "IF Type",
          width:"10%"
@@ -197,14 +197,14 @@ var gridIfColumnLayout =
          headerText : "Check Col",
          width:"10%"
      },
-	 {
+     {
         dataField : "sndCnt",
         headerText : "BIZ Cnt",
         dataType : "numeric",
         formatString : "#,##0",
         width : "12%",
         style : "aui-grid-user-custom-right"
-	},
+    },
     {
        dataField : "rcvCnt",
        headerText : "ITF Cnt",
@@ -233,7 +233,7 @@ var gridIfColumnLayout =
 
 var detailOptions =
 {
-		editable : false,
+        editable : false,
         usePaging : true, //페이징 사용
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
@@ -261,24 +261,24 @@ $(document).ready(function(){
                  , "interfaceMonitoringKey"
             );
         }
-    	else {
-	    	var popUpObj = Common.popupDiv
-	        (
-	             "/common/interfaceMonitoringDtm.do"
-	             , ""
-	             , null
-	             , "false"
-	             , "interfaceMonitoringDtm"
-	        );
-    	}
+        else {
+            var popUpObj = Common.popupDiv
+            (
+                 "/common/interfaceMonitoringDtm.do"
+                 , ""
+                 , null
+                 , "false"
+                 , "interfaceMonitoringDtm"
+            );
+        }
     });
 
     AUIGrid.bind(grdIf, "ready", function(event) {
-    	gridDataLength = AUIGrid.getGridData(grdIf).length; // 그리드 전체 행수 보관
+        gridDataLength = AUIGrid.getGridData(grdIf).length; // 그리드 전체 행수 보관
 
-//     	for(var idx = 0 ; idx < gridDataLength ; idx++){
+//      for(var idx = 0 ; idx < gridDataLength ; idx++){
 
-//     	}
+//      }
     });
 
     // 헤더 클릭 핸들러 바인딩(checkAll)
@@ -365,12 +365,12 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Search Date</th>
     <td colspan="3">
-	    <div class="date_set"><!-- date_set start -->
-		    <p><input id="searchDate" name="searchDate" type="text" title="" placeholder="MM/YYYY" class="j_date2" readonly /></p>
-		    <!--<span>~</span>
-		    <p><input id="toDate" name="toDate"  type="text" title="" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
-		     -->
-	    </div><!-- date_set end -->
+        <div class="date_set"><!-- date_set start -->
+            <p><input id="searchDate" name="searchDate" type="text" title="" placeholder="MM/YYYY" class="j_date2" readonly /></p>
+            <!--<span>~</span>
+            <p><input id="toDate" name="toDate"  type="text" title="" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
+             -->
+        </div><!-- date_set end -->
     </td>
 </tr>
 </tbody>
@@ -390,7 +390,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap autoHeight"><!-- grid_wrap start -->
-    <div id="grdIf"  style="height:390px;"></div>
+    <div id="grdIf"  class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 <!-- </div> -->

@@ -17,20 +17,20 @@
 
        //Rule Book Item search
         $("#search").click(function(){
-        	if (validation()) {
-	            Common.ajax("GET", "/common/selectAreaManagement", $("#listSForm").serialize(), function(result) {
-	                console.log("성공.");
-	                console.log("data : " + result);
-	                AUIGrid.setGridData(myGridID, result);
-	            });
-        	} //validation
+            if (validation()) {
+                Common.ajax("GET", "/common/selectAreaManagement", $("#listSForm").serialize(), function(result) {
+                    console.log("성공.");
+                    console.log("data : " + result);
+                    AUIGrid.setGridData(myGridID, result);
+                });
+            } //validation
        });
 
       //save
         $("#save").click(function() {
-        	if (validationRowCheck()) {
+            if (validationRowCheck()) {
               Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData);
-        	}
+            }
        });
 
         //excel Download
@@ -145,11 +145,11 @@
         var EditedList = AUIGrid.getEditedRowItems(myGridID);
 
          if (rowCount == 0) {
-        	 Common.alert("<spring:message code='sys.common.alert.noChange'/>");
-        	 return false;
+             Common.alert("<spring:message code='sys.common.alert.noChange'/>");
+             return false;
         } else if (EditedList.length == 0){
-        	Common.alert("<spring:message code='sys.common.alert.noChange'/>");
-        	return false;
+            Common.alert("<spring:message code='sys.common.alert.noChange'/>");
+            return false;
         }
 
         return resultChk;
@@ -174,15 +174,15 @@
         var lengthPostcode = postcode.length;
 
         if(country == '' || postcode == ''){
-        	result = false;
-	        if (country == '') {
-	        	Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + aCountry + "' htmlEscape='false'/>");
-	        } else if (postcode == '') {
-	        	Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + aPostCode + "' htmlEscape='false'/>");
-	        }
+            result = false;
+            if (country == '') {
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + aCountry + "' htmlEscape='false'/>");
+            } else if (postcode == '') {
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + aPostCode + "' htmlEscape='false'/>");
+            }
         } else if(lengthPostcode != 5){
-        	result = false;
-        	Common.alert("<spring:message code='sys.msg.limitCharacter' arguments='" + aPostCode +" ; 5' htmlEscape='false' argumentSeparator=';' />");
+            result = false;
+            Common.alert("<spring:message code='sys.msg.limitCharacter' arguments='" + aPostCode +" ; 5' htmlEscape='false' argumentSeparator=';' />");
         }
         return result;
     }
@@ -277,7 +277,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
+    <div id="grid_wrap" style="width:100%; height:100%; margin:0 auto;" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

@@ -59,12 +59,12 @@ function fn_checkChangeRows(gridId,mandatoryItems){
     var totalLength = 0;
     totalLength = addList.length + updateList.length + removeList.length;
 
-	if(totalLength == 0){
-		alert("No Change Data.");
-		return true; /* Failed */
-	}
+    if(totalLength == 0){
+        alert("No Change Data.");
+        return true; /* Failed */
+    }
 
-	return false; /* Success */
+    return false; /* Success */
 }
 
 
@@ -84,18 +84,18 @@ function lpad(param, length, str) {
 
 function fn_search(){
 
-	Common.ajax(
-		    "GET",
-		    "/common/selectLoginMonitoringList.do",
-		    $("#searchForm").serialize(),
-		    function(data, textStatus, jqXHR){ // Success
-		    	AUIGrid.clearGridData(grdLogin);
-		    	AUIGrid.setGridData(grdLogin, data);
-		    },
-		    function(jqXHR, textStatus, errorThrown){ // Error
-		    	alert("Fail : " + jqXHR.responseJSON.message);
-		    }
-	)
+    Common.ajax(
+            "GET",
+            "/common/selectLoginMonitoringList.do",
+            $("#searchForm").serialize(),
+            function(data, textStatus, jqXHR){ // Success
+                AUIGrid.clearGridData(grdLogin);
+                AUIGrid.setGridData(grdLogin, data);
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                alert("Fail : " + jqXHR.responseJSON.message);
+            }
+    )
 };
 
 function fn_commCodesearch(){
@@ -104,9 +104,9 @@ function fn_commCodesearch(){
             "/common/selectCommonCodeSystemList.do",
             $("#searchForm").serialize(),
             function(data, textStatus, jqXHR){ // Success
-            	 for(var idx = 0 ; idx < data.length ; idx++){
-            		 $("#systemId").append("<option value='"+data[idx].code+"'>"+data[idx].value+"</option>");
-            	 }
+                 for(var idx = 0 ; idx < data.length ; idx++){
+                     $("#systemId").append("<option value='"+data[idx].code+"'>"+data[idx].value+"</option>");
+                 }
             },
             function(jqXHR, textStatus, errorThrown){ // Error
                 alert("Fail : " + jqXHR.responseJSON.message);
@@ -119,12 +119,12 @@ function fn_commCodesearch(){
 var gridIfColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
-	 {
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
+     {
          dataField : "systemId",
          headerText : "System",
          width:"3%",
@@ -170,7 +170,7 @@ var gridIfColumnLayout =
              }
          }
      },
-	 {
+     {
         dataField : "userId",
         headerText : "User Id",
         width : "8%",
@@ -188,7 +188,7 @@ var gridIfColumnLayout =
                 return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
             }
         }
-	},
+    },
     {
        dataField : "userNm",
        headerText : "User Name",
@@ -290,7 +290,7 @@ var gridIfColumnLayout =
 
 var detailOptions =
 {
-		editable : false,
+        editable : false,
         usePaging : true, //페이징 사용
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
@@ -309,11 +309,11 @@ $(document).ready(function(){
     grdLogin = GridCommon.createAUIGrid("grdLogin", gridIfColumnLayout,"", detailOptions);
 
     AUIGrid.bind(grdLogin, "ready", function(event) {
-    	gridDataLength = AUIGrid.getGridData(grdLogin).length; // 그리드 전체 행수 보관
+        gridDataLength = AUIGrid.getGridData(grdLogin).length; // 그리드 전체 행수 보관
 
-//     	for(var idx = 0 ; idx < gridDataLength ; idx++){
+//      for(var idx = 0 ; idx < gridDataLength ; idx++){
 
-//     	}
+//      }
     });
 
     // 헤더 클릭 핸들러 바인딩(checkAll)
@@ -426,7 +426,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap autoHeight"><!-- grid_wrap start -->
-    <div id="grdLogin"  style="height:390px;"></div>
+    <div id="grdLogin" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 <!-- </div> -->

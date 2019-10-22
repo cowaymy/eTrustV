@@ -14,90 +14,12 @@
   background:#efcefc;
 }
 
-/* Grid - Input Column Header Display */
-.aui-grid-header-input-icon {
-    background: url("../../resources/AUIGrid/images/grid_input_ico.png") no-repeat  , linear-gradient(to bottom, #f8f8f8, #eee);
-    z-index: 9999999;
-    width: 12px;
-    height: 12px;
-    /* position: relative;*/
-
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.1em;
-    background-color: #eee;
-
-    cursor: pointer;
-}
-
-/* Grid - Input Column Header Display - hover */
-.aui-grid-header-input-icon:hover {
-    background: url("../../resources/AUIGrid/images/grid_input_ico.png") no-repeat , linear-gradient(to bottom, #f8f8f8, #dadada);
-    z-index: 9999999;
-    width: 12px;
-    height: 12px;
-   /* position: relative;*/
-
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.1em;
-    background-color: #dadada;
-
-    cursor: pointer;
-}
-
-/* Grid - Mandatory Input Column Header Display */
-.aui-grid-header-input-essen > .aui-grid-renderer-base > span::after{
-    color:#ff0000;
-    margin-left:5px;
-
-    content : '*';
-}
-
 </style>
 <script type="text/javaScript">
 
 var gAddRowCnt = 0;
 var gOrgList =   ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS","SCM","FCM"];
-
-var MainColumnLayout =
-    [
-        {
-            dataField : "pgmCode",
-            headerText : "<spring:message code='sys.progmanagement.grid1.Id'/>",
-            editable : false,
-            width : "10%",
-        }, {
-            dataField : "orgCode",
-            headerText : "<spring:message code='sys.progmanagement.grid1.OrgCode'/>",
-            style : "aui-grid-left-column",
-            visible : false,
-            editRenderer : {
-                type : "DropDownListRenderer",
-                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-                list : gOrgList
-            },
-            width : "10%",
-        },{
-            dataField : "pgmName",
-            headerText : "<spring:message code='sys.generalCode.grid1.NAME'/>",
-            headerStyle : "aui-grid-header-input-icon aui-grid-header-input-essen",
-            style : "aui-grid-left-column",
-            width : "25%",
-        }, {
-            dataField : "pgmPath",
-            headerText : "<spring:message code='sys.progmanagement.grid1.Path'/>",
-            headerStyle : "aui-grid-header-input-icon aui-grid-header-input-essen",
-            styleFunction : cellStyleFunction,
-            width : "40%",
-        }, {
-            dataField : "pgmDesc",
-            headerText : "<spring:message code='sys.progmanagement.grid1.Description'/>",
-            headerStyle : "aui-grid-header-input-icon aui-grid-header-input-essen",
-            style : "aui-grid-left-column",
-            width : "25%",
-        }
-    ];
+var keyValueList = [];
 
 var TransColumnLayout =
     [
@@ -992,7 +914,21 @@ function auiCellEditignHandler(event)
 
       if (event.dataField == "pgmName" && event.headerText == "NAME" )
       {
-    	  AUIGrid.setCellValue(myGridID, event.rowIndex, 4, event.value);
+          AUIGrid.setCellValue(myGridID, event.rowIndex, 4, event.value);
+      }
+      else if (event.dataField == "fromDtTypeId")
+      {
+          if(event.value == "") {
+              AUIGrid.setCellValue(myGridID, event.rowIndex, 6, "");   // fromDtFieldNm
+              AUIGrid.setCellValue(myGridID, event.rowIndex, 7, "");   // fromDtVal
+          }
+      }
+      else if (event.dataField == "toDtTypeId")
+      {
+          if(event.value == "") {
+              AUIGrid.setCellValue(myGridID, event.rowIndex, 9, "");    // toDtFieldNm
+              AUIGrid.setCellValue(myGridID, event.rowIndex, 10, "");   // toDtVal
+          }
       }
   }
   else if(event.type == "cellEditCancel")
@@ -1006,7 +942,7 @@ function auiCellEditignHandler(event)
 function auiAddRowHandler(event)
 {
   gAddRowCnt = gAddRowCnt + event.items.length ;
-	console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length );
+    console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length );
 }
 
 //Main 행 추가, 삽입
@@ -1030,34 +966,34 @@ function fnAddRowPgmId()
 function fnAddRowTrans()
 {
   if ($("#paramPgmId").val().length == 0)
-	{
-	   Common.alert("<spring:message code='sys.msg.necessary' arguments='programID' htmlEscape='false'/>");
-	   return false;
-	}
+    {
+       Common.alert("<spring:message code='sys.msg.necessary' arguments='programID' htmlEscape='false'/>");
+       return false;
+    }
 
   gAddRowCnt = gAddRowCnt +1;
 
   if ( gAddRowCnt > 1)
   {
-	  Common.alert("<spring:message code='sys.msg.limitMore' arguments='Data Add ; 1' htmlEscape='false' argumentSeparator=';' />");
+      Common.alert("<spring:message code='sys.msg.limitMore' arguments='Data Add ; 1' htmlEscape='false' argumentSeparator=';' />");
     return false;
   }
 
-	var item = new Object();
-	item.funcView  = "N";
-	item.funcChng  = "N";
-	item.funcPrt   = "N";
+    var item = new Object();
+    item.funcView  = "N";
+    item.funcChng  = "N";
+    item.funcPrt   = "N";
 
-	item.funcUserDfn1 ="N";
-	item.descUserDfn1 ="";
-	item.funcUserDfn2 ="N";
-	item.descUserDfn2 ="";
-	item.funcUserDfn3 ="N";
-	item.descUserDfn3 ="";
-	item.funcUserDfn4 ="N";
-	item.descUserDfn4 ="";
-	item.funcUserDfn5 ="N";
-	item.descUserDfn5 ="";
+    item.funcUserDfn1 ="N";
+    item.descUserDfn1 ="";
+    item.funcUserDfn2 ="N";
+    item.descUserDfn2 ="";
+    item.funcUserDfn3 ="N";
+    item.descUserDfn3 ="";
+    item.funcUserDfn4 ="N";
+    item.descUserDfn4 ="";
+    item.funcUserDfn5 ="N";
+    item.descUserDfn5 ="";
 
     item.funcUserDfn6 ="N";
     item.descUserDfn6 ="";
@@ -1123,7 +1059,7 @@ function auiRemoveRowHandlerDetail(event)
 //행 삭제 메소드
 function removeRow()
 {
-	console.log("removeRow method")
+    console.log("removeRow method")
   AUIGrid.removeRow(myGridID,"selectedIndex");
 }
 
@@ -1131,13 +1067,13 @@ function removeRow()
 function getOrgDropList()
 {
     var list =  ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS"];
-	return list;
+    return list;
 }
 
 function fnSetPgmIdParamSet(myGridID, rowIndex)
 {
-	$("#paramPgmId").val(AUIGrid.getCellValue(myGridID, rowIndex, "pgmCode"));
-	$("#pgmId").val(AUIGrid.getCellValue(myGridID, rowIndex, "pgmCode"));
+    $("#paramPgmId").val(AUIGrid.getCellValue(myGridID, rowIndex, "pgmCode"));
+    $("#pgmId").val(AUIGrid.getCellValue(myGridID, rowIndex, "pgmCode"));
 
     console.log("paramPgmId: "+ $("#paramPgmId").val() + "pgmId: "+ $("#pgmId").val() );
 }
@@ -1157,22 +1093,32 @@ function getItemsByCheckedField(selectedGrid)
   }
 }
 
+function fn_commCodeSearch(){
+    Common.ajax("GET", "/common/selectCodeList.do",  {groupCode : '423'}, function(result) {
+        var temp    = { codeId : "", codeName : "" };
+        keyValueList.push(temp);
+        for ( var i = 0 ; i < result.length ; i++ ) {
+            keyValueList.push(result[i]);
+        }
+    }, null, {async : false});
+}
 
 function fnSelectPgmListAjax()
 {
-	 fnTransGridReset();
-	 Common.ajax("GET", "/program/selectProgramList.do"
-		       , $("#MainForm").serialize()
-		       , function(result)
-		       {
-		          console.log("성공 data : " + result);
-		          checkboxPgmIdChangeHandler("show");
-		          AUIGrid.setGridData(myGridID, result);
-		          if(result != null && result.length > 0)
-		          {
-		            fnSetPgmIdParamSet(myGridID, 0);
-		          }
-		       });
+     fnTransGridReset();
+     Common.ajax("GET", "/program/selectProgramList.do"
+               , $("#MainForm").serialize()
+               , function(result)
+               {
+                  console.log("성공 data : " + result);
+                  checkboxPgmIdChangeHandler("show");
+                  AUIGrid.setGridData(myGridID, result);
+                  if(result != null && result.length > 0)
+                  {
+                    fnSetPgmIdParamSet(myGridID, 0);
+                  }
+                  oldRowIndex = -1; // 20190911 KR-OHK Initialize Variables
+               });
 }
 
 function fnValidationCheck()
@@ -1194,55 +1140,55 @@ function fnValidationCheck()
       var pgmName  = addList[i].pgmName;
       var pgmPath  = addList[i].pgmPath;
 
-	    if (orgCode == "" || orgCode.length == 0)
-	    {
-	      result = false;
-	      // {0} is required.
-	      Common.alert("<spring:message code='sys.msg.necessary' arguments='ORG CODE' htmlEscape='false'/>");
-	      break;
-	    }
+        if (orgCode == "" || orgCode.length == 0)
+        {
+          result = false;
+          // {0} is required.
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='ORG CODE' htmlEscape='false'/>");
+          break;
+        }
 
-	    if (pgmName == "" || pgmName.length == 0)
-	    {
-	      result = false;
-	      // {0} is required.
-	      Common.alert("<spring:message code='sys.msg.necessary' arguments='PGM NAME' htmlEscape='false'/>");
-	      break;
-	    }
+        if (pgmName == "" || pgmName.length == 0)
+        {
+          result = false;
+          // {0} is required.
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='PGM NAME' htmlEscape='false'/>");
+          break;
+        }
 
-	    if (pgmPath == "" || pgmPath.length == 0)
-	    {
-	      result = false;
-	      // {0} is required.
-	      Common.alert("<spring:message code='sys.msg.necessary' arguments='PGM PATH' htmlEscape='false'/>");
-	      break;
-	    }
+        if (pgmPath == "" || pgmPath.length == 0)
+        {
+          result = false;
+          // {0} is required.
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='PGM PATH' htmlEscape='false'/>");
+          break;
+        }
     }
 
     for (var i = 0; i < udtList.length; i++)
     {
       var pgmCode  = udtList[i].pgmCode;
 
-	    if (pgmCode == "" || pgmCode.length == 0)
-	    {
-	      result = false;
-	      // {0} is required.
-	      Common.alert("<spring:message code='sys.msg.necessary' arguments='PGM CODE' htmlEscape='false'/>");
-	      break;
-	    }
+        if (pgmCode == "" || pgmCode.length == 0)
+        {
+          result = false;
+          // {0} is required.
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='PGM CODE' htmlEscape='false'/>");
+          break;
+        }
     }
 
     for (var i = 0; i < delList.length; i++)
     {
-	    var pgmCode  = delList[i].pgmCode;
+        var pgmCode  = delList[i].pgmCode;
 
-	    if (pgmCode == "" || pgmCode.length == 0)
-	    {
-	      result = false;
-	      // {0} is required.
-	      Common.alert("<spring:message code='sys.msg.necessary' arguments='PGM CODE' htmlEscape='false'/>");
-	      break;
-	    }
+        if (pgmCode == "" || pgmCode.length == 0)
+        {
+          result = false;
+          // {0} is required.
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='PGM CODE' htmlEscape='false'/>");
+          break;
+        }
     }
 
     return result;
@@ -1250,20 +1196,20 @@ function fnValidationCheck()
 
 function fnSelectPgmTransListAjax()
 {
-	 fnTransGridReset();
-	 Common.ajax("GET", "/program/selectPgmTranList.do"
-		       , $("#MainForm").serialize()
-		       , function(result)
-		       {
-		          console.log("성공 data : " + result);
-		          //checkboxPgmIdChangeHandler("show");
-		          AUIGrid.setGridData(transGridID, result);
-		          if(result != null && result.length > 0)
-		          {
-		            fnSetPgmIdParamSet(transGridID, 0);
-		            gAddRowCnt++;
-		          }
-		       });
+     fnTransGridReset();
+     Common.ajax("GET", "/program/selectPgmTranList.do"
+               , $("#MainForm").serialize()
+               , function(result)
+               {
+                  console.log("성공 data : " + result);
+                  //checkboxPgmIdChangeHandler("show");
+                  AUIGrid.setGridData(transGridID, result);
+                  if(result != null && result.length > 0)
+                  {
+                    fnSetPgmIdParamSet(transGridID, 0);
+                    gAddRowCnt++;
+                  }
+               });
 }
 
 
@@ -1275,7 +1221,7 @@ function fnSavePgmId()
     return false;
   }
 
-	fnTransGridReset();
+    fnTransGridReset();
   Common.ajax("POST", "/program/saveProgramId.do"
         , GridCommon.getEditData(myGridID)
         , function(result)
@@ -1306,60 +1252,60 @@ function fnSavePgmId()
 function fnUpdateTrans()
 {
 
-	var dfnDesc1 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn1");
-	var dfnDesc2 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn2");
-	var dfnDesc3 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn3");
-	var dfnDesc4 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn4");
-	var dfnDesc5 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn5");
-	var dfnDesc6 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn6");
-	var dfnDesc7 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn7");
-	var dfnDesc8 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn8");
-	var dfnDesc9 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn9");
-	var dfnDesc10 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn10");
-	var dfnDesc11 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn11");
-	var dfnDesc12 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn12");
-	var dfnDesc13 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn13");
-	var dfnDesc14 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn14");
-	var dfnDesc15 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn15");
-	var dfnDesc16 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn16");
-	var dfnDesc17 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn17");
-	var dfnDesc18 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn18");
-	var dfnDesc19 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn19");
-	var dfnDesc20 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn20");
-	var dfnDesc21 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn21");
-	var dfnDesc22 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn22");
-	var dfnDesc23 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn23");
-	var dfnDesc24 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn24");
-	var dfnDesc25 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn25");
+    var dfnDesc1 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn1");
+    var dfnDesc2 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn2");
+    var dfnDesc3 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn3");
+    var dfnDesc4 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn4");
+    var dfnDesc5 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn5");
+    var dfnDesc6 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn6");
+    var dfnDesc7 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn7");
+    var dfnDesc8 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn8");
+    var dfnDesc9 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn9");
+    var dfnDesc10 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn10");
+    var dfnDesc11 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn11");
+    var dfnDesc12 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn12");
+    var dfnDesc13 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn13");
+    var dfnDesc14 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn14");
+    var dfnDesc15 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn15");
+    var dfnDesc16 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn16");
+    var dfnDesc17 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn17");
+    var dfnDesc18 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn18");
+    var dfnDesc19 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn19");
+    var dfnDesc20 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn20");
+    var dfnDesc21 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn21");
+    var dfnDesc22 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn22");
+    var dfnDesc23 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn23");
+    var dfnDesc24 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn24");
+    var dfnDesc25 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn25");
 
-	var dfnChk1 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn1");
-	var dfnChk2 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn2");
-	var dfnChk3 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn3");
-	var dfnChk4 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn4");
-	var dfnChk5 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn5");
-	var dfnChk6 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn6");
-	var dfnChk7 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn7");
-	var dfnChk8 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn8");
-	var dfnChk9 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn9");
-	var dfnChk10 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn10");
-	var dfnChk11 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn11");
-	var dfnChk12 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn12");
-	var dfnChk13 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn13");
-	var dfnChk14 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn14");
-	var dfnChk15 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn15");
-	var dfnChk16 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn16");
-	var dfnChk17 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn17");
-	var dfnChk18 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn18");
-	var dfnChk19 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn19");
-	var dfnChk20 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn20");
-	var dfnChk21 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn21");
-	var dfnChk22 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn22");
-	var dfnChk23 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn23");
-	var dfnChk24 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn24");
-	var dfnChk25 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn25");
+    var dfnChk1 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn1");
+    var dfnChk2 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn2");
+    var dfnChk3 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn3");
+    var dfnChk4 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn4");
+    var dfnChk5 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn5");
+    var dfnChk6 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn6");
+    var dfnChk7 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn7");
+    var dfnChk8 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn8");
+    var dfnChk9 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn9");
+    var dfnChk10 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn10");
+    var dfnChk11 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn11");
+    var dfnChk12 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn12");
+    var dfnChk13 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn13");
+    var dfnChk14 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn14");
+    var dfnChk15 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn15");
+    var dfnChk16 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn16");
+    var dfnChk17 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn17");
+    var dfnChk18 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn18");
+    var dfnChk19 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn19");
+    var dfnChk20 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn20");
+    var dfnChk21 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn21");
+    var dfnChk22 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn22");
+    var dfnChk23 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn23");
+    var dfnChk24 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn24");
+    var dfnChk25 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn25");
 
     if(dfnChk1 == "Y" && (dfnDesc1 == "" || typeof(dfnDesc1) == "undefined")){
-    	//The {0} Must Exist.
+        //The {0} Must Exist.
         Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#1 Desc' htmlEscape='false'/>");
         return false;
     }
@@ -1517,8 +1463,8 @@ function fnUpdateTrans()
         return false;
     }
 
-	 gAddRowCnt = 0;
-	 Common.ajax("POST", "/program/updateTrans.do"
+     gAddRowCnt = 0;
+     Common.ajax("POST", "/program/updateTrans.do"
         , GridCommon.getEditData(transGridID)
         , function(result)
          {
@@ -1548,14 +1494,14 @@ function fnUpdateTrans()
 //셀스타일 함수 정의
 function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataField)
 {
-	if(value != null)
-	{
-	  return "aui-grid-left-column";
-	}
-	else
-	{
-		return null;
-	}
+    if(value != null)
+    {
+      return "aui-grid-left-column";
+    }
+    else
+    {
+        return null;
+    }
 }
 
 //칼럼 숨김/해제 체크박스 핸들러
@@ -1563,20 +1509,20 @@ function checkboxPgmIdChangeHandler(event)
 {
   if (event == "show")
   {
-	  AUIGrid.showColumnByDataField(myGridID, "pgmCode");
-	  AUIGrid.hideColumnByDataField(myGridID, "orgCode");
+      AUIGrid.showColumnByDataField(myGridID, "pgmCode");
+      AUIGrid.hideColumnByDataField(myGridID, "orgCode");
   }
   else  // hide
   {
-	  AUIGrid.hideColumnByDataField(myGridID, "pgmCode");
-	  AUIGrid.showColumnByDataField(myGridID, "orgCode");
+      AUIGrid.hideColumnByDataField(myGridID, "pgmCode");
+      AUIGrid.showColumnByDataField(myGridID, "orgCode");
   }
 
 }
 
 function fnTransGridReset()
 {
-	gAddRowCnt = 0;
+    gAddRowCnt = 0;
   AUIGrid.clearGridData(transGridID);
   $("#transGrid").find(".aui-grid-nodata-msg-layer").remove();
 }
@@ -1584,7 +1530,7 @@ function fnTransGridReset()
 // 삭제해서 마크 된(줄이 그어진) 행을 복원 합니다.(삭제 취소)
 function removeAllCancel()
 {
-	$("#delCancel").hide();
+    $("#delCancel").hide();
 
     AUIGrid.restoreSoftRows(myGridID, "all");
 }
@@ -1610,6 +1556,7 @@ function fnSelectTransGrid(tGrid, mGrid, evntRowIdx)
 }
 
 var myGridID, transGridID;
+var oldRowIndex = -1;
 
 $(document).ready(function()
 {
@@ -1619,7 +1566,7 @@ $(document).ready(function()
      {
         if (key.keyCode == 13)
         {
-     	   fnSelectPgmListAjax();
+           fnSelectPgmListAjax();
         }
      });
     $("#pgmCode").bind("keyup", function()
@@ -1630,7 +1577,7 @@ $(document).ready(function()
     {
        if (key.keyCode == 13)
        {
-    	   fnSelectPgmListAjax();
+           fnSelectPgmListAjax();
        }
     });
 
@@ -1639,7 +1586,7 @@ $(document).ready(function()
       $(this).val($(this).val().toUpperCase());
     });
 
-
+    fn_commCodeSearch(); // 공통코드 호출
 
     var options = {
                   usePaging : true,
@@ -1655,9 +1602,234 @@ $(document).ready(function()
                   editable : true
                 };
 
+
+    var MainColumnLayout =
+        [
+            {
+                dataField : "pgmCode",
+                headerText : "<spring:message code='sys.progmanagement.grid1.Id'/>",
+                editable : false,
+                width : "5%",
+            }, {
+                dataField : "orgCode",
+                headerText : "<spring:message code='sys.progmanagement.grid1.OrgCode'/>",
+                style : "aui-grid-left-column",
+                headerStyle : "aui-grid-header-input-icon aui-grid-header-input-essen", // 20190910 KR-MIN : aui-grid-header-input-icon: input, aui-grid-header-input-essen: Mandatory indication
+                visible : false,
+                editRenderer : {
+                    type : "DropDownListRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                    list : gOrgList
+                },
+                width : "10%",
+            },{
+                dataField : "pgmName",
+                headerText : "<spring:message code='sys.generalCode.grid1.NAME'/>",
+                headerStyle : "aui-grid-header-input-icon aui-grid-header-input-essen",
+                style : "aui-grid-left-column",
+                width : "15%",
+            }, {
+                dataField : "pgmPath",
+                headerText : "<spring:message code='sys.progmanagement.grid1.Path'/>",
+                headerStyle : "aui-grid-header-input-icon aui-grid-header-input-essen",
+                styleFunction : cellStyleFunction,
+                width : "25%",
+            }, {
+                dataField : "pgmDesc",
+                headerText : "<spring:message code='sys.progmanagement.grid1.Description'/>",
+                headerStyle : "aui-grid-header-input-icon",
+                style : "aui-grid-left-column",
+                width : "15%",
+            }, {
+                dataField : "fromDtTypeId", // 20190902 KR-OHK : FromDtTypeId add
+                headerText : "<spring:message code='sys.progmanagement.grid1.FromDtTypeId'/>",
+                headerStyle : "aui-grid-header-input-icon",
+                style : "aui-grid-left-column",
+                labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
+                    var retStr = value;
+                    for(var i=0,len=keyValueList.length; i<len; i++) {
+                            if(keyValueList[i]["codeId"] == value) {
+                            retStr = keyValueList[i]["codeName"];
+                            break;
+                        }
+                    }
+                    return retStr;
+                },
+                editRenderer : {
+                    type : "DropDownListRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                    list : keyValueList, //key-value Object 로 구성된 리스트
+                    keyField : "codeId", // key 에 해당되는 필드명
+                    valueField : "codeName", // value 에 해당되는 필드명
+                    listAlign : "left"
+                },
+                width : "10%"
+            }, {
+                dataField : "fromDtFieldNm", // 20190902 KR-OHK : FromDtFieldNm add
+                headerText : "<spring:message code='sys.progmanagement.grid1.FromDtFieldNm'/>",
+                headerStyle : "aui-grid-header-input-icon",
+                style : "aui-grid-left-column",
+                width : "10%",
+                editRenderer : {
+                    type : "InputEditRenderer",
+                    // 에디팅 유효성 검사
+                    validator : function(oldValue, newValue, item, dataField) {
+                        var isValid = true;
+                        var rtnMsg = "";
+                        var matcher = /^[_a-zA-Z0-9]+$/;
+
+                        if(newValue.length > 0) {
+                            if(!matcher.test(newValue)) {
+                                isValid = false;
+                                rtnMsg = "Invaild character.";
+                            }
+                            if(newValue.length > 20) {
+                                isValid = false;
+                                rtnMsg = "The maximum of characters is 20.";
+                            }
+                        }
+
+                        // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                        return { "validate" : isValid, "message"  : rtnMsg };
+                    }
+                }
+            } , {
+                dataField : "fromDtVal",  // 20190902 KR-OHK : FromDtVal add
+                headerText : "<spring:message code='sys.progmanagement.grid1.FromDtVal'/>",
+                headerStyle : "aui-grid-header-input-icon",
+                style : "aui-grid-left-column",
+                width : "8%",
+                editRenderer : {
+                    type : "InputEditRenderer",
+                    // 에디팅 유효성 검사
+                    validator : function(oldValue, newValue, item, dataField) {
+                        var isValid = true;
+                        var rtnMsg = "";
+                        var matcher = /^(0|-?[1-9][0-9]*)$/;
+
+                        if(newValue.length > 0) {
+                            if(!matcher.test(newValue)) {
+                                isValid = false;
+                                rtnMsg = "Invaild character.";
+                            }
+                            if(newValue.length > 10) {
+                                isValid = false;
+                                rtnMsg = "The maximum of characters is 10.";
+                            }
+                        }
+                        // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                        return { "validate" : isValid, "message"  : rtnMsg };
+                    }
+                }
+            }, {
+                dataField : "toDtTypeId", // 20190902 KR-OHK : ToDtTypeId add
+                headerText : "<spring:message code='sys.progmanagement.grid1.ToDtTypeId'/>",
+                headerStyle : "aui-grid-header-input-icon",
+                style : "aui-grid-left-column",
+                labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
+                    var retStr = value;
+                    for(var i=0,len=keyValueList.length; i<len; i++) {
+                        if(keyValueList[i]["codeId"] == value) {
+                            retStr = keyValueList[i]["codeName"];
+                            break;
+                        }
+                    }
+                    return retStr;
+                },
+                editRenderer : {
+                    type : "DropDownListRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                    list : keyValueList, //key-value Object 로 구성된 리스트
+                    keyField : "codeId", // key 에 해당되는 필드명
+                    valueField : "codeName", // value 에 해당되는 필드명
+                    listAlign : "left"
+                },
+                width : "10%"
+            }, {
+                dataField : "toDtFieldNm", // 20190902 KR-OHK : ToDtFieldNm add
+                headerText : "<spring:message code='sys.progmanagement.grid1.ToDtFieldNm'/>",
+                headerStyle : "aui-grid-header-input-icon",
+                style : "aui-grid-left-column",
+                width : "10%",
+                editRenderer : {
+                    type : "InputEditRenderer",
+                    // 에디팅 유효성 검사
+                    validator : function(oldValue, newValue, item, dataField) {
+                        var isValid = true;
+                        var rtnMsg = "";
+
+                        var matcher = /^[_a-zA-Z0-9]+$/;
+
+                        if(newValue.length > 0) {
+                            if(!matcher.test(newValue)) {
+                                isValid = false;
+                                rtnMsg = "Invaild character.";
+                            }
+                            if(newValue.length > 20) {
+                                isValid = false;
+                                rtnMsg = "The maximum of characters is 20.";
+                            }
+                        }
+
+                        // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                        return { "validate" : isValid, "message"  : rtnMsg };
+                    }
+                }
+            }
+            , {
+                dataField : "toDtVal", // 20190902 KR-OHK : ToDtVal add
+                headerText : "<spring:message code='sys.progmanagement.grid1.ToDtVal'/>",
+                headerStyle : "aui-grid-header-input-icon",
+                style : "aui-grid-left-column",
+                width : "8%",
+                editRenderer : {
+                    type : "InputEditRenderer",
+                    // 에디팅 유효성 검사
+                    validator : function(oldValue, newValue, item, dataField) {
+                        var isValid = true;
+                        var rtnMsg = "";
+                        var matcher = /^(0|-?[1-9][0-9]*)$/;
+
+                        if(newValue.length > 0) {
+                            if(!matcher.test(newValue)) {
+                                isValid = false;
+                                rtnMsg = "Invaild character.";
+                            }
+                            if(newValue.length > 10) {
+                                isValid = false;
+                                rtnMsg = "The maximum of characters is 10.";
+                            }
+                        }
+
+                        // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                        return { "validate" : isValid, "message"  : rtnMsg };
+                    }
+                }
+            }
+        ];
+
     // masterGrid 그리드를 생성합니다.
     myGridID = GridCommon.createAUIGrid("grid_wrap", MainColumnLayout,"", options);
     // AUIGrid 그리드를 생성합니다.
+
+    // 20190902 KR-OHK : Add selectionChange event
+    AUIGrid.bind(myGridID, "selectionChange", function(event) {
+        var selectedItems = event.selectedItems;
+        if(selectedItems.length <= 0) return;
+        var firstItem = selectedItems[0];
+
+        var primeCell = event.primeCell; // 선택된 대표 셀
+        var rowIndex = primeCell.rowIndex;
+
+        if(firstItem.rowIndex != oldRowIndex) {
+             $("#paramPgmId").val("");
+            fnTransGridReset();
+
+            fnSetPgmIdParamSet(myGridID, rowIndex);
+            fnSelectPgmTransListAjax();
+        }
+        oldRowIndex =  firstItem.rowIndex; // 현재 rowIndex 를 보관하면, 다음 셀렉션 시 비교 할 수 있음.
+    });
 
     // 푸터 객체 세팅
     //AUIGrid.setFooter(myGridID, footerObject);
@@ -1680,13 +1852,15 @@ $(document).ready(function()
     // cellClick event.
     AUIGrid.bind(myGridID, "cellClick", function( event )
     {
-        $("#paramPgmId").val("");
+        // 20190902 KR-OHK
+        /* $("#paramPgmId").val("");
 
         fnTransGridReset();
 
         fnSetPgmIdParamSet(myGridID, event.rowIndex);
         fnSelectPgmTransListAjax();
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedParamPgmId: " + $("#paramPgmId").val() +" / "+ $("#paramPgmName").val());
+        */
     });
 
     // 셀 더블클릭 이벤트 바인딩
@@ -1739,13 +1913,13 @@ $(document).ready(function()
         }
         else if (event.columnIndex == 3 &&  event.value == "N")
         {
-        	var myValue_desc1 = AUIGrid.getCellValue(transGridID, 0, 4);
+            var myValue_desc1 = AUIGrid.getCellValue(transGridID, 0, 4);
 
-        	if(myValue_desc1.length == 0 ){
-        		AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn1"] );
-        	}else{
-        		AUIGrid.setCellValue(transGridID, 0, 4, "");
-        	}
+            if(myValue_desc1.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn1"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 4, "");
+            }
         }
 
         if (event.columnIndex == 5 &&  event.value == "Y")
@@ -1754,7 +1928,7 @@ $(document).ready(function()
         }
         else if (event.columnIndex == 5 &&  event.value == "N")
         {
-        	var myValue_desc2 = AUIGrid.getCellValue(transGridID, 0, 6);
+            var myValue_desc2 = AUIGrid.getCellValue(transGridID, 0, 6);
 
             if(myValue_desc2.length == 0 ){
                 AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn2"] );
@@ -2227,7 +2401,7 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역2 -->
- <div id="transGrid" style="height:95px;"></div>
+ <div id="transGrid" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

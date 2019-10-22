@@ -26,38 +26,38 @@ function lpad(param, length, str) {
 /****************************Transaction Start********************************/
 
 function fn_search(){
-	if($("input[name=searchDivCd]:checked").val() == "1"){
-		Common.ajax(
-	            "GET",
-	            "/common/selectAccessMonitoringList.do",
-	            $("#searchForm").serialize(),
-	            function(data, textStatus, jqXHR){ // Success
-	                AUIGrid.clearGridData(grdAccess);
-	                AUIGrid.setGridData(grdAccess, data);
-	                Common.setMsg("Search Success.");
-	            },
-	            function(jqXHR, textStatus, errorThrown){ // Error
-	                alert("Fail : " + jqXHR.responseJSON.message);
-	                Common.setMsg("Search Failed.");
-	            }
-	    )
-	}else if($("input[name=searchDivCd]:checked").val() == "2"){
-		Common.ajax(
-	            "GET",
-	            "/common/selectAccessMonitoringDtmList.do",
-	            $("#searchForm").serialize(),
-	            function(data, textStatus, jqXHR){ // Success
-	            	AUIGrid.clearGridData(grdAccessUser);
-	                AUIGrid.clearGridData(grdAccessDtm);
-	                AUIGrid.setGridData(grdAccessDtm, data);
-	                Common.setMsg("Search Success.");
-	            },
-	            function(jqXHR, textStatus, errorThrown){ // Error
-	                alert("Fail : " + jqXHR.responseJSON.message);
-	                Common.setMsg("Search Failed.");
-	            }
-	    )
-	}
+    if($("input[name=searchDivCd]:checked").val() == "1"){
+        Common.ajax(
+                "GET",
+                "/common/selectAccessMonitoringList.do",
+                $("#searchForm").serialize(),
+                function(data, textStatus, jqXHR){ // Success
+                    AUIGrid.clearGridData(grdAccess);
+                    AUIGrid.setGridData(grdAccess, data);
+                    Common.setMsg("Search Success.");
+                },
+                function(jqXHR, textStatus, errorThrown){ // Error
+                    alert("Fail : " + jqXHR.responseJSON.message);
+                    Common.setMsg("Search Failed.");
+                }
+        )
+    }else if($("input[name=searchDivCd]:checked").val() == "2"){
+        Common.ajax(
+                "GET",
+                "/common/selectAccessMonitoringDtmList.do",
+                $("#searchForm").serialize(),
+                function(data, textStatus, jqXHR){ // Success
+                    AUIGrid.clearGridData(grdAccessUser);
+                    AUIGrid.clearGridData(grdAccessDtm);
+                    AUIGrid.setGridData(grdAccessDtm, data);
+                    Common.setMsg("Search Success.");
+                },
+                function(jqXHR, textStatus, errorThrown){ // Error
+                    alert("Fail : " + jqXHR.responseJSON.message);
+                    Common.setMsg("Search Failed.");
+                }
+        )
+    }
 };
 
 function fn_detailSearch(_systemId,_searchDt,_pgmCode){
@@ -66,7 +66,7 @@ function fn_detailSearch(_systemId,_searchDt,_pgmCode){
             "/common/selectAccessMonitoringUserList.do",
             "systemId="+_systemId+"&searchDt="+_searchDt+"&pgmCode="+_pgmCode,
             function(data, textStatus, jqXHR){ // Success
-            	AUIGrid.clearGridData(grdAccessUser);
+                AUIGrid.clearGridData(grdAccessUser);
                 AUIGrid.setGridData(grdAccessUser, data);
                 Common.setMsg("Search Success.");
             },
@@ -83,9 +83,9 @@ function fn_commCodesearch(){
             "/common/selectCommonCodeSystemList.do",
             $("#searchForm").serialize(),
             function(data, textStatus, jqXHR){ // Success
-            	 for(var idx = 0 ; idx < data.length ; idx++){
-            		 $("#systemId").append("<option value='"+data[idx].code+"'>"+data[idx].value+"</option>");
-            	 }
+                 for(var idx = 0 ; idx < data.length ; idx++){
+                     $("#systemId").append("<option value='"+data[idx].code+"'>"+data[idx].value+"</option>");
+                 }
             },
             function(jqXHR, textStatus, errorThrown){ // Error
                 alert("Fail : " + jqXHR.responseJSON.message);
@@ -97,12 +97,12 @@ function fn_commCodesearch(){
 var grdAccessColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
-	 {
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
+     {
          dataField : "systemId",
          headerText : "System",
          width:"3%",
@@ -191,7 +191,7 @@ var grdAccessColumnLayout =
          }
        },
 
-	 {
+     {
         dataField : "userId",
         headerText : "User Id",
         width : "9%",
@@ -209,7 +209,7 @@ var grdAccessColumnLayout =
                 return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
             }
         }
-	},
+    },
     {
        dataField : "userName",
        headerText : "User Name",
@@ -482,7 +482,7 @@ var grdAccessUserColumnLayout =
 
 var accessOptions =
 {
-		editable : false,
+        editable : false,
         usePaging : true, //페이징 사용
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
@@ -505,9 +505,11 @@ $(document).ready(function(){
             $("#layoutBasic").attr("style","");
             $("#layoutByTime").attr("style","display:none");
         } else if (rdoVal == "2") {
-        	$("#layoutBasic").attr("style","display:none");
+            $("#layoutBasic").attr("style","display:none");
             $("#layoutByTime").attr("style","");
         }
+        // 20190917 KR-OHK : for grid resizing
+        gfn_resizeGridHeight();
     });
 
     grdAccess = GridCommon.createAUIGrid("grdAccess", grdAccessColumnLayout,"", accessOptions);
@@ -515,7 +517,7 @@ $(document).ready(function(){
     grdAccessUser = GridCommon.createAUIGrid("grdAccessUser", grdAccessUserColumnLayout,"", accessOptions);
 
     AUIGrid.bind(grdAccess, "ready", function(event) {
-    	gridDataLength = AUIGrid.getGridData(grdAccess).length; // 그리드 전체 행수 보관
+        gridDataLength = AUIGrid.getGridData(grdAccess).length; // 그리드 전체 행수 보관
     });
 
     // click 이벤트 바인딩
@@ -652,7 +654,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grdAccess"  style="height:420px;"></div>
+    <div id="grdAccess"  class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 </div>
 </div>
@@ -666,7 +668,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grdAccessDtm"  style="height:420px;"></div>
+    <div id="grdAccessDtm"  class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
@@ -678,7 +680,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grdAccessUser"  style="height:420px;"></div>
+    <div id="grdAccessUser"  class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->

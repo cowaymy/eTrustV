@@ -34,16 +34,16 @@ function checkAll(isChecked) {
 //         AUIGrid.updateAllToValue(grdMenuMapping, "funcYn", "Y");
         var item = { funcYn : "Y" };
         for(idx = 0 ; idx < gridDetailDataLength ; idx++){
-        	if(AUIGrid.getItemByRowIndex(grdMenuMapping,idx).existYn == "N"){
-        	    AUIGrid.updateRow(grdMenuMapping, item, idx);
-        	}
+            if(AUIGrid.getItemByRowIndex(grdMenuMapping,idx).existYn == "N"){
+                AUIGrid.updateRow(grdMenuMapping, item, idx);
+            }
         }
     } else {
-    	var item = { funcYn : "N" };
-    	for(idx = 0 ; idx < gridDetailDataLength ; idx++){
-    		if(AUIGrid.getItemByRowIndex(grdMenuMapping,idx).existYn == "N"){
-    			AUIGrid.updateRow(grdMenuMapping, item, idx);
-    		}
+        var item = { funcYn : "N" };
+        for(idx = 0 ; idx < gridDetailDataLength ; idx++){
+            if(AUIGrid.getItemByRowIndex(grdMenuMapping,idx).existYn == "N"){
+                AUIGrid.updateRow(grdMenuMapping, item, idx);
+            }
         }
 //         AUIGrid.updateAllToValue(grdMenuMapping, "funcYn", "N");
     }
@@ -86,29 +86,29 @@ function fn_checkChangeRows(gridId,mandatoryItems){
     var totalLength = 0;
     totalLength = addList.length + updateList.length + removeList.length;
 
-	if(totalLength == 0){
-		Common.alert("<spring:message code='sys.common.alert.noChange'/>");
-		return true; /* Failed */
-	}
+    if(totalLength == 0){
+        Common.alert("<spring:message code='sys.common.alert.noChange'/>");
+        return true; /* Failed */
+    }
 
-	return false; /* Success */
+    return false; /* Success */
 }
 /****************************Function  End***********************************/
 /****************************Transaction Start********************************/
 
 function fn_search(){
-	Common.ajax(
-		    "GET",
-		    "/common/selectAuthList.do",
-		    $("#searchForm").serialize(),
-		    function(data, textStatus, jqXHR){ // Success
-		    	AUIGrid.clearGridData(grdMenuMapping);
-		    	AUIGrid.setGridData(grdAuth, data);
-		    },
-		    function(jqXHR, textStatus, errorThrown){ // Error
-		    	alert("Fail : " + jqXHR.responseJSON.message);
-		    }
-	)
+    Common.ajax(
+            "GET",
+            "/common/selectAuthList.do",
+            $("#searchForm").serialize(),
+            function(data, textStatus, jqXHR){ // Success
+                AUIGrid.clearGridData(grdMenuMapping);
+                AUIGrid.setGridData(grdAuth, data);
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                alert("Fail : " + jqXHR.responseJSON.message);
+            }
+    )
 };
 
 function fn_detailSearch(authCode){
@@ -117,7 +117,7 @@ function fn_detailSearch(authCode){
             "/common/selectAuthMenuMappingList.do",
             "authCode="+authCode+"&menuCode="+$("#menuCode").val(),
             function(data, textStatus, jqXHR){ // Success
-//             	alert(JSON.stringify(data));
+//              alert(JSON.stringify(data));
                 AUIGrid.setGridData(grdMenuMapping, data);
             },
             function(jqXHR, textStatus, errorThrown){ // Error
@@ -129,12 +129,12 @@ function fn_detailSearch(authCode){
 function fn_detailSearchForMenu(){
     var authCode = "";
 
-	if(AUIGrid.getSelectedItems(grdAuth).length > 0){
-		authCode = AUIGrid.getSelectedItems(grdAuth)[0].item.authCode;
-	}else{
-		Common.alert("<spring:message code='sys.info.grid.selectMessage'/>"+" Auth Grid");
-		return;
-	}
+    if(AUIGrid.getSelectedItems(grdAuth).length > 0){
+        authCode = AUIGrid.getSelectedItems(grdAuth)[0].item.authCode;
+    }else{
+        Common.alert("<spring:message code='sys.info.grid.selectMessage'/>"+" Auth Grid");
+        return;
+    }
 
     Common.ajax(
             "GET",
@@ -151,23 +151,23 @@ function fn_detailSearchForMenu(){
 };
 
 function fn_detailSave(){
-	if(fn_checkChangeRows(grdMenuMapping)){
-		return;
-	}
-	Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
+    if(fn_checkChangeRows(grdMenuMapping)){
+        return;
+    }
+    Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
         Common.ajax(
                 "POST",
                 "/common/saveAuthMenuMappingList.do",
                 GridCommon.getEditData(grdMenuMapping),
                 function(data, textStatus, jqXHR){ // Success
-                	Common.alert("<spring:message code='sys.msg.success'/>");
+                    Common.alert("<spring:message code='sys.msg.success'/>");
                     fn_search();
                 },
                 function(jqXHR, textStatus, errorThrown){ // Error
                     alert("Fail : " + jqXHR.responseJSON.message);
                 }
         )
-	});
+    });
 };
 
 /****************************Transaction End**********************************/
@@ -175,13 +175,13 @@ function fn_detailSave(){
 var gridAuthColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
     /*
-	{
+    {
         dataField : "chkAll",
         headerText : "<input type='checkbox' id='allCheckbox' style='width:15px;height:15px;''>",
         width:"8%",
@@ -211,8 +211,8 @@ var gridAuthColumnLayout =
 
 var options =
 {
-		editable : false,
-		pagingMode : "simple",
+        editable : false,
+        pagingMode : "simple",
         usePaging : true, //페이징 사용
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
@@ -227,25 +227,25 @@ var options =
 var gridMenuMappingColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
-	{
-	    dataField : "menuLvl",
-	    /* dataType : "string", */
-	    headerText : "Lvl",
-	    editable : false, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
-	    width : "8%"
-	},
-	{
-	    dataField : "menuName",
-	    headerText : "Menu Name",
-	    width : "30%",
-	    editable : false,
-	    style : "aui-grid-user-custom-left"
-	},
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
+    {
+        dataField : "menuLvl",
+        /* dataType : "string", */
+        headerText : "Lvl",
+        editable : false, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
+        width : "8%"
+    },
+    {
+        dataField : "menuName",
+        headerText : "Menu Name",
+        width : "30%",
+        editable : false,
+        style : "aui-grid-user-custom-left"
+    },
     {
         dataField : "pgmName",
         headerText : "Program Name",
@@ -334,7 +334,7 @@ var gridMenuMappingColumnLayout =
 
 var detailOptions =
 {
-		editable : true,
+        editable : true,
         usePaging : true, //페이징 사용
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
@@ -352,13 +352,13 @@ var detailOptions =
 $(document).ready(function(){
 
     $("#menuCode").keydown(function(key)
-	{
-	      if (key.keyCode == 13)
-	      {
-	    	  fn_detailSearchForMenu();
-	      }
+    {
+          if (key.keyCode == 13)
+          {
+              fn_detailSearchForMenu();
+          }
 
-	});
+    });
 
     // AUIGrid 그리드를 생성
     grdAuth = GridCommon.createAUIGrid("grdAuth", gridAuthColumnLayout,"", options);
@@ -369,8 +369,8 @@ $(document).ready(function(){
 
     // click 이벤트 바인딩
     AUIGrid.bind(grdAuth, ["cellClick"], function(event) {
-    	selectedRow = event.rowIndex;
-    	fn_detailSearch(event.item.authCode);
+        selectedRow = event.rowIndex;
+        fn_detailSearch(event.item.authCode);
     });
 
     grdMenuMapping = GridCommon.createAUIGrid("grdMenuMapping", gridMenuMappingColumnLayout,"", detailOptions);
@@ -380,7 +380,7 @@ $(document).ready(function(){
     });
 
     AUIGrid.bind(grdMenuMapping, "ready", function(event) {
-    	gridDetailDataLength = AUIGrid.getGridData(grdMenuMapping).length; // 그리드 전체 행수 보관
+        gridDetailDataLength = AUIGrid.getGridData(grdMenuMapping).length; // 그리드 전체 행수 보관
 
     });
 
@@ -515,7 +515,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grdAuth" style="height:420px;"></div>
+    <div id="grdAuth" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
@@ -527,7 +527,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grdMenuMapping" style="height:420px;"></div>
+    <div id="grdMenuMapping" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->

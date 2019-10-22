@@ -21,7 +21,7 @@ var StatusCdList = new Array();
 
 $(function()
 {
-	getStatusComboListAjax();
+    getStatusComboListAjax();
 });
 
 var MainColumnLayout =
@@ -41,7 +41,7 @@ var MainColumnLayout =
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                 listFunction : function(rowIndex, columnIndex, item, dataField)
                 {
-                	gSelMainRowIdx = rowIndex;
+                    gSelMainRowIdx = rowIndex;
                     return   getMenuLevel();
                 },
                 keyField : "id"
@@ -71,17 +71,17 @@ var MainColumnLayout =
 
                 onclick : function(rowIndex, columnIndex, value, item)
                          {
-				                    console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.menuLvl + " POPUP 클릭");
-				                    if (item.menuLvl == "1")
-				                    {
-				                    	//Common.alert("Can't Select UpperMenu In 'Lvl 1.' ");
-				                    	Common.alert("<spring:message code='sys.msg.cannot' arguments='Select UpperMenu ; Lvl 1.' htmlEscape='false' argumentSeparator=';'/>");
-				                      return false;
-				                    }
+                                    console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.menuLvl + " POPUP 클릭");
+                                    if (item.menuLvl == "1")
+                                    {
+                                        //Common.alert("Can't Select UpperMenu In 'Lvl 1.' ");
+                                        Common.alert("<spring:message code='sys.msg.cannot' arguments='Select UpperMenu ; Lvl 1.' htmlEscape='false' argumentSeparator=';'/>");
+                                      return false;
+                                    }
 
-				                    gSelMainRowIdx = rowIndex;
-				                    fnSearchUpperMenuPopUp();
-				                  }
+                                    gSelMainRowIdx = rowIndex;
+                                    fnSearchUpperMenuPopUp();
+                                  }
             } // IconRenderer
         },{
             dataField : "menuCode",
@@ -152,9 +152,9 @@ var MainColumnLayout =
 
               for(var iLoop = 0; iLoop < iCnt; iLoop++)
               {
-            	  if(StatusCdList[iLoop]["id"] == value)
+                  if(StatusCdList[iLoop]["id"] == value)
                 {
-            		  retStr = StatusCdList[iLoop]["value"];
+                      retStr = StatusCdList[iLoop]["value"];
                   break;
                 }
               }
@@ -174,27 +174,27 @@ var MainColumnLayout =
 
 function getStatusComboListAjax(callBack)
 {
-	  Common.ajaxSync("GET", "/common/selectCodeList.do"
-// 	  Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do"
-    	           , $("#MainForm").serialize()+"&orderValue=code"
-    	           , function(result)
-    	           {
-    	        	   StatusCdList.push({id:"" ,value:""});
-					          for (var i = 0; i < result.length; i++)
-						        {
-					        	  var list = new Object();
-							            list.id = result[i].code;
-							            list.value = result[i].codeName ;
-							            StatusCdList.push(list);
-							      }
+      Common.ajaxSync("GET", "/common/selectCodeList.do"
+//    Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do"
+                   , $("#MainForm").serialize()+"&orderValue=code"
+                   , function(result)
+                   {
+                       StatusCdList.push({id:"" ,value:""});
+                              for (var i = 0; i < result.length; i++)
+                                {
+                                  var list = new Object();
+                                        list.id = result[i].code;
+                                        list.value = result[i].codeName ;
+                                        StatusCdList.push(list);
+                                  }
 
-							      //if you need callBack Function , you can use that function
-							      if (callBack) {
-							        callBack(StatusCdList);
-							      }
+                                  //if you need callBack Function , you can use that function
+                                  if (callBack) {
+                                    callBack(StatusCdList);
+                                  }
 
-							    });
-	  return StatusCdList;
+                                });
+      return StatusCdList;
   }
 
 //AUIGrid 메소드
@@ -211,7 +211,7 @@ function auiCellEditignHandler(event)
           // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
          if(AUIGrid.isAddedById(myGridID, event.item.rowId) == false && (event.item.rowId =="PkAddNew") )  //추가된 Row
          {
-        	  return true; // 수정가능
+              return true; // 수정가능
          }
          else
          {
@@ -220,7 +220,7 @@ function auiCellEditignHandler(event)
       }
       else
       {
-    	   return true; // 다른 필드들은 편집 허용
+           return true; // 다른 필드들은 편집 허용
       }
 
   }
@@ -310,13 +310,13 @@ function fnSearchUpperMenuPopUp()
 
 function fnSelectMenuListAjax()
 {
-	  if ($("#txtMenuCode").val().length > 0)
-		{
-		  $("#menuCode").val($("#txtMenuCode").val());
-		}
-	  else
+      if ($("#txtMenuCode").val().length > 0)
+        {
+          $("#menuCode").val($("#txtMenuCode").val());
+        }
+      else
     {
-    	$("#menuCode").val("");
+        $("#menuCode").val("");
     }
 
    Common.ajax("GET", "/menu/selectMenuList.do"
@@ -335,9 +335,9 @@ function fnSelectMenuListAjax()
 function fnSaveMenuCode()
 {
   if (fnValidationCheck() == false)
-	{
-	  return false;
-	}
+    {
+      return false;
+    }
 
   Common.ajax("POST", "/menu/saveMenuId.do"
         , GridCommon.getEditData(myGridID)
@@ -352,19 +352,19 @@ function fnSaveMenuCode()
           }
         , function(jqXHR, textStatus, errorThrown)
           {
-	          try
-	          {
-	            console.log("Fail Status : " + jqXHR.status);
-	            console.log("code : "        + jqXHR.responseJSON.code);
-	            console.log("message : "     + jqXHR.responseJSON.message);
-	            console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-	          }
-	          catch (e)
-	          {
-	            console.log(e);
-	          }
+              try
+              {
+                console.log("Fail Status : " + jqXHR.status);
+                console.log("code : "        + jqXHR.responseJSON.code);
+                console.log("message : "     + jqXHR.responseJSON.message);
+                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+              }
+              catch (e)
+              {
+                console.log(e);
+              }
 
-	          Common.alert("Fail : " + jqXHR.responseJSON.message);
+              Common.alert("Fail : " + jqXHR.responseJSON.message);
 
           });
   }
@@ -600,9 +600,9 @@ $(document).ready(function()
     });
 
     $("#txtMenuCode").bind("keyup", function()
-	  {
-	    $(this).val($(this).val().toUpperCase());
-	  });
+      {
+        $(this).val($(this).val().toUpperCase());
+      });
 
     $("#pgmCode").keydown(function(key)
     {
@@ -619,7 +619,7 @@ $(document).ready(function()
 
 /***************************************************[ Main GRID] ***************************************************/
     var options = {
-    		          //rowIdField : "rowId", // PK행 지정
+                      //rowIdField : "rowId", // PK행 지정
                   usePaging : true,
                   // 한 화면에 출력되는 행 개수 20개로 지정
                   //pageRowCount : 20,
@@ -683,9 +683,9 @@ $(document).ready(function()
 
 <section id="content"><!-- content start -->
 <ul class="path">
-	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+    <li>Sales</li>
+    <li>Order list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -693,43 +693,43 @@ $(document).ready(function()
 <h2>Menu Management</h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-	<li><p class="btn_blue"><a onclick="fnSelectMenuListAjax();"><span class="search"></span>Search</a></p></li>
-	</c:if>
-<!-- 	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
+    <li><p class="btn_blue"><a onclick="fnSelectMenuListAjax();"><span class="search"></span>Search</a></p></li>
+    </c:if>
+<!--    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
 
 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
-	<input type ="hidden" id="menuCode" name="menuCode" value=""/>
-	<input type ="hidden" id="selCategoryId" name="selCategoryId" value="1"/>
-	<input type ="hidden" id="parmDisab" name="parmDisab" value="0"/>
-	<input type ="hidden" id="groupCode" name="groupCode" value="345"/>
-	<table class="type1"><!-- table start -->
-	<caption>table</caption>
-	<colgroup>
-		<col style="width:150px" />
-		<col style="width:*" />
-		<col style="width:150px" />
-		<col style="width:*" />
-	</colgroup>
-	<tbody>
-	<tr>
-		<th scope="row">Menu</th>
-		<td>
-		 <input type="text" id="txtMenuCode" name="txtMenuCode" title="" placeholder="Menu Id or Name" class="w100p" style="text-transform: uppercase;"/>
-		</td>
-		<th scope="row">Program</th>
-		<td>
-		 <input type="text" id="pgmCode" name="pgmCode" title="" placeholder="Program Id or Name" class="w100p" />
-		</td>
-	</tr>
-	</tbody>
-	</table><!-- table end -->
+    <input type ="hidden" id="menuCode" name="menuCode" value=""/>
+    <input type ="hidden" id="selCategoryId" name="selCategoryId" value="1"/>
+    <input type ="hidden" id="parmDisab" name="parmDisab" value="0"/>
+    <input type ="hidden" id="groupCode" name="groupCode" value="345"/>
+    <table class="type1"><!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+        <col style="width:150px" />
+        <col style="width:*" />
+        <col style="width:150px" />
+        <col style="width:*" />
+    </colgroup>
+    <tbody>
+    <tr>
+        <th scope="row">Menu</th>
+        <td>
+         <input type="text" id="txtMenuCode" name="txtMenuCode" title="" placeholder="Menu Id or Name" class="w100p" style="text-transform: uppercase;"/>
+        </td>
+        <th scope="row">Program</th>
+        <td>
+         <input type="text" id="pgmCode" name="pgmCode" title="" placeholder="Program Id or Name" class="w100p" />
+        </td>
+    </tr>
+    </tbody>
+    </table><!-- table end -->
 
-	<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-	<p class="show_btn">
+    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+    <p class="show_btn">
   <%-- <a href="javascript:;">
     <img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" />
   </a> --%>
@@ -761,7 +761,7 @@ $(document).ready(function()
   </dd>
 </dl>
 
-	</aside><!-- link_btns_wrap end -->
+    </aside><!-- link_btns_wrap end -->
 
 </form>
 </section><!-- search_table end -->
@@ -773,17 +773,17 @@ $(document).ready(function()
 <ul class="right_opt">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li id="delCancel"><p class="btn_grid"><a onclick="removeAllCancel();">Cancel</a></p></li>
-	<li><p class="btn_grid"><a onclick="removeRow();">DEL</a></p></li>
-	<li><p class="btn_grid"><a onclick="addRowMenu();">ADD</a></p></li>
-	<li><p class="btn_grid"><a onclick="fnSaveMenuCode();">SAVE</a></p></li>
-	</c:if>
+    <li><p class="btn_grid"><a onclick="removeRow();">DEL</a></p></li>
+    <li><p class="btn_grid"><a onclick="addRowMenu();">ADD</a></p></li>
+    <li><p class="btn_grid"><a onclick="fnSaveMenuCode();">SAVE</a></p></li>
+    </c:if>
 </ul>
 
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 1-->
- <div id="grid_wrap" style="height:420px"></div>
+ <div id="grid_wrap" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

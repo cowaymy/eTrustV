@@ -38,74 +38,78 @@ public class GSTZeroRateLocationController {
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
+
 	//GST Zero Rate Exportation
 	@RequestMapping(value = "/gstZeroRateExporation.do")
-	public String gstZeroRateExporationList(@RequestParam Map<String, Object> params, ModelMap model) 
+	public String gstZeroRateExporationList(@RequestParam Map<String, Object> params, ModelMap model)
 	{
 		return "/common/gstZeroRateExportation";
 	}
-	
+
 	@RequestMapping(value = "/selectGSTExportationList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectGSTExportationList(@RequestParam Map<String, Object> params) 
+	public ResponseEntity<List<EgovMap>> selectGSTExportationList(@RequestParam Map<String, Object> params)
 	{
 		LOGGER.debug("zreExptId : {}", params.get("zreExptId"));
 
 		List<EgovMap> selectGSTExportationList = gstZeroRateLocationService.selectGSTExportationList(params);
 		return ResponseEntity.ok(selectGSTExportationList);
 	}
-	
+
 	@RequestMapping(value = "/selectGSTExportDealerList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectGSTExportDealerList(@RequestParam Map<String, Object> params) 
+	public ResponseEntity<List<EgovMap>> selectGSTExportDealerList(@RequestParam Map<String, Object> params)
 	{
 		LOGGER.debug("params : {}", params.toString());
-		
+
 		List<EgovMap> selectGSTExportDealerList = gstZeroRateLocationService.selectGSTExportDealerList(params);
 		return ResponseEntity.ok(selectGSTExportDealerList);
 	}
-	
+
 	// save UserExptAuth
-			@RequestMapping(value = "/saveGSTExportation.do", method = RequestMethod.POST)
-			public ResponseEntity<ReturnMessage> saveUserExceptAuthMapping(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO)
-			{
-				List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
-				List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
-				List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
+	@RequestMapping(value = "/saveGSTExportation.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveUserExceptAuthMapping(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO)
+	{
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
 
-				int tmpCnt = 0;
-				int totCnt = 0;
-				
-				if (addList.size() > 0) {
-					tmpCnt = gstZeroRateLocationService.insertGSTExportation(addList, sessionVO.getUserId());
-					totCnt = totCnt + tmpCnt;
-				}
+		/*
+		int tmpCnt = 0;
+		int totCnt = 0;
 
-				if (udtList.size() > 0) {
-					tmpCnt = gstZeroRateLocationService.updateGSTExportation(udtList, sessionVO.getUserId());
-					totCnt = totCnt + tmpCnt;
-				}
-				
-				if (delList.size() > 0) {
-					tmpCnt = gstZeroRateLocationService.deleteGSTExportation(delList, sessionVO.getUserId());
-					totCnt = totCnt + tmpCnt;
-				}
+		if (addList.size() > 0) {
+			tmpCnt = gstZeroRateLocationService.insertGSTExportation(addList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
 
-				// 콘솔로 찍어보기
-				LOGGER.info("GSTExportation_수정 : {}", udtList.toString());
-				LOGGER.info("GSTExportation_추가 : {}", addList.toString());
-				LOGGER.info("GSTExportation_삭제 : {}", delList.toString());
-				LOGGER.info("GSTExportation_카운트 : {}", totCnt);
+		if (udtList.size() > 0) {
+			tmpCnt = gstZeroRateLocationService.updateGSTExportation(udtList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
 
-				// 결과 만들기 예.
-				ReturnMessage message = new ReturnMessage();
-				message.setCode(AppConstants.SUCCESS);
-				message.setData(totCnt);
-				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		if (delList.size() > 0) {
+			tmpCnt = gstZeroRateLocationService.deleteGSTExportation(delList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
+		*/
 
-				return ResponseEntity.ok(message);
-			}
-	
-	
+		// 20190910 KR-OHK : insertGSTExportation+updateGSTExportation+deleteGSTExportation => Change One Transaction
+		int totCnt = gstZeroRateLocationService.saveGSTExportation(addList, udtList, delList, sessionVO.getUserId());
+
+		// 콘솔로 찍어보기
+		LOGGER.info("GSTExportation_수정 : {}", udtList.toString());
+		LOGGER.info("GSTExportation_추가 : {}", addList.toString());
+		LOGGER.info("GSTExportation_삭제 : {}", delList.toString());
+		LOGGER.info("GSTExportation_카운트 : {}", totCnt);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+
 	//GST Zero Rate Location
 	@RequestMapping(value = "/gstZeroRateLocation.do")
 	public String gstZeroRateLocation(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {

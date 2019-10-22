@@ -40,8 +40,8 @@ function addDetailRow() {
     item.mymenuName = AUIGrid.getCellValue(myGridID, selectedRow, "mymenuName");
 
     if(item.mymenuCode == "" || item.mymenuCode == null) {
-    	Common.alert("My Menu Code is Null or not saved.");
-    	return;
+        Common.alert("My Menu Code is Null or not saved.");
+        return;
     }
 
     // parameter
@@ -91,8 +91,8 @@ function getItemsByField() {
 
 
 function popupCallback(result){
-	AUIGrid.setCellValue(myGridDetailID, popSelectedRow, "menuCode", result.menuCode);
-	AUIGrid.setCellValue(myGridDetailID, popSelectedRow, "menuName", result.menuName);
+    AUIGrid.setCellValue(myGridDetailID, popSelectedRow, "menuCode", result.menuCode);
+    AUIGrid.setCellValue(myGridDetailID, popSelectedRow, "menuName", result.menuName);
 }
 
 
@@ -107,39 +107,39 @@ function fn_checkChangeRows(gridId,mandatoryItems){
     var totalLength = 0;
     totalLength = addList.length + updateList.length + removeList.length;
 
-	if(totalLength == 0){
-		return true; /* Failed */
-	}
+    if(totalLength == 0){
+        return true; /* Failed */
+    }
 
-	return false; /* Success */
+    return false; /* Success */
 }
 /****************************Function  End***********************************/
 /****************************Transaction Start********************************/
 
 function fn_search(){
-	Common.ajax(
-		    "GET",
-		    "/common/selectMyMenuList.do",
-		    $("#searchForm").serialize(),
-		    function(data, textStatus, jqXHR){ // Success
-		    	AUIGrid.clearGridData(myGridDetailID);
-		    	AUIGrid.setGridData(myGridID, data);
+    Common.ajax(
+            "GET",
+            "/common/selectMyMenuList.do",
+            $("#searchForm").serialize(),
+            function(data, textStatus, jqXHR){ // Success
+                AUIGrid.clearGridData(myGridDetailID);
+                AUIGrid.setGridData(myGridID, data);
 
-		        Common.setMsg("Menu Group Search Success.");
-		    },
-		    function(jqXHR, textStatus, errorThrown){ // Error
-		    	Common.alert("Fail : " + jqXHR.responseJSON.message);
-		    	Common.setMsg("Failed.");
-		    }
-	)
+                Common.setMsg("Menu Group Search Success.");
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+                Common.setMsg("Failed.");
+            }
+    )
 };
 
 function fn_save(){
-	if(fn_checkChangeRows(myGridID)){
-		Common.alert("<spring:message code='sys.common.alert.noChange'/>");
+    if(fn_checkChangeRows(myGridID)){
+        Common.alert("<spring:message code='sys.common.alert.noChange'/>");
         return;
     }
-	var addList = AUIGrid.getAddedRowItems(myGridID);
+    var addList = AUIGrid.getAddedRowItems(myGridID);
     if(addList.length > 0){
         for(var idx = 0 ; idx < addList.length ; idx++){
             if(addList[idx].mymenuCode == "" || typeof(addList[idx].mymenuCode) == "undefined"){
@@ -151,7 +151,7 @@ function fn_save(){
     }
 
     Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
-    	Common.ajax(
+        Common.ajax(
                 "POST",
                 "/common/saveMyMenuList.do",
                 GridCommon.getEditData(myGridID),
@@ -178,49 +178,49 @@ function fn_detailSearch(mymenuCode){
                 Common.setMsg("<spring:message code='sys.msg.success'/>");
             },
             function(jqXHR, textStatus, errorThrown){ // Error
-            	Common.alert("Fail : " + jqXHR.responseJSON.message);
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
                 Common.setMsg("<spring:message code='sys.msg.fail'/>");
             }
     )
 };
 
 function fn_detailSave(){
-	if(fn_checkChangeRows(myGridDetailID)){
-		Common.alert("<spring:message code='sys.common.alert.noChange'/>");
-		return;
-	}
+    if(fn_checkChangeRows(myGridDetailID)){
+        Common.alert("<spring:message code='sys.common.alert.noChange'/>");
+        return;
+    }
 
-	var addList = AUIGrid.getAddedRowItems(myGridDetailID);
-	if(addList.length > 0){
-		for(var idx = 0 ; idx < addList.length ; idx++){
-			if(addList[idx].mymenuCode == "" || typeof(addList[idx].mymenuCode) == "undefined"){
-				AUIGrid.selectRowsByRowId(myGridDetailID, addList[idx].rowId);
-				Common.alert("<spring:message code='sys.msg.necessary' arguments='My Menu Code' htmlEscape='false'/>");
+    var addList = AUIGrid.getAddedRowItems(myGridDetailID);
+    if(addList.length > 0){
+        for(var idx = 0 ; idx < addList.length ; idx++){
+            if(addList[idx].mymenuCode == "" || typeof(addList[idx].mymenuCode) == "undefined"){
+                AUIGrid.selectRowsByRowId(myGridDetailID, addList[idx].rowId);
+                Common.alert("<spring:message code='sys.msg.necessary' arguments='My Menu Code' htmlEscape='false'/>");
                 return;
             }
-			if(addList[idx].menuCode == "" || typeof(addList[idx].menuCode) == "undefined"){
-				AUIGrid.selectRowsByRowId(myGridDetailID, addList[idx].rowId);
-				Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Code' htmlEscape='false'/>");
-				return;
-			}
-		}
-	}
+            if(addList[idx].menuCode == "" || typeof(addList[idx].menuCode) == "undefined"){
+                AUIGrid.selectRowsByRowId(myGridDetailID, addList[idx].rowId);
+                Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Code' htmlEscape='false'/>");
+                return;
+            }
+        }
+    }
 
 
     Common.confirm("<spring:message code='sys.common.alert.save'/>",
-    		function(){
+            function(){
             Common.ajax(
-	                "POST",
-	                "/common/savetMyMenuProgrmList.do",
-	                GridCommon.getEditData(myGridDetailID),
-	                function(data, textStatus, jqXHR){ // Success
-	                	Common.alert("<spring:message code='sys.msg.success'/>");
-	                    fn_search();
-	                },
-	                function(jqXHR, textStatus, errorThrown){ // Error
-	                    Common.alert("Fail : " + jqXHR.responseJSON.message);
-	                }
-	        )
+                    "POST",
+                    "/common/savetMyMenuProgrmList.do",
+                    GridCommon.getEditData(myGridDetailID),
+                    function(data, textStatus, jqXHR){ // Success
+                        Common.alert("<spring:message code='sys.msg.success'/>");
+                        fn_search();
+                    },
+                    function(jqXHR, textStatus, errorThrown){ // Error
+                        Common.alert("Fail : " + jqXHR.responseJSON.message);
+                    }
+            )
         }
     );
 };
@@ -230,13 +230,13 @@ function fn_detailSave(){
 var gridMasterColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
     /*
-	{
+    {
         dataField : "chkAll",
         headerText : "<input type='checkbox' id='allCheckbox' style='width:15px;height:15px;''>",
         width:"8%",
@@ -348,25 +348,25 @@ var options =
 var gridDetailColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
-	{
-	    dataField : "mymenuCode",
-	    /* dataType : "string", */
-	    headerText : "Grp Code",
-	    editable : false, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
-	    width : "15%"
-	},
-	{
-	    dataField : "mymenuName",
-	    headerText : "Grp Name",
-	    editable : false,
-	    width : "20%",
-	    style : "aui-grid-user-custom-left"
-	},
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
+    {
+        dataField : "mymenuCode",
+        /* dataType : "string", */
+        headerText : "Grp Code",
+        editable : false, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
+        width : "15%"
+    },
+    {
+        dataField : "mymenuName",
+        headerText : "Grp Name",
+        editable : false,
+        width : "20%",
+        style : "aui-grid-user-custom-left"
+    },
     {
         dataField : "menuCode",
         /* dataType : "string", */
@@ -383,15 +383,15 @@ var gridDetailColumnLayout =
                },
                onclick : function(rowIndex, columnIndex, value, item) {
                   if(AUIGrid.isAddedById("#myMenu", item.rowId)) {
-                	  popSelectedRow = rowIndex;
+                      popSelectedRow = rowIndex;
                       var popUpObj = Common.popupDiv
                       (
                            "/common/menuPop.do"
-                   	       , ""
-                   	       , null
-                   	       , "false"
-                   	       , "menuPop"
-                   	  );
+                           , ""
+                           , null
+                           , "false"
+                           , "menuPop"
+                      );
 
                   }
                }
@@ -407,7 +407,7 @@ var gridDetailColumnLayout =
     {
         dataField : "pgmOrd",
         headerText : "Order",
-       	editRenderer : {
+        editRenderer : {
                type : "InputEditRenderer",
                onlyNumeric : true, // Input 에서 숫자만 가능케 설정
                // 에디팅 유효성 검사
@@ -426,7 +426,7 @@ var gridDetailColumnLayout =
 
 var detailOptions =
 {
-		editable : true,
+        editable : true,
         usePaging : true, //페이징 사용
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
@@ -452,13 +452,13 @@ $(document).ready(function(){
 
     // click 이벤트 바인딩
     AUIGrid.bind(myGridID, ["cellClick"], function(event) {
-    	selectedRow = event.rowIndex;
-    	fn_detailSearch(event.item.mymenuCode);
+        selectedRow = event.rowIndex;
+        fn_detailSearch(event.item.mymenuCode);
     });
 
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(myGridID, ["cellEditBegin"], function(event) {
-    	if(event.dataField == "mymenuCode") {
+        if(event.dataField == "mymenuCode") {
             // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
             if(AUIGrid.isAddedById(event.pid, event.item.rowId)) {
                 return true;
@@ -467,8 +467,8 @@ $(document).ready(function(){
             }
         }
         return true; // 다른 필드들은 편집 허용
-    	/*
-    	// Country 가 "Korea", "UK" 인 경우, Name, Product 수정 못하게 하기
+        /*
+        // Country 가 "Korea", "UK" 인 경우, Name, Product 수정 못하게 하기
         if(event.dataField == "name" || event.dataField == "product") {
             if(event.item.country == "Korea" || event.item.country == "UK") {
                 return false; // false 반환. 기본 행위인 편집 불가
@@ -611,7 +611,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="myMenuGrp" style="height:425px;"></div>
+    <div id="myMenuGrp" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
@@ -630,7 +630,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wraps"><!-- grid_wrap start -->
-    <div id="myMenu"  style="height:425px;"></div>
+    <div id="myMenu" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->

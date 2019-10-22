@@ -65,10 +65,12 @@ public class GeneralCodeController {
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 
 		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
-		int tmpCnt = 0;
-		int totCnt = 0;
-		
-		if (addList.size() > 0) {
+		//int tmpCnt = 0;
+
+		// 20190905 KR-MIN : addCommCodeGrid+udtCommCodeGrid => Change One Transaction
+		int totCnt = commonService.saveCommCodeGrid(addList, sessionVO.getUserId(), udtList, sessionVO.getUserId());
+
+		/*if (addList.size() > 0) {
 			tmpCnt = commonService.addCommCodeGrid(addList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
 		}
@@ -76,7 +78,7 @@ public class GeneralCodeController {
 		if (udtList.size() > 0) {
 			tmpCnt = commonService.udtCommCodeGrid(udtList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
-		}
+		}*/
 
 		// 콘솔로 찍어보기
 		LOGGER.info("CommCd_수정 : {}", udtList.toString());
@@ -100,8 +102,12 @@ public class GeneralCodeController {
 
 		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
 		// 조회.
-		int tmpCnt = 0;
-		int totCnt = 0;
+		//int tmpCnt = 0;
+
+		// 20190905 KR-MIN : addDetailCommCodeGrid+udtDetailCommCodeGrid => Change One Transaction
+		int totCnt = commonService.saveDetailCommCodeGrid(addList, sessionVO.getUserId(), udtList, sessionVO.getUserId());
+
+		/*
 		if (addList.size() > 0) {
 			tmpCnt = commonService.addDetailCommCodeGrid(addList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
@@ -111,6 +117,7 @@ public class GeneralCodeController {
 			tmpCnt = commonService.udtDetailCommCodeGrid(udtList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
 		}
+		*/
 
 		// 콘솔로 찍어보기
 		LOGGER.info("DetailCommCd_수정 : {}", udtList.toString());

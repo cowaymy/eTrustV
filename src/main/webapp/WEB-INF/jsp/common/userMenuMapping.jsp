@@ -34,16 +34,16 @@ function checkAll(isChecked) {
 //         AUIGrid.updateAllToValue(grdMenuMapping, "funcYn", "Y");
         var item = { funcYn : "Y" };
         for(idx = 0 ; idx < gridDetailDataLength ; idx++){
-        	if(AUIGrid.getItemByRowIndex(grdMenuMapping,idx).existYn == "N"){
-        	    AUIGrid.updateRow(grdMenuMapping, item, idx);
-        	}
+            if(AUIGrid.getItemByRowIndex(grdMenuMapping,idx).existYn == "N"){
+                AUIGrid.updateRow(grdMenuMapping, item, idx);
+            }
         }
     } else {
-    	var item = { funcYn : "N" };
-    	for(idx = 0 ; idx < gridDetailDataLength ; idx++){
-    		if(AUIGrid.getItemByRowIndex(grdMenuMapping,idx).existYn == "N"){
-    			AUIGrid.updateRow(grdMenuMapping, item, idx);
-    		}
+        var item = { funcYn : "N" };
+        for(idx = 0 ; idx < gridDetailDataLength ; idx++){
+            if(AUIGrid.getItemByRowIndex(grdMenuMapping,idx).existYn == "N"){
+                AUIGrid.updateRow(grdMenuMapping, item, idx);
+            }
         }
 //         AUIGrid.updateAllToValue(grdMenuMapping, "funcYn", "N");
     }
@@ -86,29 +86,29 @@ function fn_checkChangeRows(gridId,mandatoryItems){
     var totalLength = 0;
     totalLength = addList.length + updateList.length + removeList.length;
 
-	if(totalLength == 0){
-		alert("No Change Data.");
-		return true; /* Failed */
-	}
+    if(totalLength == 0){
+        alert("No Change Data.");
+        return true; /* Failed */
+    }
 
-	return false; /* Success */
+    return false; /* Success */
 }
 /****************************Function  End***********************************/
 /****************************Transaction Start********************************/
 
 function fn_search(){
-	Common.ajax(
-		    "GET",
-		    "/common/selectUserList.do",
-		    $("#searchForm").serialize(),
-		    function(data, textStatus, jqXHR){ // Success
-		    	AUIGrid.clearGridData(grdMenuMapping);
-		    	AUIGrid.setGridData(grdUser, data);
-		    },
-		    function(jqXHR, textStatus, errorThrown){ // Error
-		    	alert("Fail : " + jqXHR.responseJSON.message);
-		    }
-	)
+    Common.ajax(
+            "GET",
+            "/common/selectUserList.do",
+            $("#searchForm").serialize(),
+            function(data, textStatus, jqXHR){ // Success
+                AUIGrid.clearGridData(grdMenuMapping);
+                AUIGrid.setGridData(grdUser, data);
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                alert("Fail : " + jqXHR.responseJSON.message);
+            }
+    )
 };
 
 function fn_detailSearch(userId){
@@ -117,7 +117,7 @@ function fn_detailSearch(userId){
             "/common/selectUserMenuMappingList.do",
             "userId="+userId+"&menuCode="+$("#menuCode").val(),
             function(data, textStatus, jqXHR){ // Success
-//             	alert(JSON.stringify(data));
+//              alert(JSON.stringify(data));
                 AUIGrid.setGridData(grdMenuMapping, data);
             },
             function(jqXHR, textStatus, errorThrown){ // Error
@@ -127,25 +127,25 @@ function fn_detailSearch(userId){
 };
 
 function fn_detailSave(){
-	if(fn_checkChangeRows(grdMenuMapping)){
-		return;
-	}
+    if(fn_checkChangeRows(grdMenuMapping)){
+        return;
+    }
 
-	var editList = AUIGrid.getEditedRowItems(grdMenuMapping);
-	if(editList.length > 0){
-		for(var idx = 0 ; idx < editList.length ; idx++){
-			if(editList[idx].validDtFrom == "" || typeof(editList[idx].validDtFrom) == "undefined"){
-				AUIGrid.selectRowsByRowId(grdMenuMapping, editList[idx].rowId);
-				alert("From Date is essential field.");
+    var editList = AUIGrid.getEditedRowItems(grdMenuMapping);
+    if(editList.length > 0){
+        for(var idx = 0 ; idx < editList.length ; idx++){
+            if(editList[idx].validDtFrom == "" || typeof(editList[idx].validDtFrom) == "undefined"){
+                AUIGrid.selectRowsByRowId(grdMenuMapping, editList[idx].rowId);
+                alert("From Date is essential field.");
                 return;
             }
-			if(editList[idx].validDtTo == "" || typeof(editList[idx].validDtTo) == "undefined"){
-				AUIGrid.selectRowsByRowId(grdMenuMapping, editList[idx].rowId);
-				alert("To Date is essential field.");
-				return;
-			}
-		}
-	}
+            if(editList[idx].validDtTo == "" || typeof(editList[idx].validDtTo) == "undefined"){
+                AUIGrid.selectRowsByRowId(grdMenuMapping, editList[idx].rowId);
+                alert("To Date is essential field.");
+                return;
+            }
+        }
+    }
 
 
     if(confirm("Do you want to save it?")){
@@ -169,13 +169,13 @@ function fn_detailSave(){
 var gridUserColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
     /*
-	{
+    {
         dataField : "chkAll",
         headerText : "<input type='checkbox' id='allCheckbox' style='width:15px;height:15px;''>",
         width:"8%",
@@ -205,7 +205,7 @@ var gridUserColumnLayout =
 
 var options =
 {
-		editable : false,
+        editable : false,
         usePaging : true, //페이징 사용
         pagingMode : "simple",
         showPageButtonCount : 3 ,
@@ -221,25 +221,25 @@ var options =
 var gridMenuMappingColumnLayout =
 [
      /* PK , rowid 용 칼럼*/
-	 {
-	     dataField : "rowId",
-	     dataType : "string",
-	     visible : false
-	 },
-	{
-	    dataField : "menuLvl",
-	    /* dataType : "string", */
-	    headerText : "Lvl",
-	    editable : false, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
-	    width : "7%"
-	},
-	{
-	    dataField : "menuName",
-	    headerText : "Menu Name",
-	    width : "25%",
-	    editable : false,
-	    style : "aui-grid-user-custom-left"
-	},
+     {
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },
+    {
+        dataField : "menuLvl",
+        /* dataType : "string", */
+        headerText : "Lvl",
+        editable : false, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
+        width : "7%"
+    },
+    {
+        dataField : "menuName",
+        headerText : "Menu Name",
+        width : "25%",
+        editable : false,
+        style : "aui-grid-user-custom-left"
+    },
     {
         dataField : "pgmName",
         headerText : "Program Name",
@@ -293,7 +293,7 @@ var gridMenuMappingColumnLayout =
         }
     },
     {
-    	dataField: "validDtTo",
+        dataField: "validDtTo",
         headerText: "To",
         dataType : "date",
         formatString : "yyyy-mm-dd",
@@ -317,11 +317,11 @@ var gridMenuMappingColumnLayout =
                 }
 
                 if(isValid){
-                	var dtFrom = Number(rowItem.validDtFrom.toString().replace(/\//g,""));
+                    var dtFrom = Number(rowItem.validDtFrom.toString().replace(/\//g,""));
                     var dtTo = Number(rowItem.validDtTo.toString().replace(/\//g,""));
                     if(dtFrom != 0 && dtTo != 0 && dtFrom > dtTo){
-                    	msg = "Start date can not be greater than End date.";
-                    	isValid = false;
+                        msg = "Start date can not be greater than End date.";
+                        isValid = false;
                     }
                 }
                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
@@ -404,7 +404,7 @@ var gridMenuMappingColumnLayout =
 
 var detailOptions =
 {
-		editable : true,
+        editable : true,
         usePaging : true, //페이징 사용
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
@@ -429,24 +429,24 @@ $(document).ready(function(){
 
     // click 이벤트 바인딩
     AUIGrid.bind(grdUser, ["cellClick"], function(event) {
-    	selectedRow = event.rowIndex;
-    	fn_detailSearch(event.item.userId);
+        selectedRow = event.rowIndex;
+        fn_detailSearch(event.item.userId);
     });
 
     grdMenuMapping = GridCommon.createAUIGrid("grdMenuMapping", gridMenuMappingColumnLayout,"", detailOptions);
 
     AUIGrid.bind(grdMenuMapping, ["cellDoubleClick"], function(event) {
-//     	if(event.dataField == "validDtFrom" || event.dataField == "validDtTo") {
-//     		AUIGrid.setCellValue(grdMenuMapping, event.rowIndex, event.dataField, "");
+//      if(event.dataField == "validDtFrom" || event.dataField == "validDtTo") {
+//          AUIGrid.setCellValue(grdMenuMapping, event.rowIndex, event.dataField, "");
 //         }
     });
 
     AUIGrid.bind(grdMenuMapping, "ready", function(event) {
-    	gridDetailDataLength = AUIGrid.getGridData(grdMenuMapping).length; // 그리드 전체 행수 보관
+        gridDetailDataLength = AUIGrid.getGridData(grdMenuMapping).length; // 그리드 전체 행수 보관
 
-//     	for(var idx = 0 ; idx < gridDetailDataLength ; idx++){
+//      for(var idx = 0 ; idx < gridDetailDataLength ; idx++){
 
-//     	}
+//      }
     });
 
     // 헤더 클릭 핸들러 바인딩(checkAll)
@@ -477,25 +477,25 @@ $(document).ready(function(){
 
      // ExistYn 가 "Y" 인 경우, validDtTo, validDtTo 수정 못하게 하기
         if(event.dataField == "validDtFrom" || event.dataField == "validDtTo"){
-        	var dtFrom = event.item.validDtFrom;
-        	var dtTo = event.item.validDtTo;
-        	var oldValue = event.oldValue;
+            var dtFrom = event.item.validDtFrom;
+            var dtTo = event.item.validDtTo;
+            var oldValue = event.oldValue;
 
-        	if(typeof(event.item.validDtFrom) == "undefined") dtFrom = "";
-        	if(typeof(event.item.validDtTo) == "undefined") dtTo = "";
-        	if(typeof(event.item.oldValue) == "undefined") oldValue = "";
+            if(typeof(event.item.validDtFrom) == "undefined") dtFrom = "";
+            if(typeof(event.item.validDtTo) == "undefined") dtTo = "";
+            if(typeof(event.item.oldValue) == "undefined") oldValue = "";
 
-        	dtFrom = Number(dtFrom.toString().replace(/\//g,""));
-        	dtTo = Number(dtTo.toString().replace(/\//g,""));
+            dtFrom = Number(dtFrom.toString().replace(/\//g,""));
+            dtTo = Number(dtTo.toString().replace(/\//g,""));
 
-        	if(dtFrom != 0 && dtTo != 0 && dtFrom > dtTo){
-        		alert("Start date can not be greater than End date.");
-        		AUIGrid.setCellValue(grdMenuMapping, event.rowIndex, event.dataField, event.oldValue);
-        	}
+            if(dtFrom != 0 && dtTo != 0 && dtFrom > dtTo){
+                alert("Start date can not be greater than End date.");
+                AUIGrid.setCellValue(grdMenuMapping, event.rowIndex, event.dataField, event.oldValue);
+            }
         }
      /*
         if(event.dataField == "validDtTo") {
-        	var dtFrom = event.item.validDtFrom;
+            var dtFrom = event.item.validDtFrom;
             var dtTo = event.item.validDtTo;
             if(typeof(event.item.validDtFrom) == "undefined") dtFrom = "";
             if(typeof(event.item.validDtTo) == "undefined") dtTo = "";
@@ -623,7 +623,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grdUser"  style="height:420px;"></div>
+    <div id="grdUser" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
@@ -635,7 +635,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grdMenuMapping"  style="height:420px;"></div>
+    <div id="grdMenuMapping" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->

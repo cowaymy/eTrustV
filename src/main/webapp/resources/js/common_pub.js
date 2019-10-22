@@ -165,6 +165,9 @@ $(document).on(
 
 	$(".link_btns_wrap .show_btn").css("display","none");
 	$(".link_btns_wrap .link_list").css("display","block");
+
+	gfn_resizeGridHeight();
+
 	return false;
 
 });
@@ -174,6 +177,9 @@ $(document).on(
 
 	$(".link_btns_wrap .show_btn").css("display","block");
 	$(".link_btns_wrap .link_list").css("display","none");
+
+	gfn_resizeGridHeight();
+
 	return false;
 });
 /* 링크버튼 숨기기/보이기 end*/

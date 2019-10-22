@@ -656,7 +656,7 @@
         </ul>
 
         <article class="grid_wrap"><!-- grid_wrap start -->
-            <div id="roleGridId"></div>
+            <div id="roleGridId" class="autoGridHeight"></div>
         </article><!-- grid_wrap end -->
 
     </section><!-- search_result end -->

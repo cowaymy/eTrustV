@@ -140,10 +140,18 @@
 	}
 
    $(function() {
+
        selectDailyCount(false);
        fn_selectMyMenuProgrmList();
 
-       // draw menu path.
+       // 20190903 KR-OHK :  default date setting( from~to date)
+       var fromFieldNm = $("#FROM_FIELD_NM1").val();
+       var toFieldNm = $("#TO_FIELD_NM1").val();
+
+       $("#" + fromFieldNm).val($("#FROM_DT1").val());
+       $("#" + toFieldNm).val($("#TO_DT1").val());
+
+        // draw menu path.
 		var $menuPathObj = $("#content > ul:first-child");
 		if($menuPathObj.hasClass("path")){
 
@@ -260,6 +268,10 @@ function fn_userSetting() {
     );
 }
 </script>
-
-
-
+<form id="_frameMenuForm">
+<!--  20190903 KR-OHK :  default date setting( from~to date) -->
+    <input type="hidden" id="FROM_DT1" name="FROM_DT1" value="${param.FROM_DT}"/>
+    <input type="hidden" id="FROM_FIELD_NM1" name="FROM_FIELD_NM1" value="${param.FROM_FIELD_NM}"/>
+    <input type="hidden" id="TO_DT1" name="TO_DT1" value="${param.TO_DT}"/>
+    <input type="hidden" id="TO_FIELD_NM1" name="TO_FIELD_NM1" value="${param.TO_FIELD_NM}"/>
+</form>

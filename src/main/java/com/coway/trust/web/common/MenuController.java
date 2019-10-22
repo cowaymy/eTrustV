@@ -95,6 +95,7 @@ public class MenuController {
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
 
+		/*
 		int tmpCnt = 0;
 		int totCnt = 0;
 		if (addList.size() > 0) {
@@ -111,6 +112,10 @@ public class MenuController {
 			tmpCnt = commonService.deleteMenuId(delList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
 		}
+		*/
+
+		// 20190910 KR-OHK : insertMenuCode+updateMenuCode+deleteMenuId => Change One Transaction
+		int totCnt = commonService.saveMenuId(addList, udtList, delList, sessionVO.getUserId());
 
 		// 콘솔로 찍어보기
 		LOGGER.info("MenuCd_수정 : {}", udtList.toString());

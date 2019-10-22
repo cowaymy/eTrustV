@@ -40,67 +40,136 @@ public interface CommonService {
 
 	/************************** UserException ****************************/
 	List<EgovMap> selectUserExceptionInfoList(Map<String, Object> params);
-	
-	List<EgovMap> selectUserExceptAdjustList(Map<String, Object> params); 
-	
-	int insertUserExceptAuthMapping(List<Object> addList, Integer updUserId);
-	
-	int updateUserExceptAuthMapping(List<Object> addList, Integer updUserId);
-	
-	int deleteUserExceptAuthMapping(List<Object> addList, Integer updUserId);
-	
-	
+
+	List<EgovMap> selectUserExceptAdjustList(Map<String, Object> params);
+
+	//int insertUserExceptAuthMapping(List<Object> addList, Integer updUserId);
+
+	//int updateUserExceptAuthMapping(List<Object> addList, Integer updUserId);
+
+	//int deleteUserExceptAuthMapping(List<Object> addList, Integer updUserId);
+
+	/**
+	 * Insert, Update, Delete UserExceptional Auth Mapping List
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param delList
+	 * @param userId
+	 * @return
+	 */
+	int saveUserExceptAuthMapping(List<Object> addList, List<Object> udtList, List<Object> delList, Integer userId);
+
 	/************************** Role Auth Mapping ****************************/
 	List<EgovMap> selectRoleAuthMappingList(Map<String, Object> params);
 
 	List<EgovMap> selectRoleAuthMappingBtn(Map<String, Object> params);
-	
+
 	List<EgovMap> selectRoleAuthMappingAdjustList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectRoleAuthMappingPopUpList(Map<String, Object> params);
-	
-	int insertRoleAuthMapping(List<Object> addList, Integer updUserId);
-	
-	int updateRoleAuthMapping(List<Object> addList, Integer updUserId);
-	
-	int deleteRoleAuthMapping(List<Object> addList, Integer updUserId);
-	
+
+	//int insertRoleAuthMapping(List<Object> addList, Integer updUserId);
+
+	//int updateRoleAuthMapping(List<Object> addList, Integer updUserId);
+
+	//int deleteRoleAuthMapping(List<Object> addList, Integer updUserId);
+
+	/**
+	 * Insert, Update, Delete Role Auth Mapping List
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param delList
+	 * @param userId
+	 * @return
+	 */
+	int saveRoleAuthMapping(List<Object> addList, List<Object> udtList, List<Object> delList, Integer userId);
+
 	int deleteMGRRoleAuthMapping(List<Object> addList, Integer updUserId);
-	
+
 	/************************** Role Management ****************************/
 	List<EgovMap> selectRoleList(Map<String, Object> params);
 
 	/************************** Auth Management ****************************/
 	List<EgovMap> selectAuthList(Map<String, Object> params);
 
-	int deleteAuth(List<Object> addList, Integer updUserId);
+	//int deleteAuth(List<Object> addList, Integer updUserId);
 
-	int insertAuth(List<Object> addList, Integer updUserId);
+	//int insertAuth(List<Object> addList, Integer updUserId);
 
-	int updateAuth(List<Object> addList, Integer updUserId);
+	//int updateAuth(List<Object> addList, Integer updUserId);
+
+	/**
+	 * Insert, Update, Delete Auth Mapping List
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param delList
+	 * @param userId
+	 * @return
+	 */
+	int saveAuth(List<Object> addList, List<Object> udtList, List<Object> delList, Integer userId);
 
 	/************************** Menu Management ****************************/
 	List<EgovMap> selectMenuList(Map<String, Object> params);
 	List<EgovMap> selectUpperMenuList(Map<String, Object> params);
 
-	int deleteMenuId(List<Object> addList, Integer updUserId);
+	//int deleteMenuId(List<Object> addList, Integer updUserId);
 
-	int insertMenuCode(List<Object> addList, Integer updUserId);
+	//int insertMenuCode(List<Object> addList, Integer updUserId);
 
-	int updateMenuCode(List<Object> addList, Integer updUserId);
+	//int updateMenuCode(List<Object> addList, Integer updUserId);
+
+	/**
+	 * Insert, Update, Delete Menu List
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param delList
+	 * @param userId
+	 * @return
+	 */
+	int saveMenuId(List<Object> addList, List<Object> udtList, List<Object> delList, Integer userId);
 
 	/************************** Program Management ****************************/
 	List<EgovMap> selectProgramList(Map<String, Object> params);
 	List<EgovMap> selectPgmTranList(Map<String, Object> params);
 
-	int insertPgmId(List<Object> addList, Integer crtUserId);
+	//int insertPgmId(List<Object> addList, Integer crtUserId);
 
-	int updatePgmId(List<Object> addList, Integer crtUserId);
+	//int updatePgmId(List<Object> addList, Integer crtUserId);
 
-	int updPgmIdTrans(List<Object> addList, Integer updUserId);
+	//int deletePgmId(List<Object> addList, Integer updUserId);
 
-	int deletePgmId(List<Object> addList, Integer updUserId);
+	//int updPgmIdTrans(List<Object> addList, Integer updUserId);
 
+	/**
+	 * Insert, Update, Delete Program List
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param delList
+	 * @param userId
+	 * @return
+	 */
+	int savePgmId(List<Object> addList, List<Object> udtList, List<Object> delList, Integer userId);
+
+	/**
+	 * Update Program Trans List
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param userId
+	 * @return
+	 */
+	int savePgmIdTrans(List<Object> addList, List<Object> udtList, Integer userId);
 
 	/************************** Status Code ****************************/
 	// StatusCategory
@@ -113,17 +182,41 @@ public interface CommonService {
 	List<EgovMap> selectStatusCodeList(Map<String, Object> params);
 
 	// insert StatusCategory
-	int  insertStatusCategory(List<Object> addList, Integer crtUserId);
+	//int  insertStatusCategory(List<Object> addList, Integer crtUserId);
 	// update StatusCategory
-	int  updateStatusCategory(List<Object> addList, Integer crtUserId);
-	
-	int  deleteStatusCategoryCode(List<Object> addList, Integer crtUserId);
+	//int  updateStatusCategory(List<Object> addList, Integer crtUserId);
+
+	//int  deleteStatusCategoryCode(List<Object> addList, Integer crtUserId);
+
+	/**
+	 * Insert, Update, Delete Status Category List
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param delList
+	 * @param userId
+	 * @return
+	 */
+	int  saveStatusCategory(List<Object> addList, List<Object> udtList, List<Object> delList, Integer userId);
+
 	int  deleteStatusCategoryMst(List<Object> addList, Integer crtUserId);
 
 	// insert StatusCode
-	int  insertStatusCode(List<Object> addList, Integer crtUserId);
+	//int  insertStatusCode(List<Object> addList, Integer crtUserId);
 	// update StatusCode
-	int  updateStatusCode(List<Object> addList, Integer crtUserId);
+	//int  updateStatusCode(List<Object> addList, Integer crtUserId);
+
+	/**
+	 * Insert, Update Status Code List
+	 * @Author KR-OHK
+	 * @Date 2019. 9. 10.
+	 * @param addList
+	 * @param udtList
+	 * @param userId
+	 * @return
+	 */
+	int  saveStatusCode(List<Object> addList, List<Object> udtList, Integer userId);
 
 	// insert Status Category Code
 	int insertStatusCategoryCode(CommStatusVO formDataParameters, Integer crtUserId);
@@ -148,33 +241,57 @@ public interface CommonService {
 
 	//void saveCodes(Map<String, Object> params);
 
+	 /**
+	 * Insert, Update Group Code list
+	 * @Author KR-MIN
+	 * @Date 2019. 9. 5.
+	 * @param addList
+	 * @param crtUserId
+	 * @param udtList
+	 * @param updUserId
+	 * @return
+	 */
+	int saveCommCodeGrid(List<Object> addList, Integer crtUserId, List<Object> udtList, Integer updUserId);
+
     /**
      * add Organization Detail Data
      * @param addList
      * @return
      */
-    int addCommCodeGrid(List<Object> addList, Integer crtUserId);
+    //int addCommCodeGrid(List<Object> addList, Integer crtUserId);
 
     /**
      * update Organization Detail Data
      * @param updateList
      * @return
      */
-    int udtCommCodeGrid(List<Object> updateList, Integer updUserId);
+    //int udtCommCodeGrid(List<Object> updateList, Integer updUserId);
+
+    /**
+     * Insert, Update Code list
+     * @Author KR-MIN
+     * @Date 2019. 9. 5.
+     * @param addList
+     * @param crtUserId
+     * @param updateList
+     * @param updUserId
+     * @return
+     */
+    int saveDetailCommCodeGrid(List<Object> addList, Integer crtUserId, List<Object> updateList, Integer updUserId);
 
     /**
      * add Organization Detail Data
      * @param addList
      * @return
      */
-    int addDetailCommCodeGrid(List<Object> addList, Integer crtUserId);
+    //int addDetailCommCodeGrid(List<Object> addList, Integer crtUserId);
 
     /**
      * update Organization Detail Data
      * @param updateList
      * @return
      */
-    int udtDetailCommCodeGrid(List<Object> updateList, Integer updUserId);
+    //int udtDetailCommCodeGrid(List<Object> updateList, Integer updUserId);
 
 
     /**
@@ -198,7 +315,7 @@ public interface CommonService {
 	 * @return
 	 */
 	List<EgovMap> selectBankAccountList(Map<String, Object> params);
-	
+
 	 /**
 	 * Branch ID로 User 정보 조회
 	 * @param params
@@ -207,7 +324,7 @@ public interface CommonService {
 	List<EgovMap> getUsersByBranch(Map<String, Object> params);
 
 	List<EgovMap> selectCountryList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectStateList(Map<String, Object> params);
 
 	List<EgovMap> selectAreaList(Map<String, Object> params);
@@ -233,17 +350,17 @@ public interface CommonService {
 
 
 	List<EgovMap> selectProductList();
-	
+
 	String selectDocNo(String  docId);
-	
+
 	/**
 	 * Payment - Adjustment CN/DN : Adjustment Reason 정보 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectAdjReasonList(Map<String, Object> params);
-	
+
 	String SysdateCall(Map<String, Object> params);
 
 	List<EgovMap> selectReasonCodeList(Map<String, Object> params);

@@ -192,7 +192,7 @@
         <br>
 
         <article class="grid_wrap"><!-- grid_wrap start -->
-            <div id="grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+            <div id="grid_wrap" style="width:100%; height:100%; margin:0 auto;" class="autoGridHeight"></div>
         </article><!-- grid_wrap end -->
 
     </section><!-- search_result end -->
