@@ -155,6 +155,10 @@
 			  });
 
 
+                $('#exchgBodyAmbientAssy').click(function() {
+                    Common.popupDiv("/services/bs/hsExchgBodyAmbientAssyPop.do", null, null, true);
+                });
+
 		});
 
 
@@ -217,7 +221,7 @@
 <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBasicListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
-</c:if>    
+</c:if>
 </ul>
 <!--조회조건 추가  -->
 <!--     <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
@@ -269,7 +273,8 @@
                 <dd>
                 <ul class="btns">
                     <li><p class="link_btn"> <a href="javascript:fn_basicInfo()" id="basicInfo">HS Basic Info</a> </p></li>
-                    <li><p class="link_btn"><a href="javascript:fn_filterSetInfo()" id="filterSet">HS Filter Maintenance</a></p></li>                    
+                    <li><p class="link_btn"><a href="javascript:fn_filterSetInfo()" id="filterSet">HS Filter Maintenance</a></p></li>
+                        <li><p class="link_btn"> <a href="javascript:fn_exchgBodyAmbientAssy()" id="exchgBodyAmbientAssy">Exchange Body Ambient Assy Report</a> </p></li>
                 </ul>
                 <ul class="btns">
                 </ul>
