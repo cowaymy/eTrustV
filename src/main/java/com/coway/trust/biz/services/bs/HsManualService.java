@@ -166,4 +166,6 @@ public interface HsManualService {
   EgovMap checkRentalStatusInfo(Map<String, Object> params);
 
   EgovMap checkOrderStatusInfo(Map<String, Object> params);
+
+  List<EgovMap> getAppTypeList(Map<String, Object> params);
 }
