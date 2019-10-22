@@ -209,33 +209,11 @@
                $("#reportForm #Month").val(month);
                $("#reportForm #Year").val(year);
                $("#reportForm #TaskID").val(taskID);
-               console.log("aaa:"  +month);
-               console.log("bbb:"  +year);
-               console.log("ccc:"  +taskID);
+
 
             }
 
-//         } else if (type == "6") {
 
-//             reportFileName = "/commission/HPCommissionRentalRawData_Excel2.rpt"; //reportFileName
-//             reportDownFileName = "HPCommissionRentalRawData_" + today; //report name
-//             reportViewType = "EXCEL"; //viewType
-
-//             //set parameters
-//             $($reportForm).append('<input type="hidden" id="V_MONTH" name="V_MONTH" value="" /> ');
-//             $($reportForm).append('<input type="hidden" id="V_YEAR" name="V_YEAR" value="" /> ');
-//             $($reportForm).append('<input type="hidden" id="V_TASKID" name="V_TASKID" value="" /> ');
-
-
-
-//            $("#reportForm #V_MONTH").val(month);
-//            $("#reportForm #V_YEAR").val(year);
-//            $("#reportForm #V_TASKID").val(taskID);
-//            console.log("aaa:"  +month);
-//            console.log("bbb:"  +year);
-//            console.log("ccc:"  +taskID);
-
-//         }
 
 			//report info
 			if (reportFileName == "" || reportDownFileName == "" || reportViewType == "") {
@@ -249,12 +227,9 @@
 			$("#reportForm #viewType").val(reportViewType);
 
 			//  report 호출
-//             if (type == "6"){
-//             	Common.report("reportForm", option2);
-//             }
-//             else{
-            	Common.report("reportForm", option);
-//             }
+
+            Common.report("reportForm", option);
+
 
 			$("#searchForm #confirmChk").val("N");
 
