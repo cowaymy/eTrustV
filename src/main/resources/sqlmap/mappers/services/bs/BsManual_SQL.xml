@@ -5005,4 +5005,33 @@ SELECT DISTINCT A.ORD_ID FROM (
   </select>
 
 
+<select id="getAppTypeList" parameterType="Map" resultType="egovMap">
+            SELECT Project1.CODE_ID CODE_ID ,
+                      Project1.CODE_MASTER_ID CODE_MASTER_ID ,
+                      Project1.CODE CODE ,
+                      Project1.CODE_NAME CODE_NAME ,
+                      Project1.DISAB DISAB ,
+                      Project1.CRT_DT CRT_DT ,
+                      Project1.CRT_USER_ID CRT_USER_ID ,
+                      Project1.UPD_DT UPD_DT ,
+                      Project1.UPD_USER_ID UPD_USER_ID ,
+                      Project1.OLD_CODE_ID OLD_CODE_ID
+                    FROM
+                      (SELECT Extent1.CODE_ID CODE_ID ,
+                        Extent1.CODE_MASTER_ID CODE_MASTER_ID ,
+                        Extent1.CODE CODE ,
+                        Extent1.CODE_NAME CODE_NAME ,
+                        Extent1.DISAB DISAB ,
+                        Extent1.CRT_DT CRT_DT ,
+                        Extent1.CRT_USER_ID CRT_USER_ID ,
+                        Extent1.UPD_DT UPD_DT ,
+                        Extent1.UPD_USER_ID UPD_USER_ID ,
+                        Extent1.OLD_CODE_ID OLD_CODE_ID
+                      FROM SYS0013M Extent1
+                      WHERE ( Extent1.CODE_MASTER_ID = #{codeId} )
+                       AND CODE_ID IN  (66,67,68,141,142,143,144,145,1412,140)
+                      ) Project1
+           ORDER BY Project1.CODE_NAME ASC
+    </select>
+
 </mapper>
