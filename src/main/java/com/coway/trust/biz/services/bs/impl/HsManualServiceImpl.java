@@ -2479,6 +2479,10 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
 	  }
 
 
+  @Override
+  public List<EgovMap> getAppTypeList(Map<String, Object> params) {
+      return hsManualMapper.getAppTypeList(params);
+  }
 
   }
 
