@@ -332,4 +332,6 @@ public interface HsManualMapper {
 
   EgovMap checkOrderStatusInfo(Map<String, Object> params);
 
+  List<EgovMap> getAppTypeList(Map<String, Object> params);
+
 }
