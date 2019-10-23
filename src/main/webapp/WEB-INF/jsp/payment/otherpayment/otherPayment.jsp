@@ -1138,13 +1138,13 @@ function fn_rentalAdvMonthChangeTxt(){
 	                     item.targetAmt   = mstRpf - mstRpfPaid;
 	                     item.srvcContractID   = 0;
 	                     item.billAsId    = 0;
-	 					 item.srvMemId	=0;
-	 					 item.trNo =  $("#rentalkeyInTrNo").val() ;
-                         item.trDt =  $("#rentalkeyInTrIssueDate").val() ;
-	 					 item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
-	 					 item.collectorId = $("#rentalkeyInCollMemId").val() ;
-	 					 item.allowComm = $("#rentalcashIsCommChk").val() ;
-	 					 item.refDtlsJPayRef = $("rentalRefDtlsJompay").val();
+						 					 item.srvMemId	=0;
+						 					 item.trNo =  $("#rentalkeyInTrNo").val() ;
+					             item.trDt =  $("#rentalkeyInTrIssueDate").val() ;
+						 					 item.collectorCode =  $("#rentalkeyInCollMemCd").val() ;
+						 					 item.collectorId = $("#rentalkeyInCollMemId").val() ;
+						 					 item.allowComm = $("#rentalcashIsCommChk").val() ;
+						 					 item.refDtlsJPayRef = $("rentalRefDtlsJompay").val();
 
 	                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1184,10 +1184,10 @@ function fn_rentalAdvMonthChangeTxt(){
 	                        item.targetAmt   = AUIGrid.getCellValue(targetRenDetGridID, j ,"targetAmt");
 	                        item.srvcContractID   = 0;
 	                        item.billAsId    = 0;
-							item.srvMemId	=0;
+													item.srvMemId	=0;
 	                        item.trNo =  $("#rentalkeyInTrNo").val() ;
 	                        item.trDt =  $("#rentalkeyInTrIssueDate").val() ;
-	                        item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
+	                        item.collectorCode =  $("#rentalkeyInCollMemCd").val() ;
 	                        item.collectorId = $("#rentalkeyInCollMemId").val() ;
 	                        item.allowComm = $("#rentalcashIsCommChk").val() ;
 	                        item.refDtlsJPayRef = $("rentalRefDtlsJompay").val();
@@ -1226,13 +1226,13 @@ function fn_rentalAdvMonthChangeTxt(){
 	                    item.targetAmt   = $("#rentalAdvAmt").val();
 	                    item.srvcContractID   = 0;
 	                    item.billAsId    = 0;
-						item.srvMemId	=0;
-                        item.trNo =  $("#rentalkeyInTrNo").val() ;
-                        item.trDt =  $("#rentalkeyInTrIssueDate").val() ;
-                        item.collectorCode =  $("#rentalkeyInCollMemNm").val() ;
-                        item.collectorId = $("#rentalkeyInCollMemId").val() ;
-                        item.allowComm = $("#rentalcashIsCommChk").val() ;
-                        item.refDtlsJPayRef = $("rentalRefDtlsJompay").val();
+											item.srvMemId	=0;
+                      item.trNo =  $("#rentalkeyInTrNo").val() ;
+                      item.trDt =  $("#rentalkeyInTrIssueDate").val() ;
+                      item.collectorCode =  $("#rentalkeyInCollMemCd").val() ;
+                      item.collectorId = $("#rentalkeyInCollMemId").val() ;
+                      item.allowComm = $("#rentalcashIsCommChk").val() ;
+                      item.refDtlsJPayRef = $("rentalRefDtlsJompay").val();
 
 	                    AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1378,13 +1378,13 @@ function isDupRentalToFinal(){
 	                item.targetAmt   = AUIGrid.getCellValue(targetOutMstGridID, i ,"balance");
 	                item.srvcContractID   = 0;
 	                item.billAsId    = 0;
-					item.srvMemId	=0;
-                    item.trNo =  $("#outkeyInTrNo").val() ;
-                    item.trDt =  $("#outkeyInTrIssueDate").val() ;
-                    item.collectorCode = $("#outkeyInCollMemNm").val() ;
-                    item.collectorId = $("#outkeyInCollMemId").val() ;
-                    item.allowComm = $("#outcashIsCommChk").val() ;
-                    item.refDtlsJPayRef = $("#outRefDtlsJompay").val();
+									item.srvMemId	=0;
+                  item.trNo =  $("#outkeyInTrNo").val() ;
+                  item.trDt =  $("#outkeyInTrIssueDate").val() ;
+                  item.collectorCode = $("#outkeyInCollMemCd").val() ;
+                  item.collectorId = $("#outkeyInCollMemId").val() ;
+                  item.allowComm = $("#outcashIsCommChk").val() ;
+                  item.refDtlsJPayRef = $("#outRefDtlsJompay").val();
 
 	                AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1500,10 +1500,10 @@ function isDupOutToFinal(){
 	                     item.targetAmt   = mstFilterCharges - mstFilterChargesPaid;
 	                     item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
 	                     item.billAsId    = 0;
-						 item.srvMemId	=0;
+						 					 item.srvMemId	=0;
 	                     item.trNo =  $("#srvckeyInTrNo").val() ;
 	                     item.trDt =  $("#srvckeyInTrIssueDate").val() ;
-	                     item.collectorCode = $("#srvckeyInCollMemNm").val() ;
+	                     item.collectorCode = $("#srvckeyInCollMemCd").val() ;
 	                     item.collectorId = $("#srvckeyInCollMemId").val() ;
 	                     item.allowComm = $("#srvccashIsCommChk").val() ;
 	                     item.refDtlsJPayRef = $("#srvcRefDtlsJompay").val();
@@ -1540,13 +1540,13 @@ function isDupOutToFinal(){
 	                    item.targetAmt   = mstPenaltyCharges - mstPenaltyChargesPaid;
 	                    item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
 	                    item.billAsId    = 0;
-						item.srvMemId	=0;
-                        item.trNo =  $("#srvckeyInTrNo").val() ;
-                        item.trDt =  $("#srvckeyInTrIssueDate").val() ;
-                        item.collectorCode = $("#srvckeyInCollMemNm").val() ;
-                        item.collectorId = $("#srvckeyInCollMemId").val() ;
-                        item.allowComm = $("#srvccashIsCommChk").val() ;
-                        item.refDtlsJPayRef = $("#srvcRefDtlsJompay").val();
+											item.srvMemId	=0;
+                      item.trNo =  $("#srvckeyInTrNo").val() ;
+                      item.trDt =  $("#srvckeyInTrIssueDate").val() ;
+                      item.collectorCode = $("#srvckeyInCollMemCd").val() ;
+                      item.collectorId = $("#srvckeyInCollMemId").val() ;
+                      item.allowComm = $("#srvccashIsCommChk").val() ;
+                      item.refDtlsJPayRef = $("#srvcRefDtlsJompay").val();
 
 	                    AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1581,13 +1581,13 @@ function isDupOutToFinal(){
 	                    item.targetAmt   = $("#srvcAdvAmt").val();
 	                    item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
 	                    item.billAsId    = 0;
-						item.srvMemId	=0;
-                        item.trNo =  $("#srvckeyInTrNo").val() ;
-                        item.trDt =  $("#srvckeyInTrIssueDate").val() ;
-                        item.collectorCode = $("#srvckeyInCollMemNm").val() ;
-                        item.collectorId = $("#srvckeyInCollMemId").val() ;
-                        item.allowComm = $("#srvccashIsCommChk").val() ;
-                        item.refDtlsJPayRef = $("#srvcRefDtlsJompay").val();
+											item.srvMemId	=0;
+                      item.trNo =  $("#srvckeyInTrNo").val() ;
+                      item.trDt =  $("#srvckeyInTrIssueDate").val() ;
+                      item.collectorCode = $("#srvckeyInCollMemCd").val() ;
+                      item.collectorId = $("#srvckeyInCollMemId").val() ;
+                      item.allowComm = $("#srvccashIsCommChk").val() ;
+                      item.refDtlsJPayRef = $("#srvcRefDtlsJompay").val();
 
 	                    AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1627,10 +1627,10 @@ function isDupOutToFinal(){
 	                        item.targetAmt   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"targetAmt");
 	                        item.srvcContractID   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrCntrctId");
 	                        item.billAsId    = 0;
-							item.srvMemId	=0;
+													item.srvMemId	=0;
 	                        item.trNo =  $("#srvckeyInTrNo").val() ;
 	                        item.trDt =  $("#srvckeyInTrIssueDate").val() ;
-	                        item.collectorCode = $("#srvckeyInCollMemNm").val() ;
+	                        item.collectorCode = $("#srvckeyInCollMemCd").val() ;
 	                        item.collectorId = $("#srvckeyInCollMemId").val() ;
 	                        item.allowComm = $("#srvccashIsCommChk").val() ;
 	                        item.refDtlsJPayRef = $("#srvcRefDtlsJompay").val();
@@ -1797,13 +1797,13 @@ function isDupSrvcToFinal(){
 	                        item.targetAmt   = targetAmt;
 	                        item.srvcContractID   = 0;
 	                        item.billAsId    = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAsId");
-							item.srvMemId	=0;
-		                    item.trNo =  $("#billkeyInTrNo").val() ;
-		                    item.trDt =  $("#billkeyInTrIssueDate").val() ;
-		                    item.collectorCode = $("#billkeyInCollMemNm").val() ;
-		                    item.collectorId = $("#billkeyInCollMemId").val() ;
-		                    item.allowComm = $("#billcashIsCommChk").val() ;
-		                    item.refDtlsJPayRef = $("#billKeyRefDtlsJompay").val();
+													item.srvMemId	=0;
+			                    item.trNo =  $("#billkeyInTrNo").val() ;
+			                    item.trDt =  $("#billkeyInTrIssueDate").val() ;
+			                    item.collectorCode = $("#billkeyInCollMemCd").val() ;
+			                    item.collectorId = $("#billkeyInCollMemId").val() ;
+			                    item.allowComm = $("#billcashIsCommChk").val() ;
+			                    item.refDtlsJPayRef = $("#billKeyRefDtlsJompay").val();
 
 	                        AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -2541,7 +2541,7 @@ function fn_outConfirm(){
                   item.billAsId    = 0;
                   item.srvMemId   =AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"cnvrMemId");
                   item.trNo =  $("#careSrvckeyInTrNo").val() ;
-                  item.collectorCode = $("#careSrvckeyInCollMemNm").val() ;
+                  item.collectorCode = $("#careSrvckeyInCollMemCd").val() ;
                   item.collectorId = $("#careSrvckeyInCollMemId").val() ;
                   item.allowComm = $("#careSrvccashIsCommChk").val() ;
                   item.refDtlsJPayRef = $("#careSrvcRefDtlsJompay").val();
@@ -2580,7 +2580,7 @@ function fn_outConfirm(){
                   item.billAsId    = 0;
                   item.srvMemId   =AUIGrid.getCellValue(targetCareSrvcMstGridID, i ,"cnvrMemId");
                   item.trNo =  $("#careSrvckeyInTrNo").val() ;
-                  item.collectorCode = $("#careSrvckeyInCollMemNm").val() ;
+                  item.collectorCode = $("#careSrvckeyInCollMemCd").val() ;
                   item.collectorId = $("#careSrvckeyInCollMemId").val() ;
                   item.allowComm = $("#careSrvccashIsCommChk").val() ;
                   item.refDtlsJPayRef = $("#careSrvcRefDtlsJompay").val();
@@ -3091,6 +3091,89 @@ function srvcDiscountValue(){
 
  // }
 
+function fn_ConfirmColl() {
+	
+	var appType = $("#appType").val();
+	var collmemcode = '';
+	
+	if (appType == "1"){
+		collmemcode = $("#rentalkeyInCollMemCd").val();
+	} else if (appType == "2"){
+		collmemcode = $("#outkeyInCollMemCd").val();
+	} else if(appType == "3") {
+		collmemcode = $("#srvckeyInCollMemCd").val();
+	} else if(appType == "4"){
+		collmemcode = $("#billkeyInCollMemCd").val();
+	} else if(appType == "5"){
+		collmemcode = $("#outSrvckeyInCollMemCd").val();
+	} else if(appType == "6"){
+		collmemcode = $("#careSrvckeyInCollMemCd").val();
+	}
+	
+	console.log("appType: " +appType + " collmemcode: "+collmemcode);
+
+	if (collmemcode == "") {
+
+		Common.alert("Please Key-In Collector. ");
+		return;
+	}
+
+	Common.ajax("GET", "/sales/membership/paymentColleConfirm", {
+		COLL_MEM_CODE : collmemcode
+	}, function(result) {
+		console.log(result);
+
+		if (result.length > 0) {
+			
+			if (appType == "1"){
+				$("#rentalkeyInCollMemCd").val(result[0].memCode);
+				$("#rentalkeyInCollMemNm").val(result[0].name);
+				$("#rentalkeyInCollMemId").val(result[0].memId);
+				
+			} else if (appType == "2"){
+				$("#outkeyInCollMemCd").val(result[0].memCode);
+				$("#outkeyInCollMemNm").val(result[0].name);
+				$("#outkeyInCollMemId").val(result[0].memId);
+			} else if(appType == "3"){
+				$("#srvckeyInCollMemCd").val(result[0].memCode);
+				$("#srvckeyInCollMemNm").val(result[0].name);
+				$("#srvckeyInCollMemId").val(result[0].memId);
+			} else if(appType == "4") {
+				$("#billkeyInCollMemCd").val(result[0].memCode);
+				$("#billkeyInCollMemNm").val(result[0].name);
+				$("#billkeyInCollMemId").val(result[0].memId);
+			} else if(appType == "5") {
+				$("#outSrvckeyInCollMemCd").val(result[0].memCode);
+				$("#outSrvckeyInCollMemNm").val(result[0].name);
+				$("#outSrvckeyInCollMemId").val(result[0].memId);
+			} else if(appType == "6"){
+				$("#careSrvckeyInCollMemCd").val(result[0].memCode);
+		    $("#careSrvckeyInCollMemNm").val(result[0].name);
+		    $("#careSrvckeyInCollMemId").val(result[0].memId);
+			}
+		}
+		else {
+			
+			if (appType == "1"){
+				$("#rentalkeyInCollMemNm").val("");
+			} else if (appType == "2"){
+				$("#outkeyInCollMemNm").val("");
+			} else if(appType == "3"){
+				$("#srvckeyInCollMemNm").val("");
+			} else if(appType == "4"){
+				$("#billkeyInCollMemNm").val("");
+			} else if(appType == "5"){
+				$("#outSrvckeyInCollMemNm").val("");
+			} else if(appType == "6"){
+				$("#careSrvckeyInCollMemNm").val("");
+			}
+			Common.alert(" <spring:message code="sal.alert.msg.unableToFind" /> [" +collmemcode + "] <spring:message code="sal.alert.msg.unableToFind2" />   ");
+			return;
+		}
+
+	});
+}
+
   //Collector 조회 팝업
 function fn_searchUserIdPop(){
     Common.popupDiv("/common/memberPop.do", { callPrgm : "PAYMENT_PROCESS" }, null, true);
@@ -3099,26 +3182,32 @@ function fn_searchUserIdPop(){
 //Collector 조회 팝업 결과값 세팅
 function fn_loadOrderSalesman(memId, memCode, memNm){
     var appType = $("#appType").val();
-    var memCode = memCode + " - " + memNm;
+    //var memCode = memCode + " - " + memNm;
 
     if(appType == "1"){//Rental
         $("#rentalkeyInCollMemId").val(memId);
-        $("#rentalkeyInCollMemNm").val(memCode);
+        $("#rentalkeyInCollMemCd").val(memCode);
+        $("#rentalkeyInCollMemNm").val(memNm);
     }else if(appType == "2"){//Outright
         $("#outkeyInCollMemId").val(memId);
-        $("#outkeyInCollMemNm").val(memCode);
+        $("#outkeyInCollMemCd").val(memCode);
+        $("#outkeyInCollMemNm").val(memNm);
     }else if(appType == "3"){//Rental Membership
         $("#srvckeyInCollMemId").val(memId);
-        $("#srvckeyInCollMemNm").val(memCode);
+        $("#srvckeyInCollMemCd").val(memCode);
+        $("#srvckeyInCollMemNm").val(memNm);
     }else if(appType == "4"){//Bill Payment
         $("#billkeyInCollMemId").val(memId);
-        $("#billkeyInCollMemNm").val(memCode);
+        $("#billkeyInCollMemCd").val(memCode);
+        $("#billkeyInCollMemNm").val(memNm);
     }else if(appType == "5"){//Outright Membership
         $("#outSrvckeyInCollMemId").val(memId);
-        $("#outSrvckeyInCollMemNm").val(memCode);
+        $("#outSrvckeyInCollMemCd").val(memCode);
+        $("#outSrvckeyInCollMemNm").val(memNm);
     }else if(appType == "6"){//Care Service
         $("#careSrvckeyInCollMemId").val(memId);
-        $("#careSrvckeyInCollMemNm").val(memCode);
+        $("#careSrvckeyInCollMemCd").val(memCode);
+        $("#careSrvckeyInCollMemNm").val(memNm);
     }
 
 }
@@ -3317,13 +3406,13 @@ function addOutSrvcToFinal(){
 	            item.targetAmt   = packageAmt;
 	            item.srvcContractID   = 0;
 	            item.billAsId    = 0;
-				item.srvMemId	=AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
-                item.trNo =  $("#outSrvckeyInTrNo").val() ;
-                item.trDt =  $("#outSrvckeyInTrIssueDate").val() ;
-                item.collectorCode = $("#outSrvckeyInCollMemNm").val() ;
-                item.collectorId = $("#outSrvckeyInCollMemId").val() ;
-                item.allowComm = $("#outSrvccashIsCommChk").val() ;
-                item.refDtlsJPayRef = $("#outSrvcRefDtlsJompay").val();
+							item.srvMemId	=AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
+              item.trNo =  $("#outSrvckeyInTrNo").val() ;
+              item.trDt =  $("#outSrvckeyInTrIssueDate").val() ;
+              item.collectorCode = $("#outSrvckeyInCollMemCd").val() ;
+              item.collectorId = $("#outSrvckeyInCollMemId").val() ;
+              item.allowComm = $("#outSrvccashIsCommChk").val() ;
+              item.refDtlsJPayRef = $("#outSrvcRefDtlsJompay").val();
 
 	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	            addedCount++;
@@ -3357,13 +3446,13 @@ function addOutSrvcToFinal(){
 	            item.targetAmt   = filterAmt;
 	            item.srvcContractID   = 0;
 	            item.billAsId    = 0;
-				item.srvMemId	=AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
-                item.trNo =  $("#outSrvckeyInTrNo").val() ;
-                item.trDt =  $("#outSrvckeyInTrIssueDate").val() ;
-                item.collectorCode = $("#outSrvckeyInCollMemNm").val() ;
-                item.collectorId = $("#outSrvckeyInCollMemId").val() ;
-                item.allowComm = $("#outSrvccashIsCommChk").val() ;
-                item.refDtlsJPayRef = $("#outSrvcRefDtlsJompay").val();
+							item.srvMemId	=AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
+              item.trNo =  $("#outSrvckeyInTrNo").val() ;
+              item.trDt =  $("#outSrvckeyInTrIssueDate").val() ;
+              item.collectorCode = $("#outSrvckeyInCollMemCd").val() ;
+              item.collectorId = $("#outSrvckeyInCollMemId").val() ;
+              item.allowComm = $("#outSrvccashIsCommChk").val() ;
+              item.refDtlsJPayRef = $("#outSrvcRefDtlsJompay").val();
 
 	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	            addedCount++;
@@ -4028,10 +4117,14 @@ $.fn.clearForm = function() {
                             <th scope="row">Collector</th>
                             <td>
                                 <input id="rentalkeyInCollMemId" name="rentalkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                                <input id="rentalkeyInCollMemNm" name="rentalkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                                <input id="rentalkeyInCollMemCd" name="rentalkeyInCollMemCd" type="text" title="" placeholder="" />
+                                <p class="btn_sky">
+                                      <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm'/></a>
+                                 </p>
                                     <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
                                         <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                     </a>
+                                    <input id="rentalkeyInCollMemNm" name="rentalkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
                             </td>
                         </tr>
                         <tr>
@@ -4124,10 +4217,14 @@ $.fn.clearForm = function() {
                             <th scope="row">Collector</th>
                             <td>
                                 <input id="outkeyInCollMemId" name="outkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                                <input id="outkeyInCollMemNm" name="outkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                                <input id="outkeyInCollMemCd" name="outkeyInCollMemCd" type="text" title="" placeholder="" />
+                                <p class="btn_sky">
+                                      <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm'/></a>
+                                 </p>
                                     <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
                                         <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                     </a>
+                                    <input id="outkeyInCollMemNm" name="outkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
                             </td>
                         </tr>
                         <tr>
@@ -4230,10 +4327,14 @@ $.fn.clearForm = function() {
                             <th scope="row">Collector</th>
                             <td>
                                 <input id="srvckeyInCollMemId" name="srvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                                <input id="srvckeyInCollMemNm" name="srvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                                <input id="srvckeyInCollMemCd" name="srvckeyInCollMemCd" type="text" title="" placeholder="" />
+                                <p class="btn_sky">
+                                      <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm'/></a>
+                                 </p>
                                 <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
                                     <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                 </a>
+                                <input id="srvckeyInCollMemNm" name="srvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
                             </td>
                         </tr>
                         <tr>
@@ -4331,10 +4432,14 @@ $.fn.clearForm = function() {
                             <th scope="row">Collector</th>
                             <td>
                                 <input id="billkeyInCollMemId" name="billkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                                <input id="billkeyInCollMemNm" name="billkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                                <input id="billkeyInCollMemCd" name="billkeyInCollMemCd" type="text" title="" placeholder=""  />
+                                <p class="btn_sky">
+                                      <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm'/></a>
+                                 </p>
                                     <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
                                         <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                     </a>
+                                    <input id="billkeyInCollMemNm" name="billkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
                             </td>
                         </tr>
                         <tr>
@@ -4422,10 +4527,14 @@ $.fn.clearForm = function() {
                             <th scope="row">Collector</th>
                             <td>
                                 <input id="outSrvckeyInCollMemId" name="outSrvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                                <input id="outSrvckeyInCollMemNm" name="outSrvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                                <input id="outSrvckeyInCollMemCd" name="outSrvckeyInCollMemCd" type="text" title="" placeholder=""  />
+                                <p class="btn_sky">
+                                      <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm'/></a>
+                                 </p>
                                 <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
                                     <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                 </a>
+                                <input id="outSrvckeyInCollMemNm" name="outSrvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
                             </td>
                         </tr>
                         <tr>
@@ -4506,10 +4615,14 @@ $.fn.clearForm = function() {
                             <th scope="row">Collector</th>
                             <td>
                                 <input id="careSrvckeyInCollMemId" name="careSrvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                                <input id="careSrvckeyInCollMemNm" name="careSrvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                                <input id="careSrvckeyInCollMemCd" name="careSrvckeyInCollMemCd" type="text" title="" placeholder=""  />
+                                <p class="btn_sky">
+                                      <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm'/></a>
+                                 </p>
                                 <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
                                     <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                 </a>
+                                <input id="careSrvckeyInCollMemNm" name="careSrvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
                             </td>
                         </tr>
                         <tr>
