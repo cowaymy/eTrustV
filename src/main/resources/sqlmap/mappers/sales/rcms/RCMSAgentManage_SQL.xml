@@ -201,7 +201,7 @@
         LEFT JOIN SYS0013M F ON F.CODE_ID = B.RACE_ID
         LEFT JOIN FIRST_INSTALL G ON A.SALES_ORD_ID = G.SALES_ORD_ID
         JOIN REP0010S cD ON a.SALES_ORD_ID = cD.ORD_ID AND cd.SRV_CNTRCT_ID = 0
-        LEFT JOIN PAY0286D gstRb ON C.SALES_ORD_ID = gstRb.ORD_ID AND gstRb.CNTRCT_ID = 0
+        LEFT JOIN PAY0286D gstRb ON C.SALES_ORD_ID = gstRb.ORD_ID AND gstRb.CNTRCT_ID = 0 AND gstrb.stus_id = 1
         LEFT JOIN SYS0013M H ON H.CODE_ID = B.CORP_TYPE_ID
 		WHERE 1=1
 		<choose>
@@ -235,16 +235,36 @@
                       #{item}
                     </foreach>
                   </if>
-                  <if test="nric != null and nric !='' ">
-                    AND B.NRIC = #{nric}
-                  </if>
-                  <if test="custName != null and custName !='' ">
-                    AND UPPER(B.NAME) LIKE '%'||#{custName}||'%'
-                  </if>
                   <if test="vaNo != null and vaNo !='' ">
                     AND B.CUST_VA_NO = #{vaNo}
                   </if>
-
+            </when>
+            <when test="nric != null and nric !='' ">
+                    AND B.NRIC = #{nric}
+                    <if test="rosCaller != null and rosCaller != ''">
+                    AND A.AGENT_ID IN
+                    <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
+                      #{item}
+                    </foreach>
+                  </if>
+            </when>
+            <when test="custName != null and custName !='' ">
+                    AND UPPER(B.NAME) LIKE '%'||#{custName}||'%'
+                    <if test="rosCaller != null and rosCaller != ''">
+                    AND A.AGENT_ID IN
+                    <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
+                      #{item}
+                    </foreach>
+                  </if>
+            </when>
+            <when test="vaNo != null and vaNo !='' ">
+                    AND B.CUST_VA_NO = #{vaNo}
+                    <if test="rosCaller != null and rosCaller != ''">
+                    AND A.AGENT_ID IN
+                    <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
+                      #{item}
+                    </foreach>
+                  </if>
             </when>
             <otherwise>
 				  <if test="appType != null and appType !='' ">
