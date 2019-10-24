@@ -6,7 +6,7 @@
  ----------------------------------------------------------------
  25/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  06/03/2019  ONGHC  1.0.1          Remove Installation Status Active
- 24/10/2019  ONGHC  1.0.1          Amend Sirim and Serial no checking
+ 24/10/2019  ONGHC  1.0.2          Amend Sirim and Serial no checking
  -->
 
 <script type="text/javaScript">
