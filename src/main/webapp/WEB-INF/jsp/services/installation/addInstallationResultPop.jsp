@@ -6,6 +6,7 @@
  ----------------------------------------------------------------
  25/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  06/03/2019  ONGHC  1.0.1          Remove Installation Status Active
+ 24/10/2019  ONGHC  1.0.1          Amend Sirim and Serial no checking
  -->
 
 <script type="text/javaScript">
@@ -154,11 +155,15 @@
       if ($("#addInstallForm #installDate").val() == '') {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Actual Install Date' htmlEscape='false'/> </br>";
       }
-      if ($("#addInstallForm #sirimNo").val() == '') {
+      if ($("#addInstallForm #sirimNo").val().trim() == '' || ("#addInstallForm #sirimNo") == null) {
         msg += "* <spring:message code='sys.msg.necessary' arguments='SIRIM No' htmlEscape='false'/> </br>";
       }
-      if ($("#addInstallForm #serialNo").val() == '') {
+      if ($("#addInstallForm #serialNo").val().trim() == '' || ("#addInstallForm #serialNo") == null) {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
+      } else {
+        if ($("#addInstallForm #serialNo").val().trim().length < 9) {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Serial No' htmlEscape='false'/> </br>";
+        }
       }
 
       if (msg != "") {
