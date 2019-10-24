@@ -25,7 +25,7 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{di
 
 /* shs reset.css*/
 /*html{overflow-y:scroll;}*/
-html{overflow-y:hidden;}    /* 20190911 KR-MIN : for grid resizing */
+html{overflow-y:scroll;}    /* 20190911 KR-MIN : for grid resizing */
 a{cursor:pointer; text-decoration:none;}
 a:hover,
 a:focus{text-decoration:none;}
