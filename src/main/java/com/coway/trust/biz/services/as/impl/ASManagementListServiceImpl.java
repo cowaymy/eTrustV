@@ -2434,7 +2434,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       ASManagementListMapper.bckupPAY0252T(svc0004dmap);
       // REMOVE DATA
       LOGGER.debug(" =================== 2. REMOVE =================== ");
-      ASManagementListMapper.rmvPAY0252T(svc0004dmap);
+      //ASManagementListMapper.rmvPAY0252T(svc0004dmap);
       // UPDATE STATUS
       LOGGER.debug(" =================== 3. UPDATE =================== ");
       ASManagementListMapper.updPAY0081D(svc0004dmap);
