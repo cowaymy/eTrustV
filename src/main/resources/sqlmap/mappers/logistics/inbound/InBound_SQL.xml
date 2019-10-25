@@ -11,8 +11,8 @@
 				        ,S28.WH_LOC_DESC
 				        ,L83.PLANT
 				        ,L83.BL_NO
-				        ,TO_DATE(L83.SHIP_DT, 'YYYY/MM/DD') shipDt
-				        ,TO_DATE(L83.GR_DT, 'YYYY/MM/DD') grDt
+				        ,CASE WHEN L83.SHIP_DT= '00000000' THEN L83.SHIP_DT  ELSE TO_CHAR(TO_DATE(L83.SHIP_DT, 'YYYY/MM/DD')) END shipDt
+                ,CASE WHEN L83.GR_DT= '00000000' THEN L83.GR_DT  ELSE TO_CHAR(TO_DATE(L83.GR_DT, 'YYYY/MM/DD')) END grDt
 				        ,L83.AP_CMPLT
 				        ,L83.GR_CMPLT
 				        ,L84.PUR_DOC_NO
