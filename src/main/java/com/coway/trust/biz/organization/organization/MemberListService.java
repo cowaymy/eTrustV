@@ -1,5 +1,6 @@
 package com.coway.trust.biz.organization.organization;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,7 @@ public interface MemberListService {
 
 	Map<String, Object> traineeUpdate(Map<String, Object> params,SessionVO sessionVO);
 
-	Map<String, Object> hpMemRegister(Map<String, Object> params,SessionVO sessionVO);
+	Map<String, Object> hpMemRegister(Map<String, Object> params,SessionVO sessionVO) throws ParseException;
 
 
 	List<EgovMap> getMemberListView(Map<String, Object> params);

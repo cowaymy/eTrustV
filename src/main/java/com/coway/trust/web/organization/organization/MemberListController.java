@@ -1,6 +1,7 @@
 package com.coway.trust.web.organization.organization;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -1031,7 +1032,7 @@ public class MemberListController {
 
 
 	@RequestMapping(value = "/hpMemRegister.do", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage>  hpMemRegister(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+	public ResponseEntity<ReturnMessage>  hpMemRegister(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) throws ParseException {
 
 		ReturnMessage message = new ReturnMessage();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
