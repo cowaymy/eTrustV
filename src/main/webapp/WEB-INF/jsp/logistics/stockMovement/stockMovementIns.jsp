@@ -569,6 +569,13 @@
 				Common.alert("Header Text can be up to 50 digits.");
 				return false;
 			}
+			
+			//promp alert message when movement type does not correct.
+			if((($("#movpath").val() == 'CTOR') && $("#smtype").val() != 'UM93') || 
+					(($("#movpath").val() == '02' || $("#movpath").val() == 'CT') && $("#smtype").val() != 'UM03')){
+				Common.alert("The Movement Type is incorrect.");
+				return false;
+			}
 
 		}
 		return true;
