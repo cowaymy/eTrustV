@@ -608,9 +608,12 @@ var TODAY_DD      = "${toDay}";
 	                        function(result) {
 	                          console.log ('BS Month : ' +  $.datepicker.formatDate('mm/yy', new Date()));
 	                          if (result.message == "success") {
-	                            Common.alert("There is already exist for HCS for this month");
+	                            Common.alert("<b>Manual create CS Order disallow due to already exist for current month.");
 	                            return;
-	                          } else {
+	                          } else if (result.message == "warning") {
+	                                Common.alert("<b>Manual create CS Order (CS1T & FT1T) disallow due to already completed on previous month.");
+	                                return;
+	                              } else {
 	                            Common
 	                                .popupDiv("/homecare/services/selectCSConfigListPop.do?isPop=true&JsonObj="
 	                                    + jsonObj
