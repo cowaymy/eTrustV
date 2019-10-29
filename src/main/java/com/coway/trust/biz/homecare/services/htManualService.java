@@ -165,5 +165,7 @@ public interface htManualService {
 
 	int updateHsConfigBasicMultiple(Map<String, Object> params, SessionVO sessionVO);
 
+	EgovMap selectHsOrder1Time(Map<String, Object> params);
+
 
 }
