@@ -334,5 +334,5 @@ public interface htManualMapper {
 
 	void updateAssignHTMultiple(Map<String, Object> params);
 
-
+	EgovMap selectHsOrder1Time(Map<String, Object> params);
 }
