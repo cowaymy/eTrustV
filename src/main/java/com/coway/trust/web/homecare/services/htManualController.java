@@ -1019,9 +1019,13 @@ public class htManualController {
 		logger.debug("selectHsOrderInMonth.do : {}", params);
 
 		EgovMap hsOrderInMonth = htManualService.selectHsOrderInMonth(params);
+		EgovMap hsOrder1Time = htManualService.selectHsOrder1Time(params);
 
 		if(hsOrderInMonth != null && hsOrderInMonth.size() != 0  ){
 			message.setMessage("success");
+		}
+		else if(hsOrder1Time != null && hsOrder1Time.size() != 0){
+		  message.setMessage("warning");
 		}
 		else{
 			message.setMessage("fail");
@@ -1329,7 +1333,6 @@ public class htManualController {
 		return ResponseEntity.ok(message);
 
 	}
-
 
 
 }
