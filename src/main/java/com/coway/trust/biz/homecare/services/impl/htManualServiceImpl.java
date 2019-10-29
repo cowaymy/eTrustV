@@ -1450,4 +1450,13 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
 	    return cnt;
 	 }
 
+
+	 @Override
+	  public EgovMap selectHsOrder1Time(Map<String, Object> params) {
+	    if (params.get("selectHsOrder1Time") != null) {
+	    }
+	    return htManualMapper.selectHsOrder1Time(params);
+
+	 }
+
 }
