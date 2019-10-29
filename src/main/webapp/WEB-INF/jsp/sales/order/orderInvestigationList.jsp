@@ -143,7 +143,22 @@
 	}
 
 
+function fn_checkOrderValidDate(){
+    var todayDD = Number(TODAY_DD.substr(0, 2));
+    var todayYY = Number(TODAY_DD.substr(6, 4));
 
+
+    if (MEM_TYPE == 2) {
+        if(todayYY >= 2018) {
+            if(todayDD > 25) { // Block if date >= 25th of the month
+                 var msg = 'Disallow to create new request for Order Investigation after 25th of the Month.';
+                Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+                return "Warning";
+
+            }
+        }
+    }
+}
 
 
 	function fn_goSingle() {
@@ -152,22 +167,11 @@
 //			"action" : getContextPath() + "/sales/order/orderNewRequestSingleList.do"
 //		}).submit();
 
-         var todayDD = Number(TODAY_DD.substr(0, 2));
-              var todayYY = Number(TODAY_DD.substr(6, 4));
-
-
-              if (MEM_TYPE == 2) {
-                  if(todayYY >= 2018) {
-                      if(todayDD >= 25) { // Block if date >= 25th of the month
-                          var msg = 'Disallow to create new request for Order Investigation after 25th of the Month.';
-                          Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
-                          return;
-                      }
-                  }
-              }
-
-
+       if(fn_checkOrderValidDate() == "Warning") {
+             return;
+     }else{
 		Common.popupDiv("/sales/order/orderNewRequestSingleListPop.do", $("#popForm").serializeJSON(), null, true, 'singlePop');
+     }
 	}
 
 	function fn_goBatch() {
