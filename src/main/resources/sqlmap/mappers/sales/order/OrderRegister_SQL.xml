@@ -2232,6 +2232,7 @@
                   AND T2.SRV_CNTRCT_PAC_ID = #{srvPacId}
                   AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
                   AND T5.CODE_MASTER_ID = '381'
+                  AND T1.STUS_CODE_ID = 1
             </if>
             <if test='stkType != null and stkType == "2"'>
                 SELECT DISTINCT T1.STK_ID
@@ -2253,6 +2254,7 @@
                   AND T2.SRV_MEM_PAC_ID = #{srvPacId}
                   AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
                   AND T5.CODE_MASTER_ID = '381'
+                   AND T1.STUS_CODE_ID = 1
             </if>
              )
          ORDER BY DISCONTINUE, CODE_NAME ASC, STK_ID ASC
