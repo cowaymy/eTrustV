@@ -158,8 +158,8 @@
 
               if (MEM_TYPE == 2) {
                   if(todayYY >= 2018) {
-                      if(todayDD > 25) { // Block if date > 25th of the month
-                          var msg = 'Disallow to create new request for Order Investigation after 25nd of the Month.';
+                      if(todayDD >= 25) { // Block if date >= 25th of the month
+                          var msg = 'Disallow to create new request for Order Investigation after 25th of the Month.';
                           Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                           return;
                       }
