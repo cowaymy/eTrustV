@@ -305,7 +305,7 @@
                 console.log("checkRC.do");
 
                 if(memRc.rcPrct < 30) {
-                    Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more tha 3 orders due to RC below 30%. Kindly refer to your respective upline and proceed to manual submission.");
+                    Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%. Kindly refer to your respective upline and proceed to manual submission.");
                 } else {
                     Common.popupDiv("/sales/order/preOrderRegisterPop.do", null, null, true, '_divPreOrdRegPop');
                 }
