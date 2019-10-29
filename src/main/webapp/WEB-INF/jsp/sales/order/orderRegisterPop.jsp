@@ -2249,9 +2249,11 @@ console.log("vBindingNo" + vBindingNo);
         Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode}, function(memRc) {
             console.log("memRC checking");
 
-            if(memRc.rcPrct < 30 && memRc.cnt >= 3) {
-                fn_clearOrderSalesman();
-                Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
+            if(memRc != null) {
+                if(memRc.rcPrct < 30 && memRc.cnt >= 3) {
+                    fn_clearOrderSalesman();
+                    Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
+                }
             } else {
                 Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
 

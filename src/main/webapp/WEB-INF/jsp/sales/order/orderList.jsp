@@ -78,8 +78,10 @@
             Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
                 console.log("checkRC");
 
-                if(memRc.rcPrct < 30 && memRc.cnt >= 3) {
-                    Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
+                if(memRc != null) {
+                    if(memRc.rcPrct < 30 && memRc.cnt >= 3) {
+                        Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
+                    }
                 } else {
                     Common.popupDiv("/sales/order/copyChangeOrder.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
                 }
