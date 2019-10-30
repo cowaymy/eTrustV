@@ -2253,39 +2253,39 @@ console.log("vBindingNo" + vBindingNo);
                 if(memRc.rcPrct < 30 && memRc.cnt >= 3) {
                     fn_clearOrderSalesman();
                     Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
+                    return false;
                 }
-            } else {
-                Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
-
-                    if(memInfo == null) {
-//                      Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
-                        Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
-                    }
-                    else {
-                        $('#hiddenSalesmanId').val(memInfo.memId);
-                        $('#salesmanCd').val(memInfo.memCode);
-                        $('#salesmanType').val(memInfo.codeName);
-                        $('#salesmanTypeId').val(memInfo.memType);
-                        $('#salesmanNm').val(memInfo.name);
-                        $('#salesmanNric').val(memInfo.nric);
-                        $('#departCd').val(memInfo.deptCode);
-                        $('#departMemId').val(memInfo.lvl3UpId);
-                        $('#grpCd').val(memInfo.grpCode);
-                        $('#grpMemId').val(memInfo.lvl2UpId);
-                        $('#orgCd').val(memInfo.orgCode);
-                        $('#orgMemId').val(memInfo.lvl1UpId);
-
-                        $('#salesmanCd').removeClass("readonly");
-                      //$('#salesmanType').removeClass("readonly");
-                      //$('#salesmanNm').removeClass("readonly");
-                      //$('#salesmanNric').removeClass("readonly");
-                        $('#departCd').removeClass("readonly");
-                        $('#grpCd').removeClass("readonly");
-                        $('#orgCd').removeClass("readonly");
-                    }
-                });
             }
 
+            Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
+
+                if(memInfo == null) {
+                    Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+                    Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
+                }
+                else {
+                    $('#hiddenSalesmanId').val(memInfo.memId);
+                    $('#salesmanCd').val(memInfo.memCode);
+                    $('#salesmanType').val(memInfo.codeName);
+                    $('#salesmanTypeId').val(memInfo.memType);
+                    $('#salesmanNm').val(memInfo.name);
+                    $('#salesmanNric').val(memInfo.nric);
+                    $('#departCd').val(memInfo.deptCode);
+                    $('#departMemId').val(memInfo.lvl3UpId);
+                    $('#grpCd').val(memInfo.grpCode);
+                    $('#grpMemId').val(memInfo.lvl2UpId);
+                    $('#orgCd').val(memInfo.orgCode);
+                    $('#orgMemId').val(memInfo.lvl1UpId);
+
+                    $('#salesmanCd').removeClass("readonly");
+                    //$('#salesmanType').removeClass("readonly");
+                    //$('#salesmanNm').removeClass("readonly");
+                    //$('#salesmanNric').removeClass("readonly");
+                    $('#departCd').removeClass("readonly");
+                    $('#grpCd').removeClass("readonly");
+                    $('#orgCd').removeClass("readonly");
+                }
+            });
         });
     }
 

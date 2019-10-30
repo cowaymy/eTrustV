@@ -307,10 +307,11 @@
                 if(memRc != null) {
                     if(memRc.rcPrct < 30) {
                         Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%. Kindly refer to your respective upline and proceed to manual submission.");
+                        return false;
                     }
-                } else {
-                    Common.popupDiv("/sales/order/preOrderRegisterPop.do", null, null, true, '_divPreOrdRegPop');
                 }
+
+                Common.popupDiv("/sales/order/preOrderRegisterPop.do", null, null, true, '_divPreOrdRegPop');
             });
         });
         $('#_btnClear').click(function() {
@@ -433,10 +434,12 @@
                     if(memRc != null) {
                         if(memRc.rcPrct < 30) {
                             Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more tha 3 orders due to RC below 30%. Kindly refer to your respective upline and proceed to manual submission.");
+                            return false;
                         }
-                    } else {
-                        Common.popupDiv("/sales/order/convertToOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);
                     }
+
+                    Common.popupDiv("/sales/order/convertToOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);
+
                 });
             }
         }else {
