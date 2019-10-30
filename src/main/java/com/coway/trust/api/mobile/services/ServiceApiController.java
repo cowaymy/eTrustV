@@ -107,6 +107,7 @@ import io.swagger.annotations.ApiOperation;
  * 29/07/2019    ONGHC      1.0.6       - Amend productReturnResult to Add Status Checking
  * 30/07/2019    ONGHC      1.0.7       - Amend asRegistration
  * 18/10/2019    ONGHC      1.0.8       - Amend Installation for Product Exchange
+ * 30/10/2019    ONGHC      1.0.9       - Amend Installation for add EXC_CT_ID as parameter
  *********************************************************************************************/
 
 @Api(value = "service api", description = "service api")
@@ -1278,6 +1279,8 @@ public class ServiceApiController {
           params.put("hidStockIsSirim", String.valueOf(insTransLogs.get(i).get("sirimNo")));
           params.put("hidSerialNo", String.valueOf(insTransLogs.get(i).get("serialNo")));
           params.put("remark", insTransLogs.get(i).get("resultRemark"));
+
+          params.put("EXC_CT_ID", String.valueOf(userId));
 
           LOGGER.debug("### INSTALLATION PARAM : " + params.toString());
 
