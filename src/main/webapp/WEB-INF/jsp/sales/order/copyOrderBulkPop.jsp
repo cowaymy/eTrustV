@@ -3,27 +3,48 @@
 <head>
 <script type="text/javaScript" language="javascript">
 
+    var rcPrct = "${rcPrct}";
+    var cnt = "${cnt}";
+    var memCode = "${memCode}";
+    var salesmanName = "${salesmanName}";
+
 	$(document).ready(function(){
         $('#_custNm').val($('#name').val());
         $('#_appType').val($('#appType option:selected').text());
 	});
-	
+
 	$(function(){
 	    $('#btnBulk').click(function() {
+	        console.log("btnBulk");
             if(FormUtil.checkReqValue($('#_copyQty'))) {
                 var msg = '* <spring:message code="sal.alert.msg.plzKeyInOrdQty" />';
                 Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
                 return false;
             }
-            if($('#_copyQty').val() <= 1) {
-                var msg = '* <spring:message code="sal.alert.msg.plzKeyInNum1" />';
-                Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
-                return false;
-            }
-            else {
-                $('#hiddenCopyQty').val($('#_copyQty').val());
-                fn_preCheckSave();
-                $('#btnCnfmOrderClose').click();
+
+            if(rcPrct < 30) {
+                var qty = parseInt($('#_copyQty').val());
+                var tot = qty + parseInt(cnt);
+
+                if(tot > 3) {
+                    Common.alert(salesmanName + " (" + memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
+                    return false;
+                } else {
+                    $('#hiddenCopyQty').val($('#_copyQty').val());
+                    fn_preCheckSave();
+                    $('#btnCnfmOrderClose').click();
+                }
+            } else {
+                if($('#_copyQty').val() <= 1) {
+                    var msg = '* <spring:message code="sal.alert.msg.plzKeyInNum1" />';
+                    Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+                    return false;
+                }
+                else {
+                    $('#hiddenCopyQty').val($('#_copyQty').val());
+                    fn_preCheckSave();
+                    $('#btnCnfmOrderClose').click();
+                }
             }
 	    });
 	});
