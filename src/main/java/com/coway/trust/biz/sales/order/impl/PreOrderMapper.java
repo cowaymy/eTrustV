@@ -50,4 +50,6 @@ public interface PreOrderMapper {
 	void insertFileDetail(Map<String, Object> flInfo);
 
 	int selRcdTms(Map<String, Object> params);
+
+	void updateKeyinSOF(Map<String, Object> params);
 }

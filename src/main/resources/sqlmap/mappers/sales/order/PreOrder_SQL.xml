@@ -474,5 +474,14 @@
       SELECT COUNT(*) COUNT
         FROM SAL0213M
       WHERE PRE_ORD_ID = #{preOrdId} AND UPD_DT = TO_DATE(SUBSTR(#{rcdTms},1,19), 'YYYY-MM-DD HH24:MI:SS')
-  </select>
+    </select>
+
+    <update id="updateKeyinSOF" parameterType="Map">
+        UPDATE SAL0213M
+           SET
+               SOF_NO = #{ordRefNo}
+             , UPD_USER_ID           = #{updUserId}
+             , UPD_DT                   = SYSDATE
+         WHERE SALES_ORD_ID        = #{salesOrdId}
+    </update>
 </mapper>

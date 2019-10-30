@@ -444,16 +444,16 @@
             Common.popupDiv(
                 "/sales/customer/customerCreditCardAddPop.do",
                 {
-                  custId : $('#hiddenThrdPartyId').val(),
-                  nric : $("#thrdPartyNric").val()
+                  custId : $('#hiddenThrdPartyId').val()
+                  //,nric : $("#thrdPartyNric").val()
                 }, null, true);
 
           } else {
             Common.popupDiv(
                 "/sales/customer/customerCreditCardAddPop.do",
                 {
-                  custId : CUST_ID,
-                  nric : CUST_NRIC
+                  custId : CUST_ID
+                  //,nric : CUST_NRIC
                 }, null, true);
 
           }
@@ -2869,6 +2869,7 @@
       name="deptMemId" type="hidden" /> <input id="modGrpMemId"
       name="grpMemId" type="hidden" /> <input id="modOrgMemId"
       name="orgMemId" type="hidden" />
+      <input id="eKeyinYn" name="eKeyinYn" type="hidden" value="${eKeyinYn}" />
      <table class="type1">
       <!-- table start -->
       <caption>table</caption>

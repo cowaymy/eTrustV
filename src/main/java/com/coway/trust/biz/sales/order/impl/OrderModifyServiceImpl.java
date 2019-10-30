@@ -88,6 +88,9 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 	@Resource(name = "orderRegisterMapper")
 	private OrderRegisterMapper orderRegisterMapper;
 
+	@Resource(name = "preOrderMapper")
+    private PreOrderMapper preOrderMapper;
+
 	@Resource(name = "customerMapper")
 	private CustomerMapper customerMapper;
 
@@ -104,6 +107,9 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		if(Integer.valueOf((String)params.get("appTypeId")) != SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
 			params.put("installDur", 0);
 		}
+
+		if(params.get("eKeyinYn").equals("Y"))
+		  preOrderMapper.updateKeyinSOF(params);
 
 		orderModifyMapper.updateSalesOrderM(params);
 	}
@@ -633,7 +639,7 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 	public EgovMap getInstallDetail(Map<String, Object> params) {
 		return orderModifyMapper.getInstallDetail(params);
 	}
-	
+
 	@Override
 	public void updateCcpOrderBasinInfo(Map<String, Object> params, SessionVO sessionVO) {
 
