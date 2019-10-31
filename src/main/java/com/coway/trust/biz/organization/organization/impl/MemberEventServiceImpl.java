@@ -120,29 +120,29 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 				// request vacation
 			} else {
 				//Get New Dept Code
-				int docNoID = getNewDeptCodeDocNoId(vMemTypeId ,vMemLvlTo );
-				logger.debug("DocNoID::::" + docNoID );
-
-				EgovMap  qryDocNo = memberEventMapper.getDocNoes(docNoID);
-//				Map<String,Object> mapQryDocNo = (Map<String,Object>)qryDocNo.get(0);
-				logger.debug("qryDocNo:::: : {}" + qryDocNo );
-
-                String vDocNo = qryDocNo.get("docNo").toString();
-                String vDocNoPrefix = qryDocNo.get("docNoPrefix").toString();
-
-                newDeptCode1 = vDocNoPrefix + vDocNo;
-                logger.debug("DocNoID::::" + newDeptCode1 );
-
-                nextDocNo = getNextDocNo(vDocNoPrefix, vDocNo);
-                logger.debug("nextDocNo : {}",nextDocNo);
-
-
-                if(qryDocNo.size()>0){
-                	vDocNo = nextDocNo;
-                	qryDocNo.put("docNo", nextDocNo);
-                	qryDocNo.put("docNoID", docNoID);
-                	memberEventMapper.updateDocNoes(qryDocNo);
-                }
+//				int docNoID = getNewDeptCodeDocNoId(vMemTypeId ,vMemLvlTo );
+//				logger.debug("DocNoID::::" + docNoID );
+//
+//				EgovMap  qryDocNo = memberEventMapper.getDocNoes(docNoID);
+////				Map<String,Object> mapQryDocNo = (Map<String,Object>)qryDocNo.get(0);
+//				logger.debug("qryDocNo:::: : {}" + qryDocNo );
+//
+//                String vDocNo = qryDocNo.get("docNo").toString();
+//                String vDocNoPrefix = qryDocNo.get("docNoPrefix").toString();
+//
+//                newDeptCode1 = vDocNoPrefix + vDocNo;
+//                logger.debug("DocNoID::::" + newDeptCode1 );
+//
+//                nextDocNo = getNextDocNo(vDocNoPrefix, vDocNo);
+//                logger.debug("nextDocNo : {}",nextDocNo);
+//
+//
+//                if(qryDocNo.size()>0){
+//                	vDocNo = nextDocNo;
+//                	qryDocNo.put("docNo", nextDocNo);
+//                	qryDocNo.put("docNoID", docNoID);
+//                	memberEventMapper.updateDocNoes(qryDocNo);
+//                }
 			}
 
 			//MemberOrganization
