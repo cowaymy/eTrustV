@@ -106,6 +106,7 @@ public class OrderModifyController {
 		model.put("ordPvMonth",     basicInfo.get("ordPvMonth"));
 		model.put("ordPvYear",     basicInfo.get("ordPvYear"));
 		model.put("typeId",     basicInfo.get("typeId"));
+		model.put("eKeyinYn", !basicInfo.get("ekeyCrtUser").equals(null) ? "Y" : "N");
 
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### salesOrderId : "+model.get("salesOrderId"));
@@ -500,7 +501,7 @@ public class OrderModifyController {
 		logger.debug("orderInstallDetail : {}",orderInstallDetail);
 		return ResponseEntity.ok(orderInstallDetail);
 	}
-	
+
 	@RequestMapping(value = "/updateCcpOrderBasinInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateCcpOrderBasinInfo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
