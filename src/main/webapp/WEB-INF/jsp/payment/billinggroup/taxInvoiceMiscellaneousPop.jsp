@@ -18,7 +18,9 @@ var invoiceTypeData = [{"codeId": "117","codeName": "HP Registration Invoice (BR
                             {"codeId": "123","codeName": "WholeSales Invoice (BR63)"},
                             {"codeId": "124","codeName": "Product Lost Invoice (BR56)"},
                             {"codeId": "125","codeName": "Early Termination Invoice (BR52)"},
-                            {"codeId": "408","codeName": "Care Service Invoice (BR71)"}
+                            {"codeId": "408","codeName": "Care Service Invoice (BR71)"},
+                            // Added for differentiate Compensation vs Wholesales Invoice type by Hui Ding, 31/10/2019
+                            {"codeId": "440","codeName": "Compensation Invoice (BR63)"}
                             ];
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
