@@ -39,5 +39,11 @@ public class CodyStockServiceImpl extends EgovAbstractServiceImpl implements Cod
     // TODO Auto-generated method stub
     return CodyStockMapper.getCodyCodeList(params);
   }
+
+  @Override
+  public List<EgovMap> selectCMGroupList(Map<String, Object> params) {
+    // TODO Auto-generated method stub
+    return CodyStockMapper.selectCMGroupList(params);
+  }
   
 }

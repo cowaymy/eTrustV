@@ -12,5 +12,7 @@ public interface CodyStockService {
   List<EgovMap> getDeptCodeList(Map<String, Object> params);
 
   List<EgovMap> getCodyCodeList(Map<String, Object> params);
+
+  List<EgovMap> selectCMGroupList(Map<String, Object> params);
   
 }

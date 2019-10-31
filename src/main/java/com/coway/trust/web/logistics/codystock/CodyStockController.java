@@ -74,4 +74,10 @@ public class CodyStockController {
     return ResponseEntity.ok(codyCodeList);
   }
   
+  @RequestMapping(value = "/selectCMGroupList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectCMGroupList(@RequestParam Map<String, Object> params) {
+    List<EgovMap> codeList = CodyStockService.selectCMGroupList(params);
+    return ResponseEntity.ok(codeList);
+  }
+  
 }

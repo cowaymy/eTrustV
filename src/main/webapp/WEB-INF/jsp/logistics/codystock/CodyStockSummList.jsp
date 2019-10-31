@@ -7,14 +7,26 @@
 		"codeId" : "04",
 		"codeName" : "CODY"
 	} ];
-
+	
+	var brnch = ('${SESSION_INFO.userBranchId}' == null || '${SESSION_INFO.userBranchId}' == "" ) ? 0 : '${SESSION_INFO.userBranchId}';
+	
 	$(document).ready(function() {
-		doGetComboData('/logistics/codystock/selectTotalBranchList.do', '', '', 'searchBranch', 'S', '');
-		CommonCombo.make('cmgroup', '/logistics/codystock/getDeptCodeList', {
-			memLvl : 3,
-			memType : 2
-		}, '');
+		//branch
+		doGetComboData('/logistics/codystock/selectTotalBranchList.do', '', brnch, 'searchBranch', 'S', '');
+
+		//cm group
+		if(brnch == null || brnch == ""){
+			CommonCombo.make('cmgroup', '/logistics/codystock/getDeptCodeList', {memLvl : 3, memType : 2}, '');
+		} else {
+			doGetCombo("/logistics/codystock/selectCMGroupList.do", brnch, '', 'cmgroup', 'S', '');
+		}
+		
+		//loc type
 		doDefCombo(comboData, '04', 'searchlocgb', 'S', '');
+
+		$("#searchBranch").change(function() {
+			doGetCombo("/logistics/codystock/selectCMGroupList.do", $("#searchBranch").val(), '', 'cmgroup', 'S', '');
+		});
 	});
 
 	function fn_ChangeCMGroup() {
@@ -25,27 +37,26 @@
 		}, '');
 
 	}
-	
-	
+
 	function validRequiredField() {
 
 		var valid = true;
 		var message = "";
-		
+
 		if ($("#searchBranch").val() == null || $("#searchBranch").val().length == 0) {
 			valid = false;
 			message += 'Please select Branch.|!|';
 		}
-		
+
 		if ($("#cmgroup").val() == null || $("#cmgroup").val().length == 0) {
 			valid = false;
 			message += 'Please select CM Group.|!|';
 		}
-		
+
 		if ($("#searchLoc").val() == null || $("#searchLoc").val().length == 0) {
 			valid = false;
 			message += 'Please select Location.|!|';
-		} 
+		}
 
 		if (($("#hsperiod").val() == null || $("#hsperiod").val() == '')) {
 
@@ -61,7 +72,6 @@
 		return valid;
 	}
 
-	
 	function fn_report(type) {
 
 		if (validRequiredField() == true) {
@@ -75,11 +85,6 @@
 			var codyCode = "";
 			var whereSQL = "";
 			var orderBySQL = "";
-
-			/* console.log("type " +type);
-			console.log("yyyyStr " +yyyyStr);
-			console.log("mmStr " +mmStr);
-			console.log("yyyyStr+mmStr " +yyyyStr+mmStr); */
 
 			$("#reportFileName").val("");
 			$("#reportDownFileName").val("");
@@ -107,15 +112,16 @@
 			if (date.toString().length == 1) {
 				date = "0" + date;
 			}
-			
-			if (type == 'PDF'){
+
+			if (type == 'PDF') {
 				$("#form #reportFileName").val("/logistics/CodyStockSummary.rpt");
-			} else {
+			}
+			else {
 				$("#form #reportFileName").val("/logistics/CodyStockSummary_Excel.rpt");
 			}
-			
+
 			$("#reportDownFileName").val("CodyStockSummary" + date + (new Date().getMonth() + 1) + new Date().getFullYear());
-			
+
 			orderBySQL += " ORDER BY S28.WH_LOC_CODE, L93.STK_CODE ";
 
 			$("#form #V_HSPERIOD").val(hsPeriod);
@@ -161,17 +167,14 @@
 	<aside class="title_line"></aside>
 
 	<section class="search_table">
-	<form action="#" method="post" id="form">
-			<input type="hidden" id="reportFileName" name="reportFileName" /> 
-			<input type="hidden" id="viewType" name="viewType" /> 
-			<input type="hidden" id="V_HSPERIOD" name="V_HSPERIOD" /> 
-			<input type="hidden" id="V_DEPTCODE" name="V_DEPTCODE" /> 
-			<input type="hidden" id="V_CODYCODE" name="V_CODYCODE" />
-			<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" /> 
-			<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> 
-			<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" />
-			<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> 
-			<input type="hidden" id="reportDownFileName" name="reportDownFileName" />
+		<form action="#" method="post" id="form">
+			<input type="hidden" id="reportFileName" name="reportFileName" /> <input type="hidden"
+				id="viewType" name="viewType" /> <input type="hidden" id="V_HSPERIOD" name="V_HSPERIOD" /> <input
+				type="hidden" id="V_DEPTCODE" name="V_DEPTCODE" /> <input type="hidden" id="V_CODYCODE"
+				name="V_CODYCODE" /> <input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" /> <input
+				type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> <input type="hidden" id="V_ORDERBYSQL"
+				name="V_ORDERBYSQL" /> <input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> <input
+				type="hidden" id="reportDownFileName" name="reportDownFileName" />
 
 
 			<table summary="search table" class="type1">
@@ -212,10 +215,10 @@
 		<li><p class="btn_blue2">
 				<a href="#" onclick="javascript:fn_report('PDF')"><spring:message code="sal.btn.genPDF" /></a>
 			</p></li>
-			<li><p class="btn_blue2">
+		<li><p class="btn_blue2">
 				<a href="#" onclick="javascript:fn_report('EXCEL')"><spring:message code="sal.btn.genExcel" /></a>
 			</p></li>
-			
+
 
 	</ul>
 
