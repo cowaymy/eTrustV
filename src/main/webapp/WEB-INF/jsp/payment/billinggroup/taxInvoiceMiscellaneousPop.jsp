@@ -162,6 +162,15 @@ function fn_generateInvoice(){
 
             	}
             	break;
+            // Added for differentiate Compensation vs Wholesales Invoice type by Hui Ding, 01/11/2019
+            case 440 :
+                if( parseInt(year)*100 + parseInt(month) >= 201809){
+                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Compensation_PDF_SST.rpt');
+                }
+                else {
+                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Compensation_PDF.rpt');
+                }
+                break;
             default:
                 break;
         }
