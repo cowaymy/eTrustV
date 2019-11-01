@@ -106,7 +106,7 @@ public class OrderModifyController {
 		model.put("ordPvMonth",     basicInfo.get("ordPvMonth"));
 		model.put("ordPvYear",     basicInfo.get("ordPvYear"));
 		model.put("typeId",     basicInfo.get("typeId"));
-		model.put("eKeyinYn", !basicInfo.get("ekeyCrtUser").equals(null) ? "Y" : "N");
+		model.put("eKeyinYn", CommonUtils.nvl(basicInfo.get("ekeyCrtUser")).equals("") ? "Y" : "N");
 
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### salesOrderId : "+model.get("salesOrderId"));
