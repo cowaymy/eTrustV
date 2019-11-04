@@ -1270,7 +1270,8 @@ console.log("orderRegisterPop.jsp");
         });
         $('[name="ordSaveBtn"]').click(function() {
             if(bulkOrderYn == 'Y' && FormUtil.checkReqValue($('#hiddenCopyQty'))) {
-                Common.popupDiv("/sales/order/copyOrderBulkPop.do");
+                var data = {memCode : $("#salesmanCd").val()};
+                Common.popupDiv("/sales/order/copyOrderBulkPop.do", data, null, true, "copyOrderBulkPop");
             }
             else {
                 fn_preCheckSave();
