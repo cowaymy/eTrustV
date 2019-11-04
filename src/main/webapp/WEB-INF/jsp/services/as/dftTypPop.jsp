@@ -144,6 +144,7 @@
     <input id="callPrgm" name="callPrgm" value="${callPrgm}" type="hidden" />
     <input id="prodCde" name="prodCde" value="${prodCde}" type="hidden" />
     <input id="ddCde" name="ddCde" value="${ddCde}" type="hidden" />
+     <input id="dtCde" name="dtCde" value="${dtCde}" type="hidden" />
     <input id="search1" name="search1" type="hidden" />
     <input id="search2" name="search2" type="hidden" />
     <input id="search3" name="search3" type="hidden" />
