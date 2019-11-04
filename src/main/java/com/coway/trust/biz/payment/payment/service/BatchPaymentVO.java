@@ -22,6 +22,7 @@ public class BatchPaymentVO {
 	private String collectorCode;
 	private String paymentType;
 	private String advanceMonth;
+	private String userRemark;
 	
 	
 	public static BatchPaymentVO create(CSVRecord CSVRecord) {
@@ -44,6 +45,7 @@ public class BatchPaymentVO {
 		vo.setCollectorCode(CSVRecord.get(15));
 		vo.setPaymentType(CSVRecord.get(16));
 		vo.setAdvanceMonth(CSVRecord.get(17));
+		vo.setUserRemark(CSVRecord.get(18));
 		
 		return vo;
 	}
@@ -191,6 +193,14 @@ public class BatchPaymentVO {
 	public void setBankChargeAcc(String bankChargeAcc) {
 		this.bankChargeAcc = bankChargeAcc;
 	}
+
+  public String getUserRemark() {
+    return userRemark;
+  }
+  
+  public void setUserRemark(String userRemark) {
+    this.userRemark = userRemark;
+  }
 
 	
 	

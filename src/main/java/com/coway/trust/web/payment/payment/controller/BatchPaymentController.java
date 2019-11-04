@@ -274,6 +274,7 @@ public class BatchPaymentController {
 			hm.put("sysRefDate", "1900/01/01");
 			hm.put("sysBCAmt", 0);
 			hm.put("sysBCAccId", 0);
+			hm.put("userRemark", vo.getUserRemark().trim());
 			
 			if(!vo.getTrDate().trim().equals("")){
 				hm.put("userTrDate", vo.getTrDate().trim());
@@ -296,7 +297,6 @@ public class BatchPaymentController {
 			}else{
 				hm.put("advanceMonth", 0);
 			}
-			
 			detailList.add(hm);
 		}
 

@@ -475,7 +475,8 @@
 		SYS_CLCTR_ID, 
 		PAY_TYPE, 
 		PAY_TYPE_ID,
-		ADV_MONTH
+		ADV_MONTH,
+		USER_REM
 		) VALUES (
 		#{detId},
 		#{batchId},
@@ -522,7 +523,8 @@
 		#{sysCollectorId},
 		#{paymentType},
 		#{PaymentTypeId},
-		#{advanceMonth}
+		#{advanceMonth},
+		#{userRemark}
 		)
     </insert>
     
