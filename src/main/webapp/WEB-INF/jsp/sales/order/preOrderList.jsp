@@ -230,6 +230,7 @@
                 }
             } */
           , { headerText : "preOrdId",        dataField : "preOrdId",   visible  : false}
+
             ];
 
         //그리드 속성 설정
@@ -427,7 +428,7 @@
                 Common.alert("Convert order is not allowed for this pre-order");
             }
         	else{
-                var memCode = AUIGrid.getcellValue(listGridId, selIdx, "crtName");
+                var memCode = AUIGrid.getCellValue(listGridID, selIdx, "crtName");
                 Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
                     console.log("checkRc");
 
