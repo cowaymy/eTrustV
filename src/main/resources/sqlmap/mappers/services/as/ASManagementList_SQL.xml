@@ -2760,6 +2760,10 @@
         AND ( DEFECT_GRP = #{ddCde} )
       </if>
 
+      <if test="dtCde != null and dtCde != '' ">
+        AND ( DEFECT_GRP = #{dtCde} )
+      </if>
+
       <if test="search1 != null and search1 != '' ">
         AND ( DEFECT_CODE LIKE UPPER(#{search1}) )
       </if>
