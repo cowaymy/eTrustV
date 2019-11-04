@@ -289,7 +289,7 @@ public class ApiController {
     this.checkArgument(params);
     String reportFile = (String) params.get(REPORT_FILE_NAME);
     String reportName = reportFilePath + reportFile;
-    ViewType viewType = ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+    ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
 
     try {
       ReportAppSession ra = new ReportAppSession();
