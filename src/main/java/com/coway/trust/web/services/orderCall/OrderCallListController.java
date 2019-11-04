@@ -34,6 +34,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 03/04/2019    ONGHC      1.0.3       - Amend selectCallResultPop to retrieve Call Log Date Time
  * 10/10/2019    ONGHC      1.0.4       - Amend insertCallResult_2 to Check Available Stock
  * 11/10/2019    ONGHC      1.0.5       - Amend insertCallResult_2 to Check Available Stock By Status
+ * 04/11/2019    ONGHC      1.0.6       - Amend insertCallResult_2
  *********************************************************************************************/
 
 @Controller
@@ -237,25 +238,30 @@ public class OrderCallListController {
       EgovMap rdcStock = orderCallListService.selectRdcStock(params);
 
       logger.debug("rdcStock : {}", rdcStock);
-      if (rdcStock != null) {
+      //if (rdcStock != null) {
         if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
           logger.debug("CHECK QUANTITY~~");
-          if (Integer.parseInt(rdcStock.get("availQty").toString()) > 0) {
-            resultValue = orderCallListService.insertCallResult_2(params, sessionVO);
+          if (rdcStock != null) {
+            if (Integer.parseInt(rdcStock.get("availQty").toString()) > 0) {
+              resultValue = orderCallListService.insertCallResult_2(params, sessionVO);
 
-            if (null != resultValue) {
-              if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
-                if ("1".equals(resultValue.get("logStat"))) {
-                  message.setMessage("Error Encounter. Please Contact Administrator. Error Code(CL): " + resultValue.get("logStat").toString());
-                  message.setCode("99");
+              if (null != resultValue) {
+                if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
+                  if ("1".equals(resultValue.get("logStat"))) {
+                    message.setMessage("Error Encounter. Please Contact Administrator. Error Code(CL): " + resultValue.get("logStat").toString());
+                    message.setCode("99");
+                  } else {
+                    message.setMessage("Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo"));
+                    message.setCode("1");
+                  }
                 } else {
-                  message.setMessage("Record created successfully.</br> Installation No : " + resultValue.get("installationNo") + "</br>Seles Order No : " + resultValue.get("salesOrdNo"));
+                  message.setMessage("Record updated successfully.</br> ");
                   message.setCode("1");
                 }
-              } else {
-                message.setMessage("Record updated successfully.</br> ");
-                message.setCode("1");
               }
+            } else {
+              message.setMessage("Fail to update due to RDC out of stock. ");
+              message.setCode("99");
             }
           } else {
             message.setMessage("Fail to update due to RDC out of stock. ");
@@ -302,10 +308,10 @@ public class OrderCallListController {
           message.setMessage("Fail to update due to RDC out of stock. ");
           message.setCode("99");
         }*/
-      } else {
-        message.setMessage("Fail to update due to RDC out of stock. ");
-        message.setCode("99");
-      }
+      //} else {
+        //message.setMessage("Fail to update due to RDC out of stock. ");
+        //message.setCode("99");
+      //}
     } else {
       message.setMessage("Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
       message.setCode("99");
