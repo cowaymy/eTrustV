@@ -979,6 +979,7 @@
 
   function fn_dftTyp(dftTyp){
     var ddCde = "";
+    var dtCde = "";
     if (dftTyp == "DC") {
       if ($("#def_def_id").val() == "" || $("#def_def_id").val() == null) {
         var text = "<spring:message code='service.text.dtlDef' />";
@@ -988,8 +989,18 @@
       } else {
         ddCde = $("#def_def_id").val();
       }
-    }
-    Common.popupDiv("/services/as/dftTypPop.do", {callPrgm : dftTyp, prodCde : $("#PROD_CDE").val(), ddCde: ddCde}, null, true);
+    }else if (dftTyp == "SC"){
+      if ($("#def_type_id").val() == "" || $("#def_type_id").val() == null) {
+            var text = "<spring:message code='service.text.defTyp' />";
+            var msg = "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+            Common.alert(msg);
+            return false;
+          } else {
+            dtCde = $("#def_type_id").val();
+          }
+}
+    Common.popupDiv("/services/as/dftTypPop.do", {callPrgm : dftTyp, prodCde : $("#PROD_CDE").val(), ddCde: ddCde , dtCde : dtCde}, null, true);
+
   }
 
   function fn_loadDftCde(itm, prgmCde) {
@@ -998,6 +1009,11 @@
         $("#def_type").val(itm.code);
         $("#def_type_id").val(itm.id);
         $("#def_type_text").val(itm.descp);
+
+        //DEPENDENCY
+        $("#solut_code").val("");
+        $("#solut_code_id").val("");
+        $("#solut_code_text").val("");
       } else if (prgmCde == 'DC') {
         $("#def_code").val(itm.code);
         $("#def_code_id").val(itm.id);
