@@ -1,24 +1,57 @@
 package com.coway.trust.web.common;
 
+import static com.coway.trust.AppConstants.MSG_NECESSARY;
+import static com.coway.trust.AppConstants.REPORT_CLIENT_DOCUMENT;
+import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+
 /**************************************
  * Author                  Date                    Remark
  * Chew Kah Kit        2019/04/11           API for customer portal
  ***************************************/
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-import javax.annotation.Resource;import javax.servlet.http.HttpServletRequest;
+import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.ApiService;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.Precondition;
+import com.coway.trust.util.ReportUtils;
+import com.coway.trust.web.common.ReportController.ViewType;
+import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
+import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
+import com.crystaldecisions.sdk.occa.report.application.ParameterFieldController;
+import com.crystaldecisions.sdk.occa.report.application.ReportAppSession;
+import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
+import com.crystaldecisions.sdk.occa.report.data.Fields;
+import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -28,8 +61,23 @@ public class ApiController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ApiController.class);
 
+  @Autowired
+  private MessageSourceAccessor messageAccessor;
+
+  @Autowired
+  private ServletContext context;
+
   @Resource(name = "apiService")
   private ApiService apiService;
+
+  @Value("${report.datasource.username}")
+  private String reportUserName;
+
+  @Value("${report.datasource.password}")
+  private String reportPassword;
+
+  @Value("${report.file.path}")
+  private String reportFilePath;
 
   @RequestMapping(value = "/customer/getCowayCustByNricOrPassport.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> getCowayCustByNricOrPassport(HttpServletRequest request,@RequestParam Map<String, Object> params) {
@@ -186,5 +234,102 @@ public class ApiController {
     EgovMap addEInvoiceSubscription = apiService.addEInvoiceSubscription(request, params);
     return ResponseEntity.ok(addEInvoiceSubscription);
   }
+
+  @RequestMapping(value = "/customer/genOutrightInvoice.do")
+  public void genOutrightInvoice(HttpServletRequest request, HttpServletResponse response ,@RequestParam Map<String, Object> params) {
+
+    params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_SST.rpt");
+    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    params.put("V_TAXINVOICEID", params.get("taxInvoiceId").toString()); // parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,"CustomerPortal" + File.separator + "Outright_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
+    this.viewProcedure(request, response, params);
+
+  }
+
+  private void checkArgument(Map<String, Object> params) {
+
+    Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
+        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
+    Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
+        messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
+
+  }
+
+  private void viewHandle(HttpServletRequest request, HttpServletResponse response, ViewType viewType,
+      ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
+      throws ReportSDKExceptionBase, IOException {
+
+    String downFileName = (String) params.get(REPORT_DOWN_FILE_NAME);
+
+    switch (viewType) {
+      case CSV:
+        ReportUtils.viewCSV(response, clientDoc, downFileName);
+        break;
+      case PDF:
+        ReportUtils.viewPDF(response, clientDoc, downFileName);
+        break;
+      case EXCEL:
+        ReportUtils.viewDataEXCEL(response, clientDoc, downFileName, params);
+        break;
+      case EXCEL_FULL:
+        ReportUtils.viewEXCEL(response, clientDoc, downFileName);
+        break;
+      case MAIL_CSV:
+      case MAIL_PDF:
+      case MAIL_EXCEL:
+        ReportUtils.sendMail(clientDoc, viewType, params);
+        break;
+      default:
+        break;
+    }
+  }
+
+  private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
+
+    this.checkArgument(params);
+    String reportFile = (String) params.get(REPORT_FILE_NAME);
+    String reportName = reportFilePath + reportFile;
+    ViewType viewType = ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+
+    try {
+      ReportAppSession ra = new ReportAppSession();
+      ra.createService(REPORT_CLIENT_DOCUMENT);
+
+      ra.setReportAppServer(ReportClientDocument.inprocConnectionString);
+      ra.initialize();
+      ReportClientDocument clientDoc = new ReportClientDocument();
+      clientDoc.setReportAppServer(ra.getReportAppServer());
+      clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
+
+      clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
+
+      ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
+      Fields fields = clientDoc.getDataDefinition().getParameterFields();
+      ReportUtils.setReportParameter(params, paramController, fields);
+      {
+        this.viewHandle(request, response, viewType, clientDoc, ReportUtils.getCrystalReportViewer(clientDoc.getReportSource()), params);
+
+        //Download File
+        Path file = Paths.get(reportFilePath, reportFile);
+        if (Files.exists(file))
+        {
+            response.setContentType("application/pdf");
+            response.addHeader("Content-Disposition", "attachment; filename="+reportFile);
+            try
+            {
+                Files.copy(file, response.getOutputStream());
+                response.getOutputStream().flush();
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+      }
+    } catch (Exception ex) {
+      LOGGER.error(CommonUtils.printStackTraceToString(ex));
+      throw new ApplicationException(ex);
+    }
+  }
+
 
 }
