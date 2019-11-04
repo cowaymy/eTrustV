@@ -1403,6 +1403,8 @@ public class ASManagementListController {
     model.put("callPrgm", params.get("callPrgm"));
     model.put("prodCde", params.get("prodCde"));
     model.put("ddCde", params.get("ddCde"));
+    model.put("dtCde", params.get("dtCde"));
+    logger.debug("== params - dftTypPop : " + params.toString());
     return "services/as/dftTypPop";
   }
 
