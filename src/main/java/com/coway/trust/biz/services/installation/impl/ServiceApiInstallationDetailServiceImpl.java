@@ -79,13 +79,14 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 				params.put("installEntryId", installResult.get("installEntryId"));
 
 				// DETAIL INFO RESULT IS NO COLUMN
-				try {
-					params.put("hidInstallation_AddDtl", installResult.get("addrDtl"));
-					params.put("hidInstallation_AreaID", installResult.get("areaId"));
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
+				// java.lang.NullPointerException -> addrDtl, areaId
+//				try {
+//					params.put("hidInstallation_AddDtl", installResult.get("addrDtl"));
+//					params.put("hidInstallation_AreaID", installResult.get("areaId"));
+//				}
+//				catch (Exception e) {
+//					e.printStackTrace();
+//				}
 
 				// DETAIL INFO SELECT (installEntryId)
 				EgovMap orderInfo = installationResultListService.getOrderInfo(params);
