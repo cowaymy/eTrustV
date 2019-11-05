@@ -3033,6 +3033,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
     LinkedHashMap svc0004dmap = (LinkedHashMap) params.get("asResultM");
     int c = -1;
+    List<EgovMap> DefectTypSCList = ASManagementListMapper.getDefectTypSCList(svc0004dmap.get("AS_SLUTN_RESN_ID").toString());
 
     if (svc0004dmap.get("AS_RESULT_STUS_ID").equals("1")) { // IN HOUSE REPAIR
       c = ASManagementListMapper.updateBasicInhouseSVC0004D(svc0004dmap);
@@ -3040,7 +3041,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     } else { // OTHER STATUS
       c = ASManagementListMapper.updateBasicSVC0004D(svc0004dmap);
       if (svc0004dmap.get("AS_RESULT_STUS_ID").equals("4")) {
-        if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454") || String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("7018") ) {
+        //if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454") || String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("7018") ) {
+        LOGGER.debug("================   DefectTypSCList : " + DefectTypSCList  + "   svc0004dmap : " +  svc0004dmap);
+        boolean DefectList = DefectTypSCList.isEmpty();
+        if(DefectList != true){
           params.put("AS_SO_ID", svc0004dmap.get("AS_SO_ID"));
           this.saveASEntryInHouse(params);
         }
