@@ -374,7 +374,7 @@ public class OrderRegisterController {
 
     // Ex-Trade : 1
     if (orderVO.getSalesOrderMVO().getExTrade() == 1
-        && CommonUtils.isNotEmpty(orderVO.getSalesOrderMVO().getBindingNo())) {
+        && CommonUtils.isNotEmpty(orderVO.getSalesOrderMVO().getSalesOrdIdOld())) {
       logger.debug("@#### Order Cancel START");
       String nowDate = "";
 
