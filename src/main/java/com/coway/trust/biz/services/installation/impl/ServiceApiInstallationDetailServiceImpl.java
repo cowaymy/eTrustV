@@ -118,7 +118,15 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
 							MSvcLogApiService.insert_SVC0066T(m);
 
-							return ResponseEntity.ok(InstallationResultDto.create(transactionId));
+							BizMsgVO bizMsgVO = new BizMsgVO();
+							bizMsgVO.setProcTransactionId(transactionId);
+							bizMsgVO.setProcKey(serviceNo);
+							bizMsgVO.setProcName("Installation");
+							bizMsgVO.setProcMsg("PRODUCT UNAVAILABLE");
+							bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
+							throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
+
+							//return ResponseEntity.ok(InstallationResultDto.create(transactionId));
 						}
 					}
 					else {
@@ -133,7 +141,15 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
 						MSvcLogApiService.insert_SVC0066T(m);
 
-						return ResponseEntity.ok(InstallationResultDto.create(transactionId));
+						BizMsgVO bizMsgVO = new BizMsgVO();
+						bizMsgVO.setProcTransactionId(transactionId);
+						bizMsgVO.setProcKey(serviceNo);
+						bizMsgVO.setProcName("Installation");
+						bizMsgVO.setProcMsg("PRODUCT LOC NO DATA");
+						bizMsgVO.setErrorMsg("PRODUCT LOC NO DATA");
+						throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
+
+						//return ResponseEntity.ok(InstallationResultDto.create(transactionId));
 					}
 				}
 
