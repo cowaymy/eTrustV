@@ -335,4 +335,5 @@ public interface ASManagementListMapper {
 
   List<EgovMap> getDftTyp(Map<String, Object> params);
 
+  List<EgovMap> getDefectTypSCList(String params);
 }
