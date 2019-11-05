@@ -4667,4 +4667,17 @@
       AND APP_TYPE = 'AS'
   </delete>
 
+<select id="getDefectTypSCList" parameterType="Map" resultType="egovMap">
+SELECT DEFECT_ID
+FROM
+SYS0100M
+WHERE
+DEFECT_TYP = 'SC'
+AND DEFECT_STATUS = 1
+AND IS_INHOUSE = 1
+AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+AND DEFECT_ID = #{AS_SLUTN_RESN_ID}
+  </select>
+
+
 </mapper>
