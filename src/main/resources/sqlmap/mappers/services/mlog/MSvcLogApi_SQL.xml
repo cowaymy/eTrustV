@@ -3089,20 +3089,30 @@
   </insert>
 
   <insert id="insertInsFailServiceLog" parameterType="Map">
+    /* Woongjin Jun */
+    <selectKey keyProperty="resultSeq" resultType="int" order="BEFORE">
+        SELECT SVC0043T_RESULT_SEQ.NEXTVAL AS resultSeq FROM DUAL
+    </selectKey>
     INSERT INTO SVC0043T (RESULT_SEQ
                          ,CRT_USER_ID
                          ,SALES_ORD_ID
                          ,SVC_NO
                          ,FAIL_RESN_CODE
-                         <!-- ,TRNSC_ID -->
                          ,TRAN_STUS_CD
-    ) VALUES (SVC0043T_RESULT_SEQ.NEXTVAL
+    ) VALUES (#{resultSeq}
             , #{userId}
             , #{salesOrderNo}
             , #{serviceNo}
             , #{failReasonCode}
             , 'N'
     )
+  </insert>
+
+  <insert id="updateInsFailServiceLog" parameterType="int">
+    /* Woongjin Jun */
+    UPDATE SVC0043T
+         SET TRAN_STUS_CD = 'Y'
+     WHERE RESULT_SEQ = #{resultSeq}
   </insert>
 
   <insert id="insertPrFailServiceLog" parameterType="Map">

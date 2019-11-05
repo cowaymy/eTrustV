@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
 import com.coway.trust.biz.common.impl.CommonMapper;
@@ -96,7 +98,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void updateErrStatus(String transactionId) {
     MSvcLogApiMapper.updateErrStatus(transactionId);
   }
@@ -301,19 +305,25 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     return MSvcLogApiMapper.getProductRetrunJobList_b(params);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void saveAfterServiceLogs(List<Map<String, Object>> asTransLogs) {
     for (Map<String, Object> asTransLog : asTransLogs) {
       MSvcLogApiMapper.insertAsResultLog(asTransLog);
     }
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW) /* Woongjin Jun */
   public void saveInstallServiceLogs(Map<String, Object> params) {
     MSvcLogApiMapper.insertInstallServiceLog(params);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void insert_SVC0026T(Map<String, Object> params) {
     MSvcLogApiMapper.insert_SVC0026T(params);
   }
@@ -338,7 +348,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     MSvcLogApiMapper.updatePRStatus(transactionId);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void updatePRErrStatus(String transactionId) {
     MSvcLogApiMapper.updatePRErrStatus(transactionId);
   }
@@ -348,7 +360,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     MSvcLogApiMapper.updateSuccessInstallStatus(transactionId);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void updateSuccessErrInstallStatus(String transactionId) {
     MSvcLogApiMapper.updateSuccessErrInstallStatus(transactionId);
   }
@@ -533,9 +547,18 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     MSvcLogApiMapper.insertPrFailServiceLog(params);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void saveInsFailServiceLogs(Map<String, Object> params) {
     MSvcLogApiMapper.insertInsFailServiceLog(params);
+  }
+
+  /* Woongjin Jun */
+  @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void updateSuccessInsFailServiceLogs(int resultSeq) {
+    MSvcLogApiMapper.updateInsFailServiceLog(resultSeq);
   }
 
   @Override
@@ -543,7 +566,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     MSvcLogApiMapper.insertAsFailServiceLog(params);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void saveHsFailServiceLogs(Map<String, Object> params) {
     MSvcLogApiMapper.insertHsFailServiceLog(params);
   }
@@ -673,7 +698,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     return MSvcLogApiMapper.getcancReqNo(params);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void updateInsFailServiceLogs(Map<String, Object> params) {
   }
 
@@ -682,7 +709,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     return MSvcLogApiMapper.getInstallDate(insApiresult);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public int insert_SVC0066T(Map<String, Object> params) {
     return MSvcLogApiMapper.insert_SVC0066T(params);
   }

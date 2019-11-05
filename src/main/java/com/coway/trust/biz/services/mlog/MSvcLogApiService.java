@@ -85,6 +85,9 @@ public interface MSvcLogApiService {
 
   void saveInsFailServiceLogs(Map<String, Object> params);
 
+  /* Woongjin Jun */
+  void updateSuccessInsFailServiceLogs(int resultSeq);
+
   void saveAsFailServiceLogs(Map<String, Object> params);
 
   void saveHsFailServiceLogs(Map<String, Object> params);

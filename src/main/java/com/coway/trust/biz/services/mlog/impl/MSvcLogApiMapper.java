@@ -152,6 +152,9 @@ public interface MSvcLogApiMapper {
 
   void insertInsFailServiceLog(Map<String, Object> params);
 
+  /* Woongjin Jun */
+  void updateInsFailServiceLog(int resultSeq);
+
   /* ProductReturnResult API */
   int updateState_LOG0038D(Map<String, Object> params);
 

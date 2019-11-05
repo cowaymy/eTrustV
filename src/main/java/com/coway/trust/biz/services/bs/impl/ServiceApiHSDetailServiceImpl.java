@@ -1,0 +1,203 @@
+package com.coway.trust.biz.services.bs.impl;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.coway.trust.api.mobile.services.RegistrationConstants;
+import com.coway.trust.api.mobile.services.heartService.HSFailJobRequestDto;
+import com.coway.trust.api.mobile.services.heartService.HeartServiceResultDto;
+import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
+import com.coway.trust.biz.services.bs.HsManualService;
+import com.coway.trust.biz.services.bs.ServiceApiHSDetailService;
+import com.coway.trust.biz.services.mlog.MSvcLogApiService;
+import com.coway.trust.cmmn.exception.BizExceptionFactoryBean;
+import com.coway.trust.cmmn.model.BizMsgVO;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
+
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+
+/**
+ * @ClassName : ServiceApiHSDetailServiceImpl.java
+ * @Description : Mobile Heart Service Data Save
+ *
+ * @History
+ * Date              Author         Description
+ * -------------  -----------  -------------
+ * 2019. 09. 20.   Jun             First creation
+ */
+@Service("serviceApiHSDetailService")
+public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl implements ServiceApiHSDetailService {
+	private static final Logger logger = LoggerFactory.getLogger(ServiceApiHSDetailServiceImpl.class);
+
+	@Resource(name = "hsManualService")
+	private HsManualService hsManualService;
+
+	@Resource(name = "MSvcLogApiService")
+	private MSvcLogApiService MSvcLogApiService;
+
+	@Resource(name = "servicesLogisticsPFCService")
+	private ServicesLogisticsPFCService servicesLogisticsPFCService;
+
+	@Override
+	public ResponseEntity<HeartServiceResultDto> hsResultProc(Map<String, Object> insApiresult, Map<String, Object> params, List<Object> paramsDetailList) throws Exception {
+		String transactionId = "";
+		String serviceNo = "";
+		SessionVO sessionVO = new SessionVO();
+
+	    Calendar cal = Calendar.getInstance();
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+	    String strToday = sdf.format(cal.getTime());
+
+	    // CURRENT YEAR, MONTH, DAY
+	    StringBuffer today2 = new StringBuffer();
+	    today2.append(String.format("%02d", cal.get(cal.DATE)));
+	    today2.append(String.format("%02d", cal.get(cal.MONTH) + 1));
+	    today2.append(String.format("%04d", cal.get(cal.YEAR)));
+
+	    String toSetlDt = today2.toString();
+
+	    transactionId = String.valueOf(insApiresult.get("transactionId"));
+		serviceNo = String.valueOf(insApiresult.get("serviceNo"));
+
+		// CHECK IF SVC0008D MEM_CODE AND SVC0006D MEM_CODE ARE THE SAME
+    	int hsResultMemId = hsManualService.hsResultSync(params);
+
+    	if (hsResultMemId > 0) {
+    		// RESULT CHECK HS IS ACTIVE
+    		int isHsCnt = hsManualService.isHsAlreadyResult(params);
+
+    		// IF NO RESULT OR IS 0
+    		if (isHsCnt == 0) {
+    			try {
+    				String userId = MSvcLogApiService.getUseridToMemid(params);
+    				sessionVO.setUserId(Integer.parseInt(userId));
+
+    				// UPDATE FAUCET EXCHANGE
+    				if (params.get("faucetExch") != null) {
+    					if ("1".equals(CommonUtils.nvl(params.get("faucetExch").toString()))) {
+    						int cnt = MSvcLogApiService.updFctExch(params);
+
+    						if (cnt < 1) {
+    							BizMsgVO bizMsgVO = new BizMsgVO();
+    							bizMsgVO.setProcTransactionId(transactionId);
+    							bizMsgVO.setProcKey(serviceNo);
+    							bizMsgVO.setProcName("HeartService");
+    							bizMsgVO.setProcMsg("[SAL0090D] UPDATE FAIL");
+    							bizMsgVO.setErrorMsg("[API] [" + params.get("salesOrderNo") + "] [SAL0090D] UPDATE FAIL.");
+    							throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
+    						}
+    					}
+    				}
+
+    				Map<String, Object> getHsBasic = MSvcLogApiService.getHsBasic(params);
+    				logger.debug("### HS BASIC INFO : " + getHsBasic.toString());
+
+    				// API SETTING
+    				params.put("hidschdulId", getHsBasic.get("schdulId"));
+    				params.put("hidSalesOrdId", String.valueOf(getHsBasic.get("salesOrdId")));
+    				params.put("hidCodyId", (String) userId);
+    				params.put("settleDate", toSetlDt);
+    				params.put("resultIsSync", '0');
+    				params.put("resultIsEdit", '0');
+    				params.put("resultStockUse", '1');
+    				params.put("resultIsCurr", '1');
+    				params.put("resultMtchId", '0');
+    				params.put("resultIsAdj", '0');
+    				params.put("cmbStatusType", "4");
+    				params.put("renColctId", "0");
+
+    				// API OVER
+    				params.put("remark", insApiresult.get("resultRemark"));
+    				params.put("cmbCollectType", String.valueOf(insApiresult.get("rcCode")));
+
+    				// API ADDED
+    				params.put("temperateSetng", String.valueOf(insApiresult.get("temperatureSetting")));
+    				params.put("nextAppntDt", insApiresult.get("nextAppointmentDate"));
+    				params.put("nextAppointmentTime", String.valueOf(insApiresult.get("nextAppointmentTime")));
+    				params.put("ownerCode", String.valueOf(insApiresult.get("ownerCode")));
+    				params.put("resultCustName", insApiresult.get("resultCustName"));
+    				params.put("resultMobileNo", String.valueOf(insApiresult.get("resultIcMobileNo")));
+    				params.put("resultRptEmailNo", String.valueOf(insApiresult.get("resultReportEmailNo")));
+    				params.put("resultAceptName", insApiresult.get("resultAcceptanceName"));
+    				params.put("sgnDt", insApiresult.get("signData"));
+    				params.put("stage", "API");
+
+    				logger.debug("### HS PARAM : " + params.toString());
+    				logger.debug("### HS PARAM FILTER : " + paramsDetailList.toString());
+
+    				// SERVICE TO VALUE SETTING
+    				Map<String, Object> asResultInsert = new HashMap();
+    				logger.debug("### HS INSERT [BEFORE] : " + asResultInsert.toString());
+
+    				Map rtnValue = hsManualService.addIHsResult(params, paramsDetailList, sessionVO);
+    				logger.debug("### HS INSERT RESULT : " + rtnValue.toString());
+
+    				if (null != rtnValue) {
+    					HashMap spMap = (HashMap) rtnValue.get("spMap");
+    					logger.debug("spMap :" + spMap.toString());
+    					if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
+    						rtnValue.put("logerr", "Y");
+    					}
+
+    					// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
+    					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+
+    					// HS LOG HISTORY
+    					if (RegistrationConstants.IS_INSERT_HEART_LOG) {
+    						MSvcLogApiService.updateSuccessStatus(transactionId);
+    					}
+    				}
+                }
+    			catch (Exception e) {
+    				BizMsgVO bizMsgVO = new BizMsgVO();
+					bizMsgVO.setProcTransactionId(transactionId);
+					bizMsgVO.setProcKey(serviceNo);
+					bizMsgVO.setProcName("HeartService");
+					bizMsgVO.setProcMsg("Failed to Save");
+					bizMsgVO.setErrorMsg("[API] " + e.toString());
+					throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
+                }
+    		}
+    		else {
+    			logger.debug("### HS NOT IN ACTIVE STATUS. ");
+            }
+    	}
+    	else {
+    		BizMsgVO bizMsgVO = new BizMsgVO();
+			bizMsgVO.setProcTransactionId(transactionId);
+			bizMsgVO.setProcKey(serviceNo);
+			bizMsgVO.setProcName("HeartService");
+			bizMsgVO.setProcMsg("[SVC0008D] NoTarget Data");
+			bizMsgVO.setErrorMsg("[API] [" + params.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.");
+			throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
+    	}
+
+    	logger.debug("==================================[MB]HEART SERVICE RESULT - END - ====================================");
+
+    	return ResponseEntity.ok(HeartServiceResultDto.create(transactionId));
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public ResponseEntity<HSFailJobRequestDto> hsFailJobRequestProc(Map<String, Object> params) throws Exception {
+		String serviceNo = String.valueOf(params.get("serviceNo"));
+
+		MSvcLogApiService.insertHsFailJobResult(params);
+	    MSvcLogApiService.upDateHsFailJobResultM(params);
+
+    	return ResponseEntity.ok(HSFailJobRequestDto.create(serviceNo));
+	}
+}

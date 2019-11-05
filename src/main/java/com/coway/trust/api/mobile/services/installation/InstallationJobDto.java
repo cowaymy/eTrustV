@@ -98,8 +98,9 @@ public class InstallationJobDto {
   @ApiModelProperty(value = "")
   private String instruction;
 
+  /* Woongjin Jun */
   @ApiModelProperty(value = "")
-  private String salesPromotion;
+  private int salesPromotion;
 
   @ApiModelProperty(value = "")
   private int contractDuration;
@@ -471,11 +472,11 @@ public class InstallationJobDto {
     this.instruction = instruction;
   }
 
-  public String getSalesPromotion() {
+  public int getSalesPromotion() {
     return salesPromotion;
   }
 
-  public void setSalesPromotion(String salesPromotion) {
+  public void setSalesPromotion(int salesPromotion) {
     this.salesPromotion = salesPromotion;
   }
 
