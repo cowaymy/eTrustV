@@ -71,33 +71,54 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	        		}
 	        	}
 	        	catch (Exception e) {
-	        		BizMsgVO bizMsgVO = new BizMsgVO();
-					bizMsgVO.setProcTransactionId(transactionId);
-					bizMsgVO.setProcKey(serviceNo);
-					bizMsgVO.setProcName("ProductReturn");
-					bizMsgVO.setProcMsg("Failed to Save");
-					bizMsgVO.setErrorMsg("[API] " + e.toString());
-					throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
+	        		String procTransactionId = transactionId;
+	    			String procName = "ProductReturn";
+	    			String procKey = serviceNo;
+	    			String procMsg = "Failed to Save";
+	    			String errorMsg = "[API] " + e.toString();
+	    			throw BizExceptionFactoryBean.getInstance().createBizException("02", procTransactionId, procName, procKey, procMsg, errorMsg);
+
+//	        		BizMsgVO bizMsgVO = new BizMsgVO();
+//					bizMsgVO.setProcTransactionId(transactionId);
+//					bizMsgVO.setProcKey(serviceNo);
+//					bizMsgVO.setProcName("ProductReturn");
+//					bizMsgVO.setProcMsg("Failed to Save");
+//					bizMsgVO.setErrorMsg("[API] " + e.toString());
+//					throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
 	        	}
 	        }
 	        else {
-	        	BizMsgVO bizMsgVO = new BizMsgVO();
-				bizMsgVO.setProcTransactionId(transactionId);
-				bizMsgVO.setProcKey(serviceNo);
-				bizMsgVO.setProcName("ProductReturn");
-				bizMsgVO.setProcMsg("NoTarget Data");
-				bizMsgVO.setErrorMsg("[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT IN ACTIVE STATUS. ");
-				throw BizExceptionFactoryBean.getInstance().createBizException("04", bizMsgVO);
+	        	String procTransactionId = transactionId;
+    			String procName = "ProductReturn";
+    			String procKey = serviceNo;
+    			String procMsg = "NoTarget Data";
+    			String errorMsg = "[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT IN ACTIVE STATUS. ";
+    			throw BizExceptionFactoryBean.getInstance().createBizException("04", procTransactionId, procName, procKey, procMsg, errorMsg);
+
+//	        	BizMsgVO bizMsgVO = new BizMsgVO();
+//				bizMsgVO.setProcTransactionId(transactionId);
+//				bizMsgVO.setProcKey(serviceNo);
+//				bizMsgVO.setProcName("ProductReturn");
+//				bizMsgVO.setProcMsg("NoTarget Data");
+//				bizMsgVO.setErrorMsg("[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT IN ACTIVE STATUS. ");
+//				throw BizExceptionFactoryBean.getInstance().createBizException("04", bizMsgVO);
 	        }
 		}
 		else {
-			BizMsgVO bizMsgVO = new BizMsgVO();
-			bizMsgVO.setProcTransactionId(transactionId);
-			bizMsgVO.setProcKey(serviceNo);
-			bizMsgVO.setProcName("ProductReturn");
-			bizMsgVO.setProcMsg("NoTarget Data");
-			bizMsgVO.setErrorMsg("[API] [" + cvMp.get("userId") + "] IT IS NOT ASSIGNED CT CODE. ");
-			throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
+			String procTransactionId = transactionId;
+			String procName = "ProductReturn";
+			String procKey = serviceNo;
+			String procMsg = "NoTarget Data";
+			String errorMsg = "[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT IN ACTIVE STATUS. ";
+			throw BizExceptionFactoryBean.getInstance().createBizException("04", procTransactionId, procName, procKey, procMsg, errorMsg);
+
+//			BizMsgVO bizMsgVO = new BizMsgVO();
+//			bizMsgVO.setProcTransactionId(transactionId);
+//			bizMsgVO.setProcKey(serviceNo);
+//			bizMsgVO.setProcName("ProductReturn");
+//			bizMsgVO.setProcMsg("NoTarget Data");
+//			bizMsgVO.setErrorMsg("[API] [" + cvMp.get("userId") + "] IT IS NOT ASSIGNED CT CODE. ");
+//			throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
 		}
 
 		logger.debug("### PRODUCT RETURN FINAL PARAM : " + cvMp.toString());

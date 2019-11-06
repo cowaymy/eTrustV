@@ -91,13 +91,20 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     						int cnt = MSvcLogApiService.updFctExch(params);
 
     						if (cnt < 1) {
-    							BizMsgVO bizMsgVO = new BizMsgVO();
-    							bizMsgVO.setProcTransactionId(transactionId);
-    							bizMsgVO.setProcKey(serviceNo);
-    							bizMsgVO.setProcName("HeartService");
-    							bizMsgVO.setProcMsg("[SAL0090D] UPDATE FAIL");
-    							bizMsgVO.setErrorMsg("[API] [" + params.get("salesOrderNo") + "] [SAL0090D] UPDATE FAIL.");
-    							throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
+    							String procTransactionId = transactionId;
+    							String procName = "HeartService";
+    							String procKey = serviceNo;
+    							String procMsg = "[SAL0090D] UPDATE FAIL";
+    							String errorMsg = "[API] [" + params.get("salesOrderNo") + "] [SAL0090D] UPDATE FAIL.";
+    							throw BizExceptionFactoryBean.getInstance().createBizException("02", procTransactionId, procName, procKey, procMsg, errorMsg);
+
+//    							BizMsgVO bizMsgVO = new BizMsgVO();
+//    							bizMsgVO.setProcTransactionId(transactionId);
+//    							bizMsgVO.setProcKey(serviceNo);
+//    							bizMsgVO.setProcName("HeartService");
+//    							bizMsgVO.setProcMsg("[SAL0090D] UPDATE FAIL");
+//    							bizMsgVO.setErrorMsg("[API] [" + params.get("salesOrderNo") + "] [SAL0090D] UPDATE FAIL.");
+//    							throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
     						}
     					}
     				}
@@ -162,13 +169,20 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     				}
                 }
     			catch (Exception e) {
-    				BizMsgVO bizMsgVO = new BizMsgVO();
-					bizMsgVO.setProcTransactionId(transactionId);
-					bizMsgVO.setProcKey(serviceNo);
-					bizMsgVO.setProcName("HeartService");
-					bizMsgVO.setProcMsg("Failed to Save");
-					bizMsgVO.setErrorMsg("[API] " + e.toString());
-					throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
+    				String procTransactionId = transactionId;
+					String procName = "HeartService";
+					String procKey = serviceNo;
+					String procMsg = "Failed to Save";
+					String errorMsg = "[API] " + e.toString();
+					throw BizExceptionFactoryBean.getInstance().createBizException("02", procTransactionId, procName, procKey, procMsg, errorMsg);
+
+//    				BizMsgVO bizMsgVO = new BizMsgVO();
+//					bizMsgVO.setProcTransactionId(transactionId);
+//					bizMsgVO.setProcKey(serviceNo);
+//					bizMsgVO.setProcName("HeartService");
+//					bizMsgVO.setProcMsg("Failed to Save");
+//					bizMsgVO.setErrorMsg("[API] " + e.toString());
+//					throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
                 }
     		}
     		else {
@@ -176,13 +190,20 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
             }
     	}
     	else {
-    		BizMsgVO bizMsgVO = new BizMsgVO();
-			bizMsgVO.setProcTransactionId(transactionId);
-			bizMsgVO.setProcKey(serviceNo);
-			bizMsgVO.setProcName("HeartService");
-			bizMsgVO.setProcMsg("[SVC0008D] NoTarget Data");
-			bizMsgVO.setErrorMsg("[API] [" + params.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.");
-			throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
+    		String procTransactionId = transactionId;
+			String procName = "HeartService";
+			String procKey = serviceNo;
+			String procMsg = "NoTarget Data";
+			String errorMsg = "[API] [" + params.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.";
+			throw BizExceptionFactoryBean.getInstance().createBizException("01", procTransactionId, procName, procKey, procMsg, errorMsg);
+
+//    		BizMsgVO bizMsgVO = new BizMsgVO();
+//			bizMsgVO.setProcTransactionId(transactionId);
+//			bizMsgVO.setProcKey(serviceNo);
+//			bizMsgVO.setProcName("HeartService");
+//			bizMsgVO.setProcMsg("[SVC0008D] NoTarget Data");
+//			bizMsgVO.setErrorMsg("[API] [" + params.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.");
+//			throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
     	}
 
     	logger.debug("==================================[MB]HEART SERVICE RESULT - END - ====================================");

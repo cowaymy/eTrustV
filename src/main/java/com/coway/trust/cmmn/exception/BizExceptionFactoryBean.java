@@ -11,12 +11,12 @@ public class BizExceptionFactoryBean implements InitializingBean {
 		return instance;
 	}
 
-	public BizException createBizException(String errorCode, BizMsgVO bizMsgVO) {
-		return new BizException(errorCode, bizMsgVO, null);
+	public BizException createBizException(String errorCode, String procTransactionId, String procName, String procKey, String procMsg, String errorMsg) {
+		return new BizException(errorCode, procTransactionId, procName, procKey, procMsg, errorMsg, null);
 	}
 
-	public BizException createBizException(String errorCode, BizMsgVO bizMsgVO, Throwable cause) {
-		return new BizException(errorCode, bizMsgVO, cause);
+	public BizException createBizException(String errorCode, String procTransactionId, String procName, String procKey, String procMsg, String errorMsg, Throwable cause) {
+		return new BizException(errorCode, procTransactionId, procName, procKey, procMsg, errorMsg, cause);
 	}
 
 	@Override

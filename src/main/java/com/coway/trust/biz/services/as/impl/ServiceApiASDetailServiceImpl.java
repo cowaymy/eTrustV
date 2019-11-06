@@ -515,13 +515,20 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         			}
         		}
         		catch (Exception e) {
-        			BizMsgVO bizMsgVO = new BizMsgVO();
-					bizMsgVO.setProcTransactionId(transactionId);
-					bizMsgVO.setProcKey(serviceNo);
-					bizMsgVO.setProcName("AfterService");
-					bizMsgVO.setProcMsg("Failed to Save");
-					bizMsgVO.setErrorMsg("[API] " + e.toString());
-					throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
+        			String procTransactionId = transactionId;
+        			String procName = "AfterService";
+        			String procKey = serviceNo;
+        			String procMsg = "Failed to Save";
+        			String errorMsg = "[API] " + e.toString();
+        			throw BizExceptionFactoryBean.getInstance().createBizException("02", procTransactionId, procName, procKey, procMsg, errorMsg);
+
+//        			BizMsgVO bizMsgVO = new BizMsgVO();
+//					bizMsgVO.setProcTransactionId(transactionId);
+//					bizMsgVO.setProcKey(serviceNo);
+//					bizMsgVO.setProcName("AfterService");
+//					bizMsgVO.setProcMsg("Failed to Save");
+//					bizMsgVO.setErrorMsg("[API] " + e.toString());
+//					throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
         		}
 
         		// RESULT UPDATE TO STATE Y IN PRESENCE
@@ -533,13 +540,20 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         	}
         }
         else {
-        	BizMsgVO bizMsgVO = new BizMsgVO();
-			bizMsgVO.setProcTransactionId(transactionId);
-			bizMsgVO.setProcKey(serviceNo);
-			bizMsgVO.setProcName("AfterService");
-			bizMsgVO.setProcMsg("[SVC0001D] NoTarget Data");
-			bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.");
-			throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
+        	String procTransactionId = transactionId;
+			String procName = "AfterService";
+			String procKey = serviceNo;
+			String procMsg = "NoTarget Data";
+			String errorMsg = "[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.";
+			throw BizExceptionFactoryBean.getInstance().createBizException("01", procTransactionId, procName, procKey, procMsg, errorMsg);
+
+//        	BizMsgVO bizMsgVO = new BizMsgVO();
+//			bizMsgVO.setProcTransactionId(transactionId);
+//			bizMsgVO.setProcKey(serviceNo);
+//			bizMsgVO.setProcName("AfterService");
+//			bizMsgVO.setProcMsg("[SVC0001D] NoTarget Data");
+//			bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.");
+//			throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
         }
 
         logger.debug("==================================[MB]AFTER SERVICE RESULT - END - ====================================");

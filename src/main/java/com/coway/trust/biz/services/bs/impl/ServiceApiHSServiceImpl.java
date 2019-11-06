@@ -113,7 +113,7 @@ public class ServiceApiHSServiceImpl extends EgovAbstractServiceImpl implements 
 				m.put("APP_TYPE", "HS");
 	            m.put("SVC_NO", serviceNo);
 	            m.put("ERR_CODE", bizException.getErrorCode());
-	            m.put("ERR_MSG", bizException.getBizMsgVO().getErrorMsg());
+	            m.put("ERR_MSG", bizException.getErrorMsg());
 	            m.put("TRNSC_ID", transactionId);
 
 				// INSERT FAIL LOG HISTORY (SVC0066T)(REQUIRES_NEW)

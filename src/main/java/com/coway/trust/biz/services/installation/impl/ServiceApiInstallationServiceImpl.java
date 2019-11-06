@@ -94,7 +94,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 			}
 			catch (BizException bizException) {
 				logger.debug("### INSTALLATION bizException errorcode : " + bizException.getErrorCode());
-				logger.debug("### INSTALLATION bizException errormsg : " + bizException.getBizMsgVO().getErrorMsg());
+				logger.debug("### INSTALLATION bizException errormsg : " + bizException.getErrorMsg());
 				// UPDATE LOG HISTORY (SVC0025T)(REQUIRES_NEW)
 				MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
 
@@ -102,7 +102,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 				m.put("APP_TYPE", "INS");
 				m.put("SVC_NO", insApiresult.get("serviceNo"));
 				m.put("ERR_CODE", bizException.getErrorCode());
-				m.put("ERR_MSG", bizException.getBizMsgVO().getErrorMsg());
+				m.put("ERR_MSG", bizException.getErrorMsg());
 				m.put("TRNSC_ID", transactionId);
 
 				// INSERT FAIL LOG HISTORY (SVC0066T)(REQUIRES_NEW)

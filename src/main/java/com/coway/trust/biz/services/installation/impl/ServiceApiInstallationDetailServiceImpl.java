@@ -119,14 +119,20 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
 							MSvcLogApiService.insert_SVC0066T(m);
 
-							BizMsgVO bizMsgVO = new BizMsgVO();
-							bizMsgVO.setProcTransactionId(transactionId);
-							bizMsgVO.setProcKey(serviceNo);
-							bizMsgVO.setProcName("Installation");
-							bizMsgVO.setProcMsg("PRODUCT UNAVAILABLE");
-							//bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
-							bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] PRODUCT FOR [" + (String)orderInfo.get("stkId") + "] IS UNAVAILABLE. " + (String)locInfo.get("availQty"));
-							throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
+							String procTransactionId = transactionId;
+							String procName = "Installation";
+							String procKey = serviceNo;
+							String procMsg = "PRODUCT UNAVAILABLE";
+							String errorMsg = "[API] [" + insApiresult.get("userId") + "] PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString();
+							throw BizExceptionFactoryBean.getInstance().createBizException("01", procTransactionId, procName, procKey, procMsg, errorMsg);
+
+//							BizMsgVO bizMsgVO = new BizMsgVO();
+//							bizMsgVO.setProcTransactionId(transactionId);
+//							bizMsgVO.setProcKey(serviceNo);
+//							bizMsgVO.setProcName("Installation");
+//							bizMsgVO.setProcMsg("PRODUCT UNAVAILABLE");
+//							bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
+//							throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
 
 							//return ResponseEntity.ok(InstallationResultDto.create(transactionId));
 						}
@@ -143,13 +149,20 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
 						MSvcLogApiService.insert_SVC0066T(m);
 
-						BizMsgVO bizMsgVO = new BizMsgVO();
-						bizMsgVO.setProcTransactionId(transactionId);
-						bizMsgVO.setProcKey(serviceNo);
-						bizMsgVO.setProcName("Installation");
-						bizMsgVO.setProcMsg("PRODUCT LOC NO DATA");
-						bizMsgVO.setErrorMsg("PRODUCT LOC NO DATA");
-						throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
+						String procTransactionId = transactionId;
+						String procName = "Installation";
+						String procKey = serviceNo;
+						String procMsg = "PRODUCT LOC NO DATA";
+						String errorMsg = "PRODUCT LOC NO DATA";
+						throw BizExceptionFactoryBean.getInstance().createBizException("01", procTransactionId, procName, procKey, procMsg, errorMsg);
+
+//						BizMsgVO bizMsgVO = new BizMsgVO();
+//						bizMsgVO.setProcTransactionId(transactionId);
+//						bizMsgVO.setProcKey(serviceNo);
+//						bizMsgVO.setProcName("Installation");
+//						bizMsgVO.setProcMsg("PRODUCT LOC NO DATA");
+//						bizMsgVO.setErrorMsg("PRODUCT LOC NO DATA");
+//						throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
 
 						//return ResponseEntity.ok(InstallationResultDto.create(transactionId));
 					}
@@ -212,13 +225,20 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 						servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 					}
 				} catch (Exception e) {
-					BizMsgVO bizMsgVO = new BizMsgVO();
-					bizMsgVO.setProcTransactionId(transactionId);
-					bizMsgVO.setProcKey(serviceNo);
-					bizMsgVO.setProcName("Installation");
-					bizMsgVO.setProcMsg("Failed to Save");
-					bizMsgVO.setErrorMsg("[API] " + e.toString());
-					throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
+					String procTransactionId = transactionId;
+					String procName = "Installation";
+					String procKey = serviceNo;
+					String procMsg = "Failed to Save";
+					String errorMsg = "[API] " + e.toString();
+					throw BizExceptionFactoryBean.getInstance().createBizException("02", procTransactionId, procName, procKey, procMsg, errorMsg);
+
+//					BizMsgVO bizMsgVO = new BizMsgVO();
+//					bizMsgVO.setProcTransactionId(transactionId);
+//					bizMsgVO.setProcKey(serviceNo);
+//					bizMsgVO.setProcName("Installation");
+//					bizMsgVO.setProcMsg("Failed to Save");
+//					bizMsgVO.setErrorMsg("[API] " + e.toString());
+//					throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
 				}
 			}
 			else {
@@ -229,13 +249,20 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 			}
 		}
 		else {
-			BizMsgVO bizMsgVO = new BizMsgVO();
-			bizMsgVO.setProcTransactionId(transactionId);
-			bizMsgVO.setProcKey(serviceNo);
-			bizMsgVO.setProcName("Installation");
-			bizMsgVO.setProcMsg("NoTarget Data");
-			bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CT CODE. ");
-			throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
+			String procTransactionId = transactionId;
+			String procName = "Installation";
+			String procKey = serviceNo;
+			String procMsg = "NoTarget Data";
+			String errorMsg = "[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CT CODE.";
+			throw BizExceptionFactoryBean.getInstance().createBizException("01", procTransactionId, procName, procKey, procMsg, errorMsg);
+
+//			BizMsgVO bizMsgVO = new BizMsgVO();
+//			bizMsgVO.setProcTransactionId(transactionId);
+//			bizMsgVO.setProcKey(serviceNo);
+//			bizMsgVO.setProcName("Installation");
+//			bizMsgVO.setProcMsg("NoTarget Data");
+//			bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CT CODE. ");
+//			throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
 		}
 
 		logger.debug("### INSTALLATION FINAL PARAM : " + params.toString());
