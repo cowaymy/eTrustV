@@ -124,7 +124,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 							bizMsgVO.setProcKey(serviceNo);
 							bizMsgVO.setProcName("Installation");
 							bizMsgVO.setProcMsg("PRODUCT UNAVAILABLE");
-							bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
+							//bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
+							bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] PRODUCT FOR [" + (String)orderInfo.get("stkId") + "] IS UNAVAILABLE. " + (String)locInfo.get("availQty"));
 							throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
 
 							//return ResponseEntity.ok(InstallationResultDto.create(transactionId));
