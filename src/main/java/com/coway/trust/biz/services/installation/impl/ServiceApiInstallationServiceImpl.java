@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.services.RegistrationConstants;
 import com.coway.trust.api.mobile.services.installation.InstallFailJobRequestDto;
 import com.coway.trust.api.mobile.services.installation.InstallFailJobRequestForm;
@@ -22,6 +23,7 @@ import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.biz.services.installation.ServiceApiInstallationDetailService;
 import com.coway.trust.biz.services.installation.ServiceApiInstallationService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.web.services.installation.InstallationResultListController;
 
@@ -111,7 +113,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 
 				failCnt = failCnt + 1;
 
-				throw new HttpResponseException(500, "error");
+				throw new ApplicationException(AppConstants.FAIL, "dddfefw");
 				//throw bizException;
 			}
 			catch (Exception exception) {
@@ -130,7 +132,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 
 				failCnt = failCnt + 1;
 
-				throw exception;
+				throw new ApplicationException(AppConstants.FAIL, "wefwefewfewf");
 			}
 		}
 
