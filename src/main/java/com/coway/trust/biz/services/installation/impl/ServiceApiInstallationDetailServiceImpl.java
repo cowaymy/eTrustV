@@ -21,6 +21,7 @@ import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.biz.services.installation.ServiceApiInstallationDetailService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
+import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.cmmn.exception.BizExceptionFactoryBean;
 import com.coway.trust.cmmn.model.BizMsgVO;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -129,7 +130,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 							logger.debug("exception param : " + procKey);
 							logger.debug("exception param : " + procMsg);
 							logger.debug("exception param : " + errorMsg);
-							throw BizExceptionFactoryBean.getInstance().createBizException("01", procTransactionId, procName, procKey, procMsg, errorMsg);
+							throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //							BizMsgVO bizMsgVO = new BizMsgVO();
 //							bizMsgVO.setProcTransactionId(transactionId);
