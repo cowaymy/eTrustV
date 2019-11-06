@@ -178,16 +178,17 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 				String installDate = MSvcLogApiService.getInstallDate(insApiresult); // SELECT TO_CHAR( TO_DATE(#{checkInDate} ,'YYYY/MM/DD') , 'DD/MM/YYYY' ) FROM DUAL
 
 				params.put("installStatus", String.valueOf(statusId));
-				params.put("statusCodeId", Integer.parseInt(params.get("installStatus").toString()));
-				params.put("hidEntryId", String.valueOf(installResult.get("installEntryId")));
-				params.put("hidCustomerId", String.valueOf(installResult.get("custId")));
-				params.put("hidSalesOrderId", String.valueOf(installResult.get("salesOrdId")));
-				params.put("hidTaxInvDSalesOrderNo", String.valueOf(installResult.get("salesOrdNo")));
-				params.put("hidStockIsSirim", String.valueOf(installResult.get("isSirim")));
-				params.put("hidStockGrade", installResult.get("stkGrad"));
-				params.put("hidSirimTypeId", String.valueOf(installResult.get("stkCtgryId")));
-				params.put("hiddeninstallEntryNo", String.valueOf(installResult.get("installEntryNo")));
-				params.put("hidTradeLedger_InstallNo", String.valueOf(installResult.get("installEntryNo")));
+		        params.put("statusCodeId", Integer.parseInt(params.get("installStatus").toString()));
+		        params.put("hidEntryId", String.valueOf(installResult.get("installEntryId")));
+		        params.put("hidCustomerId", String.valueOf(installResult.get("custId")));
+		        params.put("hidSalesOrderId", String.valueOf(installResult.get("salesOrdId")));
+		        params.put("hidTaxInvDSalesOrderNo", String.valueOf(installResult.get("salesOrdNo")));
+		        params.put("hidStockIsSirim", String.valueOf(installResult.get("isSirim")));
+		        params.put("hidStockGrade", installResult.get("stkGrad"));
+		        params.put("hidSirimTypeId", String.valueOf(installResult.get("stkCtgryId")));
+		        params.put("hiddeninstallEntryNo", String.valueOf(installResult.get("installEntryNo")));
+		        params.put("hidTradeLedger_InstallNo", String.valueOf(installResult.get("installEntryNo")));
+		        params.put("hidCallType", String.valueOf(installResult.get("typeId")));
 				params.put("installDate", installDate);
 				params.put("CTID", String.valueOf(userId));
 				params.put("updator", String.valueOf(userId));
@@ -208,6 +209,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 				params.put("hidStockIsSirim", String.valueOf(insApiresult.get("sirimNo")));
 				params.put("hidSerialNo", String.valueOf(insApiresult.get("serialNo")));
 				params.put("remark", insApiresult.get("resultRemark"));
+				params.put("EXC_CT_ID", String.valueOf(userId));
 
 				logger.debug("### INSTALLATION PARAM : " + params.toString());
 

@@ -128,7 +128,14 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
         						MSvcLogApiService.insert_SVC0066T(m);
 
-        						return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
+        						String procTransactionId = transactionId;
+        						String procName = "AfterService";
+        						String procKey = serviceNo;
+        						String procMsg = "PRODUCT STOCK UNAVAILABLE";
+        						String errorMsg = "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString();
+        						throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+
+        						//return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
         					}
         				}
         				else {
@@ -144,7 +151,14 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
         					MSvcLogApiService.insert_SVC0066T(m);
 
-        					return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
+        					String procTransactionId = transactionId;
+    						String procName = "AfterService";
+    						String procKey = serviceNo;
+    						String procMsg = "PRODUCT STOCK UNAVAILABLE";
+    						String errorMsg = "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode").toString() + "] IS UNAVAILABLE. ";
+    						throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+
+        					//return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
         				}
         			}
 
