@@ -13,6 +13,10 @@ public class BizException extends RuntimeException {
 
 	private final Exception exception;
 
+	public BizException (String errorCode, String procTransactionId, String procName, String procKey, String procMsg, String errorMsg) {
+		this(errorCode, procTransactionId, procName, procKey, procMsg, errorMsg, null);
+	}
+
 	public BizException (String errorCode, String procTransactionId, String procName, String procKey, String procMsg, String errorMsg, Exception cause) {
 		super();
 		this.exception = cause;
