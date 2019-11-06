@@ -13,167 +13,167 @@
     doGetCombo('/common/selectCodeList.do', '17', '', 'cmbInitialTypeId', 'S' , '');                     // Initial Type Combo Box
     doGetCombo('/common/selectCodeList.do', '2', '', 'cmbRaceTypeId', 'S' , '');                        // Race Type Combo Box
     doGetCombo('/common/selectCodeList.do', '357', '2575','newDealerType', 'S' , '');    // Dealer Type Combo Box
-    doGetCombo('/sales/pst/dealerBrnchJsonList', '','','dealerBranch', 'S' , '');                 // Branch Combo Box
-    
+    doGetCombo('/sales/pst/dealerBrnchJsonList', '','','dealerBrnch', 'S' , '');                 // Branch Combo Box
+
     $(document).ready(function(){
     	CommonCombo.make('mCountry', "/sales/pst/pstDealerAddrComboList", '' , '', optionCountry);
     });
-    
+
     // 조회조건 combo box
     function f_multiCombo(){
         $(function() {
             $('#newDealerType').change(function() {
-            
+
             }).multipleSelect({
-                selectAll: true, // 전체선택 
+                selectAll: true, // 전체선택
                 width: '80%'
             });
         });
     }
- 
+
     function fn_initAddress(){
-        
+
     	$('#mState').append($('<option>', { value: '', text: '1. State' }));
         $('#mState').val('');
         $("#mState").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
         $('#mCity').append($('<option>', { value: '', text: '2. City' }));
         $('#mCity').val('');
         $("#mCity").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
         $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
         $('#mPostCd').val('');
         $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
         $('#mArea').val('');
         $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
 	 }
-	 
+
 	 /*####### Dealer Magic Address #########*/
 	 function fn_selectCountry(selVal){
-         
+
          var tempVal = selVal;
-         
+
          if('' == selVal || null == selVal){
              //전체 초기화
-             fn_initAddress();   
-             
+             fn_initAddress();
+
          }else{
-             
+
              $("#mState").attr({"disabled" : false  , "class" : "w100p"});
-             
+
              $('#mCity').append($('<option>', { value: '', text: '3. Post Code' }));
              $('#mCity').val('');
              $("#mCity").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-             
+
              $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
              $('#mPostCd').val('');
              $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-             
+
              $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
              $('#mArea').val('');
              $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-             
+
              //Call ajax
              var stateJson = {country : tempVal}; //Condition
              CommonCombo.make('mState', "/sales/pst/pstDealerAddrComboList", stateJson, '' , optionState);
          }
-         
+
      }
-	 
+
 	 function fn_selectState(selVal){
-	     
+
 	     var tempVal = selVal;
-	     
+
 	     if('' == selVal || null == selVal){
 	         //전체 초기화
-	         fn_initAddress();   
-	         
+	         fn_initAddress();
+
 	     }else{
-	         
+
 	         $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
-	         
+
 	         $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
 	         $('#mPostCd').val('');
 	         $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	         
+
 	         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
 	         $('#mArea').val('');
 	         $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	         
+
 	         //Call ajax
 	         var cityJson = {country : $("#mCountry").val(), state : tempVal}; //Condition
 	         CommonCombo.make('mCity', "/sales/pst/pstDealerAddrComboList", cityJson, '' , optionCity);
 	     }
-	     
+
 	 }
-	 
+
 	 function fn_selectCity(selVal){
-	     
+
 	     var tempVal = selVal;
-	     
+
 	     if('' == selVal || null == selVal){
-	        
+
 	          $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
 	          $('#mPostCd').val('');
 	          $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	         
+
 	          $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
 	          $('#mArea').val('');
 	          $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	         
+
 	     }else{
-	         
+
 	         $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
-	         
+
 	         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
 	         $('#mArea').val('');
 	         $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	         
+
 	         //Call ajax
 	         var postCodeJson = {country : $("#mCountry").val(), state : $("#mState").val() , city : tempVal}; //Condition
 	         CommonCombo.make('mPostCd', "/sales/pst/pstDealerAddrComboList", postCodeJson, '' , optionPostCode);
 	     }
-	     
+
 	 }
-	 
-	 
+
+
 	 function fn_selectPostCode(selVal){
-	     
+
 	     var tempVal = selVal;
-	     
+
 	     if('' == selVal || null == selVal){
-	        
+
 	         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
 	         $('#mArea').val('');
 	         $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	         
+
 	     }else{
-	         
+
 	         $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
-	         
+
 	         //Call ajax
 	         var areaJson = {country : $("#mCountry").val(), state : $("#mState").val(), city : $("#mCity").val() , postcode : tempVal}; //Condition
 	         CommonCombo.make('mArea', "/sales/pst/pstDealerAddrComboList", areaJson, '' , optionArea);
 	     }
-	     
+
 	 }
-	 
+
 	//Get Area Id
 	    function fn_getAreaId(){
-	        
+
 	    	var countryValue = $("#mCountry").val();
 	        var statValue = $("#mState").val();
 	        var cityValue = $("#mCity").val();
 	        var postCodeValue = $("#mPostCd").val();
 	        var areaValue = $("#mArea").val();
-	        
-	        
-	        
+
+
+
 	        if('' != countryValue && '' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
-	            
+
 	            var jsonObj = { countryValue : countryValue ,
 	            		              statValue : statValue ,
 	                                  cityValue : cityValue,
@@ -181,9 +181,9 @@
 	                                  areaValue : areaValue
 	                                };
 	            Common.ajax("GET", "/sales/pst/getDealerAreaId.do", jsonObj, function(result) {
-	                
+
 	                 $("#areaId").val(result.areaId);
-	                
+
 	            });
 	        }
 	    }
@@ -208,7 +208,7 @@
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinNricCompNum" />');
             return false;
         }
-    	if(newForm.dealerBranch.value==""){
+    	if(newForm.dealerBrnch.value==""){
             Common.alert('<spring:message code="sal.alert.msg.selectBranch" />');
             return false;
         }
@@ -248,7 +248,10 @@
             Common.alert('<spring:message code="sal.alert.msg.plzKeyInreTypePassword" />');
             return false;
         }
-    	
+
+    	console.log("dealerBrnch: " + newForm.dealerBrnch.value);
+
+
     	Common.ajax("GET", "/sales/pst/newDealer.do", $("#newForm").serializeJSON(), function(result) {
             Common.alert('<spring:message code="sal.alert.msg.newDealerSuccessfullySaved" />' , fn_winClose);
 
@@ -256,13 +259,13 @@
             Common.alert("실패하였습니다.");
             console.log("실패하였습니다.");
             console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-            
+
             alert(jqXHR.responseJSON.message);
             console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-            
+
         });
     }
-    
+
     function fn_winClose(){
     	$("#newDealerClose").click();
     	fn_pstDealerListAjax();
@@ -317,7 +320,7 @@
     <td><input type="text" id="dealerEmail" name="dealerEmail" title="" placeholder="" class="w100p" /></td>
     <th scope="row"><spring:message code="sal.text.branch" /><span class="must">*</span></th>
     <td>
-	    <select class="w100p" id="dealerBranch" name="dealerBranch">
+	    <select class="w100p" id="dealerBrnch" name="dealerBrnch">
 	    </select>
     </td>
 </tr>
@@ -371,13 +374,13 @@
 	       <tr>
 	          <th scope="row"><spring:message code="sal.text.area4" /><span class="must">*</span></th>
 	           <td colspan="3">
-	           <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select> 
+	           <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
 	           </td>
 	       </tr>
 	       <tr>
 	            <th scope="row"><spring:message code="sal.text.city2" /><span class="must">*</span></th>
 	           <td>
-	           <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
+	           <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
 	           </td>
 	           <th scope="row"><spring:message code="sal.text.postCode3" /><span class="must">*</span></th>
 	           <td>

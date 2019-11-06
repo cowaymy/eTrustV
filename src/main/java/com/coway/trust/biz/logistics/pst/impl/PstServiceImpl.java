@@ -379,10 +379,17 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 				ordMap.put("cnty" , "");
 
 			}else{
-				ordMap.put("addr1", addMap.get("CITY"));
+				/**ordMap.put("addr1", addMap.get("CITY"));
 				ordMap.put("addr2", addMap.get("AREA"));
 				ordMap.put("addr3", addMap.get("ADDR_DTL"));
-				ordMap.put("addr4", "");
+				ordMap.put("addr4", "");**/
+
+				// Edited for rearranging address layout in billing invoice. By Hui Ding, 01/11/2019
+				ordMap.put("addr1", addMap.get("ADDR_DTL"));
+				ordMap.put("addr2", addMap.get("STREET"));
+				ordMap.put("addr3",  addMap.get("AREA"));
+				ordMap.put("addr4",  addMap.get("CITY"));
+				ordMap.put("areaId", addMap.get("AREA_ID"));
 				ordMap.put("post" , addMap.get("POSTCODE"));
 				ordMap.put("state", addMap.get("STATE"));
 				ordMap.put("cnty" , addMap.get("COUNTRY"));
