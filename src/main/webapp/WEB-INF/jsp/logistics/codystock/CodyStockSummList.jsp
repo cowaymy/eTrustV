@@ -90,9 +90,9 @@
 			$("#reportDownFileName").val("");
 			$("#viewType").val(type);
 
-			if (!($("#hsPeriod").val() == null || $("#hsPeriod").val() == '')) {
-				whereSQL += " AND L93.HS_PERIOD = '" + $("#hsPeriod").val() + "'";
-				hsPeriod = mmStr + '/' + yyyyStr;
+			if (hsPeriod != null || hsPeriod != '') {
+				whereSQL += " AND L93.HS_PERIOD = '" + hsPeriod + "'";
+				hsPeriod = hsPeriod;
 
 			}
 
