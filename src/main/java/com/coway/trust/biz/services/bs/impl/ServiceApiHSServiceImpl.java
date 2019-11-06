@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.apache.http.client.HttpResponseException;
 
 import com.coway.trust.api.mobile.services.RegistrationConstants;
 import com.coway.trust.api.mobile.services.heartService.HSFailJobRequestDto;
@@ -22,6 +23,8 @@ import com.coway.trust.biz.services.bs.ServiceApiHSDetailService;
 import com.coway.trust.biz.services.bs.ServiceApiHSService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.exception.BizException;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.AppConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -121,7 +124,7 @@ public class ServiceApiHSServiceImpl extends EgovAbstractServiceImpl implements 
 
 				failCnt = failCnt + 1;
 
-				throw bizException;
+				throw new ApplicationException(AppConstants.FAIL, bizException.getProcMsg());
 			}
 			catch (Exception exception) {
 				// UPDATE LOG HISTORY (SVC0023T)(REQUIRES_NEW)
@@ -139,7 +142,7 @@ public class ServiceApiHSServiceImpl extends EgovAbstractServiceImpl implements 
 
 				failCnt = failCnt + 1;
 
-				throw exception;
+				throw new ApplicationException(AppConstants.FAIL, "Fail");
 			}
 	    }
 

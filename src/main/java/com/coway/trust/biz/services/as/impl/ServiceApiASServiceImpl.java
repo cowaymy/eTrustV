@@ -21,6 +21,9 @@ import com.coway.trust.biz.services.as.ServiceApiASDetailService;
 import com.coway.trust.biz.services.as.ServiceApiASService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.exception.BizException;
+import org.apache.http.client.HttpResponseException;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.AppConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -109,7 +112,7 @@ public class ServiceApiASServiceImpl extends EgovAbstractServiceImpl implements 
 
 				failCnt = failCnt + 1;
 
-				throw bizException;
+				throw new ApplicationException(AppConstants.FAIL, bizException.getProcMsg());
 			}
 			catch (Exception exception) {
 				// UPDATE LOG HISTORY (SVC0024T)(REQUIRES_NEW)
@@ -127,7 +130,7 @@ public class ServiceApiASServiceImpl extends EgovAbstractServiceImpl implements 
 
 				failCnt = failCnt + 1;
 
-				throw exception;
+				throw new ApplicationException(AppConstants.FAIL, "Fail");
 			}
 	    }
 

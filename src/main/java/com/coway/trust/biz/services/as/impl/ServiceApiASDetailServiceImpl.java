@@ -26,6 +26,7 @@ import com.coway.trust.biz.services.as.ServiceApiASDetailService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.exception.BizExceptionFactoryBean;
+import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.cmmn.model.BizMsgVO;
 import com.coway.trust.util.CommonUtils;
 
@@ -520,7 +521,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         			String procKey = serviceNo;
         			String procMsg = "Failed to Save";
         			String errorMsg = "[API] " + e.toString();
-        			throw BizExceptionFactoryBean.getInstance().createBizException("02", procTransactionId, procName, procKey, procMsg, errorMsg);
+        			throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //        			BizMsgVO bizMsgVO = new BizMsgVO();
 //					bizMsgVO.setProcTransactionId(transactionId);
@@ -545,7 +546,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 			String procKey = serviceNo;
 			String procMsg = "NoTarget Data";
 			String errorMsg = "[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.";
-			throw BizExceptionFactoryBean.getInstance().createBizException("01", procTransactionId, procName, procKey, procMsg, errorMsg);
+			throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //        	BizMsgVO bizMsgVO = new BizMsgVO();
 //			bizMsgVO.setProcTransactionId(transactionId);

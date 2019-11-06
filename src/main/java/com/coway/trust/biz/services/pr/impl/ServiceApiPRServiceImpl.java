@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.services.productRetrun.PRFailJobRequestDto;
 import com.coway.trust.api.mobile.services.productRetrun.PRFailJobRequestForm;
 import com.coway.trust.api.mobile.services.productRetrun.ProductReturnResultDto;
@@ -20,6 +21,7 @@ import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.biz.services.pr.ServiceApiPRDetailService;
 import com.coway.trust.biz.services.pr.ServiceApiPRService;
 import com.coway.trust.cmmn.exception.BizException;
+import com.coway.trust.cmmn.exception.ApplicationException;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -138,7 +140,7 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 
 				failCnt = failCnt + 1;
 
-				throw bizException;
+				throw new ApplicationException(AppConstants.FAIL, bizException.getProcMsg());
 			}
 			catch (Exception exception) {
 				// UPDATE LOG HISTORY (SVC0026T)(REQUIRES_NEW)
@@ -156,7 +158,7 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 
 				failCnt = failCnt + 1;
 
-				throw exception;
+				throw new ApplicationException(AppConstants.FAIL, "Fail");
 			}
 
 			MSvcLogApiService.updatePRStatus(transactionId);

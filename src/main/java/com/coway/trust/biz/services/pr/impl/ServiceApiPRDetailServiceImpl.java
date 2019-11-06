@@ -18,6 +18,7 @@ import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.biz.services.pr.ServiceApiPRDetailService;
 import com.coway.trust.cmmn.exception.BizExceptionFactoryBean;
+import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.cmmn.model.BizMsgVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -76,7 +77,7 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	    			String procKey = serviceNo;
 	    			String procMsg = "Failed to Save";
 	    			String errorMsg = "[API] " + e.toString();
-	    			throw BizExceptionFactoryBean.getInstance().createBizException("02", procTransactionId, procName, procKey, procMsg, errorMsg);
+	    			throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //	        		BizMsgVO bizMsgVO = new BizMsgVO();
 //					bizMsgVO.setProcTransactionId(transactionId);
@@ -93,7 +94,7 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
     			String procKey = serviceNo;
     			String procMsg = "NoTarget Data";
     			String errorMsg = "[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT IN ACTIVE STATUS. ";
-    			throw BizExceptionFactoryBean.getInstance().createBizException("04", procTransactionId, procName, procKey, procMsg, errorMsg);
+    			throw new BizException("04", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //	        	BizMsgVO bizMsgVO = new BizMsgVO();
 //				bizMsgVO.setProcTransactionId(transactionId);
@@ -110,7 +111,7 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 			String procKey = serviceNo;
 			String procMsg = "NoTarget Data";
 			String errorMsg = "[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT IN ACTIVE STATUS. ";
-			throw BizExceptionFactoryBean.getInstance().createBizException("04", procTransactionId, procName, procKey, procMsg, errorMsg);
+			throw new BizException("04", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //			BizMsgVO bizMsgVO = new BizMsgVO();
 //			bizMsgVO.setProcTransactionId(transactionId);

@@ -23,6 +23,7 @@ import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.biz.services.bs.ServiceApiHSDetailService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.exception.BizExceptionFactoryBean;
+import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.cmmn.model.BizMsgVO;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -96,7 +97,7 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     							String procKey = serviceNo;
     							String procMsg = "[SAL0090D] UPDATE FAIL";
     							String errorMsg = "[API] [" + params.get("salesOrderNo") + "] [SAL0090D] UPDATE FAIL.";
-    							throw BizExceptionFactoryBean.getInstance().createBizException("02", procTransactionId, procName, procKey, procMsg, errorMsg);
+    							throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //    							BizMsgVO bizMsgVO = new BizMsgVO();
 //    							bizMsgVO.setProcTransactionId(transactionId);
@@ -174,7 +175,7 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
 					String procKey = serviceNo;
 					String procMsg = "Failed to Save";
 					String errorMsg = "[API] " + e.toString();
-					throw BizExceptionFactoryBean.getInstance().createBizException("02", procTransactionId, procName, procKey, procMsg, errorMsg);
+					throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //    				BizMsgVO bizMsgVO = new BizMsgVO();
 //					bizMsgVO.setProcTransactionId(transactionId);
@@ -195,7 +196,7 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
 			String procKey = serviceNo;
 			String procMsg = "NoTarget Data";
 			String errorMsg = "[API] [" + params.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.";
-			throw BizExceptionFactoryBean.getInstance().createBizException("01", procTransactionId, procName, procKey, procMsg, errorMsg);
+			throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //    		BizMsgVO bizMsgVO = new BizMsgVO();
 //			bizMsgVO.setProcTransactionId(transactionId);

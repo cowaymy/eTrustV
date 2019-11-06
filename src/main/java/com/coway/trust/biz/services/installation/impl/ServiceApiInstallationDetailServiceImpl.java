@@ -160,7 +160,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 						String procKey = serviceNo;
 						String procMsg = "PRODUCT LOC NO DATA";
 						String errorMsg = "PRODUCT LOC NO DATA";
-						throw BizExceptionFactoryBean.getInstance().createBizException("01", procTransactionId, procName, procKey, procMsg, errorMsg);
+						throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //						BizMsgVO bizMsgVO = new BizMsgVO();
 //						bizMsgVO.setProcTransactionId(transactionId);
@@ -236,7 +236,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 					String procKey = serviceNo;
 					String procMsg = "Failed to Save";
 					String errorMsg = "[API] " + e.toString();
-					throw BizExceptionFactoryBean.getInstance().createBizException("02", procTransactionId, procName, procKey, procMsg, errorMsg);
+					throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //					BizMsgVO bizMsgVO = new BizMsgVO();
 //					bizMsgVO.setProcTransactionId(transactionId);
@@ -260,7 +260,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 			String procKey = serviceNo;
 			String procMsg = "NoTarget Data";
 			String errorMsg = "[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CT CODE.";
-			throw BizExceptionFactoryBean.getInstance().createBizException("01", procTransactionId, procName, procKey, procMsg, errorMsg);
+			throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //			BizMsgVO bizMsgVO = new BizMsgVO();
 //			bizMsgVO.setProcTransactionId(transactionId);
