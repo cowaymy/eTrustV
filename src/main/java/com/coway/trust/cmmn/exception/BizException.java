@@ -11,8 +11,11 @@ public class BizException extends RuntimeException {
 	private final String procMsg;
 	private final String errorMsg;
 
-	public BizException (String errorCode, String procTransactionId, String procName, String procKey, String procMsg, String errorMsg, Throwable cause) {
-		super(errorCode, cause);
+	private final Exception exception;
+
+	public BizException (String errorCode, String procTransactionId, String procName, String procKey, String procMsg, String errorMsg, Exception cause) {
+		super();
+		this.exception = cause;
 		this.errorCode = errorCode;
 		this.procTransactionId = procTransactionId;
 		this.procName = procName;

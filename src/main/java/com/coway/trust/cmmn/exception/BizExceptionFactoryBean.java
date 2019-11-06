@@ -15,7 +15,7 @@ public class BizExceptionFactoryBean implements InitializingBean {
 		return new BizException(errorCode, procTransactionId, procName, procKey, procMsg, errorMsg, null);
 	}
 
-	public BizException createBizException(String errorCode, String procTransactionId, String procName, String procKey, String procMsg, String errorMsg, Throwable cause) {
+	public BizException createBizException(String errorCode, String procTransactionId, String procName, String procKey, String procMsg, String errorMsg, Exception cause) {
 		return new BizException(errorCode, procTransactionId, procName, procKey, procMsg, errorMsg, cause);
 	}
 
