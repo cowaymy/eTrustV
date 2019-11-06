@@ -130,7 +130,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 							logger.debug("exception param : " + procKey);
 							logger.debug("exception param : " + procMsg);
 							logger.debug("exception param : " + errorMsg);
-							throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+							throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //							BizMsgVO bizMsgVO = new BizMsgVO();
 //							bizMsgVO.setProcTransactionId(transactionId);
@@ -160,7 +160,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 						String procKey = serviceNo;
 						String procMsg = "PRODUCT LOC NO DATA";
 						String errorMsg = "PRODUCT LOC NO DATA";
-						throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+						throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 
 //						BizMsgVO bizMsgVO = new BizMsgVO();
 //						bizMsgVO.setProcTransactionId(transactionId);

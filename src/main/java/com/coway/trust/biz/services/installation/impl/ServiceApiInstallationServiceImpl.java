@@ -113,7 +113,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 
 				failCnt = failCnt + 1;
 
-				throw new ApplicationException("HE0503", bizException.getProcMsg());
+				throw new ApplicationException(AppConstants.FAIL, bizException.getProcMsg());
 			}
 			catch (Exception exception) {
 				// UPDATE LOG HISTORY (SVC0025T)(REQUIRES_NEW)
@@ -131,7 +131,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 
 				failCnt = failCnt + 1;
 
-				throw new ApplicationException("HE0503", "Fail");
+				throw new ApplicationException(AppConstants.FAIL, "Fail");
 			}
 		}
 
