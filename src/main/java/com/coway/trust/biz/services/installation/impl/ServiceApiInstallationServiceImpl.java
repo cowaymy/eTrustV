@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.http.client.HttpResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -110,7 +111,8 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 
 				failCnt = failCnt + 1;
 
-				throw bizException;
+				throw new HttpResponseException(500, "error");
+				//throw bizException;
 			}
 			catch (Exception exception) {
 				// UPDATE LOG HISTORY (SVC0025T)(REQUIRES_NEW)
