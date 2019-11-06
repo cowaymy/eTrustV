@@ -124,6 +124,11 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 							String procKey = serviceNo;
 							String procMsg = "PRODUCT UNAVAILABLE";
 							String errorMsg = "[API] [" + insApiresult.get("userId") + "] PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString();
+							logger.debug("exception param : " + procTransactionId);
+							logger.debug("exception param : " + procName);
+							logger.debug("exception param : " + procKey);
+							logger.debug("exception param : " + procMsg);
+							logger.debug("exception param : " + errorMsg);
 							throw BizExceptionFactoryBean.getInstance().createBizException("01", procTransactionId, procName, procKey, procMsg, errorMsg);
 
 //							BizMsgVO bizMsgVO = new BizMsgVO();
