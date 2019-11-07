@@ -459,9 +459,6 @@ var TODAY_DD      = "${toDay}";
                   Common.popupDiv("/homecare/services/htConfigBasicMultiplePop.do?isPop=true&schdulId="+ schdulId + "&salesOrdId="+saleOrdList  +"&indicator=1", null, null , true , '_ConfigBasicPop');
   }
 
-
-
-
   function fn_getHSAddListAjax() {
     // Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
     var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
@@ -514,6 +511,10 @@ var TODAY_DD      = "${toDay}";
             + schdulId + "&salesOrdId=" + salesOrdId, null, null,
         true, '_hsDetailPopDiv');
   }
+
+  function fn_selfClose(){
+      $('#closeHtConfigPop').click();
+      }
 
   $(function() {
 	    $("#hSConfiguration")
@@ -607,28 +608,41 @@ var TODAY_DD      = "${toDay}";
 	                        "",
 	                        function(result) {
 	                          console.log ('BS Month : ' +  $.datepicker.formatDate('mm/yy', new Date()));
-	                          if (result.message == "success") {
+	                          if (result.message == "fail") {
 	                            Common.alert("<b>Manual create CS Order disallow due to already exist for current month.");
 	                            return;
 	                          } else if (result.message == "warning") {
-	                                Common.alert("<b>Manual create CS Order (CS1T & FT1T) disallow due to already completed on previous month.");
+	                                Common.alert("<b>Manual create CS Order (CS1T & FT1T) disallow due to already completed / cancel on previous month.");
 	                                return;
-	                              } else {
-	                            Common
-	                                .popupDiv("/homecare/services/selectCSConfigListPop.do?isPop=true&JsonObj="
-	                                    + jsonObj
-	                                    + "&CheckedItems="
-	                                    + saleOrdList
-	                                    + "&BrnchId="
-	                                    + brnchId
-	                                    + "&ManuaMyBSMonth="
-	                                    +  $.datepicker.formatDate('mm/yy', new Date()));
+	                              }
+	                          else if (result.message == "block") {
+                                  Common.alert("<b>Manual create CS Order (CS1Y & FT1Y) disallow due to already completed with total 3 times.");
+                                  return;
+                                }
+	                          else {
+	                              Common
+                                  .popupDiv("/homecare/services/selectCSConfigListPop.do?isPop=true&JsonObj="
+                                      + jsonObj
+                                      + "&CheckedItems="
+                                      + saleOrdList
+                                      + "&BrnchId="
+                                      + brnchId
+                                      + "&ManuaMyBSMonth="
+                                      +  $.datepicker.formatDate('mm/yy', new Date()));
+
+	                        	   var msg = "";
+	                                  msg += '<br/> Do you sure want to manual create the order ? <br/>';
+	                                  Common.confirm('Manual create CS Confirmation '
+	                                                  + DEFAULT_DELIMITER
+	                                                  + "<b>" + msg
+	                                                  + "</b>",
+	                                                          "" ,
+	                                                      fn_selfClose);
 	                          }
 	                        });
 	              }
 	            });
 	  });
-
 
 
   $(document).ready(
