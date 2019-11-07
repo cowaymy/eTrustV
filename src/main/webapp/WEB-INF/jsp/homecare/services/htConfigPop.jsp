@@ -437,7 +437,7 @@
 <ul class="right_opt">
     <!-- <li><p class="btn_blue2"><a href="javascript:fn_codyChange();" id="btnCodyCh" name="btnCodyCh">Assign Cody Change</a></p></li> -->
     <li><p class="btn_blue2"><a href="javascript:fn_codyAssignSave();" id="btnCreate" id="btnCreate" >Create</a></p></li>
-    <li><p class="btn_blue2"><a href="#" id="_close1">Close</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="closeHtConfigPop">Close</a></p></li>
 </ul>
 
 </header><!-- pop_header end -->
