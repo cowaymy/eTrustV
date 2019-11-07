@@ -5156,15 +5156,27 @@ FROM
                      </update>
 
        <select id="selectHsOrder1Time" parameterType="Map" resultType="egovMap">
-         SELECT  SALES_ORD_ID
+         SELECT  DISTINCT SALES_ORD_ID
          FROM  SVC0008D
          WHERE 1=1
-         AND STUS_CODE_ID = 4
+         AND STUS_CODE_ID IN (4,10)
          AND SALES_ORD_ID IN (
              SELECT SRV_ORD_ID
              from SAL0225D SOM
              where SOM.SRV_ORD_NO = #{saleOrdList} AND APP_TYPE_ID IN (5701 , 3216)
          )
 
+        </select>
+
+               <select id="selectHsOrderTotal1Year" parameterType="Map" resultType="Integer">
+    SELECT  COUNT(NVL(SALES_ORD_ID,0)) AS TOTAL
+         FROM  SVC0008D
+         WHERE 1=1
+         AND STUS_CODE_ID IN (4)
+         AND SALES_ORD_ID IN (
+             SELECT SRV_ORD_ID
+             from SAL0225D SOM
+             where SOM.SRV_ORD_NO = #{saleOrdList} AND APP_TYPE_ID IN (5702 , 3217)
+         )
         </select>
 </mapper>
