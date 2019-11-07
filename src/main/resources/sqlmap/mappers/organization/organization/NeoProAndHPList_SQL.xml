@@ -18,6 +18,7 @@
             ORG_CODE,
             GRP_CODE,
             DEPT_CODE,
+            MEET_POINT,
             TO_CHAR(JOIN_DT, 'DD/MM/YYYY') JOIN_DT,
             PREV3_MTH_NET,
             PREV2_MTH_NET,
@@ -88,6 +89,10 @@
                 AND PREV1_MTH_NET >= 10
             </if>
         </if>
+        <if test="meetPoint != null and meetPoint != ''">
+            AND MEET_POINT_ID = #{meetPoint} 
+        </if>
+        ORDER BY MEM_CODE
     </select>
 
     <select id="checkHpType" parameterType="Map" resultType="EgovMap">

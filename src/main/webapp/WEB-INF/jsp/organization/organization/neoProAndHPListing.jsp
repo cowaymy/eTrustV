@@ -12,6 +12,8 @@
     var userName, userRole, userType;
 
     $(document).ready(function() {
+    	
+    	doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
 
         userName = "${userName}";
         userRole = ${userRole};
@@ -94,6 +96,10 @@
                 headerText : "Dept Code",
                 width : "8%"
             }, {
+                dataField : "meetPoint",
+                headerText : "Reporting<br/>Branch",
+                width : "8%"
+            }, {
                 dataField : "joinDt",
                 headerText : "Join Date",
                 width : "8%"
@@ -148,7 +154,8 @@
             deptCode : $("#deptCode").val(),
             prev1Mth : $("#prev1Mth").val(),
             prev2Mth : $("#prev2Mth").val(),
-            prev3Mth : $("#prev3Mth").val()
+            prev3Mth : $("#prev3Mth").val(),
+            meetPoint : $("#meetingPoint").val()
         };
 
         Common.ajax("GET", "/organization/selectNeoProAndHPList.do", data, function(result) {
@@ -213,8 +220,10 @@
                         <td>
                             <input type="text" title="" placeholder="" class="w100p" id="hpCode" name="hpCode" />
                         </td>
-                        <th scope="row"></th>
-                        <td></td>
+                       	<th scope="row">Reporting Branch</th>
+                        <td>
+                            <select class="w100p" id="meetingPoint" name="meetingPoint"></select>
+                        </td>
                         <th scope="row"></th>
                         <td></td>
                     </tr>

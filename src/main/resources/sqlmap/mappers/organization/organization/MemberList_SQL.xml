@@ -4777,6 +4777,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             MEET_POINT_CODE || ' - ' || MEET_POINT_DESC CODE_NAME
         FROM SYS0089M
         WHERE STUS = 1
+        ORDER BY MEET_POINT_CODE
     </select>
 
     <select id="getAplcntId" parameterType="Map" resultType="egovMap">
