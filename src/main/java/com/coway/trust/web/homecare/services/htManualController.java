@@ -1020,15 +1020,19 @@ public class htManualController {
 
 		EgovMap hsOrderInMonth = htManualService.selectHsOrderInMonth(params);
 		EgovMap hsOrder1Time = htManualService.selectHsOrder1Time(params);
+		int hsOrderTotal1Year = htManualService.selectHsOrderTotal1Year(params);
 
 		if(hsOrderInMonth != null && hsOrderInMonth.size() != 0  ){
-			message.setMessage("success");
+			message.setMessage("fail");
 		}
 		else if(hsOrder1Time != null && hsOrder1Time.size() != 0){
 		  message.setMessage("warning");
 		}
+	     else if(hsOrderTotal1Year >= 3 ){
+	          message.setMessage("block");
+	        }
 		else{
-			message.setMessage("fail");
+			message.setMessage("success");
 		}
 
 		return ResponseEntity.ok(message);
