@@ -1463,4 +1463,9 @@ public class htManualServiceImpl extends EgovAbstractServiceImpl implements htMa
 	      public int selectHsOrderTotal1Year(Map<String, Object> params) {
 	        return htManualMapper.selectHsOrderTotal1Year(params);
 	     }
+
+       @Override
+       public int selectTotalCS(Map<String, Object> params) {
+         return htManualMapper.selectTotalCS(params);
+      }
 }
