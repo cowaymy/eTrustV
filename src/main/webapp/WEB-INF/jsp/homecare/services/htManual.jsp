@@ -630,14 +630,24 @@ var TODAY_DD      = "${toDay}";
                                       + "&ManuaMyBSMonth="
                                       +  $.datepicker.formatDate('mm/yy', new Date()));
 
+	                              Common
+	                              .ajax(
+	                                  "GET",
+	                                  "/homecare/services/selectTotalCS.do?saleOrdList="
+	                                      + saleOrdList
+	                                      + "&ManuaMyBSMonth="
+	                                      + $.datepicker.formatDate('mm/yy', new Date()),
+	                                  "",
+	                                  function(result) {
 	                        	   var msg = "";
-	                                  msg += '<br/> Do you sure want to manual create the order ? <br/>';
+	                                  msg += '<br/> '+ result.message +' Do you sure want to manual create the order ? <br/>';
 	                                  Common.confirm('Manual create CS Confirmation '
 	                                                  + DEFAULT_DELIMITER
 	                                                  + "<b>" + msg
 	                                                  + "</b>",
 	                                                          "" ,
 	                                                      fn_selfClose);
+	                                  });
 	                          }
 	                        });
 	              }
