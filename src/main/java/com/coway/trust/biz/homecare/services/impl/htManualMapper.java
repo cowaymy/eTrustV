@@ -337,4 +337,6 @@ public interface htManualMapper {
 	EgovMap selectHsOrder1Time(Map<String, Object> params);
 
 	int selectHsOrderTotal1Year(Map<String, Object> params);
+
+	int selectTotalCS(Map<String, Object> params);
 }
