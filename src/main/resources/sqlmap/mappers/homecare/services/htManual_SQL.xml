@@ -360,7 +360,7 @@ FROM
 
     WHERE 1 = 1
 
-                 <![CDATA[ AND SOM.STUS_CODE_ID <> 8
+                 <![CDATA[ AND SOM.STUS_CODE_ID NOT IN (8,10)
                                 and rownum  < 500 ]]>
 
                                <if test="ManuaSalesOrder != null and ManuaSalesOrder != ''">
@@ -411,7 +411,7 @@ FROM
     LEFT JOIN SYS0005M BRANCH ON ORG01.BRNCH = BRANCH.BRNCH_ID
                                 WHERE 1=1
 
-                 <![CDATA[ AND SOM.STUS_CODE_ID <> 8
+                 <![CDATA[ AND SOM.STUS_CODE_ID NOT IN (8,10)
                                 and rownum  < 500 ]]>
 
                                <if test="ManuaSalesOrder != null and ManuaSalesOrder != ''">
@@ -478,7 +478,7 @@ FROM
                                 AND SOM.SRV_ORD_ID = INS.SALES_ORD_ID
                                 AND SAL023.CUST_ADD_ID = INS.ADD_ID
                                 AND SAL023.AREA_ID = SYS064.AREA_ID
-                 <![CDATA[ AND SOM.STUS_CODE_ID <> 8    ]]>
+                 <![CDATA[ AND SOM.STUS_CODE_ID NOT IN (8,10)    ]]>
                              <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
                                       AND  hsm.YEAR(+) = #{myBSYear}
                                       AND  hsm.MONTH(+) = #{myBSMonth}
@@ -5163,7 +5163,7 @@ FROM
          AND SALES_ORD_ID IN (
              SELECT SRV_ORD_ID
              from SAL0225D SOM
-             where SOM.SRV_ORD_NO = #{saleOrdList} AND APP_TYPE_ID IN (5701 , 3216)
+             where SOM.SRV_ORD_NO = #{saleOrdList} AND APP_TYPE_ID IN (5701 , 3216) AND STUS_CODE_ID = 4
          )
 
         </select>
@@ -5176,7 +5176,21 @@ FROM
          AND SALES_ORD_ID IN (
              SELECT SRV_ORD_ID
              from SAL0225D SOM
-             where SOM.SRV_ORD_NO = #{saleOrdList} AND APP_TYPE_ID IN (5702 , 3217)
+             where SOM.SRV_ORD_NO = #{saleOrdList} AND APP_TYPE_ID IN (5702 , 3217) AND STUS_CODE_ID = 4
          )
         </select>
+
+
+                       <select id="selectTotalCS" parameterType="Map" resultType="Integer">
+    SELECT  COUNT(NVL(SALES_ORD_ID,0)) AS TOTAL
+         FROM  SVC0008D
+         WHERE 1=1
+         AND STUS_CODE_ID IN (4)
+         AND SALES_ORD_ID IN (
+             SELECT SRV_ORD_ID
+             from SAL0225D SOM
+             where SOM.SRV_ORD_NO = #{saleOrdList} AND STUS_CODE_ID = 4
+         )
+        </select>
+
 </mapper>
