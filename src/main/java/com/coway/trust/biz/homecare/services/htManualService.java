@@ -169,4 +169,6 @@ public interface htManualService {
 
 	int selectHsOrderTotal1Year(Map<String, Object> params);
 
+	int selectTotalCS(Map<String, Object> params);
+
 }
