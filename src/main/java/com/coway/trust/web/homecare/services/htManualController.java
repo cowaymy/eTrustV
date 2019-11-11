@@ -1345,9 +1345,9 @@ public class htManualController {
 	        int hsOrderTotal1Year = htManualService.selectTotalCS(params);
 
 	         if(hsOrderTotal1Year == 2 ){
-	              message.setMessage("CS Complered twice before , Left 1 time CS Service.");
+	              message.setMessage("CS Completed twice before , Left 1 times CS Service.");
 	         }else if (hsOrderTotal1Year == 1 ){
-	             message.setMessage("CS Complered once before , Left 2 time CS Service.");
+	             message.setMessage("CS Completed once before , Left 2 times CS Service.");
 	         }else{
 	           message.setMessage(" ");
 	         }
