@@ -1337,6 +1337,24 @@ public class htManualController {
 		return ResponseEntity.ok(message);
 
 	}
+	   @RequestMapping(value = "/selectTotalCS.do", method = RequestMethod.GET)
+	    public ResponseEntity<ReturnMessage> selectTotalCS(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+	        ReturnMessage message = new ReturnMessage();
+	        logger.debug("selectTotalCS.do : {}", params);
+
+	        int hsOrderTotal1Year = htManualService.selectTotalCS(params);
+
+	         if(hsOrderTotal1Year == 2 ){
+	              message.setMessage("CS Complered twice before , Left 1 time CS Service.");
+	         }else if (hsOrderTotal1Year == 1 ){
+	             message.setMessage("CS Complered once before , Left 2 time CS Service.");
+	         }else{
+	           message.setMessage(" ");
+	         }
+
+
+	        return ResponseEntity.ok(message);
+	    }
 
 
 }
