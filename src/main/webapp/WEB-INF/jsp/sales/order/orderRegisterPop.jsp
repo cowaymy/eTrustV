@@ -1535,7 +1535,8 @@ console.log("orderRegisterPop.jsp");
         var vAppType    = $('#appType').val();
         var vDefRentAmt = vAppType == '66' ? $('#ordRentalFees').val().trim() : 0;
         var vCustBillId = $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0;
-        var vBindingNo  = FormUtil.isNotEmpty($('#txtOldOrderID').val().trim()) ? $('#relatedNo').val().trim() : $('#hiddenOldOrderId').val().trim();
+        //var vBindingNo  = FormUtil.isNotEmpty($('#txtOldOrderID').val().trim()) ? $('#relatedNo').val().trim() : $('#hiddenOldOrderId').val().trim();
+        var vBindingNo  = $('#relatedNo').val().trim();
         var vCnvrSchemeId;
 console.log("vBindingNo" + vBindingNo);
         if($('#trialNoChk').is(":checked")) {
