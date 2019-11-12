@@ -83,8 +83,10 @@ public class OrderRegisterController {
   public String main(@RequestParam Map<String, Object> params, ModelMap model) {
 
     logger.debug(CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
-
+    String nextDay = CommonUtils.changeFormat(CommonUtils.getCalDate(1), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+    
     model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+    model.put("nextDay", nextDay);
 
     return "sales/order/orderRegisterPop";
   }

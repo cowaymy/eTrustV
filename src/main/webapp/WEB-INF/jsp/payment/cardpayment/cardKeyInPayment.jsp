@@ -3818,7 +3818,7 @@ function isDupOutSrvcToFinal(){
 				        </td>
 				        <th scope="row">Pay Date<span class="must">*</span></th>
 				        <td>
-				            <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+				            <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly value="${currentDay}"/>
 				        </td>
 				    </tr>
 					<tr>
