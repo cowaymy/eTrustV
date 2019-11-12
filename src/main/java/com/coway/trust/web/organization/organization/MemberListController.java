@@ -1934,4 +1934,13 @@ logger.debug("params : {}", params);
 		List<EgovMap> approvalBranch = memberListService.selectApprovalBranch(params);
 		return ResponseEntity.ok(approvalBranch);
 	}
+
+	@RequestMapping(value = "/getHpAplctUrl.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> getHpAplctUrl(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+
+	    EgovMap aplctnDtls = memberListService.getApplicantDetails(params);
+
+	    return ResponseEntity.ok(aplctnDtls);
+	}
+
 }

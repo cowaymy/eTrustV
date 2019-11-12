@@ -5,6 +5,7 @@
 var myGridID;
 var grpOrgList = new Array(); // Group Organization List
 var orgList = new Array(); // Organization List
+var selRowIndex;
 
 var selectedGridValue;
 
@@ -13,6 +14,7 @@ function fn_memberListNew(){
 }
 
 function fn_memberListSearch(){
+    selRowIndex = null;
     /* if ($("#memTypeCom").val() == '5' ) {
         AUIGrid.showColumnByDataField(myGridID, "testResult");
         AUIGrid.setColumnProp( myGridID, 6, { width : 130, visible : true } );
@@ -355,6 +357,7 @@ $(document).ready(function() {
         });
 
      AUIGrid.bind(myGridID, "cellClick", function(event) {
+        selRowIndex = event.rowIndex;
         //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
         memberid =  AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid");
         memberType = AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype");
@@ -640,9 +643,36 @@ function fn_genRawData() {
 }
 
 $(function() {
-$('#hpYSListingBtn').click(function() {
-    Common.popupDiv("/organization/HPYSListingPop.do", null, null, true);
-});
+    $('#hpYSListingBtn').click(function() {
+        Common.popupDiv("/organization/HPYSListingPop.do", null, null, true);
+    });
+
+    $('#getHpApplicantURL').click(function() {
+        if(selRowIndex != null && selRowIndex != "") {
+            if(memberType == "2803") {
+                if(memberid == "" || memberid == null) {
+                    Common.alert("Please select a applicant.");
+                    return false;
+                }
+
+                Common.ajax("GET","/organization/getHpAplctUrl.do", {memberID : memberid}, function(result) {
+                    console.log(result);
+                    Common.confirm("Click OK to copy URL", function() {
+                        var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + result.aplicntIdntfc + memberid;
+                        $("#aplctUrl").val(url);
+                        $("#aplctUrl").attr("type", "text").select();
+                        document.execCommand("copy");
+                        $("#aplctUrl").attr("type", "hidden");
+                    });
+                });
+
+            } else {
+                Common.alert("e-Agreement URL is not required.");
+            }
+        } else {
+            Common.alert("Please select a member!");
+        }
+    })
 });
 
 </script>
@@ -700,6 +730,7 @@ $('#hpYSListingBtn').click(function() {
 </aside><!-- title_line end -->
 
 <input type="hidden" id="userRole" name="userRole" value="${userRole} " />
+<input type="hidden" id="aplctUrl" name="aplctUrl" style="visible:false"/>
 
 <form id="rawDataReport" name="rawDataReport">
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />
@@ -861,11 +892,8 @@ $('#hpYSListingBtn').click(function() {
         <dt><spring:message code="sal.title.text.link" /></dt>
         <dd>
         <ul class="btns">
-
             <li><p class="link_btn"><a href="#" id="hpYSListingBtn">HP Raw Listing</a></p></li>
-
-        </ul>
-        <ul class="btns">
+            <li><p class="link_btn"><a href="#" id="getHpApplicantURL">HP Applicant e-Agreement URL</a></li>
         </ul>
         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
         </dd>

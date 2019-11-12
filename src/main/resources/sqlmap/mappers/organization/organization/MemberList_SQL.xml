@@ -4489,13 +4489,19 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             A.APLICNT_NAME,
             A.APLICNT_NRIC,
             B.NAME BANK_NAME,
-            A.APLICNT_BANK_ACC_NO
+            A.APLICNT_BANK_ACC_NO,
+            A.APLICNT_IDNTFC
+            /*,NVL(A.AGMT_SMS_CNT, 0) AGMT_SMS_CNT*/
         FROM ORG0003D A
         LEFT JOIN SYS0004M B
             ON A.APLICNT_BANK_ID = B.BANK_ID
         WHERE A.APLCTN_ID = #{memberID}
-            AND A.APLICNT_IDNTFC = #{identification}
-            AND A.APLICNT_NRIC = #{nric}
+            <if test='identification != "" and identification != null'>
+                AND A.APLICNT_IDNTFC = #{identification}
+            </if>
+            <if test='identification != "" and identification != null'>
+                AND A.APLICNT_NRIC = #{nric}
+            </if>
       </select>
 
       <select id="checkBankAcc" parameterType="Map" resultType="egovMap">
