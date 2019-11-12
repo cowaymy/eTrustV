@@ -893,7 +893,9 @@ $(function() {
         <dd>
         <ul class="btns">
             <li><p class="link_btn"><a href="#" id="hpYSListingBtn">HP Raw Listing</a></p></li>
-            <li><p class="link_btn"><a href="#" id="getHpApplicantURL">HP Applicant e-Agreement URL</a></li>
+            <c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
+                <li><p class="link_btn"><a href="#" id="getHpApplicantURL">HP Applicant e-Agreement URL</a></li>
+            </c:if>
         </ul>
         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
         </dd>
