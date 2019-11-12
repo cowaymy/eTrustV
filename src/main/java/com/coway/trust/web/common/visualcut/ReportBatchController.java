@@ -776,6 +776,26 @@ public class ReportBatchController {
     LOGGER.info("[END] CodyTraineeAppRaw_Excel...");
   }
 
+  // Requested by Homecare Department
+  @RequestMapping(value = "/HTRawDate_Excel_S.do")
+  //@Scheduled(cron = "0 0 8 * * MON,WED,THU,FRI")
+  public void htRawDateExcelS() throws IOException {
+    LOGGER.info("[START] HTRawDate_Excel_S...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/HTRawDate_Excel_S.rpt");// visualcut
+                                                                       // rpt
+                                                                       // file
+                                                                       // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Homecare" + File.separator + "HTRawDate_Excel_S" + CommonUtils.getNowDate() + ".xls");
+
+    this.view(null, null, params);
+    LOGGER.info("[END] HTRawDate_Excel_S...");
+  }
+
+
+
   @RequestMapping(value = "/BSRawCurrent.do")
   //@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
   public void bsRawCurrent() throws IOException {
