@@ -162,7 +162,12 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 			}
 	    }
 
-	    serviceApiInstallationDetailService.installFailJobRequestProc(params);
+	    try {
+	    	serviceApiInstallationDetailService.installFailJobRequestProc(params);
+	    }
+	    catch (Exception e) {
+	    	throw new ApplicationException(AppConstants.FAIL, "Fail");
+		}
 
 	    return ResponseEntity.ok(InstallFailJobRequestDto.create(serviceNo));
 	}

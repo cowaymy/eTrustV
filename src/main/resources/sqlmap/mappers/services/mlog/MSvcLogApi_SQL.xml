@@ -3089,7 +3089,6 @@
   </insert>
 
   <insert id="insertInsFailServiceLog" parameterType="Map">
-    /* Woongjin Jun */
     <selectKey keyProperty="resultSeq" resultType="int" order="BEFORE">
         SELECT SVC0043T_RESULT_SEQ.NEXTVAL AS resultSeq FROM DUAL
     </selectKey>

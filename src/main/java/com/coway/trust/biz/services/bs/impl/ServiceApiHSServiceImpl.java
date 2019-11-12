@@ -173,7 +173,12 @@ public class ServiceApiHSServiceImpl extends EgovAbstractServiceImpl implements 
 			}
 	    }
 
-	    serviceApiHSDetailService.hsFailJobRequestProc(params);
+	    try {
+	    	serviceApiHSDetailService.hsFailJobRequestProc(params);
+	    }
+	    catch (Exception e) {
+	    	throw new ApplicationException(AppConstants.FAIL, "Fail");
+		}
 
 	    return ResponseEntity.ok(HSFailJobRequestDto.create(serviceNo));
 	}

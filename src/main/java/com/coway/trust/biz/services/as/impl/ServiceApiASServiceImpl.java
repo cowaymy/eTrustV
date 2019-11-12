@@ -159,7 +159,12 @@ public class ServiceApiASServiceImpl extends EgovAbstractServiceImpl implements 
 			}
 	    }
 
-	    serviceApiASDetailService.asFailJobRequestProc(params);
+	    try {
+	    	serviceApiASDetailService.asFailJobRequestProc(params);
+	    }
+	    catch (Exception e) {
+	    	throw new ApplicationException(AppConstants.FAIL, "Fail");
+		}
 
 	    return ResponseEntity.ok(ASFailJobRequestDto.create(serviceNo));
 	}

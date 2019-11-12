@@ -279,7 +279,6 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ResponseEntity<InstallFailJobRequestDto> installFailJobRequestProc(Map<String, Object> params) throws Exception {
 		String serviceNo = String.valueOf(params.get("serviceNo"));
 		SessionVO sessionVO1 = new SessionVO();
@@ -323,21 +322,23 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 	    	params.put("hidSirimTypeId", String.valueOf(installResult.get("stkCtgryId")));
 	    	params.put("hiddeninstallEntryNo", String.valueOf(installResult.get("installEntryNo")));
 	    	params.put("hidTradeLedger_InstallNo", String.valueOf(installResult.get("installEntryNo")));
-	    	params.put("hidCallType", "257"); // fail시 전화타입 257
+	    	params.put("hidCallType", String.valueOf(installResult.get("typeId")));
 	    	params.put("CTID", String.valueOf(userId));
 	    	params.put("installDate", "");
 	    	params.put("updator", String.valueOf(userId));
 	    	params.put("nextCallDate", todayPlusOne);
 	    	params.put("refNo1", "0");
 	    	params.put("refNo2", "0");
-	    	params.put("codeId", String.valueOf(installResult.get("257")));
+	    	params.put("codeId", String.valueOf(installResult.get("typeId")));
 	    	params.put("failReason", String.valueOf(params.get("failReasonCode")));
+
 	    	if (orderInfo != null) {
 	    		params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
 	    	}
 	    	else {
 	    		params.put("hidOutright_Price", "0");
 	    	}
+
 	    	params.put("hidAppTypeId", installResult.get("codeId"));
 
 	    	if (installResult.get("sirimNo") != null) {
@@ -379,6 +380,11 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 	    		// SP_SVC_LOGISTIC_REQUEST COMMIT DELETE
 	    		servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 	    	}
+	    }
+	    else {
+	    	if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
+	    		MSvcLogApiService.updateInsFailServiceLogs(params);
+	        }
 	    }
 
 	    return ResponseEntity.ok(InstallFailJobRequestDto.create(serviceNo));

@@ -128,7 +128,6 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ResponseEntity<PRFailJobRequestDto> prReAppointmentRequestProc(Map<String, Object> params) throws Exception {
 		String serviceNo = String.valueOf(params.get("serviceNo"));
 

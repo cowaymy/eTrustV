@@ -213,7 +213,6 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ResponseEntity<HSFailJobRequestDto> hsFailJobRequestProc(Map<String, Object> params) throws Exception {
 		String serviceNo = String.valueOf(params.get("serviceNo"));
 

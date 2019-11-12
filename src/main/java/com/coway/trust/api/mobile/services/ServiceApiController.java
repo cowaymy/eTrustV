@@ -1655,179 +1655,181 @@ public class ServiceApiController {
 
   @ApiOperation(value = "Heart Service Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/hSFailJobRequest", method = RequestMethod.POST)
-  public ResponseEntity<HSFailJobRequestDto> hSFailJobRequest(@RequestBody HSFailJobRequestForm hSFailJobRequestForm)
-      throws Exception {
-    String transactionId = "";
+  public ResponseEntity<HSFailJobRequestDto> hSFailJobRequest(@RequestBody HSFailJobRequestForm hSFailJobRequestForm) throws Exception {
+	  return serviceApiHSService.hsFailJobRequest(hSFailJobRequestForm);
 
-    Map<String, Object> params = HSFailJobRequestForm.createMaps(hSFailJobRequestForm);
-
-    LOGGER.debug("==================================[MB]HS FAIL JOB REQUEST ====================================");
-    LOGGER.debug("### HS FAIL JOB REQUEST FORM : " + params.toString());
-    LOGGER.debug("==================================[MB]HS FAIL JOB REQUEST ====================================");
-
-    // INSERT LOG HISTORY
-    if (RegistrationConstants.IS_INSERT_HSFAIL_LOG) {
-      MSvcLogApiService.saveHsFailServiceLogs(params);
-    }
-
-    MSvcLogApiService.insertHsFailJobResult(params);
-    MSvcLogApiService.upDateHsFailJobResultM(params);
-
-    return ResponseEntity.ok(HSFailJobRequestDto.create(transactionId));
-
+//    String transactionId = "";
+//
+//    Map<String, Object> params = HSFailJobRequestForm.createMaps(hSFailJobRequestForm);
+//
+//    LOGGER.debug("==================================[MB]HS FAIL JOB REQUEST ====================================");
+//    LOGGER.debug("### HS FAIL JOB REQUEST FORM : " + params.toString());
+//    LOGGER.debug("==================================[MB]HS FAIL JOB REQUEST ====================================");
+//
+//    // INSERT LOG HISTORY
+//    if (RegistrationConstants.IS_INSERT_HSFAIL_LOG) {
+//      MSvcLogApiService.saveHsFailServiceLogs(params);
+//    }
+//
+//    MSvcLogApiService.insertHsFailJobResult(params);
+//    MSvcLogApiService.upDateHsFailJobResultM(params);
+//
+//    return ResponseEntity.ok(HSFailJobRequestDto.create(transactionId));
   }
 
   @ApiOperation(value = "After Service Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/aSFailJobRequest", method = RequestMethod.POST)
-  public ResponseEntity<ASFailJobRequestDto> aSFailJobRequest(@RequestBody ASFailJobRequestForm aSFailJobRequestForm)
-      throws Exception {
-    String transactionId = "";
+  public ResponseEntity<ASFailJobRequestDto> aSFailJobRequest(@RequestBody ASFailJobRequestForm aSFailJobRequestForm) throws Exception {
+	  return serviceApiASService.asFailJobRequest(aSFailJobRequestForm);
 
-    Map<String, Object> params = ASFailJobRequestForm.createMaps(aSFailJobRequestForm);
-
-    LOGGER.debug("==================================[MB]AS FAIL JOB REQUEST ====================================");
-    LOGGER.debug("### AS FAIL JOB REQUEST FORM : " + params.toString());
-    LOGGER.debug("==================================[MB]AS FAIL JOB REQUEST ====================================");
-
-    if (RegistrationConstants.IS_INSERT_ASFAIL_LOG) {
-      MSvcLogApiService.saveAsFailServiceLogs(params);
-    }
-
-    MSvcLogApiService.insertAsFailJobResult(params);
-    MSvcLogApiService.upDatetAsFailJobResultM(params);
-
-    return ResponseEntity.ok(ASFailJobRequestDto.create(transactionId));
-
+//    String transactionId = "";
+//
+//    Map<String, Object> params = ASFailJobRequestForm.createMaps(aSFailJobRequestForm);
+//
+//    LOGGER.debug("==================================[MB]AS FAIL JOB REQUEST ====================================");
+//    LOGGER.debug("### AS FAIL JOB REQUEST FORM : " + params.toString());
+//    LOGGER.debug("==================================[MB]AS FAIL JOB REQUEST ====================================");
+//
+//    if (RegistrationConstants.IS_INSERT_ASFAIL_LOG) {
+//      MSvcLogApiService.saveAsFailServiceLogs(params);
+//    }
+//
+//    MSvcLogApiService.insertAsFailJobResult(params);
+//    MSvcLogApiService.upDatetAsFailJobResultM(params);
+//
+//    return ResponseEntity.ok(ASFailJobRequestDto.create(transactionId));
   }
 
   @ApiOperation(value = "Installation Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/installFailJobRequest", method = RequestMethod.POST)
-  public ResponseEntity<InstallFailJobRequestDto> installFailJobRequest(
-      @RequestBody InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
-    String transactionId = "";
-    SessionVO sessionVO1 = new SessionVO();
+  public ResponseEntity<InstallFailJobRequestDto> installFailJobRequest(@RequestBody InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
+	  return serviceApiInstallationService.installFailJobRequest(installFailJobRequestForm);
 
-    Map<String, Object> params = InstallFailJobRequestForm.createMaps(installFailJobRequestForm);
-
-    LOGGER.debug("==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
-    LOGGER.debug("### INSTALLATION FAIL JOB REQUEST FORM : " + params.toString());
-    LOGGER.debug("==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
-
-    // INSERT LOG HISTORY
-    if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
-      MSvcLogApiService.saveInsFailServiceLogs(params);
-    }
-
-    Calendar cal = Calendar.getInstance();
-    int year = cal.get(cal.YEAR);
-    String month = String.format("%02d", cal.get(cal.MONTH) + 1);
-    String date = String.format("%02d", cal.get(cal.DATE) + 1);
-    String todayPlusOne = (String.valueOf(date) + '/' + String.valueOf(month) + '/' + String.valueOf(year));
-    int isInsCnt = installationResultListService.isInstallAlreadyResult(params);
-
-    // IF STATUS ARE NOT ACTIVE
-    if (isInsCnt == 0) {
-      String statusId = "21";
-
-      EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
-      params.put("installEntryId", installResult.get("installEntryId"));
-      EgovMap orderInfo = installationResultListService.getOrderInfo(params);
-
-      String userId = MSvcLogApiService.getUseridToMemid(params);
-
-      sessionVO1.setUserId(Integer.parseInt(userId));
-
-      params.put("installStatus", String.valueOf(statusId));// 21
-      params.put("statusCodeId", Integer.parseInt(params.get("installStatus").toString()));
-      params.put("hidEntryId", String.valueOf(installResult.get("installEntryId")));
-      params.put("hidCustomerId", String.valueOf(installResult.get("custId")));
-      params.put("hidSalesOrderId", String.valueOf(installResult.get("salesOrdId")));
-      params.put("hidTaxInvDSalesOrderNo", String.valueOf(installResult.get("salesOrdNo")));
-      params.put("hidStockIsSirim", String.valueOf(installResult.get("isSirim")));
-      params.put("hidStockGrade", installResult.get("stkGrad"));
-      params.put("hidSirimTypeId", String.valueOf(installResult.get("stkCtgryId")));
-      params.put("hiddeninstallEntryNo", String.valueOf(installResult.get("installEntryNo")));
-      params.put("hidTradeLedger_InstallNo", String.valueOf(installResult.get("installEntryNo")));
-      //params.put("hidCallType", "257"); // fail시 전화타입 257
-      params.put("hidCallType", String.valueOf(installResult.get("typeId")));
-      params.put("CTID", String.valueOf(userId));
-      params.put("installDate", "");
-      params.put("updator", String.valueOf(userId));
-      params.put("nextCallDate", todayPlusOne);
-      params.put("refNo1", "0");
-      params.put("refNo2", "0");
-      //params.put("codeId", String.valueOf(installResult.get("257")));
-      params.put("codeId", String.valueOf(installResult.get("typeId")));
-      params.put("failReason", String.valueOf(params.get("failReasonCode")));
-      params.put("sirimNo", "");
-      params.put("serialNo", "");
-
-      if (orderInfo != null) {
-        params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
-      } else {
-        params.put("hidOutright_Price", "0");
-      }
-
-      params.put("hidAppTypeId", installResult.get("codeId"));
-      /*
-       * params.put("hidStockIsSirim",String.valueOf(insTransLogs.get(i).get(
-       * "sirimNo")));
-       * params.put("hidSerialNo",String.valueOf(insTransLogs.get(i).get(
-       * "serialNo")));
-       * params.put("remark",insTransLogs.get(i).get("resultRemark"));
-       */
-
-      LOGGER.debug("### INSTALLATION FAIL JOB REQUEST PARAM : " + params.toString());
-
-      Map rtnValue = installationResultListService.insertInstallationResult(params, sessionVO1);
-
-      if (null != rtnValue) {
-        HashMap spMap = (HashMap) rtnValue.get("spMap");
-        if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-          rtnValue.put("logerr", "Y");
-        } else {
-          transactionId = String.valueOf(params.get("transactionId"));
-          if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-            MSvcLogApiService.updateSuccessInstallStatus(transactionId);
-          }
-        }
-        servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-      }
-    } else {
-      if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
-        MSvcLogApiService.updateInsFailServiceLogs(params);
-      }
-    }
-    return ResponseEntity.ok(InstallFailJobRequestDto.create(transactionId));
+//    String transactionId = "";
+//    SessionVO sessionVO1 = new SessionVO();
+//
+//    Map<String, Object> params = InstallFailJobRequestForm.createMaps(installFailJobRequestForm);
+//
+//    LOGGER.debug("==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
+//    LOGGER.debug("### INSTALLATION FAIL JOB REQUEST FORM : " + params.toString());
+//    LOGGER.debug("==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
+//
+//    // INSERT LOG HISTORY
+//    if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
+//      MSvcLogApiService.saveInsFailServiceLogs(params);
+//    }
+//
+//    Calendar cal = Calendar.getInstance();
+//    int year = cal.get(cal.YEAR);
+//    String month = String.format("%02d", cal.get(cal.MONTH) + 1);
+//    String date = String.format("%02d", cal.get(cal.DATE) + 1);
+//    String todayPlusOne = (String.valueOf(date) + '/' + String.valueOf(month) + '/' + String.valueOf(year));
+//    int isInsCnt = installationResultListService.isInstallAlreadyResult(params);
+//
+//    // IF STATUS ARE NOT ACTIVE
+//    if (isInsCnt == 0) {
+//      String statusId = "21";
+//
+//      EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
+//      params.put("installEntryId", installResult.get("installEntryId"));
+//      EgovMap orderInfo = installationResultListService.getOrderInfo(params);
+//
+//      String userId = MSvcLogApiService.getUseridToMemid(params);
+//
+//      sessionVO1.setUserId(Integer.parseInt(userId));
+//
+//      params.put("installStatus", String.valueOf(statusId));// 21
+//      params.put("statusCodeId", Integer.parseInt(params.get("installStatus").toString()));
+//      params.put("hidEntryId", String.valueOf(installResult.get("installEntryId")));
+//      params.put("hidCustomerId", String.valueOf(installResult.get("custId")));
+//      params.put("hidSalesOrderId", String.valueOf(installResult.get("salesOrdId")));
+//      params.put("hidTaxInvDSalesOrderNo", String.valueOf(installResult.get("salesOrdNo")));
+//      params.put("hidStockIsSirim", String.valueOf(installResult.get("isSirim")));
+//      params.put("hidStockGrade", installResult.get("stkGrad"));
+//      params.put("hidSirimTypeId", String.valueOf(installResult.get("stkCtgryId")));
+//      params.put("hiddeninstallEntryNo", String.valueOf(installResult.get("installEntryNo")));
+//      params.put("hidTradeLedger_InstallNo", String.valueOf(installResult.get("installEntryNo")));
+//      //params.put("hidCallType", "257"); // fail시 전화타입 257
+//      params.put("hidCallType", String.valueOf(installResult.get("typeId")));
+//      params.put("CTID", String.valueOf(userId));
+//      params.put("installDate", "");
+//      params.put("updator", String.valueOf(userId));
+//      params.put("nextCallDate", todayPlusOne);
+//      params.put("refNo1", "0");
+//      params.put("refNo2", "0");
+//      //params.put("codeId", String.valueOf(installResult.get("257")));
+//      params.put("codeId", String.valueOf(installResult.get("typeId")));
+//      params.put("failReason", String.valueOf(params.get("failReasonCode")));
+//      params.put("sirimNo", "");
+//      params.put("serialNo", "");
+//
+//      if (orderInfo != null) {
+//        params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
+//      } else {
+//        params.put("hidOutright_Price", "0");
+//      }
+//
+//      params.put("hidAppTypeId", installResult.get("codeId"));
+//      /*
+//       * params.put("hidStockIsSirim",String.valueOf(insTransLogs.get(i).get(
+//       * "sirimNo")));
+//       * params.put("hidSerialNo",String.valueOf(insTransLogs.get(i).get(
+//       * "serialNo")));
+//       * params.put("remark",insTransLogs.get(i).get("resultRemark"));
+//       */
+//
+//      LOGGER.debug("### INSTALLATION FAIL JOB REQUEST PARAM : " + params.toString());
+//
+//      Map rtnValue = installationResultListService.insertInstallationResult(params, sessionVO1);
+//
+//      if (null != rtnValue) {
+//        HashMap spMap = (HashMap) rtnValue.get("spMap");
+//        if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
+//          rtnValue.put("logerr", "Y");
+//        } else {
+//          transactionId = String.valueOf(params.get("transactionId"));
+//          if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+//            MSvcLogApiService.updateSuccessInstallStatus(transactionId);
+//          }
+//        }
+//        servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+//      }
+//    } else {
+//      if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
+//        MSvcLogApiService.updateInsFailServiceLogs(params);
+//      }
+//    }
+//    return ResponseEntity.ok(InstallFailJobRequestDto.create(transactionId));
   }
 
   @ApiOperation(value = "Product Return Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/pRFailJobRequest", method = RequestMethod.POST)
-  public ResponseEntity<PRFailJobRequestDto> pRReAppointmentRequest(
-      @RequestBody PRFailJobRequestForm pRFailJobRequestForm) throws Exception {
-    String transactionId = "";
+  public ResponseEntity<PRFailJobRequestDto> pRReAppointmentRequest(@RequestBody PRFailJobRequestForm pRFailJobRequestForm) throws Exception {
+	  return serviceApiPRService.prReAppointmentRequest(pRFailJobRequestForm);
 
-    Map<String, Object> params = PRFailJobRequestForm.createMaps(pRFailJobRequestForm);
-
-    LOGGER.debug("==================================[MB]PRODUCT RETURN FAIL JOB REQUEST ====================================");
-    LOGGER.debug("### PRODUCT RETURN FAIL JOB REQUEST FORM : " + params.toString());
-    LOGGER.debug("==================================[MB]PRODUCT RETURN FAIL JOB REQUEST ====================================");
-
-    if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
-      // NO LOG
-    }
-
-    MSvcLogApiService.savePrFailServiceLogs(params);
-    MSvcLogApiService.setPRFailJobRequest(params);
-    // Call Log Update
-
-    transactionId = pRFailJobRequestForm.getTransactionId();
-
-    if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
-      // MSvcLogApiService.updatePrFailServiceLogs(transactionId);
-    }
-
-    return ResponseEntity.ok(PRFailJobRequestDto.create(transactionId));
+//    String transactionId = "";
+//
+//    Map<String, Object> params = PRFailJobRequestForm.createMaps(pRFailJobRequestForm);
+//
+//    LOGGER.debug("==================================[MB]PRODUCT RETURN FAIL JOB REQUEST ====================================");
+//    LOGGER.debug("### PRODUCT RETURN FAIL JOB REQUEST FORM : " + params.toString());
+//    LOGGER.debug("==================================[MB]PRODUCT RETURN FAIL JOB REQUEST ====================================");
+//
+//    if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
+//      // NO LOG
+//    }
+//
+//    MSvcLogApiService.savePrFailServiceLogs(params);
+//    MSvcLogApiService.setPRFailJobRequest(params);
+//    // Call Log Update
+//
+//    transactionId = pRFailJobRequestForm.getTransactionId();
+//
+//    if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
+//      // MSvcLogApiService.updatePrFailServiceLogs(transactionId);
+//    }
+//
+//    return ResponseEntity.ok(PRFailJobRequestDto.create(transactionId));
   }
 
   @ApiOperation(value = "Cancel SMS Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

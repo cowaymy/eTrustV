@@ -181,7 +181,12 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 	    logger.debug("### PRODUCT RETURN FAIL JOB REQUEST FORM : " + params.toString());
 	    logger.debug("==================================[MB]PRODUCT RETURN FAIL JOB REQUEST ====================================");
 
-	    serviceApiPRDetailService.prReAppointmentRequestProc(params);
+	    try {
+	    	serviceApiPRDetailService.prReAppointmentRequestProc(params);
+	    }
+	    catch (Exception e) {
+	    	throw new ApplicationException(AppConstants.FAIL, "Fail");
+		}
 
 	    return ResponseEntity.ok(PRFailJobRequestDto.create(serviceNo));
 	}

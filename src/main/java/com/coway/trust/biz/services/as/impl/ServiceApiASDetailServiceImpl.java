@@ -576,7 +576,6 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ResponseEntity<ASFailJobRequestDto> asFailJobRequestProc(Map<String, Object> params) throws Exception {
 		String serviceNo = String.valueOf(params.get("serviceNo"));
 

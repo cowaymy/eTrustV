@@ -561,7 +561,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     MSvcLogApiMapper.updateInsFailServiceLog(resultSeq);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void saveAsFailServiceLogs(Map<String, Object> params) {
     MSvcLogApiMapper.insertAsFailServiceLog(params);
   }
