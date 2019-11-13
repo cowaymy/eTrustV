@@ -1638,8 +1638,14 @@
     }
 
     function fn_createCustomerPop() {
-        Common.popupWin("frmCustSearch", "/sales/customer/customerRegistPopESales.do", {width : "1220px", height : "690", resizable: "no", scrollbars: "no"});
-        //Common.popupDiv("/sales/customer/customerRegistPopESales.do", {"callPrgm" : "PRE_ORD"});
+    	if(Common.checkPlatformType() == "mobile") {
+            var strDocumentWidth = $(document).outerWidth();
+            var strDocumentHeight = $(document).outerHeight();
+            Common.popupWin("frmCustSearch", "/sales/customer/customerRegistPopESales.do", {width : strDocumentWidth+"px", height : strDocumentHeight + "px", resizable: "no", scrollbars: "yes"});
+        } else{
+        	Common.popupWin("frmCustSearch", "/sales/customer/customerRegistPopESales.do", {width : "1220px", height : "690", resizable: "no", scrollbars: "no"});
+            //Common.popupDiv("/sales/customer/customerRegistPopESales.do", {"callPrgm" : "PRE_ORD"});
+        }
     }
 
     function fn_loadMainCntcPerson(custCntcId){

@@ -1085,7 +1085,12 @@ var Common = {
 	        $(".popup_wrap").css("margin-left","0px");
 
 	        if(isGrid) {
-	        	var gridWidth =  $(".pop_body").width()  - ($(".search_result").offset().left)  ;
+	        	var gridWidth = "";
+	        	if ($(".search_result").length > 0) {
+	        		gridWidth =  $(".pop_body").width()  - ($(".search_result").offset().left)  ;
+	        	} else {
+	        		gridWidth =  $(".pop_body").width()  - 10;
+	        	}
 	        	var gridHeight =  $(".pop_body").height() - $("#"+gridId).offset().top;
 
 	        	//$(".search_result").css("width", gridWidth);
