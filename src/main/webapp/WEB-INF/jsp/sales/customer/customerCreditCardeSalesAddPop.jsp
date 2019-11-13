@@ -1,24 +1,27 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://sandbox.molpay.com/MOLPay/API/cse/checkout_dev.js"></script>
 <script type="text/javaScript" language="javascript">
 
-  	//AUIGrid ���� �� ��ȯ ID
+    //AUIGrid ���� �� ��ȯ ID
 
     $(document).ready(function(){
         doGetCombo('/common/selectCodeList.do', '21',  '','cmbCreditCardType', 'S', ''); // Add Card Type Combo Box
         doGetCombo('/sales/customer/selectAccBank.do',  '', '', 'cmbIssBank',  'S', ''); //Issue Bank)
        //doGetCombo('/common/selectCodeList.do', '115', '','cmbCardType',       'S', ''); // Add Card Type Combo Box
         $("#nameOnCard").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
+
+        // 20190925 KR-OHK Moblie Popup Setting
+        Common.setMobilePopup(false, false, '');
     });
 
     $(function(){
         $('#btnAddCreditCard').click(function() {
-        	$("#cmbCardType").val($('input[name=cmbCardType]:checked').val());
+            $("#cmbCardType").val($('input[name=cmbCardType]:checked').val());
 
-        	if(!fn_validCreditCard()) return false;
+            if(!fn_validCreditCard()) return false;
              fn_doSaveCreditCard();
         });
         $('#cardNo').change(function() {
@@ -149,7 +152,7 @@
     }
 
     function fn_doSaveCreditCard() {
-    	/*
+        /*
         console.log('fn_doSaveBankAcc() START');
 
         var checkCrc = {
@@ -215,7 +218,7 @@
                         $("#signature").val(tlResult.signature);
 
                         Common.ajax("GET", "/sales/customer/tokenizationProcess.do", $("#frmCrCard").serialize(), function(tResult) {
-                        	if(tResult.stus == "1" && tResult.crcCheck == "0") {
+                            if(tResult.stus == "1" && tResult.crcCheck == "0") {
                                 console.log("order edit new :: " + tResult.token);
                                 $("#custCrcExpr").val($("#expMonth").val() + $("#expYear").val().substring(2));
                                 $("#custCrcNoMask").val(tResult.crcNo);
@@ -288,7 +291,7 @@
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
-                <col style="width:360px" />
+                <col style="width:40%" />
                 <col style="width:*" />
                 </colgroup>
 

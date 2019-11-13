@@ -1,6 +1,14 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style type="text/css">
+
+    /* 커스텀 칼럼 스타일 정의 */
+    .aui-grid-user-custom-left {
+        text-align: left;
+    }
+</style>
 <script type="text/javaScript" language="javascript">
 
   //AUIGrid 생성 후 반환 ID
@@ -17,6 +25,8 @@
             $('#custPopCloseBtn').click();
         });
 
+        // 20190925 KR-OHK Moblie Popup Setting
+        Common.setMobilePopup(false, true, 'grid_addr_wrap');
   });
 
   function fn_setData(custAddId) {
@@ -56,7 +66,9 @@
               width : 80
           }, {
               dataField : "addr",
-              headerText : '<spring:message code="sal.title.address" />'
+              headerText : '<spring:message code="sal.title.address" />',
+              width : 700,
+              style: "aui-grid-user-custom-left"
           },{
               dataField : "custAddId",
               visible : false
@@ -144,8 +156,7 @@
      <!-- search_result start -->
      <ul class="right_btns">
       <li><p class="btn_grid">
-        <a id="cntcSearchBtn" href="#""><spring:message
-          code="sal.btn.search" /></a>
+        <a id="cntcSearchBtn" href="#""><spring:message code="sal.btn.search" /></a>
        </p></li>
       <li><p class="btn_grid">
         <a href="#"><spring:message code="sal.btn.clear" /></a>
@@ -153,8 +164,7 @@
      </ul>
      <article class="grid_wrap">
       <!-- grid_wrap start -->
-      <div id="grid_addr_wrap"
-       style="width: 100%; height: 380px; margin: 0 auto;"></div>
+      <div id="grid_addr_wrap" style="width: 100%; height: 100%; margin: 0 auto;"></div>
      </article>
      <!-- grid_wrap end -->
     </section>

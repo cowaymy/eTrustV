@@ -13,6 +13,7 @@
 	var myFileCaches = {};
 	var recentGridItem = null;
 	var selectRowIdx;
+	var popupObj;
 
     if(MEM_TYPE == '1') { //HP
         CATE_ID = "29";
@@ -311,8 +312,12 @@
                         return false;
                     }
                 }
-
-                Common.popupDiv("/sales/order/preOrderRegisterPop.do", null, null, true, '_divPreOrdRegPop');
+                // 20190925 KR-OHK Moblie Popup Setting
+                if(Common.checkPlatformType() == "mobile") {
+                    popupObj = Common.popupWin("frmNew", "/sales/order/preOrderRegisterPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+                } else{
+                    Common.popupDiv("/sales/order/preOrderRegisterPop.do", null, null, true, '_divPreOrdRegPop');
+                }
             });
         });
         $('#_btnClear').click(function() {
@@ -453,6 +458,10 @@
             AUIGrid.setGridData(listGridID, result);
             AUIGrid.setGridData(excelListGridID, result);
         });
+    }
+
+    function fn_PopClose() {
+        if(popupObj!=null) popupObj.close();
     }
 
     function fn_calcGst(amt) {

@@ -1,7 +1,21 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style type="text/css">
 
+    /* 커스텀 스타일 정의 */
+    .auto_file2 {
+        width:100%!important;
+    }
+    .auto_file2 > label {
+        width:100%!important;
+    }
+   .auto_file2 label input[type=text]{width:40%!important; float:left}
+
+</style>
 <script type="text/javaScript">
+    //파일 저장 캐시
+    var myFileCaches = {};
 
     //AUIGrid 생성 후 반환 ID
     var listGiftGridID;
@@ -9,22 +23,47 @@
     var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
     var atchFileGrpId = 0;
 
+    var codeList_19 = [];
+    <c:forEach var="obj" items="${codeList_19}">
+    codeList_19.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
+    var codeList_325 = [];
+    <c:forEach var="obj" items="${codeList_325}">
+    codeList_325.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
+    var codeList_415 = [];
+    <c:forEach var="obj" items="${codeList_415}">
+    codeList_415.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
+    var codeList_416 = [];
+    <c:forEach var="obj" items="${codeList_416}">
+    codeList_416.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
+    var branchCdList_1 = [];
+    <c:forEach var="obj" items="${branchCdList_1}">
+    branchCdList_1.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
+    var branchCdList_5 = [];
+    <c:forEach var="obj" items="${branchCdList_5}">
+    branchCdList_5.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
     $(document).ready(function(){
 
         createAUIGridStk();
 
-        doDefCombo(appTypeData, '' ,'appType', 'S', '');                 //Status 생성
-        //doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
-        doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
-      //doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
-        doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
-        doGetComboSepa ('/common/selectBranchCodeList.do', '1',  ' - ', '', 'keyinBrnchId',  'S', ''); //Branch Code
-        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '0', 'exTrade', 'S'); //EX-TRADE
-        //doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '0', 'gstChk',  'S'); //GST_CHK
-        //doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
-        doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'corpCustType',     'S', ''); //Common Code
-        doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'agreementType',     'S', ''); //Common Code
-
+        doDefCombo(appTypeData, '' ,'appType', 'S', '');           // Status 생성
+        doDefCombo(codeList_19, '', 'rentPayMode', 'S', '');       // Common Code
+        doDefCombo(codeList_415, '', 'corpCustType', 'S', '');     // Common Code
+        doDefCombo(codeList_416, '', 'agreementType', 'S', '');  // Common Code
+        doDefCombo(branchCdList_5, '', 'dscBrnchId', 'S', '');      // Branch Code
+        doDefCombo(branchCdList_1, '', 'keyinBrnchId', 'S', '');    // Branch Code
+        doDefComboCode(codeList_325, '0', 'exTrade', 'S', '');    // EX-TRADE
         //Attach File
         //$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
 
@@ -32,6 +71,8 @@
         $("#nric").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
         $("#sofNo").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
 
+        // 20190925 KR-OHK Moblie Popup Setting
+        Common.setMobilePopup(true, false,'');
 
     });
 
@@ -93,10 +134,10 @@
 
                 /* $('#refereNo').val($('#sofNo').val().trim()) */
 
-	            $('#nric').prop("readonly", true).addClass("readonly");
-	            $('#sofNo').prop("readonly", true).addClass("readonly");
-	            $('#btnConfirm').addClass("blind");
-	            $('#btnClear').addClass("blind");
+                $('#nric').prop("readonly", true).addClass("readonly");
+                $('#sofNo').prop("readonly", true).addClass("readonly");
+                $('#btnConfirm').addClass("blind");
+                $('#btnClear').addClass("blind");
 
                 fn_loadCustomer(null, $('#nric').val());
             }
@@ -125,13 +166,13 @@
             }
         });
         $('#btnNewCntc').click(function() {
-        	Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_CNTC"}, null , true);
+            Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_CNTC"}, null , true);
         });
         $('#btnSelCntc').click(function() {
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "PRE_ORD_CNTC"}, null, true);
         });
         $('#btnNewInstAddr').click(function() {
-            Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_INST_ADD"}, null , true);
+            Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_INST_ADD"}, null, true);
         });
         $('#btnSelInstAddr').click(function() {
             Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "PRE_ORD_INST_ADD"}, null, true);
@@ -474,11 +515,10 @@
                 return false;
             }
 
-            if(fn_isExistESalesNo() == 'true') return false;
+			if(fn_isExistESalesNo() == 'true') return false;
 
-            Common.popupDiv("/sales/order/cnfmPreOrderDetailPop.do");
+            Common.popupDiv("/sales/order/cnfmPreOrderDetailPop.do", null, null, true, '_divPreOrderDetailPop');
             //fn_doSavePreOrder();
-
         });
         $('#btnCal').click(function() {
 
@@ -550,9 +590,9 @@
         $('#sofFile').change(function(evt) {
             var file = evt.target.files[0];
             if(file == null && myFileCaches[1] != null){
-            	delete myFileCaches[1];
+                delete myFileCaches[1];
             }else if(file != null){
-            	myFileCaches[1] = {file:file};
+                myFileCaches[1] = {file:file};
             }
             console.log(myFileCaches);
         });
@@ -681,7 +721,7 @@
         $('#sctThrdParty').removeClass("blind");
     }
 
-	function fn_excludeGstAmt() {
+    function fn_excludeGstAmt() {
         //Amount before GST
         var oldPrice     = $('#normalOrdPrice').val();
         var newPrice     = $('#ordPrice').val();
@@ -702,7 +742,7 @@
         $('#ordPv').val(newPv);
 
         $('#pBtnCal').addClass("blind");
-	}
+    }
 
     function fn_isExistESalesNo() {
         var isExist = false, msg = "";
@@ -916,16 +956,16 @@
             isValid = false;
             msg += "* Please key in NRIC/Company No.<br>";
         }else{
-        	var dob = Number($('#nric').val().substr(0,2));
-	        var nowDt = new Date();
-	        var nowDtY = Number(nowDt.getFullYear().toString().substr(-2));
-	        var age = nowDtY- dob < 0 ? nowDtY- dob + 100 : nowDtY- dob ;
-	        console.log(age);
-	        if(age < 18) {
-	            Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Member must 18 years old and above.</b>");
-	            $('#scPreOrdArea').addClass("blind");
-	            return false;
-	        }
+            var dob = Number($('#nric').val().substr(0,2));
+            var nowDt = new Date();
+            var nowDtY = Number(nowDt.getFullYear().toString().substr(-2));
+            var age = nowDtY- dob < 0 ? nowDtY- dob + 100 : nowDtY- dob ;
+            console.log(age);
+            if(age < 18) {
+                Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Member must 18 years old and above.</b>");
+                $('#scPreOrdArea').addClass("blind");
+                return false;
+            }
         }
         if(FormUtil.checkReqValue($('#sofNo'))) {
             isValid = false;
@@ -986,19 +1026,19 @@
     }
 
     function fn_validFile() {
-    	var isValid = true, msg = "";
-    	if(FormUtil.isEmpty($('#sofFile').val().trim())) {
+        var isValid = true, msg = "";
+        if(FormUtil.isEmpty($('#sofFile').val().trim())) {
             isValid = false;
             msg += "* Please upload copy of SOF<br>";
         }
-    	if(FormUtil.isEmpty($('#nricFile').val().trim())) {
+        if(FormUtil.isEmpty($('#nricFile').val().trim())) {
             isValid = false;
             msg += "* Please upload copy of NRIC<br>";
         }
 
-    	if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
-    	return isValid;
+        return isValid;
     }
 
     function fn_doSavePreOrder() {
@@ -1100,15 +1140,27 @@
     }
 
     function fn_closePreOrdRegPop() {
-        fn_getPreOrderList();
         myFileCaches = {};
-        $('#_divPreOrdRegPop').remove();
         $('#btnCnfmOrderClose').click();
+
+        // 20190925 KR-OHK Moblie Popup Setting
+        if(Common.checkPlatformType() == "mobile") {
+            opener.fn_PopClose();
+            opener.fn_getPreOrderList();
+        } else {
+            fn_getPreOrderList();
+            $('#_divPreOrdRegPop').remove();
+        }
     }
 
     function fn_closePreOrdRegPop2() {
         myFileCaches = {};
-        $('#_divPreOrdRegPop').remove();
+        // 20190925 KR-OHK Moblie Popup Setting
+        if(Common.checkPlatformType() == "mobile") {
+            self.close();
+        } else {
+            $('#_divPreOrdRegPop').remove();
+        }
     }
 
     function fn_setBillGrp(grpOpt) {
@@ -1410,7 +1462,7 @@
     function fn_loadCustomer(custId, nric){
 
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId, nric : nric}, function(result) {
-
+            Common.removeLoader();
             if(result != null && result.length == 1) {
 
                 $('#scPreOrdArea').removeClass("blind");
@@ -1487,7 +1539,7 @@
                     // [Master Contact] : Owner & Purchaser Contact
                     //                    Additional Service Contact
                     //----------------------------------------------------------
-                    $('#custCntcForm').clearForm();
+                    //$('#custCntcForm').clearForm(); // KR-OHK
                     //$('#liMstCntcNewAddr').addClass("blind");
                     //$('#liMstCntcSelAddr').addClass("blind");
                     //$('#liMstCntcNewAddr2').addClass("blind");
@@ -1509,7 +1561,7 @@
 
             }
             else {
-                Common.confirm('<b>* This customer is NEW customer.<br>Do you want to create a customer?</b>', fn_createCustomerPop, fn_closePreOrdRegPop);
+                Common.confirm('<b>* This customer is NEW customer.<br>Do you want to create a customer?</b>', fn_createCustomerPop, fn_closePreOrdRegPop2);
             }
         });
     }
@@ -1586,7 +1638,7 @@
     }
 
     function fn_createCustomerPop() {
-    	Common.popupWin("frmCustSearch", "/sales/customer/customerRegistPopESales.do", {width : "1220px", height : "690", resizable: "no", scrollbars: "no"});
+        Common.popupWin("frmCustSearch", "/sales/customer/customerRegistPopESales.do", {width : "1220px", height : "690", resizable: "no", scrollbars: "no"});
         //Common.popupDiv("/sales/customer/customerRegistPopESales.do", {"callPrgm" : "PRE_ORD"});
     }
 
@@ -1664,35 +1716,35 @@
         switch(tabNm) {
             case 'ord' :
 
-            	if(MEM_TYPE == '1' || MEM_TYPE == '2'){
-            		$('#memBtn').addClass("blind");
-            		$('#salesmanCd').prop("readonly",true).addClass("readonly");;
-            		$('#salesmanCd').val("${SESSION_INFO.userName}");
+                if(MEM_TYPE == '1' || MEM_TYPE == '2'){
+                    $('#memBtn').addClass("blind");
+                    $('#salesmanCd').prop("readonly",true).addClass("readonly");;
+                    $('#salesmanCd').val("${SESSION_INFO.userName}");
                     $('#salesmanCd').change();
-            	}
+                }
 
-            	$('#appType').val("66");
-            	$('#appType').prop("disabled", true);
+                $('#appType').val("66");
+                $('#appType').prop("disabled", true);
 
-            	if($('#ordProudct').val() == null){
-            		   $('#appType').change();
-            	}
+                if($('#ordProudct').val() == null){
+                       $('#appType').change();
+                }
 
-            	$('[name="advPay"]').prop("disabled", true);
-            	$('#advPayNo').prop("checked", true);
-            	$('#poNo').prop("disabled", true);
+                $('[name="advPay"]').prop("disabled", true);
+                $('#advPayNo').prop("checked", true);
+                $('#poNo').prop("disabled", true);
 
-            	break;
+                break;
             case 'pay' :
-            	if($('#appType').val() == '66'){
-            		$('#rentPayMode').val('131');
-            		$('#rentPayMode').change();
-            		$('#rentPayMode').prop("disabled", true);
-            		$('#thrdParty').prop("disabled", true);
-            	}
+                if($('#appType').val() == '66'){
+                    $('#rentPayMode').val('131');
+                    $('#rentPayMode').change();
+                    $('#rentPayMode').prop("disabled", true);
+                    $('#thrdParty').prop("disabled", true);
+                }
 
-            	$('[name="grpOpt"]').prop("disabled", true);
-            	fn_setBillGrp("new"); // default set billing group option to new
+                $('[name="grpOpt"]').prop("disabled", true);
+                fn_setBillGrp("new"); // default set billing group option to new
                 break;
             default :
                 break;
@@ -1709,8 +1761,8 @@
     }
 
     function encryptIc(nric){
-    	$('#nric').attr("placeholder", nric.substr(0).replace(/[\S]/g,"*"));
-    	//$('#nric').val(nric.substr(0).replace(/[\S]/g,"*"));
+        $('#nric').attr("placeholder", nric.substr(0).replace(/[\S]/g,"*"));
+        //$('#nric').val(nric.substr(0).replace(/[\S]/g,"*"));
     }
 
     function fn_removeFile(name){
@@ -1790,7 +1842,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>eKey-in</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="btnPreOrdClose" onClick="javascript:fn_closePreOrdRegPop2();" href="#">CLOSE | TUTUP</a></p></li>
+    <li><p class="btn_blue2"><a id="btnPreOrdClose" onClick="javascript:fn_closePreOrdRegPop2();" href="#">CLOSE | TUTUP</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -1798,33 +1850,33 @@
 
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
-	<li><p class="btn_blue"><a id="btnConfirm" href="#">Confirm</a></p></li>
-	<li><p class="btn_blue"><a id="btnClear" href="#">Clear</a></p></li>
+    <li><p class="btn_blue"><a id="btnConfirm" href="#">Confirm</a></p></li>
+    <li><p class="btn_blue"><a id="btnClear" href="#">Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 <form id="frmCustSearch" name="frmCustSearch" action="#" method="post">
     <input id="selType" name="selType" type="hidden" value="1" />
     <input id="callPrgm" name="callPrgm" type="hidden" value="PRE_ORD" />
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:160px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row">NRIC/Company No</th>
-	<td><input id="nric" name="nric" type="text" title="" placeholder="" class="w100p"  value=""'/></td>
-	<th scope="row">SOF No</th>
-	<td><input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p"   value=""'/></td>
-</tr>
-<tr>
-    <th scope="row" colspan="4" ><span class="must"><spring:message code='sales.msg.ordlist.icvalid'/></span></th>
-</tr>
-</tbody>
-</table><!-- table end -->
+	<table class="type1"><!-- table start -->
+		<caption>table</caption>
+		<colgroup>
+		    <col style="width:150px" />
+		    <col style="width:*" />
+		</colgroup>
+		<tbody>
+			<tr>
+			    <th scope="row">NRIC/Company No</th>
+			    <td colspan="3" ><input id="nric" name="nric" type="text" title="" placeholder="" class="w100p" style="min-width:150px"  value=""'/></td>
+			</tr>
+			<tr>
+			    <th scope="row">SOF No</th>
+			    <td colspan="3" ><input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p" style="min-width:150px"  value=""'/></td>
+			</tr>
+			<tr>
+			    <th scope="row" colspan="4" ><span class="must"><spring:message code='sales.msg.ordlist.icvalid'/></span></th>
+			</tr>
+		</tbody>
+	</table><!-- table end -->
 </form>
 <!------------------------------------------------------------------------------
     Pre-Order Regist Content START
@@ -1833,10 +1885,10 @@
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
-	<li><a href="aTabCS" class="on">Customer</a></li>
-	<li><a href="aTabOI" onClick="javascript:chgTab('ord');">Order Info</a></li>
-	<li><a href="aTabBD" onClick="javascript:chgTab('pay');">Payment Info</a></li>
-	<li><a href="aTabFL" >Attachment</a></li>
+    <li><a id="aTabCS" class="on">Customer</a></li>
+    <li><a id="aTabOI" onClick="javascript:chgTab('ord');">Order Info</a></li>
+    <li><a id="aTabBD" onClick="javascript:chgTab('pay');">Payment Info</a></li>
+    <li><a id="aTabFL" >Attachment</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -1847,169 +1899,172 @@
     <input id="hiddenTypeId" name="typeId"   type="hidden"/>
     <input id="hiddenCustCntcId" name="custCntcId" type="hidden" />
     <input id="hiddenCustAddId" name="custAddId" type="hidden" />
+    <input id="hiddenCallPrgm" name="callPrgm" type="hidden" />
 
-<aside class="title_line"><!-- title_line start -->
-<h3>Customer information</h3>
-</aside><!-- title_line end -->
+	<aside class="title_line"><!-- title_line start -->
+	<h3>Customer information</h3>
+	</aside><!-- title_line end -->
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:350px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row"><spring:message code="sal.text.custType2" /><span class="must">*</span></th>
-	<td><input id="custTypeNm" name="custTypeNm" type="text" title="" placeholder="" class="w100p readonly" /></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="sal.text.initial2" /><span class="must">*</span></th>
-    <td><input id="custInitial" name="custInitial" type="text" title="Initial" placeholder="Initial" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="sal.title.text.companyType2" /></th>
-    <td><input id="corpTypeNm" name="corpTypeNm" type="text" title="" placeholder="" class="w100p readonly" /></td>
-</tr>
-<tr>
-	<th scope="row"><spring:message code="sal.text.custName2" /><span class="must">*</span></th>
-	<td><input id="name" name="name" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr>
-<!-- <tr>
-	<th scope="row">GST Relief Certificate / Regist. No.</th>
-	<td colspan="3"><p><select id="gstChk" name="gstChk" class="w100p"></select></p>
-		<p><input id="txtCertCustRgsNo" name="txtCertCustRgsNo" type="text" title="" placeholder="" class="w100p" /></p>
-		<p>
-		<div class="auto_file file_flag">auto_file start
-		<input type="file" title="file add" />
-		</div>auto_file end
-		</p>
-	</td>
-</tr> -->
-</tbody>
-</table><!-- table end -->
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:350px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row"><spring:message code="sal.text.nationality2" /><span class="must">*</span></th>
-    <td><input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-    <th scope="row">Passport Visa expiry date | Visa passport tarikh tamat(foreigner)</th>
-    <td><input id="visaExpr" name="visaExpr" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-    <th scope="row">Passport expiry date | Pasport tarikh luput(foreigner)</th>
-    <td><input id="pasSportExpr" name="pasSportExpr" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="sal.text.dob2" /></th>
-    <td><input id="dob" name="dob" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-	<th scope="row"><spring:message code="sal.text.race2" /><span class="must">*</span></th>
-	<td><input id="race" name="race" type="text" title="Create start Date" placeholder="Race" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-	<th scope="row"><spring:message code="sal.text.gender2" /></th>
-	<td><input id="gender" name="gender" type="text" title="" placeholder="Gender" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-	<th scope="row"><spring:message code="sal.title.text.email2" /></th>
-	<td><input id="custEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr>
-<!-- <tr>
-	<th scope="row">Tel (Mobile)</th>
-	<td><input id="custTelM" name="custTelM" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-	<th scope="row">Tel (Residence)</th>
-	<td><input id="custTelR" name="custTelR" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-	<th scope="row">Tel (Fax)<span class="must">*</span></th>
-	<td><input id="custTelF" name="custTelF" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-	<th scope="row">Tel (Office)</th>
-	<td><input id="custTelO" name="custTelO" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-	<th scope="row">Ext No.</th>
-	<td><input id="custExt" name="custExt" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr> -->
-</tbody>
-</table><!-- table end -->
+	<table class="type1"><!-- table start -->
+		<caption>table</caption>
+		<colgroup>
+		    <col style="width:40%" />
+		    <col style="width:*" />
+		</colgroup>
+		<tbody>
+			<tr>
+			    <th scope="row"><spring:message code="sal.text.custType2" /><span class="must">*</span></th>
+			    <td><input id="custTypeNm" name="custTypeNm" type="text" title="" placeholder="" class="w100p readonly" /></td>
+			</tr>
+			<tr>
+			    <th scope="row"><spring:message code="sal.text.initial2" /><span class="must">*</span></th>
+			    <td><input id="custInitial" name="custInitial" type="text" title="Initial" placeholder="Initial" class="w100p readonly" readonly/></td>
+			</tr>
+			<tr>
+			    <th scope="row"><spring:message code="sal.title.text.companyType2" /></th>
+			    <td><input id="corpTypeNm" name="corpTypeNm" type="text" title="" placeholder="" class="w100p readonly" /></td>
+			</tr>
+			<tr>
+			    <th scope="row"><spring:message code="sal.text.custName2" /><span class="must">*</span></th>
+			    <td><input id="name" name="name" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+			</tr>
+			<!-- <tr>
+			    <th scope="row">GST Relief Certificate / Regist. No.</th>
+			    <td colspan="3"><p><select id="gstChk" name="gstChk" class="w100p"></select></p>
+			        <p><input id="txtCertCustRgsNo" name="txtCertCustRgsNo" type="text" title="" placeholder="" class="w100p" /></p>
+			        <p>
+			        <div class="auto_file file_flag">auto_file start
+			        <input type="file" title="file add" />
+			        </div>auto_file end
+			        </p>
+			    </td>
+			</tr> -->
+		</tbody>
+	</table><!-- table end -->
+	<table class="type1"><!-- table start -->
+		<caption>table</caption>
+		<colgroup>
+		    <col style="width:40%" />
+		    <col style="width:*" />
+		</colgroup>
+		<tbody>
+			<tr>
+			    <th scope="row"><spring:message code="sal.text.nationality2" /><span class="must">*</span></th>
+			    <td><input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p readonly" readonly/></td>
+			</tr>
+			<tr>
+			    <th scope="row">Passport Visa expiry date | Visa passport tarikh tamat(foreigner)</th>
+			    <td><input id="visaExpr" name="visaExpr" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
+			</tr>
+			<tr>
+			    <th scope="row">Passport expiry date | Pasport tarikh luput(foreigner)</th>
+			    <td><input id="pasSportExpr" name="pasSportExpr" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
+			</tr>
+			<tr>
+			    <th scope="row"><spring:message code="sal.text.dob2" /></th>
+			    <td><input id="dob" name="dob" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
+			</tr>
+			<tr>
+			    <th scope="row"><spring:message code="sal.text.race2" /><span class="must">*</span></th>
+			    <td><input id="race" name="race" type="text" title="Create start Date" placeholder="Race" class="w100p readonly" readonly/></td>
+			</tr>
+			<tr>
+			    <th scope="row"><spring:message code="sal.text.gender2" /></th>
+			    <td><input id="gender" name="gender" type="text" title="" placeholder="Gender" class="w100p readonly" readonly/></td>
+			</tr>
+			<tr>
+			    <th scope="row"><spring:message code="sal.title.text.email2" /></th>
+			    <td><input id="custEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+			</tr>
+			<!-- <tr>
+			    <th scope="row">Tel (Mobile)</th>
+			    <td><input id="custTelM" name="custTelM" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+			</tr>
+			<tr>
+			    <th scope="row">Tel (Residence)</th>
+			    <td><input id="custTelR" name="custTelR" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+			    <th scope="row">Tel (Fax)<span class="must">*</span></th>
+			    <td><input id="custTelF" name="custTelF" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+			</tr>
+			<tr>
+			    <th scope="row">Tel (Office)</th>
+			    <td><input id="custTelO" name="custTelO" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+			</tr>
+			<tr>
+			    <th scope="row">Ext No.</th>
+			    <td><input id="custExt" name="custExt" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+			</tr> -->
+		</tbody>
+	</table><!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h3>Contact Person information</h3>
-</aside><!-- title_line end -->
+	<aside class="title_line"><!-- title_line start -->
+	<h3>Contact Person information</h3>
+	</aside><!-- title_line end -->
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:250px" />
-	<col style="width:*" />
-	<col style="width:250px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<!-- <tr>
-	<th scope="row">If contact same as above click here</th>
-	<td colspan="3"><input id="chkSameCntc" type="checkbox" checked/></td>
-</tr> -->
-</tbody>
-</table><!-- table end -->
+<!-- 20191105 - KR-SH 모바일 화면일 경우 여백이 생김 삭제처리
+	<table class="type1">
+		<caption>table</caption>
+		<colgroup>
+		    <col style="width:250px" />
+		    <col style="width:*" />
+		    <col style="width:250px" />
+		    <col style="width:*" />
+		</colgroup>
+		<tbody>
+			<tr>
+			    <th scope="row">If contact same as above click here</th>
+			    <td colspan="3"><input id="chkSameCntc" type="checkbox" checked/></td>
+			</tr>
+		</tbody>
+	</table>
+ -->
 
-<section id="scAnothCntc">
+	<section id="scAnothCntc">
 
-<ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="btnSelCntc" href="#">Select Another Contact</a></p></li>
-    <li><p class="btn_grid"><a id="btnNewCntc" href="#">Add New Contact</a></p></li>
-</ul>
+	<ul class="right_btns mb10">
+	    <li><p class="btn_grid"><a id="btnSelCntc" href="#">Select Another Contact</a></p></li>
+	    <li><p class="btn_grid"><a id="btnNewCntc" href="#">Add New Contact</a></p></li>
+	</ul>
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:250px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<!-- <th scope="row">Initial<span class="must">*</span></th>
-	<td><input id="custCntcInitial" name="custCntcInitial" type="text" title="Create start Date" placeholder="Race" class="w100p readonly" readonly/></td> -->
-	<th scope="row">Second/Service contact person name</th>
-	<td><input id="custCntcName" name="custCntcName" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-	<th scope="row">Tel (Mobile)<span class="must">*</span></th>
-	<td><input id="custCntcTelM" name="custCntcTelM" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+	<table class="type1"><!-- table start -->
+	<caption>table</caption>
+	<colgroup>
+	    <col style="width:40%" />
+	    <col style="width:*" />
+	</colgroup>
+	<tbody>
+	<tr>
+	    <!-- <th scope="row">Initial<span class="must">*</span></th>
+	    <td><input id="custCntcInitial" name="custCntcInitial" type="text" title="Create start Date" placeholder="Race" class="w100p readonly" readonly/></td> -->
+	    <th scope="row">Second/Service contact person name</th>
+	    <td><input id="custCntcName" name="custCntcName" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 	</tr>
-<tr>
-	<th scope="row">Tel (Residence)<span class="must">*</span></th>
-	<td><input id="custCntcTelR" name="custCntcTelR" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-	<th scope="row">Tel (Office)<span class="must">*</span></th>
-	<td><input id="custCntcTelO" name="custCntcTelO" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-	<th scope="row">Tel (Fax)<span class="must">*</span></th>
-	<td><input id="custCntcTelF" name="custCntcTelF" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-    <th scope="row">Ext No.(1)</th>
-    <td><input id="custCntcExt" name="custCntcExt" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
-    <th scope="row">Email(1)</th>
-    <td><input id="custCntcEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-</tr>
-</tbody>
-</table><!-- table end -->
+	<tr>
+	    <th scope="row">Tel (Mobile)<span class="must">*</span></th>
+	    <td><input id="custCntcTelM" name="custCntcTelM" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+	    </tr>
+	<tr>
+	    <th scope="row">Tel (Residence)<span class="must">*</span></th>
+	    <td><input id="custCntcTelR" name="custCntcTelR" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+	</tr>
+	<tr>
+	    <th scope="row">Tel (Office)<span class="must">*</span></th>
+	    <td><input id="custCntcTelO" name="custCntcTelO" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+	</tr>
+	<tr>
+	    <th scope="row">Tel (Fax)<span class="must">*</span></th>
+	    <td><input id="custCntcTelF" name="custCntcTelF" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+	</tr>
+	<tr>
+	    <th scope="row">Ext No.(1)</th>
+	    <td><input id="custCntcExt" name="custCntcExt" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+	</tr>
+	<tr>
+	    <th scope="row">Email(1)</th>
+	    <td><input id="custCntcEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+	</tr>
+	</tbody>
+	</table><!-- table end -->
 </section>
 
 <aside class="title_line"><!-- title_line start -->
@@ -2018,7 +2073,7 @@
 
 <ul class="right_btns mb10">
     <li><p class="btn_grid"><a id="btnSelInstAddr" href="#">Select Existing Address</a></p></li>
-	<li><p class="btn_grid"><a id="btnNewInstAddr" href="#">Add New Address</a></p></li>
+    <li><p class="btn_grid"><a id="btnNewInstAddr" href="#">Add New Address</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -2137,10 +2192,10 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:250px" />
-	<col style="width:*" />
-<!-- 	<col style="width:220px" />
-	<col style="width:*" /> -->
+    <col style="width:40%" />
+    <col style="width:*" />
+<!--    <col style="width:220px" />
+    <col style="width:*" /> -->
 </colgroup>
 <tbody>
 <tr>
@@ -2149,41 +2204,41 @@
         <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
 </tr>
 <tr>
-	<th scope="row">Application Type | Jenis Permohonan<span class="must">*</span></th>
-	<td>
+    <th scope="row">Application Type | Jenis Permohonan<span class="must">*</span></th>
+    <td>
     <p><select id="appType" name="appType" class="w100p"></select></p>
     <p><select id="srvPacId" name="srvPacId" class="w100p"></select></p>
-	</td>
+    </td>
 </tr>
 <tr>
     <th scope="row">Product | Produk<span class="must">*</span></th>
-    <td><select id="ordProudct" name="ordProudct" class="w50p" disabled></select>
+    <td><select id="ordProudct" name="ordProudct" class="w100p" disabled></select>
     </td>
 </tr>
 <tr id='trCpntId' style='visibility:collapse'>
     <th scope="row"><spring:message code="sal.title.text.cpntId" /> | Komponen Tambahan <span class="must">*</span></th>
     <td>
-     <select id="compType" name="compType" class="w50p" onchange="fn_reloadPromo()"></select>
+     <select id="compType" name="compType" class="w100p" onchange="fn_reloadPromo()"></select>
     </td>
 </tr>
 <tr>
     <th scope="row">Promotion | Promosi<span class="must">*</span></th>
-    <td><select id="ordPromo" name="ordPromo" class="w50p" disabled></select></td>
+    <td><select id="ordPromo" name="ordPromo" class="w100p" disabled></select></td>
 </tr>
 <!-- <tr>
-	<th scope="row">Installment Duration<span class="must">*</span></th>
-	<td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
+    <th scope="row">Installment Duration<span class="must">*</span></th>
+    <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
 </tr> -->
 <tr>
     <th scope="row">Price / RPF (RM)</th>
-    <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w50p readonly" readonly />
+    <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
         <input id="ordPriceId"  name="ordPriceId"  type="hidden" />
         <input id="normalOrdPrice" name="normalOrdPrice" type="hidden" />
         <input id="normalOrdPv"    name="normalOrdPv"    type="hidden" /></td>
 </tr>
 <tr>
     <th scope="row">Rental Fee</th>
-    <td><p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></p></td>
+    <td><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
 <th scope="row">PV<span class="must">*</span></th>
@@ -2200,15 +2255,15 @@
         <p id="pBtnCal" class="btn_sky blind"><a id="btnCal" href="#">Exclude GST Calc</a></p></td> -->
 </tr>
 <tr>
-	<th scope="row">PO No</th>
-	<td><input id="poNo" name="poNo" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">PO No</th>
+    <td><input id="poNo" name="poNo" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <!-- <tr>
-	<th scope="row">SOF No<span class="must">*</span></th>
-	<td><input id="refereNo" name="refereNo" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+    <th scope="row">SOF No<span class="must">*</span></th>
+    <td><input id="refereNo" name="refereNo" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr> -->
 <tr>
-	<th scope="row">Salesman Code / Name<span class="must">*</span></th>
+    <th scope="row">Salesman Code / Name<span class="must">*</span></th>
     <td><input id="salesmanCd" name="salesmanCd" type="text" style="width:115px;" title="" placeholder="" class=""/>
         <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <p><input id="salesmanNm" name="salesmanNm" type="text" class="w100p readyonly" title="" placeholder="Salesman Name" disabled/></p>
@@ -2219,10 +2274,10 @@
     <td><textarea id="speclInstct" name="speclInstct" cols="20" rows="5"></textarea></td>
 </tr>
 <tr style="display:none;">
-	<th scope="row">PV<span class="must">*</span></th>
+    <th scope="row">PV<span class="must">*</span></th>
     <td><input id="ordPv"    name="ordPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
         <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
-	<th scope="row">Discount Type /  Period (month)</th>
+    <th scope="row">Discount Type /  Period (month)</th>
     <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p></td>
 </tr>
@@ -2256,7 +2311,7 @@
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:250px" />
+    <col style="width:40%" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -2317,15 +2372,13 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:250px" />
-    <col style="width:*" />
-    <col style="width:190px" />
+    <col style="width:40%" />
     <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
     <th><spring:message code="sal.text.rentalPaymode2" /><span class="must">*</span></th>
-    <td  scope="row" colspan="3"'>
+    <td  scope="row" >
     <select id="rentPayMode" name="rentPayMode" class="w100p"></select>
     </td>
     <!-- <th scope="row">NRIC on DD/Passbook</th>
@@ -2353,7 +2406,7 @@
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:250px" />
+    <col style="width:40%" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -2449,7 +2502,7 @@
 <table class="type1" style="display:none"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
+    <col style="width:40%" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -2535,51 +2588,49 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:170px" />
+    <col style="width:40%" />
     <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
     <th scope="row">Address Detail<span class="must">*</span></th>
-    <td colspan="3">
+    <td >
     <input id="billAddrDtl" name="billAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">Street</th>
-    <td colspan="3">
+    <td >
     <input id="billStreet" name="billStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">Area<span class="must">*</span></th>
-    <td colspan="3">
+    <td >
     <input id="billArea" name="billArea" type="text" title="" placeholder="Area" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">City<span class="must">*</span></th>
-    <td colspan="3">
+    <td >
     <input id="billCity" name="billCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">PostCode<span class="must">*</span></th>
-    <td colspan="3">
+    <td >
     <input id="billPostCode" name="billPostCode" type="text" title="" placeholder="Postcode" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">State<span class="must">*</span></th>
-    <td colspan="3">
+    <td >
     <input id="billState" name="billState" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">Country<span class="must">*</span></th>
-    <td colspan="3">
+    <td >
     <input id="billCountry" name="billCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
     </td>
 </tr>
@@ -2694,26 +2745,26 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:350px" />
+    <col style="width:30%" />
     <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
     <th scope="row">Sales Order Form (SOF)<span class="must">*</span></th>
     <td>
-        <div class="auto_file2 auto_file3">
-	        <input type="file" title="file add" id="sofFile" accept="image/*"/>
-	        <label>
-	            <input type='text' class='input_text' readonly='readonly' />
-	            <span class='label_text'><a href='#'>Upload</a></span>
-	        </label>
+        <div class="auto_file2">
+            <input type="file" title="file add" id="sofFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+            </label>
         </div>
     </td>
 </tr>
 <tr>
     <th scope="row">NRIC & Bank Card<span class="must">*</span></th>
     <td>
-        <div class="auto_file2 auto_file3">
+        <div class="auto_file2">
             <input type="file" title="file add" id="nricFile" accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
@@ -2725,52 +2776,52 @@
 <tr>
     <th scope="row">Payment document</th>
     <td>
-        <div class="auto_file2 auto_file3">
+        <div class="auto_file2">
             <input type="file" title="file add" id="payFile" accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("PAY")'>Remove</a></span>
             </label>
-            <span class='label_text'><a href='#' onclick='fn_removeFile("PAY")'>Remove</a></span>
         </div>
     </td>
 </tr>
 <tr>
     <th scope="row">Coway temporary receipt (TR)</th>
     <td>
-        <div class="auto_file2 auto_file3">
+        <div class="auto_file2">
             <input type="file" title="file add" id="trFile" accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("TRF")'>Remove</a></span>
             </label>
-            <span class='label_text'><a href='#' onclick='fn_removeFile("TRF")'>Remove</a></span>
         </div>
     </td>
 </tr>
 <tr>
     <th scope="row">Declaration letter/Others form</th>
     <td>
-        <div class="auto_file2 auto_file3">
+        <div class="auto_file2">
             <input type="file" title="file add" id="otherFile" accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
             </label>
-            <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
         </div>
     </td>
 </tr>
 <tr>
     <th scope="row">Declaration letter/Others form 2</th>
     <td>
-        <div class="auto_file2 auto_file3">
+        <div class="auto_file2">
             <input type="file" title="file add" id="otherFile2" accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
             </label>
-            <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -2786,7 +2837,7 @@
 </section><!-- tap_wrap end -->
 
 <ul class="center_btns mt20">
-	<li><p class="btn_blue2 big"><a id="btnSave" href="#">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a id="btnSave" href="#">Save</a></p></li>
 </ul>
 
 </section>

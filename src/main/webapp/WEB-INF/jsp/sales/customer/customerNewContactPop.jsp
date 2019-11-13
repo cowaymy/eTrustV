@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript">
 $(document).ready(function() {
 
@@ -29,6 +30,8 @@ $(document).ready(function() {
     doGetCombo('/common/selectCodeList.do', '17', '', 'cntcCmbInitialTypeId', 'S' , ''); // Customer Initial Type Combo Box
     doGetCombo('/common/selectCodeList.do', '2', '', 'cntcCmbRaceTypeId', 'S' , ''); // Customer Race Type Combo Box
 
+    // 20190925 KR-OHK Moblie Popup Setting
+    Common.setMobilePopup(false, false, '');
 
     // Save Button Click
     $("#_saveBtn").click(function() {
@@ -137,7 +140,6 @@ $(document).ready(function() {
         // Validation Success
         // 2. Add
       fn_customerContactInfoAddAjax();
-
     });
 
     $("#_copyBtn").click(function() {
@@ -269,9 +271,7 @@ $(document).ready(function() {
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:130px" />
+    <col style="width:40%" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -280,6 +280,8 @@ $(document).ready(function() {
     <td>
     <select class="w100p" id="cntcCmbInitialTypeId" name="cntcInitial"></select>
     </td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.gender" /><span class="must">*</span></th>
     <td>
     <label><input type="radio" name="cntcGender"  value="M" checked="checked" /><span><spring:message code="sal.title.text.male" /></span></label>
@@ -289,6 +291,8 @@ $(document).ready(function() {
 <tr>
     <th scope="row"><spring:message code="sal.text.name" /><span class="must">*</span></th>
     <td><input type="text" title="" placeholder="" class="w100p"  id="cntcName" name="cntcName" maxlength="70"/></td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.race" /><span class="must">*</span></th>
     <td>
     <select class="w100p" id="cntcCmbRaceTypeId" name="cntcCmbRaceTypeId"></select>
@@ -297,6 +301,8 @@ $(document).ready(function() {
 <tr>
     <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><input type="text" title="" placeholder="" class="w100p"   name="cntcNric" id="cntcNric" maxlength="18"/></td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.dob" /></th>
     <td>
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date3 w100p"   name="cntcDob" readonly="readonly"/>
@@ -305,24 +311,32 @@ $(document).ready(function() {
 <tr>
     <th scope="row"><spring:message code="sal.text.telM" /><span class="must">*</span></th>
     <td><input type="text" title="" placeholder="" class="w100p"   id="cntcTelm" name="cntcTelm" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.telO" /><span class="must">*</span></th>
     <td><input type="text" title="" placeholder="" class="w100p"  id="cntcTelo" name="cntcTelo" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.telR" /><span class="must">*</span></th>
     <td><input type="text" title="" placeholder="" class="w100p"   id="cntcTelr" name="cntcTelr" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.telF" /><span class="must">*</span></th>
     <td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p"   id="cntcTelf" name="cntcTelf" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.dept" /></th>
     <td><input type="text" title="" placeholder="Department" class="w100p"   name="cntcDept"/></td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.title.text.jonPosition" /></th>
     <td><input type="text" title="" placeholder="Job Position" class="w100p"   name="cntcPos" maxlength="50"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.extNo" /></th>
     <td><input type="text" title="" placeholder="Extension Number" class="w100p"  id="cntcExtNo" name="cntcExpno" maxlength="50"/></td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.email" /></th>
     <td><input type="text" title="" placeholder="" class="w100p"  id="cntcEmail" name="cntcEmail" maxlength="70"/></td>
 </tr>

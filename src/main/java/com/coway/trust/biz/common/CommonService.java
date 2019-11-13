@@ -301,6 +301,20 @@ public interface CommonService {
      */
     List<EgovMap> selectBranchList(Map<String, Object> params);
 
+    /**
+     * BranchCodeList
+     * @param grpCd
+     * @return
+     */
+    List<EgovMap> selectBranchList(String grpCd);
+
+    /**
+     * BranchCodeList
+     * @param grpCd
+     * @param separator
+     * @return
+     */
+    List<EgovMap> selectBranchList(String grpCd, String separator);
 
     /**
 	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
@@ -366,4 +380,19 @@ public interface CommonService {
 	List<EgovMap> selectReasonCodeList(Map<String, Object> params);
 
 	List<EgovMap> getPublicHolidayList(Map<String, Object> params);
+
+	/**
+	 * CodeList 조회
+	 * @param grpCd
+	 * @return
+	 */
+	List<EgovMap> selectCodeList(String grpCd);
+
+	/**
+	 * CodeList 조회
+	 * @param grpCd
+	 * @param orderVal
+	 * @return
+	 */
+	List<EgovMap> selectCodeList(String grpCd, String orderVal);
 }

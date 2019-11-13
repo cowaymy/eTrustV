@@ -20,8 +20,8 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.ui.datepicker.min.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.mtz.monthpicker.js"></script>
 
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common.js"></script>        <!-- 일반 공통 js -->
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common_pub.js"></script>        <!-- publish js -->
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common.js?ver=20191113"></script>        <!-- 일반 공통 js -->
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common_pub.js?ver=20191113"></script>        <!-- publish js -->
 
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.serializejson.js"></script> <!-- Form to jsonObject -->

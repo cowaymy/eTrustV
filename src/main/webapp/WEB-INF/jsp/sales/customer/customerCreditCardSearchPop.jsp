@@ -1,13 +1,14 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javaScript" language="javascript">
 
-	//AUIGrid 생성 후 반환 ID
-	var crcGridID;
+    //AUIGrid 생성 후 반환 ID
+    var crcGridID;
 
-	$(document).ready(function(){
-	    //AUIGrid 그리드를 생성합니다.
+    $(document).ready(function(){
+        //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
 
         fn_getCreditCardAjax();
@@ -26,28 +27,31 @@
                       );
         });
 
-	});
+        // 20190925 KR-OHK Moblie Popup Setting
+        Common.setMobilePopup(false, true, 'grid_crc_wrap');
 
-	function fn_setData(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName) {
-	    if($('#callPrgm').val() == 'ORD_REGISTER_PAYM_CRC') {
-	        fn_loadCreditCard2(custCrcId);
-	    }
-	    if($('#callPrgm').val() == 'PRE_ORD') {
-	        fn_loadCreditCard2(custCrcId);
-	    }
-	    else if($('#callPrgm').val() == 'ORD_REQUEST_PAY') {
-	        fn_loadCreditCard(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName);
-	    }
-	    else if($('#callPrgm').val() == 'ORD_MODIFY_PAY_CHAN') {
-	        console.log('callPrgm');
-	        fn_loadCreditCardPop(custCrcId);
-	    }
-	    else if($('#callPrgm').val() == 'PAY_CRC_KEY_IN') {
-	        console.log();
-	        fn_loadCreditCard(custCrcId);
-	    }
-	    $('#custPopCloseBtn').click();
-	}
+    });
+
+    function fn_setData(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName) {
+        if($('#callPrgm').val() == 'ORD_REGISTER_PAYM_CRC') {
+            fn_loadCreditCard2(custCrcId);
+        }
+        if($('#callPrgm').val() == 'PRE_ORD') {
+            fn_loadCreditCard2(custCrcId);
+        }
+        else if($('#callPrgm').val() == 'ORD_REQUEST_PAY') {
+            fn_loadCreditCard(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName);
+        }
+        else if($('#callPrgm').val() == 'ORD_MODIFY_PAY_CHAN') {
+            console.log('callPrgm');
+            fn_loadCreditCardPop(custCrcId);
+        }
+        else if($('#callPrgm').val() == 'PAY_CRC_KEY_IN') {
+            console.log();
+            fn_loadCreditCard(custCrcId);
+        }
+        $('#custPopCloseBtn').click();
+    }
 
     function createAUIGrid() {
 
@@ -83,11 +87,11 @@
         crcGridID = GridCommon.createAUIGrid("grid_crc_wrap", columnLayout, "", gridPros);
     }
 
-	$(function(){
-	    $('#crcSearchBtn').click(function() {
-	        fn_getCreditCardAjax();
-	    });
-	});
+    $(function(){
+        $('#crcSearchBtn').click(function() {
+            fn_getCreditCardAjax();
+        });
+    });
 
     //Get Credit Card by Ajax
     function fn_getCreditCardAjax(){
@@ -104,7 +108,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="sal.page.title.custCreditCard" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="custPopCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
+    <li><p class="btn_blue2"><a id="custPopCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -118,13 +122,13 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:160px" />
-	<col style="width:*" />
+    <col style="width:40%" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"><spring:message code="sal.text.contactKeyword" /></th>
-	<td ><input id="searchWord" name="searchWord" type="text" title="" placeholder="Keyword" class="w100p" /></td>
+    <th scope="row"><spring:message code="sal.text.contactKeyword" /></th>
+    <td ><input id="searchWord" name="searchWord" type="text" title="" placeholder="Keyword" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -132,13 +136,13 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a id="crcSearchBtn" ><spring:message code="sal.btn.search" /></a></p></li>
-	<li><p class="btn_grid"><a href="#"><spring:message code="sal.btn.clear" />
+    <li><p class="btn_grid"><a id="crcSearchBtn" ><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_grid"><a href="#"><spring:message code="sal.btn.clear" />
 </a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_crc_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
+<div id="grid_crc_wrap" style="width:100%; height:100%; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

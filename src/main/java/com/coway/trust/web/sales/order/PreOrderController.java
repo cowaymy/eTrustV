@@ -4,9 +4,8 @@
 package com.coway.trust.web.sales.order;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,14 +30,12 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
-import com.coway.trust.biz.eAccounting.staffClaim.StaffClaimApplication;
 import com.coway.trust.biz.sales.common.SalesCommonService;
-import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.biz.sales.order.PreOrderApplication;
 import com.coway.trust.biz.sales.order.PreOrderService;
-import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.biz.sales.order.vo.PreOrderListVO;
 import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -50,7 +45,6 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
-import com.crystaldecisions.jakarta.poi.util.StringUtil;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -75,6 +69,10 @@ public class PreOrderController {
 
 	@Resource(name = "salesCommonService")
 	private SalesCommonService salesCommonService;
+
+	@Resource(name = "commonService")
+	private CommonService commonService;
+
 
 	@RequestMapping(value = "/preOrderList.do")
 	public String preOrderList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
@@ -155,12 +153,16 @@ public class PreOrderController {
 	}
 
 	@RequestMapping(value = "/preOrderRegisterPop.do")
-	public String preOrderRegisterPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DAY_OF_YEAR,1);
-		Date nextDay = calendar.getTime();
-
-		model.put("nextDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1,nextDay));
+	public String preOrderRegisterPop(@RequestParam Map<String, Object> params, ModelMap model) throws ParseException {
+        // Search code List
+        model.put("codeList_19", commonService.selectCodeList("19", "CODE_NAME"));
+        model.put("codeList_325", commonService.selectCodeList("325"));
+        model.put("codeList_415", commonService.selectCodeList("415", "CODE_ID"));
+        model.put("codeList_416", commonService.selectCodeList("416", "CODE_ID"));
+        // Search BranchCodeList
+        model.put("branchCdList_1", commonService.selectBranchList("1", "-"));
+        model.put("branchCdList_5", commonService.selectBranchList("5", "-"));
+        model.put("nextDay", CommonUtils.getAddDay(CommonUtils.getDateToFormat(SalesConstants.DEFAULT_DATE_FORMAT1), 1, SalesConstants.DEFAULT_DATE_FORMAT1));
 
 		return "sales/order/preOrderRegisterPop";
 	}

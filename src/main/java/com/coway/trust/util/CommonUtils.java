@@ -4,9 +4,19 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.SimpleTimeZone;
+import java.util.StringTokenizer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -115,6 +125,19 @@ public final class CommonUtils {
 
 	/**
 	 * <pre>
+	 * Description  : null 처리 및 trim 처리를 한다.
+	 * </pre>
+	 */
+	public static String nvl2(String strTemp, String rtnVal) {
+		if (strTemp == null || strTemp.equals("undefined") || strTemp.equals("null") || strTemp.equals("")) {
+			return nvl(rtnVal);
+		} else {
+			return strTemp.trim();
+		}
+	}
+
+	/**
+	 * <pre>
 	 * Description  : 현재 날짜를 가져온다.
 	 * </pre>
 	 */
@@ -126,6 +149,21 @@ public final class CommonUtils {
 		rtnValue = df.format(date);
 
 		return rtnValue;
+	}
+
+
+	/**
+	 * <pre>
+	 * Description  : 현재 날짜를 가져온다.
+	 * </pre>
+	 */
+	public static String getDateToFormat(String format) {
+		String dfFormat = nvl2(format, "yyyyMMdd");
+
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat(dfFormat, Locale.getDefault(Locale.Category.FORMAT));
+
+		return df.format(date);
 	}
 
 	/**
@@ -164,9 +202,9 @@ public final class CommonUtils {
 	 * <pre>
 	 * Description  : 특정 날짜에서 +-된 날짜를 반환한다.
 	 * </pre>
-	 * 
+	 *
 	 * inputDate : 기준일자 d : 기준일자에서 +-될 일수 format : 기준일자와 반환일자 format
-	 * 
+	 *
 	 * @throws java.text.ParseException
 	 */
 	public static String getAddDay(String inputDate, int d, String format) throws java.text.ParseException {
@@ -185,9 +223,9 @@ public final class CommonUtils {
 	 * <pre>
 	 * Description  : 특정 날짜에서 +-된 날짜를 반환한다.
 	 * </pre>
-	 * 
+	 *
 	 * inputDate : 기준일자 d : 기준일자에서 +-될 일수 format : 기준일자와 반환일자 format
-	 * 
+	 *
 	 * @throws java.text.ParseException
 	 */
 	public static String getAddMonth(String inputDate, int m, String format) throws java.text.ParseException {
@@ -219,7 +257,7 @@ public final class CommonUtils {
 
 	/**
 	 * 타임포멧 : yyyyMMddHHmmssSSS
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getMillisecondTime() {
@@ -388,7 +426,7 @@ public final class CommonUtils {
 
 	/**
 	 * String을 받아서 숫자인지 판단후 리턴한다.
-	 * 
+	 *
 	 * @param str
 	 * @return boolean
 	 * @auth Na Seung Bok
@@ -422,7 +460,7 @@ public final class CommonUtils {
 	 * 날짜 문자열을 다른 포맷의 날짜 문자열로 변환.
 	 * ex) changeFormat("20081220","yyyyMMdd","yyyy-MM-dd"); -->결과: 2008-12-20
 	 * </pre>
-	 * 
+	 *
 	 * @param source
 	 *            대상 날짜 문자열
 	 * @param sourcePattern
@@ -725,7 +763,7 @@ public final class CommonUtils {
 	 *    throws throwNotValidException( errors );
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * @param errors
 	 * @return
 	 */
@@ -735,7 +773,7 @@ public final class CommonUtils {
 
 	/**
 	 * List<String> 값을 "key1, key2, key3, ..." 으로 변환
-	 * 
+	 *
 	 * @param values
 	 * @return
 	 */
@@ -863,7 +901,7 @@ public final class CommonUtils {
 
 	/**
 	 * 입력받은 문자열을 입력받은 크기만큼 왼쪽에서 부터 substring 일반적인 substring 과 동일함.
-	 * 
+	 *
 	 * @param inputStr
 	 * @param len
 	 * @return
@@ -881,7 +919,7 @@ public final class CommonUtils {
 
 	/**
 	 * 입력받은 문자열을 입력받은 크기만큼 오른쪽에서 substring
-	 * 
+	 *
 	 * @param inputStr
 	 * @param len
 	 * @return
@@ -925,19 +963,26 @@ public final class CommonUtils {
 
 	/**
 	 * AS-IS : CommonFunction.cs - GetRandomNumber 변환 method
-	 * 
+	 *
 	 * @param size
 	 * @return
 	 */
 	public static String getRandomNumber(int size) {
-		Random random = new Random();
-		char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < size; i++) {
-			int num = random.nextInt(chars.length);
-			sb.append(chars[num]);
+		Random random;
+		try {
+			random = SecureRandom.getInstanceStrong();
+			char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+
+			for (int i = 0; i < size; i++) {
+				int num = random.nextInt(chars.length);
+				sb.append(chars[num]);
+			}
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
 		return sb.toString();
 	}
 
@@ -995,5 +1040,45 @@ public final class CommonUtils {
 		}
 
 		return iPromoAppTypeId;
+	}
+
+	/**
+	 * 마지막 대상 문자열을 변경한다.
+	 *
+	 * @param string
+	 * @param toReplace
+	 * @param replacement
+	 * @return
+	 */
+	public static String replaceLast(String string, String toReplace, String replacement) {
+		int _lastIdx = string.lastIndexOf(toReplace);
+		if (_lastIdx > -1) {
+           return string.substring(0, _lastIdx)+ replacement + string.substring(_lastIdx +   toReplace.length(), string.length());
+		} else {
+			return string;
+		}
+	}
+
+	/**
+	 * 시간을 24시로 변환한다.
+	 *
+	 * @param strTm
+	 * @return
+	 */
+	public static String convert24Tm(String strTm) {
+		String cvtTm = "";
+
+		if(isNotEmpty(strTm)) {
+			String ampm = right(strTm, 2);
+			String hour = left(strTm, 2);
+			String min = strTm.substring(3, 5);
+
+			if("PM".equals(ampm.toUpperCase())) {
+				cvtTm = String.valueOf(Integer.parseInt(hour) + 12) + ":" + min + ":00";
+			} else  {
+				cvtTm = hour + ":" + min + ":00";
+			}
+		}
+		return cvtTm;
 	}
 }

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javaScript" language="javascript" >
 
     //AUIGrid 그리드 객체
@@ -17,7 +18,10 @@
 
     $(document).ready(function(){
 
-         //j_date
+        // 20190925 KR-OHK Moblie Popup Setting
+        Common.setMobilePopup(false, false, '');
+
+        //j_date
         var pickerOpts={
                 changeMonth:true,
                 changeYear:true,
@@ -425,9 +429,9 @@
     };
 
     function fn_winClose(){
-    	//Parent Reload Method Call
-    	$("#_insCloseBtn").click();
-    	window.opener.$("#btnConfirm").click();
+        //Parent Reload Method Call
+        $("#_insCloseBtn").click();
+        window.opener.$("#btnConfirm").click();
         window.close();
     }
 
@@ -809,7 +813,7 @@
         var msg = '';
 
         Common.ajax("POST", "/sales/customer/nricDupChk.do", nricObj, function(result){
-        	if(result != null){
+            if(result != null){
                     msg += '<spring:message code="sal.alert.msg.existCustomerBrCustId" />' + result.custId;
                     isDup = true;
             }
@@ -916,7 +920,7 @@
 
 </script>
 
-<div id="popup_wrap" class="popup_wrap pop_win"  ><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap"  ><!-- popup_wrap start -->
     <header class="pop_header"><!-- pop_header start -->
         <h1><spring:message code="sal.title.text.newCustomer2" /></h1>
         <ul class="right_opt">
@@ -949,7 +953,7 @@
                         <!-- table start -->
                         <caption>table</caption>
                         <colgroup>
-                            <col style="width: 250px" />
+                            <col style="width: 40%" />
                             <col style="width: *" />
                         </colgroup>
                         <tbody>
@@ -1091,7 +1095,7 @@
                         <!-- table start -->
                         <caption>table</caption>
                         <colgroup>
-                            <col style="width: 250px" />
+                            <col style="width: 40%" />
                             <col style="width: *" />
                         </colgroup>
                         <tbody>
@@ -1152,16 +1156,16 @@
                         <!-- table start -->
                         <caption>table</caption>
                         <colgroup>
-                            <col style="width: 250px" />
+                            <col style="width: 40%" />
                             <col style="width: *" />
                         </colgroup>
                         <tbody>
                             <tr>
                                 <th scope="row"><spring:message code="sal.title.text.areaSearch2" /><span class="must">*</span></th>
                                 <td colspan="1"><input type="text" title="" id="_searchSt_" name="searchSt" placeholder="" class="" />
-	                                <a href="#" onclick="fn_addrSearch()" class="search_btn">
-	                                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-	                                </a>
+                                    <a href="#" onclick="fn_addrSearch()" class="search_btn">
+                                        <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                                    </a>
                                 </td>
                             </tr>
                             <tr>
@@ -1193,9 +1197,9 @@
                                 <td><input type="text" title="" id="_mCountry_" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia" /></td>
                             </tr>
                             <tr>
-					                <th scope="row"><spring:message code="sal.text.remarks" /></th>
-					                <td colspan="3"><textarea cols="20" rows="5" id="_addrRem_" name="addrRem" placeholder="Remark"></textarea></td>
-					        </tr>
+                                    <th scope="row"><spring:message code="sal.text.remarks" /></th>
+                                    <td colspan="3"><textarea cols="20" rows="5" id="_addrRem_" name="addrRem" placeholder="Remark"></textarea></td>
+                            </tr>
                         </tbody>
                     </table>
                     <!-- table end -->

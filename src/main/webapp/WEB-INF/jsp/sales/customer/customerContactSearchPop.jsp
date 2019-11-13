@@ -1,61 +1,65 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javaScript" language="javascript">
 
-	//AUIGrid 생성 후 반환 ID
-	var contactGridID;
+    //AUIGrid 생성 후 반환 ID
+    var contactGridID;
 
-	$(document).ready(function(){
-	    //AUIGrid 그리드를 생성합니다.
-	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN'
-	    || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
-	    || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC'
-	    || $('#callPrgm').val() == 'fn_loadCntcPerson'
-	    || $('#callPrgm').val() == 'fn_loadInstallationCntcPerson'
-	    || $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
-	        createAUIGrid();
-	        fn_getCustomerContactAjax();
+    $(document).ready(function(){
+        //AUIGrid 그리드를 생성합니다.
+        if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN'
+        || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
+        || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC'
+        || $('#callPrgm').val() == 'fn_loadCntcPerson'
+        || $('#callPrgm').val() == 'fn_loadInstallationCntcPerson'
+        || $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
+            createAUIGrid();
+            fn_getCustomerContactAjax();
 
             // 셀 더블클릭 이벤트 바인딩
             AUIGrid.bind(contactGridID, "cellDoubleClick", function(event) {
                 fn_setData(AUIGrid.getCellValue(contactGridID , event.rowIndex , "custCntcId"))
                 $('#custPopCloseBtn').click();
             });
-	    }
-	    else if($('#cnctSearchForm #callPrgm').val() == 'ORD_REGISTER_CNTC_ADD'
-	         || $('#cnctSearchForm #callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
-	        createAUIGrid2();
-	        fn_getCustomerCareAjax();
+        }
+        else if($('#cnctSearchForm #callPrgm').val() == 'ORD_REGISTER_CNTC_ADD'
+             || $('#cnctSearchForm #callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
+            createAUIGrid2();
+            fn_getCustomerCareAjax();
 
             // 셀 더블클릭 이벤트 바인딩
             AUIGrid.bind(contactGridID, "cellDoubleClick", function(event) {
                 fn_setData(AUIGrid.getCellValue(contactGridID , event.rowIndex , "custCareCntId"))
                 $('#custPopCloseBtn').click();
             });
-	    }
+        }
 
-	});
+        // 20190925 KR-OHK Moblie Popup Setting
+        Common.setMobilePopup(false, true, 'grid_cntc_wrap');
 
-	function fn_setData(cntcId) {
-	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN'
-	    		|| $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
-	    		|| $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
-	        fn_loadCntcPerson(cntcId);
-	    }
-	    else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD') {
-	        fn_loadSrvCntcPerson(cntcId);
-	    }
-	    else if($('#callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
-	        fn_loadBillingPreference(cntcId);
-	    }
-	    else if($('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC') {
-	        fn_loadInstallCntcInfo(cntcId);
-	    }
-	    else{
-	    	eval(${callPrgm}(cntcId));
-	    }
-	}
+    });
+
+    function fn_setData(cntcId) {
+        if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN'
+                || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
+                || $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
+            fn_loadCntcPerson(cntcId);
+        }
+        else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD') {
+            fn_loadSrvCntcPerson(cntcId);
+        }
+        else if($('#callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
+            fn_loadBillingPreference(cntcId);
+        }
+        else if($('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC') {
+            fn_loadInstallCntcInfo(cntcId);
+        }
+        else{
+            eval(${callPrgm}(cntcId));
+        }
+    }
 
     function createAUIGrid() {
 
@@ -129,9 +133,9 @@
         contactGridID = GridCommon.createAUIGrid("grid_cntc_wrap", columnLayout, "", gridPros);
     }
 
-	$(function(){
-	    $('#cntcSearchBtn').click(function() {
-	    	if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN'
+    $(function(){
+        $('#cntcSearchBtn').click(function() {
+            if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN'
                 || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
                 || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC') {
                     fn_getCustomerContactAjax();
@@ -140,22 +144,22 @@
                      || $('#callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
                     fn_getCustomerCareAjax();
                 }
-	    });
+        });
         $('#searchWord').keydown(function (event) {
             if (event.which === 13) {    //enter
-        	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN'
-        	    || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
-        	    || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC') {
-        	        fn_getCustomerContactAjax();
-        	    }
-        	    else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD'
-        	         || $('#callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
-        	        fn_getCustomerCareAjax();
-        	    }
+                if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN'
+                || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
+                || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC') {
+                    fn_getCustomerContactAjax();
+                }
+                else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD'
+                     || $('#callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
+                    fn_getCustomerCareAjax();
+                }
                 return false;
             }
         });
-	});
+    });
 
     //Get Contact by Ajax
     function fn_getCustomerContactAjax(){
@@ -180,7 +184,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="sal.title.text.customerCntc" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="custPopCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
+    <li><p class="btn_blue2"><a id="custPopCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -194,13 +198,13 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:160px" />
-	<col style="width:*" />
+    <col style="width:160px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"><spring:message code="sal.title.text.cntcKeyword" /></th>
-	<td ><input id="searchWord" name="searchWord" type="text" title="" placeholder="Keyword" class="w100p" /></td>
+    <th scope="row"><spring:message code="sal.title.text.cntcKeyword" /></th>
+    <td ><input id="searchWord" name="searchWord" type="text" title="" placeholder="Keyword" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -208,12 +212,12 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a id="cntcSearchBtn" href="#""><spring:message code="sal.btn.search" /></a></p></li>
-	<li><p class="btn_grid"><a href="#"><spring:message code="sal.btn.clear" /></a></p></li>
+    <li><p class="btn_grid"><a id="cntcSearchBtn" href="#""><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_grid"><a href="#"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_cntc_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
+<div id="grid_cntc_wrap" style="width:100%; height:100%; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

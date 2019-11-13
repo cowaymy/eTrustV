@@ -381,7 +381,10 @@ $(document).on(
 function setInputFile2(){//인풋파일 세팅하기
 	$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
 }
-setInputFile2();
+
+if(Common.checkPlatformType() != "mobile") { // 20190925 KR-OHK Moblie Popup Setting
+	setInputFile2();
+}
 
 $(document).on(//인풋파일 추가
 	"click", ".auto_file2 a:contains('Add')", function(){

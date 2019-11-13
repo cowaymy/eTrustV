@@ -15,6 +15,7 @@
  */
 package com.coway.trust.biz.common.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,12 +25,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommStatusFormVO;
 import com.coway.trust.biz.common.CommonService;
-import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.util.BeanConverter;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.CommStatusGridData;
 import com.coway.trust.web.common.CommStatusVO;
 
@@ -1701,4 +1701,39 @@ public class CommonServiceImpl implements CommonService {
 	public List<EgovMap> getPublicHolidayList(Map<String, Object> params) {
 		return commonMapper.selectPublicHolidayList(params);
 	}
+
+	@Override
+	public List<EgovMap> selectCodeList(String grpCd) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("groupCode", CommonUtils.nvl(grpCd));
+
+		return selectCodeList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCodeList(String grpCd, String orderVal) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("groupCode", CommonUtils.nvl(grpCd));
+		params.put("orderValue", CommonUtils.nvl(orderVal));
+
+		return selectCodeList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectBranchList(String grpCd) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("groupCode", CommonUtils.nvl(grpCd));
+
+		return selectBranchList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectBranchList(String grpCd, String separator) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("groupCode", CommonUtils.nvl(grpCd));
+		params.put("separator", CommonUtils.nvl(separator));
+
+		return selectBranchList(params);
+	}
+
 }

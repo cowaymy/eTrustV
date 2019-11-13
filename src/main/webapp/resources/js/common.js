@@ -233,7 +233,8 @@ var Common = {
      */
     removeLoader: function () {
         _loading_count -= 1;
-        if(_loading_count == 0){
+        // 20190924 KR-OHK : loading_count
+        if(_loading_count <= 0){
             $("#_loading").hide();
         }
     },
@@ -1043,18 +1044,64 @@ var Common = {
     },
 
     findJson : function(obj, key, val) {
-    var objects = [];
-    for (var i in obj) {
-        if (!obj.hasOwnProperty(i)) continue;
-        if (typeof obj[i] == 'object') {
-            objects = objects.concat(Common.findJson(obj[i], key, val));
-        } else if (i == key && obj[key] == val) {
-            objects.push(obj);
-        }
-    }
-    return objects;
-}
+	    var objects = [];
+	    for (var i in obj) {
+	        if (!obj.hasOwnProperty(i)) continue;
+	        if (typeof obj[i] == 'object') {
+	            objects = objects.concat(Common.findJson(obj[i], key, val));
+	        } else if (i == key && obj[key] == val) {
+	            objects.push(obj);
+	        }
+	    }
+	    return objects;
+    },
 
+    // 20190925 KR-OHK Moblie Popup Setting
+    checkPlatformType : function () {
+    	var platform = "";
+    	if ( navigator.platform ) {
+    		var filter = "win16|win32|win64|mac|macintel";
+
+    		if (filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {
+    			platform = "mobile";
+    		} else {
+    			platform = "pc";
+    		}
+    	}
+    	//platform = "mobile";
+    	return platform;
+    },
+
+    // 20190925 KR-OHK Moblie Popup Setting
+    setMobilePopup : function (isWinPopup, isGrid, gridId) {
+    	if(Common.checkPlatformType() == "mobile") {
+	    	var strDocumentWidth = $(document).outerWidth();
+	        var strDocumentHeight = $(document).outerHeight();
+	        window.resizeTo(strDocumentWidth, strDocumentHeight); // 지정한 크기로 변한다.(가로,세로)
+
+	        $(".popup_wrap").css("width","100%");
+	        $(".popup_wrap").css("left","0px");
+	        $(".popup_wrap").css("z-index","0");
+	        $(".popup_wrap").css("margin-left","0px");
+
+	        if(isGrid) {
+	        	var gridWidth =  $(".pop_body").width()  - ($(".search_result").offset().left)  ;
+	        	var gridHeight =  $(".pop_body").height() - $("#"+gridId).offset().top;
+
+	        	//$(".search_result").css("width", gridWidth);
+	        	//$(".search_result").width(gridWidth);
+	        	$(".search_result").attr("style", "width:" +gridWidth+"px");
+
+		        var myGridID = GridCommon.makeGridId(gridId);
+	            AUIGrid.resize(myGridID, gridWidth, gridHeight);
+    		}
+
+	        if(isWinPopup) {
+	        	$(".pop_body").css("height","calc(" + strDocumentHeight + "px - 200px)");
+    		}
+	        //$(".pop_body").find("input").css("min-width","150px");
+    	}
+    }
 };
 
 /////////////////////////////////////
