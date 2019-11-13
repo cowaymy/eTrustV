@@ -996,7 +996,10 @@
                                         WHERE AS_ENTRY_ID = A.AS_ID
                                           AND AS_RESULT_STUS_ID = 4
                                         GROUP BY AS_SO_ID)
-    WHERE B.AS_SLUTN_RESN_ID IN (#{SOLCDE})
+    WHERE B.AS_SLUTN_RESN_ID IN (SELECT DEFECT_ID
+                                 FROM SYS0100M
+                                 WHERE IS_INHOUSE = 1
+                                   AND DEFECT_TYP = 'SC' )
       AND A.AS_NO = #{ASNO}
   </select>
 
@@ -1008,7 +1011,7 @@
                                          WHERE AS_ENTRY_ID = A.AS_ID
                                            AND AS_RESULT_STUS_ID = 4
                                          GROUP BY AS_SO_ID)
-     WHERE B.AS_SLUTN_RESN_ID IN (#{SOLCDE})
+     WHERE B.AS_SLUTN_RESN_ID IN ('7019', '4291')
        AND A.AS_NO = #{ASNO}
   </select>
 
