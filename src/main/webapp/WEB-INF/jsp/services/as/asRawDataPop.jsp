@@ -133,6 +133,8 @@
         $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_DEPT" name="V_DEPT" /> ');
+
 
         $("#reportForm1 #V_SELECTSQL").val(" ");
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
