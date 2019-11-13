@@ -546,7 +546,8 @@
 	</c:if>
 </ul>
 </aside><!-- title_line end -->
-
+<form id="frmNew" name="frmNew" action="#" method="post">
+</form>
 <section class="search_table"><!-- search_table start -->
 <form id="_frmPreOrdSrch" name="_frmPreOrdSrch" action="#" method="post">
 <!-- <input id="callPrgm" name="callPrgm" value="PRE_ORD" type="hidden" /> -->
