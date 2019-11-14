@@ -18,6 +18,9 @@
 
     $(document).ready(function(){
 
+    	$("#wrap").css({"min-width":"100%"});
+        $("#container").css({"min-width":"100%"});
+
         // 20190925 KR-OHK Moblie Popup Setting
         Common.setMobilePopup(false, false, '');
 

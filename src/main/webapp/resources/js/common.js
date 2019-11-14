@@ -328,7 +328,6 @@ var Common = {
                 /* 팝업 드래그 start */
                 try{
                     $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header',containment: "html"});
-                    $("#popup_wrap, .popup_wrap").resizable({containment: "html"});	// div popup resize : zaza 20190812
                 }catch(e){
                     console.log("[popup.draggable...] " + e);
                 }
