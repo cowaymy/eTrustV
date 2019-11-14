@@ -648,7 +648,7 @@ $(function() {
     });
 
     $('#getHpApplicantURL').click(function() {
-        if(selRowIndex != null && selRowIndex != "") {
+        if(selRowIndex >= 0 && selRowIndex != null) {
             if(memberType == "2803") {
                 if(memberid == "" || memberid == null) {
                     Common.alert("Please select a applicant.");
