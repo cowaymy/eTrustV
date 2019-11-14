@@ -2,13 +2,13 @@
 
     //AUIGrid 생성 후 반환 ID
     var payGridID;
-    
+
     $(document).ready(function(){
         createAUIGrid5();
     });
-    
+
     function createAUIGrid5() {
-        
+
         //AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : '<spring:message code="sal.title.receiptNo" />',    dataField : "orNo",         width : 100 }
@@ -20,13 +20,14 @@
           , { headerText : '<spring:message code="sal.text.keyInBranchNm" />', dataField : "name1",        width : 140 }
           , { headerText : '<spring:message code="sal.text.totAmt" />',        dataField : "totAmt",       width : 100 }
           , { headerText : '<spring:message code="sal.text.creator" />',       dataField : "userName",     width : 80  }
+          , { headerText : '<spring:message code="sal.text.approvalCode" />',       dataField : "payItmAppvNo",     width : 80  }
           ];
 
         payGridID = GridCommon.createAUIGrid("grid_pay_wrap", columnLayout, "", gridPros);
     }
-    
+
     // 리스트 조회.
-    function fn_selectPaymentList() {        
+    function fn_selectPaymentList() {
         Common.ajax("GET", "/sales/order/selectPaymentJsonList.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
             AUIGrid.setGridData(payGridID, result);
         });

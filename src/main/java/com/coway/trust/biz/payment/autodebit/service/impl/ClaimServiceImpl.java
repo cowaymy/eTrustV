@@ -156,6 +156,7 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
       map.put("refCode", r.getRefCode());
       map.put("id", claimMap.get("ctrlId"));
       map.put("itemId", r.getItemId());
+      map.put("apprCode", r.getApprCode());
 
       return map;
     }).collect(Collectors.toList());
@@ -231,6 +232,7 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
       map.put("refCode", vos.get(idx).getRefCode());
       map.put("id", claimMap.get("ctrlId"));
       map.put("itemId", vos.get(idx).getItemId());
+      map.put("apprCode", vos.get(idx).getApprCode());
 
       // list.add(idx, map);
 
@@ -309,6 +311,7 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
       map.put("refCode", r.getRefCode());
       map.put("id", claimMap.get("ctrlId"));
       map.put("itemId", r.getItemId());
+      map.put("apprCode", r.getApprCode());
 
       return map;
     }).collect(Collectors.toList());
