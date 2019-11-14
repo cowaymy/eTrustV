@@ -1,6 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style type="text/css">
+
+    /* 커스텀 칼럼 스타일 정의 */
+    .aui-grid-user-custom-left {
+        text-align: left;
+    }
+</style>
 <script type="text/javascript">
     //AUIGrid 생성 후 반환 ID
     var mAddrGridID;
@@ -44,22 +51,26 @@
         var columnLayout = [ {
             dataField : "area",
             headerText : '<spring:message code="sal.text.area" />',
-            editable : false
+            width : 300,
+            editable : false,
+            style: "aui-grid-user-custom-left"
         }, {
             dataField : "postcode",
             headerText : '<spring:message code="sal.text.postCode" />',
-            width : 90,
+            width : 70,
             editable : false
         }, {
             dataField : "city",
             headerText : '<spring:message code="sal.text.city" />',
-            width : 160,
-            editable : false
+            width : 120,
+            editable : false,
+            style: "aui-grid-user-custom-left"
         }, {
             dataField : "state",
             headerText : '<spring:message code="sal.text.state" />',
-            width : 180,
-            editable : false
+            width : 120,
+            editable : false,
+            style: "aui-grid-user-custom-left"
         },{
             dataField : "areaId",
             visible : false
@@ -70,40 +81,45 @@
 
         // 그리드 속성 설정
         var gridPros = {
-
             // 페이징 사용
             usePaging : false,
-
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
-
             editable : true,
-
             fixedColumnCount : 1,
-
             showStateColumn : true,
-
             displayTreeOpen : true,
-
       //      selectionMode : "multipleCells",
-
             headerHeight : 30,
-
             // 그룹핑 패널 사용
             useGroupingPanel : true,
-
             // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             skipReadonlyColumns : true,
-
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
-
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : false
         };
 
+        var gridPros_mobile = {
+                usePaging : false,
+                pageRowCount : 20,
+                editable : true,
+                showStateColumn : true,
+                displayTreeOpen : true,
+                headerHeight : 30,
+                useGroupingPanel : true,
+                skipReadonlyColumns : true,
+                wrapSelectionMove : true,
+                showRowNumColumn : false
+            };
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-    mAddrGridID = GridCommon.createAUIGrid("#maddr_grid_wrap", columnLayout,'', gridPros);
+        if(Common.checkPlatformType() == "mobile") {
+            mAddrGridID = GridCommon.createAUIGrid("#maddr_grid_wrap", columnLayout,'', gridPros_mobile);
+        } else {
+            mAddrGridID = GridCommon.createAUIGrid("#maddr_grid_wrap", columnLayout,'', gridPros);
+        }
     }
 
     function fn_searchMagicAddressPopJsonListAjax(){

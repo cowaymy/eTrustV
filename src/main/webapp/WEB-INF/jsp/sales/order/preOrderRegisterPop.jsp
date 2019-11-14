@@ -2085,9 +2085,9 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:160px" />
+    <col style="width:40%" />
     <col style="width:*" />
-    <col style="width:160px" />
+    <col style="width:40%" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -2126,9 +2126,9 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:160px" />
+    <col style="width:40%" />
     <col style="width:*" />
-    <col style="width:160px" />
+    <col style="width:40%" />
     <col style="width:*" />
 </colgroup>
 <tbody>
