@@ -1850,11 +1850,14 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       int a = ASManagementListMapper.updateSVC0001D_RCL(rclUpdASEntry);
     }
 
+    List<EgovMap> DefectTypSCList = ASManagementListMapper.getDefectTypSCList(svc0004dmap.get("AS_SLUTN_RESN_ID").toString());
     // HERE INSERT NEW IN HOUSE DATA.
     LOGGER.debug("= PARAMS {}" + params);
     if (String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4")) {
-      if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454") || String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("7018") ) {
-
+   //   if (String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454") || String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("7018") ) {
+      LOGGER.debug("================   DefectTypSCList : " + DefectTypSCList  + "   svc0004dmap : " +  svc0004dmap);
+      boolean DefectList = DefectTypSCList.isEmpty();
+      if(DefectList != true){
         params.put("AS_SO_ID", svc0004dmap.get("AS_SO_ID"));
         this.saveASEntryInHouse(params);
       }
