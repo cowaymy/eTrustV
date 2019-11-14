@@ -99,6 +99,10 @@ var columnLayout = [
     function fn_clear(){
         $("#searchForm")[0].reset();
     }
+
+    function fn_excelDown() {
+      GridCommon.exportTo("grid_wrap", "xlsx", "RC by BS");
+    }
 </script>
 
 <!-- content start -->
@@ -150,6 +154,12 @@ var columnLayout = [
     </section>
     <!-- search_table end -->
 
+    <!-- link_btns_wrap end -->
+    <ul class="right_btns">
+        <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+            <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a></p></li>
+        </c:if>
+    </ul>
     <!-- search_result start -->
     <section class="search_result">
         <!-- grid_wrap start -->
