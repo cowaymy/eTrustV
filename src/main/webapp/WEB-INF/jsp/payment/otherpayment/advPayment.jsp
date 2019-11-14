@@ -2565,10 +2565,10 @@ function fn_bankChange(bankVal){
 }
 
 function fn_ConfirmColl() {
-	
+
 	var appType = $("#appType").val();
 	var collmemcode = '';
-	
+
 	if (appType == "1"){
 		collmemcode = $("#rentalkeyInCollMemCd").val();
 	} else if (appType == "2"){
@@ -2580,7 +2580,7 @@ function fn_ConfirmColl() {
 	} else if(appType == "5"){
 		collmemcode = $("#outSrvckeyInCollMemCd").val();
 	}
-	
+
 	console.log("appType: " +appType + " collmemcode: "+collmemcode);
 
 	if (collmemcode == "") {
@@ -2595,12 +2595,12 @@ function fn_ConfirmColl() {
 		console.log(result);
 
 		if (result.length > 0) {
-			
+
 			if (appType == "1"){
 				$("#rentalkeyInCollMemCd").val(result[0].memCode);
 				$("#rentalkeyInCollMemNm").val(result[0].name);
 				$("#rentalkeyInCollMemId").val(result[0].memId);
-				
+
 			} else if (appType == "2"){
 				$("#outkeyInCollMemCd").val(result[0].memCode);
 				$("#outkeyInCollMemNm").val(result[0].name);
@@ -2620,7 +2620,7 @@ function fn_ConfirmColl() {
 			}
 		}
 		else {
-			
+
 			if (appType == "1"){
 				$("#rentalkeyInCollMemNm").val("");
 			} else if (appType == "2"){
@@ -3011,7 +3011,7 @@ $.fn.clearForm = function() {
                         <tr>
                             <th scope="row">Ref Details/JomPay Ref</th>
                             <td>
-                                <input id="rentalRefDtlsJompay" name="rentalRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="10" />
+                                <input id="rentalRefDtlsJompay" name="rentalRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="20" />
                             </td>
                         </tr>
                         <tr>
