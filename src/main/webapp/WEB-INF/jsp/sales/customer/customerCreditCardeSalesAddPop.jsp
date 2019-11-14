@@ -152,7 +152,7 @@
     }
 
     function fn_doSaveCreditCard() {
-        /*
+        
         console.log('fn_doSaveBankAcc() START');
 
         var checkCrc = {
@@ -194,8 +194,9 @@
                 );
             }
         });
-        */
+        
 
+        /*
         console.log('fn_doSaveBankAcc() START');
 
         Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {;
@@ -255,6 +256,7 @@
                 }
             });
      });
+        */
     }
 </script>
 
