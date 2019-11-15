@@ -633,6 +633,9 @@ console.log("orderRegisterPop.jsp");
             //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
             Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
         });
+        $('#OrdNoTagBtn').click(function() {
+            Common.popupDiv("/sales/order/orderComboSearchPop.do", {promoNo:$("#ordPromo").val(), prod:$("#ordProudct").val(), custId : $('#hiddenCustId').val()});
+        });
         $('#addCustBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "580x"});
             Common.popupDiv("/sales/customer/customerRegistPop.do", {"callPrgm" : "ORD_REGISTER"}, null, true);
@@ -1233,6 +1236,33 @@ console.log("orderRegisterPop.jsp");
             Common.alert('<spring:message code="sal.alert.msg.gstAmount" />' + DEFAULT_DELIMITER + '<b>'+msg+'</b>');
         });
         $('#ordPromo').change(function() {
+          // == CHECK COMBO PROMOTION HERE ==  ordProudct
+          Common.ajaxSync("POST", "/sales/order/chkPromoCboMst.do", { promoNo:$("#ordPromo").val(), prod:$("#ordProudct").val(), custId : $('#hiddenCustId').val()}, function(result) {
+            if(result != null) {
+                if (result.code == '3') {
+                  // PROCEED TO SELECT COMBO PROMOTION
+                  $('#trCboOrdNoTag').css("visibility","visible");
+                } else if (result.code == '4') {
+                  // THERE HAVE NO ORDER TO TAG FOR COMBO PROMOTION
+                   $('#trCboOrdNoTag').css("visibility","collapse");
+                   $("#ordPromo").prop("selectedIndex", 0);
+
+                  Common.alert('<spring:message code="sal.alert.msg.cboNoOrdTag" />');
+                  return false;
+                } else if (result.code == '99') {
+                  Common.alert('<spring:message code="sal.alert.msg.promoCancalCode" />');
+                  $('#trCboOrdNoTag').css("visibility","collapse");
+                  $("#ordPromo").prop("selectedIndex", 0);
+
+                  return false;
+                } else {
+                  // DO NTH
+                  $('#trCboOrdNoTag').css("visibility","collapse");
+                }
+                $('#cboOrdNoTag').val("");
+                $('#hiddenCboOrdNoTag').val("");
+              }
+            });
 
 //          $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
             $('#trialNoChk').prop("checked", false).prop("disabled", true);
@@ -1628,8 +1658,9 @@ console.log("vBindingNo" + vBindingNo);
                 norRntFee               : $('#orgOrdRentalFees').val().trim(),
                 discRntFee              : $('#ordRentalFees').val().trim(),
                 gstChk                  : $('#gstChk').val(),
-                corpCustType         : $('#corpCustType').val(),
-                agreementType         : $('#agreementType').val(),
+                corpCustType            : $('#corpCustType').val(),
+                agreementType           : $('#agreementType').val(),
+                comboOrdBind            : $('#hiddenCboOrdNoTag').val(),
             },
             salesOrderDVO : {
                 itmPrc                  : $('#ordPrice').val().trim(),
@@ -1865,6 +1896,19 @@ console.log("vBindingNo" + vBindingNo);
               isValid = false;
               msg += '* <spring:message code="sal.alert.msg.plzSelAddCmpt" /><br>';
             }
+          }
+        }
+
+        // ADD COMBO PROMOTION CHECKING
+        if ($('#trCboOrdNoTag').css("visibility") == "visible") {
+          if ($('#cboOrdNoTag').val() == "" || $('#cboOrdNoTag').val() == null) {
+            isValid = false;
+            text = "<spring:message code='sal.title.text.cboBindOrdNo' />";
+            msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/><br>";
+          } else  if ($('#hiddenCboOrdNoTag').val() == "" || $('#hiddenCboOrdNoTag').val() == null) {
+            isValid = false;
+            text = "<spring:message code='sal.title.text.cboBindOrdNo' />";
+            msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/><br>";
           }
         }
 
@@ -2648,6 +2692,11 @@ console.log("vBindingNo" + vBindingNo);
 
     doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade }, '', 'ordPromo', 'S', '');
   }
+
+  function fn_setBindComboOrd(ordNo, ordId) {
+    $('#cboOrdNoTag').val(ordNo);
+    $('#hiddenCboOrdNoTag').val(ordId);
+  }
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
@@ -2957,6 +3006,16 @@ console.log("vBindingNo" + vBindingNo);
     </td>
     <th scope="row"><spring:message code="sal.title.text.salesmanNric" /></th>
     <td><input id="salesmanNric" name="salesmanNric" type="text" title="" placeholder="Salesman NRIC" class="w100p readonly" readonly/></td>
+</tr>
+<tr id='trCboOrdNoTag' style='visibility:collapse'>
+    <th scope="row"><spring:message code="sal.title.text.cboBindOrdNo" /><span class="must">*</span></th>
+    <td>
+     <input id="cboOrdNoTag" name="cboOrdNoTag" type="text" title="" placeholder="" class="" disabled="disabled"/>
+     <input id="hiddenCboOrdNoTag" name="hiddenCboOrdNoTag" type="hidden"  />
+     <a id="OrdNoTagBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    </td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
@@ -3657,7 +3716,7 @@ console.log("vBindingNo" + vBindingNo);
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.perferInstDate" /><span class="must">*</span></th>
-    <td><input id="prefInstDt" name="prefInstDt" type="text" title="Create start Date" 
+    <td><input id="prefInstDt" name="prefInstDt" type="text" title="Create start Date"
     placeholder="Prefer Install Date (dd/MM/yyyy)" class="j_date w100p" value="${nextDay}"/></td>
     <th scope="row"><spring:message code="sal.title.text.perferInstTime" /><span class="must">*</span></th>
     <td>
