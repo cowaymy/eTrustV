@@ -6,7 +6,6 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
 /**
  * The persistent class for the SAL0001D database table.
  *
@@ -14,636 +13,645 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SalesOrderMVO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private long salesOrdId;
+  private long salesOrdId;
 
-	private int advBill;
+  private int advBill;
 
-	private int aeonStusId;
+  private int aeonStusId;
 
-	private int appTypeId;
+  private int appTypeId;
 
-	private int srvPacId;
+  private int srvPacId;
 
-	private String bindingNo;
+  private String bindingNo;
 
-	private int brnchId;
+  private int brnchId;
 
-	private int ccPromoId;
+  private int ccPromoId;
 
-	private int cnvrSchemeId;
+  private int cnvrSchemeId;
 
-	private String commDt;
+  private String commDt;
 
-	private Date crtDt;
+  private Date crtDt;
 
-	private int crtUserId;
+  private int crtUserId;
 
-	private int custAddId;
+  private int custAddId;
 
-	private int custBillId;
+  private int custBillId;
 
-	private int custCareCntId;
+  private int custCareCntId;
 
-	private int custCntId;
+  private int custCntId;
 
-	private int custId;
+  private int custId;
 
-	private String custPoNo;
+  private String custPoNo;
 
-	private BigDecimal defRentAmt;
+  private BigDecimal defRentAmt;
 
-	private String deptCode;
+  private String deptCode;
 
-	private String doNo;
+  private String doNo;
 
-	private BigDecimal dscntAmt;
+  private BigDecimal dscntAmt;
 
-	private int editTypeId;
+  private int editTypeId;
 
-	private String grpCode;
+  private String grpCode;
 
-	private int instPriod;
+  private int instPriod;
 
-	private int lok;
+  private int lok;
 
-	private int memId;
+  private int memId;
 
-	private BigDecimal mthRentAmt;
+  private BigDecimal mthRentAmt;
 
-	private String orgCode;
+  private String orgCode;
 
-	private String payComDt;
+  private String payComDt;
 
-	private int promoId;
+  private int promoId;
 
-	private int pvMonth;
+  private int pvMonth;
 
-	private int pvYear;
+  private int pvYear;
 
-	private int refDocId;
+  private int refDocId;
 
-	private String refNo;
+  private String refNo;
 
-	private String rem;
+  private String rem;
 
-	private int renChkId;
+  private int renChkId;
 
-	private int rentPromoId;
+  private int rentPromoId;
 
-	private Date salesDt;
+  private Date salesDt;
 
-	private int salesGmId;
+  private int salesGmId;
 
-	private int salesHmId;
+  private int salesHmId;
 
-	private int salesOrdIdOld;
+  private int salesOrdIdOld;
 
-	private String salesOrdNo;
+  private String salesOrdNo;
 
-	private int salesSmId;
+  private int salesSmId;
 
-	private int stusCodeId;
+  private int stusCodeId;
 
-	private int syncChk;
+  private int syncChk;
 
-	private BigDecimal taxAmt;
+  private BigDecimal taxAmt;
 
-	private BigDecimal totAmt;
+  private BigDecimal totAmt;
 
-	private BigDecimal totPv;
+  private BigDecimal totPv;
 
-	private Date updDt;
+  private Date updDt;
 
-	private int updUserId;
+  private int updUserId;
 
-	private String billGroup;
+  private String billGroup;
 
-	private int empChk;
+  private int empChk;
 
-	private int exTrade;
+  private int exTrade;
 
-	private int ecash;
+  private int ecash;
 
-	private int promoDiscPeriodTp;
+  private int promoDiscPeriodTp;
 
-	private int promoDiscPeriod;
+  private int promoDiscPeriod;
 
-	private BigDecimal norAmt;
+  private BigDecimal norAmt;
 
-	private BigDecimal norRntFee;
+  private BigDecimal norRntFee;
 
-	private BigDecimal discRntFee;
+  private BigDecimal discRntFee;
 
-	private int gstChk;
+  private int gstChk;
 
-	private int corpCustType;
+  private int corpCustType;
 
-	private int agreementType;
+  private int agreementType;
 
-	public long getSalesOrdId() {
-		return salesOrdId;
-	}
+  private int comboOrdBind;
 
-	public void setSalesOrdId(long salesOrdId) {
-		this.salesOrdId = salesOrdId;
-	}
+  public long getSalesOrdId() {
+    return salesOrdId;
+  }
 
-	public int getAdvBill() {
-		return advBill;
-	}
+  public void setSalesOrdId(long salesOrdId) {
+    this.salesOrdId = salesOrdId;
+  }
 
-	public void setAdvBill(int advBill) {
-		this.advBill = advBill;
-	}
+  public int getAdvBill() {
+    return advBill;
+  }
 
-	public int getAeonStusId() {
-		return aeonStusId;
-	}
+  public void setAdvBill(int advBill) {
+    this.advBill = advBill;
+  }
 
-	public void setAeonStusId(int aeonStusId) {
-		this.aeonStusId = aeonStusId;
-	}
+  public int getAeonStusId() {
+    return aeonStusId;
+  }
 
-	public int getAppTypeId() {
-		return appTypeId;
-	}
+  public void setAeonStusId(int aeonStusId) {
+    this.aeonStusId = aeonStusId;
+  }
 
-	public void setAppTypeId(int appTypeId) {
-		this.appTypeId = appTypeId;
-	}
+  public int getAppTypeId() {
+    return appTypeId;
+  }
 
-	public String getBindingNo() {
-		return bindingNo;
-	}
+  public void setAppTypeId(int appTypeId) {
+    this.appTypeId = appTypeId;
+  }
 
-	public void setBindingNo(String bindingNo) {
-		this.bindingNo = bindingNo;
-	}
+  public String getBindingNo() {
+    return bindingNo;
+  }
 
-	public int getBrnchId() {
-		return brnchId;
-	}
+  public void setBindingNo(String bindingNo) {
+    this.bindingNo = bindingNo;
+  }
 
-	public void setBrnchId(int brnchId) {
-		this.brnchId = brnchId;
-	}
+  public int getBrnchId() {
+    return brnchId;
+  }
 
-	public int getCcPromoId() {
-		return ccPromoId;
-	}
+  public void setBrnchId(int brnchId) {
+    this.brnchId = brnchId;
+  }
 
-	public void setCcPromoId(int ccPromoId) {
-		this.ccPromoId = ccPromoId;
-	}
+  public int getCcPromoId() {
+    return ccPromoId;
+  }
 
-	public int getCnvrSchemeId() {
-		return cnvrSchemeId;
-	}
+  public void setCcPromoId(int ccPromoId) {
+    this.ccPromoId = ccPromoId;
+  }
 
-	public void setCnvrSchemeId(int cnvrSchemeId) {
-		this.cnvrSchemeId = cnvrSchemeId;
-	}
+  public int getCnvrSchemeId() {
+    return cnvrSchemeId;
+  }
 
-	public String getCommDt() {
-		return commDt;
-	}
+  public void setCnvrSchemeId(int cnvrSchemeId) {
+    this.cnvrSchemeId = cnvrSchemeId;
+  }
 
-	public void setCommDt(String commDt) {
-		this.commDt = commDt;
-	}
+  public String getCommDt() {
+    return commDt;
+  }
 
-	public Date getCrtDt() {
-		return crtDt;
-	}
+  public void setCommDt(String commDt) {
+    this.commDt = commDt;
+  }
 
-	public void setCrtDt(Date crtDt) {
-		this.crtDt = crtDt;
-	}
+  public Date getCrtDt() {
+    return crtDt;
+  }
 
-	public int getCrtUserId() {
-		return crtUserId;
-	}
+  public void setCrtDt(Date crtDt) {
+    this.crtDt = crtDt;
+  }
 
-	public void setCrtUserId(int crtUserId) {
-		this.crtUserId = crtUserId;
-	}
+  public int getCrtUserId() {
+    return crtUserId;
+  }
 
-	public int getCustAddId() {
-		return custAddId;
-	}
+  public void setCrtUserId(int crtUserId) {
+    this.crtUserId = crtUserId;
+  }
 
-	public void setCustAddId(int custAddId) {
-		this.custAddId = custAddId;
-	}
+  public int getCustAddId() {
+    return custAddId;
+  }
 
-	public int getCustBillId() {
-		return custBillId;
-	}
+  public void setCustAddId(int custAddId) {
+    this.custAddId = custAddId;
+  }
 
-	public void setCustBillId(int custBillId) {
-		this.custBillId = custBillId;
-	}
+  public int getCustBillId() {
+    return custBillId;
+  }
 
-	public int getCustCareCntId() {
-		return custCareCntId;
-	}
+  public void setCustBillId(int custBillId) {
+    this.custBillId = custBillId;
+  }
 
-	public void setCustCareCntId(int custCareCntId) {
-		this.custCareCntId = custCareCntId;
-	}
+  public int getCustCareCntId() {
+    return custCareCntId;
+  }
 
-	public int getCustCntId() {
-		return custCntId;
-	}
+  public void setCustCareCntId(int custCareCntId) {
+    this.custCareCntId = custCareCntId;
+  }
 
-	public void setCustCntId(int custCntId) {
-		this.custCntId = custCntId;
-	}
+  public int getCustCntId() {
+    return custCntId;
+  }
 
-	public int getCustId() {
-		return custId;
-	}
+  public void setCustCntId(int custCntId) {
+    this.custCntId = custCntId;
+  }
 
-	public void setCustId(int custId) {
-		this.custId = custId;
-	}
+  public int getCustId() {
+    return custId;
+  }
 
-	public String getCustPoNo() {
-		return custPoNo;
-	}
+  public void setCustId(int custId) {
+    this.custId = custId;
+  }
 
-	public void setCustPoNo(String custPoNo) {
-		this.custPoNo = custPoNo;
-	}
+  public String getCustPoNo() {
+    return custPoNo;
+  }
 
-	public BigDecimal getDefRentAmt() {
-		return defRentAmt;
-	}
+  public void setCustPoNo(String custPoNo) {
+    this.custPoNo = custPoNo;
+  }
 
-	public void setDefRentAmt(BigDecimal defRentAmt) {
-		this.defRentAmt = defRentAmt;
-	}
+  public BigDecimal getDefRentAmt() {
+    return defRentAmt;
+  }
 
-	public String getDeptCode() {
-		return deptCode;
-	}
+  public void setDefRentAmt(BigDecimal defRentAmt) {
+    this.defRentAmt = defRentAmt;
+  }
 
-	public void setDeptCode(String deptCode) {
-		this.deptCode = deptCode;
-	}
+  public String getDeptCode() {
+    return deptCode;
+  }
 
-	public String getDoNo() {
-		return doNo;
-	}
+  public void setDeptCode(String deptCode) {
+    this.deptCode = deptCode;
+  }
 
-	public void setDoNo(String doNo) {
-		this.doNo = doNo;
-	}
+  public String getDoNo() {
+    return doNo;
+  }
 
-	public BigDecimal getDscntAmt() {
-		return dscntAmt;
-	}
+  public void setDoNo(String doNo) {
+    this.doNo = doNo;
+  }
 
-	public void setDscntAmt(BigDecimal dscntAmt) {
-		this.dscntAmt = dscntAmt;
-	}
+  public BigDecimal getDscntAmt() {
+    return dscntAmt;
+  }
 
-	public int getEditTypeId() {
-		return editTypeId;
-	}
+  public void setDscntAmt(BigDecimal dscntAmt) {
+    this.dscntAmt = dscntAmt;
+  }
 
-	public void setEditTypeId(int editTypeId) {
-		this.editTypeId = editTypeId;
-	}
+  public int getEditTypeId() {
+    return editTypeId;
+  }
 
-	public String getGrpCode() {
-		return grpCode;
-	}
+  public void setEditTypeId(int editTypeId) {
+    this.editTypeId = editTypeId;
+  }
 
-	public void setGrpCode(String grpCode) {
-		this.grpCode = grpCode;
-	}
+  public String getGrpCode() {
+    return grpCode;
+  }
 
-	public int getInstPriod() {
-		return instPriod;
-	}
+  public void setGrpCode(String grpCode) {
+    this.grpCode = grpCode;
+  }
 
-	public void setInstPriod(int instPriod) {
-		this.instPriod = instPriod;
-	}
+  public int getInstPriod() {
+    return instPriod;
+  }
 
-	public int getLok() {
-		return lok;
-	}
+  public void setInstPriod(int instPriod) {
+    this.instPriod = instPriod;
+  }
 
-	public void setLok(int lok) {
-		this.lok = lok;
-	}
+  public int getLok() {
+    return lok;
+  }
 
-	public int getMemId() {
-		return memId;
-	}
+  public void setLok(int lok) {
+    this.lok = lok;
+  }
 
-	public void setMemId(int memId) {
-		this.memId = memId;
-	}
+  public int getMemId() {
+    return memId;
+  }
 
-	public BigDecimal getMthRentAmt() {
-		return mthRentAmt;
-	}
+  public void setMemId(int memId) {
+    this.memId = memId;
+  }
 
-	public void setMthRentAmt(BigDecimal mthRentAmt) {
-		this.mthRentAmt = mthRentAmt;
-	}
+  public BigDecimal getMthRentAmt() {
+    return mthRentAmt;
+  }
 
-	public String getOrgCode() {
-		return orgCode;
-	}
+  public void setMthRentAmt(BigDecimal mthRentAmt) {
+    this.mthRentAmt = mthRentAmt;
+  }
 
-	public void setOrgCode(String orgCode) {
-		this.orgCode = orgCode;
-	}
+  public String getOrgCode() {
+    return orgCode;
+  }
 
-	public String getPayComDt() {
-		return payComDt;
-	}
+  public void setOrgCode(String orgCode) {
+    this.orgCode = orgCode;
+  }
 
-	public void setPayComDt(String payComDt) {
-		this.payComDt = payComDt;
-	}
+  public String getPayComDt() {
+    return payComDt;
+  }
 
-	public int getPromoId() {
-		return promoId;
-	}
+  public void setPayComDt(String payComDt) {
+    this.payComDt = payComDt;
+  }
 
-	public void setPromoId(int promoId) {
-		this.promoId = promoId;
-	}
+  public int getPromoId() {
+    return promoId;
+  }
 
-	public int getPvMonth() {
-		return pvMonth;
-	}
+  public void setPromoId(int promoId) {
+    this.promoId = promoId;
+  }
 
-	public void setPvMonth(int pvMonth) {
-		this.pvMonth = pvMonth;
-	}
+  public int getPvMonth() {
+    return pvMonth;
+  }
 
-	public int getPvYear() {
-		return pvYear;
-	}
+  public void setPvMonth(int pvMonth) {
+    this.pvMonth = pvMonth;
+  }
 
-	public void setPvYear(int pvYear) {
-		this.pvYear = pvYear;
-	}
+  public int getPvYear() {
+    return pvYear;
+  }
 
-	public int getRefDocId() {
-		return refDocId;
-	}
+  public void setPvYear(int pvYear) {
+    this.pvYear = pvYear;
+  }
 
-	public void setRefDocId(int refDocId) {
-		this.refDocId = refDocId;
-	}
+  public int getRefDocId() {
+    return refDocId;
+  }
 
-	public String getRefNo() {
-		return refNo;
-	}
+  public void setRefDocId(int refDocId) {
+    this.refDocId = refDocId;
+  }
 
-	public void setRefNo(String refNo) {
-		this.refNo = refNo;
-	}
+  public String getRefNo() {
+    return refNo;
+  }
 
-	public String getRem() {
-		return rem;
-	}
+  public void setRefNo(String refNo) {
+    this.refNo = refNo;
+  }
 
-	public void setRem(String rem) {
-		this.rem = rem;
-	}
+  public String getRem() {
+    return rem;
+  }
 
-	public int getRenChkId() {
-		return renChkId;
-	}
+  public void setRem(String rem) {
+    this.rem = rem;
+  }
 
-	public void setRenChkId(int renChkId) {
-		this.renChkId = renChkId;
-	}
+  public int getRenChkId() {
+    return renChkId;
+  }
 
-	public int getRentPromoId() {
-		return rentPromoId;
-	}
+  public void setRenChkId(int renChkId) {
+    this.renChkId = renChkId;
+  }
 
-	public void setRentPromoId(int rentPromoId) {
-		this.rentPromoId = rentPromoId;
-	}
+  public int getRentPromoId() {
+    return rentPromoId;
+  }
 
-	public Date getSalesDt() {
-		return salesDt;
-	}
+  public void setRentPromoId(int rentPromoId) {
+    this.rentPromoId = rentPromoId;
+  }
 
-	public void setSalesDt(Date salesDt) {
-		this.salesDt = salesDt;
-	}
+  public Date getSalesDt() {
+    return salesDt;
+  }
 
-	public int getSalesGmId() {
-		return salesGmId;
-	}
+  public void setSalesDt(Date salesDt) {
+    this.salesDt = salesDt;
+  }
 
-	public void setSalesGmId(int salesGmId) {
-		this.salesGmId = salesGmId;
-	}
+  public int getSalesGmId() {
+    return salesGmId;
+  }
 
-	public int getSalesHmId() {
-		return salesHmId;
-	}
+  public void setSalesGmId(int salesGmId) {
+    this.salesGmId = salesGmId;
+  }
 
-	public void setSalesHmId(int salesHmId) {
-		this.salesHmId = salesHmId;
-	}
+  public int getSalesHmId() {
+    return salesHmId;
+  }
 
-	public int getSalesOrdIdOld() {
-		return salesOrdIdOld;
-	}
+  public void setSalesHmId(int salesHmId) {
+    this.salesHmId = salesHmId;
+  }
 
-	public void setSalesOrdIdOld(int salesOrdIdOld) {
-		this.salesOrdIdOld = salesOrdIdOld;
-	}
+  public int getSalesOrdIdOld() {
+    return salesOrdIdOld;
+  }
 
-	public String getSalesOrdNo() {
-		return salesOrdNo;
-	}
+  public void setSalesOrdIdOld(int salesOrdIdOld) {
+    this.salesOrdIdOld = salesOrdIdOld;
+  }
 
-	public void setSalesOrdNo(String salesOrdNo) {
-		this.salesOrdNo = salesOrdNo;
-	}
+  public String getSalesOrdNo() {
+    return salesOrdNo;
+  }
 
-	public int getSalesSmId() {
-		return salesSmId;
-	}
+  public void setSalesOrdNo(String salesOrdNo) {
+    this.salesOrdNo = salesOrdNo;
+  }
 
-	public void setSalesSmId(int salesSmId) {
-		this.salesSmId = salesSmId;
-	}
+  public int getSalesSmId() {
+    return salesSmId;
+  }
 
-	public int getStusCodeId() {
-		return stusCodeId;
-	}
+  public void setSalesSmId(int salesSmId) {
+    this.salesSmId = salesSmId;
+  }
 
-	public void setStusCodeId(int stusCodeId) {
-		this.stusCodeId = stusCodeId;
-	}
+  public int getStusCodeId() {
+    return stusCodeId;
+  }
 
-	public int getSyncChk() {
-		return syncChk;
-	}
+  public void setStusCodeId(int stusCodeId) {
+    this.stusCodeId = stusCodeId;
+  }
 
-	public void setSyncChk(int syncChk) {
-		this.syncChk = syncChk;
-	}
+  public int getSyncChk() {
+    return syncChk;
+  }
 
-	public BigDecimal getTaxAmt() {
-		return taxAmt;
-	}
+  public void setSyncChk(int syncChk) {
+    this.syncChk = syncChk;
+  }
 
-	public void setTaxAmt(BigDecimal taxAmt) {
-		this.taxAmt = taxAmt;
-	}
+  public BigDecimal getTaxAmt() {
+    return taxAmt;
+  }
 
-	public BigDecimal getTotAmt() {
-		return totAmt;
-	}
+  public void setTaxAmt(BigDecimal taxAmt) {
+    this.taxAmt = taxAmt;
+  }
 
-	public void setTotAmt(BigDecimal totAmt) {
-		this.totAmt = totAmt;
-	}
+  public BigDecimal getTotAmt() {
+    return totAmt;
+  }
 
-	public BigDecimal getTotPv() {
-		return totPv;
-	}
+  public void setTotAmt(BigDecimal totAmt) {
+    this.totAmt = totAmt;
+  }
 
-	public void setTotPv(BigDecimal totPv) {
-		this.totPv = totPv;
-	}
+  public BigDecimal getTotPv() {
+    return totPv;
+  }
 
-	public Date getUpdDt() {
-		return updDt;
-	}
+  public void setTotPv(BigDecimal totPv) {
+    this.totPv = totPv;
+  }
 
-	public void setUpdDt(Date updDt) {
-		this.updDt = updDt;
-	}
+  public Date getUpdDt() {
+    return updDt;
+  }
 
-	public int getUpdUserId() {
-		return updUserId;
-	}
+  public void setUpdDt(Date updDt) {
+    this.updDt = updDt;
+  }
 
-	public void setUpdUserId(int updUserId) {
-		this.updUserId = updUserId;
-	}
+  public int getUpdUserId() {
+    return updUserId;
+  }
 
-	public String getBillGroup() {
-		return billGroup;
-	}
+  public void setUpdUserId(int updUserId) {
+    this.updUserId = updUserId;
+  }
 
-	public void setBillGroup(String billGroup) {
-		this.billGroup = billGroup;
-	}
+  public String getBillGroup() {
+    return billGroup;
+  }
 
-	public int getEmpChk() {
-		return empChk;
-	}
+  public void setBillGroup(String billGroup) {
+    this.billGroup = billGroup;
+  }
 
-	public void setEmpChk(int empChk) {
-		this.empChk = empChk;
-	}
+  public int getEmpChk() {
+    return empChk;
+  }
 
-	public int getExTrade() {
-		return exTrade;
-	}
+  public void setEmpChk(int empChk) {
+    this.empChk = empChk;
+  }
 
-	public void setExTrade(int exTrade) {
-		this.exTrade = exTrade;
-	}
+  public int getExTrade() {
+    return exTrade;
+  }
 
-	public int getEcash() {
-		return ecash;
-	}
+  public void setExTrade(int exTrade) {
+    this.exTrade = exTrade;
+  }
 
-	public void setEcash(int ecash) {
-		this.ecash = ecash;
-	}
+  public int getEcash() {
+    return ecash;
+  }
 
-	public int getPromoDiscPeriodTp() {
-		return promoDiscPeriodTp;
-	}
+  public void setEcash(int ecash) {
+    this.ecash = ecash;
+  }
 
-	public void setPromoDiscPeriodTp(int promoDiscPeriodTp) {
-		this.promoDiscPeriodTp = promoDiscPeriodTp;
-	}
+  public int getPromoDiscPeriodTp() {
+    return promoDiscPeriodTp;
+  }
 
-	public int getPromoDiscPeriod() {
-		return promoDiscPeriod;
-	}
+  public void setPromoDiscPeriodTp(int promoDiscPeriodTp) {
+    this.promoDiscPeriodTp = promoDiscPeriodTp;
+  }
 
-	public void setPromoDiscPeriod(int promoDiscPeriod) {
-		this.promoDiscPeriod = promoDiscPeriod;
-	}
+  public int getPromoDiscPeriod() {
+    return promoDiscPeriod;
+  }
 
-	public BigDecimal getNorAmt() {
-		return norAmt;
-	}
+  public void setPromoDiscPeriod(int promoDiscPeriod) {
+    this.promoDiscPeriod = promoDiscPeriod;
+  }
 
-	public void setNorAmt(BigDecimal norAmt) {
-		this.norAmt = norAmt;
-	}
+  public BigDecimal getNorAmt() {
+    return norAmt;
+  }
 
-	public BigDecimal getNorRntFee() {
-		return norRntFee;
-	}
+  public void setNorAmt(BigDecimal norAmt) {
+    this.norAmt = norAmt;
+  }
 
-	public void setNorRntFee(BigDecimal norRntFee) {
-		this.norRntFee = norRntFee;
-	}
+  public BigDecimal getNorRntFee() {
+    return norRntFee;
+  }
 
-	public BigDecimal getDiscRntFee() {
-		return discRntFee;
-	}
+  public void setNorRntFee(BigDecimal norRntFee) {
+    this.norRntFee = norRntFee;
+  }
 
-	public void setDiscRntFee(BigDecimal discRntFee) {
-		this.discRntFee = discRntFee;
-	}
+  public BigDecimal getDiscRntFee() {
+    return discRntFee;
+  }
 
-	public int getGstChk() {
-		return gstChk;
-	}
+  public void setDiscRntFee(BigDecimal discRntFee) {
+    this.discRntFee = discRntFee;
+  }
 
-	public void setGstChk(int gstChk) {
-		this.gstChk = gstChk;
-	}
+  public int getGstChk() {
+    return gstChk;
+  }
 
-	public int getSrvPacId() {
-		return srvPacId;
-	}
+  public void setGstChk(int gstChk) {
+    this.gstChk = gstChk;
+  }
 
-	public void setSrvPacId(int srvPacId) {
-		this.srvPacId = srvPacId;
-	}
+  public int getSrvPacId() {
+    return srvPacId;
+  }
 
-	public int getCorpCustType() {
-		return corpCustType;
-	}
+  public void setSrvPacId(int srvPacId) {
+    this.srvPacId = srvPacId;
+  }
 
-	public void setCorpCustType(int corpCustType) {
-		this.corpCustType = corpCustType;
-	}
+  public int getCorpCustType() {
+    return corpCustType;
+  }
 
-	public int getAgreementType() {
-		return agreementType;
-	}
+  public void setCorpCustType(int corpCustType) {
+    this.corpCustType = corpCustType;
+  }
 
-	public void setAgreementType(int agreementType) {
-		this.agreementType = agreementType;
-	}
+  public int getAgreementType() {
+    return agreementType;
+  }
 
+  public void setAgreementType(int agreementType) {
+    this.agreementType = agreementType;
+  }
+
+  public int getComboOrdBind() {
+    return comboOrdBind;
+  }
+
+  public void setComboOrdBind(int comboOrdBind) {
+    this.comboOrdBind = comboOrdBind;
+  }
 }
