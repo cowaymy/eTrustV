@@ -44,178 +44,189 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("orderRequestMapper")
 public interface OrderRequestMapper {
 
-	List<EgovMap> selectResnCodeList(Map<String, Object> params);
+  List<EgovMap> selectResnCodeList(Map<String, Object> params);
 
-	EgovMap selectOrderLastRentalBillLedger1(Map<String, Object> params);
+  EgovMap selectOrderLastRentalBillLedger1(Map<String, Object> params);
 
-	void insertSalesReqCancel(SalesReqCancelVO salesReqCancelVO);
+  void insertSalesReqCancel(SalesReqCancelVO salesReqCancelVO);
 
-	EgovMap selectSalesOrderD(Map<String, Object> params);
+  EgovMap selectSalesOrderD(Map<String, Object> params);
 
-	EgovMap selectInstallEntry(Map<String, Object> params);
+  EgovMap selectInstallEntry(Map<String, Object> params);
 
-	EgovMap selectCallEntry(Map<String, Object> params);
+  EgovMap selectCallEntry(Map<String, Object> params);
 
-	EgovMap selectCallEntryByEntryId(Map<String, Object> params);
+  EgovMap selectCallEntryByEntryId(Map<String, Object> params);
 
-	void updateCallEntry(CallEntryVO callEntryVO);
+  void updateCallEntry(CallEntryVO callEntryVO);
 
-	void updateCallEntry2(Map<String, Object> params);
+  void updateCallEntry2(Map<String, Object> params);
 
-	void updateRentalScheme(Map<String, Object> params);
+  void updateRentalScheme(Map<String, Object> params);
 
-	EgovMap selectCompleteASIDByOrderIDSolutionReason(Map<String, Object> params);
+  EgovMap selectCompleteASIDByOrderIDSolutionReason(Map<String, Object> params);
 
-	void insertSalesOrderExchange(SalesOrderExchangeVO salesOrderExchangeVO);
+  void insertSalesOrderExchange(SalesOrderExchangeVO salesOrderExchangeVO);
 
-	void updateSalesOrderExchangeNwCall(SalesOrderExchangeVO salesOrderExchangeVO);
+  void updateSalesOrderExchangeNwCall(SalesOrderExchangeVO salesOrderExchangeVO);
 
-	void updateSoExchgStkRetMovId(SalesOrderExchangeVO salesOrderExchangeVO);
+  void updateSoExchgStkRetMovId(SalesOrderExchangeVO salesOrderExchangeVO);
 
-	void updateSalesOrderM(SalesOrderMVO salesOrderMVO);
+  void updateSalesOrderM(SalesOrderMVO salesOrderMVO);
 
-	void updateSalesOrderMSchem(SalesOrderMVO salesOrderMVO);
+  void updateSalesOrderMSchem(SalesOrderMVO salesOrderMVO);
 
-	void updateSalesOrderMOtran(SalesOrderMVO salesOrderMVO);
+  void updateSalesOrderMOtran(SalesOrderMVO salesOrderMVO);
 
-	void updateSalesOrderD(SalesOrderDVO salesOrderDVO);
+  void updateSalesOrderD(SalesOrderDVO salesOrderDVO);
 
-	void updateSalesOrderDAexc(SalesOrderDVO salesOrderDVO);
+  void updateSalesOrderDAexc(SalesOrderDVO salesOrderDVO);
 
-	EgovMap selecLastInstall(Map<String, Object> params);
+  EgovMap selecLastInstall(Map<String, Object> params);
 
-	EgovMap selectSrvConfiguration(Map<String, Object> params);
+  EgovMap selectSrvConfiguration(Map<String, Object> params);
 
-	EgovMap selectSrvConfiguration2(Map<String, Object> params);
+  EgovMap selectSrvConfiguration2(Map<String, Object> params);
 
-	void insertInvStkMovement(InvStkMovementVO invStkMovementVO);
+  void insertInvStkMovement(InvStkMovementVO invStkMovementVO);
 
-	void insertStkReturnEntry(StkReturnEntryVO stkReturnEntryVO);
+  void insertStkReturnEntry(StkReturnEntryVO stkReturnEntryVO);
 
-	List<EgovMap> selectSrvConfigPeriod(Map<String, Object> params);
+  List<EgovMap> selectSrvConfigPeriod(Map<String, Object> params);
 
-	List<EgovMap> selectSrvConfigSetting(Map<String, Object> params);
+  List<EgovMap> selectSrvConfigSetting(Map<String, Object> params);
 
-	List<EgovMap> selectSrvConfigFilter(Map<String, Object> params);
+  List<EgovMap> selectSrvConfigFilter(Map<String, Object> params);
 
-	List<EgovMap> selectSrvConfigFilterList(Map<String, Object> params);
+  List<EgovMap> selectSrvConfigFilterList(Map<String, Object> params);
 
-	void insertSalesOrderExchangeBUSrvConfig(SalesOrderExchangeBUSrvConfigVO salesOrderExchangeBUSrvConfigVO);
+  void insertSalesOrderExchangeBUSrvConfig(SalesOrderExchangeBUSrvConfigVO salesOrderExchangeBUSrvConfigVO);
 
-	void insertSalesOrderExchangeBUSrvPeriod(SalesOrderExchangeBUSrvPeriodVO salesOrderExchangeBUSrvPeriodVO);
+  void insertSalesOrderExchangeBUSrvPeriod(SalesOrderExchangeBUSrvPeriodVO salesOrderExchangeBUSrvPeriodVO);
 
-	void insertSalesOrderExchangeBUSrvSetting(SalesOrderExchangeBUSrvSettingVO salesOrderExchangeBUSrvSettingVO);
+  void insertSalesOrderExchangeBUSrvSetting(SalesOrderExchangeBUSrvSettingVO salesOrderExchangeBUSrvSettingVO);
 
-	void insertSalesOrderExchangeBUSrvFilter(SalesOrderExchangeBUSrvFilterVO salesOrderExchangeBUSrvFilterVO);
+  void insertSalesOrderExchangeBUSrvFilter(SalesOrderExchangeBUSrvFilterVO salesOrderExchangeBUSrvFilterVO);
 
-	List<EgovMap> selectSalesOrderSchemeList(Map<String, Object> params);
+  List<EgovMap> selectSalesOrderSchemeList(Map<String, Object> params);
 
-	EgovMap selectSchemePriceSettingByPromoCode(Map<String, Object> params);
+  EgovMap selectSchemePriceSettingByPromoCode(Map<String, Object> params);
 
-	List<EgovMap> selectSchemePartSettingBySchemeIDList(Map<String, Object> params);
+  List<EgovMap> selectSchemePartSettingBySchemeIDList(Map<String, Object> params);
 
-	EgovMap selectRentalInstStartMonth(Map<String, Object> params);
+  EgovMap selectRentalInstStartMonth(Map<String, Object> params);
 
-	List<EgovMap> selectSrvMembershipSaleList(Map<String, Object> params);
+  List<EgovMap> selectSrvMembershipSaleList(Map<String, Object> params);
 
-//	List<SrvMembershipSalesVO> selectSrvMembershipSaleList(Map<String, Object> params);
+  // List<SrvMembershipSalesVO> selectSrvMembershipSaleList(Map<String, Object>
+  // params);
 
-	List<EgovMap> selectServiceConfigPeriodEffectiveList(Map<String, Object> params);
+  List<EgovMap> selectServiceConfigPeriodEffectiveList(Map<String, Object> params);
 
-	void insertSalesOrderSchemeConversion(SalesOrderSchemeConversionVO salesOrderSchemeConversionVO);
+  void insertSalesOrderSchemeConversion(SalesOrderSchemeConversionVO salesOrderSchemeConversionVO);
 
-	void updateSrvMembershipSales(Map<String, Object> params);
+  void updateSrvMembershipSales(Map<String, Object> params);
 
-	void updateSrvMembershipSalesAexc(SrvMembershipSalesVO srvMembershipSalesVO);
+  void updateSrvMembershipSalesAexc(SrvMembershipSalesVO srvMembershipSalesVO);
 
-	void updateSrvMembershipSalesAexc2(Map<String, Object> params);
+  void updateSrvMembershipSalesAexc2(Map<String, Object> params);
 
-	void updateSrvConfigPeriod(Map<String, Object> params);
+  void updateSrvConfigPeriod(Map<String, Object> params);
 
-	void updateSrvConfigPeriodAexc(SrvConfigPeriodVO srvConfigPeriodVO);
+  void updateSrvConfigPeriodAexc(SrvConfigPeriodVO srvConfigPeriodVO);
 
-	void updateDiscountEntryStatus(Map<String, Object> params);
+  void updateDiscountEntryStatus(Map<String, Object> params);
 
-	void insertDiscountEntry(DiscountEntryVO discountEntryVO);
+  void insertDiscountEntry(DiscountEntryVO discountEntryVO);
 
-	void updateSrvConfigFilter(Map<String, Object> params);
+  void updateSrvConfigFilter(Map<String, Object> params);
 
-	void insertSrvConfigFilter(Map<String, Object> params);
+  void insertSrvConfigFilter(Map<String, Object> params);
 
-	EgovMap selectOrderSimulatorViewByOrderNo(Map<String, Object> params);
+  EgovMap selectOrderSimulatorViewByOrderNo(Map<String, Object> params);
 
-	EgovMap selectRentalInst(Map<String, Object> params);
+  EgovMap selectRentalInst(Map<String, Object> params);
 
-	EgovMap selectRentalInst2(Map<String, Object> params);
+  EgovMap selectRentalInst2(Map<String, Object> params);
 
-	EgovMap selectInstallResult(Map<String, Object> params);
+  EgovMap selectInstallResult(Map<String, Object> params);
 
-	EgovMap selectPromoD(Map<String, Object> params);
+  EgovMap selectPromoD(Map<String, Object> params);
 
-	EgovMap selectAccRentLedger(Map<String, Object> params);
+  EgovMap selectAccRentLedger(Map<String, Object> params);
 
-	EgovMap selectAccRentLedger2(Map<String, Object> params);
+  EgovMap selectAccRentLedger2(Map<String, Object> params);
 
-	EgovMap selectAccRentLedger3(Map<String, Object> params);
+  EgovMap selectAccRentLedger3(Map<String, Object> params);
 
-	EgovMap selectTotalDNBill(Map<String, Object> params);
+  EgovMap selectTotalDNBill(Map<String, Object> params);
 
-	EgovMap selectTotalDNBill2(Map<String, Object> params);
+  EgovMap selectTotalDNBill2(Map<String, Object> params);
 
-	EgovMap selectTotalCNBill(Map<String, Object> params);
+  EgovMap selectTotalCNBill(Map<String, Object> params);
 
-	EgovMap selectTotalCNBill2(Map<String, Object> params);
+  EgovMap selectTotalCNBill2(Map<String, Object> params);
 
-	EgovMap selectLastBill(Map<String, Object> params);
+  EgovMap selectLastBill(Map<String, Object> params);
 
-	List<EgovMap> selectInstallResultsBySalesOrderID(Map<String, Object> params);
+  List<EgovMap> selectInstallResultsBySalesOrderID(Map<String, Object> params);
 
-	void updateSalesOrderMAexc(SalesOrderMVO salesOrderMVO);
+  void updateSalesOrderMAexc(SalesOrderMVO salesOrderMVO);
 
-	void insertSrvMembershipSales(SrvMembershipSalesVO srvMembershipSalesVO);
+  void insertSrvMembershipSales(SrvMembershipSalesVO srvMembershipSalesVO);
 
-	List<EgovMap> selectPurchaseMembershipList(Map<String, Object> params);
+  List<EgovMap> selectPurchaseMembershipList(Map<String, Object> params);
 
-	void insertAccTradeLedger(AccTradeLedgerVO accTradeLedgerVO);
+  void insertAccTradeLedger(AccTradeLedgerVO accTradeLedgerVO);
 
-	void insertAccOrderBill(AccOrderBillVO accOrderBillVO);
+  void insertAccOrderBill(AccOrderBillVO accOrderBillVO);
 
-	void insertAccTaxInvoiceOutright(AccTaxInvoiceOutrightVO accTaxInvoiceOutrightVO);
+  void insertAccTaxInvoiceOutright(AccTaxInvoiceOutrightVO accTaxInvoiceOutrightVO);
 
-	void insertAccTaxInvoiceOutright_Sub(AccTaxInvoiceOutright_SubVO accTaxInvoiceOutright_SubVO);
+  void insertAccTaxInvoiceOutright_Sub(AccTaxInvoiceOutright_SubVO accTaxInvoiceOutright_SubVO);
 
-	EgovMap selectInstallationAddress(Map<String, Object> params);
+  EgovMap selectInstallationAddress(Map<String, Object> params);
 
-	void updateInstallationOtran(InstallationVO installationVO);
+  void updateInstallationOtran(InstallationVO installationVO);
 
-	void updateRentPaySetOtran(RentPaySetVO rentPaySetVO);
+  void updateRentPaySetOtran(RentPaySetVO rentPaySetVO);
 
-	EgovMap selectSalesOrderMOtran(Map<String, Object> params);
+  EgovMap selectSalesOrderMOtran(Map<String, Object> params);
 
-	void updateCustBillMasterOtran(CustBillMasterVO custBillMasterVO);
+  void updateCustBillMasterOtran(CustBillMasterVO custBillMasterVO);
 
-	EgovMap selectObligtPriod(Map<String, Object> params);
+  EgovMap selectObligtPriod(Map<String, Object> params);
 
-	EgovMap selectPenaltyAmt(Map<String, Object> params);
+  EgovMap selectPenaltyAmt(Map<String, Object> params);
 
-	int selectCcpDecisionMById(Map<String, Object> params);
+  int selectCcpDecisionMById(Map<String, Object> params);
 
-	int selectECashDeductionItemById(Map<String, Object> params);
+  int selectECashDeductionItemById(Map<String, Object> params);
 
-	void updateSalesOrderLog(Map<String, Object> params);
+  void updateSalesOrderLog(Map<String, Object> params);
 
-	void updateSalesOrderMCanc(Map<String, Object> params);
+  void updateSalesOrderMCanc(Map<String, Object> params);
 
-	//BY KV order installation no yet complete (CallLog Type - 257, CCR0001D - 20, SAL00046 - Active )
-	int validOCRStus(Map<String, Object> params);
-	/*BY KV -  installation cant do, ccr0006d - active  SAL0046D - no record
-    Valid OCR Status - (CallLog Type - 257, Stus - 1, SAL00046 - NO RECORD  )*/
-	int validOCRStus2(Map<String, Object> params);
+  // BY KV order installation no yet complete (CallLog Type - 257, CCR0001D -
+  // 20, SAL00046 - Active )
+  int validOCRStus(Map<String, Object> params);
 
-	/*BY KV -order cancellation no yet complete sal0020d */
-	int validOCRStus3(Map<String, Object> params);
+  /*
+   * BY KV - installation cant do, ccr0006d - active SAL0046D - no record Valid
+   * OCR Status - (CallLog Type - 257, Stus - 1, SAL00046 - NO RECORD )
+   */
+  int validOCRStus2(Map<String, Object> params);
 
-	/*BY KV -order cancellation complete sal0020d ; log0038d active   */
-	int validOCRStus4(Map<String, Object> params);
+  /* BY KV -order cancellation no yet complete sal0020d */
+  int validOCRStus3(Map<String, Object> params);
+
+  /* BY KV -order cancellation complete sal0020d ; log0038d active */
+  int validOCRStus4(Map<String, Object> params);
+
+  List<EgovMap> selectCodeList(Map<String, Object> params);
+
+  int chkCboSubSal(Map<String, Object> params);
+
+  int chkCboMSal(Map<String, Object> params);
 
 }
