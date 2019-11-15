@@ -85,7 +85,22 @@
     <th scope="row"><spring:message code="sal.text.obligationPeriod" /></th>
     <td colspan="1">${orderDetail.basicInfo.obligtYear}</td>
     <th scope="row"><spring:message code="sal.text.AddCmpt" /></th>
-    <td colspan="3">${orderDetail.basicInfo.addCmpt}</td>
+    <td colspan="1">${orderDetail.basicInfo.addCmpt}</td>
+    <th scope="row"><spring:message code="sal.title.text.cboBindOrdNo" /></th>
+    <td colspan="1"><p class="w100p">
+
+     <c:choose>
+      <c:when test="${orderDetail.basicInfo.pckageBindingId.length() > 0 }">
+       <span style="float:left">${orderDetail.basicInfo.pckageBindingId}</span>
+       <!-- <span style="float:right" onclick='if ("${orderDetail.basicInfo.pckageBindingId}" != "") { Common.popupDiv("/sales/order/orderDetailPop.do", { salesOrderId : ${orderDetail.basicInfo.pckageBindingNo} }, null, true, "_divIdOrdDt2"); } '>
+        <img id="cboTagComboOrdNo" name="cboTagComboOrdNo" src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search"/>
+       </span> -->
+      </c:when>
+      <c:otherwise>
+       <span></span>
+      </c:otherwise>
+    </c:choose>
+    </p></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.ekeyCrtUser" /></th>
