@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -84,7 +85,7 @@ public class OrderRegisterController {
 
     logger.debug(CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
     String nextDay = CommonUtils.changeFormat(CommonUtils.getCalDate(1), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
-    
+
     model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
     model.put("nextDay", nextDay);
 
@@ -577,4 +578,113 @@ public class OrderRegisterController {
     List<EgovMap> list = orderRegisterService.instAddrViewHistoryAjax(params);
     return ResponseEntity.ok(list);
   }
+
+  @RequestMapping(value = "/chkPromoCboMst.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> chkPromoCboMst(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+    ReturnMessage message = new ReturnMessage();
+
+    logger.debug("==================/chkPromoCboMst.do=======================");
+    logger.debug("params : {}", params);
+    logger.debug("==================/chkPromoCboMst.do=======================");
+
+    int statCode = orderRegisterService.chkPromoCboMst(params);
+
+    if (statCode == 1) {
+      message.setMessage("NORMAL PROMOTION[NOT COMBO]");
+    } else if (statCode == 2) {
+      message.setMessage("IS MASTER COMBO PACKAGE");
+    } else if (statCode == 3) {
+      message.setMessage("HAVE MASTER COMBO ORDER TO MAP");
+    } else if (statCode == 4) {
+      message.setMessage("PLEASE CREATE A MASTER COMBP TO MAP");
+    }
+
+    message.setCode(Integer.toString(statCode));
+    return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/chkCboBindOrdNo.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> chkCboBindOrdNo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+    ReturnMessage message = new ReturnMessage();
+
+    logger.debug("==================/chkCboBindOrdNo.do=======================");
+    logger.debug("params : {}", params);
+    logger.debug("==================/chkCboBindOrdNo.do=======================");
+
+    int statCode = orderRegisterService.chkCboBindOrdNo(params);
+
+    if (statCode > 0) {
+      message.setCode("99");
+      message.setMessage("SELECTED BINDING NO FOR THIS PROMOTION ALREADY EXIST.");
+    } else {
+      message.setCode("1");
+      message.setMessage("OK.");
+    }
+
+    // message.setCode(Integer.toString(statCode));
+    return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/orderComboSearchPop.do")
+  public String orderComboSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    model.put("promoNo", params.get("promoNo"));
+    model.put("prod", params.get("prod"));
+    model.put("custId", params.get("custId"));
+    return "sales/order/orderComboSearchPop";
+  }
+
+  @RequestMapping(value = "/selectComboOrderJsonList", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectComboOrderJsonList(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+
+    /*String[] arrAppType = request.getParameterValues("appType");
+    String[] arrOrdStusId = request.getParameterValues("ordStusId");
+    String[] arrKeyinBrnchId = request.getParameterValues("keyinBrnchId");
+    String[] arrDscBrnchId = request.getParameterValues("dscBrnchId");
+    String[] arrRentStus = request.getParameterValues("rentStus");
+
+    if (StringUtils.isEmpty(params.get("ordStartDt")))
+      params.put("ordStartDt", "01/01/1900");
+
+    if (StringUtils.isEmpty(params.get("ordEndDt")))
+      params.put("ordEndDt", "31/12/9999");
+
+    params.put("ordStartDt", CommonUtils.changeFormat(String.valueOf(params.get("ordStartDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+    params.put("ordEndDt", CommonUtils.changeFormat(String.valueOf(params.get("ordEndDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+
+    if (arrAppType != null && !CommonUtils.containsEmpty(arrAppType))
+      params.put("arrAppType", arrAppType);
+
+    if (arrOrdStusId != null && !CommonUtils.containsEmpty(arrOrdStusId))
+      params.put("arrOrdStusId", arrOrdStusId);
+
+    if (arrKeyinBrnchId != null && !CommonUtils.containsEmpty(arrKeyinBrnchId))
+      params.put("arrKeyinBrnchId", arrKeyinBrnchId);
+
+    if (arrDscBrnchId != null && !CommonUtils.containsEmpty(arrDscBrnchId))
+      params.put("arrDscBrnchId", arrDscBrnchId);
+
+    if (arrRentStus != null && !CommonUtils.containsEmpty(arrRentStus))
+      params.put("arrRentStus", arrRentStus);
+
+    if (params.get("custIc") == null) {
+    }
+
+    if ("".equals(params.get("custIc"))) {
+    }
+
+    logger.debug("!@##############################################################################");
+    logger.debug("!@###### ordNo : " + params.get("ordNo"));
+    logger.debug("!@###### ordStartDt : " + params.get("ordStartDt"));
+    logger.debug("!@###### ordEndDt : " + params.get("ordEndDt"));
+    logger.debug("!@###### ordDt : " + params.get("ordDt"));
+    logger.debug("!@###### custIc : " + params.get("custIc"));
+    logger.debug("!@##############################################################################");*/
+
+    List<EgovMap> orderList = orderRegisterService.selectComboOrderJsonList(params);
+
+    return ResponseEntity.ok(orderList);
+  }
+
+
 }
