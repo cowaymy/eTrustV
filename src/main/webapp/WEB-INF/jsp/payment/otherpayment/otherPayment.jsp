@@ -3092,10 +3092,10 @@ function srvcDiscountValue(){
  // }
 
 function fn_ConfirmColl() {
-	
+
 	var appType = $("#appType").val();
 	var collmemcode = '';
-	
+
 	if (appType == "1"){
 		collmemcode = $("#rentalkeyInCollMemCd").val();
 	} else if (appType == "2"){
@@ -3109,7 +3109,7 @@ function fn_ConfirmColl() {
 	} else if(appType == "6"){
 		collmemcode = $("#careSrvckeyInCollMemCd").val();
 	}
-	
+
 	console.log("appType: " +appType + " collmemcode: "+collmemcode);
 
 	if (collmemcode == "") {
@@ -3124,12 +3124,12 @@ function fn_ConfirmColl() {
 		console.log(result);
 
 		if (result.length > 0) {
-			
+
 			if (appType == "1"){
 				$("#rentalkeyInCollMemCd").val(result[0].memCode);
 				$("#rentalkeyInCollMemNm").val(result[0].name);
 				$("#rentalkeyInCollMemId").val(result[0].memId);
-				
+
 			} else if (appType == "2"){
 				$("#outkeyInCollMemCd").val(result[0].memCode);
 				$("#outkeyInCollMemNm").val(result[0].name);
@@ -3153,7 +3153,7 @@ function fn_ConfirmColl() {
 			}
 		}
 		else {
-			
+
 			if (appType == "1"){
 				$("#rentalkeyInCollMemNm").val("");
 			} else if (appType == "2"){
@@ -4098,7 +4098,7 @@ $.fn.clearForm = function() {
                         <tr>
                             <th scope="row">Ref Details/JomPay Ref</th>
                             <td>
-                                <input id="rentalRefDtlsJompay" name="rentalRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="10" />
+                                <input id="rentalRefDtlsJompay" name="rentalRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="20" />
                             </td>
                         </tr>
                         <tr>
@@ -4198,7 +4198,7 @@ $.fn.clearForm = function() {
                         <tr>
                             <th scope="row">Ref Details/JomPay Ref</th>
                             <td>
-                                <input id="outRefDtlsJompay" name="outRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="10" />
+                                <input id="outRefDtlsJompay" name="outRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="20" />
                             </td>
                         </tr>
                         <tr>
@@ -4308,7 +4308,7 @@ $.fn.clearForm = function() {
                         <tr>
                             <th scope="row">Ref Details/JomPay Ref</th>
                             <td>
-                                <input id="srvcRefDtlsJompay" name="srvcRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="10" />
+                                <input id="srvcRefDtlsJompay" name="srvcRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="20" />
                             </td>
                         </tr>
                         <tr>
@@ -4413,7 +4413,7 @@ $.fn.clearForm = function() {
                         <tr>
                             <th scope="row">Ref Details/JomPay Ref</th>
                             <td>
-                                <input id="billKeyRefDtlsJompay" name="billKeyRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="10" />
+                                <input id="billKeyRefDtlsJompay" name="billKeyRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="20" />
                             </td>
                         </tr>
                         <tr>
@@ -4508,7 +4508,7 @@ $.fn.clearForm = function() {
                         <tr>
                             <th scope="row">Ref Details/JomPay Ref</th>
                             <td>
-                                <input id="outSrvcRefDtlsJompay" name="outSrvcRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="10" />
+                                <input id="outSrvcRefDtlsJompay" name="outSrvcRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="20" />
                             </td>
                         </tr>
                         <tr>
@@ -4602,7 +4602,7 @@ $.fn.clearForm = function() {
                         <tr>
                             <th scope="row">Ref Details/JomPay Ref</th>
                             <td>
-                                <input id="careSrvcRefDtlsJompay" name="careSrvcRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="10" />
+                                <input id="careSrvcRefDtlsJompay" name="careSrvcRefDtlsJompay" type="text" title="" placeholder="" class="" maxlength="20" />
                             </td>
                         </tr>
                         <tr>
