@@ -1074,123 +1074,121 @@
 		   AND T1.BOM_PART_PRIOD &gt; 0
     </select>
 
-    <insert id="insertSalesOrderM" parameterType="salesOrderMVO">
-      <selectKey keyProperty="salesOrdId" resultType="Integer" order="BEFORE">
-        SELECT SAL0001D_SALES_ORD_ID_SEQ.NEXTVAL FROM DUAL
-      </selectKey>
-		INSERT
-		  INTO SAL0001D
-		     ( SALES_ORD_ID
-		     , SALES_ORD_NO
-		     , REF_NO
-		     , SALES_DT
-		     , CUST_ID
-		     , CUST_CNT_ID
-		     , CUST_ADD_ID
-		     , MEM_ID
-		     , BRNCH_ID
-		     , APP_TYPE_ID
-		 <!--, DSCNT_AMT-->
-		 <!--, TAX_AMT-->
-		     , TOT_AMT
-		     , PROMO_ID
-		     , BINDING_NO
-		     , CC_PROMO_ID
-		     , TOT_PV
-		     , REM
-		     , PV_MONTH
-		     , PV_YEAR
-		     , STUS_CODE_ID
-		     , UPD_DT
-		     , UPD_USER_ID
-		     , SYNC_CHK
-		     , CUST_PO_NO
-		     , REN_CHK_ID
-		     , INST_PRIOD
-		     , DO_NO
-		     , DEPT_CODE
-		     , GRP_CODE
-		     , ORG_CODE
-		     , SALES_ORD_ID_OLD
-		     , EDIT_TYPE_ID
-		     , CUST_BILL_ID
-		     , MTH_RENT_AMT
-		     , LOK
-		     , AEON_STUS_ID
-		     , COMM_DT
-		     , CRT_USER_ID
-		     , CRT_DT
-		     , PAY_COM_DT
-		     , DEF_RENT_AMT
-		     , REF_DOC_ID
-		 <!--, RENT_PROMO_ID-->
-		     , SALES_HM_ID
-		     , SALES_SM_ID
-		     , SALES_GM_ID
-		     , ADV_BILL
-		     , CNVR_SCHEME_ID
-		     , CUST_CARE_CNT_ID
-             , EMP_CHK
-             , EX_TRADE
-             , ECASH
-             , PROMO_DISC_PERIOD_TP
-             , PROMO_DISC_PERIOD
-             , NOR_AMT
-             , NOR_RNT_FEE
-             , DISC_RNT_FEE
-             , GST_CHK
-             , SRV_PAC_ID
-             , CORP_CUST_TYPE
-             , AGREEMENT_TYPE
-		     )
-		VALUES
-		     ( #{salesOrdId}
-		     , #{salesOrdNo}
-		     , #{refNo}
-		     , SYSDATE <!-- TO_DATE(TO_CHAR(SYSDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') -->
-		     , #{custId}
-		     , #{custCntId}
-		     , #{custAddId}
-		     , #{memId}
-		     , #{brnchId}
-		     , #{appTypeId}
-		     , #{totAmt}
-		     , #{promoId}
-		     , #{bindingNo}
-		     , #{ccPromoId}
-		     , #{totPv}
-		     , #{rem}
-		     , #{pvMonth}
-		     , #{pvYear}
-		     , #{stusCodeId}
-		     , SYSDATE
-		     , #{updUserId}
-		     , #{syncChk}
-		     , #{custPoNo}
-		     , #{renChkId}
-		     , #{instPriod}
-		     , #{doNo}
-		     , #{deptCode}
-		     , #{grpCode}
-		     , #{orgCode}
-		     , #{salesOrdIdOld}
-		     , #{editTypeId}
-		     , #{custBillId}
-		     , #{mthRentAmt}
-		     , #{lok}
-		     , #{aeonStusId}
-		     , TO_DATE(#{commDt}, 'yyyy-MM-dd')
-		     , #{crtUserId}
-		     , SYSDATE
-		     , TO_DATE(#{payComDt}, 'yyyy-MM-dd')
-		     , #{defRentAmt}
-		     , #{refDocId}
-		     , #{salesHmId}
-		     , #{salesSmId}
-		     , #{salesGmId}
-		     , #{advBill}
-		     , #{cnvrSchemeId}
-		     , #{custCareCntId}
+  <insert id="insertSalesOrderM" parameterType="salesOrderMVO">
+    <selectKey keyProperty="salesOrdId" resultType="Integer" order="BEFORE">
+      SELECT SAL0001D_SALES_ORD_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT
+    INTO SAL0001D ( SALES_ORD_ID
+                  , SALES_ORD_NO
+                  , REF_NO
+                  , SALES_DT
+                  , CUST_ID
+                  , CUST_CNT_ID
+                  , CUST_ADD_ID
+                  , MEM_ID
+                  , BRNCH_ID
+                  , APP_TYPE_ID
+                  <!--, DSCNT_AMT-->
+                  <!--, TAX_AMT-->
+                  , TOT_AMT
+                  , PROMO_ID
+                  , BINDING_NO
+                  , CC_PROMO_ID
+                  , TOT_PV
+                  , REM
+                  , PV_MONTH
+                  , PV_YEAR
+                  , STUS_CODE_ID
+                  , UPD_DT
+                  , UPD_USER_ID
+                  , SYNC_CHK
+                  , CUST_PO_NO
+                  , REN_CHK_ID
+                  , INST_PRIOD
+                  , DO_NO
+                  , DEPT_CODE
+                  , GRP_CODE
+                  , ORG_CODE
+                  , SALES_ORD_ID_OLD
+                  , EDIT_TYPE_ID
+                  , CUST_BILL_ID
+                  , MTH_RENT_AMT
+                  , LOK
+                  , AEON_STUS_ID
+                  , COMM_DT
+                  , CRT_USER_ID
+                  , CRT_DT
+                  , PAY_COM_DT
+                  , DEF_RENT_AMT
+                  , REF_DOC_ID
+                  <!--, RENT_PROMO_ID-->
+                  , SALES_HM_ID
+                  , SALES_SM_ID
+                  , SALES_GM_ID
+                  , ADV_BILL
+                  , CNVR_SCHEME_ID
+                  , CUST_CARE_CNT_ID
+                  , EMP_CHK
+                  , EX_TRADE
+                  , ECASH
+                  , PROMO_DISC_PERIOD_TP
+                  , PROMO_DISC_PERIOD
+                  , NOR_AMT
+                  , NOR_RNT_FEE
+                  , DISC_RNT_FEE
+                  , GST_CHK
+                  , SRV_PAC_ID
+                  , CORP_CUST_TYPE
+                  , AGREEMENT_TYPE
+                  , PCKAGE_BINDING_NO
+    ) VALUES ( #{salesOrdId}
+             , #{salesOrdNo}
+             , #{refNo}
+             , SYSDATE <!-- TO_DATE(TO_CHAR(SYSDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') -->
+             , #{custId}
+             , #{custCntId}
+             , #{custAddId}
+             , #{memId}
+             , #{brnchId}
+             , #{appTypeId}
+             , #{totAmt}
+             , #{promoId}
+             , #{bindingNo}
+             , #{ccPromoId}
+             , #{totPv}
+             , #{rem}
+             , #{pvMonth}
+             , #{pvYear}
+             , #{stusCodeId}
+             , SYSDATE
+             , #{updUserId}
+             , #{syncChk}
+             , #{custPoNo}
+             , #{renChkId}
+             , #{instPriod}
+             , #{doNo}
+             , #{deptCode}
+             , #{grpCode}
+             , #{orgCode}
+             , #{salesOrdIdOld}
+             , #{editTypeId}
+             , #{custBillId}
+             , #{mthRentAmt}
+             , #{lok}
+             , #{aeonStusId}
+             , TO_DATE(#{commDt}, 'yyyy-MM-dd')
+             , #{crtUserId}
+             , SYSDATE
+             , TO_DATE(#{payComDt}, 'yyyy-MM-dd')
+             , #{defRentAmt}
+             , #{refDocId}
+             , #{salesHmId}
+             , #{salesSmId}
+             , #{salesGmId}
+             , #{advBill}
+             , #{cnvrSchemeId}
+             , #{custCareCntId}
              , #{empChk}
              , #{exTrade}
              , #{ecash}
@@ -1203,8 +1201,9 @@
              , #{srvPacId}
              , #{corpCustType}
              , #{agreementType}
-		     )
-    </insert>
+             , #{comboOrdBind}
+     )
+  </insert>
 
     <update id="updateCustBillId" parameterType="salesOrderMVO">
         UPDATE SAL0001D
@@ -2593,5 +2592,111 @@
     JOIN SAL0027D E ON E.CUST_CNTC_ID = A.CNT_ID
     JOIN SYS0005M F ON F.BRNCH_ID = A.BRNCH_ID
     WHERE A.SALES_ORD_ID = #{prm}
+  </select>
+
+  <select id="chkPromoCboCan" parameterType="Map" resultType="int">
+    SELECT COUNT(*) FROM (
+      SELECT PROMO_CAN_ID
+      FROM SAL0252M
+      WHERE DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+
+      UNION
+
+      SELECT PROMO_CAN_ID
+      FROM SAL0253D
+      WHERE DISB = 0
+        AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+    ) WHERE PROMO_CAN_ID = #{promoNo}
+  </select>
+
+  <select id="chkPromoCboMst" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0252M
+    WHERE PROD_CDE = #{prod}
+      AND PROMO_ID = #{promoNo}
+      AND DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+  </select>
+
+  <select id="chkPromoCboSub" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0253D
+    WHERE SUB_PROD_ID = #{prod}
+      AND SUB_PROMO_ID = #{promoNo}
+      AND DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+  </select>
+
+  <select id="chkCanMapCnt" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0001D A
+    LEFT JOIN (SELECT PCKAGE_BINDING_NO,
+                      CUST_ID,
+                      PROMO_ID
+               FROM SAL0001D
+               WHERE PCKAGE_BINDING_NO IS NOT NULL
+                 AND PROMO_ID IN (SELECT PROMO_ID FROM SAL0253D WHERE DISB = 0 AND SUB_PROD_ID = #{prod}
+                                                                                AND SUB_PROMO_ID = #{promoNo} )) B ON B.PCKAGE_BINDING_NO = A.SALES_ORD_ID
+                                                                                AND B.CUST_ID = #{custId}
+    WHERE A.CUST_ID = #{custId}
+      AND A.PROMO_ID IN (SELECT PROMO_ID
+                         FROM SAL0252M
+                         WHERE CONF_ID IN (SELECT CONF_ID
+                                           FROM SAL0253D
+                                           WHERE DISB = 0
+                                           AND SUB_PROD_ID = #{prod}
+                                           AND SUB_PROMO_ID = #{promoNo} ))
+      AND B.PCKAGE_BINDING_NO IS NULL
+  </select>
+
+  <select id="chkCboBindOrdNo" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0001D
+    WHERE PROMO_ID IN ( SELECT PROMO_ID
+                        FROM SAL0252M
+                        WHERE CONF_ID IN ( SELECT CONF_ID
+                                           FROM SAL0253D
+                                           WHERE SUB_PROD_ID = #{prod}
+                                             AND SUB_PROMO_ID = #{promoNo}
+                                             AND DISB = 0
+                                             AND SYSDATE BETWEEN EFF_DT AND EXP_DT)
+                       ) AND CUST_ID = #{custId}
+                         AND PCKAGE_BINDING_NO IS NOT NULL
+                         AND PCKAGE_BINDING_NO = #{promoOrdBind}
+  </select>
+
+  <select id="selectComboOrderJsonList" parameterType="Map" resultType="egovMap">
+    SELECT A.SALES_ORD_NO AS ORD_NO,
+           A.SALES_ORD_ID AS ORD_ID,
+           A.REF_NO AS REF_NO,
+           TO_CHAR(A.SALES_DT, 'DD/MM/YYYY') AS ORD_DT,
+           G.CODE AS APP_TYPE,
+           D.STK_DESC AS PROD,
+           E.PROMO_CODE AS PROMO_CDE,
+           F.CUST_ACC_OWNER AS CUST_ID
+    FROM SAL0001D A
+    LEFT JOIN (SELECT PCKAGE_BINDING_NO,
+                      CUST_ID,
+                      PROMO_ID
+               FROM SAL0001D
+               WHERE PCKAGE_BINDING_NO IS NOT NULL
+                 AND PROMO_ID IN (SELECT PROMO_ID FROM SAL0253D WHERE DISB = 0 AND SUB_PROD_ID = #{prod}
+                                                                                AND SUB_PROMO_ID = #{promoNo} )) B ON B.PCKAGE_BINDING_NO = A.SALES_ORD_ID
+                                                                                AND B.CUST_ID = #{custId}
+    JOIN SAL0002D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
+    JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
+    JOIN SAL0017D E ON A.PROMO_ID = E.PROMO_ID
+    JOIN SAL0022D F ON A.CUST_ID = F.CUST_ID
+    JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND A.APP_TYPE_ID = G.CODE_ID
+    WHERE A.CUST_ID = #{custId}
+      AND A.PROMO_ID IN (SELECT PROMO_ID
+                         FROM SAL0252M
+                         WHERE CONF_ID IN (SELECT CONF_ID
+                                           FROM SAL0253D
+                                           WHERE DISB = 0
+                                           AND SUB_PROD_ID = #{prod}
+                                           AND SUB_PROMO_ID = #{promoNo} ))
+     AND B.PCKAGE_BINDING_NO IS NULL
   </select>
 </mapper>
