@@ -2573,4 +2573,31 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     return result;
   }
 
+  @Override
+  public List<EgovMap> selectCodeList(Map<String, Object> params) {
+    return orderRequestMapper.selectCodeList(params);
+  }
+
+  @Override
+  public Integer chkCboSal(Map<String, Object> params) {
+    int cnt = orderRequestMapper.chkCboSubSal(params);
+
+    /*
+     * RETURN STATUS
+     * 0 - MATCH SUB COMBO
+     * 1 - MATCH MAIN COMBO
+     * 99 - NO MATCH ANY COMBO
+     */
+    if (cnt > 0) { // IS SUB
+      return 0;
+    } else {
+      cnt = orderRequestMapper.chkCboMSal(params);
+      if (cnt > 0) {
+        return 1;
+      } else {
+        return 99;
+      }
+    }
+  }
+
 }
