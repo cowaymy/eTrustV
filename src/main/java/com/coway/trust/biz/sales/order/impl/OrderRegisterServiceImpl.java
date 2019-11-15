@@ -2063,4 +2063,64 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     List<EgovMap> lst = orderRegisterMapper.instAddrViewHistoryAjax(params);
     return lst;
   }
+
+  @Override
+  public int chkPromoCboMst(Map<String, Object> params) {
+    /*
+     * CODE              DESCRIPTION
+     * ----------------------------------------
+     * 1                 IS NORMAL PROMOTION NO RELATED TO COMBO SET
+     * 2                 IS MASTER COMBO PACKAGE
+     * 3                 HAVE MASTER COMBO ORDER TO MAP
+     * 4                 PLEASE CREATE A MASTER COMBP TO MAP
+     *
+     * 99                SELECTED PROMOTION CODE ARE NOT FOR NEW SALES (FOR CANCELLATION)
+     */
+
+    // CHECK SELECTED PROMO. ARE USED FOR CANCELLATION
+    int canCnt = orderRegisterMapper.chkPromoCboCan(params);
+
+    if (canCnt == 0) {
+
+      int mstCnt = orderRegisterMapper.chkPromoCboMst(params);
+      int subCnt;
+      int canMapCnt;
+      if (mstCnt > 0) { // IS MASTER COMBO SELECTION
+        // PASS
+        return 2;
+      } else { // MAYBE IS SUB COMBO OR NOT COMBO PACKAGE
+        subCnt = orderRegisterMapper.chkPromoCboSub(params);
+        if (subCnt > 0) { // IS SUB COMBO
+          // CHECH CUSTOMER HAVE ANY MASTER COMBO
+          canMapCnt = orderRegisterMapper.chkCanMapCnt(params);
+
+          if (canMapCnt > 0) {
+            // PASS
+            return 3;
+          } else {
+            // FAIL
+            return 4;
+          }
+        } else { // IS NORMAL PROMOTION
+          // PASS
+          return 1;
+        }
+      }
+    } else {
+      return 99;
+    }
+  }
+
+  @Override
+  public int chkCboBindOrdNo(Map<String, Object> params) {
+     return orderRegisterMapper.chkCboBindOrdNo(params);
+  }
+
+
+  @Override
+  public List<EgovMap> selectComboOrderJsonList(Map<String, Object> params) {
+    List<EgovMap> lst = orderRegisterMapper.selectComboOrderJsonList(params);
+    return lst;
+  }
+
 }
