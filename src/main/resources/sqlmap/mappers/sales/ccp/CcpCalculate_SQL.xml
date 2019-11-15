@@ -824,7 +824,9 @@ SELECT Extent1.CCP_ID   ,
   FROM ( SELECT COUNT(1) TOT_COUNT
          FROM CCR0006D Extent1
          WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
-         AND  10 != Extent1.STUS_CODE_ID )GroupBy1
+         AND  10 != Extent1.STUS_CODE_ID
+         AND TYPE_ID IN (257,259)
+         )GroupBy1
 </select>
 
 <update id="updateCcpDecision" parameterType="Map">
