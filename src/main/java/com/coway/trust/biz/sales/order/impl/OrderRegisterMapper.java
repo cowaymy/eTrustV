@@ -178,4 +178,17 @@ public interface OrderRegisterMapper {
 
   List<EgovMap> instAddrViewHistoryAjax(Map<String, Object> params);
 
+  int chkPromoCboCan(Map<String, Object> params);
+
+  int chkPromoCboMst(Map<String, Object> params);
+
+  int chkPromoCboSub(Map<String, Object> params);
+
+  int chkCanMapCnt(Map<String, Object> params);
+
+  int chkCboBindOrdNo(Map<String, Object> params);
+
+  List<EgovMap> selectComboOrderJsonList(Map<String, Object> params);
+
+
 }
