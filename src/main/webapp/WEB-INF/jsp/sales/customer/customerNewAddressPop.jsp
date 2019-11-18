@@ -384,15 +384,9 @@
                 </td>
             </tr>
             <tr>
-                <th scope="row"><spring:message code="sal.text.state1" /><span class="must">*</span></th>
+               <th scope="row"><spring:message code="sal.text.area4" /><span class="must">*</span></th>
                 <td>
-                <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
-                </td>
-            </tr>
-            <tr>
-                 <th scope="row"><spring:message code="sal.text.city2" /><span class="must">*</span></th>
-                <td>
-                <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
+                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
                 </td>
             </tr>
             <tr>
@@ -402,9 +396,15 @@
                 </td>
             </tr>
             <tr>
-               <th scope="row"><spring:message code="sal.text.area4" /><span class="must">*</span></th>
+                 <th scope="row"><spring:message code="sal.text.city2" /><span class="must">*</span></th>
                 <td>
-                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
+                <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><spring:message code="sal.text.state1" /><span class="must">*</span></th>
+                <td>
+                <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
                 </td>
             </tr>
             <tr>
