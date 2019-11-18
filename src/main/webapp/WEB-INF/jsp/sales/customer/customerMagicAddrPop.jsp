@@ -98,7 +98,8 @@
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : false
+            showRowNumColumn : false,
+            groupingMessage : "Here groupping"
         };
 
         var gridPros_mobile = {
@@ -111,7 +112,8 @@
                 useGroupingPanel : true,
                 skipReadonlyColumns : true,
                 wrapSelectionMove : true,
-                showRowNumColumn : false
+                showRowNumColumn : false,
+                groupingMessage : "Here groupping"
             };
 
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);

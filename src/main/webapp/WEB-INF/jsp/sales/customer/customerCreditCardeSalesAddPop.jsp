@@ -10,6 +10,9 @@
         doGetCombo('/sales/customer/selectAccBank.do',  '', '', 'cmbIssBank',  'S', ''); //Issue Bank)
        //doGetCombo('/common/selectCodeList.do', '115', '','cmbCardType',       'S', ''); // Add Card Type Combo Box
         $("#nameOnCard").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
+
+        // 20190925 KR-OHK Moblie Popup Setting
+        Common.setMobilePopup(false, false, '');
     });
 
     $(function(){
@@ -198,7 +201,7 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:360px" />
+	<col style="width:40%"/>
 	<col style="width:*" />
 </colgroup>
 <tbody>
