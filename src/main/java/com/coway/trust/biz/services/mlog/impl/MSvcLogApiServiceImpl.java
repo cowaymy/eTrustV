@@ -85,14 +85,18 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     return MSvcLogApiMapper.getAfterServiceJobList_b(params);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void saveHearLogs(List<Map<String, Object>> logs) {
     for (Map<String, Object> log : logs) {
       MSvcLogApiMapper.insertHeatLog(log);
     }
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void updateSuccessStatus(String transactionId) {
     MSvcLogApiMapper.updateSuccessStatus(transactionId);
 
@@ -333,7 +337,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     return MSvcLogApiMapper.prdResultSync(params);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void updateSuccessASStatus(String transactionId) {
     MSvcLogApiMapper.updateSuccessASStatus(transactionId);
   }
@@ -355,7 +361,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     MSvcLogApiMapper.updatePRErrStatus(transactionId);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void updateSuccessInstallStatus(String transactionId) {
     MSvcLogApiMapper.updateSuccessInstallStatus(transactionId);
   }
