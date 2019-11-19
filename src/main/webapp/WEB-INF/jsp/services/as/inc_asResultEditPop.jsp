@@ -10,6 +10,7 @@
  05/09/2019  ONGHC  1.0.4          REMOVE IN-HOUSE REPAIR SECTION
  17/09/2019  ONGHC  1.0.5          AMEND DEFECT DETAIL SECTION
  21/10/2019  ONGHC  1.0.6          ADD CHECKING FOR AS PAYMENT MAPPING
+ 19/11/2019  ONGHC  1.0.7          AMEND FOR ORDER MANAGEMENT VIEW ISSUE
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > EDIT / VIEW AS ENTRY PLUG IN -->
@@ -424,11 +425,13 @@
       $("#ddlFailReason").attr("disabled", true);
     }
 
-    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-    $("#ddlCTCode").val(selectedItems[0].item.asMemId);
-    $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
-    $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
-    $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
+    if (myGridID != null) {
+      var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+      $("#ddlCTCode").val(selectedItems[0].item.asMemId);
+      $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
+      $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
+      $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
+    }
 
     switch ($("#ddlStatus").val()) {
     case "4":
