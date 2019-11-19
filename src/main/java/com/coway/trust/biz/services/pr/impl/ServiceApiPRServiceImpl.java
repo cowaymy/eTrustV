@@ -98,27 +98,27 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 
 	    	transactionId = String.valueOf(paramsTran.get("transactionId"));
 
-	    	try {
-	    		// INSERT LOG HISTORY (SVC0026T)(REQUIRES_NEW)
-		        MSvcLogApiService.insert_SVC0026T(cvMp);
-	    	}
-	    	catch (Exception e) {
-	    		// UPDATE LOG HISTORY (SVC0026T)(REQUIRES_NEW)
-	    		// Insert Log Adapter. So Delete Log
+	    	// Insert Log Adapter. So Delete Log
+//	    	try {
+//	    		// INSERT LOG HISTORY (SVC0026T)(REQUIRES_NEW)
+//		        MSvcLogApiService.insert_SVC0026T(cvMp);
+//	    	}
+//	    	catch (Exception e) {
+//	    		// UPDATE LOG HISTORY (SVC0026T)(REQUIRES_NEW)
 //	    		MSvcLogApiService.updatePRErrStatus(transactionId);
-
-		        Map<String, Object> m = new HashMap();
-		        m.put("APP_TYPE", "PR");
-		        m.put("SVC_NO", cvMp.get("serviceNo"));
-		        m.put("ERR_CODE", "01");
-		        m.put("ERR_MSG", "[API] " + e.toString());
-		        m.put("TRNSC_ID", transactionId);
-
-		        // INSERT FAIL LOG HISTORY (SVC0066T)(REQUIRES_NEW)
-		        MSvcLogApiService.insert_SVC0066T(m);
-
-		        continue;
-	    	}
+//
+//		        Map<String, Object> m = new HashMap();
+//		        m.put("APP_TYPE", "PR");
+//		        m.put("SVC_NO", cvMp.get("serviceNo"));
+//		        m.put("ERR_CODE", "01");
+//		        m.put("ERR_MSG", "[API] " + e.toString());
+//		        m.put("TRNSC_ID", transactionId);
+//
+//		        // INSERT FAIL LOG HISTORY (SVC0066T)(REQUIRES_NEW)
+//		        MSvcLogApiService.insert_SVC0066T(m);
+//
+//		        continue;
+//	    	}
 
 	    	// DETAIL PROC
 			try {
