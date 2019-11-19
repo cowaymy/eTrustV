@@ -109,7 +109,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
 					if (locInfo != null) {
 						if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
-							MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+							// Insert Log Adapter. So Delete Log
+//							MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
 
 							Map<String, Object> m = new HashMap();
 							m.put("APP_TYPE", "INS");
@@ -144,7 +145,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 						}
 					}
 					else {
-						MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+						// Insert Log Adapter. So Delete Log
+//						MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
 
 						Map<String, Object> m = new HashMap();
 						m.put("APP_TYPE", "INS");
@@ -224,9 +226,10 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 							rtnValue.put("logerr", "Y");
 						}
 						else {
-							if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-								MSvcLogApiService.updateSuccessInstallStatus(transactionId);
-							}
+							// Insert Log Adapter. So Delete Log
+//							if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+//								MSvcLogApiService.updateSuccessInstallStatus(transactionId);
+//							}
 						}
 
 						// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
@@ -251,9 +254,10 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 			}
 			else {
 				// 대상이 없다면 정상 완료 처리
-				if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-					MSvcLogApiService.updateSuccessInstallStatus(String.valueOf(params.get("transactionId")));
-				}
+				// Insert Log Adapter. So Delete Log
+//				if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+//					MSvcLogApiService.updateSuccessInstallStatus(String.valueOf(params.get("transactionId")));
+//				}
 			}
 		}
 		else {

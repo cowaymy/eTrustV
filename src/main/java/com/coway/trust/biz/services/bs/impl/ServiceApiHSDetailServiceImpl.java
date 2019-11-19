@@ -164,9 +164,10 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 
     					// HS LOG HISTORY
-    					if (RegistrationConstants.IS_INSERT_HEART_LOG) {
-    						MSvcLogApiService.updateSuccessStatus(transactionId);
-    					}
+    					// Insert Log Adapter. So Delete Log
+//    					if (RegistrationConstants.IS_INSERT_HEART_LOG) {
+//    						MSvcLogApiService.updateSuccessStatus(transactionId);
+//    					}
     				}
                 }
     			catch (Exception e) {

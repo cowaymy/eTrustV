@@ -104,7 +104,8 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 	    	}
 	    	catch (Exception e) {
 	    		// UPDATE LOG HISTORY (SVC0026T)(REQUIRES_NEW)
-	    		MSvcLogApiService.updatePRErrStatus(transactionId);
+	    		// Insert Log Adapter. So Delete Log
+//	    		MSvcLogApiService.updatePRErrStatus(transactionId);
 
 		        Map<String, Object> m = new HashMap();
 		        m.put("APP_TYPE", "PR");
@@ -126,7 +127,8 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 			}
 			catch (BizException bizException) {
 				// UPDATE LOG HISTORY (SVC0026T)(REQUIRES_NEW)
-				MSvcLogApiService.updatePRErrStatus(transactionId);
+				// Insert Log Adapter. So Delete Log
+//				MSvcLogApiService.updatePRErrStatus(transactionId);
 
 				Map<String, Object> m = new HashMap();
 				m.put("APP_TYPE", "PR");
@@ -144,7 +146,8 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 			}
 			catch (Exception exception) {
 				// UPDATE LOG HISTORY (SVC0026T)(REQUIRES_NEW)
-				MSvcLogApiService.updatePRErrStatus(transactionId);
+				// Insert Log Adapter. So Delete Log
+//				MSvcLogApiService.updatePRErrStatus(transactionId);
 
 				Map<String, Object> m = new HashMap();
 				m.put("APP_TYPE", "PR");
@@ -161,7 +164,8 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 				throw new ApplicationException(AppConstants.FAIL, "Fail");
 			}
 
-			MSvcLogApiService.updatePRStatus(transactionId);
+			// Insert Log Adapter. So Delete Log
+//			MSvcLogApiService.updatePRStatus(transactionId);
 	    }
 
 	    logger.debug("==================================[MB]PRODUCT RETURN RESULT REGISTRATION - END - ====================================");

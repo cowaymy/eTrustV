@@ -62,19 +62,20 @@ public class ServiceApiASServiceImpl extends EgovAbstractServiceImpl implements 
 	    logger.debug("### TRANSACTION ID? : {}" + RegistrationConstants.IS_INSERT_AS_LOG);
 	    logger.debug("### AS FORM : {}" + afterServiceForms);
 
-	    if (RegistrationConstants.IS_INSERT_AS_LOG) {
-	    	logger.debug("==================================[MB]AFTER SERVICE RESULT > SAVE HS LOG - START - ====================================");
-		    asTransLogs = new ArrayList<>();
-		    for (AfterServiceResultForm afterService : afterServiceForms) {
-		    	asTransLogs.addAll(afterService.createMaps(afterService));
-		    }
-
-		    MSvcLogApiService.saveAfterServiceLogs(asTransLogs);
-
-		    transactionId = afterServiceForms.get(0).getTransactionId();
-		    logger.debug("### TRANSACTION ID : " + transactionId);
-		    logger.debug("==================================[MB]AFTER SERVICE RESULT > SAVE HS LOG - END - ====================================");
-	    }
+	    // Insert Log Adapter. So Delete Log
+//	    if (RegistrationConstants.IS_INSERT_AS_LOG) {
+//	    	logger.debug("==================================[MB]AFTER SERVICE RESULT > SAVE HS LOG - START - ====================================");
+//		    asTransLogs = new ArrayList<>();
+//		    for (AfterServiceResultForm afterService : afterServiceForms) {
+//		    	asTransLogs.addAll(afterService.createMaps(afterService));
+//		    }
+//
+//		    MSvcLogApiService.saveAfterServiceLogs(asTransLogs);
+//
+//		    transactionId = afterServiceForms.get(0).getTransactionId();
+//		    logger.debug("### TRANSACTION ID : " + transactionId);
+//		    logger.debug("==================================[MB]AFTER SERVICE RESULT > SAVE HS LOG - END - ====================================");
+//	    }
 
 	    asTransLogs1 = new ArrayList<>();
 	    for (AfterServiceResultForm afterService1 : afterServiceForms) {
@@ -98,7 +99,8 @@ public class ServiceApiASServiceImpl extends EgovAbstractServiceImpl implements 
 			}
 			catch (BizException bizException) {
 				// UPDATE LOG HISTORY (SVC0024T)(REQUIRES_NEW)
-				MSvcLogApiService.updateErrStatus(transactionId);
+				// Insert Log Adapter. So Delete Log
+//				MSvcLogApiService.updateErrStatus(transactionId);
 
 				Map<String, Object> m = new HashMap();
 				m.put("APP_TYPE", "AS");
@@ -116,7 +118,8 @@ public class ServiceApiASServiceImpl extends EgovAbstractServiceImpl implements 
 			}
 			catch (Exception exception) {
 				// UPDATE LOG HISTORY (SVC0024T)(REQUIRES_NEW)
-				MSvcLogApiService.updateErrStatus(transactionId);
+				// Insert Log Adapter. So Delete Log
+//				MSvcLogApiService.updateErrStatus(transactionId);
 
 				Map<String, Object> m = new HashMap();
 				m.put("APP_TYPE", "AS");

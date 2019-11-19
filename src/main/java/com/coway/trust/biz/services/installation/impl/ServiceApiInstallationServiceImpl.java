@@ -68,17 +68,18 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 			insTransLogs.addAll(insService.createMaps(insService));
 		}
 
-		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-			for (int i = 0; i < insTransLogs.size(); i++) {
-				// INSERT LOG HISTORY (SVC0025T)(REQUIRES_NEW)
-				try {
-					MSvcLogApiService.saveInstallServiceLogs(insTransLogs.get(i));
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		// Insert Log Adapter. So Delete Log
+//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+//			for (int i = 0; i < insTransLogs.size(); i++) {
+//				// INSERT LOG HISTORY (SVC0025T)(REQUIRES_NEW)
+//				try {
+//					MSvcLogApiService.saveInstallServiceLogs(insTransLogs.get(i));
+//				}
+//				catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
 
 		totalCnt = insTransLogs.size();
 
@@ -99,7 +100,8 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 				logger.debug("### INSTALLATION bizException errorcode : " + bizException.getErrorCode());
 				logger.debug("### INSTALLATION bizException errormsg : " + bizException.getErrorMsg());
 				// UPDATE LOG HISTORY (SVC0025T)(REQUIRES_NEW)
-				MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+				// Insert Log Adapter. So Delete Log
+//				MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
 
 				Map<String, Object> m = new HashMap();
 				m.put("APP_TYPE", "INS");
@@ -117,7 +119,8 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 			}
 			catch (Exception exception) {
 				// UPDATE LOG HISTORY (SVC0025T)(REQUIRES_NEW)
-				MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+				// Insert Log Adapter. So Delete Log
+//				MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
 
 				Map<String, Object> m = new HashMap();
 				m.put("APP_TYPE", "INS");

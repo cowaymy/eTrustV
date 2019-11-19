@@ -63,22 +63,23 @@ public class ServiceApiHSServiceImpl extends EgovAbstractServiceImpl implements 
 	    logger.debug("### TRANSACTION ID? : {}" + RegistrationConstants.IS_INSERT_HEART_LOG);
 	    logger.debug("### HS FORM : {}" + heartForms);
 
-	    if (RegistrationConstants.IS_INSERT_HEART_LOG) {
-	    	logger.debug("==================================[MB]HEART SERVICE RESULT > SAVE HS LOG - START - ====================================");
-	    	heartLogs = new ArrayList<>();
-
-	    	for (HeartServiceResultForm heart : heartForms) {
-	    		heartLogs.addAll(heart.createMaps(heart));
-	    	}
-
-	    	try {
-	    		MSvcLogApiService.saveHearLogs(heartLogs);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-	    	logger.debug("==================================[MB]HEART SERVICE RESULT > SAVE HS LOG - END - ====================================");
-	    }
+	    // Insert Log Adapter. So Delete Log
+//	    if (RegistrationConstants.IS_INSERT_HEART_LOG) {
+//	    	logger.debug("==================================[MB]HEART SERVICE RESULT > SAVE HS LOG - START - ====================================");
+//	    	heartLogs = new ArrayList<>();
+//
+//	    	for (HeartServiceResultForm heart : heartForms) {
+//	    		heartLogs.addAll(heart.createMaps(heart));
+//	    	}
+//
+//	    	try {
+//	    		MSvcLogApiService.saveHearLogs(heartLogs);
+//			}
+//			catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//	    	logger.debug("==================================[MB]HEART SERVICE RESULT > SAVE HS LOG - END - ====================================");
+//	    }
 
 	    hsTransLogs1 = new ArrayList<>();
 	    for (HeartServiceResultForm hsService1 : heartForms) {
@@ -110,7 +111,8 @@ public class ServiceApiHSServiceImpl extends EgovAbstractServiceImpl implements 
 			}
 			catch (BizException bizException) {
 				// UPDATE LOG HISTORY (SVC0023T)(REQUIRES_NEW)
-				MSvcLogApiService.updateErrStatus(transactionId);
+				// Insert Log Adapter. So Delete Log
+				//MSvcLogApiService.updateErrStatus(transactionId);
 
 				Map<String, Object> m = new HashMap();
 				m.put("APP_TYPE", "HS");
@@ -128,7 +130,8 @@ public class ServiceApiHSServiceImpl extends EgovAbstractServiceImpl implements 
 			}
 			catch (Exception exception) {
 				// UPDATE LOG HISTORY (SVC0023T)(REQUIRES_NEW)
-				MSvcLogApiService.updateErrStatus(transactionId);
+				// Insert Log Adapter. So Delete Log
+				//MSvcLogApiService.updateErrStatus(transactionId);
 
 				Map<String, Object> m = new HashMap();
 				m.put("APP_TYPE", "HS");

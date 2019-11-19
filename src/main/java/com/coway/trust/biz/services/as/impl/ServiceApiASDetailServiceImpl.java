@@ -117,7 +117,8 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         				if (locInfo != null) {
         					if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
         						// FAIL CT NOT ENOUGH STOCK
-        						MSvcLogApiService.updateASErrStatus(transactionId);
+        						// Insert Log Adapter. So Delete Log
+//        						MSvcLogApiService.updateASErrStatus(transactionId);
 
         						Map<String, Object> m = new HashMap();
         						m.put("APP_TYPE", "AS");
@@ -140,7 +141,8 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         				}
         				else {
         					// FAIL CT NOT ENOUGH STOCK
-        					MSvcLogApiService.updateASErrStatus(transactionId);
+        					// Insert Log Adapter. So Delete Log
+//        					MSvcLogApiService.updateASErrStatus(transactionId);
 
         					Map<String, Object> m = new HashMap();
         					m.put("APP_TYPE", "AS");
@@ -525,9 +527,10 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
         			}
 
-        			if (RegistrationConstants.IS_INSERT_AS_LOG) {
-        				MSvcLogApiService.updateSuccessASStatus(transactionId);
-        			}
+        			// Insert Log Adapter. So Delete Log
+//        			if (RegistrationConstants.IS_INSERT_AS_LOG) {
+//        				MSvcLogApiService.updateSuccessASStatus(transactionId);
+//        			}
         		}
         		catch (Exception e) {
         			String procTransactionId = transactionId;
@@ -549,9 +552,10 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         		// RESULT UPDATE TO STATE Y IN PRESENCE
         	}
         	else {
-        		if (RegistrationConstants.IS_INSERT_AS_LOG) {
-        			MSvcLogApiService.updateSuccessASStatus(transactionId);
-        		}
+        		// Insert Log Adapter. So Delete Log
+//        		if (RegistrationConstants.IS_INSERT_AS_LOG) {
+//        			MSvcLogApiService.updateSuccessASStatus(transactionId);
+//        		}
         	}
         }
         else {
