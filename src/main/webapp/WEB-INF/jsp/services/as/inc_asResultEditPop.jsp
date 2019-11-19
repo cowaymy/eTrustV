@@ -425,7 +425,7 @@
       $("#ddlFailReason").attr("disabled", true);
     }
 
-    if (myGridID != undefined || myGridID != "undefined") {
+    if (myGridID) {
       var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
       $("#ddlCTCode").val(selectedItems[0].item.asMemId);
       $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
