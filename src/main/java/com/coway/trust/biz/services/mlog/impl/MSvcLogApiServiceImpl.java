@@ -344,12 +344,16 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     MSvcLogApiMapper.updateSuccessASStatus(transactionId);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void updateASErrStatus(String transactionId) {
     MSvcLogApiMapper.updateASErrStatus(transactionId);
   }
 
+  /* Woongjin Jun */
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void updatePRStatus(String transactionId) {
     MSvcLogApiMapper.updatePRStatus(transactionId);
   }
