@@ -40,9 +40,19 @@ public interface ApiMapper {
   List<EgovMap> selectMembershipProgrammesList(Map<String, Object> params);
   List<EgovMap> selectProductList(Map<String, Object> params);
   List<EgovMap> selectOrderNumberList(Map<String, Object> params);
+
+
+  EgovMap selectCustomerPortalTemp(Map<String, Object> params);
+
+  int customerPortalSeq();
+
   int addOrEditPersonInCharge(Map<String, Object> params);
   int addOrEditCustomerInfo(Map<String, Object> params);
   int addEInvoiceSubscription(Map<String, Object> params);
+
+  int updatePersonInChargeContact(Map<String, Object> params);
+  int insertCustomerNewContact(Map<String,Object> params);
+
 
   void insertApiAccessLog(Map<String, Object> params);
 

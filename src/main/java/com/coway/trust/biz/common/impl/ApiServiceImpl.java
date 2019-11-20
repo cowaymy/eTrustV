@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.common.ApiService;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 import com.coway.trust.AppConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -303,38 +303,103 @@ public class ApiServiceImpl implements ApiService {
 
   @Override
   public EgovMap addOrEditPersonInCharge(HttpServletRequest request, Map<String, Object> params) {
+
+    int customerPortalSeq = apiMapper.customerPortalSeq();
+
+    params.put("customerPortalSeq", customerPortalSeq);
+
     int updatedResult = apiMapper.addOrEditPersonInCharge(params);
     EgovMap picInfoUpdateResult = new EgovMap();
     if(updatedResult < 1){
       picInfoUpdateResult.put("status", "Failed");
     }else{
-      picInfoUpdateResult.put("status", "Success");
-    };
+
+      int update = apiMapper.updatePersonInChargeContact(params);
+      if(update < 1)
+        picInfoUpdateResult.put("status", "Failed while updating customer contact");
+      else
+        picInfoUpdateResult.put("status", "Success");
+        picInfoUpdateResult.put("customerPortalSeq", customerPortalSeq);
+
+    }
     return displayResponseMessage(request, params,picInfoUpdateResult);
   }
 
   @Override
   public EgovMap addOrEditCustomerInfo(HttpServletRequest request, Map<String, Object> params) {
+
+    int customerPortalSeq = apiMapper.customerPortalSeq();
+
+    params.put("customerPortalSeq", customerPortalSeq);
+
     int updatedResult = apiMapper.addOrEditCustomerInfo(params);
-    LOGGER.info("@@@@@@@@@@@@@@@@::" + params.toString());
     EgovMap custInfoUpdateResult = new EgovMap();
     if(updatedResult < 1){
       custInfoUpdateResult.put("status", "Failed");
     }else{
+      custInfoUpdateResult.put("customerPortalSeq", customerPortalSeq);
       custInfoUpdateResult.put("status", "Success");
-    };
+    }
     return displayResponseMessage(request, params,custInfoUpdateResult);
   }
 
   @Override
   public EgovMap addEInvoiceSubscription(HttpServletRequest request, Map<String, Object> params) {
+
+    int customerPortalSeq = apiMapper.customerPortalSeq();
+
+    params.put("customerPortalSeq", customerPortalSeq);
+
     int updatedResult = apiMapper.addEInvoiceSubscription(params);
     EgovMap invoiceUpdateResult = new EgovMap();
     if(updatedResult < 1){
       invoiceUpdateResult.put("status", "Failed");
     }else{
       invoiceUpdateResult.put("status", "Success");
-    };
+    }
     return displayResponseMessage(request, params,invoiceUpdateResult);
+  }
+
+  @Override
+  public EgovMap verify(HttpServletRequest request, Map<String, Object> params) {
+
+    /*
+     * Code     Description
+     * 5502     Person In Charge
+     * 5503     Customer Info
+     * 5504     Invoice Subscription
+    */
+
+    EgovMap selectCustomerPortalTemp = apiMapper.selectCustomerPortalTemp(params);
+
+    EgovMap updateResult = new EgovMap();
+
+    if(selectCustomerPortalTemp != null){
+
+      int type = Integer.parseInt(selectCustomerPortalTemp.get("cpTypeId").toString());
+
+      params.put("stus",SalesConstants.STATUS_ACTIVE);
+      params.put("userId", 100910); //Customer Portal
+
+      if(type == 5503){
+        LOGGER.debug(selectCustomerPortalTemp.toString());
+        params.put("custId", selectCustomerPortalTemp.get("custId").toString());
+        params.put("name", selectCustomerPortalTemp.get("custName").toString());
+        params.put("custMobile", selectCustomerPortalTemp.get("custMobile").toString());
+        params.put("email", selectCustomerPortalTemp.get("custEmail").toString());
+
+        apiMapper.insertCustomerNewContact(params);
+      }
+      else if(type == 5504){
+
+      }
+
+      updateResult.put("status", "Success");
+
+    }else{
+      updateResult.put("status", "Failed");
+    }
+
+    return displayResponseMessage(request, params,updateResult);
   }
 }

@@ -9,21 +9,15 @@ import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
 
 /**************************************
  * Author                  Date                    Remark
  * Chew Kah Kit        2019/04/11           API for customer portal
  ***************************************/
 
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -44,7 +38,6 @@ import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.Precondition;
 import com.coway.trust.util.ReportUtils;
-import com.coway.trust.web.common.ReportController.ViewType;
 import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
 import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
 import com.crystaldecisions.sdk.occa.report.application.ParameterFieldController;
@@ -63,9 +56,6 @@ public class ApiController {
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
-
-  @Autowired
-  private ServletContext context;
 
   @Resource(name = "apiService")
   private ApiService apiService;
@@ -217,11 +207,11 @@ public class ApiController {
     return ResponseEntity.ok(productList);
   }
 
-  @RequestMapping(value = "/customer/addOrEditPersonInCharge.do", method = RequestMethod.GET)
+/*  @RequestMapping(value = "/customer/addOrEditPersonInCharge.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> addOrEditPersonInCharge(HttpServletRequest request,@RequestParam Map<String, Object> params) {
     EgovMap addOrEditPersonInCharge = apiService.addOrEditPersonInCharge(request, params);
     return ResponseEntity.ok(addOrEditPersonInCharge);
-  }
+  }*/
 
   @RequestMapping(value = "/customer/addOrEditCustomerInfo.do", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> addOrEditCustomerInfo(HttpServletRequest request,@RequestParam Map<String, Object> params) {
@@ -233,6 +223,12 @@ public class ApiController {
   public ResponseEntity<EgovMap> addEInvoiceSubscription(HttpServletRequest request,@RequestParam Map<String, Object> params) {
     EgovMap addEInvoiceSubscription = apiService.addEInvoiceSubscription(request, params);
     return ResponseEntity.ok(addEInvoiceSubscription);
+  }
+
+  @RequestMapping(value = "/customer/verify.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> verify(HttpServletRequest request,@RequestParam Map<String, Object> params) {
+    EgovMap result = apiService.verify(request, params);
+    return ResponseEntity.ok(result);
   }
 
   @RequestMapping(value = "/customer/genOutrightInvoice.do")
@@ -255,7 +251,7 @@ public class ApiController {
 
   }
 
-  private void viewHandle(HttpServletRequest request, HttpServletResponse response, ViewType viewType,
+  private void viewHandle(HttpServletRequest request, HttpServletResponse response, ReportController.ViewType viewType,
       ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
       throws ReportSDKExceptionBase, IOException {
 

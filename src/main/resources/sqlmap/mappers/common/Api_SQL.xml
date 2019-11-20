@@ -328,6 +328,31 @@
        SELECT * FROM CP1026V
     </select>
 
+    <select id="customerPortalSeq" resultType="Integer">
+        SELECT CP0001T_CP_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="selectCustomerPortalTemp" parameterType="Map" resultType="egovMap">
+        SELECT
+            CP_ID ,
+			CUST_ID ,
+			NVL(CUST_NAME, ' ')  CUST_NAME,
+			NVL(CUST_MOBILE, ' ')  CUST_MOBILE,
+			NVL(CUST_EMAIL , ' ') CUST_EMAIL,
+			CUST_EMAIL_VERIFY_STUS ,
+			NVL(PIC_NAME , ' ') PIC_NAME,
+			NVL(PIC_NRIC , ' ') PIC_NRIC,
+			NVL(PIC_MOBILE , ' ') PIC_MOBILE,
+			NVL(PIC_EMAIL , ' ') PIC_EMAIL,
+			STUS_ID ,
+			CRT_USR_ID ,
+			CRT_DT ,
+			CP_TYPE_ID ,
+			ACTN_TYPE ,
+			CUST_CNTC_ID
+        FROM CP0001T WHERE CP_ID = #{id}
+    </select>
+
 	<insert id="addOrEditPersonInCharge" parameterType="Map">
 		INSERT INTO CP0001T
 			(CP_ID ,
@@ -339,9 +364,10 @@
 			STUS_ID ,
 			CRT_USR_ID ,
 			CRT_DT,
-			CP_TYPE_ID
+			CP_TYPE_ID,
+			CUST_CNTC_ID
 		) VALUES(
-		   CP0001T_CP_ID_SEQ.NEXTVAL
+		      #{customerPortalSeq}
 			, #{cowayCustId}
 			<choose><when test="picName != null and picName !=''">,#{picName}</when><otherwise>,NULL</otherwise></choose>
             <choose><when test="picIcNric != null and picIcNric !=''">,#{picIcNric}</when><otherwise>,NULL</otherwise></choose>
@@ -351,8 +377,21 @@
 			, 100910
 			, SYSDATE
 			, 5502
+			, #{cowayCntId}
 		)
 	</insert>
+
+	<update id="updatePersonInChargeContact" parameterType="Map">
+	   UPDATE SAL0027D
+	   SET <if test="picName != null and picName !=''">NAME = #{picName}, </if>
+            <if test="picIcNric != null and picIcNric !=''">NRIC = #{picIcNric}, </if>
+            <if test="picMobile != null and picMobile !=''">TEL_M1 = #{picMobile}, </if>
+            <if test="picEmail != null and picEmail !=''">EMAIL = #{picEmail}, </if>
+             UPD_DT = SYSDATE ,
+             UPD_USER_ID = 100910
+       WHERE CUST_ID = #{cowayCustId}
+           AND CUST_CNTC_ID = #{cowayCntId}
+	</update>
 
 	<insert id="addOrEditCustomerInfo" parameterType="Map">
 		INSERT INTO CP0001T
@@ -365,7 +404,7 @@
 	            CRT_DT,
 	            CP_TYPE_ID
 	        ) VALUES(
-	           CP0001T_CP_ID_SEQ.NEXTVAL
+	              #{customerPortalSeq}
 	            , #{cowayCustId}
 	            <choose><when test="cowayCustMobile != null and cowayCustMobile !=''">,#{cowayCustMobile}</when><otherwise>,NULL</otherwise></choose>
 	            <choose><when test="cowayCustEmail != null and cowayCustEmail !=''">,#{cowayCustEmail}</when><otherwise>,NULL</otherwise></choose>
@@ -389,7 +428,7 @@
 	               , CP_TYPE_ID
 	               , ACTN_TYPE
 	            ) VALUES(
-	               CP0001T_CP_ID_SEQ.NEXTVAL
+	                  #{customerPortalSeq}
 	                , #{cowayCustId}
 	                <choose><when test="email != null and email !=''">,#{email}</when><otherwise>,NULL</otherwise></choose>
 	                <choose><when test="fullName != null and fullName !=''">,#{fullName}</when><otherwise>,NULL</otherwise></choose>
@@ -427,7 +466,35 @@
         , SYSDATE
         , 100910
     )
+    </insert>
 
+    <insert id="insertCustomerNewContact" parameterType="Map">
+    INSERT INTO SAL0027D
+	(
+	      CUST_CNTC_ID
+	    , CUST_ID
+	    , NAME
+	    , TEL_M1
+	    , EMAIL
+	    , STUS_CODE_ID
+	    , UPD_DT
+	    , UPD_USER_ID
+	    , CRT_DT
+	    , CRT_USER_ID
+	) VALUES
+	(
+	      SAL0027D_CUST_CNTC_ID_SEQ.NEXTVAL
+	    , #{custId}
+	    , #{name}
+	    , #{custMobile}
+	    , #{email}
+	    , #{stus}
+	    , SYSDATE
+	    , #{userName}
+	    , SYSDATE
+	    , #{userName}
+
+	)
     </insert>
 
 </mapper>

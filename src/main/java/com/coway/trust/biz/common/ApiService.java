@@ -41,9 +41,12 @@ public interface ApiService {
   EgovMap selectOrderNumberList(HttpServletRequest request, Map<String, Object> params);//23
   EgovMap selectMembershipProgrammesList(HttpServletRequest request, Map<String, Object> params);//24
   EgovMap selectProductList(HttpServletRequest request, Map<String, Object> params);//28
+
   EgovMap addOrEditPersonInCharge(HttpServletRequest request, Map<String, Object> params);//25
   EgovMap addOrEditCustomerInfo(HttpServletRequest request, Map<String, Object> params);//26
   EgovMap addEInvoiceSubscription(HttpServletRequest request, Map<String, Object> params);//27
+
+  EgovMap verify(HttpServletRequest request, Map<String, Object> params);
 
 
 
