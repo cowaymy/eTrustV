@@ -968,21 +968,14 @@ public final class CommonUtils {
 	 * @return
 	 */
 	public static String getRandomNumber(int size) {
+		Random random = new Random();
+		char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+
 		StringBuilder sb = new StringBuilder();
-		Random random;
-		try {
-			random = SecureRandom.getInstanceStrong();
-			char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-
-			for (int i = 0; i < size; i++) {
-				int num = random.nextInt(chars.length);
-				sb.append(chars[num]);
-			}
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for (int i = 0; i < size; i++) {
+			int num = random.nextInt(chars.length);
+			sb.append(chars[num]);
 		}
-
 		return sb.toString();
 	}
 
