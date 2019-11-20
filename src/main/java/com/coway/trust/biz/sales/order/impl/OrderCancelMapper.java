@@ -219,4 +219,13 @@ public interface OrderCancelMapper {
 
   int chkRcdTms(Map<String, Object> params);
 
+  int chkSubPromo(Map<String, Object> params);
+
+  int chkMainPromo(Map<String, Object> params);
+
+  EgovMap revSubCboPckage(Map<String, Object> params);
+
+  EgovMap revMainCboPckage(Map<String, Object> params);
+
+  void insertSAL0254D(Map<String, Object> params);
 }
