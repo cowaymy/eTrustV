@@ -2043,4 +2043,20 @@
         UPD_USER_ID = #{updator}
     WHERE SALES_ORD_ID = #{salesOrdId}
   </update>
+
+  <update id="updateSrvMembershipSalesAexc60" parameterType="Map">
+    UPDATE SAL0095D
+    SET SRV_STUS_CODE_ID = 8,
+        SRV_UPD_DT = SYSDATE,
+        SRV_UPD_USER_ID = #{updator}
+    WHERE SRV_SALES_ORD_ID = #{salesOrdId}
+      AND SRV_MEM_PAC_ID IN (SELECT SRV_CNTRCT_PAC_ID
+                             FROM SAL0081D
+                             WHERE SRV_CNTRCT_PAC_DUR IN (SELECT PARAM_VAL FROM SYS0098M WHERE PARAM_CODE = 'S_APPL_EXC_PAC_DUR')
+                             UNION
+                             SELECT SRV_MEM_PAC_ID
+                             FROM SAL0091M
+                             WHERE SRV_MEM_DUR IN (SELECT PARAM_VAL FROM SYS0098M WHERE PARAM_CODE = 'S_APPL_EXC_PAC_DUR'))
+  </update>
+
 </mapper>
