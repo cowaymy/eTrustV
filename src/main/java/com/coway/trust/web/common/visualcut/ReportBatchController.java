@@ -1562,6 +1562,24 @@ public class ReportBatchController {
     LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel...");
   }
 
+  @RequestMapping(value = "/Hand_Collection_vs_Autopay_Excel.do")
+  //@Scheduled(cron = " 0 0 6 1 * ?")//Monthly (Day 1) 6:00am
+  public void handCollectionVsAutopay() {
+    LOGGER.info("[START] Hand_Collection_vs_Autopay_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/RCMClosing_HandCollvsAutopay.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "RCM" + File.separator + "RCM_Closing_HandCollvsAutopay" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] Hand_Collection_vs_Autopay_Excel...");
+  }
+
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
