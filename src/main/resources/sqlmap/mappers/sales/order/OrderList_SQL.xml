@@ -960,4 +960,170 @@
                ) T
            ORDER BY T.ORD_NO ASC
     </select>
+
+  <select id="newSearchCancelSAL0001D" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.SALES_ORD_ID SALES_ORD_ID ,
+           Extent1.SALES_ORD_NO SALES_ORD_NO ,
+           Extent1.REF_NO REF_NO ,
+           Extent1.SALES_DT SALES_DT ,
+           Extent1.CUST_ID CUST_ID ,
+           Extent1.CUST_CNT_ID CUST_CNT_ID ,
+           Extent1.CUST_ADD_ID CUST_ADD_ID ,
+           Extent1.MEM_ID MEM_ID ,
+           Extent1.BRNCH_ID BRNCH_ID ,
+           Extent1.APP_TYPE_ID APP_TYPE_ID ,
+           Extent1.TOT_AMT TOT_AMT ,
+           Extent1.PROMO_ID PROMO_ID ,
+           Extent1.BINDING_NO BINDING_NO ,
+           Extent1.CC_PROMO_ID CC_PROMO_ID ,
+           Extent1.TOT_PV TOT_PV ,
+           Extent1.REM REM ,
+           Extent1.PV_MONTH PV_MONTH ,
+           Extent1.PV_YEAR PV_YEAR ,
+           Extent1.STUS_CODE_ID STUS_CODE_ID ,
+           Extent1.UPD_DT UPD_DT ,
+           Extent1.UPD_USER_ID UPD_USER_ID ,
+           Extent1.SYNC_CHK SYNC_CHK ,
+           Extent1.CUST_PO_NO CUST_PO_NO ,
+           Extent1.REN_CHK_ID REN_CHK_ID ,
+           Extent1.INST_PRIOD INST_PRIOD ,
+           Extent1.DO_NO DO_NO ,
+           Extent1.DEPT_CODE DEPT_CODE ,
+           Extent1.GRP_CODE GRP_CODE ,
+           Extent1.ORG_CODE ORG_CODE ,
+           Extent1.SALES_ORD_ID_OLD SALES_ORD_ID_OLD ,
+           Extent1.EDIT_TYPE_ID EDIT_TYPE_ID ,
+           Extent1.CUST_BILL_ID CUST_BILL_ID ,
+           Extent1.MTH_RENT_AMT MTH_RENT_AMT ,
+           Extent1.LOK LOK ,
+           Extent1.AEON_STUS_ID AEON_STUS_ID ,
+           Extent1.COMM_DT COMM_DT ,
+           Extent1.CRT_USER_ID CRT_USER_ID ,
+           Extent1.CRT_DT CRT_DT ,
+           Extent1.PAY_COM_DT PAY_COM_DT ,
+           Extent1.DEF_RENT_AMT DEF_RENT_AMT ,
+           Extent1.REF_DOC_ID REF_DOC_ID ,
+           Extent1.SALES_HM_ID SALES_HM_ID ,
+           Extent1.SALES_SM_ID SALES_SM_ID ,
+           Extent1.SALES_GM_ID SALES_GM_ID ,
+           Extent1.ADV_BILL ADV_BILL ,
+           Extent1.CNVR_SCHEME_ID CNVR_SCHEME_ID ,
+           Extent1.CUST_CARE_CNT_ID CUST_CARE_CNT_ID ,
+           Extent1.PCKAGE_BINDING_NO ,
+           Extent1.SRV_PAC_ID ,
+           Extent2.ITM_STK_ID ITM_STK_ID
+    FROM SAL0001D Extent1
+    JOIN SAL0002D Extent2 ON Extent1.SALES_ORD_ID = Extent2.SALES_ORD_ID
+    WHERE Extent1.SALES_ORD_NO = #{salesOrderNo}
+    <![CDATA[
+      AND ROWNUM <= 1
+    ]]>
+  </select>
+
+  <select id="chkSubPromo" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0253D
+    WHERE SUB_PROD_ID = #{itmStkId}
+      AND SUB_PROMO_ID = #{promoId}
+      AND DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+  </select>
+
+  <select id="chkMainPromo" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0252M
+    WHERE PROD_CDE = #{itmStkId}
+      AND PROMO_ID = #{promoId}
+      AND DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+  </select>
+
+  <select id="revSubCboPckage" parameterType="Map" resultType="egovMap">
+    SELECT A.SALES_ORD_ID AS ORD_ID,
+           A.SALES_ORD_NO AS ORD_NO,
+           A.PROMO_ID AS OLD_PROMO,
+           C.PROMO_CAN_ID AS NEW_PROMO,
+           A.TOT_PV AS OLD_PV,
+           D.PROMO_ITM_PV AS NEW_PV,
+           A.MTH_RENT_AMT AS OLD_MTH_RENT_AMT,
+           CASE WHEN C.CHG_RENT_AMT = 1
+           THEN CASE WHEN F.APP_TYPE_ID IN (67,68)
+             THEN TRUNC(FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC),-1)
+             ELSE FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC) END
+           ELSE A.MTH_RENT_AMT END AS PROMO_AMT,
+           C.CHG_RENT_AMT
+    FROM SAL0001D A
+    JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN SAL0252M C ON A.PROMO_ID = C.PROMO_ID AND B.ITM_STK_ID = C.PROD_CDE
+    JOIN SAL0018D D ON C.PROMO_ID = D.PROMO_ID AND B.ITM_STK_ID = D.PROMO_ITM_STK_ID
+    JOIN SAL0017D E ON C.PROMO_ID = E.PROMO_ID
+    LEFT OUTER JOIN SAL0016M F ON F.STK_ID = D.PROMO_ITM_STK_ID
+                              AND F.APP_TYPE_ID = DECODE(E.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+                              AND F.MEM_PAC_ID = A.SRV_PAC_ID
+    WHERE A.SALES_ORD_ID = ( SELECT PCKAGE_BINDING_NO
+                             FROM SAL0001D
+                             WHERE SALES_ORD_ID = #{salesOrdId} )
+      AND D.PROMO_ITM_STUS_ID = 1
+  </select>
+
+  <select id="revMainCboPckage" parameterType="Map" resultType="egovMap">
+    SELECT A.SALES_ORD_ID AS ORD_ID,
+           A.SALES_ORD_NO AS ORD_NO,
+           A.PROMO_ID AS OLD_PROMO,
+           C.PROMO_CAN_ID AS NEW_PROMO,
+           A.TOT_PV AS OLD_PV,
+           D.PROMO_ITM_PV AS NEW_PV,
+           A.MTH_RENT_AMT AS OLD_MTH_RENT_AMT,
+           CASE WHEN C.CHG_RENT_AMT = 1
+           THEN CASE WHEN F.APP_TYPE_ID IN (67,68)
+             THEN TRUNC(FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC),-1)
+             ELSE FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC) END
+           ELSE A.MTH_RENT_AMT END AS PROMO_AMT,
+           C.CHG_RENT_AMT
+    FROM SAL0001D A
+    JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN SAL0253D C ON A.PROMO_ID = C.SUB_PROMO_ID AND B.ITM_STK_ID = C.SUB_PROD_ID
+    JOIN SAL0018D D ON C.SUB_PROMO_ID = D.PROMO_ID AND B.ITM_STK_ID = D.PROMO_ITM_STK_ID
+    JOIN SAL0017D E ON C.SUB_PROMO_ID = E.PROMO_ID
+    LEFT OUTER JOIN SAL0016M F ON F.STK_ID = D.PROMO_ITM_STK_ID
+                              AND F.APP_TYPE_ID = DECODE(E.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+                              AND F.MEM_PAC_ID = A.SRV_PAC_ID
+    WHERE A.PCKAGE_BINDING_NO = #{salesOrdId}
+      AND D.PROMO_ITM_STUS_ID = 1
+  </select>
+
+
+  <insert id="insertSAL0254D" parameterType="Map">
+    INSERT INTO SAL0254D (SEQ_NO,
+                          SALES_ORD_ID,
+                          PROMO_OLD,
+                          PROMO_NEW,
+                          PV_OLD,
+                          PV_NEW,
+                          MTH_RENT_AMT_OLD,
+                          MTH_RENT_AMT_NEW,
+                          REMARK,
+                          DISB,
+                          CRT_DT,
+                          UPD_DT,
+                          CRT_BY,
+                          UPD_BY,
+                          CHG_RENT_AMT
+    ) VALUES (SAL0254D_SEQ_ID.NEXTVAL,
+              #{ordId},
+              #{oldPromo},
+              #{newPromo},
+              #{oldPv},
+              #{newPv},
+              #{oldMthRentAmt},
+              #{promoAmt},
+              #{reqStageId},
+              0,
+              SYSDATE,
+              SYSDATE,
+              349,
+              349,
+              #{chgRentAmt}
+    )
+  </insert>
 </mapper>
