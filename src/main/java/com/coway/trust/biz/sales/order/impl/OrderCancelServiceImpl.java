@@ -259,11 +259,12 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
           logger.info("====================== CANCELLATION IS SUB COMBO PACKAGE ==========================");
 
           EgovMap revCboPckage = orderCancelMapper.revSubCboPckage(searchSAL0001D);
-          revCboPckage.put("reqStageId", reqStageId);
+          if (revCboPckage != null) {
+            revCboPckage.put("reqStageId", reqStageId);
 
-          logger.info("= PARAM 2 = " + revCboPckage.toString());
-          orderCancelMapper.insertSAL0254D(revCboPckage);
-
+            logger.info("= PARAM 2 = " + revCboPckage.toString());
+            orderCancelMapper.insertSAL0254D(revCboPckage);
+          }
         } else {
           // 2ND CHECK PACKAGE (MAIN)
           count = orderCancelMapper.chkMainPromo(searchSAL0001D);
@@ -275,10 +276,12 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
             logger.info("====================== CANCELLATION IS MAIN COMBO PACKAGE ==========================");
 
             EgovMap revCboPckage = orderCancelMapper.revMainCboPckage(searchSAL0001D);
-            revCboPckage.put("reqStageId", reqStageId);
+            if (revCboPckage != null) {
+              revCboPckage.put("reqStageId", reqStageId);
 
-            logger.info("= PARAM 2 = " + revCboPckage.toString());
-            orderCancelMapper.insertSAL0254D(revCboPckage);
+              logger.info("= PARAM 2 = " + revCboPckage.toString());
+              orderCancelMapper.insertSAL0254D(revCboPckage);
+            }
           } else {
             // DO NOTHING (IS NOT A COMBO PACKAGE)
           }
