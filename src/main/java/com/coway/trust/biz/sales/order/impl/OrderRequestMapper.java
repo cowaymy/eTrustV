@@ -175,6 +175,8 @@ public interface OrderRequestMapper {
 
   void insertSrvMembershipSales(SrvMembershipSalesVO srvMembershipSalesVO);
 
+  void updateSrvMembershipSalesAexc60(SrvMembershipSalesVO srvMembershipSalesVO);
+
   List<EgovMap> selectPurchaseMembershipList(Map<String, Object> params);
 
   void insertAccTradeLedger(AccTradeLedgerVO accTradeLedgerVO);
