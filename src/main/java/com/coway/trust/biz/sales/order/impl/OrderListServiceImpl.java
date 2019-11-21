@@ -30,168 +30,203 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("orderListService")
 public class OrderListServiceImpl extends EgovAbstractServiceImpl implements OrderListService {
 
+  private static Logger logger = LoggerFactory.getLogger(OrderListServiceImpl.class);
 
-	private static Logger logger = LoggerFactory.getLogger(OrderListServiceImpl.class);
+  @Resource(name = "orderListMapper")
+  private OrderListMapper orderListMapper;
 
-	@Resource(name = "orderListMapper")
-	private OrderListMapper orderListMapper;
+  @Resource(name = "servicesLogisticsPFCMapper")
+  private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
 
-	@Resource(name = "servicesLogisticsPFCMapper")
-	private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
+  // @Autowired
+  // private MessageSourceAccessor messageSourceAccessor;
 
+  @Override
+  public List<EgovMap> selectOrderList(Map<String, Object> params) {
+    return orderListMapper.selectOrderList(params);
+  }
 
-//	@Autowired
-//	private MessageSourceAccessor messageSourceAccessor;
+  @Override
+  public List<EgovMap> selectOrderListVRescue(Map<String, Object> params) {
+    return orderListMapper.selectOrderListVRescue(params);
+  }
 
-	@Override
-	public List<EgovMap> selectOrderList(Map<String, Object> params) {
-		return orderListMapper.selectOrderList(params);
-	}
+  @Override
+  public List<EgovMap> getApplicationTypeList(Map<String, Object> params) {
+    return orderListMapper.getApplicationTypeList(params);
+  }
 
-	@Override
-	public List<EgovMap> selectOrderListVRescue(Map<String, Object> params) {
-		return orderListMapper.selectOrderListVRescue(params);
-	}
+  @Override
+  public List<EgovMap> getUserCodeList() {
+    return orderListMapper.getUserCodeList();
+  }
 
-	@Override
-	public List<EgovMap> getApplicationTypeList(Map<String, Object> params) {
-		return orderListMapper.getApplicationTypeList(params);
-	}
+  @Override
+  public List<EgovMap> getOrgCodeList(Map<String, Object> params) {
+    return orderListMapper.getOrgCodeList(params);
+  }
 
-	@Override
-	public List<EgovMap> getUserCodeList() {
-		return orderListMapper.getUserCodeList();
-	}
+  @Override
+  public List<EgovMap> getGrpCodeList(Map<String, Object> params) {
+    return orderListMapper.getGrpCodeList(params);
+  }
 
-	@Override
-	public List<EgovMap> getOrgCodeList(Map<String, Object> params) {
-		return orderListMapper.getOrgCodeList(params);
-	}
+  @Override
+  public EgovMap getMemberOrgInfo(Map<String, Object> params) {
+    return orderListMapper.getMemberOrgInfo(params);
+  }
 
-	@Override
-	public List<EgovMap> getGrpCodeList(Map<String, Object> params) {
-		return orderListMapper.getGrpCodeList(params);
-	}
+  @Override
+  public List<EgovMap> getBankCodeList(Map<String, Object> params) {
+    return orderListMapper.getBankCodeList(params);
+  }
 
-	@Override
-	public EgovMap getMemberOrgInfo(Map<String, Object> params) {
-		return orderListMapper.getMemberOrgInfo(params);
-	}
+  @Override
+  public EgovMap selectInstallParam(Map<String, Object> params) {
 
-	@Override
-	public List<EgovMap> getBankCodeList(Map<String, Object> params) {
-		return orderListMapper.getBankCodeList(params);
-	}
+    return orderListMapper.selectInstallParam(params);
+  }
 
-	@Override
-	public EgovMap selectInstallParam(Map<String, Object> params) {
+  @Override
+  public List<EgovMap> selectProductReturnView(Map<String, Object> params) {
 
-		return orderListMapper.selectInstallParam(params);
-	}
+    return orderListMapper.selectProductReturnView(params);
+  }
 
-	@Override
-	public List<EgovMap> selectProductReturnView(Map<String, Object> params) {
+  @Override
+  public EgovMap getPReturnParam(Map<String, Object> params) {
 
-		return orderListMapper.selectProductReturnView(params);
-	}
+    return orderListMapper.selectPReturnParam(params);
+  }
 
-	@Override
-	public EgovMap getPReturnParam(Map<String, Object> params) {
+  @Override
+  public EgovMap productReturnResult(Map<String, Object> params) {
 
-		return orderListMapper.selectPReturnParam(params);
-	}
+    EgovMap rMp = new EgovMap();
 
-	@Override
-	public EgovMap productReturnResult(Map<String, Object> params) {
+    logger.debug("insert_LOG0039D==>" + params.toString());
+    int log39cnt = orderListMapper.insert_LOG0039D(params);
+    logger.debug("log39cnt==>" + log39cnt);
 
-		EgovMap  rMp = new EgovMap();
+    if (log39cnt > 0) {
+      logger.debug("updateState_LOG0038D / updateState_SAL0001D / insert_SAL0009D ==>" + params.toString());
+      int log38cnt = orderListMapper.updateState_LOG0038D(params);
+      logger.debug("log38cnt==>" + log38cnt);
 
-    	logger.debug("insert_LOG0039D==>" +params.toString());
-    	int  log39cnt  = orderListMapper.insert_LOG0039D(params);
-    	logger.debug("log39cnt==>" +log39cnt);
+      int sal9dcnt = orderListMapper.insert_SAL0009D(params);
+      logger.debug("sal9dcnt==>" + sal9dcnt);
+      int sal20dcnt = orderListMapper.updateState_SAL0020D(params);
+      logger.debug("sal20dcnt==>" + sal20dcnt);
+      int sal71dcnt = orderListMapper.updateState_SAL0071D(params);
+      logger.debug("sal71dcnt==>" + sal71dcnt);
+    }
 
-	if(log39cnt > 0){
-			logger.debug("updateState_LOG0038D / updateState_SAL0001D / insert_SAL0009D ==>" +params.toString());
-			int  log38cnt  = orderListMapper.updateState_LOG0038D(params);
-			logger.debug("log38cnt==>" +log38cnt);
+    params.put("P_SALES_ORD_NO", params.get("salesOrderNo"));
+    params.put("P_USER_ID", params.get("stkRetnCrtUserId"));
+    params.put("P_RETN_NO", params.get("serviceNo"));
+    orderListMapper.SP_RETURN_BILLING_EARLY_TERMI(params);
 
-    		int  sal9dcnt  = orderListMapper.insert_SAL0009D(params);
-    		logger.debug("sal9dcnt==>" +sal9dcnt);
-    		int  sal20dcnt  = orderListMapper.updateState_SAL0020D(params);
-    		logger.debug("sal20dcnt==>" +sal20dcnt);
-    		int  sal71dcnt  = orderListMapper.updateState_SAL0071D(params);
-    		logger.debug("sal71dcnt==>" +sal71dcnt);
-	}
+    int sal1dcnt = orderListMapper.updateState_SAL0001D(params);
+    logger.debug("sal1dcnt==>" + sal1dcnt);
 
-    	params.put("P_SALES_ORD_NO", params.get("salesOrderNo"));
-    	params.put("P_USER_ID",   params.get("stkRetnCrtUserId"));
-    	params.put("P_RETN_NO",  params.get("serviceNo") );
-    	orderListMapper.SP_RETURN_BILLING_EARLY_TERMI(params);
+    // 물류 호출 add by hgham
+    Map<String, Object> logPram = null;
+    ///////////////////////// 물류 호출/////////////////////////
+    logPram = new HashMap<String, Object>();
+    logPram.put("ORD_ID", params.get("serviceNo"));
+    logPram.put("RETYPE", "SVO");
+    logPram.put("P_TYPE", "OD91");
+    logPram.put("P_PRGNM", "LOG39");
+    logPram.put("USERID", params.get("stkRetnCrtUserId"));
 
-		int  sal1dcnt  = orderListMapper.updateState_SAL0001D(params);
-		logger.debug("sal1dcnt==>" +sal1dcnt);
+    logger.debug("productReturnResult 물류  PRAM ===>" + logPram.toString());
+    servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+    logger.debug("productReturnResult 물류  결과 ===>" + logPram.toString());
+    logPram.put("P_RESULT_TYPE", "PR");
+    logPram.put("P_RESULT_MSG", logPram.get("p1"));
+    ///////////////////////// 물류 호출 END //////////////////////
 
-		   //물류 호출   add by hgham
-        Map<String, Object>  logPram = null ;
-		/////////////////////////물류 호출/////////////////////////
-		logPram =new HashMap<String, Object>();
-        logPram.put("ORD_ID",   params.get("serviceNo") );
-        logPram.put("RETYPE",  "SVO");
-        logPram.put("P_TYPE",  "OD91");
-        logPram.put("P_PRGNM","LOG39");
-        logPram.put("USERID",params.get("stkRetnCrtUserId"));
+    rMp.put("SP_MAP", logPram);
 
-        logger.debug("productReturnResult 물류  PRAM ===>"+ logPram.toString());
-		servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
-		logger.debug("productReturnResult 물류  결과 ===>" +logPram.toString());
-		logPram.put("P_RESULT_TYPE", "PR");
-		logPram.put("P_RESULT_MSG", logPram.get("p1"));
-        /////////////////////////물류 호출 END //////////////////////
+    logger.info("= PARAM = " + params.toString());
+    EgovMap searchSAL0001D = orderListMapper.newSearchCancelSAL0001D(params);
 
-		rMp.put("SP_MAP", logPram);
+    logger.info("====================== PROMOTION COMBO CHECKING - START - ==========================");
+    logger.info("= PARAM = " + searchSAL0001D.toString());
 
+    // CHECK ORDER PROMOTION IS IT FALL ON COMBO PACKAGE PROMOTION
+    // 1ST CHECK PCKAGE_BINDING_NO (SUB)
+    int count = orderListMapper.chkSubPromo(searchSAL0001D);
+    logger.info("= CHECK PCKAGE_BINDING_NO (SUB) = " + count);
 
-		return rMp;
-	}
+    if (count > 0) {
+      // CANCELLATION IS SUB COMBO PACKAGE.
+      // TODO REVERT MAIN PRODUCT PROMO. CODE
+      logger.info("====================== CANCELLATION IS SUB COMBO PACKAGE ==========================");
 
-	@Override
-	public void setPRFailJobRequest(Map<String, Object> params) {
-		// TODO Auto-generated method stub
+      EgovMap revCboPckage = orderListMapper.revSubCboPckage(searchSAL0001D);
+      revCboPckage.put("reqStageId", "25");
 
+      logger.info("= PARAM 2 = " + revCboPckage.toString());
+      orderListMapper.insertSAL0254D(revCboPckage);
 
-		logger.debug("setPRFailJobRequest==>" +params.toString());
-    	String callEntryID= orderListMapper.select_SeqCCR0006D(params);
+    } else {
+      // 2ND CHECK PACKAGE (MAIN)
+      count = orderListMapper.chkMainPromo(searchSAL0001D);
 
-		params.put("callEntryID", callEntryID);
+      if (count > 0) {
+        // CANCELLATION IS MAIN COMBO PACKAGE.
+        // TODO REVERT SUB PRODUCT PROMO. CODE AND RENTAL PRICE
 
-		String callResultID = orderListMapper.select_SeqCCR0007D(params);
+        logger.info("====================== CANCELLATION IS MAIN COMBO PACKAGE ==========================");
 
-		params.put("callResultID", callResultID);
-		logger.debug("setPRFailJobRequest==>" +params.toString());
-		orderListMapper.insert_CCR0006D(params);
-		orderListMapper.insert_CCR0007D(params);
+        EgovMap revCboPckage = orderListMapper.revMainCboPckage(searchSAL0001D);
+        revCboPckage.put("reqStageId", "25");
 
-		int  log38cnt  = orderListMapper.updateFailed_LOG0038D(params);
-		int  log39cnt  = orderListMapper.insertFailed_LOG0039D(params);
-		orderListMapper.updateFailed_SAL0020D(params);
+        logger.info("= PARAM 2 = " + revCboPckage.toString());
+        orderListMapper.insertSAL0254D(revCboPckage);
+      } else {
+        // DO NOTHING (IS NOT A COMBO PACKAGE)
+      }
+    }
+    logger.info("====================== PROMOTION COMBO CHECKING - END - ==========================");
 
-		logger.debug("log39cnt==>" +log39cnt);
+    return rMp;
+  }
 
+  @Override
+  public void setPRFailJobRequest(Map<String, Object> params) {
+    // TODO Auto-generated method stub
 
+    logger.debug("setPRFailJobRequest==>" + params.toString());
+    String callEntryID = orderListMapper.select_SeqCCR0006D(params);
 
-	}
+    params.put("callEntryID", callEntryID);
 
-	@Override
-	public EgovMap getPrCTInfo(Map<String, Object> params) {
+    String callResultID = orderListMapper.select_SeqCCR0007D(params);
 
-		return orderListMapper.getPrCTInfo(params);
-	}
+    params.put("callResultID", callResultID);
+    logger.debug("setPRFailJobRequest==>" + params.toString());
+    orderListMapper.insert_CCR0006D(params);
+    orderListMapper.insert_CCR0007D(params);
 
-	  @Override
-	  public int chkRcdTms(Map<String, Object> params) {
-	    return orderListMapper.chkRcdTms(params);
-	  }
+    int log38cnt = orderListMapper.updateFailed_LOG0038D(params);
+    int log39cnt = orderListMapper.insertFailed_LOG0039D(params);
+    orderListMapper.updateFailed_SAL0020D(params);
 
+    logger.debug("log39cnt==>" + log39cnt);
 
+  }
+
+  @Override
+  public EgovMap getPrCTInfo(Map<String, Object> params) {
+
+    return orderListMapper.getPrCTInfo(params);
+  }
+
+  @Override
+  public int chkRcdTms(Map<String, Object> params) {
+    return orderListMapper.chkRcdTms(params);
+  }
 
 }
