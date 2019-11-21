@@ -229,8 +229,7 @@
 
     <if test='ORDER_BY != null and ORDER_BY !="ASC"'>
       ORDER
-      BY T1.INS
-      TALL_ENTRY_ID DESC
+      BY T1.INSTALL_ENTRY_ID DESC
     </if>
     <if test='ORDER_BY != null and ORDER_BY =="ASC"'>
       ORDER
