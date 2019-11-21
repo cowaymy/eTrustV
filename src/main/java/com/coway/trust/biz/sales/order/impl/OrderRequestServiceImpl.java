@@ -1244,6 +1244,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
           srvMembershipSalesVO.setSrvStartDt(memStartDate);
 
           orderRequestMapper.insertSrvMembershipSales(srvMembershipSalesVO);
+
+          // UPDATE OLD RECORD WHERE SERVICE DUCRATION IS 60
+          orderRequestMapper.updateSrvMembershipSalesAexc60(srvMembershipSalesVO);
         }
 
         // RESCHEDULE PURCHASED MEMBERSHIP
