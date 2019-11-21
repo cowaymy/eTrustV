@@ -140,7 +140,11 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
     saveParam.put("callSmsRem", "");
     saveParam.put("salesOrdId", params.get("paramOrdId"));
 
-    int status = Integer.parseInt((String) params.get("addStatus")); // recall, calcel, reversal cancel, continuerental
+    int status = Integer.parseInt((String) params.get("addStatus")); // recall,
+                                                                     // calcel,
+                                                                     // reversal
+                                                                     // cancel,
+                                                                     // continuerental
     int appTypeId = Integer.parseInt((String) params.get("appTypeId"));
     logger.info("####################### appTypeId ######## " + params.get("appTypeId"));
     int reqStageId = 0; // before , after install
@@ -238,8 +242,48 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
       } else {
         EgovMap searchSAL0001D = orderCancelMapper.newSearchCancelSAL0001D(saveParam); // SalesOrderM
         saveParam.put("salesMstusCodeId", 10);
+
         orderCancelMapper.updateCancelSAL0001D(saveParam); // SalesOrderM
 
+        logger.info("====================== PROMOTION COMBO CHECKING - START - ==========================");
+        logger.info("= PARAM = " + searchSAL0001D.toString());
+
+        // CHECK ORDER PROMOTION IS IT FALL ON COMBO PACKAGE PROMOTION
+        // 1ST CHECK PCKAGE_BINDING_NO (SUB)
+        int count = orderCancelMapper.chkSubPromo(searchSAL0001D);
+        logger.info("= CHECK PCKAGE_BINDING_NO (SUB) = " + count);
+
+        if (count > 0) {
+          // CANCELLATION IS SUB COMBO PACKAGE.
+          // TODO REVERT MAIN PRODUCT PROMO. CODE
+          logger.info("====================== CANCELLATION IS SUB COMBO PACKAGE ==========================");
+
+          EgovMap revCboPckage = orderCancelMapper.revSubCboPckage(searchSAL0001D);
+          revCboPckage.put("reqStageId", reqStageId);
+
+          logger.info("= PARAM 2 = " + revCboPckage.toString());
+          orderCancelMapper.insertSAL0254D(revCboPckage);
+
+        } else {
+          // 2ND CHECK PACKAGE (MAIN)
+          count = orderCancelMapper.chkMainPromo(searchSAL0001D);
+
+          if (count > 0) {
+            // CANCELLATION IS MAIN COMBO PACKAGE.
+            // TODO REVERT SUB PRODUCT PROMO. CODE AND RENTAL PRICE
+
+            logger.info("====================== CANCELLATION IS MAIN COMBO PACKAGE ==========================");
+
+            EgovMap revCboPckage = orderCancelMapper.revMainCboPckage(searchSAL0001D);
+            revCboPckage.put("reqStageId", reqStageId);
+
+            logger.info("= PARAM 2 = " + revCboPckage.toString());
+            orderCancelMapper.insertSAL0254D(revCboPckage);
+          } else {
+            // DO NOTHING (IS NOT A COMBO PACKAGE)
+          }
+        }
+        logger.info("====================== PROMOTION COMBO CHECKING - END - ==========================");
       }
 
       if (reqStageId == 25) {
@@ -254,7 +298,8 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
       orderInvestMapper.insertSalesOrdLog(saveParam); // SalesOrderLog
       logger.info("####################### Confirm To Cancel save END!! #####################");
 
-    } else if (status == 31 || status == 105) { // Reversal Of Cancellation or Continue Rental
+    } else if (status == 31 || status == 105) { // Reversal Of Cancellation or
+                                                // Continue Rental
       logger.info(
           "####################### Reversal Of Cancellation or Continue Rental save Start!! #####################");
       // 해야함
@@ -313,10 +358,10 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 
         if (reqStageId == 24) {
           saveParam.put("rentalSchemeStusId", "ACT");
-        }
-        else if (reqStageId == 25) {
-          if (getCountSalesOrdId>= 1){
-              orderCancelMapper.insertOrdReactiveFee(saveParam); // Insert Unbill billing
+        } else if (reqStageId == 25) {
+          if (getCountSalesOrdId >= 1) {
+            orderCancelMapper.insertOrdReactiveFee(saveParam); // Insert Unbill
+                                                               // billing
           }
           saveParam.put("rentalSchemeStusId", "REG");
         }
@@ -407,7 +452,8 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
   @Transactional
   public int saveCancelBulk(Map<String, Object> params) {
 
-    // GridDataSet<OrderCancelCtBulkMVO> bulkDataSetList = ctbulkvo.getBulkDataSetList();
+    // GridDataSet<OrderCancelCtBulkMVO> bulkDataSetList =
+    // ctbulkvo.getBulkDataSetList();
 
     // List<OrderCancelCtBulkMVO> updateList = bulkDataSetList.getRemove();
     List<Object> updList = (List<Object>) params.get("saveList");
