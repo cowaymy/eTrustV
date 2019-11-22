@@ -1236,7 +1236,7 @@
          , T2.STK_CODE AS ITMCD
          , T2.STK_DESC AS ITMNAME
          , T1.PROMO_ITM_CUR_ID
-           T4.AMT PROMO_ITM_PRC
+         , T4.AMT PROMO_ITM_PRC
          , T4.PRC_RPF
          , T4.PRC_PV
          , CASE WHEN T4.APP_TYPE_ID IN (67,68)
