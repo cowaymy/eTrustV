@@ -351,7 +351,7 @@
 			ACTN_TYPE ,
 			CUST_CNTC_ID
         FROM CP0001T WHERE CP_ID = #{id}
-        WHERE STUS_ID = 1
+        AND STUS_ID = 1
     </select>
 
 	<insert id="addOrEditPersonInCharge" parameterType="Map">
