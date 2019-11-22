@@ -2048,8 +2048,8 @@
     UPDATE SAL0095D
     SET SRV_STUS_CODE_ID = 8,
         SRV_UPD_DT = SYSDATE,
-        SRV_UPD_USER_ID = #{updator}
-    WHERE SRV_SALES_ORD_ID = #{salesOrdId}
+        SRV_UPD_USER_ID = #{srvUpdUserId}
+    WHERE SRV_SALES_ORD_ID = #{srvSalesOrdId}
       AND SRV_MEM_PAC_ID IN (SELECT SRV_CNTRCT_PAC_ID
                              FROM SAL0081D
                              WHERE SRV_CNTRCT_PAC_DUR IN (SELECT PARAM_VAL FROM SYS0098M WHERE PARAM_CODE = 'S_APPL_EXC_PAC_DUR')
