@@ -546,7 +546,7 @@ public class InvoiceAdjController {
 						double itemAdjsutment =memoAdjustAmount < Double.parseDouble(String.valueOf(detailMap.get("billitemamount"))) ?
 																	memoAdjustAmount : Double.parseDouble(String.valueOf(detailMap.get("billitemamount"))) ;
 
-						if(itemAdjsutment <= 0){
+						if(itemAdjsutment <= 0 || memoAdjustAmount <= 0){
 							continue;
 						}
 
@@ -566,6 +566,7 @@ public class InvoiceAdjController {
 						//}
 
 						totalAmount += itemAdjsutment;
+						memoAdjustAmount -= itemAdjsutment;
 
 						//리스트에 추가
 						detailParamList.add(detailParamMap);
