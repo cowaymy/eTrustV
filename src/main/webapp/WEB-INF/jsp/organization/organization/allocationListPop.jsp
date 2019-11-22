@@ -6,6 +6,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  24/10/2019  ONGHC  1.0.0          RE-STRUCTURE JSP FILE FORMAT AND REMOVE OTHER SESSION COLUMN
+ 22/11/2019  ONGHC  1.0.1          ADD CHECKING ON JOB TYPE SELECTION
  -->
 
 <style type="text/css">
@@ -62,7 +63,6 @@
     });
 
     AUIGrid.bind(dAgrid, "cellDoubleClick", function(event) {
-
       if(event.headerText != '${TYPE}'){
         return ;
       }
@@ -466,12 +466,12 @@
                                                       return "my-cell-style";
                                                     }
 
+                                                    if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
+                                                        return "my-cell-style";
+                                                      }
+
                                                     if('INS'== '${TYPE}'){
                                                       return "my-cell-style-sel";
-                                                    }
-
-                                                    if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
-                                                      return "my-cell-style";
                                                     }
 
                                                     return null;
@@ -593,6 +593,11 @@
 
     for(i=0; i<selectedItems.length; i++) {
       rowInfoObj = selectedItems[i];
+
+      if (rowInfoObj.headerText != '${TYPE}'){
+        Common.alert("<b><font color='red'>" + rowInfoObj.headerText + "</font></b> column are selected. Please select highlighted <b><font color='green'>" + '${TYPE}' + "</font></b> column.");
+        return ;
+      }
 
       var valArray  =new Array();
       valArray = rowInfoObj.value.split("-");
