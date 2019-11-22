@@ -382,18 +382,21 @@ public class ApiServiceImpl implements ApiService {
       params.put("userId", 100910); //Customer Portal
 
       if(type == 5503){
-        LOGGER.debug(selectCustomerPortalTemp.toString());
         params.put("custId", selectCustomerPortalTemp.get("custId").toString());
         params.put("name", selectCustomerPortalTemp.get("custName").toString());
         params.put("custMobile", selectCustomerPortalTemp.get("custMobile").toString());
         params.put("email", selectCustomerPortalTemp.get("custEmail").toString());
 
         apiMapper.insertCustomerNewContact(params);
+
+        params.put("stusId", 4);
       }
       else if(type == 5504){
 
       }
 
+
+      apiMapper.updateStatus(params);
       updateResult.put("status", "Success");
 
     }else{

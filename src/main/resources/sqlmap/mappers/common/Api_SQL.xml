@@ -351,6 +351,7 @@
 			ACTN_TYPE ,
 			CUST_CNTC_ID
         FROM CP0001T WHERE CP_ID = #{id}
+        WHERE STUS_ID = 1
     </select>
 
 	<insert id="addOrEditPersonInCharge" parameterType="Map">
@@ -397,6 +398,7 @@
 		INSERT INTO CP0001T
 	            (CP_ID ,
 	            CUST_ID ,
+	            CUST_NAME ,
 	            CUST_MOBILE ,
 	            CUST_EMAIL ,
 	            STUS_ID ,
@@ -406,6 +408,7 @@
 	        ) VALUES(
 	              #{customerPortalSeq}
 	            , #{cowayCustId}
+	            , #{fullName}
 	            <choose><when test="cowayCustMobile != null and cowayCustMobile !=''">,#{cowayCustMobile}</when><otherwise>,NULL</otherwise></choose>
 	            <choose><when test="cowayCustEmail != null and cowayCustEmail !=''">,#{cowayCustEmail}</when><otherwise>,NULL</otherwise></choose>
 	            , 1
@@ -490,11 +493,17 @@
 	    , #{email}
 	    , #{stus}
 	    , SYSDATE
-	    , #{userName}
+	    , #{userId}
 	    , SYSDATE
-	    , #{userName}
+	    , #{userId}
 
 	)
     </insert>
+
+    <update id="updateStatus" parameterType="Map">
+        UPDATE CP0001T
+            SET STUS_ID = #{stusId}
+        WHERE CP_ID = #{id}
+    </update>
 
 </mapper>

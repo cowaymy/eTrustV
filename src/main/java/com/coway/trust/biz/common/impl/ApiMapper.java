@@ -53,6 +53,8 @@ public interface ApiMapper {
   int updatePersonInChargeContact(Map<String, Object> params);
   int insertCustomerNewContact(Map<String,Object> params);
 
+  int updateStatus(Map<String,Object> params);
+
 
   void insertApiAccessLog(Map<String, Object> params);
 
