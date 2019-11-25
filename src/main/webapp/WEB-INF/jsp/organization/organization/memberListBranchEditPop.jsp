@@ -1199,19 +1199,23 @@ function fn_selectState(selVal){
     </td>
 </tr>
 <tr>
-<th scope="row">Businesses Type</th>
-      <td>
-         <select class="w100p" id="businessType" name="businessType" disabled="disabled">
-    </select>
+    <th scope="row">Businesses Type</th>
+    <td colspan="2">
+        <select class="w100p" id="businessType" name="businessType" disabled="disabled">
+        </select>
     </td>
-  <th scope="row">Hospitalization</th>
-<td>
-    <span><input type="checkbox" id="hsptlzCheck" name="hsptlzCheck" disabled="disabled"/></span>
+     <th scope="row">Hospitalization</th>
+    <td colspan="2">
+        <span><input type="checkbox" id="hsptlzCheck" name="hsptlzCheck" disabled="disabled"/></span>
+    </td>
  </td>
-
-
- <td>
- </td>
+</tr>
+<tr id="trMobileUseYn">
+    <th scope="row">Mobile App</th>
+    <td colspan="4">
+        <label><input type="radio" name="mobileUseYn" id="mobileUseYn" value="Y" disabled="disabled" <c:if test="${memberView.mobileUseYn eq 'Y'}">checked</c:if>/><span>Use</span></label>
+        <label><input type="radio" name="mobileUseYn" id="mobileUseYn" value="N" disabled="disabled" <c:if test="${memberView.mobileUseYn eq 'N'}">checked</c:if>/><span>Unused</span></label>
+    </td>
 </tr>
 
 </tbody>
