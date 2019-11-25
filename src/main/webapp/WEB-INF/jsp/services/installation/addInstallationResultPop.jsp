@@ -299,14 +299,32 @@
   <section class="tap_wrap">
    <!-- tap_wrap start -->
    <ul class="tap_type1">
-    <li><a href="#" class="on"><spring:message
+     <li><a href="#" id="orderInfo" class="on"><spring:message
        code='sales.tap.order' /></a></li>
+     <li><a href="#"><spring:message
+       code='service.title.General' /></a></li>
     <li><a href="#"><spring:message
        code='sales.tap.customerInfo' /></a></li>
     <li><a href="#"><spring:message
        code='sales.tap.installationInfo' /></a></li>
     <li><a href="#"><spring:message code='sales.tap.HPInfo' /></a></li>
    </ul>
+
+   <!-- Order Information Start -->
+<article class="tap_area"><!-- tap_area start -->
+<!------------------------------------------------------------------------------
+    Order Detail Page Include START
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp" %>
+<!------------------------------------------------------------------------------
+    Order Detail Page Include END
+------------------------------------------------------------------------------->
+
+
+</article><!-- tap_area end -->
+<!-- Order Information End -->
+
+
    <article class="tap_area">
     <!-- tap_area start -->
     <aside class="title_line">
