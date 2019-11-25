@@ -480,6 +480,8 @@ public class InvoiceAdjController {
 		String memoAdjustOrderNo = "";
 		String memoAdjustItemNo = "";
 		double memoAdjustAmount = 0.0D;
+		int memoAdjustInstallmentMonth = 0;
+		String memoAdjustType = "";
 
 		//Invoice 조회 parameter
 		Map<String, Object> map = null;
@@ -512,11 +514,15 @@ public class InvoiceAdjController {
 				memoAdjustOrderNo = String.valueOf(gridMap.get("1"));										//Order No.
 				memoAdjustItemNo = String.valueOf(gridMap.get("2"));										//Invoice Item No.
 				memoAdjustAmount = Double.parseDouble(String.valueOf(gridMap.get("3")));			//Adjustment Amount
+				memoAdjustInstallmentMonth = Integer.parseInt(String.valueOf(gridMap.get("4")));//Installment Month
+				memoAdjustType = String.valueOf(gridMap.get("5"));            //REN,RPF and etc
 
 				map = new HashMap<String, Object>();
 				map.put("refNo", memoAdjustInvoiceNo);
 				map.put("invcItmOrdNo", memoAdjustOrderNo);
 				map.put("txInvoiceItemId", memoAdjustItemNo);
+				map.put("invcItmInstlmtNo", memoAdjustInstallmentMonth);
+				map.put("billItemType", memoAdjustType);
 
 				//그리드 데이터에 대한 adjustment 대상 마스터, 상세 데이터 조회
 				master = invoiceService.selectNewAdjMaster(map).get(0);
@@ -546,7 +552,7 @@ public class InvoiceAdjController {
 						double itemAdjsutment =memoAdjustAmount < Double.parseDouble(String.valueOf(detailMap.get("billitemamount"))) ?
 																	memoAdjustAmount : Double.parseDouble(String.valueOf(detailMap.get("billitemamount"))) ;
 
-						if(itemAdjsutment <= 0 || memoAdjustAmount <= 0){
+						if(itemAdjsutment <= 0){
 							continue;
 						}
 
@@ -566,7 +572,6 @@ public class InvoiceAdjController {
 						//}
 
 						totalAmount += itemAdjsutment;
-						memoAdjustAmount -= itemAdjsutment;
 
 						//리스트에 추가
 						detailParamList.add(detailParamMap);

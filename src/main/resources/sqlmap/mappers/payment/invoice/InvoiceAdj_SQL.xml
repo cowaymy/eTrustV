@@ -654,7 +654,8 @@
     UnionAll3.BILLITEMTAXES BILLITEMTAXES,
     UnionAll3.BILLITEMCHARGES BILLITEMCHARGES,
     UnionAll3.BILLITEMAMOUNT BILLITEMAMOUNT,
-    0 AS TOTAMOUNT
+    0 AS TOTAMOUNT,
+    UnionAll3.BILLITEMINSTLMTNO BILLITEMINSTLMTNO
     FROM  (SELECT
         UnionAll2.C1 C1,
         UnionAll2.TXINVOICEID TXINVOICEID,
@@ -670,7 +671,8 @@
         UnionAll2.BILLITEMQTY BILLITEMQTY,
         UnionAll2.BILLITEMTAXES BILLITEMTAXES,
         UnionAll2.BILLITEMCHARGES BILLITEMCHARGES,
-        UnionAll2.BILLITEMAMOUNT BILLITEMAMOUNT
+        UnionAll2.BILLITEMAMOUNT BILLITEMAMOUNT,
+        UnionAll2.BILLITEMINSTLMTNO BILLITEMINSTLMTNO
         FROM  (SELECT UnionAll1.C1 C1  ,
        UnionAll1.TXINVOICEID TXINVOICEID  ,
        UnionAll1.BR_NO BR_NO  ,
@@ -685,7 +687,8 @@
        UnionAll1.BILLITEMQTY BILLITEMQTY  ,
        UnionAll1.BILLITEMTAXES BILLITEMTAXES  ,
        UnionAll1.BILLITEMCHARGES BILLITEMCHARGES  ,
-       UnionAll1.BILLITEMAMOUNT BILLITEMAMOUNT
+       UnionAll1.BILLITEMAMOUNT BILLITEMAMOUNT  ,
+       UnionAll1.BILLITEMINSTLMTNO BILLITEMINSTLMTNO
   FROM ( SELECT 1 C1  ,
                 Filter1.TAXINVOICEID1 TXINVOICEID  ,
                 Filter1.BR_NO BR_NO  ,
@@ -706,7 +709,8 @@
                 Filter1.INVC_ITM_QTY BILLITEMQTY  ,
                 Filter1.INVC_ITM_GST_TXS BILLITEMTAXES  ,
                 Filter1.INVC_ITM_CHRG BILLITEMCHARGES  ,
-                Filter1.INVC_ITM_AMT_DUE BILLITEMAMOUNT
+                Filter1.INVC_ITM_AMT_DUE BILLITEMAMOUNT  ,
+                Filter1.INVC_ITM_INSTLMT_NO BILLITEMINSTLMTNO
          FROM ( SELECT Extent1.TAX_INVC_ID TAXINVOICEID1  ,
                        Extent1.TAX_INVC_REF_NO BR_NO  ,
                        Extent2.INVC_ITM_ID TXINVOICEITEMID  ,
@@ -722,7 +726,8 @@
                        Extent2.INVC_ITM_AMT_DUE INVC_ITM_AMT_DUE  ,
                        Extent3.CODE_NAME CODENAME1  ,
                        Extent4.CODE_ID CODEID1  ,
-                       Extent4.OLD_CODE_ID OLDCODEID1
+                       Extent4.OLD_CODE_ID OLDCODEID1  ,
+                       0 INVC_ITM_INSTLMT_NO
                 FROM PAY0031D Extent1
                        LEFT JOIN PAY0032D Extent2   ON Extent1.TAX_INVC_ID = Extent2.TAX_INVC_ID
                        LEFT JOIN SYS0013M Extent3   ON Extent2.INVC_ITM_TYPE = Extent3.CODE_ID
@@ -757,7 +762,8 @@
                 1 BILLITEMQTY  ,
                 Extent7.INVC_ITM_GST_TXS BILLITEMTAXES  ,
                 Extent7.INVC_ITM_RENTAL_FEE BILLITEMCHARGES  ,
-                Extent7.INVC_ITM_AMT_DUE BILLITEMAMOUNT
+                Extent7.INVC_ITM_AMT_DUE BILLITEMAMOUNT  ,
+                0 INVC_ITM_INSTLMT_NO
          FROM PAY0033D Extent6
                 LEFT JOIN PAY0034D Extent7   ON Extent6.TAX_INVC_ID = Extent7.TAX_INVC_ID
                 JOIN PAY0016D Extent8   ON Extent6.TAX_INVC_REF_NO = Extent8.ACC_BILL_REM
@@ -801,7 +807,8 @@
                     1 BILLITEMQTY  ,
                     Extent10.INVC_ITM_GST_TXS BILLITEMTAXES  ,
                     Extent10.INVC_ITM_RENTAL_FEE - Extent10.INVC_ITM_GST_TXS BILLITEMCHARGES  ,
-                    Extent10.INVC_ITM_RENTAL_FEE BILLITEMAMOUNT
+                    Extent10.INVC_ITM_RENTAL_FEE BILLITEMAMOUNT  ,
+                    Extent10.INVC_ITM_INSTLMT_NO BILLITEMINSTLMTNO
             FROM PAY0029D Extent9
             LEFT JOIN PAY0030D Extent10   ON Extent9.TAX_INVC_ID = Extent10.TAX_INVC_ID
             LEFT JOIN PAY0016D Extent11   ON ( Extent10.INVC_ITM_ORD_NO = Extent11.ACC_BILL_ORD_NO )
@@ -817,6 +824,9 @@
               </if>
               <if test="txInvoiceItemId != null and txInvoiceItemId != '' ">
                 AND Extent10.INVC_ITM_ID = #{txInvoiceItemId}
+              </if>
+              <if test="invcItmInstlmtNo != null and invcItmInstlmtNo != '' ">
+                AND Extent10.INVC_ITM_INSTLMT_NO = #{invcItmInstlmtNo}
               </if>
             </if>
             ) UnionAll2
@@ -838,7 +848,8 @@
                 1 BILLITEMQTY  ,
                 Filter5.INVC_ITM_HNDL_FEE_TXS BILLITEMTAXES  ,
                 Filter5.INVC_ITM_HNDL_FEE - Filter5.INVC_ITM_HNDL_FEE_TXS BILLITEMCHARGES  ,
-                Filter5.INVC_ITM_HNDL_FEE BILLITEMAMOUNT
+                Filter5.INVC_ITM_HNDL_FEE BILLITEMAMOUNT  ,
+                Filter5.INVC_ITM_INSTLMT_NO BILLITEMINSTLMTNO
         FROM ( SELECT Extent13.TAX_INVC_ID TAXINVOICEID2  ,
                 Extent13.TAX_INVC_REF_NO TAX_INVC_REF_NO  ,
                 Extent13.TAX_INVC_TASK_ID TAX_INVC_TASK_ID  ,
@@ -846,7 +857,8 @@
                 Extent14.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
                 Extent14.INVC_ITM_GST_RATE INVC_ITM_GST_RATE  ,
                 Extent14.INVC_ITM_HNDL_FEE INVC_ITM_HNDL_FEE  ,
-                Extent14.INVC_ITM_HNDL_FEE_TXS INVC_ITM_HNDL_FEE_TXS
+                Extent14.INVC_ITM_HNDL_FEE_TXS INVC_ITM_HNDL_FEE_TXS  ,
+                Extent14.INVC_ITM_INSTLMT_NO INVC_ITM_INSTLMT_NO
             FROM PAY0029D Extent13
                 JOIN PAY0030D Extent14   ON Extent13.TAX_INVC_ID = Extent14.TAX_INVC_ID
             WHERE  Extent14.INVC_ITM_HNDL_FEE > UTILS.CONVERT_TO_NUMBER(0,18) ) Filter5
@@ -862,9 +874,16 @@
               <if test="txInvoiceItemId != null and txInvoiceItemId != '' ">
                 AND Filter5.INVC_ITM_ID = #{txInvoiceItemId}
               </if>
+              <if test="invcItmInstlmtNo != null and invcItmInstlmtNo != '' ">
+                AND Filter5.INVC_ITM_INSTLMT_NO = #{invcItmInstlmtNo}
+              </if>
 
             </if>
         ) UnionAll3
+        WHERE 1 = 1
+              <if test="billItemType != null and billItemType != '' ">
+                AND UPPER(UnionAll3.BILLITEMTYPE) = UPPER(#{billItemType})
+              </if>
 
 
     </select>
