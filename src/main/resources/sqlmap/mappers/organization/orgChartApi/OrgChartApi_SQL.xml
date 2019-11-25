@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.orgChartApi.impl.OrgChartApiMapper">
+
+
+
+<select id="selectOrgChart" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.organization.orgChartApi.impl.OrgChartApiMapper] 20190905 - KR JAEMAJEM */
+SELECT  A.MEM_ID                                                                AS MEM_ID
+    ,   A.MEM_UP_ID                                                             AS MEM_UP_ID
+    ,   A.MEM_LVL                                                               AS MEM_LVL
+    ,   A.DEPT_CODE                                                             AS DEPT_CODE
+    ,   B.MEM_TYPE                                                              AS MEM_TYPE
+    ,   CASE WHEN A.MEM_LVL = 4 THEN B.MEM_CODE ||' - '||B.NAME
+                                ELSE A.DEPT_CODE||' - '||B.NAME
+                                END                                             AS MEMBER
+    ,   #{memId}                                                                AS PARAM_MEM_ID
+    ,   #{memType}                                                              AS PARAM_MEM_TYPE
+    ,   #{memLvl}                                                               AS PARAM_MEM_LVL
+    ,   (
+            SELECT  COUNT(1)
+			FROM    ORG0005D AA                                                 --MemberOrganization
+			        INNER JOIN ORG0001D BB                                      --Member
+			            ON  AA.MEM_ID = BB.MEM_ID
+			            AND BB.STUS = 1
+			            AND BB.MEM_TYPE = #{memType}
+			        LEFT OUTER JOIN ORG0007D CC                                 --MemberPromoEntry
+			            ON  CC.MEM_ID = AA.MEM_ID
+			            AND CC.EVT_APPLY_DT IS NOT NULL
+			            AND TO_CHAR(CC.EVT_APPLY_DT, 'YYYYMM') <= TO_CHAR(SYSDATE,'YYYYMM')
+			WHERE   A.DEPT_CODE IS NOT NULL
+			AND     (
+			                (
+			                        CC.PROMO_TYPE_ID IN (747, 748, 749)
+			                    AND CC.STUS_ID = 4
+			                    AND CC.MEM_LVL_TO = A.MEM_LVL + 1
+			                    AND CC.PARENT_ID_TO = A.MEM_ID
+			                )
+			            OR  (
+			                        CC.PROMO_TYPE_ID IN (747, 748, 749)
+			                    AND CC.STUS_ID <> 4
+			                    AND AA.MEM_LVL = A.MEM_LVL + 1
+			                    AND AA.MEM_UP_ID = A.MEM_ID
+			                )
+			            OR  (
+			                        CC.PROMO_TYPE_ID NOT IN (747, 748, 749)
+			                    OR  CC.PROMO_TYPE_ID IS NULL
+			                )
+			            AND AA.MEM_LVL = A.MEM_LVL + 1
+			            AND AA.MEM_UP_ID = A.MEM_ID
+			        )
+			AND     (
+			            CC.PROMO_ID IN (
+			                              SELECT  MAX(C.PROMO_ID) AS PROMO_ID
+			                              FROM    ORG0007D C
+			                              WHERE   TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') <= TO_CHAR(SYSDATE,'YYYYMM')
+			                              GROUP   BY C.MEM_ID
+			                          )
+			             OR CC.PROMO_ID IS NULL
+			         )
+        )                                                                       AS CNT
+FROM    ORG0005D A                                                              --MemberOrganization
+        INNER JOIN ORG0001D B                                                   --Member
+            ON  A.MEM_ID = B.MEM_ID
+            AND B.STUS = 1
+            AND B.MEM_TYPE = #{memType}
+        LEFT OUTER JOIN ORG0007D C                                              --MemberPromoEntry
+            ON  C.MEM_ID = A.MEM_ID
+            AND C.EVT_APPLY_DT IS NOT NULL
+            AND TO_CHAR(C.EVT_APPLY_DT, 'YYYYMM') <= TO_CHAR(SYSDATE,'YYYYMM')
+WHERE   A.DEPT_CODE IS NOT NULL
+AND     (
+                (
+                        C.PROMO_TYPE_ID IN (747, 748, 749)
+                    AND C.STUS_ID = 4
+                    AND C.MEM_LVL_TO = #{memLvl}
+]]>
+<if test='memId > 0'>
+<![CDATA[
+                    AND C.PARENT_ID_TO = #{memId}
+]]>
+</if>
+<![CDATA[
+                )
+            OR  (
+                        C.PROMO_TYPE_ID IN (747, 748, 749)
+                    AND C.STUS_ID <> 4
+                    AND A.MEM_LVL = #{memLvl}
+]]>
+<if test='memId > 0'>
+<![CDATA[
+                    AND A.MEM_UP_ID = #{memId}
+]]>
+</if>
+<![CDATA[
+                )
+            OR  (
+                        C.PROMO_TYPE_ID NOT IN (747, 748, 749)
+                    OR  C.PROMO_TYPE_ID IS NULL
+                )
+            AND A.MEM_LVL = #{memLvl}
+]]>
+<if test='memId > 0'>
+<![CDATA[
+            AND A.MEM_UP_ID = #{memId}
+]]>
+</if>
+<![CDATA[
+        )
+AND     (
+            C.PROMO_ID IN (
+                              SELECT  MAX(C.PROMO_ID) AS PROMO_ID
+                              FROM    ORG0007D C
+                              WHERE   TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') <= TO_CHAR(SYSDATE,'YYYYMM')
+                              GROUP   BY C.MEM_ID
+                          )
+             OR C.PROMO_ID IS NULL
+        )
+ORDER BY A.DEPT_CODE ASC
+]]>
+</select>
+</mapper>
