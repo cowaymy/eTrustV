@@ -595,7 +595,8 @@
       (select CODE_DESC SUB_DEPT from sys0013M  WHERE CODE_MASTER_ID = 360 and code =  Limit1.SUB_DEPT) SUB_DEPT,
       Limit1.BANK_NAME,
        (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course,
-       Limit1.APLICNT_MEETPOINT
+       Limit1.APLICNT_MEETPOINT,
+       Limit1.MOBILE_USE_YN
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -937,7 +938,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 EXTENT1.MAIN_DEPT,
                 EXTENT1.SUB_DEPT,
                 BANK.NAME AS BANK_NAME,
-                EXTENT29.MEET_POINT_CODE || ' - ' || MEET_POINT_DESC APLICNT_MEETPOINT
+                EXTENT29.MEET_POINT_CODE || ' - ' || MEET_POINT_DESC APLICNT_MEETPOINT,
+                Extent1.MOBILE_USE_YN
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -1247,6 +1249,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         ,MAIN_DEPT
         ,SUB_DEPT
         , RELIGION
+        , MOBILE_USE_YN
         )
             VALUES (
             ORG0001D_MEM_ID_SEQ.NEXTVAL
@@ -1308,6 +1311,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
              , #{searchdepartment}
              , #{searchSubDept}
              , #{religion}
+             , NVL(#{mobileUseYn}, 'N')
              )
     </insert>
 
@@ -3123,7 +3127,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               <if test="businessType != null and businessType != '' " >
               BIZ_TYPE =#{businessType},
               </if>
-              BRNCH =#{selectBranch}
+              BRNCH =#{selectBranch},
+              MOBILE_USE_YN = NVL(#{mobileUseYn}, 'N')
 
 
 
@@ -3172,7 +3177,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		,SPUSE_CODE 		,SPOUSE_NAME 		,SPOUSE_NRIC 		,SPOUSE_OCPAT 		,SPOUSE_TEL_CNTC
 		,SPOUSE_DOB 		,EDC_LEV 		,LANG 		,BANK 		,BANK_ACC_NO
 		,SPONS_CODE 		,CRT_DT 		,CRT_USER_ID 		,UPD_DT 		,UPD_USER_ID,  stus, APLICNT_ID
-		,MAIN_DEPT , SUB_DEPT, JOIN_DT , AREA_ID, ADDR_DTL, STREET, BRNCH
+		,MAIN_DEPT , SUB_DEPT, JOIN_DT , AREA_ID, ADDR_DTL, STREET, BRNCH, MOBILE_USE_YN
 		)
 		select
 		        #{memId},
@@ -3214,6 +3219,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		        ,MAIN_DEPT , SUB_DEPT
 		        ,SYSDATE JOIN_DT, AREA_ID, ADDR_DTL, STREET,
 		        #{branchId}
+		        ,'N'
 		from ORG0003D   d
 		where 1=1 and APLCTN_ID = #{MemberID}
     </insert>
