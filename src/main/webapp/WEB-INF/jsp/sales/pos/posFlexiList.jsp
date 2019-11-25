@@ -619,10 +619,10 @@ function fn_insTransactionLog(posNo, posTypeId){
     <dt><spring:message code="sal.title.text.link" /></dt>
     <dd>
     <ul class="btns">
-        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+  <%--       <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}"> --%>
         <li><p class="link_btn"><a href="#" onclick="javascript : fn_posReceipt()"><spring:message code="sal.title.text.posReceipt" /></a></p></li>
                 <li><p class="link_btn type2"><a id="_posFlexiRawDataBtn">Pos Flexi Raw Data</a></p></li>
-        </c:if>
+<%--         </c:if> --%>
     </ul>
   <%--   <ul class="btns">
         <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
