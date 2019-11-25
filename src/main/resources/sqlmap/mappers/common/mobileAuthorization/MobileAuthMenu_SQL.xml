@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.mobileAuthorization.impl.MobileAuthMenuMapper">
+
+	<select id="selectMobileRoleAuthMappingAdjustList" parameterType="Map" resultType="egovMap">
+		SELECT  /* [com.coway.trust.biz.common.mobileAuthorization.impl.MobileAuthMenuMapper.selectMobileRoleAuthMappingAdjustList] 20191029 - KR HAN */
+					t1.AUTH_CODE AUTH_CODE
+					,t2.MENU_LVL MENU_LVL
+					,t2.MENU_CODE MENU_CODE
+					,t2.MENU_NAME MENU_NAME
+					,t2.PGM_CODE PGM_CODE
+					,t2.PGM_NAME PGM_NAME
+		FROM    MOB0003M t1
+						JOIN MOB0002M t2
+							ON t1.MENU_CODE = t2.menu_code
+		WHERE t1.AUTH_CODE IN (
+			 /* 선택한 권한의 매핑된 Role의 상위 권한 */
+	        SELECT f.auth_code
+	           FROM ( SELECT c.role_id
+	                       , d.auth_code
+	                    FROM SYS0044M c
+	                       , (SELECT a.role_id, a.auth_code
+	                            FROM SYS0053M a ,
+	                                 SYS0054M b
+	                           WHERE a.auth_code = b.auth_code
+	                             AND a.role_id = b.role_id
+	                             AND a.auth_code = #{authCode} ) d
+	                   WHERE c.role_id = d.role_id(+)
+	                   START WITH c.role_id = d.role_id
+	                 CONNECT BY c.role_id = PRIOR c.parent_role) e
+	              , SYS0054M f
+	        WHERE e.role_id = f.role_id
+		)
+        START WITH t2.UPPER_MENU_CODE IS NULL
+        CONNECT BY PRIOR t2.MENU_CODE = t2.UPPER_MENU_CODE
+        ORDER SIBLINGS  BY t2.MENU_ORDER
+		<!-- ORDER BY t2.MENU_LVL, t2.MENU_CODE -->
+	</select>
+
+    <insert id="insertMobileMenuAuthRoleMapping" parameterType="Map">
+        INSERT   /* [com.coway.trust.biz.common.mobileAuthorization.impl.MobileAuthMenuMapper.insertMobileMenuAuthRoleMapping] 20191029 - KR HAN */
+                    INTO MOB0003M
+                    (
+                        AUTH_CODE
+                        ,MENU_CODE
+                        ,CRT_USER_ID
+                        ,CRT_DT
+                        ,UPD_USER_ID
+                        ,UPD_DT
+                    )
+                    VALUES
+                    (
+                        #{authCode}
+                        ,#{menuCode}
+                        ,#{crtUserId}
+                        ,SYSDATE
+                        ,#{updUserId}
+                        ,SYSDATE
+                    )
+    </insert>
+
+  <delete id="deleteMobileMenuAuthRoleMapping" parameterType="Map">
+      DELETE    /* [com.coway.trust.biz.common.mobileAuthorization.impl.MobileAuthMenuMapper.deleteMobileMenuAuthRoleMapping] 20191029 - KR HAN */
+                    MOB0003M
+      WHERE     AUTH_CODE =  #{authCode}
+      AND         MENU_CODE = #{menuCode}
+  </delete>
+
+  <delete id="deleteMobileMenuMapping" parameterType="Map">
+      DELETE    /* [com.coway.trust.biz.common.mobileAuthorization.impl.MobileAuthMenuMapper.deleteMobileMenuMapping] 20191029 - KR HAN */
+                    MOB0003M
+      WHERE     MENU_CODE = #{menuCode}
+  </delete>
+
+
+</mapper>
