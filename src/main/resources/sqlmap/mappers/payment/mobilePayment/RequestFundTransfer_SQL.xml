@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper">
+
+
+
+<sql id="prefixSql">
+<if test="pageSize >= 0">
+SELECT  *
+FROM
+(
+    SELECT  *
+    FROM
+    (
+        SELECT  ROWNUM                                                          AS RNUM
+            ,   Z.*
+        FROM
+        (
+</if>
+</sql>
+
+
+
+<sql id="suffixSql">
+<if test="pageSize >= 0">
+<![CDATA[
+        ) Z
+    )
+    WHERE   RNUM <= #{pageNo} * #{pageSize}
+)
+WHERE   RNUM >= (#{pageNo} - 1) * #{pageSize} + 1
+]]>
+</if>
+</sql>
+
+
+
+<select id="selectTicketStatusCode" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.selectTicketStatusCode] 20191023 - KR JAEMAJEM */
+SELECT  STUS_CODE_ID                                                            AS CODE
+    ,   NAME                                                                    AS CODE_NAME
+FROM    SYS0038M
+WHERE   STUS_CODE_ID IN (1, 5, 6, 10)
+]]>
+</select>
+
+
+
+<sql id="selectRequestFundTransferTalbe">
+<![CDATA[
+FROM    PAY0296D A                                                              --Mobile Request Fund Transfer
+        INNER JOIN MOB0001D B
+            ON  B.MOB_TICKET_NO = A.MOB_TICKET_NO
+        INNER JOIN SYS0038M C
+            ON  C.STUS_CODE_ID = B.TICKET_STUS_ID
+        INNER JOIN SYS0013M D
+            ON  D.CODE_MASTER_ID = 396
+            AND D.CODE_ID = A.FT_RESN
+        LEFT OUTER JOIN SYS0070M E
+            ON  E.CHENAL_TYPE = 'M'
+            AND E.ATCH_FILE_GRP_ID = A.FT_ATTCH_IMG
+        LEFT OUTER JOIN SYS0071D F
+            ON  F.ATCH_FILE_ID = E.ATCH_FILE_ID
+        INNER JOIN SYS0005M G                                                   --Branch Info master table .
+            ON G.BRNCH_ID = B.CRT_USER_BRNCH
+        INNER JOIN SYS0047M H
+            ON  A.CRT_USER_ID = H.USER_ID
+        INNER JOIN SYS0047M I
+            ON  A.UPD_USER_ID = I.USER_ID
+WHERE   TO_CHAR(B.CRT_DT, 'YYYYMMDD') BETWEEN TO_CHAR(TO_DATE(#{fromReqDt}, 'DD/MM/YYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{toReqDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
+]]>
+<if test="mobTicketNo != null and mobTicketNo != '' ">
+AND     A.MOB_TICKET_NO = #{mobTicketNo}
+</if>
+
+<if test="curOrdNo != null and curOrdNo != '' ">
+AND     A.CUR_ORD_NO = #{curOrdNo}
+</if>
+
+<if test="ticketStusId != null and ticketStusId != '' ">
+AND     B.TICKET_STUS_ID = #{ticketStusId}
+</if>
+
+<if test="brnchCode != null and brnchCode != '' ">
+AND     G.CODE = #{brnchCode}
+</if>
+
+<if test="memCode != null and memCode != '' ">
+AND     H.HR_CODE = #{memCode}
+</if>
+</sql>
+
+
+
+
+
+
+<select id="selectRequestFundTransferCount" parameterType="Map" resultType="int">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper.selectRequestFundTransferCount] 20191023 - KR JAEMAJEM */
+SELECT  COUNT(1)                                                                AS CNT
+]]>
+<include refid="selectRequestFundTransferTalbe"/>
+</select>
+
+
+
+<select id="selectRequestFundTransferList" parameterType="Map" resultType="egovMap">
+<if test='gu.equals("LIST")'>
+    <include refid="prefixSql"/>
+</if>
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.selectRequestFundTransferList] 20191023 - KR JAEMAJEM */
+SELECT  B.MOB_TICKET_NO                                                         AS MOB_TICKET_NO
+    ,   TO_CHAR(B.CRT_DT, 'DD/MM/YYYY')                                         AS REQ_DT
+    ,   C.NAME                                                                  AS TICKET_STUS_NM
+    ,   A.CUR_ORD_NO                                                            AS CUR_ORD_NO
+    ,   A.CUR_CUST_NAME                                                         AS CUR_CUST_NAME
+    ,   A.CUR_WOR_NO                                                            AS CUR_WOR_NO
+    ,   A.CUR_AMT                                                               AS CUR_AMT
+    ,   A.NEW_ORD_NO                                                            AS NEW_ORD_NO
+    ,   A.NEW_CUST_NAME                                                         AS NEW_CUST_NAME
+    ,   D.CODE_NAME                                                             AS FT_RESN_NAME
+    ,   CASE WHEN A.FT_ATTCH_IMG IS NOT NULL THEN #{uploadDir}||F.PHYSICL_FILE_NAME
+                                             ELSE NULL
+                                             END                                AS FT_ATTCH_IMG_URL
+    ,   A.FT_REM                                                                AS FT_REM
+    ,   G.CODE                                                                  AS BRNCH_CODE
+    ,   H.HR_CODE                                                               AS MEM_CODE
+    ,   TO_CHAR(A.UPD_DT, 'DD/MM/YYYY HH24:MI:SS')                              AS UPD_DT
+    ,   I.USER_NAME                                                             AS UPD_USER_ID
+    ,   A.FT_REQ_ID                                                             AS FT_REQ_ID
+    ,   A.FT_STUS_ID                                                            AS FT_STUS_ID
+    ,   B.TICKET_STUS_ID                                                        AS TICKET_STUS_ID
+    ,   A.NEW_AMT                                                               AS NEW_AMT
+    ,   A.FT_RESN                                                               AS FT_RESN
+    ,   A.FT_ATTCH_IMG                                                          AS REF_ATTCH_IMG
+    ,   F.ATCH_FILE_NAME                                                        AS ATCH_FILE_NAME
+    ,   F.PHYSICL_FILE_NAME                                                     AS PHYSICL_FILE_NAME
+]]>
+<include refid="selectRequestFundTransferTalbe"/>
+<if test='gu.equals("LIST")'>
+    <include refid="suffixSql"/>
+</if>
+ORDER BY MOB_TICKET_NO DESC
+</select>
+
+
+
+<select id="selectInfoPAY02052T" parameterType="Map" resultType="egovMap">
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.selectInfoPAY02052T] 20191024 - KR JAEMAJEM */
+SELECT  A.GROUP_SEQ                                                             AS GROUP_SEQ
+    ,   A.PAY_ID                                                                AS PAY_ID
+FROM    PAY0252T A
+        INNER JOIN  PAY0064D B
+            ON  A.PAY_ID = B.PAY_ID
+WHERE   B.OR_NO = #{orNo}
+</select>
+
+
+
+<update id="insertApprovedPAY0260D" parameterType="Map">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.insertApprovedPAY0260D] 20191024 - KR JAEMAJEM */
+INSERT
+INTO    PAY0260D                                                                -- Request_FT
+(
+        FT_REQ_ID                                                               --DCF Request No.
+    ,   SRC_GRP_SEQ                                                             --Payment Group No. (Source Info)
+    ,   SRC_AMT                                                                 --Source Amount
+    ,   SRC_ORD_NO                                                              --Source Order Number
+    ,   SRC_CUST_NAME                                                           --Source Customer Name
+    ,   SRC_PAY_ID                                                              --Source Pay ID
+    ,   FT_GRP_SEQ                                                              --Payment Group No.  (Target Info)
+    ,   FT_AMT                                                                  --FT amount
+    ,   FT_ORD_NO                                                               --FT order number
+    ,   FT_CUST_NAME                                                            --FT Customer Name
+    ,   FT_RESN                                                                 --FT Reason.
+    ,   FT_REM                                                                  --FT Remark
+    ,   FT_STUS_ID                                                              --FT Status
+    ,   FT_CRT_USER_ID                                                          --FT Requestor
+    ,   FT_CRT_DT                                                               --FT Date
+    --FT Approval No.
+    --FT Confirm Date
+    --FT Confirm User
+    --FT Confirm Reject Remark
+    --ECC I/F Date
+)VALUES(
+        #{ftReqId}                                                              --DCF Request No.
+    ,   #{srcGrpSeq}                                                            --Payment Group No. (Source Info)
+    ,   #{srcAmt}                                                               --Source Amount
+    ,   #{srcOrdNo}                                                             --Source Order Number
+    ,   #{srcCustName}                                                          --Source Customer Name
+    ,   #{srcPayId}                                                             --Source Pay ID
+    ,   #{ftGrpSeq}                                                             --Payment Group No.  (Target Info)
+    ,   #{ftAmt}                                                                --FT amount
+    ,   #{ftOrdNo}                                                              --FT order number
+    ,   #{ftCustName}                                                           --FT Customer Name
+    ,   #{ftResn}                                                               --FT Reason.
+    ,   #{ftRem}                                                                --FT Remark
+    ,   #{ftStusId}                                                             --FT Status
+    ,   #{ftCrtUserId}                                                          --FT Requestor
+    ,   SYSDATE                                                                 --FT Date
+    --FT Approval No.
+    --FT Confirm Date
+    --FT Confirm User
+    --FT Confirm Reject Remark
+    --ECC I/F Date
+)
+]]>
+</update>
+
+
+
+<update id="updateFtStusIdPAY0252T" parameterType="Map">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.insertApprovedPAY0260D] 20191024 - KR JAEMAJEM */
+UPDATE  PAY0252T A                                                              -- Pay Result
+SET     A.FT_STUS_ID = #{ftStusId}                                              -- FT Status ID
+WHERE   A.GROUP_SEQ = #{groupSeq}                                               -- Group Sequence
+AND     A.PAY_ID = #{payId}                                                     -- Payment ID
+AND     A.FT_STUS_ID IS NULL
+]]>
+</update>
+
+
+
+<update id="updateApprovedPAY0296D" parameterType="Map">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.updateApprovedPAY0296D] 20191023 - KR JAEMAJEM */
+UPDATE  PAY0296D A                                                              --Mobile Request Fund Transfer
+SET     A.FT_STUS_ID = #{ftStusId}                                              --Fund Tranfer Status
+    ,   A.UPD_DT = SYSDATE                                                      --Update Date
+    ,   A.UPD_USER_ID = #{updUserId}                                            --Update User Id
+WHERE   A.FT_REQ_ID = #{ftReqId}                                                --Mobile Request Fund Transfer Number
+AND     A.FT_STUS_ID = 1                                                        --Fund Tranfer Status
+]]>
+</update>
+
+
+
+<update id="updateRejectedPAY0296D" parameterType="Map">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.updateRejectedPAY0296D] 20191023 - KR JAEMAJEM */
+UPDATE  PAY0296D A                                                              --Mobile Request Fund Transfer
+SET     A.FT_STUS_ID = #{ftStusId}                                              --Fund Tranfer Status
+    ,   A.FT_REM = #{ftRem}                                                     --Remarks
+    ,   A.UPD_DT = SYSDATE                                                      --Update Date
+    ,   A.UPD_USER_ID = #{updUserId}                                               --Update User Id
+WHERE   A.FT_REQ_ID = #{ftReqId}                                                --Mobile Request Fund Transfer Number
+AND     A.FT_STUS_ID = 1                                                        --Fund Tranfer Status
+]]>
+</update>
+</mapper>
