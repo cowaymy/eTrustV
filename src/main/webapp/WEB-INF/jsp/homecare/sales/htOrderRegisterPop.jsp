@@ -13,6 +13,7 @@
     var docDefaultChk = false;
     var GST_CHK = '';
     var GST_MANNUAL = 'N';
+    var ROLE_ID = "${SESSION_INFO.roleId}";
 
     $(document).ready(function(){
 
@@ -1158,12 +1159,27 @@
 
 
         if($('#salesmanCd').val() == '' || $('#salesmanCd').val() == null ){
+        	console.log("appTypeVal  : " + appTypeVal);
         	if(appTypeVal == 5701 || appTypeVal == 5702){
-
+        	    // 5701 - FREE TRIAL 1 TIME
+        	    // 5702 - FREE TRIAL 1 YEAR
         	}else {
         	       isValid = false;
         	         msg += '<spring:message code="sal.alert.msg.plzSelectSalesman" />';
         	}
+        }
+
+        if(appTypeVal == 5702 ){ // FREE TRIAL 1 YEAR ONLY CAN BE CREATED BY HOMECARE DEPARTMENT AND IT ADMINISTRATOR
+        	console.log("ROLE ID  : " + ROLE_ID);
+        	if(ROLE_ID == "130" ||   ROLE_ID == "344" || ROLE_ID == "343" || ROLE_ID == "342"){
+        		  // 130 - ADMINISTRATOR
+        		  // 344 - HOMECARE EXECUTIVE
+        		  // 343 - HOMECARE TEAM LEADER
+        		  // 342 - HOMECARE MANAGER
+        	}else{
+            isValid = false;
+            msg += 'Application Type : Free Trial - 1 Year is not allowed. <br> Please select other application type.';
+        }
         }
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
