@@ -243,7 +243,7 @@ public class InstallationResultListController {
    * @throws Exception
    */
   @RequestMapping(value = "/addInstallationPopup.do")
-  public String addInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model) {
+  public String addInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
     /*
      * INSTALL STATUS: 1 ACTIVE 4 COMPLETED 21 FAILED
      */
@@ -369,6 +369,9 @@ public class InstallationResultListController {
     model.addAttribute("CheckCurrentPromo", CheckCurrentPromo);
     model.addAttribute("promotionView", promotionView);
     // model.addAttribute("customerAddress", customerAddress);
+
+    EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
+    model.put("orderDetail", orderDetail);
 
     // 호출될 화면
     return "services/installation/addInstallationResultPop";
@@ -1019,10 +1022,13 @@ public class InstallationResultListController {
    * @throws Exception
    */
   @RequestMapping(value = "/editInstallationPopup.do")
-  public String editInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model) {
+  public String editInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model , SessionVO sessionVO) throws Exception {
 
     EgovMap installInfo = installationResultListService.selectInstallInfo(params);
     model.addAttribute("installInfo", installInfo);
+
+    EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
+    model.put("orderDetail", orderDetail);
     // 호출될 화면
     return "services/installation/editInstallationResultPop";
   }
