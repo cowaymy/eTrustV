@@ -1456,7 +1456,13 @@ function checkBankAccNo() {
  <td>
  </td>
 </tr>
-
+<tr id="trMobileUseYn">
+    <th scope="row">Mobile App</th>
+    <td colspan="4">
+        <label><input type="radio" name="mobileUseYn" id="mobileUseYn" value="Y" <c:if test="${memberView.mobileUseYn eq 'Y'}">checked</c:if>/><span>Use</span></label>
+        <label><input type="radio" name="mobileUseYn" id="mobileUseYn" value="N" <c:if test="${memberView.mobileUseYn eq 'N'}">checked</c:if>/><span>Unused</span></label>
+    </td>
+</tr>
 </tbody>
 </table><!-- table end -->
 
