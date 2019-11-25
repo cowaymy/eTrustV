@@ -1,0 +1,79 @@
+package com.coway.trust.biz.payment.payment.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.coway.trust.api.mobile.payment.payment.PaymentForm;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+/**
+ * @ClassName : PaymentApiService.java
+ * @Description : TO-DO Class Description
+ *
+ * @History
+ * <pre>
+ * Date            Author       Description
+ * -------------  -----------  -------------
+ * 2019. 9. 30.   KR-HAN        First creation
+ * </pre>
+ */
+public interface PaymentApiService{
+
+	 /**
+	 * TO-DO Description
+	 * @Author KR-HAN
+	 * @Date 2019. 9. 30.
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectPaymentList(Map<String, Object> params);
+
+	 /**
+	 * TO-DO Description
+	 * @Author KR-HAN
+	 * @Date 2019. 10. 14.
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectPaymentDetailList(Map<String, Object> params);
+
+	 /**
+	 * TO-DO Description
+	 * @Author KR-HAN
+	 * @Date 2019. 10. 14.
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectMegaDealByOrderId(Map<String, Object> params);
+
+	 /**
+	 * TO-DO Description
+	 * @Author KR-HAN
+	 * @Date 2019. 10. 14.
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectBillInfoRental(Map<String, Object> params);
+
+	 /**
+	 * TO-DO Description
+	 * @Author KR-HAN
+	 * @Date 2019. 10. 15.
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectSalesNotificationInfo(Map<String, Object> params);
+
+	 /**
+	 * TO-DO Description
+	 * @Author KR-HAN
+	 * @Date 2019. 10. 15.
+	 * @param paymentForm
+	 * @return
+	 */
+	int insertSalesNotification(PaymentForm  paymentForm) throws Exception;
+
+	List<EgovMap> selectBankSelectBox(Map<String, Object> params);
+
+}
