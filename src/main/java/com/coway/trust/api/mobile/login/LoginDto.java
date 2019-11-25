@@ -30,6 +30,12 @@ public class LoginDto {
 	private String managerYn;
 	@ApiModelProperty(value = "사용자 그룹 ID [codeMasterId=1]")
 	private int userGroupId;
+	@ApiModelProperty(value = "userTypeId")
+	private int userTypeId;
+	@ApiModelProperty(value = "userMainDeptId")
+	private String userMainDeptId;
+
+
 
 	public static LoginDto create(LoginVO loginVO) {
 		LoginDto dto = new LoginDto();
@@ -44,7 +50,8 @@ public class LoginDto {
 		dto.setManagerYn(loginVO.getMgrYn());
 		dto.setUserGroupId(loginVO.getUserTypeId());
 		dto.setUserPassWord(loginVO.getUserPassWord());
-		
+		dto.setUserTypeId(loginVO.getUserTypeId());
+		dto.setUserMainDeptId(loginVO.getUserMainDeptId());
 		return dto;
 	}
 
@@ -79,7 +86,7 @@ public class LoginDto {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	
+
 	public String getUserPassWord() {
 		return userPassWord;
 	}
@@ -134,5 +141,21 @@ public class LoginDto {
 
 	public void setUserGroupId(int userGroupId) {
 		this.userGroupId = userGroupId;
+	}
+
+	public int getUserTypeId() {
+		return userTypeId;
+	}
+
+	public void setUserTypeId(int userTypeId) {
+		this.userTypeId = userTypeId;
+	}
+
+	public String getUserMainDeptId() {
+		return userMainDeptId;
+	}
+
+	public void setUserMainDeptId(String userMainDeptId) {
+		this.userMainDeptId = userMainDeptId;
 	}
 }
