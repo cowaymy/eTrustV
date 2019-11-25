@@ -80,7 +80,7 @@
               Common.popupDiv(
                   "/services/addInstallationPopup.do?isPop=true&installEntryId="
                       + installEntryId + "&codeId=" + codeid1
-                      + "&salesOrderNO=" + salesOrdNo1, "", null,
+                      + "&salesOrderNO=" + salesOrdNo1 + "&salesOrderId=" + salesOrderId, "", null,
                   "false", "addInstallationPopupId");
             } else { // PRODUCT RETURN
               Common.popupDiv(
@@ -345,7 +345,7 @@
           Common.alert(result.message);
         } else {
           if (statusCode == "COM") {
-            Common.popupDiv("/services/editInstallationPopup.do?isPop=true&installEntryId=" + installEntryId + "&codeId=" + codeid1);
+            Common.popupDiv("/services/editInstallationPopup.do?isPop=true&installEntryId=" + installEntryId + "&codeId=" + codeid1 + "&salesOrderId=" + orderId);
           } else {
             //Common.alert("<b>Only completed installation result is allowed to edit.</b>");
             Common.alert("<b><spring:message code='service.msg.Onlycompleted'/></b>");
