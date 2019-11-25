@@ -91,11 +91,24 @@
   <!-- pop_body start -->
   <section class="tap_wrap">
    <!-- tap_wrap start -->
-   <!--
-<ul class="tap_type1">
-    <li><a href="#" class="on">Order Info</a></li>
-</ul>
- -->
+   <ul class="tap_type1">
+     <li><a href="#" id="orderInfo" class="on"><spring:message
+       code='sales.tap.order' /></a></li>
+     </ul>
+       <!-- Order Information Start -->
+<article class="tap_area"><!-- tap_area start -->
+<!------------------------------------------------------------------------------
+    Order Detail Page Include START
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp" %>
+<!------------------------------------------------------------------------------
+    Order Detail Page Include END
+------------------------------------------------------------------------------->
+
+
+</article><!-- tap_area end -->
+<!-- Order Information End -->
+
    <form action="#" id="editInstallForm" method="post">
     <input type="hidden" value="<c:out value="${installInfo.resultId}"/> " id="resultId" name="resultId" />
     <input type="hidden" value="<c:out value="${installInfo.installEntryId}"/> " id="entryId" name="entryId" />
