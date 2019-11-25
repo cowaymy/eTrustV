@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper">
+
+    <select id="selectPaymentList" parameterType="Map" resultType="egovMap">
+		SELECT  /* [com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper.selectPaymentList] 20190930 - KR HAN */
+					 Extent1.SALES_ORD_ID                                SALES_ORD_ID
+					, Extent1.SALES_ORD_NO                               SALES_ORD_NO
+					, Extent2.CUST_ID                                       CUST_ID
+					, Extent2.NAME                                            CUST_NAME
+					, CASE WHEN ( Extent4.CODE_NAME IS NOT NULL )
+					        THEN Extent3.CODE_NAME||'('||Extent4.CODE_NAME||')'
+					    ELSE Extent3.CODE_NAME
+					  END CUST_TYPE_NAME
+	                , Extent1.APP_TYPE_ID APP_TYPE_ID
+					, Extent5.CODE_NAME APP_TYPE_NAME
+		FROM    SAL0001D Extent1
+		                JOIN SAL0029D Extent2
+		                    ON Extent1.CUST_ID = Extent2.CUST_ID
+		                JOIN SYS0013M Extent3
+		                    ON Extent3.CODE_ID = Extent2.TYPE_ID
+		                LEFT OUTER JOIN SYS0013M Extent4
+		                    ON Extent4.CODE_ID = Extent2.CORP_TYPE_ID
+		                JOIN SYS0013M Extent5
+		                    ON Extent1.APP_TYPE_ID = Extent5.CODE_ID
+		WHERE   Extent1.STUS_CODE_ID  <![CDATA[<>]]>  8
+		<if test='searchType eq "1"'>
+		    AND Extent1.SALES_ORD_NO = #{searchKeyword}
+		</if>
+		<if test='searchType eq "2" or searchType eq "3" '>
+		    AND Extent2.NRIC = #{searchKeyword}
+		</if>
+		 <if test='salesOrdNo != null and salesOrdNo !=""'>
+		    AND Extent1.SALES_ORD_NO = #{salesOrdNo}
+		 </if>
+    </select>
+
+    <select id="selectBillInfoRental" parameterType="Map" resultType="egovMap">
+		SELECT    /* [com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper.selectBillInfoRental] 20191010 - KR HAN */
+		            Extent1.SALES_ORD_ID,
+		            Extent1.CUST_BILL_ID,
+		            Extent1.SALES_ORD_NO,
+		            Extent1.CUST_ID,
+		            Extent4.NAME CUST_NM,
+		            Extent1.APP_TYPE_ID,
+		            Extent2.CODE_NAME APP_TYPE_NM,
+		            Extent1.PV_YEAR,
+		            Extent1.PV_MONTH,
+		            Extent1.STUS_CODE_ID STUS_CODE_ID,
+		            Extent3.STUS_CODE_ID STUS_CODE_NM,
+		            CASE WHEN Extent6.REBATE_AMT_PER_INSTLMT IS NOT NULL
+		                    THEN Extent1.MTH_RENT_AMT - Extent6.REBATE_AMT_PER_INSTLMT
+		                    ELSE Extent1.MTH_RENT_AMT END MTH_RENT_AMT,
+		            Extent1.TOT_AMT
+		        FROM
+		            SAL0001D Extent1
+			            LEFT JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
+			            LEFT JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+			            LEFT JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
+			            LEFT JOIN (
+			                            SELECT
+			                                RENT_SO_ID,
+			                                COUNT(1) AS RPF_CNT,
+			                                NVL(SUM(RENT_AMT),0) AS RPF_CHARGE
+			                            FROM
+			                                PAY0022D
+			                            WHERE
+			                                RENT_DOC_TYPE_ID = 161 AND RENT_AMT    >=  0
+			                            GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
+			            LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id
+		        WHERE 1=1
+		            <!-- Extent1.APP_TYPE_ID = 66 -->
+		            AND Extent1.SALES_ORD_NO = #{salesOrdNo}
+		        ORDER BY Extent1.SALES_ORD_NO
+    </select>
+
+	<select id="selectSalesNotificationInfo" parameterType="Map" resultType="egovMap">
+	   SELECT  /* [com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper.selectSalesNotificationInfo] 20191014 - KR HAN */
+					Extent1.SALES_ORD_ID       SALES_ORD_ID
+					,Extent1.SALES_ORD_NO     SALES_ORD_NO
+					,Extent2.TEL_M1                MOBILE_NO
+					,Extent2.EMAIL                  EMAIL
+        FROM    SAL0001D Extent1
+                        JOIN SAL0027D Extent2
+                            ON Extent1.CUST_CNT_ID = Extent2.CUST_CNTC_ID
+        WHERE   Extent1.SALES_ORD_NO = #{salesOrdNo}
+	</select>
+
+    <insert id="insertSalesNotification" parameterType="Map"  >
+        INSERT  /* [com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper.insertSalesNotification] 20191014 - KR HAN */
+             INTO PAY0297D(
+				MOB_PAY_NO
+				,SALES_ORD_NO
+				,PAY_STUS_ID
+				,PAY_MODE
+				,ADV_MONTH
+				,ADV_AMT
+				,OTSTND_AMT
+				,PAY_AMT
+				,UPLOAD_IMG
+				,SLIP_NO
+				,ISSU_BANK_ID
+				,CHEQUE_DT
+				,CHEQUE_NO
+				,SMS_1
+				,SMS_2
+				,EMAIL_1
+				,EMAIL_2
+				,SIGN_IMG
+				,MOB_TICKET_NO
+				,PAY_REM
+				,CRT_USER_ID
+				,CRT_DT
+				,UPD_USER_ID
+				,UPD_DT
+        )
+        VALUES(
+                PAY0297D_SEQ.NEXTVAL
+                ,#{salesOrdNo}
+                ,#{payStusId}
+                ,#{payMode}
+                ,#{advMonth}
+                ,#{advAmt}
+                ,#{otstndAmt}
+                ,#{payAmt}
+                ,#{uploadImg}
+                ,#{slipNo}
+                ,#{issuBankId}
+                ,#{chequeDt}
+                ,#{chequeNo}
+                ,#{sms1}
+                ,#{sms2}
+                ,#{email1}
+                ,#{email2}
+                ,UTL_RAW.CAST_TO_RAW(#{signImg})
+                ,#{mobTicketNo}
+                ,#{payRem}
+                ,#{crtUserId}
+                ,SYSDATE
+                ,#{updUserId}
+                ,SYSDATE
+        )
+    </insert>
+
+
+    <select id="selectBankSelectBox" parameterType="Map" resultType="egovMap">
+       SELECT  /* [com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper.selectBankSelectBox] 20191014 - KR HAN */
+				   BANK_ID  BANK_ID
+				   , NAME   BANK_NM
+		FROM     SYS0004M
+		WHERE   STUS_CODE_ID = '1'
+		ORDER    BY BANK_ID ASC
+    </select>
+</mapper>

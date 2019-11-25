@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.eInvoice.service.impl.EInvoiceApiMapper">
+
+    <select id="selectBillGroupList" parameterType="Map" resultType="egovMap">
+		SELECT  /* [com.coway.trust.biz.payment.eInvoice.service.impl.EInvoiceApiMapper.selectBillGroupList] 20191002 - KR HAN */
+					  Extent1.SALES_ORD_NO                             SALES_ORD_NO
+					, Extent2.NAME                                            CUST_NAME
+					, Extent3.CUST_BILL_GRP_NO                         CUST_BILL_GRP_NO
+					, TO_CHAR(Extent1.SALES_DT, 'DD/MM/YYYY')      SALES_DT
+					, Extent4.CODE_NAME                                   APP_TYPE_NAME
+					, Extent6.STK_DESC                                      STK_DESC
+					, Extent1.CUST_BILL_ID                                         CUST_ID
+					, Extent8.CUST_BILL_GRP_NO                         CUST_BILL_GRP_NO_NM
+		            , CASE
+			                   WHEN ( Extent8.CUST_BILL_GRP_NO IS NOT NULL ) THEN 'Y'
+			              ELSE 'N'
+			                 END REQ_STUS_YN
+		FROM    SAL0001D Extent1
+                        JOIN SAL0029D Extent2 ON Extent1.CUST_ID = Extent2.CUST_ID
+						JOIN SAL0024D Extent3 ON Extent1.CUST_BILL_ID = Extent3.CUST_BILL_ID
+						JOIN SYS0013M Extent4 ON Extent1.APP_TYPE_ID = Extent4.CODE_ID
+						JOIN SAL0002D Extent5 ON Extent1.SALES_ORD_ID = Extent5.SALES_ORD_ID
+						JOIN SYS0026M Extent6 ON Extent6.STK_ID = Extent5.ITM_STK_ID
+			            LEFT OUTER JOIN PAY0293D Extent7 ON Extent1.SALES_ORD_NO = Extent7.SALES_ORD_NO AND Extent7.REQ_STUS_ID = 1
+                        LEFT OUTER JOIN SAL0024D Extent8 ON Extent7.CUST_BILL_ID_NW = Extent8.CUST_BILL_ID
+		WHERE   Extent1.STUS_CODE_ID <![CDATA[<>]]> 8
+		AND       Extent3.CUST_BILL_GRP_NO IS NOT NULL
+		<if test='searchType eq "1"'>
+		    AND Extent1.SALES_ORD_no = #{searchKeyword}
+		</if>
+		<if test='searchType eq "2" or searchType eq "3" '>
+		    AND Extent2.NRIC = #{searchKeyword}
+		</if>
+		<!--  <if test='salesOrdNo != null and salesOrdNo !=""'>
+		    AND Extent1.SALES_ORD_NO = #{salesOrdNo}
+		 </if> -->
+    </select>
+
+    <select id="selectEInvoiceDetail" parameterType="Map" resultType="egovMap">
+        SELECT  /* [com.coway.trust.biz.payment.eInvoice.service.impl.EInvoiceApiMapper.selectEInvoiceDetail] 20191002 - KR HAN */
+					Limit1.CUST_BILL_ID              CUST_BILL_ID
+					, Limit1.CUST_BILL_GRP_NO    CUST_BILL_GRP_NO
+					, Limit1.USER_NAME               USER_NAME
+					, Limit1.CODE_NAME               CODE_NAME
+					, Limit1.NRIC                         NRIC
+					, Limit1.NAME                        NAME
+					, Limit1.CUST_BILL_EMAIL        CUST_BILL_EMAIL
+					, Limit1.CUST_BILL_EMAIL_ADD  CUST_BILL_EMAIL_ADD
+					, Limit1.CUST_BILL_IS_ESTM     CUST_BILL_IS_ESTM
+					, Limit1.CUST_BILL_IS_POST     CUST_BILL_IS_POST
+					, Limit1.CUST_BILL_IS_SMS      CUST_BILL_IS_SMS
+					, Limit1.SALES_ORD_NO            SALES_ORD_NO
+					, Limit1.CNTC_NAME                 CNTC_NAME
+					, Limit1.MOBILE_NO                  MOBILE_NO
+
+		FROM (
+					SELECT
+								Extent1.CUST_BILL_ID CUST_BILL_ID
+								, Extent1.CUST_BILL_GRP_NO CUST_BILL_GRP_NO
+								, Extent1.CUST_BILL_EMAIL CUST_BILL_EMAIL
+								, Extent1.CUST_BILL_IS_ESTM CUST_BILL_IS_ESTM
+								, Extent1.CUST_BILL_IS_SMS CUST_BILL_IS_SMS
+								, Extent1.CUST_BILL_IS_POST CUST_BILL_IS_POST
+								, Extent2.NAME NAME
+								, Extent2.NRIC NRIC
+								, Extent3.SALES_ORD_NO SALES_ORD_NO
+								, Extent4.CODE_NAME CODE_NAME
+								, CASE
+									    WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
+									 ELSE ''
+									    END USER_NAME
+								, CASE
+								        WHEN ( Extent1.CUST_BILL_EMAIL_ADD IS NULL ) THEN ''
+									 ELSE Extent1.CUST_BILL_EMAIL_ADD
+									    END CUST_BILL_EMAIL_ADD
+								, Extent6.NAME CNTC_NAME
+								, Extent6.TEL_M1 MOBILE_NO
+					FROM    SAL0024D Extent1
+									JOIN SAL0029D Extent2
+									    ON Extent2.CUST_ID = Extent1.CUST_BILL_CUST_ID
+									JOIN SAL0001D Extent3
+									    ON Extent3.SALES_ORD_ID = Extent1.CUST_BILL_SO_ID
+									JOIN SYS0013M Extent4
+									    ON Extent4.CODE_ID = Extent2.TYPE_ID
+									LEFT JOIN SYS0047M Extent5
+									    ON Extent5.USER_ID = Extent1.CUST_BILL_CRT_USER_ID
+					                LEFT JOIN SAL0027D Extent6
+					                    ON Extent6.CUST_CNTC_ID = Extent1.CUST_BILL_CNT_ID
+					WHERE       Extent1.CUST_BILL_ID =  #{custId}
+					<!-- AND           Extent3.SALES_ORD_NO = #{salesOrdNo} -->
+		) Limit1
+    </select>
+
+    <insert id="insInvoiceHistory" parameterType="Map">
+        INSERT  /* [com.coway.trust.biz.payment.eInvoice.service.impl.EInvoiceApiMapper.insInvoiceHistory] 20191008 - KR HAN */
+             INTO SAL0025D(
+		        HIST_ID,
+		        CUST_BILL_ID,
+		        HIST_CRT_DT,
+		        HIST_CRT_USER_ID,
+		        USER_HIST_REM,
+		        SALES_ORD_ID_OLD,
+		        SALES_ORD_ID_NW,
+		        CNTC_ID_OLD,
+		        CNTC_ID_NW,
+		        ADDR_ID_OLD,
+		        ADDR_ID_NW,
+		        STUS_ID_OLD,
+		        STUS_ID_NW,
+		        REM_OLD,
+		        REM_NW,
+		        EMAIL_OLD,
+		        EMAIL_NW,
+		        IS_E_STATE_OLD,
+		        IS_E_STATE_NW,
+		        IS_SMS_OLD,
+		        IS_SMS_NW,
+		        IS_POST_OLD,
+		        IS_POST_NW,
+		        TYPE_ID,
+		        SYS_HIST_REM,
+		        EMAIL_ADD_OLD,
+		        EMAIL_ADD_NW,
+		        MOBILE_YN,
+                AGREE_YN,
+                CUST_SIGN
+        )
+        VALUES(
+		        SAL0025D_HIST_ID_SEQ.NEXTVAL,
+		        #{custBillId},
+		        SYSDATE,
+		        #{userId},
+		        #{reasonUpd},
+		        #{salesOrderIDOld},
+		        #{salesOrderIDNew},
+		        #{contactIDOld},
+		        #{contactIDNew},
+		        #{addressIDOld},
+		        #{addressIDNew},
+		        #{statusIDOld},
+		        #{statusIDNew},
+		        #{remarkOld},
+		        #{remarkNew},
+		        #{emailOld},
+		        #{emailNew},
+		        #{isEStatementOld},
+		        #{isEStatementNew},
+		        #{isSMSOld},
+		        #{isSMSNew},
+		        #{isPostOld},
+		        #{isPostNew},
+		        #{typeId},
+		        #{sysHisRemark},
+		        #{emailAddtionalOld} ,
+		        #{emailAddtionalNew},
+		        #{mobileYn},
+                #{agreeYn},
+                UTL_RAW.CAST_TO_RAW(#{custSign})
+        )
+    </insert>
+
+    <update id="updCustInvoiceMaster" parameterType="Map">
+        UPDATE
+            SAL0024D SET
+		        CUST_BILL_UPD_DT = SYSDATE
+		        , CUST_BILL_UPD_USER_ID = #{userId}
+		       <if test="chgBillFlag == 'Y'.toString() ">
+		        , CUST_BILL_IS_ESTM = #{custBillIsEstm}
+		        , CUST_BILL_EMAIL = #{custBillEmail}
+		        , CUST_BILL_EMAIL_ADD = #{custBillEmailAdd}
+		        </if>
+        WHERE CUST_BILL_ID = #{custBillId}
+    </update>
+
+</mapper>
