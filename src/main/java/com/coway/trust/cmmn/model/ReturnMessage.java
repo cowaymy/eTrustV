@@ -15,6 +15,7 @@ public class ReturnMessage implements Serializable {
 	private String code = AppConstants.SUCCESS;
 	private String message;
 	private String detailMessage;
+	private long total;
 	private List<?> dataList;
 	private Object data;
 
@@ -40,6 +41,14 @@ public class ReturnMessage implements Serializable {
 
 	public void setDetailMessage(String detailMessage) {
 		this.detailMessage = detailMessage;
+	}
+
+	public long getTotal() {
+		return total;
+	}
+
+	public void setTotal(long total) {
+		this.total = total;
 	}
 
 	public List<?> getDataList() {

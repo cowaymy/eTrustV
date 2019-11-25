@@ -18,7 +18,7 @@
 
 /* Grid - Input Column Header Display */
 .aui-grid-header-input-icon {
-    background: url("../../resources/AUIGrid/images/grid_input_ico.png") no-repeat  , linear-gradient(to bottom, #f8f8f8, #eee);
+    background: url("../../resources/AUIGrid/images/grid_input_ico.png") no-repeat  , linear-gradient(to bottom, #f8f8f8, #eee) !important;
     z-index: 9999999;
     width: 12px;
     height: 12px;
@@ -54,4 +54,21 @@
     margin-left:5px;
 
     content : '*';
+}
+
+/* Grid - align */
+.aui-grid-user-custom-left {
+        text-align:left;
+ }
+ .aui-grid-user-custom-right {
+     text-align:right;
+ }
+
+/* Grid - paging panel */
+.my-grid-paging-panel {
+    width:100%;
+    margin:4px auto;
+    font-size:12px;
+    height:34px;
+    border: 1px solid #ccc;
 }
