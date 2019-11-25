@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
+import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.web.services.servicePlanning.MileageCalculationController;
@@ -33,6 +34,8 @@ public class TagMgmtController {
 	@Resource(name = "tagMgmtService")
 	TagMgmtService tagMgmtService;
 
+	   @Resource(name = "orderDetailService")
+	    private OrderDetailService orderDetailService;
 
 	@RequestMapping(value = "/tagManagement.do")
 	public String viewTagMangement (@RequestParam Map<String, Object> params, ModelMap model) {
@@ -42,7 +45,7 @@ public class TagMgmtController {
 	}
 
 	@RequestMapping(value = "/tagLogRegistPop.do")
-	public String viewTagLogRegistPop (@RequestParam Map<String, Object> params, ModelMap model) {
+	public String viewTagLogRegistPop (@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 		model.addAttribute("params", params);
 		// 호출될 화면
 		logger.debug("paramsJINMU1 {}", params);
@@ -65,6 +68,11 @@ public class TagMgmtController {
 
 		EgovMap codyInfo     	 = tagMgmtService.selectOrderServiceMemberViewByOrderID(orderInfo);
 		model.addAttribute("codyInfo" , codyInfo);
+
+		params.put("salesOrderId", orderInfo.get("salesOrdId"));
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
+		model.put("orderDetail", orderDetail);
+
 		return "services/tagMgmt/tagLogListPop";
 	}
 
