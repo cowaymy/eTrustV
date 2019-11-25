@@ -635,7 +635,12 @@ function fn_winClose(){
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Basic Information</h2>
+    <h2>Basic Information</h2>
+    <div class="right_chk">
+        <label for="mobileApp">Mobile App</label>
+        <input type="checkbox" disabled="disabled" id="mobileUseYn" <c:if test="${memberView.mobileUseYn eq 'Y'}">checked</c:if>>
+    </div>
+</h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
