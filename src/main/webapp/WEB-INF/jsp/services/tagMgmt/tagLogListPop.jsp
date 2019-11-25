@@ -212,6 +212,8 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <ul class="tap_type1">
     <li><a href="#" class="on">Tag Info</a></li>
     <li><a href="#" id="respondInfo">Respond Info</a></li>
+    <li><a href="#" id="orderInfo"><spring:message
+       code='sales.tap.order' /></a></li>
 </ul>
 
 <!-- Tag Info Start -->
@@ -483,6 +485,23 @@ function fn_atchViewDown(fileGrpId, fileId) {
 
 </article><!-- tap_area end -->
 <!-- Respond Info End -->
+
+<!-- Order Information Start -->
+<article class="tap_area"><!-- tap_area start -->
+    <aside class="title_line"><!-- title_line start -->
+    <h3>Order Information</h3>
+    </aside><!-- title_line end -->
+<!------------------------------------------------------------------------------
+    Order Detail Page Include START
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp" %>
+<!------------------------------------------------------------------------------
+    Order Detail Page Include END
+------------------------------------------------------------------------------->
+
+
+</article><!-- tap_area end -->
+<!-- Order Information End -->
 
 </section><!-- tap_wrap end -->
 
