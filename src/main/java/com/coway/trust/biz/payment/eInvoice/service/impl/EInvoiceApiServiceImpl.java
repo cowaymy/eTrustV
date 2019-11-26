@@ -18,7 +18,9 @@ import com.coway.trust.biz.common.MobileAppTicketApiCommonService;
 import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.biz.payment.billinggroup.service.impl.BillingGroupMapper;
 import com.coway.trust.biz.payment.eInvoice.service.EInvoiceApiService;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.LoginVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -122,6 +124,9 @@ public class EInvoiceApiServiceImpl extends EgovAbstractServiceImpl implements E
 		String custBillId = selectBasicInfo.get("custBillId") != null
 				? String.valueOf(selectBasicInfo.get("custBillId")) : "0";
 
+		// 기존 이력 조회
+		List<EgovMap> reqMaster = billingGroupMapper.selectBeforeReqIDs(params);
+
 		if (selectBasicInfo != null && Integer.parseInt(custBillId) > 0) {
 			// Ticket 저장
 //			List<Map<String, Object>> arrParams  = new ArrayList<Map<String,Object>>();
@@ -135,6 +140,16 @@ public class EInvoiceApiServiceImpl extends EgovAbstractServiceImpl implements E
 //			arrParams.add(sParams);
 //
 //			String mobTicketNo = mobileAppTicketApiCommonService.saveMobileAppTicket(arrParams);
+
+			if (reqMaster.size() > 0) {
+				for (int i = 0; i < reqMaster.size(); i++) {
+					Map<String, Object> map = reqMaster.get(i);
+					params.put("reqId", String.valueOf(map.get("reqId")));
+					params.put("stusCodeId", 10);
+					// REQ마스터테이블 업데이트
+					billingGroupMapper.updReqEstm(params);
+				}
+			}
 
 			// 인서트 셋팅 시작
 			String salesOrderIDOld = "0";
@@ -199,6 +214,19 @@ public class EInvoiceApiServiceImpl extends EgovAbstractServiceImpl implements E
 			// 히스토리테이블 인서트
 			eInvoiceApiMapper.insInvoiceHistory(insHisMap);
 
+			Map<String, Object> estmMap = new HashMap<String, Object>();
+			estmMap.put("stusCodeId", "5");//approve
+			estmMap.put("custBillId", String.valueOf(params.get("custBillId")));
+			estmMap.put("email", String.valueOf(emailNew).trim());
+			estmMap.put("cnfmCode", CommonUtils.getRandomNumber(10));
+			estmMap.put("userId", userId);
+			estmMap.put("defaultDate", defaultDate);
+			estmMap.put("emailFailInd", "0");
+			estmMap.put("emailFailDesc", "");
+			estmMap.put("emailAdditional", String.valueOf(addEmailAddr).trim());
+			// estmReq 인서트
+			billingGroupMapper.insEstmReq(estmMap);
+
 			Map<String, Object> custMap = new HashMap<String, Object>();
 			custMap.put("custBillIsEstm", "1");
 			custMap.put("custBillEmail", emailNew );
@@ -209,6 +237,36 @@ public class EInvoiceApiServiceImpl extends EgovAbstractServiceImpl implements E
 
 			// 마스터테이블 업데이트
 			eInvoiceApiMapper.updCustInvoiceMaster(custMap);
+
+			// E-mail 전송하기
+			EmailVO email = new EmailVO();
+			List<String> toList = new ArrayList<String>();
+
+			String additionalEmail = "";
+			additionalEmail = String.valueOf(addEmailAddr).trim();
+			toList.add(String.valueOf(emailNew));
+			if (!"".equals(additionalEmail)) {
+				toList.add(additionalEmail);
+			}
+
+			email.setTo(toList);
+			email.setHtml(true);
+			email.setSubject("Coway E-Invoice Subscription Confirmation");
+			email.setText("Dear Sir/Madam, <br /><br />"
+					+ "Thank you for registering for 'Go Green Go E-invoice' with Coway. <br /><br />"
+					+ "Your email address have been registered as per below:- <br /><br />" + "Email 1: "
+					+ String.valueOf(emailNew).trim() + "<br />" + "Email 2: " + additionalEmail
+					+ "<br /><br /> "
+					//+ "To complete the registration, please confirm the above email addresses by clicking the link below:- <br /><br />"
+					+
+					// To-Be eTRUST시스템에서는 문구 삭제 요청함
+					// "<a href='" + billingTypeConfirmUrl + "?reqId=" + reqId + "' target='_blank'
+					// style='color:blue;font-weight:bold'>Verify Your Email Here</a><br /><br />" +
+					"Should you have any enquiries, please do not hesitate to contact our toll-free number at 1800 888 111 or email to"
+					+ "<a href='mailto:billing@coway.com.my' target='_top' style='color:blue;font-weight:bold'>billing@coway.com.my</a><br /><br /><br />"
+					+ "Yours faithfully,<br />" + "<b>Coway Malaysia</b>");
+
+			adaptorService.sendEmail(email, false);
 		}
 	}
 }
