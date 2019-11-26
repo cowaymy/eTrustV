@@ -25,10 +25,10 @@
 					(
 
 	                     CASE WHEN #{upperMenuCode} IS NULL THEN
-					       ( SELECT 'MOB' || LPAD( NVL(SUBSTR(MAX(MENU_CODE), 4, 2), 0)+1 , 2, 0)  || LPAD( NVL(SUBSTR(MAX(MENU_CODE), 6, 2), 0) , 2, 0) FROM MOB0002M )
+					       ( SELECT 'MOB' || LPAD( NVL(SUBSTR(MAX(MENU_CODE), 4, 2), 0)+1 , 2, 0)  || '00' FROM MOB0002M )
 					     ELSE
 					       ( SELECT 'MOB' || LPAD( NVL(SUBSTR(MAX(MENU_CODE), 4, 2), 0) , 2, 0)  || LPAD( NVL(SUBSTR(MAX(MENU_CODE), 6, 2), 0)+1 , 2, 0) FROM MOB0002M
-					           WHERE  UPPER_MENU_CODE = #{upperMenuCode}  )
+					           WHERE  MENU_CODE = #{upperMenuCode}  )
 					     END
 						,#{menuName}
 						,#{pgmCode}
@@ -77,9 +77,9 @@
 			            UPPER(PGM_NAME) LIKE '%' || UPPER(#{pgmCode}) || '%')
 			</if>
 		</where>
-		       START WITH t1.UPPER_MENU_CODE IS NULL
+        START WITH t1.UPPER_MENU_CODE IS NULL
         CONNECT BY PRIOR t1.MENU_CODE = t1.UPPER_MENU_CODE
-        ORDER BY t1.MENU_ORDER
+        ORDER SIBLINGS BY t1.MENU_ORDER
 <!-- 	    ORDER BY MENU_LVL, MENU_CODE -->
        </select>
 
