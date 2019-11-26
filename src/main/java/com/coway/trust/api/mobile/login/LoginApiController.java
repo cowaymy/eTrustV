@@ -83,6 +83,11 @@ public class LoginApiController {
           throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. Please accept e-Agreement via eTRUST web application.");
         }
       }
+
+      if( CommonUtils.isEmpty(loginVO.getMobileUseYn()) || loginVO.getMobileUseYn().equals("N") ){
+          throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized user.");
+      }
+
       HttpSession session = sessionHandler.getCurrentSession();
       session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
     }
