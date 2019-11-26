@@ -159,8 +159,6 @@ function fn_detailSearch(authCode){
 function fn_detailSearchForMenu(){
     var authCode = "";
 
-    alert("++++fn_detailSearchForMenu ::");
-
 /*     if(AUIGrid.getSelectedItems(grdAuth).length > 0){
         authCode = AUIGrid.getSelectedItems(grdAuth)[0].item.authCode;
     }else{
@@ -442,7 +440,6 @@ var gridMenuMappingColumnLayout =
              iconPosition : "aisleRight",
              iconFunction : function(rowIndex, columnIndex, value, item)
              {
-            	 console.log("++++ item.rowId  ::" + item.rowId  )
                  switch(item.rowId )
                  {
                    case "PkAddNew":

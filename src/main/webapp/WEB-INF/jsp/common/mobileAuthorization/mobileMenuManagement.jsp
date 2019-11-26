@@ -452,10 +452,14 @@ function fnValidationCheck()
         var menuName  = udtList[i].menuName;
         var menuIconNm  = udtList[i].menuIconNm;
 
-        var iValue = menuIconNm.indexOf("icon")
-
         if( menuLvl == "2" )
         {
+        	var iValue = -1;
+        	if( !FormUtil.isEmpty(menuIconNm) ){
+        		 iValue = menuIconNm.indexOf("icon");
+        	}
+
+
             if( iValue > -1 )
             {
             	result = false;
@@ -571,7 +575,7 @@ $(document).ready(function()
 /***************************************************[ Main GRID] ***************************************************/
     var options = {
                       //rowIdField : "rowId", // PK행 지정
-                  usePaging : true,
+                  usePaging : false,
                   // 한 화면에 출력되는 행 개수 20개로 지정
                   //pageRowCount : 20,
                   useGroupingPanel : false,
