@@ -119,6 +119,8 @@
 .title_line .right_opt{float:right;}
 .title_line .right_opt:after{content:""; display:block; clear:both;}
 .title_line .right_opt li{float:left; margin-left:5px;}
+.title_line .right_chk {float: right;}
+.title_line .right_chk label { vertical-align: text-top;}
 .title_line h3+ .left_opt{margin:7px 0 0 5px;}
 .title_line h3+.right_btns{float:right; position:relative; top:3px;}
 .title_line .left_opt{float:left;}
