@@ -48,20 +48,22 @@ public class HcSettlementServiceImpl extends EgovAbstractServiceImpl implements 
 
 
 	@Override
-	public int multiHcSettlement(Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception{
+	public int multiHcSettlement(Map<String, Object> params, SessionVO sessionVO) throws Exception{
 		int saveCnt = 0;
 
 		List<Object> chkList = (List<Object>)params.get("chkList");
 
+		String settlNo = "";
 		Map<String, Object> chkMap = null;
-
 		for(int i=0; i<chkList.size(); i++){
 			chkMap = (Map<String, Object>) chkList.get(i);
 			chkMap.put("crtUserId", sessionVO.getUserId());
 			chkMap.put("updUserId", sessionVO.getUserId());
 			if(i == 0){
 				// HMC0012M
+				chkMap.put("amount", params.get("totAmount"));
 				hcSettlementMapper.insertSettlementMain(chkMap);
+				settlNo = (String)chkMap.get("settlNo");
 			}
 
 			// HMC0009M : PO_SETTL_STATUS : 10
@@ -72,7 +74,7 @@ public class HcSettlementServiceImpl extends EgovAbstractServiceImpl implements 
 			List<EgovMap> detailInfo = hcSettlementMapper.selectSettlementDetailInfo(chkMap);
 			for (Object obj : detailInfo) {
 				Map<String, Object>  map = (Map<String, Object>) obj;
-				map.put("settlNo", (String)chkMap.get("settlNo"));
+				map.put("settlNo", settlNo);
 				map.put("crtUserId", sessionVO.getUserId());
 				map.put("updUserId", sessionVO.getUserId());
 				hcSettlementMapper.insertSettlementDetail(map);

@@ -168,7 +168,7 @@ var myGridID, excelGridId;
 				                , formatString:"#,##0"
 				                , cellMerge:true
 				                , mergePolicy : "restrict"
-	                            , mergeRef : "poNo"
+	                            , mergeRef : "poDtlNo"
                                 , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
                                     if ( "0" == item.poMod ) {
                                         return  "my-columnCenter0";
@@ -243,7 +243,7 @@ var myGridID, excelGridId;
                                 , formatString:"#,##0"
                                 , cellMerge:true
                                 , mergePolicy : "restrict"
-                                , mergeRef : "poNo"
+                                , mergeRef : "hmcDelvryNo"
                                 , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
                                     if ( "0" == item.poMod ) {
                                         return  "my-columnCenter0";
@@ -286,7 +286,7 @@ var myGridID, excelGridId;
                             , {dataField:"hmcGrNoDtlNo", headerText:"GR Detail No", width:120
                             	, cellMerge:true
                             	, mergePolicy : "restrict"
-                                , mergeRef : "poNo"
+                                , mergeRef : "hmcGrNo"
                                 , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
                                     if ( "0" == item.poMod ) {
                                         return  "my-columnCenter0";
@@ -316,7 +316,7 @@ var myGridID, excelGridId;
                                 , formatString:"#,##0"
                                 , cellMerge:true
                                 , mergePolicy : "restrict"
-                                , mergeRef : "poNo"
+                                , mergeRef : "hmcGrNoDtlNo"
                                 , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
                                     if ( "0" == item.poMod ) {
                                         return  "my-columnCenter0";
@@ -500,6 +500,8 @@ var myGridID, excelGridId;
 
         // header Click
         AUIGrid.bind(myGridID, "headerClick", function( event ) {
+        	return false;
+
             console.log(event.type + " : " + event.headerText + ", dataField : " + event.dataField + ", index : " + event.columnIndex + ", depth : " + event.item.depth);
             //return false; // 정렬 실행 안함.
             var cNot = $(myGridID).find(".aui-grid-header-panel").find("tbody > tr > td[colspan]");

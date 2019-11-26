@@ -43,12 +43,12 @@ var vendorObj = {};
             , {dataField:"poSettlStatusNm", headerText:"Settlement Status", width:160, editable:false}
             , {dataField:"settlNo", headerText :"Settlement No", width:170, editable:false}
             , {dataField:"hmcGrNo", headerText :"GR No", width:160, editable:false}
-            , {dataField:"amount", headerText:"Amount", width:150, editable:false
+            , {dataField:"amount", headerText:"Amount", width:160, editable:false
                 , style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
                 , formatString:"#,##0.0"
             }
-            , {dataField:"settlementAmount", headerText:"Settlement Amount", width:150, editable:false
+            , {dataField:"settlementAmount", headerText:"Settlement Amount", width:160, editable:false
                 , style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
                 , formatString:"#,##0.0"
@@ -56,7 +56,7 @@ var vendorObj = {};
             , {dataField:"curNm",headerText :"CUR", width:100, editable:false}
 
             , {dataField:"memAccId", headerText:"Supplier ID", width:120}
-            , {dataField:"memAccName", headerText:"Supplier Name", width:260, editable:false}
+            , {dataField:"memAccName", headerText:"Supplier Name", width:300, style:"aui-grid-user-custom-left", editable:false}
     ];
 
     // main 그리드 속성 설정
@@ -293,6 +293,22 @@ var vendorObj = {};
             }
         });
 
+        // row 콤보박스 클릭.
+        AUIGrid.bind(myGridID, "rowCheckClick", function( event ) {
+            console.log("rowIndex : " + event.rowIndex + ", checked : " + event.checked);
+            if(event.checked){
+                // 같은 번호만 체크.  (같지 않은 번호는 체크 해제)
+                //AUIGrid.setCheckedRowsByValue(myGridID, "settlNo", event.item.settlNo);
+
+                // 같은 번호 체크. (누적되어 같은 번호 체크.)
+                AUIGrid.addCheckedRowsByValue(myGridID, "settlNo", event.item.settlNo);
+            }else{
+                // 같은 번호 체크해제.
+                AUIGrid.addUncheckedRowsByValue(myGridID, "settlNo", event.item.settlNo);
+            }
+        });
+
+
     });
 
 
@@ -330,7 +346,13 @@ function fn_confirmState( state ){
 	                    , {"mainList":reqList, "statCd":state}
 	                    , function(result){
 	                        Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-	                        getListAjax(1);
+
+	                        oldSettlementNo = -1;
+	                        AUIGrid.setGridData(myGridID, []);
+	                        AUIGrid.setGridData(detailGridID, []);
+
+	                        $("#btnSearch").click();
+	                        //getListAjax(1);
 	                        //console.log("성공." + JSON.stringify(result));
 	                        //console.log("data : " + result.data);
 	                     }

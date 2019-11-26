@@ -51,12 +51,12 @@ var vendorObj = {};
             , {dataField:"poSettlStatusNm", headerText:"Settlement Status", width:160, editable:false}
             , {dataField:"settlNo", headerText :"Settlement No", width:170, editable:false}
             , {dataField:"hmcGrNo", headerText :"GR No", width:160, editable:false}
-            , {dataField:"amount", headerText:"Amount", width:150, editable:false
+            , {dataField:"amount", headerText:"Amount", width:160, editable:false
                 , style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
                 , formatString:"#,##0.0"
             }
-            , {dataField:"settlementAmount", headerText:"Settlement Amount", width:150, editable:false
+            , {dataField:"settlementAmount", headerText:"Settlement Amount", width:160, editable:false
                 , style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
                 , formatString:"#,##0.0"
@@ -64,7 +64,7 @@ var vendorObj = {};
             , {dataField:"curNm",headerText :"CUR", width:100, editable:false}
 
             , {dataField:"memAccId", headerText:"Supplier ID", width:120}
-            , {dataField:"memAccName", headerText:"Supplier Name", width:260, editable:false}
+            , {dataField:"memAccName", headerText:"Supplier Name", width:300, style:"aui-grid-user-custom-left", editable:false}
     ];
 
     // main 그리드 속성 설정
@@ -239,10 +239,12 @@ var vendorObj = {};
 
             var isValid = true;
             var reqList = [];
+            var totAmount = 0;
             $.each(chkList, function(idx, row){
                 if(row.item.poSettlStatusCd != "-1" && row.item.poSettlStatusCd != "25" ){
                     isValid = false;
                 }else{
+                	totAmount += Number(row.item.amount);
                 	reqList.push(row.item);
                 }
             });
@@ -262,7 +264,7 @@ var vendorObj = {};
 
             var message = "Do you want to Save?";
 
-            var params = {"chkList":reqList, "udtList":udtList};
+            var params = {"chkList":reqList, "udtList":udtList, "totAmount":totAmount};
 
             Common
                 .confirm(

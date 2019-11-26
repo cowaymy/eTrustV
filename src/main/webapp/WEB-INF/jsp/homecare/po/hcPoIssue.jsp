@@ -71,7 +71,7 @@ var taxObj = {};
 
     // AUIGrid main 칼럼 설정
     var columnLayout = [{dataField:"cdc", editable:false, visible:false}
-             , {dataField:"cdcCd", headerText :"CDC", width:100, headerStyle:"aui-grid-header-input-essen", editable:false}
+             , {dataField:"cdcCd", headerText :"CDC", width:100, editable:false}
              , {dataField:"cdcText",headerText :"CDC Name", width:220, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen", style:"aui-grid-user-custom-left"
             	   ,labelFunction : function(rowIndex, columnIndex, value, headerText, item ) {
 	            		return cdcObj[value]==null?"":js.String.strNvl(cdcObj[value].codeName);
@@ -85,7 +85,7 @@ var taxObj = {};
 	               }
             }
             , {dataField:"poNo", headerText:"Po No", width:160, editable:false}
-            , {dataField:"poTyCd", headerText:"Po Type", width:120, headerStyle:"aui-grid-header-input-icon", visible:false
+            , {dataField:"poTyCd", headerText:"Po Type", width:120, headerStyle:"aui-grid-header-input-icon", editable:false, visible:false
                   ,labelFunction : function(rowIndex, columnIndex, value, headerText, item ) {
                 	    return poTypeObj[value]==null?"":js.String.strNvl(poTypeObj[value]);
                    }
@@ -97,12 +97,12 @@ var taxObj = {};
 						valueField : "codeName"    // value 에 해당되는 필드명
                   }
             }
-            , {dataField:"poStsCode", visible:false}
+            , {dataField:"poStsCode", editable:false, visible:false}
             , {dataField:"poStsName",headerText :"Status", width:100, editable:false}
-            , {dataField:"suppStsCode", visible:false}
+            , {dataField:"suppStsCode", editable:false, visible:false}
             , {dataField:"suppStsName",headerText :"Sales Order", width:100, editable:false}
 
-            , {dataField:"memAccId", headerText:"Supplier ID", width:120, editable:false, headerStyle:"aui-grid-header-input-essen"}
+            , {dataField:"memAccId", headerText:"Supplier ID", width:120, editable:false}
             , {dataField:"memAccName", headerText:"Supplier Name", width:250, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
             	   , style:"aui-grid-user-custom-left"
             	   , labelFunction:function(rowIndex, columnIndex, value, headerText, item ) {
@@ -153,8 +153,8 @@ var taxObj = {};
                 	maxlength : 200
                 }
             }
-            , {dataField:"baseExr", visible:false}
-            , {dataField:"cur", visible:false}
+            , {dataField:"baseExr", editable:false, visible:false}
+            , {dataField:"cur", editable:false, visible:false}
             , {dataField:"issueUsrId", headerText:"Issue User Id", width:120, editable:false}
             , {dataField:"issueUsrName", headerText:"Issue User Name", width:140, editable:false, style:"aui-grid-user-custom-left"}
             , {dataField:"issueDt", headerText:"Issue Date", width:100, editable:false
@@ -177,7 +177,7 @@ var taxObj = {};
                 , dateInputFormat:"dd/mm/yyyy"  // 실제 데이터의 형식 지정
             }
             , {dataField: "crtUserId", headerText :"Creator", width:120, editable:false}
-            , {dataField: "code", visible:false}
+            , {dataField: "code", editable:false, visible:false}
     ];
 
     // main 그리드 속성 설정
@@ -293,7 +293,7 @@ var taxObj = {};
               , {dataField:"total", headerText:"Total", width:140, editable:false, headerStyle:"aui-grid-header-input-essen"
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
-                    , formatString:"#,##0.0"
+                    , formatString:"#,##0.00"
                     , editRenderer : {
                         type : "InputEditRenderer",
                         showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
@@ -319,7 +319,7 @@ var taxObj = {};
               , {dataField:"frexAmt", headerText:"Fx Price", width:120, headerStyle:"aui-grid-header-input-icon"
             	    , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
-                    , formatString:"#,##0.0"
+                    , formatString:"#,##0.00"
               }
 	];
 
@@ -476,7 +476,13 @@ var taxObj = {};
 	                            , params
 	                            , function(result){
 	                                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-	                                getListAjax(1);
+
+	                                oldPoNo = -1;
+	                                AUIGrid.setGridData(myGridID, []);
+	                                AUIGrid.setGridData(detailGridID, []);
+	                                $("#btnSearch").click();
+
+	                                //getListAjax(1);
 	                                //console.log("성공." + JSON.stringify(result));
 	                                //console.log("data : " + result.data);
 	                             }
@@ -608,7 +614,13 @@ var taxObj = {};
                         , function(result){
                             $("#editWindow").hide();
                             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-                            getListAjax(1);
+
+                            oldPoNo = -1;
+                            AUIGrid.setGridData(myGridID, []);
+                            AUIGrid.setGridData(detailGridID, []);
+                            $("#btnSearch").click();
+
+                            //getListAjax(1);
                             //console.log("성공." + JSON.stringify(result));
                             //console.log("data : " + result.data);
                          }

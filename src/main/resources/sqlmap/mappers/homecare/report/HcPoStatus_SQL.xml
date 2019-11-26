@@ -57,10 +57,10 @@
 	                       AND A.DELVRY_GI_DT IS NOT NULL
 	                   ) D
 	            WHERE A.PO_NO = B.PO_NO
-
 	              AND B.PO_NO = D.PO_NO (+)
 	              AND B.PO_DTL_NO = D.PO_DTL_NO (+)
-
+                  AND A.USE_YN = 'Y'
+                  AND B.USE_YN = 'Y'
 	            <if test='sCdc != null and sCdc != ""'>
 	              AND A.CDC = #{sCdc}
 	            </if>
@@ -235,7 +235,6 @@
 		                                 , TO_DATE(D6D.PO_PLAN_DT, 'YYYYMMDD') AS PO_PLAN_DT
 		                                 , D6D.PO_NO
 		                                 , D6D.PO_DTL_NO
-
 
 		                                 , A.APPR_DT  AS PO_DATE
 		                                 , A.PO_STS_CD

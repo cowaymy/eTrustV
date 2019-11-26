@@ -57,6 +57,8 @@
         </if>
            AND A.PO_NO = D.PO_NO
            AND A.GR_YN = 'Y'
+           AND A.USE_YN = 'Y'
+           AND D.USE_YN = 'Y'
        <if test='sCdc != null and sCdc != ""'>
            AND A.CDC = #{sCdc}
        </if>
@@ -156,6 +158,8 @@
                        AND A.HMC_GR_NO = C.HMC_GR_NO
 					</if>
 					   AND A.PO_NO = D.PO_NO
+					   AND A.USE_YN = 'Y'
+                       AND D.USE_YN = 'Y'
 					   AND A.GR_YN = 'Y'
 			       <if test='sCdc != null and sCdc != ""'>
 			           AND A.CDC = #{sCdc}
@@ -194,13 +198,13 @@
                                     <when test='item.field == "memAccId"'>D.MEM_ACC_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
                                     <when test='item.field == "memAccName"'>MEM_ACC_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
                                     <otherwise>
-                                        A.HMC_GR_NO DESC
+                                       C.SETTL_NO DESC, A.HMC_GR_NO DESC
                                     </otherwise>
                                 </choose>
                             </foreach>
                         </when>
                         <otherwise>
-                            A.HMC_GR_NO DESC
+                            C.SETTL_NO DESC, A.HMC_GR_NO DESC
                         </otherwise>
                      </choose>
                  ) T1

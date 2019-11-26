@@ -163,7 +163,7 @@ public class HcSettlementController {
 
 	// SAVE
 	@RequestMapping(value = "/hcSettlement/multiHcSettlement.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> multiHcSettlement(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception {
+	public ResponseEntity<ReturnMessage> multiHcSettlement(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
 
 		int totCnt = hcSettlementService.multiHcSettlement(params, sessionVO);
 

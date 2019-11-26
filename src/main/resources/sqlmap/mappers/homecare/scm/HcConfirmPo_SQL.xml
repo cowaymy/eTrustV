@@ -7,6 +7,7 @@
         SELECT COUNT(1) AS CNT
           FROM HMC0004M A
          WHERE 1 = 1
+           AND A.USE_YN = 'Y'
            AND A.PO_STS_CD IN ( SELECT CODE_ID FROM SYS0013M
                                  WHERE CODE_MASTER_ID = '429'
                                    AND CODE IN ('30')
@@ -90,6 +91,7 @@
                            ) B  -- CDC MASTER
 			         WHERE 1 = 1
 			           AND A.CDC = B.CDC (+)
+			           AND A.USE_YN = 'Y'
 			           AND A.PO_STS_CD IN ( SELECT CODE_ID FROM SYS0013M
 			                                 WHERE CODE_MASTER_ID = '429'
 			                                   AND CODE IN ('30')

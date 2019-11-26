@@ -13,6 +13,7 @@
            AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
            AND A.PO_NO = C.PO_NO
            AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO
+           AND A.USE_YN = 'Y'
            AND C.DELVRY_STATUS = '5652'
            AND C.USE_YN = 'Y'
          <if test='sCdc != null and sCdc != ""'>
@@ -76,6 +77,7 @@
 					   AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
 					   AND A.PO_NO = C.PO_NO
 					   AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO
+					   AND A.USE_YN = 'Y'
 					   AND C.DELVRY_STATUS = '5652'
 					   AND C.USE_YN = 'Y'
 					 <if test='sCdc != null and sCdc != ""'>
@@ -139,6 +141,8 @@
 		  FROM HMC0007M A
 		     , HMC0004M B
 		 WHERE A.PO_NO = B.PO_NO
+		   AND A.USE_YN = 'Y'
+		   AND B.USE_YN = 'Y'
 		   AND A.HMC_DELVRY_NO = #{hmcDelvryNo}
     </select>
 
@@ -220,7 +224,8 @@
 		     , SYSDATE AS UPD_DT
 		     , #{updUserId} AS UPD_USER_ID
 		  FROM HMC0008D
-		 WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+		 WHERE USE_YN = 'Y'
+		   AND HMC_DELVRY_NO = #{hmcDelvryNo}
     </insert>
 
     <select id="selectDeliveryConfirm" parameterType="Map" resultType="egovMap">
@@ -260,6 +265,7 @@
 		                                                      FROM HMC0009M Z
 		                                                     WHERE Z.HMC_DELVRY_NO = A.HMC_DELVRY_NO
 		                                                       AND Z.PO_NO = A.PO_NO
+		                                                       AND Z.USE_YN = 'Y'
 		                                                       AND Z.GR_YN = 'N'
 		                                                    )
 		                     ELSE C.ING_GR_NO
@@ -281,6 +287,7 @@
 				             , SUM(CASE WHEN A.GR_YN = 'N' THEN B.QC_FAIL_QTY ELSE 0 END) AS FAIL_TM_QTY
 		                     , (SELECT MAX(Z.HMC_GR_NO) FROM HMC0009M Z
 		                         WHERE Z.HMC_DELVRY_NO = A.HMC_DELVRY_NO
+		                           AND Z.USE_YN = 'Y'
 		                           AND Z.GR_YN = 'N'
 		                       ) AS ING_GR_NO
 				          FROM HMC0009M A
@@ -315,6 +322,7 @@
         SELECT COUNT(1)
           FROM HMC0009M
          WHERE HMC_GR_NO = #{hmcGrNo}
+           AND USE_YN = 'Y'
            AND GR_YN = 'N'
     </select>
 
@@ -425,6 +433,7 @@
 				     AND A.PO_DTL_NO = B.PO_DTL_NO (+)
 				     AND A.STOCK_ID = B.STOCK_ID (+)
 				     AND A.STOCK_CODE = B.STOCK_CODE (+)
+				     AND A.USE_YN = 'Y'
 				     AND A.HMC_DELVRY_NO = #{hmcDelvryNo}
 		     ) Z
     </select>
@@ -493,10 +502,10 @@
 		 WHERE A.HMC_GR_NO = B.HMC_GR_NO
 		   AND A.PO_NO = B.PO_NO
 		   AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
-
 		   AND A.STOCK_ID = C.STK_ID
 		   AND A.STOCK_CODE = C.STK_CODE
-
+           AND A.USE_YN = 'Y'
+           AND B.USE_YN = 'Y'
 		   AND A.HMC_GR_NO = #{hmcGrNo}
     </select>
 

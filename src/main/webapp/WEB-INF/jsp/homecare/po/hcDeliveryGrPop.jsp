@@ -67,9 +67,7 @@ $(document).ready(function(){
                 	if(item[i].serialChk == "Y"){ isSerialCheck = true; }
                 	var bfTotQty = js.String.naNcheck(item[i].delvryQty)
 				                	- ( js.String.naNcheck(item[i].rciptGrQty)
-				                		+ js.String.naNcheck(item[i].failGrQty)
-				                		+ js.String.naNcheck(item[i].rciptTmQty)
-				                		+ js.String.naNcheck(item[i].failTmQty));
+				                		+ js.String.naNcheck(item[i].failGrQty));
 
                 	html += "<input type='hidden' name='hmcDelvryNo' value='"+item[i].hmcDelvryNo+"' />"
                 	      + "<input type='hidden' name='hmcDelvryNoDtlNo' value='"+item[i].hmcDelvryNoDtlNo+"' />"
@@ -164,14 +162,13 @@ $(document).ready(function(){
     	var item = [];
     	var validQty = 0, sumQty = 0;
     	for (var i=0; i<count; i++) {
-    		/*
+
     		validQty = js.String.naNcheck(param.bfTotQty[i]) - Number(js.String.deletecomma(param.rciptTmQty[i])) - js.String.naNcheck(param.failTmQty[i]);
 
 	    	if(validQty < 0){
 	    		Common.alert("Total quantity cannot be exceeded.");
 	    		return false;
 	    	}
-	    	*/
 
 	    	sumQty += Number(js.String.deletecomma(param.rciptTmQty[i])) + js.String.naNcheck(param.failTmQty[i]);
 

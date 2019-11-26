@@ -6,12 +6,12 @@
     /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryPlanMapper.selectHcDeliveryPlanMainListCnt] - KR JIN */
 	    SELECT NVL(SUM(1), 0) AS CNT
 	      FROM (
-	            SELECT (SELECT DECODE(MAX(Z.PO_DTL_PLAN_NO), NULL, 'N', 'Y') FROM HMC0006D Z WHERE Z.PO_NO = B.PO_NO AND Z.PO_DTL_NO = B.PO_DTL_NO ) AS PLAN_YN
+	            SELECT (SELECT DECODE(MAX(Z.PO_DTL_PLAN_NO), NULL, 'N', 'Y') FROM HMC0006D Z WHERE Z.PO_NO = A.PO_NO) AS PLAN_YN
 	              FROM HMC0004M A
-	                 , HMC0005D B
-	             WHERE A.PO_NO = B.PO_NO
+	             WHERE 1 = 1
 	               AND A.SUPP_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '438' AND CODE = '20')
 	               AND A.PO_TY_CD  = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '428' AND CODE = 'PO')
+	               AND A.USE_YN = 'Y'
 	             <if test='sCdc != null and sCdc != ""'>
 	               AND A.CDC = #{sCdc}
 	             </if>
@@ -90,6 +90,7 @@
 							 WHERE A.CDC = B.CDC (+)
 							   AND A.SUPP_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '438' AND CODE = '20')
 							   AND A.PO_TY_CD  = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '428' AND CODE = 'PO')
+							   AND A.USE_YN = 'Y'
 							 <if test='sCdc != null and sCdc != ""'>
 					           AND A.CDC = #{sCdc}
 					         </if>
@@ -195,6 +196,7 @@
         WHERE A.PO_NO = B.PO_NO (+)
           AND A.PO_DTL_NO = B.PO_DTL_NO (+)
           AND A.PO_NO = #{sPoNo}
+          AND A.USE_YN = 'Y'
           ORDER BY A.PO_NO, A.PO_DTL_NO
     </select>
 
@@ -214,6 +216,7 @@
 		     , HMC0005D B      -- PO DETAIL
 		 WHERE A.PO_NO = B.PO_NO
 		   AND A.PO_DTL_NO = B.PO_DTL_NO
+		   AND B.USE_YN = 'Y'
 		   AND A.PO_NO = #{sPoNo}
 		   ORDER BY A.PO_NO, A.PO_DTL_NO, A.PO_DTL_PLAN_NO
     </select>
@@ -225,6 +228,7 @@
              , HMC0005D B      -- PO DETAIL
          WHERE A.PO_NO = B.PO_NO
            AND A.PO_DTL_NO = B.PO_DTL_NO
+           AND B.USE_YN = 'Y'
            AND A.PO_NO = #{sPoNo}
     </select>
 

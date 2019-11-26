@@ -10,6 +10,7 @@
            AND A.PO_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE = '30')
            AND A.SUPP_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '438' AND CODE = '20')
            AND A.PO_TY_CD  = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '428' AND CODE = 'PO')
+           AND A.USE_YN = 'Y'
          <if test='sCdc != null and sCdc != ""'>
            AND A.CDC = #{sCdc}
          </if>
@@ -80,6 +81,7 @@
 					   AND A.PO_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE = '30')
 					   AND A.SUPP_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '438' AND CODE = '20')
 					   AND A.PO_TY_CD  = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '428' AND CODE = 'PO')
+					   AND A.USE_YN = 'Y'
 					 <if test='sCdc != null and sCdc != ""'>
 			           AND A.CDC = #{sCdc}
 					 </if>
@@ -195,6 +197,7 @@
           AND A.PO_NO = C.PO_NO (+)
           AND A.PO_DTL_NO = C.PO_DTL_NO (+)
           AND A.PO_NO = #{sPoNo}
+          AND A.USE_YN = 'Y'
         ORDER BY A.PO_NO, A.PO_DTL_NO
     </select>
 

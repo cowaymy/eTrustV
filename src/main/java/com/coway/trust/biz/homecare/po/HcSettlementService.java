@@ -18,7 +18,7 @@ public interface HcSettlementService {
 	public List<EgovMap> selectHcSettlementSub(Map<String, Object> params) throws Exception;
 
 	// SAVE
-	public int multiHcSettlement(Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception;
+	public int multiHcSettlement(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 
 	// Confirm
 	public int confirmHcSettlement(Map<String, Object> params, SessionVO sessionVO) throws Exception;
