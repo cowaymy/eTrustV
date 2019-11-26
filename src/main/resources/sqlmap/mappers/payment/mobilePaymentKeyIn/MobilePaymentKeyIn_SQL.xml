@@ -33,9 +33,10 @@
 					 Extent1.PAY_REM PAY_REM,
 					 Extent5.CRT_USER_BRNCH CRT_USER_BRNCH,
 					 T4.NAME CRT_USER_BRNCH_NM,
-					 Extent1.CRT_USER_ID CRT_USER_ID,
-					 Extent1.UPD_USER_ID UPD_USER_ID,
-					 T10.USER_NAME                                UPD_USER_NM,
+		             Extent1.CRT_USER_ID CRT_USER_ID,
+                     T10.USER_NAME CRT_USER_NM,
+                     Extent1.UPD_USER_ID UPD_USER_ID,
+                     T11.USER_NAME UPD_USER_NM,
 					 TO_CHAR(Extent1.UPD_DT , 'DD-MM-YYYY HH24:MI:SS') UPD_DT,
 					 Extent7.CUST_BILL_ID CUST_BILL_ID,
                      Extent2.SALES_ORD_ID  ORD_ID,
@@ -80,6 +81,8 @@
                               ON  F.ATCH_FILE_ID = E.ATCH_FILE_ID
                           LEFT JOIN SYS0047M T10
                                 ON T10.USER_ID = Extent1.CRT_USER_ID
+                           LEFT JOIN SYS0047M T11
+                                ON T11.USER_ID = Extent1.UPD_USER_ID
                         INNER JOIN SYS0005M T4
                             ON  T4.BRNCH_ID = Extent5.CRT_USER_BRNCH
          <where>
