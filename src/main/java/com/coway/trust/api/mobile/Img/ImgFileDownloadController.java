@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
@@ -24,6 +25,7 @@ import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.cmmn.exception.FileDownException;
 import com.coway.trust.util.EgovBasicLogger;
+import com.coway.trust.util.EgovFormBasedFileUtil;
 import com.coway.trust.util.EgovResourceCloseHelper;
 /**
  * @ClassName : ImgFileDownloadController.java
@@ -294,4 +296,21 @@ public class ImgFileDownloadController {
 			throw new FileDownException(AppConstants.FAIL, "Could not get file name : " + originalFileName);
 		}
 	}
+
+
+
+    /**
+     * 이미지 view를 제공한다.
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(value = "/editor/imageSrc.do", method = RequestMethod.GET)
+    public void download(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String subPath = request.getParameter("path");
+        String physical = request.getParameter("physical");
+        String mimeType = request.getParameter("contentType");
+        EgovFormBasedFileUtil.viewFile(response, uploadDir, subPath, physical, mimeType);
+    }
 }
