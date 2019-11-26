@@ -42,6 +42,7 @@ public class LoginVO {
 	private String costCentr;
 	private String agrmtAppStat; //ADD AGREEMENT APPROVAL STATUS FOR MOBILE
 	private String agrmt; //ADD AGREEMENT STATUS FOR MOBILE
+	private String mobileUseYn;
 
 	public String getUserNric() {
 		return userNric;
@@ -349,4 +350,13 @@ public class LoginVO {
 	public void setAgrmt(String agrmt) {
 		this.agrmt = agrmt;
 	}
+
+
+    public String getMobileUseYn() {
+        return mobileUseYn;
+    }
+
+    public void setMobileUseYn(String mobileUseYn) {
+        this.mobileUseYn = mobileUseYn;
+    }
 }
