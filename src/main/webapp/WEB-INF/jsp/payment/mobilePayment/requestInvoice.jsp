@@ -207,18 +207,16 @@ function fn_excel(){
 
 
 function fn_approve(){
-    var length = AUIGrid.getSelectedItems(myGridID).length;
-    if( length == 0 ){
+    var selectGrd = AUIGrid.getSelectedItems(myGridID);
+    if( selectGrd.length != 1 ){
     	Common.alert("<spring:message code='pay.check.noRowsSelected'/>");
 
     }else{
-    	for( var i = 0 ; i < length ; i++ ){
-    		var reqStusId = AUIGrid.getCellValue(myGridID, i, "reqStusId");
-            if( reqStusId != 1 ){
-                Common.alert("<spring:message code='pay.check.reqStusId'/>");
-                return false;
-            }
-    	}
+    	var reqStusId = AUIGrid.getCellValue(myGridID, AUIGrid.getSelectedItems(myGridID)[0].rowIndex, "reqStusId");
+        if( reqStusId != 1 ){
+            Common.alert("<spring:message code='pay.check.reqStusId'/>");
+            return false;
+        }
 
     	Common.confirm("<spring:message code='pay.confirm.approve'/>", function(){
             Common.ajaxSync("POST", "/payment/requestInvoice/saveRequestInvoiceArrpove.do", AUIGrid.getSelectedItems(myGridID)[0].item, function(result) {
@@ -236,17 +234,15 @@ function fn_approve(){
 
 
 function fn_rejcet(){
-	var length = AUIGrid.getSelectedItems(myGridID).length;
-    if( length == 0 ){
+	var selectGrd = AUIGrid.getSelectedItems(myGridID);
+    if( selectGrd.length != 1 ){
     	Common.alert("<spring:message code='pay.check.noRowsSelected'/>");
 
     }else{
-    	for( var i = 0 ; i < length ; i++ ){
-            var reqStusId = AUIGrid.getCellValue(myGridID, i, "reqStusId");
-            if( reqStusId != 1 ){
-                Common.alert("<spring:message code='pay.check.reqStusId'/>");
-                return false;
-            }
+        var reqStusId = AUIGrid.getCellValue(myGridID, AUIGrid.getSelectedItems(myGridID)[0].rowIndex, "reqStusId");
+        if( reqStusId != 1 ){
+            Common.alert("<spring:message code='pay.check.reqStusId'/>");
+            return false;
         }
 
     	Common.prompt("<spring:message code='pay.prompt.reject'/>", "", function(){
