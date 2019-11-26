@@ -14,14 +14,21 @@
 	                 ( SELECT CUST_BILL_GRP_NO FROM SAL0024D t1 WHERE t1.CUST_BILL_ID = Extent1.CUST_BILL_ID_OLD  ) CUST_BILL_NM_OLD,
 				     Extent1.CUST_BILL_ID_NW CUST_BILL_ID_NW,
                      ( SELECT CUST_BILL_GRP_NO FROM SAL0024D t1 WHERE t1.CUST_BILL_ID = Extent1.CUST_BILL_ID_NW  ) CUST_BILL_NM_NW,
-                     ( SELECT sales_ord_no FROM SAL0001D t4 WHERE t4.CUST_BILL_ID = Extent1.CUST_BILL_ID_NW  ) SALES_ORD_NO_NM,
+                     (
+	                     SELECT     t2.SALES_ORD_NO
+	                     FROM        SAL0024D t1
+	                                        JOIN SAL0001D t2
+	                                            ON t1.CUST_BILL_ID = t2.CUST_BILL_ID
+	                                            AND t1.CUST_BILL_SO_ID = t2.SALES_ORD_ID
+	                     WHERE      t2.CUST_BILL_ID = Extent1.CUST_BILL_ID_NW
+                     ) SALES_ORD_NO_NM,
 				     Extent1.REM REM,
 				     Extent2.CRT_USER_BRNCH CRT_USER_BRNCH,
 				     Extent4.CODE CRT_USER_BRNCH_CD,
                      Extent4.NAME CRT_USER_BRNCH_NM,
 				     Extent1.CRT_USER_ID CRT_USER_ID,
-				     T10.USER_NAME CRT_USER_NM,
-				     TO_CHAR(Extent1.UPD_DT, 'DD-MM-YYYY') UPD_DT,
+				     T9.USER_NAME CRT_USER_NM,
+				     TO_CHAR(Extent1.UPD_DT, 'DD-MM-YYYY hh24:mi:ss') UPD_DT,
 				     Extent1.UPD_USER_ID UPD_USER_ID,
 				     T10.USER_NAME UPD_USER_NM
             FROM PAY0299D Extent1
