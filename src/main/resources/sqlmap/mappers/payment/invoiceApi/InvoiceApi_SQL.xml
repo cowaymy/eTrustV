@@ -302,8 +302,8 @@ INTO    PAY0295D                                                                
     ,   #{invcItmDiscRate}                                                      --Only Advance : Discount Rate
     ,   #{invcItmExgAmt}                                                        --Only Advance : Existing Amount
     ,   #{invcItmTotAmt}                                                        --Only Advance : Total Amount
-    ,   #{reqInvcYear}                                                          --Only Advance : The year of the beginning of the period
-    ,   #{reqInvcMonth}                                                         --Only Advance : The month of the beginning of the period
+    ,   TO_CHAR(TO_DATE(#{reqInvcYearMonth}, 'YYYYMM'), 'YYYY')                 --Only Advance : The year of the beginning of the period
+    ,   TO_CHAR(TO_DATE(#{reqInvcYearMonth}, 'YYYYMM'), 'MM')                   --Only Advance : The month of the beginning of the period
     ,   #{invcCntcPerson}                                                       --Only Advance : Invoice Contact Person Name
     ,   #{email}                                                                --Only Advance : Order Contact Email1
     ,   #{email2}                                                               --Only Advance : Order Contact Email2

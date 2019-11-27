@@ -141,7 +141,7 @@ SELECT  B.MOB_TICKET_NO                                                         
 <if test='gu.equals("LIST")'>
     <include refid="suffixSql"/>
 </if>
-ORDER BY MOB_TICKET_NO DESC
+ORDER BY TO_NUMBER(MOB_TICKET_NO) DESC
 </select>
 
 
