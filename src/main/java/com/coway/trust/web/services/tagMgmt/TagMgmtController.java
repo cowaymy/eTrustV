@@ -21,6 +21,7 @@ import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.services.servicePlanning.MileageCalculationController;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -69,9 +70,12 @@ public class TagMgmtController {
 		EgovMap codyInfo     	 = tagMgmtService.selectOrderServiceMemberViewByOrderID(orderInfo);
 		model.addAttribute("codyInfo" , codyInfo);
 
-		params.put("salesOrderId", orderInfo.get("salesOrdId"));
+		  logger.debug("orderInfo : " +  orderInfo);
+		  if(orderInfo != null){
+		params.put("salesOrderId",  orderInfo.get("salesOrdId"));
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
 		model.put("orderDetail", orderDetail);
+		  }
 
 		return "services/tagMgmt/tagLogListPop";
 	}
