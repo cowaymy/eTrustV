@@ -19,20 +19,30 @@ $(document).ready(function() {
 		isCheckAll : false,
 		type : 'M'
 	});
-	CommonCombo.make("_rosCaller", "/sales/rcms/selectRosCaller", {stus:'1'}, agentId,
-	{
-		id:"agentId",
-		name:"agentName",
-		isCheckAll : false,
-		isShowChoose: false ,
-		type: "M"
-	});
+	CommonCombo.make("_agentType", "/sales/rcms/selectAgentTypeList", {codeMasterId : '329'}, '',  {isShowChoose: false});
+
 	CommonCombo.make('_assignUploadType','/common/selectCodeList.do', {groupCode:'422',orderValue:"CODE"},null,
 	{
 		id: "codeId",
 		name: "codeName",
 		type: "M"
 	});
+
+	$("#_agentType").change(function(){
+		var agentType = $("#_agentType").val() != null ? $("#_agentType").val() : 2326;
+		CommonCombo.make("_rosCaller", "/sales/rcms/selectRosCaller", {stus:'1',agentType: agentType}, '',
+			    {
+			        id:"agentId",
+			        name:"agentName",
+			        isCheckAll : false,
+			        isShowChoose: false ,
+			        type: "M"
+			    });
+	});
+
+	// Trigger onchange when page loaded.
+	$("#_agentType").trigger('change');
+
 });
 
 function fn_genReport(){
@@ -184,11 +194,17 @@ function fn_genReport(){
         </td>
     </tr>
     <tr>
+        <th scope="row"><spring:message code="sal.title.text.agentType" /></th>
+        <td>
+            <select id="_agentType" name="_agentType" class="w100p" ></select>
+        </td>
         <th scope="row"><spring:message code="sal.title.text.rosCaller" /></th>
         <td>
             <select id="_rosCaller" name="_rosCaller" class="multy_select w100p" multiple="multiple">
             </select>
         </td>
+    </tr>
+    </tr>
 	    <th scope="row"><spring:message code='sal.title.text.assignedDt'/></th>
 	    <td>
 	    <div class="date_set w100p"><!-- date_set start -->
@@ -197,6 +213,8 @@ function fn_genReport(){
 	    <p><input id="listEndDt" name="endDt" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 	    </div><!-- date_set end -->
 	    </td>
+	    <th></th>
+	    <td></td>
     </tr>
 </tbody>
 </table><!-- table end -->

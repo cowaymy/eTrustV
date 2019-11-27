@@ -9,14 +9,29 @@ $(document).ready(function() {
     CommonCombo.make("_appType", "/common/selectCodeList.do", {groupCode : '10'}, '66',{id: "codeId",name:"codeName",isShowChoose: false});
     //Rental Status
     CommonCombo.make('_rentalStusType', "/status/selectStatusCategoryCdList.do", {selCategoryId : 26} , 'INV|!|SUS', {id: "code", name: "codeName", isShowChoose: false,isCheckAll : false,type : 'M'});
-    //ROS Caller
-    CommonCombo.make("_rosCaller", "/sales/rcms/selectRosCaller", {stus:'1'}, agentId,{id:"agentId",name:"agentName",isCheckAll : false,isShowChoose: false ,type: "M"});
+    //Agent Type
+    CommonCombo.make("_agentType", "/sales/rcms/selectAgentTypeList", {codeMasterId : '329'}, '',  {isShowChoose: false});
     //Customer Type
     CommonCombo.make("_customerType", "/common/selectCodeList.do", {groupCode : '8'}, '964', {isShowChoose: false});
     //Company Type
     CommonCombo.make("_companyType", "/common/selectCodeList.do", {groupCode : '95'}, null, {isShowChoose: false , isCheckAll : false, type: "M"});
 
     $("#_companyType").multipleSelect("disable");
+
+    $("#_agentType").change(function(){
+        var agentType = $("#_agentType").val() != null ? $("#_agentType").val() : 2326;
+        CommonCombo.make("_rosCaller", "/sales/rcms/selectRosCaller", {stus:'1',agentType: agentType}, '',
+                {
+                    id:"agentId",
+                    name:"agentName",
+                    isCheckAll : false,
+                    isShowChoose: false ,
+                    type: "M"
+                });
+    });
+
+    // Trigger onchange when page loaded.
+    $("#_agentType").trigger('change');
 
 });
 
@@ -180,17 +195,25 @@ console.log($("#_companyType").val());
         </td>
     </tr>
     <tr>
+        <th scope="row"><spring:message code="sal.title.text.agentType" /></th>
+        <td>
+            <select id="_agentType" name="_agentType" class="w100p" ></select>
+        </td>
         <th scope="row"><spring:message code="sal.title.text.rosCaller" /></th>
         <td>
             <select id="_rosCaller" name="_rosCaller" class="multy_select w100p" multiple="multiple">
             </select>
         </td>
+     </tr>
+     <tr>
         <th scope="row"><spring:message code='sal.title.text.assignedDt'/></th>
         <td>
 	        <div class="date_set w100p">
 	        <p><input id="_assignDt" name="_assignDt" type="text" value="" placeholder="MM/YYYY" class="j_date2" /></p>
 	        </div>
         </td>
+        <th></th>
+        <td></td>
     </tr>
 </tbody>
 </table><!-- table end -->

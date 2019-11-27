@@ -130,6 +130,9 @@
      <if test="userName != null and userName != '' ">
           AND A.USER_ID= #{userName}
       </if>
+      <if test="agentType != null and agentType != '' ">
+         AND A.AGENT_TYPE = #{agentType}
+      </if>
 </select>
 
 <select id="selectAssignAgentList" parameterType="Map" resultType="egovMap">
