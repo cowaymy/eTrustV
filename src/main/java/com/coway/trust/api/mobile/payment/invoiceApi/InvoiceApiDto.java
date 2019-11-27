@@ -66,8 +66,7 @@ public class InvoiceApiDto {
         params.put("invcItmRentalFee", vo.getInvcItmRentalFee());
         params.put("invcItmExgAmt", vo.getInvcItmExgAmt());
         params.put("invcItmTotAmt", vo.getInvcItmTotAmt());
-        params.put("reqInvcYear", vo.getReqInvcYear());
-        params.put("reqInvcMonth", vo.getReqInvcMonth());
+        params.put("reqInvcYearMonth", vo.getReqInvcYearMonth());
         params.put("invcCntcPerson", vo.getInvcCntcPerson());
         params.put("custBillGrpNo", vo.getCustBillGrpNo());
 		return params;
@@ -106,13 +105,12 @@ public class InvoiceApiDto {
     private double invcItmRentalFee;
     private double invcItmExgAmt;
     private double invcItmTotAmt;
-    private int reqInvcYear;
-    private int reqInvcMonth;
+    private int reqInvcYearMonth;
     private String invcCntcPerson;
     private String custBillGrpNo;
 
 
-    
+
     public String getCustBillGrpNo() {
         return custBillGrpNo;
     }
@@ -369,20 +367,12 @@ public class InvoiceApiDto {
         this.invcItmTotAmt = invcItmTotAmt;
     }
 
-    public int getReqInvcYear() {
-        return reqInvcYear;
+    public int getReqInvcYearMonth() {
+        return reqInvcYearMonth;
     }
 
-    public void setReqInvcYear(int reqInvcYear) {
-        this.reqInvcYear = reqInvcYear;
-    }
-
-    public int getReqInvcMonth() {
-        return reqInvcMonth;
-    }
-
-    public void setReqInvcMonth(int reqInvcMonth) {
-        this.reqInvcMonth = reqInvcMonth;
+    public void setReqInvcYearMonth(int reqInvcYearMonth) {
+        this.reqInvcYearMonth = reqInvcYearMonth;
     }
 
     public String getInvcCntcPerson() {
