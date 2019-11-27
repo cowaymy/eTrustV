@@ -15,6 +15,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 29/07/2019    ONGHC      1.0.2       - Add Function
  * 29/07/2019    ONGHC      1.0.3       - Amend productReturnResult to Add Status Checking
  * 13/08/2019    ONGHC      1.0.4       - Add updFctExch
+ * 27/11/2019    ONGHC      1.0.5       - Add Function
  *********************************************************************************************/
 
 @Mapper("MSvcLogApiMapper")
@@ -226,5 +227,17 @@ public interface MSvcLogApiMapper {
   int insert_SVC0066T(Map<String, Object> params);
 
   int prdResultSync(Map<String, Object> params);
+
+  EgovMap newSearchCancelSAL0001D(Map<String, Object> params);
+
+  int chkSubPromo(Map<String, Object> params);
+
+  int chkMainPromo(Map<String, Object> params);
+
+  EgovMap revSubCboPckage(Map<String, Object> params);
+
+  EgovMap revMainCboPckage(Map<String, Object> params);
+
+  void insertSAL0254D(Map<String, Object> params);
 
 }
