@@ -311,6 +311,6 @@ public class ImgFileDownloadController {
         String subPath = request.getParameter("path");
         String physical = request.getParameter("physical");
         String mimeType = request.getParameter("contentType");
-        EgovFormBasedFileUtil.viewFile(response, uploadDir, subPath, physical, mimeType);
+        EgovFormBasedFileUtil.viewFile(response, uploadDirWeb, subPath, physical, mimeType);
     }
 }
