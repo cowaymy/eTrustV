@@ -480,7 +480,7 @@ public class InvoiceAdjController {
 		String memoAdjustOrderNo = "";
 		String memoAdjustItemNo = "";
 		double memoAdjustAmount = 0.0D;
-		int memoAdjustInstallmentMonth = 0;
+		String memoAdjustInstallmentMonth = "";
 		String memoAdjustType = "";
 
 		//Invoice 조회 parameter
@@ -514,7 +514,7 @@ public class InvoiceAdjController {
 				memoAdjustOrderNo = String.valueOf(gridMap.get("1"));										//Order No.
 				memoAdjustItemNo = String.valueOf(gridMap.get("2"));										//Invoice Item No.
 				memoAdjustAmount = Double.parseDouble(String.valueOf(gridMap.get("3")));			//Adjustment Amount
-				memoAdjustInstallmentMonth = Integer.parseInt(String.valueOf(gridMap.get("4")));//Installment Month
+				memoAdjustInstallmentMonth = String.valueOf(gridMap.get("4"));//Installment Month
 				memoAdjustType = String.valueOf(gridMap.get("5"));            //REN,RPF and etc
 
 				map = new HashMap<String, Object>();
