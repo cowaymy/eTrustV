@@ -516,14 +516,6 @@ var detailOptions =
 /****************************Program Init Start********************************/
 $(document).ready(function(){
 
-    $("#menuCode").keydown(function(key)
-    {
-          if (key.keyCode == 13)
-          {
-              fn_detailSearchForMenu();
-          }
-
-    });
 
     // AUIGrid 그리드를 생성
     grdAuth = GridCommon.createAUIGrid("grdAuth", gridAuthColumnLayout,"", options);
