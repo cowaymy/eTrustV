@@ -208,18 +208,18 @@ function fn_excel(){
 
 function fn_approve(){
     var selectGrd = AUIGrid.getSelectedItems(myGridID);
-    if( selectGrd.length != 1 ){
+    if( selectGrd.length <= 0 ){
     	Common.alert("<spring:message code='pay.check.noRowsSelected'/>");
 
     }else{
-    	var reqStusId = AUIGrid.getCellValue(myGridID, AUIGrid.getSelectedItems(myGridID)[0].rowIndex, "reqStusId");
+    	var reqStusId = AUIGrid.getCellValue(myGridID, selectGrd[0].rowIndex, "reqStusId");
         if( reqStusId != 1 ){
             Common.alert("<spring:message code='pay.check.reqStusId'/>");
             return false;
         }
 
     	Common.confirm("<spring:message code='pay.confirm.approve'/>", function(){
-            Common.ajaxSync("POST", "/payment/requestInvoice/saveRequestInvoiceArrpove.do", AUIGrid.getSelectedItems(myGridID)[0].item, function(result) {
+            Common.ajaxSync("POST", "/payment/requestInvoice/saveRequestInvoiceArrpove.do", selectGrd[0].item, function(result) {
                 if(result !=""  && null !=result ){
                     Common.alert("<spring:message code='pay.alert.approve'/>", function(){
                         fn_search(1);
@@ -235,7 +235,7 @@ function fn_approve(){
 
 function fn_rejcet(){
 	var selectGrd = AUIGrid.getSelectedItems(myGridID);
-    if( selectGrd.length != 1 ){
+	if( selectGrd.length <= 0 ){
     	Common.alert("<spring:message code='pay.check.noRowsSelected'/>");
 
     }else{
