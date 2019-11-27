@@ -230,11 +230,8 @@ public class InvoiceApiServiceImpl extends EgovAbstractServiceImpl implements In
         if( CommonUtils.isEmpty(param.getInvcItmTotAmt()) ){
             throw new ApplicationException(AppConstants.FAIL, "The  Total Amount value does not exist.");
         }
-        if( CommonUtils.isEmpty(param.getReqInvcYear()) ){
-            throw new ApplicationException(AppConstants.FAIL, "The year of the beginning of the period value does not exist.");
-        }
-        if( CommonUtils.isEmpty(param.getReqInvcMonth()) ){
-            throw new ApplicationException(AppConstants.FAIL, "The month of the beginning of the period value does not exist.");
+        if( CommonUtils.isEmpty(param.getReqInvcYearMonth()) ){
+            throw new ApplicationException(AppConstants.FAIL, "There is no period form value.");
         }
         if( CommonUtils.isEmpty(param.getTypeId()) ){
             throw new ApplicationException(AppConstants.FAIL, "Type Id value does not exist.");
