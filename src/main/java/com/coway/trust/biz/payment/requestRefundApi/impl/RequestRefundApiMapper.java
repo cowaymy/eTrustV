@@ -30,9 +30,5 @@ public interface RequestRefundApiMapper {
 
 
 
-    int updateFtStusIdPAY0252T(Map<String, Object> param);
-
-
-
     int insertPAY0298D(Map<String, Object> param);
 }

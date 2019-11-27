@@ -115,16 +115,6 @@ public class RequestRefundApiServiceImpl extends EgovAbstractServiceImpl impleme
 
 
 
-        Map<String, Object> pay0252t = new HashMap<String, Object>();
-        pay0252t.put("groupSeq", param.getRefReqId());
-        pay0252t.put("payId", param.getPayId());
-        int saveCnt = requestRefundApiMapper.updateFtStusIdPAY0252T(pay0252t);
-        if( saveCnt == 0 ){
-            throw new ApplicationException(AppConstants.FAIL, "Failed to update.");
-        }
-
-
-
         List<Map<String, Object>> arrParams  = new ArrayList<Map<String,Object>>();
         Map<String, Object> sParams = new HashMap<String, Object>();
         sParams.put("salesOrdNo", param.getOrdNo());
@@ -152,7 +142,7 @@ public class RequestRefundApiServiceImpl extends EgovAbstractServiceImpl impleme
         pay0298d.put("mobTicketNo", mobTicketNo);
         pay0298d.put("crtUserId", loginVO.getUserId());
         pay0298d.put("updUserId", loginVO.getUserId());
-        saveCnt = requestRefundApiMapper.insertPAY0298D(pay0298d);
+        int saveCnt = requestRefundApiMapper.insertPAY0298D(pay0298d);
         if( saveCnt != 1 ){
             throw new ApplicationException(AppConstants.FAIL, "Failed to save.");
         }
