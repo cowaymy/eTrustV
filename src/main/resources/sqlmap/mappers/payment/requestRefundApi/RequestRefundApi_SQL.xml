@@ -28,17 +28,6 @@ WHERE   STUS_CODE_ID = 1
 
 
 
-<update id="updateFtStusIdPAY0252T" parameterType="Map">
-/* [com.coway.trust.biz.payment.fundTransferApi.impl.FundTransferApiMapper.updateFtStusIdPAY0252T] 20191023 - KR JAEMAJEM */
-UPDATE  PAY0252T A                                                              -- Pay Result
-SET     A.FT_STUS_ID = 1                                                        -- FT Status ID
-WHERE   A.GROUP_SEQ = #{groupSeq}                                               -- Group Sequence
-AND     A.PAY_ID = #{payId}                                                     -- Payment ID
-AND     A.FT_STUS_ID IS NULL
-</update>
-
-
-
 <insert id="insertPAY0298D" parameterType="Map">
 /* [com.coway.trust.biz.payment.fundTransferApi.impl.FundTransferApiMapper.insertPAY0298D] 20191022 - KR JAEMAJEM */
 INSERT
