@@ -38,6 +38,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 29/07/2019    ONGHC      1.0.2       - Add Function
  * 29/07/2019    ONGHC      1.0.3       - Amend productReturnResult to Add Status Checking
  * 13/08/2019    ONGHC      1.0.4       - Add updFctExch
+ * 27/11/2019    ONGHC      1.0.5       - Amend productReturnResult
  *********************************************************************************************/
 
 @Service("MSvcLogApiService")
@@ -441,6 +442,50 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     rMp.put("SP_MAP", logPram);
 
     logger.debug("SP-MAP " + logPram);
+
+    logger.debug("= PARAM = " + params.toString());
+    EgovMap searchSAL0001D = MSvcLogApiMapper.newSearchCancelSAL0001D(params);
+
+    logger.debug("====================== PROMOTION COMBO CHECKING - START - ==========================");
+    logger.debug("= PARAM = " + searchSAL0001D.toString());
+
+    // CHECK ORDER PROMOTION IS IT FALL ON COMBO PACKAGE PROMOTION
+    // 1ST CHECK PCKAGE_BINDING_NO (SUB)
+    int count = MSvcLogApiMapper.chkSubPromo(searchSAL0001D);
+    logger.info("= CHECK PCKAGE_BINDING_NO (SUB) = " + count);
+
+    if (count > 0) {
+      // CANCELLATION IS SUB COMBO PACKAGE.
+      // TODO REVERT MAIN PRODUCT PROMO. CODE
+      logger.debug("====================== CANCELLATION IS SUB COMBO PACKAGE ==========================");
+
+      EgovMap revCboPckage = MSvcLogApiMapper.revSubCboPckage(searchSAL0001D);
+      revCboPckage.put("reqStageId", "25");
+
+      logger.info("= PARAM 2 = " + revCboPckage.toString());
+      MSvcLogApiMapper.insertSAL0254D(revCboPckage);
+
+    } else {
+      // 2ND CHECK PACKAGE (MAIN)
+      count = MSvcLogApiMapper.chkMainPromo(searchSAL0001D);
+
+      if (count > 0) {
+        // CANCELLATION IS MAIN COMBO PACKAGE.
+        // TODO REVERT SUB PRODUCT PROMO. CODE AND RENTAL PRICE
+
+        logger.debug("====================== CANCELLATION IS MAIN COMBO PACKAGE ==========================");
+
+        EgovMap revCboPckage = MSvcLogApiMapper.revMainCboPckage(searchSAL0001D);
+        revCboPckage.put("reqStageId", "25");
+
+        logger.info("= PARAM 2 = " + revCboPckage.toString());
+        MSvcLogApiMapper.insertSAL0254D(revCboPckage);
+      } else {
+        // DO NOTHING (IS NOT A COMBO PACKAGE)
+      }
+    }
+    logger.debug("====================== PROMOTION COMBO CHECKING - END - ==========================");
+
     logger.debug("====================productReturnResult=====================");
 
     return rMp;
