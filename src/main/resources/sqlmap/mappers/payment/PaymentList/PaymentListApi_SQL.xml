@@ -23,6 +23,9 @@
         <if test="toDate != null and toDate != '' ">
             AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{toDate},   'YYYYMMDD'),'YYYY-MM-DD')
          </if>
+         <if test="ticketType != null and ticketType != '' ">
+            AND  Extent1.PAY_STUS_ID = #{ticketType}
+           </if>
          ORDER BY Extent1.CRT_DT DESC
     </select>
 
