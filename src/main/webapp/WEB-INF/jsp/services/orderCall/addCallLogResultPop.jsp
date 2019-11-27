@@ -7,6 +7,7 @@
  08/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  03/04/2019  ONGHC  1.0.1          ADD CREATE & UPDATE DATETIME
  21/08/2019  ONGHC  1.0.2          Amend RDC Stock Checking
+ 27/11/2019  ONGHC  1.0.3          Amend Recall and Request Date Not to Choose Back Date
  -->
 
 <script type="text/javaScript">
@@ -129,9 +130,11 @@
     Common.ajax("GET", "/callCenter/getCallLogTransaction.do", $("#addCallForm").serialize(), function(result) {
       AUIGrid.setGridData(callLogTranID, result);
 
-      if (result != "") {
-        $('#veriremark').val(result[0].callRem);
-      }
+      /*Common.ajax("GET", "/callCenter/getVrfRmk.do", $("#addCallForm").serialize(), function(result2) {
+        if (result2 != "") {
+          $('#veriremark').val(result2[0].callRem);
+        }
+      });*/
     });
   }
 
@@ -140,6 +143,24 @@
       callLogTranGrid();
       fn_callLogTransaction();
       fn_start();
+
+      // j_date
+      var dateToday = new Date();
+      var pickerOpts = { changeMonth:true,
+                         changeYear:true,
+                         dateFormat: "dd/mm/yy",
+                      	   minDate: dateToday
+                       };
+
+      $(".j_date").datepicker(pickerOpts);
+
+      var monthOptions = { pattern: 'mm/yyyy',
+                           selectedYear: 2017,
+                           startYear: 2007,
+                           finalYear: 2027
+                         };
+
+      $(".j_date2").monthpicker(monthOptions);
 
       $("#stock").change(function() {
       if ($("#stock").val() == 'B') {
@@ -293,6 +314,10 @@
     var ord_id = $("#salesOrdId").val();
     var vdte = $("#requestDate").val();
     var rdcStock = $("#rdcStock").text();
+
+    if (vdte == '') {
+      return;
+    }
 
     if (rdcStock != '0') {
       Common.popupDiv("/organization/allocation/allocation.do", {ORD_ID : ord_id, S_DATE : vdte, TYPE : 'INS'}, null, true, '_doAllactionDiv');
