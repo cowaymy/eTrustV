@@ -58,8 +58,7 @@
 
 	<select id="selectMobileTicketReqStus" parameterType="Map" resultType="egovMap">
 		SELECT   /* [com.coway.trust.biz.payment.payment.service.impl.MobileTicketApiMapper.selectMobileTicketReqStus] 20191108 - KR HAN */
-					MOB_TICKET_NO MOB_TICKET_NO
-					,SALES_ORD_NO SALES_ORD_NO
+					DISTINCT MOB_TICKET_NO MOB_TICKET_NO
 					,TICKET_TYPE_ID TICKET_TYPE_ID
 		FROM    MOB0001D
 		WHERE  MOB_TICKET_NO = #{mobTicketNo}
