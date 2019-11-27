@@ -611,7 +611,7 @@ var mSort = {};
         	    var planDate = new Date(arrDate[0], arrDate[1], arrDate[2]);
         	    if( (planDate - toDate) < 0 ){
         	    	Common.alert("Plan date cannot be less than current date.");
-        	    	AUIGrid.setCellValue(planGridID, event.rowIndex, "poPlanDt", arrToDate[2]+"/"+arrToDate[1]+"/"+arrToDate[0]);
+        	    	AUIGrid.setCellValue(planGridID, event.rowIndex, "poPlanDt", js.String.isNotEmpty(event.oldValue)?event.oldValue:arrToDate[2]+"/"+arrToDate[1]+"/"+arrToDate[0]);
         	    }
         	}
         	if ( event.dataField == "poPlanQty"){

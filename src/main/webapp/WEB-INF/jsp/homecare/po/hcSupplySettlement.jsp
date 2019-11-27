@@ -46,12 +46,12 @@ var vendorObj = {};
             , {dataField:"amount", headerText:"Amount", width:160, editable:false
                 , style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
-                , formatString:"#,##0.0"
+                , formatString:"#,##0.00"
             }
             , {dataField:"settlementAmount", headerText:"Settlement Amount", width:160, editable:false
                 , style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
-                , formatString:"#,##0.0"
+                , formatString:"#,##0.00"
             }
             , {dataField:"curNm",headerText :"CUR", width:100, editable:false}
 
@@ -116,23 +116,23 @@ var vendorObj = {};
               , {dataField:"poUprc", headerText:"PO Price", width:100
                   , style:"aui-grid-user-custom-right"
                   , dataType:"numeric"
-                  , formatString:"#,##0"
+                  , formatString:"#,##0.00"
               }
               , {dataField:"suplyPrc", headerText:"Supply Price", width:140
             	    , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
-                    , formatString:"#,##0.0"
+                    , formatString:"#,##0.00"
               }
               , {dataField:"tax", headerText:"Tax", width:120
             	    , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
-                    , formatString:"#,##0.0"
+                    , formatString:"#,##0.00"
               }
               , {dataField:"taxNm", headerText:"Tax Text", width:100}
               , {dataField:"total", headerText:"Total", width:140
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
-                    , formatString:"#,##0.0"
+                    , formatString:"#,##0.00"
               }
               , {dataField:"curNm", headerText:"Currency", width:120}
               , {dataField:"poNo", headerText:"PO No", width:160}
@@ -281,6 +281,9 @@ var vendorObj = {};
                 // 25 코드 제거하기
                 if(uniqueValues.indexOf("25") != -1){
                     uniqueValues.splice(uniqueValues.indexOf("25"),1);
+                }
+                if(uniqueValues.indexOf("26") != -1){
+                    uniqueValues.splice(uniqueValues.indexOf("26"),1);
                 }
                 // 30 코드 제거하기
                 if(uniqueValues.indexOf("30") != -1){

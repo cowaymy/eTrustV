@@ -128,24 +128,24 @@ var mSort = {};
               , {dataField:"poUprc", headerText:"PO Price", width:120, editable:false
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
-                    , formatString:"#,##0.0"
+                    , formatString:"#,##0.00"
 
               }
               , {dataField:"suplyPrc", headerText:"Supply Price", width:140, editable:false
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
-                    , formatString:"#,##0.0"
+                    , formatString:"#,##0.00"
               }
               , {dataField:"tax", headerText:"Tax", width:120, editable:false
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
-                    , formatString:"#,##0.0"
+                    , formatString:"#,##0.00"
               }
               , {dataField:"taxName", headerText:"Tax Text", width:100, editable:false}
               , {dataField:"total", headerText:"Total", width:140, editable:false
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
-                    , formatString:"#,##0.0"
+                    , formatString:"#,##0.00"
 
               }
   ];

@@ -370,7 +370,7 @@ var taxObj = {};
                        , {dataField : "tax"
                            , positionField : "tax"
                            , operation : "SUM"
-                           , formatString : "#,##0"
+                           , formatString : "#,##0.00"
                            , style:"aui-grid-user-custom-right"
                        }
                        , {dataField : "total"
@@ -936,6 +936,8 @@ function auiCellEditignHandler(event){
 	    	        			detailData[i].suplyPrc = suplyPrc;
 	    	        			detailData[i].tax = tax;
 	    	        			detailData[i].total = total;
+
+	    	        			detailData[i].cur = js.String.strNvl(data[j].cur) == ""?"1150":js.String.strNvl(data[j].cur);
 	    	        			break;
 	    	        		}
 	    	        	}
@@ -1192,7 +1194,7 @@ function fn_itempopList(data){
     	item["tax"] = 0;
     	item["taxCd"] = "5614";
     	item["total"] = 0;
-    	item["cur"] = "1150";
+    	item["cur"] = js.String.strNvl(data[i].item.cur)==""?"1150":js.String.strNvl(data[i].item.cur);
     	item["frexAmt"] = 0;
         AUIGrid.addRow(detailGridID, item, "first");
 	}
@@ -1301,13 +1303,17 @@ function fn_ValidationCheck2(){
     var addList = AUIGrid.getAddedRowItems(detailGridID);
     var updateList = AUIGrid.getEditedRowItems(detailGridID);
     //var delList = AUIGrid.getRemovedItems(detailGridID);
-    var item = [];
+    var item = [], uItem = [];
     if(addList.length > 0){
-    	item = item.concat(addList);
+    	//item = item.concat(addList);
+    	item = JSON.parse(JSON.stringify( addList ));
     }
     if(updateList.length > 0){
-    	item = item.concat(updateList);
+    	//item = item.concat(updateList);
+    	uItem = JSON.parse(JSON.stringify( updateList ));
     }
+
+    item = item.concat(uItem);
 
     if(dataItem.length == 0){
     	Common.alert("Please, Input item information.");

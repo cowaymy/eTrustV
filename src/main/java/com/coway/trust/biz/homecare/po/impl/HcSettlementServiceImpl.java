@@ -3,7 +3,7 @@
  */
 package com.coway.trust.biz.homecare.po.impl;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +60,16 @@ public class HcSettlementServiceImpl extends EgovAbstractServiceImpl implements 
 			chkMap.put("crtUserId", sessionVO.getUserId());
 			chkMap.put("updUserId", sessionVO.getUserId());
 			if(i == 0){
+
+				// Reject건 재 요청시.
+				if( "25".equals((String)chkMap.get("poSettlStatusCd"))){
+					Map<String, Object> sMap = new HashMap<String, Object>();
+					sMap.put("updUserId", sessionVO.getUserId());
+					sMap.put("settlStatus", "26");
+					sMap.put("settlNo", (String)chkMap.get("settlNo"));
+					hcSettlementMapper.updateSettlementStateRejectComplete(sMap);
+				}
+
 				// HMC0012M
 				chkMap.put("amount", params.get("totAmount"));
 				hcSettlementMapper.insertSettlementMain(chkMap);

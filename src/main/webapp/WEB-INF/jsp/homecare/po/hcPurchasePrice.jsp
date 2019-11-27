@@ -117,7 +117,7 @@ var cmbCategoryDs = [{codeId:"5706", codeName:"Mattress"}, {codeId:"5707", codeN
             {dataField:"purchsPrc", headerText:"Price", width:120, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
             	, style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
-                , formatString:"#,###.#"
+                , formatString:"#,##0.00"
                 , editRenderer:{
                           type:"InputEditRenderer",
                           //showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -214,7 +214,7 @@ var cmbCategoryDs = [{codeId:"5706", codeName:"Mattress"}, {codeId:"5707", codeN
 	                    {dataField:"purchsPrc", headerText:"Price", width:120
 	                        , style:"aui-grid-user-custom-right"
 	                        , dataType:"numeric"
-	                        , formatString:"#,###.#"
+	                        , formatString:"#,##0.00"
 	                    },
 	                    {dataField: "uom", headerText:"UOM", width:120
 	                        ,labelFunction : function(rowIndex, columnIndex, value, headerText, item ) {

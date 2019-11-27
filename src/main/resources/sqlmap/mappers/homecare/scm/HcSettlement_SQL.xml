@@ -88,14 +88,14 @@
 					     , A.HMC_DELVRY_NO
 					     , A.PO_NO
 					     , C.SETTL_DT
-					     , A.PO_SETTL_STATUS
+					     , C.SETTL_STATUS AS PO_SETTL_STATUS
 					     , NVL((SELECT CODE AS CODE
 					          FROM SYS0013M
-					         WHERE CODE_MASTER_ID = '443' AND CODE_ID = A.PO_SETTL_STATUS
+					         WHERE CODE_MASTER_ID = '443' AND CODE_ID = C.SETTL_STATUS
 					       ), '-1') AS PO_SETTL_STATUS_CD
 					     , (SELECT CODE_NAME
 					          FROM SYS0013M
-					         WHERE CODE_MASTER_ID = '443' AND CODE_ID = A.PO_SETTL_STATUS
+					         WHERE CODE_MASTER_ID = '443' AND CODE_ID = C.SETTL_STATUS
 					       ) AS PO_SETTL_STATUS_NM
 					     , C.SETTL_NO
 					     , B.TOTAL AS AMOUNT
@@ -402,4 +402,13 @@
            </if>
          WHERE SETTL_NO = #{settlNo}
     </update>
+    
+    <update id="updateSettlementStateRejectComplete" parameterType="Map">
+        UPDATE HMC0012M
+           SET UPD_DT = SYSDATE
+             , UPD_USER_ID = #{updUserId}
+             , SETTL_STATUS = (SELECT MAX(CODE_ID) FROM SYS0013M WHERE CODE_MASTER_ID = '443' AND DISAB = 0 AND CODE = #{settlStatus})
+         WHERE SETTL_NO = #{settlNo}
+    </update>
+    
 </mapper>

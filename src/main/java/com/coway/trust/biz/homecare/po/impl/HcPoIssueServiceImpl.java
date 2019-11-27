@@ -94,8 +94,14 @@ public class HcPoIssueServiceImpl extends EgovAbstractServiceImpl implements HcP
 		map = null;
 		for (Object obj : udtList) {
 			map = (Map<String, Object>) obj;
+			map.put("crtUserId", sessionVO.getUserId());
 			map.put("updUserId", sessionVO.getUserId());
-			hcPoIssueMapper.updateHcPoIssueSub(map);
+			if(StringUtils.isBlank((String)map.get("poNo"))){
+				map.put("poNo", poNo);
+				hcPoIssueMapper.insertHcPoIssueSub(map);
+			}else{
+				hcPoIssueMapper.updateHcPoIssueSub(map);
+			}
 		}
 
 		map = null;

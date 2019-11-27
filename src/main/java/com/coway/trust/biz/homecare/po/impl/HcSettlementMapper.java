@@ -43,4 +43,6 @@ public interface HcSettlementMapper {
 	// HMC0012M.SETTL_DT
 	public void updateSettlementState(Map<String, Object> obj) throws Exception;
 
+
+	public void updateSettlementStateRejectComplete(Map<String, Object> obj) throws Exception;
 }
