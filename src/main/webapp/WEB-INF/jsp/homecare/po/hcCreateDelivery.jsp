@@ -3,6 +3,12 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
 
 <style type="text/css">
+
+@font-face {
+  font-family: Code39AzaleaWide2;
+  src: url(/resources/font/Code39AzaleaWide2.ttf) format('truetype');
+}
+
 /* 커스텀 칼럼 콤보박스 스타일 정의 */
 .aui-grid-drop-list-ul {
     text-align:left;
