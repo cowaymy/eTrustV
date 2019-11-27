@@ -30,6 +30,9 @@ public class PaymentListForm {
 	@ApiModelProperty(value = "userId", example = "1")
 	private String userId;
 
+	@ApiModelProperty(value = "userId", example = "1")
+	private String ticketType;
+
 	public String getFromDate() {
 		return fromDate;
 	}
@@ -54,12 +57,21 @@ public class PaymentListForm {
 		this.userId = userId;
 	}
 
+	public String getTicketType() {
+		return ticketType;
+	}
+
+	public void setTicketType(String ticketType) {
+		this.ticketType = ticketType;
+	}
+
 	public static Map<String, Object> createMap(PaymentListForm paymentForm){
 		Map<String, Object> params = new HashMap<>();
 
 		params.put("fromDate",   		paymentForm.getFromDate());
 		params.put("toDate",   			paymentForm.getToDate());
 		params.put("userId",   			paymentForm.getUserId());
+		params.put("ticketType",   	paymentForm.getTicketType());
 
 		return params;
 	}

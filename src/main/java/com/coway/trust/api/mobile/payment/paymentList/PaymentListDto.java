@@ -54,6 +54,18 @@ public class PaymentListDto {
 	@ApiModelProperty(value = "chequeNo")
 	private String chequeNo;
 
+	@ApiModelProperty(value = "codeId")
+	private int codeId;
+
+	@ApiModelProperty(value = "code")
+	private String code;
+
+	@ApiModelProperty(value = "codeName")
+	private String codeName;
+
+	@ApiModelProperty(value = "description")
+	private String description;
+
 	public int getMobPayNo() {
 		return mobPayNo;
 	}
@@ -116,6 +128,46 @@ public class PaymentListDto {
 
 	public void setChequeNo(String chequeNo) {
 		this.chequeNo = chequeNo;
+	}
+
+	public int getPayMode() {
+		return payMode;
+	}
+
+	public void setPayMode(int payMode) {
+		this.payMode = payMode;
+	}
+
+	public int getCodeId() {
+		return codeId;
+	}
+
+	public void setCodeId(int codeId) {
+		this.codeId = codeId;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getCodeName() {
+		return codeName;
+	}
+
+	public void setCodeName(String codeName) {
+		this.codeName = codeName;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public static PaymentListDto create(EgovMap egvoMap) {
