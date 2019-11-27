@@ -1,5 +1,8 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <style type="text/css">
 /* 칼럼 스타일 전체 재정의 */
@@ -18,11 +21,6 @@
 <script type="text/javaScript">
 var gSelMainRowIdx = 0;
 var StatusCdList = new Array();
-
-$(function()
-{
-    getStatusComboListAjax();
-});
 
 var MainColumnLayout =
     [
@@ -171,31 +169,6 @@ var MainColumnLayout =
             visible : false
        }
     ];
-
-function getStatusComboListAjax(callBack)
-{
-      Common.ajaxSync("GET", "/common/selectCodeList.do"
-//    Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do"
-                   , $("#MainForm").serialize()+"&orderValue=code"
-                   , function(result)
-                   {
-                       StatusCdList.push({id:"" ,value:""});
-                              for (var i = 0; i < result.length; i++)
-                                {
-                                  var list = new Object();
-                                        list.id = result[i].code;
-                                        list.value = result[i].codeName ;
-                                        StatusCdList.push(list);
-                                  }
-
-                                  //if you need callBack Function , you can use that function
-                                  if (callBack) {
-                                    callBack(StatusCdList);
-                                  }
-
-                                });
-      return StatusCdList;
-  }
 
 //AUIGrid 메소드
 

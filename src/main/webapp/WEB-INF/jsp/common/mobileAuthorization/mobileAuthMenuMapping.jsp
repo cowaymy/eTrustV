@@ -1,6 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
 <script type="text/javaScript">
 /********************************Global Variable Start***********************************/
 // 행 추가, 삽입
@@ -472,7 +476,7 @@ var gridMenuMappingColumnLayout =
          headerText : "<spring:message code='sys.menumanagement.grid1.ProgramNm' />",
          editable : false, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
          style : "aui-grid-left-column",
-         width : "22%"
+         width : "*%"
      }, {
          // PK , rowid 용 칼럼
          dataField : "rowId",
@@ -480,7 +484,8 @@ var gridMenuMappingColumnLayout =
          visible : false
      }, {
          dataField : "authCode",
-         dataType : "string"
+         dataType : "string",
+         visible : false
      }
 
 ];
