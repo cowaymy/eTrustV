@@ -63,7 +63,7 @@ public class MobileMenuController {
 	 */
 	@RequestMapping(value = "/mobileMenuManagement.do")
 	public String mobileMenuManagement(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		return "/common/mobileAuthorization/mobileMenuManagement";
+		return "common/mobileAuthorization/mobileMenuManagement";
 	}
 
 	 /**
@@ -95,7 +95,7 @@ public class MobileMenuController {
 		model.addAttribute("menuLvl", params.get("menuLvl") );
 
 		// 호출될 화면
-		return "/common/mobileAuthorization/searchMobileMenuPop";
+		return "common/mobileAuthorization/searchMobileMenuPop";
 	}
 
 	 /**

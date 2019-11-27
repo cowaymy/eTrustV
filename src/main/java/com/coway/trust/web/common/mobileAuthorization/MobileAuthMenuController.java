@@ -27,6 +27,17 @@ import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
+/**
+ * @ClassName : MobileAuthMenuController.java
+ * @Description : MobileAuthMenuController
+ *
+ * @History
+ * <pre>
+ * Date            Author       Description
+ * -------------  -----------  -------------
+ * 2019. 11. 27.   KR-HAN        First creation
+ * </pre>
+ */
 @Controller
 @RequestMapping(value = "/mobileAuthMenu")
 public class MobileAuthMenuController {
@@ -39,9 +50,19 @@ public class MobileAuthMenuController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
+	 /**
+	 * MobileAuthMenuMapping
+	 * @Author KR-HAN
+	 * @Date 2019. 11. 27.
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/mobileAuthMenuMapping.do")
 	public String MobileAuthMenuMapping(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		return "/common/mobileAuthorization/mobileAuthMenuMapping";
+		return "common/mobileAuthorization/mobileAuthMenuMapping";
 	}
 
 	@RequestMapping(value = "/selectMobileRoleAuthMappingAdjustList.do", method = RequestMethod.GET)
@@ -52,15 +73,32 @@ public class MobileAuthMenuController {
 		return ResponseEntity.ok(selectRoleAuthMappingAdjustList);
 	}
 
+	 /**
+	 * searchUpperMobileMenuPop
+	 * @Author KR-HAN
+	 * @Date 2019. 11. 27.
+	 * @param params
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/searchMobileAuthMenuPop.do")
 	public String searchUpperMobileMenuPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		model.addAttribute("authCode", params.get("authCode") );
 
 		// 호출될 화면
-		return "/common/mobileAuthorization/searchMobileAuthMenuPop";
+		return "common/mobileAuthorization/searchMobileAuthMenuPop";
 	}
-	// save menuId
+
+
+	 /**
+	 * saveMobileMenuAuthRoleMapping
+	 * @Author KR-HAN
+	 * @Date 2019. 11. 27.
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 */
 	@RequestMapping(value = "/saveMobileMenuAuthRoleMapping.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveMobileMenuAuthRoleMapping(@RequestBody Map<String, ArrayList<Object>> params,
 			SessionVO sessionVO) {
