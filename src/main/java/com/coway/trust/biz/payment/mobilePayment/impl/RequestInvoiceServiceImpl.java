@@ -71,7 +71,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
         ReturnMessage result = new ReturnMessage();
         int total = requestInvoiceMapper.selectRequestInvoiceCount(param);
         result.setTotal(total);
-        param.put("uploadDir", "/resources/WebShare/mobile/payment/requestAdvanceInvoice/");
+        param.put("uploadDir", uploadDir);
         result.setDataList(requestInvoiceMapper.selectRequestInvoiceList(param));
         return result;
     }
