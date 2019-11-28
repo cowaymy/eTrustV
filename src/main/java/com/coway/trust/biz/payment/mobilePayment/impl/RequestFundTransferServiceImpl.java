@@ -64,7 +64,6 @@ public class RequestFundTransferServiceImpl extends EgovAbstractServiceImpl impl
         ReturnMessage result = new ReturnMessage();
         int total = requestFundTransferMapper.selectRequestFundTransferCount(param);
         result.setTotal(total);
-        param.put("uploadDir", "/resources/WebShare/mobile/payment/fundTransferApi/");
         result.setDataList(requestFundTransferMapper.selectRequestFundTransferList(param));
         return result;
     }

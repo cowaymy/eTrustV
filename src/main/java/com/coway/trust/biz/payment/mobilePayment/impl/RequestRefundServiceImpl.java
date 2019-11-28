@@ -64,7 +64,6 @@ public class RequestRefundServiceImpl extends EgovAbstractServiceImpl implements
         ReturnMessage result = new ReturnMessage();
         int total = requestRefundMapper.selectRequestFundTransferCount(param);
         result.setTotal(total);
-        param.put("uploadDir", "/resources/WebShare/mobile/payment/requestRefundApi/");
         result.setDataList(requestRefundMapper.selectRequestRefundList(param));
         return result;
     }
