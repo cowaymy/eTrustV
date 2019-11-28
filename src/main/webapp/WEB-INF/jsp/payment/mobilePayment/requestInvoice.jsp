@@ -63,7 +63,7 @@ var refundColumnLayout =
                             ,   onclick : function(rowIndex, columnIndex, value, item) {
                                 	var rowVal = AUIGrid.getItemByRowIndex(myGridID, rowIndex);
                                     if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName) == false){
-                                        window.open("/file/fileDownWeb.do?subPath=" + "mobile/payment/requestAdvanceInvoice" + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
+                                        window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.invcItmPoImgUrl + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
                                     }
                                 }
                         }
@@ -129,7 +129,7 @@ $(document).ready(function () {
         	if( FormUtil.isEmpty(event.value) == false){
         		var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
         		if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName) == false){
-        			window.open("/file/fileDownWeb.do?subPath=" + "mobile/payment/requestAdvanceInvoice" + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
+        			window.open("/file/fileDownWasMobile?subPath=" + rowVal.invcItmPoImgUrl + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
         		}
         	}
         }
