@@ -68,7 +68,7 @@ var taxObj = {};
             , {dataField:"stockId", visible:false}
             , {dataField:"stockCode", headerText:"Material Code", width:120, editable:false}
             , {dataField:"stockName", headerText:"Material Name", width:280, style:"aui-grid-user-custom-left", editable:false}
-            , {dataField:"grYn",headerText :"GR Y/N", width:100, editable:false}
+            , {dataField:"grYn",headerText :"GR Complete", width:100, editable:false}
             , {dataField:"rciptQty", headerText:"QTY", width:140
                 , style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
@@ -139,9 +139,10 @@ var taxObj = {};
         doDefCombo(cdcDs, '', 'sCdc', 'S', '');
         doDefCombo(vendorDs, '', 'sMemAccId', 'S', '');
 
+        <c:if test="${PAGE_AUTH.funcUserDefine1 != 'Y'}">
         $("#sMemAccId").val(vendorDs[0].codeId);                // 임시 처리 - 로그인 사용자의 vendor로 할 예정.
         $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
-
+        </c:if>
 
         if( js.String.isEmpty($("#sDlvGiDtFrom").val()) ){
             $("#sDlvGiDtFrom").val("${oneMonthBf}");
@@ -352,10 +353,12 @@ function fn_PopClose() {
         <h2>HomeCare GR</h2>
 
         <ul class="right_btns">
-    <%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
-        <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
-        <li><p class="btn_blue"><a id="btnCreateGr">Create GR</a></p></li>
-    <%-- </c:if> --%>
+        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+            <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+            <li><p class="btn_blue"><a id="btnCreateGr">Create GR</a></p></li>
+        </c:if>
         </ul>
     </aside><!-- title_line end -->
 
@@ -399,14 +402,15 @@ function fn_PopClose() {
                 <tr>
                     <th scope="row">Delivery No</th>
                     <td >
-                        <input type="text" id="sDeliveryNo" name="sDeliveryNo" placeholder="" class="w100p" >
+                        <input type="text" id="sHmcDelvryNo" name="sHmcDelvryNo" placeholder="" class="w100p" >
                     </td>
                     <th scope="row">PO No</th>
                     <td >
                         <input type="text" id="sPoNo" name="sPoNo" placeholder="" class="w100p" >
                     </td>
-                    <th scope="row"></th>
+                    <th scope="row">GR Complete</th>
                     <td >
+                        <input type="text" id="sGrYn" name="sGrYn" placeholder="" class="w100p" >
                     </td>
                 </tr>
             </tbody>
@@ -420,7 +424,9 @@ function fn_PopClose() {
 	<aside class="title_line"><!-- title_line start -->
         <h3>List</h3>
         <ul class="right_btns">
-           <li><p class="btn_grid"><a id="btnGR">GR</a></p></li>
+           <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+               <li><p class="btn_grid"><a id="btnGR">GR Complete</a></p></li>
+           </c:if>
         </ul>
 	</aside><!-- title_line end -->
 	<!-- grid_wrap start -->

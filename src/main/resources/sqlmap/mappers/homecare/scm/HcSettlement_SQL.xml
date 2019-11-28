@@ -19,6 +19,7 @@
                      , HMC0005D B
                  WHERE A.PO_NO = B.PO_NO
                    AND A.PO_DTL_NO = B.PO_DTL_NO
+                   AND A.RCIPT_QTY <![CDATA[>]]> 0
                    AND A.USE_YN = 'Y'
                    AND B.USE_YN = 'Y'
                   GROUP BY A.HMC_GR_NO, A.PO_NO, A.HMC_DELVRY_NO
@@ -121,6 +122,7 @@
 					             , HMC0005D B
 					         WHERE A.PO_NO = B.PO_NO
 					           AND A.PO_DTL_NO = B.PO_DTL_NO
+					           AND A.RCIPT_QTY <![CDATA[>]]> 0
 					           AND A.USE_YN = 'Y'
 					           AND B.USE_YN = 'Y'
 					          GROUP BY A.HMC_GR_NO, A.PO_NO, A.HMC_DELVRY_NO
@@ -402,7 +404,7 @@
            </if>
          WHERE SETTL_NO = #{settlNo}
     </update>
-    
+
     <update id="updateSettlementStateRejectComplete" parameterType="Map">
         UPDATE HMC0012M
            SET UPD_DT = SYSDATE
@@ -410,5 +412,5 @@
              , SETTL_STATUS = (SELECT MAX(CODE_ID) FROM SYS0013M WHERE CODE_MASTER_ID = '443' AND DISAB = 0 AND CODE = #{settlStatus})
          WHERE SETTL_NO = #{settlNo}
     </update>
-    
+
 </mapper>

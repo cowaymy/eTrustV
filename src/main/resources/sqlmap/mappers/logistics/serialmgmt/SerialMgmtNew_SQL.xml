@@ -52,7 +52,8 @@
     <insert id="insertSerialInfo" parameterType="Map">
     /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.insertSerialInfo] - KR JIN */
         <selectKey keyProperty="scanNo" resultType="String" order="BEFORE">
-            SELECT NVL(TO_NUMBER(MAX(SCAN_NO)), 0)+1 AS SCAN_NO FROM LOG0099D WHERE SERIAL_NO = #{barcode}
+            <!-- SELECT NVL(TO_NUMBER(MAX(SCAN_NO)), 0)+1 AS SCAN_NO FROM LOG0099D WHERE SERIAL_NO = {barcode} -->
+            SELECT FN_GET_LOG0099D_SCAN_NO() FROM DUAL
         </selectKey>
         INSERT
           INTO LOG0099D    -- Serial Info for Scan
@@ -81,7 +82,7 @@
 			 , #{barcode}             --scan s/n > raw input after scan
 			 , #{barcode}             --box number
 			 , #{stockCode}             --Material code
-			 , 'S'
+			 , 'C'
 			 , #{docNo}              --request number
 			 , #{docNoItm}           --request item
 			 , TO_CHAR(SYSDATE, 'YYYYMMDD')
@@ -112,7 +113,7 @@
                    , #{docNoItm} AS LAST_REQST_NO_ITM
 		           , NULL AS LAST_DELVRY_NO
 		           , NULL AS LAST_DELVRY_NO_ITM
-		           , #{scanNo} AS TEMP_SCAN_NO
+		           , NULL AS TEMP_SCAN_NO
 		           , #{crtUserId} AS CRT_USER_ID
 		           , SYSDATE AS CRT_DT
 		           , #{updUserId} AS UPD_USER_ID
@@ -210,7 +211,7 @@
 			 , #{docNoItm}
 			 , NULL
 			 , NULL
-			 , #{scanNo}
+			 , NULL
 			 , #{crtUserId}
 			 , SYSDATE
 			 , #{updUserId}

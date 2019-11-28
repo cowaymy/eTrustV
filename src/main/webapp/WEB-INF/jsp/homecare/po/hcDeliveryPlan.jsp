@@ -359,6 +359,7 @@ var mSort = {};
             	return false;
             }
 
+            /*
         	Common.showLoader();
             $.ajax({
                 type:"GET",
@@ -410,8 +411,9 @@ var mSort = {};
                     }
                 }
             });
+            */
 
-
+            addPlanRow(items);
         });
 
         // del
@@ -818,7 +820,9 @@ function fn_isDateValidate(sValidDt){
     <h2>Production Plans</h2>
 
     <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
       <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
+    </c:if>
     </ul>
   </aside><!-- title_line end -->
 
@@ -902,7 +906,9 @@ function fn_isDateValidate(sValidDt){
     <aside class="title_line"><!-- title_line start -->
         <h3>PO Detail List</h3>
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="btnSubAdd">Add</a></p></li>
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                <li><p class="btn_grid"><a id="btnSubAdd">Add</a></p></li>
+            </c:if>
         </ul>
     </aside><!-- title_line end -->
     <article class="grid_wrap" ><!-- grid_wrap start -->
@@ -913,8 +919,10 @@ function fn_isDateValidate(sValidDt){
     <aside class="title_line"><!-- title_line start -->
         <h3>Plan</h3>
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="btnPlanDel">Del</a></p></li>
-            <li><p class="btn_grid"><a id="btnPlanSave">Save</a></p></li>
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+	            <li><p class="btn_grid"><a id="btnPlanDel">Del</a></p></li>
+	            <li><p class="btn_grid"><a id="btnPlanSave">Save</a></p></li>
+            </c:if>
         </ul>
     </aside><!-- title_line end -->
     <article class="grid_wrap" ><!-- grid_wrap start -->

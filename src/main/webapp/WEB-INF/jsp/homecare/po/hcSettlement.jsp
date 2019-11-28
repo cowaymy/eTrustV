@@ -196,9 +196,10 @@ var vendorObj = {};
             $("#sGrDtTo").val("${toDay}");
         }
 
-
-        $("#sMemAccId").val(vendorDs[0].codeId);                // 임시 처리 - 로그인 사용자의 vendor로 할 예정.
-        $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
+        <c:if test="${PAGE_AUTH.funcChange != 'Y'}">
+	        $("#sMemAccId").val(vendorDs[0].codeId);                // 임시 처리 - 로그인 사용자의 vendor로 할 예정.
+	        $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
+        </c:if>
 
         // 조회버튼
 	    $("#btnSearch").click(function(){
@@ -482,12 +483,13 @@ function isSettlDtCheck(list, settlNo, settlDt){
     <aside class="title_line"><!-- title_line start -->
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Settlement</h2>
-
         <ul class="right_btns">
-    <%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
-        <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
-        <li><p class="btn_blue"><a id="btnSave">SAVE</a></p></li>
-    <%-- </c:if> --%>
+        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+            <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+            <li><p class="btn_blue"><a id="btnSave">SAVE</a></p></li>
+        </c:if>
         </ul>
     </aside><!-- title_line end -->
 

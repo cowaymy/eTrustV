@@ -184,10 +184,12 @@ var mSort = {};
             $("#sPoDtTo").val("${toDay}");
         }
 
-        $("#sMemAccId").val(vendorDs[0].codeId);                // 임시 처리 - 로그인 사용자의 vendor로 할 예정.
-        $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
+        <c:if test="${PAGE_AUTH.funcChange != 'Y'}">
+	        $("#sMemAccId").val(vendorDs[0].codeId);                // 임시 처리 - 로그인 사용자의 vendor로 할 예정.
+	        $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
+        </c:if>
 
-        // 조회버튼
+	        // 조회버튼
         $("#btnSearch").click(function(){
             if(js.String.isEmpty($("#sCdc").val())){
                 Common.alert("Please, check the mandatory value.");
@@ -363,7 +365,9 @@ function fn_isDateValidate(sValidDt){
     <h2>Po Result List</h2>
 
     <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
       <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
+    </c:if>
     </ul>
   </aside><!-- title_line end -->
 

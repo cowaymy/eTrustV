@@ -41,6 +41,11 @@ var poStatObj = {};
   poStatObj["${obj.codeId}"] = "${obj.codeName}";
 </c:forEach>
 
+var suppStsDs = [];
+<c:forEach var="obj" items="${suppStsList}">
+  suppStsDs.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+</c:forEach>
+
 var uomDs = [];
 <c:forEach var="obj" items="${uomList}">
   uomDs.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
@@ -238,10 +243,12 @@ var taxObj = {};
         doDefCombo(cdcDs, '', 'sCdc', 'S', '');
         doDefCombo(vendorDs, '', 'sMemAccId', 'S', '');
         doDefCombo(poTypeDs, '', 'sPoTyCd', 'S', '');
-        doDefCombo(poStatDs, '', 'sPoStsCd', 'S', '');
+        doDefCombo(suppStsDs, '', 'sSuppStsCd', 'S', '');
 
-        $("#sMemAccId").val(vendorDs[0].codeId);                // 임시 처리 - 로그인 사용자의 vendor로 할 예정.
-        $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
+        <c:if test="${PAGE_AUTH.funcChange != 'Y'}">
+	        $("#sMemAccId").val(vendorDs[0].codeId);                // 임시 처리 - 로그인 사용자의 vendor로 할 예정.
+	        $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
+        </c:if>
 
         if( js.String.isEmpty($("#sPoDtFrom").val()) ){
             $("#sPoDtFrom").val("${oneDay}");
@@ -479,11 +486,13 @@ function fn_multiButton(stat){
         <h2>PO Confirmation</h2>
 
         <ul class="right_btns">
-    <%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
-        <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
-        <li><p class="btn_blue"><a id="btnApproval">Approve</a></p></li>
-        <li><p class="btn_blue"><a id="btnDenial">Reject</a></p></li>
-    <%-- </c:if> --%>
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+                <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+		        <li><p class="btn_blue"><a id="btnApproval">Approve</a></p></li>
+		        <li><p class="btn_blue"><a id="btnDenial">Reject</a></p></li>
+		    </c:if>
         </ul>
     </aside><!-- title_line end -->
 
@@ -531,9 +540,9 @@ function fn_multiButton(stat){
                     <td >
                         <select id="sPoTyCd" name="sPoTyCd" placeholder="" class="w100p" >
                     </td>
-                    <th scope="row">PO Status</th>
+                    <th scope="row">Sales Order</th>
                     <td >
-                        <select id="sPoStsCd" name="sPoStsCd" placeholder="" class="w100p" >
+                        <select id="sSuppStsCd" name="sSuppStsCd" placeholder="" class="w100p" >
                     </td>
                     <th scope="row">PO No</th>
                     <td >

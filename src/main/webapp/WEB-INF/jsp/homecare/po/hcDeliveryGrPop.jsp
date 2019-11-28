@@ -371,9 +371,9 @@ function fnOnfocus(obj){
 			  <h3>Delivery List</h3>
 
 			  <ul class="right_btns">
-		        <li><p class="btn_grid"><a id="btnPopGr">GR</a></p></li>
+		        <li><p class="btn_grid"><a id="btnPopGr">GR Complete</a></p></li>
 		        <li><p class="btn_grid"><a id="btnPopSerialClear">Clear Serial</a></p></li>
-		        <li><p class="btn_grid"><a id="btnPopSerial">Serial</a></p></li>
+		        <li><p class="btn_grid"><a id="btnPopSerial">Read Serial</a></p></li>
 		      </ul>
 			</aside>
 

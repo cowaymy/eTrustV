@@ -76,6 +76,8 @@ public class HcConfirmPoController {
 		model.addAttribute("poTypeList", hcPurchasePriceService.selectComonCodeList("428"));
 		// PO Status
 		model.addAttribute("poStatList", hcPurchasePriceService.selectComonCodeList("429"));
+		// Sales Order Status
+		model.addAttribute("suppStsList", hcPurchasePriceService.selectComonCodeList("438"));
 		// UOM
 		model.addAttribute("uomList", hcPurchasePriceService.selectComonCodeList("42"));
 		// Currency

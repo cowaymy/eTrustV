@@ -195,13 +195,14 @@ var myGridID, excelGridId;
                                     }
                                 }
                             }
+                            , {dataField:"poDtlPlanNo", visible:false}
                             , {dataField:"poPlanQty", headerText:"Plan QTY", width:100
                                 , style:"aui-grid-user-custom-right"
                                 , dataType:"numeric"
                                 , formatString:"#,##0"
                                 , cellMerge:true
                                 , mergePolicy : "restrict"
-                                , mergeRef : "poNo"
+                                , mergeRef : "poDtlPlanNo"
                                 , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
                                     if ( "0" == item.poMod ) {
                                         return  "my-columnCenter0";
@@ -390,8 +391,10 @@ var myGridID, excelGridId;
             $("#sPoDtTo").val("${toDay}");
         }
 
-        $("#sMemAccId").val(vendorDs[0].codeId);                // 임시 처리 - 로그인 사용자의 vendor로 할 예정.
-        $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
+        <c:if test="${PAGE_AUTH.funcChange != 'Y'}">
+	        $("#sMemAccId").val(vendorDs[0].codeId);                // 임시 처리 - 로그인 사용자의 vendor로 할 예정.
+	        $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
+	    </c:if>
 
         // 조회버튼
         $("#btnSearch").click(function(){
@@ -587,7 +590,9 @@ function fn_isDateValidate(sValidDt){
     <h2>Po Result List</h2>
 
     <ul class="right_btns">
-      <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
+        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+            <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
+        </c:if>
     </ul>
   </aside><!-- title_line end -->
 

@@ -34,6 +34,9 @@
          <if test="sHmcDelvryNo != null and sHmcDelvryNo !=''">
            AND A.HMC_DELVRY_NO = #{sHmcDelvryNo}
          </if>
+         <if test="sGrYn != null and sGrYn !=''">
+           AND A.GR_YN = #{sGrYn}
+         </if>
     </select>
 
     <select id="selectDeliveryGrMain" parameterType="Map" resultType="egovMap">
@@ -98,6 +101,9 @@
 					 <if test="sHmcDelvryNo != null and sHmcDelvryNo !=''">
 					   AND A.HMC_DELVRY_NO = #{sHmcDelvryNo}
 					 </if>
+					 <if test="sGrYn != null and sGrYn !=''">
+                       AND A.GR_YN = #{sGrYn}
+                     </if>
                     ORDER BY
                     <choose>
                         <when test='sort != null and sort.size != 0'>

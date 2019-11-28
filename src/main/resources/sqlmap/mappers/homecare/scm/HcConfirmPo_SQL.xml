@@ -30,10 +30,12 @@
        <if test="sPoStsCd != null and sPoStsCd !=''">
           AND A.PO_STS_CD = #{sPoStsCd}
        </if>
+       <if test="sSuppStsCd != null and sSuppStsCd !=''">
+          AND A.SUPP_STS_CD = #{sSuppStsCd}
+       </if>
        <if test="sPoNo != null and sPoNo !=''">
           AND A.PO_NO = #{sPoNo}
        </if>
-
     </select>
 
     <select id="selectHcConfirmPoMainList" parameterType="Map" resultType="egovMap">
@@ -114,6 +116,9 @@
 			       <if test="sPoStsCd != null and sPoStsCd !=''">
 			          AND A.PO_STS_CD = #{sPoStsCd}
 			       </if>
+			       <if test="sSuppStsCd != null and sSuppStsCd !=''">
+			          AND A.SUPP_STS_CD = #{sSuppStsCd}
+			       </if>
 			       <if test="sPoNo != null and sPoNo !=''">
 			          AND A.PO_NO = #{sPoNo}
 			       </if>
@@ -142,13 +147,13 @@
                                     <when test='item.field == "crtDt"'>A.CRT_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
                                     <when test='item.field == "crtUserId"'>A.CRT_USER_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
                                     <otherwise>
-                                        A.PO_NO ASC
+                                        A.UPD_DT DESC
                                     </otherwise>
                                 </choose>
                             </foreach>
                         </when>
                         <otherwise>
-                            A.PO_NO ASC
+                            A.UPD_DT DESC
                         </otherwise>
                      </choose>
                  ) T1

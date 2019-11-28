@@ -91,7 +91,8 @@
 					     , C.PRICE_SEQ_NO
 					     , TO_CHAR(TO_DATE(C.VALID_START_DT, 'YYYYMMDD'), 'YYYY/MM/DD') AS VALID_START_DT
 					     , TO_CHAR(TO_DATE(C.VALID_END_DT, 'YYYYMMDD'), 'YYYY/MM/DD') AS VALID_END_DT
-					     , C.CUR
+					     <!-- , C.CUR -->
+					     , '1150' AS CUR
 					     , C.PURCHS_PRC
 					     , C.CRT_DT
 					     , C.CRT_USER_ID

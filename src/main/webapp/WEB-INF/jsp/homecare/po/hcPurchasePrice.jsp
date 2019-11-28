@@ -50,6 +50,28 @@ var cmbCategoryDs = [{codeId:"5706", codeName:"Mattress"}, {codeId:"5707", codeN
             {dataField: "stkId",headerText :"Material Id",width:120, editable:false, visible:false},
             {dataField: "stkCode",headerText :"Material Code",width:140, editable:false},
             {dataField: "stkDesc",headerText :"Material Name",width:300, style:"aui-grid-user-custom-left", editable:false},
+            {dataField: "uom", headerText:"UOM", width:120, editable:false
+                ,labelFunction : function(rowIndex, columnIndex, value, headerText, item ) {
+                    //var retStr = value;
+                    var retStr = "";
+                    for(var i=0, len=uomComboData.length; i<len; i++) {
+                        if(uomComboData[i]["codeId"] == value) {
+                            retStr = uomComboData[i]["codeName"];
+                            break;
+                        }
+                    }
+                    return retStr;
+                }
+                , editRenderer : {
+                         type : "DropDownListRenderer",
+                         showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                         listFunction : function(rowIndex, columnIndex, item, dataField) {
+                             return uomComboData;
+                         },
+                         keyField : "codeId",        // key 에 해당되는 필드명
+                         valueField : "codeName"    // value 에 해당되는 필드명
+                 }
+            },
             {dataField: "validStartDt", headerText :"Valid From", width:120, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
               , dataType:"date"
               , formatString:"dd-mm-yyyy"     // 실제 데이터 형식을 어떻게 표시할지 지정
@@ -95,25 +117,6 @@ var cmbCategoryDs = [{codeId:"5706", codeName:"Mattress"}, {codeId:"5707", codeN
                     }
                 }
             },
-            {dataField: "cur", headerText:"CUR", width:120, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
-            	,labelFunction : function(rowIndex, columnIndex, value, headerText, item ) {
-                    var retStr = value;
-                    for(var i=0, len=curComboData.length; i<len; i++) {
-                        if(curComboData[i]["codeId"] == value) {
-                            retStr = curComboData[i]["codeName"];
-                            break;
-                        }
-                    }
-                    return retStr;
-                }
-            	,editRenderer : {
-	                type : "DropDownListRenderer",
-	                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-	                list : curComboData,
-	                keyField : "codeId",        // key 에 해당되는 필드명
-	                valueField : "codeName"    // value 에 해당되는 필드명
-	            }
-            },
             {dataField:"purchsPrc", headerText:"Price", width:120, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
             	, style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
@@ -129,27 +132,25 @@ var cmbCategoryDs = [{codeId:"5706", codeName:"Mattress"}, {codeId:"5707", codeN
                   }
 
             },
-            {dataField: "uom", headerText:"UOM", width:120, editable:false
-            	,labelFunction : function(rowIndex, columnIndex, value, headerText, item ) {
-                    //var retStr = value;
-                    var retStr = "";
-                    for(var i=0, len=uomComboData.length; i<len; i++) {
-                        if(uomComboData[i]["codeId"] == value) {
-                            retStr = uomComboData[i]["codeName"];
+            {dataField: "cur", headerText:"CUR", width:120
+                ,labelFunction : function(rowIndex, columnIndex, value, headerText, item ) {
+                    var retStr = value;
+                    for(var i=0, len=curComboData.length; i<len; i++) {
+                        if(curComboData[i]["codeId"] == value) {
+                            retStr = curComboData[i]["codeName"];
                             break;
                         }
                     }
                     return retStr;
                 }
-            	, editRenderer : {
-                         type : "DropDownListRenderer",
-                         showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-                         listFunction : function(rowIndex, columnIndex, item, dataField) {
-                             return uomComboData;
-                         },
-                         keyField : "codeId",        // key 에 해당되는 필드명
-                         valueField : "codeName"    // value 에 해당되는 필드명
-                 }
+                ,editable:false
+                ,editRenderer : {
+                    type : "DropDownListRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                    list : curComboData,
+                    keyField : "codeId",        // key 에 해당되는 필드명
+                    valueField : "codeName"    // value 에 해당되는 필드명
+                }
             },
             {dataField:"crtDt", headerText :"create date", width:120, editable:false
                 , dataType:"date"
@@ -769,9 +770,9 @@ var cmbCategoryDs = [{codeId:"5706", codeName:"Mattress"}, {codeId:"5707", codeN
         <h2>Purchase Price</h2>
 
         <ul class="right_btns">
-    <%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
-        <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-    <%-- </c:if> --%>
+	    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+	        <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+	    </c:if>
         </ul>
     </aside><!-- title_line end -->
 
@@ -828,7 +829,9 @@ var cmbCategoryDs = [{codeId:"5706", codeName:"Mattress"}, {codeId:"5707", codeN
   <section class="search_result"><!-- search_result start -->
     <aside class="title_line"><!-- title_line start -->
       <ul class="right_btns">
+        <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
           <li><p class="btn_grid"><a id="btnSave">Save</a></p></li>
+        </c:if>
       </ul>
     </aside><!-- title_line end -->
     <!-- grid_wrap start -->

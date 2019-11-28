@@ -1492,8 +1492,10 @@ function fn_isDateValidate(sValidDt){
   <section class="search_result"><!-- search_result start -->
 	<aside class="title_line"><!-- title_line start -->
 	  <ul class="right_btns">
+	  <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 	    <li><p class="btn_grid"><a id="btnAdd">Add</a></p></li>
 	    <li><p class="btn_grid"><a id="btnDel">Del</a></p></li>
+	  </c:if>
 	  </ul>
 	</aside><!-- title_line end -->
 	<!-- grid_wrap start -->
@@ -1508,8 +1510,10 @@ function fn_isDateValidate(sValidDt){
 
 	<aside class="title_line"><!-- title_line start -->
 	    <ul class="right_btns">
+	    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 	        <li><p class="btn_grid"><a id="btnSubAdd">Add</a></p></li>
 	        <li><p class="btn_grid"><a id="btnSubDel">Del</a></p></li>
+	    </c:if>
 	    </ul>
 	</aside><!-- title_line end -->
 	<article class="grid_wrap" ><!-- grid_wrap start -->

@@ -114,7 +114,7 @@ var mSort = {};
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0"
-                    , editRenderer : {
+                  	, editRenderer : {
                           type : "InputEditRenderer",
                           showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
                           onlyNumeric : true, // 0~9만 입력가능
@@ -205,8 +205,8 @@ var mSort = {};
                 , {dataField:"delvryStatusCode", visible:false}
                 , { dataField:"printYn", headerText:"Print", width: 160
                   , renderer : {
-                      type : "CheckBoxEditRenderer",   // 체크박스 렌더러
-                      showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                	  type : "CheckBoxEditRenderer",   // 체크박스 렌더러
+                	  showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
                       editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
                       checkValue : true, // true, false 인 경우가 기본
                       unCheckValue : false,
@@ -222,21 +222,21 @@ var mSort = {};
                       //사용자가 체크 상태를 변경하고자 할 때 변경을 허락할지 여부를 지정할 수 있는 함수 입니다. : (return false시, 변경안됨.)
                       checkableFunction :  function(rowIndex, columnIndex, value, isChecked, item, dataField ) {
 
-                          // 체크했을 때.
+                    	  // 체크했을 때.
                           if(!isChecked){
-                              var items = AUIGrid.getGridData(deliveryGridID);
+                        	  var items = AUIGrid.getGridData(deliveryGridID);
 
-                              var printDs = [];
-                              $.each(items, function(i, row){
-                                 if(row.delvryStatusCode != "10" && Number(row.hmcDelvryNoDtlNo) == 1
-                                    && rowIndex != i){
-                                        printDs.push({"rowIndex":i, "hmcDelvryNo":row.hmcDelvryNo, "hmcDelvryNoDtlNo":row.hmcDelvryNoDtlNo});
-                                 }
-                              });
+                        	  var printDs = [];
+                        	  $.each(items, function(i, row){
+                        		 if(row.delvryStatusCode != "10" && Number(row.hmcDelvryNoDtlNo) == 1
+                        			&& rowIndex != i){
+                        			    printDs.push({"rowIndex":i, "hmcDelvryNo":row.hmcDelvryNo, "hmcDelvryNoDtlNo":row.hmcDelvryNoDtlNo});
+                        		 }
+                        	  });
 
-                              for(var i in printDs){
-                                  AUIGrid.setCellValue(deliveryGridID, Number(printDs[i].rowIndex), "printYn", false);
-                              }
+                        	  for(var i in printDs){
+                        	      AUIGrid.setCellValue(deliveryGridID, Number(printDs[i].rowIndex), "printYn", false);
+                        	  }
                           }
 
                           return true;
@@ -308,8 +308,10 @@ var mSort = {};
             $("#sPoDtTo").val("${toDay}");
         }
 
-        $("#sMemAccId").val(vendorDs[0].codeId);                // 임시 처리 - 로그인 사용자의 vendor로 할 예정.
-        $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
+        <c:if test="${PAGE_AUTH.funcUserDefine1 != 'Y'}">
+	        $("#sMemAccId").val(vendorDs[0].codeId);                // 임시 처리 - 로그인 사용자의 vendor로 할 예정.
+	        $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
+        </c:if>
 
         // 조회버튼
         $("#btnSearch").click(function(){
@@ -318,19 +320,19 @@ var mSort = {};
                 return ;
             }
 
-            // 날짜형식 체크
-            var sValidDtFrom = $("#sPoDtFrom").val();
-            var sValidDtTo = $("#sPoDtTo").val();
+		    // 날짜형식 체크
+		    var sValidDtFrom = $("#sPoDtFrom").val();
+		    var sValidDtTo = $("#sPoDtTo").val();
 
-            var date_pattern = /^(0[1-9]|[12][0-9]|3[0-1])\/(0[1-9]|1[012])\/(19|20)\d{2}$/;
-            if( !date_pattern.test(sValidDtFrom)) {
-                  Common.alert("Please check the date format.");
-                  return ;
-            }
-            if( !date_pattern.test(sValidDtTo)) {
-                Common.alert("Please check the date format.");
-                return ;
-            }
+		    var date_pattern = /^(0[1-9]|[12][0-9]|3[0-1])\/(0[1-9]|1[012])\/(19|20)\d{2}$/;
+		    if( !date_pattern.test(sValidDtFrom)) {
+		          Common.alert("Please check the date format.");
+		          return ;
+		    }
+		    if( !date_pattern.test(sValidDtTo)) {
+		        Common.alert("Please check the date format.");
+		        return ;
+		    }
 
             var arrStDt = sValidDtFrom.split('/');
             var arrEnDt = sValidDtTo.split('/');
@@ -339,26 +341,26 @@ var mSort = {};
 
             var diff = dat2 - dat1;
             if(diff < 0){
-                Common.alert("The start date can be greater than the end date.");
-                return ;
+            	Common.alert("The start date can be greater than the end date.");
+            	return ;
             }
 
             /*
             if(js.date.dateDiff(dat1, dat2) > 61){
-                Common.alert("The duration is only two months.");
+            	Common.alert("The duration is only two months.");
                 return ;
             }
             */
 
-            // 메인 그리드 조회
-            getListAjax(1);
+		    // 메인 그리드 조회
+		    getListAjax(1);
 
       });
 
         // save
         $("#btnSave").click(function(){
 
-            var items = AUIGrid.getGridData(detailGridID);
+        	var items = AUIGrid.getGridData(detailGridID);
             if(items.length == 0){
                 Common.alert("Please, Check Input item information.");
                 return false;
@@ -392,42 +394,42 @@ var mSort = {};
             }
 
             if(paramList.length == 0){
-                Common.alert("No delivery QTY.");
+            	Common.alert("No delivery QTY.");
                 return false;
             }
 
             Common
-                .confirm(
-                    "<spring:message code='sys.common.alert.save'/>",
-                    function(){
-                        Common.ajax("POST", "/homecare/po/hcCreateDelivery/multiHcCreateDelivery.do"
-                                , {"saveData":paramList}
-                                , function(result){
-                                    AUIGrid.setGridData(deliveryGridID, result.dataList);
+	            .confirm(
+	                "<spring:message code='sys.common.alert.save'/>",
+	                function(){
+	                    Common.ajax("POST", "/homecare/po/hcCreateDelivery/multiHcCreateDelivery.do"
+	                            , {"saveData":paramList}
+	                            , function(result){
+	                                AUIGrid.setGridData(deliveryGridID, result.dataList);
 
-                                    Common.ajax("GET", "/homecare/po/hcCreateDelivery/selectPoDetailList.do"
-                                            , {"sPoNo":items[0].poNo}
-                                            , function(result){
-                                                   //console.log("data : " + result);
-                                                   AUIGrid.setGridData(detailGridID, result.dataList);
-                                    });
+	                                Common.ajax("GET", "/homecare/po/hcCreateDelivery/selectPoDetailList.do"
+	                                        , {"sPoNo":items[0].poNo}
+	                                        , function(result){
+	                                               //console.log("data : " + result);
+	                                               AUIGrid.setGridData(detailGridID, result.dataList);
+	                                });
 
-                                    Common.alert("<spring:message code='sys.msg.savedCnt'/>");
-                                    //console.log("성공." + JSON.stringify(result));
-                                 }
-                                , function(jqXHR, textStatus, errorThrown){
-                                    try{
-                                        console.log("Fail Status : " + jqXHR.status);
-                                        console.log("code : "        + jqXHR.responseJSON.code);
-                                        console.log("message : "     + jqXHR.responseJSON.message);
-                                        console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-                                    }catch (e){
-                                        console.log(e);
-                                    }
-                                    Common.alert("Fail : " + jqXHR.responseJSON.message);
-                        });
-                    }
-            );
+	                                Common.alert("<spring:message code='sys.msg.savedCnt'/>");
+	                                //console.log("성공." + JSON.stringify(result));
+	                             }
+	                            , function(jqXHR, textStatus, errorThrown){
+	                                try{
+	                                    console.log("Fail Status : " + jqXHR.status);
+	                                    console.log("code : "        + jqXHR.responseJSON.code);
+	                                    console.log("message : "     + jqXHR.responseJSON.message);
+	                                    console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	                                }catch (e){
+	                                    console.log(e);
+	                                }
+	                                Common.alert("Fail : " + jqXHR.responseJSON.message);
+	                    });
+	                }
+	        );
         });
 
         // del
@@ -445,7 +447,7 @@ var mSort = {};
                 if(Number(row.item.delvryStatusCode) != 10){
                     isValid = false;
                 }else{
-                    chList.push(row.item);
+                	chList.push(row.item);
                 }
             });
             if(!isValid){
@@ -463,16 +465,16 @@ var mSort = {};
                         Common.ajax("POST", "/homecare/po/hcCreateDelivery/deleteHcCreateDelivery.do"
                                 , params
                                 , function(result){
-                                    AUIGrid.setGridData(deliveryGridID, result.dataList);
+		                            AUIGrid.setGridData(deliveryGridID, result.dataList);
 
-                                    Common.ajax("GET", "/homecare/po/hcCreateDelivery/selectPoDetailList.do"
-                                            , {"sPoNo":chList[0].poNo}
-                                            , function(result){
-                                                   //console.log("data : " + result);
-                                                   AUIGrid.setGridData(detailGridID, result.dataList);
-                                    });
+		                            Common.ajax("GET", "/homecare/po/hcCreateDelivery/selectPoDetailList.do"
+		                                    , {"sPoNo":chList[0].poNo}
+		                                    , function(result){
+		                                           //console.log("data : " + result);
+		                                           AUIGrid.setGridData(detailGridID, result.dataList);
+		                            });
 
-                                    Common.alert("<spring:message code='sys.msg.savedCnt'/>");
+		                            Common.alert("<spring:message code='sys.msg.savedCnt'/>");
                                  }
                                 , function(jqXHR, textStatus, errorThrown){
                                     try{
@@ -491,13 +493,13 @@ var mSort = {};
 
         // delivery
         $("#btnSubDelivery").click(function(){
-            var items = AUIGrid.getCheckedRowItems(deliveryGridID);
-            if(items.length < 1){
-                Common.alert("Please, select a row.");
+        	var items = AUIGrid.getCheckedRowItems(deliveryGridID);
+        	if(items.length < 1){
+        		Common.alert("Please, select a row.");
                 return false;
             }
 
-            var isValid = true;
+        	var isValid = true;
             var chList = [];
             $.each(items, function(idx, row){
                 if(Number(row.item.delvryStatusCode) != 10){
@@ -541,16 +543,16 @@ var mSort = {};
         });
 
         $("#btnSubPrint").click(function(){
-            var items = AUIGrid.getGridData(deliveryGridID);
+        	var items = AUIGrid.getGridData(deliveryGridID);
 
-            var checkedItems = [];
-            $.each(items, function(i, row){
-                if(row.printYn == true){
-                    checkedItems.push(row);
-                }
-            });
+        	var checkedItems = [];
+        	$.each(items, function(i, row){
+        		if(row.printYn == true){
+        			checkedItems.push(row);
+        		}
+        	});
 
-            if(checkedItems.length == 0) {
+        	if(checkedItems.length == 0) {
                 Common.alert('No data selected.');
                 return false;
             }else if(checkedItems.length == 1 ) {
@@ -611,14 +613,14 @@ var mSort = {};
         AUIGrid.bind(deliveryGridID, "rowCheckClick", function( event ) {
             console.log("rowIndex : " + event.rowIndex + ", checked : " + event.checked);
             if(event.checked){
-                // 같은 번호만 체크.  (같지 않은 번호는 체크 해제)
-                //AUIGrid.setCheckedRowsByValue(deliveryGridID, "hmcDelvryNo", event.item.hmcDelvryNo);
+            	// 같은 번호만 체크.  (같지 않은 번호는 체크 해제)
+            	//AUIGrid.setCheckedRowsByValue(deliveryGridID, "hmcDelvryNo", event.item.hmcDelvryNo);
 
-                // 같은 번호 체크. (누적되어 같은 번호 체크.)
-                AUIGrid.addCheckedRowsByValue(deliveryGridID, "hmcDelvryNo", event.item.hmcDelvryNo);
+            	// 같은 번호 체크. (누적되어 같은 번호 체크.)
+            	AUIGrid.addCheckedRowsByValue(deliveryGridID, "hmcDelvryNo", event.item.hmcDelvryNo);
             }else{
-                // 같은 번호 체크해제.
-                AUIGrid.addUncheckedRowsByValue(deliveryGridID, "hmcDelvryNo", event.item.hmcDelvryNo);
+            	// 같은 번호 체크해제.
+            	AUIGrid.addUncheckedRowsByValue(deliveryGridID, "hmcDelvryNo", event.item.hmcDelvryNo);
             }
         });
 
@@ -693,9 +695,9 @@ function getListAjax(goPage) {
         AUIGrid.setGridData(deliveryGridID, []);
 
         if(data.total > 0){
-            // 행을 선택해줌.
-            AUIGrid.setSelectionByIndex(myGridID, 0);
-            cellClickEvent({"rowIndex":0, "columnIndex":0});
+	        // 행을 선택해줌.
+	        AUIGrid.setSelectionByIndex(myGridID, 0);
+	        cellClickEvent({"rowIndex":0, "columnIndex":0});
         }
     });
 
@@ -732,11 +734,11 @@ function fn_isDateValidate(sValidDt){
     <h2>Create Delivery & Statement</h2>
 
     <ul class="right_btns">
-      <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
+        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+            <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
+        </c:if>
     </ul>
   </aside><!-- title_line end -->
-
-
 
     <section class="search_table"><!-- search_table start -->
     <form id="searchForm" method="post" onsubmit="return false;">
@@ -790,25 +792,27 @@ function fn_isDateValidate(sValidDt){
     </section><!-- search_table end -->
 
   <section class="search_result"><!-- search_result start -->
-    <aside class="title_line"><!-- title_line start -->
+	<aside class="title_line"><!-- title_line start -->
         <h3>PO list</h3>
-        <ul class="right_btns">
-        </ul>
-    </aside><!-- title_line end -->
+	    <ul class="right_btns">
+	    </ul>
+	</aside><!-- title_line end -->
 
     <article class="grid_wrap"><!-- grid_wrap start -->
         <!-- 그리드 영역1 -->
         <div id="mainGrid" style="height:250px;"></div>
 
-        <!-- 그리드 페이징 네비게이터 -->
-        <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
+	    <!-- 그리드 페이징 네비게이터 -->
+	    <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
     </article><!-- grid_wrap end -->
 
 
     <aside class="title_line"><!-- title_line start -->
         <h3>PO Detail & delivery Management</h3>
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="btnSave">SAVE</a></p></li>
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                <li><p class="btn_grid"><a id="btnSave">SAVE</a></p></li>
+            </c:if>
         </ul>
     </aside><!-- title_line end -->
     <article class="grid_wrap" ><!-- grid_wrap start -->
@@ -819,9 +823,13 @@ function fn_isDateValidate(sValidDt){
     <aside class="title_line"><!-- title_line start -->
         <h3>Delivery List</h3>
         <ul class="right_btns">
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_grid"><a id="btnSubDel">Delete</a></p></li>
             <li><p class="btn_grid"><a id="btnSubDelivery">Delivery</a></p></li>
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_grid"><a id="btnSubPrint">Print</a></p></li>
+            </c:if>
         </ul>
     </aside><!-- title_line end -->
     <article class="grid_wrap" ><!-- grid_wrap start -->
