@@ -25,12 +25,12 @@ $(document).ready(function() {
     }
     $("#mypExpireMonthFr").val((new Date().getMonth()+1)+"/"+new Date().getFullYear());
     var month = new Date();
-    month.setMonth(month.getMonth()+3);
+    month.setMonth(month.getMonth()+6);
     var year = new Date().getFullYear();
     if(new Date().getMonth() > month.getMonth()){
     	year += 1;
     }
-    $("#mypExpireMonthTo").val((month.getMonth()+1)+"/"+year); //now+AddMonths(3)
+    $("#mypExpireMonthTo").val((month.getMonth()+1)+"/"+year); //now+AddMonths(6)
 
 });
 
@@ -63,12 +63,12 @@ function validRequiredField(){
 	var frArr = $("#mypExpireMonthFr").val().split("/");
     var toArr = $("#mypExpireMonthTo").val().split("/");
 	var mypExpireMonthFr = new Date(frArr[1]+"-"+frArr[0]+"-01");
-	mypExpireMonthFr.setMonth(mypExpireMonthFr.getMonth() + 3) //AddMonths(3)
+	mypExpireMonthFr.setMonth(mypExpireMonthFr.getMonth() + 6) //AddMonths(6)
 	var mypExpireMonthTo = new Date(toArr[1]+"-"+toArr[0]+"-01");
 
 	if(mypExpireMonthFr < mypExpireMonthTo){
 		valid = false;
-        message += "<spring:message code="sal.alert.msg.monthInterval3" />";
+        message += "<spring:message code='sal.alert.msg.monthInterval6' />";
 	}
 
 	if(valid == false){
