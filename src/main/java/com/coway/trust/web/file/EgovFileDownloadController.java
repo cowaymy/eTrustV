@@ -52,6 +52,9 @@ public class EgovFileDownloadController {
 	@Value("${web.resource.upload.file}")
 	private String uploadDirWeb;
 
+    @Value("${com.file.mobile.upload.path}")
+    private String fileDownWasMobile;
+
 	@Autowired
 	private FileService fileService;
 
@@ -300,4 +303,59 @@ public class EgovFileDownloadController {
 			throw new FileDownException(AppConstants.FAIL, "Could not get file name : " + originalFileName);
 		}
 	}
+
+    /**
+     * 첨부파일로 등록된 파일에 대하여 다운로드를 제공한다.
+     *
+     * @param params
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(value = "/fileDownWasMobile.do")
+    public void fileDownWasMobile(@RequestParam Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        String fileId = (String) params.get("fileId");
+        String subPath;
+        String fileName;
+        String originalFileName;
+
+        if (StringUtils.isNotEmpty(fileId)) {
+            FileVO fileVO = fileService.getFile(Integer.parseInt(fileId));
+            subPath = fileVO.getFileSubPath();
+            fileName = fileVO.getPhysiclFileName();
+            originalFileName = fileVO.getAtchFileName();
+        } else {
+            subPath = (String) params.get("subPath");
+            fileName = (String) params.get("fileName");
+            originalFileName = (String) params.get("orignlFileNm");
+        }
+
+        File uFile = new File(fileDownWasMobile + File.separator + subPath, fileName);
+        long fSize = uFile.length();
+
+        if (fSize > 0) {
+            String mimetype = "application/x-msdownload";
+            response.setContentType(mimetype);
+            response.setHeader("Set-Cookie", "fileDownload=true; path=/");  ///resources/js/jquery.fileDownload.js   callback 호출시 필수.
+            setDisposition(originalFileName, request, response);
+            BufferedInputStream in = null;
+            BufferedOutputStream out = null;
+
+            try {
+                in = new BufferedInputStream(new FileInputStream(uFile));
+                out = new BufferedOutputStream(response.getOutputStream());
+
+                FileCopyUtils.copy(in, out);
+                out.flush();
+            } catch (IOException ex) {
+                EgovBasicLogger.ignore("IO Exception", ex);
+            } finally {
+                EgovResourceCloseHelper.close(in, out);
+            }
+
+        } else {
+
+            throw new FileDownException(AppConstants.FAIL, "Could not get file name : " + originalFileName);
+        }
+    }
 }
