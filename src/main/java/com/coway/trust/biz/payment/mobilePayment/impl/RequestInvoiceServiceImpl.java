@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.poi.util.StringUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -47,11 +46,6 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 
 
-	@Value("${com.file.mobile.upload.path}")
-	private String uploadDir;
-
-
-
 	@Override
 	public List<EgovMap> selectTicketStatusCode() throws Exception{
 	    return requestInvoiceMapper.selectTicketStatusCode();
@@ -71,7 +65,6 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
         ReturnMessage result = new ReturnMessage();
         int total = requestInvoiceMapper.selectRequestInvoiceCount(param);
         result.setTotal(total);
-        param.put("uploadDir", uploadDir);
         result.setDataList(requestInvoiceMapper.selectRequestInvoiceList(param));
         return result;
     }
