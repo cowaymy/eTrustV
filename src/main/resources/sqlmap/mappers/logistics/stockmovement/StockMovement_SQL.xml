@@ -998,7 +998,7 @@
                                         GROUP BY AS_SO_ID)
     WHERE B.AS_SLUTN_RESN_ID IN (SELECT DEFECT_ID
                                  FROM SYS0100M
-                                 WHERE IS_INHOUSE = 1
+                                 WHERE IS_INHOUSE = #{SOLCDE}
                                    AND DEFECT_TYP = 'SC' )
       AND A.AS_NO = #{ASNO}
   </select>
@@ -1013,7 +1013,7 @@
                                          GROUP BY AS_SO_ID)
      WHERE B.AS_SLUTN_RESN_ID IN (SELECT DEFECT_ID
                                  FROM SYS0100M
-                                 WHERE IS_INHOUSE = 2
+                                 WHERE IS_INHOUSE = #{SOLCDE}
                                    AND DEFECT_TYP = 'SC')
        AND A.AS_NO = #{ASNO}
   </select>
