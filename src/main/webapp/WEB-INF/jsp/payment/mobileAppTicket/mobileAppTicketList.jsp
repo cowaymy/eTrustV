@@ -5,6 +5,17 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-right {
+    text-align:right;
+}
+</style>
+
 <script type="text/javaScript">
 var TODAY_DD      = "${toDay}";
 
@@ -64,7 +75,7 @@ var TODAY_DD      = "${toDay}";
         var columnLayout = [ {
                 dataField : "mobTicketNo",
                 headerText : '<spring:message code="pay.title.ticketNo" />',
-                width : 140,
+                width : 100,
                 editable : false,
                 cellMerge : true // 구분1 칼럼 셀 세로 병합 실행
 
@@ -78,7 +89,8 @@ var TODAY_DD      = "${toDay}";
                 editable : false,
                 cellMerge : true, // 구분1 칼럼 셀 세로 병합 실행
                 mergeRef : "mobTicketNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
-                mergePolicy : "restrict"
+                mergePolicy : "restrict",
+                style : "aui-grid-user-custom-left"
             }, {
                 dataField : "ticketStusId",
                 visible : false
@@ -89,7 +101,8 @@ var TODAY_DD      = "${toDay}";
                 editable : false,
                 cellMerge : true, // 구분1 칼럼 셀 세로 병합 실행
                 mergeRef : "mobTicketNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
-                mergePolicy : "restrict"
+                mergePolicy : "restrict",
+                style : "aui-grid-user-custom-left"
             }, {
 
                 dataField : "salesOrdNo",
