@@ -5,6 +5,21 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+
+
+<style type="text/css">
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-right {
+    text-align:right;
+}
+</style>
+
+
+
 <script type="text/javaScript">
 var TODAY_DD      = "${toDay}";
 
@@ -137,63 +152,69 @@ var TODAY_DD      = "${toDay}";
         var columnLayout = [ {
                 dataField : "mobTicketNo",
                 headerText : '<spring:message code="pay.title.ticketNo" />',
-                width : 140,
+                width : 100,
                 editable : false
             }, {
                 dataField : "crtDt",
                 headerText : '<spring:message code="pay.grid.requestDate" />',
-                width : 170,
+                width : 120,
                 editable : false
             }, {
                 dataField : "payStusNm",
-                width : 170,
+                width : 120,
                 headerText : '<spring:message code="pay.grid.status" />',
-                editable : false
+                editable : false,
+                style : "aui-grid-user-custom-left"
             }, {
                 dataField : "payModeNm",
-                width : 170,
+                width : 160,
                 headerText : '<spring:message code="sal.text.payMode" />',
-                editable : false
+                editable : false,
+                style : "aui-grid-user-custom-left"
             }, {
                 dataField : "salesOrdNo",
                 headerText : '<spring:message code="pay.title.orderNo" />',
-                width : 160,
+                width : 120,
                 editable : false
             }, {
                 dataField : "name",
                 headerText : '<spring:message code="pay.head.customerName" />',
-                width : 160,
-                editable : false
+                width : 200,
+                editable : false,
+                style : "aui-grid-user-custom-left"
             }, {
                 dataField : "advMonth",
                 headerText : '<spring:message code="pay.head.advanceMonth2" />',
-                width : 160,
+                width : 80,
                 editable : false
             }, {
                 dataField : "advAmt",
                 headerText : '<spring:message code="pay.head.advanceAmount" />',
-                width : 160,
-                editable : false
+                width : 100,
+                editable : false,
+                style : "aui-grid-user-custom-right"
             }, {
                 dataField : "otstndAmt",
                 headerText : '<spring:message code="pay.head.outstandingAmount" />',
-                width : 160,
-                editable : false
+                width : 100,
+                editable : false,
+                style : "aui-grid-user-custom-right"
             }, {
                 dataField : "payAmt",
                 headerText : '<spring:message code="pay.head.paymentAmount" />',
-                width : 160,
+                width : 100,
                 editable : false,
-                dataType : "numeric"
+                dataType : "numeric",
+                style : "aui-grid-user-custom-right"
             }, {
                 dataField : "slipNo",
                 headerText : '<spring:message code="pay.head.slipNo" />',
-                width : 160,
+                width : 140,
                 editable : false
             }, {
                 dataField : "chequeNo",
                 headerText : '<spring:message code="pay.title.chequeNo" />',
-                width : 160,
+                width : 140,
                 editable : false
             },{
                 dataField : "issuBankId",
@@ -201,18 +222,19 @@ var TODAY_DD      = "${toDay}";
             }, {
                 dataField : "bankNm",
                 headerText : '<spring:message code="pay.text.issBnk" />',
-                width : 160,
-                editable : false
+                width : 180,
+                editable : false,
+                style : "aui-grid-user-custom-left"
             }, {
                 dataField : "chequeDt",
                 headerText : '<spring:message code="service.text.IssueDt" />',
-                width : 160,
+                width : 120,
                 editable : false
             }, {
                 dataField : "uploadImg",
                 /* headerText : '<spring:message code=" " />', */
                 headerText : 'Attachment',
-                width : 160,
+                width : 120,
                 editable : false
             }, {
             	dataField : "attchImgUrl",
@@ -238,28 +260,30 @@ var TODAY_DD      = "${toDay}";
             }, {
                 dataField : "email1",
                 headerText : '<spring:message code="pay.head.email" />',
-                width : 160,
-                editable : false
+                width : 180,
+                editable : false,
+                style : "aui-grid-user-custom-left"
             }, {
                 dataField : "email2",
                 headerText : '<spring:message code="pay.head.addEmail" />',
-                width : 160,
+                width : 180,
                 editable : false
             }, {
                 dataField : "sms1",
                 headerText : '<spring:message code="pay.head.sms" />',
-                width : 160,
+                width : 140,
                 editable : false
             }, {
                 dataField : "sms2",
                 headerText : '<spring:message code="pay.head.addSms" />',
-                width : 160,
+                width : 140,
                 editable : false
             }, {
                 dataField : "payRem",
                 headerText : '<spring:message code="pay.head.remark" />',
                 width : 160,
-                editable : false
+                editable : false,
+                style : "aui-grid-user-custom-left"
             }, {
                 dataField : "crtUserBrnchNm",
                 headerText : '<spring:message code="pay.title.branchCode" />',
@@ -269,7 +293,8 @@ var TODAY_DD      = "${toDay}";
                 dataField : "crtUserNm",
                 headerText : '<spring:message code="pay.head.memberCode" />',
                 width : 160,
-                editable : false
+                editable : false,
+                style : "aui-grid-user-custom-left"
             }, {
                 dataField : "updDt",
                 headerText : '<spring:message code="pay.text.updDt" />',
@@ -279,7 +304,8 @@ var TODAY_DD      = "${toDay}";
                 dataField : "updUserNm",
                 headerText : '<spring:message code="pay.head.updateUser" />',
                 width : 160,
-                editable : false
+                editable : false,
+                style : "aui-grid-user-custom-left"
             }, {
             	dataField : "payStusId",
                 visible : false
