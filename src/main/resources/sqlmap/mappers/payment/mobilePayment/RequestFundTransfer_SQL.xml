@@ -122,9 +122,12 @@ SELECT  B.MOB_TICKET_NO                                                         
     ,   A.NEW_ORD_NO                                                            AS NEW_ORD_NO
     ,   A.NEW_CUST_NAME                                                         AS NEW_CUST_NAME
     ,   D.CODE_NAME                                                             AS FT_RESN_NAME
-    ,   CASE WHEN A.FT_ATTCH_IMG IS NOT NULL THEN #{uploadDir}||F.PHYSICL_FILE_NAME
-                                             ELSE NULL
-                                             END                                AS FT_ATTCH_IMG_URL
+    ,   CASE WHEN A.FT_ATTCH_IMG IS NOT NULL THEN '/file/fileDownWasMobile.do?subPath='||F.FILE_SUB_PATH||'&fileName='||F.PHYSICL_FILE_NAME||'&orignlFileNm='||F.ATCH_FILE_NAME
+                                                ELSE NULL
+                                                END                             AS FT_ATTCH_IMG_URL
+    ,   CASE WHEN A.FT_ATTCH_IMG IS NOT NULL THEN F.FILE_SUB_PATH
+                                                ELSE NULL
+                                                END                             AS FILE_SUB_PATH
     ,   A.FT_REM                                                                AS FT_REM
     ,   G.CODE                                                                  AS BRNCH_CODE
     ,   H.HR_CODE                                                               AS MEM_CODE
