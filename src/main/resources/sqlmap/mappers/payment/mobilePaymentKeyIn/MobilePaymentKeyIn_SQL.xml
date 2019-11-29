@@ -23,9 +23,12 @@
 					 Extent6.NAME BANK_NM,
 					TO_CHAR( TO_DATE( Extent1.CHEQUE_DT, 'DD/MM/YYYY' ), 'DD/MM/YYYY') CHEQUE_DT,
 					 Extent1.UPLOAD_IMG UPLOAD_IMG,
-                     CASE WHEN Extent1.UPLOAD_IMG IS NOT NULL THEN '/resources/WebShare/mobile/payment/mobilePaymentApi/'||F.PHYSICL_FILE_NAME
-	                     ELSE NULL
-	                     END                                AS ATTCH_IMG_URL ,
+                     CASE WHEN Extent1.UPLOAD_IMG IS NOT NULL   THEN 'DOWN'
+                                                                ELSE NULL
+                                                                END             AS ATTCH_IMG_URL,
+                     CASE WHEN Extent1.UPLOAD_IMG IS NOT NULL   THEN F.FILE_SUB_PATH
+                                                                ELSE NULL
+                                                                END             AS FILE_SUB_PATH,
 					 Extent1.EMAIL_1 EMAIL_1,
 					 Extent1.EMAIL_2 EMAIL_2,
 					 Extent1.SMS_1 SMS_1,
@@ -115,7 +118,7 @@
                  AND ( Extent1.SLIP_NO = #{serialNo} OR Extent1.CHEQUE_NO = #{serialNo} )
              </if>
          </where>
-		 ORDER BY CAST(Extent5.MOB_TICKET_NO AS INT) DESC
+		 ORDER BY Extent5.MOB_TICKET_NO
     </select>
 
 
@@ -140,7 +143,7 @@
 
 
     <select id="selectBankStatementInfo" parameterType="Map" resultType="egovMap">
-        SELECT   /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.selectMobilePaymentKeyInList] 20191021 - KR HAN */
+        SELECT   /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.selectBankStatementInfo] 20191021 - KR HAN */
                      A.F_TRNSC_ID id,
                      B.BANK_ID,
                      C.NAME BANK,
