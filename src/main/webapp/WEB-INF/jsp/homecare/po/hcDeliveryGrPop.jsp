@@ -19,7 +19,7 @@
 <script type="text/javaScript">
 
 //AUIGrid 생성 후 반환 ID
-var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
+//var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
 var popupObj;
 
 $(document).ready(function(){
@@ -155,35 +155,60 @@ $(document).ready(function(){
     	if($(this).parent().hasClass("btn_disabled") == true){
             return false;
         }
-
     	var param = $("#frmDeliveryGr").serializeObject();
     	var count = param.hmcDelvryNoDtlNo.length;
 
     	var item = [];
     	var validQty = 0, sumQty = 0;
-    	for (var i=0; i<count; i++) {
 
-    		validQty = js.String.naNcheck(param.bfTotQty[i]) - Number(js.String.deletecomma(param.rciptTmQty[i])) - js.String.naNcheck(param.failTmQty[i]);
+    	if(count == 1 ){
 
-	    	if(validQty < 0){
-	    		Common.alert("Total quantity cannot be exceeded.");
-	    		return false;
-	    	}
+    		validQty = js.String.naNcheck(param.bfTotQty) - Number(js.String.deletecomma(param.rciptTmQty)) - js.String.naNcheck(param.failTmQty);
+            if(validQty < 0){
+                Common.alert("Total quantity cannot be exceeded.");
+                return false;
+            }
 
-	    	sumQty += Number(js.String.deletecomma(param.rciptTmQty[i])) + js.String.naNcheck(param.failTmQty[i]);
+            sumQty += Number(js.String.deletecomma(param.rciptTmQty)) + js.String.naNcheck(param.failTmQty);
 
-	    	item.push({"hmcGrNo":param.ingGrNo
-	    		    , "cdc":param.grCdcId
-		            , "hmcDelvryNo":param.hmcDelvryNo[i]
-		            , "hmcDelvryNoDtlNo":param.hmcDelvryNoDtlNo[i]
-		            , "poNo":param.poNo[i]
-		            , "poDtlNo":param.poDtlNo[i]
-		            , "stockId":param.stockId[i]
-		            , "stockCode":param.stockCode[i]
-	                , "stkTypeId":param.stkTypeId[i]
-	    	        , "qcQty":js.String.naNcheck(param.rciptTmQty[i])      //  serial scan : N일 경우
-		            , "qcFailQty":js.String.naNcheck(param.failTmQty[i])
-	    	});
+            item.push({"hmcGrNo":param.ingGrNo
+                    , "cdc":param.grCdcId
+                    , "hmcDelvryNo":param.hmcDelvryNo
+                    , "hmcDelvryNoDtlNo":param.hmcDelvryNoDtlNo
+                    , "poNo":param.poNo
+                    , "poDtlNo":param.poDtlNo
+                    , "stockId":param.stockId
+                    , "stockCode":param.stockCode
+                    , "stkTypeId":param.stkTypeId
+                    , "qcQty":js.String.naNcheck(param.rciptTmQty)      //  serial scan : N일 경우
+                    , "qcFailQty":js.String.naNcheck(param.failTmQty)
+            });
+
+    	}else{
+
+    		for (var i=0; i<count; i++) {
+                validQty = js.String.naNcheck(param.bfTotQty[i]) - Number(js.String.deletecomma(param.rciptTmQty[i])) - js.String.naNcheck(param.failTmQty[i]);
+                if(validQty < 0){
+                    Common.alert("Total quantity cannot be exceeded.");
+                    return false;
+                }
+
+                sumQty += Number(js.String.deletecomma(param.rciptTmQty[i])) + js.String.naNcheck(param.failTmQty[i]);
+
+                item.push({"hmcGrNo":param.ingGrNo
+                        , "cdc":param.grCdcId
+                        , "hmcDelvryNo":param.hmcDelvryNo[i]
+                        , "hmcDelvryNoDtlNo":param.hmcDelvryNoDtlNo[i]
+                        , "poNo":param.poNo[i]
+                        , "poDtlNo":param.poDtlNo[i]
+                        , "stockId":param.stockId[i]
+                        , "stockCode":param.stockCode[i]
+                        , "stkTypeId":param.stkTypeId[i]
+                        , "qcQty":js.String.naNcheck(param.rciptTmQty[i])      //  serial scan : N일 경우
+                        , "qcFailQty":js.String.naNcheck(param.failTmQty[i])
+                });
+            }
+
     	}
 
 	    if( sumQty == 0 ){
