@@ -36,29 +36,23 @@ var refundColumnLayout =
     ,   { dataField : "newOrdNo", width:140, headerText : "<spring:message code='pay.head.newOrdNo'/>" }
     ,   { dataField : "newCustName", width:200, headerText : "<spring:message code='pay.head.newCusoomerName'/>", style : "aui-grid-user-custom-left" }
     ,   { dataField : "ftResnName", width:140, headerText : "<spring:message code='pay.head.reason'/>", style : "aui-grid-user-custom-left" }
-    ,   {       dataField : "ftAttchImgUrl"
-            ,   width:100
-            ,   headerText : "<spring:message code='pay.head.attachment'/>"
-            ,   renderer : {type : "ImageRenderer"}
-        }
     ,   {
-        dataField : "invcItmPoImgUrl"
-    ,   cellMerge : true
-    ,   mergeRef : "mobTicketNo"
-    ,   mergePolicy : "restrict"
-    ,   headerText : ""
-    ,   width: 140
-    ,   renderer : {
-                        type : "ButtonRenderer"
-                    ,   labelText : "Download"
-                    ,   onclick : function(rowIndex, columnIndex, value, item) {
-                            var rowVal = AUIGrid.getItemByRowIndex(myGridID, rowIndex);
-                            if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName) == false){
-                            	window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
+                dataField : "ftAttchImgUrl"
+            ,   cellMerge : true
+            ,   mergeRef : "mobTicketNo"
+            ,   mergePolicy : "restrict"
+            ,   width : 100
+            ,   headerText : "<spring:message code='pay.head.pOAttach'/>"
+            ,   renderer : {
+                               type : "ImageRenderer",
+                               width : 20,
+                               height : 20,
+                               imgTableRef :
+                               {
+                                   "DOWN": "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+                               }
                             }
-                        }
-                }
-}
+        }
     ,   { dataField : "ftRem", width:100, headerText : "<spring:message code='pay.head.remark'/>", style : "aui-grid-user-custom-left"}
     ,   { dataField : "brnchCode", width:100, headerText : "<spring:message code='log.head.branchcode'/>" }
     ,   { dataField : "memCode", width:100, headerText : "<spring:message code='pay.head.memberCode'/>" }

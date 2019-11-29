@@ -43,30 +43,20 @@ var refundColumnLayout =
     ,   { dataField : "invcItmPoNo", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:80, headerText : "<spring:message code='pay.head.pOno'/>" }
     ,   {
                 dataField : "invcItmPoImgUrl"
-    	    ,   cellMerge : true
-    	    ,   mergeRef : "mobTicketNo"
-    	    ,   mergePolicy : "restrict"
-            ,   width : 100
-            ,   headerText : "<spring:message code='pay.head.pOAttach'/>"
-            ,   renderer : {type : "ImageRenderer"}
-        }
-    ,   {
-                dataField : "invcItmPoImgUrl"
             ,   cellMerge : true
             ,   mergeRef : "mobTicketNo"
             ,   mergePolicy : "restrict"
-            ,   headerText : ""
-            ,   width: 140
+            ,   width : 100
+            ,   headerText : "<spring:message code='pay.head.pOAttach'/>"
             ,   renderer : {
-                                type : "ButtonRenderer"
-                            ,   labelText : "Download"
-                            ,   onclick : function(rowIndex, columnIndex, value, item) {
-                                	var rowVal = AUIGrid.getItemByRowIndex(myGridID, rowIndex);
-                                    if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName) == false){
-                                        window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
-                                    }
-                                }
-                        }
+                               type : "ImageRenderer",
+                               width : 20,
+                               height : 20,
+                               imgTableRef :
+                               {
+                            	   "DOWN": "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+                               }
+                            }
         }
     ,   { dataField : "rem", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:100, headerText : "<spring:message code='pay.head.remark'/>" }
     ,   { dataField : "branchCode", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:100, headerText : "<spring:message code='log.head.branchcode'/>" }
@@ -95,7 +85,7 @@ var refundColumnLayout =
 
 
 $(document).ready(function () {
-	fn_setToDay();
+    fn_setToDay();
 
 
 
@@ -107,31 +97,31 @@ $(document).ready(function () {
 
 
 
-	var refundGridPros = {
-			  selectionMode : "multipleRows"//셀 선택모드를 지정합니다. 유효 속성값은 다음과 같습니다.
-		,     enableCellMerge : true
-		,     rowSelectionWithMerge : true
-		,     cellMergePolicy : "withNull"
-	};
+    var refundGridPros = {
+              selectionMode : "multipleRows"//셀 선택모드를 지정합니다. 유효 속성값은 다음과 같습니다.
+        ,     enableCellMerge : true
+        ,     rowSelectionWithMerge : true
+        ,     cellMergePolicy : "withNull"
+    };
 
     myGridID = AUIGrid.create("#grid_wrap", refundColumnLayout, refundGridPros);//List
 
     /* myExcelID = AUIGrid.create("#grid_excel_wrap", refundColumnLayout, refundGridPros);//Excel */
 
     AUIGrid.bind(myGridID, "pageChange", function(event) {
-    	fn_searchPage(event.currentPage);
+        fn_searchPage(event.currentPage);
     });
 
 
 
     AUIGrid.bind(myGridID, "cellClick", function( event ) {
         if( event.dataField == "invcItmPoImgUrl" ){
-        	if( FormUtil.isEmpty(event.value) == false){
-        		var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
-        		if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName) == false){
-        			window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
-        		}
-        	}
+            if( FormUtil.isEmpty(event.value) == false){
+                var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
+                if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName) == false){
+                    window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
+                }
+            }
         }
     });
 });
@@ -171,22 +161,22 @@ function fn_setToDay() {
 
 
 function fn_search(){
-	fn_searchPage(1);
+    fn_searchPage(1);
 }
 
 
 
 function fn_searchPage(pageNo){
-	Common.ajax("POST", "/payment/requestInvoice/selectRequestInvoiceList.do",  $.extend($("#searchForm").serializeObject(), {"pageNo":pageNo, "pageSize":20, "gu" : "ALL"}), function(result) {
-		//GridCommon.createExtPagingNavigator(pageNo, result.total, {funcName:'fn_searchPage'});
-		AUIGrid.setGridData(myGridID, result.dataList);
-	});
+    Common.ajax("POST", "/payment/requestInvoice/selectRequestInvoiceList.do",  $.extend($("#searchForm").serializeObject(), {"pageNo":pageNo, "pageSize":20, "gu" : "ALL"}), function(result) {
+        //GridCommon.createExtPagingNavigator(pageNo, result.total, {funcName:'fn_searchPage'});
+        AUIGrid.setGridData(myGridID, result.dataList);
+    });
 }
 
 
 
 function fn_clear(){
-	$("#searchForm").each(function() {
+    $("#searchForm").each(function() {
         this.reset();
     });
     fn_setToDay();
@@ -195,9 +185,9 @@ function fn_clear(){
 
 
 function fn_excel(){
-	GridCommon.exportTo("grid_wrap", 'xlsx', 'Request Invoice');
+    GridCommon.exportTo("grid_wrap", 'xlsx', 'Request Invoice');
 /*
-	Common.ajax("POST", "/payment/requestInvoice/selectRequestInvoiceList.do",  $.extend($("#searchForm").serializeObject(), {"gu" : "EXCEL"}), function(result) {
+    Common.ajax("POST", "/payment/requestInvoice/selectRequestInvoiceList.do",  $.extend($("#searchForm").serializeObject(), {"gu" : "EXCEL"}), function(result) {
         AUIGrid.setGridData(myExcelID, result.dataList);
         GridCommon.exportTo("grid_excel_wrap", 'xlsx', 'Request Invoice');
     })
@@ -209,16 +199,16 @@ function fn_excel(){
 function fn_approve(){
     var selectGrd = AUIGrid.getSelectedItems(myGridID);
     if( selectGrd.length <= 0 ){
-    	Common.alert("<spring:message code='pay.check.noRowsSelected'/>");
+        Common.alert("<spring:message code='pay.check.noRowsSelected'/>");
 
     }else{
-    	var reqStusId = AUIGrid.getCellValue(myGridID, selectGrd[0].rowIndex, "reqStusId");
+        var reqStusId = AUIGrid.getCellValue(myGridID, selectGrd[0].rowIndex, "reqStusId");
         if( reqStusId != 1 ){
             Common.alert("<spring:message code='pay.check.reqStusId'/>");
             return false;
         }
 
-    	Common.confirm("<spring:message code='pay.confirm.approve'/>", function(){
+        Common.confirm("<spring:message code='pay.confirm.approve'/>", function(){
             Common.ajaxSync("POST", "/payment/requestInvoice/saveRequestInvoiceArrpove.do", selectGrd[0].item, function(result) {
                 if(result !=""  && null !=result ){
                     Common.alert("<spring:message code='pay.alert.approve'/>", function(){
@@ -234,9 +224,9 @@ function fn_approve(){
 
 
 function fn_rejcet(){
-	var selectGrd = AUIGrid.getSelectedItems(myGridID);
-	if( selectGrd.length <= 0 ){
-    	Common.alert("<spring:message code='pay.check.noRowsSelected'/>");
+    var selectGrd = AUIGrid.getSelectedItems(myGridID);
+    if( selectGrd.length <= 0 ){
+        Common.alert("<spring:message code='pay.check.noRowsSelected'/>");
 
     }else{
         var reqStusId = AUIGrid.getCellValue(myGridID, AUIGrid.getSelectedItems(myGridID)[0].rowIndex, "reqStusId");
@@ -245,7 +235,7 @@ function fn_rejcet(){
             return false;
         }
 
-    	Common.prompt("<spring:message code='pay.prompt.reject'/>", "", function(){
+        Common.prompt("<spring:message code='pay.prompt.reject'/>", "", function(){
             if( FormUtil.isEmpty($("#promptText").val()) ){
                 Common.alert("<spring:message code='pay.check.rejectReason'/>");
 

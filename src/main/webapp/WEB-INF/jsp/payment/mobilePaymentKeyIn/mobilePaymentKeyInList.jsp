@@ -240,24 +240,16 @@ var TODAY_DD      = "${toDay}";
             	dataField : "attchImgUrl",
             	width:100,
             	headerText : "<spring:message code='pay.head.attachment'/>",
-            	renderer : {
-                                   type : "ImageRenderer"
-                               }
+                renderer : {
+                    type : "ImageRenderer",
+                    width : 20,
+                    height : 20,
+                    imgTableRef :
+                    {
+                        "DOWN": "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+                    }
+                 }
              }, {
-                 dataField : "invcItmPoImgUrl",
-                 headerText : ""
-             ,   width: 140
-             ,   renderer : {
-                                 type : "ButtonRenderer"
-                             ,   labelText : "Download"
-                             ,   onclick : function(rowIndex, columnIndex, value, item) {
-                                     var rowVal = AUIGrid.getItemByRowIndex(myGridID, rowIndex);
-                                     if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName) == false){
-                                         window.open("/file/fileDownWeb.do?subPath=" + "mobile/payment/mobilePaymentApi" + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
-                                     }
-                                 }
-                         }
-            }, {
                 dataField : "email1",
                 headerText : '<spring:message code="pay.head.email" />',
                 width : 180,
@@ -380,6 +372,19 @@ var TODAY_DD      = "${toDay}";
 
         //myGridID  = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
         myGridID  = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+
+
+
+        AUIGrid.bind(myGridID, "cellClick", function( event ) {
+            if( event.dataField == "attchImgUrl" ){
+                if( FormUtil.isEmpty(event.value) == false){
+                    var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
+                    if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName) == false){
+                        window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
+                    }
+                }
+            }
+        });
 
     }
 
