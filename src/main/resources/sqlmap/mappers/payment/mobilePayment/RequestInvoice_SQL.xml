@@ -163,7 +163,7 @@ SELECT  A.MOB_TICKET_NO                                                         
     ,   B.INVC_CNTC_PERSON                                                      AS INVC_CNTC_PERSON
     ,   B.INVC_ITM_PO_NO                                                        AS INVC_ITM_PO_NO
     ,   B.INVC_ITM_PO_IMG                                                       AS INVC_ITM_PO_IMG
-    ,   CASE WHEN B.INVC_ITM_PO_IMG IS NOT NULL THEN '/file/fileDownWasMobile.do?subPath='||F.FILE_SUB_PATH||'&fileName='||F.PHYSICL_FILE_NAME||'&orignlFileNm='||F.ATCH_FILE_NAME
+    ,   CASE WHEN B.INVC_ITM_PO_IMG IS NOT NULL THEN 'DOWN'
                                                 ELSE NULL
                                                 END                             AS INVC_ITM_PO_IMG_URL
     ,   CASE WHEN B.INVC_ITM_PO_IMG IS NOT NULL THEN F.FILE_SUB_PATH
@@ -186,8 +186,8 @@ SELECT  A.MOB_TICKET_NO                                                         
 <if test='gu.equals("LIST")'>
     <include refid="suffixSql"/>
 </if>
-ORDER BY    TO_NUMBER(MOB_TICKET_NO) DESC
-        ,   REQ_INVC_NO DESC
+ORDER BY    MOB_TICKET_NO DESC
+        ,   TAX_INVC_ID ASC
 </select>
 
 

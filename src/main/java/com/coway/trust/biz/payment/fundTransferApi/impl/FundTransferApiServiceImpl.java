@@ -159,7 +159,7 @@ public class FundTransferApiServiceImpl extends EgovAbstractServiceImpl implemen
         sParams.put("userId", param.getRegId());
         arrParams.add(sParams);
         int mobTicketNo = mobileAppTicketApiCommonService.saveMobileAppTicket(arrParams);
-        if( CommonUtils.isEmpty(String.valueOf(mobTicketNo)) || mobTicketNo == 0 ){
+        if( CommonUtils.isEmpty(mobTicketNo) || mobTicketNo == 0 ){
             throw new ApplicationException(AppConstants.FAIL, "The Mobile Ticket Number value does not exist.");
         }
 

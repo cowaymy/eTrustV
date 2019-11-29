@@ -122,7 +122,7 @@ SELECT  B.MOB_TICKET_NO                                                         
     ,   A.CUST_ACC_NO                                                           AS CUST_ACC_NO
     ,   D.RESN_DESC                                                             AS REF_RESN_NAME
     ,   A.REF_ATTCH_IMG                                                         AS REF_ATTCH_IMG
-    ,   CASE WHEN A.REF_ATTCH_IMG IS NOT NULL THEN '/file/fileDownWasMobile.do?subPath='||F.FILE_SUB_PATH||'&fileName='||F.PHYSICL_FILE_NAME||'&orignlFileNm='||F.ATCH_FILE_NAME
+    ,   CASE WHEN A.REF_ATTCH_IMG IS NOT NULL THEN 'DOWN'
                                                 ELSE NULL
                                                 END                             AS REF_ATTCH_IMG_URL
     ,   CASE WHEN A.REF_ATTCH_IMG IS NOT NULL THEN F.FILE_SUB_PATH
@@ -144,7 +144,7 @@ SELECT  B.MOB_TICKET_NO                                                         
 <if test='gu.equals("LIST")'>
     <include refid="suffixSql"/>
 </if>
-ORDER BY TO_NUMBER(MOB_TICKET_NO) DESC
+ORDER BY MOB_TICKET_NO DESC
 </select>
 
 

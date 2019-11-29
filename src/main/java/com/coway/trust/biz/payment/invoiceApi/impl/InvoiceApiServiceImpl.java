@@ -151,7 +151,7 @@ public class InvoiceApiServiceImpl extends EgovAbstractServiceImpl implements In
             arrParams.add(sParams);
         }
         int mobTicketNo = mobileAppTicketApiCommonService.saveMobileAppTicket(arrParams);
-        if( CommonUtils.isEmpty(String.valueOf(mobTicketNo)) || mobTicketNo == 0 ){
+        if( CommonUtils.isEmpty(mobTicketNo) || mobTicketNo == 0 ){
             throw new ApplicationException(AppConstants.FAIL, "The Mobile Ticket Number value does not exist.");
         }
 
@@ -169,15 +169,14 @@ public class InvoiceApiServiceImpl extends EgovAbstractServiceImpl implements In
             createData.put("invcItmDiscRate", null);
             createData.put("invcItmExgAmt", null);
             createData.put("invcItmTotAmt", null);
-            createData.put("reqInvcYear", null);
-            createData.put("reqInvcMonth", null);
+            createData.put("reqInvcYearMonth()", null);
             createData.put("email", createData.get("email"));
             createData.put("email2", createData.get("email2"));
 
             if( reqInvcNo == 0 ){
                 int chkCnt = invoiceApiMapper.selectRequestInvoiceStusCheck(createData);
                 if( chkCnt != 0 ){
-                    throw new ApplicationException(AppConstants.FAIL, "Request Status Check.");
+                    throw new ApplicationException(AppConstants.FAIL, "Has already been requested.");
                 }
 
                 saveCnt = invoiceApiMapper.insertPay0294D(createData);
@@ -250,7 +249,7 @@ public class InvoiceApiServiceImpl extends EgovAbstractServiceImpl implements In
         sParams.put("userId", param.getRegId());
         arrParams.add(sParams);
         int mobTicketNo = mobileAppTicketApiCommonService.saveMobileAppTicket(arrParams);
-        if( CommonUtils.isEmpty(String.valueOf(mobTicketNo)) || mobTicketNo == 0){
+        if( CommonUtils.isEmpty(mobTicketNo) || mobTicketNo == 0){
             throw new ApplicationException(AppConstants.FAIL, "The Mobile Ticket Number value does not exist.");
         }
 

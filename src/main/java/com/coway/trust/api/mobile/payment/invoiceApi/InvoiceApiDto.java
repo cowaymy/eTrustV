@@ -105,7 +105,7 @@ public class InvoiceApiDto {
     private double invcItmRentalFee;
     private double invcItmExgAmt;
     private double invcItmTotAmt;
-    private int reqInvcYearMonth;
+    private String reqInvcYearMonth;
     private String invcCntcPerson;
     private String custBillGrpNo;
 
@@ -367,11 +367,11 @@ public class InvoiceApiDto {
         this.invcItmTotAmt = invcItmTotAmt;
     }
 
-    public int getReqInvcYearMonth() {
+    public String getReqInvcYearMonth() {
         return reqInvcYearMonth;
     }
 
-    public void setReqInvcYearMonth(int reqInvcYearMonth) {
+    public void setReqInvcYearMonth(String reqInvcYearMonth) {
         this.reqInvcYearMonth = reqInvcYearMonth;
     }
 
