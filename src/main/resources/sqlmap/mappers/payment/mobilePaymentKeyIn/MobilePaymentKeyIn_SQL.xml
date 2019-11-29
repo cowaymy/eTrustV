@@ -14,9 +14,9 @@
 					 Extent1.SALES_ORD_NO SALES_ORD_NO,
 					 Extent3.NAME NAME,
 					 Extent1.ADV_MONTH ADV_MONTH,
-					 Extent1.ADV_AMT ADV_AMT,
-					 Extent1.OTSTND_AMT OTSTND_AMT,
-					 Extent1.PAY_AMT PAY_AMT,
+		             TO_CHAR(Extent1.ADV_AMT, 'FM9990.00' ) ADV_AMT,
+		             TO_CHAR(Extent1.OTSTND_AMT, 'FM9990.00' ) OTSTND_AMT,
+		             TO_CHAR(Extent1.PAY_AMT, 'FM9990.00' ) PAY_AMT,
 					 Extent1.SLIP_NO SLIP_NO,
 					 Extent1.CHEQUE_NO CHEQUE_NO,
 					 Extent1.ISSU_BANK_ID ISSU_BANK_ID,
@@ -32,6 +32,7 @@
 					 Extent1.SMS_2 SMS_2,
 					 Extent1.PAY_REM PAY_REM,
 					 Extent5.CRT_USER_BRNCH CRT_USER_BRNCH,
+					 T4.CODE CRT_USER_BRNCH_CD,
 					 T4.NAME CRT_USER_BRNCH_NM,
 		             Extent1.CRT_USER_ID CRT_USER_ID,
                      T10.USER_NAME CRT_USER_NM,
@@ -114,7 +115,7 @@
                  AND ( Extent1.SLIP_NO = #{serialNo} OR Extent1.CHEQUE_NO = #{serialNo} )
              </if>
          </where>
-		 ORDER BY Extent1.CRT_DT DESC
+		 ORDER BY CAST(Extent5.MOB_TICKET_NO AS INT) DESC
     </select>
 
 
