@@ -17,7 +17,7 @@ import java.util.Map;
 public interface MobileAppTicketApiCommonService {
 
 
-	String saveMobileAppTicket(List<Map<String, Object>> params);
+	int saveMobileAppTicket(List<Map<String, Object>> params);
 
 
     int updateMobileAppTicket(List<Map<String, Object>> params);

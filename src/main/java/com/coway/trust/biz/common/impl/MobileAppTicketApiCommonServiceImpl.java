@@ -67,12 +67,12 @@ public class MobileAppTicketApiCommonServiceImpl implements MobileAppTicketApiCo
 	 * Mobile
 	 */
 	@Override
-	public String saveMobileAppTicket(  List<Map<String, Object>> arrParams)  {
+	public int saveMobileAppTicket(  List<Map<String, Object>> arrParams)  {
 		if(LOGGER.isInfoEnabled()){
 		    LOGGER.info("++++ saveMobileAppTicket params.toString() ::" + arrParams.toString() );
 		}
 
-		String mobTicketNo = "";
+		int mobTicketNo = 0;
 
 		if( StringUtil.isEmpty( String.valueOf(arrParams.get(0).get("userId"))) ){
             throw new ApplicationException(AppConstants.FAIL, "User Id value does not exist.");
@@ -104,7 +104,7 @@ public class MobileAppTicketApiCommonServiceImpl implements MobileAppTicketApiCo
 				ticketStusId = "1"; // SYS0038M / 1 : Active
 			}
 
-			if( i == 0 || StringUtil.isEmpty(mobTicketNo) ){ // 값이 없을 경우 저장
+			if( i == 0 || mobTicketNo == 0 ){ // 값이 없을 경우 저장
 				mobTicketNo = mobileAppTicketApiCommonMapper.selectMobTicketNo();
 				params.put( "mobTicketNo" , mobTicketNo);
 			}else{

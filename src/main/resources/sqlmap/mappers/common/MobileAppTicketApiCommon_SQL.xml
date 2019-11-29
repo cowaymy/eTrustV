@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.common.impl.MobileAppTicketApiCommonMapper">
 
-    <select id="selectMobTicketNo" resultType="String">
+    <select id="selectMobTicketNo" resultType="int">
         SELECT  /* [com.coway.trust.biz.common.impl.MobileAppTicketApiCommonMapper.selectMobTicketNo] 20191011 - KR HAN */
                     MOB0001D_SEQ.NEXTVAL
         FROM    DUAL

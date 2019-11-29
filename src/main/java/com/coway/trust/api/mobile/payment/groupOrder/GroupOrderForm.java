@@ -43,7 +43,7 @@ public class GroupOrderForm {
 	private String salesOrdNo;
 
 	@ApiModelProperty(value = "mobticketno 예)2276627", example = "2276627")
-	private String mobTicketNo;
+	private int mobTicketNo;
 
 
 	public String getSalesOrdNo() {
@@ -102,11 +102,11 @@ public class GroupOrderForm {
 		this.userId = userId;
 	}
 
-	public String getMobTicketNo() {
+	public int getMobTicketNo() {
 		return mobTicketNo;
 	}
 
-	public void setMobTicketNo(String mobTicketNo) {
+	public void setMobTicketNo(int mobTicketNo) {
 		this.mobTicketNo = mobTicketNo;
 	}
 

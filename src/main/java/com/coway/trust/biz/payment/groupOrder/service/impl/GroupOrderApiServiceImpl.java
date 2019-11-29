@@ -147,7 +147,7 @@ public class GroupOrderApiServiceImpl extends EgovAbstractServiceImpl implements
 
 		arrParams.add(sParams);
 
-		String mobTicketNo = mobileAppTicketApiCommonService.saveMobileAppTicket(arrParams);
+		int mobTicketNo = mobileAppTicketApiCommonService.saveMobileAppTicket(arrParams);
 
 		// 1. group order 변경 신청 유무 확인
 //		EgovMap selectGroupOrderReqStusYn =  groupOrderApiMapper.selectGroupOrderReqStusYn (params);

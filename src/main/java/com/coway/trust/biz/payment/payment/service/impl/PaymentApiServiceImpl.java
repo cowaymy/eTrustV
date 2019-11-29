@@ -389,7 +389,7 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
 
 		arrParams.add(sParams);
 
-		String mobTicketNo = mobileAppTicketApiCommonService.saveMobileAppTicket(arrParams);
+		int mobTicketNo = mobileAppTicketApiCommonService.saveMobileAppTicket(arrParams);
 
 		// 저장
 		params.put("signImg",  params.get("signData")   );

@@ -84,14 +84,14 @@ public class GroupOrderDto {
     private String stusCodeCode;
 
     @ApiModelProperty(value = "mobTicketNo")
-    private String mobTicketNo;
+    private int mobTicketNo;
 
 
-	public String getMobTicketNo() {
+	public int getMobTicketNo() {
 		return mobTicketNo;
 	}
 
-	public void setMobTicketNo(String mobTicketNo) {
+	public void setMobTicketNo(int mobTicketNo) {
 		this.mobTicketNo = mobTicketNo;
 	}
 

@@ -7,7 +7,7 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 @Mapper("mobileAppTicketApiCommonMapper")
 public interface MobileAppTicketApiCommonMapper {
 
-	String selectMobTicketNo();
+	int selectMobTicketNo();
 
 	 /**
 	 * insert

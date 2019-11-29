@@ -150,8 +150,8 @@ public class InvoiceApiServiceImpl extends EgovAbstractServiceImpl implements In
             sParams.put("userId", param.get(0).getRegId());
             arrParams.add(sParams);
         }
-        String mobTicketNo = mobileAppTicketApiCommonService.saveMobileAppTicket(arrParams);
-        if( CommonUtils.isEmpty(mobTicketNo) ){
+        int mobTicketNo = mobileAppTicketApiCommonService.saveMobileAppTicket(arrParams);
+        if( CommonUtils.isEmpty(String.valueOf(mobTicketNo)) || mobTicketNo == 0 ){
             throw new ApplicationException(AppConstants.FAIL, "The Mobile Ticket Number value does not exist.");
         }
 
@@ -249,8 +249,8 @@ public class InvoiceApiServiceImpl extends EgovAbstractServiceImpl implements In
         sParams.put("ticketStusId", "1");
         sParams.put("userId", param.getRegId());
         arrParams.add(sParams);
-        String mobTicketNo = mobileAppTicketApiCommonService.saveMobileAppTicket(arrParams);
-        if( CommonUtils.isEmpty(mobTicketNo) ){
+        int mobTicketNo = mobileAppTicketApiCommonService.saveMobileAppTicket(arrParams);
+        if( CommonUtils.isEmpty(String.valueOf(mobTicketNo)) || mobTicketNo == 0){
             throw new ApplicationException(AppConstants.FAIL, "The Mobile Ticket Number value does not exist.");
         }
 

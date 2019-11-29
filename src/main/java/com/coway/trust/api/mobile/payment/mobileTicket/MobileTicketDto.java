@@ -1,7 +1,5 @@
 package com.coway.trust.api.mobile.payment.mobileTicket;
 
-import java.math.BigDecimal;
-
 import com.coway.trust.util.BeanConverter;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;

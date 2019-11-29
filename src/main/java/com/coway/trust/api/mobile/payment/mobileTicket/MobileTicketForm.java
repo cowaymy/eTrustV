@@ -24,7 +24,7 @@ public class MobileTicketForm {
 	private String ticketType;
 
 	@ApiModelProperty(value = "mobTicketNo 예)00", example = "00")
-	private String mobTicketNo;
+	private int mobTicketNo;
 
 	@ApiModelProperty(value = "ticketTypeId 예)00", example = "00")
 	private String ticketTypeId;
@@ -86,11 +86,11 @@ public class MobileTicketForm {
 		this.ticketType = ticketType;
 	}
 
-	public String getMobTicketNo() {
+	public int getMobTicketNo() {
 		return mobTicketNo;
 	}
 
-	public void setMobTicketNo(String mobTicketNo) {
+	public void setMobTicketNo(int mobTicketNo) {
 		this.mobTicketNo = mobTicketNo;
 	}
 
