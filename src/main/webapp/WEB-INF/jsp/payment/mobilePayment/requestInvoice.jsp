@@ -37,8 +37,8 @@ var refundColumnLayout =
     ,   { dataField : "invcAdvPrd", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:80, headerText : "<spring:message code='pay.head.period'/>" }
     ,   { dataField : "reqInvcMonthYear", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:120, headerText : "<spring:message code='pay.head.startOfPeriod'/>" }
     ,   { dataField : "invcItmDiscRate", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:120, headerText : "<spring:message code='pay.head.discountRate'/>", dataType : "numeric", style : "aui-grid-user-custom-right" }
-    ,   { dataField : "invcItmExgAmt", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:140, headerText : "<spring:message code='pay.head.existingAmount'/>", dataType : "numeric", style : "aui-grid-user-custom-right" }
-    ,   { dataField : "invcItmTotAmt", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:100, headerText : "<spring:message code='pay.head.amoumt'/>", dataType : "numeric", style : "aui-grid-user-custom-right" }
+    ,   { dataField : "invcItmExgAmt", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:140, headerText : "<spring:message code='pay.head.existingAmount'/>", dataType : "numeric", formatString : "#,##0.00", style : "aui-grid-user-custom-right" }
+    ,   { dataField : "invcItmTotAmt", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:100, headerText : "<spring:message code='pay.head.amoumt'/>",         dataType : "numeric", formatString : "#,##0.00", style : "aui-grid-user-custom-right" }
     ,   { dataField : "invcCntcPerson", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:140, headerText : "<spring:message code='pay.head.contactPerson'/>" }
     ,   { dataField : "invcItmPoNo", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:80, headerText : "<spring:message code='pay.head.pOno'/>" }
     ,   {
