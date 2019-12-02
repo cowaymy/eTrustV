@@ -192,9 +192,17 @@ var FormUtil = {
 	/**
 	 * 필수값 체크
 	 */
-	checkReqValue : function(obj) {
+	checkReqValue : function(obj, isFocus) {
+
+		// 20191202- KR-MIN isFocus parameter add
+		if(isFocus == null || isFocus == undefined){
+			isFocus = true;
+		}
+
 		if (obj.val().trim().length == 0) {
-			obj.focus();
+			if(isFocus){
+				obj.focus();
+			}
 			return true;
 		}
 		return false;
@@ -446,5 +454,19 @@ var FormUtil = {
         }else{
                 return false;
         }
+    },
+
+    // 20191202- KR-OK diffDay
+    diffDay : function (startDt, endDt){
+		var arrDt1 = startDt.split("/");
+        var arrDt2 = endDt.split("/");
+
+        var dt1 = new Date(arrDt1[2], arrDt1[1]-1, arrDt1[0]);
+        var dt2 = new Date(arrDt2[2], arrDt2[1]-1, arrDt2[0]);
+
+        var diff = dt2 - dt1;
+        var day = 1000*60*60*24;
+
+        return (diff/day);
     }
 };
