@@ -16,26 +16,27 @@
 		            ,CONNECT_BY_ISLEAF    IS_LEAF
         FROM    MOB0002M t1
                         JOIN MOB0003M t2 ON t1.MENU_CODE = t2.MENU_CODE
-	                        AND      t2.AUTH_CODE IN
-	                                (
-	                                <!-- SELECT
-	                                A.ROLE_ID
-	                                FROM SYS0044M A, SYS0045M B
-	                                WHERE A.ROLE_ID = B.ROLE_ID(+)
-	                                AND B.USER_ID(+) = #{userId}
-	                                START WITH A.ROLE_ID = B.ROLE_ID
-	                                CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE -->
-	                                SELECT
-	                                D.AUTH_CODE
-	                                FROM (SELECT     B.USER_ID
-	                                ,A.ROLE_ID
-	                                FROM SYS0044M A, SYS0045M B
-	                                WHERE A.ROLE_ID = B.ROLE_ID(+)
-	                                AND B.USER_ID = #{userId}
-	                                ) C
-	                                ,SYS0054M D
-	                                WHERE C.ROLE_ID = D.ROLE_ID
-	                                )
+                                AND      t2.AUTH_CODE IN
+                                            (
+                                            <!-- SELECT
+                                            A.ROLE_ID
+                                            FROM SYS0044M A, SYS0045M B
+                                            WHERE A.ROLE_ID = B.ROLE_ID(+)
+                                            AND B.USER_ID(+) = #{userId}
+                                            START WITH A.ROLE_ID = B.ROLE_ID
+                                            CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE -->
+                                            SELECT
+                                            D.AUTH_CODE
+                                            FROM (SELECT     B.USER_ID
+                                            ,A.ROLE_ID
+                                            FROM SYS0044M A, SYS0045M B
+                                            WHERE A.ROLE_ID = B.ROLE_ID(+)
+                                            AND B.USER_ID(+) = #{userId}
+                                            START WITH A.ROLE_ID = B.ROLE_ID
+                                            CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE) C
+                                            ,SYS0054M D
+                                            WHERE C.ROLE_ID = D.ROLE_ID
+                                            )
         WHERE  t1.USE_YN = 'Y'
 
         START WITH t1.UPPER_MENU_CODE IS NULL
