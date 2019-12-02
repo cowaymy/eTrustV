@@ -93,8 +93,8 @@ var taxObj = {};
             	, dateInputFormat:"dd/mm/yyyy"  // 실제 데이터의 형식 지정
                 , formatString:"dd/mm/yyyy"     // 실제 데이터 형식을 어떻게 표시할지 지정
             }
-            , {dataField:"address", headerText:"Address", width:300, editable:false, style:"aui-grid-user-custom-left"}
-            , {dataField:"tel", headerText:"Contact No", width:120, editable:false}
+            , {dataField:"address", headerText:"Delivery Address", width:300, editable:false, style:"aui-grid-user-custom-left"}
+            , {dataField:"tel", headerText:"PIC Contact No", width:140, editable:false}
             , {dataField:"rm", headerText:"Remark", width:300, style:"aui-grid-user-custom-left"}
     ];
 

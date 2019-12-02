@@ -19,9 +19,9 @@
 
    /* 커스텀 칼럼 스타일 정의 */
    .my-column {
-	    text-align: center;
-	    margin-top: -20px;
-	}
+        text-align: center;
+        margin-top: -20px;
+    }
 
    .my-row-style { background:#FF5733; font-weight:bold; color:#22741C; }
 
@@ -42,74 +42,74 @@ var uomObj = {};
 var msIe = (js.browser.isMsie || js.browser.isSafari);
 
 if(!msIe){
-	var a=new AudioContext();
-	//var a = new (window.AudioContext || window.webkitAudioContext)();
-	function beep(vol, freq, duration){
-	  v=a.createOscillator()
-	  u=a.createGain()
-	  v.connect(u)
-	  v.frequency.value=freq
-	  v.type="square"
-	  u.connect(a.destination)
-	  u.gain.value=vol*0.01
-	  v.start(a.currentTime)
-	  v.stop(a.currentTime+duration*0.001)
-	}
-	//*****************************************/
+    var a=new AudioContext();
+    //var a = new (window.AudioContext || window.webkitAudioContext)();
+    function beep(vol, freq, duration){
+      v=a.createOscillator()
+      u=a.createGain()
+      v.connect(u)
+      v.frequency.value=freq
+      v.type="square"
+      u.connect(a.destination)
+      u.gain.value=vol*0.01
+      v.start(a.currentTime)
+      v.stop(a.currentTime+duration*0.001)
+    }
+    //*****************************************/
 }
 
 var scanGridId;
 
 var scanLayout = [
-		  {
-		      dataField : "_del", // 임의의 고유값
-		      headerText : " ",
-		      style : "my-column",
-		      width: 64,
-		      editable : false,
-		      renderer : {
-		          type : "ButtonRenderer",
-		          labelText : "X",
-		          onclick : function(rowIndex, columnIndex, value, item) {
-		        	  if(item.status == 0){
-		                  AUIGrid.removeRow(scanGridId, rowIndex);
-		        	  }else{
+          {
+              dataField : "_del", // 임의의 고유값
+              headerText : " ",
+              style : "my-column",
+              width: 64,
+              editable : false,
+              renderer : {
+                  type : "ButtonRenderer",
+                  labelText : "X",
+                  onclick : function(rowIndex, columnIndex, value, item) {
+                      if(item.status == 0){
+                          AUIGrid.removeRow(scanGridId, rowIndex);
+                      }else{
 
-		                  $.extend(item, {"docNo":$("#sDocNo").val()
-				                        , "fromLocCode":$("#fromLocCode").val()
-				                        , "toLocCode":$("#toLocCode").val()
-				                        , "ioType":$("#ioType").val()
-				                        , "transactionType":$("#transaction").val()}
-		                  );
+                          $.extend(item, {"docNo":$("#sDocNo").val()
+                                        , "fromLocCode":$("#fromLocCode").val()
+                                        , "toLocCode":$("#toLocCode").val()
+                                        , "ioType":$("#ioType").val()
+                                        , "transactionType":$("#transaction").val()}
+                          );
 
-		        		  Common.ajax("POST", "/logistics/serialMgmtNew/deleteHPSerial.do"
-		                          , item
-		                          , function(result){
-		                              AUIGrid.removeRow(scanGridId, rowIndex);
-		                           }
-		                          , function(jqXHR, textStatus, errorThrown){
-		                              try{
-		                                  console.log("Fail Status : " + jqXHR.status);
-		                                  console.log("code : "        + jqXHR.responseJSON.code);
-		                                  console.log("message : "     + jqXHR.responseJSON.message);
-		                                  console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-		                              }catch (e){
-		                                  console.log(e);
-		                              }
-		                          });
-		        	  }
-		          }
-		          /*
-		          , disabledFunction :  function(rowIndex, columnIndex, value, item, dataField ) {
-		              // 행 아이템의 name 이 Anna 라면 버튼 비활성화 처리
-		             if(item.name == "Anna") {
-		                 return true;
-		             }
-		             return false;
-		          }
-		          */
-		      }
-		  }
+                          Common.ajax("POST", "/logistics/serialMgmtNew/deleteHPSerial.do"
+                                  , item
+                                  , function(result){
+                                      AUIGrid.removeRow(scanGridId, rowIndex);
+                                   }
+                                  , function(jqXHR, textStatus, errorThrown){
+                                      try{
+                                          console.log("Fail Status : " + jqXHR.status);
+                                          console.log("code : "        + jqXHR.responseJSON.code);
+                                          console.log("message : "     + jqXHR.responseJSON.message);
+                                          console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                                      }catch (e){
+                                          console.log(e);
+                                      }
+                                  });
+                      }
+                  }
+                  /*
+                  , disabledFunction :  function(rowIndex, columnIndex, value, item, dataField ) {
+                      // 행 아이템의 name 이 Anna 라면 버튼 비활성화 처리
+                     if(item.name == "Anna") {
+                         return true;
+                     }
+                     return false;
+                  }
+                  */
+              }
+          }
         , {dataField:"boxno", headerText :"Box Serial No.", width:180}
         , {dataField:"status", visible:false}
         , {dataField:"stockId", visible:false}
@@ -157,13 +157,13 @@ $(document).ready(function(){
 
     // 변수설정. -- TO-BE 홈케어 GR완료 후 공통용으로 변경예정.
     if(Common.checkPlatformType() == "mobile") {
-    	$("#sDocNo").val("${url.ingGrNo}");    // homecare gr번호
-    	$("#transaction").val("HP");
-    	$("#fromLocCode").val("");
-    	$("#toLocCode").val("${url.grCdcId}");
-    	$("#ioType").val("I");
+        $("#sDocNo").val("${url.ingGrNo}");    // homecare gr번호
+        $("#transaction").val("HP");
+        $("#fromLocCode").val("");
+        $("#toLocCode").val("${url.grCdcId}");
+        $("#ioType").val("I");
     }else{
-    	$("#sDocNo").val($("#ingGrNo").val());
+        $("#sDocNo").val($("#ingGrNo").val());
         $("#transaction").val("HP");
         $("#fromLocCode").val("");
         $("#toLocCode").val($("#grCdcId").val());
@@ -171,49 +171,49 @@ $(document).ready(function(){
     }
 
     $("#btnScanAllDel").click(function(){
-    	var items = AUIGrid.getGridData(scanGridId);
-    	Common
-	        .confirm(
-	            "Do you want to All Delete?",
-	            function(){
-	                var itemDs = [];
-	                $.each(items, function(i, row){
-	                   if(row.status != 0){
-	                	   $.extend(row, {"docNo":$("#sDocNo").val()
+        var items = AUIGrid.getGridData(scanGridId);
+        Common
+            .confirm(
+                "Do you want to All Delete?",
+                function(){
+                    var itemDs = [];
+                    $.each(items, function(i, row){
+                       if(row.status != 0){
+                           $.extend(row, {"docNo":$("#sDocNo").val()
                                , "fromLocCode":$("#fromLocCode").val()
                                , "toLocCode":$("#toLocCode").val()
                                , "ioType":$("#ioType").val()
                                , "transactionType":$("#transaction").val()}
-	                	   );
-	                       itemDs.push(row);
-	                   }
-	                });
+                           );
+                           itemDs.push(row);
+                       }
+                    });
 
-	                if(itemDs.length > 0){
-	                    Common.ajax("POST", "/logistics/serialMgmtNew/allDeleteHPSerial.do"
-	                            , {"dataList":itemDs}
-	                            , function(result){
-	                                AUIGrid.setGridData(scanGridId, []);
-	                            }
-	                            , function(jqXHR, textStatus, errorThrown){
-	                                try{
-	                                    console.log("Fail Status : " + jqXHR.status);
-	                                    console.log("code : "        + jqXHR.responseJSON.code);
-	                                    console.log("message : "     + jqXHR.responseJSON.message);
-	                                    console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-	                                }catch (e){
-	                                    console.log(e);
-	                                }
-	                    });
-	                }else{
-	                    AUIGrid.setGridData(scanGridId, []);
-	                }
-	            }
-    	);
+                    if(itemDs.length > 0){
+                        Common.ajax("POST", "/logistics/serialMgmtNew/allDeleteHPSerial.do"
+                                , {"dataList":itemDs}
+                                , function(result){
+                                    AUIGrid.setGridData(scanGridId, []);
+                                }
+                                , function(jqXHR, textStatus, errorThrown){
+                                    try{
+                                        console.log("Fail Status : " + jqXHR.status);
+                                        console.log("code : "        + jqXHR.responseJSON.code);
+                                        console.log("message : "     + jqXHR.responseJSON.message);
+                                        console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                                    }catch (e){
+                                        console.log(e);
+                                    }
+                        });
+                    }else{
+                        AUIGrid.setGridData(scanGridId, []);
+                    }
+                }
+        );
     });
 
     $("#btnScanClose").click(function(){
-    	fn_scanClosePop();
+        fn_scanClosePop();
     });
 
 });
@@ -221,7 +221,7 @@ $(document).ready(function(){
 function fn_splitBarcode(){
 
     if($("#txtBarcode").val() != null || js.String.strNvl($("#txtBarcode").val()) != ""){
-        var BarCodeArray = $("#txtBarcode").val().match(/.{1,18}/g);
+        var BarCodeArray = $("#txtBarcode").val().toUpperCase().match(/.{1,18}/g);
 
         var unitType;
         var failSound = false;
@@ -231,7 +231,7 @@ function fn_splitBarcode(){
         var ExistingBarCodeArray = AUIGrid.getColumnValues(scanGridId, "boxno");
         for (var i = 0 ; i < BarCodeArray.length ; i++){
 
-        	if (BarCodeArray[i].charAt(BarCodeArray[i].length - 5) == 'B'){
+            if (BarCodeArray[i].charAt(BarCodeArray[i].length - 5) == 'B'){
                 unitType = "Box";
             }
 
@@ -240,7 +240,7 @@ function fn_splitBarcode(){
                 //BarCodeArray[i] = BarCodeArray[i];
                 failSound = true;
                 rowData = {
-                		   "boxno":BarCodeArray[i]
+                           "boxno":BarCodeArray[i]
                          , "status":0
                          , "stockName":"Serial No. (Duplicate)",
                         };
@@ -249,20 +249,20 @@ function fn_splitBarcode(){
             }
 
             if( BarCodeArray[i].length < 18 ){
-            	failSound = true;
-            	rowData = {
-	                        "boxno":BarCodeArray[i]
-	                      , "status":0
-	                      , "stockName":"Serial No. Does Not Exist.",
+                failSound = true;
+                rowData = {
+                            "boxno":BarCodeArray[i]
+                          , "status":0
+                          , "stockName":"Serial No. Does Not Exist.",
                         };
-            	AUIGrid.addRow(scanGridId, rowData, "first");
-            	continue;
+                AUIGrid.addRow(scanGridId, rowData, "first");
+                continue;
             }
 
             stockCode = (js.String.roughScale(BarCodeArray[i].substr(3,5), 36)).toString().substr(0,6);
             if(stockCode == "0"){
-            	failSound = true;
-            	rowData = {
+                failSound = true;
+                rowData = {
                         "boxno":BarCodeArray[i]
                       , "status":0
                       , "stockName":"Serial No. Does Not Exist.",
@@ -288,17 +288,17 @@ function fn_splitBarcode(){
                     , function(result){
                         $.each(result.dataList, function(idx, row){
                             if(row.status == 0){
-                            	failSound = true;
+                                failSound = true;
                             }
-                        	AUIGrid.addRow(scanGridId, row, "first");
+                            AUIGrid.addRow(scanGridId, row, "first");
                         });
 
                         if(!msIe){
-	                        if(failSound){
-	                        	beep(999, 210, 800); beep(999, 500, 800);
-	                        }else{
-	                            beep(100, 520, 200);
-	                        }
+                            if(failSound){
+                                beep(999, 210, 800); beep(999, 500, 800);
+                            }else{
+                                beep(100, 520, 200);
+                            }
                         }
                      }
                     , function(jqXHR, textStatus, errorThrown){
@@ -313,10 +313,10 @@ function fn_splitBarcode(){
                         //Common.alert("Fail : " + jqXHR.responseJSON.message);
                     });
         }else{
-        	// faile sound
-        	if(!msIe){
-        	    beep(999, 210, 800); beep(999, 500, 800);
-        	}
+            // faile sound
+            if(!msIe){
+                beep(999, 210, 800); beep(999, 500, 800);
+            }
         }
 
         $("#txtBarcode").val("");
@@ -326,13 +326,13 @@ function fn_splitBarcode(){
 }
 
 function fn_scanClosePop(){
-	// Moblie Popup Setting
+    // Moblie Popup Setting
     if(Common.checkPlatformType() == "mobile") {
         opener.fn_PopSerialClose();
     } else {
-    	$("#btnPopConfirm").parent().removeClass("btn_disabled");
-    	$("#btnPopConfirm").click();
-    	$('#_serialScanPop').remove();
+        $("#btnPopConfirm").parent().removeClass("btn_disabled");
+        $("#btnPopConfirm").click();
+        $('#_serialScanPop').remove();
     }
 }
 
@@ -349,34 +349,34 @@ function fn_scanClosePop(){
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-	<aside class="title_line"><!-- title_line start -->
-	<ul class="right_btns">
-	</ul>
-	</aside><!-- title_line end -->
-	<table class="type1">
-		<caption>table</caption>
-		<colgroup>
-		    <col style="width:150px" />
-		    <col style="width:*" />
-		</colgroup>
-		<tbody>
-			<tr>
-			    <th scope="row">Delivery No</th>
-			    <td colspan="3" >
-			        <input type="text" id="sDocNo" name="sDocNo" placeholder="" class="w100p readonly" style="min-width:150px" readonly value=""'/>
-			    </td>
-			</tr>
-			<tr>
-			    <td colspan="4" >
-			         <input type="hidden" id="transaction" />
-			         <input type="hidden" id="toLocCode" />
-			         <input type="hidden" id="fromLocCode" />
+    <aside class="title_line"><!-- title_line start -->
+    <ul class="right_btns">
+    </ul>
+    </aside><!-- title_line end -->
+    <table class="type1">
+        <caption>table</caption>
+        <colgroup>
+            <col style="width:150px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+            <tr>
+                <th scope="row">Delivery No</th>
+                <td colspan="3" >
+                    <input type="text" id="sDocNo" name="sDocNo" placeholder="" class="w100p readonly" style="min-width:150px" readonly value=""'/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" >
+                     <input type="hidden" id="transaction" />
+                     <input type="hidden" id="toLocCode" />
+                     <input type="hidden" id="fromLocCode" />
 
-			         <input type="hidden" id="ioType" />
-			    </td>
-			</tr>
-		</tbody>
-	</table>
+                     <input type="hidden" id="ioType" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
 
 <!------------------------------------------------------------------------------
@@ -385,9 +385,9 @@ function fn_scanClosePop(){
 
     <aside class="title_line"><!-- title_line start -->
        <h3>Serial Scan</h3>
-	   <ul class="right_btns">
-	       <li style="display:none;"><p class="btn_blue"><a id="btnScanImport" href="#">Import</a></p></li>
-	   </ul>
+       <ul class="right_btns">
+           <li style="display:none;"><p class="btn_blue"><a id="btnScanImport" href="#">Import</a></p></li>
+       </ul>
     </aside><!-- title_line end -->
 
 
@@ -405,7 +405,7 @@ function fn_scanClosePop(){
                          <input type="text"  id="txtBarcode" name="txtBarcode"
                                     onchange="javascript:fn_splitBarcode();"
                                     placeholder="Please select here before scanning."
-                                    style="height:40px;width:80%;" />
+                                    style="height:40px;width:80%; text-transform:uppercase;" />
                     </td>
                 </tr>
              </tbody>

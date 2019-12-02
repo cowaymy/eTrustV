@@ -37,8 +37,8 @@
                   AND VALID_END_DT <![CDATA[>=]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
                ) B
        WHERE 1 = 1
-         AND A.STK_ID = B.STOCK_ID (+)
-         AND A.STK_CODE = B.STOCK_CODE (+)
+         AND A.STK_ID = B.STOCK_ID
+         AND A.STK_CODE = B.STOCK_CODE
          AND A.STK_CTGRY_ID IN ('5706', '5707') -- Mattress, Frame
 
        <if test="scode != null and scode !=''">

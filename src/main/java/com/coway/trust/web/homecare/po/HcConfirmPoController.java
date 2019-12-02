@@ -85,7 +85,7 @@ public class HcConfirmPoController {
 		// UOM
 		model.addAttribute("uomList", hcPurchasePriceService.selectComonCodeList("42"));
 		// Currency
-		model.addAttribute("curList", hcPurchasePriceService.selectComonCodeList("11"));
+		model.addAttribute("curList", hcPurchasePriceService.selectComonCodeList("94"));
 		// Tax Text
 		model.addAttribute("taxList", hcPurchasePriceService.selectComonCodeList("430"));
 

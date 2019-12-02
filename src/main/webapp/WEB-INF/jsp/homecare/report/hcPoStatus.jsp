@@ -374,7 +374,7 @@ var myGridID, excelGridId;
         excelGridId = GridCommon.createAUIGrid("excelGrid", columnLayout, "", grid_options);
 
         // main grid paging 표시
-        GridCommon.createExtPagingNavigator(1, 0, {funcName:'getListAjax'});
+        GridCommon.createExtPagingNavigator(1, 0, {funcName:'getListAjax', rowCount:50});
 
         // 그리드 초기화
         AUIGrid.setGridData(myGridID, []);
@@ -549,7 +549,7 @@ function getListAjax(goPage) {
         sortList.push(row);
     });
 
-    param = $.extend(param, {"rowCount":25, "goPage":goPage}, {"sort":sortList});
+    param = $.extend(param, {"rowCount":50, "goPage":goPage}, {"sort":sortList});
     console.log("param : ", param);
 
     // 초기화
@@ -557,7 +557,7 @@ function getListAjax(goPage) {
 
     Common.ajax("POST" , url , param, function(data){
         // 그리드 페이징 네비게이터 생성
-        GridCommon.createExtPagingNavigator(goPage, data.total, {funcName:'getListAjax'});
+        GridCommon.createExtPagingNavigator(goPage, data.total, {funcName:'getListAjax', rowCount:50});
         AUIGrid.setGridData(myGridID, data.dataList);
     });
 
@@ -576,8 +576,6 @@ function fn_isDateValidate(sValidDt){
     }
     return true;
 }
-
-
 
 </script>
 

@@ -261,6 +261,24 @@
                                        AND D6D.PO_DTL_NO = B.PO_DTL_NO
                                        AND A.USE_YN = 'Y'
                                        AND B.USE_YN = 'Y'
+                                     <if test='sCdc != null and sCdc != ""'>
+			                           AND A.CDC = #{sCdc}
+			                         </if>
+			                         <if test="sPoDtFrom != null and sPoDtFrom !=''">
+			                           AND A.APPR_DT <![CDATA[>=]]> TO_DATE(#{sPoDtFrom}, 'YYYYMMDD')
+			                         </if>
+			                         <if test="sPoDtTo != null and sPoDtTo !=''">
+			                           AND A.APPR_DT <![CDATA[<=]]> TO_DATE(#{sPoDtTo}, 'YYYYMMDD') + 1
+			                         </if>
+			                         <if test="sMemAccId != null and sMemAccId !=''">
+			                           AND A.MEM_ACC_ID = #{sMemAccId}
+			                         </if>
+			                         <if test="sMemAcc != null and sMemAcc !=''">
+			                             AND 1 = 2
+			                         </if>
+			                         <if test="sPoNo != null and sPoNo !=''">
+			                           AND A.PO_NO = #{sPoNo}
+			                         </if>
 				                   ) Y
 				      ON X.PO_KEY_DO =  Y.PO_KEY_PLAN
                      AND X.PO_NO = Y.PO_NO
