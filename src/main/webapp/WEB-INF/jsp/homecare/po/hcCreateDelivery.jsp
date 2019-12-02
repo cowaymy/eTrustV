@@ -576,7 +576,7 @@ var mSort = {};
 
         // 바코드 폰트 다운로드
         $("#btnPrintFont").click(function(){
-        	window.location.href = "${pageContext.request.contextPath}/resources/font/Code39AzaleaWide2.ttf";
+        	window.location.href = "${pageContext.request.contextPath}/resources/font/Code39AzaleaWide2.zip";
         });
 
     });
