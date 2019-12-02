@@ -237,7 +237,8 @@ public class ApiServiceImpl implements ApiService {
 
     EgovMap productDetail = apiMapper.selectProductDetail(params);
     EgovMap memDetail = apiMapper.selectLatestMembership(params);
-    productDetail.putAll(memDetail);
+    if(memDetail != null)
+      productDetail.putAll(memDetail);
     return displayResponseMessage(request, params,productDetail);
   }
 
