@@ -493,7 +493,7 @@ var gridMenuMappingColumnLayout =
 var detailOptions =
 {
         //rowIdField : "rowId", // PK행 지정
-        usePaging : true,
+        usePaging : false,
         showRowNumColumn : false, // 순번 칼럼 숨김
         useGroupingPanel : false,
         selectionMode : "multipleRows",
