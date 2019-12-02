@@ -23,6 +23,9 @@
          <if test="sMemAccId != null and sMemAccId !=''">
            AND A.MEM_ACC_ID = #{sMemAccId}
          </if>
+         <if test="sMemAcc != null and sMemAcc !=''">
+           AND 1 = 2
+         </if>
          <if test="sPoNo != null and sPoNo !=''">
            AND A.PO_NO = #{sPoNo}
          </if>
@@ -94,6 +97,9 @@
 					 <if test="sMemAccId != null and sMemAccId !=''">
 					   AND A.MEM_ACC_ID = #{sMemAccId}
 					 </if>
+					 <if test="sMemAcc != null and sMemAcc !=''">
+                       AND 1 = 2
+                     </if>
 					 <if test="sPoNo != null and sPoNo !=''">
 					   AND A.PO_NO = #{sPoNo}
 					 </if>

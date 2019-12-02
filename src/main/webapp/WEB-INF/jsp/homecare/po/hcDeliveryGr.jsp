@@ -140,8 +140,11 @@ var taxObj = {};
         doDefCombo(vendorDs, '', 'sMemAccId', 'S', '');
 
         <c:if test="${PAGE_AUTH.funcUserDefine1 != 'Y'}">
-        $("#sMemAccId").val(vendorDs[0].codeId);                // 임시 처리 - 로그인 사용자의 vendor로 할 예정.
-        $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
+	        if(js.String.isEmpty("${zMemAccId}")){
+	            $("#sMemAcc").val("N");
+	        }
+	        $("#sMemAccId").val("${zMemAccId}");
+	        $("select[name=sMemAccId]").prop('disabled',true);
         </c:if>
 
         if( js.String.isEmpty($("#sDlvGiDtFrom").val()) ){
@@ -396,6 +399,7 @@ function fn_PopClose() {
                     <th scope="row"><span style="color:red">*</span>Supplier</th>
                     <td>
                         <select id="sMemAccId" name="sMemAccId" title="" placeholder="" class="w100p" >
+                        <input type="hidden" id="sMemAcc" name="sMemAcc" />
                     </td>
                 </tr>
 

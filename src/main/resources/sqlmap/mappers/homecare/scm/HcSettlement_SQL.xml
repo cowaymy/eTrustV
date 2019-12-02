@@ -72,6 +72,9 @@
        <if test="sMemAccId != null and sMemAccId !=''">
           AND D.MEM_ACC_ID = #{sMemAccId}
        </if>
+       <if test="sMemAcc != null and sMemAcc !=''">
+           AND 1 = 2
+       </if>
        <if test="sHmcGrNo != null and sHmcGrNo !=''">
           AND A.HMC_GR_NO LIKE '%'||#{sHmcGrNo}||'%'
        </if>
@@ -174,6 +177,9 @@
 			       </if>
 			       <if test="sMemAccId != null and sMemAccId !=''">
 			          AND D.MEM_ACC_ID = #{sMemAccId}
+			       </if>
+			       <if test="sMemAcc != null and sMemAcc !=''">
+			           AND 1 = 2
 			       </if>
 			       <if test="sHmcGrNo != null and sHmcGrNo !=''">
 			          AND A.HMC_GR_NO LIKE '%'||#{sHmcGrNo}||'%'

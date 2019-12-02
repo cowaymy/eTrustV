@@ -155,6 +155,7 @@ $(document).ready(function(){
     	if($(this).parent().hasClass("btn_disabled") == true){
             return false;
         }
+
     	var param = $("#frmDeliveryGr").serializeObject();
     	var count = param.hmcDelvryNoDtlNo.length;
 

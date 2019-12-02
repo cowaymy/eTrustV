@@ -245,9 +245,8 @@
          * @returns {Number}
          */
         smoothScale:function(x, base) {
-        	var parsed = x.toString(base);
-      	  if (isNaN(parsed)) { return 0 }
-      	  return parsed;
+        	var parsed = Number(x).toString(base);
+      	    return parsed.toUpperCase();
         },
 
 	    /**

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.homecare.po.HcConfirmPoService;
@@ -33,6 +34,16 @@ public class HcConfirmPoServiceImpl extends EgovAbstractServiceImpl implements H
 
 	@Resource(name = "hcConfirmPoMapper")
 	private HcConfirmPoMapper hcConfirmPoMapper;
+
+	@Override
+	public String selectUserSupplierId(Map<String, Integer> params) throws Exception{
+		EgovMap info = hcConfirmPoMapper.selectUserSupplierId(params);
+
+		if(info == null || StringUtils.isEmpty((String)info.get("memAccId"))){
+			return "";
+		}
+		return (String)info.get("memAccId");
+	}
 
 	@Override
 	public int selectHcConfirmPoMainListCnt(Map<String, Object> params) throws Exception{

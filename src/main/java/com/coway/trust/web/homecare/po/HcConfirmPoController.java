@@ -3,6 +3,7 @@
  */
 package com.coway.trust.web.homecare.po;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import com.coway.trust.biz.homecare.po.HcPoIssueService;
 import com.coway.trust.biz.homecare.po.HcPurchasePriceService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -46,6 +48,9 @@ public class HcConfirmPoController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
+	@Autowired
+	private SessionHandler sessionHandler;
+
 	@Resource(name = "hcConfirmPoService")
 	private HcConfirmPoService hcConfirmPoService;
 
@@ -53,7 +58,6 @@ public class HcConfirmPoController {
 	private HcPurchasePriceService hcPurchasePriceService;
 	@Resource(name = "hcPoIssueService")
 	private HcPoIssueService hcPoIssueService;
-
 
 	@RequestMapping(value = "/hcConfirmPo.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
@@ -84,6 +88,11 @@ public class HcConfirmPoController {
 		model.addAttribute("curList", hcPurchasePriceService.selectComonCodeList("11"));
 		// Tax Text
 		model.addAttribute("taxList", hcPurchasePriceService.selectComonCodeList("430"));
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		HashMap<String, Integer> sMemAccMap = new HashMap<String, Integer>();
+		sMemAccMap.put("sUserId", sessionVO.getUserId());
+		model.put("zMemAccId", hcConfirmPoService.selectUserSupplierId(sMemAccMap));
 
 		return "homecare/po/hcConfirmPo";
 	}

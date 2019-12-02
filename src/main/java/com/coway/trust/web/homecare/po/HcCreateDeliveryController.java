@@ -4,6 +4,7 @@
 package com.coway.trust.web.homecare.po;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,11 +25,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.homecare.po.HcConfirmPoService;
 import com.coway.trust.biz.homecare.po.HcCreateDeliveryService;
 import com.coway.trust.biz.homecare.po.HcPoIssueService;
 import com.coway.trust.biz.homecare.po.HcPurchasePriceService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -45,6 +48,11 @@ public class HcCreateDeliveryController {
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+
+	@Autowired
+	private SessionHandler sessionHandler;
+	@Resource(name = "hcConfirmPoService")
+	private HcConfirmPoService hcConfirmPoService;
 
 	@Resource(name = "hcCreateDeliveryService")
 	private HcCreateDeliveryService hcCreateDeliveryService;
@@ -70,6 +78,12 @@ public class HcCreateDeliveryController {
 		model.addAttribute("cdcList", hcPoIssueService.selectCdcList());
 		// Supplier : vendor
 		model.addAttribute("vendorList", hcPurchasePriceService.selectVendorList(null));
+
+		// Supplier
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		HashMap<String, Integer> sMemAccMap = new HashMap<String, Integer>();
+		sMemAccMap.put("sUserId", sessionVO.getUserId());
+		model.put("zMemAccId", hcConfirmPoService.selectUserSupplierId(sMemAccMap));
 
 		return "homecare/po/hcCreateDelivery";
 	}

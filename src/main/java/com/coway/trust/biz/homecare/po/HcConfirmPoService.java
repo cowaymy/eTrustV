@@ -8,7 +8,8 @@ import com.coway.trust.cmmn.model.SessionVO;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface HcConfirmPoService {
-
+	// supplier id search
+	public String selectUserSupplierId(Map<String, Integer> params) throws Exception;
 
 	// Purchase Price(HC) 메인 조회
 	public int selectHcConfirmPoMainListCnt(Map<String, Object> params) throws Exception;

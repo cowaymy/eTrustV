@@ -24,6 +24,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("hcConfirmPoMapper")
 public interface HcConfirmPoMapper {
 
+	public EgovMap selectUserSupplierId(Map<String, Integer> obj) throws Exception;
+
 	// main 조회
 	public int selectHcConfirmPoMainListCnt(Map<String, Object> obj) throws Exception;
 	public List<EgovMap> selectHcConfirmPoMainList(Map<String, Object> obj) throws Exception;

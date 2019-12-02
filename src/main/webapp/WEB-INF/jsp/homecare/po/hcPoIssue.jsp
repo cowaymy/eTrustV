@@ -13,6 +13,10 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript">
 
+
+var MEM_TYPE  = '${SESSION_INFO.userTypeId}';
+//var userAccId = '${SESSION_INFO}';
+
 var gAddRowCnt = 0;
 var oldPoNo = -1;
 
