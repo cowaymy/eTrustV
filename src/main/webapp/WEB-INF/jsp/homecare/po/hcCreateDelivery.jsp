@@ -571,6 +571,11 @@ var mSort = {};
             }
         });
 
+        // 바코드 폰트 다운로드
+        $("#btnPrintFont").click(function(){
+        	window.location.href = "/resources/font/Code39AzaleaWide2.ttf";
+        });
+
     });
 
 
@@ -829,6 +834,7 @@ function fn_isDateValidate(sValidDt){
             </c:if>
             <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_grid"><a id="btnSubPrint">Print</a></p></li>
+            <li><p class="btn_grid"><a id="btnPrintFont">Print Font</a></p></li>
             </c:if>
         </ul>
     </aside><!-- title_line end -->
