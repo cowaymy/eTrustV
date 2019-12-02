@@ -13,24 +13,7 @@
 		FROM    MOB0003M t1
 						JOIN MOB0002M t2
 							ON t1.MENU_CODE = t2.menu_code
-								AND t1.AUTH_CODE IN (
-									 /* 선택한 권한의 매핑된 Role의 상위 권한 */
-							        SELECT f.auth_code
-							           FROM ( SELECT c.role_id
-							                       , d.auth_code
-							                    FROM SYS0044M c
-							                       , (SELECT a.role_id, a.auth_code
-							                            FROM SYS0053M a ,
-							                                 SYS0054M b
-							                           WHERE a.AUTH_CODE = b.AUTH_CODE
-							                             AND a.ROLE_ID = b.ROLE_ID
-							                             AND a.AUTH_CODE = #{authCode} ) d
-							                   WHERE C.ROLE_ID = D.ROLE_ID(+)
-							                   START WITH C.ROLE_ID = D.ROLE_ID
-							                 CONNECT BY C.ROLE_ID = PRIOR C.PARENT_ROLE) e
-							              , SYS0054M f
-							        WHERE e.ROLE_ID = f.ROLE_ID
-								)
+								AND t1.AUTH_CODE = #{authCode}
         START WITH t2.UPPER_MENU_CODE IS NULL
         CONNECT BY PRIOR t2.MENU_CODE = t2.UPPER_MENU_CODE
         ORDER SIBLINGS  BY t2.MENU_ORDER

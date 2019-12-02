@@ -4,7 +4,7 @@
 
     <select id="selectMobileMenuList" parameterType="Map" resultType="egovMap">
 		SELECT   /* [com.coway.trust.biz.common.mobileMenu.impl.MobileMenuApiMapper.selectMobileMenuList] 20191031 - KR HAN */
-					t1.MENU_CODE   MENU_CODE
+					DISTINCT t1.MENU_CODE   MENU_CODE
 					,t1.MENU_NAME  MENU_NAME
 					,t1.PGM_CODE   PGM_CODE
 					,t1.PGM_NAME   PGM_NAME
@@ -18,22 +18,14 @@
                         JOIN MOB0003M t2 ON t1.MENU_CODE = t2.MENU_CODE
                                 AND      t2.AUTH_CODE IN
                                             (
-                                            <!-- SELECT
-                                            A.ROLE_ID
-                                            FROM SYS0044M A, SYS0045M B
-                                            WHERE A.ROLE_ID = B.ROLE_ID(+)
-                                            AND B.USER_ID(+) = #{userId}
-                                            START WITH A.ROLE_ID = B.ROLE_ID
-                                            CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE -->
                                             SELECT
                                             D.AUTH_CODE
                                             FROM (SELECT     B.USER_ID
                                             ,A.ROLE_ID
                                             FROM SYS0044M A, SYS0045M B
                                             WHERE A.ROLE_ID = B.ROLE_ID(+)
-                                            AND B.USER_ID(+) = #{userId}
-                                            START WITH A.ROLE_ID = B.ROLE_ID
-                                            CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE) C
+                                            AND B.USER_ID = #{userId}
+                                            ) C
                                             ,SYS0054M D
                                             WHERE C.ROLE_ID = D.ROLE_ID
                                             )
