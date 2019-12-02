@@ -108,6 +108,18 @@
 //                     return;
 //                 }
 
+
+                var d = new Date();
+                var h = d.getDate();
+                var i = d.getHours();
+                if(h == 1 || h == 2 || h == 3){
+                    if(8 < i && i < 18){
+                        Common.alert("This report cannot be generated on 1st, 2nd, and 3rd day of every month during working hours from 9am - 6pm");
+                        return;
+                    }
+
+                }
+
             if (month >= 10 && year >= 2018 || year >2018){
                 reportFileName = "/commission/CodyComm_PDF_201810.rpt"; //reportFileName
             }

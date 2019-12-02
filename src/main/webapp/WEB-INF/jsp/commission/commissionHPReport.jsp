@@ -109,12 +109,16 @@
 //                     return;
 //                 }
 
-//                 var d = new Date();
-//                 var h = d.getDate();
-//                 if(h == 1){
-//                     Common.alert("This report cannot be generated on first day of every month");
-//                     return;
-//                 }
+                 var d = new Date();
+                 var h = d.getDate();
+                 var i = d.getHours();
+                 if(h == 1 || h == 2 || h == 3){
+                	 if(8 < i && i < 18){
+                		 Common.alert("This report cannot be generated on 1st, 2nd, and 3rd day of every month during working hours from 9am - 6pm");
+                         return;
+                	 }
+
+                 }
 
 				  option = {
 	                      isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
