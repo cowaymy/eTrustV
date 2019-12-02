@@ -47,10 +47,10 @@
 
     var pagestate="";
 
-	var optionState = {chooseMessage: " 1.States "};
-	var optionCity = {chooseMessage: "2. City"};
-	var optionPostCode = {chooseMessage: "3. Post Code"};
-	var optionArea = {chooseMessage: "4. Area"};
+    var optionState = {chooseMessage: " 1.States "};
+    var optionCity = {chooseMessage: "2. City"};
+    var optionPostCode = {chooseMessage: "3. Post Code"};
+    var optionArea = {chooseMessage: "4. Area"};
 
     var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "8","codeName": "Inactive"}];
     var stockgradecomboData = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
@@ -58,45 +58,47 @@
 
     // AUIGrid 칼럼 설정                                                                            visible : false
 var columnLayout = [{dataField: "locid",headerText :"<spring:message code='log.head.whid'/>"               ,width:  "8%"      ,height:30 , visible:false},
-							{dataField: "loccd",headerText :"Location Code"               ,width:  "12%"    ,height:30 , visible:true},
-							{dataField: "locdesc",headerText :"Location Name"       ,width: "40%"    ,height:30 , visible:true},
-							{dataField: "locdtl",headerText :"<spring:message code='log.head.locaddr1'/>"          ,width:120   ,height:30 , visible:false},
-							{dataField: "areaid",headerText :"<spring:message code='log.head.locarea'/>"            ,width:120   ,height:30 , visible:false},
-							{dataField: "street",headerText :"<spring:message code='log.head.street'/>"          ,width:120   ,height:30 , visible:false},
-							{dataField: "loctel1",headerText :"<spring:message code='log.head.loctel1'/>"           ,width:90    ,height:30 , visible:false},
-							{dataField: "loctel2",headerText :"<spring:message code='log.head.loctel2'/>"           ,width:120   ,height:30 , visible:false},
-							{dataField: "locbranch1",headerText :"<spring:message code='log.head.loc_branch'/>"      ,width:100   ,height:30 , visible:false},
-							{dataField: "locbranch2",headerText :"<spring:message code='log.head.loc_branch'/>"      ,width:100   ,height:30 , visible:false},
-							{dataField: "locbranch3",headerText :"<spring:message code='log.head.loc_branch'/>"      ,width:100   ,height:30 , visible:false},
-							{dataField: "whlocgb",headerText :"<spring:message code='log.head.locationtype'/>"    ,width:100   ,height:30 , visible:false},
-							{dataField: "whlocgbnm",headerText :"<spring:message code='log.head.locationtype'/>"      ,width:   "15%"    ,height:30 , visible:true},
-							{dataField: "whloclane",headerText :"Location Lane"       ,width: "12%"    ,height:30 , visible:true},
-							{dataField: "serialftchk",headerText :"<spring:message code='log.head.serialcheck'/>"      ,width:100   ,height:30 , visible:false},
-							{dataField: "serialptchk",headerText :"<spring:message code='log.head.serialcheck'/>"      ,width:100   ,height:30 , visible:false},
-							{dataField: "serialpdchk",headerText :"<spring:message code='log.head.serialcheck'/>"      ,width:100   ,height:30 , visible:false},
-							{dataField: "loctype",headerText :"<spring:message code='log.head.loctype'/>"           ,width:100   ,height:30 , visible:false},
-							{dataField: "locuserid",headerText :"<spring:message code='log.head.locuserid'/>"         ,width:100   ,height:30 , visible:false},
-							{dataField: "locupddt",headerText :"<spring:message code='log.head.locupddt'/>"        ,width:100   ,height:30 , visible:false},
-							{dataField: "code2",headerText :"<spring:message code='log.head.code2'/>"             ,width:100   ,height:30 , visible:false},
-							{dataField: "desc2",headerText :"<spring:message code='log.head.desc2'/>"             ,width:100   ,height:30 , visible:false},
-							{dataField: "areanm",headerText :"<spring:message code='log.head.areanm'/>"          ,width:100   ,height:30 , visible:false},
-							{dataField: "postcd",headerText :"<spring:message code='log.head.postcd'/>"          ,width:100   ,height:30 , visible:false},
-							{dataField: "code",headerText :"<spring:message code='log.head.code'/>"            ,width:100   ,height:30 , visible:false},
-							{dataField: "name",headerText :"<spring:message code='log.head.name'/>"            ,width:100   ,height:30 , visible:false},
-							{dataField: "countrynm",headerText :"<spring:message code='log.head.countrynm'/>"         ,width:100   ,height:30 , visible:false},
-							{dataField: "branchcd",headerText :"<spring:message code='log.head.branchcode'/>"          ,width:100   ,height:30 , visible:true},
-							{dataField: "branchnm",headerText :"<spring:message code='log.head.branchname'/>"            ,width:    "15%"    ,height:30 , visible:true},
-							{dataField: "dcode",headerText :"<spring:message code='log.head.dcode'/>"             ,width:100   ,height:30 , visible:false},
-							{dataField: "descr",headerText :"<spring:message code='log.head.descr'/>"             ,width:100   ,height:30 , visible:false},
-							{dataField: "codenm",headerText :"<spring:message code='log.head.type'/>"              ,width:  "15%"    ,height:30 , visible:false},
-							{dataField: "statnm",headerText :"<spring:message code='log.head.status'/>"          ,width:    "10%"    ,height:30 , visible:true},
-							{dataField: "locgrad",headerText :"<spring:message code='log.head.locationgrade'/>"  ,width:100   ,height:30 , visible:true},
-							{dataField: "locstus",headerText :"<spring:message code='log.head.locstus'/>"           ,width:100   ,height:30 , visible:false},
-							{dataField: "user_name",headerText :"<spring:message code='log.head.nser_name'/>"         ,width:100   ,height:30 , visible:false},
-							{dataField: "cdccode",headerText :"<spring:message code='log.head.cdc_code'/>"         ,width:100   ,height:30 , visible:false},
-							{dataField: "rdccode",headerText :"<spring:message code='log.head.rdc_code'/>"         ,width:100   ,height:30 , visible:false},
-							{dataField: "plant",headerText :"<spring:message code='log.head.plant'/>"             ,width:100   ,height:30 , visible:false},
-							{dataField: "slplant",headerText :"<spring:message code='log.head.s/l'/>"             ,width:100   ,height:30 , visible:false}
+                            {dataField: "loccd",headerText :"Location Code"               ,width:  110   ,height:30 , visible:true},
+                            {dataField: "locdesc",headerText :"Location Name"       ,width: 280    ,height:30 , visible:true},
+                            {dataField: "locdtl",headerText :"<spring:message code='log.head.locaddr1'/>"          ,width:120   ,height:30 , visible:false},
+                            {dataField: "areaid",headerText :"<spring:message code='log.head.locarea'/>"            ,width:120   ,height:30 , visible:false},
+                            {dataField: "street",headerText :"<spring:message code='log.head.street'/>"          ,width:120   ,height:30 , visible:false},
+                            {dataField: "loctel1",headerText :"<spring:message code='log.head.loctel1'/>"           ,width:90    ,height:30 , visible:false},
+                            {dataField: "loctel2",headerText :"<spring:message code='log.head.loctel2'/>"           ,width:120   ,height:30 , visible:false},
+                            {dataField: "locbranch1",headerText :"<spring:message code='log.head.loc_branch'/>"      ,width:100   ,height:30 , visible:false},
+                            {dataField: "locbranch2",headerText :"<spring:message code='log.head.loc_branch'/>"      ,width:100   ,height:30 , visible:false},
+                            {dataField: "locbranch3",headerText :"<spring:message code='log.head.loc_branch'/>"      ,width:100   ,height:30 , visible:false},
+                            {dataField: "whlocgb",headerText :"<spring:message code='log.head.locationtype'/>"    ,width:100   ,height:30 , visible:false},
+                            {dataField: "whlocgbnm",headerText :"<spring:message code='log.head.locationtype'/>"      ,width:   120    ,height:30 , visible:true},
+                            {dataField: "whloclane",headerText :"Location Lane"       ,width:120   ,height:30 , visible:true},
+                            {dataField: "loctype",headerText :"<spring:message code='log.head.loctype'/>"           ,width:100   ,height:30 , visible:false},
+                            {dataField: "locuserid",headerText :"<spring:message code='log.head.locuserid'/>"         ,width:100   ,height:30 , visible:false},
+                            {dataField: "locupddt",headerText :"<spring:message code='log.head.locupddt'/>"        ,width:100   ,height:30 , visible:false},
+                            {dataField: "code2",headerText :"<spring:message code='log.head.code2'/>"             ,width:100   ,height:30 , visible:false},
+                            {dataField: "desc2",headerText :"<spring:message code='log.head.desc2'/>"             ,width:100   ,height:30 , visible:false},
+                            {dataField: "areanm",headerText :"<spring:message code='log.head.areanm'/>"          ,width:100   ,height:30 , visible:false},
+                            {dataField: "postcd",headerText :"<spring:message code='log.head.postcd'/>"          ,width:100   ,height:30 , visible:false},
+                            {dataField: "code",headerText :"<spring:message code='log.head.code'/>"            ,width:100   ,height:30 , visible:false},
+                            {dataField: "name",headerText :"<spring:message code='log.head.name'/>"            ,width:100   ,height:30 , visible:false},
+                            {dataField: "countrynm",headerText :"<spring:message code='log.head.countrynm'/>"         ,width:100   ,height:30 , visible:false},
+                            {dataField: "branchcd",headerText :"<spring:message code='log.head.branchcode'/>"          ,width:120   ,height:30 , visible:true},
+                            {dataField: "branchnm",headerText :"<spring:message code='log.head.branchname'/>"            ,width:    220    ,height:30 , visible:true},
+                            {dataField: "dcode",headerText :"<spring:message code='log.head.dcode'/>"             ,width:100   ,height:30 , visible:false},
+                            {dataField: "descr",headerText :"<spring:message code='log.head.descr'/>"             ,width:100   ,height:30 , visible:false},
+                            {dataField: "codenm",headerText :"<spring:message code='log.head.type'/>"              ,width: 100   ,height:30 , visible:false},
+                            {dataField: "statnm",headerText :"<spring:message code='log.head.status'/>"          ,width:    100    ,height:30 , visible:true},
+                            {dataField: "locgrad",headerText :"<spring:message code='log.head.locationgrade'/>"  ,width:120   ,height:30 , visible:true},
+                            {dataField: "locstus",headerText :"<spring:message code='log.head.locstus'/>"           ,width:100   ,height:30 , visible:false},
+                            {dataField: "user_name",headerText :"<spring:message code='log.head.nser_name'/>"         ,width:100   ,height:30 , visible:false},
+                            {dataField: "cdccode",headerText :"<spring:message code='log.head.cdc_code'/>"         ,width:100   ,height:30 , visible:false},
+                            {dataField: "rdccode",headerText :"<spring:message code='log.head.rdc_code'/>"         ,width:100   ,height:30 , visible:false},
+                            {dataField: "plant",headerText :"<spring:message code='log.head.plant'/>"             ,width:100   ,height:30 , visible:false},
+                            {dataField: "slplant",headerText :"<spring:message code='log.head.s/l'/>"             ,width:100   ,height:30 , visible:false},
+                            {dataField: "rem", visible:false},
+                            {dataField: "serialpdchk",headerText :"Serial Check – Stock"  ,width:150   ,height:30 , visible:true},
+                            {dataField: "serialftchk",headerText :"Serial Check – Filter"  ,width:150   ,height:30 , visible:true},
+                            {dataField: "serialptchk",headerText :"Serial Check – Spare Part"  ,width:180   ,height:30 , visible:true},
+                            {dataField: "serialRequireChkYn",headerText :"Serial Required Check Y/N"  ,width:10   ,height:30 , visible:false}
                        ];
 
 var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.head.stkid'/>"             ,width:   "12%"    ,height:30 , visible:false},
@@ -118,26 +120,26 @@ var gridoptions = {showStateColumn : false , editable : false, usePaging : false
 
 $(document).ready(function(){
 
-		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
+        myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
 
-		doDefCombo(comboData, '' ,'status', 'S', '');
-		doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
+        doDefCombo(comboData, '' ,'status', 'S', '');
+        doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
 
-		doDefCombo(stockgradecomboData, '' ,'locgrad', 'S', '');
+        doDefCombo(stockgradecomboData, '' ,'locgrad', 'S', '');
 
-		doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'loctype', 'M','f_multiCombo');
+        doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'loctype', 'M','f_multiCombo');
 
-		AUIGrid.bind(myGridID, "cellClick", function( event )
-	    {
-
-
-	    });
+        AUIGrid.bind(myGridID, "cellClick", function( event )
+        {
 
 
-		// 셀 더블클릭 이벤트 바인딩
-	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event)
-	    {
-	    	pagestate = "m";
+        });
+
+
+        // 셀 더블클릭 이벤트 바인딩
+        AUIGrid.bind(myGridID, "cellDoubleClick", function(event)
+        {
+            pagestate = "m";
             console.log(event);
             if (event.rowIndex > -1){
                 fn_modyWare(event.rowIndex);
@@ -146,55 +148,55 @@ $(document).ready(function(){
             }
         });
 
-	    AUIGrid.bind(myGridID, "updateRow", function(event) {
-	    	$( "#editWindow" ).hide();
-	    	$('#modForm')[0].reset();
+        AUIGrid.bind(myGridID, "updateRow", function(event) {
+            $( "#editWindow" ).hide();
+            $('#modForm')[0].reset();
 
-	    	pagestate = "";
+            pagestate = "";
 
-	        Common.ajax("POST", "/logistics/organization/locationUpdate.do", GridCommon.getEditData(myGridID), function(result) {
-	        	Common.alert(result.message);
-	            AUIGrid.resetUpdatedItems(myGridID, "all");
-	            $("#search").click();
-	        },  function(jqXHR, textStatus, errorThrown) {
-	            try {
-	            } catch (e) {
-	            }
+            Common.ajax("POST", "/logistics/organization/locationUpdate.do", GridCommon.getEditData(myGridID), function(result) {
+                Common.alert(result.message);
+                AUIGrid.resetUpdatedItems(myGridID, "all");
+                $("#search").click();
+            },  function(jqXHR, textStatus, errorThrown) {
+                try {
+                } catch (e) {
+                }
 
-	            Common.alert("Fail : " + jqXHR.responseJSON.message);
-	        });
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+            });
 
-	       // $("#search").click();
-	    });
+           // $("#search").click();
+        });
 
- 		/* 팝업 드래그 start */
+        /* 팝업 드래그 start */
         $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
         /* 팝업 드래그 end */
 
     });
 
     $(function(){
-    	$("#loccd").keypress(function(event){
-    		if (event.which == '13') {
+        $("#loccd").keypress(function(event){
+            if (event.which == '13') {
                 $("#sUrl").val("/logistics/organization/locationCdSearch.do");
                 Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
             }
-    	});
+        });
         $("#search").click(function(){
-        	getLocationListAjax();
+            getLocationListAjax();
 
         });
         $("#clear").click(function(){
-        	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
-        	doDefCombo(comboData, '' ,'status', 'S', '');
-        	doDefCombo(stockgradecomboData, '' ,'locgrad', 'S', '');
-        	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'loctype', 'M','f_multiCombo');
-        	$("#loccd").val('');
-        	$("#locdesc").val('');
+            doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
+            doDefCombo(comboData, '' ,'status', 'S', '');
+            doDefCombo(stockgradecomboData, '' ,'locgrad', 'S', '');
+            doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'loctype', 'M','f_multiCombo');
+            $("#loccd").val('');
+            $("#locdesc").val('');
         });
         $("#update").click(function(){
 
-        	pagestate = "m";
+            pagestate = "m";
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
 
             if (selectedItem[0] > -1){
@@ -218,22 +220,22 @@ $(document).ready(function(){
 
 
          $("#insert").click(function(){
-        	 pagestate = "i";
-        	 fn_insertWare();
+             pagestate = "i";
+             fn_insertWare();
 
-        	$("#registWindow").show();
-	     });
+            $("#registWindow").show();
+         });
 
          $("#download").click(function() {
-        	 GridCommon.exportTo("grid_wrap", 'xlsx', "Location List");
+             GridCommon.exportTo("grid_wrap", 'xlsx', "Location List");
          });
 
         $("#delete").click(function(){
 
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             if (selectedItem[0] > -1){
-            //	Common.confirm("<spring:message code='sys.common.alert.delete'/>",fn_deleteAjax(selectedItem[0]));
-            	fn_deleteWare(selectedItem[0]);
+            //  Common.confirm("<spring:message code='sys.common.alert.delete'/>",fn_deleteAjax(selectedItem[0]));
+                fn_deleteWare(selectedItem[0]);
             }else{
             Common.alert('Please select record for deletion.');
             }
@@ -241,55 +243,56 @@ $(document).ready(function(){
         });
         // Commented for removing relationship between CDC & RDC code selection by Hui Ding, 17/9/2019
         /* $("#icdccode").change(function(){
-        	rdccodeFunc();
+            rdccodeFunc();
         }); */
 
         $("#irdccode ,#mrdccode").change(function(){
 
-        	if($("#ilocationtype").val() == '03' || $("#ilocationtype").val() == '04'){
-        		var irdcCode = $("#irdccode").val();
+            if($("#ilocationtype").val() == '03' || $("#ilocationtype").val() == '04'){
+                var irdcCode = $("#irdccode").val();
                 $("#islplant").val(irdcCode);
-        	} else if ($("#locationtype").val() == '03' || $("#locationtype").val() == '04'){
-        		var rdcCode = $("#mrdccode").val();
+            } else if ($("#locationtype").val() == '03' || $("#locationtype").val() == '04'){
+                var rdcCode = $("#mrdccode").val();
                 $("#slplant").val(rdcCode);
-        	}
+            }
         });
 
     });
 
     function fn_modyWare(rowid){
 
-    	console.log(AUIGrid.getCellValue(myGridID ,rowid,'locstus'));
+        console.log(AUIGrid.getCellValue(myGridID ,rowid,'locstus'));
 
-    	if (AUIGrid.getCellValue(myGridID ,rowid,'whlocgbnm') != "CT")
-    	{
-    		$("#loclane").prop('disabled', true);
-    	}
-    	else
-    	{
-    		$("#loclane").prop('disabled', false);
-    	}
+        if (AUIGrid.getCellValue(myGridID ,rowid,'whlocgbnm') != "CT")
+        {
+            $("#loclane").prop('disabled', true);
+        }
+        else
+        {
+            $("#loclane").prop('disabled', false);
+        }
 
-    	$("#mwarecd").val(AUIGrid.getCellValue(myGridID ,rowid,'loccd'));
-    	$("#mwarenm").val(AUIGrid.getCellValue(myGridID ,rowid,'locdesc'));
-    	$("#maddr1").val(AUIGrid.getCellValue(myGridID ,rowid,'locdtl'));
-    	$("#mcontact1").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel1'));
-    	$("#mcontact2").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel2'));
-    	$("#street").val(AUIGrid.getCellValue(myGridID ,rowid,'street'));
-    	$("#mareaId").val(AUIGrid.getCellValue(myGridID ,rowid,'areaid'));
-    	$("#plant").val(AUIGrid.getCellValue(myGridID ,rowid,'plant'));
-    	$("#slplant").val(AUIGrid.getCellValue(myGridID ,rowid,'slplant'));
+        $("#mwarecd").val(AUIGrid.getCellValue(myGridID ,rowid,'loccd'));
+        $("#mwarenm").val(AUIGrid.getCellValue(myGridID ,rowid,'locdesc'));
+        $("#maddr1").val(AUIGrid.getCellValue(myGridID ,rowid,'locdtl'));
+        $("#mcontact1").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel1'));
+        $("#mcontact2").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel2'));
+        $("#street").val(AUIGrid.getCellValue(myGridID ,rowid,'street'));
+        $("#mareaId").val(AUIGrid.getCellValue(myGridID ,rowid,'areaid'));
+        $("#plant").val(AUIGrid.getCellValue(myGridID ,rowid,'plant'));
+        $("#slplant").val(AUIGrid.getCellValue(myGridID ,rowid,'slplant'));
         $("#loclane").val(AUIGrid.getCellValue(myGridID ,rowid,'whloclane'));
+        $("#rem").val(AUIGrid.getCellValue(myGridID ,rowid,'rem'));
 
-    	doDefCombo(stockgradecomboData, AUIGrid.getCellValue(myGridID ,rowid,'locgrad') ,'mstockgrade', 'S', '');
+        doDefCombo(stockgradecomboData, AUIGrid.getCellValue(myGridID ,rowid,'locgrad') ,'mstockgrade', 'S', '');
 
-    	var paramdata = { groupCode : '339' , orderValue : 'CODE'};
+        var paramdata = { groupCode : '339' , orderValue : 'CODE'};
         doGetComboData('/common/selectCodeList.do', paramdata, AUIGrid.getCellValue(myGridID ,rowid,'whlocgb'),'locationtype', 'S' , '');
 
-    	CommonCombo.make('mState',  "/sales/customer/selectMagicAddressComboList", '' , AUIGrid.getCellValue(myGridID ,rowid,'state'), optionState);
+        CommonCombo.make('mState',  "/sales/customer/selectMagicAddressComboList", '' , AUIGrid.getCellValue(myGridID ,rowid,'state'), optionState);
 
-    	var Json = {state : AUIGrid.getCellValue(myGridID ,rowid,'state')}; //Condition
-    	CommonCombo.make('mCity',   "/sales/customer/selectMagicAddressComboList", Json, AUIGrid.getCellValue(myGridID ,rowid,'locdt2') , optionCity);
+        var Json = {state : AUIGrid.getCellValue(myGridID ,rowid,'state')}; //Condition
+        CommonCombo.make('mCity',   "/sales/customer/selectMagicAddressComboList", Json, AUIGrid.getCellValue(myGridID ,rowid,'locdt2') , optionCity);
 
         Json = {state : AUIGrid.getCellValue(myGridID ,rowid,'state') , city : AUIGrid.getCellValue(myGridID ,rowid,'locdt2') ,  postcode : AUIGrid.getCellValue(myGridID ,rowid,'postcd')}; //Condition
         CommonCombo.make('mArea',   "/sales/customer/selectMagicAddressComboList", Json, AUIGrid.getCellValue(myGridID ,rowid,'areanm') , optionArea);
@@ -297,37 +300,44 @@ $(document).ready(function(){
         Json = {state : AUIGrid.getCellValue(myGridID ,rowid,'state') , city : AUIGrid.getCellValue(myGridID ,rowid,'locdt2') , }; //Condition
         CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", Json, AUIGrid.getCellValue(myGridID ,rowid,'postcd') , optionPostCode);
 
-    	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch1'),'mwarebranch1', 'S' , '');
-    	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch2'),'mwarebranch2', 'S' , '');
-    	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch3'),'mwarebranch3', 'S' , '');
+        doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch1'),'mwarebranch1', 'S' , '');
+        doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch2'),'mwarebranch2', 'S' , '');
+        doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch3'),'mwarebranch3', 'S' , '');
 
-    	if (AUIGrid.getCellValue(myGridID ,rowid,'serialpdchk') == "Y"){
-    		$("#pdchk").prop("checked" , true);
-    	}else{
-    		$("#pdchk").prop("checked" , false);
-    	}
-    	if (AUIGrid.getCellValue(myGridID ,rowid,'serialftchk') == "Y"){
+        if (AUIGrid.getCellValue(myGridID ,rowid,'serialpdchk') == "Y"){
+            $("#pdchk").prop("checked" , true);
+        }else{
+            $("#pdchk").prop("checked" , false);
+        }
+        if (AUIGrid.getCellValue(myGridID ,rowid,'serialftchk') == "Y"){
             $("#ftchk").prop("checked" , true);
         }else{
-        	$("#ftchk").prop("checked" , false);
+            $("#ftchk").prop("checked" , false);
         }
-    	if (AUIGrid.getCellValue(myGridID ,rowid,'serialptchk') == "Y"){
+        if (AUIGrid.getCellValue(myGridID ,rowid,'serialptchk') == "Y"){
             $("#ptchk").prop("checked" , true);
         }else{
-        	$("#ptchk").prop("checked" , false);
+            $("#ptchk").prop("checked" , false);
         }
-    	/*
-    	doGetComboData('/common/selectStockLocationList.do', { locgb : '01'}, AUIGrid.getCellValue(myGridID ,rowid,'cdccode'),'mcdccode', 'S' , '');
-    	doGetComboData('/common/selectStockLocationList.do', { locgb : '02'}, AUIGrid.getCellValue(myGridID ,rowid,'rdccode'),'mrdccode', 'S' , '');
+        // 20191122 KR-OHK Serial Required Check Y/N Add
+        if (AUIGrid.getCellValue(myGridID ,rowid,'serialRequireChkYn') == "Y"){
+            $("input:radio[name='serialRequireChkYn']:radio[value='Y']").prop("checked", true);
+        } else {
+            $("input:radio[name='serialRequireChkYn']:radio[value='N']").prop("checked", true);
+        }
+
+        /*
+        doGetComboData('/common/selectStockLocationList.do', { locgb : '01'}, AUIGrid.getCellValue(myGridID ,rowid,'cdccode'),'mcdccode', 'S' , '');
+        doGetComboData('/common/selectStockLocationList.do', { locgb : '02'}, AUIGrid.getCellValue(myGridID ,rowid,'rdccode'),'mrdccode', 'S' , '');
         */
-    	doGetComboData('/common/selectStockLocationList.do', { stoIn : '01,05'}, AUIGrid.getCellValue(myGridID ,rowid,'cdccode'),'mcdccode', 'S' , '');
-    	doGetComboData('/common/selectStockLocationList.do', { stoIn : '02,05'}, AUIGrid.getCellValue(myGridID ,rowid,'rdccode'),'mrdccode', 'S' , '');
+        doGetComboData('/common/selectStockLocationList.do', { stoIn : '01,05'}, AUIGrid.getCellValue(myGridID ,rowid,'cdccode'),'mcdccode', 'S' , '');
+        doGetComboData('/common/selectStockLocationList.do', { stoIn : '02,05'}, AUIGrid.getCellValue(myGridID ,rowid,'rdccode'),'mrdccode', 'S' , '');
 
         if (AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '01'  || AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '05'){
-        	$("#mcdccode").prop("disabled" , true);
-        	$("#mrdccode").prop("disabled" , true);
-        	$("#plant").prop("disabled" , false);
-        	$("#slplant").prop("disabled" , false);
+            $("#mcdccode").prop("disabled" , true);
+            $("#mrdccode").prop("disabled" , true);
+            $("#plant").prop("disabled" , false);
+            $("#slplant").prop("disabled" , false);
         }else if (AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '02'){
             $("#mcdccode").prop("disabled" , false);
             //$("#mrdccode").prop("disabled" , true);
@@ -348,15 +358,16 @@ $(document).ready(function(){
 
   function fn_insertWare(){
 
-	    $("#iplant").val('');
+        $("#iplant").val('');
         $("#islplant").val('');
 
-	    doDefCombo(stockgradecomboData, '' ,'instockgrade', 'S', '');
+        doDefCombo(stockgradecomboData, '' ,'instockgrade', 'S', '');
 
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch1', 'S' , ''); //브런치 등록
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch2', 'S' , ''); //브런치 등록
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch3', 'S' , ''); //브런치 등록
 
+        $("#irem").val('');
 
         fn_addMaddr();
 
@@ -370,14 +381,14 @@ $(document).ready(function(){
 
   //Commented for removing relationship between CDC & RDC code selection by Hui Ding, 17/9/2019
   /* function rdccodeFunc(){
-	    doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02' , cdcloc:$("#icdccode").val()}, '','irdccode', 'S' , '');
+        doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02' , cdcloc:$("#icdccode").val()}, '','irdccode', 'S' , '');
   } */
 
   function fn_deleteWare(rowid){
-	  var locid=AUIGrid.getCellValue(myGridID ,rowid,'locid');
+      var locid=AUIGrid.getCellValue(myGridID ,rowid,'locid');
      // var param = "?locid="+locid;
       Common.ajax("GET", "/logistics/organization/locationDelete.do", {"locid":locid}, function(result) {
-    	  Common.alert(result.message);
+          Common.alert(result.message);
         $("#search").click();
       }, function(jqXHR, textStatus, errorThrown) {
           //Common.alert("실패하였습니다.");
@@ -389,51 +400,51 @@ $(document).ready(function(){
   }
   function validate(action){
 
-	   var warecd;
-	   var warenm;
-	   var stockgrade;
-	   var warebranch1;
-	   var warebranch2;
-	   var warebranch3;
-	   var contact1;
-	   var contact2;
-	   var plant;
-	   var slPlant;
-	   var country;
-	   var state;
-	   var city;
-	   var postcode;
-	   var area;
-	   var addrDtl;
+       var warecd;
+       var warenm;
+       var stockgrade;
+       var warebranch1;
+       var warebranch2;
+       var warebranch3;
+       var contact1;
+       var contact2;
+       var plant;
+       var slPlant;
+       var country;
+       var state;
+       var city;
+       var postcode;
+       var area;
+       var addrDtl;
 
-	   var locType;
+       var locType;
 
-	   if (action == "i"){
-		   warecd = $("#inwarecd").val().trim();
-		   warenm = $("#inwarenm").val().trim();
-		   stockgrade = $("#instockgrade").val().trim();
-		   warebranch1 = $("#inwarebranch1").val().trim();
-		   warebranch2 = $("#inwarebranch2").val().trim();
-		   warebranch3 = $("#inwarebranch3").val().trim();
-		   contact1 = $("#incontact1").val().trim();
-		   contact2 = $("#incontact2").val().trim();
-		   country = $("#iCountry").val().trim();
-		   city = $("#iCity").val().trim();
-		   state = $("#iState").val().trim();
-		   postcode = $("#iPostCd").val().trim();
-		   area = $("#iareaId").val().trim();
-		   locType = $("#ilocationtype").val().trim();
-		   addrDtl = $("#iaddrdtl").val().trim();
+       if (action == "i"){
+           warecd = $("#inwarecd").val().trim();
+           warenm = $("#inwarenm").val().trim();
+           stockgrade = $("#instockgrade").val().trim();
+           warebranch1 = $("#inwarebranch1").val().trim();
+           warebranch2 = $("#inwarebranch2").val().trim();
+           warebranch3 = $("#inwarebranch3").val().trim();
+           contact1 = $("#incontact1").val().trim();
+           contact2 = $("#incontact2").val().trim();
+           country = $("#iCountry").val().trim();
+           city = $("#iCity").val().trim();
+           state = $("#iState").val().trim();
+           postcode = $("#iPostCd").val().trim();
+           area = $("#iareaId").val().trim();
+           locType = $("#ilocationtype").val().trim();
+           addrDtl = $("#iaddrdtl").val().trim();
 
-		   fn_locchk(warecd);
+           fn_locchk(warecd);
 
-		   if(locchkcnt > 0){
-	           Common.alert('Duplicated Location Code.');
-	           return false;
-		   }
+           if(locchkcnt > 0){
+               Common.alert('Duplicated Location Code.');
+               return false;
+           }
 
-	   } else if (action == "m"){
-		   warecd = $("#mwarecd").val().trim();
+       } else if (action == "m"){
+           warecd = $("#mwarecd").val().trim();
            warenm = $("#mwarenm").val().trim();
            stockgrade = $("#mstockgrade").val().trim();
            warebranch1 = $("#mwarebranch1").val().trim();
@@ -455,9 +466,9 @@ $(document).ready(function(){
                Common.alert("Please enter Plant in ECC.");
                return false;
            }
-	   }
+       }
 
-	 if (warecd == null || warecd == "" ){
+     if (warecd == null || warecd == "" ){
            //Common.alert('Some required fields are empty. Please fill up all the required fields. ');
            Common.alert('Location Code is required.');
            //$("#inwarecd").focus();
@@ -481,14 +492,14 @@ $(document).ready(function(){
            Common.alert('Contact number is invalid. Please key in only number in contact field.');
            return false;
      } else if (locType != null && locType != "" && (locType == '01' || locType == '02')) {
-    	   if ((country == null || country == "") || (city == null || city == "") || (state == null || state == "") ||
-    			  (postcode == null || postcode == "") || (area == null || area == "") || (addrDtl == null || addrDtl == "")){
-    		   Common.alert('Please complete the address.');
-    		   return false;
-    	   }
+           if ((country == null || country == "") || (city == null || city == "") || (state == null || state == "") ||
+                  (postcode == null || postcode == "") || (area == null || area == "") || (addrDtl == null || addrDtl == "")){
+               Common.alert('Please complete the address.');
+               return false;
+           }
 
      } else {
-    	 if((warebranch1 == null || warebranch1 == "") && (warebranch2 == null || warebranch2 == "") && (warebranch3 == null || warebranch3 == "")){
+         if((warebranch1 == null || warebranch1 == "") && (warebranch2 == null || warebranch2 == "") && (warebranch3 == null || warebranch3 == "")){
              //Common.alert('Some required fields are empty. Please fill up all the required fields. ');
              Common.alert('Reminder:\nIt is not recommend to leave Branch field empty.\nPlease edit it after saved.');
             // $("#inwarebranch1").focus();
@@ -496,14 +507,14 @@ $(document).ready(function(){
        }
      }
 
-  	   return true;
+       return true;
   }
 
 
     function fn_updateGridRow(){
-    	//AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
-    	var item = {};
-    	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+        //AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
+        var item = {};
+        var selectedItem = AUIGrid.getSelectedIndex(myGridID);
 
         item.loccd   = $("#mwarecd").val();
         item.locdesc = $("#mwarenm").val();
@@ -519,6 +530,8 @@ $(document).ready(function(){
         item.whlocgb = $("#locationtype").val();
         item.locstus = $("#mstatus").val();
         item.loclane = $("#loclane").val();
+        item.rem = $("#rem").val();
+        item.serialRequireChkYn = $("input:radio[name=serialRequireChkYn]:checked").val();
 
         if ($("#pdchk").is(":checked")) item.serialpdchk = 'Y';else item.serialpdchk = '';
         if ($("#ftchk").is(":checked")) item.serialftchk = 'Y';else item.serialftchk = '';
@@ -537,8 +550,8 @@ $(document).ready(function(){
     }
 
     function fn_locDetail(locid){
-    	var param = "?locid="+locid;
-    	$.ajax({
+        var param = "?locid="+locid;
+        $.ajax({
             type : "POST",
             url : "/logistics/organization/locationDetail.do"+param,
             dataType : "json",
@@ -570,10 +583,10 @@ $(document).ready(function(){
                 AUIGrid.setGridData(myGridID, gridData.data);
             },
             error: function(jqXHR, textStatus, errorThrown){
-            	Common.alert("Fail : " + jqXHR.responseJSON.message);
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
             },
             complete: function(){
-            	Common.removeLoader();
+                Common.removeLoader();
             }
         });
     }
@@ -590,19 +603,19 @@ $(document).ready(function(){
         });
     }
      function fn_updateCancel(){
-    	 $( "#editWindow" ).hide();
-    	 $('#modForm')[0].reset();
+         $( "#editWindow" ).hide();
+         $('#modForm')[0].reset();
      }
 
      function fn_insertGrid(){
 
-    	 if(validate('i')){
+         if(validate('i')){
 
-    		 // Added to set plant & slplant attribute back to available before save.
-    		 $("#iplant").attr("disabled"   , false);
+             // Added to set plant & slplant attribute back to available before save.
+             $("#iplant").attr("disabled"   , false);
              $("#islplant").attr("disabled" , false);
 
-    		 console.log($("#insForm").serialize());
+             console.log($("#insForm").serialize());
              //$('#instockgrade').attr("disabled",false)
                Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) {
                 Common.alert(""+result.message+"</br> Created WHID: "+result.data);
@@ -628,26 +641,26 @@ $(document).ready(function(){
 
      function fn_itempopList(data){
 
-    	 var rtnVal = data[0].item.loccd;
-    	 $("#loccd").val(rtnVal);
+         var rtnVal = data[0].item.loccd;
+         $("#loccd").val(rtnVal);
      }
 
      function fn_plantchk(id , take){
 
-    	 var slplant = (take == "i" ) ? $("#inwarecd").val() : $("#mwarecd").val() ;
-    	 var rdcSlPlant = ($("#"+take+"rdccode").val() != null) ? $("#"+take+"rdccode").val() : $("#mrdccode").val();
+         var slplant = (take == "i" ) ? $("#inwarecd").val() : $("#mwarecd").val() ;
+         var rdcSlPlant = ($("#"+take+"rdccode").val() != null) ? $("#"+take+"rdccode").val() : $("#mrdccode").val();
 
-    	 // Added for resetting plant value when location type onchange. By Hui Ding, 17/9/2019
-    	 $("#"+take+"plant").val('');
-    	 $("#"+take+"slplant").val('');
+         // Added for resetting plant value when location type onchange. By Hui Ding, 17/9/2019
+         $("#"+take+"plant").val('');
+         $("#"+take+"slplant").val('');
 
-    	 if($("#"+id).val() == '03'){
-    		 $("#"+take+"plant").val('6000');
-    		 $("#"+take+"plant").attr("disabled"   , true);
-    		 $("#"+take+"slplant").attr("disabled" , true);
+         if($("#"+id).val() == '03'){
+             $("#"+take+"plant").val('6000');
+             $("#"+take+"plant").attr("disabled"   , true);
+             $("#"+take+"slplant").attr("disabled" , true);
 
-    		 // Added for auto pollulating slPlant value when location type onchance. By Hui Ding, 17/9/2019
-    		 $("#"+take+"slplant").val(rdcSlPlant);
+             // Added for auto pollulating slPlant value when location type onchance. By Hui Ding, 17/9/2019
+             $("#"+take+"slplant").val(rdcSlPlant);
 
          }else if($("#"+id).val() == '04'){
              $("#"+take+"plant").val('5000');
@@ -657,20 +670,20 @@ $(document).ready(function(){
              // Added for auto pollulating slPlant value when location type onchance. By Hui Ding, 17/9/2019
              $("#"+take+"slplant").val(rdcSlPlant);
          }else{
-        	 $("#"+take+"plant").attr("disabled"   , false);
-        	 if ($("#"+id).val() == '02'){
-        		 $("#"+take+"slplant").attr("disabled" , true);
-        		 $("#"+take+"slplant").val(slplant);
-        	 }else{
-        		 $("#"+take+"slplant").attr("disabled" , false);
-        	 }
+             $("#"+take+"plant").attr("disabled"   , false);
+             if ($("#"+id).val() == '02'){
+                 $("#"+take+"slplant").attr("disabled" , true);
+                 $("#"+take+"slplant").val(slplant);
+             }else{
+                 $("#"+take+"slplant").attr("disabled" , false);
+             }
          }
      }
 
 //      function fn_deleteAjax(rowid) {
-//     	 alert("rowid :   "+rowid);
+//       alert("rowid :   "+rowid);
 //       fn_deleteWare(rowid);
-// 	}
+//  }
 
     function fn_locchk(loccode){
         var param = {"loccode" : loccode};
@@ -682,10 +695,10 @@ $(document).ready(function(){
     }
 
     /* function f_validatation(){
-	    if ($("#plant").val() == null || $("#plant").val() == undefined || $("#plant").val() == ""){
-	        Common.alert("Please enter Plant in ECC.");
-	        return false;
-	    }
+        if ($("#plant").val() == null || $("#plant").val() == undefined || $("#plant").val() == ""){
+            Common.alert("Please enter Plant in ECC.");
+            return false;
+        }
         return true;
     } */
 
@@ -782,7 +795,7 @@ $(document).ready(function(){
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap" style="height:500px"></div>
+    <div id="grid_wrap" class="autoGridHeight"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
@@ -825,14 +838,19 @@ $(document).ready(function(){
     <td><input type="text" name="mwarecd" id="mwarecd"  class="w100p"/></td>
     <th scope="row">Serial Check</th>
     <td>
-        <label><input type="checkbox" id="pdchk" name="pdchk"/><span>Product</span></label>
+        <label><input type="checkbox" id="pdchk" name="pdchk"/><span>Stock</span></label>
         <label><input type="checkbox" id="ftchk" name="ftchk"/><span>Filter</span></label>
-        <label><input type="checkbox" id="ptchk" name="ptchk"/><span>Parts</span></label>
+        <label><input type="checkbox" id="ptchk" name="ptchk"/><span>Spare Part</span></label>
     </td>
 </tr>
 <tr>
     <th scope="row">Location Name<span class="must">*</span></th>
-    <td colspan="3"><input type="text" name="mwarenm" id="mwarenm" class="w100p"/></td>
+    <td><input type="text" name="mwarenm" id="mwarenm" class="w100p"/></td>
+    <th scope="row">Serial Required Check Y/N<span class="must">*</span></th>
+    <td>
+        <label><input type="radio" id="serialRequireChkYn" name="serialRequireChkYn" value="Y"/><span>Y</span></label>
+        <label><input type="radio" id="serialRequireChkYn" name="serialRequireChkYn" value="N"/><span>N</span></label>
+    </td>
 </tr>
 <tr>
     <th scope="row">CDC CODE</th>
@@ -867,6 +885,12 @@ $(document).ready(function(){
     </td>
 </tr>
 <tr>
+    <th scope="row">CDC CODE</th>
+    <td colspan='3'>
+        <input type="text" id="rem" name="rem" class="w100p" maxlength="2" />
+    </td>
+</tr>
+<tr>
     <th scope="row">Street search</th>
 
     <td colspan='3'>
@@ -881,36 +905,36 @@ $(document).ready(function(){
     <td colspan="3"><input type="text" id="maddr1" name="maddr1" class="w100p"/></td>
 </tr>
 <tr>
-	<th scope="row" colspan="4">Magic Address Street</th>
-	<!-- <td colspan="3"> -->
+    <th scope="row" colspan="4">Magic Address Street</th>
+    <!-- <td colspan="3"> -->
 </tr>
 <tr>
    <th scope="row">Area(4)</span></th>
-	<td>
-	<select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId('m')"></select>
-	</td>
-	 <th scope="row">Street</th>
+    <td>
+    <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId('m')"></select>
+    </td>
+     <th scope="row">Street</th>
     <td><input type="text" title="" id="street" name="street" placeholder="Detail Address" class="w100p"  /></td>
 </tr>
 <tr>
-	 <th scope="row">City(2)</th>
-	<td>
-	<select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value , 'm')"></select>
-	</td>
-	<th scope="row">PostCode(3)</th>
-	<td>
-	<select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value , 'm')"></select>
-	</td>
+     <th scope="row">City(2)</th>
+    <td>
+    <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value , 'm')"></select>
+    </td>
+    <th scope="row">PostCode(3)</th>
+    <td>
+    <select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value , 'm')"></select>
+    </td>
 </tr>
 <tr>
-	<th scope="row">State(1)</th>
-	<td>
-	<select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value , 'm')"></select>
-	</td>
-	<th scope="row">Country</th>
-	<td>
-	<input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
-	</td>
+    <th scope="row">State(1)</th>
+    <td>
+    <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value , 'm')"></select>
+    </td>
+    <th scope="row">Country</th>
+    <td>
+    <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -986,9 +1010,20 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Serial Check</th>
     <td>
-        <label><input type="checkbox" id="ipdchk" name="ipdchk"/><span>Product</span></label>
+        <label><input type="checkbox" id="ipdchk" name="ipdchk"/><span>Stock</span></label>
         <label><input type="checkbox" id="iftchk" name="iftchk"/><span>Filter</span></label>
-        <label><input type="checkbox" id="iptchk" name="iptchk"/><span>Parts</span></label>
+        <label><input type="checkbox" id="iptchk" name="iptchk"/><span>Spare Part</span></label>
+    </td>
+    <th scope="row">Serial Required Check Y/N<span class="must">*</span></th>
+    <td>
+        <label><input type="radio" id="iserialRequireChkYn" name="iserialRequireChkYn" value="Y"/><span>Y</span></label>
+        <label><input type="radio" id="iserialRequireChkYn" name="iserialRequireChkYn" value="N" checked/><span>N</span></label>
+    </td>
+</tr>
+<tr>
+    <th scope="row">CDC CODE</th>
+    <td colspan='3'>
+        <input type="text" id="irem" name="irem" class="w100p" maxlength="2"/>
     </td>
 </tr>
 <tr>
@@ -1043,7 +1078,7 @@ $(document).ready(function(){
 
 </section><!-- content end -->
 <script type="text/javaScript" language="javascript">
-	function fn_addrSearch(){
+    function fn_addrSearch(){
          if($("#searchSt").val() == ''){
              Common.alert("Please search.");
              return false;
@@ -1051,7 +1086,7 @@ $(document).ready(function(){
          Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#modForm').serializeJSON(), null , true, '_searchDiv'); //searchSt
      }
 
-	function fn_addrSearch1(){
+    function fn_addrSearch1(){
         if($("#isearchSt").val() == ''){
             Common.alert("Please search.");
             return false;
@@ -1107,11 +1142,11 @@ $(document).ready(function(){
                                    areaValue : areaValue
                                  };
              Common.ajax("GET", "/sales/customer/getAreaId.do", jsonObj, function(result) {
-            	 console.log(result);
+                 console.log(result);
                  if (result != null){
-                	 $("#"+d+"areaId").val(result.areaId);
+                     $("#"+d+"areaId").val(result.areaId);
                  }else{
-                	 Common.alert("Invalid Area.");
+                     Common.alert("Invalid Area.");
                  }
              });
 
@@ -1119,7 +1154,7 @@ $(document).ready(function(){
 
      }
 
-	 function fn_selectCity(selVal , d){
+     function fn_selectCity(selVal , d){
 
         var tempVal = selVal;
 
@@ -1145,7 +1180,7 @@ $(document).ready(function(){
 
     }
 
-	function fn_selectPostCode(selVal , d){
+    function fn_selectPostCode(selVal , d){
 
         var tempVal = selVal;
 
@@ -1165,7 +1200,7 @@ $(document).ready(function(){
 
     }
 
-	function fn_selectState(selVal , d){
+    function fn_selectState(selVal , d){
 
         var tempVal = selVal;
 
@@ -1190,7 +1225,7 @@ $(document).ready(function(){
 
     }
 
-	function fn_initAddress(d){
+    function fn_initAddress(d){
 
         $("#"+d+"PostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
         $("#"+d+"PostCd").val('');

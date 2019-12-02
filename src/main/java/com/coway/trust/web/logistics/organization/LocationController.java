@@ -199,6 +199,9 @@ public class LocationController {
 
 		String plant         = (String) params.get("iplant");
 		String slplant         = (String) params.get("islplant");
+		String irem          = (String) params.get("irem");
+
+		String iserialRequireChkYn  = (String) params.get("iserialRequireChkYn"); // 20191122 KR-OHK Serial Required Check Y/N Add
 
 		if (ipdchk != null && "on".equals(ipdchk)){
 				ipdchk = "Y";
@@ -244,6 +247,9 @@ public class LocationController {
 
 		insmap.put("plant"       , plant);
 		insmap.put("slplant"     , slplant);
+		insmap.put("rem"         , irem);
+
+		insmap.put("serialRequireChkYn"         , iserialRequireChkYn);
 
 		int inlocid =loc.insertLocationInfo(insmap);
 		//System.out.println("inlocid 값!!!  : " + inlocid);
