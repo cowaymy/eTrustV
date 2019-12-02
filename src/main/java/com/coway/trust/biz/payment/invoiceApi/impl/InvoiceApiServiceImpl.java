@@ -179,7 +179,7 @@ public class InvoiceApiServiceImpl extends EgovAbstractServiceImpl implements In
                     throw new ApplicationException(AppConstants.FAIL, "Has already been requested.");
                 }
 
-                saveCnt = invoiceApiMapper.insertPay0294D(createData);
+                saveCnt = invoiceApiMapper.insertPay0300D(createData);
                 if( saveCnt == 0 ){
                     throw new ApplicationException(AppConstants.FAIL, "Failed to save.");
                 }else{
@@ -188,7 +188,7 @@ public class InvoiceApiServiceImpl extends EgovAbstractServiceImpl implements In
             }
 
             createData.put("reqInvcNo", reqInvcNo);
-            saveCnt = invoiceApiMapper.insertPay0295D(createData);
+            saveCnt = invoiceApiMapper.insertPay0301D(createData);
             if( saveCnt == 0 ){
                 throw new ApplicationException(AppConstants.FAIL, "Failed to save.");
             }
@@ -268,12 +268,12 @@ public class InvoiceApiServiceImpl extends EgovAbstractServiceImpl implements In
             throw new ApplicationException(AppConstants.FAIL, "Request Status Check.");
         }
 
-        int saveCnt = invoiceApiMapper.insertPay0294D(createData);
+        int saveCnt = invoiceApiMapper.insertPay0300D(createData);
         if( saveCnt == 0 ){
             throw new ApplicationException(AppConstants.FAIL, "Failed to save.");
         }
 
-        saveCnt = invoiceApiMapper.insertPay0295D(createData);
+        saveCnt = invoiceApiMapper.insertPay0301D(createData);
         if( saveCnt == 0 ){
             throw new ApplicationException(AppConstants.FAIL, "Failed to save.");
         }

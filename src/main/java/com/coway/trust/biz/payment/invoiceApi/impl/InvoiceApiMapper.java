@@ -42,9 +42,9 @@ public interface InvoiceApiMapper {
 
 
 
-    int insertPay0294D(Map<String, Object> params);
+    int insertPay0300D(Map<String, Object> params);
 
 
 
-    int insertPay0295D(Map<String, Object> params);
+    int insertPay0301D(Map<String, Object> params);
 }

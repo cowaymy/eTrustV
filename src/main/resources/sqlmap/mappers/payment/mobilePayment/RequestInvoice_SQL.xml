@@ -72,8 +72,8 @@ WHERE   CODE_MASTER_ID = 442
 
 
 <sql id="selectRequestInvoiceListTalbe">
-FROM    PAY0294D A                                                              --Request to Invoice on mobile_Header
-        INNER JOIN PAY0295D B                                                   --Request to Invoice on mobile_Detail
+FROM    PAY0300D A                                                              --Request to Invoice on mobile_Header
+        INNER JOIN PAY0301D B                                                   --Request to Invoice on mobile_Detail
             ON  A.REQ_INVC_NO = B.REQ_INVC_NO
         INNER JOIN SYS0038M C
             ON  C.STUS_CODE_ID = A.REQ_STUS_ID
@@ -195,7 +195,7 @@ ORDER BY    MOB_TICKET_NO DESC
 <update id="saveRequestInvoiceArrpove" parameterType="Map">
 <![CDATA[
 /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper.saveRequestInvoiceArrpove] 20191017 - KR JAEMAJEM */
-UPDATE  PAY0294D A                                                              --Request to Invoice on mobile_Header
+UPDATE  PAY0300D A                                                              --Request to Invoice on mobile_Header
 SET     A.REQ_STUS_ID = 5                                                       --Request Status
     ,   A.UPD_DT = SYSDATE                                                      --Update Date
     ,   A.UPD_USER_ID = #{userId}                                               --Update User Id
@@ -209,7 +209,7 @@ AND     A.REQ_STUS_ID = 1                                                       
 <update id="saveRequestInvoiceReject" parameterType="Map">
 <![CDATA[
 /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper.saveRequestInvoiceReject] 20191017 - KR JAEMAJEM */
-UPDATE  PAY0294D A                                                              --Request to Invoice on mobile_Header
+UPDATE  PAY0300D A                                                              --Request to Invoice on mobile_Header
 SET     A.REQ_STUS_ID = 6                                                       --Request Status
     ,   A.REM = #{rem}
     ,   A.UPD_DT = SYSDATE                                                      --Update Date

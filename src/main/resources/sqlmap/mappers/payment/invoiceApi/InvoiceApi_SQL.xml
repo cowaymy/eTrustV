@@ -199,8 +199,8 @@ ORDER BY    CUST_BILL_GRP_NO ASC                                                
 <![CDATA[
 /* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.selectRequestInvoiceStusCheck] 20191001 - KR JAEMAJEM */
 SELECT  COUNT(1)
-FROM    PAY0294D A
-        INNER JOIN PAY0295D B
+FROM    PAY0300D A
+        INNER JOIN PAY0301D B
             ON  A.REQ_INVC_NO = B.REQ_INVC_NO
 WHERE   B.TAX_INVC_ID = #{taxInvcId}
 AND     REQ_STUS_ID = 1
@@ -213,8 +213,8 @@ AND     REQ_STUS_ID = 1
 <![CDATA[
 /* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.selectRequestAdvanceInvoiceCheck] 20191104 - KR JAEMAJEM */
 SELECT  COUNT(1)
-FROM    PAY0294D A
-        INNER JOIN PAY0295D B
+FROM    PAY0300D A
+        INNER JOIN PAY0301D B
             ON  A.REQ_INVC_NO = B.REQ_INVC_NO
 WHERE   A.INVC_TYPE = #{invcType}
 AND     B.INVC_ITM_ORD_NO = #{invcItmOrdNo}
@@ -224,15 +224,15 @@ AND     REQ_STUS_ID = 1
 
 
 
-<insert id="insertPay0294D" parameterType="Map">
+<insert id="insertPay0300D" parameterType="Map">
 <selectKey keyProperty="reqInvcNo" resultType="int" order="BEFORE">
 SELECT  PAY0294D_SEQ.NEXTVAL AS reqInvcNo
 FROM    DUAL
 </selectKey>
 <![CDATA[
-/* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.insertPay0294D] 20191001 - KR JAEMAJEM */
+/* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.insertPay0300D] 20191001 - KR JAEMAJEM */
 INSERT
-INTO    PAY0294D                                                                --Request to Invoice on mobile_Header
+INTO    PAY0300D                                                                --Request to Invoice on mobile_Header
 (
         REQ_INVC_NO                                                             --Request Number
     ,   REQ_DT                                                                  --Request Date
@@ -259,16 +259,16 @@ INTO    PAY0294D                                                                
 
 
 
-<insert id="insertPay0295D" parameterType="Map">
+<insert id="insertPay0301D" parameterType="Map">
 <selectKey keyProperty="reqIndex" resultType="int" order="BEFORE">
 SELECT  NVL(MAX(REQ_INDEX), 0) + 1
-FROM    PAY0295D
+FROM    PAY0301D
 WHERE   REQ_INVC_NO = #{reqInvcNo}
 </selectKey>
 <![CDATA[
-/* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.insertPay0294D] 20191001 - KR JAEMAJEM */
+/* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.insertPay0301D] 20191001 - KR JAEMAJEM */
 INSERT
-INTO    PAY0295D                                                                --Request to Invoice on mobile_Detail
+INTO    PAY0301D                                                                --Request to Invoice on mobile_Detail
 (
         REQ_INVC_NO                                                             --Request Number
     ,   REQ_INDEX                                                               --Sequence
