@@ -370,6 +370,38 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 						LOGGER.debug("insertReqstInterface =====================================>>  " + invoAppvItems);
 						webInvoiceMapper.insertReqstInterface(invoAppvItems);
 					}
+				} else if("R2".equals(clmType) || "A1".equals(clmType)) {
+				    List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAdvInfoAndItems(invoAppvInfo);
+				    for(int j = 0; j < appvInfoAndItems.size(); j++) {
+                        String ifKey = webInvoiceMapper.selectNextAppvIfKey();
+                        Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
+                        invoAppvItems.put("ifKey", ifKey);
+                        invoAppvItems.put("userId", params.get("userId"));
+
+                        if("1".equals(invoAppvItems.get("advType").toString()) || "2".equals(invoAppvItems.get("advType").toString())) {
+                            invoAppvItems.put("grandAmt", invoAppvItems.get("netAmt"));
+                            invoAppvItems.put("expAmt", 0);
+                            invoAppvItems.put("balAmt", 0);
+                            invoAppvItems.put("taxAmt", 0);
+                            invoAppvItems.put("nonTaxAmt", 0);
+                            invoAppvItems.put("taxCode", "");
+
+                            if("1".equals(invoAppvItems.get("advType").toString())) {
+                                invoAppvItems.put("docDt", invoAppvItems.get("reqstDt"));
+                                invoAppvItems.put("dueDt", invoAppvItems.get("reqstDt"));//APPV_PRCSS_DT
+                            }
+
+                            if("2".equals(invoAppvItems.get("advType").toString())) {
+                                invoAppvItems.put("docDt", invoAppvItems.get("invcDt"));
+                                invoAppvItems.put("dueDt", invoAppvItems.get("appvPrcssDt"));
+                                invoAppvItems.put("glCode", "0012510100");
+                            }
+                        }
+
+                        LOGGER.debug("insertAppvInterface =====================================>>  " + invoAppvItems);
+
+                        webInvoiceMapper.insertAdvInterface(invoAppvItems);
+                    }
 				}
 			}
 		}

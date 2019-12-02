@@ -67,6 +67,8 @@ public interface WebInvoiceMapper {
 
 	List<EgovMap> selectAppvInfoAndItems(Map<String, Object> params);
 
+	List<EgovMap> selectAdvInfoAndItems(Map<String, Object> params);
+
 	int selectAppvLineCnt(String appvPrcssNo);
 
 	int selectAppvLinePrcssCnt(String appvPrcssNo);
@@ -82,6 +84,8 @@ public interface WebInvoiceMapper {
 	int selectNextAppvSeq(String ifKey);
 
 	void insertAppvInterface(Map<String, Object> params);
+
+	void insertAdvInterface(Map<String, Object> params);
 
 	String selectNextReqstIfKey();
 

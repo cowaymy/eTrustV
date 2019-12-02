@@ -373,11 +373,19 @@ function fn_fileListPop() {
 
 function fn_webInvoiceAppvViewPop() {
     var data = {
-    		clmType : clmType
+            clmType : clmType
             ,appvPrcssNo : appvPrcssNo
             ,pageAuthFuncChange : "${PAGE_AUTH.funcChange}"
     };
-    Common.popupDiv("/eAccounting/webInvoice/webInvoiceAppvViewPop.do", data, null, true, "webInvoiceAppvViewPop");
+    var url;
+
+    if(clmType == "A1" || clmType == "R2") {
+        url = "/eAccounting/staffAdvance/staffAdvanceAppvViewPop.do";
+    } else {
+        url = "/eAccounting/webInvoice/webInvoiceAppvViewPop.do";
+    }
+
+    Common.popupDiv(url, data, null, true, "webInvoiceAppvViewPop");
 }
 
 function fn_approveRegistPop() {

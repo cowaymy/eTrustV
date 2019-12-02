@@ -1707,6 +1707,16 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
             AND BULK_J1 <> '0'
         ]]>
     </if>
+    <if test="clmType == 'R2' ">
+        <![CDATA[
+            AND R2 <> '0'
+        ]]>
+    </if>
+    <if test="clmType == 'A1' ">
+        <![CDATA[
+            AND A1 <> '0'
+        ]]>
+    </if>
 </select>
 
 <update id="insMissAppr" parameterType="Map">
@@ -1748,5 +1758,115 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
 <select id="checkExistClmNo" parameterType="String" resultType="int">
     SELECT COUNT(*) AS CLM_NO_CNT FROM FCM0004M WHERE APPV_REQ_KEY_NO = #{clmNo}
 </select>
+
+<select id="selectAdvInfoAndItems" parameterType="Map" resultType="egovMap">
+    SELECT
+        TO_CHAR(SYSDATE, 'YYYYMMDD') RGST_DT,           /* RGST_DT */
+        TO_CHAR(SYSDATE, 'HH24MISS') RGST_TM,           /* RGST_TM */
+        A.APPV_REQ_KEY_NO CLM_NO,                       /* CLAM_NO */
+        SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) CLM_TYPE,       /* BLART */
+        F.ADV_TYPE,                                     /* ADVANCE_TYPE */
+        CASE WHEN F.ADV_TYPE = '1' THEN 'STAFF TRAVEL ADVANCE REQUEST'
+             WHEN F.ADV_TYPE = '2' THEN 'STAFF TRAVEL ADVANCE REPAYMENT'
+             WHEN F.ADV_TYPE = '3' THEN 'STAFF/COMPANY EVENT REQUEST'
+             WHEN F.ADV_TYPE = '4' THEN 'STAFF/COMPANY EVENT REPAYMENT'
+        END AS ADV_TYPE_NAME,
+        TO_CHAR(A.REQST_DT, 'DD/MM/YYYY') REQST_DT,     /* REQDATE */
+        A.REQST_USER_ID,                                /* REQPERNM */
+        TO_CHAR(B.PAY_DUE_DT, 'DD/MM/YYYY') PAY_DUE_DT, /* DUEDATE */
+        B.COST_CENTR_NAME,                              /* REQDEPTNM */
+        D.MEM_ACC_ID,                                   /* ACCOUNT */
+        B.EXP_DESC,                                     /* LINEMEMO */
+        B.APPV_ITM_SEQ,                                 /* LINEID */
+        CASE WHEN (F.ADV_TYPE = '2' OR F.ADV_TYPE = '4') THEN (SELECT CLM_NO FROM FCM0027M WHERE ADV_REFD_NO = A.APPV_REQ_KEY_NO)
+        END AS ADV_CLAM_NO,                             /* ADV_CLAM_NO */
+        B.NET_AMT,                                      /* GRAND_AMT */
+        E.TOT_AMT,                                      /* TAMT */
+        A.APPV_PRCSS_STUS,
+        TO_CHAR(A.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT,
+        TO_CHAR(B.INVC_DT, 'DD/MM/YYYY') INVC_DT        /* DOCDATE */
+    FROM FCM0004M A
+    LEFT JOIN FCM0015D B
+        ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+    LEFT JOIN SYS0013M C
+        ON SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) = C.CODE
+    LEFT JOIN FCM0006M D
+        ON B.MEM_ACC_ID = D.MEM_ACC_ID
+    LEFT JOIN (
+        SELECT APPV_PRCSS_NO, SUM(APPV_AMT) AS TOT_AMT
+        FROM FCM0015D
+        GROUP BY APPV_PRCSS_NO
+    ) E
+        ON A.APPV_PRCSS_NO = E.APPV_PRCSS_NO
+    LEFT JOIN FCM0027M F
+        ON A.APPV_PRCSS_NO = F.APPV_PRCSS_NO
+    WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
+</select>
+
+<insert id="insertAdvInterface" parameterType="Map">
+    INSERT INTO ITF0702M (
+        IF_KEY,
+        SEQ,
+        IF_TYPE,
+        TRAN_STATUS_CD,
+        RGST_DT,
+        RGST_TM,
+        RGST_ID,
+        CLAM_NO,
+        ADVANCE_TYPE,
+        BLART,
+        DOCDATE,
+        DUEDATE,
+        REQDATE,
+        REQPERNM,
+        REQDEPTNM,
+        ACCOUNT,
+        LINEID,
+        LINEMEMO,
+        ADV_CLAM_NO,
+        ACCTCODE,
+        GRAND_AMT,
+        EXPENSE_AMT,
+        BALANCE_AMT,
+        VATAMT,
+        VAT_NON,
+        TAMT,
+        VATCODE,
+        DIMENSION1,
+        DIMENSION2,
+        STATUS
+    ) VALUES (
+        #{ifKey},
+        '1',
+        '702',
+        '10',
+        #{rgstDt},
+        #{rgstTm},
+        #{userId},
+        #{clmNo},
+        #{advType},
+        #{clmType},
+        TO_CHAR(TO_DATE(#{docDt}, 'DD/MM/YYYY'), 'YYYYMMDD'),
+        TO_CHAR(TO_DATE(#{dueDt}, 'DD/MM/YYYY'), 'YYYYMMDD'),
+        TO_CHAR(TO_DATE(#{reqstDt}, 'DD/MM/YYYY'), 'YYYYMMDD'),
+        #{reqstUserId},
+        #{costCentrName},
+        #{memAccId},
+        #{appvItmSeq},
+        #{expDesc},
+        #{advClamNo},
+        #{glCode},
+        #{grandAmt},
+        #{expAmt},
+        #{balAmt},
+        #{taxAmt},
+        #{nonTaxAmt},
+        #{totAmt},
+        #{taxCode},
+        #{dim1},
+        #{dim2},
+        #{appvPrcssStus}
+    )
+</insert>
 
 </mapper>
