@@ -239,6 +239,19 @@
             $("#reportForm #Cody").val(memberType);
             $("#reportForm #TaskID").val(taskID);
 
+          } else if (type == "10") {
+
+              reportFileName = "/commission/CodyMBORawData_Excel.rpt"; //reportFileName
+              reportDownFileName = "CodyMBORawData_Excel_" + today; //report name
+              reportViewType = "EXCEL"; //viewType
+
+              //set parameters
+              $($reportForm).append('<input type="hidden" id="V_COMM_DT" name="V_COMM_DT" value="" /> ');
+              $($reportForm).append('<input type="hidden" id="V_TASK_ID" name="V_TASK_ID" value="" /> ');
+
+              $("#reportForm #V_COMM_DT").val(cmmDt.substring(3)+"-"+cmmDt.substring(0, 2)+"-"+"01");
+              $("#reportForm #V_TASK_ID").val(taskID);
+
           }
 
             //report info
@@ -253,9 +266,9 @@
             $("#reportForm #viewType").val(reportViewType);
 
             //  report 호출
-            var option = {
-                isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
-            };
+	        var option = {
+	            isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
+	        };
             Common.report("reportForm", option);
             $("#searchForm #confirmChk").val("N");
 
@@ -320,6 +333,7 @@
 	                                <option value="6">Cody Retation Report</option>
 	                                <option value="7">Cody SHI Index Raw</option>
 	                                <option value="8">Cody Manager SHI Index Raw</option>
+	                                <option value="10">Cody MBO Raw</option>
                                 </c:if>
                         </select></td>
                     </tr>
