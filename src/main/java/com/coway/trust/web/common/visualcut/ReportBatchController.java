@@ -616,7 +616,8 @@ public class ReportBatchController {
                                                                                   // rpt
                                                                                   // file
                                                                                   // name.
-    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put(REPORT_VIEW_TYPE, "EXCEL");
+    params.put("V_TEMP", "TEMP");// parameter// viewType
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "OrderCancellationRaw_CSP" + File.separator + "OrderCancellationProductReturnRawData_" + CommonUtils.getNowDate() + ".xls");
 
