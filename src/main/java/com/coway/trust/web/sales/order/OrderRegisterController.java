@@ -391,7 +391,8 @@ public class OrderRegisterController {
 
       Map<String, Object> cParam = new HashMap<String, Object>();
 
-      cParam.put("salesOrdNo", orderVO.getSalesOrderMVO().getBindingNo());
+      //cParam.put("salesOrdNo", orderVO.getSalesOrderMVO().getBindingNo());
+      cParam.put("salesOrdId",String.valueOf(orderVO.getSalesOrderMVO().getSalesOrdIdOld()));
 
       EgovMap rMap = orderRegisterService.selectOldOrderId(cParam);
 

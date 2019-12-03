@@ -249,7 +249,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
   @Override
   public EgovMap selectOldOrderId(Map<String, Object> params) {
-    return orderRegisterMapper.selectOldOrderId((String) params.get("salesOrdNo"));
+    //return orderRegisterMapper.selectOldOrderId((String) params.get("salesOrdNo"));
+    return orderRegisterMapper.selectOldOrderId((String) params.get("salesOrdId"));
   }
 
   @Override
