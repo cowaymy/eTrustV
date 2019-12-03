@@ -205,6 +205,17 @@ public class HcCreateDeliveryController {
 		return ResponseEntity.ok(result);
 	}
 
-	// print처리
+
+	//
+	@RequestMapping(value = "/hcCreateDelivery/selectProductionCompar.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> selectProductionCompar(@RequestBody Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
+		ReturnMessage result = new ReturnMessage();
+		List<EgovMap> list = hcCreateDeliveryService.selectProductionCompar(params);
+		result.setTotal(list.size());
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		result.setDataList(list);
+		return ResponseEntity.ok(result);
+	}
 
 }

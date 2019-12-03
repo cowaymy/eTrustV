@@ -315,4 +315,23 @@
 		        AND X.REQST_NO = #{reqstNo}
     </select>
 
+    <resultMap id="RETURNDATA" type="egovMap" />
+    <select id="callBarcodeScan" parameterType="Map"  statementType="CALLABLE">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.callBarcodeScan] - KR JIN */
+        {CALL SP_LOGISTIC_BARCODE_SCAN(#{scanNo}, #{barcode}, #{rstNo}, #{dryNo}, #{fromLocCode}, #{toLocCode} , #{transactionType}, #{ioType}, #{updUserId}
+                    , #{errCode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA}
+                    , #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA}
+                    , #{outScanNo, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA})
+         }
+    </select>
+
+    <select id="callDeleteBarcodeScan" parameterType="Map"  statementType="CALLABLE">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.callDeleteBarcodeScan] - KR JIN */
+        {CALL SP_LOGISTIC_BARCODE_DELETE(#{allYn}, #{boxno}, #{rstNo}, #{dryNo}, #{transactionType}, #{ioType}, #{updUserId}
+                    , #{errCode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA}
+                    , #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA})
+         }
+    </select>
+
+
 </mapper>

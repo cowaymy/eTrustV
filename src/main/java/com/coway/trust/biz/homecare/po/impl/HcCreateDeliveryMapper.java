@@ -49,4 +49,8 @@ public interface HcCreateDeliveryMapper {
 
 	// delivery 처리
 	public int updateDeliveryMain(Map<String, Object> params) throws Exception;
+
+	// PO의 생산수량 select
+	public List<EgovMap> selectProductionCompar(Map<String, Object> params) throws Exception;
+
 }

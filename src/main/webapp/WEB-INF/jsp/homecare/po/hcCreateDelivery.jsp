@@ -100,17 +100,17 @@ var mSort = {};
                     , dataType:"numeric"
                     , formatString:"#,##0"
               }
-              , {dataField:"extQty", headerText:"Existing Qty", width:100, editable:false
+              , {dataField:"extQty", headerText:"Delivery Qty", width:110, editable:false
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0"
               }
-              , {dataField:"qcFailQty", headerText:"QC Fail Qty", width:100, editable:false
+              , {dataField:"qcFailQty", headerText:"QC Fail Qty", width:120, editable:false
                   , style:"aui-grid-user-custom-right"
                   , dataType:"numeric"
                   , formatString:"#,##0"
               }
-              , {dataField:"doQty", headerText:"DO QTY", width:100, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
+              , {dataField:"doQty", headerText:"Available Qty", width:140, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0"
@@ -381,14 +381,14 @@ var mSort = {};
                 var doQty = js.String.naNcheck(items[i].doQty);
 
                 if(poQty < (extQty - qcFailQty)){
-                    // PO Qty는 Existing Qty보다 많아야 합니다.
-                    Common.alert("PO Qty must be greater than Existing Qty.<br /> PO Detail No : "+poDtlNo);
+                    // PO Qty는 Delivery Qty보다 많아야 합니다.
+                    Common.alert("PO Qty must be greater than Delivery Qty.<br /> PO Detail No : "+poDtlNo);
                     return false;
                 }
 
                 if( (poQty - extQty + qcFailQty) < doQty ){
-                    // DO Qty는 Total 수량보다 많을수 없습니다.
-                    Common.alert("DO Qty cannot be greater than Total Quantity.<br /> PO Detail No : "+poDtlNo);
+                    // Available Qty는 Total 수량보다 많을수 없습니다.
+                    Common.alert("Available Qty cannot be greater than Total Quantity.<br /> PO Detail No : "+poDtlNo);
                     return false;
                 }
 
@@ -405,32 +405,42 @@ var mSort = {};
                 .confirm(
                     "<spring:message code='sys.common.alert.save'/>",
                     function(){
-                        Common.ajax("POST", "/homecare/po/hcCreateDelivery/multiHcCreateDelivery.do"
-                                , {"saveData":paramList}
-                                , function(result){
-                                    AUIGrid.setGridData(deliveryGridID, result.dataList);
 
-                                    Common.ajax("GET", "/homecare/po/hcCreateDelivery/selectPoDetailList.do"
-                                            , {"sPoNo":items[0].poNo}
-                                            , function(result){
-                                                   //console.log("data : " + result);
-                                                   AUIGrid.setGridData(detailGridID, result.dataList);
-                                    });
+                    		Common.ajax("POST", "/homecare/po/hcCreateDelivery/selectProductionCompar.do"
+                                    , {"poNo":paramList[0].poNo}
+                                    , function(result){
+                                    	var pList = result.dataList;
+                                    	var dlvTot = 0;
+                                    	var dlvMsg = [];
 
-                                    Common.alert("<spring:message code='sys.msg.savedCnt'/>");
-                                    //console.log("성공." + JSON.stringify(result));
-                                 }
-                                , function(jqXHR, textStatus, errorThrown){
-                                    try{
-                                        console.log("Fail Status : " + jqXHR.status);
-                                        console.log("code : "        + jqXHR.responseJSON.code);
-                                        console.log("message : "     + jqXHR.responseJSON.message);
-                                        console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-                                    }catch (e){
-                                        console.log(e);
+                                    	for (var i = 0; i < paramList.length; i++){
+                                    		for (var k = 0; k < pList.length; k++){
+
+                                    			if(  paramList[i].poNo == pList[k].poNo
+                                    			  && paramList[i].poDtlNo == pList[k].poDtlNo
+                                    			){
+                                    				dlvTot = Number(paramList[i].doQty) + Number(pList[k].delvryQty);
+                                    				if(dlvTot > pList[k].actualQty){
+                                    					dlvMsg.push(paramList[i].poDtlNo);
+                                    				}
+                                    			}
+                                    		}
+
+                                    	}
+
+                                    	if(dlvMsg.length > 0){
+                                    		var dMsg = "DO QTY is smaller than Production Qty. <br />Please Check The PRODUECTION QTY IN PRODUCTION PLANS.";
+                                    		    dMsg += "<br /> [PO Detail No : "+dlvMsg+"]";
+                                    		Common.confirm(dMsg,
+                                    			    function(){
+                                    			         fn_deliverySave(paramList, items);
+                                    			    });
+                                    	}else{
+                                    		fn_deliverySave(paramList, items);
+                                    	}
                                     }
-                                    Common.alert("Fail : " + jqXHR.responseJSON.message);
-                        });
+                             );
+
                     }
             );
         });
@@ -709,6 +719,36 @@ function getListAjax(goPage) {
         }
     });
 
+}
+
+// save 처리
+function fn_deliverySave(paramList, items){
+    Common.ajax("POST", "/homecare/po/hcCreateDelivery/multiHcCreateDelivery.do"
+            , {"saveData":paramList}
+            , function(result){
+                AUIGrid.setGridData(deliveryGridID, result.dataList);
+
+                Common.ajax("GET", "/homecare/po/hcCreateDelivery/selectPoDetailList.do"
+                        , {"sPoNo":items[0].poNo}
+                        , function(result){
+                               //console.log("data : " + result);
+                               AUIGrid.setGridData(detailGridID, result.dataList);
+                });
+
+                Common.alert("<spring:message code='sys.msg.savedCnt'/>");
+                //console.log("성공." + JSON.stringify(result));
+             }
+            , function(jqXHR, textStatus, errorThrown){
+                try{
+                    console.log("Fail Status : " + jqXHR.status);
+                    console.log("code : "        + jqXHR.responseJSON.code);
+                    console.log("message : "     + jqXHR.responseJSON.message);
+                    console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                }catch (e){
+                    console.log(e);
+                }
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+    });
 }
 
 /**

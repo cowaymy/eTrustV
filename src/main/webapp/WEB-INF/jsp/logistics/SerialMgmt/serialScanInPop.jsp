@@ -23,6 +23,24 @@
         margin-top: -20px;
     }
 
+    .aui-grid-button-renderer {
+        color: rgb(0, 0, 0);
+        display: inline-block;
+        line-height: 1em;
+        -webkit-appearance: none;
+        font-weight: bold;
+        text-align: center;
+        cursor: pointer;
+        background: padding-box rgb(238, 238, 238);
+        border-width: 1px;
+        border-style: solid;
+        border-color: rgb(170, 170, 170);
+        border-image: initial;
+        border-radius: 0px;
+        padding: 2px !important;
+        width : 80% !important;
+    }
+
    .my-row-style { background:#FF5733; font-weight:bold; color:#22741C; }
 
 </style>
@@ -65,7 +83,7 @@ var scanLayout = [
               dataField : "_del", // 임의의 고유값
               headerText : " ",
               style : "my-column",
-              width: 64,
+              width: 30,
               editable : false,
               renderer : {
                   type : "ButtonRenderer",

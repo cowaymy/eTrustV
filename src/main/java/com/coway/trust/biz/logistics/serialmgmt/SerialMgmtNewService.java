@@ -18,4 +18,11 @@ public interface SerialMgmtNewService{
 	public void deleteHPSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 	public void allDeleteHPSerial(Map<String, ArrayList<Map<String, Object>>> params, SessionVO sessionVO) throws Exception;
 
+
+	// Logistic serial save
+	public List<Object> saveLogisticBarcode(Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception;
+
+	// homecare serial cancel
+	public void deleteSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
 }

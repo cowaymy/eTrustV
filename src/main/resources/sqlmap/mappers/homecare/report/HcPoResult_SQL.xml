@@ -23,8 +23,8 @@
                           GROUP BY D.PO_NO, D.PO_DTL_NO
                      ) E
                  WHERE A.PO_NO = B.PO_NO
-                   AND B.PO_NO = E.PO_NO
-                   AND B.PO_DTL_NO = E.PO_DTL_NO
+                   AND B.PO_NO = E.PO_NO (+)
+                   AND B.PO_DTL_NO = E.PO_DTL_NO (+)
                    AND A.PO_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30')) -- Approve
                    AND EXISTS(
                                 SELECT 1
@@ -68,6 +68,7 @@
 					     , A.SUPP_STS_CD
 					     , (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = '438' AND CODE_ID = A.SUPP_STS_CD) AS SUPP_STS_NAME
 					     , NVL(B.CONFIRM_QTY, 0) AS CONFIRM_QTY
+					     , NVL(C.ACTUAL_QTY, 0) AS ACTUAL_QTY
 					     , NVL(E.DELVRY_QTY, 0) AS DELVRY_QTY
 					     , NVL(E.GI_QTY, 0) AS GI_QTY
 					     , NVL(F.GR_QTY, 0) AS GR_QTY
@@ -77,6 +78,14 @@
 					     , (SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = A.MEM_ACC_ID) AS MEM_ACC_NAME
 					  FROM HMC0004M A
 					     , HMC0005D B
+					     , (
+	                        SELECT PO_NO
+	                             , PO_DTL_NO
+	                             , SUM(PO_PLAN_QTY) AS PLAN_QTY
+	                             , SUM(ACTUAL_QTY)  AS ACTUAL_QTY
+	                          FROM HMC0006D
+	                         GROUP BY PO_NO, PO_DTL_NO
+	                       ) C
 					     , (
 					         SELECT D.PO_NO
 					              , D.PO_DTL_NO
@@ -106,11 +115,12 @@
                              GROUP BY B.PO_NO, B.PO_DTL_NO
                            ) F
 					 WHERE A.PO_NO = B.PO_NO
+					   AND B.PO_NO = C.PO_NO (+)
+                       AND B.PO_DTL_NO = C.PO_DTL_NO (+)
 					   AND B.PO_NO = E.PO_NO (+)
 					   AND B.PO_DTL_NO = E.PO_DTL_NO (+)
 					   AND B.PO_NO = F.PO_NO (+)
                        AND B.PO_DTL_NO = F.PO_DTL_NO (+)
-
 					   AND A.PO_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30')) -- Approve
 					   AND EXISTS(
 					                SELECT 1
@@ -199,7 +209,7 @@
              , A.MEM_ACC_ID
              , (SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = A.MEM_ACC_ID) AS MEM_ACC_NAME
              , TO_DATE(A.DELVRY_DT, 'YYYYMMDD') AS DELVRY_DT
-             , TO_DATE(A.DELVRY_GI_DT, 'YYYYMMDD') AS DELVRY_GI_DT
+             , A.DELVRY_GI_DT AS DELVRY_GI_DT
           FROM HMC0007M A
              , HMC0008D B
              , HMC0005D C

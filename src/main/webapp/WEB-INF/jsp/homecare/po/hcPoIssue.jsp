@@ -154,7 +154,7 @@ var taxObj = {};
             , {dataField:"rm", headerText:"Remark", width:300, style:"aui-grid-user-custom-left", headerStyle:"aui-grid-header-input-icon"
                 , editRenderer : {
                 	type : "InputEditRenderer",
-                	maxlength : 200
+                	maxlength : 120
                 }
             }
             , {dataField:"baseExr", editable:false, visible:false}
@@ -228,7 +228,10 @@ var taxObj = {};
                         autoThousandSeparator : false // 천단위 구분자 삽입 여부
                     }
               }
-              , {dataField:"uom", headerText:"UOM", width:100, editable:false, headerStyle:"aui-grid-header-input-essen"
+              , {dataField:"uom", headerText:"UOM", width:100, editable:false
+            	  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+            	    , headerStyle:"aui-grid-header-input-essen"
+            	  </c:if>
             	    ,labelFunction : function(rowIndex, columnIndex, value, headerText, item ) {
                         var retStr = "";
                         for(var i=0, len=uomDs.length; i<len; i++) {
@@ -240,7 +243,10 @@ var taxObj = {};
                         return retStr;
                     }
               }
-              , {dataField:"poUprc", headerText:"PO Price", width:120, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
+              , {dataField:"poUprc", headerText:"PO Price", width:120
+            	  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+            	    , headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
+                  </c:if>
             	    , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0.00"
@@ -254,7 +260,10 @@ var taxObj = {};
 	                    autoThousandSeparator : false // 천단위 구분자 삽입 여부
                     }
               }
-              , {dataField:"suplyPrc", headerText:"Supply Price", width:140, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
+              , {dataField:"suplyPrc", headerText:"Supply Price", width:140
+            	  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+            	    , headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
+                  </c:if>
             	    , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0.00"
@@ -268,7 +277,11 @@ var taxObj = {};
 	                    autoThousandSeparator : false // 천단위 구분자 삽입 여부
                      }
               }
-              , {dataField:"tax", headerText:"Tax", width:120, headerStyle:"aui-grid-header-input-essen", editable:false
+              , {dataField:"tax", headerText:"Tax", width:120
+                  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+            	    , headerStyle:"aui-grid-header-input-essen"
+                  </c:if>
+            	    , editable:false
             	    , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0.00"
@@ -282,17 +295,20 @@ var taxObj = {};
                         autoThousandSeparator : false // 천단위 구분자 삽입 여부
                      }
               }
-              , {dataField:"taxCd", headerText:"Tax Text", width:100, headerStyle:"aui-grid-header-input-icon"
-                  , labelFunction:function(rowIndex, columnIndex, value, headerText, item ) {
+              , {dataField:"taxCd", headerText:"Tax Text", width:100
+                  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+            	    , headerStyle:"aui-grid-header-input-icon"
+                  </c:if>
+            	    , labelFunction:function(rowIndex, columnIndex, value, headerText, item ) {
                       return taxObj[value]==null?"":js.String.strNvl(taxObj[value].codeName);
-                   }
-                   , editRenderer : {
+                    }
+                    , editRenderer : {
                         type:"DropDownListRenderer"
                       , showEditorBtnOver:true // 마우스 오버 시 에디터버턴 보이기
                       , list:taxDs
                       , keyField:"codeId"        // key 에 해당되는 필드명
                       , valueField:"codeName"    // value 에 해당되는 필드명
-                   }
+                    }
               }
               , {dataField:"total", headerText:"Total", width:140, editable:false, headerStyle:"aui-grid-header-input-essen"
                     , style:"aui-grid-user-custom-right"
@@ -308,8 +324,11 @@ var taxObj = {};
                         autoThousandSeparator : false // 천단위 구분자 삽입 여부
                      }
               }
-              , {dataField:"cur", headerText:"Currency", width:120, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
-            	  , labelFunction:function(rowIndex, columnIndex, value, headerText, item ) {
+              , {dataField:"cur", headerText:"Currency", width:120
+            	  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+            	   , headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
+                  </c:if>
+            	   , labelFunction:function(rowIndex, columnIndex, value, headerText, item ) {
                       return curObj[value]==null?"":js.String.strNvl(curObj[value]);
                    }
                    , editRenderer : {
@@ -320,7 +339,10 @@ var taxObj = {};
                       , valueField:"codeName"    // value 에 해당되는 필드명
                    }
               }
-              , {dataField:"frexAmt", headerText:"Fx Price", width:120, headerStyle:"aui-grid-header-input-icon"
+              , {dataField:"frexAmt", headerText:"Fx Price", width:120
+                  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+            	    , headerStyle:"aui-grid-header-input-icon"
+                  </c:if>
             	    , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0.00"
@@ -1025,6 +1047,13 @@ function auiCellEditingSubHandler(event){
             if( js.String.isNotEmpty(selectItem[0].item.poStsCode) && Number(selectItem[0].item.poStsCode) > 10 ){
                 return false;
             }
+
+
+            <c:if test="${PAGE_AUTH.funcUserDefine2 != 'Y'}">
+                if(event.dataField != "poQty"){
+                	return false;
+                }
+            </c:if>
          }
 
         console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);

@@ -32,7 +32,13 @@ public interface SerialMgmtNewMapper{
 	public int deleteSerialMaster(Map<String, Object> obj) throws Exception;
 	public int copySerialMasterHistory(Map<String, Object> obj) throws Exception;
 
-
 	// HP - 진행중인 GR의 serial 정보 조회
 	public List<EgovMap> selectHPIngSerialInfo(Map<String, Object> obj) throws Exception;
+
+	// Logistic barcode scan
+	public EgovMap callBarcodeScan(Map<String, Object> param) throws Exception;
+	// Logistic barcode delete
+	public EgovMap callDeleteBarcodeScan(Map<String, Object> param) throws Exception;
+
+
 }

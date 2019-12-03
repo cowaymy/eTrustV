@@ -5,41 +5,59 @@
     <select id="selectDeliveryGrMainCnt" parameterType="Map" resultType="int">
     /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.selectDeliveryGrMainCnt] - KR JIN */
         SELECT COUNT(1) AS CNT
-          FROM HMC0009M A       -- GR
-             , HMC0010D B
-             , HMC0007M C
-         WHERE A.HMC_GR_NO = B.HMC_GR_NO
-           AND A.PO_NO = B.PO_NO
-           AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
-           AND A.PO_NO = C.PO_NO
-           AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO
-           AND A.USE_YN = 'Y'
-           AND C.DELVRY_STATUS = '5652'
-           AND C.USE_YN = 'Y'
-         <if test='sCdc != null and sCdc != ""'>
-           AND A.CDC = #{sCdc}
-         </if>
-         <if test="sDlvGiDtFrom != null and sDlvGiDtFrom !=''">
-           AND C.DELVRY_GI_DT <![CDATA[>=]]> #{sDlvGiDtFrom}
-         </if>
-         <if test="sDlvGiDtTo != null and sDlvGiDtTo !=''">
-           AND C.DELVRY_GI_DT <![CDATA[<=]]> to_char(TO_DATE(#{sDlvGiDtTo}, 'YYYYMMDD') + 1, 'YYYYMMDD')
-         </if>
-         <if test="sMemAccId != null and sMemAccId !=''">
-           AND C.MEM_ACC_ID = #{sMemAccId}
-         </if>
-         <if test="sMemAcc != null and sMemAcc !=''">
-             AND 1 = 2
-         </if>
-         <if test="sPoNo != null and sPoNo !=''">
-           AND A.PO_NO = #{sPoNo}
-         </if>
-         <if test="sHmcDelvryNo != null and sHmcDelvryNo !=''">
-           AND A.HMC_DELVRY_NO = #{sHmcDelvryNo}
-         </if>
-         <if test="sGrYn != null and sGrYn !=''">
-           AND A.GR_YN = #{sGrYn}
-         </if>
+          FROM (
+		        SELECT CASE WHEN NVL(A.GR_YN, 'N') = 'N' THEN ( SELECT COUNT(1)
+		                                                          FROM (
+		                                                                SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+		                                                                     , REQST_NO
+		                                                                     , REQST_NO_ITM
+		                                                                     , ITM_CODE
+		                                                                  FROM LOG0099D
+		                                                               ) Z
+		                                                         WHERE Z.REQST_NO = B.HMC_GR_NO
+		                                                           AND Z.REQST_NO_ITM = B.HMC_GR_NO_DTL_NO
+		                                                           AND Z.ITM_CODE = B.STOCK_CODE
+		                                                           AND Z.RN = 1
+		                                                      )
+		                    ELSE B.RCIPT_QTY
+		               END AS RCIPT_QTY
+		          FROM HMC0009M A       -- GR
+		             , HMC0010D B
+		             , HMC0007M C
+		         WHERE A.HMC_GR_NO = B.HMC_GR_NO
+		           AND A.PO_NO = B.PO_NO
+		           AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
+		           AND A.PO_NO = C.PO_NO
+		           AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO
+		           AND A.USE_YN = 'Y'
+		           AND C.DELVRY_STATUS = '5652'
+		           AND C.USE_YN = 'Y'
+		         <if test='sCdc != null and sCdc != ""'>
+		           AND A.CDC = #{sCdc}
+		         </if>
+		         <if test="sDlvGiDtFrom != null and sDlvGiDtFrom !=''">
+		           AND C.DELVRY_GI_DT <![CDATA[>=]]> TO_DATE(#{sDlvGiDtFrom}, 'YYYYMMDD')
+		         </if>
+		         <if test="sDlvGiDtTo != null and sDlvGiDtTo !=''">
+		           AND C.DELVRY_GI_DT <![CDATA[<=]]> TO_DATE(#{sDlvGiDtTo}, 'YYYYMMDD') + 1
+		         </if>
+		         <if test="sMemAccId != null and sMemAccId !=''">
+		           AND C.MEM_ACC_ID = #{sMemAccId}
+		         </if>
+		         <if test="sMemAcc != null and sMemAcc !=''">
+		             AND 1 = 2
+		         </if>
+		         <if test="sPoNo != null and sPoNo !=''">
+		           AND A.PO_NO = #{sPoNo}
+		         </if>
+		         <if test="sHmcDelvryNo != null and sHmcDelvryNo !=''">
+		           AND A.HMC_DELVRY_NO = #{sHmcDelvryNo}
+		         </if>
+		         <if test="sGrYn != null and sGrYn !=''">
+		           AND A.GR_YN = #{sGrYn}
+		         </if>
+              ) Z
+      WHERE Z.RCIPT_QTY <![CDATA[>]]> 0
     </select>
 
     <select id="selectDeliveryGrMain" parameterType="Map" resultType="egovMap">
@@ -47,83 +65,87 @@
         SELECT * FROM (
             SELECT ROWNUM AS RNUM, T1.*
               FROM (
+                    SELECT Z.*
+                      FROM (
+		                    SELECT B.HMC_GR_NO
+							     , B.HMC_GR_NO_DTL_NO
+							     , B.HMC_DELVRY_NO
+							     , B.HMC_DELVRY_NO_DTL_NO
+							     , B.PO_NO
+							     , B.PO_DTL_NO
+							     , B.STOCK_ID
+							     , B.STOCK_CODE
+							     , (SELECT STK_DESC FROM SYS0026M WHERE STK_ID = B.STOCK_ID AND STK_CODE = B.STOCK_CODE) AS STOCK_NAME
+							     , NVL(A.GR_YN, 'N') AS GR_YN
+							     , CASE WHEN NVL(A.GR_YN, 'N') = 'N' THEN ( SELECT COUNT(1)
+		                                                                      FROM (
+																	                SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+								                                                         , REQST_NO
+								                                                         , REQST_NO_ITM
+								                                                         , ITM_CODE
+								                                                      FROM LOG0099D
+						                                                           ) Z
+								                                             WHERE Z.REQST_NO = B.HMC_GR_NO
+								                                               AND Z.REQST_NO_ITM = B.HMC_GR_NO_DTL_NO
+								                                               AND Z.ITM_CODE = B.STOCK_CODE
+								                                               AND Z.RN = 1
+															              )
+							            ELSE B.RCIPT_QTY
+							        END AS RCIPT_QTY
+							     , B.QC_FAIL_QTY
+							     , A.GR_DT
+							  FROM HMC0009M A       -- GR
+							     , HMC0010D B
+							     , HMC0007M C
+							 WHERE A.HMC_GR_NO = B.HMC_GR_NO
+							   AND A.PO_NO = B.PO_NO
+							   AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
+							   AND A.PO_NO = C.PO_NO
+							   AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO
+							   AND A.USE_YN = 'Y'
+							   AND C.DELVRY_STATUS = '5652'
+							   AND C.USE_YN = 'Y'
+							 <if test='sCdc != null and sCdc != ""'>
+					           AND A.CDC = #{sCdc}
+							 </if>
+							 <if test="sDlvGiDtFrom != null and sDlvGiDtFrom !=''">
+							   AND C.DELVRY_GI_DT <![CDATA[>=]]> TO_DATE(#{sDlvGiDtFrom}, 'YYYYMMDD')
+							 </if>
+							 <if test="sDlvGiDtTo != null and sDlvGiDtTo !=''">
+							   AND C.DELVRY_GI_DT <![CDATA[<=]]> TO_DATE(#{sDlvGiDtTo}, 'YYYYMMDD') + 1
+							 </if>
+							 <if test="sMemAccId != null and sMemAccId !=''">
+							   AND C.MEM_ACC_ID = #{sMemAccId}
+							 </if>
+							 <if test="sMemAcc != null and sMemAcc !=''">
+					             AND 1 = 2
+					         </if>
+							 <if test="sPoNo != null and sPoNo !=''">
+							   AND A.PO_NO = #{sPoNo}
+							 </if>
+							 <if test="sHmcDelvryNo != null and sHmcDelvryNo !=''">
+							   AND A.HMC_DELVRY_NO = #{sHmcDelvryNo}
+							 </if>
+							 <if test="sGrYn != null and sGrYn !=''">
+		                       AND A.GR_YN = #{sGrYn}
+		                     </if>
+		                ) Z
+		            WHERE Z.RCIPT_QTY <![CDATA[>]]> 0
 
-                    SELECT B.HMC_GR_NO
-					     , B.HMC_GR_NO_DTL_NO
-					     , B.HMC_DELVRY_NO
-					     , B.HMC_DELVRY_NO_DTL_NO
-					     , B.PO_NO
-					     , B.PO_DTL_NO
-					     , B.STOCK_ID
-					     , B.STOCK_CODE
-					     , (SELECT STK_DESC FROM SYS0026M WHERE STK_ID = B.STOCK_ID AND STK_CODE = B.STOCK_CODE) AS STOCK_NAME
-					     , NVL(A.GR_YN, 'N') AS GR_YN
-					     , CASE WHEN NVL(A.GR_YN, 'N') = 'N' THEN ( SELECT COUNT(1)
-                                                                      FROM (
-															                SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
-						                                                         , REQST_NO
-						                                                         , REQST_NO_ITM
-						                                                         , ITM_CODE
-						                                                      FROM LOG0099D
-				                                                           ) Z
-						                                             WHERE Z.REQST_NO = B.HMC_GR_NO
-						                                               AND Z.REQST_NO_ITM = B.HMC_GR_NO_DTL_NO
-						                                               AND Z.ITM_CODE = B.STOCK_CODE
-						                                               AND Z.RN = 1
-													              )
-					            ELSE B.RCIPT_QTY
-					        END AS RCIPT_QTY
-					     , B.QC_FAIL_QTY
-					     , A.GR_DT
-					  FROM HMC0009M A       -- GR
-					     , HMC0010D B
-					     , HMC0007M C
-					 WHERE A.HMC_GR_NO = B.HMC_GR_NO
-					   AND A.PO_NO = B.PO_NO
-					   AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
-					   AND A.PO_NO = C.PO_NO
-					   AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO
-					   AND A.USE_YN = 'Y'
-					   AND C.DELVRY_STATUS = '5652'
-					   AND C.USE_YN = 'Y'
-					 <if test='sCdc != null and sCdc != ""'>
-			           AND A.CDC = #{sCdc}
-					 </if>
-					 <if test="sDlvGiDtFrom != null and sDlvGiDtFrom !=''">
-					   AND C.DELVRY_GI_DT <![CDATA[>=]]> #{sDlvGiDtFrom}
-					 </if>
-					 <if test="sDlvGiDtTo != null and sDlvGiDtTo !=''">
-					   AND C.DELVRY_GI_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{sDlvGiDtTo}, 'YYYYMMDD') + 1, 'YYYYMMDD')
-					 </if>
-					 <if test="sMemAccId != null and sMemAccId !=''">
-					   AND C.MEM_ACC_ID = #{sMemAccId}
-					 </if>
-					 <if test="sMemAcc != null and sMemAcc !=''">
-			             AND 1 = 2
-			         </if>
-					 <if test="sPoNo != null and sPoNo !=''">
-					   AND A.PO_NO = #{sPoNo}
-					 </if>
-					 <if test="sHmcDelvryNo != null and sHmcDelvryNo !=''">
-					   AND A.HMC_DELVRY_NO = #{sHmcDelvryNo}
-					 </if>
-					 <if test="sGrYn != null and sGrYn !=''">
-                       AND A.GR_YN = #{sGrYn}
-                     </if>
                     ORDER BY
                     <choose>
                         <when test='sort != null and sort.size != 0'>
                             <foreach item="item" index="index" collection="sort" open="" separator="," close="">
                                 <choose>
-                                    <when test='item.field == "hmcGrNo"'>B.HMC_GR_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "hmcGrNo"'>Z.HMC_GR_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
                                     <otherwise>
-                                        B.HMC_GR_NO DESC
+                                        Z.HMC_GR_NO DESC
                                     </otherwise>
                                 </choose>
                             </foreach>
                         </when>
                         <otherwise>
-                            B.HMC_GR_NO DESC
+                            Z.HMC_GR_NO DESC
                         </otherwise>
                      </choose>
                  ) T1

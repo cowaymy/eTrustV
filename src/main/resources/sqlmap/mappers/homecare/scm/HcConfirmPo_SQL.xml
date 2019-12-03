@@ -216,11 +216,12 @@
 
     <update id="updateConfirmPoStat" parameterType="Map">
     /* [com.coway.trust.biz.homecare.po.impl.HcConfirmPoMapper.updateConfirmPoStat] - KR JIN */
-        UPDATE HMC0004M
-           SET SUPP_STS_CD = #{suppStsCd}
-             , UPD_USER_ID = #{updUserId}
-             , UPD_DT  = SYSDATE
-         WHERE PO_NO = #{poNo}
+        UPDATE HMC0004M A
+           SET A.SUPP_STS_CD = #{suppStsCd}
+             , A.rm = (SELECT Z.RM || #{sRm} FROM HMC0004M Z  WHERE Z.PO_NO = A.PO_NO)
+             , A.UPD_USER_ID = #{updUserId}
+             , A.UPD_DT  = SYSDATE
+         WHERE A.PO_NO = #{poNo}
     </update>
 
     <update id="updateConfirmPoDetail" parameterType="Map">

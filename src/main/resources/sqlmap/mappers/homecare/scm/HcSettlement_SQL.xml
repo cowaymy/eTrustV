@@ -60,6 +60,7 @@
            AND A.GR_YN = 'Y'
            AND A.USE_YN = 'Y'
            AND D.USE_YN = 'Y'
+           AND B.TOTAL <![CDATA[>]]> 0
        <if test='sCdc != null and sCdc != ""'>
            AND A.CDC = #{sCdc}
        </if>
@@ -166,6 +167,7 @@
 					   AND A.USE_YN = 'Y'
                        AND D.USE_YN = 'Y'
 					   AND A.GR_YN = 'Y'
+					   AND B.TOTAL <![CDATA[>]]> 0
 			       <if test='sCdc != null and sCdc != ""'>
 			           AND A.CDC = #{sCdc}
 			       </if>
@@ -310,6 +312,7 @@
 		   AND A.PO_DTL_NO = B.PO_DTL_NO
 		   AND A.USE_YN = 'Y'
 		   AND B.USE_YN = 'Y'
+		   AND A.RCIPT_QTY <![CDATA[>]]> 0
 		   AND A.HMC_GR_NO = #{hmcGrNo}
     </select>
 

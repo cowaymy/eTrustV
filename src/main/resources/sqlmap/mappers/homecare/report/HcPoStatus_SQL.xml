@@ -150,7 +150,7 @@
 							     , D.HMC_DELVRY_NO
 							     , D.HMC_DELVRY_NO_DTL_NO
 							     , TO_DATE(D.DELVRY_DT, 'YYYYMMDD') AS DELVRY_DT
-							     , TO_DATE(D.DELVRY_GI_DT, 'YYYYMMDD') AS DELVRY_GI_DT
+							     , D.DELVRY_GI_DT AS DELVRY_GI_DT
 							     , D.DELVRY_QTY
 							     , D.HMC_GR_NO
 							     , D.HMC_GR_NO_DTL_NO

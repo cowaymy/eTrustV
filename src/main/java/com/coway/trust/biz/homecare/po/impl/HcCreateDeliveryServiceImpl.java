@@ -168,4 +168,8 @@ public class HcCreateDeliveryServiceImpl extends EgovAbstractServiceImpl impleme
 		return selectDeliveryList(sMap);
 	}
 
+	@Override
+	public List<EgovMap> selectProductionCompar(Map<String, Object> params) throws Exception{
+		return hcCreateDeliveryMapper.selectProductionCompar(params);
+	}
 }

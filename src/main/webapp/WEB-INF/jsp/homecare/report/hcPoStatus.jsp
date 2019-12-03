@@ -326,6 +326,21 @@ var myGridID, excelGridId;
                                     }
                                 }
                             }
+                            , {dataField:"qcFailQty", headerText:"GR Fail QTY", width:100
+                                , style:"aui-grid-user-custom-right"
+                                , dataType:"numeric"
+                                , formatString:"#,##0"
+                                , cellMerge:true
+                                , mergePolicy : "restrict"
+                                , mergeRef : "hmcGrNoDtlNo"
+                                , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                    if ( "0" == item.poMod ) {
+                                        return  "my-columnCenter0";
+                                    } else {
+                                        return  "my-columnCenter1";
+                                    }
+                                }
+                            }
                            ]
             }
     ];

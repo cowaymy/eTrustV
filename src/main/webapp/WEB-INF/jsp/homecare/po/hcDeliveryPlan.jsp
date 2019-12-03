@@ -186,7 +186,7 @@ var mSort = {};
                           , onlyNumeric : false // 숫자
                     }
                 }
-                , {dataField:"actualQty", headerText:"production Qty", width:140, headerStyle:"aui-grid-header-input-icon"
+                , {dataField:"actualQty", headerText:"Production Qty", width:140, headerStyle:"aui-grid-header-input-icon"
                     , style:"aui-grid-user-custom-right"
                       , dataType:"numeric"
                       , formatString:"#,##0"

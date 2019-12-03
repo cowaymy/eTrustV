@@ -64,6 +64,13 @@ public class HcConfirmPoServiceImpl extends EgovAbstractServiceImpl implements H
 		int saveCnt = 0;
 		List<Object> mainList = (List)params.get("mainData");
 		String statCd = (String)params.get("statCd");
+		String sRm = (String)params.get("rsn");
+
+		if("20".equals(statCd)){
+			sRm = StringUtils.isEmpty(sRm)?"":" ∈ Approve Reason:"+sRm;
+		}else{
+			sRm = StringUtils.isEmpty(sRm)?"":" ∈ Reject Reason:"+sRm;
+		}
 
 		List<EgovMap> suppList = hcPurchasePriceService.selectComonCodeList("438");
 		HashMap<String, BigDecimal> suppMap = new HashMap<String, BigDecimal>();
@@ -76,6 +83,8 @@ public class HcConfirmPoServiceImpl extends EgovAbstractServiceImpl implements H
 			mainMap = (Map<String, Object>) obj;
 			mainMap.put("updUserId", sessionVO.getUserId());
 			mainMap.put("suppStsCd", suppMap.get(statCd));  // 20:Comfirmed, 30:Reject
+			mainMap.put("sRm", sRm);
+
 			hcConfirmPoMapper.updateConfirmPoStat(mainMap);
 
 			if("20".equals(statCd)){

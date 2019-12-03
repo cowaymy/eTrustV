@@ -182,7 +182,7 @@
              , (
                 SELECT TO_CHAR(NVL(TO_DATE(MAX(CDC_DUE_DT), 'YYYYMMDD'), SYSDATE), 'YYYY/MM/DD') AS PLAN_DT
                   FROM HMC0004M Z
-                 WHERE Z.PO_NO = B.PO_NO
+                 WHERE Z.PO_NO = #{sPoNo}
                ) AS PLAN_DT
           FROM HMC0005D A
 		     , (

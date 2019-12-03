@@ -184,6 +184,104 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 		}
 	}
 
+	// 1.Non Homecare serial save
+	@Override
+	public List<Object> saveLogisticBarcode(Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception{
+		List<Object> mainList = (List<Object>)params.get("barList");
+
+		String crDate = "";
+		String month = "";
+		String sDate = "";
+
+		String vIoType = "";
+		String vToLocId = "";
+		Map<String, Object> mainMap = null;
+		for (Object obj : mainList) {
+			mainMap = (Map<String, Object>) obj;
+			mainMap.put("crtUserId", sessionVO.getUserId());
+			mainMap.put("updUserId", sessionVO.getUserId());
+			mainMap.put("boxno", mainMap.get("barcode"));
+
+			// 날짜형식이 맞는지 체크.
+			crDate = (String)mainMap.get("crDate");
+			if(StringUtils.isBlank(crDate) || crDate.length() != 5){
+				mainMap.put("stockName", "Serial No. (Invalid)");
+				mainMap.put("status", 0);
+				continue;
+			}
+
+			month = crDate.substring(2, 3);
+
+			switch(month){
+    			case "A":
+    				month = "10";
+    				break;
+    			case "B":
+    				month = "11";
+    				break;
+    			case "C":
+    				month = "12";
+    				break;
+    			default:
+    				month = "0"+month;
+    			break;
+			}
+			sDate = crDate.substring(0, 2) + month + crDate.substring(3, 5);
+			if(!validationDate(sDate)){
+				mainMap.put("stockName", "Serial No. (Invalid)");
+				mainMap.put("status", 0);
+				continue;
+			}
+
+			EgovMap itemmap = serialMgmtNewMapper.selectItemSerch(mainMap);
+			if(itemmap == null || itemmap.size() == 0){
+				mainMap.put("stockName", "Serial No. (Invalid Item)");
+				mainMap.put("status", 0);
+				continue;
+			}else{
+				mainMap.put("stockId", itemmap.get("stkId"));
+				mainMap.put("stockCode", itemmap.get("stkCode"));
+				mainMap.put("stockName", itemmap.get("stkDesc"));
+				mainMap.put("uom", itemmap.get("uom"));
+			}
+
+			serialMgmtNewMapper.callBarcodeScan(mainMap);
+
+			if("000".equals((String)mainMap.get("errCode"))){
+				mainMap.put("scanNo",(String)mainMap.get("outScanNo"));
+
+			}else if("-1".equals((String)mainMap.get("errCode"))){
+				throw new ApplicationException(AppConstants.FAIL, (String)mainMap.get("errMsg"));
+			}else{
+				mainMap.put("stockName", (String)mainMap.get("errMsg"));
+				mainMap.put("status", 0);
+				continue;
+			}
+
+			mainMap.put("status", 1);		// success state
+			mainMap.put("boxQty", 0);
+			mainMap.put("eaQty",  1);
+			mainMap.put("totQty", 1);
+		}
+
+
+		return mainList;
+	}
+
+	// 2.Non Homecare serial delete
+	public void deleteSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception{
+		params.put("crtUserId", sessionVO.getUserId());
+		params.put("updUserId", sessionVO.getUserId());
+
+		serialMgmtNewMapper.callDeleteBarcodeScan(params);
+
+		if(!"000".equals((String)params.get("errCode"))){
+			throw new ApplicationException(AppConstants.FAIL, (String)params.get("errMsg"));
+		}
+	}
+
+
+
 	private boolean validationDate(String checkDate){
 		try{
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");

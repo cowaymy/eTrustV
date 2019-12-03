@@ -48,6 +48,16 @@ public class SerialMgmtNewController {
 	private CommonService commonService;
 
 
+	@RequestMapping(value = "/serialScanCommonPop.do")
+	public String serialScanCommonPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("url", params);
+		Map<String, Object> sParam = new HashMap<String, Object>();
+		sParam.put("groupCode", "42");
+		model.addAttribute("uomList", commonService.selectCodeList(sParam));
+		return "logistics/SerialMgmt/serialScanCommonPop";
+	}
+
+
 	// inbound serial
 	@RequestMapping(value = "/serialScanInPop.do")
 	public String serialScanInPop(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -92,6 +102,32 @@ public class SerialMgmtNewController {
 	public ResponseEntity<ReturnMessage> allDeleteHPSerial(@RequestBody Map<String, ArrayList<Map<String, Object>>> params, SessionVO sessionVO) throws Exception {
 
 		serialMgmtNewService.allDeleteHPSerial(params, sessionVO);
+
+		ReturnMessage result = new ReturnMessage();
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(result);
+	}
+
+	// 1.Non Homecare serial save
+	@RequestMapping(value = "/saveLogisticBarcode.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveLogisticBarcode(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception {
+
+		List<Object> list = serialMgmtNewService.saveLogisticBarcode(params, sessionVO);
+
+		ReturnMessage result = new ReturnMessage();
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		result.setDataList(list);
+
+		return ResponseEntity.ok(result);
+	}
+
+	// 2.Non Homecare serial delete
+	@RequestMapping(value = "/deleteSerial.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> deleteSerial(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+		serialMgmtNewService.deleteSerial(params, sessionVO);
 
 		ReturnMessage result = new ReturnMessage();
 		result.setCode(AppConstants.SUCCESS);

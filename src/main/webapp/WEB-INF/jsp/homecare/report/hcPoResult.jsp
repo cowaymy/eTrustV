@@ -41,22 +41,27 @@ var mSort = {};
             , {dataField:"stockName", headerText:"Material Name", width:300, editable:false, style:"aui-grid-user-custom-left"}
             , {dataField:"suppStsCode", visible:false}
             , {dataField:"suppStsName",headerText :"Sales Order", width:100, editable:false}
-            , {dataField:"confirmQty", headerText:"PO QTY", width:100
+            , {dataField:"confirmQty", headerText:"PO QTY", width:120
                 , style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
                 , formatString:"#,##0"
             }
-            , {dataField:"delvryQty", headerText:"Delivery QTY", width:100
+            , {dataField:"actualQty", headerText:"Production Qty", width:120
                 , style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
                 , formatString:"#,##0"
             }
-            , {dataField:"giQty", headerText:"GI QTY", width:100
+            , {dataField:"delvryQty", headerText:"Delivery QTY", width:120
                 , style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
                 , formatString:"#,##0"
             }
-            , {dataField:"grQty", headerText:"GR QTY", width:100
+            , {dataField:"giQty", headerText:"GI QTY", width:120
+                , style:"aui-grid-user-custom-right"
+                , dataType:"numeric"
+                , formatString:"#,##0"
+            }
+            , {dataField:"grQty", headerText:"GR QTY", width:120
                 , style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
                 , formatString:"#,##0"
@@ -97,7 +102,7 @@ var mSort = {};
   // sub 칼럼 설정
   var subColumnLayout = [ {dataField:"hmcDelvryNo", headerText:"Delivery No", width:140, editable:false}
               , {dataField:"hmcDelvryNoDtlNo", headerText:"Delivery Detail No", width:140, editable:false}
-              , {dataField:"poNo", headerText:"PO No", width:120, editable:false}
+              , {dataField:"poNo", headerText:"PO No", width:140, editable:false}
               , {dataField:"poDtlNo", headerText:"PO Detail No", width:100, editable:false}
               , {dataField:"confirmQty", headerText:"PO QTY", width:100
                   , style:"aui-grid-user-custom-right"
@@ -447,7 +452,7 @@ function fn_isDateValidate(sValidDt){
 
 
     <aside class="title_line"><!-- title_line start -->
-        <h3>PO List</h3>
+        <h3>PO to Delivery List</h3>
     </aside><!-- title_line end -->
     <article class="grid_wrap" ><!-- grid_wrap start -->
         <!--  그리드 영역2  -->

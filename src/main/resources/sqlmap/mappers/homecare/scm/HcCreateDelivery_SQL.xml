@@ -219,7 +219,7 @@
 		     , B.PO_NO
 		     , B.PO_DTL_NO
 		     , TO_DATE(A.DELVRY_DT, 'YYYYMMDD') AS DELVRY_DT
-		     , TO_DATE(A.DELVRY_GI_DT, 'YYYYMMDD') AS DELVRY_GI_DT
+		     , A.DELVRY_GI_DT AS DELVRY_GI_DT
 		     , A.DELVRY_STATUS
              , (SELECT CODE
                   FROM SYS0013M
@@ -341,11 +341,44 @@
     <update id="updateDeliveryMain" parameterType="Map">
     /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.updateDeliveryMain] - KR JIN */
         UPDATE HMC0007M
-           SET DELVRY_GI_DT = TO_CHAR(SYSDATE, 'YYYYMMDD')
+           SET DELVRY_GI_DT = SYSDATE
              , DELVRY_STATUS = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '432' AND CODE = '20')
              , UPD_DT = SYSDATE
              , UPD_USER_ID = #{updUserId}
          WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
     </update>
+
+    <select id="selectProductionCompar" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectProductionCompar] - KR JIN */
+        SELECT A.PO_NO
+		     , A.PO_DTL_NO
+		     , NVL(B.ACTUAL_QTY, 0) AS ACTUAL_QTY
+		     , NVL(C.DELVRY_QTY, 0) AS DELVRY_QTY
+		  FROM HMC0005D A
+		     , (
+		        SELECT PO_NO
+		             , PO_DTL_NO
+		             , SUM(ACTUAL_QTY) AS ACTUAL_QTY
+		          FROM HMC0006D
+		         WHERE PO_NO = #{poNo}
+		         GROUP BY PO_NO, PO_DTL_NO
+		       ) B
+		     , (
+		         SELECT PO_NO
+		              , PO_DTL_NO
+		              , SUM(DELVRY_QTY) AS DELVRY_QTY
+		           FROM HMC0008D
+		          WHERE USE_YN = 'Y'
+		            AND PO_NO = #{poNo}
+		          GROUP BY PO_NO, PO_DTL_NO
+		       ) C
+		WHERE A.PO_NO = B.PO_NO (+)
+		  AND A.PO_DTL_NO = B.PO_DTL_NO (+)
+		  AND A.PO_NO = C.PO_NO (+)
+		  AND A.PO_DTL_NO = C.PO_DTL_NO (+)
+		  AND A.USE_YN = 'Y'
+		  AND A.PO_NO = #{poNo}
+		 ORDER BY PO_NO, PO_DTL_NO
+    </select>
 
 </mapper>

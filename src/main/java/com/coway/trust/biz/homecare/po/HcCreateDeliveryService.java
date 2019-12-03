@@ -28,4 +28,7 @@ public interface HcCreateDeliveryService {
 
 	// delivery
 	public List<EgovMap> deliveryHcCreateDelivery(Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception;
+
+
+	public List<EgovMap> selectProductionCompar(Map<String, Object> params) throws Exception;
 }
