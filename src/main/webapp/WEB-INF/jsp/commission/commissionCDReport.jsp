@@ -246,10 +246,10 @@
               reportViewType = "EXCEL"; //viewType
 
               //set parameters
-              $($reportForm).append('<input type="hidden" id="V_COMM_DT" name="V_COMM_DT" value="" /> ');
               $($reportForm).append('<input type="hidden" id="V_TASK_ID" name="V_TASK_ID" value="" /> ');
+              $($reportForm).append('<input type="hidden" id="V_COMM_DT" name="V_COMM_DT" value="" /> ');
 
-              $("#reportForm #V_COMM_DT").val(cmmDt.substring(3)+"-"+cmmDt.substring(0, 2)+"-"+"01");
+              $("#reportForm #V_COMM_DT").val(cmmDt.substring(3)+cmmDt.substring(0, 2)+"01");
               $("#reportForm #V_TASK_ID").val(taskID);
 
           }
@@ -265,10 +265,12 @@
             $("#reportForm #reportDownFileName").val(reportDownFileName);
             $("#reportForm #viewType").val(reportViewType);
 
-            //  report 호출
-	        var option = {
-	            isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
-	        };
+            if(type != "10")
+            	var option = { isProcedure : false };
+            else{
+            	var option = { isProcedure : true }
+            }
+
             Common.report("reportForm", option);
             $("#searchForm #confirmChk").val("N");
 
