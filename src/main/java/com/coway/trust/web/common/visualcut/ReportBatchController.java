@@ -608,7 +608,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/OrderCancellationProductReturnRawData.do")
-  //@Scheduled(cron = "0 0 8 * * *")//Daily (6:00am)
+  //@Scheduled(cron = "0 0 8 * * *")//Daily (8:00am)
   public void orderCancellationProductReturn() {
     LOGGER.info("[START] OrderCancellationProductReturnRawData...");
     Map<String, Object> params = new HashMap<>();
@@ -617,7 +617,6 @@ public class ReportBatchController {
                                                                                   // file
                                                                                   // name.
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-    params.put("V_TEMP", "TEMP");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "OrderCancellationRaw_CSP" + File.separator + "OrderCancellationProductReturnRawData_" + CommonUtils.getNowDate() + ".xls");
 
