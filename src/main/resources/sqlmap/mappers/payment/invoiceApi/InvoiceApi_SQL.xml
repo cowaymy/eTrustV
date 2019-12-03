@@ -226,7 +226,7 @@ AND     REQ_STUS_ID = 1
 
 <insert id="insertPay0300D" parameterType="Map">
 <selectKey keyProperty="reqInvcNo" resultType="int" order="BEFORE">
-SELECT  PAY0294D_SEQ.NEXTVAL AS reqInvcNo
+SELECT  PAY0300D_SEQ.NEXTVAL AS reqInvcNo
 FROM    DUAL
 </selectKey>
 <![CDATA[
