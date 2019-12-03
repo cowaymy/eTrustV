@@ -607,6 +607,26 @@ public class ReportBatchController {
     LOGGER.info("[END] BSReportCT...");
   }
 
+  @RequestMapping(value = "/OrderCancellationProductReturnRawData.do")
+  //@Scheduled(cron = "0 0 8 * * *")//Daily (6:00am)
+  public void orderCancellationProductReturn() {
+    LOGGER.info("[START] OrderCancellationProductReturnRawData...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/OrderCancellationProductReturnRawData_3.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "OrderCancellationRaw_CSP" + File.separator + "OrderCancellationProductReturnRawData_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] OrderCancellationProductReturnRawData...");
+  }
+
+
+
   private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
     this.checkArgument(params);
     String reportFile = (String) params.get(REPORT_FILE_NAME);
