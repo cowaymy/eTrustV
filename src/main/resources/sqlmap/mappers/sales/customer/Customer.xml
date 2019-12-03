@@ -2014,6 +2014,15 @@
 						    UPPER(AREA) LIKE UPPER('%'|| #{searchStreet} || '%')
 						AND STATUS_ID = 1
            ]]>
+           <if test="state != null and state != '' ">
+                AND UPPER(STATE) LIKE UPPER('%'|| #{state} || '%')
+           </if>
+           <if test="city != null and city != '' ">
+                AND UPPER(CITY) LIKE UPPER('%'|| #{city} || '%')
+           </if>
+           <if test="postCode != null and postCode != '' ">
+                AND POSTCODE = #{postCode}
+           </if>
   </select>
 
   <insert id="insertCustomerAddressInfoAf" parameterType="Map">

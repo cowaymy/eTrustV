@@ -51,24 +51,24 @@
         var columnLayout = [ {
             dataField : "area",
             headerText : '<spring:message code="sal.text.area" />',
-            width : 300,
+            width : "50%",
             editable : false,
             style: "aui-grid-user-custom-left"
         }, {
             dataField : "postcode",
             headerText : '<spring:message code="sal.text.postCode" />',
-            width : 70,
+            width : "10%",
             editable : false
         }, {
             dataField : "city",
             headerText : '<spring:message code="sal.text.city" />',
-            width : 120,
+            width : "20%",
             editable : false,
             style: "aui-grid-user-custom-left"
         }, {
             dataField : "state",
             headerText : '<spring:message code="sal.text.state" />',
-            width : 120,
+            width : "20%",
             editable : false,
             style: "aui-grid-user-custom-left"
         },{
@@ -150,6 +150,9 @@
 
 <form action="" id="searchAddrForm" name="searchAddrForm" method="POST">
     <input type="hidden" id="searchStreet" name="searchStreet" value="${searchStreet }">
+    <input type="hidden" id="state" name="state" value="${state}">
+    <input type="hidden" id="city" name="city" value="${city}">
+    <input type="hidden" id="postCode" name="postCode" value="${postCode}">
 </form>
 <form id="mAddrForm" method="post">
     <input type="hidden" name="custId"  id="_custId"/>  <!-- Cust Id  -->

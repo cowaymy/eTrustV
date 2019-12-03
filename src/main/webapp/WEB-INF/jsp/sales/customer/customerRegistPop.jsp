@@ -133,6 +133,9 @@
              $('#_mArea_').val('');
              $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
 
+             $('#_searchSt_').val('');
+             $("#_searchSt_").attr("disabled","disabled");
+
         }else{
 
             $("#_mPostCd_").attr({"disabled" : false  , "class" : "w100p"});
@@ -144,6 +147,8 @@
             //Call ajax
             var postCodeJson = {state : $("#_mState_").val() , city : tempVal}; //Condition
             CommonCombo.make('_mPostCd_', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
+
+            $("#_searchSt_").attr("disabled",false);
         }
 
     }
@@ -1141,12 +1146,6 @@
     </colgroup>
          <tbody>
             <tr>
-                <th scope="row"><spring:message code="sal.title.text.areaSearch" /><span class="must">*</span></th>
-                <td colspan="3">
-                <input type="text" title="" id="_searchSt_" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-                </td>
-            </tr>
-            <tr>
                 <th scope="row" ><spring:message code="sal.text.addressDetail" /><span class="must">*</span></th>
                 <td colspan="3">
                 <input type="text" title="" id="_addrDtl_" name="addrDtl" placeholder="Detail Address" class="w100p"  />
@@ -1159,19 +1158,9 @@
                 </td>
             </tr>
             <tr>
-               <th scope="row"><spring:message code="sal.text.area4" /><span class="must">*</span></th>
+            <th scope="row"><spring:message code="sal.text.country" /><span class="must">*</span></th>
                 <td colspan="3">
-                <select class="w100p" id="_mArea_"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
-                </td>
-            </tr>
-            <tr>
-                 <th scope="row"><spring:message code="sal.text.city2" /><span class="must">*</span></th>
-                <td>
-                <select class="w100p" id="_mCity_"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
-                </td>
-                <th scope="row"><spring:message code="sal.text.postCode3" /><span class="must">*</span></th>
-                <td>
-                <select class="w100p" id="_mPostCd_"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
+                <input type="text" title="" id="_mCountry_" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
                 </td>
             </tr>
             <tr>
@@ -1179,9 +1168,25 @@
                 <td>
                 <select class="w100p" id="_mState_"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
                 </td>
-                <th scope="row"><spring:message code="sal.text.country" /><span class="must">*</span></th>
+                 <th scope="row"><spring:message code="sal.text.city2" /><span class="must">*</span></th>
                 <td>
-                <input type="text" title="" id="_mCountry_" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
+                <select class="w100p" id="_mCity_"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><spring:message code="sal.title.text.areaSearch" /><span class="must">*</span></th>
+                <td colspan="3">
+                <input type="text" title="" id="_searchSt_" name="searchSt" placeholder="" class="w50p disabled" disabled/><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><spring:message code="sal.text.postCode3" /><span class="must">*</span></th>
+                <td>
+                <select class="w100p" id="_mPostCd_"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
+                </td>
+               <th scope="row"><spring:message code="sal.text.area4" /><span class="must">*</span></th>
+                <td>
+                <select class="w100p" id="_mArea_"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
                 </td>
             </tr>
             <tr>
