@@ -159,7 +159,7 @@ var serialGridPros = {
 $(document).ready(function(){
 
     // Moblie Popup Setting
-    Common.setMobilePopup(true, false,'');
+    Common.setMobilePopup(true, false, 'serialGrid');
 
     scanGridId = GridCommon.createAUIGrid("serialGrid", scanLayout, null, serialGridPros);
 
@@ -382,14 +382,10 @@ function fn_scanClosePop(){
                 <th scope="row">Delivery No</th>
                 <td colspan="3" >
                     <input type="text" id="sDocNo" name="sDocNo" placeholder="" class="w100p readonly" style="min-width:150px" readonly value=""'/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4" >
+
                      <input type="hidden" id="transaction" />
                      <input type="hidden" id="toLocCode" />
                      <input type="hidden" id="fromLocCode" />
-
                      <input type="hidden" id="ioType" />
                 </td>
             </tr>
@@ -401,27 +397,22 @@ function fn_scanClosePop(){
     Content START
 ------------------------------------------------------------------------------->
 
-    <aside class="title_line"><!-- title_line start -->
+    <aside>
        <h3>Serial Scan</h3>
-       <ul class="right_btns">
-           <li style="display:none;"><p class="btn_blue"><a id="btnScanImport" href="#">Import</a></p></li>
-       </ul>
-    </aside><!-- title_line end -->
-
+    </aside>
 
     <!-- <form id="barScanForm" name="barScanForm" method="POST"> -->
 
         <table class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
-                <col style="width:140px" />
+                <col style="width:150px" />
             </colgroup>
             <tbody>
                 <tr>
                     <th scope="row"><span style="color:red">*</span><b>BARCODE</b></th>
                     <td>
-                         <input type="text"  id="txtBarcode" name="txtBarcode"
-                                    onchange="javascript:fn_splitBarcode();"
+                         <input type="text"  id="txtBarcode" name="txtBarcode" onchange="javascript:fn_splitBarcode();"
                                     placeholder="Please select here before scanning."
                                     style="height:40px;width:80%; text-transform:uppercase;" />
                     </td>
@@ -432,7 +423,7 @@ function fn_scanClosePop(){
     &nbsp;
     <section class="search_result"><!-- search_result start -->
         <article class="grid_wrap"><!-- grid_wrap start -->
-            <div id="serialGrid" style="height:350px;"></div>
+            <div id="serialGrid" class="autoGridHeight"></div>
         </article><!-- grid_wrap end -->
     </section><!-- search_result end -->
     &nbsp;
