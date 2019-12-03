@@ -57,7 +57,7 @@ var uomObj = {};
 </c:forEach>
 
 //*****************************************/
-var msIe = (js.browser.isMsie || js.browser.isSafari);
+var msIe = (js.browser.isMsie() || js.browser.isSafari());
 
 if(!msIe){
     var a=new AudioContext();
