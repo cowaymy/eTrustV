@@ -1461,7 +1461,7 @@ var TODAY_DD      = "${toDay}";
           <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
            <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_filterForecastList()">HS
-              Filter Forecast Listring</a>
+              Filter Forecast Listing</a>
             </p></li>
            <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsConfigOld()">HS

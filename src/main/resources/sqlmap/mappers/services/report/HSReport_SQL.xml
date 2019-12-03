@@ -494,4 +494,8 @@
                  WHERE  1 = Extent1.AREA_STUS_ID
                   ORDER BY Extent1.AREA_NAME ASC
         </select>
+        
+        <select id="safetyLevelList" parameterType="Map" resultType="egovMap">
+              SELECT CODE CODE_ID, CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 444
+       </select>
      </mapper>

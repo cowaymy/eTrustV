@@ -23,229 +23,218 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/services/bs/report")
 public class HSReportController {
-	private static final Logger logger = LoggerFactory.getLogger(HSReportController.class);
-
-	@Resource(name = "HSReportService")
-	private HSReportService HSReportService;
-	
-	@RequestMapping(value = "/hsCountForecastListingPop.do")
-	public String hsCountForecastListingPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		// 호출될 화면
-		return "services/bs/hsCountForecastListingPop";
-	}
-	
-	@RequestMapping(value = "/hsReportGroupPop.do")
-	public String hsReportGroupPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		// 호출될 화면
-		return "services/bs/hsReportGroupPop";
-	}
-	
-	@RequestMapping(value = "/hsReportSinglePop.do")
-	public String hsReportSinglePop(@RequestParam Map<String, Object> params, ModelMap model) {
-		// 호출될 화면
-		return "services/bs/hsReportSinglePop";
-	}
-	
-	@RequestMapping(value = "/bSSummaryList.do")
-	public String bSSummaryList(@RequestParam Map<String, Object> params, ModelMap model) {
-		// 호출될 화면
-		return "services/bs/bSSummaryPop";
-	}	
-	
-	
-	/**
-	 * Search rule book management list
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/selectHSReportSingle.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectHSReportSingle(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		List<EgovMap>  HSReportSingle = HSReportService.selectHSReportSingle(params);
-		logger.debug("HSReportSingle {}", HSReportSingle);
-		return ResponseEntity.ok(HSReportSingle);
-	}
-	
-	/**
-	 * Search rule book management list
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/selectHSReportGroup.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectHSReportGroup(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		List<EgovMap>  HSReportGroup = HSReportService.selectHSReportGroup(params);
-		logger.debug("HSReportGroup {}", HSReportGroup);
-		return ResponseEntity.ok(HSReportGroup);
-	}
-	
-	@RequestMapping(value = "/filterForecastListingPop.do")
-	public String filterForecastPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		// 호출될 화면
-		return "services/bs/filterForecastListingPop";
-	}
-	
-	/**
-	 * Search rule book management list
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/selectCMGroupList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCMGroupList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		List<EgovMap>  selectCMGroupList = HSReportService.selectCMGroupList(params);
-		logger.debug("HSReportGroup {}", selectCMGroupList);
-		return ResponseEntity.ok(selectCMGroupList);
-	}
-	
-	/**
-	 * Search rule book management list
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/selectCodyList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCodyList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		List<EgovMap>  selectCodyList = HSReportService.selectCodyList(params);
-		logger.debug("selectCodyList {}", selectCodyList);
-		return ResponseEntity.ok(selectCodyList);
-	}
-	
-	/**
-	 * Search rule book management list
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/reportBranchCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectReportBranchCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		List<EgovMap>  selectBranchList = HSReportService.selectReportBranchCodeList(params);
-		logger.debug("selectBranchList {}", selectBranchList);
-		return ResponseEntity.ok(selectBranchList);
-	}
-	
-	
-	/**
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/deptCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectdeptCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		List<EgovMap>  DeptCodeList = HSReportService.selectDeptCodeList(params);
-		logger.debug("HSReportSingle {}", DeptCodeList);
-		return ResponseEntity.ok(DeptCodeList);
-	}	
-	
-	
-	
-	
-   
-	/**
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/dscCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectDscCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		List<EgovMap>  DscCode = HSReportService.selectDscCodeList(params);
-		logger.debug("HSReportSingle {}", DscCode);
-		return ResponseEntity.ok(DscCode);
-	}	
-	
-	
-
-	
-	/**
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/insStatusCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectInsStatusList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		List<EgovMap>  InsStatusList = HSReportService.selectInsStatusList(params);
-		logger.debug("HSReportSingle {}", InsStatusList);
-		return ResponseEntity.ok(InsStatusList);
-	}	
-	
-	
-
-	
-	/**
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/codyCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCodyCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		List<EgovMap>  CodyCodeList = HSReportService.selectCodyCodeList(params);
-		logger.debug("HSReportSingle {}", CodyCodeList);
-		return ResponseEntity.ok(CodyCodeList);
-	}	
-
-	
-	
-	
-	/**
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/codyCode_1.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCodyCodeList_1(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		List<EgovMap>  CodyCodeList = HSReportService.selectCodyCodeList_1(params);
-		logger.debug("HSReportSingle {}", CodyCodeList);
-		return ResponseEntity.ok(CodyCodeList);
-	}	
-	
-	
-
-	
-
-	
-	/**
-	 *
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/areaCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectAreaCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		List<EgovMap>  AreaCodeList = HSReportService.selectAreaCodeList(params);
-		logger.debug("HSReportSingle {}", AreaCodeList);
-		return ResponseEntity.ok(AreaCodeList);
-	}		
-	
+  private static final Logger logger = LoggerFactory.getLogger(HSReportController.class);
+  
+  @Resource(name = "HSReportService")
+  private HSReportService HSReportService;
+  
+  @RequestMapping(value = "/hsCountForecastListingPop.do")
+  public String hsCountForecastListingPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    // 호출될 화면
+    return "services/bs/hsCountForecastListingPop";
+  }
+  
+  @RequestMapping(value = "/hsReportGroupPop.do")
+  public String hsReportGroupPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    // 호출될 화면
+    return "services/bs/hsReportGroupPop";
+  }
+  
+  @RequestMapping(value = "/hsReportSinglePop.do")
+  public String hsReportSinglePop(@RequestParam Map<String, Object> params, ModelMap model) {
+    // 호출될 화면
+    return "services/bs/hsReportSinglePop";
+  }
+  
+  @RequestMapping(value = "/bSSummaryList.do")
+  public String bSSummaryList(@RequestParam Map<String, Object> params, ModelMap model) {
+    // 호출될 화면
+    return "services/bs/bSSummaryPop";
+  }
+  
+  /**
+   * Search rule book management list
+   *
+   * @param request
+   * @param model
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/selectHSReportSingle.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectHSReportSingle(@RequestParam Map<String, Object> params, ModelMap model) {
+    
+    List<EgovMap> HSReportSingle = HSReportService.selectHSReportSingle(params);
+    logger.debug("HSReportSingle {}", HSReportSingle);
+    return ResponseEntity.ok(HSReportSingle);
+  }
+  
+  /**
+   * Search rule book management list
+   *
+   * @param request
+   * @param model
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/selectHSReportGroup.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectHSReportGroup(@RequestParam Map<String, Object> params, ModelMap model) {
+    
+    List<EgovMap> HSReportGroup = HSReportService.selectHSReportGroup(params);
+    logger.debug("HSReportGroup {}", HSReportGroup);
+    return ResponseEntity.ok(HSReportGroup);
+  }
+  
+  @RequestMapping(value = "/filterForecastListingPop.do")
+  public String filterForecastPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    // 호출될 화면
+    return "services/bs/filterForecastListingPop";
+  }
+  
+  /**
+   * Search rule book management list
+   *
+   * @param request
+   * @param model
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/selectCMGroupList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectCMGroupList(@RequestParam Map<String, Object> params, ModelMap model) {
+    
+    List<EgovMap> selectCMGroupList = HSReportService.selectCMGroupList(params);
+    logger.debug("HSReportGroup {}", selectCMGroupList);
+    return ResponseEntity.ok(selectCMGroupList);
+  }
+  
+  /**
+   * Search rule book management list
+   *
+   * @param request
+   * @param model
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/selectCodyList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectCodyList(@RequestParam Map<String, Object> params, ModelMap model) {
+    
+    List<EgovMap> selectCodyList = HSReportService.selectCodyList(params);
+    logger.debug("selectCodyList {}", selectCodyList);
+    return ResponseEntity.ok(selectCodyList);
+  }
+  
+  /**
+   * Search rule book management list
+   *
+   * @param request
+   * @param model
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/reportBranchCodeList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectReportBranchCodeList(@RequestParam Map<String, Object> params,
+      ModelMap model) {
+    
+    List<EgovMap> selectBranchList = HSReportService.selectReportBranchCodeList(params);
+    logger.debug("selectBranchList {}", selectBranchList);
+    return ResponseEntity.ok(selectBranchList);
+  }
+  
+  /**
+   *
+   * @param request
+   * @param model
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/deptCode.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectdeptCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+    
+    List<EgovMap> DeptCodeList = HSReportService.selectDeptCodeList(params);
+    logger.debug("HSReportSingle {}", DeptCodeList);
+    return ResponseEntity.ok(DeptCodeList);
+  }
+  
+  /**
+   *
+   * @param request
+   * @param model
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/dscCode.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectDscCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+    
+    List<EgovMap> DscCode = HSReportService.selectDscCodeList(params);
+    logger.debug("HSReportSingle {}", DscCode);
+    return ResponseEntity.ok(DscCode);
+  }
+  
+  /**
+   *
+   * @param request
+   * @param model
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/insStatusCode.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectInsStatusList(@RequestParam Map<String, Object> params, ModelMap model) {
+    
+    List<EgovMap> InsStatusList = HSReportService.selectInsStatusList(params);
+    logger.debug("HSReportSingle {}", InsStatusList);
+    return ResponseEntity.ok(InsStatusList);
+  }
+  
+  /**
+   *
+   * @param request
+   * @param model
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/codyCode.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectCodyCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+    
+    List<EgovMap> CodyCodeList = HSReportService.selectCodyCodeList(params);
+    logger.debug("HSReportSingle {}", CodyCodeList);
+    return ResponseEntity.ok(CodyCodeList);
+  }
+  
+  /**
+   *
+   * @param request
+   * @param model
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/codyCode_1.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectCodyCodeList_1(@RequestParam Map<String, Object> params, ModelMap model) {
+    
+    List<EgovMap> CodyCodeList = HSReportService.selectCodyCodeList_1(params);
+    logger.debug("HSReportSingle {}", CodyCodeList);
+    return ResponseEntity.ok(CodyCodeList);
+  }
+  
+  /**
+   *
+   * @param request
+   * @param model
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/areaCode.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectAreaCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+    
+    List<EgovMap> AreaCodeList = HSReportService.selectAreaCodeList(params);
+    logger.debug("HSReportSingle {}", AreaCodeList);
+    return ResponseEntity.ok(AreaCodeList);
+  }
+  
+  @RequestMapping(value = "/safetyLevelList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> safetyLevelList(@RequestParam Map<String, Object> params, ModelMap model) {
+    
+    List<EgovMap> safetyLevelList = HSReportService.safetyLevelList(params);
+    logger.debug("safetyLevelList {}", safetyLevelList);
+    return ResponseEntity.ok(safetyLevelList);
+  }
+  
 }

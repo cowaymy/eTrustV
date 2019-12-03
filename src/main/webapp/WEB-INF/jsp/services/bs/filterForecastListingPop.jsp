@@ -4,9 +4,18 @@
 <script type="text/javaScript">
 $(document).ready(function() {
 	doGetCombo("/services/bs/report/reportBranchCodeList.do",'' ,''   , 'branchCmb' , 'S', '');
+	doGetCombo("/services/bs/report/safetyLevelList.do",'' ,''   , 'safetyLv' , 'S', '');
 	
     $("#branchCmb").change(function(){
         doGetCombo("/services/bs/report/selectCMGroupList.do",$("#branchCmb").val() ,''   , 'CMGroup' , 'S', '');
+        
+        if($("#branchCmb").val() != '0'){
+        	$("#safetyLv").prop("disabled" , true);
+        } else {
+        	$("#safetyLv").prop("disabled" , false);
+        }
+        
+        
     });
     
     $("#CMGroup").change(function(){
@@ -34,109 +43,129 @@ function fn_validation(){
     return true;
 }
 
-function fn_openReport(){
-    if(fn_validation()){
-        var date = new Date();
-        var month = date.getMonth()+1;
-        var day = date.getDate();
-        if(date.getDate() < 10){
-            day = "0"+date.getDate();
-        }
-        var forecastDt2 = $("#forecastMonth").val().substring(3,7)+"-"+$("#forecastMonth").val().substring(0,2);
-        
-        if($("#branchCmb").val() != '0'){
-        	var cmid = $("#CMGroup").val();
-        	var codyId = $("#codyList").val();
-        	var branchId = $("#branchCmb").val();
-        	var forecastDt = $("#forecastMonth").val().substring(3,7)+"-"+$("#forecastMonth").val().substring(0,2)+"-01";
-        	if(cmid == '' && codyId == null || cmid == '' && codyId == '' ){
-        		cmid = 0;
-        		console.log("BSFilterForecastByBranch");
-        		$("#hsFilterForm #reportFileName").val('/services/BSFilterForecastByBranch.rpt');    
-        		$("#hsFilterForm #reportDownFileName").val("BSFilterForecast_" + month+date.getFullYear());
-        		$("#hsFilterForm #V_FORECASTDATE").val(forecastDt);
-        		$("#hsFilterForm #V_BRANCHID").val(branchId);
-        		$("#hsFilterForm #V_CMID").val(cmid);
-        		
-        	}else if(cmid > 0 && codyId == 0){
-        		console.log("BSFilterForecast_CM");
-        		$("#hsFilterForm #reportFileName").val('/services/BSFilterForecastByCMGroup.rpt');    
-                $("#hsFilterForm #reportDownFileName").val("BSFilterForecast_" + month+date.getFullYear());
-                $("#hsFilterForm #V_FORECASTDATE").val(forecastDt);
-                $("#hsFilterForm #V_BRANCHID").val(branchId);
-                $("#hsFilterForm #V_CMID").val(cmid);
-        	}else if(cmid > 0 && codyId > 0){
-        		console.log("BSFilterForecast_Cody");
-                $("#hsFilterForm #reportFileName").val('/services/BSFilterForecast_Cody.rpt');    
-                $("#hsFilterForm #reportDownFileName").val("BSFilterForecast_" + month+date.getFullYear());
-                $("#hsFilterForm #V_FORECASTDATE").val(forecastDt);
-                $("#hsFilterForm #V_BRANCHID").val(branchId);
-                $("#hsFilterForm #V_MEMBERID").val(codyId);
-                $("#hsFilterForm #V_MEMBERLVL").val(4);
-            }
-        	
-        	if($("#exportType").val() == "PDF"){
-        		$("#hsFilterForm #viewType").val("PDF");
-        		 var option = {
-        	                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-        	        };
-        	        
-        	        Common.report("hsFilterForm", option);
-        		
-        	}else{
-        		$("#hsFilterForm #viewType").val("EXCEL");
-        		 var option = {
-        	                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-        	        };
-        	        
-        	        Common.report("hsFilterForm", option);
-        	}
-        	
-        }else{
-        	console.log("BSFilterForecast_AllBranches");
-        	 $("#hsFilterForm #reportFileName").val('/services/BSFilterForecast_AllBranches.rpt');    
-             $("#hsFilterForm #reportDownFileName").val("BSFilterForecast_" + month+date.getFullYear());
-             //$("#hsFilterForm #viewType").val("PDF");
-             $("#hsFilterForm #V_FORECASTDATE").val(forecastDt2);
-             
-             if($("#exportType").val() == "PDF"){
-                 $("#hsFilterForm #viewType").val("PDF");
-                  var option = {
-                             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-                     };
-                     
-                     Common.report("hsFilterForm", option);
-                 
-             }else{
-                 $("#hsFilterForm #viewType").val("EXCEL");
-                  var option = {
-                             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-                     };
-                     
-                     Common.report("hsFilterForm", option);
-             }
-        }
-       
-        
-       
-        
-    }
-}
-$.fn.clearForm = function() {
-    return this.each(function() {
-        var type = this.type, tag = this.tagName.toLowerCase();
-        if (tag === 'form'){
-            return $(':input',this).clearForm();
-        }
-        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
-            this.value = '';
-        }else if (type === 'checkbox' || type === 'radio'){
-            this.checked = false;
-        }else if (tag === 'select'){
-            this.selectedIndex = -1;
-        }
-    });
-};
+
+	function fn_simplifyFormula(x) {
+
+		if (x != "") {
+			return 1 + (x / 100);
+		}
+		else {
+			return 0;
+		}
+
+	}
+
+	function fn_openReport() {
+		if (fn_validation()) {
+			var date = new Date();
+			var month = date.getMonth() + 1;
+			var day = date.getDate();
+			if (date.getDate() < 10) {
+				day = "0" + date.getDate();
+			}
+			var forecastDt2 = $("#forecastMonth").val().substring(3, 7) + "-" + $("#forecastMonth").val().substring(0, 2);
+
+			if ($("#branchCmb").val() != '0') {
+				var cmid = $("#CMGroup").val();
+				var codyId = $("#codyList").val();
+				var branchId = $("#branchCmb").val();
+				var forecastDt = $("#forecastMonth").val().substring(3, 7) + "-" + $("#forecastMonth").val().substring(0, 2) + "-01";
+				if (cmid == '' && codyId == null || cmid == '' && codyId == '') {
+					cmid = 0;
+					console.log("BSFilterForecastByBranch");
+					$("#hsFilterForm #reportFileName").val('/services/BSFilterForecastByBranch.rpt');
+					$("#hsFilterForm #reportDownFileName").val("BSFilterForecast_" + month + date.getFullYear());
+					$("#hsFilterForm #V_FORECASTDATE").val(forecastDt);
+					$("#hsFilterForm #V_BRANCHID").val(branchId);
+					$("#hsFilterForm #V_CMID").val(cmid);
+
+				}
+				else if (cmid > 0 && codyId == 0) {
+					console.log("BSFilterForecast_CM");
+					$("#hsFilterForm #reportFileName").val('/services/BSFilterForecastByCMGroup.rpt');
+					$("#hsFilterForm #reportDownFileName").val("BSFilterForecast_" + month + date.getFullYear());
+					$("#hsFilterForm #V_FORECASTDATE").val(forecastDt);
+					$("#hsFilterForm #V_BRANCHID").val(branchId);
+					$("#hsFilterForm #V_CMID").val(cmid);
+				}
+				else if (cmid > 0 && codyId > 0) {
+					console.log("BSFilterForecast_Cody");
+					$("#hsFilterForm #reportFileName").val('/services/BSFilterForecast_Cody.rpt');
+					$("#hsFilterForm #reportDownFileName").val("BSFilterForecast_" + month + date.getFullYear());
+					$("#hsFilterForm #V_FORECASTDATE").val(forecastDt);
+					$("#hsFilterForm #V_BRANCHID").val(branchId);
+					$("#hsFilterForm #V_MEMBERID").val(codyId);
+					$("#hsFilterForm #V_MEMBERLVL").val(4);
+				}
+
+				if ($("#exportType").val() == "PDF") {
+					$("#hsFilterForm #viewType").val("PDF");
+					var option = {
+						isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+					};
+
+					Common.report("hsFilterForm", option);
+
+				}
+				else {
+					$("#hsFilterForm #viewType").val("EXCEL");
+					var option = {
+						isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+					};
+
+					Common.report("hsFilterForm", option);
+				}
+
+			}
+			else {
+				console.log("BSFilterForecast_AllBranches");
+				console.log("safetyLv value " + $("#safetyLv").val());
+				console.log("fn_simplifyFormula " + fn_simplifyFormula($("#safetyLv").val()))
+
+				$("#hsFilterForm #reportFileName").val('/services/BSFilterForecast_AllBranches.rpt');
+				$("#hsFilterForm #reportDownFileName").val("BSFilterForecast_" + month + date.getFullYear());
+				//$("#hsFilterForm #viewType").val("PDF");
+				$("#hsFilterForm #V_FORECASTDATE").val(forecastDt2);
+				$("#hsFilterForm #V_SAFETYLVL").val(fn_simplifyFormula($("#safetyLv").val()));
+
+				if ($("#exportType").val() == "PDF") {
+					$("#hsFilterForm #viewType").val("PDF");
+					var option = {
+						isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+					};
+
+					Common.report("hsFilterForm", option);
+
+				}
+				else {
+					$("#hsFilterForm #viewType").val("EXCEL");
+					var option = {
+						isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+					};
+
+					Common.report("hsFilterForm", option);
+				}
+			}
+
+		}
+	}
+	$.fn.clearForm = function() {
+		return this.each(function() {
+			var type = this.type, tag = this.tagName.toLowerCase();
+			if (tag === 'form') {
+				return $(':input', this).clearForm();
+			}
+			if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea') {
+				this.value = '';
+			}
+			else if (type === 'checkbox' || type === 'radio') {
+				this.checked = false;
+			}
+			else if (tag === 'select') {
+				this.selectedIndex = -1;
+			}
+		});
+	};
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -157,6 +186,7 @@ $.fn.clearForm = function() {
 <input type="hidden" id="V_MEMBERID" name="V_MEMBERID" />
 <input type="hidden" id="V_MEMBERLVL" name="V_MEMBERLVL" />
 <input type="hidden" id="V_CMID" name="V_CMID" />
+<input type="hidden" id="V_SAFETYLVL" name="V_SAFETYLVL" />
 <!--reportFileName,  viewType 모든 레포트 필수값 -->
 <input type="hidden" id="reportFileName" name="reportFileName" />
 <input type="hidden" id="viewType" name="viewType" />
@@ -188,6 +218,14 @@ $.fn.clearForm = function() {
     <th scope="row">Branch</th>    
     <td>
     <select id="branchCmb" name="branchCmb">
+    </select>
+    </td>
+</tr>
+
+<tr>
+    <th scope="row">Safety Level</th>    
+    <td>
+    <select id="safetyLv" name="safetyLv">
     </select>
     </td>
 </tr>
