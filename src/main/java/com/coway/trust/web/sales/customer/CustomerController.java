@@ -1701,6 +1701,9 @@ public class CustomerController {
     } else {
       model.addAttribute("searchStreet", params.get("searchSt"));
     }
+    model.addAttribute("state", params.get("mState"));
+    model.addAttribute("city", params.get("mCity"));
+    model.addAttribute("postCode", params.get("mPostCd"));
 
     // 데이터 리턴.
     return "sales/customer/customerMagicAddrPop";
