@@ -35,8 +35,7 @@
         SELECT T1.SALES_ORD_ID
           FROM SAL0001D T1
          WHERE
-         <!-- T1.SALES_ORD_NO = #{value} -->
-           T1.SALES_ORD_ID = #{value}
+            T1.SALES_ORD_NO = #{value}
            AND ROWNUM &lt;= 1
     </select>
 
