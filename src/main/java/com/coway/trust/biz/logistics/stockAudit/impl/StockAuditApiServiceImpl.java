@@ -146,6 +146,7 @@ public class StockAuditApiServiceImpl extends EgovAbstractServiceImpl implements
             log0096m.put("itmId", saveData.getItmId());
             log0096m.put("cntQty", saveData.getCntQty());
             log0096m.put("diffQty", saveData.getDiffQty());
+            log0096m.put("otherQty", saveData.getDiffQty());
             log0096m.put("rem", saveData.getRem());
             log0096m.put("updUserId", loginVO.getUserId());
             saveCnt = stockAuditApiMapper.updateSaveLocStusCodeIdLOG0096D(log0096m);

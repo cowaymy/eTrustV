@@ -12,9 +12,9 @@ SELECT  B.STOCK_AUDIT_NO                                                        
     ,   TO_CHAR(TO_DATE(A.DOC_START_DT, 'YYYYMMDD'), 'DD/MM/YYYY')              AS DOC_START_DT
     ,   TO_CHAR(TO_DATE(A.DOC_END_DT, 'YYYYMMDD'), 'DD/MM/YYYY')                AS DOC_END_DT
     ,   B.LOC_STUS_CODE_ID                                                      AS LOC_STUS_CODE_ID
-    ,   CASE WHEN B.LOC_STUS_CODE_ID IN (5685, 5686, 5689, 5691, 5713)  THEN '01'--Count-Stock Audit
-                                                                        ELSE '02'--Count-Stock Detail
-                                                                        END     AS LOC_STUS_CODE_ID_GU
+    ,   CASE WHEN B.LOC_STUS_CODE_ID IN (5685, 5689, 5691, 5713)  THEN '01'--Count-Stock Audit
+                                                                  ELSE '02'--Count-Stock Detail
+                                                                  END           AS LOC_STUS_CODE_ID_GU
     ,   C.CODE_NAME                                                             AS LOC_STUS_CODE_ID_NM
     ,   A.ITM_TYPE                                                              AS ITM_TYPE
     ,   A.ITM_TYPE_NM                                                           AS ITM_TYPE_NM
@@ -70,9 +70,9 @@ SELECT  B.STOCK_AUDIT_NO                                                        
     ,   B.APPV_2_OPINION                                                        AS APPV_2_OPINION
     ,   B.LOC_STUS_CODE_ID                                                      AS LOC_STUS_CODE_ID
     ,   C.CODE_NAME                                                             AS DOC_STUS_CODE_ID_NM
-    ,   CASE WHEN B.LOC_STUS_CODE_ID IN (5685, 5686, 5689, 5691, 5713)  THEN '01'--Count-Stock Audit
-                                                                        ELSE '02'--Count-Stock Detail
-                                                                        END     AS LOC_STUS_CODE_ID_GU
+    ,   CASE WHEN B.LOC_STUS_CODE_ID IN (5685, 5689, 5691, 5713)  THEN '01'--Count-Stock Audit
+                                                                  ELSE '02'--Count-Stock Detail
+                                                                  END           AS LOC_STUS_CODE_ID_GU
     ,   #{viewGu}                                                               AS VIEW_GU
 FROM    LOG0094M A                                                              --Stock Audit Doc Master Table
         INNER JOIN LOG0095M B                                                   --Stock Audit LOC Master Table
@@ -92,7 +92,7 @@ AND     B.WH_LOC_ID = #{whLocId}
 /* [com.coway.trust.biz.logistics.stockAudit.impl.selectStockAuditDetailList] 20191029 - KR JAEMAJEM */
 SELECT  B.STOCK_AUDIT_NO                                                        AS STOCK_AUDIT_NO
     ,   B.WH_LOC_ID                                                             AS WH_LOC_ID
-    ,   C.ITM_ID                                                                AS ITM_ID
+    ,   D.STK_CODE                                                              AS ITM_ID
     ,   D.STK_DESC                                                              AS ITM_ID_NM
     ,   D.STK_TYPE_ID                                                           AS STK_TYPE_ID
     ,   E.CODE_NAME                                                             AS STK_TYPE_ID_NM
@@ -101,9 +101,9 @@ SELECT  B.STOCK_AUDIT_NO                                                        
     ,   NVL(C.DIFF_QTY, 0)                                                      AS DIFF_QTY
     ,   C.REM                                                                   AS REM
     ,   B.LOC_STUS_CODE_ID                                                      AS LOC_STUS_CODE_ID
-    ,   CASE WHEN B.LOC_STUS_CODE_ID IN (5685, 5686, 5689, 5691, 5713)  THEN '01'--Count-Stock Audit
-                                                                        ELSE '02'--Count-Stock Detail
-                                                                        END     AS LOC_STUS_CODE_ID_GU
+    ,   CASE WHEN B.LOC_STUS_CODE_ID IN (5685, 5689, 5691, 5713)  THEN '01'--Count-Stock Audit
+                                                                  ELSE '02'--Count-Stock Detail
+                                                                  END           AS LOC_STUS_CODE_ID_GU
 FROM    LOG0094M A                                                              --Stock Audit Doc Master Table
         INNER JOIN LOG0095M B                                                   --Stock Audit LOC Master Table
             ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
@@ -144,6 +144,7 @@ AND     A.LOC_STUS_CODE_ID IN (5685, 5686, 5689, 5691, 5713)
 UPDATE  LOG0096D A                                                              --Stock Audit LOC Detail Table
 SET     A.CNT_QTY = #{cntQty}                                                   --Count Qty
     ,   A.DIFF_QTY = #{diffQty}                                                 --Diff Qty
+    ,   A.OTHER_QTY = #{otherQty}                                               --Other GI/GR Qty
     ,   A.REM = #{rem}                                                          --Remark
     ,   A.UPD_USER_ID = #{updUserId}                                            --Update User
     ,   A.UPD_DT = SYSDATE                                                      --Update date
@@ -160,6 +161,8 @@ AND     A.ITM_ID = #{itmId}                                                     
 /* [com.coway.trust.biz.logistics.stockAudit.impl.updateRequestApproval] 20191030 - KR JAEMAJEM */
 UPDATE  LOG0095M A                                                              --Stock Audit LOC Master Table
 SET     A.LOC_STUS_CODE_ID = 5687                                               --Location Status ID (SYS0013M - CODE_MASTER_ID : 437)--Request approval
+    ,   APPV_1_REQST_USER_ID = #{updUserId}
+    ,   APPV_1_REQST_DT = SYSDATE
     ,   A.UPD_USER_ID = #{updUserId}                                            --Update User
     ,   A.UPD_DT = SYSDATE                                                      --Update date
 WHERE   A.STOCK_AUDIT_NO = #{stockAuditNo}                                      --Stock Audit Number
