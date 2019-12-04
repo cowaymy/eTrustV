@@ -145,7 +145,7 @@ function fn_close(){
 
 function fn_excelDown(){
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    GridCommon.exportTo("grid_wrap", "xlsx", "Current Coverage Area Search");
+    GridCommon.exportTo("grid_wrap2", "xlsx", "Current Coverage Area Search");
 }
 </script>
 
