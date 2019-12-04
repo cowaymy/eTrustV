@@ -234,6 +234,22 @@ $(document).ready(function(){
         fn_scanClosePop();
     });
 
+    $("#txtBarcode").keydown(function() {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+
+            fn_splitBarcode();
+        };
+    });
+
+    $("#txtBarcode").change(function() {
+        event.preventDefault();
+
+        fn_splitBarcode();
+    });
+
+
+    $("#txtBarcode").focus();
 });
 
 function fn_splitBarcode(){
@@ -412,9 +428,8 @@ function fn_scanClosePop(){
                 <tr>
                     <th scope="row"><span style="color:red">*</span><b>BARCODE</b></th>
                     <td>
-                         <input type="text"  id="txtBarcode" name="txtBarcode" onchange="javascript:fn_splitBarcode();"
-                                    placeholder="Please select here before scanning."
-                                    style="height:40px;width:80%; text-transform:uppercase;" />
+                         <!-- <input type="text"  id="txtBarcode" name="txtBarcode" onchange="javascript:fn_splitBarcode();" placeholder="Please select here before scanning." style="height:40px;width:80%; text-transform:uppercase;" /> -->
+                         <input type="text"  id="txtBarcode" name="txtBarcode" placeholder="Please select here before scanning." style="height:40px;width:99%; text-transform:uppercase;" />
                     </td>
                 </tr>
              </tbody>
