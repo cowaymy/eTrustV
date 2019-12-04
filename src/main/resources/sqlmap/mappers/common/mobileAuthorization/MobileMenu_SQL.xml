@@ -25,10 +25,10 @@
 					(
 
 	                     CASE WHEN #{upperMenuCode} IS NULL THEN
-					       ( SELECT 'MOB' || LPAD( NVL(SUBSTR(MAX(MENU_CODE), 4, 2), 0)+1 , 2, 0)  || '00' FROM MOB0002M )
+					       ( SELECT 'MOB' || LPAD( NVL(SUBSTR(MAX(MENU_CODE), 4, 2), 0)+1 , 2, 0)  || '00' FROM MOB0002M WHERE MENU_CODE != 'MOB9999' )
 					     ELSE
 					       ( SELECT 'MOB' || LPAD( NVL(SUBSTR(MAX(MENU_CODE), 4, 2), 0) , 2, 0)  || LPAD( NVL(SUBSTR(MAX(MENU_CODE), 6, 2), 0)+1 , 2, 0) FROM MOB0002M
-					           WHERE  MENU_CODE = #{upperMenuCode}  )
+					           WHERE  MENU_CODE = #{upperMenuCode} AND MENU_CODE != 'MOB9999'  )
 					     END
 						,#{menuName}
 						,#{pgmCode}
