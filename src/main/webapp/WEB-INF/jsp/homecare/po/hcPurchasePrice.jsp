@@ -45,7 +45,6 @@ var cmbCategoryDs = [{codeId:"5706", codeName:"Mattress"}, {codeId:"5707", codeN
     var columnLayout = [{dataField: "rnum", visible:false},
             {dataField: "priceSeqNo", headerText :"Price Seq", width:120, editable:false},
             {dataField: "memAccId",headerText :"Supplier Code", width:120, editable:false},
-            {dataField: "memAccId",headerText :"Supplier Code", width:120, editable:false},
             {dataField: "memAccName",headerText :"Supplier Name", width:350, style:"aui-grid-user-custom-left", editable:false },
             {dataField: "stkId",headerText :"Material Id",width:120, editable:false, visible:false},
             {dataField: "stkCode",headerText :"Material Code",width:140, editable:false},

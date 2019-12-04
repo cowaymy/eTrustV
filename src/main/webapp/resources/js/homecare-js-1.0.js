@@ -320,5 +320,85 @@
 		}
 	};
 
+	/**
+	 * 바코드 출력을 위한 재생성 처리.
+	 */
+	js.print = {
+		    /**
+		     * 리포트 view  :  예제 파일 => sampleReport.jsp
+		     *
+		     * 1. _formId 내에 reportFileName, viewType 필수.
+		     *
+		     * reportFileName : /(업무폴더 포함)리포트 파일위치/파일명
+		     * viewType : WINDOW, EXCEL, CSV, PDF
+		     *
+		     * 2. 프로시져로 구성된 리포트 파일 호출인 경우 _options.isProcedure = true  필수 .
+		     *
+		     * @param _formId
+		     * @param _options
+		     */
+		    report: function (_formId, _options) {
+
+		        var option = {
+		            isProcedure: false,
+		            isShowLoader : true,
+		            isBodyLoad : false,
+		            bodyId : "reportBody"
+		        };
+
+		        option = $.extend(option, _options);
+
+		        var submitReportViewUrl = "/homecare/po/report/view-submit.do";
+		        if (option.isProcedure) {
+		            submitReportViewUrl = "/homecare/po/report/view-proc-submit.do";
+		        }
+
+		        var viewType = $("#viewType").val();
+
+		        if (viewType == "WINDOW") {
+		            if(option.isBodyLoad){
+		                var frm = document.getElementById(_formId);
+		                frm.action = getContextPath() + submitReportViewUrl;
+		                frm.target = option.bodyId;
+		                frm.method = "post";
+		                frm.submit();
+		            }else{
+		                Common.popupWin(_formId, submitReportViewUrl, option);
+		            }
+		        } else if (viewType.match("^MAIL_")) {
+
+		            var reportViewUrl = "/homecare/po/report/view.do"; // report를 보기 위한 uri
+
+		            if (option.isProcedure) {
+		                reportViewUrl = "/homecare/po/report/view-proc.do"; // procedure로 구성된 report를 보기 위한 uri
+		            }
+
+		            Common.ajax("POST", reportViewUrl, $("#" + _formId).serializeJSON(), function (data) {
+		                Common.setMsg("<spring:message code='sys.msg.success'/>");
+		            });
+		        } else {
+		            Common.showLoader();
+		            $.fileDownload(getContextPath() + submitReportViewUrl, {
+		                httpMethod: "POST",
+		                data: $("#" + _formId).serialize(),
+		            })
+		                .done(function () {
+		                    Common.removeLoader();
+		                    console.log('File download a success!');
+		                })
+		                .fail(function () {
+		                    Common.removeLoader();
+		                    Common.alert('File download failed!');
+		                });
+
+		            // $("#" + _formId).attr({
+		            //     action: getContextPath() + submitReportViewUrl,
+		            //     method: "POST"
+		            // }).submit();
+		        }
+		    }
+
+	}
+
 	window.js = js;
 }(window, document, jQuery));

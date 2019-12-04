@@ -570,7 +570,7 @@ var mSort = {};
                 return false;
             }else if(checkedItems.length == 1 ) {
                 $("#V_DELVRYNO").val(checkedItems[0].hmcDelvryNo);
-                Common.report("printForm");
+                js.print.report("printForm");
             }else{
                 Common.alert('only one [Delivery No] is possible.');
                 return false;
@@ -766,7 +766,6 @@ function fn_isDateValidate(sValidDt){
 }
 
 
-
 </script>
 
 <section id="content"><!-- content start -->
@@ -889,7 +888,7 @@ function fn_isDateValidate(sValidDt){
   </section><!-- search_result end -->
 
   <form id="printForm" name="printForm">
-    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="viewType" name="viewType" value="WINDOW" />
     <input type="hidden" id="V_DELVRYNO" name="V_DELVRYNO" value="" />
     <input type="hidden" id="reportFileName" name="reportFileName" value="/homecare/hcDelivery_Note_for_Gl.rpt" /><br />
   </form>

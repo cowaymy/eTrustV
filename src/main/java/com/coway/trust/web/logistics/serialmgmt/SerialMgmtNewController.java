@@ -131,7 +131,7 @@ public class SerialMgmtNewController {
 
 		ReturnMessage result = new ReturnMessage();
 		result.setCode(AppConstants.SUCCESS);
-		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		result.setMessage((String)params.get("errMsg"));
 		return ResponseEntity.ok(result);
 	}
 
