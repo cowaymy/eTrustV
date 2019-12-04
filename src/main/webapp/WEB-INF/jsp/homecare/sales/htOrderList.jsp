@@ -209,6 +209,7 @@ function createAUIGrid() {
       , { headerText : "<spring:message code='sales.custId'/>",  dataField : "custId",      editable : false, width : 80  }
       , { headerText : "<spring:message code='sales.cusName'/>", dataField : "custName",    editable : false, width : 300 }
       , { headerText : "<spring:message code='sales.NRIC2'/>",   dataField : "custIc",      editable : false, width : 150 }
+      , { headerText : "<spring:message code='sales.salesman'/>", dataField : "salesmanCode",   editable : false, width : 80 }
       , { headerText : "<spring:message code='sales.Creator'/>", dataField : "crtUserId",   editable : false, width : 80 }
       , { headerText : "<spring:message code='sales.pvYear'/>",  dataField : "pvYear",      editable : false, width : 60  }
       , { headerText : "<spring:message code='sales.pvMth'/>",   dataField : "pvMonth",     editable : false, width : 60  }
