@@ -581,7 +581,7 @@ public class OrderRegisterController {
     List<EgovMap> list = orderRegisterService.instAddrViewHistoryAjax(params);
     return ResponseEntity.ok(list);
   }
-
+/*
   @RequestMapping(value = "/chkPromoCboMst.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> chkPromoCboMst(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
     ReturnMessage message = new ReturnMessage();
@@ -640,7 +640,7 @@ public class OrderRegisterController {
   public ResponseEntity<List<EgovMap>> selectComboOrderJsonList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
 
-    /*String[] arrAppType = request.getParameterValues("appType");
+    String[] arrAppType = request.getParameterValues("appType");
     String[] arrOrdStusId = request.getParameterValues("ordStusId");
     String[] arrKeyinBrnchId = request.getParameterValues("keyinBrnchId");
     String[] arrDscBrnchId = request.getParameterValues("dscBrnchId");
@@ -682,12 +682,12 @@ public class OrderRegisterController {
     logger.debug("!@###### ordEndDt : " + params.get("ordEndDt"));
     logger.debug("!@###### ordDt : " + params.get("ordDt"));
     logger.debug("!@###### custIc : " + params.get("custIc"));
-    logger.debug("!@##############################################################################");*/
+    logger.debug("!@##############################################################################");
 
     List<EgovMap> orderList = orderRegisterService.selectComboOrderJsonList(params);
 
     return ResponseEntity.ok(orderList);
   }
-
+*/
 
 }
