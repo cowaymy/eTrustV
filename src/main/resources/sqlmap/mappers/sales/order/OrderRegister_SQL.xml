@@ -2595,7 +2595,6 @@
     JOIN SYS0005M F ON F.BRNCH_ID = A.BRNCH_ID
     WHERE A.SALES_ORD_ID = #{prm}
   </select>
-  <!--
 
   <select id="chkPromoCboCan" parameterType="Map" resultType="int">
     SELECT COUNT(*) FROM (
@@ -2701,6 +2700,6 @@
                                            AND SUB_PROD_ID = #{prod}
                                            AND SUB_PROMO_ID = #{promoNo} ))
      AND B.PCKAGE_BINDING_NO IS NULL
-  </select> -->
+  </select>
 
 </mapper>
