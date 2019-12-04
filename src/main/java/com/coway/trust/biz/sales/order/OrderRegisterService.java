@@ -76,10 +76,10 @@ public interface OrderRegisterService {
 
   List<EgovMap> instAddrViewHistoryAjax(Map<String, Object> params);
 
-  int chkPromoCboMst(Map<String, Object> params);
+/*  int chkPromoCboMst(Map<String, Object> params);
 
   int chkCboBindOrdNo(Map<String, Object> params);
 
-  List<EgovMap> selectComboOrderJsonList(Map<String, Object> params);
+  List<EgovMap> selectComboOrderJsonList(Map<String, Object> params);*/
 
 }

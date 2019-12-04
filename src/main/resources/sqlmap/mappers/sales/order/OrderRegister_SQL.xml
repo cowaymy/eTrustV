@@ -1143,7 +1143,7 @@
                   , SRV_PAC_ID
                   , CORP_CUST_TYPE
                   , AGREEMENT_TYPE
-                  , PCKAGE_BINDING_NO
+--                  , PCKAGE_BINDING_NO
     ) VALUES ( #{salesOrdId}
              , #{salesOrdNo}
              , #{refNo}
@@ -1203,7 +1203,7 @@
              , #{srvPacId}
              , #{corpCustType}
              , #{agreementType}
-             , #{comboOrdBind}
+--             , #{comboOrdBind}
      )
   </insert>
 
@@ -2595,6 +2595,7 @@
     JOIN SYS0005M F ON F.BRNCH_ID = A.BRNCH_ID
     WHERE A.SALES_ORD_ID = #{prm}
   </select>
+  <!--
 
   <select id="chkPromoCboCan" parameterType="Map" resultType="int">
     SELECT COUNT(*) FROM (
@@ -2700,5 +2701,6 @@
                                            AND SUB_PROD_ID = #{prod}
                                            AND SUB_PROMO_ID = #{promoNo} ))
      AND B.PCKAGE_BINDING_NO IS NULL
-  </select>
+  </select> -->
+
 </mapper>
