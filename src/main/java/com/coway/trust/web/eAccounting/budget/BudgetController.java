@@ -148,21 +148,32 @@ public class BudgetController {
 
 		List<EgovMap> budgetList = null;
 
-		// add jgkim
-		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96, 206, 236, 320, 313, 308, 335, 342, 357};
-		List<Object> roleIdList = new ArrayList<Object>();
-		for(int i = 0; i < roleIds.length; i++) {
-			roleIdList.add(roleIds[i]);
-		}
+		params.put("mainMod", "E-ACCOUNTING");
+        params.put("subMod", "BUDGET");
+        params.put("userId", sessionVO.getUserId());
 
-		if(roleIdList.indexOf(sessionVO.getRoleId()) >= 0) {
-			params.put("costCentr", sessionVO.getCostCentr());
-		}
+        List<EgovMap> aRoleId = budgetService.getPermRole();
+        EgovMap permissions = budgetService.getListPerm(params);
 
-		if(sessionVO.getUserId() == 270) {
-			params.put("costCentr", "A1701");
-			params.put("costCentr2", "A2101");
-		}
+        if(!aRoleId.isEmpty()) {
+            for(int i = 0; i < aRoleId.size(); i++) {
+                EgovMap role = aRoleId.get(i);
+                int roleid1 = Integer.parseInt(role.get("roleId").toString());
+                LOGGER.debug("roleid1 =====================================>>  " + roleid1);
+                LOGGER.debug("sessionVO.getRoleId() =====================================>>  " + sessionVO.getRoleId());
+                if(roleid1 == sessionVO.getRoleId()) {
+                    params.put("costCentr", sessionVO.getCostCentr());
+                }
+            }
+        }
+
+        if("".equals(params.get("costCentr")) || !params.containsKey("costCentr")) {
+            if(permissions != null) {
+                if(!"A1101".equals(permissions.get("costCenter"))) {
+                    params.put("costCentr", permissions.get("costCenter"));
+                }
+            }
+        }
 
 		LOGGER.debug("params =====================================>>  " + params);
 
@@ -299,22 +310,34 @@ public class BudgetController {
 		String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
 
 		params.put("budgetAdjType", budgetAdjType);
-		params.put("appvStus", appvStus);
-		params.put("appvPrcssStus", appvPrcssStus);
+        params.put("appvStus", appvStus);
+        params.put("appvPrcssStus", appvPrcssStus);
 
-		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96, 206, 236, 320, 313, 308, 335, 342, 357};
-		List<Object> roleIdList = new ArrayList<Object>();
-		for(int i = 0; i < roleIds.length; i++) {
-			roleIdList.add(roleIds[i]);
+		params.put("mainMod", "E-ACCOUNTING");
+		params.put("subMod", "BUDGET");
+		params.put("userId", sessionVO.getUserId());
+
+		List<EgovMap> aRoleId = budgetService.getPermRole();
+		EgovMap permissions = budgetService.getListPerm(params);
+
+		if(!aRoleId.isEmpty()) {
+		    for(int i = 0; i < aRoleId.size(); i++) {
+		        EgovMap role = aRoleId.get(i);
+		        int roleid1 = Integer.parseInt(role.get("roleId").toString());
+		        LOGGER.debug("roleid1 =====================================>>  " + roleid1);
+		        LOGGER.debug("sessionVO.getRoleId() =====================================>>  " + sessionVO.getRoleId());
+		        if(roleid1 == sessionVO.getRoleId()) {
+		            params.put("costCentr", sessionVO.getCostCentr());
+		        }
+		    }
 		}
 
-		if(roleIdList.indexOf(sessionVO.getRoleId()) >= 0) {
-			params.put("costCentr", sessionVO.getCostCentr());
-		}
-
-		if(sessionVO.getUserId() == 270) {
-			params.put("costCentr", "A1701");
-			params.put("costCentr2", "A2101");
+		if("".equals(params.get("costCentr")) || !params.containsKey("costCentr")) {
+		    if(permissions != null) {
+		        if(!"A1101".equals(permissions.get("costCenter"))) {
+	                params.put("costCentr", permissions.get("costCenter"));
+	            }
+		    }
 		}
 
 		if(params.containsKey("stYearMonth") && params.containsKey("edYearMonth")) {
@@ -837,21 +860,32 @@ public class BudgetController {
 
 		List<EgovMap> budgetList = null;
 
-		// add jgkim
-		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96, 206, 236, 320, 313, 308, 335, 342, 357};
-		List<Object> roleIdList = new ArrayList<Object>();
-		for(int i = 0; i < roleIds.length; i++) {
-			roleIdList.add(roleIds[i]);
-		}
+		params.put("mainMod", "E-ACCOUNTING");
+        params.put("subMod", "BUDGET");
+        params.put("userId", sessionVO.getUserId());
 
-		if(roleIdList.indexOf(sessionVO.getRoleId()) >= 0) {
-			params.put("costCentr", sessionVO.getCostCentr());
-		}
+        List<EgovMap> aRoleId = budgetService.getPermRole();
+        EgovMap permissions = budgetService.getListPerm(params);
 
-		if(sessionVO.getUserId() == 270) {
-			params.put("costCentr", "A1701");
-			params.put("costCentr2", "A2101");
-		}
+        if(!aRoleId.isEmpty()) {
+            for(int i = 0; i < aRoleId.size(); i++) {
+                EgovMap role = aRoleId.get(i);
+                int roleid1 = Integer.parseInt(role.get("roleId").toString());
+                LOGGER.debug("roleid1 =====================================>>  " + roleid1);
+                LOGGER.debug("sessionVO.getRoleId() =====================================>>  " + sessionVO.getRoleId());
+                if(roleid1 == sessionVO.getRoleId()) {
+                    params.put("costCentr", sessionVO.getCostCentr());
+                }
+            }
+        }
+
+        if("".equals(params.get("costCentr")) || !params.containsKey("costCentr")) {
+            if(permissions != null) {
+                if(!"A1101".equals(permissions.get("costCenter"))) {
+                    params.put("costCentr", permissions.get("costCenter"));
+                }
+            }
+        }
 
 		LOGGER.debug("params =====================================>>  " + params);
 

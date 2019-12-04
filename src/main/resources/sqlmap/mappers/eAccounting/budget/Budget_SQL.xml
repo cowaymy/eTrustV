@@ -1439,4 +1439,23 @@ WHERE 1=1
         ON A.REQST_USER_ID = B.USER_ID
         WHERE A.BUDGET_DOC_NO = #{budgetDocNo}
     </select>
+
+    <select id="getPermRole" resultType="egovMap">
+        SELECT ROLE_ID FROM SYS0053M WHERE UPPER(AUTH_NAME) LIKE '%MANAGER%' AND ROLE_LVL = '3' AND ROLE_ID1 NOT IN ('106','107','108','345')
+    </select>
+
+    <select id="getListPerm" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+        SELECT
+            COST_CENTER,
+            COUNT(*)
+        FROM FCM0107M
+        WHERE USER_ID = #{userId}
+          AND SYSDATE >= VALID_DT_FR
+          AND SYSDATE <= VALID_DT_TO
+          AND MAIN_MODULE = #{mainMod}
+          AND SUB_MODULE = #{subMod}
+        GROUP BY COST_CENTER
+    ]]>
+    </select>
 </mapper>

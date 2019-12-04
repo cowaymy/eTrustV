@@ -80,4 +80,8 @@ public interface BudgetMapper {
 	EgovMap getBgtApprList(Map<String, Object> params);
 
 	String getReqDtl(Map<String, Object> params);
+
+	List<EgovMap> getPermRole();
+
+	EgovMap getListPerm(Map<String, Object> params);
 }

@@ -508,4 +508,14 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
     public EgovMap getBgtApprList(Map<String, Object> params) {
         return budgetMapper.getBgtApprList(params);
     }
+
+    @Override
+    public List<EgovMap> getPermRole() {
+        return budgetMapper.getPermRole();
+    }
+
+    @Override
+    public EgovMap getListPerm(Map<String, Object> params) {
+        return budgetMapper.getListPerm(params);
+    }
 }

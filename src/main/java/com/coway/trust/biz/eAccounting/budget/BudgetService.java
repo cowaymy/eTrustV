@@ -51,6 +51,10 @@ public interface BudgetService {
 
 	String selectCloseMonth(Map<String, Object> params);
 
+	List<EgovMap> getPermRole();
+
+	EgovMap getListPerm(Map<String, Object> params);
+
 	List<EgovMap> selectAvailableBudgetList(Map<String, Object> params) throws Exception;
 
 	EgovMap availableAmtCp(Map<String, Object> params);
