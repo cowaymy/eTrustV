@@ -14,7 +14,7 @@
 					,Extent1.SLIP_NO SLIP_NO
 					,Extent1.CHEQUE_NO CHEQUE_NO
 		FROM    PAY0297D Extent1
-		                JOIN SYS0013M Extent2 ON Extent1.PAY_MODE = Extent2.CODE
+		                LEFT JOIN SYS0013M Extent2 ON Extent1.PAY_MODE = Extent2.CODE_ID
                               AND Extent2.CODE_MASTER_ID = 439
         AND      Extent1.CRT_USER_ID = #{userId}
         <if test="fromDate != null and fromDate != '' ">
