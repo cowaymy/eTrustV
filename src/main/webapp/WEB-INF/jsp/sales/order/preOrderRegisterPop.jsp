@@ -2206,8 +2206,8 @@
 <tbody>
 <tr>
     <th scope="row">Ex-Trade/Related No</th>
-    <td><p><select id="exTrade" name="exTrade" class="w100p" disabled></select></p>
-        <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
+    <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p>
+        <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" /></p></td>
 </tr>
 <tr>
     <th scope="row">Application Type | Jenis Permohonan<span class="must">*</span></th>
