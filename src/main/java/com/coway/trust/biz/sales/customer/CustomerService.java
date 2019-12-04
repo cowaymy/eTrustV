@@ -536,6 +536,10 @@ public interface CustomerService {
 
   EgovMap checkCRC2(Map<String, Object> params);
 
+  int tCheckCRC1(Map<String, Object> params);
+
+  int tCheckCRC2(Map<String, Object> params);
+
   List<EgovMap> selectCustomerCheckingList(Map<String, Object> params);
 
   EgovMap selectCustomerCheckingListPop(Map<String, Object> params);
@@ -550,4 +554,17 @@ public interface CustomerService {
 
   EgovMap existingHPCodyMobile(Map<String, Object> params);
 
+  int getTokenID();
+
+  void insertTokenLogging(Map<String, Object> params);
+
+  EgovMap getTokenSettings();
+
+  void updateTokenLogging(Map<String, Object> params);
+
+  void insertTokenError(Map<String, Object> params);
+
+  EgovMap getPubKey();
+
+  void tokenCrcUpdate(Map<String, Object> params);
 }

@@ -75,6 +75,10 @@
         }
     });
 
+    function fn_tokenTest() {
+        Common.popupDiv("/sales/customer/tokenCustCrcTest.do", $("#searchForm").serializeJSON(), null, true, '_cardDiv');
+    }
+
     function createAUIGrid() {
         // AUIGrid 칼럼 설정
 
@@ -382,6 +386,9 @@
         <ul class="btns">
             <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <li><p class="link_btn"><a href="#" id="_custVALetterBtn"><spring:message code="sal.title.text.custVaLetter" /></a></p></li>
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
+            <li><p class="link_btn"><a href="#" id="tokenTest" onclick="javascript:fn_tokenTest()">Tokenization Test (IT Usage only)</a></p></li>
             </c:if>
         </ul>
         <ul class="btns">
