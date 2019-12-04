@@ -7,12 +7,6 @@
 
 console.log("custNewCardPop.jsp");
 
-var pubKey = "-----BEGIN PUBLIC KEY-----";
-pubKey += "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvwArbN+wiDkaZfbLRioQoGmHVQs8aHvxXWjWbOrJxRT369dG/+hNhAnh76KXS+nI0v1glprsCD/EBNkmPt1hnJ";
-pubKey += "kO1U+TFNVn+Al3D9qKnDpgBjAmYksNCDaCschpm3SVgSVntn/f8m3HwiGAqu543E+/er3qmA//OTpaG7CsWrOVs/tvEutu4j9KDTpnmrkS2TGKSO+gFCXwPyQErmo6Rv5q";
-pubKey += "V24BD1LBCgJxLpxL1G83WdzO7liKMVE2KxC9p+IwKjwy7G3039gDm9NugRpBdWOAUvHz+13gcemyjaDnvF82zwBbDdaJR5FZtCLqhtXe79/PCMDapPK80xkHAu18eQIDAQAB";
-pubKey += "-----END PUBLIC KEY-----";
-
     $(document).ready(function() {
 
         //j_date
