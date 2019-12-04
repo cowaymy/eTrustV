@@ -36,6 +36,7 @@
             console.log('RESULT INST_SPEC_INST:'+RESULT.instSpecInst);
 
             $('#txtOldOrderID').val(RESULT.oldOrderId);
+            $('#relatedNo').val($('#rwOldOrder').val());
 
             if(RESULT.rootState == 'ROOT_1') {
                 $('#rwOldOrder').clearForm();
