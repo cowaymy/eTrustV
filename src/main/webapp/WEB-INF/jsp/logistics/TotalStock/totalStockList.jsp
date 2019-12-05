@@ -23,6 +23,12 @@
     color:#000;
 }
 
+.aui-grid-link-renderer1 {
+     text-decoration:underline;
+     color: #4374D9 !important;
+     text-align: right;
+ }
+
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
@@ -41,14 +47,25 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "whLocCode",headerText :"<spring:message code='log.head.locationcode'/>"     ,width :120 ,height : 30},
                      {dataField: "locDesc",headerText :"<spring:message code='log.head.location'/>"            ,width:120    ,height:30 },
                      {dataField: "whlocgb",headerText :"<spring:message code='log.head.locationgrade'/>"     ,width:120    ,height:30 },
-                     {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"                  ,width:120    ,height:30},
-                     {dataField: "movQty",headerText :"In-Transit Qty"      ,width:120    ,height:30                },
-                     {dataField: "bookingQty",headerText :"Book Qty"        ,width:120    ,height:30                },
-                     {dataField: "availableQty",headerText :"<spring:message code='log.head.availableqty'/>"      ,width:120    ,height:30                },
+                     {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"                  ,width:120    ,height:30,
+                         styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                             if(item.serialRequireChkYn == "Y"){
+                                 return "aui-grid-link-renderer1";
+                             }
+                             return "aui-grid-user-custom-right";
+                         }
+
+                     },
+                     {dataField: "movQty",headerText :"In-Transit Qty"      ,width:120    ,height:30 , style:"aui-grid-user-custom-right"               },
+                     {dataField: "bookingQty",headerText :"Book Qty"        ,width:120    ,height:30 , style:"aui-grid-user-custom-right"               },
+                     {dataField: "availableQty",headerText :"<spring:message code='log.head.availableqty'/>"      ,width:120    ,height:30  , style:"aui-grid-user-custom-right"              },
                      {dataField: "brnchCode",headerText :"Branch Code"        ,width:120    ,height:30                },
                      {dataField: "brnchName",headerText :"Branch Name"        ,width:120    ,height:30                },
                      {dataField: "cdcCode",headerText :"CDC Code"        ,width:120    ,height:30                },
-                     {dataField: "cdcName",headerText :"CDC Name"        ,width:120    ,height:30                }
+                     {dataField: "cdcName",headerText :"CDC Name"        ,width:120    ,height:30                },
+                     {dataField: "locId",headerText :"LOC ID"        ,width:120    ,height:30                },
+                     {dataField: "serialRequireChkYn",headerText :"SERIAL_REQUIRE_CHK_YN"        ,width:120    ,height:30 ,visible:false               }
+
                       ];
 
 //var reqop = {editable : false,usePaging : false ,showStateColumn : false};
@@ -103,10 +120,10 @@ $(document).ready(function(){
     doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos');
     doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
     doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'searchlocgrade', 'A','');
-    
+
     doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
-    
-    
+
+
     //
 
     /**********************************
@@ -120,6 +137,21 @@ $(document).ready(function(){
 
 
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
+
+        var dataField = AUIGrid.getDataFieldByColumnIndex(listGrid, event.columnIndex);
+
+        if(dataField == "qty" ){
+            var rowIndex = event.rowIndex;
+            var serialRequireChkYn = AUIGrid.getCellValue(listGrid, event.rowIndex, "serialRequireChkYn");
+                if(serialRequireChkYn == "Y"){
+
+                $('#pLocationType').val( AUIGrid.getCellValue(listGrid, rowIndex, "whlocgb") );
+                $('#pLocationCode').val( AUIGrid.getCellValue(listGrid, rowIndex, "locId") );
+                $('#pItemCodeOrName').val( AUIGrid.getCellValue(listGrid, rowIndex, "stkCode") );
+                fn_serialSearchPop();
+            }
+
+        }
 
     });
 
@@ -143,43 +175,43 @@ $(function(){
         }
     });
     $('#clear').click(function() {
-    	//$('#searchlocgb').val('');
-    	$('#searchMatCode').val('');
-    	$('#searchMatName').val('');
-    	//$('#searchCtgry').val('');
-    	//$('#searchType').val('');
-    	  doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
-    	    doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos');
-    	    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
+        //$('#searchlocgb').val('');
+        $('#searchMatCode').val('');
+        $('#searchMatName').val('');
+        //$('#searchCtgry').val('');
+        //$('#searchType').val('');
+          doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
+            doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos');
+            doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
     });
 
     $('#searchMatName').keypress(function(event) {
-    	$('#searchMatCode').val('');
+        $('#searchMatCode').val('');
         if (event.which == '13') {
-        	$("#stype").val('stock');
-        	$("#svalue").val($('#searchMatName').val());
-        	$("#sUrl").val("/logistics/material/materialcdsearch.do");
+            $("#stype").val('stock');
+            $("#svalue").val($('#searchMatName').val());
+            $("#sUrl").val("/logistics/material/materialcdsearch.do");
             Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
         }
     });
     $('#searchlocgrade').change(function(){
-    	var searchlocgb = $('#searchlocgb').val();
+        var searchlocgb = $('#searchlocgb').val();
 
-    	var locgbparam = "";
-    	for (var i = 0 ; i < searchlocgb.length ; i++){
-    		if (locgbparam == ""){
-    			locgbparam = searchlocgb[i];
-    		}else{
-    			locgbparam = locgbparam +"∈"+searchlocgb[i];
-    		}
-    	}
+        var locgbparam = "";
+        for (var i = 0 ; i < searchlocgb.length ; i++){
+            if (locgbparam == ""){
+                locgbparam = searchlocgb[i];
+            }else{
+                locgbparam = locgbparam +"∈"+searchlocgb[i];
+            }
+        }
 
-    	var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
-    	doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
+        var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
+        doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
     });
 
     $("#download").click(function() {
-    	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Total Stcok List");
+        GridCommon.exportTo("main_grid_wrap", 'xlsx', "Total Stcok List");
     });
     $("#searchBranch").change(function(){
         //doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
@@ -213,29 +245,29 @@ function f_validatation(v){
                  return false;
              }
              else {
-            	 return true;
+                 return true;
              }
 }
 
 function f_multiCombo() {
     $(function() {
         $('#searchlocgb').change(function() {
-        	console.log('1');
-        	if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
-        	     var searchlocgb = $('#searchlocgb').val();
+            //console.log('1');
+            if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
+                 var searchlocgb = $('#searchlocgb').val();
 
-        	        var locgbparam = "";
-        	        for (var i = 0 ; i < searchlocgb.length ; i++){
-        	            if (locgbparam == ""){
-        	                locgbparam = searchlocgb[i];
-        	            }else{
-        	                locgbparam = locgbparam +"∈"+searchlocgb[i];
-        	            }
-        	        }
+                    var locgbparam = "";
+                    for (var i = 0 ; i < searchlocgb.length ; i++){
+                        if (locgbparam == ""){
+                            locgbparam = searchlocgb[i];
+                        }else{
+                            locgbparam = locgbparam +"∈"+searchlocgb[i];
+                        }
+                    }
 
-        	        var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
-        	        doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
-        	  }
+                    var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
+                    doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
+              }
         }).multipleSelect({
             selectAll : true
         });
@@ -267,10 +299,10 @@ function fn_itempopList(data){
     var rtnVal = data[0].item;
     console.log(rtnVal);
     if ($("#stype").val() == "stock" ){
-    	$("#searchMatCode").val(rtnVal.itemcode);
+        $("#searchMatCode").val(rtnVal.itemcode);
         $("#searchMatName").val(rtnVal.itemname);
     }else{
-    	$("#searchLoc").val(rtnVal.locid);
+        $("#searchLoc").val(rtnVal.locid);
 
     }
 
@@ -278,10 +310,21 @@ function fn_itempopList(data){
 }
 
 function searchlocationFunc(){
-	console.log('111');
+    console.log('111');
 }
 
+// 시리얼 조회 팝업 호출
+function fn_serialSearchPop(){
 
+    Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
+
+}
+
+function fnSerialSearchResult(data) {
+    data.forEach(function(dataRow) {
+//        console.log("serialNo : " + dataRow.serialNo);
+    });
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -356,7 +399,7 @@ function searchlocationFunc(){
                    </td>
                 </tr>
                 <tr>
-                   <th scope="row">Material Code</th>
+                   <th scope="row">Material Code/Name</th>
                    <td >
                       <input type="hidden" title="" placeholder=""  class="w100p" id="searchMatCode" name="searchMatCode"/>
                       <input type="text"   title="" placeholder=""  class="w100p" id="searchMatName" name="searchMatName"/>
@@ -374,7 +417,15 @@ function searchlocationFunc(){
             </tbody>
         </table><!-- table end -->
     </form>
-
+    <form id="frmSearchSerial" name="frmSearchSerial" method="post">
+        <input id="pGubun" name="pGubun" type="hidden" value="SEARCH" />
+        <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" />
+        <input id="pLocationType" name="pLocationType" type="hidden" value="" />
+        <input id="pLocationCode" name="pLocationCode" type="hidden" value="" />
+        <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" />
+        <input id="pStatus" name="pStatus" type="hidden" value="" />
+        <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
+    </form>
     </section><!-- search_table end -->
 
     <!-- data body start -->
@@ -387,8 +438,9 @@ function searchlocationFunc(){
 <!--          <li><p class="btn_grid"><a id="insert">INS</a></p></li>             -->
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:500px"></div>
-
+        <article class="grid_wrap"><!-- grid_wrap start -->
+        <div id="main_grid_wrap" class="autoGridHeight"></div>
+        </article><!-- grid_wrap end -->
 
     </section><!-- search_result end -->
 
