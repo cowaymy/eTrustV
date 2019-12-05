@@ -589,7 +589,7 @@ public class OrderRegisterController {
     List<EgovMap> list = orderRegisterService.instAddrViewHistoryAjax(params);
     return ResponseEntity.ok(list);
   }
-/*
+
   @RequestMapping(value = "/chkPromoCboMst.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> chkPromoCboMst(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
     ReturnMessage message = new ReturnMessage();
@@ -696,6 +696,5 @@ public class OrderRegisterController {
 
     return ResponseEntity.ok(orderList);
   }
-*/
 
 }

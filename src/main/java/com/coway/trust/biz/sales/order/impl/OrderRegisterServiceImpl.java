@@ -2064,9 +2064,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     return lst;
   }
 
-/*  @Override
+  @Override
   public int chkPromoCboMst(Map<String, Object> params) {
-
+    /*
      * CODE              DESCRIPTION
      * ----------------------------------------
      * 1                 IS NORMAL PROMOTION NO RELATED TO COMBO SET
@@ -2075,7 +2075,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
      * 4                 PLEASE CREATE A MASTER COMBP TO MAP
      *
      * 99                SELECTED PROMOTION CODE ARE NOT FOR NEW SALES (FOR CANCELLATION)
-
+     */
 
     // CHECK SELECTED PROMO. ARE USED FOR CANCELLATION
     int canCnt = orderRegisterMapper.chkPromoCboCan(params);
@@ -2121,7 +2121,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
   public List<EgovMap> selectComboOrderJsonList(Map<String, Object> params) {
     List<EgovMap> lst = orderRegisterMapper.selectComboOrderJsonList(params);
     return lst;
-  }*/
+  }
 
 
 }
