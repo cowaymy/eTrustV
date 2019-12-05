@@ -397,7 +397,7 @@ function fn_scanClosePop(){
         </colgroup>
         <tbody>
             <tr>
-                <th scope="row">Delivery No</th>
+                <th scope="row">GR No</th>
                 <td colspan="3" >
                     <input type="text" id="sDocNo" name="sDocNo" placeholder="" class="w100p readonly" style="min-width:150px" readonly value=""'/>
 
