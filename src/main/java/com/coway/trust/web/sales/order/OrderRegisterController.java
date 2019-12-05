@@ -337,9 +337,17 @@ public class OrderRegisterController {
   public String copyOrderBulkPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
       throws Exception {
 
-      EgovMap result = orderRegisterService.checkRC(params);
-      model.addAttribute("rcPrct", result.get("rcPrct"));
-      model.addAttribute("cnt", result.get("cnt"));
+      EgovMap result = null;
+      result = orderRegisterService.checkRC(params);
+      if(result != null) {
+          model.addAttribute("rcPrct", result.get("rcPrct"));
+          model.addAttribute("cnt", result.get("cnt"));
+          model.addAttribute("memRc", "1");
+      } else {
+          model.addAttribute("memRc", "0");
+      }
+
+
       model.addAttribute("memCode", params.get("memCode"));
       model.addAttribute("salesmanName", params.get("name"));
 
