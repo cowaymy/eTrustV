@@ -399,8 +399,7 @@ public class OrderRegisterController {
 
       Map<String, Object> cParam = new HashMap<String, Object>();
 
-      //cParam.put("salesOrdNo", orderVO.getSalesOrderMVO().getBindingNo());
-      cParam.put("salesOrdId",String.valueOf(orderVO.getSalesOrderMVO().getSalesOrdIdOld()));
+      cParam.put("salesOrdNo", orderVO.getSalesOrderMVO().getBindingNo());
 
       EgovMap rMap = orderRegisterService.selectOldOrderId(cParam);
 
@@ -590,7 +589,7 @@ public class OrderRegisterController {
     return ResponseEntity.ok(list);
   }
 
-  @RequestMapping(value = "/chkPromoCboMst.do", method = RequestMethod.POST)
+  /*@RequestMapping(value = "/chkPromoCboMst.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> chkPromoCboMst(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
     ReturnMessage message = new ReturnMessage();
 
@@ -695,6 +694,6 @@ public class OrderRegisterController {
     List<EgovMap> orderList = orderRegisterService.selectComboOrderJsonList(params);
 
     return ResponseEntity.ok(orderList);
-  }
+  }*/
 
 }
