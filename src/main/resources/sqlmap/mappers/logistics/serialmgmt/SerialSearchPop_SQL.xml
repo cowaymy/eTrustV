@@ -15,7 +15,7 @@
           JOIN SYS0028M D ON A.LAST_LOC_ID = D.WH_LOC_ID
          WHERE A.LAST_SALES_ORD_ID IS NULL
         <if test="locCode !=null">
-            AND D.WH_LOC_CODE IN
+            AND A.LAST_LOC_ID IN
 	        <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
 	            #{item}
 	        </foreach>
