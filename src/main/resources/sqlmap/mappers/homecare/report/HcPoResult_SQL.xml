@@ -2,6 +2,176 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.homecare.report.impl.HcPoResultMapper">
 
+    <select id="selecthcPoResultGropListCnt" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.report.impl.HcPoResultMapper.selecthcPoResultGropListCnt] - KR JIN */
+        SELECT COUNT(1) AS CNT
+          FROM (
+                SELECT A.PO_NO
+                  FROM HMC0004M A
+                     , HMC0005D B
+                 WHERE A.PO_NO = B.PO_NO
+                   AND A.PO_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30')) -- Approve
+                   AND EXISTS(
+                                SELECT 1
+                                  FROM HMC0007M X
+                                 WHERE X.PO_NO = A.PO_NO
+                                 <if test='sHmcDelvryNo != null and sHmcDelvryNo != ""'>
+                                   AND X.HMC_DELVRY_NO = #{sHmcDelvryNo}
+                                 </if>
+                              )
+                <if test='sCdc != null and sCdc != ""'>
+                   AND A.CDC = #{sCdc}
+                </if>
+                <if test="sPoDtFrom != null and sPoDtFrom !=''">
+                   AND A.APPR_DT <![CDATA[>=]]> TO_DATE(#{sPoDtFrom}, 'YYYYMMDD')
+                </if>
+                <if test="sPoDtTo != null and sPoDtTo !=''">
+                   AND A.APPR_DT <![CDATA[<=]]> TO_DATE(#{sPoDtTo}, 'YYYYMMDD') + 1
+                </if>
+                <if test="sMemAccId != null and sMemAccId !=''">
+                  AND A.MEM_ACC_ID = #{sMemAccId}
+                </if>
+                <if test="sMemAcc != null and sMemAcc !=''">
+                    AND 1 = 2
+                </if>
+                <if test="sPoNo != null and sPoNo !=''">
+                  AND A.PO_NO = #{sPoNo}
+                </if>
+                GROUP BY A.PO_NO
+              )
+    </select>
+
+    <select id="selecthcPoResultGropList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.report.impl.HcPoResultMapper.selecthcPoResultGropList] - KR JIN */
+        SELECT * FROM (
+            SELECT ROWNUM AS RNUM, T1.*
+              FROM (
+			        SELECT A.PO_NO
+			             , A.CDC
+			             , (
+		                    SELECT WH_LOC_DESC  AS CODE_NAME
+		                      FROM SYS0028M
+		                     WHERE WH_LOC_CODE IN ('3010', '3020', '3030')
+		                       AND  WH_LOC_ID = A.CDC
+		                   ) CDC_NM
+			             , A.MEM_ACC_ID
+			             , (SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = A.MEM_ACC_ID) AS MEM_ACC_NAME
+			             , NVL(SUM(B.CONFIRM_QTY), 0) AS CONFIRM_QTY
+			             , NVL(SUM(C.ACTUAL_QTY), 0) AS ACTUAL_QTY
+			             , NVL(SUM(E.DELVRY_QTY), 0) AS DELVRY_QTY
+			             , NVL(SUM(E.GI_QTY), 0) AS GI_QTY
+			             , NVL(SUM(F.GR_QTY), 0) AS GR_QTY
+			             , NVL(SUM(F.FAIL_QTY), 0) AS FAIL_QTY
+			          FROM HMC0004M A
+			             , HMC0005D B
+			             , (
+			                SELECT PO_NO
+			                     , SUM(PO_PLAN_QTY) AS PLAN_QTY
+			                     , SUM(ACTUAL_QTY)  AS ACTUAL_QTY
+			                  FROM HMC0006D
+			                 GROUP BY PO_NO
+			               ) C
+			             , (
+			                 SELECT C.PO_NO
+			                      , SUM(D.DELVRY_QTY) AS DELVRY_QTY
+			                      , SUM(NVL2(C.DELVRY_GI_DT, D.DELVRY_QTY, 0)) AS GI_QTY
+			                   FROM HMC0007M C
+			                      , HMC0008D D
+			                  WHERE C.HMC_DELVRY_NO = D.HMC_DELVRY_NO
+			                    AND C.PO_NO = D.PO_NO
+			                    AND C.USE_YN = 'Y'
+			                    AND D.USE_YN = 'Y'
+			                  GROUP BY C.PO_NO
+			                ) E
+			             , (
+			                SELECT B.PO_NO
+			                     , SUM(B.RCIPT_QTY)    AS GR_QTY
+			                     , SUM(B.QC_FAIL_QTY)  AS FAIL_QTY
+			                  FROM HMC0009M A       -- GR
+			                     , HMC0010D B
+			                 WHERE A.HMC_GR_NO = B.HMC_GR_NO
+			                   AND A.PO_NO = B.PO_NO
+			                   AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
+			                   AND A.GR_YN = 'Y'
+			                   AND A.USE_YN = 'Y'
+			                   AND B.USE_YN = 'Y'
+			                 GROUP BY B.PO_NO
+			               ) F
+                     WHERE A.PO_NO = B.PO_NO
+		               AND A.PO_NO = C.PO_NO (+)
+		               AND A.PO_NO = E.PO_NO (+)
+		               AND A.PO_NO = F.PO_NO (+)
+                       AND A.PO_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30')) -- Approve
+                       AND EXISTS(
+                                    SELECT 1
+                                      FROM HMC0007M X
+                                     WHERE X.PO_NO = A.PO_NO
+                                     <if test='sHmcDelvryNo != null and sHmcDelvryNo != ""'>
+                                       AND X.HMC_DELVRY_NO = #{sHmcDelvryNo}
+                                     </if>
+                                  )
+                   <if test='sCdc != null and sCdc != ""'>
+                       AND A.CDC = #{sCdc}
+                   </if>
+                   <if test="sPoDtFrom != null and sPoDtFrom !=''">
+                       AND A.APPR_DT <![CDATA[>=]]> TO_DATE(#{sPoDtFrom}, 'YYYYMMDD')
+                   </if>
+                   <if test="sPoDtTo != null and sPoDtTo !=''">
+                       AND A.APPR_DT <![CDATA[<=]]> TO_DATE(#{sPoDtTo}, 'YYYYMMDD') + 1
+                   </if>
+                   <if test="sMemAccId != null and sMemAccId !=''">
+                      AND A.MEM_ACC_ID = #{sMemAccId}
+                   </if>
+                   <if test="sMemAcc != null and sMemAcc !=''">
+                       AND 1 = 2
+                   </if>
+                   <if test="sPoNo != null and sPoNo !=''">
+                      AND A.PO_NO = #{sPoNo}
+                   </if>
+
+                   GROUP BY A.PO_NO, A.CDC, A.SUPP_STS_CD, A.MEM_ACC_ID
+
+                   ORDER BY
+                    <choose>
+                        <when test='sort != null and sort.size != 0'>
+                            <foreach item="item" index="index" collection="sort" open="" separator="," close="">
+                                <choose>
+                                    <when test='item.field == "poNo"'>A.PO_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "cdc"'>A.CDC <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "cdcNm"'>CDC_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "memAccId"'>A.MEM_ACC_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "memAccName"'>MEM_ACC_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "confirmQty"'>CONFIRM_QTY <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "actualQty"'>ACTUAL_QTY <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "delvryQty"'>DELVRY_QTY <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "giQty"'>GI_QTY <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "grQty"'>GR_QTY <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "failQty"'>FAIL_QTY <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <otherwise>
+                                        A.PO_NO ASC
+                                    </otherwise>
+                                </choose>
+                            </foreach>
+                        </when>
+                        <otherwise>
+                            A.PO_NO ASC
+                        </otherwise>
+                     </choose>
+                 ) T1
+            <where>
+                <if test='firstIndex != -1 and lastIndex != -1'>
+                    ROWNUM <![CDATA[<=]]> #{lastIndex}
+                </if>
+            </where>
+            )
+        <where>
+            <if test='firstIndex != -1 and lastIndex != -1'>
+                RNUM > #{firstIndex}
+            </if>
+        </where>
+    </select>
+
+
     <select id="selecthcPoResultMainListCnt" parameterType="Map" resultType="int">
     /* [com.coway.trust.biz.homecare.report.impl.HcPoResultMapper.selecthcPoResultMainListCnt] - KR JIN */
         SELECT COUNT(1) AS CNT
@@ -163,7 +333,8 @@
                                     <when test='item.field == "confirmQty"'>B.CONFIRM_QTY <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
                                     <when test='item.field == "delvryQty"'>E.DELVRY_QTY <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
                                     <when test='item.field == "giQty"'>E.GI_QTY <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-                                    <when test='item.field == "grQty"'>E.GR_QTY <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "grQty"'>F.GR_QTY <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "failQty"'>F.FAIL_QTY <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
                                     <when test='item.field == "apprDt"'>A.APPR_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
                                     <when test='item.field == "memAccId"'>A.MEM_ACC_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
                                     <when test='item.field == "memAccName"'>MEM_ACC_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>

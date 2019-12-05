@@ -111,6 +111,12 @@ public class HcPoIssueServiceImpl extends EgovAbstractServiceImpl implements HcP
 			hcPoIssueMapper.deleteHcPoIssueSub(map);
 		}
 
+		// detail Key re-sort
+		Map<String, String> sortMap = new HashMap<String, String>();
+		sortMap.put("sPoNo", poNo);
+		hcPoIssueMapper.updateHCPoDetailKeySort(sortMap);
+
+
 		List<Object> deleteList = (List<Object>)params.get("removeData");
 		Map<String, Object> delMap = null;
 		for (Object obj : deleteList) {

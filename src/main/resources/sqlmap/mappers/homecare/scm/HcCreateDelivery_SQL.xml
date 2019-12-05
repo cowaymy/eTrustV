@@ -160,9 +160,11 @@
              , A.SUPLY_ITEM_CD
              --, A.PO_QTY
              , A.CONFIRM_QTY
+             , NVL(D.ACTUAL_QTY, 0) AS ACTUAL_QTY
              , NVL(B.EXT_QTY, 0) AS EXT_QTY
              , NVL(C.QC_FAIL_QTY, 0) AS QC_FAIL_QTY
-             , ( NVL(A.CONFIRM_QTY, 0) - NVL(B.EXT_QTY, 0) + NVL(C.QC_FAIL_QTY, 0) ) AS DO_QTY
+             , ( NVL(D.ACTUAL_QTY, 0) - NVL(B.EXT_QTY, 0) + NVL(C.QC_FAIL_QTY, 0) ) AS AVAILABLE_QTY
+             , 0 AS DO_QTY
              , A.UOM
              , (SELECT CODE_NAME
                   FROM SYS0013M
@@ -177,7 +179,7 @@
                  WHERE CODE_MASTER_ID = '430'
                    AND CODE_ID = A.TAX_CD) AS TAX_NAME
              , A.LOCAL_AMT
-             , (A.PO_UPRC+A.TAX) AS TOTAL
+             , (A.SUPLY_PRC+A.TAX) AS TOTAL
           FROM HMC0005D A
 	         , (
 	            SELECT PO_NO
@@ -198,10 +200,21 @@
 				  AND USE_YN = 'Y'
 				GROUP BY PO_NO, PO_DTL_NO
 	          ) C
+	        , (
+	           SELECT PO_NO
+				    , PO_DTL_NO
+				    , SUM(ACTUAL_QTY) AS ACTUAL_QTY
+				 FROM HMC0006D
+				WHERE 1 = 1
+				  AND PO_NO = #{sPoNo}
+			    GROUP BY PO_NO, PO_DTL_NO
+	          ) D
         WHERE A.PO_NO = B.PO_NO (+)
           AND A.PO_DTL_NO = B.PO_DTL_NO (+)
           AND A.PO_NO = C.PO_NO (+)
           AND A.PO_DTL_NO = C.PO_DTL_NO (+)
+          AND A.PO_NO = D.PO_NO (+)
+          AND A.PO_DTL_NO = D.PO_DTL_NO (+)
           AND A.PO_NO = #{sPoNo}
           AND A.USE_YN = 'Y'
         ORDER BY A.PO_NO, A.PO_DTL_NO

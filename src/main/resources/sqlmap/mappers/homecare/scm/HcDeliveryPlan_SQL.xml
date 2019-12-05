@@ -176,9 +176,12 @@
                  WHERE CODE_MASTER_ID = '42'
                    AND CODE_ID = A.UOM) AS UOM_NAME
              , NVL(B.EX_PLAN_QTY, 0) AS EX_PLAN_QTY
-             , CASE WHEN (A.CONFIRM_QTY - NVL(B.EX_PLAN_QTY, 0)) >= 0 THEN (A.CONFIRM_QTY - NVL(B.EX_PLAN_QTY, 0))
+             , NVL(B.PRODUCED_QTY, 0) AS PRODUCED_QTY
+             , NVL(A.CONFIRM_QTY, 0) - NVL(B.PRODUCED_QTY, 0) AS BALANCE_QTY
+<!--         , CASE WHEN (A.CONFIRM_QTY - NVL(B.EX_PLAN_QTY, 0)) >= 0 THEN (A.CONFIRM_QTY - NVL(B.EX_PLAN_QTY, 0))
                     ELSE 0
-                END AS PLAN_QTY
+                END AS PLAN_QTY-->
+             , 0 AS PLAN_QTY
              , (
                 SELECT TO_CHAR(NVL(TO_DATE(MAX(CDC_DUE_DT), 'YYYYMMDD'), SYSDATE), 'YYYY/MM/DD') AS PLAN_DT
                   FROM HMC0004M Z
@@ -189,6 +192,7 @@
 		        SELECT PO_NO
 		             , PO_DTL_NO
 		             , SUM(PO_PLAN_QTY) AS EX_PLAN_QTY
+		             , SUM(ACTUAL_QTY) AS PRODUCED_QTY
 		          FROM HMC0006D
 		         WHERE PO_NO = #{sPoNo}
 		         GROUP BY PO_NO, PO_DTL_NO

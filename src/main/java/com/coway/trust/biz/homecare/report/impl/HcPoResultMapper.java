@@ -24,6 +24,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("hcPoResultMapper")
 public interface HcPoResultMapper {
 
+	public int selecthcPoResultGropListCnt(Map<String, Object> obj) throws Exception;
+	public List<EgovMap> selecthcPoResultGropList(Map<String, Object> obj) throws Exception;
+
 	// main 조회
 	public int selecthcPoResultMainListCnt(Map<String, Object> obj) throws Exception;
 	public List<EgovMap> selecthcPoResultMainList(Map<String, Object> obj) throws Exception;

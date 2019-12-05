@@ -221,16 +221,66 @@ var taxObj = {};
 		groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다.",
 		//rowIdField : "priceSeqNo",
 		enableSorting : true,
+		showFooter : true,
 		showRowCheckColumn : false,    // row checkbox
 		enableRestore: true,
 		softRemovePolicy : "exceptNew" //사용자추가한 행은 바로 삭제
     };
+
+    // 푸터 설정
+    var subFooterLayout = [{labelText : "Total", positionField : "stockName"}
+                      , {dataField : "poQty"
+                          , positionField : "poQty"
+                          , operation : "SUM"
+                          , formatString : "#,##0"
+                          , style:"aui-grid-user-custom-right"
+                      }
+                      , {dataField : "confirmQty"
+                          , positionField : "confirmQty"
+                          , operation : "SUM"
+                          , formatString : "#,##0"
+                          , style:"aui-grid-user-custom-right"
+                      }
+                      , {dataField : "poUprc"
+                          , positionField : "poUprc"
+                          , operation : "SUM"
+                          , formatString : "#,##0.00"
+                          , style:"aui-grid-user-custom-right"
+                      }
+                      , {dataField : "suplyPrc"
+                          , positionField : "suplyPrc"
+                          , operation : "SUM"
+                          , formatString : "#,##0.00"
+                          , style:"aui-grid-user-custom-right"
+                      }
+                      , {dataField : "tax"
+                          , positionField : "tax"
+                          , operation : "SUM"
+                          , formatString : "#,##0.00"
+                          , style:"aui-grid-user-custom-right"
+                      }
+                      , {dataField : "total"
+                          , positionField : "total"
+                          , operation : "SUM"
+                          , formatString : "#,##0.00"
+                          , style:"aui-grid-user-custom-right"
+                      }
+                      , {dataField : "frexAmt"
+                          , positionField : "frexAmt"
+                          , operation : "SUM"
+                          , formatString : "#,##0.00"
+                          , style:"aui-grid-user-custom-right"
+                      }
+   ];
 
     $(document).ready(function(){
 
         // masterGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("mainGrid", columnLayout, "", grid_options);
         detailGridID = GridCommon.createAUIGrid("subGrid", subColumnLayout,"", subGrid_options);
+
+        // 푸터 레이아웃 세팅
+        AUIGrid.setFooter(detailGridID, subFooterLayout);
 
         // main grid paging 표시
         GridCommon.createExtPagingNavigator(1, 0, {funcName:'getListAjax'});

@@ -115,6 +115,7 @@ public class HcPoResultController {
 
 		int firstIndex = -1;
 		int lastIndex  = -1;
+		/*
 		// 한페이지에서 보여줄 행 수
 		int rowCount = params.containsKey("rowCount")?(int)params.get("rowCount"):25;
 		// 호출한 페이지
@@ -123,6 +124,7 @@ public class HcPoResultController {
 			firstIndex = (rowCount * goPage) - rowCount;
 			lastIndex = rowCount * goPage;
 		}
+		*/
 		params.put("firstIndex", firstIndex);
 		params.put("lastIndex", lastIndex);
 
@@ -145,6 +147,54 @@ public class HcPoResultController {
 
 		List<EgovMap> list = hcPoResultService.selecthcPoResultSubList(params);
 		result.setTotal(list.size());
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		result.setDataList(list);
+		return ResponseEntity.ok(result);
+	}
+
+	// PO GROUP 조회
+	@RequestMapping(value = "/hcPoResult/selecthcPoResultGroupList.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> selecthcPoResultGroupList(@RequestBody Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
+		ReturnMessage result = new ReturnMessage();
+
+		String poDtFrom = "";
+		if(StringUtils.isNotEmpty((String)params.get("sPoDtFrom"))){
+			String[] poDtFroms =((String)params.get("sPoDtFrom")).split("/");
+			for(String str : poDtFroms){
+				poDtFrom = str + poDtFrom;
+			}
+			params.put("sPoDtFrom", poDtFrom);
+		}
+
+		String poDtTo = "";
+		if(StringUtils.isNotEmpty((String)params.get("sPoDtTo"))){
+			String[] poDtTos =((String)params.get("sPoDtTo")).split("/");
+			for(String str : poDtTos){
+				poDtTo = str + poDtTo;
+			}
+			params.put("sPoDtTo", poDtTo);
+		}
+
+		int firstIndex = -1;
+		int lastIndex  = -1;
+		// 한페이지에서 보여줄 행 수
+		int rowCount = params.containsKey("rowCount")?(int)params.get("rowCount"):25;
+		// 호출한 페이지
+		int goPage = params.containsKey("goPage")?(int)params.get("goPage"):0;
+		if(rowCount != 0 && goPage != 0){
+			firstIndex = (rowCount * goPage) - rowCount;
+			lastIndex = rowCount * goPage;
+		}
+		params.put("firstIndex", firstIndex);
+		params.put("lastIndex", lastIndex);
+
+		List<EgovMap> list = null;
+		result.setTotal(hcPoResultService.selecthcPoResultGropListCnt(params));
+
+		if(result.getTotal() != 0){
+			list = hcPoResultService.selecthcPoResultGropList(params);
+		}
 		result.setCode(AppConstants.SUCCESS);
 		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		result.setDataList(list);

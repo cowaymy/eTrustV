@@ -212,6 +212,8 @@ $(document).ready(function(){
                                 , {"dataList":itemDs}
                                 , function(result){
                                     AUIGrid.setGridData(scanGridId, []);
+                                    $("#sTotal").html(0);
+                                    $("#fTotal").html(0);
                                 }
                                 , function(jqXHR, textStatus, errorThrown){
                                     try{
@@ -225,6 +227,8 @@ $(document).ready(function(){
                         });
                     }else{
                         AUIGrid.setGridData(scanGridId, []);
+                        $("#sTotal").html(0);
+                        $("#fTotal").html(0);
                     }
                 }
         );
@@ -253,6 +257,53 @@ $(document).ready(function(){
 
     $("#txtBarcode").focus();
 });
+
+// 이벤트 정의
+$(function(){
+
+    // 행 추가 이벤트 바인딩
+    AUIGrid.bind(scanGridId, "addRow", function(e){
+        //console.log(e.type + " 이벤트 :  " + "삽입된 행 인덱스 : " + e.rowIndex + ", 삽입된 행 개수 : " + e.items.length);
+        var success = js.String.deletecomma($("#sTotal").html());
+        var fail = js.String.deletecomma($("#fTotal").html());
+
+        var sCnt = 0
+          , fCnt = 0;
+        $.each(e.items, function(idx, row){
+            if(row.status == 0){
+            	fCnt++;
+            }else{
+            	sCnt++;
+            }
+        });
+
+        $("#sTotal").html( js.String.addcomma(Number(success)+sCnt) );
+        $("#fTotal").html( js.String.addcomma(Number(fail)+fCnt) );
+    });
+
+
+    // 행 삭제 이벤트 바인딩
+    AUIGrid.bind(scanGridId, "removeRow", function(e){
+        var success = js.String.deletecomma($("#sTotal").html());
+        var fail = js.String.deletecomma($("#fTotal").html());
+
+        var sCnt = 0
+        , fCnt = 0;
+        $.each(e.items, function(idx, row){
+            if(row.status == 0){
+                fCnt++;
+            }else{
+                sCnt++;
+            }
+        });
+
+        $("#sTotal").html( js.String.addcomma(Number(success)-sCnt) );
+        $("#fTotal").html( js.String.addcomma(Number(fail)-fCnt) );
+    });
+
+
+});
+
 
 function fn_splitBarcode(){
 
@@ -437,10 +488,13 @@ function fn_scanClosePop(){
              </tbody>
         </table><!-- table end -->
     <!-- </form> -->
-    &nbsp;
+    <h3>
+        &nbsp; * success : <span id="sTotal" style="color:blue">0</span>, &nbsp; fail : <span id="fTotal" style="color:red">0</span>
+    </h3>
     <section class="search_result"><!-- search_result start -->
         <article class="grid_wrap"><!-- grid_wrap start -->
-            <div id="serialGrid" class="autoGridHeight"></div>
+            <!-- <div id="serialGrid" class="autoGridHeight"></div> -->
+            <div id="serialGrid" style="height:98%"></div>
         </article><!-- grid_wrap end -->
     </section><!-- search_result end -->
     &nbsp;

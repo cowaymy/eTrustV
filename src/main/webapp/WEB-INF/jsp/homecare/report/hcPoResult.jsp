@@ -7,7 +7,6 @@
 .aui-grid-drop-list-ul {
     text-align:left;
 }
-
 </style>
 
 <script type="text/javaScript">
@@ -30,11 +29,107 @@ var vendorObj = {};
 var mSort = {};
 
     //AUIGrid 생성 후 반환 ID
-    var myGridID, detailGridID;
+    var myGridID, detailGridID, groupGridId;
+
+    var gColumnLayout = [{dataField:"rnum", headerText:"No", width:50, editable:false}
+		    , {dataField:"poNo", headerText:"PO No", width:120}
+		    , {dataField:"cdc", visible:false, editable:false}
+		    , {dataField:"cdcNm",headerText :"CDC NAME", width:180, editable:false}
+		    , {dataField:"memAccId", headerText:"Supplier ID", width:120}
+            , {dataField:"memAccName", headerText:"Supplier Name", width:250, editable:false}
+		    , {dataField:"confirmQty", headerText:"PO QTY", width:120
+		        , style:"aui-grid-user-custom-right"
+		        , dataType:"numeric"
+		        , formatString:"#,##0"
+		    }
+		    , {dataField:"actualQty", headerText:"Production Qty", width:120
+		        , style:"aui-grid-user-custom-right"
+		        , dataType:"numeric"
+		        , formatString:"#,##0"
+		    }
+		    , {dataField:"delvryQty", headerText:"Delivery QTY", width:120
+		        , style:"aui-grid-user-custom-right"
+		        , dataType:"numeric"
+		        , formatString:"#,##0"
+		    }
+		    , {dataField:"giQty", headerText:"GI QTY", width:120
+		        , style:"aui-grid-user-custom-right"
+		        , dataType:"numeric"
+		        , formatString:"#,##0"
+		    }
+		    , {dataField:"grQty", headerText:"GR QTY", width:120
+		        , style:"aui-grid-user-custom-right"
+		        , dataType:"numeric"
+		        , formatString:"#,##0"
+		    }
+		    , {dataField:"failQty", headerText:"Fail QTY", width:120
+                , style:"aui-grid-user-custom-right"
+                , dataType:"numeric"
+                , formatString:"#,##0"
+            }
+	];
+
+    var grid_gOptions = {
+            usePaging : false,           // 페이지 설정1
+            editable : false,            // 편집 가능 여부 (기본값 : false)
+            enterKeyColumnBase : true,   // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
+            selectionMode : "singleRow", // 셀 선택모드 (기본값: singleCell): (singleCell, singleRow), (multipleCells, multipleRows)
+            showRowNumColumn : false,     // 그리드 넘버링
+            enableFilter : true,         // 필터 사용 여부 (기본값 : false)
+            showStateColumn : false,      // 상태 칼럼 사용
+            noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+            groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다.",
+            rowIdField : "rnum",
+            enableSorting : false,
+            showRowCheckColumn : false,      // row 체크박스 표시 설정
+            showRowAllCheckBox : false,      // 전체 체크박스 표시 설정
+            showFooter : true,
+            enableRestore: true
+      };
+
+    // 푸터 설정
+    var gFooterLayout = [{labelText : "Total", positionField : "memAccName"}
+                       , {dataField : "confirmQty"
+                           , positionField : "confirmQty"
+                           , operation : "SUM"
+                           , formatString : "#,##0"
+                           , style:"aui-grid-user-custom-right"
+                       }
+                       , {dataField : "actualQty"
+                           , positionField : "actualQty"
+                           , operation : "SUM"
+                           , formatString : "#,##0"
+                           , style:"aui-grid-user-custom-right"
+                       }
+                       , {dataField : "delvryQty"
+                           , positionField : "delvryQty"
+                           , operation : "SUM"
+                           , formatString : "#,##0"
+                           , style:"aui-grid-user-custom-right"
+                       }
+                       , {dataField : "giQty"
+                           , positionField : "giQty"
+                           , operation : "SUM"
+                           , formatString : "#,##0"
+                           , style:"aui-grid-user-custom-right"
+                       }
+                       , {dataField : "grQty"
+                           , positionField : "grQty"
+                           , operation : "SUM"
+                           , formatString : "#,##0"
+                           , style:"aui-grid-user-custom-right"
+                       }
+                       , {dataField : "failQty"
+                           , positionField : "failQty"
+                           , operation : "SUM"
+                           , formatString : "#,##0"
+                           , style:"aui-grid-user-custom-right"
+                       }
+    ];
 
     // AUIGrid main 칼럼 설정
-    var columnLayout = [{dataField:"rnum", headerText:"No", width:50, editable:false}
-            , {dataField:"poNo", headerText:"PO No", width:120}
+    var columnLayout = [ //{dataField:"rnum", headerText:"No", width:50, editable:false},
+              {dataField:"poNo", headerText:"PO No", width:120}
             , {dataField:"poDtlNo", headerText:"PO Detail No", width:120}
             , {dataField:"stockId", visible:false}
             , {dataField:"stockCode", headerText:"Material Code", width:120, editable:false}
@@ -66,6 +161,11 @@ var mSort = {};
                 , dataType:"numeric"
                 , formatString:"#,##0"
             }
+            , {dataField:"failQty", headerText:"Fail QTY", width:120
+                , style:"aui-grid-user-custom-right"
+                , dataType:"numeric"
+                , formatString:"#,##0"
+            }
             , {dataField:"apprDt", headerText:"PO Date", width:100, editable:false
                 , dataType:"date"
                 , dateInputFormat:"dd/mm/yyyy"  // 실제 데이터의 형식 지정
@@ -77,27 +177,57 @@ var mSort = {};
 
     // main 그리드 속성 설정
     var grid_options = {
-	      usePaging : false,           // 페이지 설정1
-	      //pageRowCount : 30,         // 페이지 설정2
-	      //fixedColumnCount : 1,        // 틀고정(index)
-	      editable : false,            // 편집 가능 여부 (기본값 : false)
-	      enterKeyColumnBase : true,   // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
-	      selectionMode : "singleRow", // 셀 선택모드 (기본값: singleCell): (singleCell, singleRow), (multipleCells, multipleRows)
-	      //showSelectionBorder:true,    // (녹색 테두리 선)(기본값 : true)
-	      //useContextMenu : true,       // 컨텍스트 메뉴 사용 여부 (기본값 : false)
-	      showRowNumColumn : false,     // 그리드 넘버링
-	      enableFilter : true,         // 필터 사용 여부 (기본값 : false)
-	      //useGroupingPanel : false,    // 그룹핑 패널 사용
-	      //displayTreeOpen : false,     // 그룹핑 또는 트리로 만들었을 때 펼쳐지게 할지 여부 (기본값 : false)
-	      showStateColumn : false,      // 상태 칼럼 사용
-	      noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
-	      groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다.",
-	      rowIdField : "rnum",
-	      enableSorting : false,
-	      showRowCheckColumn : false,      // row 체크박스 표시 설정
-	      showRowAllCheckBox : false,      // 전체 체크박스 표시 설정
-	      enableRestore: true
+            usePaging : true,            // 페이지 설정1
+            pageRowCount : 30,           // 페이지 설정2
+            fixedColumnCount : 0,        // 틀고정(index)
+            editable : false,            // 편집 가능 여부 (기본값 : false)
+            enterKeyColumnBase : true,   // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
+            selectionMode : "singleRow", // 셀 선택모드 (기본값: singleCell): (singleCell, singleRow), (multipleCells, multipleRows)
+            showRowNumColumn : true,     // 그리드 넘버링
+            enableFilter : true,         // 필터 사용 여부 (기본값 : false)
+            useGroupingPanel : false,    // 그룹핑 패널 사용
+            displayTreeOpen : false,     // 그룹핑 또는 트리로 만들었을 때 펼쳐지게 할지 여부 (기본값 : false)
+            showStateColumn : false,      // 상태 칼럼 사용
+            noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+            groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다.",
+            //rowIdField : "priceSeqNo",
+            showFooter : true,
+            enableSorting : true
     };
+
+    // 푸터 설정
+    var myFooterLayout = [{labelText : "Total", positionField : "stockName"}
+                       , {dataField : "confirmQty"
+                           , positionField : "confirmQty"
+                           , operation : "SUM"
+                           , formatString : "#,##0"
+                           , style:"aui-grid-user-custom-right"
+                       }
+                       , {dataField : "actualQty"
+                           , positionField : "actualQty"
+                           , operation : "SUM"
+                           , formatString : "#,##0"
+                           , style:"aui-grid-user-custom-right"
+                       }
+                       , {dataField : "delvryQty"
+                           , positionField : "delvryQty"
+                           , operation : "SUM"
+                           , formatString : "#,##0"
+                           , style:"aui-grid-user-custom-right"
+                       }
+                       , {dataField : "giQty"
+                           , positionField : "giQty"
+                           , operation : "SUM"
+                           , formatString : "#,##0"
+                           , style:"aui-grid-user-custom-right"
+                       }
+                       , {dataField : "grQty"
+                           , positionField : "grQty"
+                           , operation : "SUM"
+                           , formatString : "#,##0"
+                           , style:"aui-grid-user-custom-right"
+                       }
+    ];
 
   // sub 칼럼 설정
   var subColumnLayout = [ {dataField:"hmcDelvryNo", headerText:"Delivery No", width:140, editable:false}
@@ -162,19 +292,63 @@ var mSort = {};
 	    noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
 	    groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다.",
 	    //rowIdField : "priceSeqNo",
+	    showFooter : true,
 	    enableSorting : true
     };
+
+    var subFooterLayout = [{labelText : "Total", positionField : "poDtlNo"}
+	    , {dataField : "confirmQty"
+	        , positionField : "confirmQty"
+	        , operation : "SUM"
+	        , formatString : "#,##0"
+	        , style:"aui-grid-user-custom-right"
+	    }
+	    , {dataField : "delvryQty"
+	        , positionField : "delvryQty"
+	        , operation : "SUM"
+	        , formatString : "#,##0"
+	        , style:"aui-grid-user-custom-right"
+	    }
+	    , {dataField : "giQty"
+	        , positionField : "giQty"
+	        , operation : "SUM"
+	        , formatString : "#,##0"
+	        , style:"aui-grid-user-custom-right"
+	    }
+	    , {dataField : "grQty"
+	        , positionField : "grQty"
+	        , operation : "SUM"
+	        , formatString : "#,##0"
+	        , style:"aui-grid-user-custom-right"
+	    }
+	    , {dataField : "grFailQty"
+	        , positionField : "grFailQty"
+	        , operation : "SUM"
+	        , formatString : "#,##0"
+	        , style:"aui-grid-user-custom-right"
+	    }
+    ];
+
 
     $(document).ready(function(){
 
         // masterGrid 그리드를 생성합니다.
+        groupGridId = GridCommon.createAUIGrid("groupGrid", gColumnLayout, "", grid_gOptions);
         myGridID = GridCommon.createAUIGrid("mainGrid", columnLayout, "", grid_options);
         detailGridID = GridCommon.createAUIGrid("detailGrid", subColumnLayout, "", subGrid_options);
 
+        AUIGrid.setFooter(groupGridId, gFooterLayout);
+        AUIGrid.setFooter(myGridID, myFooterLayout);
+        AUIGrid.setFooter(detailGridID, subFooterLayout);
+
+
         // main grid paging 표시
-        GridCommon.createExtPagingNavigator(1, 0, {funcName:'getListAjax'});
+        GridCommon.createExtPagingNavigator(1, 0, {funcName:'getGroupListAjax', targetId:'group_grid_paging'});
+
+        //GridCommon.createExtPagingNavigator(1, 0, {funcName:'getListAjax'});
 
         // 그리드 초기화
+        AUIGrid.setGridData(groupGridId, []);
         AUIGrid.setGridData(myGridID, []);
         AUIGrid.setGridData(detailGridID, []);
 
@@ -235,7 +409,8 @@ var mSort = {};
             }
 
 		    // 메인 그리드 조회
-		    getListAjax(1);
+		    //getListAjax(1);
+            getGroupListAjax(1);
 
           });
 
@@ -249,6 +424,30 @@ var mSort = {};
     // 이벤트 정의
     $(function(){
 
+    	AUIGrid.bind(groupGridId, "cellClick", cellGroupClickEvent);
+
+    	// header Click
+        AUIGrid.bind(groupGridId, "headerClick", function( event ) {
+            var span = $(groupGridId).find(".aui-grid-header-panel").find("tbody > tr > td > div")[event.columnIndex];
+            if(mSort.hasOwnProperty(event.dataField)){
+                if(mSort[event.dataField].dir == "asc"){
+                  mSort[event.dataField] = {"field":event.dataField, "dir":"desc" };
+                    $(span).removeClass("aui-grid-sorting-ascending");
+                    $(span).addClass("aui-grid-sorting-descending");
+                }else{
+                    delete mSort[event.dataField];
+                    $(span).removeClass("aui-grid-sorting-descending");
+                }
+            }else{
+              mSort[event.dataField] = {"field":event.dataField, "dir":"asc"};
+                $(span).addClass("aui-grid-sorting-ascending");
+            }
+
+            getGroupListAjax(1);
+        });
+
+
+        /*
         // main grid cellClick event.
         AUIGrid.bind(myGridID, "cellClick", cellClickEvent);
 
@@ -274,12 +473,51 @@ var mSort = {};
 
             getListAjax(1);
         });
+        */
 
     });
 
 
 //--function--//
 
+function cellGroupClickEvent( event ){
+    //console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+
+    // 그리드 선택 block을 잡아준다.
+    //AUIGrid.setSelectionBlock(myGridID, event.rowIndex, event.rowIndex, 0, event.columnIndex);
+     var poNo = AUIGrid.getCellValue(groupGridId, event.rowIndex, "poNo");
+     if(poNo != oldPoNo){
+    	 AUIGrid.setGridData(myGridID, []);
+    	 AUIGrid.setGridData(detailGridID, []);
+
+         if(js.String.isEmpty(poNo)){
+           oldPoNo = poNo;
+           return false;
+         }
+
+       var mainParam = {"sPoNo":poNo};
+       Common.ajax("POST", "/homecare/report/hcPoResult/selecthcPoResultMainList.do"
+               , mainParam
+               , function(result){
+                      //console.log("data : " + result);
+                      AUIGrid.setGridData(myGridID, result.dataList);
+       });
+
+
+       var subParam = {"sPoNo":poNo};
+       Common.ajax("GET", "/homecare/report/hcPoResult/selecthcPoResultSubList.do"
+               , subParam
+               , function(result){
+                      //console.log("data : " + result);
+                      AUIGrid.setGridData(detailGridID, result.dataList);
+       });
+
+    }
+    oldPoNo = poNo;
+}
+
+
+/*
 // main grid cellClick event.
 function cellClickEvent( event ){
     //console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
@@ -306,9 +544,46 @@ function cellClickEvent( event ){
     }
     oldPoNo = poNo;
 }
+*/
+
+function getGroupListAjax(goPage) {
+    var url = "/homecare/report/hcPoResult/selecthcPoResultGroupList.do";
+
+    var param = $("#searchForm").serializeObject();
+    param.sMemAccId = $("#sMemAccId").val();
+
+    var sortList = [];
+    $.each(mSort, function(idx, row){
+        sortList.push(row);
+    });
+
+    param = $.extend(param, {"rowCount":25, "goPage":goPage}, {"sort":sortList});
+    //console.log("param : ", param);
+
+    // 초기화
+    oldPoNo = -1;
+    AUIGrid.setGridData(groupGridId, []);
+
+    Common.ajax("POST" , url , param, function(data){
+        // 그리드 페이징 네비게이터 생성
+        GridCommon.createExtPagingNavigator(goPage, data.total, {funcName:'getGroupListAjax', targetId:'group_grid_paging'});
+
+        AUIGrid.setGridData(groupGridId, data.dataList);
+        AUIGrid.setGridData(myGridID, []);
+        AUIGrid.setGridData(detailGridID, []);
+
+        if(data.total > 0){
+            // 행을 선택해줌.
+            AUIGrid.setSelectionByIndex(groupGridId, 0);
+            cellGroupClickEvent({"rowIndex":0, "columnIndex":0});
+        }
+    });
+
+}
 
 
 // 메인 그리드 조회
+/*
 function getListAjax(goPage) {
     var url = "/homecare/report/hcPoResult/selecthcPoResultMainList.do";
 
@@ -342,6 +617,7 @@ function getListAjax(goPage) {
     });
 
 }
+*/
 
 /**
 * dd-mm-yyyy 날짜 형식을 체크함.
@@ -436,18 +712,32 @@ function fn_isDateValidate(sValidDt){
     </section><!-- search_table end -->
 
   <section class="search_result"><!-- search_result start -->
-	<aside class="title_line"><!-- title_line start -->
+
+    <aside class="title_line"><!-- title_line start -->
         <h3>PO List</h3>
+        <ul class="right_btns">
+        </ul>
+    </aside><!-- title_line end -->
+    <article class="grid_wrap"><!-- grid_wrap start -->
+        <!-- 그리드 영역1 -->
+        <div id="groupGrid" style="height:250px;"></div>
+
+        <!-- 그리드 페이징 네비게이터 -->
+        <div id="group_grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
+    </article><!-- grid_wrap end -->
+
+
+
+	<aside class="title_line"><!-- title_line start -->
+        <h3>PO Item List</h3>
 	    <ul class="right_btns">
 	    </ul>
 	</aside><!-- title_line end -->
-
     <article class="grid_wrap"><!-- grid_wrap start -->
         <!-- 그리드 영역1 -->
-        <div id="mainGrid" style="height:250px;"></div>
-
+        <div id="mainGrid" style="height:200px;"></div>
 	    <!-- 그리드 페이징 네비게이터 -->
-	    <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
+	    <!-- <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div> -->
     </article><!-- grid_wrap end -->
 
 
@@ -456,7 +746,7 @@ function fn_isDateValidate(sValidDt){
     </aside><!-- title_line end -->
     <article class="grid_wrap" ><!-- grid_wrap start -->
         <!--  그리드 영역2  -->
-        <div id="detailGrid" style="height:250px;"></div>
+        <div id="detailGrid" style="height:200px;"></div>
     </article><!-- grid_wrap end -->
 
   </section><!-- search_result end -->

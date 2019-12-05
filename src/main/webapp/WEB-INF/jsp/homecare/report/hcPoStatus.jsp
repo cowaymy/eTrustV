@@ -238,6 +238,18 @@ var myGridID, excelGridId;
                                     }
                                 }
                             }
+                            , {dataField:"hmcDelvryNoDtlNo", headerText:"Delivery No", width:140
+                                , cellMerge:true
+                                , mergePolicy : "restrict"
+                                , mergeRef : "hmcDelvryNo"
+                                , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                                    if ( "0" == item.poMod ) {
+                                        return  "my-columnCenter0";
+                                    } else {
+                                        return  "my-columnCenter1";
+                                    }
+                                }
+                            }
                             , {dataField:"delvryQty", headerText:"GI QTY", width:100
                                 , style:"aui-grid-user-custom-right"
                                 , dataType:"numeric"
@@ -603,7 +615,7 @@ function fn_isDateValidate(sValidDt){
 
   <aside class="title_line"><!-- title_line start -->
     <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-    <h2>Po Result List</h2>
+    <h2>Po Status View</h2>
 
     <ul class="right_btns">
         <c:if test="${PAGE_AUTH.funcView == 'Y'}">

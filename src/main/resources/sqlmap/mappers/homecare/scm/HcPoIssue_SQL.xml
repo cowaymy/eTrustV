@@ -222,7 +222,8 @@
              , UPD_USER_ID
           FROM HMC0005D a
          WHERE PO_NO = #{sPoNo}
-           and USE_YN = 'Y'
+           AND USE_YN = 'Y'
+         ORDER BY PO_NO, PO_DTL_NO
     </select>
 
     <insert id="insertHcPoIssueMain" parameterType="Map">
@@ -390,16 +391,12 @@
            AND PO_DTL_NO = #{poDtlNo}
     </update>
 
-    <update id="deleteHcPoIssueSub" parameterType="Map">
+    <delete id="deleteHcPoIssueSub" parameterType="Map">
     /* [com.coway.trust.biz.homecare.po.impl.HcPoIssueMapper.deleteHcPoIssueSub] - KR JIN */
-        UPDATE HMC0005D
-           SET USE_YN = 'N'
-             , UPD_DT = SYSDATE
-             , UPD_USER_ID = #{updUserId}
+        DELETE FROM HMC0005D
          WHERE PO_NO = #{poNo}
            AND PO_DTL_NO = #{poDtlNo}
-    </update>
-
+    </delete>
 
     <update id="updateIssueHcPoIssue" parameterType="Map">
     /* [com.coway.trust.biz.homecare.po.impl.HcPoIssueMapper.updateIssueHcPoIssue] - KR JIN */
@@ -446,6 +443,25 @@
              , UPD_DT = SYSDATE
              , UPD_USER_ID = #{updUserId}
          WHERE PO_NO = #{poNo}
+    </update>
+
+    <update id="updateHCPoDetailKeySort" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcPoIssueMapper.updateHCPoDetailKeySort] - KR JIN */
+        UPDATE HMC0005D A
+		   SET A.PO_DTL_NO = (
+		                     SELECT T.PO_ROW
+		                       FROM (
+		                             SELECT ROW_NUMBER() OVER (PARTITION BY PO_NO ORDER BY STOCK_CODE ASC) AS PO_ROW
+		                                  , PO_NO
+		                                  , PO_DTL_NO
+		                                  , STOCK_CODE
+		                               FROM HMC0005D
+		                              WHERE PO_NO = #{sPoNo}
+		                            ) T
+		                       WHERE A.PO_NO = T.PO_NO
+		                         AND A.PO_DTL_NO = T.PO_DTL_NO
+		                   )
+		 WHERE A.PO_NO = #{sPoNo}
     </update>
 
 

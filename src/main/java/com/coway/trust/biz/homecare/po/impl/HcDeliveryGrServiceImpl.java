@@ -289,6 +289,14 @@ public class HcDeliveryGrServiceImpl extends EgovAbstractServiceImpl implements 
 		params.put("updUserId", sessionVO.getUserId());
 
 
+		/*
+		if(serialMgmtNewMapper.selectHPDelStsCheck(params) <= 0){
+			throw new ApplicationException(AppConstants.FAIL,
+					messageAccessor.getMessage(AppConstants.MSG_NOT_EXIST, new Object[] { "Serial No(String)" }));
+		}
+		*/
+
+
 		// HP - 진행중인 GR의 serial 정보 조회
 		Map<String, Object> sMap = new HashMap<String, Object>();
 		sMap.put("reqstNo", (String)params.get("hmcGrNo"));

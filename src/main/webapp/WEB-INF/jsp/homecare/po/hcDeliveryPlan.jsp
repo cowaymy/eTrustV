@@ -106,11 +106,21 @@ var mSort = {};
                     , dataType:"numeric"
                     , formatString:"#,##0"
               }
-              , {dataField:"planQty", headerText:"Plan QTY", width:100, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
+              , {dataField:"producedQty", headerText:"Produced Qty", width:100, editable:false
                   , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0"
-                  	, editRenderer : {
+              }
+              , {dataField:"balanceQty", headerText:"Balance", width:100, editable:false
+                  , style:"aui-grid-user-custom-right"
+                    , dataType:"numeric"
+                    , formatString:"#,##0"
+              }
+              , {dataField:"planQty", headerText:"Planed Qty", width:100, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
+                  , style:"aui-grid-user-custom-right"
+                    , dataType:"numeric"
+                    , formatString:"#,##0"
+                    , editRenderer : {
                           type : "InputEditRenderer",
                           showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
                           onlyNumeric : true, // 0~9만 입력가능
@@ -120,6 +130,7 @@ var mSort = {};
                           autoThousandSeparator : false // 천단위 구분자 삽입 여부
                     }
               }
+
               , {dataField:"planDt", headerText:"Plan Date", width:160, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
                   , dataType:"date"
                   , dateInputFormat:"dd/mm/yyyy"  // 실제 데이터의 형식 지정
@@ -561,7 +572,8 @@ var mSort = {};
                 AUIGrid.setCellValue(detailGridID, rows, "exPlanQty", totQty);
 
                 var confirmQty = Number(AUIGrid.getCellValue(detailGridID, rows, "confirmQty"));
-                AUIGrid.setCellValue(detailGridID, rows, "planQty", (confirmQty-totQty)>=0?(confirmQty-totQty):0);
+                //AUIGrid.setCellValue(detailGridID, rows, "planQty", (confirmQty-totQty)>=0?(confirmQty-totQty):0);
+                AUIGrid.setCellValue(detailGridID, rows, "planQty", 0);
             }
         });
 
@@ -573,13 +585,21 @@ var mSort = {};
             	var poNo = e.items[i].poNo;
                 var poDtlNo = e.items[i].poDtlNo;
                 var planQty = Number(e.items[i].poPlanQty);
+                var actualQty = Number(e.items[i].actualQty);
 
                 var rows = AUIGrid.getRowIndexesByValue(detailGridID, "poDtlNo", poDtlNo);
                 var exPlan = Number(AUIGrid.getCellValue(detailGridID, rows, "exPlanQty"));
                 var confirmQty = Number(AUIGrid.getCellValue(detailGridID, rows, "confirmQty"));
 
                 AUIGrid.setCellValue(detailGridID, rows, "exPlanQty", exPlan - planQty);
-                AUIGrid.setCellValue(detailGridID, rows, "planQty", confirmQty - (exPlan - planQty)>=0?confirmQty - (exPlan - planQty):0);
+                //AUIGrid.setCellValue(detailGridID, rows, "planQty", confirmQty - (exPlan - planQty)>=0?confirmQty - (exPlan - planQty):0);
+
+                // producedQty
+                var produced = Number(AUIGrid.getCellValue(detailGridID, rows, "producedQty"));
+                AUIGrid.setCellValue(detailGridID, rows, "producedQty", produced - actualQty);
+
+                // balanceQty
+                AUIGrid.setCellValue(detailGridID, rows, "balanceQty", confirmQty-(produced - actualQty) );
             }
         });
 
@@ -626,8 +646,23 @@ var mSort = {};
         		var confirmQty = Number(AUIGrid.getCellValue(detailGridID, rows, "confirmQty"));
 
         		AUIGrid.setCellValue(detailGridID, rows, "exPlanQty", exPlan - diff);
-                AUIGrid.setCellValue(detailGridID, rows, "planQty", confirmQty - (exPlan - diff)>=0?confirmQty - (exPlan - diff):0);
+                //AUIGrid.setCellValue(detailGridID, rows, "planQty", confirmQty - (exPlan - diff)>=0?confirmQty - (exPlan - diff):0);
         	}
+
+        	if ( event.dataField == "actualQty"){
+                var poNo = event.item.poNo;
+                var poDtlNo = event.item.poDtlNo;
+                var diff = js.String.naNcheck(event.oldValue) - js.String.naNcheck(event.value);
+
+                var rows = AUIGrid.getRowIndexesByValue(detailGridID, "poDtlNo", poDtlNo);
+                var produced = Number(AUIGrid.getCellValue(detailGridID, rows, "producedQty"));
+
+                AUIGrid.setCellValue(detailGridID, rows, "producedQty", produced - diff);
+
+                var balance = Number(AUIGrid.getCellValue(detailGridID, rows, "balanceQty"));
+                AUIGrid.setCellValue(detailGridID, rows, "balanceQty", balance + diff);
+        	}
+
         });
 
         // 전체 체크박스 클릭 이벤트 바인딩 - 엑스트라 체크

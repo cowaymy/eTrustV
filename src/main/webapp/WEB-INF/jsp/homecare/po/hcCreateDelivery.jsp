@@ -60,7 +60,7 @@ var mSort = {};
                 , dateInputFormat:"dd/mm/yyyy"  // 실제 데이터의 형식 지정
                 , formatString:"dd/mm/yyyy"     // 실제 데이터 형식을 어떻게 표시할지 지정
             }
-            , {dataField:"address", headerText:"Address", width:300, style:"aui-grid-user-custom-left"}
+            , {dataField:"address", headerText:"Address", width:380, style:"aui-grid-user-custom-left"}
             , {dataField:"tel", headerText:"Contact No", width:120}
             , {dataField:"rm", headerText:"Remark", width:300, style:"aui-grid-user-custom-left"}
     ];
@@ -100,7 +100,12 @@ var mSort = {};
                     , dataType:"numeric"
                     , formatString:"#,##0"
               }
-              , {dataField:"extQty", headerText:"Delivery Qty", width:110, editable:false
+              , {dataField:"actualQty", headerText:"Production Qty", width:140, editable:false
+                  , style:"aui-grid-user-custom-right"
+                    , dataType:"numeric"
+                    , formatString:"#,##0"
+              }
+              , {dataField:"extQty", headerText:"Delived Qty", width:110, editable:false
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0"
@@ -110,7 +115,12 @@ var mSort = {};
                   , dataType:"numeric"
                   , formatString:"#,##0"
               }
-              , {dataField:"doQty", headerText:"Available Qty", width:140, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
+              , {dataField:"availableQty", headerText:"Available Qty", width:120, editable:false
+                  , style:"aui-grid-user-custom-right"
+                  , dataType:"numeric"
+                  , formatString:"#,##0"
+              }
+              , {dataField:"doQty", headerText:"DO Qyt", width:140, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen"
                     , style:"aui-grid-user-custom-right"
                     , dataType:"numeric"
                     , formatString:"#,##0"
@@ -378,6 +388,7 @@ var mSort = {};
                 var poQty = js.String.naNcheck(items[i].confirmQty);
                 var extQty = js.String.naNcheck(items[i].extQty);
                 var qcFailQty = js.String.naNcheck(items[i].qcFailQty);
+                var availableQty = js.String.naNcheck(items[i].availableQty);
                 var doQty = js.String.naNcheck(items[i].doQty);
 
                 if(poQty < (extQty - qcFailQty)){
@@ -386,9 +397,9 @@ var mSort = {};
                     return false;
                 }
 
-                if( (poQty - extQty + qcFailQty) < doQty ){
+                if( availableQty < doQty ){
                     // Available Qty는 Total 수량보다 많을수 없습니다.
-                    Common.alert("Available Qty cannot be greater than Total Quantity.<br /> PO Detail No : "+poDtlNo);
+                    Common.alert("Available Qty cannot be greater than DO Qty.<br /> PO Detail No : "+poDtlNo);
                     return false;
                 }
 

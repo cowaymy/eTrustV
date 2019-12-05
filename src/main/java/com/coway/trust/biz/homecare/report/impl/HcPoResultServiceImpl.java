@@ -28,6 +28,15 @@ public class HcPoResultServiceImpl extends EgovAbstractServiceImpl implements Hc
 	private HcPoResultMapper hcPoResultMapper;
 
 	@Override
+	public int selecthcPoResultGropListCnt(Map<String, Object> params) throws Exception{
+		return hcPoResultMapper.selecthcPoResultGropListCnt(params);
+	}
+	@Override
+	public List<EgovMap> selecthcPoResultGropList(Map<String, Object> params) throws Exception{
+		return hcPoResultMapper.selecthcPoResultGropList(params);
+	}
+
+	@Override
 	public int selecthcPoResultMainListCnt(Map<String, Object> params) throws Exception{
 		return hcPoResultMapper.selecthcPoResultMainListCnt(params);
 	}

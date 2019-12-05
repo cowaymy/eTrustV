@@ -7,6 +7,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface HcPoResultService {
 
+	public int selecthcPoResultGropListCnt(Map<String, Object> params) throws Exception;
+	public List<EgovMap> selecthcPoResultGropList(Map<String, Object> params) throws Exception;
+
 	// Po List 조회
 	public int selecthcPoResultMainListCnt(Map<String, Object> params) throws Exception;
 	public List<EgovMap> selecthcPoResultMainList(Map<String, Object> params) throws Exception;

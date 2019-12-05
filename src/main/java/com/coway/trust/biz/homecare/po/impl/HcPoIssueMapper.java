@@ -56,4 +56,6 @@ public interface HcPoIssueMapper {
 	public void deleteHcPoIssuePoSub(Map<String, Object> obj) throws Exception;
 	public void deleteHcPoIssuePoMain(Map<String, Object> obj) throws Exception;
 
+	public void updateHCPoDetailKeySort(Map<String, String> obj) throws Exception;
+
 }
