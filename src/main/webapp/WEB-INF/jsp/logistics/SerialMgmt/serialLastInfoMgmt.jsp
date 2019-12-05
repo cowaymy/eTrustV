@@ -412,10 +412,11 @@
         var obj = $("#searchForm").serializeJSON();
         var gridData = GridCommon.getEditData(myGridID);
 
-        if(gridData.update.length == 0 && gridData.add.length) {
-        	Common.alert(result.message);
+        if(gridData.update.length == 0 && gridData.add.length==0) {
+        	Common.alert("No changes");
         	return false;
         }
+
         obj.gridData = gridData;
 
         if(Common.confirm("Do you want to save?", function(){
