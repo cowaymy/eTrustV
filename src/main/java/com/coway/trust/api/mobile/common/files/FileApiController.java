@@ -66,4 +66,20 @@ public class FileApiController {
 		FileDto fileDto = FileDto.createByFileVO(list, fileGroupId);
 		return ResponseEntity.ok(fileDto);
 	}
+
+	// 공통 파일 테이블에서 관리하는 api 입니다.
+	@ApiOperation(value = "SyncFileUpload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@RequestMapping(value = "/syncFileUpload", method = RequestMethod.POST)
+	public ResponseEntity<FileDto> syncFileUpload(@ApiIgnore MultipartHttpServletRequest request, @ModelAttribute FileForm fileForm) throws Exception {
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, fileForm.getSubPath(), AppConstants.UPLOAD_MAX_FILE_SIZE);
+
+		Map<String, Object> params = fileForm.createMap(fileForm);
+
+		LOGGER.debug("param01 : {}", params.get(""));
+		LOGGER.debug("list.size : {}", list.size());
+
+		int fileGroupKey = fileApplication.commonAttachByUserName(FileType.MOBILE, FileVO.createList(list), params);
+		FileDto fileDto = FileDto.create(list, fileGroupKey);
+		return ResponseEntity.ok(fileDto);
+	}
 }
