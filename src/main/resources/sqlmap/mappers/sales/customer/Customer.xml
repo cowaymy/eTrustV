@@ -2632,4 +2632,175 @@
 	 )
 	   WHERE ROWNUM <![CDATA[<= 1 ]]>
   </select>
+
+    <select id="getTokenID" resultType="Integer">
+    SELECT SAL0257D_ID_SEQ.NEXTVAL SEQ FROM DUAL
+  </select>
+
+  <insert id="insertTokenLogging" parameterType="Map">
+    INSERT INTO SAL0257D (
+        TKN_ID,
+        REF_NO,
+        BILL_NM,
+        EXP_MONTH,
+        EXP_YEAR,
+        TKN_TYPE,
+        SIGNATURE_REQ,
+        STATUS,
+        CRT_DT,
+        CRT_USER_ID,
+        UPD_DT,
+        UPD_USER_ID
+        <if test="etyPoint == 'EE'">
+            , CUST_CRC_ID
+        </if>
+    )
+    VALUES
+    (
+        #{tknId},
+        #{refNo},
+        #{nameCard},
+        #{hExpMonth},
+        #{hExpYear},
+        1,
+        #{signature},
+        44,
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId}
+        <if test="etyPoint == 'EE'">
+            , #{custCrcId}
+        </if>
+    )
+  </insert>
+
+  <select id="getPubKey" resultType="egovMap">
+    SELECT PARAM_VAL PUB_KEY FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_PUB'
+  </select>
+
+  <select id="getTokenSettings" resultType="egovMap">
+    SELECT
+        (SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_URL') TKNZ_URL,
+        (SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_MERCHANT_ID') TKNZ_MERCHANT_ID,
+        (SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_VERF_KEY') TKNZ_VERF_KEY
+    FROM DUAL
+  </select>
+
+  <update id="updateTokenLogging" parameterType="Map">
+    UPDATE SAL0257D
+         SET BIN = #{BIN},
+               CCLAST4 = #{cclast4},
+               TOKEN = #{token},
+               SIGNATURE_RES = #{signature},
+               RES_TEXT = #{resText},
+               STATUS = #{stus},
+               UPD_DT = SYSDATE
+     WHERE TKN_ID = #{tknId}
+         AND REF_NO = #{referenceNo}
+  </update>
+
+  <insert id="insertTokenError" parameterType="Map">
+    INSERT INTO SAL0258D VALUES
+    (
+        #{tknId},
+        #{error_code},
+        #{error_desc},
+        #{src},
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId}
+    )
+  </insert>
+
+  <update id="tokenCrcUpdate" parameterType="Map">
+    MERGE INTO SAL0257D A
+    USING (
+        SELECT
+            CUST_CRC_ID,
+            CUST_ID,
+            SUBSTR(CUST_ORI_CRC_NO, 1, 6) BIN,
+            SUBSTR(CUST_ORI_CRC_NO, 13, 4) CCLAST4,
+            CUST_CRC_TOKEN
+        FROM SAL0028D
+        WHERE CUST_ID = #{custId}
+    ) SRC
+    ON (A.TOKEN = SRC.CUST_CRC_TOKEN AND A.BIN = SRC.BIN AND A.CCLAST4 = SRC.CCLAST4
+    <if test="tknId != null and tknId != '' ">
+         AND A.TKN_ID = #{tknId}
+    </if>
+    )
+    WHEN MATCHED THEN UPDATE
+        SET A.CUST_CRC_ID = SRC.CUST_CRC_ID,
+              A.UPD_DT = SYSDATE,
+              A.UPD_USER_ID = #{userId}
+  </update>
+
+  <select id="selectCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              CODE_ID ,
+              CODE ,
+              CODE_NAME ,
+              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+        FROM SYS0013M
+        WHERE DISAB = 0
+        <if test="groupCode != null and groupCode !=''">
+           AND CODE_MASTER_ID = #{groupCode}
+        </if>
+        <if test="notin != null and notin !=''"> <!-- TODO : 파라미터는 notin 인데, 아래 쿼리는 in 이네요.... 왜 그럴까요??? -->
+              AND CODE NOT IN (#{notin})
+        </if>
+        <choose>
+          <when test="orderValue !=null and orderValue !=''">
+              ORDER BY ${orderValue}
+          </when>
+          <otherwise>
+              ORDER BY CODE_NAME
+          </otherwise>
+        </choose>
+    </select>
+
+  <select id="tCheckCRC1" parameterType="Map" resultType="Integer">
+    SELECT
+    COUNT(*) CNT
+    FROM SAL0028D A
+    INNER JOIN (
+    SELECT
+    CUST_ORI_CRC_NO,
+    COUNT(*)
+    FROM SAL0028D
+    GROUP BY CUST_ORI_CRC_NO
+    ) B
+    ON A.CUST_ORI_CRC_NO = B.CUST_ORI_CRC_NO
+    WHERE A.CUST_ORI_CRC_NO LIKE #{cardNo}
+    AND A.CUST_CRC_STUS_ID = '1'
+  </select>
+
+  <select id="tCheckCRC2" parameterType="Map" resultType="Integer">
+    SELECT
+    COUNT(DISTINCT(NRIC)) CNT
+    FROM SAL0029D A
+    INNER JOIN (
+    SELECT
+    A1.CUST_ID,
+    A1.CUST_ORI_CRC_NO,
+    B1.CNT
+    FROM SAL0028D A1
+    INNER JOIN (
+    SELECT
+    CUST_ORI_CRC_NO,
+    COUNT(*) CNT
+    FROM SAL0028D
+    GROUP BY CUST_ORI_CRC_NO
+    ) B1
+    ON A1.CUST_ORI_CRC_NO = B1.CUST_ORI_CRC_NO
+    WHERE A1.CUST_ORI_CRC_NO LIKE #{cardNo}
+    AND A1.CUST_CRC_STUS_ID = '1'
+    ) B
+    ON A.CUST_ID = B.CUST_ID
+    <if test='step == "3" '>
+      WHERE A.NRIC = #{nric}
+    </if>
+  </select>
 </mapper>
