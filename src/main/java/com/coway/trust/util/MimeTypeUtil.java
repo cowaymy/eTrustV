@@ -37,6 +37,7 @@ public class MimeTypeUtil {
 		ALLOW_MIME_TYPE.put("application/x-tika-ooxml", "application/x-tika-ooxml");
 		ALLOW_MIME_TYPE.put("text/plain", "text/plain");
 		ALLOW_MIME_TYPE.put("application/zip", "application/zip");
+		ALLOW_MIME_TYPE.put("application/x-sqlite3", "application/x-sqlite3");
 	}
 
 	public static boolean isAllowFile(InputStream inputStream) throws IOException {
