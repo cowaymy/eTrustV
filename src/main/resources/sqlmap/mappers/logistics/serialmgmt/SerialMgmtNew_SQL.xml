@@ -17,6 +17,7 @@
 		SELECT COUNT(1) AS CNT
 		  FROM LOG0100M
 		 WHERE SERIAL_NO = #{barcode}
+		   AND STUS_CODE <![CDATA[<>]]> 'N'
     </select>
 
     <select id="selectHPScanInfoCheck" parameterType="Map" resultType="egovMap">
@@ -332,6 +333,16 @@
                     , #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA})
          }
     </select>
+
+
+    <select id="callSaveBarcodeScan" parameterType="Map"  statementType="CALLABLE">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.callSaveBarcodeScan] - KR JIN */
+        {CALL SP_LOGISTIC_BARCODE_SAVE(#{sGrDate}, #{rstNo}, #{dryNo}, #{zTrnscType}, #{zIoType}, #{updUserId}
+                    , #{errCode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA}
+                    , #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA})
+         }
+    </select>
+
 
 
 </mapper>
