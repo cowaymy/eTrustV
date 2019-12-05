@@ -234,6 +234,7 @@ $(document).ready(function(){
         fn_scanClosePop();
     });
 
+    /*
     $("#txtBarcode").keydown(function() {
         if (event.keyCode === 13) {
             event.preventDefault();
@@ -241,6 +242,7 @@ $(document).ready(function(){
             fn_splitBarcode();
         };
     });
+    */
 
     $("#txtBarcode").change(function() {
         event.preventDefault();
