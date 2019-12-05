@@ -2431,7 +2431,7 @@ public class CustomerController {
           requestParam.put("expYear", params.get("EXPYEAR").toString());
           requestParam.put("tokenType", "1");
           requestParam.put("signature", params.get("signature").toString());
-
+LOGGER.debug(requestParam.toString());
           LOGGER.debug("2");
           StringJoiner sj = new StringJoiner("&");
           for(Map.Entry<String,String> entry : requestParam.entrySet())
@@ -2448,6 +2448,7 @@ public class CustomerController {
           LOGGER.debug("3.3");
           try(OutputStream os = http.getOutputStream()) {
               os.write(out);
+              LOGGER.debug(os.toString());
               LOGGER.debug("3.3.1");
           }
           LOGGER.debug("3.4");
