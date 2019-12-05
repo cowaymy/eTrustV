@@ -30,6 +30,10 @@ public interface RequestFundTransferService {
 
 
 
+    ReturnMessage selectOutstandingAmount(Map<String, Object> param) throws Exception;
+
+
+
     int saveRequestFundTransferArrpove(Map<String, Object> param) throws Exception;
 
 

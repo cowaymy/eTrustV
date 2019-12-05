@@ -27,7 +27,7 @@ FROM    LOG0094M A                                                              
 WHERE   A.USE_YN = 'Y'                                                          --Use YN
 AND     A.DOC_STUS_CODE_ID <> 5678                                              --Doc Status ID : 5678(Save)
 --AND     TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN A.DOC_START_DT AND A.DOC_END_DT    --Stock Audit Start Date/Stock Audit End Date
---AND     B.WH_LOC_ID = whLocId 보류
+--AND     B.WH_LOC_ID = whLocId
 ORDER BY A.STOCK_AUDIT_NO DESC
 ]]>
 </select>
@@ -43,11 +43,11 @@ SELECT  B.STOCK_AUDIT_NO                                                        
     ,   TO_CHAR(TO_DATE(A.DOC_END_DT, 'YYYYMMDD'), 'DD/MM/YYYY')                AS DOC_END_DT
     ,   A.DOC_STUS_CODE_ID                                                      AS DOC_STUS_CODE_ID
     ,   A.REUPLOAD_YN                                                           AS REUPLOAD_YN
-    ,   A.APPV_3_REQST_USER_ID                                                  AS APPV_3_REQST_USER_ID
+    ,   APPV_3_REQST.USER_NAME                                                  AS APPV_3_REQST_USER_ID
     ,   TO_CHAR(A.APPV_3_REQST_DT, 'DD/MM/YYYY HH24:MI:SS')                     AS APPV_3_REQST_DT
     ,   A.APPV_3_REQST_OPINION                                                  AS APPV_3_REQST_OPINION
     ,   A.APPV_ATCH_FILE_GRP_ID                                                 AS APPV_ATCH_FILE_GRP_ID
-    ,   A.APPV_3_USER_ID                                                        AS APPV_3_USER_ID
+    ,   APPV_3.USER_NAME                                                        AS APPV_3_USER_ID
     ,   TO_CHAR(A.APPV_3_DT, 'DD/MM/YYYY HH24:MI:SS')                           AS APPV_3_DT
     ,   A.APPV_3_OPINION                                                        AS APPV_3_OPINION
     ,   A.STOCK_AUDIT_REASON                                                    AS STOCK_AUDIT_REASON
@@ -60,12 +60,12 @@ SELECT  B.STOCK_AUDIT_NO                                                        
     ,   A.ITM_TYPE_NM                                                           AS ITM_TYPE_NM
     ,   A.REM                                                                   AS REM
     ,   A.USE_YN                                                                AS USE_YN
-    ,   B.APPV_1_REQST_USER_ID                                                  AS APPV_1_REQST_USER_ID
+    ,   APPV_1_REQST.USER_NAME                                                  AS APPV_1_REQST_USER_ID
     ,   TO_CHAR(B.APPV_1_REQST_DT, 'DD/MM/YYYY HH24:MI:SS')                     AS APPV_1_REQST_DT
-    ,   B.APPV_1_USER_ID                                                        AS APPV_1_USER_ID
+    ,   APPV_1.USER_NAME                                                        AS APPV_1_USER_ID
     ,   TO_CHAR(B.APPV_1_DT, 'DD/MM/YYYY HH24:MI:SS')                           AS APPV_1_DT
     ,   B.APPV_1_OPINION                                                        AS APPV_1_OPINION
-    ,   B.APPV_2_USER_ID                                                        AS APPV_2_USER_ID
+    ,   APPV_2.USER_NAME                                                        AS APPV_2_USER_ID
     ,   TO_CHAR(B.APPV_2_DT, 'DD/MM/YYYY HH24:MI:SS')                           AS APPV_2_DT
     ,   B.APPV_2_OPINION                                                        AS APPV_2_OPINION
     ,   B.LOC_STUS_CODE_ID                                                      AS LOC_STUS_CODE_ID
@@ -80,6 +80,16 @@ FROM    LOG0094M A                                                              
         INNER JOIN SYS0013M C
             ON  C.CODE_MASTER_ID = 437
             AND C.CODE_ID = B.LOC_STUS_CODE_ID
+        LEFT OUTER JOIN SYS0047M APPV_1_REQST
+            ON APPV_1_REQST.USER_ID = B.APPV_1_REQST_USER_ID
+        LEFT OUTER JOIN SYS0047M APPV_1
+            ON APPV_1.USER_ID = B.APPV_1_USER_ID
+        LEFT OUTER JOIN SYS0047M APPV_2
+            ON APPV_2.USER_ID = B.APPV_2_USER_ID
+        LEFT OUTER JOIN SYS0047M APPV_3_REQST
+            ON APPV_3_REQST.USER_ID = A.APPV_3_REQST_USER_ID
+        LEFT OUTER JOIN SYS0047M APPV_3
+            ON APPV_3.USER_ID = A.APPV_3_USER_ID
 WHERE   B.STOCK_AUDIT_NO = #{stockAuditNo}
 AND     B.WH_LOC_ID = #{whLocId}
 ]]>
@@ -92,7 +102,8 @@ AND     B.WH_LOC_ID = #{whLocId}
 /* [com.coway.trust.biz.logistics.stockAudit.impl.selectStockAuditDetailList] 20191029 - KR JAEMAJEM */
 SELECT  B.STOCK_AUDIT_NO                                                        AS STOCK_AUDIT_NO
     ,   B.WH_LOC_ID                                                             AS WH_LOC_ID
-    ,   D.STK_CODE                                                              AS ITM_ID
+    ,   C.ITM_ID                                                                AS ITM_ID
+    ,   D.STK_CODE                                                              AS STK_CODE
     ,   D.STK_DESC                                                              AS ITM_ID_NM
     ,   D.STK_TYPE_ID                                                           AS STK_TYPE_ID
     ,   E.CODE_NAME                                                             AS STK_TYPE_ID_NM

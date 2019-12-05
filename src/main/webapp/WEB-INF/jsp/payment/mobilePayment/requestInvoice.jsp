@@ -32,6 +32,7 @@ var refundColumnLayout =
     ,   { dataField : "invcTypeNm", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:140, headerText : "<spring:message code='invoiceApprove.invcType'/>", style : "aui-grid-user-custom-left" }
     ,   { dataField : "invcItmOrdNo", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:100, headerText : "<spring:message code='pay.head.order No'/>" }
     ,   { dataField : "taxInvcId", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:100, headerText : "<spring:message code='pay.head.invcId'/>" }
+    ,   { dataField : "taxInvcRefNo", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:140, headerText : "<spring:message code='pay.head.brNo'/>" }
     ,   { dataField : "email", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:200, headerText : "<spring:message code='pay.head.email'/>", style : "aui-grid-user-custom-left" }
     ,   { dataField : "email2", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:200, headerText : "<spring:message code='pay.head.addEmail'/>", style : "aui-grid-user-custom-left" }
     ,   { dataField : "invcAdvPrd", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:80, headerText : "<spring:message code='pay.head.period'/>" }
@@ -40,7 +41,7 @@ var refundColumnLayout =
     ,   { dataField : "invcItmExgAmt", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:140, headerText : "<spring:message code='pay.head.existingAmount'/>", dataType : "numeric", formatString : "#,##0.00", style : "aui-grid-user-custom-right" }
     ,   { dataField : "invcItmTotAmt", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:100, headerText : "<spring:message code='pay.head.amoumt'/>",         dataType : "numeric", formatString : "#,##0.00", style : "aui-grid-user-custom-right" }
     ,   { dataField : "invcCntcPerson", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:140, headerText : "<spring:message code='pay.head.contactPerson'/>" }
-    ,   { dataField : "invcItmPoNo", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:80, headerText : "<spring:message code='pay.head.pOno'/>" }
+    ,   { dataField : "invcItmPoNo", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:160, headerText : "<spring:message code='pay.head.pOno'/>", style : "aui-grid-user-custom-left" }
     ,   {
                 dataField : "invcItmPoImgUrl"
             ,   cellMerge : true
@@ -58,7 +59,7 @@ var refundColumnLayout =
                                }
                             }
         }
-    ,   { dataField : "rem", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:100, headerText : "<spring:message code='pay.head.remark'/>" }
+    ,   { dataField : "rem", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:100, headerText : "<spring:message code='pay.head.remark'/>", style : "aui-grid-user-custom-left" }
     ,   { dataField : "branchCode", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:100, headerText : "<spring:message code='log.head.branchcode'/>" }
     ,   { dataField : "memberCode", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:100, headerText : "<spring:message code='pay.head.memberCode'/>" }
     ,   { dataField : "updDt", cellMerge : true, mergeRef : "mobTicketNo", mergePolicy : "restrict", width:160, headerText : "<spring:message code='pay.head.updateDate'/>" }

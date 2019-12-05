@@ -183,7 +183,7 @@ function fn_excel(){
 
 
 function fn_approve(){
-    var indexArr = AUIGrid.getSelectedIndex(myGridID);
+     var indexArr = AUIGrid.getSelectedIndex(myGridID);
     if( indexArr[0] == -1 ){
     	Common.alert("<spring:message code='pay.check.noRowsSelected'/>");
 
@@ -193,7 +193,8 @@ function fn_approve(){
     		Common.alert("<spring:message code='pay.check.ticketStusId'/>");
 
     	}else{
-    		Common.confirm("<spring:message code='pay.confirm.approve'/>", function(){
+/*
+            Common.confirm("<spring:message code='pay.confirm.approve'/>", function(){
 
     		    Common.ajaxSync("POST", "/payment/requestFundTransfer/saveRequestFundTransferArrpove.do", AUIGrid.getSelectedItems(myGridID)[0].item , function(result) {
     		        if(result !=""  && null !=result ){
@@ -204,10 +205,68 @@ function fn_approve(){
     		    });
 
     		});
+*/
+
+    		var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    		Common.ajax("POST", "/payment/requestFundTransfer/selectOutstandingAmount.do", {"newOrdNo":selectedItems[0].item.newOrdNo}, function(result) {
+                var selectedItems = AUIGrid.getSelectedItems(myGridID);
+/*
+                    selectedItems[0].item
+                    atchFileName: "MOBILE_PAY_30_20191202_1.jpg"
+                    brnchCode: "CDB-48"
+                    curAmt: 1000
+                    curCustName: "SAMCHEM SDN. BHD."
+                    curOrdNo: "2227757"
+                    curWorNo: "WOR8904103"
+                    fileSubPath: "payment/fundTransferApi/"
+                    ftAttchImgUrl: "DOWN"
+                    ftReqId: 6115
+                    ftResn: 2839
+                    ftResnName: "Wrongly information"
+                    ftStusId: 1
+                    memCode: "CD102479"
+                    mobTicketNo: 243
+                    newAmt: 1000
+                    newCustName: "NURAQILLA YASMIN BINTI FAZIR"
+                    newOrdNo: "2227766"
+                    physiclFileName: "B648DBF0ABC648EBACBBE68BFE3C3669"
+                    refAttchImg: 268706
+                    reqDt: "02/12/2019"
+                    rnum: 1
+                    ticketStusId: 1
+                    ticketStusNm: "Active"
+                    updDt: "02/12/2019 19:54:14"
+                    updUserId: "CD102479"
+                    _$uid: "B7F5FB51-F7A7-DE9E-277B- C6D3277FCADE"
+*/
+                var popCurAmt =  Number(selectedItems[0].item.curAmt);
+                var outAmt =  Number(result.data[0].outAmt);
+                var popAdvanceAmount = popCurAmt + outAmt;
+                if( popAdvanceAmount <= 0 ){
+                	popAdvanceAmount = 0;
+                    $("#popAdvanceMonth").addClass("disabled");
+                    $("#popAdvanceMonth").attr("disabled", "disabled");
+                }else{
+                	popAdvanceAmount = $.number(popAdvanceAmount, 2) ;
+                	$("#popAdvanceMonth").removeClass("disabled");
+                	$("#popAdvanceMonth").removeAttr("disabled");
+                }
+                $("#popNewOrdNo").val(selectedItems[0].item.newOrdNo);
+                $("#popNewPaymentType").val(result.data[0].appTypeName);
+                $("#popCurAmt").val( $.number(popCurAmt, 2) );
+                $("#popOutAmt").val( $.number(outAmt, 2) );
+                $("#popAdvanceAmount").val(popAdvanceAmount);
+                $("#editWindow").show();
+    	    });
     	}
     }
 }
 
+
+
+function saveApproveFundTransfer(){
+    alert(1);
+}
 
 
 function fn_rejcet(){
@@ -375,4 +434,80 @@ function fn_rejcet(){
         </article>
         <article class="grid_wrap" id="grid_excel_wrap" style="display: none;"></article>
     </section>
+
+
+<!--[START_POPUP] ▣ Approve Fund Transfer -->
+    <div id="editWindow" class="popup_wrap" style="display: none;">
+        <header class="pop_header">
+            <h1>Approve Fund Transfer</h1>
+            <ul class="right_opt">
+                <li>
+                    <p class="btn_blue2">
+                        <a href="#"><spring:message code='sys.btn.close' /></a>
+                    </p>
+                </li>
+            </ul>
+        </header>
+        <section class="pop_body">
+            <form id="fromApproveFundTransfer" action="#" method="post">
+                <table class="type1">
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:140px" />
+                        <col style="width:180px" />
+                        <col style="width:180px" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Order No (New)<span class="must">*</span></th>
+                            <td colspan = "2" >
+                                <input type="text" id="popNewOrdNo" name="popNewOrdNo" class="w100p readonly" readonly="readonly"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Payment Type<span class="must">*</span></th>
+                            <td colspan = "2" >
+                                <input type="text" id="popNewPaymentType" name="popNewPaymentType" class="w100p readonly" readonly="readonly"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Transfer Amount<span class="must">*</span></th>
+                            <td colspan = "2" >
+                                <input type="text" id="popCurAmt" name="popCurAmt" class="w100p readonly" readonly="readonly"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Outstanding Amount<span class="must">*</span></th>
+                            <td colspan = "2" >
+                                <input type="text" id="popOutAmt" name="popOutAmt" class="w100p readonly" readonly="readonly"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Advance Amount & Month<span class="must">*</span></th>
+                            <td>
+                                <input type="text" id="popAdvanceAmount" name="popAdvanceAmount" class="w100p readonly" readonly="readonly"/>
+                            </td>
+                            <td>
+                                <select id="popAdvanceMonth" name="popAdvanceMonth"  class="w100p disabled" disabled="disabled">
+                                    <c:forEach var="i" begin="0" end="24" step="1">
+                                        <option value="${i}">${i}</option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+            <ul class="center_btns">
+                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                    <li>
+                        <p class="btn_blue2 big">
+                            <a id="cardSave" href="javascript:saveApproveFundTransfer();" ><spring:message code='sys.btn.save'/></a>
+                        </p>
+                    </li>
+                </c:if>
+            </ul>
+        </section>
+    </div>
+<!--[END_POPUP] ▣ Approve Fund Transfer -->
 </section>

@@ -274,6 +274,7 @@ INTO    PAY0301D                                                                
     ,   REQ_INDEX                                                               --Sequence
     ,   INVC_ITM_ORD_NO                                                         --InvoiceItemOrderNo
     ,   TAX_INVC_ID                                                             --Only Normal : previously issued invoice ID
+    ,   TAX_INVC_REF_NO
     ,   INVC_ITM_PO_NO                                                          --Only Advance : Purchase Order No.
     ,   INVC_ITM_PO_IMG                                                         --Only Advance : Purchase Order Image
     ,   INVC_ADV_PRD                                                            --Only Advance : Number of months in advance
@@ -295,6 +296,7 @@ INTO    PAY0301D                                                                
     ,   #{reqIndex}                                                             --Sequence
     ,   #{invcItmOrdNo}                                                         --InvoiceItemOrderNo
     ,   #{taxInvcId}                                                            --Only Normal : previously issued invoice ID
+    ,   #{taxInvcRefNo}
     ,   #{invcItmPoNo}                                                          --Only Advance : Purchase Order No.
     ,   #{invcItmPoImg}                                                         --Only Advance : Purchase Order Image
     ,   #{invcAdvPrd}                                                           --Only Advance : Number of months in advance

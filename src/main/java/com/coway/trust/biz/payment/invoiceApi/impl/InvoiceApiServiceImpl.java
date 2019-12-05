@@ -159,6 +159,7 @@ public class InvoiceApiServiceImpl extends EgovAbstractServiceImpl implements In
         int reqInvcNo = 0;
         for(InvoiceApiDto data : param){
             Map<String, Object> createData = InvoiceApiDto.createMap(data);
+
             createData.put("crtUserId", loginVO.getUserId());
             createData.put("updUserId", loginVO.getUserId());
             createData.put("mobTicketNo", mobTicketNo);
@@ -170,8 +171,6 @@ public class InvoiceApiServiceImpl extends EgovAbstractServiceImpl implements In
             createData.put("invcItmExgAmt", null);
             createData.put("invcItmTotAmt", null);
             createData.put("reqInvcYearMonth()", null);
-            createData.put("email", createData.get("email"));
-            createData.put("email2", createData.get("email2"));
 
             if( reqInvcNo == 0 ){
                 int chkCnt = invoiceApiMapper.selectRequestInvoiceStusCheck(createData);
@@ -220,6 +219,9 @@ public class InvoiceApiServiceImpl extends EgovAbstractServiceImpl implements In
         if( param.getInvcType()!= 964 && (CommonUtils.isEmpty(param.getInvcItmPoNo()) && CommonUtils.isEmpty(param.getInvcItmPoImg())) ){
             throw new ApplicationException(AppConstants.FAIL, "invcItmPoNo, invcItmPoImg null.");
         }
+        if( CommonUtils.isNotEmpty(param.getInvcItmPoNo()) && param.getInvcItmPoNo().length() > 20 ){
+            throw new ApplicationException(AppConstants.FAIL, "Purchase order number length is up to 20 digits.");
+        }
         if( CommonUtils.isEmpty(param.getInvcItmDiscRate()) ){
             throw new ApplicationException(AppConstants.FAIL, "The Discount Rate value does not exist.");
         }
@@ -258,6 +260,7 @@ public class InvoiceApiServiceImpl extends EgovAbstractServiceImpl implements In
         createData.put("taxInvcId", null);
         createData.put("invcItmId", null);
         createData.put("invcItmRentalFee", null);
+        createData.put("taxInvcRefNo", null);
         createData.put("mobTicketNo", mobTicketNo);
         if( param.getInvcItmPoImg() == 0 ){
             createData.put("invcItmPoImg", null);

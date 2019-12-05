@@ -34,6 +34,10 @@ public interface RequestFundTransferMapper {
 
 
 
+    List<EgovMap> selectOutstandingAmount(Map<String, Object> params);
+
+
+
     EgovMap selectInfoPAY02052T(Map<String, Object> params);
 
 

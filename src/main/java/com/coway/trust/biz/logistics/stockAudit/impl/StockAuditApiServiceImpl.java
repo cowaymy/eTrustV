@@ -62,7 +62,6 @@ public class StockAuditApiServiceImpl extends EgovAbstractServiceImpl implements
         if( null == loginVO || CommonUtils.isEmpty(loginVO.getUserId()) ){
             throw new ApplicationException(AppConstants.FAIL, "Reg ID value does not exist.");
         }
-//TODO 강재민 whLocId 운영반영전에 수정해야됨 !!
         param.setWhLocId(loginVO.getUserId());
         return stockAuditApiMapper.selectStockAuditList(StockAuditApiFormDto.createMap(param));
     }

@@ -151,6 +151,7 @@ SELECT  A.MOB_TICKET_NO                                                         
     ,   D.CODE_NAME                                                             AS INVC_TYPE_NM
     ,   B.INVC_ITM_ORD_NO                                                       AS INVC_ITM_ORD_NO
     ,   B.TAX_INVC_ID                                                           AS TAX_INVC_ID
+    ,   B.TAX_INVC_REF_NO                                                       AS TAX_INVC_REF_NO
     ,   B.EMAIL                                                                 AS EMAIL
     ,   B.EMAIL2                                                                AS EMAIL2
     ,   B.INVC_ADV_PRD                                                          AS INVC_ADV_PRD

@@ -59,8 +59,7 @@ FROM
                 ON  H.SALES_ORD_ID = D.SALES_ORD_ID
             INNER JOIN SYS0026M I
                 ON  I.STK_ID = H.ITM_STK_ID
-    WHERE   A.LDGR_TYPE IN (1, 2)
-    AND     A.FT_STUS_ID IS NULL
+    WHERE   A.FT_STUS_ID IS NULL
     AND     TO_CHAR(C.PAY_ITM_REF_DT, 'YYYYMMDD') BETWEEN #{transactionDateFrom} AND #{transactionDateTo}
     <choose>
     <when test='selectType.equals("1")'>
@@ -110,8 +109,7 @@ FROM
                 ON  I.SALES_ORD_ID = E.SALES_ORD_ID
             INNER JOIN SYS0026M J
                 ON  J.STK_ID = I.ITM_STK_ID
-    WHERE   A.LDGR_TYPE IN (1, 2)
-    AND     A.FT_STUS_ID IS NULL
+    WHERE   A.FT_STUS_ID IS NULL
     AND     TO_CHAR(C.PAY_ITM_REF_DT, 'YYYYMMDD') BETWEEN #{transactionDateFrom} AND #{transactionDateTo}
     <choose>
     <when test='selectType.equals("1")'>

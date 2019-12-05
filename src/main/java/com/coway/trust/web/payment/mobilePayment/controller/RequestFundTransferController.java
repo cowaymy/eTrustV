@@ -73,6 +73,16 @@ public class RequestFundTransferController {
 
 
 
+    @RequestMapping(value = "/selectOutstandingAmount.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> selectOutstandingAmount(@RequestBody Map<String, Object> param) throws Exception{
+        ReturnMessage result = requestFundTransferService.selectOutstandingAmount(param);
+        result.setCode(AppConstants.SUCCESS);
+        result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        return ResponseEntity.ok(result);
+    }
+
+
+
     @RequestMapping(value = "/saveRequestFundTransferArrpove.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> saveRequestFundTransferArrpove(@RequestBody Map<String, Object> param, SessionVO sessionVO) throws Exception{
         param.put("userId", sessionVO.getUserId());

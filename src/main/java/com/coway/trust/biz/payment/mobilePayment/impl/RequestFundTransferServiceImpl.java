@@ -71,6 +71,18 @@ public class RequestFundTransferServiceImpl extends EgovAbstractServiceImpl impl
 
 
     @Override
+    public ReturnMessage selectOutstandingAmount(Map<String, Object> param) throws Exception{
+        if( CommonUtils.isEmpty( param.get("newOrdNo") )){
+            throw new ApplicationException(AppConstants.FAIL, "New Order Number value does not exist.");
+        }
+        ReturnMessage result = new ReturnMessage();
+        result.setData(requestFundTransferMapper.selectOutstandingAmount(param));
+        return result;
+    }
+
+
+
+    @Override
     public int saveRequestFundTransferArrpove(Map<String, Object> param) throws Exception{
         if( CommonUtils.isEmpty( param.get("ftReqId") )){
             throw new ApplicationException(AppConstants.FAIL, "Mobile Request Fund Transfer Number value does not exist.");

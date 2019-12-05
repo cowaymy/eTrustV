@@ -33,11 +33,11 @@ public class StockAuditApiDto {
 	private String docEndDt;                                                    //Stock Audit End Date
 	private int docStusCodeId;                                                  //Doc Status (SYS0013M - CODE_MASTER_ID : 436)
 	private String reuploadYn;                                                  //Attachments file reupload yn
-	private int appv3ReqstUserId;                                               //3rd Requester
+	private String appv3ReqstUserId;                                            //3rd Requester
 	private String appv3ReqstDt;                                                //3rd Request Date
 	private String appv3ReqstOpinion;                                           //3rd Request Opinion
 	private int appvAtchFileGrpId;                                              //Approval Attach File Group Id
-	private int appv3UserId;                                                    //3rd Approver
+	private String appv3UserId;                                                 //3rd Approver
 	private String appv3Dt;                                                     //3rd Approval Date
 	private String appv3Opinion;                                                //3rd Approval Opinion
 	private String stockAuditReason;                                            //Stock Audit Reason
@@ -51,12 +51,12 @@ public class StockAuditApiDto {
 	private String rem;                                                         //Remark
 	private String useYn;                                                       //Use YN
     private String docStusCodeIdNm;                                             //Doc Status (SYS0013M - ID CODE_MASTER_ID : 436)
-    private int appv1ReqstUserId;
+    private String appv1ReqstUserId;
     private String appv1ReqstDt;
-    private int appv1UserId;
+    private String appv1UserId;
     private String appv1Dt;
     private String appv1Opinion;
-    private int appv2UserId;
+    private String appv2UserId;
     private String appv2Dt;
     private String appv2Opinion;
     private int locStusCodeId;
@@ -72,21 +72,7 @@ public class StockAuditApiDto {
     private int diffQty;
     private String regId;
     private String viewGu;
-
-
-
-    public String getViewGu() {
-        return viewGu;
-    }
-    public void setViewGu(String viewGu) {
-        this.viewGu = viewGu;
-    }
-    public String getLocStusCodeIdNm() {
-        return locStusCodeIdNm;
-    }
-    public void setLocStusCodeIdNm(String locStusCodeIdNm) {
-        this.locStusCodeIdNm = locStusCodeIdNm;
-    }
+    private String stkCode;
     public String getStockAuditNo() {
         return stockAuditNo;
     }
@@ -117,10 +103,10 @@ public class StockAuditApiDto {
     public void setReuploadYn(String reuploadYn) {
         this.reuploadYn = reuploadYn;
     }
-    public int getAppv3ReqstUserId() {
+    public String getAppv3ReqstUserId() {
         return appv3ReqstUserId;
     }
-    public void setAppv3ReqstUserId(int appv3ReqstUserId) {
+    public void setAppv3ReqstUserId(String appv3ReqstUserId) {
         this.appv3ReqstUserId = appv3ReqstUserId;
     }
     public String getAppv3ReqstDt() {
@@ -141,10 +127,10 @@ public class StockAuditApiDto {
     public void setAppvAtchFileGrpId(int appvAtchFileGrpId) {
         this.appvAtchFileGrpId = appvAtchFileGrpId;
     }
-    public int getAppv3UserId() {
+    public String getAppv3UserId() {
         return appv3UserId;
     }
-    public void setAppv3UserId(int appv3UserId) {
+    public void setAppv3UserId(String appv3UserId) {
         this.appv3UserId = appv3UserId;
     }
     public String getAppv3Dt() {
@@ -225,10 +211,10 @@ public class StockAuditApiDto {
     public void setDocStusCodeIdNm(String docStusCodeIdNm) {
         this.docStusCodeIdNm = docStusCodeIdNm;
     }
-    public int getAppv1ReqstUserId() {
+    public String getAppv1ReqstUserId() {
         return appv1ReqstUserId;
     }
-    public void setAppv1ReqstUserId(int appv1ReqstUserId) {
+    public void setAppv1ReqstUserId(String appv1ReqstUserId) {
         this.appv1ReqstUserId = appv1ReqstUserId;
     }
     public String getAppv1ReqstDt() {
@@ -237,10 +223,10 @@ public class StockAuditApiDto {
     public void setAppv1ReqstDt(String appv1ReqstDt) {
         this.appv1ReqstDt = appv1ReqstDt;
     }
-    public int getAppv1UserId() {
+    public String getAppv1UserId() {
         return appv1UserId;
     }
-    public void setAppv1UserId(int appv1UserId) {
+    public void setAppv1UserId(String appv1UserId) {
         this.appv1UserId = appv1UserId;
     }
     public String getAppv1Dt() {
@@ -255,10 +241,10 @@ public class StockAuditApiDto {
     public void setAppv1Opinion(String appv1Opinion) {
         this.appv1Opinion = appv1Opinion;
     }
-    public int getAppv2UserId() {
+    public String getAppv2UserId() {
         return appv2UserId;
     }
-    public void setAppv2UserId(int appv2UserId) {
+    public void setAppv2UserId(String appv2UserId) {
         this.appv2UserId = appv2UserId;
     }
     public String getAppv2Dt() {
@@ -278,6 +264,12 @@ public class StockAuditApiDto {
     }
     public void setLocStusCodeId(int locStusCodeId) {
         this.locStusCodeId = locStusCodeId;
+    }
+    public String getLocStusCodeIdNm() {
+        return locStusCodeIdNm;
+    }
+    public void setLocStusCodeIdNm(String locStusCodeIdNm) {
+        this.locStusCodeIdNm = locStusCodeIdNm;
     }
     public String getLocStusCodeIdGu() {
         return locStusCodeIdGu;
@@ -339,5 +331,16 @@ public class StockAuditApiDto {
     public void setRegId(String regId) {
         this.regId = regId;
     }
-
+    public String getViewGu() {
+        return viewGu;
+    }
+    public void setViewGu(String viewGu) {
+        this.viewGu = viewGu;
+    }
+    public String getStkCode() {
+        return stkCode;
+    }
+    public void setStkCode(String stkCode) {
+        this.stkCode = stkCode;
+    }
 }

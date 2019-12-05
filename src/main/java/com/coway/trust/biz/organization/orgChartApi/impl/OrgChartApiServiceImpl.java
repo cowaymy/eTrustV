@@ -47,6 +47,9 @@ public class OrgChartApiServiceImpl extends EgovAbstractServiceImpl implements O
         if( CommonUtils.isEmpty(param.getMemLvl()) ){
             throw new ApplicationException(AppConstants.FAIL, "Member Level value does not exist.");
         }
+        if( param.getMemType() !=  2 && param.getMemType() != 3){
+            throw new ApplicationException(AppConstants.FAIL, "Please check the Member Type.");
+        }
 		return orgChartApiMapper.selectOrgChart(OrgChartApiForm.createMap(param));
 	}
 }

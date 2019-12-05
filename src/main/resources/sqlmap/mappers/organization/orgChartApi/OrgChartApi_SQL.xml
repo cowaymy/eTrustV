@@ -59,7 +59,20 @@ SELECT  A.MEM_ID                                                                
 			                          )
 			             OR CC.PROMO_ID IS NULL
 			         )
+]]>
+<if test="memType == 2">
+			AND     (
+			            (
+			                    C.PROMO_TYPE_ID NOT IN (757, 758)
+			                OR   C.PROMO_TYPE_ID IS NULL
+			            )OR(
+			                    C.STUS_ID != 4
+			                OR  C.STUS_ID IS NULL
+			            )
+			        )
+</if>
         )                                                                       AS CNT
+<![CDATA[
 FROM    ORG0005D A                                                              --MemberOrganization
         INNER JOIN ORG0001D B                                                   --Member
             ON  A.MEM_ID = B.MEM_ID
@@ -77,34 +90,24 @@ AND     (
                     AND C.MEM_LVL_TO = #{memLvl}
 ]]>
 <if test='memId > 0'>
-<![CDATA[
                     AND C.PARENT_ID_TO = #{memId}
-]]>
 </if>
-<![CDATA[
                 )
             OR  (
                         C.PROMO_TYPE_ID IN (747, 748, 749)
-                    AND C.STUS_ID <> 4
+                    AND C.STUS_ID != 4
                     AND A.MEM_LVL = #{memLvl}
-]]>
 <if test='memId > 0'>
-<![CDATA[
                     AND A.MEM_UP_ID = #{memId}
-]]>
 </if>
-<![CDATA[
                 )
             OR  (
                         C.PROMO_TYPE_ID NOT IN (747, 748, 749)
                     OR  C.PROMO_TYPE_ID IS NULL
                 )
             AND A.MEM_LVL = #{memLvl}
-]]>
 <if test='memId > 0'>
-<![CDATA[
             AND A.MEM_UP_ID = #{memId}
-]]>
 </if>
 <![CDATA[
         )
@@ -117,7 +120,18 @@ AND     (
                           )
              OR C.PROMO_ID IS NULL
         )
-ORDER BY A.DEPT_CODE ASC
 ]]>
+<if test="memType == 2">
+AND     (
+            (
+                    C.PROMO_TYPE_ID NOT IN (757, 758)
+                OR   C.PROMO_TYPE_ID IS NULL
+            )OR(
+                    C.STUS_ID != 4
+                OR  C.STUS_ID IS NULL
+            )
+        )
+</if>
+ORDER BY A.DEPT_CODE ASC
 </select>
 </mapper>
