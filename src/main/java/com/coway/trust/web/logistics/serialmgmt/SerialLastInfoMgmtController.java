@@ -57,10 +57,28 @@ public class SerialLastInfoMgmtController {
 	private SerialLastInfoMgmtService serialLastInfoMgmtService;
 
 	@RequestMapping(value = "/serialLastInfoMgmt.do")
-	public String serialLastInfoMgmt(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String serialLastInfoMgmt(@RequestParam Map<String, Object> params, ModelMap model,	SessionVO sessionVo) {
 
 		// In/Out STUS
 		model.addAttribute("stusList", commonService.selectCodeList("446", "CODE_ID"));
+
+		// Location Type/Code selection
+		if(sessionVo.getUserTypeId() == 2) { 			// CODY
+			params.put("locgb", "04");
+		} else if(sessionVo.getUserTypeId() == 3) { // CT
+			params.put("locgb", "03");
+		}
+		params.put("userBrnchId", sessionVo.getUserBranchId());
+		String defLocType = serialLastInfoMgmtService.selectDefLocationType(params);
+
+		model.addAttribute("defLocType", defLocType);
+		params.put("locgb", defLocType);
+
+		if("03".equals(defLocType) || "04".equals(defLocType)) {
+			params.put("userName", sessionVo.getUserName());
+		}
+		String defLocCode = serialLastInfoMgmtService.selectDefLocationCode(params);
+		model.addAttribute("defLocCode", defLocCode);
 
 		return "logistics/SerialMgmt/serialLastInfoMgmt";
 	}

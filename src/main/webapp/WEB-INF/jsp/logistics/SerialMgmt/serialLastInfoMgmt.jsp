@@ -31,7 +31,7 @@
 
         AUIGrid.setGridData(myGridID, []);
 
-        doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'listLocType', 'M','f_multiCombo');
+        doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '${defLocType}', 'listLocType', 'M','f_multiCombo');
 
         $("#btnSearch").click(function() {
         	getListAjax(1)
@@ -445,7 +445,8 @@
                      }
 
                      var param = {searchlocgb:locgbparam , grade:""}
-                     doGetComboData('/common/selectStockLocationList2.do', param , '', 'locCode', 'M','f_multiComboType');
+                     //doGetComboData('/common/selectStockLocationList2.do', param , '', 'locCode', 'M','f_multiComboType');
+                     CommonCombo.make('locCode', '/common/selectStockLocationList2.do', param , '${defLocCode}', {type: 'M', id:'codeId', name:'codeName', width:'68%', isCheckAll:false});
                   }
             }).multipleSelect({
                 selectAll : true

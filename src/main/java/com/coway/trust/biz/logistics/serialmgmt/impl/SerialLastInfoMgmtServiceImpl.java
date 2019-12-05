@@ -36,6 +36,16 @@ public class SerialLastInfoMgmtServiceImpl implements SerialLastInfoMgmtService 
 	private SerialLastInfoMgmtMapper serialLastInfoMgmtMapper;
 
 	@Override
+	public String selectDefLocationType(Map<String, Object> params) {
+		return serialLastInfoMgmtMapper.selectDefLocationType(params);
+	}
+
+	@Override
+	public String selectDefLocationCode(Map<String, Object> params) {
+		return serialLastInfoMgmtMapper.selectDefLocationCode(params);
+	}
+
+	@Override
 	public int selectSerialLastInfoListCnt(Map<String, Object> params) {
 		return serialLastInfoMgmtMapper.selectSerialLastInfoListCnt(params);
 	}

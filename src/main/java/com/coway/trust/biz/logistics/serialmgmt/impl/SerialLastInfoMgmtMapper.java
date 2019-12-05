@@ -21,6 +21,10 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("serialLastInfoMgmtMapper")
 public interface SerialLastInfoMgmtMapper {
 
+	String selectDefLocationType(Map<String, Object> params);
+
+	String selectDefLocationCode(Map<String, Object> params);
+
 	int selectSerialLastInfoListCnt(Map<String, Object> param);
 
 	List<EgovMap> selectSerialLastInfoList(Map<String, Object> params);

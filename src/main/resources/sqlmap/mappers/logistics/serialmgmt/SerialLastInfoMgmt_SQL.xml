@@ -2,6 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.serialmgmt.impl.SerialLastInfoMgmtMapper">
 
+    <select id="selectDefLocationType" parameterType="Map" resultType="String">
+        /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialScanningGRMapper.selectDefLocationType] - KR OHK */
+        SELECT WH_LOC_GB
+          FROM SYS0028M
+         WHERE 1 = 1
+            AND WH_LOC_STUS_ID = 1
+        <if test="userBrnchId != null and userBrnchId != ''">
+             AND WH_LOC_BRNCH_ID = #{userBrnchId}
+        </if>
+        <if test="locgb != null and locgb != ''">
+             AND WH_LOC_GB = #{locgb}
+        </if>
+             AND ROWNUM = 1
+    </select>
+
+    <select id="selectDefLocationCode" parameterType="Map" resultType="String">
+        /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialScanningGRMapper.selectDefLocationCode] - KR OHK */
+        SELECT LISTAGG(WH_LOC_ID, '|!|') WITHIN GROUP (ORDER BY WH_LOC_ID) WH_LOC_ID
+          FROM SYS0028M
+         WHERE 1 = 1
+             AND WH_LOC_STUS_ID = 1
+        <if test="locgb != null and locgb != ''">
+              AND WH_LOC_GB = #{locgb}
+        </if>
+        <if test="userName != null and userName != ''">
+              AND WH_LOC_CODE = #{userName}
+        </if>
+        <if test="userBrnchId != null and userBrnchId != ''">
+             AND WH_LOC_BRNCH_ID = #{userBrnchId}
+        </if>
+    </select>
+
 	<select id="selectSerialLastInfoListCnt" parameterType="Map"  resultType="int">
     /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialLastInfoMgmtMapper.selectSerialLastInfoListCnt] 20191125 - KR OHK */
     SELECT COUNT(1) AS CNT
@@ -38,7 +70,7 @@
             AND A.LAST_DELVRY_GR_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{grEDate}, 'DD/MM/YYYY'), 'YYYYMMDD')
         </if>
         <if test="locCode != null">
-            AND (1, B.WH_LOC_CODE) IN
+            AND (1, B.WH_LOC_ID) IN
                 <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
                   (1,#{item})
                 </foreach>
@@ -109,7 +141,7 @@
                                       AND A.LAST_DELVRY_GR_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{grEDate}, 'DD/MM/YYYY'), 'YYYYMMDD')
                                   </if>
                                   <if test="locCode != null">
-                                      AND (1, B.WH_LOC_CODE) IN
+                                      AND (1, B.WH_LOC_ID) IN
                                           <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
                                              (1,#{item})
                                           </foreach>
