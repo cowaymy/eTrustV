@@ -71,7 +71,7 @@ public class FileApiController {
 	@ApiOperation(value = "SyncFileUpload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@RequestMapping(value = "/syncFileUpload", method = RequestMethod.POST)
 	public ResponseEntity<FileDto> syncFileUpload(@ApiIgnore MultipartHttpServletRequest request, @ModelAttribute FileForm fileForm) throws Exception {
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, fileForm.getSubPath(), AppConstants.UPLOAD_MAX_FILE_SIZE);
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles2(request, uploadDir, fileForm.getSubPath(), AppConstants.UPLOAD_MAX_FILE_SIZE);
 
 		Map<String, Object> params = fileForm.createMap(fileForm);
 
