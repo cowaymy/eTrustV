@@ -20,8 +20,10 @@
         , l59.trnsc_type_code
         , l60.MATRL_DOC_ITM
         , l60.delvry_no
+        , l60.delvry_itm_no
         , (SELECT SALES_ORD_NO FROM SAL0001D WHERE SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0046D WHERE INSTALL_ENTRY_NO = l60.sales_ord_no)) ordno
         , l60.STOCK_TRNSFR_REQST
+        , l60.STOCK_TRNSFR_REQST_ITM_NO
         , tt.code_name trantype
         , l60.INVNTRY_MOV_TYPE
         , mt.code_name movtype
@@ -172,7 +174,13 @@
         <if test="ordno !=null and ordno != ''">
             AND l59.MAIN_SALES_ORD_NO = #{ordno}
         </if>
-
+        <if test="serialNo !=null and serialNo !=''">
+            AND EXISTS (SELECT 1
+                                 FROM LOG0099D T
+                               WHERE T.REQST_NO = l60.STOCK_TRNSFR_REQST
+                                   AND T.SERIAL_NO = #{serialNo}
+                             )
+        </if>
         order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
     </select>
 
@@ -195,5 +203,44 @@
      ORDER BY S8.CODE
     </select>
 
+    <select id="selectMaterialDocSerialList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.materialdocument.impl.MaterialDocumentMapper.selectMaterialDocSerialList] 20191122 - KR OHK */
+    <if test="trnscTypeCode == 'OD'">
+    SELECT SERIAL_NO
+              ,SERIAL_NO AS SERIAL_SCAN
+              ,SERIAL_NO AS BOX_NO
+              ,ITM_CODE
+              ,LAST_REQST_NO AS REQST_NO
+              ,LAST_REQST_NO_ITM AS REQST_NO_ITM
+              ,LAST_DELVRY_NO AS DELVRY_NO
+              ,LAST_DELVRY_NO_ITM AS DELVRY_NO_ITM
+      FROM LOG0100M
+    WHERE LAST_SALES_ORD_ID = #{ordno}
+        AND LAST_SALES_ORD_ID IS NOT NULL
+    </if>
+    <if test="trnscTypeCode != 'OD'">
+    SELECT SERIAL_NO
+              ,SERIAL_SCAN
+              ,BOX_NO
+              ,ITM_CODE
+              ,REQST_NO
+              ,REQST_NO_ITM
+              ,DELVRY_NO
+              ,DELVRY_NO_ITM
+      FROM LOG0099D
+    WHERE 1=1
+        AND SCAN_STUS_CODE != 'D'
+        AND IO_TYPE = #{ioType}
+        <if test="delvryNo != null and delvryNo !=''">
+            AND DELVRY_NO = #{delvryNo}
+            AND DELVRY_NO_ITM = #{delvryNoItm}
+        </if>
+        <if test="delvryNo == null">
+            AND REQST_NO =  #{reqstNo}
+            AND REQST_NO_ITM = #{reqstNoItm}
+        </if>
+     ORDER BY SERIAL_NO
+     </if>
+    </select>
 
 </mapper>

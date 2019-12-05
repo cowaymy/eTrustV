@@ -376,6 +376,13 @@
            <if test='isEKeyin != null and isEKeyin != ""'>
              AND EKEY_IN_ID IS NOT NULL
            </if>
+           <if test='isSelectAll == null or isSelectAll == ""'>
+             AND NOT EXISTS (SELECT AA.ORD_NO FROM SAL1013V  AA, SYS0026M BB
+                                       WHERE AA.PRODUCT_CODE  = BB.STK_CODE
+                                          AND BB.STK_CTGRY_ID     IN ('5706', '5707')        /* StkCategoryID_Homecare */
+                                          AND AA.ORD_NO             = V1.ORD_NO
+             )
+           </if>
     ) T
     ORDER BY T.ORD_NO ASC
   </select>

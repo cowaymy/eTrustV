@@ -55,7 +55,9 @@
         	fn_callbackOrder(ordId);
         }else if($('#callPrgm').val() == 'BILLING_STATEMENT_PO') {
             fn_callbackOrder(ordId);
-        }
+        }else if($('#callPrgm').val() == 'SERIAL') {
+        	fn_orderInfo(ordNo);
+	    }
         
 	}
 	
@@ -125,6 +127,9 @@
     
 	    // 리스트 조회.
     function fn_selectListAjax() {        
+    	if($('#callPrgm').val() == 'SERIAL') {
+    		$('#isSelectAll').val('Y');
+    	}
         Common.ajax("GET", "/sales/order/selectOrderJsonList", $("#popSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(popOrderGridID, result);
         });
@@ -150,6 +155,7 @@
 <form id="popSearchForm" name="popSearchForm" action="#" method="post">
     <input id="callPrgm" name="callPrgm" value="${callPrgm}" type="hidden" />
     <input id="indicator" name="indicator" value="${indicator}" type="hidden" />
+    <input id="isSelectAll" name="isSelectAll" value="" type="hidden" />
 <table class="type1 mt10"><!-- table start -->
 <caption>table</caption>
 <colgroup>

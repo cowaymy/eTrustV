@@ -39,6 +39,7 @@ var columnLayout = [{dataField: "matrlNo",headerText :"<spring:message code='log
 							{dataField: "reqStorgNm",headerText :"From SLoc"                     ,width:120    ,height:30 , visible:true},
 							{dataField: "revStorgNm",headerText :"To SLoc"                     ,width:120    ,height:30 , visible:true},
 							{dataField: "trantype",headerText :"<spring:message code='log.head.transactiontype'/>"        ,width:120    ,height:30 , visible:true},
+							{dataField: "trnscTypeCode",headerText :"trnscTypeCode"        ,width:120    ,height:30 , visible:false},
 							{dataField: "invntryMovType",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:true},
 							{dataField: "movtype",headerText :"<spring:message code='log.head.movementtext'/>"                ,width:120    ,height:30 , visible:true},
 							{dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"                           ,width: "8%"       ,height:30 , visible:true},
@@ -46,9 +47,11 @@ var columnLayout = [{dataField: "matrlNo",headerText :"<spring:message code='log
 							{dataField: "matrlDocItm",headerText :"Mat. Doc Item"                         ,width:120    ,height:30 , visible:true},
 							{dataField: "postingdate",headerText :"<spring:message code='log.head.postingdate'/>"                  ,width:120    ,height:30 , visible:true},
 							{dataField: "delvryNo",headerText :"<spring:message code='log.head.deliveryno'/>"                   ,width:120    ,height:30 , visible:true},
+							{dataField: "delvryItmNo",headerText :"delvryItmNo"                   ,width:120    ,height:30 , visible:false},
 							{dataField: "ordno",headerText :"Order No."        ,width:120    ,height:30                },
 							{dataField: "salesOrdNo",headerText :"Ref.DOC. No"                ,width: "15%"     ,height:30 , visible:true},
 							{dataField: "stockTrnsfrReqst",headerText :"<spring:message code='log.head.requestno'/>"                    ,width:120    ,height:30 , visible:true},
+							{dataField: "stockTrnsfrReqstItmNo",headerText :"stockTrnsfrReqstItmNo"                    ,width:120    ,height:30 , visible:false},
 							{dataField: "rcivCdcRdc",headerText :"Req_F_Loc"                    ,width:120    ,height:30 , visible:true},
 							{dataField: "reqstCdcRdc",headerText :"Req_T_Loc"                    ,width:120    ,height:30 , visible:true},
 							{dataField: "debtCrditIndict",headerText :"<spring:message code='log.head.debit/credit'/>"                 ,width:120    ,height:30 , visible:true},
@@ -64,6 +67,11 @@ var columnLayout = [{dataField: "matrlNo",headerText :"<spring:message code='log
 							{dataField: "userName",headerText :"Creator"        ,width:120    ,height:30 }
                    ];
 
+var columnLayoutDetail = [
+                            {dataField: "serialNo", headerText :"<spring:message code='service.title.SerialNo'/>", width:160, height:30, visible:true},
+                            {dataField: "boxNo", headerText :"Box Serial No", width:160, height:30, visible:true}
+                   ];
+
 var resop = {
         rowIdField : "rnum",
         //editable : true,
@@ -73,6 +81,7 @@ var resop = {
         //showStateColumn : false,
         showBranchOnGrouping : false
         };
+
 var reqop = {editable : false,usePaging : false ,showStateColumn : false};
 var gridoptions = {showStateColumn : false , editable : false, usePaging : false, useGroupingPanel : false };
 var paramdata;
@@ -83,6 +92,8 @@ $(document).ready(function(){
 
     // masterGrid 그리드를 생성합니다.
     myGridID = GridCommon.createAUIGrid("main_grid_wrap", columnLayout,"", gridoptions);
+
+    detailGridID = GridCommon.createAUIGrid("detail_grid_wrap", columnLayoutDetail,"", gridoptions);
 
     /**********************************
     * Header Setting
@@ -139,7 +150,37 @@ $(document).ready(function(){
 
 
     AUIGrid.bind(myGridID, "cellClick", function( event ) {
+    	var delvryNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "delvryNo");
+    	var delvryItmNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "delvryItmNo");
+    	var reqstNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "stockTrnsfrReqst");
+    	var reqstNoItm = AUIGrid.getCellValue(myGridID, event.rowIndex, "stockTrnsfrReqstItmNo");
+    	var ordno = AUIGrid.getCellValue(myGridID, event.rowIndex, "ordno");
 
+    	var qty = AUIGrid.getCellValue(myGridID, event.rowIndex, "qty");
+    	var trnscTypeCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "trnscTypeCode");
+
+    	var ioType = "I";
+    	if(qty <0){
+    		ioType = "O";
+    	}
+
+    	if(trnscTypeCode == "OD"){
+    		delvryNo = "";
+    		delvryItmNo = "";
+    		reqstNo = "";
+    		reqstNoItm = "";
+    	} else{
+    		ordno = "";
+    	}
+
+        var subParam = {"delvryNo":delvryNo, "delvryNoItm":delvryItmNo, "reqstNo":reqstNo, "reqstNoItm":reqstNoItm, "ordno":ordno, "trnscTypeCode":trnscTypeCode, "ioType":ioType};
+
+        Common.ajax("GET", "/logistics/materialDoc/selectMaterialDocSerialList.do"
+                , subParam
+                , function(data){
+                       console.log("data : " + data);
+                       AUIGrid.setGridData(detailGridID, data.data);
+        });
     });
 
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
@@ -328,6 +369,8 @@ function f_multiCombos() {
 
 	function SearchListAjax() {
 
+		AUIGrid.setGridData(detailGridID, []);
+
 		var url = "/logistics/materialDoc/MaterialDocSearchList.do";
 		var param = $('#searchForm').serialize();
 
@@ -511,6 +554,10 @@ function f_multiCombos() {
                     <td>
                         <input type="text" id="mainloc" name="mainloc" title="" placeholder="Location Code" class="w100p" />
                     </td>
+                    <th scope="row">Serial No.</th>
+                    <td>
+                        <input type="text" id="serialNo" name="serialNo" title="" placeholder="Serial No" class="w100p" />
+                    </td>
                 </tr>
             </tbody>
         </table><!-- table end -->
@@ -527,9 +574,17 @@ function f_multiCombos() {
             <!-- <li><p class="btn_grid"><a id="insert">INS</a></p></li> -->
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:400px"></div>
+        <div id="main_grid_wrap" class="mt10" style="height:340px" ></div>
 
     <!--    <div id="sub_grid_wrap" class="mt10" style="height:350px"></div>  -->
+
+        <aside class="title_line"><!-- title_line start -->
+           <h3>Serial List</h3>
+        </aside><!-- title_line end -->
+        <article class="grid_wrap" ><!-- grid_wrap start -->
+          <!--  그리드 영역2  -->
+          <div id="detail_grid_wrap" style="height:130px"></div>
+        </article><!-- grid_wrap end -->
 
     </section><!-- search_result end -->
 

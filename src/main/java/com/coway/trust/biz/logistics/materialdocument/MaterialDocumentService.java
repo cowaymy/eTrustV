@@ -8,14 +8,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface MaterialDocumentService {
 
 	List<EgovMap> selectLocation(Map<String, Object> params);
-	
+
 	List<EgovMap> MaterialDocSearchList(Map<String, Object> params);
-	
+
 	List<EgovMap> MaterialDocMovementType(Map<String, Object> params);
-	
-	
-	
-	
+
+	// 20191122 KR-OHK Serial List Add
+	List<EgovMap> selectMaterialDocSerialList(Map<String, Object> params);
+
+
 
 /*	List<EgovMap> selectStockMovementMainList(Map<String, Object> params);
 

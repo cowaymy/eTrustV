@@ -41,8 +41,10 @@ public class MaterialDocumentServiceImpl extends EgovAbstractServiceImpl impleme
 		return MaterialDocumentMapper.MaterialDocMovementType(params);
 	}
 
-	
-	
-	
-	
+	// 20191122 KR-OHK Serial List Add
+	@Override
+	public List<EgovMap> selectMaterialDocSerialList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MaterialDocumentMapper.selectMaterialDocSerialList(params);
+	}
 }

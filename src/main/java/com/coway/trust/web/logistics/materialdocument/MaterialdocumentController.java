@@ -90,6 +90,7 @@ public class MaterialdocumentController {
 		String sordno = request.getParameter("sordno");
 		String mainloc = request.getParameter("mainloc").trim();
 		String ordno = request.getParameter("ordno");
+		String serialNo = request.getParameter("serialNo"); // 20191122 KR-OHK Serial No Add
 
 		logger.debug("mainloc trim@@@@@@@ : {}", mainloc);
 
@@ -117,6 +118,7 @@ public class MaterialdocumentController {
 		pmap.put("sordno", sordno);
 		pmap.put("mainloc", mainloc);
 		pmap.put("ordno", ordno);
+		pmap.put("serialNo", serialNo);
 
 		List<EgovMap> list = MaterialDocumentService.MaterialDocSearchList(pmap);
 
@@ -137,6 +139,19 @@ public class MaterialdocumentController {
 		result = MaterialDocumentService.MaterialDocMovementType(map);
 
 		return ResponseEntity.ok(result);
+	}
+
+	//  20191122 KR-OHK Serial List Add
+	@RequestMapping(value = "/selectMaterialDocSerialList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectMaterialDocSerialList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) throws Exception {
+
+		List<EgovMap> list = MaterialDocumentService.selectMaterialDocSerialList(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
 	}
 
 }

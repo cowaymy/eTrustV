@@ -175,7 +175,8 @@ var locLayout = [
 		                 {dataField:"codenm"     ,headerText:"Type"           ,width:"15%" ,height:30 , visible:true},
 		                 {dataField:"statnm"     ,headerText:"Status"         ,width:"10%" ,height:30 , visible:true},
 		                 {dataField:"locstus"    ,headerText:"locstus"        ,width:100 ,height:30 , visible:false},
-		                 {dataField:"user_name"  ,headerText:"nser_name"      ,width:100 ,height:30 , visible:false}
+		                 {dataField:"user_name"  ,headerText:"nser_name"      ,width:100 ,height:30 , visible:false},
+		                 {dataField:"locgbnm"      ,headerText:"locgbnm"          ,width:120 ,height:30 , visible:false},
 	                 ]; 
 
 
