@@ -684,7 +684,7 @@
                 arrDt = $("#trvPeriodTo").val().split("/");
                 if(arrDt[0] <= advReqDate1) {
                     rDate = new Date(arrDt[2], parseInt(arrDt[1]) - 1 + advRetMth1, advRetDate);
-                } else if (arrDt[0] > advReqDate1) {
+                } else if (arrDt[0] >= advReqDate1) {
                     rDate = new Date(arrDt[2], parseInt(arrDt[1]) - 1 + advRetMth2, advRetDate);
                 }
 
@@ -760,7 +760,10 @@
                 $("#appvLinePop").show();
                 AUIGrid.resize(approveLineGridID, 565, $(".approveLine_grid_wrap").innerHeight());
             }
+        } else if(mode == "J") {
+            $("#advReqMsgPop").hide();
         }
+
     }
 
     function fn_requestCheck() {
@@ -1607,12 +1610,14 @@
                             <input type="text" title="Repayment Date" placeholder="Repayment Date" id="trvAdvRepayDate" name="trvAdvRepayDate" class="j_date" style="200px" />
                         </td>
                     </tr>
+                    <!--
                     <tr>
                         <th scope="row">Bank-In Advice Ref No</th>
                         <td colspan="2">
                             <input type="text" title="Bank-In Advice Ref No" placeholder="Bank-In Advice Ref No" id="trvBankRefNo" name="trvBankRefNo" style="200px" />
                         </td>
                     </tr>
+                    -->
                     <tr>
                         <th scope="row">Remarks<span class="must">*</span></th>
                             <td colspan="2">
