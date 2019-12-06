@@ -25,4 +25,8 @@ public interface SerialMgmtNewService{
 	// homecare serial cancel
 	public void deleteSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 
+	// homecare serial save
+	public void saveSerialCode(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
+
 }

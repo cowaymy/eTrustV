@@ -247,6 +247,10 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 
 			serialMgmtNewMapper.callBarcodeScan(mainMap);
 
+
+			System.out.println("ERR CODE : " + (String)mainMap.get("errCode"));
+			System.out.println("ERR MSG : " + (String)mainMap.get("errMsg"));
+
 			if("000".equals((String)mainMap.get("errCode"))){
 				mainMap.put("scanNo",(String)mainMap.get("outScanNo"));
 
@@ -269,6 +273,7 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 	}
 
 	// 2.Non Homecare serial delete
+	@Override
 	public void deleteSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception{
 		params.put("crtUserId", sessionVO.getUserId());
 		params.put("updUserId", sessionVO.getUserId());
@@ -278,6 +283,20 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 		if(!"000".equals((String)params.get("errCode"))){
 			throw new ApplicationException(AppConstants.FAIL, (String)params.get("errMsg"));
 		}
+	}
+
+
+	// 3.Non Homecare serial save
+	@Override
+	public void saveSerialCode(Map<String, Object> params, SessionVO sessionVO) throws Exception{
+		params.put("crtUserId", sessionVO.getUserId());
+		params.put("updUserId", sessionVO.getUserId());
+
+		serialMgmtNewMapper.callSaveBarcodeScan(params);
+
+		//if(!"000".equals((String)params.get("errCode"))){
+		//	throw new ApplicationException(AppConstants.FAIL, (String)params.get("errMsg"));
+		//}
 	}
 
 

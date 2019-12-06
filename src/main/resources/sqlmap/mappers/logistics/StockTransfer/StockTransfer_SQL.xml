@@ -50,7 +50,9 @@
 		     , (select * from sys0013m where code_master_id = 309) reqs
 		     , sys0028m s28c
 		     , sys0028m s28q
-		     , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY from log0055d WHERE NVL(DEL_FLAG,'N') <![CDATA[<>]]> 'Y'  group by reqst_no , itm_code )l55
+		     , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY
+		         from log0055d WHERE NVL(DEL_FLAG,'N') <![CDATA[<>]]> 'Y'
+		         group by reqst_no , itm_code )l55
 		 where 1 =1
 		   and l47.reqst_no       = l48.reqst_no
 		   and l47.trnsc_type     = tran.code(+)
@@ -640,6 +642,72 @@
 		AND WH_LOC_BRNCH_ID = #{userBrnchId}
 	</if>
 </select>
+
+
+    <select id="selectStoIssuePop" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.stocktransfer.impl.StockTransferMapper.selectStoIssuePop] - KR JIN */
+        SELECT A.DELVRY_NO
+		     , B.DELVRY_NO_ITM
+		     , B.ITM_CODE
+		     , B.ITM_NAME
+		     , NVL(A.DELVRY_GI_CMPLT,'N') DEL_GI_CMPLT
+		     , CASE WHEN S26.STK_TYPE_ID= 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
+		            WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+		            WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+		            ELSE 'N'
+		       END AS SERIAL_CHK
+		     , B.DELVRY_QTY
+		     , (
+		        SELECT COUNT(1)
+		          FROM (
+		               SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+		                    , REQST_NO
+		                    , REQST_NO_ITM
+		                    , DELVRY_NO
+		                    , DELVRY_NO_ITM
+		                    , ITM_CODE
+		                    , SCAN_STUS_CODE
+		                 FROM LOG0099D
+		              ) Z1
+		       WHERE 1 = 1
+		         AND Z1.DELVRY_NO = B.DELVRY_NO
+		         AND Z1.DELVRY_NO_ITM = B. DELVRY_NO_ITM
+		         AND Z1.ITM_CODE = B.ITM_CODE
+		         AND Z1.SCAN_STUS_CODE = 'C'
+		         AND Z1.RN = 1
+		       ) AS SCAN_QTY
+		     , NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
+		  FROM LOG0054M A
+		     , LOG0055D B
+		     , LOG0047M C
+		     , SYS0028M S28  -- LOCATION
+		     , SYS0026M S26  -- ITEM
+		 WHERE A.DELVRY_NO = B.DELVRY_NO
+		   AND B.REQST_NO = C.REQST_NO
+		   AND C.REQST_CDC_RDC  = S28.WH_LOC_ID
+		   AND B.ITM_CODE = S26.STK_CODE(+)
+		   AND C.REQST_CDC_RDC  = S28.WH_LOC_ID
+		   AND NVL(B.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
+           AND A.DELVRY_NO in
+	            <foreach item="item" collection="delyList" index="index" open="(" separator="," close=")">
+	            #{item}
+	            </foreach>
+    </select>
+
+    <select id="stockTransferiSsueNew"  statementType="CALLABLE" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.stocktransfer.impl.StockTransferMapper.stockTransferiSsueNew] - KR JIN */
+        { call SP_LOGISTIC_DELIVERY_SERIAL(#{parray, mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}
+                                         , #{zGtype}
+                                         , #{doctext}
+                                         , #{sGipfdate}
+                                         , #{sGiptdate}
+                                         , #{zPrgName}
+                                         , #{zRstNo}
+                                         , #{salesorder}
+                                         , #{userId}
+                                         , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=STOPRCDATA} )
+        }
+     </select>
 
 
 </mapper>

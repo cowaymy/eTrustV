@@ -65,21 +65,25 @@ public interface StockTransferMapper {
 	void updateRequestTransfer(Map<String, Object> params);
 
 	List<EgovMap> selectDeliverydupCheck(Map<String, Object> insMap);
-	
+
 	void updateStockHead(String reqstono);
-	
+
 	void deleteStockDelete(String reqstono);
-	
+
 	void deleteStockBooking(String reqstono);
-	
+
 	int selectdeliveryHead(String reqstono);
-	
+
 	int selectAvaliableStockQty(Map<String, Object> param);
-	
+
 	Map<String, Object> selectDelvryGRcmplt(String delyno);
 
 	void updateDelivery54(Map<String, Object> formMap);
 
 	String selectDefLocation(Map<String, Object> param);
-	
+
+	public List<EgovMap> selectStoIssuePop(Map<String, Object> params) throws Exception;
+
+	public void stockTransferiSsueNew(Map<String, Object> params) throws Exception;
+
 }

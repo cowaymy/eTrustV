@@ -1,6 +1,4 @@
-/**
- *
- */
+
 /**
  * @author methree
  *
@@ -15,6 +13,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,6 +34,7 @@ import com.coway.trust.cmmn.exception.PreconditionException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -445,6 +446,8 @@ public class StocktransferController {
 		return ResponseEntity.ok(map);
 	}
 
+
+	// Befor goods issue
 	@RequestMapping(value = "/StocktransferGoodIssue.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> StocktransferGoodIssue(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVo) throws Exception {
@@ -675,13 +678,13 @@ public class StocktransferController {
 
 		return ResponseEntity.ok(map);
 	}
-	
+
 	@RequestMapping(value = "/selectDefLocation.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> selectDefLocation(@RequestParam Map<String, Object> params,
 			Model model,SessionVO sessionVo) {
-		
+
 		int userBrnchId = sessionVo.getUserBranchId();
-		
+
 		params.put("userBrnchId", userBrnchId);
 
 		logger.debug(" selectDefLocation params {} ", params);
@@ -696,5 +699,77 @@ public class StocktransferController {
 
 		return ResponseEntity.ok(message);
 	}
+
+
+
+	// Good Issue 팝업
+	@RequestMapping(value = "/stoIssuePop.do")
+	public String serialScanInPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("url", params);
+
+		String toDay = CommonUtils.getFormattedString("dd/MM/yyyy");
+		model.put("toDay", toDay);
+
+		return "logistics/StockTrans/stoIssuePop";
+	}
+
+	// delivery별 스캔 리스트 조회
+	@RequestMapping(value = "/selectStoIssuePop.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> selectStoIssuePop(@RequestBody Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
+		ReturnMessage result = new ReturnMessage();
+
+		List<EgovMap> list = stock.selectStoIssuePop(params);
+
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		result.setDataList(list);
+		result.setTotal(list.size());
+		return ResponseEntity.ok(result);
+
+	}
+
+	@RequestMapping(value = "/StocktransferGoodIssueNew.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> StocktransferGoodIssueNew(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVo) throws Exception {
+		int userId = sessionVo.getUserId();
+		String delyno = "";
+
+		ReturnMessage message = new ReturnMessage();
+
+		String gtype= (String) params.get("gtype");
+		//logger.debug("gtype @@@@@@@: {}", gtype);
+
+		delyno = (String)params.get("zDelvryNo");
+
+		//logger.debug("delyno : {}", delyno);
+		if(StringUtils.isEmpty(delyno)){
+			throw new PreconditionException(AppConstants.FAIL, "DelvryNO does not exist.");
+		}
+
+		Map<String, Object> grlist = stock.selectDelvryGRcmplt(delyno);
+		if(grlist == null){
+			throw new PreconditionException(AppConstants.FAIL, "DelvryNO does not exist.");
+		}
+
+		String grmplt =(String) grlist.get("DEL_GR_CMPLT");
+		String gimplt =(String) grlist.get("DEL_GI_CMPLT");
+		//logger.debug("grmplt    값 : {}", grmplt);
+		//logger.debug("gimplt    값 : {}", gimplt);
+
+		if ("Y".equals(gimplt)){
+			message.setCode(AppConstants.FAIL);
+			message.setMessage("Already processed.");
+		}else{
+    		params.put("userId", userId);
+    		String reVal = stock.StockTransferDeliveryIssueNew(params, sessionVo);
+
+    		message.setCode(AppConstants.SUCCESS);
+    		message.setData(reVal);
+    		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	}
+
+		return ResponseEntity.ok(message);
+	}
+
 
 }

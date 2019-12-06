@@ -35,7 +35,7 @@
 <script type="text/javaScript" language="javascript">
 var listGrid;
 
-var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
+var rescolumnLayout=[{dataField: "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
                      {dataField: "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                  ,width:230    ,height:30                },
                      {dataField: "reqloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
                      {dataField: "reqlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},
@@ -303,6 +303,66 @@ $(function(){
 	    	}
     	}
     });
+
+    $("#gissueNew").click(function(){
+    	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+
+        if(checkedItems.length <= 0) {
+            Common.alert('No data selected.');
+            return false;
+        }else{
+
+        	var delynoGroup = "", reqlocGroup = "", rcvlocGroup = "";
+
+            for (var i = 0 ; i < checkedItems.length ; i++){
+                if(checkedItems[i].item.gicmplt == 'Y'){
+                    Common.alert('Already processed.');
+                    return false;
+                    break;
+                }
+
+                if (checkedItems[i].item.delydt == "" || checkedItems[i].item.delydt == null){
+                    Common.alert("Please check the Delivery Date.")
+                    return false;
+                }
+
+                if (i == 0){
+                	delynoGroup = checkedItems[i].item.delyno;
+                	reqlocGroup = checkedItems[i].item.reqloc;
+                	rcvlocGroup = checkedItems[i].item.rcvloc;
+                }
+               	if(checkedItems[i].item.delyno != delynoGroup){
+               		Common.alert("Delivery No must be the same. <br />Please process one by one.");
+               		return false;
+               	}
+               	if(checkedItems[i].item.reqloc != reqlocGroup){
+               		Common.alert("From Location must be the same. <br />Please process one by one.");
+                    return false;
+                }if(checkedItems[i].item.rcvloc != rcvlocGroup){
+                	Common.alert("To Location must be the same. <br />Please process one by one.");
+                    return false;
+                }
+
+            }
+        }
+
+        if(checkedItems[0].item.delyno == null || checkedItems[0].item.delyno == ""){
+        	Common.alert('Already processed.');
+        	return false;
+        }
+
+        $("#zDelyno").val(checkedItems[0].item.delyno);
+        $("#zReqloc").val(checkedItems[0].item.reqloc);
+        $("#zRcvloc").val(checkedItems[0].item.rcvloc);
+
+        if(Common.checkPlatformType() == "mobile") {
+            popupObj = Common.popupWin("frmNew", "/logistics/stocktransfer/stoIssuePop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+        } else{
+            Common.popupDiv("/logistics/stocktransfer/stoIssuePop.do", null, null, true, '_divStoIssuePop');
+        }
+
+    });
+
     $("#gissue").click(function(){
  //   	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
     	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
@@ -470,6 +530,11 @@ $(function(){
          }
 	 });
 });
+
+function fn_PopStoIssueClose(){
+	if(popupObj!=null) popupObj.close();
+	$("#search").click();
+}
 
 function fn_itempopList(data){
 
@@ -852,13 +917,14 @@ function f_addrow(){
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
-            <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-</c:if>
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-            <li><p class="btn_grid"><a id="deliverydelete">Delete Delivery</a></p></li>
-</c:if>
-            <li><p class="btn_grid"><a id="gissue">Good Issue</a></p></li>
+            <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+                <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                <li><p class="btn_grid"><a id="deliverydelete">Delete Delivery</a></p></li>
+            </c:if>
+            <li><p class="btn_grid"><a id="gissueNew">Good Issue</a></p></li>
+            <li style="display:none;"><p class="btn_grid"><a id="gissue">Good Issue-Old</a></p></li>
             <li><p class="btn_grid"><a id="gcissue">Issue Cancel</a></p></li>
             <li><p class="btn_grid"><a id="print"><spring:message code='sys.progmanagement.grid1.PRINT' /></a></p></li>
         </ul>
@@ -866,6 +932,13 @@ function f_addrow(){
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
 
     </section><!-- search_result end -->
+    <form id="frmNew" name="frmNew" action="#" method="post">
+        <input type="hidden" name="zDelyno" id="zDelyno" />
+        <input type="hidden" name="zReqloc" id="zReqloc" />
+        <input type="hidden" name="zRcvloc" id="zRcvloc" />
+        <input type="hidden" name="zPrgnm"  id="zPrgnm" value="${param.CURRENT_MENU_CODE}"/>
+    </form>
+
 
     <div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->

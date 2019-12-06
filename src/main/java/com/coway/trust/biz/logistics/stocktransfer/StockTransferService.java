@@ -3,6 +3,8 @@ package com.coway.trust.biz.logistics.stocktransfer;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface StockTransferService {
@@ -35,17 +37,21 @@ public interface StockTransferService {
 	void insertStockBooking(Map<String, Object> params);
 
 	void StocktransferDeliveryDelete(Map<String, Object> params);
-	
+
 	void deleteStoNo(Map<String, Object> param);
-	
+
 	int selectDelNo(Map<String, Object> param);
-	
+
 	String selectMaxQtyCheck(Map<String, Object> param);
-	
+
 	Map<String, Object> selectDelvryGRcmplt(String delyno);
 
 	String defLoc(Map<String, Object> param);
 
 	String selectDefLocation(Map<String, Object> params);
-	
+
+	public List<EgovMap> selectStoIssuePop(Map<String, Object> params) throws Exception;
+	public String StockTransferDeliveryIssueNew(Map<String, Object> params, SessionVO sessionVo) throws Exception;
+
+
 }

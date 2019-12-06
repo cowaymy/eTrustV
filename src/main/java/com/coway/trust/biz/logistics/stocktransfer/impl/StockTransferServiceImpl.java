@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 /**
  * @author methree
@@ -14,12 +14,17 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewService;
 import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -29,6 +34,9 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Resource(name = "stockTranMapper")
 	private StockTransferMapper stocktran;
+
+	@Resource(name = "serialMgmtNewService")
+	private SerialMgmtNewService serialMgmtNewService;
 
 	@Override
 	public List<EgovMap> selectStockTransferMainList(Map<String, Object> params) {
@@ -46,13 +54,13 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	public String insertStockTransferInfo(Map<String, Object> params) {
 		List<Object> insList = (List<Object>) params.get("add");
 		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
-		
+
 		if (insList.size() > 0) {
 			for (int i = 0; i < insList.size(); i++) {
 				Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
-				
+
 				insMap.put("tlocation", fMap.get("tlocation"));
-				
+
 				int iCnt = stocktran.selectAvaliableStockQty(insMap);
 				if (iCnt == 1 ){
 					return "";
@@ -62,7 +70,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
 		String seq = stocktran.selectStockTransferSeq();
 
-		
+
 
 		// String reqNo = fMap.get("headtitle") + seq;
 		String reqNo = seq;
@@ -330,9 +338,9 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		}
 		/*
 		 * String seq = stocktran.selectDeliveryStockTransferSeq();
-		 * 
+		 *
 		 * if (updList.size() > 0) { Map<String, Object> insMap = null; for (int i = 0; i < updList.size(); i++) {
-		 * 
+		 *
 		 * logger.info(" updList.get(i) : {}", updList.get(i).toString()); insMap = (Map<String, Object>)
 		 * updList.get(i); insMap.put("delno", seq); insMap.put("userId", params.get("userId"));
 		 * stocktran.deliveryStockTransferDetailIns(insMap); } stocktran.deliveryStockTransferIns(insMap); }
@@ -448,10 +456,10 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			}
 		}
 	}
-	
+
 	@Override
 	public void deleteStoNo(Map<String, Object> params) {
-		
+
 		String reqstono = (String) params.get("reqstono");
 		logger.info(" reqstono ???? : {}", params.get("reqstono"));
 		if(!"".equals(reqstono) || null != reqstono){
@@ -460,7 +468,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			stocktran.deleteStockBooking(reqstono);
 		}
 	}
-	
+
 	@Override
 	public int selectDelNo(Map<String, Object> params) {
 		int delchk =0;
@@ -470,7 +478,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			delchk = stocktran.selectdeliveryHead(reqstono);
 
 		}
-		
+
 		return delchk;
 	}
 
@@ -478,13 +486,13 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	public String selectMaxQtyCheck(Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		String reChk = "";
-		
+
 		Map<String, Object> map = new HashMap();
 		map.put("itmcd", param.get("itmcd"));
 		map.put("tlocation", param.get("reqloc"));
 		map.put("rqty", param.get("delyqty"));
 		int iCnt = stocktran.selectAvaliableStockQty(map);
-		
+
 		logger.debug( " 486 Line ::::: " + iCnt);
 		if (iCnt == 1 ){
 			reChk = "N";
@@ -493,17 +501,17 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		}
 		return reChk;
 	}
-	
-	
+
+
 	@Override
 	public Map<String, Object> selectDelvryGRcmplt(String delyno) {
 		// TODO Auto-generated method stub
 		return stocktran.selectDelvryGRcmplt(delyno);
 	}
-	
+
 	@Override
 	public String selectDefLocation(Map<String, Object> param) {
-		
+
 		return stocktran.selectDefLocation(param);
 
 	}
@@ -513,6 +521,46 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
+
+	@Override
+	public List<EgovMap> selectStoIssuePop(Map<String, Object> params) throws Exception{
+		return stocktran.selectStoIssuePop(params);
+	}
+
+	@Override
+	public String StockTransferDeliveryIssueNew(Map<String, Object> params, SessionVO sessionVo) throws Exception{
+		String reVal = "";
+		String delyCd = "";
+		delyCd = (String)params.get("zDelvryNo");
+		//logger.info(" map:::!!! ??: {}", params);
+
+		String[] delvcd = {delyCd};
+		params.put("parray", delvcd);
+		params.put("zRstNo", "");
+		params.put("salesorder", "");
+		params.put("gtype", (String)params.get("zGtype"));
+		params.put("delyno", delyCd);
+
+		stocktran.stockTransferiSsueNew(params);
+
+		reVal = (String) params.get("rdata");
+		String[] returnValue = reVal.split("∈");
+
+		if( returnValue == null || StringUtils.isEmpty(returnValue[0]) || !"000".equals(StringUtils.trimToEmpty(returnValue[0])) ){
+			throw new ApplicationException(AppConstants.FAIL, returnValue[1]);
+		}
+
+		stocktran.updateDelivery54(params);
+
+		// serial Save
+		params.put("dryNo", delyCd);
+		params.put("sGrDate", (String)params.get("sGiptdate"));
+		serialMgmtNewService.saveSerialCode(params, sessionVo);
+
+		if( !"000".equals( StringUtils.trimToEmpty((String)params.get("errCode")) ) ){
+			throw new ApplicationException(AppConstants.FAIL, StringUtils.trimToEmpty((String)params.get("errMsg")));
+		}
+
+		return (String)params.get("errMsg");
+	}
 }
