@@ -48,6 +48,11 @@
             return false;
         });
 
+        if(Common.checkPlatformType() == "mobile") {
+        	$("a[name=mainGo]").attr("href", "${pageContext.request.contextPath}/common/mainExternal.do")
+        }else{
+        	$("a[name=mainGo]").attr("href", "${pageContext.request.contextPath}/common/main.do")
+        }
     });
 
     // 현재 메뉴 표시.
@@ -198,8 +203,8 @@
         <header class="lnb_header"><!-- lnb_header start -->
             <form method="post">
                 <h1 class="logo_type">
-                    <a href="${pageContext.request.contextPath}/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/CowayLeftLogo.png" alt="COWAY" /></a>
-                    <a href="${pageContext.request.contextPath}/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a>
+                    <a name="mainGo" href="${pageContext.request.contextPath}/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/CowayLeftLogo.png" alt="COWAY" /></a>
+                    <a name="mainGo" href="${pageContext.request.contextPath}/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a>
                 </h1>
                 <p class="search">
                     <input type="text" id="_leftSearch" name="_leftSearch" title="Enter search term" onkeyPress="if (event.keyCode==13){return false;}" />
