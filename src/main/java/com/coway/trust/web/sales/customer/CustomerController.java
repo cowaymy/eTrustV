@@ -2383,13 +2383,13 @@ public class CustomerController {
 
   @RequestMapping(value = "/tokenizationProcess.do", method = RequestMethod.GET)
   public ResponseEntity <Map<String, Object>> tokenizationProcess(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
-
-      LOGGER.debug("params :: " + params);
+      LOGGER.error("======================================= tokenizationProcess =======================================");
+      LOGGER.error("params :: " + params);
 
       Map<String, Object> result = new HashMap();
 
       if(!"".equals(params.get("tknId").toString())) {
-          LOGGER.debug("1");
+          LOGGER.error("tokenizationProcess :: 1");
 
           // Requesting tokenization from RazerPay
           //URL url = new URL(urlReq);
@@ -2431,34 +2431,36 @@ public class CustomerController {
           requestParam.put("expYear", params.get("EXPYEAR").toString());
           requestParam.put("tokenType", "1");
           requestParam.put("signature", params.get("signature").toString());
-LOGGER.debug(requestParam.toString());
-          LOGGER.debug("2");
+
+          LOGGER.error(requestParam.toString());
+          LOGGER.error("tokenizationProcess :: 2");
+
           StringJoiner sj = new StringJoiner("&");
           for(Map.Entry<String,String> entry : requestParam.entrySet())
               sj.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "=" + URLEncoder.encode(entry.getValue(), "UTF-8"));
           byte[] out = sj.toString().getBytes(StandardCharsets.UTF_8);
           int length = out.length;
 
-          LOGGER.debug("3");
+          LOGGER.error("tokenizationProcess :: 3");
           http.setFixedLengthStreamingMode(length);
-          LOGGER.debug("3.1");
+          LOGGER.error("tokenizationProcess :: 3.1");
           http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-          LOGGER.debug("3.2");
+          LOGGER.error("tokenizationProcess :: 3.2");
           http.connect();
-          LOGGER.debug("3.3");
+          LOGGER.error("tokenizationProcess :: 3.3");
           try(OutputStream os = http.getOutputStream()) {
               os.write(out);
-              LOGGER.debug(os.toString());
-              LOGGER.debug("3.3.1");
+              LOGGER.error(os.toString());
+              LOGGER.error("tokenizationProcess :: 3.3.1");
           }
-          LOGGER.debug("3.4");
+          LOGGER.debug("tokenizationProcess :: 3.4");
 
-          LOGGER.debug("4");
+          LOGGER.debug("tokenizationProcess :: 4");
           BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
           String inputLine = in.readLine();
           in.close();
 
-          LOGGER.debug("5");
+          LOGGER.error("tokenizationProcess :: 5");
 
           Map<String, Object> retResult = new HashMap();
 
@@ -2474,7 +2476,7 @@ LOGGER.debug(requestParam.toString());
           }
 
           if(!retResult.containsKey("error_code")) {
-              LOGGER.debug("successful tokenization");
+              LOGGER.error("successful tokenization");
               retResult.put("stus", "1");
 
               customerService.updateTokenLogging(retResult);
@@ -2514,7 +2516,7 @@ LOGGER.debug(requestParam.toString());
               }
 
           } else {
-              LOGGER.debug("failed tokenization");
+              LOGGER.error("failed tokenization");
               retResult.put("stus", "21");
 
               customerService.updateTokenLogging(retResult);
