@@ -227,6 +227,11 @@ var mSort = {};
                            , formatString : "#,##0"
                            , style:"aui-grid-user-custom-right"
                        }
+                       , {dataField:"failQty", headerText:"Fail QTY", width:120
+                           , style:"aui-grid-user-custom-right"
+                           , dataType:"numeric"
+                           , formatString:"#,##0"
+                       }
     ];
 
   // sub 칼럼 설정

@@ -181,8 +181,67 @@ var mSort = {};
     showRowCheckColumn : false,    // row checkbox
     showRowAllCheckBox : false,
     enableRestore: true,
+    showFooter : true,
     softRemovePolicy : "exceptNew" //사용자추가한 행은 바로 삭제
     };
+
+    var subFooterLayout = [{labelText : "Total", positionField : "stockName"}
+	    , {dataField : "confirmQty"
+	        , positionField : "confirmQty"
+	        , operation : "SUM"
+	        , formatString : "#,##0"
+	        , style:"aui-grid-user-custom-right"
+	    }
+	    , {dataField : "actualQty"
+	        , positionField : "actualQty"
+	        , operation : "SUM"
+	        , formatString : "#,##0"
+	        , style:"aui-grid-user-custom-right"
+	    }
+	    , {dataField : "extQty"
+	        , positionField : "extQty"
+	        , operation : "SUM"
+	        , formatString : "#,##0"
+	        , style:"aui-grid-user-custom-right"
+	    }
+	    , {dataField : "qcFailQty"
+	        , positionField : "qcFailQty"
+	        , operation : "SUM"
+	        , formatString : "#,##0"
+	        , style:"aui-grid-user-custom-right"
+	    }
+	    , {dataField : "availableQty"
+	        , positionField : "availableQty"
+	        , operation : "SUM"
+	        , formatString : "#,##0"
+	        , style:"aui-grid-user-custom-right"
+	    }
+       , {dataField : "doQty"
+            , positionField : "doQty"
+            , operation : "SUM"
+            , formatString : "#,##0"
+            , style:"aui-grid-user-custom-right"
+        }
+       , {dataField : "poUprc"
+           , positionField : "poUprc"
+           , operation : "SUM"
+           , formatString : "#,##0.00"
+           , style:"aui-grid-user-custom-right"
+       }
+       , {dataField : "suplyPrc"
+           , positionField : "suplyPrc"
+           , operation : "SUM"
+           , formatString : "#,##0.00"
+           , style:"aui-grid-user-custom-right"
+       }
+       , {dataField : "total"
+           , positionField : "total"
+           , operation : "SUM"
+           , formatString : "#,##0.00"
+           , style:"aui-grid-user-custom-right"
+       }
+	];
+
 
     // Delivery 칼럼 설정
     var deliveryColumnLayout = [{dataField:"rnum", visible:false}
@@ -256,7 +315,6 @@ var mSort = {};
               }
 
     ];
-
     // Delivery  그리드 속성 설정
     var deliveryGrid_options = {
       usePaging : false,           // 페이지 설정1
@@ -298,6 +356,9 @@ var mSort = {};
         myGridID = GridCommon.createAUIGrid("mainGrid", columnLayout, "", grid_options);
         detailGridID = GridCommon.createAUIGrid("detailGrid", subColumnLayout,"", subGrid_options);
         deliveryGridID = GridCommon.createAUIGrid("deliveryGrid", deliveryColumnLayout,"", deliveryGrid_options);
+
+        // 푸터 레이아웃 세팅
+        AUIGrid.setFooter(detailGridID, subFooterLayout);
 
         // main grid paging 표시
         GridCommon.createExtPagingNavigator(1, 0, {funcName:'getListAjax'});

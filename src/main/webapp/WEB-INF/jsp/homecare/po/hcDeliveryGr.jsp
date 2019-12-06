@@ -67,14 +67,14 @@ var taxObj = {};
             , {dataField:"hmcGrNoDtlNo",headerText :"GR Detail No", width:150}
             , {dataField:"stockId", visible:false}
             , {dataField:"stockCode", headerText:"Material Code", width:120, editable:false}
-            , {dataField:"stockName", headerText:"Material Name", width:280, style:"aui-grid-user-custom-left", editable:false}
+            , {dataField:"stockName", headerText:"Material Name", width:340, style:"aui-grid-user-custom-left", editable:false}
             , {dataField:"grYn",headerText :"GR Complete", width:100, editable:false}
-            , {dataField:"rciptQty", headerText:"QTY", width:140
+            , {dataField:"rciptQty", headerText:"QTY", width:120
                 , style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
                 , formatString:"#,##0"
             }
-            , {dataField:"qcFailQty", headerText:"QC Fail QTY", width:140
+            , {dataField:"qcFailQty", headerText:"QC Fail QTY", width:120
                 , style:"aui-grid-user-custom-right"
                 , dataType:"numeric"
                 , formatString:"#,##0"

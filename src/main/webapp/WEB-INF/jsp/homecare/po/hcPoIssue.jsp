@@ -393,12 +393,6 @@ var taxObj = {};
                            , formatString : "#,##0.00"
                            , style:"aui-grid-user-custom-right"
                        }
-                       , {dataField : "tax"
-                           , positionField : "tax"
-                           , operation : "SUM"
-                           , formatString : "#,##0.00"
-                           , style:"aui-grid-user-custom-right"
-                       }
                        , {dataField : "total"
                            , positionField : "total"
                            , operation : "SUM"
