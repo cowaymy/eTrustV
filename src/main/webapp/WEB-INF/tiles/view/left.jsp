@@ -48,7 +48,7 @@
             return false;
         });
 
-        if(Common.checkPlatformType() == "mobile") {
+        if(Common.checkPlatformType() == "mobile" && '${SESSION_INFO.userIsExternal}' == "1") {
         	$("a[name=mainGo]").attr("href", "${pageContext.request.contextPath}/common/mainExternal.do")
         }else{
         	$("a[name=mainGo]").attr("href", "${pageContext.request.contextPath}/common/main.do")
