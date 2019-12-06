@@ -318,8 +318,11 @@ function fn_closeGrPop(){
 
 	// Moblie Popup Setting
     if(Common.checkPlatformType() == "mobile") {
-        opener.fn_PopClose();
-        //opener.$("#btnSearch").click();       // ???
+        if( typeof(opener.fn_PopClose) != "undefined" ){
+        	opener.fn_PopClose();
+        }else{
+        	window.close();
+        }
     } else {
         $("#btnSearch").click();
         $('#_divDeliveryGrPop').remove();
