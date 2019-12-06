@@ -227,10 +227,11 @@ var mSort = {};
                            , formatString : "#,##0"
                            , style:"aui-grid-user-custom-right"
                        }
-                       , {dataField:"failQty", headerText:"Fail QTY", width:120
+                       , {dataField : "failQty"
+                           , positionField : "failQty"
+                           , operation : "SUM"
+                           , formatString : "#,##0"
                            , style:"aui-grid-user-custom-right"
-                           , dataType:"numeric"
-                           , formatString:"#,##0"
                        }
     ];
 
