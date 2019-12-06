@@ -743,8 +743,17 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .aui-grid-user-custom-left {
         text-align:left;
  }
+
+ .aui-grid-user-custom-left > .aui-grid-renderer-base  {
+        text-align:left !important;
+ }
+
  .aui-grid-user-custom-right {
      text-align:right;
+ }
+
+.aui-grid-user-custom-right > .aui-grid-renderer-base {
+     text-align:right !important;
  }
 
 /* Grid - paging panel */
