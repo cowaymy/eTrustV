@@ -69,8 +69,8 @@
         $(".bottom_msg_box").attr("style","display:none");
 
         $.each($("#mobileMenu li"), function(index){
-        	var menu_code = $(this).attr("menu_code");
-        	if( menu_code == "HCT11030400" ){
+        	var pgm_path = $(this).attr("pgm_path");
+        	if( pgm_path == "/homecare/po/hcDeliveryGr.do" ){
         		var btnStr = "";
         		btnStr += '<button class="button2 big-btn" id="btnCreateGr">';
         		btnStr += 'Create GR';
@@ -165,7 +165,7 @@
 
 
 
-                        <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}" menu_code="${list.menuCode}">
+                        <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}" pgm_path="${list.pgmPath}">
                             <button class="button big-btn">
                                 <a  style ="color:#FFFFFF; text-align: left; font-size: 50px;"
                                     id="a_${list.menuCode}"
