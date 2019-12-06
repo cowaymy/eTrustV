@@ -23,6 +23,10 @@
     color:#000;
 }
 
+.aui-grid-column-right {
+     text-align: right;
+ }
+
 .aui-grid-link-renderer1 {
      text-decoration:underline;
      color: #4374D9 !important;
@@ -48,17 +52,19 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "locDesc",headerText :"<spring:message code='log.head.location'/>"            ,width:120    ,height:30 },
                      {dataField: "whlocgb",headerText :"<spring:message code='log.head.locationgrade'/>"     ,width:120    ,height:30 },
                      {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"                  ,width:120    ,height:30,
+                    	 dataType:"numeric",
+                         formatString:"#,##0",
                          styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
                              if(item.serialRequireChkYn == "Y"){
                                  return "aui-grid-link-renderer1";
                              }
-                             return "aui-grid-user-custom-right";
+                             return "aui-grid-column-right";
                          }
 
                      },
-                     {dataField: "movQty",headerText :"In-Transit Qty"      ,width:120    ,height:30 , style:"aui-grid-user-custom-right"               },
-                     {dataField: "bookingQty",headerText :"Book Qty"        ,width:120    ,height:30 , style:"aui-grid-user-custom-right"               },
-                     {dataField: "availableQty",headerText :"<spring:message code='log.head.availableqty'/>"      ,width:120    ,height:30  , style:"aui-grid-user-custom-right"              },
+                     {dataField: "movQty",headerText :"In-Transit Qty"      ,width:120    ,height:30 , style:"aui-grid-column-right" , dataType:"numeric", formatString:"#,##0"            },
+                     {dataField: "bookingQty",headerText :"Book Qty"        ,width:120    ,height:30 , style:"aui-grid-column-right" , dataType:"numeric", formatString:"#,##0"              },
+                     {dataField: "availableQty",headerText :"<spring:message code='log.head.availableqty'/>"      ,width:120    ,height:30  , style:"aui-grid-column-right" , dataType:"numeric", formatString:"#,##0"            },
                      {dataField: "brnchCode",headerText :"Branch Code"        ,width:120    ,height:30                },
                      {dataField: "brnchName",headerText :"Branch Name"        ,width:120    ,height:30                },
                      {dataField: "cdcCode",headerText :"CDC Code"        ,width:120    ,height:30                },
