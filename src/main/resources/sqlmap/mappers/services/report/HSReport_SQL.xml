@@ -264,7 +264,23 @@
                                and ( Extent1.MEM_LVL = #{groupCode} )
                                </if>
                                AND ( Extent1.DEPT_CODE LIKE '%CCS%'ESCAPE '~' )
-                               AND ( 1 = Extent1.ORG_STUS_CODE_ID ) ) Distinct1
+                               AND ( 1 = Extent1.ORG_STUS_CODE_ID )
+
+                                     UNION
+
+                      SELECT DISTINCT Extent1.DEPT_CODE DEPT_CODE  ,
+                                     1 C1  ,
+                                     Extent1.DEPT_CODE || ' - ' || Extent2.NAME C2
+                     FROM ORG0005D Extent1
+                            JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+                      WHERE  1=1
+
+                               and ( Extent1.MEM_LVL = '3' )
+
+                               AND ( Extent1.DEPT_CODE = 'CTS3167' )
+                               AND ( 1 = Extent1.ORG_STUS_CODE_ID )
+
+                               ) Distinct1
               order by  Distinct1.DEPT_CODE
 
         </select>
@@ -494,7 +510,7 @@
                  WHERE  1 = Extent1.AREA_STUS_ID
                   ORDER BY Extent1.AREA_NAME ASC
         </select>
-        
+
         <select id="safetyLevelList" parameterType="Map" resultType="egovMap">
               SELECT CODE CODE_ID, CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 444
        </select>
