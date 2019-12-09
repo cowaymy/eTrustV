@@ -1,223 +1,245 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
 <script type="text/javaScript">
+  var gridID;
+  var gridIDExcel;
+  var counselingId;
 
-var gridID;
-var gridIDExcel;
-var counselingId;
+  function tagMgmtGrid() {
 
-function tagMgmtGrid() {
+    var columnLayout = [ {
+      dataField : "counselingNo",
+      headerText : "<spring:message code='service.grid.counselingNo'/>",
+      width : "10%"
+    }, {
+      dataField : "customerName",
+      headerText : "<spring:message code='service.grid.CustomerName'/>",
+      width : "13%"
+    }, {
+      dataField : "mainInquiry",
+      headerText : "<spring:message code='service.grid.mainInq'/>",
+      width : "12%"
+    }, {
+      dataField : "subInquiry",
+      headerText : "<spring:message code='service.grid.subInq'/>",
+      style : "aui-grid-user-custom-left ",
+      width : "13%"
+    }, {
+      dataField : "feedbackCode",
+      headerText : "<spring:message code='service.grid.fbCde'/>",
+      width : "10%"
+    }, {
+      dataField : "mainDept",
+      headerText : "<spring:message code='service.grid.mainDept'/>",
+      style : "aui-grid-user-custom-left ",
+      width : "13%"
+    }, {
+      dataField : "subDept",
+      headerText : "<spring:message code='service.grid.subDept'/>",
+      style : "aui-grid-user-custom-left ",
+      width : "15%"
+    }, {
+      dataField : "regDate",
+      headerText : "<spring:message code='service.grid.registerDt'/>",
+      dataType : "date"
+    }, {
+      dataField : "status",
+      headerText : "<spring:message code='service.grid.Status'/>",
+      width : "5%"
+    }, {
+      dataField : "ordNo",
+      headerText : "<spring:message code='service.grid.SalesOrder'/>",
+      width : "5%"
+    } ];
 
-    var columnLayout =[
-                       {
-                           dataField: "counselingNo",
-                           headerText: "CounselingNo",
-                           width: "10%"
-                       },
-                       {
-                           dataField: "customerName",
-                           headerText: "Customer",
-                           width: "13%"
-                       },
-                       {
-                           dataField: "mainInquiry",
-                           headerText: "Main Inquiry",
-                           width: "12%"
-                       },
-                       {
-                           dataField: "subInquiry",
-                           headerText: "Sub Inquiry",
-                           style: "aui-grid-user-custom-left ",
-                           width: "13%"
-                       },
-                       {
-                           dataField: "feedbackCode",
-                           headerText: "Feedback Code",
-                           width: "10%"
-                       },
-                       {
-                           dataField: "mainDept",
-                           headerText: "Main Department",
-                           style: "aui-grid-user-custom-left ",
-                           width: "13%"
-                       },
-                       {
-                           dataField: "subDept",
-                           headerText: "Sub Department",
-                           style: "aui-grid-user-custom-left ",
-                           width: "15%"
-                       },
-                       {
-                           dataField: "regDate",
-                           headerText: "Register Date",
-                           dataType : "date"
-                       },
-                       {
-                           dataField: "status",
-                           headerText: "Status",
-                           width: "5%"
-                       },
-                       {
-                           dataField: "ordNo",
-                           headerText: "ordNo",
-                           width: "5%"
-                       }
-                   ];
+    var excelLayout = [ {
+      dataField : "regDate",
+      headerText : "<spring:message code='service.grid.registerDt'/>",
+      width : 150,
+      height : 80
+    }, {
+      dataField : "ordNo",
+      headerText : "<spring:message code='service.grid.SalesOrder'/>",
+      width : 200,
+      height : 80
+    }, {
+      dataField : "counselingNo",
+      headerText : "<spring:message code='service.grid.counselingNo'/>",
+      width : 200,
+      height : 80
+    }, {
+      dataField : "customerName",
+      headerText : "<spring:message code='service.grid.CustomerName'/>",
+      width : 200,
+      height : 80
+    }, {
+      dataField : "mainInquiry",
+      headerText : "<spring:message code='service.grid.mainInq'/>",
+      width : 200,
+      height : 80
+    }, {
+      dataField : "subInquiry",
+      headerText : "<spring:message code='service.grid.subInq'/>",
+      width : 200,
+      height : 80
+    }, {
+      dataField : "feedbackCode",
+      headerText : "<spring:message code='service.grid.fbCde'/>",
+      width : 200,
+      height : 80
+    }, {
+      dataField : "mainDept",
+      headerText : "<spring:message code='service.grid.mainDept'/>",
+      width : 200,
+      height : 80
+    }, {
+      dataField : "subDept",
+      headerText : "<spring:message code='service.grid.subDept'/>",
+      width : 200,
+      height : 80
+    }, {
+      dataField : "updDt",
+      headerText : "<spring:message code='service.title.UpdateDate'/>",
+      width : 150,
+      height : 80
+    }, {
+      dataField : "lstUpdId",
+      headerText : "<spring:message code='service.grid.UpdateBy'/>",
+      width : 150,
+      height : 80
+    }, {
+      dataField : "status",
+      headerText : "<spring:message code='service.grid.Status'/>",
+      width : 100,
+      height : 80
+    }, {
+      dataField : "callRem",
+      headerText : "<spring:message code='service.grid.Remark'/>",
+      width : 500,
+      height : 80
+    } ];
 
-    var excelLayout = [
-                        {dataField: "regDate",headerText: "Register Date",width:150 ,height:80}
-                        ,{dataField: "ordNo",headerText: "Order Number",width:200 ,height:80}
-                       ,{dataField: "counselingNo",headerText: "CounselingNo",width:200 ,height:80}
-                       ,{dataField: "customerName",headerText: "Customer",width:200 ,height:80}
-                       ,{dataField: "mainInquiry",headerText: "Main Inquiry",width:200 ,height:80}
-                       ,{dataField: "subInquiry",headerText: "Sub Inquiry",width:200 ,height:80}
-                       ,{dataField: "feedbackCode",headerText: "Feedback Code",width:200 ,height:80}
-                       ,{dataField: "mainDept",headerText: "Main Department",width:200 ,height:80}
-                       ,{dataField: "subDept",headerText: "Sub Department",width:200 ,height:80}
-                       ,{dataField: "updDt",headerText: "Update Date",width:150 ,height:80}
-                       ,{dataField: "lstUpdId",headerText: "Updated By",width:150 ,height:80}
-                       ,{dataField: "status",headerText: "Status",width:100 ,height:80}
-                       ,{dataField: "callRem",headerText: "Remark",width:500 ,height:80}
-                       ];
+    var gridPros = {
+      usePaging : true,
+      pageRowCount : 20,
+      showStateColumn : false,
+      displayTreeOpen : false,
+      //selectionMode : "singleRow",
+      skipReadonlyColumns : true,
+      wrapSelectionMove : true,
+      showRowNumColumn : true,
+      editable : false
+    };
 
-     var gridPros = {
-    		                        usePaging           : true,         //페이징 사용
-                        	        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
-                        	        showStateColumn     : false,
-                        	        displayTreeOpen     : false,
-                        	        selectionMode       : "singleRow",  //"multipleCells",
-                        	        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                        	        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                        	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
-                        	        editable :false
-                          };
+    var excelGridPros = {
+      enterKeyColumnBase : true,
+      useContextMenu : true,
+      enableFilter : true,
+      showStateColumn : true,
+      displayTreeOpen : true,
+      wordWrap : true,
+      noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+      groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
+      exportURL : "/common/exportGrid.do"
+    };
 
-     var excelGridPros = {
-             enterKeyColumnBase : true,
-             useContextMenu : true,
-             enableFilter : true,
-             showStateColumn : true,
-             displayTreeOpen : true,
-             wordWrap : true,
-             noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
-             groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
-             exportURL : "/common/exportGrid.do"
-         };
+    gridID = GridCommon.createAUIGrid("tagMgmt_grid_wap", columnLayout, "", gridPros);
+    gridIDExcelHide = GridCommon.createAUIGrid("grid_wrap_hide", excelLayout, "", excelGridPros);
+  }
 
-                          gridID = GridCommon.createAUIGrid("tagMgmt_grid_wap", columnLayout  ,"" ,gridPros);
-                          gridIDExcelHide = GridCommon.createAUIGrid("grid_wrap_hide", excelLayout  ,"" ,excelGridPros);
+  $(document).ready(
+    function() {
+      tagMgmtGrid();
 
+      $("#search").click(
+        function() {
+            fn_search();
+          });
 
+          //excel Download
+          $('#excelDown').click(
+            function() {
+              //GridCommon.exportTo("tagMgmt_grid_wap", 'xlsx',"Tag Management");
+              var excelProps = {
+                fileName : "Tag Management",
+                exceptColumnFields : AUIGrid.getHiddenColumnDataFields(gridIDExcelHide)
+              };
+              AUIGrid.exportToXlsx(gridIDExcelHide, excelProps);
+          });
 
-    }
-$(document).ready(function(){
+          // cell click
+          AUIGrid.bind(gridID, "cellClick",
+            function(event) {
+              counselingId = AUIGrid.getCellValue(gridID, event.rowIndex, "counselingNo");
+          });
 
-	tagMgmtGrid(); // tagMgmt 그리드 생성 함수
+          doGetCombo('/services/tagMgmt/selectMainDept.do', '', '', 'main_department', 'S', '');
 
-	   //search
-    $("#search").click(function() {
+          $("#main_department").change(
+            function() {
+              if ($("#main_department").val() == '') {
+                $("#sub_department").val('');
+                $("#sub_department").find("option").remove();
+              } else {
+                doGetCombo('/services/tagMgmt/selectSubDept.do', $("#main_department").val(), '', 'sub_department', 'S', '');
+              }
+          });
 
-        Common.ajax("GET","/services/tagMgmt/selectTagStatus",$("#tagMgmtForm").serialize(),function(result) {
-            AUIGrid.setGridData(gridID,result);
-            AUIGrid.setGridData(gridIDExcelHide,result);
-        });
+          doGetCombo('/services/tagMgmt/selectMainInquiry.do', '', '', 'main_inquiry', 'S', '');
 
-    });
+          $("#main_inquiry").change(
+            function() {
+              doGetCombo('/services/tagMgmt/selectSubInquiry.do', $("#main_inquiry").val(), '', 'sub_inquiry', 'S', '');
+          });
+  });
 
-    //excel Download
-    $('#excelDown').click(function() {
-        //GridCommon.exportTo("tagMgmt_grid_wap", 'xlsx',"Tag Management");
-        var excelProps = {
-            fileName     : "Tag Management",
-           exceptColumnFields : AUIGrid.getHiddenColumnDataFields(gridIDExcelHide)
-        };
-        AUIGrid.exportToXlsx(gridIDExcelHide, excelProps);
-    });
+  function fn_search() {
+    Common.ajax("GET", "/services/tagMgmt/selectTagStatus", $("#tagMgmtForm").serialize(),
+      function(result) {
+        AUIGrid.setGridData(gridID, result);
+        AUIGrid.setGridData(gridIDExcelHide, result);
+      });
+  }
 
-    // cell click
-         AUIGrid.bind(gridID, "cellClick", function(event) {
-        	 counselingId = AUIGrid.getCellValue(gridID, event.rowIndex, "counselingNo");
-
-         });
-
-
-         doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'main_department' , 'S', '');
-
-
-         $("#main_department").change(function(){
-           if($("#main_department").val() == ''){
-        	   $("#sub_department").val('');
-        	   $("#sub_department").find("option").remove();
-           }else{
-        	    doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#main_department").val(), '','sub_department', 'S' ,  '');
-           }
-       });
-
-
-         doGetCombo('/services/tagMgmt/selectMainInquiry.do', '' , '', 'main_inquiry' , 'S', '');
-
-
-         $("#main_inquiry").change(function(){
-
-           doGetCombo('/services/tagMgmt/selectSubInquiry.do',  $("#main_inquiry").val(), '','sub_inquiry', 'S' ,  '');
-
-       });
-
-});
-
-
-
-function fn_tagLog() {
-
+  function fn_tagLog() {
     var selectedItems = AUIGrid.getSelectedItems(gridID);
-    if(selectedItems.length  <= 0) {
-        Common.alert("<b>No Tag selected.</b>");
-        return ;
+    if (selectedItems.length <= 0) {
+      Common.alert("<spring:message code='service.msg.NoRcd'/>");
+      return;
     }
 
+    //Common.popupDiv("/services/tagMgmt/tagLogRegist.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId, null, null , true , '_ConfigBasicPop');
+    Common.popupDiv("/services/tagMgmt/tagLogRegistPop.do?counselingId=" + counselingId + "", null, null, true, "tagLogRegistPop");
+  }
 
-
-
-       //Common.popupDiv("/services/tagMgmt/tagLogRegist.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId, null, null , true , '_ConfigBasicPop');
-       Common.popupDiv("/services/tagMgmt/tagLogRegistPop.do?counselingId="+counselingId+"", null, null , true , "tagLogRegistPop");
-
-}
-
-function fn_download() {
-
+  function fn_download() {
     var gridObj = AUIGrid.getSelectedItems(gridID);
 
-
-    if(gridObj == null || gridObj.length <= 0 ){
-        Common.alert("* No Tag Selected. ");
-        return;
+    if (gridObj == null || gridObj.length <= 0) {
+      Common.alert("<spring:message code='service.msg.NoRcd'/>");
+      return;
     }
 
-     var counselingNo = gridObj[0].item.counselingNo;
-
-
+    var counselingNo = gridObj[0].item.counselingNo;
 
     var whereSQL = "";
     var whereSQL2 = "";
     var whereSQL3 = "";
     var date = new Date().getDate();
-    if(date.toString().length == 1){
-        date = "0" + date;
+    if (date.toString().length == 1) {
+      date = "0" + date;
     }
 
     $("#reportFileName").val("");
     $("#reportDownFileName").val("");
     $("#viewType").val("");
 
-
-     whereSQL = " AND z.Counselling_No = '"+counselingNo+"'";
-     whereSQL2 = " WHERE T1.CUR_SEQNO = '"+counselingNo+"'";
-     whereSQL3 = "  AND T4.CUR_SEQNO = '"+counselingNo+"'";
-      $("#dataForm3 #viewType").val("PDF");
-            $("#dataForm3 #reportFileName").val("/services/TagCFFReport_PDF.rpt");
-            $("#reportDownFileName").val("Tag/CFF_"+counselingNo+"_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-
+    whereSQL = " AND z.Counselling_No = '" + counselingNo + "'";
+    whereSQL2 = " WHERE T1.CUR_SEQNO = '" + counselingNo + "'";
+    whereSQL3 = "  AND T4.CUR_SEQNO = '" + counselingNo + "'";
+    $("#dataForm3 #viewType").val("PDF");
+    $("#dataForm3 #reportFileName").val("/services/TagCFFReport_PDF.rpt");
+    $("#reportDownFileName").val("Tag/CFF_" + counselingNo + "_" + date + (new Date().getMonth() + 1) + new Date().getFullYear());
 
     $("#dataForm3 #V_COUNSELLINGNO").val(counselingNo);
     $("#dataForm3 #V_WHERESQL").val(whereSQL);
@@ -227,149 +249,166 @@ function fn_download() {
     $("#dataForm3 #V_SELECTSQL2").val("");
     $("#dataForm3 #V_FULLSQL").val("");
 
-    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
-            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+      isProcedure : true
+      // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
     };
 
     Common.report("dataForm3", option);
-
-
-}
-
-
-
-
+  }
 
 </script>
-
-
-
-
-<section id="content"><!-- content start -->
-<ul class="path">
-    <li><img src="${pageContext.request.contextPath}/images/common/path_home.gif" alt="Home" /></li>
-    <li>Service</li>
-    <li>Tag Mgmt</li>
-</ul>
-
-<aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Tag Log Search</h2>
-<ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_blue"><a href="javascript:fn_download()" >Tag/CFF</a></p></li>
-</c:if>
-<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_blue"><a href="javascript:fn_tagLog()" >View Respond Ticket</a></p></li>
-</c:if>
-<c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a href="#" id ="search"><span class="search"></span>Search</a></p></li>
-</c:if>
-<!--     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li> -->
-</ul>
-
-
-</aside><!-- title_line end -->
-
-
-<section class="search_table"><!-- search_table start -->
-<form id="dataForm3">
-<input type="hidden" id="reportFileName" name="reportFileName" value="" />
-<input type="hidden" id="viewType" name="viewType" value="" />
-<input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
-<input type="hidden" id="V_COUNSELLINGNO" name="V_COUNSELLINGNO" value="" />
-<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
-<input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" value="" />
-<input type="hidden" id="V_WHERESQL3" name="V_WHERESQL3" value="" />
-<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" value="" />
-<input type="hidden" id="V_SELECTSQL2" name="V_SELECTSQL2" value="" />
-<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" value="" />
-</form>
-
-<form id="tagMgmtForm" name="tagMgmtForm" method="post">
-
-
-
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:180px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-    <col style="width:160px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Counselling No</th>
-    <td><input type="text" id="customer" name="counseling_no" placeholder="counseling_no" class="w100p" /></td>
-    <th scope="row">Main Inquiry</th>
-    <td><select class="w100p" id="main_inquiry" name="main_inquiry"></select></td>
-    <th scope="row">Sub Inquiry</th>
-    <td><select class="w100p" id="sub_inquiry" name="sub_inquiry"></select></td>
-</tr>
-<tr>
-    <th scope="row">Customer</th>
-    <td><input type="text" id="customer" name="customer" placeholder="customer" class="w100p" /></td>
-    <th scope="row">Main Dept</th>
-    <td><select class="w100p" id="main_department" name="main_department"></select></td>
-    <th scope="row">Sub Dept</th>
-    <td><select class="w100p" id="sub_department" name="sub_department"></select></td>
-</tr>
-<tr>
-    <th scope="row">Feedback Code</th>
-    <td><input type="text" id="feedback_code" name="feedback_code" title="" placeholder="feedback_code" class="w100p" /></td>
-
-
-
-
-       <th scope="row">Regist Date</th>
-       <td>
-       <div class="date_set w100p"><!-- date_set start -->
-        <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regStartDt" name="regStartDt"/></p>
+<section id="content">
+ <!-- content start -->
+ <ul class="path">
+  <li><img
+   src="${pageContext.request.contextPath}/images/common/path_home.gif"
+   alt="Home" /></li>
+  <li><spring:message code='service.title.service'/></li>
+  <li><spring:message code='service.title.tagMgmt'/></li>
+ </ul>
+ <aside class="title_line">
+  <!-- title_line start -->
+  <p class="fav">
+   <a href="#" class="click_add_on">My menu</a>
+  </p>
+  <h2><spring:message code='service.title.tagMgmt'/></h2>
+  <ul class="right_btns">
+   <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <li><p class="btn_blue">
+      <a href="javascript:fn_download()"><spring:message code='service.text.tagCff'/></a>
+     </p></li>
+   </c:if>
+   <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <li><p class="btn_blue">
+      <a href="javascript:fn_tagLog()"><spring:message code='service.text.viewRespTick'/></a>
+     </p></li>
+   </c:if>
+   <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+    <li><p class="btn_blue">
+      <a href="#" id="search"><span class="search"></span><spring:message code='sys.btn.search'/></a>
+     </p></li>
+   </c:if>
+   <!-- <li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li> -->
+  </ul>
+ </aside>
+ <!-- title_line end -->
+ <section class="search_table">
+  <!-- search_table start -->
+  <form id="dataForm3">
+   <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+   <input type="hidden" id="viewType" name="viewType" value="" />
+   <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+   <input type="hidden" id="V_COUNSELLINGNO" name="V_COUNSELLINGNO" value="" />
+   <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
+   <input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" value="" />
+   <input type="hidden" id="V_WHERESQL3" name="V_WHERESQL3" value="" />
+   <input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" value="" />
+   <input type="hidden" id="V_SELECTSQL2" name="V_SELECTSQL2" value="" />
+   <input type="hidden" id="V_FULLSQL" name="V_FULLSQL" value="" />
+  </form>
+  <form id="tagMgmtForm" name="tagMgmtForm" method="post">
+   <table class="type1">
+    <!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+     <col style="width: 180px" />
+     <col style="width: *" />
+     <col style="width: 180px" />
+     <col style="width: *" />
+     <col style="width: 160px" />
+     <col style="width: *" />
+    </colgroup>
+    <tbody>
+     <tr>
+      <th scope="row"><spring:message code='service.grid.counselingNo'/></th>
+      <td><input type="text" id="customer" name="counseling_no"
+       placeholder="<spring:message code='service.grid.counselingNo'/>" class="w100p" /></td>
+      <th scope="row"><spring:message code='service.grid.mainInq'/></th>
+      <td><select class="w100p" id="main_inquiry" name="main_inquiry">
+        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
+      </select></td>
+      <th scope="row"><spring:message code='service.grid.subInq'/></th>
+      <td><select class="w100p" id="sub_inquiry" name="sub_inquiry">
+        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
+      </select></td>
+     </tr>
+     <tr>
+      <th scope="row"><spring:message code='service.grid.CustomerName'/></th>
+      <td><input type="text" id="customer" name="customer"
+       placeholder="<spring:message code='service.grid.CustomerName'/>" class="w100p" /></td>
+      <th scope="row"><spring:message code='service.grid.mainDept'/></th>
+      <td><select class="w100p" id="main_department"
+       name="main_department"></select></td>
+      <th scope="row"><spring:message code='service.grid.subDept'/></th>
+      <td><select class="w100p" id="sub_department"
+       name="sub_department">
+       <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
+       </select></td>
+     </tr>
+     <tr>
+      <th scope="row"><spring:message code='service.grid.fbCde'/></th>
+      <td><input type="text" id="feedback_code"
+       name="feedback_code" title="" placeholder="<spring:message code='service.grid.fbCde'/>"
+       class="w100p" /></td>
+      <th scope="row"><spring:message code='service.grid.registerDt'/></th>
+      <td>
+       <div class="date_set w100p">
+        <!-- date_set start -->
+        <p>
+         <input type="text" title="Create start Date"
+          placeholder="DD/MM/YYYY" class="j_date w100p" id="regStartDt"
+          name="regStartDt" />
+        </p>
         <span>To</span>
-        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regEndDt" name="regEndDt"/></p>
-       </div><!-- date_set end -->
-       </td>
+        <p>
+         <input type="text" title="Create end Date"
+          placeholder="DD/MM/YYYY" class="j_date w100p" id="regEndDt"
+          name="regEndDt" />
+        </p>
+       </div>
+       <!-- date_set end -->
+      </td>
+      <th scope="row"><spring:message code='service.grid.Status'/></th>
+      <td><select class="multy_select w100p" multiple="multiple"
+       id="statusList" name="statusList">
 
-     <th scope="row">Status</th>
-    <td>
-         <select  class="multy_select w100p" multiple="multiple"  id="statusList" name="statusList">
-                 <option value="1">Active</option>
-                <option value="44">Pending</option>
-                <option value="34">Solved</option>
-                <option value="35">Unsolved</option>
-                <option value="36">Closed</option>
-                <option value="10">Cancelled</option>
-        </select>
-    </td>
+        <c:forEach var="list" items="${tMgntStat}" varStatus="status">
+          <option value="${list.code}" selected>${list.codeName}</option>
+        </c:forEach>
 
-</tr>
+        <!-- <option value="1">Active</option>
+        <option value="44">Pending</option>
+        <option value="34">Solved</option>
+        <option value="35">Unsolved</option>
+        <option value="36">Closed</option>
+        <option value="10">Cancelled</option> -->
 
-</tbody>
-</table><!-- table end -->
-
-
-
-</form>
-</section><!-- search_table end -->
-
-
-<section class="search_result"><!-- search_result start -->
-<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="excelDown">GENERATE</a></p></li>
-</ul>
-</c:if>
-<article class="grid_wrap"><!-- grid_wrap start  그리드 영역-->
-    <div id="tagMgmt_grid_wap" style="width:100%; height:300px; margin:0 auto;"></div>
-    <div id="grid_wrap_hide" style="display: none;"></div>
-</article><!-- grid_wrap end -->
-
-</section><!-- search_result end -->
-
-</section><!-- content end -->
-
+      </select></td>
+     </tr>
+    </tbody>
+   </table>
+   <!-- table end -->
+  </form>
+ </section>
+ <!-- search_table end -->
+ <section class="search_result">
+  <!-- search_result start -->
+  <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+   <ul class="right_btns">
+    <li><p class="btn_grid">
+      <a href="#" id="excelDown"><spring:message code='service.btn.Generate'/></a>
+     </p></li>
+   </ul>
+  </c:if>
+  <article class="grid_wrap">
+   <!-- grid_wrap start  그리드 영역-->
+   <div id="tagMgmt_grid_wap"
+    style="width: 100%; height: 500px; margin: 0 auto;"></div>
+   <div id="grid_wrap_hide" style="display: none;"></div>
+  </article>
+  <!-- grid_wrap end -->
+ </section>
+ <!-- search_result end -->
+</section>
+<!-- content end -->
