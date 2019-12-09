@@ -14,6 +14,10 @@
         $('#btnOrdDtlClose').click(function() {
             $('#_divIdOrdDtl').remove();
         });
+        $('#btnPrint').click(function() {
+
+        	Common.report("printForm");
+        });
     });
     
 </script>
@@ -24,6 +28,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="sal.page.title.ordView" /></h1>
 <ul class="right_opt">
+	<li><p class="btn_blue2"><a id="btnPrint" href="#">Print</a></p></li>
 	<li><p class="btn_blue2"><a id="btnLedger1" href="#"><spring:message code="sal.btn.ledger" />(1)</a></p></li>
 	<li><p class="btn_blue2"><a id="btnLedger2" href="#"><spring:message code="sal.btn.ledger" />(2)</a></p></li>
 	<li><p class="btn_blue2"><a id="btnOrdDtlClose" href="#"><spring:message code="sal.btn.close" /></a></p></li>
@@ -42,6 +47,11 @@
 <!------------------------------------------------------------------------------
     Order Detail Page Include END
 ------------------------------------------------------------------------------->
+  <form id="printForm" name="printForm">
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="V_ORDERID" name="V_ORDERID" value="${orderDetail.basicInfo.ordId}"/>
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/CustomerScoreCard.rpt" /><br />
+  </form>
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
