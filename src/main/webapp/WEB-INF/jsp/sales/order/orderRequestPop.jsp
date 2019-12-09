@@ -1697,6 +1697,24 @@
     if (tabNm == 'PEXC') {
 
       if (fn_getCheckAccessRight(userid, 10)) {
+        // ONGHC - CHECK PROMOTION CODE IS IT FALL ON COMBO PACKAGE PROMOTION
+        // IF YES - EDIT PROMOTION DISALLOW
+        // ELSE NO - PROMOTION EDITABLE
+        var stat = "";
+        Common.ajaxSync("GET", "/sales/order/chkCboPromPck.do", {
+           promo : PROMO_CODE
+        }, function(rsltInfo) {
+           if (rsltInfo == 1) {
+             stat = rsltInfo;
+             Common.alert('<spring:message code="sales.msg.errEdtPromCbo" />');
+             return;
+           }
+        });
+
+        if (stat == 1) {
+          return;
+        }
+        // END
 
         if (ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
           //                  var msg = "[" + ORD_NO + "] is under [" + ORD_STUS_CODE + "] status.<br/>Produt exchange request is disallowed.";
