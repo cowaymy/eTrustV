@@ -639,4 +639,31 @@
          WHERE SALES_ORD_ID     = #{salesOrdId}
     </update>
 
+  <select id="chkCboPromPck" parameterType="Map" resultType="int">
+    SELECT COUNT(PROMO) FROM (SELECT DISTINCT A.PROMO_ID AS PROMO
+                              FROM SAL0252M A
+                              JOIN SAL0253D B ON A.CONF_ID = B.CONF_ID
+                              UNION
+                              SELECT DISTINCT B.SUB_PROMO_ID AS PROMO
+                              FROM SAL0252M A
+                              JOIN SAL0253D B ON A.CONF_ID = B.CONF_ID
+                             )
+    WHERE PROMO = (SELECT PROMO_ID
+                   FROM SAL0017D
+                   WHERE PROMO_CODE = #{promo})
+  </select>
+
+  <select id="chkCboPromCanPck" parameterType="Map" resultType="int">
+    SELECT COUNT(PROMO_CAN_ID) FROM (SELECT DISTINCT A.PROMO_CAN_ID AS PROMO_CAN_ID
+                              FROM SAL0252M A
+                              JOIN SAL0253D B ON A.CONF_ID = B.CONF_ID
+                              UNION
+                              SELECT DISTINCT B.PROMO_CAN_ID AS PROMO_CAN_ID
+                              FROM SAL0252M A
+                              JOIN SAL0253D B ON A.CONF_ID = B.CONF_ID
+                             )
+    WHERE PROMO_CAN_ID = (SELECT PROMO_ID
+                          FROM SAL0017D
+                          WHERE PROMO_CODE = #{promo})
+  </select>
 </mapper>
