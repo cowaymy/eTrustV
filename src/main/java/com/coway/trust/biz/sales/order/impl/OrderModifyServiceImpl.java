@@ -75,583 +75,605 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *
  */
 @Service("orderModifyService")
-public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements OrderModifyService{
+public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements OrderModifyService {
 
-	private static Logger logger = LoggerFactory.getLogger(PSTRequestDOServiceImpl.class);
+  private static Logger logger = LoggerFactory.getLogger(PSTRequestDOServiceImpl.class);
 
-	@Resource(name = "orderModifyMapper")
-	private OrderModifyMapper orderModifyMapper;
+  @Resource(name = "orderModifyMapper")
+  private OrderModifyMapper orderModifyMapper;
 
-	@Resource(name = "orderDetailMapper")
-	private OrderDetailMapper orderDetailMapper;
+  @Resource(name = "orderDetailMapper")
+  private OrderDetailMapper orderDetailMapper;
 
-	@Resource(name = "orderRegisterMapper")
-	private OrderRegisterMapper orderRegisterMapper;
+  @Resource(name = "orderRegisterMapper")
+  private OrderRegisterMapper orderRegisterMapper;
 
-	@Resource(name = "preOrderMapper")
-    private PreOrderMapper preOrderMapper;
+  @Resource(name = "preOrderMapper")
+  private PreOrderMapper preOrderMapper;
 
-	@Resource(name = "customerMapper")
-	private CustomerMapper customerMapper;
+  @Resource(name = "customerMapper")
+  private CustomerMapper customerMapper;
 
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
+  @Autowired
+  private MessageSourceAccessor messageSourceAccessor;
 
-	@Override
-	public void updateOrderBasinInfo(Map<String, Object> params, SessionVO sessionVO) {
+  @Override
+  public void updateOrderBasinInfo(Map<String, Object> params, SessionVO sessionVO) {
 
-		logger.info("!@###### OrderModifyServiceImpl.updateOrderBasinInfo");
+    logger.info("!@###### OrderModifyServiceImpl.updateOrderBasinInfo");
 
-		params.put("updUserId", sessionVO.getUserId());
+    params.put("updUserId", sessionVO.getUserId());
 
-		if(Integer.valueOf((String)params.get("appTypeId")) != SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
-			params.put("installDur", 0);
-		}
+    if (Integer.valueOf((String) params.get("appTypeId")) != SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
+      params.put("installDur", 0);
+    }
 
-		if(params.get("eKeyinYn").equals("Y"))
-		  preOrderMapper.updateKeyinSOF(params);
+    if (params.get("eKeyinYn").equals("Y"))
+      preOrderMapper.updateKeyinSOF(params);
 
-		orderModifyMapper.updateSalesOrderM(params);
-	}
+    orderModifyMapper.updateSalesOrderM(params);
+  }
 
-	@Override
-	public EgovMap selectBillGrpMailingAddr(Map<String, Object> params) throws Exception {
+  @Override
+  public EgovMap selectBillGrpMailingAddr(Map<String, Object> params) throws Exception {
 
-		EgovMap orderInfo = orderRegisterMapper.selectSalesOrderM(params);
+    EgovMap orderInfo = orderRegisterMapper.selectSalesOrderM(params);
 
-		params.put("custBillId", orderInfo.get("custBillId"));
+    params.put("custBillId", orderInfo.get("custBillId"));
 
-		EgovMap billGrpInfo = orderModifyMapper.selectBillGroupByBillGroupID(params);
+    EgovMap billGrpInfo = orderModifyMapper.selectBillGroupByBillGroupID(params);
 
-		List<EgovMap> billGrpOrd  = orderModifyMapper.selectBillGroupOrder(params);
+    List<EgovMap> billGrpOrd = orderModifyMapper.selectBillGroupOrder(params);
 
-		if(billGrpOrd != null && billGrpOrd.size() > 0) {
-    		billGrpInfo.put("totOrder", billGrpOrd.size());
-		}
+    if (billGrpOrd != null && billGrpOrd.size() > 0) {
+      billGrpInfo.put("totOrder", billGrpOrd.size());
+    }
 
-		if(billGrpInfo != null) {
-    		params.put("custAddId", billGrpInfo.get("custBillAddId"));
+    if (billGrpInfo != null) {
+      params.put("custAddId", billGrpInfo.get("custBillAddId"));
 
-    		EgovMap mailAddrInfo = customerMapper.selectCustomerViewMainAddress(params);
+      EgovMap mailAddrInfo = customerMapper.selectCustomerViewMainAddress(params);
 
-    		if(mailAddrInfo != null) {
-    			billGrpInfo.put("fullAddress", mailAddrInfo.get("fullAddress"));
-    		}
-		}
+      if (mailAddrInfo != null) {
+        billGrpInfo.put("fullAddress", mailAddrInfo.get("fullAddress"));
+      }
+    }
 
-		return billGrpInfo;
-	}
+    return billGrpInfo;
+  }
 
-	@Override
-	public EgovMap checkNricEdit(Map<String, Object> params) throws Exception {
+  @Override
+  public EgovMap checkNricEdit(Map<String, Object> params) throws Exception {
 
-		int checkNricCnt  = orderModifyMapper.selectNricCheckCnt(params);
-		int checkNricCnt2 = orderModifyMapper.selectNricCheckCnt2(params);
+    int checkNricCnt = orderModifyMapper.selectNricCheckCnt(params);
+    int checkNricCnt2 = orderModifyMapper.selectNricCheckCnt2(params);
 
-		boolean isEditable = checkNricCnt == checkNricCnt2 ? true : false;
+    boolean isEditable = checkNricCnt == checkNricCnt2 ? true : false;
 
-		EgovMap outMap = new EgovMap();
+    EgovMap outMap = new EgovMap();
 
-		outMap.put("isEditable", isEditable);
+    outMap.put("isEditable", isEditable);
 
-		return outMap;
-	}
+    return outMap;
+  }
 
-	@Override
-	public EgovMap checkNricExist(Map<String, Object> params) throws Exception {
+  @Override
+  public EgovMap checkNricExist(Map<String, Object> params) throws Exception {
 
-		EgovMap outMap = orderModifyMapper.selectNricExist(params);
+    EgovMap outMap = orderModifyMapper.selectNricExist(params);
 
-		return outMap;
-	}
+    return outMap;
+  }
 
-	@Override
-	public EgovMap selectBillGrpCntcPerson(Map<String, Object> params) throws Exception {
+  @Override
+  public EgovMap selectBillGrpCntcPerson(Map<String, Object> params) throws Exception {
 
-		EgovMap orderInfo = orderRegisterMapper.selectSalesOrderM(params);
+    EgovMap orderInfo = orderRegisterMapper.selectSalesOrderM(params);
 
-		logger.info("!@###### custBillId:"+orderInfo.get("custBillId"));
+    logger.info("!@###### custBillId:" + orderInfo.get("custBillId"));
 
-		params.put("custBillId", orderInfo.get("custBillId"));
+    params.put("custBillId", orderInfo.get("custBillId"));
 
-		EgovMap billGrpInfo = orderModifyMapper.selectBillGroupByBillGroupID(params);
+    EgovMap billGrpInfo = orderModifyMapper.selectBillGroupByBillGroupID(params);
 
-		List<EgovMap> billGrpOrd  = orderModifyMapper.selectBillGroupOrder(params);
+    List<EgovMap> billGrpOrd = orderModifyMapper.selectBillGroupOrder(params);
 
-		//logger.info("!@###### billGrpOrd.size():"+billGrpOrd.size());
-		if(billGrpOrd != null && billGrpOrd.size() > 0) {
-			billGrpInfo.put("totOrder", billGrpOrd.size());
-		}
+    // logger.info("!@###### billGrpOrd.size():"+billGrpOrd.size());
+    if (billGrpOrd != null && billGrpOrd.size() > 0) {
+      billGrpInfo.put("totOrder", billGrpOrd.size());
+    }
 
-		if(billGrpInfo != null) {
-			params.put("custCntcId", billGrpInfo.get("custBillCntId"));
+    if (billGrpInfo != null) {
+      params.put("custCntcId", billGrpInfo.get("custBillCntId"));
 
-			EgovMap custAddInfo = customerMapper.selectCustomerViewMainContact(params);
+      EgovMap custAddInfo = customerMapper.selectCustomerViewMainContact(params);
 
-			custAddInfo.put("code",	CommonUtils.isEmpty(custAddInfo.get("code")) ? "" : custAddInfo.get("code"));
-			custAddInfo.put("name1",	CommonUtils.isEmpty(custAddInfo.get("name1")) ? "" : custAddInfo.get("name1"));
+      custAddInfo.put("code", CommonUtils.isEmpty(custAddInfo.get("code")) ? "" : custAddInfo.get("code"));
+      custAddInfo.put("name1", CommonUtils.isEmpty(custAddInfo.get("name1")) ? "" : custAddInfo.get("name1"));
 
-			billGrpInfo.put("custAddInfo", custAddInfo);
-		}
+      billGrpInfo.put("custAddInfo", custAddInfo);
+    }
 
-		return billGrpInfo;
-	}
+    return billGrpInfo;
+  }
 
-	@Override
-	public void updateOrderMailingAddress(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+  @Override
+  public void updateOrderMailingAddress(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
 
-		logger.info("!@###### OrderModifyServiceImpl.updateOrderMailingAddress");
+    logger.info("!@###### OrderModifyServiceImpl.updateOrderMailingAddress");
 
-		CustBillMasterHistoryVO custBillMasterHistoryVO = new CustBillMasterHistoryVO();
+    CustBillMasterHistoryVO custBillMasterHistoryVO = new CustBillMasterHistoryVO();
 
-		this.preprocBillMasterHistory(custBillMasterHistoryVO, params, sessionVO, SalesConstants.ORDER_EDIT_TYPE_CD_MAL);
+    this.preprocBillMasterHistory(custBillMasterHistoryVO, params, sessionVO, SalesConstants.ORDER_EDIT_TYPE_CD_MAL);
 
-		orderModifyMapper.insertCustBillMasterHistory(custBillMasterHistoryVO);
+    orderModifyMapper.insertCustBillMasterHistory(custBillMasterHistoryVO);
 
-		Map<String, Object> inMap = new HashMap<String, Object>();
+    Map<String, Object> inMap = new HashMap<String, Object>();
 
-		inMap.put("custBillAddId", params.get("custAddId"));
-		inMap.put("updUserId", sessionVO.getUserId());
-		inMap.put("custBillId", params.get("billGroupId"));
-		inMap.put("salesOrdId", params.get("salesOrdId"));
+    inMap.put("custBillAddId", params.get("custAddId"));
+    inMap.put("updUserId", sessionVO.getUserId());
+    inMap.put("custBillId", params.get("billGroupId"));
+    inMap.put("salesOrdId", params.get("salesOrdId"));
 
-		orderModifyMapper.updateCustBillMaster(inMap);
+    orderModifyMapper.updateCustBillMaster(inMap);
 
-		orderModifyMapper.updateCustAddId(inMap);
-	}
+    orderModifyMapper.updateCustAddId(inMap);
+  }
 
-	@Override
-	public void updateCntcPerson(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+  @Override
+  public void updateCntcPerson(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
 
-		logger.info("!@###### OrderModifyServiceImpl.updateOrderMailingAddress");
+    logger.info("!@###### OrderModifyServiceImpl.updateOrderMailingAddress");
 
-		CustBillMasterHistoryVO custBillMasterHistoryVO = new CustBillMasterHistoryVO();
+    CustBillMasterHistoryVO custBillMasterHistoryVO = new CustBillMasterHistoryVO();
 
-		this.preprocBillMasterHistory(custBillMasterHistoryVO, params, sessionVO, SalesConstants.ORDER_EDIT_TYPE_CD_CNT);
+    this.preprocBillMasterHistory(custBillMasterHistoryVO, params, sessionVO, SalesConstants.ORDER_EDIT_TYPE_CD_CNT);
 
-		orderModifyMapper.insertCustBillMasterHistory(custBillMasterHistoryVO);
+    orderModifyMapper.insertCustBillMasterHistory(custBillMasterHistoryVO);
 
-		Map<String, Object> inMap = new HashMap<String, Object>();
+    Map<String, Object> inMap = new HashMap<String, Object>();
 
-		inMap.put("custBillCntId", params.get("custCntcId"));
-		inMap.put("updUserId", sessionVO.getUserId());
-		inMap.put("custBillId", params.get("billGroupId"));
-		inMap.put("salesOrdId", params.get("salesOrdId"));
+    inMap.put("custBillCntId", params.get("custCntcId"));
+    inMap.put("updUserId", sessionVO.getUserId());
+    inMap.put("custBillId", params.get("billGroupId"));
+    inMap.put("salesOrdId", params.get("salesOrdId"));
 
-		orderModifyMapper.updateCustBillMaster(inMap);
+    orderModifyMapper.updateCustBillMaster(inMap);
 
-		orderModifyMapper.updateCustAddId(inMap);
-	}
+    orderModifyMapper.updateCustAddId(inMap);
+  }
 
-	@Override
-	public void updateOrderMailingAddress2(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+  @Override
+  public void updateOrderMailingAddress2(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
 
-		Map<String, Object> inMap = new HashMap<String, Object>();
+    Map<String, Object> inMap = new HashMap<String, Object>();
 
-		inMap.put("custBillAddId", params.get("custAddId"));
-		inMap.put("updUserId", sessionVO.getUserId());
-		inMap.put("salesOrdId", params.get("salesOrdId"));
+    inMap.put("custBillAddId", params.get("custAddId"));
+    inMap.put("updUserId", sessionVO.getUserId());
+    inMap.put("salesOrdId", params.get("salesOrdId"));
 
-		orderModifyMapper.updateCustAddId(inMap);
-	}
+    orderModifyMapper.updateCustAddId(inMap);
+  }
 
-	@Override
-	public void updateNric(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+  @Override
+  public void updateNric(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
 
-		logger.info("!@###### OrderModifyServiceImpl.updateNric");
+    logger.info("!@###### OrderModifyServiceImpl.updateNric");
 
-		params.put("updUserId", sessionVO.getUserId());
+    params.put("updUserId", sessionVO.getUserId());
 
-		orderModifyMapper.updateNric(params);
-	}
+    orderModifyMapper.updateNric(params);
+  }
 
-	@Override
-	public void saveDocSubmission(OrderVO orderVO, SessionVO sessionVO) throws Exception {
+  @Override
+  public void saveDocSubmission(OrderVO orderVO, SessionVO sessionVO) throws Exception {
 
-		logger.info("!@###### OrderModifyServiceImpl.saveDocSubmission");
+    logger.info("!@###### OrderModifyServiceImpl.saveDocSubmission");
 
-		GridDataSet<DocSubmissionVO>    documentList     = orderVO.getDocSubmissionVOList();
+    GridDataSet<DocSubmissionVO> documentList = orderVO.getDocSubmissionVOList();
 
-		List<DocSubmissionVO> docSubVOList = documentList.getUpdate(); // 수정 리스트 얻기
+    List<DocSubmissionVO> docSubVOList = documentList.getUpdate(); // 수정 리스트 얻기
 
-		int salesOrdId = orderVO.getSalesOrdId();
+    int salesOrdId = orderVO.getSalesOrdId();
 
-		for(DocSubmissionVO docSubVO : docSubVOList) {
-			if(docSubVO.getChkfield() == 1) {
+    for (DocSubmissionVO docSubVO : docSubVOList) {
+      if (docSubVO.getChkfield() == 1) {
 
-				docSubVO.setDocSoId(salesOrdId);
-				docSubVO.setDocSubTypeId(SalesConstants.CCP_DOC_SUB_CODE_ID_ICS);
-				docSubVO.setDocMemId(0);
-				docSubVO.setCrtUserId(sessionVO.getUserId());
-				docSubVO.setUpdUserId(sessionVO.getUserId());
-				docSubVO.setDocSubBrnchId(sessionVO.getUserBranchId());
+        docSubVO.setDocSoId(salesOrdId);
+        docSubVO.setDocSubTypeId(SalesConstants.CCP_DOC_SUB_CODE_ID_ICS);
+        docSubVO.setDocMemId(0);
+        docSubVO.setCrtUserId(sessionVO.getUserId());
+        docSubVO.setUpdUserId(sessionVO.getUserId());
+        docSubVO.setDocSubBrnchId(sessionVO.getUserBranchId());
 
-				orderModifyMapper.saveDocSubmission(docSubVO);
-			}
-			else {
+        orderModifyMapper.saveDocSubmission(docSubVO);
+      } else {
 
-				docSubVO.setUpdUserId(sessionVO.getUserId());
-				docSubVO.setDocSubBrnchId(sessionVO.getUserBranchId());
+        docSubVO.setUpdUserId(sessionVO.getUserId());
+        docSubVO.setDocSubBrnchId(sessionVO.getUserBranchId());
 
-				orderModifyMapper.updateDocSubmissionDel(docSubVO);
-			}
-		}
-	}
+        orderModifyMapper.updateDocSubmissionDel(docSubVO);
+      }
+    }
+  }
 
-	@Override
-	public void updatePaymentChannel(Map<String, Object> params, SessionVO sessionVO) throws Exception {
+  @Override
+  public void updatePaymentChannel(Map<String, Object> params, SessionVO sessionVO) throws Exception {
 
-		logger.info("!@###### OrderModifyServiceImpl.updatePaymentChannel");
-		int rentPayMode = Integer.parseInt((String) params.get("rentPayMode"));
-		RentPaySetVO rentPaySetVO = new RentPaySetVO();
+    logger.info("!@###### OrderModifyServiceImpl.updatePaymentChannel");
+    int rentPayMode = Integer.parseInt((String) params.get("rentPayMode"));
+    RentPaySetVO rentPaySetVO = new RentPaySetVO();
 
-		this.preprocRentPaySet(rentPaySetVO, params, sessionVO);
+    this.preprocRentPaySet(rentPaySetVO, params, sessionVO);
 
-		int payModeId = orderModifyMapper.selectPayModeId(rentPaySetVO);
-		if((payModeId == 131 || payModeId == 132) && rentPayMode == 130){
-			int crtSeqSAL0236D = orderModifyMapper.crtSeqSAL0236D();
-			params.put("deductId", crtSeqSAL0236D);
-			params.put("rentPayId", Integer.parseInt((String) params.get("rentPayId")));
-			params.put("modeId", rentPayMode);
-			params.put("userId", sessionVO.getUserId());
-			orderModifyMapper.insertDeductSAL0236D(params);
-			orderModifyMapper.updatePaymentChannelvRescue(params);
-		}
-		else{
-			orderModifyMapper.updatePaymentChannel(rentPaySetVO);
+    int payModeId = orderModifyMapper.selectPayModeId(rentPaySetVO);
+    if ((payModeId == 131 || payModeId == 132) && rentPayMode == 130) {
+      int crtSeqSAL0236D = orderModifyMapper.crtSeqSAL0236D();
+      params.put("deductId", crtSeqSAL0236D);
+      params.put("rentPayId", Integer.parseInt((String) params.get("rentPayId")));
+      params.put("modeId", rentPayMode);
+      params.put("userId", sessionVO.getUserId());
+      orderModifyMapper.insertDeductSAL0236D(params);
+      orderModifyMapper.updatePaymentChannelvRescue(params);
+    } else {
+      orderModifyMapper.updatePaymentChannel(rentPaySetVO);
+
+    }
+
+    SalesOrderMVO salesOrderMVO = new SalesOrderMVO();
+
+    salesOrderMVO.setSalesOrdId(Long.parseLong((String) params.get("salesOrdId")));
+    salesOrderMVO.setUpdUserId(sessionVO.getUserId());
+    salesOrderMVO.setEcash(rentPaySetVO.getModeId() == 131 ? 1 : 0);
+
+    orderModifyMapper.updateECashInfo(salesOrderMVO);
+  }
+
+  private void preprocRentPaySet(RentPaySetVO rentPaySetVO, Map<String, Object> params, SessionVO sessionVO)
+      throws ParseException {
+    logger.info("!@###### preprocRentPaySet START ");
+
+    int iRentPayMode = Integer.parseInt((String) params.get("rentPayMode"));
+
+    String sIssuNric = "";
+
+    if (CommonUtils.isNotEmpty(((String) params.get("rentPayIC")).trim())) {
+      sIssuNric = (String) params.get("rentPayIC");
+      logger.info("!@###### 000");
+    } else if ("1".equals((String) params.get("thrdParty"))) {
+      sIssuNric = (String) params.get("thrdPartyNric");
+      logger.info("!@###### 111");
+    } else {
+      sIssuNric = (String) params.get("custNric");
+      logger.info("!@###### 222");
+    }
 
-		}
+    rentPaySetVO.setRentPayId(Integer.parseInt((String) params.get("rentPayId")));
+    // rentPaySetVO.setSalesOrdId(Integer.parseInt((String)
+    // params.get("salesOrdId")));
+    rentPaySetVO.setModeId(iRentPayMode);
+    rentPaySetVO.setCustCrcId(iRentPayMode == 131 ? Integer.parseInt((String) params.get("rentPayCRCId")) : 0);
+    rentPaySetVO
+        .setCustAccId(iRentPayMode == 132 ? Integer.parseInt((String) params.get("hiddenRentPayBankAccID")) : 0);
+    rentPaySetVO.setBankId(iRentPayMode == 131 ? Integer.parseInt((String) params.get("rentPayCRCBankId"))
+        : iRentPayMode == 132 ? Integer.parseInt((String) params.get("hiddenAccBankId")) : 0);
+    rentPaySetVO.setDdApplyDt(CommonUtils.isNotEmpty(params.get("applyDate")) ? (String) params.get("applyDate")
+        : SalesConstants.DEFAULT_DATE);
+    rentPaySetVO.setDdSubmitDt(CommonUtils.isNotEmpty(params.get("submitDate")) ? (String) params.get("submitDate")
+        : SalesConstants.DEFAULT_DATE);
+    rentPaySetVO.setDdStartDt(CommonUtils.isNotEmpty(params.get("startDate")) ? (String) params.get("startDate")
+        : SalesConstants.DEFAULT_DATE);
+    rentPaySetVO.setDdRejctDt(CommonUtils.isNotEmpty(params.get("rejectDate")) ? (String) params.get("rejectDate")
+        : SalesConstants.DEFAULT_DATE);
+    rentPaySetVO.setFailResnId(
+        "1".equals((String) params.get("chkRejectDate")) ? Integer.parseInt((String) params.get("rejectReason")) : 0);
+    rentPaySetVO.setUpdUserId(sessionVO.getUserId());
+    // rentPaySetVO.setStusCodeId(1);
+    rentPaySetVO.setIs3rdParty("1".equals((String) params.get("thrdParty")) ? 1 : 0);
+    rentPaySetVO.setCustId(
+        "1".equals((String) params.get("thrdParty")) ? Integer.parseInt((String) params.get("hiddenThrdPartyId")) : 0);
+    // rentPaySetVO.setEditTypeId(0);
+    rentPaySetVO.setNricOld((String) params.get("rentPayIC"));
+    rentPaySetVO.setIssuNric(sIssuNric);
+    // rentPaySetVO.setAeonCnvr(0);
+    // rentPaySetVO.setRem("");
+    rentPaySetVO.setLastApplyUser(sessionVO.getUserId());
+    rentPaySetVO.setPayTrm(Integer.parseInt((String) params.get("payTerm")));
+  }
+
+  private void preprocBillMasterHistory(CustBillMasterHistoryVO custBillMasterHistoryVO, Map<String, Object> params,
+      SessionVO sessionVO, String ordEditType) throws ParseException {
+    logger.info("!@###### preprocBillMasterHistory START ");
+
+    custBillMasterHistoryVO.setCustBillId(Integer.parseInt((String) params.get("billGroupId")));
+    custBillMasterHistoryVO.setHistCrtUserId(sessionVO.getUserId());
+    custBillMasterHistoryVO.setSysHistRem("");
+    custBillMasterHistoryVO.setUserHistRem((String) params.get("sysHistRem"));
+    custBillMasterHistoryVO.setSalesOrdIdOld(0);
+    custBillMasterHistoryVO.setSalesOrdIdNw(0);
+    custBillMasterHistoryVO.setCntcIdOld(0);
+    custBillMasterHistoryVO.setCntcIdNw(0);
+    custBillMasterHistoryVO.setAddrIdOld(0);
+    custBillMasterHistoryVO.setAddrIdNw(0);
+    custBillMasterHistoryVO.setSalesOrdIdOld(0);
+    custBillMasterHistoryVO.setSalesOrdIdNw(0);
+    custBillMasterHistoryVO.setRemOld("");
+    custBillMasterHistoryVO.setRemNw("");
+    custBillMasterHistoryVO.setEmailOld("");
+    custBillMasterHistoryVO.setEmailNw("");
+    custBillMasterHistoryVO.setIsEStateOld(0);
+    custBillMasterHistoryVO.setIsEStateNw(0);
+    custBillMasterHistoryVO.setIsSmsOld(0);
+    custBillMasterHistoryVO.setIsSmsNw(0);
+    custBillMasterHistoryVO.setIsPostOld(0);
+    custBillMasterHistoryVO.setIsPostNw(0);
+    custBillMasterHistoryVO.setTypeId(0);
 
-		SalesOrderMVO salesOrderMVO = new SalesOrderMVO();
+    if (SalesConstants.ORDER_EDIT_TYPE_CD_MAL.equals(ordEditType)) {
+      custBillMasterHistoryVO.setSysHistRem("[System] Change Mailing Address");
+      custBillMasterHistoryVO.setAddrIdOld(Integer.parseInt((String) params.get("custAddIdOld")));
+      custBillMasterHistoryVO.setAddrIdNw(Integer.parseInt((String) params.get("custAddId")));
+      custBillMasterHistoryVO.setTypeId(1042);
+    } else if (SalesConstants.ORDER_EDIT_TYPE_CD_CNT.equals(ordEditType)) {
+      custBillMasterHistoryVO.setSysHistRem("[System] Change Contact Person");
+      custBillMasterHistoryVO.setCntcIdOld(Integer.parseInt((String) params.get("custCntcId")));
+      custBillMasterHistoryVO.setCntcIdNw(Integer.parseInt((String) params.get("custCntcIdOld")));
+      custBillMasterHistoryVO.setTypeId(1043);
+    }
+  }
 
-		salesOrderMVO.setSalesOrdId(Long.parseLong((String)params.get("salesOrdId")));
-		salesOrderMVO.setUpdUserId(sessionVO.getUserId());
-		salesOrderMVO.setEcash(rentPaySetVO.getModeId() == 131 ? 1 : 0);
+  @Override
+  public EgovMap selectCustomerInfo(Map<String, Object> params) throws Exception {
 
-		orderModifyMapper.updateECashInfo(salesOrderMVO);
-	}
+    EgovMap outMap = orderModifyMapper.selectCustInfo(params);
 
-	private void preprocRentPaySet(RentPaySetVO rentPaySetVO, Map<String, Object> params, SessionVO sessionVO) throws ParseException {
-		logger.info("!@###### preprocRentPaySet START ");
+    return outMap;
+  }
 
-		int iRentPayMode = Integer.parseInt((String) params.get("rentPayMode"));
+  @Override
+  public EgovMap selectInstallInfo(Map<String, Object> params) throws Exception {
 
-		String sIssuNric = "";
+    EgovMap instMap = orderDetailMapper.selectOrderInstallationInfoByOrderID(params);
 
-		if(CommonUtils.isNotEmpty(((String) params.get("rentPayIC")).trim())) {
-			sIssuNric = (String) params.get("rentPayIC");
-			logger.info("!@###### 000");
-		}
-		else if("1".equals((String) params.get("thrdParty"))) {
-			sIssuNric = (String) params.get("thrdPartyNric");
-			logger.info("!@###### 111");
-		}
-		else {
-			sIssuNric = (String) params.get("custNric");
-			logger.info("!@###### 222");
-		}
+    String TM = this.convert12Tm((String) instMap.get("preferInstTm"));
 
-		rentPaySetVO.setRentPayId(Integer.parseInt((String) params.get("rentPayId")));
-//		rentPaySetVO.setSalesOrdId(Integer.parseInt((String) params.get("salesOrdId")));
-		rentPaySetVO.setModeId(iRentPayMode);
-		rentPaySetVO.setCustCrcId(iRentPayMode == 131 ? Integer.parseInt((String) params.get("rentPayCRCId")) : 0);
-		rentPaySetVO.setCustAccId(iRentPayMode == 132 ? Integer.parseInt((String) params.get("hiddenRentPayBankAccID")) : 0);
-		rentPaySetVO.setBankId(iRentPayMode == 131 ? Integer.parseInt((String) params.get("rentPayCRCBankId")) : iRentPayMode == 132 ? Integer.parseInt((String) params.get("hiddenAccBankId")) : 0);
-		rentPaySetVO.setDdApplyDt(CommonUtils.isNotEmpty(params.get("applyDate")) ? (String) params.get("applyDate") : SalesConstants.DEFAULT_DATE );
-		rentPaySetVO.setDdSubmitDt(CommonUtils.isNotEmpty(params.get("submitDate")) ? (String) params.get("submitDate") : SalesConstants.DEFAULT_DATE );
-		rentPaySetVO.setDdStartDt(CommonUtils.isNotEmpty(params.get("startDate")) ? (String) params.get("startDate") : SalesConstants.DEFAULT_DATE );
-		rentPaySetVO.setDdRejctDt(CommonUtils.isNotEmpty(params.get("rejectDate")) ? (String) params.get("rejectDate") : SalesConstants.DEFAULT_DATE );
-		rentPaySetVO.setFailResnId("1".equals((String) params.get("chkRejectDate")) ? Integer.parseInt((String) params.get("rejectReason")) : 0);
-		rentPaySetVO.setUpdUserId(sessionVO.getUserId());
-//		rentPaySetVO.setStusCodeId(1);
-		rentPaySetVO.setIs3rdParty("1".equals((String) params.get("thrdParty")) ? 1 : 0);
-		rentPaySetVO.setCustId("1".equals((String) params.get("thrdParty")) ? Integer.parseInt((String) params.get("hiddenThrdPartyId")) : 0);
-//		rentPaySetVO.setEditTypeId(0);
-		rentPaySetVO.setNricOld((String) params.get("rentPayIC"));
-		rentPaySetVO.setIssuNric(sIssuNric);
-//		rentPaySetVO.setAeonCnvr(0);
-//		rentPaySetVO.setRem("");
-		rentPaySetVO.setLastApplyUser(sessionVO.getUserId());
-		rentPaySetVO.setPayTrm(Integer.parseInt((String) params.get("payTerm")));
-	}
+    instMap.put("preferInstTm", TM);
 
-	private void preprocBillMasterHistory(CustBillMasterHistoryVO custBillMasterHistoryVO, Map<String, Object> params, SessionVO sessionVO, String ordEditType) throws ParseException {
-		logger.info("!@###### preprocBillMasterHistory START ");
+    return instMap;
+  }
 
-		custBillMasterHistoryVO.setCustBillId(Integer.parseInt((String) params.get("billGroupId")));
-		custBillMasterHistoryVO.setHistCrtUserId(sessionVO.getUserId());
-		custBillMasterHistoryVO.setSysHistRem("");
-		custBillMasterHistoryVO.setUserHistRem((String) params.get("sysHistRem"));
-		custBillMasterHistoryVO.setSalesOrdIdOld(0);
-		custBillMasterHistoryVO.setSalesOrdIdNw(0);
-		custBillMasterHistoryVO.setCntcIdOld(0);
-		custBillMasterHistoryVO.setCntcIdNw(0);
-		custBillMasterHistoryVO.setAddrIdOld(0);
-		custBillMasterHistoryVO.setAddrIdNw(0);
-		custBillMasterHistoryVO.setSalesOrdIdOld(0);
-		custBillMasterHistoryVO.setSalesOrdIdNw(0);
-		custBillMasterHistoryVO.setRemOld("");
-		custBillMasterHistoryVO.setRemNw("");
-		custBillMasterHistoryVO.setEmailOld("");
-		custBillMasterHistoryVO.setEmailNw("");
-		custBillMasterHistoryVO.setIsEStateOld(0);
-		custBillMasterHistoryVO.setIsEStateNw(0);
-		custBillMasterHistoryVO.setIsSmsOld(0);
-		custBillMasterHistoryVO.setIsSmsNw(0);
-		custBillMasterHistoryVO.setIsPostOld(0);
-		custBillMasterHistoryVO.setIsPostNw(0);
-		custBillMasterHistoryVO.setTypeId(0);
+  private String convert12Tm(String TM) {
+    String HH = "", MI = "", cvtTM = "";
 
-		if(SalesConstants.ORDER_EDIT_TYPE_CD_MAL.equals(ordEditType)) {
-			custBillMasterHistoryVO.setSysHistRem("[System] Change Mailing Address");
-			custBillMasterHistoryVO.setAddrIdOld(Integer.parseInt((String) params.get("custAddIdOld")));
-			custBillMasterHistoryVO.setAddrIdNw(Integer.parseInt((String) params.get("custAddId")));
-			custBillMasterHistoryVO.setTypeId(1042);
-		}
-		else if(SalesConstants.ORDER_EDIT_TYPE_CD_CNT.equals(ordEditType)) {
-			custBillMasterHistoryVO.setSysHistRem("[System] Change Contact Person");
-			custBillMasterHistoryVO.setCntcIdOld(Integer.parseInt((String) params.get("custCntcId")));
-			custBillMasterHistoryVO.setCntcIdNw(Integer.parseInt((String) params.get("custCntcIdOld")));
-			custBillMasterHistoryVO.setTypeId(1043);
-		}
-	}
+    if (CommonUtils.isNotEmpty(TM)) {
+      HH = CommonUtils.left(TM, 2);
+      MI = TM.substring(3, 5);
 
-	@Override
-	public EgovMap selectCustomerInfo(Map<String, Object> params) throws Exception {
+      if (Integer.parseInt(HH) > 12) {
+        cvtTM = CommonUtils.getFillString(String.valueOf(Integer.parseInt(HH) - 12), "0", 2) + ":" + String.valueOf(MI)
+            + " PM";
+      } else {
+        cvtTM = HH + ":" + String.valueOf(MI) + " AM";
+      }
+    }
+    return cvtTM;
+  }
 
-		EgovMap outMap = orderModifyMapper.selectCustInfo(params);
+  private String convert24Tm(String TM) {
+    String ampm = "", HH = "", MI = "", cvtTM = "";
 
-		return outMap;
-	}
+    if (CommonUtils.isNotEmpty(TM)) {
+      ampm = CommonUtils.right(TM, 2);
+      HH = CommonUtils.left(TM, 2);
+      MI = TM.substring(3, 5);
 
-	@Override
-	public EgovMap selectInstallInfo(Map<String, Object> params) throws Exception {
+      if ("PM".equals(ampm)) {
+        cvtTM = String.valueOf(Integer.parseInt(HH) + 12) + ":" + MI + ":00";
+      } else {
+        cvtTM = HH + ":" + MI + ":00";
+      }
+    }
+    return cvtTM;
+  }
 
-		EgovMap instMap = orderDetailMapper.selectOrderInstallationInfoByOrderID(params);
+  @Override
+  public EgovMap selectInstallAddrInfo(Map<String, Object> params) throws Exception {
 
-		String TM = this.convert12Tm((String) instMap.get("preferInstTm"));
+    EgovMap addrMap = customerMapper.selectCustomerViewMainAddress(params);
 
-		instMap.put("preferInstTm", TM);
+    return addrMap;
+  }
 
-		return instMap;
-	}
+  @Override
+  public EgovMap selectInstallCntcInfo(Map<String, Object> params) throws Exception {
 
-	private String convert12Tm(String TM) {
-		String HH = "", MI = "", cvtTM = "";
+    EgovMap cnctMap = customerMapper.selectCustomerViewMainContact(params);
 
-		if(CommonUtils.isNotEmpty(TM)) {
-			HH = CommonUtils.left(TM, 2);
-			MI = TM.substring(3, 5);
+    return cnctMap;
+  }
 
-			if(Integer.parseInt(HH) > 12) {
-				cvtTM = CommonUtils.getFillString(String.valueOf(Integer.parseInt(HH) - 12), "0", 2) + ":" + String.valueOf(MI) + " PM";
-			}
-			else {
-				cvtTM = HH + ":" + String.valueOf(MI) + " AM";
-			}
-		}
-		return cvtTM;
-	}
+  @Override
+  public EgovMap selectInstRsltCount(Map<String, Object> params) throws Exception {
 
-	private String convert24Tm(String TM) {
-		String ampm = "", HH = "", MI = "", cvtTM = "";
+    EgovMap cnctMap = orderModifyMapper.selectInstRsltCount(params);
 
-		if(CommonUtils.isNotEmpty(TM)) {
-			ampm = CommonUtils.right(TM, 2);
-			HH = CommonUtils.left(TM, 2);
-			MI = TM.substring(3, 5);
+    return cnctMap;
+  }
 
-			if("PM".equals(ampm)) {
-				cvtTM = String.valueOf(Integer.parseInt(HH) + 12) + ":" + MI + ":00";
-			}
-			else  {
-				cvtTM = HH + ":" + MI + ":00";
-			}
-		}
-		return cvtTM;
-	}
+  @Override
+  public EgovMap selectGSTZRLocationCount(Map<String, Object> params) throws Exception {
 
-	@Override
-	public EgovMap selectInstallAddrInfo(Map<String, Object> params) throws Exception {
+    EgovMap cnctMap = orderModifyMapper.selectGSTZRLocationCount(params);
 
-		EgovMap addrMap = customerMapper.selectCustomerViewMainAddress(params);
+    return cnctMap;
+  }
 
-		return addrMap;
-	}
+  @Override
+  public EgovMap selectGSTZRLocationByAddrIdCount(Map<String, Object> params) throws Exception {
 
-	@Override
-	public EgovMap selectInstallCntcInfo(Map<String, Object> params) throws Exception {
+    EgovMap cnctMap = orderModifyMapper.selectGSTZRLocationByAddrIdCount(params);
 
-		EgovMap cnctMap = customerMapper.selectCustomerViewMainContact(params);
+    return cnctMap;
+  }
 
-		return cnctMap;
-	}
+  @Override
+  public void updateInstallInfo(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
 
-	@Override
-	public EgovMap selectInstRsltCount(Map<String, Object> params) throws Exception {
+    logger.info("!@###### OrderModifyServiceImpl.updateInstallInfo");
 
-		EgovMap cnctMap = orderModifyMapper.selectInstRsltCount(params);
+    params.put("updUserId", sessionVO.getUserId());
+    params.put("preTm", this.convert24Tm((String) params.get("preTm")));
 
-		return cnctMap;
-	}
+    orderModifyMapper.updateInstallInfo(params);
 
-	@Override
-	public EgovMap selectGSTZRLocationCount(Map<String, Object> params) throws Exception {
+    orderModifyMapper.updateInstallUpdateInfo(params);
+  }
 
-		EgovMap cnctMap = orderModifyMapper.selectGSTZRLocationCount(params);
+  @Override
+  public EgovMap selectRentPaySetInfo(Map<String, Object> params) throws Exception {
 
-		return cnctMap;
-	}
+    EgovMap cnctMap = orderDetailMapper.selectOrderRentPaySetInfoByOrderID(params);
 
-	@Override
-	public EgovMap selectGSTZRLocationByAddrIdCount(Map<String, Object> params) throws Exception {
+    return cnctMap;
+  }
 
-		EgovMap cnctMap = orderModifyMapper.selectGSTZRLocationByAddrIdCount(params);
+  @Override
+  public List<EgovMap> selectReferralList(Map<String, Object> params) {
+    return orderModifyMapper.selectReferralList(params);
+  }
 
-		return cnctMap;
-	}
+  @Override
+  public List<EgovMap> selectStateCodeList(Map<String, Object> params) {
+    return orderModifyMapper.selectStateCodeList(params);
+  }
 
-	@Override
-	public void updateInstallInfo(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+  @Override
+  public void saveReferral(OrderModifyVO orderModifyVO, SessionVO sessionVO) throws Exception {
 
-		logger.info("!@###### OrderModifyServiceImpl.updateInstallInfo");
+    GridDataSet<ReferralVO> gridReferralVOList = orderModifyVO.getGridReferralVOList();
 
-		params.put("updUserId", sessionVO.getUserId());
-		params.put("preTm", this.convert24Tm((String) params.get("preTm")));
+    List<ReferralVO> addList = gridReferralVOList.getAdd();
+    List<ReferralVO> udtList = gridReferralVOList.getUpdate();
 
-		orderModifyMapper.updateInstallInfo(params);
+    for (ReferralVO addVO : addList) {
 
-		orderModifyMapper.updateInstallUpdateInfo(params);
-	}
+      if (CommonUtils.isEmpty(addVO.getRefCntc().trim())) {
+        throw new ApplicationException(AppConstants.FAIL, "Please key-in Contact number.");
+      }
+      if (!CommonUtils.isNumCheck(addVO.getRefCntc().trim())) {
+        throw new ApplicationException(AppConstants.FAIL, "Invalid Contact number.");
+      }
+      if (CommonUtils.intNvl(addVO.getRefStateId()) <= 0) {
+        throw new ApplicationException(AppConstants.FAIL, "Please Select State.");
+      }
+      if (addVO.getRefCntc().trim().length() >= 12) {
+        throw new ApplicationException(AppConstants.FAIL, "Contact number exceed valid digit.");
+      }
 
-	@Override
-	public EgovMap selectRentPaySetInfo(Map<String, Object> params) throws Exception {
+      addVO.setSalesOrdId(orderModifyVO.getSalesOrdId());
+      addVO.setCrtUserId(sessionVO.getUserId());
+      addVO.setStusCode(1);
 
-		EgovMap cnctMap = orderDetailMapper.selectOrderRentPaySetInfoByOrderID(params);
+      orderModifyMapper.insertReferral(addVO);
+    }
 
-		return cnctMap;
-	}
+    for (ReferralVO udtVO : udtList) {
 
-	@Override
-	public List<EgovMap> selectReferralList(Map<String, Object> params) {
-		return orderModifyMapper.selectReferralList(params);
-	}
+      if (CommonUtils.isEmpty(udtVO.getRefCntc().trim())) {
+        throw new ApplicationException(AppConstants.FAIL, "Please key-in Contact number.");
+      }
+      if (!CommonUtils.isNumCheck(udtVO.getRefCntc().trim())) {
+        throw new ApplicationException(AppConstants.FAIL, "Invalid Contact number.");
+      }
+      if (CommonUtils.intNvl(udtVO.getRefStateId()) <= 0) {
+        throw new ApplicationException(AppConstants.FAIL, "Please Select State.");
+      }
+      if (udtVO.getRefCntc().trim().length() >= 12) {
+        throw new ApplicationException(AppConstants.FAIL, "Contact number exceed valid digit.");
+      }
 
-	@Override
-	public List<EgovMap> selectStateCodeList(Map<String, Object> params) {
-		return orderModifyMapper.selectStateCodeList(params);
-	}
+      orderModifyMapper.updateReferral(udtVO);
+    }
+  }
 
-	@Override
-	public void saveReferral(OrderModifyVO orderModifyVO, SessionVO sessionVO) throws Exception {
+  @Override
+  public void updatePromoPriceInfo(SalesOrderMVO salesOrderMVO, SessionVO sessionVO) throws Exception {
 
-		GridDataSet<ReferralVO> gridReferralVOList  = orderModifyVO.getGridReferralVOList();
+    logger.info("!@###### OrderModifyServiceImpl.updatePromoPriceInfo");
 
-		List<ReferralVO> addList = gridReferralVOList.getAdd();
-		List<ReferralVO> udtList = gridReferralVOList.getUpdate();
+    salesOrderMVO.setUpdUserId(sessionVO.getUserId());
 
-		for(ReferralVO addVO : addList) {
+    orderModifyMapper.updatePromoPriceInfo(salesOrderMVO);
+  }
 
-			if(CommonUtils.isEmpty(addVO.getRefCntc().trim())) {
-				throw new ApplicationException(AppConstants.FAIL, "Please key-in Contact number.");
-			}
-			if(!CommonUtils.isNumCheck(addVO.getRefCntc().trim())) {
-				throw new ApplicationException(AppConstants.FAIL, "Invalid Contact number.");
-			}
-			if(CommonUtils.intNvl(addVO.getRefStateId()) <= 0) {
-				throw new ApplicationException(AppConstants.FAIL, "Please Select State.");
-			}
-			if(addVO.getRefCntc().trim().length() >= 12) {
-				throw new ApplicationException(AppConstants.FAIL, "Contact number exceed valid digit.");
-			}
+  @Override
+  public void updateGSTEURCertificate(GSTEURCertificateVO gSTEURCertificateVO, SessionVO sessionVO) {
 
-			addVO.setSalesOrdId(orderModifyVO.getSalesOrdId());
-			addVO.setCrtUserId(sessionVO.getUserId());
-			addVO.setStusCode(1);
+    logger.info("!@###### OrderModifyServiceImpl.updateGSTEURCertificate");
 
-			orderModifyMapper.insertReferral(addVO);
-		}
+    this.preprocGSTCertificate(gSTEURCertificateVO, sessionVO);
 
-		for(ReferralVO udtVO : udtList) {
+    if ("Y".equals(gSTEURCertificateVO.getExistData())) {
+      orderModifyMapper.updateGSTEURCertificate(gSTEURCertificateVO); // UPDATE
+                                                                      // GST
+                                                                      // CERTIFICATE
+    } else {
+      orderRegisterMapper.insertGSTEURCertificate(gSTEURCertificateVO); // INSERT
+                                                                        // GST
+                                                                        // CERTIFICATE
+    }
+  }
 
-			if(CommonUtils.isEmpty(udtVO.getRefCntc().trim())) {
-				throw new ApplicationException(AppConstants.FAIL, "Please key-in Contact number.");
-			}
-			if(!CommonUtils.isNumCheck(udtVO.getRefCntc().trim())) {
-				throw new ApplicationException(AppConstants.FAIL, "Invalid Contact number.");
-			}
-			if(CommonUtils.intNvl(udtVO.getRefStateId()) <= 0) {
-				throw new ApplicationException(AppConstants.FAIL, "Please Select State.");
-			}
-			if(udtVO.getRefCntc().trim().length() >= 12) {
-				throw new ApplicationException(AppConstants.FAIL, "Contact number exceed valid digit.");
-			}
+  private void preprocGSTCertificate(GSTEURCertificateVO gSTEURCertificateVO, SessionVO sessionVO) {
 
-			orderModifyMapper.updateReferral(udtVO);
-		}
-	}
+    logger.info("!@###### preprocGSTCertificate START ");
 
-	@Override
-	public void updatePromoPriceInfo(SalesOrderMVO salesOrderMVO, SessionVO sessionVO) throws Exception {
+    int reliefTypeId = 0;
 
-		logger.info("!@###### OrderModifyServiceImpl.updatePromoPriceInfo");
+    if (gSTEURCertificateVO.getEurcRliefAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
+      reliefTypeId = 1374; // Foreign Mission And International Organization
+    } else if (gSTEURCertificateVO.getEurcRliefAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT
+        || gSTEURCertificateVO.getEurcRliefAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
+      reliefTypeId = 1373; // Government Sector
+    }
 
-		salesOrderMVO.setUpdUserId(sessionVO.getUserId());
+    gSTEURCertificateVO.setEurcRliefTypeId(reliefTypeId);
+    gSTEURCertificateVO.setEurcStusCodeId(SalesConstants.STATUS_ACTIVE);
+    gSTEURCertificateVO.setEurcCrtUserId(sessionVO.getUserId());
+    gSTEURCertificateVO.setEurcUpdUserId(sessionVO.getUserId());
+  }
 
-		orderModifyMapper.updatePromoPriceInfo(salesOrderMVO);
-	}
+  @Override
+  public EgovMap getInstallDetail(Map<String, Object> params) {
+    return orderModifyMapper.getInstallDetail(params);
+  }
 
-	@Override
-	public void updateGSTEURCertificate(GSTEURCertificateVO gSTEURCertificateVO, SessionVO sessionVO) {
+  @Override
+  public void updateCcpOrderBasinInfo(Map<String, Object> params, SessionVO sessionVO) {
 
-		logger.info("!@###### OrderModifyServiceImpl.updateGSTEURCertificate");
+    logger.info("!@###### OrderModifyServiceImpl.updateCcpOrderBasinInfo");
 
-		this.preprocGSTCertificate(gSTEURCertificateVO, sessionVO);
+    params.put("updUserId", sessionVO.getUserId());
 
-		if("Y".equals(gSTEURCertificateVO.getExistData())) {
-			orderModifyMapper.updateGSTEURCertificate(gSTEURCertificateVO); //UPDATE GST CERTIFICATE
-		}
-		else {
-            orderRegisterMapper.insertGSTEURCertificate(gSTEURCertificateVO); //INSERT GST CERTIFICATE
-		}
-	}
+    if (Integer.valueOf((String) params.get("appTypeId")) != SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
+      params.put("installDur", 0);
+    }
 
-	private void preprocGSTCertificate(GSTEURCertificateVO gSTEURCertificateVO, SessionVO sessionVO) {
+    orderModifyMapper.updateCcpSalesOrderM(params);
+  }
 
-		logger.info("!@###### preprocGSTCertificate START ");
-
-		int reliefTypeId = 0;
-
-		if(gSTEURCertificateVO.getEurcRliefAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
-			reliefTypeId = 1374; //Foreign Mission And International Organization
-		}
-		else if(gSTEURCertificateVO.getEurcRliefAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT || gSTEURCertificateVO.getEurcRliefAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
-			reliefTypeId = 1373; //Government Sector
-		}
-
-		gSTEURCertificateVO.setEurcRliefTypeId(reliefTypeId);
-		gSTEURCertificateVO.setEurcStusCodeId(SalesConstants.STATUS_ACTIVE);
-		gSTEURCertificateVO.setEurcCrtUserId(sessionVO.getUserId());
-		gSTEURCertificateVO.setEurcUpdUserId(sessionVO.getUserId());
-	}
-
-	@Override
-	public EgovMap getInstallDetail(Map<String, Object> params) {
-		return orderModifyMapper.getInstallDetail(params);
-	}
-
-	@Override
-	public void updateCcpOrderBasinInfo(Map<String, Object> params, SessionVO sessionVO) {
-
-		logger.info("!@###### OrderModifyServiceImpl.updateCcpOrderBasinInfo");
-
-		params.put("updUserId", sessionVO.getUserId());
-
-		if(Integer.valueOf((String)params.get("appTypeId")) != SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
-			params.put("installDur", 0);
-		}
-
-		orderModifyMapper.updateCcpSalesOrderM(params);
-	}
-
+  @Override
+  public int chkCboPromPck(Map<String, Object> params) {
+    int count = orderModifyMapper.chkCboPromPck(params);
+    if (count == 0) {
+      count = orderModifyMapper.chkCboPromCanPck(params);
+      if (count == 0) {
+        return 0; // PASS
+      } else {
+        return 1; // FAIL
+      }
+    } else {
+      return 1; // FAIL
+    }
+  }
 }
