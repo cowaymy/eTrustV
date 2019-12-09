@@ -2641,6 +2641,7 @@
                                                                                 AND SUB_PROMO_ID = #{promoNo} )) B ON B.PCKAGE_BINDING_NO = A.SALES_ORD_ID
                                                                                 AND B.CUST_ID = #{custId}
     WHERE A.CUST_ID = #{custId}
+      AND A.STUS_CODE_ID IN (1, 4)
       AND A.PROMO_ID IN (SELECT PROMO_ID
                          FROM SAL0252M
                          WHERE CONF_ID IN (SELECT CONF_ID
@@ -2691,6 +2692,7 @@
     JOIN SAL0022D F ON A.CUST_ID = F.CUST_ID
     JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND A.APP_TYPE_ID = G.CODE_ID
     WHERE A.CUST_ID = #{custId}
+      AND A.STUS_CODE_ID IN (1, 4)
       AND A.PROMO_ID IN (SELECT PROMO_ID
                          FROM SAL0252M
                          WHERE CONF_ID IN (SELECT CONF_ID
