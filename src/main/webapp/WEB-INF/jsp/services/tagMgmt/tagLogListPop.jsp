@@ -79,6 +79,23 @@
               }
            });
 
+          $('#btnLedger1').click(function() {
+            if ("${orderDetail.basicInfo.ordId}" == "") {
+              var text = "<spring:message code='service.title.OrderNo'/>";
+              Common.alert("<spring:message code='sys.msg.notexist' arguments='" + text + "' htmlEscape='false'/>");
+              return;
+            }
+            Common.popupWin("tagMngmForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+          });
+          $('#btnLedger2').click(function() {
+            if ("${orderDetail.basicInfo.ordId}" == "") {
+              var text = "<spring:message code='service.title.OrderNo'/>";
+              Common.alert("<spring:message code='sys.msg.notexist' arguments='" + text + "' htmlEscape='false'/>");
+              return;
+            }
+            Common.popupWin("tagMngmForm", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+          });
+
             /* atchFileGrpId */
             var attachList = $("#atchFileGrpId").val();
             Common.ajax("Get", "/services/tagMgmt/selectAttachList.do", { atchFileGrpId : attachList },
@@ -214,7 +231,6 @@
       }
       var fileSubPath = result.fileSubPath;
       fileSubPath = fileSubPath.replace('\', ' / '');
-      console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
       window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
     });
   }
@@ -569,6 +585,10 @@
     <aside class="title_line">
      <!-- title_line start -->
      <h3>Order Information</h3>
+     <ul class="right_opt">
+      <li><p class="btn_blue2"><a id="btnLedger1" href="#"><spring:message code="sal.btn.ledger" />(1)</a></p></li>
+      <li><p class="btn_blue2"><a id="btnLedger2" href="#"><spring:message code="sal.btn.ledger" />(2)</a></p></li>
+     </ul>
     </aside>
     <!-- title_line end -->
     <!------------------------------------------------------------------------------
