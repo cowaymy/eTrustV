@@ -1101,13 +1101,29 @@
           return false;
       }
        */
+
+      // ONGHC - CHECK PROMOTION CODE IS IT FALL ON COMBO PACKAGE PROMOTION
+      // IF YES - EDIT PROMOTION DISALLOW
+      // ELSE NO - PROMOTION EDITABLE
+      var stat = "";
+      Common.ajaxSync("GET", "/sales/order/chkCboPromPck.do", {
+         promo : PROMO_CODE
+      }, function(rsltInfo) {
+         if (rsltInfo == 1) {
+           stat = rsltInfo;
+           Common.alert('<spring:message code="sales.msg.errEdtPromCbo" />');
+           return;
+         }
+      });
+
+      if (stat == 1) {
+        return;
+      }
+      // END
+
       if (ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
         var msg = '<spring:message code="This order is not in active/complete status.<br/>Edit promotion is disallowed." />';
-
-        Common
-            .alert('<spring:message code="sal.alert.msg.actionRestriction" />'
-                + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
-
+        Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
         $('#btnSavePromo').addClass("blind");
       }
     }
