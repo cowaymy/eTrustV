@@ -23,67 +23,75 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("orderModifyMapper")
 public interface OrderModifyMapper {
 
-	void updateSalesOrderM(Map<String, Object> params);
+  void updateSalesOrderM(Map<String, Object> params);
 
-	void insertCustBillMasterHistory(CustBillMasterHistoryVO custBillMasterHistoryVO);
+  void insertCustBillMasterHistory(CustBillMasterHistoryVO custBillMasterHistoryVO);
 
-	void updateCustBillMaster(Map<String, Object> params);
+  void updateCustBillMaster(Map<String, Object> params);
 
-	void updateCustAddId(Map<String, Object> params);
+  void updateCustAddId(Map<String, Object> params);
 
-	void updateNric(Map<String, Object> params);
+  void updateNric(Map<String, Object> params);
 
-	EgovMap selectBillGroupByBillGroupID(Map<String, Object> params); //Bill Group Master
+  EgovMap selectBillGroupByBillGroupID(Map<String, Object> params); // Bill
+                                                                    // Group
+                                                                    // Master
 
-	List<EgovMap> selectBillGroupOrder(Map<String, Object> params); //Bill Group Master
+  List<EgovMap> selectBillGroupOrder(Map<String, Object> params); // Bill Group
+                                                                  // Master
 
-	int selectNricCheckCnt(Map<String, Object> params);
+  int selectNricCheckCnt(Map<String, Object> params);
 
-	int selectNricCheckCnt2(Map<String, Object> params);
+  int selectNricCheckCnt2(Map<String, Object> params);
 
-	EgovMap selectCustInfo(Map<String, Object> params); //
+  EgovMap selectCustInfo(Map<String, Object> params); //
 
-	EgovMap selectNricExist(Map<String, Object> params); //
+  EgovMap selectNricExist(Map<String, Object> params); //
 
-	EgovMap selectInstRsltCount(Map<String, Object> params);
+  EgovMap selectInstRsltCount(Map<String, Object> params);
 
-	EgovMap selectGSTZRLocationCount(Map<String, Object> params);
+  EgovMap selectGSTZRLocationCount(Map<String, Object> params);
 
-	EgovMap selectGSTZRLocationByAddrIdCount(Map<String, Object> params);
+  EgovMap selectGSTZRLocationByAddrIdCount(Map<String, Object> params);
 
-	void updateInstallInfo(Map<String, Object> params);
+  void updateInstallInfo(Map<String, Object> params);
 
-	void updateInstallUpdateInfo(Map<String, Object> params);
+  void updateInstallUpdateInfo(Map<String, Object> params);
 
-	void updatePaymentChannel(RentPaySetVO rentPaySetVO);
+  void updatePaymentChannel(RentPaySetVO rentPaySetVO);
 
-	void saveDocSubmission(DocSubmissionVO docSubmissionVO);
+  void saveDocSubmission(DocSubmissionVO docSubmissionVO);
 
-	void updateDocSubmissionDel(DocSubmissionVO docSubmissionVO);
+  void updateDocSubmissionDel(DocSubmissionVO docSubmissionVO);
 
-	List<EgovMap> selectReferralList(Map<String, Object> params);
+  List<EgovMap> selectReferralList(Map<String, Object> params);
 
-	List<EgovMap> selectStateCodeList(Map<String, Object> params);
+  List<EgovMap> selectStateCodeList(Map<String, Object> params);
 
-	void insertReferral(ReferralVO referralVO);
+  void insertReferral(ReferralVO referralVO);
 
-	void updateReferral(ReferralVO referralVO);
+  void updateReferral(ReferralVO referralVO);
 
-	void updatePromoPriceInfo(SalesOrderMVO salesOrderMVO);
+  void updatePromoPriceInfo(SalesOrderMVO salesOrderMVO);
 
-	void updateGSTEURCertificate(GSTEURCertificateVO gSTEURCertificateVO);
+  void updateGSTEURCertificate(GSTEURCertificateVO gSTEURCertificateVO);
 
-	void updateECashInfo(SalesOrderMVO salesOrderMVO);
+  void updateECashInfo(SalesOrderMVO salesOrderMVO);
 
-	EgovMap getInstallDetail(Map<String, Object> params);
+  EgovMap getInstallDetail(Map<String, Object> params);
 
-	int selectPayModeId(RentPaySetVO rentPaySetVO);
+  int selectPayModeId(RentPaySetVO rentPaySetVO);
 
-	void insertDeductSAL0236D(Map<String, Object> params);
+  void insertDeductSAL0236D(Map<String, Object> params);
 
-	int crtSeqSAL0236D();
+  int crtSeqSAL0236D();
 
-	void updatePaymentChannelvRescue(Map<String, Object> params);
-	
-	void updateCcpSalesOrderM(Map<String, Object> params);
+  void updatePaymentChannelvRescue(Map<String, Object> params);
+
+  void updateCcpSalesOrderM(Map<String, Object> params);
+
+  int chkCboPromPck(Map<String, Object> params);
+
+  int chkCboPromCanPck(Map<String, Object> params);
+
 }
