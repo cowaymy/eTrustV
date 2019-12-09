@@ -19,7 +19,7 @@
         	Common.report("printForm");
         });
     });
-    
+
 </script>
 <body>
 
@@ -50,7 +50,7 @@
   <form id="printForm" name="printForm">
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="V_ORDERID" name="V_ORDERID" value="${orderDetail.basicInfo.ordId}"/>
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/CustomerScoreCard.rpt" /><br />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/customerScoreCard.rpt" /><br />
   </form>
 </section><!-- pop_body end -->
 
