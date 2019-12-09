@@ -428,7 +428,7 @@ function fnOnfocus(obj){
 		    </aside><!-- title_line end -->
 
 	        <div id="sTable"></div>
-
+            </form>
 	    </section><!-- tap_wrap end -->
 
     </section>
