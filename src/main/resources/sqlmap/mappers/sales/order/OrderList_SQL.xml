@@ -379,7 +379,9 @@
            <if test='isSelectAll == null or isSelectAll == ""'>
              AND NOT EXISTS (SELECT AA.ORD_NO FROM SAL1013V  AA, SYS0026M BB
                                        WHERE AA.PRODUCT_CODE  = BB.STK_CODE
-                                          AND BB.STK_CTGRY_ID     IN ('5706', '5707')        /* StkCategoryID_Homecare */
+                                          AND BB.STK_CTGRY_ID     IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                                                    WHERE AA.CODE = BB.CODE
+                                                                                       AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE') -- Mattress, Frame
                                           AND AA.ORD_NO             = V1.ORD_NO
              )
            </if>
