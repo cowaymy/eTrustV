@@ -131,7 +131,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/ColorGrid_Daily_2018_Jan_Dec_S.do")
-  //@Scheduled(cron = "0 0 5 * * *")//Daily (5:00am)
+  //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
   public void colorGridDaily2018JanDecS() {
     LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
     Map<String, Object> params = new HashMap<>();
@@ -292,7 +292,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/ColorGrid_Daily_2015_2006-2012_S.do")
-  //@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am)
+  //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
   public void colorGridDaily_2015_2006_2012_S() {
     LOGGER.info("[START] ColorGrid_Daily_2015_2006-2012_S...");
     Map<String, Object> params = new HashMap<>();
@@ -310,7 +310,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/ColorGrid_Daily_2015_2013-2014_S.do")
-  //@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am)
+  //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
   public void colorGridDaily_2015_2013_2014_S() {
     LOGGER.info("[START] ColorGrid_Daily_2015_2013-2014_S...");
     Map<String, Object> params = new HashMap<>();
@@ -328,7 +328,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/ColorGrid_Daily_2015_Jan_April_S.do")
-  //@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am)
+  //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
   public void colorGridDaily2015JanAprilS() {
     LOGGER.info("[START] ColorGrid_Daily_2015_Jan_April_S...");
     Map<String, Object> params = new HashMap<>();
@@ -346,7 +346,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/ColorGrid_Daily_2015_May_Dec_S.do")
-  //@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am)
+  //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
   public void colorGridDaily2015MayDecS() {
     LOGGER.info("[START] ColorGrid_Daily_2015_May_Dec_S...");
     Map<String, Object> params = new HashMap<>();
@@ -364,7 +364,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/ColorGrid_Daily_2016_Jan_Dec_S.do")
-  //@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am)
+  //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
   public void colorGridDaily2016JanDecS() {
     LOGGER.info("[START] ColorGrid_Daily_2016_Jan_Dec_S...");
     Map<String, Object> params = new HashMap<>();
@@ -471,7 +471,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/RentalAging12Month.do")
-  // @Scheduled(cron = "0 0 2 2 * *")//2nd day of the month (2am)
+  // //@Scheduled(cron = "0 0 2 2 * *")//2nd day of the month (2am)
   public void RentalAging12Month() {
     LOGGER.info("[START] RentalAging12Month...");
     Map<String, Object> params = new HashMap<>();
@@ -491,7 +491,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/RentalAgingReport.do")
-  // @Scheduled(cron = "0 0 3 2 * *")//2nd day of the month (3am)
+  // //@Scheduled(cron = "0 0 3 2 * *")//2nd day of the month (3am)
   public void RentalAgingReport() {
     LOGGER.info("[START] RentalAgingReport...");
     Map<String, Object> params = new HashMap<>();
@@ -508,7 +508,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/OutrightPlusAgingCollection_12Month.do")
-  // @Scheduled(cron = "0 0 4 2 * *")//2nd day of the month (4am)
+  // //@Scheduled(cron = "0 0 4 2 * *")//2nd day of the month (4am)
   public void OutrightPlusAgingCollection_12Month() {
     LOGGER.info("[START] OutrightPlusAgingCollection_12Month...");
     Map<String, Object> params = new HashMap<>();
@@ -527,7 +527,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/OutrightPlusAging_12Month.do")
-  // @Scheduled(cron = "0 30 4 2 * *")//2nd day of the month (4.30am)
+  // //@Scheduled(cron = "0 30 4 2 * *")//2nd day of the month (4.30am)
   public void OutrightPlusAging_12Month() {
     LOGGER.info("[START] OutrightPlusAging_12Month...");
     Map<String, Object> params = new HashMap<>();
