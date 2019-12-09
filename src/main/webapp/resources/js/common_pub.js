@@ -155,6 +155,22 @@ $(document).on(
 	$(this).addClass("on").parent().siblings().children("a").removeClass("on");
 	theTapArea.eq(thisNum).show().siblings(".tap_area").hide();
 	/*theTapArea.eq(thisNum).css("position","relative").css("top","0").siblings(".tap_area").css("position","absolute").css("top","-1000em");*/
+
+	// 20191202 KR-MIN tab click, grid resize
+	$.each($(".grid_wrap > div"), function (index, value) {
+
+		var gridId = $(this).attr("id");
+		//alert(gridId)
+		if (typeof gridId !== "undefined") {
+        	try{
+        		var myGridID = GridCommon.makeGridId(gridId);
+                AUIGrid.resize(myGridID);
+			}catch (e){
+        		// console.log("grid is not exist.....[gridID : " + _gridID + "]")
+			}
+        }
+	});
+
 	return false;
 })
 /* 탭동작 end */
