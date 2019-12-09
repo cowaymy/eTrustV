@@ -22,7 +22,6 @@
     }, {
       dataField : "subInquiry",
       headerText : "<spring:message code='service.grid.subInq'/>",
-      style : "aui-grid-user-custom-left ",
       width : "13%"
     }, {
       dataField : "feedbackCode",
@@ -31,12 +30,10 @@
     }, {
       dataField : "mainDept",
       headerText : "<spring:message code='service.grid.mainDept'/>",
-      style : "aui-grid-user-custom-left ",
       width : "13%"
     }, {
       dataField : "subDept",
       headerText : "<spring:message code='service.grid.subDept'/>",
-      style : "aui-grid-user-custom-left ",
       width : "15%"
     }, {
       dataField : "regDate",
