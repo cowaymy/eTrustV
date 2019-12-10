@@ -18,7 +18,7 @@
 <script type="text/javaScript">
 
 var gAddRowCnt = 0;
-var gOrgList =   ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS","SCM","FCM"];
+var gOrgList =   ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS","SCM","FCM","HCT"];
 var keyValueList = [];
 
 var TransColumnLayout =
