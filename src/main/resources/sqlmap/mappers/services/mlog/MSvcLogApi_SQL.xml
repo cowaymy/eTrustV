@@ -159,7 +159,8 @@
                                   L.STK_DESC AS product_Name,
                                   L.STK_CODE AS product_Code,
                                   M.CUST_BILL_PAY_REF_NO1 AS customer_Jom_Pay_Ref_No,
-                                  P.CODE_NAME AS payment_ModeName,
+                                  /* P.CODE_NAME AS payment_ModeName, */
+                                  CASE WHEN P.CODE_ID = '131' THEN X.CODE_NAME || ' (Auto Debit)' ELSE P.CODE_NAME END AS payment_ModeName,
                                   TO_CHAR (P.CODE_ID) AS payment_Mode,
                                   TO_CHAR (R.SRV_DUR) AS contract_Duration,
                                   TO_CHAR (R.SRV_EXPR_DT, 'YYYYMMDD') AS Membership_Contract_Expiry,
@@ -254,7 +255,10 @@
                     ON A.SRV_SALES_ORD_ID = B.SRV_SALES_ORD_ID AND A.SRV_MEM_ID = B.SRV_MEM_ID) R,
                  SAL0071D S,
                  SAL0017D T,
-                 (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID, FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, FAUCET_EXCH) U
+                 (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID, FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, FAUCET_EXCH) U,
+                 SAL0028D W,
+                 SYS0013M X
+
                  WHERE A.SCHDUL_ID = B.SCHDUL_ID(+)
                     AND A.SALES_ORD_ID = B.SALES_ORD_ID(+)
                     AND A.SALES_ORD_ID = C.SALES_ORD_ID
@@ -267,8 +271,14 @@
                     AND C.SALES_ORD_ID = K.SALES_ORD_ID
                     AND K.ITM_STK_ID = L.STK_ID
                     AND C.CUST_BILL_ID = M.CUST_BILL_ID(+)
-                    AND C.SALES_ORD_ID = O.SALES_ORD_ID(+)
-                    AND C.SALES_ORD_ID = O.CUST_ID(+)
+
+                    --AND C.SALES_ORD_ID = O.SALES_ORD_ID(+)
+                    --AND C.SALES_ORD_ID = O.CUST_ID(+)
+                    AND R.SRV_SALES_ORD_ID = O.SALES_ORD_ID(+)
+                    AND R.SRV_MEM_CNTRCT_ID = O.SVC_CNTRCT_ID(+)
+                    AND O.CUST_CRC_ID = W.CUST_CRC_ID(+)
+                    AND W.CARD_TYPE_ID = X.CODE_ID(+)
+
                     AND O.MODE_ID = P.CODE_ID(+)
                     AND C.CUST_ID = Q.CUST_ID
                     AND H.ADD_ID = Q.CUST_ADD_ID(+)
