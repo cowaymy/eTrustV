@@ -148,8 +148,28 @@ var TODAY_DD      = "${toDay}";
         }
 
         var isValid = true;
+        var isValid_1 = true;
         var reqList = [];
         var payMode = "";
+
+        $.each(selectedItems, function(idx, row){
+
+            if( idx == 0 ){
+            	slipNo = row.item.slipNo;
+            }else{
+                if(slipNo != row.item.slipNo ){
+                	isValid_1 = false;
+                }
+            }
+
+        });
+
+        if(!isValid_1){
+            //Common.alert("<spring:message code='pay.alert.payStatus'/>");
+            Common.alert("Check Slip No.");
+            return false;
+        }
+
         $.each(selectedItems, function(idx, row){
 
         	if( idx == 0 ){
@@ -168,7 +188,7 @@ var TODAY_DD      = "${toDay}";
         });
         if(!isValid){
             //Common.alert("<spring:message code='pay.alert.payStatus'/>");
-            Common.alert("Check the payment.");
+            Common.alert("Check Payment Mode.");
             return false;
         }
 
