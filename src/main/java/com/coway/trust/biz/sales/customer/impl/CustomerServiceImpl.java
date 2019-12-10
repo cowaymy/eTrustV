@@ -624,9 +624,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     CustCrcVO custCrcVO = new CustCrcVO();
 
     custCrcVO.setCustId(Integer.parseInt((String) params.get("custId")));
-    custCrcVO.setCustCrcNo((String) params.get("custCrcNoMask")); // EncryptionProvider.Encrypt(txtCRCNo.Text.Trim());
-    custCrcVO.setCustOriCrcNo((String) params.get("custCrcNoMask"));
-    custCrcVO.setCustEncryptCrcNo((String) params.get("custCrcNoMask")); // CommonFunction.GetBytesFromString(txtCRCNo.Text.Trim());
+    custCrcVO.setCustCrcNo((String) params.get("cardNo")); // EncryptionProvider.Encrypt(txtCRCNo.Text.Trim());
+    custCrcVO.setCustOriCrcNo((String) params.get("cardNo"));
+    custCrcVO.setCustEncryptCrcNo((String) params.get("cardNo")); // CommonFunction.GetBytesFromString(txtCRCNo.Text.Trim());
     custCrcVO.setCustCrcOwner((String) params.get("nameOnCard"));
     custCrcVO.setCustCrcTypeId(Integer.parseInt((String) params.get("creditCardType")));
     custCrcVO.setCustCrcBankId(Integer.parseInt((String) params.get("issBank")));

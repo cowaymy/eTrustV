@@ -239,6 +239,7 @@ public class CustomerController {
 
     model.put("custId", params.get("custId"));
     model.put("callPrgm", params.get("callPrgm"));
+    model.put("nric", params.get("nric"));
 
     return "sales/customer/customerCreditCardeSalesAddPop";
   }
@@ -263,17 +264,20 @@ public class CustomerController {
   public ResponseEntity<ReturnMessage> insertCreditCardInfo2(@RequestBody Map<String, Object> params, ModelMap model,
       SessionVO sessionVO) throws ParseException {
 
-    int custCrcId = customerService.insertCreditCardInfo2(params, sessionVO);
-    ;
+      params.put("cardNo", params.get("custCrcNoMask"));
 
-    // 결과 만들기
-    ReturnMessage message = new ReturnMessage();
-    message.setCode(AppConstants.SUCCESS);
-    // message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-    message.setMessage("New credit card added.");
-    message.setData(custCrcId);
+      int custCrcId = customerService.insertCreditCardInfo2(params, sessionVO);
 
-    return ResponseEntity.ok(message);
+      customerService.tokenCrcUpdate(params);
+
+      // 결과 만들기
+      ReturnMessage message = new ReturnMessage();
+      message.setCode(AppConstants.SUCCESS);
+      // message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+      message.setMessage("New credit card added.");
+      message.setData(custCrcId);
+
+      return ResponseEntity.ok(message);
   }
 
   /**
@@ -1979,9 +1983,6 @@ public class CustomerController {
   @RequestMapping(value = "/insertCustomerCardAddAf.do")
   public ResponseEntity<ReturnMessage> insertCustomerCardAddAf(@RequestParam Map<String, Object> params, ModelMap model)
       throws Exception {
-
-      LOGGER.error("insertCustomerCardAddAf");
-      LOGGER.error(params.toString());
 
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
     params.put("userId", sessionVO.getUserId());
