@@ -3,6 +3,7 @@ package com.coway.trust.biz.sales.order.vo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
@@ -143,6 +144,36 @@ public class PreOrderVO implements Serializable {
     private int corpCustType;
 
     private int agreementType;
+
+    // 20191210 - KR-SH 추가
+    private int preOrdId1;
+    private int preOrdId2;
+    private int ordSeqNo;
+    private int itmStkId1;
+    private int itmCompId1;
+    private int promoId1;
+    private BigDecimal mthRentAmt1;
+    private BigDecimal totAmt1;
+    private BigDecimal norAmt1;
+    private BigDecimal discRntFee1;
+    private BigDecimal totPv1;
+    private BigDecimal totPvGst1;
+    private int prcId1;
+    private int itmStkId2;
+    private int itmCompId2;
+    private int promoId2;
+    private BigDecimal mthRentAmt2;
+    private BigDecimal totAmt2;
+    private BigDecimal norAmt2;
+	private BigDecimal discRntFee2;
+    private BigDecimal totPv2;
+    private BigDecimal totPvGst2;
+    private int prcId2;
+    private int matPreOrdNo;
+    private int fraPreOrdNo;
+    private HcOrderVO hcOrderVO;  // Homecare Order
+    private String rcdTms1;
+    private String rcdTms2;
 
 	public int getPreOrdId() {
 		return preOrdId;
@@ -662,6 +693,234 @@ public class PreOrderVO implements Serializable {
 
 	public void setAgreementType(int agreementType) {
 		this.agreementType = agreementType;
+	}
+
+	public int getPreOrdId1() {
+		return preOrdId1;
+	}
+
+	public void setPreOrdId1(int preOrdId1) {
+		this.preOrdId1 = preOrdId1;
+	}
+
+	public int getPreOrdId2() {
+		return preOrdId2;
+	}
+
+	public void setPreOrdId2(int preOrdId2) {
+		this.preOrdId2 = preOrdId2;
+	}
+
+	public int getOrdSeqNo() {
+		return ordSeqNo;
+	}
+
+	public void setOrdSeqNo(int ordSeqNo) {
+		this.ordSeqNo = ordSeqNo;
+	}
+
+	public int getItmStkId1() {
+		return itmStkId1;
+	}
+
+	public void setItmStkId1(int itmStkId1) {
+		this.itmStkId1 = itmStkId1;
+	}
+
+	public int getItmCompId1() {
+		return itmCompId1;
+	}
+
+	public void setItmCompId1(int itmCompId1) {
+		this.itmCompId1 = itmCompId1;
+	}
+
+	public int getPromoId1() {
+		return promoId1;
+	}
+
+	public void setPromoId1(int promoId1) {
+		this.promoId1 = promoId1;
+	}
+
+	public BigDecimal getMthRentAmt1() {
+		return mthRentAmt1;
+	}
+
+	public void setMthRentAmt1(BigDecimal mthRentAmt1) {
+		this.mthRentAmt1 = mthRentAmt1;
+	}
+
+	public BigDecimal getTotAmt1() {
+		return totAmt1;
+	}
+
+	public void setTotAmt1(BigDecimal totAmt1) {
+		this.totAmt1 = totAmt1;
+	}
+
+	public BigDecimal getNorAmt1() {
+		return norAmt1;
+	}
+
+	public void setNorAmt1(BigDecimal norAmt1) {
+		this.norAmt1 = norAmt1;
+	}
+
+	public BigDecimal getDiscRntFee1() {
+		return discRntFee1;
+	}
+
+	public void setDiscRntFee1(BigDecimal discRntFee1) {
+		this.discRntFee1 = discRntFee1;
+	}
+
+	public BigDecimal getTotPv1() {
+		return totPv1;
+	}
+
+	public void setTotPv1(BigDecimal totPv1) {
+		this.totPv1 = totPv1;
+	}
+
+	public BigDecimal getTotPvGst1() {
+		return totPvGst1;
+	}
+
+	public void setTotPvGst1(BigDecimal totPvGst1) {
+		this.totPvGst1 = totPvGst1;
+	}
+
+	public int getPrcId1() {
+		return prcId1;
+	}
+
+	public void setPrcId1(int prcId1) {
+		this.prcId1 = prcId1;
+	}
+
+	public int getItmStkId2() {
+		return itmStkId2;
+	}
+
+	public void setItmStkId2(int itmStkId2) {
+		this.itmStkId2 = itmStkId2;
+	}
+
+	public int getItmCompId2() {
+		return itmCompId2;
+	}
+
+	public void setItmCompId2(int itmCompId2) {
+		this.itmCompId2 = itmCompId2;
+	}
+
+	public int getPromoId2() {
+		return promoId2;
+	}
+
+	public void setPromoId2(int promoId2) {
+		this.promoId2 = promoId2;
+	}
+
+	public BigDecimal getMthRentAmt2() {
+		return mthRentAmt2;
+	}
+
+	public void setMthRentAmt2(BigDecimal mthRentAmt2) {
+		this.mthRentAmt2 = mthRentAmt2;
+	}
+
+	public BigDecimal getTotAmt2() {
+		return totAmt2;
+	}
+
+	public void setTotAmt2(BigDecimal totAmt2) {
+		this.totAmt2 = totAmt2;
+	}
+
+	public BigDecimal getNorAmt2() {
+		return norAmt2;
+	}
+
+	public void setNorAmt2(BigDecimal norAmt2) {
+		this.norAmt2 = norAmt2;
+	}
+
+	public BigDecimal getDiscRntFee2() {
+		return discRntFee2;
+	}
+
+	public void setDiscRntFee2(BigDecimal discRntFee2) {
+		this.discRntFee2 = discRntFee2;
+	}
+
+	public BigDecimal getTotPv2() {
+		return totPv2;
+	}
+
+	public void setTotPv2(BigDecimal totPv2) {
+		this.totPv2 = totPv2;
+	}
+
+	public BigDecimal getTotPvGst2() {
+		return totPvGst2;
+	}
+
+	public void setTotPvGst2(BigDecimal totPvGst2) {
+		this.totPvGst2 = totPvGst2;
+	}
+
+	public int getPrcId2() {
+		return prcId2;
+	}
+
+	public void setPrcId2(int prcId2) {
+		this.prcId2 = prcId2;
+	}
+
+	public int getMatPreOrdNo() {
+		return matPreOrdNo;
+	}
+
+	public void setMatPreOrdNo(int matPreOrdNo) {
+		this.matPreOrdNo = matPreOrdNo;
+	}
+
+	public int getFraPreOrdNo() {
+		return fraPreOrdNo;
+	}
+
+	public void setFraPreOrdNo(int fraPreOrdNo) {
+		this.fraPreOrdNo = fraPreOrdNo;
+	}
+
+	public HcOrderVO getHcOrderVO() {
+		return hcOrderVO;
+	}
+
+	public void setHcOrderVO(HcOrderVO hcOrderVO) {
+		this.hcOrderVO = hcOrderVO;
+	}
+
+	public String getRcdTms1() {
+		return rcdTms1;
+	}
+
+	public void setRcdTms1(String rcdTms1) {
+		this.rcdTms1 = rcdTms1;
+	}
+
+	public String getRcdTms2() {
+		return rcdTms2;
+	}
+
+	public void setRcdTms2(String rcdTms2) {
+		this.rcdTms2 = rcdTms2;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 }

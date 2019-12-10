@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -15,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private SalesOrderMVO salesOrderMVO; //SALES ORDER MASTER
@@ -23,47 +24,47 @@ public class OrderVO implements Serializable {
 	private SalesOrderDVO salesOrderDVO; //SALES ORDER DETAILS
 
 	private InstallationVO installationVO; //INSTALLATION MASTER
-	
+
 	private RentPaySetVO rentPaySetVO; //RENT PAY SET
-	
+
 	private CustBillMasterVO custBillMasterVO; //CUSTOMER BILL MASTER
-	
+
 	private RentalSchemeVO rentalSchemeVO; //RENTAL SCHEME
-	
+
 	private AccClaimAdtVO accClaimAdtVO; //CLAIM ADT
-	
+
 	private CcpDecisionMVO ccpDecisionMVO;//CCP MASTER
-	
+
 	private EStatementReqVO eStatementReqVO; //CCP DETAILS
-	
+
 	private SalesOrderContractVO salesOrderContractVO; //SALES ORDER CONTRACT
-	
+
 	private GridDataSet<DocSubmissionVO> docSubmissionVOList;
-	
+
 	private List<DocSubmissionVO> docSubVOList;
-	
+
 	private CallEntryVO callEntryVO;
-	
+
 	private CallResultVO callResultVO;
-	
+
 	private InstallEntryVO installEntryVO;
-	
+
 	private InstallResultVO installResultVO;
-	
+
 	private SrvMembershipSalesVO srvMembershipSalesVO;
-	
+
 	private SrvConfigurationVO srvConfigurationVO;
-	
+
 	private List<SrvConfigSettingVO> srvConfigSettingVOList;
-	
+
 	private SrvConfigPeriodVO srvConfigPeriodVO;
-	
+
 	private List<SrvConfigFilterVO> srvConfigFilterVOList;
-	
+
 	private List<SalesOrderLogVO> salesOrderLogVOList;
-	
+
 	private GSTEURCertificateVO gSTEURCertificateVO;
-	
+
 	private ASEntryVO aSEntryVO;
 
 	private int custTypeId;
@@ -71,28 +72,47 @@ public class OrderVO implements Serializable {
 	private int raceId;
 
 	private String billGrp;
-	
+
 	private int orderAppType;
-	
+
 	private String sInstallDate;
-	
+
 	private int itmStkId;
-	
+
 	private String dInstallDate;
-	
+
 	private int salesOrdId;
-	
+
 	private int preOrdId;
-	
+
 	private String preOrderYN;
-	
+
 	private String copyOrderBulkYN;
-	
+
 	private int copyQty;
-	
+
 	private String salesOrdNoFirst;
-	
-	
+
+	private int ordSeqNo;
+
+	private int matPreOrdId;
+
+	private int fraPreOrdId;
+
+	private SalesOrderMVO salesOrderMVO1; //SALES ORDER MASTER
+
+	private SalesOrderMVO salesOrderMVO2; //SALES ORDER MASTER
+
+	private SalesOrderDVO salesOrderDVO1; //SALES ORDER DETAILS
+
+	private SalesOrderDVO salesOrderDVO2; //SALES ORDER DETAILS
+
+	private AccClaimAdtVO accClaimAdtVO1; //CLAIM ADT
+
+	private AccClaimAdtVO accClaimAdtVO2; //CLAIM ADT
+
+	private HcOrderVO hcOrderVO;  // Homecare Order
+
 	public SalesOrderMVO getSalesOrderMVO() {
 		return salesOrderMVO;
 	}
@@ -380,7 +400,7 @@ public class OrderVO implements Serializable {
 	public void setSalesOrdNoFirst(String salesOrdNoFirst) {
 		this.salesOrdNoFirst = salesOrdNoFirst;
 	}
-	
+
 	public ASEntryVO getASEntryVO() {
 		return aSEntryVO;
 	}
@@ -388,7 +408,99 @@ public class OrderVO implements Serializable {
 	public void setASEntryVO(ASEntryVO aSEntryVO) {
 		this.aSEntryVO = aSEntryVO;
 	}
-	
+
+	public ASEntryVO getaSEntryVO() {
+		return aSEntryVO;
+	}
+
+	public void setaSEntryVO(ASEntryVO aSEntryVO) {
+		this.aSEntryVO = aSEntryVO;
+	}
+
+	public SalesOrderMVO getSalesOrderMVO1() {
+		return salesOrderMVO1;
+	}
+
+	public void setSalesOrderMVO1(SalesOrderMVO salesOrderMVO1) {
+		this.salesOrderMVO1 = salesOrderMVO1;
+	}
+
+	public SalesOrderMVO getSalesOrderMVO2() {
+		return salesOrderMVO2;
+	}
+
+	public void setSalesOrderMVO2(SalesOrderMVO salesOrderMVO2) {
+		this.salesOrderMVO2 = salesOrderMVO2;
+	}
+
+	public SalesOrderDVO getSalesOrderDVO1() {
+		return salesOrderDVO1;
+	}
+
+	public void setSalesOrderDVO1(SalesOrderDVO salesOrderDVO1) {
+		this.salesOrderDVO1 = salesOrderDVO1;
+	}
+
+	public SalesOrderDVO getSalesOrderDVO2() {
+		return salesOrderDVO2;
+	}
+
+	public void setSalesOrderDVO2(SalesOrderDVO salesOrderDVO2) {
+		this.salesOrderDVO2 = salesOrderDVO2;
+	}
+
+	public AccClaimAdtVO getAccClaimAdtVO1() {
+		return accClaimAdtVO1;
+	}
+
+	public void setAccClaimAdtVO1(AccClaimAdtVO accClaimAdtVO1) {
+		this.accClaimAdtVO1 = accClaimAdtVO1;
+	}
+
+	public AccClaimAdtVO getAccClaimAdtVO2() {
+		return accClaimAdtVO2;
+	}
+
+	public void setAccClaimAdtVO2(AccClaimAdtVO accClaimAdtVO2) {
+		this.accClaimAdtVO2 = accClaimAdtVO2;
+	}
+
+	public HcOrderVO getHcOrderVO() {
+		return hcOrderVO;
+	}
+
+	public void setHcOrderVO(HcOrderVO hcOrderVO) {
+		this.hcOrderVO = hcOrderVO;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public int getOrdSeqNo() {
+		return ordSeqNo;
+	}
+
+	public void setOrdSeqNo(int ordSeqNo) {
+		this.ordSeqNo = ordSeqNo;
+	}
+
+	public int getMatPreOrdId() {
+		return matPreOrdId;
+	}
+
+	public void setMatPreOrdId(int matPreOrdId) {
+		this.matPreOrdId = matPreOrdId;
+	}
+
+	public int getFraPreOrdId() {
+		return fraPreOrdId;
+	}
+
+	public void setFraPreOrdId(int fraPreOrdId) {
+		this.fraPreOrdId = fraPreOrdId;
+	}
+
 
 
 }

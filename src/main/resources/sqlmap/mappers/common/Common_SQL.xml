@@ -1340,7 +1340,7 @@
               </when>
               <when test='groupCode == "3"'>
                  AND STUS_ID = 1
-                 AND TYPE_ID IN (40 , 43 , 42)
+                 AND TYPE_ID IN (40 , 43 , 42, 5726)
               </when>
               <when test='groupCode == "4"'>
                  AND STUS_ID = 1
@@ -1536,30 +1536,42 @@
     <!--Product 정보 조회 -->
     <select id="selectProductCodeList" parameterType="Map" resultType="egovMap">
         SELECT STK_ID
-             , C1
-             , CODE_NAME
-          FROM
-             (
-               SELECT DISTINCT T1.STK_ID
-                    , T1.STK_CODE ||' - '||T1.STK_DESC C1
-                    , T3.CODE_NAME
-                 FROM SYS0026M T1
-                    , SYS0013M T3
-                WHERE T1.STK_CTGRY_ID = T3.CODE_ID
-                  AND 61 = T1.STK_TYPE_ID
-                  AND T1.STUS_CODE_ID = 1
-                UNION
-               SELECT DISTINCT T1.STK_ID
-                    , T1.STK_CODE ||' - '||T1.STK_DESC C1
-                    , T3.CODE_NAME
-                 FROM SYS0026M T1
-                    , SYS0013M T3
-                WHERE T1.STK_CTGRY_ID = T3.CODE_ID
-                  AND 61 = T1.STK_TYPE_ID
-                  AND T1.STUS_CODE_ID = 1
-             )
-         ORDER BY CODE_NAME ASC, STK_ID ASC
+                 , C1
+                 , CODE_NAME
+         FROM
+        (
+            SELECT DISTINCT T1.STK_ID
+                     , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                     , T3.CODE_NAME
+             FROM SYS0026M T1
+                     , SYS0013M T3
+            WHERE T1.STK_CTGRY_ID = T3.CODE_ID
+               AND 61 = T1.STK_TYPE_ID
+               AND T1.STUS_CODE_ID = 1
+               <choose>
+                   <when test="selProdGubun !=null and selProdGubun == 'EXHC'"> /* Exclusion Homecare */
+                       AND NOT EXISTS (SELECT M1.STK_CTGRY_ID
+                                                  FROM SYS0026M M1
+                                                 WHERE M1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                                                           WHERE AA.CODE = BB.CODE
+                                                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
+                                                    AND M1.STK_CTGRY_ID =T1.STK_CTGRY_ID
+                        )
+                   </when>
+                   <when test="selProdGubun !=null and selProdGubun == 'HC'"> /* Only Homecare */
+                       AND EXISTS (SELECT M1.STK_CTGRY_ID
+                                          FROM SYS0026M M1
+                                         WHERE M1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                                                   WHERE AA.CODE = BB.CODE
+                                                                                       AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
+                                            AND M1.STK_CTGRY_ID =T1.STK_CTGRY_ID
+                        )
+                   </when>
+               </choose>
+        )
+        ORDER BY CODE_NAME ASC, STK_ID ASC
     </select>
+
     <select id="selectInStckSelCodeList" parameterType="Map" resultType="egovMap">
             SELECT
                               STK.STK_ID CODE_ID
@@ -1804,4 +1816,18 @@
            AND HOLIDAY BETWEEN (TRUNC (SYSDATE, 'YYYY') - ( INTERVAL '1' YEAR) )
                            AND (TRUNC (SYSDATE, 'YYYY') + ( INTERVAL '2' YEAR) )
     </select>
+
+    <!-- select Homecare holiday list -->
+    <select id="getHcHolidayList"  parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.common.impl.CommonMapper.getHcHolidayList */
+        SELECT TO_CHAR (HOLIDAY, 'YYYYMMDD') HOLIDAY
+                 , TO_CHAR (HOLIDAY, 'YYYY') YYYY
+                 , TO_CHAR (HOLIDAY, 'MMDD') MMDD
+                 , HOLIDAY_DESC
+         FROM SYS0101M
+        WHERE HOLIDAY_TYPE = 'P'
+           AND HOLIDAY BETWEEN (TRUNC (SYSDATE, 'YYYY') - ( INTERVAL '1' YEAR))
+           AND (TRUNC (SYSDATE, 'YYYY') + ( INTERVAL '2' YEAR))
+    </select>
+
 </mapper>

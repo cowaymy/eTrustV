@@ -30,7 +30,7 @@
 
 
     <!-- WEB -->
-	
+
     <definition name="layout.default" template="/WEB-INF/tiles/layout/default.jsp">
         <put-attribute name="head" value="" />
         <put-attribute name="css" value="" />
@@ -42,21 +42,21 @@
         <put-attribute name="footer" value="/WEB-INF/tiles/view/footer.jsp" />
         <put-attribute name="var" value="/WEB-INF/tiles/view/var.jsp" />
     </definition>
-    
+
     <definition name="layout.empty.script" template="/WEB-INF/tiles/layout/emptyScript.jsp">
         <put-attribute name="var" value="/WEB-INF/tiles/view/var.jsp" />
         <put-attribute name="script" value="/WEB-INF/tiles/view/script.jsp" />
     	<put-attribute name="body" value="" />
     </definition>
-    
+
     <definition name="layout.empty" template="/WEB-INF/tiles/layout/empty.jsp">
         <put-attribute name="body" value="" />
     </definition>
-    
+
     <!-- Layout(Templates) end -->
-    
+
     <!-- ==================================================== -->
-    
+
     <!-- Content start -->
 
     <!-- MOBILE WEB -->
@@ -95,27 +95,33 @@
     <definition name="message/*" extends="layout.empty">
         <put-attribute name="body" value="/WEB-INF/jsp/message/{1}.jsp" />
     </definition>
-    
+
     <definition name="login/*" extends="layout.empty.script">
         <put-attribute name="body" value="/WEB-INF/jsp/login/{1}.jsp" />
     </definition>
 
     <definition name="report/**" extends="layout.empty">
     </definition>
-    
+
     <definition name="*/*Pop" extends="layout.empty.script">
         <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}Pop.jsp" />
     </definition>
-    
+
     <definition name="*/*/*Pop" extends="layout.empty.script">
         <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}Pop.jsp" />
     </definition>
-    
+
+    <!-- SH-KR - 20191210 -->
+    <definition name="*/*/*/*Pop" extends="layout.empty.script">
+        <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}Pop.jsp" />
+    </definition>
+    <!-- END -->
+
     <definition name="sample/*" extends="layout.default">
     	<!-- <put-attribute name="head" value="" />  -->
         <put-attribute name="body" value="/WEB-INF/jsp/sample/{1}.jsp" />
     </definition>
-    
+
 	<definition name="/*" extends="layout.default">
 		<put-attribute name="body" value="/WEB-INF/jsp/{1}.jsp" />
 	</definition>
@@ -127,8 +133,11 @@
 	<definition name="*/*/*" extends="layout.default">
 		<put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}.jsp" />
 	</definition>
-    
-    
+
+    <!-- SH-KR - 20191210 -->
+    <definition name="*/*/*/*" extends="layout.default">
+        <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}.jsp" />
+    </definition>
     <!-- Content end -->
 
 </tiles-definitions>

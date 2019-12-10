@@ -138,6 +138,19 @@ public final class CommonUtils {
 
 	/**
 	 * <pre>
+	 * Description  : null 처리 및 trim 처리를 한다.
+	 * </pre>
+	 */
+	public static String nvl2(Object objTemp, String rtnVal) {
+		if (objTemp == null || objTemp.equals("undefined") || objTemp.equals("null") || objTemp.equals("")) {
+			return nvl(rtnVal);
+		} else {
+			return nvl(objTemp);
+		}
+	}
+
+	/**
+	 * <pre>
 	 * Description  : 현재 날짜를 가져온다.
 	 * </pre>
 	 */
