@@ -1624,7 +1624,8 @@
     CUST_CRC_IDCM,
     CUST_CRC_CRT_USER_ID,
     CUST_CRC_CRT_DT,
-    CARD_TYPE_ID)
+    CARD_TYPE_ID,
+    CUST_CRC_TOKEN)
     VALUES (
     SAL0028D_CUST_CRC_ID_SEQ.NEXTVAL ,
     #{getCustId},
@@ -1644,7 +1645,8 @@
     #{crcIdcm},
     #{crcCrtId},
     SYSDATE,
-    #{cardType})
+    #{cardType},
+    #{crcToken})
   </insert>
 
   <insert id="insertCreditCardInfo2" parameterType="custCrcVO">
@@ -1673,13 +1675,14 @@
     , CUST_CRC_CRT_USER_ID
     , CUST_CRC_CRT_DT
     , CARD_TYPE_ID
+    , CUST_CRC_TOKEN
     )
     VALUES
     ( #{custCrcId}
     , #{custId}
     , #{custCrcNo}
     , #{custOriCrcNo}
-    , #{custEncryptCrcNo}
+    , NULL
     , #{custCrcOwner}
     , #{custCrcTypeId}
     , #{custCrcBankId}
@@ -1694,6 +1697,7 @@
     , #{custCrcCrtUserId}
     , SYSDATE
     , #{cardTypeId}
+    , #{crcToken}
     )
   </insert>
 
@@ -1933,11 +1937,12 @@
     CUST_CRC_UPD_DT = SYSDATE,
     CUST_CRC_TYPE_ID = #{custCrcTypeId},
     CUST_CRC_BANK_ID = #{custCrcBankId},
-    CUST_ORI_CRC_NO = #{custOriCrcNo},
+    CUST_ORI_CRC_NO = #{custCrcNoMask},
     CUST_CRC_EXPR = #{custCrcExpr},
     CUST_CRC_OWNER = #{custCrcOwner},
     CARD_TYPE_ID = #{cardTypeId},
-    CUST_CRC_REM = #{custCrcRem}
+    CUST_CRC_REM = #{custCrcRem},
+    CUST_CRC_TOKEN = #{token}
     WHERE
     CUST_CRC_ID = #{custCrcId}
   </update>
@@ -2187,12 +2192,13 @@
     CUST_CRC_IDCM,
     CUST_CRC_CRT_USER_ID,
     CUST_CRC_CRT_DT,
-    CARD_TYPE_ID)
+    CARD_TYPE_ID,
+    CUST_CRC_TOKEN)
     VALUES (
     SAL0028D_CUST_CRC_ID_SEQ.NEXTVAL ,
-    #{insCustId},
+    #{custId},
     NULL ,
-    #{custOriCrcNo},
+    #{custCrcNoMask},
     NULL ,
     #{custCrcOwner},
     #{custCrcTypeId},
@@ -2207,7 +2213,9 @@
     0 ,
     #{userId} , <!-- SESSION -->
     SYSDATE,
-    #{cardTypeId})
+	#{cardTypeId},
+    #{token})
+    )
   </insert>
 
   <select id="selectCustomerMainAddr" parameterType="Map"
