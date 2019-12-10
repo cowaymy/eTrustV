@@ -80,41 +80,122 @@ var TODAY_DD      = "${toDay}";
 
     // reject 처리
     function fn_reject(){
+
+    	var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+        if (selectedItems.length <= 0) {
+        	Common.alert("<b>No request selected.</b>");
+          return;
+        }
+        var data = {};
+        if(selectedItems.length > 0)
+            data.all = selectedItems;
+
+        Common.prompt("<spring:message code='pay.prompt.reject'/>", "", function(){
+            if( FormUtil.isEmpty($("#promptText").val()) ){
+                Common.alert("<spring:message code='pay.check.rejectReason'/>");
+
+            }else{
+            	data.etc = $("#promptText").val();
+                Common.ajaxSync("POST", "/mobilePaymentKeyIn/saveMobilePaymentKeyInReject.do", data, function(result) {
+                    if(result !=""  && null !=result ){
+                        Common.alert("<spring:message code='pay.alert.reject'/>", function(){
+                            fn_selectPstRequestDOListAjax();
+                        });
+                    }
+                });
+
+            }
+        });
+
+/*
         var indexArr = AUIGrid.getSelectedIndex(myGridID);
         if( indexArr[0] == -1 ){
             Common.alert("<spring:message code='pay.check.noRowsSelected'/>");
 
         }else{
-            var mobPayNo = AUIGrid.getCellValue(myGridID, indexArr[0], "mobPayNo");
-            var billStatus = AUIGrid.getCellValue(myGridID, indexArr[0], "billStatus");
-/*             if( mobPayNo != 1 ){
-                Common.alert("오류 메시지 - mobPayNo");
+	        var mobPayNo = AUIGrid.getCellValue(myGridID, indexArr[0], "mobPayNo");
+	        var billStatus = AUIGrid.getCellValue(myGridID, indexArr[0], "billStatus");
+	        Common.prompt("<spring:message code='pay.prompt.reject'/>", "", function(){
+	            if( FormUtil.isEmpty($("#promptText").val()) ){
+	                Common.alert("<spring:message code='pay.check.rejectReason'/>");
 
-            }else{ */
-                Common.prompt("<spring:message code='pay.prompt.reject'/>", "", function(){
-                    if( FormUtil.isEmpty($("#promptText").val()) ){
-                        Common.alert("<spring:message code='pay.check.rejectReason'/>");
+	            }else{
+	                var rejectData = AUIGrid.getSelectedItems(myGridID)[0].item;
+	                rejectData.etc = $("#promptText").val();
+	                Common.ajaxSync("POST", "/mobilePaymentKeyIn/saveMobilePaymentKeyInReject.do", rejectData, function(result) {
+	                    if(result !=""  && null !=result ){
+	                        Common.alert("<spring:message code='pay.alert.reject'/>", function(){
+	                        	fn_selectPstRequestDOListAjax();
+	                        });
+	                    }
+	                });
 
-                    }else{
-                        var rejectData = AUIGrid.getSelectedItems(myGridID)[0].item;
-                        rejectData.etc = $("#promptText").val();
-                        Common.ajaxSync("POST", "/mobilePaymentKeyIn/saveMobilePaymentKeyInReject.do", rejectData, function(result) {
-                            if(result !=""  && null !=result ){
-                                Common.alert("<spring:message code='pay.alert.reject'/>", function(){
-                                	fn_selectPstRequestDOListAjax();
-                                });
-                            }
-                        });
-
-                    }
-                });
-            /* } */
+	            }
+	        });
         }
+        */
     }
 
 
     function fn_update(){
 
+        var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+        if (selectedItems.length == 0){
+            /* Common.alert("Please select a row."); */
+            Common.alert("<b>No request selected.</b>");
+            return false;
+        }
+
+        var isValid = true;
+        var reqList = [];
+        var payMode = "";
+        $.each(selectedItems, function(idx, row){
+
+        	if( idx == 0 ){
+        		payMode = row.item.payMode;
+        	}else{
+        	    if(payMode != row.item.payMode ){
+        	    	isValid = false;
+        	    }
+        	}
+
+            if(row.item.payStusId != "1" ){
+                isValid = false;
+            }else{
+                reqList.push(row.item);
+            }
+        });
+        if(!isValid){
+            //Common.alert("<spring:message code='pay.alert.payStatus'/>");
+            Common.alert("Check the payment.");
+            return false;
+        }
+
+        // 초기화
+        $("#paymentForm")[0].reset();
+        $("#paymentForm1")[0].reset();
+
+        var gridList = reqList;
+        //var rejectData = AUIGrid.getSelectedItems(myGridID)[0].item;
+
+        if( payMode == "5696" ){
+
+        	 // 카드 셋팅시 금액 셋팅
+        	 var totPayAmt = 0;
+        	 $.each(selectedItems, function(idx, row){
+
+        		 totPayAmt += row.item.payAmt;
+
+             });
+        	 $("#keyInAmount").val(totPayAmt)
+
+            $("#PopUp2_wrap").show(); // Update [ Card ] Key-in
+        }else{
+            $("#PopUp1_wrap").show(); // Update [ Cash, Cheque, Bank-In Slip ] Key-in
+        }
+
+/*
          var indexArr = AUIGrid.getSelectedIndex(myGridID);
          if( indexArr[0] == -1 ){
              Common.alert("<spring:message code='pay.check.noRowsSelected'/>");
@@ -139,8 +220,8 @@ var TODAY_DD      = "${toDay}";
              }else{
             	 $("#PopUp1_wrap").show(); // Update [ Cash, Cheque, Bank-In Slip ] Key-in
              }
-
          }
+*/
 
     }
 
@@ -149,7 +230,8 @@ var TODAY_DD      = "${toDay}";
 
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-        var columnLayout = [ {
+        var columnLayout = [
+			{
                 dataField : "mobTicketNo",
                 headerText : '<spring:message code="pay.title.ticketNo" />',
                 width : 100,
@@ -366,7 +448,9 @@ var TODAY_DD      = "${toDay}";
             wrapSelectionMove : true,
 
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : true
+            showRowNumColumn : true,
+
+            showRowCheckColumn : true
 
         };
 
@@ -632,20 +716,37 @@ var TODAY_DD      = "${toDay}";
         //param data array
         var data = {};
 
-        /* var gridList = AUIGrid.getGridData(targetFinalBillGridID);       //그리드 데이터 */
-        var gridList = AUIGrid.getSelectedIndex(myGridID);
-        var rejectData = AUIGrid.getSelectedItems(myGridID)[0].item;
-        //var rejectData =AUIGrid.getOrgGridData(myGridID);
+
+        //var gridList = AUIGrid.getSelectedIndex(myGridID);
+        //var rejectData = AUIGrid.getSelectedItems(myGridID)[0].item;
+
+        var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+        var selPayType = "";
+        var reqList = [];
+        $.each(selectedItems, function(idx, row){
+            if( idx == 0 ){
+                selPayType = row.item.payMode;
+            }
+
+            if(row.item.payStusId != "1" ){
+                isValid = false;
+            }else{
+                reqList.push(row.item);
+            }
+        });
+
+        data.all = reqList;
 
         var formList = $("#paymentForm").serializeArray();       //폼 데이터
 
         //array에 담기
-        if(gridList.length > 0) {
-            data.all = rejectData;
+        /* if(gridList.length > 0) {
+//            data.all = rejectData;
+            data.all = reqList;
         }  else {
             Common.alert("<spring:message code='pay.alert.noRowData'/>");
             return;
-        }
+        } */
 
 
         if(formList.length > 0) data.form = formList;
@@ -687,18 +788,33 @@ var TODAY_DD      = "${toDay}";
         $("#keyInExpiryMonth").val("");
         $("#keyInExpiryYear").val("");
     }
+
+    // transaction Id   Payment
     function saveNormalPayment(){
         //param data array
         var data = {};
 
-        //var gridList = AUIGrid.getGridData(targetFinalBillGridID);       //그리드 데이터
-
+        /*
        var gridList = AUIGrid.getSelectedIndex(myGridID);
        var rejectData = AUIGrid.getSelectedItems(myGridID)[0].item;
        var gridList = rejectData;
+        var selPayType = rejectData.payMode;
+        */
 
-        // var selPayType=$("#payMode").val();
-        var selPayType = rejectData.payMode
+        var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+        var selPayType = "";
+        var reqList = [];
+        $.each(selectedItems, function(idx, row){
+            if( idx == 0 ){
+            	selPayType = row.item.payMode;
+            }
+
+            if(row.item.payStusId != "1" ){
+                isValid = false;
+            }else{
+                reqList.push(row.item);
+            }
+        });
 
         if( selPayType == "20" ){ // Cash
         	selPayType = "105";
@@ -755,8 +871,10 @@ var TODAY_DD      = "${toDay}";
         }
 
         formList = $("#paymentForm1").serializeArray();
-        data.all = gridList;
         data.form = formList;
+
+        data.all = reqList;
+
         //array에 담기
         /* if(gridList.length > 0) {
             data.all = gridList;
@@ -911,7 +1029,7 @@ var TODAY_DD      = "${toDay}";
     <tr>
         <th scope="row"><spring:message code="sal.text.payMode" /></th>
         <td>
-            <select  id="ticketType" name="payMode" class="w100p"></select>
+            <select  id="payMode" name="payMode" class="w100p"></select>
         </td>
         <th scope="row"><spring:message code="pay.head.slipNo" /> / <spring:message code="pay.title.chequeNo" /> </th>
         <td>
@@ -958,7 +1076,7 @@ var TODAY_DD      = "${toDay}";
     </ul>
    </header>
 <!-- pop_header end -->
-   <section class="pop_body">
+   <section style="max-height:500px; padding:10px; background:#fff; overflow-y:scroll;">
     <!-- pop_body start -->
     <form id="paymentForm1" name="paymentForm1" >
 
@@ -1001,8 +1119,7 @@ var TODAY_DD      = "${toDay}";
    <!-- pop_body end -->
 </div>
 
-  <div id="PopUp2_wrap" class="popup_wrap"
-   style="display: none;">
+  <div id="PopUp2_wrap" class="popup_wrap win_popup" style="display: none;">
    <!-- popup_wrap start -->
    <header class="pop_header">
     <!-- pop_header start -->
@@ -1014,7 +1131,7 @@ var TODAY_DD      = "${toDay}";
     </ul>
    </header>
        <!-- search_table start -->
-    <section class="pop_body">
+    <section style="max-height:500px; padding:10px; background:#fff; overflow-y:scroll;">
         <!-- search_table start -->
         <form id="paymentForm" action="#" method="post">
             <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" />
@@ -1040,7 +1157,7 @@ var TODAY_DD      = "${toDay}";
                         </td>
                         <th scope="row">Amount<span class="must">*</span></th>
                         <td>
-                            <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
+                            <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' readonly="readonly" />
                         </td>
                     </tr>
                     <tr>
