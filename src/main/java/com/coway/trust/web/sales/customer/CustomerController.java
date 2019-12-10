@@ -804,7 +804,7 @@ public class CustomerController {
 
       customerService.insertCreditCardInfo(customerCardVOList);
       LOGGER.info("추가 : {}", addList.toString());
-      
+
       Map<String, Object> tokenCrcParam = new HashMap<>();
       tokenCrcParam.put("custId", customerId);
       tokenCrcParam.put("userId", sessionVo.getUserId());
@@ -1979,6 +1979,9 @@ public class CustomerController {
   @RequestMapping(value = "/insertCustomerCardAddAf.do")
   public ResponseEntity<ReturnMessage> insertCustomerCardAddAf(@RequestParam Map<String, Object> params, ModelMap model)
       throws Exception {
+
+      LOGGER.error("insertCustomerCardAddAf");
+      LOGGER.error(params.toString());
 
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
     params.put("userId", sessionVO.getUserId());
