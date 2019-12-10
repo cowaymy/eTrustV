@@ -32,7 +32,7 @@
     },
    {
         dataField: "crcStateCrtDt",
-        headerText: "<spring:message code='pay.head.statementDate'/>",
+        headerText: "<spring:message code='pay.head.uploadDate'/>",
         editable: false,
         visible: true,
         width : 120,
@@ -76,8 +76,8 @@
         visible: true
     }
     ,{
-    	dataField: "crcTrnscDt",
-        headerText: "<spring:message code='pay.head.trDate'/>",
+        dataField: "crcTrnscDt",
+        headerText: "<spring:message code='pay.head.statementDate'/>",
         editable: false,
         visible: true,
         width : 90,
@@ -126,7 +126,7 @@
         mergeRef : "crcTrnscAppv"
      }
     ,{
-        dataField: "crcGstAmt",
+        dataField: "crcTotGstAmt",
         headerText: "<spring:message code='pay.head.gstRm'/>",
         width : 100,
         editable: false,
@@ -139,7 +139,7 @@
         mergeRef : "crcTrnscAppv"
     }
     ,{
-        dataField: "crcNetAmt",
+        dataField: "crcTotNetAmt",
         headerText: "<spring:message code='pay.head.netRm'/>",
         width : 100,
         editable: false,
@@ -247,38 +247,38 @@
     // 리스트 조회.
     function fn_selectCardTransactionList() {
 
-    	if(FormUtil.checkReqValue($("#stateNo"), false) && FormUtil.checkReqValue($("#mid"), false)) {
-    		if(FormUtil.checkReqValue($("#stateDateFr"), false) && FormUtil.checkReqValue($("#stateDateTo"), false) &&
-	                FormUtil.checkReqValue($("#transDateFr"), false) && FormUtil.checkReqValue($("#transDateTo"), false) ){
-    			Common.alert("<spring:message code='pay.alert.inputAtLeastOne'/>");
+        if(FormUtil.checkReqValue($("#stateNo"), false) && FormUtil.checkReqValue($("#mid"), false)) {
+            if(FormUtil.checkReqValue($("#stateDateFr"), false) && FormUtil.checkReqValue($("#stateDateTo"), false) &&
+                    FormUtil.checkReqValue($("#transDateFr"), false) && FormUtil.checkReqValue($("#transDateTo"), false) ){
+                Common.alert("<spring:message code='pay.alert.inputAtLeastOne'/>");
                 return;
-	        }
+            }
 
-	    	if((!FormUtil.checkReqValue($("#stateDateFr"), false) && FormUtil.checkReqValue($("#stateDateTo"), false)) ||
-	                (FormUtil.checkReqValue($("#stateDateFr"), false) && !FormUtil.checkReqValue($("#stateDateTo"), false)) ){
-	    		Common.alert("<spring:message code='pay.alert.inputStatementDate'/>");
-	            return;
-	        }
+            if((!FormUtil.checkReqValue($("#stateDateFr"), false) && FormUtil.checkReqValue($("#stateDateTo"), false)) ||
+                    (FormUtil.checkReqValue($("#stateDateFr"), false) && !FormUtil.checkReqValue($("#stateDateTo"), false)) ){
+                Common.alert("<spring:message code='pay.alert.inputStatementDate'/>");
+                return;
+            }
 
-	    	 if(FormUtil.diffDay($("#stateDateFr").val(), $("#stateDateTo").val()) > 15){
-	             Common.alert("Statement Date is only within 15 days.");
-	             return ;
-	         }
+             if(FormUtil.diffDay($("#stateDateFr").val(), $("#stateDateTo").val()) > 31){
+                 Common.alert("Statement Date is only within 31 days.");
+                 return ;
+             }
 
-	        if((!FormUtil.checkReqValue($("#transDateFr"), false) && FormUtil.checkReqValue($("#transDateTo"), false)) ||
-	                (FormUtil.checkReqValue($("#transDateFr"), false, false) && !FormUtil.checkReqValue($("#transDateTo"), false)) ){
-	            Common.alert("<spring:message code='pay.alert.inputTransaction Date'/>");
-	            return;
-	        }
+            if((!FormUtil.checkReqValue($("#transDateFr"), false) && FormUtil.checkReqValue($("#transDateTo"), false)) ||
+                    (FormUtil.checkReqValue($("#transDateFr"), false, false) && !FormUtil.checkReqValue($("#transDateTo"), false)) ){
+                Common.alert("<spring:message code='pay.alert.inputTransaction Date'/>");
+                return;
+            }
 
-	        if(FormUtil.diffDay($("#transDateFr").val(), $("#transDateTo").val()) > 15){
+            if(FormUtil.diffDay($("#transDateFr").val(), $("#transDateTo").val()) > 15){
                 Common.alert("Transaction Date is only within 15 days.");
                 return ;
             }
-    	}
+        }
 
-    	Common.ajax("GET", "/payment/selectCardTransactionList", $("#searchForm").serialize(), function (result) {
-        	AUIGrid.setGridData(myGridID, result);
+        Common.ajax("GET", "/payment/selectCardTransactionList", $("#searchForm").serialize(), function (result) {
+            AUIGrid.setGridData(myGridID, result);
         });
     }
 
@@ -309,15 +309,15 @@
                 <caption>table</caption>
                 <colgroup>
                     <col style="width:130px" />
-				    <col style="width:*" />
-				    <col style="width:130px" />
-				    <col style="width:*" />
-				    <col style="width:130px" />
-				    <col style="width:*" />
+                    <col style="width:*" />
+                    <col style="width:130px" />
+                    <col style="width:*" />
+                    <col style="width:130px" />
+                    <col style="width:*" />
                 </colgroup>
                 <tbody>
                 <tr>
-				    <th scope="row"><spring:message code='pay.head.statementDate'/></th>
+                    <th scope="row"><spring:message code='pay.head.uploadDate'/></th>
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="stateDateFr" name="stateDateFr" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"/></p>
@@ -326,16 +326,16 @@
                         </div><!-- date_set end -->
                     </td>
                     <th scope="row"><spring:message code='pay.head.bankAccount'/></th>
-				    <td>
-					    <select id="bankAccount" name="bankAccount" class="w100p">
-					    </select>
-				    </td>
-				    <th scope="row"><spring:message code='pay.head.statementNo'/></th>
+                    <td>
+                        <select id="bankAccount" name="bankAccount" class="w100p">
+                        </select>
+                    </td>
+                    <th scope="row"><spring:message code='pay.head.statementNo'/></th>
                     <td>
                         <input id="stateNo" name="stateNo" type="text"  placeholder="" class="w100p" />
                     </td>
-				</tr>
-				<tr>
+                </tr>
+                <tr>
                     <th scope="row"><spring:message code='pay.head.transactionDate'/></th>
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
@@ -357,9 +357,9 @@
     </section><!-- search_table end -->
 
     <section class="search_result"><!-- search_result start -->
-	    <ul class="right_btns">
-		    <li><p class="btn_grid"><a href="#" id="excelDown"><spring:message code='sys.btn.excel.dw'/></a></p></li>
-		</ul>
+        <ul class="right_btns">
+            <li><p class="btn_grid"><a href="#" id="excelDown"><spring:message code='sys.btn.excel.dw'/></a></p></li>
+        </ul>
 
         <article class="grid_wrap"><!-- grid_wrap start -->
             <div id="grid_wrap_list" style="width:100%; height:100%; margin:0 auto;" class="autoGridHeight"></div>
