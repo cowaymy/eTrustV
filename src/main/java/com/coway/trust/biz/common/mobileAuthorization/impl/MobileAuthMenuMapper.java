@@ -71,4 +71,6 @@ public interface MobileAuthMenuMapper {
 	 * @return
 	 */
 	int deleteMobileMenuMapping(Map<String, Object> params);
+
+	int saveMobileMenuAuthAllRoleMapping(Map<String, Object> params);
 }

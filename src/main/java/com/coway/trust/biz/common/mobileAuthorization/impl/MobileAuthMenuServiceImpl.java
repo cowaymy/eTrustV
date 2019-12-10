@@ -15,6 +15,7 @@
  */
 package com.coway.trust.biz.common.mobileAuthorization.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,6 +87,24 @@ public class MobileAuthMenuServiceImpl implements MobileAuthMenuService {
 
 			mobileAuthMenuMapper.deleteMobileMenuAuthRoleMapping((Map<String, Object>) obj);
 		}
+
+		return saveCnt;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public int saveMobileMenuAuthAllRoleMapping(Map<String, Object> params, Integer userId) {
+		int saveCnt = 0;
+
+		Map map = new HashMap<String, Object>();
+
+		map.put("authCode", params.get("authCode"));
+		map.put("crtUserId", userId);
+		map.put("updUserId", userId);
+
+		LOGGER.debug(" >>>>> saveMobileMenu insertMobileMenu ");
+
+		mobileAuthMenuMapper.saveMobileMenuAuthAllRoleMapping(map);
 
 		return saveCnt;
 	}
