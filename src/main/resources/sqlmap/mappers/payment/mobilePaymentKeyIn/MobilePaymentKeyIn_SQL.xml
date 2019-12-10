@@ -66,7 +66,7 @@
 						    ON Extent1.ISSU_BANK_ID = Extent6.BANK_ID
 						          AND Extent6.STUS_CODE_ID = '1'
                           JOIN SYS0013M Extent6
-                            ON Extent1.PAY_MODE = Extent6.CODE
+                            ON Extent1.PAY_MODE = Extent6.CODE_ID
                                  AND Extent6.CODE_MASTER_ID = 439
                            JOIN SAL0024D Extent7
                              ON Extent2.CUST_BILL_ID = Extent7.CUST_BILL_ID
@@ -117,8 +117,11 @@
              <if test="serialNo != null and serialNo != '' ">
                  AND ( Extent1.SLIP_NO = #{serialNo} OR Extent1.CHEQUE_NO = #{serialNo} )
              </if>
+             <if test="payMode != null and payMode != '' ">
+                 AND Extent1.PAY_MODE = #{payMode}
+             </if>
          </where>
-		 ORDER BY Extent5.MOB_TICKET_NO
+		 ORDER BY Extent5.MOB_TICKET_NO DESC
     </select>
 
 
