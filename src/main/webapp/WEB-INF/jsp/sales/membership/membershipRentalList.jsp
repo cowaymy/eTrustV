@@ -12,7 +12,8 @@ $(document).ready(function(){
 
 	$("#table1").hide();
 
-	if("${SESSION_INFO.userTypeId}" == "1" ||"${SESSION_INFO.userTypeId}" == "2" ){
+	/* if("${SESSION_INFO.userTypeId}" == "1" ||"${SESSION_INFO.userTypeId}" == "2" ){ */
+	if("${SESSION_INFO.userTypeId}" == "1" ){
         $("#table1").show();
     }
 

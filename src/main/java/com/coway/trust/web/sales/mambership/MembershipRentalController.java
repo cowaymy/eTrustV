@@ -67,7 +67,8 @@ public class  MembershipRentalController {
 
 		logger.debug("sessionVO ============>> " + sessionVO.getUserTypeId());
 
-		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+		/*if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){*/
+		if( sessionVO.getUserTypeId() == 1){
 
 			params.put("userId", sessionVO.getUserId());
 			EgovMap result =  salesCommonService.getUserInfo(params);
