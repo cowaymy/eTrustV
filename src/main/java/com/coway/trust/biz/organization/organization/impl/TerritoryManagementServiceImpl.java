@@ -247,6 +247,7 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
 		return true;
 	}
 
+	@Override
 	public EgovMap getDocNo(String docNoId){
 		int tmp = Integer.parseInt(docNoId);
 		String docNo = "";
@@ -270,16 +271,15 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
 		return selectDocNo;
 	}
 
+	@Override
 	public String getNextDocNo(String prefixNo,String docNo){
 		String nextDocNo = "";
 		int docNoLength=0;
 		System.out.println("!!!"+prefixNo);
 		if(prefixNo != null && prefixNo != ""){
-			System.out.println("들어오면안됨");
 			docNoLength = docNo.replace(prefixNo, "").length();
 			docNo = docNo.replace(prefixNo, "");
 		}else{
-			System.out.println("들어와얗ㅁ");
 			docNoLength = docNo.length();
 		}
 

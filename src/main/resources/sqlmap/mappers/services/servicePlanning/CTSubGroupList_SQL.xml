@@ -4,7 +4,7 @@
 
 <select id="selectCTSubGroupList" parameterType="Map" resultType="egovMap">
 		WITH TEMP AS (
-		    SELECT 
+		    SELECT
 		        A.CODE, B.NAME, D.MEM_CODE || ' - ' || D.NAME MEM_CODE, D.MEM_ID,C.CT_SUB_GRP, C.LAST_GRP_CODE, D.MEM_CODE MEMCODE
 		        FROM SYS0005M A
 		        INNER JOIN ORG0001D B ON B.BRNCH = A.BRNCH_ID
@@ -15,7 +15,7 @@
 						  SELECT *
 						  FROM SVC0054M
 						  WHERE MAJOR_GRP = 1
-						 )      
+						 )
 		  SELECT T1.CODE, T1.NAME, T1.MEM_CODE, T1.MEM_ID, T2.CT_SUB_GRP, T1.LAST_GRP_CODE
 		  FROM TEMP T1, TEMP2 T2
 		  WHERE  T1.MEM_ID = T2.MEM_ID(+)
@@ -35,19 +35,20 @@
 </select>
 
 <update id="insertCTSubGroup" parameterType="Map">
-    UPDATE ORG0005D SET 
+    UPDATE ORG0005D SET
     CT_SUB_GRP = #{ctSubGrp}
     WHERE MEM_ID = #{memId}
 </update>
 
 <update id="updateCTSubGroupByExcel" parameterType="Map">
-    UPDATE ORG0005D SET 
+    UPDATE ORG0005D SET
     CT_SUB_GRP = #{ctSubGrp}
     WHERE MEM_ID = #{memId}
 </update>
 
 <select id="selectCTAreaSubGroupList" parameterType="Map" resultType="egovMap">
      SELECT A.AREA_ID,
+         B.CT_BRNCH_CODE,
          B.AREA,
          B.CITY,
          B.POSTCODE,
@@ -55,12 +56,14 @@
          A.REQST_NO,
          TO_CHAR(A.PRIOD_FROM,'YYYY-MM-DD') PRIOD_FROM,
          TO_CHAR(A.PRIOD_TO,'YYYY-MM-DD') PRIOD_TO,
-         CASE WHEN (A.LOC_TYPE='L') THEN 'Local' 
+         CASE WHEN (A.LOC_TYPE='L') THEN 'Local'
          WHEN (A.LOC_TYPE='O') THEN 'OutStation'
          ELSE ''
          END LOC_TYPE,
          A.SVC_WEEK,
-         A.CT_SUB_GRP
+         A.CT_SUB_GRP,
+         (SELECT COUNT(AREA_ID) FROM ORG0028M WHERE AREA_ID = A.AREA_ID) AS NO_SVC_CNT
+
 	   FROM ORG0019M A
 		INNER JOIN  SYS0064M B ON A.AREA_ID = B.AREA_ID AND A.AVAIL_FLAG = 'Y'
         WHERE A.BRNCH_TYPE = 43
@@ -94,7 +97,7 @@
 		LOC_TYPE = #{locType},
 		SVC_WEEK = #{serviceWeek},
 		UPD_DT = SYSDATE
-	WHERE AREA_ID = #{areaId} 
+	WHERE AREA_ID = #{areaId}
 	AND BRNCH_TYPE = 43
 	AND AVAIL_FLAG = 'Y'
 </update>
@@ -106,7 +109,7 @@
 		  ORDER BY CT_SUB_GRP ASC
 </select>
 <select id="selectCTM" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
         A.CODE CODE_ID, B.NAME CODE_NAME
         FROM SYS0005M A
         INNER JOIN ORG0001D B ON B.BRNCH = A.BRNCH_ID
@@ -165,12 +168,12 @@
 select B.CT_SUB_GRP, A.ASIGN_FLAG, A.MAJOR_GRP
 from
    ( select *
-    from svc0054m 
-        <if test="memId != null and memId !='' "> 
+    from svc0054m
+        <if test="memId != null and memId !='' ">
           where  MEM_ID= replace(#{memId},' ','')
         </if> )A
     ,( select distinct ct_sub_Grp
-        from sys0064m 
+        from sys0064m
         where ct_sub_Grp is not null
         and ct_brnch_code=#{branch}
                ) B
@@ -180,15 +183,15 @@ ORDER BY CT_SUB_GRP ASC
 
 
 
-<select id="selectOneCTSubGrb" parameterType="Map" resultType="egovMap">
-    select *
-    from svc0054m 
-    where  MEM_ID= replace(#{memId},' ','')
-    and  CT_Sub_GRp =#{ctSubGrp}
+<select id="selectOneCTSubGrb" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+     FROM SVC0054M
+    WHERE MEM_ID = REPLACE(#{memId},' ','')
+       AND CT_SUB_GRP = #{ctSubGrp}
 </select>
 
 <insert id="insertSvc0054m" parameterType="Map">
- INSERT INTO Svc0054m(	
+ INSERT INTO Svc0054m(
 		MEM_ID
 		,CT_SUB_GRP
 		,ASIGN_FLAG
@@ -196,7 +199,7 @@ ORDER BY CT_SUB_GRP ASC
 		,CRT_DT
 		,UPD_USER_ID
 		,UPD_DT
-	
+
 		)
 	Values(
 	    replace(#{memId},' ','')
@@ -206,26 +209,26 @@ ORDER BY CT_SUB_GRP ASC
 	   ,SYSDATE
 	   , #{userId}
        ,SYSDATE
-       
+
 	)
 	</insert>
-	
+
 	<delete id="deleteSvc0054m" parameterType="Map">
     	Delete from Svc0054m
     	where MEM_ID = replace(#{memId},' ','')
-    	
+
    <if test="insertSubgrps != null and insertSubgrps.size() > 0 ">
       and CT_Sub_GRP not in
     <foreach item="item" collection="insertSubgrps" index="index" open="(" separator="," close=")">
     	 #{item}
 	</foreach>
 	</if>
-	
+
 	</delete>
-	
+
 	<select id="selectNotChooseCTSubGrb" parameterType="Map" resultType="egovMap">
 		  select *
-	    from svc0054m 
+	    from svc0054m
 	    where  MEM_ID= replace(#{memId},' ','')
 	  <if test="insertSubgrps != null and insertSubgrps.size() > 0 ">
 	     AND CT_Sub_GRP not in
@@ -234,18 +237,17 @@ ORDER BY CT_SUB_GRP ASC
     </foreach>
     </if>
 	</select>
-	
-	<select id="selectOneMainGroup" parameterType="Map" resultType="egovMap">
-	     select *
-        from svc0054m 
-        where  MEM_ID= replace(#{memId},' ','')
-        and CT_SUB_GRP = #{mainGroup}
-	    and MAJOR_GRP = 1
-	
-	</select>
-	
+
+    <select id="selectOneMainGroup" parameterType="Map" resultType="int">
+         SELECT COUNT(*)
+          FROM SVC0054M
+         WHERE MEM_ID= REPLACE(#{memId},' ','')
+            AND CT_SUB_GRP = #{mainGroup}
+            AND MAJOR_GRP = 1
+    </select>
+
 	<insert id="insertMajorgroup" parameterType="Map">
-	 INSERT INTO Svc0054m( 
+	 INSERT INTO Svc0054m(
         MEM_ID
         ,CT_SUB_GRP
         ,ASIGN_FLAG
@@ -254,7 +256,7 @@ ORDER BY CT_SUB_GRP ASC
         ,UPD_USER_ID
         ,UPD_DT
         ,MAJOR_GRP
-        
+
         )
     Values(
        replace(#{memId},' ','')
@@ -265,7 +267,7 @@ ORDER BY CT_SUB_GRP ASC
        , #{userId}
        ,SYSDATE
        ,'1'
-       
+
     )
 
 	</insert>
@@ -274,7 +276,7 @@ ORDER BY CT_SUB_GRP ASC
 	   set MAJOR_GRP =1
 	  where  MEM_ID= replace(#{memId},' ','')
 	  and CT_SUB_GRP = #{mainGroup}
-	
+
 	</update>
 	<update id="updateNotMajorGroup" parameterType="Map">
 	   update svc0054m
@@ -284,15 +286,111 @@ ORDER BY CT_SUB_GRP ASC
         and CT_SUB_GRP != #{mainGroup}
       </if>
       and MAJOR_GRP =1
-	
+
 	</update>
-	
+
 <select id="selectAlreadyCTSubGrb"  parameterType="Map" resultType="egovMap">
-		select    * 
+		select    *
 		from svc0054m
 	    where  MEM_ID= replace(#{memId},' ','')
 	    and CT_SUB_GRP = #{mainGroup}
 	</select>
-	
-	
+
+    <!-- Select Month Calendar -->
+    <select id="selectMonthCalendar" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.services.servicePlanning.impl.CTSubGroupListMapper.selectMonthCalendar */
+        <![CDATA[
+        SELECT DECODE(SUN, null, null, #{paramMonth} || SUN)    AS CHK_SUN, SUN
+                 , DECODE(MON, null, null, #{paramMonth} || MON) AS CHK_MON, MON
+                 , DECODE(TUE, null, null, #{paramMonth} || TUE)     AS CHK_TUE, TUE
+                 , DECODE(WED, null, null, #{paramMonth} || WED)   AS CHK_WED, WED
+                 , DECODE(THU, null, null, #{paramMonth} || THU)    AS CHK_THU, THU
+                 , DECODE(FRI, null, null, #{paramMonth} || FRI)       AS CHK_FRI, FRI
+                 , DECODE(SAT, null, null, #{paramMonth} || SAT)     AS CHK_SAT, SAT
+
+         FROM (SELECT SUN, MON, TUE, WED, THU, FRI, SAT
+                    FROM (SELECT TRUNC  (dt + LEVEL - 1, 'd') w
+                                       , TO_CHAR(dt + LEVEL - 1, 'd') d
+                                       , TO_CHAR(dt + LEVEL - 1, 'dd') dd
+                               FROM (SELECT TO_DATE(#{paramMonth}, 'yyyymm') dt FROM dual)
+                     CONNECT BY LEVEL < = LAST_DAY(dt) - dt + 1
+                   ) PIVOT (MIN(dd) FOR d IN(1 SUN, 2 MON, 3 TUE, 4 WED, 5 THU, 6 FRI, 7 SAT) )
+        ORDER BY w
+        ) A
+       ]]>
+    </select>
+
+    <!-- select Sub Group Service Day List -->
+    <select id="selectSubGroupServiceDayList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.services.servicePlanning.impl.CTSubGroupListMapper.selectSubGroupServiceDayList */
+        SELECT AREA_ID
+                 , TO_CHAR(NOSCV_DT, 'YYYYMMDD')              AS NOSCV_DT
+                 , TO_NUMBER(TO_CHAR(NOSCV_DT, 'MM'))      AS NOSCV_MM
+                ,  TO_CHAR(NOSCV_DT, 'D')                             AS NOSCV_DAY
+         FROM ORG0028M
+        WHERE TO_CHAR(NOSCV_DT, 'YYYY') = #{paramYear}
+           AND AREA_ID = #{paramAreaId}
+    </select>
+
+    <!-- Insert Sub Group Service Day - History Table -->
+    <insert id="insert_ORG0029H" parameterType="Map" >
+        /* com.coway.trust.biz.services.servicePlanning.impl.CTSubGroupListMapper.insert_ORG0029H */
+        INSERT INTO ORG0029H
+            ( SEQ                    /* Sequence - ORG0029H_SEQ */
+            , AREA_ID              /* Magic Address Area ID */
+            , NOSCV_DT          /* Service Date */
+            , DISAB                 /* Disable - 추가 1, 삭제 0 */
+            , CRT_USER_ID       /* Create User ID */
+            , CRT_DT               /* Create Date */
+            , UPD_USER_ID       /* Update User ID */
+            , UPD_DT              /* update Date */
+
+        ) VALUES (
+             ORG0029H_SEQ.NEXTVAL
+           , #{areaId}
+           , TO_DATE(#{noscvDt}, 'YYYYMMDD')
+           , #{disab}
+           , #{crtUserId}
+           , SYSDATE
+           , #{updUserId}
+           , SYSDATE
+        )
+    </insert>
+
+    <!-- Insert Sub Group Service Day -->
+    <insert id="insert_ORG0028M" parameterType="Map" >
+        /* com.coway.trust.biz.services.servicePlanning.impl.CTSubGroupListMapper.insert_ORG0028M */
+        INSERT INTO ORG0028M
+            ( AREA_ID              /* Magic Address Area ID */
+            , NOSCV_DT          /* Service Date */
+            , CRT_USER_ID       /* Create User ID */
+            , CRT_DT               /* Create Date */
+            , UPD_USER_ID       /* Update User ID */
+            , UPD_DT              /* update Date */
+
+        ) VALUES (
+             #{areaId}
+           , TO_DATE(#{noscvDt}, 'YYYYMMDD')
+           , #{crtUserId}
+           , SYSDATE
+           , #{updUserId}
+           , SYSDATE
+        )
+    </insert>
+
+    <!-- Delete Sub Group Service Day -->
+    <delete id="delete_ORG0028M" parameterType="Map">
+        /* com.coway.trust.biz.services.servicePlanning.impl.CTSubGroupListMapper.delete_ORG0028M */
+        DELETE FROM ORG0028M
+        WHERE AREA_ID = #{areaId}
+           AND TO_CHAR(NOSCV_DT, 'YYYYMMDD') = #{noscvDt}
+    </delete>
+
+    <!-- proceduar call (SP_SVC_NOSERVICE_DATE_UPD) -->
+    <select id="saveAllSubGroupServiceDayList" parameterType="Map"  statementType="CALLABLE">
+        {
+            CALL SP_SVC_NOSERVICE_DATE_UPD(#{paramCtSubGrp}, #{paramAreaId}, #{updUserId}, #{pErrcode, mode=OUT, jdbcType=VARCHAR}, #{pErrmsg, mode=OUT, jdbcType=VARCHAR})
+        }
+    </select>
+
 </mapper>

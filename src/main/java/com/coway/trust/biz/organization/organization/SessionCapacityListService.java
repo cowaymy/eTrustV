@@ -10,19 +10,19 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface SessionCapacityListService {
 
 	List<EgovMap> selectSsCapacityBrList(Map<String, Object> params);
-	
+
 	void insertCapacity(List<Object> params, SessionVO sessionVO);
-	
+
 	void updateCapacity(List<Object> params, SessionVO sessionVO);
-	
+
 	void deleteCapacity(List<Object> params, SessionVO sessionVO);
-	
+
 	void updateCapacityByExcel(List<Map<String, Object>> updateList, SessionVO sessionVO);
-	
+
 	List<EgovMap> seleCtCodeSearch(Map<String, Object>params);
-	
+
 	List<EgovMap> seleCtCodeSearch2(Map<String, Object> params);
-	
+
 	List<EgovMap> seleBranchCodeSearch(Map<String, Object>params);
 
 	List<EgovMap> selectSsCapacityCTM(Map<String, Object> params);
@@ -33,34 +33,43 @@ public interface SessionCapacityListService {
 
 	void deleteCapacityByExcel(List<Map<String, Object>> updateList, SessionVO sessionVO);
 
+	/**
+	 * Select Count Cpacity CTM
+	 * @Author KR-SH
+	 * @Date 2019. 11. 20.
+	 * @param params
+	 * @return
+	 */
+	public int selectCountSsCapacityCTM(Map<String, Object> params);
+
 	/*List<EgovMap> selectHpChildList(Map<String, Object> params);
-	
-	List<EgovMap> getDeptTreeList(Map<String, Object> params);        
-	
-	List<EgovMap> getGroupTreeList(Map<String, Object> params);        
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	List<EgovMap> getDeptTreeList(Map<String, Object> params);
+
+	List<EgovMap> getGroupTreeList(Map<String, Object> params);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	List<EgovMap> selectOrgChartCdList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectOrgChartCtList(Map<String, Object> params);
-	
-	
+
+
 	*/
 
-	
+
 }
 
 

@@ -13,7 +13,7 @@ var grpOrgList= new Array();
 var rData = new Array();
 var type, branchName, holidayDesc , holiday, branchId, state, holidaySeq , applCode;
 function holidayCTassignGrid() {
-    
+
     var columnLayout = [
                           { dataField : "holidayType", headerText  : "Holiday Type",    width : 100 },
                           { dataField : "state", headerText  : "State",width : 100 },
@@ -34,17 +34,17 @@ function holidayCTassignGrid() {
                           }
                         	  },
                           { dataField : "brnchId",       headerText  : "",  width  : 0}
-                          
-                           
+
+
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
-        
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};
+
         gridID1 = GridCommon.createAUIGrid("holiday_CTassign_grid_wap", columnLayout  ,"" ,gridPros);
     }
-    
+
 function holidayGrid() {
-	   
+
     var columnLayout = [
                           { dataField : "holidayType", headerText  : "Holiday Type",    width : 100 ,
                         	  editRenderer : {
@@ -79,14 +79,14 @@ function holidayGrid() {
                           },
                           { dataField : "holidayDesc",       headerText  : "Description",  width  : 200},
                           { dataField : "holidaySeq",       headerText  : "",  width  : 0}
-                          
-                           
+
+
        ];
-	    
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
-        
+
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};
+
         gridID = GridCommon.createAUIGrid("holiday_grid_wap", columnLayout  ,"" ,gridPros);
-        
+
         // 에디팅 정상 종료 이벤트 바인딩
         AUIGrid.bind(gridID, "cellEditEnd", auiCellEditingHandler);
 
@@ -113,7 +113,7 @@ function fn_selectState(){
 	 Common.ajax("GET", "/services/holiday/selectState.do",$("#holidayForm").serialize(), function(result) {
          console.log("성공.");
          console.log("data : " + result);
-         
+
          for (var i = 0; i < result.length; i++) {
              var list = new Object();
              list.codeId = result[i].codeId;
@@ -146,7 +146,7 @@ function auiCellEditingHandler(event) {
     	AUIGrid.setColumnProp( gridID, 1, { editable : true } );
     }
 };
-	 
+
 $(document).ready(function(){
 	doGetCombo('/services/mileageCileage/selectBranch', 43, '','branchId', 'M' ,  'f_multiCombo');
 	 holidayGrid();
@@ -157,7 +157,7 @@ $(document).ready(function(){
 	 $("#hiddenBtn4").hide();
 	 AUIGrid.bind(gridID, "addRow", auiAddRowHandler);
 	 AUIGrid.bind(gridID, "removeRow", auiRemoveRowHandler);
-	 
+
 	 AUIGrid.bind(gridID, "cellClick", function(event) {
          console.log(event.rowIndex);
          type1= AUIGrid.getCellValue(gridID, event.rowIndex, "holidayType");
@@ -165,12 +165,12 @@ $(document).ready(function(){
          holiday1 = AUIGrid.getCellValue(gridID, event.rowIndex, "holiday");
          state1 = AUIGrid.getCellValue(gridID, event.rowIndex, "state");
          holidaySeq1 = AUIGrid.getCellValue(gridID, event.rowIndex, "holidaySeq");
-         
+
          console.log(type1 + "      " + holidayDesc1 + "    " + holiday1 + "   "  + holidaySeq1 + state1);
-         
+
      });
-	 
-	 
+
+
 	 AUIGrid.bind(gridID1, "cellClick", function(event) {
 	        console.log(event.rowIndex);
 	        type= AUIGrid.getCellValue(gridID1, event.rowIndex, "holidayType");
@@ -182,18 +182,18 @@ $(document).ready(function(){
 	         holidaySeq = AUIGrid.getCellValue(gridID1, event.rowIndex, "holidaySeq");
 	        applCode = AUIGrid.getCellValue(gridID1, event.rowIndex, "applCode");
 	        console.log(type + "      "+branchName + "     " + holidayDesc + "    " + holiday + "   " + branchId + "    " + holidaySeq + state);
-	
-	        	
-	       
-	        
-	        
+
+
+
+
+
 	    });
-	 
-  
-	
-	
-	 
-	
+
+
+
+
+
+
 	 doGetCombo('/services/holiday/selectState.do', '' , '', 'cmbState' , 'S', '');
 });
 
@@ -201,25 +201,25 @@ $(document).ready(function(){
 	    	if(fnValidationCheck()){
 	    		Common.ajax("POST", "/services/holiday/saveHoliday.do", GridCommon.getEditData(gridID), function(result) {
 	    			 var checkbeforeToday = {code: "00", message: "Already Gone"};
-	    	         var checkExistHoliday={code: "00", message: "Already Exist"}   
+	    	         var checkExistHoliday={code: "00", message: "Already Exist"}
 	                console.log(result);
 	    	         if(JSON.stringify(result) === JSON.stringify(checkbeforeToday) )  {
 	                	 Common.alert("Already Gone");
 	                 }
-	    	         
+
 	    	         if(JSON.stringify(result) === JSON.stringify(checkExistHoliday) )  {
                          Common.alert("The Holiday Exist Already");
                      }
-	    			
+
 	    			console.log("성공.");
 	            console.log("data : " + result);
 	        });
     	}
     }
-    
+
     function f_multiCombo(){
     	 $(function() {
-    	       
+
     	        $('#branchId').change(function() {
     	        }).multipleSelect({
     	            selectAll : true,
@@ -227,33 +227,33 @@ $(document).ready(function(){
     	        });
     	    });
     }
-    function fnValidationCheck() 
+    function fnValidationCheck()
     {
     	 var result = true;
          var addList = AUIGrid.getAddedRowItems(gridID);
          var udtList = AUIGrid.getEditedRowItems(gridID);
          var delList = AUIGrid.getRemovedItems(gridID);
-            
-        if (addList.length == 0  && udtList.length == 0 && delList.length == 0) 
+
+        if (addList.length == 0  && udtList.length == 0 && delList.length == 0)
         {
           Common.alert("No Change");
           return false;
         }
 
-        for (var i = 0; i < addList.length; i++) 
+        for (var i = 0; i < addList.length; i++)
         {
         	var holidayType  = addList[i].holidayType;
             var holiday  = addList[i].holiday;
             var state = addList[i].state;
-              if (holidayType == "" || holidayType.length == 0) 
+              if (holidayType == "" || holidayType.length == 0)
               {
                 result = false;
                 // {0} is required.
                 Common.alert("<spring:message code='sys.msg.necessary' arguments='Holiday Type' htmlEscape='false'/>");
                 break;
               }
-              
-              if (holidayType == "Public Holiday") 
+
+              if (holidayType == "Public Holiday")
               {
             	  if (state.length > 0)
             	  {
@@ -262,7 +262,7 @@ $(document).ready(function(){
             	    break;
             	  }
               } else {
-            	  if (state == "" || state.length == 0) 
+            	  if (state == "" || state.length == 0)
                   {
                     result = false;
                     // {0} is required.
@@ -270,8 +270,8 @@ $(document).ready(function(){
                     break;
                   }
               }
-              
-              if (holiday == "" || holiday.length == 0) 
+
+              if (holiday == "" || holiday.length == 0)
               {
                 result = false;
                 // {0} is required.
@@ -279,23 +279,23 @@ $(document).ready(function(){
                 break;
               }
               var today = new Date();
-              
+
         }
 
-        for (var i = 0; i < udtList.length; i++) 
+        for (var i = 0; i < udtList.length; i++)
         {
         	var holidayType  = udtList[i].holidayType;
-            var holiday  = udtList[i].holiday; 
+            var holiday  = udtList[i].holiday;
             var state = addList[i].state;
-              if (holidayType == "" || holidayType.length == 0) 
+              if (holidayType == "" || holidayType.length == 0)
               {
                 result = false;
                 // {0} is required.
                 Common.alert("<spring:message code='sys.msg.necessary' arguments='Holiday Type' htmlEscape='false'/>");
                 break;
               }
-              
-              if (holidayType == "Public Holiday") 
+
+              if (holidayType == "Public Holiday")
               {
                   if (state.length > 0)
                   {
@@ -304,7 +304,7 @@ $(document).ready(function(){
                     break;
                   }
               } else {
-                  if (state == "" || state.length == 0) 
+                  if (state == "" || state.length == 0)
                   {
                     result = false;
                     // {0} is required.
@@ -312,8 +312,8 @@ $(document).ready(function(){
                     break;
                   }
               }
-              
-              if (holiday == "" || holiday.length == 0) 
+
+              if (holiday == "" || holiday.length == 0)
               {
                 result = false;
                 // {0} is required.
@@ -322,19 +322,19 @@ $(document).ready(function(){
               }
         }
 
-        for (var i = 0; i < delList.length; i++) 
+        for (var i = 0; i < delList.length; i++)
         {
         	 var holidayType  = delList[i].holidayType;
-             var holiday  = delList[i].holiday; 
-               if (holidayType == "" || holidayType.length == 0) 
+             var holiday  = delList[i].holiday;
+               if (holidayType == "" || holidayType.length == 0)
                {
                  result = false;
                  // {0} is required.
                  Common.alert("<spring:message code='sys.msg.necessary' arguments='Holiday Type' htmlEscape='false'/>");
                  break;
                }
-               
-               if (holiday == "" || holiday.length == 0) 
+
+               if (holiday == "" || holiday.length == 0)
                {
                  result = false;
                  // {0} is required.
@@ -346,19 +346,19 @@ $(document).ready(function(){
         return result;
 
     }
-    
+
     function auiAddRowHandler(event) {
     }
-    
+
     function fn_holidayListSearch(){
     	   Common.ajax("GET", "/services/holiday/searchHolidayList.do",$("#holidayForm").serialize(), function(result) {
             console.log("성공.");
             console.log("data : " + result);
             AUIGrid.setGridData(gridID, result);
     	   });
-    	   
-    	 
-    	  
+
+
+
     	  $("#type1").val(type1.substr(0,1));
     	  $("#holidayDesc1").val(holidayDesc1);
     	  $("#holiday1").val( holiday1);
@@ -370,8 +370,8 @@ $(document).ready(function(){
                console.log("data : " + result);
                AUIGrid.setGridData(gridID1, result);
               });
-    	   
-    	  
+
+
     	   type1 = "";
     	   holidayDesc1="";
     	   holiday1="";
@@ -379,7 +379,7 @@ $(document).ready(function(){
     	   holidaySeq1="";
     	   console.log(type1 + "      " + holidayDesc1 + "    " + holiday1 + "   "  + holidaySeq1 + state1);
     }
-    
+
     function fn_radioBtn(val){
     	if(val == 1){
             $("#holiday_grid_wap").show();
@@ -389,10 +389,10 @@ $(document).ready(function(){
             $("#hiddenBtn1").show();
             $("#hiddenBtn2").show();
             $("#hiddenBtn3").show();
-            AUIGrid.resize(holiday_grid_wap,1000,400);
+            AUIGrid.resize(gridID);
         }else{
-        	
-        	   fn_holidayListSearch();  	
+
+        	   fn_holidayListSearch();
               $("#holiday_CTassign_grid_wap").show();
               $("#holiday_grid_wap").hide();
               $("#hiddenBtn").show();
@@ -400,10 +400,10 @@ $(document).ready(function(){
               $("#hiddenBtn2").hide();
               $("#hiddenBtn3").hide();
               $("#hiddenBtn4").show();
-              AUIGrid.resize(holiday_CTassign_grid_wap,1000,400);
+              AUIGrid.resize(gridID1);
          }
    }
-    function fn_CTEntry(){  
+    function fn_CTEntry(){
     	if(applCode == "Working"){
     		Common.alert("Working day");
     		return;
@@ -414,43 +414,43 @@ $(document).ready(function(){
          }
     	 Common.popupDiv("/services/holiday/holidayReplacementCT.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq ,null, null , true , '_NewAddDiv1');
     }
-    
+
     function fn_CTEntryEdit(){
     	Common.popupDiv("/services/holiday/updatHolidayReplacementCT.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq ,null, null , true , '_NewAddDiv1');
-    } 
-    
+    }
+
     function fn_ChangeApplType(){
     	var objJson = GridCommon.getEditData(gridID1);
         $("#type1").val(type1.substr(0,1));
         $("#holidayDesc1").val(holidayDesc1);
         $("#holiday1").val( holiday1);
         $("#holidaySeq1").val(holidaySeq1);
-        $("#state1").val(state1);              
+        $("#state1").val(state1);
         if(type == undefined){
         	Common.alert("Retry to click a column");
         	return;
         }
-        
+
     	 Common.ajax("GET", "/services/holiday/changeApplType.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq+"&applCode=" + applCode, objJson ,  function(result) {
     	/*  ?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq+"&applCode=" + applCode */
-             
-    			
-    		  fn_holidayListSearch();     
+
+
+    		  fn_holidayListSearch();
     		  fn_radioBtn(1);
     		  $("#hList").prop("checked",true);
     	 });
-    	
+
     }
     function removeRow(){
     	AUIGrid.removeRow(gridID, "selectedIndex");
         AUIGrid.removeSoftRows(gridID);
     }
-    
-    
-    
 
 
-   
+
+
+
+
     function auiRemoveRowHandler(){}
 </script>
 <section id="content"><!-- content start -->
@@ -504,7 +504,7 @@ $(document).ready(function(){
          <c:forEach var="list" items="${selectState}">
              <option value="${list.codeId}">${list.codeName}</option>
          </c:forEach>
-        </select> 
+        </select>
     </td>
     <th scope="row">Holiday</th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="holidayDt" name="holidayDt"/></td>

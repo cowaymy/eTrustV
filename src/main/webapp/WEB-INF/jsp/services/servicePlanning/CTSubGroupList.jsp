@@ -12,6 +12,7 @@
 var memId1;
 var myGridID;
 var myGridID2;//AREA
+
 var subList = new Array();
 //popup 크기
 var option = {
@@ -24,16 +25,18 @@ var option = {
 
 //subList=rsult.list;
 function getUseYnComboList() {
-	  
+
 }
 function getLocalComboList(){
     var list = [ "Local", "OutStation"];
     return list;
 }
+
 function getServiceWeekComboList() {
     var list = [ "1", "2", "3", "4" ];
     return list;
 }
+
 function CTSubgGroupGrid() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
@@ -50,7 +53,7 @@ function CTSubgGroupGrid() {
         dataField : "memCode",
         headerText : "CT",
         editable : false,
-        width : 350, 
+        width : 350,
         style : "aui-grid-user-custom-left"
     }, {
         dataField : "memId",
@@ -71,64 +74,30 @@ function CTSubgGroupGrid() {
             keyField : "ctSubGrp",
             valueField : "codeName",
         }
-    
-    
+
+
     }];
      // 그리드 속성 설정
     var gridPros = {
-        
+
              usePaging           : true,         //페이징 사용
-             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : true,            
-             fixedColumnCount    : 1,            
-             showStateColumn     : false,             
-             displayTreeOpen     : false,            
-/*              selectionMode       : "singleRow",  //"multipleCells",    */         
-             headerHeight        : 30,       
+             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : true,
+             fixedColumnCount    : 1,
+             showStateColumn     : false,
+             displayTreeOpen     : false,
+/*              selectionMode       : "singleRow",  //"multipleCells",    */
+             headerHeight        : 30,
              useGroupingPanel    : false,        //그룹핑 패널 사용
              skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
              wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID = AUIGrid.create("#grid_wrap_ctSubGroup", columnLayout, gridPros);
 }
-
-var gridPros = {
-    
-    // 페이징 사용       
-    usePaging : true,
-    
-    // 한 화면에 출력되는 행 개수 20(기본값:20)
-    pageRowCount : 20,
-    
-    editable : true,
-    
-    fixedColumnCount : 1,
-    
-    showStateColumn : true, 
-    
-    displayTreeOpen : true,
-    
-    selectionMode : "singleRow",
-    
-    headerHeight : 30,
-    
-    // 그룹핑 패널 사용
-    useGroupingPanel : true,
-    
-    // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-    skipReadonlyColumns : true,
-    
-    // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-    wrapSelectionMove : true,
-    
-    // 줄번호 칼럼 렌더러 출력
-    showRowNumColumn : false
-    
-};
 
 function CTSubAreaGroupGrid() {
     //AUIGrid 칼럼 설정
@@ -170,22 +139,22 @@ function CTSubAreaGroupGrid() {
           },
         width : 130
     }, {
-        dataField : "svcWeek",
-        headerText : "Service Week",
-        editRenderer : {
+        dataField : "noSvcCnt",
+        headerText : "No Service Date",
+        editable : false,
+        /* editRenderer : {
             type : "ComboBoxRenderer",
             showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
             listFunction : function(rowIndex, columnIndex, item, dataField) {
                 var list = getServiceWeekComboList();
                 return list;
-            },
+            }, */
         width : 100
-      }
-    }, {
-        dataField : "ctSubGrp",
-        headerText : "Sub Group",
-        width :130
-    }, {
+      //}
+    },
+    {dataField : "ctSubGrp",  headerText : "Sub Group",  width :130},
+    {dataField : "ctBrnchCode",  headerText : "ctBrnchCode",  width :0},
+    {
         dataField : "priodFrom",
         headerText : "Priod From",
         dataType : "date",
@@ -195,7 +164,7 @@ function CTSubAreaGroupGrid() {
             showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
           },
         onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-        width : 130
+        width : 0
     }, {
         dataField : "priodTo",
         headerText : "Priod To",
@@ -206,50 +175,51 @@ function CTSubAreaGroupGrid() {
             showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
           },
         onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-        width : 130
+        width : 0
     }];
+
      // 그리드 속성 설정
     var gridPros = {
-        
+
              usePaging           : true,         //페이징 사용
-             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : true,            
-             fixedColumnCount    : 1,            
-             showStateColumn     : false,             
-             displayTreeOpen     : false,            
-/*              selectionMode       : "singleRow",  //"multipleCells",    */         
-             headerHeight        : 30,       
+             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : true,
+             fixedColumnCount    : 1,
+             showStateColumn     : false,
+             displayTreeOpen     : false,
+/*              selectionMode       : "singleRow",  //"multipleCells",    */
+             headerHeight        : 30,
              useGroupingPanel    : false,        //그룹핑 패널 사용
              skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
              wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID2 = AUIGrid.create("#grid_wrap_ctaAreaSubGroup", columnLayout, gridPros);
 }
 
 var gridPros = {
-    
-		usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false
-    
+
+        usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false
+
 };
 
 
 
 function f_multiCombo() {
          $(function(event) {
-        	 $('#dscCode').change(function(event) {
+             $('#dscCode').change(function(event) {
              }).multipleSelect({
-                 selectAll : true, // 전체선택 
+                 selectAll : true, // 전체선택
                  width : '80%'
              }).blur(function(){
 
                  alert("This input field has lost its focus.");
 
               });
-             
+
        });
 }
 
@@ -260,104 +230,125 @@ function fn_onchange(){
     //alert(333);
     //doGetCombo('/services/mileageCileage/selectCTM', {brnchCode:brnchCode}, '','memCode', 'M' ,  '');
 
-} 
+}
 
 $(document).ready(function() {
-	//DSCCODE
-	 doGetCombo('/services/holiday/selectBranchWithNM', 43, '','dscCode', 'S' ,  '');
-	 doGetCombo('/services/holiday/selectState.do', '' , '', 'state' , 'S', '');
-	CTSubgGroupGrid();
-	CTSubAreaGroupGrid();
-	$("#grid_wrap_ctaAreaSubGroup").hide();
-	
-	
-	
-	 AUIGrid.bind(myGridID, "cellClick", function(event) {
-	        //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
-	        branchCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "code");
-	        memId1 = AUIGrid.getCellValue(myGridID, event.rowIndex, "memId");
-	       
-	       
-	        Common.ajax("GET", "/services/serviceGroup/selectCTSubGroupDscList.do", {branchCode:branchCode}, function(result) {
-	            console.log("성공.");
-	            console.log("data : " + result);
-	            subList = new Array()
-	            for (var i = 0; i < result.length; i++) {
-		                var list = new Object();
-		                list.ctSubGrp = result[i].codeId;
-		                list.codeName = result[i].codeName;
-		                subList.push(list);
-	                 }
-	            return subList;
-	            //AUIGrid.setGridData(myGridID, result);
-	        });
-	        
-	        //memberType = AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype");
-	        //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
-	    }); 
-	 
-	 $("#state").change(function(){
-		 
-		 doGetCombo('/services/holiday/selectCity.do',  $("#state").val(), '','city', 'S' ,  ''); 
-		 
-	 });
-	 
-	 $("#dscCode").change(function (){
-	        doGetCombo('/services/serviceGroup/selectCTMByDSC',  $("#dscCode").val(), '','memCode', 'S' ,  ''); 
-	        doGetCombo('/services/serviceGroup/selectCTSubGrb',  $("#dscCode").val(), '','ctSubGrp', 'S' ,  ''); 
-	 });
-	 
+    doGetCombo('/services/holiday/selectBranchWithNM', 43, '','dscCode', 'S' ,  '');
+    doGetCombo('/services/holiday/selectState.do', '' , '', 'state' , 'S', '');
+
+    CTSubgGroupGrid();
+    CTSubAreaGroupGrid();
+
+
+    $("#grid_wrap_ctaAreaSubGroup").hide();
+
+    AUIGrid.bind(myGridID, "cellClick", function(event) {
+        //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
+        branchCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "code");
+        memId1 = AUIGrid.getCellValue(myGridID, event.rowIndex, "memId");
+
+        Common.ajax("GET", "/services/serviceGroup/selectCTSubGroupDscList.do", {branchCode:branchCode}, function(result) {
+            console.log("성공.");
+            console.log("data : " + result);
+            subList = new Array()
+            for (var i = 0; i < result.length; i++) {
+                    var list = new Object();
+                    list.ctSubGrp = result[i].codeId;
+                    list.codeName = result[i].codeName;
+                    subList.push(list);
+                 }
+            return subList;
+            //AUIGrid.setGridData(myGridID, result);
+        });
+    });
+
+    $("#state").change(function(){
+        doGetCombo('/services/holiday/selectCity.do',  $("#state").val(), '','city', 'S' ,  '');
+    });
+
+    $("#dscCode").change(function (){
+        doGetCombo('/services/serviceGroup/selectCTMByDSC',  $("#dscCode").val(), '','memCode', 'S' ,  '');
+        doGetCombo('/services/serviceGroup/selectCTSubGrb',  $("#dscCode").val(), '','ctSubGrp', 'S' ,  '');
+    });
+
+    // Sub Group Grid Cell DoubleClick Event
+    AUIGrid.bind(myGridID2, "cellDoubleClick", function( event ) {
+        if(event.dataField == "noSvcCnt") {
+            var jsonObj=  {
+                "area" : AUIGrid.getCellValue(myGridID2, event.rowIndex, "area"),
+                "areaID" : AUIGrid.getCellValue(myGridID2, event.rowIndex, "areaId"),
+                "ctSubGrp" : AUIGrid.getCellValue(myGridID2, event.rowIndex, "ctSubGrp")
+            };
+
+            // 년 달력 팝업 창 호출
+            fn_CTSubGroupCalendar(jsonObj);
+        }
+    });
+
 });
 
 function fn_CTSubGroupSearch(){
-	Common.ajax("GET", "/services/serviceGroup/selectCTSubGroup.do", $("#CTSearchForm").serialize(), function(result) {
-        console.log("성공.");
-        console.log("data : " + result);
+    Common.ajax("GET", "/services/serviceGroup/selectCTSubGroup.do", $("#CTSearchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
-	
-	Common.ajax("GET", "/services/serviceGroup/selectCTSubAreaGroup.do", $("#CTSearchForm").serialize(), function(result) {
-        console.log("성공.");
-        console.log("data : " + result);
+
+    Common.ajax("GET", "/services/serviceGroup/selectCTSubAreaGroup.do", $("#CTSearchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID2, result);
     });
+
 }
 
 function fn_CTSubGroupSave(){
-	if(GridCommon.getEditData(myGridID) != null ){
-		Common.ajax("POST", "/services/serviceGroup/saveCTSubGroup.do", GridCommon.getEditData(myGridID), function(result) {
-	        console.log("성공.");
-	        console.log("data : " + result);
-	    });
-	}
-	
-	if(GridCommon.getEditData(myGridID2) != null){
-		Common.ajax("POST", "/services/serviceGroup/saveCTSubAreaGroup.do", GridCommon.getEditData(myGridID2), function(result) {
+    if(GridCommon.getEditData(myGridID) != null ){
+        Common.ajax("POST", "/services/serviceGroup/saveCTSubGroup.do", GridCommon.getEditData(myGridID), function(result) {
+            Common.alert(" CT Sub Group Upload "+DEFAULT_DELIMITER + result.message);
+
+            if(result.code == "00"){
+                 // 성공시에 재조회
+                 fn_CTSubGroupSearch();
+             }
+        });
+    }
+    /* if(GridCommon.getEditData(myGridID2) != null){
+        Common.ajax("POST", "/services/serviceGroup/saveCTSubAreaGroup.do", GridCommon.getEditData(myGridID2), function(result) {
             console.log("성공.");
             console.log("data : " + result);
         });
-	}
-	
+    } */
 }
 
 function fn_openAreaMain(){
     Common.popupDiv("/services/serviceGroup/openAreaMainPop.do?isPop=true","" );
 }
 
+// 라디오 버튼 클릭 이벤트.
 function fn_radioButton(val){
-	if(val == 1){
-		   $("#grid_wrap_ctSubGroup").show();
-		   $("#grid_wrap_ctaAreaSubGroup").hide();
-	}else{
-			 $("#grid_wrap_ctaAreaSubGroup").show();
-			 $("#grid_wrap_ctSubGroup").hide();
-	}
+    if(val == 1) {
+        $("#grid_wrap_ctSubGroup").show();
+        $("#grid_wrap_ctaAreaSubGroup").hide();
+        // 버튼 보이게 한다.
+        $("#hiddenBtn1").show();
+        $("#hiddenBtn2").show();
+        $("#hiddenBtn3").show();
+
+        AUIGrid.resize(myGridID);
+
+    } else {
+        $("#grid_wrap_ctaAreaSubGroup").show();
+        $("#grid_wrap_ctSubGroup").hide();
+        // 버튼 안보이게 한다.
+        $("#hiddenBtn1").hide();
+        $("#hiddenBtn2").hide();
+        $("#hiddenBtn3").hide();
+
+        AUIGrid.resize(myGridID2);
+    }
 }
 
 // 엑셀 내보내기(Export);
 function fn_exportTo() {
     var radioVal = $("input:radio[name='name']:checked").val();
-    
+
     if (radioVal == 1 ){
         GridCommon.exportTo("grid_wrap_ctSubGroup", 'xlsx', "Service Group_ctSubGroup");
     } else {
@@ -365,21 +356,19 @@ function fn_exportTo() {
     }
 };
 
-function fn_uploadFile() 
+function fn_uploadFile()
 {
    var formData = new FormData();
-   console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
    formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
-   
-   var radioVal = $("input:radio[name='name']:checked").val();
-   formData.append("radioVal", radioVal );
 
-   //alert('read');
-   
-   if( radioVal == 1 ){
-	   Common.ajaxFile("/services/serviceGroup/excel/updateCTSubGroupByExcel.do"
+   var radioVal = $("input:radio[name='name']:checked").val();
+   formData.append("radioVal", radioVal);
+
+   // CT Sub Group Display 인 경우만 upload 한다.
+   if( radioVal == 1 ) {
+       Common.ajaxFile("/services/serviceGroup/excel/updateCTSubGroupByExcel.do"
                , formData
-               , function (result) 
+               , function (result)
                 {
                      //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
                      if(result.code == "99"){
@@ -388,57 +377,57 @@ function fn_uploadFile()
                          Common.alert(result.message);
                      }
             });
-   } else {
-	   Common.ajaxFile("/services/serviceGroup/excel/updateCTAreaByExcel.do"
+  /*  } else {
+       Common.ajaxFile("/services/serviceGroup/excel/updateCTAreaByExcel.do"
                , formData
-               , function (result) 
+               , function (result)
                 {
                     //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-                	if(result.code == "99"){
+                    if(result.code == "99"){
                         Common.alert(" ExcelUpload "+DEFAULT_DELIMITER + result.message);
                     }else{
                         Common.alert(result.message);
                     }
-            });
+            }); */
    }
 
 }
 
 function fn_Clear(){
-    
+
     //hash
-	$("#state").val("");
-	$("#city").val("");
-	$("#area").val("");
-	$("#postCode").val("");
-	$("#areaId").val("");
-	$("#dscCode").val("");
-	$("#memCode").val("");
-	$("#ctSubGrp").val("");
-	$("#CTMemId").val("");
+    $("#state").val("");
+    $("#city").val("");
+    $("#area").val("");
+    $("#postCode").val("");
+    $("#areaId").val("");
+    $("#dscCode").val("");
+    $("#memCode").val("");
+    $("#ctSubGrp").val("");
+    $("#CTMemId").val("");
 }
 
-function fn_CTSubAssign(){  
-	  var checkedItems  = AUIGrid.getSelectedItems(myGridID);
-	  
+function fn_CTSubAssign(){
+    var checkedItems  = AUIGrid.getSelectedItems(myGridID);
 
-      if(checkedItems.length <= 0) {
-          Common.alert('No data selected.');
-          return false;
-      }
-	
-	
+    if(checkedItems.length <= 0) {
+        Common.alert('No data selected.');
+        return false;
+    }
 
-	var jsonObj=  { 
-		                    "memId" : memId1, 
-			                "branchCode" :branchCode
-			             };
+    var jsonObj=  {
+                            "memId" : memId1,
+                            "branchCode" :branchCode
+                         };
     Common.popupDiv("/services/serviceGroup/ctSubGroupPop.do" ,  jsonObj , null , true , '_NewAddDiv1');
+}
+
+function fn_CTSubGroupCalendar(jsonObj) {
+    Common.popupDiv("/services/serviceGroup/cTSubGroupServiceDay.do", jsonObj, null , true, '_groupCalDiv');
 }
 
 
 </script>
-
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -450,7 +439,7 @@ function fn_CTSubAssign(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Service Group</h2>
 <ul class="right_btns">
-	<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li>
     <div class="auto_file"><!-- auto_file start -->
     <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".xlsx"/>
@@ -491,7 +480,7 @@ function fn_CTSubAssign(){
     <td>
         <select class="w100p" id="state" name="state"></select>
    </td>
-    
+
     <th scope="row">City</th>
     <td>
         <select class="w100p" id="city" name="city"></select>
@@ -508,7 +497,7 @@ function fn_CTSubAssign(){
     </td>
     <th scope="row"></th>
     <td>
-        
+
     </td>
     <th scope="row">Area ID</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="areaId" name="areaId"/></td>
@@ -612,23 +601,22 @@ function fn_CTSubAssign(){
 
 <ul class="right_btns">
    <!--  <li><p class="btn_grid"><a href="#">Edit</a></p></li> -->
-   
-     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_CTSubAssign()">CT Sub Assignment</a></p></li>
+    <li></li>
+     <li id="hiddenBtn1"><p class="btn_grid"><a href="#" onclick="javascript:fn_CTSubAssign()">CT Sub Assignment</a></p></li>
      <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_exportTo()">TEMPLATE</a></p></li>
+    <li id="hiddenBtn2"><p class="btn_grid"><a href="#" onclick="javascript:fn_exportTo()">TEMPLATE</a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_CTSubGroupSave()">SAVE</a></p></li>
+    <li id="hiddenBtn3"><p class="btn_grid"><a href="#" onclick="javascript:fn_CTSubGroupSave()">SAVE</a></p></li>
     </c:if>
 <!--     <li><p class="btn_grid"><a href="#">Outstation Schedule Maintenance</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_openAreaMain()">CT Sub Group – Area ID Maintenance</a></p></li> -->
 </ul>
-  
+
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="grid_wrap_ctSubGroup" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 <div id="grid_wrap_ctaAreaSubGroup" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
-</section><!-- search_result end -->
-
 </section><!-- content end -->
+
