@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://sandbox.molpay.com/MOLPay/API/cse/checkout_dev.js"></script>
+<script src="https://www.onlinepayment.com.my/MOLPay/API/cse/checkout_dev.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 

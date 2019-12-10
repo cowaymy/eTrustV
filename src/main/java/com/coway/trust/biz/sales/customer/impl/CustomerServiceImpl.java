@@ -634,7 +634,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     custCrcVO.setCustCrcRem((String) params.get("cardRem"));
     custCrcVO.setCustCrcUpdUserId(sessionVO.getUserId());
     custCrcVO.setCustCrcExpr(expDate);
-    //custCrcVO.setCrcToken((String) params.get("token"));
+    custCrcVO.setCrcToken((String) params.get("token"));
     ;
     custCrcVO.setCustCrcIdOld(0);
     custCrcVO.setSoId(0);

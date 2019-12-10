@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://www.onlinepayment.com.my/MOLPay/API/cse/checkout_dev.js"></script>
 <script type="text/javaScript" language="javascript">
 
   	//AUIGrid ���� �� ��ȯ ID
@@ -97,7 +99,14 @@
         if(FormUtil.isEmpty($('#expDate').val())) {
             isValid = false;
             msg += "<spring:message code='sal.alert.msg.pleaseSelectCreditCardExpDate' />";
+        } else {
+            var expDate = $("#expDate").val();
+            $("#expMonth").val(expDate.substring(0, 2));
+            $("#expYear").val(expDate.substring(3));
+            $("#hExpMonth").val(expDate.substring(0, 2));
+            $("#hExpYear").val(expDate.substring(3));
         }
+
         if(FormUtil.isEmpty($('#nameOnCard').val())) {
             isValid = false;
             msg += "<spring:message code='sal.alert.msg.pleaseKeyInNameOnCard' />";
@@ -106,6 +115,8 @@
             if(!FormUtil.checkSpecialChar($('#nameOnCard').val())) {
                 isValid = false;
                 msg += "<spring:message code='sal.alert.NameOnCardCannotContainOfSpecChr' />";
+            } else {
+                $("#nameCard").val($("#nameOnCard").val());
             }
         }
 
@@ -141,6 +152,7 @@
     }
 
     function fn_doSaveCreditCard() {
+    	/*
         console.log('fn_doSaveBankAcc() START');
 
         var checkCrc = {
@@ -182,6 +194,67 @@
                 );
             }
         });
+        */
+
+        console.log('fn_doSaveBankAcc() START');
+
+        Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {;
+            var pub = "-----BEGIN PUBLIC KEY-----" + result.pubKey + "-----END PUBLIC KEY-----";
+            var molpay = MOLPAY.encrypt( pub );
+
+            form = document.getElementById('frmCrCard');
+            molpay.encryptForm(form);
+            var form = $("#frmCrCard").serialize();
+
+            $.ajax({
+                url : "/sales/customer/tokenLogging.do",
+                data : form,
+                success : function(tlResult) {
+                    if(result.tknId != 0) {
+                        $("#tknId").val(tlResult.tknId);
+                        $("#refNo").val(tlResult.refNo);
+                        $("#urlReq").val(tlResult.urlReq);
+                        $("#merchantId").val(tlResult.merchantId);
+                        $("#signature").val(tlResult.signature);
+
+                        Common.ajax("GET", "/sales/customer/tokenizationProcess.do", $("#frmCrCard").serialize(), function(tResult) {
+                        	if(tResult.stus == "1" && tResult.crcCheck == "0") {
+                                console.log("order edit new :: " + tResult.token);
+                                $("#custCrcExpr").val($("#expMonth").val() + $("#expYear").val().substring(2));
+                                $("#custCrcNoMask").val(tResult.crcNo);
+                                $("#token").val(tResult.token);
+
+                                Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
+
+                                    Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+
+                                    if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC' || '${callPrgm}' == 'PRE_ORD') {
+                                        fn_loadCreditCard2(result.data);
+                                        $('#addCrcCloseBtn').click();
+                                    }
+
+                                }, function(jqXHR, textStatus, errorThrown) {
+                                    try {
+                                         Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save credit card. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                                    }
+                                    catch(e) {
+                                        console.log(e);
+                                    }
+                                }
+                            );
+
+                                $("#addCrcCloseBtn").click();
+                            } else {
+                                Common.alert(tResult.errorDesc);
+                            }
+                        });
+                    } else {
+                        console.log("tknId 0");
+                        Common.alert("Tokenization error!");
+                    }
+                }
+            });
+     });
     }
 </script>
 
@@ -197,6 +270,23 @@
 <section class="pop_body"><!-- pop_body start -->
 <form id="frmCrCard" method="post">
 <input type="hidden" id="custId" name="custId" value="${custId}" />
+<input type="hidden" id="nric" name="nric" value="${nric}" />
+
+<input type="hidden" id="etyPoint" name="etyPoint" value="EN">
+<input type="hidden" id="tknId" name="tknId">
+<input type="hidden" id="refNo" name="refNo">
+<input type="hidden" id="urlReq" name="urlReq">
+<input type="hidden" id="merchantId" name="merchantId">
+<input type="hidden" id="signature" name="signature">
+<input type="hidden" id="token" name="token">
+<input type="hidden" id="expMonth" size="20" data-encrypted-name="EXPMONTH" placeholder="Expiry Month (MM)" maxlength="2" required/>
+<input type="hidden" id="expYear" size="20" data-encrypted-name="EXPYEAR" placeholder="Expiry Year (YYYY)" min="4" maxlength="4" required/>
+<input type="hidden" id="hExpMonth" name="hExpMonth">
+<input type="hidden" id="hExpYear" name="hExpYear">
+
+<input type="hidden" id="custCrcOwner" name="custCrcOwner">
+<input type="hidden" id="custCrcNoMask" name="custCrcNoMask">
+<input type="hidden" id="nameCard" name="nameCard">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -209,6 +299,7 @@
     <th scope="row"><spring:message code="sal.text.creditCardNo2" /><span class="must">*</span></th>
     <td>
         <input id="cardNo" name="cardNo" type="text" maxlength="16" title="" placeholder="Credit Card Number" class="w100p"/>
+        <input type="text" class="w100p" id="cardNo" data-encrypted-name="PAN" placeholder="Credit Card Number" maxlength="16" required/>
     </td>
 </tr>
 <tr>

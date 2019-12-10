@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -2407,8 +2408,12 @@ public class CustomerController {
           SSLContext sslContext = SSLContext.getInstance("SSL");
           sslContext.init(null, trustAllCerts, null);
 
+//          SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+//          sslContext.init(null, null, new SecureRandom());
+
           URL url = new URL(null, params.get("urlReq").toString(), new sun.net.www.protocol.https.Handler());
           URLConnection con = url.openConnection();
+          con.setRequestProperty("User-Agent", "Mozilla/5.0");
           HttpsURLConnection http = (HttpsURLConnection) con;
           http.setSSLSocketFactory(sslContext.getSocketFactory());
           http.setHostnameVerifier(new HostnameVerifier() {
