@@ -43,21 +43,39 @@
     //Copy Pop 호출
     function fn_areaCopy(){
 
-        var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    	var selectedItems = AUIGrid.getSelectedItems(myGridID);
         if(selectedItems.length <= 0) {
             Common.alert("<spring:message code='expense.msg.NoData'/> ");
             return;
         }
         // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
         var first = selectedItems[0];
+        var vCity = AUIGrid.getCellValue(myGridID , first.rowIndex , "city")
+        var vStatusId = AUIGrid.getCellValue(myGridID , first.rowIndex , "statusId");
+        var vId = AUIGrid.getCellValue(myGridID , first.rowIndex , "id");
+        // null state
+        if (FormUtil.isEmpty(vCity)) {
+            Common.alert("<spring:message code='sys.msg.necessary' arguments='City' htmlEscape='false'/>");
+            return false;
+        }
+        // null state
+        if (FormUtil.isEmpty(vStatusId)) {
+            Common.alert("<spring:message code='sys.msg.necessary' arguments='State' htmlEscape='false'/>");
+            return false;
+        }
+        // Internal 복사불가
+        if (vId == 'Internal') {
+            Common.alert("Internal Area ID cannot be copied.");
+            return false;
+        }
 
         $("#popAreaId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "areaId"));
         $("#popArea").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "area"));
         $("#popPostcode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "postcode"));
-        $("#popCity").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "city"));
+        $("#popCity").val(vCity);
         $("#popState").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "state"));
         $("#popCountry").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "country"));
-        $("#popStatusId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "statusId"));
+        $("#popStatusId").val(vStatusId);
         $("#popId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "id"));
 
        Common.popupDiv("/common/areaCopyAddressMasterPop.do", $("#popSForm").serializeJSON(), null, true, "areaCopyAddressMasterPop");

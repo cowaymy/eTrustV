@@ -13,7 +13,7 @@ var columnLayout2=[
  {dataField:"areaId", headerText:'<spring:message code="sys.areaId" />', width: 120, editable : false},
  {dataField:"area", headerText:'<spring:message code="sys.area" />', width: 200, editable : true},
  {dataField:"postcode", headerText:'<spring:message code="sys.title.postcode" />', width: 100, editable : false },
- {dataField:"city", headerText:'<spring:message code="sys.city" />', width: 100 },
+ {dataField:"city", headerText:'<spring:message code="sys.city" />', width: 100, editable : false },
  {dataField:"state", headerText:'<spring:message code="sys.state" />', width: 100, editable : false },
  {dataField:"country", headerText:'<spring:message code="sys.country" />', width: 100, editable : false },
  {dataField:"statusId", headerText:'<spring:message code="sys.status" />', width: 100, editable : false},
@@ -23,15 +23,15 @@ var columnLayout2=[
 
 $(document).ready(function(){
 
-	  var item = { "areaId" :  "${popPostcode}-xxxx", "area" : "", "postcode" :  "${popPostcode}", "city" :  "${popCity}", "state" :  "${popState}", "country" :  "${popCountry}", "statusId" :  "${popStatusId}", "id" :  "${popId}", "key" :  "${popAreaId}"}; //row 추가
-	  var item_other = { "areaId" :  ("${popAreaId}").substring(0,2)+"-xxxx", "area" : "", "postcode" :  "${popPostcode}", "city" :  "${popCity}", "state" :  "${popState}", "country" :  "${popCountry}", "statusId" :  "${popStatusId}", "id" :  "${popId}", "key" :  "${popAreaId}"}; //row 추가
+      var item = { "areaId" :  "${popPostcode}-xxxx", "area" : "", "postcode" :  "${popPostcode}", "city" :  "${popCity}", "state" :  "${popState}", "country" :  "${popCountry}", "statusId" :  "${popStatusId}", "id" :  "${popId}", "key" :  "${popAreaId}"}; //row 추가
+      var item_other = { "areaId" :  ("${popAreaId}").substring(0,2)+"-xxxx", "area" : "", "postcode" :  "${popPostcode}", "city" :  "${popCity}", "state" :  "${popState}", "country" :  "${popCountry}", "statusId" :  "${popStatusId}", "id" :  "${popId}", "key" :  "${popAreaId}"}; //row 추가
 
 
       myGridID2 = GridCommon.createAUIGrid("grid_wrap2", columnLayout2,null,"");
 
       AUIGrid.hideColumnByDataField(myGridID2, "key");
       if (("${popAreaId}").length == 10){
-    	  AUIGrid.addRow(myGridID2, item, "last"); //row 추가
+          AUIGrid.addRow(myGridID2, item, "last"); //row 추가
       } else {
           AUIGrid.addRow(myGridID2, item_other, "last"); //row 추가
       }
@@ -40,25 +40,24 @@ $(document).ready(function(){
       //아이템 grid 행 추가
       $("#addRow").click(function() {
 
-    	  if (("${popAreaId}").length == 10){
+          if (("${popAreaId}").length == 10){
               AUIGrid.addRow(myGridID2, item, "last"); //row 추가
           } else {
-        	  AUIGrid.addRow(myGridID2, item_other, "last"); //row 추가
+              AUIGrid.addRow(myGridID2, item_other, "last"); //row 추가
           }
 
       });
 
       //save
       $("#save_copy").click(function() {
-
-    	    // 버튼 클릭시 cellEditCancel  이벤트 발생 제거. => 편집모드(editable=true)인 경우 해당 input 의 값을 강제적으로 편집 완료로 변경.
-    	    AUIGrid.forceEditingComplete(myGridID2, null, false);
+          // 버튼 클릭시 cellEditCancel  이벤트 발생 제거. => 편집모드(editable=true)인 경우 해당 input 의 값을 강제적으로 편집 완료로 변경.
+          AUIGrid.forceEditingComplete(myGridID2, null, false);
 
           if (validation_copy()) {
-        	  if (("${popAreaId}").length == 10){
-        		  Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_copy);
+              if (("${popAreaId}").length == 10){
+                  Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_copy);
               } else {
-            	  Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_copyOther);
+                  Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_copyOther);
               }
            }
       });
@@ -68,9 +67,14 @@ $(document).ready(function(){
 function fn_saveGridData_copy(){
     Common.ajax("POST", "/common/saveCopyAddressMaster.do", GridCommon.getEditData(myGridID2), function(result) {
         // 공통 메세지 영역에 메세지 표시.
-        Common.setMsg("<spring:message code='sys.msg.success'/>");
-        $("#search").trigger("click");
-        Common.alert("<spring:message code='sys.msg.success'/>");
+        Common.setMsg(result.message);
+        Common.alert(result.message);
+
+        if(result.code == '00') { // 성공인경우.
+            $("#search").trigger("click");
+            $('#areaCopyAddressMasterPop').remove();
+        }
+
     }, function(jqXHR, textStatus, errorThrown) {
         try {
             console.log("status : " + jqXHR.status);
@@ -87,9 +91,14 @@ function fn_saveGridData_copy(){
 function fn_saveGridData_copyOther(){
     Common.ajax("POST", "/common/saveCopyOtherAddressMaster.do", GridCommon.getEditData(myGridID2), function(result) {
         // 공통 메세지 영역에 메세지 표시.
-        Common.setMsg("<spring:message code='sys.msg.success'/>");
-        $("#search").trigger("click");
-        Common.alert("<spring:message code='sys.msg.success'/>");
+        Common.setMsg(result.message);
+        Common.alert(result.message);
+
+        if(result.code == '00') { // 성공인경우.
+            $("#search").trigger("click");
+            $('#areaCopyAddressMasterPop').remove();
+        }
+
     }, function(jqXHR, textStatus, errorThrown) {
         try {
             console.log("status : " + jqXHR.status);
@@ -109,8 +118,8 @@ function validation_copy() {
     var addList = AUIGrid.getAddedRowItems(myGridID2);
 
     if (addList.length == 0) {
-      Common.alert("<spring:message code='sys.common.alert.noChange'/>");
-      return false;
+        Common.alert("<spring:message code='sys.common.alert.noChange'/>");
+        return false;
     }
 
     if(!validationCom_copy(addList)){
@@ -122,29 +131,33 @@ function validation_copy() {
 
 
 function validationCom_copy(list){
-    var result = true;
     for (var i = 0; i < list.length; i++) {
-           var area = list[i].area;
+           var area = $.trim(list[i].area.toUpperCase());
            var city = list[i].city;
 
            if (area == "") {
-             result = false;
-             Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + cArea + "' htmlEscape='false'/>");
-             break;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + cArea + "' htmlEscape='false'/>");
+               return false;
            }
            if (city == "") {
-               result = false;
                Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + cCity + "' htmlEscape='false'/>");
-               break;
-             }
+               return false;
+           }
+
+           for (var j = 0; j < list.length; j++) {
+               if(i != j && area == $.trim(list[j].area.toUpperCase())) {
+                   Common.alert("The same area already exists.");
+                   return false;
+               }
+           }
     }
-    return result;
+    return true;
 }
 
 
 function removeRowDetail()
 {
-	AUIGrid.removeRow(myGridID2, "selectedIndex");
+    AUIGrid.removeRow(myGridID2, "selectedIndex");
 }
 </script>
 

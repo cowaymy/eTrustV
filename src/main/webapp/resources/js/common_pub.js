@@ -1,7 +1,7 @@
 $(document).ready(function(){
 /* 제이쿼리 ui달력 start*/
 // calendar : remove autocomplete
-$('.j_date,.j_date2,.j_date3').attr('autocomplete','off');
+$('.j_date,.j_date2,.j_date3.j_dateHc').attr('autocomplete','off');
 
 var holidays = {//휴일 세팅 하기
     /*"0809":{type:0, title:"신정", year:"2017"}*/
@@ -69,6 +69,68 @@ var pickerOpts = {//일반년월일달력 세팅
 $(document).on(//일반년월일달력 실행
 	"focus", ".j_date", function(){
 	$(this).datepicker(pickerOpts);
+});
+
+//Homecare 달력 세팅
+var hcPickerOpts = {
+	changeMonth: true,
+	changeYear: true,
+	dateFormat: "dd/mm/yy",
+	beforeShowDay: function (day) {
+
+		if (!isLoadHoliday) {
+            isLoadHoliday = true;
+
+            try{
+                // get holiday list
+                Common.ajaxSync("GET", "/common/getHcHolidayList.do", {}, function (result) {
+                    for (var idx = 0; idx < result.length; idx++) {
+                        holidays[result[idx].mmdd] = {
+                            type: 0,
+                            title: result[idx].holidayDesc,
+                            year: result[idx].yyyy
+                        };
+                    }
+                });
+			}catch(e){
+                Common.removeLoader();
+            	console.log("common_pub.js => getHolidays fail : " + e);
+			}
+        }
+
+		var result;
+		// 포맷에 대해선 다음 참조(http://docs.jquery.com/UI/Datepicker/formatDate)
+		var holiday = holidays[$.datepicker.formatDate("mmdd", day)];
+		var thisYear = $.datepicker.formatDate("yy", day);
+
+		// exist holiday?
+		if (holiday) {
+			if (thisYear == holiday.year || holiday.year == "") {
+				result = [true, "date-holiday", holiday.title];
+			}
+		}
+
+		if (!result) {
+			switch (day.getDay()) {
+				case 0: // is sunday?
+					result = [true, "date-sunday"];
+					break;
+				case 6: // is saturday?
+					result = [true, "date-saturday"];
+					break;
+				default:
+					result = [true, ""];
+					break;
+			}
+		}
+		return result;
+	}
+};
+
+// Homecare 달력 세팅
+$(document).on(
+	"focus", ".j_dateHc", function(){
+	$(this).datepicker(hcPickerOpts);
 });
 
 /* Input에 초기값(today) 출력

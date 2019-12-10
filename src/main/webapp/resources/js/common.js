@@ -1230,3 +1230,31 @@ var CommonCombo = {
     }
 };
 
+/**
+ * Lpad  - alert(lpad("A", 2, 0)); //0A
+ * @param padStr
+ * @param padLength
+ * @param padString
+ * @returns {String}
+ */
+function lpad(padStr, padLength, padString){
+	var rtnStr = String(padStr);
+    while(rtnStr.length < padLength)
+    	rtnStr = padString + rtnStr;
+    return rtnStr;
+}
+
+/**
+ * Rpad - alert(rpad("A", 2, 0)); //A0
+ * @param padStr
+ * @param padLength
+ * @param padString
+ * @returns {String}
+ */
+function rpad(padStr, padLength, padString){
+	var rtnStr = String(padStr);
+    while(rtnStr.length < padLength)
+    	rtnStr += padString;
+    return rtnStr;
+}
+
