@@ -57,6 +57,14 @@ public class MobilePaymentKeyInController {
     @Autowired
     private MessageSourceAccessor messageAccessor;
 
+	 /**
+	 * TO-DO Description
+	 * @Author KR-HAN
+	 * @Date 2019. 12. 3.
+	 * @param params
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/initMobilePaymentKeyIn.do")
 	public String initMobilePaymentKeyIn(@RequestParam Map<String, Object> params, ModelMap model) {
 
@@ -69,7 +77,16 @@ public class MobilePaymentKeyInController {
 		return "payment/mobilePaymentKeyIn/mobilePaymentKeyInList";
 	}
 
-     @RequestMapping(value = "/selectMobilePaymentKeyInJsonList.do", method = RequestMethod.GET)
+      /**
+     * TO-DO Description
+     * @Author KR-HAN
+     * @Date 2019. 12. 3.
+     * @param params
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/selectMobilePaymentKeyInJsonList.do", method = RequestMethod.GET)
       public ResponseEntity<List<EgovMap>> selectMobilePaymentKeyInJsonList(@RequestParam Map<String, Object> params,
     	HttpServletRequest request, ModelMap model) {
     	List<EgovMap> mobilePaymentKeyInJsonList = null;
@@ -80,6 +97,15 @@ public class MobilePaymentKeyInController {
         return ResponseEntity.ok(mobilePaymentKeyInJsonList);
       }
 
+     /**
+     * TO-DO Description
+     * @Author KR-HAN
+     * @Date 2019. 12. 3.
+     * @param param
+     * @param sessionVO
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/saveMobilePaymentKeyInReject.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> saveMobilePaymentKeyInReject(@RequestBody Map<String, Object> param, SessionVO sessionVO) throws Exception{
         param.put("userId", sessionVO.getUserId());
@@ -92,6 +118,16 @@ public class MobilePaymentKeyInController {
     }
 
 
+     /**
+     * TO-DO Description
+     * @Author KR-HAN
+     * @Date 2019. 12. 3.
+     * @param params
+     * @param model
+     * @param sessionVO
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/saveMobilePaymentKeyInPayment.do", method = RequestMethod.POST)
     public ResponseEntity<List<EgovMap>> saveMobilePaymentKeyInCard(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
@@ -308,6 +344,16 @@ public class MobilePaymentKeyInController {
     }
 
 
+     /**
+     * TO-DO Description
+     * @Author KR-HAN
+     * @Date 2019. 12. 3.
+     * @param params
+     * @param model
+     * @param sessionVO
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/saveMobilePaymentKeyInNormalPayment.do", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> saveMobilePaymentKeyInNormalPayment(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
