@@ -225,6 +225,33 @@ function fnAddRow()
       AUIGrid.addRow(grdMenuMapping, item, "first");
 }
 
+// 전체메뉴추가
+function fnALLAddRow()
+{
+    if( $("#authCode").val().length == 0 )
+	{
+    	   Common.alert("<spring:message code='sys.msg.first.Select' arguments='Auth Code' htmlEscape='false'/>");
+    	   return false;
+	}
+
+    if( AUIGrid.getRowCount(grdMenuMapping) > 0 ){
+    	return false;
+    }
+
+    if(AUIGrid.getSelectedItems(grdAuth).length > 0){
+        authCode = AUIGrid.getSelectedItems(grdAuth)[0].item.authCode;
+        $("#authCode").val(authCode);
+    }
+    var data = {};
+    data.authCode = authCode;
+    Common.ajax("POST", "/mobileAuthMenu/saveMobileMenuAuthAllRoleMapping.do", data, function(result) {
+    	fn_detailSearch();
+    });
+
+
+
+}
+
 function fnAuthGridIDRemoveRow()
 {
   console.log("fnAuthGridIDRemoveRow: " + gSelMainRowIdx);
@@ -700,6 +727,7 @@ $(document).ready(function(){
 <h3 class="pt0">Menu</h3>
 <ul class="right_opt">
   <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+  <li><p class="btn_grid"><a onclick="fnALLAddRow();">ALL ADD</a></p></li>
   <li><p class="btn_grid"><a onclick="fnAuthGridIDRemoveRow();">DEL</a></p></li>
   <li><p class="btn_grid"><a onclick="fnAddRow();">ADD</a></p></li>
   <li><p class="btn_grid"><a onclick="fnSaveMobileMenuAuthCd();">SAVE</a></p></li>
