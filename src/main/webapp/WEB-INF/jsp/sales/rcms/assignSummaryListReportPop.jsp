@@ -108,7 +108,7 @@ console.log($("#_companyType").val());
         return;
     }else{
     	assignDt = $("#_assignDt").val();
-    	whereSql += " AND  TO_CHAR(EXTENT5.CURR_ASSIGN_DT,'MM/YYYY') = '" + assignDt + "' ";
+    	/* whereSql += " AND  TO_CHAR(EXTENT5.CURR_ASSIGN_DT,'MM/YYYY') = '" + assignDt + "' "; */
     }
 
 
