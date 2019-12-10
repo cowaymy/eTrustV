@@ -785,6 +785,7 @@ public class CustomerController {
         customerCVO.setCrcStusId(1); // 고정
         customerCVO.setCrcUpdId(sessionVo.getUserId()); // 임시
         customerCVO.setCrcCrtId(sessionVo.getUserId()); // 임시
+        customerCVO.setCrcToken(form.getCrcToken());    // LaiKW 2019-08-01 Tokenization
 
         String cardExpiry = form.getCardExpiry();
         if (cardExpiry != null) {
@@ -803,6 +804,11 @@ public class CustomerController {
 
       customerService.insertCreditCardInfo(customerCardVOList);
       LOGGER.info("추가 : {}", addList.toString());
+      
+      Map<String, Object> tokenCrcParam = new HashMap<>();
+      tokenCrcParam.put("custId", customerId);
+      tokenCrcParam.put("userId", sessionVo.getUserId());
+      customerService.tokenCrcUpdate(tokenCrcParam);
     }
 
     // insert Bank Account Info
@@ -1274,6 +1280,7 @@ public class CustomerController {
     model.addAttribute("custAddId", params.get("custAddId"));
     model.addAttribute("custCntcId", params.get("custCntcId"));
     model.addAttribute("selectParam", params.get("selectParam"));
+    model.addAttribute("custNric", params.get("_custNric"));
     // infomation param
     model.addAttribute("result", basicinfo);
     model.addAttribute("addresinfo", addresinfo);
@@ -1584,6 +1591,7 @@ public class CustomerController {
 
     model.addAttribute("detailcard", detailcard);
     model.addAttribute("custId", params.get("custId"));
+    model.addAttribute("custNric", params.get("editCustNric"));
 
     return "sales/customer/customerCreditCardEditInfoPop";
 
@@ -1975,6 +1983,8 @@ public class CustomerController {
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
     params.put("userId", sessionVO.getUserId());
     customerService.insertCustomerCardAddAf(params);
+
+	customerService.tokenCrcUpdate(params);
 
     // 결과 만들기 예.
     ReturnMessage message = new ReturnMessage();
