@@ -288,8 +288,8 @@ public class CommonController {
 		LOGGER.info("selectStockLocationList: {}", codeList.toString());
 		return ResponseEntity.ok(codeList);
 	}
-	
-	
+
+
 	@RequestMapping(value = "/selectStockLocationList3.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectStockLocationList3(@RequestParam Map<String, Object> params,
 			ModelMap model) {
@@ -361,6 +361,19 @@ public class CommonController {
 	@RequestMapping(value = "/getPublicHolidayList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getPublicHolidayList(@RequestParam Map<String, Object> params) {
 		List<EgovMap> holidayList = commonService.getPublicHolidayList(params);
+		return ResponseEntity.ok(holidayList);
+	}
+
+	/**
+	 * select Homecare holiday list
+	 * @Author KR-SH
+	 * @Date 2019. 11. 14.
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/getHcHolidayList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getHcHolidayList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> holidayList = commonService.getHcHolidayList(params);
 		return ResponseEntity.ok(holidayList);
 	}
 }

@@ -1736,4 +1736,16 @@ public class CommonServiceImpl implements CommonService {
 		return selectBranchList(params);
 	}
 
+	/**
+	 * select Homecare holiday list
+	 * @Author KR-SH
+	 * @Date 2019. 11. 14.
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> getHcHolidayList(Map<String, Object> params) {
+		return commonMapper.getHcHolidayList(params);
+	}
+
 }

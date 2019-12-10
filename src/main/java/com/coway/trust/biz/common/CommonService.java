@@ -395,4 +395,13 @@ public interface CommonService {
 	 * @return
 	 */
 	List<EgovMap> selectCodeList(String grpCd, String orderVal);
+
+	/**
+	 * select Homecare holiday list
+	 * @Author KR-SH
+	 * @Date 2019. 11. 14.
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> getHcHolidayList(Map<String, Object> params);
 }

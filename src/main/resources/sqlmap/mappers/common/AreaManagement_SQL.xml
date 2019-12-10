@@ -38,9 +38,9 @@ ORDER BY STATE, CITY, POSTCODE, AREA, AREA_ID
 </select>
 
 
-<update id="udtAreaManagement"> 
+<update id="udtAreaManagement">
 UPDATE SYS0064M
-SET 
+SET
     <if test="statusId == 'Active'">
         STATUS_ID = 1,
     </if>
@@ -82,7 +82,7 @@ VALUES (
 (SELECT DISTINCT(ISO) FROM SYS0064M WHERE COUNTRY= #{country}),
 #{country},
 'EN',
-(SELECT CASE 
+(SELECT CASE
     WHEN (SELECT ID FROM SYS0064M WHERE AREA_ID=#{key}) IS NOT NULL
     THEN (SELECT ID FROM SYS0064M WHERE AREA_ID=#{key})
     ELSE (SELECT REF_ID FROM SYS0064M WHERE AREA_ID=#{key})
@@ -134,7 +134,7 @@ VALUES (
 (SELECT DISTINCT(ISO) FROM SYS0064M WHERE COUNTRY= #{country}),
 #{country},
 'EN',
-(SELECT CASE 
+(SELECT CASE
     WHEN (SELECT ID FROM SYS0064M WHERE AREA_ID=#{key}) IS NOT NULL
     THEN (SELECT ID FROM SYS0064M WHERE AREA_ID=#{key})
     ELSE (SELECT REF_ID FROM SYS0064M WHERE AREA_ID=#{key})
@@ -177,7 +177,7 @@ INSERT INTO SYS0064M (
  GST_CHK
 )
 VALUES (
-(SELECT DISTINCT(CASE 
+(SELECT DISTINCT(CASE
     WHEN (SELECT LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode}) IS NULL
     THEN #{countrycode}||'-'||LPAD(0001,4,'0')
     ELSE (SELECT #{countrycode}||'-'||LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode})
@@ -219,7 +219,7 @@ INSERT INTO SYS0064M (
  GST_CHK
 )
 VALUES (
-(SELECT DISTINCT(CASE 
+(SELECT DISTINCT(CASE
     WHEN (SELECT LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode}) IS NULL
     THEN #{postcode}||'-'||LPAD(0001,4,'0')
     ELSE (SELECT #{postcode}||'-'||LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode})
@@ -254,6 +254,16 @@ WHERE 1=1
 <if test="postcode_my != null and postcode_my != '' ">
 AND POSTCODE = #{postcode_my} AND ISO = 'MY' AND ROWNUM=1
 </if>
+</select>
+
+<!-- 동일한 Area 건수 조회. -->
+<select id="isRedupAddCopyAddressMaster" parameterType="Map" resultType="int">
+    /* com.coway.trust.biz.common.impl.AreaManagementMapper.isRedupAddCopyAddressMaster */
+    SELECT COUNT(A.POSTCODE)
+     FROM SYS0064M A
+
+    WHERE A.POSTCODE = #{postcode}
+       AND TRIM(UPPER(A.AREA)) = UPPER(#{area})
 </select>
 
 </mapper>
