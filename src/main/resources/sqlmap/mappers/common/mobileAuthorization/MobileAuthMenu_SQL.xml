@@ -55,5 +55,26 @@
       WHERE     MENU_CODE = #{menuCode}
   </delete>
 
+    <insert id="saveMobileMenuAuthAllRoleMapping" parameterType="Map">
+		INSERT   /* [com.coway.trust.biz.common.mobileAuthorization.impl.MobileAuthMenuMapper.saveMobileMenuAuthAllRoleMapping] 20191209 - KR HAN */
+					INTO MOB0003M
+					(
+						AUTH_CODE
+						,MENU_CODE
+						,CRT_USER_ID
+						,CRT_DT
+						,UPD_USER_ID
+						,UPD_DT
+					)
+					SELECT
+								 #{authCode}
+								,MENU_CODE
+								 ,#{crtUserId}
+					             ,SYSDATE
+					             ,#{updUserId}
+					             ,SYSDATE
+					FROM     MOB0002M
+					WHERE   USE_YN = 'Y'
+    </insert>
 
 </mapper>
