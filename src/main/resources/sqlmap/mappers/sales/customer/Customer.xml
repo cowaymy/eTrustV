@@ -2214,7 +2214,7 @@
     #{userId} , <!-- SESSION -->
     SYSDATE,
 	#{cardTypeId},
-    #{token})
+    #{token}
     )
   </insert>
 
