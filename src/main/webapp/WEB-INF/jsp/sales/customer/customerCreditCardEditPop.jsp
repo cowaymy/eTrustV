@@ -29,7 +29,8 @@ $(document).ready(function(){
     	$("#_editCustId").val(event.item.custId);
         $("#_editCustCardId").val(event.item.custCrcId);
         $("#_editCustNric").val($("#custNric").val());
-        Common.popupDiv("/sales/customer/updateCustomerCreditCardInfoPop.do", $("#editForm").serializeJSON(), null , true, '_editDiv5Pop');
+        Common.alert("Edit Credit Card Information is not allowed at the moment.<br/>Please wait until further notice.");
+        //Common.popupDiv("/sales/customer/updateCustomerCreditCardInfoPop.do", $("#editForm").serializeJSON(), null , true, '_editDiv5Pop');
     });
 
 

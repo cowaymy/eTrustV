@@ -292,8 +292,9 @@ console.log("_updBtn .click");
         $("#_close1").click();
         $("#_close").click();
         $("#_selectParam").val('5');
-        Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
-        Common.popupDiv("/sales/customer/updateCustomerCreditCardInfoPop.do", $('#editForm').serializeJSON(), null , true, '_editDiv5Pop');
+        Common.alert("Edit Credit Card Information is not allowed at the moment.<br/>Please wait until further notice.");
+        //Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
+        //Common.popupDiv("/sales/customer/updateCustomerCreditCardInfoPop.do", $('#editForm').serializeJSON(), null , true, '_editDiv5Pop');
     }
 
     //delete
