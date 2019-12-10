@@ -123,4 +123,30 @@ public class MobileAuthMenuController {
 		return ResponseEntity.ok(message);
 	}
 
+	 /**
+	 * saveMobileMenuAuthAllRoleMapping
+	 * @Author KR-HAN
+	 * @Date 2019. 11. 27.
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 */
+	@RequestMapping(value = "/saveMobileMenuAuthAllRoleMapping.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveMobileMenuAuthAllRoleMapping(@RequestBody Map<String, Object> params,
+			SessionVO sessionVO) {
+
+		int totCnt = mobileAuthMenuService.saveMobileMenuAuthAllRoleMapping(params, sessionVO.getUserId());
+
+		// 콘솔로 찍어보기
+		LOGGER.info("MenuCd_카운트 : {}", totCnt);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+
 }
