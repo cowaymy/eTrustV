@@ -1,0 +1,145 @@
+package com.coway.trust.biz.homecare.sales.order.impl;
+
+import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.coway.trust.AppConstants;
+import com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService;
+import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
+import com.coway.trust.biz.sales.order.OrderRegisterService;
+import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
+
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+/**
+ * @ClassName : OrderRegisterServiceImpl.java
+ * @Description : TO-DO Class Description
+ *
+ * @History
+ * <pre>
+ * Date            Author       Description
+ * -------------  -----------  -------------
+ * 2019. 10. 18.   KR-SH        First creation
+ * </pre>
+ */
+@Service("hcOrderRegisterService")
+public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implements HcOrderRegisterService {
+
+  	@Resource(name = "hcOrderRegisterMapper")
+  	private HcOrderRegisterMapper hcOrderRegisterMapper;
+
+  	@Resource(name = "orderRegisterService")
+  	private OrderRegisterService orderRegisterService;
+
+  	/**
+  	 * Select Homacare Product List
+  	 *
+  	 * @Author KR-SH
+  	 * @Date 2019. 10. 18.
+  	 * @param params
+  	 * @return list
+  	 * @see com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService#selectHcProductCodeList(java.util.Map)
+  	 */
+    @Override
+    public List<EgovMap> selectHcProductCodeList(Map<String, Object> params) {
+    	return hcOrderRegisterMapper.selectHcProductCodeList(params);
+    }
+
+    /**
+     * Homecare Register Order
+     *
+     * @Author KR-SH
+     * @Date 2019. 10. 23.
+     * @param orderVO
+     * @param sessionVO
+     * @throws ParseException
+     * @see com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService#hcRegisterOrder(com.coway.trust.biz.sales.order.vo.OrderVO, com.coway.trust.cmmn.model.SessionVO)
+     */
+	@Override
+	public void hcRegisterOrder(OrderVO orderVO, SessionVO sessionVO) throws ParseException {
+		String matOrdNo = "";     // Mattress Order No
+		String fraOrdNo = "";       // Frame Order No.
+		int rtnCnt = 0;
+		int custId = CommonUtils.intNvl(orderVO.getSalesOrderMVO1().getCustId());     // Cust Id
+
+		if(custId <= 0) {
+			throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Null Customer ID");
+		}
+
+		try {
+			int matStkId = CommonUtils.intNvl(orderVO.getSalesOrderDVO1().getItmStkId());
+			int fraStkId = CommonUtils.intNvl(orderVO.getSalesOrderDVO2().getItmStkId());
+
+			// 제품이 둘다 없는 경우.
+			if(matStkId+fraStkId <= 0) {
+				throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Null Product ID");
+			}
+
+			// Mattress register
+			if(matStkId > 0) {
+    			// Mattress register
+				orderVO.setSalesOrderMVO(orderVO.getSalesOrderMVO1());
+				orderVO.setSalesOrderDVO(orderVO.getSalesOrderDVO1());
+				orderVO.setAccClaimAdtVO(orderVO.getAccClaimAdtVO1());
+				orderVO.setPreOrdId(orderVO.getMatPreOrdId());
+
+    			orderRegisterService.registerOrder(orderVO, sessionVO);
+    			matOrdNo = orderVO.getSalesOrderMVO().getSalesOrdNo();
+			}
+
+			// Frame register
+			if(fraStkId > 0) {
+    			// Frame register
+				orderVO.setSalesOrderMVO(orderVO.getSalesOrderMVO2());
+				orderVO.setSalesOrderDVO(orderVO.getSalesOrderDVO2());
+				orderVO.setAccClaimAdtVO(orderVO.getAccClaimAdtVO2());
+				orderVO.setPreOrdId(orderVO.getFraPreOrdId());
+
+    			orderRegisterService.registerOrder(orderVO, sessionVO);
+    			fraOrdNo = orderVO.getSalesOrderMVO().getSalesOrdNo();
+			}
+
+			// 홈케어 주문관리 테이블 insert - HMC0011D
+			HcOrderVO hcOrderVO = new HcOrderVO();
+			int ordSeqNo = CommonUtils.intNvl(orderVO.getOrdSeqNo());
+
+			// Pre Order 인 경우.
+			if(ordSeqNo > 0) {
+				hcOrderVO.setCustId(custId);                     // 고객번호
+				hcOrderVO.setMatOrdNo(matOrdNo);        // Mattress Order No
+				hcOrderVO.setFraOrdNo(fraOrdNo);           // Frame Order No
+				hcOrderVO.setCrtUserId(sessionVO.getUserId());    // session Id Setting
+				hcOrderVO.setUpdUserId(sessionVO.getUserId());  // session Id Setting
+				hcOrderVO.setOrdSeqNo(ordSeqNo);
+
+				rtnCnt = hcOrderRegisterMapper.updateHcPreOrder(hcOrderVO);
+			} else {
+				hcOrderVO.setCustId(custId);                     // 고객번호
+				hcOrderVO.setMatOrdNo(matOrdNo);        // Mattress Order No
+				hcOrderVO.setFraOrdNo(fraOrdNo);           // Frame Order No
+				hcOrderVO.setCrtUserId(sessionVO.getUserId());    // session Id Setting
+				hcOrderVO.setUpdUserId(sessionVO.getUserId());  // session Id Setting
+
+				rtnCnt = hcOrderRegisterMapper.insertHcRegisterOrder(hcOrderVO);
+			}
+
+			if(rtnCnt <= 0) { // not insert
+				throw new ApplicationException(AppConstants.FAIL, "Order Register Failed.");
+			}
+			orderVO.setHcOrderVO(hcOrderVO);
+
+		} catch (Exception e) {
+			throw new ApplicationException(AppConstants.FAIL, "Order Register Failed.");
+		}
+	}
+
+}
