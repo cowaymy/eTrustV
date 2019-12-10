@@ -462,10 +462,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     	  	tPayAmt += payAmtDou;
         }
 
-        System.out.println("++++ DoubleCrdit ::" + DoubleCrdit );
-        System.out.println("++++ tPayAmt ::" + tPayAmt );
-
-        if(DoubleCrdit != tPayAmt){
+        if(!DoubleCrdit.equals(tPayAmt)){
         	 throw new ApplicationException(AppConstants.FAIL, "Check the Payment Amt");
         }
 
