@@ -2542,7 +2542,11 @@ public class CustomerController {
               customerService.insertTokenError(retResult);
 
               result.put("stus", "21");
-              result.put("errorDesc", retResult.get("error_desc"));
+              if("T9".equals(retResult.get("error_code"))) {
+                  result.put("errorDesc", "Invalid credit card.");
+              } else {
+                  result.put("errorDesc", retResult.get("error_desc"));
+              }
           }
       }
 
