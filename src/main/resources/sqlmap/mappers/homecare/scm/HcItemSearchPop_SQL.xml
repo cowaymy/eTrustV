@@ -39,7 +39,12 @@
        WHERE 1 = 1
          AND A.STK_ID = B.STOCK_ID
          AND A.STK_CODE = B.STOCK_CODE
-         AND A.STK_CTGRY_ID IN ('5706', '5707') -- Mattress, Frame
+         AND A.STK_CTGRY_ID IN ( SELECT AA.CODE_ID       -- Mattress('5706'), Frame('5707')
+                                   FROM SYS0013M AA
+                                      , SYS0094M BB
+								  WHERE AA.CODE = BB.CODE
+									AND AA.CODE_MASTER_ID = 11
+									AND BB.IND = 'HOMECARE')
 
        <if test="scode != null and scode !=''">
             AND A.STK_CODE LIKE  #{scode}||'%'

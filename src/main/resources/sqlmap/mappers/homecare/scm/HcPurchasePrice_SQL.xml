@@ -40,7 +40,12 @@
 			        AND A2.CODE_MASTER_ID = 445
 			        AND A2.DISAB = 0
 	                AND A.MEM_ACC_ID = #{sMemAccId}
-	                AND B.STK_CTGRY_ID IN ('5706', '5707') -- Mattress, Frame
+	                AND B.STK_CTGRY_ID IN ( SELECT AA.CODE_ID        -- Mattress('5706'), Frame('5707')
+			                                  FROM SYS0013M AA
+			                                     , SYS0094M BB
+			                                 WHERE AA.CODE = BB.CODE
+			                                   AND AA.CODE_MASTER_ID = 11
+			                                   AND BB.IND = 'HOMECARE')
 
 	              <if test='sStkCd != null and sStkCd != ""'>
 	                AND B.STK_CODE = #{sStkCd}
@@ -116,7 +121,13 @@
                             AND A2.CODE_MASTER_ID = 445
                             AND A2.DISAB = 0
 					        AND A.MEM_ACC_ID = #{sMemAccId}
-					        AND B.STK_CTGRY_ID IN ('5706', '5707') -- Mattress, Frame
+					        AND B.STK_CTGRY_ID IN ( SELECT AA.CODE_ID     -- Mattress('5706'), Frame('5707')
+		                                              FROM SYS0013M AA
+		                                                 , SYS0094M BB
+		                                             WHERE AA.CODE = BB.CODE
+		                                               AND AA.CODE_MASTER_ID = 11
+		                                               AND BB.IND = 'HOMECARE')
+
 					      <if test='sStkCd != null and sStkCd != ""'>
 		                    AND B.STK_CODE = #{sStkCd}
 		                  </if>
