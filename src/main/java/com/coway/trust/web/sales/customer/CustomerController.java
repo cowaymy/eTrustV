@@ -2506,7 +2506,7 @@ public class CustomerController {
               result.put("crcNo", crcNo);
               result.put("token", retResult.get("token").toString());
 
-              /*Map<String, Object> crcParam = new HashMap<>();
+              Map<String, Object> crcParam = new HashMap<>();
               crcParam.put("cardNo", retResult.get("BIN").toString() + "%" + retResult.get("cclast4").toString());
               crcParam.put("nric", params.get("refNo").toString().substring(0, 12));
 
@@ -2532,7 +2532,7 @@ public class CustomerController {
                   }
               } else {
                   result.put("crcCheck", "0");
-              }*/
+              }
 
           } else {
               LOGGER.error("failed tokenization");
