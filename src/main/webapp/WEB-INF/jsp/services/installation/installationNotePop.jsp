@@ -7,6 +7,7 @@
  09/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  14/10/2019  ONGHC  1.0.1          Amend Layout
  15/10/2019  ONGHC  1.0.2          Amend branch Condition
+ 11/12/2019  ONGHC  1.0.3          To Fix CT Listing without ' symbol
  -->
 
 <script type="text/javaScript">
@@ -149,8 +150,21 @@
         whereSeq += "AND B.INSTALL_ENTRY_NO = '" + $("#instalNo").val() + "' ";
       }
 
+      //if ($("#CTCode").val() != '' && $("#CTCode").val() != null) {
+        //whereSeq2 += "AND CTMEM.MEM_CODE IN (" + $("#CTCode").val() + ") ";
+      //}
+
+      var ctCodeLst = "";
+      var ctCode = $("#CTCode").val();
       if ($("#CTCode").val() != '' && $("#CTCode").val() != null) {
-        whereSeq2 += "AND CTMEM.MEM_CODE IN (" + $("#CTCode").val() + ") ";
+        for (var a = 0; a < ctCode.length; a++) {
+          if (a == 0) {
+            ctCodeLst += "'" + ctCode[a] + "'"
+          } else {
+            ctCodeLst += ", '" + ctCode[a] + "'"
+          }
+        }
+        whereSeq2 += "AND CTMEM.MEM_CODE IN (" + ctCodeLst + ") ";
       }
 
       if ($("#instalType").val() != '' && $("#instalType").val() != null) {
