@@ -445,7 +445,7 @@
                 "/sales/customer/customerCreditCardAddPop.do",
                 {
                   custId : $('#hiddenThrdPartyId').val()
-                  //,nric : $("#thrdPartyNric").val()
+                  ,nric : $("#thrdPartyNric").val()
                 }, null, true);
 
           } else {
@@ -453,7 +453,7 @@
                 "/sales/customer/customerCreditCardAddPop.do",
                 {
                   custId : CUST_ID
-                  //,nric : CUST_NRIC
+                  ,nric : CUST_NRIC
                 }, null, true);
 
           }

@@ -298,7 +298,6 @@
 <tr>
     <th scope="row"><spring:message code="sal.text.creditCardNo2" /><span class="must">*</span></th>
     <td>
-        <input id="cardNo" name="cardNo" type="text" maxlength="16" title="" placeholder="Credit Card Number" class="w100p"/>
         <input type="text" class="w100p" id="cardNo" data-encrypted-name="PAN" placeholder="Credit Card Number" maxlength="16" required/>
     </td>
 </tr>
