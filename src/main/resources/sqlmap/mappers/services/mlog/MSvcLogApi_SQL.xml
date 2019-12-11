@@ -48,7 +48,7 @@
            A.product_Name,
            A.product_Code,
            A.customer_Jom_Pay_Ref_No,
-           A.payment_ModeName,
+           A.payment_ModeName AS payment_Mode_Name,
            A.payment_Mode,
            A.contract_Duration,
            A.Membership_Contract_Expiry,
