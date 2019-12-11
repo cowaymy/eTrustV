@@ -2784,6 +2784,9 @@
     WHERE A.CUST_ORI_CRC_NO LIKE #{cardNo}
     AND A.CUST_CRC_STUS_ID = '1'
     AND A.CUST_CRC_TOKEN = #{token}
+    <if test="custId != '' and custId != null">
+        AND A.CUST_ID = #{custId}
+    </if>
   </select>
 
   <select id="tCheckCRC2" parameterType="Map" resultType="Integer">
@@ -2807,6 +2810,9 @@
         WHERE A1.CUST_ORI_CRC_NO LIKE #{cardNo}
         AND A1.CUST_CRC_STUS_ID = '1'
         AND A1.CUST_CRC_TOKEN = #{token}
+        <if test="custId != '' and custId != null">
+            AND A.CUST_ID = #{custId}
+        </if>
     ) B
     ON A.CUST_ID = B.CUST_ID
     <if test='step == "3" '>
