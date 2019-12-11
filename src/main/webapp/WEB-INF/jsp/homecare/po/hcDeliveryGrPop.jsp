@@ -299,6 +299,18 @@ $(document).ready(function(){
 
     });
 
+
+    $("#btnGrSearch").click(function(){
+    	if($("#sDeliveryPopNo").hasClass("readonly") == true){
+            return false;
+        }
+    	if(Common.checkPlatformType() == "mobile") {
+            popupObj = Common.popupWin("frmSearchPop", "/homecare/po/hcDeliveryGrSearchPop/hcDeliveryGrSearchPop.do", {width:"800px", height:"720", resizable: "no", scrollbars: "yes"});
+        } else{
+        	Common.popupDiv("/homecare/po/hcDeliveryGrSearchPop/hcDeliveryGrSearchPop.do", null, null, true, '_divSearchPop');
+        }
+    });
+
     $("#sDeliveryPopNo").keydown(function() {
         if (event.keyCode === 13) {
     	    event.preventDefault();
@@ -336,6 +348,14 @@ function fn_PopSerialClose() {
 	    $("#btnPopConfirm").click();
     	popupObj.close();
     }
+}
+
+
+function fn_SearchPopClose(item){
+	if(item != null){
+	    $("#sDeliveryPopNo").val(item.hmcDelvryNo);
+	    $("#btnPopConfirm").click();
+	}
 }
 
 function onlyNumber(obj) {
@@ -377,13 +397,17 @@ function fnOnfocus(obj){
 				<tr>
 				    <th scope="row">Delivery No</th>
 				    <td colspan="3" >
-				        <input type="text" id="sDeliveryPopNo" name="sDeliveryPopNo" placeholder="" class="w100p" style="min-width:150px"  value="" onfocus="fnOnfocus(this);"'/>
+				        <p class="w100p">
+				            <input type="text" id="sDeliveryPopNo" name="sDeliveryPopNo" placeholder="" style="width:86%; min-width:150px;"  value="" onfocus="fnOnfocus(this);"'/>
+                            <a id="btnGrSearch"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search"/></a>
+                        </p>
+
 				    </td>
 				</tr>
 			</tbody>
 		</table>
 	</form>
-	<!-- <form id="frmScanNew" name="frmScanNew" action="#" method="post"></form> -->
+	<form id="frmSearchPop" name="frmSearchPop" action="#" method="post"></form>
 
 <!------------------------------------------------------------------------------
     Content START

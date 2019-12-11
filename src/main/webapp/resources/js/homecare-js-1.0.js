@@ -1,3 +1,6 @@
+/********
+ * HomeCare KR-JIN
+ ******** */
 (function($){
 	$.fn.serializeObject = function() {
 	      var result = {}
