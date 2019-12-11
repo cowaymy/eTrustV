@@ -2443,8 +2443,8 @@ public class CustomerController {
           requestParam.put("merchantID", params.get("merchantId").toString());
           requestParam.put("referenceNo", params.get("refNo").toString());
           requestParam.put("billingName", params.get("nameCard").toString());
-          requestParam.put("billingEmail", params.get("nameCard").toString()); // << Change
-          requestParam.put("billingMobile", params.get("nameCard").toString()); // << Change
+          requestParam.put("billingEmail", params.get("refNo").toString().substring(12, 22)); // << Change
+          requestParam.put("billingMobile", params.get("refNo").toString().substring(22)); // << Change
           requestParam.put("creditCardNo", params.get("PAN").toString());
           requestParam.put("expMonth", params.get("EXPMONTH").toString());
           requestParam.put("expYear", params.get("EXPYEAR").toString());
@@ -2509,21 +2509,28 @@ public class CustomerController {
               Map<String, Object> crcParam = new HashMap<>();
               crcParam.put("cardNo", retResult.get("BIN").toString() + "%" + retResult.get("cclast4").toString());
               crcParam.put("nric", params.get("refNo").toString().substring(0, 12));
+              crcParam.put("custId", params.get("refNo").toString().substring(12, 22).replaceFirst("^0+(?!$)", ""));
+              crcParam.put("custCrcId", params.get("refNo").toString().substring(22).replaceFirst("^0+(?!$)", ""));
+              crcParam.put("token", retResult.get("token"));
 
               // Check CRC's 1st 6 digits, last 4 digits
               // Pending to check if needed to add expiry date + name for checking
               int step1 = (Integer) customerService.tCheckCRC1(crcParam);
               if (step1 != 0) {
-                  int step2 = (Integer) customerService.tCheckCRC2(crcParam);
+                  if(!"EE".equals(params.get("etyPoint"))) {
+                      int step2 = (Integer) customerService.tCheckCRC2(crcParam);
 
-                  if (step2 >= 1) {
-                      crcParam.put("step", "3");
-                      int step3 = (Integer) customerService.tCheckCRC2(crcParam);
+                      if (step2 >= 1) {
+                          crcParam.put("step", "3");
+                          int step3 = (Integer) customerService.tCheckCRC2(crcParam);
 
-                      if (step3 >= 1) {
-                          result.put("crcCheck", "3");
-                          result.put("errorDesc", "This Bank card number is used by another customer.</br>Please inform respective HP/Cody.");
+                          if (step3 >= 1) {
+                              result.put("crcCheck", "3");
+                              result.put("errorDesc", "This Bank card number is used by another customer.</br>Please inform respective HP/Cody.");
 
+                          } else {
+                              result.put("crcCheck", "0");
+                          }
                       } else {
                           result.put("crcCheck", "0");
                       }

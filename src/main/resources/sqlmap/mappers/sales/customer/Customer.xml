@@ -2774,15 +2774,16 @@
     COUNT(*) CNT
     FROM SAL0028D A
     INNER JOIN (
-    SELECT
-    CUST_ORI_CRC_NO,
-    COUNT(*)
-    FROM SAL0028D
-    GROUP BY CUST_ORI_CRC_NO
+        SELECT
+            CUST_ORI_CRC_NO,
+            COUNT(*)
+        FROM SAL0028D
+        GROUP BY CUST_ORI_CRC_NO
     ) B
     ON A.CUST_ORI_CRC_NO = B.CUST_ORI_CRC_NO
     WHERE A.CUST_ORI_CRC_NO LIKE #{cardNo}
     AND A.CUST_CRC_STUS_ID = '1'
+    AND A.CUST_CRC_TOKEN = #{token}
   </select>
 
   <select id="tCheckCRC2" parameterType="Map" resultType="Integer">
@@ -2790,21 +2791,22 @@
     COUNT(DISTINCT(NRIC)) CNT
     FROM SAL0029D A
     INNER JOIN (
-    SELECT
-    A1.CUST_ID,
-    A1.CUST_ORI_CRC_NO,
-    B1.CNT
-    FROM SAL0028D A1
-    INNER JOIN (
-    SELECT
-    CUST_ORI_CRC_NO,
-    COUNT(*) CNT
-    FROM SAL0028D
-    GROUP BY CUST_ORI_CRC_NO
-    ) B1
-    ON A1.CUST_ORI_CRC_NO = B1.CUST_ORI_CRC_NO
-    WHERE A1.CUST_ORI_CRC_NO LIKE #{cardNo}
-    AND A1.CUST_CRC_STUS_ID = '1'
+        SELECT
+            A1.CUST_ID,
+            A1.CUST_ORI_CRC_NO,
+            B1.CNT
+        FROM SAL0028D A1
+        INNER JOIN (
+            SELECT
+                CUST_ORI_CRC_NO,
+                COUNT(*) CNT
+            FROM SAL0028D
+            GROUP BY CUST_ORI_CRC_NO
+        ) B1
+        ON A1.CUST_ORI_CRC_NO = B1.CUST_ORI_CRC_NO
+        WHERE A1.CUST_ORI_CRC_NO LIKE #{cardNo}
+        AND A1.CUST_CRC_STUS_ID = '1'
+        AND A1.CUST_CRC_TOKEN = #{token}
     ) B
     ON A.CUST_ID = B.CUST_ID
     <if test='step == "3" '>
