@@ -56,7 +56,7 @@
 
 
                              , '( ' || A.STOCK_CODE || ' ) ' || A.STOCK_DESC STK_CODE
-                             , CASE WHEN A.APP_TYPE_CODE IN ('OUT','INS','EDU') THEN NULL
+                             , CASE WHEN A.APP_TYPE_CODE IN ('OUT','INS','EDU') OR pay52.ACC_DEBT_SRV_CNTRCT_ID IS NULL THEN NULL
                                        WHEN pay52.ACC_DEBT_SRV_CNTRCT_ID = 0 THEN 'Sales'
                                        ELSE 'Service' END AS APP_TYPE_CODE
 
