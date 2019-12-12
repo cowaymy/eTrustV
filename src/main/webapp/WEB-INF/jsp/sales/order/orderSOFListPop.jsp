@@ -180,10 +180,10 @@ function fn_report(viewType){
 
     if(viewType == "PDF"){
     	$("#form #viewType").val("PDF");
-    	$("#form #reportFileName").val("/sales/OrderSOFList.rpt");
+    	$("#form #reportFileName").val("/sales/OrderSOFList_2.rpt");
     }else if(viewType == "EXCEL"){
     	$("#form #viewType").val("EXCEL");
-    	$("#form #reportFileName").val("/sales/OrderSOFList_Excel.rpt");
+    	$("#form #reportFileName").val("/sales/OrderSOFList_Excel_2.rpt");
     }
 
 	$("#form #V_ORDERNOFROM").val(orderNoFrom);

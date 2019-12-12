@@ -1255,8 +1255,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             ORG0001D_MEM_ID_SEQ.NEXTVAL
             , #{memberCode}
             , #{memberType}
-            , #{memberNm}
-            , #{fulllName}
+            , UPPER(#{memberNm})
+            , UPPER(#{fulllName})
             , #{password}
             , #{nric}
             , TO_DATE(#{Birth},'dd-mm-yyyy')
@@ -1939,8 +1939,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  ORG0003D_APLCTN_ID_SEQ.NEXTVAL
         , #{applicantCode}
 	  , #{applicantType}
-	  , #{applicantName}
-	  , #{applicantFullName}
+	  , UPPER(#{applicantName})
+	  , UPPER(#{applicantFullName})
 	  , #{applicantIdentification}
 	  , #{applicantNRIC}
 	  , TO_DATE(#{applicantDOB},'dd-mm-yyyy')

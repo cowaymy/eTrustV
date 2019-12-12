@@ -1402,7 +1402,7 @@
     GST_RGIST_NO,
     OLD_IC)
     VALUES (#{custSeq},
-    #{custName},
+    UPPER(#{custName}),
     #{nric},
     #{cmbNation},
     TO_DATE(#{dob}, 'DD/MM/YYYY'),
@@ -1467,8 +1467,8 @@
     #{crtUserId},
     SYSDATE,
     #{areaId},
-    #{addrDtl},
-    #{streetDtl}
+    UPPER(#{addrDtl}),
+    UPPER(#{streetDtl})
     )
   </insert>
 
@@ -1498,7 +1498,7 @@
     EXT)
     VALUES (SAL0027D_CUST_CNTC_ID_SEQ.NEXTVAL,
     SAL0029D_CUST_ID_SEQ.CURRVAL,
-    #{custName},
+    UPPER(#{custName}),
     #{custInitial},
     #{nric},
     #{pos},
@@ -1542,7 +1542,7 @@
     TELF)
     VALUES (#{getCustCareCntId},
     #{custSeq},
-    #{asCustName},
+    UPPER(#{asCustName}),
     #{custInitial},
     #{asTelM},
     #{asTelO},
@@ -1632,7 +1632,7 @@
     #{crcNo},
     #{creditCardNo},
     #{encCrcNo},
-    #{nmCard},
+    UPPER(#{nmCard}),
     #{crcType},
     #{bank},
     #{crcStusId},
@@ -1683,7 +1683,7 @@
     , #{custCrcNo}
     , #{custOriCrcNo}
     , NULL
-    , #{custCrcOwner}
+    , UPPER(#{custCrcOwner})
     , #{custCrcTypeId}
     , #{custCrcBankId}
     , #{custCrcStusId}
@@ -1766,7 +1766,7 @@
     SAL0029D_CUST_ID_SEQ.CURRVAL,
     #{accNo},
     #{encAccNo},
-    #{accOwner},
+    UPPER(#{accOwner}),
     #{accTypeId},
     #{accBankId},
     #{accBankBrnch},
@@ -1818,7 +1818,7 @@
     , #{custId}
     , #{custAccNo}
     , #{custEncryptAccNo}
-    , #{custAccOwner}
+    , UPPER(#{custAccOwner})
     , #{custAccTypeId}
     , #{custAccBankId}
     , #{custAccBankBrnch}
@@ -2064,8 +2064,8 @@
     #{userId},
     SYSDATE,
     #{areaId},
-    #{addrDtl},
-    #{streetDtl}
+    UPPER(#{addrDtl}),
+    UPPER(#{streetDtl})
     )
     <selectKey keyProperty="custAddId" resultType="Integer"
       order="AFTER">
@@ -2100,7 +2100,7 @@
     EXT )
     VALUES ( SAL0027D_CUST_CNTC_ID_SEQ.NEXTVAL,
     #{insCustId},
-    #{cntcName},
+    UPPER(#{cntcName}),
     #{cntcInitial},
     #{cntcNric},
     #{cntcPos},
@@ -2154,7 +2154,7 @@
     #{insCustId},
     #{bankCustAccNo},
     NULL ,
-    #{bankCustAccOwner},
+    UPPER(#{bankCustAccOwner}),
     #{bankCustAccTypeId},
     #{bankCustAccBankId},
     #{bankCustAccBankBrnch},
@@ -2200,7 +2200,7 @@
     NULL ,
     #{custCrcNoMask},
     NULL ,
-    #{custCrcOwner},
+    UPPER(#{custCrcOwner}),
     #{custCrcTypeId},
     #{custCrcBankId},
     1 ,

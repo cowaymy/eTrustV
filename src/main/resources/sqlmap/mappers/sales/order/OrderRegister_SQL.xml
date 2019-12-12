@@ -1145,7 +1145,7 @@
                   , PCKAGE_BINDING_NO
     ) VALUES ( #{salesOrdId}
              , #{salesOrdNo}
-             , #{refNo}
+             , UPPER(#{refNo})
              , SYSDATE <!-- TO_DATE(TO_CHAR(SYSDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') -->
              , #{custId}
              , #{custCntId}
@@ -2702,5 +2702,6 @@
                                            AND SUB_PROMO_ID = #{promoNo} ))
      AND B.PCKAGE_BINDING_NO IS NULL
   </select>
+
 
 </mapper>

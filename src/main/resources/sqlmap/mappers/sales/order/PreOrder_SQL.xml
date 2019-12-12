@@ -57,6 +57,7 @@
                           FROM ORG0010D DOC
                           JOIN SYS0005M BRNCH ON DOC.DOC_SUB_BRNCH_ID = BRNCH.BRNCH_ID
                           WHERE DOC_TYPE_ID = 3198 AND DOC.STUS_ID = 1  ) T15 ON T15.DOC_SO_ID = T11.SALES_ORD_ID
+         LEFT JOIN SAL0001D T16 ON T16.SALES_ORD_ID = T1.SALES_ORD_ID
 		 WHERE 1 = 1
          <if test='_memCode != null and _memCode != ""'>
 		   AND T1.MEM_CODE = #{_memCode}
@@ -105,6 +106,16 @@
          </if>
          <if test="deptCode != '' ">
            AND T9.DEPT_CODE = #{deptCode}
+         </if>
+         <if test="_ordNo != '' ">
+           AND T16.SALES_ORD_NO = #{_ordNo}
+         </if>
+         <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != "" and _reqstStartTime != null and _reqstStartTime != "" and _reqstEndTime != null and _reqstEndTime != ""'>
+           AND T1.REQST_DT BETWEEN TO_DATE(#{_reqstStartDt} || #{_reqstStartTime}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{_reqstEndDt} || #{_reqstEndTime}, 'dd/mm/yyyy hh24:mi')
+         </if>
+         <if test='ordProudct != null and ordProudct != ""'>
+           AND T4.STK_ID  = #{ordProudct}
+
          </if>
          ORDER BY T1.PRE_ORD_ID ASC
     </select>
