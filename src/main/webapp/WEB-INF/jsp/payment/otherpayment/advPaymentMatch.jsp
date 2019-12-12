@@ -152,11 +152,12 @@ function fn_mapping(){
 	var stmtAmount =0;
 	var groupSeq =0;
 	var fTrnscId =0;
+	var flag = 'Y';
 
 	if( advKeyInItems.length < 1 || bankStmtItem.length < 1){
 		Common.alert("<spring:message code='pay.alert.keyInListCheck'/>");
 		return;
-	}else{
+	}else if( advKeyInItems.length == 1 || bankStmtItem.length == 1){
 
 		keyInRowItem = advKeyInItems[0];
 		stateRowItem = bankStmtItem[0];
@@ -197,6 +198,58 @@ function fn_mapping(){
 
 			fn_saveMapping('N');
 		}
+	}
+	// 2019-12-12 - LaiKW - Added many to one checking.
+	else if( advKeyInItems.length > 1 && bankStmtItem.length == 1){
+	    stateRowItem = bankStmtItem[0];
+        stmtAmount = Number(stateRowItem.item.fTrnscCrditAmt);
+        stmtAmount = $.number(stmtAmount,2,'.','');
+
+	    for(var i = 0; i < advKeyInItems.length; i++) {
+	        keyInRowItem = advKeyInItems[i];
+	        keyInAmount += Number(keyInRowItem.item.totAmt);
+
+	        if(keyInRowItem.item.payItmModeNm != stateRowItem.item.fTrnscRem) {
+	            Common.alert("Only same payment mode is allowed!");
+	            return false;
+	        }
+
+	        if(keyInRowItem.item.payItmRefDt != stateRowItem.item.fTrnscDt) {
+	            Common.alert("Only same payment transaction date is allowed!");
+	            flag = 'N';
+                return false;
+	        }
+	    }
+
+	    keyInAmount = $.number(keyInAmount,2,'.','');
+	    if(keyInAmount != stmtAmount) {
+	        Common.alert("<spring:message code='pay.alert.transAmtNotSame'/>",
+	            function (){
+	                $("#journal_entry_wrap").show();
+	                $("#groupSeq").val(groupSeq);
+	                $("#fTrnscId").val(fTrnscId);
+	                $("#preKeyInAmt").val(keyInAmount);
+	                $("#bankStmtAmt").val(stmtAmount);
+	                //$("#variance").val(keyInAmount-stmtAmount);
+	                $("#variance").val($.number(keyInAmount-stmtAmount,2,'.',''));
+	                $("#accCode").val('');
+	                $("#remark").val('');
+	            }
+	        );
+	    }
+
+	    if(flag == "Y") {
+	        $("#groupSeq").val(groupSeq);
+            $("#fTrnscId").val(fTrnscId);
+            $("#preKeyInAmt").val(keyInAmount);
+            $("#bankStmtAmt").val(stmtAmount);
+            //$("#variance").val(keyInAmount-stmtAmount);
+            $("#variance").val($.number(keyInAmount-stmtAmount,2,'.',''));
+            $("#accCode").val('');
+            $("#remark").val('');
+
+            fn_saveMapping('N');
+	    }
 	}
 }
 
