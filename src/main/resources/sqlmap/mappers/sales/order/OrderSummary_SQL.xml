@@ -56,16 +56,18 @@
 
 
                              , '( ' || A.STOCK_CODE || ' ) ' || A.STOCK_DESC STK_CODE
-                             , DECODE(pay52.ACC_DEBT_SRV_CNTRCT_ID,0,'Sales','Service' ) AS APP_TYPE_CODE
+                             , CASE WHEN A.APP_TYPE_CODE IN ('OUT','INS','EDU') THEN NULL
+                                       WHEN pay52.ACC_DEBT_SRV_CNTRCT_ID = 0 THEN 'Sales'
+                                       ELSE 'Service' END AS APP_TYPE_CODE
 
 
                              , A.RENTAL_STUS
-                             , A.NOR_RNT_FEE
+                             , DECODE(A.APP_TYPE_CODE, 'REN', A.NOR_RNT_FEE, NULL) AS NOR_RNT_FEE
 
                              , pay53.ACC_DEBT_SUB_CURR_CHRG        AS CURR_MTH_CHRG
                              , pay53.ACC_DEBT_SUB_PAY_SCHDUL_NO AS CURR_NO_MONTH_OF_RENTAL_BILL
                              , pay53.ACC_DEBT_SUB_TOT_OTSTND     AS RENT_CURR_OTSTND
-                             , pay53.ACC_DEBT_SUB_RPF_CHRG          AS RPF_BILL_AMT
+                             , DECODE(A.APP_TYPE_CODE, 'REN', pay53.ACC_DEBT_SUB_RPF_CHRG, A.ORD_AMT)          AS RPF_BILL_AMT
                              , pay53.ACC_DEBT_SUB_RPF_COLCT        AS RPF_PAY_AMT
                              , pay53.ACC_DEBT_SUB_RPF_ADJ            AS RPF_ADJ_AMT
                              , pay53.ACC_DEBT_SUB_RENTAL_BILL_NO AS RENTAL_BILL_NO
@@ -81,6 +83,8 @@
                              , (SELECT SUM(RENT_AMT) FROM PAY0022D WHERE RENT_SO_ID=A.ORD_ID GROUP BY RENT_SO_ID
                                 UNION
                                 SELECT SUM(SRV_LDGR_AMT) FROM PAY0023D WHERE SRV_SALES_ORD_ID=A.ORD_ID AND SRV_LDGR_CNTRCT_ID <![CDATA[ <> ]]> 0 GROUP BY SRV_SALES_ORD_ID
+                                UNION
+                                SELECT SUM(TRADE_AMT) FROM PAY0035D WHERE TRADE_SO_ID=A.ORD_ID GROUP BY TRADE_SO_ID
                                 ) AS  WEB_RENT_LEDGER
 
                              /*
@@ -104,7 +108,7 @@
                              , E.SRV_CNTRCT_NO
                              */
 
-                             , A.CUST_BILL_GRP_NO
+                             , DECODE(A.APP_TYPE_CODE, 'REN', A.CUST_BILL_GRP_NO, NULL) AS CUST_BILL_GRP_NO
 
                              , A.APP_TYPE_DESC
                              , A.ORD_ORG_CODE AS ORG_CODE
@@ -318,8 +322,8 @@
                              LEFT OUTER JOIN SYS0013M PYM   ON PYM.CODE_ID = sal74.MODE_ID
 
 
-                             LEFT JOIN SAL0045D INS   ON INS.SALES_ORD_ID = A.ORD_ID
-                             LEFT JOIN SAL0023D IADD   ON IADD.CUST_ADD_ID = INS.ADD_ID
+                             LEFT OUTER JOIN SAL0045D INS   ON INS.SALES_ORD_ID = A.ORD_ID
+                             LEFT OUTER JOIN SAL0023D IADD   ON IADD.CUST_ADD_ID = INS.ADD_ID
                              LEFT OUTER JOIN SYS0064M sys64  ON sys64.AREA_ID = IADD.AREA_ID AND sys64.STATUS_ID = 1
 
                              <if test="cmbCondition == 5 or cmbCondition == 6">
