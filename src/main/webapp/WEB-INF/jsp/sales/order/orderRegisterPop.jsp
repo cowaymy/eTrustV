@@ -1237,7 +1237,7 @@ console.log("orderRegisterPop.jsp");
         });
         $('#ordPromo').change(function() {
           // == CHECK COMBO PROMOTION HERE ==  ordProudct
-          /*Common.ajaxSync("POST", "/sales/order/chkPromoCboMst.do", { promoNo:$("#ordPromo").val(), prod:$("#ordProudct").val(), custId : $('#hiddenCustId').val()}, function(result) {
+          Common.ajaxSync("POST", "/sales/order/chkPromoCboMst.do", { promoNo:$("#ordPromo").val(), prod:$("#ordProudct").val(), custId : $('#hiddenCustId').val()}, function(result) {
             if(result != null) {
                 if (result.code == '3') {
                   // PROCEED TO SELECT COMBO PROMOTION
@@ -1262,7 +1262,7 @@ console.log("orderRegisterPop.jsp");
                 $('#cboOrdNoTag').val("");
                 $('#hiddenCboOrdNoTag').val("");
               }
-            });*/
+            });
 
 //          $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
             $('#trialNoChk').prop("checked", false).prop("disabled", true);
