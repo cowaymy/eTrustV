@@ -428,13 +428,13 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 	public Map<String, Object>  saveMobilePaymentKeyInNormalPayment( Map<String, Object> params, String sUserId ) {
 
 
-//    	System.out.println("++++ params.toString() ::" + params.toString() );
+    	System.out.println("++++ params.toString() ::" + params.toString() );
 
     	List<Object> gridList 			= (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
     	List<Object> gridFormList 	= (List<Object>) params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
 
-//    	System.out.println("++++ gridList.toString() ::" + gridList.toString() );
-//    	System.out.println("++++ gridFormList.toString() ::" + gridFormList.toString() );
+    	System.out.println("++++ gridList.toString() ::" + gridList.toString() );
+    	System.out.println("++++ gridFormList.toString() ::" + gridFormList.toString() );
 
     	// List 셋팅 시작
     	List<Object> formList = new ArrayList<Object>();
@@ -466,8 +466,32 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         	 throw new ApplicationException(AppConstants.FAIL, "Check the Payment Amt");
         }
 
+        // Trnsc Id Payment Mode
+
+        System.out.println("++++ selectBankStatementInfo ::" + selectBankStatementInfo.toString() );
+
+       String paymentMode = (String) selectBankStatementInfo.get("type");
+
     	for (int i = 0; i < gridList.size(); i++) {
     		gridListMap = ( Map<String, Object> ) gridList.get(i);
+
+    		System.out.println("++++ paymentMode ::" + paymentMode );
+    		System.out.println("++++ gridListMap.toString()  ::" + gridListMap.toString() );
+
+    		System.out.println("++++ payMode  ::" + gridListMap.get("payMode")  );
+    		String payMode = "";
+    		if( "5697".equals( String.valueOf(gridListMap.get("payMode"))  ) ){
+    			payMode = "CHQ";
+    		}else{
+    			payMode = "CSH";
+    		}
+
+    		System.out.println("++++ payMode ::" + payMode );
+
+    		// Payment Mode 비교
+    		if( !paymentMode.equals( payMode ) ){
+    			throw new ApplicationException(AppConstants.FAIL, "Check the Payment Mode.");
+    		}
 
         	// 그리드 값 조회 후 다시 셋팅
         	//Payment - Order Info 조회 : order No로 Order ID 조회하기
@@ -498,6 +522,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
         	if( "ROOT_1".equals(targetOutMstResult.get("rootState"))  ){
         		System.out.println("++ No Outstanding" + targetOutMstResult.get("msg"));
+        		throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + targetOutMstResult.get("msg") );
         	}
 
             Double mstRpf = (Double) orderInfoRentalList.get(0).get("rpf");
@@ -574,7 +599,13 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 //                        	System.out.println("++++ payAmtDou ::" + payAmtDou );
 
                               if( (totTargetAmt + targetAmt) > payAmtDou ){
-                              	targetAmt =  payAmtDou - totTargetAmt;
+
+                            	  if( detailRowCnt-1 == j ){
+                            		  targetAmt = targetAmt;
+                            	  }else{
+                            		  targetAmt =  payAmtDou - totTargetAmt;
+                            	  }
+
                               }else{
                               	targetAmt = targetAmt;
                               }
@@ -714,7 +745,6 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
               		formInfo.put("bankAcc", 0);
               	}
 
-
           		formInfo.put("payItemIsLock", false);
           		formInfo.put("payItemIsThirdParty", false);
           		formInfo.put("payItemStatusId", 1);
@@ -738,7 +768,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
               	formInfo.put("userId", sUserId);
               	formInfo.put("userid", sUserId);
 
-              	System.out.println("++++ 3-1 formList.toString() ::" + formList.toString() );
+//              	System.out.println("++++ 3-1 formList.toString() ::" + formList.toString() );
               	System.out.println("++++ 3 formInfo.toString() ::" + formInfo.toString() );
           		System.out.println("++++ 4 gridList.toString() ::" + gridList.toString() );
           		System.out.println("++++ 5 key ::" + key );
