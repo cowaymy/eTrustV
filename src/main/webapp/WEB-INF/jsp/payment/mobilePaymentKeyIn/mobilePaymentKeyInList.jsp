@@ -154,30 +154,17 @@ var TODAY_DD      = "${toDay}";
 
         $.each(selectedItems, function(idx, row){
 
-            if( idx == 0 ){
-            	slipNo = row.item.slipNo;
-            }else{
-                if(slipNo != row.item.slipNo ){
-                	isValid_1 = false;
-                }
-            }
-
-        });
-
-        if(!isValid_1){
-            //Common.alert("<spring:message code='pay.alert.payStatus'/>");
-            Common.alert("Check Slip No.");
-            return false;
-        }
-
-        $.each(selectedItems, function(idx, row){
-
         	if( idx == 0 ){
         		payMode = row.item.payMode;
+        		slipNo = row.item.slipNo;
         	}else{
         	    if(payMode != row.item.payMode ){
         	    	isValid = false;
         	    }
+
+        	    if(slipNo != row.item.slipNo ){
+                    isValid_1 = false;
+                }
         	}
 
             if(row.item.payStusId != "1" ){
@@ -186,9 +173,16 @@ var TODAY_DD      = "${toDay}";
                 reqList.push(row.item);
             }
         });
+
         if(!isValid){
             //Common.alert("<spring:message code='pay.alert.payStatus'/>");
             Common.alert("Check Payment Mode.");
+            return false;
+        }
+
+        if(!isValid_1){
+            //Common.alert("<spring:message code='pay.alert.payStatus'/>");
+            Common.alert("Check Slip No.");
             return false;
         }
 
@@ -838,7 +832,7 @@ var TODAY_DD      = "${toDay}";
 
         if( selPayType == "20" ){ // Cash
         	selPayType = "105";
-        }else if( selPayType == "30" ){ // Cheque
+        }else if( selPayType == "5697" ){ // Cheque
         	selPayType = "106";
         }else{
         	selPayType = "105";
