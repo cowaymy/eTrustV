@@ -12,7 +12,7 @@ $(document).ready(function() {
     //Agent Type
     CommonCombo.make("_agentType", "/sales/rcms/selectAgentTypeList", {codeMasterId : '329'}, '',  {isShowChoose: false});
     //Customer Type
-    CommonCombo.make("_customerType", "/common/selectCodeList.do", {groupCode : '8'}, '964', {isShowChoose: false});
+    CommonCombo.make("_customerType", "/common/selectCodeList.do", {groupCode : '8'}, '', {chooseMessage: "Choose one"});
     //Company Type
     CommonCombo.make("_companyType", "/common/selectCodeList.do", {groupCode : '95'}, null, {isShowChoose: false , isCheckAll : false, type: "M"});
 
