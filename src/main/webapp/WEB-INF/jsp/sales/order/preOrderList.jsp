@@ -405,6 +405,13 @@
     		}
     	 }
 
+    	if(!FormUtil.isEmpty($('#_reqstStartTime').val()) || !FormUtil.isEmpty($('#_reqstEndTime').val())) {
+    		if(FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val())) {
+                isValid = false;
+                msg += '* Please select Pre-Order Date first<br/>';
+            }
+        }
+
          if(!isValid) Common.alert('<spring:message code="sal.title.text.ordSrch" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
          return isValid;
