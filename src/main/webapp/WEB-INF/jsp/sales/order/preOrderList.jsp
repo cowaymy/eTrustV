@@ -101,7 +101,7 @@
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
-        doGetComboAndGroup2('/common/selectProductCodeList.do', '', '', 'ordProudct', 'S', 'fn_setOptGrpClass');
+        doGetComboAndGroup2('/common/selectProductCodeList.do', '', '', 'ordProudctList', 'S', 'fn_setOptGrpClass');
 
 
         //excel Download
@@ -623,7 +623,7 @@
         </div>
     </td>
     <th scope="row"><spring:message code="sal.text.product" /></th>
-    <td><select id="ordProudct" name="ordProudct" class="w100p" ></select>
+    <td><select id="ordProudctList" name="ordProudctList" class="w100p" ></select>
 </tr>
 <tr>
     <th scope="row">Org Code</th>

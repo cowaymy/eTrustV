@@ -114,7 +114,7 @@
            AND T1.REQST_DT BETWEEN TO_DATE(#{_reqstStartDt} || #{_reqstStartTime}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{_reqstEndDt} || #{_reqstEndTime}, 'dd/mm/yyyy hh24:mi')
          </if>
          <if test='ordProudct != null and ordProudct != ""'>
-           AND T4.STK_ID  = #{ordProudct}
+           AND T4.STK_ID  = #{ordProudctList}
 
          </if>
          ORDER BY T1.PRE_ORD_ID ASC
