@@ -65,6 +65,13 @@ public class MobileAuthMenuController {
 		return "common/mobileAuthorization/mobileAuthMenuMapping";
 	}
 
+	 /**
+	 * selectMobileRoleAuthMappingAdjustList
+	 * @Author KR-HAN
+	 * @Date 2019. 12. 14.
+	 * @param params
+	 * @return
+	 */
 	@RequestMapping(value = "/selectMobileRoleAuthMappingAdjustList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectMobileRoleAuthMappingAdjustList(@RequestParam Map<String, Object> params)
 	{
@@ -147,6 +154,15 @@ public class MobileAuthMenuController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
+	}
+
+
+	@RequestMapping(value = "/selectMobileMenuAuthMenuList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMobileMenuAuthMenuList(@RequestParam Map<String, Object> params)
+	{
+		List<EgovMap> selectMobileMenuAuthMenuList = mobileAuthMenuService.selectMobileMenuAuthMenuList(params);
+
+		return ResponseEntity.ok(selectMobileMenuAuthMenuList);
 	}
 
 }
