@@ -39,6 +39,10 @@ public class MobileAuthMenuServiceImpl implements MobileAuthMenuService {
 	@Resource(name = "mobileAuthMenuMapper")
 	private MobileAuthMenuMapper mobileAuthMenuMapper;
 
+	@Resource(name = "mobileMenuMapper")
+	private MobileMenuMapper mobileMenuMapper;
+
+
 	@Override
 	public List<EgovMap> selectMobileRoleAuthMappingAdjustList(Map<String, Object> params) {
 		return mobileAuthMenuMapper.selectMobileRoleAuthMappingAdjustList(params);
@@ -107,5 +111,13 @@ public class MobileAuthMenuServiceImpl implements MobileAuthMenuService {
 		mobileAuthMenuMapper.saveMobileMenuAuthAllRoleMapping(map);
 
 		return saveCnt;
+	}
+
+	@Override
+	public List<EgovMap> selectMobileMenuAuthMenuList(Map<String, Object> params) {
+
+		params.put("useYn", "Y");
+
+		return mobileMenuMapper.selectMobileMenuList(params);
 	}
 }
