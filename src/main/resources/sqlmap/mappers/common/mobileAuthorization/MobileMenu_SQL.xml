@@ -76,6 +76,9 @@
 			   AND (UPPER(PGM_CODE) LIKE  UPPER(#{pgmCode}) || '%' OR
 			            UPPER(PGM_NAME) LIKE '%' || UPPER(#{pgmCode}) || '%')
 			</if>
+			<if test='useYn !=null and useYn !="" '>
+			   AND USE_YN = #{useYn}
+			</if>
 		</where>
         START WITH t1.UPPER_MENU_CODE IS NULL
         CONNECT BY PRIOR t1.MENU_CODE = t1.UPPER_MENU_CODE
