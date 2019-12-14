@@ -51,4 +51,6 @@ public interface MobileAuthMenuService {
 	 * @return
 	 */
 	int saveMobileMenuAuthAllRoleMapping(Map<String, Object> params, Integer userId);
+
+	List<EgovMap> selectMobileMenuAuthMenuList(Map<String, Object> params);
 }
