@@ -242,11 +242,50 @@ function fnALLAddRow()
         authCode = AUIGrid.getSelectedItems(grdAuth)[0].item.authCode;
         $("#authCode").val(authCode);
     }
+
+    Common.ajax(
+            "GET",
+            "/mobileAuthMenu/selectMobileMenuAuthMenuList.do",
+            "",
+            function(data, textStatus, jqXHR){ // Success
+//              alert(JSON.stringify(data));
+                //AUIGrid.setGridData(grdMenuMapping, data);
+
+                // 추가시킬 행 10개 작성
+                var item;
+                var rowList = [];
+
+                for(var i=0; i<data.length; i++) {
+                    rowList[i] = {
+                       	menuLvl     : data[i].menuLvl,
+                        menuCode  : data[i].menuCode,
+                        menuName : data[i].menuName,
+                        pgmCode   : data[i].pgmCode,
+                        pgmName  : data[i].pgmName,
+                        authCode  : $("#authCode").val(),
+                        rowId       : "PkAddNew"
+
+                    }
+                }
+
+                // parameter
+                // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
+                // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+                AUIGrid.addRow(grdMenuMapping, rowList, "first");
+
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                alert("Fail : " + jqXHR.responseJSON.message);
+            }
+    )
+
+    /*
     var data = {};
     data.authCode = authCode;
     Common.ajax("POST", "/mobileAuthMenu/saveMobileMenuAuthAllRoleMapping.do", data, function(result) {
     	fn_detailSearch();
     });
+    */
 
 
 
