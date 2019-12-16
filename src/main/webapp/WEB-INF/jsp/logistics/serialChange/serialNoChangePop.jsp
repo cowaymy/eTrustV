@@ -52,12 +52,18 @@ function fn_saveSerialNoModify(){
 }
 
 function fn_ClosePop(){
-    // Moblie Popup Setting
+	var obj = {
+         asIsSerialNo  : $("#pSerialNo").val(),
+         beforeSerialNo : $("#pBeforeSerialNo").val()
+     }
+
+	// Moblie Popup Setting
     if(Common.checkPlatformType() == "mobile") {
         opener.fn_PopSerialChangeClose();
     } else {
         $('#_serialNoChangePop').remove();
-        SearchListAjax();
+
+        SearchListAjax( obj );
     }
 }
 </script>
