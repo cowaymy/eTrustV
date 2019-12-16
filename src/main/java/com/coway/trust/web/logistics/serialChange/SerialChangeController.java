@@ -60,7 +60,7 @@ public class SerialChangeController {
 		model.put("pRetnNo"			, params.get("pRetnNo") );
 		model.put("pStkCode"		, params.get("pStkCode") );
 
-		return "sales/order/serialNoChangePop";
+		return "logistics/serialChange/serialNoChangePop";
 	}
 
 
