@@ -59,7 +59,7 @@ function fn_ClosePop(){
 
 	// Moblie Popup Setting
     if(Common.checkPlatformType() == "mobile") {
-        opener.fn_PopSerialChangeClose();
+        opener.fn_PopSerialChangeClose( obj );
     } else {
         $('#_serialNoChangePop').remove();
 
