@@ -36,7 +36,7 @@
 var listGrid;
 
 var rescolumnLayout=[{dataField: "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
-                     {dataField: "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                  ,width:230    ,height:30                },
+                     {dataField: "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                  ,width:180    ,height:30                },
                      {dataField: "reqloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
                      {dataField: "reqlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},
                      {dataField: "rcvlocdesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30                },
@@ -336,11 +336,11 @@ $(function(){
                		return false;
                	}
                	if(checkedItems[i].item.reqloc != reqlocGroup){
-               		Common.alert("From Location must be the same. <br />Please process one by one.");
+               		Common.alert("To Location must be the same. <br />Please process one by one.");
                     return false;
                 }if(checkedItems[i].item.rcvloc != rcvlocGroup){
-                	Common.alert("To Location must be the same. <br />Please process one by one.");
-                    return false;
+                	Common.alert("From Location must be the same. <br />Please process one by one.");
+                	return false;
                 }
 
             }

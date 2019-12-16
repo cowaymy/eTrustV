@@ -741,7 +741,7 @@ function fn_isDateValidate(sValidDt){
 	</aside><!-- title_line end -->
     <article class="grid_wrap"><!-- grid_wrap start -->
         <!-- 그리드 영역1 -->
-        <div id="mainGrid" style="height:200px;"></div>
+        <div id="mainGrid" style="height:250px; margin:0 auto;"></div>
 	    <!-- 그리드 페이징 네비게이터 -->
 	    <!-- <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div> -->
     </article><!-- grid_wrap end -->
@@ -752,7 +752,7 @@ function fn_isDateValidate(sValidDt){
     </aside><!-- title_line end -->
     <article class="grid_wrap" ><!-- grid_wrap start -->
         <!--  그리드 영역2  -->
-        <div id="detailGrid" style="height:200px;"></div>
+        <div id="detailGrid" style="height:250px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
 
   </section><!-- search_result end -->
