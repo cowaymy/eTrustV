@@ -26,12 +26,12 @@ function fn_saveSerialNoModify(){
         return false;
 	} */
 
-	$("#pBeforeSerialNo").val($("#bSerialNo").val());
+	$("#popSerialNoModifyForm #pSerialNo").val( $("#bSerialNo").val() );
 
 	var obj = $("#popSerialNoModifyForm").serializeJSON();
 
     if(Common.confirm("Do you want to save?", function(){
-        Common.ajax("POST", "/logistics/serialChange/saveSerialChange.do", obj, function(result) {
+         Common.ajax("POST", "/logistics/serialChange/saveSerialChange.do", obj, function(result) {
 			for( var key in result.data ){
 			    if( key == "errCode" ){
 			        errCode = result.data[key];
@@ -83,8 +83,8 @@ function fn_ClosePop(){
  <section class="pop_body">
   <!-- pop_body start -->
   <form id="popSerialNoModifyForm" name="popSerialNoModifyForm" action="#" method="post">
-   <input type="hidden" id="pSerialNo" name="pSerialNo" value="${pSerialNo}" />
-   <input type="hidden" id="pBeforeSerialNo" name="pBeforeSerialNo" value="" />
+   <input type="hidden" id="pSerialNo" name="pSerialNo"  />
+   <input type="hidden" id="pBeforeSerialNo" name="pBeforeSerialNo" value="${pSerialNo}" />
    <input type="hidden" id="pSalesOrdId" name="pSalesOrdId" value="${pSalesOrdId}" />
    <input type="hidden" id="pRefDocNo" name="pRefDocNo" value="${pRefDocNo}" />
    <input type="hidden" id="pItmCode" name="pItmCode" value="${pItmCode}" />
