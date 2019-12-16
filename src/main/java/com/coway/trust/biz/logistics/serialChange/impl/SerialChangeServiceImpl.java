@@ -43,10 +43,10 @@ public class SerialChangeServiceImpl extends EgovAbstractServiceImpl implements 
 
 	logger.info("++++ saveSerialNoModify params ::" + params );
 
-	params.put("pItmCode", params.get("pStkCode") );
-	params.put("pRefDocNo", params.get("pRetnNo") );
-	params.put("pCallGbn", "RETURN" );
-	params.put("pMobileYn", "Y" );
+//	params.put("pItmCode", params.get("pItmCode") );
+//	params.put("pRefDocNo", params.get("pRefDocNo") );
+//	params.put("pCallGbn", params.get("pCallGbn") );
+//	params.put("pMobileYn", params.get("pMobileYn") );
 
 	params.put("pUserId", CommonUtils.intNvl(params.get("userId"))  );
 
