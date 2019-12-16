@@ -149,6 +149,7 @@ var TODAY_DD      = "${toDay}";
 
         var isValid = true;
         var isValid_1 = true;
+        var isValid_2 = true;
         var reqList = [];
         var payMode = "";
 
@@ -172,6 +173,13 @@ var TODAY_DD      = "${toDay}";
             }else{
                 reqList.push(row.item);
             }
+
+            if( row.item.payMode == "5698" ){
+            	   console.log("++++ ::" + FormUtil.isEmpty( row.item.slipNo ))
+            	if( FormUtil.isEmpty( row.item.slipNo ) == true ){
+            		isValid_1 = false;
+            	}
+            }
         });
 
         if(!isValid){
@@ -183,6 +191,12 @@ var TODAY_DD      = "${toDay}";
         if(!isValid_1){
             //Common.alert("<spring:message code='pay.alert.payStatus'/>");
             Common.alert("Check Slip No.");
+            return false;
+        }
+
+        if(!isValid_2){
+            //Common.alert("<spring:message code='pay.alert.payStatus'/>");
+        	Common.alert("Check Slip No.");
             return false;
         }
 
