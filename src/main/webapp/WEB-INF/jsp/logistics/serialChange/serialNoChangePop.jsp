@@ -16,7 +16,7 @@
 function fn_saveSerialNoModify(){
 
 	// 유효성 체크
-	if( $("#beforeSerialNo").val().length != 18 ){
+	if( $("#bSerialNo").val().length != 18 ){
 		Common.alert("Please, check the Serial No.");
 		return false;
 	}
@@ -26,7 +26,7 @@ function fn_saveSerialNoModify(){
         return false;
 	} */
 
-	$("#pBeforeSerialNo").val($("#beforeSerialNo").val());
+	$("#pBeforeSerialNo").val($("#bSerialNo").val());
 
 	var obj = $("#popSerialNoModifyForm").serializeJSON();
 
@@ -82,12 +82,14 @@ function fn_ClosePop(){
  <!-- pop_header end -->
  <section class="pop_body">
   <!-- pop_body start -->
-  <form id="popSerialNoModifyForm" name=""popSerialNoModifyForm"" action="#" method="post">
+  <form id="popSerialNoModifyForm" name="popSerialNoModifyForm" action="#" method="post">
    <input type="hidden" id="pSerialNo" name="pSerialNo" value="${pSerialNo}" />
    <input type="hidden" id="pBeforeSerialNo" name="pBeforeSerialNo" value="" />
    <input type="hidden" id="pSalesOrdId" name="pSalesOrdId" value="${pSalesOrdId}" />
-   <input type="hidden" id="pRetnNo" name="pRetnNo" value="${pRetnNo}" />
-   <input type="hidden" id="pStkCode" name="pStkCode" value="${pStkCode}" />
+   <input type="hidden" id="pRefDocNo" name="pRefDocNo" value="${pRefDocNo}" />
+   <input type="hidden" id="pItmCode" name="pItmCode" value="${pItmCode}" />
+   <input type="hidden" id="pCallGbn" name="pCallGbn" value="${pCallGbn}" />
+   <input type="hidden" id="pMobileYn" name="pMobileYn" value="${pMobileYn}" />
   </form>
 
      <table class="type1">
@@ -115,7 +117,7 @@ function fn_ClosePop(){
         <td colspan="5">
          <div >
           <!-- auto_file start -->
-            <input type="text" id="beforeSerialNo" name="beforeSerialNo"  class="w95p" value="${pSerialNo}" />
+            <input type="text" id="bSerialNo" name="bSerialNo"  class="w95p" value="${pSerialNo}" />
          </div>
          <!-- auto_file end -->
         </td>
