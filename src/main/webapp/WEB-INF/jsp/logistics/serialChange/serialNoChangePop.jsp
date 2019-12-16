@@ -53,8 +53,8 @@ function fn_saveSerialNoModify(){
 
 function fn_ClosePop(){
 	var obj = {
-         asIsSerialNo  : $("#pSerialNo").val(),
-         beforeSerialNo : $("#pBeforeSerialNo").val()
+         asIsSerialNo  : $("#popSerialNoModifyForm #pSerialNo").val(),
+         beforeSerialNo : $("#popSerialNoModifyForm #pBeforeSerialNo").val()
      }
 
 	// Moblie Popup Setting
