@@ -57,8 +57,10 @@ public class SerialChangeController {
 		model.put("pSerialNo"		, params.get("pSerialNo") );
 		model.put("pSalesOrdId"	, params.get("pSalesOrdId") );
 		model.put("pSalesOrdNo"	, params.get("pSalesOrdNo") );
-		model.put("pRetnNo"			, params.get("pRetnNo") );
-		model.put("pStkCode"		, params.get("pStkCode") );
+		model.put("pRefDocNo"		, params.get("pRefDocNo") );
+		model.put("pItmCode"		, params.get("pItmCode") );
+		model.put("pCallGbn"			, params.get("pCallGbn") );
+		model.put("pMobileYn"		, params.get("pMobileYn") );
 
 		return "logistics/serialChange/serialNoChangePop";
 	}
