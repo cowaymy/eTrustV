@@ -245,4 +245,10 @@ public interface PosMapper {
 
 	List<EgovMap> selectWhSOBrnchList();
 
+	List<EgovMap> selectPOSFlexiItem(Map<String, Object> params);
+
+	int  updatePOSFlexiItemActive(Map<String, Object> params);
+
+	int  updatePOSFlexiItemInactive(Map<String, Object> params);
+
 }
