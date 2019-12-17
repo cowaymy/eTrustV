@@ -30,7 +30,7 @@
                   , T.ORD_UNBILL_AMT
                   , T.RENTAL_BILL_NO
                   , T.ORD_LAST_PAY_DT
-                  , T.WEB_RENT_LEDGER
+                  , (NVL(T.WEB_RENT_LEDGER_1,0) + NVL(T.WEB_RENT_LEDGER_2,0) ) AS WEB_RENT_LEDGER
                   , T.CUST_BILL_GRP_NO
                   , T.SRV_CNTRCT_NO
                   , T.APP_TYPE_DESC
@@ -80,12 +80,15 @@
 
                              , (SELECT UN_BILL_AMT FROM REP0010S WHERE ORD_ID = A.ORD_ID AND SRV_CNTRCT_ID = pay52.ACC_DEBT_SRV_CNTRCT_ID) AS  ORD_UNBILL_AMT
                              , (SELECT TO_CHAR(MAX(RENT_DT_TM),'DD/MM/YYYY') FROM PAY0022D WHERE RENT_SO_ID=A.ORD_ID) AS  ORD_LAST_PAY_DT
-                             , (SELECT SUM(RENT_AMT) FROM PAY0022D WHERE RENT_SO_ID=A.ORD_ID GROUP BY RENT_SO_ID
+                            , (
+                                SELECT SUM(RENT_AMT) AS AMT FROM PAY0022D WHERE RENT_SO_ID=A.ORD_ID GROUP BY RENT_SO_ID
                                 UNION
-                                SELECT SUM(SRV_LDGR_AMT) FROM PAY0023D WHERE SRV_SALES_ORD_ID=A.ORD_ID AND SRV_LDGR_CNTRCT_ID <![CDATA[ <> ]]> 0 GROUP BY SRV_SALES_ORD_ID
-                                UNION
-                                SELECT SUM(TRADE_AMT) FROM PAY0035D WHERE TRADE_SO_ID=A.ORD_ID GROUP BY TRADE_SO_ID
-                                ) AS  WEB_RENT_LEDGER
+                                SELECT SUM(SRV_LDGR_AMT) AS AMT FROM PAY0023D WHERE SRV_SALES_ORD_ID=A.ORD_ID AND SRV_LDGR_CNTRCT_ID   <![CDATA[ <> ]]>   0 GROUP BY SRV_SALES_ORD_ID
+                                ) AS  WEB_RENT_LEDGER_1
+
+                             , (
+                                 SELECT SUM(TRADE_AMT) AS AMT FROM PAY0035D WHERE TRADE_SO_ID=A.ORD_ID GROUP BY TRADE_SO_ID
+                                ) AS  WEB_RENT_LEDGER_2
 
                              /*
 
