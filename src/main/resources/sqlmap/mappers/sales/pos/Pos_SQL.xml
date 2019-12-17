@@ -3587,4 +3587,64 @@
             ) ORDER BY CODE
    </select>
 
+<select id="selectPOSFlexiItem" parameterType="Map" resultType="egovMap">
+   SELECT
+     stk.STK_ID ITEM_ID,
+     stkM.STK_CODE ITEM_CODE,
+     stkM.STK_DESC ITEM_DESC,
+     stkM.STK_TYPE_ID ITEM_TYPE_ID,
+     D.CODE_NAME AS ITEM_TYPE,
+     E.CODE_NAME AS ITEM_CATEGORY,
+     C.NAME AS STATUS
+ FROM
+    LOG0092D stk
+    JOIN SYS0026M stkM ON stk.STK_ID = stkM.STK_ID
+    LEFT JOIN SYS0038M C ON stk.STUS_CODE_ID = C.STUS_CODE_ID
+    LEFT JOIN SYS0013M D ON stkM.STK_TYPE_ID = D.CODE_ID
+    LEFT JOIN SYS0013M E ON stkM.STK_CTGRY_ID = E.CODE_ID
+    WHERE 1=1
+    AND stkM.STK_CTGRY_ID IN (1346,1348)
+
+        <if test="stkCode != null and stkCode != ''">
+            AND UPPER(stkM.STK_CODE) LIKE UPPER('%'||#{stkCode}||'%')
+        </if>
+           <if test="itemTypeCategory != null and itemTypeCategory != ''">
+            AND stkM.STK_CTGRY_ID = #{itemTypeCategory}
+        </if>
+          <if test="statusId != null and statusId != ''">
+            AND stk.STUS_CODE_ID = #{statusId}
+        </if>
+
+
+    ORDER BY stk.STK_ID
+
+    </select>
+
+     <update id="updatePOSFlexiItemActive" parameterType="Map">
+                       UPDATE LOG0092D
+                           SET STUS_CODE_ID  =  1 ,
+                               UPD_USER_ID = #{updUserId},
+                               UPD_DT = SYSDATE
+                         WHERE
+                         STK_ID IN
+                         <foreach item="item" collection="stkIdListSp" index="index" open="(" separator="," close=")">
+                          #{item}
+                           </foreach>
+
+                     </update>
+
+                       <update id="updatePOSFlexiItemInactive" parameterType="Map">
+                       UPDATE LOG0092D
+                           SET STUS_CODE_ID  =  8 ,
+                               UPD_USER_ID = #{updUserId},
+                               UPD_DT = SYSDATE
+                         WHERE
+                         STK_ID IN
+                         <foreach item="item" collection="stkIdListSp" index="index" open="(" separator="," close=")">
+                          #{item}
+                           </foreach>
+
+                     </update>
+
+
 </mapper>
