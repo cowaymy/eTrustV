@@ -837,4 +837,81 @@ public class PosController {
 		return "sales/pos/posFlexiRawDataPop";
 	}
 
+	   @RequestMapping(value = "/posFlexiAddItemPop.do")
+	    public String posFlexiAddItemPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	        // 호출될 화면
+	        return "sales/pos/posFlexiAddItemPop";
+	    }
+
+	    @RequestMapping(value = "/selectPOSFlexiItem.do", method = RequestMethod.GET)
+	    public ResponseEntity<List<EgovMap>> selectPOSFlexiItem(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+
+	        params.put("user_id", sessionVO.getUserId());
+	        // 조회.
+	        List<EgovMap> posItemList = posService.selectPOSFlexiItem(params);
+
+	        return ResponseEntity.ok(posItemList);
+	    }
+
+
+
+	    @RequestMapping(value = "/updatePOSFlexiItemActive.do",method = RequestMethod.POST)
+	    public ResponseEntity<ReturnMessage> updatePOSFlexiItemActive(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
+	        ReturnMessage message = new ReturnMessage();
+
+	        LOGGER.debug("updatePOSFlexiItemActive - params : {}", params);
+
+	        if(null != params.get("stkId")){
+	            String olist = (String)params.get("stkId");
+	            String[] spl = olist.split(",");
+	            params.put("stkIdListSp", spl);
+	        }
+
+	        LOGGER.debug("updatePOSFlexiItemActive - params : {}", params);
+
+	        // UPDATE LOG0092M
+	        int resultValue = posService.updatePOSFlexiItemActive(params, sessionVO);
+
+	        //int resultValue = 0;
+
+	        if(resultValue >0 ){
+	            message.setCode(AppConstants.SUCCESS);
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	        }else{
+	            message.setCode(AppConstants.FAIL);
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	        }
+	        return ResponseEntity.ok(message);
+
+	    }
+
+	    @RequestMapping(value = "/updatePOSFlexiItemInactive.do",method = RequestMethod.POST)
+	    public ResponseEntity<ReturnMessage> updatePOSFlexiItemInactive(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
+	        ReturnMessage message = new ReturnMessage();
+
+	        LOGGER.debug("updatePOSFlexiItemInactive - params : {}", params);
+
+	        if(null != params.get("stkId")){
+	            String olist = (String)params.get("stkId");
+	            String[] spl = olist.split(",");
+	            params.put("stkIdListSp", spl);
+	        }
+
+	        LOGGER.debug("updatePOSFlexiItemInactive - params : {}", params);
+
+	        // UPDATE LOG0092M
+	        int resultValue = posService.updatePOSFlexiItemInactive(params, sessionVO);
+
+	        //int resultValue = 0;
+
+	        if(resultValue >0 ){
+	            message.setCode(AppConstants.SUCCESS);
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	        }else{
+	            message.setCode(AppConstants.FAIL);
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	        }
+	        return ResponseEntity.ok(message);
+
+	    }
 }
