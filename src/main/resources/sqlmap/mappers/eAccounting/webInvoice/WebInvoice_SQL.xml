@@ -1040,8 +1040,19 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
             ,CASE WHEN (SUBSTR(T1.APPV_REQ_KEY_NO, 1, 2)) = 'J2' THEN TO_CHAR(TO_DATE(T9.CLM_MONTH, 'YYYYMM'), 'MON-YYYY')
                     WHEN (SUBSTR(T1.APPV_REQ_KEY_NO, 1, 2)) = 'J4' THEN TO_CHAR(TO_DATE(T12.CLM_MONTH, 'YYYYMM'), 'MON-YYYY')
                     ELSE ''
-            END AS CLM_MONTH
+            END AS CLM_MONTH,
+            F12.REQST_REM,
+            S70.ATCH_FILE_NAME,
+            S70.ATCH_FILE_ID
         FROM FCM0004M T1 /*LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO*/
+        LEFT JOIN FCM0012D F12 ON T1.APPV_PRCSS_NO = F12.APPV_PRCSS_NO
+        LEFT JOIN (SELECT T1.ATCH_FILE_GRP_ID, T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = (SELECT ATCH_FILE_GRP_ID FROM FCM0012D WHERE APPV_PRCSS_NO = #{appvPrcssNo})
+          AND ROWNUM = 1) S70 ON S70.ATCH_FILE_GRP_ID = F12.ATCH_FILE_GRP_ID
         LEFT JOIN FCM0015D T3 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
         LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
         LEFT JOIN FCM0007C T5 ON T3.TAX_CODE = T5.TAX_CODE
@@ -1261,6 +1272,10 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
         ,REQDEPTCD
         ,REQDEPTNM
         ,PETR_AMT
+        ,BUDAT
+        ,UNIT_NO
+        ,KOSTL
+        ,REMARK
     )
     values
     (
@@ -1278,6 +1293,11 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
        ,#{memAccId}
        ,#{costCentrName}
        ,#{netAmt}
+       ,TO_CHAR(SYSDATE, 'YYYYMMDD')
+       ,#{clamUn}
+       ,#{costCentr}
+       ,#{reqstRem}
+       
     )
 </insert>
 
@@ -1868,5 +1888,28 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         #{appvPrcssStus}
     )
 </insert>
+
+<select id="selectAtchFileData" parameterType="Map" resultType="egovMap">
+	SELECT *
+	FROM (SELECT Row_number ()
+	OVER (
+	PARTITION BY F1.ATCH_FILE_GRP_ID
+	ORDER BY F1.ATCH_FILE_GRP_ID
+	, F2.ATCH_FILE_ID) AS
+	RNUM,
+	F1.ATCH_FILE_GRP_ID,
+	F2.ATCH_FILE_ID,
+	Count (F1.ATCH_FILE_ID)
+	OVER (
+	PARTITION BY F1.ATCH_FILE_GRP_ID)
+	AS
+	FILE_CNT
+	FROM SYS0070M F1
+	LEFT JOIN SYS0071D F2
+	ON F1.ATCH_FILE_ID =
+	F2.ATCH_FILE_ID) F
+	WHERE F.RNUM = 1
+	AND ATCH_FILE_GRP_ID = (SELECT ATCH_FILE_GRP_ID FROM FCM0012D WHERE APPV_PRCSS_NO = #{appvPrcssNo})
+</select>
 
 </mapper>

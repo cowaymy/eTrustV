@@ -30,7 +30,12 @@ function fn_insertCustodian() {
 	});
     Common.ajaxFile("/eAccounting/pettyCash/insertCustodian.do", formData, function(result) {
         console.log(result);
-        Common.popupDiv("/eAccounting/pettyCash/newCompletedMsgPop.do", null, null, true, "completedMsgPop");
+        if(result.code == "00"){
+        	Common.popupDiv("/eAccounting/pettyCash/newCompletedMsgPop.do", null, null, true, "completedMsgPop");
+        } else {
+        	Common.alert("The same custodian exists. Please check.");
+        }
+        
     });
 }
 

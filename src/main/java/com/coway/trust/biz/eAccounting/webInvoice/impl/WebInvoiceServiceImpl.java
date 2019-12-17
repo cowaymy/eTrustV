@@ -618,4 +618,10 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
     public int checkExistClmNo(String clmNo) {
         return webInvoiceMapper.checkExistClmNo(clmNo);
     }
+
+    @Override
+    public List<EgovMap> selectAtchFileData(Map<String, Object> params) {
+      // TODO Auto-generated method stub
+      return webInvoiceMapper.selectAtchFileData(params);
+    }
 }

@@ -44,19 +44,34 @@ public class PettyCashApplicationImpl implements PettyCashApplication {
 	private MessageSourceAccessor messageSourceAccessor;
 
 	@Override
-	public void insertCustodianBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		LOGGER.debug("params =====================================>>  " + params);
-
-		// serivce 에서 파일정보를 가지고, DB 처리.
-		LOGGER.debug("list.size : {}", list.size());
-		if (list.size() > 0) {
-			int fileGroupKey = fileService.insertFiles(list, type, Integer.parseInt(String.valueOf(params.get("userId"))));
-			params.put("fileGroupKey", fileGroupKey);
-		}
-
-		pettyCashService.insertCustodian(params);
-	}
+  public Boolean insertCustodianBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
+    // TODO Auto-generated method stub
+    LOGGER.debug("params =====================================>>  " + params);
+    boolean result = false;
+    // VANNIE ADD CHECKING DUPLICATE CUSTODIAN ID 11/12/2019
+    
+    String memAccId = (String) params.get("memAccId");
+    
+    String custdnId = pettyCashService.checkCustodian(memAccId);
+    LOGGER.debug("custdnId =====>> " + custdnId);
+    
+    if (custdnId == null) {
+      // serivce 에서 파일정보를 가지고, DB 처리.
+      LOGGER.debug("list.size : {}", list.size());
+      if (list.size() > 0) {
+        int fileGroupKey = fileService.insertFiles(list, type, Integer.parseInt(String.valueOf(params.get("userId"))));
+        params.put("fileGroupKey", fileGroupKey);
+      }
+      
+      pettyCashService.insertCustodian(params);
+      result = true;
+      
+    } else {
+      result = false;
+    }
+    return result;
+    
+  }
 
 	@Override
 	public void updateCustodianBiz(List<FileVO> list, FileType type, Map<String, Object> params) {

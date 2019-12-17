@@ -458,4 +458,12 @@ public class PettyCashServiceImpl implements PettyCashService {
         }
 
     }
+
+    @Override
+    public String checkCustodian(String memAccId) {
+      // TODO Auto-generated method stub
+      
+       return pettyCashMapper.checkCustodian(memAccId);
+      
+    }
 }

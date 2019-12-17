@@ -161,6 +161,7 @@ public class WebInvoiceController {
 		List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
 		List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(params);
 
+		String clmType = appvInfoAndItems.get(0).get("clmNo").toString().substring(0, 2);
 		String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
         memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
         params.put("memCode", memCode);
@@ -182,12 +183,27 @@ public class WebInvoiceController {
 
 		// TODO appvPrcssStus 생성
 		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
+		
+		// VANNIE ADD TO GET FILE GROUP ID, FILE ID AND FILE COUNT.
+        List<EgovMap> atchFileData = webInvoiceService.selectAtchFileData(params);
+        
+        if(atchFileData.isEmpty()){
+          model.addAttribute("atchFileCnt", 0);
+        } else {
+          model.addAttribute("atchFileCnt", atchFileData.get(0).get("fileCnt"));
+        }
 
 		model.addAttribute("pageAuthFuncChange", params.get("pageAuthFuncChange"));
 		model.addAttribute("appvPrcssStus", appvPrcssStus);
 		model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
+		
+		if(clmType.equalsIgnoreCase("R1")){
+		  return "eAccounting/webInvoice/webInvoiceApproveViewR1Pop";
+		} else {
+		  return "eAccounting/webInvoice/webInvoiceApproveViewPop";
+		}
 
-		return "eAccounting/webInvoice/webInvoiceApproveViewPop";
+		
 	}
 
 	@RequestMapping(value = "/webInvoiceRqstViewPop.do")
@@ -207,6 +223,15 @@ public class WebInvoiceController {
 
 		// TODO appvPrcssStus 생성
 		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
+		
+		// VANNIE ADD TO GET FILE GROUP ID, FILE ID AND FILE COUNT.
+		List<EgovMap> atchFileData = webInvoiceService.selectAtchFileData(params);
+		
+		if(atchFileData.isEmpty()){
+		  model.addAttribute("atchFileCnt", 0);
+		} else {
+		  model.addAttribute("atchFileCnt", atchFileData.get(0).get("fileCnt"));
+		}
 
 		model.addAttribute("appvPrcssStus", appvPrcssStus);
 		model.addAttribute("appvPrcssResult", appvInfoAndItems.get(0).get("appvPrcssStus"));

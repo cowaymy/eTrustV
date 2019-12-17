@@ -11,7 +11,7 @@ import com.coway.trust.biz.common.type.FileType;
 
 public interface PettyCashApplication {
 	
-	void insertCustodianBiz(List<FileVO> list, FileType type, Map<String, Object> params);
+	Boolean insertCustodianBiz(List<FileVO> list, FileType type, Map<String, Object> params);
 	
 	void updateCustodianBiz(List<FileVO> list, FileType type, Map<String, Object> params);
 	

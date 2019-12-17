@@ -114,30 +114,39 @@ public class PettyCashController {
 		return "eAccounting/pettyCash/newCustodianRegistMsgPop";
 	}
 
-	@RequestMapping(value = "/insertCustodian.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> insertCustodian(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
-
-		LOGGER.debug("params =====================================>>  " + params);
-
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
-
-		LOGGER.debug("list.size : {}", list.size());
-
-		params.put("attachmentList", list);
-		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
-		params.put("userName", sessionVO.getUserName());
-
-		// TODO insert
-		pettyCashApplication.insertCustodianBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
-
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(params);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-		return ResponseEntity.ok(message);
-	}
+  @RequestMapping(value = "/insertCustodian.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> insertCustodian(MultipartHttpServletRequest request,
+      @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+    
+    LOGGER.debug("params =====================================>>  " + params);
+    
+    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+        File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+    
+    LOGGER.debug("list.size : {}", list.size());
+    
+    params.put("attachmentList", list);
+    params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+    params.put("userName", sessionVO.getUserName());
+    
+    // TODO insert
+    boolean custdnResult = pettyCashApplication.insertCustodianBiz(FileVO.createList(list),
+        FileType.WEB_DIRECT_RESOURCE, params);
+    
+    ReturnMessage message = new ReturnMessage();
+    
+    if (custdnResult) {
+      message.setCode(AppConstants.SUCCESS);
+      message.setData(params);
+      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    } else {
+      message.setCode(AppConstants.FAIL);
+      message.setData(params);
+      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    }
+    
+    return ResponseEntity.ok(message);
+  }
 
 	@RequestMapping(value = "/newCompletedMsgPop.do")
 	public String newCompletedMsgPop(ModelMap model, SessionVO session) {
