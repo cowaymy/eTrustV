@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://www.onlinepayment.com.my/MOLPay/API/cse/checkout_dev.js"></script>
+<script src="https://sandbox.molpay.com/MOLPay/API/cse/checkout_dev.js"></script>
 <script type="text/javaScript">
 
 console.log("customerCreditCardPop");
@@ -37,11 +37,11 @@ console.log("customerCreditCardPop");
         }else{
             $("#_insCmbCreditCardType").val('');
         }
-
-        $("#ccNumMPay").val($("#_cardNo_").val());
     }
 
     function fn_addCreditCard(){
+
+        $("#oriCustCrcNo").val($("#_cardNo_").val());
 
         Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {
             var pub = "-----BEGIN PUBLIC KEY-----" + result.pubKey + "-----END PUBLIC KEY-----";
@@ -55,6 +55,7 @@ console.log("customerCreditCardPop");
             var cardNo = $("#_cardNo_").val();
             var expMonth = $("#_expMonth_").val();
             var expYear = $("#_expYear_").val();
+            var encCrcNo = $("#oriCustCrcNo").val();
 
             // Validation
             if(ccType == ""){
@@ -153,7 +154,7 @@ console.log("customerCreditCardPop");
 
                         Common.ajax("GET", "/sales/customer/tokenizationProcess.do", $("#insCardForm").serialize(), function(tResult) {
                             if(tResult.stus == "1" && tResult.crcCheck == "0") {
-                                fn_addCreditCardInfo(ccType, iBank, tResult.crcNo, expDate, nameCard, cType, bankRem, tResult.token);
+                                fn_addCreditCardInfo(ccType, iBank, tResult.crcNo, expDate, nameCard, cType, bankRem, tResult.token, encCrcNo);
                                 $("#_cardPopCloseBtn").click();
                             } else {
                                 Common.alert(tResult.errorDesc);
@@ -189,6 +190,8 @@ console.log("customerCreditCardPop");
     <input type="hidden" id="urlReq" name="urlReq">
     <input type="hidden" id="merchantId" name="merchantId">
     <input type="hidden" id="signature" name="signature">
+
+    <input type="hidden" id="oriCustCrcNo" name="oriCustCrcNo">
 
     <table class="type1"><!-- table start -->
         <caption>table</caption>

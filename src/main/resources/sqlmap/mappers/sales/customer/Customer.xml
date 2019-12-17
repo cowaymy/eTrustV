@@ -1682,7 +1682,7 @@
     , #{custId}
     , #{custCrcNo}
     , #{custOriCrcNo}
-    , NULL
+    , #{custEncryptCrcNo}
     , UPPER(#{custCrcOwner})
     , #{custCrcTypeId}
     , #{custCrcBankId}
@@ -1937,12 +1937,16 @@
     CUST_CRC_UPD_DT = SYSDATE,
     CUST_CRC_TYPE_ID = #{custCrcTypeId},
     CUST_CRC_BANK_ID = #{custCrcBankId},
+    CUST_CRC_NO = #{custCrcNoMask},
     CUST_ORI_CRC_NO = #{custCrcNoMask},
     CUST_CRC_EXPR = #{custCrcExpr},
     CUST_CRC_OWNER = #{custCrcOwner},
     CARD_TYPE_ID = #{cardTypeId},
     CUST_CRC_REM = #{custCrcRem},
     CUST_CRC_TOKEN = #{token}
+    <if test="oriCustCrcNo != null and oriCustCrcNo != '' ">
+        , CUST_ENCRYPT_CRC_NO = #{oriCustCrcNo}
+    </if>
     WHERE
     CUST_CRC_ID = #{custCrcId}
   </update>
@@ -2197,9 +2201,9 @@
     VALUES (
     SAL0028D_CUST_CRC_ID_SEQ.NEXTVAL ,
     #{custId},
-    NULL ,
     #{custCrcNoMask},
-    NULL ,
+    #{custCrcNoMask},
+    #{oriCustCrcNo},
     UPPER(#{custCrcOwner}),
     #{custCrcTypeId},
     #{custCrcBankId},
@@ -2818,5 +2822,12 @@
     <if test='step == "3" '>
       WHERE A.NRIC = #{nric}
     </if>
+  </select>
+
+  <select id="getCustNric" parameterType="Map" resultType="String">
+    SELECT
+        NRIC
+    FROM SAL0029D
+    WHERE CUST_ID = #{custId}
   </select>
 </mapper>

@@ -42,7 +42,7 @@
 
 		//Update
 	    $("#_updBtn").click(function() {
-console.log("_updBtn .click");
+
 	    	/* disable params  */
 	    	$("#custCrcTypeId").val($("#cmbCrcTypeId").val());
 
@@ -214,6 +214,8 @@ console.log("_updBtn .click");
 		 var isValid = true;
 
 		 var isExistCrc = false;
+
+		 $("#oriCustCrcNo").val($("#custOriCrcNo").val());
 
 		 Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {
 	            var pub = "-----BEGIN PUBLIC KEY-----" + result.pubKey + "-----END PUBLIC KEY-----";
@@ -387,6 +389,8 @@ console.log("_updBtn .click");
             <input type="hidden" id="custCrcOwner" name="custCrcOwner">
             <input type="hidden" id="custCrcExpr" name="custCrcExpr">
             <input type="hidden" id="custCrcNoMask" name="custCrcNoMask">
+
+            <input type="hidden" id="oriCustCrcNo" name="oriCustCrcNo">
 
             <table class="type1"><!-- table start -->
                 <caption>table</caption>

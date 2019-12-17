@@ -626,7 +626,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     custCrcVO.setCustId(Integer.parseInt((String) params.get("custId")));
     custCrcVO.setCustCrcNo((String) params.get("cardNo")); // EncryptionProvider.Encrypt(txtCRCNo.Text.Trim());
     custCrcVO.setCustOriCrcNo((String) params.get("cardNo"));
-    custCrcVO.setCustEncryptCrcNo((String) params.get("cardNo")); // CommonFunction.GetBytesFromString(txtCRCNo.Text.Trim());
+    custCrcVO.setCustEncryptCrcNo((String) params.get("oriCustCrcNo")); // CommonFunction.GetBytesFromString(txtCRCNo.Text.Trim());
     custCrcVO.setCustCrcOwner((String) params.get("nameOnCard"));
     custCrcVO.setCustCrcTypeId(Integer.parseInt((String) params.get("creditCardType")));
     custCrcVO.setCustCrcBankId(Integer.parseInt((String) params.get("issBank")));
@@ -921,5 +921,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
   @Override
   public void tokenCrcUpdate(Map<String, Object> params) {
       customerMapper.tokenCrcUpdate(params);
+  }
+
+  public String getCustNric(Map<String, Object> params) {
+      return customerMapper.getCustNric(params);
   }
 }

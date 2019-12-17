@@ -219,6 +219,7 @@ console.log("custNewCardPop.jsp");
 
      //update Call Ajax
     function fn_customerCardInfoAddAjax(){
+        $("#oriCustCrcNo").val($("#custOriCrcNo").val());
 
         Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {
             var pub = "-----BEGIN PUBLIC KEY-----" + result.pubKey + "-----END PUBLIC KEY-----";
@@ -328,6 +329,8 @@ console.log("custNewCardPop.jsp");
         <input type="hidden" id="custCrcExpr" name="custCrcExpr">
         <input type="hidden" id="custCrcNoMask" name="custCrcNoMask">
         <input type="hidden" id="token" name="token">
+
+        <input type="hidden" id="oriCustCrcNo" name="oriCustCrcNo">
 
         <table class="type1"><!-- table start -->
             <caption>table</caption>

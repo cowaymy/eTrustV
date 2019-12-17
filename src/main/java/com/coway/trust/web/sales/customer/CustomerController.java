@@ -782,9 +782,9 @@ public class CustomerController {
         customerCVO.setCardType(form.getCardType());
         customerCVO.setCardRem(null); // 임시
         // customerCVO.setGetCustCrcIdSeq(getCustCrcIdSeq);
-        customerCVO.setCrcNo(null); // 암호화 코드
+        customerCVO.setCrcNo(form.getCreditCardNo()); // 암호화 코드
         customerCVO.setCreditCardNo(form.getCreditCardNo());
-        customerCVO.setEncCrcNo(null); // 암호화 코드
+        customerCVO.setEncCrcNo(form.getEncCrcNo()); // 암호화 코드
         customerCVO.setNmCard(form.getNmCard());
         customerCVO.setCrcStusId(1); // 고정
         customerCVO.setCrcUpdId(sessionVo.getUserId()); // 임시
@@ -1860,7 +1860,12 @@ public class CustomerController {
   public String updateCustomerNewCardPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 
     model.addAttribute("insCustId", params.get("custId"));
-    model.addAttribute("insNric", params.get("_custNric"));
+
+    if(params.containsKey("_custNric")) {
+        model.addAttribute("insNric", params.get("_custNric"));
+    } else {
+        model.addAttribute("insNric", customerService.getCustNric(params));
+    }
 
     return "sales/customer/customerNewCardPop";
   }

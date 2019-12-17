@@ -152,51 +152,10 @@
     }
 
     function fn_doSaveCreditCard() {
-    	/*
-        console.log('fn_doSaveBankAcc() START');
-
-        var checkCrc = {
-                //ccType : $("#cmbCrcTypeId").val(),
-                //ccBank : $("#cmbCrcBankId").val(),
-                cardNo : $("#cardNo").val(),
-                //expDate : $("#expDate").val(),
-                //nameCard : $("#custCrcOwner").val(),
-                //cType : $("#cmbCardTypeId").val(),
-                nric : "${insNric}",
-                src : "EC"
-            };
-
-        console.log("CHECKING " + checkCrc);
-
-        Common.ajax("GET", "/sales/customer/checkCrc.do", checkCrc, function(result) {
-            console.log(result);
-
-            if(result != "0") {
-                Common.alert("<b>WARNING!</b></br>This Bank card number is used by another customer.");
-            } else {
-                Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
-
-                        Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
-
-                        if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC' || '${callPrgm}' == 'PRE_ORD') {
-                            fn_loadCreditCard2(result.data);
-                            $('#addCrcCloseBtn').click();
-                        }
-
-                    }, function(jqXHR, textStatus, errorThrown) {
-                        try {
-                             Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save credit card. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                        }
-                        catch(e) {
-                            console.log(e);
-                        }
-                    }
-                );
-            }
-        });
-        */
 
         console.log('fn_doSaveBankAcc() START');
+
+        $("#oriCustCrcNo").val($("#cardNo").val());
 
         Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {;
             var pub = "-----BEGIN PUBLIC KEY-----" + result.pubKey + "-----END PUBLIC KEY-----";
@@ -287,6 +246,8 @@
 <input type="hidden" id="custCrcOwner" name="custCrcOwner">
 <input type="hidden" id="custCrcNoMask" name="custCrcNoMask">
 <input type="hidden" id="nameCard" name="nameCard">
+
+<input type="hidden" id="oriCustCrcNo" name="oriCustCrcNo">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

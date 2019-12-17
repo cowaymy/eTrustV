@@ -553,15 +553,20 @@
       }, null, true);
     });
     $('#btnAddCRC').click(
-        function() {
-          var vCustId = $('#btnThirdPartyOwnt').is(":checked") ? $(
-              '#txtHiddenThirdPartyIDOwnt').val() : $(
-              '#txtHiddenCustIDOwnt').val();
-          Common.popupDiv(
-              "/sales/customer/customerCreditCardAddPop.do", {
-                custId : vCustId
-              }, null, true);
-        });
+            function() {
+              var vCustId = $('#btnThirdPartyOwnt').is(":checked") ? $(
+                  '#txtHiddenThirdPartyIDOwnt').val() : $(
+                  '#txtHiddenCustIDOwnt').val();
+              if(FormUtil.isEmpty($("#nricOwnt").val())) {
+                  Common.alert("NRIC required to add new Credit Card!");
+                  return false;
+              }
+              Common.popupDiv(
+                  "/sales/customer/customerCreditCardAddPop.do", {
+                    custId : vCustId,
+                    nric : $("#nricOwnt").val()
+                  }, null, true);
+            });
     $('#btnSelectCRC').click(
         function() {
           var vCustId = $('#btnThirdPartyOwnt').is(":checked") ? $(

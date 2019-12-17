@@ -567,4 +567,6 @@ public interface CustomerService {
   EgovMap getPubKey();
 
   void tokenCrcUpdate(Map<String, Object> params);
+
+  String getCustNric(Map<String, Object> params);
 }

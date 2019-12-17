@@ -195,7 +195,7 @@
     }
 
     function fn_doSaveCreditCard() {
-        console.log('fn_doSaveBankAcc() START');
+        $("#oriCustCrcNo").val($("#cardNo").val());
 
         Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {;
             var pub = "-----BEGIN PUBLIC KEY-----" + result.pubKey + "-----END PUBLIC KEY-----";
@@ -204,7 +204,6 @@
             form = document.getElementById('frmCrCard');
             molpay.encryptForm(form);
             var form = $("#frmCrCard").serialize();
-
 
             $.ajax({
                 url : "/sales/customer/tokenLogging.do",
@@ -232,7 +231,7 @@
                                         fn_loadCreditCard2(result.data);
                                         $('#addCrcCloseBtn').click();
                                     }
-
+e
                                 }, function(jqXHR, textStatus, errorThrown) {
                                     try {
                                          Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save credit card. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
@@ -287,6 +286,8 @@
             <input type="hidden" id="custCrcExpr" name="custCrcExpr">
             <input type="hidden" id="custCrcNoMask" name="custCrcNoMask">
             <input type="hidden" id="nameCard" name="nameCard">
+
+            <input type="hidden" id="oriCustCrcNo" name="oriCustCrcNo">
 
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
