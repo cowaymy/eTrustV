@@ -2945,4 +2945,28 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		return posMapper.selectWhSOBrnchList();
 	}
 
+	   @Override
+	    public List<EgovMap> selectPOSFlexiItem(Map<String, Object> params) {
+
+	        return posMapper.selectPOSFlexiItem(params);
+	    }
+
+	     @Override
+	      public int updatePOSFlexiItemActive(Map<String, Object> params, SessionVO sessionVO) {
+	        // TODO Auto-generated method stub
+	        int cnt = 0;
+	        params.put("updUserId", sessionVO.getUserId());
+	        posMapper.updatePOSFlexiItemActive(params);
+	        return cnt;
+	     }
+
+	     @Override
+	      public int updatePOSFlexiItemInactive(Map<String, Object> params, SessionVO sessionVO) {
+	        // TODO Auto-generated method stub
+	        int cnt = 0;
+	        params.put("updUserId", sessionVO.getUserId());
+	        posMapper.updatePOSFlexiItemInactive(params);
+	        return cnt;
+	     }
+
 }
