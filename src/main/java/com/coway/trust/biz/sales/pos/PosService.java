@@ -101,4 +101,10 @@ public interface PosService {
 
 	List<EgovMap> selectWhSOBrnchList() throws Exception;
 
+	List<EgovMap> selectPOSFlexiItem(Map<String, Object> params);
+
+	int updatePOSFlexiItemActive(Map<String, Object> params, SessionVO sessionVO);
+
+	int updatePOSFlexiItemInactive(Map<String, Object> params, SessionVO sessionVO);
+
 }
