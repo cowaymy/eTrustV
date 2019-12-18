@@ -5001,4 +5001,89 @@
     WHERE ASR_ITM_ID = #{ASR_ITM_ID}
   </delete>
 
+  <insert id="insertLOG0103M" parameterType="Map">
+    INSERT INTO LOG0103M ( SEQ,
+                           SVC_ORD_ID,
+                           CUST_ID,
+                           SVC_DT,
+                           STK_ID,
+                           QTY,
+                           OLD_SERIAL,
+                           NEW_SERIAL,
+                           CMPLT_YN,
+                           CMPLT_DT,
+                           RESN_CODE,
+                           COMMENTS,
+                           CRT_DT,
+                           CRT_USER_ID,
+                           UPD_DT,
+                           UPD_USER_ID,
+                           MEM_ID,
+                           RESULT_ID,
+                           STK_ID_NEW
+    ) VALUES ( LOG0103M_SEQ.nextval,
+               #{AS_NO},
+               null,
+               TO_DATE(#{ASR_SETL_DT},'dd/mm/yyyy'),
+               #{AS_PART_ID},
+               #{AS_PART_QTY},
+               null,
+               null,
+               null,
+               null,
+               null,
+               null,
+               SYSDATE,
+               #{AS_UPD_USR},
+               SYSDATE,
+               #{AS_UPD_USR},
+               #{ASR_CT},
+               #{ASR_NO},
+               null
+    )
+  </insert>
+
+  <insert id="reverse_CURR_LOG0103M" parameterType="Map">
+    INSERT INTO LOG0103M ( SEQ,
+                           SVC_ORD_ID,
+                           CUST_ID,
+                           SVC_DT,
+                           STK_ID,
+                           QTY,
+                           OLD_SERIAL,
+                           NEW_SERIAL,
+                           CMPLT_YN,
+                           CMPLT_DT,
+                           RESN_CODE,
+                           COMMENTS,
+                           CRT_DT,
+                           CRT_USER_ID,
+                           UPD_DT,
+                           UPD_USER_ID,
+                           MEM_ID,
+                           RESULT_ID,
+                           STK_ID_NEW
+    )
+    SELECT LOG0103M_SEQ.NEXTVAL ,
+           A.AS_NO,
+           NULL,
+           B.AS_SETL_DT,
+           C.ASR_ITM_PART_ID,
+           (C.ASR_ITM_PART_QTY * -1),
+           NULL,
+           NULL,
+           NULL,
+           NULL,
+           NULL,
+           NULL,
+           SYSDATE,
+           #{updator},
+           SYSDATE,
+           #{updator},
+           B.AS_CT_ID,
+           B.AS_RESULT_ID,
+           NULL
+    FROM SVC0108D A JOIN SVC0109D B ON A.AS_ID = B.AS_ENTRY_ID AND AS_RESULT_ID = #{OLD_AS_RESULT_ID}
+    LEFT JOIN SVC0110D C ON B.AS_RESULT_ID = C.AS_RESULT_ID
+  </insert>
 </mapper>
