@@ -40,6 +40,7 @@ import oracle.sql.DATE;
  * 17/09/2019    ONGHC      1.0.8       - Create getDftTyp
  * 08/10/2019    ONGHC      1.0.9       - Amend asResultBasic_update
  * 21/10/2019    ONGHC      1.0.10      - Amend chkPmtMap and Un-map Payment Function
+ * 17/12/2019    ONGHC      1.0.11      - Add AS Used Filter Feature
  *********************************************************************************************/
 
 @Service("ASManagementListService")
@@ -876,6 +877,43 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
       }
     }
     LOGGER.debug("== INSERT FILTER CHANGE - END");
+    return rtnValue;
+  }
+
+  /**
+   * LOG0103M INSERT - AS'S USED FILTER
+   * @param string
+   *
+   * @param params
+   * @return
+   */
+  public int insertLOG0103M(List<EgovMap> addItemList, String AS_NO, Map obj, String UPDATOR) {
+    LOGGER.debug("== INSERT USED FILTER - START");
+    int rtnValue = -1;
+    if (addItemList.size() > 0) {
+      for (int i = 0; i < addItemList.size(); i++) {
+
+        Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
+        Map<String, Object> iMap = new HashMap();
+
+        String strFilterID = String.valueOf(updateMap.get("filterId")) != "null"
+                             ? String.valueOf(updateMap.get("filterId")) : String.valueOf(updateMap.get("filterID"));
+
+        iMap.put("AS_NO", AS_NO);
+        iMap.put("AS_PART_ID", strFilterID.trim());
+        iMap.put("AS_PART_QTY", updateMap.get("filterQty"));
+        iMap.put("AS_UPD_UST", UPDATOR);
+        iMap.put("ASR_NO", obj.get("AS_RESULT_ID"));
+        iMap.put("ASR_CT", obj.get("AS_CT_ID"));
+        iMap.put("ASR_SETL_DT", obj.get("AS_SETL_DT"));
+        //iMap.put("SERIAL_NO", updateMap.get("srvFilterLastSerial"));
+        //iMap.put("FILTER_BARCD_SERIAL_NO", updateMap.get("srvFilterLastSerial"));
+
+        LOGGER.debug("== INSERT LOG0103M PARAMS {}", iMap);
+        rtnValue = ASManagementListMapper.insertLOG0103M(iMap);
+      }
+    }
+    LOGGER.debug("== INSERT USED FILTER - END");
     return rtnValue;
   }
 
@@ -1786,6 +1824,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     int callint = updateSTATE_CCR0006D(svc0004dmap);
     // INSERT SVC0005D FILTER
     this.insertSVC0005D(addItemList, AS_RESULT_ID, String.valueOf(params.get("updator")));
+    // INSERT USED FILTER
+    this.insertLOG0103M(addItemList, svc0004dmap.get("AS_NO").toString(), svc0004dmap, String.valueOf(params.get("updator")));
     this.insert_stkCardLOG0014D(addItemList, AS_RESULT_ID, String.valueOf(params.get("updator")), svc0004dmap);
 
     svc0004dmap.put("AS_ID", svc0004dmap.get("AS_ENTRY_ID"));
@@ -1968,6 +2008,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     int reverse_SVC0004D_cnt = ASManagementListMapper.reverse_SVC0004D(svc0004dmap); // INSERT REVERSE SVC0004D
     int reverse_CURR_SVC0004D_cnt = ASManagementListMapper.reverse_CURR_SVC0004D(svc0004dmap); // UPDATE OLD ISCUR COLUMN TO 0 MAKE IT NOT THE LATEST RECORD
     int reverse_SVC0005D_cnt = ASManagementListMapper.reverse_CURR_SVC0005D(svc0004dmap); // INSERT REVERSE SVC0005D
+    // INSERT REVERSE USED FILTER
+    int reverse_LOG0103M_cnt = ASManagementListMapper.reverse_CURR_LOG0103M(svc0004dmap); // INSERT REVERSE SVC0005D
 
     // REVERSE LOGISTIC CALL
     Map<String, Object> logPram = null;
