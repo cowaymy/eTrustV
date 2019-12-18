@@ -2981,8 +2981,8 @@
   }
 
   function fn_loadListCanc() {
-    //doGetComboOrder('/common/selectCodeList.do', '52', 'CODE_ID', '', 'cmbRequestor', 'S', ''); //Common Code
-    doGetComboOrder('/sales/order/selectCodeList.do', '52', 'CODE_ID', '', 'cmbRequestor', 'S', ''); //Common Code
+    doGetComboOrder('/common/selectCodeList.do', '52', 'CODE_ID', '', 'cmbRequestor', 'S', ''); //Common Code
+    //doGetComboOrder('/sales/order/selectCodeList.do', '52', 'CODE_ID', '', 'cmbRequestor', 'S', ''); //Common Code
     doGetComboData('/sales/order/selectResnCodeList.do', {
       resnTypeId : '536',
       stusCodeId : '1'
