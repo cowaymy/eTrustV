@@ -10,6 +10,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 05/09/2019    ONGHC      1.0.1       - CREATE FOR IN-HOUSE REPAIR
+ * 17/12/2019    ONGHC      1.0.2       - Add AS Used Filter Feature
  *********************************************************************************************/
 
 @Mapper("InHouseRepairMapper")
@@ -328,4 +329,7 @@ public interface InHouseRepairMapper {
 
   List<EgovMap> getASEntryCommission(Map<String, Object> params);
 
+  int insertLOG0103M(Map<String, Object> params);
+
+  int reverse_CURR_LOG0103M(Map<String, Object> params);
 }
