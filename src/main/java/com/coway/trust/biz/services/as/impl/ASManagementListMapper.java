@@ -16,6 +16,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 05/09/2019    ONGHC      1.0.4       - Create Function for In-House Repair
  * 17/09/2019    ONGHC      1.0.5       - Create getDftTyp
  * 21/10/2019    ONGHC      1.0.6       - Amend chkPmtMap and Un-map Payment Function
+ * 17/12/2019    ONGHC      1.0.7       - Add AS Used Filter Feature
  *********************************************************************************************/
 
 @Mapper("ASManagementListMapper")
@@ -336,4 +337,8 @@ public interface ASManagementListMapper {
   List<EgovMap> getDftTyp(Map<String, Object> params);
 
   List<EgovMap> getDefectTypSCList(String params);
+
+  int insertLOG0103M(Map<String, Object> params);
+
+  int reverse_CURR_LOG0103M(Map<String, Object> params);
 }
