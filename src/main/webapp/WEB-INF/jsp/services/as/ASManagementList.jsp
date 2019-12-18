@@ -13,6 +13,7 @@
  17/09/2019  ONGHC  1.0.6          Amend fn_ledger to Pass AS no. rather than ASR no.
  17/09/2019  ONGHC  1.0.7          Show Total AS Ledger
  03/10/2019  ONGHC  1.0.8          Add AS Raw Report for 31Days
+ 17/12/2019  ONGHC  1.0.9          Add BS No. Column
  -->
 
 <script type="text/javaScript">
@@ -192,6 +193,12 @@
           headerText : "<spring:message code='service.grid.asTotalLdg'/>",
           editable : false,
           dataType : "numeric",
+          width : 100
+        },
+        {
+          dataField : "bsNo",
+          headerText : "<spring:message code='service.grid.HSNo'/>",
+          editable : false,
           width : 100
         },
         {
