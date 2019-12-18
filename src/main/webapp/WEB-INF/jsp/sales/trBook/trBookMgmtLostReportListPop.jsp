@@ -380,7 +380,7 @@ $(document).ready(function() {
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript: validRequiredField()"><spring:message code="sal.btn.getToExcel" /></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript: validRequiredField()">Generate To Excel</a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />
