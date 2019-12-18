@@ -538,8 +538,10 @@ function fn_insTransactionLog(posNo, posTypeId){
     </c:if>
 <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
  <li><p class="btn_blue"><a href="#" id="_convertBtn">Convert POS</a></p></li>
-  <li><p class="btn_blue"><a href="#" id="_addItemBtn">Add POS Flexi Item</a></p></li>
     </c:if>
+  <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+     <li><p class="btn_blue"><a href="#" id="_addItemBtn">Add POS Flexi Item</a></p></li>
+     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_search"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
