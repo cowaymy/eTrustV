@@ -3,38 +3,38 @@
 
 
 <script type="text/javascript">
-	
+
 function cboGroup_SelectedIndexChanged(){
-    
+
     var total_item = new Array();
     var i = 0;
-    $('#cboGroup :selected').each(function(j, mul){ 
+    $('#cboGroup :selected').each(function(j, mul){
        total_item[i] = $(mul).val();
         i++;
     });
-  
+
     CommonCombo.make('cboDepartment', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 3, parentID : total_item}, '', {type:'M', isCheckAll:false});
-    
+
     $("#cboDepartment").multipleSelect("enable");
  //   $("#cboMember").multipleSelect("enable");
-    
+
 }
 
 function cboOrganization_SelectedIndexChanged(){
-    
+
     var total_item = new Array();
     var i = 0;
-    $('#cboOrganization :selected').each(function(j, mul){ 
+    $('#cboOrganization :selected').each(function(j, mul){
         total_item[i] = $(mul).val();
         i++;
     });
 
     CommonCombo.make('cboGroup', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 2, parentID : total_item}, '', {type:'M', isCheckAll:false});
-   
+
     $("#cboGroup").multipleSelect("enable");
     $("#cboDepartment").multipleSelect("disable");
 //    $("#cboMember").multipleSelect("enable");
-     
+
 }
 
 function cboMember_SelectedIndexChanged(){
@@ -42,101 +42,101 @@ function cboMember_SelectedIndexChanged(){
     $("#cboOrganization").multipleSelect("disable");
     $("#cboGroup").multipleSelect("disable");
     $("#cboDepartment").multipleSelect("disable");
-   
+
 	if(parseInt($("#cboMember :selected").val()) < 4){
-		
+
 		var arrparentID0 = 3487;
 		var arrparentID1 = 31983;
 		var arrparentID2 = 23259;
-		
+
 		if($("#cboMember :selected").val() == "1"){
-			CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1, parentID : arrparentID0}, '', {type:'M', isCheckAll:false});			
+			CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1, parentID : arrparentID0}, '', {type:'M', isCheckAll:false});
 		}else if($("#cboMember :selected").val() == "2"){
 			CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1, parentID : arrparentID1}, '', {type:'M', isCheckAll:false});
         }else if($("#cboMember :selected").val() == "3"){
         	CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1, parentID : arrparentID2}, '', {type:'M', isCheckAll:false});
         }
-		
+
 		$("#cboOrganization").multipleSelect("enable");
 		$("#cboGroup").multipleSelect("disable");
 	    $("#cboDepartment").multipleSelect("disable");
 //		$("#cboMember").multipleSelect("enable");
-	    
+
 	}else{
-		
-		var arrparentID0 = 0;  
+
+		var arrparentID0 = 0;
 		CommonCombo.make('cboDepartment', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 4, parentID : arrparentID0}, '', {type:'M', isCheckAll:false});
-		
+
 		$("#cboOrganization").multipleSelect("disable");
 	    $("#cboGroup").multipleSelect("disable");
 		$("#cboDepartment").multipleSelect("enable");
    //     $("#cboMember").multipleSelect("enable");
 	}
-	
+
 }
 
 
 function validRequiredField(){
-	
+
 	var valid = true;
 	var message = "";
-	
+
 	if(($("#rdpDateTo").val() == null || $("#rdpDateTo").val().length == 0) || ($("#rdpDateFrom").val() == null || $("#rdpDateFrom").val().length == 0)){
 		valid = false;
 		message += "<spring:message code="sal.alert.msg.selectClosedDate" /></br>";
 	}
-	
-	if(!($("#rdpDateTo").val() == null || $("#rdpDateTo").val().length == 0) || !($("#rdpDateFrom").val() == null || $("#rdpDateFrom").val().length == 0)){
-		
-		var frArr = $("#rdpDateFrom").val().split("/");
-	    var toArr = $("#rdpDateTo").val().split("/");
-		var datefrom = new Date(frArr[1]+"/"+frArr[0]+"/"+frArr[2]);
-		var dateto = new Date(toArr[1]+"/"+toArr[0]+"/"+toArr[2]);
-		var day = 60 * 60 * 24 * 1000;
-		
-		if((datefrom.getTime() + 30*day) < dateto){
-			valid = false;
-            message += "<spring:message code="sal.alert.msg.interval30days" /></br>";
-		}			 
-	}
-	
+
+	//if(!($("#rdpDateTo").val() == null || $("#rdpDateTo").val().length == 0) || !($("#rdpDateFrom").val() == null || $("#rdpDateFrom").val().length == 0)){
+
+	//	var frArr = $("#rdpDateFrom").val().split("/");
+	//    var toArr = $("#rdpDateTo").val().split("/");
+	//	var datefrom = new Date(frArr[1]+"/"+frArr[0]+"/"+frArr[2]);
+	//	var dateto = new Date(toArr[1]+"/"+toArr[0]+"/"+toArr[2]);
+	//	var day = 60 * 60 * 24 * 1000;
+
+		//if((datefrom.getTime() + 30*day) < dateto){
+		//	valid = false;
+        //    message += "<spring:message code="sal.alert.msg.interval30days" /></br>";
+		//}
+	//}
+
 	if(valid == false){
         Common.alert("<spring:message code="sal.alert.title.reportGenSummary" />" + DEFAULT_DELIMITER + message);
 
     }else{
     	btnGenerateExcel_Click();
     }
-    
+
 }
 
 function btnGenerateExcel_Click(){
-	
+
 	var dateclosed = "";
 	var losttype = "";
 	var tRNo = "";
-	var tRBookNo = ""; 
+	var tRBookNo = "";
 	var keyInBranch = 0;
 	var keyInUser = "";
-	
+
 	var whereSQL = "";
-	
+
 	if(!($("#rdpDateTo").val() == null || $("#rdpDateTo").val().length == 0) || !($("#rdpDateFrom").val() == null || $("#rdpDateFrom").val().length == 0)){
 		whereSQL += " AND t.DATECLOSED >= TO_DATE('"+$("#rdpDateFrom").val()+"', 'dd/MM/YY') AND t.DATECLOSED <= TO_DATE('"+$("#rdpDateTo").val()+"', 'dd/MM/YY')";
 	}
-	
+
 	if(!($("#txtTRFrom").val().trim() == null || $("#txtTRFrom").val().trim().length == 0) || !($("#txtTRTo").val().trim() == null || $("#txtTRTo").val().trim().length == 0)){
 		whereSQL += " AND (t.TR_NO BETWEEN '"+$("#txtTRFrom").val().trim()+"' AND '"+$("#txtTRTo").val().trim()+"')";
 	}
-	
+
 	if(!($("#txtTRBookNo").val().trim() == null || $("#txtTRBookNo").val().trim().length == 0)){
 		whereSQL += " AND t.TRBNUMBER = '"+$("#txtTRBookNo").val().trim()+"' ";
 	}
-	
+
 	 if($('#cmbLostType :selected').length > 0){
          whereSQL += " AND (";
          var runNo = 0;
-         
-         $('#cmbLostType :selected').each(function(i, mul){ 
+
+         $('#cmbLostType :selected').each(function(i, mul){
              if(runNo == 0){
                  if($(mul).val() == "pieces"){
                 	 losttype = "Piece";
@@ -145,7 +145,7 @@ function btnGenerateExcel_Click(){
                 	 losttype = "Whole Book";
                      whereSQL += "t.LOSTTYPE LIKE '%whole%' ";
                  }
-	
+
              }else{
             	 if($(mul).val() == "pieces"){
                      losttype = "Piece";
@@ -159,28 +159,28 @@ function btnGenerateExcel_Click(){
          });
          whereSQL += ") ";
 	 }
-	
+
 	if($("#cmbBranch :selected").index() > 0){
 		keyInBranch = parseInt($("#cmbBranch :selected").val());
 		whereSQL += " AND t.BRNCH_ID = '"+keyInBranch+"' ";
 	}
-	
+
 	if(!($("#txtKeyInUser").val().trim() == null || $("#txtKeyInUser").val().trim().length == 0)){
 		keyInUser = $("#txtKeyInUser").val().trim();
 		whereSQL += " AND t.USER_NAME = '"+keyInUser+"' ";
 	}
-	
+
 	var showKeyDepartment = "-";
 	if($("#cboMember :selected").index() > 0){
-		
+
 		var mbrID = "";
 		var mbrID1 = "";
 		var mbrID2 = "";
 		var mbrID3 = "";
 		if(parseInt($("#cboMember :selected").val()) == 4){
-			
+
 			var cnt = 0;
-			$('#cboDepartment :selected').each(function(i, mul){ 
+			$('#cboDepartment :selected').each(function(i, mul){
 				if(cnt == 0){
 					mbrID += $(mul).val();
 				}else{
@@ -190,10 +190,10 @@ function btnGenerateExcel_Click(){
 			});
 			whereSQL += " AND t.MEM_ID IN ("+mbrID+") ";
 		}else{
-			
+
 			var cnt = 0;
 			if($('#cboOrganization :selected').length > 0){
-				$('#cboOrganization :selected').each(function(i, mul){ 
+				$('#cboOrganization :selected').each(function(i, mul){
 					if(cnt == 0){
 						mbrID1 += " '"+$(mul).val().substring(0, 7)+"' ";
 					}else{
@@ -203,9 +203,9 @@ function btnGenerateExcel_Click(){
 				});
 			//	whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";
 			}
-			
+
 			if($('#cboGroup :selected').length > 0){
-				$('#cboGroup :selected').each(function(i, mul){ 
+				$('#cboGroup :selected').each(function(i, mul){
 					if(cnt == 0){
 						mbrID2 += " '"+$(mul).val().substring(0, 7)+"' ";
                     }else{
@@ -215,9 +215,9 @@ function btnGenerateExcel_Click(){
 				});
 			//	whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";
 			}
-			
+
 			if($('#cboDepartment :selected').length > 0){
-				$('#cboDepartment :selected').each(function(i, mul){ 
+				$('#cboDepartment :selected').each(function(i, mul){
 					if(cnt == 0){
 						mbrID3 += " '"+$(mul).val().substring(0, 7)+"' ";
                     }else{
@@ -225,37 +225,37 @@ function btnGenerateExcel_Click(){
                     }
                     cnt += 1;
 				});
-			//   whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";	
+			//   whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";
 			}
 			//showKeyDepartment = $('#cboDepartment :selected').text();
 			whereSQL += " AND t.DEPT_CODE IN ("+mbrID1+mbrID2+mbrID3+") ";
 		}
 	}
-		
+
 	var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
-    } 
+    }
     $("#reportDownFileName").val("TRBookLostReport_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     $("#viewType").val("EXCEL");
     $("#reportFileName").val("/sales/TRBook_LostReport.rpt");
-    
+
     $("#V_WHERESQL").val(whereSQL);
-    
+
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
-            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  
+            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.
     };
-    
+
     Common.report("form", option);
-	
+
 }
 
 
 $(document).ready(function() {
 
 	CommonCombo.make('cmbBranch', '/sales/ccp/getBranchCodeList', '' , '');
-    
+
      /* 멀티셀렉트 플러그인 start */
     $('.multy_select').change(function() {
        //console.log($(this).val());
@@ -263,14 +263,14 @@ $(document).ready(function() {
     .multipleSelect({
        width: '100%'
     });
-    
+
     var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
-    } 
+    }
     $("#rdpDateFrom").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
     $("#rdpDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
-    
+
     CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1}, '', {type:'M', isCheckAll:false});
     CommonCombo.make('cboGroup', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 2}, '', {type:'M', isCheckAll:false});
     CommonCombo.make('cboDepartment', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 3}, '', {type:'M', isCheckAll:false});
@@ -392,7 +392,7 @@ $(document).ready(function() {
 </form>
 
 </section><!-- content end -->
-     
+
 </section><!-- container end -->
 
 </div><!-- popup_wrap end -->
