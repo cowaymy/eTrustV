@@ -52,6 +52,7 @@ function fn_saveSerialNoModify(){
 }
 
 function fn_ClosePop(){
+
 	var obj = {
          asIsSerialNo  : $("#popSerialNoModifyForm #pSerialNo").val(),
          beforeSerialNo : $("#popSerialNoModifyForm #pBeforeSerialNo").val()
@@ -83,7 +84,7 @@ function fn_ClosePop(){
  <section class="pop_body">
   <!-- pop_body start -->
   <form id="popSerialNoModifyForm" name="popSerialNoModifyForm" action="#" method="post">
-   <input type="hidden" id="pSerialNo" name="pSerialNo"  />
+   <input type="hidden" id="pSerialNo" name="pSerialNo" value="${pSerialNo}" />
    <input type="hidden" id="pBeforeSerialNo" name="pBeforeSerialNo" value="${pSerialNo}" />
    <input type="hidden" id="pSalesOrdId" name="pSalesOrdId" value="${pSalesOrdId}" />
    <input type="hidden" id="pRefDocNo" name="pRefDocNo" value="${pRefDocNo}" />
