@@ -15,7 +15,6 @@
 console.log("webInvoiceRequestViewPop");
 var myGridID;
 var myGridData = $.parseJSON('${appvInfoAndItems}');
-var atchFileCnt = '${atchFileCnt}';
 var attachList = null;
 var myColumnLayout = [ {
     dataField : "clamUn",
@@ -32,7 +31,7 @@ var myColumnLayout = [ {
 }, {
     dataField : "appvItmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
-}, /*{
+}, {
     dataField : "glAccCode",
     headerText : '<spring:message code="expense.GLAccount" />'
 }, {
@@ -53,7 +52,7 @@ var myColumnLayout = [ {
     dataField : "taxName",
     headerText : '<spring:message code="newWebInvoice.taxCode" />',
     style : "aui-grid-user-custom-left"
-},*/ {
+}, {
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />'
 }, /*{
@@ -84,73 +83,12 @@ var myColumnLayout = [ {
     /*expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
         return (item.netAmt + item.taxAmt + item.taxNonClmAmt);
-    }
+    }*/
 }, {
     dataField : "expDesc",
     headerText : '<spring:message code="newWebInvoice.description" />',
     style : "aui-grid-user-custom-left",
-    width : 200*/
-},{
-    dataField : "reqstRem",
-    headerText : '<spring:message code="newWebInvoice.remark" />'
-},{
-    dataField : "atchFileGrpId",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-},{
-    dataField : "atchFileId",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-},{
-    dataField : "atchFileName",
-    headerText : '<spring:message code="newWebInvoice.attachment" />',
-    width : 200,
-    labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-        var myString = value;
-        // 로직 처리
-        // 여기서 value 를 원하는 형태로 재가공 또는 포매팅하여 반환하십시오.
-        if(FormUtil.isEmpty(myString)) {
-            myString = '<spring:message code="invoiceApprove.noAtch.msg" />';
-        }
-        return myString;
-     },
-    renderer : {
-        type : "ButtonRenderer",
-        onclick : function(rowIndex, columnIndex, value, item) {
-            console.log("view_btn click atchFileGrpId : " + item.atchFileGrpId + " atchFileId : " + item.atchFileId);
-            if(atchFileCnt > 1) {
-                fn_fileListPop(item.atchFileGrpId);
-            } else {
-            	if(atchFileCnt == 1) {
-                    var data = {
-                            atchFileGrpId : item.atchFileGrpId,
-                            atchFileId : item.atchFileId
-                    };
-                    if(item.fileExtsn == "jpg" || item.fileExtsn == "png" || item.fileExtsn == "gif") {
-                        // TODO View
-                        console.log(data);
-                        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-                            console.log(result);
-                            var fileSubPath = result.fileSubPath;
-                            fileSubPath = fileSubPath.replace('\', '/'');
-                            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                        });
-                    } else {
-                        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-                            console.log(result);
-                            var fileSubPath = result.fileSubPath;
-                            fileSubPath = fileSubPath.replace('\', '/'');
-                            console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
-                                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
-                                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                        });
-                    }
-                } else {
-                	Common.alert('<spring:message code="invoiceApprove.notFoundAtch.msg" />');
-                }
-            }
-        }
-    }
+    width : 200
 }
 ];
 
@@ -755,21 +693,20 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <tr id="ccInvcInfo">
     <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
     <td id="viewCostCentr"></td>
-    <th scope="row"><spring:message code="approveView.requester" /></th>
-    <td id="viewReqstUserId"></td>
-    <!-- <th scope="row" id="invcDtLbl"><spring:message code="webInvoice.invoiceDate" /></th> -->
-    <!--<td id="viewInvcDt"></td> -->
+    <th scope="row" id="invcDtLbl"><spring:message code="webInvoice.invoiceDate" /></th>
+    <td id="viewInvcDt"></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="webInvoice.requestDate" /></th>
-    <td colspan="3" id="viewReqstDt"></td>
-    
+    <td id="viewReqstDt"></td>
+    <th scope="row"><spring:message code="approveView.requester" /></th>
+    <td id="viewReqstUserId"></td>
 </tr>
 <tr>
     <th scope="row" id="viewMemAccNameTh"></th>
-    <td colspan="3" id="viewMemAccNameTd"></td>
-    <!--<th scope="row" id="paydueDtLbl"><spring:message code="newWebInvoice.payDueDate" /></th>-->
-    <!--<td id="viewPayDueDt"></td>-->
+    <td id="viewMemAccNameTd"></td>
+    <th scope="row" id="paydueDtLbl"><spring:message code="newWebInvoice.payDueDate" /></th>
+    <td id="viewPayDueDt"></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="approveView.approveStatus" /></th>
