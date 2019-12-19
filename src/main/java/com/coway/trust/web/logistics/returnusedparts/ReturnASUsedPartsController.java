@@ -35,6 +35,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 18/12/2019    ONGHC      1.0.1       - Create AS Used Filter
+ * 18/12/2019    ONGHC      1.0.2       - Amend returnPartsList to add AS Type
  *********************************************************************************************/
 
 @Controller
@@ -110,6 +111,8 @@ public class ReturnASUsedPartsController {
     String[] searchSltCde = request.getParameterValues("searchSltCde");
     String[] searchLoc = request.getParameterValues("searchLoc");
 
+    String asTyp = request.getParameter("asTyp");
+
     logger.debug("===================================================");
     logger.debug("= searchOder  : {}", searchOder);
     logger.debug("= searchCustomer : {}", searchCustomer);
@@ -120,6 +123,7 @@ public class ReturnASUsedPartsController {
     logger.debug("= returnedt : {}", returnedt);
     logger.debug("= searchMaterialType : {}", searchMaterialType);
     logger.debug("= searchComplete  : {}", searchComplete);
+    logger.debug("= asTyp  : {}", asTyp);
     logger.debug("= searchDefTyp  : {}", searchDefTyp);
     logger.debug("= searchDefCde  : {}", searchDefCde);
     logger.debug("= searchSltCde  : {}", searchSltCde);
@@ -138,6 +142,7 @@ public class ReturnASUsedPartsController {
     smap.put("searchMaterialType", searchMaterialType);
     smap.put("searchComplete", searchComplete);
     smap.put("searchLoc", searchLoc);
+    smap.put("asTyp", asTyp);
     smap.put("searchDefTyp", searchDefTyp);
     smap.put("searchDefCde", searchDefCde);
     smap.put("searchSltCde", searchSltCde);
