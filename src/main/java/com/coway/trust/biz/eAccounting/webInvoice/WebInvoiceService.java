@@ -92,4 +92,6 @@ public interface WebInvoiceService {
   int checkExistClmNo(String clmNo);
   
   List<EgovMap> selectAtchFileData(Map<String, Object> params);
+
+  String selectFCM12Data(Map<String, Object> params);
 }

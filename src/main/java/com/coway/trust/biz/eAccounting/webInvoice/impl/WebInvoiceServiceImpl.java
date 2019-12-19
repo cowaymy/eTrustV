@@ -624,4 +624,10 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
       // TODO Auto-generated method stub
       return webInvoiceMapper.selectAtchFileData(params);
     }
+
+    @Override
+    public String selectFCM12Data(Map<String, Object> params) {
+      // TODO Auto-generated method stub
+      return webInvoiceMapper.selectFCM12Data(params);
+    }
 }

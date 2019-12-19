@@ -138,4 +138,6 @@ public interface WebInvoiceMapper {
   int checkExistClmNo(String clmNo);
   
   List<EgovMap> selectAtchFileData(Map<String, Object> params);
+  
+  String selectFCM12Data(Map<String, Object> params);
 }

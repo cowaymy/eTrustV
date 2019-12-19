@@ -373,29 +373,60 @@ function fn_checkEmpty() {
     return checkResult;
 }
 
-function fn_viewRequestPop(clmNo) {
-	var data = {
-            clmNo : clmNo,
-            callType : 'view'
-    };
-	Common.popupDiv("/eAccounting/pettyCash/viewRequestPop.do", data, null, true, "viewRequestPop");
-}
 
-function fn_webInvoiceRequestPop(appvPrcssNo, clmType) {
-    var data = {
-            clmType : clmType
-            ,appvPrcssNo : appvPrcssNo
-    };
-    Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
-}
+	function fn_checkEmpty2() {
+		var checkResult = true;
+		if (FormUtil.isEmpty($("#newCostCenter").val())) {
+			Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
+			checkResult = false;
+		}
+		if (FormUtil.isEmpty($("#reqstAmt").val())) {
+			Common.alert('<spring:message code="pettyCashCustdn.reqstAmt.msg" />');
+			checkResult = false;
+		} else {
+			if($("#reqstAmt").val() <= 0){
+				Common.alert('<spring:message code="pettyCashCustdn.reqstAmtVal.msg" />');
+				checkResult = false;
+			}
+		}
+		if (FormUtil.isEmpty($("#payDueDt").val())) {
+			Common.alert('<spring:message code="pettyCashCustdn.paydt.msg" />');
+			checkResult = false;
+		}
+		if (FormUtil.isEmpty($("#txtAtch").val())) {
+			Common.alert('<spring:message code="pettyCashCustdn.atch.msg" />');
+			checkResult = false;
+		}
+		if (FormUtil.isEmpty($("#reqstRem").val())) {
+			Common.alert('<spring:message code="pettyCashCustdn.reqstRem.msg" />');
+			checkResult = false;
+		}
 
-function fn_report() {
-    var option = {
-        isProcedure : true
-    };
-    Common.report("dataForm", option);
-}
+		return checkResult;
+	}
 
+	function fn_viewRequestPop(clmNo) {
+		var data = {
+			clmNo : clmNo,
+			callType : 'view'
+		};
+		Common.popupDiv("/eAccounting/pettyCash/viewRequestPop.do", data, null, true, "viewRequestPop");
+	}
+
+	function fn_webInvoiceRequestPop(appvPrcssNo, clmType) {
+		var data = {
+			clmType : clmType,
+			appvPrcssNo : appvPrcssNo
+		};
+		Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
+	}
+
+	function fn_report() {
+		var option = {
+			isProcedure : true
+		};
+		Common.report("dataForm", option);
+	}
 </script>
 
 <!-- report Form -->

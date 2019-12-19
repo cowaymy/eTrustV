@@ -330,7 +330,7 @@ public class PettyCashController {
 	@RequestMapping(value = "/updatePettyCashReqst.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePettyCashReqst(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 
-		LOGGER.debug("params =====================================>>  " + params);
+		LOGGER.debug("updatePettyCashReqst ===============================>>  " + params);
 
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
 				File.separator + "eAccounting" + File.separator + "pettyCash", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
@@ -355,26 +355,31 @@ public class PettyCashController {
 		return "eAccounting/pettyCash/reqstApproveLinePop";
 	}
 
-	@RequestMapping(value = "/reqstApproveLineSubmit.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> reqstApproveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-
-		LOGGER.debug("params =====================================>>  " + params);
-
-		String appvPrcssNo = webInvoiceService.selectNextAppvPrcssNo();
-		params.put("appvPrcssNo", appvPrcssNo);
-		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
-		params.put("userName", sessionVO.getUserName());
-
-		// TODO
-		pettyCashService.insertRqstApproveManagement(params);
-
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(params);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-		return ResponseEntity.ok(message);
-	}
+  @RequestMapping(value = "/reqstApproveLineSubmit.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> reqstApproveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model,
+      SessionVO sessionVO) {
+    
+    // VANNIE ADD TO SELECT ATCH FILE GROUP ID FROM F12 TABLE.
+    
+    String atchFileGrpId = webInvoiceService.selectFCM12Data(params);
+    String appvPrcssNo = webInvoiceService.selectNextAppvPrcssNo();
+    params.put("appvPrcssNo", appvPrcssNo);
+    params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+    params.put("userName", sessionVO.getUserName());
+    params.put("atchFileGrpId", atchFileGrpId);
+    
+    LOGGER.debug("reqstApproveLineSubmit ==========================>>  " + params);
+    
+    // TODO
+    pettyCashService.insertRqstApproveManagement(params);
+    
+    ReturnMessage message = new ReturnMessage();
+    message.setCode(AppConstants.SUCCESS);
+    message.setData(params);
+    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    
+    return ResponseEntity.ok(message);
+  }
 
 	@RequestMapping(value = "/reqstRegistrationMsgPop.do")
 	public String reqstRegistrationMsgPop(ModelMap model) {

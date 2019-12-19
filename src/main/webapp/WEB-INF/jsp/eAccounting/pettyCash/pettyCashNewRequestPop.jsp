@@ -66,11 +66,12 @@ $(document).ready(function () {
 
 /* 인풋 파일(멀티) */
 function setInputFile2(){//인풋파일 세팅하기
-    $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
+    $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' id= 'txtAtch'/><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
+    
 }
 
 function fn_tempSave() {
-	if(fn_checkEmpty()) {
+	if(fn_checkEmpty2()) {
 		if(FormUtil.isEmpty($("#clmNo").val())) {
 			fn_saveNewRequest(callType);
 		} else {
@@ -80,7 +81,7 @@ function fn_tempSave() {
 }
 
 function fn_saveNewRequest(st) {
-    if(fn_checkEmpty()){
+    if(fn_checkEmpty2()){
         var formData = Common.getFormData("form_newReqst");
         var obj = $("#form_newReqst").serializeJSON();
         $.each(obj, function(key, value) {
@@ -112,7 +113,7 @@ function fn_saveNewRequest(st) {
 }
 
 function fn_saveUpdateRequest(st) {
-    if(fn_checkEmpty()){
+    if(fn_checkEmpty2()){
         var formData = Common.getFormData("form_newReqst");
         var obj = $("#form_newReqst").serializeJSON();
         $.each(obj, function(key, value) {
@@ -145,7 +146,7 @@ function fn_saveUpdateRequest(st) {
 }
 
 function fn_reqstApproveLinePop() {
-    var checkResult = fn_checkEmpty();
+    var checkResult = fn_checkEmpty2();
     
     if(!checkResult){
         return false;
@@ -193,7 +194,7 @@ function fn_reqstApproveLinePop() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
+	<th scope="row"><spring:message code="webInvoice.costCenter" /><span class="must">*</span></th>
 	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" /><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="pettyCashCustdn.creator" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserName" name="crtUserName" value="${userName}"/></td>
@@ -215,13 +216,13 @@ function fn_reqstApproveLinePop() {
 	<td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="appvCashAmt" name="appvCashAmt"/></td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="pettyCashNewRqst.rqstAmt" /></th>
+	<th scope="row"><spring:message code="pettyCashNewRqst.rqstAmt" /><span class="must">*</span></th>
 	<td><input type="text" title="" placeholder="" class="w100p" id="reqstAmt" name="reqstAmt"/></td>
-	<th scope="row"><spring:message code="pettyCashNewRqst.payDt" /></th>
+	<th scope="row"><spring:message code="pettyCashNewRqst.payDt" /><span class="must">*</span></th>
 	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="payDueDt" name="payDueDt"/></td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
+	<th scope="row"><spring:message code="newWebInvoice.attachment" /><span class="must">*</span></th>
 	<td colspan="3">
 	<div class="auto_file2"><!-- auto_file start -->
 	<input type="file" title="file add" />
@@ -229,7 +230,7 @@ function fn_reqstApproveLinePop() {
 	</td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
+	<th scope="row"><spring:message code="newWebInvoice.remark" /><span class="must">*</span></th>
 	<td colspan="3"><textarea cols="20" rows="5" id="reqstRem" name="reqstRem"></textarea></td>
 </tr>
 </tbody>
