@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  18/12/2019  ONGHC  1.0.0          Create AS Used Filter
+ 19/12/2019  ONGHC  1.0.1          Add AS Type Selection
  -->
 
 <style type="text/css">
@@ -695,12 +696,18 @@
      <tr>
       <th scope="row"><spring:message code='log.label.lctGrade'/></th>
       <td><select class="w100p" id="searchlocgrade" name="searchlocgrade"></select></td>
+      <th scope="row"><spring:message code='service.grid.ASTyp'/></th>
+      <td>
+         <label><input type="radio" name="asTyp" value="*" checked="checked" /><span>All</span></label>
+         <label><input type="radio" name="asTyp" value="as" /><span>AS</span></label>
+         <label><input type="radio" name="asTyp" value="ihr" /><span>IHR</span></label>
+      </td>
       <th scope="row"><spring:message code='service.grid.ASNo'/></th>
       <td><input type="text" class="w100p" id="searchOder"  name="searchOder"></td>
-      <th scope="row"><spring:message code='log.head.customername'/></th>
-      <td><input type="text" class="w100p" id="searchCustomer" name="searchCustomer"></td>
      </tr>
      <tr>
+      <th scope="row"><spring:message code='log.head.customername'/></th>
+      <td><input type="text" class="w100p" id="searchCustomer" name="searchCustomer"></td>
       <th scope="row"><spring:message code='log.head.settledate'/></th>
       <td>
        <div class="date_set w100p">
@@ -725,8 +732,6 @@
         </p>
        </div>
       </td>
-      <th scope="row"></th>
-      <td></td>
      </tr>
      <tr>
       <th scope="row"><spring:message code='log.head.materialcode'/></th>
