@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  18/12/2019  ONGHC  1.0.0          Create AS Used Filter
+ 19/12/2019  ONGHC  1.0.1          Add AS Type Selection
  -->
 
 <script type="text/javascript">
@@ -148,12 +149,16 @@
       var warehouseCode = "";
       var deptCode = "";
       var codyCode = "";
+      var asTyp = "";
       var whereSQL = "";
       var orderBySQL = "";
 
       $("#reportFileName").val("");
       $("#reportDownFileName").val("");
       $("#viewType").val("");
+
+      asTyp = $("input[name='asTypPop']:checked").val();
+      warehouseCode = $("#cmbBranchCode :selected").text();
 
       if (!($("#dpHSSettleDateFrom").val() == null || $("#dpHSSettleDateFrom").val().length == 0)) {
         whereSQL += " AND TO_CHAR(A.SVC_DT, 'yyyymmdd') >= TO_CHAR(TO_DATE('"
@@ -242,7 +247,7 @@
       if ($("#cmbListingType :selected").val() == 1) {
         $("#form #reportFileName").val( "/logistics/ASUsedFilterListing_PDF.rpt");
         $("#reportDownFileName").val("ASUsedFilterListing" + date + (new Date().getMonth() + 1) + new Date().getFullYear());
-        orderBySQL += " ORDER BY B.STK_CODE, B.STK_DESC, F.SALES_ORD_NO, A.SVC_DT ";
+        orderBySQL += " ORDER BY A.MATERIAL_CODE, A.MATERIAL_NAME, A.ORDER_NO, A.SERVICE_DATE ";
       }
 
       if ($("#cmbListingType :selected").val() == 2) {
@@ -257,6 +262,7 @@
       $("#form #V_WAREHOUSECODE").val(warehouseCode);
       $("#form #V_DEPTCODE").val(deptCode);
       $("#form #V_CODYCODE").val(codyCode);
+      $("#form #V_ASTYP").val(asTyp);
       $("#form #V_ORDERBYSQL").val(orderBySQL);
       $("#form #V_SELECTSQL").val("");
       $("#form #V_FULLSQL").val("");
@@ -341,15 +347,26 @@
          <c:forEach var="list" items="${rtnStat}" varStatus="status">
            <option value="${list.code}" selected>${list.codeName}</option>
          </c:forEach>
-         </select></td>
-       <th scope="row"><spring:message code='log.head.branch'/> <span class="must">*</span></th>
-       <td><select class="w100p" id="cmbBranchCode" name="cmbBranchCode"></select></td>
+         </select>
+       </td>
+       <th scope="row"><spring:message code='service.grid.ASTyp'/></th>
+       <td>
+         <label><input type="radio" name="asTypPop" value="*" checked="checked" /><span>All</span></label>
+         <label><input type="radio" name="asTypPop" value="as" /><span>AS</span></label>
+         <label><input type="radio" name="asTypPop" value="ihr" /><span>IHR</span></label>
+       </td>
       </tr>
       <tr>
+       <th scope="row"><spring:message code='log.head.branch'/> <span class="must">*</span></th>
+       <td><select class="w100p" id="cmbBranchCode" name="cmbBranchCode"></select></td>
        <th scope="row"><spring:message code='log.label.lctGrade'/> <span class="must">*</span></th>
        <td><select class="w100p" id="cmbDepartmentCode" onchange="cmbDepartmentCode_SelectedIndexChanged()"></select></td>
+      </tr>
+      <tr>
        <th scope="row"><spring:message code='log.head.location'/> <span id="m6" name="m6" class="must" style="display:none">*</span></th>
        <td><select class="w100p" id="cmbCodyCode" name="cmbCodyCode"></select></td>
+       <th scope="row"></th>
+       <td></td>
       </tr>
      </tbody>
     </table>
@@ -364,21 +381,20 @@
          code="sal.btn.clear" /></a>
       </p></li>
     </ul>
-    <input type="hidden" id="reportFileName" name="reportFileName"
-     value="" /> <input type="hidden" id="viewType" name="viewType"
-     value="" /> <input type="hidden" id="reportDownFileName"
-     name="reportDownFileName" value="" /> <input type="hidden"
-     id="V_WHERESQL" name="V_WHERESQL" value="" /> <input type="hidden"
-     id="V_HSSETTLEDATEFROM" name="V_HSSETTLEDATEFROM" value="" /> <input
-     type="hidden" id="V_HSSETTLEDATETO" name="V_HSSETTLEDATETO"
-     value="" /> <input type="hidden" id="V_RETSTATUS"
-     name="V_RETSTATUS" value="" /> <input type="hidden"
-     id="V_WAREHOUSECODE" name="V_WAREHOUSECODE" value="" /> <input
-     type="hidden" id="V_DEPTCODE" name="V_DEPTCODE" value="" /> <input
-     type="hidden" id="V_CODYCODE" name="V_CODYCODE" value="" /> <input
-     type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" value="" /> <input
-     type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" value="" /> <input
-     type="hidden" id="V_FULLSQL" name="V_FULLSQL" value="" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+    <input type="hidden" id="viewType" name="viewType" value="" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
+    <input type="hidden" id="V_HSSETTLEDATEFROM" name="V_HSSETTLEDATEFROM" value="" />
+    <input type="hidden" id="V_HSSETTLEDATETO" name="V_HSSETTLEDATETO" value="" />
+    <input type="hidden" id="V_RETSTATUS" name="V_RETSTATUS" value="" />
+    <input type="hidden" id="V_WAREHOUSECODE" name="V_WAREHOUSECODE" value="" />
+    <input type="hidden" id="V_DEPTCODE" name="V_DEPTCODE" value="" />
+    <input type="hidden" id="V_CODYCODE" name="V_CODYCODE" value="" />
+    <input type="hidden" id="V_ASTYP" name="V_ASTYP" value="" />
+    <input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" value="" />
+    <input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" value="" />
+    <input type="hidden" id="V_FULLSQL" name="V_FULLSQL" value="" />
    </form>
   </section>
   <!-- content end -->
