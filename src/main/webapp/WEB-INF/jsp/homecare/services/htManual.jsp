@@ -241,10 +241,18 @@ var TODAY_DD      = "${toDay}";
           labelText : "Edit",
           onclick : function(rowIndex, columnIndex, value, item) {
 
+              var todayMMYYYY = String(TODAY_DD.substr(3, 7));
+              console.log("todayMMYYYY : "+ todayMMYYYY);
+
             if (item.code == "ACT") {
               Common
                   .alert('Not able to EDIT for the CS Order status in Active.');
               return false;
+            }
+
+            if(item.hsDate != todayMMYYYY) {
+            	Common.alert("Not able to EDIT previous month CS Order.");
+            	return false;
             }
 
             $("#_schdulId").val(item.schdulId);
