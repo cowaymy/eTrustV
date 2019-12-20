@@ -11,7 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.serialChange.SerialChangeService;
+import com.coway.trust.cmmn.exception.PreconditionException;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -53,6 +55,16 @@ public class SerialChangeServiceImpl extends EgovAbstractServiceImpl implements 
 	serialChangeMapper.updateBarcodeChange(params);
 
 	logger.info("++++ saveSerialNoModify return params ::" + params );
+
+	String errcodeScan = (String)params.get("errCode");
+	String errmsgScan = (String)params.get("errMsg");
+
+	System.out.println("++++ errcodeScan ::" + errcodeScan );
+	System.out.println("++++ errmsgScan ::" + errmsgScan );
+
+	if(!errcodeScan.equals("000")){
+		throw new PreconditionException(AppConstants.FAIL, errmsgScan);
+	}
 
   	  return params;
 	}
