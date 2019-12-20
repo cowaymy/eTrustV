@@ -64,6 +64,9 @@
 		               AND B.MEM_LVL = 2      -- SCM
 		               AND B.EMPLY_STUS_ID = 1
 		        WHERE A.MEM_LVL = 1         -- GCM
+		        <if test='allYn == "N"'>
+		           AND A.EMPLY_STUS_ID = 1
+		        </if>
 		        GROUP BY A.MONTH_VAL, A.MEM_CODE, A.NAME
 		      )
 		      PIVOT
@@ -122,6 +125,9 @@
 			           AND C.MEM_LVL= 3      -- CM
 			           AND C.EMPLY_STUS_ID = 1
 			        WHERE A.MEM_LVL= 1     -- GCM
+			        <if test='allYn == "N"'>
+	                   AND A.EMPLY_STUS_ID = 1
+	                </if>
 			        GROUP BY A.MONTH_VAL, A.MEM_CODE, A.NAME
               )
               PIVOT
@@ -185,6 +191,9 @@
 			           AND D.MEM_LVL= 4      -- CODY
 			           AND D.EMPLY_STUS_ID = 1
 			       WHERE A.MEM_LVL= 1      -- GCM
+			       <if test='allYn == "N"'>
+                       AND A.EMPLY_STUS_ID = 1
+                   </if>
 			        GROUP BY A.MONTH_VAL, A.MEM_CODE, A.NAME
               )
               PIVOT
