@@ -278,7 +278,6 @@
   <!-- Customer Main Address(Customer View) -->
   <select id="selectCustomerViewMainAddress" parameterType="Map"
     resultType="egovMap">
-      <![CDATA[
                  SELECT Extent1.CUST_ADD_ID CUST_ADD_ID  ,
                            Extent1.CUST_ID CUST_ID  ,
                            Extent1.CRT_USER_ID CRT_USER_ID  ,
@@ -310,8 +309,16 @@
                            LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
                            LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
                            LEFT JOIN SYS0064M Extent5   ON Extent5.AREA_ID = Extent1.AREA_ID
-                           LEFT JOIN SYS0005M Extent6   ON Extent5.CT_BRNCH_CODE = Extent6.CODE
+                <choose>
+                    <when test='isHomecare == "Y"'>
+                        LEFT JOIN SYS0005M Extent6 ON Extent5.DT_BRNCH_CODE = Extent6.CODE
+                    </when>
+                    <otherwise>
+                        LEFT JOIN SYS0005M Extent6 ON Extent5.CT_BRNCH_CODE = Extent6.CODE
+                    </otherwise>
+                </choose>
                            LEFT JOIN SYS0005M Extent7   ON Extent5.SO_BRNCH_CODE = Extent7.CODE
+    <![CDATA[
                     WHERE
                          8 <> Extent1.STUS_CODE_ID
                     AND

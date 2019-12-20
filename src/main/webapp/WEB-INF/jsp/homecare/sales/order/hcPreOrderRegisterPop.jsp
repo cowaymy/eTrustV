@@ -1508,7 +1508,7 @@
     }
 
     function fn_loadBillAddr(custAddId){
-        Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(billCustInfo) {
+        Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : 'Y'}, function(billCustInfo) {
 
         	if(billCustInfo != null) {
                 $("#hiddenBillAddId").val(billCustInfo.custAddId); //Customer Address ID(Hidden)
