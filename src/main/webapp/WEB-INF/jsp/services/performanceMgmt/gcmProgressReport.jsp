@@ -195,6 +195,7 @@
 
     	var obj = $("#insertForm").serializeJSON();
     	obj.tabId = tabId;
+    	obj.allYn = $("#allYn option:selected").val();
 
     	if(tabId == 'CRD') {
     		if(FormUtil.checkReqValue($("#mmyyyy"))){
@@ -287,6 +288,8 @@
                 <col style="width: *">
                 <col style="width: 160px">
                 <col style="width: *">
+                <col style="width: 160px">
+                <col style="width: *">
             </colgroup>
             <tbody>
             <tr>
@@ -297,6 +300,13 @@
                 <th scope="row"><spring:message code='service.grid.gcmCode'/></th>
                 <td>
                     <input type="text" id="gcmCode" name="gcmCode" title="GCM Code" style="width: 80%">
+                </td>
+                <th scope="row">GCM <spring:message code='status'/></th>
+                <td>
+                    <select class="w50p" id="allYn" name="allYn">
+                        <option value="N" selected>Active</option>
+                        <option value="Y">Include Inactive</option>
+                    </select>
                 </td>
             </tr>
             </tbody>
