@@ -288,7 +288,7 @@
                 <col style="width: *">
                 <col style="width: 160px">
                 <col style="width: *">
-                <col style="width: 160px">
+                <col style="width: 190px">
                 <col style="width: *">
             </colgroup>
             <tbody>
@@ -301,7 +301,7 @@
                 <td>
                     <input type="text" id="gcmCode" name="gcmCode" title="GCM Code" style="width: 80%">
                 </td>
-                <th scope="row">GCM <spring:message code='status'/></th>
+                <th scope="row">GCM/SCM/CM/CODY <spring:message code='status'/></th>
                 <td>
                     <select class="w50p" id="allYn" name="allYn">
                         <option value="N" selected>Active</option>
