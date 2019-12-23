@@ -29,6 +29,13 @@ public class StockTransferReqStatusMListDto {
 	@ApiModelProperty(value = "Location ID")
 	private String rdcCode;
 
+	@ApiModelProperty(value = "From Loc Id")
+	private String fromLocId;
+
+	@ApiModelProperty(value = "To Loc Id")
+	private String toLocId;
+
+
 	public List<StockTransferReqStatusDListDto> getPartsList() {
 		return partsList;
 	}
@@ -89,6 +96,22 @@ public class StockTransferReqStatusMListDto {
 
 	public void setRdcCode(String rdcCode) {
 		this.rdcCode = rdcCode;
+	}
+
+	public String getFromLocId() {
+		return fromLocId;
+	}
+
+	public void setFromLocId(String fromLocId) {
+		this.fromLocId = fromLocId;
+	}
+
+	public String getToLocId() {
+		return toLocId;
+	}
+
+	public void setToLocId(String toLocId) {
+		this.toLocId = toLocId;
 	}
 
 }
