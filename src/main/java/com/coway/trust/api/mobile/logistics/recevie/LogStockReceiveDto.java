@@ -38,6 +38,14 @@ public class LogStockReceiveDto {
 	@ApiModelProperty(value = "Location ID")
 	private int rdcCode;
 
+	@ApiModelProperty(value = "시리얼 여부")
+	private String serialRequireChkYn;
+
+	@ApiModelProperty(value = "")
+	private String fromLocId;
+
+	@ApiModelProperty(value = "")
+	private String toLocId;
 	private List<LogStockPartsReceiveDto> partsList = null;
 
 	public static LogStockReceiveDto create(EgovMap egvoMap) {
@@ -122,6 +130,30 @@ public class LogStockReceiveDto {
 
 	public void setRdcCode(int rdcCode) {
 		this.rdcCode = rdcCode;
+	}
+
+	public String getSerialRequireChkYn() {
+		return serialRequireChkYn;
+	}
+
+	public void setSerialRequireChkYn(String serialRequireChkYn) {
+		this.serialRequireChkYn = serialRequireChkYn;
+	}
+
+	public String getFromLocId() {
+		return fromLocId;
+	}
+
+	public void setFromLocId(String fromLocId) {
+		this.fromLocId = fromLocId;
+	}
+
+	public String getToLocId() {
+		return toLocId;
+	}
+
+	public void setToLocId(String toLocId) {
+		this.toLocId = toLocId;
 	}
 
 }
