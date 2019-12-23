@@ -261,7 +261,7 @@
                         <th scope="row">From Location<span class="must">*</span></th>
                         <td>
                             <!-- <select id="locType" name="locType[]" multiple="multiple" style="width:85px"></select> -->
-                            <select id="locType" name="locType[]" multiple="multiple" class="w23_5p"></select>
+                            <select id="locType" name="locType[]" multiple="multiple" style="width:85px"></select>
                             <select id="locCode" name="locCode[]"><option value="">Choose One</option></select>
                         </td>
                     </tr>
