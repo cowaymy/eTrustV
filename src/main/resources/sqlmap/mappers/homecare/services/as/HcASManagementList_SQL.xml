@@ -599,7 +599,7 @@
 	    AND E.MEM_ID = C.MEM_ID
 	    AND C.MEM_TYPE = 5758              -- homecare
 	    AND A.MEM_LVL IN ('3','4')
-	    AND B.CODE = D.D.DT_BRNCH_CODE
+	    AND B.CODE = D.DT_BRNCH_CODE
 	    AND E.CT_SUB_GRP = D.DT_SUB_GRP
 	    AND C.STUS = 1
 	    AND E.MAJOR_GRP = '1'
