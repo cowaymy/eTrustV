@@ -32,7 +32,7 @@
     <if test='deliveryNo != null and deliveryNo != ""'>
         AND A.LAST_DELVRY_NO = #{deliveryNo}
     </if>
-    <if test='(serialNo == null or serialNo == "") and (itmCode == null or itmCode == "") and (requestNo == null or requestNo == "") and (custId == null or custId == "")  and (orderNo == null or orderNo == "")  and (deliveryNo == null or deliveryNo == "")'>
+    <if test='(serialNo == null or serialNo == "") and (requestNo == null or requestNo == "") and (custId == null or custId == "")  and (orderNo == null or orderNo == "")  and (deliveryNo == null or deliveryNo == "")'>
         <if test='grSDate != null and grSDate != "" and grEDate != null and grEDate != ""'>
             AND A.LAST_DELVRY_GR_DT <![CDATA[>=]]> TO_CHAR(TO_DATE(#{grSDate} , 'DD/MM/YYYY'), 'YYYYMMDD')
             AND A.LAST_DELVRY_GR_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{grEDate}, 'DD/MM/YYYY'), 'YYYYMMDD')
@@ -103,7 +103,7 @@
                               <if test='deliveryNo != null and deliveryNo != ""'>
                                   AND A.LAST_DELVRY_NO = #{deliveryNo}
                               </if>
-                              <if test='(serialNo == null or serialNo == "") and (itmCode == null or itmCode == "") and (requestNo == null or requestNo == "") and (custId == null or custId == "")  and (orderNo == null or orderNo == "")  and (deliveryNo == null or deliveryNo == "")'>
+                              <if test='(serialNo == null or serialNo == "") and (requestNo == null or requestNo == "") and (custId == null or custId == "")  and (orderNo == null or orderNo == "")  and (deliveryNo == null or deliveryNo == "")'>
                                   <if test='grSDate != null and grSDate != "" and grEDate != null and grEDate != ""'>
                                       AND A.LAST_DELVRY_GR_DT <![CDATA[>=]]> TO_CHAR(TO_DATE(#{grSDate} , 'DD/MM/YYYY'), 'YYYYMMDD')
                                       AND A.LAST_DELVRY_GR_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{grEDate}, 'DD/MM/YYYY'), 'YYYYMMDD')
