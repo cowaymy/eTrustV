@@ -192,17 +192,18 @@
 
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            {headerText : "SOF No.",                dataField : "sofNo",           editable : false, width : '7%'}
-          , {headerText : "eKey-in Date",          dataField : "requestDt",      editable : false, width : '7%'}
-          , {headerText : "eKey-in Time",          dataField : "requestTm",    editable : false, width : '8%'}
-          , {headerText : "Product",                 dataField : "product",        editable : false, width : '10%'}
-          , {headerText : "Customer Name",     dataField : "custNm",         editable : false, width : '8%'}
-          , {headerText : "Creator",                  dataField : "crtName",       editable : false, width : '8%'}
-          , {headerText : "Status",                   dataField : "stusName",      editable : false,  width : '8%'}
-          , {headerText : "Order Number",       dataField : "salesOrdNo",    editable : false, width : '8%'}
-          , {headerText : "Fail Reason Code",    dataField : "rem1",            editable : false,  width : '9%'}
-          , {headerText : "Fail Remark",            dataField : "rem2",            editable : false,  width : '9%'}
-          , {headerText : "Last Update At (By)", dataField : "lastUpd",         editable : false, width : '18%'}
+            {headerText : "BNDL No.",             dataField : "bndlNo",         editable : false, width : 130}
+          , {headerText : "SOF No.",                dataField : "sofNo",           editable : false, width : 150}
+          , {headerText : "eKey-in Date",          dataField : "requestDt",      editable : false, width : 120}
+          , {headerText : "eKey-in Time",          dataField : "requestTm",    editable : false, width : 120}
+          , {headerText : "Product",                 dataField : "product",        editable : false, width : 300}
+          , {headerText : "Customer Name",     dataField : "custNm",         editable : false, width : 300}
+          , {headerText : "Creator",                  dataField : "crtName",       editable : false, width : 200}
+          , {headerText : "Status",                   dataField : "stusName",      editable : false, width : 120}
+          , {headerText : "Order Number",       dataField : "salesOrdNo",    editable : false, width : 150}
+          , {headerText : "Fail Reason Code",    dataField : "rem1",            editable : false,  width : 150}
+          , {headerText : "Fail Remark",            dataField : "rem2",            editable : false,  width : 150}
+          , {headerText : "Last Update At (By)", dataField : "lastUpd",         editable : false,  width : 300}
           , {headerText : "StatusId",                 dataField : "stusId",           visible  : false}
           , {headerText : "preOrdId",               dataField : "preOrdId",       visible  : false}
         ];

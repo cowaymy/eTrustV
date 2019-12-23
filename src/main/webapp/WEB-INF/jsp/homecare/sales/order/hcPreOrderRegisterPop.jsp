@@ -489,7 +489,19 @@
 
 			if(fn_isExistESalesNo() == 'true') return false;
 
-			Common.popupDiv("/homecare/sales/order/cnfmHcPreOrderDetailPop.do", null, null, true, '_divPreOrderDetailPop');
+		    if($("#ordProduct1 option:selected").index() > 0 && $("#ordProduct2 option:selected").index() > 0) {
+	            // product size check
+	            Common.ajax("GET", "/homecare/sales/order/checkProductSize.do", {product1 : $("#ordProduct1 option:selected").val(), product2 : $("#ordProduct2 option:selected").val()}, function(result) {
+	                if(result.code != '00') {
+	                    Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+	                    $('#aTabOI').click();
+	                    return false;
+
+	                } else {
+	                	Common.popupDiv("/homecare/sales/order/cnfmHcPreOrderDetailPop.do", null, null, true, '_divPreOrderDetailPop');
+	                }
+	            });
+		    }
         });
 
         /* $('#btnCal').click(function() {
@@ -925,7 +937,6 @@
         // ADD ON COMPONENT CHECKING - END
 
         if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
-
         return isValid;
     }
 
@@ -1753,7 +1764,7 @@
 </tr>
 <tr>
     <th scope="row">SOF No</th>
-    <td colspan="3" ><input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p" style="min-width:150px"  value=""'/></td>
+    <td colspan="3" ><input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p" style="min-width:150px" maxlength="20" value=""'/></td>
 </tr>
 <tr>
     <th scope="row" colspan="4" ><span class="must"><spring:message code='sales.msg.ordlist.icvalid'/></span></th>

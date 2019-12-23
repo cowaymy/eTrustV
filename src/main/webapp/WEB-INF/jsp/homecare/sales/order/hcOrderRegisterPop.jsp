@@ -1209,6 +1209,25 @@
             return false;
         }
 
+        if($("#ordProduct1 option:selected").index() > 0 && $("#ordProduct2 option:selected").index() > 0) {
+            // product size check
+            Common.ajax("GET", "/homecare/sales/order/checkProductSize.do", {product1 : $("#ordProduct1 option:selected").val(), product2 : $("#ordProduct2 option:selected").val()}, function(result) {
+                if(result.code != '00') {
+                    Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+                    $('#aTabSO').click();
+                    return false;
+
+                } else {
+                	fn_preCheckSave2();
+                }
+            });
+        } else {
+        	fn_preCheckSave2();
+        }
+    }
+
+
+    function fn_preCheckSave2() {
         var isValid = true;
         var msg = "";
         var docSelCnt = 0;
@@ -1226,33 +1245,32 @@
         }
 
         if(convToOrdYn == 'Y') {// if it is eKeyin order
-                if($('#custCntcTelM').val() != null && $('#srvCntcTelM').val() != null ) {
-                    var contactNumber = {
-                              contactNumber       : $('#custCntcTelM').val()
-                            , residenceNumber    : $('#custCntcTelR').val()
-                            , officeNumber          : $('#custCntcTelO').val()
-                            , faxNumber             : $('#custCntcTelF').val()
-                            , asContactNumber    : $('#srvCntcTelM').val()
-                            , asResidenceNumber : $('#srvCntcTelR').val()
-                            , asOfficeNumber       : $('#srvCntcTelO').val()
-                            , asFaxNumber          : $('#srvCntcTelF').val()
-                    };
+           if($('#custCntcTelM').val() != null && $('#srvCntcTelM').val() != null ) {
+               var contactNumber = {
+                     contactNumber       : $('#custCntcTelM').val()
+                   , residenceNumber    : $('#custCntcTelR').val()
+                   , officeNumber          : $('#custCntcTelO').val()
+                   , faxNumber             : $('#custCntcTelF').val()
+                   , asContactNumber    : $('#srvCntcTelM').val()
+                   , asResidenceNumber : $('#srvCntcTelR').val()
+                   , asOfficeNumber       : $('#srvCntcTelO').val()
+                   , asFaxNumber          : $('#srvCntcTelF').val()
+               };
 
-                    Common.ajax("GET", "/sales/customer/existingHPCodyMobile", contactNumber , function(result) {
-                        if(result != null) {
-                            Common.confirm("<spring:message code='sal.alert.msg.existingHPCodyMobileForSales' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />",
-                            function() {
-                                if(docSelCnt <= 0) {
-                                    Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
-                                } else {
-                                	fn_popOrderDetail();
-                                }
-                            });
-                        } else {
-                        	fn_popOrderDetail();
-                         }
-                    });
-                }
+               Common.ajax("GET", "/sales/customer/existingHPCodyMobile", contactNumber , function(result) {
+                   if(result != null) {
+                       Common.confirm("<spring:message code='sal.alert.msg.existingHPCodyMobileForSales' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />", function() {
+                           if(docSelCnt <= 0) {
+                               Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
+                           } else {
+                               fn_popOrderDetail();
+                           }
+                       });
+                    } else {
+                        fn_popOrderDetail();
+                    }
+               });
+           }
         } else {
             if(!isValid) {
                 Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
@@ -2803,7 +2821,9 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.product" /><span class="must">*</span></th>
-    <td><select id="ordProduct1" name="ordProduct1" class="w100p" disabled></select>
+    <td>
+        <select id="ordProduct1" name="ordProduct1" class="w100p" disabled></select>
+    </td>
     <th scope="row"><spring:message code="sal.title.text.salesmanNric" /></th>
     <td><input id="salesmanNric" name="salesmanNric" type="text" title="" placeholder="Salesman NRIC" class="w100p readonly" readonly/></td>
 </tr>
@@ -2878,7 +2898,9 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.product" /><span class="must">*</span></th>
-    <td><select id="ordProduct2" name="ordProduct2" class="w100p" disabled></select>
+    <td>
+        <select id="ordProduct2" name="ordProduct2" class="w100p" disabled></select>
+    </td>
     <td colspan="2"></td>
 </tr>
 <tr id='trCpntId2' style='visibility:collapse'>

@@ -1552,6 +1552,7 @@
             $('#ordPvGST2').val('${preFrmOrderInfo.totPvGst}');
             $('#ordPriceId2').val('${preFrmOrderInfo.prcId}');
         }
+        totSumPrice();
 
         $("input:radio[name='advPay']:radio[value='${preOrderInfo.advBill}']").prop("checked", true);
 

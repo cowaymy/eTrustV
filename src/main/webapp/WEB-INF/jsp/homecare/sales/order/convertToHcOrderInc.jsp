@@ -148,6 +148,7 @@
                     $('#ordPvGST2').val('${preFrmOrderInfo.totPvGst}');
                     $('#ordPriceId2').val('${preFrmOrderInfo.prcId}');
                 }
+                totSumPrice();   // 합계
 
 		        $('#corpCustType').val('${preOrderInfo.corpCustType}');
                 $('#agreementType').val('${preOrderInfo.agreementType}');
