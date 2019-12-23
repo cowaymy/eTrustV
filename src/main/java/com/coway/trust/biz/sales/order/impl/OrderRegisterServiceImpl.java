@@ -1518,6 +1518,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     int itmCompId = salesOrderDVO.getItmCompId();
     int brnchId = installationVO.getBrnchId();
 
+    // SET BNDL_ID
+    salesOrderMVO.setBndlId(orderVO.getBndlId());
+
     DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
     // Date dInstallDate = (Date)formatter.parse(sInstallDate);
     String dInstallDate = sInstallDate;

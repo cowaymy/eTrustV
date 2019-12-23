@@ -174,6 +174,15 @@ public class PreOrderVO implements Serializable {
     private HcOrderVO hcOrderVO;  // Homecare Order
     private String rcdTms1;
     private String rcdTms2;
+    private int bndlId;
+
+	public int getBndlId() {
+		return bndlId;
+	}
+
+	public void setBndlId(int bndlId) {
+		this.bndlId = bndlId;
+	}
 
 	public int getPreOrdId() {
 		return preOrdId;

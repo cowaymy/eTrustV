@@ -52,4 +52,30 @@ public interface HcOrderRegisterMapper {
 	 */
 	public int updateHcPreOrder(HcOrderVO hcOrderVO);
 
+	/**
+	 * Get Order Seq No
+	 * @Author KR-SH
+	 * @Date 2019. 12. 16.
+	 * @return
+	 */
+	public int getOrdSeqNo();
+
+	/**
+	 * Get Bndl No
+	 * @Author KR-SH
+	 * @Date 2019. 12. 16.
+	 * @param hcOrderVO
+	 * @return
+	 */
+	public String getBndlNo(int orderSeqNo);
+
+	/**
+	 * Get Product Size
+	 * @Author KR-SH
+	 * @Date 2019. 12. 16.
+	 * @param product
+	 * @return
+	 */
+	public String getProductSize(String product);
+
 }

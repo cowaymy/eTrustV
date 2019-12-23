@@ -84,6 +84,8 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 				throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Null Product ID");
 			}
 
+			int ordSeqNo = CommonUtils.intNvl(orderVO.getOrdSeqNo());
+
 			// Mattress register
 			if(matStkId > 0) {
     			// Mattress register
@@ -91,6 +93,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 				orderVO.setSalesOrderDVO(orderVO.getSalesOrderDVO1());
 				orderVO.setAccClaimAdtVO(orderVO.getAccClaimAdtVO1());
 				orderVO.setPreOrdId(orderVO.getMatPreOrdId());
+				orderVO.setBndlId(ordSeqNo);
 
     			orderRegisterService.registerOrder(orderVO, sessionVO);
     			matOrdNo = orderVO.getSalesOrderMVO().getSalesOrdNo();
@@ -103,6 +106,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 				orderVO.setSalesOrderDVO(orderVO.getSalesOrderDVO2());
 				orderVO.setAccClaimAdtVO(orderVO.getAccClaimAdtVO2());
 				orderVO.setPreOrdId(orderVO.getFraPreOrdId());
+				orderVO.setBndlId(ordSeqNo);
 
     			orderRegisterService.registerOrder(orderVO, sessionVO);
     			fraOrdNo = orderVO.getSalesOrderMVO().getSalesOrdNo();
@@ -110,7 +114,6 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
 			// 홈케어 주문관리 테이블 insert - HMC0011D
 			HcOrderVO hcOrderVO = new HcOrderVO();
-			int ordSeqNo = CommonUtils.intNvl(orderVO.getOrdSeqNo());
 
 			// Pre Order 인 경우.
 			if(ordSeqNo > 0) {
@@ -123,11 +126,14 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
 				rtnCnt = hcOrderRegisterMapper.updateHcPreOrder(hcOrderVO);
 			} else {
+				ordSeqNo = hcOrderRegisterMapper.getOrdSeqNo();
+
 				hcOrderVO.setCustId(custId);                     // 고객번호
 				hcOrderVO.setMatOrdNo(matOrdNo);        // Mattress Order No
 				hcOrderVO.setFraOrdNo(fraOrdNo);           // Frame Order No
 				hcOrderVO.setCrtUserId(sessionVO.getUserId());    // session Id Setting
 				hcOrderVO.setUpdUserId(sessionVO.getUserId());  // session Id Setting
+				hcOrderVO.setOrdSeqNo(ordSeqNo);
 
 				rtnCnt = hcOrderRegisterMapper.insertHcRegisterOrder(hcOrderVO);
 			}
@@ -140,6 +146,18 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		} catch (Exception e) {
 			throw new ApplicationException(AppConstants.FAIL, "Order Register Failed.");
 		}
+	}
+
+	@Override
+	public boolean checkProductSize(Map<String, Object> params) {
+		String productSize1 = hcOrderRegisterMapper.getProductSize(CommonUtils.nvl(params.get("product1")));
+		String productSize2 = hcOrderRegisterMapper.getProductSize(CommonUtils.nvl(params.get("product2")));
+
+		if(CommonUtils.nvl(productSize1).equals(CommonUtils.nvl(productSize2))) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

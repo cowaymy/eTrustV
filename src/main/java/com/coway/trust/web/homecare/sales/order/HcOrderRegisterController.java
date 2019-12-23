@@ -5,8 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -42,10 +42,11 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/homecare/sales/order")
 public class HcOrderRegisterController {
 
-	private static Logger logger = LoggerFactory.getLogger(HcOrderRegisterController.class);
-
 	@Resource(name = "hcOrderRegisterService")
 	private HcOrderRegisterService hcOrderRegisterService;
+
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
 
 	/**
 	 * New Order Popup
@@ -165,6 +166,31 @@ public class HcOrderRegisterController {
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(msg);
+
+		return ResponseEntity.ok(message);
+	}
+
+	/**
+	 * Check Product Size
+	 * @Author KR-SH
+	 * @Date 2019. 12. 16.
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/checkProductSize.do")
+	public ResponseEntity<ReturnMessage> checkProductSize(@RequestParam Map<String, Object> params) {
+		boolean chkSize = hcOrderRegisterService.checkProductSize(params);
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		if(chkSize) {
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		} else {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage("Product Size is different.");
+		}
 
 		return ResponseEntity.ok(message);
 	}

@@ -113,6 +113,8 @@ public class OrderVO implements Serializable {
 
 	private HcOrderVO hcOrderVO;  // Homecare Order
 
+	private int bndlId;
+
 	public SalesOrderMVO getSalesOrderMVO() {
 		return salesOrderMVO;
 	}
@@ -499,6 +501,14 @@ public class OrderVO implements Serializable {
 
 	public void setFraPreOrdId(int fraPreOrdId) {
 		this.fraPreOrdId = fraPreOrdId;
+	}
+
+	public int getBndlId() {
+		return bndlId;
+	}
+
+	public void setBndlId(int bndlId) {
+		this.bndlId = bndlId;
 	}
 
 

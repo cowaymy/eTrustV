@@ -42,4 +42,13 @@ public interface HcOrderRegisterService {
 	 */
 	public void hcRegisterOrder(OrderVO orderVO, SessionVO sessionVO) throws ParseException;
 
+	/**
+	 * Check Product Size
+	 * @Author KR-SH
+	 * @Date 2019. 12. 16.
+	 * @param params
+	 * @return
+	 */
+	public boolean checkProductSize(Map<String, Object> params);
+
 }

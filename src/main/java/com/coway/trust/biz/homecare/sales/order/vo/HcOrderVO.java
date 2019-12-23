@@ -38,9 +38,17 @@ public class HcOrderVO {
 	private int fraPreOrdId;
 	/** eKeyin Status id */
 	private int stusId;
+	/** bndl No */
+	private String bndlNo;
 
 	public int getOrdSeqNo() {
 		return ordSeqNo;
+	}
+	public String getBndlNo() {
+		return bndlNo;
+	}
+	public void setBndlNo(String bndlNo) {
+		this.bndlNo = bndlNo;
 	}
 	public void setOrdSeqNo(int ordSeqNo) {
 		this.ordSeqNo = ordSeqNo;

@@ -143,7 +143,21 @@ public class SalesOrderMVO implements Serializable {
 
   private int comboOrdBind;
 
-  public long getSalesOrdId() {
+  private int bndlId;
+
+  public int getBndlId() {
+	return bndlId;
+}
+
+public void setBndlId(int bndlId) {
+	this.bndlId = bndlId;
+}
+
+public static long getSerialversionuid() {
+	return serialVersionUID;
+}
+
+public long getSalesOrdId() {
     return salesOrdId;
   }
 

@@ -279,6 +279,7 @@
 		     , CPNT_ID
 		     , CORP_CUST_TYPE
 		     , AGREEMENT_TYPE
+		     , BNDL_ID
 		     )
 		VALUES
 		     ( #{preOrdId}
@@ -345,6 +346,7 @@
 		     , #{itmCompId}
 		     , #{corpCustType}
              , #{agreementType}
+             , #{bndlId}
 		     )
     </insert>
 
