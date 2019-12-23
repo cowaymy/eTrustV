@@ -48,6 +48,26 @@
             return false;
         });
 
+        // [Woongjin Jun] Toggle Button
+        if (Common.checkPlatformType() == "mobile") { // pc, mobile
+            $("#leftMenuToggle").show();
+
+            $(document).on('click', '.js-adminmenu-toggle', function (e) {
+                if (!$('#container > .js-adminmenu-toggle').length) {
+                    $('#container').prepend($(this).clone().addClass('active'));
+                    $("#container").css("padding", "32px 0 0 0");
+                    $(".lnb_wrap").hide(200);
+                } else {
+                    $('#container > .js-adminmenu-toggle').remove();
+                    $("#container").css("padding", "32px 0 0 215px");
+                    $(".lnb_wrap").show(200);
+                }
+            });
+
+            //$(".js-adminmenu-toggle").click();
+        }
+        // [Woongjin Jun] Toggle Button
+
         if( '${SESSION_INFO.userIsExternal}' == "1" ) {
         	$("a[name=mainGo]").attr("href", "${pageContext.request.contextPath}/common/mainExternal.do")
         }else{
@@ -99,21 +119,34 @@
         // 20190903 KR-OHK : default date setting( from~to date)
         fn_setDefaultDate(fromDtType, fromDtFieldNm, fromDtVal, toDtType, toDtFieldNm, toDtVal);
 
-        $("#CURRENT_MENU_CODE").val(menuCode);
-
-        if($("#_myMenu").hasClass("on")){
-            $("#CURRENT_MENU_TYPE").val("MY_MENU");
-            $("#CURRENT_GROUP_MY_MENU_CODE").val(myMenuGroupCode);
-        }else{
-            $("#CURRENT_MENU_TYPE").val("LEFT_MENU");
+        // [Woongjin Jun] Mobile Popup
+        if (Common.checkPlatformType() == "mobile" && menuPath.indexOf("serialScanningGRList.do") != -1) { // pc, mobile
+            popupObj = Common.popupWin("serialScanningGR", "/logistics/SerialMgmt/serialScanningGRList.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
         }
+        else if (Common.checkPlatformType() == "mobile" && menuPath.indexOf("serialScanningGISTOList.do") != -1) {
+            popupObj = Common.popupWin("serialScanningGISTO", "/logistics/SerialMgmt/serialScanningGISTOList.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+        }
+        else if (Common.checkPlatformType() == "mobile" && menuPath.indexOf("serialScanningGISMOList.do") != -1) {
+            popupObj = Common.popupWin("serialScanningGISMO", "/logistics/SerialMgmt/serialScanningGISMOList.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+        }
+        else {
 
-        $("#CURRENT_MENU_FULL_PATH_NAME").val(fullPath);
+	        $("#CURRENT_MENU_CODE").val(menuCode);
 
-        $("#_menuForm").attr({
-            action : getContextPath() + menuPath,
-            method : "POST"
-        }).submit();
+	        if($("#_myMenu").hasClass("on")){
+	            $("#CURRENT_MENU_TYPE").val("MY_MENU");
+	            $("#CURRENT_GROUP_MY_MENU_CODE").val(myMenuGroupCode);
+	        }else{
+	            $("#CURRENT_MENU_TYPE").val("LEFT_MENU");
+	        }
+
+	        $("#CURRENT_MENU_FULL_PATH_NAME").val(fullPath);
+
+	        $("#_menuForm").attr({
+	            action : getContextPath() + menuPath,
+	            method : "POST"
+	        }).submit();
+        }
     }
 
  // 20190903 KR-OHK : default date setting( from~to date)
@@ -191,6 +224,15 @@
             $("#FROM_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setFromYY, setFromMM, setFromDD)));
             $("#TO_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setToYY, setToMM, setToDD)));
 
+            $("#serialScanningGR #GR_FROM_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setFromYY, setFromMM, setFromDD)));
+            $("#serialScanningGR #GR_TO_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setToYY, setToMM, setToDD)));
+
+            $("#serialScanningGISTO #GR_FROM_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setFromYY, setFromMM, setFromDD)));
+            $("#serialScanningGISTO #GR_TO_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setToYY, setToMM, setToDD)));
+
+            $("#serialScanningGISMO #GR_FROM_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setFromYY, setFromMM, setFromDD)));
+            $("#serialScanningGISMO #GR_TO_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setToYY, setToMM, setToDD)));
+
         }
     }
 </script>
@@ -199,6 +241,9 @@
 <section id="container"><!-- container start -->
 
     <aside class="lnb_wrap"><!-- lnb_wrap start -->
+        <!-- [Woongjin Jun] Toggle Button -->
+        <div id="leftMenuToggle" class="js-adminmenu-toggle" style="display:none;"></div>
+        <!-- [Woongjin Jun] Toggle Button -->
 
         <header class="lnb_header"><!-- lnb_header start -->
             <form method="post">
@@ -367,4 +412,18 @@
         <input type="hidden" id="FROM_FIELD_NM" name="FROM_FIELD_NM"/>
         <input type="hidden" id="TO_DT" name="TO_DT"/>
         <input type="hidden" id="TO_FIELD_NM" name="TO_FIELD_NM"/>
+    </form>
+
+    <!-- [Woongjin Jun] Mobile Popup -->
+    <form id="serialScanningGR" name="serialScanningGR" action="#" method="post">
+        <input type="hidden" id="GR_FROM_DT" name="GR_FROM_DT" value=""/>
+        <input type="hidden" id="GR_TO_DT" name="GR_TO_DT" value=""/>
+    </form>
+    <form id="serialScanningGISTO" name="serialScanningGISTO" action="#" method="post">
+        <input type="hidden" id="GR_FROM_DT" name="GR_FROM_DT" value=""/>
+        <input type="hidden" id="GR_TO_DT" name="GR_TO_DT" value=""/>
+     </form>
+    <form id="serialScanningGISMO" name="serialScanningGISMO" action="#" method="post">
+        <input type="hidden" id="GR_FROM_DT" name="GR_FROM_DT" value=""/>
+        <input type="hidden" id="GR_TO_DT" name="GR_TO_DT" value=""/>
     </form>
