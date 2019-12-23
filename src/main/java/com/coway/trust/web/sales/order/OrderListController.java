@@ -4,7 +4,6 @@
 package com.coway.trust.web.sales.order;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,27 +13,27 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
-import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
-import com.coway.trust.biz.services.mlog.MSvcLogApiService;
-import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
-import com.crystaldecisions.jakarta.poi.util.StringUtil;
+import com.crystaldecisions.sdk.prompting.report.Util;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -57,6 +56,8 @@ public class OrderListController {
 	@Resource(name = "servicesLogisticsPFCService")
 	private ServicesLogisticsPFCService servicesLogisticsPFCService;
 
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
 
 
 	@RequestMapping(value = "/orderList.do")
@@ -293,7 +294,21 @@ public class OrderListController {
 
 		//}
 
+		// 시리얼 번호 조회
+		Map<String, Object> schParams = new HashMap<String, Object>() ;
+		System.out.println("++++ codeId ::" + params.get("codeId") );
+		System.out.println("++++ orderInfo ::" + orderInfo );
+		if(CommonUtils.nvl(params.get("codeId")).toString().equals("258")){
+			schParams.put("pItmCode", orderInfo.get("c6"));
+		}else{
+			schParams.put("pItmCode", orderInfo.get("stkCode"));
+		}
+		schParams.put("pSalesOrdId", installResult.get("salesOrdId"));
+		Map<String, Object> orderSerialMap = orderListService.selectOrderSerial(schParams);
+		String orderSerialNo = "";
+		if(!StringUtils.isEmpty( orderSerialMap ) ) orderSerialNo = (String)orderSerialMap.get("orderSerial");
 
+		logger.debug("orderSerialMap : {}", orderSerialMap);
 		logger.debug("installResult : {}", installResult);
 		logger.debug("orderInfo : {}", orderInfo);
 		logger.debug("customerInfo : {}", customerInfo);
@@ -327,6 +342,8 @@ public class OrderListController {
 		model.addAttribute("promotionView", promotionView);
 		model.addAttribute("pRCtInfo", pRCtInfo);
 		model.addAttribute("callEntryId" , params.get("callEntryId"));
+		model.addAttribute("orderSerial" , orderSerialNo );
+
 
 		// 호출될 화면
 		return "sales/order/addProductReturnResultPop";
@@ -413,6 +430,87 @@ public class OrderListController {
 		return ResponseEntity.ok(message);
 	}
 
+	// KR_HAN : Serial 추가
+	@RequestMapping(value = "/addProductReturnSerial.do",method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertProductReturnResultSerial(@RequestBody Map<String, Object> params,SessionVO sessionVO) throws ParseException {
+		ReturnMessage message = new ReturnMessage();
+
+
+		params.put("userId", sessionVO.getUserId() );
+
+		logger.debug("params : {}", params);
+
+		EgovMap rtnMap = orderListService.insertProductReturnResultSerial(params);
+
+
+
+//		Map<String, Object> resultValue = new HashMap<String, Object>();
+//		EgovMap   pReturnParam =orderListService.getPReturnParam(params);
+//		if(String.valueOf(params.get("returnStatus")).equals("4") ) { //성공시
+//			Map<String, Object>    cvMp = new HashMap<String, Object>();
+//
+//		     int noRcd = orderListService.chkRcdTms(params);
+//
+//
+//        	cvMp.put("stkRetnStusId",  			"4");
+//        	cvMp.put("stkRetnStkIsRet",  			"1");
+//        	cvMp.put("stkRetnRem",  			    String.valueOf(params.get("remark")));
+//        	cvMp.put("stkRetnResnId", 		    pReturnParam.get("soReqResnId"));   //?
+//        	cvMp.put("stkRetnCcId",  		     	"1781"); //?
+//        	cvMp.put("stkRetnCrtUserId",         sessionVO.getUserId());
+//        	cvMp.put("stkRetnUpdUserId",        sessionVO.getUserId());
+//        	cvMp.put("stkRetnResultIsSynch",   "0");
+//        	cvMp.put("stkRetnAllowComm",  	"1");
+//        	cvMp.put("stkRetnCtMemId",  		params.get("CTID"));
+//        	cvMp.put("checkinDt",  					String.valueOf( params.get("returnDate") ) );
+//        	cvMp.put("checkinTm",  				"");
+//        	cvMp.put("checkinGps",  				"");
+//        	cvMp.put("signData",  					"");
+//        	cvMp.put("signRegDt",  			    String.valueOf( params.get("returnDate") ) );
+//        	cvMp.put("signRegTm",  				"");
+//        	cvMp.put("ownerCode",                String.valueOf(params.get("custRelationship")));
+//        	cvMp.put("resultCustName",  		String.valueOf(params.get("hidCustomerName")));
+//        	cvMp.put("resultIcmobileNo",  		String.valueOf(params.get("hidCustomerContact")));
+//        	cvMp.put("resultRptEmailNo",  		"");
+//        	cvMp.put("resultAceptName",  		String.valueOf(params.get("custName")));
+//        	cvMp.put("salesOrderNo",  String.valueOf(params.get("hidTaxInvDSalesOrderNo")));
+//        	cvMp.put("userId",  sessionVO.getUserId());
+//        	cvMp.put("serviceNo",  String.valueOf(pReturnParam.get("retnNo")));
+//        	//cvMp.put("transactionId",  String.valueOf(paramsTran.get("transactionId")));
+//        	logger.debug("cvMp : {}", cvMp);
+//
+//        		EgovMap  rtnValue = orderListService.productReturnResult(cvMp);
+//
+//			if( null !=rtnValue){
+//				HashMap   spMap =(HashMap)rtnValue.get("spMap");
+//				logger.debug("spMap :"+ spMap.toString());
+//				if(!"000".equals(spMap.get("P_RESULT_MSG"))){
+//					rtnValue.put("logerr","Y");
+//				}
+//				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+//			}
+//			message.setMessage("Success : Product Return is Complete");
+//
+//		}
+//
+//		else{ // 실패시
+//			Map<String, Object> failParam = params;
+//
+//			failParam.put("userId", sessionVO.getUserId() );
+//			failParam.put("salesOrderNo",  params.get("hidTaxInvDSalesOrderNo") );
+//			failParam.put("serviceNo",  pReturnParam.get("retnNo") );
+//			failParam.put("failReasonCode",  params.get("failReason") );
+//
+//
+//			orderListService.setPRFailJobRequest(params);
+//			message.setMessage("Success : Product Return is Fail");
+//
+//		}
+
+//		message.setMessage("Success : Product Return is Fail");
+		message.setMessage( (String) rtnMap.get("message"));
+		return ResponseEntity.ok(message);
+	}
 
 	@RequestMapping(value = "/selectOrderJsonListVRescue", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectOrderJsonListVRescue(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
@@ -457,5 +555,48 @@ public class OrderListController {
 
 		return "sales/order/orderEKeyInListingPop";
 	}
+
+	// KR_HAN
+	// 시러얼 수정 팝업 호출
+	@RequestMapping(value="/serialNoModifyPop.do")
+	public String serialNoModifyPop(@RequestParam Map<String, Object> params, ModelMap model){
+
+		logger.debug("serialNoModificationPop params : {}",params);
+
+		model.put("pSerialNo"		, params.get("pSerialNo") );
+		model.put("pSalesOrdId"	, params.get("pSalesOrdId") );
+		model.put("pSalesOrdNo"	, params.get("pSalesOrdNo") );
+		model.put("pRetnNo"			, params.get("pRetnNo") );
+		model.put("pStkCode"		, params.get("pStkCode") );
+
+		return "sales/order/serialNoModifyPop";
+	}
+
+
+
+    // KR HAN : Save Serial No Modify
+//	@RequestMapping(value = "/saveSerialNoModify.do", method = RequestMethod.POST)
+//	public ResponseEntity<ReturnMessage> saveSerialNoModify(@RequestBody Map<String, Object> params, Model model,
+//			SessionVO sessionVo) {
+//
+//		Map<String, Object> rmap = new HashMap<>();
+//
+//		params.put("userId", sessionVo.getUserId());
+//
+//		logger.debug("saveSerialNoModify.do :::: params {} ", params);
+//
+//		rmap =  orderListService.saveSerialNoModify(params);
+//
+//		System.out.println("++++ rmap.toString() ::" + rmap.toString() );
+//
+//	    String reVal = (String) rmap.get("dryNo");
+//
+//	    // 결과 만들기
+//	    ReturnMessage message = new ReturnMessage();
+//	    message.setCode(AppConstants.SUCCESS);
+//	    message.setData(rmap);
+//	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+//		return ResponseEntity.ok(message);
+//	}
 
 }
