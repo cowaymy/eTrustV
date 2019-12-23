@@ -51,7 +51,8 @@ var bankStmtLayout = [
     {dataField : "fTrnscId",headerText : "<spring:message code='pay.head.tranxId'/>", editable : false},
     {dataField : "bankName",headerText : "<spring:message code='pay.head.bank'/>", editable : false},
     {dataField : "bankAccName",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},
-    {dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.dateTime'/>", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+    /*{dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.dateTime'/>", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},*/
+    {dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.dateTime'/>", editable : false},
     {dataField : "fTrnscTellerId",headerText : "<spring:message code='pay.head.refCheqNo'/>", editable : false},
     {dataField : "fTrnscRef3",headerText : "<spring:message code='pay.head.description1'/>",editable : false},
     {dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.description2'/>", editable : false},
@@ -157,7 +158,7 @@ function fn_mapping(){
 	if( advKeyInItems.length < 1 || bankStmtItem.length < 1){
 		Common.alert("<spring:message code='pay.alert.keyInListCheck'/>");
 		return;
-	}else if( advKeyInItems.length == 1 || bankStmtItem.length == 1){
+	}else if( advKeyInItems.length == 1 && bankStmtItem.length == 1){
 
 		keyInRowItem = advKeyInItems[0];
 		stateRowItem = bankStmtItem[0];

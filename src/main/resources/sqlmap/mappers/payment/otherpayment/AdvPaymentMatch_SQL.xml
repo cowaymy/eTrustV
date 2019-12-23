@@ -64,7 +64,7 @@
             C.NAME AS BANK_NAME,
             A.F_BANK_JRNL_ACC_ID AS BANK_ACC,
             D.ACC_CODE || ' - ' ||  D.ACC_DESC AS BANK_ACC_NAME,
-            B.F_TRNSC_DT,
+            TO_CHAR(B.F_TRNSC_DT, 'DD/MM/YYYY')F_TRNSC_DT,
             B.F_TRNSC_REF_CHQ_NO,
             B.F_TRNSC_REF_VA_NO,
             B.F_TRNSC_REF3,
