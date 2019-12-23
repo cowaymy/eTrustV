@@ -2822,7 +2822,7 @@
         AND A1.CUST_CRC_STUS_ID = '1'
         AND A1.CUST_CRC_TOKEN = #{token}
         <if test="custId != '' and custId != null">
-            AND A.CUST_ID = #{custId}
+            AND A1.CUST_ID = #{custId}
         </if>
     ) B
     ON A.CUST_ID = B.CUST_ID
