@@ -492,5 +492,23 @@
 		GROUP BY BL_NO, BL_ITM_SEQ, ITM_CODE
 		ORDER BY BL_NO, BL_ITM_SEQ, ITM_CODE
 	</select>
+
+    <resultMap id="INBOUNDSERIALDATA" type="egovMap" />
+    <select id="CreateIssueSerial"  statementType="CALLABLE" parameterType="Map">
+        /* [com.coway.trust.biz.logistics.inbound.impl.InboundMapper.CreateIssueSerial] KR_HAN */
+             { call SP_LOGISTIC_DELIVERY_SERIAL
+                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId}
+                     ,#{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=INBOUNDSERIALDATA} )
+             }
+    </select>
+
+    <resultMap id="INBOUNDRETURNDATA" type="egovMap" />
+    <select id="callSaveBarcodeScan" parameterType="Map"  statementType="CALLABLE">
+        /* [com.coway.trust.biz.logistics.inbound.impl.InboundMapper.callSaveBarcodeScan] KR_HAN */
+        {CALL SP_LOGISTIC_BARCODE_SAVE(#{sGrDate}, #{rstNo}, #{dryNo}, #{zTrnscType}, #{zIoType}, #{updUserId}
+                    , #{errCode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=INBOUNDRETURNDATA}
+                    , #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=INBOUNDRETURNDATA})
+         }
+    </select>
 </mapper>
 
