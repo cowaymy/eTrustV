@@ -16,38 +16,42 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("servicesLogisticsPFCService")
 public class  ServicesLogisticsPFCServiceImpl  extends EgovAbstractServiceImpl implements ServicesLogisticsPFCService {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServicesLogisticsPFCServiceImpl.class);
-	
+
 	@Resource(name = "servicesLogisticsPFCMapper")
 	private ServicesLogisticsPFCMapper  servicesLogisticsPFCMapper;
-	 
-	
+
+
 	@Override
 	public EgovMap  SP_LOGISTIC_REQUEST(Map<String, Object> params) {
 		return (EgovMap) servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(params);
-	}  
-	   
-	
+	}
+
+
 	@Override
 	public EgovMap SP_SVC_LOGISTIC_REQUEST(Map<String, Object> params) {
 		return (EgovMap) servicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST(params);
-	}  
-	 
-	
+	}
+
+
 	@Override
 	public  void  install_Active_SP_LOGISTIC_REQUEST(Map<String, Object> params) {
 		 servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(params);
-	}  
-	 
-	
+	}
+
+
 	@Override
 	public EgovMap getFN_GET_SVC_AVAILABLE_INVENTORY(Map<String, Object> params) {
 		return (EgovMap) servicesLogisticsPFCMapper.getFN_GET_SVC_AVAILABLE_INVENTORY(params);
-	}  
-	 
-	
-	
-} 
+	}
+
+	// KR_HAN : ADD
+	@Override
+	public EgovMap SP_SVC_LOGISTIC_REQUEST_SERIAL(Map<String, Object> params) {
+		return (EgovMap) servicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST_SERIAL(params);
+	}
+
+}
 
 
