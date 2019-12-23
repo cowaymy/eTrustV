@@ -65,22 +65,22 @@ function fnSerialSearchResult(data) {
         });
 
         $("#btnConfiirm").click(function() {
-        	getConfiirm("Confiirm");
+            getConfiirm("Confiirm");
         });
 
         $("#btnClose").click(function() {
-        	window.close();
+            window.close();
         });
     });
 
     function createAUIGrid() {
-    	var mainColumnLayout = [
+        var mainColumnLayout = [
             {dataField:"serialNo", headerText:"Serial No", width:160, height:30},
             {dataField:"itmCode", headerText:"Item Code", width:100, height:30},
             {dataField:"stkDesc", headerText:"Item Description", width:200, height:30, style:"aui-grid-user-custom-left"},
             {dataField:"stkTypeNm", headerText:"Item Type", width:100, height:30},
             {dataField:"stusCode", headerText:"Status", width:70, height:30, labelFunction:function(rowIndex, columnIndex, value, headerText, item) {
-            	return getCodeList("CODE", "", "446", item.stusCode);
+                return getCodeList("CODE", "", "446", item.stusCode);
             }},
             {dataField:"lastDelvryGrDt", headerText:"GR Date", width:100, height:30, dataType:"date", dateInputFormat:"yyyymmdd", formatString:"dd/mm/yyyy"}
         ];
@@ -117,30 +117,30 @@ function fnSerialSearchResult(data) {
         }
 
         if ("CHECK" == "${pGubun}") {
-        	$.extend(mainGridOptions, {showRowCheckColumn : true});
+            $.extend(mainGridOptions, {showRowCheckColumn : true});
         }
 
         mainGridID = GridCommon.createAUIGrid("mainGrid", mainColumnLayout, "", mainGridOptions);
 
         if ("CHECK" == "${pGubun}") {
-        	AUIGrid.bind(mainGridID, "cellDoubleClick", function(event) {
+            AUIGrid.bind(mainGridID, "cellDoubleClick", function(event) {
                 if (event.rowIndex > -1) {
-                	getConfiirm("Click", AUIGrid.getItemByRowIndex(mainGridID, event.rowIndex));
+                    getConfiirm("Click", AUIGrid.getItemByRowIndex(mainGridID, event.rowIndex));
                 }
             });
         }
     }
 
     function getMainList() {
-    	if (FormUtil.isEmpty($("#locType").val())) {
-    		Common.alert('Please Enter Location.');
-    		return;
-    	}
-    	if (FormUtil.isEmpty($("#locCode").val())) {
+        if (FormUtil.isEmpty($("#locType").val())) {
             Common.alert('Please Enter Location.');
             return;
         }
-    	if (FormUtil.isEmpty($("#searchItemCodeOrName").val())) {
+        if (FormUtil.isEmpty($("#locCode").val())) {
+            Common.alert('Please Enter Location.');
+            return;
+        }
+        if (FormUtil.isEmpty($("#searchItemCodeOrName").val())) {
             Common.alert('Please Enter Item Code Or Item Name.');
             return;
         }
@@ -151,18 +151,18 @@ function fnSerialSearchResult(data) {
     }
 
     function setButton() {
-    	if ("SEARCH" == "${pGubun}") {
-    		$(".search_result_button").hide();
-    	}
+        if ("SEARCH" == "${pGubun}") {
+            $(".search_result_button").hide();
+        }
     }
 
     function setSearchFixd() {
-    	if ("${pFixdYn}" == "Y" || "${pFixdYn}" == "" || "${pFixdYn}" == null) {
-    		$("#locType").attr("disabled", true);
-    		$("#locCode").attr("disabled", true);
-    		$("#searchItemCodeOrName").attr("disabled", true);
-    		$("#searchStatus").attr("disabled", true);
-    		$("#searchSerialNo").attr("disabled", true);
+        if ("${pFixdYn}" == "Y" || "${pFixdYn}" == "" || "${pFixdYn}" == null) {
+            $("#locType").attr("disabled", true);
+            $("#locCode").attr("disabled", true);
+            $("#searchItemCodeOrName").attr("disabled", true);
+            $("#searchStatus").attr("disabled", true);
+            $("#searchSerialNo").attr("disabled", true);
         }
     }
 
@@ -184,10 +184,10 @@ function fnSerialSearchResult(data) {
 
         if (searchData.length > 0) {
             if (returnType == "all") {
-            	return searchData;
+                return searchData;
             }
             else {
-            	return searchData[0].codeName;
+                return searchData[0].codeName;
             }
         }
         else {
@@ -237,41 +237,41 @@ function fnSerialSearchResult(data) {
             });
         }
         else {
-        	if ("SEARCH" == "${pGubun}") {
-        		$("#searchStatus option").each(function() {
+            if ("SEARCH" == "${pGubun}") {
+                $("#searchStatus option").each(function() {
                     if (this.value == "I" || this.value == "O") {
                         $("#searchStatus option:eq(" + this.index + ")").attr("selected", "selected");
                     }
                 });
-        	}
-        	else {
-        		$("#searchStatus option").each(function() {
+            }
+            else {
+                $("#searchStatus option").each(function() {
                     if (this.value == "I") {
                         $("#searchStatus option:eq(" + this.index + ")").attr("selected", "selected");
                     }
                 });
-        	}
+            }
         }
     }
 
     function getConfiirm(event, data) {
-    	var rtnData = [];
-    	if (event == "Click") {
-    		rtnData.push(data);
-    	}
-    	if (event == "Confiirm") {
-    		var checkedItems = AUIGrid.getCheckedRowItems(mainGridID);
-    		if (checkedItems.length <= 0 ) {
-    	        alert("Please Check.");
-    	        return;
-    	    }
+        var rtnData = [];
+        if (event == "Click") {
+            rtnData.push(data);
+        }
+        if (event == "Confiirm") {
+            var checkedItems = AUIGrid.getCheckedRowItems(mainGridID);
+            if (checkedItems.length <= 0 ) {
+                alert("Please Check.");
+                return;
+            }
 
-    		$.each(checkedItems, function(index, value) {
-    			rtnData.push(value.item);
-    		});
-    	}
-    	opener.fnSerialSearchResult(rtnData);
-    	window.close();
+            $.each(checkedItems, function(index, value) {
+                rtnData.push(value.item);
+            });
+        }
+        opener.fnSerialSearchResult(rtnData);
+        window.close();
     }
 </script>
 
@@ -286,56 +286,56 @@ function fnSerialSearchResult(data) {
 
     <section class="pop_body"><!-- pop_body start -->
         <section class="search_table"><!-- search_table start -->
-	        <form id="searchForm" name="searchForm">
-	            <table class="type1"><!-- table start -->
-	                <caption>table</caption>
-	                <colgroup>
-	                    <col style="width:35%" />
-	                    <col style="width:*" />
-	                </colgroup>
-	                <tbody>
-	                    <tr>
-	                        <th scope="row"><span style="color:red">*</span> Location</th>
-	                        <td>
-	                            <select id="locType" name="locType[]" multiple="multiple" style="width:120px"></select>
-	                            <select id="locCode" name="locCode[]"><option value="">Choose One</option></select>
-	                        </td>
-	                    </tr>
-	                    <tr>
-	                        <th scope="row"><span style="color:red">*</span> Item Code / Name</th>
-	                        <td>
-	                            <input type="text"  id="searchItemCodeOrName" name="searchItemCodeOrName"  class="w100p" value="${pItemCodeOrName}" />
-	                        </td>
-	                    </tr>
-	                    <tr>
-	                        <th scope="row"> Status</th>
-	                        <td>
-	                            <select class="w100p" id="searchStatus" name="searchStatus[]" multiple="multiple"></select>
-	                        </td>
-	                    </tr>
-	                    <tr>
-	                        <th scope="row"> Serial No</th>
-	                        <td>
-	                            <input type="text"  id="searchSerialNo" name="searchSerialNo"  class="w100p" value="${pSerialNo}" />
-	                        </td>
-	                    </tr>
-	                </tbody>
-	            </table><!-- table end -->
-	        </form>
-	        &nbsp;
-	        &nbsp;
-	    </section><!-- search_table end -->
+            <form id="searchForm" name="searchForm">
+                <table class="type1"><!-- table start -->
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:35%" />
+                        <col style="width:*" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row"><span style="color:red">*</span> Location</th>
+                            <td>
+                                <select id="locType" name="locType[]" multiple="multiple" style="width:120px"></select>
+                                <select id="locCode" name="locCode[]"><option value="">Choose One</option></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><span style="color:red">*</span> Item Code / Name</th>
+                            <td>
+                                <input type="text"  id="searchItemCodeOrName" name="searchItemCodeOrName"  class="w100p" value="${pItemCodeOrName}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"> Status</th>
+                            <td>
+                                <select class="w100p" id="searchStatus" name="searchStatus[]" multiple="multiple"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"> Serial No</th>
+                            <td>
+                                <input type="text"  id="searchSerialNo" name="searchSerialNo"  class="w100p" value="${pSerialNo}" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table><!-- table end -->
+            </form>
+            &nbsp;
+            &nbsp;
+        </section><!-- search_table end -->
 
-	    <section class="search_result"><!-- search_result start -->
-	        <article class="grid_wrap">
-	            <div id="mainGrid" class="autoGridHeight"></div>
-	        </article>
-	    </section><!-- search_result end -->
+        <section class="search_result"><!-- search_result start -->
+            <article class="grid_wrap">
+                <div id="mainGrid" class="autoGridHeight"></div>
+            </article>
+        </section><!-- search_result end -->
 
-	    <section class="search_result_button">
-	        <ul class="center_btns">
-	            <li><p class="btn_blue2 big"><a id="btnConfiirm">Confiirm</a></p></li>
-	        </ul>
-	    </section>
+        <section class="search_result_button">
+            <ul class="center_btns">
+                <li><p class="btn_blue2 big"><a id="btnConfiirm">Confiirm</a></p></li>
+            </ul>
+        </section>
     </section>
 </section><!-- content end -->
