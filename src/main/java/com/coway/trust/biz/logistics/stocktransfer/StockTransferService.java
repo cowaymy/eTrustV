@@ -3,6 +3,7 @@ package com.coway.trust.biz.logistics.stocktransfer;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -30,7 +31,7 @@ public interface StockTransferService {
 
 	String StocktransferReqDelivery(Map<String, Object> params);
 
-	String StockTransferDeliveryIssue(Map<String, Object> params);
+	String StockTransferDeliveryIssue(Map<String, Object> params) throws Exception;
 
 	List<EgovMap> selectStockTransferMtrDocInfoList(Map<String, Object> params);
 
@@ -53,5 +54,23 @@ public interface StockTransferService {
 	public List<EgovMap> selectStoIssuePop(Map<String, Object> params) throws Exception;
 	public String StockTransferDeliveryIssueNew(Map<String, Object> params, SessionVO sessionVo) throws Exception;
 
+	/**
+	 * Search Good Receipt Popup List
+	 * @Author KR-SH
+	 * @Date 2019. 12. 5.
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public List<EgovMap> goodReceiptPopList(Map<String, Object> params) throws Exception;
+
+	/**
+	 * Save Good Receipt Popup List
+	 * @Author KR-SH
+	 * @Date 2019. 12. 6.
+	 * @param params
+	 * @return
+	 */
+	public ReturnMessage StockTransferDeliveryIssueSerial(Map<String, Object> params, SessionVO sessionVo) throws Exception;
 
 }

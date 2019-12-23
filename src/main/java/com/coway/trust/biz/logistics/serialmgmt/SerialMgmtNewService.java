@@ -22,11 +22,14 @@ public interface SerialMgmtNewService{
 	// Logistic serial save
 	public List<Object> saveLogisticBarcode(Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception;
 
-	// homecare serial cancel
+	// Logistic serial cancel
 	public void deleteSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+	// Logistic Grid All Delete
+	public void deleteGridSerial(Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception;
 
-	// homecare serial save
+	// Logistic serial save
 	public void saveSerialCode(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 
+	public void reverseSerialCode(Map<String, Object> params) throws Exception;
 
 }

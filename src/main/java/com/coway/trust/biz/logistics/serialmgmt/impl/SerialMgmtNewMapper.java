@@ -42,4 +42,5 @@ public interface SerialMgmtNewMapper{
 	// Logistic barcode save
 	public void callSaveBarcodeScan(Map<String, Object> param) throws Exception;
 
+	public void callReverseBarcodeScan(Map<String, Object> param) throws Exception;
 }

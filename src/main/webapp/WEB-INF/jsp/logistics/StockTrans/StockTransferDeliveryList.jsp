@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
 
 <style type="text/css">
 
@@ -29,6 +30,12 @@
     color:#22741C;
 }
 
+.aui-grid-link-renderer1 {
+     text-decoration:underline;
+     color: #4374D9 !important;
+     cursor: pointer;
+     text-align: right;
+ }
 
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
@@ -36,7 +43,7 @@
 var listGrid;
 
 var rescolumnLayout=[{dataField: "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
-                     {dataField: "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                  ,width:180    ,height:30                },
+                     {dataField: "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                  ,width:160    ,height:30                },
                      {dataField: "reqloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
                      {dataField: "reqlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},
                      {dataField: "rcvlocdesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30                },
@@ -46,21 +53,54 @@ var rescolumnLayout=[{dataField: "rnum",headerText :"<spring:message code='log.h
                      {dataField: "delydt",headerText :"<spring:message code='log.head.deliverydate'/>"                  ,width:120    ,height:30 },
                      {dataField: "gidt",headerText :"<spring:message code='log.head.gidate'/>"                        ,width:120    ,height:30 },
                      {dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"                   ,width:120    ,height:30 },
-                     {dataField: "itmname",headerText :"Mat. Name"                 ,width:120    ,height:30                },
-                     {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>"                 ,width:120    ,height:30 },
-                     {dataField: "rciptqty",headerText :"<spring:message code='log.head.giqty'/>"              ,width:120    ,height:30 , editalble:true},
+                     {dataField: "itmname",headerText :"Mat. Name" , width:280, height:30, style:"aui-grid-user-custom-left"},
+                     {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>", width:120, height:30
+                    	 , style:"aui-grid-user-custom-right", dataType:"numeric", formatString:"#,##0"
+                   		 , editRenderer : {
+                                type : "InputEditRenderer",
+                                showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
+                                onlyNumeric : true, // 0~9만 입력가능
+                                allowPoint : false, // 소수점( . ) 도 허용할지 여부
+                                allowNegative : false, // 마이너스 부호(-) 허용 여부
+                                textAlign : "right", // 오른쪽 정렬로 입력되도록 설정
+                                autoThousandSeparator : false // 천단위 구분자 삽입 여부
+                            }
+                     },
+                     {dataField: "rciptqty",headerText :"<spring:message code='log.head.giqty'/>", width:120    ,height:30 , editalble:true
+                    	 , style:"aui-grid-user-custom-right", dataType:"numeric", formatString:"#,##0"
+
+                   		 , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
+                                if(item.serialchk == "Y") {
+                                    return "aui-grid-link-renderer1";
+                                }
+                                return "aui-grid-column-right";
+                         }
+                    	 /*
+                    	 , renderer :{
+                               type : "LinkRenderer",
+                               baseUrl : "javascript", // 자바스크립 함수 호출로 사용하고자 하는 경우에 baseUrl 에 "javascript" 로 설정
+                               // baseUrl 에 javascript 로 설정한 경우, 링크 클릭 시 callback 호출됨.
+                               jsCallback : function(rowIndex, columnIndex, value, item){
+                                   if(item.serialchk == "Y" && item.rcvSerialRequireChkYn == "Y"){
+                                       fn_scanSearchPop(item);
+                                   }
+                               }
+                        }
+                        */
+                     },
                      {dataField: "docno",headerText :"<spring:message code='log.head.refdocno'/>"              ,width:120    ,height:30                },
                      {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},
                      {dataField: "uomnm",headerText :"UOM"                ,width:120    ,height:30                },
-                     {dataField: "reqstno",headerText :"STO No."                            ,width:120    ,height:30},
+                     {dataField: "reqstno",headerText :"STO No."                            ,width:130    ,height:30},
                      {dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},
                      {dataField: "ttext",headerText :"Trans. Type"        ,width:120    ,height:30                },
                      {dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},
-                     {dataField: "mtext",headerText :"Movement Type"                   ,width:120    ,height:30                },
+                     {dataField: "mtext",headerText :"Movement Type"                   ,width:180    ,height:30                },
                      {dataField: "reqitmno",headerText :"STO Item No."                     ,width:120    ,height:30 , visible:true},
                      {dataField: "gicmplt",headerText :"GI Complt."                   ,width:120    ,height:30 , visible:true},
                      {dataField: "grcmplt",headerText :"GR Complt."                   ,width:120    ,height:30 , visible:true},
-                     {dataField: "serialchk",headerText :"<spring:message code='log.head.serialcheck'/>"                   ,width:120    ,height:30 , visible:true}
+                     {dataField: "serialchk",headerText :"<spring:message code='log.head.serialcheck'/>" ,width:130, height:30 , visible:true},
+                     {dataField: "rcvSerialRequireChkYn", headerText :"Serial Required Check Y/N", width:90, height:30, visible:true}
                      ];
 
 var serialcolumn       =[{dataField:    "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },
@@ -138,10 +178,17 @@ $(document).ready(function(){
     //listGrid = GridCommon.createAUIGrid("#main_grid_wrap", rescolumnLayout,"", resop);
     serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
 
-    AUIGrid.bind(listGrid, "cellClick", function( event ) {});
+    AUIGrid.bind(listGrid, "cellClick", function( event ) {
+    	// serial search Popup
+        if(event.dataField == "rciptqty"){
+            var item = event.item;
+        	if(item.serialchk == "Y" && item.rcvSerialRequireChkYn == "Y"){
+                fn_scanSearchList(item);
+            }
+        }
+    });
 
     AUIGrid.bind(listGrid, "cellEditBegin", function (event){
-
     	if (event.dataField != "delyqty"){
     		return false;
     	}else{
@@ -336,11 +383,11 @@ $(function(){
                		return false;
                	}
                	if(checkedItems[i].item.reqloc != reqlocGroup){
-               		Common.alert("To Location must be the same. <br />Please process one by one.");
+               		Common.alert("From Location must be the same. <br />Please process one by one.");
                     return false;
                 }if(checkedItems[i].item.rcvloc != rcvlocGroup){
-                	Common.alert("From Location must be the same. <br />Please process one by one.");
-                	return false;
+                	Common.alert("To Location must be the same. <br />Please process one by one.");
+                    return false;
                 }
 
             }
@@ -355,12 +402,17 @@ $(function(){
         $("#zReqloc").val(checkedItems[0].item.reqloc);
         $("#zRcvloc").val(checkedItems[0].item.rcvloc);
 
-        if(Common.checkPlatformType() == "mobile") {
-            popupObj = Common.popupWin("frmNew", "/logistics/stocktransfer/stoIssuePop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
-        } else{
-            Common.popupDiv("/logistics/stocktransfer/stoIssuePop.do", null, null, true, '_divStoIssuePop');
+        // No Serial Logic ( Old version )
+        if(checkedItems[0].item.rcvSerialRequireChkYn == "N"){
+        	$("#gissue").click();
+        }else{
+        	// Serial Logic ( New version )
+	        if(Common.checkPlatformType() == "mobile") {
+	            popupObj = Common.popupWin("frmNew", "/logistics/stocktransfer/stoIssuePop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+	        } else{
+	            Common.popupDiv("/logistics/stocktransfer/stoIssuePop.do", null, null, true, '_divStoIssuePop');
+	        }
         }
-
     });
 
     $("#gissue").click(function(){
@@ -805,6 +857,20 @@ function f_addrow(){
     return false;
 }
 
+//Serial Search Pop
+function fn_scanSearchList(item){
+	$("#pDeliveryNo").val(item.delyno);
+    $("#pDeliveryItem").val(item.delvryNoItm);
+    $("#pStatus").val("O");
+
+    if(Common.checkPlatformType() == "mobile") {
+        popupObj = Common.popupWin("frmSearchScan", "/logistics/SerialMgmt/scanSearchPop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+    } else{
+        Common.popupDiv("/logistics/SerialMgmt/scanSearchPop.do", $("#frmSearchScan").serializeObject(), null, true, '_scanSearchPop');
+    }
+
+}
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -929,7 +995,7 @@ function f_addrow(){
             <li><p class="btn_grid"><a id="print"><spring:message code='sys.progmanagement.grid1.PRINT' /></a></p></li>
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
+        <div id="main_grid_wrap" class="mt10 autoGridHeight" ></div>
 
     </section><!-- search_result end -->
     <form id="frmNew" name="frmNew" action="#" method="post">
@@ -937,6 +1003,15 @@ function f_addrow(){
         <input type="hidden" name="zReqloc" id="zReqloc" />
         <input type="hidden" name="zRcvloc" id="zRcvloc" />
         <input type="hidden" name="zPrgnm"  id="zPrgnm" value="${param.CURRENT_MENU_CODE}"/>
+    </form>
+
+    <form id="frmSearchScan" name="frmSearchScan" method="POST">
+        <input id="pDeliveryNo" name="pDeliveryNo" type="hidden" value="" />
+        <input id="pDeliveryItem" name="pDeliveryItem" type="hidden" value="" />
+        <input id="pRequestNo" name="pRequestNo" type="hidden" value="" />
+        <input id="pRequestItem" name="pRequestItem" type="hidden" value="" />
+        <input id="pStatus" name="pStatus" type="hidden" value="" />
+        <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
     </form>
 
 

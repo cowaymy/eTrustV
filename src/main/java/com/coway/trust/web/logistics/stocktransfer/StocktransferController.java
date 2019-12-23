@@ -1,4 +1,6 @@
-
+/**
+ *
+ */
 /**
  * @author methree
  *
@@ -35,6 +37,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -70,8 +73,11 @@ public class StocktransferController {
 	}
 
 	@RequestMapping(value = "/StockTransferReceiptList.do")
-	public String StockTransferReceiptList(Model model, HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public String StockTransferReceiptList(ModelMap model) throws Exception {
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+		model.put("nextDate", CommonUtils.getAddDay(toDay, +6, SalesConstants.DEFAULT_DATE_FORMAT1));
+        model.put("toDay", toDay);
 
 		return "logistics/StockTrans/StockTransferReceiptList";
 	}
@@ -620,13 +626,13 @@ public class StocktransferController {
 		logger.debug("params : {}", params.toString());
 		// List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 
-		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		//List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 
-		Map<String, Object> param = new HashMap();
-		param.put("check", updList);
-		param.put("userId", userId);
+		//Map<String, Object> param = new HashMap();
+		//param.put("check", updList);
+		params.put("userId", userId);
 
-		stock.StocktransferDeliveryDelete(param);
+		stock.StocktransferDeliveryDelete(params);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -771,5 +777,82 @@ public class StocktransferController {
 		return ResponseEntity.ok(message);
 	}
 
+
+	/**
+	 * Call Good Receipt Popup
+	 * @Author KR-SH
+	 * @Date 2019. 12. 5.
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/goodReceiptPop.do")
+	public String goodReceiptPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		String toDay = CommonUtils.getFormattedString("dd/MM/yyyy");
+		model.put("gipDate", toDay);
+
+		return "logistics/StockTrans/goodReceiptPop";
+	}
+
+	/**
+	 * Search Good Receipt Popup List
+	 * @Author KR-SH
+	 * @Date 2019. 12. 5.
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/goodReceiptPopList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> goodReceiptPopList(@RequestParam Map<String, Object>params) throws Exception {
+		String delyno = CommonUtils.nvl(params.get("delyno")); 		// Delivery No List
+		String[] arrDelyList = null;
+
+		if(delyno.indexOf(",") > -1)  arrDelyList = delyno.split(",");
+		params.put("arrDelyList", arrDelyList);
+		params.put("delyno", delyno);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(stock.goodReceiptPopList(params));
+	}
+
+
+	/**
+	 * Save Good Receipt Popup List
+	 * @Author KR-SH
+	 * @Date 2019. 12. 6.
+	 * @param params
+	 * @param sessionVo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/StockTransferDeliveryIssueSerial.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> StockTransferDeliveryIssueSerial(@RequestBody Map<String, Object> params, SessionVO sessionVo) throws Exception {
+		ReturnMessage message = new ReturnMessage();
+		String delyno = CommonUtils.nvl(params.get("delyno"));
+		String[] delvcd = {delyno};
+
+		Map<String, Object> grlist = stock.selectDelvryGRcmplt(delyno);
+
+		if(null == grlist) {
+			throw new PreconditionException(AppConstants.FAIL, "DelvryNO does not exist.");
+		}
+		if ("Y".equals(CommonUtils.nvl(grlist.get("DEL_GR_CMPLT")))) {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage("Already processed.");
+
+		}else{
+    		params.put("parray", delvcd);
+    		params.put("sGrDate", CommonUtils.nvl(params.get("giptdate")));
+    		params.put("sGipfdate", CommonUtils.nvl(params.get("gipfdate")));
+    		params.put("sGiptdate", CommonUtils.nvl(params.get("giptdate")));
+    		params.put("zGtype", CommonUtils.nvl(params.get("gtype")));
+    		params.put("dryNo", delyno);
+    		params.put("userId", CommonUtils.intNvl(sessionVo.getUserId()));
+
+    		message = stock.StockTransferDeliveryIssueSerial(params, sessionVo);
+		}
+
+		return ResponseEntity.ok(message);
+	}
 
 }

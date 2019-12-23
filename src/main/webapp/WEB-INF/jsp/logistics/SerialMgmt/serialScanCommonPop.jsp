@@ -194,10 +194,17 @@ $(document).ready(function(){
     }
 
     $("#btnScanAllDel").click(function(){
-    	var items = AUIGrid.getGridData(scanGridId);
+    	//var items = AUIGrid.getGridData(scanGridId);
+
+    	var msg = "";
+    	if($("#transaction").val() == "UM"){
+    		msg = "Do you want to All Delete Delivery No ["+$("#sRstNo").val()+"]?";
+    	}else{
+    		msg = "Do you want to All Delete Delivery No ["+$("#sDryNo").val()+"]?";
+    	}
+
     	Common
-	        .confirm(
-	            "Do you want to All Delete?",
+	        .confirm(msg,
 	            function(){
 	                var itemDs = {"allYn":"Y"
 	                		, "rstNo":$("#sRstNo").val()
@@ -233,6 +240,64 @@ $(document).ready(function(){
 
 	            }
     	);
+    });
+
+
+    $("#btnScanDeleteGrid").click(function(){
+    	var items = AUIGrid.getGridData(scanGridId);
+
+        Common
+	        .confirm("Do you want to All Delete?",
+	            function(){
+
+	        	    var itemDs = [];
+	        	    $.each(items, function(i, row){
+	                       if(row.status != 0){
+	                           $.extend(row, {"allYn":"N"
+	                        	   , "rstNo":$("#sRstNo").val()
+	                               , "dryNo":$("#sDryNo").val()
+	                               , "fromLocCode":$("#fromLocCode").val()
+	                               , "toLocCode":$("#toLocCode").val()
+	                               , "ioType":$("#ioType").val()
+	                               , "transactionType":$("#transaction").val()}
+	                           );
+	                           itemDs.push(row);
+	                       }
+	                    });
+
+
+	        	    if(itemDs.length > 0){
+	                    Common.ajax("POST", "/logistics/serialMgmtNew/deleteGridSerial.do"
+	                            , {"delete":itemDs}
+	                            , function(result){
+	                                AUIGrid.setGridData(scanGridId, []);
+	                                $("#sTotal").html(0);
+	                                $("#fTotal").html(0);
+	                            }
+	                            , function(jqXHR, textStatus, errorThrown){
+	                                try{
+	                                    if (FormUtil.isNotEmpty(jqXHR.responseJSON)) {
+	                                        console.log("code : "  + jqXHR.responseJSON.code);
+	                                        Common.alert("Fail : " + jqXHR.responseJSON.message);
+	                                    }else{
+	                                        console.log("Fail Status : " + jqXHR.status);
+	                                        console.log("code : "        + jqXHR.responseJSON.code);
+	                                        console.log("message : "     + jqXHR.responseJSON.message);
+	                                        console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	                                    }
+	                                }catch (e){
+	                                    console.log(e);
+	                                }
+	                   });
+	        	    }else{
+	        	    	AUIGrid.setGridData(scanGridId, []);
+	        	    	$("#sTotal").html(0);
+                        $("#fTotal").html(0);
+	        	    }
+	            }
+        );
+
+
     });
 
     $("#btnScanClose").click(function(){
@@ -424,7 +489,8 @@ function fn_scanClosePop(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>New Serial No. Scanning</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="btnScanAllDel" href="#">All Delete</a></p></li>
+    <li style="display:none;"><p class="btn_blue2"><a id="btnScanAllDel" href="#">Clear Serial</a></p></li>
+    <li><p class="btn_blue2"><a id="btnScanDeleteGrid" >All Delete</a></p></li>
     <li><p class="btn_blue2"><a id="btnScanClose" >CLOSE | TUTUP</a></p></li>
 </ul>
 </header><!-- pop_header end -->
@@ -495,14 +561,18 @@ function fn_scanClosePop(){
              </tbody>
         </table><!-- table end -->
     <!-- </form> -->
-    <h3>
-        &nbsp; * success : <span id="sTotal" style="color:blue">0</span>, &nbsp; fail : <span id="fTotal" style="color:red">0</span>
-    </h3>
-    <section class="search_result"><!-- search_result start -->
-        <article class="grid_wrap"><!-- grid_wrap start -->
+
+    <aside class="title_line">
+       <h3>
+            &nbsp; * success : <span id="sTotal" style="color:blue">0</span>, &nbsp; fail : <span id="fTotal" style="color:red">0</span>
+       </h3>
+    </aside>
+
+    <section class="search_result">
+        <article class="grid_wrap">
             <div id="serialGrid" class="autoGridHeight"></div>
-        </article><!-- grid_wrap end -->
-    </section><!-- search_result end -->
+        </article>
+    </section>
     &nbsp;
 
     <ul class="center_btns"></ul>

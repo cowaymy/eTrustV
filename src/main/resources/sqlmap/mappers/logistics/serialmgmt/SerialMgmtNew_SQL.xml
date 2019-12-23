@@ -334,7 +334,6 @@
          }
     </select>
 
-
     <select id="callSaveBarcodeScan" parameterType="Map"  statementType="CALLABLE">
     /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.callSaveBarcodeScan] - KR JIN */
         {CALL SP_LOGISTIC_BARCODE_SAVE(#{sGrDate}, #{rstNo}, #{dryNo}, #{zTrnscType}, #{zIoType}, #{updUserId}
@@ -343,6 +342,13 @@
          }
     </select>
 
+    <select id="callReverseBarcodeScan" parameterType="Map"  statementType="CALLABLE">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.callReverseBarcodeScan] - KR JIN */
+        {CALL SP_LOGISTIC_BARCODE_REVERSE(#{delyno}, #{zTrnscType}, #{zIoType}, #{updUserId}
+                    , #{errCode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA}
+                    , #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA})
+         }
+    </select>
 
 
 </mapper>

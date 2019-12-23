@@ -135,6 +135,18 @@ public class SerialMgmtNewController {
 		return ResponseEntity.ok(result);
 	}
 
+	// 3. Non Homecare serial Grid All Delete
+	@RequestMapping(value = "/deleteGridSerial.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> deleteGridSerial(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception {
+
+		serialMgmtNewService.deleteGridSerial(params, sessionVO);
+
+		ReturnMessage result = new ReturnMessage();
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(result);
+	}
+
 
 
 }

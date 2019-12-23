@@ -86,4 +86,14 @@ public interface StockTransferMapper {
 
 	public void stockTransferiSsueNew(Map<String, Object> params) throws Exception;
 
+	/**
+	 * Search Good Receipt Popup List
+	 * @Author KR-SH
+	 * @Date 2019. 12. 5.
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public List<EgovMap> goodReceiptPopList(Map<String, Object> params) throws Exception;
+
 }

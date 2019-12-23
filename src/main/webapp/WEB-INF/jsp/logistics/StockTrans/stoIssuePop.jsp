@@ -40,12 +40,12 @@ var scanInfoLayout = [
         , {dataField:"delGiCmplt", visible:false}
         , {dataField:"serialChk", headerText:"Serial Chk", width:120}
         , {dataField:"delvryQty", headerText:"DELVRY QTY", width:110
-            , style:"aui-grid-user-custom-right"
             , dataType:"numeric"
             , formatString:"#,##0"
+            , style:"aui-grid-user-custom-right"
         }
         , {dataField:"scanQty", headerText:"Scaned QTY", width:110
-            , style:"aui-grid-user-custom-right"
+            , style:"aui-grid-user-custom-right aui-grid-link-renderer"
             , dataType:"numeric"
             , formatString:"#,##0"
             , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
@@ -54,6 +54,17 @@ var scanInfoLayout = [
                 }
                 return "";
             }
+	        , renderer :{
+	                  type : "LinkRenderer",
+	                  baseUrl : "javascript", // 자바스크립 함수 호출로 사용하고자 하는 경우에 baseUrl 에 "javascript" 로 설정
+	                  // baseUrl 에 javascript 로 설정한 경우, 링크 클릭 시 callback 호출됨.
+	                  jsCallback : function(rowIndex, columnIndex, value, item){
+	                      if(item.serialChk == "Y"){
+	                          fn_scanSearchPop(item);
+	                      }
+
+	                  }
+	         }
         }
         , {dataField:"serialRequireChkYn", visible:false}
 
@@ -82,15 +93,15 @@ $(document).ready(function(){
 
     if(Common.checkPlatformType() == "mobile") {
     	$("#zDelvryNo").val("${url.zDelyno}");    // delivery No
-    	$("#zFromLoc").val("${url.zReqloc}");
-    	$("#zToLoc").val("${url.zRcvloc}");
+    	$("#zFromLoc").val("${url.zRcvloc}");
+        $("#zToLoc").val("${url.zReqloc}");
     	$("#zPrgName").val("${url.zPrgnm}");
     	$("#zIoType").val("O");
     	$("#zGtype").val("GI");
     }else{
     	$("#zDelvryNo").val($("#zDelyno").val());
-        $("#zFromLoc").val($("#zReqloc").val());
-        $("#zToLoc").val($("#zRcvloc").val());
+        $("#zFromLoc").val($("#zRcvloc").val());
+        $("#zToLoc").val($("#zReqloc").val());
         $("#zPrgName").val($("#zPrgnm").val());
         $("#zIoType").val("O");
         $("#zGtype").val("GI");
@@ -110,6 +121,7 @@ $(document).ready(function(){
 
         // 초기화
         $("#btnPopSerial").parent().addClass("btn_disabled");
+        $("#btnAllDel").parent().addClass("btn_disabled");
         AUIGrid.setGridData(scanInfoGridId, []);
 
         Common.ajax("POST" , url , {"delyList":arrDelvryNo} , function(data){
@@ -123,6 +135,7 @@ $(document).ready(function(){
 	        		});
 	        		if(isSerial){
 		        		$("#btnPopSerial").parent().removeClass("btn_disabled");
+		        		$("#btnAllDel").parent().removeClass("btn_disabled");
 	        		}
 	        	}
 	        	AUIGrid.setGridData(scanInfoGridId, data.dataList);
@@ -216,6 +229,56 @@ $(document).ready(function(){
 
     });
 
+
+    $("#btnAllDel").click(function(){
+        if($(this).parent().hasClass("btn_disabled") == true){
+            return false;
+        }
+
+        var msg = "";
+        if($("#zTrnscType").val() == "UM"){
+            msg = "Do you want to All Delete Delivery No ["+$("#zRstNo").val()+"]?";
+        }else{
+            msg = "Do you want to All Delete Delivery No ["+$("#zDelvryNo").val()+"]?";
+        }
+
+        Common
+            .confirm(msg,
+                function(){
+                    var itemDs = {"allYn":"Y"
+                            , "rstNo":$("#zRstNo").val()
+                            , "dryNo":$("#zDelvryNo").val()
+                            , "fromLocCode":$("#zFromLoc").val()
+                            , "toLocCode":$("#zToLoc").val()
+                            , "ioType":$("#zIoType").val()
+                            , "transactionType":$("#zTrnscType").val()};
+
+
+                        Common.ajax("POST", "/logistics/serialMgmtNew/deleteSerial.do"
+                                , itemDs
+                                , function(result){
+                                    $("#btnPopSearch").click();
+                                }
+                                , function(jqXHR, textStatus, errorThrown){
+                                    try{
+                                        if (FormUtil.isNotEmpty(jqXHR.responseJSON)) {
+                                            console.log("code : "  + jqXHR.responseJSON.code);
+                                            Common.alert("Fail : " + jqXHR.responseJSON.message);
+                                        }else{
+                                            console.log("Fail Status : " + jqXHR.status);
+                                            console.log("code : "        + jqXHR.responseJSON.code);
+                                            console.log("message : "     + jqXHR.responseJSON.message);
+                                            console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                                        }
+                                    }catch (e){
+                                        console.log(e);
+                                    }
+                       });
+
+                }
+        );
+    });
+
     $("#btnPopSerial").click(function(){
     	if($(this).parent().hasClass("btn_disabled") == true){
             return false;
@@ -230,6 +293,22 @@ $(document).ready(function(){
 
     $("#btnPopSearch").click();
 });
+
+
+// Serial Search Pop
+function fn_scanSearchPop(item){
+	$("#pDeliveryNo").val(item.delvryNo);
+	$("#pDeliveryItem").val(item.delvryNoItm);
+	$("#pStatus").val("O");
+
+    if(Common.checkPlatformType() == "mobile") {
+        popupObj = Common.popupWin("frmSearchScan", "/logistics/SerialMgmt/scanSearchPop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+    } else{
+        Common.popupDiv("/logistics/SerialMgmt/scanSearchPop.do", $("#frmSearchScan").serializeObject(), null, true, '_scanSearchPop');
+    }
+
+}
+
 
 function fn_ClosePop(){
 	// Moblie Popup Setting
@@ -295,10 +374,20 @@ function fn_PopSerialClose(){
         </table>
     </form>
 
+    <form id="frmSearchScan" name="frmSearchScan" method="POST">
+        <input id="pDeliveryNo" name="pDeliveryNo" type="hidden" value="" />
+	    <input id="pDeliveryItem" name="pDeliveryItem" type="hidden" value="" />
+	    <input id="pRequestNo" name="pRequestNo" type="hidden" value="" />
+	    <input id="pRequestItem" name="pRequestItem" type="hidden" value="" />
+	    <input id="pStatus" name="pStatus" type="hidden" value="" />
+	    <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
+    </form>
+
     <aside class="title_line">
        <h3>Serial Scan</h3>
 	   <ul class="right_btns">
             <li style="display:none;"><p class="btn_grid"><a id="btnPopSearch">Search</a></p></li>
+            <li><p class="btn_grid"><a id="btnAllDel">Clear Serial</a></p></li>
             <li><p class="btn_grid"><a id="btnPopSerial">Serial Scan</a></p></li>
 	   </ul>
     </aside>

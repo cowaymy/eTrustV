@@ -288,7 +288,41 @@
 	        if((str.toString()).indexOf(",") < 0) return str;
 	        if (str == '') str = "0";
 	        return str.replace(/(.:)*[,]/gi,"");
-	    }
+	    },
+
+        /**
+         * 왼쪽 채움
+         * lpad('1234', '0', 8);     // 00001234
+         */
+        lpad: function(s, c, n) {
+            if (! s || ! c || s.length >= n) {
+                return s;
+            }
+
+            var max = (n - s.length)/c.length;
+            for (var i = 0; i < max; i++) {
+                s = c + s;
+            }
+
+            return s;
+        },
+
+        /**
+         * 오른쪽 채움
+         * rpad('1234', '0', 8);     // 12340000
+         */
+        rpad: function(s, c, n) {
+            if (! s || ! c || s.length >= n) {
+                return s;
+            }
+
+            var max = (n - s.length)/c.length;
+            for (var i = 0; i < max; i++) {
+                s += c;
+            }
+
+            return s;
+        }
 
 	};
 

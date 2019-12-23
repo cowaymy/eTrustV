@@ -331,7 +331,7 @@
         delete from LOG0048D where REQST_NO = #{reqno} and REQST_NO_ITM = #{resnoitm}
     </delete>
 
-        <select id="selectStockTransferDeliveryList" parameterType="Map" resultType="egovMap">
+    <select id="selectStockTransferDeliveryList" parameterType="Map" resultType="egovMap">
         SELECT Rownum rnum , T.* FROM (
         select
                l47.reqst_no reqstno
@@ -364,7 +364,9 @@
                when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_ft_chk = 'Y'  then 'Y' else 'N' end
                when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_pt_chk = 'Y' then 'Y' else 'N' end
                else 'N' end serialchk
-              , l47.REF_DOC_NO docno
+             , l47.REF_DOC_NO docno
+             , NVL(S28C.SERIAL_REQUIRE_CHK_YN, 'N') AS RCV_SERIAL_REQUIRE_CHK_YN
+             , NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQ_YN
           from log0047m l47
              , log0048d l48
              , log0054m l54
@@ -382,10 +384,14 @@
            and l47.rciv_cdc_rdc   = s28c.wh_loc_id
            and l47.reqst_cdc_rdc  = s28q.wh_loc_id
            and l48.uom            = uomt.code_id
+
            and l48.itm_code  = l55.itm_code
+
            and l54.delvry_no = l55.delvry_no
+
            and l48.reqst_no  = l55.reqst_no
            and l47.reqst_no  = l48.reqst_no
+
            AND NVL(l55.del_flag,'N') <![CDATA[<>]]> 'Y'
            <!-- AND NVL(L54.DELVRY_GR_CMPLT,'N') <![CDATA[<>]]> 'Y' -->
            <if test="reqstno != null and reqstno != ''">
@@ -709,5 +715,58 @@
         }
      </select>
 
+    <!-- Search Good Receipt Popup List -->
+    <select id="goodReceiptPopList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.logistics.stocktransfer.impl.StockTransferMapper.goodReceiptPopList */
+        SELECT ROWNUM rnum , T.* FROM (
+            SELECT l47.REQST_NO
+                     , l48.REQST_NO_ITM
+                     , l55.DELVRY_NO
+                     , l55.DELVRY_NO_ITM
+                     , l47.TRNSC_TYPE
+                     , l47.TRNSC_TYPE_DTL
+                     , l54.DELVRY_DT
+                     , l54.DELVRY_GI_DT
+                     , l54.DELVRY_GR_DT
+                     , l48.ITM_CODE
+                     , l48.ITM_NAME
+                     , l55.DELVRY_QTY
+                     , l48.UOM
+                     , l47.RCIV_CDC_RDC
+                     , NVL(l55.RCIPT_QTY , 0) DELVRY_GI_CMPLT
+                     , CASE WHEN S26.STK_TYPE_ID= 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND  S28Q.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
+                               WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND  S28Q.SERIAL_FT_CHK = 'Y'  THEN 'Y' ELSE 'N' END
+                               WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND  S28Q.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+                        ELSE 'N' END SERIAL_CHK
+
+              FROM LOG0047M l47
+                      , LOG0048D L48
+                      , LOG0054M L54
+                      , LOG0055D L55
+                      , SYS0028M S28C
+                      , SYS0028M S28Q
+                      , SYS0026M S26
+             WHERE L48.ITM_CODE             = S26.STK_CODE(+)
+                 AND L47.RCIV_CDC_RDC      = S28C.WH_LOC_ID
+                 AND L47.REQST_CDC_RDC   = S28Q.WH_LOC_ID
+                 AND L48.ITM_CODE            = L55.ITM_CODE
+                 AND L54.DELVRY_NO          = L55.DELVRY_NO
+                 AND L48.REQST_NO            = L55.REQST_NO
+                 AND L47.REQST_NO            = L48.REQST_NO
+                 AND NVL(l55.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
+                 AND l54.DELVRY_NO IN
+                 <choose>
+                     <when test="arrDelyList !=null">
+                         <foreach item="item" collection="arrDelyList" index="index" open="(" separator="," close=")">
+                             #{item}
+                         </foreach>
+                     </when>
+                     <otherwise>
+                         (#{delyno})
+                     </otherwise>
+                 </choose>
+               ORDER BY l54.DELVRY_NO DESC
+           ) T
+    </select>
 
 </mapper>

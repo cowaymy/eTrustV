@@ -247,9 +247,8 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 
 			serialMgmtNewMapper.callBarcodeScan(mainMap);
 
-
-			System.out.println("ERR CODE : " + (String)mainMap.get("errCode"));
-			System.out.println("ERR MSG : " + (String)mainMap.get("errMsg"));
+			//System.out.println("ERR CODE : " + (String)mainMap.get("errCode"));
+			//System.out.println("ERR MSG : " + (String)mainMap.get("errMsg"));
 
 			if("000".equals((String)mainMap.get("errCode"))){
 				mainMap.put("scanNo",(String)mainMap.get("outScanNo"));
@@ -285,8 +284,18 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 		}
 	}
 
+	// 3. Non Homecare Grid All Delete
+	public void deleteGridSerial(Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception{
+		List<Object> dataList = (List<Object>)params.get("dataList");
+		Map<String, Object> delMap = null;
+		for (Object obj : dataList) {
+			delMap = (Map<String, Object>) obj;
+			deleteSerial(delMap, sessionVO);
+		}
+	}
 
-	// 3.Non Homecare serial save
+
+	// 4.Non Homecare serial save
 	@Override
 	public void saveSerialCode(Map<String, Object> params, SessionVO sessionVO) throws Exception{
 		params.put("crtUserId", sessionVO.getUserId());
@@ -299,7 +308,11 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 		//}
 	}
 
-
+	// 5. Non Homecare serial STO reverse
+	@Override
+	public void reverseSerialCode(Map<String, Object> params) throws Exception{
+		serialMgmtNewMapper.callReverseBarcodeScan(params);
+	}
 
 	private boolean validationDate(String checkDate){
 		try{

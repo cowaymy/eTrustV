@@ -17,12 +17,16 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.logistics.serialmgmt.ScanSearchPopService;
 import com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewService;
 import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 
@@ -38,6 +42,13 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	@Resource(name = "serialMgmtNewService")
 	private SerialMgmtNewService serialMgmtNewService;
 
+	@Resource(name = "ScanSearchPopService")
+	private ScanSearchPopService scanSearchPopService;
+
+
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+
 	@Override
 	public List<EgovMap> selectStockTransferMainList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -46,7 +57,6 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Override
 	public List<EgovMap> selectStockTransferDeliveryList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return stocktran.selectStockTransferDeliveryList(params);
 	}
 
@@ -350,7 +360,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public String StockTransferDeliveryIssue(Map<String, Object> params) {
+	public String StockTransferDeliveryIssue(Map<String, Object> params) throws Exception{
 		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
@@ -413,6 +423,10 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		if ("RC".equals(formMap.get("gtype"))) {
 			stocktran.StockTransferCancelIssue(formMap);
 			reVal = (String) formMap.get("rdata");
+
+			// STO - new Serial scan Cancel.
+			stockSerialReverse(params);
+
 		} else {
 			stocktran.StockTransferiSsue(formMap);
 			stocktran.updateDelivery54(formMap);
@@ -437,15 +451,28 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Override
 	public void StocktransferDeliveryDelete(Map<String, Object> params) {
-		List<Object> updList = (List<Object>) params.get("check");
+		List<Object> updList = (List<Object>) params.get("checked");
 		String delno = "";
 		if (updList.size() > 0) {
 			for (int i = 0; i < updList.size(); i++) {
-				Map<String, Object> dmap = (Map<String, Object>) ((Map<String, Object>) updList.get(i)).get("item");
+				//Map<String, Object> dmap = (Map<String, Object>) ((Map<String, Object>) updList.get(i)).get("item");
+				Map<String, Object> dmap = (Map<String, Object>) updList.get(i);
+
 				logger.debug("323 Line params ::: {}", dmap);
 
 				if (!delno.equals(dmap.get("delyno"))) {
 					delno = (String) dmap.get("delyno");
+
+					// new serial checking.
+					if( "Y".equals((String)dmap.get("rcvSerialRequireChkYn"))){
+						HashMap<String, Object> sMap = new HashMap<String, Object>();
+						sMap.put("searchDeliveryNo", delno);
+						List<EgovMap> sList = scanSearchPopService.scanSearchDataList(sMap);
+						if(sList != null && sList.size() > 0){
+							throw new ApplicationException(AppConstants.FAIL, "Please proceed after deleting the serial.");
+						}
+					}
+
 					stocktran.deliveryDelete54(dmap);
 					stocktran.deliveryDelete55(dmap);
 					stocktran.deliveryDelete61(dmap);
@@ -561,6 +588,85 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			throw new ApplicationException(AppConstants.FAIL, StringUtils.trimToEmpty((String)params.get("errMsg")));
 		}
 
-		return (String)params.get("errMsg");
+		return returnValue[1];
 	}
+
+	// STO - new Serial scan Cancel.  KR-Jin
+	private void stockSerialReverse(Map<String, Object> params) throws Exception {
+		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+
+		String delCd = "";
+		if (checklist.size() > 0) {
+			for (int i = 0; i < checklist.size(); i++) {
+				Map<String, Object> map = (Map<String, Object>) checklist.get(i);
+
+				Map<String, Object> imap = new HashMap();
+				imap = (Map<String, Object>) map.get("item");
+				if("Y".equals((String)imap.get("rcvSerialRequireChkYn"))){
+					if( !delCd.equals(imap.get("delyno")) ){
+						imap.put("updUserId", params.get("userId"));
+						imap.put("zTrnscType", "US");
+						imap.put("zIoType", "O");
+						serialMgmtNewService.reverseSerialCode(imap);
+					}
+					delCd = (String)imap.get("delyno");
+				}
+
+			}
+		}
+
+	}
+
+	/**
+	 * Search Good Receipt Popup List
+	 * @Author KR-SH
+	 * @Date 2019. 12. 5.
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 * @see com.coway.trust.biz.logistics.stocktransfer.StockTransferService#goodReceiptPopList(java.util.Map)
+	 */
+	@Override
+	public List<EgovMap> goodReceiptPopList(Map<String, Object> params) throws Exception {
+		return stocktran.goodReceiptPopList(params);
+	}
+
+	/**
+	 * Save Good Receipt Popup List
+	 * @Author KR-SH
+	 * @Date 2019. 12. 6.
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 * @see com.coway.trust.biz.logistics.stocktransfer.StockTransferService#StockTransferDeliveryIssueSerial(java.util.Map)
+	 */
+	@Override
+	public ReturnMessage StockTransferDeliveryIssueSerial(Map<String, Object> params, SessionVO sessionVo) throws Exception {
+		ReturnMessage rtnMsg = new ReturnMessage();
+
+		stocktran.stockTransferiSsueNew(params);
+
+		String reVal = CommonUtils.nvl(params.get("rdata"));
+		String[] returnValue = reVal.split("∈");
+		String rstNo = CommonUtils.nvl(returnValue[1]);
+
+		if( returnValue == null || StringUtils.isEmpty(returnValue[0]) || !"000".equals(StringUtils.trimToEmpty(returnValue[0])) ){
+			throw new ApplicationException(AppConstants.FAIL, rstNo);
+		}
+		stocktran.updateDelivery54(params);
+
+		// serial Save
+		serialMgmtNewService.saveSerialCode(params, sessionVo);
+
+		if( !"000".equals(StringUtils.trimToEmpty(CommonUtils.nvl(params.get("errCode"))))){
+			throw new ApplicationException(AppConstants.FAIL, StringUtils.trimToEmpty(CommonUtils.nvl(params.get("errMsg"))));
+		}
+
+		rtnMsg.setCode(AppConstants.SUCCESS);
+		rtnMsg.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		rtnMsg.setData(rstNo);
+
+		return rtnMsg;
+	}
+
 }
