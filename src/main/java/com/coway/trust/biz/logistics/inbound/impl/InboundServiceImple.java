@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.inbound.InboundService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -159,33 +160,33 @@ public class InboundServiceImple extends EgovAbstractServiceImpl implements Inbo
 		// String reqNo = "SMO" + seq;
 		/*
 		 * String reqNo = inboundMapper.selectStockTransferSeq();
-		 * 
+		 *
 		 * formMap.put("reqNo", reqNo); formMap.put("userId", params.get("userId"));
-		 * 
+		 *
 		 * inboundMapper.CreateReqM(formMap);
-		 * 
+		 *
 		 * if (checkList.size() > 0) { for (int i = 0; i < checkList.size(); i++) { Map<String, Object> map =
 		 * (Map<String, Object>) checkList.get(i);
-		 * 
+		 *
 		 * Map<String, Object> setMap = new HashMap(); setMap = (Map<String, Object>) map.get("item");
 		 * setMap.put("reqNo", reqNo); setMap.put("userId", params.get("userId")); inboundMapper.CreateReqD(setMap); } }
 		 * String deliveryNo = inboundMapper.selectDeliverySeq(); formMap.put("reqNo", reqNo); formMap.put("deliveryNo",
 		 * deliveryNo); inboundMapper.CreateDeliveryM(formMap);
-		 * 
+		 *
 		 * List<EgovMap> delList = inboundMapper.selectDeliveryList(formMap); logger.info("delList : {} ",
 		 * delList.toString()); if (delList.size() > 0) { for (int i = 0; i < delList.size(); i++) {
-		 * 
+		 *
 		 * Map<String, Object> setMap = delList.get(i); logger.info("setMap : {} ", setMap); setMap.put("deliveryNo",
 		 * deliveryNo); setMap.put("userId", params.get("userId")); inboundMapper.CreateDeliveryD(setMap); } }
 		 * inboundMapper.updateReqStatus(reqNo);
-		 * 
+		 *
 		 * String[] delvcd = { deliveryNo };
-		 * 
+		 *
 		 * formMap.put("parray", delvcd); formMap.put("userId", params.get("userId")); // formMap.put("prgnm",
 		 * params.get("prgnm")); formMap.put("refdocno", ""); formMap.put("salesorder", "");
-		 * 
+		 *
 		 * inboundMapper.CreateIssue(formMap);
-		 * 
+		 *
 		 * Map<String, Object> reMap = new HashMap(); reMap.put("reqNo", reqNo); reMap.put("deliveryNo", deliveryNo);
 		 */
 		return reMap;
@@ -236,4 +237,104 @@ public class InboundServiceImple extends EgovAbstractServiceImpl implements Inbo
 			}
 		}
 	}
+
+	// KR HAN
+	  @SuppressWarnings("unchecked")
+	  @Override
+		public Map<String, Object> receiptSerial(Map<String, Object> params) {
+
+//			List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+//			Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+//			List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+
+		    Map<String, Object> gridList = (Map<String, Object>) params.get("gridList");
+			List<Object> serialGridList = (List<Object>)gridList.get(AppConstants.AUIGRID_ALL);
+
+//			System.out.println("++++ params.toString() ::" + params.toString() );
+//			System.out.println("++++ gridList.toString() ::" + gridList.toString() );
+//			System.out.println("++++ serialGridList.toString() ::" + serialGridList.toString() );
+
+
+		    int iCnt = 0;
+		    String tmpdelCd = "";
+		    String delyCd = "";
+		    String delyno = "";
+
+		    if (serialGridList.size() > 0) {
+		      for (int i = 0; i < serialGridList.size(); i++) {
+		        Map<String, Object> map = (Map<String, Object>) serialGridList.get(i);
+
+		        String delCd = (String) map.get("delvryNo");
+		        delyno = (String) map.get("delvryNo");
+
+		        if (delCd != null && !(tmpdelCd.equals(delCd))) {
+		          tmpdelCd = delCd;
+		          if (iCnt == 0) {
+		            delyCd = delCd;
+		          } else {
+		            delyCd += "∈" + delCd;
+		          }
+		          iCnt++;
+		        }
+		      }
+		    }
+		    logger.info(" delyCd : {}", delyCd);
+
+		    // 유효성 체크
+
+		    // SP_LOGISTIC_DELIVERY_SERIAL 호출
+		    String[] delvcd = delyCd.split("∈");
+
+	        params.put("parray", delvcd);
+	        params.put("refdocno", "");
+	        params.put("salesorder", "");
+
+	        params.put("giptdate", params.get("zGrptdate"));
+	        params.put("gipfdate", params.get("zGrpfdate"));
+	        params.put("doctext", params.get("zDoctext"));
+	        params.put("gtype", params.get("ztype"));
+
+	        logger.debug("**** receiptSerial params ::" + params.toString()  );
+
+	        inboundMapper.CreateIssueSerial(params);
+
+	        String reVal = (String) params.get("rdata");
+
+	        String returnValue[] = reVal.split("∈");
+
+	        logger.debug(" **** receiptSerial [" + returnValue[0]+ "]");
+	        logger.debug(" **** receiptSerial [" + returnValue[1]+ "]");
+
+	    	if(!"000".equals(returnValue[0])){
+	 		    throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + returnValue[0]+ ":" + returnValue[1]);
+	 	    }
+
+	    	// SP_LOGISTIC_BARCODE_SAVE 호출
+	    	Map<String, Object> barcodeParams = new HashMap<String, Object>();
+
+	    	barcodeParams.put("sGrDate"		, params.get("zGrptdate"));
+	    	barcodeParams.put("rstNo"			, "");
+	    	barcodeParams.put("dryNo"		, params.get("zDelyNo"));
+	    	barcodeParams.put("zTrnscType"	, "UM");
+	    	barcodeParams.put("zIoType"		, "I");
+	    	barcodeParams.put("updUserId"	, params.get("userId"));
+
+	    	 inboundMapper.callSaveBarcodeScan(barcodeParams);
+
+	        String errCode = (String)barcodeParams.get("errCode");
+	  	    String errMsg = (String)barcodeParams.get("errMsg");
+
+	     	logger.debug(">>>>>>>>>>>ERROR CODE : " + errCode);
+	  	    logger.debug(">>>>>>>>>>>ERROR MSG: " + errMsg);
+	  	  barcodeParams.put("errCode", errCode);
+	  	  barcodeParams.put("errMsg", errMsg);
+	  	  barcodeParams.put("mdnNo", returnValue[1]);
+
+	  	    // pErrcode : 000  = Success, others = Fail
+	  	    if(!"000".equals(errCode)){
+	  		    throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+	  	    }
+
+	  	  return barcodeParams;
+		}
 }

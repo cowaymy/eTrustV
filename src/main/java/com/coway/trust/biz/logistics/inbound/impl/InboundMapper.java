@@ -41,4 +41,9 @@ public interface InboundMapper {
 
 	List<EgovMap> selectDeliverydupCheck(Map<String, Object> setMap);
 
+	// KR HAN
+	void CreateIssueSerial(Map<String, Object> formMap);
+
+	// KR HAN : 바코드 스캔
+	void callSaveBarcodeScan(Map<String, Object> formMap);
 }

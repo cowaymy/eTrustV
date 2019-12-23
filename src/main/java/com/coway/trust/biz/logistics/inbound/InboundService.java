@@ -21,4 +21,6 @@ public interface InboundService {
 
 	void receipt(Map<String, Object> params);
 
+	// KR HAN
+	Map<String, Object> receiptSerial(Map<String, Object> params);
 }
