@@ -1308,5 +1308,19 @@ public class LogisticsApiController {
 		MlogApiService.returnOnHandStockReqScan(returnOnHandStockReqMForm);
 	}
 
+	/* Woongjin Jun */
+	@ApiOperation(value = "Stock HomeCare Price Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/stock/homeCarePrice", method = RequestMethod.GET)
+	public ResponseEntity<List<StockPriceDto>> getStockHomeCarePriceList(@ModelAttribute StockPriceForm stockpriceForm) throws Exception {
+		Map<String, Object> params = StockPriceForm.createMap(stockpriceForm);
+
+		List<EgovMap> stockpricelist = MlogApiService.getStockHCPriceList(params);
+
+		List<StockPriceDto> list = stockpricelist.stream().map(r -> StockPriceDto.create(r)).collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	/* Woongjin Jun */
+
 
 }
