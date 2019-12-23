@@ -43,6 +43,7 @@ public class LoginVO {
 	private String agrmtAppStat; //ADD AGREEMENT APPROVAL STATUS FOR MOBILE
 	private String agrmt; //ADD AGREEMENT STATUS FOR MOBILE
 	private String mobileUseYn;
+	private String serialRequireChkYn;
 
 	public String getUserNric() {
 		return userNric;
@@ -351,7 +352,6 @@ public class LoginVO {
 		this.agrmt = agrmt;
 	}
 
-
     public String getMobileUseYn() {
         return mobileUseYn;
     }
@@ -359,4 +359,13 @@ public class LoginVO {
     public void setMobileUseYn(String mobileUseYn) {
         this.mobileUseYn = mobileUseYn;
     }
+
+	public String getSerialRequireChkYn() {
+		return serialRequireChkYn;
+	}
+
+	public void setSerialRequireChkYn(String serialRequireChkYn) {
+		this.serialRequireChkYn = serialRequireChkYn;
+	}
+
 }
