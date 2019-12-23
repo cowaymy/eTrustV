@@ -402,6 +402,7 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
+                    OR T2.PROMO_ID = 31723
                 UNION
                SELECT DISTINCT T2.PROMO_ID PROMO_ID
                     , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
@@ -436,6 +437,7 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.E_SALES in (0,2)
+                    OR T2.PROMO_ID = 31723
              ) T
          ORDER BY T.PROMO_DT_FROM DESC
     </select>
