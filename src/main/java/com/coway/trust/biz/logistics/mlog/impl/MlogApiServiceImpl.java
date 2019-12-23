@@ -879,4 +879,11 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 	}
 
+	/* Woongjin Jun */
+	@Override
+	public List<EgovMap> getStockHCPriceList(Map<String, Object> params) {
+		return MlogApiMapper.getStockHCPriceList(params);
+	}
+	/* Woongjin Jun */
+
 }

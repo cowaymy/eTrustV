@@ -159,4 +159,8 @@ public interface MlogApiMapper {
 	String selectWhLocId(Map<String, Object> tmpMap);
 
 	void LogisticBarcodeScanUsum(Map<String, Object> formMap);
+
+	/* Woongjin Jun */
+	List<EgovMap> getStockHCPriceList(Map<String, Object> params);
+	/* Woongjin Jun */
 }

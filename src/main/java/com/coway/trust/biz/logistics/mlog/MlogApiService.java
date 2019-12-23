@@ -128,4 +128,8 @@ public interface MlogApiService {
 
 	Map<String, Object> selectDelvryGRcmplt(String delNo);
 
+	/* Woongjin Jun */
+	List<EgovMap> getStockHCPriceList(Map<String, Object> params);
+	/* Woongjin Jun */
+
 }
