@@ -153,8 +153,8 @@
 
     	if (item.trnsctype == "US") {
             $("#zDelyno").val(item.delno);
-            $("#zReqloc").val(item.frmlocid);
-            $("#zRcvloc").val(item.tolocid);
+            $("#zReqloc").val(item.tolocid);
+            $("#zRcvloc").val(item.frmlocid);
 
     		if(Common.checkPlatformType() == "mobile") {
                 popupObj = Common.popupWin("frmNew", "/logistics/stocktransfer/stoIssuePop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
