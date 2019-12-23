@@ -1905,4 +1905,32 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
                      )
              }
      </select>
+
+     <select id="getStockHCPriceList" parameterType="Map" resultType="egovMap">
+       SELECT S26T.STK_ID parts_Id
+               , l44.BOM_COMPNT parts_Code
+               , S26T.STK_DESC parts_Name
+               , S26T.STK_CTGRY_ID
+               , S26T.STK_TYPE_ID
+               , 1 price_Unit
+               , s16.AMT parts_Price
+               , (select CODE_NAME from sys0013m where CODE_MASTER_ID ='94' AND CODE_ID='1150') currency
+         FROM log0043m l43,  log0044d l44,SAL0016M s16  , SYS0026M s26t
+       WHERE S26T.STK_ID = s16.STK_ID
+           AND l44.BOM_COMPNT = S26T.stk_code(+)
+           AND l43.bom = l44.bom
+           AND s26t.STK_CTGRY_ID IN (SELECT A.CODE_ID
+                                                    FROM SYS0013M A, SYS0094M B
+                                                  WHERE A.CODE = B.CODE
+                                                      AND A.CODE_MASTER_ID = 11
+                                                      AND B.IND = 'HOMECARE')
+           AND l43.MATRL_NO=#{productCode}
+        <if test="searchType == 1 ">
+           AND S26T.STK_CODE = #{searchKeyword}
+        </if>
+        <if test="searchType == 2 ">
+           AND (LTRIM(RTRIM(S26T.STK_DESC))) LIKE #{searchKeyword}||'%'
+        </if>
+       group by S26T.STK_ID,l44.BOM_COMPNT,S26T.STK_DESC,S26T.STK_CTGRY_ID,S26T.STK_TYPE_ID,1,s16.AMT
+    </select>
 </mapper>
