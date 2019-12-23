@@ -84,40 +84,40 @@ $(document).ready(function() {
     $("#addInstallForm #installStatus").change(function (){
         console.log($("#addInstallForm #installStatus").val());
         if($("#addInstallForm #installStatus").val() == 4){
-    
+
                 $("#checkCommission").prop("checked",true);
                 $("#addInstallForm #installDate").prop("readonly" , false);
                 $("#addInstallForm #installDate").attr("class" , "j_date w100p hasDatepicker");
                 $("#addInstallForm #installDate").attr("placeholder" , "DD/MM/YYYY");
         }
         else{
-        	
+
             $("#checkCommission").prop("checked",false);
             $("#addInstallForm #installDate").val("");
             $("#addInstallForm #installDate").prop("readonly" , true);
             $("#addInstallForm #installDate").attr("readonly" , true);
             $("#addInstallForm #installDate").attr("class" , "disabled");
             $("#addInstallForm #installDate").attr("placeholder" , "only complete case");
-        }      
-    
+        }
+
     });
-    
-    
-    
+
+
+
     $("#installDate").change(function(){
         var checkMon =   $("#installDate").val();
-    
-        
+
+
         Common.ajax("GET", "/services/checkMonth.do?intallDate=" + checkMon, ' ', function(result) {
              console.log("성공.");
              console.log("data : " + result);
              if(result.message == "Please choose this month only"){
                  Common.alert(result.message);
                  $("#installDate").val('');
-                 
+
              }
         });
-             
+
     });
 
 });
@@ -128,37 +128,55 @@ function fn_saveInstall(){
 			Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
 			return;
 		}
-	 
-		if ( $("#addInstallForm #installDate").val() == '' ||  $("#addInstallForm #custRelationship").val() == '' || 
+
+		if ( $("#addInstallForm #installDate").val() == '' ||  $("#addInstallForm #custRelationship").val() == '' ||
 				$("#addInstallForm #custName").val() == '' ) {
 			Common.alert("Please insert 'Actual Product Return Date', 'Acctance Name',  'Acctance Relationship' <br/>in complete status");
             return;
         }
 	 }
-	 
+
 	 if($("#addInstallForm #installStatus").val() == 21){  // Failed
 	        if( $("#failReason").val() == 0 || $("#nextCallDate").val() == '' ){
 	        	Common.alert("Please insert 'Failed Reason', 'Next Call Date'<br/>in fail status");
-	     
+
 	            return;
 	        }
-	 
-	        if ( $("#addInstallForm #installDate").val() != ''  || 
+
+	        if ( $("#addInstallForm #installDate").val() != ''  ||
 	                $("#addInstallForm #custName").val() != '' ) {
 	            Common.alert("Not allowed to choose 'Actual Product Return Date', 'Acctance Name' <br/>in fail status");
 	            return;
 	        }
 	}
 
-	Common.ajax("POST", "/sales/order/addProductReturn.do", $("#addInstallForm").serializeJSON(), function(result) {
-        console.log(result);
-        Common.alert(result.message,fn_saveclose);
-        
-        /* if (result.code == 'Y') {
-        	$("#popup_wrap").remove();
-        	fn_installationListSearch();
-        } */
-    });
+	//
+	if( $("#serialRequireChkYn").val() == "N" ){
+	       Common.ajax("POST", "/sales/order/addProductReturn.do", $("#addInstallForm").serializeJSON(), function(result) {
+	            console.log(result);
+	            Common.alert(result.message,fn_saveclose);
+
+	            /* if (result.code == 'Y') {
+	                $("#popup_wrap").remove();
+	                fn_installationListSearch();
+	            } */
+	        });
+	}else{
+		  var pRetnNo = AUIGrid.getCellValue(myGridID_view, 0, "retnNo");
+
+	    $("#addInstallForm #hidRefDocNo").val( pRetnNo ); // Retn No
+
+        Common.ajax("POST", "/sales/order/addProductReturnSerial.do", $("#addInstallForm").serializeJSON(), function(result) {
+            console.log(result);
+            Common.alert(result.message,fn_saveclose);
+
+            /* if (result.code == 'Y') {
+                $("#popup_wrap").remove();
+                fn_installationListSearch();
+            } */
+        });
+	}
+
 }
 
 function fn_saveclose(){
@@ -175,6 +193,56 @@ function fn_viewInstallResultSearch(){
        AUIGrid.setGridData(myGridID_view, result);
    });
 
+}
+
+// 시리얼 수정 팝업 호출
+function fn_serialChangePop(){
+
+	var pRetnNo = AUIGrid.getCellValue(myGridID_view, 0, "retnNo");
+
+    $("#serialNoChangeForm #pSerialNo").val( $("#serialNo").val() ); // Serial No
+    $("#serialNoChangeForm #pSalesOrdId").val( $("#hidSalesOrderId").val() ); // 주문 ID
+    $("#serialNoChangeForm #pSalesOrdNo").val( $("#salesOrdNo").val() ); // 주문 번호
+    $("#serialNoChangeForm #pRefDocNo").val( pRetnNo ); // Retn No
+    $("#serialNoChangeForm #pItmCode").val( $("#stkCode").val()  ); // 제품 ID
+    $("#serialNoChangeForm #pCallGbn").val( "RETURN" ); //
+    $("#serialNoChangeForm #pMobileYn").val("N"  ); //
+
+    if(Common.checkPlatformType() == "mobile") {
+        popupObj = Common.popupWin("inBoundInForm", "/logistics/serialChange/serialNoChangePop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+    } else{
+        Common.popupDiv("/logistics/serialChange/serialNoChangePop.do", $("#serialNoChangeForm").serializeJSON(), null, true, '_serialNoChangePop');
+    }
+}
+
+// 모바일에서 호출시 닫기 이벤트
+function fn_PopSerialChangeClose(){
+
+	console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+
+	// obj.asIsSerialNo : 변경 이전 시리얼 번호
+    // obj.beforeSerialNo : 변경 이후 시리얼 번호
+
+    if(popupObj!=null) popupObj.close();
+
+    $("#addInstallForm #asIsSerialNo").val( obj.asIsSerialNo );
+    $("#addInstallForm #beforeSerialNo").val( obj.beforeSerialNo );
+    $("#addInstallForm #serialNo").val( obj.asIsSerialNo );
+    fn_viewInstallResultSearch(); //조회
+}
+
+// 팝업에서 호출하는 조회 함수
+function SearchListAjax(obj){
+
+	console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+
+    // obj.asIsSerialNo : 변경 이전 시리얼 번호
+    // obj.beforeSerialNo : 변경 이후 시리얼 번호
+
+    $("#addInstallForm #asIsSerialNo").val( obj.asIsSerialNo );
+    $("#addInstallForm #beforeSerialNo").val( obj.beforeSerialNo );
+    $("#addInstallForm #serialNo").val( obj.asIsSerialNo );
+	fn_viewInstallResultSearch(); //조회
 }
 
 function createInstallationViewAUIGrid() {
@@ -302,6 +370,7 @@ var gridPros = {
 </aside><!-- title_line end -->
 
 <input type="hidden" value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId" name="installEntryId"/>
+<input type="text" value="<c:out value="${installResult.serialRequireChkYn}"/>" id="serialRequireChkYn" name="serialRequireChkYn"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -324,6 +393,7 @@ var gridPros = {
     </td>
     <th scope="row"><spring:message code='service.title.OrderNo'/></th>
     <td>
+    <input type="hidden" id="salesOrdNo" name="salesOrdNo" value="${installResult.salesOrdNo}" />
     <span><c:out value="${installResult.salesOrdNo}"/></span>
     </td>
 </tr>
@@ -362,11 +432,13 @@ var gridPros = {
     <th scope="row">Product</th>
     <c:if test="${installResult.codeid1  == '257' }">
         <td>
+            <input type="hidden" id="stkCode" name="stkCode" value="${orderInfo.stkCode}" />
         <span><c:out value="${orderInfo.stkCode} - ${orderInfo.stkDesc} " /></span>
         </td>
     </c:if>
     <c:if test="${installResult.codeid1  == '258' }">
         <td>
+        <input type="hidden" id="stkCode" name="stkCode" value="${orderInfo.c6}" />
         <span><c:out value="${orderInfo.c6} - ${orderInfo.c7} " /></span>
         </td>
     </c:if>
@@ -687,6 +759,16 @@ var gridPros = {
 <h2>Add Product Return Result</h2>
 </aside><!-- title_line end -->
 
+<form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
+    <input type="hidden" name="pSerialNo" id="pSerialNo"/>
+    <input type="hidden" name="pSalesOrdId"  id="pSalesOrdId"/>
+    <input type="hidden" name="pSalesOrdNo"  id="pSalesOrdNo"/>
+    <input type="hidden" name="pRefDocNo" id="pRefDocNo"/>
+    <input type="hidden" name="pItmCode" id="pItmCode"/>
+    <input type="hidden" name="pCallGbn" id="pCallGbn"/>
+    <input type="hidden" name="pMobileYn" id="pMobileYn"/>
+</form>
+
 <form action="#" id="addInstallForm" method="post">
 <input type="hidden" value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId" name="installEntryId"/>
 <input type="hidden" value="${callType.typeId}" id="hidCallType" name="hidCallType"/>
@@ -752,6 +834,9 @@ var gridPros = {
 <input type="hidden" value="${customerContractInfo.name}" id = "hidInatallation_ContactPerson" name = "hidInatallation_ContactPerson"/>
 <input type="hidden" value="${callEntryId}" id = "hicallEntryId" name = "callEntryId"/>
 
+<input type="hidden" value="" id = "asIsSerialNo" name = "asIsSerialNo"/>
+<input type="hidden" value="" id = "beforeSerialNo" name = "beforeSerialNo"/>
+<input type="hidden" value="" id = "hidRefDocNo" name = "hidRefDocNo"/>
 
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
@@ -766,13 +851,13 @@ var gridPros = {
     <th scope="row">PR Result</th>
     <td>
     <select class="w100p" id="installStatus" name="returnStatus">
-    
+
            <option value="4">Completed</option>
            <option value="21">Failed</option>
-           
-        
+
+
     </select>
-    <!-- 
+    <!--
         <c:forEach var="list" items="${installStatus }" varStatus="status">
            <option value="${list.codeId}">${list.codeName}</option>
         </c:forEach> -->
@@ -808,8 +893,15 @@ var gridPros = {
     <th scope="row"><spring:message code='service.title.SIRIMNo'/></th>
     <td colspan="3"><input type="text" title="" placeholder="" class="w100p"    readonly = "readonly" id="sirimNo" name="sirimNo"   value="${installResult.sirimNo}"/></td>
     <th scope="row"><spring:message code='service.title.SerialNo'/></th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" readonly = "readonly" id="serialNo" name="serialNo"  value="${installResult.serialNo}"/></td>
-   
+    <td colspan="3">
+        <%-- <input type="text" title="" placeholder="" class="w95p" readonly = "readonly" id="serialNo" name="serialNo"  value="${installResult.serialNo}"/> --%>
+        <input type="text" title="" placeholder="" class="w95p" readonly = "readonly" id="serialNo" name="serialNo"  value="${orderSerial}"/>
+
+        <p class="btn_grid">
+            <a href="#" onClick="fn_serialChangePop()">EDIT<!-- Modify --></a>
+        </p>
+    </td>
+
 </tr>
 
 <tr>
@@ -817,7 +909,7 @@ var gridPros = {
     <td  colspan="3"><input type="text" title="" placeholder="" class="w100p" id="custName" name="custName"/>
     </td>
     <th scope="row">Acceptance Cust Relationship</th>
-    <td  colspan="3">    
+    <td  colspan="3">
     <select class="w100p" id="custRelationship" name="custRelationship">
 
            <option value="2688">Owner</option>
@@ -829,7 +921,7 @@ var gridPros = {
            <option value="2694">Staff</option>
            <option value="2695">Maid</option>
            <option value="2696">Other</option>
- 
+
         </select>
         </td>
 </tr>
