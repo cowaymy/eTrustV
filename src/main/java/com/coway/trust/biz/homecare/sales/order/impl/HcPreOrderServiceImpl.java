@@ -17,6 +17,7 @@ import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.homecare.HomecareConstants;
 import com.coway.trust.web.homecare.HomecareConstants.HC_PRE_ORDER;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -85,11 +86,15 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			if(matStkId+fraStkId <= 0) {
 				throw new ApplicationException(AppConstants.FAIL, "Pre Order Register Failed. - Null Product ID");
 			}
+
+			int ordSeqNo = hcOrderRegisterMapper.getOrdSeqNo();
+
 			preOrderVO.setStusId(SalesConstants.STATUS_ACTIVE);
 			preOrderVO.setChnnl(SalesConstants.PRE_ORDER_CHANNEL_WEB);
 			preOrderVO.setPreTm(CommonUtils.convert24Tm(preOrderVO.getPreTm()));
 			preOrderVO.setCrtUserId(sessionVO.getUserId());
 			preOrderVO.setUpdUserId(sessionVO.getUserId());
+			preOrderVO.setBndlId(ordSeqNo);
 
 			// Mattress register
 			if(matStkId > 0) {
@@ -115,6 +120,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			// Frame register
 			if(fraStkId > 0) {
     			// Frame register
+				preOrderVO.setAppTypeId(HomecareConstants.APP_TYPE_ID.AUX);
     			preOrderVO.setItmStkId(preOrderVO.getItmStkId2());
     			preOrderVO.setItmCompId(preOrderVO.getItmCompId2());
     			preOrderVO.setPromoId(preOrderVO.getPromoId2());
@@ -135,6 +141,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 
 			// 홈케어 주문관리 테이블 insert - HMC0011D
 			HcOrderVO hcOrderVO = new HcOrderVO();
+			hcOrderVO.setOrdSeqNo(ordSeqNo);
 			hcOrderVO.setCustId(custId);                     // 고객번호
 			hcOrderVO.setMatPreOrdId(CommonUtils.intNvl(matPreOrdNo));        // Mattress Order No
 			hcOrderVO.setFraPreOrdId(CommonUtils.intNvl(fraPreOrdNo));           // Frame Order No

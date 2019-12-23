@@ -87,5 +87,13 @@ public class HomecareConstants {
 	public static final String HDC_BRANCH_TYPE = "5754";
 	/** HDC Member */
 	public static final String HDC_MEMBET_TYPE = "5758";
+	/** Base Term Date */
+	public static final String TERM_DT_CD = "5763";
+
+	/** Homecare App Type ID */
+	public static class APP_TYPE_ID {
+		/** AUX */
+		public static final int AUX = 5764;
+	}
 }
 
