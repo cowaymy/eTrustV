@@ -41,6 +41,9 @@
     </c:forEach>
 
     $(document).ready(function() {
+    	$("#wrap").css({"min-width":"100%"});
+        $("#container").css({"min-width":"100%"});
+
     	createAUIGrid();
 
     	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '${defLocType}', 'locType', 'M','f_multiCombo');
