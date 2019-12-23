@@ -1,5 +1,6 @@
 package com.coway.trust.web.logistics.inbound;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -127,4 +128,32 @@ public class InboundController {
 		return ResponseEntity.ok(message);
 	}
 
+    //KR HAN : InBound's Serial Check In Popup
+    @RequestMapping(value = "/inBoundIssueInPop.do")
+    public String inBoundIssueInPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+    	model.addAttribute("url", params);
+        return "logistics/inbound/inboundIssueInPop";
+    }
+
+    // KR HAN : receipt Serial Save
+	@RequestMapping(value = "/receiptSerial.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> receiptSerial(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVo) {
+
+		Map<String, Object> rmap = new HashMap<>();
+
+		params.put("userId", sessionVo.getUserId());
+
+		logger.debug("receiptSerial.do :::: params {} ", params);
+
+		rmap =  inboundService.receiptSerial(params);
+
+	    // 결과 만들기
+	    ReturnMessage message = new ReturnMessage();
+	    message.setCode(AppConstants.SUCCESS);
+	    message.setData(rmap);
+	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
+	}
 }
