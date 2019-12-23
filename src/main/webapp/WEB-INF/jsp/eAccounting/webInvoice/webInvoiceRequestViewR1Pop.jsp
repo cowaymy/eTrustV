@@ -19,7 +19,8 @@ var atchFileCnt = '${atchFileCnt}';
 var attachList = null;
 var myColumnLayout = [ {
     dataField : "clamUn",
-    headerText : '<spring:message code="newWebInvoice.seq" />'
+    headerText : '<spring:message code="newWebInvoice.seq" />',
+    width : 120
 }, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -34,7 +35,8 @@ var myColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "cur",
-    headerText : '<spring:message code="newWebInvoice.cur" />'
+    headerText : '<spring:message code="newWebInvoice.cur" />',
+    width : 90
 }, {
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
@@ -42,6 +44,7 @@ var myColumnLayout = [ {
     dataType: "numeric",
     formatString : "#,##0.00",
     editable : false,
+    width : 120
 },{
     dataField : "reqstRem",
     headerText : '<spring:message code="newWebInvoice.remark" />'

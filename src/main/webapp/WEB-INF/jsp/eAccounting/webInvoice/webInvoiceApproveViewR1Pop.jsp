@@ -19,7 +19,8 @@ var atchFileCnt = '${atchFileCnt}';
 var attachList = null;
 var myColumnLayout = [ {
     dataField : "clamUn",
-    headerText : '<spring:message code="newWebInvoice.seq" />'
+    headerText : '<spring:message code="newWebInvoice.seq" />',
+    width : 120
 }, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -32,64 +33,18 @@ var myColumnLayout = [ {
 }, {
     dataField : "appvItmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
-}, /*{
-    dataField : "glAccCode",
-    headerText : '<spring:message code="expense.GLAccount" />'
 }, {
-    dataField : "glAccCodeName",
-    headerText : '<spring:message code="newWebInvoice.glAccountName" />',
-    style : "aui-grid-user-custom-left"
-}, {
-    dataField : "budgetCode",
-    headerText : '<spring:message code="approveView.budget" />'
-}, {
-    dataField : "budgetCodeName",
-    headerText : '<spring:message code="approveView.budgetName" />',
-    style : "aui-grid-user-custom-left"
-},{
-    dataField : "taxCode",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "taxName",
-    headerText : '<spring:message code="newWebInvoice.taxCode" />',
-    style : "aui-grid-user-custom-left"
-},*/ {
     dataField : "cur",
-    headerText : '<spring:message code="newWebInvoice.cur" />'
-}, /*{
-    dataField : "netAmt",
-    headerText : '<spring:message code="newWebInvoice.netAmount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
+    headerText : '<spring:message code="newWebInvoice.cur" />',
+    width : 90
 }, {
-    dataField : "taxAmt",
-    headerText : '<spring:message code="newWebInvoice.taxAmount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "taxNonClmAmt",
-    headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, */{
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    editable : false//,
-    /*expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return (item.netAmt + item.taxAmt + item.taxNonClmAmt);
-    }
-}, {
-    dataField : "expDesc",
-    headerText : '<spring:message code="newWebInvoice.description" />',
-    style : "aui-grid-user-custom-left",
-    width : 200*/
+    editable : false,
+    width : 120
 },{
     dataField : "reqstRem",
     headerText : '<spring:message code="newWebInvoice.remark" />'
@@ -869,6 +824,15 @@ function fn_atchViewDown(fileGrpId, fileId) {
 
 <article class="grid_wrap" id="approveView_grid_wrap"><!-- grid_wrap start -->
 </article><!-- grid_wrap end -->
+
+<ul class="center_btns">
+    <c:if test="${pageAuthFuncChange eq 'Y'}">
+    <c:if test="${appvPrcssResult eq 'R'}">
+    <li><p class="btn_blue2"><a href="#" id="pApprove_btn"><spring:message code="invoiceApprove.title" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="pReject_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
+    </c:if>
+    </c:if>
+</ul>
 
 </section><!-- pop_body end -->
 

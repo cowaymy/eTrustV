@@ -240,7 +240,7 @@ public class WebInvoiceController {
     model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
     
     if (clmType.equalsIgnoreCase("R1")) {
-      return "eAccounting/webInvoice/webInvoiceApproveViewR1Pop";
+      return "eAccounting/webInvoice/webInvoiceRequestViewR1Pop";
     } else {
       return "eAccounting/webInvoice/webInvoiceRequestViewPop";
     }
