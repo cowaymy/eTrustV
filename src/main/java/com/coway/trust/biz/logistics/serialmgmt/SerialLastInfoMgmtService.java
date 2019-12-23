@@ -18,10 +18,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 public interface SerialLastInfoMgmtService {
 
-	String selectDefLocationType(Map<String, Object> params);
-
-	String selectDefLocationCode(Map<String, Object> params);
-
 	int selectSerialLastInfoListCnt(Map<String, Object> params);
 
 	List<EgovMap> selectSerialLastInfoList(Map<String, Object> params);

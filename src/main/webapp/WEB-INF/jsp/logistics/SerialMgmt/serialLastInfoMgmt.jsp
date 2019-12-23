@@ -106,6 +106,7 @@
             }
         });
 
+        AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
         AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditignHandler);
     });
 
@@ -465,17 +466,25 @@
 
     function auiCellEditignHandler(event)
     {
-      if(event.type == "cellEditEnd")
-      {
-          //console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+        if(event.type == "cellEditBegin") {
+            if (event.dataField == "serialNo")
+            {
+            	var hidSerialNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "hidSerialNo");
 
-          if (event.dataField == "itmCode")
-          {
-        	  if (event.which == '13'){
-	        	  //$("#svalue").val(event.value);
-        	  }
-          }
-       }
+            	if(FormUtil.isNotEmpty(hidSerialNo)) {
+            		return false;
+            	}
+            }
+        } else if(event.type == "cellEditEnd") {
+            //console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+
+            if (event.dataField == "itmCode")
+            {
+        	    if (event.which == '13'){
+	        	    //$("#svalue").val(event.value);
+        	    }
+            }
+        }
     }
 
 </script>

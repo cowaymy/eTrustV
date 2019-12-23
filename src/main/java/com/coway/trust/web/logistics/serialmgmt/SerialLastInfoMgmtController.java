@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.logistics.serialmgmt.SerialLastInfoMgmtService;
+import com.coway.trust.biz.logistics.serialmgmt.SerialScanningGRService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
@@ -56,6 +57,9 @@ public class SerialLastInfoMgmtController {
 	@Resource(name = "serialLastInfoMgmtService")
 	private SerialLastInfoMgmtService serialLastInfoMgmtService;
 
+	@Resource(name = "SerialScanningGRService")
+	private SerialScanningGRService serialScanningGRService;
+
 	@RequestMapping(value = "/serialLastInfoMgmt.do")
 	public String serialLastInfoMgmt(@RequestParam Map<String, Object> params, ModelMap model,	SessionVO sessionVo) {
 
@@ -69,7 +73,7 @@ public class SerialLastInfoMgmtController {
 			params.put("locgb", "03");
 		}
 		params.put("userBrnchId", sessionVo.getUserBranchId());
-		String defLocType = serialLastInfoMgmtService.selectDefLocationType(params);
+		String defLocType = serialScanningGRService.selectDefLocationType(params);
 
 		model.addAttribute("defLocType", defLocType);
 		params.put("locgb", defLocType);
@@ -77,7 +81,7 @@ public class SerialLastInfoMgmtController {
 		if("03".equals(defLocType) || "04".equals(defLocType)) {
 			params.put("userName", sessionVo.getUserName());
 		}
-		String defLocCode = serialLastInfoMgmtService.selectDefLocationCode(params);
+		String defLocCode = serialScanningGRService.selectDefLocationCode(params);
 		model.addAttribute("defLocCode", defLocCode);
 
 		return "logistics/SerialMgmt/serialLastInfoMgmt";
