@@ -17,7 +17,6 @@ import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
-import com.coway.trust.web.homecare.HomecareConstants;
 import com.coway.trust.web.homecare.HomecareConstants.HC_PRE_ORDER;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -120,7 +119,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			// Frame register
 			if(fraStkId > 0) {
     			// Frame register
-				preOrderVO.setAppTypeId(HomecareConstants.APP_TYPE_ID.AUX);
+				preOrderVO.setAppTypeId(SalesConstants.APP_TYPE_CODE_ID_AUX);
     			preOrderVO.setItmStkId(preOrderVO.getItmStkId2());
     			preOrderVO.setItmCompId(preOrderVO.getItmCompId2());
     			preOrderVO.setPromoId(preOrderVO.getPromoId2());

@@ -13,9 +13,11 @@ import com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -102,7 +104,10 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			// Frame register
 			if(fraStkId > 0) {
     			// Frame register
-				orderVO.setSalesOrderMVO(orderVO.getSalesOrderMVO2());
+				SalesOrderMVO salesOrderMVO2 = orderVO.getSalesOrderMVO2();
+				salesOrderMVO2.setAppTypeId(SalesConstants.APP_TYPE_CODE_ID_AUX);
+
+				orderVO.setSalesOrderMVO(salesOrderMVO2);
 				orderVO.setSalesOrderDVO(orderVO.getSalesOrderDVO2());
 				orderVO.setAccClaimAdtVO(orderVO.getAccClaimAdtVO2());
 				orderVO.setPreOrdId(orderVO.getFraPreOrdId());

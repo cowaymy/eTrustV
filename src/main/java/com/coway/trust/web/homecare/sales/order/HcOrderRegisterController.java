@@ -108,6 +108,7 @@ public class HcOrderRegisterController {
 	 */
 	@RequestMapping(value = "/hcRegisterOrder.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> hcRegisterOrder(@RequestBody OrderVO orderVO, SessionVO sessionVO) throws Exception {
+		String appTypeName = HomecareConstants.cnvAppTypeName(orderVO.getSalesOrderMVO().getAppTypeId());
 		// Registe Homecare Order
 		hcOrderRegisterService.hcRegisterOrder(orderVO, sessionVO);
 		// Ex-Trade : 1
@@ -139,7 +140,6 @@ public class HcOrderRegisterController {
 		}*/
 
 		String msg = "";
-		String appTypeName = HomecareConstants.cnvAppTypeName(orderVO.getSalesOrderMVO().getAppTypeId());
 
 		msg += "Order successfully saved.<br />";
 

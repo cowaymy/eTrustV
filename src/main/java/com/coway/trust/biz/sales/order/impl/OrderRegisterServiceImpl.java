@@ -14,9 +14,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static java.lang.Math.toIntExact;
 
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +24,9 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
-import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
+import com.coway.trust.biz.sales.order.vo.ASEntryVO;
 import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
 import com.coway.trust.biz.sales.order.vo.CallEntryVO;
 import com.coway.trust.biz.sales.order.vo.CallResultVO;
@@ -52,10 +51,7 @@ import com.coway.trust.biz.sales.order.vo.SrvConfigPeriodVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigSettingVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigurationVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
-import com.coway.trust.biz.sales.order.vo.ASEntryVO;
-import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
 import com.coway.trust.cmmn.model.GridDataSet;
-import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.DocTypeConstants;
@@ -178,6 +174,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     int srvPacId = Integer.parseInt(String.valueOf(params.get("srvPacId")));
     int promoId = Integer.parseInt(String.valueOf(params.get("promoId")));
     int stkId = Integer.parseInt(String.valueOf(params.get("stkId")));
+    int ordAppType =  CommonUtils.intNvl(params.get("orderAppType"));
 
     if (!StringUtils.isEmpty(params.get("promoId"))) {
       EgovMap promoMap = orderRegisterMapper.selectPromoDesc(Integer.parseInt((String) params.get("promoId")));
@@ -223,6 +220,20 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
           priceInfo.put("promoDiscPeriodTp", promoMap.get("promoDiscPeriodTp"));
           priceInfo.put("promoDiscPeriod", promoMap.get("promoDiscPeriod"));
           priceInfo.put("normalRentalFees", new DecimalFormat("0.00").format(normalRentalFees));
+
+        } else {
+        	// App Type == AUX
+        	if(ordAppType == SalesConstants.APP_TYPE_CODE_ID_AUX) {
+        		priceInfo = new EgovMap();
+
+        		priceInfo.put("orderPricePromo", "0.00");
+                priceInfo.put("orderPVPromo", "0.00");
+                priceInfo.put("orderPVPromoGST", "0.00");
+                priceInfo.put("orderRentalFeesPromo", "0.00");
+                priceInfo.put("promoDiscPeriodTp", "");
+                priceInfo.put("promoDiscPeriod", "");
+                priceInfo.put("normalRentalFees", "0.00");
+        	}
         }
       } else {
         priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockID(params); // AS-IS
@@ -1556,6 +1567,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       } else {
         iMap.put("srvPacId", Integer.toString(srvPacId));
       }
+      iMap.put("orderAppType", orderAppType);
 
       EgovMap oMap = this.selectProductPromotionPriceByPromoStockID(iMap);
 
