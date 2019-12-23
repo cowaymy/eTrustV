@@ -441,6 +441,7 @@
          , Extent18.AREA_ID
          , Extent1.Grade
          , Extent1.RCD_TMS
+         , Extent16.SERIAL_REQUIRE_CHK_YN SERIAL_REQUIRE_CHK_YN
     FROM SAL0046D Extent1
     LEFT JOIN SAL0047D Extent2 ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
     JOIN SAL0001D Extent3 ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
