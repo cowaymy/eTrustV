@@ -489,4 +489,26 @@ public class HcASManagementListController {
     return ResponseEntity.ok(list);
   }
 
+  @RequestMapping(value = "/assignCtOrderListSave.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> assignCtOrderListSave(@RequestBody Map<String, Object> params, Model model,
+      HttpServletRequest request, SessionVO sessionVO) throws Exception{
+    logger.debug("===========================/assignCtOrderListSave.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/assignCtOrderListSave.do===============================");
+
+    params.put("updator", sessionVO.getUserId());
+    List<EgovMap> update = (List<EgovMap>) params.get("update");
+    logger.debug("asResultM ===>" + update.toString());
+
+    int rtnValue = hcASManagementListService.updateAssignCT(params);
+
+    ReturnMessage message = new ReturnMessage();
+    message.setCode(AppConstants.SUCCESS);
+    message.setData(99);
+    message.setMessage("");
+
+    return ResponseEntity.ok(message);
+
+  }
+
 }

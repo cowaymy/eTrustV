@@ -43,4 +43,7 @@ public interface HcASManagementListService {
 
 	// AS Defect
 	public List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params) throws Exception;
+
+	public int updateAssignCT(Map<String, Object> params) throws Exception;
+
 }

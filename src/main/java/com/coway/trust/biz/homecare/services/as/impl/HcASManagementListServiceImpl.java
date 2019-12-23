@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.services.as.HcASManagementListService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -103,4 +104,20 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
 	public List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params) throws Exception{
 		return hcASManagementListMapper.getASRulstSVC0004DInfo(params);
 	}
+
+    @Override
+    public int updateAssignCT(Map<String, Object> params) throws Exception{
+      List<EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
+      int rtnValue = -1;
+
+      if (updateItemList.size() > 0) {
+
+        for (int i = 0; i < updateItemList.size(); i++) {
+          Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
+          updateMap.put("updator", params.get("updator"));
+          rtnValue = hcASManagementListMapper.updateAssignCT(updateMap);
+        }
+      }
+      return rtnValue;
+    }
 }
