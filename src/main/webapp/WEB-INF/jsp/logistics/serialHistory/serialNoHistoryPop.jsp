@@ -24,6 +24,10 @@
 
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
+
+        $("#download").click(function() {
+            GridCommon.exportTo("ord_grid", 'xlsx', "Order Serial No. History List");
+        });
     });
 
     /* salesOrdId
@@ -56,7 +60,7 @@
          ,{   dataField : "lastInstallSerialNo",  headerText : 'Install Serial No.',     width : 160  }
          ,{   dataField : "crtUserBrnchCd", headerText : 'Change Branch',      width : 120, style: "aui-grid-user-custom-left" }
          ,{   dataField : "crtUserFullName", headerText : 'Change User',        width : 120, style: "aui-grid-user-custom-left" }
-         ,{   dataField : "crtDt", headerText : 'Change Date Time',    width : 160, style: "aui-grid-user-custom-left" }
+         ,{   dataField : "crtDt", headerText : 'Change Date Time',    width : 160 }
         ];
 
      //그리드 속성 설정
@@ -103,7 +107,7 @@
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Order Serial No. History</h2>
+<!-- <h2>Order Serial No. History</h2> -->
 
   <ul class="right_btns">
     <li><p class="btn_blue">
@@ -176,6 +180,7 @@
 </form>
 
 <ul class="right_btns mt20">
+    <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
