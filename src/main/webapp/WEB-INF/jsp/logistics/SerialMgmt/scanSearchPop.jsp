@@ -71,7 +71,7 @@ function fnScanSearchResult(serialNo) {
         });
 
         if(  js.String.isNotEmpty($("#searchDeliveryNo").val())
-          || js.String.isNotEmpty($("#searchRequestNo").val())){
+          || js.String.isNotEmpty($("#searchRequestNo1").val())){
         	getScanPopList();
         }
 
@@ -137,20 +137,20 @@ function fnScanSearchResult(serialNo) {
                 return;
         	}
         }
-        if (!js.String.isEmpty($("#searchRequestNo").val()) || !js.String.isEmpty($("#searchRequestItem").val())) {
-            if (js.String.isEmpty($("#searchRequestNo").val()) || js.String.isEmpty($("#searchRequestItem").val())) {
+        if (!js.String.isEmpty($("#searchRequestNo1").val()) || !js.String.isEmpty($("#searchRequestItem").val())) {
+            if (js.String.isEmpty($("#searchRequestNo1").val()) || js.String.isEmpty($("#searchRequestItem").val())) {
                 Common.alert('Please Enter Request NO And Request Item.');
                 return;
             }
         }
         */
 
-        if( js.String.isEmpty($("#searchDeliveryNo").val()) && js.String.isEmpty($("#searchRequestNo").val() )){
+        if( js.String.isEmpty($("#searchDeliveryNo").val()) && js.String.isEmpty($("#searchRequestNo1").val() )){
         	Common.alert('Please Enter Delivery Info Or Request Info.');
             return;
         }
 
-        var data = {searchDeliveryNo : $("#searchDeliveryNo").val(), searchDeliveryItem : $("#searchDeliveryItem").val(), searchRequestNo : $("#searchRequestNo").val(), searchRequestItem : $("#searchRequestItem").val(), searchStatus : $("#searchStatus").val(), searchSerialNo : $("#searchSerialNo").val()};
+        var data = {searchDeliveryNo : $("#searchDeliveryNo").val(), searchDeliveryItem : $("#searchDeliveryItem").val(), searchRequestNo : $("#searchRequestNo1").val(), searchRequestItem : $("#searchRequestItem").val(), searchStatus : $("#searchStatus").val(), searchSerialNo : $("#searchSerialNo").val()};
 
         /*
         Common.ajaxSync("GET", "/logistics/SerialMgmt/scanSearchDataList.do", data, function(result) {
@@ -235,7 +235,7 @@ function fnScanSearchResult(serialNo) {
 	                        <th scope="row"><span style="color:red">*</span> Request No / Item</th>
 	                        <td>
 	                            <div class="w100p">
-	                                <input type="text"  id="searchRequestNo" name="searchRequestNo" style="width:50%;" value="${pRequestNo}" readonly class="readonly"/>
+	                                <input type="text"  id="searchRequestNo1" name="searchRequestNo1" style="width:50%;" value="${pRequestNo}" readonly class="readonly"/>
 	                                <input type="text"  id="searchRequestItem" name="searchRequestItem" style="width:49%;" value="${pRequestItem}" readonly class="readonly"/>
 	                            </div>
 	                        </td>
