@@ -27,9 +27,13 @@ public interface StockMovementService {
 
   Map<String, Object> stockMovementReqDelivery(Map<String, Object> param);
 
+  Map<String, Object> stockMovementReqDeliverySerial(Map<String, Object> param);
+
   List<EgovMap> selectStockMovementSerial(Map<String, Object> params);
 
   Map<String, Object> stockMovementDeliveryIssue(Map<String, Object> params);
+
+  Map<String, Object> stockMovementDeliveryIssueSerial(Map<String, Object> params);
 
   List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params);
 
@@ -54,5 +58,11 @@ public interface StockMovementService {
   int getASNo(Map<String, Object> params);
 
   int chkASNoExist(Map<String, Object> params);
+
+  List<EgovMap> selectSmoIssueOutPop(Map<String, Object> smap); // KR OHK : SMO Serial Check Popup
+
+  List<EgovMap> selectSmoIssueInPop(Map<String, Object> smap); // KR OHK : SMO Serial Check Popup
+
+  List<EgovMap> selectSMOIssueInSerialGradeList(Map<String, Object> smap); // KR OHK :SMO Serial Grade List
 
 }

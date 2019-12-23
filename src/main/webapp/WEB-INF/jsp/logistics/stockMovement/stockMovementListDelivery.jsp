@@ -32,6 +32,13 @@
   font-weight: bold;
   color: #22741C;
 }
+
+.aui-grid-link-renderer1 {
+  text-decoration:underline;
+  color: #4374D9 !important;
+  cursor: pointer;
+  text-align: right;
+}
 </style>
 <script type="text/javascript"
  src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
@@ -137,13 +144,15 @@
         dataField : "reqstqty",
         headerText : "<spring:message code='log.head.requestedqty'/>",
         width : 120,
-        height : 30
+        height : 30,
+        style: "aui-grid-user-custom-right"
       },
       {
         dataField : "rmqty",
         headerText : "<spring:message code='log.head.remainqty'/>",
         width : 120,
-        height : 30
+        height : 30,
+        style: "aui-grid-user-custom-right"
       },
       {
         dataField : "delvno",
@@ -166,6 +175,12 @@
         height : 30,
         editable : true,
         dataType : "numeric",
+        style: "aui-grid-user-custom-right",
+        styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
+            if(item.serialchk == "Y" && item.serialRequireChkYn == "Y") {
+                return "aui-grid-link-renderer1";
+            }
+        },
         editRenderer : {
           type : "InputEditRenderer",
           onlyNumeric : true, // 0~9 까지만 허용
@@ -184,7 +199,8 @@
         dataField : "rciptqty",
         headerText : "<spring:message code='log.head.grqty'/>",
         width : 120,
-        height : 30
+        height : 30,
+        style: "aui-grid-user-custom-right"
       },
       {
         dataField : "docno",
@@ -261,7 +277,14 @@
         headerText : "Reqst. Required Date",
         width : 120,
         height : 30
-      } ];
+      }, {
+          dataField : "serialRequireChkYn",
+          headerText : "Serial Required Check Y/N",
+          width : 200,
+          height : 30,
+          visible:true
+        }
+      ];
   var reqcolumnLayout;
 
   var serialcolumnLayout = [
@@ -627,7 +650,24 @@
       listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
       serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
 
-      AUIGrid.bind(listGrid, "cellClick", function(event) {});
+      // KR-OHK
+      AUIGrid.bind(listGrid, "cellClick", function( event ) {
+          var dataField = AUIGrid.getDataFieldByColumnIndex(listGrid, event.columnIndex);
+
+          if(dataField == "indelyqty"){
+              var rowIndex = event.rowIndex;
+              var serialchk = AUIGrid.getCellValue(listGrid, rowIndex, "serialchk");
+              var serialRequireChkYn = AUIGrid.getCellValue(listGrid, rowIndex, "serialRequireChkYn");
+
+              if(serialchk == "Y" && serialRequireChkYn == "Y") {
+                  $("#pRequestNo").val(AUIGrid.getCellValue(listGrid, rowIndex, "reqstno"));
+                  $("#pRequestItem").val(AUIGrid.getCellValue(listGrid, rowIndex, "reqitmno"));
+                  $("#pStatus").val("O");
+
+                  fn_scanSearchPop();
+              }
+          }
+      });
 
       AUIGrid.bind(listGrid, "cellEditBegin",
         function(event) {
@@ -766,6 +806,27 @@
                              return false;
                        }
 
+                       // KR-OHK Serial Require Check
+                       if(checked[i].item.serialRequireChkYn !=event.item.serialRequireChkYn){
+                           Common.alert("Please Check SMO No");
+                           var rown = AUIGrid.getRowIndexesByValue(listGrid, "reqstno" , reqno);
+                           for (var i = 0 ; i < rown.length ; i++){
+                               AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+                           }
+                           return false;
+                       }else if(event.item.serialRequireChkYn== "Y"){
+                            if(checked[i].item.reqstno !=event.item.reqstno){
+                                Common.alert("Please Check SMO No");
+
+                                var rown = AUIGrid.getRowIndexesByValue(listGrid, "reqstno" , reqno);
+                                for (var i = 0 ; i < rown.length ; i++){
+                                    AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+                                }
+                                return false;
+                            }
+                      }
+
+
                        if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum))
                        {
                            AUIGrid.addCheckedRowsByValue(listGrid, "reqstno" , reqno);
@@ -868,6 +929,7 @@
       }
 
       var checkDelqty = false;
+      var serialRequireChkYn = false;
       var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
 
       if (checkedItems.length <= 0) {
@@ -897,6 +959,11 @@
           } else{
             serialchk = false;
           } */
+
+          // KR-OHK Serial Require Check
+          if (rowItem.item.serialRequireChkYn == 'Y') {
+        	serialRequireChkYn = true;
+          }
         }
 
         if (checkDelqty) {
@@ -905,23 +972,29 @@
                        };
                   Common.alertBase(option);
         } else {
-          $("#giopenwindow").show();
-          $("#giptdate").val("");
-          $("#gipfdate").val("");
-          $("#doctext").val("");
-          doSysdate(0, 'giptdate');
-          doSysdate(0, 'gipfdate');
-          AUIGrid.clearGridData(serialGrid);
-          AUIGrid.resize(serialGrid);
-          if (serialchk) {
-            //fn_itempopListSerial(checkedItems);
-            fn_itempopList_T(checkedItems);
-            $("#ascall").show();
-            $("#serial_grid_wrap_div").show();
-            AUIGrid.resize(serialGrid);
+          if(serialRequireChkYn) { // KR-OHK Serial Require Check
+
+        	  fn_smoIssuePop();
+
           } else {
-            $("#serial_grid_wrap_div").hide();
-            $("#ascall").hide();
+	        $("#giopenwindow").show();
+	        $("#giptdate").val("");
+	        $("#gipfdate").val("");
+	        $("#doctext").val("");
+	        doSysdate(0, 'giptdate');
+	        doSysdate(0, 'gipfdate');
+	        AUIGrid.clearGridData(serialGrid);
+	        AUIGrid.resize(serialGrid);
+	        if (serialchk) {
+	          //fn_itempopListSerial(checkedItems);
+	          fn_itempopList_T(checkedItems);
+	          $("#ascall").show();
+	          $("#serial_grid_wrap_div").show();
+	          AUIGrid.resize(serialGrid);
+	        } else {
+	          $("#serial_grid_wrap_div").hide();
+	          $("#ascall").hide();
+	        }
           }
         }
       }
@@ -994,6 +1067,40 @@
     });
 
   });
+
+  function fn_smoIssuePop(){
+    var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+    var str = "";
+    var rowItem;
+
+    for (var i = 0, len = checkedItems.length; i < len; i++) {
+      rowItem = checkedItems[i];
+    }
+
+    $("#zReqstno").val(checkedItems[0].item.reqstno);
+    $("#zRcvloc").val(checkedItems[0].item.rcvloc); // From Location
+    $("#zReqloc").val(checkedItems[0].item.reqloc); // To Location
+
+    if(Common.checkPlatformType() == "mobile") {
+      popupObj = Common.popupWin("frmNew", "/logistics/stockMovement/smoIssueOutPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+    } else{
+      Common.popupDiv("/logistics/stockMovement/smoIssueOutPop.do", null, null, true, '_divSmoIssuePop');
+    }
+  }
+
+  function fn_PopSmoIssueClose(){
+    if(popupObj!=null) popupObj.close();
+    SearchListAjax();
+  }
+
+  //Serial Search Pop
+  function fn_scanSearchPop(){
+      if(Common.checkPlatformType() == "mobile") {
+          popupObj = Common.popupWin("frmNew", "/logistics/SerialMgmt/scanSearchPop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+      } else{
+          Common.popupDiv("/logistics/SerialMgmt/scanSearchPop.do", $("#frmNew").serializeJSON(), null, true, '_scanSearchPop');
+      }
+  }
 
   function fn_itempopList(data) {
     var rtnVal = data[0].item;
@@ -1096,8 +1203,8 @@
       }
     }
     AUIGrid.addRow(serialGrid, rowList, rowPos);
-  }  
-	
+  }
+
 	function fn_itempopList_T(data) {
 		var itm_temp = "";
 		var itm_qty = 0;
@@ -1497,11 +1604,11 @@
       <a id="download"><spring:message code='sys.btn.excel.dw' /></a>
      </p></li>
    </c:if>
-   <li><p class="btn_grid">
-     <a id="delivery">DELIVERY</a>
-    </p></li>
+   <li><p class="btn_grid"><a id="delivery">DELIVERY</a></p></li>
   </ul>
-  <div id="main_grid_wrap" class="mt10" style="height: 450px"></div>
+  <article class="grid_wrap"><!-- grid_wrap start -->
+    <div id="main_grid_wrap" class="autoGridHeight"></div>
+  </article><!-- grid_wrap end -->
  </section>
  <!-- search_result end -->
  <div class="popup_wrap" id="giopenwindow" style="display: none">
@@ -1579,5 +1686,14 @@
  <form id='popupForm'>
   <input type="hidden" id="sUrl" name="sUrl"> <input
    type="hidden" id="svalue" name="svalue">
+ </form>
+ <form id="frmNew" name="frmNew" action="#" method="post">
+     <input type="hidden" name="zDelvryNo" id="zDelvryNo"/>
+     <input type="hidden" name="zReqstno" id="zReqstno" />
+     <input type="hidden" name="zReqloc" id="zReqloc" />
+     <input type="hidden" name="zRcvloc" id="zRcvloc" />
+     <input type="hidden" name="pRequestNo" id="pRequestNo" />
+     <input type="hidden" name="pRequestItem" id="pRequestItem" />
+     <input type="hidden" name="pStatus" id="pStatus" />
  </form>
 </section>

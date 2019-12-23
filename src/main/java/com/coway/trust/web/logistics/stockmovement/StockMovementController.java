@@ -380,6 +380,28 @@ public class StockMovementController {
     return ResponseEntity.ok(message);
   }
 
+  @RequestMapping(value = "/StockMovementReqDeliverySerial.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> stockMovementReqDeliverySerial(@RequestBody Map<String, Object> params, Model model,
+      SessionVO sessionVO) {
+    int loginId = sessionVO.getUserId();
+    params.put("userId", loginId);
+
+    Map<String, Object> map = stockMovementService.stockMovementReqDeliverySerial(params);
+
+    logger.debug(" :::: {}", map);
+
+    String reVal = (String) map.get("rdata");
+    String returnValue[] = reVal.split("∈");
+
+    // 결과 만들기 예.
+    ReturnMessage message = new ReturnMessage();
+    message.setCode(AppConstants.SUCCESS);
+    message.setData(returnValue);
+    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+    return ResponseEntity.ok(message);
+  }
+
   @RequestMapping(value = "/StockMovementSerialCheck.do", method = RequestMethod.GET)
   public ResponseEntity<Map> stockMovementSerialCheck(@RequestParam Map<String, Object> params) {
 
@@ -428,6 +450,30 @@ public class StockMovementController {
     rmap.put("message", message);
 
     return ResponseEntity.ok(rmap);
+  }
+
+  @RequestMapping(value = "/StockMovementGoodIssueSerial.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> stockMovementGoodIssueSerial(@RequestBody Map<String, Object> params, Model model,
+      SessionVO sessionVO) throws Exception {
+
+    params.put("userId", sessionVO.getUserId());
+
+    Map<String, Object> rmap = new HashMap<>();
+
+    logger.debug("StockMovementGoodIssueSerial.do :::: params {} ", params);
+
+    rmap = stockMovementService.stockMovementDeliveryIssueSerial(params);
+
+    String reVal = (String) rmap.get("rdata");
+    String returnValue[] = reVal.split("∈");
+
+    // 결과 만들기 예.
+    ReturnMessage message = new ReturnMessage();
+    message.setCode(AppConstants.SUCCESS);
+    message.setData(returnValue);
+    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+    return ResponseEntity.ok(message);
   }
 
   // 백업
@@ -708,4 +754,57 @@ public class StockMovementController {
     return ResponseEntity.ok(smo);
   }
 
+    //KR OHK : SMO Serial Check Out Popup
+    @RequestMapping(value = "/smoIssueOutPop.do")
+    public String smoIssueOutPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+    	model.addAttribute("url", params);
+        return "logistics/stockMovement/smoIssueOutPop";
+    }
+
+    //KR OHK : SMO Serial Check Out List
+    @RequestMapping(value = "/selectSmoIssueOutPop.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> selectSMOIssueOutList(@RequestBody Map<String, Object> params, Model model) throws Exception {
+    	ReturnMessage result = new ReturnMessage();
+
+        List<EgovMap> list = stockMovementService.selectSmoIssueOutPop(params);
+
+        result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		result.setDataList(list);
+		result.setTotal(list.size());
+
+		return ResponseEntity.ok(result);
+    }
+
+    //KR OHK : SMO Serial Check In Popup
+    @RequestMapping(value = "/smoIssueInPop.do")
+    public String smoIssueInPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+    	model.addAttribute("url", params);
+        return "logistics/stockMovement/smoIssueInPop";
+    }
+
+    //KR OHK : SMO Serial Check In List
+    @RequestMapping(value = "/selectSmoIssueInPop.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> selectSMOIssueInList(@RequestBody Map<String, Object> params, Model model) throws Exception {
+    	ReturnMessage result = new ReturnMessage();
+
+        List<EgovMap> list = stockMovementService.selectSmoIssueInPop(params);
+
+        result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		result.setDataList(list);
+		result.setTotal(list.size());
+
+		return ResponseEntity.ok(result);
+    }
+
+    //KR OHK : SMO Serial Check In Serial Grade List
+    @RequestMapping(value = "/selectSMOIssueInSerialGradeList.do", method = RequestMethod.GET)
+    public ResponseEntity selectSMOIssueInSerialGradeList(@RequestParam Map<String, Object> params, Model model)
+        throws Exception {
+
+      List<EgovMap> list = stockMovementService.selectSMOIssueInSerialGradeList(params);
+
+      return ResponseEntity.ok(list);
+    }
 }

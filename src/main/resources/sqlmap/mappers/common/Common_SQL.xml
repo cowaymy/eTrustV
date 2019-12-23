@@ -1571,7 +1571,6 @@
         )
         ORDER BY CODE_NAME ASC, STK_ID ASC
     </select>
-
     <select id="selectInStckSelCodeList" parameterType="Map" resultType="egovMap">
             SELECT
                               STK.STK_ID CODE_ID
@@ -1639,7 +1638,7 @@
                       AND S28M.WH_LOC_GB in ('01','02','05')
                   </when>
                   <when test='locgb !=null and locgb == "CT" or locgb =="CTOR"'>
-                      AND S28M.WH_LOC_GB in ('03','04')
+                      AND S28M.WH_LOC_GB in ('03','04','09')
                   </when>
                   <otherwise>
                       AND S28M.WH_LOC_GB = #{locgb}

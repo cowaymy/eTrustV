@@ -53,6 +53,12 @@ public interface StockMovementMapper {
 
   void StockMovementIssue(Map<String, Object> formMap);
 
+  void StockMovementIssueSerial(Map<String, Object> formMap);
+
+  void StockMovementIssueBarcodeSave(Map<String, Object> formMap);
+
+  void StockMovementIssueBarcodeRetSave(Map<String, Object> formMap);
+
   List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params);
 
   List<EgovMap> selectStockMovementMtrDocInfoList(Map<String, Object> params);
@@ -100,5 +106,11 @@ public interface StockMovementMapper {
   int getIHNo(Map<String, Object> params);
 
   int chkASNoExist(Map<String, Object> params);
+
+  List<EgovMap> selectSmoIssueOutPop(Map<String, Object> params); // KR OHK : SMO Serial Check List
+
+  List<EgovMap> selectSmoIssueInPop(Map<String, Object> params); // KR OHK : SMO Serial Check List
+
+  List<EgovMap> selectSMOIssueInSerialGradeList(Map<String, Object> params); // KR OHK : SMO Serial Grade List
 
 }

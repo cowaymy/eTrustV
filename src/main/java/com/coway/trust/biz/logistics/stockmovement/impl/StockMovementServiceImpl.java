@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.stockmovement.StockMovementService;
 import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.PreconditionException;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -352,6 +353,125 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
     return formMap;
   }
 
+  // KR - OHK
+  @SuppressWarnings("unchecked")
+  @Override
+  public Map<String, Object> stockMovementReqDeliverySerial(Map<String, Object> params) {
+	Map<String, Object> gridList = (Map<String, Object>) params.get("gridList");
+	List<Object> serialGridList = (List<Object>)gridList.get(AppConstants.AUIGRID_ALL);
+
+    boolean dupCheck = true;
+
+    if (serialGridList.size() > 0) {
+      Map<String, Object> insMap = null;
+
+      for (int i = 0; i < serialGridList.size(); i++) {
+
+        insMap = (Map<String, Object>) serialGridList.get(i);
+
+        insMap.put("reqstno", insMap.get("reqstNo"));
+        insMap.put("itmcd", insMap.get("itmCode"));
+
+        List<EgovMap> list = stockMoveMapper.selectDeliverydupCheck(insMap);
+
+        String ttmp1 = (String) insMap.get("reqstno");
+        String ttmp2 = (String) insMap.get("itmcd");
+
+        int ttmp3 = (int) insMap.get("reqstQty");  // 요청 수량
+        int ttmp4 = (int) insMap.get("scanQty"); // 실제 화면에서 입력한 출고 수량
+
+        if (list.size() > 0) {
+          Map<String, Object> checkmap = null;
+          checkmap = list.get(0);
+          String tmp1 = (String) checkmap.get("reqstNo");
+          String tmp2 = (String) checkmap.get("itmCode");
+
+          Integer count = ((BigDecimal) checkmap.get("delvryQty")).intValueExact();
+          int tmp3 = count; // 기 출고된 수량
+
+          if (ttmp1.equals(tmp1) && ttmp2.equals(tmp2) && (ttmp4 + tmp3) > ttmp3) {
+            dupCheck = false;
+          }
+        }
+      }
+    }
+
+    if (dupCheck) { // 출고수량 <= 요청 수량
+      String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
+
+      if (serialGridList.size() > 0) {
+        Map<String, Object> insMap = null;
+
+        for (int i = 0; i < serialGridList.size(); i++) {
+
+          insMap = (Map<String, Object>) serialGridList.get(i);
+
+          insMap.put("reqstno", insMap.get("reqstNo"));
+          insMap.put("reqitmno", insMap.get("reqstNoItm"));
+          insMap.put("itmcd", insMap.get("itmCode"));
+          insMap.put("itmname", insMap.get("itmName"));
+          insMap.put("indelyqty", insMap.get("scanQty"));
+          insMap.put("ttype", insMap.get("trnscType"));
+          insMap.put("mtype", insMap.get("trnscTypeDtl"));
+          insMap.put("delno", deliSeq);
+          insMap.put("userId", params.get("userId"));
+
+          stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
+          stockMoveMapper.updateRequestMovement((String) insMap.get("reqstno"));
+        }
+        stockMoveMapper.insertDeliveryStockMovement(insMap);
+      }
+
+      String[] delvcd = { deliSeq };
+
+      params.put("parray", delvcd);
+      //params.put("userId", params.get("userId"));
+      params.put("refdocno", "");
+      params.put("salesorder", "");
+      params.put("giptdate", params.get("zGiptdate"));
+      params.put("gipfdate", params.get("zGipfdate"));
+      params.put("doctext", params.get("zDoctext"));
+      params.put("gtype", params.get("ztype"));
+
+      stockMoveMapper.StockMovementIssueSerial(params);
+
+      String reVal = (String) params.get("rdata");
+      String returnValue[] = reVal.split("∈");
+
+      logger.debug(" **** StockMovementIssueSerial [" + returnValue[0]+ "]");
+      logger.debug(" **** StockMovementIssueSerial [" + returnValue[1]+ "]");
+
+  	  if(!"000".equals(returnValue[0])){
+		    throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + returnValue[0]+ ":" + returnValue[1]);
+	    }
+
+      logger.debug(">>>>>>>>>>> deliSeq : " +  deliSeq);
+
+      // SERIAL SCAN SAVE
+      params.put("reqstNo", params.get("zRstNo"));
+      params.put("delvryNo", deliSeq);
+      params.put("trnscType",params.get("zTrnscType"));
+      params.put("ioType",params.get("zIoType"));
+
+      stockMoveMapper.StockMovementIssueBarcodeSave(params);
+
+      String errCode = (String)params.get("pErrcode");
+	  String errMsg = (String)params.get("pErrmsg");
+
+   	  logger.debug(">>>>>>>>>>>ERROR CODE : " + errCode);
+	  logger.debug(">>>>>>>>>>>ERROR MSG: " + errMsg);
+
+	  // pErrcode : 000  = Success, others = Fail
+	  if(!"000".equals(errCode)){
+		throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+	  }
+
+    } else {
+    	params.put("rdata", "8282∈dup");
+    }
+    return params;
+  }
+
   @Override
   public List<EgovMap> selectStockMovementSerial(Map<String, Object> params) {
     // TODO Auto-generated method stub
@@ -477,6 +597,126 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
     }
 
     return formMap;
+
+  }
+
+  // KR - OHK
+  @SuppressWarnings("unchecked")
+  @Override
+  public Map<String, Object> stockMovementDeliveryIssueSerial(Map<String, Object> params) {
+    //List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+    //Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+
+    Map<String, Object> gridList = (Map<String, Object>) params.get("gridList");
+	List<Object> serialGridList = (List<Object>)gridList.get(AppConstants.AUIGRID_ALL);
+
+    int iCnt = 0;
+    String tmpdelCd = "";
+    String delyCd = "";
+    String delyno = "";
+
+    if (serialGridList.size() > 0) {
+      for (int i = 0; i < serialGridList.size(); i++) {
+        Map<String, Object> map = (Map<String, Object>) serialGridList.get(i);
+
+        String delCd = (String) map.get("delvryNo");
+        delyno = (String) map.get("delvryNo");
+
+        if (delCd != null && !(tmpdelCd.equals(delCd))) {
+          tmpdelCd = delCd;
+          if (iCnt == 0) {
+            delyCd = delCd;
+          } else {
+            delyCd += "∈" + delCd;
+          }
+          iCnt++;
+        }
+      }
+    }
+    logger.info(" delyCd : {}", delyCd);
+
+    Map<String, Object> grlist = stockMoveMapper.selectDelvryGRcmplt(delyno);
+
+    String grmplt = (String) grlist.get("DEL_GR_CMPLT");
+
+    if ("Y".equals(grmplt)) {
+    	//params.put("failMsg", "Already processed.");
+    	throw new ApplicationException(AppConstants.FAIL, "Already processed.");
+    } else {
+
+        String[] delvcd = delyCd.split("∈");
+
+        params.put("parray", delvcd);
+        params.put("refdocno", "");
+        params.put("salesorder", "");
+
+        params.put("giptdate", params.get("zGrptdate"));
+        params.put("gipfdate", params.get("zGrpfdate"));
+        params.put("doctext", params.get("zDoctext"));
+        params.put("gtype", params.get("ztype"));
+
+        stockMoveMapper.StockMovementIssueSerial(params);
+
+        String reVal = (String) params.get("rdata");
+
+        String returnValue[] = reVal.split("∈");
+        logger.debug(" **** StockMovementIssueSerial [" + returnValue[0]+ "]");
+        logger.debug(" **** StockMovementIssueSerial [" + returnValue[1]+ "]");
+
+    	if(!"000".equals(returnValue[0])){
+ 		    throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + returnValue[0]+ ":" + returnValue[1]);
+ 	    }
+
+        Map<String, Object> gradeList = (Map<String, Object>) params.get("gradeList");
+
+         if ("GR".equals(params.get("ztype")) & null != gradeList) {
+             List<Object> gradeGridList = (List<Object>) gradeList.get(AppConstants.AUIGRID_UPDATE);
+
+             for (int i = 0; i < gradeGridList.size(); i++) {
+               Map<String, Object> getmap = (Map<String, Object>) gradeGridList.get(i);
+
+               logger.info(" getmap: {}", getmap);
+               logger.info(" getmap delvryNo: {}", getmap.get("delvryNo"));
+
+               Map<String, Object> setmap = new HashMap();
+               setmap.put("delvryNo", getmap.get("delvryNo"));
+               setmap.put("serialNo", getmap.get("serialNo"));
+               setmap.put("locStkGrad", getmap.get("lastLocStkGrad"));
+               setmap.put("trnscType", params.get("zTrnscType"));
+               setmap.put("ioType", params.get("zIoType"));
+               setmap.put("userId", params.get("userId"));
+
+               stockMoveMapper.StockMovementIssueBarcodeRetSave(setmap);
+
+                // pErrcode : 000  = Success, others = Fail
+         	    if(!"000".equals((String)setmap.get("pErrcode"))){
+         		    throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + (String)setmap.get("pErrcode") + ":" + (String)setmap.get("pErrmsg"));
+         	    }
+             }
+         }
+
+        // SERIAL SCAN SAVE
+        params.put("delvryGrDt",params.get("zGrptdate"));
+  	    params.put("reqstNo", params.get("zRstNo"));
+        params.put("delvryNo", params.get("zDelyNo"));
+  	    params.put("trnscType",params.get("zTrnscType"));
+        params.put("ioType",params.get("zIoType"));
+
+        stockMoveMapper.StockMovementIssueBarcodeSave(params);
+
+        String errCode = (String)params.get("pErrcode");
+  	    String errMsg = (String)params.get("pErrmsg");
+
+     	logger.debug(">>>>>>>>>>>ERROR CODE : " + errCode);
+  	    logger.debug(">>>>>>>>>>>ERROR MSG: " + errMsg);
+
+  	    // pErrcode : 000  = Success, others = Fail
+  	    if(!"000".equals(errCode)){
+  		    throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+  	    }
+      }
+
+      return params;
 
   }
 
@@ -727,4 +967,21 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
     return smo;
   }
 
+  @Override
+  public List<EgovMap> selectSmoIssueOutPop(Map<String, Object> params) {
+	  // KR OHK : SMO Serial Check Popup
+	  return stockMoveMapper.selectSmoIssueOutPop(params);
+  }
+
+  @Override
+  public List<EgovMap> selectSmoIssueInPop(Map<String, Object> params) {
+	  // KR OHK : SMO Serial Check Popup
+	  return stockMoveMapper.selectSmoIssueInPop(params);
+  }
+
+  @Override
+  public List<EgovMap> selectSMOIssueInSerialGradeList(Map<String, Object> params) {
+	  // KR OHK : SMO Serial Grade List
+	  return stockMoveMapper.selectSMOIssueInSerialGradeList(params);
+  }
 }
