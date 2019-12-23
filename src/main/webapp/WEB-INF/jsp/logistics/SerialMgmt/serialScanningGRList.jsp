@@ -65,7 +65,7 @@
             }}},
             {dataField:"deldate", headerText:"Delivery Date", width:100, editable:false, dataType:"date", dateInputFormat:"dd/mm/yyyy", formatString:"dd/mm/yyyy"},
             {dataField:"frmloc", headerText:"From Location", width:200, height:30, style:"aui-grid-user-custom-left"},
-            {dataField:"delqty", headerText:"Qty", width:50, height:30},
+            {dataField:"delqty", headerText:"Qty", width:50, height:30, style:"aui-grid-user-custom-right"},
             {dataField:"trnsctype", headerText:"Transaction Type", width:130, height:30, labelFunction:function(rowIndex, columnIndex, value, headerText, item) {
             	return getCodeList("CODE", "", "306", item.trnsctype);
             }},

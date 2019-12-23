@@ -68,7 +68,7 @@
             {dataField:"reqstdt", headerText:"Dlvd.Req.Date", width:120, editable:false, dataType:"date", dateInputFormat:"dd/mm/yyyy", formatString:"dd/mm/yyyy"},
             {dataField:"deldate", headerText:"Delivery Date", width:120, editable:false, dataType:"date", dateInputFormat:"dd/mm/yyyy", formatString:"dd/mm/yyyy"},
             {dataField:"toloc", headerText:"To Location", width:150, height:30, style:"aui-grid-user-custom-left"},
-            {dataField:"delqty", headerText:"Delivered Qty", width:120, height:30},
+            {dataField:"delqty", headerText:"Delivered Qty", width:120, height:30, style:"aui-grid-user-custom-right"},
             {dataField:"trnsctypedtl", headerText:"Movement Type", width:200, labelFunction:function(rowIndex, columnIndex, value, headerText, item) {
                 return getCodeList("CODE", "", "308", item.trnsctypedtl);
             }}
