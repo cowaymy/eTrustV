@@ -1135,4 +1135,38 @@
               #{chgRentAmt}
     )
   </insert>
+
+<!--   <resultMap id="BARCODECHANGERETURNDATA" type="egovMap" />
+  <select id="updateBarcodeChange"  statementType="CALLABLE" parameterType="Map">
+      /* [com.coway.trust.biz.sales.order.impl.OrderListMapper.updateBarcodeChange] KR_HAN */
+           { call SP_SVC_BARCODE_CHANGE
+                   (#{pSerialNo}, #{pBeforeSerialNo}, #{pSalesOrdId}, #{pItmCode}, #{pRefDocNo}, #{pCallGbn}, #{pMobileYn}, #{pUserId}
+					, #{errCode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=BARCODECHANGERETURNDATA}
+					, #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=BARCODECHANGERETURNDATA}
+                    )
+           }
+  </select> -->
+
+  <select id="SP_RETURN_BILLING_EARLY_TERMI_SERIAL" parameterType="Map"  statementType="CALLABLE" >
+    /* [com.coway.trust.biz.sales.order.impl.OrderListMapper.SP_RETURN_BILLING_EARLY_TERMI_SERIAL] KR_HAN */
+    {
+      call SP_RETURN_BILLING_EARLY_TERMIS( #{P_SALES_ORD_NO},#{P_USER_ID},#{P_RETN_NO})
+    }
+  </select>
+
+  <select id="selectOrderSerial" parameterType="Map" resultType="egovMap">
+    SELECT  /* [com.coway.trust.biz.sales.order.impl.OrderListMapper.selectOrderSerial] KR_HAN */
+                FN_GET_ORDER_SERIAL( #{pSalesOrdId} , #{pItmCode} ) ORDER_SERIAL
+    FROM    DUAL
+  </select>
+
+  <select id="selectDelvryNo" parameterType="Map" resultType="egovMap">
+    SELECT
+                DISTINCT Y.DELVRY_NO DELVRY_NO
+    FROM    LOG0047M X
+                    INNER JOIN LOG0055D Y ON X.REQST_NO = Y.REQST_NO
+    WHERE  X.REF_DOC_NO = #{refDocNo}
+  </select>
+
+
 </mapper>
