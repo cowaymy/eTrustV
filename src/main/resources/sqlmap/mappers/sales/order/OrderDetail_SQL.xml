@@ -4,7 +4,8 @@
 
 
 	<select id="selectBasicInfo" parameterType="Map" resultType="egovMap">
-        SELECT V1.ORD_ID
+        SELECT DISTINCT
+          V1.ORD_ID
         , V1.ORD_NO
         , V1.RENTAL_STUS
         , V1.ORD_STUS_ID
