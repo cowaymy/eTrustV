@@ -91,4 +91,16 @@ public interface OrderListMapper {
   EgovMap revMainCboPckage(Map<String, Object> params);
 
   void insertSAL0254D(Map<String, Object> params);
+
+	// KR HAN
+//	void updateBarcodeChange(Map<String, Object> formMap);
+
+  // KR_HAN : ADD
+  void SP_RETURN_BILLING_EARLY_TERMI_SERIAL(Map<String, Object> params);
+
+  // KR_HAN : ADD
+  EgovMap selectOrderSerial(Map<String, Object> params);
+
+  EgovMap selectDelvryNo(Map<String, Object> params);
+
 }

@@ -43,4 +43,15 @@ public interface OrderListService {
 
 	List<EgovMap> selectOrderListVRescue(Map<String, Object> params);
 
+	// KR_HAN :
+	EgovMap insertProductReturnResultSerial(Map<String, Object> params);
+
+	// KR_HAN
+	EgovMap productReturnResultSerial(Map<String, Object> params);
+
+	// KR_HAN
+	Map<String, Object> selectOrderSerial(Map<String, Object> params);
+
+	// KR HAN : Save Serial No Modify
+//	Map<String, Object> saveSerialNoModify(Map<String, Object> params);
 }
