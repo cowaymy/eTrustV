@@ -48,7 +48,7 @@ var scanInfoLayout = [
             , dataType:"numeric"
             , formatString:"#,##0"
             , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
-                if(item.delvryQty != value){
+                if(item.delvryQty != value && item.serialChk == "Y"){
                     return "my-row-style";
                 }
                 return "";
