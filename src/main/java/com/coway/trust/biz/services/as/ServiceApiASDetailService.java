@@ -20,4 +20,6 @@ public interface ServiceApiASDetailService {
 	ResponseEntity<AfterServiceResultDto> asResultProc(Map<String, Object> insApiresult) throws Exception;
 
 	ResponseEntity<ASFailJobRequestDto> asFailJobRequestProc(Map<String, Object> params) throws Exception;
+
+	ResponseEntity<AfterServiceResultDto> asDtResultProc(Map<String, Object> insApiresult) throws Exception;
 }

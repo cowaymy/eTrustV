@@ -22,4 +22,6 @@ public interface ServiceApiASService {
 	ResponseEntity<AfterServiceResultDto> asResult(List<AfterServiceResultForm> afterServiceForms) throws Exception;
 
 	ResponseEntity<ASFailJobRequestDto> asFailJobRequest(ASFailJobRequestForm aSFailJobRequestForm) throws Exception;
+
+	ResponseEntity<AfterServiceResultDto> asDtResult(List<AfterServiceResultForm> afterServiceForms) throws Exception;
 }

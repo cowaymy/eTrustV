@@ -171,4 +171,77 @@ public class ServiceApiASServiceImpl extends EgovAbstractServiceImpl implements 
 
 	    return ResponseEntity.ok(ASFailJobRequestDto.create(serviceNo));
 	}
+
+	@Override
+	public ResponseEntity<AfterServiceResultDto> asDtResult(List<AfterServiceResultForm> afterServiceForms) throws Exception {
+		String transactionId = "";
+		String serviceNo = "";
+		List<Map<String, Object>> asTransLogs = null;
+	    List<Map<String, Object>> asTransLogs1 = null;
+	    int totalCnt = 0;
+		int successCnt = 0;
+		int failCnt = 0;
+
+		// INSERT DATA FROM MOBILE INTO LOG TABLE
+	    logger.debug("==================================[MB]AFTER SERVICE RESULT - START - ====================================");
+	    logger.debug("### INSERT HEART LOG? : {}" + RegistrationConstants.IS_INSERT_AS_LOG);
+	    logger.debug("### TRANSACTION ID? : {}" + RegistrationConstants.IS_INSERT_AS_LOG);
+	    logger.debug("### AS FORM : {}" + afterServiceForms);
+
+	    asTransLogs1 = new ArrayList<>();
+	    for (AfterServiceResultForm afterService1 : afterServiceForms) {
+	    	asTransLogs1.addAll(afterService1.createMaps1(afterService1));
+	    }
+
+	    totalCnt = asTransLogs1.size();
+
+	    logger.debug("### AS TRANSACTION TOTAL : " + asTransLogs1.size());
+	    for (int i = 0; i < asTransLogs1.size(); i++) {
+	    	logger.debug("### AS TRANSACTION DETAILS : " + asTransLogs1.get(i));
+
+	    	Map<String, Object> insApiresult = asTransLogs1.get(i);
+	    	transactionId = String.valueOf(insApiresult.get("transactionId"));
+	    	serviceNo = String.valueOf(insApiresult.get("serviceNo"));
+
+	    	// DETAIL PROC
+			try {
+				serviceApiASDetailService.asDtResultProc(insApiresult);
+				successCnt = successCnt + 1;
+			}
+			catch (BizException bizException) {
+				Map<String, Object> m = new HashMap();
+				m.put("APP_TYPE", "AS");
+	            m.put("SVC_NO", serviceNo);
+	            m.put("ERR_CODE", bizException.getErrorCode());
+	            m.put("ERR_MSG", bizException.getErrorMsg());
+	            m.put("TRNSC_ID", transactionId);
+
+				// INSERT FAIL LOG HISTORY (SVC0066T)(REQUIRES_NEW)
+				MSvcLogApiService.insert_SVC0066T(m);
+
+				failCnt = failCnt + 1;
+
+				throw new ApplicationException(AppConstants.FAIL, bizException.getProcMsg());
+			}
+			catch (Exception exception) {
+				Map<String, Object> m = new HashMap();
+				m.put("APP_TYPE", "AS");
+				m.put("SVC_NO", serviceNo);
+				m.put("ERR_CODE", "01");
+				m.put("ERR_MSG", exception.toString());
+				m.put("TRNSC_ID", transactionId);
+
+				// INSERT FAIL LOG HISTORY (SVC0066T)(REQUIRES_NEW)
+				MSvcLogApiService.insert_SVC0066T(m);
+
+				failCnt = failCnt + 1;
+
+				throw new ApplicationException(AppConstants.FAIL, "Fail");
+			}
+	    }
+
+	    logger.debug("==================================[MB]AFTER SERVICE RESULT - END - ====================================");
+
+	    return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
+	}
 }
