@@ -195,4 +195,17 @@ public class HcOrderRegisterController {
 		return ResponseEntity.ok(message);
 	}
 
+	/**
+	 * Select Promotion By Frame
+	 * @Author KR-SH
+	 * @Date 2019. 12. 24.
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/selectPromotionByFrame.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPromotionByFrame(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = hcOrderRegisterService.selectPromotionByFrame(params);
+	    return ResponseEntity.ok(codeList);
+	}
+
 }
