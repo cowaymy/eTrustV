@@ -83,6 +83,9 @@ public class HeartServiceResultForm {
   private String checkInTime;
   private String checkInGps;
 
+  private String scanSerial;
+  private String homeCareOrderYn;
+
   public String getCheckInDate() {
     return checkInDate;
   }
@@ -260,6 +263,22 @@ public class HeartServiceResultForm {
 
   public void setHeartDtails(List<HeartServiceResultDetailForm> heartDtails) {
     this.heartDtails = heartDtails;
+  }
+
+  public String getScanSerial() {
+    return scanSerial;
+  }
+
+  public void setScanSerial(String scanSerial) {
+    this.scanSerial = scanSerial;
+  }
+
+  public String getHomeCareOrderYn() {
+    return homeCareOrderYn;
+  }
+
+  public void setHomeCareOrderYn(String homeCareOrderYn) {
+    this.homeCareOrderYn = homeCareOrderYn;
   }
 
   public List<Map<String, Object>> createMaps(HeartServiceResultForm heartServiceResultForm) {
