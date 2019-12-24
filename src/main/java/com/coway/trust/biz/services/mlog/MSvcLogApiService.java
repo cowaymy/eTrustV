@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.coway.trust.api.mobile.services.heartService.HeartServiceResultForm;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -177,4 +178,26 @@ public interface MSvcLogApiService {
   int isPrdRtnAlreadyResult(Map<String, Object> params);
 
   int updFctExch(Map<String, Object> params);
+
+  List<EgovMap> getCareServiceJob_b(Map<String, Object> params);
+
+  List<EgovMap> getCareServiceParts_b(Map<String, Object> params);
+
+  /* Woongjin Jun */
+  List<EgovMap> getCareServiceJobList(Map<String, Object> params);
+
+  void updateHTReAppointmentReturnResult(Map<String, Object> params);
+
+  void insertHtFailJobResult(Map<String, Object> params, SessionVO sessionVO);
+
+  void upDateHtFailJobResultM(Map<String, Object> params);
+
+  EgovMap SP_SVC_BARCODE_SAVE(Map<String, Object> params);
+
+  Map<String, Object> getHtBasic(Map<String, Object> params);
+
+  List<EgovMap> hcServiceHistory(Map<String, Object> params);
+
+  List<EgovMap> selectSerialList(Map<String, Object> params);
+  /* Woongjin Jun */
 }

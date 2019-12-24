@@ -19,11 +19,13 @@ import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.common.impl.SmsMapper;
 import com.coway.trust.biz.common.type.SMSTemplateType;
+import com.coway.trust.biz.homecare.services.impl.htManualMapper;
 import com.coway.trust.biz.logistics.returnusedparts.impl.ReturnUsedPartsMapper;
 import com.coway.trust.biz.services.as.impl.ASManagementListMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.impl.InstallationResultListMapper;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -65,6 +67,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 
   @Resource(name = "servicesLogisticsPFCMapper")
   private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
+
+  @Resource(name = "htManualMapper")
+  private htManualMapper htManualMapper;
 
   @Override
   public List<EgovMap> getHeartServiceJobList(Map<String, Object> params) {
@@ -809,5 +814,94 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
    *
    * r = ASManagementListMapper.insertSVC0005D(iMap) ; } } }
    */
+
+  @Override
+  public List<EgovMap> getCareServiceJob_b(Map<String, Object> params) {
+    return MSvcLogApiMapper.getCareServiceJobList_b(params);
+  }
+
+  @Override
+  public List<EgovMap> getCareServiceParts_b(Map<String, Object> params) {
+    return MSvcLogApiMapper.getCareServiceParts_b(params);
+  }
+
+  /* Woongjin Jun */
+  @Override
+  public List<EgovMap> getCareServiceJobList(Map<String, Object> params) {
+    return MSvcLogApiMapper.getCareServiceJobList(params);
+  }
+
+  @Override
+  public void updateHTReAppointmentReturnResult(Map<String, Object> params) {
+    MSvcLogApiMapper.updateHTReAppointmentReturnResult(params);
+  }
+
+  @Override
+  public void insertHtFailJobResult(Map<String, Object> params, SessionVO sessionVO) {
+	  int schdulId = Integer.parseInt(params.get("hidschdulId").toString());
+	  int nextSeq = htManualMapper.getNextSvc006dSeq();
+	  String docNo = commonMapper.selectDocNo("11");
+
+	  EgovMap insertHsResultfinal = new EgovMap();
+	  insertHsResultfinal.put("resultId", nextSeq);
+	  insertHsResultfinal.put("docNo", docNo);
+	  insertHsResultfinal.put("typeId", 306);
+	  insertHsResultfinal.put("schdulId", schdulId);
+	  insertHsResultfinal.put("salesOrdId", Integer.parseInt(params.get("hidSalesOrdId").toString()));
+	  insertHsResultfinal.put("codyId", Integer.parseInt(params.get("hidCodyId").toString()));
+	  //insertHsResultfinal.put("setlDt", "01/01/1900");
+	  insertHsResultfinal.put("setlDt", null);
+      insertHsResultfinal.put("resultStusCodeId", 21);
+      insertHsResultfinal.put("failResnId", Integer.parseInt(params.get("failReasonCode").toString()));
+      insertHsResultfinal.put("renColctId", 0);
+      insertHsResultfinal.put("whId", 0);
+      insertHsResultfinal.put("resultRem", "");
+      insertHsResultfinal.put("resultCrtUserId", sessionVO.getUserId());
+      insertHsResultfinal.put("resultUpdUserId", sessionVO.getUserId());
+      insertHsResultfinal.put("resultIsSync", 0);
+      insertHsResultfinal.put("resultIsEdit", 0);
+      insertHsResultfinal.put("resultStockUse", 0);
+      insertHsResultfinal.put("resultIsCurr", 1);
+      insertHsResultfinal.put("resultMtchId", 0);
+      insertHsResultfinal.put("resultIsAdj", 0);
+      insertHsResultfinal.put("temperateSetng", "");
+      insertHsResultfinal.put("nextAppntDt", "");
+      insertHsResultfinal.put("nextAppointmentTime", "");
+      insertHsResultfinal.put("ownerCode", "");
+      insertHsResultfinal.put("resultCustName", "");
+      insertHsResultfinal.put("resultMobileNo", "");
+      insertHsResultfinal.put("resultRptEmailNo", "");
+      insertHsResultfinal.put("resultAceptName", "");
+      insertHsResultfinal.put("sgnDt", "");
+
+      logger.debug("### insertHsResultfinal : {}", insertHsResultfinal);
+      htManualMapper.insertHsResultfinal(insertHsResultfinal);
+  }
+
+  @Override
+  public void upDateHtFailJobResultM(Map<String, Object> params) {
+    MSvcLogApiMapper.upDateHtFailJobResultM(params);
+  }
+
+  @Override
+  public EgovMap SP_SVC_BARCODE_SAVE(Map<String, Object> params) {
+    return (EgovMap)MSvcLogApiMapper.SP_SVC_BARCODE_SAVE(params);
+  }
+
+  @Override
+  public Map<String, Object> getHtBasic(Map<String, Object> params) {
+    return MSvcLogApiMapper.getHtBasic(params);
+  }
+
+  @Override
+  public List<EgovMap> hcServiceHistory(Map<String, Object> params) {
+    return MSvcLogApiMapper.hcServiceHistory(params);
+  }
+
+  @Override
+  public List<EgovMap> selectSerialList(Map<String, Object> params) {
+    return MSvcLogApiMapper.selectSerialList(params);
+  }
+  /* Woongjin Jun */
 
 }

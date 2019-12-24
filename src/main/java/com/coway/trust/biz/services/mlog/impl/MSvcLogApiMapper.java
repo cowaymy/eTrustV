@@ -240,4 +240,28 @@ public interface MSvcLogApiMapper {
 
   void insertSAL0254D(Map<String, Object> params);
 
+  List<EgovMap> getCareServiceJobList_b(Map<String, Object> params);
+
+  List<EgovMap> getCareServiceParts_b(Map<String, Object> params);
+
+  /* Woongjin Jun */
+  List<EgovMap> getCareServiceJobList(Map<String, Object> params);
+
+  void updateHTReAppointmentReturnResult(Map<String, Object> params);
+
+  void updateHtFailJobResult(Map<String, Object> params);
+
+  void upDateHtFailJobResultM(Map<String, Object> params);
+
+  Map<String, Object> getHtBasic(Map<String, Object> params);
+
+  List<EgovMap> hcServiceHistory(Map<String, Object> params);
+
+  int selectSVC0008DSchdulId(Map<String, Object> params);
+
+  EgovMap SP_SVC_BARCODE_SAVE(Map<String, Object> params);
+
+  List<EgovMap> selectSerialList(Map<String, Object> params);
+  /* Woongjin Jun */
+
 }
