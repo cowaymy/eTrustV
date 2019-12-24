@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.common.CommStatusFormVO;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.CommonUtils;
@@ -42,6 +43,9 @@ public class CommonServiceImpl implements CommonService {
 
 	@Resource(name = "commonMapper")
 	private CommonMapper commonMapper;
+
+	@Resource(name = "MlogApiMapper")
+	private MlogApiMapper MlogApiMapper;
 
 	@Override
 	public List<EgovMap> selectCodeList(Map<String, Object> params) {
@@ -75,7 +79,13 @@ public class CommonServiceImpl implements CommonService {
 
 	@Override
 	public List<EgovMap> getDefectDetails(Map<String, Object> params) {
-		return commonMapper.selectDefectDetails(params);
+		String homeCareGroupChkYn = commonMapper.getHomeCareGroupChkYn(params);
+
+		if ("Y".equals(homeCareGroupChkYn)) {
+			return commonMapper.selectDefectDetailsHc(params);
+		} else{
+			return commonMapper.selectDefectDetails(params);
+		}
 	}
 
 	@Override

@@ -33,6 +33,7 @@ public interface CommonMapper {
 
 	List<EgovMap> selectDefectMasters(Map<String, Object> params);
 	List<EgovMap> selectDefectDetails(Map<String, Object> params);
+	List<EgovMap> selectDefectDetailsHc(Map<String, Object> params);
 
 	List<EgovMap> selectMalfunctionReasons(Map<String, Object> params);
 	List<EgovMap> selectMalfunctionCodes(Map<String, Object> params);
@@ -242,4 +243,6 @@ public interface CommonMapper {
 	 * @return
 	 */
 	List<EgovMap> getHcHolidayList(Map<String, Object> params);
+
+	String getHomeCareGroupChkYn(Map<String, Object> params);
 }
