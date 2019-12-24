@@ -87,6 +87,9 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			}
 
 			int ordSeqNo = CommonUtils.intNvl(orderVO.getOrdSeqNo());
+			if(ordSeqNo <= 0) {
+				ordSeqNo = hcOrderRegisterMapper.getOrdSeqNo();
+			}
 
 			// Mattress register
 			if(matStkId > 0) {
@@ -130,9 +133,8 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 				hcOrderVO.setOrdSeqNo(ordSeqNo);
 
 				rtnCnt = hcOrderRegisterMapper.updateHcPreOrder(hcOrderVO);
-			} else {
-				ordSeqNo = hcOrderRegisterMapper.getOrdSeqNo();
 
+			} else {
 				hcOrderVO.setCustId(custId);                     // 고객번호
 				hcOrderVO.setMatOrdNo(matOrdNo);        // Mattress Order No
 				hcOrderVO.setFraOrdNo(fraOrdNo);           // Frame Order No
