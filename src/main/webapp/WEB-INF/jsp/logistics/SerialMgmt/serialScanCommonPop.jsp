@@ -185,7 +185,7 @@ $(document).ready(function(){
         $("#ioType").val($("#zIoType").val());
     }
 
-    if($("#transaction").val() == "UM"){
+    if($("#transaction").val() == "UM" && $("#ioType").val() == "O"){
     	$("#typeUM").show();
     	$("#typeUS").hide();
     }else{
