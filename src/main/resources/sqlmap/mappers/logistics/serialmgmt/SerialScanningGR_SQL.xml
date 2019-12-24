@@ -76,6 +76,7 @@
              </foreach>
              AND l47.trnsc_type IN ('US','UM')
              AND l54.DELVRY_GI_CMPLT = 'Y'
+             AND NVL(l54.DEL_FLAG, 'N') = 'N'
              AND NVL(l54.DELVRY_GR_CMPLT, 'N') = 'N'
              AND NVL(l55.del_flag,'N')  <![CDATA[ <> ]]>  'Y'
              AND s28q.SERIAL_REQUIRE_CHK_YN = 'Y'
