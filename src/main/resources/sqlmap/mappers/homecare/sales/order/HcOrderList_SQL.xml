@@ -47,6 +47,8 @@
                  , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
                  , T.PV_MONTH
                  , T.PV_YEAR
+                 , T.BNDL_NO
+
          FROM ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
                               V1.APP_TYPE_CODE
                             , V1.APP_TYPE_ID
@@ -90,8 +92,10 @@
                             , V1.PROMO_DESC
                             , V1.RELATED_NO
                             , V1.RELATED_ID
+                            , D1.BNDL_NO
                     FROM SAL1013V  V1
-                            , SYS0026M S1
+                      JOIN SYS0026M S1 ON V1.PRODUCT_CODE = S1.STK_CODE
+               LEFT JOIN HMC0011D D1 ON V1.BNDL_ID = D1.ORD_SEQ_NO
                     <if test='(serialNo != null and serialNo != "") || sirimNo != null and sirimNo != ""'>
                         INNER JOIN ( SELECT IE.SALES_ORD_ID
                                             FROM SAL0047D IR
@@ -112,7 +116,7 @@
                                           ) A on V1.ORD_ID = A.SALES_ORD_ID
                     </if>
 
-                    WHERE V1.PRODUCT_CODE   = S1.STK_CODE
+                    WHERE 1 = 1
                        AND S1.STK_CTGRY_ID     IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                                 WHERE AA.CODE = BB.CODE
                                                                     AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
