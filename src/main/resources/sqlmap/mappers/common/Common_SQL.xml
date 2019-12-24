@@ -1340,7 +1340,7 @@
               </when>
               <when test='groupCode == "3"'>
                  AND STUS_ID = 1
-                 AND TYPE_ID IN (40 , 43 , 42, 5726)
+                 AND TYPE_ID IN (40 , 43 , 42, 5754)
               </when>
               <when test='groupCode == "4"'>
                  AND STUS_ID = 1

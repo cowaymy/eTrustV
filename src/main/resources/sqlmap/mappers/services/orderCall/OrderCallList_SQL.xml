@@ -4,7 +4,6 @@
 
   <!-- SELECT START -->
   <select id="selectOrderCall" parameterType="Map" resultType="egovMap">
-    <![CDATA[
      SELECT Extent1.CALL_ENTRY_ID CALL_ENTRY_ID
           , Extent1.CALL_TYPE_ID CALL_TYPE_ID
           , Extent1.CALL_TYPE_CODE CALL_TYPE_CODE
@@ -98,9 +97,11 @@
             FROM CCR1002V vCallLogOrderCall
             JOIN SYS0064M area on area.AREA_ID = vcalllogordercall.INSTALL_AREA_ID
             JOIN SYS0005M dsc on dsc.BRNCH_ID = vcalllogordercall.DSC_BRNCH_ID
+           <if test="branchTypeId != null and branchTypeId != ''">
+               AND dsc.TYPE_ID = #{branchTypeId}
+           </if>
             ) Extent1
      WHERE  1=1
-    ]]>
 
     <if test="orderNo != null and orderNo != '' ">
       AND (Extent1.SALES_ORD_NO = #{orderNo} )
@@ -564,7 +565,15 @@
       </choose>
       AND s28.WH_LOC_GB IN ('02' ,'05')
       AND s28.WH_LOC_STUS_ID = '1'
-      AND s05.code IN ( SELECT D.CT_BRNCH_CODE
+      AND s05.code IN ( SELECT
+                        <choose>
+                            <when test="branchTypeId != null and branchTypeId !=''">
+                                D.DT_BRNCH_CODE
+                            </when>
+                            <otherwise>
+                                D.CT_BRNCH_CODE
+                            </otherwise>
+                        </choose>
                         FROM SAL0001D A ,
                              SAL0023D B ,
                              SAL0045D C ,
