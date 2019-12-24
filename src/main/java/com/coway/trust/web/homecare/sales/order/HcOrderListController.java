@@ -1,5 +1,6 @@
 package com.coway.trust.web.homecare.sales.order;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.HomecareCmService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
+import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -46,6 +48,9 @@ public class HcOrderListController {
     @Resource(name = "homecareCmService")
     private HomecareCmService homecareCmService;
 
+    @Resource(name = "orderDetailService")
+    private OrderDetailService orderDetailService;
+
     /**
      *  Order List Open
      *
@@ -54,9 +59,10 @@ public class HcOrderListController {
      * @param params
      * @param model
      * @return
+     * @throws ParseException
      */
     @RequestMapping(value = "/hcOrderList.do")
-    public String main(@RequestParam Map<String, Object> params, ModelMap model) {
+    public String main(@RequestParam Map<String, Object> params, ModelMap model) throws ParseException {
         String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
                 SalesConstants.DEFAULT_DATE_FORMAT1);
         String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
@@ -79,6 +85,7 @@ public class HcOrderListController {
 
         model.put("bfDay", bfDay);
         model.put("toDay", toDay);
+        model.put("fromDay", CommonUtils.getAddDay(toDay, -1, SalesConstants.DEFAULT_DATE_FORMAT1));
 
         model.put("codeList_10", codeList_10);
         model.put("branchCdList_1", branchCdList_1);
@@ -118,4 +125,5 @@ public class HcOrderListController {
 		// 데이터 리턴.
 		return ResponseEntity.ok(hcOrderListService.selectHcOrderList(params));
 	}
+
 }

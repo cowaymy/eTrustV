@@ -290,7 +290,7 @@
     function fn_orderModifyPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
-            Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+            Common.popupDiv("/homecare/sales/order/hcOrderModifyPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
         }
         else {
             Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
@@ -502,14 +502,12 @@
             <c:if test="${SESSION_INFO.userIsExternal == '0'}">
                 <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
                     <li><p class="btn_blue">
-                            <a id="btnCopy" href="#"><spring:message
-                                    code='sales.btn.copyChange' /></a>
+                            <a id="btnCopy" href="#"><spring:message code='sales.btn.copyChange' /></a>
                         </p></li>
                 </c:if>
                 <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
                     <li><p class="btn_blue">
-                            <a id="btnCopyBulk" href="#"><spring:message
-                                    code='sales.btn.copyBulk' /></a>
+                            <a id="btnCopyBulk" href="#"><spring:message code='sales.btn.copyBulk' /></a>
                         </p></li>
                 </c:if>
                 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
@@ -521,28 +519,23 @@
                         <a id="btnEdit" href="#"><spring:message code='sales.btn.edit' /></a>
                     </p></li>
                 <li><p class="btn_blue">
-                        <a id="btnReq" href="#"><spring:message
-                                code='sales.btn.request' /></a>
+                        <a id="btnReq" href="#"><spring:message code='sales.btn.request' /></a>
                     </p></li>
                 <c:if test="${PAGE_AUTH.funcUserDefine19 == 'Y'}">
                     <li><p class="btn_blue">
-                            <a id="btnSimul" href="#"><spring:message
-                                    code='sales.btn.simul' /></a>
+                            <a id="btnSimul" href="#"><spring:message code='sales.btn.simul' /></a>
                         </p></li>
                 </c:if>
             </c:if>
             <c:if test="${SESSION_INFO.userIsExternal == '1'}">
                 <li><p class="btn_blue">
-                        <a id="_btnLedger1" href="#"><spring:message
-                                code="sal.btn.ledger" />(1)</a>
+                        <a id="_btnLedger1" href="#"><spring:message code="sal.btn.ledger" />(1)</a>
                     </p></li>
                 <li><p class="btn_blue">
-                        <a id="_btnLedger2" href="#"><spring:message
-                                code="sal.btn.ledger" />(2)</a>
+                        <a id="_btnLedger2" href="#"><spring:message code="sal.btn.ledger" />(2)</a>
                     </p></li>
                 <li><p class="btn_blue">
-                        <a id="_btnTaxInvc" href="#"><spring:message
-                                code="sal.btn.taxInvoice" /></a>
+                        <a id="_btnTaxInvc" href="#"><spring:message code="sal.btn.taxInvoice" /></a>
                     </p></li>
             </c:if>
             <li><p class="btn_blue">
@@ -627,11 +620,11 @@
                             <div class="date_set w100p">
                                 <!-- date_set start -->
                                 <p>
-                                    <input id="listOrdStartDt" name="ordStartDt" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+                                    <input id="listOrdStartDt" name="ordStartDt" type="text" value="${fromDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
                                 </p>
                                 <span>To</span>
                                 <p>
-                                    <input id="listOrdEndDt" name="ordEndDt" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" />
+                                    <input id="listOrdEndDt" name="ordEndDt" type="text" value="${toDay}" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" />
                                 </p>
                             </div>
                             <!-- date_set end -->

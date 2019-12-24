@@ -196,6 +196,7 @@ public class HcPreOrderController {
 	 */
 	@RequestMapping(value = "/registerHcPreOrder.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> registerHcPreOrder(@RequestBody PreOrderVO preOrderVO, SessionVO sessionVO) throws Exception {
+		String appTypeStr = HomecareConstants.cnvAppTypeName(preOrderVO.getAppTypeId());
 		// 주문 저장
 		hcPreOrderService.registerHcPreOrder(preOrderVO, sessionVO);
 
@@ -207,7 +208,7 @@ public class HcPreOrderController {
 		if(!"".equals(CommonUtils.nvl(preOrderVO.getHcOrderVO().getFraPreOrdId())) && !"0".equals(CommonUtils.nvl(preOrderVO.getHcOrderVO().getFraPreOrdId()))) {
 			msg += "Pre Order Number(Frame) : "   + preOrderVO.getHcOrderVO().getFraPreOrdId() + "<br />";
 		}
-		msg += "Application Type : " + HomecareConstants.cnvAppTypeName(preOrderVO.getAppTypeId()) + "<br />";
+		msg += "Application Type : " + appTypeStr + "<br />";
 
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
