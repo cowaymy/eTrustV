@@ -22,4 +22,6 @@ public interface ServiceApiInstallationService {
 	ResponseEntity<InstallationResultDto> installationResult(List<InstallationResultForm> installationResultForms) throws Exception;
 
 	ResponseEntity<InstallFailJobRequestDto> installFailJobRequest(InstallFailJobRequestForm installFailJobRequestForm) throws Exception;
+
+	ResponseEntity<InstallationResultDto> installationDtResult(List<InstallationResultForm> installationResultForms) throws Exception;
 }

@@ -174,4 +174,76 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 
 	    return ResponseEntity.ok(InstallFailJobRequestDto.create(serviceNo));
 	}
+
+	@Override
+	public ResponseEntity<InstallationResultDto> installationDtResult(List<InstallationResultForm> installationResultForms) throws Exception {
+		String transactionId = "";
+		List<Map<String, Object>> insTransLogs = null;
+		Map<String, Object> insApiresult = null;
+		int totalCnt = 0;
+		int successCnt = 0;
+		int failCnt = 0;
+
+		logger.debug("==================================[MB]INSTALLATION RESULT REGISTRATION - START - ====================================");
+		logger.debug("### INSTALLATION FORM : ", installationResultForms);
+
+		insTransLogs = new ArrayList<>();
+		for (InstallationResultForm insService : installationResultForms) {
+			insTransLogs.addAll(insService.createMaps(insService));
+		}
+
+		totalCnt = insTransLogs.size();
+
+		logger.debug("### INSTALLATION SIZE : " + insTransLogs.size());
+		for (int i = 0; i < insTransLogs.size(); i++) {
+			logger.debug("### INSTALLATION DETAILS : " + insTransLogs.get(i));
+
+			insApiresult = insTransLogs.get(i);
+
+			transactionId = String.valueOf(insApiresult.get("transactionId"));
+
+			// DETAIL PROC
+			try {
+				serviceApiInstallationDetailService.installationDtResultProc(insApiresult);
+				successCnt = successCnt + 1;
+			}
+			catch (BizException bizException) {
+				logger.debug("### INSTALLATION bizException errorcode : " + bizException.getErrorCode());
+				logger.debug("### INSTALLATION bizException errormsg : " + bizException.getErrorMsg());
+
+				Map<String, Object> m = new HashMap();
+				m.put("APP_TYPE", "INS");
+				m.put("SVC_NO", insApiresult.get("serviceNo"));
+				m.put("ERR_CODE", bizException.getErrorCode());
+				m.put("ERR_MSG", bizException.getErrorMsg());
+				m.put("TRNSC_ID", transactionId);
+
+				// INSERT FAIL LOG HISTORY (SVC0066T)(REQUIRES_NEW)
+				MSvcLogApiService.insert_SVC0066T(m);
+
+				failCnt = failCnt + 1;
+
+				throw new ApplicationException(AppConstants.FAIL, bizException.getProcMsg());
+			}
+			catch (Exception exception) {
+				Map<String, Object> m = new HashMap();
+				m.put("APP_TYPE", "INS");
+				m.put("SVC_NO", insApiresult.get("serviceNo"));
+				m.put("ERR_CODE", "01");
+				m.put("ERR_MSG", exception.toString());
+				m.put("TRNSC_ID", transactionId);
+
+				// INSERT FAIL LOG HISTORY (SVC0066T)(REQUIRES_NEW)
+				MSvcLogApiService.insert_SVC0066T(m);
+
+				failCnt = failCnt + 1;
+
+				throw new ApplicationException(AppConstants.FAIL, "Fail");
+			}
+		}
+
+		logger.debug("==================================[MB]INSTALLATION RESULT REGISTRATION - END - ====================================");
+
+	    return ResponseEntity.ok(InstallationResultDto.create(transactionId));
+	}
 }
