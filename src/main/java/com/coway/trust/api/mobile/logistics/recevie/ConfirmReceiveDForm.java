@@ -18,6 +18,9 @@ public class ConfirmReceiveDForm {
 	@ApiModelProperty(value = "부품 sn")
 	private String serialNo;
 
+	@ApiModelProperty(value = "시리얼체크여부")
+	private String serialChk;
+
 	public int getSmoNoItem() {
 		return smoNoItem;
 	}
@@ -48,6 +51,14 @@ public class ConfirmReceiveDForm {
 
 	public void setSerialNo(String serialNo) {
 		this.serialNo = serialNo;
+	}
+
+	public String getSerialChk() {
+		return serialChk;
+	}
+
+	public void setSerialChk(String serialChk) {
+		this.serialChk = serialChk;
 	}
 
 }
