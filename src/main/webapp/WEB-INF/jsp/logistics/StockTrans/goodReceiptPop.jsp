@@ -52,13 +52,13 @@
 	    listPopGrid = GridCommon.createAUIGrid("listPopGrid", scanInfoLayout, null, scanInfoPros);
 
 	    if(Common.checkPlatformType() == "mobile") {
-	    	$("#zDelvryNo").val("${url.zDelyno}");    // delivery No
+	    	$("#zDelyNo").val("${url.zDelyno}");    // delivery No
 	    	$("#zFromLoc").val("${url.zReqloc}");
 	    	$("#zToLoc").val("${url.zRcvloc}");
 	    	//$("#zIoType").val("O");
 
 	    } else {
-	    	$("#zDelvryNo").val($("#zDelyno").val());
+	    	$("#zDelyNo").val($("#zDelyno").val());
 	        $("#zFromLoc").val($("#zReqloc").val());
 	        $("#zToLoc").val($("#zRcvloc").val());
 	        //$("#zIoType").val("O");
@@ -130,7 +130,7 @@
 
     // 조회
     function fn_search() {
-        var arrDelvryNo = ($("#zDelvryNo").val()).split(',');
+        var arrDelvryNo = ($("#zDelyNo").val()).split(',');
 
         if(arrDelvryNo.length == 0){
             Common.alert("Please, check the mandatory value.");
@@ -159,7 +159,7 @@
 </script>
 <div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>Good Issue Posting Data</h1>
+<h1>Good Receipt Posting Data</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a id="btnClose" >CLOSE</a></p></li>
 </ul>
@@ -180,14 +180,14 @@
 	        <tbody>
                 <tr>
                    <th scope="row">Delivery No</th>
-                   <td ><input id="zDelvryNo" name="zDelvryNo" type="text" placeholder="" class="w100p readonly" readonly /></td>
+                   <td ><input id="zDelyNo" name="zDelyNo" type="text" placeholder="" class="w100p readonly" readonly /></td>
                    </tr>
                 <tr>
-                    <th scope="row"><span class="must">*</span>GI Posting Date</th>
+                    <th scope="row"><span class="must">*</span>GR Posting Date</th>
                     <td ><input id="sGiptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
                 </tr>
                 <tr>
-                    <th scope="row"><span class="must">*</span>GI Doc Date</th>
+                    <th scope="row"><span class="must">*</span>GR Doc Date</th>
                     <td ><input id="sGipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
                 </tr>
                 <tr>
