@@ -53,6 +53,7 @@
              , NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = l47.CRT_USER_ID),l47.CRT_USER_ID) user_Name
              , NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
              , NVL(l99.CNT, 0) SCAN_CNT
+             , H11.BNDL_NO
           from log0047m l47
              , log0048d l48
              , (select * from sys0013m where code_master_id = 306) tran
@@ -70,6 +71,7 @@
 		        WHERE SCAN_STUS_CODE = 'C'
 		            AND IO_TYPE  = 'O'
 		         GROUP BY REQST_NO, ITM_CODE) l99
+		     ,HMC0011D H11
          where 1 =1
            and l47.reqst_no       = l48.reqst_no
            and l47.trnsc_type     = tran.code(+)
@@ -87,6 +89,7 @@
            AND s46.SALES_ORD_ID = s1.SALES_ORD_ID (+)
            AND l48.reqst_no = l99.REQST_NO(+)
            AND l48.itm_code = l99.ITM_CODE(+)
+           AND S1.BNDL_ID = H11.ORD_SEQ_NO(+)
            <if test='sscancel !="Y"'>
            AND NVL(l47.REQST_DEL , 'N') = 'N'
            AND NVL(l48.REQST_DEL , 'N') = 'N'
@@ -154,6 +157,9 @@
            </if>
            <if test="ordno !=null and ordno != ''">
                 AND s1.SALES_ORD_NO = #{ordno}
+           </if>
+           <if test="bndlNo !=null and bndlNo !=''">
+                AND H11.BNDL_NO= #{bndlNo}
            </if>
            ORDER by l47.CRT_DT desc
   </select>
@@ -401,6 +407,7 @@
              , DECODE ((SELECT STK_TYPE_ID FROM SYS0026M WHERE STK_CODE = L48.ITM_CODE) , 61 , NVL(S28Q.SERIAL_PD_CHK , 'N') , 62 , NVL(S28Q.SERIAL_PD_CHK , 'N') , 63 , NVL(S28Q.SERIAL_PD_CHK , 'N') , 'N') SERIALCHECK
              , L54.DEL_FLAG
              , NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
+             , H11.BNDL_NO
           from log0047m l47
              , log0048d l48
              , log0054m l54
@@ -413,6 +420,7 @@
              , sys0026m s26
              , sal0046d s46
              , sal0001d s1
+             , HMC0011D H11
          where 1 = 1
            and l47.trnsc_type     = tran.code
            and l47.trnsc_type_dtl = trand.code
@@ -428,6 +436,7 @@
            AND NVL(L54.DEL_FLAG,'N') <![CDATA[<>]]>'Y'
            AND l47.REF_DOC_NO = s46.INSTALL_ENTRY_NO (+)
            AND s46.SALES_ORD_ID = s1.SALES_ORD_ID (+)
+           AND S1.BNDL_ID = H11.ORD_SEQ_NO(+)
            <if test="reqstno != null and reqstno != ''">
               and l47.reqst_no  = #{reqstno}
            </if>
@@ -505,6 +514,9 @@
            </if>
            <if test="ordno !=null and ordno != ''">
                 AND s1.SALES_ORD_NO = #{ordno}
+           </if>
+           <if test="bndlNo !=null and bndlNo !=''">
+                AND H11.BNDL_NO= #{bndlNo}
            </if>
            ORDER BY l54.delvry_no desc
            ) T

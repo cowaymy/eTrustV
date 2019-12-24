@@ -41,6 +41,7 @@ var gradeList = new Array();
 
 var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
                      {dataField: "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                  ,width:120    ,height:30                },
+                     {dataField: "bndlNo",headerText :"Bundle No"        ,width:120    ,height:30                },
                      {dataField: "ordno",headerText :"Order No."        ,width:120    ,height:30                },
                      {dataField: "grcmplt",headerText :"<spring:message code='log.head.grcomplete'/>"                   ,width:120    ,height:30 },
                      {dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
@@ -941,7 +942,8 @@ function fn_gradComb(){
 							</div>
 							<!-- date_set end -->
 						</td>
-						<td colspan="2">&nbsp;</td>
+						<th scope="row">Bundle No</th>
+                        <td><input type="text" class="w100p" id="bndlNo" name="bndlNo" placeholder="Bundle No"></td>
 					</tr>
 				</tbody>
         </table><!-- table end -->

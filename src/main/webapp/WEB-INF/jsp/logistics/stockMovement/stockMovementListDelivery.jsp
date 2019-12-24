@@ -69,6 +69,12 @@
         height : 30
       },
       {
+          dataField : "bndlNo",
+          headerText : "Bundle No",
+          width : 120,
+          height : 30
+        },
+      {
         dataField : "ordno",
         headerText : "Order No.",
         width : 120,
@@ -1588,6 +1594,14 @@
       <td><select class="w100p" id="sam" name="sam"></select></td>
       <th scope="row">Sales Order No.</th>
       <td><input type="text" class="w100p" id="ordno" name="ordno"></td>
+     </tr>
+     <tr>
+      <th scope="row">Bundle No</th>
+      <td><input type="text" class="w100p" id="bndlNo" name="bndlNo" placeholder="Bundle No"></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
      </tr>
     </tbody>
    </table>
