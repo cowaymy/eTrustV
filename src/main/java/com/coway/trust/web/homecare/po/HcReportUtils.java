@@ -147,7 +147,7 @@ public class HcReportUtils {
 		crystalReportViewer.setEnableDrillDown(true);
 		crystalReportViewer.setHasExportButton(true);
 		crystalReportViewer.setHasRefreshButton(false);
-		crystalReportViewer.setHasPrintButton(false);
+		crystalReportViewer.setHasPrintButton(true);
 		return crystalReportViewer;
 	}
 
