@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
@@ -99,6 +100,55 @@ import com.coway.trust.biz.services.installation.ServiceApiInstallationService;
 import com.coway.trust.biz.services.bs.ServiceApiHSService;
 import com.coway.trust.biz.services.as.ServiceApiASService;
 import com.coway.trust.biz.services.pr.ServiceApiPRService;
+
+import com.coway.trust.api.mobile.services.careService.CSFailJobRequestDto;
+import com.coway.trust.api.mobile.services.careService.CSFailJobRequestForm;
+import com.coway.trust.api.mobile.services.careService.CSReAppointmtRequestDto;
+import com.coway.trust.api.mobile.services.careService.CSReAppointmtRequestForm;
+import com.coway.trust.api.mobile.services.careService.CareServiceJobDto;
+import com.coway.trust.api.mobile.services.careService.CareServiceJobForm;
+import com.coway.trust.api.mobile.services.careService.CareServicePartsDto;
+import com.coway.trust.api.mobile.services.careService.CareServicePartsForm;
+import com.coway.trust.api.mobile.services.careService.CareServiceResultDetailForm;
+import com.coway.trust.api.mobile.services.careService.CareServiceResultDto;
+import com.coway.trust.api.mobile.services.careService.CareServiceResultForm;
+
+import com.coway.trust.api.mobile.services.dtAs.DtASFailJobRequestDto;
+import com.coway.trust.api.mobile.services.dtAs.DtASFailJobRequestForm;
+import com.coway.trust.api.mobile.services.dtAs.DtASReAppointmentRequestDto;
+import com.coway.trust.api.mobile.services.dtAs.DtASReAppointmentRequestForm;
+import com.coway.trust.api.mobile.services.dtAs.DtASRequestCustDto;
+import com.coway.trust.api.mobile.services.dtAs.DtASRequestCustForm;
+import com.coway.trust.api.mobile.services.dtAs.DtASRequestRegistDto;
+import com.coway.trust.api.mobile.services.dtAs.DtASRequestRegistForm;
+import com.coway.trust.api.mobile.services.dtAs.DtASRequestResultDto;
+import com.coway.trust.api.mobile.services.dtAs.DtASRequestResultForm;
+import com.coway.trust.api.mobile.services.dtAs.DtAfterServiceJobDto;
+import com.coway.trust.api.mobile.services.dtAs.DtAfterServiceJobDto_b;
+import com.coway.trust.api.mobile.services.dtAs.DtAfterServiceJobForm;
+import com.coway.trust.api.mobile.services.dtAs.DtAfterServicePartsDto;
+import com.coway.trust.api.mobile.services.dtAs.DtAfterServicePartsForm;
+import com.coway.trust.api.mobile.services.dtAs.DtAfterServiceResultDetailForm;
+import com.coway.trust.api.mobile.services.dtAs.DtAfterServiceResultDto;
+import com.coway.trust.api.mobile.services.dtAs.DtAfterServiceResultForm;
+
+import com.coway.trust.api.mobile.services.dtInstallation.DtInstallFailJobRequestDto;
+import com.coway.trust.api.mobile.services.dtInstallation.DtInstallFailJobRequestForm;
+import com.coway.trust.api.mobile.services.dtInstallation.DtInstallReAppointmentRequestDto;
+import com.coway.trust.api.mobile.services.dtInstallation.DtInstallReAppointmentRequestForm;
+import com.coway.trust.api.mobile.services.dtInstallation.DtInstallationJobDto;
+import com.coway.trust.api.mobile.services.dtInstallation.DtInstallationJobForm;
+import com.coway.trust.api.mobile.services.dtInstallation.DtInstallationResultDto;
+import com.coway.trust.api.mobile.services.dtInstallation.DtInstallationResultForm;
+
+import com.coway.trust.api.mobile.services.dtProductRetrun.DtPRFailJobRequestDto;
+import com.coway.trust.api.mobile.services.dtProductRetrun.DtPRFailJobRequestForm;
+import com.coway.trust.api.mobile.services.dtProductRetrun.DtPRReAppointmentRequestDto;
+import com.coway.trust.api.mobile.services.dtProductRetrun.DtPRReAppointmentRequestForm;
+import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductRetrunJobDto;
+import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductRetrunJobForm;
+import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductReturnResultDto;
+import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductReturnResultForm;
 
 /*********************************************************************************************
  * DATE          PIC        VERSION     COMMENT
@@ -2062,4 +2112,360 @@ public class ServiceApiController {
 
     return ResponseEntity.ok(ASRequestRegistDto.create(transactionId));
   }
+
+  /* Woongjin Jun */
+  /*
+  @ApiOperation(value = "Care Service Job List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/careServiceJobList_b", method = RequestMethod.GET)
+  public ResponseEntity<List<CareServiceJobDto>> getCareServiceJob_b(@ModelAttribute CareServiceJobForm careServiceJobForm) throws Exception {
+	  Map<String, Object> params = CareServiceJobForm.createMap(careServiceJobForm);
+
+	  List<EgovMap> CareServiceJobList = MSvcLogApiService.getCareServiceJob_b(params);
+
+	  LOGGER.debug("==================================[MB]CARE SERVICE JOB BATCH SEARCH====================================");
+	  for (int i = 0; i < CareServiceJobList.size(); i++) {
+		  LOGGER.debug("careServiceJobList_b : {}", CareServiceJobList.get(i));
+	  }
+	  LOGGER.debug("==================================[MB]CARE SERVICE JOB BATCH SEARCH====================================");
+
+	  List<CareServiceJobDto> list = CareServiceJobList.stream().map(r -> CareServiceJobDto.create(r)).collect(Collectors.toList());
+
+	  return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "Care Service Parts List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/careServiceParts_b", method = RequestMethod.GET)
+  public ResponseEntity<List<CareServicePartsDto>> getCareServiceParts_b(@ModelAttribute CareServicePartsForm careServicePartsForm) throws Exception {
+	  Map<String, Object> params = CareServicePartsForm.createMap(careServicePartsForm);
+
+	  List<EgovMap> CareServiceParts = MSvcLogApiService.getCareServiceParts_b(params);
+
+	  LOGGER.debug("==================================[MB]CARE SERVICE PART LIST BATCH SEARCH====================================");
+	  for (int i = 0; i < CareServiceParts.size(); i++) {
+		  LOGGER.debug("careServiceParts_b : {}", CareServiceParts.get(i));
+	  }
+	  LOGGER.debug("==================================[MB]CARE SERVICE PART LIST BATCH SEARCH====================================");
+
+	  List<CareServicePartsDto> list = CareServiceParts.stream().map(r -> CareServicePartsDto.create(r)).collect(Collectors.toList());
+
+	  return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "DT AfterServiceJob List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtAfterServiceJobList_b", method = RequestMethod.GET)
+  public ResponseEntity<List<DtAfterServiceJobDto_b>> getDtAfterServiceJob_b(@ModelAttribute DtAfterServiceJobForm afterServiceJobForm) throws Exception {
+	  Map<String, Object> params = DtAfterServiceJobForm.createMap(afterServiceJobForm);
+
+	  List<EgovMap> dtAfterServiceJobList = MSvcLogApiService.getAfterServiceJobList_b(params);
+
+	  LOGGER.debug("==================================[MB]AFTER SERVICE JOB BATCH SEARCH====================================");
+	  for (int i = 0; i < dtAfterServiceJobList.size(); i++) {
+		  LOGGER.debug("afterServiceJobList_b : {}", dtAfterServiceJobList.get(i));
+	  }
+	  LOGGER.debug("==================================[MB]AFTER SERVICE JOB BATCH SEARCH====================================");
+
+	  List<DtAfterServiceJobDto_b> list = dtAfterServiceJobList.stream().map(r -> DtAfterServiceJobDto_b.create(r)).collect(Collectors.toList());
+
+	  return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "DT After Service Parts List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtAfterServiceParts_b", method = RequestMethod.GET)
+  public ResponseEntity<List<DtAfterServicePartsDto>> getDtAfterServiceParts_b(@ModelAttribute DtAfterServicePartsForm afterServicePartsForm) throws Exception {
+	  Map<String, Object> params = DtAfterServicePartsForm.createMap(afterServicePartsForm);
+
+	  List<EgovMap> dtAfterServiceParts = MSvcLogApiService.afterServiceParts_b(params);
+
+	  LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST BATCH SEARCH====================================");
+	  for (int i = 0; i < dtAfterServiceParts.size(); i++) {
+		  LOGGER.debug("afterServiceParts_b  : {}", dtAfterServiceParts.get(i));
+	  }
+	  LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST BATCH SEARCH====================================");
+
+	  List<DtAfterServicePartsDto> list = dtAfterServiceParts.stream().map(r -> DtAfterServicePartsDto.create(r)).collect(Collectors.toList());
+
+	  return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "DT ProductRetrunJob List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtProductRetrunJobList_b", method = RequestMethod.GET)
+  public ResponseEntity<List<DtProductRetrunJobDto>> getDtProductRetrunJobList_b(@ModelAttribute DtProductRetrunJobForm productRetrunJobForm) throws Exception {
+	  Map<String, Object> params = DtProductRetrunJobForm.createMap(productRetrunJobForm);
+
+	  List<EgovMap> dtProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList_b(params);
+
+	  LOGGER.debug("==================================[MB]PRODUCT RETURN JOB BATCH SEARCH====================================");
+	  for (int i = 0; i < dtProductRetrunJobList.size(); i++) {
+		  LOGGER.debug("productRetrunJobList_b : {}", dtProductRetrunJobList.get(i));
+	  }
+	  LOGGER.debug("==================================[MB]PRODUCT RETURN JOB BATCH SEARCH====================================");
+
+	  List<DtProductRetrunJobDto> list = dtProductRetrunJobList.stream().map(r -> DtProductRetrunJobDto.create(r)).collect(Collectors.toList());
+
+	  return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "DT InstallationJob List batchSearch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtInstallationJobList_b", method = RequestMethod.GET)
+  public ResponseEntity<List<DtInstallationJobDto>> getDtInstallationJobList_b(@ModelAttribute DtInstallationJobForm installationJobForm) throws Exception {
+	  Map<String, Object> params = DtInstallationJobForm.createMap(installationJobForm);
+
+	  List<EgovMap> dtInstallationJobList = MSvcLogApiService.getInstallationJobList_b(params);
+
+	  LOGGER.debug("==================================[MB]INSTALLATION JOB BATCH SEARCH====================================");
+	  for (int i = 0; i < dtInstallationJobList.size(); i++) {
+		  LOGGER.debug("installationJobList_b    값 : {}", dtInstallationJobList.get(i));
+	  }
+	  LOGGER.debug("==================================[MB]INSTALLATION JOB BATCH SEARCH====================================");
+
+	  List<DtInstallationJobDto> list = dtInstallationJobList.stream().map(r -> DtInstallationJobDto.create(r)).collect(Collectors.toList());
+
+	  return ResponseEntity.ok(list);
+  }
+  */
+
+  @ApiOperation(value = "Care Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/careServiceJobList", method = RequestMethod.GET)
+  public ResponseEntity<List<CareServiceJobDto>> getCareServiceJob(@ModelAttribute CareServiceJobForm careServiceJobForm) throws Exception {
+	  Map<String, Object> params = CareServiceJobForm.createMap(careServiceJobForm);
+
+	  List<EgovMap> careServiceJobList = MSvcLogApiService.getCareServiceJobList(params);
+
+	  LOGGER.debug("==================================[MB]CARE SERVICE JOB LIST SEARCH====================================");
+	  for (int i = 0; i < careServiceJobList.size(); i++) {
+		  LOGGER.debug("careServiceJobList: {}", careServiceJobList.get(i));
+	  }
+	  LOGGER.debug("==================================[MB]CARE SERVICE JOB LIST SEARCH====================================");
+
+	  List<CareServiceJobDto> list = careServiceJobList.stream().map(r -> CareServiceJobDto.create(r)).collect(Collectors.toList());
+
+	  return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "Care Service Parts List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/careServiceParts", method = RequestMethod.GET)
+  public ResponseEntity<List<CareServicePartsDto>> getCareServiceParts(@ModelAttribute CareServicePartsForm careServicePartsForm) throws Exception {
+	  Map<String, Object> params = CareServicePartsForm.createMap(careServicePartsForm);
+
+	  List<EgovMap> careServiceParts = MSvcLogApiService.heartServiceParts(params);
+
+	  LOGGER.debug("==================================[MB]CARE SERVICE PART LIST SEARCH====================================");
+	  for (int i = 0; i < careServiceParts.size(); i++) {
+		  LOGGER.debug("careServiceParts : {}", careServiceParts.get(i));
+	  }
+	  LOGGER.debug("==================================[MB]CARE SERVICE PART LIST SEARCH====================================");
+
+	  List<CareServicePartsDto> list = careServiceParts.stream().map(r -> CareServicePartsDto.create(r)).collect(Collectors.toList());
+
+	  return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "DT AfterServiceJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtAfterServiceJobList", method = RequestMethod.GET)
+  public ResponseEntity<List<DtAfterServiceJobDto>> getDtAfterServiceJobList(@ModelAttribute DtAfterServiceJobForm dtAfterServiceJobForm) throws Exception {
+	  Map<String, Object> params = DtAfterServiceJobForm.createMap(dtAfterServiceJobForm);
+
+	  List<EgovMap> dtAfterServiceJobList = MSvcLogApiService.getAfterServiceJobList(params);
+
+	  LOGGER.debug("==================================[MB]AFTER SERVICE JOB LIST SEARCH====================================");
+	  for (int i = 0; i < dtAfterServiceJobList.size(); i++) {
+		  LOGGER.debug("dtAfterServiceJobList : {}", dtAfterServiceJobList.get(i));
+	  }
+	  LOGGER.debug("==================================[MB]AFTER SERVICE JOB LIST SEARCH====================================");
+
+	  List<DtAfterServiceJobDto> list = dtAfterServiceJobList.stream().map(r -> DtAfterServiceJobDto.create(r)).collect(Collectors.toList());
+
+	  return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "DT After Service Parts List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtAfterServiceParts", method = RequestMethod.GET)
+  public ResponseEntity<List<DtAfterServicePartsDto>> getDtAfterServiceParts(@ModelAttribute DtAfterServicePartsForm dtAfterServicePartsForm) throws Exception {
+	  Map<String, Object> params = DtAfterServicePartsForm.createMap(dtAfterServicePartsForm);
+
+	  List<EgovMap> dtAfterServiceParts = MSvcLogApiService.afterServiceParts(params);
+
+	  LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST SEARCH====================================");
+	  for (int i = 0; i < dtAfterServiceParts.size(); i++) {
+		  LOGGER.debug("dtAfterServiceParts : {}", dtAfterServiceParts.get(i));
+	  }
+	  LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST SEARCH====================================");
+
+	  List<DtAfterServicePartsDto> list = dtAfterServiceParts.stream().map(r -> DtAfterServicePartsDto.create(r)).collect(Collectors.toList());
+
+	  return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "DT ProductRetrunJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtProductRetrunJobList", method = RequestMethod.GET)
+  public ResponseEntity<List<DtProductRetrunJobDto>> getDtProductRetrunJobList(@ModelAttribute DtProductRetrunJobForm dtProductRetrunJobForm) throws Exception {
+	  Map<String, Object> params = DtProductRetrunJobForm.createMap(dtProductRetrunJobForm);
+
+	  List<EgovMap> dtProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList(params);
+
+	  LOGGER.debug("==================================[MB]PRODUCT RETURN JOB LIST SEARCH====================================");
+	  for (int i = 0; i < dtProductRetrunJobList.size(); i++) {
+		  LOGGER.debug("dtProductRetrunJobList : {}", dtProductRetrunJobList.get(i));
+	  }
+	  LOGGER.debug("==================================[MB]PRODUCT RETURN JOB LIST SEARCH====================================");
+
+	  List<DtProductRetrunJobDto> list = dtProductRetrunJobList.stream().map(r -> DtProductRetrunJobDto.create(r)).collect(Collectors.toList());
+
+	  return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "DT InstallationJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtInstallationJobList", method = RequestMethod.GET)
+  public ResponseEntity<List<DtInstallationJobDto>> getDtInstallationJobList(@ModelAttribute DtInstallationJobForm dtInstallationJobForm) throws Exception {
+	  Map<String, Object> params = DtInstallationJobForm.createMap(dtInstallationJobForm);
+
+	  List<EgovMap> dtInstallationJobList = MSvcLogApiService.getInstallationJobList(params);
+
+	  LOGGER.debug("==================================[MB]INSTALLATION JOB LIST SEARCH====================================");
+	  for (int i = 0; i < dtInstallationJobList.size(); i++) {
+		  LOGGER.debug("dtInstallationJobList : {}", dtInstallationJobList.get(i));
+	  }
+	  LOGGER.debug("==================================[MB]INSTALLATION JOB LIST SEARCH====================================");
+
+	  List<DtInstallationJobDto> list = dtInstallationJobList.stream().map(r -> DtInstallationJobDto.create(r)).collect(Collectors.toList());
+
+	  return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "Care Service Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/hTReAppointmtRequest", method = RequestMethod.POST)
+  public ResponseEntity<HSReAppointmtRequestDto> hTReAppointmtRequest(@RequestBody HSReAppointmtRequestForm hSReAppointmtRequestForm) throws Exception {
+	  String transactionId = "";
+
+	  Map<String, Object> params = HSReAppointmtRequestForm.createMaps(hSReAppointmtRequestForm);
+
+	  LOGGER.debug("==================================[MB]HT RE APPOINMENT REQUEST ====================================");
+	  LOGGER.debug("### HT RE APPOINTMENT REQUEST FORM : " + params.toString());
+	  LOGGER.debug("==================================[MB]HT RE APPOINMENT REQUEST ====================================");
+
+	  MSvcLogApiService.updateHTReAppointmentReturnResult(params);
+
+	  return ResponseEntity.ok(HSReAppointmtRequestDto.create(transactionId));
+  }
+
+  @ApiOperation(value = "Care Service Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/htFailJobRequest", method = RequestMethod.POST)
+  public ResponseEntity<HSFailJobRequestDto> htFailJobRequest(@RequestBody HSFailJobRequestForm hSFailJobRequestForm) throws Exception {
+	  return serviceApiHSService.htFailJobRequest(hSFailJobRequestForm);
+  }
+
+  @ApiOperation(value = "After Service Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtAsFailJobRequest", method = RequestMethod.POST)
+  public ResponseEntity<ASFailJobRequestDto> dtAsFailJobRequest(@RequestBody ASFailJobRequestForm aSFailJobRequestForm) throws Exception {
+	  return serviceApiASService.asFailJobRequest(aSFailJobRequestForm);
+  }
+
+  @ApiOperation(value = "Installation Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtInstallFailJobRequest", method = RequestMethod.POST)
+  public ResponseEntity<InstallFailJobRequestDto> dtInstallFailJobRequest(@RequestBody InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
+	  return serviceApiInstallationService.installFailJobRequest(installFailJobRequestForm);
+  }
+
+  @ApiOperation(value = "Product Return Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtPRFailJobRequest", method = RequestMethod.POST)
+  public ResponseEntity<PRFailJobRequestDto> dtPRFailJobRequest(@RequestBody PRFailJobRequestForm pRFailJobRequestForm) throws Exception {
+	  return serviceApiPRService.prReAppointmentRequest(pRFailJobRequestForm);
+  }
+
+  @ApiOperation(value = "Heart", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/careServiceResult", method = RequestMethod.POST)
+  public ResponseEntity<HeartServiceResultDto> careServiceResult(@RequestBody List<HeartServiceResultForm> heartForms) throws Exception {
+	  return serviceApiHSService.htResult(heartForms);
+  }
+
+  @ApiOperation(value = "AfterService Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtAfterServiceResult", method = RequestMethod.POST)
+  public ResponseEntity<AfterServiceResultDto> dtAfterServiceResult(@RequestBody List<AfterServiceResultForm> afterServiceForms) throws Exception {
+	  return serviceApiASService.asDtResult(afterServiceForms);
+  }
+
+  @ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtInstallationResult", method = RequestMethod.POST)
+  public ResponseEntity<InstallationResultDto> dtInstallationResult(@RequestBody List<InstallationResultForm> installationResultForms) throws Exception {
+	  return serviceApiInstallationService.installationDtResult(installationResultForms);
+  }
+
+  @ApiOperation(value = "Product Return Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtProductReturnResult", method = RequestMethod.POST)
+  public ResponseEntity<ProductReturnResultDto> dtProductReturnResult(@RequestBody List<ProductReturnResultForm> productReturnResultForm) throws Exception {
+	  return serviceApiPRService.productReturnDtResult(productReturnResultForm);
+  }
+
+  @ApiOperation(value = "HomeCare Service History List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/hcServiceHistory", method = RequestMethod.POST)
+  public ResponseEntity<List<ServiceHistoryDto>> hcServiceHistory(@RequestBody ServiceHistoryForm serviceHistoryForm) throws Exception {
+	  Map<String, Object> params = ServiceHistoryForm.createMaps(serviceHistoryForm);
+
+	  LOGGER.debug("==================================[MB]SERVICE HISTORY LIST ====================================");
+	  LOGGER.debug("### SERVICE HISTORY LIST FORM : " +  params.toString());
+	  LOGGER.debug("==================================[MB]SERVICE HISTORY LIST ====================================");
+
+	  List<EgovMap> headerList = MSvcLogApiService.hcServiceHistory(params);
+
+	  List<ServiceHistoryDto> hList = new ArrayList<>();
+	  for (int i = 0; i < headerList.size(); i++) {
+		  LOGGER.debug("### SERVICE HISTORY LIST : " + headerList.get(i).toString());
+	  }
+
+	  for (int i = 0; i < headerList.size(); i++) {
+		  hList = headerList.stream().map(r -> ServiceHistoryDto.create(r)).collect(Collectors.toList());
+
+		  for (int j = 0; j < hList.size(); j++) {
+			  Map<String, Object> tmpMap = headerList.get(j);
+
+			  LOGGER.debug("### REQUEST STATUS HEADER 1 : ", tmpMap.get("jobType"));
+
+			  if ("AS".equals(tmpMap.get("jobType").toString())) {
+				  // tmpMap.put("asResultId", params.get("asResultId"));
+				  List<EgovMap> historyParts = MSvcLogApiService.getAsPartsHistoryDList(tmpMap);
+
+				  List<ServiceHistoryPartDetailDto> partsList = historyParts.stream().map(r -> ServiceHistoryPartDetailDto.create(r)).collect(Collectors.toList());
+				  hList.get(j).setPartList(partsList);
+			  }
+			  else {
+				  tmpMap.put("bsResultId", tmpMap.get("asResultId"));
+				  List<EgovMap> historyParts = MSvcLogApiService.getHsPartsHistoryDList(tmpMap);
+
+				  List<ServiceHistoryPartDetailDto> partsList = historyParts.stream().map(r -> ServiceHistoryPartDetailDto.create(r)).collect(Collectors.toList());
+				  hList.get(j).setPartList(partsList);
+			  }
+		  }
+
+		  for (int k = 0; k < hList.size(); k++) {
+			  Map<String, Object> tmpMap1 = headerList.get(k);
+
+			  LOGGER.debug("### REQUEST STATUS HEADER 2 : " + tmpMap1.get("jobType").toString());
+
+			  if ("AS".equals(tmpMap1.get("jobType").toString())) {
+				  List<EgovMap> historyFilters = MSvcLogApiService.getAsFilterHistoryDList(tmpMap1);
+
+				  List<ServiceHistoryFilterDetailDto> filterList = historyFilters.stream().map(r -> ServiceHistoryFilterDetailDto.create(r)).collect(Collectors.toList());
+				  hList.get(k).setFilterList(filterList);
+			  }
+			  else {
+				  tmpMap1.put("bsResultId", tmpMap1.get("asResultId"));
+				  List<EgovMap> historyFilters = MSvcLogApiService.getHsFilterHistoryDList(tmpMap1);
+
+				  List<ServiceHistoryFilterDetailDto> filterList = historyFilters.stream().map(r -> ServiceHistoryFilterDetailDto.create(r)).collect(Collectors.toList());
+				  hList.get(k).setFilterList(filterList);
+			  }
+		  }
+	  }
+
+	  return ResponseEntity.ok(hList);
+  }
+
+  @ApiOperation(value = "Serial List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectSerialList", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectSerialList(@RequestParam Map<String, Object> params) throws Exception {
+	  List<EgovMap> selectSerialList = MSvcLogApiService.selectSerialList(params);
+
+	  return ResponseEntity.ok(selectSerialList);
+  }
+  /* Woongjin Jun */
 }
