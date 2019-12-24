@@ -100,15 +100,15 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	public List<EgovMap> getMyStockList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 
-		String serialRequireChkYn = MlogApiMapper.getSerialRequireChkYn(params);
+//		String serialRequireChkYn = MlogApiMapper.getSerialRequireChkYn(params);
+//
+//		if("Y".equals(serialRequireChkYn)){
+//			return MlogApiMapper.getMyStockListScan(params);
+//		} else{
+//			return MlogApiMapper.getMyStockList(params);
+//		}
 
-		if("Y".equals(serialRequireChkYn)){
-			return MlogApiMapper.getMyStockListScan(params);
-		} else{
-			return MlogApiMapper.getMyStockList(params);
-		}
-
-
+		return MlogApiMapper.getMyStockList(params);
 	}
 
 
