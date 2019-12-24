@@ -875,7 +875,8 @@
                     l55d.DELVRY_QTY REQUEST_QTY,
                     l55d.DELVRY_NO_ITM SMO_NO_ITEM,
                     l100m.LAST_DELVRY_NO_ITM AS PDELVRY_NO_ITM,
-                    s26m.STK_ID PARTS_ID
+                    s26m.STK_ID PARTS_ID,
+                    NVL(TRIM(s26m.SERIAL_CHK), 'N') AS SERIAL_CHK
         FROM LOG0055D l55d, LOG0100M l100m,sys0026m s26m
         WHERE l55d.DELVRY_NO = l100m.LAST_DELVRY_NO(+)
         AND l55d.DELVRY_NO_ITM = l100m.LAST_DELVRY_NO_ITM(+)
