@@ -136,4 +136,77 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 
 	    return ResponseEntity.ok(PRFailJobRequestDto.create(serviceNo));
 	}
+
+	@Override
+	public ResponseEntity<ProductReturnResultDto> productReturnDtResultProc(Map<String, Object> cvMp) throws Exception {
+		String transactionId = "";
+		String serviceNo = "";
+
+		transactionId = String.valueOf(cvMp.get("transactionId"));
+		serviceNo = String.valueOf(cvMp.get("serviceNo"));
+
+		Map<String, Object> params = cvMp;
+
+		// CHECK CT VALID TO PERFORM THIS ACTION
+		int memCnt = MSvcLogApiService.prdResultSync(cvMp);
+
+		if (memCnt > 0) {
+			int isPrdRtnCnt = MSvcLogApiService.isPrdRtnAlreadyResult(cvMp);
+
+	        if (isPrdRtnCnt == 0) {
+	        	try {
+	        		// SP_RETURN_BILLING_EARLY_TERMI COMMIT DELETE
+	        		EgovMap rtnValue = MSvcLogApiService.productReturnResult(cvMp);
+
+	        		if (null != rtnValue) {
+	        			HashMap spMap = (HashMap) rtnValue.get("spMap");
+	        			if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
+	        				rtnValue.put("logerr", "Y");
+	        			}
+	        			// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
+	        			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+
+	        			params.put("scanSerial", String.valueOf(cvMp.get("serialNo")));  // ????????????????????
+    					params.put("salesOrdId", String.valueOf(cvMp.get("salesOrdId"))); // ?????????
+    					params.put("reqstNo", String.valueOf(cvMp.get("serviceNo")));
+    					params.put("delvryNo", "ddddddddddd");
+    					params.put("callGbn", "RETURN");
+    					params.put("mobileYn", "Y");
+    					//params.put("userId", userId);
+    					params.put("pErrcode", "");
+    					params.put("pErrmsg", "");
+    					MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
+	        		}
+	        	}
+	        	catch (Exception e) {
+	        		String procTransactionId = transactionId;
+	    			String procName = "ProductReturn";
+	    			String procKey = serviceNo;
+	    			String procMsg = "Failed to Save";
+	    			String errorMsg = "[API] " + e.toString();
+	    			throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+	        	}
+	        }
+	        else {
+	        	String procTransactionId = transactionId;
+    			String procName = "ProductReturn";
+    			String procKey = serviceNo;
+    			String procMsg = "NoTarget Data";
+    			String errorMsg = "[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT IN ACTIVE STATUS. ";
+    			throw new BizException("04", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+	        }
+		}
+		else {
+			String procTransactionId = transactionId;
+			String procName = "ProductReturn";
+			String procKey = serviceNo;
+			String procMsg = "NoTarget Data";
+			String errorMsg = "[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT IN ACTIVE STATUS. ";
+			throw new BizException("04", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+		}
+
+		logger.debug("### PRODUCT RETURN FINAL PARAM : " + cvMp.toString());
+
+	    return ResponseEntity.ok(ProductReturnResultDto.create(transactionId));
+	}
 }

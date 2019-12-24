@@ -20,4 +20,6 @@ public interface ServiceApiPRDetailService {
 	ResponseEntity<ProductReturnResultDto> productReturnResultProc(Map<String, Object> cvMp) throws Exception;
 
 	ResponseEntity<PRFailJobRequestDto> prReAppointmentRequestProc(Map<String, Object> params) throws Exception;
+
+	ResponseEntity<ProductReturnResultDto> productReturnDtResultProc(Map<String, Object> cvMp) throws Exception;
 }

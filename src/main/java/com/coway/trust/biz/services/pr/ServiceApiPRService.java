@@ -22,4 +22,6 @@ public interface ServiceApiPRService {
 	ResponseEntity<ProductReturnResultDto> productReturnResult(List<ProductReturnResultForm> productReturnResultForm) throws Exception;
 
 	ResponseEntity<PRFailJobRequestDto> prReAppointmentRequest(PRFailJobRequestForm pRFailJobRequestForm) throws Exception;
+
+	ResponseEntity<ProductReturnResultDto> productReturnDtResult(List<ProductReturnResultForm> productReturnResultForm) throws Exception;
 }
