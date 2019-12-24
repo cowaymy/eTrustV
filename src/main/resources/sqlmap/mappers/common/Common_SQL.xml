@@ -1123,6 +1123,10 @@
         SELECT * FROM SYS1019V
     </select>
 
+    <select id="selectDefectDetailsHc" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1025V
+    </select>
+
     <select id="selectMalfunctionReasons" parameterType="Map" resultType="egovMap">
         SELECT * FROM SYS1022V
     </select>
@@ -1827,6 +1831,12 @@
         WHERE HOLIDAY_TYPE = 'P'
            AND HOLIDAY BETWEEN (TRUNC (SYSDATE, 'YYYY') - ( INTERVAL '1' YEAR))
            AND (TRUNC (SYSDATE, 'YYYY') + ( INTERVAL '2' YEAR))
+    </select>
+
+    <select id="getHomeCareGroupChkYn" parameterType="Map" resultType="String">
+        SELECT CASE WHEN USER_TYPE_ID = '1165' THEN 'Y' ELSE 'N' END
+          FROM SYS0047M
+         WHERE USER_NAME = #{userId}
     </select>
 
 </mapper>
