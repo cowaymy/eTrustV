@@ -139,6 +139,9 @@ public class FundTransferApiServiceImpl extends EgovAbstractServiceImpl implemen
         if( param.getSrcOrdNo().equals(param.getFtOrdNo()) ){
             throw new ApplicationException(AppConstants.FAIL, "Duplicate order number.");
         }
+        if( CommonUtils.isEmpty(param.getCurPayTypeId()) ){
+            throw new ApplicationException(AppConstants.FAIL, "(Order(New)) Current WOR Payment Type ID value does not exist.");
+        }
 
 
 
@@ -179,6 +182,7 @@ public class FundTransferApiServiceImpl extends EgovAbstractServiceImpl implemen
         pay0296d.put("mobTicketNo", mobTicketNo);
         pay0296d.put("crtUserId", loginVO.getUserId());
         pay0296d.put("updUserId", loginVO.getUserId());
+        pay0296d.put("curPayTypeId", param.getCurPayTypeId());
         int saveCnt = fundTransferApiMapper.insertPAY0296D(pay0296d);
         if( saveCnt != 1 ){
             throw new ApplicationException(AppConstants.FAIL, "Failed to save.");

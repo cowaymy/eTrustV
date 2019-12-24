@@ -48,6 +48,7 @@ public class FundTransferRefundApiDto {
         params.put("productName", vo.getProductName());
         params.put("appTypeId", vo.getAppTypeId());
         params.put("payId", vo.getPayId());
+        params.put("payItmModeId", vo.getPayItmModeId());
 		return params;
 	}
 
@@ -67,8 +68,17 @@ public class FundTransferRefundApiDto {
 	private String productName;
 	private int appTypeId;
 	private int payId;
+    private int payItmModeId;
 
 
+
+    public int getPayItmModeId() {
+        return payItmModeId;
+    }
+
+    public void setPayItmModeId(int payItmModeId) {
+        this.payItmModeId = payItmModeId;
+    }
 
     public int getPayId() {
         return payId;

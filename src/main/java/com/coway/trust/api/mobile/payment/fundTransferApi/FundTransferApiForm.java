@@ -26,7 +26,6 @@ public class FundTransferApiForm {
 		Map<String, Object> params = new HashMap<>();
         params.put("salesOrdNo", vo.getSalesOrdNo());
         params.put("appTypeId", vo.getAppTypeId());
-
         params.put("srcGrpSeq", vo.getSrcGrpSeq());
         params.put("srcAmt", vo.getSrcAmt());
         params.put("srcOrdNo", vo.getSrcOrdNo());
@@ -40,6 +39,7 @@ public class FundTransferApiForm {
         params.put("regId", vo.getRegId());
         params.put("orNo", vo.getOrNo());
         params.put("ftAttchImg", vo.getFtAttchImg());
+        params.put("curPayTypeId", vo.getCurPayTypeId());
 		return params;
 	}
 
@@ -60,9 +60,16 @@ public class FundTransferApiForm {
     private String regId;
     private String orNo;
     private String ftAttchImg;
+    private String curPayTypeId;
 
 
 
+    public String getCurPayTypeId() {
+        return curPayTypeId;
+    }
+    public void setCurPayTypeId(String curPayTypeId) {
+        this.curPayTypeId = curPayTypeId;
+    }
     public String getFtAttchImg() {
         return ftAttchImg;
     }

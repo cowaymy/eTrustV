@@ -38,19 +38,7 @@ public interface RequestFundTransferMapper {
 
 
 
-    EgovMap selectInfoPAY02052T(Map<String, Object> params);
-
-
-
-    int insertApprovedPAY0260D(Map<String, Object> params);
-
-
-
-    int updateApprovedPAY0296D(Map<String, Object> params);
-
-
-
-    int updateFtStusIdPAY0252T(Map<String, Object> params);
+    int callSpInstReqFundTrnsfr(Map<String, Object> params);
 
 
 

@@ -36,6 +36,9 @@ public class LoginDto {
 	private String userMainDeptId;
 	@ApiModelProperty(value = "serialRequireChkYn")
 	private String serialRequireChkYn;
+	@ApiModelProperty(value = "memId")
+    private String memId;
+
 
 	public static LoginDto create(LoginVO loginVO) {
 		LoginDto dto = new LoginDto();
@@ -53,7 +56,7 @@ public class LoginDto {
 		dto.setUserTypeId(loginVO.getUserTypeId());
 		dto.setUserMainDeptId(loginVO.getUserMainDeptId());
 		dto.setSerialRequireChkYn(loginVO.getSerialRequireChkYn());
-
+		dto.setMemId(loginVO.getMemId());
 		return dto;
 	}
 
@@ -168,4 +171,12 @@ public class LoginDto {
 	public void setSerialRequireChkYn(String serialRequireChkYn) {
 		this.serialRequireChkYn = serialRequireChkYn;
 	}
+
+    public String getMemId() {
+        return memId;
+    }
+
+    public void setMemId(String memId) {
+        this.memId = memId;
+    }
 }
