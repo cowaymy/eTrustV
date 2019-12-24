@@ -1028,7 +1028,11 @@
 
             if(stkIdx > 0) {
                 fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId, _tagNum);
-                fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, _tagNum);
+                if(_tagNum == '2') {
+                    fn_loadProductPromotion2(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, _tagNum);
+                } else {
+                    fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, _tagNum);
+                }
             }
 
             fn_loadProductComponent(appTypeVal, stkIdVal, _tagNum);
@@ -2125,41 +2129,41 @@
         fn_clearOrderSalesman();
 
         Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode}, function(memRc) {
-            if (memRc == undefined || memRc == null) {
-            	Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
-
-            } else {
-            	if(memRc.rcPrct < 30 && memRc.cnt >= 3) {
+            if(memRc != null) {
+                if(memRc.rcPrct < 30 && memRc.cnt >= 3) {
                     fn_clearOrderSalesman();
                     Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
-                } else {
-                    Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
 
-                        if(memInfo == null) {
-                            Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
-                        }
-                        else {
-                            $('#hiddenSalesmanId').val(memInfo.memId);
-                            $('#salesmanCd').val(memInfo.memCode);
-                            $('#salesmanType').val(memInfo.codeName);
-                            $('#salesmanTypeId').val(memInfo.memType);
-                            $('#salesmanNm').val(memInfo.name);
-                            $('#salesmanNric').val(memInfo.nric);
-                            $('#departCd').val(memInfo.deptCode);
-                            $('#departMemId').val(memInfo.lvl3UpId);
-                            $('#grpCd').val(memInfo.grpCode);
-                            $('#grpMemId').val(memInfo.lvl2UpId);
-                            $('#orgCd').val(memInfo.orgCode);
-                            $('#orgMemId').val(memInfo.lvl1UpId);
-
-                            $('#salesmanCd').removeClass("readonly");
-                            $('#departCd').removeClass("readonly");
-                            $('#grpCd').removeClass("readonly");
-                            $('#orgCd').removeClass("readonly");
-                        }
-                    });
+                    return false;
                 }
             }
+
+            Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
+
+                if(memInfo == null) {
+                    Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
+                    Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
+
+                } else {
+                    $('#hiddenSalesmanId').val(memInfo.memId);
+                    $('#salesmanCd').val(memInfo.memCode);
+                    $('#salesmanType').val(memInfo.codeName);
+                    $('#salesmanTypeId').val(memInfo.memType);
+                    $('#salesmanNm').val(memInfo.name);
+                    $('#salesmanNric').val(memInfo.nric);
+                    $('#departCd').val(memInfo.deptCode);
+                    $('#departMemId').val(memInfo.lvl3UpId);
+                    $('#grpCd').val(memInfo.grpCode);
+                    $('#grpMemId').val(memInfo.lvl2UpId);
+                    $('#orgCd').val(memInfo.orgCode);
+                    $('#orgMemId').val(memInfo.lvl1UpId);
+
+                    $('#salesmanCd').removeClass("readonly");
+                    $('#departCd').removeClass("readonly");
+                    $('#grpCd').removeClass("readonly");
+                    $('#orgCd').removeClass("readonly");
+                }
+            });
         });
     }
 
@@ -2201,6 +2205,12 @@
         } else {
             doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
         }
+    }
+
+    function fn_loadProductPromotion2(appTypeVal, stkId, empChk, custTypeVal, exTrade, tagNum) {
+        $('#ordPromo'+tagNum).removeAttr("disabled");
+
+        doGetComboData('/homecare/sales/order/selectPromotionByFrame.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
     }
 
     //LoadProductPrice
