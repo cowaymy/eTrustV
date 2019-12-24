@@ -8,12 +8,27 @@
 
 
    /* 커스텀 칼럼 스타일 정의 */
-   .my-column {
-	    text-align: center;
-	    margin-top: -20px;
-	}
+.my-column {
+    text-align: center;
+    margin-top: -20px;
+}
 
-   .my-row-style { background:#FF5733; font-weight:bold; color:#22741C; }
+.my-row-style {
+    background:#FF5733;
+    font-weight:bold;
+    color:#22741C;
+    text-decoration:underline;
+    cursor: pointer;
+    text-align: right;
+}
+
+.aui-grid-link-renderer1 {
+     text-decoration:underline;
+     color: #4374D9 !important;
+     cursor: pointer;
+     text-align: right;
+ }
+
 
 </style>
 <script type="text/javaScript">
@@ -49,11 +64,15 @@ var scanInfoLayout = [
             , dataType:"numeric"
             , formatString:"#,##0"
             , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
-                if(item.delvryQty != value){
+                if(item.delvryQty != value && item.serialChk != "N"){
                 	return "my-row-style";
+                }else if(item.serialChk != "N"){
+                	return "aui-grid-link-renderer1";
                 }
-                return "";
+
+                return "aui-grid-column-right";
             }
+            /*
 	        , renderer :{
 	                  type : "LinkRenderer",
 	                  baseUrl : "javascript", // 자바스크립 함수 호출로 사용하고자 하는 경우에 baseUrl 에 "javascript" 로 설정
@@ -65,6 +84,7 @@ var scanInfoLayout = [
 
 	                  }
 	         }
+            */
         }
         , {dataField:"serialRequireChkYn", visible:false}
 
@@ -90,6 +110,17 @@ $(document).ready(function(){
     Common.setMobilePopup(true, false, 'scanInfoGrid');
 
     scanInfoGridId = GridCommon.createAUIGrid("scanInfoGrid", scanInfoLayout, null, scanInfoPros);
+
+    AUIGrid.bind(scanInfoGridId, "cellClick", function( event ) {
+        if(event.dataField == "scanQty"){
+            var item = event.item;
+            if(item.serialChk == "Y"){
+                fn_scanSearchPop(item);
+            }
+        }
+    });
+
+
 
     if(Common.checkPlatformType() == "mobile") {
     	$("#zDelvryNo").val("${url.zDelyno}");    // delivery No
@@ -394,7 +425,7 @@ function fn_PopSerialClose(){
 
     <section class="search_result">
         <article class="grid_wrap">
-            <div id="scanInfoGrid" style="height:350px;"></div>
+            <div id="scanInfoGrid" class="autoGridHeight"></div>
         </article>
     </section>
     &nbsp;
