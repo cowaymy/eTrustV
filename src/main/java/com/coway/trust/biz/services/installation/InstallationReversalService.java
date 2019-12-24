@@ -1,5 +1,6 @@
 package com.coway.trust.biz.services.installation;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -138,5 +139,7 @@ public interface InstallationReversalService {
 	void updateSrvMembershipSale2(Map<String, Object> params);
 
 	void addAccRentLedger(Map<String, Object> params);
+
+	void saveResavalSerial(Map<String, Object> params) throws ParseException;
 
 }
