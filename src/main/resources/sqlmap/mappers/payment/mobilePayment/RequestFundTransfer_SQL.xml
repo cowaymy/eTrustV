@@ -151,146 +151,33 @@ ORDER BY MOB_TICKET_NO DESC
 
 
 
-<select id="selectOutstandingAmount" parameterType="Map" resultType="egovMap">
+<resultMap id="selectOutstandingAmountMap" type="egovMap"></resultMap>
+<select id="selectOutstandingAmount" parameterType="Map" statementType="CALLABLE">
 /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.selectOutstandingAmount] 20191202 - KR JAEMAJEM */
-SELECT  A.OUT_AMT                                                               AS OUT_AMT
-    ,   A.APP_TYPE_NAME                                                         AS APP_TYPE_NAME
-FROM
-(
-    SELECT  M.MEM_CODE
-        ,   S.SALES_ORD_NO
-        ,   X.OUT_AMT
-        ,   S.CUST_ID
-        ,   A.CODE_NAME                                                         AS APP_TYPE_NAME
-    FROM    SAL0001D S
-            JOIN SAL0090D G
-                ON G.SRV_SO_ID = S.SALES_ORD_ID
-            JOIN ORG0001D M
-                ON M.MEM_ID = G.SRV_CODY_ID
-            JOIN SYS0013M A
-                ON  S.APP_TYPE_ID = A.CODE_ID
-            LEFT JOIN
-            (
-                SELECT  RENT_SO_ID
-                    ,   SUM(ROUND(NVL(RENT_AMT, 0), 2)) AS OUT_AMT
-                FROM    PAY0022D
-                GROUP BY RENT_SO_ID
-            ) X
-                ON  X.RENT_SO_ID = S.SALES_ORD_ID
-    WHERE   S.APP_TYPE_ID = 66
-    AND     G.SRV_STUS_ID = 1
-    AND     S.SALES_ORD_NO = #{newOrdNo}
-    UNION ALL
-    SELECT  M.MEM_CODE
-        ,   S.SALES_ORD_NO
-        ,   X.OUT_AMT
-        ,   S.CUST_ID
-        ,   A.CODE_NAME                                                         AS APP_TYPE_NAME
-    FROM    SAL0001D S
-            JOIN SAL0090D G
-                ON G.SRV_SO_ID = S.SALES_ORD_ID
-            JOIN ORG0001D M
-                ON M.MEM_ID = G.SRV_CODY_ID
-            JOIN SYS0013M A
-                ON  S.APP_TYPE_ID = A.CODE_ID
-            LEFT JOIN
-            (
-                SELECT  TRADE_SO_ID
-                    ,   SUM(ROUND(NVL(TRADE_AMT, 0), 2)) AS OUT_AMT
-                FROM    PAY0035D
-                GROUP BY TRADE_SO_ID
-            ) X ON X.TRADE_SO_ID = S.SALES_ORD_ID
-    WHERE   S.APP_TYPE_ID IN (67,68)
-    AND     G.SRV_STUS_ID = 1
-    AND     S.SALES_ORD_NO = #{newOrdNo}
-) A
+{
+    call  SP_GET_ORD_OUTSTANDING(#{ftReqId}, #{selectData, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=selectOutstandingAmountMap})
+ }
 </select>
 
 
 
-<select id="selectInfoPAY02052T" parameterType="Map" resultType="egovMap">
-/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.selectInfoPAY02052T] 20191024 - KR JAEMAJEM */
-SELECT  A.GROUP_SEQ                                                             AS GROUP_SEQ
-    ,   A.PAY_ID                                                                AS PAY_ID
-FROM    PAY0252T A
-        INNER JOIN  PAY0064D B
-            ON  A.PAY_ID = B.PAY_ID
-WHERE   B.OR_NO = #{orNo}
+<resultMap id="callSpInstReqFundTrnsfr" type="egovMap"></resultMap>
+<select id="callSpInstReqFundTrnsfr" parameterType="Map" statementType="CALLABLE">
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.callSpInstReqFundTrnsfr] 20191223 - KR JAEMAJEM */
+{
+    call  SP_INST_REQ_FUND_TRNSFR(#{ftReqId}, #{updUserId})
+ }
 </select>
 
 
 
-<update id="insertApprovedPAY0260D" parameterType="Map">
+<update id="updateApprovePAY0296D" parameterType="Map">
 <![CDATA[
-/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.insertApprovedPAY0260D] 20191024 - KR JAEMAJEM */
-INSERT
-INTO    PAY0260D                                                                -- Request_FT
-(
-        FT_REQ_ID                                                               --DCF Request No.
-    ,   SRC_GRP_SEQ                                                             --Payment Group No. (Source Info)
-    ,   SRC_AMT                                                                 --Source Amount
-    ,   SRC_ORD_NO                                                              --Source Order Number
-    ,   SRC_CUST_NAME                                                           --Source Customer Name
-    ,   SRC_PAY_ID                                                              --Source Pay ID
-    ,   FT_GRP_SEQ                                                              --Payment Group No.  (Target Info)
-    ,   FT_AMT                                                                  --FT amount
-    ,   FT_ORD_NO                                                               --FT order number
-    ,   FT_CUST_NAME                                                            --FT Customer Name
-    ,   FT_RESN                                                                 --FT Reason.
-    ,   FT_REM                                                                  --FT Remark
-    ,   FT_STUS_ID                                                              --FT Status
-    ,   FT_CRT_USER_ID                                                          --FT Requestor
-    ,   FT_CRT_DT                                                               --FT Date
-    --FT Approval No.
-    --FT Confirm Date
-    --FT Confirm User
-    --FT Confirm Reject Remark
-    --ECC I/F Date
-)VALUES(
-        #{ftReqId}                                                              --DCF Request No.
-    ,   #{srcGrpSeq}                                                            --Payment Group No. (Source Info)
-    ,   #{srcAmt}                                                               --Source Amount
-    ,   #{srcOrdNo}                                                             --Source Order Number
-    ,   #{srcCustName}                                                          --Source Customer Name
-    ,   #{srcPayId}                                                             --Source Pay ID
-    ,   #{ftGrpSeq}                                                             --Payment Group No.  (Target Info)
-    ,   #{ftAmt}                                                                --FT amount
-    ,   #{ftOrdNo}                                                              --FT order number
-    ,   #{ftCustName}                                                           --FT Customer Name
-    ,   #{ftResn}                                                               --FT Reason.
-    ,   #{ftRem}                                                                --FT Remark
-    ,   #{ftStusId}                                                             --FT Status
-    ,   #{ftCrtUserId}                                                          --FT Requestor
-    ,   SYSDATE                                                                 --FT Date
-    --FT Approval No.
-    --FT Confirm Date
-    --FT Confirm User
-    --FT Confirm Reject Remark
-    --ECC I/F Date
-)
-]]>
-</update>
-
-
-
-<update id="updateFtStusIdPAY0252T" parameterType="Map">
-<![CDATA[
-/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.insertApprovedPAY0260D] 20191024 - KR JAEMAJEM */
-UPDATE  PAY0252T A                                                              -- Pay Result
-SET     A.FT_STUS_ID = #{ftStusId}                                              -- FT Status ID
-WHERE   A.GROUP_SEQ = #{groupSeq}                                               -- Group Sequence
-AND     A.PAY_ID = #{payId}                                                     -- Payment ID
-AND     A.FT_STUS_ID IS NULL
-]]>
-</update>
-
-
-
-<update id="updateApprovedPAY0296D" parameterType="Map">
-<![CDATA[
-/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.updateApprovedPAY0296D] 20191023 - KR JAEMAJEM */
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.updateApprovePAY0296D] 20191222 - KR JAEMAJEM */
 UPDATE  PAY0296D A                                                              --Mobile Request Fund Transfer
-SET     A.FT_STUS_ID = #{ftStusId}                                              --Fund Tranfer Status
+SET     A.NEW_ORD_OUT_AMT = #{newOrdOutAmt}                                     --New Order Outstanding Amount
+    ,   A.ADV_AMT = #{advAmt}                                                   --Advanced Amount
+    ,   A.ADV_MONTH = #{advMonth}                                               --Advanced Month
     ,   A.UPD_DT = SYSDATE                                                      --Update Date
     ,   A.UPD_USER_ID = #{updUserId}                                            --Update User Id
 WHERE   A.FT_REQ_ID = #{ftReqId}                                                --Mobile Request Fund Transfer Number

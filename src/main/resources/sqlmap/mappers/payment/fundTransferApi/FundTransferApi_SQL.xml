@@ -55,6 +55,7 @@ INTO    PAY0296D                                                                
     ,   CUR_CUST_NAME                                                           --Current Order Customer Name
     ,   CUR_WOR_NO                                                              --Current WOR Number
     ,   CUR_AMT                                                                 --Current Amount
+    ,   CUR_PAY_TYPE_ID                                                         --Current WOR Payment Type ID
     ,   NEW_ORD_NO                                                              --New Order Number
     ,   NEW_CUST_NAME                                                           --New Order Customer Name
     ,   NEW_AMT                                                                 --New Amount
@@ -73,6 +74,7 @@ INTO    PAY0296D                                                                
     ,   #{curCustName}                                                          --Current Order Customer Name
     ,   #{curWorNo}                                                             --Current WOR Number
     ,   #{curAmt}                                                               --Current Amount
+    ,   #{curPayTypeId}                                                         --Current WOR Payment Type ID
     ,   #{newOrdNo}                                                             --New Order Number
     ,   #{newCustName}                                                          --New Order Customer Name
     ,   #{newAmt}                                                               --New Amount

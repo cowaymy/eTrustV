@@ -20,6 +20,7 @@ SELECT  #{type}                                                                 
     ,   STUS_CODE_NAME                                                          AS STUS_CODE_NAME
     ,   PRODUCT_NAME                                                            AS PRODUCT_NAME
     ,   APP_TYPE_ID                                                             AS APP_TYPE_ID
+    ,   PAY_ITM_MODE_ID                                                         AS PAY_ITM_MODE_ID
 FROM
 (
     SELECT  A.GROUP_SEQ                                                         AS SEQ
@@ -42,6 +43,7 @@ FROM
         ,   G.NAME                                                              AS STUS_CODE_NAME
         ,   I.STK_DESC                                                          AS PRODUCT_NAME
         ,   D.APP_TYPE_ID                                                       AS APP_TYPE_ID
+        ,   C.PAY_ITM_MODE_ID                                                   AS PAY_ITM_MODE_ID
     FROM    PAY0252T A
             INNER JOIN PAY0064D B
                 ON  B.PAY_ID = A.PAY_ID
@@ -90,6 +92,7 @@ FROM
         ,   H.NAME                                                              AS STUS_CODE_NAME
         ,   J.STK_DESC                                                          AS PRODUCT_NAME
         ,   E.APP_TYPE_ID                                                       AS APP_TYPE_ID
+        ,   C.PAY_ITM_MODE_ID                                                   AS PAY_ITM_MODE_ID
     FROM    PAY0252T A
             INNER JOIN PAY0064D B
                 ON  B.PAY_ID = A.PAY_ID
