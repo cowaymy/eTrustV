@@ -27,6 +27,9 @@ public class LogStockPartsReceiveDto {
 	@ApiModelProperty(value = "부품 sn")
 	private String serialNo;
 
+	@ApiModelProperty(value = "시리얼 체크 여부")
+	private String serialChk;
+
 	public static LogStockPartsReceiveDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, LogStockPartsReceiveDto.class);
 	}
@@ -77,6 +80,14 @@ public class LogStockPartsReceiveDto {
 
 	public void setSerialNo(String serialNo) {
 		this.serialNo = serialNo;
+	}
+
+	public String getSerialChk() {
+		return serialChk;
+	}
+
+	public void setSerialChk(String serialChk) {
+		this.serialChk = serialChk;
 	}
 
 }
