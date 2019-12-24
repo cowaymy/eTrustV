@@ -193,54 +193,12 @@ function fn_approve(){
     		Common.alert("<spring:message code='pay.check.ticketStusId'/>");
 
     	}else{
-/*
-            Common.confirm("<spring:message code='pay.confirm.approve'/>", function(){
-
-    		    Common.ajaxSync("POST", "/payment/requestFundTransfer/saveRequestFundTransferArrpove.do", AUIGrid.getSelectedItems(myGridID)[0].item , function(result) {
-    		        if(result !=""  && null !=result ){
-    		            Common.alert("<spring:message code='pay.alert.approve'/>", function(){
-    		                fn_search(1);
-    		            });
-    		        }
-    		    });
-
-    		});
-*/
-
     		var selectedItems = AUIGrid.getSelectedItems(myGridID);
-    		Common.ajax("POST", "/payment/requestFundTransfer/selectOutstandingAmount.do", {"newOrdNo":selectedItems[0].item.newOrdNo}, function(result) {
+    		Common.ajax("POST", "/payment/requestFundTransfer/selectOutstandingAmount.do", {"ftReqId":selectedItems[0].item.ftReqId}, function(result) {
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
-/*
-                    selectedItems[0].item
-                    atchFileName: "MOBILE_PAY_30_20191202_1.jpg"
-                    brnchCode: "CDB-48"
-                    curAmt: 1000
-                    curCustName: "SAMCHEM SDN. BHD."
-                    curOrdNo: "2227757"
-                    curWorNo: "WOR8904103"
-                    fileSubPath: "payment/fundTransferApi/"
-                    ftAttchImgUrl: "DOWN"
-                    ftReqId: 6115
-                    ftResn: 2839
-                    ftResnName: "Wrongly information"
-                    ftStusId: 1
-                    memCode: "CD102479"
-                    mobTicketNo: 243
-                    newAmt: 1000
-                    newCustName: "NURAQILLA YASMIN BINTI FAZIR"
-                    newOrdNo: "2227766"
-                    physiclFileName: "B648DBF0ABC648EBACBBE68BFE3C3669"
-                    refAttchImg: 268706
-                    reqDt: "02/12/2019"
-                    rnum: 1
-                    ticketStusId: 1
-                    ticketStusNm: "Active"
-                    updDt: "02/12/2019 19:54:14"
-                    updUserId: "CD102479"
-                    _$uid: "B7F5FB51-F7A7-DE9E-277B- C6D3277FCADE"
-*/
                 var popCurAmt =  Number(selectedItems[0].item.curAmt);
-                var outAmt =  Number(result.data[0].outAmt);
+                var outAmt =  Number(result.data[0].outstandingAmt);
+
                 var popAdvanceAmount = popCurAmt + outAmt;
                 if( popAdvanceAmount <= 0 ){
                 	popAdvanceAmount = 0;
@@ -252,7 +210,7 @@ function fn_approve(){
                 	$("#popAdvanceMonth").removeAttr("disabled");
                 }
                 $("#popNewOrdNo").val(selectedItems[0].item.newOrdNo);
-                $("#popNewPaymentType").val(result.data[0].appTypeName);
+                $("#popNewPaymentType").val(result.data[0].ledgerType);
                 $("#popCurAmt").val( $.number(popCurAmt, 2) );
                 $("#popOutAmt").val( $.number(outAmt, 2) );
                 $("#popAdvanceAmount").val(popAdvanceAmount);
@@ -265,7 +223,24 @@ function fn_approve(){
 
 
 function saveApproveFundTransfer(){
-    alert(1);
+    Common.confirm("<spring:message code='pay.confirm.approve'/>", function(){
+    	var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    	var saveData = new Object();
+    	saveData.ftReqId = selectedItems[0].item.ftReqId;
+    	saveData.newOrdOutAmt = $("#popOutAmt").val();
+    	saveData.advAmt = $("#popAdvanceAmount").val();
+        saveData.advMonth = $("#popAdvanceMonth").val();
+        saveData.mobTicketNo = selectedItems[0].item.mobTicketNo;
+        /* var saveData = { ftReqId : selectedItems[0].item.ftReqId, newOrdOutAmt : $("#popOutAmt").val(), advAmt : $("#popAdvanceAmount").val(), advMonth : $("#popAdvanceMonth").val()} */
+        Common.ajaxSync("POST", "/payment/requestFundTransfer/saveRequestFundTransferArrpove.do", saveData , function(result) {
+            if(result !=""  && null !=result ){
+                Common.alert("<spring:message code='pay.alert.approve'/>", function(){
+                	$("#editWindow").hide();
+                    fn_search(1);
+                });
+            }
+        });
+    });
 }
 
 
