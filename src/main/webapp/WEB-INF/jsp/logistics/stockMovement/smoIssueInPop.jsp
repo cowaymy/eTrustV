@@ -212,11 +212,11 @@ $(document).ready(function(){
                Common.alert("Please check the GI Date.")
               return false;
            }
-    	   if (check.all[i].serialChk != "Y"){
+    	   /*if (check.all[i].serialChk != "Y"){
                Common.alert("Please check Serial Chk YN.")
               return false;
-           }
-    	   if (check.all[i].scanQty == 0){
+           }*/
+    	   if (check.all[i].serialChk == "Y" && check.all[i].scanQty == 0){
                Common.alert("Scan QTY does not exist.")
               return false;
            }

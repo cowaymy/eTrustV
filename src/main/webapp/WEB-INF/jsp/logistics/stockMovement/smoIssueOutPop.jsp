@@ -116,11 +116,11 @@ $(document).ready(function(){
     	var gridList = GridCommon.getGridData(scanInfoGridId);
 
         for(var i = 0 ; i < gridList.all.length ; i++){
-            if (gridList.all[i].serialChk != "Y"){
+            /*if (gridList.all[i].serialChk != "Y"){
                 Common.alert("Please check Serial Chk YN.")
                return false;
-            }
-            if (gridList.all[i].scanQty == 0){
+            }*/
+            if (gridList.all[i].serialChk == "Y" && gridList.all[i].scanQty == 0){
                 Common.alert("Scan QTY does not exist.")
                return false;
             }
