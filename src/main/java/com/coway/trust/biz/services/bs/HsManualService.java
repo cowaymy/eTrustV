@@ -168,4 +168,8 @@ public interface HsManualService {
   EgovMap checkOrderStatusInfo(Map<String, Object> params);
 
   List<EgovMap> getAppTypeList(Map<String, Object> params);
+
+  /* Woongjin Jun */
+  Map<String, Object> addIHtResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws Exception;
+  /* Woongjin Jun */
 }

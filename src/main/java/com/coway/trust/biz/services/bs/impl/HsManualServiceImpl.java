@@ -2484,6 +2484,154 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
       return hsManualMapper.getAppTypeList(params);
   }
 
+  /* Woongjin Jun */
+  @Override
+  @Transactional
+  public Map<String, Object> addIHtResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws Exception {
+	  return SaveCsResult(true, params, docType, sessionVO);
+  }
+
+  private Map<String, Object> SaveCsResult(boolean isfreepromo, Map<String, Object> params, List<Object> docType, SessionVO sessionVO) {
+	  logger.debug("=========================SaveResult - START - ===============================");
+
+	  int schdulId = Integer.parseInt(params.get("hidschdulId").toString());
+	  String docNo = commonMapper.selectDocNo("11");
+	  int masterCnt = hsManualMapper.selectHSResultMCnt(params);
+	  int nextSeq = hsManualMapper.getNextSvc006dSeq();
+
+	  EgovMap insertHsResultfinal = new EgovMap();
+	  String LOG_SVC0008D_NO = "";
+	  LOG_SVC0008D_NO = (String) hsManualMapper.getSVC008D_NO(params);
+
+	  if (masterCnt > 0) {
+		  params.put("resultId", nextSeq);
+	      hsManualMapper.insertHsResultCopy(params);
+	  }
+	  else {
+		  params.put("resultId", nextSeq);
+
+	      logger.debug("= Next Sequence : {}", nextSeq);
+	      logger.debug("= Param : {}", params);
+
+	      int status = 0;
+	      status = Integer.parseInt(params.get("cmbStatusType").toString());
+
+	      insertHsResultfinal.put("resultId", nextSeq);
+	      insertHsResultfinal.put("docNo", docNo);
+	      insertHsResultfinal.put("typeId", 306);
+	      insertHsResultfinal.put("schdulId", schdulId);
+	      insertHsResultfinal.put("salesOrdId", params.get("hidSalesOrdId"));
+	      insertHsResultfinal.put("codyId", params.get("hidCodyId"));
+
+	      // SET DEFAULT AS 01/01/1900 IF SETTLE DATE ARE EMPTY
+	      if (params.get("settleDate") != null || params.get("settleDate") != "") {
+	    	  insertHsResultfinal.put("setlDt", String.valueOf(params.get("settleDate")));
+	      }
+	      else {
+	    	  insertHsResultfinal.put("setlDt", "01/01/1900");
+	      }
+
+	      insertHsResultfinal.put("resultStusCodeId", params.get("cmbStatusType"));
+	      insertHsResultfinal.put("failResnId", params.get("failReason"));
+
+	      if (status == 4) { // COMPLETE
+	    	  insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+	      }
+	      else if (status == 21 || status == 10) { // FAIL & CANCELLED
+	    	  insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+	      }
+
+	      insertHsResultfinal.put("whId", params.get("wareHouse"));
+	      insertHsResultfinal.put("resultRem", params.get("remark"));
+	      insertHsResultfinal.put("resultCrtUserId", sessionVO.getUserId());
+	      insertHsResultfinal.put("resultUpdUserId", sessionVO.getUserId());
+
+	      insertHsResultfinal.put("resultIsSync", '0');
+	      insertHsResultfinal.put("resultIsEdit", '0');
+	      insertHsResultfinal.put("resultStockUse", '1');
+	      insertHsResultfinal.put("resultIsCurr", '1');
+	      insertHsResultfinal.put("resultMtchId", '0');
+	      insertHsResultfinal.put("resultIsAdj", '0');
+
+	      // FOR MOBILE APPS DATA
+	      insertHsResultfinal.put("temperateSetng", params.get("temperateSetng"));
+	      insertHsResultfinal.put("nextAppntDt", params.get("nextAppntDt"));
+	      insertHsResultfinal.put("nextAppointmentTime", params.get("nextAppointmentTime"));
+	      insertHsResultfinal.put("ownerCode", params.get("ownerCode"));
+	      insertHsResultfinal.put("resultCustName", params.get("resultCustName"));
+	      insertHsResultfinal.put("resultMobileNo", params.get("resultMobileNo"));
+	      insertHsResultfinal.put("resultRptEmailNo", params.get("resultRptEmailNo"));
+	      insertHsResultfinal.put("resultAceptName", params.get("resultAceptName"));
+	      insertHsResultfinal.put("sgnDt", params.get("sgnDt"));
+
+	      logger.debug("= INSERT SVC0006D START : {}", insertHsResultfinal);
+	      hsManualMapper.insertHsResultfinal(insertHsResultfinal); // INSERT SVC0006D
+
+	      hsManualMapper.updateHs009d(params); // UPDATE SAL0090D
+	  }
+
+	  EgovMap getHsResultMList = hsManualMapper.selectHSResultMList(params); // GET SVC0006D
+	  int scheduleCnt = hsManualMapper.selectHSScheduleMCnt(params);
+
+	  if (scheduleCnt > 0) {
+		  EgovMap insertHsScheduleM = new EgovMap();
+
+	      insertHsScheduleM.put("hidschdulId", params.get("hidschdulId"));
+	      insertHsScheduleM.put("resultStusCodeId", params.get("cmbStatusType"));
+	      insertHsScheduleM.put("actnMemId", getHsResultMList.get("codyId"));
+
+	      hsManualMapper.updateHsScheduleM(insertHsScheduleM); // UPDATE SVC0008D
+	  }
+
+	  EgovMap srvConfiguration = hsManualMapper.selectSrvConfiguration(params);
+
+	  if (srvConfiguration.size() > 0) {
+		// COMPLETE
+		  if (getHsResultMList.get("resultStusCodeId").toString().equals("4")) {
+	        EgovMap insertHsSrvConfigM = new EgovMap();
+	        insertHsSrvConfigM.put("salesOrdId", getHsResultMList.get("salesOrdId"));
+	        insertHsSrvConfigM.put("srvRem", params.get("instruction"));
+	        insertHsSrvConfigM.put("srvPrevDt", params.get("settleDate"));
+	        insertHsSrvConfigM.put("srvBsWeek", params.get("srvBsWeek"));
+
+	        EgovMap callMas = new EgovMap();
+	        callMas.put("hcsoid", getHsResultMList.get("salesOrdId"));
+	        callMas.put("hcTypeNo", params.get("hidSalesOrdCd"));
+	        callMas.put("crtUserId", sessionVO.getUserId());
+	        callMas.put("updUserId", sessionVO.getUserId());
+
+	        hsManualMapper.insertCcr0001d(callMas);
+	      }
+	  }
+
+	  // LOGISTICS CALL
+	  /*
+	  Map<String, Object> logPram = null;
+	  if (Integer.parseInt(params.get("cmbStatusType").toString()) == 4) { // COMPLETED
+		  logPram = new HashMap<String, Object>();
+	      logPram.put("ORD_ID", LOG_SVC0008D_NO);
+	      logPram.put("RETYPE", "COMPLET");
+	      logPram.put("P_TYPE", "OD05");
+	      logPram.put("P_PRGNM", "HSCOM");
+	      logPram.put("USERID", sessionVO.getUserId());
+
+	      logger.debug("= HSCOM LOGISTICS CALL PARAM ===>" + logPram.toString());
+	      servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+	      logger.debug("= HSCOMCALL LOGISTICS CALL RESULT ===> {}", logPram);
+	      logPram.put("P_RESULT_TYPE", "HS");
+	      logPram.put("P_RESULT_MSG", logPram.get("p1"));
+	  }
+	  */
+
+	  Map<String, Object> resultValue = new HashMap<String, Object>();
+	  resultValue.put("resultId", params.get("hidSalesOrdCd"));
+	  resultValue.put("resultDocNo", docNo);
+	  //resultValue.put("spMap", logPram);
+
+	  return resultValue;
+	}
+  /* Woongjin Jun */
+
   }
 
 

@@ -185,4 +185,118 @@ public class ServiceApiHSServiceImpl extends EgovAbstractServiceImpl implements 
 
 	    return ResponseEntity.ok(HSFailJobRequestDto.create(serviceNo));
 	}
+
+	@Override
+	public ResponseEntity<HeartServiceResultDto> htResult(List<HeartServiceResultForm> heartForms) throws Exception {
+		String transactionId = "";
+		String serviceNo = "";
+	    List<Map<String, Object>> heartLogs = null;
+	    List<Map<String, Object>> hsTransLogs1 = null;
+	    int totalCnt = 0;
+		int successCnt = 0;
+		int failCnt = 0;
+
+	    // INSERT DATA FROM MOBILE INTO LOG TABLE
+	    logger.debug("==================================[MB]CARE SERVICE RESULT - START - ====================================");
+	    logger.debug("### CS FORM : {}" + heartForms);
+
+	    hsTransLogs1 = new ArrayList<>();
+	    for (HeartServiceResultForm hsService1 : heartForms) {
+	    	hsTransLogs1.addAll(hsService1.createMaps1(hsService1));
+	    }
+
+	    totalCnt = hsTransLogs1.size();
+
+	    logger.debug("### CS TRANSACTION TOTAL : " + hsTransLogs1.size());
+	    for (int i = 0; i < hsTransLogs1.size(); i++) {
+	    	logger.debug("### CS TRANSACTION DETAILS : " + hsTransLogs1.get(i));
+
+	    	List<Map<String, Object>> paramsDetail = HeartServiceResultDetailForm.createMaps((List<HeartServiceResultDetailForm>) hsTransLogs1.get(i).get("heartDtails"));
+	    	List<Object> paramsDetailList = HeartServiceResultDetailForm.createMaps1((List<HeartServiceResultDetailForm>) hsTransLogs1.get(i).get("heartDtails"));
+
+	    	Map<String, Object> params = hsTransLogs1.get(i);
+	    	params.put("updList", paramsDetail);
+
+	    	Map<String, Object> insApiresult = hsTransLogs1.get(i);
+	    	transactionId = String.valueOf(insApiresult.get("transactionId"));
+	    	serviceNo = String.valueOf(insApiresult.get("serviceNo"));
+
+	    	logger.debug("### CS TRANSACTION PARAM : " + params.toString());
+	    	logger.debug("### CS TRANSACTION PARAM : " + paramsDetailList);
+
+	    	// DETAIL PROC
+			try {
+				serviceApiHSDetailService.htResultProc(insApiresult, params, paramsDetailList);
+				successCnt = successCnt + 1;
+			}
+			catch (BizException bizException) {
+				Map<String, Object> m = new HashMap();
+				m.put("APP_TYPE", "HS");
+	            m.put("SVC_NO", serviceNo);
+	            m.put("ERR_CODE", bizException.getErrorCode());
+	            m.put("ERR_MSG", bizException.getErrorMsg());
+	            m.put("TRNSC_ID", transactionId);
+
+				// INSERT FAIL LOG HISTORY (SVC0066T)(REQUIRES_NEW)
+				MSvcLogApiService.insert_SVC0066T(m);
+
+				failCnt = failCnt + 1;
+
+				throw new ApplicationException(AppConstants.FAIL, bizException.getProcMsg());
+			}
+			catch (Exception exception) {
+				Map<String, Object> m = new HashMap();
+				m.put("APP_TYPE", "HS");
+				m.put("SVC_NO", serviceNo);
+				m.put("ERR_CODE", "01");
+				m.put("ERR_MSG", exception.toString());
+				m.put("TRNSC_ID", transactionId);
+
+				// INSERT FAIL LOG HISTORY (SVC0066T)(REQUIRES_NEW)
+				MSvcLogApiService.insert_SVC0066T(m);
+
+				failCnt = failCnt + 1;
+
+				throw new ApplicationException(AppConstants.FAIL, "Fail");
+			}
+	    }
+
+	    logger.debug("==================================[MB]CARE SERVICE RESULT - END - ====================================");
+
+	    return ResponseEntity.ok(HeartServiceResultDto.create(transactionId));
+	}
+
+	@Override
+	public ResponseEntity<HSFailJobRequestDto> htFailJobRequest(HSFailJobRequestForm hSFailJobRequestForm) throws Exception {
+		String serviceNo = "";
+
+	    Map<String, Object> params = HSFailJobRequestForm.createMaps(hSFailJobRequestForm);
+
+	    serviceNo = String.valueOf(params.get("serviceNo"));
+
+	    logger.debug("==================================[MB]CS FAIL JOB REQUEST ====================================");
+	    logger.debug("### CS FAIL JOB REQUEST FORM : " + params.toString());
+	    logger.debug("==================================[MB]CS FAIL JOB REQUEST ====================================");
+
+	    // INSERT LOG HISTORY (SVC0041T)(REQUIRES_NEW)
+	    if (RegistrationConstants.IS_INSERT_HSFAIL_LOG) {
+	    	try {
+	    		MSvcLogApiService.saveHsFailServiceLogs(params);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+	    }
+
+	    try {
+	    	serviceApiHSDetailService.htFailJobRequestProc(params);
+	    }
+	    catch (Exception e) {
+	    	logger.debug("==================================[MB]CS FAIL Exception ====================================");
+	    	logger.debug(e.toString());
+	    	throw new ApplicationException(AppConstants.FAIL, "Fail");
+		}
+
+	    return ResponseEntity.ok(HSFailJobRequestDto.create(serviceNo));
+	}
 }

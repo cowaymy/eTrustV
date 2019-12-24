@@ -21,4 +21,8 @@ public interface ServiceApiHSDetailService {
 	ResponseEntity<HeartServiceResultDto> hsResultProc(Map<String, Object> insApiresult, Map<String, Object> params, List<Object> paramsDetailList) throws Exception;
 
 	ResponseEntity<HSFailJobRequestDto> hsFailJobRequestProc(Map<String, Object> params) throws Exception;
+
+	ResponseEntity<HeartServiceResultDto> htResultProc(Map<String, Object> insApiresult, Map<String, Object> params, List<Object> paramsDetailList) throws Exception;
+
+	ResponseEntity<HSFailJobRequestDto> htFailJobRequestProc(Map<String, Object> params) throws Exception;
 }

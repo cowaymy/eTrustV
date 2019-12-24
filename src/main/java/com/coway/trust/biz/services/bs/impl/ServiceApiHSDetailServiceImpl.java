@@ -29,6 +29,7 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
  * @ClassName : ServiceApiHSDetailServiceImpl.java
@@ -219,6 +220,167 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
 
 		MSvcLogApiService.insertHsFailJobResult(params);
 	    MSvcLogApiService.upDateHsFailJobResultM(params);
+
+    	return ResponseEntity.ok(HSFailJobRequestDto.create(serviceNo));
+	}
+
+	@Override
+	public ResponseEntity<HeartServiceResultDto> htResultProc(Map<String, Object> insApiresult, Map<String, Object> params, List<Object> paramsDetailList) throws Exception {
+		String transactionId = "";
+		String serviceNo = "";
+		SessionVO sessionVO = new SessionVO();
+
+	    Calendar cal = Calendar.getInstance();
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+	    String strToday = sdf.format(cal.getTime());
+
+	    // CURRENT YEAR, MONTH, DAY
+	    StringBuffer today2 = new StringBuffer();
+	    today2.append(String.format("%02d", cal.get(cal.DATE)));
+	    today2.append(String.format("%02d", cal.get(cal.MONTH) + 1));
+	    today2.append(String.format("%04d", cal.get(cal.YEAR)));
+
+	    String toSetlDt = today2.toString();
+
+	    transactionId = String.valueOf(insApiresult.get("transactionId"));
+		serviceNo = String.valueOf(insApiresult.get("serviceNo"));
+
+		// CHECK IF SVC0008D MEM_CODE AND SVC0006D MEM_CODE ARE THE SAME
+    	int hsResultMemId = hsManualService.hsResultSync(params);
+
+    	if (hsResultMemId > 0) {
+    		// RESULT CHECK HS IS ACTIVE
+    		int isHsCnt = hsManualService.isHsAlreadyResult(params);
+
+    		// IF NO RESULT OR IS 0
+    		if (isHsCnt == 0) {
+    			try {
+    				String userId = MSvcLogApiService.getUseridToMemid(params);
+    				sessionVO.setUserId(Integer.parseInt(userId));
+
+    				Map<String, Object> getHsBasic = MSvcLogApiService.getHtBasic(params);
+    				if (getHsBasic == null) {
+    					String procTransactionId = transactionId;
+    					String procName = "HeartService";
+    					String procKey = serviceNo;
+    					String procMsg = "No Target Basic Data";
+    					String errorMsg = "[API] [" + serviceNo + "] No Target Basic Data.";
+    					throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    				}
+
+    				logger.debug("### CS BASIC INFO : " + getHsBasic.toString());
+
+    				// API SETTING
+    				params.put("hidschdulId", getHsBasic.get("schdulId"));
+    				params.put("hidSalesOrdId", String.valueOf(getHsBasic.get("salesOrdId")));
+    				params.put("hidCodyId", (String) userId);
+    				params.put("settleDate", toSetlDt);
+    				params.put("resultIsSync", '0');
+    				params.put("resultIsEdit", '0');
+    				params.put("resultStockUse", '1');
+    				params.put("resultIsCurr", '1');
+    				params.put("resultMtchId", '0');
+    				params.put("resultIsAdj", '0');
+    				params.put("cmbStatusType", "4");
+    				params.put("renColctId", "0");
+
+    				// API OVER
+    				params.put("remark", insApiresult.get("resultRemark"));
+    				params.put("cmbCollectType", String.valueOf(insApiresult.get("rcCode")));
+
+    				// API ADDED
+    				params.put("temperateSetng", String.valueOf(insApiresult.get("temperatureSetting")));
+    				params.put("nextAppntDt", insApiresult.get("nextAppointmentDate"));
+    				params.put("nextAppointmentTime", String.valueOf(insApiresult.get("nextAppointmentTime")));
+    				params.put("ownerCode", String.valueOf(insApiresult.get("ownerCode")));
+    				params.put("resultCustName", insApiresult.get("resultCustName"));
+    				params.put("resultMobileNo", String.valueOf(insApiresult.get("resultIcMobileNo")));
+    				params.put("resultRptEmailNo", String.valueOf(insApiresult.get("resultReportEmailNo")));
+    				params.put("resultAceptName", insApiresult.get("resultAcceptanceName"));
+    				params.put("sgnDt", insApiresult.get("signData"));
+    				params.put("stage", "API");
+
+    				logger.debug("### CS PARAM : " + params.toString());
+
+    				Map rtnValue = hsManualService.addIHtResult(params, paramsDetailList, sessionVO);
+    				logger.debug("### CS INSERT RESULT : " + rtnValue.toString());
+
+    				if (null != rtnValue) {
+//    					HashMap spMap = (HashMap) rtnValue.get("spMap");
+//    					logger.debug("spMap :" + spMap.toString());
+//    					if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
+//    						rtnValue.put("logerr", "Y");
+//    					}
+
+    					// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
+//    					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+
+    					// 홈케어 주문일 경우만 호출
+    					if ("Y".equals(String.valueOf(insApiresult.get("homeCareOrderYn")))) {
+        					params.put("scanSerial", String.valueOf(insApiresult.get("scanSerial")));
+        					params.put("salesOrdId", String.valueOf(getHsBasic.get("salesOrdId")));
+        					params.put("reqstNo", String.valueOf(rtnValue.get("resultDocNo")));
+        					params.put("delvryNo", null);
+        					params.put("callGbn", "HS");
+        					params.put("mobileYn", "Y");
+        					params.put("userId", userId);
+        					params.put("pErrcode", "");
+        					params.put("pErrmsg", "");
+        					MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
+        				}
+    				}
+                }
+    			catch (Exception e) {
+    				String procTransactionId = transactionId;
+					String procName = "HeartService";
+					String procKey = serviceNo;
+					String procMsg = "Failed to Save";
+					String errorMsg = "[API] " + e.toString();
+					throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+                }
+    		}
+    		else {
+    			logger.debug("### HS NOT IN ACTIVE STATUS. ");
+            }
+    	}
+    	else {
+    		String procTransactionId = transactionId;
+			String procName = "HeartService";
+			String procKey = serviceNo;
+			String procMsg = "NoTarget Data";
+			String errorMsg = "[API] [" + params.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.";
+			throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    	}
+
+    	logger.debug("==================================[MB]HEART SERVICE RESULT - END - ====================================");
+
+    	return ResponseEntity.ok(HeartServiceResultDto.create(transactionId));
+	}
+
+	@Override
+	public ResponseEntity<HSFailJobRequestDto> htFailJobRequestProc(Map<String, Object> params) throws Exception {
+		String serviceNo = String.valueOf(params.get("serviceNo"));
+
+		SessionVO sessionVO = new SessionVO();
+		String userId = MSvcLogApiService.getUseridToMemid(params);
+		sessionVO.setUserId(Integer.parseInt(userId));
+
+		Map<String, Object> getHsBasic = MSvcLogApiService.getHtBasic(params);
+		if (getHsBasic == null) {
+			String procTransactionId = "";
+			String procName = "HeartService";
+			String procKey = serviceNo;
+			String procMsg = "No Target Basic Data";
+			String errorMsg = "[API] [" + serviceNo + "] No Target Basic Data.";
+			throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+		}
+
+		params.put("hidschdulId", getHsBasic.get("schdulId"));
+		params.put("hidSalesOrdId", String.valueOf(getHsBasic.get("salesOrdId")));
+		params.put("hidCodyId", (String)userId);
+
+		MSvcLogApiService.insertHtFailJobResult(params, sessionVO);
+	    MSvcLogApiService.upDateHtFailJobResultM(params);
 
     	return ResponseEntity.ok(HSFailJobRequestDto.create(serviceNo));
 	}

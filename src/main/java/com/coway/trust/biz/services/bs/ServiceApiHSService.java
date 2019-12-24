@@ -22,4 +22,8 @@ public interface ServiceApiHSService {
 	ResponseEntity<HeartServiceResultDto> hsResult(List<HeartServiceResultForm> heartForms) throws Exception;
 
 	ResponseEntity<HSFailJobRequestDto> hsFailJobRequest(HSFailJobRequestForm hSFailJobRequestForm) throws Exception;
+
+	ResponseEntity<HeartServiceResultDto> htResult(List<HeartServiceResultForm> heartForms) throws Exception;
+
+	ResponseEntity<HSFailJobRequestDto> htFailJobRequest(HSFailJobRequestForm hSFailJobRequestForm) throws Exception;
 }
