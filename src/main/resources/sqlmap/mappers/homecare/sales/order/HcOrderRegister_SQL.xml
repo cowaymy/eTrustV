@@ -158,4 +158,9 @@
         WHERE T2.PROMO_ID = 31723
     </select>
 
+    <select id="getCountHcPreOrder" parameterType="int" resultType="int">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.getCountHcPreOrder */
+        SELECT COUNT(ORD_SEQ_NO) FROM HMC0011D WHERE ORD_SEQ_NO = #{ordSeqNo}
+    </select>
+
 </mapper>

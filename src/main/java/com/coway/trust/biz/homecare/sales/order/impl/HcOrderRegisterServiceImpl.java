@@ -122,9 +122,10 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
 			// 홈케어 주문관리 테이블 insert - HMC0011D
 			HcOrderVO hcOrderVO = new HcOrderVO();
+			int cntHcOrder = hcOrderRegisterMapper.getCountHcPreOrder(ordSeqNo);
 
 			// Pre Order 인 경우.
-			if(ordSeqNo > 0) {
+			if(cntHcOrder > 0) {
 				hcOrderVO.setCustId(custId);                     // 고객번호
 				hcOrderVO.setMatOrdNo(matOrdNo);        // Mattress Order No
 				hcOrderVO.setFraOrdNo(fraOrdNo);           // Frame Order No

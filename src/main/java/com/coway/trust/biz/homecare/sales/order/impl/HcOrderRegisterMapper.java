@@ -87,4 +87,6 @@ public interface HcOrderRegisterMapper {
 	 */
 	public List<EgovMap> selectPromotionByFrame(Map<String, Object> params);
 
+
+	public int getCountHcPreOrder(int orderSeqNo);
 }
