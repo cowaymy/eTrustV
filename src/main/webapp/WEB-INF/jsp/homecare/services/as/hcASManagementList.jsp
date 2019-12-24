@@ -867,7 +867,6 @@ var branchDs = [];
     Common.popupDiv("/homecare/services/as/report/asYellowSheetPop.do", null, null, true, '');
   }
 
-  // TO-BE 화면 내용 확인필요.
   function fn_ledger() {
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 

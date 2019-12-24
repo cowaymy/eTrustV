@@ -119,7 +119,7 @@
         $("#reportForm1 #V_WHERESQL").val(whereSql);
         $("#reportForm1 #reportFileName").val('/homecare/hcASRawData.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
-        $("#reportForm1 #reportDownFileName").val("ASRawData_" + day + month + date.getFullYear());
+        $("#reportForm1 #reportDownFileName").val("hcASRawData_" + day + month + date.getFullYear());
 
         var option = {
           isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -149,7 +149,7 @@
         $("#reportForm1 #V_WHERESQL").val(whereSql);
         $("#reportForm1 #reportFileName").val('/homecare/hcASRawPQC.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
-        $("#reportForm1 #reportDownFileName").val("ASRawPQCData_" + day + month + date.getFullYear());
+        $("#reportForm1 #reportDownFileName").val("hcASRawPQCData_" + day + month + date.getFullYear());
         $("#reportForm1 #V_DEPT").val("PQC");
 
         var option = {
@@ -180,7 +180,7 @@
         $("#reportForm1 #V_WHERESQL").val(whereSql);
         $("#reportForm1 #reportFileName").val('/homecare/hcASRawData.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
-        $("#reportForm1 #reportDownFileName").val("ASRawDataAOAS_" + day + month + date.getFullYear());
+        $("#reportForm1 #reportDownFileName").val("hcASRawDataAOAS_" + day + month + date.getFullYear());
         //$("#reportForm1 #V_DEPT").val("PQC");
 
         var option = {
@@ -201,7 +201,7 @@
         $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
 
         //whereSql += " AND A.AS_TYPE_ID = 339 ";
-        whereSql += " AND EXISTS( SELECT 1 "
+        whereSql += " AND EXISTS ( SELECT 1 "
         	                  + "   FROM SAL0001D C "
                               + "  WHERE A.AS_SO_ID = C.SALES_ORD_ID "
                               + "    AND C.BNDL_ID IS NOT NULL ) ";
@@ -211,9 +211,9 @@
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
         $("#reportForm1 #V_FULLSQL").val(" ");
         $("#reportForm1 #V_WHERESQL").val(whereSql);
-        $("#reportForm1 #reportFileName").val('/homecare/hcASRawDataKOR.rpt');
+        $("#reportForm1 #reportFileName").val('/services/ASRawDataKOR.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
-        $("#reportForm1 #reportDownFileName").val("ASRawDataKOR_" + day + month + date.getFullYear());
+        $("#reportForm1 #reportDownFileName").val("hcASRawDataKOR_" + day + month + date.getFullYear());
 
         var option = {
           isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -247,7 +247,7 @@
           $("#reportForm1 #V_WHERESQL").val(whereSql);
           $("#reportForm1 #reportFileName").val('/homecare/hcASRawDataKOR.rpt');
           $("#reportForm1 #viewType").val("EXCEL");
-          $("#reportForm1 #reportDownFileName").val("ASRawDataAOASKOR_" + day + month + date.getFullYear());
+          $("#reportForm1 #reportDownFileName").val("hcASRawDataAOASKOR_" + day + month + date.getFullYear());
 
           var option = {
             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -281,7 +281,7 @@
           $("#reportForm1 #V_WHERESQL").val(whereSql);
           $("#reportForm1 #reportFileName").val('/homecare/hcASRawDataSprPrtKOR.rpt');
           $("#reportForm1 #viewType").val("EXCEL");
-          $("#reportForm1 #reportDownFileName").val("ASRawDataSprPrtKOR_" + day + month + date.getFullYear());
+          $("#reportForm1 #reportDownFileName").val("hcASRawDataSprPrtKOR_" + day + month + date.getFullYear());
 
           var option = {
             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -296,7 +296,7 @@
           day = "0" + date.getDate();
         }
 
-        // SP_CR_PART_DLVY_ORD_RAW   <<< 프로시져를 수정해야함. TO-BE
+        // SP_CR_PART_DLVY_ORD_RAW_HC
         $("#reportForm1").append('<input type="hidden" id="V_KEYINDATEFROM" name="V_KEYINDATEFROM" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_KEYINDATETO" name="V_KEYINDATETO"  /> ');
         $("#reportForm1").append('<input type="hidden" id="V_DSCBRANCHID" name="V_DSCBRANCHID" /> ');
@@ -305,7 +305,7 @@
         $("#reportForm1 #V_DSCBRANCHID").val(0);
         $("#reportForm1 #reportFileName").val('/homecare/hcASSparePartRaw.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
-        $("#reportForm1 #reportDownFileName").val("ASSparePartRaw_" + day + month + date.getFullYear());
+        $("#reportForm1 #reportDownFileName").val("hcASSparePartRaw_" + day + month + date.getFullYear());
 
         var option = {
           isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.

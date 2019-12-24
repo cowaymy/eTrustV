@@ -93,7 +93,7 @@
         YSAging = $("#aging").val();
       }
 
-      // SP_CR_GEN_YEL_SHT_AS  -- TO-Be : 홈케어 수정요망
+      // SP_CR_GEN_YEL_SHT_AS_HC
       $("#reportFormYS #V_YS").val(YS);
       $("#reportFormYS #V_NONYS").val(nonYS);
       $("#reportFormYS #V_SETDATEFROM").val(setDateFrom);
