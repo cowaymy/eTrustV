@@ -58,7 +58,7 @@
                           JOIN SYS0005M BRNCH ON DOC.DOC_SUB_BRNCH_ID = BRNCH.BRNCH_ID
                           WHERE DOC_TYPE_ID = 3198 AND DOC.STUS_ID = 1  ) T15 ON T15.DOC_SO_ID = T11.SALES_ORD_ID
          LEFT JOIN SAL0001D T16 ON T16.SALES_ORD_ID = T1.SALES_ORD_ID
-		 WHERE 1 = 1
+		 WHERE T4.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB WHERE AA.CODE = BB.CODE AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')         /* StkCategoryID_Homecare */
          <if test='_memCode != null and _memCode != ""'>
 		   AND T1.MEM_CODE = #{_memCode}
 		 </if>
