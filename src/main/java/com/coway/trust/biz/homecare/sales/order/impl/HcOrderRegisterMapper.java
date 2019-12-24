@@ -78,4 +78,13 @@ public interface HcOrderRegisterMapper {
 	 */
 	public String getProductSize(String product);
 
+	/**
+	 * Select Promotion By Frame
+	 * @Author KR-SH
+	 * @Date 2019. 12. 24.
+	 * @param params
+	 * @return
+	 */
+	public List<EgovMap> selectPromotionByFrame(Map<String, Object> params);
+
 }

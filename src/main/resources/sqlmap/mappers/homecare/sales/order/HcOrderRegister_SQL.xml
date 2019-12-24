@@ -145,4 +145,17 @@
         SELECT STK_SIZE FROM SYS0026M WHERE STK_ID = #{product}
     </select>
 
+    <!-- Select Promotion By Frame -->
+    <select id="selectPromotionByFrame" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.selectPromotionByFrame */
+        SELECT DISTINCT T2.PROMO_ID CODE
+                 , T2.PROMO_CODE || '-' || T2.PROMO_DESC CODE_NAME
+
+         FROM SAL0018D T1
+           JOIN SAL0017D T2
+             ON T2.PROMO_ID = T1.PROMO_ID
+
+        WHERE T2.PROMO_ID = 31723
+    </select>
+
 </mapper>

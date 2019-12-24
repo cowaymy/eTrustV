@@ -4,8 +4,9 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.coway.trust.biz.sales.order.vo.OrderVO;
-import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -50,5 +51,14 @@ public interface HcOrderRegisterService {
 	 * @return
 	 */
 	public boolean checkProductSize(Map<String, Object> params);
+
+	/**
+	 * Select Promotion By Frame
+	 * @Author KR-SH
+	 * @Date 2019. 12. 24.
+	 * @param params
+	 * @return
+	 */
+	public List<EgovMap> selectPromotionByFrame(@RequestParam Map<String, Object> params);
 
 }

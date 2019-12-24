@@ -165,4 +165,17 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		return false;
 	}
 
+	/**
+	 * Select Promotion By Frame
+	 * @Author KR-SH
+	 * @Date 2019. 12. 24.
+	 * @param params
+	 * @return
+	 * @see com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService#selectPromotionByFrame(java.util.Map)
+	 */
+	@Override
+	public List<EgovMap> selectPromotionByFrame(Map<String, Object> params) {
+		return hcOrderRegisterMapper.selectPromotionByFrame(params);
+	}
+
 }
