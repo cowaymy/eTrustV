@@ -182,6 +182,7 @@
 
     function fn_goodReceiptPop(deliveryNo) {
         $("#zDelyno").val(deliveryNo);
+        $("#zDelvryNo").val(deliveryNo);
      //  $("#zReqloc").val(checkedItems[0].reqloc);
      //   $("#zRcvloc").val(checkedItems[0].rcvloc);
 

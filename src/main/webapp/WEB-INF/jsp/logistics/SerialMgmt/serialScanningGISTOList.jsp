@@ -48,7 +48,7 @@
 
     	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '${defLocType}', 'locType', 'M','f_multiCombo');
 
-        $("#btnSearch").click(function() {
+        $("#search").click(function() {
         	getMainList();
         });
 
@@ -214,6 +214,11 @@
             });
         });
     }
+
+    function fn_PopStoIssueClose(){
+        if(popupObj!=null) popupObj.close();
+        $("#search").click();
+    }
 </script>
 
 <section id="content"><!-- content start -->
@@ -229,7 +234,7 @@
         <h2>GI Serial No. Scanning(STO)</h2>
 
         <ul class="right_btns">
-            <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
         </ul>
     </aside><!-- title_line end -->
 
