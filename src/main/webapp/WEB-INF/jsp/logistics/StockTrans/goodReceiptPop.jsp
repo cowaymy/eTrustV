@@ -200,7 +200,7 @@
     </form>
     <section class="search_result">
         <article class="grid_wrap">
-            <div id="listPopGrid" style="height:350px;"></div>
+            <div id="listPopGrid" class="autoGridHeight"></div>
         </article>
     </section>
     &nbsp;

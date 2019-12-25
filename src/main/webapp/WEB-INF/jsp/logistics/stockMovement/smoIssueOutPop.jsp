@@ -337,7 +337,7 @@ function fn_scanSearchPop(item){
 
     <section class="search_result">
         <article class="grid_wrap">
-            <div id="scanInfoGrid" style="height:350px;"></div>
+            <div id="scanInfoGrid" class="autoGridHeight"></div>
         </article>
     </section>
     &nbsp;
