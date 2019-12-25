@@ -345,6 +345,19 @@ function fn_smoIssueInListAjax() {
                     fn_gradeSerial(delvryNo);
                     if(isSerial){
                         $("#gradeGrid").show();
+
+                        // resize
+                        var gridId = "gradeGrid";
+				        //alert(gridId)
+				        if (typeof gridId !== "undefined") {
+				            try{
+				                var myGridID = GridCommon.makeGridId(gridId);
+				                AUIGrid.resize(myGridID);
+				            }catch (e){
+				                // console.log("grid is not exist.....[gridID : " + _gridID + "]")
+				            }
+				        }
+
                     }else{
                         $("#gradeGrid").hide();
                         AUIGrid.clearGridData(gradeGrid);
