@@ -340,10 +340,11 @@ function fn_scanSearchPop(item){
             <div id="scanInfoGrid" class="autoGridHeight"></div>
         </article>
     </section>
+    <div class="autoFixArea">
     &nbsp;
-    <ul class="center_btns autoFixArea">
+    <ul class="center_btns ">
         <li><p class="btn_blue2 big"><a id="btnPopIssueSave" >SAVE</a></p></li>
     </ul>
-
+    </div>
 </section>
 </div>
