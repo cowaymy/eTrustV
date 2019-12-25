@@ -123,10 +123,10 @@ $(document).ready(function(){
 
 
     if(Common.checkPlatformType() == "mobile") {
-    	$("#zDelvryNo").val("${url.zDelyno}");    // delivery No
-    	$("#zFromLoc").val("${url.zRcvloc}");
-        $("#zToLoc").val("${url.zReqloc}");
-    	$("#zPrgName").val("${url.zPrgnm}");
+    	$("#zDelvryNo").val("${param.zDelyno}");    // delivery No
+    	$("#zFromLoc").val("${param.zRcvloc}");
+        $("#zToLoc").val("${param.zReqloc}");
+    	$("#zPrgName").val("${param.zPrgnm}");
     	$("#zIoType").val("O");
     	$("#zGtype").val("GI");
     }else{

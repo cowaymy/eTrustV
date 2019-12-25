@@ -139,10 +139,10 @@ $(document).ready(function(){
     gradeGridId = GridCommon.createAUIGrid("gradeGrid", gradeLayout, null, gradInfoPros);
 
     if(Common.checkPlatformType() == "mobile") {
-        $("#zDelyNo").val("${url.zDelvryNo}");
-        $("#zRstNo").val("${url.zReqstno}");
-        $("#zFromLoc").val("${url.zRcvloc}");
-        $("#zToLoc").val("${url.zReqloc}");
+        $("#zDelyNo").val("${param.zDelvryNo}");
+        $("#zRstNo").val("${param.zReqstno}");
+        $("#zFromLoc").val("${param.zRcvloc}");
+        $("#zToLoc").val("${param.zReqloc}");
 
     }else{
         $("#zDelyNo").val($("#zDelvryNo").val());

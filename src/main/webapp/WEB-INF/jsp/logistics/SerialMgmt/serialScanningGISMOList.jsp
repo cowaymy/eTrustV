@@ -153,7 +153,7 @@
         $("#zRcvloc").val(item.frmlocid);
 
         if(Common.checkPlatformType() == "mobile") {
-            popupObj = Common.popupWin("frmNew", "/logistics/stocktransfer/smoIssueOutPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+            popupObj = Common.popupWin("frmNew", "/logistics/stockMovement/smoIssueOutPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
         } else{
             Common.popupDiv("/logistics/stockMovement/smoIssueOutPop.do", null, null, true, '_divSmoIssuePop');
         }

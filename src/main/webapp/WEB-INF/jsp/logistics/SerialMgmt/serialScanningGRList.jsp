@@ -49,7 +49,7 @@
 
     	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '${defLocType}', 'locType', 'M','f_multiCombo');
 
-        $("#btnSearch").click(function() {
+        $("#search").click(function() {
         	getMainList();
         });
 
@@ -180,11 +180,11 @@
     }
 
 
-    function fn_goodReceiptPop(deliveryNo) {
+    function fn_goodReceiptPop(deliveryNo, reqstNo, frmlocid, tolocid) {
         $("#zDelyno").val(deliveryNo);
         $("#zDelvryNo").val(deliveryNo);
-     //  $("#zReqloc").val(checkedItems[0].reqloc);
-     //   $("#zRcvloc").val(checkedItems[0].rcvloc);
+        $("#zReqloc").val(tolocid);
+        $("#zRcvloc").val(frmlocid);
 
         if(Common.checkPlatformType() == "mobile") {
             popupObj = Common.popupWin("frmNew", "/logistics/stocktransfer/goodReceiptPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
@@ -253,6 +253,11 @@
             });
         });
     }
+
+    function fn_PopClose(){
+        if(popupObj!=null) popupObj.close();
+        $("#search").click();
+    }
 </script>
 
 <section id="content"><!-- content start -->
@@ -268,7 +273,7 @@
         <h2>GR Serial No. Scanning</h2>
 
         <ul class="right_btns">
-            <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
         </ul>
     </aside><!-- title_line end -->
 
@@ -330,7 +335,7 @@
         <input type="hidden" name="zDelyno" id="zDelyno" />
         <input type="hidden" name="zReqloc" id="zReqloc" />
         <input type="hidden" name="zRcvloc" id="zRcvloc" />
-        <input type="hidden" name="searchId" id="searchId" value="btnSearch" />
+        <input type="hidden" name="searchId" id="searchId" value="search" />
         <input type="hidden" name="zDelvryNo" id="zDelvryNo" />
         <input type="hidden" name="zReqstno" id="zReqstno" />
     </form>

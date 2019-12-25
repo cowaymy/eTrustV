@@ -92,9 +92,9 @@ $(document).ready(function(){
     scanInfoGridId = GridCommon.createAUIGrid("scanInfoGrid", scanInfoLayout, null, scanInfoPros);
 
     if(Common.checkPlatformType() == "mobile") {
-    	$("#zRstNo").val("${url.zReqstno}");
-    	$("#zFromLoc").val("${url.zRcvloc}");
-    	$("#zToLoc").val("${url.zReqloc}");
+    	$("#zRstNo").val("${param.zReqstno}");
+    	$("#zFromLoc").val("${param.zRcvloc}");
+    	$("#zToLoc").val("${param.zReqloc}");
     }else{
     	$("#zRstNo").val($("#zReqstno").val());
         $("#zFromLoc").val($("#zRcvloc").val());

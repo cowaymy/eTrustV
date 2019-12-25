@@ -52,9 +52,9 @@
 	    listPopGrid = GridCommon.createAUIGrid("listPopGrid", scanInfoLayout, null, scanInfoPros);
 
 	    if(Common.checkPlatformType() == "mobile") {
-	    	$("#zDelyNo").val("${url.zDelyno}");    // delivery No
-	    	$("#zFromLoc").val("${url.zReqloc}");
-	    	$("#zToLoc").val("${url.zRcvloc}");
+	    	$("#zDelyNo").val("${param.zDelyno}");    // delivery No
+	    	$("#zFromLoc").val("${param.zReqloc}");
+	    	$("#zToLoc").val("${param.zRcvloc}");
 	    	//$("#zIoType").val("O");
 
 	    } else {
@@ -150,9 +150,10 @@
 	function fn_ClosePop() {
 		// Moblie Popup Setting
 	    if(Common.checkPlatformType() == "mobile") {
-	        if(opener.popupObj!=null) opener.popupObj.close();
+	    	opener.fn_PopClose();
 	    } else {
-	    	$('#_divStoIssuePop').remove();
+	    	if($('#_divStoIssuePop') != null) $('#_divStoIssuePop').remove();
+	    	$("#search").click();
 	    }
 	}
 
