@@ -51,7 +51,7 @@ var scanInfoLayout = [
           {dataField:"delvryNo", visible:false}
         , {dataField:"delvryNoItm", visible:false}
         , {dataField:"itmCode", headerText:"Item Code", width:120}
-        , {dataField:"itmName", headerText:"Item Description", width:400, style:"aui-grid-user-custom-left"}
+        , {dataField:"itmName", headerText:"Item Description", width:280, style:"aui-grid-user-custom-left"}
         , {dataField:"delGiCmplt", visible:false}
         , {dataField:"serialChk", headerText:"Serial Chk", width:120}
         , {dataField:"delvryQty", headerText:"DELVRY QTY", width:110

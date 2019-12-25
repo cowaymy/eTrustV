@@ -22,8 +22,8 @@
           {dataField:"delvryNo", visible:false}
         , {dataField:"delvryNoItm", visible:false}
         , {dataField:"delGiCmplt", visible:false}
-        , {dataField:"itmCode", headerText:"Item Code", width:140}
-        , {dataField:"itmName", headerText:"Item Description", style:"aui-grid-user-custom-left"}
+        , {dataField:"itmCode", headerText:"Item Code", width:120}
+        , {dataField:"itmName", headerText:"Item Description", width:280, style:"aui-grid-user-custom-left"}
         , {dataField:"serialChk", headerText:"Serial Chk", width:100}
         , {dataField:"delvryQty", headerText:"DELVRY QTY", width:100
             , style:"aui-grid-user-custom-right"
