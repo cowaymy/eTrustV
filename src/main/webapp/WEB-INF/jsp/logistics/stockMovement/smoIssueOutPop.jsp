@@ -341,7 +341,7 @@ function fn_scanSearchPop(item){
         </article>
     </section>
     &nbsp;
-    <ul class="center_btns">
+    <ul class="center_btns autoFixArea">
         <li><p class="btn_blue2 big"><a id="btnPopIssueSave" >SAVE</a></p></li>
     </ul>
 
