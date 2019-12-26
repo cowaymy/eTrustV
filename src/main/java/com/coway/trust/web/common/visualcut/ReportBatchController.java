@@ -8,8 +8,10 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.ReportBatchService;
 import com.coway.trust.cmmn.CRJavaHelper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
@@ -74,6 +77,9 @@ public class ReportBatchController {
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
+
+  @Autowired
+  private ReportBatchService reportBatchService;
 
   @RequestMapping(value = "/SQLColorGrid_NoRental-Out-Ins_Excel.do")
   //@Scheduled(cron = "0 0 4 * * *") //Daily (4:00am) // sample :
@@ -629,9 +635,15 @@ public class ReportBatchController {
 
   private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
     this.checkArgument(params);
+
+    SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
+    Calendar startTime = Calendar.getInstance();
+    Calendar endTime = null;
+
     String reportFile = (String) params.get(REPORT_FILE_NAME);
     String reportName = reportFilePath + reportFile;
     ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+    String msg = "Completed";
 
     try {
       ReportAppSession ra = new ReportAppSession();
@@ -645,6 +657,8 @@ public class ReportBatchController {
 
       clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
 
+      params.put("repProdName", clientDoc.getDatabaseController().getDatabase().getTables().get(0).getAlias());
+
       ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
       Fields fields = clientDoc.getDataDefinition().getParameterFields();
       ReportUtils.setReportParameter(params, paramController, fields);
@@ -654,7 +668,17 @@ public class ReportBatchController {
       }
     } catch (Exception ex) {
       LOGGER.error(CommonUtils.printStackTraceToString(ex));
+      msg = CommonUtils.printStackTraceToString(ex).substring(0,4000);
       throw new ApplicationException(ex);
+    } finally{
+      // Insert Log
+      endTime = Calendar.getInstance();
+      params.put("msg", msg);
+      params.put("startTime", fmt.format(startTime.getTime()));
+      params.put("endTime", fmt.format(endTime.getTime()));
+      params.put("userId", 349);
+
+      reportBatchService.insertLog(params);
     }
   }
 
