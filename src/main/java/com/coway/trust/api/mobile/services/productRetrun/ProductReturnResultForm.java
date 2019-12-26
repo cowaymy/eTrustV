@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "ProductReturnResultForm", description = "공통코드 Form")
 public class ProductReturnResultForm {
 
-	
+
 	@ApiModelProperty(value = "사용자 ID (예_CT123456)")
 	private String userId;
 
@@ -51,17 +51,17 @@ public class ProductReturnResultForm {
 	private String checkInDate;
 	private String checkInTime;
 	private String checkInGps;
-	
+
 
 	@ApiModelProperty(value = "signRegDate Data")
 	private String signRegDate;
 
 	@ApiModelProperty(value = "signRegTime Data")
 	private String signRegTime;
-	
+
 	private String ccCode;
 	private String resultCode;
-	
+
 	public String getCcCode() {
 		return ccCode;
 	}
@@ -119,9 +119,9 @@ public class ProductReturnResultForm {
 	public void setCheckInGps(String checkInGps) {
 		this.checkInGps = checkInGps;
 	}
-	
-	
-	
+
+
+
 	public String getUserId() {
 		return userId;
 	}
@@ -210,25 +210,35 @@ public class ProductReturnResultForm {
 		this.transactionId = transactionId;
 	}
 
-	
-	
+	private String scanSerial;
+
+	public String getScanSerial() {
+		return scanSerial;
+	}
+
+	public void setScanSerial(String scanSerial) {
+		this.scanSerial = scanSerial;
+	}
+
+
+
 	public static  List<Map<String, Object>>   createMaps(ProductReturnResultForm productReturnResultForm) {
-		
+
 		List<Map<String, Object>> list = new ArrayList<>();
 			   Map<String, Object> map;
-			
+
 				map = BeanConverter.toMap(productReturnResultForm, "signData");
-				
-				
-				map.put("resultCode",  	productReturnResultForm.getResultCode()); 
-				map.put("ccCode",  		productReturnResultForm.getCcCode()); 
+
+
+				map.put("resultCode",  	productReturnResultForm.getResultCode());
+				map.put("ccCode",  		productReturnResultForm.getCcCode());
 				map.put("signData", Base64.decodeBase64(productReturnResultForm.getSignData()));
 				//map.put("signData",    productReturnResultForm.getSignData());
-				map.put("checkinDt",  	productReturnResultForm.getCheckInDate()); 
-				map.put("checkinTm",  	productReturnResultForm.getCheckInTime()); 
-		    	map.put("checkinGps",  	productReturnResultForm.getCheckInGps()); 
-		    	map.put("signRegDt",  	productReturnResultForm.getSignRegDate());  
-		    	map.put("signRegTm",   productReturnResultForm.getSignRegTime()); 
+				map.put("checkinDt",  	productReturnResultForm.getCheckInDate());
+				map.put("checkinTm",  	productReturnResultForm.getCheckInTime());
+		    	map.put("checkinGps",  	productReturnResultForm.getCheckInGps());
+		    	map.put("signRegDt",  	productReturnResultForm.getSignRegDate());
+		    	map.put("signRegTm",   productReturnResultForm.getSignRegTime());
 				map.put("userId",		    productReturnResultForm.getUserId());
 				map.put("salesOrderNo", productReturnResultForm.getSalesOrderNo());
 				map.put("serviceNo", productReturnResultForm.getServiceNo());
@@ -238,14 +248,14 @@ public class ProductReturnResultForm {
 				map.put("resultIcMobileNo", productReturnResultForm.getResultIcMobileNo());
 				map.put("resultReportEmailNo", productReturnResultForm.getResultReportEmailNo());
 				map.put("resultAcceptanceName", productReturnResultForm.getResultAcceptanceName());
-				map.put("transactionId", productReturnResultForm.getTransactionId());				
-				
+				map.put("transactionId", productReturnResultForm.getTransactionId());
+
 
 				list.add(map);
-				
+
 				return list;
 	}
-	
-	
-	
+
+
+
 }

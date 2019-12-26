@@ -57,17 +57,26 @@ public class InstallationResultForm {
 	@ApiModelProperty(value = "Transaction ID 값(체계 : USER_ID + SALES_ORDER_NO + SERVICE_NO + 현재시간_YYYYMMDDHHMMSS)")
 	private String transactionId;
 
-	
+
 	private String signRegDate;
-	
+
 	private String signRegTime;
-	
-	
+
+
 	private String checkInDate;
 	private String checkInTime;
 	private String checkInGps;
-	
-	
+	private String scanSerial;
+
+	public String getScanSerial() {
+		return scanSerial;
+	}
+
+	public void setScanSerial(String scanSerial) {
+		this.scanSerial = scanSerial;
+	}
+
+
 	public String getCheckInDate() {
 		return checkInDate;
 	}
@@ -91,8 +100,8 @@ public class InstallationResultForm {
 	public void setCheckInGps(String checkInGps) {
 		this.checkInGps = checkInGps;
 	}
-	
-	
+
+
 	public String getSignRegDate() {
 		return signRegDate;
 	}
@@ -229,13 +238,13 @@ public class InstallationResultForm {
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
 	}
-	
-	
-	
 
-	
-	
-	
+
+
+
+
+
+
 //	public static Map<String, Object> createMaps(InstallationResultForm installationResultForm) {
 //		Map<String, Object> params = new HashMap<>();
 //		params.put("userId", installationResultForm.getUserId());
@@ -253,30 +262,30 @@ public class InstallationResultForm {
 //		params.put("resultAcceptanceName", installationResultForm.getResultAcceptanceName());
 //
 //		params.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
-//		
+//
 //		params.put("transactionId", installationResultForm.getTransactionId());
-//		
+//
 //		return params;
 //	}
 
 
-	
+
 	public List<Map<String, Object>> createMaps(InstallationResultForm installationResultForm) {
-		
+
 		List<Map<String, Object>> list = new ArrayList<>();
 			Map<String, Object> map;
-			
+
 //			for(InstallationResultForm form : installationResultForm){
 ////				map = BeanConverter.toMap(installationResultForm, "signData");
 ////				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
-//				
+//
 //				list.add(map);
 //			}
 				map = BeanConverter.toMap(installationResultForm, "signData");
 				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
 
 				// install Result
-				
+
 				map.put("userId", installationResultForm.getUserId());
 				map.put("salesOrderNo", installationResultForm.getSalesOrderNo());
 				map.put("serviceNo", installationResultForm.getServiceNo());
@@ -291,20 +300,20 @@ public class InstallationResultForm {
 				map.put("resultReportEmailNo", installationResultForm.getResultReportEmailNo());
 				map.put("resultAcceptanceName", installationResultForm.getResultAcceptanceName());
 				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
-				map.put("transactionId", installationResultForm.getTransactionId());				
+				map.put("transactionId", installationResultForm.getTransactionId());
 				map.put("signRegDate", installationResultForm.getSignRegDate());
-				map.put("signRegTime", installationResultForm.getSignRegTime());				
+				map.put("signRegTime", installationResultForm.getSignRegTime());
 
 				list.add(map);
-				
+
 				return list;
 	}
-	
-	
-	
-	
-	
-	
 
-	
+
+
+
+
+
+
+
 }

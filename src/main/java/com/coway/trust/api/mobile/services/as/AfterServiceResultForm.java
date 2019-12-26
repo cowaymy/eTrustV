@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "AfterServiceResultForm", description = "AfterServiceResultForm")
 public class AfterServiceResultForm {
 
-	
+
 	@ApiModelProperty(value = "사용자 ID (예_CT123456)")
 	private String userId;
 
@@ -83,10 +83,19 @@ public class AfterServiceResultForm {
 
 	@ApiModelProperty(value = "base64 Data")
 	private String signData;
-	
-	
-	
-	
+
+	private String scanSerial;
+
+	public String getScanSerial() {
+		return scanSerial;
+	}
+
+	public void setScanSerial(String scanSerial) {
+		this.scanSerial = scanSerial;
+	}
+
+
+
 
 
 
@@ -116,18 +125,18 @@ public class AfterServiceResultForm {
 	private String signRegDate;
 	private String signRegTime;
 
-	
-	
+
+
 
 	@ApiModelProperty(value = "Transaction ID 값(체계 : USER_ID + SALES_ORDER_NO + SERVICE_NO + 현재시간_YYYYMMDDHHMMSS)")
 	private String transactionId;
-	
-	
+
+
 	private String checkInDate;
 	private String checkInTime;
 	private String checkInGps;
-	
-	
+
+
 	public String getCheckInDate() {
 		return checkInDate;
 	}
@@ -151,12 +160,12 @@ public class AfterServiceResultForm {
 	public void setCheckInGps(String checkInGps) {
 		this.checkInGps = checkInGps;
 	}
-	
+
 
 	@ApiModelProperty(value = "partList")
 	private List<AfterServiceResultDetailForm>  partList;
-	
-	
+
+
 public List<Map<String, Object>> createMaps(AfterServiceResultForm afterServiceResultForm) {
 
 		List<Map<String, Object>> list = new ArrayList<>();
@@ -182,9 +191,9 @@ public List<Map<String, Object>> createMaps(AfterServiceResultForm afterServiceR
 		}
 		return list;
 	}
-	
-			
-			
+
+
+
 public static List<Map<String, Object>>  createMaps1(AfterServiceResultForm afterServiceResultForm) {
 
 		List<Map<String, Object>> list = new ArrayList<>();
@@ -192,24 +201,24 @@ public static List<Map<String, Object>>  createMaps1(AfterServiceResultForm afte
 		map = BeanConverter.toMap(afterServiceResultForm, "signData");
 		map.put("signData", Base64.decodeBase64(afterServiceResultForm.getSignData()));
 		list.add(map);
-		
+
 	return list;
 }
 
 //
-//	
+//
 //
 //public  List<Map<String, Object>>  createMaps1(AfterServiceResultForm afterServiceResultForm) {
 //
 //		List<Map<String, Object>> list = new ArrayList<>();
-//	
+//
 //		if (partList != null && partList.size() > 0) {
 //			Map<String, Object> map;
 //			map = BeanConverter.toMap(afterServiceResultForm, "signData");
 //			map.put("signData", Base64.decodeBase64(afterServiceResultForm.getSignData()));
-//			
+//
 //			for (AfterServiceResultDetailForm obj : partList) {
-////				map = BeanConverter.toMap(afterServiceResultForm, "AfterServiceResultForm");	
+////				map = BeanConverter.toMap(afterServiceResultForm, "AfterServiceResultForm");
 ////				map.put("serialNo", obj.getSerialNo());
 //				// as Dtails
 //				map.put("filterCode", obj.getFilterCode());
@@ -219,11 +228,11 @@ public static List<Map<String, Object>>  createMaps1(AfterServiceResultForm afte
 //				map.put("filterChangeQty", obj.getFilterChangeQty());
 //				map.put("partsType", obj.getPartsType());
 //				map.put("filterBarcdSerialNo", obj.getFilterBarcdSerialNo());
-//				
+//
 //				list.add(map);
 //			}
 //		}
-//		
+//
 //	return list;
 //}
 
@@ -232,7 +241,7 @@ public static List<Map<String, Object>>  createMaps1(AfterServiceResultForm afte
 //
 //    	List<Map<String, Object>> list = new ArrayList<>();
 //
-//		Map<String, Object> params = new HashMap<>();				
+//		Map<String, Object> params = new HashMap<>();
 //			params.put("userId",afterServiceResultForm.getUserId());
 //			params.put("salesOrderNo",afterServiceResultForm.getSalesOrderNo());
 //			params.put("serviceNo",afterServiceResultForm.getServiceNo());
@@ -256,16 +265,16 @@ public static List<Map<String, Object>>  createMaps1(AfterServiceResultForm afte
 //			params.put("resultAcceptanceName",afterServiceResultForm.getResultAcceptanceName());
 //			params.put("signData",afterServiceResultForm.getSignData());
 //			params.put("transactionId",afterServiceResultForm.getTransactionId());
-//            	
+//
 //			list.add(params);
-//			
+//
 //    	return list;
-//	
+//
 //	}
-//	
-	
-	
-	
+//
+
+
+
 	public String getUserId() {
 		return userId;
 	}
@@ -479,8 +488,8 @@ public static List<Map<String, Object>>  createMaps1(AfterServiceResultForm afte
 
 
 
-	
-	
 
-	
+
+
+
 }
