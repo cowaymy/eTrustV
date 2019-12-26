@@ -1048,7 +1048,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
         				params.put("scanSerial", String.valueOf(insApiresult.get("scanSerial")));
     					params.put("salesOrdId", String.valueOf(getAsBasic.get("salesOrdId")));
-    					params.put("reqstNo", String.valueOf(insApiresult.get("serviceNo")));
+    					params.put("reqstNo", String.valueOf(rtnValue.get("AS_NO")));
     					params.put("delvryNo", null);
     					params.put("callGbn", "AS");
     					params.put("mobileYn", "Y");
