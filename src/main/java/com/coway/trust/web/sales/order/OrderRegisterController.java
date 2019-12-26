@@ -589,7 +589,7 @@ public class OrderRegisterController {
     return ResponseEntity.ok(list);
   }
 
-  /*@RequestMapping(value = "/chkPromoCboMst.do", method = RequestMethod.POST)
+  @RequestMapping(value = "/chkPromoCboMst.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> chkPromoCboMst(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
     ReturnMessage message = new ReturnMessage();
 
@@ -640,6 +640,12 @@ public class OrderRegisterController {
     model.put("promoNo", params.get("promoNo"));
     model.put("prod", params.get("prod"));
     model.put("custId", params.get("custId"));
+    if (params.get("ord_id") != null) {
+      model.put("ordId", params.get("ord_id"));
+    } else {
+      model.put("ordId", "");
+    }
+
     return "sales/order/orderComboSearchPop";
   }
 
@@ -647,7 +653,7 @@ public class OrderRegisterController {
   public ResponseEntity<List<EgovMap>> selectComboOrderJsonList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
 
-    String[] arrAppType = request.getParameterValues("appType");
+    /*String[] arrAppType = request.getParameterValues("appType");
     String[] arrOrdStusId = request.getParameterValues("ordStusId");
     String[] arrKeyinBrnchId = request.getParameterValues("keyinBrnchId");
     String[] arrDscBrnchId = request.getParameterValues("dscBrnchId");
@@ -689,11 +695,58 @@ public class OrderRegisterController {
     logger.debug("!@###### ordEndDt : " + params.get("ordEndDt"));
     logger.debug("!@###### ordDt : " + params.get("ordDt"));
     logger.debug("!@###### custIc : " + params.get("custIc"));
-    logger.debug("!@##############################################################################");
+    logger.debug("!@##############################################################################");*/
 
     List<EgovMap> orderList = orderRegisterService.selectComboOrderJsonList(params);
 
     return ResponseEntity.ok(orderList);
-  }*/
+  }
+
+  @RequestMapping(value = "/selectComboOrderJsonList_2", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectComboOrderJsonList_2(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+
+    logger.debug("==================/selectComboOrderJsonList_2.do=======================");
+    logger.debug("params : {}", params);
+    logger.debug("==================/selectComboOrderJsonList_2.do=======================");
+
+    List<EgovMap> orderList = orderRegisterService.selectComboOrderJsonList_2(params);
+
+    return ResponseEntity.ok(orderList);
+  }
+
+  @RequestMapping(value = "/checkCboPromByOrdNo.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> checkCboPromByOrdNo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+    ReturnMessage message = new ReturnMessage();
+
+    logger.debug("==================/checkCboPromByOrdNo.do=======================");
+    logger.debug("params : {}", params);
+    logger.debug("==================/checkCboPromByOrdNo.do=======================");
+
+    int statCode = orderRegisterService.checkCboPromByOrdNo(params);
+
+    message.setCode(Integer.toString(statCode));
+    return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/ordUnlinkProc.do")
+  public String ordUnlinkProc(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+    logger.debug("==================/ordUnlinkProc.do=======================");
+    logger.debug("params : {}", params);
+    logger.debug("==================/ordUnlinkProc.do=======================");
+
+    EgovMap result = orderRegisterService.getOrdInfo(params);
+    EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+
+    model.put("orderDetail", orderDetail);
+
+    model.put("ordNo", params.get("ordNo"));
+    model.put("ordId", result.get("ordid"));
+    model.put("typ", params.get("typ"));
+    model.put("ordApp", result.get("ordapp"));
+    model.put("ordStat", result.get("ordstat"));
+
+    return "sales/order/orderPromoPckUnlinkPop";
+  }
 
 }
