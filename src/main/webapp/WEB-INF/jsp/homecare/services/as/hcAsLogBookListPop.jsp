@@ -86,8 +86,6 @@ var branchDs = [];
       // HomeCare add
       whereSql += " AND OM.BNDL_ID IS NOT NULL ";
 
-      console.log(whereSql);
-
       $("#reportFormList #reportFileName").val('/homecare/hcASLogBookList.rpt');
       $("#reportFormList #reportDownFileName").val("ASLogBook_" + day + month + date.getFullYear());
       $("#reportFormList #viewType").val("PDF");
