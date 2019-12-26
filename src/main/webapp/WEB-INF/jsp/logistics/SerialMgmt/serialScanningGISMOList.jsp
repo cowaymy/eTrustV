@@ -211,12 +211,12 @@
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Logistics</li>
         <li>S/N Management</li>
-        <li>GI S/N Scanning(SMO)</li>
+        <li>SMO GI S/N Scanning</li>
     </ul>
 
     <aside class="title_line"><!-- title_line start -->
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>GI S/N Scanning(SMO)</h2>
+        <h2>SMO GI S/N Scanning</h2>
 
         <ul class="right_btns">
             <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
