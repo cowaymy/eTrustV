@@ -441,7 +441,7 @@
          , Extent18.AREA_ID
          , Extent1.Grade
          , Extent1.RCD_TMS
-         , Extent16.SERIAL_REQUIRE_CHK_YN SERIAL_REQUIRE_CHK_YN
+         , Extent19.SERIAL_REQUIRE_CHK_YN
     FROM SAL0046D Extent1
     LEFT JOIN SAL0047D Extent2 ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
     JOIN SAL0001D Extent3 ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
@@ -463,6 +463,7 @@
     JOIN SAL0023D Extent17 ON Extent10.CUST_ID = Extent17.CUST_ID
     JOIN SYS0064M Extent18 ON Extent17.AREA_ID = Extent18.AREA_ID
     JOIN ORG0001D CTCODE ON Extent1.CT_ID = CTCODE.MEM_ID
+    LEFT JOIN SYS0028M Extent19 ON CTCODE.MEM_CODE = Extent19.WH_LOC_CODE
     WHERE Extent1.INSTALL_ENTRY_ID = #{installEntryId}
       AND ROWNUM = 1
 
@@ -2910,11 +2911,13 @@
                   , C.STUS CT_STUS
                   , C.NAME CT_NAME
                   , D.CT_SUB_GRP CT_SUB_GRP
+                  , S28.SERIAL_REQUIRE_CHK_YN
     FROM ORG0005D A ,
          SYS0005M B ,
          ORG0001D C ,
          SYS0064M D ,
-         SVC0054M E
+         SVC0054M E ,
+         SYS0028M S28
     WHERE A.BRNCH_ID = #{BRNCH_ID}
       AND A.BRNCH_ID = B.BRNCH_ID
       AND E.MEM_ID = C.MEM_ID
@@ -2922,6 +2925,7 @@
       AND A.MEM_LVL in ('4', '3')
       AND B.CODE = D.CT_BRNCH_CODE
       AND E.CT_SUB_GRP = D.CT_SUB_GRP
+      AND C.MEM_CODE = S28.WH_LOC_CODE
       AND C.STUS =1
       AND E.MAJOR_GRP = '1'
   </select>
@@ -2933,13 +2937,25 @@
          , C.CUST_ID CUST_ID
          , A.CT_ID CT_ID
          , F.CT_SUB_GRP CUST_SUB_GRP
-         , (SELECT MEM_CODE FROM ORG0001D S WHERE S.MEM_ID = A.CT_ID ) MEM_CODE
+         , S.MEM_CODE
+         , S.MEM_CODE CT_CODE
+         , S26.STK_CODE
+         , S26.STK_DESC
+         , CASE WHEN S26.STK_TYPE_ID= 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
+                   WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+                   WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+          ELSE 'N'
+          END AS SERIAL_CHK
+         ,S28.SERIAL_REQUIRE_CHK_YN
     FROM SAL0046D A ,
          SAL0001D B ,
          SAL0029D C ,
          SAL0045D D ,
          SAL0023D E ,
-         SYS0064M F
+         SYS0064M F ,
+         ORG0001D S ,
+         SYS0026M S26 ,
+         SYS0028M S28
     WHERE 1=1
     <if test="installNo != null and installNo != '' ">
       AND INSTALL_ENTRY_NO IN
@@ -2953,6 +2969,9 @@
     AND B.SALES_ORD_ID = D.SALES_ORD_ID
     AND D.ADD_ID = E.CUST_ADD_ID
     AND E.AREA_ID = F.AREA_ID(+)
+    AND A.CT_ID = S.MEM_ID
+    AND A.INSTALL_STK_ID = S26.STK_ID
+    AND S.MEM_CODE = S28.WH_LOC_CODE
   </select>
 
   <select id="selectPrevAssignCt" parameterType="Map" resultType="String">
@@ -3038,6 +3057,7 @@
                WHEN ( Limit1.IS_SIRIM IS NOT NULL ) THEN UTILS.CONVERT_TO_NUMBER(Limit1.IS_SIRIM,10,0)
                ELSE 0
              END C13
+           , SERIAL_REQUIRE_CHK_YN
       FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID
                   , Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO
                   , Extent1.INSTALL_STK_ID INSTALL_STK_ID
@@ -3067,7 +3087,8 @@
                   , Extent6.USER_ID USER_ID
                   , Extent6.USER_NAME USER_NAME
                   , Extent7.USER_ID USERID1
-                , Extent7.USER_NAME USERNAME1
+                  , Extent7.USER_NAME USERNAME1
+                  , Extent8.SERIAL_REQUIRE_CHK_YN
          FROM SAL0046D Extent1
          JOIN SYS0026M Extent2 ON Extent2.STK_ID = Extent1.INSTALL_STK_ID
          JOIN SAL0047D Extent3 ON Extent3.ENTRY_ID = Extent1.INSTALL_ENTRY_ID
@@ -3075,6 +3096,7 @@
          LEFT JOIN ORG0001D Extent5 ON Extent5.MEM_ID = Extent3.CT_ID
          LEFT JOIN SYS0047M Extent6 ON Extent6.USER_ID = Extent3.CRT_USER_ID
          LEFT JOIN SYS0047M Extent7 ON Extent7.USER_ID = Extent3.UPD_USER_ID
+         LEFT JOIN SYS0028M Extent8 ON Extent5.MEM_CODE = Extent8.WH_LOC_CODE
          WHERE  Extent1.INSTALL_ENTRY_ID = TO_NUMBER(TRIM(#{installEntryId})) AND ROWNUM <= 1 ) Limit1
     ]]>
   </select>
@@ -4596,5 +4618,34 @@
     <result property="CALL_REM" column="CALL_REM" jdbcType="CLOB"
       javaType="java.lang.String" />
   </resultMap>
+
+  <select id="selectCtSerialNoList" parameterType="Map" resultType="egovMap">
+  /* [com.coway.trust.biz.services.installation.impl.InstallationResultListMapper.selectCtSerialNoList] 20191221 - KR OHK*/
+  SELECT A.SERIAL_NO CODE, A.SERIAL_NO CODE_NAME
+    FROM LOG0100M A
+     LEFT JOIN SYS0028M B ON B.WH_LOC_ID = A.LAST_LOC_ID
+  WHERE B.WH_LOC_CODE = #{ctCode}
+      AND A.ITM_CODE = #{stkCode}
+      AND A.STUS_CODE = 'I'
+   ORDER BY A.SERIAL_NO
+  </select>
+
+ <select id="selectDelvryGrCmpltYn" parameterType="Map" resultType="String">
+  /* [com.coway.trust.biz.services.installation.impl.InstallationResultListMapper.selectDelvryGrCmpltYn] 20191223 - KR OHK*/
+  SELECT DELVRY_GR_CMPLT
+    FROM (SELECT NVL(L54.DELVRY_GR_CMPLT, 'N') DELVRY_GR_CMPLT
+	            FROM LOG0047M L47,
+		                LOG0048D L48,
+		                LOG0054M L54,
+		                LOG0055D L55
+	          WHERE L47.REQST_NO = L48.REQST_NO
+	              AND L48.REQST_NO = L55.REQST_NO
+	              AND L48.REQST_NO_ITM = L55.REQST_NO_ITM
+	              AND L55.DELVRY_NO = L54.DELVRY_NO
+	              AND L47.TRNSC_TYPE_DTL = 'UM03'
+	              AND L47.REF_DOC_NO = #{installEntryNo}
+	          ORDER BY L54.DELVRY_NO DESC)
+   WHERE ROWNUM = 1
+  </select>
 
 </mapper>
