@@ -634,7 +634,7 @@ console.log("orderRegisterPop.jsp");
             Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
         });
         $('#OrdNoTagBtn').click(function() {
-            Common.popupDiv("/sales/order/orderComboSearchPop.do", {promoNo:$("#ordPromo").val(), prod:$("#ordProudct").val(), custId : $('#hiddenCustId').val()});
+            Common.popupDiv("/sales/order/orderComboSearchPop.do", {promoNo:$("#ordPromo").val(), prod:$("#ordProudct").val(), custId : $('#hiddenCustId').val()}, null, true);
         });
         $('#addCustBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "580x"});
@@ -1237,7 +1237,7 @@ console.log("orderRegisterPop.jsp");
         });
         $('#ordPromo').change(function() {
           // == CHECK COMBO PROMOTION HERE ==  ordProudct
-          /*Common.ajaxSync("POST", "/sales/order/chkPromoCboMst.do", { promoNo:$("#ordPromo").val(), prod:$("#ordProudct").val(), custId : $('#hiddenCustId').val()}, function(result) {
+          Common.ajaxSync("POST", "/sales/order/chkPromoCboMst.do", { promoNo:$("#ordPromo").val(), prod:$("#ordProudct").val(), custId : $('#hiddenCustId').val()}, function(result) {
             if(result != null) {
                 if (result.code == '3') {
                   // PROCEED TO SELECT COMBO PROMOTION
@@ -1262,7 +1262,7 @@ console.log("orderRegisterPop.jsp");
                 $('#cboOrdNoTag').val("");
                 $('#hiddenCboOrdNoTag').val("");
               }
-            });*/
+            });
 
 //          $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
             $('#trialNoChk').prop("checked", false).prop("disabled", true);
@@ -1660,7 +1660,7 @@ console.log("vBindingNo" + vBindingNo);
                 gstChk                  : $('#gstChk').val(),
                 corpCustType            : $('#corpCustType').val(),
                 agreementType           : $('#agreementType').val(),
-                //comboOrdBind            : $('#hiddenCboOrdNoTag').val(),
+                comboOrdBind            : $('#hiddenCboOrdNoTag').val(),
             },
             salesOrderDVO : {
                 itmPrc                  : $('#ordPrice').val().trim(),
