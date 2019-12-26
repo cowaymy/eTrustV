@@ -216,6 +216,40 @@
             fn_report();
             //Common.alert('The program is under development.');
         });
+
+        $('#btnUnbindCboPromOrd').click(function() {
+          var gridObj = AUIGrid.getSelectedItems(listMyGridID);
+
+          if(gridObj == null || gridObj.length <= 0 ){
+            Common.alert('* <spring:message code="sal.alert.msg.noOrdSel" />');
+            return;
+          }
+
+          if(gridObj[0].item.ordStusCode == "CAN" ){
+            var text = gridObj[0].item.ordStusCode;
+            Common.alert("<spring:message code='sal.msg.faiUnlinkCanOrd' arguments='" + text + "' htmlEscape='false'/>");
+            return;
+          }
+
+          var ordNo =  gridObj[0].item.ordNo;
+          var ordId = gridObj[0].item.ordId;
+
+          Common.ajaxSync("POST", "/sales/order/checkCboPromByOrdNo.do", {ordNo : ordNo}, function(result) {
+            if(result != null) {
+              if (result.code == 99) {
+                Common.alert('<spring:message code="sales.msg.ordNotCboProm" />');
+                return false;
+              } else if (result.code == 98) {
+                Common.alert('<spring:message code="sales.msg.ordNotCboPromNoLnk" />');
+                return false;
+              }
+              // 10 - MASTER PRODUCT; 20 - SUB PRODUCT;
+              Common.popupDiv("/sales/order/ordUnlinkProc.do", { ordNo : ordNo, salesOrderId: ordId, typ : result.code, ordStat : result.code, ordApp : result.code }, null , true);
+              //Common.popupDiv("/sales/order/orderEKeyInListPop.do", null, null, true);
+            }
+          });
+        });
+
     });
 
     function fn_letter_report() {
@@ -683,19 +717,22 @@
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
-	<dt>Link</dt>
-	<dd>
-	<ul class="btns">
-      <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
-		<li><p class="link_btn"><a href="#" id="btnVaLetter"><spring:message code='sales.btn.custVALetter'/></a></p></li>
-	  </c:if>
-      <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
-		<li><p class="link_btn"><a href="#" id="btnExport"><spring:message code='sales.btn.exptSrchList'/></a></p></li>
-	  </c:if>
-      <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
-        <li><p class="link_btn"><a href="#" id="btnEKeyIn">eKey-In Listing</a></p></li>
-      </c:if>
-	</ul>
+  <dt>Link</dt>
+  <dd>
+  <ul class="btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
+      <li><p class="link_btn"><a href="#" id="btnVaLetter"><spring:message code='sales.btn.custVALetter'/></a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
+      <li><p class="link_btn"><a href="#" id="btnExport"><spring:message code='sales.btn.exptSrchList'/></a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
+      <li><p class="link_btn"><a href="#" id="btnEKeyIn">eKey-In Listing</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine25 == 'Y'}">
+      <li><p class="link_btn"><a href="#" id="btnUnbindCboPromOrd">Unlink Combo Promo. Order</a></p></li>
+    </c:if>
+  </ul>
 	<ul class="btns">
       <c:if test="${PAGE_AUTH.funcUserDefine21 == 'Y'}">
 		<li><p class="link_btn type2"><a href="#" id="btnRentalPaySet"><spring:message code='sales.btn.rentPaySet'/></a></p></li>
