@@ -1147,7 +1147,7 @@
                   , CORP_CUST_TYPE
                   , AGREEMENT_TYPE
                   , PCKAGE_BINDING_NO
-                  <!-- , BNDL_ID  -->
+                  , BNDL_ID
     ) VALUES ( #{salesOrdId}
              , #{salesOrdNo}
              , UPPER(#{refNo})
@@ -1208,7 +1208,7 @@
              , #{corpCustType}
              , #{agreementType}
              , #{comboOrdBind}
-             <!-- , #{bndlId}  -->
+             , #{bndlId}
      )
   </insert>
 
@@ -2784,4 +2784,145 @@
     FROM SAL0001D
     WHERE SALES_ORD_NO = #{ordNo}
   </select>
+
+    <select id="getCtgryId" parameterType="int" resultType="String">
+        /* com.coway.trust.biz.sales.order.impl.OrderRegisterMapper.getCtgryId */
+        SELECT M1.STK_CTGRY_ID
+
+           FROM SAL1013V V1
+             JOIN SYS0026M M1 ON V1.PRODUCT_CODE = M1.STK_CODE
+          WHERE V1.ORD_ID = #{ordId}
+    </select>
+
+    <insert id="insert_SAL0225D" parameterType="salesOrderMVO">
+        /* com.coway.trust.biz.sales.order.impl.OrderRegisterMapper.insert_SAL0225D */
+	    INSERT INTO SAL0225D (
+	            SRV_ORD_ID
+	          , SRV_ORD_NO
+	          , REF_NO
+	          , SALES_DT
+	          , CUST_ID
+	          , CUST_CNT_ID
+	          , CUST_ADD_ID
+	          , MEM_ID
+	          , BRNCH_ID
+	          , APP_TYPE_ID
+	          , TOT_AMT
+	          , PROMO_ID
+	          , BINDING_NO
+	          , CC_PROMO_ID
+	          , TOT_PV
+	          , REM
+	          , PV_MONTH
+	          , PV_YEAR
+	          , STUS_CODE_ID
+	          , UPD_DT
+	          , UPD_USER_ID
+	          , SYNC_CHK
+	          , CUST_PO_NO
+	          , REN_CHK_ID
+	          , INST_PRIOD
+	          , DO_NO
+	          , DEPT_CODE
+	          , GRP_CODE
+	          , ORG_CODE
+	          , SALES_ORD_ID_OLD
+	          , EDIT_TYPE_ID
+	          , CUST_BILL_ID
+	          , MTH_RENT_AMT
+	          , LOK
+	          , AEON_STUS_ID
+	          , COMM_DT
+	          , CRT_USER_ID
+	          , CRT_DT
+	          , PAY_COM_DT
+	          , DEF_RENT_AMT
+	          , REF_DOC_ID
+	          , SALES_HM_ID
+	          , SALES_SM_ID
+	          , SALES_GM_ID
+	          , ADV_BILL
+	          , CNVR_SCHEME_ID
+	          , CUST_CARE_CNT_ID
+	          , EMP_CHK
+	          , EX_TRADE
+	          , ECASH
+	          , PROMO_DISC_PERIOD_TP
+	          , PROMO_DISC_PERIOD
+	          , NOR_AMT
+	          , NOR_RNT_FEE
+	          , DISC_RNT_FEE
+	          , GST_CHK
+	          , SRV_PAC_ID
+	          , SALES_PROD_SZ
+	          , SALES_PROD_BRD
+	          , RCD_TMS
+	          , SRV_PROD_QTY
+
+	    ) VALUES (
+
+	            #{salesOrdId}
+	          , (SELECT FN_GET_DOCNO(168) FROM DUAL)
+	          , UPPER(#{refNo})
+	          , SYSDATE <!-- TO_DATE(TO_CHAR(SYSDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') -->
+	          , #{custId}
+	          , #{custCntId}
+	          , #{custAddId}
+	          , #{memId}
+	          , #{brnchId}
+	          , #{appTypeId}
+	          , #{totAmt}
+	          , #{promoId}
+	          , #{bindingNo}
+	          , #{ccPromoId}
+	          , #{totPv}
+	          , #{rem}
+	          , #{pvMonth}
+	          , #{pvYear}
+	          , #{stusCodeId}
+	          , SYSDATE
+	          , #{updUserId}
+	          , #{syncChk}
+	          , #{custPoNo}
+	          , #{renChkId}
+	          , #{instPriod}
+	          , #{doNo}
+	          , #{deptCode}
+	          , #{grpCode}
+	          , #{orgCode}
+	          , #{salesOrdIdOld}
+	          , #{editTypeId}
+	          , #{custBillId}
+	          , #{mthRentAmt}
+	          , #{lok}
+	          , #{aeonStusId}
+	          , TO_DATE(#{commDt}, 'yyyy-MM-dd')
+	          , #{crtUserId}
+	          , SYSDATE
+	          , TO_DATE(#{payComDt}, 'yyyy-MM-dd')
+	          , #{defRentAmt}
+	          , #{refDocId}
+	          , #{salesHmId}
+	          , #{salesSmId}
+	          , #{salesGmId}
+	          , #{advBill}
+	          , #{cnvrSchemeId}
+	          , #{custCareCntId}
+	          , #{empChk}
+	          , #{exTrade}
+	          , #{ecash}
+	          , #{promoDiscPeriodTp}
+	          , #{promoDiscPeriod}
+	          , #{norAmt}
+	          , #{norRntFee}
+	          , #{discRntFee}
+	          , #{gstChk}
+	          , #{srvPacId}
+	          , #{salesProdSz}
+	          , 'GOODNITE'
+	          , null
+	          , 1
+	     )
+    </insert>
+
 </mapper>
