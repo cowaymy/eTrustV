@@ -240,12 +240,12 @@ public interface MSvcLogApiMapper {
 
   void insertSAL0254D(Map<String, Object> params);
 
-  List<EgovMap> getCareServiceJobList_b(Map<String, Object> params);
+  /*List<EgovMap> getCareServiceJobList_b(Map<String, Object> params);
 
-  List<EgovMap> getCareServiceParts_b(Map<String, Object> params);
+  List<EgovMap> getCareServiceParts_b(Map<String, Object> params);*/
 
   /* Woongjin Jun */
-  List<EgovMap> getCareServiceJobList(Map<String, Object> params);
+  /*List<EgovMap> getCareServiceJobList(Map<String, Object> params);
 
   void updateHTReAppointmentReturnResult(Map<String, Object> params);
 
@@ -261,7 +261,7 @@ public interface MSvcLogApiMapper {
 
   EgovMap SP_SVC_BARCODE_SAVE(Map<String, Object> params);
 
-  List<EgovMap> selectSerialList(Map<String, Object> params);
+  List<EgovMap> selectSerialList(Map<String, Object> params);*/
   /* Woongjin Jun */
 
 }
