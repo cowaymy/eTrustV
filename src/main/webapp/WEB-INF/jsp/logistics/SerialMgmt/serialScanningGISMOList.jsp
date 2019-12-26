@@ -46,7 +46,15 @@
 
     	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '${defLocType}', 'locType', 'M','f_multiCombo');
 
-        $("#btnSearch").click(function() {
+    	 if(Common.checkPlatformType() == "mobile") {
+    	     $("#btnMobileClose").attr("style", "");
+    	 }
+
+    	 $("#btnClose").click(function() {
+             window.close();
+         });
+
+    	$("#btnSearch").click(function() {
         	SearchListAjax();
         });
 
@@ -180,7 +188,7 @@
                      }
 
                      var param = {searchlocgb:locgbparam , grade:""}
-                     CommonCombo.make('locCode', '/common/selectStockLocationList2.do', param , '${defLocCode}', {type: 'M', id:'codeId', name:'codeName', width:'68%', isCheckAll:false});
+                     CommonCombo.make('locCode', '/common/selectStockLocationList2.do', param , '${defLocCode}', {type: 'M', id:'codeId', name:'codeName', width:'50%', isCheckAll:false});
                   }
             }).multipleSelect({
                 selectAll : true
@@ -203,15 +211,16 @@
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Logistics</li>
         <li>S/N Management</li>
-        <li>GR Serial No. Scanning</li>
+        <li>GI S/N Scanning(SMO)</li>
     </ul>
 
     <aside class="title_line"><!-- title_line start -->
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>GI Serial No. Scanning(SMO)</h2>
+        <h2>GI S/N Scanning(SMO)</h2>
 
         <ul class="right_btns">
             <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
+            <li  id="btnMobileClose" style="display:none"><p class="btn_blue"><a id="btnClose" style="min-width:10px!important;width:10px!important"><span class="clear"></span></a></p></li>
         </ul>
     </aside><!-- title_line end -->
 
@@ -242,8 +251,8 @@
                     <tr>
                         <th scope="row">From Location<span class="must">*</span></th>
                         <td>
-                            <select id="locType" name="locType[]" multiple="multiple" style="width:85px"></select>
-                            <select id="locCode" name="locCode[]"><option value="">Choose One</option></select>
+                            <select id="locType" name="locType[]" multiple="multiple" style="width:100px"></select>
+                            <select id="locCode" name="locCode[]" multiple="multiple" style="width:350px"><option value="">Choose One</option></select>
                         </td>
                     </tr>
                     <tr>
