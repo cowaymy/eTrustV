@@ -227,7 +227,7 @@
          , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
          , T.PV_MONTH
          , T.PV_YEAR
-         <!-- , T.BNDL_NO  -->
+         , T.BNDL_NO
 
     FROM ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
                   V1.APP_TYPE_CODE
@@ -275,7 +275,7 @@
                 <!-- , D1.BNDL_NO  -->
            FROM SAL1013V  V1
              JOIN SYS0026M M1 ON V1.PRODUCT_CODE = M1.STK_CODE
-      LEFT JOIN HMC0011D D1 ON V1.BNDL_ID = D1.ORD_SEQ_NO
+      <!-- LEFT JOIN HMC0011D D1 ON V1.BNDL_ID = D1.ORD_SEQ_NO  -->
 
            <if test='(serialNo != null and serialNo != "") || sirimNo != null and sirimNo != ""'>
              INNER JOIN ( SELECT IE.SALES_ORD_ID
