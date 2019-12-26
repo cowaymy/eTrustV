@@ -4,6 +4,7 @@ import java.util.List;
 
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -183,4 +184,12 @@ public interface ASManagementListService {
   int saveASEntryInHouse(Map<String, Object> params);
 
   List<EgovMap> getDftTyp(Map<String, Object> params);
+
+  ReturnMessage newASInHouseAddSerial(Map<String, Object> params);
+
+  String getSerialChk(Map<String, Object> params) ;
+
+  int asResultBasic_updateSerial(Map<String, Object> params);
+
+  EgovMap asResult_updateSerial(Map<String, Object> params);
 }

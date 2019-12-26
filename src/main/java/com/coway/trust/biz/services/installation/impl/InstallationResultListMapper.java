@@ -267,4 +267,8 @@ public interface InstallationResultListMapper {
   int selRcdTms(Map<String, Object> params);
 
   String getINSNo(Map<String, Object> params);
+
+  List<EgovMap> selectCtSerialNoList(Map<String, Object> params);
+
+  String selectDelvryGrCmpltYn(Map<String, Object> params);
 }

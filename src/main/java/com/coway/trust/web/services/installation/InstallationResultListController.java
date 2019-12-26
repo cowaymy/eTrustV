@@ -769,6 +769,8 @@ public class InstallationResultListController {
     logger.debug("					" + params.toString());
     logger.debug("			pram set end  ");
 
+    model.addAttribute("serialList", installationResultListService.selectCtSerialNoList(params));
+
     // 호출될 화면
     return "services/installation/assignCTTransferPop";
   }
@@ -1096,4 +1098,122 @@ public class InstallationResultListController {
     return ResponseEntity.ok(message);
   }
 
+  //KR-OHK add serial add
+  @RequestMapping(value = "/selectCtSerialNoList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectCtSerialNoList(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+	  logger.debug("==================/selectCtSerialNoList.do=======================");
+	  logger.debug("params : {}", params);
+	  logger.debug("==================/selectCtSerialNoList.do=======================");
+
+      List<EgovMap> list = installationResultListService.selectCtSerialNoList(params);
+
+      return ResponseEntity.ok(list);
+  }
+
+  //KR-OHK add serial add
+ @RequestMapping(value = "/addInstallationSerial.do", method = RequestMethod.POST)
+ public ResponseEntity<ReturnMessage> addInstallationSerial(@RequestBody Map<String, Object> params,
+     SessionVO sessionVO) throws ParseException {
+   ReturnMessage message = new ReturnMessage();
+
+   logger.debug("==========================/addInstallationSerial.do=================================");
+   logger.debug("params : {}", params);
+   logger.debug("==========================/addInstallationSerial.do=================================");
+
+   message = installationResultListService.insertInstallationResultSerial(params, sessionVO);
+
+   return ResponseEntity.ok(message);
+ }
+
+ //KR-OHK add serial add
+ @RequestMapping(value = "/editInstallationSerial.do", method = RequestMethod.POST)
+ public ResponseEntity<ReturnMessage> editInstallationSerial(@RequestBody Map<String, Object> params,
+     SessionVO sessionVO) throws ParseException {
+   ReturnMessage message = new ReturnMessage();
+   int resultValue = 0;
+
+   int userId = sessionVO.getUserId();
+   params.put("user_id", userId);
+   logger.debug("params : {}", params);
+
+   resultValue = installationResultListService.editInstallationResultSerial(params, sessionVO);
+   if (resultValue > 0) {
+     message.setMessage("Installation result successfully updated.");
+   } else {
+     message.setMessage("Failed to update installation result. Please try again later.");
+   }
+
+   return ResponseEntity.ok(message);
+ }
+
+ //KR-OHK add serial add
+ @RequestMapping(value = "/assignCtOrderListSaveSerial.do", method = RequestMethod.POST)
+ public ResponseEntity<ReturnMessage> assignCtOrderListSaveSerial(@RequestBody Map<String, Object> params, Model model,
+     HttpServletRequest request, SessionVO sessionVO) {
+
+   logger.debug("in  assignCtOrderListSave ");
+   logger.debug("			pram set  log");
+   logger.debug("					" + params.toString());
+   logger.debug("			pram set end  ");
+
+   params.put("updator", sessionVO.getUserId());
+   List<EgovMap> update = (List<EgovMap>) params.get("update");
+   logger.debug("asResultM ===>" + update.toString());
+
+   Map<String, Object> returnValue = new HashMap<String, Object>();
+   returnValue = installationResultListService.updateAssignCTSerial(params);
+
+   logger.debug("rtnValue ===> " + returnValue);
+
+   String content = "";
+   String successCon = "";
+   String failCon = "";
+
+   int successCnt = 0;
+   int failCnt = 0;
+   successCnt = Integer.parseInt(returnValue.get("successCnt").toString());
+   failCnt = Integer.parseInt(returnValue.get("failCnt").toString());
+   content = "[ Complete Count : " + successCnt + ", Fail Count : " + failCnt + " ]";
+
+   List<String> successList = new ArrayList<String>();
+   List<String> failList = new ArrayList<String>();
+   successList = (List<String>) returnValue.get("successList");
+   failList = (List<String>) returnValue.get("failList");
+
+   if (successCnt > 0) {
+     content += "<br/>Complete INS Number : ";
+     for (int i = 0; i < successCnt; i++) {
+       successCon += successList.get(i) + ", ";
+     }
+     successCon = successCon.substring(0, successCon.length() - 2);
+     content += successCon;
+   }
+
+   if (failCnt > 0) {
+     content += "<br/>Fail INS Number : ";
+     for (int i = 0; i < failCnt; i++) {
+       failCon += failList.get(i) + ", ";
+     }
+     failCon = failCon.substring(0, failCon.length() - 2);
+     content += failCon;
+     content += "<br/>Can't transfer CT to the Installation order";
+   }
+
+   ReturnMessage message = new ReturnMessage();
+   message.setCode(AppConstants.SUCCESS);
+   message.setData(99);
+   message.setMessage(content);
+
+   /*
+    * if (rtnValue == -1) { message.setCode(AppConstants.FAIL);
+    * message.setMessage("Can't transfer CT to the Installation order"); } else
+    * { message.setCode(AppConstants.SUCCESS); message.setData(99);
+    * message.setMessage(""); }
+    */
+
+   logger.debug("message : {}", message);
+   return ResponseEntity.ok(message);
+
+ }
 }

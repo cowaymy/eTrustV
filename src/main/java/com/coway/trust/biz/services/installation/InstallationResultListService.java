@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -112,4 +113,13 @@ public interface InstallationResultListService {
   String getSalStat(Map<String, Object> params);
 
   int chkExgRsnCde(Map<String, Object> params);
+
+  List<EgovMap> selectCtSerialNoList(Map<String, Object> params);
+
+  ReturnMessage insertInstallationResultSerial(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
+
+  int editInstallationResultSerial(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
+
+  Map<String, Object> updateAssignCTSerial(Map<String, Object> params);
+
 }

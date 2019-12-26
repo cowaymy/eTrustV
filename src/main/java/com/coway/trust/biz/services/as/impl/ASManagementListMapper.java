@@ -338,6 +338,8 @@ public interface ASManagementListMapper {
 
   List<EgovMap> getDefectTypSCList(String params);
 
+  String getSerialChk(Map<String, Object> params);
+
   int insertLOG0103M(Map<String, Object> params);
 
   int reverse_CURR_LOG0103M(Map<String, Object> params);

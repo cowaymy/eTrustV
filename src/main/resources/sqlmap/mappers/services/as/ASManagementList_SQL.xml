@@ -1107,7 +1107,8 @@
                         AND ( S.TAX_INVC_REF_NO IS NULL ) ) )
                   THEN S.TAX_INVC_REF_NO
                   ELSE ' '
-           END C20
+           END C20,
+           SERIAL_REQUIRE_CHK_YN
     FROM ( SELECT E.AS_ID AS_ID ,
                   E.AS_NO AS_NO ,
                   E.AS_SO_ID AS_SO_ID ,
@@ -1155,7 +1156,8 @@
                   E2.TAX_INVC_ID TAX_INVC_ID ,
                   E2.TAX_INVC_REF_NO TAX_INVC_REF_NO ,
                   E3.ACC_BILL_ID ACC_BILL_ID ,
-                  E3.ACC_BILL_TASK_ID ACC_BILL_TASK_ID
+                  E3.ACC_BILL_TASK_ID ACC_BILL_TASK_ID ,
+                  E4.SERIAL_REQUIRE_CHK_YN
     FROM SVC0001D E JOIN SYS0038M Extent2 ON E.AS_STUS_ID = Extent2.STUS_CODE_ID
     LEFT JOIN SYS0047M Extent3 ON E.AS_CRT_USER_ID = Extent3.USER_ID
     LEFT JOIN SYS0013M Extent4 ON E.AS_REQSTER_TYPE_ID = Extent4.CODE_ID
@@ -1172,6 +1174,7 @@
                           OR ( ( Extent5.AS_RESULT_NO IS NULL )
                          AND ( E2.TAX_INVC_SVC_NO IS NULL ) )
     LEFT JOIN PAY0016D E3 ON E2.TAX_INVC_REF_NO = E3.ACC_BILL_REM
+    LEFT JOIN SYS0028M E4 ON Extent7.MEM_CODE = E4.WH_LOC_CODE
     WHERE E.AS_ID = #{AS_ID} AND ROWNUM <![CDATA[ <= ]]>1 ) S
   </select>
 
@@ -4685,6 +4688,12 @@
       AND IS_INHOUSE = 1
       AND SYSDATE BETWEEN EFF_DT AND EXP_DT
       AND DEFECT_ID = #{AS_SLUTN_RESN_ID}
+  </select>
+
+  <select id="getSerialChk" parameterType="Map" resultType="String">
+     SELECT SERIAL_CHK
+	   FROM SYS0026M
+	 WHERE STK_ID = #{STK_CODE}
   </select>
 
   <insert id="insertLOG0103M" parameterType="Map">

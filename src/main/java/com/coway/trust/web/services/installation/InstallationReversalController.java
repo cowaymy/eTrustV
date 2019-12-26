@@ -1612,5 +1612,17 @@ public class InstallationReversalController {
 		return ResponseEntity.ok(message);
 	}
 
+	// KR-OHK
+	@RequestMapping(value = "/saveResavalSerial", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveResavalSerial(@RequestBody Map<String, Object> params, Model model,SessionVO sessionVO) throws Exception {
+		logger.debug("-------------0.saveResavalSerial---------------");
+		params.put("userId", sessionVO.getUserId());
+
+		installationReversalService.saveResavalSerial(params);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setMessage("reversal complete");
+		return ResponseEntity.ok(message);
+	}
 
 }

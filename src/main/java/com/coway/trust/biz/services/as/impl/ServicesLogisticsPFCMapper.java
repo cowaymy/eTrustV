@@ -17,7 +17,10 @@ public interface ServicesLogisticsPFCMapper {
 	 Map<String, Object>   getFN_GET_SVC_AVAILABLE_INVENTORY(Map<String, Object> param);
 	 Map<String, Object>   SP_LOGISTIC_REQUEST_TRANS(Map<String, Object> param);
 
+	 // KR-OHK SERIAL ADD
 	 Map<String, Object> SP_LOGISTIC_REQUEST_SERIAL(Map<String, Object> param);
-	 Map<String, Object> SP_SVC_LOGISTIC_REQUEST_SERIAL(Map<String, Object> param);
+	 Map<String, Object> SP_LOGISTIC_REQUEST_REVERSE_SERIAL(Map<String, Object> param);
+     Map<String, Object> SP_SVC_LOGISTIC_REQUEST_SERIAL(Map<String, Object> param);
+     Map<String, Object> SP_LOGISTIC_REQUEST_TRANS_SERIAL(Map<String, Object> param);
 	 Map<String, Object> SP_SVC_BARCODE_SAVE(Map<String, Object> param);
 }
