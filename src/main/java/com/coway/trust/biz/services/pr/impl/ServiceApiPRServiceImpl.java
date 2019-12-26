@@ -244,6 +244,7 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 		    cvMp.put("userId", String.valueOf(paramsTran.get("userId")));
 		    cvMp.put("serviceNo", String.valueOf(paramsTran.get("serviceNo")));
 		    cvMp.put("transactionId", String.valueOf(paramsTran.get("transactionId")));
+		    cvMp.put("scanSerial", String.valueOf(paramsTran.get("scanSerial")));
 
 		    logger.debug("### PRODUCT RETURN INFORMATION : " + cvMp.toString());
 
