@@ -99,6 +99,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 				orderVO.setAccClaimAdtVO(orderVO.getAccClaimAdtVO1());
 				orderVO.setPreOrdId(orderVO.getMatPreOrdId());
 				orderVO.setBndlId(ordSeqNo);
+				orderVO.setMatAppTyId(orderVO.getSalesOrderMVO().getAppTypeId());
 
     			orderRegisterService.registerOrder(orderVO, sessionVO);
     			matOrdNo = orderVO.getSalesOrderMVO().getSalesOrdNo();

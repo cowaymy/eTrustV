@@ -92,5 +92,14 @@ public class HomecareConstants {
 	public static final String HDC_MEMBET_TYPE = "5758";
 	/** Base Term Date */
 	public static final String TERM_DT_CD = "5763";
+
+	/** Homecare Category ID */
+	public static class HC_CTGRY_ID {
+		/** Mattress */
+		public static final int MAT = 5706;
+		/** Frame */
+		public static final int FRM = 5707;
+	}
+
 }
 

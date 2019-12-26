@@ -99,6 +99,10 @@ public class OrderVO implements Serializable {
 
 	private int fraPreOrdId;
 
+	private int matAppTyId;
+
+	private int fraAppTyId;
+
 	private SalesOrderMVO salesOrderMVO1; //SALES ORDER MASTER
 
 	private SalesOrderMVO salesOrderMVO2; //SALES ORDER MASTER
@@ -509,6 +513,22 @@ public class OrderVO implements Serializable {
 
 	public void setBndlId(int bndlId) {
 		this.bndlId = bndlId;
+	}
+
+	public int getMatAppTyId() {
+		return matAppTyId;
+	}
+
+	public void setMatAppTyId(int matAppTyId) {
+		this.matAppTyId = matAppTyId;
+	}
+
+	public int getFraAppTyId() {
+		return fraAppTyId;
+	}
+
+	public void setFraAppTyId(int fraAppTyId) {
+		this.fraAppTyId = fraAppTyId;
 	}
 
 

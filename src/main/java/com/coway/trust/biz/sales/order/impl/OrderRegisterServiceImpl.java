@@ -55,6 +55,7 @@ import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.DocTypeConstants;
+import com.coway.trust.web.homecare.HomecareConstants;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -1655,9 +1656,14 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     // || (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && custTypeId
     // == SalesConstants.CUST_TYPE_CODE_ID_IND && custRaceId == 14)
     ) {
-      CallEntryVO callEntryVO = new CallEntryVO();
-      this.preprocCallEntryMaster(callEntryVO, orderAppType, sInstallDate, sessionVO);
-      regOrderVO.setCallEntryVO(callEntryVO);
+    	if(CommonUtils.intNvl(orderVO.getMatAppTyId()) == SalesConstants.APP_TYPE_CODE_ID_RENTAL
+    	  && orderAppType == SalesConstants.APP_TYPE_CODE_ID_AUX) {
+
+    	} else {
+    		CallEntryVO callEntryVO = new CallEntryVO();
+    		this.preprocCallEntryMaster(callEntryVO, orderAppType, sInstallDate, sessionVO);
+    		regOrderVO.setCallEntryVO(callEntryVO);
+    	}
     }
 
     if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_SERVICE) {
@@ -1838,6 +1844,15 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     // SALES ORDER DETAILS
     salesOrderDVO.setSalesOrdId(salesOrdId);
     orderRegisterMapper.insertSalesOrderD(salesOrderDVO);
+
+    // is Mattress
+    EgovMap stkMap = orderRegisterMapper.getCtgryId(salesOrderDVO.getItmStkId());
+    int ctgyId = CommonUtils.intNvl(stkMap.get("stkCtgryId"));
+
+    if(ctgyId == HomecareConstants.HC_CTGRY_ID.MAT) {  // Mattress Only
+    	salesOrderMVO.setSalesProdSz(CommonUtils.nvl(stkMap.get("stkSize")));
+    	orderRegisterMapper.insert_SAL0225D(salesOrderMVO);
+    }
 
     // INSTALLATION
     installationVO.setSalesOrdId(salesOrdId);

@@ -145,7 +145,17 @@ public class SalesOrderMVO implements Serializable {
 
   private int bndlId;
 
-  public int getBndlId() {
+  private String salesProdSz;
+
+  public String getSalesProdSz() {
+	return salesProdSz;
+}
+
+public void setSalesProdSz(String salesProdSz) {
+	this.salesProdSz = salesProdSz;
+}
+
+public int getBndlId() {
 	return bndlId;
 }
 

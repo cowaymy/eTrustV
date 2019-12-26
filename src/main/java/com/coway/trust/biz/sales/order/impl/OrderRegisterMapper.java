@@ -30,7 +30,6 @@ import com.coway.trust.biz.sales.order.vo.SrvConfigPeriodVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigSettingVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigurationVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
-import com.coway.trust.cmmn.model.LoginVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -197,5 +196,9 @@ public interface OrderRegisterMapper {
   int chkOrdLink(Map<String, Object> params);
 
   EgovMap getOrdInfo(Map<String, Object> params);
+
+  public int insert_SAL0225D(SalesOrderMVO salesOrderMVO);
+
+  public EgovMap getCtgryId(int ordId);
 
 }
