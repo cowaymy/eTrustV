@@ -25,6 +25,8 @@ public interface OrderRequestService {
 
   ReturnMessage requestCancelOrder(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 
+  ReturnMessage cboPckReqCanOrd(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
   EgovMap selectCompleteASIDByOrderIDSolutionReason(Map<String, Object> params);
 
   ReturnMessage requestProductExchange(Map<String, Object> params, SessionVO sessionVO) throws Exception;
