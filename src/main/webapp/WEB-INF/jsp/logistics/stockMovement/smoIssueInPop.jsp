@@ -140,12 +140,14 @@ $(document).ready(function(){
 
     if(Common.checkPlatformType() == "mobile") {
     	$("#zDelyNo").val("${param.zDelvryNo}");
+    	$("#zDelvryNo").val("${param.zDelvryNo}");
         $("#zRstNo").val("${param.zReqstno}");
     	$("#zFromLoc").val("${param.zRcvloc}");
     	$("#zToLoc").val("${param.zReqloc}");
 
     }else{
     	$("#zDelyNo").val($("#zDelvryNo").val());
+    	$("#zDelvryNo").val($("#zDelvryNo").val());
         $("#zRstNo").val($("#zReqstno").val());
         $("#zFromLoc").val($("#zRcvloc").val());
         $("#zToLoc").val($("#zReqloc").val());
@@ -448,6 +450,7 @@ function fn_scanSearchPop(item){
     <form id="smoIssueInForm" name="smoIssueInForm" method="POST">
         <input type="hidden" name="zTrnscType" id="zTrnscType" value="UM" />
         <input type="hidden" name="zRstNo" id="zRstNo" value=""/>
+        <input type="hidden" name="zDelvryNo" id="zDelvryNo" value=""/>
         <input type="hidden" name="zFromLoc" id="zFromLoc" />
         <input type="hidden" name="zToLoc" id="zToLoc" />
         <input type="hidden" name="zIoType" id="zIoType" value="I"/>
