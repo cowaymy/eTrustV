@@ -815,7 +815,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
    * r = ASManagementListMapper.insertSVC0005D(iMap) ; } } }
    */
 
-  /*@Override
+  @Override
   public List<EgovMap> getCareServiceJob_b(Map<String, Object> params) {
     return MSvcLogApiMapper.getCareServiceJobList_b(params);
   }
@@ -823,10 +823,10 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   @Override
   public List<EgovMap> getCareServiceParts_b(Map<String, Object> params) {
     return MSvcLogApiMapper.getCareServiceParts_b(params);
-  }*/
+  }
 
   /* Woongjin Jun */
-  /*@Override
+  @Override
   public List<EgovMap> getCareServiceJobList(Map<String, Object> params) {
     return MSvcLogApiMapper.getCareServiceJobList(params);
   }
@@ -901,7 +901,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   @Override
   public List<EgovMap> selectSerialList(Map<String, Object> params) {
     return MSvcLogApiMapper.selectSerialList(params);
-  }*/
+  }
   /* Woongjin Jun */
 
 }
