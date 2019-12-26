@@ -424,12 +424,14 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 		MlogApiMapper.StockMovementIssueScan(insMap);
 
+		logger.debug("++++ stockMovementReqDeliveryScan StockMovementIssueScan insMap 값 : {}", insMap);
+
 		String rdata = (String)insMap.get("rdata");
 		String rcode = "";
 		String rmsg = "";
 
-		System.out.println("++++ insMap ::" + insMap.toString()  );
-		System.out.println("++++ rdata ::" + rdata.toString()  );
+//		System.out.println("++++ insMap ::" + insMap.toString()  );
+//		System.out.println("++++ rdata ::" + rdata.toString()  );
 
 		if(rdata != null && rdata.indexOf("∈") > 0){
 			rcode = (String)rdata.split("∈")[0];
@@ -444,9 +446,11 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		receiveMapBarcode.put("reqstNo", "");
 		receiveMapBarcode.put("delvryNo", deliSeq);
 		receiveMapBarcode.put("userId", userLoc);
-		receiveMapBarcode.put("ioType", "I");
+		receiveMapBarcode.put("ioType", "O");
 
 		MlogApiMapper.LogisticBarcodeSave(receiveMapBarcode);
+
+		logger.debug("++++ stockMovementReqDeliveryScan LogisticBarcodeSave receiveMapBarcode 값 : {}", receiveMapBarcode);
 
 		String errcode = (String)receiveMapBarcode.get("errcode");
 		String errmsg = (String)receiveMapBarcode.get("errmsg");
