@@ -11,6 +11,18 @@
 
 	    createInstallationListAUIGrid();
 
+        AUIGrid.bind(myGridID, "rowAllChkClick", function( event ) {
+            if(event.checked) {
+                var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "appTypeId");
+                if(uniqueValues.indexOf("5764") != -1){
+                    uniqueValues.splice(uniqueValues.indexOf("5764"),1);
+                }
+                AUIGrid.setCheckedRowsByValue(event.pid, "appTypeId", uniqueValues);
+            } else {
+                AUIGrid.setCheckedRowsByValue(event.pid, "appTypeId", []);
+            }
+        });
+
 	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 	       var statusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
 	       Common.popupDiv("/services/installationResultDetailPop.do?isPop=true&installEntryId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId") + "&codeId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1"));
@@ -115,15 +127,23 @@
 	        {dataField : "codeid1",            width : 0},
 	        {dataField : "c1",                    width : 0},
 	        {dataField : "salesOrdId",         width : 0},
-	        {dataField : "rcdTms",             width : 0}
+	        {dataField : "rcdTms",             width : 0},
+	        {dataField : "appTypeId",       width : 0, visible:false}
 	    ];
 
 	    var gridPros = {
-	      showRowCheckColumn : true,
 	      usePaging : true,
 	      pageRowCount : 20,
+	      showRowCheckColumn : true,
+	      independentAllCheckBox : true,
 	      showRowAllCheckBox : true,
-	      editable : false
+	      editable : false,
+	      rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
+	          if(item.appTypeId == "5764") { // AUX가  아닌 경우 체크박스 disabeld 처리함
+	              return false; // false 반환하면 disabled 처리됨
+	          }
+	          return true;
+	      }
 	    };
 
 	    myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
@@ -177,7 +197,7 @@
         if (result.code == "99") {
           Common.alert(result.message);
         } else {
-          Common.popupDiv("/services/assignCTTransferPop.do", null, null, true, '_assginCTTransferDiv');
+          Common.popupDiv("/homecare/services/as/assignCTTransferPop.do", null, null, true, '_assginCTTransferDiv');
         }
       });
   }
@@ -328,14 +348,12 @@
   <ul class="right_btns">
    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onClick="javascript:fn_assginCTTransfer()"><spring:message
-        code='service.btn.AssginCTTransfer' /></a>
+      <a href="#" onClick="javascript:fn_assginCTTransfer()"><spring:message code='service.btn.AssginCTTransfer' /></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="javascript:fn_installationListSearch()"><span
-       class="search"></span>
+      <a href="#" onclick="javascript:fn_installationListSearch()"><span class="search"></span>
       <spring:message code='sys.btn.search' /></a>
      </p></li>
    </c:if>
