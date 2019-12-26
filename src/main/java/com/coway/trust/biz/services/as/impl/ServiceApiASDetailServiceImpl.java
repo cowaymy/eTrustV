@@ -1046,10 +1046,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         					rtnValue.put("logerr", "Y");
         				}
 
-        				// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
-        				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-
-        				params.put("scanSerial", String.valueOf(insApiresult.get("serialNo"))); // ??????????????????????
+        				params.put("scanSerial", String.valueOf(insApiresult.get("scanSerial")));
     					params.put("salesOrdId", String.valueOf(getAsBasic.get("salesOrdId")));
     					params.put("reqstNo", String.valueOf(insApiresult.get("serviceNo")));
     					params.put("delvryNo", null);
@@ -1059,6 +1056,18 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
     					params.put("pErrcode", "");
     					params.put("pErrmsg", "");
     					MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
+
+    					if (!"000".equals(params.get("pErrcode"))) {
+    						String procTransactionId = transactionId;
+    						String procName = "AfterService";
+    						String procKey = serviceNo;
+    						String procMsg = "Failed to Barcode Save";
+    						String errorMsg = "[API] " + params.get("pErrmsg");
+    						throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+						}
+
+        				// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
+        				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
         			}
         		}
         		catch (Exception e) {
