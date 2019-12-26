@@ -2059,4 +2059,16 @@
                              WHERE SRV_MEM_DUR IN (SELECT PARAM_VAL FROM SYS0098M WHERE PARAM_CODE = 'S_APPL_EXC_PAC_DUR'))
   </update>
 
+  <update id="unbindPromPckOrd" parameterType="Map">
+    UPDATE SAL0001D SET PCKAGE_BINDING_NO = 0
+    WHERE SALES_ORD_ID = #{salesOrdId}
+  </update>
+
+  <update id="tagPromPckOrd" parameterType="Map">
+    UPDATE SAL0001D SET PCKAGE_BINDING_NO = #{hiddenCboOrdNoTag}
+    WHERE SALES_ORD_ID IN ( SELECT SALES_ORD_ID
+                            FROM SAL0001D
+                            WHERE PCKAGE_BINDING_NO = #{salesOrdId})
+  </update>
+
 </mapper>
