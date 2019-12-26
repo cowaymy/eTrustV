@@ -4341,7 +4341,7 @@
            A.need_Filter,
            TO_CHAR (NVL(A.warranty,0)) AS warranty,
            TO_CHAR (NVL(B.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding,
-           homeCareOrderYn
+           homeCareOrderYn AS home_Care_Order_Yn
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
