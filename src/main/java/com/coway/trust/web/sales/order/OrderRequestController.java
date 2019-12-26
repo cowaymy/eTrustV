@@ -98,6 +98,15 @@ public class OrderRequestController {
     return ResponseEntity.ok(message);
   }
 
+  @RequestMapping(value = "/cboPckReqCanOrd.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> cboPckReqCanOrd(@RequestBody Map<String, Object> params, ModelMap model,
+      SessionVO sessionVO) throws Exception {
+
+    ReturnMessage message = orderRequestService.cboPckReqCanOrd(params, sessionVO);
+
+    return ResponseEntity.ok(message);
+  }
+
   @RequestMapping(value = "/requestProdExch.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> requestProdExch(@RequestBody Map<String, Object> params, ModelMap model,
       SessionVO sessionVO) throws Exception {
