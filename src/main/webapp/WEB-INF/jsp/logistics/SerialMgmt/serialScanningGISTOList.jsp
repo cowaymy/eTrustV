@@ -239,7 +239,7 @@
 
     <aside class="title_line"><!-- title_line start -->
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>STO GI S/N Scanning</h2>
+        <h2>STO GI S/N Scan</h2>
 
         <ul class="right_btns">
             <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
