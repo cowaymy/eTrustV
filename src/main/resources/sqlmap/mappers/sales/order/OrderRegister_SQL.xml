@@ -2709,5 +2709,79 @@
      AND B.PCKAGE_BINDING_NO IS NULL
   </select>
 
+  <select id="selectComboOrderJsonList_2" parameterType="Map" resultType="egovMap">
+    SELECT * FROM ( SELECT DISTINCT A.SALES_ORD_NO AS ORD_NO,
+                                    A.SALES_ORD_ID AS ORD_ID,
+                                    A.REF_NO AS REF_NO,
+                                    TO_CHAR(A.SALES_DT, 'DD/MM/YYYY') AS ORD_DT,
+                                    G.CODE AS APP_TYPE,
+                                    D.STK_DESC AS PROD,
+                                    E.PROMO_CODE AS PROMO_CDE,
+                                    F.CUST_ACC_OWNER AS CUST_ID,
+                                    C.SO_REQ_ID,
+                                    C.SO_REQ_STUS_ID
+                    FROM SAL0001D A
+                    JOIN ( SELECT PROD_CDE,
+                                  PROMO_ID
+                           FROM SAL0252M
+                           WHERE CONF_ID IN ( SELECT CONF_ID
+                                              FROM SAL0253D
+                                              WHERE SUB_PROMO_ID IN (SELECT PROMO_ID
+                                                                     FROM SAL0001D
+                                                                     WHERE PCKAGE_BINDING_NO = #{ordIdPop_1}
+                                                                       AND CUST_ID = #{custId}))) B ON A.PROMO_ID = B.PROMO_ID
+                                                                                            AND A.CUST_ID = #{custId}
+                                                                                            AND STUS_CODE_ID <![CDATA[<>]]> 10
+                    LEFT JOIN SAL0020D C ON C.SO_REQ_SO_ID = A.SALES_ORD_ID AND C.SO_REQ_ID = FN_GET_SAL0020D_MAX_ID(A.SALES_ORD_ID, '1')
+                    JOIN SAL0002D H ON A.SALES_ORD_ID = H.SALES_ORD_ID
+                    JOIN SYS0026M D ON H.ITM_STK_ID = D.STK_ID
+                    JOIN SAL0017D E ON A.PROMO_ID = E.PROMO_ID
+                    JOIN SAL0022D F ON A.CUST_ID = F.CUST_ID
+                    JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND A.APP_TYPE_ID = G.CODE_ID
 
+                    WHERE A.SALES_ORD_ID NOT IN ( SELECT A.SALES_ORD_ID
+                                                  FROM SAL0001D A
+                                                  JOIN SAL0001D B ON A.SALES_ORD_ID = B.PCKAGE_BINDING_NO
+                                                  WHERE A.CUST_ID = #{custId}
+                                                    AND A.STUS_CODE_ID <![CDATA[<>]]> 10
+                                                    AND A.PROMO_ID IN ( SELECT PROMO_ID
+                                                                        FROM SAL0252M
+                                                                        WHERE CONF_ID IN ( SELECT CONF_ID
+                                                                                            FROM SAL0253D
+                                                                                            WHERE SUB_PROMO_ID IN (SELECT PROMO_ID
+                                                                                                                   FROM SAL0001D
+                                                                                                                   WHERE PCKAGE_BINDING_NO = #{ordIdPop_1}
+                                                                                                                     AND CUST_ID = 31))
+                                                                       ))) WHERE (SO_REQ_ID IS NULL OR (SO_REQ_ID IS NOT NULL AND SO_REQ_STUS_ID = 31))
+  </select>
+
+  <select id="chkPromoCboByOrd" parameterType="Map" resultType="string">
+    SELECT DISTINCT TYP FROM (SELECT PROMO_ID AS PROMO_ID,
+                                     'M' AS TYP FROM SAL0252M
+                                     WHERE DISB = 0
+                              UNION
+                              SELECT SUB_PROMO_ID AS PROMO_ID,
+                                     'S' AS TYP FROM SAL0253D
+                                     WHERE DISB = 0
+    ) WHERE PROMO_ID = (SELECT PROMO_ID
+                        FROM SAL0001D
+                        WHERE SALES_ORD_NO = #{ordNo})
+  </select>
+
+  <select id="chkOrdLink" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0001D
+    WHERE SALES_ORD_NO = #{ordNo}
+     AND (PCKAGE_BINDING_NO IS NOT NULL
+       OR PCKAGE_BINDING_NO != ''
+       OR PCKAGE_BINDING_NO > 0)
+  </select>
+
+  <select id="getOrdInfo" parameterType="Map" resultType="egovMap">
+    SELECT SALES_ORD_ID AS ordId,
+           APP_TYPE_ID AS ordApp,
+           STUS_CODE_ID AS ordStat
+    FROM SAL0001D
+    WHERE SALES_ORD_NO = #{ordNo}
+  </select>
 </mapper>
