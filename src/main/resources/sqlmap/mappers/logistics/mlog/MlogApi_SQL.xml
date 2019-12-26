@@ -872,7 +872,7 @@
                     l55d.ITM_NAME
                     PARTS_NAME,
                     l100m.SERIAL_NO SERIAL_NO,
-                    l55d.DELVRY_QTY REQUEST_QTY,
+                    (CASE WHEN l100m.SERIAL_NO is not null THEN 1 ELSE l55d.DELVRY_QTY END) REQUEST_QTY,
                     l55d.DELVRY_NO_ITM SMO_NO_ITEM,
                     l100m.LAST_DELVRY_NO_ITM AS PDELVRY_NO_ITM,
                     s26m.STK_ID PARTS_ID,
