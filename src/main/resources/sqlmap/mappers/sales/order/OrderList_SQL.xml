@@ -272,7 +272,7 @@
                 , V1.PROMO_DESC
                 , V1.RELATED_NO
                 , V1.RELATED_ID
-                , D1.BNDL_NO
+                <!-- , D1.BNDL_NO  -->
            FROM SAL1013V  V1
              JOIN SYS0026M M1 ON V1.PRODUCT_CODE = M1.STK_CODE
       LEFT JOIN HMC0011D D1 ON V1.BNDL_ID = D1.ORD_SEQ_NO
