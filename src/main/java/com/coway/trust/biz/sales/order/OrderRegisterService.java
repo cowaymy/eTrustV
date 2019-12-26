@@ -82,4 +82,10 @@ public interface OrderRegisterService {
 
   List<EgovMap> selectComboOrderJsonList(Map<String, Object> params);
 
+  List<EgovMap> selectComboOrderJsonList_2(Map<String, Object> params);
+
+  int checkCboPromByOrdNo(Map<String, Object> params);
+
+  EgovMap getOrdInfo(Map<String, Object> params);
+
 }
