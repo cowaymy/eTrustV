@@ -64,6 +64,10 @@ public interface OrderRequestMapper {
 
   void updateRentalScheme(Map<String, Object> params);
 
+  int unbindPromPckOrd(Map<String, Object> params);
+
+  int tagPromPckOrd(Map<String, Object> params);
+
   EgovMap selectCompleteASIDByOrderIDSolutionReason(Map<String, Object> params);
 
   void insertSalesOrderExchange(SalesOrderExchangeVO salesOrderExchangeVO);
