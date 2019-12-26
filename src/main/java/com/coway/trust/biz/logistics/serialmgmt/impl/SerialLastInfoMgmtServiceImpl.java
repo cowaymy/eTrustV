@@ -109,9 +109,9 @@ public class SerialLastInfoMgmtServiceImpl implements SerialLastInfoMgmtService 
     			throw new ApplicationException(AppConstants.FAIL, "Invalid Serial No.<br />[ Serial No : " + params.get("serialNo") +  " ]");
     		}
 		}
-		if(CommonUtils.isNotEmpty(params.get("lastReqstNo")) && Integer.parseInt(String.valueOf(validMap.get("validReqstCnt"))) == 0  )	{
+		/*if(CommonUtils.isNotEmpty(params.get("lastReqstNo")) && Integer.parseInt(String.valueOf(validMap.get("validReqstCnt"))) == 0  )	{
 			throw new ApplicationException(AppConstants.FAIL, "Invalid Request No.<br />[ Request No : " + params.get("lastReqstNo") +  " ]");
-		}
+		}*/
 		if(CommonUtils.isNotEmpty(params.get("lastDelvryNo")) && Integer.parseInt(String.valueOf(validMap.get("validDelvryCnt"))) == 0  )	{
 			throw new ApplicationException(AppConstants.FAIL, "Invalid Delivery No.<br />[ Delivery No : " + params.get("lastDelvryNo") +  " ]");
 		}
