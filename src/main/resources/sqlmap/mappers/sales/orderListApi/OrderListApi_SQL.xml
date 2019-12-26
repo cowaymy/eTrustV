@@ -68,6 +68,7 @@ FROM
         </choose>
 )
 WHERE   RN = 1
+ORDER BY SALES_ORD_NO DESC
 </select>
 
 

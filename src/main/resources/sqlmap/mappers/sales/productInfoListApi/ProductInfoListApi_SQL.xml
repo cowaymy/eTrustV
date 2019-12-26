@@ -41,28 +41,20 @@ SELECT  A.STK_CODE                                                              
                                                 ELSE CAST(0 AS FLOAT (53))
                                                 END                             AS STK_COMM_INS
     ,   A.STK_TYPE_ID                                                           AS STK_TYPE_ID
-    ,   CASE WHEN A.STK_TYPE_ID = 61    THEN NVL(C.AMT, 0)
-                                        ELSE 0
-                                        END                                     AS MONTHLY_RENTAL
-    ,   CASE WHEN A.STK_TYPE_ID = 61    THEN NVL(C.PRC_RPF, 0)
-                                        ELSE 0
-                                        END                                     AS PRC_RPF
-    ,   CASE WHEN A.STK_TYPE_ID = 61    THEN 0
-                                        ELSE NVL(D.PRC_CHRG, 0)
-                                        END                                     AS NORMAL_PRICE
-    ,   CASE WHEN A.STK_TYPE_ID = 61    THEN NVL(D.TRADE_IN_PV, 0)
-                                        ELSE 0
-                                        END                                     AS POINT_OF_VALUE
+    ,   NVL(C.AMT, 0)                                                           AS MONTHLY_RENTAL
+    ,   NVL(C.PRC_RPF, 0)                                                       AS PRC_RPF
+    ,   NVL(D.AMT, 0)                                                           AS NORMAL_PRICE
+    ,   NVL(D.PRC_PV, 0)                                                        AS POINT_OF_VALUE
     ,   E.IMG_URL                                                               AS IMG_URL
 FROM    SYS0026M A                                                              -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : InvStock
         INNER JOIN SYS0013M B
             ON  A.STK_CTGRY_ID = B.CODE_ID
-        LEFT OUTER JOIN LOG0058D C
+        LEFT OUTER JOIN SAL0016M C
             ON  C.APP_TYPE_ID = 66
             AND C.MEM_PAC_ID  = 2
             AND A.STK_ID = C.STK_ID
-        LEFT OUTER JOIN LOG0058D D
-            ON  D.APP_TYPE_ID = 66
+        LEFT OUTER JOIN SAL0016M D
+            ON  D.APP_TYPE_ID = 67
             AND D.MEM_PAC_ID  = 0
             AND A.STK_ID = D.STK_ID
         LEFT OUTER JOIN SYS0027M E

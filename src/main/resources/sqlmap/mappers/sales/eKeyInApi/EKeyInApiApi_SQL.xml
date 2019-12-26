@@ -1332,7 +1332,7 @@ SELECT  A.TYPE_ID                                                               
                                                                         END     AS DOB
     ,   A.NAME                                                                  AS CUST_NAME
     ,   A.GENDER                                                                AS GENDER
-    ,   NVL2(D.CNTY_ID, D.NAME, NULL)                                           AS NATION
+    ,   D.CODE_DESC                                                             AS NATION
     ,   NVL2(E.CODE_ID, E.CODE_NAME, NULL)                                      AS RACE
     ,   CASE WHEN TO_CHAR(A.PAS_SPORT_EXPR, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
                                                                          ELSE TO_CHAR(A.PAS_SPORT_EXPR, 'DD/MM/YYYY')
@@ -1347,8 +1347,10 @@ FROM    SAL0029D A                                                              
             AND B.STUS_CODE_ID = 9
         LEFT OUTER JOIN SYS0013M C
             ON  B.CUST_INITIAL = C.CODE_ID
-        LEFT OUTER JOIN SYS0015M D
-            ON  A.NATION = D.CNTY_ID
+        LEFT OUTER JOIN SYS0013M D
+            ON  A.NATION = D.CODE_ID
+            AND D.CODE_MASTER_ID = 338
+            AND D.DISAB = 0
         LEFT OUTER JOIN SYS0013M E
             ON  A.RACE_ID = E.CODE_ID
         LEFT OUTER JOIN SYS0013M F
@@ -1681,7 +1683,7 @@ INTO    HMC0011D                                                                
     ,   #{matPreOrdId}                                                          --eKeyin Mat ord_id
     ,   #{fraPreOrdId}                                                          --eKeyin Fra Ord_id
     ,   1                                                                       --eKeyin Status id
-    ,   NULL                                                                    --BNDL_NO
+    ,   'SB'||LPAD(#{ordSeqNo}, 8, '0')                                         --BNDL_NO
     ,   NULL                                                                    --SAL0225D SRV_ORD_ID
 )
 </insert>

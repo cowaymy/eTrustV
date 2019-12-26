@@ -47,7 +47,7 @@ FROM
 	<if test="selectType != null and selectType != '' ">
 	    <choose>
 	        <when test='selectType.equals("1")'>
-	AND     UPPER(A.NAME) LIKE UPPER(#{selectKeyword})||'%'
+	AND     REPLACE(UPPER(A.NAME), ' ', '') LIKE '%'||REPLACE(UPPER(#{selectKeyword}), ' ', '')||'%'
 	        </when>
 
 	       <when test='selectType.equals("2")'>
@@ -101,7 +101,7 @@ FROM
 	        NVL(C.COUNTRY,'')                                                   AS ADDR
 	    ,   C.POSTCODE                                                          AS POSTCODE
 	    ,   A.CUST_VA_NO                                                        AS CUST_VA_NO
-	    ,   LEFT_B.NAME                                                         AS NATION_NAME
+	    ,   LEFT_B.CODE_DESC                                                    AS NATION_NAME
 	    ,   LEFT_C.CODE_NAME                                                    AS RACE_ID_NAME
 	    ,   E.TEL_M1                                                            AS TEL_M1
 	    ,   E.TEL_O                                                             AS TEL_O
@@ -123,8 +123,10 @@ FROM
 	        LEFT OUTER JOIN SYS0013M LEFT_A
 	            ON  A.CORP_TYPE_ID = LEFT_A.CODE_ID
 	            AND A.CORP_TYPE_ID != 0
-	        LEFT OUTER JOIN SYS0015M LEFT_B
-	            ON  A.NATION = LEFT_B.CNTY_ID
+            LEFT OUTER JOIN SYS0013M LEFT_B
+                ON  A.NATION = LEFT_B.CODE_ID
+                AND LEFT_B.CODE_MASTER_ID = 338
+                AND LEFT_B.DISAB = 0
 	        LEFT OUTER JOIN SYS0013M LEFT_C
 	            ON  A.RACE_ID = LEFT_C.CODE_ID
 	WHERE   A.CUST_ID = #{custId}
