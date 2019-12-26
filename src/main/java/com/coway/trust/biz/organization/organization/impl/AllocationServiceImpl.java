@@ -231,7 +231,7 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 	}
 
 
-
+	@Override
 	public  EgovMap  isVacation(Map<String, Object> params){
 
 		params.put("vactReplCt",CommonUtils.nvl((params.get("ct"))));

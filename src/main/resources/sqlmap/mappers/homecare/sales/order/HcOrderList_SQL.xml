@@ -203,6 +203,9 @@
                         <if test='isEKeyin != null and isEKeyin != ""'>
                             AND EKEY_IN_ID IS NOT NULL
                         </if>
+                        <if test='bndlNo != null and bndlNo != ""'>
+                            AND UPPER(D1.BNDL_NO) = UPPER(#{bndlNo})
+                        </if>
          ) T
          ORDER BY T.ORD_NO ASC
     </select>

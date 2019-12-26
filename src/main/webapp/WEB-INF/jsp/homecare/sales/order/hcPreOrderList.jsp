@@ -8,7 +8,7 @@
     var keyValueList = [];
     var MEM_TYPE = '${SESSION_INFO.userTypeId}';
     var CATE_ID  = "14";
-    var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
+    var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "5764","codeName": "Auxiliary"}];
     var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancel"}];
     var myFileCaches = {};
     var recentGridItem = null;
@@ -560,6 +560,14 @@
     <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="Grp Code" class="w100p"/></td>
     <th scope="row">Dept Code</th>
     <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
+</tr>
+<tr>
+    <th scope="row">Bundle Number</th>
+    <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
+    <th scope="row"></th>
+    <td></td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th>

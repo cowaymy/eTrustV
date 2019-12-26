@@ -1736,6 +1736,11 @@ public class CustomerController {
     model.addAttribute("city", params.get("mCity"));
     model.addAttribute("postCode", params.get("mPostCd"));
 
+    // 20191018 - Add KR-SH
+    model.addAttribute("searchState", params.get("mState"));
+    model.addAttribute("searchCity", params.get("mCity"));
+
+
     // 데이터 리턴.
     return "sales/customer/customerMagicAddrPop";
   }

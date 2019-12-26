@@ -1132,28 +1132,7 @@
             var _tagId = _tagObj.attr('id');
             var _tagNum = _tagId.replace(/[^0-9]/g,"");
 
-            $('#trialNoChk').prop("checked", false).prop("disabled", true);
-            $('#trialNo').val('').addClass("readonly");
-
-            var appTypeIdx  = $("#appType option:selected").index();
-            var appTypeVal  = $("#appType").val();
-
-            var stkIdIdx      = $("#ordProduct"+_tagNum+" option:selected").index();
-            var stkIdVal      = $("#ordProduct"+_tagNum).val();
-            var promoIdIdx = $("#ordPromo"+_tagNum+" option:selected").index();
-            var promoIdVal = $("#ordPromo"+_tagNum).val();
-
-            var srvPacId  = appTypeVal == '66' ? $('#srvPacId').val() : 0;
-
-            if(promoIdIdx > 0 && promoIdVal != '0') {
-                if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
-                    $('#trialNoChk').removeAttr("disabled");
-                }
-                fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId, _tagNum);
-
-            } else {
-                fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId, _tagNum);
-            }
+            fn_promoChg(_tagNum);
         });
 
 
@@ -1166,6 +1145,31 @@
             }
         });
     });
+
+    function fn_promoChg(_tagNum) {
+        $('#trialNoChk').prop("checked", false).prop("disabled", true);
+        $('#trialNo').val('').addClass("readonly");
+
+        var appTypeIdx  = $("#appType option:selected").index();
+        var appTypeVal  = $("#appType").val();
+
+        var stkIdIdx      = $("#ordProduct"+_tagNum+" option:selected").index();
+        var stkIdVal      = $("#ordProduct"+_tagNum).val();
+        var promoIdIdx = $("#ordPromo"+_tagNum+" option:selected").index();
+        var promoIdVal = $("#ordPromo"+_tagNum).val();
+
+        var srvPacId  = appTypeVal == '66' ? $('#srvPacId').val() : 0;
+
+        if(promoIdIdx > 0 && promoIdVal != '0') {
+            if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
+                $('#trialNoChk').removeAttr("disabled");
+            }
+            fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId, _tagNum);
+
+        } else {
+            fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId, _tagNum);
+        }
+    }
 
     function fn_preCheckSave() {
         if(!fn_validCustomer()) {
@@ -2192,6 +2196,9 @@
 
                 $("#promoDiscPeriodTp"+tagNum).val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriod"+tagNum).val(promoPriceInfo.promoDiscPeriod);
+
+                // 합계
+                totSumPrice();
             }
         });
     }

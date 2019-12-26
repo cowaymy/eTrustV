@@ -123,26 +123,20 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			// 홈케어 주문관리 테이블 insert - HMC0011D
 			HcOrderVO hcOrderVO = new HcOrderVO();
 			int cntHcOrder = hcOrderRegisterMapper.getCountHcPreOrder(ordSeqNo);
+			String bndlNo = hcOrderRegisterMapper.getBndlNo(ordSeqNo);
+
+			hcOrderVO.setCustId(custId);                     // 고객번호
+			hcOrderVO.setMatOrdNo(matOrdNo);        // Mattress Order No
+			hcOrderVO.setFraOrdNo(fraOrdNo);           // Frame Order No
+			hcOrderVO.setCrtUserId(sessionVO.getUserId());    // session Id Setting
+			hcOrderVO.setUpdUserId(sessionVO.getUserId());  // session Id Setting
+			hcOrderVO.setOrdSeqNo(ordSeqNo);
+			hcOrderVO.setBndlNo(bndlNo);
 
 			// Pre Order 인 경우.
 			if(cntHcOrder > 0) {
-				hcOrderVO.setCustId(custId);                     // 고객번호
-				hcOrderVO.setMatOrdNo(matOrdNo);        // Mattress Order No
-				hcOrderVO.setFraOrdNo(fraOrdNo);           // Frame Order No
-				hcOrderVO.setCrtUserId(sessionVO.getUserId());    // session Id Setting
-				hcOrderVO.setUpdUserId(sessionVO.getUserId());  // session Id Setting
-				hcOrderVO.setOrdSeqNo(ordSeqNo);
-
 				rtnCnt = hcOrderRegisterMapper.updateHcPreOrder(hcOrderVO);
-
 			} else {
-				hcOrderVO.setCustId(custId);                     // 고객번호
-				hcOrderVO.setMatOrdNo(matOrdNo);        // Mattress Order No
-				hcOrderVO.setFraOrdNo(fraOrdNo);           // Frame Order No
-				hcOrderVO.setCrtUserId(sessionVO.getUserId());    // session Id Setting
-				hcOrderVO.setUpdUserId(sessionVO.getUserId());  // session Id Setting
-				hcOrderVO.setOrdSeqNo(ordSeqNo);
-
 				rtnCnt = hcOrderRegisterMapper.insertHcRegisterOrder(hcOrderVO);
 			}
 

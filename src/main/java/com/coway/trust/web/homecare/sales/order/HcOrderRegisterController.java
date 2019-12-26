@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService;
+import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -140,6 +141,7 @@ public class HcOrderRegisterController {
 		}*/
 
 		String msg = "";
+		HcOrderVO hcOrderVO = orderVO.getHcOrderVO();
 
 		msg += "Order successfully saved.<br />";
 
@@ -147,11 +149,11 @@ public class HcOrderRegisterController {
 			msg += "Order Number : " + orderVO.getSalesOrdNoFirst() + " ~ " + orderVO.getSalesOrderMVO().getSalesOrdNo()
 					+ "<br />";
 		} else {
-			if(!"".equals(CommonUtils.nvl(orderVO.getHcOrderVO().getMatOrdNo()))) {
-				msg += "Order Number(Mattres) : " + orderVO.getHcOrderVO().getMatOrdNo() + "<br />";
+			if(!"".equals(CommonUtils.nvl(hcOrderVO.getMatOrdNo()))) {
+				msg += "Order Number(Mattres) : " + hcOrderVO.getMatOrdNo() + "<br />";
 			}
-			if(!"".equals(CommonUtils.nvl(orderVO.getHcOrderVO().getFraOrdNo()))) {
-				msg += "Order Number(Frame) : "   + orderVO.getHcOrderVO().getFraOrdNo() + "<br />";
+			if(!"".equals(CommonUtils.nvl(hcOrderVO.getFraOrdNo()))) {
+				msg += "Order Number(Frame) : "   + hcOrderVO.getFraOrdNo() + "<br />";
 			}
 		}
 
@@ -159,7 +161,7 @@ public class HcOrderRegisterController {
 				|| orderVO.getSalesOrderDVO().getItmCompId() == 4) {
 			msg += "AS Number : " + orderVO.getASEntryVO().getAsNo() + "<br />";
 		}
-
+		msg += "Bundle Number : " + hcOrderVO.getBndlNo() + "<br />";
 		msg += "Application Type : " + appTypeName + "<br />";
 
 		// 결과 만들기

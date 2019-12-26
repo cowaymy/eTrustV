@@ -36,7 +36,7 @@ public interface HcOrderCallListService {
 	 * @param params
 	 * @return
 	 */
-	public List<EgovMap> hcInsertCallResult(Map<String, Object>params);
+	public List<EgovMap> hcInsertCallResult(Map<String, Object>params) throws Exception;
 
 	/**
 	 * TO-DO Description

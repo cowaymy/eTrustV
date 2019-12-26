@@ -118,9 +118,8 @@
                     $('#ordRentalFees1').val('${preMatOrderInfo.mthRentAmt}');
                     $('#promoDiscPeriodTp1').val('${preMatOrderInfo.promoDiscPeriodTp}');
                     $('#promoDiscPeriod1').val('${preMatOrderInfo.promoDiscPeriod}');
-                    $('#ordPrice1').val('${preMatOrderInfo.totAmt}');
-                    $('#normalOrdPrice1').val('${preMatOrderInfo.norAmt}');
-                    $('#normalOrdRentalFees1').val('${preMatOrderInfo.norRntFee}');
+                    $('#ordPrice1').val('${preMatOrderInfo.norAmt}');
+
                     $('#ordRentalFees1').val('${preMatOrderInfo.discRntFee}');
                     $('#ordPv1').val('${preMatOrderInfo.totPv}');
                     $('#ordPvGST1').val('${preMatOrderInfo.totPvGst}');
@@ -141,8 +140,6 @@
                     $('#promoDiscPeriodTp2').val('${preFrmOrderInfo.promoDiscPeriodTp}');
                     $('#promoDiscPeriod2').val('${preFrmOrderInfo.promoDiscPeriod}');
                     $('#ordPrice2').val('${preFrmOrderInfo.totAmt}');
-                    $('#normalOrdPrice2').val('${preFrmOrderInfo.norAmt}');
-                    $('#normalOrdRentalFees2').val('${preFrmOrderInfo.norRntFee}');
                     $('#ordRentalFees2').val('${preFrmOrderInfo.discRntFee}');
                     $('#ordPv2').val('${preFrmOrderInfo.totPv}');
                     $('#ordPvGST2').val('${preFrmOrderInfo.totPvGst}');

@@ -7,8 +7,6 @@
     var anoOrdNo = "${hcOrder.anoOrdNo}";
     var _addCllMsg = "Another order : <b>"+ anoOrdNo +"</b><br/>is also Add Call Log together.<br/>Do you want to continue?";
 
-    console.log("anoOrdNo:::::::", anoOrdNo);
-
     function fn_saveValidation() {
         var msg = "";
 

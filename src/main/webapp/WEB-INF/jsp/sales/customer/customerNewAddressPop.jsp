@@ -275,6 +275,16 @@
     }
 
     function fn_addrSearch(){
+        // null state
+        if (FormUtil.isEmpty($("#mState").val())) {
+            Common.alert("<spring:message code='sys.msg.necessary' arguments='State' htmlEscape='false'/>");
+            return false;
+        }
+        // null city
+        if (FormUtil.isEmpty($("#mCity").val())) {
+            Common.alert("<spring:message code='sys.msg.necessary' arguments='City' htmlEscape='false'/>");
+            return false;
+        }
         if($("#searchSt").val() == ''){
             Common.alert("Please search.");
             return false;
@@ -366,12 +376,6 @@
     </colgroup>
          <tbody>
             <tr>
-                <th scope="row"><spring:message code="sal.text.streetSearch" /><span class="must">*</span></th>
-                <td>
-                <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" style="width:155px;"/><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-                </td>
-            </tr>
-            <tr>
                 <th scope="row" ><spring:message code="sal.text.addressDetail" /><span class="must">*</span></th>
                 <td>
                 <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  />
@@ -384,15 +388,9 @@
                 </td>
             </tr>
             <tr>
-               <th scope="row"><spring:message code="sal.text.area4" /><span class="must">*</span></th>
+                <th scope="row"><spring:message code="sal.text.state1" /><span class="must">*</span></th>
                 <td>
-                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
-                </td>
-            </tr>
-            <tr>
-                 <th scope="row"><spring:message code="sal.text.postCode3" /><span class="must">*</span></th>
-                <td>
-                <select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
+                <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
                 </td>
             </tr>
             <tr>
@@ -402,9 +400,21 @@
                 </td>
             </tr>
             <tr>
-                <th scope="row"><spring:message code="sal.text.state1" /><span class="must">*</span></th>
+                <th scope="row"><spring:message code="sal.text.streetSearch3" /><span class="must">*</span></th>
                 <td>
-                <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
+                <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" style="width:155px;"/><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                </td>
+            </tr>
+            <tr>
+                 <th scope="row"><spring:message code="sal.text.postCode4" /><span class="must">*</span></th>
+                <td>
+                <select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
+                </td>
+            </tr>
+            <tr>
+               <th scope="row"><spring:message code="sal.text.area5" /><span class="must">*</span></th>
+                <td>
+                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
                 </td>
             </tr>
             <tr>

@@ -7,8 +7,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.homecare.sales.order.HcPreOrderService;
+import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.vo.PreOrderVO;
@@ -46,8 +45,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/homecare/sales/order")
 public class HcPreOrderController {
-
-	private static Logger logger = LoggerFactory.getLogger(HcPreOrderController.class);
 
     @Resource(name = "salesCommonService")
     private SalesCommonService salesCommonService;
@@ -200,14 +197,17 @@ public class HcPreOrderController {
 		// 주문 저장
 		hcPreOrderService.registerHcPreOrder(preOrderVO, sessionVO);
 
+		HcOrderVO hcOrderVO = preOrderVO.getHcOrderVO();
+
 		String msg = "Order successfully saved.<br />";
 
-		if(!"".equals(CommonUtils.nvl(preOrderVO.getHcOrderVO().getMatPreOrdId())) && !"0".equals(CommonUtils.nvl(preOrderVO.getHcOrderVO().getMatPreOrdId()))) {
-			msg += "Pre Order Number(Mattres) : " + preOrderVO.getHcOrderVO().getMatPreOrdId() + "<br />";
+		if(!"".equals(CommonUtils.nvl(hcOrderVO.getMatPreOrdId())) && !"0".equals(CommonUtils.nvl(hcOrderVO.getMatPreOrdId()))) {
+			msg += "Pre Order Number(Mattres) : " + hcOrderVO.getMatPreOrdId() + "<br />";
 		}
-		if(!"".equals(CommonUtils.nvl(preOrderVO.getHcOrderVO().getFraPreOrdId())) && !"0".equals(CommonUtils.nvl(preOrderVO.getHcOrderVO().getFraPreOrdId()))) {
-			msg += "Pre Order Number(Frame) : "   + preOrderVO.getHcOrderVO().getFraPreOrdId() + "<br />";
+		if(!"".equals(CommonUtils.nvl(hcOrderVO.getFraPreOrdId())) && !"0".equals(CommonUtils.nvl(hcOrderVO.getFraPreOrdId()))) {
+			msg += "Pre Order Number(Frame) : "   + hcOrderVO.getFraPreOrdId() + "<br />";
 		}
+		msg += "Bundle Number : " + hcOrderVO.getBndlNo() + "<br />";
 		msg += "Application Type : " + appTypeStr + "<br />";
 
 		// 결과 만들기
@@ -231,7 +231,7 @@ public class HcPreOrderController {
 	@RequestMapping(value = "/hcPreOrderModifyPop.do")
 	public String hcPreOrderModifyPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
 		// Search Pre Order Info
-		EgovMap preOrderInfo = preOrderService.selectPreOrderInfo(params);
+		EgovMap preOrderInfo = null;
 		// 매핑테이블 조회. - HMC0011D
 		EgovMap hcPreOrdInfo = hcPreOrderService.selectHcPreOrderInfo(params);
 		EgovMap matOrderInfo = null;
@@ -244,6 +244,7 @@ public class HcPreOrderController {
 			// Mattress Order Info
 			params.put("preOrdId", matPreOrdId);
 			matOrderInfo = preOrderService.selectPreOrderInfo(params);
+			preOrderInfo = preOrderService.selectPreOrderInfo(params);
 		}
 		if(!"".equals(fraPreOrdId) && !"0".equals(fraPreOrdId)) {
     		// Frame Order Info
@@ -332,7 +333,7 @@ public class HcPreOrderController {
 	@RequestMapping(value = "/convertToHcOrderPop.do")
 	public String convertToHcOrderPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
 		// Search Pre Order Info
-		EgovMap preOrderInfo = preOrderService.selectPreOrderInfo(params);
+		EgovMap preOrderInfo = null;
 		// 매핑테이블 조회. - HMC0011D
 		EgovMap hcPreOrdInfo = hcPreOrderService.selectHcPreOrderInfo(params);
 		EgovMap matOrderInfo = null;
@@ -345,6 +346,7 @@ public class HcPreOrderController {
 			// Mattress Order Info
 			params.put("preOrdId", matPreOrdId);
 			matOrderInfo = preOrderService.selectPreOrderInfo(params);
+			preOrderInfo = preOrderService.selectPreOrderInfo(params);
 		}
 		if(!"".equals(fraPreOrdId) && !"0".equals(fraPreOrdId)) {
     		// Frame Order Info

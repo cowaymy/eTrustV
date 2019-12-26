@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.services.install.HcOrderCallListService;
-import com.coway.trust.biz.organization.organization.AllocationService;
 import com.coway.trust.biz.organization.organization.impl.AllocationMapper;
 import com.coway.trust.biz.organization.organization.orgUts.VComparator;
 import com.coway.trust.biz.services.orderCall.OrderCallListService;
@@ -42,9 +41,6 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Resource(name = "hcOrderCallListMapper")
 	private HcOrderCallListMapper hcOrderCallListMapper;
-
-	@Resource(name = "allocationService")
-	private AllocationService allocationService;
 
 	@Resource(name = "allocationMapper")
 	private AllocationMapper allocationMapper;
@@ -183,7 +179,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<EgovMap> hcInsertCallResult(Map<String, Object> params) {
+	public List<EgovMap> hcInsertCallResult(Map<String, Object> params) throws Exception {
 		List<EgovMap> baseList = null;
 		List<EgovMap> rtnList = null;
 		List<EgovMap> fList = null;
@@ -210,7 +206,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
     				 holiDayAddMap.put("brnchId", CommonUtils.nvl(e.get("brnchId")));
 
     				 try {
-    					 List<EgovMap> vm = allocationService.isMergeHoliDay(holiDayAddMap);
+    					 List<EgovMap> vm = allocationMapper.isSubGroupHoliDay(holiDayAddMap);
 
     					 // KR. JIN. - 2019-11-25
     					 if(null != vm && vm.size() > 0) {
@@ -237,8 +233,8 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 
     				 } catch(Exception ex) {
     					 holiDayAddMap.put("isHoliDay", "false");
-						 mergeHolidayList.add(holiDayAddMap);
 					 }
+    				 mergeHolidayList.add(holiDayAddMap);
 				} // eof mergeHolidayList
 			}
 		}// eof baseList
@@ -261,7 +257,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
                     vacationAddMap.put("oldCt", CommonUtils.nvl(e.get("oldCt")));
 
                     try {
-                    	EgovMap vm = allocationService.isVacation(vacationAddMap);
+                    	EgovMap vm = allocationMapper.selectVacationList(vacationAddMap);
 
                     	if(null != vm) {
                             vacationAddMap.put("isVact", "true");
@@ -302,7 +298,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
                     noSvcListMap.put("vactReplCt", CommonUtils.nvl(e.get("vactReplCt")));
 
     				try {
-    					int vm = allocationService.isMergeNosvcDay(noSvcListMap);
+    					int vm = allocationMapper.isMergeNosvcDay(noSvcListMap);
 
     					if(vm > 0) {
     						noSvcListMap.put("isNoSvcDay", "true");
@@ -315,15 +311,15 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 
     				} catch(Exception ex) {
     					noSvcListMap.put("isNoSvcDay", "false");
-    					mergeNoSvcList.add(noSvcListMap);
     				}
+    				mergeNoSvcList.add(noSvcListMap);
 				} // eof mergeHolidayList
 			}
 		}
 
 		//level 5  setViewList
 		rtnList = new ArrayList<EgovMap>();
-		fList = new ArrayList<EgovMap>();
+		fList= new ArrayList<EgovMap>();
 
 		if(null != mergeNoSvcList) {
 			if(mergeNoSvcList.size() > 0) {

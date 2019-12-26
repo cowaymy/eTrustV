@@ -2039,6 +2039,12 @@
            <if test="postCode != null and postCode != '' ">
                 AND POSTCODE = #{postCode}
            </if>
+           <if test=" null != searchState and '' != searchState">
+	            AND STATE = #{searchState}
+	        </if>
+	        <if test=" null != searchCity and '' != searchCity">
+	            AND CITY   = #{searchCity}
+	        </if>
   </select>
 
   <insert id="insertCustomerAddressInfoAf" parameterType="Map">

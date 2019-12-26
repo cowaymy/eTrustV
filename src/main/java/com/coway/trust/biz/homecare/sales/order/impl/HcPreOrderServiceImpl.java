@@ -140,6 +140,8 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 
 			// 홈케어 주문관리 테이블 insert - HMC0011D
 			HcOrderVO hcOrderVO = new HcOrderVO();
+			String bndlNo = hcOrderRegisterMapper.getBndlNo(ordSeqNo);
+
 			hcOrderVO.setOrdSeqNo(ordSeqNo);
 			hcOrderVO.setCustId(custId);                     // 고객번호
 			hcOrderVO.setMatPreOrdId(CommonUtils.intNvl(matPreOrdNo));        // Mattress Order No
@@ -147,6 +149,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			hcOrderVO.setCrtUserId(sessionVO.getUserId());        // session Id Setting
 			hcOrderVO.setUpdUserId(sessionVO.getUserId());      // session Id Setting
 			hcOrderVO.setStusId(HC_PRE_ORDER.STATUS_ACT);  // Homecare Pre Order Status - Active
+			hcOrderVO.setBndlNo(bndlNo);
 
 			int rtnCnt = hcOrderRegisterMapper.insertHcRegisterOrder(hcOrderVO);
 			if(rtnCnt <= 0) { // not insert

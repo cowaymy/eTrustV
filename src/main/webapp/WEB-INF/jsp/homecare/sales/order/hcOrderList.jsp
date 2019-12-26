@@ -689,8 +689,8 @@
                     <tr>
                         <th scope="row"><spring:message code='sales.isEKeyin' /></th>
                         <td><input id="isEKeyin" name="isEKeyin" type="checkbox" /></td>
-                        <th scope="row"></th>
-                        <td></td>
+                        <th scope="row">Bundle Number</th>
+                        <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
                         <th scope="row"></th>
                         <td></td>
                     </tr>

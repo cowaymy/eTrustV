@@ -108,7 +108,7 @@
              , #{matPreOrdId}
              , #{fraPreOrdId}
              , #{stusId}
-             , 'SB' || LPAD(#{ordSeqNo}, 8, '0')
+             , #{bndlNo}
         )
     </insert>
 

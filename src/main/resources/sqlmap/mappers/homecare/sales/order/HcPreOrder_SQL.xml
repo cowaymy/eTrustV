@@ -112,6 +112,9 @@
         <if test="deptCode != '' ">
             AND T9.DEPT_CODE = #{deptCode}
         </if>
+        <if test='bndlNo != null and bndlNo != ""'>
+            AND UPPER(T16.BNDL_NO) = UPPER(#{bndlNo})
+        </if>
        ORDER BY T1.PRE_ORD_ID ASC
     </select>
 

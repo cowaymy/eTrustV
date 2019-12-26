@@ -170,7 +170,7 @@ public class HcOrderCallListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/selectHcAllocation.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectHcAllocation(@RequestParam Map<String, Object>params) {
+	public ResponseEntity<List<EgovMap>> selectHcAllocation(@RequestParam Map<String, Object>params) throws Exception {
 		params.put("termDtCd", HomecareConstants.TERM_DT_CD);
 		List<EgovMap> resultList = hcOrderCallListService.hcInsertCallResult(params);
 
