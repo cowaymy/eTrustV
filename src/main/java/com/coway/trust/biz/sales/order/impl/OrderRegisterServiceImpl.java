@@ -2138,5 +2138,57 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     return lst;
   }
 
+  @Override
+  public List<EgovMap> selectComboOrderJsonList_2(Map<String, Object> params) {
+    List<EgovMap> lst = orderRegisterMapper.selectComboOrderJsonList_2(params);
+    return lst;
+  }
 
+  @Override
+  public int checkCboPromByOrdNo(Map<String, Object> params) {
+    /*
+     * CODE              DESCRIPTION
+     * ----------------------------------------
+     * MASTER
+     * 10                 IS NORMAL PROMOTION NO RELATED TO COMBO SET
+     * SUB
+     * 20                ORDER ARE SUB COMBO PACKAGE PRODUCT AND HAVE LINKAGE WITH ORDER. REQUEST APPROVE.
+     * ERROR
+     * 98                SELECTED ORDER'S PROMOTION ARE UNDER COMBO PACKAGE PROMOTION BUT DOES NOT HAVE ANY LINKAGE WITH OTHER ORDER. REQUEST DENY.
+     * 99                SELECTED ORDER'S PROMOTION ARE NOT COMBO PACKAGE PROMOTION. REQUEST DENY.
+     */
+
+    // CHECK SELECTED PROMO. ARE USED FOR CANCELLATION
+    String cboTyp = (String) CommonUtils.nvl(orderRegisterMapper.chkPromoCboByOrd(params));
+
+    if (!cboTyp.equals("")) {
+      /*
+       * COMBO TYPE
+       * -----------------------------------
+       *  M                MASTER PRODUCT
+       *  S                SUB PRODUCT
+       */
+
+      if (cboTyp.equals("M")) {
+        return 10;
+      } else if (cboTyp.equals("S")) {
+        int cntOrdLnk = orderRegisterMapper.chkOrdLink(params);
+        if (cntOrdLnk > 0) {
+          return 20;
+        } else {
+          return 98;
+        }
+      } else {
+        return 99;
+      }
+    } else {
+      return 99;
+    }
+  }
+
+  @Override
+  public EgovMap getOrdInfo(Map<String, Object> params) {
+    EgovMap ordInfo = orderRegisterMapper.getOrdInfo(params);
+    return ordInfo;
+  }
 }
