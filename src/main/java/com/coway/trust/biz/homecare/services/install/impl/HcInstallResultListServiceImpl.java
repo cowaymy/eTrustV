@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
@@ -50,17 +51,15 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
     @Override
     public ReturnMessage hcInsertInstallationResultSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception {
     	ReturnMessage message = new ReturnMessage();
-		ReturnMessage rtnMsg = installationResultListService.insertInstallationResultSerial(params, sessionVO);
+    	String rmsg = "";
 
+		ReturnMessage rtnMsg = installationResultListService.insertInstallationResultSerial(params, sessionVO);
 		if("99".equals(rtnMsg.getCode())){
 			throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnMsg.getMessage()));
 		}
+		rmsg = rtnMsg.getMessage();
 
-    	// Fail
-    	/*if(!"00".equals(rtnMsg.getCode())) {
-    		throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnMsg.getMessage()));
-    	}*/
-    	// another order
+    	// another order  --  Frame Order Search.
     	params.put("ordNo", CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")));
     	EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(params);
 
@@ -72,21 +71,21 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
     		params.put("installEntryId", CommonUtils.nvl(anotherOrder.get("installEntryId")));
     		params.put("hidEntryId", CommonUtils.nvl(anotherOrder.get("installEntryId")));
     		params.put("hidSalesOrderId", CommonUtils.nvl(anotherOrder.get("salesOrdId")));
+    		params.put("hidSerialRequireChkYn", "N");
 
     		rtnMsg = installationResultListService.insertInstallationResultSerial(params, sessionVO);
-    		// Fail
-        	/*if(!"00".equals(rtnMsg.getCode())) {
-        		throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnMsg.getMessage()));
-        	}*/
-
     		if("99".equals(rtnMsg.getCode())){
     			throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnMsg.getMessage()));
     		}
+    		rmsg = rtnMsg.getMessage();
     	}
 
     	message.setCode(AppConstants.SUCCESS);
-    	rtnMsg.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
+    	if(StringUtils.isEmpty(rmsg)){
+    		rtnMsg.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	}else{
+    		rtnMsg.setMessage(rmsg);
+    	}
 
     	return message;
     }

@@ -24,13 +24,14 @@
 		              , TO_CHAR (IE.INSTALL_DT, 'DD-MM-YYYY') C3
 		              , CE.DOC_ID C1
 		              , I.BRNCH_ID
+		              , I.BRNCH_ID AS AS_BRNCH_ID
 		              , BRANCH.CODE BRNCH_CODE
 		              , CASE WHEN ORG1.MEM_CODE IS NOT NULL
 		                       THEN ORG1.MEM_CODE
 		                       ELSE ORG2.USER_NAME END AS LST_UPD
 		              , IE.RCD_TMS
 		              , HMC.BNDL_NO
-
+                      , SOM.APP_TYPE_ID
 		FROM SAL0001D som
 		JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
 		JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
@@ -49,7 +50,9 @@
 		LEFT JOIN SYS0047M ORG2 ON ORG2.USER_ID = ir.CRT_USER_ID AND ORG2.USER_TYPE_ID > 2
 		LEFT JOIN HMC0011D HMC ON HMC.ORD_SEQ_NO = SOM.BNDL_ID
 
-		WHERE STK.STK_CTGRY_ID = '5706'      /* STKCATEGORYID_HOMECARE - Mattress  */
+        WHERE STK.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                   WHERE AA.CODE = BB.CODE
+                                                      AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
 		]]>
 		<if test="installStatusList != null and installStatusList != '' ">
 			AND ST.STUS_CODE_ID IN

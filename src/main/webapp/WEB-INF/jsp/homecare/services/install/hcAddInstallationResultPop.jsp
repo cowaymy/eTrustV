@@ -872,13 +872,13 @@
           code='service.title.SendSMSToSalesPerson' /></span></label></td>
      </tr>
      <tr>
-      <th scope="row" rowspan="2"><spring:message
-        code='service.title.Message' /></th>
-      <td><textarea cols="20" rows="5" readonly="readonly"
-        class="readonly" id="msg" name="msg">RM0.00 COWAY DSC
-Install Status: Completed
-Order No: ${installResult.salesOrdNo}
-Name: ${hpMember.name1}</textarea></td>
+      <th scope="row" rowspan="2"><spring:message code='service.title.Message' /></th>
+         <td><textarea cols="20" rows="5" readonly="readonly" class="readonly" id="msg" name="msg">RM0.00 COWAY DSC
+			Install Status: Completed
+			Order No: ${installResult.salesOrdNo}
+			Name: ${hpMember.name1}
+	       </textarea>
+	     </td>
      </tr>
      <tr>
       <td><input type="text" title="" placeholder="" class="w100p"
@@ -896,19 +896,15 @@ Name: ${hpMember.name1}</textarea></td>
     </colgroup>
     <tbody>
      <tr>
-      <th scope="row"><spring:message
-        code='service.title.FailedReason' /><span name="m6" id="m6" class="must">*</span></th>
+      <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m6" id="m6" class="must">*</span></th>
       <td><select class="w100p" id="failReason" name="failReason">
         <option value="0">Failed Reason</option>
         <c:forEach var="list" items="${failReason }" varStatus="status">
          <option value="${list.resnId}">${list.c1}</option>
         </c:forEach>
       </select></td>
-      <th scope="row"><spring:message
-        code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
-      <td><input type="text" title="Create start Date"
-       placeholder="DD/MM/YYYY" class="j_date w100p" id="nextCallDate"
-       name="nextCallDate" /></td>
+      <th scope="row"><spring:message code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
+      <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="nextCallDate" name="nextCallDate" /></td>
      </tr>
     </tbody>
    </table>
