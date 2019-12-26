@@ -200,6 +200,14 @@
     $("#m8").hide(); // APPOINTMENT SESSION
     $("#m9").hide(); // REMARK
 
+    if ($("#addStatus").val() == "31" || $("#addStatus").val() == "105") {
+      if ("${cancelReqInfo.reqResnCode}" == "0098") {
+        $("#addStatus").val("");
+        Common.alert("<spring:message code='sal.msg.reqFailCanc'/>");
+        return;
+      }
+    }
+
     if($("#addStatus").val() == '19'){ // RECALL
       $("select[name=cmbAssignCt]").attr('disabled', 'disabled');
       $("select[name=cmbAssignCt]").addClass("w100p disabled");
