@@ -100,21 +100,42 @@
         // 20190903 KR-OHK : default date setting( from~to date)
         fn_setDefaultDate(fromDtType, fromDtFieldNm, fromDtVal, toDtType, toDtFieldNm, toDtVal);
 
-        $("#CURRENT_MENU_CODE").val(menuCode);
+        if (Common.checkPlatformType() == "mobile" && menuPath.indexOf("serialScanningGRList.do") != -1) { // pc, mobile
+        	$("#serialScanningGR #GR_FROM_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setFromYY, setFromMM, setFromDD)));
+            $("#serialScanningGR #GR_TO_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setToYY, setToMM, setToDD)));
 
-        if($("#_myMenu").hasClass("on")){
-            $("#CURRENT_MENU_TYPE").val("MY_MENU");
-            $("#CURRENT_GROUP_MY_MENU_CODE").val(myMenuGroupCode);
-        }else{
-            $("#CURRENT_MENU_TYPE").val("LEFT_MENU");
+            popupObj = Common.popupWin("serialScanningGR", "/logistics/SerialMgmt/serialScanningGRList.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
         }
+        else if (Common.checkPlatformType() == "mobile" && menuPath.indexOf("serialScanningGISTOList.do") != -1) {
+        	$("#serialScanningGISTO #GR_FROM_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setFromYY, setFromMM, setFromDD)));
+            $("#serialScanningGISTO #GR_TO_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setToYY, setToMM, setToDD)));
 
-        $("#CURRENT_MENU_FULL_PATH_NAME").val(fullPath);
+            popupObj = Common.popupWin("serialScanningGISTO", "/logistics/SerialMgmt/serialScanningGISTOList.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+        }
+        else if (Common.checkPlatformType() == "mobile" && menuPath.indexOf("serialScanningGISMOList.do") != -1) {
+        	$("#serialScanningGISMO #GR_FROM_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setFromYY, setFromMM, setFromDD)));
+            $("#serialScanningGISMO #GR_TO_DT").val($.datepicker.formatDate('dd/mm/yy', new Date(setToYY, setToMM, setToDD)));
 
-        $("#_menuForm").attr({
-            action : getContextPath() + menuPath,
-            method : "POST"
-        }).submit();
+            popupObj = Common.popupWin("serialScanningGISMO", "/logistics/SerialMgmt/serialScanningGISMOList.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+        }
+        else {
+
+	        $("#CURRENT_MENU_CODE").val(menuCode);
+
+	        if($("#_myMenu").hasClass("on")){
+	            $("#CURRENT_MENU_TYPE").val("MY_MENU");
+	            $("#CURRENT_GROUP_MY_MENU_CODE").val(myMenuGroupCode);
+	        }else{
+	            $("#CURRENT_MENU_TYPE").val("LEFT_MENU");
+	        }
+
+	        $("#CURRENT_MENU_FULL_PATH_NAME").val(fullPath);
+
+	        $("#_menuForm").attr({
+	            action : getContextPath() + menuPath,
+	            method : "POST"
+	        }).submit();
+        }
     }
 </script>
 
@@ -201,4 +222,16 @@
     </aside><!-- lnb_wrap end -->
 </section>
 <form id="frmNew" name="frmNew" action="#" method="post"></form>
+<form id="serialScanningGR" name="serialScanningGR" action="#" method="post">
+     <input type="hidden" id="GR_FROM_DT" name="GR_FROM_DT" value=""/>
+     <input type="hidden" id="GR_TO_DT" name="GR_TO_DT" value=""/>
+ </form>
+ <form id="serialScanningGISTO" name="serialScanningGISTO" action="#" method="post">
+     <input type="hidden" id="GR_FROM_DT" name="GR_FROM_DT" value=""/>
+     <input type="hidden" id="GR_TO_DT" name="GR_TO_DT" value=""/>
+  </form>
+ <form id="serialScanningGISMO" name="serialScanningGISMO" action="#" method="post">
+     <input type="hidden" id="GR_FROM_DT" name="GR_FROM_DT" value=""/>
+     <input type="hidden" id="GR_TO_DT" name="GR_TO_DT" value=""/>
+ </form>
 <!-- container end -->
