@@ -12,7 +12,7 @@
           $('#custPopCloseBtn').click();
       });
 
-      fn_selectListAjax();
+      fn_selectListAjaxPop();
     });
 
   function fn_setData(ordNo, ordId) {
@@ -96,10 +96,16 @@
     popOrderGridID = GridCommon.createAUIGrid("pop_ord_grid_wrap", columnLayout, "", gridPros);
   }
 
-  function fn_selectListAjax() {
-    Common.ajax("GET", "/sales/order/selectComboOrderJsonList", $("#popSearchComboForm").serialize(), function(result) {
-      AUIGrid.setGridData(popOrderGridID, result);
-    });
+  function fn_selectListAjaxPop() {
+    if ($('#ordIdPop_1').val() != null && $('#ordIdPop_1').val() != "") {
+      Common.ajax("GET", "/sales/order/selectComboOrderJsonList_2", $("#popSearchComboForm").serialize(), function(result) {
+        AUIGrid.setGridData(popOrderGridID, result);
+      });
+    } else {
+      Common.ajax("GET", "/sales/order/selectComboOrderJsonList", $("#popSearchComboForm").serialize(), function(result) {
+        AUIGrid.setGridData(popOrderGridID, result);
+      });
+    }
   }
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -122,6 +128,7 @@
    <input id="promoNo" name="promoNo" value="${promoNo}" type="hidden" />
    <input id="prod" name="prod" value="${prod}" type="hidden" />
    <input id="custId" name="custId" value="${custId}" type="hidden" />
+   <input id="ordIdPop_1" name="ordIdPop_1" value="${ordId}" type="hidden" />
 
   </form>
   <article class="grid_wrap mt30">
