@@ -193,6 +193,9 @@
       }
       var asSort = "";
 
+      // Homecare Remove(except)
+      whereSql += " AND O.BNDL_ID IS NULL ";
+
       $("#reportFormAS #reportFileName").val('/services/ASSummaryList.rpt');
       $("#reportFormAS #reportDownFileName").val("ASSummaryList_" + day + month + date.getFullYear());
       $("#reportFormAS #viewType").val("PDF");

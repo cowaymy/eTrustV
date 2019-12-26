@@ -189,6 +189,9 @@
             + dscBranchCode + "' AND TYPE_ID = 43 AND STUS_ID = 1 ) ";
       }
 
+      // homecare Remove(except)
+      whereSql += " AND AF.BNDL_ID IS NULL ";
+
       var date = new Date();
       var month = date.getMonth() + 1;
       var day = date.getDate();

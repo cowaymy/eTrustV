@@ -74,6 +74,10 @@
       if ($("#CTGroup").val() != '' && $("#CTGroup").val() != null) {
         whereSql += " AND ae.AS_MEM_GRP = '" + $("#CTGroup").val() + "' ";
       }
+
+      // Homecare Remove(except)
+      whereSql += " AND OM.BNDL_ID IS NULL ";
+
       $("#reportFormList #reportFileName").val('/services/ASLogBookList.rpt');
       $("#reportFormList #reportDownFileName").val("ASLogBook_" + day + month + date.getFullYear());
       $("#reportFormList #viewType").val("PDF");

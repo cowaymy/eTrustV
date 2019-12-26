@@ -109,6 +109,9 @@
 
         whereSql += " AND H.TYPE_ID = 339 ";
 
+        // Homecare Remove(except)
+        whereSql += " AND B.BNDL_ID IS NULL";
+
         $("#reportForm1 #V_SELECTSQL").val(" ");
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
         $("#reportForm1 #V_FULLSQL").val(" ");
@@ -135,6 +138,8 @@
         $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_DEPT" name="V_DEPT" /> ');
 
+        // Homecare Remove(except)
+        whereSql += " AND B.BNDL_ID IS NULL";
 
         $("#reportForm1 #V_SELECTSQL").val(" ");
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
@@ -164,6 +169,9 @@
 
         whereSql += " AND A.AS_TYPE_ID IN (3154) ";
 
+        // Homecare Remove(except)
+        whereSql += " AND B.BNDL_ID IS NULL";
+
         $("#reportForm1 #V_SELECTSQL").val(" ");
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
         $("#reportForm1 #V_FULLSQL").val(" ");
@@ -191,6 +199,11 @@
         $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
 
         //whereSql += " AND A.AS_TYPE_ID = 339 ";
+        // Homecare Remove(except)
+        whereSql += " AND EXISTS ( SELECT 1 "
+                               + "   FROM SAL0001D C "
+                               + "  WHERE A.AS_SO_ID = C.SALES_ORD_ID "
+                               + "    AND C.BNDL_ID IS NULL ) ";
 
         $("#reportForm1 #V_SELECTSQL").val(" ");
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
@@ -219,6 +232,12 @@
 
           whereSql += " AND A.AS_TYPE_ID IN (3154) ";
 
+          // Homecare Remove(except)
+          whereSql += " AND EXISTS( SELECT 1 "
+                                + "   FROM SAL0001D C "
+                                + "  WHERE A.AS_SO_ID = C.SALES_ORD_ID "
+                                + "    AND C.BNDL_ID IS NULL ) ";
+
           $("#reportForm1 #V_SELECTSQL").val(" ");
           $("#reportForm1 #V_ORDERBYSQL").val(" ");
           $("#reportForm1 #V_FULLSQL").val(" ");
@@ -246,6 +265,12 @@
 
           //whereSql += " AND A.AS_TYPE_ID = 339 ";
 
+          // Homecare Remove(except)
+          whereSql += " AND EXISTS( SELECT 1 "
+                                + "   FROM SAL0001D C "
+                                + "  WHERE A.AS_SO_ID = C.SALES_ORD_ID "
+                                + "    AND C.BNDL_ID IS NOT NULL ) ";
+
           $("#reportForm1 #V_SELECTSQL").val(" ");
           $("#reportForm1 #V_ORDERBYSQL").val(" ");
           $("#reportForm1 #V_FULLSQL").val(" ");
@@ -267,6 +292,7 @@
           day = "0" + date.getDate();
         }
 
+        // SP_CR_PART_DLVY_ORD_RAW
         $("#reportForm1").append('<input type="hidden" id="V_KEYINDATEFROM" name="V_KEYINDATEFROM" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_KEYINDATETO" name="V_KEYINDATETO"  /> ');
         $("#reportForm1").append('<input type="hidden" id="V_DSCBRANCHID" name="V_DSCBRANCHID" /> ');
