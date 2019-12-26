@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
+//import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -111,7 +111,7 @@ public class OrderVO implements Serializable {
 
 	private AccClaimAdtVO accClaimAdtVO2; //CLAIM ADT
 
-	private HcOrderVO hcOrderVO;  // Homecare Order
+	//private HcOrderVO hcOrderVO;  // Homecare Order
 
 	private int bndlId;
 
@@ -467,13 +467,13 @@ public class OrderVO implements Serializable {
 		this.accClaimAdtVO2 = accClaimAdtVO2;
 	}
 
-	public HcOrderVO getHcOrderVO() {
-		return hcOrderVO;
-	}
+	//public HcOrderVO getHcOrderVO() {
+		//return hcOrderVO;
+	//}
 
-	public void setHcOrderVO(HcOrderVO hcOrderVO) {
-		this.hcOrderVO = hcOrderVO;
-	}
+	//public void setHcOrderVO(HcOrderVO hcOrderVO) {
+		//this.hcOrderVO = hcOrderVO;
+	//}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
