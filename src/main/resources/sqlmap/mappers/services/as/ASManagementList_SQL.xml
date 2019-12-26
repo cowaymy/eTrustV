@@ -169,7 +169,7 @@
                  AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
                  AND ( 1 = Extent7.AS_RESULT_IS_CURR )
                  WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
-
+                   AND Extent4.BNDL_ID IS NULL       -- homecare Remove(except)
                  <if test="asStatusList != null and asStatusList != '' ">
                    AND Extent1.AS_STUS_ID IN
                    <foreach item="item" collection="asStatusList" index="index" open="(" separator="," close=")">
@@ -458,6 +458,11 @@
                                                         WHERE SALES_ORD_ID = Extent1.ORD_ID
                                                         GROUP BY SALES_ORD_ID)
              WHERE ( Extent1.ORD_NO = #{orderNo} )
+               AND NOT EXISTS (SELECT 1
+                                 FROM SAL0001D Z
+                                WHERE Z.SALES_ORD_ID = EXTENT1.ORD_ID
+                                  AND Z.BNDL_ID IS NOT NULL
+                              )             -- homecare Remove(except)
                 AND ( Extent1.ORD_STUS_ID = 4 ) AND (Extent1.RENTAL_STUS NOT IN ('WOF','SUS','RET'))
                 AND ((Extent2.CCP_STUS_ID = 5 OR Extent2.CCP_STUS_ID IS NULL) OR (Extent3.PRGRS_ID = 5))
                 AND ROWNUM <= 1

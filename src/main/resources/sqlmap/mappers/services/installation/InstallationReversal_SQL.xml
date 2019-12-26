@@ -60,7 +60,9 @@
                 LEFT JOIN SYS0038M Extent9   ON Extent1.STUS_CODE_ID = Extent9.STUS_CODE_ID
                 JOIN SAL0045D Extent10   ON Extent3.SALES_ORD_ID = Extent10.SALES_ORD_ID
           WHERE  ( NOT ( LTRIM(RTRIM(UPPER(Extent3.SALES_ORD_NO))) LIKE '%C%')
-                   AND ( Extent3.SALES_ORD_NO = #{orderNo} )) ) Project1
+                   AND ( Extent3.SALES_ORD_NO = #{orderNo} ))
+                   AND Extent3.BNDL_ID IS NULL      -- homecare Remove(except)
+                   ) Project1
   ORDER BY Project1.INSTALL_ENTRY_ID DESC )
   WHERE ROWNUM <= 1
           ]]>
@@ -130,7 +132,8 @@
        END                                            C7,
        Extent6.code_name                              CODENAME2,
        TO_CHAR(sysdate,'MM') c8,
-       TO_CHAR(Extent2.crt_dt,'MM')     C39
+       TO_CHAR(Extent2.crt_dt,'MM')     C39,
+       Extent16.SERIAL_REQUIRE_CHK_YN
 FROM   sal0046d Extent1
        left join sal0047d Extent2
               ON Extent1.install_entry_id = Extent2.entry_id

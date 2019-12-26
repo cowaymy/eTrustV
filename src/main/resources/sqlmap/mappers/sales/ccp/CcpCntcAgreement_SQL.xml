@@ -303,6 +303,7 @@
      </select>
 
      <select id="selectSearchOrderNo" parameterType="Map" resultType="egovMap">
+     /*[com.coway.trust.biz.sales.ccp.impl.CcpAgreementMapper.selectSearchOrderNo]*/
 				SELECT
                     Distinct1.C1 C1 ,
                     Distinct1.ORD_ID ,
@@ -401,6 +402,11 @@
 				          <![CDATA[
 				          WHERE  ( 'IACT' <> Extent1.ORD_STUS_CODE )
 				           ]]>
+				            AND NOT EXISTS (SELECT 1
+		                                      FROM SAL0001D Z
+		                                     WHERE Z.SALES_ORD_ID = EXTENT1.ORD_ID
+		                                       AND Z.BNDL_ID IS NOT NULL
+		                                    )             -- homecare Remove(except)
 				           <if test=" '' != searchOrdNo and null != searchOrdNo">
 				                AND ( Extent1.ORD_NO = #{searchOrdNo})
 				           </if>
