@@ -25,7 +25,7 @@ public class SalesDashboardApiDto{
 
 
 	@SuppressWarnings("unchecked")
-	public static SalesDashboardApiDto create(EgovMap egvoMap) {
+	public SalesDashboardApiDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, SalesDashboardApiDto.class);
 	}
 

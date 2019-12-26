@@ -1681,8 +1681,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
             hmc0011D.put("stusId", SalesConstants.STATUS_ACTIVE);
             hmc0011D.put("updUserId", loginVO.getUserId());
 
-            int saveCnt = eKeyInApiMapper.updateHMC0011D(hmc0011D);             // INSERT HMC0011D
-            if (saveCnt == 1) {
+            int saveCnt = eKeyInApiMapper.updateHMC0011D(hmc0011D);             //UPDATE HMC0011D
+            if (saveCnt != 1) {
                 throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
             }
         }

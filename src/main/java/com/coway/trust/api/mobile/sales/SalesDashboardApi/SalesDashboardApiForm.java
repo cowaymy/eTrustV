@@ -33,14 +33,12 @@ public class SalesDashboardApiForm {
 	public static Map<String, Object> createMap(SalesDashboardApiForm vo){
 		Map<String, Object> params = new HashMap<>();
 		params.put("memId", vo.getMemId());
-        params.put("regId", vo.getRegId());
 		return params;
 	}
 
 
 
 	private int memId;
-	private String regId;
 
 
 
@@ -52,18 +50,6 @@ public class SalesDashboardApiForm {
 
     public void setMemId(int memId) {
         this.memId = memId;
-    }
-
-
-
-    public String getRegId() {
-        return regId;
-    }
-
-
-
-    public void setRegId(String regId) {
-        this.regId = regId;
     }
 
 }

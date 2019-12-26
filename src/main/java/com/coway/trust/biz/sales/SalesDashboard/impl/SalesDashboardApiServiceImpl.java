@@ -37,19 +37,18 @@ public class SalesDashboardApiServiceImpl extends EgovAbstractServiceImpl implem
 
 
 
-    @SuppressWarnings("static-access")
     @Override
     public SalesDashboardApiDto selectSalesDashboard(SalesDashboardApiForm param) throws Exception {
         if (null == param) {
             throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
         }
-        if (CommonUtils.isEmpty(param.getRegId())) {
-            throw new ApplicationException(AppConstants.FAIL, "User ID value does not exist.");
+        if (CommonUtils.isEmpty(param.getMemId())) {
+            throw new ApplicationException(AppConstants.FAIL, "MemId value does not exist.");
         }
         EgovMap selectSalesDashboard = salesDashboardApiMapper.selectSalesDashboard(SalesDashboardApiForm.createMap(param));
         SalesDashboardApiDto rtn = new SalesDashboardApiDto();
         if( MapUtils.isNotEmpty(selectSalesDashboard) ){
-            rtn.create(selectSalesDashboard);
+            return rtn.create(selectSalesDashboard);
         }
         return rtn;
     }
