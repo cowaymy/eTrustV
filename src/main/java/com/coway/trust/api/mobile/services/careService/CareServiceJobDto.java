@@ -9,21 +9,21 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "HeartServiceJobDto", description = "공통코드 Dto")
 public class CareServiceJobDto {
 
-	@ApiModelProperty(value = "주문번호")	
+	@ApiModelProperty(value = "주문번호")
 	private String salesOrderNo;
-	
+
 	@ApiModelProperty(value = "EX_BS00000 / AS00000")
 	private String serviceNo;
-	
+
 	@ApiModelProperty(value = "고객명")
 	private String custName;
-	
-	@ApiModelProperty(value = "AS / HS / INST / PR 구분값") 
-	private String jobType; 
-	
+
+	@ApiModelProperty(value = "AS / HS / INST / PR 구분값")
+	private String jobType;
+
 	@ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCLE 구분")
 	private int jobStatus;
-	
+
 	@ApiModelProperty(value = "작업 예정날짜")
 	private String appointmentDate;
 
@@ -62,31 +62,31 @@ public class CareServiceJobDto {
 
 	@ApiModelProperty(value = "설치주소(Magic Address 체계?)")
 	private String installAddress;
-	
+
 	@ApiModelProperty(value = "우편번호")
 	private String postcode;
-	
+
 	@ApiModelProperty(value = "핸드폰 번호")
 	private String handphoneTel;
-	
+
 	@ApiModelProperty(value = "집전화 번호")
 	private String homeTel;
-	
+
 	@ApiModelProperty(value = "회사 번호")
 	private String officeTel;
-	
+
 	@ApiModelProperty(value = "메일 주소")
 	private String mailAddress;
-	
+
 	@ApiModelProperty(value = "고객 VA 번호_170914 추가")
 	private String customerVaNo;
-	
+
 	@ApiModelProperty(value = "고객 JomPay Reference 번호_170914 추가")
 	private String customerJomPayRefNo;
-	
+
 	@ApiModelProperty(value = "제품 사진 url")
 	private String imageUrl;
-	
+
 	@ApiModelProperty(value = "제품명")
 	private String productName;
 
@@ -95,118 +95,127 @@ public class CareServiceJobDto {
 
 	@ApiModelProperty(value = "application Type (Rental…)")
 	private int appType;
-	
+
 	@ApiModelProperty(value = "")
 	private String instruction;
 
 	@ApiModelProperty(value = "")
 	private int salesPromotion;
-	
+
 	@ApiModelProperty(value = "")
 	private String contractDuration;
-	
+
 	@ApiModelProperty(value = "")
 	private String monthlyRentalFees;
-	
+
 	@ApiModelProperty(value = "")
 	private String registrationFees;
-	
+
 	@ApiModelProperty(value = "결제 방식 - Code")
 	private String paymentMode;
-	
+
 	@ApiModelProperty(value = "결제 방식 - Name")
 	private String paymentModeName;
-	
+
 	@ApiModelProperty(value = "결제 은행")
 	private int bankCode;
-	
+
 	@ApiModelProperty(value = "결제 은행명")
 	private String bankName;
-	
+
 	@ApiModelProperty(value = "결제 정보")
 	private String cardAccountNo;
-	
+
 	@ApiModelProperty(value = "outstanding 정보(OutstandingV.total)")
 	private String outstanding;
-	
+
 	@ApiModelProperty(value = "sirim 코드")
 	private String sirimNo;
-	
+
 	@ApiModelProperty(value = "serial 코드")
 	private String serialNo;
-	
+
 	@ApiModelProperty(value = "WARRANTY (YYYYMMDD)")
 	private String warranty;
-	
+
 	@ApiModelProperty(value = "멤버십 만료 기간(YYYYMMDD)")
 	private String MembershipContractExpiry;
-	
+
 	@ApiModelProperty(value = "렌탈 현황")
 	private String rentalStatus;
-	
+
 	@ApiModelProperty(value = "")
 	private int dscCode;
-	
+
 	@ApiModelProperty(value = "마지막 결제일(YYYYMMDD)")
 	private String lastPaymentDate;
-	
+
 	@ApiModelProperty(value = "하트 결과등록시 체크")
 	private String temperatureSetting;
-	
+
 	@ApiModelProperty(value = "remark")
 	private String resultRemark;
-	
+
 	@ApiModelProperty(value = "서명한사람 코드(owner / father…)")
 	private String ownerCode;
-	
+
 	@ApiModelProperty(value = "별도의 코드로 관리안하면 필요없음.")
 	private String ownerCodeNm;
-	
+
 	@ApiModelProperty(value = "고객명")
 	private String resultCustName;
-	
+
 	@ApiModelProperty(value = "nric 번호")
 	private String resultIcMobileNo;
-	
+
 	@ApiModelProperty(value = "고객메일주소")
 	private String resultReportEmailNo;
-	
+
 	@ApiModelProperty(value = "신규 요건(default : 고객명)")
 	private String resultAcceptanceName;
-	
+
 	@ApiModelProperty(value = "")
 	private int rcCode;
-	
+
 
 	@ApiModelProperty(value = "실패 사유 코드")
 	private int failReasonCode;
-	
+
 	@ApiModelProperty(value = "실패 사유명")
 	private String failReasonName;
-	
+
 	@ApiModelProperty(value = "설치자")
 	private String settledBy;
-	
+
 	@ApiModelProperty(value = "설치날짜(YYYYMMDD)")
 	private String settledDate;
-	
+
 	@ApiModelProperty(value = "설치시간(HHMMSS)")
 	private String settledTime;
-	
+
 	@ApiModelProperty(value = "")
 	private String renCollectionId;
-	
+
 	@ApiModelProperty(value = "bsr no")
 	private String bsrNo;
-	
+
 	@ApiModelProperty(value = "다음 작업시간(HHMM)")
 	private String needFilter;
-	
+
 	@ApiModelProperty(value = "다음 작업일자(YYYYMMDD)")
 	private String nextAppointmentDate;
 
 	@ApiModelProperty(value = "필터교체대상 여부")
 	private String nextAppointmentTime;
+
+	private String homeCareOrderYn;
+	public String getHomeCareOrderYn() {
+		return homeCareOrderYn;
+	}
+
+	public void setHomeCareOrderYn(String homeCareOrderYn) {
+		this.homeCareOrderYn = homeCareOrderYn;
+	}
 
 	public void setSalesOrderNo(String salesOrderNo) {
 		this.salesOrderNo = salesOrderNo;
@@ -286,7 +295,7 @@ public class CareServiceJobDto {
 
 	public String getCheckInDate() {
 		return checkInDate;
-	} 
+	}
 
 	public void setCheckInDate(String checkInDate) {
 		this.checkInDate = checkInDate;
@@ -674,7 +683,7 @@ public class CareServiceJobDto {
 	public static CareServiceJobDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, CareServiceJobDto.class);
 	}
-	
+
 	public String getServiceNo() {
 		return serviceNo;
 	}
@@ -693,8 +702,8 @@ public class CareServiceJobDto {
 	public void setJobType(String jobType) {
 		this.jobType = jobType;
 	}
-	
-	
+
+
 	public int getAppType() {
 		return appType;
 	}
@@ -738,8 +747,8 @@ public class CareServiceJobDto {
 	public int getFailReasonCode() {
 		return failReasonCode;
 	}
-	
-	
-	
-	
+
+
+
+
 }
