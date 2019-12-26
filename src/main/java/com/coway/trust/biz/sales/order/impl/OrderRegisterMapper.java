@@ -190,5 +190,12 @@ public interface OrderRegisterMapper {
 
   List<EgovMap> selectComboOrderJsonList(Map<String, Object> params);
 
+  List<EgovMap> selectComboOrderJsonList_2(Map<String, Object> params);
+
+  String chkPromoCboByOrd(Map<String, Object> params);
+
+  int chkOrdLink(Map<String, Object> params);
+
+  EgovMap getOrdInfo(Map<String, Object> params);
 
 }
