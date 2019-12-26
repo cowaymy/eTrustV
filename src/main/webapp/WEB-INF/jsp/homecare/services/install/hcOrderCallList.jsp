@@ -95,7 +95,7 @@
 	        }
 	    }
 
-	    Common.ajax("GET", "/callCenter/searchOrderCallList.do", $("#orderCallSearchForm").serialize(), function(result) {
+	    Common.ajax("GET", "/homecare/services/install/searchHcOrderCallList.do", $("#orderCallSearchForm").serialize(), function(result) {
 	        AUIGrid.setGridData(myGridID, result);
 	    });
 	}
@@ -142,6 +142,7 @@
             {dataField : "callTypeCode",     headerText : '<spring:message code="service.grid.Type" />',         editable : false,      width : 90},
             {dataField : "callStusCode",      headerText : '<spring:message code="service.grid.Status" />',        editable : false,      width : 90},
             {dataField : "callLogDt",           headerText : '<spring:message code="service.grid.Date" />',          editable : false,     width : 130},
+            {dataField : "bndlNo",              headerText : 'BNDL No.',                                                          editable : false,     width : 120},
             {dataField : "salesOrdNo",        headerText : '<spring:message code="service.grid.OrderNo" />',    editable : false,     width : 120},
             {dataField : "appTypeName",    headerText : '<spring:message code="service.grid.AppType" />',    editable : false,     style : "my-column",     width : 100},
             {dataField : "productCode",      headerText : '<spring:message code="service.grid.Product" />',      editable : false,     width : 280},
@@ -330,7 +331,7 @@
 				</tr>
 				<tr>
 					<th scope="row"><spring:message code='service.title.SortBy' /></th>
-					<td colspan="5">
+					<td>
 						<select class="w100p" id="sortBy" name="sortBy">
 							<c:forEach var="list" items="${callLogSrt}" varStatus="status">
 								<c:choose>
@@ -344,6 +345,10 @@
 							</c:forEach>
 						</select>
 					</td>
+					<th scope="row">Bundle Number</th>
+                    <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
+                    <th scope="row"></th>
+                    <td></td>
 				</tr>
 			</tbody>
 		</table>

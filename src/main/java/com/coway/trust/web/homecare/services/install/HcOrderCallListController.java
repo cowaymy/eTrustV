@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -78,6 +79,33 @@ public class HcOrderCallListController {
 
     	// 호출될 화면
     	return "homecare/services/install/hcOrderCallList";
+    }
+
+    /**
+     * Search Order Call List
+     * @Author KR-SH
+     * @Date 2019. 12. 26.
+     * @param params
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/searchHcOrderCallList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> searchHcOrderCallList(@RequestParam Map<String, Object> params, HttpServletRequest request) {
+
+      String[] appTypeList = request.getParameterValues("appType");
+      String[] callLogTypeList = request.getParameterValues("callLogType");
+      String[] callLogStatusList = request.getParameterValues("callLogStatus");
+      String[] DSCCodeList = request.getParameterValues("DSCCode");
+
+      params.put("appTypeList", appTypeList);
+      params.put("callLogTypeList", callLogTypeList);
+      params.put("callLogStatusList", callLogStatusList);
+      params.put("DSCCodeList", DSCCodeList);
+
+      List<EgovMap> orderCallList = hcOrderCallListService.searchHcOrderCallList(params);
+
+      return ResponseEntity.ok(orderCallList);
     }
 
     /**

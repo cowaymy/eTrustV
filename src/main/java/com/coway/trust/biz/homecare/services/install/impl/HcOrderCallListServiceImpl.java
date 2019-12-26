@@ -361,4 +361,17 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 		return hcOrderCallListMapper.selectBaseList(params);
 	}
 
+	/**
+	 * Search Order Call List
+	 * @Author KR-SH
+	 * @Date 2019. 12. 26.
+	 * @param params
+	 * @return
+	 * @see com.coway.trust.biz.homecare.services.install.HcOrderCallListService#searchHcOrderCallList(java.util.Map)
+	 */
+	@Override
+	public List<EgovMap> searchHcOrderCallList(Map<String, Object> params) {
+		return hcOrderCallListMapper.searchHcOrderCallList(params);
+	}
+
 }

@@ -27,4 +27,13 @@ public interface HcOrderCallListMapper {
 	 */
 	public List<EgovMap> selectBaseList(Map<String, Object> params);
 
+	/**
+	 * Search Order Call List
+	 * @Author KR-SH
+	 * @Date 2019. 12. 26.
+	 * @param params
+	 * @return
+	 */
+	public List<EgovMap> searchHcOrderCallList(Map<String, Object> params);
+
 }
