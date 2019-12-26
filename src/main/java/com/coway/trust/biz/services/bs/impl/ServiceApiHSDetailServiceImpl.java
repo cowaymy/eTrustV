@@ -327,6 +327,15 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
         					params.put("pErrcode", "");
         					params.put("pErrmsg", "");
         					MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
+
+        					if (!"000".equals(params.get("pErrcode"))) {
+        						String procTransactionId = transactionId;
+        						String procName = "HeartService";
+        						String procKey = serviceNo;
+        						String procMsg = "Failed to Barcode Save";
+        						String errorMsg = "[API] " + params.get("pErrmsg");
+        						throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    						}
         				}
     				}
                 }
