@@ -1912,6 +1912,17 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     return message;
   }
 
+  @Override
+  public ReturnMessage cboPckReqCanOrd(Map<String, Object> params, SessionVO sessionVO) throws Exception {
+    // UNBLIND ACCOUNT
+    if (params.get("typ").equals("20")) { // SUB PRODUCT
+      orderRequestMapper.unbindPromPckOrd(params);
+    } else {
+      orderRequestMapper.tagPromPckOrd(params);
+    }
+    return this.requestCancelOrder(params, sessionVO);
+  }
+
   private void preprocSalesOrderLog(SalesOrderLogVO salesOrderLogVO, Map<String, Object> params, SessionVO sessionVO,
       String ordReqType) {
 
