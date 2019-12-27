@@ -1147,7 +1147,7 @@
                   , CORP_CUST_TYPE
                   , AGREEMENT_TYPE
                   , PCKAGE_BINDING_NO
-                  , BNDL_ID
+                  <!-- , BNDL_ID -->
     ) VALUES ( #{salesOrdId}
              , #{salesOrdNo}
              , UPPER(#{refNo})
@@ -1208,7 +1208,7 @@
              , #{corpCustType}
              , #{agreementType}
              , #{comboOrdBind}
-             , #{bndlId}
+             <!-- , #{bndlId}  -->
      )
   </insert>
 
