@@ -52,14 +52,14 @@
         var ordGridrLayout = [
           {   dataField : "salesOrdNo", headerText : 'Order No.',         width : 120 }
          ,{   dataField : "itmCode", headerText : 'Item Code',     width : 120 }
-         ,{   dataField : "stkDesc", headerText : 'Item Name',     width : 160, style: "aui-grid-user-custom-left" }
+         ,{   dataField : "stkDesc", headerText : 'Item Name',     width : 220, style: "aui-grid-user-custom-left" }
          ,{   dataField : "callGbn", headerText : 'Call Screen',     width : 120 }
          ,{   dataField : "refDocNo", headerText : 'Ref Doc No.',         width : 120 }
          ,{   dataField : "bfSerialNo", headerText : 'Before Serial No.',        width : 160 }
          ,{   dataField : "afSerialNo", headerText : 'After Serial No.',   width : 160, style:"my-column-style2" }
          ,{   dataField : "lastInstallSerialNo",  headerText : 'Install Serial No.',     width : 160  }
          ,{   dataField : "crtUserBrnchCd", headerText : 'Change Branch',      width : 120, style: "aui-grid-user-custom-left" }
-         ,{   dataField : "crtUserFullName", headerText : 'Change User',        width : 120, style: "aui-grid-user-custom-left" }
+         ,{   dataField : "crtUserFullName", headerText : 'Change User',        width : 180, style: "aui-grid-user-custom-left" }
          ,{   dataField : "crtDt", headerText : 'Change Date Time',    width : 160 }
         ];
 
@@ -104,7 +104,7 @@
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
+<section style="max-height:none; padding:10px; background:#fff; padding-top: 60px"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
 <!-- <h2>Order Serial No. History</h2> -->
