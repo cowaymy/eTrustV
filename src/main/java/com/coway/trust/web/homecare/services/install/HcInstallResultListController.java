@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.common.HomecareCmService;
 import com.coway.trust.biz.homecare.services.install.HcInstallResultListService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
@@ -23,6 +24,7 @@ import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.homecare.HomecareConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -40,6 +42,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/homecare/services/install")
 public class HcInstallResultListController {
+
+	//@Resource(name = "homecareCmService")
+	//private HomecareCmService homecareCmService;
 
 	@Resource(name = "installationResultListService")
 	private InstallationResultListService installationResultListService;
@@ -71,9 +76,14 @@ public class HcInstallResultListController {
 		List<EgovMap> appTypeList = installationResultListService.selectApplicationType();
 		List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
 
+		//String _brnchType = CommonUtils.nvl2(params.get("brnchType"), HomecareConstants.HDC_BRANCH_TYPE);
+		//params.put("brnchType", _brnchType);
+		//List<EgovMap> branchList = homecareCmService.selectHomecareBranchList(params);
+
 		model.addAttribute("instTypeList", instTypeList);
 		model.addAttribute("appTypeList", appTypeList);
 		model.addAttribute("installStatus", installStatus);
+		//model.addAttribute("branchList", branchList);
 
 		return "homecare/services/install/hcInstallationList";
 	}

@@ -135,8 +135,9 @@ function fn_ctChange(){
         return  false ;
     }
 
+
     var  updateForm ={
-            "update" : editedRowItems
+              "update" : editedRowItems
     }
 
     Common.ajax("POST", "/homecare/services/as/assignCtOrderListSave.do", updateForm, function(result) {

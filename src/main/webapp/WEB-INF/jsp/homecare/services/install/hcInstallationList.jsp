@@ -49,6 +49,8 @@
             selectAll: true, // 전체선택
             width: '100%'
         });
+
+        $("#dscCode").val(${SESSION_INFO.userBranchId});
     }
 
     function fn_installationListSearch() {

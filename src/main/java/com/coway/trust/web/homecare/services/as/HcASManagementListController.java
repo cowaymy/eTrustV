@@ -430,6 +430,7 @@ public class HcASManagementListController {
     logger.debug("===========================/assignCTTransferPop.do===============================");
     logger.debug("== params " + params.toString());
     logger.debug("===========================/assignCTTransferPop.do===============================");
+    //model.put("data", params);
 
     return "homecare/services/as/hcAssignCTTransferPop";
   }

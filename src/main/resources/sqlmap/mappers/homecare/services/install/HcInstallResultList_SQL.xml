@@ -24,7 +24,6 @@
 		              , TO_CHAR (IE.INSTALL_DT, 'DD-MM-YYYY') C3
 		              , CE.DOC_ID C1
 		              , I.BRNCH_ID
-		              , I.BRNCH_ID AS AS_BRNCH_ID
 		              , BRANCH.CODE BRNCH_CODE
 		              , CASE WHEN ORG1.MEM_CODE IS NOT NULL
 		                       THEN ORG1.MEM_CODE
@@ -139,6 +138,7 @@
         <if test="bndlNo != null and bndlNo != ''">
             AND HMC.BNDL_NO = #{bndlNo}
         </if>
+        ORDER BY IE.INSTALL_ENTRY_NO ASC, SOM.SALES_ORD_NO ASC, IE.INSTALL_DT ASC
 	</select>
 
     <select id="getAnotherInstallInfo" parameterType="Map" resultType="egovMap">
