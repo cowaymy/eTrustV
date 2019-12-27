@@ -14,7 +14,7 @@
     var option1 = {
             winName : "popup",
             width : "1200px",   // 창 가로 크기
-            height : "590px",    // 창 세로 크기
+            height : "540px",    // 창 세로 크기
             resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
             scrollbars : "no" // 스크롤바. (yes/no)(default : yes)
     };
