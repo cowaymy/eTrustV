@@ -26,7 +26,7 @@ public class UserProfileApiDto {
 
 
 	@SuppressWarnings("unchecked")
-	public static UserProfileApiDto create(EgovMap egvoMap) {
+	public UserProfileApiDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, UserProfileApiDto.class);
 	}
 

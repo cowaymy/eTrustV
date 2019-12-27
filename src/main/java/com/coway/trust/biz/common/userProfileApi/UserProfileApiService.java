@@ -1,8 +1,7 @@
 package com.coway.trust.biz.common.userProfileApi;
 
+import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiDto;
 import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiForm;
-
-import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
  * @ClassName : UserProfileApiService.java
@@ -18,5 +17,5 @@ public interface UserProfileApiService {
 
 
 
-	EgovMap selectUserProfile(UserProfileApiForm param) throws Exception;
+    UserProfileApiDto selectUserProfile(UserProfileApiForm param) throws Exception;
 }

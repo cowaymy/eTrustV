@@ -26,6 +26,8 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +60,10 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 @Service("EKeyInApiService")
 public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKeyInApiService {
+
+
+
+    private static final Logger logger = LoggerFactory.getLogger(EKeyInApiServiceImpl.class);
 
 
 
@@ -147,6 +153,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
                         mattress.setPackTypeList(selectOrderInfoMattress.getPackTypeList());
                         mattress.setProductList(selectOrderInfoMattress.getProductList());
                         mattress.setPromotionList(selectOrderInfoMattress.getPromotionList());
+                        mattress.setMatPreOrdId(mattress.getPreOrdId());
                         selecteKeyInDetail.setMattress(mattress);
 
                         mattressItmStkId = mattress.getItmStkId();
@@ -168,6 +175,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
                         frame.setPromotionList(selectOrderInfoFrame.getPromotionList());
 
                         frame.setItmStkId(frameItmStkId);                       //frame itmStkId set
+                        frame.setFraPreOrdId(frame.getPreOrdId());
                         selecteKeyInDetail.setFrame(frame);
                     }
 
@@ -730,6 +738,11 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
     @Override
     public EKeyInApiDto saveTokenLogging(EKeyInApiDto param) throws Exception {
+        if( logger.isDebugEnabled() ){
+            logger.debug("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+            logger.debug("[START]saveTokenLogging");
+            logger.debug("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        }
         if (null == param) {
             throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
         }
@@ -831,7 +844,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         String verfKey = selectTokenSettings.getTknzVerfKey();
         if (CommonUtils.isEmpty(selectTokenSettings.getTknzUrl())
                 || CommonUtils.isEmpty(selectTokenSettings.getTknzMerchantId())
-                || CommonUtils.isEmpty(selectTokenSettings.getTknzVerfKey())) {
+                    || CommonUtils.isEmpty(selectTokenSettings.getTknzVerfKey())) {
             throw new ApplicationException(AppConstants.FAIL, "selectTokenSettings value does not exist.");
         }
 
@@ -877,6 +890,11 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         rtn.setUrlReq(urlReq);
         rtn.setMerchantId(merchantId);
         rtn.setSignature(signature);
+        if( logger.isDebugEnabled() ){
+            logger.debug("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+            logger.debug("[END]saveTokenLogging");
+            logger.debug("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        }
         return rtn;
     }
 
@@ -1184,15 +1202,35 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         EKeyInApiDto rtn = new EKeyInApiDto();
 
         int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(param));
+        rtn.setCnt(selectExistSofNo);
+
         if (selectExistSofNo == 0) {
             EgovMap selectCustomerInfo = eKeyInApiMapper.selectCustomerInfo(EKeyInApiForm.createMap(param));
             if (MapUtils.isNotEmpty(selectCustomerInfo)) {
                 rtn = EKeyInApiDto.create(selectCustomerInfo);
+
+                param.setCustId(rtn.getCustId());
+                param.setStusCodeId(9);                                         //SYS0038M : 9(Main)
+                List<EgovMap> selectAnotherContact = eKeyInApiMapper.selectAnotherContact(EKeyInApiForm.createMap(param));
+                if( selectAnotherContact.size() > 1 ){
+                    throw new ApplicationException(AppConstants.FAIL, "Check customer information.");
+                }
+                if( selectAnotherContact.size() == 1 ){
+                    rtn.setSelectAnotherContactMain(EKeyInApiDto.create(selectAnotherContact.get(0)));
+                }
+
+                List<EgovMap> selectAnotherAddress = eKeyInApiMapper.selectAnotherAddress(EKeyInApiForm.createMap(param));
+                if( selectAnotherAddress.size() > 1 ){
+                    throw new ApplicationException(AppConstants.FAIL, "Check Address information.");
+                }
+                if( selectAnotherAddress.size() == 1 ){
+                    rtn.setSelectAnotherAddressMain(EKeyInApiDto.create(selectAnotherAddress.get(0)));
+                }
             }
+
             List<EgovMap> selectBankList = eKeyInApiMapper.selectBankList();
             rtn.setBankList(selectBankList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
         }
-        rtn.setCnt(selectExistSofNo);
         return rtn;
     }
 
@@ -1229,7 +1267,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 //            sys0070M.put("atchFileId", );
             sys0071D.put("atchFileName", data.getAtchFileName());
             sys0071D.put("fileSubPath", data.getFileSubPath());
-            sys0071D.put("physiclFileName", data.getPhysiclFileName());
+            sys0071D.put("physiclFileName", data.getPhysiclFileName() + "." + data.getFileExtsn());
             sys0071D.put("fileExtsn", data.getFileExtsn());
             sys0071D.put("fileSize", data.getFileSize());
             sys0071D.put("filePassword", null);
@@ -1319,7 +1357,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
                     throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
                 }
             } else if (param.getSaveFlag().equals("U")) {
-                sys0070M.put("atchFileId", param.getAtchFileId());
+                sys0071D.put("atchFileId", param.getAtchFileId());
                 sys0071D.put("atchFileName", data.getAtchFileName());
                 sys0071D.put("fileSubPath", data.getFileSubPath());
                 sys0071D.put("physiclFileName", data.getPhysiclFileName());
@@ -1653,20 +1691,10 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
             updateEkeyInSal0213M(param.getBasic());                             //★☆★☆UPDATE SAL0213M
         } else { // Homecare
             if (CommonUtils.isEmpty(param.getMattress())) {
-                throw new ApplicationException(AppConstants.FAIL, "Basic order value does not exist.");
+                throw new ApplicationException(AppConstants.FAIL, "Homecare value does not exist.");
             }
-            if (CommonUtils.isEmpty(param.getMattress().getSofNo())) {
-                throw new ApplicationException(AppConstants.FAIL, "sofNo value does not exist.");
-            }
-
-            param.getMattress().setUpdUserId(loginVO.getUserId());
-            param.getMattress().setRegId(param.getRegId());
-            updateEkeyInSal0213M(param.getMattress());                           //★☆★☆UPDATE SAL0213M
-
-            if (CommonUtils.isNotEmpty(param.getFrame())) {
-                param.getFrame().setUpdUserId(loginVO.getUserId());
-                param.getFrame().setRegId(param.getRegId());
-                updateEkeyInSal0213M(param.getFrame());                         //★☆★☆UPDATE SAL0213M
+            if (CommonUtils.isEmpty(param.getMattress().getPreOrdId())) {
+                throw new ApplicationException(AppConstants.FAIL, "PreOrdId value does not exist.");
             }
 
             Map<String, Object> selectHomecareParam = new HashMap<String, Object>();
@@ -1684,6 +1712,24 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
             int saveCnt = eKeyInApiMapper.updateHMC0011D(hmc0011D);             //UPDATE HMC0011D
             if (saveCnt != 1) {
                 throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
+            }
+
+            if (CommonUtils.isEmpty(homecareList.get(0).getMatPreOrdId())) {
+                throw new ApplicationException(AppConstants.FAIL, "eKeyin Mat ord_id value does not exist.");
+            }
+            param.getMattress().setPreOrdId(homecareList.get(0).getMatPreOrdId());
+            param.getMattress().setUpdUserId(loginVO.getUserId());
+            param.getMattress().setRegId(param.getRegId());
+            updateEkeyInSal0213M(param.getMattress());                           //★☆★☆UPDATE SAL0213M
+
+            if( CommonUtils.isNotEmpty(homecareList.get(0).getFraPreOrdId()) && homecareList.get(0).getFraPreOrdId() > 0 ){
+                if (CommonUtils.isEmpty(param.getFrame())) {
+                    throw new ApplicationException(AppConstants.FAIL, "No frame information.");
+                }
+                param.getFrame().setPreOrdId(homecareList.get(0).getFraPreOrdId());
+                param.getFrame().setUpdUserId(loginVO.getUserId());
+                param.getFrame().setRegId(param.getRegId());
+                updateEkeyInSal0213M(param.getFrame());                         //★☆★☆UPDATE SAL0213M
             }
         }
 
@@ -1834,6 +1880,21 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 //            throw new ApplicationException(AppConstants.FAIL, "atchFileGrpId value does not exist.");
 //        }
 
+        if( logger.isDebugEnabled() ){
+            logger.debug("####################################################");
+            logger.debug("####################################################");
+            logger.debug("####################################################");
+            logger.debug("getPreOrdId : " + param.getPreOrdId());
+            logger.debug("getMthRentAmt : " + param.getMthRentAmt());
+            logger.debug("getTotAmt : " + param.getTotAmt());
+            logger.debug("getNorAmt : " + param.getNorAmt());
+            logger.debug("getDiscRntFee : " + param.getDiscRntFee());
+            logger.debug("getTotPv : " + param.getTotPv());
+            logger.debug("getTotPvGst : " + param.getTotPvGst());
+            logger.debug("####################################################");
+            logger.debug("####################################################");
+            logger.debug("####################################################");
+        }
         Map<String, Object> sal0213M = new HashMap<String, Object>();
         sal0213M.put("preOrdId", param.getPreOrdId());
 //        sal0213M.put("reqstDt, );

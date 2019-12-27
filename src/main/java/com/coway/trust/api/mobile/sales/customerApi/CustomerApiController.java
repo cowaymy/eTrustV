@@ -1,5 +1,7 @@
 package com.coway.trust.api.mobile.sales.customerApi;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,7 +56,7 @@ public class CustomerApiController {
 	@RequestMapping(value = "/selectCustomerList", method = RequestMethod.GET)
 	public ResponseEntity<List<CustomerApiDto>> selectCustomerList(@ModelAttribute CustomerApiForm param) throws Exception {
 		List<EgovMap> selectCustomerList = customerApiService.selectCustomerList(param);
-		if(LOGGER.isErrorEnabled()){
+		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selectCustomerList.size(); i++) {
 				LOGGER.debug("selectCustomerList    값 : {}", selectCustomerList.get(i));
 			}
@@ -76,7 +78,7 @@ public class CustomerApiController {
     @RequestMapping(value = "/selectCustomerOrder", method = RequestMethod.GET)
     public ResponseEntity<List<CustomerApiDto>> selectCustomerOrder(@ModelAttribute CustomerApiForm param) throws Exception {
         List<EgovMap> selectCustomerOrder = customerApiService.selectCustomerOrder(param);
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectCustomerOrder.size(); i++) {
                 LOGGER.debug("selectCustomerOrder    값 : {}", selectCustomerOrder.get(i));
             }
@@ -98,5 +100,33 @@ public class CustomerApiController {
     @RequestMapping(value = "/saveCustomer", method = RequestMethod.POST)
     public ResponseEntity<CustomerApiForm> saveCustomer(@RequestBody CustomerApiForm param) throws Exception {
         return ResponseEntity.ok(customerApiService.saveCustomer(param));
+    }
+
+
+
+    @ApiOperation(value = "convertDate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/convertDate", method = RequestMethod.GET)
+    public ResponseEntity<CustomerApiForm> convertDate(@ModelAttribute CustomerApiForm param) throws Exception {
+        CustomerApiForm rtn = new CustomerApiForm();
+        try{
+            String date =  param.getYymmdd();
+
+            SimpleDateFormat sdf1 = new SimpleDateFormat("yyMMdd");
+            Date d1 = sdf1.parse(date);
+            sdf1.applyPattern("dd/MM/yyyy");
+            rtn.setDdmmyyyy(sdf1.format(d1));
+
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyMMdd");
+            Date d2 = sdf2.parse(date);
+            sdf2.applyPattern("ddMMyyyy");
+            rtn.setYyyymmdd(sdf2.format(d2));
+        }catch(Exception e){
+            rtn.setDdmmyyyy("");
+            rtn.setYyyymmdd("");
+            if( LOGGER.isErrorEnabled() ){
+                LOGGER.equals("Exception : " + e.toString());
+            }
+        }
+        return ResponseEntity.ok(rtn);
     }
 }

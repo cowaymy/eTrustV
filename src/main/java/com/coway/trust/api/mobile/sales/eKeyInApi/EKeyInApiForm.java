@@ -56,6 +56,7 @@ public class EKeyInApiForm {
         params.put("atchFileGrpId", vo.getAtchFileGrpId());
         params.put("promoDt", vo.getPromoDt());
         params.put("gu", vo.getGu());
+        params.put("stusCodeId", vo.getStusCodeId());
 		return params;
 	}
 
@@ -85,6 +86,21 @@ public class EKeyInApiForm {
     private int atchFileGrpId;
     private String promoDt;
     private String gu;
+    private int stusCodeId;
+
+
+
+    public int getStusCodeId() {
+        return stusCodeId;
+    }
+
+
+
+    public void setStusCodeId(int stusCodeId) {
+        this.stusCodeId = stusCodeId;
+    }
+
+
 
     public String getGu() {
         return gu;

@@ -34,7 +34,8 @@ import springfox.documentation.annotations.ApiIgnore;
  * @ClassName : EKeyInListApiController.java
  * @Description : TO-DO Class Description
  *
- * @History
+ * @HistoryselectAnotherContact
+ *
  * <pre>
  * Date             Author          Description
  * -------------    -----------     -------------
@@ -67,7 +68,7 @@ public class EKeyInApiController {
 	@RequestMapping(value = "/selecteKeyInList", method = RequestMethod.GET)
 	public ResponseEntity<List<EKeyInApiDto>> selecteKeyInList(@ModelAttribute EKeyInApiForm param) throws Exception {
 		List<EgovMap> selecteKeyInList = eKeyInApiService.selecteKeyInList(param);
-		if(LOGGER.isErrorEnabled()){
+		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selecteKeyInList.size(); i++) {
 				LOGGER.debug("selecteKeyInList    값 : {}", selecteKeyInList.get(i));
 			}
@@ -97,7 +98,7 @@ public class EKeyInApiController {
     @RequestMapping(value = "/selecteOrderPackType1", method = RequestMethod.GET)
     public ResponseEntity<List<EKeyInApiDto>> selecteOrderPackType1() throws Exception {
         List<EgovMap> selecteOrderPackType1 = eKeyInApiService.selecteOrderPackType1();
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selecteOrderPackType1.size(); i++) {
                 LOGGER.debug("selecteOrderPackType1    값 : {}", selecteOrderPackType1.get(i));
             }
@@ -111,7 +112,7 @@ public class EKeyInApiController {
     @RequestMapping(value = "/selecteOrderPackType2", method = RequestMethod.GET)
     public ResponseEntity<List<EKeyInApiDto>> selecteOrderPackType2(@ModelAttribute EKeyInApiForm param) throws Exception {
         List<EgovMap> selecteOrderPackType2 = eKeyInApiService.selecteOrderPackType2(param);
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selecteOrderPackType2.size(); i++) {
                 LOGGER.debug("selecteOrderPackType2    값 : {}", selecteOrderPackType2.get(i));
             }
@@ -125,7 +126,7 @@ public class EKeyInApiController {
     @RequestMapping(value = "/selecteOrderProduct1", method = RequestMethod.GET)
     public ResponseEntity<List<EKeyInApiDto>> selecteOrderProduct1(EKeyInApiForm param) throws Exception {
         List<EgovMap> selecteOrderProduct1 = eKeyInApiService.selecteOrderProduct1(param);
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selecteOrderProduct1.size(); i++) {
                 LOGGER.debug("selecteOrderProduct1    값 : {}", selecteOrderProduct1.get(i));
             }
@@ -139,7 +140,7 @@ public class EKeyInApiController {
     @RequestMapping(value = "/selecteOrderProduct2", method = RequestMethod.GET)
     public ResponseEntity<List<EKeyInApiDto>> selecteOrderProduct2(EKeyInApiForm param) throws Exception {
         List<EgovMap> selecteOrderProduct2 = eKeyInApiService.selecteOrderProduct2(param);
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selecteOrderProduct2.size(); i++) {
                 LOGGER.debug("selecteOrderProduct2    값 : {}", selecteOrderProduct2.get(i));
             }
@@ -153,7 +154,7 @@ public class EKeyInApiController {
     @RequestMapping(value = "/selectPromotionByAppTypeStockESales", method = RequestMethod.GET)
     public ResponseEntity<List<EKeyInApiDto>> selectPromotionByAppTypeStockESales(@ModelAttribute EKeyInApiForm param) throws Exception {
         List<EgovMap> selectPromotionByAppTypeStockESales = eKeyInApiService.selectPromotionByAppTypeStockESales(param);
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectPromotionByAppTypeStockESales.size(); i++) {
                 LOGGER.debug("selectPromotionByAppTypeStockESales    값 : {}", selectPromotionByAppTypeStockESales.get(i));
             }
@@ -167,7 +168,7 @@ public class EKeyInApiController {
     @RequestMapping(value = "/selectPromotionByAppTypeStock", method = RequestMethod.GET)
     public ResponseEntity<List<EKeyInApiDto>> selectPromotionByAppTypeStock(@ModelAttribute EKeyInApiForm param) throws Exception {
         List<EgovMap> selectPromotionByAppTypeStock = eKeyInApiService.selectPromotionByAppTypeStock(param);
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectPromotionByAppTypeStock.size(); i++) {
                 LOGGER.debug("selectPromotionByAppTypeStock    값 : {}", selectPromotionByAppTypeStock.get(i));
             }
@@ -181,7 +182,7 @@ public class EKeyInApiController {
     @RequestMapping(value = "/selectBankList", method = RequestMethod.GET)
     public ResponseEntity<List<EKeyInApiDto>> selectBankList() throws Exception {
         List<EgovMap> selectBankList = eKeyInApiService.selectBankList();
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectBankList.size(); i++) {
                 LOGGER.debug("selectBankList    값 : {}", selectBankList.get(i));
             }
@@ -195,7 +196,7 @@ public class EKeyInApiController {
     @RequestMapping(value = "/selectAnotherContact", method = RequestMethod.GET)
     public ResponseEntity<List<EKeyInApiDto>> selectAnotherContact(EKeyInApiForm param) throws Exception {
         List<EgovMap> selectAnotherContact = eKeyInApiService.selectAnotherContact(param);
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectAnotherContact.size(); i++) {
                 LOGGER.debug("selectAnotherContact    값 : {}", selectAnotherContact.get(i));
             }
@@ -241,7 +242,7 @@ public class EKeyInApiController {
     @RequestMapping(value = "/selectAnotherAddress", method = RequestMethod.GET)
     public ResponseEntity<List<EKeyInApiDto>> selectAnotherAddress(EKeyInApiForm param) throws Exception {
         List<EgovMap> selectAnotherAddress = eKeyInApiService.selectAnotherAddress(param);
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectAnotherAddress.size(); i++) {
                 LOGGER.debug("selectAnotherAddress    값 : {}", selectAnotherAddress.get(i));
             }
@@ -310,7 +311,7 @@ public class EKeyInApiController {
     @ApiOperation(value = "insertUploadFileSal0500", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @RequestMapping(value = "/insertUploadFileSal0500", method = RequestMethod.POST)
     public ResponseEntity<FileDto> insertUploadFileSal0500(@ApiIgnore MultipartHttpServletRequest request, @ModelAttribute EKeyInApiDto param) throws Exception {
-        List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, webUploadDir, param.getSubPath(), AppConstants.UPLOAD_MAX_FILE_SIZE);
+        List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, webUploadDir, param.getSubPath(), AppConstants.UPLOAD_MIN_FILE_SIZE, true);
         int fileGroupKey = eKeyInApiService.insertUploadFileSal0500(FileVO.createList(list), param);
         FileDto fileDto = FileDto.create(list, fileGroupKey);
         return ResponseEntity.ok(fileDto);
@@ -321,7 +322,8 @@ public class EKeyInApiController {
     @ApiOperation(value = "updateUploadFileSal0500", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @RequestMapping(value = "/updateUploadFileSal0500", method = RequestMethod.POST)
     public ResponseEntity<FileDto> updateUploadFileSal0500(@ApiIgnore MultipartHttpServletRequest request, @ModelAttribute EKeyInApiDto param) throws Exception {
-        List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, webUploadDir, param.getSubPath(), AppConstants.UPLOAD_MAX_FILE_SIZE);
+        List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, webUploadDir, param.getSubPath(), AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+
         int fileGroupKey = eKeyInApiService.updateUploadFileSal0500(FileVO.createList(list), param);
         FileDto fileDto = FileDto.create(list, fileGroupKey);
         return ResponseEntity.ok(fileDto);

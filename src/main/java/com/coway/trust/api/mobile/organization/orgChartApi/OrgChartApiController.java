@@ -52,7 +52,7 @@ public class OrgChartApiController {
 	@RequestMapping(value = "/selectOrgChart", method = RequestMethod.GET)
 	public ResponseEntity<List<OrgChartApiDto>> selectOrgChart(@ModelAttribute OrgChartApiForm param) throws Exception {
 		List<EgovMap> selectOrgChart = orgChartApiService.selectOrgChart(param);
-		if(LOGGER.isErrorEnabled()){
+		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selectOrgChart.size(); i++) {
 				LOGGER.debug("courseList    값 : {}", selectOrgChart.get(i));
 			}

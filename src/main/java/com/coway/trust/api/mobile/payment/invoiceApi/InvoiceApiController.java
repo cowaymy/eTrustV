@@ -56,7 +56,7 @@ public class InvoiceApiController {
 	@RequestMapping(value = "/selectInvoiceList", method = RequestMethod.GET)
 	public ResponseEntity<List<InvoiceApiDto>> selectInvoiceList(@ModelAttribute InvoiceApiForm param) throws Exception {
 		List<EgovMap> selectInvoiceList = invoiceApiService.selectInvoiceList(param);
-		if(LOGGER.isErrorEnabled()){
+		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selectInvoiceList.size(); i++) {
 				LOGGER.debug("selectInvoiceList    값 : {}", selectInvoiceList.get(i));
 			}
@@ -70,7 +70,7 @@ public class InvoiceApiController {
     @RequestMapping(value = "/selectRequestInvoiceList", method = RequestMethod.GET)
     public ResponseEntity<List<InvoiceApiDto>> selectRequestInvoiceList(@ModelAttribute InvoiceApiForm param) throws Exception {
         List<EgovMap> selectRequestInvoiceList = invoiceApiService.selectRequestInvoiceList(param);
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectRequestInvoiceList.size(); i++) {
                 LOGGER.debug("selectRequestInvoiceList    값 : {}", selectRequestInvoiceList.get(i));
             }

@@ -53,7 +53,7 @@ public class FundTransferRefundApiController {
 	@RequestMapping(value = "/selectFundTransferRefundList", method = RequestMethod.GET)
 	public ResponseEntity<List<FundTransferRefundApiDto>> selectFundTransferRefundList(@ModelAttribute FundTransferRefundApiForm param) throws Exception {
 		List<EgovMap> selectFundTransferRefundList = fundTransferRefundApiService.selectFundTransferRefundList(param);
-		if(LOGGER.isErrorEnabled()){
+		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selectFundTransferRefundList.size(); i++) {
 				LOGGER.debug("selectFundTransferRefundList    값 : {}", selectFundTransferRefundList.get(i));
 			}

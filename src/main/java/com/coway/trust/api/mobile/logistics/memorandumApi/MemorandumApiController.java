@@ -52,7 +52,7 @@ public class MemorandumApiController {
     @RequestMapping(value = "/selectMemorandumList", method = RequestMethod.GET)
     public ResponseEntity<List<MemorandumApiDto>> selectMemorandumList(@ModelAttribute MemorandumApiFormDto param) throws Exception {
         List<EgovMap> selectMemorandumList = memorandumApiService.selectMemorandumList( param );
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectMemorandumList.size(); i++) {
                     LOGGER.debug("selectMemorandumList    값 : {}", selectMemorandumList.get(i));
             }

@@ -48,6 +48,9 @@ public class CustomerApiForm {
 	private int custId;
     private int custAddId;
     private String regId;
+    private String yymmdd;
+    private String yyyymmdd;
+    private String ddmmyyyy;
 
 
 
@@ -626,5 +629,23 @@ public class CustomerApiForm {
     }
     public void setAddressCountryid(int addressCountryid) {
         this.addressCountryid = addressCountryid;
+    }
+    public String getYyyymmdd() {
+        return yyyymmdd;
+    }
+    public void setYyyymmdd(String yyyymmdd) {
+        this.yyyymmdd = yyyymmdd;
+    }
+    public String getYymmdd() {
+        return yymmdd;
+    }
+    public void setYymmdd(String yymmdd) {
+        this.yymmdd = yymmdd;
+    }
+    public String getDdmmyyyy() {
+        return ddmmyyyy;
+    }
+    public void setDdmmyyyy(String ddmmyyyy) {
+        this.ddmmyyyy = ddmmyyyy;
     }
 }

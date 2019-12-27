@@ -1,5 +1,7 @@
 package com.coway.trust.api.mobile.sales.SalesDashboardApi;
 
+import java.math.BigDecimal;
+
 import com.coway.trust.util.BeanConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -37,18 +39,17 @@ public class SalesDashboardApiDto{
 	private int memType;
 	private String year;
 	private String month;
-	private int totSales;
-	private int netSales;
-	private int shi;
-	private int pvTot;
-	private int ownPurchase;
-	private int hsSuccessRate;
-	private int collectionRate;
-	private int rejoin;
-	private int membership;
+	private BigDecimal totSales;
+	private BigDecimal netSales;
+	private BigDecimal shi;
+	private BigDecimal pvTot;
+	private BigDecimal ownPurchase;
+	private BigDecimal hsSuccessRate;
+	private BigDecimal collectionRate;
+	private BigDecimal rejoin;
+	private BigDecimal membership;
 	private int updUserId;
 	private String updDt;
-
     public int getId() {
         return id;
     }
@@ -85,58 +86,58 @@ public class SalesDashboardApiDto{
     public void setMonth(String month) {
         this.month = month;
     }
-    public int getTotSales() {
+    public BigDecimal getTotSales() {
         return totSales;
     }
-    public void setTotSales(int totSales) {
+    public void setTotSales(BigDecimal totSales) {
         this.totSales = totSales;
     }
-    public int getNetSales() {
+    public BigDecimal getNetSales() {
         return netSales;
     }
-    public void setNetSales(int netSales) {
+    public void setNetSales(BigDecimal netSales) {
         this.netSales = netSales;
     }
-    public int getShi() {
+    public BigDecimal getShi() {
         return shi;
     }
-    public void setShi(int shi) {
+    public void setShi(BigDecimal shi) {
         this.shi = shi;
     }
-    public int getPvTot() {
+    public BigDecimal getPvTot() {
         return pvTot;
     }
-    public void setPvTot(int pvTot) {
+    public void setPvTot(BigDecimal pvTot) {
         this.pvTot = pvTot;
     }
-    public int getOwnPurchase() {
+    public BigDecimal getOwnPurchase() {
         return ownPurchase;
     }
-    public void setOwnPurchase(int ownPurchase) {
+    public void setOwnPurchase(BigDecimal ownPurchase) {
         this.ownPurchase = ownPurchase;
     }
-    public int getHsSuccessRate() {
+    public BigDecimal getHsSuccessRate() {
         return hsSuccessRate;
     }
-    public void setHsSuccessRate(int hsSuccessRate) {
+    public void setHsSuccessRate(BigDecimal hsSuccessRate) {
         this.hsSuccessRate = hsSuccessRate;
     }
-    public int getCollectionRate() {
+    public BigDecimal getCollectionRate() {
         return collectionRate;
     }
-    public void setCollectionRate(int collectionRate) {
+    public void setCollectionRate(BigDecimal collectionRate) {
         this.collectionRate = collectionRate;
     }
-    public int getRejoin() {
+    public BigDecimal getRejoin() {
         return rejoin;
     }
-    public void setRejoin(int rejoin) {
+    public void setRejoin(BigDecimal rejoin) {
         this.rejoin = rejoin;
     }
-    public int getMembership() {
+    public BigDecimal getMembership() {
         return membership;
     }
-    public void setMembership(int membership) {
+    public void setMembership(BigDecimal membership) {
         this.membership = membership;
     }
     public int getUpdUserId() {

@@ -53,7 +53,7 @@ public class CommissionApiController {
     @RequestMapping(value = "/selectCommissionDashboard", method = RequestMethod.GET)
     public ResponseEntity<List<CommissionApiDto>> selectCommissionDashboard(@ModelAttribute CommissionApiForm param) throws Exception {
         List<EgovMap> selectCommissionDashboard = commissionApiService.selectCommissionDashboard(param);
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectCommissionDashboard.size(); i++) {
                     LOGGER.debug("selectCommissionDashboard    값 : {}", selectCommissionDashboard.get(i));
             }

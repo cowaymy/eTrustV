@@ -53,7 +53,7 @@ public class RequestRefundApiController {
     @RequestMapping(value = "/selectCodeList", method = RequestMethod.GET)
     public ResponseEntity<Map<String, List<EgovMap>>> selectCodeList() throws Exception {
         Map<String, List<EgovMap>> selectCodeList = requestRefundApiService.selectCodeList();
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectCodeList.size(); i++) {
                 LOGGER.debug("selectCodeList    값 : {}", selectCodeList.get(i));
             }

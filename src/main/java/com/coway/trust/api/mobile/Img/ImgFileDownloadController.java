@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -41,6 +43,8 @@ import com.coway.trust.util.EgovResourceCloseHelper;
 @Controller
 @RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/imgFileDownloadApi")
 public class ImgFileDownloadController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ImgFileDownloadController.class);
 
 	@Value("${com.file.upload.path}")
 	private String uploadDir;
@@ -211,6 +215,14 @@ public class ImgFileDownloadController {
 		File uFile = new File(uploadDirWeb + File.separator + subPath, fileName);
 		long fSize = uFile.length();
 
+		if( logger.isDebugEnabled() ){
+		    logger.debug(":::::::::::::::::::::::::::::::::::::::::::::::::::::");
+		    logger.debug("uploadDirWeb : " + uploadDirWeb);
+		    logger.debug("File.separator : "+ File.separator);
+		    logger.debug("subPath : " + subPath);
+            logger.debug("fileName : " + fileName);
+		    logger.debug(":::::::::::::::::::::::::::::::::::::::::::::::::::::");
+		}
 		if (fSize > 0) {
 			String mimetype = "application/x-msdownload";
 			response.setContentType(mimetype);
@@ -218,11 +230,9 @@ public class ImgFileDownloadController {
 			setDisposition(originalFileName, request, response);
 			BufferedInputStream in = null;
 			BufferedOutputStream out = null;
-
 			try {
 				in = new BufferedInputStream(new FileInputStream(uFile));
 				out = new BufferedOutputStream(response.getOutputStream());
-
 				FileCopyUtils.copy(in, out);
 				out.flush();
 			} catch (IOException ex) {
@@ -230,9 +240,7 @@ public class ImgFileDownloadController {
 			} finally {
 				EgovResourceCloseHelper.close(in, out);
 			}
-
 		} else {
-
 			throw new FileDownException(AppConstants.FAIL, "Could not get file name : " + originalFileName);
 		}
 	}

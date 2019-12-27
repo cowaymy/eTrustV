@@ -53,7 +53,7 @@ public class AddressApiController {
 	@RequestMapping(value = "/selectStateCodeList", method = RequestMethod.GET)
 	public ResponseEntity<List<AddressApiDto>> selectStateCodeList(@ModelAttribute AddressApiForm param) throws Exception {
 		List<EgovMap> selectStateCodeList = addressApiService.selectStateCodeList(param);
-		if(LOGGER.isErrorEnabled()){
+		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selectStateCodeList.size(); i++) {
 				LOGGER.debug("selectStateCodeList    값 : {}", selectStateCodeList.get(i));
 			}
@@ -67,7 +67,7 @@ public class AddressApiController {
     @RequestMapping(value = "/selectCityCodeList", method = RequestMethod.GET)
     public ResponseEntity<List<AddressApiDto>> selectCityCodeList(@ModelAttribute AddressApiForm param) throws Exception {
         List<EgovMap> selectCityCodeList = addressApiService.selectCityCodeList(param);
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectCityCodeList.size(); i++) {
                 LOGGER.debug("selectCityCodeList    값 : {}", selectCityCodeList.get(i));
             }
@@ -81,7 +81,7 @@ public class AddressApiController {
     @RequestMapping(value = "/selectAddressList", method = RequestMethod.GET)
     public ResponseEntity<List<AddressApiDto>> selectAddressList(@ModelAttribute AddressApiForm param) throws Exception {
         List<EgovMap> selectAddressList = addressApiService.selectAddressList(param);
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectAddressList.size(); i++) {
                 LOGGER.debug("selectAddressList    값 : {}", selectAddressList.get(i));
             }

@@ -47,6 +47,8 @@ public class EKeyInApiDto{
     private List<EKeyInApiDto> mattressProductList;
     private List<EKeyInApiDto> frameProductList;
     private List<EKeyInApiDto> attachment;
+    private EKeyInApiDto selectAnotherContactMain;
+    private EKeyInApiDto selectAnotherAddressMain;
 	private int custId;
 	private String custName;
 	private String hcGu;
@@ -86,7 +88,6 @@ public class EKeyInApiDto{
     private int srvPacId;
     private String srvPacName;
 	private int itmStkId;
-
 	private int promoId;
 	private BigDecimal totAmt;
 	private BigDecimal norAmt;
@@ -225,144 +226,8 @@ public class EKeyInApiDto{
     private String promoDt;
     private String gu;
 
-    public String getGu() {
-        return gu;
-    }
-    public void setGu(String gu) {
-        this.gu = gu;
-    }
-    public List<EKeyInApiDto> getFrameProductList() {
-        return frameProductList;
-    }
-    public void setFrameProductList(List<EKeyInApiDto> frameProductList) {
-        this.frameProductList = frameProductList;
-    }
-    public String getPromoDt() {
-        return promoDt;
-    }
-    public void setPromoDt(String promoDt) {
-        this.promoDt = promoDt;
-    }
-    public int getOrdSeqNo() {
-        return ordSeqNo;
-    }
-    public void setOrdSeqNo(int ordSeqNo) {
-        this.ordSeqNo = ordSeqNo;
-    }
-    public int getAtchFileIdSales() {
-        return atchFileIdSales;
-    }
-    public void setAtchFileIdSales(int atchFileIdSales) {
-        this.atchFileIdSales = atchFileIdSales;
-    }
-    public int getAtchFileIdNric() {
-        return atchFileIdNric;
-    }
-    public void setAtchFileIdNric(int atchFileIdNric) {
-        this.atchFileIdNric = atchFileIdNric;
-    }
-    public int getAtchFileIdPayment() {
-        return atchFileIdPayment;
-    }
-    public void setAtchFileIdPayment(int atchFileIdPayment) {
-        this.atchFileIdPayment = atchFileIdPayment;
-    }
-    public int getAtchFileIdTemporary() {
-        return atchFileIdTemporary;
-    }
-    public void setAtchFileIdTemporary(int atchFileIdTemporary) {
-        this.atchFileIdTemporary = atchFileIdTemporary;
-    }
-    public int getAtchFileIdoOthersform() {
-        return atchFileIdoOthersform;
-    }
-    public void setAtchFileIdoOthersform(int atchFileIdoOthersform) {
-        this.atchFileIdoOthersform = atchFileIdoOthersform;
-    }
-    public int getAtchFileIdoOthersform2() {
-        return atchFileIdoOthersform2;
-    }
-    public void setAtchFileIdoOthersform2(int atchFileIdoOthersform2) {
-        this.atchFileIdoOthersform2 = atchFileIdoOthersform2;
-    }
-    public int getUpdateAtchFileGrpId() {
-        return updateAtchFileGrpId;
-    }
-    public void setUpdateAtchFileGrpId(int updateAtchFileGrpId) {
-        this.updateAtchFileGrpId = updateAtchFileGrpId;
-    }
-    public String getSaveFlag() {
-        return saveFlag;
-    }
-    public void setSaveFlag(String saveFlag) {
-        this.saveFlag = saveFlag;
-    }
-    public int getAtchFileId() {
-        return atchFileId;
-    }
-    public void setAtchFileId(int atchFileId) {
-        this.atchFileId = atchFileId;
-    }
-    public String getAtchFileName() {
-        return atchFileName;
-    }
-    public void setAtchFileName(String atchFileName) {
-        this.atchFileName = atchFileName;
-    }
-    public String getFileSubPath() {
-        return fileSubPath;
-    }
-    public void setFileSubPath(String fileSubPath) {
-        this.fileSubPath = fileSubPath;
-    }
-    public String getPhysiclFileName() {
-        return physiclFileName;
-    }
-    public void setPhysiclFileName(String physiclFileName) {
-        this.physiclFileName = physiclFileName;
-    }
-    public String getFileExtsn() {
-        return fileExtsn;
-    }
-    public void setFileExtsn(String fileExtsn) {
-        this.fileExtsn = fileExtsn;
-    }
-    public List<EKeyInApiDto> getAttachment() {
-        return attachment;
-    }
-    public void setAttachment(List<EKeyInApiDto> attachment) {
-        this.attachment = attachment;
-    }
-    public int getCrtUserId() {
-        return crtUserId;
-    }
-    public void setCrtUserId(int crtUserId) {
-        this.crtUserId = crtUserId;
-    }
-    public int getUpdUserId() {
-        return updUserId;
-    }
-    public void setUpdUserId(int updUserId) {
-        this.updUserId = updUserId;
-    }
-    public String getSubPath() {
-        return subPath;
-    }
-    public void setSubPath(String subPath) {
-        this.subPath = subPath;
-    }
-    public String getFileKeySeq() {
-        return fileKeySeq;
-    }
-    public void setFileKeySeq(String fileKeySeq) {
-        this.fileKeySeq = fileKeySeq;
-    }
-    public int getAtchFileGrpId() {
-        return atchFileGrpId;
-    }
-    public void setAtchFileGrpId(int atchFileGrpId) {
-        this.atchFileGrpId = atchFileGrpId;
-    }
+
+
     public List<EKeyInApiDto> getCodeList() {
         return codeList;
     }
@@ -428,6 +293,30 @@ public class EKeyInApiDto{
     }
     public void setMattressProductList(List<EKeyInApiDto> mattressProductList) {
         this.mattressProductList = mattressProductList;
+    }
+    public List<EKeyInApiDto> getFrameProductList() {
+        return frameProductList;
+    }
+    public void setFrameProductList(List<EKeyInApiDto> frameProductList) {
+        this.frameProductList = frameProductList;
+    }
+    public List<EKeyInApiDto> getAttachment() {
+        return attachment;
+    }
+    public void setAttachment(List<EKeyInApiDto> attachment) {
+        this.attachment = attachment;
+    }
+    public EKeyInApiDto getSelectAnotherContactMain() {
+        return selectAnotherContactMain;
+    }
+    public void setSelectAnotherContactMain(EKeyInApiDto selectAnotherContactMain) {
+        this.selectAnotherContactMain = selectAnotherContactMain;
+    }
+    public EKeyInApiDto getSelectAnotherAddressMain() {
+        return selectAnotherAddressMain;
+    }
+    public void setSelectAnotherAddressMain(EKeyInApiDto selectAnotherAddressMain) {
+        this.selectAnotherAddressMain = selectAnotherAddressMain;
     }
     public int getCustId() {
         return custId;
@@ -1358,5 +1247,131 @@ public class EKeyInApiDto{
     }
     public void setOrderType(String orderType) {
         this.orderType = orderType;
+    }
+    public int getAtchFileGrpId() {
+        return atchFileGrpId;
+    }
+    public void setAtchFileGrpId(int atchFileGrpId) {
+        this.atchFileGrpId = atchFileGrpId;
+    }
+    public String getSubPath() {
+        return subPath;
+    }
+    public void setSubPath(String subPath) {
+        this.subPath = subPath;
+    }
+    public String getFileKeySeq() {
+        return fileKeySeq;
+    }
+    public void setFileKeySeq(String fileKeySeq) {
+        this.fileKeySeq = fileKeySeq;
+    }
+    public int getCrtUserId() {
+        return crtUserId;
+    }
+    public void setCrtUserId(int crtUserId) {
+        this.crtUserId = crtUserId;
+    }
+    public int getUpdUserId() {
+        return updUserId;
+    }
+    public void setUpdUserId(int updUserId) {
+        this.updUserId = updUserId;
+    }
+    public int getAtchFileId() {
+        return atchFileId;
+    }
+    public void setAtchFileId(int atchFileId) {
+        this.atchFileId = atchFileId;
+    }
+    public String getAtchFileName() {
+        return atchFileName;
+    }
+    public void setAtchFileName(String atchFileName) {
+        this.atchFileName = atchFileName;
+    }
+    public String getFileSubPath() {
+        return fileSubPath;
+    }
+    public void setFileSubPath(String fileSubPath) {
+        this.fileSubPath = fileSubPath;
+    }
+    public String getPhysiclFileName() {
+        return physiclFileName;
+    }
+    public void setPhysiclFileName(String physiclFileName) {
+        this.physiclFileName = physiclFileName;
+    }
+    public String getFileExtsn() {
+        return fileExtsn;
+    }
+    public void setFileExtsn(String fileExtsn) {
+        this.fileExtsn = fileExtsn;
+    }
+    public String getSaveFlag() {
+        return saveFlag;
+    }
+    public void setSaveFlag(String saveFlag) {
+        this.saveFlag = saveFlag;
+    }
+    public int getUpdateAtchFileGrpId() {
+        return updateAtchFileGrpId;
+    }
+    public void setUpdateAtchFileGrpId(int updateAtchFileGrpId) {
+        this.updateAtchFileGrpId = updateAtchFileGrpId;
+    }
+    public int getAtchFileIdSales() {
+        return atchFileIdSales;
+    }
+    public void setAtchFileIdSales(int atchFileIdSales) {
+        this.atchFileIdSales = atchFileIdSales;
+    }
+    public int getAtchFileIdNric() {
+        return atchFileIdNric;
+    }
+    public void setAtchFileIdNric(int atchFileIdNric) {
+        this.atchFileIdNric = atchFileIdNric;
+    }
+    public int getAtchFileIdPayment() {
+        return atchFileIdPayment;
+    }
+    public void setAtchFileIdPayment(int atchFileIdPayment) {
+        this.atchFileIdPayment = atchFileIdPayment;
+    }
+    public int getAtchFileIdTemporary() {
+        return atchFileIdTemporary;
+    }
+    public void setAtchFileIdTemporary(int atchFileIdTemporary) {
+        this.atchFileIdTemporary = atchFileIdTemporary;
+    }
+    public int getAtchFileIdoOthersform() {
+        return atchFileIdoOthersform;
+    }
+    public void setAtchFileIdoOthersform(int atchFileIdoOthersform) {
+        this.atchFileIdoOthersform = atchFileIdoOthersform;
+    }
+    public int getAtchFileIdoOthersform2() {
+        return atchFileIdoOthersform2;
+    }
+    public void setAtchFileIdoOthersform2(int atchFileIdoOthersform2) {
+        this.atchFileIdoOthersform2 = atchFileIdoOthersform2;
+    }
+    public int getOrdSeqNo() {
+        return ordSeqNo;
+    }
+    public void setOrdSeqNo(int ordSeqNo) {
+        this.ordSeqNo = ordSeqNo;
+    }
+    public String getPromoDt() {
+        return promoDt;
+    }
+    public void setPromoDt(String promoDt) {
+        this.promoDt = promoDt;
+    }
+    public String getGu() {
+        return gu;
+    }
+    public void setGu(String gu) {
+        this.gu = gu;
     }
 }

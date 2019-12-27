@@ -54,7 +54,7 @@ public class FundTransferApiController {
 	@RequestMapping(value = "/selectReasonList", method = RequestMethod.GET)
 	public ResponseEntity<List<FundTransferApiDto>> selectReasonList() throws Exception {
 		List<EgovMap> selectReasonList = fundTransferApiService.selectReasonList();
-		if(LOGGER.isErrorEnabled()){
+		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selectReasonList.size(); i++) {
 				LOGGER.debug("selectReasonList    값 : {}", selectReasonList.get(i));
 			}

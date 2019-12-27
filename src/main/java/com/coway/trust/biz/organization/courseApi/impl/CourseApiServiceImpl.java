@@ -71,7 +71,7 @@ public class CourseApiServiceImpl extends EgovAbstractServiceImpl implements Cou
 		int saveCnt = 0;
 
 		List<EgovMap> selectCourse = this.selectCourse(param);
-		if(LOGGER.isErrorEnabled()){
+		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selectCourse.size(); i++) {
 				LOGGER.debug("selectCourse    값 : {}", selectCourse.get(i));
 			}

@@ -74,7 +74,7 @@ public class ProductInfoListApiController {
     @RequestMapping(value = "/selectCodeList", method = RequestMethod.GET)
     public ResponseEntity<List<ProductInfoListApiDto>> selectCodeList() throws Exception {
         List<EgovMap> selectCodeList = productInfoListApiService.selectCodeList();
-        if(LOGGER.isErrorEnabled()){
+        if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectCodeList.size(); i++) {
                 LOGGER.debug("selectCodeList    값 : {}", selectCodeList.get(i));
             }
@@ -88,7 +88,7 @@ public class ProductInfoListApiController {
 	@RequestMapping(value = "/selectProductInfoList", method = RequestMethod.GET)
 	public ResponseEntity<List<ProductInfoListApiDto>> selectProductInfoList(@ModelAttribute ProductInfoListApiForm param) throws Exception {
 		List<EgovMap> selectProductInfoList = productInfoListApiService.selectProductInfoList(param);
-		if(LOGGER.isErrorEnabled()){
+		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selectProductInfoList.size(); i++) {
 				LOGGER.debug("selectProductInfoList    값 : {}", selectProductInfoList.get(i));
 			}

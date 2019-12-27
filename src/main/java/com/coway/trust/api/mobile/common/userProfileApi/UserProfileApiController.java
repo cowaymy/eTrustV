@@ -42,6 +42,6 @@ public class UserProfileApiController {
     @ApiOperation(value = "selectUserProfile", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/selectUserProfile", method = RequestMethod.GET)
     public ResponseEntity<UserProfileApiDto> selectUserProfile(@ModelAttribute UserProfileApiForm param) throws Exception {
-        return ResponseEntity.ok(UserProfileApiDto.create(userProfileApiService.selectUserProfile(param)));
+        return ResponseEntity.ok(userProfileApiService.selectUserProfile(param));
     }
 }

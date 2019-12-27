@@ -52,7 +52,7 @@ public class MemberApiController {
 	@RequestMapping(value = "/selectMemberList", method = RequestMethod.GET)
 	public ResponseEntity<List<MemberApiDto>> selectMemberList(@ModelAttribute MemberApiForm param) throws Exception {
 		List<EgovMap> selectMemberList = memberApiService.selectMemberList(param);
-		if(LOGGER.isErrorEnabled()){
+		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selectMemberList.size(); i++) {
 				LOGGER.debug("selectMemberList    값 : {}", selectMemberList.get(i));
 			}

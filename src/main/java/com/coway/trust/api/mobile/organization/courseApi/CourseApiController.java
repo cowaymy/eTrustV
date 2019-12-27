@@ -53,7 +53,7 @@ public class CourseApiController {
 	@RequestMapping(value = "/selectCourse", method = RequestMethod.GET)
 	public ResponseEntity<List<CourseApiDto>> selectCourse(@ModelAttribute CourseApiForm param) throws Exception {
 		List<EgovMap> selectCourse = courseApiService.selectCourse(param);
-		if(LOGGER.isErrorEnabled()){
+		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selectCourse.size(); i++) {
 				LOGGER.debug("selectCourse    값 : {}", selectCourse.get(i));
 			}
