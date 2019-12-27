@@ -18,6 +18,19 @@
 
         	Common.report("printForm");
         });
+
+        var option1 = {
+                winName : "popup",
+                width : "1200px",   // 창 가로 크기
+                height : "540px",    // 창 세로 크기
+                resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
+                scrollbars : "no" // 스크롤바. (yes/no)(default : yes)
+        };
+
+        $('#btnOrderSerialNoHistory').click(function() {
+            //Common.popupDiv("/sales/order/orderLedger2ViewPop.do", {ordId : '${orderDetail.basicInfo.ordId}'});
+        	Common.popupWin('serialNoHistoryParam', "/logistics/serialHistory/serialNoHistoryPop.do", option1);
+        });
     });
 
 </script>
@@ -28,6 +41,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="sal.page.title.ordView" /></h1>
 <ul class="right_opt">
+	<li><p class="btn_blue2"><a id="btnOrderSerialNoHistory" href="#">Order Serial No. History</a></p></li>
 	<li><p class="btn_blue2"><a id="btnPrint" href="#">Customer Score Card</a></p></li>
 	<li><p class="btn_blue2"><a id="btnLedger1" href="#"><spring:message code="sal.btn.ledger" />(1)</a></p></li>
 	<li><p class="btn_blue2"><a id="btnLedger2" href="#"><spring:message code="sal.btn.ledger" />(2)</a></p></li>
@@ -52,6 +66,10 @@
     <input type="hidden" id="V_ORDERID" name="V_ORDERID" value="${orderDetail.basicInfo.ordId}"/>
     <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/customerScoreCard.rpt" /><br />
   </form>
+  <form id="serialNoHistoryParam" name="serialNoHistoryParam" method="POST">
+    <input type="hidden" id="ordNo" name="ordNo" value="${orderDetail.basicInfo.ordNo }">
+    <input type="hidden" id="refDocNo" name="refDocNo" value="">
+</form>
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
