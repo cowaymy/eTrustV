@@ -306,15 +306,6 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     				logger.debug("### CS INSERT RESULT : " + rtnValue.toString());
 
     				if (null != rtnValue) {
-//    					HashMap spMap = (HashMap) rtnValue.get("spMap");
-//    					logger.debug("spMap :" + spMap.toString());
-//    					if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-//    						rtnValue.put("logerr", "Y");
-//    					}
-
-    					// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
-//    					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-
     					// 홈케어 주문일 경우만 호출
     					if ("Y".equals(String.valueOf(insApiresult.get("homeCareOrderYn")))) {
         					params.put("scanSerial", String.valueOf(insApiresult.get("scanSerial")));

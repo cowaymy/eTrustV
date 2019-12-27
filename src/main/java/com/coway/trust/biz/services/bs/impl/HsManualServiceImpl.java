@@ -2604,29 +2604,9 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
 	      }
 	  }
 
-	  // LOGISTICS CALL
-	  /*
-	  Map<String, Object> logPram = null;
-	  if (Integer.parseInt(params.get("cmbStatusType").toString()) == 4) { // COMPLETED
-		  logPram = new HashMap<String, Object>();
-	      logPram.put("ORD_ID", LOG_SVC0008D_NO);
-	      logPram.put("RETYPE", "COMPLET");
-	      logPram.put("P_TYPE", "OD05");
-	      logPram.put("P_PRGNM", "HSCOM");
-	      logPram.put("USERID", sessionVO.getUserId());
-
-	      logger.debug("= HSCOM LOGISTICS CALL PARAM ===>" + logPram.toString());
-	      servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
-	      logger.debug("= HSCOMCALL LOGISTICS CALL RESULT ===> {}", logPram);
-	      logPram.put("P_RESULT_TYPE", "HS");
-	      logPram.put("P_RESULT_MSG", logPram.get("p1"));
-	  }
-	  */
-
 	  Map<String, Object> resultValue = new HashMap<String, Object>();
 	  resultValue.put("resultId", params.get("hidSalesOrdCd"));
 	  resultValue.put("resultDocNo", docNo);
-	  //resultValue.put("spMap", logPram);
 
 	  return resultValue;
 	}
