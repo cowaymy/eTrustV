@@ -2865,12 +2865,16 @@
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
+    <th scope="row" type="hidden"><spring:message code="sal.title.text.priceRpfRm" /></th>
     <td>
-        <input id="ordPrice1"       name="ordPrice1"      data-ref='ordProduct1' type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
+        <input id="ordPrice1"       name="ordPrice1"      data-ref='ordProduct1' type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" type="hidden" readonly />
         <input id="ordPriceId1"    name="ordPriceId1"    data-ref='ordProduct1' type="hidden" />
         <input id="orgOrdPrice1"  name="orgOrdPrice1" data-ref='ordProduct1' type="hidden" />
         <input id="orgOrdPv1"     name="orgOrdPv1"     data-ref='ordProduct1' type="hidden" /></td>
+     <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
+    <td>
+        <input id="totOrdPrice"    name="totOrdPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
+    </td>
     <th scope="row"><spring:message code="sal.text.GroupCode" /></th>
     <td>
         <input id="grpCd"       name="grpCd"       type="text" title="" placeholder="Group Code" class="w100p readonly" readonly />
@@ -2878,8 +2882,10 @@
     </td>
 </tr>
 <tr>
+    <th scope="row" type="hidden"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
+    <td><input id="orgOrdRentalFees1" name="orgOrdRentalFees1" data-ref='ordProduct1' type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly"  type="hidden"readonly /></td>
     <th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
-    <td><input id="orgOrdRentalFees1" name="orgOrdRentalFees1" data-ref='ordProduct1' type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
+    <td><input id="totOrgOrdRentalFees" name="totOrgOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
     <th scope="row"><spring:message code="sal.text.organizationCode" /></th>
     <td>
         <input id="orgCd" name="orgCd" type="text" title="" placeholder="Organization Code" class="w100p readonly" readonly />
@@ -2887,11 +2893,15 @@
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sales.promo.discPeriod" />/<br><spring:message code="sal.title.text.finalRentalFees" /></th>
+    <th scope="row" type="hidden"><spring:message code="sales.promo.discPeriod" />/<br><spring:message code="sal.title.text.finalRentalFees" /></th>
     <td>
-        <span style="width:40%;"><select id="promoDiscPeriodTp1" name="promoDiscPeriodTp1" data-ref='ordProduct1' class="w100p" disabled></select></span>
-        <span style="width:23%;"><input id="promoDiscPeriod1"     name="promoDiscPeriod1"     data-ref='ordProduct1' type="text" title="" placeholder=""  class="w100p readonly" readonly/></span>
-        <span style="width:32%;"><input id="ordRentalFees1"         name="ordRentalFees1"          data-ref='ordProduct1' type="text" title="" placeholder=""  class="w100p readonly" readonly/></span>
+        <span style="width:40%;"><select id="promoDiscPeriodTp1" name="promoDiscPeriodTp1" data-ref='ordProduct1' class="w100p" type="hidden" disabled></select></span>
+        <span style="width:23%;"><input id="promoDiscPeriod1"     name="promoDiscPeriod1"     data-ref='ordProduct1' type="text" title="" placeholder=""  class="w100p readonly" type="hidden" readonly/></span>
+        <span style="width:32%;"><input id="ordRentalFees1"         name="ordRentalFees1"          data-ref='ordProduct1' type="text" title="" placeholder=""  class="w100p readonly"  type="hidden" readonly/></span>
+    </td>
+    <th scope="row"><spring:message code="sal.title.text.finalRentalFees" /></th>
+    <td>
+        <p><input id="totOrdRentalFees" name="totOrdRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></p>
     </td>
     <th scope="row"><spring:message code="sal.text.trialNo" /></th>
     <td><label><input id="trialNoChk" name="trialNoChk" type="checkbox" disabled/><span></span></label>
@@ -2901,19 +2911,23 @@
     </td>
 </tr>
 <tr>
+    <th scope="row" type="hidden"><spring:message code="sal.title.text.pv" /></th>
+    <td>
+        <input id="ordPv1"       name="ordPv1"      data-ref='ordProduct1' type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" type="hidden" readonly />
+        <input id="ordPvGST1" name="ordPvGST1" data-ref='ordProduct1' type="hidden" />
+    </td>
     <th scope="row"><spring:message code="sal.title.text.pv" /></th>
     <td>
-        <input id="ordPv1"       name="ordPv1"      data-ref='ordProduct1' type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
-        <input id="ordPvGST1" name="ordPvGST1" data-ref='ordProduct1' type="hidden" />
+        <input id="totOrdPv"    name="totOrdPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
     </td>
     <td colspan="2"></td>
 </tr>
-<tr>
+<tr style='visibility:collapse'>
     <td><h3>Frame</h3></td>
     <td></td>
     <td colspan="2"></td>
 </tr>
-<tr>
+<tr style='visibility:collapse'>
     <th scope="row"><spring:message code="sal.title.text.product" /><span class="must">*</span></th>
     <td>
         <select id="ordProduct2" name="ordProduct2" class="w100p" disabled></select>
@@ -2926,7 +2940,7 @@
      <select id="compType2" name="compType2" class="w100p" onchange="fn_reloadPromo('2')"></select>
     </td>
 </tr>
-<tr>
+<tr style='visibility:collapse'>
     <th scope="row"><spring:message code="sal.title.text.promo" /><span class="must">*</span></th>
     <td>
     <select id="ordPromo2"     name="ordPromo2"       data-ref='ordProduct2' class="w100p" disabled></select>
@@ -2935,7 +2949,7 @@
     <td><h3>Total</h3></td>
     <td></td>
 </tr>
-<tr>
+<tr style='visibility:collapse'>
     <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
     <td>
         <input id="ordPrice2"        name="ordPrice2"      data-ref='ordProduct2' type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
@@ -2943,39 +2957,39 @@
         <input id="orgOrdPrice2"   name="orgOrdPrice2" data-ref='ordProduct2' type="hidden" />
         <input id="orgOrdPv2"      name="orgOrdPv2"     data-ref='ordProduct2' type="hidden" />
     </td>
-    <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
+<!--    <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
     <td>
         <input id="totOrdPrice"    name="totOrdPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
-    </td>
+    </td>-->
 </tr>
-<tr>
+<tr style='visibility:collapse'>
     <th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
     <td><input id="orgOrdRentalFees2" name="orgOrdRentalFees2" data-ref='ordProduct2' type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
-    <th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
-    <td><input id="totOrgOrdRentalFees" name="totOrgOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
+    <!--<th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
+    <td><input id="totOrgOrdRentalFees" name="totOrgOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>-->
 </tr>
-<tr>
+<tr style='visibility:collapse'>
     <th scope="row"><spring:message code="sales.promo.discPeriod" />/<br><spring:message code="sal.title.text.finalRentalFees" /></th>
     <td>
         <span style="width:40%;"><select id="promoDiscPeriodTp2" name="promoDiscPeriodTp2" data-ref='ordProduct2' class="w100p" disabled></select></span>
         <span style="width:23%;"><input id="promoDiscPeriod2"     name="promoDiscPeriod2"     data-ref='ordProduct2' type="text" title="" placeholder=""  class="w100p readonly" readonly/></span>
         <span style="width:32%;"><input id="ordRentalFees2"         name="ordRentalFees2"          data-ref='ordProduct2' type="text" title="" placeholder=""  class="w100p readonly" readonly/></span>
     </td>
-    <th scope="row"><spring:message code="sal.title.text.finalRentalFees" /></th>
+    <!--<th scope="row"><spring:message code="sal.title.text.finalRentalFees" /></th>
     <td>
         <p><input id="totOrdRentalFees" name="totOrdRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></p>
-    </td>
+    </td>-->
 </tr>
-<tr>
+<tr style='visibility:collapse'>
     <th scope="row"><spring:message code="sal.title.text.pv" /></th>
     <td>
         <input id="ordPv2"      name="ordPv2"       data-ref='ordProduct2' type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
         <input id="ordPvGST2" name="ordPvGST2" data-ref='ordProduct2' type="hidden" />
     </td>
-    <th scope="row"><spring:message code="sal.title.text.pv" /></th>
+    <!--<th scope="row"><spring:message code="sal.title.text.pv" /></th>
     <td>
         <input id="totOrdPv"    name="totOrdPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
-    </td>
+    </td>-->
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
