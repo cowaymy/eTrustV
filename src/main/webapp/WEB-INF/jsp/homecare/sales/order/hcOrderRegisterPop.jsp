@@ -2907,10 +2907,11 @@
     </td>-->
     <th scope="row"><spring:message code="sal.title.text.finalRentalFees" /></th>
     <td>
-        <p><input id="totOrdRentalFees" name="totOrdRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></p>
-        <span style="width:40%;"><select id="promoDiscPeriodTp1" name="promoDiscPeriodTp1" data-ref='ordProduct1'  type="hidden" ></select></span>
+    <!--<span style="width:40%;"><select id="promoDiscPeriodTp1" name="promoDiscPeriodTp1" data-ref='ordProduct1'  type="hidden" ></select></span>-->
         <span style="width:23%;"><input id="promoDiscPeriod1"     name="promoDiscPeriod1"     data-ref='ordProduct1'  type="hidden" /></span>
         <span style="width:32%;"><input id="ordRentalFees1"         name="ordRentalFees1"          data-ref='ordProduct1' type="hidden" /></span>
+        <input id="totOrdRentalFees" name="totOrdRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/>
+
     </td>
     <th scope="row"><spring:message code="sal.text.trialNo" /></th>
     <td><label><input id="trialNoChk" name="trialNoChk" type="checkbox" disabled/><span></span></label>
