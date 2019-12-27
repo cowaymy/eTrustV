@@ -199,7 +199,7 @@
         if (result.code == "99") {
           Common.alert(result.message);
         } else {
-          Common.popupDiv("/homecare/services/as/assignCTTransferPop.do", null, null, true, '_assginCTTransferDiv');
+          Common.popupDiv("/homecare/services/install/hcAssignDTTransferPop.do", null, null, true, '_assginCTTransferDiv');
         }
       });
   }
@@ -350,7 +350,7 @@
   <ul class="right_btns">
    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onClick="javascript:fn_assginCTTransfer()"><spring:message code='service.btn.AssginCTTransfer' /></a>
+      <a href="#" onClick="javascript:fn_assginCTTransfer()"><spring:message code='home.btn.assginDTTransfer' /></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcView == 'Y'}">

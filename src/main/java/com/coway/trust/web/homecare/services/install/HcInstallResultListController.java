@@ -1,20 +1,27 @@
 package com.coway.trust.web.homecare.services.install;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.HomecareCmService;
 import com.coway.trust.biz.homecare.services.install.HcInstallResultListService;
@@ -25,6 +32,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.homecare.HomecareConstants;
+import com.coway.trust.web.services.installation.InstallationResultListController;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -42,6 +50,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/homecare/services/install")
 public class HcInstallResultListController {
+	private static final Logger logger = LoggerFactory.getLogger(HcInstallResultListController.class);
 
 	//@Resource(name = "homecareCmService")
 	//private HomecareCmService homecareCmService;
@@ -262,5 +271,97 @@ public class HcInstallResultListController {
 
 		return ResponseEntity.ok(message);
 	}
+
+	/**
+	 *  Assign DT Transfer popup
+	 *  @Author KR-JIN
+	 **/
+    @RequestMapping(value = "/hcAssignDTTransferPop.do")
+    public String assignCTTransferPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+      return "homecare/services/install/hcAssignDTTransferPop";
+    }
+
+
+    @RequestMapping(value = "/assignCtOrderList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> assignCtOrderList(@RequestParam Map<String, Object> params,
+        HttpServletRequest request, ModelMap model) throws Exception{
+
+      String vAsNo = (String) params.get("installNo");
+      String[] asNo = null;
+
+      if (!StringUtils.isEmpty(vAsNo)) {
+        asNo = ((String) params.get("installNo")).split(",");
+        params.put("installNo", asNo);
+      }
+
+      List<EgovMap> list = hcInstallResultListService.assignCtOrderList(params);
+
+      return ResponseEntity.ok(list);
+    }
+
+    @RequestMapping(value = "/assignCtOrderListSaveSerial.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage>  assignCtOrderListSaveSerial(@RequestBody Map<String, Object> params, Model model,
+    	     HttpServletRequest request, SessionVO sessionVO) throws Exception{
+
+    	//logger.debug("assignCtOrderListSave param :" + params.toString());
+    	params.put("updator", sessionVO.getUserId());
+    	//List<EgovMap> update = (List<EgovMap>) params.get("update");
+        //logger.debug("asResultM ===>" + update.toString());
+
+        Map<String, Object> returnValue = new HashMap<String, Object>();
+        returnValue = hcInstallResultListService.updateAssignCTSerial(params);
+
+        logger.debug("rtnValue ===> " + returnValue);
+
+        String content = "";
+        String successCon = "";
+        String failCon = "";
+
+        int successCnt = 0;
+        int failCnt = 0;
+        successCnt = Integer.parseInt(returnValue.get("successCnt").toString());
+        failCnt = Integer.parseInt(returnValue.get("failCnt").toString());
+        content = "[ Complete Count : " + successCnt + ", Fail Count : " + failCnt + " ]";
+
+        List<String> successList = new ArrayList<String>();
+        List<String> failList = new ArrayList<String>();
+        successList = (List<String>) returnValue.get("successList");
+        failList = (List<String>) returnValue.get("failList");
+
+        if (successCnt > 0) {
+          content += "<br/>Complete INS Number : ";
+          for (int i = 0; i < successCnt; i++) {
+            successCon += successList.get(i) + ", ";
+          }
+          successCon = successCon.substring(0, successCon.length() - 2);
+          content += successCon;
+        }
+
+        if (failCnt > 0) {
+          content += "<br/>Fail INS Number : ";
+          for (int i = 0; i < failCnt; i++) {
+            failCon += failList.get(i) + ", ";
+          }
+          failCon = failCon.substring(0, failCon.length() - 2);
+          content += failCon;
+          content += "<br/>Can't transfer CT to the Installation order";
+        }
+
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(99);
+        message.setMessage(content);
+
+        /*
+         * if (rtnValue == -1) { message.setCode(AppConstants.FAIL);
+         * message.setMessage("Can't transfer CT to the Installation order"); } else
+         * { message.setCode(AppConstants.SUCCESS); message.setData(99);
+         * message.setMessage(""); }
+         */
+
+        logger.debug("message : {}", message);
+        return ResponseEntity.ok(message);
+    }
+
 
 }

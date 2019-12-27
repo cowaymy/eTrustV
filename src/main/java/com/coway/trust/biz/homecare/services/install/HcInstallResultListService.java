@@ -42,4 +42,25 @@ public interface HcInstallResultListService {
 	 */
 	public ReturnMessage hcInsertInstallationResultSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 
+	/**
+	 * Assign DT OderList
+	 * @Author KR-JIN
+	 * @Date Dec 27, 2019
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<EgovMap> assignCtOrderList(Map<String, Object> params) throws Exception;
+
+	/**
+	 * Assign DT save
+	 * @Author KR-JIN
+	 * @Date Dec 27, 2019
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, Object> updateAssignCTSerial(Map<String, Object> params) throws Exception;
 }

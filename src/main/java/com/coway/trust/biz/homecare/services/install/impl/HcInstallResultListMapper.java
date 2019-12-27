@@ -27,4 +27,24 @@ public interface HcInstallResultListMapper {
 	 */
 	public EgovMap getAnotherInstallInfo(Map<String, Object> params);
 
+	/**
+	 * assign DT OrderList
+	 * @Author KR-JIN
+	 * @Date Dec 27, 2019
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public List<EgovMap> assignCtOrderList(Map<String, Object> params) throws Exception;
+
+	/**
+	 * AUX Order No search
+	 * @Author KR-JIN
+	 * @Date Dec 27, 2019
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public EgovMap selectFrmOrdNo(Map<String, Object> params) throws Exception;
+	public EgovMap selectFrmInstNO(Map<String, Object> params) throws Exception;
 }

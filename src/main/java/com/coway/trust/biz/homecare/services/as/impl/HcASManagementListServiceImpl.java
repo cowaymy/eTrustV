@@ -120,4 +120,10 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
       }
       return rtnValue;
     }
+
+    @Override
+    public List<EgovMap> selectLbrFeeChr() throws Exception{
+    	return hcASManagementListMapper.selectLbrFeeChr();
+    }
+
 }

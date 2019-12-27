@@ -46,4 +46,5 @@ public interface HcASManagementListService {
 
 	public int updateAssignCT(Map<String, Object> params) throws Exception;
 
+	public List<EgovMap> selectLbrFeeChr() throws Exception;
 }

@@ -138,7 +138,7 @@
         <if test="bndlNo != null and bndlNo != ''">
             AND HMC.BNDL_NO = #{bndlNo}
         </if>
-        ORDER BY IE.INSTALL_ENTRY_NO ASC, SOM.SALES_ORD_NO ASC, IE.INSTALL_DT ASC
+        ORDER BY HMC.BNDL_NO DESC, SOM.SALES_ORD_NO ASC, IE.INSTALL_ENTRY_NO ASC, IE.INSTALL_DT ASC
 	</select>
 
     <select id="getAnotherInstallInfo" parameterType="Map" resultType="egovMap">
@@ -159,6 +159,75 @@
            AND A.INSTALL_ENTRY_ID NOT IN (#{installEntryId})
            AND A.STUS_CODE_ID = '1'
            AND B.SALES_ORD_NO = #{anoOrdNo}
+    </select>
+
+    <select id="assignCtOrderList" parameterType="Map" resultType="egovMap">
+    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.assignCtOrderList]*/
+        SELECT B.SALES_ORD_NO SALES_ORD_NO
+	         , A.INSTALL_ENTRY_NO INSTALL_ENTRY_NO
+	         , C.NAME CUST_NAME
+	         , C.CUST_ID CUST_ID
+	         , A.CT_ID CT_ID
+	         , F.CT_SUB_GRP CUST_SUB_GRP
+	         , S.MEM_CODE
+	         , S.MEM_CODE CT_CODE
+	         , S26.STK_CODE
+	         , S26.STK_DESC
+	         , CASE WHEN S26.STK_TYPE_ID= 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
+	                   WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+	                   WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+	          ELSE 'N'
+	          END AS SERIAL_CHK
+	         ,S28.SERIAL_REQUIRE_CHK_YN
+	    FROM SAL0046D A ,
+	         SAL0001D B ,
+	         SAL0029D C ,
+	         SAL0045D D ,
+	         SAL0023D E ,
+	         SYS0064M F ,
+	         ORG0001D S ,
+	         SYS0026M S26 ,
+	         SYS0028M S28
+	    WHERE 1=1
+	    <if test="installNo != null and installNo != '' ">
+	      AND INSTALL_ENTRY_NO IN
+	      <foreach item="item" collection="installNo" index="index"
+	        open="(" separator="," close=")">
+	        #{item}
+	      </foreach>
+	    </if>
+	    AND A.SALES_ORD_ID = B.SALES_ORD_ID
+	    AND B.CUST_ID = C.CUST_ID
+	    AND B.SALES_ORD_ID = D.SALES_ORD_ID
+	    AND D.ADD_ID = E.CUST_ADD_ID
+	    AND E.AREA_ID = F.AREA_ID(+)
+	    AND A.CT_ID = S.MEM_ID
+	    AND A.INSTALL_STK_ID = S26.STK_ID
+	    AND S.MEM_CODE = S28.WH_LOC_CODE
+	    AND S.MEM_TYPE = 5758              -- homecare
+    </select>
+
+    <select id="selectFrmOrdNo" parameterType="Map" resultType="egovMap">
+    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.selectFrmOrdNo]*/
+        SELECT DECODE(#{salesOrdNo}, B.FRA_ORD_NO, B.MAT_ORD_NO, B.MAT_ORD_NO, B.FRA_ORD_NO) AS SALES_ORD_NO
+		  FROM SAL0001D a
+		     , HMC0011D B
+		 WHERE A.BNDL_ID IS NOT NULL
+		   AND A.BNDL_ID = B.ORD_SEQ_NO
+		   AND A.SALES_ORD_NO = #{salesOrdNo}
+    </select>
+
+    <select id="selectFrmInstNO" parameterType="Map" resultType="egovMap">
+    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.selectFrmOrdNo]*/
+        SELECT A.SALES_ORD_NO
+             , A.SALES_ORD_ID
+             , B.INSTALL_ENTRY_ID
+             , B.INSTALL_ENTRY_NO
+          FROM SAL0001D a
+             , SAL0046D b
+          WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+            AND A.SALES_ORD_NO = #{salesOrdNo}
+            AND B.STUS_CODE_ID = '1'
     </select>
 
 </mapper>

@@ -314,7 +314,8 @@ public class HcASManagementListController {
     List<EgovMap> timePick = ASManagementListService.selectTimePick();
     model.addAttribute("timePick", timePick);
 
-    List<EgovMap> lbrFeeChr = ASManagementListService.selectLbrFeeChr();
+    //List<EgovMap> lbrFeeChr = ASManagementListService.selectLbrFeeChr();
+    List<EgovMap> lbrFeeChr =  hcASManagementListService.selectLbrFeeChr();
     model.addAttribute("lbrFeeChr", lbrFeeChr);
 
     // fltQty : 1
