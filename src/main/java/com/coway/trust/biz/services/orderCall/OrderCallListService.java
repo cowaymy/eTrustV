@@ -48,4 +48,5 @@ public interface OrderCallListService {
 
   int selRcdTms(Map<String, Object> params);
 
+  Map<String, Object> insertCallResultSerial(Map<String, Object> params, SessionVO sessionVO);
 }

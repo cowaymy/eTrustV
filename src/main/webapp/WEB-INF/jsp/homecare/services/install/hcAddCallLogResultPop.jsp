@@ -86,7 +86,7 @@
                     msg += "<spring:message code='service.title.AppointmentSession'/><b>" + " : " + $("#CTSSessionCode").val() + "</b></br>";
 			    }
 			    if ($("#CTCode").val() != "") {
-                    msg += "<spring:message code='service.title.CTCode'/><b>" + " : " + $("#CTCode").val() + "</b></br>";
+                    msg += "DT Code<b>" + " : " + $("#CTCode").val() + "</b></br>";
 			    }
 			    if ($("#feedBackCode").val() != "") {
                     msg += "<spring:message code='service.title.FeedbackCode'/><b>" + " : " + $("#feedBackCode option:selected").text() + "</b></br>";

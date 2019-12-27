@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -112,6 +113,9 @@ public class HcOrderListController {
 		String[] arrKeyinBrnchId 	= request.getParameterValues("keyinBrnchId"); // Key-In Branch
 		String[] arrDscBrnchId 		= request.getParameterValues("dscBrnchId"); 	// DSC Branch
 		String[] arrRentStus 		= request.getParameterValues("rentStus"); 		// Rent Status
+
+		if(StringUtils.isEmpty(params.get("ordStartDt"))) params.put("ordStartDt", "01/01/1900");
+    	if(StringUtils.isEmpty(params.get("ordEndDt")))   params.put("ordEndDt",   "31/12/9999");
 
     	params.put("ordStartDt", CommonUtils.changeFormat(String.valueOf(params.get("ordStartDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
     	params.put("ordEndDt",  CommonUtils.changeFormat(String.valueOf(params.get("ordEndDt")),  SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));

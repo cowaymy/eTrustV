@@ -17,6 +17,7 @@ import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.orderCall.OrderCallListService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.services.installation.InstallationResultListController;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -602,6 +603,96 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
   @Override
   public int selRcdTms(Map<String, Object> params) {
     return orderCallListMapper.selRcdTms(params);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public Map<String, Object> insertCallResultSerial(Map<String, Object> params, SessionVO sessionVO) {
+	  Map<String, Object> resultValue = new HashMap<String, Object>();
+
+	  if (sessionVO != null) {
+		  Map<String, Object> callMaster = getSaveCallCenter(params, sessionVO);
+          Map<String, Object> callDetails = getSaveCallDetails(params, sessionVO);
+          Map<String, Object> installMaster = new HashMap<String, Object>();
+          Map<String, Object> orderLogList = new HashMap<String, Object>();
+          Map<String, Object> logPram = new HashMap<String, Object>();
+          EgovMap installNo = new EgovMap();
+          boolean stat = false;
+          String pType = "";
+          String pPrgm = "";
+          String docNo = "";
+          int callEntId = 0;
+
+          if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
+        	  installMaster = getSaveInstallMaster(params, sessionVO);
+        	  orderLogList = getSaveOrderLogList(params, sessionVO);
+
+        	  // INSERT INSTALL ENTRY
+        	  installNo = getDocNo("9");
+        	  docNo = CommonUtils.nvl(installNo.get("docNo"));
+        	  callEntId = CommonUtils.intNvl(installMaster.get("callEntryId"));
+
+        	  String nextDocNo = getNextDocNo("INS", docNo);
+        	  installNo.put("nextDocNo", nextDocNo);
+
+        	  // UPDATE DOC NO
+              memberListMapper.updateDocNo(installNo);
+
+              installMaster.put("installEntryNo", docNo);
+
+              // IF installMaster NOT EMPTY AND INSIDE installMaster CONTAIN CALL ENTRY ID
+              if (installMaster != null && callEntId > 0) {
+            	  // PRE INSERT INSTALL ENTRY
+            	  orderCallListMapper.insertInstallEntry(installMaster);
+              }
+
+              if (params.get("callTypeId").equals("258")) { // PRODUCT RETURN
+            	  pType = "OD53";
+            	  pPrgm = "PEXCALL";
+              } else {
+            	  pType = "OD01";
+            	  pPrgm = "OCALL";
+              }
+
+              ///////////////////////// 물류 호출//////////////////////
+              logPram.put("ORD_ID", docNo);
+              logPram.put("RETYPE", "SVO");
+              logPram.put("P_TYPE", pType);
+              logPram.put("P_PRGNM", pPrgm);
+              logPram.put("USERID", CommonUtils.intNvl(sessionVO.getUserId()));
+
+              logger.debug("ORDERCALL 물류 호출 PRAM ===>" + logPram.toString());
+              servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL(logPram);
+              logPram.put("P_RESULT_TYPE", "IN");
+              logPram.put("P_RESULT_MSG", logPram.get("p1"));
+              logger.debug("ORDERCALL 물류 호출 결과 ===>");
+              ///////////////////////// 물류 호출 END //////////////////////
+
+              if (!"000".equals(logPram.get("p1"))) {
+            	  stat = false;
+            	  // REMOVE INSTALL ENTRY
+            	  if (installMaster != null && callEntId > 0) {
+            		  // PRE INSERT INSTALL ENTRY
+            		  orderCallListMapper.deleteInstallEntry(installMaster);
+            	  }
+              } else {
+            	  stat = true;
+            	  servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(logPram);
+              }
+          } else {
+        	  stat = true; // RECALL / WAITING FOR CANCEL
+          }
+
+          if (stat) {
+        	  resultValue = orderCallLogSave_2(callMaster, callDetails, installMaster, orderLogList, CommonUtils.nvl(params.get("salesOrdNo")), params);
+          }
+          if (stat) {
+        	  resultValue.put("logStat", "0");
+          } else {
+        	  resultValue.put("logStat", "1");
+          }
+	  }
+	  return resultValue;
   }
 
 }

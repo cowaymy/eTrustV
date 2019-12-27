@@ -166,9 +166,8 @@
                   , Extent1.INSTALL_AREA_NAME
                   , Extent1.STATE
                   , Extent1.AREA
-                  , Extent1.CALL_LOG_DT
                   , Extent1.DSC_BRNCH_ID
-                  , Extent1.PO_NO PO_NO
+                  , Extent1.PO_NO
                   , Extent1.INSTALL_TEL_M
                   , Extent1.INSTALL_TEL_O
                   , Extent1.INSTALL_TEL_R
@@ -182,6 +181,7 @@
                   , Extent1.RCD_TMS
                   , Extent1.POSTCODE
                   , Extent1.DSC_CODE
+                  , Extent1.CALL_LOG_DT
                   , CASE WHEN ( Extent1.APP_TYPE_ID IS NOT NULL )
                            THEN Extent1.APP_TYPE_ID
                          ELSE 0

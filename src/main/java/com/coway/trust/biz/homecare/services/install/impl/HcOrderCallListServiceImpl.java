@@ -134,7 +134,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 
 	     	if (rdcStock != null) {
      			if (CommonUtils.intNvl(rdcStock.get("availQty")) > 0) {
-     				Map<String, Object> resultValue = orderCallListService.insertCallResult_2(params, sessionVO);
+     				Map<String, Object> resultValue = orderCallListService.insertCallResultSerial(params, sessionVO);
 
      				if (null != resultValue) {
      					if (CommonUtils.intNvl(params.get("callStatus")) == 20) {

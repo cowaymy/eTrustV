@@ -1656,8 +1656,13 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     // || (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && custTypeId
     // == SalesConstants.CUST_TYPE_CODE_ID_IND && custRaceId == 14)
     ) {
+    	// Mattress Order - App Type : Rental AND Order App Type : Aux 
     	if(CommonUtils.intNvl(orderVO.getMatAppTyId()) == SalesConstants.APP_TYPE_CODE_ID_RENTAL
-    	  && orderAppType == SalesConstants.APP_TYPE_CODE_ID_AUX) {
+	       && orderAppType == SalesConstants.APP_TYPE_CODE_ID_AUX) {
+    		// CCP MASTER
+    		CcpDecisionMVO ccpDecisionMVO = new CcpDecisionMVO();
+    		this.preprocCcpMaster(ccpDecisionMVO, custTypeId, custRaceId, sessionVO);
+    		regOrderVO.setCcpDecisionMVO(ccpDecisionMVO);
 
     	} else {
     		CallEntryVO callEntryVO = new CallEntryVO();
