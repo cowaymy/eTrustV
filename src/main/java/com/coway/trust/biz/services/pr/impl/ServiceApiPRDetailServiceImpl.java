@@ -155,6 +155,9 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 
 	        if (isPrdRtnCnt == 0) {
 	        	try {
+	        		EgovMap ordIdMap = MSvcLogApiService.getOrdID(cvMp);
+	        		String userId = MSvcLogApiService.getUseridToMemid(params); // SELECT MEM_ID FROM ORG0001D WHERE mem_code = #{userId}
+
 	        		// SP_RETURN_BILLING_EARLY_TERMI COMMIT DELETE
 	        		EgovMap rtnValue = MSvcLogApiService.productReturnResult(cvMp);
 
@@ -165,12 +168,12 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	        			}
 
 	        			params.put("scanSerial", String.valueOf(cvMp.get("scanSerial")));
-    					params.put("salesOrdId", String.valueOf(cvMp.get("salesOrdId"))); // ?????????
+    					params.put("salesOrdId", String.valueOf(ordIdMap.get("salesOrdId")));
     					params.put("reqstNo", String.valueOf(cvMp.get("serviceNo")));
-    					params.put("delvryNo", "ddddddddddd"); // ?????????
+    					params.put("delvryNo", null); // ?????????
     					params.put("callGbn", "RETURN");
     					params.put("mobileYn", "Y");
-    					//params.put("userId", userId);
+    					params.put("userId", userId);
     					params.put("pErrcode", "");
     					params.put("pErrmsg", "");
     					MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
@@ -184,8 +187,7 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
     						throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 						}
 
-	        			// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
-	        			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+	        			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
 	        		}
 	        	}
 	        	catch (Exception e) {
