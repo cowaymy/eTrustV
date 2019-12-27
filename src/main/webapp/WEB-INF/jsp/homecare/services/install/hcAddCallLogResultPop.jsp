@@ -420,6 +420,7 @@
 		<input type="hidden" value="${orderCall.rcdTms}" id="rcdTms" name="rcdTms" />
 		<input type="hidden" value="${orderCall.callTypeId}" id="callTypeId" name="callTypeId" />
 		<input type="hidden" value="${hcOrder.anoOrdNo}" id="anoOrdNo" name="anoOrdNo" />
+		<input type="hidden" value="${orderCall.c1}" id="apptypeId" name="apptypeId" />
 
 		<table class="type1" id="hideContent1">
             <!-- table start -->
