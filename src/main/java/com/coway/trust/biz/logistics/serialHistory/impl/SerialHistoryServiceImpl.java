@@ -51,10 +51,12 @@ public class SerialHistoryServiceImpl extends EgovAbstractServiceImpl implements
     @Override
 	public List<EgovMap> selectSerialHistoryList(Map<String, Object> params) {
 
-    	if( !StringUtils.isEmpty( params.get("serialNo") ) || !StringUtils.isEmpty( params.get("refDocNo") ) || !StringUtils.isEmpty( params.get("#ordNo") )){
-    		System.out.println("++++ 1 ::");
+    	logger.info("++++ selectSerialHistoryList params :: {}", params );
+
+    	if( !StringUtils.isEmpty( params.get("serialNo") ) &&
+    			!StringUtils.isEmpty( params.get("refDocNo") ) &&
+    			!StringUtils.isEmpty( params.get("ordNo") ) ){
     	}else{
-    		System.out.println("++++ 2 ::");
     		params.put("startCrtDt", "");
     		params.put("endCrtDt", "");
     	}
