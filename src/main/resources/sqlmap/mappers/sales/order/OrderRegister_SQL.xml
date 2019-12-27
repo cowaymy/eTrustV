@@ -1147,7 +1147,7 @@
                   , CORP_CUST_TYPE
                   , AGREEMENT_TYPE
                   , PCKAGE_BINDING_NO
-                  , BNDL_ID
+                  <!-- , BNDL_ID -->
     ) VALUES ( #{salesOrdId}
              , #{salesOrdNo}
              , UPPER(#{refNo})
@@ -1208,7 +1208,7 @@
              , #{corpCustType}
              , #{agreementType}
              , #{comboOrdBind}
-             , #{bndlId}
+             <!-- , #{bndlId}  -->
      )
   </insert>
 
@@ -2682,7 +2682,7 @@
            G.CODE AS APP_TYPE,
            D.STK_DESC AS PROD,
            E.PROMO_CODE AS PROMO_CDE,
-           F.CUST_ACC_OWNER AS CUST_ID
+           F.NAME AS CUST_ID
     FROM SAL0001D A
     LEFT JOIN (SELECT PCKAGE_BINDING_NO,
                       CUST_ID,
@@ -2695,7 +2695,7 @@
     JOIN SAL0002D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
     JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
     JOIN SAL0017D E ON A.PROMO_ID = E.PROMO_ID
-    JOIN SAL0022D F ON A.CUST_ID = F.CUST_ID
+    JOIN SAL0029D F ON A.CUST_ID = F.CUST_ID
     JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND A.APP_TYPE_ID = G.CODE_ID
     WHERE A.CUST_ID = #{custId}
       AND A.STUS_CODE_ID IN (1, 4)
@@ -2717,7 +2717,7 @@
                                     G.CODE AS APP_TYPE,
                                     D.STK_DESC AS PROD,
                                     E.PROMO_CODE AS PROMO_CDE,
-                                    F.CUST_ACC_OWNER AS CUST_ID,
+                                    F.NAME AS CUST_ID,
                                     C.SO_REQ_ID,
                                     C.SO_REQ_STUS_ID
                     FROM SAL0001D A
@@ -2736,7 +2736,7 @@
                     JOIN SAL0002D H ON A.SALES_ORD_ID = H.SALES_ORD_ID
                     JOIN SYS0026M D ON H.ITM_STK_ID = D.STK_ID
                     JOIN SAL0017D E ON A.PROMO_ID = E.PROMO_ID
-                    JOIN SAL0022D F ON A.CUST_ID = F.CUST_ID
+                    JOIN SAL0029D F ON A.CUST_ID = F.CUST_ID
                     JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND A.APP_TYPE_ID = G.CODE_ID
 
                     WHERE A.SALES_ORD_ID NOT IN ( SELECT A.SALES_ORD_ID
