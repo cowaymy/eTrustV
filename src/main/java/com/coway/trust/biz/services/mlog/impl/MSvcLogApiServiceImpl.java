@@ -902,6 +902,10 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   public List<EgovMap> selectSerialList(Map<String, Object> params) {
     return MSvcLogApiMapper.selectSerialList(params);
   }
-  /* Woongjin Jun */
 
+  @Override
+  public EgovMap getOrdID(Map<String, Object> params) {
+    return MSvcLogApiMapper.getOrdID(params);
+  }
+  /* Woongjin Jun */
 }
