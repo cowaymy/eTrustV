@@ -643,11 +643,13 @@ public class ReportBatchController {
     String reportFile = (String) params.get(REPORT_FILE_NAME);
     String reportName = reportFilePath + reportFile;
     ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+    String prodName;
     String msg = "Completed";
 
     try {
       ReportAppSession ra = new ReportAppSession();
       ra.createService(REPORT_CLIENT_DOCUMENT);
+
 
       ra.setReportAppServer(ReportClientDocument.inprocConnectionString);
       ra.initialize();
@@ -657,7 +659,9 @@ public class ReportBatchController {
 
       clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
 
-      params.put("repProdName", clientDoc.getDatabaseController().getDatabase().getTables().get(0).getAlias());
+      prodName = clientDoc.getDatabaseController().getDatabase().getTables().size() > 0 ? clientDoc.getDatabaseController().getDatabase().getTables().get(0).getName() : null;
+
+      params.put("repProdName", prodName);
 
       ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
       Fields fields = clientDoc.getDataDefinition().getParameterFields();
