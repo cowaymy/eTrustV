@@ -416,7 +416,7 @@
                                       mail_Address,
                                       customer_Va_No,
                                       sirim_No,
-                                      serial_No,
+                                      fn_get_order_serial(sales_Order_Id, NULL) as serial_No,
                                       installation_Date,
                                       rental_Status,
                                       contract_Duration,
@@ -467,6 +467,7 @@
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
                                            ROW_NUMBER () OVER (PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no ORDER BY svc0004d.as_result_id DESC) rn,
                                            sal0001d.sales_ord_no AS sales_Order_No,
+                                           sal0001d.sales_ord_id AS sales_Order_Id,
                                            svc0001d.as_no AS service_No,
                                            sal0029d.name AS cust_Name,
                                            TO_CHAR (sal0029d.TYPE_ID) AS customer_Type,
@@ -1101,7 +1102,7 @@
              '' AS outstanding,
              NVL (TO_CHAR (L.CODE), '') AS dsc_Code,
              NVL (I.SIRIM_NO, '') AS sirim_No,
-             NVL (I.SERIAL_NO, '') AS serial_No,
+             fn_get_order_serial(C.SALES_ORD_ID, NULL) AS serial_No,
              '' AS hp_Name,
              '' AS hp_Tel,
              NVL (TO_CHAR (M.NAME), '') AS hm_Name,
@@ -4595,5 +4596,11 @@
 	 WHERE A.LAST_LOC_ID = B.WH_LOC_ID
 	     AND A.STUS_CODE = 'I'
 		 AND B.WH_LOC_CODE = #{userId}
+  </select>
+
+  <select id="getOrdID" parameterType="Map" resultType="egovMap">
+    SELECT SALES_ORD_ID
+      FROM SAL0001D
+    WHERE SALES_ORD_NO = #{salesOrderNo}
   </select>
 </mapper>
