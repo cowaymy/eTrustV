@@ -1267,7 +1267,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 //            sys0070M.put("atchFileId", );
             sys0071D.put("atchFileName", data.getAtchFileName());
             sys0071D.put("fileSubPath", data.getFileSubPath());
-            sys0071D.put("physiclFileName", data.getPhysiclFileName() + "." + data.getFileExtsn());
+            sys0071D.put("physiclFileName", data.getPhysiclFileName());
             sys0071D.put("fileExtsn", data.getFileExtsn());
             sys0071D.put("fileSize", data.getFileSize());
             sys0071D.put("filePassword", null);
