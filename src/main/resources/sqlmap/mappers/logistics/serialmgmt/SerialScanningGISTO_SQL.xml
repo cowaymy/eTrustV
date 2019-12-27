@@ -32,8 +32,8 @@
 					  , LOG0054M l54
 					  , SYS0028M s28q
 				  WHERE l47.REQST_NO = l48.REQST_NO
-				    AND l47.REQST_NO = l55.REQST_NO(+)
-				    AND l55.DELVRY_NO = l54.DELVRY_NO(+)
+				    AND l47.REQST_NO = l55.REQST_NO
+				    AND l55.DELVRY_NO = l54.DELVRY_NO
 				    AND l47.REQST_CDC_RDC = s28q.WH_LOC_ID(+)
 				    AND l47.REQST_CRT_DT <![CDATA[ >= ]]>  to_date(#{searchReqSDate},'dd/mm/yyyy')   -- FROM
 				    AND l47.REQST_CRT_DT <![CDATA[ <= ]]>  to_date(#{searchReqEDate} || ' 23:59:59','dd/mm/yyyy HH24:MI:SS')   -- TO
