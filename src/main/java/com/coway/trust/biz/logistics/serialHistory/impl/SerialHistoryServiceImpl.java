@@ -53,12 +53,18 @@ public class SerialHistoryServiceImpl extends EgovAbstractServiceImpl implements
 
     	logger.info("++++ selectSerialHistoryList params :: {}", params );
 
-    	if( !StringUtils.isEmpty( params.get("serialNo") ) &&
-    			!StringUtils.isEmpty( params.get("refDocNo") ) &&
+//    	logger.info("++++ serialNo ::" + !StringUtils.isEmpty( params.get("serialNo") ) );
+//    	logger.info("++++ refDocNo ::" + !StringUtils.isEmpty( params.get("refDocNo") ) );
+//    	logger.info("++++ ordNo ::" + !StringUtils.isEmpty( params.get("ordNo") ) );
+
+    	if( !StringUtils.isEmpty( params.get("serialNo") ) ||
+    			!StringUtils.isEmpty( params.get("refDocNo") ) ||
     			!StringUtils.isEmpty( params.get("ordNo") ) ){
-    	}else{
+//    		logger.info("++++ A ::");
     		params.put("startCrtDt", "");
     		params.put("endCrtDt", "");
+    	}else{
+//    		logger.info("++++ B ::");
     	}
 
 		return serialHistoryMapper.selectSerialHistoryList(params);
