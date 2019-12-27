@@ -1028,6 +1028,8 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
         		params.put("SGN_DT", insApiresult.get("signData")); // asTransLogs
 
+        		params.put("SERIAL_REQUIRE_CHK_YN", "Y"); // HomeCare Chk "Y"
+
         		logger.debug("### AS PARAM [AFTER]: ", params);
 
         		Map<String, Object> asResultInsert = new HashMap();
@@ -1066,8 +1068,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
     						throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 						}
 
-        				// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
-        				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+        				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
         			}
         		}
         		catch (Exception e) {
