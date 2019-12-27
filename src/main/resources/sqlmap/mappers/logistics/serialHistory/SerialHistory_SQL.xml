@@ -3,59 +3,78 @@
 <mapper namespace="com.coway.trust.biz.logistics.serialHistory.impl.SerialHistoryMapper">
 
     <select id="selectSerialHistoryList" parameterType="Map" resultType="egovMap">
-		SELECT  /* [com.coway.trust.biz.logistics.serialHistory.impl.SerialHistoryMapper.selectSerialHistoryList] KR_HAN */
-					T1.SALES_ORD_ID AS SALES_ORD_ID
-					, T2.SALES_ORD_NO AS SALES_ORD_NO
-					, T1.ITM_CODE  AS ITM_CODE
-					, T5.STK_DESC  AS STK_DESC
-					, T1.SEQ   AS SEQ
-					, T1.CALL_GBN AS CALL_GBN
-					, T1.REF_DOC_NO AS REF_DOC_NO
-					, T1.AF_SERIAL_NO AS AF_SERIAL_NO
-					, T1.BF_SERIAL_NO AS BF_SERIAL_NO
-					, T3.LAST_INSTALL_SERIAL_NO AS LAST_INSTALL_SERIAL_NO
-					, T1.MOBILE_YN AS MOBILE_YN
-					, T1.CRT_BRNCH_ID AS CRT_BRNCH_ID
-					, T4.CODE CRT_USER_BRNCH_CD
-					, T1.CRT_USER_ID AS CRT_USER_ID
-					, T10.USER_NAME AS CRT_USER_NM
-					, T10.USER_FULL_NAME AS CRT_USER_FULL_NAME
-					, TO_CHAR(T1.CRT_DT, 'DD-MM-YYYY HH24:MI:SS')   CRT_DT
-		FROM    LOG0102H T1
-		                JOIN SAL0001D T2
-		                    ON T1.SALES_ORD_ID = T2.SALES_ORD_ID
-		                JOIN SAL1010V T3
-		                    ON T1.SALES_ORD_ID = T3.ORD_ID
-		                INNER JOIN SYS0005M T4
-		                    ON  T1.CRT_BRNCH_ID = T4.BRNCH_ID
-		                JOIN SYS0026M T5
-		                    ON T1.ITM_CODE = T5.STK_CODE
-		                LEFT JOIN SYS0047M T10
-		                    ON T1.CRT_USER_ID = T10.USER_ID
+	    SELECT  /* [com.coway.trust.biz.logistics.serialHistory.impl.SerialHistoryMapper.selectSerialHistoryList] KR_HAN */
+				    Z.SALES_ORD_ID,
+				    Z.SALES_ORD_NO,
+				    Z.ITM_CODE,
+				    Z.STK_DESC,
+				    Z.SEQ,
+				    Z.CALL_GBN,
+				    Z.REF_DOC_NO,
+				    Z.AF_SERIAL_NO,
+				    Z.BF_SERIAL_NO,
+				    Z.LAST_INSTALL_SERIAL_NO,
+				    Z.MOBILE_YN,
+				    Z.CRT_BRNCH_ID,
+				    Z.CRT_USER_BRNCH_CD,
+				    Z.CRT_USER_ID,
+				    Z.CRT_USER_NM,
+				    Z.CRT_USER_FULL_NAME,
+				    TO_CHAR(Z.CRT_DT, 'DD-MM-YYYY HH24:MI:SS') AS CRT_DT
+	    FROM
+	    (
+				    SELECT
+				                    T1.SALES_ORD_ID AS SALES_ORD_ID
+				                    , T2.SALES_ORD_NO AS SALES_ORD_NO
+				                    , T1.ITM_CODE  AS ITM_CODE
+				                    , T5.STK_DESC  AS STK_DESC
+				                    , T1.SEQ   AS SEQ
+				                    , T1.CALL_GBN AS CALL_GBN
+				                    , T1.REF_DOC_NO AS REF_DOC_NO
+				                    , T1.AF_SERIAL_NO AS AF_SERIAL_NO
+				                    , T1.BF_SERIAL_NO AS BF_SERIAL_NO
+				                    , (SELECT fn_get_order_serial(T1.SALES_ORD_ID, '') FROM DUAL) AS LAST_INSTALL_SERIAL_NO
+				                    , T1.MOBILE_YN AS MOBILE_YN
+				                    , T1.CRT_BRNCH_ID AS CRT_BRNCH_ID
+				                    , T4.CODE CRT_USER_BRNCH_CD
+				                    , T1.CRT_USER_ID AS CRT_USER_ID
+				                    , T10.USER_NAME AS CRT_USER_NM
+				                    , T10.USER_FULL_NAME AS CRT_USER_FULL_NAME
+				                    , T1.CRT_DT CRT_DT
+				        FROM    LOG0102H T1
+				                        JOIN SAL0001D T2
+				                            ON T1.SALES_ORD_ID = T2.SALES_ORD_ID
+				                    INNER JOIN SYS0005M T4
+				                        ON  T1.CRT_BRNCH_ID = T4.BRNCH_ID
+				                    JOIN SYS0026M T5
+				                        ON T1.ITM_CODE = T5.STK_CODE
+				                    LEFT JOIN SYS0047M T10
+				                        ON T1.CRT_USER_ID = T10.USER_ID
+	    ) Z
 		<where>
 	    <if test="startCrtDt != null and startCrtDt != '' ">
-	      AND T1.CRT_DT <![CDATA[ >= ]]>  TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+	      AND Z.CRT_DT <![CDATA[ >= ]]>  TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
 	    </if>
 	    <if test="endCrtDt != null and endCrtDt != ''">
-	      AND T1.CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+	      AND Z.CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
 	    </if>
 	    <if test="schBranch != null and schBranch != ''">
-	      AND ( TO_CHAR(T1.CRT_BRNCH_ID) = #{schBranch}  OR T4.CODE = #{schBranch} )
+	      AND ( TO_CHAR(Z.CRT_BRNCH_ID) = #{schBranch}  OR Z.CRT_USER_BRNCH_CD = #{schBranch} )
 	    </if>
 	    <if test="schUser != null and schUser != ''">
-	      AND ( TO_CHAR(T1.CRT_USER_ID) = #{schBranch}  OR T4.USER_FULL_NAME = #{schBranch} )
+	      AND ( TO_CHAR(Z.CRT_USER_ID) = #{schUser}  OR Z.CRT_USER_FULL_NAME LIKE '%'||#{schUser}||'%' )
 	    </if>
 	    <if test="serialNo != null and serialNo != ''">
-	      AND ( T1.AF_SERIAL_NO = #{serialNo} OR T1.BF_SERIAL_NO = #{serialNo} OR T3.LAST_INSTALL_SERIAL_NO = #{serialNo} )
+	      AND ( Z.AF_SERIAL_NO = #{serialNo} OR Z.BF_SERIAL_NO = #{serialNo} OR Z.LAST_INSTALL_SERIAL_NO = #{serialNo} )
 	    </if>
 	    <if test="refDocNo != null and refDocNo != ''">
-          AND T1.REF_DOC_NO = #{refDocNo}
+          AND Z.REF_DOC_NO = #{refDocNo}
 	    </if>
         <if test="ordNo != null and ordNo != ''">
-          AND T2.SALES_ORD_NO = #{ordNo}
+          AND Z.SALES_ORD_NO = #{ordNo}
         </if>
 	    </where>
-		ORDER   BY T1.CRT_DT DESC
+		ORDER   BY Z.CRT_DT DESC
     </select>
 
 </mapper>
