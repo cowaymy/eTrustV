@@ -38,7 +38,7 @@ FROM    SYS0047M A                                                              
             AND B.MEM_TYPE = C.CODE_ID
         INNER JOIN SYS0038M D
             ON  B.STUS = D.STUS_CODE_ID
-        INNER JOIN SYS0005M E
+        LEFT OUTER JOIN SYS0005M E
             ON  B.BRNCH = E.BRNCH_ID
         LEFT OUTER JOIN SYS0004M F
             ON  F.STUS_CODE_ID = 1
