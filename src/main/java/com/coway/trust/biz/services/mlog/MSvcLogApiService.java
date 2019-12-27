@@ -199,5 +199,7 @@ public interface MSvcLogApiService {
   List<EgovMap> hcServiceHistory(Map<String, Object> params);
 
   List<EgovMap> selectSerialList(Map<String, Object> params);
+
+  EgovMap getOrdID(Map<String, Object> params);
   /* Woongjin Jun */
 }
