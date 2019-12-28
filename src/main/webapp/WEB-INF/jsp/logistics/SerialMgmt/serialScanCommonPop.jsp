@@ -268,7 +268,7 @@ $(document).ready(function(){
 
 	        	    if(itemDs.length > 0){
 	                    Common.ajax("POST", "/logistics/serialMgmtNew/deleteGridSerial.do"
-	                            , {"delete":itemDs}
+	                            , {"dataList":itemDs}
 	                            , function(result){
 	                                AUIGrid.setGridData(scanGridId, []);
 	                                $("#sTotal").html(0);
