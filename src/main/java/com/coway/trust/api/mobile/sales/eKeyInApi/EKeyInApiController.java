@@ -378,6 +378,17 @@ public class EKeyInApiController {
             LOGGER.debug("::::: getFileSubPath : " + selectAttachmentImgFile.getFileSubPath());
             LOGGER.debug("::::: getPhysiclFileName : " + selectAttachmentImgFile.getPhysiclFileName());
         }
+
+        System.out.println("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        System.out.println("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        System.out.println("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        System.out.println("::::: webUploadDir : " + webUploadDir);
+        System.out.println("::::: getFileSubPath : " + selectAttachmentImgFile.getFileSubPath());
+        System.out.println("::::: getPhysiclFileName : " + selectAttachmentImgFile.getPhysiclFileName());
+        System.out.println("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        System.out.println("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        System.out.println("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+
         File uFile = new File(webUploadDir + selectAttachmentImgFile.getFileSubPath() + File.separator + selectAttachmentImgFile.getPhysiclFileName());
         long fSize = uFile.length();
 
