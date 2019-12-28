@@ -329,7 +329,7 @@ function fn_smoIssueInListAjax() {
         var mtype = '';
         var delvryNo = '';
         if(data.total > 0){
-            if(data.dataList[0].serialRequireChkYn == "Y"){
+            if(data.dataList[0].serialRequireChkYn == "Y" && data.dataList[0].whLocStkGrad == "B"){
                 var isSerial = false;
                 $.each(data.dataList, function(i, row){
                     if(row.serialChk == "Y"){
