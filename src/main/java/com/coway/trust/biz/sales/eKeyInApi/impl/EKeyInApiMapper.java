@@ -222,4 +222,8 @@ public interface EKeyInApiMapper {
 
 
     int cancelHMC0011D(Map<String, Object> param);
+
+
+
+    EgovMap selectAttachmentImgFile(Map<String, Object> param);
 }

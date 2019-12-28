@@ -1,6 +1,7 @@
 package com.coway.trust.biz.sales.eKeyInApi;
 
 import java.util.List;
+import java.util.Map;
 
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiForm;
@@ -132,4 +133,8 @@ public interface EKeyInApiService {
 
 
     EKeyInApiDto cancelEkeyIn(EKeyInApiDto param) throws Exception;
+
+
+
+    EKeyInApiDto selectAttachmentImgFile(Map<String, Object> param) throws Exception;
 }

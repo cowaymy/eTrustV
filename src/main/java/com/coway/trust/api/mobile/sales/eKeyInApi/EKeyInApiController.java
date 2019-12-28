@@ -1,19 +1,30 @@
 package com.coway.trust.api.mobile.sales.eKeyInApi;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -21,8 +32,11 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.files.FileDto;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.sales.eKeyInApi.EKeyInApiService;
+import com.coway.trust.cmmn.exception.FileDownException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
+import com.coway.trust.util.EgovBasicLogger;
 import com.coway.trust.util.EgovFormBasedFileVo;
+import com.coway.trust.util.EgovResourceCloseHelper;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
@@ -351,5 +365,97 @@ public class EKeyInApiController {
     @RequestMapping(value = "/cancelEkeyIn", method = RequestMethod.POST)
     public ResponseEntity<EKeyInApiDto> cancelEkeyIn(@RequestBody EKeyInApiDto param) throws Exception {
         return ResponseEntity.ok(eKeyInApiService.cancelEkeyIn(param));
+    }
+
+
+
+    @RequestMapping(value = "/fileDownMobilEkeyin.do")
+    public void fileDownMobilEkeyin(@RequestParam Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        EKeyInApiDto selectAttachmentImgFile = eKeyInApiService.selectAttachmentImgFile(params);
+
+        if( LOGGER.isDebugEnabled() ){
+            LOGGER.debug("::::: webUploadDir : " + webUploadDir);
+            LOGGER.debug("::::: getFileSubPath : " + selectAttachmentImgFile.getFileSubPath());
+            LOGGER.debug("::::: getPhysiclFileName : " + selectAttachmentImgFile.getPhysiclFileName());
+        }
+        File uFile = new File(webUploadDir + selectAttachmentImgFile.getFileSubPath() + File.separator + selectAttachmentImgFile.getPhysiclFileName());
+        long fSize = uFile.length();
+
+        if (fSize > 0) {
+            response.setContentType("application/x-msdownload");
+            response.setHeader("Set-Cookie", "fileDownload=true; path=/");  ///resources/js/jquery.fileDownload.js   callback 호출시 필수.
+            setDisposition(selectAttachmentImgFile.getAtchFileName(), request, response);
+            BufferedInputStream in = null;
+            BufferedOutputStream out = null;
+
+            try {
+                in = new BufferedInputStream(new FileInputStream(uFile));
+                out = new BufferedOutputStream(response.getOutputStream());
+
+                FileCopyUtils.copy(in, out);
+                out.flush();
+            } catch (IOException ex) {
+                EgovBasicLogger.ignore("IO Exception", ex);
+            } finally {
+                EgovResourceCloseHelper.close(in, out);
+            }
+        } else {
+            throw new FileDownException(AppConstants.FAIL, "Could not get file name : " + selectAttachmentImgFile.getAtchFileName());
+        }
+    }
+
+
+
+    private String getBrowser(HttpServletRequest request) {
+        String header = request.getHeader("User-Agent");
+        if (header.contains("MSIE")) {
+            return "MSIE";
+        } else if (header.contains("Trident")) { // IE11 문자열 깨짐 방지
+            return "Trident";
+        } else if (header.contains("Chrome")) {
+            return "Chrome";
+        } else if (header.contains("Opera")) {
+            return "Opera";
+        }
+        return "Firefox";
+    }
+
+
+
+    private void setDisposition(String filename, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        String browser = getBrowser(request);
+
+        String dispositionPrefix = "attachment; filename=";
+        String encodedFilename = null;
+
+        if (browser.equals("MSIE")) {
+            encodedFilename = URLEncoder.encode(filename, "UTF-8").replaceAll("\\+", "%20");
+        } else if (browser.equals("Trident")) { // IE11 문자열 깨짐 방지
+            encodedFilename = URLEncoder.encode(filename, "UTF-8").replaceAll("\\+", "%20");
+        } else if (browser.equals("Firefox")) {
+            encodedFilename = "\"" + new String(filename.getBytes("UTF-8"), "8859_1") + "\"";
+        } else if (browser.equals("Opera")) {
+            encodedFilename = "\"" + new String(filename.getBytes("UTF-8"), "8859_1") + "\"";
+        } else if (browser.equals("Chrome")) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < filename.length(); i++) {
+                char c = filename.charAt(i);
+                if (c > '~') {
+                    sb.append(URLEncoder.encode("" + c, "UTF-8"));
+                } else {
+                    sb.append(c);
+                }
+            }
+            encodedFilename = sb.toString();
+        } else {
+            throw new IOException("Not supported browser");
+        }
+
+        response.setHeader("Content-Disposition", dispositionPrefix + encodedFilename);
+
+        if ("Opera".equals(browser)) {
+            response.setContentType("application/octet-stream;charset=UTF-8");
+        }
     }
 }

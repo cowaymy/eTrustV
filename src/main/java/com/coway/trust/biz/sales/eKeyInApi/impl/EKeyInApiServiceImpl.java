@@ -2043,4 +2043,25 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         }
         return param;
     }
+
+
+
+
+
+
+    @Override
+    public EKeyInApiDto selectAttachmentImgFile(Map<String, Object> param) throws Exception{
+        if (MapUtils.isEmpty(param)) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+        if (CommonUtils.isEmpty(param.get("atchFileId")) || Integer.parseInt(param.get("atchFileId").toString()) <= 0 ) {
+            throw new ApplicationException(AppConstants.FAIL, "atchFileId value does not exist.");
+        }
+
+        EgovMap selectAttachmentImgFile = eKeyInApiMapper.selectAttachmentImgFile(param);
+        if( MapUtils.isEmpty(selectAttachmentImgFile) ){
+            throw new ApplicationException(AppConstants.FAIL, "Picture information is missing.");
+        }
+        return EKeyInApiDto.create(selectAttachmentImgFile);
+    }
 }

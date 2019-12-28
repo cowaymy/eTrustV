@@ -1798,4 +1798,21 @@ SET     A.UPD_DT = SYSDATE                                                      
 WHERE   A.ORD_SEQ_NO = #{ordSeqNo}                                              --HC ORD Sequence
 AND     A.STUS_ID IN (1, 21)                                                    -- SYS0038M : 1(ACT), 21(FAL)
 </update>
+
+
+
+
+
+
+<select id="selectAttachmentImgFile" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectAttachmentImgFile] 20191227 - KR JAEMAJEM */
+SELECT  A.ATCH_FILE_ID                                                          AS ATCH_FILE_ID
+    ,   A.ATCH_FILE_NAME                                                        AS ATCH_FILE_NAME
+    ,   A.FILE_SUB_PATH                                                         AS FILE_SUB_PATH
+    ,   A.PHYSICL_FILE_NAME                                                     AS PHYSICL_FILE_NAME
+FROM    SYS0071D A                                                              --Attached File Table
+WHERE   A.ATCH_FILE_ID = #{atchFileId}                                          --Attached File ID
+]]>
+</select>
 </mapper>
