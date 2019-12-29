@@ -33,7 +33,7 @@
 				                    , T1.REF_DOC_NO AS REF_DOC_NO
 				                    , T1.AF_SERIAL_NO AS AF_SERIAL_NO
 				                    , T1.BF_SERIAL_NO AS BF_SERIAL_NO
-				                    , (SELECT fn_get_order_serial(T1.SALES_ORD_ID, '') FROM DUAL) AS LAST_INSTALL_SERIAL_NO
+				                    , (SELECT LAST_INSTALL_SERIAL_NO FROM SAL1010V WHERE ORD_ID = T1.SALES_ORD_ID AND ROWNUM = 1) AS LAST_INSTALL_SERIAL_NO
 				                    , T1.MOBILE_YN AS MOBILE_YN
 				                    , T1.CRT_BRNCH_ID AS CRT_BRNCH_ID
 				                    , T4.CODE CRT_USER_BRNCH_CD
