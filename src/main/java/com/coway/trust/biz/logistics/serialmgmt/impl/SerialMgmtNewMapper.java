@@ -39,8 +39,12 @@ public interface SerialMgmtNewMapper{
 	public EgovMap callBarcodeScan(Map<String, Object> param) throws Exception;
 	// Logistic barcode delete
 	public EgovMap callDeleteBarcodeScan(Map<String, Object> param) throws Exception;
+
 	// Logistic barcode save
 	public void callSaveBarcodeScan(Map<String, Object> param) throws Exception;
 
 	public void callReverseBarcodeScan(Map<String, Object> param) throws Exception;
+
+	// Stock Audit Logistic barcode delete
+	public EgovMap callAdDeleteBarcodeScan(Map<String, Object> param) throws Exception;
 }

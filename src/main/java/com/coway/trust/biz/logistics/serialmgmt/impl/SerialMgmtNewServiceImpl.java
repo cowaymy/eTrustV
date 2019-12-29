@@ -314,6 +314,20 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 		serialMgmtNewMapper.callReverseBarcodeScan(params);
 	}
 
+	// Stock Audit serial delete
+	@Override
+	public void deleteAdSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception{
+		params.put("crtUserId", sessionVO.getUserId());
+		params.put("updUserId", sessionVO.getUserId());
+
+		serialMgmtNewMapper.callAdDeleteBarcodeScan(params);
+
+		if(!"000".equals((String)params.get("errCode"))){
+			throw new ApplicationException(AppConstants.FAIL, (String)params.get("errMsg"));
+		}
+	}
+
+
 	private boolean validationDate(String checkDate){
 		try{
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");

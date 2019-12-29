@@ -32,4 +32,7 @@ public interface SerialMgmtNewService{
 
 	public void reverseSerialCode(Map<String, Object> params) throws Exception;
 
+	// Stock Audit serial delete
+	public void deleteAdSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
 }

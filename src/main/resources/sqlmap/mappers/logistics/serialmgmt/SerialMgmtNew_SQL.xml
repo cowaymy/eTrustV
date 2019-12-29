@@ -350,5 +350,11 @@
          }
     </select>
 
-
+    <select id="callAdDeleteBarcodeScan" parameterType="Map"  statementType="CALLABLE">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.callAdDeleteBarcodeScan] - KR OHK */
+        {CALL SP_LOGISTIC_BARCODE_DELETE_AD(#{allYn}, #{boxno}, #{rstNo}, #{locId}, #{transactionType}, #{ioType}, #{updUserId}
+                    , #{errCode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA}
+                    , #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA})
+         }
+    </select>
 </mapper>
