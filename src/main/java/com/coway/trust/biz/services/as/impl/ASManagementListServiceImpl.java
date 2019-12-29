@@ -3383,9 +3383,20 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         	              rtnValue.put("logerr", "Y");
         	          }
 
-        	          servicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+        	          servicesLogisticsPFCMapper .SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
 
         	          LOGGER.debug("SP_SVC_LOGISTIC_REQUEST_SERIAL===> " + spMap.toString());
+
+        	          String errCode = (String)spMap.get("pErrcode");
+                	  String errMsg = (String)spMap.get("pErrmsg");
+
+                	  LOGGER.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
+                	  LOGGER.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
+
+                   	  // pErrcode : 000  = Success, others = Fail
+                   	  if(!"000".equals(errCode)){
+                   	    throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+                   	  }
 	    		  }
 
     	          // ONGHC ADD FOR OPTIONAL FILTER

@@ -55,7 +55,9 @@
      <select id="SP_SVC_LOGISTIC_REQUEST_SERIAL" parameterType="Map"  statementType="CALLABLE" >
       /* [com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST_SERIAL] 20191216 - KR OHK*/
       {
-          call SP_SVC_LOGISTIC_REQUEST_SERIAL( #{ORD_ID},#{RETYPE},#{P_TYPE}, #{P_PRGNM}, #{USERID} ,#{P_RESULT_TYPE},#{P_RESULT_MSG}  )
+          call SP_SVC_LOGISTIC_REQUEST_SERIAL( #{ORD_ID},#{RETYPE},#{P_TYPE}, #{P_PRGNM}, #{USERID} ,#{P_RESULT_TYPE},#{P_RESULT_MSG}
+          , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
+          , #{ pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR} )
       }
      </select>
 

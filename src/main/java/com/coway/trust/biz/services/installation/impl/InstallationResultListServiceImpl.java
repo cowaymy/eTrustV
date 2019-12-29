@@ -3190,6 +3190,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
                 } else { // SUCCESS
                   if ("000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) {
                 	  servicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+                	  String errCode = (String)spMap.get("pErrcode");
+                	  String errMsg = (String)spMap.get("pErrmsg");
+
+                      logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
+                      logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
+
+                      // pErrcode : 000  = Success, others = Fail
+                      if(!"000".equals(errCode)){
+                      	  throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+                      }
                   }
                   String ordStat = getSalStat(params);
 
@@ -3211,6 +3222,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
                               message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS2): " + spMap.get("P_RESULT_MSG").toString());
                             } else {
                             	servicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+                            	String errCode = (String)spMap.get("pErrcode");
+                          	  	String errMsg = (String)spMap.get("pErrmsg");
+
+                             	logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
+                             	logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
+
+                             	// pErrcode : 000  = Success, others = Fail
+                             	if(!"000".equals(errCode)){
+                             		throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+                             	}
                             }
                           }
                         }
