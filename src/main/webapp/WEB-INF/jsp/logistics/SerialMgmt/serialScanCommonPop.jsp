@@ -172,7 +172,7 @@ $(document).ready(function(){
     if(Common.checkPlatformType() == "mobile") {
     	$("#sRstNo").val("${url.zRstNo}");            // requst no
     	$("#sDryNo").val("${url.zDelvryNo}");         // delivery no
-    	$("#transaction").val("${url.zTrnscType}");   // US : STO, UM : SMO
+    	$("#transaction").val("${url.zTrnscType}");   // US : STO, UM : SMO, AD : STOCK AUDIT
     	$("#fromLocCode").val("${url.zFromLoc}");
     	$("#toLocCode").val("${url.zToLoc}");
     	$("#ioType").val("${url.zIoType}");
@@ -188,9 +188,15 @@ $(document).ready(function(){
     if($("#transaction").val() == "UM" && $("#ioType").val() == "O"){
     	$("#typeUM").show();
     	$("#typeUS").hide();
+    	$("#typeAD").hide();
+    }if($("#transaction").val() == "AD"){
+        $("#typeUM").hide();
+        $("#typeUS").hide();
+        $("#typeAD").show();
     }else{
     	$("#typeUM").hide();
     	$("#typeUS").show();
+    	$("#typeAD").hide();
     }
 
     $("#btnScanAllDel").click(function(){
@@ -508,13 +514,19 @@ function fn_scanClosePop(){
 		</colgroup>
 		<tbody>
 			<tr id="typeUS">
-			    <th scope="row">Delivery No</th>
+			    <th scope="row">Delivery No.</th>
 			    <td colspan="3" >
 			        <input type="text" id="sDryNo" name="sDryNo" placeholder="" class="w100p readonly" style="min-width:150px" readonly value=""'/>
 			    </td>
 			</tr>
+			<tr id="typeAD" style="display:none;">
+                <th scope="row">Stock Audit No.</th>
+                <td colspan="3" >
+                    <input type="text" id="sRstNo" name="sRstNo" placeholder="" class="w100p readonly" style="min-width:150px" readonly value=""'/>
+                </td>
+            </tr>
 			<tr id="typeUM" style="display:none;">
-                <th scope="row">Delivery No</th>
+                <th scope="row">SMO No.</th>
                 <td colspan="3" >
                     <input type="text" id="sRstNo" name="sRstNo" placeholder="" class="w100p readonly" style="min-width:150px" readonly value=""'/>
 
