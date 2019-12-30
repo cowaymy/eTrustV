@@ -468,5 +468,15 @@ var FormUtil = {
         var day = 1000*60*60*24;
 
         return (diff/day);
-    }
+    },
+
+    // 20191230- KR-OK onlyNumCheck
+    onlyNumCheck : function(val) {
+		var flag = false;
+		var reg =  /^[0-9]*$/;
+		if(reg.test(val) == true){
+			flag = true;
+			}
+		return flag;
+	}
 };
