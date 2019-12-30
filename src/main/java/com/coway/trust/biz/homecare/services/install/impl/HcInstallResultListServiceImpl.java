@@ -54,8 +54,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 
     /**
      * Insert Installation Result
-     * @Author KR-SH
-     * @Date 2019. 12. 20.
+     * @Author KR-JIN
      * @param params
      * @param sessionVO
      * @return
@@ -273,7 +272,8 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 
     	        // one more AUX
     	        EgovMap sMap = hcInstallResultListMapper.selectFrmOrdNo(updateMap);
-    	        if(sMap != null && StringUtils.isBlank((String)sMap.get("salesOrdNo")) ){
+    	        if(sMap != null && StringUtils.isNotBlank((String)sMap.get("salesOrdNo")) ){
+    	        	sMap.put("stusCodeId", 1);		// active
     	        	EgovMap eMap = hcInstallResultListMapper.selectFrmInstNO(sMap);
 
     	        	updateMap.put("salesOrdNo", eMap.get("salesOrdNo"));
@@ -366,5 +366,38 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
           failList.add(updateMap.get("installEntryNo").toString());
           logger.debug("Fail Reason >> View & DB CT info not matching : " + prevCt_db + " / " + prevCt_view);
         }
+	}
+
+	public int hcEditInstallationResultSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception{
+		int resultValue = installationResultListService.editInstallationResultSerial(params, sessionVO);
+
+		// check AUX
+		if(resultValue > 0){
+			Map<String, Object> oMap = new HashMap<String, Object>();
+			oMap.put("salesOrdNo", params.get("hidSalesOrderNo"));
+			EgovMap sMap = hcInstallResultListMapper.selectFrmOrdNo(oMap);
+
+			// one more AUX
+	        if(sMap != null && StringUtils.isNotBlank((String)sMap.get("salesOrdNo")) ){
+	        	sMap.put("stusCodeId", 4);		// Completed
+	        	EgovMap eMap = hcInstallResultListMapper.selectFrmInstNO(sMap);
+	        	params.put("entryId", eMap.get("installEntryId"));
+	        	params.put("hidSalesOrderId", eMap.get("salesOrdId"));
+	        	params.put("hidSalesOrderNo", eMap.get("salesOrdNo"));
+	        	params.put("hidInstallEntryNo", eMap.get("installEntryNo"));
+	        	params.put("hidSerialRequireChkYn", "N");
+	        	params.put("hidSerialNo", "");
+
+	        	// SAL0047D.RESULT_ID
+	        	EgovMap rMap = hcInstallResultListMapper.selectResultId(eMap);
+	        	params.put("resultId", rMap.get("resultId"));
+
+	        	int result = installationResultListService.editInstallationResultSerial(params, sessionVO);
+	        	resultValue += result;
+	        }
+		}else{
+			throw new ApplicationException(AppConstants.FAIL, "Failed to update installation result. Please try again later.");
+		}
+		return resultValue;
 	}
 }

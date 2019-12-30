@@ -364,4 +364,47 @@ public class HcInstallResultListController {
     }
 
 
+    /**
+     * InstallationResult edit Installation Result Popup
+     *
+     * @param request
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/hcEditInstallationResultPop.do")
+    public String hcEditInstallationResultPop(@RequestParam Map<String, Object> params, ModelMap model , SessionVO sessionVO) throws Exception {
+
+      EgovMap installInfo = installationResultListService.selectInstallInfo(params);
+      model.addAttribute("installInfo", installInfo);
+
+      EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
+      model.put("orderDetail", orderDetail);
+      // 호출될 화면
+      return "homecare/services/install/hcEditInstallationResultPop";
+    }
+
+
+    @RequestMapping(value = "/hceditInstallationSerial.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> editInstallationSerial(@RequestBody Map<String, Object> params,
+        SessionVO sessionVO) throws Exception {
+      ReturnMessage message = new ReturnMessage();
+      int resultValue = 0;
+
+      int userId = sessionVO.getUserId();
+      params.put("user_id", userId);
+      logger.debug("params : {}", params);
+
+      resultValue = hcInstallResultListService.hcEditInstallationResultSerial(params, sessionVO);
+
+      if (resultValue > 0) {
+        message.setMessage("Installation result successfully updated.");
+      } else {
+        message.setMessage("Failed to update installation result. Please try again later.");
+      }
+
+      return ResponseEntity.ok(message);
+    }
+
+
 }

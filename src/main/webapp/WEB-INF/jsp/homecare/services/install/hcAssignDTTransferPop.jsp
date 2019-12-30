@@ -7,6 +7,7 @@
 var assignCtListGridID;
 var assignCOrdtListGridID;
 var serialList = new Array();
+var v_ctCode = "", v_stkCode = "";
 
 $(document).ready(function() {
 
@@ -113,7 +114,7 @@ function createAssignCtOrderListAUIGrid() {
                                 type : "ComboBoxRenderer",
                                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                                 listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                    fn_ctSerialNoList(item);
+                                	fn_ctSerialNoList(item);
                                     return serialList;
                                 },
                                 keyField : "code",
@@ -233,14 +234,17 @@ function fn_asaAssignCtOderList(){
 }
 
 function fn_ctSerialNoList(item){
-	Common.showLoader();
-    Common.ajaxSync("GET", "/services/selectCtSerialNoList.do", {ctCode : item.ctCode, stkCode : item.stkCode}, function(result) {
-    	Common.removeLoader();
-    	serialList = new Array();
-        for ( var i = 0 ; i < result.length ; i++ ) {
-            serialList.push(result[i]);
-        }
-    }, function(){Common.removeLoader();});
+	if( v_ctCode != item.ctCode && v_stkCode != item.stkCode){
+	    Common.ajaxSync("GET", "/services/selectCtSerialNoList.do", {ctCode : item.ctCode, stkCode : item.stkCode}, function(result) {
+	    	serialList = new Array();
+	        for ( var i = 0 ; i < result.length ; i++ ) {
+	            serialList.push(result[i]);
+	        }
+	        v_ctCode = item.ctCode;
+	        v_stkCode = item.stkCode;
+	    }, function(){});
+	}
+
 }
 </script>
 

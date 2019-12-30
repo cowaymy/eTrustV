@@ -227,7 +227,15 @@
              , SAL0046D b
           WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
             AND A.SALES_ORD_NO = #{salesOrdNo}
-            AND B.STUS_CODE_ID = '1'
+            AND B.STUS_CODE_ID = #{stusCodeId}
+    </select>
+
+    <select id="selectResultId" parameterType="Map" resultType="egovMap">
+    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.selectResultId]*/
+        SELECT RESULT_ID
+	      FROM SAL0047D
+	     WHERE ENTRY_ID = #{installEntryId}
+	       AND ROWNUM <![CDATA[<=]]> 1
     </select>
 
 </mapper>

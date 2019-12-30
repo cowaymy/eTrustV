@@ -63,4 +63,16 @@ public interface HcInstallResultListService {
 	 * @throws Exception
 	 */
 	public Map<String, Object> updateAssignCTSerial(Map<String, Object> params) throws Exception;
+
+
+	/**
+	 * Edit Installation Result
+	 * @Author KR-JIN
+	 * @Date Dec 30, 2019
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 * @throws ParseException
+	 */
+	public int hcEditInstallationResultSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 }

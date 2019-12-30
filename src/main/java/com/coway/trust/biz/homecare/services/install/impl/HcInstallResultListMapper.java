@@ -47,4 +47,5 @@ public interface HcInstallResultListMapper {
 	 */
 	public EgovMap selectFrmOrdNo(Map<String, Object> params) throws Exception;
 	public EgovMap selectFrmInstNO(Map<String, Object> params) throws Exception;
+	public EgovMap selectResultId(Map<String, Object> params) throws Exception;
 }

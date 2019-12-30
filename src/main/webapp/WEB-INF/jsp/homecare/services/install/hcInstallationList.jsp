@@ -118,7 +118,7 @@
 	        {dataField : "c3",                    headerText : '<spring:message code="service.grid.AppDate" />',        editable : false,     width : 100},
 	        {dataField : "stkDesc",             headerText : '<spring:message code="service.grid.Product" />',         editable : false,     style : "my-column",    width : 320},
 	        {dataField : "custId",               headerText : '<spring:message code="service.grid.CustomerId" />',    editable : false,     width : 100},
-	        {dataField : "memCode",         headerText : '<spring:message code="service.grid.CTCode" />',         editable : false,     width : 100},
+	        {dataField : "memCode",         headerText : '<spring:message code="home.lbl.dtCode" />',         editable : false,     width : 100},
 	        {dataField : "appType",            headerText : '<spring:message code="service.grid.AppType" />',       editable : false,     width : 80},
 	        {dataField : "bndlNo",             headerText : 'Bundle No',                                                             editable : false,     width : 120},
 	        {dataField : "brnchCode",         headerText : '<spring:message code="service.grid.BranchCode" />',   editable : false,     width : 100},
@@ -257,7 +257,7 @@
     Common.popupDiv("/services/installationDscReportPop.do", null, null, true, '');
   }
 
-  function fn_editInstallation() {//active 일때만 열림
+  function fn_editInstallation() {
 
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
@@ -289,7 +289,7 @@
           Common.alert(result.message);
         } else {
           if (statusCode == "COM") {
-            Common.popupDiv("/services/editInstallationPopup.do?isPop=true&installEntryId=" + installEntryId + "&codeId=" + codeid1);
+            Common.popupDiv("/homecare/services/install/hcEditInstallationResultPop.do?isPop=true&installEntryId=" + installEntryId + "&codeId=" + codeid1 + "&salesOrderId=" + orderId);
           } else {
             //Common.alert("<b>Only completed installation result is allowed to edit.</b>");
             Common.alert("<b><spring:message code='service.msg.Onlycompleted'/></b>");
@@ -536,8 +536,7 @@
        <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
         <li><p class="link_btn">
           <a href="javascript:fn_editInstallation()"
-           id="editInstallation"><spring:message
-            code='service.btn.EditInstallationResult' /></a>
+           id="editInstallation"><spring:message code='service.btn.EditInstallationResult' /></a>
          </p></li>
        </c:if>
       </ul>

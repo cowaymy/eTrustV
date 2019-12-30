@@ -2767,11 +2767,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     String maxTaxInvoiceID = installationResultListMapper.selectMaxId_2(maxtaxInvoiceID);
     // String ApptypeID = (String) TaxinvoiceCompany.get("ApptypeID");
 
-    if ("66".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID)) { // Rental
-                                                                                        // ||
-                                                                                        // Sponsor
-                                                                                        // ||
-                                                                                        // Education
+    // Rental || Sponsor || Education || AUX
+    if ("66".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID) || "5754".equals(ApptypeID)) {
       if (installResult.get("statusCodeId").toString().equals("4")) {
         EgovMap s46dup = new EgovMap();
         s46dup.put("installResultId", maxId);

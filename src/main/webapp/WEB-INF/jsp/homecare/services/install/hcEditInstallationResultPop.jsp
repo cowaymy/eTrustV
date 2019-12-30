@@ -41,16 +41,8 @@
   function fn_saveInstall() {
     if (fn_validate()) {
 
-        // KR-OHK Serial Check add
-        var url = "";
-
-        if ($("#hidSerialRequireChkYn").val() == 'Y') {
-            url = "/services/editInstallationSerial.do";
-        } else {
-            url = "/services/editInstallation.do";
-        }
-
-      Common.ajax("POST", url, $("#editInstallForm").serializeJSON(), function(result) {
+      // KR-OHK Serial Check add
+      Common.ajax("POST", "/homecare/services/install/hceditInstallationSerial.do", $("#editInstallForm").serializeJSON(), function(result) {
         Common.alert(result.message);
         if (result.message == "Installation result successfully updated.") {
           $("#popup_wrap").remove();
@@ -149,6 +141,7 @@
     <input type="hidden" value="<c:out value="${installInfo.serialRequireChkYn}"/>" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
     <input type="hidden" value="<c:out value="${installInfo.c14}"/>" id="hidInstallEntryNo" name="hidInstallEntryNo" />
     <input type="hidden" value="<c:out value="${orderDetail.basicInfo.ordId}"/>" id="hidSalesOrderId" name="hidSalesOrderId" />
+    <input type="hidden" value="<c:out value="${orderDetail.basicInfo.ordNo}"/>" id="hidSalesOrderNo" name="hidSalesOrderNo" />
     <input type="hidden" value="<c:out value="${installInfo.serialNo}"/>" id="hidSerialNo" name="hidSerialNo" />
 
     <table class="type1 mb1m">
