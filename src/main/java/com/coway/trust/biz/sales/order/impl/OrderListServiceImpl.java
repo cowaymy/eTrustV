@@ -316,6 +316,16 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 //			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
 
+			String errCodeSvc = (String)spMap.get("pErrcode");
+      	  	String errMsgSvc = (String)spMap.get("pErrmsg");
+
+      	    logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCodeSvc);
+      	    logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsgSvc);
+
+         	// pErrcode : 000  = Success, others = Fail
+         	if(!"000".equals(errCodeSvc)){
+         		throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCodeSvc + ":" + errMsgSvc);
+         	}
 
     		// KR-HAN Barcode Save Start
     		Map<String, Object> setmap = new HashMap();
@@ -410,6 +420,11 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
     logger.debug("productReturnResult 물류  PRAM ===>" + logPram.toString());
     servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL(logPram);
     logger.debug("productReturnResult 물류  결과 ===>" + logPram.toString());
+
+    if(!"000".equals(logPram.get("p1"))) {
+		  throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram.get("p1")+ ":" + "RETURN Result Error");
+	  }
+
     logPram.put("P_RESULT_TYPE", "PR");
     logPram.put("P_RESULT_MSG", logPram.get("p1"));
     ///////////////////////// 물류 호출 END //////////////////////
