@@ -115,6 +115,7 @@
       LEFT JOIN org0001d ORG1 ON ORG1.MEM_ID = ir.CRT_USER_ID and ORG1.MEM_TYPE > 2
       LEFT JOIN SYS0047M ORG2 ON ORG2.USER_ID = ir.CRT_USER_ID AND ORG2.USER_TYPE_ID > 2
       WHERE 1 = 1
+        AND som.BNDL_ID IS NULL    -- homecare Remove(except)
     ]]>
     <if test="installStatusList != null and installStatusList != '' ">
       AND ST.STUS_CODE_ID IN
