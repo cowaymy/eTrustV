@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.coway.trust.biz.sales.SalesDashboard.impl.SalesDashboardApiMapper">
+<mapper namespace="com.coway.trust.biz.sales.salesDashboardApi.impl.SalesDashboardApiMapper">
 
 
 
@@ -9,7 +9,7 @@
 
 <select id="selectSalesDashboard" parameterType="Map" resultType="egovMap">
 <![CDATA[
-/* [com.coway.trust.biz.sales.SalesDashboard.impl.SalesDashboardApiMapper.selectSalesDashboard] 20191223 - KR JAEMAJEM */
+/* [com.coway.trust.biz.sales.salesDashboardApi.impl.SalesDashboardApiMapper.selectSalesDashboard] 20191223 - KR JAEMAJEM */
 SELECT  A.ID                                                                    AS ID
     ,   A.MEM_ID                                                                AS MEM_ID
     ,   A.MEM_CODE                                                              AS MEM_CODE
