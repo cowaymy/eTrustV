@@ -35,7 +35,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(value = "ExpiringCustomerApiController", description = "ExpiringCustomerApiController")
 @RestController(value = "ExpiringCustomerApiController")
-@RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/expiringCustomer")
+@RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/expiringCustomerApi")
 public class ExpiringCustomerApiController {
 
 

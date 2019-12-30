@@ -29,7 +29,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(value = "SalesDashboardApiController", description = "SalesDashboardApiController")
 @RestController(value = "SalesDashboardApiController")
-@RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/salesDashboard")
+@RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/salesDashboardApi")
 public class SalesDashboardApiController {
 	@Resource(name = "SalesDashboardApiService")
 	private SalesDashboardApiService salesDashboardApiService;

@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(value = "OrderListApiController", description = "OrderListApiController")
 @RestController(value = "OrderListApiController")
-@RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/orderList")
+@RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/orderListApi")
 public class OrderListApiController {
 	@Resource(name = "OrderListApiService")
 	private OrderListApiService orderListApiService;
