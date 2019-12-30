@@ -37,18 +37,26 @@ function fn_saveSerialNoModify(){
 			        errCode = result.data[key];
 			    }
 			}
+
             if(errCode == '000') {
                 Common.alert(result.message);
             } else {
+            	$("#popSerialNoModifyForm #pSerialNo").val( $("#pBeforeSerialNo").val() );   // if fail, reverse
                 Common.alert(result.message);
             }
             if(result.code == "00"){
                 $("#btnPopClose").click();
             }
 
-        });
+        },
+        errcallback);
     }));
 
+}
+
+function errcallback(jqXHR, textStatus, errorThrown){
+	Common.alert(jqXHR.responseJSON.message);
+	$("#popSerialNoModifyForm #pSerialNo").val( $("#pBeforeSerialNo").val() );   // if fail, reverse
 }
 
 function fn_ClosePop(){
@@ -108,13 +116,13 @@ function fn_ClosePop(){
         <td colspan="5">
          <div >
           <!-- auto_file start -->
-            <input type="text" id="salesOrdNo" name="salesOrdNo" class="w95p" readonly = "readonly"  value="${pSalesOrdNo}" />
+            <input type="text" id="salesOrdNo" name="salesOrdNo" class="w95p readonly" readonly = "readonly"  value="${pSalesOrdNo}" />
          </div>
          <!-- auto_file end -->
         </td>
        </tr>
        <tr>
-        <th scope="row">Serial No.</th>
+        <th scope="row">Serial No.<span name="m5" id="m5" class="must">*</span></th>
         <td colspan="5">
          <div >
           <!-- auto_file start -->
