@@ -127,6 +127,10 @@
 
       actPrdCode = result[0].stockCode;
       $("#PROD_CDE").val(result[0].stockCode);
+
+      // KR-OHK Serial Check
+      $("#pItmCode").val(result[0].stockCode);
+
       doGetCombo('/services/as/getASFilterInfo.do?prdctCd=' + actPrdCode, '', '', 'ddlFilterCode', 'S', '');
     });
   }
@@ -156,6 +160,15 @@
       $("#txtRequestorContact").text(result[0].asRemReqsterCntc);
       $("#txtASKeyAt").text(result[0].asCrtDt);
 
+      // KR-OHK Serial Check
+      $("#hidSerialRequireChkYn").val(result[0].serialRequireChkYn);
+      if( $("#hidSerialRequireChkYn").val() == 'Y' ) {
+          $("#btnSerialEdit").attr("style", "");
+          $("#serialSearch").attr("style", "");
+
+          $("#pLocationType").val(result[0].whLocGb);
+          $('#pLocationCode').val(result[0].ctWhLocId);
+      }
     });
   }
 
@@ -196,6 +209,10 @@
 
       $("#btnSaveDiv").attr("style", "display:none");
       $("#addDiv").attr("style", "display:none");
+
+      // KR-OHK Serial Check
+      $("#serialSearch").attr("style", "display:none");
+      $("#serialEdit").attr("style", "display:none");
 
       $('#dpSettleDate').attr("disabled", true);
       $('#ddlFailReason').attr("disabled", true);

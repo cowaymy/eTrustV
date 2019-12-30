@@ -43,6 +43,7 @@
       fn_getASHistoryInfo();
 
       //fn_getASRulstEditFilterInfo();
+
     });
 
   function fn_getErrMstList(_ordNo) {
@@ -360,6 +361,9 @@
 
       $("#PROD_CDE").val(result[0].stockCode);
 
+      // KR-OHK Serial Check
+      $("#pItmCode").val(result[0].stockCode);
+
       fn_getErrMstList(result[0].ordNo);
     });
   }
@@ -387,6 +391,11 @@
       $("#txtRequestorContact").text(result[0].asRemReqsterCntc);
       $("#txtASKeyAt").text(result[0].asCrtDt);
 
+      // KR-OHK Serial Check
+      $("#hidSerialRequireChkYn").val(result[0].serialRequireChkYn);
+      if( $("#hidSerialRequireChkYn").val() == 'Y' ) {
+          $("#btnSerialEdit").attr("style", "");
+      }
     });
   }
 
@@ -432,7 +441,8 @@
   }
 
   function fn_doSave() {
-    if (!fn_validRequiredField_Save_ResultInfo){
+
+    if (!fn_validRequiredField_Save_ResultInfo()){
       return;
     }
 
@@ -492,14 +502,26 @@
       IN_HUSE_REPAIR_PRODUCT_CODE : $("#productCode").val(),
       IN_HUSE_REPAIR_SERIAL_NO : $("#serialNo").val(),
       AS_RESULT_STUS_ID : $("#ddlStatus").val(),
-      AS_REPLACEMENT : $("#replacement:checked").val()
+      AS_REPLACEMENT : $("#replacement:checked").val(),
+      // KR-OHK Serial Check
+      SERIAL_NO : $("#stockSerialNo").val(),
+      AS_RESULT_NO : $('#txtResultNo').val(),
+      AS_SO_ID : $("#ORD_ID").val()
     }
 
     var saveForm = {
       "asResultM" : asResultM
     }
 
-    Common.ajax("POST", "/services/as/newResultBasicUpdate.do", saveForm,
+    // KR-OHK Serial Check
+    var url = "";
+    if ($("#hidSerialRequireChkYn").val() == 'Y') {
+    	url = "/services/as/newResultBasicUpdateSerial.do";
+    } else {
+    	url = "/services/as/newResultBasicUpdate.do";
+    }
+
+    Common.ajax("POST", url, saveForm,
       function(result) {
         if (result.asNo != "") {
           Common.alert("<spring:message code='service.msg.updSucc'/>");
@@ -719,6 +741,12 @@
         if (FormUtil.checkReqValue($("#ddlCTCode"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT Code' htmlEscape='false'/> </br>";
           rtnValue = false;
+        }
+
+        // KR-OHK Serial Check
+        if (FormUtil.checkReqValue($("#stockSerialNo"))) {
+            rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
+            rtnValue = false;
         }
       } else if ($("#ddlStatus").val() == 19) { // RECALL
         if (FormUtil.checkReqValue($("#ddlFailReason"))) { // FAIL REASON
@@ -1038,11 +1066,58 @@
       }
     }
   }
+
+  function fn_serialModifyPop(){
+      $("#serialNoChangeForm #pSerialNo").val( $("#stockSerialNo").val() ); // Serial No
+      $("#serialNoChangeForm #pSalesOrdId").val( $("#ORD_ID").val() ); // 주문 ID
+      $("#serialNoChangeForm #pSalesOrdNo").val( $("#ORD_NO").val() ); // 주문 번호
+      $("#serialNoChangeForm #pRefDocNo").val( $("#AS_NO").val() ); //
+     // $("#serialNoModifyForm #pItmCode").val( $("#stkCode").val()  ); // 제품 ID
+      $("#serialNoChangeForm #pCallGbn").val( "AS_EDIT" );
+      $("#serialNoChangeForm #pMobileYn").val( "N"  );
+
+      if(Common.checkPlatformType() == "mobile") {
+          popupObj = Common.popupWin("serialNoChangeForm", "/logistics/serialChange/serialNoChangePop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+      } else{
+          Common.popupDiv("/logistics/serialChange/serialNoChangePop.do", $("#serialNoChangeForm").serializeJSON(), null, true, '_serialNoChangePop');
+      }
+  }
+
+  function fn_PopSerialChangeClose(obj){
+
+      console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+
+      $("#stockSerialNo").val(obj.asIsSerialNo);
+      $("#hidStockSerialNo").val(obj.beforeSerialNo);
+
+      if(popupObj!=null) popupObj.close();
+      //fn_viewInstallResultSearch(); //조회
+  }
+
+//팝업에서 호출하는 조회 함수
+function SearchListAjax(obj){
+
+    console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+
+    $("#stockSerialNo").val(obj.asIsSerialNo);
+    $("#hidStockSerialNo").val(obj.beforeSerialNo);
+
+    //fn_viewInstallResultSearch(); //조회
+}
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
  <section id="content">
   <!-- content start -->
+  <form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
+      <input type="hidden" name="pSerialNo" id="pSerialNo"/>
+    <input type="hidden" name="pSalesOrdId"  id="pSalesOrdId"/>
+    <input type="hidden" name="pSalesOrdNo"  id="pSalesOrdNo"/>
+    <input type="hidden" name="pRefDocNo" id="pRefDocNo"/>
+    <input type="hidden" name="pItmCode" id="pItmCode"/>
+    <input type="hidden" name="pCallGbn" id="pCallGbn"/>
+    <input type="hidden" name="pMobileYn" id="pMobileYn"/>
+  </form>
   <form id="resultASForm" method="post">
    <div style="display: none">
     <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" />
@@ -1053,6 +1128,8 @@
     <input type="text" name="AS_RESULT_NO" id="AS_RESULT_NO" value="${AS_RESULT_NO}" />
     <input type="text" name="AS_RESULT_ID" id="AS_RESULT_ID" value="${AS_RESULT_ID}" />
     <input type="text" name="PROD_CDE" id="PROD_CDE" />
+    <input type="hidden" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
+    <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
    </div>
   </form>
   <header class="pop_header">
@@ -1212,7 +1289,7 @@
        <colgroup>
         <col style="width: 150px" />
         <col style="width: *" />
-        <col style="width: 150px" />
+        <col style="width: 110px" />
         <col style="width: *" />
        </colgroup>
        <tbody>
@@ -1300,11 +1377,16 @@
         </tr>
         <tr>
          <th scope="row"><spring:message code='sal.text.commission' /></th>
-         <td colspan="3">
+         <td>
            <label>
            <input type="checkbox" id='iscommission' name='iscommission' />
            <span><spring:message code='sal.text.commissionApplied' /></span>
            </label>
+         </td>
+         <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must">*</span></th>
+         <td>
+            <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly/>
+            <p class="btn_grid" style="display:none" id="btnSerialEdit"><a href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
          </td>
         </tr>
         <tr>
