@@ -3312,7 +3312,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installationResultListMapper.updateInstallEntryEdit(params);
 
     // KR-OHK Barcode Save Start(serial change)
-    if(!params.get("hidSerialNo").equals(params.get("serialNo"))) {
+    if( "Y".equals(params.get("hidSerialRequireChkYn")) && !params.get("hidSerialNo").equals(params.get("serialNo")) ) {
         Map<String, Object> setmap = new HashMap();
         setmap.put("serialNo", params.get("serialNo"));
         setmap.put("beforeSerialNo", params.get("hidSerialNo"));
