@@ -98,6 +98,7 @@ public class HcInstallationReversalServiceImpl extends EgovAbstractServiceImpl i
 				sOrder.put("hidSalesOrderId", sMap.get("salesOrdId"));
 				sOrder.put("hidSerialNo", list1.get("serialNo"));
 				sOrder.put("hidSerialRequireChkYn", "N");		// no serial check
+				sOrder.put("userId", sessionVO.getUserId());
 
 				if(list5 != null && list5.get("whLocId") != null && (int)list5.get("whLocId") != 0 ){
 					sOrder.put("inChargeCTWHID", list5.get("whLocId"));
