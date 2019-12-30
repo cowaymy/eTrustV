@@ -40,7 +40,17 @@
 
   function fn_saveInstall() {
     if (fn_validate()) {
-      Common.ajax("POST", "/services/editInstallation.do", $("#editInstallForm").serializeJSON(), function(result) {
+
+        // KR-OHK Serial Check add
+        var url = "";
+
+        if ($("#hidSerialRequireChkYn").val() == 'Y') {
+            url = "/services/editInstallationSerial.do";
+        } else {
+            url = "/services/editInstallation.do";
+        }
+
+      Common.ajax("POST", url, $("#editInstallForm").serializeJSON(), function(result) {
         Common.alert(result.message);
         if (result.message == "Installation result successfully updated.") {
           $("#popup_wrap").remove();
@@ -71,6 +81,23 @@
       return false;
     }
     return true;
+  }
+
+
+  function fn_serialSearchPop(){
+
+	  $("#pLocationType").val('${installInfo.whLocGb}');
+      $('#pLocationCode').val('${installInfo.ctWhLocId}');
+      $("#pItemCodeOrName").val('${orderDetail.basicInfo.stockCode}');
+
+      Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
+  }
+
+  function fnSerialSearchResult(data) {
+      data.forEach(function(dataRow) {
+          $("#editInstallForm #serialNo").val(dataRow.serialNo);
+          //console.log("serialNo : " + dataRow.serialNo);
+      });
   }
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -108,10 +135,24 @@
 
 </article><!-- tap_area end -->
 <!-- Order Information End -->
+    <form id="frmSearchSerial" name="frmSearchSerial" method="post">
+        <input id="pGubun" name="pGubun" type="hidden" value="RADIO" />
+        <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" />
+        <input id="pLocationType" name="pLocationType" type="hidden" value="" />
+        <input id="pLocationCode" name="pLocationCode" type="hidden" value="" />
+        <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" />
+        <input id="pStatus" name="pStatus" type="hidden" value="" />
+        <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
+    </form>
 
    <form action="#" id="editInstallForm" method="post">
-    <input type="hidden" value="<c:out value="${installInfo.resultId}"/> " id="resultId" name="resultId" />
-    <input type="hidden" value="<c:out value="${installInfo.installEntryId}"/> " id="entryId" name="entryId" />
+    <input type="hidden" value="<c:out value="${installInfo.resultId}"/>" id="resultId" name="resultId" />
+    <input type="hidden" value="<c:out value="${installInfo.installEntryId}"/>" id="entryId" name="entryId" />
+    <input type="hidden" value="<c:out value="${installInfo.serialRequireChkYn}"/>" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
+    <input type="hidden" value="<c:out value="${installInfo.c14}"/>" id="hidInstallEntryNo" name="hidInstallEntryNo" />
+    <input type="hidden" value="<c:out value="${orderDetail.basicInfo.ordId}"/>" id="hidSalesOrderId" name="hidSalesOrderId" />
+    <input type="hidden" value="<c:out value="${installInfo.serialNo}"/>" id="hidSerialNo" name="hidSerialNo" />
+
     <table class="type1 mb1m">
      <!-- table start -->
      <caption>table</caption>
@@ -144,7 +185,11 @@
        <th scope="row"><spring:message code='service.title.SirimNo' /><span class="must"> *</span></th>
        <td><input type="text" id="sirimNo" name="sirimNo" class='w100p' value="<c:out value="${installInfo.sirimNo}"/>" /></td>
        <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must"> *</span></th>
-       <td><input type="text" id="serialNo" name="serialNo" class='w100p' value="<c:out value="${installInfo.serialNo}" />" /></td>
+       <td><input type="text" id="serialNo" name="serialNo" class='w50p' value="<c:out value="${installInfo.serialNo}" />" />
+       <c:if test="${installInfo.serialRequireChkYn == 'Y' }">
+       <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+       </c:if>
+       </td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.title.RefNo' />

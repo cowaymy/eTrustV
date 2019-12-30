@@ -6,7 +6,7 @@
 
 var assignCtListGridID;
 var assignCOrdtListGridID;
-
+var serialList = new Array();
 
 $(document).ready(function() {
 
@@ -15,6 +15,15 @@ $(document).ready(function() {
 
 	fn_asaAssignCtList();
 	fn_asaAssignCtOderList();
+
+	AUIGrid.bind(assignCtListGridID, "rowCheckClick", function(event){
+		var assiinCd = fn_getAssionCTListCheckedRowItems();
+
+		var editedRowItems = AUIGrid.getEditedRowItems(assignCOrdtListGridID);
+		for (var i = 0; i < editedRowItems.length; i++) {
+			  AUIGrid.updateRow(assignCOrdtListGridID, {"memCode" :  assiinCd[0], "insstallCtId" : assiinCd[1]}, i);
+		}
+	});
 });
 
 
@@ -28,7 +37,8 @@ function createAssignCtListAUIGrid() {
                         { dataField : "ctName",    headerText  : "CT Name",  width  : 120 , editable       : false},
                         { dataField : "branchName", headerText  : "Branch Name ",  width  : 120  },
                         { dataField : "ctSubGrp", headerText  : "CT GRP",  width  : 120  },
-                        {dataField : "ctId", headerText  : "CT ID ",  width  : 120        ,visible : true}
+                        {dataField : "ctId", headerText  : "CT ID ",  width  : 120        ,visible : true},
+                        { dataField : "serialRequireChkYn", headerText : "Serial Require Check Y/N", width : 180, visible : true, editable : false }
    ];
 
 
@@ -65,7 +75,7 @@ function fn_getAssionCTListCheckedRowItems() {
 	  var rowItem = checkedItems[0].item;
 	 str[0] = rowItem.ctCode;
 	 str[1] = rowItem.ctId;
-	 
+
 	 return str;
 }
 
@@ -78,7 +88,7 @@ function createAssignCtOrderListAUIGrid() {
 	                            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
 	                            editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
 	                            checkValue : "1", // true, false 인 경우가 기본
-	                            width : 30,
+	                            width : 20,
 	                            unCheckValue : "0",
 	                         // 체크박스 Visible 함수
 	                            checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
@@ -103,12 +113,32 @@ function createAssignCtOrderListAUIGrid() {
                         },
                         {dataField : "custName",         headerText  : "Customer" ,width  : 150 } ,
                         { dataField : "salesOrdNo",      headerText  : "SalesOrder",  width  : 100},
+                        { dataField : "serialNo", headerText:"Serial No", width:160, height:30, headerStyle : "aui-grid-header-input-icon",
+                        	editRenderer : {
+                                type : "DropDownListRenderer",
+                                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                listFunction : function(rowIndex, columnIndex, item, dataField) {
+                                	if(item.serialChk == "Y"){
+                                	    fn_ctSerialNoList(item);
+                                	} else{
+                                		serialList = null;
+                                	}
+                                    return serialList;
+                                },
+                                keyField : "code",
+                                valueField : "codeName"
+                            }
+                        },
                         { dataField : "memCode",        headerText  : "CT Code",  width  : 80  },
                         { dataField : "custSubGrp",     headerText  : "Cust GRP",  width  : 100  },
                         { dataField : "insstallCtId",      headerText  : "CT ID ",  width  : 100   ,     visible : true},
                         { dataField : "ctId",        headerText  : "Old CT ID",  width  : 100   ,     visible : false},
-                        { dataField : "installEntryNo",        headerText  : "Install No ",  width  : 100   ,     visible : false}
-
+                        { dataField : "ctCode",        headerText  : "Old CT Code",  width  : 100   ,     visible : false},
+                        { dataField : "installEntryNo",        headerText  : "Install No ",  width  : 100   ,     visible : false},
+                        { dataField : "stkCode", headerText : "Item Code", width : 80, editable : false},
+                        { dataField : "stkDesc", headerText : "Product", width : 180, editable : false, style: "aui-grid-user-custom-left"},
+                        { dataField : "serialChk", headerText : "Serial Chk", width : 80, editable : false },
+                        { dataField : "serialRequireChkYn", headerText  : "Serial Require Check Y/N", width : 180, editable : false  }
 
    ];
 
@@ -127,20 +157,41 @@ function createAssignCtOrderListAUIGrid() {
 
 function fn_ctChange(){
 
+	var selectedItems = AUIGrid.getCheckedRowItems(assignCtListGridID);
+    var ctSerialRequireChkYn = selectedItems[0].item.serialRequireChkYn;
+
 	//수정된 행 아이템들(배열)
     var editedRowItems = AUIGrid.getEditedRowItems(assignCOrdtListGridID);
-
 
 	if(editedRowItems.length  == 0  ||  editedRowItems == null) {
         Common.alert("<b>No CTOrder List  selected.</b>");
         return  false ;
     }
 
+    for (var i = 0; i < editedRowItems.length; i++) {
+    	if(FormUtil.isEmpty(editedRowItems[i].insstallCtId)) {
+            Common.alert("<b>No CTOrder List selected.</b>");
+            return  false ;
+        }
+
+    	if(ctSerialRequireChkYn != editedRowItems[i].serialRequireChkYn) {
+    		Common.alert("<b>'Serial Require Check Y/N' is different.</b>");
+            return  false ;
+    	}
+
+    	if(editedRowItems[i].serialChk == 'Y' && editedRowItems[i].serialRequireChkYn == 'Y') {
+    		if(FormUtil.isEmpty(editedRowItems[i].serialNo)) {
+    			Common.alert("<b>Serial No is required.( SalesOrder : " + editedRowItems[i].salesOrdNo + " )</b>");
+    	        return  false ;
+    		}
+    	}
+    }
+
     var  updateForm ={
             "update" : editedRowItems
     }
 
-    Common.ajax("POST", "/services/assignCtOrderListSave.do", updateForm, function(result) {
+    Common.ajax("POST", "/services/assignCtOrderListSaveSerial.do", updateForm, function(result) {
         console.log("updateAssignCT.");
         console.log( result);
 
@@ -150,8 +201,6 @@ function fn_ctChange(){
             $("#_assginCTTransferDiv").remove();
         }
     });
-
-
 }
 
 function fn_asaAssignCtList(){
@@ -192,6 +241,14 @@ function fn_asaAssignCtOderList(){
     });
 }
 
+function fn_ctSerialNoList(item){
+    Common.ajaxSync("GET", "/services/selectCtSerialNoList.do", {ctCode : item.ctCode, stkCode : item.stkCode}, function(result) {
+    	serialList = new Array();
+        for ( var i = 0 ; i < result.length ; i++ ) {
+            serialList.push(result[i]);
+        }
+    });
+}
 </script>
 
 
@@ -209,7 +266,6 @@ function fn_asaAssignCtOderList(){
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-
 <div class="divine_auto"><!-- divine_auto start -->
 
 

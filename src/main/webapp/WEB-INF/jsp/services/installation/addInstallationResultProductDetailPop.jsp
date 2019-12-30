@@ -133,6 +133,11 @@
           $("#addInstallForm #nextCallDate").val("");
           $("#addInstallForm #remark").val("");
         });
+
+        // KR-OHK Serial Check
+        if( $("#hidSerialRequireChkYn").val() == 'Y' ) {
+        	$("#btnSerialEdit").attr("style", "");
+        }
   });
 
   function fn_installProductExchangeSave() {
@@ -180,8 +185,17 @@
       }
     }
 
+    // KR-OHK Serial Check add
+    var url = "";
+
+    if ($("#hidSerialRequireChkYn").val() == 'Y') {
+        url = "/services/addInstallationSerial.do";
+    } else {
+        url = "/services/addInstallation_2.do";
+    }
+
     // Common.ajax("POST", "/services/addInstallation.do",
-    Common.ajax("POST", "/services/addInstallation_2.do",
+    Common.ajax("POST", url,
         $("#addInstallForm").serializeJSON(), function(result) {
           Common.alert(result.message, fn_saveDetailclose);
 
@@ -198,6 +212,59 @@
     addinstallationResultProductDetailPopId.remove();
   }
 
+  function fn_serialModifyPop(){
+	  $("#serialNoChangeForm #pSerialNo").val( $("#stockSerialNo").val() ); // Serial No
+      $("#serialNoChangeForm #pSalesOrdId").val( $("#hidSalesOrderId").val() ); // 주문 ID
+      $("#serialNoChangeForm #pSalesOrdNo").val( $("#hidTaxInvDSalesOrderNo").val() ); // 주문 번호
+      $("#serialNoChangeForm #pRefDocNo").val( $("#hiddeninstallEntryNo").val() ); //
+      $("#serialNoChangeForm #pItmCode").val( '${viewDetail.exchangeInfo.c10}' ); // 제품 ID
+      $("#serialNoChangeForm #pCallGbn").val( "EXCH_RETURN" );
+      $("#serialNoChangeForm #pMobileYn").val( "N"  );
+
+      if(Common.checkPlatformType() == "mobile") {
+          popupObj = Common.popupWin("serialNoChangeForm", "/logistics/serialChange/serialNoChangePop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+      } else{
+          Common.popupDiv("/logistics/serialChange/serialNoChangePop.do", $("#serialNoChangeForm").serializeJSON(), null, true, '_serialNoChangePop');
+      }
+  }
+
+  function fn_PopSerialChangeClose(obj){
+
+      console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+
+      $("#stockSerialNo").val(obj.asIsSerialNo);
+      $("#hidStockSerialNo").val(obj.beforeSerialNo);
+
+      if(popupObj!=null) popupObj.close();
+      //fn_viewInstallResultSearch(); //조회
+  }
+
+  //팝업에서 호출하는 조회 함수
+  function SearchListAjax(obj){
+
+    console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+
+    $("#stockSerialNo").val(obj.asIsSerialNo);
+    $("#hidStockSerialNo").val(obj.beforeSerialNo);
+
+    //fn_viewInstallResultSearch(); //조회
+  }
+
+  function fn_serialSearchPop(){
+
+	  $("#pLocationType").val('${installResult.whLocGb}');
+      $('#pLocationCode').val('${installResult.ctWhLocId}');
+      $("#pItemCodeOrName").val('${viewDetail.installationInfo.stkCode}');
+
+      Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
+  }
+
+  function fnSerialSearchResult(data) {
+      data.forEach(function(dataRow) {
+          $("#addInstallForm #serialNo").val(dataRow.serialNo);
+          //console.log("serialNo : " + dataRow.serialNo);
+      });
+  }
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -213,6 +280,24 @@
  <!-- pop_header end -->
  <section class="pop_body">
   <!-- pop_body start -->
+    <form id="frmSearchSerial" name="frmSearchSerial" method="post">
+        <input id="pGubun" name="pGubun" type="hidden" value="RADIO" />
+        <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" />
+        <input id="pLocationType" name="pLocationType" type="hidden" value="" />
+        <input id="pLocationCode" name="pLocationCode" type="hidden" value="" />
+        <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" />
+        <input id="pStatus" name="pStatus" type="hidden" value="" />
+        <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
+    </form>
+    <form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
+	    <input type="hidden" name="pSerialNo" id="pSerialNo"/>
+	    <input type="hidden" name="pSalesOrdId"  id="pSalesOrdId"/>
+	    <input type="hidden" name="pSalesOrdNo"  id="pSalesOrdNo"/>
+	    <input type="hidden" name="pRefDocNo" id="pRefDocNo"/>
+	    <input type="hidden" name="pItmCode" id="pItmCode"/>
+	    <input type="hidden" name="pCallGbn" id="pCallGbn"/>
+	    <input type="hidden" name="pMobileYn" id="pMobileYn"/>
+  </form>
   <form id="insertPopupForm" method="post">
    <section class="tap_wrap">
     <!-- tap_wrap start -->
@@ -313,7 +398,9 @@
        <tr>
         <th scope="row">Product (From)</th>
         <td colspan="5"><span><c:out
-           value="${viewDetail.exchangeInfo.c10} - ${viewDetail.exchangeInfo.c11} " /></span></td>
+           value="${viewDetail.exchangeInfo.c10} - ${viewDetail.exchangeInfo.c11} " /></span>
+
+        </td>
        </tr>
        <tr>
         <th scope="row">Product (To)</th>
@@ -1323,6 +1410,8 @@
     <input type="hidden"
     value="${installResult.rcdTms}"
     id="rcdTms" name="rcdTms" />
+    <input type="hidden" value="${installResult.serialRequireChkYn}" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
+    <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
    <table class="type1 mb1m">
     <!-- table start -->
     <caption>table</caption>
@@ -1333,6 +1422,14 @@
      <col style="width: *" />
     </colgroup>
     <tbody>
+     <tr>
+        <th scope="row">Before Stock</th>
+        <td colspan="3"><span><c:out
+           value="${viewDetail.exchangeInfo.c10} - ${viewDetail.exchangeInfo.c11} " /></span>
+           <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.exchReturnSerialNo}" class="readonly" readonly/>
+            <p class="btn_grid" style="display:none" id="btnSerialEdit"><a href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
+        </td>
+       </tr>
      <tr>
       <th scope="row"><spring:message
         code='service.title.InstallStatust' /><span name="m1" id="m1" class="must">*</span></th>
@@ -1380,16 +1477,22 @@
     <tbody>
      <tr>
       <th scope="row"><spring:message code='service.title.SIRIMNo' /><span name="m4" id="m4" class="must">*</span></th>
-      <td><input type="text" title="" placeholder="<spring:message code='service.title.SIRIMNo' />" class="w100p"
+      <td  colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.SIRIMNo' />" class="w100p"
        id="sirimNo" name="sirimNo" /></td>
       <th scope="row"><spring:message code='service.title.SerialNo' /><span name="m5" id="m5" class="must">*</span></th>
-      <td><input type="text" title="" placeholder="<spring:message code='service.title.SerialNo' />" class="w100p"
-       id="serialNo" name="serialNo" /></td>
+      <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.SerialNo' />" class="w50p"
+       id="serialNo" name="serialNo" />
+       <c:if test="${installResult.serialRequireChkYn == 'Y' }">
+       <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+       </c:if>
+      </td>
+     </tr>
+     <tr>
       <th scope="row"><spring:message code='service.title.RefNo' />(1)</th>
-      <td><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(1)" class="w100p"
+      <td  colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(1)" class="w100p"
        id="refNo1" name="refNo1" /></td>
       <th scope="row"><spring:message code='service.title.RefNo' />(2)</th>
-      <td><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(2)" class="w100p"
+      <td  colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(2)" class="w100p"
        id="refNo2" name="refNo2" /></td>
      </tr>
      <tr>

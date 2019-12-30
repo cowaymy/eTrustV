@@ -187,7 +187,16 @@
       }
     }
 
-    Common.ajax("POST", "/services/addInstallation_2.do", $("#addInstallForm").serializeJSON(),
+    // KR-OHK Serial Check add
+    var url = "";
+
+    if ($("#hidSerialRequireChkYn").val() == 'Y') {
+    	url = "/services/addInstallationSerial.do";
+    } else {
+    	url = "/services/addInstallation_2.do";
+    }
+
+    Common.ajax("POST", url, $("#addInstallForm").serializeJSON(),
       function(result) {
         Common.alert(result.message, fn_saveclose);
 
@@ -278,6 +287,24 @@
     wrapSelectionMove : true,
     showRowNumColumn : false
   };
+
+
+   function fn_serialSearchPop(){
+
+
+	   $("#pLocationType").val('${installResult.whLocGb}');
+	   $('#pLocationCode').val('${installResult.ctWhLocId}');
+	   $("#pItemCodeOrName").val('${orderDetail.basicInfo.stockCode}');
+
+       Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
+   }
+
+   function fnSerialSearchResult(data) {
+       data.forEach(function(dataRow) {
+    	   $("#addInstallForm #serialNo").val(dataRow.serialNo);
+    	   //console.log("serialNo : " + dataRow.serialNo);
+       });
+   }
 
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -698,6 +725,15 @@
    </h2>
   </aside>
   <!-- title_line end -->
+    <form id="frmSearchSerial" name="frmSearchSerial" method="post">
+        <input id="pGubun" name="pGubun" type="hidden" value="RADIO" />
+        <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" />
+        <input id="pLocationType" name="pLocationType" type="hidden" value="" />
+        <input id="pLocationCode" name="pLocationCode" type="hidden" value="" />
+        <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" />
+        <input id="pStatus" name="pStatus" type="hidden" value="" />
+        <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
+    </form>
   <form action="#" id="addInstallForm" method="post">
    <input type="hidden"
     value="<c:out value="${installResult.installEntryId}"/>"
@@ -800,6 +836,7 @@
     <input type="hidden"
     value="${installResult.rcdTms}"
     id="rcdTms" name="rcdTms" />
+    <input type="hidden" value="${installResult.serialRequireChkYn}" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
    <table class="type1 mb1m">
     <!-- table start -->
     <caption>table</caption>
@@ -864,16 +901,22 @@
     <tbody>
      <tr>
       <th scope="row"><spring:message code='service.title.SIRIMNo' /><span name="m4" id="m4" class="must">*</span></th>
-      <td><input type="text" title="" placeholder="<spring:message code='service.title.SIRIMNo' />" class="w100p"
+      <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.SIRIMNo' />" class="w100p"
        id="sirimNo" name="sirimNo" /></td>
       <th scope="row"><spring:message code='service.title.SerialNo' /><span name="m5" id="m5" class="must">*</span></th>
-      <td><input type="text" title="" placeholder="<spring:message code='service.title.SerialNo' />" class="w100p"
-       id="serialNo" name="serialNo" /></td>
+      <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.SerialNo' />" class="w50p"
+       id="serialNo" name="serialNo" />
+       <c:if test="${installResult.serialRequireChkYn == 'Y' }">
+       <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+       </c:if>
+       </td>
+     </tr>
+     <tr>
       <th scope="row"><spring:message code='service.title.RefNo' />(1)</th>
-      <td><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(1)" class="w100p"
+      <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(1)" class="w100p"
        id="refNo1" name="refNo1" /></td>
       <th scope="row"><spring:message code='service.title.RefNo' />(2)</th>
-      <td><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(2)" class="w100p"
+      <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(2)" class="w100p"
        id="refNo2" name="refNo2" /></td>
      </tr>
      <tr>
