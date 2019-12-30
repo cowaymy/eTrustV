@@ -1,5 +1,7 @@
 package com.coway.trust.api.mobile.sales.productInfoListApi;
 
+import java.math.BigDecimal;
+
 import com.coway.trust.util.BeanConverter;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -34,233 +36,125 @@ public class ProductInfoListApiDto {
     private String code;
     private String codeName;
     private String codeDesc;
-
 	private String stkCode;
 	private String stkDesc;
 	private int stkCtgryId;
 	private String stkCtgryIdName;
-	private int stkCommAs;
-	private int stkCommBs;
-	private int stkCommIns;
+	private BigDecimal stkCommAs;
+	private BigDecimal stkCommBs;
+	private BigDecimal stkCommIns;
 	private int stkTypeId;
-	private int monthlyRental;
-	private int prcRpf;
-	private int normalPrice;
-	private int pointOfValue;
+	private BigDecimal monthlyRental;
+	private BigDecimal prcRpf;
+	private BigDecimal normalPrice;
+	private BigDecimal pointOfValue;
 	private String imgUrl;
-
-
 
     public int getCodeMasterId() {
         return codeMasterId;
     }
-
-
-
     public void setCodeMasterId(int codeMasterId) {
         this.codeMasterId = codeMasterId;
     }
-
-
-
     public int getCodeId() {
         return codeId;
     }
-
-
-
     public void setCodeId(int codeId) {
         this.codeId = codeId;
     }
-
-
-
     public String getCode() {
         return code;
     }
-
-
-
     public void setCode(String code) {
         this.code = code;
     }
-
-
-
     public String getCodeName() {
         return codeName;
     }
-
-
-
     public void setCodeName(String codeName) {
         this.codeName = codeName;
     }
-
-
-
     public String getCodeDesc() {
         return codeDesc;
     }
-
-
-
     public void setCodeDesc(String codeDesc) {
         this.codeDesc = codeDesc;
     }
-
-
-
     public String getStkCode() {
         return stkCode;
     }
-
-
-
     public void setStkCode(String stkCode) {
         this.stkCode = stkCode;
     }
-
-
-
     public String getStkDesc() {
         return stkDesc;
     }
-
-
-
     public void setStkDesc(String stkDesc) {
         this.stkDesc = stkDesc;
     }
-
-
-
     public int getStkCtgryId() {
         return stkCtgryId;
     }
-
-
-
     public void setStkCtgryId(int stkCtgryId) {
         this.stkCtgryId = stkCtgryId;
     }
-
-
-
     public String getStkCtgryIdName() {
         return stkCtgryIdName;
     }
-
-
-
     public void setStkCtgryIdName(String stkCtgryIdName) {
         this.stkCtgryIdName = stkCtgryIdName;
     }
-
-
-
-    public int getStkCommAs() {
+    public BigDecimal getStkCommAs() {
         return stkCommAs;
     }
-
-
-
-    public void setStkCommAs(int stkCommAs) {
+    public void setStkCommAs(BigDecimal stkCommAs) {
         this.stkCommAs = stkCommAs;
     }
-
-
-
-    public int getStkCommBs() {
+    public BigDecimal getStkCommBs() {
         return stkCommBs;
     }
-
-
-
-    public void setStkCommBs(int stkCommBs) {
+    public void setStkCommBs(BigDecimal stkCommBs) {
         this.stkCommBs = stkCommBs;
     }
-
-
-
-    public int getStkCommIns() {
+    public BigDecimal getStkCommIns() {
         return stkCommIns;
     }
-
-
-
-    public void setStkCommIns(int stkCommIns) {
+    public void setStkCommIns(BigDecimal stkCommIns) {
         this.stkCommIns = stkCommIns;
     }
-
-
-
     public int getStkTypeId() {
         return stkTypeId;
     }
-
-
-
     public void setStkTypeId(int stkTypeId) {
         this.stkTypeId = stkTypeId;
     }
-
-
-
-    public int getMonthlyRental() {
+    public BigDecimal getMonthlyRental() {
         return monthlyRental;
     }
-
-
-
-    public void setMonthlyRental(int monthlyRental) {
+    public void setMonthlyRental(BigDecimal monthlyRental) {
         this.monthlyRental = monthlyRental;
     }
-
-
-
-    public int getPrcRpf() {
+    public BigDecimal getPrcRpf() {
         return prcRpf;
     }
-
-
-
-    public void setPrcRpf(int prcRpf) {
+    public void setPrcRpf(BigDecimal prcRpf) {
         this.prcRpf = prcRpf;
     }
-
-
-
-    public int getNormalPrice() {
+    public BigDecimal getNormalPrice() {
         return normalPrice;
     }
-
-
-
-    public void setNormalPrice(int normalPrice) {
+    public void setNormalPrice(BigDecimal normalPrice) {
         this.normalPrice = normalPrice;
     }
-
-
-
-    public int getPointOfValue() {
+    public BigDecimal getPointOfValue() {
         return pointOfValue;
     }
-
-
-
-    public void setPointOfValue(int pointOfValue) {
+    public void setPointOfValue(BigDecimal pointOfValue) {
         this.pointOfValue = pointOfValue;
     }
-
-
-
     public String getImgUrl() {
         return imgUrl;
     }
-
-
-
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }
