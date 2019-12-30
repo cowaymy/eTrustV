@@ -442,6 +442,8 @@
          , Extent1.Grade
          , Extent1.RCD_TMS
          , Extent19.SERIAL_REQUIRE_CHK_YN
+         , Extent19.WH_LOC_GB WH_LOC_GB
+         , Extent19.WH_LOC_ID CT_WH_LOC_ID
     FROM SAL0046D Extent1
     LEFT JOIN SAL0047D Extent2 ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
     JOIN SAL0001D Extent3 ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
