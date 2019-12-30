@@ -37,6 +37,7 @@ public class CustomerApiForm {
 		params.put("selectKeyword", vo.getSelectKeyword());
         params.put("custId", vo.getCustId());
         params.put("custAddId", vo.getCustAddId());
+        params.put("memId", vo.getMemId());
 		return params;
 	}
 
@@ -51,7 +52,7 @@ public class CustomerApiForm {
     private String yymmdd;
     private String yyyymmdd;
     private String ddmmyyyy;
-
+    private int memId;
 
 
     /*SAL0029D --ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : Customer*/
@@ -647,5 +648,11 @@ public class CustomerApiForm {
     }
     public void setDdmmyyyy(String ddmmyyyy) {
         this.ddmmyyyy = ddmmyyyy;
+    }
+    public int getMemId() {
+        return memId;
+    }
+    public void setMemId(int memId) {
+        this.memId = memId;
     }
 }

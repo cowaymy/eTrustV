@@ -63,6 +63,9 @@ public class CustomerApiServiceImpl extends EgovAbstractServiceImpl implements C
                 throw new ApplicationException(AppConstants.FAIL, "Select Keyword value does not exist.");
             }
         }
+        if( CommonUtils.isEmpty(param.getMemId()) || param.getMemId() <= 0 ){
+            throw new ApplicationException(AppConstants.FAIL, "mdmId value does not exist.");
+        }
 		return customerApiMapper.selectCustomerList(CustomerApiForm.createMap(param));
 	}
 
