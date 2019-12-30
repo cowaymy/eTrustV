@@ -1,4 +1,4 @@
-package com.coway.trust.api.mobile.sales.SalesDashboardApi;
+package com.coway.trust.api.mobile.sales.salesDashboardApi;
 
 import javax.annotation.Resource;
 
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.sales.SalesDashboard.SalesDashboardApiService;
+import com.coway.trust.biz.sales.salesDashboardApi.SalesDashboardApiService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

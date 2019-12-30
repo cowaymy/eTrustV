@@ -1,4 +1,4 @@
-package com.coway.trust.api.mobile.sales.SalesDashboardApi;
+package com.coway.trust.api.mobile.sales.salesDashboardApi;
 
 import java.util.HashMap;
 import java.util.Map;
