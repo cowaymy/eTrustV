@@ -1,4 +1,4 @@
-package com.coway.trust.biz.sales.SalesDashboard.impl;
+package com.coway.trust.biz.sales.salesDashboardApi.impl;
 
 import javax.annotation.Resource;
 
@@ -6,9 +6,9 @@ import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.api.mobile.sales.SalesDashboardApi.SalesDashboardApiDto;
-import com.coway.trust.api.mobile.sales.SalesDashboardApi.SalesDashboardApiForm;
-import com.coway.trust.biz.sales.SalesDashboard.SalesDashboardApiService;
+import com.coway.trust.api.mobile.sales.salesDashboardApi.SalesDashboardApiDto;
+import com.coway.trust.api.mobile.sales.salesDashboardApi.SalesDashboardApiForm;
+import com.coway.trust.biz.sales.salesDashboardApi.SalesDashboardApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
 

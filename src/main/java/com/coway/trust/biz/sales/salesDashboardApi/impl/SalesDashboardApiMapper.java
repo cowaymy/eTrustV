@@ -1,4 +1,4 @@
-package com.coway.trust.biz.sales.SalesDashboard.impl;
+package com.coway.trust.biz.sales.salesDashboardApi.impl;
 
 import java.util.Map;
 
