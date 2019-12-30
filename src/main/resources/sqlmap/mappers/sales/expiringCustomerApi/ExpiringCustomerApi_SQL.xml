@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.expiringCustomerApi.impl.ExpiringCustomerApiMapper">
+
+
+
+
+
+
+<select id="selectExpiringCustomer" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.sales.expiringCustomerApi.impl.ExpiringCustomerApiMapper.selectExpiringCustomer] 20191230 - KR JAEMAJEM */
+SELECT  B.CUST_ID                                                               AS CUST_ID
+    ,   A.CUST_NAME                                                             AS CUST_NAME
+    ,   A.SALES_ORD_NO                                                          AS SALES_ORD_NO
+    ,   TO_CHAR(A.SRV_EXPR_DT, 'DD/MM/YYYY')                                    AS SRV_EXPR_DT
+    ,   A.ID                                                                    AS ID
+FROM    REP0103T A
+        INNER JOIN SAL0001D B
+            ON A.SALES_ORD_ID = B.SALES_ORD_ID
+WHERE   A.MEM_ID = #{memId}
+]]>
+<if test='srvExprMth != 99'>
+AND     A.SRV_EXPR_MTH = #{srvExprMth}
+</if>
+ORDER BY A.SRV_EXPR_DT ASC
+</select>
+
+
+
+
+
+
+<select id="selectExpiringCustomerDetail" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.sales.expiringCustomerApi.impl.ExpiringCustomerApiMapper.selectExpiringCustomerDetail] 20191230 - KR JAEMAJEM */
+SELECT  B.CUST_ID                                                               AS CUST_ID
+    ,   A.CUST_NAME                                                             AS CUST_NAME
+    ,   A.SALES_ORD_NO                                                          AS SALES_ORD_NO
+    ,   TO_CHAR(B.SALES_DT, 'DD/MM/YYYY')                                       AS SALES_DT
+    ,   TO_CHAR(A.SRV_EXPR_DT, 'DD/MM/YYYY')                                    AS SRV_EXPR_DT
+    ,   B.STUS_CODE_ID                                                          AS STUS_CODE_ID
+    ,   C.NAME                                                                  AS STUS_CODE_ID_NAME
+    ,   B.APP_TYPE_ID                                                           AS APP_TYPE_ID
+    ,   D.CODE_NAME                                                             AS APP_TYPE_ID_NAME
+    ,   F.STK_CODE                                                              AS STK_CODE
+    ,   F.STK_DESC                                                              AS STK_DESC
+FROM    REP0103T A
+        INNER JOIN SAL0001D B
+            ON A.SALES_ORD_ID = B.SALES_ORD_ID
+        INNER JOIN SYS0038M C
+            ON  B.STUS_CODE_ID = C.STUS_CODE_ID
+        INNER JOIN SYS0013M D
+            ON  D.CODE_MASTER_ID = 10
+            AND B.APP_TYPE_ID = D.CODE_ID
+        INNER JOIN SAL0002D E
+            ON  B.SALES_ORD_ID = E.SALES_ORD_ID
+        INNER JOIN SYS0026M F
+            ON  E.ITM_STK_ID = F.STK_ID
+WHERE   A.MEM_ID = #{memId}
+AND     A.ID = #{id}
+]]>
+</select>
+
+
+
+
+
+
+<select id="selectExpiringCustomerDetailList" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.sales.expiringCustomerApi.impl.ExpiringCustomerApiMapper.selectExpiringCustomerDetailList] 20191230 - KR JAEMAJEM */
+SELECT  A.SALES_ORD_NO
+    ,   TO_CHAR(A.SALES_DT, 'DD/MM/YYYY')                                       AS SALES_DT
+    ,   A.STUS_CODE_ID                                                          AS STUS_CODE_ID
+    ,   D.NAME                                                                  AS STUS_CODE_ID_NAME
+    ,   A.APP_TYPE_ID                                                           AS APP_TYPE_ID
+    ,   E.CODE_NAME                                                             AS APP_TYPE_ID_NAME
+    ,   F.STK_CODE                                                              AS STK_CODE
+    ,   F.STK_DESC                                                              AS STK_DESC
+    ,   CASE    WHEN A.APP_TYPE_ID = 88 THEN NVL(AA1.ADDR_DTL, '')||' '||NVL(AA1.STREET, '')||' '||NVL(AA2.AREA, '')||' '||NVL(AA2.POSTCODE, '') ||' '||NVL(AA2.CITY,'')||' '||NVL(AA2.STATE,'')||' '|| NVL(AA2.COUNTRY,'')
+                                        ELSE NVL(BB1.ADDR_DTL, '')||' '||NVL(BB1.STREET, '')||' '||NVL(BB2.AREA, '')||' '||NVL(BB2.POSTCODE, '') ||' '||NVL(BB2.CITY,'')||' '||NVL(BB2.STATE,'')||' '|| NVL(BB2.COUNTRY,'')
+                                        END                                     AS ADDR
+    ,   CASE    WHEN A.APP_TYPE_ID = 88 THEN NVL(AA3.NAME, '')
+                                        ELSE NVL(BB3.NAME, '')
+                                        END                                     AS CUST_NAME
+FROM    SAL0001D A
+        INNER JOIN SAL0002D B
+            ON  A.SALES_ORD_ID = B.SALES_ORD_ID
+        INNER JOIN SAL0029D C
+            ON  A.CUST_ID = C.CUST_ID
+        INNER JOIN SYS0038M D
+            ON  A.STUS_CODE_ID = D.STUS_CODE_ID
+        INNER JOIN SYS0013M E
+            ON  E.CODE_MASTER_ID = 10
+            AND A.APP_TYPE_ID =E.CODE_ID
+        INNER JOIN SYS0026M F
+            ON  B.ITM_STK_ID = F.STK_ID
+        LEFT OUTER JOIN SAL0024D AA0
+            ON  A.CUST_BILL_ID = AA0.CUST_BILL_ID
+        LEFT OUTER JOIN SAL0023D AA1
+            ON  AA0.CUST_BILL_ADD_ID = AA1.CUST_ADD_ID
+        LEFT OUTER JOIN SYS0064M AA2
+            ON  AA1.AREA_ID = AA2.AREA_ID
+        LEFT OUTER JOIN SAL0027D AA3
+            ON  AA0.CUST_BILL_CNT_ID = AA3.CUST_CNTC_ID
+        LEFT OUTER JOIN SAL0023D BB1
+            ON  A.CUST_ADD_ID = BB1.CUST_ADD_ID
+        LEFT OUTER JOIN SYS0064M BB2
+            ON  BB1.AREA_ID = BB2.AREA_ID
+        LEFT OUTER JOIN SAL0027D BB3
+            ON  A.CUST_CNT_ID = BB3.CUST_CNTC_ID
+WHERE   A.CUST_ID = #{custId}
+ORDER BY A.SALES_DT DESC
+]]>
+</select>
+
+
+
+
+
+
+</mapper>
