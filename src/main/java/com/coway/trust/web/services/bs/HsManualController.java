@@ -610,6 +610,42 @@ public class HsManualController {
     return ResponseEntity.ok(message);
   }
 
+   /**
+ * TO-DO HS Edit Save-Serial version
+ * @Author KR-MIN
+ * @Date 2019. 12. 31.
+ * @param params
+ * @param request
+ * @param sessionVO
+ * @return
+ * @throws ParseException
+ */
+@RequestMapping(value = "/UpdateHsResult2Serial.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> UpdateHsResult2Serial(@RequestBody Map<String, Object> params,
+      HttpServletRequest request, SessionVO sessionVO) throws ParseException {
+    ReturnMessage message = new ReturnMessage();
+    logger.debug("params : {}", params);
+
+    boolean success = false;
+    Map<String, Object> resultValue = new HashMap<String, Object>();
+
+    Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+    List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+    List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+    List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+
+    logger.debug("UpdateHsResult2=============> in ");
+    logger.debug("[" + params.toString() + "]");
+    logger.debug("UpdateHsResult2=============> in");
+
+    resultValue = hsManualService.UpdateHsResult2Serial(formMap, insList, sessionVO, updList);
+
+
+    message.setMessage("Complete to Update a HS Result : " + formMap.get("hidHsno"));
+
+    return ResponseEntity.ok(message);
+  }
+
   @RequestMapping(value = "/UpdateHsResult.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> UpdateHsResult(@RequestBody Map<String, Object> params,
       HttpServletRequest request, SessionVO sessionVO) throws ParseException {
