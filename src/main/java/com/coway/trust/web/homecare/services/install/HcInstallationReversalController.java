@@ -98,7 +98,7 @@ public class HcInstallationReversalController {
 		return ResponseEntity.ok(map);
 	}
 
-	@RequestMapping(value = "/saveResavalSerial", method = RequestMethod.POST)
+	@RequestMapping(value = "/saveResavalSerial.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveResavalSerial(@RequestBody Map<String, Object> params, Model model,SessionVO sessionVO) throws Exception {
 		//logger.debug("-------------0.saveResavalSerial---------------");
 		params.put("userId", sessionVO.getUserId());
