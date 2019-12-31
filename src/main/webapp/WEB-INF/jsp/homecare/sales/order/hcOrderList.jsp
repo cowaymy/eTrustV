@@ -95,11 +95,10 @@
                 if(memRc.rcPrct < 30 && memRc.cnt >= 3) {
                     Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
                 } else {
-                    Common.popupDiv("/sales/order/copyChangeOrder.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+                    Common.popupDiv("/homecare/sales/order/copyChangeHcOrder.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
                 }
             });
-        }
-        else {
+        } else {
             Common.alert('<spring:message code="sal.alert.msg.preOrdMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noPreOrdSel" /></b>');
         }
     }
@@ -505,11 +504,11 @@
                             <a id="btnCopy" href="#"><spring:message code='sales.btn.copyChange' /></a>
                         </p></li>
                 </c:if>
-                <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-                    <li><p class="btn_blue">
-                            <a id="btnCopyBulk" href="#"><spring:message code='sales.btn.copyBulk' /></a>
-                        </p></li>
-                </c:if>
+<%--                 <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}"> --%>
+<!--                     <li><p class="btn_blue"> -->
+<%--                             <a id="btnCopyBulk" href="#"><spring:message code='sales.btn.copyBulk' /></a> --%>
+<!--                         </p></li> -->
+<%--                 </c:if> --%>
                 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
                     <li><p class="btn_blue">
                             <a id="btnNew" href="#"><spring:message code='sales.btn.new' /></a>

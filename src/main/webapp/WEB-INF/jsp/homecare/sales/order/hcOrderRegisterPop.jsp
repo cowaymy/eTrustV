@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <%@ include file="/WEB-INF/jsp/homecare/sales/order/convertToHcOrderInc.jsp" %>
-<%@ include file="/WEB-INF/jsp/sales/order/copyChangeOrderInc.jsp" %>
+<%@ include file="/WEB-INF/jsp/homecare/sales/order/copyChangeHcOrderInc.jsp" %>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
 
 <script type="text/javaScript" language="javascript">
@@ -15,23 +15,43 @@
     var GST_CHK = '';
     var GST_MANNUAL = 'N';
 
+    var codeList_10 = [];
+    <c:forEach var="obj" items="${codeList_10}">
+    codeList_10.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
+    var codeList_17 = [];
+    <c:forEach var="obj" items="${codeList_17}">
+    codeList_17.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
+    var codeList_19 = [];
+    <c:forEach var="obj" items="${codeList_19}">
+    codeList_19.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
+    var codeList_322 = [];
+    <c:forEach var="obj" items="${codeList_322}">
+    codeList_322.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
     $(document).ready(function(){
         createAUIGrid();
 
         fn_selectDocSubmissionList();
 
-        doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
-        doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
-        doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
-        doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'corpCustType',     'S', ''); //Common Code
-        doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'agreementType',     'S', ''); //Common Code
-        doGetComboSepa ('/homecare/selectHomecareBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
+        doDefCombo(codeList_10, '', 'appType', 'S', '');              // Common Code
+        doDefCombo(codeList_19, '', 'rentPayMode', 'S', '');        // Common Code
+        doDefCombo(codeList_17, '', 'billPreferInitial', 'S', '');       // Common Code
+        doDefCombo(codeList_322, '', 'promoDiscPeriodTp1', 'S', '');      // Discount period
+        doDefCombo(codeList_322, '', 'promoDiscPeriodTp2', 'S', '');      // Discount period
+         doGetComboSepa ('/homecare/selectHomecareBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
-        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
-        doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'}, '0', 'exTrade', 'S'); //EX-TRADE
-        doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '0', 'gstChk',  'S'); //GST_CHK
-        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp1', 'S'); //Discount period
-        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp2', 'S'); //Discount period
+         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
+         doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'}, '0', 'exTrade', 'S'); //EX-TRADE
+         doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '0', 'gstChk',  'S'); //GST_CHK
+//         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp1', 'S'); //Discount period
+//         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp2', 'S'); //Discount period
 
         //Payment Channel, Billing Detail TAB Visible False처리
         fn_tabOnOffSet('PAY_CHA', 'HIDE');
@@ -316,7 +336,7 @@
                         fn_loadPromotionPrice(promoIdVal1, stkIdVal1, srvPacId, '1');
                     }
                     if(FormUtil.isNotEmpty(promoIdVal2)) {
-                        fn_loadPromotionPrice(promoIdVal2, stkIdVal2, srvPacId, '1');
+                        fn_loadPromotionPrice(promoIdVal2, stkIdVal2, srvPacId, '2');
                     }
 
                     if(custInfo.gstChk == '1') {
