@@ -416,9 +416,11 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
           insMap.put("delno", deliSeq);
           insMap.put("userId", params.get("userId"));
 
-          stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
-          stockMoveMapper.updateRequestMovement((String) insMap.get("reqstno"));
+          if((Integer)insMap.get("scanQty") > 0) {
+              stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
+          }
         }
+        stockMoveMapper.updateRequestMovement((String) insMap.get("reqstno"));
         stockMoveMapper.insertDeliveryStockMovement(insMap);
       }
 

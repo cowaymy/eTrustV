@@ -13,8 +13,13 @@
 	    margin-top: -20px;
 	}
 
-   .my-row-style { background:#FF5733; font-weight:bold; color:#22741C; }
-
+   .my-row-style { background:#FF5733; font-weight:bold; color:#22741C; text-decoration:underline;}
+   .aui-grid-link-renderer1 {
+      text-decoration:underline;
+      color: #4374D9 !important;
+      cursor: pointer;
+      text-align: right;
+    }
 </style>
 <script type="text/javaScript">
 
@@ -31,45 +36,40 @@ var popupObj;
 var scanInfoGridId;
 
 var scanInfoLayout = [
-          {dataField:"reqstNo", visible:false}
-        , {dataField:"reqstNoItm", visible:false}
-        , {dataField:"itmCode", headerText:"Item Code", width:120}
-        , {dataField:"itmName", headerText:"Item Description", width:280, style:"aui-grid-user-custom-left"}
-        , {dataField:"delGiCmplt", visible:false}
-        , {dataField:"serialChk", headerText:"Serial Chk", width:120}
-        , {dataField:"giQty", headerText:"GI QTY", width:100
+          {dataField:"reqstNo", visible:false, editable : false}
+        , {dataField:"reqstNoItm", visible:false, editable : false}
+        , {dataField:"itmCode", headerText:"Item Code", width:120, editable : false}
+        , {dataField:"itmName", headerText:"Item Description", width:280, style:"aui-grid-user-custom-left", editable : false}
+        , {dataField:"delGiCmplt", visible:false, editable : false}
+        , {dataField:"serialChk", headerText:"Serial Chk", width:120, editable : false}
+        , {dataField:"giQty", headerText:"GI QTY", width:100, editable : false
             , style:"aui-grid-user-custom-right"
             , dataType:"numeric"
             , formatString:"#,##0"
         }
-        , {dataField:"scanQty", headerText:"Scaned QTY", width:100
-            , style:"aui-grid-user-custom-right aui-grid-link-renderer"
+        , {dataField:"scanQty", headerText:"Scaned(Request) QTY", width:180
+            , style:"aui-grid-user-custom-right"
             , dataType:"numeric"
             , formatString:"#,##0"
             , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
-                if(item.giQty != value && item.serialChk == "Y"){
+                if(item.serialChk == "Y" && item.giQty != value){
                     return "my-row-style";
+                } else if(item.serialChk == "Y" && item.giQty == value){
+                	return "aui-grid-link-renderer1";
                 }
-                return "";
             }
-            , renderer :{
-                      type : "LinkRenderer",
-                      baseUrl : "javascript", // 자바스크립 함수 호출로 사용하고자 하는 경우에 baseUrl 에 "javascript" 로 설정
-                      // baseUrl 에 javascript 로 설정한 경우, 링크 클릭 시 callback 호출됨.
-                      jsCallback : function(rowIndex, columnIndex, value, item){
-                          if(item.serialChk == "Y"){
-                              fn_scanSearchPop(item);
-                          }
-                      }
-             }
+	        ,editRenderer : {
+	            type : "InputEditRenderer",
+	            onlyNumeric : true
+	        }
         }
-        , {dataField:"trnscType", visible:false}
-        , {dataField:"trnscTypeDtl", visible:false}
+        , {dataField:"trnscType", visible:false, editable : false}
+        , {dataField:"trnscTypeDtl", visible:false, editable : false}
 ];
 
 var scanInfoPros = {
 		usePaging : false,
-        editable : false,
+        editable : true,
         selectionMode : "singleCell",
         showRowNumColumn : true,
         enableFilter : true,
@@ -114,20 +114,28 @@ $(document).ready(function(){
 
     $("#btnPopIssueSave").click(function(){
     	var gridList = GridCommon.getGridData(scanInfoGridId);
+        var reqQty = 0;
 
         for(var i = 0 ; i < gridList.all.length ; i++){
             /*if (gridList.all[i].serialChk != "Y"){
                 Common.alert("Please check Serial Chk YN.")
                return false;
             }*/
-            if (gridList.all[i].serialChk == "Y" && gridList.all[i].scanQty == 0){
-                Common.alert("Scan QTY does not exist.")
+            /*if (gridList.all[i].serialChk == "Y" && gridList.all[i].scanQty == 0){
+                Common.alert("Scan Qty does not exist.")
                return false;
-            }
+            }*/
             if (gridList.all[i].scanQty > gridList.all[i].giQty){
-                Common.alert("Scaned QTY cannot be greater than GI QTY.")
-               return false;
+                Common.alert("Scaned(Request) Qty cannot be greater than GI Qty.")
+                return false;
             }
+
+            reqQty = reqQty + gridList.all[i].scanQty;
+        }
+
+        if(reqQty == 0) {
+        	Common.alert("Please input at least one of the item.<br/>Scaned(Request) Qty is all zero.")
+            return false;
         }
 
         var obj = $("#smoIssueOutForm").serializeJSON();
@@ -209,7 +217,53 @@ $(document).ready(function(){
         }
     });
 
+    AUIGrid.bind(scanInfoGridId, "cellClick", function( event ) {
+        var rowIndex = event.rowIndex;
+        var dataField = AUIGrid.getDataFieldByColumnIndex(scanInfoGridId, event.columnIndex);
+        var serialChk = AUIGrid.getCellValue(scanInfoGridId, rowIndex, "serialChk");
+        var scanQty = AUIGrid.getCellValue(scanInfoGridId, rowIndex, "scanQty");
+
+        if(dataField == "scanQty"){
+            var rowIndex = event.rowIndex;
+            if(serialChk == "Y" && scanQty > 0){
+                $('#smoIssueOutForm #pRequestNo').val( AUIGrid.getCellValue(scanInfoGridId, rowIndex, "reqstNo") );
+                $('#smoIssueOutForm #pRequestItem').val( AUIGrid.getCellValue(scanInfoGridId, rowIndex, "reqstNoItm") );
+                $('#smoIssueOutForm #pStatus').val( "O" );
+
+                fn_scanSearchPop();
+            }
+        }
+   });
+
+    AUIGrid.bind(scanInfoGridId, "cellEditBegin", auiCellEditignHandler);
+    AUIGrid.bind(scanInfoGridId, "cellEditEnd", auiCellEditignHandler);
+
 });
+
+function auiCellEditignHandler(event)
+{
+    if(event.type == "cellEditBegin") {
+        if (event.dataField == "scanQty")
+        {
+            var serialChk = AUIGrid.getCellValue(scanInfoGridId, event.rowIndex, "serialChk");
+            if(serialChk == 'Y') {
+                 return false;
+            }
+        }
+    } else if(event.type == "cellEditEnd") {
+        if (event.dataField == "scanQty")
+        {
+        	var giQty = AUIGrid.getCellValue(scanInfoGridId, event.rowIndex, "giQty");
+            var reqQty = event.value;
+
+            if(reqQty >  giQty) {
+                Common.alert("Scaned(Request) Qty cannot be greater than GI Qty.");
+                AUIGrid.setCellValue(scanInfoGridId, event.rowIndex, "scanQty", giQty);
+                return false;
+            }
+        }
+    }
+}
 
 function fn_smoIssueOutListAjax() {
 
@@ -263,12 +317,7 @@ function fn_PopSerialClose(){
 }
 
 //Serial Search Pop
-function fn_scanSearchPop(item){
-
-	$("#smoIssueOutForm #pRequestNo").val(item.reqstNo);
-    $("#smoIssueOutForm #pRequestItem").val(item.reqstNoItm);
-    $("#smoIssueOutForm #pStatus").val("O");
-
+function fn_scanSearchPop(){
     if(Common.checkPlatformType() == "mobile") {
         popupObj = Common.popupWin("smoIssueOutForm", "/logistics/SerialMgmt/scanSearchPop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
     } else{

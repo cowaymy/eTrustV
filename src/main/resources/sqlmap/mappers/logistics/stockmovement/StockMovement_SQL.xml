@@ -1071,103 +1071,113 @@
 
   <select id="selectSmoIssueOutPop" parameterType="Map" resultType="egovMap">
   /* [com.coway.trust.biz.logistics.stockmovement.impl.StockMovementMapper.selectSmoIssueOutPop] KR OHK */
-    SELECT B.REQST_NO
-              ,B.REQST_NO_ITM
-              ,B.ITM_CODE
-		      ,ITM_NAME
-		      ,CASE WHEN S26.STK_TYPE_ID= 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
-			           WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N' END
-			           WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
-			           ELSE 'N'
-		       END AS SERIAL_CHK
-		      ,B.REQST_QTY
-		      ,NVL(C.DELVRY_QTY, 0) AS DELVRY_QTY
-		      ,B.REQST_QTY - NVL(C.DELVRY_QTY, 0) GI_QTY
-		      ,(SELECT COUNT(1)
-		          FROM (SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
-				                    , REQST_NO
-				                    , REQST_NO_ITM
-				                    , DELVRY_NO
-				                    , DELVRY_NO_ITM
-				                    , ITM_CODE
-				                    , SCAN_STUS_CODE
-				                    , IO_TYPE
-		                     FROM LOG0099D
-		                  ) Z1
-		         WHERE Z1.REQST_NO = B.REQST_NO
-		             AND Z1.REQST_NO_ITM = B.REQST_NO_ITM
-		             AND Z1.ITM_CODE = B.ITM_CODE
-		             AND Z1.SCAN_STUS_CODE = 'C'
-		             AND Z1.IO_TYPE = 'O'
-		             AND Z1.RN = 1
-		      ) AS SCAN_QTY
-		      , NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
-		      ,A.TRNSC_TYPE
-		      ,A.TRNSC_TYPE_DTL
-	  FROM LOG0047M A
-	  INNER JOIN LOG0048D B ON B.REQST_NO = A.REQST_NO
-	   LEFT OUTER JOIN (SELECT REQST_NO , ITM_CODE , SUM(DELVRY_QTY) DELVRY_QTY FROM LOG0055D where NVL(DEL_FLAG , 'N' ) <![CDATA[<>]]> 'Y' GROUP BY REQST_NO, ITM_CODE) C ON C.REQST_NO = B.REQST_NO AND C.ITM_CODE = B.ITM_CODE
-	   LEFT OUTER JOIN SYS0026M S26 ON S26.STK_CODE = B.ITM_CODE
-	   LEFT OUTER JOIN SYS0028M S28 ON S28.WH_LOC_ID = A.REQST_CDC_RDC
-    WHERE A.REQST_NO = #{reqstNo}
+   SELECT REQST_NO, REQST_NO_ITM, ITM_CODE, ITM_NAME, SERIAL_CHK, REQST_QTY, DELVRY_QTY, GI_QTY
+            , DECODE(SERIAL_CHK, 'Y', SCAN_QTY, GI_QTY) SCAN_QTY
+            , SERIAL_REQUIRE_CHK_YN, TRNSC_TYPE, TRNSC_TYPE_DTL
+     FROM (
+			    SELECT B.REQST_NO
+			              ,B.REQST_NO_ITM
+			              ,B.ITM_CODE
+					      ,ITM_NAME
+					      ,CASE WHEN S26.STK_TYPE_ID= 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
+						           WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+						           WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+						           ELSE 'N'
+					       END AS SERIAL_CHK
+					      ,B.REQST_QTY
+					      ,NVL(C.DELVRY_QTY, 0) AS DELVRY_QTY
+					      ,B.REQST_QTY - NVL(C.DELVRY_QTY, 0) GI_QTY
+					      ,(SELECT COUNT(1)
+					          FROM (SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+							                    , REQST_NO
+							                    , REQST_NO_ITM
+							                    , DELVRY_NO
+							                    , DELVRY_NO_ITM
+							                    , ITM_CODE
+							                    , SCAN_STUS_CODE
+							                    , IO_TYPE
+					                     FROM LOG0099D
+					                  ) Z1
+					         WHERE Z1.REQST_NO = B.REQST_NO
+					             AND Z1.REQST_NO_ITM = B.REQST_NO_ITM
+					             AND Z1.ITM_CODE = B.ITM_CODE
+					             AND Z1.SCAN_STUS_CODE = 'C'
+					             AND Z1.IO_TYPE = 'O'
+					             AND Z1.RN = 1
+					      ) AS SCAN_QTY
+					      , NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
+					      ,A.TRNSC_TYPE
+					      ,A.TRNSC_TYPE_DTL
+				  FROM LOG0047M A
+				  INNER JOIN LOG0048D B ON B.REQST_NO = A.REQST_NO
+				   LEFT OUTER JOIN (SELECT REQST_NO , ITM_CODE , SUM(DELVRY_QTY) DELVRY_QTY FROM LOG0055D where NVL(DEL_FLAG , 'N' ) <![CDATA[<>]]> 'Y' GROUP BY REQST_NO, ITM_CODE) C ON C.REQST_NO = B.REQST_NO AND C.ITM_CODE = B.ITM_CODE
+				   LEFT OUTER JOIN SYS0026M S26 ON S26.STK_CODE = B.ITM_CODE
+				   LEFT OUTER JOIN SYS0028M S28 ON S28.WH_LOC_ID = A.REQST_CDC_RDC
+			    WHERE A.REQST_NO = #{reqstNo}
+			 )
   </select>
 
   <select id="selectSmoIssueInPop" parameterType="Map" resultType="egovMap">
     /* [com.coway.trust.biz.logistics.stockmovement.impl.StockMovementMapper.selectSmoIssueInPop] - KR OHK */
-        SELECT A.DELVRY_NO
-             , B.DELVRY_NO_ITM
-             , B.ITM_CODE
-             , B.ITM_NAME
-             , NVL(A.DELVRY_GI_CMPLT,'N') DEL_GI_CMPLT
-             , CASE WHEN S26.STK_TYPE_ID= 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
-                    WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N' END
-                    WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
-                    ELSE 'N'
-               END AS SERIAL_CHK
-             , B.DELVRY_QTY
-             , (
-                SELECT COUNT(1)
-                  FROM (
-                       SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
-                            , REQST_NO
-                            , REQST_NO_ITM
-                            , DELVRY_NO
-                            , DELVRY_NO_ITM
-                            , ITM_CODE
-                            , SCAN_STUS_CODE
-                            , IO_TYPE
-                         FROM LOG0099D
-                      ) Z1
-               WHERE Z1.REQST_NO = B.REQST_NO
-                 AND Z1.REQST_NO_ITM = B.REQST_NO_ITM
-                 AND Z1.DELVRY_NO = B.DELVRY_NO
-                 AND Z1.DELVRY_NO_ITM = B.DELVRY_NO_ITM
-                 AND Z1.ITM_CODE = B.ITM_CODE
-                 AND Z1.SCAN_STUS_CODE = 'C'
-                 AND Z1.IO_TYPE = 'I'
-                 AND Z1.RN = 1
-               ) AS SCAN_QTY
-             , NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
-             , S28.WH_LOC_STK_GRAD
-             ,C.TRNSC_TYPE_DTL MTYPE
-             ,C.REF_DOC_NO DOCNO
-             ,TO_CHAR(TO_DATE(A.DELVRY_DT, 'YYYY/MM/DD'), 'DD/MM/YYYY') DELYDT
-             ,TO_CHAR(TO_DATE(A.DELVRY_GI_DT, 'YYYY/MM/DD'), 'DD/MM/YYYY') GIDT
-          FROM LOG0054M A
-             , LOG0055D B
-             , LOG0047M C
-             , SYS0028M S28  -- LOCATION
-             , SYS0026M S26  -- ITEM
-         WHERE A.DELVRY_NO = B.DELVRY_NO
-           AND B.REQST_NO = C.REQST_NO
-           AND C.REQST_CDC_RDC  = S28.WH_LOC_ID
-           AND B.ITM_CODE = S26.STK_CODE(+)
-           AND C.REQST_CDC_RDC  = S28.WH_LOC_ID
-           AND NVL(B.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
-           AND A.DELVRY_NO in
-                <foreach item="item" collection="delyList" index="index" open="(" separator="," close=")">
-                #{item}
-                </foreach>
+   SELECT DELVRY_NO, DELVRY_NO_ITM, ITM_CODE, ITM_NAME, DEL_GI_CMPLT, SERIAL_CHK, DELVRY_QTY
+            , DECODE(SERIAL_CHK, 'Y', SCAN_QTY, DELVRY_QTY) SCAN_QTY
+            , SERIAL_REQUIRE_CHK_YN, WH_LOC_STK_GRAD, MTYPE, DOCNO, DELYDT, GIDT
+     FROM (
+		    SELECT A.DELVRY_NO
+		             , B.DELVRY_NO_ITM
+		             , B.ITM_CODE
+		             , B.ITM_NAME
+		             , NVL(A.DELVRY_GI_CMPLT,'N') DEL_GI_CMPLT
+		             , CASE WHEN S26.STK_TYPE_ID= 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
+		                    WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+		                    WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+		                    ELSE 'N'
+		               END AS SERIAL_CHK
+		             , B.DELVRY_QTY
+		             , (
+		                SELECT COUNT(1)
+		                  FROM (
+		                       SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+		                            , REQST_NO
+		                            , REQST_NO_ITM
+		                            , DELVRY_NO
+		                            , DELVRY_NO_ITM
+		                            , ITM_CODE
+		                            , SCAN_STUS_CODE
+		                            , IO_TYPE
+		                         FROM LOG0099D
+		                      ) Z1
+		               WHERE Z1.REQST_NO = B.REQST_NO
+		                 AND Z1.REQST_NO_ITM = B.REQST_NO_ITM
+		                 AND Z1.DELVRY_NO = B.DELVRY_NO
+		                 AND Z1.DELVRY_NO_ITM = B.DELVRY_NO_ITM
+		                 AND Z1.ITM_CODE = B.ITM_CODE
+		                 AND Z1.SCAN_STUS_CODE = 'C'
+		                 AND Z1.IO_TYPE = 'I'
+		                 AND Z1.RN = 1
+		               ) AS SCAN_QTY
+		             , NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
+		             , S28.WH_LOC_STK_GRAD
+		             ,C.TRNSC_TYPE_DTL MTYPE
+		             ,C.REF_DOC_NO DOCNO
+		             ,TO_CHAR(TO_DATE(A.DELVRY_DT, 'YYYY/MM/DD'), 'DD/MM/YYYY') DELYDT
+		             ,TO_CHAR(TO_DATE(A.DELVRY_GI_DT, 'YYYY/MM/DD'), 'DD/MM/YYYY') GIDT
+		          FROM LOG0054M A
+		             , LOG0055D B
+		             , LOG0047M C
+		             , SYS0028M S28  -- LOCATION
+		             , SYS0026M S26  -- ITEM
+		         WHERE A.DELVRY_NO = B.DELVRY_NO
+		           AND B.REQST_NO = C.REQST_NO
+		           AND C.REQST_CDC_RDC  = S28.WH_LOC_ID
+		           AND B.ITM_CODE = S26.STK_CODE(+)
+		           AND C.REQST_CDC_RDC  = S28.WH_LOC_ID
+		           AND NVL(B.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
+		           AND A.DELVRY_NO in
+		                <foreach item="item" collection="delyList" index="index" open="(" separator="," close=")">
+		                #{item}
+		                </foreach>
+             ) T
   </select>
 
   <select id="selectSMOIssueInSerialGradeList" parameterType="Map" resultType="egovMap">
