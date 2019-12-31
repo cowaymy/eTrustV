@@ -509,14 +509,19 @@
            C.CODE,
            TO_CHAR(A.REQST_DT, 'YYYY/MM/DD' ) REQST_DT,
            D.MEM_CODE,
-           D.NAME
+           D.NAME,
+           E.SERIAL_REQUIRE_CHK_YN,
+           E.WH_LOC_GB,
+           E.WH_LOC_ID CT_WH_LOC_ID
     FROM LOG0038D A,
          SAL0001D B,
          SYS0038M C,
-         ORG0001D D
+         ORG0001D D,
+         SYS0028M E
     WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
       AND A.STUS_CODE_ID = C.STUS_CODE_ID
       AND A.CT_ID = D.MEM_ID
+      AND D.MEM_CODE = E.WH_LOC_CODE(+)
       AND B.SALES_ORD_NO = #{salesOrdNo}
   </select>
 
