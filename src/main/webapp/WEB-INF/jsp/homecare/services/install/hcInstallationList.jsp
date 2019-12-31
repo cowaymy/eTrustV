@@ -409,13 +409,13 @@
         <!-- date_set start -->
         <p>
          <input type="text" title="Create start Date"
-          placeholder="DD/MM/YYYY" class="j_date" id="startDate"
+          placeholder="DD/MM/YYYY" class="j_dateHc" id="startDate"
           name="startDate" />
         </p>
         <span>To</span>
         <p>
          <input type="text" title="Create end Date"
-          placeholder="DD/MM/YYYY" class="j_date" id="endDate"
+          placeholder="DD/MM/YYYY" class="j_dateHc" id="endDate"
           name="endDate" />
         </p>
        </div>
@@ -430,13 +430,13 @@
         <!-- date_set start -->
         <p>
          <input type="text" title="Create start Date"
-          placeholder="DD/MM/YYYY" class="j_date" id="instalStrlDate"
+          placeholder="DD/MM/YYYY" class="j_dateHc" id="instalStrlDate"
           name="instalStrlDate" />
         </p>
         <span>To</span>
         <p>
          <input type="text" title="Create end Date"
-          placeholder="DD/MM/YYYY" class="j_date" id="installEndDate"
+          placeholder="DD/MM/YYYY" class="j_dateHc" id="installEndDate"
           name="installEndDate" />
         </p>
        </div>
@@ -457,7 +457,7 @@
       <th scope="row"><spring:message
         code='service.title.OrderDate' /></th>
       <td><input type="text" title="Create start Date"
-       placeholder="DD/MM/YYYY" class="j_date w100p" id="orderDate"
+       placeholder="DD/MM/YYYY" class="j_dateHc w100p" id="orderDate"
        name="orderDate" /></td>
       <th scope="row"><spring:message
         code='service.title.ApplicationType' /></th>

@@ -1060,11 +1060,11 @@ var branchDs = [];
       <td>
        <div class="date_set w100p">
         <p>
-         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="createStrDate" name="createStrDate" value="${bfDay}"/>
+         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="createStrDate" name="createStrDate" value="${bfDay}"/>
         </p>
         <span><spring:message code='pay.text.to'/></span>
         <p>
-         <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="createEndDate" name="createEndDate" value="${toDay}"/>
+         <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="createEndDate" name="createEndDate" value="${toDay}"/>
         </p>
        </div>
       </td>
@@ -1092,15 +1092,11 @@ var branchDs = [];
       <td>
        <div class="date_set w100p">
         <p>
-         <input type="text" title="Create start Date"
-          placeholder="DD/MM/YYYY" class="j_date" id="appDtFrm"
-          name="appDtFrm" />
+         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="appDtFrm" name="appDtFrm" />
         </p>
         <span><spring:message code='pay.text.to'/></span>
         <p>
-         <input type="text" title="Create end Date"
-          placeholder="DD/MM/YYYY" class="j_date" id="appDtTo"
-          name="appDtTo" />
+         <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="appDtTo" name="appDtTo" />
         </p>
        </div>
       </td>

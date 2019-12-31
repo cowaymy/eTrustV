@@ -290,13 +290,13 @@ var branchDs = [];
          <!-- date_set start -->
          <p>
           <input type="text" title="Create start Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="reqStrDate"
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="reqStrDate"
            name="reqStrDate" />
          </p>
          <span>To</span>
          <p>
           <input type="text" title="Create end Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="reqEndDate"
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="reqEndDate"
            name="reqEndDate" />
          </p>
         </div> <!-- date_set end -->
@@ -308,13 +308,13 @@ var branchDs = [];
          <!-- date_set start -->
          <p>
           <input type="text" title="Create start Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="asAppDtFr"
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="asAppDtFr"
            name="asAppDtFr" />
          </p>
          <span><spring:message code='svc.hs.reversal.to' /></span>
          <p>
           <input type="text" title="Create end Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="asAppDtTo"
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="asAppDtTo"
            name="asAppDtTo" />
          </p>
         </div> <!-- date_set end -->

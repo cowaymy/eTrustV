@@ -345,12 +345,12 @@
          <!-- date_set start -->
          <p>
           <input type="text" title="Create start Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="reqDtFr" />
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="reqDtFr" />
          </p>
          <span><spring:message code='svc.hs.reversal.to' /></span>
          <p>
           <input type="text" title="Create end Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="reqDtTo" />
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="reqDtTo" />
          </p>
         </div> <!-- date_set end -->
        </td>
@@ -360,12 +360,12 @@
          <!-- date_set start -->
          <p>
           <input type="text" title="Create start Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="appDtFr" />
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="appDtFr" />
          </p>
          <span><spring:message code='svc.hs.reversal.to' /></span>
          <p>
           <input type="text" title="Create end Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="appDtTo2" />
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="appDtTo2" />
          </p>
         </div> <!-- date_set end -->
        </td>

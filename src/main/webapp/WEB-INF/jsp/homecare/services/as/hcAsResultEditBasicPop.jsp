@@ -1306,7 +1306,7 @@ function SearchListAjax(obj){
         <tr>
          <th scope="row"><spring:message code='service.grid.SettleDate' /><span id='m2' name='m2' class="must">*</span>
          </th>
-         <td><input type="text" title="Create start Date" class="readonly w100p" id='dpSettleDate' name='dpSettleDate' placeholder="DD/MM/YYYY" class="readonly j_date" disabled="disabled" /></td>
+         <td><input type="text" title="Create start Date" class="readonly w100p" id='dpSettleDate' name='dpSettleDate' placeholder="DD/MM/YYYY" class="readonly j_dateHc" disabled="disabled" /></td>
          <th scope="row"><spring:message code='service.grid.FailReason' /><span id='m3' name='m3' class="must">*</span></th>
          <td>
            <select id='ddlFailReason' name='ddlFailReason' class="readonly w100p" disabled="disabled"></select>
@@ -1413,7 +1413,7 @@ function SearchListAjax(obj){
        <tr>
          <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
          <td>
-          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " readonly="readonly" id="appDate" name="appDate" onChange="fn_doAllaction(this)"/>
+          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc " readonly="readonly" id="appDate" name="appDate" onChange="fn_doAllaction(this)"/>
          </td>
          <th scope="row"><spring:message code='service.title.AppointmentSessione' /><span class="must">*</span></th>
          <td>
@@ -1540,7 +1540,7 @@ function SearchListAjax(obj){
          </label></td>
          <th scope="row">PromisedDate</th>
          <td><input type="text" title="Create start Date"
-          placeholder="DD/MM/YYYY" class="j_date" id="promisedDate"
+          placeholder="DD/MM/YYYY" class="j_dateHc" id="promisedDate"
           name="promisedDate" /></td>
         </tr>
         <tr>

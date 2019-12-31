@@ -263,9 +263,11 @@ table+.center_btns{padding-top:5px;}
 /* 검색 영역 */
 .search_table{margin-bottom:10px;}
 .j_date,
+.j_dateHc,
 .j_date2,
 .j_date3{width:99px!important;}
 .j_date.w100p,
+.j_dateHc.w100p,
 .j_date2.w100p
 .j_date3.w100p{width:100%!important;}
 .date_set{position:relative; width:236px;}
@@ -275,6 +277,7 @@ table+.center_btns{padding-top:5px;}
 .date_set > p:first-child,
 .date_set > .time_picker:first-child{padding-left:0; padding-right:11px;}
 .date_set > p input[type=text].j_date,
+.date_set > p input[type=text].j_dateHc,
 .date_set .time_date{width:100%!important;}
 .date_set > span{position:absolute; top:0; left:50%; width:22px; margin-left:-11px; line-height:20px; text-align:center;}
 .date_set > .sel_year {float:left; width:calc(30% - 5px); margin-right:5px;}

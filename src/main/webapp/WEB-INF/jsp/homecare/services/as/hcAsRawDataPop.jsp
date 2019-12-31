@@ -400,12 +400,12 @@
          <!-- date_set start -->
          <p>
           <input type="text" title="Create start Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="reqstDateFr" />
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="reqstDateFr" />
          </p>
          <span>To</span>
          <p>
           <input type="text" title="Create end Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="reqstDateTo" />
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="reqstDateTo" />
          </p>
         </div>
         <!-- date_set end -->

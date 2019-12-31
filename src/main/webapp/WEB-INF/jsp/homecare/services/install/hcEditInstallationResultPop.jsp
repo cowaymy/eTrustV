@@ -191,7 +191,7 @@
       <tr>
        <th scope="row"><spring:message code='service.title.ActualInstalledDate' /><span class="must"> *</span></th>
        <td>
-         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"
+         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc w100p"
           title="Create start Date" placeholder="DD/MM/YYYY"
           id="installdt" name="installdt"
           value="<c:out value="${installInfo.installDt}" />" />

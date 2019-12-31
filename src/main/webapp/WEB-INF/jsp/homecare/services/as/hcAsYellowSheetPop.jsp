@@ -267,13 +267,13 @@
          <!-- date_set start -->
          <p>
           <input type="text" title="Create start Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="settleDtFr"
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="settleDtFr"
            name="settleDtFr" />
          </p>
          <span>To</span>
          <p>
           <input type="text" title="Create end Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="settleDtTo"
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="settleDtTo"
            name="settleDtTo" />
          </p>
         </div>
@@ -285,13 +285,13 @@
          <!-- date_set start -->
          <p>
           <input type="text" title="Create start Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="reqDtFr"
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="reqDtFr"
            name="reqDtFr" />
          </p>
          <span>To</span>
          <p>
           <input type="text" title="Create end Date"
-           placeholder="DD/MM/YYYY" class="j_date" id="reqDtTo"
+           placeholder="DD/MM/YYYY" class="j_dateHc" id="reqDtTo"
            name="reqDtTo" />
          </p>
         </div>

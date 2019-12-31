@@ -171,7 +171,7 @@ var branchDs = [];
         </c:forEach>
        </select></td>
        <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class='must'>*</span></th>
-       <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="asAppDate" /></td>
+       <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="asAppDate" /></td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='sal.title.text.dscBrnch' /></th>

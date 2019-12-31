@@ -1335,11 +1335,11 @@
         <tr>
          <th scope="row"><spring:message code='service.grid.ReqstDt' /><span class="must">*</span></th>
          <td>
-          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate" onChange="fn_doAllaction('#requestDate')"/>
+          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc w100p" id="requestDate" name="requestDate" onChange="fn_doAllaction('#requestDate')"/>
          </td>
          <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
          <td>
-          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" readonly="readonly" id="appDate" name="appDate" onChange="fn_chkDt('#appDate')"/>
+          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc w100p" readonly="readonly" id="appDate" name="appDate" onChange="fn_chkDt('#appDate')"/>
          </td>
          <th scope="row">
              <!-- Appointment Session -->

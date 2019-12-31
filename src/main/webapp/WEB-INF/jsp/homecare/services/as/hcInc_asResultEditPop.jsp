@@ -2168,7 +2168,7 @@
       <tr>
        <th scope="row"><spring:message code='service.grid.SettleDate' /><span id='m2' name='m2' class="must" style="display:none">*</span>
        </th>
-       <td><input type="text" title="Create start Date" id='dpSettleDate' name='dpSettleDate' placeholder="DD/MM/YYYY" class="readonly j_date" disabled="disabled" /></td>
+       <td><input type="text" title="Create start Date" id='dpSettleDate' name='dpSettleDate' placeholder="DD/MM/YYYY" class="readonly j_dateHc" disabled="disabled" /></td>
        <th scope="row"><spring:message code='service.grid.FailReason' /><span id='m3' name='m3' class="must" style="display:none">*</span></th>
        <td>
          <select id='ddlFailReason' name='ddlFailReason' disabled="disabled"  class="w100p">
@@ -2278,7 +2278,7 @@
        <tr>
          <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
          <td>
-          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " readonly="readonly" id="appDate" name="appDate" onChange="fn_chkDt2(this);"/>
+          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc " readonly="readonly" id="appDate" name="appDate" onChange="fn_chkDt2(this);"/>
          </td>
          <th scope="row"><spring:message code='service.title.AppointmentSessione' /><span class="must">*</span></th>
          <td>
@@ -2516,7 +2516,7 @@
        </label></td>
        <th scope="row">Promise Date <span class="must">*</span></th>
        <td><input type="text" title="Create start Date"
-        placeholder="DD/MM/YYYY" class="j_date" id="promisedDate"
+        placeholder="DD/MM/YYYY" class="j_dateHc" id="promisedDate"
         name="promisedDate" onchange="fn_chkDateRange(this)" /><input type="hidden" id="lmtDt" name="lmtDt" value="${inHseLmtDy}" disabled /></td>
       </tr>
       <tr>

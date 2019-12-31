@@ -170,7 +170,7 @@ $(document).ready(function() {
     <select class="w100p" id="listAppType" name="searchOrdAppType"></select>
     </td>
     <th scope="row"><spring:message code="sal.text.ordDate" /></th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  name="searchOrdDate"/></td>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc w100p"  name="searchOrdDate"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.custName" /></th>

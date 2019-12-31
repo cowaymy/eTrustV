@@ -790,7 +790,7 @@
       <th scope="row"><spring:message
         code='service.title.ActualInstalledDate' /><span name="m2" id="m2" class="must">*</span></th>
       <td><input type="text" title="Create start Date"
-       placeholder="DD/MM/YYYY" class="j_date w100p" id="installDate"
+       placeholder="DD/MM/YYYY" class="j_dateHc w100p" id="installDate"
        name="installDate" /></td>
      </tr>
      <tr>
@@ -904,7 +904,7 @@
         </c:forEach>
       </select></td>
       <th scope="row"><spring:message code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
-      <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="nextCallDate" name="nextCallDate" /></td>
+      <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc w100p" id="nextCallDate" name="nextCallDate" /></td>
      </tr>
     </tbody>
    </table>

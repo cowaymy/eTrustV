@@ -619,7 +619,7 @@ function fn_close(){
 	    <th scope="row"><spring:message code='service.title.InstallDate'/></th>
 	    <td>
 	        <div class="date_set w100p"><!-- date_set start -->
-	        <p><input type="text" title="Install Date" placeholder="DD/MM/YYYY" class="j_date" id="instalStrlDate" name="instalStrlDate"/></p>
+	        <p><input type="text" title="Install Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="instalStrlDate" name="instalStrlDate"/></p>
 	        </div>
 	    </td>
 
@@ -646,7 +646,7 @@ function fn_close(){
 	    <th scope="row"><spring:message code='service.title.NextCallDate'/></th>
 	    <td>
 	        <div class="date_set w100p"><!-- date_set start -->
-	        <p><input type="text" title="Next Call Date" placeholder="DD/MM/YYYY" class="j_date" id="nextCallStrlDate" name="nextCallStrlDate"/></p>
+	        <p><input type="text" title="Next Call Date" placeholder="DD/MM/YYYY" class="j_dateHc" id="nextCallStrlDate" name="nextCallStrlDate"/></p>
 	        </div>
 	    </td>
 	</tr>
