@@ -116,6 +116,8 @@ public class OrderVO implements Serializable {
 
 	private Integer bndlId;
 
+	private String copyOrderChgYn;
+
 	public SalesOrderMVO getSalesOrderMVO() {
 		return salesOrderMVO;
 	}
@@ -526,6 +528,14 @@ public class OrderVO implements Serializable {
 
 	public void setBndlId(Integer bndlId) {
 		this.bndlId = bndlId;
+	}
+
+	public String getCopyOrderChgYn() {
+		return copyOrderChgYn;
+	}
+
+	public void setCopyOrderChgYn(String copyOrderChgYn) {
+		this.copyOrderChgYn = copyOrderChgYn;
 	}
 
 }

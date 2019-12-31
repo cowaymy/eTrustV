@@ -223,6 +223,7 @@
                  , A.FRA_PRE_ORD_ID
                  , A.ORD_ID
                  , A.ANO_ORD_NO
+                 , A.SRV_ORD_ID
                  , (SELECT SAL1.ORD_ID FROM SAL1013V SAL1 WHERE SAL1.ORD_NO = A.ANO_ORD_NO) AS ANO_ORD_ID
                  , (SELECT SYS2.CODE FROM SYS0026M SYS1, SYS0013M SYS2
                    WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID
@@ -239,6 +240,8 @@
 		                 , S1.ORD_ID
 		                 , S1.PRODUCT_CODE
 		                 , DECODE(#{ordNo}, H1.FRA_ORD_NO, H1.MAT_ORD_NO, H1.MAT_ORD_NO, H1.FRA_ORD_NO) AS ANO_ORD_NO
+		                 , H1.SRV_ORD_ID
+
 		         FROM HMC0011D H1
 		                 , SAL1013V S1
 

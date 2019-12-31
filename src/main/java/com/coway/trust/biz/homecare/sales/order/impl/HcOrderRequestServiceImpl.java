@@ -10,9 +10,11 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.order.HcOrderRequestService;
 import com.coway.trust.biz.sales.order.OrderRequestService;
 import com.coway.trust.biz.sales.order.impl.OrderRequestMapper;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -60,9 +62,10 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 		if("MAT".equals(salesOrdCtgryCd) && CommonUtils.isNotEmpty(salesAnoOrdId)) {
 			// 유효성 체크
 			params.put("salesOrdId", salesAnoOrdId);
+			params.put("appTypeId", SalesConstants.APP_TYPE_CODE_ID_AUX);
 			ReturnMessage rtnVaild = validOCRStus(params);
 
-			if(rtnVaild.equals(AppConstants.SUCCESS)) {
+			if(CommonUtils.nvl(rtnVaild.getCode()).equals(AppConstants.SUCCESS)) {
 				String rtnMessage = CommonUtils.nvl(rtnMsg.getMessage());
 				// 같이 주문된 주문 취소요청한다.
 				orderRequestService.requestCancelOrder(params, sessionVO);
@@ -70,6 +73,8 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 				rtnMessage = rtnMessage.replaceFirst("<br/>", ", "+ CommonUtils.nvl(params.get("rtnOrderNo") +"<br/>"));
 				rtnMessage = CommonUtils.replaceLast(rtnMessage, "<br/>", ", "+ CommonUtils.nvl(params.get("rtnReqNo") +"<br/>"));
 				rtnMsg.setMessage(rtnMessage);
+			} else {
+				throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnVaild.getMessage()));
 			}
 		}
 

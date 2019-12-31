@@ -73,6 +73,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		int matOrdId = 0;
 		int rtnCnt = 0;
 		int custId = CommonUtils.intNvl(orderVO.getSalesOrderMVO1().getCustId());     // Cust Id
+		String ordChgYn = CommonUtils.nvl(orderVO.getCopyOrderChgYn());
 
 		if(custId <= 0) {
 			throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Null Customer ID");
@@ -87,7 +88,8 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 				throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Null Product ID");
 			}
 
-			int ordSeqNo = CommonUtils.intNvl(orderVO.getOrdSeqNo());
+			// Order Copy(Change) -> ordSeqNo = 0
+			int ordSeqNo = ("Y".equals(ordChgYn)) ? 0 : CommonUtils.intNvl(orderVO.getOrdSeqNo());
 			if(ordSeqNo <= 0) {
 				ordSeqNo = hcOrderRegisterMapper.getOrdSeqNo();
 			}

@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.biz.common.HomecareCmService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderCancelService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.sales.order.OrderCancelService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.homecare.HomecareConstants;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -50,6 +52,8 @@ public class HcOrderCancelController {
 	@Resource(name = "hcOrderListService")
 	private HcOrderListService hcOrderListService;
 
+	@Resource(name = "homecareCmService")
+	private HomecareCmService homecareCmService;
 
 	/**
 	 * Homecare Order Cancellation List 초기화 화면
@@ -120,7 +124,8 @@ public class HcOrderCancelController {
 
 		EgovMap cancelReqInfo = orderCancelService.cancelReqInfo(params);
 
-		List<EgovMap> selectAssignCTList = orderCancelService.selectAssignCT(params);
+		params.put("brnchType", HomecareConstants.HDC_BRANCH_TYPE);
+		List<EgovMap> selectAssignCTList = homecareCmService.selectHomecareBranchCd(params);
 		List<EgovMap> selectFeedback = orderCancelService.selectFeedback(params);
 		// homecare 주문 조회
 		params.put("ordNo", CommonUtils.nvl(params.get("paramSalesOrdNo")));

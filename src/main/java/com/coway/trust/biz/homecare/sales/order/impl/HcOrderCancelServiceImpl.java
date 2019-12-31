@@ -14,6 +14,7 @@ import com.coway.trust.biz.sales.order.OrderCancelService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -77,6 +78,7 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 				// Mattress 주문이면서 같이 주문된 주문이 있는 경우.
 				if("MAT".equals(paramOrdCtgryCd) && paramAnoOrdId > 0) {
 					params.put("paramOrdId", paramAnoOrdId);
+					params.put("appTypeId", SalesConstants.APP_TYPE_CODE_ID_AUX);
 					params.put("paramCallEntryId", hcOrderCancelMapper.getCallEntryId(params));
 
 					orderCancelService.saveCancel(params);

@@ -19,17 +19,10 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.coway.trust.biz.payment.payment.service.impl.SearchPaymentMapper;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.order.OrderDetailService;
-import com.coway.trust.biz.sales.order.OrderListService;
-import com.coway.trust.biz.sales.order.OrderVO;
-import com.coway.trust.biz.sales.pst.impl.PSTRequestDOMapper;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -95,7 +88,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		params.put("viewSort", "1");
 		List<EgovMap> callLog      = orderDetailMapper.selectCallLogList(params);
 
-		String memInfo           = orderDetailMapper.selectMemberInfo((String) basicInfo.get("custNric"));
+		String memInfo           = orderDetailMapper.selectMemberInfo(CommonUtils.nvl(basicInfo.get("custNric")));
 
 		if(CommonUtils.isNotEmpty(memInfo)) {
 			basicInfo.put("memInfo", "("+memInfo+")");

@@ -138,6 +138,9 @@
                 <if test='stusId != null and stusId != ""'>
                     , STUS_ID                  = #{stusId}
                 </if>
+                <if test='srvOrdId != null and srvOrdId != ""'>
+                    , SRV_ORD_ID            = #{srvOrdId}
+                </if>
            WHERE ORD_SEQ_NO          = #{ordSeqNo}
     </update>
 

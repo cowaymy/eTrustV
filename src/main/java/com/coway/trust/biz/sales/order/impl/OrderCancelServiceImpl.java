@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.sales.order.OrderCancelService;
 import com.coway.trust.cmmn.model.GridDataSet;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -140,13 +141,13 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
     saveParam.put("callSmsRem", "");
     saveParam.put("salesOrdId", params.get("paramOrdId"));
 
-    int status = Integer.parseInt((String) params.get("addStatus")); // recall,
+    int status = CommonUtils.intNvl(params.get("addStatus")); // recall,
                                                                      // calcel,
                                                                      // reversal
                                                                      // cancel,
                                                                      // continuerental
-    int appTypeId = Integer.parseInt((String) params.get("appTypeId"));
-    logger.info("####################### appTypeId ######## " + params.get("appTypeId"));
+    int appTypeId = CommonUtils.intNvl(params.get("appTypeId"));
+    logger.info("####################### appTypeId ######## " + appTypeId);
     int reqStageId = 0; // before , after install
     String reqStageIdValue = ""; // RET, CAN
 

@@ -66,8 +66,12 @@ public class HcOrderRequestController {
 		if (CommonUtils.isNotEmpty(params.get(AppConstants.CALLCENTER_TOKEN_KEY))) {
 			callCenterYn = "Y";
 		}
-		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);		// APP_TYPE_ID CUST_ID
 		EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(params);
+
+        params.put("salesOrderId", CommonUtils.nvl(hcOrder.get("srvOrdId")));
+        params.put("ordNo", CommonUtils.nvl(hcOrder.get("matOrdNo")));
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);		// Mattress Order
+		hcOrder = hcOrderListService.selectHcOrderInfo(params);
 
 		model.put("orderDetail", orderDetail);
 		model.put("hcOrder", hcOrder);
