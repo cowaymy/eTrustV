@@ -159,6 +159,7 @@ WHERE   ROW_NUMBER = 1
 <![CDATA[
 /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerOrder] 20190916 - KR JAEMAJEM */
 SELECT  A.SALES_ORD_ID                                                          AS SALES_ORD_ID
+    ,   A.SALES_ORD_NO                                                          AS SALES_ORD_NO
     ,   TO_CHAR(A.SALES_DT, 'DD/MM/YYYY')                                       AS SALES_DT
     ,   C.NAME                                                                  AS STUS_CODE_ID_NAME
     ,   D.CODE_NAME                                                             AS APP_TYPE_ID_NAME

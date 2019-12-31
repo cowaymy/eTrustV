@@ -52,6 +52,7 @@ public class CustomerApiDto {
         params.put("custCntcId", vo.getCustCntcId());
         params.put("typeId", vo.getTypeId());
         params.put("salesOrdId", vo.getSalesOrdId());
+        params.put("salesOrdNo", vo.getSalesOrdNo());
         params.put("salesDt", vo.getSalesDt());
         params.put("stusCodeIdName", vo.getStusCodeIdName());
         params.put("appTypeIdName", vo.getAppTypeIdName());
@@ -78,6 +79,7 @@ public class CustomerApiDto {
 	private int custCntcId;
     private int typeId;
     private int salesOrdId;
+    private int salesOrdNo;
     private String salesDt;
     private String stusCodeIdName;
     private String appTypeIdName;
@@ -88,6 +90,19 @@ public class CustomerApiDto {
     private String code;
     private String codeName;
     private String codeDesc;
+
+
+
+
+    public int getSalesOrdNo() {
+        return salesOrdNo;
+    }
+
+
+
+    public void setSalesOrdNo(int salesOrdNo) {
+        this.salesOrdNo = salesOrdNo;
+    }
 
 
 
