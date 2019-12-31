@@ -358,7 +358,7 @@
         	   if(serialChkYn == "Y" && serialRequireChkYn == "Y" && itemSerialChkYn == "Y"){
             	   $("#serialForm #pRequestNo").val(AUIGrid.getCellValue(itemRegGrid, rowIndex, "stockAuditNo"));
                    $("#serialForm #pStatus").val("I");
-                   fn_serialSearchPop();
+                   fn_scanSearchPop();
                 }
            }
        });
