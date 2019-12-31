@@ -40,7 +40,7 @@
     var _cancleMsg = "Another order :  "+ anoOrdNo +"<br/>is also canceled together.<br/>";
 
     $(document).ready(function(){
-        doGetComboData('/common/selectCodeList.do', {groupCode :'348'}, TAB_NM, 'ordReqType', 'S', ''); //Order Edit Type
+        doGetComboData('/common/selectCodeList.do', {groupCode :'348'}, TAB_NM, 'ordReqType', 'S', 'fn_ordReqTypeCallBack'); //Order Edit Type
 //        if(FormUtil.isNotEmpty(TAB_NM)) {
 // <c:if test="${callCenterYn != 'Y'}">
 //             if(!fn_checkAccessRequest(TAB_NM)) return false;
@@ -48,6 +48,20 @@
 //             fn_changeTab(TAB_NM);
 //         }
      });
+
+    // Edit Type 삭제처리.
+    function fn_ordReqTypeCallBack(){
+        var ordReqTpVal = '';
+        var ordReqTpLen = $('#ordReqType option').size();
+
+        for(var i=0; i<ordReqTpLen; ++i) {
+            ordReqTpVal = $("#ordReqType option:eq("+i+")").val();
+            if(ordReqTpVal == 'SCHM') {  // Scheme conversion
+                // 특정 삭제
+                $("#ordReqType option:eq("+i+")").remove();
+            }
+        }
+    }
 
     $(function(){
         $('#btnEditType').click(function() {

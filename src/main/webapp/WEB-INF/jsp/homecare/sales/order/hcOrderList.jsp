@@ -43,8 +43,7 @@
         AUIGrid.bind(listMyGridID, "cellDoubleClick", function(event) {
             if(IS_3RD_PARTY == '0') {
                 fn_setDetail(listMyGridID, event.rowIndex);
-            }
-            else {
+            } else {
                 Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
             }
         });

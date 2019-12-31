@@ -1496,6 +1496,7 @@
             fraPreOrdId           : '${fraPreOrdId}',
             preOrderYN          : '${CONV_TO_ORD_YN}',
             copyOrderBulkYN  : '${BULK_ORDER_YN}',
+            copyOrderChgYn   : "${COPY_CHANGE_YN}",
             copyQty               : $('#hiddenCopyQty').val(),
             ordSeqNo             : '${ordSeqNo}',
 

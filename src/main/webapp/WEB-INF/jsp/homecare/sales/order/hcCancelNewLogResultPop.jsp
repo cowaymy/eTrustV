@@ -160,7 +160,7 @@
               CallBackFun:'fn_allactionFun'
         }
 
-        Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options ,TYPE:'RTN'}, null , true , '_doAllactionDiv');
+        Common.popupDiv("/homecare/services/install/hcAllocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options ,TYPE:'RTN'}, null , true , '_doAllactionDiv');
     }
 
     function fn_allactionFun(obj){
@@ -436,8 +436,8 @@
                 }
             }
         }
-        // 매트리스인 경우만 같이 취소한다.
-        if(js.String.isNotEmpty(anoOrdNo) && ordCtgryCd == 'MAT') {
+        // have Another Order Cancled together
+        if(js.String.isNotEmpty(anoOrdNo) /* && ordCtgryCd == 'MAT' */) {
         	Common.confirm('<spring:message code="sal.page.title.orderCancellation" />' + DEFAULT_DELIMITER + "<b>"+ _cancleMsg +"</b>", fn_procSaveCancel);
         } else {
         	fn_procSaveCancel();

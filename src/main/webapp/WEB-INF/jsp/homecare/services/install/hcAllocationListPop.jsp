@@ -33,6 +33,7 @@
 	var detailSelRowIndex ;
 	var detailSelCellIndex ;
 	var anoOrdNo = "${ANO_ORD_NO}";
+	var locType = "${TYPE}";
 
 	function fn_doBack(){
 		$("#_doAllactionDiv").remove();
@@ -504,12 +505,24 @@
 	        sessionCode ="A";
 	    }
 
-	    $("#CTSSessionCode").val(sessionCode);
-	    $("#CTCode").val(selectedItems[0].item.memCode);
-	    $("#CTID").val(selectedItems[0].item.ct);
-	    $("#CTgroup").val(selectedItems[0].item.ctSubGrp);
-	    $("#appDate").val(selectedItemsMain[0].item.dDate);
-	    $("#branchDSC").val(selectedItemsMain[0].item.brnchId);
+	    if(locType == 'INS') {
+	    	$("#CTSSessionCode").val(sessionCode);
+	        $("#CTCode").val(selectedItems[0].item.memCode);
+	        $("#CTID").val(selectedItems[0].item.ct);
+	        $("#CTgroup").val(selectedItems[0].item.ctSubGrp);
+	        $("#appDate").val(selectedItemsMain[0].item.dDate);
+	        $("#branchDSC").val(selectedItemsMain[0].item.brnchId);
+
+	    } else if(locType == 'RTN') {
+	    	$("#CTSSessionCode").val(sessionCode);
+            $("#cmbAssignCt").val(selectedItems[0].item.memCode);
+            $("#ctId").val(selectedItems[0].item.ct);
+            $("#CTgroup").val(selectedItems[0].item.ctSubGrp);
+            $("#addAppRetnDt").val(selectedItemsMain[0].item.dDate);
+            $("#brnchId").val(selectedItemsMain[0].item.brnchId);
+
+	    }
+
 
 	    $("#_doAllactionDiv").remove();
 	}
