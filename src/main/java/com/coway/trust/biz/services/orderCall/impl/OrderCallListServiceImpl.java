@@ -465,7 +465,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
     installMaster.put("installDate", appointmentDate);
     installMaster.put("appDate", appointmentDate);
     installMaster.put("callEntryId", params.get("callEntryId"));
-    installMaster.put("installStkId", Integer.parseInt(params.get("hiddenProductId").toString()));
+    installMaster.put("installStkId",  CommonUtils.intNvl(params.get("hiddenProductId")));
     installMaster.put("installResultId", 0);
     installMaster.put("created", new Date());
     installMaster.put("creator", sessionVO.getUserId());

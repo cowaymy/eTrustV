@@ -86,6 +86,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 			params.put("salesOrdNo", CommonUtils.nvl(orderCallOrd.get("salesOrdNo")));
 			params.put("rcdTms", CommonUtils.nvl(orderCallOrd.get("rcdTms")));
 			params.put("callTypeId", CommonUtils.nvl(orderCallOrd.get("callTypeId")));
+			params.put("hiddenProductId", CommonUtils.nvl(orderCallOrd.get("c4")));
 
 			ReturnMessage message2 = hcInsertCallSave(params, sessionVO);
 

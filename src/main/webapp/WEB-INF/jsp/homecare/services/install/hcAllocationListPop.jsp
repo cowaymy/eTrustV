@@ -109,11 +109,11 @@
 		      var selectedValue = AUIGrid.getCellValue(dAgrid, detailSelRowIndex, detailSelCellIndex);
 		      valArray = selectedValue.split("-");
 
-		      if(FormUtil.isEmpty(anoOrdNo)){
+		      //if(FormUtil.isEmpty(anoOrdNo)){
 		    	  AUIGrid.setCellValue(dAgrid, detailSelRowIndex, detailSelCellIndex, (Number(valArray[0])+1)  +"-"+  Number(valArray[1]));
-		      } else {
+		      /* } else {
 		    	  AUIGrid.setCellValue(dAgrid, detailSelRowIndex, detailSelCellIndex, (Number(valArray[0])+2)  +"-"+  Number(valArray[1]));
-		      }
+		      } */
 		      AUIGrid.setSelectionByIndex(dAgrid, detailSelRowIndex,detailSelCellIndex);
 
 		  });

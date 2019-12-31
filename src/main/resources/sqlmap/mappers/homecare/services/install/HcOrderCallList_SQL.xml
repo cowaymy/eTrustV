@@ -102,6 +102,7 @@
 	                   </if>
 	            ) Extent1
 	     WHERE Extent1.SALES_ORD_NO = #{orderNo}
+	        AND Extent1.CALL_STUS_ID = 1
     </select>
 
 
