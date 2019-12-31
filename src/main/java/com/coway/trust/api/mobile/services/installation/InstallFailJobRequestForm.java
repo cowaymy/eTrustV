@@ -21,14 +21,16 @@ public class InstallFailJobRequestForm {
 
 	@ApiModelProperty(value = "EX_BS00000 / AS00000")
 	private String serviceNo;
-	
-	private String failReasonCode; 
-	
-	
+
+	private String failReasonCode;
+
+
 	private String serialNo;
 
-	
-	
+	private String scanSerial;
+
+
+
 
 	public String getSerialNo() {
 		return serialNo;
@@ -71,28 +73,36 @@ public class InstallFailJobRequestForm {
 		this.serviceNo = serviceNo;
 	}
 
+	public String getScanSerial() {
+		return scanSerial;
+	}
 
-	
-	
-	
-	
-	
+	public void setScanSerial(String scanSerial) {
+		this.scanSerial = scanSerial;
+	}
+
+
+
+
+
+
+
 	public static Map<String, Object> createMaps(InstallFailJobRequestForm installFailJobRequestForm) {
-		
+
 		List<Map<String, Object>> list = new ArrayList<>();
 
 			Map<String, Object> map=null;
-			
-			
+
+
 //				map = BeanConverter.toMap(pRReAppointmentRequestForm, "signData", "partList");
 //				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
 
-			
+
 			map = BeanConverter.toMap(installFailJobRequestForm);
 
 //				list.add(map);
-				
+
 				return map;
 	}
-	
+
 }
