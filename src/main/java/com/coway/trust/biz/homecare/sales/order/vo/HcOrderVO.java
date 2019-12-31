@@ -40,6 +40,8 @@ public class HcOrderVO {
 	private int stusId;
 	/** bndl No */
 	private String bndlNo;
+	/** Mattress Order Id */
+	private int srvOrdId;
 
 	public int getOrdSeqNo() {
 		return ordSeqNo;
@@ -118,6 +120,12 @@ public class HcOrderVO {
 	}
 	public void setStusId(int stusId) {
 		this.stusId = stusId;
+	}
+	public int getSrvOrdId() {
+		return srvOrdId;
+	}
+	public void setSrvOrdId(int srvOrdId) {
+		this.srvOrdId = srvOrdId;
 	}
 
 }

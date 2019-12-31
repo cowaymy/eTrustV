@@ -94,6 +94,7 @@
              , FRA_PRE_ORD_ID       /* eKeyin Fra Ord_id */
              , STUS_ID
              , BNDL_NO
+             , SRV_ORD_ID
 
         ) VALUES (
                #{ordSeqNo}
@@ -109,6 +110,7 @@
              , #{fraPreOrdId}
              , #{stusId}
              , #{bndlNo}
+             , #{srvOrdId}
         )
     </insert>
 

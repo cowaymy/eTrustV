@@ -1048,15 +1048,17 @@
 
             if(stkIdx > 0) {
                 fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId, _tagNum);
-                if(_tagNum == '2') {
+                /* if(_tagNum == '2') {
                     fn_loadProductPromotion2(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, _tagNum);
-                } else {
+                } else { */
                     fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, _tagNum);
-                }
+                //}
             }
 
             fn_loadProductComponent(appTypeVal, stkIdVal, _tagNum);
             setTimeout(function() { fn_check(0, _tagNum) }, 200);
+
+            if(copyChangeYn == 'Y') fn_setPromotion(_tagNum);
         });
 
         $('#rentPayMode').change(function() {
@@ -2234,11 +2236,11 @@
         }
     }
 
-    function fn_loadProductPromotion2(appTypeVal, stkId, empChk, custTypeVal, exTrade, tagNum) {
+    /* function fn_loadProductPromotion2(appTypeVal, stkId, empChk, custTypeVal, exTrade, tagNum) {
         $('#ordPromo'+tagNum).removeAttr("disabled");
 
         doGetComboData('/homecare/sales/order/selectPromotionByFrame.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
-    }
+    } */
 
     //LoadProductPrice
     function fn_loadProductPrice(appTypeVal, stkId, srvPacId, tagNum) {

@@ -501,6 +501,8 @@
 	                	Common.popupDiv("/homecare/sales/order/cnfmHcPreOrderDetailPop.do", null, null, true, '_divPreOrderDetailPop');
 	                }
 	            });
+		    } else {
+		    	Common.popupDiv("/homecare/sales/order/cnfmHcPreOrderDetailPop.do", null, null, true, '_divPreOrderDetailPop');
 		    }
         });
 
@@ -1264,7 +1266,12 @@
     function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade, tagNum) {
     	$('#ordPromo'+tagNum).removeAttr("disabled");
 
-        doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
+        // doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
+        if(appTypeVal !=66){
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
+        } else {
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
+        }
     }
 
     //LoadProductPrice

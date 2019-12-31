@@ -70,6 +70,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 	public void hcRegisterOrder(OrderVO orderVO, SessionVO sessionVO) throws ParseException {
 		String matOrdNo = "";     // Mattress Order No
 		String fraOrdNo = "";       // Frame Order No.
+		int matOrdId = 0;
 		int rtnCnt = 0;
 		int custId = CommonUtils.intNvl(orderVO.getSalesOrderMVO1().getCustId());     // Cust Id
 
@@ -103,6 +104,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
     			orderRegisterService.registerOrder(orderVO, sessionVO);
     			matOrdNo = orderVO.getSalesOrderMVO().getSalesOrdNo();
+    			matOrdId =  CommonUtils.intNvl(orderVO.getSalesOrderMVO().getSalesOrdId());
 			}
 
 			// Frame register
@@ -133,6 +135,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			hcOrderVO.setUpdUserId(sessionVO.getUserId());  // session Id Setting
 			hcOrderVO.setOrdSeqNo(ordSeqNo);
 			hcOrderVO.setBndlNo(bndlNo);
+			hcOrderVO.setSrvOrdId(matOrdId);
 
 			// Pre Order 인 경우.
 			if(cntHcOrder > 0) {

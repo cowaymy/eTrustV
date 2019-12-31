@@ -1787,9 +1787,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       this.doSaveOrder(regOrderVO);
     }
 
+    int salesOrdId = CommonUtils.intNvl(regOrderVO.getSalesOrderMVO().getSalesOrdId());
+
     if ("Y".equals(orderVO.getPreOrderYN())) {
       PreOrderVO preOrderVO = new PreOrderVO();
-      int salesOrdId = (int) regOrderVO.getSalesOrderMVO().getSalesOrdId();
 
       preOrderVO.setPreOrdId(orderVO.getPreOrdId());
       preOrderVO.setUpdUserId(sessionVO.getUserId());
@@ -1799,7 +1800,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       preOrderMapper.updatePreOrderStatus(preOrderVO);
     }
 
-    logger.info("regOrderVO.getSalesOrderMVO().getSalesOrdId() : {}" + regOrderVO.getSalesOrderMVO().getSalesOrdId());
+    // Set Sales_Order_ID - KR-SH
+    salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(salesOrdId));
+
+    logger.info("regOrderVO.getSalesOrderMVO().getSalesOrdId() : {}" + salesOrdId);
     logger.info("regOrderVO.getSalesOrderMVO().getSalesOrdNo() : {}" + regOrderVO.getSalesOrderMVO().getSalesOrdNo());
   }
 
