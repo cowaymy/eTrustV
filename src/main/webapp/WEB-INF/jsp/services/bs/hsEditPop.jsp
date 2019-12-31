@@ -3,6 +3,9 @@
 
 <script type="text/javaScript">
 
+var gSelMainRowIdx = 0;
+var gSelMainColIdx = 0;
+
 // add by jgkim
 var myDetailGridData = null;
   //Combo Data
@@ -60,6 +63,24 @@ var myDetailGridData = null;
                              dataField : "serialNo",
                              headerText : "Serial No",
                              width : 240
+                             <c:if test="${orderDetail.codyInfo.serialRequireChkYn == 'Y' }">
+	                         , renderer : {
+	                              type : "IconRenderer",
+	                              iconWidth : 24, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+	                              iconHeight : 24,
+	                              iconPosition : "aisleRight",
+	                              iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
+	                                  "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png" //
+	                              },
+	                              onclick : function(rowIndex, columnIndex, value, item)
+	                              {
+	                                  gSelMainRowIdx = rowIndex;
+	                                  gSelMainColIdx = columnIndex;
+
+	                                  fn_serialSearchPop(item);
+	                              }
+	                           }
+	                        </c:if>
                          }, {
                              dataField : "serialChk",
                              headerText : "Serial Check",
@@ -330,6 +351,11 @@ var myDetailGridData = null;
 
     fn_getHsViewfilterInfoAjax();
 
+ // KR-OHK Serial Check
+    if( $("#hidSerialRequireChkYn").val() == 'Y' ) {
+        $("#btnSerialEdit").attr("style", "");
+    }
+
     var statusCd = "${basicinfo.stusCodeId}";
     $("#cmbStatusType2 option[value='"+ statusCd +"']").attr("selected", true);
 
@@ -584,10 +610,88 @@ var myDetailGridData = null;
     return availQty;
   }
 
+  function fn_serialModifyPop(){
+      $("#serialNoChangeForm #pSerialNo").val( $("#stockSerialNo").val() ); // Serial No
+      $("#serialNoChangeForm #pSalesOrdId").val( $("#hidSalesOrdId").val() ); // 주문 ID
+      $("#serialNoChangeForm #pSalesOrdNo").val( $("#hidSalesOrdNo").val() ); // 주문 번호
+      $("#serialNoChangeForm #pRefDocNo").val( $("#hidSalesOrdCd").val() ); //
+      $("#serialNoChangeForm #pItmCode").val( $("#hidStockCode").val()  ); // 제품 ID
+      $("#serialNoChangeForm #pCallGbn").val( "HS" );
+      $("#serialNoChangeForm #pMobileYn").val( "N"  );
+
+      if(Common.checkPlatformType() == "mobile") {
+          popupObj = Common.popupWin("serialNoChangeForm", "/logistics/serialChange/serialNoChangePop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+      } else{
+          Common.popupDiv("/logistics/serialChange/serialNoChangePop.do", $("#serialNoChangeForm").serializeJSON(), null, true, '_serialNoChangePop');
+      }
+  }
+
+  function fn_PopSerialChangeClose(obj){
+
+      console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+
+      $("#stockSerialNo").val(obj.asIsSerialNo);
+      $("#hidStockSerialNo").val(obj.beforeSerialNo);
+
+      if(popupObj!=null) popupObj.close();
+      //fn_viewInstallResultSearch(); //조회
+  }
+
+//팝업에서 호출하는 조회 함수
+function SearchListAjax(obj){
+
+    console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+
+    $("#stockSerialNo").val(obj.asIsSerialNo);
+    $("#hidStockSerialNo").val(obj.beforeSerialNo);
+
+    //fn_viewInstallResultSearch(); //조회
+}
+
+  function fn_serialSearchPop(item){
+
+	    $("#pLocationType").val('${orderDetail.codyInfo.whLocGb}');
+	    $('#pLocationCode').val('${orderDetail.codyInfo.ctWhLocId}');
+	    $("#pItemCodeOrName").val(item.stkCode);
+
+	    if (FormUtil.isEmpty(item.stkCode)) {
+	        var text = "<spring:message code='service.grid.FilterCode'/>";
+	        var rtnMsg = "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+	        Common.alert(rtnMsg);
+	        return false;
+	    }
+
+	    Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
+	}
+
+	function fnSerialSearchResult(data) {
+	    data.forEach(function(dataRow) {
+	        AUIGrid.setCellValue(myDetailGridID, gSelMainRowIdx, gSelMainColIdx, dataRow.serialNo);
+	        console.log("serialNo : " + dataRow.serialNo);
+	    });
+	}
+
 </script>
 
 <div id="popup_Editwrap" class="popup_wrap"><!-- popup_wrap start -->
-
+<form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
+  <input type="hidden" name="pSerialNo" id="pSerialNo"/>
+  <input type="hidden" name="pSalesOrdId"  id="pSalesOrdId"/>
+  <input type="hidden" name="pSalesOrdNo"  id="pSalesOrdNo"/>
+  <input type="hidden" name="pRefDocNo" id="pRefDocNo"/>
+  <input type="hidden" name="pItmCode" id="pItmCode"/>
+  <input type="hidden" name="pCallGbn" id="pCallGbn"/>
+  <input type="hidden" name="pMobileYn" id="pMobileYn"/>
+</form>
+<form id="frmSearchSerial" name="frmSearchSerial" method="post">
+     <input id="pGubun" name="pGubun" type="hidden" value="RADIO" />
+     <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" />
+     <input id="pLocationType" name="pLocationType" type="hidden" value="" />
+     <input id="pLocationCode" name="pLocationCode" type="hidden" value="" />
+     <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" />
+     <input id="pStatus" name="pStatus" type="hidden" value="" />
+     <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
+</form>
 <header class="pop_header"><!-- pop_header start -->
 
 <h1>  <spin id='stitle'>  </spin></h1>
@@ -690,6 +794,13 @@ var myDetailGridData = null;
     </td>
 </tr>
 <tr>
+    <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must">*</span></th>
+    <td colspan="3">
+      <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly/>
+      <p class="btn_grid" style="display:none" id="btnSerialEdit"><a href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
+    </td>
+</tr>
+<tr>
     <th scope="row">Fail Reason</th>
     <td>
     <select class="w100p" id ="failReason"  name ="failReason">
@@ -777,6 +888,9 @@ var myDetailGridData = null;
  <input type="text" value="${basicinfo.c2}" id="hrResultId" name="hrResultId"/>
  <input type="text" value="${basicinfo.srvBsWeek}" id="srvBsWeek" name="srvBsWeek"/>
  <input type="text" value="${basicinfo.codyId}" id="cmbServiceMem" name="cmbServiceMem"/>
+ <input type="hidden" value="${orderDetail.basicInfo.stockCode}" id="hidStockCode" name="hidStockCode"/>
+ <input type="hidden" value="${orderDetail.basicInfo.ordNo}" id="hidSalesOrdNo" name="hidSalesOrdNo"/>
+ <input type="hidden" value="${basicinfo.no}" id="hidSalesOrdCd" name="hidSalesOrdCd"/>
 
  <input type="text" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode" name="stusCode"/>
  <input type="text" value="<c:out value="${basicinfo.failResnId}"/> "  id="failResn" name="failResn"/>
@@ -787,8 +901,13 @@ var myDetailGridData = null;
  <input type="text" value="<c:out value="${basicinfo.instct}"/> "  id="Instruction" name="Instruction"/>
  <input type="text" value=""  id="cmbCollectType1" name="cmbCollectType1"/>
 
+ <input type="hidden" value="${orderDetail.codyInfo.serialRequireChkYn}" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
+ <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
+
  </div>
 
 </form>
+
+
 </section><!-- pop_body end -->
 </div><!-- popup_wrap end -->

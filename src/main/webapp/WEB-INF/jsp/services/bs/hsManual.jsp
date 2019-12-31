@@ -113,7 +113,10 @@ var TODAY_DD      = "${toDay}";
     dataField : "prevMthHsStatus",
     headerText : "Previous Month Hs Result",
     width : 120
-  } ];
+  } , {
+	    dataField : "serialRequireChkYn",
+	    headerText : "serialRequireChkYn",
+	    width : 120}];
 
   var columnAssiinLayout = [
       {
@@ -212,8 +215,11 @@ var TODAY_DD      = "${toDay}";
         headerText : "result",
         width : 120,
         visible : false
-      },
-      {
+      }, {
+          dataField : "serialRequireChkYn",
+          headerText : "serialRequireChkYn",
+          width : 120}
+      , {
         dataField : "undefined",
         headerText : "Edit",
         width : 170,
@@ -1221,37 +1227,39 @@ var TODAY_DD      = "${toDay}";
 	      return;
 	    } else {
 
-	    	var rowItem ;
+	      var rowItem ;
 	      var salesOrdId = "";
 	      var schdulId = "";
+	      var serialRequireChkYn = "";
 
 	      for (var i = 0, len = checkedItems.length; i < len; i++) {
 	    	  rowItem = checkedItems[i];
 	          schdulId = rowItem.schdulId;
 	          salesOrdId = rowItem.salesOrdId;
-
-
+	          serialRequireChkYn = rowItem.serialRequireChkYn;
 	        }
 	      }
-	    Common.confirm("Are you sure want to reverse this HS ?", function() {
 
+	      // KR-OHK Serial Check add
+          var url = "";
+          if (serialRequireChkYn == 'Y') {
+            url = "/services/bs/hsReversalSerial.do";
+          } else {
+            url = "/services/bs/hsReversal.do";
+          }
+
+          Common.confirm("Are you sure want to reverse this HS ?", function() {
 	    	console.log("schdulId :: " + schdulId + "  salesOrdId :: "  + salesOrdId);
-       Common.ajax("GET", "/services/bs/hsReversal.do",  {schdulId : schdulId , salesOrdId : salesOrdId} , function(result) {
-
-             if(result == null || result == "") {
+            Common.ajax("GET", url,  {schdulId : schdulId , salesOrdId : salesOrdId, serialRequireChkYn : serialRequireChkYn } , function(result) {
+            if(result == null || result == "") {
                  Common.alert("HS Reverse Failed.");
                    return;
-             }else{
-       Common.alert(result.message, fn_parentReload);
-       }
-             });
-
+            }else{
+                 Common.alert(result.message, fn_parentReload);
+            }
+          });
 	    });
     }
-
-
-
-
 </script>
 <form id="popEditForm" method="post">
  <input type="hidden" name="schdulId" id="_schdulId" />
