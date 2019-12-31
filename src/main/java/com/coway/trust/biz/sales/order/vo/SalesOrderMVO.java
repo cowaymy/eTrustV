@@ -143,7 +143,7 @@ public class SalesOrderMVO implements Serializable {
 
   private int comboOrdBind;
 
-  private int bndlId;
+  private Integer bndlId;
 
   private String salesProdSz;
 
@@ -153,14 +153,6 @@ public class SalesOrderMVO implements Serializable {
 
 public void setSalesProdSz(String salesProdSz) {
 	this.salesProdSz = salesProdSz;
-}
-
-public int getBndlId() {
-	return bndlId;
-}
-
-public void setBndlId(int bndlId) {
-	this.bndlId = bndlId;
 }
 
 public static long getSerialversionuid() {
@@ -678,4 +670,12 @@ public long getSalesOrdId() {
   public void setComboOrdBind(int comboOrdBind) {
     this.comboOrdBind = comboOrdBind;
   }
+
+public Integer getBndlId() {
+	return bndlId;
+}
+
+public void setBndlId(Integer bndlId) {
+	this.bndlId = bndlId;
+}
 }

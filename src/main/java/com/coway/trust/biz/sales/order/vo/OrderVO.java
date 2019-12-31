@@ -1,9 +1,6 @@
 package com.coway.trust.biz.sales.order.vo;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
@@ -117,7 +114,7 @@ public class OrderVO implements Serializable {
 
 	private HcOrderVO hcOrderVO;  // Homecare Order
 
-	private int bndlId;
+	private Integer bndlId;
 
 	public SalesOrderMVO getSalesOrderMVO() {
 		return salesOrderMVO;
@@ -507,14 +504,6 @@ public class OrderVO implements Serializable {
 		this.fraPreOrdId = fraPreOrdId;
 	}
 
-	public int getBndlId() {
-		return bndlId;
-	}
-
-	public void setBndlId(int bndlId) {
-		this.bndlId = bndlId;
-	}
-
 	public int getMatAppTyId() {
 		return matAppTyId;
 	}
@@ -531,6 +520,12 @@ public class OrderVO implements Serializable {
 		this.fraAppTyId = fraAppTyId;
 	}
 
+	public Integer getBndlId() {
+		return bndlId;
+	}
 
+	public void setBndlId(Integer bndlId) {
+		this.bndlId = bndlId;
+	}
 
 }
