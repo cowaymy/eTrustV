@@ -191,6 +191,17 @@ function fn_viewInstallResultSearch(){
        console.log("성공.");
        console.log("data : " + result);
        AUIGrid.setGridData(myGridID_view, result);
+
+       if(result != null){
+    	   if(result.length > 0){
+    		   //alert(result[0].serialRequireChkYn)
+    		   $("#serialRequireChkYn").val(result[0].serialRequireChkYn);
+
+    		   if($("#serialRequireChkYn").val() == "Y"){
+    			   $("#btnSerialEdit").attr("style", "");
+    		   }
+    	   }
+       }
    });
 
 }
@@ -277,7 +288,13 @@ function createInstallationViewAUIGrid() {
         headerText : '<spring:message code="service.grid.CTName" />',
         editable : false,
         width : 180
-    }];
+    }, {
+        dataField : "serialRequireChkYn",
+        headerText : 'SERIAL_REQUIRE_CHK_YN',
+        visible : false,
+        width : 180
+    }
+    ];
      // 그리드 속성 설정
     var gridPros = {
 
@@ -370,7 +387,7 @@ var gridPros = {
 </aside><!-- title_line end -->
 
 <input type="hidden" value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId" name="installEntryId"/>
-<input type="text" value="<c:out value="${installResult.serialRequireChkYn}"/>" id="serialRequireChkYn" name="serialRequireChkYn"/>
+<input type="hidden"  id="serialRequireChkYn" name="serialRequireChkYn"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -896,10 +913,10 @@ var gridPros = {
     <td colspan="3">
         <%-- <input type="text" title="" placeholder="" class="w95p" readonly = "readonly" id="serialNo" name="serialNo"  value="${installResult.serialNo}"/> --%>
         <input type="text" title="" placeholder="" class="w95p" readonly = "readonly" id="serialNo" name="serialNo"  value="${orderSerial}"/>
-
-        <p class="btn_grid">
+        <p id="btnSerialEdit" class="btn_grid" style="display:none">
             <a href="#" onClick="fn_serialChangePop()">EDIT<!-- Modify --></a>
         </p>
+
     </td>
 
 </tr>
