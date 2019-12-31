@@ -26,6 +26,7 @@ import com.coway.trust.biz.payment.invoice.service.impl.InvoiceAdjMapper;
 import com.coway.trust.biz.sales.ccp.impl.CcpAgreementMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.bs.HsManualService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.organization.organization.MemberEventListController;
@@ -613,8 +614,20 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       logPram.put("USERID", sessionVO.getUserId());
 
       logger.debug("= HSCOM LOGISTICS CALL PARAM ===>" + logPram.toString());
-      servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+
+      // KR-OHK Serial check add start
+      if("Y".equals(params.get("hidSerialRequireChkYn"))) {
+    	  servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL(logPram);
+      } else {
+    	  servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+      }
       logger.debug("= HSCOMCALL LOGISTICS CALL RESULT ===> {}", logPram);
+
+	  if(!"000".equals(logPram.get("p1"))) {
+		  throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram.get("p1")+ ":" + "HS Result Error");
+	  }
+	  // KR-OHK Serial check add end
+
       logPram.put("P_RESULT_TYPE", "HS");
       logPram.put("P_RESULT_MSG", logPram.get("p1"));
     }
@@ -638,6 +651,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     Map<String, Object> resultValue = new HashMap<String, Object>();
     resultValue.put("resultId", params.get("hidSalesOrdCd"));
     resultValue.put("spMap", logPram);
+    resultValue.put("hsrNo", insertHsResultfinal.get("docNo")); // KR-OHK Serial Check add
 
     if ("API".equals(CommonUtils.nvl(params.get("stage")).toString())) { // MOBILE
       params.put("selSchdulId",CommonUtils.nvl(params.get("hidschdulId")).toString());
@@ -2180,10 +2194,20 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	        logPram.put("P_PRGNM", "HSCEN");
 	        logPram.put("USERID", String.valueOf(sessionVO.getUserId()));
 
-
 	        logger.debug("HS Reversal Start ===>" + logPram.toString());
-	        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE(logPram);
+
+	        // KR-OHK Serial check add start
+	        if("Y".equals(params.get("serialRequireChkYn"))) {
+	        	servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE_SERIAL(logPram);
+	        } else {
+	        	servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE(logPram);
+	        }
 	        logger.debug("HS Reversal End  ===>" + logPram.toString());
+
+	        if(!"000".equals(logPram.get("p1"))) {
+    		    throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram.get("p1")+ ":" + "HS REVERSE Result Error");
+    		}
+    		// KR-OHK Serial check add end
 	      }
 	      Map<String, Object> bsResultMas = new HashMap<String, Object>();
 	      bsResultMas.put("ScheduleID", String.valueOf(qryBS_Rev.get("schdulId")));
@@ -2482,6 +2506,228 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
   @Override
   public List<EgovMap> getAppTypeList(Map<String, Object> params) {
       return hsManualMapper.getAppTypeList(params);
+  }
+
+  //KR-OHK SERIAL ADD
+  @Override
+  public String addIHsResultSerial(Map<String, Object> params, SessionVO sessionVO) {
+	String msg = "";
+	boolean success = false;
+
+	Map<String, Object> resultValue = new HashMap<String, Object>();
+
+	Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+	List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+	List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+	List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+
+	logger.debug("insList : {}", insList);
+
+    resultValue = this.SaveResult(true, formMap, insList, sessionVO);
+
+    int status = 0;
+    status = Integer.parseInt(formMap.get("cmbStatusType").toString());
+
+    if (null != resultValue && status == 4) {
+
+      HashMap spMap = (HashMap) resultValue.get("spMap");
+
+      logger.debug("spMap :========>" + spMap.toString());
+
+      if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
+
+        resultValue.put("logerr", "Y");
+        msg = "Logistics call Error.";
+      } else {
+
+        msg = "Complete to Add a HS Order : " + resultValue.get("resultId");
+      }
+
+      servicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+      String errCode = (String)spMap.get("pErrcode");
+	  String errMsg = (String)spMap.get("pErrmsg");
+
+      logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
+      logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
+
+      // pErrcode : 000  = Success, others = Fail
+      if(!"000".equals(errCode)){
+          throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+      }
+
+    } else if (null != resultValue && (status == 21 || status == 10)) {
+
+      msg = "Complete to Add a HS Order : " + resultValue.get("resultId");
+
+    }
+
+    // CHECKING FILTER LIST IN SVC0007D
+    params.put("selSchdulId", formMap.get("hidschdulId").toString());
+    EgovMap useFilterList = this.getBSFilterInfo(params);
+    // logger.debug("useFilterList : "+ useFilterList.toString());
+
+    // INSERT AS ENTRY FOR OMBAK -- TPY
+    if (useFilterList != null) {
+      String stkId = useFilterList.get("stkId").toString();
+      if (stkId.equals("1428")) { // 1428 - MINERAL FILTER
+        logger.debug("==================== saveASEntryResult [Start] ========================");
+        // logger.debug("saveASEntryResult params :"+ params.toString());
+
+        params.put("userId", sessionVO.getUserId());
+        params.put("salesOrdId", formMap.get("hidSalesOrdId").toString());
+        params.put("codyId", formMap.get("hidCodyId").toString());
+        params.put("settleDate", formMap.get("settleDate").toString());
+        params.put("stkId", useFilterList.get("stkId").toString());
+        params.put("stkCode", useFilterList.get("stkCode").toString());
+        params.put("stkDesc", useFilterList.get("stkDesc").toString());
+        params.put("stkQty", useFilterList.get("bsResultPartQty").toString());
+        params.put("amt", useFilterList.get("amt").toString());
+        params.put("totalAmt", useFilterList.get("totalAmt").toString());
+        params.put("no", useFilterList.get("no").toString());
+        // params.put("stkFilterId",
+        // useFilterList.get("srvFilterId").toString());
+        logger.debug("saveASEntryResult params :" + params.toString());
+
+        Map<String, Object> sm = new HashMap<String, Object>();
+        sm = this.saveASEntryResult(params);
+        params.put("asNo", sm.get("asNo").toString());
+        params.put("asId", sm.get("asId").toString());
+        params.put("asResultNo", sm.get("asResultNo").toString());
+
+        logger.debug("==================== saveASEntryResult [End] ========================");
+
+        // INSERT TAX INVOICE FOR OMBAK -- TPY
+        logger.debug("==================== saveASTaxInvoice [Start] ========================");
+        logger.debug("saveASTaxInvoice params :" + params.toString());
+        Map<String, Object> pb = new HashMap<String, Object>();
+        pb = this.saveASTaxInvoice(params);
+
+        logger.debug("==================== saveASTaxInvoice [End] ========================");
+
+        msg = msg + "<br /> AS NO : " + sm.get("asNo").toString() + "<br /> AS REF : "
+            + sm.get("asResultNo").toString();
+      }
+    }
+
+    // KR-OHK Barcode Save Start
+    Map<String, Object> setmapEdit = new HashMap();
+    setmapEdit.put("serialNo", formMap.get("stockSerialNo"));
+    setmapEdit.put("salesOrdId", formMap.get("hidSalesOrdId"));
+    setmapEdit.put("reqstNo", resultValue.get("hsrNo"));
+    setmapEdit.put("callGbn", "HS");
+    setmapEdit.put("mobileYn", "N");
+    setmapEdit.put("userId", sessionVO.getUserId());
+
+    servicesLogisticsPFCMapper.SP_SVC_BARCODE_SAVE(setmapEdit);
+
+    String errCodeEdit = (String)setmapEdit.get("pErrcode");
+    String errMsgEdit = (String)setmapEdit.get("pErrmsg");
+
+    logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS ERROR CODE : " + errCodeEdit);
+    logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS ERROR MSG: " + errMsgEdit);
+
+    // pErrcode : 000  = Success, others = Fail
+    if(!"000".equals(errCodeEdit)){
+        throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCodeEdit + ":" + errMsgEdit);
+    }
+    // KR-OHK Barcode Save Start
+
+    return msg;
+  }
+
+  //KR-OHK SERIAL ADD
+  @Override
+  public String hsReversalSerial(Map<String, Object> params, SessionVO sessionVO) {
+	String msg = "";
+    String msg2 = "";
+
+    String hsResultNo = "";
+    String CNRefNo = "";
+    String ASResultNo = "";
+    String ReverseASResultNo = "";
+
+    EgovMap stkInfo = this.checkHsBillASInfo(params); // CHECK HS /
+                                                                 // AS / BILL
+                                                                 // INFORMATION
+                                                                 // - ADDED BY
+                                                                 // TPY -
+                                                                 // 18/06/2019
+    logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ITM_STK_ID : " + stkInfo.get("itmStkId").toString());
+    String stkItem = stkInfo.get("itmStkId").toString();
+    if (stkItem.equals("1427")) { // OMBAK - STK ID // 1243 - DEV // 1427 - PRD
+
+      // ADD FUNCTION TO REVERSE HS
+      hsResultNo = this.reverseHSResult(params, sessionVO);
+      msg2 += "<br / > HS RESULT NO : " + hsResultNo;
+
+      if (stkInfo.get("brNo") != null) {
+        params.put("memoAdjustInvoiceNo", stkInfo.get("brNo").toString());
+        params.put("memoAdjustTotalAmount", stkInfo.get("invcItmAmtDue").toString());
+        params.put("MemoItemInvoiceItemID", stkInfo.get("txinvoiceitemid").toString());
+        params.put("memoItemInvoiceItmQty", stkInfo.get("invcItmQty").toString());
+        params.put("memoItemCreditAccID", "39"); // TRADE RECEIVABLE - A/S
+        params.put("memoItemDebitAccID", "167");// SALES - A/S
+        params.put("memoItemTaxCodeID", 0);
+        params.put("memoItemStatusID", "4");
+        params.put("memoItemRemark", "HS REVERSAL - OMBAK");
+        params.put("memoItemGSTRate", stkInfo.get("invcItmGstRate").toString());
+        params.put("memoItemCharges", stkInfo.get("invcItmChrg").toString());
+        params.put("memoItemTaxes", stkInfo.get("invcItmGstTxs").toString());
+        params.put("memoItemAmount", stkInfo.get("invcItmAmtDue").toString());
+
+        params.put("invcSvcNo", stkInfo.get("invcSvcNo").toString());
+        params.put("asId", stkInfo.get("asId").toString());
+        params.put("bsResultPartId", stkInfo.get("bsResultPartId").toString());
+        params.put("invcItmUnitPrc", CommonUtils.nvl(stkInfo.get("invcItmUnitPrc")));
+        params.put("invcItmChrg", stkInfo.get("invcItmChrg").toString());
+        params.put("invcItmDesc1", stkInfo.get("invcItmDesc1").toString());
+
+        logger.debug("hsReversal params --- : " + params);
+
+        // ADD FUNCTION TO CREATE CN BILLING AND INVOICE
+        CNRefNo = this.createCreditNote(params, sessionVO);
+
+        // ADD FUNCTION TO REVERSE AS
+        ASResultNo = this.createASResults(params, sessionVO);
+
+        ReverseASResultNo = this.createReverseASResults(params, sessionVO);
+
+        msg2 += "<br /> CREDIT NOTE REF NO : " + CNRefNo + "<br /> AS REF : " + ReverseASResultNo;
+      }
+
+      msg = "HS REVERSAL SUCCESSFUL. <br /> HS ORDER NO : " + stkInfo.get("salesOrdNo").toString() + "<br />  HS NO : "
+          + stkInfo.get("no").toString() + msg2;
+
+      // KR-OHK Barcode Save Start
+      Map<String, Object> setmap= new HashMap();
+      setmap.put("serialNo", stkInfo.get("lastSerialNo"));
+      setmap.put("salesOrdId", stkInfo.get("salesOrdId"));
+      setmap.put("reqstNo", stkInfo.get("hsrNo"));
+      setmap.put("callGbn", "HS_REVERSE");
+      setmap.put("mobileYn", "N");
+      setmap.put("userId", sessionVO.getUserId());
+
+      servicesLogisticsPFCMapper.SP_SVC_BARCODE_SAVE(setmap);
+
+      String errCode = (String)setmap.get("pErrcode");
+      String errMsg = (String)setmap.get("pErrmsg");
+
+      logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS_REVERSE ERROR CODE : " + errCode);
+      logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS_REVERSE ERROR MSG: " + errMsg);
+
+      // pErrcode : 000  = Success, others = Fail
+      if(!"000".equals(errCode)){
+          throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+      }
+      // KR-OHK Barcode Save Start
+
+    } else {
+      // msg = "HS REVERSAL ONLY ALLOW FOR OMBAK PRODUCT.";
+      msg = "HS REVERSAL IS NOT ALLOWED FOR THIS HS.";
+    }
+
+	return msg;
   }
 
   /* Woongjin Jun */

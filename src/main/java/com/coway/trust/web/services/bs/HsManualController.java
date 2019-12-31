@@ -1268,4 +1268,27 @@ public class HsManualController {
       return ResponseEntity.ok(applicationTypeList);
   }
 
+  @RequestMapping(value = "/addIHsResultSerial.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> addIHsResultSerial(@RequestBody Map<String, Object> params, HttpServletRequest request,
+      SessionVO sessionVO) throws Exception {
+    ReturnMessage message = new ReturnMessage();
+    logger.debug("addIHsResultSerial params : {}", params);
+
+    String msg = hsManualService.addIHsResultSerial(params, sessionVO);
+
+    message.setMessage(msg);
+    return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/hsReversalSerial.do")
+  public ResponseEntity<ReturnMessage> hsReversalSerial(@RequestParam Map<String, Object> params, HttpServletRequest request,
+      ModelMap model, SessionVO sessionVO) {
+    ReturnMessage message = new ReturnMessage();
+    logger.debug("params {}", params);
+
+    String msg = hsManualService.hsReversalSerial(params, sessionVO);
+
+    message.setMessage(msg);
+    return ResponseEntity.ok(message);
+  }
 }

@@ -677,6 +677,7 @@ AND SAL023.CUST_ADD_ID = INS.ADD_ID
                         , Project2.Result as Result
                         , project2.dept_code
                         , project2.crt_user_id
+                        , project2.SERIAL_REQUIRE_CHK_YN
           FROM (SELECT /*+ use_hash(br, hs) index(ad, SAL0023D_IDX5) */
                        DISTINCT hs.no AS no
                               , hs.stus_code_id AS stus_code_id
@@ -702,6 +703,7 @@ AND SAL023.CUST_ADD_ID = INS.ADD_ID
                               , mg.cody_mangr_user_id
                               , og.dept_code
                               , CASE WHEN HS.CRT_USER_ID = '1111' THEN '' ELSE USR.USER_NAME END AS CRT_USER_ID
+                              , LOC.SERIAL_REQUIRE_CHK_YN
                 FROM SVC0008D hs
                 INNER JOIN SAL0001D so ON so.sales_ord_id = hs.sales_ord_id
                 INNER JOIN SAL0045D ins ON ins.sales_ord_id = hs.sales_ord_id
@@ -717,7 +719,7 @@ AND SAL023.CUST_ADD_ID = INS.ADD_ID
                 LEFT JOIN SYS0005M br ON br.brnch_id = ac.brnch
                 LEFT JOIN ORG0005D og ON og.MEM_ID = CD.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
-
+                LEFT JOIN SYS0028M LOC ON LOC.WH_LOC_CODE = cd.MEM_CODE
                 WHERE
 
                 <if test="myBSMonth != null and myBSMonth != ''">
@@ -4905,7 +4907,9 @@ SELECT
     EXTENT2.INVC_ITM_CHRG INVC_ITM_CHRG,
     EXTENT2.INVC_ITM_AMT_DUE INVC_ITM_AMT_DUE,
     EXTENT1.TAX_INVC_SVC_NO INVC_SVC_NO,
-    EXTENT3.AS_ENTRY_ID AS_ID
+    EXTENT3.AS_ENTRY_ID AS_ID,
+    FN_GET_ORDER_SERIAL(SVC.SALES_ORD_ID, STK.STK_CODE) LAST_SERIAL_NO,
+    SVD.NO HSR_NO
 FROM
    SVC0008D SVC
     JOIN SAL0001D SOM ON SVC.SALES_ORD_ID = SOM.SALES_ORD_ID
@@ -4916,6 +4920,7 @@ FROM
                               AND AS_RESULT_STUS_ID = 4
     LEFT JOIN PAY0031D EXTENT1 ON EXTENT1.TAX_INVC_SVC_NO = EXTENT3.AS_RESULT_NO
     LEFT JOIN PAY0032D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
+    JOIN SYS0026M STK ON STK.STK_ID = SOD.ITM_STK_ID
 WHERE
             som.STUS_CODE_ID = 4
               AND svc.MONTH = EXTRACT(MONTH FROM SYSDATE)

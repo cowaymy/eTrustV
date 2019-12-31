@@ -169,6 +169,11 @@ public interface HsManualService {
 
   List<EgovMap> getAppTypeList(Map<String, Object> params);
 
+  //KR-OHK SERIAL ADD
+  String addIHsResultSerial(Map<String, Object> params, SessionVO sessionVO);
+  //KR-OHK SERIAL ADD
+  String hsReversalSerial(Map<String, Object> params, SessionVO sessionVO);
+
   /* Woongjin Jun */
   Map<String, Object> addIHtResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws Exception;
   /* Woongjin Jun */
