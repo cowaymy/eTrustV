@@ -25,7 +25,7 @@
 
 	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 	       var statusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
-	       Common.popupDiv("/services/installationResultDetailPop.do?isPop=true&installEntryId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId") + "&codeId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1"));
+	       Common.popupDiv("/homecare/services/install/installationResultDetailPop.do?isPop=true&installEntryId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId") + "&codeId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1"));
 	    });
 
 	    AUIGrid.bind(myGridID, "cellClick", function(event) {
@@ -112,25 +112,25 @@
 
     function createInstallationListAUIGrid() {
 	    var columnLayout = [
-	        {dataField : "code",                headerText : '<spring:message code="service.grid.Type" />',             editable : false,     width : 80},
-	        {dataField : "installEntryNo",     headerText : '<spring:message code="service.grid.InstallNo" />',        editable : false,     width : 130},
+	        {dataField : "code",             headerText : '<spring:message code="service.grid.Type" />',             editable : false,     width : 80},
+	        {dataField : "installEntryNo",   headerText : '<spring:message code="service.grid.InstallNo" />',        editable : false,     width : 130},
 	        {dataField : "salesOrdNo",       headerText : '<spring:message code="service.grid.OrderNo" />',        editable : false,     width : 110},
-	        {dataField : "c3",                    headerText : '<spring:message code="service.grid.AppDate" />',        editable : false,     width : 100},
-	        {dataField : "stkDesc",             headerText : '<spring:message code="service.grid.Product" />',         editable : false,     style : "my-column",    width : 320},
-	        {dataField : "custId",               headerText : '<spring:message code="service.grid.CustomerId" />',    editable : false,     width : 100},
-	        {dataField : "memCode",         headerText : '<spring:message code="home.lbl.dtCode" />',         editable : false,     width : 100},
-	        {dataField : "appType",            headerText : '<spring:message code="service.grid.AppType" />',       editable : false,     width : 80},
-	        {dataField : "bndlNo",             headerText : 'Bundle No',                                                             editable : false,     width : 120},
-	        {dataField : "brnchCode",         headerText : '<spring:message code="service.grid.BranchCode" />',   editable : false,     width : 100},
-	        {dataField : "code1",               headerText : '<spring:message code="service.grid.Status" />',            width : 100},
-	        {dataField : "lstUpd",               headerText : '<spring:message code="service.grid.UpdateBy" />',       width : 130},
-	        {dataField : "brnchId",             width : 0},
-	        {dataField : "installEntryId",      width : 0},
-	        {dataField : "codeid1",            width : 0},
-	        {dataField : "c1",                    width : 0},
-	        {dataField : "salesOrdId",         width : 0},
-	        {dataField : "rcdTms",             width : 0},
-	        {dataField : "appTypeId",       width : 0, visible:false}
+	        {dataField : "c3",               headerText : '<spring:message code="service.grid.AppDate" />',        editable : false,     width : 100},
+	        {dataField : "stkDesc",          headerText : '<spring:message code="service.grid.Product" />',         editable : false,     style : "my-column",    width : 320},
+	        {dataField : "custId",           headerText : '<spring:message code="service.grid.CustomerId" />',    editable : false,     width : 100},
+	        {dataField : "memCode",          headerText : '<spring:message code="home.lbl.dtCode" />',         editable : false,     width : 100},
+	        {dataField : "appType",          headerText : '<spring:message code="service.grid.AppType" />',       editable : false,     width : 80},
+	        {dataField : "bndlNo",           headerText : 'Bundle No',                                                             editable : false,     width : 120},
+	        {dataField : "brnchCode",        headerText : '<spring:message code="service.grid.BranchCode" />',   editable : false,     width : 100},
+	        {dataField : "code1",            headerText : '<spring:message code="service.grid.Status" />',            width : 100},
+	        {dataField : "lstUpd",           headerText : '<spring:message code="service.grid.UpdateBy" />',       width : 130},
+	        {dataField : "brnchId",          width : 0},
+	        {dataField : "installEntryId",   width : 0},
+	        {dataField : "codeid1",          width : 0},
+	        {dataField : "c1",               width : 0},
+	        {dataField : "salesOrdId",       width : 0},
+	        {dataField : "rcdTms",           width : 0},
+	        {dataField : "appTypeId",        width : 0, visible:false}
 	    ];
 
 	    var gridPros = {
@@ -205,7 +205,7 @@
   }
 
   function fn_installationNote() {
-    Common.popupDiv("/services/installationNotePop.do", null, null, true, '');
+    Common.popupDiv("/homecare/services/install/report/installationNotePop.do", null, null, true, '');
   }
 
   /* By KV - Install Mobile Failure Listing*/
@@ -232,29 +232,29 @@
   }
 
   function fn_doActiveList() {
-    Common.popupDiv("/services/doActiveListPop.do", null, null, true, '');
+    Common.popupDiv("/homecare/services/install/report/doActiveListPop.do", null, null, true, '');
   }
 
   function fn_installRawData() {
-    Common.popupDiv("/services/installationRawDataPop.do", null, null, true, '');
+    Common.popupDiv("/homecare/services/install/report/installationRawDataPop.do", null, null, true, '');
   }
 
   function fn_installBookListing() {
-    Common.popupDiv("/services/installationLogBookPop.do", null, null, true, '');
+    Common.popupDiv("/homecare/services/install/report/installationLogBookPop.do", null, null, true, '');
   }
 
   function fn_dailyDscReport() {
-    Common.popupDiv("/services/dailyDscReportPop.do", null, null, true, '');
+    Common.popupDiv("/homecare/services/install/report/dailyDscReportPop.do", null, null, true, '');
   }
 
   function fn_installNoteListing() {
-    Common.popupDiv("/services/installationNoteListingPop.do", null, null, true, '');
+    Common.popupDiv("/homecare/services/install/report/installationNoteListingPop.do", null, null, true, '');
   }
   function fn_installFreeGiftList() {
-    Common.popupDiv("/services/installationFreeGiftListPop.do", null, null, true, '');
+    Common.popupDiv("/homecare/services/install/report/installationFreeGiftListPop.do", null, null, true, '');
   }
   function fn_DscReport() {
-    Common.popupDiv("/services/installationDscReportPop.do", null, null, true, '');
+    Common.popupDiv("/homecare/services/install/report/installationDscReportPop.do", null, null, true, '');
   }
 
   function fn_editInstallation() {

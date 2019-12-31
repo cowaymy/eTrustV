@@ -11,18 +11,22 @@
  -->
 
 <script type="text/javaScript">
+//Branch : 5743
+var branchDs = [];
+<c:forEach var="obj" items="${branchList}">
+    branchDs.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}"});
+</c:forEach>
+
   $(document).ready(
     function() {
       $('.multy_select').on("change", function() {
       }).multipleSelect({});
 
       doGetCombo('/common/selectCodeList.do', '10', '', 'appliType', 'M', 'fn_multiCombo');
-      //doGetComboSepa("/common/selectBranchCodeList.do", 5, '-', '', 'branch', 'S', '');
-      doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'branch', 'S', ''); // DSC BRANCH
+      doDefCombo(branchDs, '', 'branch', 'S', '');   // Home Care Branch : 5743
 
-      $("#branch").change(
-        function() {
-          doGetCombo('/services/as/selectCTByDSC.do', $("#branch").val(), '', 'CTCode', 'M', 'fn_multiCombo');
+      $("#branch").change(function() {
+    	    doGetCombo('/homecare/services/as/selectCTByDSCSearch.do', $("#branch").val(), '', 'CTCode', 'M', 'fn_multiCombo');
         });
     });
 
@@ -150,12 +154,16 @@
         whereSeq += "AND B.INSTALL_ENTRY_NO = '" + $("#instalNo").val() + "' ";
       }
 
-      // Homecare Remove(except)
-      whereSeq += " AND A.BNDL_ID IS NULL ";
-
       //if ($("#CTCode").val() != '' && $("#CTCode").val() != null) {
         //whereSeq2 += "AND CTMEM.MEM_CODE IN (" + $("#CTCode").val() + ") ";
       //}
+
+      if ($("#bndlId").val() != '' && $("#bndlId").val() != null) {
+        whereSeq += "AND A.BNDL_ID = '" + $("#bndlId").val() + "' ";
+      }
+
+      // HomeCare add
+      whereSeq += " AND A.BNDL_ID IS NOT NULL ";
 
       var ctCodeLst = "";
       var ctCode = $("#CTCode").val();
@@ -175,7 +183,7 @@
       }
 
       if ($("#branch").val() != '' && $("#branch").val() != null) {
-        whereSeq2 += "AND INSTALL.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '" + $("#branch").val() + "' AND STUS_ID = 1) ";
+        whereSeq2 += "AND INSTALL.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '" + $("#branch").val() + "' AND STUS_ID = 1 AND TYPE_ID = 5754)";
       }
 
       if ($("#sortType").val() == "2") {
@@ -226,7 +234,7 @@
     $("#reportFileName").val('');
     $("#viewType").val('');
 
-    doGetCombo('/services/as/selectCTByDSC.do', '-', '', 'CTCode', 'M', 'fn_multiCombo');
+    doGetCombo('/homecare/services/as/selectCTByDSCSearch.do', '-', '', 'CTCode', 'M', 'fn_multiCombo');
   }
 
 </script>
@@ -356,7 +364,7 @@
        </div>
       </td> -->
 
-      <th scope="row"><spring:message code='service.grid.CTCode' /></th>
+      <th scope="row"><spring:message code='home.lbl.dtCode' /></th>
        <td>
         <select id="CTCode" name="CTCode" class="multy_select w100p" multiple="multiple">
         </select>
@@ -364,11 +372,17 @@
      </tr>
      <tr>
       <th scope="row"><spring:message code='service.title.SortBy' /> <span name="m5" id="m5" class="must">*</span></th>
-      <td colspan="3"><select id="sortType" name="sortType">
-        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
-        <option value="1">Installation Number</option>
-        <option value="2" selected>CT Code</option>
-      </select></td>
+      <td>
+        <select id="sortType" name="sortType">
+	        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
+	        <option value="1">Installation Number</option>
+	        <option value="2" selected>DT Code</option>
+        </select>
+      </td>
+      <th scope="row">Bundle No</th>
+      <td>
+        <input type="text" title="" placeholder="Bundle No" class="w100p" id="bndlId" name="bndlId" />
+      </td>
      </tr>
     </tbody>
    </table>

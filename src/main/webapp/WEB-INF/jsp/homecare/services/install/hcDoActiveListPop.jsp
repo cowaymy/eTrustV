@@ -1,13 +1,23 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
+//Branch : 5743
+var branchDs = [];
+<c:forEach var="obj" items="${branchList}">
+    branchDs.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}"});
+</c:forEach>
+
 $(document).ready(function(){
-	 $('.multy_select').on("change", function() {
+	/*
+	$('.multy_select').on("change", function() {
          //console.log($(this).val());
      }).multipleSelect({});
+	 */
 
 	 doGetCombo('/common/selectCodeList.do', '10', '','appliType', 'M' , 'f_multiCombo');
-	 doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'M', 'f_multiCombo1');
+
+	 //doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'M', 'f_multiCombo1');
+     doDefCombo(branchDs, '', 'branch', 'M', 'f_multiCombo1');   // Home Care Branch : 5743
 
 });
 
@@ -122,8 +132,8 @@ function fn_Generate(){
 			whereSql +=" AND (tm.Sales_Ord_No between '"  + $("#orderNumFr").val() + "' AND '" +$("#orderNumTo").val()  + "') ";
 	    }
 
-	    // homecare Remove(except)
-	    whereSql += " AND tm.BNDL_ID IS NULL ";
+	    // HomeCare add
+	    whereSql += " AND tm.BNDL_ID IS NOT NULL ";
 
 		var orderBySql = " ORDER BY inse.Install_Entry_ID "
 			if($("#sortType").val() == "1"){
@@ -149,7 +159,7 @@ function fn_Generate(){
 		$("#installationActiveForm #V_SELECTSQL").val("A");
 		$("#installationActiveForm #V_WHERESQL").val(whereSql);
 		$("#installationActiveForm #V_FULLSQL").val("A");
-		$("#installationActiveForm #reportFileName").val('/services/ActiveInstallList.rpt');
+		$("#installationActiveForm #reportFileName").val('/homecare/hcActiveInstallList.rpt');
 		$("#installationActiveForm #viewType").val("PDF");
 		$("#installationActiveForm #reportDownFileName").val("DOActiveList_"+day+month+date.getFullYear());
 
@@ -257,7 +267,7 @@ function fn_Generate(){
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.CTCode'/></th>
+    <th scope="row"><spring:message code='home.lbl.dtCode'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -272,7 +282,7 @@ function fn_Generate(){
     <select id="sortType" name="sortType">
         <option value=""></option>
         <option value="1">Installation Number</option>
-        <option value="2">CT Code</option>
+        <option value="2">DT Code</option>
         <option value="3">Order Number</option>
     </select>
     </td>

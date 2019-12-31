@@ -254,6 +254,8 @@
 
    function fn_serialSearchPop(){
 
+       $("#pLocationType").val('${installResult.whLocGb}');
+       $('#pLocationCode').val('${installResult.ctWhLocId}');
 	   $("#pItemCodeOrName").val('${orderDetail.basicInfo.stockCode}');
 
        Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});

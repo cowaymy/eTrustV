@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
-import com.coway.trust.biz.common.HomecareCmService;
 import com.coway.trust.biz.homecare.services.install.HcInstallResultListService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
@@ -31,8 +30,6 @@ import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
-import com.coway.trust.web.homecare.HomecareConstants;
-import com.coway.trust.web.services.installation.InstallationResultListController;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -128,18 +125,26 @@ public class HcInstallResultListController {
 		List<EgovMap> installationResultList = hcInstallResultListService.hcInstallationListSearch(params);
 
 		return ResponseEntity.ok(installationResultList);
-  }
-
-
-	@RequestMapping(value = "/installationResultPop.do")
-	public String installationResultPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		EgovMap resultInfo = installationResultListService.getInstallationResultInfo(params);
-		model.addAttribute("resultInfo", resultInfo);
-
-		// 호출될 화면
-		return "services/installation/installationResultPop";
 	}
 
+	/**
+	 * Installation Result DetailPopup
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/installationResultPop.do")
+	public String installationResultPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	  EgovMap resultInfo = installationResultListService.getInstallationResultInfo(params);
+	  model.addAttribute("resultInfo", resultInfo);
+	  logger.debug("viewInstallation : {}", resultInfo);
+
+	  // 호출될 화면
+	  return "homecare/services/installation/hcInstallationResultPop";
+	}
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/installationResultDetailPop.do")
@@ -171,7 +176,7 @@ public class HcInstallResultListController {
 		model.addAttribute("callType", callType);
 
 		// 호출될 화면
-		return "services/installation/installationResultDetailPop";
+		return "homecare/services/installation/hcInstallationResultDetailPop";
 	}
 
 	@SuppressWarnings("unchecked")

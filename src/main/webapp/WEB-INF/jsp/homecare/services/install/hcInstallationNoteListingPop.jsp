@@ -8,14 +8,22 @@
  -->
 
 <script type="text/javaScript">
-  var myGridID;
+//Branch : 5743
+var branchDs = [];
+<c:forEach var="obj" items="${branchList}">
+    branchDs.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}"});
+</c:forEach>
+
+var myGridID;
   $(document).ready(
     function() {
-      $('.multy_select').on("change", function() {
-      }).multipleSelect({});
+      //$('.multy_select').on("change", function() {
+      //}).multipleSelect({});
 
       doGetCombo('/common/selectCodeList.do', '10', '', 'appliType', 'M', 'f_multiCombo');
-      doGetComboSepa('/common/selectBranchCodeList.do', '5', '-', '', 'branch', 'M', 'f_multiCombo1');
+      //doGetComboSepa('/common/selectBranchCodeList.do', '5', '-', '', 'branch', 'M', 'f_multiCombo1');
+      doDefCombo(branchDs, '', 'branch', 'M', 'f_multiCombo1');   // Home Care Branch : 5743
+
       doGetProductCombo('/common/selectProductCodeListM.do', '', '', 'productLst', 'M', 'f_multiCombo2'); //Product Code
       fn_noteListingGrid();
     }
@@ -270,8 +278,8 @@
             + $("#orderNoTo").val() + "') ";
       }
 
-      // homecare Remove(except)
-      whereSql += " AND som.BNDL_ID IS NULL ";
+      // HomeCare add
+      whereSql += " AND som.BNDL_ID IS NOT NULL ";
 
       var orderBySql = " ORDER BY ie.Install_Entry_No "
       if ($("#sortType").val() == "1") {
@@ -391,6 +399,9 @@
             + $("#orderNoTo").val() + "') ";
       }
 
+      // HomeCare add
+      whereSql += " AND som.BNDL_ID IS NOT NULL ";
+
       var orderBySql = " ORDER BY ie.Install_Entry_No "
       if ($("#sortType").val() == "1") {
         orderBySql = " ORDER BY ie.Install_Entry_No ";
@@ -413,7 +424,7 @@
       $("#reportForm #V_ORDERDATE").val(orderDate);
       $("#reportForm #V_WHERESQL").val(whereSql);
       $("#reportForm #V_ORDERBYSQL").val(orderBySql);
-      $("#reportForm #reportFileName").val('/services/InstallationNoteListing_PDF.rpt');
+      $("#reportForm #reportFileName").val('/homecare/hcInstallationNoteListing_PDF.rpt');
       $("#reportForm #viewType").val("PDF");
       $("#reportForm #reportDownFileName").val(
           "InstallationNoteList_" + day + month + date.getFullYear());
