@@ -82,7 +82,9 @@
 			       CASE WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2
 			            ELSE '' END UPD_USER_NAME  ,
 			       CASE WHEN ( Filter1.SO_EXCHG_FORM_NO IS NOT NULL ) THEN Filter1.SO_EXCHG_FORM_NO
-			            ELSE '-' END SO_EXCHG_FORM_NO
+			            ELSE '-' END SO_EXCHG_FORM_NO ,
+                   Filter1.STK_CTGRY_ID
+
 			FROM ( SELECT Extent1.SO_EXCHG_ID ,
 					              Extent1.SO_ID ,
 					              Extent1.SO_EXCHG_TYPE_ID ,
@@ -154,7 +156,9 @@
 					              Extent15.PROMO_ID PROMOID2  ,
 					              Extent15.PROMO_CODE PROMOCODE2  ,
 					              Extent15.PROMO_DESC PROMODESC2  ,
-					              Extent16.NAME NAME8
+					              Extent16.NAME NAME8 ,
+					              Extent11.STK_CTGRY_ID
+
 			             FROM SAL0004D Extent1
 				              JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SO_ID
 				              JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
@@ -195,7 +199,9 @@
                               </if>
 			             ) Filter1
 			       LEFT JOIN SAL0029D Extent17   ON Extent17.CUST_ID = Filter1.SO_EXCHG_NW_CUST_ID
-			       WHERE 1=1
+			       WHERE Filter1.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                                        WHERE AA.CODE = BB.CODE
+                                                                           AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE') -- Mattress, Frame
 			       <if test="startCrtDt != null and startCrtDt != ''">
                          <![CDATA[
                          AND Filter1.SO_EXCHG_CRT_DT >= TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
