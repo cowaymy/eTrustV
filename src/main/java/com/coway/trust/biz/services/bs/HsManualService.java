@@ -173,8 +173,13 @@ public interface HsManualService {
   String addIHsResultSerial(Map<String, Object> params, SessionVO sessionVO);
   //KR-OHK SERIAL ADD
   String hsReversalSerial(Map<String, Object> params, SessionVO sessionVO);
+  //KR-OHK SERIAL ADD
+  Map<String, Object> UpdateHsResult2Serial(Map<String, Object> formMap, List<Object> docType, SessionVO sessionVO, List<Object> updList) throws ParseException;
+
 
   /* Woongjin Jun */
   Map<String, Object> addIHtResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws Exception;
   /* Woongjin Jun */
+
+
 }
