@@ -171,14 +171,16 @@ $(document).ready(function(){
     // 변수설정.
     if(Common.checkPlatformType() == "mobile") {
     	$("#sRstNo").val("${url.zRstNo}");            // requst no
-    	$("#sDryNo").val("${url.zDelvryNo}");         // delivery no
+    	$("#sStockAuditNo").val("${url.zRstNo}");            // requst no
+        $("#sDryNo").val("${url.zDelvryNo}");         // delivery no
     	$("#transaction").val("${url.zTrnscType}");   // US : STO, UM : SMO, AD : STOCK AUDIT
     	$("#fromLocCode").val("${url.zFromLoc}");
     	$("#toLocCode").val("${url.zToLoc}");
     	$("#ioType").val("${url.zIoType}");
     }else{
     	$("#sRstNo").val($("#zRstNo").val());
-    	$("#sDryNo").val($("#zDelvryNo").val());
+    	$("#sStockAuditNo").val($("#zRstNo").val());
+        $("#sDryNo").val($("#zDelvryNo").val());
     	$("#transaction").val($("#zTrnscType").val());
     	$("#fromLocCode").val($("#zFromLoc").val());
         $("#toLocCode").val($("#zToLoc").val());
@@ -189,7 +191,7 @@ $(document).ready(function(){
     	$("#typeUM").show();
     	$("#typeUS").hide();
     	$("#typeAD").hide();
-    }if($("#transaction").val() == "AD"){
+    }else if($("#transaction").val() == "AD"){
         $("#typeUM").hide();
         $("#typeUS").hide();
         $("#typeAD").show();
@@ -522,7 +524,7 @@ function fn_scanClosePop(){
 			<tr id="typeAD" style="display:none;">
                 <th scope="row">Stock Audit No.</th>
                 <td colspan="3" >
-                    <input type="text" id="sRstNo" name="sRstNo" placeholder="" class="w100p readonly" style="min-width:150px" readonly value=""'/>
+                    <input type="text" id="sStockAuditNo" name="sStockAuditNo" placeholder="" class="w100p readonly" style="min-width:150px" readonly value=""'/>
                 </td>
             </tr>
 			<tr id="typeUM" style="display:none;">
