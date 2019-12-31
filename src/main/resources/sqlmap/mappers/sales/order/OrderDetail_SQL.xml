@@ -591,6 +591,8 @@
              , T9.NAME NAME3
              , T9.TEL_MOBILE TEL_MOBILE3
              , T8.SERIAL_REQUIRE_CHK_YN
+             , T8.WH_LOC_GB
+             , T8.WH_LOC_ID CT_WH_LOC_ID
           FROM SAL0001D T1
           JOIN SAL0090D T2
             ON T2.SRV_SO_ID = T1.SALES_ORD_ID
