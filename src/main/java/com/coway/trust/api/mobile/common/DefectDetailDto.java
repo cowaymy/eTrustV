@@ -17,6 +17,8 @@ public class DefectDetailDto {
 	private String defectCode;
 	@ApiModelProperty(value = "defectId 설명")
 	private String defectDesc;
+	@ApiModelProperty(value = "prodCat")
+	private String prodCat;
 
 	public static DefectDetailDto create(EgovMap egvoMap) {
 		DefectDetailDto dto = new DefectDetailDto();
@@ -24,6 +26,9 @@ public class DefectDetailDto {
 		dto.setDefectId(CommonUtils.getInt(egvoMap.get("resnId")));
 		dto.setDefectCode((String) egvoMap.get("resnCode"));
 		dto.setDefectDesc((String) egvoMap.get("resnDesc"));
+		if (egvoMap.get("prodCat") != null) {
+			dto.setProdCat((String) egvoMap.get("prodCat"));
+		}
 		return dto;
 	}
 
@@ -57,5 +62,13 @@ public class DefectDetailDto {
 
 	public void setDefectDesc(String defectDesc) {
 		this.defectDesc = defectDesc;
+	}
+
+	public String getProdCat() {
+		return prodCat;
+	}
+
+	public void setProdCat(String prodCat) {
+		this.prodCat = prodCat;
 	}
 }
