@@ -84,7 +84,9 @@
                    CASE WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2
                         ELSE '' END UPD_USER_NAME  ,
                    CASE WHEN ( Filter1.SO_EXCHG_FORM_NO IS NOT NULL ) THEN Filter1.SO_EXCHG_FORM_NO
-                        ELSE '-' END SO_EXCHG_FORM_NO
+                        ELSE '-' END SO_EXCHG_FORM_NO ,
+                   Filter1.STK_CTGRY_ID
+
          FROM (
             SELECT Extent1.SO_EXCHG_ID ,
                        Extent1.SO_ID ,
@@ -157,7 +159,9 @@
                        Extent15.PROMO_ID PROMOID2  ,
                        Extent15.PROMO_CODE PROMOCODE2  ,
                        Extent15.PROMO_DESC PROMODESC2  ,
-                       Extent16.NAME NAME8
+                       Extent16.NAME NAME8 ,
+                       Extent11.STK_CTGRY_ID
+
               FROM SAL0004D Extent1
                 JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SO_ID
                 JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
@@ -198,41 +202,31 @@
                </if>
             ) Filter1
         LEFT JOIN SAL0029D Extent17   ON Extent17.CUST_ID = Filter1.SO_EXCHG_NW_CUST_ID
-            <where>
-                <if test="startCrtDt != null and startCrtDt != ''">
-                <![CDATA[
-                    AND Filter1.SO_EXCHG_CRT_DT >= TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
-                ]]>
-                </if>
-                <if test="endCrtDt != null and endCrtDt != ''">
-                <![CDATA[
-                    AND Filter1.SO_EXCHG_CRT_DT <= TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
-                ]]>
-                </if>
-                <if test="salesOrdNo != null and salesOrdNo != ''">
-                    AND Filter1.SALES_ORD_NO = #{salesOrdNo}
-                </if>
-                <if test="crtUserName != null and crtUserName != ''">
-                    AND UPPER(Filter1.USERNAME1) = UPPER(#{crtUserName})
-                </if>
-                <if test="custIc != null and custIc != ''">
-                    AND UPPER(Filter1.NRIC1) LIKE '%' || UPPER(#{custIc}) || '%'
-                </if>
-                <if test="custName != null and custName != ''">
-                    AND UPPER(Filter1.NAME5) LIKE '%' || UPPER(#{custName}) || '%'
-                </if>
-                AND EXISTS
-                (
-                    SELECT V1.ORD_NO
-                     FROM SAL1013V  V1
-                             , SYS0026M S1
-                    WHERE V1.PRODUCT_CODE  = S1.STK_CODE
-                       AND S1.STK_CTGRY_ID     IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
-                                                                WHERE AA.CODE = BB.CODE
-                                                                    AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
-                       AND V1.ORD_NO             = Filter1.SALES_ORD_NO
-                )
-      </where>
+            WHERE Filter1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                          WHERE AA.CODE = BB.CODE
+                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE') -- Mattress, Frame
+            <if test="startCrtDt != null and startCrtDt != ''">
+	            <![CDATA[
+	                AND Filter1.SO_EXCHG_CRT_DT >= TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+	            ]]>
+            </if>
+            <if test="endCrtDt != null and endCrtDt != ''">
+	            <![CDATA[
+	                AND Filter1.SO_EXCHG_CRT_DT <= TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+	            ]]>
+            </if>
+            <if test="salesOrdNo != null and salesOrdNo != ''">
+                AND Filter1.SALES_ORD_NO = #{salesOrdNo}
+            </if>
+            <if test="crtUserName != null and crtUserName != ''">
+                AND UPPER(Filter1.USERNAME1) = UPPER(#{crtUserName})
+            </if>
+            <if test="custIc != null and custIc != ''">
+                AND UPPER(Filter1.NRIC1) LIKE '%' || UPPER(#{custIc}) || '%'
+            </if>
+            <if test="custName != null and custName != ''">
+                AND UPPER(Filter1.NAME5) LIKE '%' || UPPER(#{custName}) || '%'
+            </if>
     </select>
 
 </mapper>

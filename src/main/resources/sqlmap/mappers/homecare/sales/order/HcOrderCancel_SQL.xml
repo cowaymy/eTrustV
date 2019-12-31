@@ -142,11 +142,14 @@
                        NVL(V.PRD_RTN_LST_UPD, '-') AS PRD_RTN_LST_UPD,
                        V.APP_DT AS APP_DT,
                        V.ASSIGN_CT,
-                       V.RCD_TMS
+                       V.RCD_TMS,
+                       V.STK_CTGRY_ID
              FROM SAL1007V V
              ) A
     LEFT JOIN SYS0005M B ON B.BRNCH_ID = A.DSC_BRNCH_ID
-        WHERE 1 = 1
+        WHERE A.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                               WHERE AA.CODE = BB.CODE
+                                                   AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE') -- Mattress, Frame
 	    <if test="typeIdList != null and typeIdList != ''">
 	        AND A.APP_TYPE_ID IN
 	        <foreach item="item" collection="typeIdList" index="index" open="(" separator="," close=")">
@@ -211,15 +214,6 @@
 	    <if test="endAppDt != null and endAppDt != '' ">
 	        AND APP_DT <![CDATA[ <= ]]>  TO_DATE(#{endAppDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
 	    </if>
-	        AND EXISTS (SELECT V1.ORD_NO
-	                            FROM SAL1013V  V1
-	                                    , SYS0026M S1
-	                           WHERE V1.PRODUCT_CODE  = S1.STK_CODE
-	                               AND S1.STK_CTGRY_ID     IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
-                                                                            WHERE AA.CODE = BB.CODE
-                                                                                AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
-	                               AND V1.ORD_NO            = A.ORD_NO
-	        )
     </select>
 
     <!-- Get CallEntryId -->

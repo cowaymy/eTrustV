@@ -354,6 +354,28 @@ public class HcPreOrderController {
     		frmOrderInfo = preOrderService.selectPreOrderInfo(params);
 		}
 
+		// code List
+        params.clear();
+        params.put("groupCode", 10);
+        params.put("orderValue", "CODE_ID");
+        List<EgovMap> codeList_10 = commonService.selectCodeList(params);
+
+        params.put("groupCode", 19);
+        params.put("orderValue", "CODE_NAME");
+        List<EgovMap> codeList_19 = commonService.selectCodeList(params);
+
+        params.put("groupCode", 17);
+        params.put("orderValue", "CODE_NAME");
+        List<EgovMap> codeList_17 = commonService.selectCodeList(params);
+
+        params.put("groupCode", 322);
+        params.put("orderValue", "CODE_ID");
+        List<EgovMap> codeList_322 = commonService.selectCodeList(params);
+
+        model.put("codeList_10", codeList_10);
+        model.put("codeList_17", codeList_17);
+        model.put("codeList_19", codeList_19);
+        model.put("codeList_322", codeList_322);
 		model.put("preOrderInfo", preOrderInfo);
 		model.put("hcPreOrdInfo", hcPreOrdInfo);
 		model.put("preMatOrderInfo", matOrderInfo);

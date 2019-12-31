@@ -159,7 +159,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
   public List<EgovMap> selectPromotionByAppTypeStockESales(Map<String, Object> params) {
     // TODO Auto-generated method stub
 
-    params.put("appTypeId", CommonUtils.changePromoAppTypeId(Integer.parseInt((String) params.get("appTypeId"))));
+    params.put("appTypeId", CommonUtils.changePromoAppTypeId(CommonUtils.intNvl(params.get("appTypeId"))));
 
     return orderRegisterMapper.selectPromotionByAppTypeStockESales(params);
   }
@@ -172,9 +172,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     logger.info("@@@@@@@@@@@@@@@@@@@@@@:: " + params.toString());
     EgovMap priceInfo = null;
 
-    int srvPacId = Integer.parseInt(String.valueOf(params.get("srvPacId")));
-    int promoId = Integer.parseInt(String.valueOf(params.get("promoId")));
-    int stkId = Integer.parseInt(String.valueOf(params.get("stkId")));
+    int srvPacId = CommonUtils.intNvl(params.get("srvPacId"));
+    int promoId = CommonUtils.intNvl(params.get("promoId"));
+    int stkId = CommonUtils.intNvl(params.get("stkId"));
     int ordAppType =  CommonUtils.intNvl(params.get("orderAppType"));
 
     if (!StringUtils.isEmpty(params.get("promoId"))) {
@@ -1656,7 +1656,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     // || (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && custTypeId
     // == SalesConstants.CUST_TYPE_CODE_ID_IND && custRaceId == 14)
     ) {
-    	// Mattress Order - App Type : Rental AND Order App Type : Aux 
+    	// Mattress Order - App Type : Rental AND Order App Type : Aux
     	if(CommonUtils.intNvl(orderVO.getMatAppTyId()) == SalesConstants.APP_TYPE_CODE_ID_RENTAL
 	       && orderAppType == SalesConstants.APP_TYPE_CODE_ID_AUX) {
     		// CCP MASTER

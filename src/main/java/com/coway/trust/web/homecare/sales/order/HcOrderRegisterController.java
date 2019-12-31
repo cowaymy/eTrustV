@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService;
 import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
+import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -46,6 +49,15 @@ public class HcOrderRegisterController {
 	@Resource(name = "hcOrderRegisterService")
 	private HcOrderRegisterService hcOrderRegisterService;
 
+	@Resource(name = "orderDetailService")
+	private OrderDetailService orderDetailService;
+
+	@Resource(name = "hcOrderListService")
+	private HcOrderListService hcOrderListService;
+
+	@Resource(name = "commonService")
+	private CommonService commonService;
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
@@ -60,6 +72,28 @@ public class HcOrderRegisterController {
 	 */
 	@RequestMapping(value = "/hcOrderRegisterPop.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
+		// code List
+        params.clear();
+        params.put("groupCode", 10);
+        params.put("orderValue", "CODE_ID");
+        List<EgovMap> codeList_10 = commonService.selectCodeList(params);
+
+        params.put("groupCode", 19);
+        params.put("orderValue", "CODE_NAME");
+        List<EgovMap> codeList_19 = commonService.selectCodeList(params);
+
+        params.put("groupCode", 17);
+        params.put("orderValue", "CODE_NAME");
+        List<EgovMap> codeList_17 = commonService.selectCodeList(params);
+
+        params.put("groupCode", 322);
+        params.put("orderValue", "CODE_ID");
+        List<EgovMap> codeList_322 = commonService.selectCodeList(params);
+
+        model.put("codeList_10", codeList_10);
+        model.put("codeList_17", codeList_17);
+        model.put("codeList_19", codeList_19);
+        model.put("codeList_322", codeList_322);
 		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 
 		return "homecare/sales/order/hcOrderRegisterPop";
@@ -210,4 +244,76 @@ public class HcOrderRegisterController {
 	    return ResponseEntity.ok(codeList);
 	}
 
+	/**
+	 * Copy(change) Homecare Order
+	 * @Author KR-SH
+	 * @Date 2019. 12. 30.
+	 * @param params
+	 * @param model
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/copyChangeHcOrder.do")
+	public String copyChangeHcOrder(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		// 매핑테이블 조회. - HMC0011D
+		EgovMap hcPreOrdInfo = hcOrderListService.selectHcOrderInfo(params);
+		EgovMap matOrderInfo = null;
+		EgovMap frmOrderInfo = null;
+		String matOrdId = "";
+		String fraOrdId =  "";
+		String ordCtgryCd = CommonUtils.nvl(hcPreOrdInfo.get("ordCtgryCd")); // Homecare Category CD
+
+		if(ordCtgryCd.equals(HomecareConstants.HC_CTGRY_CD.MAT)) {
+			matOrdId = CommonUtils.nvl(hcPreOrdInfo.get("ordId"));
+			fraOrdId = CommonUtils.nvl(hcPreOrdInfo.get("anoOrdId"));
+		} else {
+			matOrdId = CommonUtils.nvl(hcPreOrdInfo.get("anoOrdId"));
+			fraOrdId = CommonUtils.nvl(hcPreOrdInfo.get("ordId"));
+		}
+
+		if(!"".equals(matOrdId) && !"0".equals(matOrdId)) {
+			// Mattress Order Info
+			params.put("salesOrderId", matOrdId);
+			matOrderInfo = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+		}
+		if(!"".equals(fraOrdId) && !"0".equals(fraOrdId)) {
+    		// Frame Order Info
+    		params.put("salesOrderId", fraOrdId);
+    		frmOrderInfo = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+		}
+
+		// code List
+        params.clear();
+        params.put("groupCode", 10);
+        params.put("orderValue", "CODE_ID");
+        List<EgovMap> codeList_10 = commonService.selectCodeList(params);
+
+        params.put("groupCode", 19);
+        params.put("orderValue", "CODE_NAME");
+        List<EgovMap> codeList_19 = commonService.selectCodeList(params);
+
+        params.put("groupCode", 17);
+        params.put("orderValue", "CODE_NAME");
+        List<EgovMap> codeList_17 = commonService.selectCodeList(params);
+
+        params.put("groupCode", 322);
+        params.put("orderValue", "CODE_ID");
+        List<EgovMap> codeList_322 = commonService.selectCodeList(params);
+
+        model.put("codeList_10", codeList_10);
+        model.put("codeList_17", codeList_17);
+        model.put("codeList_19", codeList_19);
+        model.put("codeList_322", codeList_322);
+		model.put("hcPreOrdInfo", hcPreOrdInfo);
+		model.put("orderInfo", matOrderInfo);
+		model.put("orderInfo2", frmOrderInfo);
+		model.put("COPY_CHANGE_YN", "Y");
+		model.put("matOrdId", matOrdId);
+		model.put("fraOrdId", fraOrdId);
+		model.put("ordSeqNo", hcPreOrdInfo.get("ordSeqNo"));
+		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+
+		return "homecare/sales/order/hcOrderRegisterPop";
+	}
 }

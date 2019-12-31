@@ -101,5 +101,13 @@ public class HomecareConstants {
 		public static final int FRM = 5707;
 	}
 
+	/** Homecare Category CD */
+	public static class HC_CTGRY_CD {
+		/** Mattress */
+		public static final String MAT = "MAT";
+		/** Frame */
+		public static final String FRM = "FRM";
+	}
+
 }
 
