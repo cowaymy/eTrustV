@@ -264,7 +264,7 @@
 
         fn_reasonCodeSearch();
 
-    	if('${action}' == 'REG') {
+        if('${action}' == 'REG') {
     	    $("#APPR_T").hide();
     		$("#APPR_D1").hide();
     		$("#APPR_D2").hide();
@@ -291,15 +291,21 @@
 	    	    }
 	    	}
 
+	    	$("#liAllDel").show();
+            $("#liPopSerial").show();
+
 	    	if('${docInfo.serialChkYn}' == 'Y' && requireCnt > 0 && itemCnt > 0) {
-                $("#liAllDel").show();
-                $("#liPopSerial").show();
+	    		$("#btnPopSerial").parent().removeClass("btn_disabled");
+	    	    $("#btnAllDel").parent().removeClass("btn_disabled");
+            } else {
+            	$("#btnPopSerial").parent().addClass("btn_disabled");
+                $("#btnAllDel").parent().addClass("btn_disabled");
             }
 
             setInputFile();
 
         } else if('${action}' == 'APPR') {
-            $("#APPR_T").show();
+        	$("#APPR_T").show();
             $("#APPR_D1").show();
             $("#APPR_D2").hide();
 
@@ -313,7 +319,7 @@
             AUIGrid.setGridData(itemApprGrid, $.parseJSON('${itemList}'));
 
         } else if('${action}' == 'DET') {
-            $("#APPR_T").show();
+        	$("#APPR_T").show();
             $("#APPR_D1").hide();
             $("#APPR_D2").show();
 
