@@ -21,6 +21,11 @@
 	  cursor: pointer;
 	  text-align: right;
 	}
+	/* 커스텀 열 스타일 */
+	.my-column-style2 {
+	    background:#FFEBFE;
+	    color:#0000ff;
+	}
 </style>
 
 <script type="text/javascript">
@@ -39,9 +44,6 @@
                          {dataField: "itmId",headerText :"<spring:message code='log.head.rnum'/>" ,width:1, visible:false},
                          {dataField: "stkCode",headerText :"<spring:message code='log.head.itemcode'/>",width: 80, editable : false},
                          {dataField: "stkDesc",headerText :"<spring:message code='log.head.itemname'/>",width: 180, editable : false, style: "aui-grid-user-custom-left"},
-                         {dataField: "stkGrad",headerText :"<spring:message code='log.head.locationgrade'/>" ,width:120, editable : false},
-                         {dataField: "stkType",headerText :"<spring:message code='log.head.itemtype'/>" ,width: 90, editable : false },
-                         {dataField: "stkCtgryType",headerText :"<spring:message code='log.head.categoryType'/>", width: 120, editable : false },
                          {dataField: "sysQty",headerText :"<spring:message code='log.head.systemqty'/>",width:90, editable : false,style: "aui-grid-user-custom-right",
                         	 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
                                  if(item.serialChkYn == "Y" && item.serialRequireChkYn== "Y" && item.itemSerialChkYn== "Y") {
@@ -54,6 +56,8 @@
                         	 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
                         		 if(item.serialChkYn == "Y" && item.serialRequireChkYn== "Y" && item.itemSerialChkYn== "Y") {
                                      return "aui-grid-link-renderer1";
+                                 } else{
+                                	 return "my-column-style2";
                                  }
                              },
                         	 editRenderer : {
@@ -65,6 +69,9 @@
                          {dataField: "dedQty",headerText :"<spring:message code='log.head.deductionQty'/>", width:1, editable : false, visible:false, style: "aui-grid-user-custom-right"},
                          {dataField: "otherQty",headerText :"<spring:message code='log.head.otherGiGrQty'/>", width:1, editable : false, visible:false, style: "aui-grid-user-custom-right"},
                          {dataField: "rem",headerText :"<spring:message code='log.head.remark'/>", width:180, editable : true, headerStyle : "aui-grid-header-input-icon", style: "aui-grid-user-custom-left"},
+                         {dataField: "stkGrad",headerText :"<spring:message code='log.head.locationgrade'/>" ,width:90, editable : false},
+                         {dataField: "stkType",headerText :"<spring:message code='log.head.itemtype'/>" ,width: 90, editable : false },
+                         {dataField: "stkCtgryType",headerText :"<spring:message code='log.head.categoryType'/>", width: 120, editable : false },
                          {dataField: "serialChkYn",headerText :"Serial Chk Yn" ,width:100, visible:false},
                          {dataField: "stockAuditNo",headerText :"<spring:message code='log.head.stockAuditNo'/>" ,width:100, visible:false},
                          {dataField: "whLocId",headerText :"" ,width:100, visible:false},
@@ -240,6 +247,7 @@
         usePaging : false, //페이징 사용
         showStateColumn : true,
         headerHeight: 35,
+        selectionMode : "singleCell",
         };
 
     var itemapprop = {
@@ -249,6 +257,7 @@
         usePaging : false, //페이징 사용
         showStateColumn : true,
         headerHeight: 35,
+        selectionMode : "singleCell",
         };
 
     var itemdetop = {
@@ -258,6 +267,7 @@
         usePaging : false, //페이징 사용
         showStateColumn : false,
         headerHeight: 35,
+        selectionMode : "singleCell",
         };
 
     $(document).ready(function () {
@@ -488,6 +498,12 @@
        $("#btnPopSerial").click(function(){
            if($(this).parent().hasClass("btn_disabled") == true){
                return false;
+           }
+
+           var editedRowItems = AUIGrid.getEditedRowItems(itemRegGrid);
+           if(editedRowItems != null){
+        	   Common.alert("It's changed. Save first.");
+        	   return false;
            }
 
            if(Common.checkPlatformType() == "mobile") {
@@ -978,6 +994,8 @@
             console.log("data : " + result.data);
 
             Common.alert(result.message);
+
+            //fn_itemListAjax();
             $("#popClose").click();
 
             getListAjax(1);
@@ -1035,14 +1053,14 @@
 
             if (event.dataField == "cntQty")
             {
-        	    var sysQty = AUIGrid.getCellValue(itemRegGrid, event.rowIndex, 7);
+        	    var sysQty = AUIGrid.getCellValue(itemRegGrid, event.rowIndex, "sysQty");
         	    var cntQty = event.value;
 
         	    var diffQty = Number(cntQty) - Number(sysQty);
 
-        	    AUIGrid.setCellValue(itemRegGrid, event.rowIndex, 9, diffQty);           // Variance
-        	    AUIGrid.setCellValue(itemRegGrid, event.rowIndex, 10, 0);                 // Deduction Qty(Hidden)
-        	    AUIGrid.setCellValue(itemRegGrid, event.rowIndex, 11, diffQty);         // Other GI/GR Qty(Hidden)
+        	    AUIGrid.setCellValue(itemRegGrid, event.rowIndex, "diffQty", diffQty);           // Variance
+        	    AUIGrid.setCellValue(itemRegGrid, event.rowIndex, "dedQty", 0);                 // Deduction Qty(Hidden)
+        	    AUIGrid.setCellValue(itemRegGrid, event.rowIndex, "otherQty", diffQty);         // Other GI/GR Qty(Hidden)
             }
         }
     }
@@ -1052,7 +1070,7 @@
         if (event.type == "cellEditBegin") {
         	if (event.dataField == "dedReason"){
         		comDedRsnList.length = 0;
-                var dedQty = AUIGrid.getCellValue(itemApprGrid, event.rowIndex, 10); // Deduction Qty
+                var dedQty = AUIGrid.getCellValue(itemApprGrid, event.rowIndex, "dedQty"); // Deduction Qty
 
                 if(dedQty > 0) {
                     for(var i=0,len=dedRsnList.length; i<len; i++) {
@@ -1068,7 +1086,7 @@
 
         	if (event.dataField == "otherReason"){
         		otherAllRsnList.length = 0;
-        		var otherQty = AUIGrid.getCellValue(itemApprGrid, event.rowIndex, 12); // Other GI/GR Qty
+        		var otherQty = AUIGrid.getCellValue(itemApprGrid, event.rowIndex, "otherQty"); // Other GI/GR Qty
 
         		if(otherQty > 0) {
         			for(var i=0,len=otherGrRsnList.length; i<len; i++) {
@@ -1091,24 +1109,24 @@
 
             if (event.dataField == "dedQty")
             {
-                var diffQty = AUIGrid.getCellValue(itemApprGrid, event.rowIndex, 9);
+                var diffQty = AUIGrid.getCellValue(itemApprGrid, event.rowIndex, "diffQty");
                 var dedQty = event.value;
 
                 if(Math.abs(diffQty) <  dedQty) {
             	    Common.alert("Deduction Qty cannot be greater than Variance.");
-            	    AUIGrid.setCellValue(itemApprGrid, event.rowIndex, 10, 0);
+            	    AUIGrid.setCellValue(itemApprGrid, event.rowIndex, "dedQty", 0);
                     return false;
                 } else {
 	                var otherQty = Number(diffQty) -  Number(dedQty);
-	                AUIGrid.setCellValue(itemApprGrid, event.rowIndex, 12, otherQty);          // Other GI/GR Qty
+	                AUIGrid.setCellValue(itemApprGrid, event.rowIndex, "otherQty", otherQty);          // Other GI/GR Qty
 
 
 		            if(dedQty == 0) {
-		                AUIGrid.setCellValue(itemApprGrid, event.rowIndex, 11, "");
+		                AUIGrid.setCellValue(itemApprGrid, event.rowIndex, "dedReason", "");
 		            }
 
 		            if(otherQty == 0 ) {
-	                    AUIGrid.setCellValue(itemApprGrid, event.rowIndex, 13, "");
+	                    AUIGrid.setCellValue(itemApprGrid, event.rowIndex, "otherReason", "");
 		            }
               }
           }
@@ -1217,7 +1235,8 @@
 
     //Serial Scan Search Pop
     function fn_scanSearchPop(){
-        if(Common.checkPlatformType() == "mobile") {
+
+    	if(Common.checkPlatformType() == "mobile") {
             popupObj = Common.popupWin("serialForm", "/logistics/SerialMgmt/scanSearchPop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
         } else{
             Common.popupDiv("/logistics/SerialMgmt/scanSearchPop.do", $("#serialForm").serializeJSON(), null, true, '_scanSearchPop');
@@ -1233,6 +1252,35 @@
         data.forEach(function(dataRow) {
             console.log("serialNo : " + dataRow.serialNo);
         });
+    }
+
+    function fn_detailDisplay(yn){
+    	var hMain = $("#tbMain").height() ;
+
+    	if(yn == "Y"){
+    		//btnCollapse
+    		$('#btnCollapse').css("display", "");
+    		$('#btnExpand').css("display", "none");
+            $('#tbMain').attr("style", "");
+
+            $('#item_grid_wrap_pop').height(330 );
+            $('#itemappr_grid_wrap_pop').height(230 );
+            $('#itemdet_grid_wrap_pop').height(200 );
+
+        } else{
+        	$('#btnCollapse').css("display", "none");
+            $('#btnExpand').css("display", "");
+    		$('#tbMain').attr("style", "display:none;");
+
+    		$('#item_grid_wrap_pop').height(330 + hMain);
+            $('#itemappr_grid_wrap_pop').height(230 + hMain);
+            $('#itemdet_grid_wrap_pop').height(200 + hMain);
+    	}
+
+    	AUIGrid.resize(itemRegGrid);
+        AUIGrid.resize(itemApprGrid);
+        AUIGrid.resize(itemDetGrid);
+
     }
 </script>
 
@@ -1280,8 +1328,9 @@
             <input type="hidden" id="hidCtgryType" name="hidCtgryType" value="${docInfo.ctgryType}">
             <input type="hidden" id="hidLocStusCodeId" name="hidLocStusCodeId" value="${docInfo.locStusCodeId}">
             <input type="hidden" id="hidUpdDtTime" name="hidUpdDtTime" value="${docInfo.updDtTime}">
-
-			  <table class="type1"><!-- table start -->
+            <img src="${pageContext.request.contextPath}/resources/images/common/btn_up.gif" alt="Collapse" id="btnCollapse" style="position:static;float: right;" onclick="fn_detailDisplay('N')"/>
+            <img src="${pageContext.request.contextPath}/resources/images/common/btn_down.gif" alt="Expand" id="btnExpand" style="position:static;float: right;display:none" onclick="fn_detailDisplay('Y')"/>
+			  <table class="type1" id="tbMain"><!-- table start -->
 				<caption>table</caption>
 				<colgroup>
 				    <col style="width:150px" />
