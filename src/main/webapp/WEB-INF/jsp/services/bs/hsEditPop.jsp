@@ -577,7 +577,16 @@ var myDetailGridData = null;
     form.cmbStatusType2 = cmbStatusType2;
     jsonObj.form = form;
     console.log("fn_UpdateHsResult :: jsonObj :: " + jsonObj);
-    Common.ajax("POST", "/services/bs/UpdateHsResult2.do", jsonObj, function(result) {
+
+    // KR-MIN Serial Check add
+    var url = "";
+    if ($("#hidSerialRequireChkYn").val() == 'Y') {
+        url = "/services/bs/UpdateHsResult2Serial.do";
+    } else{
+    	url = "/services/bs/UpdateHsResult2.do";
+    }
+
+    Common.ajax("POST", url, jsonObj, function(result) {
       Common.alert(result.message, fn_parentReload);
       $("#popClose").click();
     });
