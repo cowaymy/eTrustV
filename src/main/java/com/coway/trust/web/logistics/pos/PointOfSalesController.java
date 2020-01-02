@@ -434,4 +434,71 @@ public class PointOfSalesController {
     return ResponseEntity.ok(fileInfo);
   }
 
+  // KR-OHK Serial add
+  @RequestMapping(value = "/selectReqItemList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectReqItemList(@RequestParam Map<String, Object> params) {
+
+    logger.debug("===========================/selectReqItemList.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/selectReqItemList.do===============================");
+
+    List<EgovMap> list = PointOfSalesService.selectReqItemList((String)params.get("taskType"), (String)params.get("reqstNo"));
+
+    return ResponseEntity.ok(list);
+
+  }
+
+  // KR-OHK Serial add
+  @RequestMapping(value = "/PosGiSaveSerial.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> PosGiSaveSerial(@RequestBody Map<String, Object> params, Model model) {
+    logger.debug("===========================/PosGiSaveSerial.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/PosGiSaveSerial.do===============================");
+
+    String reVal = "";
+    int poschk = PointOfSalesService.selectOtherReqChk(params);
+
+    logger.debug("== poschk " + poschk);
+
+    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+    int loginId = sessionVO.getUserId();
+    params.put("userId", loginId);
+
+    if (poschk > 0) {
+        logger.debug("It's already in progress..");
+    } else {
+        reVal = PointOfSalesService.insertGiInfoSerial(params);
+    }
+
+    Map<String, Object> map = new HashMap();
+    map.put("reVal", reVal);
+    map.put("poschk", poschk);
+
+    ReturnMessage message = new ReturnMessage();
+    message.setCode(AppConstants.SUCCESS);
+    // message.setData(reVal);
+    message.setData(map);
+    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+    return ResponseEntity.ok(message);
+  }
+
+  // KR-OHK Serial add
+  @RequestMapping(value = "/deleteStoNoSerial.do", method = RequestMethod.GET)
+  public ResponseEntity<ReturnMessage> deleteStoNoSerial(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) {
+    logger.debug("===========================/deleteStoNoSerial.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/deleteStoNoSerial.do===============================");
+
+    params.put("userId", sessionVO.getUserId());
+
+    PointOfSalesService.deleteStoNoSerial(params);
+
+    ReturnMessage message = new ReturnMessage();
+    message.setCode(AppConstants.SUCCESS);
+    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+    return ResponseEntity.ok(message);
+  }
+
 }

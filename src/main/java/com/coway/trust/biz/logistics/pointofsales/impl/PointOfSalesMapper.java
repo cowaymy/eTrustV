@@ -67,4 +67,12 @@ public interface PointOfSalesMapper {
 
   EgovMap selectAttachmentInfo(Map<String, Object> params);
 
-}
+  List<EgovMap> selectReqItemList(String param);
+
+  void SP_LOGISTIC_BARCODE_SAVE_OGOI(Map<String, Object> params);
+
+  void SP_LOGISTIC_BARCODE_DEL_OGOI(Map<String, Object> params);
+
+  void SP_LOGISTIC_BARCODE_REVS_OGOI(Map<String, Object> params);
+
+ }

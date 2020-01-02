@@ -46,4 +46,12 @@ public interface PointOfSalesService {
 
   EgovMap selectAttachmentInfo(Map<String, Object> params);
 
+  // KR-OHK Serial add
+  List<EgovMap> selectReqItemList(String taskType, String params);
+
+  // KR-OHK Serial add
+  String insertGiInfoSerial(Map<String, Object> params);
+
+  // KR-OHK Serial add
+  void deleteStoNoSerial(Map<String, Object> param);
 }
