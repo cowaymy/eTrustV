@@ -29,6 +29,7 @@ import com.coway.trust.web.services.installation.InstallationResultListControlle
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+import org.springframework.beans.BeanUtils;
 
 /**
  * @ClassName : ServiceApiInstallationServiceImpl.java
@@ -192,8 +193,13 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 
 		// Frame이 존재한다면 insTransLogs New Row
 		for (InstallationResultForm insService : installationResultForms) {
-			installationList.add(insService);
-			InstallationResultForm resultForm = insService;
+			InstallationResultForm orgForm = new InstallationResultForm();
+			BeanUtils.copyProperties(insService, orgForm);
+			installationList.add(orgForm);
+
+			InstallationResultForm resultForm = new InstallationResultForm();
+			BeanUtils.copyProperties(insService, resultForm);
+
 			// 해당 서비스 프레임 존재 확인
 			Map<String, Object> fraParam = new HashMap();
 			fraParam.put("matOrdNo", resultForm.getSalesOrderNo());
