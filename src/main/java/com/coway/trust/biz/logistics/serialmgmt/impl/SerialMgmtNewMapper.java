@@ -47,4 +47,7 @@ public interface SerialMgmtNewMapper{
 
 	// Stock Audit Logistic barcode delete
 	public EgovMap callAdDeleteBarcodeScan(Map<String, Object> param) throws Exception;
+
+	// Other GI/GR Logistic barcode delete
+	public EgovMap callOgOiDeleteBarcodeScan(Map<String, Object> param) throws Exception;
 }

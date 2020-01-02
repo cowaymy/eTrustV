@@ -159,4 +159,15 @@ public class SerialMgmtNewController {
 		return ResponseEntity.ok(result);
 	}
 
+	// Stock Audit serial delete
+	@RequestMapping(value = "/deleteOgOiSerial.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> deleteOgOiSerial(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+		serialMgmtNewService.deleteOgOiSerial(params, sessionVO);
+
+		ReturnMessage result = new ReturnMessage();
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(result);
+	}
 }

@@ -357,4 +357,12 @@
                     , #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA})
          }
     </select>
+
+    <select id="callOgOiDeleteBarcodeScan" parameterType="Map"  statementType="CALLABLE">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.callOgOiDeleteBarcodeScan] - KR OHK */
+        {CALL SP_LOGISTIC_BARCODE_DEL_OGOI(#{allYn}, #{boxno}, #{rstNo}, #{locId}, #{transactionType}, #{ioType}, #{updUserId}
+                    , #{errCode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA}
+                    , #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA})
+         }
+    </select>
 </mapper>

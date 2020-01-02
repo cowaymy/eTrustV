@@ -327,6 +327,18 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 		}
 	}
 
+	// Stock Audit serial delete
+	@Override
+	public void deleteOgOiSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception{
+		params.put("crtUserId", sessionVO.getUserId());
+		params.put("updUserId", sessionVO.getUserId());
+
+		serialMgmtNewMapper.callOgOiDeleteBarcodeScan(params);
+
+		if(!"000".equals((String)params.get("errCode"))){
+			throw new ApplicationException(AppConstants.FAIL, (String)params.get("errMsg"));
+		}
+	}
 
 	private boolean validationDate(String checkDate){
 		try{

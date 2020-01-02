@@ -35,4 +35,7 @@ public interface SerialMgmtNewService{
 	// Stock Audit serial delete
 	public void deleteAdSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 
+	// Other GI/GR serial delete
+	public void deleteOgOiSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
 }
