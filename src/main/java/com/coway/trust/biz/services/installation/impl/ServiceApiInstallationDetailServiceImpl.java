@@ -381,8 +381,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 	    			}
 	    		}
 
-	    		// SP_SVC_LOGISTIC_REQUEST COMMIT DELETE
-	    		servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+	    		servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
 	    	}
 	    }
 	    else {

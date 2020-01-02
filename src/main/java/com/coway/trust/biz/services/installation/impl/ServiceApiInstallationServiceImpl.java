@@ -28,6 +28,7 @@ import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.web.services.installation.InstallationResultListController;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
  * @ClassName : ServiceApiInstallationServiceImpl.java
@@ -184,11 +185,61 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 		int successCnt = 0;
 		int failCnt = 0;
 
+		List<InstallationResultForm> installationList = new ArrayList<>();
+
 		logger.debug("==================================[MB]INSTALLATION RESULT REGISTRATION - START - ====================================");
 		logger.debug("### INSTALLATION FORM : ", installationResultForms);
 
-		insTransLogs = new ArrayList<>();
+		// Frame이 존재한다면 insTransLogs New Row
 		for (InstallationResultForm insService : installationResultForms) {
+			installationList.add(insService);
+			InstallationResultForm resultForm = insService;
+			// 해당 서비스 프레임 존재 확인
+			Map<String, Object> fraParam = new HashMap();
+			fraParam.put("matOrdNo", resultForm.getSalesOrderNo());
+			fraParam.put("userId", resultForm.getUserId());
+			EgovMap fraInfo = MSvcLogApiService.getFraOrdInfo(fraParam);
+
+			if (fraInfo != null) {
+				String newTransactionId = resultForm.getTransactionId().replaceAll(String.valueOf(resultForm.getSalesOrderNo()), fraInfo.get("salesOrderNo").toString());
+				newTransactionId = newTransactionId.replaceAll(resultForm.getServiceNo(), String.valueOf(fraInfo.get("serviceNo")));
+
+				resultForm.setSalesOrderNo(Integer.parseInt(fraInfo.get("salesOrderNo").toString()));
+				resultForm.setServiceNo(String.valueOf(fraInfo.get("serviceNo")));
+				resultForm.setTransactionId(newTransactionId);
+
+				/*
+				 requestList.push({
+					"userId":row.userId,
+					"salesOrderNo": row.salesOrderNo,---------------
+					"serviceNo":row.serviceNo,----------------------
+					"checkInDate" : row.checkInDate,
+					"checkInTime" : row.checkInTime,
+					"checkInGps" : row.checkInGps,
+					"sirimNo":(row.sirimNo).toUpperCase(),
+					"serialNo":(row.serialNo).toUpperCase(),
+					"asExchangeYN":row.asExchangeYN,-----------
+					"beforeProductSerialNo":row.beforeProductSerialNo,------
+					"resultRemark":row.resultRemark,
+					"ownerCode": Number(row.ownerCode),
+					"resultCustName":row.resultCustName,
+					"resultIcMobileNo":row.resultIcMobileNo,
+					"resultReportEmailNo":row.resultReportEmailNo,
+					"resultAcceptanceName":row.resultAcceptanceName,
+					"signData":row.signData,
+					"signRegDate":row.signRegDate,
+					"signRegTime":row.signRegTime,
+					"transactionId":row.transactionId,---------userId || '_' || salesOrderNo || '_' || serviceNo || '_' || strftime('%Y%m%d%H%M%S','now','localtime') as transactionId ";
+					"scanSerial":row.scanSerial
+				});
+				*/
+
+				installationList.add(resultForm);
+			}
+		}
+
+		insTransLogs = new ArrayList<>();
+		for (InstallationResultForm insService : installationList) {
 			insTransLogs.addAll(insService.createMaps(insService));
 		}
 
@@ -245,5 +296,50 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 		logger.debug("==================================[MB]INSTALLATION RESULT REGISTRATION - END - ====================================");
 
 	    return ResponseEntity.ok(InstallationResultDto.create(transactionId));
+	}
+
+	@Override
+	public ResponseEntity<InstallFailJobRequestDto> installDtFailJobRequest(InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
+		String serviceNo = "";
+
+	    Map<String, Object> params = InstallFailJobRequestForm.createMaps(installFailJobRequestForm);
+
+	    serviceNo = String.valueOf(params.get("serviceNo"));
+
+	    logger.debug("==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
+	    logger.debug("### INSTALLATION FAIL JOB REQUEST FORM : " + params.toString());
+	    logger.debug("==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
+
+	    // INSERT LOG HISTORY (SVC0043T)(REQUIRES_NEW) (resultSeq KEY CREATE)
+	    if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
+	    	try {
+	    		MSvcLogApiService.saveInsFailServiceLogs(params);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+	    }
+
+	    try {
+	    	serviceApiInstallationDetailService.installFailJobRequestProc(params);
+
+	    	// Frame이 존재한다면 installFailJobRequestProc New Data Try
+	    	Map<String, Object> fraParam = new HashMap();
+			fraParam.put("matOrdNo", params.get("salesOrderNo"));
+			fraParam.put("userId", String.valueOf(params.get("userId")));
+			EgovMap fraInfo = MSvcLogApiService.getFraOrdInfo(fraParam);
+
+			if (fraInfo != null) {
+				params.put("salesOrderNo", Integer.parseInt(fraInfo.get("salesOrderNo").toString()));
+				params.put("serviceNo", String.valueOf(fraInfo.get("serviceNo")));
+
+				serviceApiInstallationDetailService.installFailJobRequestProc(params);
+			}
+	    }
+	    catch (Exception e) {
+	    	throw new ApplicationException(AppConstants.FAIL, "Fail");
+		}
+
+	    return ResponseEntity.ok(InstallFailJobRequestDto.create(serviceNo));
 	}
 }
