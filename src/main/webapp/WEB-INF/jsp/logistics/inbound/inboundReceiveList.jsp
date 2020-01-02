@@ -601,7 +601,7 @@ function fn_scanSearchPopInBound(){
             <li><p class="btn_grid"><a id="gissue">Receipt</a></p></li>
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:450px" class="autoGridHeight"></div>
+        <div id="main_grid_wrap" class="autoGridHeight" style="height:450px" ></div>
 
     </section><!-- search_result end -->
 

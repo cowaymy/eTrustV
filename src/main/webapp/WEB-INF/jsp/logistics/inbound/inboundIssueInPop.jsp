@@ -13,7 +13,14 @@
         margin-top: -20px;
     }
 
-   .my-row-style { background:#FF5733; font-weight:bold; color:#22741C; }
+    .my-row-style { background:#FF5733; font-weight:bold; color:#22741C; text-decoration:underline;}
+
+   .aui-grid-link-renderer1 {
+      text-decoration:underline;
+      color: #4374D9 !important;
+      cursor: pointer;
+      text-align: right;
+    }
 
 </style>
 <script type="text/javaScript">
@@ -43,26 +50,17 @@ var scanInfoLayout = [
             , dataType:"numeric"
             , formatString:"#,##0"
         }
-        , {dataField:"scanQty", headerText:"Scaned QTY", width:100
+        , {dataField:"scanQty", headerText:"Scaned(Request) QTY", width:180
             , style:"aui-grid-user-custom-right aui-grid-link-renderer"
             , dataType:"numeric"
             , formatString:"#,##0"
             , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
-                if(item.delvryQty != value){
+            	if(item.serialChk == "Y" && item.delvryQty != value){
                     return "my-row-style";
+                } else if(item.serialChk == "Y" && item.delvryQty == value){
+                    return "aui-grid-link-renderer1";
                 }
-                return "";
             }
-            , renderer :{
-                      type : "LinkRenderer",
-                      baseUrl : "javascript", // 자바스크립 함수 호출로 사용하고자 하는 경우에 baseUrl 에 "javascript" 로 설정
-                      // baseUrl 에 javascript 로 설정한 경우, 링크 클릭 시 callback 호출됨.
-                      jsCallback : function(rowIndex, columnIndex, value, item){
-                          if(item.serialChk == "Y"){
-                              fn_scanSearchPop(item);
-                          }
-                      }
-             }
         }
        ,{dataField:"mtype", visible:false}
 ];
@@ -210,19 +208,12 @@ $(document).ready(function(){
                return false;
            }
            if (check.all[i].gidt == "" || check.all[i].gidt == null){
-               Common.alert("Please check the GI Date.")
+               Common.alert("Please check the GR Date.")
               return false;
            }
-           if (check.all[i].serialChk != "Y"){
-               Common.alert("Please check Serial Chk YN.")
-              return false;
-           }
-           if (check.all[i].scanQty == 0){
-               Common.alert("Scan QTY does not exist.")
-              return false;
-           }
-           if (check.all[i].scanQty > check.all[i].delvryQty){
-               Common.alert("Scaned QTY cannot be greater than GR QTY.")
+
+           if (check.all[i].scanQty != check.all[i].delvryQty){
+               Common.alert("Scan(Request) Qty and GR qty must be the same..")
               return false;
            }
        }
@@ -269,6 +260,24 @@ $(document).ready(function(){
             popupObj = Common.popupWin("inBoundIssueInForm", "/logistics/serialMgmtNew/serialScanCommonPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
         } else{
             Common.popupDiv("/logistics/serialMgmtNew/serialScanCommonPop.do", null, null, true, '_serialScanPop');
+        }
+    });
+
+    AUIGrid.bind(scanInfoGridId, "cellClick", function( event ) {
+        var rowIndex = event.rowIndex;
+        var dataField = AUIGrid.getDataFieldByColumnIndex(scanInfoGridId, event.columnIndex);
+        var serialChk = AUIGrid.getCellValue(scanInfoGridId, rowIndex, "serialChk");
+        var scanQty = AUIGrid.getCellValue(scanInfoGridId, rowIndex, "scanQty");
+
+        if(dataField == "scanQty"){
+            var rowIndex = event.rowIndex;
+            if(serialChk == "Y" && scanQty > 0){
+                $("#inBoundIssueInForm #pDeliveryNo").val(AUIGrid.getCellValue(scanInfoGridId, rowIndex, "delvryNo"));
+                $("#inBoundIssueInForm #pDeliveryItem").val(AUIGrid.getCellValue(scanInfoGridId, rowIndex, "delvryNoItm"));
+                $("#inBoundIssueInForm #pStatus").val("I");
+
+                fn_scanSearchPop();
+            }
         }
     });
 
@@ -383,7 +392,7 @@ function fn_ClosePop(){
     if(Common.checkPlatformType() == "mobile") {
         opener.fn_PopInBoundIssueClose();
     } else {
-        $('#_divInBoundIssuePop').remove();
+        $('#_divInBoundIssuePopMain').remove();
         SearchListAjax();
     }
 }
@@ -427,11 +436,7 @@ function fn_gradComb(){
 }
 
 //Serial Search Pop
-function fn_scanSearchPop(item){
-    $("#inBoundIssueInForm #pDeliveryNo").val(item.delvryNo);
-    $("#inBoundIssueInForm #pDeliveryItem").val(item.delvryNoItm);
-    $("#inBoundIssueInForm #pStatus").val("I");
-
+function fn_scanSearchPop(){
     if(Common.checkPlatformType() == "mobile") {
         popupObj = Common.popupWin("inBoundIssueInForm", "/logistics/SerialMgmt/scanSearchPop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
     } else{
