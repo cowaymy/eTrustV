@@ -327,8 +327,14 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 	    }
 
 	    try {
-			Map<String, Object> fraParams = new HashMap();
-			BeanUtils.copyProperties(params, fraParams);
+			Map<String, Object> fraParams =  new HashMap();
+			fraParams.put("failReasonCode", params.get("failReasonCode"));
+			fraParams.put("resultSeq", params.get("resultSeq"));
+			fraParams.put("scanSerial", params.get("scanSerial"));
+			fraParams.put("serviceNo", params.get("serviceNo"));
+			fraParams.put("userId", params.get("userId"));
+			fraParams.put("salesOrderNo", params.get("salesOrderNo"));
+			fraParams.put("serialNo", params.get("serialNo"));
 
 	    	serviceApiInstallationDetailService.installFailJobRequestProc(params);
 
@@ -341,7 +347,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 				fraParams.put("salesOrderNo", Integer.parseInt(fraInfo.get("salesOrderNo").toString()));
 	    		fraParams.put("serviceNo", String.valueOf(fraInfo.get("serviceNo")));
 
-				serviceApiInstallationDetailService.installFailJobRequestProc(params);
+				serviceApiInstallationDetailService.installFailJobRequestProc(fraParams);
 			}
 	    }
 	    catch (Exception e) {
