@@ -259,7 +259,7 @@
                       editable : false
                     }, {
                       dataField : "c5",
-                      headerText : '<spring:message code="service.grid.CTCode" />',
+                      headerText : '<spring:message code="home.lbl.dtCode" />',
                       width : 100,
                       editable : false
                     }, {
