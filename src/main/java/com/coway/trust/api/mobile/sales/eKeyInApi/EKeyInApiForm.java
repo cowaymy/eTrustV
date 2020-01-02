@@ -24,8 +24,8 @@ public class EKeyInApiForm {
 
 
 
-    public static EKeyInApiForm create(Map<String, Object> customerMap) {
-        return BeanConverter.toBean(customerMap, EKeyInApiForm.class);
+    public static EKeyInApiForm create(Map<String, Object> map) {
+        return BeanConverter.toBean(map, EKeyInApiForm.class);
     }
 
 
