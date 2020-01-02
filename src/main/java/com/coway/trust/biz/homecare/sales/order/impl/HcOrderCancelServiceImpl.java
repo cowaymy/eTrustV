@@ -68,6 +68,7 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 
 		try {
 			params.put("userId", sessionVO.getUserId());
+			params.put("CTGroup", CommonUtils.nvl(params.get("dtSubGrp")));
 
 		    int noRcd = orderCancelService.chkRcdTms(params);
 		    int paramAnoOrdId = CommonUtils.intNvl(params.get("paramAnoOrdId"));

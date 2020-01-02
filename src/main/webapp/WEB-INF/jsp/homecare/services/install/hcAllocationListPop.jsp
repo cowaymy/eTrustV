@@ -517,12 +517,11 @@
 	    	$("#CTSSessionCode").val(sessionCode);
             $("#cmbAssignCt").val(selectedItems[0].item.memCode);
             $("#ctId").val(selectedItems[0].item.ct);
-            $("#CTgroup").val(selectedItems[0].item.ctSubGrp);
+            $("#dtSubGrp").val(selectedItems[0].item.ctSubGrp);
             $("#addAppRetnDt").val(selectedItemsMain[0].item.dDate);
             $("#brnchId").val(selectedItemsMain[0].item.brnchId);
 
 	    }
-
 
 	    $("#_doAllactionDiv").remove();
 	}

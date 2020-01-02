@@ -9,6 +9,7 @@
     var anoOrdNo = "${hcOrder.anoOrdNo}";
     var ordCtgryCd = "${hcOrder.ordCtgryCd}";
     var _cancleMsg = "Another order :  "+ anoOrdNo +"<br/>is also canceled together.<br/>Do you want to continue?";
+    var branchTypeId = '${branchTypeId}';
 
     $(document).ready(function(){
         /* KV -cancellation status */
@@ -28,13 +29,13 @@
 	    fn_cancelLogTransList();
 	    fn_productReturnTransList();
 
-	    // j_date
-        var pickerOpts = {
+	    // j_dateHc
+        /* var pickerOpts = {
 	        changeMonth : true,
         	changeYear : true,
             dateFormat : "dd/mm/yy"
         };
-        $(".j_date").datepicker(pickerOpts);
+        $(".j_dateHc").datepicker(pickerOpts); */
 
         // Btn Auth
         if (basicAuth == true) {
@@ -153,14 +154,14 @@
     function fn_doAllaction(){
         var ord_id = '${cancelReqInfo.ordId}';  // '143486';
         var vdte   = $("#requestDate").val();
-
-        var options ={
+        /* var options ={
               ORD_ID: ord_id,
               S_DATE: vdte,
               CallBackFun:'fn_allactionFun'
-        }
+        } */
 
-        Common.popupDiv("/homecare/services/install/hcAllocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options ,TYPE:'RTN'}, null , true , '_doAllactionDiv');
+        //Common.popupDiv("/homecare/services/install/hcAllocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options ,TYPE:'RTN'}, null , true , '_doAllactionDiv');
+        Common.popupDiv("/homecare/services/install/hcAllocation.do", {ORD_ID : ord_id, S_DATE : vdte, TYPE : 'RTN'}, null, true, '_doAllactionDiv');
     }
 
     function fn_allactionFun(obj){
@@ -791,7 +792,7 @@
 	</aside><!-- title_line end -->
 
     <section class="search_table"><!-- search_table start -->
-	    <form id="addCallForm" name="addCallForm" action="#" method="post">
+	    <form id="addCallForm" name="addCallForm" action="#" method="post" autocomplete=off>
 		    <input id="paramdocId" name="paramdocId" type="hidden" value="${paramDocId}">
 		    <input id="paramtypeId" name="paramtypeId" type="hidden" value="${paramTypeId}">
 		    <input id="paramrefId" name="paramrefId" type="hidden" value="${paramRefId}">
@@ -830,20 +831,13 @@
 		                </td>
 					</tr>
 		            <tr>
-				        <th scope="row"><spring:message code="sal.title.text.assignCt" /><span id='m3' name='m3' class="must" >*</span></th>
-				        <td>
-				            <select id="cmbAssignCt" name="cmbAssignCt" class="w100p" disabled="disabled">
-				                <option value=""></option>
-	                            <c:forEach var="list" items="${selectAssignCTList }">
-				                    <option value="${list.memId}">${list.memCodeName}</option>
-				                 </c:forEach>
-	                        </select>
-	                    </td>
+				        <th scope="row">Assign DT<span id='m3' name='m3' class="must" >*</span></th>
+				        <td><input type="text" id="cmbAssignCt" name="cmbAssignCt" class="readonly " readonly="readonly" /></td>
 				        <th scope="row"><spring:message code="sal.title.text.dscBrnch" /><span id='m4' name='m4' class="must">*</span></th>
 				        <td>
-				            <input type="text" title="" placeholder=""  id="CTGroup" name="CTGroup" class="readonly " readonly="readonly" />
-				            <input type="hidden" title="" placeholder="" class="disabled" id="brnchId" name="brnchId"  class="readonly" readonly="readonly" />
-				            <div  style="display:none">
+				            <input type="text" id="dtSubGrp" name="dtSubGrp"  class="readonly" readonly="readonly" />
+				            <input type="hidden" id="brnchId" name="brnchId"  class="readonly" readonly="readonly" />
+				            <div style="display:none">
 				                <select id="cmbCtGroup" name="cmbCtGroup" class="disabled" disabled="disabled">
 				                    <option value="">CT Group</option>
 				                    <option value="A">Group A</option>
@@ -856,17 +850,17 @@
 		            <tr>
 		                <th scope="row"><spring:message code="sal.text.requestDate" /><span id='m5' name='m5' class="must">*</span></th>
 		                <td>
-		                    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate"  onChange="fn_doAllaction()" disabled="disabled"/>
+		                    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc w100p" id="requestDate" name="requestDate"  onChange="fn_doAllaction()" disabled="disabled"/>
 		                </td>
 		                <th scope="row"><spring:message code="sal.text.appointmentDate" /><span id='m6' name='m6' class="must">*</span></th>
 		                <td>
-		                    <input type="text" id="addAppRetnDt" name="addAppRetnDt" title="Create start Date" placeholder="DD/MM/YYYY" readonly="readonly"    class="j_date readonly"  />
+		                    <input type="text" id="addAppRetnDt" name="addAppRetnDt" title="Create start Date" placeholder="DD/MM/YYYY"  readonly="readonly" class="j_dateHc readonly" disabled="disabled" />
 		                </td>
 		            </tr>
 		            <tr>
 		                <th scope="row"><spring:message code="sal.title.text.reCallDate" /><span id='m7' name='m7' class="must">*</span></th>
 		                <td>
-		                    <input type="text" id="addCallRecallDt" name="addCallRecallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" disabled="disabled" />
+		                    <input type="text" id="addCallRecallDt" name="addCallRecallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc" disabled="disabled" />
 		                </td>
 		                <th scope="row">Appointment <br> Session <span id='m8' name='m8' class="must">*</span></th>
 		                <td>

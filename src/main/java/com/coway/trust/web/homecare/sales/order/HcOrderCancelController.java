@@ -124,8 +124,6 @@ public class HcOrderCancelController {
 
 		EgovMap cancelReqInfo = orderCancelService.cancelReqInfo(params);
 
-		params.put("brnchType", HomecareConstants.HDC_BRANCH_TYPE);
-		List<EgovMap> selectAssignCTList = homecareCmService.selectHomecareBranchCd(params);
 		List<EgovMap> selectFeedback = orderCancelService.selectFeedback(params);
 		// homecare 주문 조회
 		params.put("ordNo", CommonUtils.nvl(params.get("paramSalesOrdNo")));
@@ -138,10 +136,10 @@ public class HcOrderCancelController {
 		model.addAttribute("paramTypeId", CommonUtils.nvl(params.get("typeId")));
 		model.addAttribute("paramDocId", CommonUtils.nvl(params.get("docId")));
 		model.addAttribute("paramRefId", CommonUtils.nvl(params.get("refId")));
-		model.addAttribute("selectAssignCTList", selectAssignCTList);
 		model.addAttribute("selectFeedback", selectFeedback);
 		model.addAttribute("reqStageId", params.get("paramReqStageId"));
 	    model.addAttribute("rcdTms", params.get("rcdTms"));
+	    model.addAttribute("branchTypeId", HomecareConstants.HDC_BRANCH_TYPE);
 
 		return "homecare/sales/order/hcCancelNewLogResultPop";
 
