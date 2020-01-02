@@ -51,23 +51,8 @@
                     uniqueValues.splice(uniqueValues.indexOf("5764"),1);
                 }
                 AUIGrid.setCheckedRowsByValue(event.pid, "appTypeId", uniqueValues);
-
-                callStusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusCode");
-                callStusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusId");
-                salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
-                callEntryId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callEntryId");
-                salesOrdNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
-                rcdTms = AUIGrid.getCellValue(myGridID, event.rowIndex, "rcdTms");
-
             } else {
                 AUIGrid.setCheckedRowsByValue(event.pid, "appTypeId", []);
-
-                callStusCode = "";
-                callStusId = "";
-                salesOrdId = "";
-                callEntryId = "";
-                salesOrdNo = "";
-                rcdTms = "";
             }
         });
 
@@ -129,7 +114,8 @@
 
     function fn_openAddCall() {
         var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-        if (selectedItems.length <= 0) {
+
+        if (selectedItems.length == 0) {
             // NO DATA SELECTED.
             Common.alert("<spring:message code='service.msg.NoRcd'/> ");
             return;
@@ -140,6 +126,12 @@
             Common.alert("<b><spring:message code='service.msg.onlyPlz'/><b>");
             return;
         }
+        callStusCode = selectedItems[0].item.callStusCode;
+        callStusId = selectedItems[0].item.callStusId;
+        salesOrdId = selectedItems[0].item.salesOrdId;
+        callEntryId = selectedItems[0].item.callEntryId;
+        salesOrdNo = selectedItems[0].item.salesOrdNo;
+        rcdTms = selectedItems[0].item.rcdTms;
 
         if (callStusId == "1" || callStusId == "19" || callStusId == "30") {
             Common.ajax("POST", "/callCenter/selRcdTms.do", {
