@@ -925,5 +925,10 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	  // Frame Update
 	  MSvcLogApiMapper.updateInsDtReAppointmentReturnResult(params);
   }
+
+  @Override
+  public EgovMap getPrdRtnDelvryNo(Map<String, Object> params) {
+    return MSvcLogApiMapper.getPrdRtnDelvryNo(params);
+  }
   /* Woongjin Jun */
 }

@@ -270,5 +270,7 @@ public interface MSvcLogApiMapper {
   EgovMap getFraOrdInfo(Map<String, Object> params);
 
   void updateInsDtReAppointmentReturnResult(Map<String, Object> params);
+
+  EgovMap getPrdRtnDelvryNo(Map<String, Object> params);
   /* Woongjin Jun */
 }
