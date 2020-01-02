@@ -56,8 +56,8 @@
 							{dataField: "c11",headerText :"<spring:message code='log.head.stk_comm_os_ins'/>"           ,width:100 ,height:30},
 							{dataField: "stkoldcd",headerText :"<spring:message code='log.head.stk_old_cd'/>"           ,width:100 ,height:30},
 							{dataField: "stkexttype",headerText :"<spring:message code='log.head.stk_ext_type'/>"           ,width:100 ,height:30},
-							{dataField: "stklchdt",headerText :"<spring:message code='log.head.stk_lch_dt'/>"           ,width:100 ,height:30}
-
+							{dataField: "stklchdt",headerText :"<spring:message code='log.head.stk_lch_dt'/>"           ,width:100 ,height:30},
+							{dataField: "isstockaudit",headerText :"<spring:message code='log.head.stockAudit'/>"           ,width:90 ,height:30}
                        ];
 
   var filtercolumn = [{dataField: "stockid",headerText :"<spring:message code='log.head.stockid'/>"          ,width:120 , visible : false},
@@ -638,6 +638,15 @@
                     'cbSerial' : ' '
                 });
             }
+            if ($("#cbStockAudit").is(":checked") == true) {  // 20191117 KR-OHK Stock Audit Add
+                $.extend(fdata, {
+                    'cbStockAudit' : 'Y'
+                });
+            } else {
+                $.extend(fdata, {
+                    'cbStockAudit' : 'N'
+                });
+            }
         }
         $.extend(fdata, {
             'stockId' : key
@@ -847,9 +856,16 @@
             if (data[0].serialchk == "Y") {
                 $("#cbSerial").prop("checked", true);
             }
+
             $("#cbNCV").prop("disabled", true);
             $("#cbSirim").prop("disabled", true);
             $("#cbSerial").prop("disabled", true);
+
+            // 20191117 KR-OHK Stock Audit Add
+            if (data[0].isstockaudit == "Y") {
+                $("#cbStockAudit").prop("checked", true);
+            }
+            $("#cbStockAudit").prop("disabled", true);
 
             $("#typeid").val(data[0].typeid);
         } else if (v == 'ES') {
@@ -857,6 +873,7 @@
             $("#cbNCV").prop("disabled", false);
             $("#cbSirim").prop("disabled", false);
             $("#cbSerial").prop("disabled", false);
+            $("#cbStockAudit").prop("disabled", false);  // 20191117 KR-OHK Stock Audit Add
 
             $("#txtStockType").text(data[0].typenm);
             $("#txtStockType")
@@ -909,6 +926,9 @@
             }
             if (data[0].serialchk == "Y") {
                 $("#cbSerial").prop("checked", true);
+            }
+            if (data[0].isstockaudit == "Y") {  // 20191117 KR-OHK Stock Audit Add
+                $("#cbStockAudit").prop("checked", true);
             }
             $("#typeid").val(data[0].typeid);
             $("#stock_info_edit").text("SAVE");
@@ -1122,6 +1142,7 @@
         $("#cbNCV").prop("checked", false);
         $("#cbSirim").prop("checked", false);
         $("#cbSerial").prop("checked", false);
+        $("#cbStockAudit").prop("checked", false); // 20191117 KR-OHK Stock Audit Add
         $("#txtCost").text();
         $("#txtNormalPrice").text();
         $("#txtPV").text();
@@ -1499,6 +1520,7 @@
                             <label><input type="checkbox" id="cbSirim"/><span>Sirim Certificate</span></label>
                             <label><input type="checkbox" id="cbNCV" /><span>NCV</span></label>
                             <label><input type="checkbox" id="cbSerial" /><span>Serial</span></label>
+                            <label><input type="checkbox" id="cbStockAudit" /><span><spring:message code='log.head.stockAudit'/></span></label>
                         </td>
                     </tr>
                     <tr>

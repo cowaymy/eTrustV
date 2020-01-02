@@ -34,7 +34,8 @@
 			    Project1.StkOldCd as StkOldCd ,
 			    project1.stkexttype AS stkexttype,
     			TO_CHAR(TO_DATE(project1.stklchdt,'YYYYMMDD'),'DD/MM/YYYY') stklchdt,
-          Project1.C2 AS C2,
+    			project1.isstockaudit,
+                Project1.C2 AS C2,
 			    Project1.C3 AS C3,
 			    Project1.C4 AS C4,
 			    Project1.C5 AS C5,
@@ -65,7 +66,8 @@
 			       stk.UNIT_VALU AS UnitValue,
 			       stk.STK_OLD_CODE AS StkOldCd,
 			       stk.stk_ext_type AS stkexttype,
-             stk.stk_lch_dt AS stklchdt,
+                   stk.stk_lch_dt AS stklchdt,
+                   stk.is_stock_audit AS isstockaudit,
                    (SELECT CODE_NAME
 			          FROM SYS0013M
 			         WHERE CODE_ID = stk.STK_CTGRY_ID)
@@ -227,7 +229,8 @@
 		       INV.GROS_WT grossweight,
 		       inv.MEASURE_CBM mcbm,
 		       inv.STK_TYPE_ID typeid,
-		       inv.STK_OLD_CODE oldstkcd
+		       inv.STK_OLD_CODE oldstkcd,
+		       inv.IS_STOCK_AUDIT isstockaudit
 		  FROM SYS0026M inv
 		 WHERE inv.STK_ID = #{stockId}
 
@@ -442,6 +445,7 @@
                  , IS_SIRIM     = #{cbSirim}
                  , IS_NCV       = #{cbNCV}
                  , SERIAL_CHK       = #{cbSerial}
+                 , IS_STOCK_AUDIT = #{cbStockAudit}
                  , NET_WT       = #{netweight}
                  , GROS_WT      = #{grossweight}
                  , STUS_CODE_ID = #{statusselect}
