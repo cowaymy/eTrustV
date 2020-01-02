@@ -187,7 +187,7 @@ $(document).ready(function(){
         $("#ioType").val($("#zIoType").val());
     }
 
-    if($("#transaction").val() == "UM" && $("#ioType").val() == "O"){
+    if(($("#transaction").val() == "UM" && $("#ioType").val() == "O") || $("#transaction").val() == "OG" || $("#transaction").val() == "OI"){
     	$("#typeUM").show();
     	$("#typeUS").hide();
     	$("#typeAD").hide();
@@ -528,7 +528,7 @@ function fn_scanClosePop(){
                 </td>
             </tr>
 			<tr id="typeUM" style="display:none;">
-                <th scope="row">SMO No.</th>
+                <th scope="row">Request No.</th>
                 <td colspan="3" >
                     <input type="text" id="sRstNo" name="sRstNo" placeholder="" class="w100p readonly" style="min-width:150px" readonly value=""'/>
 
