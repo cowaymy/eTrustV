@@ -30,4 +30,5 @@ public interface SerialHistoryService {
 	 * @return
 	 */
 	List<EgovMap> selectSerialHistoryList(Map<String, Object> params);
+
 }
