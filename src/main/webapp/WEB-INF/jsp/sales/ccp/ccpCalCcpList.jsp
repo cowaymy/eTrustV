@@ -37,22 +37,27 @@ $(document).ready(function() {
     AUIGrid.bind(calGrid, "cellDoubleClick", function(event){
 
     	if('${PAGE_AUTH.funcChange}' == 'Y'){
-    		if(event.item.ccpStusId == 1){
-                $("#_ccpId").val(event.item.ccpId);
-                $("#_salesOrdId").val(event.item.salesOrdId);
-                $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
-                //Common.popupDiv("/sales/ccp/selectCalCcpViewEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewEditDiv'); //Edit
 
-                Common.popupWin('_detailForm', "/sales/ccp/selectCalCcpViewEditPop.do", option);
+    		if(event.item.stkCtgryId != 5707 && event.item.apptypeid !=5764){
+	    		if(event.item.ccpStusId == 1){
+	                $("#_ccpId").val(event.item.ccpId);
+	                $("#_salesOrdId").val(event.item.salesOrdId);
+	                $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
+	                //Common.popupDiv("/sales/ccp/selectCalCcpViewEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewEditDiv'); //Edit
 
-            }else{
-                $("#_ccpId").val(event.item.ccpId);
-                $("#_salesOrdId").val(event.item.salesOrdId);
-                $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
-                //Common.popupDiv("/sales/ccp/ccpCalCCpViewPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewDiv'); //View
+	                Common.popupWin('_detailForm', "/sales/ccp/selectCalCcpViewEditPop.do", option);
 
-                Common.popupWin('_detailForm', "/sales/ccp/ccpCalCCpViewPop.do", option);
-            }
+	            }else{
+	                $("#_ccpId").val(event.item.ccpId);
+	                $("#_salesOrdId").val(event.item.salesOrdId);
+	                $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
+	                //Common.popupDiv("/sales/ccp/ccpCalCCpViewPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewDiv'); //View
+
+	                Common.popupWin('_detailForm', "/sales/ccp/ccpCalCCpViewPop.do", option);
+	            }
+    		}else{
+    			Common.alert('Auxiliary products are not allowed to view');
+    		}
     	}else{
     		Common.alert('<spring:message code="sal.alert.msg.accessDeny" />');
     	}
@@ -230,10 +235,12 @@ $.fn.clearForm = function() {
 function createCalGrid(){
 
 	var  columnLayout = [
+                         {dataField : "bndlNo", headerText : '<spring:message code="sal.title.text.ordBundleNo" />', width : "7%" , editable : false},
 	                     {dataField : "salesOrdNo", headerText : '<spring:message code="sal.title.text.ordBrNo" />', width : "7%" , editable : false},
 	                     {dataField : "ccpIsHold", headerText : '<spring:message code="sal.title.text.hold" />', width : "4%" , editable : false,
 	                       renderer : {type : "CheckBoxEditRenderer", editable : false , checkValue : true , unCheckValue : false}
 	                     },
+	                     {dataField : "appType", headerText : '<spring:message code="sal.title.text.appType" />', width : "7%" , editable : false},
 	                     {dataField : "refNo", headerText :'<spring:message code="sal.title.text.ordBrRefNo" />', width : "7%" , editable : false},
 	                     {dataField : "name1", headerText : '<spring:message code="sal.text.branch" />', width : "7%" , editable : false},
 	                     {dataField : "keyAt", headerText : '<spring:message code="sal.title.text.keyAtBrBy" />', width : "10%" , editable : false},
@@ -255,6 +262,7 @@ function createCalGrid(){
 	                     {dataField : "pvmonth", visible : false},
 	                     {dataField : "pvyear", visible : false},
 	                     {dataField : "typeid", visible : false},
+	                     {dataField : "stkCtgryId",visible : false},
 
 	]
 
@@ -443,6 +451,14 @@ function popup(location){
     </td>
     <th scope="row"><spring:message code="sal.title.text.lastUpdUser" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" name="calUpdator"/></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.title.text.ordBundleNo" /></th>
+    <td><input type="text" title="" placeholder="" class="w100p" name="bndlNo"/></td>
+    <th scope="row"></th>
+    <td></td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
