@@ -264,5 +264,11 @@ public interface MSvcLogApiMapper {
   List<EgovMap> selectSerialList(Map<String, Object> params);
 
   EgovMap getOrdID(Map<String, Object> params);
+
+  List<EgovMap> getDtInstallationJobList(Map<String, Object> params);
+
+  EgovMap getFraOrdInfo(Map<String, Object> params);
+
+  void updateInsDtReAppointmentReturnResult(Map<String, Object> params);
   /* Woongjin Jun */
 }

@@ -907,5 +907,23 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   public EgovMap getOrdID(Map<String, Object> params) {
     return MSvcLogApiMapper.getOrdID(params);
   }
+
+  @Override
+  public List<EgovMap> getDtInstallationJobList(Map<String, Object> params) {
+    return MSvcLogApiMapper.getDtInstallationJobList(params);
+  }
+
+  @Override
+  public EgovMap getFraOrdInfo(Map<String, Object> params) {
+    return MSvcLogApiMapper.getFraOrdInfo(params);
+  }
+
+  @Override
+  public void updateInsDtReAppointmentReturnResult(Map<String, Object> params) {
+	  MSvcLogApiMapper.updateInsReAppointmentReturnResult(params);
+
+	  // Frame Update
+	  MSvcLogApiMapper.updateInsDtReAppointmentReturnResult(params);
+  }
   /* Woongjin Jun */
 }
