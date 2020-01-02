@@ -505,7 +505,7 @@
 	        sessionCode ="A";
 	    }
 
-	    if(locType == 'INS') {
+	    if(locType == 'INS' || locType == 'AS') {
 	    	$("#CTSSessionCode").val(sessionCode);
 	        $("#CTCode").val(selectedItems[0].item.memCode);
 	        $("#CTID").val(selectedItems[0].item.ct);
