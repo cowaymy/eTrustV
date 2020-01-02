@@ -100,7 +100,7 @@
                 $('#exTrade').val('${orderInfo.basicInfo.exTrade}');
                 $('#installDur').val('${orderInfo.basicInfo.instPriod}');
                 $('#poNo').val('${orderInfo.basicInfo.ordPoNo}');
-                $('#refereNo').val('${orderInfo.basicInfo.ordRefNo}');
+                $('#refereNo').val('');
 
                 $('#ordPromo1, #ordPromo2').removeAttr("disabled");
                 /* var month = '${orderInfo.basicInfo.month}';
