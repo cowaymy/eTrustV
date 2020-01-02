@@ -167,10 +167,12 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	        				rtnValue.put("logerr", "Y");
 	        			}
 
+	        			EgovMap delvryMap = MSvcLogApiService.getPrdRtnDelvryNo(cvMp);
+
 	        			params.put("scanSerial", String.valueOf(cvMp.get("scanSerial")));
     					params.put("salesOrdId", String.valueOf(ordIdMap.get("salesOrdId")));
     					params.put("reqstNo", String.valueOf(cvMp.get("serviceNo")));
-    					params.put("delvryNo", null); // ?????????
+    					params.put("delvryNo", String.valueOf(delvryMap.get("delvryNo")));
     					params.put("callGbn", "RETURN");
     					params.put("mobileYn", "Y");
     					params.put("userId", userId);
