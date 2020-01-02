@@ -102,9 +102,11 @@ public class HcInstallationReportController {
      * @throws Exception
      */
     @RequestMapping(value = "/installationLogBookPop.do")
-    public String installationLogBookPop(@RequestParam Map<String, Object> params, ModelMap model) {
-      // 호출될 화면
-      return "services/installation/installationLogBookListingPop";
+    public String installationLogBookPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+      // HomeCare Branch : SYS0005M - 5743
+      model.addAttribute("branchList", hcASManagementListService.selectHomeCareBranchWithNm());
+
+      return "homecare/services/install/hcInstallationLogBookListingPop";
     }
 
     /**
@@ -118,7 +120,7 @@ public class HcInstallationReportController {
     @RequestMapping(value = "/installationRawDataPop.do")
     public String installationRawDataPop(@RequestParam Map<String, Object> params, ModelMap model) {
       // 호출될 화면
-      return "services/installation/installationRawDataPop";
+      return "homecare/services/install/hcInstallationRawDataPop";
     }
 
     /**
@@ -130,9 +132,11 @@ public class HcInstallationReportController {
      * @throws Exception
      */
     @RequestMapping(value = "/installationFreeGiftListPop.do")
-    public String installationFreeGiftListPop(@RequestParam Map<String, Object> params, ModelMap model) {
-      // 호출될 화면
-      return "services/installation/installationFreeGiftListPop";
+    public String installationFreeGiftListPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+        // HomeCare Branch : SYS0005M - 5743
+    	model.addAttribute("branchList", hcASManagementListService.selectHomeCareBranchWithNm());
+
+       return "homecare/services/install/hcInstallationFreeGiftListPop";
     }
 
     /**

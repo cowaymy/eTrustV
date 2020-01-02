@@ -243,7 +243,7 @@
     Common.popupDiv("/homecare/services/install/report/installationLogBookPop.do", null, null, true, '');
   }
 
-  function fn_dailyDscReport() {
+  function fn_dailyDscReport() {        // TO-BE : Coming soon
     Common.popupDiv("/homecare/services/install/report/dailyDscReportPop.do", null, null, true, '');
   }
 

@@ -1,6 +1,5 @@
 package com.coway.trust.web.homecare.services.as;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -144,7 +143,16 @@ public class HcASManagementListController {
       return ResponseEntity.ok(selectCTSubGroupDscList);
   }
 
+  @RequestMapping(value = "/getErrMstList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getErrMstList(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) throws Exception{
+    logger.debug("===========================/getErrMstList.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getErrMstList.do===============================");
 
+    List<EgovMap> getErrMstList = hcASManagementListService.getErrMstList(params);
+    return ResponseEntity.ok(getErrMstList);
+  }
 
   // AS Search
   @RequestMapping(value = "/searchASManagementList.do", method = RequestMethod.GET)

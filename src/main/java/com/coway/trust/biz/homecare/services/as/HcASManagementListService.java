@@ -19,6 +19,8 @@ public interface HcASManagementListService {
 	public List<EgovMap> selectHomeCareBranchWithNm() throws Exception;
 	public List<EgovMap> selectCTByDSC(Map<String, Object> params) throws Exception;
 	public List<EgovMap> selectCTByDSCSearch(Map<String, Object> params) throws Exception;
+	public List<EgovMap> getErrMstList(Map<String, Object> params) throws Exception;
+
 
 	public List<EgovMap> selectASManagementList(Map<String, Object> params) throws Exception;
 

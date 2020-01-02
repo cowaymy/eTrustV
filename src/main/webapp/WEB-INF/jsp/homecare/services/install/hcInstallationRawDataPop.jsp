@@ -66,10 +66,11 @@
         whereSql += " AND SOM.APP_TYPE_ID In (" + $("#appliType").val() + ") ";
       }
 
-      // Homecare Remove(except)
-      whereSql += " AND SOM.BNDL_ID IS NULL ";
+      // HomeCare add
+      whereSql += " AND SOM.BNDL_ID IS NOT NULL ";
       //console.log("w " + whereSql);
 
+      // SP_CR_GEN_INS_RAWDATA_EXCEL
       $("#installationRawDataForm #V_WHERESQL").val(whereSql);
       $("#installationRawDataForm #V_SELECTSQL").val('');
       $("#installationRawDataForm #reportFileName").val('/services/InstallationRawData_Excel.rpt');

@@ -55,6 +55,10 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
 		return hcASManagementListMapper.selectCTByDSCSearch(params);
 	}
 
+	@Override
+	public List<EgovMap> getErrMstList(Map<String, Object> params) throws Exception{
+		return hcASManagementListMapper.getErrMstList(params);
+	}
 
 	@Override
 	public List<EgovMap> selectASManagementList(Map<String, Object> params) throws Exception{

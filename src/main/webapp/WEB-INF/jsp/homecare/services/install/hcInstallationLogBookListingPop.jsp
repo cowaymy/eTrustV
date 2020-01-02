@@ -6,19 +6,25 @@
  11/10/2019  ONGHC  1.0.0          AMEND NOT USING BETWEEN FOR SEARCH INSTALLATION DATE
  -->
 <script type="text/javaScript">
-  $(document).ready(
-      function() {
-        doGetComboSepa("/common/selectBranchCodeList.do", 5, '-', '',
-            'branch', 'S', '');
-        doGetCombo('/common/selectCodeList.do', '10', '', 'appliType',
-            'M', 'f_multiCombo');
+//Branch : 5743
+var branchDs = [];
+<c:forEach var="obj" items="${branchList}">
+    branchDs.push({codeId:"${obj.codeId}", codeName:"${obj.codeName}"});
+</c:forEach>
 
-        //$("#branch").change(
-                //function() {
-                  //doGetComboData('/services/as/selectCTByDSC.do', $("#cmbbranchId2").val(), '', 'cmbctId2', 'M', 'fn_multiCombo');
-                  //doGetCombo('/services/as/selectCTByDSC.do', $("#branch").val(), '', 'cmbctId2', 'M', 'fn_multiCombo');
-                //}); // INCHARGE CT
-      });
+$(document).ready(function() {
+
+    //doGetComboSepa("/common/selectBranchCodeList.do", 5, '-', '', 'branch', 'S', '');
+    doDefCombo(branchDs, '', 'branch', 'S', '');   // Home Care Branch : 5743
+    doGetCombo('/common/selectCodeList.do', '10', '', 'appliType', 'M', 'f_multiCombo');
+
+    //$("#branch").change(
+              //function() {
+                //doGetComboData('/services/as/selectCTByDSC.do', $("#cmbbranchId2").val(), '', 'cmbctId2', 'M', 'fn_multiCombo');
+                //doGetCombo('/services/as/selectCTByDSC.do', $("#branch").val(), '', 'cmbctId2', 'M', 'fn_multiCombo');
+              //}); // INCHARGE CT
+});
+
   function f_multiCombo() {
     $('#appliType').change(function() {
     }).multipleSelect({
@@ -109,7 +115,7 @@
             + "' AND '" + $("#CTCodeTo").val() + "') ";
       }
       if ($("#branch").val() != '' && $("#branch").val() != null) {
-        whereSql += " AND i.BRNCH_ID = " + $("#branch").val() + "  ";
+        whereSql += " AND i.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '" + $("#branch").val() + "' AND STUS_ID = 1 AND TYPE_ID = 5754) ";
       }
       if ($("#group").val() != '' && $("#group").val() != null) {
         whereSql += " AND ie.CT_GRP = " + " '" + $("#group").val()
@@ -121,8 +127,8 @@
             + ") ";
       }
 
-      // Homecare Remove(except)
-      whereSql += " AND som.BNDL_ID IS NULL ";
+      // HomeCare add
+      whereSql += " AND som.BNDL_ID IS NOT NULL ";
 
       var orderSql = "";
       if ($("#sortType").val() == "1") {
@@ -145,7 +151,7 @@
       $("#reportFormIns #V_WHERESQL").val(whereSql);
       $("#reportFormIns #V_ORDERSQL").val(orderBySql);
       $("#reportFormIns #reportFileName").val(
-          '/services/InstallationLogBookList.rpt');
+          '/homecare/hcInstallationLogBookList.rpt');
       $("#reportFormIns #viewType").val("PDF");
       $("#reportFormIns #reportDownFileName").val(
           "InstallationLogBook_" + day + month + date.getFullYear());
@@ -158,6 +164,7 @@
 
     }
   }
+
   $.fn.clearForm = function() {
     return this.each(function() {
       var type = this.type, tag = this.tagName.toLowerCase();
@@ -249,18 +256,16 @@
        <th scope="row"><spring:message
          code='service.title.DSCBranch' /></th>
        <td><select id="branch" name="branch" class="w100p"></select></td>
-        <th scope="row"><spring:message code='service.title.CTCode' /></th>
+        <th scope="row"><spring:message code='home.lbl.dtCode' /></th>
        <td>
         <div class="date_set">
 
          <p>
-          <input type="text" title="" placeholder="" class="w100p"
-           id="CTCodeFr" name="CTCodeFr" />
+          <input type="text" title="" placeholder="" class="w100p" id="CTCodeFr" name="CTCodeFr" />
          </p>
          <span>To</span>
          <p>
-          <input type="text" title="" placeholder="" class="w100p"
-           id="CTCodeTo" name="CTCodeTo" />
+          <input type="text" title="" placeholder="" class="w100p" id="CTCodeTo" name="CTCodeTo" />
          </p>
         </div>
        </td>
@@ -269,7 +274,7 @@
        </select></td> -->
       </tr>
       <tr>
-       <th scope="row"><spring:message code='service.title.CTGroup' /></th>
+       <th scope="row"><spring:message code='home.lbl.dTGroup' /></th>
        <td><select id="group" name="group" class="w100p">
          <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
          <option value="A">A</option>
@@ -279,7 +284,7 @@
        <th scope="row"><spring:message code='service.title.SortBy' /></th>
        <td><select id="sortType" name="sortType" class="w100p">
          <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
-         <option value="1">CT Code</option>
+         <option value="1">DT Code</option>
          <option value="2">Install Number</option>
          <option value="3">Order Number</option>
        </select></td>
