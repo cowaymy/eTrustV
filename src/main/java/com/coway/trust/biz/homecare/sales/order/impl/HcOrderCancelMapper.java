@@ -37,6 +37,6 @@ public interface HcOrderCancelMapper {
 	 * @param params
 	 * @return
 	 */
-	public String getCallEntryId(Map<String, Object> params);
+	public EgovMap getCallEntryId(Map<String, Object> params);
 
 }

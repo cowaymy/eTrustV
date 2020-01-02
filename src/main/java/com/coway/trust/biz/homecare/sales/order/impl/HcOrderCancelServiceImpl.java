@@ -14,6 +14,7 @@ import com.coway.trust.biz.sales.order.OrderCancelService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.homecare.HomecareConstants;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -75,11 +76,15 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 		    if (noRcd ==1){
 				orderCancelService.saveCancel(params);
 
-				// Mattress 주문이면서 같이 주문된 주문이 있는 경우.
-				if("MAT".equals(paramOrdCtgryCd) && paramAnoOrdId > 0) {
+				// 같이 주문된 주문이 있는 경우.
+				if(paramAnoOrdId > 0) {
 					params.put("paramOrdId", paramAnoOrdId);
-					params.put("appTypeId", SalesConstants.APP_TYPE_CODE_ID_AUX);
-					params.put("paramCallEntryId", hcOrderCancelMapper.getCallEntryId(params));
+					params.put("appTypeId", paramOrdCtgryCd.equals(HomecareConstants.HC_CTGRY_CD.FRM) ? SalesConstants.APP_TYPE_CODE_ID_RENTAL : SalesConstants.APP_TYPE_CODE_ID_AUX);
+
+					EgovMap callEntryMap = hcOrderCancelMapper.getCallEntryId(params);
+
+					params.put("paramCallEntryId", CommonUtils.nvl(callEntryMap.get("callEntryId")));
+					params.put("paramReqId", CommonUtils.nvl(callEntryMap.get("reqId")));
 
 					orderCancelService.saveCancel(params);
 				}

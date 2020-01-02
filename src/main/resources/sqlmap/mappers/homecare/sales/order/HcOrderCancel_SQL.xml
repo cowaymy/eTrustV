@@ -217,9 +217,11 @@
     </select>
 
     <!-- Get CallEntryId -->
-    <select id="getCallEntryId" parameterType="Map" resultType="String">
+    <select id="getCallEntryId" parameterType="Map" resultType="egovMap">
         /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderCancelMapper.getCallEntryId */
         SELECT V.CALL_ENTRY_ID
+                 , V.REQ_ID
+                 , V.REQ_NO
          FROM SAL1007V V
         <where>
             <if test="paramOrdId != null and paramOrdId != ''">
@@ -228,15 +230,6 @@
 		    <if test="appTypeId != null and appTypeId != ''">
                 AND V.APP_TYPE_ID = #{appTypeId}
             </if>
-            AND EXISTS (SELECT V1.ORD_NO
-                                FROM SAL1013V  V1
-                                        , SYS0026M S1
-                               WHERE V1.PRODUCT_CODE  = S1.STK_CODE
-                                  AND S1.STK_CTGRY_ID     IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
-                                                                           WHERE AA.CODE = BB.CODE
-                                                                               AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
-                                  AND V1.ORD_NO             = V.ORD_NO
-                    )
         </where>
 
   </select>

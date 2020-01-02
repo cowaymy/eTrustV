@@ -2,9 +2,7 @@ package com.coway.trust.biz.sales.order.impl;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,10 +31,8 @@ import com.coway.trust.biz.sales.order.vo.AccTaxInvoiceOutright_SubVO;
 import com.coway.trust.biz.sales.order.vo.AccTradeLedgerVO;
 import com.coway.trust.biz.sales.order.vo.CallEntryVO;
 import com.coway.trust.biz.sales.order.vo.CallResultVO;
-import com.coway.trust.biz.sales.order.vo.CustBillMasterHistoryVO;
 import com.coway.trust.biz.sales.order.vo.CustBillMasterVO;
 import com.coway.trust.biz.sales.order.vo.DiscountEntryVO;
-import com.coway.trust.biz.sales.order.vo.InstallResultVO;
 import com.coway.trust.biz.sales.order.vo.InstallationVO;
 import com.coway.trust.biz.sales.order.vo.InvStkMovementVO;
 import com.coway.trust.biz.sales.order.vo.RentPaySetVO;
@@ -50,18 +46,15 @@ import com.coway.trust.biz.sales.order.vo.SalesOrderLogVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderSchemeConversionVO;
 import com.coway.trust.biz.sales.order.vo.SalesReqCancelVO;
-import com.coway.trust.biz.sales.order.vo.SrvConfigFilterVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigPeriodVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
 import com.coway.trust.biz.sales.order.vo.StkReturnEntryVO;
-import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
 import com.coway.trust.biz.services.installation.impl.InstallationResultListMapper;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.DocTypeConstants;
 import com.coway.trust.web.sales.SalesConstants;
-import com.googlecode.mp4parser.h264.Debug;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -1902,8 +1895,13 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     logger.debug("= SALES ORDER LOG : " + salesOrderLogVO);
     orderRegisterMapper.insertSalesOrderLog(salesOrderLogVO);
 
-    String msg = "Order Number : " + (String) somMap.get("salesOrdNo")
-        + "<br/>Order cancellation request successfully saved.<br/>" + "Request Number : " + reqNo + "<br />";
+    String salesOrdNo = CommonUtils.nvl(somMap.get("salesOrdNo"));
+    String msg = "Order Number : " + salesOrdNo
+        + "<br/>Order cancellation request successfully saved.<br/>" + "Request Number : " + reqNo + "<br/>";
+
+    // KR-SH return Add map - Order and Request Number
+    params.put("rtnOrderNo", salesOrdNo);
+    params.put("rtnReqNo", reqNo);
 
     ReturnMessage message = new ReturnMessage();
     message.setCode(AppConstants.SUCCESS);
