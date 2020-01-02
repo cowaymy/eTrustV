@@ -1144,7 +1144,7 @@ function fn_rentalAdvMonthChangeTxt(){
 						 					 item.collectorCode =  $("#rentalkeyInCollMemCd").val() ;
 						 					 item.collectorId = $("#rentalkeyInCollMemId").val() ;
 						 					 item.allowComm = $("#rentalcashIsCommChk").val() ;
-						 					 item.refDtlsJPayRef = $("rentalRefDtlsJompay").val();
+						 					 item.refDtlsJPayRef = $("#rentalRefDtlsJompay").val();
 
 	                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1190,7 +1190,7 @@ function fn_rentalAdvMonthChangeTxt(){
 	                        item.collectorCode =  $("#rentalkeyInCollMemCd").val() ;
 	                        item.collectorId = $("#rentalkeyInCollMemId").val() ;
 	                        item.allowComm = $("#rentalcashIsCommChk").val() ;
-	                        item.refDtlsJPayRef = $("rentalRefDtlsJompay").val();
+	                        item.refDtlsJPayRef = $("#rentalRefDtlsJompay").val();
 
 	                        AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -1232,7 +1232,7 @@ function fn_rentalAdvMonthChangeTxt(){
                       item.collectorCode =  $("#rentalkeyInCollMemCd").val() ;
                       item.collectorId = $("#rentalkeyInCollMemId").val() ;
                       item.allowComm = $("#rentalcashIsCommChk").val() ;
-                      item.refDtlsJPayRef = $("rentalRefDtlsJompay").val();
+                      item.refDtlsJPayRef = $("#rentalRefDtlsJompay").val();
 
 	                    AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
