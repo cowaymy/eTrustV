@@ -293,7 +293,6 @@
 
             if(custInfo != null) {
                 if(custInfo.areaId != undefined){
-                    console.log("custInfo.areaId.substring(0,2):"+custInfo.areaId.substring(0,2));
                     if("DM" == custInfo.areaId.substring(0,2)) {
                         Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />');
                         $("#validAreaIdYN").val("N");
@@ -301,7 +300,7 @@
                     else {
                         $("#validAreaIdYN").val("Y");
                     }
-                }else{
+                } else {
                     Common.alert('<spring:message code="sal.alert.msg.invalidMagicAddress"/>',fn_orderRegPopClose());
                     return false;
                 }
@@ -322,22 +321,22 @@
                 if($("#appType").val() == '66') {
                     $("#gstChk").removeAttr("disabled");
                 } else if($("#appType").val() != '' && $("#appType").val() != '66') {
-                    var appTypeVal   = $("#appType").val();
+                    /* var appTypeVal   = $("#appType").val();
                     var stkIdVal1       = $("#ordProduct1").val();
                     var stkIdVal2       = $("#ordProduct2").val();
                     var promoIdVal1  = $("#ordPromo1").val();
                     var promoIdVal2  = $("#ordPromo2").val();
                     var srvPacId        = 0;
 
-                    fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId, '1');
-                    fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId, '2');
+                    fn_loadProductPrice(appTypeVal, stkIdVal1, srvPacId, '1');
+                    fn_loadProductPrice(appTypeVal, stkIdVal2, srvPacId, '2');
 
                     if(FormUtil.isNotEmpty(promoIdVal1)) {
                         fn_loadPromotionPrice(promoIdVal1, stkIdVal1, srvPacId, '1');
                     }
                     if(FormUtil.isNotEmpty(promoIdVal2)) {
                         fn_loadPromotionPrice(promoIdVal2, stkIdVal2, srvPacId, '2');
-                    }
+                    } */
 
                     if(custInfo.gstChk == '1') {
                         $("#gstChk").val('1').prop("disabled", true);
