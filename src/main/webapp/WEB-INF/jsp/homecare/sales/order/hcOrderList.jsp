@@ -584,7 +584,7 @@
         </form>
 
 
-        <form id="listSearchForm" name="listSearchForm" action="#" method="post">
+        <form id="listSearchForm" name="listSearchForm" action="#" method="post" autocomplete=off>
             <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
             <table class="type1">
                 <!-- table start -->

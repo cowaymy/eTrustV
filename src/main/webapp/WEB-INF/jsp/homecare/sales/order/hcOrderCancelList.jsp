@@ -448,7 +448,7 @@
 			<input type="hidden" id="paramRsoStusId" name="paramRsoStusId">
 			<input type="hidden" id="rcdTms" name="rcdTms">
 		</form>
-		<form id="searchForm" name="searchForm" method="post">
+		<form id="searchForm" name="searchForm" method="post" autocomplete=off>
 			<table class="type1">
 				<!-- table start -->
 				<caption>table</caption>

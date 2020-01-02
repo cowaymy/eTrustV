@@ -409,7 +409,7 @@
         <h2><spring:message code='service.title.NewCallLogResult' /></h2>
     </aside>
     <!-- title_line end -->
-    <form action="#" id="addCallForm">
+    <form action="#" id="addCallForm" autocomplete=off>
 		<input type="hidden" value="${orderCall.c4}" id="hiddenProductId" name="hiddenProductId" />
 		<input type="hidden" value="${orderCall.callStusId}" id="hiddenCallLogStatusId" name="hiddenCallLogStatusId" />
 		<input type="hidden" value="${callStusCode}" id="callStusCode" name="callStusCode" />

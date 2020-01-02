@@ -44,7 +44,34 @@
 	    // AUIGrid 그리드를 생성합니다.
         orderCallListGrid();
 
-	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+        AUIGrid.bind(myGridID, "rowAllChkClick", function( event ) {
+            if(event.checked) {
+                var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "appTypeId");
+                if(uniqueValues.indexOf("5764") != -1){
+                    uniqueValues.splice(uniqueValues.indexOf("5764"),1);
+                }
+                AUIGrid.setCheckedRowsByValue(event.pid, "appTypeId", uniqueValues);
+
+                callStusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusCode");
+                callStusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusId");
+                salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+                callEntryId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callEntryId");
+                salesOrdNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
+                rcdTms = AUIGrid.getCellValue(myGridID, event.rowIndex, "rcdTms");
+
+            } else {
+                AUIGrid.setCheckedRowsByValue(event.pid, "appTypeId", []);
+
+                callStusCode = "";
+                callStusId = "";
+                salesOrdId = "";
+                callEntryId = "";
+                salesOrdNo = "";
+                rcdTms = "";
+            }
+        });
+
+	    /* AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
         	callStusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusCode");
             callStusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusId");
             salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
@@ -62,16 +89,16 @@
                     + "&rcdTms=" + rcdTms
                     + "&branchTypeId=" + "${branchTypeId}"
             );
-        });
+        }); */
 
-        AUIGrid.bind(myGridID, "cellClick", function(event) {
+        /* AUIGrid.bind(myGridID, "cellClick", function(event) {
             callStusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusCode");
             callStusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusId");
             salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
             callEntryId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callEntryId");
             salesOrdNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
             rcdTms = AUIGrid.getCellValue(myGridID, event.rowIndex, "rcdTms");
-        });
+        }); */
 	});
 
 	function fn_setOptGrpClass() {
@@ -101,6 +128,19 @@
 	}
 
     function fn_openAddCall() {
+        var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+        if (selectedItems.length <= 0) {
+            // NO DATA SELECTED.
+            Common.alert("<spring:message code='service.msg.NoRcd'/> ");
+            return;
+        }
+
+        if (selectedItems.length > 1) {
+            // ONLY SELECT ONE ROW PLEASE
+            Common.alert("<b><spring:message code='service.msg.onlyPlz'/><b>");
+            return;
+        }
+
         if (callStusId == "1" || callStusId == "19" || callStusId == "30") {
             Common.ajax("POST", "/callCenter/selRcdTms.do", {
                 callStusCode : callStusCode,
@@ -151,25 +191,33 @@
             {dataField : "area",                  headerText : '<spring:message code="service.grid.Area" />',           editable : false,     width : 180},
             {dataField : "postcode",           headerText : '<spring:message code="service.grid.PostCode" />',    editable : false,     width : 100},
             {dataField : "dscCode",            headerText : '<spring:message code="service.grid.Branch" />',        editable : false,     width : 150},
-            {dataField : "isWaitCancl",         headerText : '<spring:message code="service.grid.WaitCancel" />',   width : 100},
-            {dataField : "callStusId",           headerText : "",     width : 0},
-            {dataField : "salesOrdId",          headerText : "",    width : 0},
-            {dataField : "callEntryId",          headerText : "",     width : 0},
-            {dataField : "rcdTms",              headerText : "",     width : 0}
+            {dataField : "isWaitCancl",         headerText : '<spring:message code="service.grid.WaitCancel" />',  editable : false,     width : 100},
+            {dataField : "callStusId",           width : 0},
+            {dataField : "salesOrdId",         width : 0},
+            {dataField : "callEntryId",          width : 0},
+            {dataField : "rcdTms",              width : 0},
+            {dataField : "appTypeId",         width : 0}
         ];
 
 	  var gridPros = {
-	    usePaging : true,
-	    pageRowCount : 20,
-	    editable : true,
-	    // fixedColumnCount : 1,
-	    showStateColumn : false,
-	    displayTreeOpen : true,
-	    headerHeight : 30,
-	    // useGroupingPanel : true,
-	    skipReadonlyColumns : true,
-	    wrapSelectionMove : true,
-	    showRowNumColumn : true
+        usePaging : true,
+        pageRowCount : 20,
+        showRowCheckColumn : true,
+        independentAllCheckBox : true,
+        showRowAllCheckBox : true,
+        editable : false,
+        showStateColumn : false,
+        displayTreeOpen : true,
+        headerHeight : 30,
+        skipReadonlyColumns : true,
+        wrapSelectionMove : true,
+        showRowNumColumn : true,
+        rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
+            if(item.appTypeId == "5764") { // AUX가  아닌 경우 체크박스 disabeld 처리함
+                return false; // false 반환하면 disabled 처리됨
+            }
+            return true;
+        }
 	  };
 
 	  myGridID = AUIGrid.create("#grid_wrap_callList", columnLayout, gridPros);
@@ -229,7 +277,7 @@
 	<!-- title_line end -->
 	<section class="search_table">
 	 <!-- search_table start -->
-	<form action="#" method="post" id="orderCallSearchForm">
+	<form action="#" method="post" id="orderCallSearchForm" autocomplete=off >
 	    <input type="hidden" name="branchTypeId" value="${branchTypeId}" />
 		<!-- table start -->
 		<table class="type1">

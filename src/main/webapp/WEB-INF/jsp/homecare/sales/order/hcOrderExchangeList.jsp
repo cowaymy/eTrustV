@@ -222,7 +222,7 @@
 		    <input type="hidden" id="salesOrderId" name="salesOrderId">
 		</form>
 
-		<form id="searchForm" name="searchForm" method="post">
+		<form id="searchForm" name="searchForm" method="post" autocomplete=off>
 	        <!-- table start -->
 			<table class="type1">
 				<caption>table</caption>

@@ -397,7 +397,7 @@
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-	<form action="#" method="post" id="holidayForm">
+	<form action="#" method="post" id="holidayForm" autocomplete=off>
 		<input type ="hidden" id="type1" name="type1">
 		<input type ="hidden" id="holidayDesc1" name="holidayDesc1">
 		<input type ="hidden" id="holiday1" name="holiday1">

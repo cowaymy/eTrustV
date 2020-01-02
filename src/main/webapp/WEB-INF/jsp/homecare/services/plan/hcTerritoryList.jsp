@@ -153,7 +153,7 @@
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-	<form action="#" method="post" id="sForm" >
+	<form action="#" method="post" id="sForm" autocomplete=off>
 		<aside class="title_line"><!-- title_line start -->
 		<h4>Search Options</h4>
 		</aside><!-- title_line end -->
@@ -186,7 +186,7 @@
 				</td>
 				<th scope="row">Request Date</th>
 				<td>
-					<input type="text" title="기준년월" class="j_dateHc w100p" id="requestDt" name="requestDt"  placeholder="DD/MM/YYYY" />
+					<input type="text" title="Request Date" class="j_dateHc w100p" id="requestDt" name="requestDt"  placeholder="DD/MM/YYYY" />
 				</td>
 			</tr>
 			</tbody>

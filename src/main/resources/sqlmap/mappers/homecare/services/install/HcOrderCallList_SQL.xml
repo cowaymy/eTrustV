@@ -156,6 +156,7 @@
                   , Extent1.CALL_TYPE_CODE
                   , Extent1.SALES_ORD_ID
                   , Extent1.SALES_ORD_NO
+                  , Extent1.APP_TYPE_ID
                   , Extent1.APP_TYPE_NAME
                   , Extent1.CALL_STUS_ID
                   , Extent1.CALL_STUS_CODE

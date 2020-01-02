@@ -1923,6 +1923,15 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       }
     }
 
+    // APP TYPE = AUX -  Add KR-SH
+    if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_AUX) {
+      // CCP DECISION MASTER
+      if (ccpDecisionMVO != null && ccpDecisionMVO.getCcpStusId() > 0) {
+        ccpDecisionMVO.setCcpSalesOrdId(salesOrdId);
+        orderRegisterMapper.insertCcpDecisionM(ccpDecisionMVO);
+      }
+    }
+
     // DOCUMENT SUBMISSION
     if (docSubVOList != null && docSubVOList.size() > 0) {
       for (DocSubmissionVO docSubVO : docSubVOList) {

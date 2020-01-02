@@ -212,7 +212,7 @@
         var gridPros = {
             usePaging                 : true,         //페이징 사용
             pageRowCount          : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
-            editable                    : true,
+            editable                    : false,
             fixedColumnCount      : 1,
             showStateColumn       : false,
             displayTreeOpen        : false,
@@ -222,7 +222,7 @@
             wrapSelectionMove     : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn  : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage          : "No order found.",
-            wordWrap                  : true,
+            //wordWrap                  : true,
             groupingMessage       : "Here groupping"
         };
 
@@ -506,7 +506,7 @@
 <form id="frmNew" name="frmNew" action="#" method="post">
 </form>
 <section class="search_table"><!-- search_table start -->
-<form id="_frmPreOrdSrch" name="_frmPreOrdSrch" action="#" method="post">
+<form id="_frmPreOrdSrch" name="_frmPreOrdSrch" action="#" method="post" autocomplete=off>
 <!-- <input id="callPrgm" name="callPrgm" value="PRE_ORD" type="hidden" /> -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>

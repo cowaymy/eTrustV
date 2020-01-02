@@ -2235,6 +2235,9 @@
                   AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
                   AND T5.CODE_MASTER_ID = '381'
                   AND T1.STUS_CODE_ID = 1
+                  AND T1.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                               WHERE AA.CODE = BB.CODE
+                                                                  AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
             </if>
             <if test='stkType != null and stkType == "2"'>
                 SELECT DISTINCT T1.STK_ID
@@ -2257,6 +2260,9 @@
                   AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
                   AND T5.CODE_MASTER_ID = '381'
                    AND T1.STUS_CODE_ID = 1
+                   AND T1.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                               WHERE AA.CODE = BB.CODE
+                                                                  AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
             </if>
              )
          ORDER BY DISCONTINUE, CODE_NAME ASC, STK_ID ASC
