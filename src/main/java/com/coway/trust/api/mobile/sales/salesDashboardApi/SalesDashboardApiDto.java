@@ -1,4 +1,4 @@
-package com.coway.trust.api.mobile.sales.salesDashboardApi;
+package com.coway.trust.api.mobile.sales.SalesDashboardApi;
 
 import java.math.BigDecimal;
 
