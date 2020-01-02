@@ -3161,11 +3161,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
           if(locInfo == null) {
         	message.setCode("99");
-            message.setMessage("Fail to update result. [CT lack of stock]");
+            message.setMessage("Fail to update result. [lack of stock]");
           } else {
             if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
             	message.setCode("99");
-            	message.setMessage("Fail to update result. [CT lack of stock]");
+            	message.setMessage("Fail to update result. [lack of stock]");
             } else {
               EgovMap validMap = validationInstallationResult(params);
               int resultCnt = ((BigDecimal) validMap.get("resultCnt")).intValue();
