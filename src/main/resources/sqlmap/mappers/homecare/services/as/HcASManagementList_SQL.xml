@@ -95,7 +95,7 @@
                     FROM SVC0056M  A
                     WHERE 1=1
                     AND PRODUCT_CTGRY_CODE IN ('888')
-             ) ORDER BY PRODUCT_CTGRY_CODE DESC
+             ) ORDER BY PRODUCT_CTGRY_CODE DESC, DEFECT_TYPE_CODE ASC
     </select>
 
     <select id="selectASManagementList" parameterType="Map" resultType="egovMap">
