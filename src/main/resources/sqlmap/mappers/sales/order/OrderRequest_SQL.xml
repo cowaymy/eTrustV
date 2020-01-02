@@ -444,7 +444,7 @@
     FROM SVC0001D T1
     JOIN SVC0004D T2 ON T2.AS_ENTRY_ID = T1.AS_ID
                     AND T2.AS_RESULT_STUS_ID = 4
-                    AND T2.AS_SLUTN_RESN_ID = '#{asSlutnResnId}
+                    AND T2.AS_SLUTN_RESN_ID = #{asSlutnResnId}
     WHERE T1.AS_SO_ID = #{salesOrdId}
       AND TO_CHAR(T1.AS_APPNT_DT, 'YYYYMM') = TO_CHAR(SYADATE, 'YYYYMM')
       AND ROWNUM = 1
