@@ -147,6 +147,7 @@
              , NVL (L54.DELVRY_GR_CMPLT , 'N') grcmplt
              , NVL (L54.DELVRY_GI_CMPLT , 'N') gicmplt
              , S26.SERIAL_CHK serialchk
+             , S28Q.SERIAL_REQUIRE_CHK_YN SERIAL_REQUIRE_CHK_YN
           from log0047m l47
              , log0048d l48
              , log0054m l54
