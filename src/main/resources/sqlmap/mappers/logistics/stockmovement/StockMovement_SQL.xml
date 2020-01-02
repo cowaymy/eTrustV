@@ -1045,14 +1045,15 @@
 
   <resultMap id="SERIALDATA" type="egovMap" />
   <select id="StockMovementIssueSerial"  statementType="CALLABLE" parameterType="Map">
+   /* [ccom.coway.trust.biz.logistics.stockmovement.impl.StockMovementMapper.StockMovementIssueSerial] 20191228 - KR OHK*/
            { call SP_LOGISTIC_DELIVERY_SERIAL
                    (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId}
                    ,#{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=SERIALDATA} )
            }
   </select>
 
-  <resultMap id="BARCODE_SERIALDATA" type="egovMap" />
   <select id="StockMovementIssueBarcodeSave"  parameterType="Map"  statementType="CALLABLE" >
+   /* [com.coway.trust.biz.logistics.stockmovement.impl.StockMovementMapper.StockMovementIssueBarcodeSave] 20191228 - KR OHK*/
       {
       call  SP_LOGISTIC_BARCODE_SAVE(#{delvryGrDt}, #{reqstNo}, #{delvryNo}, #{trnscType}, #{ioType}, #{userId}
       , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
@@ -1060,8 +1061,8 @@
       }
   </select>
 
-  <resultMap id="BARCODE_RETDATA" type="egovMap" />
   <select id="StockMovementIssueBarcodeRetSave"  parameterType="Map"  statementType="CALLABLE" >
+   /* [com.coway.trust.biz.logistics.stockmovement.impl.StockMovementMapper.StockMovementIssueBarcodeRetSave] 20191228 - KR OHK*/
       {
       call  SP_LOGISTIC_BARCODE_RET_SAVE(#{delvryNo}, #{serialNo}, #{locStkGrad}, #{trnscType}, #{ioType}, #{userId}
       , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}

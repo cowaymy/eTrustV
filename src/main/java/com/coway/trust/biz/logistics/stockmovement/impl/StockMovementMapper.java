@@ -53,12 +53,6 @@ public interface StockMovementMapper {
 
   void StockMovementIssue(Map<String, Object> formMap);
 
-  void StockMovementIssueSerial(Map<String, Object> formMap);
-
-  void StockMovementIssueBarcodeSave(Map<String, Object> formMap);
-
-  void StockMovementIssueBarcodeRetSave(Map<String, Object> formMap);
-
   List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params);
 
   List<EgovMap> selectStockMovementMtrDocInfoList(Map<String, Object> params);
@@ -107,9 +101,15 @@ public interface StockMovementMapper {
 
   int chkASNoExist(Map<String, Object> params);
 
-  List<EgovMap> selectSmoIssueOutPop(Map<String, Object> params); // KR OHK : SMO Serial Check List
+  void StockMovementIssueSerial(Map<String, Object> formMap);					// KR OHK : SP_LOGISTIC_DELIVERY_SERIAL
 
-  List<EgovMap> selectSmoIssueInPop(Map<String, Object> params); // KR OHK : SMO Serial Check List
+  void StockMovementIssueBarcodeSave(Map<String, Object> formMap);			// KR OHK : SP_LOGISTIC_BARCODE_SAVE
+
+  void StockMovementIssueBarcodeRetSave(Map<String, Object> formMap);		// KR OHK : SP_LOGISTIC_BARCODE_RET_SAVE
+
+  List<EgovMap> selectSmoIssueOutPop(Map<String, Object> params); 				// KR OHK : SMO Out Serial Check List
+
+  List<EgovMap> selectSmoIssueInPop(Map<String, Object> params); 				// KR OHK : SMO In Serial Check List
 
   List<EgovMap> selectSMOIssueInSerialGradeList(Map<String, Object> params); // KR OHK : SMO Serial Grade List
 
