@@ -118,8 +118,13 @@ public class CustomerApiController {
 
             SimpleDateFormat sdf2 = new SimpleDateFormat("yyMMdd");
             Date d2 = sdf2.parse(date);
-            sdf2.applyPattern("ddMMyyyy");
+            sdf2.applyPattern("yyyyMMdd");
             rtn.setYyyymmdd(sdf2.format(d2));
+
+            if( LOGGER.isDebugEnabled() ){
+                LOGGER.debug("dd/MM/yyyy :::>>> " + rtn.getDdmmyyyy() );
+                LOGGER.debug("yyyyMMdd :::>>> " + rtn.getYyyymmdd() );
+            }
         }catch(Exception e){
             rtn.setDdmmyyyy("");
             rtn.setYyyymmdd("");
