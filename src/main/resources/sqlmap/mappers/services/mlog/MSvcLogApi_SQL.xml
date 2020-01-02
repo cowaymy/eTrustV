@@ -4879,4 +4879,11 @@
                                                                             WHERE MAT_ORD_NO = #{salesOrderNo}
                                                                                 AND FRA_ORD_NO IS NOT NULL))
   </update>
+
+  <select id="getPrdRtnDelvryNo" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT Y.DELVRY_NO
+      FROM LOG0047M X
+      INNER JOIN LOG0055D Y ON X.REQST_NO = Y.REQST_NO
+     WHERE X.REF_DOC_NO = #{serviceNo}
+  </select>
 </mapper>
