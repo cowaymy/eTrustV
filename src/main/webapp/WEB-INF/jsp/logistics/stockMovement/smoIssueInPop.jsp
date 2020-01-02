@@ -207,7 +207,7 @@ $(document).ready(function(){
                return false;
            }
     	   if (check.all[i].gidt == "" || check.all[i].gidt == null){
-               Common.alert("Please check the GI Date.")
+               Common.alert("Please check the GR Date.")
               return false;
            }
     	   /*if (check.all[i].serialChk != "Y"){
@@ -218,8 +218,8 @@ $(document).ready(function(){
                Common.alert("Scaned(Request) Qty does not exist.")
               return false;
            }
-    	   if (check.all[i].scanQty > check.all[i].delvryQty){
-               Common.alert("Scaned(Request) Qty cannot be greater than GR Qty.")
+    	   if (check.all[i].scanQty != check.all[i].delvryQty){
+               Common.alert("Scan(Request) Qty and GR qty must be the same..")
               return false;
            }
        }
