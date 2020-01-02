@@ -261,6 +261,147 @@ public class HcInstallResultListController {
         return "homecare/services/install/hcAddInstallationResultPop";
 	}
 
+    /**
+     * Installation Result DetailPopup
+     *
+     * @param request
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/hcAddinstallationResultProductDetailPop.do")
+    public String hcAddinstallationResultProductDetailPop(@RequestParam Map<String, Object> params, ModelMap model,
+        SessionVO sessionVOl) throws Exception {
+      logger.debug("params : {}", params);
+
+      EgovMap viewDetail = installationResultListService.selectViewDetail(params);
+      EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVOl);
+      model.addAttribute("viewDetail", viewDetail);
+      model.addAttribute("orderDetail", orderDetail);
+
+      List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
+      params.put("ststusCodeId", 1);
+      params.put("reasonTypeId", 172);
+      List<EgovMap> failReason = installationResultListService.selectFailReason(params);
+      EgovMap callType = installationResultListService.selectCallType(params);
+      EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
+      EgovMap stock = installationResultListService.getStockInCTIDByInstallEntryIDForInstallationView(installResult);
+      EgovMap sirimLoc = installationResultListService.getSirimLocByInstallEntryID(installResult);
+      EgovMap orderInfo = null;
+
+      if (params.get("codeId").toString().equals("258")) {
+        orderInfo = installationResultListService.getOrderExchangeTypeByInstallEntryID(params);
+      } else {
+        orderInfo = installationResultListService.getOrderInfo(params);
+      }
+
+      if (null == orderInfo) {
+        orderInfo = new EgovMap();
+      }
+
+      String promotionId = "";
+      if (CommonUtils.nvl(params.get("codeId")).toString().equals("258")) {
+        promotionId = CommonUtils.nvl(orderInfo.get("c8"));
+      } else {
+        promotionId = CommonUtils.nvl(orderInfo.get("c2"));
+      }
+
+      if (promotionId.equals("")) {
+        promotionId = "0";
+      }
+
+      logger.debug("=====================/addinstallationResultProductDetailPop.do=========================");
+      logger.debug("Promotion ID : {}", promotionId);
+      logger.debug("=====================/addinstallationResultProductDetailPop.do=========================");
+
+      EgovMap promotionView = new EgovMap();
+
+      List<EgovMap> CheckCurrentPromo = installationResultListService
+          .checkCurrentPromoIsSwapPromoIDByPromoID(Integer.parseInt(promotionId));
+      if (CheckCurrentPromo.size() > 0) {
+        promotionView = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(
+            Integer.parseInt(promotionId), Integer.parseInt(installResult.get("installStkId").toString()), true);
+      } else {
+        if (promotionId != "0") {
+          promotionView = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(
+              Integer.parseInt(promotionId), Integer.parseInt(installResult.get("installStkId").toString()), false);
+
+        } else {
+
+          // if (null == promotionView) {
+          // promotionView = new EgovMap();
+          // }
+
+          promotionView.put("promoId", "0");
+          promotionView.put("promoPrice", CommonUtils.nvl(params.get("codeId")).toString() == "258"
+              ? CommonUtils.nvl(orderInfo.get("c15")) : CommonUtils.nvl(orderInfo.get("c5")));
+          promotionView.put("promoPV", CommonUtils.nvl(params.get("codeId")).toString() == "258"
+              ? CommonUtils.nvl(orderInfo.get("c16")) : CommonUtils.nvl(orderInfo.get("c6")));
+          promotionView.put("swapPromoId", "0");
+          promotionView.put("swapPromoPV", "0");
+          promotionView.put("swapPormoPrice", "0");
+        }
+      }
+
+      logger.debug("=====================/addinstallationResultProductDetailPop.do=========================");
+      logger.debug("New Params {}", params);
+      logger.debug("=====================/addinstallationResultProductDetailPop.do=========================");
+
+      Object custId = (orderInfo == null ? installResult.get("custId") : orderInfo.get("custId"));
+      params.put("custId", custId);
+      EgovMap customerInfo = installationResultListService.getcustomerInfo(params);
+      // EgovMap customerAddress =
+      // installationResultListService.getCustomerAddressInfo(customerInfo);
+      EgovMap customerContractInfo = installationResultListService.getCustomerContractInfo(customerInfo);
+      EgovMap installation = installationResultListService.getInstallationBySalesOrderID(installResult);
+      EgovMap installationContract = installationResultListService.getInstallContactByContactID(installation);
+      EgovMap salseOrder = installationResultListService.getSalesOrderMBySalesOrderID(installResult);
+      EgovMap hpMember = installationResultListService.getMemberFullDetailsByMemberIDCode(salseOrder);
+
+      // if(params.get("codeId").toString().equals("258")){
+      // }
+
+      logger.debug("=====================/addinstallationResultProductDetailPop.do=========================");
+      logger.debug("INSTALLATION RESULT : {}", installResult);
+      logger.debug("ORDER INFO : {}", orderInfo);
+      logger.debug("CUSTOMER INFO. : {}", customerInfo);
+      logger.debug("CUSTOMER CONTACT NUMBER : {}", customerContractInfo);
+      logger.debug("INSTALLATION : {}", installation);
+      logger.debug("INSTALLATION CONTRACT : {}", installationContract);
+      logger.debug("SALES ORDER : {}", salseOrder);
+      logger.debug("HP MEMBER : {}", hpMember);
+      logger.debug("CALL TYPE : {}", callType);
+      logger.debug("FAIL REASON : {}", failReason);
+      logger.debug("INSTALL STATUS : {}", installStatus);
+      logger.debug("STOCK : {}", stock);
+      logger.debug("SIRIM LOC. : {}", sirimLoc);
+      logger.debug("PROMOTION VIEW : {}", promotionView);
+      logger.debug("CURRENT PROMO : {}", CheckCurrentPromo);
+      logger.debug("=====================/addinstallationResultProductDetailPop.do=========================");
+
+      // logger.debug("customerAddress : {}", customerAddress);
+      // model.addAttribute("customerAddress", customerAddress);
+      // RETURN RESULT TO FRONTEND
+      model.addAttribute("installResult", installResult);
+      model.addAttribute("orderInfo", orderInfo);
+      model.addAttribute("customerInfo", customerInfo);
+      model.addAttribute("customerContractInfo", customerContractInfo);
+      model.addAttribute("installation", installation);
+      model.addAttribute("installationContract", installationContract);
+      model.addAttribute("salseOrder", salseOrder);
+      model.addAttribute("hpMember", hpMember);
+      model.addAttribute("callType", callType);
+      model.addAttribute("failReason", failReason);
+      model.addAttribute("installStatus", installStatus);
+      model.addAttribute("stock", stock);
+      model.addAttribute("sirimLoc", sirimLoc);
+      model.addAttribute("CheckCurrentPromo", CheckCurrentPromo);
+      model.addAttribute("promotionView", promotionView);
+
+      return "homecare/services/install/hcAddInstallationResultProductDetailPop";
+    }
+
+
 	/**
 	 * Add Installation Result
 	 * @Author KR-SH

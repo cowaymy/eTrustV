@@ -95,7 +95,7 @@
 		                    + "&salesOrderNO=" + salesOrdNo1, "", null,
 		                    "false", "addInstallationPopupId");
 		            } else { // PRODUCT RETURN
-		                Common.popupDiv("/services/addinstallationResultProductDetailPop.do?isPop=true&installEntryId="+ installEntryId
+		                Common.popupDiv("/homecare/services/install/hcAddinstallationResultProductDetailPop.do?isPop=true&installEntryId="+ installEntryId
 	                        + "&codeId=" + codeid1
 		                    + "&orderId=" + orderId + "&docId=" + docId
 		                    + "&salesOrderId=" + salesOrderId, "", null,
