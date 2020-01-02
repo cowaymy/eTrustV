@@ -180,7 +180,7 @@
   // RELOAD DATA
   function fn_getErrMstList(_ordNo) {
     $("#ddlErrorCode option").remove();
-    doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO=' + _ordNo, '', errCde, 'ddlErrorCode', 'S', 'fn_setErrCde');
+    doGetCombo('/homecare/services/as/getErrMstList.do?SALES_ORD_NO=' + _ordNo, '', errCde, 'ddlErrorCode', 'S', 'fn_setErrCde');
   }
 
   function fn_errMst_SelectedIndexChanged() {

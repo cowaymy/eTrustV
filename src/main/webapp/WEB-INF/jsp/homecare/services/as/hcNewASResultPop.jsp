@@ -108,7 +108,7 @@
   function fn_getErrMstList(_ordNo) {
     var SALES_ORD_NO = _ordNo;
     $("#ddlErrorCode option").remove();
-    doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO=' + SALES_ORD_NO, '', '', 'ddlErrorCode', 'S', '');
+    doGetCombo('/homecare/services/as/getErrMstList.do?SALES_ORD_NO=' + SALES_ORD_NO, '', '', 'ddlErrorCode', 'S', '');
   }
 
   function fn_errMst_SelectedIndexChanged() {

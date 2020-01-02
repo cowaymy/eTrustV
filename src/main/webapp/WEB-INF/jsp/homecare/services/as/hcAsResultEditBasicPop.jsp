@@ -48,7 +48,7 @@
 
   function fn_getErrMstList(_ordNo) {
     $("#ddlErrorCode option").remove();
-    doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO=' + _ordNo, '', '', 'ddlErrorCode', 'S', 'fn_setErrMsg');
+    doGetCombo('/homecare/services/as/getErrMstList.do?SALES_ORD_NO=' + _ordNo, '', '', 'ddlErrorCode', 'S', 'fn_setErrMsg');
     fn_getASRulstSVC0004DInfo();
   }
 
