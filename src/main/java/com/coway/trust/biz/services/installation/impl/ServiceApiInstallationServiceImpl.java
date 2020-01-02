@@ -327,6 +327,9 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 	    }
 
 	    try {
+			Map<String, Object> fraParams = new HashMap();
+			BeanUtils.copyProperties(params, fraParams);
+
 	    	serviceApiInstallationDetailService.installFailJobRequestProc(params);
 
 	    	// Frame이 존재한다면 installFailJobRequestProc New Data Try
@@ -334,10 +337,9 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 			fraParam.put("matOrdNo", params.get("salesOrderNo"));
 			fraParam.put("userId", String.valueOf(params.get("userId")));
 			EgovMap fraInfo = MSvcLogApiService.getFraOrdInfo(fraParam);
-
 			if (fraInfo != null) {
-				params.put("salesOrderNo", Integer.parseInt(fraInfo.get("salesOrderNo").toString()));
-				params.put("serviceNo", String.valueOf(fraInfo.get("serviceNo")));
+				fraParams.put("salesOrderNo", Integer.parseInt(fraInfo.get("salesOrderNo").toString()));
+	    		fraParams.put("serviceNo", String.valueOf(fraInfo.get("serviceNo")));
 
 				serviceApiInstallationDetailService.installFailJobRequestProc(params);
 			}
