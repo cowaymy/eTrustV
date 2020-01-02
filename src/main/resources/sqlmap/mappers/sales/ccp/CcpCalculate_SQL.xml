@@ -68,6 +68,7 @@ ORDER BY Project1.CODE_NAME ASC
 			       Filter1.NAME3 NAME  ,
 			       Filter1.NRIC1 NRIC  ,
 			       Filter1.STK_ID   ,
+			       Filter1.STK_CTGRY_ID   ,
 			       Filter1.STK_CODE   ,
 			       Filter1.STK_DESC   ,
 			       Extent13.BRNCH_ID   ,
@@ -89,7 +90,9 @@ ORDER BY Project1.CODE_NAME ASC
 			       Filter1.APPTYPEID   ,
 			       Filter1.PVMONTH   ,
 			       Filter1.PVYEAR   ,
-			       Filter1.TYPEID
+			       Filter1.TYPEID   ,
+			       Filter1.BNDL_NO,
+			       Filter1.APP_TYPE
 			FROM ( SELECT Extent1.CCP_ID   ,
 			          Extent1.CCP_SCHEME_TYPE_ID   ,
 			          Extent1.CCP_TYPE_ID   ,
@@ -117,6 +120,7 @@ ORDER BY Project1.CODE_NAME ASC
 			          Extent9.NAME NAME3  ,
 			          Extent9.NRIC NRIC1  ,
 			          Extent11.STK_ID   ,
+			          Extent11.STK_CTGRY_ID ,
 			          Extent11.STK_CODE   ,
 			          Extent11.STK_DESC   ,
 			          Extent12.NAME NAME4  ,
@@ -125,7 +129,9 @@ ORDER BY Project1.CODE_NAME ASC
 			          Extent3.APP_TYPE_ID APPTYPEID,
 			          Extent3.PV_MONTH PVMONTH,
 			          Extent3.PV_YEAR PVYEAR,
-			          Extent9.TYPE_ID TYPEID
+			          Extent9.TYPE_ID TYPEID,
+			          Extent13.BNDL_NO,
+			          Extent14.CODE_NAME APP_TYPE
 			       FROM SAL0102D Extent1
 			          JOIN ( SELECT Extent2.CCP_SALES_ORD_ID K1  ,
 			                        MAX(Extent2.CCP_ID)  A1
@@ -143,7 +149,8 @@ ORDER BY Project1.CODE_NAME ASC
 			          JOIN SAL0002D Extent10   ON Extent3.SALES_ORD_ID = Extent10.SALES_ORD_ID
 			          JOIN SYS0026M Extent11   ON Extent10.ITM_STK_ID = Extent11.STK_ID
 			          LEFT JOIN SYS0038M Extent12   ON Extent1.CCP_RJ_STUS_ID = Extent12.STUS_CODE_ID
-
+			          LEFT JOIN HMC0011D Extent13   ON Extent13.ORD_SEQ_NO = Extent3.BNDL_ID
+			          LEFT JOIN SYS0013M Extent14   ON Extent14.CODE_ID = Extent3.APP_TYPE_ID
 			          <!-- WHERE   1 = Extent1.CCP_STUS_ID -->
 
 			          <!-- ## RENTAL  ONLY ## -->
@@ -237,6 +244,10 @@ ORDER BY Project1.CODE_NAME ASC
 			               <if test=" '' != calUpdator and null != calUpdator">
 			                  AND  UPPER(Filter1.USERNAME3) =  UPPER(#{calUpdator})
 			               </if>
+
+			               <if test=" bndlNo != '' and bndlNo != null">
+                              AND  UPPER(Filter1.BNDL_NO) =  UPPER(#{bndlNo})
+                           </if>
 			              <!--End Condition  -->
 			  ORDER BY Filter1.CCP_ID ASC
 
