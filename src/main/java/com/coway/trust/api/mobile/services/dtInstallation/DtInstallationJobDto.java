@@ -232,6 +232,18 @@ public class DtInstallationJobDto {
   @ApiModelProperty(value = "Product Exchange 대상일 경우, 교체대상 제품 SN")
   private String beforeProductSerialNo;
 
+  @ApiModelProperty(value = "fraYn")
+  private String fraYn;
+
+  @ApiModelProperty(value = "fraOrdNo")
+  private String fraOrdNo;
+
+  @ApiModelProperty(value = "fraProductCode")
+  private String fraProductCode;
+
+  @ApiModelProperty(value = "fraProductName")
+  private String fraProductName;
+
   public String getSalesOrderNo() {
     return salesOrderNo;
   }
@@ -824,6 +836,38 @@ public class DtInstallationJobDto {
 
   public void setBeforeProductSerialNo(String beforeProductSerialNo) {
     this.beforeProductSerialNo = beforeProductSerialNo;
+  }
+
+  public String getFraYn() {
+    return fraYn;
+  }
+
+  public void setFraYn(String fraYn) {
+    this.fraYn = fraYn;
+  }
+
+  public String getFraOrdNo() {
+    return fraOrdNo;
+  }
+
+  public void setFraOrdNo(String fraOrdNo) {
+    this.fraOrdNo = fraOrdNo;
+  }
+
+  public String getFraProductCode() {
+    return fraProductCode;
+  }
+
+  public void setFraProductCode(String fraProductCode) {
+    this.fraProductCode = fraProductCode;
+  }
+
+  public String getFraProductName() {
+    return fraProductName;
+  }
+
+  public void setFraProductName(String fraProductName) {
+    this.fraProductName = fraProductName;
   }
 
   public static DtInstallationJobDto create(EgovMap egvoMap) {

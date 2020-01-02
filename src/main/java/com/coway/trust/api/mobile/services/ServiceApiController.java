@@ -2319,7 +2319,7 @@ public class ServiceApiController {
   public ResponseEntity<List<DtInstallationJobDto>> getDtInstallationJobList(@ModelAttribute DtInstallationJobForm dtInstallationJobForm) throws Exception {
 	  Map<String, Object> params = DtInstallationJobForm.createMap(dtInstallationJobForm);
 
-	  List<EgovMap> dtInstallationJobList = MSvcLogApiService.getInstallationJobList(params);
+	  List<EgovMap> dtInstallationJobList = MSvcLogApiService.getDtInstallationJobList(params);
 
 	  LOGGER.debug("==================================[MB]INSTALLATION JOB LIST SEARCH====================================");
 	  for (int i = 0; i < dtInstallationJobList.size(); i++) {
@@ -2348,6 +2348,45 @@ public class ServiceApiController {
 	  return ResponseEntity.ok(HSReAppointmtRequestDto.create(transactionId));
   }
 
+  @ApiOperation(value = "Installation DT Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/installDtReAppointmentRequest", method = RequestMethod.POST)
+  public ResponseEntity<InstallReAppointmentRequestDto> installDtReAppointmentRequest(@RequestBody InstallReAppointmentRequestForm installReAppointmentRequestForm) throws Exception {
+	  String transactionId = "";
+
+	  Map<String, Object> params = InstallReAppointmentRequestForm.createMaps(installReAppointmentRequestForm);
+
+	  LOGGER.debug("==================================[MB]INSTALLATION RE APPOINMENT REQUEST ====================================");
+	  LOGGER.debug("### INSTALLATION RE APPOINTMENT REQUEST FORM : " + params.toString());
+	  LOGGER.debug("==================================[MB]INSTALLATION RE APPOINMENT REQUEST ====================================");
+
+	  // CREATE HISTORY LOG
+	  if (RegistrationConstants.IS_INSERT_INSRE_LOG) {
+		  MSvcLogApiService.saveInsReServiceLogs(params);
+	  }
+
+	  String appTime = String.valueOf(params.get("appointmentTime"));
+	  int hour = Integer.parseInt(appTime.substring(0, 2));
+
+	  if (hour >= 00 && hour <= 10) {
+		  params.put("sesionCode", "M");
+	  }
+	  else if (hour >= 10 && hour <= 14) {
+		  params.put("sesionCode", "A");
+	  }
+	  else if (hour >= 14 && hour <= 19) {
+		  params.put("sesionCode", "E");
+	  }
+	  else {
+		  params.put("sesionCode", "O");
+	  }
+
+	  LOGGER.debug("### INSTALLATION RE APPOINTMENT REQUEST INFO : ", params);
+
+	  MSvcLogApiService.updateInsDtReAppointmentReturnResult(params);
+
+	  return ResponseEntity.ok(InstallReAppointmentRequestDto.create(transactionId));
+  }
+
   @ApiOperation(value = "Care Service Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/htFailJobRequest", method = RequestMethod.POST)
   public ResponseEntity<HSFailJobRequestDto> htFailJobRequest(@RequestBody HSFailJobRequestForm hSFailJobRequestForm) throws Exception {
@@ -2363,7 +2402,7 @@ public class ServiceApiController {
   @ApiOperation(value = "Installation Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/dtInstallFailJobRequest", method = RequestMethod.POST)
   public ResponseEntity<InstallFailJobRequestDto> dtInstallFailJobRequest(@RequestBody InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
-	  return serviceApiInstallationService.installFailJobRequest(installFailJobRequestForm);
+	  return serviceApiInstallationService.installDtFailJobRequest(installFailJobRequestForm);
   }
 
   @ApiOperation(value = "Product Return Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
