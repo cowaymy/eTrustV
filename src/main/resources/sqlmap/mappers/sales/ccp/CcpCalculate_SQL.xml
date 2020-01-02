@@ -154,7 +154,7 @@ ORDER BY Project1.CODE_NAME ASC
 			          <!-- WHERE   1 = Extent1.CCP_STUS_ID -->
 
 			          <!-- ## RENTAL  ONLY ## -->
-			          WHERE Extent3.APP_TYPE_ID = 66
+			          WHERE Extent3.APP_TYPE_ID IN (66,5764)
 
 			          <if test=" '' != calCcpStatus and null != calCcpStatus ">
                              AND  Extent1.CCP_STUS_ID IN
@@ -859,7 +859,15 @@ SELECT Extent1.CCP_ID   ,
 			       CCP_HAS_GRNT = #{hasGrnt},
 			       CCP_IS_HOLD = #{onHoldCcp},
 			       CCP_FICO = #{ficoScore}
-			WHERE   CCP_ID = #{saveCcpId}
+			WHERE
+			       <choose>
+			         <when test="auxCcpId != null and auxCcpId != '' ">
+			             CCP_ID = #{auxCcpId}
+			         </when>
+			         <otherwise>
+			             CCP_ID = #{saveCcpId}
+			         </otherwise>
+			       </choose>
 </update>
 
 <select id="getCcpDecisionList" parameterType="Map" resultType="EgovMap">
@@ -1301,4 +1309,14 @@ AND T1.CNT = 1
 			WHERE A.APP_TYPE_ID IN ( 66, 67, 68, 1412)
 			AND A.CUST_ID = #{custId}
 </select>
+
+<select id="getAuxCcpId" parameterType="Map" resultType="int">
+    SELECT
+        cpm.CCP_ID
+    FROM SAL0102D cpm
+    JOIN SAL0001D som   ON cpm.CCP_SALES_ORD_ID = som.SALES_ORD_ID
+    WHERE som.APP_TYPE_ID = 5764
+        AND som.bndl_id = #{bndlId}
+</select>
+
 </mapper>
