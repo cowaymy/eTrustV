@@ -16,15 +16,15 @@ SELECT  A.ID                                                                    
     ,   A.MEM_TYPE                                                              AS MEM_TYPE
     ,   A.YEAR                                                                  AS YEAR
     ,   A.MONTH                                                                 AS MONTH
-    ,   A.TOT_SALES                                                             AS TOT_SALES
-    ,   A.NET_SALES                                                             AS NET_SALES
-    ,   A.SHI                                                                   AS SHI
-    ,   A.PV_TOT                                                                AS PV_TOT
-    ,   A.OWN_PURCHASE                                                          AS OWN_PURCHASE
-    ,   A.HS_SUCCESS_RATE                                                       AS HS_SUCCESS_RATE
-    ,   A.COLLECTION_RATE                                                       AS COLLECTION_RATE
-    ,   A.REJOIN                                                                AS REJOIN
-    ,   A.MEMBERSHIP                                                            AS MEMBERSHIP
+    ,   NVL(A.TOT_SALES, 0)                                                     AS TOT_SALES
+    ,   NVL(A.NET_SALES, 0)                                                     AS NET_SALES
+    ,   NVL(A.SHI, 0)                                                           AS SHI
+    ,   NVL(A.PV_TOT, 0)                                                        AS PV_TOT
+    ,   NVL(A.OWN_PURCHASE, 0)                                                  AS OWN_PURCHASE
+    ,   NVL(A.HS_SUCCESS_RATE, 0)                                               AS HS_SUCCESS_RATE
+    ,   NVL(A.COLLECTION_RATE, 0)                                               AS COLLECTION_RATE
+    ,   NVL(A.REJOIN, 0)                                                        AS REJOIN
+    ,   NVL(A.MEMBERSHIP, 0)                                                    AS MEMBERSHIP
     ,   A.UPD_USER_ID                                                           AS UPD_USER_ID
     ,   TO_CHAR(A.UPD_DT, 'DD.MM.YYYY')                                         AS UPD_DT
 FROM    REP0102T A
