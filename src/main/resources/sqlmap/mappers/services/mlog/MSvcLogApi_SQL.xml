@@ -921,7 +921,8 @@
                    NVL (SYS0026M.STK_DESC, '') AS product_Name,
                    NVL (SYS0026M.STK_CODE, '') AS product_Code,
                    NVL (SYS0005M.CODE, '') AS dsc_Code,
-                   NVL (TO_CHAR (CCR0007D.CALL_REM), '') AS instruction
+                   NVL (TO_CHAR (CCR0007D.CALL_REM), '') AS instruction,
+                   SAL0047D.REM AS RESULT_REMARK
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
@@ -1041,6 +1042,7 @@
          , TO_CHAR(FRA_ORD_NO) AS fra_Ord_No
          , TO_CHAR(FRA_PRODUCT_CODE) AS fra_Product_Code
          , TO_CHAR(FRA_PRODUCT_NAME) AS fra_Product_Name
+         , TO_CHAR(RESULT_REMARK) AS result_Result
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -4686,7 +4688,8 @@
                    NVL (SYS0026M.STK_CODE, '') AS product_Code,
                    NVL (SYS0005M.CODE, '') AS dsc_Code,
                    NVL (TO_CHAR (CCR0007D.CALL_REM), '') AS instruction,
-                   (SELECT FRA_ORD_NO FROM HMC0011D WHERE MAT_ORD_NO = SAL0001D.SALES_ORD_NO AND ROWNUM = 1) AS FRA_ORD_NO
+                   (SELECT FRA_ORD_NO FROM HMC0011D WHERE MAT_ORD_NO = SAL0001D.SALES_ORD_NO AND ROWNUM = 1) AS FRA_ORD_NO,
+                   SAL0047D.REM AS RESULT_REMARK
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
