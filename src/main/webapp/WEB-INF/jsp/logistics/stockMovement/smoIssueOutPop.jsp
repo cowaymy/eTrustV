@@ -51,6 +51,7 @@ var scanInfoLayout = [
             , style:"aui-grid-user-custom-right"
             , dataType:"numeric"
             , formatString:"#,##0"
+            , headerStyle : "aui-grid-header-input-icon aui-grid-header-input-essen"
             , styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
                 if(item.serialChk == "Y" && item.giQty != value){
                     return "my-row-style";
@@ -386,7 +387,7 @@ function fn_scanSearchPop(){
 
     <section class="search_result">
         <article class="grid_wrap">
-            <div id="scanInfoGrid" class="autoGridHeight"></div>
+            <div id="scanInfoGrid" style="height:300px"></div>
         </article>
     </section>
     <div class="autoFixArea">
