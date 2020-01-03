@@ -412,8 +412,7 @@
              , log0048d l48
              , log0054m l54
              , log0055d l55
-             , sys0013m tran
-             --, (select * from sys0013m where code_master_id = 306) tran
+             , (select * from sys0013m where code_master_id = 306) tran
              , (select * from sys0013m where code_master_id = 308) trand
              , (select * from sys0013m where code_master_id = 42) uomt
              , sys0028m s28c
