@@ -183,7 +183,7 @@
         dataType : "numeric",
         style: "aui-grid-user-custom-right",
         styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
-            if(item.serialchk == "Y" && item.serialRequireChkYn == "Y") {
+            if(item.serialRequireChkYn == "Y") {
                 return "aui-grid-link-renderer1";
             }
         },
