@@ -361,8 +361,9 @@ function fn_PopSerialClose(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Good Issue Posting Data</h1>
+<h1>Good Issue</h1>
 <ul class="right_opt">
+    <li><p class="btn_blue2 big"><a id="btnPopIssueSave" >SAVE</a></p></li>
     <li><p class="btn_blue2"><a id="btnClose" >CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
@@ -430,7 +431,7 @@ function fn_PopSerialClose(){
     </section>
     &nbsp;
     <ul class="center_btns autoFixArea">
-        <li><p class="btn_blue2 big"><a id="btnPopIssueSave" >SAVE</a></p></li>
+
     </ul>
 
 </section>
