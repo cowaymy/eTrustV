@@ -176,7 +176,7 @@ public class HcInstallResultListController {
 		model.addAttribute("callType", callType);
 
 		// 호출될 화면
-		return "homecare/services/installation/hcInstallationResultDetailPop";
+		return "homecare/services/install/hcInstallationResultDetailPop";
 	}
 
 	@SuppressWarnings("unchecked")
