@@ -1087,9 +1087,9 @@
 		                         WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
 		                         ELSE 'N'
 		                   END AS SERIAL_CHK
-		                  ,SUM(B.REQST_QTY) AS REQST_QTY
+		                  ,NVL(B.REQST_QTY,0) AS REQST_QTY
 		                  ,SUM(NVL(C.DELVRY_QTY, 0)) AS DELVRY_QTY
-		                  ,SUM(B.REQST_QTY) - SUM(NVL(C.DELVRY_QTY, 0)) GI_QTY
+		                  ,NVL(B.REQST_QTY,0) - SUM(NVL(C.DELVRY_QTY, 0)) GI_QTY
 		                  ,(
 		                     SELECT COUNT(1)
 		                      FROM  LOG0099D Z1
@@ -1109,7 +1109,7 @@
 		                 LEFT OUTER JOIN SYS0026M S26 ON S26.STK_CODE = B.ITM_CODE
 		                 LEFT OUTER JOIN SYS0028M S28 ON S28.WH_LOC_ID = A.REQST_CDC_RDC
 	            WHERE A.REQST_NO = #{reqstNo}
-	            GROUP BY B.REQST_NO, B.REQST_NO_ITM, B.ITM_CODE, B.ITM_NAME, A.TRNSC_TYPE, A.TRNSC_TYPE_DTL,
+	            GROUP BY B.REQST_NO, B.REQST_NO_ITM, B.ITM_CODE, B.ITM_NAME, A.TRNSC_TYPE, A.TRNSC_TYPE_DTL, NVL(B.REQST_QTY,0),
 	                     S26.STK_TYPE_ID, S26.SERIAL_CHK, S28.SERIAL_PD_CHK, S28.SERIAL_FT_CHK, S28.SERIAL_PT_CHK, S28.SERIAL_REQUIRE_CHK_YN
 	         )
 	         ORDER BY ITM_CODE
