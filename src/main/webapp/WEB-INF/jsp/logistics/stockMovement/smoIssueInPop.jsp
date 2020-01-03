@@ -448,8 +448,9 @@ function fn_scanSearchPop(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Good Receipt Posting Data</h1>
+<h1>Good Receipt</h1>
 <ul class="right_opt">
+    <li><p class="btn_blue2"><a id="btnPopIssueSave" >SAVE</a></p></li>
     <li><p class="btn_blue2"><a id="btnClose" >CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
@@ -511,9 +512,5 @@ function fn_scanSearchPop(){
         </article>
     </section>
     &nbsp;
-    <ul class="center_btns">
-        <li><p class="btn_blue2 big"><a id="btnPopIssueSave" >SAVE</a></p></li>
-    </ul>
-
 </section>
 </div>

@@ -948,14 +948,17 @@
 
         for (var i = 0, len = checkedItems.length; i < len; i++) {
           rowItem = checkedItems[i];
-          if (rowItem.item.indelyqty == 0) {
-            str += "Please Check Delivery Qty of  "
-                  + rowItem.item.reqstno + ", "
-                  + rowItem.item.itmname
-                  + "<br />";
-             checkDelqty = true;
+          if (rowItem.item.serialRequireChkYn == 'Y') {
+        	  checkDelqty = false;
+          } else {
+           if (rowItem.item.indelyqty == 0) {
+	            str += "Please Check Delivery Qty of  "
+	                  + rowItem.item.reqstno + ", "
+	                  + rowItem.item.itmname
+	                  + "<br />";
+	             checkDelqty = true;
+	          }
           }
-
           if (rowItem.item.docno !='' && rowItem.item.reqsttype =='OD' && rowItem.item.reqsttypedtl =='OD03'){
             serialchk = true;
           }

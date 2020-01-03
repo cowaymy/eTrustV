@@ -236,8 +236,8 @@ $(document).ready(function(){
         }
    });
 
-    AUIGrid.bind(scanInfoGridId, "cellEditBegin", auiCellEditignHandler);
-    AUIGrid.bind(scanInfoGridId, "cellEditEnd", auiCellEditignHandler);
+   AUIGrid.bind(scanInfoGridId, "cellEditBegin", auiCellEditignHandler);
+   AUIGrid.bind(scanInfoGridId, "cellEditEnd", auiCellEditignHandler);
 
 });
 
@@ -331,8 +331,9 @@ function fn_scanSearchPop(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Serial Check</h1>
+<h1>Good Issue</h1>
 <ul class="right_opt">
+    <li><p class="btn_blue2"><a id="btnPopIssueSave" >SAVE</a></p></li>
     <li><p class="btn_blue2"><a id="btnClose" >CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
@@ -391,10 +392,7 @@ function fn_scanSearchPop(){
         </article>
     </section>
     <div class="autoFixArea">
-    &nbsp;
-    <ul class="center_btns ">
-        <li><p class="btn_blue2 big"><a id="btnPopIssueSave" >SAVE</a></p></li>
-    </ul>
+
     </div>
 </section>
 </div>
