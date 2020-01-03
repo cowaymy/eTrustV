@@ -43,6 +43,7 @@
 	        $("#paramReqStageId").val(event.item.reqStageId);
 	        $("#paramRsoStusId").val(event.item.rsoStus);
 	        $("#paramSalesOrdNo").val(event.item.ordNo);
+	        $("#appTypeId").val(event.item.appTypeId);
 
 	        rcdTms = AUIGrid.getCellValue(myGridID, event.rowIndex, "rcdTms");
 	        $("#rcdTms").val(rcdTms);
@@ -132,7 +133,7 @@
 	        },
 	        {
 	            dataField : 'assignCt',
-	            headerText : 'AssignCT',
+	            headerText : 'AssignDt',
 	            width : 100,
 	            editable : false
 	        },
@@ -148,47 +149,17 @@
 	          width : 100,
 	          editable : false
 	        },
-	        {
-	          dataField : "callEntryId",
-	          visible : false
-	        },
-	        {
-	          dataField : "docId",
-	          visible : false
-	        },
-	        {
-	          dataField : "typeId",
-	          visible : false
-	        },
-	        {
-	          dataField : "refId",
-	          visible : false
-	        },
-	        {
-	          dataField : "reqStusId",
-	          visible : false
-	        },
-	        {
-	          dataField : "callStusId",
-	          visible : false
-	        },
-	        {
-	          dataField : "callStusCode",
-	          visible : false
-	        },
-	        {
-	          dataField : "callStusName",
-	          visible : false
-	        },
-	        {
-	          dataField : "reqStageId",
-	          visible : false
-	        },
-	        {
-	          dataField : "rcdTms",
-	          headerText : "",
-	          width : 0
-	        }
+	        {dataField : "callEntryId",                    visible : false},
+	        {dataField : "docId",                          visible : false},
+	        {dataField : "typeId",                         visible : false},
+	        {dataField : "refId",                           visible : false},
+	        {dataField : "reqStusId",                     visible : false},
+	        {dataField : "callStusId",                     visible : false},
+	        {dataField : "callStusCode",                 visible : false},
+	        {dataField : "callStusName",                visible : false},
+	        {dataField : "reqStageId",                   visible : false},
+	        {dataField : "rcdTms",                        visible : false},
+	        {dataField : "appTypeId",                    visible : false}
         ];
 
 	    // 그리드 속성 설정
@@ -259,20 +230,22 @@
             return false;
         }
 
-        Common.ajax("POST", "/sales/order/selRcdTms.do", {
-            orderId :   $("#salesOrdId").val(),
-        	callEntryId :  $("#callEntryId").val(),
-        	rcdTms : rcdTms
-        }, function(result) {
-        	if (result.code == "99") {
-        	    Common.alert(result.message);
-        		return;
-            } else {
-                Common.popupDiv("/homecare/sales/order/hcCancelNewLogResultPop.do", $("#detailForm").serializeJSON(), null, true, '_newDiv');
-            }
-        });
+        // AUX skip
+        if(detailForm.appTypeId.value !=5764) {
+        	Common.ajax("POST", "/sales/order/selRcdTms.do", {orderId :   $("#salesOrdId").val(), callEntryId :  $("#callEntryId").val(), rcdTms : rcdTms}, function(result) {
+                if (result.code == "99") {
+                    Common.alert(result.message);
+                    return;
+                } else {
+                    Common.popupDiv("/homecare/sales/order/hcCancelNewLogResultPop.do", $("#detailForm").serializeJSON(), null, true, '_newDiv');
+                }
+            });
+        }else{
+            Common.alert('Auxiliary products are not allowed to view');
+        }
     }
 
+    // Button Click - Add PR
     function fn_newRsoResult() {
         if (detailForm.reqId.value == "") {
             Common.alert("No cancellation request selected.");
@@ -283,22 +256,23 @@
             return false;
         }
 
-        var salesOrdId1 = detailForm.salesOrdId.value;
-        var salesOrdNo1 = detailForm.paramSalesOrdNo.value;
+        // AUX skip
+        if(detailForm.appTypeId.value !=5764) {
+        	var salesOrdId1 = detailForm.salesOrdId.value;
+            var salesOrdNo1 = detailForm.paramSalesOrdNo.value;
 
-        Common.ajax("POST", "/sales/order/selRcdTms2.do", {
-            orderId :   $("#salesOrdId").val(),
-            callEntryId :  $("#callEntryId").val(),
-            rcdTms : rcdTms
-        }, function(result) {
-            if (result.code == "99") {
-                Common.alert(result.message);
-                return;
-            } else {
-                Common.popupDiv("/sales/order/addProductReturnPopup.do?isPop=true&salesOrderId=" + salesOrdId1 + "&salesOrderNO=" + salesOrdNo1,
-                		$("#detailForm").serializeJSON(), null, "false", "addInstallationPopupId");
-            }
-        });
+            Common.ajax("POST", "/sales/order/selRcdTms2.do", {orderId :   $("#salesOrdId").val(), callEntryId :  $("#callEntryId").val(), rcdTms : rcdTms}, function(result) {
+                if (result.code == "99") {
+                    Common.alert(result.message);
+                    return;
+                } else {
+                    Common.popupDiv("/sales/order/addProductReturnPopup.do?isPop=true&salesOrderId=" + salesOrdId1 + "&salesOrderNO=" + salesOrdNo1,
+                    		$("#detailForm").serializeJSON(), null, "false", "addInstallationPopupId");
+                }
+            });
+        }else{
+            Common.alert('Auxiliary products are not allowed to view');
+        }
     }
 
     $.fn.clearForm = function() {
@@ -405,14 +379,12 @@
 			</c:if>
 			<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
 				<li><p class="btn_blue">
-						<a href="#" onclick="javascript:fn_ctAssignment()"><spring:message
-								code="sal.btn.ctAssignment" /></a>
+						<a href="#" onclick="javascript:fn_ctAssignment()">DT Assignment</a>
 					</p></li>
 			</c:if>
 			<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
 				<li><p class="btn_blue">
-						<a href="#" onclick="javascript:fn_CTBulk()"><spring:message
-								code="sal.btn.changeAssignCTBulk" /></a>
+						<a href="#" onclick="javascript:fn_CTBulk()">Change Assign DT(Bulk)</a>
 					</p></li>
 			</c:if>
 			<c:if test="${PAGE_AUTH.funcView == 'Y'}">
@@ -447,6 +419,7 @@
 			<input type="hidden" id="paramReqStageId" name="paramReqStageId">
 			<input type="hidden" id="paramRsoStusId" name="paramRsoStusId">
 			<input type="hidden" id="rcdTms" name="rcdTms">
+			<input type="hidden" id="appTypeId" name="appTypeId">
 		</form>
 		<form id="searchForm" name="searchForm" method="post" autocomplete=off>
 			<table class="type1">

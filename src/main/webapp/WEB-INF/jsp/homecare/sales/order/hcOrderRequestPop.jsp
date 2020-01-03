@@ -1255,7 +1255,7 @@
                 }
             } else {
                 msg = "Sorry. You have no access rights to request product exchange.";
-                Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
+                Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                 return false;
             }
         }
@@ -1305,7 +1305,7 @@
                 }
             } else {
                 msg = "Sorry. You have no access rights to request application type exchange.";
-                Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
+                Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                 return false;
             }
         }
@@ -1330,7 +1330,7 @@
                 }
             } else {
                 msg = "Sorry. You have no access rights to request ownership transfer.";
-                Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
+                Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                 return false;
             }
         }
