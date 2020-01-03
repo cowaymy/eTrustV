@@ -219,9 +219,9 @@
         } else if(menu == "REQ") {
             $("#payeeCode").val($("#search_memAccId").val());
             $("#payeeName").val($("#search_memAccName").val());
-            $("#bankId").val($("#search_bankCode").val());
-            $("#bankName").val($("#search_bankName").val());
-            $("#bankAccNo").val($("#search_bankAccNo").val());
+            //$("#bankId").val($("#search_bankCode").val());
+            //$("#bankName").val($("#search_bankName").val());
+            //$("#bankAccNo").val($("#search_bankAccNo").val());
         }
     }
 
@@ -626,6 +626,7 @@
     function fn_trvPeriod(mode) {
         console.log("fn_trvPeriod :: onChange");
 
+        var errMsg = "Travel advance can only be applied for oustation trip with qualifying expenses of more than RM400 and stay of at least two(2) consecutive nights.";
         var arrDt, fDate, tDate, dateDiff, rDate;
         var dd, mm, yyyy;
 
@@ -642,13 +643,27 @@
                 mm = fDate.getMonth() + 1;
                 yyyy = fDate.getFullYear();
 
+                if(mm < 10) {
+                    mm = "0" + mm;
+                }
+
                 $("#trvPeriodTo").val(dd + "/" + mm + "/" + yyyy);
                 $("#daysCount").val(minPeriod);
             }else {
                 arrDt = $("#trvPeriodTo").val().split("/");
                 tDate = new Date(arrDt[2], arrDt[1]-1, arrDt[0]);
                 dateDiff = (new Date(tDate - fDate))/1000/60/60/24;
-                $("#daysCount").val(dateDiff);
+
+                if(dateDiff <= 0) {
+                    $("#trvPeriodFr").val("");
+                    $("#trvPeriodTo").val("");
+                    $("#daysCount").val("");
+                    $("#refdDate").val("");
+                    Common.alert(errMsg);
+                    return false;
+                } else {
+                    $("#daysCount").val(dateDiff + 1);
+                }
             }
         } else if(mode == "T") {
             arrDt = $("#trvPeriodTo").val().split("/");
@@ -663,22 +678,37 @@
                 mm = tDate.getMonth() + 1;
                 yyyy = tDate.getFullYear();
 
+                if(mm < 10) {
+                    mm = "0" + mm;
+                }
+
                 $("#trvPeriodFr").val(dd + "/" + mm + "/" + yyyy);
                 $("#daysCount").val(minPeriod);
             }else {
                 arrDt = $("#trvPeriodFr").val().split("/");
                 fDate = new Date(arrDt[2], arrDt[1]-1, arrDt[0]);
                 dateDiff = (new Date(tDate - fDate))/1000/60/60/24;
-                $("#daysCount").val(dateDiff);
+
+                if(dateDiff <= 0) {
+                    $("#trvPeriodFr").val("");
+                    $("#trvPeriodTo").val("");
+                    $("#daysCount").val("");
+                    $("#refdDate").val("");
+                    Common.alert(errMsg);
+                    return false;
+                } else {
+                    $("#daysCount").val(dateDiff + 1);
+                }
             }
         }
 
-        if($("#refdDate").val() == "") {
+        if($("#trvPeriodTo").val() != "") {
             if(dateDiff < minPeriod) {
-                Common.alert("Minimum traveling days shall not be lesser than 3 days.");
+                Common.alert(errMsg);
                 $("#trvPeriodFr").val("");
                 $("#trvPeriodTo").val("");
                 $("#daysCount").val("");
+                $("#refdDate").val("");
                 return false;
             } else {
                 arrDt = $("#trvPeriodTo").val().split("/");
@@ -691,6 +721,10 @@
                 dd = rDate.getDate();
                 mm = rDate.getMonth() + 1;
                 yyyy = rDate.getFullYear();
+
+                if(mm < 10) {
+                    mm = "0" + mm;
+                }
 
                 $("#refdDate").val(dd + "/" + mm + "/" + yyyy);
             }
@@ -769,8 +803,12 @@
     function fn_requestCheck() {
         console.log("fn_requestCheck");
 
+        var errMsg;
+
         // Travel Request
         if(advType == 1) {
+            errMsg = "Travel advance can only be applied for oustation trip with qualifying expenses of more than RM400 and stay of at least two(2) consecutive nights."
+
             if($("#costCenterCode").val() == "" || $("#costCenterCode").val() == null) {
                 Common.alert("Please select the cost center.");
                 return false;
@@ -796,8 +834,8 @@
                 var dTo = new Date(parseInt(dArr[2]), parseInt(dArr[1]), parseInt(dArr[0]));
                 var dateDiff = (new Date(dTo - dFr))/1000/60/60/24;
 
-                if(dateDiff < 3) {
-                    Common.alert("Traveling period must be greater or equals to 3 days.");
+                if((dateDiff + 1) < 3) {
+                    Common.alert(errMsg);
                     return false
                 }
             }
@@ -809,13 +847,13 @@
 
             if(parseFloat($("#accmdtAmt").val()) == 0) {
                 if(parseFloat($("#reqTotAmt").val()) > minAmt) {
-                    Common.alert("Total travel advance cannot be greater than RM400 to be requested.");
+                    Common.alert(errMsg);
                     return false;
                 }
             }
 
             if(parseFloat($("#reqTotAmt").val()) < minAmt) {
-                Common.alert("Total travel advance must be greater than RM400 to be requested.");
+                Common.alert(errMsg);
                 return false;
             }
 
@@ -1155,7 +1193,7 @@
 
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
-        <h2>Advance Listing</h2>
+        <h2>Advance to Staff</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" id="request_btn">New Request</a></p></li>
             <li><p class="btn_blue"><a href="#" id="refund_btn">Refund</a></p></li>
@@ -1183,8 +1221,8 @@
                         <th scope="row">Advance Type</th>
                         <td>
                             <select class="multy_select w100p" multiple="multiple" id="advType" name="advType">
-                                <option value="1">Staff Travel Expenses</option>
-                                <option value="2">Staff Travel Expenses - Repayment</option>
+                                <option value="1">Staff Travel Expense</option>
+                                <option value="2">Staff Travel Expense - Repayment</option>
                                 <!--
                                 <option value="3">Staff / Company Events</option>
                                 <option value="4">Staff / Company Events - Repayment</option>
@@ -1203,7 +1241,7 @@
                             <input type="text" title="" placeholder="" class="" style="width:200px" id="memAccCode" name="memAccCode"/>
                             <a href="#" class="search_btn" id="search_payee_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
-                        <th scope="row">Status</th>
+                        <th scope="row">Approval Status</th>
                         <td>
                             <select class="multy_select w100p" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
                                 <option value="T"><spring:message code="webInvoice.select.tempSave" /></option>
@@ -1223,7 +1261,7 @@
                                 <p><input type="text" title="Claim No End" id="clmNoEnd" name="clmNoEnd" class="w100p"  /></p>
                             </div>
                         </td>
-                        <th scope="row">Refund Status</th>
+                        <th scope="row">Repayment Status</th>
                         <td>
                             <select class="multy_select w100p" multiple="multiple" id="refundStus" name="refundStus">
                                 <option value="1">Not due</option>
@@ -1281,7 +1319,7 @@
             <form action="#" method="post" enctype="multipart/form-data" id="advReqForm">
                 <input type="hidden" id="createUserId" name="createUserId" />
                 <input type="hidden" id="costCenterName" name="costCenterName" />
-                <input type="hidden" id="bankId" name="bankId" />
+                <input type="hidden" id="bankId" name="bankId" value="3"/>
                 <input type="hidden" id="clmNo" name="clmNo" />
                 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" />
 
@@ -1348,11 +1386,13 @@
                         <tr>
                             <th scope="row">Bank</th>
                             <td>
-                                <input type="text" title="Bank Name" placeholder="Bank Name" class="w100p" id="bankName" name="bankName" value="${bankId}" readonly/>
+                                <input type="text" title="Bank Name" placeholder="Bank Name" class="w100p" id="bankName" name="bankName" value="CIMB BANK BHD" readonly/>
+                                <!-- <input type="text" title="Bank Name" placeholder="Bank Name" class="w100p" id="bankName" name="bankName" value="${bankId}" readonly/> -->
                             </td>
                             <th scope="row">Bank Account</th>
                             <td>
-                                <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" value="${bankAccNo}" readonly/>
+                                <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" />
+                                <!-- <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" value="${bankAccNo}" readonly/> -->
                             </td>
                         </tr>
                     </tbody>
@@ -1366,7 +1406,7 @@
                         <colgroup>
                             <col style="width:200px" />
                             <col style="width:*" />
-                            <col style="width:100px" />
+                            <col style="width:130px" />
                         </colgroup>
 
                         <tr>
@@ -1397,7 +1437,8 @@
                                 </div>
                             </td>
                             <td>
-                                <input type="text" placeholder="No. of Days" class="w100p" id="daysCount" name="daysCount" readonly />
+                                <input type="text" placeholder="No. of Days" style="width:80px" id="daysCount" name="daysCount" readonly />
+                                <span style="line-height:20px; text-align: center;">Days</span>
                             </td>
                         </tr>
                         <!-- <tr>
@@ -1428,32 +1469,38 @@
                             <tr>
                                 <th scope="row">Accommodation</th>
                                 <td colspan="2">
+                                    <span style="line-height:20px; text-align: center;">RM</span>
                                     <input type="text" title="Accommodation Amount" placeholder="Accommodation Amount" id="accmdtAmt" name="accmdtAmt" style="200px"/>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">Estimated Mileage (km)</th>
                                 <td colspan="2">
+                                    <span style="line-height:20px; text-align: center;">RM</span>
                                     <input type="text" title="Mileage Amount" placeholder="Mileage Amount 50%" id="mileageAmt" name="mileageAmt" style="200px" readonly/>
                                     <input type="text" title="mileage" placeholder="Mileage (km)" id="mileage" name="mileage" style="200px"/>
+                                    <span style="line-height:20px; text-align: center;">km</span>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">Toll (Travel by Car)</th>
                                 <td colspan="2">
+                                    <span style="line-height:20px; text-align: center;">RM</span>
                                     <input type="text" title="Toll Amount" placeholder="Toll Amount" id="tollAmt" name="tollAmt" style="200px"/>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">Other Transportation</th>
                                 <td colspan="2">
+                                    <span style="line-height:20px; text-align: center;">RM</span>
                                     <input type="text" title="Other Transportation Amount" placeholder="Other Transportation Amount" id="othTrsptAmt" name="othTrsptAmt" style="200px"/>
                                     <input type="text" title="Mode of Transportation" placeholder="Mode of Transportation" id="trsptMode" name="trsptMode" style="200px"/>
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">Total Travel Advance (RM)</th>
+                                <th scope="row"><b>Total Travel Advance (RM)</b></th>
                                 <td colspan="2">
+                                    <span style="line-height:20px; text-align: center;">RM</span>
                                     <input type="text" title="Grand Total" placeholder="Grand Total" id="reqTotAmt" name="reqTotAmt" style="200px" readonly/>
                                 </td>
                             </tr>
@@ -1472,8 +1519,8 @@
                     </colgroup>
                     <tr>
                         <th scope="row">Attachment<span class="must">*</span></th>
-                        <td colspan="2">
-                            <div class="auto_file w100p">
+                        <td>
+                            <div class="auto_file">
                                 <input type="file" id="fileSelector" name="fileSelector" title="file add" accept=".rar, .zip" />
                             </div>
                         </td>
@@ -1675,7 +1722,7 @@
                             <input type="checkbox" id="ack1Checkbox" name="ack1Checkbox" value="1" />
                         </td>
                         <td style="padding-top : 2%; padding-bottom : 2%; text-align : justify;">
-                            By checking this box, you acknowledge that you have read and understand all the policies and rules with respect to advance to staff, and agree to abide by all policies and rules.
+                            By checking this box, you acknowledge that you have read and understand all the policies and rules with respect to advance to staff, and agree to abide by all the policies and rules.
                         </td>
                     </tr>
                 </tbody>
