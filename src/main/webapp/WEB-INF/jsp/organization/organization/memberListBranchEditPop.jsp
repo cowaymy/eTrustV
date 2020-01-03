@@ -933,6 +933,7 @@ function fn_selectState(selVal){
         <option value="5">Trainee</option>
         <option value="2803">HP Applicant</option>
         <option value="7">Homecare Technician (HT)</option>
+        <option value="5758">Homecare Delivery Technician (DT)</option>
     </select>
     </td>
 </tr>
