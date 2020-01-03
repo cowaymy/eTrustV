@@ -860,14 +860,7 @@ SELECT Extent1.CCP_ID   ,
 			       CCP_IS_HOLD = #{onHoldCcp},
 			       CCP_FICO = #{ficoScore}
 			WHERE
-			       <choose>
-			         <when test="auxCcpId != null and auxCcpId != '' ">
-			             CCP_ID = #{auxCcpId}
-			         </when>
-			         <otherwise>
-			             CCP_ID = #{saveCcpId}
-			         </otherwise>
-			       </choose>
+			       CCP_ID = #{saveCcpId}
 </update>
 
 <select id="getCcpDecisionList" parameterType="Map" resultType="EgovMap">
@@ -1310,9 +1303,9 @@ AND T1.CNT = 1
 			AND A.CUST_ID = #{custId}
 </select>
 
-<select id="getAuxCcpId" parameterType="Map" resultType="int">
+<select id="getAux" parameterType="Map" resultType="egovMap">
     SELECT
-        cpm.CCP_ID
+        cpm.CCP_ID, cpm.CCP_SALES_ORD_ID
     FROM SAL0102D cpm
     JOIN SAL0001D som   ON cpm.CCP_SALES_ORD_ID = som.SALES_ORD_ID
     WHERE som.APP_TYPE_ID = 5764
