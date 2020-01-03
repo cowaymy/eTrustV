@@ -160,6 +160,17 @@ $(document).ready(function(){
     });
 
     $("#btnPopIssueSave").click(function(){
+
+    	if(FormUtil.isEmpty($("#zGrptdate").val())) {
+            Common.alert("Please select the GR Posting Date.");
+            return false;
+        }
+
+        if(FormUtil.isEmpty($("#zGrpfdate").val())) {
+            Common.alert("Please select the GR Doc Date.");
+            return false;
+        }
+
     	var check = GridCommon.getGridData(scanInfoGridId);
     	var addedItems = AUIGrid.getColumnValues(gradeGridId,"lastLocStkGrad");
         var getRow = AUIGrid.getRowCount(gradeGridId);

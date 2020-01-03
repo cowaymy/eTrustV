@@ -114,7 +114,17 @@ $(document).ready(function(){
     });
 
     $("#btnPopIssueSave").click(function(){
-    	var gridList = GridCommon.getGridData(scanInfoGridId);
+    	if(FormUtil.isEmpty($("#zGiptdate").val())) {
+            Common.alert("Please select the GI Posting Date.");
+            return false;
+        }
+
+        if(FormUtil.isEmpty($("#zGipfdate").val())) {
+            Common.alert("Please select the GI Doc Date.");
+            return false;
+        }
+
+        var gridList = GridCommon.getGridData(scanInfoGridId);
         var reqQty = 0;
 
         for(var i = 0 ; i < gridList.all.length ; i++){
