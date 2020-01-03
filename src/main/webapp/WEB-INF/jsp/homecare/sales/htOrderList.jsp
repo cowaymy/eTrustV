@@ -124,6 +124,9 @@ function fn_setDetail(gridID, rowIdx){
 	  /* $('#btnReq').click(function() {
           fn_orderRequestPop();
       }); */
+      $('#btnCancel').click(function() {
+      fn_orderCancelRequestPop();
+      });
       $('#btnSrch').click(function() {
           if(fn_validSearchList()) fn_selectListAjax();
       });
@@ -257,6 +260,30 @@ function fn_orderModifyPop() {
     }
 }
 
+function fn_orderCancelRequestPop() {
+    var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+    var clickChk = AUIGrid.getSelectedItems(listMyGridID);
+    if(selIdx > -1) {
+    	if(clickChk[0].item.appTypeCode == "FT1T" || clickChk[0].item.appTypeCode == "FT1Y"){
+        Common.popupDiv("/homecare/sales/htOrderCancelRequestPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+    	  }
+    	else if (clickChk[0].item.appTypeCode == "CS1T" || clickChk[0].item.appTypeCode == "CS1Y"){
+    		if(clickChk[0].item.adjnote ==  "" || clickChk[0].item.adjnote ==  null) {
+    			Common.alert("CS Cancel request disallow due to CS No. not yet created Credit Note.");
+    		}else{
+    	        Common.popupDiv("/homecare/sales/htOrderCancelRequestPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+    		}
+
+    	}else{
+    		  Common.alert("CS Cancel request disallow.");
+    	  }
+    	}
+    else {
+        Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
+    }
+}
+
+
 
 function fn_multiCombo(){
     $('#listKeyinBrnchId').change(function() {
@@ -325,6 +352,11 @@ function fn_excelDown(){
   <li><p class="btn_blue"><a id="btnEdit" href="#"><spring:message code='sales.btn.edit'/></a></p></li>
   </c:if>
 </c:if>
+
+<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+ <li><p class="btn_blue"><a id="btnCancel" href="#" ><spring:message code='sal.title.text.cancelReq'/></a></p></li>
+  </c:if>
+
     <li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span><spring:message code='sales.Search'/></a></p></li>
     <li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
 </ul>
