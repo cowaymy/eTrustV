@@ -206,6 +206,8 @@ function fn_mapping(){
         stmtAmount = Number(stateRowItem.item.fTrnscCrditAmt);
         stmtAmount = $.number(stmtAmount,2,'.','');
 
+        fTrnscId = stateRowItem.item.fTrnscId;
+
 	    for(var i = 0; i < advKeyInItems.length; i++) {
 	        keyInRowItem = advKeyInItems[i];
 	        keyInAmount += Number(keyInRowItem.item.totAmt);
@@ -220,6 +222,13 @@ function fn_mapping(){
 	            flag = 'N';
                 return false;
 	        }
+
+	        if(i == 0) {
+	            groupSeq = keyInRowItem.item.groupSeq;
+	        } else {
+	            groupSeq += "," + keyInRowItem.item.groupSeq;
+	        }
+
 	    }
 
 	    keyInAmount = $.number(keyInAmount,2,'.','');

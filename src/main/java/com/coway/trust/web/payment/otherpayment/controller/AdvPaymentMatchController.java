@@ -26,15 +26,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/payment")
 public class AdvPaymentMatchController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdvPaymentMatchController.class);
-	
+
 	@Resource(name = "advPaymentMatchService")
-	private AdvPaymentMatchService advPaymentMatchService;	
-		
+	private AdvPaymentMatchService advPaymentMatchService;
+
 	/******************************************************
-	 *  Advance Payment Matching 
-	 *****************************************************/	
+	 *  Advance Payment Matching
+	 *****************************************************/
 	/**
 	 * Advance Payment Matching - 초기화
 	 * @param params
@@ -45,47 +45,47 @@ public class AdvPaymentMatchController {
 	public String initAdvPaymentMatch(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/otherpayment/advPaymentMatch";
 	}
-	
+
 	/**
 	 *  Advance Payment Matching - 초기화 조회
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
-	 */	
+	 */
 	@RequestMapping(value = "/selectPaymentMatchList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectPaymentMatchList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
 				, @RequestBody Map<String, Object> params, ModelMap model) {
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
+
 		List<EgovMap> keyInList = advPaymentMatchService.selectAdvKeyInList(params);
 		List<EgovMap> stateList = advPaymentMatchService.selectBankStateMatchList(params);
-		
+
 		resultMap.put("keyInList", keyInList);
 		resultMap.put("stateList", stateList);
-        
+
 		// 조회 결과 리턴.
         return ResponseEntity.ok(resultMap);
 	}
-	
+
 	/**
-	 *  Advance Payment Matching - Key In 정보 상세보기 초기화 화면 
+	 *  Advance Payment Matching - Key In 정보 상세보기 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/initDetailGrpPaymentPop.do")
-	public String initRequestDCFPop(@RequestParam Map<String, Object> params, ModelMap model) {		
-		
-		model.put("groupSeq", params.get("groupSeq"));		
+	public String initRequestDCFPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		model.put("groupSeq", params.get("groupSeq"));
 		LOGGER.debug("payment List params : {} ", params);
-        
+
 		return "payment/otherpayment/advPaymentMatchPop";
 	}
-	
+
 	/**
-	 * Advance Payment Matching - Mapping 처리 
+	 * Advance Payment Matching - Mapping 처리
 	 * @param params
 	 * @param model
 	 * @return
@@ -93,48 +93,54 @@ public class AdvPaymentMatchController {
 	@RequestMapping(value = "/saveAdvPaymentMapping.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveAdvPaymentMapping(
 			@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-		
+
 		LOGGER.debug("params : {} ", params);
-		
+		String groupSeq = params.get("groupSeq").toString();
+		String groupSeqArr[];
+		if(groupSeq.contains(",")) {
+		    groupSeqArr = groupSeq.split(",");
+		    params.put("groupSeqArr", groupSeqArr);
+		}
+
 		// 저장
 		params.put("userId", sessionVO.getUserId());
 		advPaymentMatchService.saveAdvPaymentMapping(params);
-		
+
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage("Saved Successfully");
 
 		return ResponseEntity.ok(message);
-    	
+
 	}
-	
+
 	/******************************************************
 	 * Payment List - Request DCF
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * Payment List - Request DCF 초기화 화면 
+	 * Payment List - Request DCF 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/initReqDCFWithAppvPop.do")
-	public String initReqDCFWithAppvPop(@RequestParam Map<String, Object> params, ModelMap model) {		
-		
-		model.put("groupSeq", params.get("groupSeq"));		
+	public String initReqDCFWithAppvPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		model.put("groupSeq", params.get("groupSeq"));
 		LOGGER.debug("payment List params : {} ", params);
-		
+
         // 조회.
-        //List<EgovMap> resultList = paymentListService.selectPaymentListByGroupSeq(params);        
-        //model.put("paymentList", resultList);        
-        
+        //List<EgovMap> resultList = paymentListService.selectPaymentListByGroupSeq(params);
+        //model.put("paymentList", resultList);
+
 		return "payment/otherpayment/requestDCFWithAppvPop";
 	}
-	
-	
-	
+
+
+
 	/**
-	 * Advance Payment Matching - Reverse 처리 
+	 * Advance Payment Matching - Reverse 처리
 	 * @param params
 	 * @param model
 	 * @return
@@ -142,20 +148,20 @@ public class AdvPaymentMatchController {
 	@RequestMapping(value = "/requestDCFWithAppv.do", method = RequestMethod.POST)
 	public ResponseEntity<EgovMap> requestDCFWithAppv(
 			@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-		
+
 		LOGGER.debug("params : {} ", params);
-		
+
 		// 저장
 		params.put("userId", sessionVO.getUserId());
     	EgovMap resultMap = advPaymentMatchService.requestDCFWithAppv(params);
-		
+
 		// 조회 결과 리턴.
     	return ResponseEntity.ok(resultMap);
-    	
+
 	}
-	
+
 	/**
-	 * Advance Payment Matching - Debtor 처리 
+	 * Advance Payment Matching - Debtor 처리
 	 * @param params
 	 * @param model
 	 * @return
@@ -163,24 +169,24 @@ public class AdvPaymentMatchController {
 	@RequestMapping(value = "/saveAdvPaymentDebtor.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveAdvPaymentDebtor(
 			@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-		
+
 		LOGGER.debug("params : {} ", params);
-		
+
 		// 저장
-		params.put("userId", sessionVO.getUserId());		
+		params.put("userId", sessionVO.getUserId());
 		params.put("groupSeq", params.get("debtorGroupSeq"));
 		params.put("fTrnscId", 0);
 		params.put("accCode", 0);
-		
+
 		advPaymentMatchService.saveAdvPaymentDebtor(params);
-		
+
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage("Saved Successfully");
 
 		return ResponseEntity.ok(message);
-    	
+
 	}
-	
+
 }

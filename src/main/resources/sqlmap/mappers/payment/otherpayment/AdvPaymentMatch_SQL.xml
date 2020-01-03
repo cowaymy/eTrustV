@@ -120,7 +120,15 @@
             BANK_CHG_MAPPING_USER_ID = #{userId},
             BANK_CHG_MAPPING_DT = SYSDATE
         WHERE
-            GROUP_SEQ = #{groupSeq}
+            <if test="groupSeqArr == null and groupSeqArr == ''">
+                GROUP_SEQ = #{groupSeq}
+            </if>
+            <if test="groupSeqArr != null and groupSeqArr != ''">
+                GROUP_SEQ IN
+                <foreach item="item" collection="groupSeqArr" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
     </update>
 
     <update id="mappingBankStatementAdv" parameterType="Map">
@@ -137,6 +145,7 @@
 
     <select id="selectMappedData" parameterType="Map" resultType="egovMap">
         SELECT
+            '1' abc,
             PAY_ITM_REF_DT,
             ROW_NUMBER() OVER(ORDER BY OR_NO) AS BANK_SEQ,
             GROUP_SEQ,
@@ -176,7 +185,15 @@
                         LEFT JOIN SYS0001M C ON A.F_BANK_JRNL_ACC_ID = C.ACC_ID
                     ) E ON A.BANK_STATE_MAPPING_ID = E.F_TRNSC_ID
             WHERE
-                A.GROUP_SEQ = #{groupSeq}
+                <if test="groupSeqArr == null and groupSeqArr == ''">
+                    A.GROUP_SEQ = #{groupSeq}
+                </if>
+                <if test="groupSeqArr != null and groupSeqArr != ''">
+                    A.GROUP_SEQ IN
+                    <foreach item="item" collection="groupSeqArr" index="index" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
             )
             GROUP BY
                 PAY_ITM_REF_DT,
