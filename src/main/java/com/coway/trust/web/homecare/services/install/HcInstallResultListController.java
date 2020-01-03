@@ -143,7 +143,7 @@ public class HcInstallResultListController {
 	  logger.debug("viewInstallation : {}", resultInfo);
 
 	  // 호출될 화면
-	  return "homecare/services/installation/hcInstallationResultPop";
+	  return "homecare/services/install/hcInstallationResultPop";
 	}
 
 	@SuppressWarnings("unchecked")
