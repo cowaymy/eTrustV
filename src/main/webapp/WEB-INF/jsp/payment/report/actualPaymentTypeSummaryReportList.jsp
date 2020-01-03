@@ -33,6 +33,7 @@ function fnSearchTotal() {
 			, "/payment/report/selectActualPaymentTypeSummaryReportJsonList.do"
 			, $("#MainForm").serialize()
 			, function(result) {
+
 				AUIGrid.setGridData(myGridID1, result.orderCountList);
 				AUIGrid.setGridData(myGridID2, result.amoutList);
 			});
@@ -70,7 +71,7 @@ function fnPlanYearMonthChange(){
 /*
  * Grid Create & Setting
  */
-var myGridID1, myGridID2;
+var myGridID1, myGridID2, lastIndex;
 
 //	myGridTotal
 var gridOptions	= {

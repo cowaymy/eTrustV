@@ -37,12 +37,39 @@ function fnSearch() {
         AUIGrid.setGridData(listGrid, data.dataList);
     }); */
 
+    var myGridID1Index = 34;
+    for (var i = lastIndex; i >= 0; i--) {
+
+        AUIGrid.setColumnProp(myGridID1, myGridID1Index, {
+            visible : true
+        });
+
+        myGridID1Index--;
+    }
+
 	Common.ajax("POST"
 			, "/payment/report/selectIssuerBankJsonList.do"
 			//, "/payment/report/selectCustomerTypeNPayChannelReporJsonList.do"
 			, $("#MainForm").serializeJSON()
 			, function(result) {
-				AUIGrid.setGridData(myGridID1, result.dataList);
+
+				// 그리드 헤더 사이즈 조정
+                lastIndex =  31 - Number( result.lastDay );
+
+                if( lastIndex > 0 ){
+                    var myGridID1Index = 34;
+                    for (var i = lastIndex; i >= 0; i--) {
+
+                        AUIGrid.setColumnProp(myGridID1, myGridID1Index, {
+                            visible : false
+                        });
+
+                        myGridID1Index--;
+                    }
+
+                }
+
+				AUIGrid.setGridData(myGridID1, result.gridList);
 			});
 }
 
@@ -78,7 +105,7 @@ function fnPlanYearMonthChange(){
 /*
  * Grid Create & Setting
  */
-var myGridID1;
+var myGridID1, lastIndex;
 
 //	myGridTotal
 var gridOptions	= {
@@ -207,7 +234,7 @@ $(document).ready(function() {
 
 		<article class="grid_wrap">
 			<!-- Summary Grid -->
-			<div id="grid1_wrap" class="mt10" style="height:550px" class="autoGridHeight" ></div>
+			<div id="grid1_wrap" class="mt10" style="height:580px" class="autoGridHeight" ></div>
 		</article>
         <!-- Grid1 End -->
 

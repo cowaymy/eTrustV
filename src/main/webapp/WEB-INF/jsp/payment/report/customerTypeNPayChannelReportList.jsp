@@ -19,7 +19,7 @@ $(function(){
 /*
  * Grid Create & Setting
  */
-var myGridID1, myGridID2, myGridID3, myGridID4;
+var myGridID1, myGridID2, myGridID3, myGridID4, lastIndex;
 
 //	myGridTotal
 var gridOptions	= {
@@ -164,12 +164,78 @@ function fnSearchTotal() {
         return false;
     }
 
+    var myGridID1Index = 34;
+    for (var i = lastIndex; i >= 0; i--) {
+
+        AUIGrid.setColumnProp(myGridID1, myGridID1Index, {
+            visible : true
+        });
+
+        myGridID1Index--;
+    }
+
+
+    var myGridID2Index = 33;
+    for (var i = lastIndex; i >= 0; i--) {
+
+        AUIGrid.setColumnProp(myGridID2, myGridID2Index, {
+            visible : true
+        });
+
+        AUIGrid.setColumnProp(myGridID3, myGridID2Index, {
+            visible : true
+        });
+
+        AUIGrid.setColumnProp(myGridID4, myGridID2Index, {
+            visible : true
+        });
+
+        myGridID2Index--;
+    }
+
     Common.ajax("GET"
             , "/payment/report/selectCustomerTypeNPayChannelReportJsonList.do"
             , $("#MainForm").serialize()
             , function(result) {
 
-                console.log("++++ result.lastDay ::" + result.lastDay );
+
+            	// 그리드 헤더 사이즈 조정
+                lastIndex =  31 - Number( result.lastDay );
+
+            	if( lastIndex > 0 ){
+                    var myGridID1Index = 34;
+                    for (var i = lastIndex; i >= 0; i--) {
+
+                        AUIGrid.setColumnProp(myGridID1, myGridID1Index, {
+                            visible : false
+                        });
+
+                        myGridID1Index--;
+                    }
+
+
+                    var myGridID2Index = 33;
+                    for (var i = lastIndex; i >= 0; i--) {
+
+                        AUIGrid.setColumnProp(myGridID2, myGridID2Index, {
+                            visible : false
+                        });
+
+                        AUIGrid.setColumnProp(myGridID3, myGridID2Index, {
+                            visible : false
+                        });
+
+                        AUIGrid.setColumnProp(myGridID4, myGridID2Index, {
+                            visible : false
+                        });
+
+                        myGridID2Index--;
+                    }
+            	}
+
+                /* AUIGrid.setColumnProp(myGridID1, 4, {
+                	visible : false
+                }); */
 
                 // 컬럼 변경
 //                AUIGrid.changeColumnLayout(myGridID1, grid1Layout);
