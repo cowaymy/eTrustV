@@ -289,7 +289,14 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
                 DocNoID = 165; // HOMECARE GROUP CODE
             else if (level.equals("3"))
                 DocNoID = 164; // HOMECARE DEPT CODE
-        }
+        }else if (memberTypeID.equals("5758")){ // HOMECARE DELIVERY TECHNICIAN -- ADDED BY TOMMY
+          if (level.equals("1"))
+            DocNoID = 172; // HOMECARE DELIVERY TECHNICIAN ORG CODE
+        else if (level.equals("2"))
+            DocNoID = 173; // HOMECARE DELIVERY TECHNICIAN GROUP CODE
+        else if (level.equals("3"))
+            DocNoID = 174; // HOMECARE DELIVERY TECHNICIAN DEPT CODE
+    }
 
 		return DocNoID;
 	}
