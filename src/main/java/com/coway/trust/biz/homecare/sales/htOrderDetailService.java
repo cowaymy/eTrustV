@@ -6,6 +6,7 @@ package com.coway.trust.biz.homecare.sales;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -57,4 +58,9 @@ public interface htOrderDetailService {
 	int updateCoverageAreaActive(Map<String, Object> params, SessionVO sessionVO);
 
 	int updateCoverageAreaInactive(Map<String, Object> params, SessionVO sessionVO);
+
+	ReturnMessage requestCancelCSOrder(Map<String, Object> params, SessionVO sessionVO) throws Exception ;
+
+	int updateCSOrderStatus(Map<String, Object> params, SessionVO sessionVO);
+
 }
