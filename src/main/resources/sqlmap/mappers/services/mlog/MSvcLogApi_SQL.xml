@@ -59,7 +59,8 @@
            A.install_Address,
            A.need_Filter,
            TO_CHAR (NVL(A.warranty,0)) AS warranty,
-           TO_CHAR (NVL(B.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding
+           TO_CHAR (NVL(B.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding,
+           A.SERIAL_CHK
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -115,7 +116,8 @@
                   install_Address,
                   CASE WHEN FILT_CNT <![CDATA[ > ]]> 0 THEN '1' ELSE '0' END need_Filter,
                   srv_mem_cntrct_id,
-                  warranty
+                  warranty,
+                  SERIAL_CHK
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
                                   A.STUS_CODE_ID AS job_Status,
@@ -183,7 +185,8 @@
                                    /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'STATE')  service_State, */
                                    /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'FULL_ADDR')  install_Address */
                                    R.SRV_MEM_CNTRCT_ID,
-                                   U.FAUCET_EXCH AS warranty
+                                   U.FAUCET_EXCH AS warranty,
+                                   NVL(L.SERIAL_CHK, 'N') AS SERIAL_CHK
                   FROM (SELECT A.*
                         FROM SVC0008D A,
                         ORG0001D B
@@ -363,6 +366,7 @@
           ,TO_CHAR(CRT_USER_ID)           AS      Create_User_ID
           ,TO_CHAR(CRT_DT)                AS      Create_Date
           ,TO_CHAR(HOME_CARE_ORDER_YN) AS home_Care_Order_Yn
+          , TO_CHAR(SERIAL_CHK) AS serial_Chk
     FROM SVC0101T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -463,7 +467,8 @@
                                       instct AS instruction,
                                       area_id AS area_id,
                                       addr_dtl AS addr_dtl,
-                                      street AS street
+                                      street AS street,
+                                      NVL(Serial_Chk, 'N') AS Serial_Chk
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
                                            ROW_NUMBER () OVER (PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no ORDER BY svc0004d.as_result_id DESC) rn,
                                            sal0001d.sales_ord_no AS sales_Order_No,
@@ -496,6 +501,7 @@
                                            sal0024d.cust_bill_pay_ref_no1 AS customer_Jom_Pay_Ref_No,
                                            sys0026m.stk_desc AS product_Name,
                                            sys0026m.stk_code AS product_Code,
+                                           sys0026m.Serial_Chk,
                                            Fn_get_commcd (10, sal0001d.app_type_id) AS app_Type,
                                            (SELECT promo_desc
                                             FROM sal0017d
@@ -922,7 +928,8 @@
                    NVL (SYS0026M.STK_CODE, '') AS product_Code,
                    NVL (SYS0005M.CODE, '') AS dsc_Code,
                    NVL (TO_CHAR (CCR0007D.CALL_REM), '') AS instruction,
-                   SAL0047D.REM AS RESULT_REMARK
+                   SAL0047D.REM AS RESULT_REMARK,
+                   NVL(SYS0026M.SERIAL_CHK, 'N') AS SERIAL_CHK
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
@@ -1043,6 +1050,7 @@
          , TO_CHAR(FRA_PRODUCT_CODE) AS fra_Product_Code
          , TO_CHAR(FRA_PRODUCT_NAME) AS fra_Product_Name
          , TO_CHAR(RESULT_REMARK) AS result_Result
+         , TO_CHAR(SERIAL_CHK) AS serial_Chk
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -1098,6 +1106,7 @@
              NVL (TO_CHAR (G.CUST_BILL_PAY_REF_NO1), '') AS customer_Jom_Pay_Ref_No,
              TO_CHAR (D.STK_CODE) AS product_Code,
              TO_CHAR (D.STK_DESC) AS product_Name,
+             NVL (D.SERIAL_CHK, 'N') AS SERIAL_CHK,
              NVL (FN_GET_COMMCD (10, C.APP_TYPE_ID), '') AS app_Type,
              NVL (K.INSTCT, '') AS instruction,
              NVL (TO_CHAR (I.INSTALL_DT, 'YYYYMMDD'), '') AS installation_Date,
@@ -1224,6 +1233,7 @@
          , TO_CHAR(NEXT_CALL_TM        )         AS        next_Call_Time
          , TO_CHAR(CRT_USER_ID         )         AS        Create_User_ID
          , TO_CHAR(CRT_DT              )         AS        Create_Date
+         , TO_CHAR(SERIAL_CHK) AS serial_Chk
     FROM SVC0104T
     WHERE MEM_CODE =  #{userId}
   </select>
@@ -1479,7 +1489,8 @@
            TO_CHAR (ACSRS_AMT) AS accessories_Amount,
            NVL(TO_CHAR (TOT_AMT), '0') AS total_Amount,
            TO_CHAR (CRT_USER_ID) AS Create_User_ID,
-           TO_CHAR (CRT_DT) AS Create_Date
+           TO_CHAR (CRT_DT) AS Create_Date,
+           TO_CHAR(SERIAL_CHK) AS serial_Chk
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -4348,7 +4359,8 @@
            A.need_Filter,
            TO_CHAR (NVL(A.warranty,0)) AS warranty,
            TO_CHAR (NVL(B.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding,
-           homeCareOrderYn AS home_Care_Order_Yn
+           homeCareOrderYn AS home_Care_Order_Yn,
+           NVL(SERIAL_CHK, 'N') AS SERIAL_CHK
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -4405,7 +4417,8 @@
                   CASE WHEN FILT_CNT <![CDATA[ > ]]> 0 THEN '1' ELSE '0' END need_Filter,
                   srv_mem_cntrct_id,
                   warranty,
-                  homeCareOrderYn
+                  homeCareOrderYn,
+                  SERIAL_CHK
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
                                   A.STUS_CODE_ID AS job_Status,
@@ -4475,7 +4488,8 @@
                                    /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'FULL_ADDR')  install_Address */
                                    R.SRV_MEM_CNTRCT_ID,
                                    U.FAUCET_EXCH AS warranty,
-                                   CASE WHEN SAL.SALES_ORD_NO IS NULL THEN 'N' ELSE 'Y' END AS homeCareOrderYn
+                                   CASE WHEN SAL.SALES_ORD_NO IS NULL THEN 'N' ELSE 'Y' END AS homeCareOrderYn,
+                                   L.SERIAL_CHK
                   FROM (SELECT A.*
                         FROM SVC0008D A,
                         ORG0001D B
@@ -4686,6 +4700,7 @@
                    (SAL0023D.ADDR_DTL || ' ' || SAL0023D.STREET || ' ' || SYS0064M.AREA || ' ' || SYS0064M.POSTCODE || ' ' || SYS0064M.CITY || ' ' || SYS0064M.STATE || ' ' || SYS0064M.COUNTRY) install_Address,
                    NVL (SYS0026M.STK_DESC, '') AS product_Name,
                    NVL (SYS0026M.STK_CODE, '') AS product_Code,
+                   NVL (SYS0026M.SERIAL_CHK, 'N') AS SERIAL_CHK,
                    NVL (SYS0005M.CODE, '') AS dsc_Code,
                    NVL (TO_CHAR (CCR0007D.CALL_REM), '') AS instruction,
                    (SELECT FRA_ORD_NO FROM HMC0011D WHERE MAT_ORD_NO = SAL0001D.SALES_ORD_NO AND ROWNUM = 1) AS FRA_ORD_NO,
