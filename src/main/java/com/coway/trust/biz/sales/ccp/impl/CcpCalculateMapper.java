@@ -97,5 +97,5 @@ public interface CcpCalculateMapper {
 
 	List<EgovMap> getCcpInstallationList(Map<String, Object> params);
 
-	int getAuxCcpId(Map<String, Object> params);
+	EgovMap getAux(Map<String, Object> params);
 }

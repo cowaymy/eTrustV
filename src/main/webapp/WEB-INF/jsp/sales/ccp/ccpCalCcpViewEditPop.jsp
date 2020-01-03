@@ -968,6 +968,7 @@ function chgTab(tabNm) {
 <input type="hidden" name="ccpTotalScorePoint" value="${fieldMap.totUnitPoint}">
 <input type="hidden" id="_saveCustTypeId" name="saveCustTypeId" value="${orderDetail.basicInfo.custTypeId}">
 <input type="hidden"  name="saveOrdId" id="_saveOrdId" value="${orderDetail.basicInfo.ordId}">
+<input type="hidden"  name="bndlId" id="_bndlId" value="${orderDetail.basicInfo.bndlId}">
 
 <!-- Ord Unit  -->
 <input type="hidden" name="saveOrdUnit"  id="_saveOrdUnit">

@@ -537,15 +537,6 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 
 		ccpCalculateMapper.updateCcpDecision(params);
 
-		LOGGER.info(" ======================= " + params.get("bndlId"));
-		/* Update Aux CCP ID*/
-		if(!params.get("bndlId").equals(null)){
-		  int auxCcpId = ccpCalculateMapper.getAuxCcpId(params);
-		  params.put("auxCcpId", auxCcpId);
-		  ccpCalculateMapper.updateCcpDecision(params);
-		}
-
-
 		LOGGER.info("_________________________________________________________________________________________");
 		LOGGER.info("_______________ // 1. Update CCP Decision <Update Data.CcpDecisionM> End _________________________");
 		LOGGER.info("_________________________________________________________________________________________");
@@ -821,7 +812,7 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 			 eCashMap = ccpCalculateMapper.chkECash(params);  // ECASH = 0  -> MODE_ID != 131 .... CHANGED BY LEE 2018.01.15
 
 			 //if(eCashMap != null && Integer.parseInt(String.valueOf(eCashMap.get("ecash"))) == 0){
-			   if(eCashMap != null){
+			   if(eCashMap != null || (!params.get("auxAppType").equals(null)) ){
 				//Call Entry Insert
 				 callSeq = ccpCalculateMapper.crtSeqCCR0006D();
 	             params.put("callEntrySeq", callSeq); //Seq
@@ -937,4 +928,10 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 
 		return ccpCalculateMapper.getCcpInstallationList(params);
 	}
+
+
+  @Override
+  public  EgovMap getAux(Map<String, Object> params) {
+    return ccpCalculateMapper.getAux(params);
+  }
 }
