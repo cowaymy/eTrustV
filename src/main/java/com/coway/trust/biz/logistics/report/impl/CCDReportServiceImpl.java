@@ -76,9 +76,19 @@ public class CCDReportServiceImpl extends EgovAbstractServiceImpl implements CCD
 	 * @see com.coway.trust.biz.logistics.report.CCDReportService#selectIssuerBankReportJsonList(java.util.Map)
 	 */
 	@Override
-	public List<EgovMap> selectIssuerBankReportJsonList(Map<String, Object> params) {
+	public Map<String, Object>  selectIssuerBankReportJsonList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return ccdReportMapper.selectIssuerBankReportJsonList(params);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+
+		Integer lastDay = ccdReportMapper.selectLastDay(params);
+    	List<EgovMap> gridList = ccdReportMapper.selectIssuerBankReportJsonList(params);
+
+    	map.put("lastDay", lastDay);
+    	map.put("gridList", gridList);
+
+		return map;
 	}
 
     /**

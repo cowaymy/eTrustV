@@ -37,7 +37,7 @@ public interface CCDReportService {
 	 * @param params
 	 * @return
 	 */
-	List<EgovMap> selectIssuerBankReportJsonList(Map<String, Object> params);
+	Map<String, Object> selectIssuerBankReportJsonList(Map<String, Object> params);
 
 	 /**
 	 * selectActualPaymentTypeSummaryReportJsonList
