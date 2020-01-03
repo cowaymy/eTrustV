@@ -205,6 +205,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
     				 holiDayAddMap.put("cDate", CommonUtils.nvl(e.get("cDate")));
     				 holiDayAddMap.put("ctSubGrp", CommonUtils.nvl(e.get("ctSubGrp")));
     				 holiDayAddMap.put("brnchId", CommonUtils.nvl(e.get("brnchId")));
+    				 holiDayAddMap.put("holiday", CommonUtils.nvl(e.get("cDate")));
 
     				 try {
     					 List<EgovMap> vm = allocationMapper.isSubGroupHoliDay(holiDayAddMap);
@@ -256,6 +257,9 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
                     vacationAddMap.put("isHoliDay", CommonUtils.nvl(e.get("isHoliDay")));
                     vacationAddMap.put("holiDayCtCode", CommonUtils.nvl(e.get("holiDayCtCode")));
                     vacationAddMap.put("oldCt", CommonUtils.nvl(e.get("oldCt")));
+
+                    vacationAddMap.put("vactReplCt", CommonUtils.nvl(e.get("ct")));
+                    vacationAddMap.put("rDate", CommonUtils.nvl(e.get("cDate")));
 
                     try {
                     	EgovMap vm = allocationMapper.selectVacationList(vacationAddMap);
@@ -327,12 +331,17 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 				for (Iterator<EgovMap> iterator = mergeNoSvcList.iterator(); iterator.hasNext();) {
 					EgovMap v = iterator.next();
 
-					if("true".equals(CommonUtils.nvl(v.get("isVact"))) || "true".equals(CommonUtils.nvl(v.get("isHoliDay"))) || "true".equals(CommonUtils.nvl(v.get("isNoSvcDay")))){
+					if( "true".equals(CommonUtils.nvl(v.get("isVact"))) || "true".equals(CommonUtils.nvl(v.get("isNoSvcDay"))) ){
+						continue;
+					}
+
+					if( "true".equals(CommonUtils.nvl(v.get("isHoliDay"))) ){
 						v.put("repla", "true");
 					}
 
 					EgovMap eM = allocationMapper.makeViewList(v);
 					fList.add(eM);
+
 				}
 			}
 		}
