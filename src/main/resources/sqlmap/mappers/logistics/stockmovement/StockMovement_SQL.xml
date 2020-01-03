@@ -379,7 +379,8 @@
              , l55.delvry_no delyno
              , l55.delvry_no_itm
              , l47.trnsc_type ttype
-             , tran.code_name     ttext
+             --, tran.code_name     ttext
+             , (select code_name from sys0013m where code_master_id = 306 AND code = l47.trnsc_type)      ttext
              , l47.trnsc_type_dtl mtype
              , trand.code_name    mtext
              , l47.ref_doc_no docno
@@ -412,7 +413,7 @@
              , log0048d l48
              , log0054m l54
              , log0055d l55
-             , (select * from sys0013m where code_master_id = 306) tran
+             --, (select * from sys0013m where code_master_id = 306) tran
              , (select * from sys0013m where code_master_id = 308) trand
              , (select * from sys0013m where code_master_id = 42) uomt
              , sys0028m s28c
@@ -422,7 +423,7 @@
              , sal0001d s1
              , HMC0011D H11
          where 1 = 1
-           and l47.trnsc_type     = tran.code
+           --and l47.trnsc_type     = tran.code
            and l47.trnsc_type_dtl = trand.code
            and l47.rciv_cdc_rdc   = s28c.wh_loc_id(+)
            and l47.reqst_cdc_rdc  = s28q.wh_loc_id(+)
