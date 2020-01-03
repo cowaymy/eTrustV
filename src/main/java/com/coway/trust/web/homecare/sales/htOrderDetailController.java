@@ -30,6 +30,7 @@ import com.coway.trust.biz.homecare.sales.htOrderDetailService;
 import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -349,6 +350,34 @@ public class htOrderDetailController {
 		return ResponseEntity.ok(message);
 
 	}
+
+	   @RequestMapping(value = "/htOrderCancelRequestPop.do")
+	    public String htOrderCancelRequestPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
+
+	        int prgrsId = 0;
+
+	        params.put("prgrsId", prgrsId);
+
+	        logger.debug("!@##############################################################################");
+	        logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+	        logger.debug("!@##############################################################################");
+
+	        //[Tap]Basic Info
+	        EgovMap orderDetail = htOrderDetailService.selectOrderBasicInfo(params, sessionVO);//
+
+	        model.put("orderDetail", orderDetail);
+
+	        return "homecare/sales/htOrderCancellationPop";
+	    }
+
+	   @RequestMapping(value = "/htRequestCancelCSOrder.do", method = RequestMethod.POST)
+	    public ResponseEntity<ReturnMessage> htRequestCancelCSOrder(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+
+	        logger.info("##### params #####" +params);
+	        ReturnMessage message = htOrderDetailService.requestCancelCSOrder(params, sessionVO);
+
+	        return ResponseEntity.ok(message);
+	    }
 
 
 }
