@@ -528,7 +528,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     public EKeyInApiDto selectItmStkChangeInfo(EKeyInApiForm param) throws Exception {
         EKeyInApiDto selectItmStkPrice = selectItmStkPrice(param);
 
-        List<EgovMap> promotionList = selectPromotionByAppTypeStockESales(param);
+        List<EgovMap> promotionList = selectPromotionByAppTypeStock(param);
         List<EKeyInApiDto> promotionListDto = promotionList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
         selectItmStkPrice.setPromotionList(promotionListDto);
 
