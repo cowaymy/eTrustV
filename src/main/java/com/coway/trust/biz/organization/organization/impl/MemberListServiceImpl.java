@@ -996,7 +996,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			}
 
 			if(params.get("memberType").toString().equals("5")  &&  !params.get("course").equals("")) {
-				if (params.get("traineeType1").toString().equals("2") || params.get("traineeType1").toString().equals("3") || params.get("traineeType1").toString().equals("7") ){ // ADDED HOMECARE AS TRAINEE TYPE -- BY TOMMY
+				if (params.get("traineeType1").toString().equals("2") || params.get("traineeType1").toString().equals("3") || params.get("traineeType1").toString().equals("7") || params.get("traineeType1").toString().equals("5758") ){ // ADDED HOMECARE AS TRAINEE TYPE -- BY TOMMY
 
     					logger.debug("=============================================================================================================");
     					logger.debug("=====================  memberType {}  traineeType {} ", params.get("memberType").toString(), params.get("traineeType").toString() );
@@ -1131,7 +1131,15 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					} else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
 						deptCode = getDocNo("166");
 					}
-				}
+				}else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 5758) { // HOMECARE DELIVERY TECHNICIAN ADDED BY TOMMY
+                  if (params.get("memberLvl").equals("4") && params.get("lvlTo").equals("3")) {
+                    deptCode = getDocNo("174");
+                } else if (params.get("memberLvl").equals("3") && params.get("lvlTo").equals("2")) {
+                    deptCode = getDocNo("173");
+                } else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
+                    deptCode = getDocNo("172");
+                }
+            }
 
 				// Demote
 				if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 2) {
@@ -1158,8 +1166,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					} else if (params.get("memberLvl").equals("1") && params.get("lvlTo").equals("2")) {
 						deptCode = getDocNo("165");
 					}
+				} else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 5758) { // HOMECARE DELIVERY TECHNICIAN ADDED BY TOMMY
+                  if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("3")) {
+                    deptCode = getDocNo("174");
+                  } else if (params.get("memberLvl").equals("1") && params.get("lvlTo").equals("2")) {
+                    deptCode = getDocNo("173");
+                  }
 				}
-
 
 				if (params.get("lvlTo").equals("4")) {
 					promoEntry.put("deptCodeTo", selectOrganization_new.get("deptCode").toString() != null && selectOrganization_new.get("deptCode") !="" ? selectOrganization_new.get("deptCode").toString() : "");
