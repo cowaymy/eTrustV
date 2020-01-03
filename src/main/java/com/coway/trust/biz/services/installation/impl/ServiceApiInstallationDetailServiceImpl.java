@@ -551,7 +551,6 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     						throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 						}
 
-    					// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
 						servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
 					}
 				} catch (Exception e) {
