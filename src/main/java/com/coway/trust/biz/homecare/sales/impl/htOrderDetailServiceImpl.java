@@ -27,10 +27,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.payment.payment.service.impl.SearchPaymentMapper;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.htOrderDetailService;
 import com.coway.trust.biz.homecare.sales.htOrderListService;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOMapper;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
@@ -623,6 +625,31 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 	    params.put("updUserId", sessionVO.getUserId());
 	    htOrderDetailMapper.updateCoverageAreaInactive(params);
 	    return cnt;
+	 }
+
+	   @Override
+	      public int updateCSOrderStatus(Map<String, Object> params, SessionVO sessionVO) {
+	        // TODO Auto-generated method stub
+	        int cnt = 0;
+	        params.put("updUserId", sessionVO.getUserId());
+	        htOrderDetailMapper.updateCSOrderStatus(params);
+	        return cnt;
+	     }
+
+
+	 @Override
+	  public ReturnMessage requestCancelCSOrder(Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+	   htOrderDetailMapper.updateCSOrderStatus(params);
+
+	   String msg = "CS Order Number : " + params.get("ordNo") + "<br/>Cancelled successfully.<br/>";
+
+	   ReturnMessage message = new ReturnMessage();
+	    message.setCode(AppConstants.SUCCESS);
+	    // message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	    message.setMessage(msg);
+
+	    return message;
 	 }
 
 }
