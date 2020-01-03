@@ -401,6 +401,7 @@ function f_info(data , v){
          <option value="2">Coway Lady</option>
          <option value="3">Coway Technician</option>
          <option value="7">Homecare Technician</option>
+         <option value="5758">Homecare Delivery Technician</option>
     </select>
     </td>
     <th scope="row">Member Code</th>
