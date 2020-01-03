@@ -8,17 +8,24 @@
           FROM (
                 SELECT A.PO_NO
                   FROM HMC0004M A
-                     , HMC0005D B
+                     , (
+                        SELECT PO_NO
+                             , SUM(CONFIRM_QTY) AS CONFIRM_QTY
+                          FROM HMC0005D
+                         WHERE USE_YN = 'Y'
+                         GROUP BY PO_NO
+                       ) B
                  WHERE A.PO_NO = B.PO_NO
-                   AND A.PO_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30')) -- Approve
+                   AND A.PO_STS_CD IN (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30', '40', '90')) -- Approve, Order, Completed
+                   AND A.SUPP_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '438' AND CODE IN ('20')) -- Comfirmed
+                <if test='sHmcDelvryNo != null and sHmcDelvryNo != ""'>
                    AND EXISTS(
                                 SELECT 1
                                   FROM HMC0007M X
                                  WHERE X.PO_NO = A.PO_NO
-                                 <if test='sHmcDelvryNo != null and sHmcDelvryNo != ""'>
                                    AND X.HMC_DELVRY_NO = #{sHmcDelvryNo}
-                                 </if>
                               )
+                </if>
                 <if test='sCdc != null and sCdc != ""'>
                    AND A.CDC = #{sCdc}
                 </if>
@@ -63,7 +70,13 @@
 			             , NVL(SUM(F.GR_QTY), 0) AS GR_QTY
 			             , NVL(SUM(F.FAIL_QTY), 0) AS FAIL_QTY
 			          FROM HMC0004M A
-			             , HMC0005D B
+			             , (
+		                    SELECT PO_NO
+		                         , SUM(CONFIRM_QTY) AS CONFIRM_QTY
+		                      FROM HMC0005D
+		                     WHERE USE_YN = 'Y'
+		                     GROUP BY PO_NO
+		                   ) B
 			             , (
 			                SELECT PO_NO
 			                     , SUM(PO_PLAN_QTY) AS PLAN_QTY
@@ -101,15 +114,16 @@
 		               AND A.PO_NO = C.PO_NO (+)
 		               AND A.PO_NO = E.PO_NO (+)
 		               AND A.PO_NO = F.PO_NO (+)
-                       AND A.PO_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30')) -- Approve
+                       AND A.PO_STS_CD IN (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30', '40', '90')) -- Approve, Order, Completed
+                       AND A.SUPP_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '438' AND CODE IN ('20')) -- Comfirmed
+                   <if test='sHmcDelvryNo != null and sHmcDelvryNo != ""'>
                        AND EXISTS(
                                     SELECT 1
                                       FROM HMC0007M X
                                      WHERE X.PO_NO = A.PO_NO
-                                     <if test='sHmcDelvryNo != null and sHmcDelvryNo != ""'>
                                        AND X.HMC_DELVRY_NO = #{sHmcDelvryNo}
-                                     </if>
                                   )
+                   </if>
                    <if test='sCdc != null and sCdc != ""'>
                        AND A.CDC = #{sCdc}
                    </if>
@@ -195,15 +209,16 @@
                  WHERE A.PO_NO = B.PO_NO
                    AND B.PO_NO = E.PO_NO (+)
                    AND B.PO_DTL_NO = E.PO_DTL_NO (+)
-                   AND A.PO_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30')) -- Approve
+                   AND A.PO_STS_CD IN (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30', '40', '90')) -- Approve, Order, Completed
+                   AND A.SUPP_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '438' AND CODE IN ('20')) -- Comfirmed
+                <if test='sHmcDelvryNo != null and sHmcDelvryNo != ""'>
                    AND EXISTS(
                                 SELECT 1
                                   FROM HMC0007M X
                                  WHERE X.PO_NO = A.PO_NO
-                                 <if test='sHmcDelvryNo != null and sHmcDelvryNo != ""'>
                                    AND X.HMC_DELVRY_NO = #{sHmcDelvryNo}
-                                 </if>
                               )
+                </if>
                 <if test='sCdc != null and sCdc != ""'>
                    AND A.CDC = #{sCdc}
                 </if>
@@ -291,15 +306,16 @@
 					   AND B.PO_DTL_NO = E.PO_DTL_NO (+)
 					   AND B.PO_NO = F.PO_NO (+)
                        AND B.PO_DTL_NO = F.PO_DTL_NO (+)
-					   AND A.PO_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30')) -- Approve
+					   AND A.PO_STS_CD IN (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30', '40', '90')) -- Approve, Order, Completed
+					   AND A.SUPP_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '438' AND CODE IN ('20')) -- Comfirmed
+				   <if test='sHmcDelvryNo != null and sHmcDelvryNo != ""'>
 					   AND EXISTS(
 					                SELECT 1
 					                  FROM HMC0007M X
 					                 WHERE X.PO_NO = A.PO_NO
-					                 <if test='sHmcDelvryNo != null and sHmcDelvryNo != ""'>
 					                   AND X.HMC_DELVRY_NO = #{sHmcDelvryNo}
-					                 </if>
 					              )
+				   </if>
 			       <if test='sCdc != null and sCdc != ""'>
 			           AND A.CDC = #{sCdc}
 			       </if>
