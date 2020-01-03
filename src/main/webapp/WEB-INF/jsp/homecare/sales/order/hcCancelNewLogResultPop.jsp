@@ -854,7 +854,7 @@
 		                </td>
 		                <th scope="row"><spring:message code="sal.text.appointmentDate" /><span id='m6' name='m6' class="must">*</span></th>
 		                <td>
-		                    <input type="text" id="addAppRetnDt" name="addAppRetnDt" title="Create start Date" placeholder="DD/MM/YYYY"  readonly="readonly" class="j_dateHc readonly" disabled="disabled" />
+		                    <input type="text" id="addAppRetnDt" name="addAppRetnDt" title="Create start Date" placeholder="DD/MM/YYYY"  readonly="readonly" class="j_dateHc readonly" />
 		                </td>
 		            </tr>
 		            <tr>

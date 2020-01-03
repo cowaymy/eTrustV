@@ -89,12 +89,15 @@
         if(selIdx > -1) {
             var memCode = AUIGrid.getCellValue(listMyGridID, selIdx, "salesmanCode");
             Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
-                console.log("checkRC");
-
-                if(memRc.rcPrct < 30 && memRc.cnt >= 3) {
-                    Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
+            	if(memRc != null) {
+                    if(memRc.rcPrct < 30 && memRc.cnt >= 3) {
+                        fn_clearOrderSalesman();
+                        Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
+                    } else {
+                    	Common.popupDiv("/homecare/sales/order/copyChangeHcOrder.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
+                    }
                 } else {
-                    Common.popupDiv("/homecare/sales/order/copyChangeHcOrder.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
+                	Common.alert('<spring:message code="sal.alert.msg.preOrdMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noPreOrdSel" /></b>');
                 }
             });
         } else {

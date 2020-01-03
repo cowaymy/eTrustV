@@ -252,14 +252,6 @@
         $("#ordProduct2").change();
     }
 
-    function fn_setPromotion(_tagNum) {
-        if(_tagNum == '1') {
-        	$("#ordPromo"+_tagNum).val('${orderInfo.basicInfo.ordPromoId}');
-        } else {
-        	$("#ordPromo"+_tagNum).val('${orderInfo2.basicInfo.ordPromoId}');
-        }
-    }
-
     function fn_checkSavedDocList(list) {
         for(var i = 0; i < AUIGrid.getRowCount(docGridID) ; i++) {
 

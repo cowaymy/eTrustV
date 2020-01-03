@@ -1050,14 +1050,21 @@
                 /* if(_tagNum == '2') {
                     fn_loadProductPromotion2(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, _tagNum);
                 } else { */
-                    fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, _tagNum);
+
                 //}
+                if(copyChangeYn == 'Y') {
+                	if(_tagNum == '1') {
+                        fn_loadProductPromotion_chg(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, '${orderInfo.basicInfo.ordPromoId}', _tagNum);
+                    } else {
+                        fn_loadProductPromotion_chg(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, '${orderInfo2.basicInfo.ordPromoId}', _tagNum);
+                    }
+                } else {
+                	fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade, _tagNum);
+                }
             }
 
             fn_loadProductComponent(appTypeVal, stkIdVal, _tagNum);
             setTimeout(function() { fn_check(0, _tagNum) }, 200);
-
-            if(copyChangeYn == 'Y') fn_setPromotion(_tagNum);
         });
 
         $('#rentPayMode').change(function() {
@@ -2233,6 +2240,17 @@
             doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
         } else {
             doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
+        }
+    }
+
+    //LoadProductPromotion - copy(chage)
+    function fn_loadProductPromotion_chg(appTypeVal, stkId, empChk, custTypeVal, exTrade, promoVal, tagNum) {
+        $('#ordPromo'+tagNum).removeAttr("disabled");
+
+        if(appTypeVal !=66){
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, promoVal, 'ordPromo'+tagNum, 'S', fn_promoChg(tagNum)); //Common Code
+        } else {
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, promoVal, 'ordPromo'+tagNum, 'S', fn_promoChg(tagNum)); //Common Code
         }
     }
 
