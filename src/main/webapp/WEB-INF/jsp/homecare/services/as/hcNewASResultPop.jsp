@@ -412,7 +412,8 @@
       editable : true,
       fixedColumnCount : 1,
       selectionMode : "singleRow",
-      showRowNumColumn : true
+      showRowNumColumn : true,
+      softRemovePolicy : "exceptNew" //사용자추가한 행은 바로 삭제
     };
 
     myFltGrd10 = GridCommon.createAUIGrid("asfilter_grid_wrap", clayout, "", gridPros2);
