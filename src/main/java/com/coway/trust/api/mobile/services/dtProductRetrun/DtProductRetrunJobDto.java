@@ -10,8 +10,8 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "ProductRetrunJobDto", description = "공통코드 Dto")
 public class DtProductRetrunJobDto {
 
-	
-	
+
+
 	@ApiModelProperty(value = "주문번호")
 	private String salesOrderNo;
 
@@ -206,6 +206,14 @@ public class DtProductRetrunJobDto {
 
 	@ApiModelProperty(value = "HHMM")
 	private String nextCallTime;
+
+	private String serialChk;
+	public String getSerialChk() {
+		return serialChk;
+	}
+	public void setSerialChk(String serialChk) {
+		this.serialChk = serialChk;
+	}
 
 	public String getSalesOrderNo() {
 		return salesOrderNo;
@@ -726,11 +734,11 @@ public class DtProductRetrunJobDto {
 	public void setNextCallTime(String nextCallTime) {
 		this.nextCallTime = nextCallTime;
 	}
-	
-	
-	
+
+
+
 	public static DtProductRetrunJobDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, DtProductRetrunJobDto.class);
 	}
-	
+
 }

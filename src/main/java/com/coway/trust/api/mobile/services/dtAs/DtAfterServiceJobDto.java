@@ -251,6 +251,14 @@ public class DtAfterServiceJobDto {
 	@ApiModelProperty(value = "서비스 총 금액")
 	private int totalAmount;
 
+	private String serialChk;
+	public String getSerialChk() {
+		return serialChk;
+	}
+	public void setSerialChk(String serialChk) {
+		this.serialChk = serialChk;
+	}
+
 	public String getSalesOrderNo() {
 		return salesOrderNo;
 	}

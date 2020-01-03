@@ -217,6 +217,14 @@ public class CareServiceJobDto {
 		this.homeCareOrderYn = homeCareOrderYn;
 	}
 
+	private String serialChk;
+	public String getSerialChk() {
+		return serialChk;
+	}
+	public void setSerialChk(String serialChk) {
+		this.serialChk = serialChk;
+	}
+
 	public void setSalesOrderNo(String salesOrderNo) {
 		this.salesOrderNo = salesOrderNo;
 	}
