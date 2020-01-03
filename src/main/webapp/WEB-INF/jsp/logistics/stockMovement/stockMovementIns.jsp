@@ -32,13 +32,13 @@
 
 	var movpathdata = [ {
 		"codeId" : "02",
-		"codeName" : "RDC to CT/Cody"
+		"codeName" : "RDC to CT/Cody/DT"
 	}, {
 		"codeId" : "CT",
-		"codeName" : "CT/Cody to CT/Cody"
+		"codeName" : "CT/Cody/DT to CT/Cody/DT"
 	}, {
 		"codeId" : "CTOR",
-		"codeName" : "CT/Cody to RDC"
+		"codeName" : "CT/Cody/DT to RDC/DT"
 	} ];
 
 	var rescolumnLayout = [ {
@@ -404,7 +404,7 @@
 							grade : $("#locationType").val()
 						}; // session 정보 등록
 						doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '', 'tlocation', 'S', '');
-						
+
 						var paramdata2 = {
 								stoIn : '02,05',
 								endlikeValue : $("#locationType").val(),
@@ -569,9 +569,9 @@
 				Common.alert("Header Text can be up to 50 digits.");
 				return false;
 			}
-			
+
 			//promp alert message when movement type does not correct.
-			if((($("#movpath").val() == 'CTOR') && $("#smtype").val() != 'UM93') || 
+			if((($("#movpath").val() == 'CTOR') && $("#smtype").val() != 'UM93') ||
 					(($("#movpath").val() == '02' || $("#movpath").val() == 'CT') && $("#smtype").val() != 'UM03')){
 				Common.alert("The Movement Type is incorrect.");
 				return false;
