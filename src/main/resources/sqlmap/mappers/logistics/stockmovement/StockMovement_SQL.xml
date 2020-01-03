@@ -1195,4 +1195,12 @@
     ORDER BY l55d.DELVRY_NO_ITM, l100m.SERIAL_NO
   </select>
 
+  <select id="getSmoOutYn" parameterType="String" resultType="String">
+  /* [com.coway.trust.biz.logistics.stockmovement.impl.StockMovementMapper.getSmoOutYn] KR OHK */
+   SELECT  DECODE(COUNT(1), 0, 'N', 'Y') AS OUT_YN
+   FROM     LOG0055D A
+   WHERE   REQST_NO = #{reqsmono}
+   AND       NVL(DEL_FLAG,'N') <![CDATA[<>]]> 'Y'
+  </select>
+
 </mapper>
