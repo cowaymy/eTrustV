@@ -323,7 +323,36 @@ function fn_departmentCode(value){
                             }
                          }
                      });
-        	   } else if( traineeType == '7'){ // HOMECARE -- ADDED BY TOMMY
+        	   }   else if(traineeType == '5758'){ // HOMECARE DELIVERY TECHNICIAN -- ADDED BY TOMMY
+
+        		   doGetComboSepa("/common/selectBranchCodeList.do",'5758' , '-',''   , 'branch' , 'S', '');
+                   $("#branch").change(function(){
+                       var jsonObj = {
+                               memberLvl : 3,
+                               flag :  "%DTS%",
+                               branchVal : $("#branch").val()
+                       };
+
+                       doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+                   });
+
+                   //Training Course ajax콜 위치
+                   //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
+                   var groupCode  = {groupCode : traineeType};
+                   Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
+
+                        $("#course").find('option').each(function() {
+                            $(this).remove();
+                        });
+                         console.log("-------------------------" + JSON.stringify(result));
+                         if (result!= null) {
+                         $("#course").append("<option value=''>Choose One</option>");
+                            for( var i=0; i< result.length; i++) {
+                             $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
+                            }
+                         }
+                     });
+               } else if( traineeType == '7'){ // HOMECARE -- ADDED BY TOMMY
                     doGetComboSepa("/common/selectBranchCodeList.do",'4' , '-',''   , 'branch' , 'S', '');
 
                    $("#branch").change(function(){
@@ -533,7 +562,7 @@ console.log("ready");
             $("#joinDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
             $("#joinDate").attr("readOnly", true);
 
-		}else if(traineeType == 7 ){
+		}else if(traineeType == 7 ||  traineeType == 5758){
 			$('#courseLbl').append("<span class='must'>*</span>");
             $("#searchdepartment").attr("disabled", true);
             $("#searchSubDept").attr("disabled", true);
@@ -1133,7 +1162,7 @@ function checkNRIC(){
 
    	var jsonObj = { "nric" : $("#nric").val() };
 
-   	if ($("#memberType").val() == '2803' || $("#memberType").val() == '4' || $("#memberType").val() == '5' || $("#memberType").val() == '7') {
+   	if ($("#memberType").val() == '2803' || $("#memberType").val() == '4' || $("#memberType").val() == '5' || $("#memberType").val() == '7' || $("#memberType").val() == '5758' ) {
 	   	Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
 	           console.log("data : " + result);
 	           if (result.message != "pass") {
@@ -1611,6 +1640,7 @@ function checkBankAccNo() {
         <option value= "2">Cody</option>
         <option value = "3">CT</option>
         <option value = "7">HT</option>
+        <option value = "5758">DT</option>
     </select>
     </td>
     <th scope="row"></th>
