@@ -111,4 +111,6 @@ public interface htOrderDetailMapper {
 
 	int  updateCoverageAreaInactive(Map<String, Object> params);
 
+	int  updateCSOrderStatus(Map<String, Object> params);
+
 }
