@@ -899,6 +899,7 @@
     var asStusId = selectedItems[0].item.code1;
     var asrId = selectedItems[0].item.asResultId;
     var asTotalAmt = selectedItems[0].item.c5;
+    var asrNo = selectedItems[0].item.c3;
     var date = new Date();
     var month = date.getMonth() + 1;
     var day = date.getDate();
@@ -912,8 +913,11 @@
       if (asTotalAmt <= 0) {
         Common.alert("<spring:message code='service.msg.asInvNoChr' arguments='<b>" + AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
       } else {
-        $("#reportForm #V_RESULTID").val(asrId);
-        $("#reportForm #reportFileName").val('/services/ASInvoice.rpt');
+        //$("#reportForm #V_RESULTID").val(asrId);
+        $("#reportForm #v_serviceNo").val(asrNo);
+        $("#reportForm #v_invoiceType").val(118);
+        //$("#reportForm #reportFileName").val('/services/ASInvoice.rpt');
+        $("#reportForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST.rpt');
         $("#reportForm #viewType").val("PDF");
         $("#reportForm #reportDownFileName").val("ASInvoice_" + day + month + date.getFullYear());
 
@@ -1187,7 +1191,9 @@
    <!-- grid_wrap end -->
   </form>
   <form action="#" id="reportForm" method="post">
-   <input type="hidden" id="V_RESULTID" name="V_RESULTID" />
+   <!--  <input type="hidden" id="V_RESULTID" name="V_RESULTID" /> -->
+   <input type="hidden" id="v_serviceNo" name="v_serviceNo" />
+   <input type="hidden" id="v_invoiceType" name="v_invoiceType" />
    <input type="hidden" id="reportFileName" name="reportFileName" />
    <input type="hidden" id="viewType" name="viewType" />
    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
