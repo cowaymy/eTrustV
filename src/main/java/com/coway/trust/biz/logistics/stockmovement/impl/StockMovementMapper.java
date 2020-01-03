@@ -113,4 +113,6 @@ public interface StockMovementMapper {
 
   List<EgovMap> selectSMOIssueInSerialGradeList(Map<String, Object> params); // KR OHK : SMO Serial Grade List
 
+  String getSmoOutYn(String reqsmono); 														// KR OHK : SMO Out Y/N
+
 }

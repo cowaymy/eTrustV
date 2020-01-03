@@ -835,6 +835,13 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
     String reqsmono = (String) params.get("reqsmono");
     logger.info(" reqsmono ???? : {}", params.get("reqsmono"));
     if (!"".equals(reqsmono) || null != reqsmono) {
+    	// 20120103 KR-MIN
+    	// check good issue -> No delete
+    	String outYn = stockMoveMapper.getSmoOutYn(reqsmono);
+    	if("Y".equals(outYn)){
+    		throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + "99:You cannot delete issued smo.");
+    	}
+
       // stockMoveMapper.updateStockHead(reqsmono);
       stockMoveMapper.deleteStockDelete(reqsmono);
       stockMoveMapper.deleteStockBooking(reqsmono);
