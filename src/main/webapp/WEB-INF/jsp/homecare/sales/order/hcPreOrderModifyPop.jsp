@@ -455,7 +455,7 @@
             }
 
             if(!fn_validOrderInfo()) {
-                $('#aTabBD').click();
+            	$('#aTabOI').click();
                 return false;
             }
 
@@ -474,17 +474,22 @@
                 return false;
             }
 
-            var formData = new FormData();
 
-            formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
-            formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-            formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+            if($("#ordProduct1 option:selected").index() > 0 && $("#ordProduct2 option:selected").index() > 0) {
+                // product size check
+                Common.ajax("GET", "/homecare/sales/order/checkProductSize.do", {product1 : $("#ordProduct1 option:selected").val(), product2 : $("#ordProduct2 option:selected").val()}, function(result) {
+                    if(result.code != '00') {
+                    	$('#aTabOI').click();
+                    	Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+                        return false;
 
-            $.each(myFileCaches, function(n, v) {
-                formData.append(n, v.file);
-            });
-
-            fn_doSavePreOrder();
+                    } else {
+                    	fn_doSavePreOrder();
+                    }
+                });
+            } else {
+            	fn_doSavePreOrder();
+            }
         });
 
         $('#addCreditCardBtn').click(function() {
@@ -822,6 +827,12 @@
             msg += '* Only frames can not be ordered.<br>';
         }
 
+        // 기존주문에 프레임이 있는경우. 프레임 필수
+        if(FormUtil.isNotEmpty($('#hiddenPreOrdId2').val()) && $("#ordProduct2 option:selected").index() <= 0) {
+        	isValid = false;
+            msg += "* Please select a product.<br>";
+        }
+
         if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68' || appTypeVal == '1412') {
             if($("#ordProduct1 option:selected").index() > 0) {
                 if($("#ordPromo1 option:selected").index() <= 0) {
@@ -845,7 +856,6 @@
         }
 
         if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
-
         return isValid;
     }
 
@@ -912,10 +922,21 @@
         }
 
         if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
         return isValid;
     }
 
     function fn_doSavePreOrder() {
+    	var formData = new FormData();
+
+        formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
+        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+
+        $.each(myFileCaches, function(n, v) {
+            formData.append(n, v.file);
+        });
+
     	//Save attachment first
         var vAppType    = $('#appType').val();
         var vCustCRCID  = $('#rentPayMode').val() == '131' ? $('#hiddenRentPayCRCId').val() : 0;
