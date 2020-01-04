@@ -156,7 +156,7 @@ ORDER BY MOB_TICKET_NO DESC
 /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.selectOutstandingAmount] 20191202 - KR JAEMAJEM */
 {
     call  SP_GET_ORD_OUTSTANDING(#{ftReqId}, #{selectData, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=selectOutstandingAmountMap})
- }
+}
 </select>
 
 
@@ -166,7 +166,7 @@ ORDER BY MOB_TICKET_NO DESC
 /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.callSpInstReqFundTrnsfr] 20191223 - KR JAEMAJEM */
 {
     call  SP_INST_REQ_FUND_TRNSFR(#{ftReqId}, #{updUserId})
- }
+}
 </select>
 
 
