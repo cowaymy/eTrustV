@@ -99,6 +99,7 @@ SELECT  A.BANK_ID                                                               
     ,   A.CODE                                                                  AS CODE
     ,   A.CODE ||'-'|| A.NAME                                                   AS NAME
 FROM    SYS0004M A
+WHERE   STUS_CODE_ID = 1
 ORDER BY    A.NAME ASC
 ]]>
 </select>
