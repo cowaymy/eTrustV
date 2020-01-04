@@ -1084,7 +1084,7 @@ WHERE (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDA
 			                            JOIN ORG0012D Extent3   ON ( Extent3.MEM_ORG_LVL = Extent2.MEM_LVL )
 			                            AND  Extent3.MEM_TYPE_ID = Extent1.MEM_TYPE
 			                      WHERE   1 = Extent1.STUS
-			                               AND  Extent1.MEM_TYPE IN ( 1,2,3,7 )
+			                               AND  Extent1.MEM_TYPE IN ( 1,2,3,7,5758 )
 			                               AND  EXTENT1.MEM_ID NOT IN (
 																                               SELECT C.MEM_ID
 																                               from  ORG0007D C
@@ -1117,6 +1117,10 @@ WHERE (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDA
 						                                when ( ABC.MEM_TYPE_ID=7 and ABC.MEM_LVL_TO = 3) then 'HTM'
                                                        when ( ABC.MEM_TYPE_ID=7 and ABC.MEM_LVL_TO = 2) then 'SHTM'
                                                        when ( ABC.MEM_TYPE_ID=7 and ABC.MEM_LVL_TO = 1) then 'GHTM'
+
+                                                       when ( ABC.MEM_TYPE_ID=5758 and ABC.MEM_LVL_TO = 3) then 'DTM'
+                                                       when ( ABC.MEM_TYPE_ID=5758 and ABC.MEM_LVL_TO = 2) then 'SDTM'
+                                                       when ( ABC.MEM_TYPE_ID=5758 and ABC.MEM_LVL_TO = 1) then 'GDTM'
 						                    else ABC.CODE1
 						                    end CODE
 						                     from (
@@ -1167,7 +1171,7 @@ WHERE (CAST(TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') AS INTEGER)) <= (CAST(TO_CHAR(SYSDA
                                                             from org0005d Extent1
                                                             where        1=1
                                                                              AND (Extent1.MEM_LVL = 1)
-                                                                             AND (Extent1.MEM_UP_ID IN (31983,78960,113237))
+                                                                             AND (Extent1.MEM_UP_ID IN (31983,78960,113237,145056))
                                                                              and   mem_id  = #{orgId})
                                </if>
                                <if test="gropId != null and gropId != ''">
