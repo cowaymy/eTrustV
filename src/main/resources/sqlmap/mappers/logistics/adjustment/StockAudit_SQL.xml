@@ -23,35 +23,60 @@
 
     <select id="selectStockAuditListCnt" parameterType="Map" resultType="int">
     /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditListCnt] 20191007 - KR OHK*/
-        SELECT COUNT(DISTINCT A.STOCK_AUDIT_NO) AS CNT
-          FROM LOG0094M A
-           LEFT OUTER JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
-           LEFT OUTER JOIN SYS0028M E ON E.WH_LOC_ID = B.WH_LOC_ID
-        WHERE 1 = 1
-        <if test='stockAuditNo != null and stockAuditNo != ""'>
-            AND A.STOCK_AUDIT_NO = #{stockAuditNo}
-        </if>
-        <if test='stockAuditNo == null or stockAuditNo == ""'>
-	        <if test='docStartDt != null and docStartDt != "" and docEndDt != null and docEndDt != ""'>
-	            AND A.DOC_START_DT <![CDATA[>=]]> TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD')
-                AND A.DOC_END_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
-	        </if>
-	        <if test="listLocType != null">
-	            AND E.WH_LOC_GB IN
-	              <foreach item="item" collection="listLocType" index="index" open="(" separator="," close=")">
-	                #{item}
-	              </foreach>
-	        </if>
-	        <if test="locCode != null">
-                AND (1, E.WH_LOC_CODE) IN
-                  <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
-                    (1, #{item})
-                  </foreach>
+        SELECT COUNT(1) AS CNT
+          FROM (
+                    <include refid="com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditListMain"></include>
+                  )
+    </select>
+
+    <select id="selectStockAuditList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditList] 20191007 - KR OHK*/
+        SELECT * FROM (
+            SELECT ROWNUM AS RNUM, T1.*
+                  FROM (
+                             <include refid="com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditListMain"></include>
+                                ORDER BY
+                    <choose>
+                        <when test='sort != null and sort.size != 0'>
+                            <foreach item="item" index="index" collection="sort" open="" separator="," close="">
+                                <choose>
+                                    <when test='item.field == "stockAuditNo"'>A.STOCK_AUDIT_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "docStusName"'>D.CODE_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "docStartDt"'>A.DOC_START_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "docEndDt"'>A.DOC_END_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "locStkGrad"'>A.LOC_STK_GRAD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "locTypeNm"'>LOC_TYPE_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "ctgryTypeNm"'>A.CTGRY_TYPE_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "itmTypeNm"'>A.ITM_TYPE_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "serialChkYn"'>A.SERIAL_CHK_YN <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <otherwise>
+                                        A.STOCK_AUDIT_NO DESC
+                                    </otherwise>
+                                </choose>
+                            </foreach>
+                        </when>
+                        <otherwise>
+                            A.STOCK_AUDIT_NO DESC
+                        </otherwise>
+                    </choose>
+                    ) T1
+            <where>
+                <if test='firstIndex != -1 and lastIndex != -1'>
+                    ROWNUM <![CDATA[<=]]> #{lastIndex}
+                </if>
+            </where>
+            )
+        <where>
+            <if test='firstIndex != -1 and lastIndex != -1'>
+                RNUM > #{firstIndex}
             </if>
-	        <if test='docStatus != null and docStatus != ""'>
-	            AND A.DOC_STUS_CODE_ID = #{docStatus}
-	        </if>
-        </if>
+        </where>
+    </select>
+
+    <select id="selectStockAuditListExcel" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditListExcel] 20191007 - KR OHK*/
+        <include refid="com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditListMain"></include>
+        ORDER BY A.STOCK_AUDIT_NO DESC
     </select>
 
     <sql id="selectStockAuditListMain">
@@ -120,56 +145,6 @@
         </if>
     </if>
     </sql>
-
-    <select id="selectStockAuditList" parameterType="Map" resultType="egovMap">
-    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditList] 20191007 - KR OHK*/
-        SELECT * FROM (
-            SELECT ROWNUM AS RNUM, T1.*
-                  FROM (
-                             <include refid="com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditListMain"></include>
-                                ORDER BY
-                    <choose>
-                        <when test='sort != null and sort.size != 0'>
-                            <foreach item="item" index="index" collection="sort" open="" separator="," close="">
-                                <choose>
-                                    <when test='item.field == "stockAuditNo"'>A.STOCK_AUDIT_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-                                    <when test='item.field == "docStusName"'>D.CODE_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-                                    <when test='item.field == "docStartDt"'>A.DOC_START_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-                                    <when test='item.field == "docEndDt"'>A.DOC_END_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-                                    <when test='item.field == "locStkGrad"'>A.LOC_STK_GRAD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-                                    <when test='item.field == "locTypeNm"'>LOC_TYPE_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-                                    <when test='item.field == "ctgryTypeNm"'>A.CTGRY_TYPE_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-                                    <when test='item.field == "itmTypeNm"'>A.ITM_TYPE_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-                                    <when test='item.field == "serialChkYn"'>A.SERIAL_CHK_YN <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-                                    <otherwise>
-                                        A.STOCK_AUDIT_NO DESC
-                                    </otherwise>
-                                </choose>
-                            </foreach>
-                        </when>
-                        <otherwise>
-                            A.STOCK_AUDIT_NO DESC
-                        </otherwise>
-                    </choose>
-                    ) T1
-            <where>
-                <if test='firstIndex != -1 and lastIndex != -1'>
-                    ROWNUM <![CDATA[<=]]> #{lastIndex}
-                </if>
-            </where>
-            )
-        <where>
-            <if test='firstIndex != -1 and lastIndex != -1'>
-                RNUM > #{firstIndex}
-            </if>
-        </where>
-    </select>
-
-    <select id="selectStockAuditListExcel" parameterType="Map" resultType="egovMap">
-    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditListExcel] 20191007 - KR OHK*/
-        <include refid="com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditListMain"></include>
-        ORDER BY A.STOCK_AUDIT_NO DESC
-    </select>
 
     <select id="selectStockAuditLocDetail" parameterType="Map" resultType="egovMap">
     /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditLocDetail] 20191008 - KR OHK */
