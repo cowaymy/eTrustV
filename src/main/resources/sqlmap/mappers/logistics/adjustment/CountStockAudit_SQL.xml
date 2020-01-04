@@ -52,109 +52,114 @@
 	    </if>
     </select>
 
-   <select id="selectCountStockAuditList" parameterType="Map" resultType="egovMap">
+    <sql id="selectCountStockAuditListMain">
+    SELECT A.STOCK_AUDIT_NO
+              ,A.DOC_START_DT
+              ,A.DOC_END_DT
+              ,A.DOC_STUS_CODE_ID
+              ,D.CODE_NAME DOC_STUS_NAME
+              ,A.REUPLOAD_YN
+              ,A.APPV_3_REQST_USER_ID
+              ,A.APPV_3_REQST_DT
+              ,A.APPV_3_REQST_OPINION
+              ,A.APPV_ATCH_FILE_GRP_ID
+              ,A.APPV_3_USER_ID
+              ,A.APPV_3_DT
+              ,A.APPV_3_OPINION
+              ,A.STOCK_AUDIT_REASON
+              ,A.LOC_TYPE DOC_LOC_TYPE
+              ,A.LOC_TYPE_NM DOC_LOC_TYPE_NM
+              ,A.LOC_STK_GRAD
+              ,A.CTGRY_TYPE
+              ,A.CTGRY_TYPE_NM
+              ,A.ITM_TYPE
+              ,A.ITM_TYPE_NM
+              ,A.REM
+              ,A.USE_YN
+              ,A.SERIAL_CHK_YN
+              ,A.CRT_USER_ID
+              ,C.USER_NAME UPD_USER_NM
+              ,A.CRT_DT
+              ,A.UPD_USER_ID
+              ,A.UPD_DT
+              ,G.CODE_NAME LOC_TYPE
+              ,E.WH_LOC_CODE LOC_CODE
+              ,E.WH_LOC_DESC LOC_DESC
+              ,B.WH_LOC_ID
+              ,B.LOC_STUS_CODE_ID
+              ,F.CODE_NAME LOC_STUS_NAME
+              ,B.APPV_1_REQST_USER_ID
+              ,H.USER_NAME APPV_1_REQST_USER_NM
+              ,B.APPV_1_REQST_DT
+              ,B.APPV_1_USER_ID
+              ,I.USER_NAME APPV_1_USER_NM
+              ,B.APPV_1_DT
+              ,B.APPV_1_OPINION
+              ,B.APPV_2_USER_ID
+              ,J.USER_NAME APPV_2_USER_NM
+              ,B.APPV_2_DT
+              ,B.APPV_2_OPINION
+         FROM LOG0094M A
+          LEFT OUTER JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+          LEFT OUTER JOIN SYS0047M C ON C.USER_ID = A.UPD_USER_ID
+          LEFT OUTER JOIN SYS0013M D ON D.CODE_ID = A.DOC_STUS_CODE_ID AND D.CODE_MASTER_ID = '436'
+          LEFT OUTER JOIN SYS0028M E ON E.WH_LOC_ID = B.WH_LOC_ID
+          LEFT OUTER JOIN SYS0013M F ON F.CODE_ID = B.LOC_STUS_CODE_ID AND F.CODE_MASTER_ID = '437'
+          LEFT OUTER JOIN SYS0013M G ON G.CODE = E.WH_LOC_GB AND G.CODE_MASTER_ID = '339'
+          LEFT OUTER JOIN SYS0047M H ON H.USER_ID = B.APPV_1_REQST_USER_ID
+          LEFT OUTER JOIN SYS0047M I ON I.USER_ID = B.APPV_1_USER_ID
+          LEFT OUTER JOIN SYS0047M J ON J.USER_ID = B.APPV_2_USER_ID
+       WHERE 1 = 1
+          AND A.USE_YN = 'Y'
+          AND A.DOC_STUS_CODE_ID > 5678
+       <if test='stockAuditNo != null and stockAuditNo != ""'>
+           AND A.STOCK_AUDIT_NO = #{stockAuditNo}
+       </if>
+       <if test='stockAuditNo == null or stockAuditNo == ""'>
+           <if test='docStartDt != null and docStartDt != "" and docEndDt != null and docEndDt != ""'>
+               AND A.DOC_START_DT <![CDATA[>=]]> TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD')
+               AND A.DOC_END_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
+           </if>
+           <if test="listLocType != null">
+               AND E.WH_LOC_GB IN
+                 <foreach item="item" collection="listLocType" index="index" open="(" separator="," close=")">
+                   #{item}
+                 </foreach>
+           </if>
+           <if test="locCode != null">
+               AND (1, E.WH_LOC_ID) IN
+                 <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
+                   (1, #{item})
+                 </foreach>
+           </if>
+           <if test='locStatus != null and locStatus != ""'>
+               AND B.LOC_STUS_CODE_ID = #{locStatus}
+           </if>
+           <if test="branchId != null">
+               AND (E.WH_LOC_BRNCH_ID IN
+                             <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
+                               #{item}
+                             </foreach>
+                       OR E.WH_LOC_BRNCH_ID2 IN
+                             <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
+                               #{item}
+                             </foreach>
+                       OR E.WH_LOC_BRNCH_ID3  IN
+                             <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
+                               #{item}
+                             </foreach>
+                      )
+           </if>
+       </if>
+    </sql>
+
+    <select id="selectCountStockAuditList" parameterType="Map" resultType="egovMap">
     /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectCountStockAuditList] 20191007 - KR OHK */
          SELECT * FROM (
             SELECT ROWNUM AS RNUM, T1.*
                   FROM (
-                             SELECT A.STOCK_AUDIT_NO
-                                       ,A.DOC_START_DT
-                                       ,A.DOC_END_DT
-                                       ,A.DOC_STUS_CODE_ID
-                                       ,D.CODE_NAME DOC_STUS_NAME
-                                       ,A.REUPLOAD_YN
-                                       ,A.APPV_3_REQST_USER_ID
-                                       ,A.APPV_3_REQST_DT
-                                       ,A.APPV_3_REQST_OPINION
-                                       ,A.APPV_ATCH_FILE_GRP_ID
-                                       ,A.APPV_3_USER_ID
-                                       ,A.APPV_3_DT
-                                       ,A.APPV_3_OPINION
-                                       ,A.STOCK_AUDIT_REASON
-                                       ,A.LOC_TYPE DOC_LOC_TYPE
-                                       ,A.LOC_TYPE_NM DOC_LOC_TYPE_NM
-                                       ,A.LOC_STK_GRAD
-                                       ,A.CTGRY_TYPE
-                                       ,A.CTGRY_TYPE_NM
-                                       ,A.ITM_TYPE
-                                       ,A.ITM_TYPE_NM
-                                       ,A.REM
-                                       ,A.USE_YN
-                                       ,A.SERIAL_CHK_YN
-                                       ,A.CRT_USER_ID
-                                       ,C.USER_NAME UPD_USER_NM
-                                       ,A.CRT_DT
-                                       ,A.UPD_USER_ID
-                                       ,A.UPD_DT
-                                       ,G.CODE_NAME LOC_TYPE
-					                   ,E.WH_LOC_CODE LOC_CODE
-					                   ,E.WH_LOC_DESC LOC_DESC
-					                   ,B.WH_LOC_ID
-                                       ,B.LOC_STUS_CODE_ID
-					                   ,F.CODE_NAME LOC_STUS_NAME
-					                   ,B.APPV_1_REQST_USER_ID
-					                   ,H.USER_NAME APPV_1_REQST_USER_NM
-					                   ,B.APPV_1_REQST_DT
-					                   ,B.APPV_1_USER_ID
-					                   ,I.USER_NAME APPV_1_USER_NM
-					                   ,B.APPV_1_DT
-					                   ,B.APPV_1_OPINION
-					                   ,B.APPV_2_USER_ID
-					                   ,J.USER_NAME APPV_2_USER_NM
-					                   ,B.APPV_2_DT
-					                   ,B.APPV_2_OPINION
-                                  FROM LOG0094M A
-                                   LEFT OUTER JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
-                                   LEFT OUTER JOIN SYS0047M C ON C.USER_ID = A.UPD_USER_ID
-                                   LEFT OUTER JOIN SYS0013M D ON D.CODE_ID = A.DOC_STUS_CODE_ID AND D.CODE_MASTER_ID = '436'
-                                   LEFT OUTER JOIN SYS0028M E ON E.WH_LOC_ID = B.WH_LOC_ID
-                                   LEFT OUTER JOIN SYS0013M F ON F.CODE_ID = B.LOC_STUS_CODE_ID AND F.CODE_MASTER_ID = '437'
-                                   LEFT OUTER JOIN SYS0013M G ON G.CODE = E.WH_LOC_GB AND G.CODE_MASTER_ID = '339'
-                                   LEFT OUTER JOIN SYS0047M H ON H.USER_ID = B.APPV_1_REQST_USER_ID
-                                   LEFT OUTER JOIN SYS0047M I ON I.USER_ID = B.APPV_1_USER_ID
-                                   LEFT OUTER JOIN SYS0047M J ON J.USER_ID = B.APPV_2_USER_ID
-                                WHERE 1 = 1
-                                   AND A.USE_YN = 'Y'
-                                   AND A.DOC_STUS_CODE_ID > 5678
-                                <if test='stockAuditNo != null and stockAuditNo != ""'>
-                                    AND A.STOCK_AUDIT_NO = #{stockAuditNo}
-                                </if>
-                                <if test='stockAuditNo == null or stockAuditNo == ""'>
-	                                <if test='docStartDt != null and docStartDt != "" and docEndDt != null and docEndDt != ""'>
-	                                    AND A.DOC_START_DT <![CDATA[>=]]> TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD')
-                                        AND A.DOC_END_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
-	                                </if>
-	                                <if test="listLocType != null">
-	                                    AND E.WH_LOC_GB IN
-	                                      <foreach item="item" collection="listLocType" index="index" open="(" separator="," close=")">
-	                                        #{item}
-	                                      </foreach>
-	                                </if>
-	                                <if test="locCode != null">
-						                AND (1, E.WH_LOC_ID) IN
-						                  <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
-						                    (1, #{item})
-						                  </foreach>
-						            </if>
-						            <if test='locStatus != null and locStatus != ""'>
-						                AND B.LOC_STUS_CODE_ID = #{locStatus}
-						            </if>
-	                                <if test="branchId != null">
-                                        AND (E.WH_LOC_BRNCH_ID IN
-			                                          <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
-			                                            #{item}
-			                                          </foreach>
-                                                OR E.WH_LOC_BRNCH_ID2 IN
-                                                      <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
-                                                        #{item}
-                                                      </foreach>
-                                                OR E.WH_LOC_BRNCH_ID3  IN
-                                                      <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
-                                                        #{item}
-                                                      </foreach>
-                                               )
-                                    </if>
-	                            </if>
+                            <include refid="com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectCountStockAuditListMain"/>
+
                                 ORDER BY
                     <choose>
                         <when test='sort != null and sort.size != 0'>
@@ -198,104 +203,7 @@
 
     <select id="selectCountStockAuditListExcel" parameterType="Map" resultType="egovMap">
     /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectCountStockAuditListExcel] 20191007 - KR OHK */
-         SELECT A.STOCK_AUDIT_NO
-                   ,A.DOC_START_DT
-                   ,A.DOC_END_DT
-                   ,A.DOC_STUS_CODE_ID
-                   ,D.CODE_NAME DOC_STUS_NAME
-                   ,A.REUPLOAD_YN
-                   ,A.APPV_3_REQST_USER_ID
-                   ,A.APPV_3_REQST_DT
-                   ,A.APPV_3_REQST_OPINION
-                   ,A.APPV_ATCH_FILE_GRP_ID
-                   ,A.APPV_3_USER_ID
-                   ,A.APPV_3_DT
-                   ,A.APPV_3_OPINION
-                   ,A.STOCK_AUDIT_REASON
-                   ,A.LOC_TYPE DOC_LOC_TYPE
-                   ,A.LOC_TYPE_NM DOC_LOC_TYPE_NM
-                   ,A.LOC_STK_GRAD
-                   ,A.CTGRY_TYPE
-                   ,A.CTGRY_TYPE_NM
-                   ,A.ITM_TYPE
-                   ,A.ITM_TYPE_NM
-                   ,A.REM
-                   ,A.USE_YN
-                   ,A.SERIAL_CHK_YN
-                   ,A.CRT_USER_ID
-                   ,C.USER_NAME UPD_USER_NM
-                   ,A.CRT_DT
-                   ,A.UPD_USER_ID
-                   ,A.UPD_DT
-                   ,G.CODE_NAME LOC_TYPE
-                   ,E.WH_LOC_CODE LOC_CODE
-                   ,E.WH_LOC_DESC LOC_DESC
-                   ,B.WH_LOC_ID
-                   ,B.LOC_STUS_CODE_ID
-                   ,F.CODE_NAME LOC_STUS_NAME
-                   ,B.APPV_1_REQST_USER_ID
-                   ,H.USER_NAME APPV_1_REQST_USER_NM
-                   ,B.APPV_1_REQST_DT
-                   ,B.APPV_1_USER_ID
-                   ,I.USER_NAME APPV_1_USER_NM
-                   ,B.APPV_1_DT
-                   ,B.APPV_1_OPINION
-                   ,B.APPV_2_USER_ID
-                   ,J.USER_NAME APPV_2_USER_NM
-                   ,B.APPV_2_DT
-                   ,B.APPV_2_OPINION
-              FROM LOG0094M A
-               LEFT OUTER JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
-               LEFT OUTER JOIN SYS0047M C ON C.USER_ID = A.UPD_USER_ID
-               LEFT OUTER JOIN SYS0013M D ON D.CODE_ID = A.DOC_STUS_CODE_ID AND D.CODE_MASTER_ID = '436'
-               LEFT OUTER JOIN SYS0028M E ON E.WH_LOC_ID = B.WH_LOC_ID
-               LEFT OUTER JOIN SYS0013M F ON F.CODE_ID = B.LOC_STUS_CODE_ID AND F.CODE_MASTER_ID = '437'
-               LEFT OUTER JOIN SYS0013M G ON G.CODE = E.WH_LOC_GB AND G.CODE_MASTER_ID = '339'
-               LEFT OUTER JOIN SYS0047M H ON H.USER_ID = B.APPV_1_REQST_USER_ID
-               LEFT OUTER JOIN SYS0047M I ON I.USER_ID = B.APPV_1_USER_ID
-               LEFT OUTER JOIN SYS0047M J ON J.USER_ID = B.APPV_2_USER_ID
-            WHERE 1 = 1
-               AND A.USE_YN = 'Y'
-               AND A.DOC_STUS_CODE_ID > 5678
-            <if test='stockAuditNo != null and stockAuditNo != ""'>
-                AND A.STOCK_AUDIT_NO = #{stockAuditNo}
-            </if>
-            <if test='stockAuditNo == null or stockAuditNo == ""'>
-                <if test='docStartDt != null and docStartDt != "" and docEndDt != null and docEndDt != ""'>
-                    AND A.DOC_START_DT <![CDATA[>=]]> TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD')
-                    AND A.DOC_END_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
-                </if>
-                <if test="listLocType != null">
-                    AND E.WH_LOC_GB IN
-                      <foreach item="item" collection="listLocType" index="index" open="(" separator="," close=")">
-                        #{item}
-                      </foreach>
-                </if>
-                <if test="locCode != null">
-                    AND (1, E.WH_LOC_ID) IN
-                      <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
-                        (1, #{item})
-                      </foreach>
-                </if>
-                <if test='locStatus != null and locStatus != ""'>
-                    AND B.LOC_STUS_CODE_ID = #{locStatus}
-                </if>
-                <if test="branchId != null">
-                    AND (E.WH_LOC_BRNCH_ID IN
-                                  <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
-                                    #{item}
-                                  </foreach>
-                            OR E.WH_LOC_BRNCH_ID2 IN
-                                  <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
-                                    #{item}
-                                  </foreach>
-                            OR E.WH_LOC_BRNCH_ID3  IN
-                                  <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
-                                    #{item}
-                                  </foreach>
-                           )
-                </if>
-            </if>
+         <include refid="com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectCountStockAuditListMain"></include>
             ORDER BY A.STOCK_AUDIT_NO DESC
     </select>
 
