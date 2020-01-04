@@ -343,12 +343,15 @@
 
     <select id="isMergeNosvcDay" parameterType="Map" resultType="int">
         /* com.coway.trust.biz.organization.organization.impl.AllocationMapper.isMergeNosvcDay */
-        SELECT COUNT(1)
-         FROM SYS0064M A
-            , ORG0028M B
-        WHERE A.AREA_ID = B.AREA_ID
-          AND A.DT_SUB_GRP = #{ctSubGrp}
-          AND TO_CHAR(B.NOSCV_DT, 'YYYY-MM-DD') = #{cDate}
+		SELECT COUNT(1)
+		  FROM ORG0028M
+		 WHERE TO_CHAR(NOSCV_DT, 'YYYY-MM-DD') = #{cDate}
+		   AND AREA_ID = (
+		                   SELECT AREA_ID
+		                     FROM SAL1010V
+		                    WHERE ORD_ID = #{ordId}
+		                      AND ROWNUM <![CDATA[<=]]> 1
+		                 )
     </select>
 
 </mapper>

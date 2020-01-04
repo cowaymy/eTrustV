@@ -301,6 +301,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
                     noSvcListMap.put("oldCt", CommonUtils.nvl(e.get("oldCt")));
                     noSvcListMap.put("isVact", CommonUtils.nvl(e.get("isVact")));
                     noSvcListMap.put("vactReplCt", CommonUtils.nvl(e.get("vactReplCt")));
+                    noSvcListMap.put("ordId", params.get("ORD_ID"));
 
     				try {
     					int vm = allocationMapper.isMergeNosvcDay(noSvcListMap);
