@@ -501,8 +501,8 @@
            }
 
            var editedRowItems = AUIGrid.getEditedRowItems(itemRegGrid);
-           //alert(editedRowItems)
-           if(editedRowItems == null){
+           //alert(editedRowItems.length)
+           if(editedRowItems.length > 0){
         	   Common.alert("It's changed. Save first.");
         	   return false;
            }
