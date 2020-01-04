@@ -526,14 +526,6 @@ FROM    SAL0018D A
             AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
             AND B.PROMO_TYPE_ID = 2282
             AND B.PROMO_IS_TRIAL_CNVR = 0
-]]>
-            <if test='promoId == 0'>
-<![CDATA[
-            AND TO_CHAR(B.PROMO_DT_FROM, 'YYYYMMDD') <= TO_CHAR(SYSDATE, 'YYYYMMDD')
-            AND TO_CHAR(B.PROMO_DT_END,  'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
-]]>
-</if>
-<![CDATA[
             AND B.EMP_CHK = #{empChk}
             AND B.EX_TRADE = #{exTrade}
             AND (
@@ -541,6 +533,20 @@ FROM    SAL0018D A
                     OR  B.PROMO_CUST_TYPE = 0
                     OR  B.PROMO_CUST_TYPE IS NULL
                 )
+]]>
+            <if test='promoId == 0'>
+<![CDATA[
+            AND TO_CHAR(B.PROMO_DT_FROM, 'YYYYMMDD') <= TO_CHAR(SYSDATE, 'YYYYMMDD')
+            AND TO_CHAR(B.PROMO_DT_END,  'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+]]>
+            </if>
+            <if test='promoId != null and promoId !=0'>
+<![CDATA[
+            AND TO_CHAR(B.PROMO_DT_FROM, 'YYYYMMDD') <= #{promoDt}
+            AND TO_CHAR(B.PROMO_DT_END,  'YYYYMMDD') >= #{promoDt}
+]]>
+            </if>
+<![CDATA[
 WHERE   A.PROMO_ITM_STK_ID = #{itmStkId}
 AND     A.PROMO_ITM_STUS_ID = 1
 AND     B.E_SALES IN (0,2)
