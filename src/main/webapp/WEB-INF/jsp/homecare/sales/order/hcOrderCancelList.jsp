@@ -78,6 +78,7 @@
 	          width : 100,
 	          editable : false
 	        },
+	        {headerText : "BNDL No.",                                              dataField : "bndlNo",               editable : false, width : 130},
 	        {
 	          dataField : "ordNo",
 	          headerText : "<spring:message code='sal.title.ordNo' />.",
@@ -518,9 +519,11 @@
 					</tr>
 					<tr>
 						<th scope="row"><spring:message code="sal.text.creator" /></th>
-						<td colspan="5">
-						    <input type="text" title="" id="crtUserId" name="crtUserId" placeholder="Creator(UserName)" class="w100p" />
-						</td>
+						<td><input type="text" title="" id="crtUserId" name="crtUserId" placeholder="Creator(UserName)" class="w100p" /></td>
+                        <th scope="row">Bundle Number</th>
+                        <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
+                        <th scope="row"></th>
+                        <td></td>
 					</tr>
 				</tbody>
 			</table>

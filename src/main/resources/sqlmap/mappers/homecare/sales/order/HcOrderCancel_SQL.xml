@@ -80,7 +80,8 @@
                     ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END APP_DT,
                    A.ASSIGN_CT,
                    A.RCD_TMS,
-                   B.CODE AS DSC
+                   B.CODE AS DSC,
+                   A.BNDL_NO
          FROM (
             SELECT V.REQ_ID ,
                        V.REQ_NO ,
@@ -143,13 +144,15 @@
                        V.APP_DT AS APP_DT,
                        V.ASSIGN_CT,
                        V.RCD_TMS,
-                       V.STK_CTGRY_ID
+                       V.STK_CTGRY_ID,
+                       D1.BNDL_NO
              FROM SAL1007V V
+        LEFT JOIN HMC0011D D1 ON V.BNDL_ID = D1.ORD_SEQ_NO
              ) A
     LEFT JOIN SYS0005M B ON B.BRNCH_ID = A.DSC_BRNCH_ID
         WHERE A.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                WHERE AA.CODE = BB.CODE
-                                                   AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE') -- Mattress, Frame
+                                                   AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE') /* STKCATEGORYID_HOMECARE */
 	    <if test="typeIdList != null and typeIdList != ''">
 	        AND A.APP_TYPE_ID IN
 	        <foreach item="item" collection="typeIdList" index="index" open="(" separator="," close=")">
@@ -214,6 +217,9 @@
 	    <if test="endAppDt != null and endAppDt != '' ">
 	        AND APP_DT <![CDATA[ <= ]]>  TO_DATE(#{endAppDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
 	    </if>
+	    <if test='bndlNo != null and bndlNo != ""'>
+            AND UPPER(A.BNDL_NO) = UPPER(#{bndlNo})
+        </if>
     </select>
 
     <!-- Get CallEntryId -->
