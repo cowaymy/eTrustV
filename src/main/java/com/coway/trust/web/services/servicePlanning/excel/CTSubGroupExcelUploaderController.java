@@ -1,14 +1,10 @@
 package com.coway.trust.web.services.servicePlanning.excel;
 
-import static com.coway.trust.config.excel.ExcelReadComponent.getValue;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Resource;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
@@ -16,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,11 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.scm.ScmMasterMngMentService;
 import com.coway.trust.biz.services.servicePlanning.CTSubGroupListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.excel.ExcelReadComponent;
+import com.coway.trust.util.CommonUtils;
 
 @RestController
 @RequestMapping("/services/serviceGroup/excel")
@@ -38,18 +32,16 @@ public class CTSubGroupExcelUploaderController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CTSubGroupExcelUploaderController.class);
 
 	@Autowired
-	private ExcelReadComponent excelReadComponent;   
-	
+	private ExcelReadComponent excelReadComponent;
+
 	@Autowired
 	private CTSubGroupListService CTSubGroupListService;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
 	@RequestMapping(value = "/updateCTAreaByExcel.do", method = RequestMethod.POST)
-	public ResponseEntity readExcelCTArea(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException
-	{
-
+	public ResponseEntity<ReturnMessage> readExcelCTArea(MultipartHttpServletRequest request) throws IOException, InvalidFormatException {
 		LOGGER.debug("radioVal : {}", request.getParameter("radioVal"));
 
 		Map<String, MultipartFile> fileMap = request.getFileMap();
@@ -58,12 +50,12 @@ public class CTSubGroupExcelUploaderController {
 		List<CTSubGroupAreaExcelUploaderDataVO> vos = excelReadComponent.readExcelToList(multipartFile, true, CTSubGroupAreaExcelUploaderDataVO::create);
 		List<Map<String, Object>> updateList = new ArrayList<Map<String, Object>>();
 
-		for (CTSubGroupAreaExcelUploaderDataVO vo : vos) 
+		for (CTSubGroupAreaExcelUploaderDataVO vo : vos)
 		{
 			LOGGER.debug("DETAIL >>>> AreaID : {}, svcWeek : {}, priodFrom : {}, priodTo : {}", vo.getAreaID(), vo.getServiceWeek(), vo.getPriodFrom(), vo.getPriodTo());
-			
+
 			HashMap<String, Object> updateMap = new HashMap<String, Object>();
-			
+
 			updateMap.put("areaId",vo.getAreaID());
 			updateMap.put("area",vo.getArea());
 			updateMap.put("city",vo.getCity());
@@ -74,11 +66,11 @@ public class CTSubGroupExcelUploaderController {
 			updateMap.put("ctSubGrp",vo.getSubGroup());
 			updateMap.put("priodFrom",vo.getPriodFrom());
 			updateMap.put("priodTo",vo.getPriodTo());
-			
+
 			// update datas
 			updateList.add(updateMap);
 		}
-		
+
 		// 파일 유효성 검사
 		List<CTSubGroupAreaExcelUploaderDataVO> vosValid = excelReadComponent.readExcelToList(multipartFile, false, CTSubGroupAreaExcelUploaderDataVO::create);
 		String localTypeValid = vosValid.get(0).getLocalType();
@@ -87,17 +79,16 @@ public class CTSubGroupExcelUploaderController {
 		String priodToValid = vosValid.get(0).getPriodTo();
 		LOGGER.debug("localTypeValid : " + localTypeValid + " / serviceWeekValid : " + serviceWeekValid
 										+ " / priodFromValid : " + priodFromValid + " / priodToValid : " + priodToValid);
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
-		
-		Boolean validation = false;
-		if (localTypeValid.equals("Local Type") && serviceWeekValid.equals("Service Week") 
+
+		if (localTypeValid.equals("Local Type") && serviceWeekValid.equals("Service Week")
 				&& priodFromValid.equals("Priod From") && priodToValid.equals("Priod To")) {
 			//updateCTSubGroupArea
 			LOGGER.debug("udtList {}", updateList);
 			CTSubGroupListService.updateCTAreaByExcel(updateList);
-			
+
 			message.setCode(AppConstants.SUCCESS);
 //			//message.setData(totCnt);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
@@ -105,67 +96,59 @@ public class CTSubGroupExcelUploaderController {
 			message.setCode(AppConstants.FAIL);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 		}
-		
+
 		LOGGER.debug("message : "+message);
-		
+
 		return ResponseEntity.ok(message);
 
 	}
-	
-	@RequestMapping(value = "/updateCTSubGroupByExcel.do", method = RequestMethod.POST)
-	public ResponseEntity readExcelCTSubGroup(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException
-	{
 
-		LOGGER.debug("radioVal : {}", request.getParameter("radioVal"));
+	/**
+	 * CT Sub Group By Excel Upload
+	 * @Author KR-SH
+	 * @Date 2019. 11. 29.
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 * @throws InvalidFormatException
+	 */
+	@RequestMapping(value = "/updateCTSubGroupByExcel.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> readExcelCTSubGroup(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException {
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
 
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 		MultipartFile multipartFile = fileMap.get("excelFile");
 
 		List<CTSubGroupExcelUploaderDataVO> vos = excelReadComponent.readExcelToList(multipartFile, true, CTSubGroupExcelUploaderDataVO::create);
 		List<Map<String, Object>> updateList = new ArrayList<Map<String, Object>>();
+		HashMap<String, Object> updateMap = null;
+		String memId = "";
+		String ctSubGrp = "";
 
-		for (CTSubGroupExcelUploaderDataVO vo : vos) 
-		{
-			LOGGER.debug("DETAIL >>>> memId : {}, ctSubGrp : {}", vo.getMemId(), vo.getCTSubGroup());
-			
-			HashMap<String, Object> updateMap = new HashMap<String, Object>();
-			
-			updateMap.put("code",vo.getDSC());
-			updateMap.put("name",vo.getCTM());
-			updateMap.put("memCode",vo.getCT());
-			updateMap.put("memId",vo.getMemId());
-			updateMap.put("ctSubGrp",vo.getCTSubGroup());
-			
-			// update datas
-			updateList.add(updateMap);
+		for (CTSubGroupExcelUploaderDataVO vo : vos) {
+			memId = CommonUtils.nvl(vo.getMemId());
+			ctSubGrp = CommonUtils.nvl(vo.getCTSubGroup());
+
+			// 파일 유효성 검사.
+			if("".equals(memId) || "".equals(ctSubGrp)) {
+				message.setCode(AppConstants.FAIL);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+				return ResponseEntity.ok(message);
+
+			} else {
+				updateMap = new HashMap<String, Object>();
+
+				updateMap.put("memId", memId);
+				updateMap.put("ctSubGrp", ctSubGrp);
+
+				// update datas
+				updateList.add(updateMap);
+			}
 		}
-		
-		// 파일 유효성 검사
-		List<CTSubGroupExcelUploaderDataVO> vosValid = excelReadComponent.readExcelToList(multipartFile, false, CTSubGroupExcelUploaderDataVO::create);
-		String memIdValid = vosValid.get(0).getMemId();
-		String ctSubGroupValid = vosValid.get(0).getCTSubGroup();
-		LOGGER.debug("memIdValid : " + memIdValid + " / ctSubGroupValid : " + ctSubGroupValid);
-		
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
-		
-		if (memIdValid.equals("memId") && ctSubGroupValid.equals("CT Sub Group")) {
-			//updateCTSubGroupArea
-			LOGGER.debug("udtList {}", updateList);
-			CTSubGroupListService.updateCTSubGroupByExcel(updateList);
-			
-			message.setCode(AppConstants.SUCCESS);
-//			//message.setData(totCnt);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		} else {
-			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-		}
-		
-		LOGGER.debug("message : "+message);
-		
+		message = CTSubGroupListService.saveCTSubGroup(updateList, sessionVO);
+
 		return ResponseEntity.ok(message);
-
 	}
-	
+
 }
