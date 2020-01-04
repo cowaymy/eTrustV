@@ -1448,7 +1448,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
           resultValue.put("logerr", "Y");
         } else { // SUCCESS
           if ("000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) {
-            servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+            servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
           }
           String ordStat = this.getSalStat(params);
 
@@ -1467,7 +1467,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
                     if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
                       resultValue.put("logerr", "Y");
                     } else {
-                      servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+                      servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
                     }
                   }
                 }
