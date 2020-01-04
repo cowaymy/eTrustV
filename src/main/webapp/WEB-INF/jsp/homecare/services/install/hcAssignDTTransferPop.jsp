@@ -63,7 +63,7 @@ function fn_getAssionCTListCheckedRowItems() {
   console.log(checkedItems);
 
   if(checkedItems.length  == 0  ||  checkedItems == null) {
-      Common.alert("<b>No CT List selected.</b>");
+      Common.alert("<b>No DT List selected.</b>");
       return  false ;
   }
 
@@ -109,7 +109,7 @@ function createAssignCtOrderListAUIGrid() {
                         },
                         {dataField : "custName",         headerText  : "Customer" ,width  : 150, editable:false } ,
                         { dataField : "salesOrdNo",      headerText  : "SalesOrder",  width  : 100, editable:false},
-                        { dataField : "serialNo", headerText:"Serial No", width:160, height:30, headerStyle : "aui-grid-header-input-icon",
+                        { dataField : "serialNo", headerText:"Serial No", width:180, height:30, headerStyle : "aui-grid-header-input-icon",
                             editRenderer : {
                                 type : "ComboBoxRenderer",
                                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -150,21 +150,25 @@ function createAssignCtOrderListAUIGrid() {
 function fn_ctChange(){
 
 	var selectedItems = AUIGrid.getCheckedRowItems(assignCtListGridID);
-	var ctSerialRequireChkYn = selectedItems[0].item.serialRequireChkYn;
-
-    //수정된 행 아이템들(배열)
+	//수정된 행 아이템들(배열)
     var editedRowItems = AUIGrid.getEditedRowItems(assignCOrdtListGridID);
+    var serialObj  = new Array();
 
-
-    if(editedRowItems.length  == 0  ||  editedRowItems == null) {
-        Common.alert("<b>No CTOrder List  selected.</b>");
+    if(selectedItems.length  == 0  ||  selectedItems == null) {
+        Common.alert("<b>No DT List  selected.</b>");
         return  false ;
     }
 
+    if(editedRowItems.length  == 0  ||  editedRowItems == null) {
+        Common.alert("<b>No DTOrder List  selected.</b>");
+        return  false ;
+    }
+
+    var ctSerialRequireChkYn = selectedItems[0].item.serialRequireChkYn;
 
     for (var i = 0; i < editedRowItems.length; i++) {
         if(FormUtil.isEmpty(editedRowItems[i].insstallCtId)) {
-            Common.alert("<b>No CTOrder List selected.</b>");
+            Common.alert("<b>No DTOrder List selected.</b>");
             return  false ;
         }
 
@@ -176,6 +180,24 @@ function fn_ctChange(){
         if(editedRowItems[i].serialChk == 'Y' && editedRowItems[i].serialRequireChkYn == 'Y') {
             if(FormUtil.isEmpty(editedRowItems[i].serialNo)) {
                 Common.alert("<b>Serial No is required.( SalesOrder : " + editedRowItems[i].salesOrdNo + " )</b>");
+                return  false ;
+            }
+        }
+
+        if(FormUtil.isNotEmpty(editedRowItems[i].serialNo)) {
+            serialObj.push(editedRowItems[i].serialNo);
+        }
+
+        for (var k = 0; k < editedRowItems.length; k++) {
+            var serialCnt = 0;
+            for(var j = 0;  j < serialObj.length; j++) {
+                if(editedRowItems[k].serialNo == serialObj[j]) {
+                    serialCnt ++;
+                }
+            }
+
+            if(serialCnt > 1) {
+                Common.alert("<b>Serial No is duplicated.</b>");
                 return  false ;
             }
         }

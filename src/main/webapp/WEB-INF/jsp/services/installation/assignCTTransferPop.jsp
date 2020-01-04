@@ -112,8 +112,8 @@ function createAssignCtOrderListAUIGrid() {
 	                        }
                         },
                         {dataField : "custName",         headerText  : "Customer" ,width  : 150 } ,
-                        { dataField : "salesOrdNo",      headerText  : "SalesOrder",  width  : 100},
-                        { dataField : "serialNo", headerText:"Serial No", width:160, height:30, headerStyle : "aui-grid-header-input-icon",
+                        { dataField : "salesOrdNo",      headerText  : "SalesOrder",  width  : 90},
+                        { dataField : "serialNo", headerText:"Serial No", width:180, height:30, headerStyle : "aui-grid-header-input-icon",
                         	editRenderer : {
                                 type : "DropDownListRenderer",
                                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -131,7 +131,7 @@ function createAssignCtOrderListAUIGrid() {
                         },
                         { dataField : "memCode",        headerText  : "CT Code",  width  : 80  },
                         { dataField : "custSubGrp",     headerText  : "Cust GRP",  width  : 100  },
-                        { dataField : "insstallCtId",      headerText  : "CT ID ",  width  : 100   ,     visible : true},
+                        { dataField : "insstallCtId",      headerText  : "CT ID ",  width  : 80   ,     visible : true},
                         { dataField : "ctId",        headerText  : "Old CT ID",  width  : 100   ,     visible : false},
                         { dataField : "ctCode",        headerText  : "Old CT Code",  width  : 100   ,     visible : false},
                         { dataField : "installEntryNo",        headerText  : "Install No ",  width  : 100   ,     visible : false},
@@ -158,17 +158,23 @@ function createAssignCtOrderListAUIGrid() {
 function fn_ctChange(){
 
 	var selectedItems = AUIGrid.getCheckedRowItems(assignCtListGridID);
-    var ctSerialRequireChkYn = selectedItems[0].item.serialRequireChkYn;
-
 	//수정된 행 아이템들(배열)
     var editedRowItems = AUIGrid.getEditedRowItems(assignCOrdtListGridID);
+    var serialObj  = new Array();
+
+	if(selectedItems.length  == 0  ||  selectedItems == null) {
+        Common.alert("<b>No CT List  selected.</b>");
+        return  false ;
+    }
 
 	if(editedRowItems.length  == 0  ||  editedRowItems == null) {
         Common.alert("<b>No CTOrder List  selected.</b>");
         return  false ;
     }
 
-    for (var i = 0; i < editedRowItems.length; i++) {
+	var ctSerialRequireChkYn = selectedItems[0].item.serialRequireChkYn;
+
+	for (var i = 0; i < editedRowItems.length; i++) {
     	if(FormUtil.isEmpty(editedRowItems[i].insstallCtId)) {
             Common.alert("<b>No CTOrder List selected.</b>");
             return  false ;
@@ -185,6 +191,24 @@ function fn_ctChange(){
     	        return  false ;
     		}
     	}
+
+        if(FormUtil.isNotEmpty(editedRowItems[i].serialNo)) {
+            serialObj.push(editedRowItems[i].serialNo);
+        }
+    }
+
+    for (var k = 0; k < editedRowItems.length; k++) {
+    	var serialCnt = 0;
+    	for(var j = 0;  j < serialObj.length; j++) {
+	    	if(editedRowItems[k].serialNo == serialObj[j]) {
+	    		serialCnt ++;
+	    	}
+    	}
+
+    	if(serialCnt > 1) {
+   	        Common.alert("<b>Serial No is duplicated.</b>");
+   	        return  false ;
+   	    }
     }
 
     var  updateForm ={
