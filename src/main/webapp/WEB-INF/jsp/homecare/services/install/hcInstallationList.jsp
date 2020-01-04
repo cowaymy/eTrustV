@@ -7,7 +7,7 @@
     $(document).ready(function() {
 	    //doGetCombo('/services/getProductList.do', '', '', 'product', 'S', '');
 	    doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', 'product', 'S', 'fn_setOptGrpClass');//product 생성 - Only Homecare
-	    doGetComboSepa('/homecare/selectHomecareBranchList.do',  '', ' - ', '',   'dscCode', 'M', 'fn_multiCombo'); //Branch Code
+	    doGetComboSepa('/homecare/selectHomecareBranchList.do',  '', ' - ', '${SESSION_INFO.userBranchId}',   'dscCode', 'M', 'fn_multiCombo'); //Branch Code
 
 	    createInstallationListAUIGrid();
 
@@ -36,6 +36,7 @@
 	        statusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
 	        salesOrderId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
 	    });
+
     });
 
     function fn_setOptGrpClass() {
@@ -49,8 +50,6 @@
             selectAll: true, // 전체선택
             width: '100%'
         });
-
-        $("#dscCode").val(${SESSION_INFO.userBranchId});
     }
 
     function fn_installationListSearch() {
