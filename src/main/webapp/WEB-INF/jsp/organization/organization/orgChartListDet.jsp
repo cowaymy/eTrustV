@@ -9,7 +9,7 @@
     // AUIGrid 생성 후 반환 ID
        var myGridID;
 
-	   var memberTypeData = [{"codeId": "1","codeName": "Health Planner"},{"codeId": "2","codeName": "Coway Lady"},{"codeId": "3","codeName": "Coway Technician"},{"codeId": "7","codeName": "Homecare Technician"}];
+	   var memberTypeData = [{"codeId": "1","codeName": "Health Planner"},{"codeId": "2","codeName": "Coway Lady"},{"codeId": "3","codeName": "Coway Technician"},{"codeId": "7","codeName": "Homecare Technician"},{"codeId": "5758","codeName": "Homecare Delivery Technician"}];
 
 
 
@@ -228,10 +228,10 @@ function fn_excelDown(){
     <th scope="row">Position</th>
     <td >
     <select class="multy_select w100p" multiple="multiple" id="cmbLvl" name="cmbLvl">
-            <option value="1">GM / GCM / SCTM / GHTM</option>
-            <option value="2">SM / SCM / CTM / SHTM</option>
-            <option value="3">HM / CM / CTL / HTM</option>
-            <option value="4">HP / CD / CT / HT</option>
+            <option value="1">GM / GCM / SCTM / GHTM / GDTM</option>
+            <option value="2">SM / SCM / CTM / SHTM / SDTM</option>
+            <option value="3">HM / CM / CTL / HTM / DTM</option>
+            <option value="4">HP / CD / CT / HT / DT</option>
     </select>
     </td>
     <th scope="row">Plan Month</th>
