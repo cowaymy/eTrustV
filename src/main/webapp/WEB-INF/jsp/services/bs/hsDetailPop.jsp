@@ -299,7 +299,7 @@
         return false;
       }
       // KR-OHK Serial Check
-      if (FormUtil.checkReqValue($("#stockSerialNo"))) {
+      if ($("#hidSerialRequireChkYn").val() == 'Y' && FormUtil.checkReqValue($("#stockSerialNo"))) {
         Common.alert("Please insert Serial No.");
         return false;
       }
