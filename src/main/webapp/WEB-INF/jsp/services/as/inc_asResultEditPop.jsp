@@ -1358,7 +1358,7 @@
         }
 
         // KR-OHK Serial Check
-        if (FormUtil.checkReqValue($("#stockSerialNo"))) {
+        if ($("#hidSerialRequireChkYn").val() == 'Y' && FormUtil.checkReqValue($("#stockSerialNo"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
