@@ -1436,10 +1436,19 @@
                 var discPrice = 0;
                 var appQty = $('#ordQuantity').val();
                 var discAddPrice = promoPriceInfo.promoAddDiscPrc;
+                var promoDiscType = promoPriceInfo.promoDiscType;
+
+                if(promoDiscType == 0){
 
                 discPrice = ($('#orgOrdPrice').val() - ($('#orgOrdPrice').val() * promoPriceInfo.promoPrcPrcnt / 100) - discAddPrice);
 
+                } else if (promoDiscType == 1){
 
+                	discPrice = ($('#orgOrdPrice').val()  - promoPriceInfo.promoPrcPrcnt  - discAddPrice);
+
+                }
+
+                console.log('discount type : ' + promoDiscType);
                 console.log('original Price -->  :'+ $('#orgOrdPrice').val());
                 console.log('discount Price -->  :'+ Math.floor(discPrice));
 
