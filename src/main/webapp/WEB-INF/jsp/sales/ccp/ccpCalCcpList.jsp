@@ -245,8 +245,8 @@ function createCalGrid(){
 	                     {dataField : "name1", headerText : '<spring:message code="sal.text.branch" />', width : "7%" , editable : false},
 	                     {dataField : "keyAt", headerText : '<spring:message code="sal.title.text.keyAtBrBy" />', width : "10%" , editable : false},
 	                     {dataField : "name", headerText : '<spring:message code="sal.title.text.customerName" />', width : "9%" , editable : false},
-	                     {dataField : "corpcusttype", headerText : 'SST Type', width : "9%" , editable : false},
-	                     {dataField : "agreementtype", headerText : 'Agreement Type', width : "9%" , editable : false},
+	                     /* {dataField : "corpcusttype", headerText : 'SST Type', width : "9%" , editable : false},
+	                     {dataField : "agreementtype", headerText : 'Agreement Type', width : "9%" , editable : false}, */
 	                     {dataField : "ccpTotScrePoint", headerText : '<spring:message code="sal.title.text.totBrPoint" />', width : "7%" , editable : false},
 	                     {dataField : "ccpStatus", headerText : '<spring:message code="sal.title.text.ccpBrStus" />', width : "7%" , editable : false},
 	                     {dataField : "name2", headerText : '<spring:message code="sal.title.text.ccpBrRjtBrStus" />', width : "7%" , editable : false},
