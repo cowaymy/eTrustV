@@ -930,7 +930,7 @@
                    NVL (TO_CHAR (CCR0007D.CALL_REM), '') AS instruction,
                    SAL0047D.REM AS RESULT_REMARK,
                    NVL (SYS0026M.SERIAL_CHK, 'N') AS SERIAL_CHK,
-                   NVL (SAL0233M.AREA_COVRG_ID, '') AS beforeProductCode
+                   NVL (SAL0233M.AREA_COVRG_ID, '') AS before_Product_Code
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
