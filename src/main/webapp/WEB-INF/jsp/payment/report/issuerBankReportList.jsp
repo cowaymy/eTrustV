@@ -13,13 +13,13 @@
 <script type="text/javascript">
 
 $(function(){
-//	fnScmTotalPeriod();
+//  fnScmTotalPeriod();
 });
 
 /*
  * Button Functions
  */
-//	Search
+//  Search
 function fnSearch() {
 
     if(FormUtil.checkReqValue($("#planYearMonth"))){
@@ -47,13 +47,13 @@ function fnSearch() {
         myGridID1Index--;
     }
 
-	Common.ajax("POST"
-			, "/payment/report/selectIssuerBankJsonList.do"
-			//, "/payment/report/selectCustomerTypeNPayChannelReporJsonList.do"
-			, $("#MainForm").serializeJSON()
-			, function(result) {
+    Common.ajax("POST"
+            , "/payment/report/selectIssuerBankJsonList.do"
+            //, "/payment/report/selectCustomerTypeNPayChannelReporJsonList.do"
+            , $("#MainForm").serializeJSON()
+            , function(result) {
 
-				// 그리드 헤더 사이즈 조정
+                // 그리드 헤더 사이즈 조정
                 lastIndex =  31 - Number( result.lastDay );
 
                 if( lastIndex > 0 ){
@@ -69,33 +69,33 @@ function fnSearch() {
 
                 }
 
-				AUIGrid.setGridData(myGridID1, result.gridList);
-			});
+                AUIGrid.setGridData(myGridID1, result.gridList);
+            });
 }
 
 function fnPlanYearMonthChange() {
-	console.log($("#planYearMonth").val());
+    console.log($("#planYearMonth").val());
 }
 
 /*
  * Util Functions
  */
 function getTimeStamp() {
-	function fnLeadingZeros(n, digits) {
-		var zero	= "";
-		n	= n.toString();
-		if ( n.length < digits ) {
-			for ( var i = 0 ; i < digits - n.length ; i++ ) {
-				zero	+= "0";
-			}
-		}
-		return	zero + n;
-	}
-	var d	= new Date();
-	var date	= fnLeadingZeros(d.getFullYear(), 4) + fnLeadingZeros(d.getMonth() + 1, 2) + fnLeadingZeros(d.getDate(), 2);
-	var time	= fnLeadingZeros(d.getHours(), 2) + fnLeadingZeros(d.getMinutes(), 2) + fnLeadingZeros(d.getSeconds(), 2);
+    function fnLeadingZeros(n, digits) {
+        var zero    = "";
+        n   = n.toString();
+        if ( n.length < digits ) {
+            for ( var i = 0 ; i < digits - n.length ; i++ ) {
+                zero    += "0";
+            }
+        }
+        return  zero + n;
+    }
+    var d   = new Date();
+    var date    = fnLeadingZeros(d.getFullYear(), 4) + fnLeadingZeros(d.getMonth() + 1, 2) + fnLeadingZeros(d.getDate(), 2);
+    var time    = fnLeadingZeros(d.getHours(), 2) + fnLeadingZeros(d.getMinutes(), 2) + fnLeadingZeros(d.getSeconds(), 2);
 
-	return	date + "_" + time;
+    return  date + "_" + time;
 }
 
 function fnPlanYearMonthChange(){
@@ -107,18 +107,18 @@ function fnPlanYearMonthChange(){
  */
 var myGridID1, lastIndex;
 
-//	myGridTotal
-var gridOptions	= {
-	usePaging : false,
-	useGroupingPanel : false,
-	showRowNumColumn : false,
-	showRowCheckColumn : false,
-	showStateColumn : false,
-	showEditedCellMarker : false,
-	editable : false,
-	enableCellMerge : true,  // 셀 병합 실행
-	enableRestore : false,
-	fixedColumnCount : 3,
+//  myGridTotal
+var gridOptions = {
+    usePaging : false,
+    useGroupingPanel : false,
+    showRowNumColumn : false,
+    showRowCheckColumn : false,
+    showStateColumn : false,
+    showEditedCellMarker : false,
+    editable : false,
+    enableCellMerge : true,  // 셀 병합 실행
+    enableRestore : false,
+    fixedColumnCount : 3,
 
     // enableCellMerge 할 때 실제로 rowspan 적용 시킬지 여부
     // 만약 false 설정하면 실제 병합은 하지 않고(rowspan 적용 시키지 않고) 최상단에 값만 출력 시킵니다.
@@ -132,11 +132,11 @@ var gridOptions	= {
     rowSelectionWithMerge : true
 };
 
-var grid1Layout	=
+var grid1Layout =
 [
- 	 {   dataField : "modeCode", headerText : ' ',         width : 120 , cellMerge : true  }
-     ,{   dataField : "modeDesc", headerText : ' ',     width : 120, style: "aui-grid-user-custom-left" , cellMerge : true }
-     ,{   dataField : "bankCode", headerText : ' ',     width : 160, style: "aui-grid-user-custom-left" }
+      {   dataField : "modeCode", headerText : ' ',    width : 50 , cellMerge : true  }
+     ,{   dataField : "modeDesc", headerText : ' ',    width : 100, style: "aui-grid-user-custom-left" , cellMerge : true, mergePolicy : "restrict", mergeRef : "modeCode" }
+     ,{   dataField : "bankCode", headerText : ' ',     width : 140, style: "aui-grid-user-custom-left" }
 ];
 
 var columnLayout = [];
@@ -144,36 +144,36 @@ var chars = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"
 
 var column;
 for(var i=0; i<31; i++) {
-	var txt = "";
-	if(i == 0){
-		txt = "st"
-	}else if(i == 1){
+    var txt = "";
+    if(i == 0){
+        txt = "st"
+    }else if(i == 1){
         txt = "nd"
     }else if(i == 2){
-    	txt = "rd"
+        txt = "rd"
     }else{
-    	txt = "th"
+        txt = "th"
     }
-	grid1Layout.push( {
+    grid1Layout.push( {
         headerText : chars[i]+txt,
         dataField : "d"+i,
-        width:50,
+        width:65,
         style: "aui-grid-user-custom-right",
-      	dataType : "numeric",
+        dataType : "numeric",
         formatString : "#,###"
     });
 
 }
 
 $(document).ready(function() {
-	// Grid 1
-	myGridID1	= GridCommon.createAUIGrid("#grid1_wrap", grid1Layout, "", gridOptions);
-	AUIGrid.bind(myGridID1, "cellClick", function(event) {
+    // Grid 1
+    myGridID1   = GridCommon.createAUIGrid("#grid1_wrap", grid1Layout, "", gridOptions);
+    AUIGrid.bind(myGridID1, "cellClick", function(event) {
 
-	});
-	AUIGrid.bind(myGridID1, "cellDoubleClick", function(event) {
+    });
+    AUIGrid.bind(myGridID1, "cellDoubleClick", function(event) {
 
-	});
+    });
 
     // 엑셀다운로드
     $('#excelDownGrid1').click(function() {
@@ -183,44 +183,44 @@ $(document).ready(function() {
 });
 </script>
 
-<section id="content">						<!-- section content start -->
-	<ul class="path">
-		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-		<li>Sales</li>
-		<li>Order List</li>
-	</ul>
+<section id="content">                      <!-- section content start -->
+    <ul class="path">
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li>Sales</li>
+        <li>Order List</li>
+    </ul>
 
-	<aside class="title_line">				<!-- aside title_line start -->
-		<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
-		<h2>Paymode Analysis by Issuer Bank</h2>
-		<ul class="right_btns">
-			<li><p class="btn_blue"><a onclick="fnSearch();"><span class="search"></span>Search</a></p></li>
-		</ul>
-	</aside>								<!-- aside title_line end -->
+    <aside class="title_line">              <!-- aside title_line start -->
+        <p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
+        <h2>Paymode Analysis by Issuer Bank</h2>
+        <ul class="right_btns">
+            <li><p class="btn_blue"><a onclick="fnSearch();"><span class="search"></span>Search</a></p></li>
+        </ul>
+    </aside>                                <!-- aside title_line end -->
 
-	<section class="search_table">			<!-- section search_table start -->
-		<form id="MainForm" method="post" action="">
-			<input type="hidden" id="stockTypeId" name="stockTypeId" />
-			<table class="type1">			<!-- table type1 start -->
-			<caption>table</caption>
-				<colgroup>
-					<col style="width:140px" />
-					<col style="width:*" />
-				</colgroup>
-				<tbody>
-					<tr>
-						<!-- <th scope="row">Month &amp; Year</th> -->
-						<th scope="row">Month</th>
-						<td>
-							<input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w95p" id="planYearMonth" name="planYearMonth" onchange="fnPlanYearMonthChange();" value="${toDay}"  />
-						</td>
-					</tr>
-				</tbody>
-			</table>						<!-- table type1 end -->
-		</form>
+    <section class="search_table">          <!-- section search_table start -->
+        <form id="MainForm" method="post" action="">
+            <input type="hidden" id="stockTypeId" name="stockTypeId" />
+            <table class="type1">           <!-- table type1 start -->
+            <caption>table</caption>
+                <colgroup>
+                    <col style="width:140px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <!-- <th scope="row">Month &amp; Year</th> -->
+                        <th scope="row">Month<span class="must">*</span></th>
+                        <td>
+                            <input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w95p" id="planYearMonth" name="planYearMonth" onchange="fnPlanYearMonthChange();" value="${toDay}"  />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>                        <!-- table type1 end -->
+        </form>
 
-	</section>								<!-- section search_table end -->
-	<section class="search_result">				<!-- section search_result start -->
+    </section>                              <!-- section search_table end -->
+    <section class="search_result">             <!-- section search_result start -->
 
         <!-- Grid1 Start -->
         <aside class="title_line mt0"><!-- title_line start -->
@@ -232,11 +232,11 @@ $(document).ready(function() {
             </ul>
         </aside>
 
-		<article class="grid_wrap">
-			<!-- Summary Grid -->
-			<div id="grid1_wrap" class="mt10" style="height:580px" class="autoGridHeight" ></div>
-		</article>
+        <article class="grid_wrap">
+            <!-- Summary Grid -->
+            <div id="grid1_wrap" class="autoGridHeight" ></div>
+        </article>
         <!-- Grid1 End -->
 
-	</section>									<!-- section search_result end -->
-</section>									<!-- section content end -->
+    </section>                                  <!-- section search_result end -->
+</section>                                  <!-- section content end -->
