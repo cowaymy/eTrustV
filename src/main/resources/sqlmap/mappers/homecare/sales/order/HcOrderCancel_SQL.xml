@@ -228,6 +228,7 @@
         SELECT V.CALL_ENTRY_ID
                  , V.REQ_ID
                  , V.REQ_NO
+                 , V.STOCK_ID
          FROM SAL1007V V
         <where>
             <if test="paramOrdId != null and paramOrdId != ''">

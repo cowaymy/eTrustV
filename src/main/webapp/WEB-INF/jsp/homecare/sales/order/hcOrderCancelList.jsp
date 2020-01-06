@@ -267,7 +267,7 @@
                     Common.alert(result.message);
                     return;
                 } else {
-                    Common.popupDiv("/sales/order/addProductReturnPopup.do?isPop=true&salesOrderId=" + salesOrdId1 + "&salesOrderNO=" + salesOrdNo1,
+                    Common.popupDiv("/sales/order/addProductReturnPopup.do?isPop=true&homecareYn=Y&salesOrderId=" + salesOrdId1 + "&salesOrderNO=" + salesOrdNo1,
                     		$("#detailForm").serializeJSON(), null, "false", "addInstallationPopupId");
                 }
             });

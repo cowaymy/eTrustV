@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.map.ListOrderedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.organization.organization.SessionCapacityListService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.homecare.HomecareConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -39,12 +40,14 @@ public class SessionCapacityListServiceImpl extends EgovAbstractServiceImpl impl
 
 	@Override
 	public List<EgovMap> selectSsCapacityBrList(Map<String, Object> params) {
+		params.put("branchTypeId", CommonUtils.nvl2(params.get("branchTypeId"), HomecareConstants.DSC_BRANCH_TYPE));
 
 		return sessionCapacityListMapper.selectSsCapacityBrList(params);
 	}
 
 	@Override
 	public List<EgovMap> selectSsCapacityCTM(Map<String, Object> params) {
+		params.put("memType", CommonUtils.nvl2(params.get("memType"), HomecareConstants.MEM_TYPE.CT));
 
 		return sessionCapacityListMapper.selectSsCapacityCTM(params);
 	}

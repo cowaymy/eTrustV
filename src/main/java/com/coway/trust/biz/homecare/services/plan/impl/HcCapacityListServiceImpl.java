@@ -43,7 +43,7 @@ public class HcCapacityListServiceImpl extends EgovAbstractServiceImpl implement
 
 		if(udtList != null) {
 			Map<String, Object> selParam = (Map<String, Object>) udtList.get(0);
-			selParam.put("memType", HomecareConstants.HDC_MEMBET_TYPE);
+			selParam.put("memType", HomecareConstants.MEM_TYPE.DT);
 
 			int ctmCnt = sessionCapacityListService.selectCountSsCapacityCTM(selParam);
 
@@ -74,7 +74,7 @@ public class HcCapacityListServiceImpl extends EgovAbstractServiceImpl implement
 
 		if(params.size() > 0) {
     		for(Map<String, Object>param : params) {
-    			param.put("memType", HomecareConstants.HDC_MEMBET_TYPE);
+    			param.put("memType", HomecareConstants.MEM_TYPE.DT);
     			param.put("userId", sessionVO.getUserId());
 
     			upCnt = sessionCapacityListMapper.updateCapacity(param);
@@ -104,7 +104,7 @@ public class HcCapacityListServiceImpl extends EgovAbstractServiceImpl implement
 		if(params.size() > 0) {
 			Map<String, Object> param = params.get(0);
 
-			param.put("memType", HomecareConstants.HDC_MEMBET_TYPE);
+			param.put("memType", HomecareConstants.MEM_TYPE.DT);
 			param.put("userId", sessionVO.getUserId());
 
 			rtnCnt = sessionCapacityListMapper.updateCTMCapacity(param);
@@ -142,7 +142,7 @@ public class HcCapacityListServiceImpl extends EgovAbstractServiceImpl implement
 	public boolean saveHcCapacityByExcel(List<Map<String, Object>> params, SessionVO sessionVO) {
 		if(params != null) {
 			Map<String, Object> selParam = (Map<String, Object>) params.get(0);
-			selParam.put("memType", HomecareConstants.HDC_MEMBET_TYPE);
+			selParam.put("memType", HomecareConstants.MEM_TYPE.DT);
 
 			int ctmCnt = sessionCapacityListService.selectCountSsCapacityCTM(selParam);
 

@@ -88,8 +88,9 @@ public class HomecareConstants {
 
 	/** HDC Branch */
 	public static final String HDC_BRANCH_TYPE = "5754";
-	/** HDC Member */
-	public static final String HDC_MEMBET_TYPE = "5758";
+	/** DSC Branch */
+	public static final String DSC_BRANCH_TYPE = "43";
+
 	/** Base Term Date */
 	public static final String TERM_DT_CD = "5763";
 
@@ -107,6 +108,14 @@ public class HomecareConstants {
 		public static final String MAT = "MAT";
 		/** Frame */
 		public static final String FRM = "FRM";
+	}
+
+	/** Member Type */
+	public static class MEM_TYPE {
+		/** CT Memeber Type */
+		public static final String CT = "3";
+		/** DT Memeber Type */
+		public static final String DT = "5758";
 	}
 
 }

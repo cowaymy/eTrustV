@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
@@ -33,7 +31,6 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
-import com.crystaldecisions.sdk.prompting.report.Util;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -343,7 +340,7 @@ public class OrderListController {
 		model.addAttribute("pRCtInfo", pRCtInfo);
 		model.addAttribute("callEntryId" , params.get("callEntryId"));
 		model.addAttribute("orderSerial" , orderSerialNo );
-
+		model.addAttribute("homecareYn" , CommonUtils.nvl2(params.get("homecareYn"), "N"));
 
 		// 호출될 화면
 		return "sales/order/addProductReturnResultPop";

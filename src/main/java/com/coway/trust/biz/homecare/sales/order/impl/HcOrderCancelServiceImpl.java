@@ -86,6 +86,7 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 
 					params.put("paramCallEntryId", CommonUtils.nvl(callEntryMap.get("callEntryId")));
 					params.put("paramReqId", CommonUtils.nvl(callEntryMap.get("reqId")));
+					params.put("paramStockId", CommonUtils.nvl(callEntryMap.get("stockId")));
 
 					orderCancelService.saveCancel(params);
 				}

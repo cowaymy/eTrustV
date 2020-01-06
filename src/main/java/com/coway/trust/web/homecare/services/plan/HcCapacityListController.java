@@ -77,7 +77,7 @@ public class HcCapacityListController {
 		List<EgovMap> dscBranchList =   sessionCapacityListService.seleBranchCodeSearch(params);
 		model.addAttribute("dscBranchList", dscBranchList);
 		model.addAttribute("branchTypeId", HomecareConstants.HDC_BRANCH_TYPE);
-		model.addAttribute("memberTypeId", HomecareConstants.HDC_MEMBET_TYPE);
+		model.addAttribute("memberTypeId", HomecareConstants.MEM_TYPE.DT);
 
 		return "homecare/services/plan/hcCapacityList";
 	}
