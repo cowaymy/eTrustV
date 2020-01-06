@@ -8,8 +8,8 @@
         FROM    DUAL
     </select>
 
-    <select id="selectCustomerTypeNPayChannelReporJsonList1" parameterType="Map" resultType="egovMap">
-		/* [com.coway.trust.biz.logistics.report.impl.CCDReportMapper.selectCustomerTypeNPayChannelReporJsonList1] KR_HAN */
+    <select id="selectCustomerTypeNPayChannelReportJsonList1" parameterType="Map" resultType="egovMap">
+		/* [com.coway.trust.biz.logistics.report.impl.CCDReportMapper.selectCustomerTypeNPayChannelReportJsonList1] KR_HAN */
 		WITH DAY_LIST AS (
 		     SELECT LEVEL DD FROM dual CONNECT BY LEVEL <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE(#{planYearMonth}, 'MM/YYYY')),'DD')  -- PARAMETER
 		)
@@ -91,8 +91,8 @@
 		ORDER BY TYPE_ID, C.CODE, CARD_TYPE_ID DESC
     </select>
 
-    <select id="selectCustomerTypeNPayChannelReporJsonList2" parameterType="Map" resultType="egovMap">
-        /* [com.coway.trust.biz.logistics.report.impl.CCDReportMapper.selectCustomerTypeNPayChannelReporJsonList2] KR_HAN */
+    <select id="selectCustomerTypeNPayChannelReportJsonList2" parameterType="Map" resultType="egovMap">
+        /* [com.coway.trust.biz.logistics.report.impl.CCDReportMapper.selectCustomerTypeNPayChannelReportJsonList2] KR_HAN */
 		WITH DAY_LIST AS (
 		     SELECT LEVEL DD FROM dual CONNECT BY LEVEL <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE(#{planYearMonth}, 'MM/YYYY')),'DD')  -- PARAMETER
 		)
@@ -174,8 +174,8 @@
 		ORDER BY C.CODE, CARD_TYPE_ID DESC
     </select>
 
-    <select id="selectCustomerTypeNPayChannelReporJsonList3" parameterType="Map" resultType="egovMap">
-        /* [com.coway.trust.biz.logistics.report.impl.CCDReportMapper.selectCustomerTypeNPayChannelReporJsonList3] KR_HAN */
+    <select id="selectCustomerTypeNPayChannelReportJsonList3" parameterType="Map" resultType="egovMap">
+        /* [com.coway.trust.biz.logistics.report.impl.CCDReportMapper.selectCustomerTypeNPayChannelReportJsonList3] KR_HAN */
 		WITH DAY_LIST AS (
 		     SELECT LEVEL DD FROM dual CONNECT BY LEVEL <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE(#{planYearMonth}, 'MM/YYYY')),'DD')  -- PARAMETER
 		)
@@ -257,8 +257,8 @@
 		ORDER BY C.CODE, CARD_TYPE_ID DESC
     </select>
 
-    <select id="selectCustomerTypeNPayChannelReporJsonList4" parameterType="Map" resultType="egovMap">
-        /* [com.coway.trust.biz.logistics.report.impl.CCDReportMapper.selectCustomerTypeNPayChannelReporJsonList4] KR_HAN */
+    <select id="selectCustomerTypeNPayChannelReportJsonList4" parameterType="Map" resultType="egovMap">
+        /* [com.coway.trust.biz.logistics.report.impl.CCDReportMapper.selectCustomerTypeNPayChannelReportJsonList4] KR_HAN */
 		WITH DAY_LIST AS (
 		     SELECT LEVEL DD FROM dual CONNECT BY LEVEL <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE(#{planYearMonth}, 'MM/YYYY')),'DD')  -- PARAMETER
 		)
