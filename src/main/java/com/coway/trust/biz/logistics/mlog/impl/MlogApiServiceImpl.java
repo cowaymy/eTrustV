@@ -626,7 +626,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	@Override
 	public void returnOnHandStockReq(ReturnOnHandStockReqMForm returnOnHandStockReqMForm) {
 
-		logger.debug("++++ returnOnHandStockReq returnOnHandStockReqScan  {}", returnOnHandStockReqMForm);
+		logger.info("++++ returnOnHandStockReq returnOnHandStockReqScan  {}", returnOnHandStockReqMForm);
 
 		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
 		String seq = MlogApiMapper.selectStockMovementSeq();
@@ -646,7 +646,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 		int userLoc = MlogApiMapper.getUserLocId(returnMap);
 
-		logger.debug("++++ returnOnHandStockReq receiveMap    값 : {}", returnMap);
+		logger.info("++++ returnOnHandStockReq receiveMap    값 : {}", returnMap);
 
 		MlogApiMapper.insStockMovementHeads(returnMap);
 
@@ -732,7 +732,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	@Override
 	public void returnOnHandStockReqScan(ReturnOnHandStockReqMForm returnOnHandStockReqMForm) {
 
-		logger.debug("++++ returnOnHandStockReqScan returnOnHandStockReqScan  {}", returnOnHandStockReqMForm);
+		logger.info("++++ returnOnHandStockReqScan returnOnHandStockReqScan  {}", returnOnHandStockReqMForm);
 
 		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
 		// create SMO no
@@ -755,7 +755,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 		int userLoc = MlogApiMapper.getUserLocId(returnMap);
 
-		logger.debug("++++ returnOnHandStockReq receiveMap    값 : {}", returnMap);
+		logger.info("++++ returnOnHandStockReq receiveMap    값 : {}", returnMap);
 
 		// 1. LOG0047M insert
 		MlogApiMapper.insStockMovementHeads(returnMap);
