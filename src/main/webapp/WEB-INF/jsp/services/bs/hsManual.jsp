@@ -1151,6 +1151,12 @@ var TODAY_DD      = "${toDay}";
     Common.popupDiv("/services/bs/report/hsReportGroupPop.do", null, null,
         true, '');
   }
+
+  function fn_hsReportIndividualGroup(){
+	    Common.popupDiv("/services/bs/hsReportIndividualGroupPop.do", null, null,
+	            true, '');
+  }
+
   function fn_hsSummary() {
     Common.popupDiv("/services/bs/report/bSSummaryList.do", null, null,
         true, '');
@@ -1457,7 +1463,11 @@ var TODAY_DD      = "${toDay}";
             </p></li>
            <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsReportGroup()">HS
-              Report(Group)</a>
+              Report Corporate (Group)</a>
+            </p></li>
+                 <li><p class="link_btn type2">
+             <a href="#" onclick="javascript:fn_hsReportIndividualGroup()">HS
+              Report Individual (Group)</a>
             </p></li>
           </c:if>
           <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
