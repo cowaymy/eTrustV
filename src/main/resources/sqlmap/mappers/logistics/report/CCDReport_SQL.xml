@@ -415,7 +415,7 @@
                 DAY_LIST AS (
 		          SELECT -1*LEVEL+1  DD FROM dual CONNECT BY LEVEL <![CDATA[ < = ]]> 6  -- -6 month~this month
 		)
-		SELECT '0' AS SEQ, DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
+		SELECT '0' AS SEQ, 'Hand-collection' AS TYPE_NAME, DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
 		  FROM (
 
 		          SELECT *
@@ -424,10 +424,10 @@
 		                       FROM DAY_LIST X
 		                            LEFT OUTER JOIN
 		                            (
-		                                 SELECT MODE_ID, CARD_TYPE_ID, MONTHS_BETWEEN(TO_DATE('01/' || MMYYYY,'DD/MM/YYYY'), TRUNC(SYSDATE,'MM')) AS DD, SUM(NVL(CNT,0)) AS CNT
+		                                 SELECT MODE_ID, CARD_TYPE_ID, MONTHS_BETWEEN(TO_DATE('01/' || MMYYYY,'DD/MM/YYYY'), TRUNC(to_date(#{planYearMonth}, 'MM/YYYY'),'MM')) AS DD, SUM(NVL(CNT,0)) AS CNT
 		                                 FROM   (
-		                                            -- CRC: '107'
-		                                            SELECT PAY65.PAY_ITM_MODE_ID AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, TO_CHAR(PAY64.PAY_DATA,'MM/YYYY') AS MMYYYY, COUNT(DISTINCT SOM.SALES_ORD_ID) AS CNT
+		                                            -- CRC: '107', DD: '108'
+		                                            SELECT CASE WHEN PAY65.PAY_ITM_MODE_ID = '108' THEN -2 ELSE PAY65.PAY_ITM_MODE_ID END AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, TO_CHAR(PAY64.PAY_DATA,'MM/YYYY') AS MMYYYY, COUNT(DISTINCT SOM.SALES_ORD_ID) AS CNT
 		                                            FROM PAY0064D pay64
 		                                                 INNER JOIN PAY0065D PAY65 ON PAY64.PAY_ID = PAY65.PAY_ID
 		                                                 INNER JOIN SAL0001D SOM ON pay64.SALES_ORD_ID = SOM.SALES_ORD_ID
@@ -442,39 +442,20 @@
 		                                            --AND SOM.PV_MONTH <![CDATA[ <> ]]> TO_CHAR(SYSDATE, 'MM')   --exclude current month Net Sales
 		                                            AND NVL(SAL3D.CNTRCT_OBLIGT_PRIOD,0) BETWEEN 1 AND 60   -- Billing month = 1-60
 
-		                                            AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(to_date( #{planYearMonth}, 'MM/YYYY'),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +1 -- Search condition : PARAMETER
+		                                            AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(add_months(to_date( #{planYearMonth}, 'MM/YYYY'),-5),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +6 -- Search condition : PARAMETER
 
-		                                            AND PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
-		                                            AND PAY64.OR_NO LIKE 'WOR%'   -- Hand-collect
+		                                            AND (         (
+		                                                                       PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
+		                                                                AND PAY64.OR_NO LIKE 'WOR%'   -- Hand-collect
+		                                                       )
+		                                                      OR   (
+		                                                                       PAY65.PAY_ITM_MODE_ID = '108'  -- Online Payment
+                                                                        AND PAY64.OR_NO LIKE 'AER%'   -- Deduction = Success (exclude hand-collect)
+		                                                      )
+		                                                  )
 
-		                                            GROUP BY PAY65.PAY_ITM_MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'MM/YYYY')
+		                                            GROUP BY CASE WHEN PAY65.PAY_ITM_MODE_ID = '108' THEN -2 ELSE PAY65.PAY_ITM_MODE_ID END, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'MM/YYYY')
 
-		                                            UNION ALL
-
-		                                            -- DD
-		                                            SELECT -2 AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, TO_CHAR(PAY64.PAY_DATA,'MM/YYYY') AS MMYYYY, COUNT(DISTINCT SOM.SALES_ORD_ID) AS CNT
-		                                            FROM PAY0064D pay64
-		                                                 INNER JOIN PAY0065D PAY65 ON PAY64.PAY_ID = PAY65.PAY_ID
-		                                                 INNER JOIN SAL0001D SOM ON pay64.SALES_ORD_ID = SOM.SALES_ORD_ID
-		                                                 INNER JOIN SAL0071D RS ON RS.SALES_ORD_ID = SOM.SALES_ORD_ID
-		                                                 LEFT OUTER JOIN SAL0003D SAL3D ON SAL3D.CNTRCT_SALES_ORD_ID = SOM.SALES_ORD_ID
-
-		                                            WHERE 1 = 1
-		                                            AND SOM.APP_TYPE_ID = '66' -- rental
-		                                            AND SOM.STUS_CODE_ID = '4'  -- Order Status = COM
-
-		                                            AND RS.STUS_CODE_ID IN ('REG','INV')   -- Open Rental Status = REG , INV
-		                                            --AND SOM.PV_YEAR <![CDATA[ <> ]]> TO_CHAR(SYSDATE, 'YYYY')
-		                                            --AND SOM.PV_MONTH <![CDATA[ <> ]]> TO_CHAR(SYSDATE, 'MM')   --exclude current month Net Sales
-		                                            AND NVL(SAL3D.CNTRCT_OBLIGT_PRIOD,0) BETWEEN 1 AND 60   -- Billing month = 1-60
-
-
-		                                            AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(to_date( #{planYearMonth}, 'MM/YYYY'),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +1 -- Search condition : PARAMETER
-
-		                                            AND PAY65.PAY_ITM_MODE_ID = '108'  -- Online Payment
-		                                            AND PAY64.OR_NO LIKE 'AER%'   -- Deduction = Success (exclude hand-collect)
-
-		                                            GROUP BY NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'MM/YYYY')
 
 		                                  )
 		                                  GROUP BY MODE_ID, CARD_TYPE_ID, MMYYYY
@@ -489,7 +470,7 @@
 
 		UNION ALL
 
-		SELECT '1' AS SEQ, DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
+		SELECT '1' AS SEQ, 'Success deduction' AS TYPE_NAME, DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
 		  FROM (
 
 		          SELECT *
@@ -498,10 +479,10 @@
 		                       FROM DAY_LIST X
 		                            LEFT OUTER JOIN
 		                            (
-		                                 SELECT MODE_ID, CARD_TYPE_ID, MONTHS_BETWEEN(TO_DATE('01/' || MMYYYY,'DD/MM/YYYY'), TRUNC(SYSDATE,'MM')) AS DD, SUM(NVL(CNT,0)) AS CNT
+		                                 SELECT MODE_ID, CARD_TYPE_ID, MONTHS_BETWEEN(TO_DATE('01/' || MMYYYY,'DD/MM/YYYY'), TRUNC(to_date(#{planYearMonth}, 'MM/YYYY'),'MM')) AS DD, SUM(NVL(CNT,0)) AS CNT
 		                                 FROM   (
 		                                            -- CRC: '107'
-		                                            SELECT PAY65.PAY_ITM_MODE_ID AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, TO_CHAR(PAY64.PAY_DATA,'MM/YYYY') AS MMYYYY, COUNT(DISTINCT SOM.SALES_ORD_ID) AS CNT
+		                                            SELECT CASE WHEN PAY65.PAY_ITM_MODE_ID = '108' THEN -2 ELSE PAY65.PAY_ITM_MODE_ID END AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, TO_CHAR(PAY64.PAY_DATA,'MM/YYYY') AS MMYYYY, COUNT(DISTINCT SOM.SALES_ORD_ID) AS CNT
 		                                            FROM PAY0064D pay64
 		                                                 INNER JOIN PAY0065D PAY65 ON PAY64.PAY_ID = PAY65.PAY_ID
 		                                                 INNER JOIN SAL0001D SOM ON pay64.SALES_ORD_ID = SOM.SALES_ORD_ID
@@ -516,48 +497,27 @@
 		                                            --AND SOM.PV_MONTH <![CDATA[ <> ]]> TO_CHAR(SYSDATE, 'MM')   --exclude current month Net Sales
 		                                            AND NVL(SAL3D.CNTRCT_OBLIGT_PRIOD,0) BETWEEN 1 AND 60   -- Billing month = 1-60
 
-		                                            AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(to_date( #{planYearMonth}, 'MM/YYYY'),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +1 -- Search condition : PARAMETER
+		                                            AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(add_months(to_date( #{planYearMonth}, 'MM/YYYY'),-5),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +6 -- Search condition : PARAMETER
 
-		                                            AND PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
-		                                            AND PAY64.OR_NO LIKE 'WOR%'   -- Hand-collect
+		                                            AND (         (
+                                                                               PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
+                                                                        AND PAY64.OR_NO LIKE 'WOR%'   -- Hand-collect
+                                                               )
+                                                              OR   (
+                                                                               PAY65.PAY_ITM_MODE_ID = '108'  -- Online Payment
+                                                                        AND PAY64.OR_NO LIKE 'AER%'   -- Deduction = Success (exclude hand-collect)
+                                                              )
+                                                          )
 		                                            AND PAY65.PAY_ITM_STUS_ID = '1'   -- Deduction = Success (exclude hand-collect)
 
-		                                            GROUP BY PAY65.PAY_ITM_MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'MM/YYYY')
-
-		                                            UNION ALL
-
-		                                            -- DD
-		                                            SELECT -2 AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, TO_CHAR(PAY64.PAY_DATA,'MM/YYYY') AS MMYYYY, COUNT(DISTINCT SOM.SALES_ORD_ID) AS CNT
-		                                            FROM PAY0064D pay64
-		                                                 INNER JOIN PAY0065D PAY65 ON PAY64.PAY_ID = PAY65.PAY_ID
-		                                                 INNER JOIN SAL0001D SOM ON pay64.SALES_ORD_ID = SOM.SALES_ORD_ID
-		                                                 INNER JOIN SAL0071D RS ON RS.SALES_ORD_ID = SOM.SALES_ORD_ID
-		                                                 LEFT OUTER JOIN SAL0003D SAL3D ON SAL3D.CNTRCT_SALES_ORD_ID = SOM.SALES_ORD_ID
-
-		                                            WHERE 1 = 1
-		                                            AND SOM.APP_TYPE_ID = '66' -- rental
-		                                            AND SOM.STUS_CODE_ID = '4'  -- Order Status = COM
-
-		                                            AND RS.STUS_CODE_ID IN ('REG','INV')   -- Open Rental Status = REG , INV
-		                                            --AND SOM.PV_YEAR <![CDATA[ <> ]]> TO_CHAR(SYSDATE, 'YYYY')
-		                                            --AND SOM.PV_MONTH <![CDATA[ <> ]]> TO_CHAR(SYSDATE, 'MM')   --exclude current month Net Sales
-		                                            AND NVL(SAL3D.CNTRCT_OBLIGT_PRIOD,0) BETWEEN 1 AND 60   -- Billing month = 1-60
-
-
-		                                            AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(to_date( #{planYearMonth}, 'MM/YYYY'),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +1 -- Search condition : PARAMETER
-
-		                                            AND PAY65.PAY_ITM_MODE_ID = '108'  -- Online Payment
-		                                            AND PAY64.OR_NO LIKE 'AER%'   -- Deduction = Success (exclude hand-collect)
-		                                            AND PAY65.PAY_ITM_STUS_ID = '1'   -- Deduction = Success (exclude hand-collect)
-
-		                                            GROUP BY NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'MM/YYYY')
+		                                            GROUP BY CASE WHEN PAY65.PAY_ITM_MODE_ID = '108' THEN -2 ELSE PAY65.PAY_ITM_MODE_ID END, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'MM/YYYY')
 
 		                                  )
 		                                  GROUP BY MODE_ID, CARD_TYPE_ID, MMYYYY
 
 		                            ) Y ON X.DD = Y.DD
 
-		          ) PIVOT ( SUM(CNT) FOR DD IN(  1 D1, 2 D2, 3 D3, 4 D4, 5 D5, 6 D6) )
+		          ) PIVOT ( SUM(CNT) FOR DD IN(  -5 M5, -4 M4, -3 M3, -2 M2, -1 M1, 0 M0) )
 		  ) A
 		  LEFT OUTER JOIN SYS0013M C ON A.MODE_ID = C.CODE_ID
 		  LEFT OUTER JOIN SYS0013M D ON A.CARD_TYPE_ID = D.CODE_ID
@@ -570,7 +530,7 @@
         WITH DAY_LIST AS (
              SELECT -1*LEVEL+1  DD FROM dual CONNECT BY LEVEL <![CDATA[ < = ]]> 6  -- -6 month~this month
         )
-        SELECT '0' AS SEQ, DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
+        SELECT '0' AS SEQ, 'Hand-collection' AS TYPE_NAME, DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
           FROM (
 
                   SELECT *
@@ -579,10 +539,10 @@
                                FROM DAY_LIST X
                                     LEFT OUTER JOIN
                                     (
-                                         SELECT MODE_ID, CARD_TYPE_ID, MONTHS_BETWEEN(TO_DATE('01/' || MMYYYY,'DD/MM/YYYY'), TRUNC(SYSDATE,'MM')) AS DD, SUM(NVL(CNT,0)) AS CNT
+                                         SELECT MODE_ID, CARD_TYPE_ID, MONTHS_BETWEEN(TO_DATE('01/' || MMYYYY,'DD/MM/YYYY'), TRUNC(to_date(#{planYearMonth}, 'MM/YYYY'),'MM')) AS DD, SUM(NVL(CNT,0)) AS CNT
                                          FROM   (
-                                                    -- CRC: '107'
-                                                    SELECT PAY65.PAY_ITM_MODE_ID AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, TO_CHAR(PAY64.PAY_DATA,'MM/YYYY') AS MMYYYY, COUNT(DISTINCT SOM.SALES_ORD_ID) AS CNT
+                                                    -- CRC: '107', DD: '108'
+                                                    SELECT CASE WHEN PAY65.PAY_ITM_MODE_ID = '108' THEN -2 ELSE PAY65.PAY_ITM_MODE_ID END AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, TO_CHAR(PAY64.PAY_DATA,'MM/YYYY') AS MMYYYY, SUM(PAY65.PAY_ITM_AMT) AS CNT
                                                     FROM PAY0064D pay64
                                                          INNER JOIN PAY0065D PAY65 ON PAY64.PAY_ID = PAY65.PAY_ID
                                                          INNER JOIN SAL0001D SOM ON pay64.SALES_ORD_ID = SOM.SALES_ORD_ID
@@ -597,39 +557,20 @@
                                                     --AND SOM.PV_MONTH <![CDATA[ <> ]]> TO_CHAR(SYSDATE, 'MM')   --exclude current month Net Sales
                                                     AND NVL(SAL3D.CNTRCT_OBLIGT_PRIOD,0) BETWEEN 1 AND 60   -- Billing month = 1-60
 
-                                                    AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(to_date( #{planYearMonth}, 'MM/YYYY'),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +1 -- Search condition : PARAMETER
+                                                    AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(add_months(to_date( #{planYearMonth}, 'MM/YYYY'),-5),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +1 -- Search condition : PARAMETER
 
-                                                    AND PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
-                                                    AND PAY64.OR_NO LIKE 'WOR%'   -- Hand-collect
+                                                    AND (         (
+                                                                               PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
+                                                                        AND PAY64.OR_NO LIKE 'WOR%'   -- Hand-collect
+                                                               )
+                                                              OR   (
+                                                                               PAY65.PAY_ITM_MODE_ID = '108'  -- Online Payment
+                                                                        AND PAY64.OR_NO LIKE 'AER%'   -- Deduction = Success (exclude hand-collect)
+                                                              )
+                                                          )
 
-                                                    GROUP BY PAY65.PAY_ITM_MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'MM/YYYY')
+                                                    GROUP BY CASE WHEN PAY65.PAY_ITM_MODE_ID = '108' THEN -2 ELSE PAY65.PAY_ITM_MODE_ID END, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'MM/YYYY')
 
-                                                    UNION ALL
-
-                                                    -- DD
-                                                    SELECT -2 AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, TO_CHAR(PAY64.PAY_DATA,'MM/YYYY') AS MMYYYY, COUNT(DISTINCT SOM.SALES_ORD_ID) AS CNT
-                                                    FROM PAY0064D pay64
-                                                         INNER JOIN PAY0065D PAY65 ON PAY64.PAY_ID = PAY65.PAY_ID
-                                                         INNER JOIN SAL0001D SOM ON pay64.SALES_ORD_ID = SOM.SALES_ORD_ID
-                                                         INNER JOIN SAL0071D RS ON RS.SALES_ORD_ID = SOM.SALES_ORD_ID
-                                                         LEFT OUTER JOIN SAL0003D SAL3D ON SAL3D.CNTRCT_SALES_ORD_ID = SOM.SALES_ORD_ID
-
-                                                    WHERE 1 = 1
-                                                    AND SOM.APP_TYPE_ID = '66' -- rental
-                                                    AND SOM.STUS_CODE_ID = '4'  -- Order Status = COM
-
-                                                    AND RS.STUS_CODE_ID IN ('REG','INV')   -- Open Rental Status = REG , INV
-                                                    --AND SOM.PV_YEAR <![CDATA[ <> ]]> TO_CHAR(SYSDATE, 'YYYY')
-                                                    --AND SOM.PV_MONTH <![CDATA[ <> ]]> TO_CHAR(SYSDATE, 'MM')   --exclude current month Net Sales
-                                                    AND NVL(SAL3D.CNTRCT_OBLIGT_PRIOD,0) BETWEEN 1 AND 60   -- Billing month = 1-60
-
-
-                                                    AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(to_date( #{planYearMonth}, 'MM/YYYY'),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +1 -- Search condition : PARAMETER
-
-                                                    AND PAY65.PAY_ITM_MODE_ID = '108'  -- Online Payment
-                                                    AND PAY64.OR_NO LIKE 'AER%'   -- Deduction = Success (exclude hand-collect)
-
-                                                    GROUP BY NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'MM/YYYY')
 
                                           )
                                           GROUP BY MODE_ID, CARD_TYPE_ID, MMYYYY
@@ -644,7 +585,7 @@
 
         UNION ALL
 
-        SELECT '1' AS SEQ, DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
+        SELECT '1' AS SEQ, 'Success deduction' AS TYPE_NAME, DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
           FROM (
 
                   SELECT *
@@ -653,10 +594,10 @@
                                FROM DAY_LIST X
                                     LEFT OUTER JOIN
                                     (
-                                         SELECT MODE_ID, CARD_TYPE_ID, MONTHS_BETWEEN(TO_DATE('01/' || MMYYYY,'DD/MM/YYYY'), TRUNC(SYSDATE,'MM')) AS DD, SUM(NVL(CNT,0)) AS CNT
+                                         SELECT MODE_ID, CARD_TYPE_ID, MONTHS_BETWEEN(TO_DATE('01/' || MMYYYY,'DD/MM/YYYY'), TRUNC(to_date(#{planYearMonth}, 'MM/YYYY'),'MM')) AS DD, SUM(NVL(CNT,0)) AS CNT
                                          FROM   (
                                                     -- CRC: '107'
-                                                    SELECT PAY65.PAY_ITM_MODE_ID AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, TO_CHAR(PAY64.PAY_DATA,'MM/YYYY') AS MMYYYY, COUNT(DISTINCT SOM.SALES_ORD_ID) AS CNT
+                                                    SELECT CASE WHEN PAY65.PAY_ITM_MODE_ID = '108' THEN -2 ELSE PAY65.PAY_ITM_MODE_ID END AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, TO_CHAR(PAY64.PAY_DATA,'MM/YYYY') AS MMYYYY, SUM(PAY65.PAY_ITM_AMT) AS CNT
                                                     FROM PAY0064D pay64
                                                          INNER JOIN PAY0065D PAY65 ON PAY64.PAY_ID = PAY65.PAY_ID
                                                          INNER JOIN SAL0001D SOM ON pay64.SALES_ORD_ID = SOM.SALES_ORD_ID
@@ -671,48 +612,27 @@
                                                     --AND SOM.PV_MONTH <![CDATA[ <> ]]> TO_CHAR(SYSDATE, 'MM')   --exclude current month Net Sales
                                                     AND NVL(SAL3D.CNTRCT_OBLIGT_PRIOD,0) BETWEEN 1 AND 60   -- Billing month = 1-60
 
-                                                    AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(to_date( #{planYearMonth}, 'MM/YYYY'),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +1 -- Search condition : PARAMETER
+                                                    AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(add_months(to_date( #{planYearMonth}, 'MM/YYYY'),-5),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +1 -- Search condition : PARAMETER
 
-                                                    AND PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
-                                                    AND PAY64.OR_NO LIKE 'WOR%'   -- Hand-collect
+                                                    AND (         (
+                                                                               PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
+                                                                        AND PAY64.OR_NO LIKE 'WOR%'   -- Hand-collect
+                                                               )
+                                                              OR   (
+                                                                               PAY65.PAY_ITM_MODE_ID = '108'  -- Online Payment
+                                                                        AND PAY64.OR_NO LIKE 'AER%'   -- Deduction = Success (exclude hand-collect)
+                                                              )
+                                                          )
                                                     AND PAY65.PAY_ITM_STUS_ID = '1'   -- Deduction = Success (exclude hand-collect)
 
-                                                    GROUP BY PAY65.PAY_ITM_MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'MM/YYYY')
-
-                                                    UNION ALL
-
-                                                    -- DD
-                                                    SELECT -2 AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, TO_CHAR(PAY64.PAY_DATA,'MM/YYYY') AS MMYYYY, COUNT(DISTINCT SOM.SALES_ORD_ID) AS CNT
-                                                    FROM PAY0064D pay64
-                                                         INNER JOIN PAY0065D PAY65 ON PAY64.PAY_ID = PAY65.PAY_ID
-                                                         INNER JOIN SAL0001D SOM ON pay64.SALES_ORD_ID = SOM.SALES_ORD_ID
-                                                         INNER JOIN SAL0071D RS ON RS.SALES_ORD_ID = SOM.SALES_ORD_ID
-                                                         LEFT OUTER JOIN SAL0003D SAL3D ON SAL3D.CNTRCT_SALES_ORD_ID = SOM.SALES_ORD_ID
-
-                                                    WHERE 1 = 1
-                                                    AND SOM.APP_TYPE_ID = '66' -- rental
-                                                    AND SOM.STUS_CODE_ID = '4'  -- Order Status = COM
-
-                                                    AND RS.STUS_CODE_ID IN ('REG','INV')   -- Open Rental Status = REG , INV
-                                                    --AND SOM.PV_YEAR <![CDATA[ <> ]]> TO_CHAR(SYSDATE, 'YYYY')
-                                                    --AND SOM.PV_MONTH <![CDATA[ <> ]]> TO_CHAR(SYSDATE, 'MM')   --exclude current month Net Sales
-                                                    AND NVL(SAL3D.CNTRCT_OBLIGT_PRIOD,0) BETWEEN 1 AND 60   -- Billing month = 1-60
-
-
-                                                    AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(to_date( #{planYearMonth}, 'MM/YYYY'),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +1 -- Search condition : PARAMETER
-
-                                                    AND PAY65.PAY_ITM_MODE_ID = '108'  -- Online Payment
-                                                    AND PAY64.OR_NO LIKE 'AER%'   -- Deduction = Success (exclude hand-collect)
-                                                    AND PAY65.PAY_ITM_STUS_ID = '1'   -- Deduction = Success (exclude hand-collect)
-
-                                                    GROUP BY NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'MM/YYYY')
+                                                    GROUP BY CASE WHEN PAY65.PAY_ITM_MODE_ID = '108' THEN -2 ELSE PAY65.PAY_ITM_MODE_ID END, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'MM/YYYY')
 
                                           )
                                           GROUP BY MODE_ID, CARD_TYPE_ID, MMYYYY
 
                                     ) Y ON X.DD = Y.DD
 
-                  ) PIVOT ( SUM(CNT) FOR DD IN(  1 D1, 2 D2, 3 D3, 4 D4, 5 D5, 6 D6) )
+                  ) PIVOT ( SUM(CNT) FOR DD IN(  -5 M5, -4 M4, -3 M3, -2 M2, -1 M1, 0 M0) )
           ) A
           LEFT OUTER JOIN SYS0013M C ON A.MODE_ID = C.CODE_ID
           LEFT OUTER JOIN SYS0013M D ON A.CARD_TYPE_ID = D.CODE_ID
