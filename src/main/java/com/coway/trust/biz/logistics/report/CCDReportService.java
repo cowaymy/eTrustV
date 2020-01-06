@@ -28,7 +28,7 @@ public interface CCDReportService {
 	 * @param params
 	 * @return
 	 */
-	Map<String, Object> selectCustomerTypeNPayChannelReporJsonList(Map<String, Object> params);
+	Map<String, Object> selectCustomerTypeNPayChannelReportJsonList(Map<String, Object> params);
 
 	 /**
 	 * selectIssuerBankReportJsonList
