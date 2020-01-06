@@ -403,24 +403,6 @@ public class ReportBatchController {
     LOGGER.info("[END] PreBSConfig...");
   }
 
-  @RequestMapping(value = "/VillaemTemperatureSetting.do")
-  //@Scheduled(cron = "0 24 8 * * MON,WED,FRI")//Weekly (Mon, Wed, Fri) 8:24am
-  public void villaemTemperatureSetting() {
-    LOGGER.info("[START] VillaemTemperatureSetting...");
-    Map<String, Object> params = new HashMap<>();
-    params.put(REPORT_FILE_NAME, "/visualcut/VillaemTemperatureSetting.rpt");// visualcut
-                                                                             // rpt
-                                                                             // file
-                                                                             // name.
-    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-    params.put("V_TEMP", "TEMP"); // viewType
-    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "BSRaw" + File.separator + "VillaemTemperatureSetting" + CommonUtils.getNowDate() + ".xls");
-
-    this.viewProcedure(null, null, params);
-    LOGGER.info("[END] VillaemTemperatureSetting...");
-  }
-
   @RequestMapping(value = "/MembershipRawData.do")
   //@Scheduled(cron = "0 0 8 * * MON,WED,THU,FRI")//Weekly (Mon,Wed,Thu,Fri)
   // 8:00am
@@ -636,7 +618,7 @@ public class ReportBatchController {
   private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
     this.checkArgument(params);
 
-    SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
+    SimpleDateFormat fmt = new SimpleDateFormat("dd/mm/yyyy HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
     Calendar startTime = Calendar.getInstance();
     Calendar endTime = null;
 
