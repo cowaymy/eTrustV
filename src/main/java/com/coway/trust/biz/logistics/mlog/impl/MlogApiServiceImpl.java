@@ -637,6 +637,10 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		returnMap.put("giptdate", returnOnHandStockReqMForm.getRequestDate());
 		returnMap.put("smType", returnOnHandStockReqMForm.getSmType());
 		returnMap.put("targetLocation", returnOnHandStockReqMForm.getTargetLocation());
+
+		String whLocId = MlogApiMapper.selectWhLocId(returnMap);
+		returnMap.put("rcivCdcRdc", whLocId );
+
 		int userLoc = MlogApiMapper.getUserLocId(returnMap);
 
 		logger.debug("receiveMap    값 : {}", returnMap);
