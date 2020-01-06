@@ -283,7 +283,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 			}
 		}
 
-		//Level 4 - no Service day
+		//Level 4 - no Service day  : KR. JIN. - 2020.01.04
 		if(null != mergeVacationList) {
 			if(mergeVacationList.size() > 0) {
 				mergeNoSvcList = new ArrayList<EgovMap>();

@@ -298,7 +298,7 @@ var taxObj = {};
         </c:if>
 
         if( js.String.isEmpty($("#sPoDtFrom").val()) ){
-            $("#sPoDtFrom").val("${oneDay}");
+            $("#sPoDtFrom").val("${threeMonthBf}");
         }
         if( js.String.isEmpty($("#sPoDtTo").val()) ){
             $("#sPoDtTo").val("${toDay}");

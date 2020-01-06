@@ -148,7 +148,7 @@ var taxObj = {};
         </c:if>
 
         if( js.String.isEmpty($("#sDlvGiDtFrom").val()) ){
-            $("#sDlvGiDtFrom").val("${oneMonthBf}");
+            $("#sDlvGiDtFrom").val("${threeMonthBf}");
         }
         if( js.String.isEmpty($("#sDlvGiDtTo").val()) ){
             $("#sDlvGiDtTo").val("${toDay}");

@@ -64,13 +64,13 @@ public class HcConfirmPoController {
 		String dateFormat = SalesConstants.DEFAULT_DATE_FORMAT1;
 
 		String toDay = CommonUtils.getFormattedString(dateFormat);
-		String oneDay = "01/"+CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT4);
+		//String oneDay = "01/"+CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT4);
 		//String sevenDtBf    = CommonUtils.getAddDay(toDay, -7, dateFormat);
         //String nextMonthDay = CommonUtils.getAddMonth(toDay, 1, dateFormat);
-        //String threeMonthBf = CommonUtils.getAddMonth(toDay, -3, dateFormat);
+        String threeMonthBf = CommonUtils.getAddMonth(toDay, -3, dateFormat);
 
 		model.put("toDay", toDay);
-		model.put("oneDay", oneDay);
+		model.put("threeMonthBf", threeMonthBf);
 
 		// CDC - HMC0003M
 		model.addAttribute("cdcList", hcPoIssueService.selectCdcList());

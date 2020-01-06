@@ -213,7 +213,7 @@ var vendorObj = {};
         doDefCombo(vendorDs, '', 'sMemAccId', 'S', '');
 
         if( js.String.isEmpty($("#sGrDtFrom").val()) ){
-            $("#sGrDtFrom").val("${oneMonthBf}");
+            $("#sGrDtFrom").val("${threeMonthBf}");
         }
         if( js.String.isEmpty($("#sGrDtTo").val()) ){
             $("#sGrDtTo").val("${toDay}");

@@ -68,11 +68,11 @@ public class HcCreateDeliveryController {
 		String dateFormat = SalesConstants.DEFAULT_DATE_FORMAT1;
 
 		String toDay = CommonUtils.getFormattedString(dateFormat);
-		String fourteenDtBf   = CommonUtils.getAddDay(toDay, -14, dateFormat);
+		//String fourteenDtBf   = CommonUtils.getAddDay(toDay, -14, dateFormat);
         //String nextMonthDay = CommonUtils.getAddMonth(toDay, 1, dateFormat);
-        //String threeMonthBf = CommonUtils.getAddMonth(toDay, -3, dateFormat);
+        String threeMonthBf = CommonUtils.getAddMonth(toDay, -3, dateFormat);
 		model.put("toDay", toDay);
-		model.put("fourteenDtBf", fourteenDtBf);
+		model.put("threeMonthBf", threeMonthBf);
 
 		// CDC - HMC0003M
 		model.addAttribute("cdcList", hcPoIssueService.selectCdcList());
@@ -205,7 +205,6 @@ public class HcCreateDeliveryController {
 		return ResponseEntity.ok(result);
 	}
 
-
 	//
 	@RequestMapping(value = "/hcCreateDelivery/selectProductionCompar.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> selectProductionCompar(@RequestBody Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
@@ -215,6 +214,19 @@ public class HcCreateDeliveryController {
 		result.setCode(AppConstants.SUCCESS);
 		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		result.setDataList(list);
+		return ResponseEntity.ok(result);
+	}
+
+	// Cancel Delivery
+	@RequestMapping(value = "/hcCreateDelivery/cancelDeliveryHc.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> cancelDeliveryHc(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+		ReturnMessage result = new ReturnMessage();
+		List<EgovMap> list = hcCreateDeliveryService.cancelDeliveryHc(params, sessionVO);
+
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		result.setDataList(list);
+		result.setTotal(list.size());
 		return ResponseEntity.ok(result);
 	}
 

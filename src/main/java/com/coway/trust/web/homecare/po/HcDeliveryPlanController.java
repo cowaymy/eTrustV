@@ -60,11 +60,11 @@ public class HcDeliveryPlanController {
 		String dateFormat = SalesConstants.DEFAULT_DATE_FORMAT1;
 
 		String toDay = CommonUtils.getFormattedString(dateFormat);
-		String fourteenDtBf   = CommonUtils.getAddDay(toDay, -14, dateFormat);
+		//String fourteenDtBf   = CommonUtils.getAddDay(toDay, -14, dateFormat);
         //String nextMonthDay = CommonUtils.getAddMonth(toDay, 1, dateFormat);
-        //String threeMonthBf = CommonUtils.getAddMonth(toDay, -3, dateFormat);
+        String threeMonthBf = CommonUtils.getAddMonth(toDay, -3, dateFormat);
 		model.put("toDay", toDay);
-		model.put("fourteenDtBf", fourteenDtBf);
+		model.put("threeMonthBf", threeMonthBf);
 
 		// CDC - HMC0003M
 		model.addAttribute("cdcList", hcPoIssueService.selectCdcList());

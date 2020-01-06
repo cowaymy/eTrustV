@@ -373,7 +373,7 @@ var mSort = {};
         doDefCombo(vendorDs, '', 'sMemAccId', 'S', '');
 
         if( js.String.isEmpty($("#sPoDtFrom").val()) ){
-            $("#sPoDtFrom").val("${fourteenDtBf}");
+            $("#sPoDtFrom").val("${threeMonthBf}");
         }
         if( js.String.isEmpty($("#sPoDtTo").val()) ){
             $("#sPoDtTo").val("${toDay}");
@@ -647,6 +647,47 @@ var mSort = {};
                 Common.alert('only one [Delivery No] is possible.');
                 return false;
             }
+
+        });
+
+        $("#btnCancelDelivery").click(function(){
+        	var rows = AUIGrid.getSelectedItems(deliveryGridID);
+        	var item = rows[0].item;
+
+            if(rows.length != 1){
+                Common.alert("Please, select one row from Delivery List.");
+                return false;
+            }
+
+            if(item.delvryStatusCode == "10"){
+            	Common.alert("Only delivery can be processed.");
+            	return false;
+            }
+
+            if(item.delvryStatusCode != "20"){
+            	Common.alert("GR processed can not be undone.");
+                return false;
+            }
+
+            Common
+	            .confirm(
+	                "Do you want to Cancel Delivery?",
+	                function(){
+	                    Common.ajax("POST", "/homecare/po/hcCreateDelivery/cancelDeliveryHc.do"
+	                            , {"hmcDelvryNo":item.hmcDelvryNo, "sPoNo":item.poNo}
+	                            , function(result){
+	                                Common.alert("<spring:message code='sys.msg.savedCnt'/>");
+	                                //AUIGrid.setGridData(deliveryGridID, result.dataList);
+	                             }
+	                            , function(jqXHR, textStatus, errorThrown){
+	                                try{
+	                                	Common.alert("Fail : " + jqXHR.responseJSON.message);
+	                                }catch (e){
+	                                    console.log(e);
+	                                }
+	                    });
+	                }
+	        );
 
         });
 
@@ -943,6 +984,9 @@ function fn_isDateValidate(sValidDt){
     <aside class="title_line"><!-- title_line start -->
         <h3>Delivery List</h3>
         <ul class="right_btns">
+
+            <li><p class="btn_grid"><a id="btnCancelDelivery">Cancel Delivery</a></p></li>
+
             <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_grid"><a id="btnSubDel">Delete</a></p></li>
             <li><p class="btn_grid"><a id="btnSubDelivery">Delivery</a></p></li>

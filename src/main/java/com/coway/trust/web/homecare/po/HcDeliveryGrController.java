@@ -68,10 +68,10 @@ public class HcDeliveryGrController {
 		String dateFormat = SalesConstants.DEFAULT_DATE_FORMAT1;
 
 		String toDay = CommonUtils.getFormattedString(dateFormat);
-		String oneMonthBf = CommonUtils.getAddMonth(toDay, -1, dateFormat);
+		String threeMonthBf = CommonUtils.getAddMonth(toDay, -3, dateFormat);
 
 		model.put("toDay", toDay);
-		model.put("oneMonthBf", oneMonthBf);
+		model.put("threeMonthBf", threeMonthBf);
 
 		// CDC - HMC0003M
 		model.addAttribute("cdcList", hcPoIssueService.selectCdcList());

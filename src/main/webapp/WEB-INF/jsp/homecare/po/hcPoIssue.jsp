@@ -431,7 +431,7 @@ var taxObj = {};
         doDefCombo(poStatDs, '', 'sPoStsCd', 'S', '');
 
         if( js.String.isEmpty($("#sPoDtFrom").val()) ){
-            $("#sPoDtFrom").val("${fourteenDtBf}");
+            $("#sPoDtFrom").val("${threeMonthBf}");
         }
         if( js.String.isEmpty($("#sPoDtTo").val()) ){
             $("#sPoDtTo").val("${toDay}");
