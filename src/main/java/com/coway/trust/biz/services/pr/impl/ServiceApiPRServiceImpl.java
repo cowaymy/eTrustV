@@ -22,6 +22,8 @@ import com.coway.trust.biz.services.pr.ServiceApiPRDetailService;
 import com.coway.trust.biz.services.pr.ServiceApiPRService;
 import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import org.springframework.beans.BeanUtils;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -206,8 +208,36 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 	    logger.debug("==================================[MB]PRODUCT RETURN RESULT REGISTRATION - START - ====================================");
 	    logger.debug("### PRODUCT RETURN FORM : ", productReturnResultForm);
 
-	    prTransLogs = new ArrayList<>();
+	    List<ProductReturnResultForm> prList = new ArrayList<>();
 	    for (ProductReturnResultForm prService : productReturnResultForm) {
+	    	ProductReturnResultForm orgForm = new ProductReturnResultForm();
+	    	BeanUtils.copyProperties(prService, orgForm);
+	    	prList.add(orgForm);
+
+	    	ProductReturnResultForm resultForm = new ProductReturnResultForm();
+			BeanUtils.copyProperties(prService, resultForm);
+
+			// 해당 서비스 프레임 존재 확인
+			Map<String, Object> fraParam = new HashMap();
+			fraParam.put("matOrdNo", resultForm.getSalesOrderNo());
+			fraParam.put("userId", resultForm.getUserId());
+			EgovMap fraInfo = MSvcLogApiService.getPrFraOrdInfo(fraParam);
+
+			if (fraInfo != null) {
+				String newTransactionId = resultForm.getTransactionId().replaceAll(String.valueOf(resultForm.getSalesOrderNo()), fraInfo.get("salesOrderNo").toString());
+				newTransactionId = newTransactionId.replaceAll(resultForm.getServiceNo(), String.valueOf(fraInfo.get("serviceNo")));
+
+				resultForm.setSalesOrderNo(String.valueOf(fraInfo.get("salesOrderNo")));
+				resultForm.setServiceNo(String.valueOf(fraInfo.get("serviceNo")));
+				resultForm.setTransactionId(newTransactionId);
+				resultForm.setScanSerial("");
+
+				prList.add(resultForm);
+			}
+	    }
+
+	    prTransLogs = new ArrayList<>();
+	    for (ProductReturnResultForm prService : prList) {
 	    	prTransLogs.addAll(prService.createMaps(prService));
 	    }
 
@@ -290,5 +320,45 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 	    logger.debug("==================================[MB]PRODUCT RETURN RESULT REGISTRATION - END - ====================================");
 
 	    return ResponseEntity.ok(ProductReturnResultDto.create(transactionId));
+	}
+
+	@Override
+	public ResponseEntity<PRFailJobRequestDto> prReAppointmentDtRequest(PRFailJobRequestForm pRFailJobRequestForm) throws Exception {
+		String serviceNo = "";
+
+	    Map<String, Object> params = PRFailJobRequestForm.createMaps(pRFailJobRequestForm);
+
+	    serviceNo = String.valueOf(params.get("serviceNo"));
+
+	    logger.debug("==================================[MB]PRODUCT RETURN FAIL JOB REQUEST ====================================");
+	    logger.debug("### PRODUCT RETURN FAIL JOB REQUEST FORM : " + params.toString());
+	    logger.debug("==================================[MB]PRODUCT RETURN FAIL JOB REQUEST ====================================");
+
+	    try {
+	    	Map<String, Object> fraParams =  new HashMap();
+			fraParams.put("failReasonCode", params.get("failReasonCode"));
+			fraParams.put("serviceNo", params.get("serviceNo"));
+			fraParams.put("userId", params.get("userId"));
+			fraParams.put("salesOrderNo", params.get("salesOrderNo"));
+
+	    	serviceApiPRDetailService.prReAppointmentRequestProc(params);
+
+	    	// Frame이 존재한다면 installFailJobRequestProc New Data Try
+	    	Map<String, Object> fraParam = new HashMap();
+			fraParam.put("matOrdNo", params.get("salesOrderNo"));
+			fraParam.put("userId", String.valueOf(params.get("userId")));
+			EgovMap fraInfo = MSvcLogApiService.getPrFraOrdInfo(fraParam);
+			if (fraInfo != null) {
+				fraParams.put("salesOrderNo", Integer.parseInt(fraInfo.get("salesOrderNo").toString()));
+	    		fraParams.put("serviceNo", String.valueOf(fraInfo.get("serviceNo")));
+
+	    		serviceApiPRDetailService.prReAppointmentRequestProc(fraParams);
+			}
+	    }
+	    catch (Exception e) {
+	    	throw new ApplicationException(AppConstants.FAIL, "Fail");
+		}
+
+	    return ResponseEntity.ok(PRFailJobRequestDto.create(serviceNo));
 	}
 }
