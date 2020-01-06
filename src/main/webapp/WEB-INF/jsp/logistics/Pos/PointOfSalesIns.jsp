@@ -32,6 +32,19 @@
   color: #000;
 }
 
+.aui-grid-link-renderer1 {
+  text-decoration:underline;
+  color: #4374D9 !important;
+  cursor: pointer;
+  text-align: right;
+}
+
+/* 커스텀 열 스타일 */
+.my-column-style2 {
+    background:#FFEBFE;
+    color:#0000ff;
+}
+
 /*
   .my-row-style {
     background:#9FC93C;
@@ -79,6 +92,7 @@
     headerText : "<spring:message code='log.head.availableqty'/>",
     width : 120,
     height : 30,
+    style: "aui-grid-user-custom-right",
     visible : true
   }, {
     dataField : "serialChk",
@@ -92,7 +106,25 @@
     width : 120,
     height : 30,
     visible : false
-  } ];
+  } , {
+	    dataField : "serialRequireChkYn",
+	    headerText : "serialRequireChkYn",
+	    width : 120,
+	    height : 30,
+	    visible : false
+  }, {
+      dataField : "whLocId",
+      headerText : "whLocId",
+      width : 120,
+      height : 30,
+      visible : false
+  }, {
+    dataField : "whLocGb",
+    headerText : "whLocGb",
+    width : 120,
+    height : 30,
+    visible : false
+  }];
 
   var serialcolumn = [ {
     dataField : "itmcd",
@@ -293,7 +325,13 @@
       headerText : "<spring:message code='log.head.availableqty'/>",
       width : 120,
       height : 30,
-      editable : false
+      editable : false,
+      style: "aui-grid-user-custom-right",
+      styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
+          if(item.serialRequireChkYn== "Y" && item.itemserialChk== "Y") {
+              return "aui-grid-link-renderer1";
+          }
+      },
     },
     /* {dataField: "rqty",headerText :"<spring:message code='log.head.requestqty'/>"       ,width:120    ,height:30 }, */
     {
@@ -303,6 +341,15 @@
       height : 30,
       editable : true,
       dataType : "numeric",
+      headerStyle : "aui-grid-header-input-icon aui-grid-header-input-essen",
+      style: "aui-grid-user-custom-right",
+      styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
+          if(item.serialRequireChkYn== "Y" && item.itemserialChk== "Y") {
+              return "aui-grid-link-renderer1";
+          } else{
+        	  return "my-column-style2";
+          }
+      },
       editRenderer : {
         type : "InputEditRenderer",
         onlyNumeric : true, // 0~9 까지만 허용
@@ -342,7 +389,25 @@
         keyField : "codeId",
         valueField : "codeName"
       }
-    } ];
+    }, {
+        dataField : "serialRequireChkYn",
+        headerText : "serialRequireChkYn",
+        width : 120,
+        height : 30,
+        visible : false
+  }, {
+      dataField : "whLocId",
+      headerText : "whLocId",
+      width : 120,
+      height : 30,
+      visible : false
+  }, {
+    dataField : "whLocGb",
+    headerText : "whLocGb",
+    width : 120,
+    height : 30,
+    visible : false
+  }];
 
     resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout, "", resop);
     reqGrid = GridCommon.createAUIGrid("req_grid_wrap", reqcolumnLayout, "", reqop);
@@ -427,13 +492,101 @@
   //  });
 
     AUIGrid.bind(resGrid, "cellClick", function(event) {});
-    AUIGrid.bind(reqGrid, "cellClick", function(event) {});
+    //AUIGrid.bind(reqGrid, "cellClick", function(event) {});
+
+    // KR-OHK Serial Check add
+    AUIGrid.bind(reqGrid, "cellClick", function( event ) {
+        var rowIndex = event.rowIndex;
+        var dataField = AUIGrid.getDataFieldByColumnIndex(reqGrid, event.columnIndex);
+        var serialRequireChkYn = AUIGrid.getCellValue(reqGrid, rowIndex, "serialRequireChkYn");
+        var itemserialChk = AUIGrid.getCellValue(reqGrid, rowIndex, "itemserialChk");
+
+        if(dataField == "itemqty"){
+            var rowIndex = event.rowIndex;
+            if(serialRequireChkYn == "Y" && itemserialChk == "Y"){
+                $('#frmSearchSerial #pLocationType').val( AUIGrid.getCellValue(reqGrid, rowIndex, "whLocGb") );
+                $('#frmSearchSerial #pLocationCode').val( AUIGrid.getCellValue(reqGrid, rowIndex, "whLocId") );
+                $('#frmSearchSerial #pItemCodeOrName').val( AUIGrid.getCellValue(reqGrid, rowIndex, "itmcode") );
+
+                fn_serialSearchPop();
+            }
+        }
+
+       if(dataField == "rqty"){
+           if(serialRequireChkYn == "Y" && itemserialChk == "Y"){
+               $("#serialForm #pRequestNo").val(AUIGrid.getCellValue(reqGrid, rowIndex, "reqno"));
+               $("#serialForm #pRequestItem").val(AUIGrid.getCellValue(reqGrid, rowIndex, "reqnoitm"));
+               $("#serialForm #pStatus").val("I");    // $("#serialForm #pStatus").val("O");
+               fn_scanSearchPop();
+           }
+       }
+   });
 
     AUIGrid.bind(resGrid, "cellDoubleClick", function(event) {});
     AUIGrid.bind(reqGrid, "cellDoubleClick", function(event) {});
 
     AUIGrid.bind(resGrid, "ready", function(event) {});
     AUIGrid.bind(reqGrid, "ready", function(event) {});
+
+    // KR-OHK Serial Check add
+    $("#btnPopSerial").parent().addClass("btn_disabled");
+    $("#btnAllDel").parent().addClass("btn_disabled");
+
+    $("#btnAllDel").click(function(){
+        if($(this).parent().hasClass("btn_disabled") == true){
+            return false;
+        }
+
+        var msg = "Do you want to delete scaned serial of Request No ["+$("#zRstNo").val()+"]?";
+
+        Common
+            .confirm(msg,
+                function(){
+                    var itemDs = {"allYn":"Y"
+                            , "rstNo":$("#zRstNo").val()
+                            , "locId":$("#zFromLoc").val()
+                            , "ioType":$("#zIoType").val()
+                            , "transactionType":$("#zTrnscType").val()};
+
+                        Common.ajax("POST", "/logistics/serialMgmtNew/deleteOgOiSerial.do"
+                                , itemDs
+                                , function(result){
+                                    $("#btnPopSearch").click();
+                                }
+                                , function(jqXHR, textStatus, errorThrown){
+                                    try{
+                                        if (FormUtil.isNotEmpty(jqXHR.responseJSON)) {
+                                            console.log("code : "  + jqXHR.responseJSON.code);
+                                            Common.alert("Fail : " + jqXHR.responseJSON.message);
+                                        }else{
+                                            console.log("Fail Status : " + jqXHR.status);
+                                            console.log("code : "        + jqXHR.responseJSON.code);
+                                            console.log("message : "     + jqXHR.responseJSON.message);
+                                            console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                                        }
+                                    }catch (e){
+                                        console.log(e);
+                                    }
+                       });
+                }
+        );
+    });
+
+    $("#btnPopSerial").click(function(){
+        if($(this).parent().hasClass("btn_disabled") == true){
+            return false;
+        }
+
+        if(Common.checkPlatformType() == "mobile") {
+            popupObj = Common.popupWin("serialForm", "/logistics/serialMgmtNew/serialScanCommonPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+        } else{
+            Common.popupDiv("/logistics/serialMgmtNew/serialScanCommonPop.do", null, null, true, '_serialScanPop');
+        }
+    });
+
+    $("#btnPopSearch").click(function(){
+    	SearchReqItemListAjax();
+    });
 
   });
 
@@ -482,6 +635,13 @@
   // ADD BUTTON WHEN REQUEST TYPE ARE FOLLOWING
   // OG53, OG51, OG71, OG72
   $('#reqadd').click(function() {
+	  // KR-OHK serial Check add
+	  if (FormUtil.isEmpty($("#insReqLoc").val())) {
+          var text = "<spring:message code='log.label.rqstlct'/>";
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/>");
+          return false;
+      }
+
      $("#svalue").val('');
      $("#sUrl").val("/logistics/material/materialcdsearch.do");
      Common.searchpopupWin("popupForm", "/common/searchPopList.do", "stocklist");
@@ -582,6 +742,10 @@
             itemqty : checkedItems[i].qty,
             itemserialChk : checkedItems[i].serialChk,
             itemuom : checkedItems[i].uom,
+            serialRequireChkYn : checkedItems[i].serialRequireChkYn,
+            whLocId : checkedItems[i].whLocId,
+            whLocGb : checkedItems[i].whLocGb,
+
             rqty : 0
           }
           k++;
@@ -812,11 +976,20 @@
       var checkedRowCnt = checkedItems.length;
       var uncheckedRowCnt = reqRowCnt - checkedRowCnt;
       if (uncheckedRowCnt > 0 || reqRowCnt == 0) {
-          text = "<spring:message code='log.label.rqstQty'/>";
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/>");
+          //text = "<spring:message code='log.label.rqstQty'/>";
+          //Common.alert("<spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/>");
+          Common.alert("Please select checkBox."); // KR-OHK
         return false;
       }
       for (var i = 0; i < checkedItems.length; i++) {
+        // KR-OHK Serial Check add
+    	if (checkedItems[i].serialRequireChkYn != 'Y' || checkedItems[i].itemserialChk != 'Y') {
+    	  if (FormUtil.isEmpty(checkedItems[i].rqty) || checkedItems[i].rqty == 0) {
+  	        text = "<spring:message code='log.head.requestqty'/>";
+  	        Common.alert("["+ checkedItems[i].itmcode + "] <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/>");
+  	        return false;
+    	  }
+  	    }
         if (checkedItems[i].itemuom == ""
          || checkedItems[i].itemuom == undefined) {
             text = "UOM";
@@ -947,6 +1120,13 @@
       var rowList = [];
       var boolitem = true;
       var k = 0;
+      // KR-OHK Serial Check add'
+      var serialChk = 'N';
+      var serialRequireChkYn = 'N';
+      var serialPdChk = 'N';
+      var serialFtChk = 'N';
+      var serialPtChk = 'N';
+
       for (var i = 0; i < data.length; i++) {
         for (var j = 0; j < reqitms.length; j++) {
           if (reqitms[j].itmcode == data[i].item.itemcode) {
@@ -956,13 +1136,31 @@
           }
         }
 
+        serialRequireChkYn = $("#serialRequireChkYn").val();
+        serialPdChk = $("#serialPdChk").val();
+        serialFtChk = $("#serialFtChk").val();
+        serialPtChk = $("#serialPtChk").val();
+
+        if(data[i].item.typeid == '61' && data[i].item.serialchk == 'Y' && serialPdChk == 'Y') {
+        	serialChk = 'Y';
+        } else if(data[i].item.typeid == '62' && data[i].item.serialchk == 'Y' && serialFtChk == 'Y') {
+        	serialChk = 'Y';
+        }else if(data[i].item.typeid == '63' && data[i].item.serialchk == 'Y' && serialPtChk == 'Y') {
+        	serialChk = 'Y';
+        } else {
+        	serialChk = 'N';
+        }
+
         if (boolitem) {
           rowList[k] = {
             itmcode : data[i].item.itemcode,
             itmdesc : data[i].item.itemname,
-            itemserialChk : data[i].item.serialchk,
+            //itemserialChk : data[i].item.serialchk,
+            itemserialChk : serialChk,                     // KR-OHK add
+            serialRequireChkYn : serialRequireChkYn,   // KR-OHK add
             itemuom : data[i].item.uom,
             rqty : 0
+
           }
           k++;
         }
@@ -1042,10 +1240,11 @@
 
     Common.ajaxSync("POST", "/logistics/pos/insertPosInfo.do", data,
       function(result) {
-        Common.alert("" + result.message + "</br> Created : " + result.data, locationList);
+        Common.alert("" + result.message + "</br> Created : " + result.data);
+        locationList(result.data);
         //Common.alert(result.message);
-        $("#giopenwindow").hide();
-
+        // KR-OHK Serial Check add
+        //$("#giopenwindow").hide();
       }, function(jqXHR, textStatus, errorThrown) {
         try {
         } catch (e) {
@@ -1097,8 +1296,10 @@
     $("#giopenwindow").hide();
   }
 
-  function locationList() {
-    $('#list').click();
+  function locationList(reqstNo) {
+	// KR-OHK Serial Check add
+	$("#zRstNo").val(reqstNo);
+	SearchReqItemListAjax();
   }
 
   function getAdjLoc(){
@@ -1113,6 +1314,12 @@
       $("#locationTypeText").val(itm.locGrade);
 
       $("#reqLoc").val(itm.locId);
+
+      // KR-OHK Serial Check add
+      $("#serialRequireChkYn").val(itm.serialRequireChkYn);
+      $("#serialPdChk").val(itm.serialPdChk);
+      $("#serialFtChk").val(itm.serialFtChk);
+      $("#serialPtChk").val(itm.serialPtChk);
     }
   }
 
@@ -1141,6 +1348,67 @@
     });
   }
 
+	// KR-OHK Serial Check add
+	function SearchReqItemListAjax() {
+	    var url = "/logistics/pos/selectReqItemList.do";
+
+	    var param = {"taskType":'INS', "reqstNo":$("#zRstNo").val()};
+
+	    Common.ajax("GET", url, param, function(result) {
+	        AUIGrid.setGridData(reqGrid, result);
+
+	        var requireCnt = 0;
+            var itemCnt = 0;
+
+            if(result.length > 0) {
+                for(var i = 0; i < result.length; i++) {
+                    if(result[i].serialRequireChkYn == 'Y') {// SERIAL_REQUIRE_CHK_YN
+                        requireCnt ++;
+                    }
+                    if(result[i].itemserialChk == 'Y') {// ITEM SERIAL CHECK YN
+                        itemCnt ++;
+                    }
+                }
+            }
+
+            if(requireCnt > 0 && itemCnt > 0) {
+            	$("#zRstNo").val(result[0].reqno);
+            	$("#zFromLoc").val(result[0].whLocId);
+                $("#zTrnscType").val(result[0].trnscType);
+            	$("#zIoType").val(result[0].ioType);
+
+            	$("#insOthersReq").val(result[0].reqno);
+
+            	$("#btnPopSerial").parent().removeClass("btn_disabled");
+                $("#btnAllDel").parent().removeClass("btn_disabled");
+
+                $("#save").parent().addClass("btn_disabled");
+            } else {
+            	$('#list').click();
+                $("#giopenwindow").hide();
+            }
+	    });
+	}
+
+	//Serial Scan Search Pop
+	function fn_scanSearchPop(){
+	    if(Common.checkPlatformType() == "mobile") {
+	        popupObj = Common.popupWin("serialForm", "/logistics/SerialMgmt/scanSearchPop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+	    } else{
+	        Common.popupDiv("/logistics/SerialMgmt/scanSearchPop.do", $("#serialForm").serializeJSON(), null, true, '_scanSearchPop');
+	    }
+	}
+
+	//Serial Search Pop
+	function fn_serialSearchPop(){
+	    Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
+	}
+
+	function fnSerialSearchResult(data) {
+	    data.forEach(function(dataRow) {
+	        console.log("serialNo : " + dataRow.serialNo);
+	    });
+	}
 
 </script>
 <section id="content">
@@ -1167,10 +1435,32 @@
  <!-- title_line end -->
  <section class="search_table">
   <!-- search_table start -->
+    <form id="frmSearchSerial" name="frmSearchSerial" method="post">
+       <input id="pGubun" name="pGubun" type="hidden" value="SEARCH" />
+       <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" />
+       <input id="pLocationType" name="pLocationType" type="hidden" value="" />
+       <input id="pLocationCode" name="pLocationCode" type="hidden" value="" />
+       <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" />
+       <input id="pStatus" name="pStatus" type="hidden" value="" />
+       <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
+   </form>
+   <form id="serialForm" name="serialForm" method="POST">
+       <input type="hidden" name="zTrnscType" id="zTrnscType"/>
+       <input type="hidden" name="zRstNo" id="zRstNo"/>
+       <input type="hidden" name="zFromLoc" id="zFromLoc"/>
+       <input type="hidden" name="zIoType" id="zIoType"/>
+       <input type="hidden" name="pRequestNo" id="pRequestNo" />
+       <input type="hidden" name="pRequestItem" id="pRequestItem" />
+       <input type="hidden" name="pStatus" id="pStatus" />
+   </form>
   <form id="headForm" name="headForm" method="post">
    <input type='hidden' id='pridic' name='pridic' value='M' /> <input
     type='hidden' id='headtitle' name='headtitle' value='SOH' /> <input
     type="hidden" id="keyvalue" name="keyvalue" />
+   <input type="hidden" name="serialRequireChkYn" id="serialRequireChkYn" />
+   <input type="hidden" name="serialPdChk" id="serialPdChk" />
+   <input type="hidden" name="serialFtChk" id="serialFtChk" />
+   <input type="hidden" name="serialPtChk" id="serialPtChk" />
    <!--<input type='hidden' id='trnscType' name='trnscType' value='OH'/> -->
    <table class="type1">
     <!-- table start -->
@@ -1353,6 +1643,9 @@
      <!-- title_line start -->
      <h3><spring:message code='log.title.rqstItm' /></h3>
      <ul class="right_btns">
+      <li><p class="btn_blue2 btn_disabled">
+        <a id="btnAllDel">Clear Serial</a>
+       </p></li>
       <%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
       <li><p class="btn_blue2">
         <a id="attachment"><spring:message code='log.label.atchmnt' /></a><input type="hidden"
@@ -1402,6 +1695,11 @@
     <p class="btn_blue2 big">
      <a id="save"><spring:message code='sys.btn.save' /></a>
     </p></li>
+    <li>
+    <p class="btn_blue2 big">
+     <a id="btnPopSerial">Serial Scan</a>
+    </p></li>
+    <li style="display:none;"><p class="btn_grid"><a id="btnPopSearch">Search</a></p></li>
    <%-- </c:if> --%>
    <!-- <li><p class="btn_blue2 big"><a id="list">List</a></p></li>&nbsp;&nbsp;<li><p class="btn_blue2 big"><a onclick="javascript:insPosInfo();">SAVE</a></p></li> -->
   </ul>
