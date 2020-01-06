@@ -10,8 +10,8 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "ProductRetrunJobDto", description = "공통코드 Dto")
 public class ProductRetrunJobDto {
 
-	
-	
+
+
 	@ApiModelProperty(value = "주문번호")
 	private String salesOrderNo;
 
@@ -206,6 +206,18 @@ public class ProductRetrunJobDto {
 
 	@ApiModelProperty(value = "HHMM")
 	private String nextCallTime;
+
+	@ApiModelProperty(value = "fraYn")
+	private String fraYn;
+
+	@ApiModelProperty(value = "fraOrdNo")
+	private String fraOrdNo;
+
+	@ApiModelProperty(value = "fraProductCode")
+	private String fraProductCode;
+
+	@ApiModelProperty(value = "fraProductName")
+	private String fraProductName;
 
 	public String getSalesOrderNo() {
 		return salesOrderNo;
@@ -726,11 +738,43 @@ public class ProductRetrunJobDto {
 	public void setNextCallTime(String nextCallTime) {
 		this.nextCallTime = nextCallTime;
 	}
-	
-	
-	
+
+	public String getFraYn() {
+		return fraYn;
+	}
+
+	public void setFraYn(String fraYn) {
+		this.fraYn = fraYn;
+	}
+
+	public String getFraOrdNo() {
+		return fraOrdNo;
+	}
+
+	public void setFraOrdNo(String fraOrdNo) {
+		this.fraOrdNo = fraOrdNo;
+	}
+
+	public String getFraProductCode() {
+	    return fraProductCode;
+	}
+
+	public void setFraProductCode(String fraProductCode) {
+	    this.fraProductCode = fraProductCode;
+	}
+
+	public String getFraProductName() {
+	    return fraProductName;
+	}
+
+	public void setFraProductName(String fraProductName) {
+	    this.fraProductName = fraProductName;
+	}
+
+
+
 	public static ProductRetrunJobDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, ProductRetrunJobDto.class);
 	}
-	
+
 }

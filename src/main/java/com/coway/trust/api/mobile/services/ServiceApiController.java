@@ -2114,116 +2114,6 @@ public class ServiceApiController {
   }
 
   /* Woongjin Jun */
-  /*
-  @ApiOperation(value = "Care Service Job List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/careServiceJobList_b", method = RequestMethod.GET)
-  public ResponseEntity<List<CareServiceJobDto>> getCareServiceJob_b(@ModelAttribute CareServiceJobForm careServiceJobForm) throws Exception {
-	  Map<String, Object> params = CareServiceJobForm.createMap(careServiceJobForm);
-
-	  List<EgovMap> CareServiceJobList = MSvcLogApiService.getCareServiceJob_b(params);
-
-	  LOGGER.debug("==================================[MB]CARE SERVICE JOB BATCH SEARCH====================================");
-	  for (int i = 0; i < CareServiceJobList.size(); i++) {
-		  LOGGER.debug("careServiceJobList_b : {}", CareServiceJobList.get(i));
-	  }
-	  LOGGER.debug("==================================[MB]CARE SERVICE JOB BATCH SEARCH====================================");
-
-	  List<CareServiceJobDto> list = CareServiceJobList.stream().map(r -> CareServiceJobDto.create(r)).collect(Collectors.toList());
-
-	  return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "Care Service Parts List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/careServiceParts_b", method = RequestMethod.GET)
-  public ResponseEntity<List<CareServicePartsDto>> getCareServiceParts_b(@ModelAttribute CareServicePartsForm careServicePartsForm) throws Exception {
-	  Map<String, Object> params = CareServicePartsForm.createMap(careServicePartsForm);
-
-	  List<EgovMap> CareServiceParts = MSvcLogApiService.getCareServiceParts_b(params);
-
-	  LOGGER.debug("==================================[MB]CARE SERVICE PART LIST BATCH SEARCH====================================");
-	  for (int i = 0; i < CareServiceParts.size(); i++) {
-		  LOGGER.debug("careServiceParts_b : {}", CareServiceParts.get(i));
-	  }
-	  LOGGER.debug("==================================[MB]CARE SERVICE PART LIST BATCH SEARCH====================================");
-
-	  List<CareServicePartsDto> list = CareServiceParts.stream().map(r -> CareServicePartsDto.create(r)).collect(Collectors.toList());
-
-	  return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "DT AfterServiceJob List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtAfterServiceJobList_b", method = RequestMethod.GET)
-  public ResponseEntity<List<DtAfterServiceJobDto_b>> getDtAfterServiceJob_b(@ModelAttribute DtAfterServiceJobForm afterServiceJobForm) throws Exception {
-	  Map<String, Object> params = DtAfterServiceJobForm.createMap(afterServiceJobForm);
-
-	  List<EgovMap> dtAfterServiceJobList = MSvcLogApiService.getAfterServiceJobList_b(params);
-
-	  LOGGER.debug("==================================[MB]AFTER SERVICE JOB BATCH SEARCH====================================");
-	  for (int i = 0; i < dtAfterServiceJobList.size(); i++) {
-		  LOGGER.debug("afterServiceJobList_b : {}", dtAfterServiceJobList.get(i));
-	  }
-	  LOGGER.debug("==================================[MB]AFTER SERVICE JOB BATCH SEARCH====================================");
-
-	  List<DtAfterServiceJobDto_b> list = dtAfterServiceJobList.stream().map(r -> DtAfterServiceJobDto_b.create(r)).collect(Collectors.toList());
-
-	  return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "DT After Service Parts List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtAfterServiceParts_b", method = RequestMethod.GET)
-  public ResponseEntity<List<DtAfterServicePartsDto>> getDtAfterServiceParts_b(@ModelAttribute DtAfterServicePartsForm afterServicePartsForm) throws Exception {
-	  Map<String, Object> params = DtAfterServicePartsForm.createMap(afterServicePartsForm);
-
-	  List<EgovMap> dtAfterServiceParts = MSvcLogApiService.afterServiceParts_b(params);
-
-	  LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST BATCH SEARCH====================================");
-	  for (int i = 0; i < dtAfterServiceParts.size(); i++) {
-		  LOGGER.debug("afterServiceParts_b  : {}", dtAfterServiceParts.get(i));
-	  }
-	  LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST BATCH SEARCH====================================");
-
-	  List<DtAfterServicePartsDto> list = dtAfterServiceParts.stream().map(r -> DtAfterServicePartsDto.create(r)).collect(Collectors.toList());
-
-	  return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "DT ProductRetrunJob List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtProductRetrunJobList_b", method = RequestMethod.GET)
-  public ResponseEntity<List<DtProductRetrunJobDto>> getDtProductRetrunJobList_b(@ModelAttribute DtProductRetrunJobForm productRetrunJobForm) throws Exception {
-	  Map<String, Object> params = DtProductRetrunJobForm.createMap(productRetrunJobForm);
-
-	  List<EgovMap> dtProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList_b(params);
-
-	  LOGGER.debug("==================================[MB]PRODUCT RETURN JOB BATCH SEARCH====================================");
-	  for (int i = 0; i < dtProductRetrunJobList.size(); i++) {
-		  LOGGER.debug("productRetrunJobList_b : {}", dtProductRetrunJobList.get(i));
-	  }
-	  LOGGER.debug("==================================[MB]PRODUCT RETURN JOB BATCH SEARCH====================================");
-
-	  List<DtProductRetrunJobDto> list = dtProductRetrunJobList.stream().map(r -> DtProductRetrunJobDto.create(r)).collect(Collectors.toList());
-
-	  return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "DT InstallationJob List batchSearch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtInstallationJobList_b", method = RequestMethod.GET)
-  public ResponseEntity<List<DtInstallationJobDto>> getDtInstallationJobList_b(@ModelAttribute DtInstallationJobForm installationJobForm) throws Exception {
-	  Map<String, Object> params = DtInstallationJobForm.createMap(installationJobForm);
-
-	  List<EgovMap> dtInstallationJobList = MSvcLogApiService.getInstallationJobList_b(params);
-
-	  LOGGER.debug("==================================[MB]INSTALLATION JOB BATCH SEARCH====================================");
-	  for (int i = 0; i < dtInstallationJobList.size(); i++) {
-		  LOGGER.debug("installationJobList_b    값 : {}", dtInstallationJobList.get(i));
-	  }
-	  LOGGER.debug("==================================[MB]INSTALLATION JOB BATCH SEARCH====================================");
-
-	  List<DtInstallationJobDto> list = dtInstallationJobList.stream().map(r -> DtInstallationJobDto.create(r)).collect(Collectors.toList());
-
-	  return ResponseEntity.ok(list);
-  }
-  */
-
   @ApiOperation(value = "Care Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/careServiceJobList", method = RequestMethod.GET)
   public ResponseEntity<List<CareServiceJobDto>> getCareServiceJob(@ModelAttribute CareServiceJobForm careServiceJobForm) throws Exception {
@@ -2408,7 +2298,7 @@ public class ServiceApiController {
   @ApiOperation(value = "Product Return Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/dtPRFailJobRequest", method = RequestMethod.POST)
   public ResponseEntity<PRFailJobRequestDto> dtPRFailJobRequest(@RequestBody PRFailJobRequestForm pRFailJobRequestForm) throws Exception {
-	  return serviceApiPRService.prReAppointmentRequest(pRFailJobRequestForm);
+	  return serviceApiPRService.prReAppointmentDtRequest(pRFailJobRequestForm);
   }
 
   @ApiOperation(value = "Heart", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

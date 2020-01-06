@@ -207,6 +207,18 @@ public class DtProductRetrunJobDto {
 	@ApiModelProperty(value = "HHMM")
 	private String nextCallTime;
 
+	@ApiModelProperty(value = "fraYn")
+	private String fraYn;
+
+	@ApiModelProperty(value = "fraOrdNo")
+	private String fraOrdNo;
+
+	@ApiModelProperty(value = "fraProductCode")
+	private String fraProductCode;
+
+	@ApiModelProperty(value = "fraProductName")
+	private String fraProductName;
+
 	private String serialChk;
 	public String getSerialChk() {
 		return serialChk;
@@ -735,6 +747,37 @@ public class DtProductRetrunJobDto {
 		this.nextCallTime = nextCallTime;
 	}
 
+	public String getFraYn() {
+		return fraYn;
+	}
+
+	public void setFraYn(String fraYn) {
+		this.fraYn = fraYn;
+	}
+
+	public String getFraOrdNo() {
+		return fraOrdNo;
+	}
+
+	public void setFraOrdNo(String fraOrdNo) {
+		this.fraOrdNo = fraOrdNo;
+	}
+
+	public String getFraProductCode() {
+		return fraProductCode;
+	}
+
+	public void setFraProductCode(String fraProductCode) {
+		this.fraProductCode = fraProductCode;
+	}
+
+	public String getFraProductName() {
+		return fraProductName;
+	}
+
+	public void setFraProductName(String fraProductName) {
+		this.fraProductName = fraProductName;
+	}
 
 
 	public static DtProductRetrunJobDto create(EgovMap egvoMap) {
