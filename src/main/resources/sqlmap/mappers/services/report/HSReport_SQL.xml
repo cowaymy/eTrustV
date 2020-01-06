@@ -182,6 +182,7 @@
 
                                         <![CDATA[
 					                          ) Distinct1 ) Distinct2
+					                          WHERE C3 NOT LIKE ('CHT%')
 					                       ]]>
 
         </select>
