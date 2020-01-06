@@ -39,7 +39,7 @@ public interface PreOrderMapper {
 
 	void updatePreOrderStatus(PreOrderVO preOrderVO);
 
-	int updatePreOrderFailStatus(Map<String, Object> params);
+	void updatePreOrderFailStatus(Map<String, Object> params);
 
 	int selectExistingMember(Map<String, Object> params);
 

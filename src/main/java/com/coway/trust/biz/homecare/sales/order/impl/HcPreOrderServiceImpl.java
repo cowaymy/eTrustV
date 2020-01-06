@@ -304,7 +304,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 		try {
 			params.put("updUserId", sessionVO.getUserId());
 
-			rtnCnt = preOrderMapper.updatePreOrderFailStatus(params);
+			rtnCnt = hcPreOrderMapper.updateHcPreOrderFailStatus(params);
 			if(rtnCnt <= 0) { // not insert
 				throw new ApplicationException(AppConstants.FAIL, "Order Status updated Failed.");
 			}
@@ -312,7 +312,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			if(CommonUtils.isNotEmpty(anoPreOrdId)) {
 				params.put("preOrdId", anoPreOrdId);
 
-				rtnCnt = preOrderMapper.updatePreOrderFailStatus(params);
+				rtnCnt = hcPreOrderMapper.updateHcPreOrderFailStatus(params);
 				if(rtnCnt <= 0) { // not insert
 					throw new ApplicationException(AppConstants.FAIL, "Order Status updated Failed.");
 				}

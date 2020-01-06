@@ -38,4 +38,13 @@ public interface HcPreOrderMapper {
 	 */
 	public EgovMap selectHcPreOrderInfo(Map<String, Object> params);
 
+	/**
+	 * Update(Fail Status) - Homecare Pre Order
+	 * @Author KR-SH
+	 * @Date 2020. 1. 6.
+	 * @param params
+	 * @return
+	 */
+	public int updateHcPreOrderFailStatus(Map<String, Object> params);
+
 }

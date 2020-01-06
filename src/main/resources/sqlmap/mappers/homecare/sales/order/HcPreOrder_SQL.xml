@@ -138,4 +138,15 @@
            AND (H1.MAT_PRE_ORD_ID = #{preOrdId} OR H1.FRA_PRE_ORD_ID = #{preOrdId})
     </select>
 
+    <!-- Update(Fail Status) - Homecare Pre Order -->
+    <update id="updateHcPreOrderFailStatus" parameterType="Map">
+        UPDATE SAL0213M SET
+               STUS_ID                  = #{stusId}
+             , UPD_USER_ID           = #{updUserId}
+             , UPD_DT                   = SYSDATE
+             , REM1                      = #{failCode}
+             , REM2                      = #{remark}
+         WHERE PRE_ORD_ID        = #{preOrdId}
+    </update>
+
 </mapper>
