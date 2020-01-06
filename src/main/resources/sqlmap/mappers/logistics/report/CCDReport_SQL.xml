@@ -411,9 +411,9 @@
     </select>
 
     <select id="selectActualPaymentTypeSummaryOrderCountReportJsonList" parameterType="Map" resultType="egovMap">
-        /* [com.coway.trust.biz.logistics.report.impl.CCDReportMapper.selectActualPaymentTypeSummaryOrderCountReportJsonList] KR_HAN */
-		WITH DAY_LIST AS (
-		     SELECT -1*LEVEL+1  DD FROM dual CONNECT BY LEVEL <![CDATA[ < = ]]> 6  -- -6 month~this month
+		WITH /* [com.coway.trust.biz.logistics.report.impl.CCDReportMapper.selectActualPaymentTypeSummaryOrderCountReportJsonList] KR_HAN */
+                DAY_LIST AS (
+		          SELECT -1*LEVEL+1  DD FROM dual CONNECT BY LEVEL <![CDATA[ < = ]]> 6  -- -6 month~this month
 		)
 		SELECT '0' AS SEQ, DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
 		  FROM (
