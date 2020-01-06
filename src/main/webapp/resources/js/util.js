@@ -48,7 +48,7 @@ var FormUtil = {
 	checkEmail : function(val) {
 		if (val.length > 0) {
 			//var regExp = /[a-z0-9_\.-]{2,}@[a-z0-9-]{2,}\.[a-z0-9]{2,}/i;
-			var regExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i;
+			var regExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/i;
 			if (!regExp.test(val)) {
 				return true;
 			}
