@@ -53,6 +53,11 @@
         var vCity = AUIGrid.getCellValue(myGridID , first.rowIndex , "city")
         var vStatusId = AUIGrid.getCellValue(myGridID , first.rowIndex , "statusId");
         var vId = AUIGrid.getCellValue(myGridID , first.rowIndex , "id");
+        // Internal 복사불가
+        if (vId == 'Internal') {
+            Common.alert("Internal Area ID cannot be copied.");
+            return false;
+        }
         // null state
         if (FormUtil.isEmpty(vCity)) {
             Common.alert("<spring:message code='sys.msg.necessary' arguments='City' htmlEscape='false'/>");
@@ -61,11 +66,6 @@
         // null state
         if (FormUtil.isEmpty(vStatusId)) {
             Common.alert("<spring:message code='sys.msg.necessary' arguments='State' htmlEscape='false'/>");
-            return false;
-        }
-        // Internal 복사불가
-        if (vId == 'Internal') {
-            Common.alert("Internal Area ID cannot be copied.");
             return false;
         }
 
