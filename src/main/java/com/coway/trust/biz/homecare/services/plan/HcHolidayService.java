@@ -88,4 +88,15 @@ public interface HcHolidayService {
 	 */
 	public boolean deleteHcHoliday(List<Map<String, Object>> params,SessionVO sessionVO);
 
+
+	/**
+	 * Save DT Assign
+	 * @Author KR-SH
+	 * @Date 2019. 11. 14.
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 */
+	public ReturnMessage DTAssignSave(Map<String, Object> params, SessionVO sessionVO)  throws Exception;
+
 }

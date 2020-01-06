@@ -143,7 +143,7 @@
 
 		 AUIGrid.bind(gridID1, "cellClick", function(event) {
 		     type = AUIGrid.getCellValue(gridID1, event.rowIndex, "holidayType");
-	         branchName = AUIGrid.getCellValue(gridID1, event.rowIndex, "ctBrnchCode");
+	         branchName = AUIGrid.getCellValue(gridID1, event.rowIndex, "dtBrnchCode");
 	         holidayDesc = AUIGrid.getCellValue(gridID1, event.rowIndex, "holidayDesc");
 	         holiday = AUIGrid.getCellValue(gridID1, event.rowIndex, "holiday");
 	         branchId = AUIGrid.getCellValue(gridID1, event.rowIndex, "brnchId");
@@ -278,27 +278,21 @@
 
     // 조회 - Search Button Click
     function fn_holidayListSearch() {
-        Common.ajax("GET", "/homecare/services/plan/selectHcHolidayList.do",$("#holidayForm").serialize(), function(result) {
-            AUIGrid.setGridData(gridID, result);
-    	});
+    	if($("#hList").prop("checked")) {  // radio button - Holiday List Display
+    		Common.ajax("GET", "/homecare/services/plan/selectHcHolidayList.do",$("#holidayForm").serialize(), function(result) {
+                AUIGrid.setGridData(gridID, result);
+            });
+    	} else { // radio button - Replacement DT Assign Status
+    		$("#type1").val(type1.substr(0,1));
+            $("#holidayDesc1").val(holidayDesc1);
+            $("#holiday1").val( holiday1);
+            $("#holidaySeq1").val(holidaySeq1);
+            $("#state1").val(state1);
 
-/*
-        $("#type1").val(type1.substr(0,1));
-    	$("#holidayDesc1").val(holidayDesc1);
-    	$("#holiday1").val(holiday1);
-        $("#holidaySeq1").val(holidaySeq1);
-    	$("#state1").val(state1);
-
-    	Common.ajax("GET", "/homecare/services/plan/selectDTAssignList.do", $("#holidayForm").serialize(), function(result) {
-            AUIGrid.setGridData(gridID1, result);
-        });
-
-        type1 = "";
-    	holidayDesc1="";
-    	holiday1="";
-    	state1="";
-    	holidaySeq1="";
-    	 */
+    		Common.ajax("GET", "/homecare/services/plan/selectDTAssignList.do", $("#holidayForm").serialize(), function(result2) {
+                AUIGrid.setGridData(gridID1, result2);
+            });
+    	}
     }
 
     function fn_radioBtn(val) {
@@ -318,7 +312,7 @@
         		Common.alert("No Select Row", $("#hList").prop("checked",true));
         		return;
         	}
-            fn_holidayListSearch();
+        	fn_holidayListSearch();
 
             $("#holiday_CTassign_grid_wap").show();
             $("#holiday_grid_wap").hide();
@@ -341,11 +335,7 @@
             Common.alert("Retry to click a column");
             return;
         }
-    	Common.popupDiv("/services/holiday/holidayReplacementCT.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq ,null, null , true , '_NewAddDiv1');
-    }
-
-    function fn_DTEntryEdit(){
-    	Common.popupDiv("/services/holiday/updatHolidayReplacementCT.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq ,null, null , true , '_NewAddDiv1');
+    	Common.popupDiv("/homecare/services/plan/replacementDTEntryPop.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq ,null, null , true , '_NewAddDiv1');
     }
 
     function fn_ChangeApplType() {
@@ -464,18 +454,16 @@
     <col style="width:*" />
 </colgroup>
 <tbody>
-<!--
 <tr>
     <td>
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <label><input id="hList" type="radio" name="name" checked="checked" onclick="fn_radioBtn(1)"/><span>Holiday List Display</span></label>
+    <label><input id="hList" type="radio" name="rdoBtn" checked="checked" onclick="fn_radioBtn(1)"/><span>Holiday List Display</span></label>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-    <label><input type="radio" name="name" onclick="fn_radioBtn(2)" /><span>Replacement DT Assign Status</span></label>
+    <label><input type="radio" name="rdoBtn" onclick="fn_radioBtn(2)" /><span>Replacement DT Assign Status</span></label>
     </c:if>
     </td>
 </tr>
- -->
 </tbody>
 </table>
 

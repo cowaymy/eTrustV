@@ -5,8 +5,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
@@ -34,7 +32,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 @Service("hcHolidayService")
 public class HcHolidayServiceImpl extends EgovAbstractServiceImpl implements HcHolidayService{
-	private static final Logger logger = LoggerFactory.getLogger(HcHolidayServiceImpl.class);
 
 	@Resource(name = "hcHolidayMapper")
 	private HcHolidayMapper hcHolidayMapper;
@@ -232,6 +229,31 @@ public class HcHolidayServiceImpl extends EgovAbstractServiceImpl implements HcH
     		return true;
 		}
 		return false;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ReturnMessage DTAssignSave(Map<String, Object> params, SessionVO sessionVO) throws Exception {
+		ReturnMessage message = new ReturnMessage();
+
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
+		List<Object> delList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);     // Get grid DeleteList
+
+		// 행 수정시
+		if(updList != null) {
+			holidayService.insertCTAssign(updList, formMap);
+		}
+
+		// 행 삭제시
+		if(delList != null) {
+			holidayService.deleteCTAssign(delList, formMap);
+		}
+
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("Save Success Replacement DT Entry");
+		return message;
 	}
 
 }
