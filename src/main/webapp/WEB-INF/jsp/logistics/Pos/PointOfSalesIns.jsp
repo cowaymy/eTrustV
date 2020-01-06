@@ -529,9 +529,6 @@
     AUIGrid.bind(reqGrid, "ready", function(event) {});
 
     // KR-OHK Serial Check add
-    $("#btnPopSerial").parent().addClass("btn_disabled");
-    $("#btnAllDel").parent().addClass("btn_disabled");
-
     $("#btnAllDel").click(function(){
         if($(this).parent().hasClass("btn_disabled") == true){
             return false;
@@ -1379,8 +1376,8 @@
 
             	$("#insOthersReq").val(result[0].reqno);
 
-            	$("#btnPopSerial").parent().removeClass("btn_disabled");
-                $("#btnAllDel").parent().removeClass("btn_disabled");
+            	$("#btnPopSerial").attr("style", "");
+                $("#btnAllDel").attr("style", "");
 
                 $("#save").parent().addClass("btn_disabled");
             } else {
@@ -1643,8 +1640,8 @@
      <!-- title_line start -->
      <h3><spring:message code='log.title.rqstItm' /></h3>
      <ul class="right_btns">
-      <li><p class="btn_blue2 btn_disabled">
-        <a id="btnAllDel">Clear Serial</a>
+      <li><p class="btn_blue2">
+        <a id="btnAllDel" style="display:none;">Clear Serial</a>
        </p></li>
       <%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
       <li><p class="btn_blue2">
@@ -1697,7 +1694,7 @@
     </p></li>
     <li>
     <p class="btn_blue2 big">
-     <a id="btnPopSerial">Serial Scan</a>
+     <a id="btnPopSerial" style="display:none;">Serial Scan</a>
     </p></li>
     <li style="display:none;"><p class="btn_grid"><a id="btnPopSearch">Search</a></p></li>
    <%-- </c:if> --%>

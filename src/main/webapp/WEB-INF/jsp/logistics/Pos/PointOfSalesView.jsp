@@ -228,11 +228,11 @@
     }
 
     if(requireCnt > 0 && itemCnt > 0) {
-        $("#btnPopSerial").parent().removeClass("btn_disabled");
-        $("#btnAllDel").parent().removeClass("btn_disabled");
+    	$("#btnPopSerial").attr("style", "");
+        $("#btnAllDel").attr("style", "");
     } else {
-        $("#btnPopSerial").parent().addClass("btn_disabled");
-        $("#btnAllDel").parent().addClass("btn_disabled");
+        $("#btnPopSerial").attr("style", "display:none");
+        $("#btnAllDel").attr("style", "display:none");
     }
 
     $("#btnAllDel").click(function(){
@@ -815,8 +815,8 @@
      <!-- title_line start -->
      <h3><spring:message code='log.title.rqstItm' /></h3>
      <ul class="right_btns">
-      <li><p class="btn_blue2"><a id="btnAllDel">Clear Serial</a></p></li>
-      <li><p class="btn_blue2"><a id="btnPopSerial">Serial Scan</a></p></li>
+      <li><p class="btn_blue2"><a id="btnAllDel" style="display:none;">Clear Serial</a></p></li>
+      <li><p class="btn_blue2"><a id="btnPopSerial" style="display:none;">Serial Scan</a></p></li>
       <li style="display:none;"><p class="btn_grid"><a id="btnPopSearch">Search</a></p></li>
      </ul>
     </aside>
