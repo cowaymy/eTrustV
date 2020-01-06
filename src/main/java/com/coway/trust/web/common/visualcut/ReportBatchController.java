@@ -297,6 +297,24 @@ public class ReportBatchController {
     LOGGER.info("[END] ColorGrid_Simplification_2014_2015...");
   }
 
+  @RequestMapping(value = "/ColorGrid_Simplification_2018.do")
+  //@Scheduled(cron = "0 20 6 * * *")//Daily (6:20am)
+  public void colorGridSimplification_2018() {
+    LOGGER.info("[START] ColorGrid_Simplification_2018...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/ColorGrid_Simplification_2018.rpt");// visualcut
+                                                                                      // rpt
+                                                                                      // file
+                                                                                      // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "ColorGrid_Simplification" + File.separator
+        + "ColorGrid_Simplification_2018" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] ColorGrid_Simplification_2018...");
+  }
+
   @RequestMapping(value = "/ColorGrid_Daily_2015_2006-2012_S.do")
   //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
   public void colorGridDaily_2015_2006_2012_S() {
