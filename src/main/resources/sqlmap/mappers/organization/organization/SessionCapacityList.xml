@@ -227,14 +227,24 @@
 		      WHERE A.MEM_ID = B.MEM_ID
 		      AND C.CT_ID = A.MEM_ID
 		      AND A.BRNCH = #{codeId}
-		      AND A.MEM_TYPE = '3'
+			  <when test="memType != null and memType != ''">
+			      AND A.MEM_TYPE = #{memType}
+			  </when>
+			  <otherwise>
+			      AND A.MEM_TYPE = '3'
+			  </otherwise>
 		      AND A.STUS       = '1'
 		      AND B.MEM_LVL != '2') BB
 	ON (AA.CT_ID = (SELECT A.MEM_ID
 			                FROM ORG0001D A, ORG0005D B
 			                WHERE A.MEM_ID = B.MEM_ID
 			                AND A.BRNCH = #{codeId}
-			                AND A.MEM_TYPE = '3'
+			                <when test="memType != null and memType != ''">
+                                AND A.MEM_TYPE = #{memType}
+                            </when>
+                            <otherwise>
+                                AND A.MEM_TYPE = '3'
+                            </otherwise>
 			                AND A.STUS      = '1'
 			                AND B.MEM_LVL = '2' ))
 	WHEN MATCHED THEN
@@ -256,7 +266,12 @@
 					                  FROM ORG0001D A, ORG0005D B
 					                  WHERE A.MEM_ID = B.MEM_ID
 					                  AND A.BRNCH = #{codeId}
-					                  AND A.MEM_TYPE = '3'
+		                              <when test="memType != null and memType != ''">
+		                                  AND A.MEM_TYPE = #{memType}
+		                              </when>
+		                              <otherwise>
+		                                  AND A.MEM_TYPE = '3'
+		                              </otherwise>
 					                  AND A.STUS      = '1'
 					                  AND B.MEM_LVL = '2'
 					                  AND ROWNUM = 1), BB.SUM_M_AS, BB.SUM_M_INS, BB.SUM_M_RTN, BB.SUM_A_AS, BB.SUM_A_INS, BB.SUM_A_RTN, BB.SUM_E_AS, BB.SUM_E_INS, BB.SUM_E_RTN, SYSDATE, #{userId}, SYSDATE, #{userId})
@@ -1023,4 +1038,25 @@
                       ORDER BY Project1.DEPT_CODE ASC
                              ]]>
         </select>
+
+        <!-- Select Count Cpacity CTM -->
+        <select id="selectCountSsCapacityCTM" parameterType="Map" resultType="int">
+            SELECT COUNT(A.MEM_CODE)
+             FROM ORG0001D A, ORG0005D B
+            WHERE A.MEM_ID = B.MEM_ID
+            <if test="cmbbranchId != null and cmbbranchId != ''">
+                AND A.BRNCH = #{cmbbranchId}
+            </if>
+            <choose>
+                <when test="memType != null and memType != ''">
+                    AND A.MEM_TYPE = #{memType}
+                </when>
+                <otherwise>
+                    AND A.MEM_TYPE = '3'
+                </otherwise>
+            </choose>
+                AND A.STUS       = '1'
+                AND B.MEM_LVL = '2'
+        </select>
+
 </mapper>
