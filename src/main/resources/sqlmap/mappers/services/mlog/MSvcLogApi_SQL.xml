@@ -4938,6 +4938,7 @@
   </select>
 
   <select id="getPrFraOrdInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
     SELECT TO_CHAR (C.SALES_ORD_NO) AS sales_Order_No,
                A.RETN_NO AS service_No,
                NVL (F.NAME, '') AS cust_Name,
@@ -5050,5 +5051,6 @@
                                               FROM HMC0011D
                                              WHERE MAT_ORD_NO = #{matOrdNo}
                                                  AND FRA_ORD_NO IS NOT NULL )
+    ]]>
   </select>
 </mapper>
