@@ -309,7 +309,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 				throw new ApplicationException(AppConstants.FAIL, "Order Status updated Failed.");
 			}
 			// HMC0011D에 다른 주문이 있는 경우.
-			if(CommonUtils.isNotEmpty(anoPreOrdId)) {
+			if(anoPreOrdId > 0) {
 				params.put("preOrdId", anoPreOrdId);
 
 				rtnCnt = hcPreOrderMapper.updateHcPreOrderFailStatus(params);
