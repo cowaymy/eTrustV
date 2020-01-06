@@ -269,7 +269,7 @@
           whereSql += " AND EXISTS( SELECT 1 "
                                 + "   FROM SAL0001D C "
                                 + "  WHERE A.AS_SO_ID = C.SALES_ORD_ID "
-                                + "    AND C.BNDL_ID IS NOT NULL ) ";
+                                + "    AND C.BNDL_ID IS NULL ) ";
 
           $("#reportForm1 #V_SELECTSQL").val(" ");
           $("#reportForm1 #V_ORDERBYSQL").val(" ");
