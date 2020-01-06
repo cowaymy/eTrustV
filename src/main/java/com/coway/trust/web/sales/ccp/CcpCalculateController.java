@@ -395,7 +395,7 @@ public class CcpCalculateController {
 		//Service
 		ccpCalculateService.calSave(params);
 
-		if(!params.get("bndlId").equals(null)){
+		if(!params.get("bndlId").equals("")){
 		  Map<String, Object> auxParam =  ccpCalculateService.getAux(params);
           params.put("saveCcpId", auxParam.get("ccpId"));
           params.put("saveOrdId", auxParam.get("ccpSalesOrdId"));
