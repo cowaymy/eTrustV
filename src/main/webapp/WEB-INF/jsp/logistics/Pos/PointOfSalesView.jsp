@@ -29,6 +29,13 @@
   background: #D9E5FF;
   color: #000;
 }
+
+.aui-grid-link-renderer1 {
+  text-decoration:underline;
+  color: #4374D9 !important;
+  cursor: pointer;
+  text-align: right;
+}
 </style>
 <script type="text/javascript"
  src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
@@ -69,6 +76,7 @@
     headerText : "<spring:message code='log.head.availableqty'/>",
     width : 120,
     height : 30,
+    style: "aui-grid-user-custom-right",
     editable : true
   }, {
     dataField : "serialChk",
@@ -168,7 +176,24 @@
     AUIGrid.bind(reqGrid, "cellEditEnd", function(event) { });
 
     AUIGrid.bind(resGrid, "cellClick", function(event) { });
-    AUIGrid.bind(reqGrid, "cellClick", function(event) { });
+    //AUIGrid.bind(reqGrid, "cellClick", function(event) { });
+
+    // KR-OHK Serial Check add
+    AUIGrid.bind(reqGrid, "cellClick", function( event ) {
+        var rowIndex = event.rowIndex;
+        var dataField = AUIGrid.getDataFieldByColumnIndex(reqGrid, event.columnIndex);
+        var serialRequireChkYn = AUIGrid.getCellValue(reqGrid, rowIndex, "serialRequireChkYn");
+        var itemserialChk = AUIGrid.getCellValue(reqGrid, rowIndex, "itemserialChk");
+
+        if(dataField == "rqty"){
+           if(serialRequireChkYn == "Y" && itemserialChk == "Y"){
+               $("#serialForm #pRequestNo").val(AUIGrid.getCellValue(reqGrid, rowIndex, "reqno"));
+               $("#serialForm #pRequestItem").val(AUIGrid.getCellValue(reqGrid, rowIndex, "reqnoitm"));
+               $("#serialForm #pStatus").val("I");    // $("#serialForm #pStatus").val("O");
+               fn_scanSearchPop();
+           }
+       }
+    });
 
     AUIGrid.bind(resGrid, "cellDoubleClick", function(event) { });
     AUIGrid.bind(reqGrid, "cellDoubleClick", function(event) {
@@ -185,6 +210,86 @@
     AUIGrid.bind(reqGrid, "ready", function(event) { });
 
     AUIGrid.bind(reqGrid, "cellEditBegin", function(event) { });
+
+    // KR-OHK Serial Check add
+    var length = AUIGrid.getGridData(reqGrid).length;
+    var requireCnt = 0;
+    var itemCnt = 0;
+
+    if(length > 0) {
+        for(var i = 0; i < length; i++) {
+            if(AUIGrid.getCellValue(reqGrid, i, "serialRequireChkYn") == 'Y') {// SERIAL_REQUIRE_CHK_YN
+                requireCnt ++;
+            }
+            if(AUIGrid.getCellValue(reqGrid, i, "itemserialChk") == 'Y') {// ITEM SERIAL CHECK YN
+                itemCnt ++;
+            }
+        }
+    }
+
+    if(requireCnt > 0 && itemCnt > 0) {
+        $("#btnPopSerial").parent().removeClass("btn_disabled");
+        $("#btnAllDel").parent().removeClass("btn_disabled");
+    } else {
+        $("#btnPopSerial").parent().addClass("btn_disabled");
+        $("#btnAllDel").parent().addClass("btn_disabled");
+    }
+
+    $("#btnAllDel").click(function(){
+        if($(this).parent().hasClass("btn_disabled") == true){
+            return false;
+        }
+
+        var msg = "Do you want to All Delete Request No ["+$("#zRstNo").val()+"]?";
+
+        Common
+            .confirm(msg,
+                function(){
+                    var itemDs = {"allYn":"Y"
+                            , "rstNo":$("#zRstNo").val()
+                            , "locId":$("#zFromLoc").val()
+                            , "ioType":$("#zIoType").val()
+                            , "transactionType":$("#zTrnscType").val()};
+
+                        Common.ajax("POST", "/logistics/serialMgmtNew/deleteOgOiSerial.do"
+                                , itemDs
+                                , function(result){
+                                    $("#btnPopSearch").click();
+                                }
+                                , function(jqXHR, textStatus, errorThrown){
+                                    try{
+                                        if (FormUtil.isNotEmpty(jqXHR.responseJSON)) {
+                                            console.log("code : "  + jqXHR.responseJSON.code);
+                                            Common.alert("Fail : " + jqXHR.responseJSON.message);
+                                        }else{
+                                            console.log("Fail Status : " + jqXHR.status);
+                                            console.log("code : "        + jqXHR.responseJSON.code);
+                                            console.log("message : "     + jqXHR.responseJSON.message);
+                                            console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                                        }
+                                    }catch (e){
+                                        console.log(e);
+                                    }
+                       });
+                }
+        );
+    });
+
+    $("#btnPopSerial").click(function(){
+        if($(this).parent().hasClass("btn_disabled") == true){
+            return false;
+        }
+
+        if(Common.checkPlatformType() == "mobile") {
+            popupObj = Common.popupWin("serialForm", "/logistics/serialMgmtNew/serialScanCommonPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+        } else{
+            Common.popupDiv("/logistics/serialMgmtNew/serialScanCommonPop.do", null, null, true, '_serialScanPop');
+        }
+    });
+
+    $("#btnPopSearch").click(function(){
+        SearchReqItemListAjax();
+    });
   });
 
   // BUTTON CLICK
@@ -357,7 +462,13 @@
       dataField : "rqty",
       headerText : "<spring:message code='log.head.requestqty'/>",
       width : 120,
-      height : 30
+      height : 30,
+      style: "aui-grid-user-custom-right",
+      styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
+          if(item.serialRequireChkYn== "Y" && item.itemserialChk== "Y") {
+              return "aui-grid-link-renderer1";
+          }
+      }
     }, {
       dataField : "uom",
       headerText : "<spring:message code='log.head.uom'/>",
@@ -385,6 +496,11 @@
 
     reqGrid = GridCommon.createAUIGrid("req_grid_wrap", reqcolumnLayout, "", gridoptions);
     AUIGrid.setGridData(reqGrid, data);
+
+    $("#zRstNo").val(AUIGrid.getCellValue(reqGrid, 0, "reqno") );
+    $("#zFromLoc").val(AUIGrid.getCellValue(reqGrid, 0, "whLocId"));
+    $("#zTrnscType").val(AUIGrid.getCellValue(reqGrid, 0, "trnscType"));
+    $("#zIoType").val(AUIGrid.getCellValue(reqGrid, 0, "ioType") );
   }
 
   function reciveList(data) {
@@ -464,6 +580,25 @@
   function destory(gridNm) {
     AUIGrid.destroy(gridNm);
   }
+
+  //KR-OHK Serial Check add
+  function SearchReqItemListAjax() {
+      var url = "/logistics/pos/selectReqItemList.do";
+      var param = {"taskType":'VIEW', "reqstNo":$("#zRstNo").val()};
+
+      Common.ajax("GET", url, param, function(result) {
+          AUIGrid.setGridData(reqGrid, result);
+      });
+  }
+
+  //Serial Scan Search Pop
+  function fn_scanSearchPop(){
+      if(Common.checkPlatformType() == "mobile") {
+          popupObj = Common.popupWin("serialForm", "/logistics/SerialMgmt/scanSearchPop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+      } else{
+          Common.popupDiv("/logistics/SerialMgmt/scanSearchPop.do", $("#serialForm").serializeJSON(), null, true, '_scanSearchPop');
+      }
+  }
 </script>
 <section id="content">
  <!-- content start -->
@@ -501,6 +636,15 @@
  <!-- title_line end -->
  <section class="search_table">
   <!-- search_table start -->
+   <form id="serialForm" name="serialForm" method="POST">
+       <input type="hidden" name="zTrnscType" id="zTrnscType"/>
+       <input type="hidden" name="zRstNo" id="zRstNo"/>
+       <input type="hidden" name="zFromLoc" id="zFromLoc"/>
+       <input type="hidden" name="zIoType" id="zIoType"/>
+       <input type="hidden" name="pRequestNo" id="pRequestNo" />
+       <input type="hidden" name="pRequestItem" id="pRequestItem" />
+       <input type="hidden" name="pStatus" id="pStatus" />
+   </form>
   <form id="headForm" name="headForm" method="post">
    <input type='hidden' id='pridic' name='pridic' value='M' />
    <input type='hidden' id='headtitle' name='headtitle' value='STO' />
@@ -670,6 +814,11 @@
     <aside class="title_line">
      <!-- title_line start -->
      <h3><spring:message code='log.title.rqstItm' /></h3>
+     <ul class="right_btns">
+      <li><p class="btn_blue2"><a id="btnAllDel">Clear Serial</a></p></li>
+      <li><p class="btn_blue2"><a id="btnPopSerial">Serial Scan</a></p></li>
+      <li style="display:none;"><p class="btn_grid"><a id="btnPopSearch">Search</a></p></li>
+     </ul>
     </aside>
     <!-- title_line end -->
     <div class="border_box" style="height: 340px;">

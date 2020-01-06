@@ -122,7 +122,7 @@
       }, {
         dataField : "mtext",
         headerText : "<spring:message code='log.head.movementtype'/>",
-        width : 120,
+        width : 160,
         height : 30
       }, {
         dataField : "adjrsn",
@@ -161,17 +161,17 @@
       }, {
         dataField : "reqdt",
         headerText : "Reqst. Require Date",
-        width : 200,
+        width : 150,
         height : 30
       }, {
         dataField : "crtdt",
         headerText : "Reqst. Create Date",
-        width : 200,
+        width : 150,
         height : 30
       }, {
         dataField : "rcvloc",
         headerText : "<spring:message code='log.head.fromlocation'/>",
-        width : 200,
+        width : 150,
         height : 30
       }, {
         dataField : "rcvlocnm",
@@ -182,7 +182,7 @@
       }, {
         dataField : "reqloc",
         headerText : "<spring:message code='log.label.rqstlct'/>",
-        width : 300,
+        width : 200,
         height : 30
       }, {
         dataField : "reqlocnm",
@@ -193,23 +193,23 @@
       }, {
         dataField : "itmcd",
         headerText : "<spring:message code='log.head.matcode'/>",
-        width : 130,
+        width : 120,
         height : 30,
         visible : true
       }, {
         dataField : "itmname",
         headerText : "<spring:message code='log.head.matNm'/>",
-        width : 300,
+        width : 250,
         height : 30
       }, {
         dataField : "reqstqty",
         headerText : "<spring:message code='log.head.reqqty'/>",
-        width : 120,
+        width : 100,
         height : 30
       }, {
         dataField : "rciptqty",
         headerText : "<spring:message code='log.head.remainqty'/>",
-        width : 120,
+        width : 100,
         height : 30
       }, {
         dataField : "delvno",
@@ -238,12 +238,17 @@
       }, {
         dataField : "serialChk",
         headerText : "Serial Check",
-        width : 120,
+        width : 100,
         height : 30
       }, {
+        dataField : "serialRequireChkYn",
+        headerText : "Serial Require Check Y/N",
+        width : 180,
+        height : 30
+     }, {
         dataField : "uomnm",
         headerText : "<spring:message code='log.head.uom'/>",
-        width : 120,
+        width : 100,
         height : 30
       }, {
         dataField : "reqstRem",
@@ -255,7 +260,14 @@
         headerText : "<spring:message code='log.head.createuser'/>",
         width : 120,
         height : 30,
-      } ];
+      }, {
+          dataField : "reqstCdcRdc",
+          headerText : "reqstCdcRdc",
+          width : 120,
+          height : 30,
+          visible : false
+      }
+      ];
 
   var mtrcolumnLayout = [
       {
@@ -502,7 +514,8 @@
 
       AUIGrid.bind(listGrid, "rowCheckClick", function(event) {
         var reqno = AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno");
-        if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)) {
+
+    	if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)) {
           AUIGrid.addCheckedRowsByValue(listGrid, "reqstno", reqno);
         } else {
           var rown = AUIGrid.getRowIndexesByValue(listGrid, "reqstno", reqno);
@@ -510,6 +523,20 @@
             AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
           }
         }
+
+    	// KR-OHK Serial Require Check add start
+        var checked = AUIGrid.getCheckedRowItems(listGrid);
+        for (var i = 0; i < checked.length; i++) {
+             if(checked[i].item.serialRequireChkYn !=event.item.serialRequireChkYn){
+                 Common.alert("'Serial Require Check Y/N' is different.");
+                 var rown = AUIGrid.getRowIndexesByValue(listGrid, "reqstno" , reqno);
+                 for (var i = 0 ; i < rown.length ; i++){
+                     AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+                 }
+                 return false;
+             }
+        }
+        // KR-OHK Serial Require Check add end
       });
 
       AUIGrid.bind(serialGrid, "cellEditEnd",
@@ -642,6 +669,12 @@
               Common.alert("<spring:message code='log.msg.rcdPrcCom'/>");
               return false;
               break;
+            }
+
+            // KR-OHK Serial check add
+            if (checkedItems[i].item.reqstqty == 0) {
+            	Common.alert("Req Qty is zero.<br/>Please scan the serial on the detail page.");
+            	return false;
             }
           }
 
@@ -857,7 +890,17 @@
       }
     }
 
-    Common.ajaxSync("POST", "/logistics/pos/PosGiSave.do", data, function(result) {
+    // KR-OHK Serial check add
+    var serialRequireChkYn = checkdata[0].item.serialRequireChkYn;
+    var url = "";
+
+    if(serialRequireChkYn == 'Y') {
+    	url = "/logistics/pos/PosGiSaveSerial.do";
+    } else {
+    	url = "/logistics/pos/PosGiSave.do";
+    }
+
+    Common.ajaxSync("POST", url, data, function(result) {
 
       if (result.data.poschk == 0) {
         Common.alert(result.message + " <br/>" + "MaterialDocumentNo : " + result.data.reVal);
@@ -1103,8 +1146,19 @@
     var getCheckedRowItems = AUIGrid.getCheckedRowItems(listGrid);
     var reqstono = getCheckedRowItems[0].item.reqstno;
     //alert("reqstono ???  "+reqstono);
-    fn_deleteAjax(reqstono);
 
+    // KR-OHK Serial check add
+    var ttype = getCheckedRowItems[0].item.ttype;
+    var locId = getCheckedRowItems[0].item.reqstCdcRdc;
+    var serialRequireChkYn = getCheckedRowItems[0].item.serialRequireChkYn;
+
+    if(serialRequireChkYn == 'Y') {
+    	Common.ajax("GET", "/logistics/pos/deleteStoNoSerial.do", { "reqstono" : reqstono, "ttype" : ttype, "locId" : locId }, function(result) {
+          Common.alert("" + result.message + "</br> Delete : " + reqstono, locationList);
+        });
+    } else {
+    	fn_deleteAjax(reqstono);
+    }
   }
 
   function fn_deleteAjax(reqstono) {
@@ -1294,7 +1348,7 @@
      </p></li>
      <li>
      <p class="btn_grid">
-       <a id="issueCancel"><spring:message code='log.btn.GIGRCancel'/></a>
+       <a id="issueCancel" style="display:none"><spring:message code='log.btn.GIGRCancel'/></a>
      </p>
     </li>
    </c:if>
@@ -1341,7 +1395,7 @@
        </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code='log.label.hdrTxt'/></th>
+       <th scope="row"><spring:message code='log.label.hdrTxt'/><span class="must">*</span></th>
        <td colspan='3'>
         <input type="text" name="doctext" id="doctext" class="w100p" maxlength="50" /></td>
       </tr>
