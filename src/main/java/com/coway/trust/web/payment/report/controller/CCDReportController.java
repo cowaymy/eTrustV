@@ -85,7 +85,7 @@ public class CCDReportController {
 		HttpServletRequest request, ModelMap model) {
 		List<EgovMap> customerTypeNPayChannelReporJsonList = null;
 		LOGGER.info("##### selectCustomerTypeNPayChannelReporJsonList START #####");
-		Map<String, Object> dataList = ccdReportService.selectCustomerTypeNPayChannelReporJsonList(params);
+		Map<String, Object> dataList = ccdReportService.selectCustomerTypeNPayChannelReportJsonList(params);
 
         // 데이터 리턴.
         return ResponseEntity.ok(dataList);
