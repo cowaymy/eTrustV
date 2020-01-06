@@ -358,7 +358,7 @@
 		WITH DAY_LIST AS (
 		     SELECT LEVEL DD FROM dual CONNECT BY LEVEL <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE(#{planYearMonth}, 'MM/YYYY')),'DD')  -- PARAMETER
 		)
-		SELECT DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, CASE WHEN A.MODE_ID = -1 THEN '' WHEN A.BANK_ID = -1 THEN 'Others (combined)' ELSE E.CODE END AS BANK_CODE, A.*, C.CODE_NAME, D.CODE
+		SELECT DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, DECODE(A.MODE_ID, -1, 'Regular', -2, 'Direct Debit', NVL(D.CODE_NAME, C.CODE_NAME)) AS MODE_DESC, CASE WHEN A.MODE_ID = -1 THEN '' WHEN A.BANK_ID = -1 THEN 'Others (combined)' ELSE E.CODE END AS BANK_CODE, A.*, C.CODE_NAME, D.CODE
 		  FROM (
 
 		          SELECT *
@@ -367,10 +367,10 @@
 		                       FROM DAY_LIST X
 		                            LEFT OUTER JOIN
 		                            (
-		                                 SELECT CASE WHEN MODE_ID IN ('108') THEN -2 WHEN MODE_ID IN ('105','106') THEN -1 ELSE MODE_ID END AS MODE_ID, CARD_TYPE_ID, CASE WHEN PAY_ITM_ISSU_BANK_ID IN (3, 21, 7, 6, 9, 5) THEN PAY_ITM_ISSU_BANK_ID ELSE -1 END AS BANK_ID, DD, SUM(NVL(CNT,0)) AS CNT
+		                                 SELECT CASE WHEN MODE_ID = '108' THEN -2 WHEN MODE_ID IN ('105','106') THEN -1 ELSE MODE_ID END AS MODE_ID, CARD_TYPE_ID, CASE WHEN PAY_ITM_ISSU_BANK_ID IN (3, 21, 7, 6, 9, 5) THEN PAY_ITM_ISSU_BANK_ID ELSE -1 END AS BANK_ID, DD, SUM(NVL(CNT,0)) AS CNT
 		                                 FROM   (
 		                                            -- CRC: '107', REG: '105','106', DD: '108'-PAY64.OR_NO LIKE 'AER%' -- AUTO DEBIT
-		                                            SELECT PAY65.PAY_ITM_MODE_ID AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, PAY65.PAY_ITM_ISSU_BANK_ID, TO_CHAR(PAY64.PAY_DATA,'DD') AS DD, COUNT(DISTINCT SOM.SALES_ORD_ID) AS CNT
+		                                            SELECT PAY65.PAY_ITM_MODE_ID AS MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0) CARD_TYPE_ID, CASE WHEN PAY65.PAY_ITM_MODE_ID IN ('105','106') THEN -1 ELSE PAY65.PAY_ITM_ISSU_BANK_ID END AS PAY_ITM_ISSU_BANK_ID, TO_CHAR(PAY64.PAY_DATA,'DD') AS DD, COUNT(DISTINCT SOM.SALES_ORD_ID) AS CNT
 		                                            FROM PAY0064D pay64
 		                                                 INNER JOIN PAY0065D PAY65 ON PAY64.PAY_ID = PAY65.PAY_ID
 		                                                 INNER JOIN SAL0001D SOM ON pay64.SALES_ORD_ID = SOM.SALES_ORD_ID
@@ -393,10 +393,10 @@
                                                         AND PAY64.OR_NO NOT LIKE 'AER%'   -- AUTO DEBIT
                                                     )
 
-		                                            GROUP BY PAY65.PAY_ITM_MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), PAY65.PAY_ITM_ISSU_BANK_ID, TO_CHAR(PAY64.PAY_DATA,'DD')
+		                                            GROUP BY PAY65.PAY_ITM_MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), CASE WHEN PAY65.PAY_ITM_MODE_ID IN ('105','106') THEN -1 ELSE PAY65.PAY_ITM_ISSU_BANK_ID END, TO_CHAR(PAY64.PAY_DATA,'DD')
 
 		                                  )
-		                                  GROUP BY CASE WHEN MODE_ID IN ('108') THEN -2 WHEN MODE_ID IN ('105','106') THEN -1 ELSE MODE_ID END, CARD_TYPE_ID, CASE WHEN PAY_ITM_ISSU_BANK_ID IN (3, 21, 7, 6, 9, 5) THEN PAY_ITM_ISSU_BANK_ID ELSE -1 END, DD
+		                                  GROUP BY CASE WHEN MODE_ID = '108' THEN -2 WHEN MODE_ID IN ('105','106') THEN -1 ELSE MODE_ID END, CARD_TYPE_ID, CASE WHEN PAY_ITM_ISSU_BANK_ID IN (3, 21, 7, 6, 9, 5) THEN PAY_ITM_ISSU_BANK_ID ELSE -1 END, DD
 
 		                            ) Y ON X.DD = Y.DD
 
