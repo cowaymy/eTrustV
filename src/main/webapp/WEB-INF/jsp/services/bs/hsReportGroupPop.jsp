@@ -3,7 +3,7 @@
 <script type="text/javaScript">
 $(document).ready(function(){
     createHSGroupListAUIGrid();
-    
+
     var today = new Date();
     var month1 = today.getMonth()+1;
     $("#dayMonth").val(month1);
@@ -24,22 +24,22 @@ function createHSGroupListAUIGrid() {
             onclick : function(rowIndex, columnIndex, value, item) {
                 var deptCode = AUIGrid.getCellValue(myGridID_Hsgroup, rowIndex, "c3");
                 var fileName = AUIGrid.getCellValue(myGridID_Hsgroup, rowIndex, "c2");
-                
+
                 console.log("deptCode =    " + deptCode +"     fileName =   " + fileName);
-                
+
                 if(deptCode == '' && deptCode == null){
                 	Common.alert("No Selected DepartmentCode");
                 }else{
-                
+
 	                $("#searchHsGroupReport #V_CODYDEPTCODE").val(deptCode);
 	                $("#searchHsGroupReport #reportFileName").val('/services/BSReport_ByBSNo.rpt');
 	                $("#searchHsGroupReport #viewType").val("PDF");
 	                $("#searchHsGroupReport #reportDownFileName").val(fileName);
-	                
+
 	                var option = {
 	                        isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
 	                };
-	                
+
 	                Common.report("searchHsGroupReport", option);
                 }
           }
@@ -55,8 +55,8 @@ function createHSGroupListAUIGrid() {
         editable : false,
         width : 300
     }];
-  
-    
+
+
 
     // 그리드 속성 설정
    var gridPros = {
@@ -72,14 +72,14 @@ function createHSGroupListAUIGrid() {
            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
            showRowNumColumn    : true       //줄번호 칼럼 렌더러 출력
    };
-    
-    
+
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID_Hsgroup = AUIGrid.create("#grid_wrap_HSReportGroup", columnLayout, gridPros);
 }
 
 function fn_HSReportGroup(){
-	
+
     Common.ajax("GET", "/services/bs/report/selectHSReportGroup.do", $("#searchHsGroupReport").serialize(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
@@ -98,11 +98,11 @@ function fn_Generate(){
     $("#searchHsReport #reportFileName").val('/services/BSReport_ByBSNo_Single.rpt');
     $("#searchHsReport #viewType").val("PDF");
     $("#searchHsReport #reportDownFileName").val(BSNo + "_"+day+month+date.getFullYear());
-    
+
     var option = {
             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
     };
-    
+
     Common.report("searchHsReport", option);
 }
 
@@ -119,7 +119,7 @@ $.fn.clearForm = function() {
         }else if (tag === 'select'){
             this.selectedIndex = -1;
         }
-        
+
     });
 };
 </script>
@@ -178,7 +178,7 @@ $.fn.clearForm = function() {
 </form>
 </section><!-- search_table end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_Generate()">Generate</a></p></li>
+ <!--    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_Generate()">Generate</a></p></li> -->
 </ul>
 </section><!-- pop_body end -->
 
