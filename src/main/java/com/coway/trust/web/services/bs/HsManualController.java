@@ -911,6 +911,12 @@ public class HsManualController {
     return "services/bs/hsReportGroupPop";
   }
 
+  @RequestMapping(value = "/hsReportIndividualGroupPop.do")
+  public String hsReportIndividualGroupPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    // 호출될 화면
+    return "services/bs/hsReportIndividualGroupPop";
+  }
+
   @RequestMapping(value = "/hsReportSinglePop.do")
   public String hsReportSinglePop(@RequestParam Map<String, Object> params, ModelMap model) {
     // 호출될 화면
