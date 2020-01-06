@@ -474,9 +474,10 @@
              , T1.PROMO_UPD_DT
              , T1.PROMO_PRC_PRCNT
              , T1.PROMO_ADD_DISC_PRC
+             , T1.PROMO_DISC_TYPE
           FROM SAL0017D T1
          WHERE T1.PROMO_ID = #{promoId}
-           AND 1 = T1.PROMO_STUS_ID
+           <!-- AND 1 = T1.PROMO_STUS_ID -->
            AND ROWNUM &lt;= 1
     </select>
 
