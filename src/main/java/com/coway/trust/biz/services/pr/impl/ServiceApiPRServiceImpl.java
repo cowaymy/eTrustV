@@ -349,7 +349,7 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 			fraParam.put("userId", String.valueOf(params.get("userId")));
 			EgovMap fraInfo = MSvcLogApiService.getPrFraOrdInfo(fraParam);
 			if (fraInfo != null) {
-				fraParams.put("salesOrderNo", Integer.parseInt(fraInfo.get("salesOrderNo").toString()));
+				fraParams.put("salesOrderNo", String.valueOf(fraInfo.get("salesOrderNo")));
 	    		fraParams.put("serviceNo", String.valueOf(fraInfo.get("serviceNo")));
 
 	    		serviceApiPRDetailService.prReAppointmentRequestProc(fraParams);
