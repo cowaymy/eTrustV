@@ -385,7 +385,7 @@ $(document).ready(function() {
 
 		<article class="grid_wrap">
 			<!-- Summary Grid -->
-			<div id="grid1_wrap" style="height:300px;"></div>
+			<div id="grid1_wrap" style="height:310px;"></div>
 		</article>
         <!-- Grid1 End -->
 
