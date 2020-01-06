@@ -23,13 +23,13 @@ public interface CCDReportMapper {
 
 	Integer selectLastDay(Map<String, Object> params);
 
-	List<EgovMap> selectCustomerTypeNPayChannelReporJsonList1(Map<String, Object> params);
+	List<EgovMap> selectCustomerTypeNPayChannelReportJsonList1(Map<String, Object> params);
 
-	List<EgovMap> selectCustomerTypeNPayChannelReporJsonList2(Map<String, Object> params);
+	List<EgovMap> selectCustomerTypeNPayChannelReportJsonList2(Map<String, Object> params);
 
-	List<EgovMap> selectCustomerTypeNPayChannelReporJsonList3(Map<String, Object> params);
+	List<EgovMap> selectCustomerTypeNPayChannelReportJsonList3(Map<String, Object> params);
 
-	List<EgovMap> selectCustomerTypeNPayChannelReporJsonList4(Map<String, Object> params);
+	List<EgovMap> selectCustomerTypeNPayChannelReportJsonList4(Map<String, Object> params);
 
 	List<EgovMap> selectIssuerBankReportJsonList(Map<String, Object> params);
 

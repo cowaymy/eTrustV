@@ -47,16 +47,16 @@ public class CCDReportServiceImpl extends EgovAbstractServiceImpl implements CCD
      * @see com.coway.trust.biz.logistics.report.CCDReportService#selectCustomerTypeNPayChannelReporJsonList(java.util.Map)
      */
     @Override
-	public Map<String, Object> selectCustomerTypeNPayChannelReporJsonList(Map<String, Object> params) {
+	public Map<String, Object> selectCustomerTypeNPayChannelReportJsonList(Map<String, Object> params) {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		logger.info("++++ selectCustomerTypeNPayChannelReporJsonList params :: {}", params );
 
 		Integer lastDay = ccdReportMapper.selectLastDay(params);
-    	List<EgovMap> grid1List = ccdReportMapper.selectCustomerTypeNPayChannelReporJsonList1(params);
-    	List<EgovMap> grid2List = ccdReportMapper.selectCustomerTypeNPayChannelReporJsonList2(params);
-    	List<EgovMap> grid3List = ccdReportMapper.selectCustomerTypeNPayChannelReporJsonList3(params);
-    	List<EgovMap> grid4List = ccdReportMapper.selectCustomerTypeNPayChannelReporJsonList4(params);
+    	List<EgovMap> grid1List = ccdReportMapper.selectCustomerTypeNPayChannelReportJsonList1(params);
+    	List<EgovMap> grid2List = ccdReportMapper.selectCustomerTypeNPayChannelReportJsonList2(params);
+    	List<EgovMap> grid3List = ccdReportMapper.selectCustomerTypeNPayChannelReportJsonList3(params);
+    	List<EgovMap> grid4List = ccdReportMapper.selectCustomerTypeNPayChannelReportJsonList4(params);
 
     	map.put("lastDay", lastDay);
     	map.put("grid1List", grid1List);
