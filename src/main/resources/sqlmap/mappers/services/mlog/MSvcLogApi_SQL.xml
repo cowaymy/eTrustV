@@ -929,7 +929,8 @@
                    NVL (SYS0005M.CODE, '') AS dsc_Code,
                    NVL (TO_CHAR (CCR0007D.CALL_REM), '') AS instruction,
                    SAL0047D.REM AS RESULT_REMARK,
-                   NVL(SYS0026M.SERIAL_CHK, 'N') AS SERIAL_CHK
+                   NVL (SYS0026M.SERIAL_CHK, 'N') AS SERIAL_CHK,
+                   NVL (SAL0233M.AREA_COVRG_ID, '') AS beforeProductCode
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
@@ -950,7 +951,8 @@
                  CCR0007D,
                  (SELECT *
                   FROM SYS0064M
-                  WHERE STATUS_ID = 1) SYS0064M
+                  WHERE STATUS_ID = 1) SYS0064M,
+                 SAL0233M
             WHERE SAL0046D.CT_ID = ORG0001D.MEM_ID
               AND ORG0005D.MEM_ID = ORG0001D.MEM_ID
               AND SAL0001D.MEM_ID = ORG1001V.MEM_ID
@@ -958,6 +960,7 @@
               AND SAL0001D.SALES_ORD_ID = SAL0002D.SALES_ORD_ID(+)
               AND SAL0001D.CUST_ID = SAL0022D.CUST_ID(+)
               AND SAL0045D.ADD_ID = SAL0023D.CUST_ADD_ID(+)
+              AND SAL0023D.AREA_ID = SAL0233M.AREA_ID(+) AND SAL0233M.STUS_CODE_ID = 1
               AND SAL0001D.CUST_BILL_ID = SAL0024D.CUST_BILL_ID(+)
               AND SAL0045D.CNT_ID = SAL0027D.CUST_CNTC_ID(+)
               AND SAL0001D.CUST_ID = SAL0029D.CUST_ID(+)
