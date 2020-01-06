@@ -60,7 +60,7 @@ SELECT  A.MEM_ID                                                                
 			             OR CC.PROMO_ID IS NULL
 			         )
 ]]>
-<if test="memType == 2">
+<if test="memType == 2 or memType == 5758">
 			AND     (
 			            (
 			                    C.PROMO_TYPE_ID NOT IN (757, 758)
@@ -121,7 +121,7 @@ AND     (
              OR C.PROMO_ID IS NULL
         )
 ]]>
-<if test="memType == 2">
+<if test="memType == 2 or memType == 5758">
 AND     (
             (
                     C.PROMO_TYPE_ID NOT IN (757, 758)
