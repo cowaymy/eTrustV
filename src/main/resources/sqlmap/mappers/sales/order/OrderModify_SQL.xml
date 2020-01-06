@@ -648,7 +648,7 @@
                               FROM SAL0252M A
                               JOIN SAL0253D B ON A.CONF_ID = B.CONF_ID
                              )
-    WHERE PROMO = (SELECT PROMO_ID
+    WHERE PROMO IN (SELECT PROMO_ID
                    FROM SAL0017D
                    WHERE PROMO_CODE = #{promo})
   </select>
