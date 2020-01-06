@@ -38,7 +38,7 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 
 		List<EgovMap>   mergeHolidayList  =  null;
 		List<EgovMap>   mergeVacationList=  null;
-
+		List<EgovMap>   mergeNoSvcList = null;
 
 		//Level 1  getBaseList   CT_SUB_GRP
 		baseList =getBaseList(params);
@@ -56,25 +56,14 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 					 EgovMap   holiDayAddMap =  new EgovMap();
     				 EgovMap e = iterator.next();
 
-    				 logger.debug(e.toString());
-
-
-
-    				 //objV.setCt(CommonUtils.nvl(e.get("ct")));
-    				// objV.setcDate((String)e.get("cDate"));
-    				// objV.setCtSubGrp( (String)e.get("ctSubGrp"));
-    				// objV.setBrnchId((String)e.get("brnchId"));
-
-
+    				 //logger.debug(e.toString());
     				 holiDayAddMap.put("ct",     CommonUtils.nvl(e.get("ct")));
     				 holiDayAddMap.put("cDate", (String)e.get("cDate"));
     				 holiDayAddMap.put("ctSubGrp", (String)e.get("ctSubGrp"));
     				 holiDayAddMap.put("brnchId", CommonUtils.nvl(e.get("brnchId")));
 
-
     				 try{
     					 List<EgovMap> vm = this.isMergeHoliDay(holiDayAddMap);
-
     					//logger.debug(" isMergeHoliDay ==> "+vm.toString());
 
  					 	// KR. JIN. - 2019-11-25
@@ -94,11 +83,10 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 
          					}
  					 	}else{
- 					 		holiDayAddMap.put("isHoliDay",   "false");
-     						holiDayAddMap.put("holiDayCtCode","" );
+ 					 		holiDayAddMap.put("isHoliDay", "false");
+     						holiDayAddMap.put("holiDayCtCode", "");
  					 		mergeHolidayList.add(holiDayAddMap);
  					 	}
-
 
  					 	/*
  					 	if(null != vm){
@@ -126,14 +114,10 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 			}
 		}// eof baseList
 
-
-
-
 		//Level 3
 		if(null !=mergeHolidayList){
 			if(mergeHolidayList.size()>0){
 				mergeVacationList = new ArrayList<EgovMap>();
-
 
 				for (Iterator<EgovMap> iterator = mergeHolidayList.iterator(); iterator.hasNext();) {
 
@@ -148,11 +132,9 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
     					 vacationAddMap.put("holiDayCtCode", (String)e.get("holiDayCtCode"));
     					 vacationAddMap.put("oldCt",CommonUtils.nvl(e.get("oldCt")));
 
-
     					 try{
      					 		EgovMap vm = this.isVacation(vacationAddMap);
-
-     					 		logger.debug(" isVacation ==> "+vm.toString());
+     					 		//logger.debug(" isVacation ==> "+vm.toString());
 
          					 	if(null != vm){
          					 		vacationAddMap.put("isVact",  "true");
@@ -160,8 +142,8 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
          					 		vacationAddMap.put("ct",      CommonUtils.nvl(vm.get("vactReplCt")));
 
              					}else{
-             						vacationAddMap.put("isVact",   "false");
-             						vacationAddMap.put("vactReplCt","" );
+             						vacationAddMap.put("isVact", "false");
+             						vacationAddMap.put("vactReplCt", "");
              					}
 
      					 }catch(Exception ex){
@@ -173,31 +155,68 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 			}
 		}
 
+		//Level 4 - no Service day  : KR. JIN. - 2020.01.04
+		if(null !=mergeVacationList){
+			if(mergeVacationList.size() > 0) {
+				mergeNoSvcList = new ArrayList<EgovMap>();
+
+				for (Iterator<EgovMap> iterator = mergeVacationList.iterator(); iterator.hasNext();) {
+					EgovMap noSvcListMap = new EgovMap();
+                    EgovMap e = iterator.next();
+
+                    noSvcListMap.put("ct", CommonUtils.nvl(e.get("ct")));
+                    noSvcListMap.put("cDate", CommonUtils.nvl(e.get("cDate")));
+                    noSvcListMap.put("ctSubGrp", CommonUtils.nvl(e.get("ctSubGrp")));
+                    noSvcListMap.put("brnchId", CommonUtils.nvl(e.get("brnchId")));
+                    noSvcListMap.put("isHoliDay", CommonUtils.nvl(e.get("isHoliDay")));
+                    noSvcListMap.put("holiDayCtCode", CommonUtils.nvl(e.get("holiDayCtCode")));
+                    noSvcListMap.put("oldCt", CommonUtils.nvl(e.get("oldCt")));
+                    noSvcListMap.put("isVact", CommonUtils.nvl(e.get("isVact")));
+                    noSvcListMap.put("vactReplCt", CommonUtils.nvl(e.get("vactReplCt")));
+                    noSvcListMap.put("ordId", params.get("ORD_ID"));
+
+    				try {
+    					int vm = allocationMapper.isMergeNosvcDay(noSvcListMap);
+
+    					if(vm > 0) {
+    						noSvcListMap.put("isNoSvcDay", "true");
+							mergeNoSvcList.add(noSvcListMap);
+
+    					} else {
+    						noSvcListMap.put("isNoSvcDay", "false");
+    						mergeNoSvcList.add(noSvcListMap);
+    					}
+
+    				} catch(Exception ex) {
+    					noSvcListMap.put("isNoSvcDay", "false");
+    				}
+    				mergeNoSvcList.add(noSvcListMap);
+				} // eof mergeVacationList
+			}
+		}
 
 		//level 5  setViewList
 		rtnList = new ArrayList<EgovMap>();
 		fList= new ArrayList<EgovMap>();
 
-		if(null !=mergeVacationList){
-			if(mergeVacationList.size()>0){
-				for (Iterator<EgovMap> iterator = mergeVacationList.iterator(); iterator.hasNext();) {
+		if(null !=mergeNoSvcList){
+			if(mergeNoSvcList.size()>0){
+				for (Iterator<EgovMap> iterator = mergeNoSvcList.iterator(); iterator.hasNext();) {
+						EgovMap v = iterator.next();
 
-						EgovMap    viewdMap =  new EgovMap();
-						EgovMap    v = iterator.next();
-
-						if("true".equals((String)v.get("isVact"))  ||  "true".equals((String)v.get("isHoliDay"))){
-							v.put("repla","true");
+						if( "true".equals(CommonUtils.nvl(v.get("isVact"))) || "true".equals(CommonUtils.nvl(v.get("isNoSvcDay"))) ){
+							continue;
 						}
 
-						EgovMap   eM=	allocationMapper.makeViewList(v);
+						if( "true".equals(CommonUtils.nvl(v.get("isHoliDay"))) ){
+							v.put("repla", "true");
+						}
 
+						EgovMap eM = allocationMapper.makeViewList(v);
 						fList.add(eM);
 				}
 			}
 		}
-
-
-
 
 		//level5  중복 제거
 		HashSet<EgovMap> hs = new HashSet<EgovMap>(fList);
@@ -206,11 +225,7 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 		while(it.hasNext()){
 			rtnList.add((EgovMap)it.next());
 		}
-
-
-		 Collections.sort(rtnList, new VComparator());
-
-
+		Collections.sort(rtnList, new VComparator());
 
 		return rtnList;
 	}
