@@ -2542,8 +2542,6 @@
 
   </select>
 
-
-<!-- For KW's attention - start -->
   <select id="selectCustomerAgingMonth" parameterType="Map"
     resultType="egovMap">
 
@@ -2551,7 +2549,7 @@
    FROM
     (
     SELECT
-    CURR_AGING/(MTH_RENT_AMT - NVL(REBATE_AMT_PER_INSTLMT,0)) CURR_AGING, RENT_SO_ID SO_ID
+    CURR_AGING/ (NULLIF(MTH_RENT_AMT - NVL(REBATE_AMT_PER_INSTLMT,0),0)) CURR_AGING, RENT_SO_ID SO_ID
         FROM SAL0001D A
         LEFT JOIN (SELECT SUM(RENT_AMT) CURR_AGING,RENT_SO_ID FROM PAY0022D GROUP BY RENT_SO_ID) B ON B.RENT_SO_ID = A.SALES_ORD_ID
         LEFT JOIN PAY0286D C ON C.ORD_ID = A.SALES_ORD_ID
@@ -2564,7 +2562,6 @@
     <if test="ordId != null and ordId !=''">
       AND SO_ID = #{ordId}
     </if>
-<!-- For KW's attention - end -->
 
   </select>
 
