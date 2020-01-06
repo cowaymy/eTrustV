@@ -381,7 +381,8 @@ public class LoginController {
 
                             currRenewalDt = sdf.parse(Integer.toString(cal.get(Calendar.YEAR)) + "-04-01");
 
-                            if(cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) < 0) {
+//                            if(currDate.compareTo(currRenewalDt) < 0 )
+                            if(cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) < 0 && currDate.compareTo(currRenewalDt) >= 0 ) {
                                 params.put("popType", "A");
                             } else if(cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) >= 0) {
                                 params.put("popType", "M");
