@@ -781,7 +781,7 @@
             //ClearControl_Sales();
             fn_clearSales();
 
-            fn_clearAddCpnt();
+            //fn_clearAddCpnt();
 
             $('[name="advPay"]').prop("disabled", true);
 
@@ -945,10 +945,10 @@
                     var nationalityId = $('#nation').val();
 
                     if (custTypeId != '964' || (custTypeId == '964' && nationalityId != '1') ) {
-                        doGetComboData('/sales/order/selectServicePackageList2.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
+                        doGetComboData('/sales/order/selectServicePackageList2.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_srvPacId'); //APPLICATION SUBTYPE
                     } else {
 	                    //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
-	                    doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
+	                    doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_srvPacId'); //APPLICATION SUBTYPE
                     }
                     $('#ordProduct1 ').removeAttr("disabled");
                     $('#ordProduct2 ').removeAttr("disabled");
@@ -956,11 +956,13 @@
             } else {
                 $('#srvPacId option').remove();
                 // ONGHC - ADD
-                $('#ordProduct1').prop("disabled", true);
-                $('#ordProduct2').prop("disabled", true);
-            }
+                /* $('#ordProduct1').prop("disabled", true);
+                $('#ordProduct2').prop("disabled", true); */
 
-            $('#ordProduct1 option').remove();
+                $('#srvPacId').chang();
+            }
+            //$('#srvPacId').chang();
+            /* $('#ordProduct1 option').remove();
             $('#ordProduct1 optgroup').remove();
             $('#ordProduct2 option').remove();
             $('#ordProduct2 optgroup').remove();
@@ -969,9 +971,9 @@
             $('#ordPromo1 option').remove();
             $('#ordPromo1').prop("disabled", true);
             $('#ordPromo2 option').remove();
-            $('#ordPromo2').prop("disabled", true);
+            $('#ordPromo2').prop("disabled", true); */
 
-            fn_clearAddCpnt();
+            //fn_clearAddCpnt();
         });
 
         $('#srvPacId').change(function() {
@@ -985,6 +987,8 @@
             $('#ordPromo1').prop("disabled", true);
             $('#ordPromo2 option').remove();
             $('#ordPromo2').prop("disabled", true);
+
+            $('#ordProduct1, #ordProduct2').change();
 
             fn_clearAddCpnt();
 
@@ -1173,6 +1177,10 @@
             }
         });
     });
+
+    function fn_srvPacId() {
+    	$('#srvPacId').change();
+    }
 
     function fn_promoChg(_tagNum) {
         $('#trialNoChk').prop("checked", false).prop("disabled", true);
@@ -2490,6 +2498,7 @@
         if($('#srvPacId option').size() >= 2) {
             $('#srvPacId option:eq(1)').attr('selected', 'selected');
 
+            //$('#srvPacId').chang();
             // product comboBox 생성
             fn_setProductCombo();
         }

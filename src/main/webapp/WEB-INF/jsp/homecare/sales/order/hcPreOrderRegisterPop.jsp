@@ -350,6 +350,8 @@
             $('#ordPromo2 option').remove();
             $('#ordPromo2').prop("disabled", true);
 
+            $('#ordProduct1, #ordProduct2').change();
+
             fn_clearAddCpnt();
 
             var idx    = $("#srvPacId option:selected").index();
@@ -1258,6 +1260,9 @@
 
                 $("#promoDiscPeriodTp"+tagNum).val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriod"+tagNum).val(promoPriceInfo.promoDiscPeriod);
+
+                // 합계
+                totSumPrice();
             }
         });
     }
