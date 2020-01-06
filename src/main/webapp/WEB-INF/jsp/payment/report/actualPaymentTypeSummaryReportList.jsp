@@ -133,7 +133,7 @@ var grid1Layout	=
 var grid2Layout =
 	[
 	     {   dataField : "typeName", headerText : ' ',         width : 120 , cellMerge : true  }
-	     ,{   dataField : "modeCode", headerText : ' ',     width : 120, style: "aui-grid-user-custom-left" , cellMerge : true }
+	     ,{   dataField : "modeCode", headerText : ' ',     width : 120, style: "aui-grid-user-custom-left" , cellMerge : true, mergePolicy : "restrict", mergeRef : "typeName" }
 	     ,{   dataField : "modeDesc", headerText : ' ',     width : 160, style: "aui-grid-user-custom-left" }
 	];
 
@@ -147,7 +147,7 @@ for(var i=0; i<6; i++) {
 	grid1Layout.push( {
         headerText : txt + chars[i],
         dataField : "m"+chars[i],
-        width:100,
+        width:120,
         style: "aui-grid-user-custom-right",
         dataType : "numeric",
         formatString : "#,###"
@@ -156,7 +156,7 @@ for(var i=0; i<6; i++) {
 	grid2Layout.push( {
 		headerText : txt + chars[i],
         dataField : "m"+chars[i],
-        width:100,
+        width:120,
         style: "aui-grid-user-custom-right",
         dataType : "numeric",
         formatString : "#,###"
@@ -223,7 +223,7 @@ $(document).ready(function() {
 				<tbody>
 					<tr>
 						<!-- <th scope="row">Month &amp; Year</th> -->
-						<th scope="row">Month</th>
+						<th scope="row">Month<span class="must">*</span></th>
 						<td>
 							<input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w95p" id="planYearMonth" name="planYearMonth" onchange="fnPlanYearMonthChange();" value="${toDay}"  />
 						</td>
