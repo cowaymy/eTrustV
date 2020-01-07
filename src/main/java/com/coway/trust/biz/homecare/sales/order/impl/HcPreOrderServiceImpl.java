@@ -74,8 +74,8 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 		try {
 			int matStkId = CommonUtils.intNvl(preOrderVO.getItmStkId1());
 			int fraStkId = CommonUtils.intNvl(preOrderVO.getItmStkId2());
-			int matPreOrdNo = 0;
-			int fraPreOrdNo = 0;
+			int matPreOrdId = 0;
+			int fraPreOrdId = 0;
 			int custId = CommonUtils.intNvl(preOrderVO.getCustId());     // Cust Id
 
 			if(custId <= 0) {
@@ -111,9 +111,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 
     			// 주문등록
     			preOrderMapper.insertPreOrder(preOrderVO);
-
-    			matPreOrdNo = preOrderVO.getPreOrdId();
-    			preOrderVO.setMatPreOrdNo(matPreOrdNo);     // Mattress Pre Order No
+    			matPreOrdId = preOrderVO.getPreOrdId();
 			}
 
 			// Frame register
@@ -133,9 +131,7 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 
     			// 주문등록
     			preOrderMapper.insertPreOrder(preOrderVO);
-
-    			fraPreOrdNo = preOrderVO.getPreOrdId();
-    			preOrderVO.setMatPreOrdNo(fraPreOrdNo);     // Frame Pre Order No
+    			fraPreOrdId = preOrderVO.getPreOrdId();
 			}
 
 			// 홈케어 주문관리 테이블 insert - HMC0011D
@@ -144,8 +140,8 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 
 			hcOrderVO.setOrdSeqNo(ordSeqNo);
 			hcOrderVO.setCustId(custId);                     // 고객번호
-			hcOrderVO.setMatPreOrdId(CommonUtils.intNvl(matPreOrdNo));        // Mattress Order No
-			hcOrderVO.setFraPreOrdId(CommonUtils.intNvl(fraPreOrdNo));           // Frame Order No
+			hcOrderVO.setMatPreOrdId(CommonUtils.intNvl(matPreOrdId));        // Mattress Order No
+			hcOrderVO.setFraPreOrdId(CommonUtils.intNvl(fraPreOrdId));           // Frame Order No
 			hcOrderVO.setCrtUserId(sessionVO.getUserId());        // session Id Setting
 			hcOrderVO.setUpdUserId(sessionVO.getUserId());      // session Id Setting
 			hcOrderVO.setStusId(HC_PRE_ORDER.STATUS_ACT);  // Homecare Pre Order Status - Active
@@ -236,29 +232,33 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 
 			// Frame update
 			if(fraStkId > 0) {
-				params.put("preOrdId", preOrderVO.getPreOrdId2());
-				params.put("rcdTms", preOrderVO.getRcdTms2());
+				int preOrdId2 = CommonUtils.intNvl(preOrderVO.getPreOrdId2());
 
-				rtnCnt = preOrderMapper.selRcdTms(params);
-				if(rtnCnt <= 0) { // null to update target
-					throw new ApplicationException(AppConstants.FAIL, "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+				if(preOrdId2 > 0) {  // has Frame Order - update Frame Order
+					params.put("preOrdId", preOrderVO.getPreOrdId2());
+					params.put("rcdTms", preOrderVO.getRcdTms2());
+
+					rtnCnt = preOrderMapper.selRcdTms(params);
+					if(rtnCnt <= 0) { // null to update target
+						throw new ApplicationException(AppConstants.FAIL, "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+					}
+
+	    			// Frame update
+					preOrderVO.setPreOrdId(preOrderVO.getPreOrdId2());
+	    			preOrderVO.setItmStkId(preOrderVO.getItmStkId2());
+	    			preOrderVO.setItmCompId(preOrderVO.getItmCompId2());
+	    			preOrderVO.setPromoId(preOrderVO.getPromoId2());
+	    			preOrderVO.setMthRentAmt(preOrderVO.getMthRentAmt2());
+	    			preOrderVO.setTotAmt(preOrderVO.getTotAmt2());
+	    			preOrderVO.setNorAmt(preOrderVO.getNorAmt2());
+	    			preOrderVO.setDiscRntFee(preOrderVO.getDiscRntFee2());
+	    			preOrderVO.setTotPv(preOrderVO.getTotPv2());
+	    			preOrderVO.setTotPvGst(preOrderVO.getTotPvGst2());
+	    			preOrderVO.setPrcId(preOrderVO.getPrcId2());
+
+	    			// 주문수정
+	    			preOrderMapper.updatePreOrder(preOrderVO);
 				}
-
-    			// Frame update
-				preOrderVO.setPreOrdId(preOrderVO.getPreOrdId2());
-    			preOrderVO.setItmStkId(preOrderVO.getItmStkId2());
-    			preOrderVO.setItmCompId(preOrderVO.getItmCompId2());
-    			preOrderVO.setPromoId(preOrderVO.getPromoId2());
-    			preOrderVO.setMthRentAmt(preOrderVO.getMthRentAmt2());
-    			preOrderVO.setTotAmt(preOrderVO.getTotAmt2());
-    			preOrderVO.setNorAmt(preOrderVO.getNorAmt2());
-    			preOrderVO.setDiscRntFee(preOrderVO.getDiscRntFee2());
-    			preOrderVO.setTotPv(preOrderVO.getTotPv2());
-    			preOrderVO.setTotPvGst(preOrderVO.getTotPvGst2());
-    			preOrderVO.setPrcId(preOrderVO.getPrcId2());
-
-    			// 주문수정
-    			preOrderMapper.updatePreOrder(preOrderVO);
 			}
 
 			// 홈케어 주문관리 테이블 insert - HMC0011D
