@@ -73,6 +73,31 @@ public class StockAuditApiDto {
     private String regId;
     private String viewGu;
     private String stkCode;
+    private String serialChkYn;
+    private String serialChk;
+    private String serialRequireChkYn;
+    private String newSerialArr;
+    private String delSerialArr;
+
+
+    public String getSerialRequireChkYn() {
+        return serialRequireChkYn;
+    }
+    public void setSerialRequireChkYn(String serialRequireChkYn) {
+        this.serialRequireChkYn = serialRequireChkYn;
+    }
+    public String getNewSerialArr() {
+        return newSerialArr;
+    }
+    public void setNewSerialArr(String newSerialArr) {
+        this.newSerialArr = newSerialArr;
+    }
+    public String getSerialChkYn() {
+        return serialChkYn;
+    }
+    public void setSerialChkYn(String serialChkYn) {
+        this.serialChkYn = serialChkYn;
+    }
     public String getStockAuditNo() {
         return stockAuditNo;
     }
@@ -342,5 +367,17 @@ public class StockAuditApiDto {
     }
     public void setStkCode(String stkCode) {
         this.stkCode = stkCode;
+    }
+    public String getSerialChk() {
+        return serialChk;
+    }
+    public void setSerialChk(String serialChk) {
+        this.serialChk = serialChk;
+    }
+    public String getDelSerialArr() {
+        return delSerialArr;
+    }
+    public void setDelSerialArr(String delSerialArr) {
+        this.delSerialArr = delSerialArr;
     }
 }

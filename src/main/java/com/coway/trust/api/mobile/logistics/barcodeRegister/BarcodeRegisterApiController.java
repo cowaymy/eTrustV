@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.api.mobile.payment.groupOrder.GroupOrderForm;
 import com.coway.trust.biz.logistics.barcodeRegister.BarcodeRegisterApiService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -104,4 +103,16 @@ public class BarcodeRegisterApiController {
 		barcodeRegisterApiService.deleteBarcode(barcodeRegisterApiForm);
 	}
 
+    /**
+    * AD_MOBILE_CHECK(Audit Mobile Check)
+    * @Author KR-KangJaeMin
+    * @Date 2019. 12. 31.
+    * @param barcodeRegisterApiForm
+    * @throws Exception
+    */
+   @ApiOperation(value = "adMobileCheckBarcode", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+   @RequestMapping(value = "/adMobileCheckBarcode", method = RequestMethod.POST)
+   public ResponseEntity<List<BarcodeRegisterApiForm>> adMobileCheckBarcode(@RequestBody BarcodeRegisterApiForm barcodeRegisterApiForm) throws Exception {
+       return ResponseEntity.ok(barcodeRegisterApiService.adMobileCheckBarcode(barcodeRegisterApiForm));
+   }
 }

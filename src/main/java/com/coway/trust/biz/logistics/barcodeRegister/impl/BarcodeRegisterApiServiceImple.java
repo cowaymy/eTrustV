@@ -1,5 +1,6 @@
 package com.coway.trust.biz.logistics.barcodeRegister.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,6 @@ import com.coway.trust.api.mobile.logistics.barcodeRegister.BarcodeRegisterApiFo
 import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.biz.logistics.barcodeRegister.BarcodeRegisterApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
-import com.coway.trust.cmmn.exception.PreconditionException;
 import com.coway.trust.cmmn.model.LoginVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -54,7 +54,6 @@ public class BarcodeRegisterApiServiceImple extends EgovAbstractServiceImpl impl
 	 */
 	@Override
 	public List<EgovMap> selectBarcodeRegisterList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return barcodeRegisterApiMapper.selectBarcodeRegisterList(params);
 	}
 
@@ -80,7 +79,7 @@ public class BarcodeRegisterApiServiceImple extends EgovAbstractServiceImpl impl
 		if (params.get("serialNo") != null && params.get("serialNo") != "") {
 			// scan info
 
-			Map<String, Object> outScanMap = new HashMap();
+			Map<String, Object> outScanMap = new HashMap<String, Object>();
 			outScanMap.put("pScanNo", params.get("scanNo"));
 			outScanMap.put("pSerialNo", params.get("serialNo"));
 			outScanMap.put("pReqstNo", params.get("reqstNo"));
@@ -132,7 +131,7 @@ public class BarcodeRegisterApiServiceImple extends EgovAbstractServiceImpl impl
 		if (params.get("serialNo") != null && params.get("serialNo") != "") {
 			// scan info
 
-			Map<String, Object> outScanMap = new HashMap();
+			Map<String, Object> outScanMap = new HashMap<String, Object>();
 			outScanMap.put("pSerialNo", params.get("serialNo"));
 			outScanMap.put("pReqstNo", params.get("reqstNo"));
 			outScanMap.put("pDelvryNo", params.get("delvryNo"));
@@ -155,4 +154,42 @@ public class BarcodeRegisterApiServiceImple extends EgovAbstractServiceImpl impl
 		}
 
 	}
+
+    /**
+     * AD_MOBILE_CHECK(Audit Mobile Check)
+     * @Author KR-KangJaeMin
+     * @Date 2019. 12. 31.
+     * @param barcodeRegisterApiForm
+     * @throws Exception
+     * @see com.coway.trust.biz.logistics.barcodeRegister.BarcodeRegisterApiService#adMobileCheckBarcode(com.coway.trust.api.mobile.logistics.barcodeRegister.BarcodeRegisterApiForm)
+     */
+    @Override
+    public List<BarcodeRegisterApiForm> adMobileCheckBarcode(BarcodeRegisterApiForm barcodeRegisterApiForm) throws Exception {
+        Map<String, Object> params = BarcodeRegisterApiForm.createMap(barcodeRegisterApiForm);
+        params.put("_USER_ID", barcodeRegisterApiForm.getUserId());
+        LoginVO loginVO = loginMapper.selectLoginInfoById(params);
+        params.put("userId",  loginVO.getUserId());
+
+        if (params.get("serialNo") != null && params.get("serialNo") != "") {
+            Map<String, Object> outScanMap = new HashMap<String, Object>();
+            outScanMap.put("pScanNo", params.get("scanNo"));
+            outScanMap.put("pSerialNo", params.get("serialNo"));
+            outScanMap.put("pReqstNo", params.get("reqstNo"));
+            outScanMap.put("pFromLocId", params.get("fromLocId"));
+            outScanMap.put("pTrnscType", "AD_MOBILE_CHECK");//CHECK
+            outScanMap.put("pUserId", params.get("userId"));
+            barcodeRegisterApiMapper.adMobileCheckBarcode(outScanMap);
+
+            barcodeRegisterApiForm.setErrcode((String)outScanMap.get("errcode"));
+            barcodeRegisterApiForm.setErrmsg((String)outScanMap.get("errmsg"));
+            if( barcodeRegisterApiForm.getErrcode().equals("000") == false){
+                throw new ApplicationException(AppConstants.FAIL, barcodeRegisterApiForm.getErrmsg());
+            }
+            List<BarcodeRegisterApiForm> rtn = new ArrayList<BarcodeRegisterApiForm>();
+            rtn.add(barcodeRegisterApiForm);
+            return rtn;
+        }else{
+            throw new ApplicationException(AppConstants.FAIL, "serialNo value does not exist.");
+        }
+    }
 }

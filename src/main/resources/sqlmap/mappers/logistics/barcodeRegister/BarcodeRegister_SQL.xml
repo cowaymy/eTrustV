@@ -63,5 +63,22 @@
                      )
              }
      </select>
-</mapper>
 
+    <resultMap id="CHECKAPIBARCODESCANDATA" type="egovMap" />
+    <select id="adMobileCheckBarcode"  statementType="CALLABLE" parameterType="Map">
+        /* [com.coway.trust.biz.logistics.barcodeRegister.impl.BarcodeRegisterApiMapper.adMobileCheckBarcode] 20191231 - KR_KangJaeMin */
+        {   call SP_LOGISTIC_BARCODE_SCAN_ADJST
+            (
+                #{pScanNo},
+                #{pSerialNo},
+                #{pReqstNo},
+                #{pFromLocId},
+                #{pTrnscType},
+                #{pUserId},
+                #{errcode , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=CHECKAPIBARCODESCANDATA} ,
+                #{errmsg , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=CHECKAPIBARCODESCANDATA} ,
+                #{outScanNo , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=CHECKAPIBARCODESCANDATA}
+            )
+        }
+    </select>
+</mapper>

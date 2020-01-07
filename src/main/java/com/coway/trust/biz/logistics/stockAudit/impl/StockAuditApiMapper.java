@@ -34,7 +34,15 @@ public interface StockAuditApiMapper {
 
 
 
+    int updateAppv3LOG0094M(Map<String, Object> params);
+
+
+
     int updateSaveLocStusCodeIdLOG0095M(Map<String, Object> params);
+
+
+
+    int updateSaveLocStusCodeIdBarcodeLOG0096D(Map<String, Object> params);
 
 
 
@@ -43,4 +51,12 @@ public interface StockAuditApiMapper {
 
 
     int updateRequestApproval(Map<String, Object> params);
+
+
+
+    int insertStockAuditLocHistoryLOG0095M(Map<String, Object> params);
+
+
+
+    int insertStockAuditItemHistoryLOG0096D(Map<String, Object> params);
 }

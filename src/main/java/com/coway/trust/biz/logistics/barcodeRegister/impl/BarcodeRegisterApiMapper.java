@@ -45,4 +45,12 @@ public interface BarcodeRegisterApiMapper {
 	 */
 	void deleteBarcode(Map<String, Object> formMap);
 
+    /**
+    * 모바일 AD 바코드 체크
+    * @Author KR-KangJaeMin
+    * @Date 2019. 12. 31.
+    * @param formMap
+    */
+   void adMobileCheckBarcode(Map<String, Object> formMap);
+
 }

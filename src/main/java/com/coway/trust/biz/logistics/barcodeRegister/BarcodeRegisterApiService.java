@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.api.mobile.logistics.barcodeRegister.BarcodeRegisterApiForm;
-import com.coway.trust.api.mobile.payment.groupOrder.GroupOrderForm;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -48,4 +47,12 @@ public interface BarcodeRegisterApiService {
 	 */
 	void deleteBarcode(BarcodeRegisterApiForm barcodeRegisterApiForm) throws Exception;
 
+    /**
+    * AD_MOBILE_CHECK(Audit Mobile Check)
+    * @Author KR-KangJaeMin
+    * @Date 2019. 12. 31.
+    * @param barcodeRegisterApiForm
+    * @throws Exception
+    */
+	List<BarcodeRegisterApiForm> adMobileCheckBarcode(BarcodeRegisterApiForm barcodeRegisterApiForm) throws Exception;
 }

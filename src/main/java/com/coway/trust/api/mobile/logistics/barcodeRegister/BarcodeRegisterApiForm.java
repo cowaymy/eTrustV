@@ -3,6 +3,8 @@ package com.coway.trust.api.mobile.logistics.barcodeRegister;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.coway.trust.util.BeanConverter;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -38,6 +40,16 @@ public class BarcodeRegisterApiForm {
 
 	@ApiModelProperty(value = "", example = "")
 	private String ioType;
+
+    @ApiModelProperty(value = "", example = "")
+	private String errcode;
+
+    @ApiModelProperty(value = "", example = "")
+	private String errmsg;
+
+	public static BarcodeRegisterApiForm create(Map<String, Object> map) {
+        return BeanConverter.toBean(map, BarcodeRegisterApiForm.class);
+    }
 
 	public static Map<String, Object> createMap(BarcodeRegisterApiForm barcodeRegisterApiForm) {
 		Map<String, Object> params = new HashMap<>();
@@ -135,5 +147,21 @@ public class BarcodeRegisterApiForm {
 	public void setIoType(String ioType) {
 		this.ioType = ioType;
 	}
+
+    public String getErrcode() {
+        return errcode;
+    }
+
+    public void setErrcode(String errcode) {
+        this.errcode = errcode;
+    }
+
+    public String getErrmsg() {
+        return errmsg;
+    }
+
+    public void setErrmsg(String errmsg) {
+        this.errmsg = errmsg;
+    }
 
 }

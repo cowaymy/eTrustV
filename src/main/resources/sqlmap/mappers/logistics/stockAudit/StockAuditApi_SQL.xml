@@ -77,6 +77,7 @@ SELECT  B.STOCK_AUDIT_NO                                                        
     ,   CASE WHEN B.LOC_STUS_CODE_ID IN (5685, 5689, 5691, 5713)  THEN '01'--Count-Stock Audit
                                                                   ELSE '02'--Count-Stock Detail
                                                                   END           AS LOC_STUS_CODE_ID_GU
+    ,   NVL(A.SERIAL_CHK_YN, 'N')                                               AS SERIAL_CHK_YN
     ,   #{viewGu}                                                               AS VIEW_GU
 FROM    LOG0094M A                                                              --Stock Audit Doc Master Table
         INNER JOIN LOG0095M B                                                   --Stock Audit LOC Master Table
@@ -119,6 +120,8 @@ SELECT  B.STOCK_AUDIT_NO                                                        
     ,   CASE WHEN B.LOC_STUS_CODE_ID IN (5685, 5689, 5691, 5713)  THEN '01'--Count-Stock Audit
                                                                   ELSE '02'--Count-Stock Detail
                                                                   END           AS LOC_STUS_CODE_ID_GU
+    ,   NVL(A.SERIAL_CHK_YN, 'N')                                               AS SERIAL_CHK_YN
+    ,   NVL(D.SERIAL_CHK, 'N')                                                  AS SERIAL_CHK
 FROM    LOG0094M A                                                              --Stock Audit Doc Master Table
         INNER JOIN LOG0095M B                                                   --Stock Audit LOC Master Table
             ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
@@ -138,16 +141,43 @@ ORDER BY B.STOCK_AUDIT_NO DESC
 
 
 
+<update id="updateAppv3LOG0094M" parameterType="Map">
+<![CDATA[
+/* [com.coway.trust.biz.logistics.stockAudit.impl.updateAppv3LOG0094M] 20200106 - KR JAEMAJEM */
+UPDATE  LOG0094M
+SET     APPV_3_REQST_USER_ID = NULL
+	,   APPV_3_REQST_DT = NULL
+	,   APPV_3_REQST_OPINION = NULL
+	,   APPV_3_USER_ID= NULL
+	,   APPV_3_DT= NULL
+	,   APPV_3_OPINION= NULL
+	,   DOC_STUS_CODE_ID = '5679'                                               --5679(Start Audit)
+	,   UPD_USER_ID  = #{updUserId}
+	,   UPD_DT = SYSDATE
+WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+]]>
+ </update>
+
+
+
 <update id="updateSaveLocStusCodeIdLOG0095M" parameterType="Map">
 <![CDATA[
 /* [com.coway.trust.biz.logistics.stockAudit.impl.updateSaveLocStusCodeIdLOG0095M] 20191030 - KR JAEMAJEM */
 UPDATE  LOG0095M A                                                              --Stock Audit LOC Master Table
 SET     A.LOC_STUS_CODE_ID = 5686                                               --Location Status ID (SYS0013M - CODE_MASTER_ID : 437)--Save
+    ,   APPV_1_REQST_USER_ID = NULL
+    ,   APPV_1_REQST_DT = NULL
+    ,   APPV_1_USER_ID = NULL
+    ,   APPV_1_DT = NULL
+    ,   APPV_1_OPINION = NULL
+    ,   APPV_2_USER_ID = NULL
+    ,   APPV_2_DT= NULL
+    ,   APPV_2_OPINION = NULL
     ,   A.UPD_USER_ID = #{updUserId}                                            --Update User
     ,   A.UPD_DT = SYSDATE                                                      --Update date
 WHERE   A.STOCK_AUDIT_NO = #{stockAuditNo}                                      --Stock Audit Number
 AND     A.WH_LOC_ID = #{whLocId}                                                --WHLocID
-AND     A.LOC_STUS_CODE_ID IN (5685, 5686, 5689, 5691, 5713)
+AND     A.LOC_STUS_CODE_ID IN (5685, 5686, 5689, 5691, 5713)                    --5685(Unregistered), 5686(Save), 5689(1st Reject), 5691(2nd Reject), 5713(3rd Reject)
 ]]>
  </update>
 
@@ -161,6 +191,25 @@ SET     A.CNT_QTY = #{cntQty}                                                   
     ,   A.DIFF_QTY = #{diffQty}                                                 --Diff Qty
     ,   A.OTHER_QTY = #{otherQty}                                               --Other GI/GR Qty
     ,   A.REM = #{rem}                                                          --Remark
+    ,   A.DED_REASON = NULL
+    ,   A.OTHER_REASON = NULL
+    ,   A.UPD_USER_ID = #{updUserId}                                            --Update User
+    ,   A.UPD_DT = SYSDATE                                                      --Update date
+WHERE   A.STOCK_AUDIT_NO = #{stockAuditNo}                                      --Stock Audit Number
+AND     A.WH_LOC_ID = #{whLocId}                                                --WHLocID
+AND     A.ITM_ID = #{itmId}                                                     --Item ID
+]]>
+ </update>
+
+
+
+<update id="updateSaveLocStusCodeIdBarcodeLOG0096D" parameterType="Map">
+<![CDATA[
+/* [com.coway.trust.biz.logistics.stockAudit.impl.updateSaveLocStusCodeIdBarcodeLOG0096D] 20200102 - KR JAEMAJEM */
+UPDATE  LOG0096D A                                                              --Stock Audit LOC Detail Table
+SET     A.REM = #{rem}                                                          --Remark
+    ,   A.DED_REASON = NULL
+    ,   A.OTHER_REASON = NULL
     ,   A.UPD_USER_ID = #{updUserId}                                            --Update User
     ,   A.UPD_DT = SYSDATE                                                      --Update date
 WHERE   A.STOCK_AUDIT_NO = #{stockAuditNo}                                      --Stock Audit Number
@@ -185,4 +234,119 @@ AND     A.WH_LOC_ID = #{whLocId}                                                
 AND     A.LOC_STUS_CODE_ID = 5686                                               --Location Status ID (SYS0013M - CODE_MASTER_ID : 437)--Save
 ]]>
  </update>
+
+
+
+ <insert id="insertStockAuditLocHistoryLOG0095M" parameterType="Map">
+/* [com.coway.trust.biz.logistics.stockAudit.impl.insertStockAuditLocHistoryLOG0095M] 20200106 - KR JAEMAJEM */
+<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+SELECT  NVL(MAX(SEQ),0)+1
+FROM    LOG0097H
+WHERE   STOCK_AUDIT_NO = #{stockAuditNo}
+AND     WH_LOC_ID = #{whLocId}
+</selectKey>
+INSERT INTO LOG0097H
+(
+    STOCK_AUDIT_NO
+,   WH_LOC_ID
+,   SEQ
+,   LOC_STUS_CODE_ID
+,   ATCH_FILE_GRP_ID
+,   APPV_1_REQST_USER_ID
+,   APPV_1_REQST_DT
+,   APPV_1_USER_ID
+,   APPV_1_DT
+,   APPV_1_OPINION
+,   APPV_2_USER_ID
+,   APPV_2_DT
+,   APPV_2_OPINION
+,   CRT_USER_ID
+,   CRT_DT
+,   UPD_USER_ID
+,   UPD_DT
+)
+SELECT  STOCK_AUDIT_NO
+    ,   WH_LOC_ID
+    ,   #{seq}
+    ,   LOC_STUS_CODE_ID
+    ,   ATCH_FILE_GRP_ID
+    ,   APPV_1_REQST_USER_ID
+    ,   APPV_1_REQST_DT
+    ,   APPV_1_USER_ID
+    ,   APPV_1_DT
+    ,   APPV_1_OPINION
+    ,   APPV_2_USER_ID
+    ,   APPV_2_DT
+    ,   APPV_2_OPINION
+    ,   #{updUserId}
+    ,   SYSDATE
+    ,   UPD_USER_ID
+    ,   UPD_DT
+FROM    LOG0095M
+WHERE   STOCK_AUDIT_NO = #{stockAuditNo}
+AND     WH_LOC_ID = #{whLocId}
+</insert>
+
+
+
+<insert id="insertStockAuditItemHistoryLOG0096D" parameterType="Map">
+/* [com.coway.trust.biz.logistics.stockAudit.impl.insertStockAuditItemHistoryLOG0096D] 20200106 - KR JAEMAJEM */
+<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+SELECT  NVL(MAX(SEQ),0)+1
+FROM    LOG0098H
+WHERE   STOCK_AUDIT_NO = #{stockAuditNo}
+AND     WH_LOC_ID = #{whLocId}
+</selectKey>
+INSERT INTO LOG0098H
+(
+    STOCK_AUDIT_NO
+,   WH_LOC_ID
+,   ITM_ID
+,   SEQ
+,   WH_LOC_STK_GRAD
+,   SYS_QTY
+,   CNT_QTY
+,   DIFF_QTY
+,   DED_QTY
+,   OTHER_QTY
+,   DED_REASON
+,   OTHER_REASON
+,   REM
+,   OTHER_REQST_NO
+,   OTHER_REQST_REQUIRE_DT
+,   OTHER_TRNSC_TYPE
+,   OTHER_TRNSC_TYPE_DTL
+,   OTHER_REM
+,   CRT_USER_ID
+,   CRT_DT
+,   UPD_USER_ID
+,   UPD_DT
+)
+SELECT STOCK_AUDIT_NO
+    ,   WH_LOC_ID
+    ,   ITM_ID
+    ,   #{seq}
+    ,   WH_LOC_STK_GRAD
+    ,   SYS_QTY
+    ,   CNT_QTY
+    ,   DIFF_QTY
+    ,   DED_QTY
+    ,   OTHER_QTY
+    ,   DED_REASON
+    ,   OTHER_REASON
+    ,   REM
+    ,   OTHER_REQST_NO
+    ,   OTHER_REQST_REQUIRE_DT
+    ,   OTHER_TRNSC_TYPE
+    ,   OTHER_TRNSC_TYPE_DTL
+    ,   OTHER_REM
+    ,   #{updUserId}
+    ,   SYSDATE
+    ,   UPD_USER_ID
+    ,   UPD_DT
+FROM    LOG0096D
+WHERE   STOCK_AUDIT_NO = #{stockAuditNo}
+AND     WH_LOC_ID = #{whLocId}
+AND     ITM_ID = #{itmId}
+</insert>
 </mapper>
