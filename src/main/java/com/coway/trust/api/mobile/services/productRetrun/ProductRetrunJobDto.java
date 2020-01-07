@@ -219,6 +219,14 @@ public class ProductRetrunJobDto {
 	@ApiModelProperty(value = "fraProductName")
 	private String fraProductName;
 
+	private String serialChk;
+	public String getSerialChk() {
+		return serialChk;
+	}
+	public void setSerialChk(String serialChk) {
+		this.serialChk = serialChk;
+	}
+
 	public String getSalesOrderNo() {
 		return salesOrderNo;
 	}

@@ -222,7 +222,7 @@ public class AfterServiceJobDto {
 	private String inHouseRepairPromisedDate;
 
 	@ApiModelProperty(value = "inHouseRepair 처리시 등록되는 제품대그룹 코드_170906 추가")
-	private String inhouserepairproductgroupcode;   
+	private String inhouserepairproductgroupcode;
 
 	@ApiModelProperty(value = "inHouseRepair 처리시 등록되는 제품코드_170906 추가")
 	private String inHouseRepairProductCode;
@@ -250,6 +250,14 @@ public class AfterServiceJobDto {
 
 	@ApiModelProperty(value = "서비스 총 금액")
 	private int totalAmount;
+
+	private String serialChk;
+	public String getSerialChk() {
+		return serialChk;
+	}
+	public void setSerialChk(String serialChk) {
+		this.serialChk = serialChk;
+	}
 
 	public String getSalesOrderNo() {
 		return salesOrderNo;
@@ -918,7 +926,7 @@ public class AfterServiceJobDto {
 	public void setTotalAmount(int totalAmount) {
 		this.totalAmount = totalAmount;
 	}
-	
+
 
 	public String getInhouserepairreplacementyn() {
 		return inhouserepairreplacementyn;
@@ -943,8 +951,8 @@ public class AfterServiceJobDto {
 	public void setInhouserepairyn(String inhouserepairyn) {
 		this.inhouserepairyn = inhouserepairyn;
 	}
-	
-	
+
+
 
 	public static AfterServiceJobDto create(EgovMap egovMap) {
 		return BeanConverter.toBean(egovMap, AfterServiceJobDto.class);

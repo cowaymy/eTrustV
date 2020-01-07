@@ -211,6 +211,14 @@ public class HeartServiceJobDto {
 	@ApiModelProperty(value = "홈케어주문 여부")
 	private String homeCareOrderYn;
 
+	private String serialChk;
+	public String getSerialChk() {
+		return serialChk;
+	}
+	public void setSerialChk(String serialChk) {
+		this.serialChk = serialChk;
+	}
+
 	public void setSalesOrderNo(String salesOrderNo) {
 		this.salesOrderNo = salesOrderNo;
 	}
