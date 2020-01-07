@@ -63,11 +63,11 @@
     function createAUIGridStk() {
         //AUIGrid 칼럼 설정
         var columnLayoutGft = [
-            { headerText : "Product CD",   dataField : "itmcd",              width : 180 }
-          , { headerText : "Product Name", dataField : "itmname" }
-          , { headerText : "Product QTY",  dataField : "promoFreeGiftQty",   width : 180 }
-          , { headerText : "itmid",        dataField : "promoFreeGiftStkId", visible : false}
-          , { headerText : "promoItmId",   dataField : "promoItmId",         visible : false}
+            {headerText : "Product CD",      dataField : "itmcd",                    width : 180}
+          , {headerText : "Product Name",  dataField : "itmname"}
+          , {headerText : "Product QTY",     dataField : "promoFreeGiftQty",   width : 180}
+          , {headerText : "itmid",               dataField : "promoFreeGiftStkId", visible : false}
+          , {headerText : "promoItmId",     dataField : "promoItmId",            visible : false}
           ];
 
         //그리드 속성 설정
@@ -255,6 +255,7 @@
             $('#ordProduct2 option').remove();
             $('#ordProduct2 optgroup').remove();
 
+            // Promostion setting
             $('#ordPromo1 option').remove();
             $('#ordPromo1').prop("disabled", true);
             $('#ordPromo2 option').remove();
@@ -333,6 +334,8 @@
             $('#ordPromo1').prop("disabled", true);
             $('#ordPromo2 option').remove();
             $('#ordPromo2').prop("disabled", true);
+
+            $('#ordProduct1, #ordProduct2').change();
 
             var idx    = $("#srvPacId option:selected").index();
             var selVal = $("#srvPacId").val();
@@ -697,7 +700,8 @@
     }
 
     function fn_validPaymentInfo() {
-        var isValid = true, msg = "";
+        var isValid = true;
+        var msg = "";
 
         var appTypeIdx = $("#appType option:selected").index();
         var appTypeVal = $("#appType").val();
@@ -821,6 +825,7 @@
             isValid = false;
             msg += "* Please select a product.<br>";
         }
+
         // 프레임만 주문 불가.
         if($("#ordProduct1 option:selected").index() <= 0 && $("#ordProduct2 option:selected").index() > 0) {
             isValid = false;
@@ -1024,16 +1029,17 @@
         });
 
         Common.ajaxFile("/sales/order/attachFileUpdate.do", formData, function(result) {
-            if(result.code == 99){
+            if(result.code == 99) {
                 Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
 
-            }else{
+            } else {
                 Common.ajax("POST", "/homecare/sales/order/updateHcPreOrder.do", orderVO, function(result) {
                     Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdModPop);
                 },
                 function(jqXHR, textStatus, errorThrown) {
                     try {
                         Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+                        Common.removeLoader();
 
                     } catch (e) {
                         console.log(e);
@@ -1041,7 +1047,7 @@
                 });
                 //myFileCaches = {};
             }
-        },function(result){
+        },function(result) {
             Common.alert(result.message+"<br/>Upload Failed. Please check with System Administrator.");
         });
     }
@@ -1170,9 +1176,11 @@
                 $("#ordPvGST"+tagNum).val(promoPriceInfo.orderPVPromoGST);
                 $("#ordRentalFees"+tagNum).val(promoPriceInfo.orderRentalFeesPromo);
 
-                //$("#promoDiscPeriodTp"+tagNum).val(promoPriceInfo.promoDiscPeriodTp);
+                $("#promoDiscPeriodTp"+tagNum).val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriod"+tagNum).val(promoPriceInfo.promoDiscPeriod);
 
+                // 합계
+                totSumPrice();
             }
         });
     }
@@ -1191,9 +1199,8 @@
     function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade, tagNum) {
         $('#ordPromo'+tagNum).removeAttr("disabled");
 
-        if('${preOrderInfo.month}' >= '7' && '${preOrderInfo.year}' == '2019') {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
-
+        if(appTypeVal !=66){
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
         } else {
             doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo'+tagNum, 'S', ''); //Common Code
         }
@@ -1207,20 +1214,20 @@
 
         $("#searchAppTypeId").val(appTypeId);
         $("#searchStkId").val(stkId);
+        $("#searchSrvPacId").val(srvPacId);
 
         Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId, srvPacId : srvPacId}, function(stkPriceInfo) {
 
             if(stkPriceInfo != null) {
+            	var pvVal = stkPriceInfo.orderPV;
+                var pvValGst = Math.floor(pvVal*(1/1.06))
+
                 $("#ordPrice"+tagNum).val(stkPriceInfo.orderPrice);
-                $("#ordPv"+tagNum).val(stkPriceInfo.orderPV);
-                $("#ordPvGST"+tagNum).val(stkPriceInfo.orderPV);
+                $("#ordPv"+tagNum).val(pvVal);
+                $("#ordPvGST"+tagNum).val(pvValGst);
                 $("#ordRentalFees"+tagNum).val(stkPriceInfo.orderRentalFees);
                 $("#ordPriceId"+tagNum).val(stkPriceInfo.priceId);
-
                 $("#normalOrdPrice"+tagNum).val(stkPriceInfo.orderPrice);
-                $("#normalOrdPv"+tagNum).val(stkPriceInfo.orderPV);
-                $("#normalOrdRentalFees"+tagNum).val(stkPriceInfo.orderRentalFees);
-                $("#normalOrdPriceId"+tagNum).val(stkPriceInfo.priceId);
 
                 $("#promoDiscPeriodTp"+tagNum).val('');
                 $("#promoDiscPeriod"+tagNum).val('');

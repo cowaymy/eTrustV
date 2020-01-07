@@ -289,7 +289,6 @@
         });
 
         $('#thrdParty').click(function(event) {
-
             fn_clearRentPayMode();
             fn_clearRentPay3thParty();
             fn_clearRentPaySetCRC();
@@ -302,36 +301,43 @@
                 $('#sctThrdParty').addClass("blind");
             }
         });
+
         $('#thrdPartyId').change(function(event) {
             fn_loadThirdParty($('#thrdPartyId').val().trim(), 2);
         });
+
         $('#thrdPartyId').keydown(function(event) {
             if(event.which === 13) {    //enter
                 fn_loadThirdParty($('#thrdPartyId').val().trim(), 2);
             }
         });
+
         $('#thrdPartyBtn').click(function() {
             Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REGISTER_PAY_3RD_PARTY"}, null, true);
         });
+
         $('#rentPayMode').change(function() {
             var rentPayModeIdx = $("#rentPayMode option:selected").index();
             var rentPayModeVal = $("#rentPayMode").val();
 
             if(rentPayModeIdx > 0) {
                 if(rentPayModeVal == '133' || rentPayModeVal == '134') {
-
                     Common.alert('<b>Currently we are not provide ['+rentPayModeVal+'] service.</b>');
                     fn_clearRentPayMode();
+
                 } else {
                     if(rentPayModeVal == '131') {
                         if($('#thrdParty').is(":checked") && FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
                             Common.alert('<b>Please select the third party first.</b>');
+
                         } else {
                             $('#sctCrCard').removeClass("blind");
                         }
+
                     } else if(rentPayModeVal == '132') {
                         if($('#thrdParty').is(":checked") && FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
                             Common.alert('<b>Please select the third party first.</b>');
+
                         } else {
                             $('#sctDirectDebit').removeClass("blind");
                         }
@@ -564,26 +570,31 @@
                 }
             }
         }); */
+
         $('#addCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             var custNric = $('#thrdParty').is(":checked") ? "" : $('#nric').val();
+
             Common.popupDiv("/sales/customer/customerCreditCardeSalesAddPop.do", {custId : vCustId, callPrgm : "PRE_ORD", nric : custNric}, null, true);
         });
-        $('#selCreditCardBtn').click(function() {
 
+        $('#selCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : vCustId, callPrgm : "PRE_ORD"}, null, true);
         });
+
         //Payment Channel - Add New Bank Account
         $('#btnAddBankAccount').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             Common.popupDiv("/sales/customer/customerBankAccountAddPop.do", {custId : vCustId, callPrgm : "PRE_ORD"}, null, true);
         });
+
         //Payment Channel - Select Another Bank Account
         $('#btnSelBankAccount').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : vCustId, callPrgm : "PRE_ORD"});
         });
+
         $('#sofFile').change(function(evt) {
             var file = evt.target.files[0];
             if(file == null && myFileCaches[1] != null){
@@ -591,7 +602,6 @@
             }else if(file != null){
                 myFileCaches[1] = {file:file};
             }
-            console.log(myFileCaches);
         });
 
         $('#nricFile').change(function(evt) {
@@ -601,7 +611,6 @@
             }else if(file != null){
                 myFileCaches[2] = {file:file};
             }
-            console.log(myFileCaches);
         });
 
         $('#payFile').change(function(evt) {
@@ -611,7 +620,6 @@
             }else if(file != null){
                 myFileCaches[3] = {file:file};
             }
-            console.log(myFileCaches);
         });
 
         $('#trFile').change(function(evt) {
@@ -621,7 +629,6 @@
             }else if(file != null){
                 myFileCaches[4] = {file:file};
             }
-            console.log(myFileCaches);
         });
 
         $('#otherFile').change(function(evt) {
@@ -631,7 +638,6 @@
             }else if(file != null){
                 myFileCaches[5] = {file:file};
             }
-            console.log(myFileCaches);
         });
 
         $('#otherFile2').change(function(evt) {
@@ -641,7 +647,6 @@
             }else if(file != null){
                 myFileCaches[6] = {file:file};
             }
-            console.log(myFileCaches);
         });
     });
 
@@ -887,6 +892,7 @@
             isValid = false;
             msg += "* Please select a product.<br>";
         }
+
         // 프레임만 주문 불가.
         if($("#ordProduct1 option:selected").index() <= 0 && $("#ordProduct2 option:selected").index() > 0) {
             isValid = false;
@@ -1117,7 +1123,7 @@
         });
 
         Common.ajaxFile("/sales/order/attachFileUpload.do", formData, function(result) {
-            if(result != 0 && result.code == 00){
+            if(result != 0 && result.code == 00) {
                 orderVO["atchFileGrpId"] = result.data.fileGroupKey;
 
                 Common.ajax("POST", "/homecare/sales/order/registerHcPreOrder.do", orderVO, function(result) {
@@ -1133,10 +1139,10 @@
                     }
                 });
 
-            }else{
+            } else {
                 Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
             }
-        },function(result){
+        },function(result) {
             Common.alert("Upload Failed. Please check with System Administrator.");
         });
     }
