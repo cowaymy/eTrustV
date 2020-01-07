@@ -213,7 +213,7 @@
             #{reqTotAmt},
             TO_DATE(#{trvPeriodFr}, 'DD/MM/YYYY'),
             TO_DATE(#{trvPeriodTo}, 'DD/MM/YYYY'),
-            #{refdDate},
+            TO_DATE(#{refdDate}, 'DD/MM/YYYY'),
             #{atchFileGrpId},
             <if test="reqAdvType == 1">
                 #{trvReqRem},
