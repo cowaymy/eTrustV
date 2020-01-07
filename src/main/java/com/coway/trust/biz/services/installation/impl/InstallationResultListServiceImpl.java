@@ -2575,6 +2575,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
       orderLog.put("logCreator", sessionVO.getUserId());
       orderLog.put("logCreated", new Date());
 
+      if (!CommonUtils.nvl(params.get("beforeProductSerialNo")).equals("")) { // TEMPORARY USING THIS COLUMN
+         // INSERT FREE TRIAL MATTRESS CARE SERVICE - SVC0113D
+         installationResultListMapper.insertSVC0113D(params);
+      }
     }
 
     resultValue.put("installEntryNo", CommonUtils.nvl(params.get("hiddeninstallEntryNo")));
