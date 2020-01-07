@@ -362,7 +362,6 @@
                   ,UPD_DT = SYSDATE
         WHERE STOCK_AUDIT_NO = #{stockAuditNo}
             AND WH_LOC_ID = #{whLocId}
-            AND ITM_ID = #{itmId}
     </update>
 
     <update id="saveAppvInfo" parameterType="Map">
@@ -438,8 +437,8 @@
                 ,APPV_2_USER_ID
                 ,APPV_2_DT
                 ,APPV_2_OPINION
-                ,CRT_USER_ID
-                ,CRT_DT
+                ,#{userId}
+                ,SYSDATE
                 ,UPD_USER_ID
                 ,UPD_DT
            FROM LOG0095M
@@ -494,8 +493,8 @@
                 ,OTHER_TRNSC_TYPE
                 ,OTHER_TRNSC_TYPE_DTL
                 ,OTHER_REM
-                ,CRT_USER_ID
-                ,CRT_DT
+                ,#{userId}
+                ,SYSDATE
                 ,UPD_USER_ID
                 ,UPD_DT
            FROM LOG0096D
