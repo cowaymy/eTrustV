@@ -884,7 +884,7 @@ AND     A.STUS_CODE_ID IN (1, 9)                                                
 AND     A.CUST_ADD_ID = #{custAddId}
 </if>
 ORDER BY    A.STUS_CODE_ID DESC
-        ,   A.CUST_ADD_ID ASC
+        ,   A.CUST_ADD_ID DESC
 </select>
 
 
@@ -1732,7 +1732,10 @@ AND     A.BNDL_ID IS NULL
 <update id="updateSAL0213M" parameterType="Map">
 /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateSAL0213M] 20191220 - KR JAEMAJEM */
 UPDATE  SAL0213M A                                                              --Pre-Order_table
-SET     A.STUS_ID = #{stusId}                                                   -- Status ID
+SET     A.STUS_ID = CASE    WHEN A.STUS_ID = 1  THEN 1                          --1(Active)
+                            WHEN A.STUS_ID = 21 THEN 104                        --21(Failed) 104(Processing)
+                                                ELSE 1                          --1(Active)
+                                                END
     ,   A.SRV_PAC_ID = #{srvPacId}                                              -- Srv Pac ID
     ,   A.CUST_CNTC_ID = #{custCntcId}                                          -- defectCodeId
     ,   A.KEYIN_BRNCH_ID = #{keyinBrnchId}                                      -- defectCodeId
