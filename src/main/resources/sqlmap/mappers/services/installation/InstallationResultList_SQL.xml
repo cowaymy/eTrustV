@@ -4678,7 +4678,7 @@
             , SYSDATE
             , #{beforeProductSerialNo}
             , #{CTID}
-            , 'VIA MOBILE INSERT'
+            , 'VIA MOBILE INSERT (FREE MATTRESS CARE SERVICE CAMPAIGN)'
             , 1
             , ''
             , 0
