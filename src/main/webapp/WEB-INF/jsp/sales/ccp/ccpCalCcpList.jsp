@@ -17,6 +17,7 @@ $(document).ready(function() {
 	doGetCombo('/sales/ccp/selectDscCodeList', '', '','_keyInDscBranch', 'S' , 'f_multiCombo'); //Branch
 
 	//doGetProductCombo('/common/selectProductCodeList.do', '', '', 'listProductId', 'S'); //Product Code
+	//doGetComboAndGroup2('/common/selectProductCodeList.do', '', '', 'listProductId', 'S', 'fn_setOptGrpClass');//product 생성
 	doGetComboWh('/sales/order/colorGridProductList.do', '', '', 'listProductId', '', ''); //Product Code
 
 	doGetCombo('/common/selectCodeList.do', '51', '',  '_calCcpType', 'S'); // CCP Type Id
@@ -149,6 +150,10 @@ function doGetComboWh(url, groupCd , selCode, obj , type, callbackFn){
   });
 } ;
 
+function fn_setOptGrpClass() {
+    $("optgroup").attr("class" , "optgroup_text");
+}
+
 function fn_otpGrouping(data, obj){
 
    var targetObj = document.getElementById(obj);
@@ -203,6 +208,19 @@ function fn_otpGrouping(data, obj){
            $(obj).append('<optgroup label="Water Purifier ">');
            count++;
        }
+       if(data[index].codeId == 1646 && count == 0){
+           $(obj).append('<optgroup label="Mattress">');
+           count++;
+       }
+       if(data[index].codeId == 1653 && count == 0){
+           $(obj).append('<optgroup label="Frame">');
+           count++;
+       }
+       if(data[index].codeId == 967 && count == 0){
+           $(obj).append('<optgroup label="Juicer">');
+           count++;
+       }
+
 
        $('<option />', {value : data[index].codeId, text: data[index].codeName}).appendTo(obj); // WH_LOC_ID
 
