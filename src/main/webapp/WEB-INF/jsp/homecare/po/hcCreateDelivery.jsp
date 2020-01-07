@@ -652,12 +652,17 @@ var mSort = {};
 
         $("#btnCancelDelivery").click(function(){
         	var rows = AUIGrid.getSelectedItems(deliveryGridID);
-        	var item = rows[0].item;
+        	if(rows.length == 0){
+        		Common.alert("No data selected.");
+                return false;
+        	}
 
             if(rows.length != 1){
                 Common.alert("Please, select one row from Delivery List.");
                 return false;
             }
+
+            var item = rows[0].item;
 
             if(item.delvryStatusCode == "10"){
             	Common.alert("Only delivery can be processed.");
@@ -677,7 +682,7 @@ var mSort = {};
 	                            , {"hmcDelvryNo":item.hmcDelvryNo, "sPoNo":item.poNo}
 	                            , function(result){
 	                                Common.alert("<spring:message code='sys.msg.savedCnt'/>");
-	                                //AUIGrid.setGridData(deliveryGridID, result.dataList);
+	                                AUIGrid.setGridData(deliveryGridID, result.dataList);
 	                             }
 	                            , function(jqXHR, textStatus, errorThrown){
 	                                try{
@@ -984,9 +989,9 @@ function fn_isDateValidate(sValidDt){
     <aside class="title_line"><!-- title_line start -->
         <h3>Delivery List</h3>
         <ul class="right_btns">
-
-            <li style="display:none"><p class="btn_grid"><a id="btnCancelDelivery">Cancel Delivery</a></p></li>
-
+            <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+            <li><p class="btn_grid"><a id="btnCancelDelivery">Cancel Delivery</a></p></li>
+            </c:if>
             <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_grid"><a id="btnSubDel">Delete</a></p></li>
             <li><p class="btn_grid"><a id="btnSubDelivery">Delivery</a></p></li>

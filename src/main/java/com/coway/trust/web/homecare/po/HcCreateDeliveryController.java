@@ -221,12 +221,12 @@ public class HcCreateDeliveryController {
 	@RequestMapping(value = "/hcCreateDelivery/cancelDeliveryHc.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> cancelDeliveryHc(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
 		ReturnMessage result = new ReturnMessage();
-		/*List<EgovMap> list = hcCreateDeliveryService.cancelDeliveryHc(params, sessionVO);
+		List<EgovMap> list = hcCreateDeliveryService.cancelDeliveryHc(params, sessionVO);
 
 		result.setCode(AppConstants.SUCCESS);
 		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		result.setDataList(list);
-		result.setTotal(list.size());*/
+		result.setTotal(list.size());
 		return ResponseEntity.ok(result);
 	}
 

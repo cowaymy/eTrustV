@@ -64,6 +64,10 @@ public class HcDeliveryGrServiceImpl extends EgovAbstractServiceImpl implements 
 					messageAccessor.getMessage(AppConstants.MSG_INVALID, new Object[] { "Delivery NO(String)" }));
 		}
 
+		if("10".equals((String)hInfo.get("delvryStatusCd"))){
+			throw new ApplicationException(AppConstants.FAIL, "Pleas, Check the delivery status.");
+		}
+
 		// isNewYn = GR 생성.
 		if( "20".equals((String)hInfo.get("delvryStatusCd"))
 			&& "Y".equals((String)hInfo.get("isNewYn"))
