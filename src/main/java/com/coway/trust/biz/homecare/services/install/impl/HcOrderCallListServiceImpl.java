@@ -208,17 +208,17 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
     				 holiDayAddMap.put("holiday", CommonUtils.nvl(e.get("cDate")));
 
     				 try {
+    					 // KR. JIN. - 2019-11-25
     					 List<EgovMap> vm = allocationMapper.isHcSubGroupHoliDay(holiDayAddMap);
 
-    					 // KR. JIN. - 2019-11-25
     					 if(null != vm && vm.size() > 0) {
     						 for(EgovMap em : vm) {
     							 EgovMap   hMap =  new EgovMap();
 
     							 hMap.put("isHoliDay", "true");
     							 hMap.put("holiDayCtCode", CommonUtils.nvl(em.get("memId")));
-    							 hMap.put("oldCt", CommonUtils.nvl(em.get("ct")));
     							 hMap.put("ct", CommonUtils.nvl(em.get("memId")));
+    							 hMap.put("oldCt", CommonUtils.nvl(e.get("ct")));
     							 hMap.put("cDate", CommonUtils.nvl(holiDayAddMap.get("cDate")));
     							 hMap.put("ctSubGrp", CommonUtils.nvl(holiDayAddMap.get("ctSubGrp")));
     							 hMap.put("brnchId", CommonUtils.nvl(holiDayAddMap.get("brnchId")));
@@ -235,8 +235,9 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 
     				 } catch(Exception ex) {
     					 holiDayAddMap.put("isHoliDay", "false");
+    					 mergeHolidayList.add(holiDayAddMap);
 					 }
-    				 mergeHolidayList.add(holiDayAddMap);
+
 				} // eof mergeHolidayList
 			}
 		}// eof baseList

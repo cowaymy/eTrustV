@@ -105,9 +105,9 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 
 					 }catch(Exception ex){
 						 holiDayAddMap.put("isHoliDay",  "false");
+						 mergeHolidayList.add(holiDayAddMap);
 					 }
 
-    				 mergeHolidayList.add(holiDayAddMap);
 				} // eof mergeHolidayList
 
 				///Collections.sort(  (ArrayList) mergeHolidayList);
