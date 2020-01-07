@@ -54,20 +54,20 @@
         var vStatusId = AUIGrid.getCellValue(myGridID , first.rowIndex , "statusId");
         var vId = AUIGrid.getCellValue(myGridID , first.rowIndex , "id");
         // Internal 복사불가
-        if (vId == 'Internal') {
-            Common.alert("Internal Area ID cannot be copied.");
-            return false;
-        }
+        //if (vId == 'Internal') {
+            //Common.alert("Internal Area ID cannot be copied.");
+            //return false;
+        //}
         // null state
-        if (FormUtil.isEmpty(vCity)) {
-            Common.alert("<spring:message code='sys.msg.necessary' arguments='City' htmlEscape='false'/>");
-            return false;
-        }
+        //if (FormUtil.isEmpty(vCity)) {
+            //Common.alert("<spring:message code='sys.msg.necessary' arguments='City' htmlEscape='false'/>");
+            //return false;
+        //}
         // null state
-        if (FormUtil.isEmpty(vStatusId)) {
-            Common.alert("<spring:message code='sys.msg.necessary' arguments='State' htmlEscape='false'/>");
-            return false;
-        }
+        //if (FormUtil.isEmpty(vStatusId)) {
+            //Common.alert("<spring:message code='sys.msg.necessary' arguments='State' htmlEscape='false'/>");
+            //return false;
+        //}
 
         $("#popAreaId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "areaId"));
         $("#popArea").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "area"));
