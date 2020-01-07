@@ -930,7 +930,8 @@
                    NVL (TO_CHAR (CCR0007D.CALL_REM), '') AS instruction,
                    SAL0047D.REM AS RESULT_REMARK,
                    NVL (SYS0026M.SERIAL_CHK, 'N') AS SERIAL_CHK,
-                   NVL (TO_CHAR (SAL0233M.AREA_COVRG_ID), '') AS before_Product_Code
+                   NVL (TO_CHAR (SAL0233M.AREA_COVRG_ID), '') AS before_Product_Code,
+                   NVL (TO_CHAR (SVC0113D.MATT_SZ), '') AS before_Product_Serial_No
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
@@ -952,7 +953,8 @@
                  (SELECT *
                   FROM SYS0064M
                   WHERE STATUS_ID = 1) SYS0064M,
-                 SAL0233M
+                 SAL0233M,
+                 SVC0113D
             WHERE SAL0046D.CT_ID = ORG0001D.MEM_ID
               AND ORG0005D.MEM_ID = ORG0001D.MEM_ID
               AND SAL0001D.MEM_ID = ORG1001V.MEM_ID
@@ -977,6 +979,7 @@
               AND ORG0001D.mem_code = #{userId}
               AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
               AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
+              AND SAL0046D.INSTALL_ENTRY_NO = SVC0113D.SVC_NO(+)
               ) WHERE rnum = 1
     ]]>
     <!-- WHERE rnum = 1 -->
