@@ -272,5 +272,5 @@ public interface InstallationResultListMapper {
 
   String selectDelvryGrCmpltYn(Map<String, Object> params);
 
-  String insertSVC0113D(Map<String, Object> params);
+  void insertSVC0113D(Map<String, Object> params);
 }
