@@ -317,7 +317,7 @@ function fn_downloadAgreement() {
             	$("#v_contractStartDt").val($("#startDt").val());
             	$("#v_contractEndDt").val($("#endDt").val());
 
-                $("#reportFileName").val("/logistics/HMAgreement_20180704.rpt");
+                $("#reportFileName").val("/logistics/HMAgreement_" + signDt + ".rpt");
                 $("#reportDownFileName").val("Manager_Agreement_" + code);
             }
 
@@ -409,7 +409,7 @@ function fn_downloadAgreement() {
 
             console.log("v_contractStartDt :: " + $("#v_contractStartDt").val());
 
-            $("#reportFileName").val("/logistics/CodyAgreement_2017.rpt");
+            $("#reportFileName").val("/logistics/CodyAgreement_2019v6.rpt");
             $("#reportDownFileName").val("CodyAgreement_" + code);
 
             console.log("reportFileName :: " + $("#reportFileName").val());
