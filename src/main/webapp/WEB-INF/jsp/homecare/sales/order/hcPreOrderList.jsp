@@ -437,27 +437,30 @@
             width: '100%'
         });
         $('#_appTypeId').multipleSelect("checkAll");
+
         $('#_stusId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
             selectAll: true, // 전체선택
             width: '100%'
         });
-        $('#_stusId').multipleSelect("checkAll");
+        //$('#_stusId').multipleSelect("checkAll");
+
         $('#_brnchId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
             selectAll: true, // 전체선택
             width: '100%'
         });
-        $('#_brnchId').multipleSelect("checkAll");
+        //$('#_brnchId').multipleSelect("checkAll");
+
         $('#_typeId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
             selectAll: true, // 전체선택
             width: '100%'
         });
-        $('#_typeId').multipleSelect("checkAll");
+        //$('#_typeId').multipleSelect("checkAll");
 
     }
 
