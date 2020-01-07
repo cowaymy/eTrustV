@@ -8,10 +8,8 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.order.HcOrderCancelService;
 import com.coway.trust.biz.sales.order.OrderCancelService;
-import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.homecare.HomecareConstants;
@@ -66,7 +64,7 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 	public Map<String, Object> hcSaveCancel(Map<String, Object> params, SessionVO sessionVO) {
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		try {
+		//try {
 			params.put("userId", sessionVO.getUserId());
 			params.put("CTGroup", CommonUtils.nvl(params.get("dtSubGrp")));
 
@@ -94,9 +92,9 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 		    } else {
 		    	map.put("msg", "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
 		    }
-		} catch (Exception e) {
+		/*} catch (Exception e) {
 			throw new ApplicationException(AppConstants.FAIL, "Order Cancellation Failed.");
-		}
+		}*/
 		return map;
 	}
 
