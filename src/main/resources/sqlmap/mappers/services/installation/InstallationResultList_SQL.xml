@@ -4655,4 +4655,38 @@
    WHERE ROWNUM = 1
   </select>
 
+  <insert id="insertSVC0113D" parameterType="Map">
+    INSERT INTO SVC0113D (SEQ
+                        , SALES_ORD_ID
+                        , SVC_NO
+                        , CUST_ID
+                        , SALES_DT
+                        , MATT_SZ
+                        , MEM_ID
+                        , REM
+                        , STATUS
+                        , REM_STATUS
+                        , DISB
+                        , CRT_DT
+                        , UPD_DT
+                        , CRT_BY
+                        , UPD_BY
+    ) VALUES (SVC0113D_SEQ.nextval
+            , #{hidSalesOrderId}
+            , #{hiddeninstallEntryNo}
+            , #{hidCustomerId}
+            , SYSDATE
+            , #{beforeProductSerialNo}
+            , #{CTID}
+            , 'VIA MOBILE INSERT'
+            , 1
+            , ''
+            , 0
+            , 349
+            , 349
+            , SYSDATE
+            , SYSDATE
+    )
+  </insert>
+
 </mapper>
