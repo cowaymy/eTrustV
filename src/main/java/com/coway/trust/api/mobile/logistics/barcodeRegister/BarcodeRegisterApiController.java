@@ -8,8 +8,6 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -44,9 +42,6 @@ public class BarcodeRegisterApiController {
 
 	@Resource(name = "barcodeRegisterApiService")
 	private BarcodeRegisterApiService barcodeRegisterApiService;
-
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
 
 	 /**
 	 * 바코드 리스트

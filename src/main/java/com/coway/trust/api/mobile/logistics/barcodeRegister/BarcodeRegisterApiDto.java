@@ -18,7 +18,8 @@ public class BarcodeRegisterApiDto {
 	@ApiModelProperty(value = "")
 	private String itmCode;
 
-	public static BarcodeRegisterApiDto create(EgovMap egvoMap) {
+	@SuppressWarnings("unchecked")
+    public static BarcodeRegisterApiDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, BarcodeRegisterApiDto.class);
 	}
 
