@@ -94,6 +94,9 @@ public class RequestFundTransferServiceImpl extends EgovAbstractServiceImpl impl
             throw new ApplicationException(AppConstants.FAIL, "User ID value does not exist.");
         }
         requestFundTransferMapper.callSpInstReqFundTrnsfr(param);
+        if( param.get("errcode").toString().equals("000") == false){
+            throw new ApplicationException(AppConstants.FAIL, (String)param.get("errmsg").toString());
+        }
         return 0;
     }
 
