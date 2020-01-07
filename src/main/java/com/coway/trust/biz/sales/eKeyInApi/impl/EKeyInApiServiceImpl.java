@@ -1210,7 +1210,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
                 rtn = EKeyInApiDto.create(selectCustomerInfo);
 
                 param.setCustId(rtn.getCustId());
-                param.setStusCodeId(9);                                         //SYS0038M : 9(Main)
+                param.setStusCodeId(9);
                 List<EgovMap> selectAnotherContact = eKeyInApiMapper.selectAnotherContact(EKeyInApiForm.createMap(param));
                 if( selectAnotherContact.size() > 1 ){
                     throw new ApplicationException(AppConstants.FAIL, "Check customer information.");
@@ -1220,12 +1220,12 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
                 }
 
                 List<EgovMap> selectAnotherAddress = eKeyInApiMapper.selectAnotherAddress(EKeyInApiForm.createMap(param));
-                if( selectAnotherAddress.size() > 1 ){
+                if( selectAnotherAddress.size() == 0 ){
                     throw new ApplicationException(AppConstants.FAIL, "Check Address information.");
                 }
-                if( selectAnotherAddress.size() == 1 ){
+//                if( selectAnotherAddress.size() == 1 ){
                     rtn.setSelectAnotherAddressMain(EKeyInApiDto.create(selectAnotherAddress.get(0)));
-                }
+//                }
             }
 
             List<EgovMap> selectBankList = eKeyInApiMapper.selectBankList();
@@ -1720,7 +1720,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
             param.getMattress().setPreOrdId(homecareList.get(0).getMatPreOrdId());
             param.getMattress().setUpdUserId(loginVO.getUserId());
             param.getMattress().setRegId(param.getRegId());
-            updateEkeyInSal0213M(param.getMattress());                           //★☆★☆UPDATE SAL0213M
+            updateEkeyInSal0213M(param.getMattress());                          //★☆★☆UPDATE SAL0213M
 
             if( CommonUtils.isNotEmpty(homecareList.get(0).getFraPreOrdId()) && homecareList.get(0).getFraPreOrdId() > 0 ){
                 if (CommonUtils.isEmpty(param.getFrame())) {
