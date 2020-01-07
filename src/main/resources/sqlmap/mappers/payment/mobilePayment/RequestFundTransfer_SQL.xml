@@ -161,11 +161,17 @@ ORDER BY MOB_TICKET_NO DESC
 
 
 
-<resultMap id="callSpInstReqFundTrnsfr" type="egovMap"></resultMap>
+<resultMap id="callSpInstReqFundTrnsfrMap" type="egovMap"></resultMap>
 <select id="callSpInstReqFundTrnsfr" parameterType="Map" statementType="CALLABLE">
 /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.callSpInstReqFundTrnsfr] 20191223 - KR JAEMAJEM */
 {
-    call  SP_INST_REQ_FUND_TRNSFR(#{ftReqId}, #{updUserId})
+    call  SP_INST_REQ_FUND_TRNSFR
+    (
+            #{ftReqId}
+        ,   #{updUserId}
+        ,   #{errcode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=callSpInstReqFundTrnsfrMap}
+        ,   #{errmsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=callSpInstReqFundTrnsfrMap}
+    )
 }
 </select>
 
