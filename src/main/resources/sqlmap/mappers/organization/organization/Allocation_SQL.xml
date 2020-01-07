@@ -115,6 +115,21 @@
 
     </select>
 
+    <select id="isHcSubGroupHoliDay" parameterType="Map" resultType="egovMap">
+        SELECT C.MEM_CODE
+             , C.MEM_ID
+          FROM SYS0101M A
+             , ORG0020D B
+             , ORG0001D C
+             , SYS0005M D
+         WHERE A.HOLIDAY = B.HOLIDAY
+           AND B.HOLIDAY_TYPE = B.HOLIDAY_TYPE
+           AND A.HOLIDAY_SEQ  = B.HOLIDAY_SEQ
+           AND B.CT_MEM_ID    = C.MEM_ID
+           AND B.BRNCH_CODE   = D.CODE
+           AND C.BRNCH        = #{brnchId}
+           AND TO_CHAR(A.HOLIDAY, 'YYYY-MM-DD') = #{holiday}
+    </select>
 
      <select id="selectVacationList" parameterType="Map" resultType="egovMap">
               <![CDATA[

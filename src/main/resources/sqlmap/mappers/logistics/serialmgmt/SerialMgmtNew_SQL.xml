@@ -48,6 +48,7 @@
 		 WHERE HMC_GR_NO = #{docNo}
 		   AND STOCK_ID = #{stockId}
 		   AND STOCK_CODE = #{stockCode}
+		   AND USE_YN = 'Y'
     </select>
 
     <insert id="insertSerialInfo" parameterType="Map">

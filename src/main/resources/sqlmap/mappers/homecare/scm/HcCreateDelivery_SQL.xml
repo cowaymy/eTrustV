@@ -394,4 +394,66 @@
 		 ORDER BY PO_NO, PO_DTL_NO
     </select>
 
+    <select id="selectGrCompleteCheck" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectGrCompleteCheck] - KR JIN */
+	    SELECT COUNT(1)
+		  FROM HMC0009M
+		 WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+		   AND GR_YN = 'Y'
+    </select>
+
+    <select id="selectCdcSerialChk" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectCdcSerialChk] - KR JIN */
+        SELECT DECODE(B.SERIAL_CHK, 'Y', 'Y', 'N') AS SERIAL_CHK
+             , B.STK_TYPE_ID
+		     , (SELECT CDC FROM HMC0004M WHERE PO_NO = A.PO_NO) AS CDC
+		  FROM HMC0008D A
+		     , SYS0026M B
+		 WHERE A.HMC_DELVRY_NO = #{hmcDelvryNo}
+		   AND A.STOCK_ID = B.STK_ID
+		   AND A.STOCK_CODE = B.STK_CODE
+    </select>
+
+    <select id="selectGrNoList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectGrNoList] - KR JIN */
+        SELECT HMC_GR_NO
+          FROM HMC0009M
+         WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+           AND USE_YN = 'Y'
+    </select>
+
+    <select id="selectSerialCountCheck" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectSerialCountCheck] - KR JIN */
+        SELECT COUNT(1)
+		  FROM (
+		        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+		             , REQST_NO
+		          FROM LOG0099D
+		         WHERE REQST_NO = #{hmcGrNo}
+		       )
+		 WHERE RN = 1
+    </select>
+
+    <delete id="deleteDeliveryGrDetail" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.deleteDeliveryGrDetail] - KR JIN */
+	    DELETE FROM HMC0010D
+	     WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+    </delete>
+
+    <delete id="deleteDeliveryGrMain" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.deleteDeliveryGrMain] - KR JIN */
+        DELETE FROM HMC0009M
+         WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+    </delete>
+
+    <update id="updateInitDelivery" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.updateInitDelivery] - KR JIN */
+        UPDATE HMC0007M
+           SET DELVRY_GI_DT = NULL
+             , DELVRY_STATUS = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '432' AND CODE = '10')
+             , UPD_USER_ID = #{updUserId}
+             , UPD_DT = SYSDATE
+         WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+    </update>
+
 </mapper>

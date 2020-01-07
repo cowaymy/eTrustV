@@ -53,4 +53,13 @@ public interface HcCreateDeliveryMapper {
 	// PO의 생산수량 select
 	public List<EgovMap> selectProductionCompar(Map<String, Object> params) throws Exception;
 
+	//
+	public int selectGrCompleteCheck(Map<String, Object> params) throws Exception;
+	public List<EgovMap> selectCdcSerialChk(Map<String, Object> params) throws Exception;
+	public List<EgovMap> selectGrNoList(Map<String, Object> params) throws Exception;
+	public int selectSerialCountCheck(Map<String, Object> params) throws Exception;
+
+	public int deleteDeliveryGrDetail(Map<String, Object> params) throws Exception;
+	public int deleteDeliveryGrMain(Map<String, Object> params) throws Exception;
+	public int updateInitDelivery(Map<String, Object> params) throws Exception;
 }

@@ -15,6 +15,7 @@ public interface AllocationMapper {
 
 	List<EgovMap> selectBaseList(Map<String, Object> params);
 	List<EgovMap> isSubGroupHoliDay(Map<String, Object> params);
+	List<EgovMap> isHcSubGroupHoliDay(Map<String, Object> params);
 	EgovMap  selectVacationList(Map<String, Object> params);
 	EgovMap  makeViewList(Map<String, Object> params);
 

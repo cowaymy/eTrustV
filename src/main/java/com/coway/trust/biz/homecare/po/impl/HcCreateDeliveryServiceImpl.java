@@ -35,6 +35,9 @@ public class HcCreateDeliveryServiceImpl extends EgovAbstractServiceImpl impleme
 	@Resource(name = "hcCreateDeliveryMapper")
 	private HcCreateDeliveryMapper hcCreateDeliveryMapper;
 
+	@Resource(name = "hcDeliveryGrMapper")
+	private HcDeliveryGrMapper hcDeliveryGrMapper;
+
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -171,5 +174,44 @@ public class HcCreateDeliveryServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public List<EgovMap> selectProductionCompar(Map<String, Object> params) throws Exception{
 		return hcCreateDeliveryMapper.selectProductionCompar(params);
+	}
+
+	@Override
+	public List<EgovMap> cancelDeliveryHc(Map<String, Object> params, SessionVO sessionVO) throws Exception{
+		int grCompleteCnt = hcCreateDeliveryMapper.selectGrCompleteCheck(params);
+		if(grCompleteCnt > 0){
+			throw new ApplicationException(AppConstants.FAIL, "GR completed can not be canceled.");
+		}
+
+		List<EgovMap> cdcYnList = hcCreateDeliveryMapper.selectCdcSerialChk(params);
+		if( cdcYnList.size() > 0){
+			for (EgovMap eMap : cdcYnList) {
+				if("Y".equals(eMap.get("serialChk"))){
+					String serialChk = hcDeliveryGrMapper.selectLocationSerialChk(eMap);
+					if("Y".equals(serialChk)){
+						List<EgovMap> grList = hcCreateDeliveryMapper.selectGrNoList(params);
+						if(grList.size() > 0){
+							for(EgovMap grMap : grList){
+
+								int serialCnt = hcCreateDeliveryMapper.selectSerialCountCheck(grMap);
+								if(serialCnt > 0){
+									throw new ApplicationException(AppConstants.FAIL, "There is a Serial in progress.[GR NO : " + grMap.get("hmcGrNo") + "]");
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// cancel delivery
+		// HMC0010D
+		hcCreateDeliveryMapper.deleteDeliveryGrDetail(params);
+		// HMC0009M
+		hcCreateDeliveryMapper.deleteDeliveryGrMain(params);
+		params.put("updUserId", sessionVO.getUserId());
+		hcCreateDeliveryMapper.updateInitDelivery(params);
+
+		return selectDeliveryList(params);
 	}
 }

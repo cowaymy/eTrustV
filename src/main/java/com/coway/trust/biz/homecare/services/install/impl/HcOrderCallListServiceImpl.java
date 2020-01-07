@@ -208,7 +208,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
     				 holiDayAddMap.put("holiday", CommonUtils.nvl(e.get("cDate")));
 
     				 try {
-    					 List<EgovMap> vm = allocationMapper.isSubGroupHoliDay(holiDayAddMap);
+    					 List<EgovMap> vm = allocationMapper.isHcSubGroupHoliDay(holiDayAddMap);
 
     					 // KR. JIN. - 2019-11-25
     					 if(null != vm && vm.size() > 0) {
@@ -338,6 +338,8 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 
 					if( "true".equals(CommonUtils.nvl(v.get("isHoliDay"))) ){
 						v.put("repla", "true");
+					}else{
+						v.put("repla", "false");
 					}
 
 					EgovMap eM = allocationMapper.makeViewList(v);

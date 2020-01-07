@@ -65,7 +65,7 @@ public class HcDeliveryGrServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 
 		// isNewYn = GR 생성.
-		if( !"30".equals((String)hInfo.get("delvryStatusCd"))
+		if( "20".equals((String)hInfo.get("delvryStatusCd"))
 			&& "Y".equals((String)hInfo.get("isNewYn"))
 		){
 			hInfo.put("crtUserId", sessionVO.getUserId());
