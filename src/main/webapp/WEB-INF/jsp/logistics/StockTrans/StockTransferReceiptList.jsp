@@ -81,7 +81,8 @@
         {dataField: "mtext",              headerText :"Movement Type",                                                           width:120,      height:30},
         {dataField: "grcmplt",           headerText :"<spring:message code='log.head.grcomplet'/>",                  width:120,      height:30,    visible:false},
         {dataField: "serialReqYn",      headerText :"Serial Chk",                                                                     width:100},
-        {dataField: "serialchk",          headerText:"serialchk",                                                                        width:0}
+        {dataField: "serialchk",          headerText:"serialchk",                                                                        width:0},
+        {dataField: "delvryNoItm",          headerText:"delvry_no_itm",                                                                        width:0,visible:false}
     ];
 
     var resop = {
@@ -152,7 +153,7 @@
 
                 if(serialchk == "Y" && serialReqYn == "Y") {
                     $("#pDeliveryNo").val(AUIGrid.getCellValue(listGrid, rowIndex, "delyno"));
-                    $("#pDeliveryItem").val(AUIGrid.getCellValue(listGrid, rowIndex, "delyqty"));
+                    $("#pDeliveryItem").val(AUIGrid.getCellValue(listGrid, rowIndex, "delvryNoItm"));
                     $("#pStatus").val("O");
 
                     fn_scanSearchPop();
