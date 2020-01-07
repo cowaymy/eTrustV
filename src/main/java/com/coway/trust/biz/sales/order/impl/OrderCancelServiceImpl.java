@@ -1,6 +1,5 @@
 package com.coway.trust.biz.sales.order.impl;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.sales.order.OrderCancelService;
-import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -148,12 +146,13 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
                                                                      // continuerental
     int appTypeId = CommonUtils.intNvl(params.get("appTypeId"));
     logger.info("####################### appTypeId ######## " + appTypeId);
-    int reqStageId = 0; // before , after install
+    int reqStageId = CommonUtils.intNvl(params.get("reqStageId")); // before , after install
     String reqStageIdValue = ""; // RET, CAN
 
-    if ((String) params.get("reqStageId") != null && !"".equals((String) params.get("reqStageId"))) {
+    /* java.lang.ClassCastException - modify KR-SH
+     if ((String) params.get("reqStageId") != null && !"".equals((String) params.get("reqStageId"))) {
       reqStageId = Integer.parseInt((String) params.get("reqStageId"));
-    }
+    }*/
     saveParam.put("reqStageId", reqStageId);
 
     if (status == 19) { // status : Recall
@@ -350,7 +349,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
         saveParam.put("resultId", getCallResultIdMaxSeq);
         orderExchangeMapper.updateResultIdCCR0006D(saveParam);
 
-        logger.info("##### reqStageId ###############" + (String) params.get("reqStageId"));
+        //logger.info("##### reqStageId ###############" + (String) params.get("reqStageId"));
       }
 
       if (appTypeId == 66) { // RENTAL
