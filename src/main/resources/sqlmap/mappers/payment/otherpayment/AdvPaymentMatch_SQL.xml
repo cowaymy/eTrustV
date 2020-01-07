@@ -120,7 +120,7 @@
             BANK_CHG_MAPPING_USER_ID = #{userId},
             BANK_CHG_MAPPING_DT = SYSDATE
         WHERE
-            <if test="groupSeqArr == null and groupSeqArr == ''">
+            <if test="groupSeqArr == null or groupSeqArr == ''">
                 GROUP_SEQ = #{groupSeq}
             </if>
             <if test="groupSeqArr != null and groupSeqArr != ''">
@@ -185,7 +185,7 @@
                         LEFT JOIN SYS0001M C ON A.F_BANK_JRNL_ACC_ID = C.ACC_ID
                     ) E ON A.BANK_STATE_MAPPING_ID = E.F_TRNSC_ID
             WHERE
-                <if test="groupSeqArr == null and groupSeqArr == ''">
+                <if test="groupSeqArr == null or groupSeqArr == ''">
                     A.GROUP_SEQ = #{groupSeq}
                 </if>
                 <if test="groupSeqArr != null and groupSeqArr != ''">
