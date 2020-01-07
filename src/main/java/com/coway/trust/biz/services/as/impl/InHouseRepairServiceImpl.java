@@ -31,6 +31,7 @@ import oracle.sql.DATE;
  * 05/09/2019    ONGHC      1.0.1       - CREATE FOR IN-HOUSE REPAIR
  * 30/09/2019    ONGHC      1.0.2       - AMEND IN-HOUSE DOC.NO.
  * 17/12/2019    ONGHC      1.0.3       - Add AS Used Filter Feature
+ * 17/12/2019    ONGHC      1.0.4       - AMEND SP PASS CODE (ASCOM > IHCOM, ASCAN > IHCAN)
  *********************************************************************************************/
 
 @Service("InHouseRepairService")
@@ -579,7 +580,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
     logPram.put("ORD_ID", String.valueOf(eMap.get("asno")).trim());
     logPram.put("RETYPE", "COMPLET");
     logPram.put("P_TYPE", "OD03");
-    logPram.put("P_PRGNM", "ASCOM_IN2");
+    logPram.put("P_PRGNM", "IHCOM_IN2");
     logPram.put("USERID", String.valueOf(params.get("updator")));
 
     Map SRMap = new HashMap();
@@ -1897,7 +1898,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
       logPram.put("ORD_ID", SVC0109Dmap.get("AS_NO"));
       logPram.put("RETYPE", "COMPLET");
       logPram.put("P_TYPE", "OD03");
-      logPram.put("P_PRGNM", "ASCOM_3");
+      logPram.put("P_PRGNM", "IHCOM_3");
       logPram.put("USERID", String.valueOf(params.get("updator")));
 
       Map SRMap = new HashMap();
@@ -2062,7 +2063,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
     logPram.put("ORD_ID", NEW_AS_RESULT_ID);
     logPram.put("RETYPE", "RETYPE");
     logPram.put("P_TYPE", "OD04");
-    logPram.put("P_PRGNM", "ASCEN");
+    logPram.put("P_PRGNM", "IHCEN");
     logPram.put("USERID", String.valueOf(SVC0109Dmap.get("updator")));
 
     Map SRMap = new HashMap();
@@ -2594,7 +2595,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
     logPram.put("ORD_ID", NEW_AS_RESULT_ID);
     logPram.put("RETYPE", "RETYPE");
     logPram.put("P_TYPE", "OD04");
-    logPram.put("P_PRGNM", "ASCEN");
+    logPram.put("P_PRGNM", "IHCEN");
     logPram.put("USERID", String.valueOf(SVC0109Dmap.get("updator")));
 
     Map SRMap = new HashMap();
