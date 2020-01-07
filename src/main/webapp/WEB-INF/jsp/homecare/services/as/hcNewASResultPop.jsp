@@ -1631,6 +1631,16 @@
     $("#txtFilterRemark").val("");
 
     AUIGrid.clearGridData(myFltGrd10);
+
+    fn_clearPageField();
+    fn_openField_Cancel();
+    // RESET SECTION
+    fn_rstRecall(); //RECALL
+    fn_rstDftEnt(); //DEFECT ENTRY
+    fn_rstChrFee(); //FEE CAHRGE
+    $("#recall_div").attr("style", "display:none");
+    $("#defEvt_div").attr("style", "display:none");
+    $("#chrFee_div").attr("style", "display:none");
   }
 
 /*
@@ -2657,7 +2667,7 @@ function fnSerialSearchResult(data) {
      </li>
      <li>
        <p class="btn_blue2 big">
-         <a href="#" onclick="javascript:$('#resultASAllForm').clearForm();"><spring:message code='sys.btn.clear' /></a>
+         <a href="#" onclick="javascript:fn_doClear();"><spring:message code='sys.btn.clear' /></a>
       </p>
      </li>
     </ul>
