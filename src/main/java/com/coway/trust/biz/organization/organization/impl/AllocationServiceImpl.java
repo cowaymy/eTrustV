@@ -24,8 +24,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class AllocationServiceImpl extends EgovAbstractServiceImpl implements AllocationService{
 	private static final Logger logger = LoggerFactory.getLogger(AllocationService.class);
 
-	private static final String String = null;
-
 	@Resource(name = "allocationMapper")
 	private AllocationMapper allocationMapper;
 
