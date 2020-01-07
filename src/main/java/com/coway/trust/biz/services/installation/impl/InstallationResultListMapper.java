@@ -271,4 +271,6 @@ public interface InstallationResultListMapper {
   List<EgovMap> selectCtSerialNoList(Map<String, Object> params);
 
   String selectDelvryGrCmpltYn(Map<String, Object> params);
+
+  String insertSVC0113D(Map<String, Object> params);
 }
