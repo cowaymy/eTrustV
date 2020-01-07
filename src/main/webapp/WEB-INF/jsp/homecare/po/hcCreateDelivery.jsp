@@ -322,7 +322,7 @@ var mSort = {};
       fixedColumnCount : 0,        // 틀고정(index)
       editable : false,             // 편집 가능 여부 (기본값 : false)
       enterKeyColumnBase : true,   // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
-      selectionMode : "multipleRows", // 셀 선택모드 (기본값: singleCell): (singleCell, singleRow), (multipleCells, multipleRows)
+      selectionMode : "multipleCells", // 셀 선택모드 (기본값: singleCell): (singleCell, singleRow), (multipleCells, multipleRows)
       useContextMenu : true,       // 컨텍스트 메뉴 사용 여부 (기본값 : false)
       showRowNumColumn : true,     // 그리드 넘버링
       enableFilter : true,         // 필터 사용 여부 (기본값 : false)
@@ -985,7 +985,7 @@ function fn_isDateValidate(sValidDt){
         <h3>Delivery List</h3>
         <ul class="right_btns">
 
-            <li><p class="btn_grid"><a id="btnCancelDelivery">Cancel Delivery</a></p></li>
+            <li style="display:none"><p class="btn_grid"><a id="btnCancelDelivery">Cancel Delivery</a></p></li>
 
             <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_grid"><a id="btnSubDel">Delete</a></p></li>
