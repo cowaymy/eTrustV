@@ -170,6 +170,7 @@
             Common.ajaxSync("POST", "/homecare/services/as/selectSerialYnSearch.do", param, function(result) {
                 $("#hidSerialRequireChkYn").val(result.data);
                 if(result.data != "Y"){
+                	$("#stockSerialNo").val("");
                     $("#s1, #s2").hide();
                 }
             });
