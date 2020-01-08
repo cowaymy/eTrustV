@@ -327,7 +327,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 
 	/**
 	 * https://www.obkb.com/dcljr/charstxt.html 참조.
-	 * 
+	 *
 	 * @param value
 	 * @return
 	 */

@@ -106,6 +106,32 @@ public class ReportUtils {
 		CRJavaHelper.exportToMail(clientDoc, exportOptions, extension, params);
 	}
 
+	public static void sendMailMultiple(ReportClientDocument clientDoc, ReportController.ViewType viewType,
+			Map<String, Object> params) throws IOException, ReportSDKExceptionBase {
+
+		ExportOptions exportOptions;
+		String extension;
+
+		switch (viewType) {
+		case MAIL_CSV:
+			exportOptions = CRJavaHelper.getCSVExportOptions();
+			extension = CRJavaHelper.CSV;
+			break;
+		case MAIL_PDF:
+			exportOptions = CRJavaHelper.getPDFExportOptions();
+			extension = CRJavaHelper.PDF;
+			break;
+		case MAIL_EXCEL:
+			exportOptions = CRJavaHelper.getExcelExportOptions();
+			extension = CRJavaHelper.XLS;
+			break;
+		default:
+			throw new ApplicationException(FAIL, "Invalid viewType !!!!!!!!!!");
+		}
+
+		CRJavaHelper.exportToMailMultiple(clientDoc, exportOptions, extension, params);
+	}
+
 	public static void viewEXCEL(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) {
 		ReportUtils.exportFile((clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper.exportExcel(clientDoc,
 				response, true, downFileName), response, clientDoc, downFileName);

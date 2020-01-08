@@ -77,7 +77,7 @@ public class CRJavaHelper {
 
 	/**
 	 * Changes the DataSource for each Table
-	 * 
+	 *
 	 * @param clientDoc
 	 *            The reportClientDocument representing the report being used
 	 * @param username
@@ -100,7 +100,7 @@ public class CRJavaHelper {
 
 	/**
 	 * Changes the DataSource for a specific Table
-	 * 
+	 *
 	 * @param clientDoc
 	 *            The reportClientDocument representing the report being used
 	 * @param reportName
@@ -888,8 +888,53 @@ public class CRJavaHelper {
 
 	}
 
+	public static void exportToMailMultiple(ReportClientDocument clientDoc, ExportOptions exportOptions, String extension,
+			Map<String, Object> params) throws ReportSDKExceptionBase, IOException {
+
+		String subject = (String) params.get(AppConstants.EMAIL_SUBJECT);
+		checkParam(subject, AppConstants.EMAIL_SUBJECT);
+		String[] to = (String[]) params.get(AppConstants.EMAIL_TO);
+		checkParam2(to, AppConstants.EMAIL_TO);
+
+		String downFileName = (String) params.get(AppConstants.REPORT_DOWN_FILE_NAME);
+		String text = (String) params.get(AppConstants.EMAIL_TEXT);
+
+		if (StringUtils.isEmpty(downFileName)) {
+			downFileName = clientDoc.getReportSource().getReportTitle();
+			downFileName = downFileName.replaceAll("\"", "");
+		}
+
+		InputStream is = null;
+		try {
+			is = new BufferedInputStream(clientDoc.getPrintOutputController().export(exportOptions));
+			AdaptorService adaptorService = CommonUtils.getBean("adaptorService", AdaptorService.class);
+
+			EmailVO emailVO = new EmailVO();
+			emailVO.addFile(EgovFormBasedFileUtil.streamToFile(is, downFileName, extension));
+			emailVO.setTo(Arrays.asList(to));
+			emailVO.setHtml(false);
+			emailVO.setSubject(subject);
+			emailVO.setText(text);
+			adaptorService.sendEmail(emailVO, true);
+
+		} finally {
+			if (is != null) {
+				is.close();
+			}
+		}
+
+	}
+
 	private static void checkParam(String param, String key) {
 		if (StringUtils.isEmpty(param)) {
+			throw new ApplicationException(AppConstants.FAIL,
+					CommonUtils.getBean("messageSourceAccessor", MessageSourceAccessor.class)
+							.getMessage(AppConstants.MSG_NECESSARY, new Object[] { key }));
+		}
+	}
+
+	private static void checkParam2(String[] param, String key) {
+		if (StringUtils.isAnyEmpty(param)) {
 			throw new ApplicationException(AppConstants.FAIL,
 					CommonUtils.getBean("messageSourceAccessor", MessageSourceAccessor.class)
 							.getMessage(AppConstants.MSG_NECESSARY, new Object[] { key }));
