@@ -106,8 +106,7 @@
       dataField : "srvFilterLastSerial",
       headerText : "<spring:message code='service.title.SerialNo'/>",
       editable : false,
-      width : 200,
-      editable : true
+      width : 200
     }, {
       dataField : "undefined",
       headerText : " ",

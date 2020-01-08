@@ -379,14 +379,12 @@
       dataField : "filterRemark",
       headerText : "<spring:message code='service.title.Remark'/>",
       editable : false,
-      width : 150,
-      editable : false
+      width : 150
     }, {
       dataField : "srvFilterLastSerial",
       headerText : "<spring:message code='service.title.SerialNo'/>",
       editable : false,
-      width : 200,
-      editable : true
+      width : 200
     }, {
       dataField : "undefined",
       headerText : " ",
@@ -402,6 +400,7 @@
       dataField : "filterID",
       headerText : "<spring:message code='service.grid.FilterId'/>",
       width : 150,
+      editable : false,
       visible : false
     }
     ];
