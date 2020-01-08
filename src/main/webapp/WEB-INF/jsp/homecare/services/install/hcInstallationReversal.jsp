@@ -224,7 +224,7 @@ function createAUIGrid() {
         headerText : '<spring:message code="service.grid.Product" />',
         editable : false,
         style:"aui-grid-user-custom-left",
-        width : 340
+        width : 370
     }, {
         dataField : "name",
         //headerText : "Custermer",

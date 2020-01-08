@@ -59,7 +59,7 @@
 				                Extent5.CODE CODE  ,
 				                Extent6.CODE_ID CODEID1  ,
 				                Extent6.CODE_NAME CODE_NAME  ,
-				                Extent7.STK_DESC STK_DESC  ,
+				                NVL2(Extent7.STK_DESC, '['||Extent7.STK_CODE||'] '||Extent7.STK_DESC, Extent7.STK_CODE) AS STK_DESC ,
 				                Extent8.CUST_ID CUST_ID  ,
 				                Extent8.NAME NAME  ,
 				                Extent8.NRIC NRIC  ,
