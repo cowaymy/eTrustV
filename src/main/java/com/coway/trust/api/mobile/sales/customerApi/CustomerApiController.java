@@ -122,8 +122,9 @@ public class CustomerApiController {
             rtn.setYyyymmdd(sdf2.format(d2));
 
             if( LOGGER.isDebugEnabled() ){
+                LOGGER.debug("yymmdd     :::>>> " + param.getYymmdd() );
                 LOGGER.debug("dd/MM/yyyy :::>>> " + rtn.getDdmmyyyy() );
-                LOGGER.debug("yyyyMMdd :::>>> " + rtn.getYyyymmdd() );
+                LOGGER.debug("yyyyMMdd   :::>>> " + rtn.getYyyymmdd() );
             }
         }catch(Exception e){
             rtn.setDdmmyyyy("");

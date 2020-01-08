@@ -22,6 +22,10 @@ public interface OrgChartApiMapper {
 
 
 
+    EgovMap selectOrg(Map<String, Object> params);
+
+
+
 	List<EgovMap> selectOrgChart(Map<String, Object> params);
 
 

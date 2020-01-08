@@ -4,6 +4,19 @@
 
 
 
+<select id="selectOrg" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.organization.orgChartApi.impl.selectOrg] 20200108 - KR JAEMAJEM */
+SELECT  A.MEM_ID                                                                AS SELECT_MEM_ID
+    ,   A.MEM_UP_ID                                                             AS SELECT_MEM_UP_ID
+    ,   A.MEM_LVL                                                               AS SELECT_MEM_LVL
+FROM    ORG0005D A
+WHERE   A.MEM_ID = #{loginMemId}
+]]>
+</select>
+
+
+
 <select id="selectOrgChart" parameterType="Map" resultType="egovMap">
 <![CDATA[
 /* [com.coway.trust.biz.organization.orgChartApi.impl.OrgChartApiMapper] 20190905 - KR JAEMAJEM */
@@ -18,61 +31,6 @@ SELECT  A.MEM_ID                                                                
     ,   #{memId}                                                                AS PARAM_MEM_ID
     ,   #{memType}                                                              AS PARAM_MEM_TYPE
     ,   #{memLvl}                                                               AS PARAM_MEM_LVL
-    ,   (
-            SELECT  COUNT(1)
-			FROM    ORG0005D AA                                                 --MemberOrganization
-			        INNER JOIN ORG0001D BB                                      --Member
-			            ON  AA.MEM_ID = BB.MEM_ID
-			            AND BB.STUS = 1
-			            AND BB.MEM_TYPE = #{memType}
-			        LEFT OUTER JOIN ORG0007D CC                                 --MemberPromoEntry
-			            ON  CC.MEM_ID = AA.MEM_ID
-			            AND CC.EVT_APPLY_DT IS NOT NULL
-			            AND TO_CHAR(CC.EVT_APPLY_DT, 'YYYYMM') <= TO_CHAR(SYSDATE,'YYYYMM')
-			WHERE   A.DEPT_CODE IS NOT NULL
-			AND     (
-			                (
-			                        CC.PROMO_TYPE_ID IN (747, 748, 749)
-			                    AND CC.STUS_ID = 4
-			                    AND CC.MEM_LVL_TO = A.MEM_LVL + 1
-			                    AND CC.PARENT_ID_TO = A.MEM_ID
-			                )
-			            OR  (
-			                        CC.PROMO_TYPE_ID IN (747, 748, 749)
-			                    AND CC.STUS_ID <> 4
-			                    AND AA.MEM_LVL = A.MEM_LVL + 1
-			                    AND AA.MEM_UP_ID = A.MEM_ID
-			                )
-			            OR  (
-			                        CC.PROMO_TYPE_ID NOT IN (747, 748, 749)
-			                    OR  CC.PROMO_TYPE_ID IS NULL
-			                )
-			            AND AA.MEM_LVL = A.MEM_LVL + 1
-			            AND AA.MEM_UP_ID = A.MEM_ID
-			        )
-			AND     (
-			            CC.PROMO_ID IN (
-			                              SELECT  MAX(C.PROMO_ID) AS PROMO_ID
-			                              FROM    ORG0007D C
-			                              WHERE   TO_CHAR(C.EVT_APPLY_DT,'YYYYMM') <= TO_CHAR(SYSDATE,'YYYYMM')
-			                              GROUP   BY C.MEM_ID
-			                          )
-			             OR CC.PROMO_ID IS NULL
-			         )
-]]>
-<if test="memType == 2 or memType == 5758">
-			AND     (
-			            (
-			                    C.PROMO_TYPE_ID NOT IN (757, 758)
-			                OR   C.PROMO_TYPE_ID IS NULL
-			            )OR(
-			                    C.STUS_ID != 4
-			                OR  C.STUS_ID IS NULL
-			            )
-			        )
-</if>
-        )                                                                       AS CNT
-<![CDATA[
 FROM    ORG0005D A                                                              --MemberOrganization
         INNER JOIN ORG0001D B                                                   --Member
             ON  A.MEM_ID = B.MEM_ID
@@ -131,6 +89,15 @@ AND     (
                 OR  C.STUS_ID IS NULL
             )
         )
+</if>
+<if test='memType == 1 and memLvl lt selectMemLvl'>
+AND     A.MEM_ID =  (
+                        SELECT  MEM_ID
+                        FROM    ORG0005D
+                        WHERE   MEM_LVL = #{memLvl}
+                        START WITH MEM_ID = #{selectMemId}
+                        CONNECT BY NOCYCLE PRIOR MEM_UP_ID = MEM_ID
+                    )
 </if>
 ORDER BY A.DEPT_CODE ASC
 </select>

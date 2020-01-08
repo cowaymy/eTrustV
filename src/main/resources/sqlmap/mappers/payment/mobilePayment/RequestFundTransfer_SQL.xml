@@ -168,7 +168,7 @@ ORDER BY MOB_TICKET_NO DESC
     call  SP_INST_REQ_FUND_TRNSFR
     (
             #{ftReqId}
-        ,   #{updUserId}
+        ,   #{userId}
         ,   #{errcode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=callSpInstReqFundTrnsfrMap}
         ,   #{errmsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=callSpInstReqFundTrnsfrMap}
     )

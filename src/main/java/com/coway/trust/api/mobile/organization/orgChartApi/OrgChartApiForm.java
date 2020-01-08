@@ -26,6 +26,10 @@ public class OrgChartApiForm {
 		params.put("memType", vo.getMemType());
 		params.put("memLvl", vo.getMemLvl());
 		params.put("memId", vo.getMemId());
+        params.put("loginMemId", vo.getLoginMemId());
+        params.put("selectMemId", vo.getSelectMemId());
+        params.put("selectMemUpId", vo.getSelectMemUpId());
+        params.put("selectMemLvl", vo.getSelectMemLvl());
 		return params;
 	}
 
@@ -34,7 +38,10 @@ public class OrgChartApiForm {
 	private int memType;
 	private int memLvl;
 	private int memId;
-
+	private int loginMemId;
+    private int selectMemId;
+    private int selectMemUpId;
+    private int selectMemLvl;
 
 
 	public int getMemType() {
@@ -65,4 +72,45 @@ public class OrgChartApiForm {
 	public void setMemId(int memId) {
 		this.memId = memId;
 	}
+
+
+    public int getLoginMemId() {
+        return loginMemId;
+    }
+
+
+    public void setLoginMemId(int loginMemId) {
+        this.loginMemId = loginMemId;
+    }
+
+
+    public int getSelectMemId() {
+        return selectMemId;
+    }
+
+
+    public void setSelectMemId(int selectMemId) {
+        this.selectMemId = selectMemId;
+    }
+
+
+    public int getSelectMemUpId() {
+        return selectMemUpId;
+    }
+
+
+    public void setSelectMemUpId(int selectMemUpId) {
+        this.selectMemUpId = selectMemUpId;
+    }
+
+
+    public int getSelectMemLvl() {
+        return selectMemLvl;
+    }
+
+
+    public void setSelectMemLvl(int selectMemLvl) {
+        this.selectMemLvl = selectMemLvl;
+    }
+
 }
