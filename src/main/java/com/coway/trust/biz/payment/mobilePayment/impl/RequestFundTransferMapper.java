@@ -38,7 +38,7 @@ public interface RequestFundTransferMapper {
 
 
 
-    int callSpInstReqFundTrnsfr(Map<String, Object> params);
+    void callSpInstReqFundTrnsfr(Map<String, Object> params);
 
 
 
