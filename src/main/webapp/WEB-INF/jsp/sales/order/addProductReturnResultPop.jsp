@@ -161,23 +161,20 @@ function fn_saveInstall(){
 	                fn_installationListSearch();
 	            } */
 	        });
-	} else {
-		 var pRetnNo = AUIGrid.getCellValue(myGridID_view, 0, "retnNo");
+	}else{
+		  var pRetnNo = AUIGrid.getCellValue(myGridID_view, 0, "retnNo");
 
 	    $("#addInstallForm #hidRefDocNo").val( pRetnNo ); // Retn No
-	    if($("homecareYn").val() == 'Y') {   // is Homecare Order
 
-	    } else {
-	    	Common.ajax("POST", "/sales/order/addProductReturnSerial.do", $("#addInstallForm").serializeJSON(), function(result) {
-	            console.log(result);
-	            Common.alert(result.message,fn_saveclose);
+        Common.ajax("POST", "/sales/order/addProductReturnSerial.do", $("#addInstallForm").serializeJSON(), function(result) {
+            console.log(result);
+            Common.alert(result.message,fn_saveclose);
 
-	            /* if (result.code == 'Y') {
-	                $("#popup_wrap").remove();
-	                fn_installationListSearch();
-	            } */
-	        });
-	    }
+            /* if (result.code == 'Y') {
+                $("#popup_wrap").remove();
+                fn_installationListSearch();
+            } */
+        });
 	}
 
 }
@@ -857,7 +854,6 @@ var gridPros = {
 <input type="hidden" value="" id = "asIsSerialNo" name = "asIsSerialNo"/>
 <input type="hidden" value="" id = "beforeSerialNo" name = "beforeSerialNo"/>
 <input type="hidden" value="" id = "hidRefDocNo" name = "hidRefDocNo"/>
-<input type="hidden" value="${homecareYn}" id = "homecareYn" name = "homecareYn"/>
 
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
