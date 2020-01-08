@@ -187,7 +187,7 @@ $(document).ready(function(){
         $("#ioType").val($("#zIoType").val());
     }
 
-    if(($("#transaction").val() == "UM" && $("#ioType").val() == "O") || $("#transaction").val() == "OG" || $("#transaction").val() == "OI"){
+    if(($("#transaction").val() == "UM" && $("#ioType").val() == "O") || $("#transaction").val() == "OG" || $("#transaction").val() == "OI" || $("#transaction").val() == "PS"){
     	$("#typeUM").show();
     	$("#typeUS").hide();
     	$("#typeAD").hide();
