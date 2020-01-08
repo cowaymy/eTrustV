@@ -147,6 +147,7 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1 id="pop_header_title">New Other GI / GR</h1>
         <ul class="right_opt">
+            <li><p id="btnSave" class="btn_blue2 <c:if test="${docInfo.docStusCodeId != '5681'}"> btn_disabled</c:if>"><a id="save">Generate GI / GR</a></p></li>
             <li><p class="btn_blue2"><a href="#" id="popClose"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
@@ -194,10 +195,6 @@
             <article class="grid_wrap"><!-- grid_wrap start -->
                <div id="other_item_grid_wrap_pop" style="width:100%; height:570px; margin:0 auto;"></div>
             </article><!-- grid_wrap end -->
-
-            <ul class="center_btns mt20">
-                <li><p id="btnSave" class="btn_blue2 big <c:if test="${docInfo.docStusCodeId != '5681'}"> btn_disabled</c:if>"><a id="save">Generate GI / GR</a></p></li>
-            </ul>
 
         </section><!-- search_result end -->
 

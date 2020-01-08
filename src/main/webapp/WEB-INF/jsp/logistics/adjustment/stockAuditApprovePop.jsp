@@ -794,6 +794,17 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1 id="pop_header_title">2nd Approval / Reject</h1>
         <ul class="right_opt">
+            <!-- APPR2 -->
+            <c:if test="${action == 'APPR2'}">
+                <li><p id="btnAppr2Approve" class="btn_blue2"><a href="#" id="appr2Approve">Approve</a></p></li>
+                <li><p id="btnAppr2Reject" class="btn_blue2"><a href="#" id="appr2Reject">Reject</a></p></li>
+                <li><p id="btn3requestApproval" class="btn_blue2"><a id="3requestApproval" >3rd Request approval</a></p></li>
+            </c:if>
+            <!-- APPR3 -->
+            <c:if test="${action == 'APPR3'}">
+                <li><p class="btn_blue2"><a id="appr3Approve">Approve</a></p></li>
+	            <li><p class="btn_blue2"><a id="appr3Reject">Reject</a></p></li>
+	        </c:if>
             <li><p class="btn_blue2"><a href="#" id="popClose"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
@@ -972,8 +983,9 @@
 
             <ul class="right_btns">
                 <li><select class="w50p" id="appr2LocStusCodeId" name="appr2LocStusCodeId"></select></li>
+                <!--
                 <li><p id="btnAppr2Approve" class="btn_grid"><a href="#" id="appr2Approve">Approve</a></p></li>
-                <li><p id="btnAppr2Reject" class="btn_grid"><a href="#" id="appr2Reject">Reject</a></p></li>
+                <li><p id="btnAppr2Reject" class="btn_grid"><a href="#" id="appr2Reject">Reject</a></p></li>-->
             </ul>
             <article class="grid_wrap"><!-- grid_wrap start -->
                <div id="appr2_loc_grid_wrap_pop" style="width:100%; height:300px; margin:0 auto;"></div>
@@ -987,9 +999,6 @@
                <div id="appr2_item_grid_wrap_pop" style="width:100%; height:300px; margin:0 auto;"></div>
             </article><!-- grid_wrap end -->
 
-            <ul class="center_btns mt20">
-                <li><p id ="btn3requestApproval" class="btn_blue2 big"><a id="3requestApproval" >3rd Request approval</a></p></li>
-            </ul>
         </section><!-- search_result end -->
 
         <section class="search_result" id="APPR3" style="display:none"><!-- search_result start -->
@@ -1008,10 +1017,6 @@
                <div id="appr3_item_grid_wrap_pop" style="width:100%; height:300px; margin:0 auto;"></div>
             </article><!-- grid_wrap end -->
 
-            <ul class="center_btns mt20">
-                <li><p class="btn_blue2 big"><a id="appr3Approve">Approve</a></p></li>
-                <li><p class="btn_blue2 big"><a id="appr3Reject">Reject</a></p></li>
-            </ul>
         </section><!-- search_result end -->
 
     </section><!-- pop_body end -->

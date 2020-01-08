@@ -546,6 +546,8 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1>New Stock Audit</h1>
         <ul class="right_opt">
+            <li><p id="btnSave" class="btn_blue2"><a id="save">Save</a></p></li>
+            <li><p id="btnStartAudit" class="btn_blue2"><a id="startAudit">Start Audit</a></p></li>
             <li><p class="btn_blue2"><a href="#" id="popClose"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
@@ -639,9 +641,9 @@
 					<aside class="title_line"><!-- title_line start -->
 					<h3>Location</h3>
 					</aside><!-- title_line end -->
-					<div class="border_box" style="height:195px;"><!-- border_box start -->
+					<div class="border_box" style="height:240px;"><!-- border_box start -->
 						<article class="grid_wrap"><!-- grid_wrap start -->
-						    <div id="res_grid_wrap" style="height:195px;"></div>
+						    <div id="res_grid_wrap" style="height:240px;"></div>
 						</article><!-- grid_wrap end -->
 					</div><!-- border_box end -->
 			    </div><!-- 50% end -->
@@ -649,9 +651,9 @@
 					<aside class="title_line"><!-- title_line start -->
 					<h3>Selected Location</h3>
 					</aside><!-- title_line end -->
-					<div class="border_box" style="height:195px;"><!-- border_box start -->
+					<div class="border_box" style="height:240px;"><!-- border_box start -->
 						<article class="grid_wrap"><!-- grid_wrap start -->
-						    <div id="req_grid_wrap" style="height:195px;"></div>
+						    <div id="req_grid_wrap" style="height:240px;"></div>
 						</article><!-- grid_wrap end -->
 						<ul class="btns">
 						    <li>
@@ -670,9 +672,9 @@
                     <h3>Item</h3>
                     </aside><!-- title_line end -->
 
-                    <div class="border_box" style="height:195px;"><!-- border_box start -->
+                    <div class="border_box" style="height:240px;"><!-- border_box start -->
                         <article class="grid_wrap"><!-- grid_wrap start -->
-                            <div id="item_res_grid_wrap" style="height:195px;"></div>
+                            <div id="item_res_grid_wrap" style="height:240px;"></div>
                         </article><!-- grid_wrap end -->
                     </div><!-- border_box end -->
                 </div><!-- 50% end -->
@@ -680,9 +682,9 @@
                     <aside class="title_line"><!-- title_line start -->
                     <h3>Selected Item</h3>
                     </aside><!-- title_line end -->
-                    <div class="border_box" style="height:195px;"><!-- border_box start -->
+                    <div class="border_box" style="height:240px;"><!-- border_box start -->
                         <article class="grid_wrap"><!-- grid_wrap start -->
-                            <div id="item_req_grid_wrap" style="height:195px;"></div>
+                            <div id="item_req_grid_wrap" style="height:240px;"></div>
                         </article><!-- grid_wrap end -->
                         <ul class="btns">
                             <li>
@@ -694,11 +696,6 @@
                     </div><!-- border_box end -->
                 </div><!-- 50% end -->
             </div><!-- divine_auto end -->
-
-			 <ul class="center_btns mt20">
-			    <li><p id="btnSave" class="btn_blue2 big"><a id="save">Save</a></p></li>
-			    <li><p id="btnStartAudit" class="btn_blue2 big"><a id="startAudit">Start Audit</a></p></li>
-			</ul>
 
 		</section><!-- search_result end -->
 
