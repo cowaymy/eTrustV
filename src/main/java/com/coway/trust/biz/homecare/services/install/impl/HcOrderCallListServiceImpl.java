@@ -76,6 +76,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 			Map<String, Object> anotherOrd = new HashMap<String, Object>();
 			anotherOrd.put("orderNo", anoOrdNo);
 			anotherOrd.put("branchTypeId", HomecareConstants.HDC_BRANCH_TYPE);
+			anotherOrd.put("callStusId", CommonUtils.nvl(params.get("callStusId")));
 
 			Map<String, Object> orderCallOrd = selectHcOrderCall(anotherOrd);
 

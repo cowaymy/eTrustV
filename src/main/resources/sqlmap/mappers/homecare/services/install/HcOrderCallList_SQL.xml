@@ -102,7 +102,14 @@
 	                   </if>
 	            ) Extent1
 	     WHERE Extent1.SALES_ORD_NO = #{orderNo}
-	        AND Extent1.CALL_STUS_ID = 1
+            <choose>
+                <when test="callStusId != null and callStusId != ''">
+                    AND Extent1.CALL_STUS_ID = #{callStusId}
+                </when>
+                <otherwise>
+                    AND Extent1.CALL_STUS_ID = 1
+                </otherwise>
+            </choose>
     </select>
 
 
