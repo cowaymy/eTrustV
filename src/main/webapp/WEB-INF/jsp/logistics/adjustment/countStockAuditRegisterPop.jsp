@@ -69,7 +69,7 @@
                          {dataField: "dedQty",headerText :"<spring:message code='log.head.deductionQty'/>", width:1, editable : false, visible:false, style: "aui-grid-user-custom-right"},
                          {dataField: "otherQty",headerText :"<spring:message code='log.head.otherGiGrQty'/>", width:1, editable : false, visible:false, style: "aui-grid-user-custom-right"},
                          {dataField: "rem",headerText :"<spring:message code='log.head.remark'/>", width:180, editable : true, headerStyle : "aui-grid-header-input-icon", style: "aui-grid-user-custom-left"},
-                         {dataField: "stkGrad",headerText :"<spring:message code='log.head.locationgrade'/>" ,width:90, editable : false},
+                         {dataField: "stkGrad",headerText :"<spring:message code='log.head.locationgrade'/>" ,width:120, editable : false},
                          {dataField: "stkType",headerText :"<spring:message code='log.head.itemtype'/>" ,width: 90, editable : false },
                          {dataField: "stkCtgryType",headerText :"<spring:message code='log.head.categoryType'/>", width: 120, editable : false },
                          {dataField: "serialChkYn",headerText :"Serial Chk Yn" ,width:100, visible:false},
@@ -102,19 +102,10 @@
                           {dataField: "dedReason",headerText :"<spring:message code='log.head.deductionReason'/>", width:130, editable : true, headerStyle : "aui-grid-header-input-icon",
                         	  labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                         		  var retStr = value;
-                        		  //comDedRsnList.length = 0;
-
-                        		  /*if(item.dedQty == 0) {
-                        			  comDedRsnList.push(dedRsnList[0]);
-                        		  } else {*/
-                        			  //for(var i=0,len=dedRsnList.length; i<len; i++) {
-                        				//   comDedRsnList.push(dedRsnList[i]);
-                        			 // }
-                        		  //}
 
                                   for(var i=0,len=comDedRsnList.length; i<len; i++) {
-                                      if(comDedRsnList[i]["code"] == value) {
-                                          retStr = comDedRsnList[i]["codeName"];
+                                	  if(comDedRsnList[i]["code"] == value) {
+                                    	  retStr = comDedRsnList[i]["codeName"];
                                           break;
                                       }
                                   }
@@ -135,8 +126,7 @@
                                   var retStr = value;
 
                                   for(var i=0,len=otherAllRsnList.length; i<len; i++) {
-                                	  console.log("otherAllRsnList:::" + otherAllRsnList[i]["code"]+ "::"+ otherAllRsnList[i]["codeName"]);
-                                      if(otherAllRsnList[i]["code"] == value) {
+                                	  if(otherAllRsnList[i]["code"] == value) {
                                     	  retStr = otherAllRsnList[i]["codeName"];
                                           break;
                                       }
@@ -185,8 +175,12 @@
 
                                       for(var i=0,len=detDedRsnList.length; i<len; i++) {
                                           if(detDedRsnList[i]["code"] == value) {
-                                              retStr = detDedRsnList[i]["codeName"];
-                                              break;
+                                        	  if(FormUtil.isEmpty(value)) {
+                                        		  retStr = "";
+                                        	  } else {
+                                        		  retStr = detDedRsnList[i]["codeName"];
+                                        	  }
+                                        	  break;
                                           }
                                       }
                                       return retStr;
@@ -223,8 +217,12 @@
 
                                       for(var i=0,len=detOtherRsnList.length; i<len; i++) {
                                           if(detOtherRsnList[i]["code"] == value) {
-                                              retStr = detOtherRsnList[i]["codeName"];
-                                              break;
+                                        	  if(FormUtil.isEmpty(value)) {
+                                                  retStr = "";
+                                              } else {
+                                        	      retStr = detOtherRsnList[i]["codeName"];
+                                              }
+                                        	  break;
                                           }
                                       }
                                       return retStr;
@@ -680,7 +678,7 @@
 
         if(length > 0) {
            for(var i = 0; i < length; i++) {
-               if(FormUtil.isEmpty(AUIGrid.getCellValue(itemRegGrid, i, "cntQty")) || AUIGrid.getCellValue(itemRegGrid, i, "cntQty") < 0) {
+               if(FormUtil.isEmpty(AUIGrid.getCellValue(itemRegGrid, i, "cntQty")) || AUIGrid.getCellValue(itemRegGrid, i, "cntQty") < 0 || AUIGrid.getCellValue(itemRegGrid, i, "cntQty") == 0) {
 
             	   //reqCnt ++;
             	   Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ arg +"'/>");
@@ -743,9 +741,9 @@
             return  false;
         }
 
-    	if(!fn_checkValid()){
-            return  false;
-        }
+    	//if(!fn_checkValid()){
+        //    return  false;
+        //}
 
     	var appvType = "save";
 
@@ -1004,8 +1002,8 @@
 	                whLocId: '${docInfo.whLocId}',
 	                action: 'REG',
                 };
-
-            	Common.popupDiv("/logistics/adjustment/countStockAuditRegisterPop.do", data, null, true);
+                getListAjax(1);
+            	//Common.popupDiv("/logistics/adjustment/countStockAuditRegisterPop.do", data, null, true);
             } else {
             	getListAjax(1);
             }
@@ -1229,9 +1227,11 @@
             otherGiRsnList.push(temp);
             otherGrRsnList.push(temp);
             otherAllRsnList.push(temp);
+            comDedRsnList.push(temp);
             for ( var i = 0 ; i < result.length ; i++ ) {
             	if(result[i].ind == 'DED_RSN') {
             		dedRsnList.push(result[i]);
+            		comDedRsnList.push(result[i]);
             	} else if(result[i].ind == 'O_GI_RSN') {
             		otherGiRsnList.push(result[i]);
             		otherAllRsnList.push(result[i]);
