@@ -503,7 +503,7 @@
 
         <ul class="right_btns">
         <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-            <li><p class="btn_blue"><a id="btnSave"><span class="search"></span>Save</a></p></li>
+            <li><p class="btn_blue"><a id="btnSave">Save</a></p></li>
         </c:if>
         <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
