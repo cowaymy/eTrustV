@@ -753,7 +753,7 @@
         obj.stockAuditNo = $("#hidStockAuditNo").val();
         obj.whLocId = $("#hidWhLocId").val();
 
-        Common.ajax("GET", "/logistics/adjustment/selectStockAuditLocDtTime.do", obj, function(result){
+        Common.ajaxSync("GET", "/logistics/adjustment/selectStockAuditLocDtTime.do", obj, function(result){
             if(result != null) {
                 if(result.updDtTime != $("#hidUpdDtTime").val()) {
                     Common.alert("The data you have selected is already updated.");
@@ -794,7 +794,7 @@
         obj.stockAuditNo = $("#hidStockAuditNo").val();
         obj.whLocId = $("#hidWhLocId").val();
 
-        Common.ajax("GET", "/logistics/adjustment/selectStockAuditLocDtTime.do", obj, function(result){
+        Common.ajaxSync("GET", "/logistics/adjustment/selectStockAuditLocDtTime.do", obj, function(result){
             if(result != null) {
                 if(result.updDtTime != $("#hidUpdDtTime").val()) {
                     Common.alert("The data you have selected is already updated.");
@@ -835,7 +835,7 @@
         obj.stockAuditNo = $("#hidStockAuditNo").val();
         obj.whLocId = $("#hidWhLocId").val();
 
-        Common.ajax("GET", "/logistics/adjustment/selectStockAuditLocDtTime.do", obj, function(result){
+        Common.ajaxSync("GET", "/logistics/adjustment/selectStockAuditLocDtTime.do", obj, function(result){
             if(result != null) {
                 if(result.updDtTime != $("#hidUpdDtTime").val()) {
                     Common.alert("The data you have selected is already updated.");
@@ -913,7 +913,7 @@
         obj.stockAuditNo = $("#hidStockAuditNo").val();
         obj.whLocId = $("#hidWhLocId").val();
 
-        Common.ajax("GET", "/logistics/adjustment/selectStockAuditLocDtTime.do", obj, function(result){
+        Common.ajaxSync("GET", "/logistics/adjustment/selectStockAuditLocDtTime.do", obj, function(result){
         	if(result != null) {
                 if(result.updDtTime != $("#hidUpdDtTime").val()) {
                     Common.alert("The data you have selected is already updated.");
@@ -956,7 +956,7 @@
         obj.stockAuditNo = $("#hidStockAuditNo").val();
         obj.whLocId = $("#hidWhLocId").val();
 
-        Common.ajax("GET", "/logistics/adjustment/selectStockAuditLocDtTime.do", obj, function(result){
+        Common.ajaxSync("GET", "/logistics/adjustment/selectStockAuditLocDtTime.do", obj, function(result){
             if(result != null) {
                 if(result.updDtTime != $("#hidUpdDtTime").val()) {
                     Common.alert("The data you have selected is already updated.");

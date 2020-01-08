@@ -237,7 +237,7 @@
 					,A.DED_REASON
                     ,A.OTHER_REASON
 					,CASE WHEN B.LOC_STUS_CODE_ID IN (5689, 5691, 5713) THEN NULL
-                     ELSE A.REM
+                     ELSE REPLACE(REPLACE(A.REM, CHR(10),' '), CHR(13), ' ')
                      END REM
 					,A.OTHER_REQST_NO
 					,A.OTHER_REQST_REQUIRE_DT
@@ -358,6 +358,7 @@
         UPDATE LOG0096D
              SET DED_REASON = ''
                   ,OTHER_REASON = ''
+                  ,REM = ''
                   ,UPD_USER_ID  = #{userId}
                   ,UPD_DT = SYSDATE
         WHERE STOCK_AUDIT_NO = #{stockAuditNo}

@@ -52,7 +52,7 @@ public class StockAuditController {
 
 	private static final Logger logger = LoggerFactory.getLogger(StockAuditController.class);
 
-	@Value("${com.file.upload.path}")
+	@Value("${web.resource.upload.file}")
 	private String uploadDir;
 
 	@Autowired
@@ -310,7 +310,7 @@ public class StockAuditController {
 		logger.debug("params =====================================>>  " + params);
 
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				"logitics" + File.separator + "stock_Audit", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+				"logitics" + File.separator + "stockAudit", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 
 		String remove = (String) params.get("deleteFileIds");
 
@@ -318,9 +318,9 @@ public class StockAuditController {
 		params.put("fileGroupKey", params.get("atchFileGrpId"));
 
 		if(list.size() > 0 &&  CommonUtils.isEmpty(params.get("atchFileGrpId"))) { // file new
-			fileApplication.businessAttach(FileType.WEB_DIRECT_RESOURCE, FileVO.createList(list), params);
+			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
 		} else if(list.size() > 0 || !StringUtils.isEmpty(remove)) {
-			stockAuditService.updateStockAuditAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
+			stockAuditService.updateStockAuditAttachBiz(FileVO.createList(list), FileType.WEB, params);
 		}
 
  		ReturnMessage message = new ReturnMessage();

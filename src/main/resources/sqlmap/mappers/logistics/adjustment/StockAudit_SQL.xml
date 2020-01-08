@@ -429,7 +429,7 @@
 			                    ,A.DED_REASON
                                 ,A.OTHER_REASON
 			                    ,CASE WHEN B.LOC_STUS_CODE_ID IN (5689, 5691, 5713) THEN NULL
-			                     ELSE A.REM
+			                     ELSE REPLACE(REPLACE(A.REM, CHR(10),' '), CHR(13), ' ')
 			                     END REM
 			                    ,A.OTHER_REQST_NO
 			                    ,A.OTHER_REQST_REQUIRE_DT
@@ -472,7 +472,7 @@
 			                    ,A.OTHER_QTY
 			                    ,A.DED_REASON
                                 ,A.OTHER_REASON
-                                ,A.REM
+                                ,REPLACE(REPLACE(A.REM, CHR(10),' '), CHR(13), ' ') REM
 			                    ,A.OTHER_REQST_NO
 			                    ,A.OTHER_REQST_REQUIRE_DT
 			                    ,A.OTHER_TRNSC_TYPE
@@ -533,7 +533,7 @@
                     ,A.DED_QTY
                     ,A.OTHER_QTY
                     ,CASE WHEN B.LOC_STUS_CODE_ID IN (5689, 5691, 5713) THEN NULL
-                     ELSE A.REM
+                     ELSE REPLACE(REPLACE(A.REM, CHR(10),' '), CHR(13), ' ')
                      END REM
                     ,A.OTHER_REQST_NO
                     ,TO_CHAR(A.OTHER_REQST_REQUIRE_DT, 'DD/MM/YYYY') OTHER_REQST_REQUIRE_DT

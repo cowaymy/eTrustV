@@ -104,7 +104,7 @@
             obj.appvType = "other";
             obj.reuploadYn = $("#hidReuploadYn").val();
 
-            Common.ajax("GET", "/logistics/adjustment/selectStockAuditDocDtTime.do", obj, function(result){
+            Common.ajaxSync("GET", "/logistics/adjustment/selectStockAuditDocDtTime.do", obj, function(result){
                 if(result != null) {
                     if(result.updDtTime != $("#hidUpdDtTime").val()) {
                         Common.alert("The data you have selected is already updated.");

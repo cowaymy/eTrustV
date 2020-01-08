@@ -209,9 +209,10 @@ public class CountStockAuditServiceImpl implements CountStockAuditService {
 			throw new ApplicationException(AppConstants.FAIL, "Location Id is required.");
 		}
 
-		if(CommonUtils.isEmpty(params.get("appv1Opinion"))) {
+		if(("aprv1".equals(appvType) || "rejt1".equals(appvType)) && CommonUtils.isEmpty(params.get("appv1Opinion"))) {
 			throw new ApplicationException(AppConstants.FAIL, "1st Opinion is required.");
 		}
+
 		if(params.get("appv1Opinion").toString().getBytes().length > 500) {
 			throw new ApplicationException(AppConstants.FAIL, "Please input the 1st Opinion below or less than 500 bytes.");
 		}
