@@ -157,7 +157,7 @@ $(document).ready(function() {
         var expDay = "";
         var expMth = "";
 
-        if($("#memTypeCom").val() == "01") {
+        if($("#memTypeCom").val() == "1") {
             if(mth <= "06") {
                 expDay = "30";
                 expMth = "06";
