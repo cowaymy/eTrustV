@@ -1629,6 +1629,62 @@ public class ReportBatchController {
   }
 
 
+  @RequestMapping(value = "/CowayDailySalesStatusHP_Adv.do")
+  //@Scheduled(cron = "0 0 7 * * *")//Daily (7:00am)
+  public void CowayDailySalesStatusHP_Adv() {
+    LOGGER.info("[START] CowayDailySalesStatusHP_Adv...");
+    Map<String, Object> params = new HashMap<>();
+    String[] address = {"jack@coway.com.my", "khongboon.soo@coway.com.my"} ;
+    String email = "";
+    email += "Dear All,\r\n\r\n";
+    email += "Hereby is the Daily Accumulated Key-In Sales Analysis Report (HP) for your reference.\r\n\r\n";
+    email +=  "Sincere Regards,\r\n";
+    email +=  "IT Department";
+    params.put(REPORT_FILE_NAME, "/sales/CowayDailySalesStatusHP_Adv.rpt");// visualcut
+    params.put(EMAIL_SUBJECT, "Daily Accumulated Key-In Sales Analysis Report (HP)");
+    params.put(EMAIL_TO, address);
+    params.put(EMAIL_TEXT, email);
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+    params.put("v_Param", " ");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "CowayDailySalesStatusHP_Adv" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] CowayDailySalesStatusHP_Adv...");
+  }
+
+
+  @RequestMapping(value = "/CowayDailySalesStatusCody.do")
+  //@Scheduled(cron = "0 0 7 * * *")//Daily (7:00am)
+  public void CowayDailySalesStatusCody() {
+    LOGGER.info("[START] CowayDailySalesStatusCody...");
+    Map<String, Object> params = new HashMap<>();
+    String[] address = {"jack@coway.com.my", "khongboon.soo@coway.com.my"} ;
+    String email = "";
+    email += "Dear All,\r\n\r\n";
+    email += "Hereby is the Daily Accumulated Key-In Sales Analysis Report (Cody) for your reference.\r\n\r\n";
+    email +=  "Sincere Regards,\r\n";
+    email +=  "IT Department";
+    params.put(REPORT_FILE_NAME, "/sales/CowayDailySalesStatusCody.rpt");// visualcut
+    params.put(EMAIL_SUBJECT, "Daily Accumulated Key-In Sales Analysis Report (Cody)");
+    params.put(EMAIL_TO, address);
+    params.put(EMAIL_TEXT, email);
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+    //params.put("v_Param", " ");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "CowayDailySalesStatusCody" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] CowayDailySalesStatusCody...");
+  }
+
+
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
     checkArgument(params);
@@ -1706,6 +1762,8 @@ public class ReportBatchController {
         break;
       case MAIL_CSV:
       case MAIL_PDF:
+    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
+          break;
       case MAIL_EXCEL:
         ReportUtils.sendMail(clientDoc, viewType, params);
         break;
