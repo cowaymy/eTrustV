@@ -98,6 +98,7 @@
                              THEN ORG1.MEM_CODE
                              ELSE ORG2.USER_NAME END AS LST_UPD
                     , IE.RCD_TMS
+                    , S28.SERIAL_REQUIRE_CHK_YN
       FROM SAL0001D som
       JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
       JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
@@ -114,6 +115,7 @@
       JOIN SAL0029D CUST ON CUST.CUST_ID = CUSTADD.CUST_ID
       LEFT JOIN org0001d ORG1 ON ORG1.MEM_ID = ir.CRT_USER_ID and ORG1.MEM_TYPE > 2
       LEFT JOIN SYS0047M ORG2 ON ORG2.USER_ID = ir.CRT_USER_ID AND ORG2.USER_TYPE_ID > 2
+      LEFT JOIN SYS0028M S28 ON S28.WH_LOC_CODE = MEM.MEM_CODE
       WHERE 1 = 1
         AND som.BNDL_ID IS NULL    -- homecare Remove(except)
     ]]>
