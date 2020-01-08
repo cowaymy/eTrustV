@@ -1016,7 +1016,8 @@
 	                      REQST_TYPE,
 	                      REQST_TYPE_DTL,
 	                      DOC_HDER_TXT,
-	                      ADJ_RSN)
+	                      ADJ_RSN,
+	                      REF_DOC_NO)
 			SELECT DISTINCT A.OTHER_REQST_NO
 				      ,A.OTHER_TRNSC_TYPE
 				      ,A.OTHER_TRNSC_TYPE_DTL
@@ -1031,10 +1032,11 @@
 	                  ,A.OTHER_TRNSC_TYPE_DTL
 	                  ,#{otherRem}
 	                  ,(SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID IN (433, 434) AND CODE = A.OTHER_REASON)
+	                  ,A.STOCK_AUDIT_NO
 				  FROM LOG0096D A
 				WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
 				    AND A.OTHER_REQST_NO IS NOT NULL
-				 GROUP BY A.OTHER_REQST_NO, A.OTHER_TRNSC_TYPE, A.OTHER_TRNSC_TYPE_DTL, A.OTHER_REQST_REQUIRE_DT, A.OTHER_REM, A.WH_LOC_ID, A.OTHER_REASON
+				 GROUP BY A.OTHER_REQST_NO, A.OTHER_TRNSC_TYPE, A.OTHER_TRNSC_TYPE_DTL, A.OTHER_REQST_REQUIRE_DT, A.OTHER_REM, A.WH_LOC_ID, A.OTHER_REASON, A.STOCK_AUDIT_NO
     </update>
 
     <update id="insertLOG0048D" parameterType="Map">
