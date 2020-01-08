@@ -76,6 +76,7 @@ LEFT OUTER JOIN
         ) UNPIVOT ( VAL FOR BTN IN ( VAL01, VAL02, VAL03, VAL04, VAL05, VAL06, VAL07, VAL08, VAL09, VAL10, VAL11, VAL12, VAL13, VAL14 ) )
 ) B
     ON  A.BTN = B.BTN
+ORDER BY A.BTN ASC
 ]]>
 </select>
 
@@ -93,16 +94,16 @@ SELECT  TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'MM.YYYY')                             
 FROM
 (
     SELECT  'VAL01' AS BTN, 'Performance Incentive'                                                 AS BTN_NM FROM DUAL UNION ALL
-    SELECT  'VAL02' AS BTN, 'Sales ( Outright + Installment + Rental)'                              AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL02' AS BTN, 'Sales<br/>( Outright + Installment + Rental)'                              AS BTN_NM FROM DUAL UNION ALL
     SELECT  'VAL03' AS BTN, 'Rental Collection Commission'                                          AS BTN_NM FROM DUAL UNION ALL
     SELECT  'VAL04' AS BTN, 'Bonus Commission'                                                      AS BTN_NM FROM DUAL UNION ALL
-    SELECT  'VAL04' AS BTN, 'Outright Plus Sales'                                                   AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL05' AS BTN, 'Outright Plus Sales'                                                   AS BTN_NM FROM DUAL UNION ALL
     SELECT  'VAL06' AS BTN, 'Outright Membership Sales'                                             AS BTN_NM FROM DUAL UNION ALL
     SELECT  'VAL07' AS BTN, 'Rental Membership Sales'                                               AS BTN_NM FROM DUAL UNION ALL
     SELECT  'VAL08' AS BTN, 'PE Encourgement Fund'                                                  AS BTN_NM FROM DUAL UNION ALL
     SELECT  'VAL09' AS BTN, 'Health Family Fund'                                                    AS BTN_NM FROM DUAL UNION ALL
     SELECT  'VAL10' AS BTN, 'Newly Entering  Allowance'                                             AS BTN_NM FROM DUAL UNION ALL
-    SELECT  'VAL11' AS BTN, 'Incentive ( 1W3s + Sales Incentive + Sales Encourgement Allowance)'    AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL11' AS BTN, 'Incentive<br/>( 1W3s + Sales Incentive +<br/>Sales Encourgement Allowance)'    AS BTN_NM FROM DUAL UNION ALL
     SELECT  'VAL12' AS BTN, 'Adjustment'                                                            AS BTN_NM FROM DUAL UNION ALL
     SELECT  'VAL13' AS BTN, 'SHI amount'                                                            AS BTN_NM FROM DUAL UNION ALL
     SELECT  'VAL14' AS BTN, 'Own Purchase'                                                          AS BTN_NM FROM DUAL UNION ALL
@@ -166,6 +167,7 @@ LEFT OUTER JOIN
 ) B
     ON  A.BTN = B.BTN
 ]]>
+ORDER BY A.BTN ASC
 </select>
 
 
@@ -225,5 +227,6 @@ LEFT OUTER JOIN
 ) B
     ON  A.BTN = B.BTN
 ]]>
+ORDER BY A.BTN ASC
 </select>
 </mapper>
