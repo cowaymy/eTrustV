@@ -1,6 +1,5 @@
 package com.coway.trust.biz.homecare.sales.order.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,8 +7,13 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.order.HcOrderCancelService;
+import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.sales.order.OrderCancelService;
+import com.coway.trust.biz.sales.order.OrderListService;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.homecare.HomecareConstants;
@@ -38,6 +42,12 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
   	@Resource(name = "orderCancelService")
 	private OrderCancelService orderCancelService;
 
+  	@Resource(name = "hcOrderListService")
+	private HcOrderListService hcOrderListService;
+
+  	@Resource(name = "orderListService")
+	private OrderListService orderListService;
+
 	/**
 	 * Homecare Order Cancellation List 데이터조회
 	 * @Author KR-SH
@@ -61,41 +71,84 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see com.coway.trust.biz.homecare.sales.order.HcOrderCancelService#hcSaveCancel(java.util.Map, org.springframework.ui.ModelMap, com.coway.trust.cmmn.model.SessionVO)
 	 */
 	@Override
-	public Map<String, Object> hcSaveCancel(Map<String, Object> params, SessionVO sessionVO) {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public ReturnMessage hcSaveCancel(Map<String, Object> params, SessionVO sessionVO) {
+		ReturnMessage map = new ReturnMessage();
 
-		//try {
-			params.put("userId", sessionVO.getUserId());
-			params.put("CTGroup", CommonUtils.nvl(params.get("dtSubGrp")));
+		params.put("userId", sessionVO.getUserId());
+		params.put("CTGroup", CommonUtils.nvl(params.get("dtSubGrp")));
 
-		    int noRcd = orderCancelService.chkRcdTms(params);
-		    int paramAnoOrdId = CommonUtils.intNvl(params.get("paramAnoOrdId"));
-		    String paramOrdCtgryCd = CommonUtils.nvl(params.get("paramOrdCtgryCd"));   // Product Category Code
+	    int noRcd = orderCancelService.chkRcdTms(params);
+	    int paramAnoOrdId = CommonUtils.intNvl(params.get("paramAnoOrdId"));
+	    String paramOrdCtgryCd = CommonUtils.nvl(params.get("paramOrdCtgryCd"));   // Product Category Code
 
-		    if (noRcd ==1){
+	    if (noRcd ==1) {
+			orderCancelService.saveCancel(params);
+
+			// 같이 주문된 주문이 있는 경우.
+			if(paramAnoOrdId > 0) {
+				params.put("paramOrdId", paramAnoOrdId);
+				params.put("appTypeId", paramOrdCtgryCd.equals(HomecareConstants.HC_CTGRY_CD.FRM) ? SalesConstants.APP_TYPE_CODE_ID_RENTAL : SalesConstants.APP_TYPE_CODE_ID_AUX);
+
+				EgovMap callEntryMap = hcOrderCancelMapper.getCallEntryId(params);
+
+				params.put("paramCallEntryId", CommonUtils.nvl(callEntryMap.get("callEntryId")));
+				params.put("paramReqId", CommonUtils.nvl(callEntryMap.get("reqId")));
+				params.put("paramStockId", CommonUtils.nvl(callEntryMap.get("stockId")));
+
 				orderCancelService.saveCancel(params);
+			}
+			map.setCode(AppConstants.SUCCESS);
+			map.setMessage("Record updated successfully.");
 
-				// 같이 주문된 주문이 있는 경우.
-				if(paramAnoOrdId > 0) {
-					params.put("paramOrdId", paramAnoOrdId);
-					params.put("appTypeId", paramOrdCtgryCd.equals(HomecareConstants.HC_CTGRY_CD.FRM) ? SalesConstants.APP_TYPE_CODE_ID_RENTAL : SalesConstants.APP_TYPE_CODE_ID_AUX);
+	    } else {
+	    	map.setCode(AppConstants.FAIL);
+	    	map.setMessage("Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+	    }
 
-					EgovMap callEntryMap = hcOrderCancelMapper.getCallEntryId(params);
+	    return map;
+	}
 
-					params.put("paramCallEntryId", CommonUtils.nvl(callEntryMap.get("callEntryId")));
-					params.put("paramReqId", CommonUtils.nvl(callEntryMap.get("reqId")));
-					params.put("paramStockId", CommonUtils.nvl(callEntryMap.get("stockId")));
 
-					orderCancelService.saveCancel(params);
-				}
-				map.put("msg", "Record updated successfully.");
-		    } else {
-		    	map.put("msg", "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
-		    }
-		/*} catch (Exception e) {
-			throw new ApplicationException(AppConstants.FAIL, "Order Cancellation Failed.");
-		}*/
-		return map;
+	@Override
+	public ReturnMessage hcAddProductReturnSerial(Map<String, Object> params, SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		params.put("userId", sessionVO.getUserId());
+		params.put("srvOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")));   // Matress OrderId
+
+		// return - Matress Product
+		EgovMap rtnMat = orderListService.insertProductReturnResultSerial(params);
+		if(AppConstants.FAIL.equals(CommonUtils.nvl(rtnMat.get("rtnCode")))) { // return Fail
+			throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnMat.get("message")));
+		}
+
+		// select another order
+		EgovMap hcOrderInfo = hcOrderListService.selectHcOrderInfo(params);
+
+		int anoOrdId = CommonUtils.intNvl(hcOrderInfo.get("anoOrdId")); // Frame OrderId
+		// has Frame Order
+		if(anoOrdId > 0) {
+			params.put("paramOrdId", anoOrdId);
+			params.put("appTypeId", SalesConstants.APP_TYPE_CODE_ID_AUX);
+
+			EgovMap callEntryMap = hcOrderCancelMapper.getCallEntryId(params);
+
+			params.put("hidSalesOrderId", anoOrdId);
+			params.put("callEntryId", CommonUtils.nvl(callEntryMap.get("callEntryId")));
+			params.put("hidRefDocNo", CommonUtils.nvl(callEntryMap.get("retnNo")));
+			params.put("hidTaxInvDSalesOrderNo", CommonUtils.nvl(hcOrderInfo.get("fraOrdNo")));
+			params.put("serialNo", "");
+
+			// return - Frame Product
+			EgovMap rtnFra = orderListService.insertProductReturnResultSerial(params);
+			if(AppConstants.FAIL.equals(CommonUtils.nvl(rtnFra.get("rtnCode")))) { // return Fail
+				throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnFra.get("message")));
+			}
+		}
+
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(CommonUtils.nvl(rtnMat.get("message")));
+
+		return message;
 	}
 
 }

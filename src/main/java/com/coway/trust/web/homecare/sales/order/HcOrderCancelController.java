@@ -1,5 +1,7 @@
 package com.coway.trust.web.homecare.sales.order;
 
+import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +21,9 @@ import com.coway.trust.biz.homecare.sales.order.HcOrderCancelService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.sales.order.OrderCancelService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.sales.order.OrderListService;
+import com.coway.trust.biz.services.installation.InstallationResultListService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.homecare.HomecareConstants;
@@ -54,6 +60,13 @@ public class HcOrderCancelController {
 
 	@Resource(name = "homecareCmService")
 	private HomecareCmService homecareCmService;
+
+	@Resource(name = "installationResultListService")
+	private InstallationResultListService installationResultListService;
+
+	@Resource(name = "orderListService")
+	private OrderListService orderListService;
+
 
 	/**
 	 * Homecare Order Cancellation List 초기화 화면
@@ -146,7 +159,7 @@ public class HcOrderCancelController {
 	}
 
 	/**
-	 * Homecare Order 취소
+	 * 화면 호출. - New Cancellation Log Result
 	 * @Author KR-SH
 	 * @Date 2019. 10. 30.
 	 * @param params
@@ -155,10 +168,156 @@ public class HcOrderCancelController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/hcSaveCancel.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> saveCancel(@RequestParam Map<String, Object> params, SessionVO sessionVO) throws Exception {
-		Map<String, Object> rtnMap = hcOrderCancelService.hcSaveCancel(params, sessionVO);
+	public ResponseEntity<ReturnMessage> saveCancel(@RequestParam Map<String, Object> params, SessionVO sessionVO) throws Exception {
+		ReturnMessage rtnMap = hcOrderCancelService.hcSaveCancel(params, sessionVO);
 
 		return ResponseEntity.ok(rtnMap);
+	}
+
+	/**
+	 * 화면 호출. - Add PR Result
+	 * @Author KR-SH
+	 * @Date 2020. 1. 7.
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/hcAddProductReturnPop.do")
+	public String hcAddProductReturnPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
+		params.put("ststusCodeId", 1);
+		params.put("reasonTypeId", 172);
+		params.put("codeId", 257);
+
+		EgovMap installParam = orderListService.selectInstallParam(params);
+		params.put("installEntryId", CommonUtils.nvl(installParam.get("installEntryId")));
+
+		List<EgovMap> failReason = installationResultListService.selectFailReason(params);
+		EgovMap callType = installationResultListService.selectCallType(params);
+		EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
+		EgovMap stock = installationResultListService.getStockInCTIDByInstallEntryIDForInstallationView(installResult);
+		EgovMap sirimLoc = installationResultListService.getSirimLocByInstallEntryID(installResult);
+		EgovMap orderInfo = installationResultListService.getOrderInfo(params);
+
+		if(null == orderInfo){
+			orderInfo = new EgovMap();
+		}
+		int promotionId = CommonUtils.intNvl(orderInfo.get("c2"));
+		int installStkId = CommonUtils.intNvl(installResult.get("installStkId"));
+
+		EgovMap promotionView = new EgovMap();
+		List<EgovMap> CheckCurrentPromo = installationResultListService.checkCurrentPromoIsSwapPromoIDByPromoID(promotionId);
+
+		if(promotionId > 0) {
+			 promotionView  = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(promotionId, installStkId, false);
+
+		} else {
+			promotionView.put("promoId", promotionId);
+			promotionView.put("promoPrice", CommonUtils.nvl(orderInfo.get("c5")));
+			promotionView.put("promoPV", CommonUtils.nvl(orderInfo.get("c6")));
+			promotionView.put("swapPromoId", "0");
+			promotionView.put("swapPromoPV", "0");
+			promotionView.put("swapPormoPrice", "0");
+		}
+
+		String custId = CommonUtils.nvl2(installResult.get("custId"), CommonUtils.nvl(orderInfo.get("custId")));
+		params.put("custId", custId);
+		params.put("salesOrdNo", params.get("salesOrderNO"));
+
+		EgovMap customerInfo = installationResultListService.getcustomerInfo(params);
+		EgovMap customerContractInfo = installationResultListService.getCustomerContractInfo(customerInfo);
+		EgovMap installation = installationResultListService.getInstallationBySalesOrderID(installResult);
+		EgovMap installationContract = installationResultListService.getInstallContactByContactID(installation);
+		EgovMap salseOrder = installationResultListService.getSalesOrderMBySalesOrderID(installResult);
+		EgovMap hpMember= installationResultListService.getMemberFullDetailsByMemberIDCode(salseOrder);
+		EgovMap pRCtInfo =orderListService.getPrCTInfo(params);
+
+		// 시리얼 번호 조회
+		Map<String, Object> schParams = new HashMap<String, Object>() ;
+		schParams.put("pItmCode", orderInfo.get("stkCode"));
+		schParams.put("pSalesOrdId", installResult.get("salesOrdId"));
+
+		Map<String, Object> orderSerialMap = orderListService.selectOrderSerial(schParams);
+		String orderSerialNo = CommonUtils.nvl(orderSerialMap.get("orderSerial"));
+
+		model.addAttribute("installResult", installResult);
+		model.addAttribute("orderInfo", orderInfo);
+		model.addAttribute("customerInfo", customerInfo);
+		model.addAttribute("customerContractInfo", customerContractInfo);
+		model.addAttribute("installationContract", installationContract);
+		model.addAttribute("salseOrder", salseOrder);
+		model.addAttribute("hpMember", hpMember);
+		model.addAttribute("callType", callType);
+		model.addAttribute("failReason", failReason);
+		model.addAttribute("installStatus", installStatus);
+		model.addAttribute("stock", stock);
+		model.addAttribute("sirimLoc", sirimLoc);
+		model.addAttribute("CheckCurrentPromo", CheckCurrentPromo);
+		model.addAttribute("promotionView", promotionView);
+		model.addAttribute("pRCtInfo", pRCtInfo);
+		model.addAttribute("callEntryId" , params.get("callEntryId"));
+		model.addAttribute("orderSerial" , orderSerialNo );
+
+		// 호출될 화면
+		return "homecare/sales/order/hcAddProductReturnPop";
+	}
+
+	/**
+	 * return Homecare Product
+	 * @Author KR-SH
+	 * @Date 2020. 1. 8.
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/hcAddProductReturnSerial.do",method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> hcAddProductReturnSerial(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+		ReturnMessage rtnMap = hcOrderCancelService.hcAddProductReturnSerial(params, sessionVO);
+
+		return ResponseEntity.ok(rtnMap);
+	}
+
+	/**
+	 * Call Popup - Assignment DT Information
+	 * @Author KR-SH
+	 * @Date 2020. 1. 8.
+	 * @param params
+	 * @param model
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/orderCancelDTAssignmentPop.do")
+	public String orderCancelDTAssignmentPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		String paramTypeId = CommonUtils.nvl(params.get("typeId"));
+		String paramDocId = CommonUtils.nvl(params.get("docId"));
+		String paramRefId = CommonUtils.nvl(params.get("refId"));
+
+		// order detail start
+		params.put("prgrsId", 0);
+		params.put("salesOrderId", CommonUtils.nvl(params.get("salesOrdId")));
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+
+        List<EgovMap> selectAssignCTList = orderCancelService.selectAssignCT(params);
+
+        EgovMap cancelReqInfo = orderCancelService.cancelReqInfo(params);
+
+        params.put("stusCodeId", 1);
+        EgovMap ctAssignmentInfo = orderCancelService.ctAssignmentInfo(params);
+
+        model.put("orderDetail", orderDetail);
+        model.addAttribute("salesOrderNo", CommonUtils.nvl(params.get("salesOrderNo")));
+        model.addAttribute("cancelReqInfo", cancelReqInfo);
+        model.addAttribute("paramTypeId", paramTypeId);
+        model.addAttribute("paramDocId", paramDocId);
+        model.addAttribute("paramRefId", paramRefId);
+        model.addAttribute("selectAssignCTList", selectAssignCTList);
+        model.addAttribute("ctAssignmentInfo", ctAssignmentInfo);
+
+        // 호출될 화면
+     	return "homecare/sales/order/orderCancelDTAssignmentPop";
 	}
 
 }

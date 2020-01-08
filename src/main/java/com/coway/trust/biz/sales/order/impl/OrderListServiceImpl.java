@@ -354,6 +354,7 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 		}
 //		message.setMessage("Success : Product Return is Complete");
 		rMp.put("message", "Success : Product Return is Complete");
+		rMp.put("rtnCode", AppConstants.SUCCESS);
 
 	}
 
@@ -368,7 +369,8 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 
 		this.setPRFailJobRequest(params);
 		//message.setMessage("Success : Product Return is Fail");
-		rMp.put("message", "Success : Product Return is Fail");
+		rMp.put("message", "FAIL : Product Return is Fail");
+		rMp.put("rtnCode", AppConstants.FAIL);
 	}
 
     return rMp;

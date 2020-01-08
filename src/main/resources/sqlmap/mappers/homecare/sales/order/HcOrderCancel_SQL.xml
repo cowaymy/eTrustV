@@ -229,6 +229,7 @@
                  , V.REQ_ID
                  , V.REQ_NO
                  , V.STOCK_ID
+                 , V.RETN_NO
          FROM SAL1007V V
         <where>
             <if test="paramOrdId != null and paramOrdId != ''">

@@ -3,6 +3,7 @@ package com.coway.trust.biz.homecare.sales.order;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -37,6 +38,16 @@ public interface HcOrderCancelService {
 	 * @param sessionVO
 	 * @return
 	 */
-	public Map<String, Object> hcSaveCancel(Map<String, Object> params, SessionVO sessionVO);
+	public ReturnMessage hcSaveCancel(Map<String, Object> params, SessionVO sessionVO);
+
+	/**
+	 * return Homecare Product
+	 * @Author KR-SH
+	 * @Date 2020. 1. 8.
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 */
+	public ReturnMessage hcAddProductReturnSerial(Map<String, Object> params, SessionVO sessionVO);
 
 }

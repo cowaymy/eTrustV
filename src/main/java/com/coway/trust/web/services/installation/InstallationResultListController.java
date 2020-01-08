@@ -1064,9 +1064,10 @@ public class InstallationResultListController {
     EgovMap isPossibleMonth = installationResultListService.checkMonthInstallDate(params);
 
     if (isPossibleMonth != null) {
-
+    	message.setCode(AppConstants.SUCCESS);
     } else {
-      message.setMessage("Please choose this month only");
+    	message.setCode(AppConstants.FAIL);
+    	message.setMessage("Please choose this month only");
     }
 
     return ResponseEntity.ok(message);
