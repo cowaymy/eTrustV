@@ -994,12 +994,21 @@
             console.log("성공." + JSON.stringify(result));
             console.log("data : " + result.data);
 
-            Common.alert(result.message);
+            Common.alert(result.message, Common.removeLoader());
 
-            //fn_itemListAjax();
             $("#popClose").click();
 
-            getListAjax(1);
+            if(appvType == 'save') {
+                var data = {
+	                stockAuditNo: '${docInfo.stockAuditNo}',
+	                whLocId: '${docInfo.whLocId}',
+	                action: 'REG',
+                };
+
+            	Common.popupDiv("/logistics/adjustment/countStockAuditRegisterPop.do", data, null, true);
+            } else {
+            	getListAjax(1);
+            }
         }
         ,   function(jqXHR, textStatus, errorThrown){
                 try {
@@ -1291,6 +1300,17 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1 id="pop_header_title_dtl">New Count-Stock Audit</h1>
         <ul class="right_opt">
+            <!-- REG -->
+            <c:if test="${action == 'REG'}">
+	            <li><p class="btn_blue2 <c:if test="${docInfo.locStusCodeId != '5685' && docInfo.locStusCodeId != '5686' && docInfo.locStusCodeId != '5689' && docInfo.locStusCodeId != '5691' && docInfo.locStusCodeId != '5713'}"> btn_disabled</c:if>"><a id="save">Save</a></p></li>
+	            <li><p class="btn_blue2 <c:if test="${docInfo.locStusCodeId != '5685' && docInfo.locStusCodeId != '5686' && docInfo.locStusCodeId != '5689' && docInfo.locStusCodeId != '5691' && docInfo.locStusCodeId != '5713'}"> btn_disabled</c:if>"><a id="requestApproval">Request approval</a></p></li>
+            </c:if>
+            <!-- APPR -->
+            <c:if test="${action == 'APPR'}">
+	            <li><p class="btn_blue2 <c:if test="${docInfo.locStusCodeId != '5687'}"> btn_disabled</c:if>"><a id="appsave">Save</a></p></li>
+	            <li><p class="btn_blue2 <c:if test="${docInfo.locStusCodeId != '5687'}"> btn_disabled</c:if>"><a id="approve">Approve</a></p></li>
+	            <li><p class="btn_blue2 <c:if test="${docInfo.locStusCodeId != '5687'}"> btn_disabled</c:if>"><a id="reject">Reject</a></p></li>
+            </c:if>
             <li><p class="btn_blue2"><a href="#" id="popClose"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
@@ -1528,10 +1548,6 @@
 	           <div id="item_grid_wrap_pop" style="width:100%; height:330px; margin:0 auto;"></div>
 	        </article><!-- grid_wrap end -->
 
-			<ul class="center_btns mt20">
-			    <li><p class="btn_blue2 big <c:if test="${docInfo.locStusCodeId != '5685' && docInfo.locStusCodeId != '5686' && docInfo.locStusCodeId != '5689' && docInfo.locStusCodeId != '5691' && docInfo.locStusCodeId != '5713'}"> btn_disabled</c:if>"><a id="save">Save</a></p></li>
-			    <li><p class="btn_blue2 big <c:if test="${docInfo.locStusCodeId != '5685' && docInfo.locStusCodeId != '5686' && docInfo.locStusCodeId != '5689' && docInfo.locStusCodeId != '5691' && docInfo.locStusCodeId != '5713'}"> btn_disabled</c:if>"><a id="requestApproval">Request approval</a></p></li>
-			</ul>
 		</section><!-- search_result end -->
 
 		<section class="search_result" id="APPR" style="display:none"><!-- search_result start -->
@@ -1543,11 +1559,6 @@
                <div id="itemappr_grid_wrap_pop" style="width:100%; height:250px; margin:0 auto;"></div>
             </article><!-- grid_wrap end -->
 
-            <ul class="center_btns mt20">
-                <li><p class="btn_blue2 big <c:if test="${docInfo.locStusCodeId != '5687'}"> btn_disabled</c:if>"><a id="appsave">Save</a></p></li>
-                <li><p class="btn_blue2 big <c:if test="${docInfo.locStusCodeId != '5687'}"> btn_disabled</c:if>"><a id="approve">Approve</a></p></li>
-                <li><p class="btn_blue2 big <c:if test="${docInfo.locStusCodeId != '5687'}"> btn_disabled</c:if>"><a id="reject">Reject</a></p></li>
-            </ul>
         </section><!-- search_result end -->
 
         <section class="search_result" id="DET" style="display:none"><!-- search_result start -->
@@ -1560,7 +1571,7 @@
             </article><!-- grid_wrap end -->
 
         </section><!-- search_result end -->
-
     </section><!-- pop_body end -->
+
 </div>
 <!-- popup_wrap end -->
