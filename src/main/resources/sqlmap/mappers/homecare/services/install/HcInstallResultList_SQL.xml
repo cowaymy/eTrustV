@@ -11,7 +11,7 @@
 		              , SOM.SALES_ORD_NO
 		              , IE.INSTALL_DT
 		              , MEM.MEM_CODE
-		              , STK.STK_DESC
+		              , NVL2(STK.STK_DESC, '['||STK.STK_CODE||'] '||STK.STK_DESC, STK.STK_CODE) AS STK_DESC
 		              , SOM.CUST_ID
 		              , MEM.NAME
 		              , CD2.CODE as APP_TYPE
