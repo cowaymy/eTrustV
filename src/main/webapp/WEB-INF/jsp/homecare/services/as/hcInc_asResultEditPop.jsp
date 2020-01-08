@@ -1359,7 +1359,7 @@
         }
 
         // KR-OHK Serial Check
-        if (FormUtil.checkReqValue($("#stockSerialNo"))) {
+        if ($("#hidSerialRequireChkYn").val() == 'Y' && FormUtil.checkReqValue($("#stockSerialNo"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
@@ -2239,10 +2239,10 @@
          <label>
            <input type="checkbox" disabled="disabled" id='iscommission' name='iscommission' />
            <span><spring:message code='sal.text.commissionApplied' /></span></label></td>
-       <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must">*</span></th>
+       <th scope="row"><spring:message code='service.title.SerialNo' /><span id="s1" class="must">*</span></th>
        <td>
            <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly style="width:70%"/>
-            <p class="btn_grid">
+            <p id="s2" class="btn_grid">
                <a id="serialEdit" href="#" onClick="fn_serialModifyPop()">EDIT</a>
             </p>
        </td>

@@ -130,4 +130,9 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
     	return hcASManagementListMapper.selectLbrFeeChr();
     }
 
+    // serial Y/N check
+    @Override
+    public String selectSerialYnSearch(Map<String, Object> params) throws Exception{
+    	return hcASManagementListMapper.selectSerialYnSearch(params);
+    }
 }

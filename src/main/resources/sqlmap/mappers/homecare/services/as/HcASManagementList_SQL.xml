@@ -963,5 +963,16 @@
 	     ORDER BY LPAD(CODE,4)
     </select>
 
+    <select id="selectSerialYnSearch"  parameterType="Map" resultType="String">
+    /* [com.coway.trust.biz.homecare.services.as.impl.HcASManagementListMapper.selectSerialYnSearch] - KR.JIN */
+		 SELECT NVL(MAX(CASE WHEN S26.STK_TYPE_ID = 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND  S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
+		                     WHEN S26.STK_TYPE_ID = 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND  S28.SERIAL_FT_CHK = 'Y'  THEN 'Y' ELSE 'N' END
+		                     WHEN S26.STK_TYPE_ID = 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND  S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+		                ELSE 'N' END), 'N') AS SERIAL_CHK
+		   FROM SYS0028M S28
+		      , SYS0026M S26
+		  WHERE S28.WH_LOC_ID = #{whLocId}
+		    AND S26.STK_CODE = #{stkCode}
+    </select>
 
 </mapper>

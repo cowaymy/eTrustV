@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
 
 <!--
  DATE        BY     VERSION        REMARK
@@ -332,7 +333,7 @@
   }
 
   function fn_getASOrderInfo() {
-    Common.ajax("GET", "/services/as/getASOrderInfo.do", $("#resultASForm").serialize(), function(result) {
+    Common.ajaxSync("GET", "/services/as/getASOrderInfo.do", $("#resultASForm").serialize(), function(result) {
 
       $("#txtASNo").text($("#AS_NO").val());
       $("#txtOrderNo").text(result[0].ordNo);
@@ -369,7 +370,7 @@
   }
 
   function fn_getASEvntsInfo() {
-    Common.ajax("GET", "/services/as/getASEvntsInfo.do", $("#resultASForm").serialize(), function(result) {
+    Common.ajaxSync("GET", "/services/as/getASEvntsInfo.do", $("#resultASForm").serialize(), function(result) {
 
       $("#txtASStatus").text(result[0].code);
       $("#txtRequestDate").text(result[0].asReqstDt);
@@ -393,6 +394,19 @@
 
       // KR-OHK Serial Check
       $("#hidSerialRequireChkYn").val(result[0].serialRequireChkYn);
+
+      if(  result[0].serialRequireChkYn == "Y"
+        && js.String.isNotEmpty(result[0].ctWhLocId)
+        && js.String.isNotEmpty($("#pItmCode").val())
+      ){
+            var param = {"whLocId":result[0].ctWhLocId, "stkCode":$("#pItmCode").val()};
+            Common.ajaxSync("POST", "/homecare/services/as/selectSerialYnSearch.do", param, function(result) {
+                $("#hidSerialRequireChkYn").val(result.data);
+                if(result.data != "Y"){
+                    $("#s1, #s2").hide();
+                }
+            });
+      }
 
     });
   }
@@ -742,7 +756,7 @@
         }
 
         // KR-OHK Serial Check
-        if (FormUtil.checkReqValue($("#stockSerialNo"))) {
+        if ($("#hidSerialRequireChkYn").val() == 'Y' && FormUtil.checkReqValue($("#stockSerialNo"))) {
             rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
             rtnValue = false;
         }
@@ -1377,10 +1391,10 @@ function SearchListAjax(obj){
            <span><spring:message code='sal.text.commissionApplied' /></span>
            </label>
          </td>
-         <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must">*</span></th>
+         <th scope="row"><spring:message code='service.title.SerialNo' /><span id="s1" class="must">*</span></th>
          <td>
             <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly style="width:70%"/>
-            <p class="btn_grid">
+            <p id="s2" class="btn_grid">
                <a href="#" onClick="fn_serialModifyPop()">EDIT</a>
             </p>
          </td>

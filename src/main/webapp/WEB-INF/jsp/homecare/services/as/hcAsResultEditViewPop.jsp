@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
 
 <!--
  DATE        BY     VERSION        REMARK
@@ -97,7 +98,7 @@
 
   var aSOrderInfo;
   function fn_getASOrderInfo() {
-    Common.ajax("GET", "/services/as/getASOrderInfo.do", $("#resultASForm").serialize(), function(result) {
+    Common.ajaxSync("GET", "/services/as/getASOrderInfo.do", $("#resultASForm").serialize(), function(result) {
       aSOrderInfo = result[0];
 
       $("#txtASNo").text($("#AS_NO").val());
@@ -136,9 +137,7 @@
   }
 
   function fn_getASEvntsInfo() {
-    Common.ajax("GET", "/services/as/getASEvntsInfo.do", $("#resultASForm")
-        .serialize(), function(result) {;
-
+    Common.ajaxSync("GET", "/services/as/getASEvntsInfo.do", $("#resultASForm").serialize(), function(result) {
       $("#txtASStatus").text(result[0].code);
       $("#txtRequestDate").text(result[0].asReqstDt);
       $("#txtRequestTime").text(result[0].asReqstTm);
@@ -162,6 +161,20 @@
 
       // KR-OHK Serial Check
       $("#hidSerialRequireChkYn").val(result[0].serialRequireChkYn);
+
+      if(  result[0].serialRequireChkYn == "Y"
+        && js.String.isNotEmpty(result[0].ctWhLocId)
+        && js.String.isNotEmpty($("#pItmCode").val())
+      ){
+            var param = {"whLocId":result[0].ctWhLocId, "stkCode":$("#pItmCode").val()};
+            Common.ajaxSync("POST", "/homecare/services/as/selectSerialYnSearch.do", param, function(result) {
+                $("#hidSerialRequireChkYn").val(result.data);
+                if(result.data != "Y"){
+                    $("#s1, #s2").hide();
+                }
+            });
+      }
+
     });
   }
 

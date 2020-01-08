@@ -14,8 +14,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("hcASManagementListMapper")
 public interface HcASManagementListMapper {
-
-
 	public String getSearchDtRange() throws Exception;
 	public List<EgovMap> selectAsTyp() throws Exception;
 	public List<EgovMap> selectAsStat() throws Exception;
@@ -44,4 +42,7 @@ public interface HcASManagementListMapper {
 	public int updateAssignCT(Map<String, Object> params) throws Exception;
 
 	public List<EgovMap> selectLbrFeeChr() throws Exception;
+
+	// serial Y/N check
+	public String selectSerialYnSearch(Map<String, Object> params) throws Exception;
 }

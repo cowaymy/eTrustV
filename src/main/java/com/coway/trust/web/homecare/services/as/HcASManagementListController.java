@@ -499,6 +499,31 @@ public class HcASManagementListController {
     return ResponseEntity.ok(list);
   }
 
+
+  @RequestMapping(value = "/getASHistoryInfo.do", method = RequestMethod.POST)
+  public ResponseEntity<List<EgovMap>> getASHistoryInfo(@RequestBody Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    logger.debug("===========================/getASHistoryInfo.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASHistoryInfo.do===============================");
+
+    List<EgovMap> list = ASManagementListService.getASHistoryInfo(params);
+
+    return ResponseEntity.ok(list);
+  }
+
+  @RequestMapping(value = "/getASRulstEditFilterInfo.do", method = RequestMethod.POST)
+  public ResponseEntity<List<EgovMap>> getASRulstEditFilterInfo(@RequestBody Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    logger.debug("===========================/getASRulstEditFilterInfo.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/getASRulstEditFilterInfo.do===============================");
+
+    List<EgovMap> list = ASManagementListService.getASRulstEditFilterInfo(params);
+
+    return ResponseEntity.ok(list);
+  }
+
   @RequestMapping(value = "/assignCtOrderListSave.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> assignCtOrderListSave(@RequestBody Map<String, Object> params, Model model,
       HttpServletRequest request, SessionVO sessionVO) throws Exception{
@@ -518,7 +543,17 @@ public class HcASManagementListController {
     message.setMessage("");
 
     return ResponseEntity.ok(message);
-
   }
+
+  @RequestMapping(value = "/selectSerialYnSearch.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> selectSerialYnSearch(@RequestBody Map<String, Object> params, HttpServletRequest request, Model model) throws Exception{
+    String rtnValue = hcASManagementListService.selectSerialYnSearch(params);
+    ReturnMessage message = new ReturnMessage();
+    message.setCode(AppConstants.SUCCESS);
+    message.setData(rtnValue);
+    message.setMessage("");
+    return ResponseEntity.ok(message);
+  }
+
 
 }
