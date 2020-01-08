@@ -1362,7 +1362,8 @@
                         empChk : empChk,
                         promoCustType : custTypeVal,
                         exTrade : exTrade,
-                        srvPacId : SRV_PAC_ID
+                        srvPacId : SRV_PAC_ID,
+                        isSrvPac : 'Y'
                       }, promoId, 'ordPromo', 'S', ''); //Common Code
                 } else
                   doGetComboData(
