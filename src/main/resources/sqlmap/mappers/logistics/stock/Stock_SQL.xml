@@ -35,6 +35,9 @@
 			    project1.stkexttype AS stkexttype,
     			TO_CHAR(TO_DATE(project1.stklchdt,'YYYYMMDD'),'DD/MM/YYYY') stklchdt,
     			project1.isstockaudit,
+    			project1.stk_size,
+    			project1.is_smo,
+    			project1.is_serial_replc,
                 Project1.C2 AS C2,
 			    Project1.C3 AS C3,
 			    Project1.C4 AS C4,
@@ -68,6 +71,9 @@
 			       stk.stk_ext_type AS stkexttype,
                    stk.stk_lch_dt AS stklchdt,
                    stk.is_stock_audit AS isstockaudit,
+                   stk.stk_size,
+                   stk.is_smo,
+                   stk.is_serial_replc,
                    (SELECT CODE_NAME
 			          FROM SYS0013M
 			         WHERE CODE_ID = stk.STK_CTGRY_ID)
@@ -230,7 +236,10 @@
 		       inv.MEASURE_CBM mcbm,
 		       inv.STK_TYPE_ID typeid,
 		       inv.STK_OLD_CODE oldstkcd,
-		       inv.IS_STOCK_AUDIT isstockaudit
+		       inv.IS_STOCK_AUDIT isstockauditm,
+		       inv.stk_size,
+		       inv.is_smo,
+		       inv.is_serial_replc
 		  FROM SYS0026M inv
 		 WHERE inv.STK_ID = #{stockId}
 
@@ -450,6 +459,9 @@
                  , GROS_WT      = #{grossweight}
                  , STUS_CODE_ID = #{statusselect}
                  , MEASURE_CBM  = #{measurement}
+                 , stk_size = #{stkSize}
+                 , is_smo = #{isSmo}
+                 , is_serial_replc = #{isSerialReplc}
                  , UPD_DT       = SYSDATE
                  , UPD_USER_ID  = #{upd_user}
             WHERE STK_ID        = #{stockId}

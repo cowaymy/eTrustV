@@ -32,7 +32,7 @@
     // AUIGrid 칼럼 설정
 
   var columnLayout = [{dataField:   "stkid",headerText :"<spring:message code='log.head.stockid'/>"            ,width:120 ,height:30, visible : false},
-							{dataField: "stkcode",headerText :"<spring:message code='log.head.materialcode'/>"           ,width:100 ,height:30},
+							{dataField: "stkcode",headerText :"<spring:message code='log.head.materialcode'/>"           ,width:120 ,height:30},
 							{dataField: "stkdesc",headerText :"<spring:message code='log.head.materialname'/>"           ,width:350 ,height:30,style :  "aui-grid-user-custom-left" },
 							{dataField: "stkcategoryid",headerText :"<spring:message code='log.head.categoryid'/>"        ,width:120,height:30 , visible : false},
 							{dataField: "codename",headerText :"<spring:message code='log.head.category'/>"       ,width:140 ,height:30},
@@ -57,7 +57,11 @@
 							{dataField: "stkoldcd",headerText :"<spring:message code='log.head.stk_old_cd'/>"           ,width:100 ,height:30},
 							{dataField: "stkexttype",headerText :"<spring:message code='log.head.stk_ext_type'/>"           ,width:100 ,height:30},
 							{dataField: "stklchdt",headerText :"<spring:message code='log.head.stk_lch_dt'/>"           ,width:100 ,height:30},
-							{dataField: "isstockaudit",headerText :"<spring:message code='log.head.stockAudit'/>"           ,width:90 ,height:30}
+							{dataField: "isstockaudit",headerText :"<spring:message code='log.head.stockAudit'/>"           ,width:90 ,height:30},
+							{dataField: "stkSize", headerText :"Mattress Size", width:120, height:30},
+							{dataField: "isSmo", headerText :"Create Return SMO", width:150, height:30},
+							{dataField: "isSerialReplc", headerText :"Serial Replace", width:120, height:30}
+
                        ];
 
   var filtercolumn = [{dataField: "stockid",headerText :"<spring:message code='log.head.stockid'/>"          ,width:120 , visible : false},
@@ -647,6 +651,27 @@
                     'cbStockAudit' : 'N'
                 });
             }
+
+            // 20200109 KR-JIN homecare mattress size & AS serial change
+            if ($("#cbIsSmo").is(":checked") == true) {
+                $.extend(fdata, {
+                    'isSmo' : 'Y'
+                });
+            } else {
+                $.extend(fdata, {
+                    'isSmo' : 'N'
+                });
+            }
+            if ($("#cbIsSerialReplc").is(":checked") == true) {
+                $.extend(fdata, {
+                    'isSerialReplc' : 'Y'
+                });
+            } else {
+                $.extend(fdata, {
+                    'isSerialReplc' : 'N'
+                });
+            }
+
         }
         $.extend(fdata, {
             'stockId' : key
@@ -835,6 +860,8 @@
             $("#txtNetWeight").empty();
             $("#txtMeasurement").empty();
 
+            $("#txtStkSize").empty();
+
             $("#txtStockType").text(data[0].typenm);
             $("#txtStatus").text(data[0].statusname);
             $("#txtStockCode").text(data[0].stockcode);
@@ -866,6 +893,17 @@
                 $("#cbStockAudit").prop("checked", true);
             }
             $("#cbStockAudit").prop("disabled", true);
+
+            // 20200109 KR-JIN homecare mattress size & AS serial change
+            $("#txtStkSize").text(data[0].stkSize);
+            if (data[0].isSmo == "Y") {
+                $("#cbIsSmo").prop("checked", true);
+            }
+            $("#cbIsSmo").prop("disabled", true);
+            if (data[0].isSerialReplc == "Y") {
+                $("#cbIsSerialReplc").prop("checked", true);
+            }
+            $("#cbIsSerialReplc").prop("disabled", true);
 
             $("#typeid").val(data[0].typeid);
         } else if (v == 'ES') {
@@ -930,6 +968,19 @@
             if (data[0].isstockaudit == "Y") {  // 20191117 KR-OHK Stock Audit Add
                 $("#cbStockAudit").prop("checked", true);
             }
+
+            // 20200109 KR-JIN homecare mattress size & AS serial change
+            $("#txtStkSize").html("<select id='stkSize' name='stkSize' class='w100p'></select>");
+            doGetComboData('/common/selectCodeList.do', {"groupCode":'447'}, data[0].stkSize, 'stkSize', 'S');     // Mattress Size
+            $("#cbIsSmo").prop("disabled", false);
+            if (data[0].isSmo == "Y") {
+                $("#cbIsSmo").prop("checked", true);
+            }
+            $("#cbIsSerialReplc").prop("disabled", false);
+            if (data[0].isSerialReplc == "Y") {
+                $("#cbIsSerialReplc").prop("checked", true);
+            }
+
             $("#typeid").val(data[0].typeid);
             $("#stock_info_edit").text("SAVE");
 
@@ -1150,6 +1201,9 @@
         $("#txtRentalDeposit").text();
         $("#txtPenaltyCharge").text();
         $("#txtTradeInPV").text();
+        $("#txtStkSize").text();
+        $("#cbIsSmo").prop("checked", false);
+        $("#cbIsSerialReplc").prop("checked", false);
     }
 
     function f_isNumeric(val) {
@@ -1545,6 +1599,14 @@
 
                         <th scope="row">Measurement CBM</th>
                         <td ID="txtMeasurement"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Mattress Size</th>
+                        <td id="txtStkSize"></td>
+                        <td colspan="4">
+                            <label><input type="checkbox" id="cbIsSmo"/><span>Create Return SMO</span></label>
+                            <label><input type="checkbox" id="cbIsSerialReplc" /><span>Serial Replace</span></label>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
