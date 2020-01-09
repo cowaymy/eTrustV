@@ -397,10 +397,13 @@ public class CcpCalculateController {
 
 		if(!params.get("bndlId").equals("")){
 		  Map<String, Object> auxParam =  ccpCalculateService.getAux(params);
-          params.put("saveCcpId", auxParam.get("ccpId"));
-          params.put("saveOrdId", auxParam.get("ccpSalesOrdId"));
-          params.put("auxAppType", 1);
-          ccpCalculateService.calSave(params);
+		  if(auxParam != null){
+		    params.put("saveCcpId", auxParam.get("ccpId"));
+	        params.put("saveOrdId", auxParam.get("ccpSalesOrdId"));
+	        params.put("payMode", auxParam.get("modeId"));
+	        params.put("auxAppType", 1);
+	        ccpCalculateService.calSave(params);
+		  }
         }
 
 		//Send SMS

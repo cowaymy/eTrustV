@@ -810,9 +810,10 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 			 EgovMap eCashMap = null;
 
 			 eCashMap = ccpCalculateMapper.chkECash(params);  // ECASH = 0  -> MODE_ID != 131 .... CHANGED BY LEE 2018.01.15
-
+			 LOGGER.info("auxAppType : " + (params.get("auxAppType")));
+             LOGGER.info("payMode : " + (params.get("payMode")));
 			 //if(eCashMap != null && Integer.parseInt(String.valueOf(eCashMap.get("ecash"))) == 0){
-			   if(eCashMap != null || (params.get("auxAppType") != null) ){
+			   if(eCashMap != null || (params.get("auxAppType") != null && params.get("payMode") != null ) ){
 				//Call Entry Insert
 				 callSeq = ccpCalculateMapper.crtSeqCCR0006D();
 	             params.put("callEntrySeq", callSeq); //Seq
