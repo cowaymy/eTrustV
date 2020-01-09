@@ -27,6 +27,8 @@ public class StockAuditApiFormDto {
 		params.put("whLocId", vo.getWhLocId());
 		params.put("stockAuditNo", vo.getStockAuditNo());
         params.put("viewGu", vo.getViewGu());
+        params.put("docStartDt", vo.getDocStartDt());
+        params.put("docEndDt", vo.getDocEndDt());
 		return params;
 	}
 
@@ -36,6 +38,8 @@ public class StockAuditApiFormDto {
 	private int whLocId;
 	private String stockAuditNo;
 	private String viewGu;
+    private String docStartDt;
+    private String docEndDt;
 
 
 
@@ -62,5 +66,17 @@ public class StockAuditApiFormDto {
     }
     public void setViewGu(String viewGu) {
         this.viewGu = viewGu;
+    }
+    public String getDocStartDt() {
+        return docStartDt;
+    }
+    public void setDocStartDt(String docStartDt) {
+        this.docStartDt = docStartDt;
+    }
+    public String getDocEndDt() {
+        return docEndDt;
+    }
+    public void setDocEndDt(String docEndDt) {
+        this.docEndDt = docEndDt;
     }
 }

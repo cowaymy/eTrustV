@@ -16,6 +16,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.logistics.stockAudit.StockAuditApiDto;
 import com.coway.trust.api.mobile.logistics.stockAudit.StockAuditApiFormDto;
 import com.coway.trust.biz.login.impl.LoginMapper;
+import com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper;
 import com.coway.trust.biz.logistics.barcodeRegister.impl.BarcodeRegisterApiMapper;
 import com.coway.trust.biz.logistics.stockAudit.StockAuditApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -51,6 +52,11 @@ public class StockAuditApiServiceImpl extends EgovAbstractServiceImpl implements
 
 
 
+    @Resource(name = "countStockAuditMapper")
+    private CountStockAuditMapper countStockAuditMapper;
+
+
+
     @Autowired
     private LoginMapper loginMapper;
 
@@ -60,6 +66,12 @@ public class StockAuditApiServiceImpl extends EgovAbstractServiceImpl implements
     public List<EgovMap> selectStockAuditList(StockAuditApiFormDto param) {
         if( CommonUtils.isEmpty(param.getRegId()) ){
             throw new ApplicationException(AppConstants.FAIL, "Reg ID value does not exist.");
+        }
+        if( CommonUtils.isEmpty(param.getDocStartDt()) ){
+            throw new ApplicationException(AppConstants.FAIL, "docStartDt value does not exist.");
+        }
+        if( CommonUtils.isEmpty(param.getDocEndDt()) ){
+            throw new ApplicationException(AppConstants.FAIL, "docEndDt value does not exist.");
         }
 
         Map<String, Object> loginInfoMap = new HashMap<String, Object>();
@@ -179,7 +191,7 @@ public class StockAuditApiServiceImpl extends EgovAbstractServiceImpl implements
                 throw new ApplicationException(AppConstants.FAIL, "Please check your Remark.");
             }
 
-            if( (CommonUtils.isEmpty(log0094mStockAuditNo) || log0094mStockAuditNo.equals(saveData.getStockAuditNo()) == false) && ( saveData.getLocStusCodeId() == 5713) ){//5713(3rd Reject)
+            if( (CommonUtils.isEmpty(log0094mStockAuditNo) || log0094mStockAuditNo.equals(saveData.getStockAuditNo()) == false) && (saveData.getLocStusCodeId() == 5713) ){//5713(3rd Reject)
                 Map<String, Object> log0094m = new HashMap<String, Object>();
                 log0094m.put("stockAuditNo", saveData.getStockAuditNo());
                 log0094m.put("updUserId", loginVO.getUserId());
@@ -195,6 +207,25 @@ public class StockAuditApiServiceImpl extends EgovAbstractServiceImpl implements
                 log0095m.put("stockAuditNo", saveData.getStockAuditNo());
                 log0095m.put("whLocId", saveData.getWhLocId());
                 log0095m.put("updUserId", loginVO.getUserId());
+
+                if( saveData.getLocStusCodeId() == 5689 || saveData.getLocStusCodeId() == 5691 || saveData.getLocStusCodeId() == 5713) {//5689(1rd Reject), 5691(2rd Reject), 5713(3rd Reject)
+                    int procCnt = countStockAuditMapper.selectStockAuditProcCnt(log0095m);
+//                  5685    Unregistered      -> check
+//                  5686    Save              -> check
+//                  5687    Request approval  -> check
+//                  5688    1st Approve       -> check
+//      5689    1st Reject
+//                  5690    2nd Approve       -> check
+//      5691    2nd Reject
+//                  5712    3rd Approve       -> check
+//      5713    3rd Reject
+//      5714    Other GI / GR
+//      5715    COMPLETE
+                    if(procCnt > 0 ) {
+                        throw new ApplicationException(AppConstants.FAIL, "There is an item in progress for Stock Audit.");
+                    }
+                }
+
 
                 saveCnt = stockAuditApiMapper.insertStockAuditLocHistoryLOG0095M(log0095m);
                 if( saveCnt != 1 ){

@@ -26,7 +26,8 @@ FROM    LOG0094M A                                                              
             AND C.CODE_ID = B.LOC_STUS_CODE_ID
 WHERE   A.USE_YN = 'Y'                                                          --Use YN
 AND     A.DOC_STUS_CODE_ID <> 5678                                              --Doc Status ID : 5678(Save)
-AND     TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN A.DOC_START_DT AND A.DOC_END_DT    --Stock Audit Start Date/Stock Audit End Date
+AND     #{docStartDt} BETWEEN A.DOC_START_DT AND A.DOC_END_DT
+AND     #{docEndDt} BETWEEN A.DOC_START_DT AND A.DOC_END_DT
 AND     B.WH_LOC_ID =   (
                                 SELECT  WH_LOC_ID
                                 FROM    SYS0028M
