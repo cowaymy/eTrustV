@@ -556,6 +556,7 @@
 			                              AND B.WH_LOC_ID = #{whLocId}
 	                       )
 	   AND A.LOC_STUS_CODE_ID IN (5685, 5686, 5687, 5688, 5690, 5712)
+	   AND A.USE_YN = 'Y'
     </select>
 
     <select id="checkRejetCountStockAudit" parameterType="Map" resultType="String">
