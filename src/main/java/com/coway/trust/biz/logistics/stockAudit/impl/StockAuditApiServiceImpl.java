@@ -231,7 +231,6 @@ public class StockAuditApiServiceImpl extends EgovAbstractServiceImpl implements
                     }
                 }
 
-
                 saveCnt = stockAuditApiMapper.insertStockAuditLocHistoryLOG0095M(log0095m);
                 if( saveCnt != 1 ){
                     throw new ApplicationException(AppConstants.FAIL, "Failed to update.");
