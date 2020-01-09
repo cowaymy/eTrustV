@@ -24,51 +24,59 @@ $(document).ready(function() {
 	    style : "aui-grid-user-custom-left"
 	}];
 
-	
+
     bgGridID = GridCommon.createAUIGrid("#budgetGrid", budgetcolumnLayout, "budgetCode", {editable:false});
-    
+
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(bgGridID, "cellDoubleClick", function(event){
-    	    	 
+
     	 /* var selectedItems = AUIGrid.getSelectedItems(expPopGridID);
-         
+
     	 budgetCode = AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCode");
     	 budgetCodeText = AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCodeText");
-         
+
          $("#budgetCode").val(budgetCode);
          $("#budgetCodeName").val(budgetCodeText);
-    	 
+
     	 if(selectedItems.length <= 0) return;
     	 // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
     	 var first = selectedItems[0];
-    	 
+
     	 AUIGrid.setCellValue(expPopGridID , first.rowIndex , "budgetCode", budgetCode);
     	 AUIGrid.setCellValue(expPopGridID , first.rowIndex , "budgetCodeName", budgetCodeText); */
-    	 
+
     	 /* $("#pBudgetCode").val(AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCode"));
          $("#pBudgetCodeName").val( AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCodeText"));
-         
+
          if("${pop}" == "pop"){
         	 fn_setPopBudgetData();
          }else{
         	 fn_setBudgetData();
          } */
-         
+
          AUIGrid.setCellValue(newGridID , "${rowIndex}" , "budgetCode", AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCode"));
          AUIGrid.setCellValue(newGridID , "${rowIndex}" , "budgetCodeName",  AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCodeText"));
-    	 
+
+         AUIGrid.setCellValue(newGridID, event.rowIndex, "glAccCode", "");
+         AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
+         AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
+
+         var totAmt = fn_getTotalAmount();
+         $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
+         $("#totAmt").val(totAmt);
+
     	 $("#budgetCodeSearchPop").remove();
     });
-    
+
 });
 
 //리스트 조회.
-function fn_selectBudgetListAjax() {        
+function fn_selectBudgetListAjax() {
     Common.ajax("GET", "/eAccounting/webInvoice/selectBudgetCodeList", $("#bgSForm").serialize(), function(result) {
-        
+
          console.log("성공.");
          console.log( result);
-         
+
         AUIGrid.setGridData(bgGridID, result);
     });
 }

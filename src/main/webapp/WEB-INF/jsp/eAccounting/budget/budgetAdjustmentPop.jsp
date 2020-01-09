@@ -148,8 +148,10 @@ $(document).ready(function(){
 
         if($("#pAdjustmentType").val() != "01" && $("#pAdjustmentType").val() != "02"){
 
-            if(FormUtil.isEmpty(senderAmt)) {}
-        	
+            if(FormUtil.isEmpty($("#sendYearMonth").val())) {
+                Common.alert("Please state month to transfer to.")
+            }
+
             var data = {
                     sendYearMonth : $("#sendYearMonth").val(),
                     sendCostCenter : $("#sendCostCenter").val(),
@@ -560,6 +562,16 @@ function  fn_setPopBudgetData(){
   }else{
       $("#recvBudgetCode").val($("#pBudgetCode").val());
       $("#recvBudgetCodeName").val( $("#pBudgetCodeName").val());
+  }
+
+  if(!FormUtil.isEmpty($("#sendGlAccCode").val())) {
+      $("#sendGlAccCode").val("");
+      $("#sendGlAccCodeName").val("");
+      $("#sendAmount").val("");
+
+      $("#recvGlAccCode").val("");
+      $("#recvGlAccCodeName").val("");
+      $("#recvAmount").val("");
   }
 
 }
