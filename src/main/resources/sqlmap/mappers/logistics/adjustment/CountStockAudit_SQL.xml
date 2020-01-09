@@ -128,8 +128,8 @@
        </if>
        <if test='stockAuditNo == null or stockAuditNo == ""'>
            <if test='docStartDt != null and docStartDt != "" and docEndDt != null and docEndDt != ""'>
-               AND A.DOC_START_DT <![CDATA[>=]]> TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD')
-               AND A.DOC_END_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
+               AND (A.DOC_START_DT  BETWEEN TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD') OR
+                   A.DOC_END_DT  BETWEEN TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD'))
            </if>
            <if test="listLocType != null">
                AND E.WH_LOC_GB IN
@@ -556,6 +556,22 @@
 			                              AND B.WH_LOC_ID = #{whLocId}
 	                       )
 	   AND A.LOC_STUS_CODE_ID IN (5685, 5686, 5687, 5688, 5690, 5712)
+    </select>
+
+    <select id="checkRejetCountStockAudit" parameterType="Map" resultType="String">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.checkRejetCountStockAudit] 20200108 - KR OHK*/
+    SELECT MAX(B.STOCK_AUDIT_NO) STOCK_AUDIT_NO
+      FROM LOG0095M A
+      INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID
+       LEFT OUTER JOIN SYS0028M C ON C.WH_LOC_ID = B.WH_LOC_ID
+    WHERE B.WH_LOC_ID = #{whLocId}
+        AND (1,B.ITM_ID) IN (SELECT 1, B.ITM_ID
+                                        FROM LOG0095M A
+                                       INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID
+                                      WHERE B.STOCK_AUDIT_NO = #{stockAuditNo}
+                                          AND B.WH_LOC_ID = #{whLocId}
+                           )
+       AND A.LOC_STUS_CODE_ID IN (5689, 5691, 5713)
     </select>
 
     <select id="selectAttachmentFileInfo" parameterType="Map" resultType="egovMap">

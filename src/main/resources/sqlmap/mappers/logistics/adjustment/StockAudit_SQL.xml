@@ -125,9 +125,9 @@
     </if>
     <if test='stockAuditNo == null or stockAuditNo == ""'>
         <if test='docStartDt != null and docStartDt != "" and docEndDt != null and docEndDt != ""'>
-            AND A.DOC_START_DT <![CDATA[>=]]> TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD')
-                           AND A.DOC_END_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
-                       </if>
+            AND (A.DOC_START_DT  BETWEEN TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD') OR
+                   A.DOC_END_DT  BETWEEN TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD'))
+        </if>
         <if test="listLocType != null">
                            AND E.WH_LOC_GB IN
                              <foreach item="item" collection="listLocType" index="index" open="(" separator="," close=")">
