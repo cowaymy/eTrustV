@@ -126,6 +126,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 	 */
 	public ReturnMessage hcInsertCallSave(Map<String, Object> params, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
+	    Map<String, Object> resultValue = new HashMap<String, Object>();
 	    int noRcd = orderCallListService.chkRcdTms(params);
 
 	    if (noRcd == 1) { // RECORD ABLE TO UPDATE
@@ -134,12 +135,12 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 
 	     	EgovMap rdcStock = orderCallListService.selectRdcStock(params);
 
-	     	if (rdcStock != null) {
-     			if (CommonUtils.intNvl(rdcStock.get("availQty")) > 0) {
-     				Map<String, Object> resultValue = orderCallListService.insertCallResultSerial(params, sessionVO);
+	     	if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
+	     		if (rdcStock != null) {
+	     			if (CommonUtils.intNvl(rdcStock.get("availQty")) > 0) {
+	     				resultValue = orderCallListService.insertCallResultSerial(params, sessionVO);
 
-     				if (null != resultValue) {
-     					if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
+	     				if (null != resultValue) {
      						if ("1".equals(resultValue.get("logStat"))) {
      							message.setMessage("Error Encounter. Please Contact Administrator. Error Code(CL): " + CommonUtils.nvl(resultValue.get("logStat")));
      							message.setCode(AppConstants.FAIL);
@@ -147,20 +148,25 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
      							message.setMessage("Record created successfully.</br> Installation No : " + CommonUtils.nvl(resultValue.get("installationNo")) + "</br>Seles Order No : " + CommonUtils.nvl(resultValue.get("salesOrdNo")));
      							message.setCode(AppConstants.SUCCESS);
      						}
-     					} else {
-     						message.setMessage("Record updated successfully.</br> ");
-     						message.setCode(AppConstants.SUCCESS);
-     					}
-     				}
+	     				}
 
-     			} else {
-     				message.setMessage("Fail to update due to RDC out of stock. ");
-     				message.setCode(AppConstants.FAIL);
-     			}
+	     			} else {
+	     				message.setMessage("Fail to update due to RDC out of stock. ");
+	     				message.setCode(AppConstants.FAIL);
+	     			}
+
+	     		} else {
+	     			message.setMessage("Fail to update due to RDC out of stock. ");
+	     			message.setCode(AppConstants.FAIL);
+	     		}
 
 	     	} else {
-	     		message.setMessage("Fail to update due to RDC out of stock. ");
-	     		message.setCode(AppConstants.FAIL);
+	     		resultValue = orderCallListService.insertCallResultSerial(params, sessionVO);
+
+	     		if (null != resultValue) {
+	     			message.setMessage("Record updated successfully.</br> ");
+	     			message.setCode(AppConstants.SUCCESS);
+	     		}
 	     	}
 
 	    } else {

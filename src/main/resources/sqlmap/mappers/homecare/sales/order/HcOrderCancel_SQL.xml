@@ -73,6 +73,7 @@
                    A.TYPE_ID,
                    A.DOC_ID,
                    A.REF_ID,
+                   A.RSO_STUS AS RSO_STUS_ID,
                    ( SELECT CODE FROM SYS0038M WHERE STUS_CODE_ID =  A.RSO_STUS) RSO_STUS,
                    A.PRD_RTN_LST_UPD,
                    CASE WHEN ( A.APP_DT IS NOT NULL )
