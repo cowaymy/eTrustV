@@ -385,8 +385,12 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		String deliSeq = MlogApiMapper.selectDeliveryStockMovementSeq();
 		Map<String, Object> insMap = new HashMap();
 		// 2. insert 55, 54 , update 47  start
+		logger.info("++++ stockMovementReqDeliveryScan stockTransferConfirmGiMForm ::" + stockTransferConfirmGiMForm.toString() );
 		for (int i = 0; i < stockTransferConfirmGiMForm.size(); i++) {
 			StockTransferConfirmGiMForm scgmf = stockTransferConfirmGiMForm.get(i);
+
+//			logger.debug("++++ stockMovementReqDeliveryScan scgmf ::" + scgmf.) );
+
 			insMap.put("delno", deliSeq);
 			insMap.put("itmcd", scgmf.getPartsCode());
 			insMap.put("itmname", scgmf.getPartsName());
@@ -396,6 +400,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 			insMap.put("gtype", scgmf.getReqStatus());
 			insMap.put("giptdate", MlogApiMapper.dateParsing(scgmf.getRequestDate()));
 			insMap.put("gipfdate", MlogApiMapper.dateParsing(scgmf.getRequestDate())); // 추가
+			insMap.put("reqstNoItm", scgmf.getSmoNoItem() );
 
 			// LOG0055D insert
 			MlogApiMapper.insertDeliveryStockMovementDetail(insMap);
@@ -900,4 +905,11 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	}
 	/* Woongjin Jun */
 
+	/* Woongjin Han */
+	@Override
+	public List<EgovMap> getStockTransferReqStatusDListScan(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getStockTransferReqStatusDListScan(params);
+	}
+	/* Woongjin Han */
 }
