@@ -232,7 +232,7 @@ public class ApiController {
   }
 
   @RequestMapping(value = "/customer/genInvoice.do")
-  public void genOutrightInvoice(HttpServletRequest request, HttpServletResponse response ,@RequestParam Map<String, Object> params) {
+  public void genInvoice(HttpServletRequest request, HttpServletResponse response ,@RequestParam Map<String, Object> params) {
 
     params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_SST.rpt");
     params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
