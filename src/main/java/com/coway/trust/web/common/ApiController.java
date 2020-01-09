@@ -231,7 +231,7 @@ public class ApiController {
     return ResponseEntity.ok(result);
   }
 
-  @RequestMapping(value = "/customer/genOutrightInvoice.do")
+  @RequestMapping(value = "/customer/genInvoice.do")
   public void genOutrightInvoice(HttpServletRequest request, HttpServletResponse response ,@RequestParam Map<String, Object> params) {
 
     params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_SST.rpt");
