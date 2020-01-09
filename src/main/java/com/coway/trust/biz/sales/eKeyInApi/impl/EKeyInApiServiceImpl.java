@@ -159,6 +159,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
                         mattressItmStkId = mattress.getItmStkId();
                     }
                 }
+
                 if (CommonUtils.isNotEmpty(listData.getFraPreOrdId()) && 0 < listData.getFraPreOrdId() ){
                     param.setPreOrdId(listData.getFraPreOrdId());
                     EgovMap selecteKeyInDetailOrder = eKeyInApiMapper.selecteKeyInDetailOrder(EKeyInApiForm.createMap(param));
