@@ -677,15 +677,50 @@
         var arg = "<spring:message code='log.head.countqty' />";
 
         if(length > 0) {
-           for(var i = 0; i < length; i++) {
-               if(FormUtil.isEmpty(AUIGrid.getCellValue(itemRegGrid, i, "cntQty")) || AUIGrid.getCellValue(itemRegGrid, i, "cntQty") < 0 || AUIGrid.getCellValue(itemRegGrid, i, "cntQty") == 0) {
+            var blZero = false;
+            for(var i = 0; i < length; i++) {
+        	   var serialChkYn = AUIGrid.getCellValue(itemRegGrid, i, "serialChkYn");
+               var serialRequireChkYn = AUIGrid.getCellValue(itemRegGrid, i, "serialRequireChkYn");
+               var itemSerialChkYn = AUIGrid.getCellValue(itemRegGrid, i, "itemSerialChkYn");
+
+               var blEdit = true;
+               if(serialChkYn == 'Y' && serialRequireChkYn == 'Y' && itemSerialChkYn == 'Y' ){
+            	   blEdit = false;
+               }
+
+               if(FormUtil.isEmpty(AUIGrid.getCellValue(itemRegGrid, i, "cntQty")) || AUIGrid.getCellValue(itemRegGrid, i, "cntQty") < 0) {
 
             	   //reqCnt ++;
             	   Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ arg +"'/>");
             	   AUIGrid.setSelectionByIndex(itemRegGrid, i, 8);
             	   return false;
                }
-           }
+
+               if(AUIGrid.getCellValue(itemRegGrid, i, "cntQty") == 0){
+            	   blZero = true;
+               }
+            }
+            if(blZero){
+            	if(Common.confirm("Count Qty is zero. Do you want to request approval?", function(){
+            		for(var i = 0; i < length; i++) {
+            			if(AUIGrid.getCellValue(itemRegGrid, i, "cntQty") == 0){
+            				AUIGrid.setCellValue(itemRegGrid, i, "cntQty","0");
+            				var diffQty = 0 - Number(AUIGrid.getCellValue(itemRegGrid, i, "sysQty"));
+
+                            AUIGrid.setCellValue(itemRegGrid, i, "diffQty", diffQty);           // Variance
+                            AUIGrid.setCellValue(itemRegGrid, i, "dedQty", 0);                 // Deduction Qty(Hidden)
+                            AUIGrid.setCellValue(itemRegGrid, i, "otherQty", diffQty);         // Other GI/GR Qty(Hidden)
+                        }
+            		}
+
+            		fn_requestApprove();
+            	})){
+            		return true;
+            	}else{
+            		return false;
+            	}
+            }
+
         }
 
         /*
@@ -786,6 +821,10 @@
             return  false;
         }
 
+    	fn_requestApprove();
+    });
+
+    function fn_requestApprove(){
     	var appvType = "reqAprv";
 
         var obj = $("#insertForm").serializeJSON();
@@ -798,24 +837,24 @@
                     Common.alert("The data you have selected is already updated.");
                     return false;
                 } else {
-			        if(Common.confirm("Do you want to request approval?", function(){
-			        	var formData = Common.getFormData("insertForm");
+                    if(Common.confirm("Do you want to request approval?", function(){
+                        var formData = Common.getFormData("insertForm");
 
-			            formData.append("atchFileGrpId", $("#atchFileGrpId").val());
-			            formData.append("updateFileIds", $("#updateFileIds").val());
-			            formData.append("deleteFileIds", $("#deleteFileIds").val());
+                        formData.append("atchFileGrpId", $("#atchFileGrpId").val());
+                        formData.append("updateFileIds", $("#updateFileIds").val());
+                        formData.append("deleteFileIds", $("#deleteFileIds").val());
 
-			            Common.ajaxFile("/logistics/adjustment/stockAuditUploadFile.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
-			                if(result.data) {
-			                    $("#atchFileGrpId").val(result.data);
-			                }
-			                fn_saveCountStockAuditNew(appvType);
-			            });
+                        Common.ajaxFile("/logistics/adjustment/stockAuditUploadFile.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
+                            if(result.data) {
+                                $("#atchFileGrpId").val(result.data);
+                            }
+                            fn_saveCountStockAuditNew(appvType);
+                        });
                     }));
                 }
             }
        });
-    });
+    }
 
     $('#appsave').click(function() {
 
