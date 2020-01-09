@@ -1934,4 +1934,38 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
         </if>
        group by S26T.STK_ID,l44.BOM_COMPNT,S26T.STK_DESC,S26T.STK_CTGRY_ID,S26T.STK_TYPE_ID,1,s16.AMT
     </select>
+
+<select id="getStockTransferReqStatusDListScan" parameterType="Map" resultType="egovMap">
+SELECT  /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.getStockTransferReqStatusDListScan] 20200108 - KR HAN */
+     L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_Code
+     , L48.ITM_NAME parts_Name , S26.STK_ID parts_Id , S26.STK_TYPE_ID parts_Type
+     <if test="searchStatus == 1 ">
+     , L48.REQST_QTY request_Qty
+     , S26.SERIAL_CHK BARCODE_CHK_YN
+     </if>
+     <if test="searchStatus == 2 ">
+     , L55.DELVRY_QTY request_Qty
+     , L55.DELVRY_NO
+     , L55.SERIAL_NO serial_No
+     </if>
+  FROM LOG0048D L48, SYS0026M S26
+  <if test="searchStatus == 2 ">
+     , (SELECT L55.DELVRY_NO, L55.DELVRY_NO_ITM, L55.REQST_NO, L55.ITM_CODE, DECODE(L99.SERIAL_NO, NULL, L55.DELVRY_QTY, 1) AS DELVRY_QTY, L99.SERIAL_NO
+     FROM LOG0055D L55 ,
+          LOG0099D L99
+     WHERE L55.REQST_NO = L99.REQST_NO(+)
+     AND L55.REQST_NO_ITM = L99.REQST_NO_ITM(+)
+     AND L55.REQST_NO = #{smoNo}
+     AND L99.SCAN_STUS_CODE(+) = 'C' AND L99.IO_TYPE(+) ='O'
+     AND NVL(L55.DEL_FLAG , 'N') <![CDATA[<>]]> 'Y' ) L55
+
+  </if>
+ WHERE 1 =1
+   AND L48.ITM_CODE  = S26.STK_CODE(+)
+   <if test="searchStatus == 2 ">
+   AND L48.ITM_CODE = L55.ITM_CODE
+   AND L48.REQST_NO = L55.REQST_NO
+   </if>
+   AND L48.REQST_NO =#{smoNo}
+</select>
 </mapper>
