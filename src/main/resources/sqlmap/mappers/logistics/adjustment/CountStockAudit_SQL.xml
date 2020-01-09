@@ -545,7 +545,8 @@
     <select id="selectStockAuditProcCnt" parameterType="Map" resultType="int">
     /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectStockAuditProcCnt] 20191121 - KR OHK*/
     SELECT COUNT(1) PROC_CNT
-      FROM LOG0095M A
+      FROM LOG0094M T
+      INNER JOIN LOG0095M A ON A.STOCK_AUDIT_NO = T.STOCK_AUDIT_NO
 	  INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID
 	   LEFT OUTER JOIN SYS0028M C ON C.WH_LOC_ID = B.WH_LOC_ID
 	WHERE B.WH_LOC_ID = #{whLocId}
@@ -556,7 +557,7 @@
 			                              AND B.WH_LOC_ID = #{whLocId}
 	                       )
 	   AND A.LOC_STUS_CODE_ID IN (5685, 5686, 5687, 5688, 5690, 5712)
-	   AND A.USE_YN = 'Y'
+	   AND T.USE_YN = 'Y'
     </select>
 
     <select id="checkRejetCountStockAudit" parameterType="Map" resultType="String">
