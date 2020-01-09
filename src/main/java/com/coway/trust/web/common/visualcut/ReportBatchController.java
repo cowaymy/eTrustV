@@ -1684,6 +1684,23 @@ public class ReportBatchController {
     LOGGER.info("[END] CowayDailySalesStatusCody...");
   }
 
+  @RequestMapping(value = "/AutoDebitDuductionSummary.do")
+   //@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am)
+  public void AutoDebitDuductionSummary() {
+    LOGGER.info("[START] AutoDebitDuductionSummary...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/AutoDebitDeductionSummaryReport_PDF.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "AD Summary Report" + File.separator + "AutoDebitDeductionSummaryReport_" + CommonUtils.getNowDate() + ".pdf");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] AutoDebitDuductionSummary...");
+  }
+
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
