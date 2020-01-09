@@ -1322,5 +1322,37 @@ public class LogisticsApiController {
 	}
 	/* Woongjin Jun */
 
+	/* Woongjin Han */
+	@ApiOperation(value = "Stock Transfer - Request Status List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/StockTransferReqStatusListScan", method = RequestMethod.GET)
+	public ResponseEntity<List<StockTransferReqStatusMListDto>> getStockTransferReqStatusListScan(
+			@ModelAttribute StockTransferReqStatusListForm StockTransferReqStatusListForm) throws Exception {
 
+		Map<String, Object> params = StockTransferReqStatusListForm.createMap(StockTransferReqStatusListForm);
+
+		List<EgovMap> headerList = MlogApiService.getStockTransferReqStatusMList(params);
+
+		List<StockTransferReqStatusMListDto> hList = new ArrayList<>();
+		for (int i = 0; i < headerList.size(); i++) {
+			LOGGER.debug("Request Status headerList1111 값 : {}", headerList.get(i));
+		}
+
+		hList = headerList.stream().map(r -> StockTransferReqStatusMListDto.create(r)).collect(Collectors.toList());
+
+		for (int i = 0; i < headerList.size(); i++) {
+
+			//for (int j = 0; j < hList.size(); j++) {
+				Map<String, Object> tmpMap = headerList.get(i);
+				tmpMap.put("searchStatus", params.get("searchStatus"));
+				List<EgovMap> reqParts = MlogApiService.getStockTransferReqStatusDListScan(tmpMap);
+
+				List<StockTransferReqStatusDListDto> partsList = reqParts.stream()
+						.map(r -> StockTransferReqStatusDListDto.create(r)).collect(Collectors.toList());
+				hList.get(i).setPartsList(partsList);
+		//	}
+
+		}
+		return ResponseEntity.ok(hList);
+	}
+	/* Woongjin Han */
 }
