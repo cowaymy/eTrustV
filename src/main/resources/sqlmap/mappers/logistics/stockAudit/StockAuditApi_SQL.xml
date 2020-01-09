@@ -27,9 +27,9 @@ FROM    LOG0094M A                                                              
 WHERE   A.USE_YN = 'Y'                                                          --Use YN
 AND     A.DOC_STUS_CODE_ID <> 5678                                              --Doc Status ID : 5678(Save)
 AND     (
-            A.DOC_START_DT  BETWEEN #{docStartDt}   AND A.DOC_END_DT
+            A.DOC_START_DT  BETWEEN #{docStartDt}   AND #{docEndDt}
             OR
-            A.DOC_END_DT    BETWEEN A.DOC_START_DT  AND #{docEndDt}
+            A.DOC_END_DT    BETWEEN #{docStartDt}   AND #{docEndDt}
         )
 AND     B.WH_LOC_ID =   (
                                 SELECT  WH_LOC_ID
