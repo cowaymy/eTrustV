@@ -100,6 +100,7 @@
            <if test="branchTypeId != null and branchTypeId != ''">
                AND dsc.TYPE_ID = #{branchTypeId}
            </if>
+           WHERE vCallLogOrderCall.BNDL_ID IS NULL
             ) Extent1
      WHERE  1=1
 
