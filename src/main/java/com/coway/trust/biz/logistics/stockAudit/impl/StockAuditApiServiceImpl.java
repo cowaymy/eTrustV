@@ -224,6 +224,11 @@ public class StockAuditApiServiceImpl extends EgovAbstractServiceImpl implements
                     if(procCnt > 0 ) {
                         throw new ApplicationException(AppConstants.FAIL, "There is an item in progress for Stock Audit.");
                     }
+
+                    String newStocAuditNo = countStockAuditMapper.checkRejetCountStockAudit(log0095m);
+                    if( newStocAuditNo.equals(saveData.getStockAuditNo()) == false ) {
+                        throw new ApplicationException(AppConstants.FAIL, "A newer Audit exists for the same item. So, This Audit cannot proceed. [ New Stock Audit No : " + newStocAuditNo +  " ]");
+                    }
                 }
 
 
