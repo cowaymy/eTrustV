@@ -59,7 +59,6 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 
 	        if (isPrdRtnCnt == 0) {
 	        	try {
-	        		// SP_RETURN_BILLING_EARLY_TERMI COMMIT DELETE
 	        		EgovMap rtnValue = MSvcLogApiService.productReturnResult(cvMp);
 
 	        		if (null != rtnValue) {
@@ -67,8 +66,8 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	        			if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
 	        				rtnValue.put("logerr", "Y");
 	        			}
-	        			// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
-	        			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+
+	        			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
 	        		}
 	        	}
 	        	catch (Exception e) {
@@ -78,14 +77,6 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	    			String procMsg = "Failed to Save";
 	    			String errorMsg = "[API] " + e.toString();
 	    			throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-//	        		BizMsgVO bizMsgVO = new BizMsgVO();
-//					bizMsgVO.setProcTransactionId(transactionId);
-//					bizMsgVO.setProcKey(serviceNo);
-//					bizMsgVO.setProcName("ProductReturn");
-//					bizMsgVO.setProcMsg("Failed to Save");
-//					bizMsgVO.setErrorMsg("[API] " + e.toString());
-//					throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
 	        	}
 	        }
 	        else {
@@ -95,14 +86,6 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
     			String procMsg = "NoTarget Data";
     			String errorMsg = "[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT IN ACTIVE STATUS. ";
     			throw new BizException("04", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-//	        	BizMsgVO bizMsgVO = new BizMsgVO();
-//				bizMsgVO.setProcTransactionId(transactionId);
-//				bizMsgVO.setProcKey(serviceNo);
-//				bizMsgVO.setProcName("ProductReturn");
-//				bizMsgVO.setProcMsg("NoTarget Data");
-//				bizMsgVO.setErrorMsg("[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT IN ACTIVE STATUS. ");
-//				throw BizExceptionFactoryBean.getInstance().createBizException("04", bizMsgVO);
 	        }
 		}
 		else {
@@ -112,14 +95,6 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 			String procMsg = "NoTarget Data";
 			String errorMsg = "[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT IN ACTIVE STATUS. ";
 			throw new BizException("04", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-//			BizMsgVO bizMsgVO = new BizMsgVO();
-//			bizMsgVO.setProcTransactionId(transactionId);
-//			bizMsgVO.setProcKey(serviceNo);
-//			bizMsgVO.setProcName("ProductReturn");
-//			bizMsgVO.setProcMsg("NoTarget Data");
-//			bizMsgVO.setErrorMsg("[API] [" + cvMp.get("userId") + "] IT IS NOT ASSIGNED CT CODE. ");
-//			throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
 		}
 
 		logger.debug("### PRODUCT RETURN FINAL PARAM : " + cvMp.toString());
@@ -158,7 +133,6 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	        		EgovMap ordIdMap = MSvcLogApiService.getOrdID(cvMp);
 	        		String userId = MSvcLogApiService.getUseridToMemid(params); // SELECT MEM_ID FROM ORG0001D WHERE mem_code = #{userId}
 
-	        		// SP_RETURN_BILLING_EARLY_TERMI COMMIT DELETE
 	        		EgovMap rtnValue = MSvcLogApiService.productReturnResult(cvMp);
 
 	        		if (null != rtnValue) {
