@@ -117,8 +117,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         				if (locInfo != null) {
         					if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
         						// FAIL CT NOT ENOUGH STOCK
-        						// Insert Log Adapter. So Delete Log
-//        						MSvcLogApiService.updateASErrStatus(transactionId);
+        						MSvcLogApiService.updateASErrStatus(transactionId);
 
         						Map<String, Object> m = new HashMap();
         						m.put("APP_TYPE", "AS");
@@ -135,14 +134,11 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         						String procMsg = "PRODUCT STOCK UNAVAILABLE";
         						String errorMsg = "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString();
         						throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-        						//return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
         					}
         				}
         				else {
         					// FAIL CT NOT ENOUGH STOCK
-        					// Insert Log Adapter. So Delete Log
-//        					MSvcLogApiService.updateASErrStatus(transactionId);
+        					MSvcLogApiService.updateASErrStatus(transactionId);
 
         					Map<String, Object> m = new HashMap();
         					m.put("APP_TYPE", "AS");
@@ -159,8 +155,6 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
     						String procMsg = "PRODUCT STOCK UNAVAILABLE";
     						String errorMsg = "[API] [" + insApiresult.get("userId") + "] STOCK FOR [" + paramsDetail.get(x).get("filterCode").toString() + "] IS UNAVAILABLE. ";
     						throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-        					//return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
         				}
         			}
 
@@ -505,6 +499,8 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
         		params.put("SGN_DT", insApiresult.get("signData")); // asTransLogs
 
+        		params.put("SERIAL_REQUIRE_CHK_YN", "Y");
+
         		logger.debug("### AS PARAM [AFTER]: ", params);
 
         		Map<String, Object> asResultInsert = new HashMap();
@@ -523,14 +519,12 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         					rtnValue.put("logerr", "Y");
         				}
 
-        				// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
-        				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+        				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
         			}
 
-        			// Insert Log Adapter. So Delete Log
-//        			if (RegistrationConstants.IS_INSERT_AS_LOG) {
-//        				MSvcLogApiService.updateSuccessASStatus(transactionId);
-//        			}
+        			if (RegistrationConstants.IS_INSERT_AS_LOG) {
+        				MSvcLogApiService.updateSuccessASStatus(transactionId);
+        			}
         		}
         		catch (Exception e) {
         			String procTransactionId = transactionId;
@@ -539,23 +533,14 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         			String procMsg = "Failed to Save";
         			String errorMsg = "[API] " + e.toString();
         			throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-//        			BizMsgVO bizMsgVO = new BizMsgVO();
-//					bizMsgVO.setProcTransactionId(transactionId);
-//					bizMsgVO.setProcKey(serviceNo);
-//					bizMsgVO.setProcName("AfterService");
-//					bizMsgVO.setProcMsg("Failed to Save");
-//					bizMsgVO.setErrorMsg("[API] " + e.toString());
-//					throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
         		}
 
         		// RESULT UPDATE TO STATE Y IN PRESENCE
         	}
         	else {
-        		// Insert Log Adapter. So Delete Log
-//        		if (RegistrationConstants.IS_INSERT_AS_LOG) {
-//        			MSvcLogApiService.updateSuccessASStatus(transactionId);
-//        		}
+        		if (RegistrationConstants.IS_INSERT_AS_LOG) {
+        			MSvcLogApiService.updateSuccessASStatus(transactionId);
+        		}
         	}
         }
         else {
@@ -565,14 +550,6 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 			String procMsg = "NoTarget Data";
 			String errorMsg = "[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.";
 			throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-//        	BizMsgVO bizMsgVO = new BizMsgVO();
-//			bizMsgVO.setProcTransactionId(transactionId);
-//			bizMsgVO.setProcKey(serviceNo);
-//			bizMsgVO.setProcName("AfterService");
-//			bizMsgVO.setProcMsg("[SVC0001D] NoTarget Data");
-//			bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.");
-//			throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
         }
 
         logger.debug("==================================[MB]AFTER SERVICE RESULT - END - ====================================");
