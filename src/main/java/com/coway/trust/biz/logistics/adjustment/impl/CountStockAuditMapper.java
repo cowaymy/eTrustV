@@ -42,6 +42,8 @@ public interface CountStockAuditMapper {
 
 	int selectStockAuditProcCnt(Map<String, Object> params);
 
+	String checkRejetCountStockAudit(Map<String, Object> params);
+
 	int updateCountStockAuditLoc(Map<String, Object> params);
 
 	int updateCountStockAuditItem(Map<String, Object> params);

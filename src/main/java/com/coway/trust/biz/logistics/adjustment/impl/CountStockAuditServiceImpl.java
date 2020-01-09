@@ -90,6 +90,7 @@ public class CountStockAuditServiceImpl implements CountStockAuditService {
 	@Override
 	public void saveCountStockAuditNew(Map<String, Object> params) {
 		int procCnt = 0;
+		String newStocAuditNo = "";
 		Map<String, Object> gridData = (Map<String, Object>) params.get("gridData");
 		List<Object> itemGrid= (List<Object>)gridData.get(AppConstants.AUIGRID_ALL);
 
@@ -133,6 +134,12 @@ public class CountStockAuditServiceImpl implements CountStockAuditService {
 			LOGGER.debug("############# saveCountStockAuditNew Check progress procCnt  : " + procCnt);
 			if(procCnt > 0 ) {
     			throw new ApplicationException(AppConstants.FAIL, "There is an item in progress for Stock Audit.");
+    		}
+
+			newStocAuditNo = countStockAuditMapper.checkRejetCountStockAudit(params);
+			LOGGER.debug("############# saveCountStockAuditNew Check progress newStocAuditNo  : " + newStocAuditNo);
+			if(!newStocAuditNo.equals(params.get("stockAuditNo")) ) {
+    			throw new ApplicationException(AppConstants.FAIL, "A newer Audit exists for the same item.<br />So, This Audit cannot proceed.<br />[ New Stock Audit No : " + newStocAuditNo +  " ]");
     		}
 	    }
 
