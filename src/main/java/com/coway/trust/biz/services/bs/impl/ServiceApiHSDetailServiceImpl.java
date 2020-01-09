@@ -99,14 +99,6 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     							String procMsg = "[SAL0090D] UPDATE FAIL";
     							String errorMsg = "[API] [" + params.get("salesOrderNo") + "] [SAL0090D] UPDATE FAIL.";
     							throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-//    							BizMsgVO bizMsgVO = new BizMsgVO();
-//    							bizMsgVO.setProcTransactionId(transactionId);
-//    							bizMsgVO.setProcKey(serviceNo);
-//    							bizMsgVO.setProcName("HeartService");
-//    							bizMsgVO.setProcMsg("[SAL0090D] UPDATE FAIL");
-//    							bizMsgVO.setErrorMsg("[API] [" + params.get("salesOrderNo") + "] [SAL0090D] UPDATE FAIL.");
-//    							throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
     						}
     					}
     				}
@@ -144,6 +136,8 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     				params.put("sgnDt", insApiresult.get("signData"));
     				params.put("stage", "API");
 
+    				params.put("hidSerialRequireChkYn", "Y");
+
     				logger.debug("### HS PARAM : " + params.toString());
     				logger.debug("### HS PARAM FILTER : " + paramsDetailList.toString());
 
@@ -161,14 +155,12 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     						rtnValue.put("logerr", "Y");
     					}
 
-    					// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
-    					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+    					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
 
     					// HS LOG HISTORY
-    					// Insert Log Adapter. So Delete Log
-//    					if (RegistrationConstants.IS_INSERT_HEART_LOG) {
-//    						MSvcLogApiService.updateSuccessStatus(transactionId);
-//    					}
+    					if (RegistrationConstants.IS_INSERT_HEART_LOG) {
+    						MSvcLogApiService.updateSuccessStatus(transactionId);
+    					}
     				}
                 }
     			catch (Exception e) {
@@ -178,14 +170,6 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
 					String procMsg = "Failed to Save";
 					String errorMsg = "[API] " + e.toString();
 					throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-//    				BizMsgVO bizMsgVO = new BizMsgVO();
-//					bizMsgVO.setProcTransactionId(transactionId);
-//					bizMsgVO.setProcKey(serviceNo);
-//					bizMsgVO.setProcName("HeartService");
-//					bizMsgVO.setProcMsg("Failed to Save");
-//					bizMsgVO.setErrorMsg("[API] " + e.toString());
-//					throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
                 }
     		}
     		else {
@@ -199,14 +183,6 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
 			String procMsg = "NoTarget Data";
 			String errorMsg = "[API] [" + params.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.";
 			throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-//    		BizMsgVO bizMsgVO = new BizMsgVO();
-//			bizMsgVO.setProcTransactionId(transactionId);
-//			bizMsgVO.setProcKey(serviceNo);
-//			bizMsgVO.setProcName("HeartService");
-//			bizMsgVO.setProcMsg("[SVC0008D] NoTarget Data");
-//			bizMsgVO.setErrorMsg("[API] [" + params.get("userId") + "] IT IS NOT ASSIGNED CODY CODE.");
-//			throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
     	}
 
     	logger.debug("==================================[MB]HEART SERVICE RESULT - END - ====================================");
