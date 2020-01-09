@@ -272,7 +272,7 @@ public class HcOrderCancelController {
 	 * @return
 	 * @throws ParseException
 	 */
-	@RequestMapping(value = "/hcAddProductReturnSerial.do",method = RequestMethod.POST)
+	@RequestMapping(value = "/hcAddProductReturnSerial.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> hcAddProductReturnSerial(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws ParseException {
 		ReturnMessage rtnMap = hcOrderCancelService.hcAddProductReturnSerial(params, sessionVO);
 
@@ -308,7 +308,7 @@ public class HcOrderCancelController {
         EgovMap ctAssignmentInfo = orderCancelService.ctAssignmentInfo(params);
 
         model.put("orderDetail", orderDetail);
-        model.addAttribute("salesOrderNo", CommonUtils.nvl(params.get("salesOrderNo")));
+        model.addAttribute("salesOrderNo", CommonUtils.nvl(params.get("paramSalesOrdNo")));
         model.addAttribute("cancelReqInfo", cancelReqInfo);
         model.addAttribute("paramTypeId", paramTypeId);
         model.addAttribute("paramDocId", paramDocId);
@@ -318,6 +318,37 @@ public class HcOrderCancelController {
 
         // 호출될 화면
      	return "homecare/sales/order/orderCancelDTAssignmentPop";
+	}
+
+	/**
+	 * Call Popup - Order Cancel DT Search
+	 * @Author KR-SH
+	 * @Date 2020. 1. 8.
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/orderCancelDTSearchPop.do")
+	public String orderCancelDTSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("dtMemType", HomecareConstants.MEM_TYPE.DT);
+
+		return "homecare/sales/order/orderCancelDTSearchPop";
+	}
+
+	/**
+	 * Order Cancel - Save Assignment DT
+	 * @Author KR-SH
+	 * @Date 2020. 1. 8.
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/saveDTAssignment.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> saveDtAssignment(@RequestParam Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+		ReturnMessage rtnMap = hcOrderCancelService.saveDTAssignment(params, sessionVO);
+
+		return ResponseEntity.ok(rtnMap);
 	}
 
 }

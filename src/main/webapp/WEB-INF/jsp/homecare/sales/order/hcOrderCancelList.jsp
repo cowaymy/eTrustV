@@ -47,7 +47,7 @@
 
 	        rcdTms = AUIGrid.getCellValue(myGridID, event.rowIndex, "rcdTms");
 	        $("#rcdTms").val(rcdTms);
-	        gridValue = AUIGrid.getCellValue(myGridID, event.rowIndex, $("#detailForm").serializeJSON());
+	        //gridValue = AUIGrid.getCellValue(myGridID, event.rowIndex, $("#detailForm").serializeJSON());
 	    });
 	});
 
@@ -207,6 +207,9 @@
 
     // 리스트 조회.
     function fn_orderCancelListAjax() {
+    	// 그리드 초기화.
+    	AUIGrid.setGridData(myGridID, []);
+
         Common.ajax("GET", "/homecare/sales/order/hcOrderCancellationList", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
         });
@@ -262,13 +265,13 @@
         	var salesOrdId1 = detailForm.salesOrdId.value;
             var salesOrdNo1 = detailForm.paramSalesOrdNo.value;
 
-            Common.ajax("POST", "/sales/order/selRcdTms2.do", {orderId :   $("#salesOrdId").val(), callEntryId :  $("#callEntryId").val(), rcdTms : rcdTms}, function(result) {
+            Common.ajax("POST", "/sales/order/selRcdTms2.do", {orderId : $("#salesOrdId").val(), callEntryId :  $("#callEntryId").val(), rcdTms : rcdTms}, function(result) {
                 if (result.code == "99") {
                     Common.alert(result.message);
                     return;
                 } else {
                     Common.popupDiv("/homecare/sales/order/hcAddProductReturnPop.do?isPop=true&homecareYn=Y&salesOrderId=" + salesOrdId1 + "&salesOrderNO=" + salesOrdNo1,
-                    		$("#detailForm").serializeJSON(), null, "false", "addInstallationPopupId");
+                        $("#detailForm").serializeJSON(), null, "false", "addInstallationPopupId");
                 }
             });
         }else{
@@ -315,7 +318,7 @@
                 return false;
             }
 
-            Common.popupDiv("/sales/order/ctAssignmentInfoPop.do", $("#detailForm").serializeJSON(), null, true, '_CTDiv');
+            Common.popupDiv("/homecare/sales/order/orderCancelDTAssignmentPop.do", $("#detailForm").serializeJSON(), null, true, '_newCTDiv');
         }
     }
 
@@ -390,8 +393,7 @@
 			</c:if>
 			<c:if test="${PAGE_AUTH.funcView == 'Y'}">
 				<li><p class="btn_blue">
-						<a href="#" onclick="javascript:fn_orderCancelListAjax()"><span
-							class="search"></span> <spring:message code="sal.btn.search" /></a>
+						<a href="#" onclick="javascript:fn_orderCancelListAjax()"><span class="search"></span> <spring:message code="sal.btn.search" /></a>
 					</p></li>
 			</c:if>
 			<li><p class="btn_blue">

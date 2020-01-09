@@ -31,6 +31,15 @@ public interface HcOrderCancelService {
 	public List<EgovMap> hcOrderCancellationList(Map<String, Object> params);
 
 	/**
+	 * Homecare Order Cancellation 데이터조회
+	 * @Author KR-SH
+	 * @Date 2020. 1. 8.
+	 * @param params
+	 * @return
+	 */
+	public EgovMap hcOrderCancellationInfo(Map<String, Object> params);
+
+	/**
 	 * Homecare Order 취소
 	 * @Author KR-SH
 	 * @Date 2019. 10. 30.
@@ -49,5 +58,15 @@ public interface HcOrderCancelService {
 	 * @return
 	 */
 	public ReturnMessage hcAddProductReturnSerial(Map<String, Object> params, SessionVO sessionVO);
+
+	/**
+	 * Order Cancel - Save Assignment DT
+	 * @Author KR-SH
+	 * @Date 2020. 1. 8.
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 */
+	public ReturnMessage saveDTAssignment(Map<String, Object> params, SessionVO sessionVO);
 
 }

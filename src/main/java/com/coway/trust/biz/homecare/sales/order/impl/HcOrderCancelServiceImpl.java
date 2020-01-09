@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
@@ -48,6 +50,9 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
   	@Resource(name = "orderListService")
 	private OrderListService orderListService;
 
+  	@Autowired
+	private MessageSourceAccessor messageAccessor;
+
 	/**
 	 * Homecare Order Cancellation List 데이터조회
 	 * @Author KR-SH
@@ -60,6 +65,21 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 		return hcOrderCancelMapper.hcOrderCancellationList(params);
 	}
 
+	/**
+	 * Homecare Order Cancellation List 데이터조회
+	 * @Author KR-SH
+	 * @Date 2020. 1. 8.
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap hcOrderCancellationInfo(Map<String, Object> params) {
+		EgovMap rtnMap = new EgovMap();
+		List<EgovMap> rtnList = hcOrderCancelMapper.hcOrderCancellationList(params);
+		if(rtnList.size() > 0) rtnMap = rtnList.get(0);
+
+		return rtnMap;
+	}
 
 	/**
 	 * Homecare Order 취소
@@ -124,9 +144,9 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 		// select another order
 		EgovMap hcOrderInfo = hcOrderListService.selectHcOrderInfo(params);
 
-		int anoOrdId = CommonUtils.intNvl(hcOrderInfo.get("anoOrdId")); // Frame OrderId
 		// has Frame Order
-		if(anoOrdId > 0) {
+		if(hcOrderInfo != null) {
+			int anoOrdId = CommonUtils.intNvl(hcOrderInfo.get("anoOrdId")); // Frame OrderId
 			params.put("paramOrdId", anoOrdId);
 			params.put("appTypeId", SalesConstants.APP_TYPE_CODE_ID_AUX);
 
@@ -149,6 +169,47 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 		message.setMessage(CommonUtils.nvl(rtnMat.get("message")));
 
 		return message;
+	}
+
+
+	@Override
+	public ReturnMessage saveDTAssignment(Map<String, Object> params, SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		params.put("userId", sessionVO.getUserId());
+		params.put("ordNo", CommonUtils.nvl(params.get("stkRetnOrdNo")));
+
+		// Mattress Product - DT Assign
+	    orderCancelService.saveCtAssignment(params);
+
+	    // select another order
+	 	EgovMap hcOrderInfo = hcOrderListService.selectHcOrderInfo(params);
+
+	 	// has Frame Order
+	 	if(hcOrderInfo != null) {
+	 		params.put("ordNo", CommonUtils.nvl(hcOrderInfo.get("anoOrdNo")));
+	 		EgovMap hcOrderCanInfo = hcOrderCancellationInfo(params);
+
+	 		params.put("typeId", CommonUtils.nvl(hcOrderCanInfo.get("typeId")));
+			params.put("stusCodeId", CommonUtils.nvl(hcOrderCanInfo.get("rsoStusId")));
+			params.put("refId", CommonUtils.nvl(hcOrderCanInfo.get("refId")));
+
+	 		EgovMap ctAssignmentInfo = orderCancelService.ctAssignmentInfo(params);
+	 		if(ctAssignmentInfo == null) { // null ctAssignmentInfo
+				throw new ApplicationException(AppConstants.FAIL, "Null - DT AssignMent Info");
+			}
+
+	 		params.put("stkRetnId", CommonUtils.nvl(ctAssignmentInfo.get("stkRetnId")));
+	 		params.put("stkRetnCtFrom", CommonUtils.nvl(ctAssignmentInfo.get("memId")));
+	 		params.put("stkRetnCtGrpFrom", CommonUtils.nvl(ctAssignmentInfo.get("ctGrp")));
+
+	 		// Frame Product - DT Assign
+		    orderCancelService.saveCtAssignment(params);
+	 	}
+
+	    message.setCode(AppConstants.SUCCESS);
+	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+	    return message;
 	}
 
 }
