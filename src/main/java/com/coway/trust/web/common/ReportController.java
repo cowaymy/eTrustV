@@ -276,6 +276,8 @@ public class ReportController {
         break;
       case MAIL_CSV:
       case MAIL_PDF:
+    	  ReportUtils.sendMailMultiple(clientDoc, viewType, params);
+          break;
       case MAIL_EXCEL:
         ReportUtils.sendMail(clientDoc, viewType, params);
         break;
