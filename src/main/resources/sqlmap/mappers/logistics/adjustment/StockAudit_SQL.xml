@@ -328,13 +328,13 @@
            FROM (SELECT DISTINCT B.STOCK_AUDIT_NO
 			                   ,D.STK_ID ADJSTK_ID
 			                   ,D.STK_GRAD ADJSTK_GRAD
-			                   ,C.SYS_QTY ADJSYS_QTY
+			                   --,C.SYS_QTY ADJSYS_QTY
 			                   ,E.CODE_NAME ADJSTK_CTGRY_TYPE
 			                   ,F.CODE_NAME ADJSTK_TYPE
 			                   ,D.STK_CODE ADJSTK_CODE
 			                   ,D.STK_DESC ADJSTK_DESC
 			         FROM LOG0095M B
-			          JOIN LOG0096D C ON C.STOCK_AUDIT_NO = B.STOCK_AUDIT_NO
+			          JOIN LOG0096D C ON C.STOCK_AUDIT_NO = B.STOCK_AUDIT_NO AND C.WH_LOC_ID = B.WH_LOC_ID
 			          LEFT OUTER JOIN SYS0026M D ON D.STK_ID = C.ITM_ID
 			          LEFT OUTER JOIN SYS0013M E ON E.CODE_ID = D.STK_CTGRY_ID AND E.CODE_MASTER_ID = '11'
 			          LEFT OUTER JOIN SYS0013M F ON F.CODE_ID = D.STK_TYPE_ID AND F.CODE_MASTER_ID = '15'
