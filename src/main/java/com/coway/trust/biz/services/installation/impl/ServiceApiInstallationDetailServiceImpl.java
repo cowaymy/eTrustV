@@ -79,16 +79,6 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 				EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
 				params.put("installEntryId", installResult.get("installEntryId"));
 
-				// DETAIL INFO RESULT IS NO COLUMN
-				// java.lang.NullPointerException -> addrDtl, areaId
-//				try {
-//					params.put("hidInstallation_AddDtl", installResult.get("addrDtl"));
-//					params.put("hidInstallation_AreaID", installResult.get("areaId"));
-//				}
-//				catch (Exception e) {
-//					e.printStackTrace();
-//				}
-
 				// DETAIL INFO SELECT (installEntryId)
 				EgovMap orderInfo = installationResultListService.getOrderInfo(params);
 
@@ -109,8 +99,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
 					if (locInfo != null) {
 						if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
-							// Insert Log Adapter. So Delete Log
-//							MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+							MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
 
 							Map<String, Object> m = new HashMap();
 							m.put("APP_TYPE", "INS");
@@ -132,21 +121,10 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 							logger.debug("exception param : " + procMsg);
 							logger.debug("exception param : " + errorMsg);
 							throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-//							BizMsgVO bizMsgVO = new BizMsgVO();
-//							bizMsgVO.setProcTransactionId(transactionId);
-//							bizMsgVO.setProcKey(serviceNo);
-//							bizMsgVO.setProcName("Installation");
-//							bizMsgVO.setProcMsg("PRODUCT UNAVAILABLE");
-//							bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
-//							throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
-
-							//return ResponseEntity.ok(InstallationResultDto.create(transactionId));
 						}
 					}
 					else {
-						// Insert Log Adapter. So Delete Log
-//						MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+						MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
 
 						Map<String, Object> m = new HashMap();
 						m.put("APP_TYPE", "INS");
@@ -163,16 +141,6 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 						String procMsg = "PRODUCT LOC NO DATA";
 						String errorMsg = "PRODUCT LOC NO DATA";
 						throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-//						BizMsgVO bizMsgVO = new BizMsgVO();
-//						bizMsgVO.setProcTransactionId(transactionId);
-//						bizMsgVO.setProcKey(serviceNo);
-//						bizMsgVO.setProcName("Installation");
-//						bizMsgVO.setProcMsg("PRODUCT LOC NO DATA");
-//						bizMsgVO.setErrorMsg("PRODUCT LOC NO DATA");
-//						throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
-
-						//return ResponseEntity.ok(InstallationResultDto.create(transactionId));
 					}
 				}
 
@@ -213,6 +181,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 				params.put("remark", insApiresult.get("resultRemark"));
 				params.put("EXC_CT_ID", String.valueOf(userId));
 
+				params.put("hidSerialRequireChkYn", "Y");
+
 				logger.debug("### INSTALLATION PARAM : " + params.toString());
 
 				sessionVO1.setUserId(Integer.parseInt(userId));
@@ -225,15 +195,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 						if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
 							rtnValue.put("logerr", "Y");
 						}
-						else {
-							// Insert Log Adapter. So Delete Log
-//							if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//								MSvcLogApiService.updateSuccessInstallStatus(transactionId);
-//							}
-						}
 
-						// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
-						servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+						servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
 					}
 				} catch (Exception e) {
 					String procTransactionId = transactionId;
@@ -242,22 +205,13 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 					String procMsg = "Failed to Save";
 					String errorMsg = "[API] " + e.toString();
 					throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-//					BizMsgVO bizMsgVO = new BizMsgVO();
-//					bizMsgVO.setProcTransactionId(transactionId);
-//					bizMsgVO.setProcKey(serviceNo);
-//					bizMsgVO.setProcName("Installation");
-//					bizMsgVO.setProcMsg("Failed to Save");
-//					bizMsgVO.setErrorMsg("[API] " + e.toString());
-//					throw BizExceptionFactoryBean.getInstance().createBizException("02", bizMsgVO);
 				}
 			}
 			else {
 				// 대상이 없다면 정상 완료 처리
-				// Insert Log Adapter. So Delete Log
-//				if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//					MSvcLogApiService.updateSuccessInstallStatus(String.valueOf(params.get("transactionId")));
-//				}
+				if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+					MSvcLogApiService.updateSuccessInstallStatus(String.valueOf(params.get("transactionId")));
+				}
 			}
 		}
 		else {
@@ -267,14 +221,6 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 			String procMsg = "NoTarget Data";
 			String errorMsg = "[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CT CODE.";
 			throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-
-//			BizMsgVO bizMsgVO = new BizMsgVO();
-//			bizMsgVO.setProcTransactionId(transactionId);
-//			bizMsgVO.setProcKey(serviceNo);
-//			bizMsgVO.setProcName("Installation");
-//			bizMsgVO.setProcMsg("NoTarget Data");
-//			bizMsgVO.setErrorMsg("[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CT CODE. ");
-//			throw BizExceptionFactoryBean.getInstance().createBizException("01", bizMsgVO);
 		}
 
 		logger.debug("### INSTALLATION FINAL PARAM : " + params.toString());
@@ -365,6 +311,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 	         * "serialNo")));
 	         * params.put("remark",insTransLogs.get(i).get("resultRemark"));
 	         */
+
+	    	params.put("hidSerialRequireChkYn", "Y");
 
 	    	logger.debug("### INSTALLATION FAIL JOB REQUEST PARAM : " + params.toString());
 
@@ -517,6 +465,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 				params.put("hidSerialNo", String.valueOf(insApiresult.get("serialNo")));
 				params.put("remark", insApiresult.get("resultRemark"));
 				params.put("EXC_CT_ID", String.valueOf(userId));
+
+				params.put("hidSerialRequireChkYn", "Y");
 
 				logger.debug("### INSTALLATION PARAM : " + params.toString());
 

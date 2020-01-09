@@ -70,18 +70,17 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 			insTransLogs.addAll(insService.createMaps(insService));
 		}
 
-		// Insert Log Adapter. So Delete Log
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			for (int i = 0; i < insTransLogs.size(); i++) {
-//				// INSERT LOG HISTORY (SVC0025T)(REQUIRES_NEW)
-//				try {
-//					MSvcLogApiService.saveInstallServiceLogs(insTransLogs.get(i));
-//				}
-//				catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
+		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+			for (int i = 0; i < insTransLogs.size(); i++) {
+				// INSERT LOG HISTORY (SVC0025T)(REQUIRES_NEW)
+				try {
+					MSvcLogApiService.saveInstallServiceLogs(insTransLogs.get(i));
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 
 		totalCnt = insTransLogs.size();
 
@@ -102,8 +101,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 				logger.debug("### INSTALLATION bizException errorcode : " + bizException.getErrorCode());
 				logger.debug("### INSTALLATION bizException errormsg : " + bizException.getErrorMsg());
 				// UPDATE LOG HISTORY (SVC0025T)(REQUIRES_NEW)
-				// Insert Log Adapter. So Delete Log
-//				MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+				MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
 
 				Map<String, Object> m = new HashMap();
 				m.put("APP_TYPE", "INS");
@@ -121,8 +119,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 			}
 			catch (Exception exception) {
 				// UPDATE LOG HISTORY (SVC0025T)(REQUIRES_NEW)
-				// Insert Log Adapter. So Delete Log
-//				MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+				MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
 
 				Map<String, Object> m = new HashMap();
 				m.put("APP_TYPE", "INS");
@@ -215,32 +212,6 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 				resultForm.setTransactionId(newTransactionId);
 				resultForm.setSerialNo("");
 				resultForm.setScanSerial("");
-
-				/*
-				 requestList.push({
-					"userId":row.userId,
-					"salesOrderNo": row.salesOrderNo,---------------
-					"serviceNo":row.serviceNo,----------------------
-					"checkInDate" : row.checkInDate,
-					"checkInTime" : row.checkInTime,
-					"checkInGps" : row.checkInGps,
-					"sirimNo":(row.sirimNo).toUpperCase(),
-					"serialNo":(row.serialNo).toUpperCase(),
-					"asExchangeYN":row.asExchangeYN,-----------
-					"beforeProductSerialNo":row.beforeProductSerialNo,------
-					"resultRemark":row.resultRemark,
-					"ownerCode": Number(row.ownerCode),
-					"resultCustName":row.resultCustName,
-					"resultIcMobileNo":row.resultIcMobileNo,
-					"resultReportEmailNo":row.resultReportEmailNo,
-					"resultAcceptanceName":row.resultAcceptanceName,
-					"signData":row.signData,
-					"signRegDate":row.signRegDate,
-					"signRegTime":row.signRegTime,
-					"transactionId":row.transactionId,---------userId || '_' || salesOrderNo || '_' || serviceNo || '_' || strftime('%Y%m%d%H%M%S','now','localtime') as transactionId ";
-					"scanSerial":row.scanSerial
-				});
-				*/
 
 				installationList.add(resultForm);
 			}
