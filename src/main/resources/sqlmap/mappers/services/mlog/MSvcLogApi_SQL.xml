@@ -28,7 +28,7 @@
            A.dsc_Code,
            A.instruction,
            A.sirim_No,
-           A.serial_No,
+           fn_get_order_serial(A.sales_Order_Id, A.product_Code) AS serial_No,
            A.result_Cust_Name,
            A.result_Report_Email_No,
            A.result_Acceptance_Name,
