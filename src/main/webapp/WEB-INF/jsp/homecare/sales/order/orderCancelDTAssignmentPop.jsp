@@ -248,7 +248,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="sal.page.title.ctAssignMent" /></h1>
+<h1>DT AssignMent</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -505,7 +505,7 @@
 </table><!-- table end -->
 </form>
 <ul class="center_btns mt20">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveCT()"><spring:message code="sal.btn.saveCtAssignment" /></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveCT()">Save DT Assignment</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

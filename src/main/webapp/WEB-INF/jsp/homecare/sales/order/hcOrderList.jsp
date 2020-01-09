@@ -291,7 +291,7 @@
     function fn_orderModifyPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
-            Common.popupDiv("/homecare/sales/order/hcOrderModifyPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+            Common.popupDiv("/homecare/sales/order/hcOrderModifyPop.do", {salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId"), ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo")}, null , true);
         }
         else {
             Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');

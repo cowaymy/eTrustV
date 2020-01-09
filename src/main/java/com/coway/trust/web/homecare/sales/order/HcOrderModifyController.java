@@ -7,15 +7,23 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
+import com.coway.trust.biz.homecare.sales.order.HcOrderModifyService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.sales.order.OrderModifyService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.homecare.HomecareConstants;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -38,6 +46,25 @@ public class HcOrderModifyController {
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
 
+	@Resource(name = "hcOrderListService")
+	private HcOrderListService hcOrderListService;
+
+	@Resource(name = "hcOrderModifyService")
+	private HcOrderModifyService hcOrderModifyService;
+
+	@Resource(name = "orderModifyService")
+	private OrderModifyService orderModifyService;
+
+	/**
+	 * Call - Homecare Order Modify Popup
+	 * @Author KR-SH
+	 * @Date 2020. 1. 9.
+	 * @param params
+	 * @param model
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 */
   	@RequestMapping(value = "/hcOrderModifyPop.do")
   	public String hcOrderModifyPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
         String callCenterYn = "N";
@@ -45,6 +72,10 @@ public class HcOrderModifyController {
         if (CommonUtils.isNotEmpty(params.get(AppConstants.CALLCENTER_TOKEN_KEY))) {
           callCenterYn = "Y";
         }
+
+        // Search Only Mattress
+   		EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(params);
+   		params.put("salesOrderId", CommonUtils.nvl(hcOrder.get("srvOrdId")));  // set - Mattress Order Id
 
         // [Tap]Basic Info
         EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);  // APP_TYPE_ID
@@ -69,8 +100,51 @@ public class HcOrderModifyController {
         model.put("ordPvYear", basicInfo.get("ordPvYear"));
         model.put("typeId", basicInfo.get("typeId"));
         model.put("eKeyinYn", !CommonUtils.nvl(basicInfo.get("ekeyCrtUser")).equals("") ? "Y" : "N");
+        model.put("dtMemType", HomecareConstants.MEM_TYPE.DT);
+        model.put("modFraOrdNo", CommonUtils.nvl(hcOrder.get("fraOrdNo")));
+        model.put("modBndlId", CommonUtils.nvl(hcOrder.get("ordSeqNo")));
 
         return "homecare/sales/order/hcOrderModifyPop";
   	}
+
+  	/**
+  	 * Homecare Order Modify - Basic Info
+  	 * @Author KR-SH
+  	 * @Date 2020. 1. 9.
+  	 * @param params
+  	 * @param sessionVO
+  	 * @return
+  	 */
+    @RequestMapping(value = "/updateHcOrderBasinInfo.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> updateHcOrderBasinInfo(@RequestBody Map<String, Object> params, SessionVO sessionVO) {
+    	String rtnMsg = "Order Number : " + CommonUtils.nvl(params.get("salesOrdNo"));
+    	orderModifyService.updateOrderBasinInfo(params, sessionVO);
+
+    	if(!"".equals(CommonUtils.nvl(params.get("modBndlId")))) {
+    		rtnMsg += ", " + CommonUtils.nvl(params.get("modFraOrdNo"));
+    	}
+
+    	// 결과 만들기
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setMessage(rtnMsg + "</br>Information successfully updated.");
+
+    	return ResponseEntity.ok(message);
+    }
+
+  	/**
+  	 * Homecare Order Modify - Install Info
+  	 * @Author KR-SH
+  	 * @Date 2020. 1. 9.
+  	 * @param params
+  	 * @return
+  	 * @throws Exception
+  	 */
+	@RequestMapping(value = "/updateHcInstallInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateHcInstallInfo(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+		ReturnMessage rtnMsg = hcOrderModifyService.updateHcInstallInfo(params, sessionVO);
+
+		return ResponseEntity.ok(rtnMsg);
+    }
 
 }

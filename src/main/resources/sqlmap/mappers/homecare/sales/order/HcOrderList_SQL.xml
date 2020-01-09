@@ -225,6 +225,7 @@
                  , A.ANO_ORD_NO
                  , A.SRV_ORD_ID
                  , A.PRODUCT_CODE
+                 , A.BNDL_NO
                  , (SELECT SAL1.SALES_ORD_ID FROM SAL0001D SAL1 WHERE SAL1.SALES_ORD_NO = A.ANO_ORD_NO) AS ANO_ORD_ID
                  , (SELECT SYS2.CODE FROM SYS0026M SYS1, SYS0013M SYS2
                    WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID AND SYS1.STK_ID = A.PRODUCT_CODE) AS ORD_CTGRY_CD
@@ -249,6 +250,7 @@
 	                      </otherwise>
 		                </choose>
 		                 , H1.SRV_ORD_ID
+		                 , H1.BNDL_NO
 
 		         FROM HMC0011D H1
 		                 , SAL0001D S1

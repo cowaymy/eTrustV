@@ -495,6 +495,14 @@
                SOF_NO = #{ordRefNo}
              , UPD_USER_ID           = #{updUserId}
              , UPD_DT                   = SYSDATE
-         WHERE SALES_ORD_ID        = #{salesOrdId}
+         WHERE 1 = 1
+        <choose>
+            <when test='modBndlId != null and modBndlId !=0 and modBndlId != ""'>
+                AND BNDL_ID = #{modBndlId}
+            </when>
+            <otherwise>
+                AND SALES_ORD_ID = #{salesOrdId}
+            </otherwise>
+        </choose>
     </update>
 </mapper>

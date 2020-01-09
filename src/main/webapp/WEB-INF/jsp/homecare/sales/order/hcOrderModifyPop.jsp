@@ -1,93 +1,89 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript" language="javascript">
-  var ORD_ID = "${salesOrderId}";
-  var ORD_NO = "${salesOrderNo}";
-  var ORD_STUS_ID = "${ordStusId}";
-  var CUST_ID = "${custId}";
-  var APP_TYPE_ID = "${appTypeId}";
-  var APP_TYPE_DESC = "${appTypeDesc}";
-  var TAB_NM = "${ordEditType}";
-  var CUST_NRIC = "${custNric}";
-  var PROMO_CODE = "${promoCode}";
-  var PROMO_DESC = "${promoDesc}";
-  var SRV_PAC_ID = "${srvPacId}";
-  var GST_CHK = "${orderDetail.basicInfo.gstChk}";
-  var ADDR_ID = "${orderDetail.basicInfo.ordAddrId}";
-  var ROLE_ID = "${SESSION_INFO.roleId}";
-  var PV_MONTH = "${ordPvMonth}";
-  var PV_YEAR = "${ordPvYear}";
-  var CUST_TYPE_ID = "${typeId}";
+    var ORD_ID = "${salesOrderId}";
+    var ORD_NO = "${salesOrderNo}";
+	var ORD_STUS_ID = "${ordStusId}";
+	var CUST_ID = "${custId}";
+	var APP_TYPE_ID = "${appTypeId}";
+	var APP_TYPE_DESC = "${appTypeDesc}";
+	var TAB_NM = "${ordEditType}";
+	var CUST_NRIC = "${custNric}";
+	var PROMO_CODE = "${promoCode}";
+	var PROMO_DESC = "${promoDesc}";
+	var SRV_PAC_ID = "${srvPacId}";
+	var GST_CHK = "${orderDetail.basicInfo.gstChk}";
+	var ADDR_ID = "${orderDetail.basicInfo.ordAddrId}";
+	var ROLE_ID = "${SESSION_INFO.roleId}";
+	var PV_MONTH = "${ordPvMonth}";
+	var PV_YEAR = "${ordPvYear}";
+    var CUST_TYPE_ID = "${typeId}";
 
-  var keyValueList = [];
+    var keyValueList = [];
+    var modDocGridID;
+    var modRfrGridID;
 
-  var option = {
-    winName : "popup",
-    width : "1200px", //창 가로 크기
-    height : "400px", //창 세로 크기
-    resizable : "yes", //창 사이즈 변경. (yes/no)(default : yes)
-    scrollbars : "no" //스크롤바. (yes/no)(default : yes)
-  };
+    var option = {
+        winName : "popup",
+        width : "1200px", //창 가로 크기
+        height : "400px", //창 세로 크기
+        resizable : "yes", //창 사이즈 변경. (yes/no)(default : yes)
+        scrollbars : "no" //스크롤바. (yes/no)(default : yes)
+    };
 
-  var modDocGridID;
-  var modRfrGridID;
+    $(document).ready(function() {
+        if ("${memType}" == "2") {
+            TAB_NM = 'CNT';
+            $("#ordEditType").prop("disabled", true);
+        }
 
-  $(document).ready(
-    function() {
-      if ("${memType}" == "2") {
-        TAB_NM = 'CNT';
-        $("#ordEditType").prop("disabled", true);
-      }
+        doGetComboData('/common/selectCodeList.do', { groupCode : '335' }, TAB_NM, 'ordEditType', 'S'); //Order Edit Type
+        doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ', '', 'modKeyInBranch', 'S'); //Branch Code
+        doGetComboSepa('/common/selectBranchCodeList.do', '${dtMemType}', ' - ', '', 'dscBrnchId', 'S'); //Branch Code
+        doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', 'eurcRliefAppTypeId', 'S', ''); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '145', 'CODE_ID', '', 'eurcRliefTypeId', 'S', ''); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
+        doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'modCorpCustType',     'S', ''); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'modAgreementType',     'S', ''); //Common Code
 
-      doGetComboData('/common/selectCodeList.do', { groupCode : '335' }, TAB_NM, 'ordEditType', 'S'); //Order Edit Type
-      doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ', '', 'modKeyInBranch', 'S'); //Branch Code
-      doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'dscBrnchId', 'S'); //Branch Code
-      doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
-      doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', 'eurcRliefAppTypeId', 'S', ''); //Common Code
-      doGetComboOrder('/common/selectCodeList.do', '145', 'CODE_ID', '', 'eurcRliefTypeId', 'S', ''); //Common Code
-      doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
-      doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'modCorpCustType',     'S', ''); //Common Code
-      doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'modAgreementType',     'S', ''); //Common Code
+        fn_statusCodeSearch();
 
-      fn_statusCodeSearch();
+        if (FormUtil.isNotEmpty(TAB_NM)) {
+            <c:if test="${callCenterYn != 'Y'}">
+                if(!fn_checkAccessModify(TAB_NM)) return false;
+            </c:if>
+            fn_changeTab(TAB_NM);
+        }
 
-      if (FormUtil.isNotEmpty(TAB_NM)) {
-        <c:if test="${callCenterYn != 'Y'}">
-          if(!fn_checkAccessModify(TAB_NM))
-            return false;
-        </c:if>
-        fn_changeTab(TAB_NM);
-      }
+        createModAUIGrid1();
+        createModAUIGrid2();
 
-      createModAUIGrid1();
-      createModAUIGrid2();
-
-      AUIGrid.bind(modDocGridID, "cellClick",
-        function(event) {
-          if (event.dataField == 'chkfield') {
-           fn_setDocSubQty(event.rowIndex, AUIGrid.getCellValue(modDocGridID, event.rowIndex, "chkfield"));
-          }
+        AUIGrid.bind(modDocGridID, "cellClick", function(event) {
+            if (event.dataField == 'chkfield') {
+                fn_setDocSubQty(event.rowIndex, AUIGrid.getCellValue(modDocGridID, event.rowIndex, "chkfield"));
+            }
         });
 
-      //Attach File
-      $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a id='btnDownGstCert' href='#' class='blind'>Download GST Cert</a></span>");
-  });
-
-  function fn_statusCodeSearch() {
-    Common.ajax("GET", "/sales/order/selectStateCodeList.do", $("#searchForm").serialize(), function(result) {
-      keyValueList = result;
-    }, null, {
-      async : false
+        //Attach File
+        $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a id='btnDownGstCert' href='#' class='blind'>Download GST Cert</a></span>");
     });
-  }
 
-  function fn_setDocSubQty(idx, chkYN) {//AUIGrid.getCellValue(modDocGridID , event.rowIndex, "chkfield"), event.rowIndex
-    if (chkYN == '1') {
-      AUIGrid.setCellValue(modDocGridID, idx, "docCopyQty", '1');
-    } else {
-      AUIGrid.setCellValue(modDocGridID, idx, "docCopyQty", '');
+    function fn_statusCodeSearch() {
+        Common.ajax("GET", "/sales/order/selectStateCodeList.do", $("#searchForm").serialize(), function(result) {
+            keyValueList = result;
+        }, null, {
+        	async : false
+        });
     }
-  }
+
+    function fn_setDocSubQty(idx, chkYN) {//AUIGrid.getCellValue(modDocGridID , event.rowIndex, "chkfield"), event.rowIndex
+        if (chkYN == '1') {
+            AUIGrid.setCellValue(modDocGridID, idx, "docCopyQty", '1');
+        } else {
+            AUIGrid.setCellValue(modDocGridID, idx, "docCopyQty", '');
+        }
+    }
 
   function fn_addRowReferral() {
     var item = new Object(); //{ "salesOrdNo" : "새 이름", "country" : "새 나라", "price" : 0 };
@@ -103,149 +99,101 @@
     AUIGrid.addRow(modRfrGridID, item, "first");
   }
 
-  function createModAUIGrid1() {
-    console.log('createModAUIGrid1() START');
+    function createModAUIGrid1() {
+        //AUIGrid 칼럼 설정
+        var docColumnLayout = [
+            {headerText : ' ',          dataField : "chkfield",          width : 70,
+                renderer : {
+                    type : "CheckBoxEditRenderer",
+                    showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                    editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                    checkValue : 1, // true, false 인 경우가 기본
+                    unCheckValue : 0
+                }
+            },
+		    {headerText : '<spring:message code="sal.title.text.document" />',       dataField : "typeDesc",              editable : false},
+		    {headerText : '<spring:message code="sal.title.qty" />',                      dataField : "docCopyQty",          editable : true,          width : 120},
+		    {headerText : "docTypeId",          dataField : "docTypeId",                  visible : false},
+		    {headerText : "docSoId",             dataField : "docSoId",                      visible : false}
+		];
 
-    //AUIGrid 칼럼 설정
-    var docColumnLayout = [ {
-      headerText : ' ',
-      dataField : "chkfield",
-      width : 70,
-      renderer : {
-        type : "CheckBoxEditRenderer",
-        showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-        editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-        checkValue : 1, // true, false 인 경우가 기본
-        unCheckValue : 0
-      }
-    }, {
-      headerText : '<spring:message code="sal.title.text.document" />',
-      dataField : "typeDesc",
-      editable : false
-    }, {
-      headerText : '<spring:message code="sal.title.qty" />',
-      dataField : "docCopyQty",
-      editable : true,
-      width : 120
-    }, {
-      headerText : "docTypeId",
-      dataField : "docTypeId",
-      visible : false
-    }, {
-      headerText : "docSoId",
-      dataField : "docSoId",
-      visible : false
-    } ];
+        //그리드 속성 설정
+        var docGridPros = {
+            usePaging : true, //페이징 사용
+            pageRowCount : 12, //한 화면에 출력되는 행 개수 20(기본값:20)
+			editable : true,
+			fixedColumnCount : 0,
+			showStateColumn : false,
+			showRowCheckColumn : false,
+			displayTreeOpen : false,
+			rowIdField : "codeId",
+			//selectionMode       : "singleRow",  //"multipleCells",
+			headerHeight : 30,
+			useGroupingPanel : false, //그룹핑 패널 사용
+			skipReadonlyColumns : true, //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+			wrapSelectionMove : true, //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+			showRowNumColumn : true, //줄번호 칼럼 렌더러 출력
+			noDataMessage : "No order found.",
+			groupingMessage : "Here groupping"
+        };
 
-    //그리드 속성 설정
-    var docGridPros = {
-      usePaging : true, //페이징 사용
-      pageRowCount : 12, //한 화면에 출력되는 행 개수 20(기본값:20)
-      editable : true,
-      fixedColumnCount : 0,
-      showStateColumn : false,
-      showRowCheckColumn : false,
-      displayTreeOpen : false,
-      rowIdField : "codeId",
-      //selectionMode       : "singleRow",  //"multipleCells",
-      headerHeight : 30,
-      useGroupingPanel : false, //그룹핑 패널 사용
-      skipReadonlyColumns : true, //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-      wrapSelectionMove : true, //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-      showRowNumColumn : true, //줄번호 칼럼 렌더러 출력
-      noDataMessage : "No order found.",
-      groupingMessage : "Here groupping"
-    };
+        modDocGridID = GridCommon.createAUIGrid("grid_mod_doc_wrap", docColumnLayout, "", docGridPros);
+    }
 
-    modDocGridID = GridCommon.createAUIGrid("grid_mod_doc_wrap", docColumnLayout, "", docGridPros);
-  }
+    function createModAUIGrid2() {
+        //AUIGrid 칼럼 설정
+        var rfrColumnLayout = [
+            {headerText : '<spring:message code="sal.text.ordNo" />',          dataField : "salesOrdNo",       editable : false,         width : 100},
+            {headerText : '<spring:message code="sal.text.name" />',           dataField : "refName",           editable : true,          width : 200},
+            {headerText : '<spring:message code="sal.text.state" />',            dataField : "refStateId",          editable : true,          width : 100,
+                labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+                    var retStr = value;
+                    for (var i = 0, len = keyValueList.length; i < len; i++) {
+                        if (keyValueList[i]["stateId"] == value) {
+                            retStr = keyValueList[i]["name"];
+                            break;
+                        }
+                    }
+                    return retStr;
+                },
+                editRenderer : {
+                    type : "DropDownListRenderer",
+                    list : keyValueList, //key-value Object 로 구성된 리스트
+                    keyField : "stateId", //key 에 해당되는 필드명
+                    valueField : "name" //value 에 해당되는 필드명
+				}
+            },
+            {headerText : '<spring:message code="sal.text.contactNo" />',          dataField : "refCntc",          editable : true,          width : 110,
+                editRenderer : {type : "InputEditRenderer", onlyNumeric : true}
+            },
+            {headerText : '<spring:message code="sal.text.remark" />',               dataField : "refRem",          editable : true},
+            {headerText : '<spring:message code="sal.text.created" />',              dataField : "crtDt",             editable : false,          width : 120},
+            {headerText : '<spring:message code="sal.text.creator" />',               dataField : "userName",      editable : false,          width : 100},
+            {headerText : "ordRefId",          dataField : "ordRefId",                      visible : false}
+        ];
 
-  function createModAUIGrid2() {
-    console.log('createModAUIGrid2() START');
+        //그리드 속성 설정
+        var rfrGridPros = {
+            usePaging : true, //페이징 사용
+            pageRowCount : 10, //한 화면에 출력되는 행 개수 20(기본값:20)
+			editable : true,
+			fixedColumnCount : 0,
+			showStateColumn : false,
+			showRowCheckColumn : false,
+			displayTreeOpen : false,
+			rowIdField : "codeId",
+			//selectionMode       : "singleRow",  //"multipleCells",
+			headerHeight : 30,
+			useGroupingPanel : false, //그룹핑 패널 사용
+			skipReadonlyColumns : true, //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+			wrapSelectionMove : true, //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+			showRowNumColumn : true, //줄번호 칼럼 렌더러 출력
+			noDataMessage : "No order found.",
+			groupingMessage : "Here groupping"
+        };
 
-    //AUIGrid 칼럼 설정
-    var rfrColumnLayout = [{ headerText : '<spring:message code="sal.text.ordNo" />',
-                             dataField : "salesOrdNo",
-                             editable : false,
-                             width : 100
-                           }, {
-                             headerText : '<spring:message code="sal.text.name" />',
-                             dataField : "refName",
-                             editable : true,
-                             width : 200
-                           }, {
-                             headerText : '<spring:message code="sal.text.state" />',
-                             dataField : "refStateId",
-                             editable : true,
-                             width : 100,
-                             labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-                               var retStr = value;
-                               for (var i = 0, len = keyValueList.length; i < len; i++) {
-                                 if (keyValueList[i]["stateId"] == value) {
-                                   retStr = keyValueList[i]["name"];
-                                   break;
-                                 }
-                               }
-                               return retStr;
-                             },
-                             editRenderer : {
-                               type : "DropDownListRenderer",
-                               list : keyValueList, //key-value Object 로 구성된 리스트
-                               keyField : "stateId", //key 에 해당되는 필드명
-                               valueField : "name" //value 에 해당되는 필드명
-                             }
-                           }, {
-                             headerText : '<spring:message code="sal.text.contactNo" />',
-                             dataField : "refCntc",
-                             editable : true,
-                             width : 110,
-                             editRenderer : {
-                               type : "InputEditRenderer",
-                               onlyNumeric : true
-                             }
-                           }, {
-                             headerText : '<spring:message code="sal.text.remark" />',
-                             dataField : "refRem",
-                             editable : true
-                           }, {
-                             headerText : '<spring:message code="sal.text.created" />',
-                             dataField : "crtDt",
-                             editable : false,
-                             width : 120
-                           }, {
-                             headerText : '<spring:message code="sal.text.creator" />',
-                             dataField : "userName",
-                             editable : false,
-                             width : 100
-                           }, {
-                             headerText : "ordRefId",
-                             dataField : "ordRefId",
-                             visible : false
-                           } ];
-
-    //그리드 속성 설정
-    var rfrGridPros = {
-      usePaging : true, //페이징 사용
-      pageRowCount : 10, //한 화면에 출력되는 행 개수 20(기본값:20)
-      editable : true,
-      fixedColumnCount : 0,
-      showStateColumn : false,
-      showRowCheckColumn : false,
-      displayTreeOpen : false,
-      rowIdField : "codeId",
-      //selectionMode       : "singleRow",  //"multipleCells",
-      headerHeight : 30,
-      useGroupingPanel : false, //그룹핑 패널 사용
-      skipReadonlyColumns : true, //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-      wrapSelectionMove : true, //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-      showRowNumColumn : true, //줄번호 칼럼 렌더러 출력
-      noDataMessage : "No order found.",
-      groupingMessage : "Here groupping"
-    };
-
-    modRfrGridID = GridCommon.createAUIGrid("grid_mod_rfr_wrap",
-        rfrColumnLayout, "", rfrGridPros);
-  }
+        modRfrGridID = GridCommon.createAUIGrid("grid_mod_rfr_wrap", rfrColumnLayout, "", rfrGridPros);
+    }
 
   // 리스트 조회.
   function fn_selectEditDocSubmList(ordId) {
@@ -266,82 +214,82 @@
     });
   }
 
-  $(function() {
-    $('#btnEditType').click(function() {
-      var tabNm = $('#ordEditType').val();
-      if("${SESSION_INFO.roleId}" == "256" && tabNm == 'PRM'){
-        Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
-      }
-      else{
-          fn_changeTab(tabNm);
-      }
-
-    });
-    $('#btnSaveBasicInfo').click(function() {
-      if (!fn_validBasicInfo())
-        return false;
-      fn_doSaveBasicInfo();
-    });
-    $('#btnSaveMailingAddress').click(function() {
-      if (!fn_validMailingAddress())
-        return false;
-      fn_doSaveMailingAddress();
-    });
-    $('#btnSaveMailingAddress2').click(function() {
-      if (!fn_validMailingAddress2())
-        return false;
-      fn_doSaveMailingAddress2();
-    });
-    $('#btnSaveCntcPerson').click(function() {
-      if (!fn_validCntcPerson())
-        return false;
-      fn_doSaveCntcPerson();
-    });
-    $('#btnSaveNric').click(function() {
-      if (fn_validNric())
-        fn_doSaveNric();
-    });
-    $('#btnSaveInstInfo').click(function() {
-      if (!fn_validInstallInfo())
-        return false;
-      fn_doSaveInstallInfo();
-    });
-    $('#btnSavePayChan').click(function() {
-      if (!fn_validPaymentChannel())
-        return false;
-
-      Common.ajax("GET", "/sales/order/getInstallDetail.do", { ordId : ORD_ID },
-        function(result) {
-          if (result.stusCodeId != "4" && result.modeId == "131") {
-            if ($('#rentPayMode').val() != '131') {
-              Common.alert('Change paymode is not allowed due to installation is not complete');
+    $(function() {
+        $('#btnEditType').click(function() {
+            var tabNm = $('#ordEditType').val();
+            if("${SESSION_INFO.roleId}" == "256" && tabNm == 'PRM') {
+                Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
             } else {
-              fn_doSavePaymentChannel();
+                fn_changeTab(tabNm);
             }
-          } else {
-            fn_doSavePaymentChannel();
-          }
         });
-    });
-    $('#btnSaveDocSub').click(function() {
-      if (!fn_validDocSubmission())
-        return false;
-      fn_doSaveDocSub();
-    });
-    $('#btnSalesmanPop').click(function() {
-      Common.popupDiv("/common/memberPop.do", {
-        callPrgm : "ORD_MODIFY_BSC_INF"
-      }, null, true);
-    });
-    $('#modSalesmanCd').change(function() {
-      fn_loadOrderSalesman(null, $('#modSalesmanCd').val());
-    });
-    $('#modSalesmanCd').keydown(function(event) {
-      if (event.which === 13) { //enter
-        fn_loadOrderSalesman(null, $('#modSalesmanCd').val());
-        return false;
-      }
-    });
+
+        // Save Basic Info
+        $('#btnSaveBasicInfo').click(function() {
+            if (!fn_validBasicInfo()) return false;
+            fn_doSaveBasicInfo();
+        });
+
+        $('#btnSaveMailingAddress').click(function() {
+            if (!fn_validMailingAddress()) return false;
+            fn_doSaveMailingAddress();
+        });
+
+        $('#btnSaveMailingAddress2').click(function() {
+            if (!fn_validMailingAddress2()) return false;
+            fn_doSaveMailingAddress2();
+        });
+
+        $('#btnSaveCntcPerson').click(function() {
+            if (!fn_validCntcPerson()) return false;
+            fn_doSaveCntcPerson();
+        });
+
+        $('#btnSaveNric').click(function() {
+            if (fn_validNric()) fn_doSaveNric();
+        });
+
+        // Save Install Info
+        $('#btnSaveInstInfo').click(function() {
+            if (!fn_validInstallInfo()) return false;
+            fn_doSaveInstallInfo();
+        });
+
+        $('#btnSavePayChan').click(function() {
+            if (!fn_validPaymentChannel()) return false;
+
+            Common.ajax("GET", "/sales/order/getInstallDetail.do", { ordId : ORD_ID }, function(result) {
+                if (result.stusCodeId != "4" && result.modeId == "131") {
+                    if ($('#rentPayMode').val() != '131') {
+                        Common.alert('Change paymode is not allowed due to installation is not complete');
+                    } else {
+                        fn_doSavePaymentChannel();
+                    }
+                } else {
+                    fn_doSavePaymentChannel();
+                }
+            });
+        });
+
+        $('#btnSaveDocSub').click(function() {
+            if (!fn_validDocSubmission()) return false;
+            fn_doSaveDocSub();
+        });
+
+        $('#btnSalesmanPop').click(function() {
+            Common.popupDiv("/common/memberPop.do", {callPrgm : "ORD_MODIFY_BSC_INF"}, null, true);
+        });
+
+        $('#modSalesmanCd').change(function() {
+            fn_loadOrderSalesman(null, $('#modSalesmanCd').val());
+        });
+
+        $('#modSalesmanCd').keydown(function(event) {
+            if (event.which === 13) { //enter
+                fn_loadOrderSalesman(null, $('#modSalesmanCd').val());
+                return false;
+            }
+        });
     $('#btnBillNewAddr').click(function() {
       Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {
         custId : CUST_ID,
@@ -1057,35 +1005,24 @@
             });
   }
 
-  function fn_changeTab(tabNm) {
+    function fn_changeTab(tabNm) {
+        if (tabNm == 'NRC' && isEditableNRIC() == false) {
+            return false;
+        }
 
-    if (tabNm == 'NRC' && isEditableNRIC() == false) {
-      return false;
-    }
+        if (tabNm == 'PAY' && APP_TYPE_ID != '66' && APP_TYPE_ID != '1412') {
+            var msg = '<spring:message code="sal.msg.rentOrdAllowEdit" arguments="'+ORD_NO+';'+APP_TYPE_DESC+'" argumentSeparator=";"/>';
 
-    if (tabNm == 'PAY' && APP_TYPE_ID != '66' && APP_TYPE_ID != '1412') {
-      /*
-       var msg = "[" + ORD_NO + "] is [" + APP_TYPE_DESC + "] order.<br/>"
-       + "Only rental order is allow to edit rental pay setting.";
-       */
-      var msg = '<spring:message code="sal.msg.rentOrdAllowEdit" arguments="'+ORD_NO+';'+APP_TYPE_DESC+'" argumentSeparator=";"/>';
+            Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+            return false;
+        }
 
-      Common
-          .alert('<spring:message code="sal.alert.msg.actionRestriction" />'
-              + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+        if (tabNm == 'DOC' && ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
+            var msg = '<spring:message code="sal.alert.msg.notInActCompStusSubmm" />';
 
-      return false;
-    }
-
-    if (tabNm == 'DOC' && ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
-      var msg = '<spring:message code="sal.alert.msg.notInActCompStusSubmm" />';
-
-      Common
-          .alert('<spring:message code="sal.alert.msg.actionRestriction" />'
-              + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
-
-      $('#btnSaveDocSub').addClass("blind");
-    }
+            Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+            $('#btnSaveDocSub').addClass("blind");
+        }
 
     if (tabNm == 'PRM') {
       /*
@@ -2366,37 +2303,20 @@
     return isValid;
   }
 
-  function fn_doSaveBasicInfo() {
-    console.log('!@# fn_doSaveBasicInfo START');
+    function fn_doSaveBasicInfo() {
+        $('#hiddenOrdEditType').val($('#ordEditType').val());
 
-    $('#hiddenOrdEditType').val($('#ordEditType').val());
-
-    Common
-        .ajax(
-            "POST",
-            "/sales/order/updateOrderBasinInfo.do",
-            $('#frmBasicInfo').serializeJSON(),
-            function(result) {
-
-              Common.alert(
-                  '<spring:message code="sal.alert.msg.updSummary" />'
-                      + DEFAULT_DELIMITER + "<b>"
-                      + result.message + "</b>",
-                  fn_reloadPage);
-
-            },
-            function(jqXHR, textStatus, errorThrown) {
-              try {
-                //                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                Common
-                    .alert('<spring:message code="sal.msg.dataPrepFail" />'
-                        + DEFAULT_DELIMITER
-                        + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
-              } catch (e) {
+        Common.ajax("POST", "/homecare/sales/order/updateHcOrderBasinInfo.do", $('#frmBasicInfo').serializeJSON(), function(result) {
+            Common.alert('<spring:message code="sal.alert.msg.updSummary" />' + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_reloadPage);
+        },
+        function(jqXHR, textStatus, errorThrown) {
+            try {
+                Common.alert('<spring:message code="sal.msg.dataPrepFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
+            } catch (e) {
                 console.log(e);
-              }
-            });
-  }
+            }
+        });
+    }
 
   function fn_doSaveMailingAddress() {
     console.log('!@# fn_doSaveMailingAddress START');
@@ -2517,35 +2437,18 @@
             });
   }
 
-  function fn_doSaveInstallInfo() {
-    console.log('!@# fn_doSaveInstallInfo START');
+    function fn_doSaveInstallInfo() {
+        Common.ajax("POST", "/homecare/sales/order/updateHcInstallInfo.do", $('#frmInstInfo').serializeJSON(), function(result) {
+            Common.alert('<spring:message code="sal.alert.msg.updSummary" />' + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_reloadPage);
 
-    Common
-        .ajax(
-            "POST",
-            "/sales/order/updateInstallInfo.do",
-            $('#frmInstInfo').serializeJSON(),
-            function(result) {
-
-              Common.alert(
-                  '<spring:message code="sal.alert.msg.updSummary" />'
-                      + DEFAULT_DELIMITER + "<b>"
-                      + result.message + "</b>",
-                  fn_reloadPage);
-
-            },
-            function(jqXHR, textStatus, errorThrown) {
-              try {
-                //                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                Common
-                    .alert('<spring:message code="sal.msg.dataPrepFail" />'
-                        + DEFAULT_DELIMITER
-                        + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
-              } catch (e) {
+        }, function(jqXHR, textStatus, errorThrown) {
+            try {
+                Common.alert('<spring:message code="sal.msg.dataPrepFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
+            } catch (e) {
                 console.log(e);
-              }
-            });
-  }
+            }
+        });
+    }
 
   function fn_doSavePaymentChannel() {
     console.log('!@# fn_doSavePaymentChannel START');
@@ -2886,6 +2789,8 @@
         <input id="modGrpMemId" name="grpMemId" type="hidden" />
         <input id="modOrgMemId" name="orgMemId" type="hidden" />
         <input id="eKeyinYn" name="eKeyinYn" type="hidden" value="${eKeyinYn}" />
+        <input id="modBndlId" name="modBndlId" type="hidden" value="${modBndlId}" />
+        <input id="modFraOrdNo" name="modFraOrdNo" type="hidden" value="${modFraOrdNo}" />
         <table class="type1">
       <!-- table start -->
       <caption>table</caption>
@@ -3353,10 +3258,10 @@
      <input name="salesOrdId" type="hidden" value="${salesOrderId}" />
      <input name="salesOrdNo" type="hidden" value="${salesOrderNo}" />
      <!-- Install Address Info                                                    -->
-     <input id="modInstallId" name="installId" type="hidden" /> <input
-      id="modInstCustAddIdOld" name="custAddIdOld" type="hidden" /> <input
-      id="modInstCustAddId" name="custAddId" type="hidden" /> <input
-      id="modInstAreaId" name="areaId" type="hidden" />
+     <input id="modInstallId" name="installId" type="hidden" />
+     <input id="modInstCustAddIdOld" name="custAddIdOld" type="hidden" />
+      <input id="modInstCustAddId" name="custAddId" type="hidden" />
+      <input id="modInstAreaId" name="areaId" type="hidden" />
      <!-- Install Contact Info                                                    -->
      <input id="modInstCustCntcId" name="custCntcId" type="hidden" />
      <!--input id="modInstCustCntcIdOld" name="custGender" type="hidden" /-->
@@ -3507,8 +3412,7 @@
         <td>
          <div class="time_picker w100p">
           <!-- time_picker start -->
-          <input id="modPreferInstTm" name="preTm" type="text" title=""
-           placeholder="" class="time_date w100p" readonly />
+          <input id="modPreferInstTm" name="preTm" type="text" title="" placeholder="" class="time_date w100p" readonly />
           <ul>
            <li>Time Picker</li>
            <li><a href="#">12:00 AM</a></li>
@@ -3553,8 +3457,7 @@
    <!-- search_table end -->
    <ul class="center_btns">
     <li><p class="btn_blue2">
-      <a id="btnSaveInstInfo" href="#"><spring:message
-        code="sal.btn.save" /></a>
+      <a id="btnSaveInstInfo" href="#"><spring:message code="sal.btn.save" /></a>
      </p></li>
    </ul>
   </section>

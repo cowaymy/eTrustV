@@ -7,7 +7,9 @@
            SET REF_NO           = #{ordRefNo}
              , MEM_ID           = #{salesmanId}
              , BRNCH_ID         = #{keyInBranch}
-             , APP_TYPE_ID      = #{appTypeId}
+             <if test='modBndlId == null or modBndlId == 0 or modBndlId == ""'>
+                , APP_TYPE_ID      = #{appTypeId}
+             </if>
              , REM              = #{ordRem}
              , UPD_DT           = SYSDATE
              , UPD_USER_ID      = #{updUserId}
@@ -21,7 +23,15 @@
              , SALES_GM_ID      = #{orgMemId}
              , CORP_CUST_TYPE = #{corpCustType}
              , AGREEMENT_TYPE = #{agreementType}
-         WHERE SALES_ORD_ID     = #{salesOrdId}
+        WHERE 1 = 1
+        <choose>
+            <when test='modBndlId != null and modBndlId !=0 and modBndlId != ""'>
+                AND BNDL_ID = #{modBndlId}
+            </when>
+            <otherwise>
+                AND SALES_ORD_ID = #{salesOrdId}
+            </otherwise>
+        </choose>
     </update>
 
     <select id="selectBillGroupByBillGroupID" parameterType="Map" resultType="egovMap">
