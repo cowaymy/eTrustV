@@ -1169,7 +1169,7 @@
                     return false;
                 } else {
 	                var otherQty = Number(diffQty) +  Number(dedQty);
-	                AUIGrid.setCellValue(itemApprGrid, event.rowIndex, "otherQty", otherQty);          // Other GI/GR Qty
+	                AUIGrid.setCellValue(itemApprGrid, event.rowIndex, "otherQty", Math.abs(otherQty));          // Other GI/GR Qty
 
 
 		            if(dedQty == 0) {
