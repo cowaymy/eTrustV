@@ -1,5 +1,6 @@
 package com.coway.trust.biz.homecare.sales.order.impl;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -72,88 +73,103 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		String fraOrdNo = "";       // Frame Order No.
 		int matOrdId = 0;
 		int rtnCnt = 0;
-		int custId = CommonUtils.intNvl(orderVO.getSalesOrderMVO1().getCustId());     // Cust Id
+		SalesOrderMVO salesOrderMVO1 = orderVO.getSalesOrderMVO1();
+		SalesOrderMVO salesOrderMVO2 = null;
+
+		int custId = CommonUtils.intNvl(salesOrderMVO1.getCustId());     // Cust Id
+		int matStkId = CommonUtils.intNvl(orderVO.getSalesOrderDVO1().getItmStkId());
+		int fraStkId = CommonUtils.intNvl(orderVO.getSalesOrderDVO2().getItmStkId());
 		String ordChgYn = CommonUtils.nvl(orderVO.getCopyOrderChgYn());
 
 		if(custId <= 0) {
 			throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Null Customer ID");
 		}
+		// 제품이 둘다 없는 경우.
+		if(matStkId+fraStkId <= 0) {
+			throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Null Product ID");
+		}
 
-		try {
-			int matStkId = CommonUtils.intNvl(orderVO.getSalesOrderDVO1().getItmStkId());
-			int fraStkId = CommonUtils.intNvl(orderVO.getSalesOrderDVO2().getItmStkId());
+		// has order frame
+		if(matStkId > 0 && fraStkId > 0) {
+			salesOrderMVO2 = orderVO.getSalesOrderMVO2();
+			salesOrderMVO2.setAppTypeId(SalesConstants.APP_TYPE_CODE_ID_AUX);
+			BigDecimal discRntFee2 = salesOrderMVO2.getDiscRntFee();  // frame rental fee
 
-			// 제품이 둘다 없는 경우.
-			if(matStkId+fraStkId <= 0) {
-				throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Null Product ID");
+			// mattress order (mth_rent_amt, def_rent_amt) + frame order(disc_rnt_fee)
+			salesOrderMVO1.setMthRentAmt(salesOrderMVO1.getMthRentAmt().add(discRntFee2));
+			salesOrderMVO1.setDefRentAmt(salesOrderMVO1.getDefRentAmt().add(discRntFee2));
+
+			// frame order (mth_rent_amt, def_rent_amt) = 0
+			salesOrderMVO2.setMthRentAmt(BigDecimal.ZERO);
+			salesOrderMVO2.setDefRentAmt(BigDecimal.ZERO);
+		}
+
+		// Order Copy(Change) -> ordSeqNo = 0
+		int ordSeqNo = ("Y".equals(ordChgYn)) ? 0 : CommonUtils.intNvl(orderVO.getOrdSeqNo());
+		if(ordSeqNo <= 0) {
+			ordSeqNo = hcOrderRegisterMapper.getOrdSeqNo();
+		}
+
+		// set OrderVO
+		orderVO.setBndlId(ordSeqNo);
+
+		// Mattress register
+		if(matStkId > 0) {
+			// Mattress register - set OrderVO
+			orderVO.setSalesOrderMVO(salesOrderMVO1);
+			orderVO.setSalesOrderDVO(orderVO.getSalesOrderDVO1());
+			orderVO.setAccClaimAdtVO(orderVO.getAccClaimAdtVO1());
+			orderVO.setPreOrdId(orderVO.getMatPreOrdId());
+			orderVO.setMatAppTyId(orderVO.getSalesOrderMVO().getAppTypeId());
+
+			orderRegisterService.registerOrder(orderVO, sessionVO);
+			matOrdNo = orderVO.getSalesOrderMVO().getSalesOrdNo();
+			matOrdId =  CommonUtils.intNvl(orderVO.getSalesOrderMVO().getSalesOrdId());
+			if("".equals(matOrdNo)) { // not insert - Mattress order
+				throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Mattress");
 			}
+		}
 
-			// Order Copy(Change) -> ordSeqNo = 0
-			int ordSeqNo = ("Y".equals(ordChgYn)) ? 0 : CommonUtils.intNvl(orderVO.getOrdSeqNo());
-			if(ordSeqNo <= 0) {
-				ordSeqNo = hcOrderRegisterMapper.getOrdSeqNo();
+		// Frame register
+		if(fraStkId > 0) {
+			// Frame register - set OrderVO
+			orderVO.setSalesOrderMVO(salesOrderMVO2);
+			orderVO.setSalesOrderDVO(orderVO.getSalesOrderDVO2());
+			orderVO.setAccClaimAdtVO(orderVO.getAccClaimAdtVO2());
+			orderVO.setPreOrdId(orderVO.getFraPreOrdId());
+
+			orderRegisterService.registerOrder(orderVO, sessionVO);
+			fraOrdNo = orderVO.getSalesOrderMVO().getSalesOrdNo();
+			if("".equals(fraOrdNo)) { // not insert - frame order
+				throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Frame");
 			}
+		}
 
-			// Mattress register
-			if(matStkId > 0) {
-    			// Mattress register
-				orderVO.setSalesOrderMVO(orderVO.getSalesOrderMVO1());
-				orderVO.setSalesOrderDVO(orderVO.getSalesOrderDVO1());
-				orderVO.setAccClaimAdtVO(orderVO.getAccClaimAdtVO1());
-				orderVO.setPreOrdId(orderVO.getMatPreOrdId());
-				orderVO.setBndlId(ordSeqNo);
-				orderVO.setMatAppTyId(orderVO.getSalesOrderMVO().getAppTypeId());
+		// 홈케어 주문관리 테이블 insert - HMC0011D
+		HcOrderVO hcOrderVO = new HcOrderVO();
+		int cntHcOrder = hcOrderRegisterMapper.getCountHcPreOrder(ordSeqNo);
+		String bndlNo = hcOrderRegisterMapper.getBndlNo(ordSeqNo);
 
-    			orderRegisterService.registerOrder(orderVO, sessionVO);
-    			matOrdNo = orderVO.getSalesOrderMVO().getSalesOrdNo();
-    			matOrdId =  CommonUtils.intNvl(orderVO.getSalesOrderMVO().getSalesOrdId());
-			}
+		hcOrderVO.setCustId(custId);                     // 고객번호
+		hcOrderVO.setMatOrdNo(matOrdNo);        // Mattress Order No
+		hcOrderVO.setFraOrdNo(fraOrdNo);           // Frame Order No
+		hcOrderVO.setCrtUserId(sessionVO.getUserId());    // session Id Setting
+		hcOrderVO.setUpdUserId(sessionVO.getUserId());  // session Id Setting
+		hcOrderVO.setOrdSeqNo(ordSeqNo);
+		hcOrderVO.setBndlNo(bndlNo);
+		hcOrderVO.setSrvOrdId(matOrdId);
 
-			// Frame register
-			if(fraStkId > 0) {
-    			// Frame register
-				SalesOrderMVO salesOrderMVO2 = orderVO.getSalesOrderMVO2();
-				salesOrderMVO2.setAppTypeId(SalesConstants.APP_TYPE_CODE_ID_AUX);
+		// Pre Order 인 경우.
+		if(cntHcOrder > 0) {
+			rtnCnt = hcOrderRegisterMapper.updateHcPreOrder(hcOrderVO);
+		} else {
+			rtnCnt = hcOrderRegisterMapper.insertHcRegisterOrder(hcOrderVO);
+		}
 
-				orderVO.setSalesOrderMVO(salesOrderMVO2);
-				orderVO.setSalesOrderDVO(orderVO.getSalesOrderDVO2());
-				orderVO.setAccClaimAdtVO(orderVO.getAccClaimAdtVO2());
-				orderVO.setPreOrdId(orderVO.getFraPreOrdId());
-				orderVO.setBndlId(ordSeqNo);
-
-    			orderRegisterService.registerOrder(orderVO, sessionVO);
-    			fraOrdNo = orderVO.getSalesOrderMVO().getSalesOrdNo();
-			}
-
-			// 홈케어 주문관리 테이블 insert - HMC0011D
-			HcOrderVO hcOrderVO = new HcOrderVO();
-			int cntHcOrder = hcOrderRegisterMapper.getCountHcPreOrder(ordSeqNo);
-			String bndlNo = hcOrderRegisterMapper.getBndlNo(ordSeqNo);
-
-			hcOrderVO.setCustId(custId);                     // 고객번호
-			hcOrderVO.setMatOrdNo(matOrdNo);        // Mattress Order No
-			hcOrderVO.setFraOrdNo(fraOrdNo);           // Frame Order No
-			hcOrderVO.setCrtUserId(sessionVO.getUserId());    // session Id Setting
-			hcOrderVO.setUpdUserId(sessionVO.getUserId());  // session Id Setting
-			hcOrderVO.setOrdSeqNo(ordSeqNo);
-			hcOrderVO.setBndlNo(bndlNo);
-			hcOrderVO.setSrvOrdId(matOrdId);
-
-			// Pre Order 인 경우.
-			if(cntHcOrder > 0) {
-				rtnCnt = hcOrderRegisterMapper.updateHcPreOrder(hcOrderVO);
-			} else {
-				rtnCnt = hcOrderRegisterMapper.insertHcRegisterOrder(hcOrderVO);
-			}
-
-			if(rtnCnt <= 0) { // not insert
-				throw new ApplicationException(AppConstants.FAIL, "Order Register Failed.");
-			}
-			orderVO.setHcOrderVO(hcOrderVO);
-
-		} catch (Exception e) {
+		if(rtnCnt <= 0) { // not insert
 			throw new ApplicationException(AppConstants.FAIL, "Order Register Failed.");
 		}
+		orderVO.setHcOrderVO(hcOrderVO);
 	}
 
 	@Override

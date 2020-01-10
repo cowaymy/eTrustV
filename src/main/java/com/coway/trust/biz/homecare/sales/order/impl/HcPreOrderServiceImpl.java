@@ -1,5 +1,6 @@
 package com.coway.trust.biz.homecare.sales.order.impl;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
@@ -84,6 +85,15 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			// 제품이 둘다 없는 경우.
 			if(matStkId+fraStkId <= 0) {
 				throw new ApplicationException(AppConstants.FAIL, "Pre Order Register Failed. - Null Product ID");
+			}
+			// 제품이 둘다 있는 경우.
+			if(matStkId > 0 && fraStkId > 0) {
+				BigDecimal discRntFee2 = preOrderVO.getDiscRntFee2(); // frame rental fee
+
+				// mattress order (mth_rent_amt) + frame order(disc_rnt_fee)
+				preOrderVO.setMthRentAmt1(preOrderVO.getMthRentAmt1().add(discRntFee2));
+				// frame order (mth_rent_amt) = 0
+				preOrderVO.setMthRentAmt2(BigDecimal.ZERO);
 			}
 
 			int ordSeqNo = hcOrderRegisterMapper.getOrdSeqNo();
