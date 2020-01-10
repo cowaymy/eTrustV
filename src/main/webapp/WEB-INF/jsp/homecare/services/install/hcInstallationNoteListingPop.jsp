@@ -17,14 +17,16 @@ var branchDs = [];
 var myGridID;
   $(document).ready(
     function() {
-      //$('.multy_select').on("change", function() {
-      //}).multipleSelect({});
+      $('.multy_select').on("change", function() {
+      }).multipleSelect({});
 
       doGetCombo('/common/selectCodeList.do', '10', '', 'appliType', 'M', 'f_multiCombo');
       //doGetComboSepa('/common/selectBranchCodeList.do', '5', '-', '', 'branch', 'M', 'f_multiCombo1');
       doDefCombo(branchDs, '', 'branch', 'M', 'f_multiCombo1');   // Home Care Branch : 5743
 
-      doGetProductCombo('/common/selectProductCodeListM.do', '', '', 'productLst', 'M', 'f_multiCombo2'); //Product Code
+      //doGetProductCombo('/common/selectProductCodeListM.do', '', '', 'productLst', 'M', 'f_multiCombo2'); //Product Code
+      doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', 'productLst', 'S', 'fn_setOptGrpClass');//product 생성 - Only Homecare
+
       fn_noteListingGrid();
     }
   );
@@ -51,6 +53,10 @@ var myGridID;
       selectAll : true,
       width : '80%'
     });
+  }
+
+  function fn_setOptGrpClass() {
+      $("optgroup").attr("class" , "optgroup_text");
   }
 
   function fn_noteListingGrid() {
@@ -455,7 +461,8 @@ var myGridID;
         this.selectedIndex = -1;
         f_multiCombo();
         f_multiCombo1();
-        f_multiCombo2();
+        //f_multiCombo2();
+        //fn_setOptGrpClass();
       }
     });
   };
@@ -502,13 +509,13 @@ var myGridID;
      <tbody>
       <tr>
        <th scope="row"><spring:message code='service.title.Type' /></th>
-       <td><select class="multy_select w100p" multiple="multiple"
-        id="installType" name="installType">
-         <option value="257">New Installation</option>
-         <option value="258">Product Exchange</option>
-       </select></td>
-       <th scope="row"><spring:message
-         code='service.title.AppointmentDate' /></th>
+       <td>
+           <select class="multy_select" multiple="multiple" id="installType" name="installType">
+	         <option value="257">New Installation</option>
+	         <option value="258">Product Exchange</option>
+	       </select>
+       </td>
+       <th scope="row"><spring:message code='service.title.AppointmentDate' /></th>
        <td>
         <div class="date_set">
          <!-- date_set start -->
@@ -530,8 +537,7 @@ var myGridID;
       <tr>
        <th scope="row"><spring:message
          code='service.title.DSCBranch' /></th>
-       <td><select class="multy_select" multiple="multiple"
-        id="branch" name="branch">
+       <td><select class="multy_select" multiple="multiple" id="branch" name="branch">
        </select></td>
        <th scope="row"><spring:message code='service.title.DODate' /></th>
        <td>
@@ -626,18 +632,19 @@ var myGridID;
         <!-- date_set end -->
        </td>
        <th scope="row"><spring:message code='service.title.Status' /></th>
-       <td><select class="multy_select" multiple="multiple"
-        id="status" name="status">
-         <option value="1">Active</option>
-         <option value="4">Complete</option>
-         <option value="21">Fail</option>
-       </select></td>
+       <td>
+           <select class="multy_select" multiple="multiple" id="status" name="status">
+	         <option value="1">Active</option>
+	         <option value="4">Complete</option>
+	         <option value="21">Fail</option>
+	       </select>
+       </td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.title.Product' /></th>
-       <td colspan="3"><select class="multy_select"
-        multiple="multiple" id="productLst" name="productLst">
-       </select></td>
+       <td colspan="3">
+           <select id="productLst" name="productLst"></select>
+       </td>
       </tr>
      </tbody>
     </table>

@@ -169,7 +169,7 @@
       <tr>
        <th scope="row"><spring:message
          code='service.title.PVMonth_PVYear' /></th>
-       <td><input type="text" title="기준년월" class="j_date2"
+       <td><input type="text" title="" class="j_date2"
         id="pvMonth" name="pvMonth" /></td>
       </tr>
      </tbody>
