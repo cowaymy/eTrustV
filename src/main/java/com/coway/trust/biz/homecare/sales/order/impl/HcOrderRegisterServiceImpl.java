@@ -75,6 +75,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		int rtnCnt = 0;
 		SalesOrderMVO salesOrderMVO1 = orderVO.getSalesOrderMVO1();
 		SalesOrderMVO salesOrderMVO2 = null;
+		String hcSetOrdYn = "N";
 
 		int custId = CommonUtils.intNvl(salesOrderMVO1.getCustId());     // Cust Id
 		int matStkId = CommonUtils.intNvl(orderVO.getSalesOrderDVO1().getItmStkId());
@@ -91,6 +92,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
 		// has order frame
 		if(matStkId > 0 && fraStkId > 0) {
+			hcSetOrdYn = "Y";
 			salesOrderMVO2 = orderVO.getSalesOrderMVO2();
 			salesOrderMVO2.setAppTypeId(SalesConstants.APP_TYPE_CODE_ID_AUX);
 			BigDecimal discRntFee2 = salesOrderMVO2.getDiscRntFee();  // frame rental fee
@@ -112,6 +114,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
 		// set OrderVO
 		orderVO.setBndlId(ordSeqNo);
+		orderVO.setHcSetOrdYn(hcSetOrdYn);
 
 		// Mattress register
 		if(matStkId > 0) {

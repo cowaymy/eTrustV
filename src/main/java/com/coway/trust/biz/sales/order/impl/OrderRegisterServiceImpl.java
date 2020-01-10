@@ -1576,6 +1576,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       BigDecimal mthRentAmt = new BigDecimal((String) oMap.get("orderRentalFeesPromo"));
       BigDecimal totPv = new BigDecimal((String) oMap.get("orderPVPromo"));
 
+      if("Y".equals(CommonUtils.nvl(orderVO.getHcSetOrdYn()))) {   // homecare order (Mattress + Frame)
+    	  mthRentAmt = salesOrderMVO.getMthRentAmt();
+      }
+
       // [07/11/2018]ONGHC - REMOVE TO SOLVE PV ISSUE
       // if(CommonUtils.intNvl(salesOrderMVO.getGstChk()) == 1) {
       // totAmt = totAmt.multiply(new BigDecimal(1/1.06)).setScale(0,

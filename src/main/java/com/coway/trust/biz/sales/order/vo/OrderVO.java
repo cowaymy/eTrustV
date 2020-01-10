@@ -118,6 +118,8 @@ public class OrderVO implements Serializable {
 
 	private String copyOrderChgYn;
 
+	private String hcSetOrdYn;
+
 	public SalesOrderMVO getSalesOrderMVO() {
 		return salesOrderMVO;
 	}
@@ -536,6 +538,14 @@ public class OrderVO implements Serializable {
 
 	public void setCopyOrderChgYn(String copyOrderChgYn) {
 		this.copyOrderChgYn = copyOrderChgYn;
+	}
+
+	public String getHcSetOrdYn() {
+		return hcSetOrdYn;
+	}
+
+	public void setHcSetOrdYn(String hcSetOrdYn) {
+		this.hcSetOrdYn = hcSetOrdYn;
 	}
 
 }
