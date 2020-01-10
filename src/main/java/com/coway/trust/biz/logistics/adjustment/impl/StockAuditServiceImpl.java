@@ -266,16 +266,16 @@ public class StockAuditServiceImpl implements StockAuditService {
 		// Stock Aduit Loc table insert
 		procCnt = stockAuditMapper.deleteStockAuditLoc(params);
 		procCnt = stockAuditMapper.insertStockAuditLoc(params);
-		if(procCnt == 0) {
+		/*if(procCnt == 0) {
 			throw new ApplicationException(AppConstants.FAIL, "ERROR :Save Stock Audit Doc.2");
-		}
+		}*/
 
 		// Stock Aduit Loc Item table insert
 		procCnt = stockAuditMapper.deleteStockAuditItem(params);
 		procCnt = stockAuditMapper.insertStockAuditItem(params);
-		if(procCnt == 0) {
+		/*if(procCnt == 0) {
 			throw new ApplicationException(AppConstants.FAIL, "ERROR :Save Stock Audit Doc.3");
-		}
+		}*/
 
 		// Doc Status : Start Audit
 		if(LogisticsConstants.DOC_START_AUDIT.equals(params.get("docStusCodeId").toString())) {
