@@ -1644,16 +1644,7 @@
     function fn_loadOrderInfoPexc() {
         if(ORD_STUS_ID != '1') {
             if(fn_getOrderMembershipConfigByOrderID() == '0') {
-
-                vAsId = fn_getCompleteASIDByOrderIDSolutionReason();
-
-                if(vAsId != '') {
-                    $('#hiddenFreeASID').val(vAsId);
-                }
-                else {
-                    fn_disableControlPexc();
-                    Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.mbsExpired" />');
-                }
+                fn_getCompleteASIDByOrderIDSolutionReason();
             }
         }
     }
@@ -1739,18 +1730,23 @@
        return vCurrentOutstanding;
     }
 
+    // product exchage
     function fn_getCompleteASIDByOrderIDSolutionReason() {
-
         var vAsId = '';
 
+        // select table : SVC0001D
         Common.ajax("GET", "/sales/order/selectCompleteASIDByOrderIDSolutionReason.do", {salesOrdId : ORD_ID, asSlutnResnId : 461}, function(result) {
             if(result != null) {
                 vAsId = result.asId;
-            }
-       });
-        console.log('vAsId:'+vAsId);
+                $('#hiddenFreeASID').val(vAsId);
 
-       return vAsId;
+            } else {
+                fn_disableControlPexc();
+                Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.mbsExpired" />');
+            }
+        });
+
+        return vAsId;
     }
 
     function fn_getOrderMembershipConfigByOrderID() {
