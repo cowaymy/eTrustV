@@ -277,6 +277,9 @@ public class StockAuditServiceImpl implements StockAuditService {
 			throw new ApplicationException(AppConstants.FAIL, "ERROR :Save Stock Audit Doc.3");
 		}*/
 
+		// LOC_TYPE, CTGRY_TYPE, ITM_TYPE, LOC_STK_GRAD update
+		procCnt = stockAuditMapper.updateStockAuditDoc(params);
+
 		// Doc Status : Start Audit
 		if(LogisticsConstants.DOC_START_AUDIT.equals(params.get("docStusCodeId").toString())) {
 			EgovMap movLoc = stockAuditMapper.getMovQty(params);
@@ -292,6 +295,7 @@ public class StockAuditServiceImpl implements StockAuditService {
     		if(procCnt == 0) {
     			throw new ApplicationException(AppConstants.FAIL, "ERROR :Save Stock Audit Doc.4");
     		}
+
     		// System Qty update
     		procCnt = stockAuditMapper.updateSysQty(params);
     		if(procCnt == 0) {

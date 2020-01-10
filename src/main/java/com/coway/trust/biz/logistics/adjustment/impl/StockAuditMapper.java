@@ -72,6 +72,8 @@ public interface StockAuditMapper {
 
 	int insertStockAuditItem(Map<String, Object> params);
 
+	int updateStockAuditDoc(Map<String, Object> params);
+
 	int updateDocStusCode(Map<String, Object> params);
 
 	int updateLocStusCode(Map<String, Object> params);

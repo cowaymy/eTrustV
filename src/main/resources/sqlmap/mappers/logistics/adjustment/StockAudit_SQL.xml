@@ -233,7 +233,6 @@
                  ,A.STK_TYPE_ID
                  ,C.CODE_NAME STK_TYPE
                  ,A.STK_GRAD
-                 ,0 SYS_QTY
         FROM SYS0026M A
          LEFT OUTER JOIN SYS0013M B ON B.CODE_ID = A.STK_CTGRY_ID AND B.CODE_MASTER_ID = '11'
          LEFT OUTER JOIN SYS0013M C ON C.CODE_ID = A.STK_TYPE_ID AND C.CODE_MASTER_ID = '15'
@@ -328,7 +327,6 @@
            FROM (SELECT DISTINCT B.STOCK_AUDIT_NO
 			                   ,D.STK_ID ADJSTK_ID
 			                   ,D.STK_GRAD ADJSTK_GRAD
-			                   --,C.SYS_QTY ADJSYS_QTY
 			                   ,E.CODE_NAME ADJSTK_CTGRY_TYPE
 			                   ,F.CODE_NAME ADJSTK_TYPE
 			                   ,D.STK_CODE ADJSTK_CODE
@@ -686,62 +684,13 @@
 	                        ,#{docStusCodeId} DOC_STUS_CODE_ID
 	                        ,'N' REUPLOAD_YN
 	                        ,#{stockAuditReason} STOCK_AUDIT_REASON
-	                        ,(SELECT LISTAGG(CODE_ID, ',') WITHIN GROUP (ORDER BY CODE_NAME)
-	                            FROM SYS0013M
-	                          WHERE CODE_MASTER_ID = '339'
-	                             AND CODE_ID IN
-	                           <foreach item="item" collection="locType" index="index" open="(" separator="," close=")">
-	                             #{item}
-	                           </foreach>
-	                            ) LOC_TYPE
-	                        ,(SELECT LISTAGG(CODE_NAME, ',') WITHIN GROUP (ORDER BY CODE_NAME)
-	                            FROM SYS0013M
-	                          WHERE CODE_MASTER_ID = '339'
-	                             AND CODE_ID IN
-	                           <foreach item="item" collection="locType" index="index" open="(" separator="," close=")">
-	                             #{item}
-	                           </foreach>
-	                            ) LOC_TYPE_NM
-	                         ,(SELECT LISTAGG(CODE_NAME, ',') WITHIN GROUP (ORDER BY CODE_NAME)
-	                            FROM SYS0013M
-	                          WHERE CODE_MASTER_ID = '383'
-	                             AND CODE IN
-	                           <foreach item="item" collection="locStkGrad" index="index" open="(" separator="," close=")">
-	                             #{item}
-	                           </foreach>
-	                            ) LOC_STK_GRAD
-	                         ,(SELECT LISTAGG(CODE_ID, ',') WITHIN GROUP (ORDER BY CODE_NAME)
-	                            FROM SYS0013M
-	                          WHERE CODE_MASTER_ID = '11'
-	                             AND CODE_ID IN
-	                           <foreach item="item" collection="ctgryType" index="index" open="(" separator="," close=")">
-	                             #{item}
-	                           </foreach>
-	                            ) CTGRY_TYPE
-	                        ,(SELECT LISTAGG(CODE_NAME, ',') WITHIN GROUP (ORDER BY CODE_NAME)
-	                            FROM SYS0013M
-	                          WHERE CODE_MASTER_ID = '11'
-	                             AND CODE_ID IN
-	                           <foreach item="item" collection="ctgryType" index="index" open="(" separator="," close=")">
-	                             #{item}
-	                           </foreach>
-	                            ) CTGRY_TYPE_NM
-	                        ,(SELECT LISTAGG(CODE_ID, ',') WITHIN GROUP (ORDER BY CODE_NAME)
-	                            FROM SYS0013M
-	                          WHERE CODE_MASTER_ID = '15'
-	                             AND CODE_ID IN
-	                           <foreach item="item" collection="itmType" index="index" open="(" separator="," close=")">
-	                             #{item}
-	                           </foreach>
-	                            ) ITM_TYPE
-	                        ,(SELECT LISTAGG(CODE_NAME, ',') WITHIN GROUP (ORDER BY CODE_NAME)
-	                            FROM SYS0013M
-	                          WHERE CODE_MASTER_ID = '15'
-	                             AND CODE_ID IN
-	                           <foreach item="item" collection="itmType" index="index" open="(" separator="," close=")">
-	                             #{item}
-	                           </foreach>
-	                            ) ITM_TYPE_NM
+	                        ,' ' LOC_TYPE
+	                        ,' ' LOC_TYPE_NM
+	                        ,' ' LOC_STK_GRAD
+	                        ,' ' CTGRY_TYPE
+	                        ,' ' CTGRY_TYPE_NM
+	                        ,' ' ITM_TYPE
+	                        ,' ' ITM_TYPE_NM
 	                        ,#{rem} REM
 	                        ,#{useYn} USE_YN
 	                        ,#{serialChkYn} SERIAL_CHK_YN
@@ -773,13 +722,13 @@
 		                ,REUPLOAD_YN
 		                ,STOCK_AUDIT_REASON
 		                ,LOC_TYPE
-		                ,LOC_TYPE_NM
-		                ,LOC_STK_GRAD
-		                ,CTGRY_TYPE
-		                ,CTGRY_TYPE_NM
-		                ,ITM_TYPE
-		                ,ITM_TYPE_NM
-		                ,REM
+                        ,LOC_TYPE_NM
+                        ,LOC_STK_GRAD
+                        ,CTGRY_TYPE
+                        ,CTGRY_TYPE_NM
+                        ,ITM_TYPE
+                        ,ITM_TYPE_NM
+                        ,REM
 		                ,USE_YN
                         ,SERIAL_CHK_YN
 		                ,CRT_USER_ID
@@ -868,6 +817,60 @@
 		    INSERT (A.STOCK_AUDIT_NO, A.WH_LOC_ID, A.ITM_ID, A.WH_LOC_STK_GRAD, A.SYS_QTY, A.CRT_USER_ID, A.CRT_DT, A.UPD_USER_ID, A.UPD_DT)
 		   VALUES (B.STOCK_AUDIT_NO, B.WH_LOC_ID, B.STK_ID, B.STK_GRAD, B.SYS_QTY, #{userId}, SYSDATE, #{userId}, SYSDATE)
     </insert>
+
+    <insert id="updateStockAuditDoc" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.insertStockAuditDoc] 20191008 - KR OHK */
+        MERGE INTO LOG0094M A
+        USING (SELECT #{stockAuditNo} STOCK_AUDIT_NO,  A.LOC_TYPE, A.LOC_TYPE_NM, B.CTGRY_TYPE, B.CTGRY_TYPE_NM, C.ITM_TYPE, C.ITM_TYPE_NM, D.LOC_STK_GRAD
+				     FROM (SELECT LISTAGG(D.CODE_NAME, ',') WITHIN GROUP (ORDER BY D.CODE_NAME) LOC_TYPE_NM
+				                         ,LISTAGG(D.CODE_ID, ',') WITHIN GROUP (ORDER BY D.CODE_NAME) LOC_TYPE
+						         FROM LOG0094M A
+						        INNER JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+						        INNER JOIN SYS0028M C ON C.WH_LOC_ID = B.WH_LOC_ID
+						         LEFT OUTER JOIN SYS0013M D ON D.CODE = C.WH_LOC_GB AND D.CODE_MASTER_ID = '339'
+						       WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+						     ) A,
+						     (SELECT LISTAGG(T.CODE_NAME, ',') WITHIN GROUP (ORDER BY T.CODE_NAME) CTGRY_TYPE_NM
+						                ,LISTAGG(T.CODE_ID, ',') WITHIN GROUP (ORDER BY T.CODE_NAME) CTGRY_TYPE
+						        FROM (SELECT DISTINCT D.CODE_ID ,D.CODE_NAME
+						                    FROM LOG0094M A
+						                    INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+						                     LEFT OUTER JOIN SYS0026M C ON C.STK_ID = B.ITM_ID
+						                     LEFT OUTER JOIN SYS0013M D ON D.CODE_ID = C.STK_CTGRY_ID AND D.CODE_MASTER_ID = '11'
+						                  WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+						                ) T
+						     ) B,
+						     (SELECT LISTAGG(T.CODE_NAME, ',') WITHIN GROUP (ORDER BY T.CODE_NAME) ITM_TYPE_NM
+						                ,LISTAGG(T.CODE_ID, ',') WITHIN GROUP (ORDER BY T.CODE_NAME) ITM_TYPE
+						         FROM (SELECT DISTINCT D.CODE_ID ,D.CODE_NAME
+							                 FROM LOG0094M A
+							                 INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+							                  LEFT OUTER JOIN SYS0026M C ON C.STK_ID = B.ITM_ID
+							                  LEFT OUTER JOIN SYS0013M D ON D.CODE_ID = C.STK_TYPE_ID AND D.CODE_MASTER_ID = '15'
+							               WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+						                 ) T
+							 ) C,
+							 (SELECT LISTAGG(T.CODE_NAME, ',') WITHIN GROUP (ORDER BY T.CODE_NAME) LOC_STK_GRAD
+							    FROM (SELECT DISTINCT D.CODE_ID ,D.CODE_NAME
+							                FROM LOG0094M A
+							                INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+							                 LEFT OUTER JOIN SYS0026M C ON C.STK_ID = B.ITM_ID
+							                 LEFT OUTER JOIN SYS0013M D ON D.CODE = C.STK_GRAD AND D.CODE_MASTER_ID = '383'
+							              WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+							            ) T
+				             ) D
+                 ) B
+            ON (A.STOCK_AUDIT_NO =  B.STOCK_AUDIT_NO)
+        WHEN MATCHED THEN
+             UPDATE SET A.LOC_TYPE = B.LOC_TYPE
+                             ,A.LOC_TYPE_NM = B.LOC_TYPE_NM
+                             ,A.LOC_STK_GRAD = B.LOC_STK_GRAD
+                             ,A.CTGRY_TYPE = B.CTGRY_TYPE
+                             ,A.CTGRY_TYPE_NM = B.CTGRY_TYPE_NM
+                             ,A.ITM_TYPE = B.ITM_TYPE
+                             ,A.ITM_TYPE_NM = B.ITM_TYPE_NM
+    </insert>
+
 
     <update id="updateDocStusCode" parameterType="Map">
     /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.updateDocStusCode] 20191014 - KR OHK */

@@ -629,15 +629,18 @@
                 	Common.alert("<spring:message code='sys.common.alert.validationNumber' />");
                     return false;
                 } else {
-                	var cntQty = existArray[idx].cntQty;
-                	var sysQty = existArray[idx].sysQty;
-                    var diffQty = Number(cntQty) - Number(sysQty);
+                	if(AUIGrid.getCellValue(itemRegGrid, rows[0], "serialChkYn") == 'Y' && AUIGrid.getCellValue(itemRegGrid, rows[0], "serialRequireChkYn") == 'Y' && AUIGrid.getCellValue(itemRegGrid, rows[0], "itemSerialChkYn") == "Y") {
+                    } else {
+	                	var cntQty = existArray[idx].cntQty;
+	                	var sysQty = existArray[idx].sysQty;
+	                    var diffQty = Number(cntQty) - Number(sysQty);
 
-                	AUIGrid.setCellValue(itemRegGrid, rows[0], "cntQty", cntQty);                     // Count Qty
-                    AUIGrid.setCellValue(itemRegGrid, rows[0], "diffQty", diffQty);                     // Variance
-                    AUIGrid.setCellValue(itemRegGrid, rows[0], "dedQty", 0);                            // Deduction Qty(Hidden)
-                    AUIGrid.setCellValue(itemRegGrid, rows[0], "otherQty", diffQty);                  // Other GI/GR Qty(Hidden)
-                    AUIGrid.setCellValue(itemRegGrid, rows[0], "rem", existArray[idx].rem);         // Remark
+	                	AUIGrid.setCellValue(itemRegGrid, rows[0], "cntQty", cntQty);                     // Count Qty
+	                    AUIGrid.setCellValue(itemRegGrid, rows[0], "diffQty", diffQty);                     // Variance
+	                    AUIGrid.setCellValue(itemRegGrid, rows[0], "dedQty", 0);                            // Deduction Qty(Hidden)
+	                    AUIGrid.setCellValue(itemRegGrid, rows[0], "otherQty", diffQty);                  // Other GI/GR Qty(Hidden)
+	                    AUIGrid.setCellValue(itemRegGrid, rows[0], "rem", existArray[idx].rem);         // Remark
+                    }
                 }
             }
         } else {

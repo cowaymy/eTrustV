@@ -38,7 +38,6 @@
                          {dataField: "rnum",headerText :"<spring:message code='log.head.rnum'/>" ,width:1 ,height:30 , visible:false },
                          {dataField: "stkId",headerText :"<spring:message code='log.head.rnum'/>" ,width:1 ,height:30  , visible:false},
                          {dataField: "stkGrad",headerText :"<spring:message code='log.head.rnum'/>" ,width:1 ,height:30  , visible:false},
-                         {dataField: "sysQty",headerText :"<spring:message code='log.head.rnum'/>" ,width:1 ,height:30  , visible:false},
                          {dataField: "stkType",headerText :"<spring:message code='log.head.itemtype'/>"    ,width: 100    ,height:30 },
                          {dataField: "stkCtgryType",headerText :"<spring:message code='log.head.categoryType'/>" ,width: 120   ,height:30 },
                          {dataField: "stkCode",headerText :"<spring:message code='log.head.itemcode'/>"    ,width: 100    ,height:30},
@@ -49,7 +48,6 @@
                      {dataField: "adjrnum",headerText :"<spring:message code='log.head.rnum'/>"  ,width:1 ,height:30 , visible:false },
                      {dataField: "adjstkId",headerText :"<spring:message code='log.head.rnum'/>" ,width:1 ,height:30 , visible:false },
                      {dataField: "adjstkGrad",headerText :"<spring:message code='log.head.rnum'/>" ,width:1 ,height:30  , visible:false},
-                     {dataField: "adjsysQty",headerText :"<spring:message code='log.head.rnum'/>" ,width:1 ,height:30  , visible:false},
                      {dataField: "adjstkType",headerText :"<spring:message code='log.head.itemtype'/>" ,width: 100    ,height:30 },
                      {dataField: "adjstkCtgryType",headerText :"<spring:message code='log.head.categoryType'/>"  ,width: 120    ,height:30 },
                      {dataField: "adjstkCode",headerText :"<spring:message code='log.head.itemcode'/>" ,width: 100    ,height:30},
@@ -269,7 +267,6 @@
                 rowList[i] = {
                             adjstkId : checkedItems[i].stkId,
                             adjstkGrad : checkedItems[i].stkGrad,
-                            adjsysQty : checkedItems[i].sysQty,
                             adjstkType : checkedItems[i].stkType,
                             adjstkCtgryType : checkedItems[i].stkCtgryType,
                             adjstkCode: checkedItems[i].stkCode,
@@ -307,7 +304,6 @@
                  rowList[i] = {
                           stkId : reqCheckedItems[i].adjstkId,
                           stkGrad : reqCheckedItems[i].adjstkGrad,
-                          sysQty : reqCheckedItems[i].adjsysQty,
                           stkType : reqCheckedItems[i].adjstkType,
                           stkCtgryType : reqCheckedItems[i].adjstkCtgryType,
                           stkCode: reqCheckedItems[i].adjstkCode,
