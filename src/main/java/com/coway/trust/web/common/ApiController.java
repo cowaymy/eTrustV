@@ -232,14 +232,25 @@ public class ApiController {
   }
 
   @RequestMapping(value = "/customer/genInvoice.do")
-  public void genInvoice(HttpServletRequest request, HttpServletResponse response ,@RequestParam Map<String, Object> params) {
-
-    params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_SST.rpt");
-    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
-    params.put("V_TAXINVOICEID", params.get("taxInvoiceId").toString()); // parameter
-    params.put(AppConstants.REPORT_DOWN_FILE_NAME,"CustomerPortal" + File.separator + "Outright_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
+  public void genInvoice(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> params) {
+    
+    if (params.get("type").equals("133") || params.get("type").equals("134")) {
+      params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Rental_PDF_JOMPAY_SST_2.rpt");
+      params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+      params.put("V_TAXINVOICEID", params.get("taxInvoiceId").toString()); // parameter
+      params.put("V_TYPE", params.get("type").toString()); // parameter
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME, "CustomerPortal" + File.separator + "Rental_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
+      
+    } 
+    if(params.get("type").equals("")){
+      params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_SST.rpt");
+      params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+      params.put("V_TAXINVOICEID", params.get("taxInvoiceId").toString()); // parameter
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME, "CustomerPortal" + File.separator + "Outright_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
+    }
+    
     this.viewProcedure(request, response, params);
-
+    
   }
 
   private void checkArgument(Map<String, Object> params) {
