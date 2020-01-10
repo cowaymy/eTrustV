@@ -58,6 +58,7 @@ $(document).ready(function() {
          AUIGrid.setCellValue(newGridID , "${rowIndex}" , "budgetCodeName",  AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCodeText"));
 
          AUIGrid.setCellValue(newGridID, event.rowIndex, "glAccCode", "");
+         AUIGrid.setCellValue(newGridID, event.rowIndex, "glAccCodeName", "");
          AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
          AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
 
