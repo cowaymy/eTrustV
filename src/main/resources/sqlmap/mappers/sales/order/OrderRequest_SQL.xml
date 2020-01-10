@@ -446,7 +446,7 @@
                     AND T2.AS_RESULT_STUS_ID = 4
                     AND T2.AS_SLUTN_RESN_ID = #{asSlutnResnId}
     WHERE T1.AS_SO_ID = #{salesOrdId}
-      AND TO_CHAR(T1.AS_APPNT_DT, 'YYYYMM') = TO_CHAR(SYADATE, 'YYYYMM')
+      AND TO_CHAR(T1.AS_APPNT_DT, 'YYYYMM') = TO_CHAR(SYSDATE, 'YYYYMM')
       AND ROWNUM = 1
   </select>
 
