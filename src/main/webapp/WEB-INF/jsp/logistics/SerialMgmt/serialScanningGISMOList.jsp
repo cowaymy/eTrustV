@@ -74,9 +74,31 @@
             },
             {dataField:"reqstdt", headerText:"Dlvd. Req. Date", width:140, editable:false, dataType:"date", dateInputFormat:"dd/mm/yyyy", formatString:"dd/mm/yyyy"},
             {dataField:"toloc", headerText:"To Location", width:250, height:30, style:"aui-grid-user-custom-left"},
+            {dataField: "bndlNo",headerText :"Bundle No"        ,width:120    ,height:30                },
+            {dataField: "ordno",headerText :"Order No."        ,width:120    ,height:30                },
+            {
+                dataField : "refDocNo",
+                headerText : "<spring:message code='log.head.refdocno'/>",
+                width : 120,
+                height : 30
+              },
+              {
+                  dataField : "itmCode",
+                  headerText : "<spring:message code='log.head.matcode'/>",
+                  width : 120,
+                  height : 30,
+                  visible : true
+                },
+                {
+                  dataField : "itmName",
+                  headerText : "Mat. Name",
+                  width : 200,
+                  height : 30
+                },
             {dataField:"reqstqty", headerText:"Req. Qty", width:120, height:30, style:"aui-grid-user-custom-right"},
             {dataField:"delqty", headerText:"Delivered Qty", width:120, height:30, style:"aui-grid-user-custom-right"},
             {dataField:"remainqty", headerText:"Remain Qty", width:120, height:30, style:"aui-grid-user-custom-right"},
+            {dataField:"appntDt", headerText:"Appointment Date", width:140, editable:false, dataType:"date", dateInputFormat:"dd/mm/yyyy", formatString:"dd/mm/yyyy"},
             {dataField:"trnsctypedtl", headerText:"Movement Type", width:250, height:30, labelFunction:function(rowIndex, columnIndex, value, headerText, item) {
                 return getCodeList("CODE", "", "308", item.trnsctypedtl);
             }}
@@ -259,6 +281,12 @@
                         <th scope="row">Request No</th>
                         <td>
                             <input type="text"  id="searchRequestNo" name="searchRequestNo"  class="w100p" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Bundle/Order/Ref</th>
+                        <td>
+                            <input type="text"  id="searchRequestNo2" name="searchRequestNo2"  class="w100p" />
                         </td>
                     </tr>
                 </tbody>
