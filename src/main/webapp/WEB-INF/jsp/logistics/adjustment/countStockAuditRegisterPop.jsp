@@ -1165,14 +1165,16 @@
                 if(Math.abs(diffQty) <  dedQty) {
             	    Common.alert("Deduction Qty cannot be greater than Variance.");
             	    AUIGrid.setCellValue(itemApprGrid, event.rowIndex, "dedQty", 0);
+            	    AUIGrid.setCellValue(itemApprGrid, event.rowIndex, "otherQty", diffQty);          // Other GI/GR Qty
                     return false;
                 } else if(Number(diffQty) > 0 && Number(dedQty) > 0 ) {
                     Common.alert("If Variance Qty >0, Deduction Qty cannot be greater than 0.");
                     AUIGrid.setCellValue(itemApprGrid, event.rowIndex, "dedQty", 0);
+                    AUIGrid.setCellValue(itemApprGrid, event.rowIndex, "otherQty", diffQty);          // Other GI/GR Qty
                     return false;
                 } else {
 	                var otherQty = Number(diffQty) +  Number(dedQty);
-	                AUIGrid.setCellValue(itemApprGrid, event.rowIndex, "otherQty", Math.abs(otherQty));          // Other GI/GR Qty
+	                AUIGrid.setCellValue(itemApprGrid, event.rowIndex, "otherQty", otherQty);          // Other GI/GR Qty
 
 
 		            if(dedQty == 0) {
