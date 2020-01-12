@@ -47,6 +47,8 @@
     	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '${defLocType}', 'locType', 'M','f_multiCombo');
 
     	 if(Common.checkPlatformType() == "mobile") {
+    		 $(".path").css("display", "none");
+    		 $("#ulButtonArea").css("display", "none");
     	     $("#btnMobileClose").attr("style", "");
     	 }
 
@@ -270,6 +272,7 @@
                             </div>
                         </td>
                     </tr>
+
                     <tr>
                         <th scope="row">From Location<span class="must">*</span></th>
                         <td>
@@ -278,9 +281,30 @@
                         </td>
                     </tr>
                     <tr>
+                        <th scope="row">Appointment Date</th>
+                        <td>
+                            <div class="date_set w100p">
+                                <!-- date_set start -->
+                                <p>
+                                    <input id="searchSAppntDt" name="searchSAppntDt" type="text" title="Appointment Start Date" placeholder="DD/MM/YYYY" class="j_date" value="" readonly />
+                                </p>
+                                <span> To </span>
+                                <p>
+                                    <input id="searchEAppntDt" name="searchEAppntDt" type="text" title="Appointment End Date" placeholder="DD/MM/YYYY" class="j_date" value="" readonly />
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
                         <th scope="row">Request No</th>
                         <td>
                             <input type="text"  id="searchRequestNo" name="searchRequestNo"  class="w100p" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Item Code/Name</th>
+                        <td>
+                            <input type="text"  id="searchItm" name="searchItm"  class="w100p" />
                         </td>
                     </tr>
                     <tr>
@@ -295,7 +319,7 @@
 	</section><!-- search_table end -->
 
      <section class="search_result"><!-- search_result start -->
-        <ul class="right_btns">
+        <ul class="right_btns" id="ulButtonArea">
             <li><p class="btn_grid"><a href="#" id="excelDown"><spring:message code='sys.btn.excel.dw'/></a></p></li>
         </ul>
 
