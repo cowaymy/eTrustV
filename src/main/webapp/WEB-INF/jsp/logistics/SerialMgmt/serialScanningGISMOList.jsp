@@ -74,7 +74,7 @@
                     getDeliveryPop(item);
                 }}
             },
-            {dataField:"reqstdt", headerText:"Dlvd. Req. Date", width:140, editable:false, dataType:"date", dateInputFormat:"dd/mm/yyyy", formatString:"dd/mm/yyyy"},
+            {dataField:"reqstdt", headerText:"Dlvd. Req. Date", width:120, editable:false, dataType:"date", dateInputFormat:"dd/mm/yyyy", formatString:"dd/mm/yyyy"},
             {dataField:"toloc", headerText:"To Location", width:250, height:30, style:"aui-grid-user-custom-left"},
             {dataField: "bndlNo",headerText :"Bundle No"        ,width:120    ,height:30                },
             {dataField: "ordno",headerText :"Order No."        ,width:120    ,height:30                },
@@ -94,8 +94,9 @@
                 {
                   dataField : "itmName",
                   headerText : "Mat. Name",
-                  width : 200,
-                  height : 30
+                  width : 300,
+                  height : 30,
+                  style:"aui-grid-user-custom-left"
                 },
             {dataField:"reqstqty", headerText:"Req. Qty", width:120, height:30, style:"aui-grid-user-custom-right"},
             {dataField:"delqty", headerText:"Delivered Qty", width:120, height:30, style:"aui-grid-user-custom-right"},
