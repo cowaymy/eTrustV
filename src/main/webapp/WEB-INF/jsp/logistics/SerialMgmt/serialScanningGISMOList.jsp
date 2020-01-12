@@ -297,7 +297,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Request No</th>
+                        <th scope="row">Request No/To Loc.</th>
                         <td>
                             <input type="text"  id="searchRequestNo" name="searchRequestNo"  class="w100p" />
                         </td>
