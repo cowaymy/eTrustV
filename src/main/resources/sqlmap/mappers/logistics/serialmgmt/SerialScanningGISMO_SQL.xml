@@ -37,12 +37,14 @@
 							                  log0047m M,
 							                  log0048D A,
 							                  LOG0055D B,
-							                  LOG0054M C
+							                  LOG0054M C,
+							                  sys0028m D
 							           WHERE  1=1
 							           AND    M.reqst_no = A.reqst_no
 							           AND    A.REQST_NO = B.REQST_NO
 							           AND    A.REQST_NO_ITM = B.REQST_NO_ITM
 							           AND    B.DELVRY_NO = C.DELVRY_NO
+							           AND    M.reqst_cdc_rdc = D.WH_LOC_ID(+)
 							           AND    NVL(B.del_flag,'N')   <![CDATA[<>]]>   'Y'
 							           AND    M.trnsc_type IN ('UM')
 							           AND    M.REQST_TYPE  <![CDATA[<>]]>   'PO'
@@ -55,7 +57,7 @@
 								                </foreach>
 								       </if>
 							           <if test="searchRequestNo !=null and searchRequestNo != ''">
-								            AND M.REQST_NO = #{searchRequestNo}
+								            AND (M.REQST_NO = #{searchRequestNo} or UPPER(D.WH_LOC_DESC) LIKE '%' || UPPER(#{searchRequestNo}) || '%')
 								       </if>
 								       GROUP BY B.REQST_NO, B.REQST_NO_ITM
 					          ) l55,
@@ -75,11 +77,12 @@
 			                </foreach>
 			         </if>
 			         <if test="searchRequestNo !=null and searchRequestNo != ''">
-			            AND l47.REQST_NO = #{searchRequestNo}
+			            AND (l47.REQST_NO = #{searchRequestNo} or UPPER(s28q.WH_LOC_DESC) LIKE '%' || UPPER(#{searchRequestNo}) || '%')
 			         </if>
 			         <if test="searchItm !=null and searchItm != ''">
                           AND (l48.itm_code = #{searchItm} or UPPER(l48.ITM_NAME) LIKE '%' || UPPER(#{searchItm}) || '%')
                      </if>
+
 			             AND l47.trnsc_type IN ('UM')
 						 AND L47.REQST_TYPE <![CDATA[<>]]>  'PO'
 						 AND NVL(l47.REQST_STUS, 'N') <![CDATA[<>]]> 'C'
