@@ -56,8 +56,8 @@
 								       </if>
 							           <if test="searchRequestNo !=null and searchRequestNo != ''">
 								            AND M.REQST_NO = #{searchRequestNo}
-								         </if>
-							           GROUP BY B.REQST_NO, B.REQST_NO_ITM
+								       </if>
+								       GROUP BY B.REQST_NO, B.REQST_NO_ITM
 					          ) l55,
 						    sys0028m s28q
 						WHERE 1 = 1
@@ -77,6 +77,9 @@
 			         <if test="searchRequestNo !=null and searchRequestNo != ''">
 			            AND l47.REQST_NO = #{searchRequestNo}
 			         </if>
+			         <if test="searchItm !=null and searchItm != ''">
+                          AND (l48.itm_code = #{searchItm} or UPPER(l48.ITM_NAME) LIKE '%' || UPPER(#{searchItm}) || '%')
+                     </if>
 			             AND l47.trnsc_type IN ('UM')
 						 AND L47.REQST_TYPE <![CDATA[<>]]>  'PO'
 						 AND NVL(l47.REQST_STUS, 'N') <![CDATA[<>]]> 'C'
@@ -98,9 +101,12 @@
            AND S1.BNDL_ID = H11.ORD_SEQ_NO(+)
            AND AA.itm_code = S26.STK_CODE
            <if test="searchRequestNo2 !=null and searchRequestNo2 != ''">
-              AND (AA.REF_DOC_NO = #{searchRequestNo2} or H11.BNDL_NO = #{searchRequestNo2} or s1.SALES_ORD_NO = #{searchRequestNo2})
+              AND (UPPER(AA.REF_DOC_NO) = UPPER(#{searchRequestNo2}) or UPPER(H11.BNDL_NO) = UPPER(#{searchRequestNo2}) or s1.SALES_ORD_NO = #{searchRequestNo2})
            </if>
-
+           <if test="searchSAppntDt !=null and searchSAppntDt != '' and searchEAppntDt !=null and searchEAppntDt != ''">
+                AND s46.APPNT_DT  <![CDATA[>=]]>  to_date(#{searchSAppntDt},'dd/mm/yyyy')   -- FROM
+                AND s46.APPNT_DT <![CDATA[ <= ]]>  to_date(#{searchEAppntDt} || ' 23:59:59','dd/mm/yyyy HH24:MI:SS')   -- TO
+           </if>
 		   ORDER BY REQST_CRT_DT, reqstno
     </select>
 </mapper>
