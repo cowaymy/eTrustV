@@ -227,7 +227,7 @@ public class BudgetController {
 		params.put("budgetCode",  params.get("item[budgetCode]"));
 
 		if( !CommonUtils.isEmpty(params.get("item[budgetCodeText]")) ){
-			params.put("glAccDesc", params.get("item[budgetCodeText]"));
+			params.put("budgetCodeText", params.get("item[budgetCodeText]"));
 		}
 
 		LOGGER.debug("item =====================================>>  " + params);
