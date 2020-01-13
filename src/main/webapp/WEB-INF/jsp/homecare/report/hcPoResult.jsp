@@ -363,7 +363,7 @@ var mSort = {};
         doDefCombo(vendorDs, '', 'sMemAccId', 'S', '');
 
         if( js.String.isEmpty($("#sPoDtFrom").val()) ){
-            $("#sPoDtFrom").val("${oneMonthBf}");
+            $("#sPoDtFrom").val("${threeMonthBf}");
         }
         if( js.String.isEmpty($("#sPoDtTo").val()) ){
             $("#sPoDtTo").val("${toDay}");
@@ -409,8 +409,8 @@ var mSort = {};
             	return ;
             }
 
-            if(js.date.dateDiff(dat1, dat2) > 31){
-            	Common.alert("The duration is only one months.");
+            if(js.date.dateDiff(dat1, dat2) > 92){
+            	Common.alert("The duration is only three months.");
                 return ;
             }
 
