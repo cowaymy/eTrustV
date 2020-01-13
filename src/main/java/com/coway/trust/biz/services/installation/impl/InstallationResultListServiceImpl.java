@@ -3403,12 +3403,13 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
             }
 
             procResult = transProc.get("p1").toString().substring(0, 3);
+            String procResultMsg = transProc.get("p1").toString().substring(4);
 
-            logger.debug("Transfer 물류 호출 결과 ===> " + procResult);
+            logger.debug("Transfer 물류 호출 결과 ===> " + procResult + ":" + procResultMsg);
             ///////////////////////// 물류 호출 END //////////////////////
 
             if (!procResult.equals("000")) {
-            	throw new ApplicationException(AppConstants.FAIL, "ERROR Code::" + procResult + ", INS Number :: " + updateMap.get("installEntryNo"));
+            	throw new ApplicationException(AppConstants.FAIL, "ERROR Code::" + procResult + "<br />ERROR Msg::" + procResultMsg + "<br />INS Number :: " + updateMap.get("installEntryNo"));
             }
 
             if (procResult.equals("000")) {
