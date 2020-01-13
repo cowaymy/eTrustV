@@ -28,7 +28,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @since 2014.01.24
  * @version 1.0
  * @see
- * 
+ *
  *      <pre>
  *  == 개정이력(Modification Information) ==
  *
@@ -42,37 +42,37 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface OrderDetailMapper {
 
 	EgovMap selectBasicInfo(Map<String, Object> params); //Basic Info
-	
+
 	EgovMap selectLatestOrderLogByOrderID(Map<String, Object> params); //Order Log View
-	
+
 	EgovMap selectOrderAgreementByOrderID(Map<String, Object> params); //Order Log View
-	
+
 	EgovMap selectOrderInstallationInfoByOrderID(Map<String, Object> params); //Installation Info
-	
+
 	List<EgovMap> selectOrderReferralInfoList(Map<String, Object> params); //Referral Info
-	
+
 	List<EgovMap> selectCallLogList(Map<String, Object> params); //Call Log
-	
+
 	List<EgovMap> selectPaymentMasterList(Map<String, Object> params); //Payment Listing
-	
+
 	List<EgovMap> selectAutoDebitResultList(Map<String, Object> params); //Auto Debit Result
 
 	EgovMap selectOrderCCPFeedbackCodeByOrderID(Map<String, Object> params); //CCP Feedback Code
-	
+
 	EgovMap selectOrderCCPInfoByOrderID(Map<String, Object> params); //CCP Remark
-	
+
 	EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params); //Salesman Info
-	
+
 	EgovMap selectOrderServiceMemberViewByOrderID(Map<String, Object> params); //Cody Info
-	
+
 	List<EgovMap> selectOrderSameRentalGroupOrderList(Map<String, Object> params); //Auto Debit Result
 
 	EgovMap selectOrderMailingInfoByOrderID(Map<String, Object> params); //Cody Info
 
 	EgovMap selectOrderRentPaySetInfoByOrderID(Map<String, Object> params); //Cody Info
-	
+
 	EgovMap selectThirdPartyInfo(Map<String, Object> params); //Cody Info
-	
+
 	List<EgovMap> selectMembershipInfoList(Map<String, Object> params); //Membership Info Result
 
 	List<EgovMap> selectDocumentList(Map<String, Object> params); //Document Result
@@ -98,4 +98,7 @@ public interface OrderDetailMapper {
 	EgovMap selectCurrentBSResultByBSNo(Map<String, Object> params); //Guarantee Info
 
 	List<EgovMap> selectASInfoList(Map<String, Object> params); //Last 6 Months Transaction
+
+	List<EgovMap> getInstImg(Map<String, Object> params);
+
 }
