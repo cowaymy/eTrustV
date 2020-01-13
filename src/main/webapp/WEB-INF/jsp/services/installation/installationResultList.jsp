@@ -146,7 +146,7 @@
       dataField : "appType",
       headerText : '<spring:message code="service.grid.AppType" />',
       editable : false,
-      width : 150
+      width : 100
 
     }, {
       dataField : "brnchId",
@@ -161,8 +161,14 @@
     }, {
       dataField : "code1",
       headerText : '<spring:message code="service.grid.Status" />',
-      width : 130
-    }, {
+      width : 80
+    },
+    {
+        dataField : "serialRequireChkYn",
+        headerText : 'Serial Require Check Y/N',
+        width : 180
+    },
+    {
       dataField : "lstUpd",
       headerText : '<spring:message code="service.grid.UpdateBy" />',
       width : 130
@@ -217,6 +223,7 @@
     }
 
     var brnchId = selectedItems[0].item.brnchId;
+    var serialRequireChkYn = selectedItems[0].item.serialRequireChkYn;
 
     if (brnchId == "") {
       Common.alert("<b>[" + selectedItems[i].item.installEntryNo
@@ -235,6 +242,11 @@
       if (brnchId != selectedItems[i].item.brnchId) {
         Common.alert("<b><spring:message code='service.msg.BranchCode'/></b>");
         return;
+      }
+
+      if (serialRequireChkYn != selectedItems[i].item.serialRequireChkYn) {
+          Common.alert("<b>Only the same 'Serial Require Chk Y/N' can be selected.</b>");
+          return;
       }
     }
 

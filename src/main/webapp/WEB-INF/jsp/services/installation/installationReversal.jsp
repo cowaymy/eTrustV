@@ -182,6 +182,11 @@ function fn_setdetail(result){
 	$("#esalesDt").val(result.list1.salesDt);
 	$("#eCustomerName").text(result.list1.name);
 
+	$("#hidSerialRequireChkYn").val(result.list1.serialRequireChkYn);
+	$("#hidInstallEntryNo").val(result.list1.installEntryNo);
+	$("#hidSerialNo").val(result.list1.serialNo);
+	$("#hidSalesOrderId").val(result.list1.salesOrdId);
+
 }
 
 function createAUIGrid() {
@@ -326,7 +331,10 @@ function fn_orderSearch(){
 
 function save_confirm(){
 
-
+	if(FormUtil.checkReqValue($("#installEntryNo"))){
+		Common.alert("<spring:message code='budget.msg.noData'/>");
+        return false;
+	}
     Common.confirm("Related Billing & Payment Data should be adjusted manually"  , fn_save );
 }
 
@@ -348,11 +356,20 @@ function fn_save(){
 
 	*/
 
+	// KR-OHK Serial Check add
+    var url = "";
+
+    if ($("#hidSerialRequireChkYn").val() == 'Y') {
+        url = "/services/saveResavalSerial.do";
+    } else {
+        url = "/services/saveResaval.do";
+    }
+
 	$("#einstallEntryNo").val($("#installEntryNo").val());
     $("#esalesOrdNo").val($("#salesOrdNo").val());
     $("#einstallEntryId").val($("#installEntryId").val());
     $("#esalesOrdId").val($("#salesOrdId").val());
-	Common.ajax("POST", "/services/saveResaval",  $("#editForm").serializeJSON(), function(result) {
+	Common.ajax("POST", url,  $("#editForm").serializeJSON(), function(result) {
         console.log("message : " + result.message );
         Common.alert(result.message,fn_close);
         location.reload(true);
@@ -619,8 +636,10 @@ function fn_close(){
 <input type="hidden"  id="esalesDt" name="esalesDt"/>
 <input type="hidden"  id="eCustomerName" name="eCustomerName"/>
 <input type="hidden"  id="eProductID" name="eProductID"/>
-
-
+<input type="hidden"  id="hidSerialRequireChkYn" name="hidSerialRequireChkYn"/>
+<input type="hidden"  id="hidInstallEntryNo" name="hidInstallEntryNo"/>
+<input type="hidden"  id="hidSalesOrderId" name="hidSalesOrderId"/>
+<input type="hidden"  id="hidSerialNo" name="hidSerialNo"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

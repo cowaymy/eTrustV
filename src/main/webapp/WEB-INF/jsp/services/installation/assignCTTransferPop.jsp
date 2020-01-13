@@ -6,7 +6,7 @@
 
 var assignCtListGridID;
 var assignCOrdtListGridID;
-
+var serialList = new Array();
 
 $(document).ready(function() {
 
@@ -28,7 +28,8 @@ function createAssignCtListAUIGrid() {
                         { dataField : "ctName",    headerText  : "CT Name",  width  : 120 , editable       : false},
                         { dataField : "branchName", headerText  : "Branch Name ",  width  : 120  },
                         { dataField : "ctSubGrp", headerText  : "CT GRP",  width  : 120  },
-                        {dataField : "ctId", headerText  : "CT ID ",  width  : 120        ,visible : true}
+                        {dataField : "ctId", headerText  : "CT ID ",  width  : 120        ,visible : true},
+                        { dataField : "serialRequireChkYn", headerText : "Serial Require Check Y/N", width : 180, visible : true, editable : false }
    ];
 
 
@@ -51,22 +52,23 @@ function createAssignCtListAUIGrid() {
 // 체크된 아이템 얻기
 function fn_getAssionCTListCheckedRowItems() {
 
-  var checkedItems = AUIGrid.getCheckedRowItems(assignCtListGridID);
+    var checkedItems = AUIGrid.getCheckedRowItems(assignCtListGridID);
 
+    console.log(checkedItems);
 
-  console.log(checkedItems);
+    if(checkedItems.length  == 0  ||  checkedItems == null) {
+        Common.alert("<b>No CT List selected.</b>");
+        return  false ;
+    }
 
-  if(checkedItems.length  == 0  ||  checkedItems == null) {
-      Common.alert("<b>No CT List selected.</b>");
-      return  false ;
-  }
+    var str = [];
+    var rowItem = checkedItems[0].item;
 
-      var str = [];
-      var rowItem = checkedItems[0].item;
-     str[0] = rowItem.ctCode;
-     str[1] = rowItem.ctId;
+    str[0] = rowItem.ctCode;
+    str[1] = rowItem.ctId;
+    str[2] = rowItem.serialRequireChkYn;
 
-     return str;
+    return str;
 }
 
 function createAssignCtOrderListAUIGrid() {
@@ -86,6 +88,16 @@ function createAssignCtOrderListAUIGrid() {
                                     var assiinCd = fn_getAssionCTListCheckedRowItems();
                                     if(assiinCd  ==false ) return false;
 
+                                    if(assiinCd[2]  != item.serialRequireChkYn) {
+                                    	Common.alert("<b>'Serial Require Check Y/N' is different.</b>");
+                                    	return false;
+                                    }
+
+                                    if(item.serialRequireChkYn == 'Y' && assiinCd[0]  == item.ctCode) {
+                                        Common.alert("<b>You cannot select the current CT Code.</b>");
+                                        return false;
+                                    }
+
                                     if(item.c1 == 1){
                                         AUIGrid.updateRow(assignCOrdtListGridID, {
                                               "memCode" : "",
@@ -102,13 +114,33 @@ function createAssignCtOrderListAUIGrid() {
                             }
                         },
                         {dataField : "custName",         headerText  : "Customer" ,width  : 150 } ,
-                        { dataField : "salesOrdNo",      headerText  : "SalesOrder",  width  : 100},
+                        { dataField : "salesOrdNo",      headerText  : "SalesOrder",  width  : 90},
+                        { dataField : "serialNo", headerText:"Serial No", width:180, height:30, headerStyle : "aui-grid-header-input-icon",
+                            editRenderer : {
+                                type : "DropDownListRenderer",
+                                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                listFunction : function(rowIndex, columnIndex, item, dataField) {
+                                    if(item.serialChk == "Y"){
+                                        fn_ctSerialNoList(item);
+                                    } else{
+                                        serialList = null;
+                                    }
+                                    return serialList;
+                                },
+                                keyField : "code",
+                                valueField : "codeName"
+                            }
+                        },
                         { dataField : "memCode",        headerText  : "CT Code",  width  : 80  },
                         { dataField : "custSubGrp",     headerText  : "Cust GRP",  width  : 100  },
-                        { dataField : "insstallCtId",      headerText  : "CT ID ",  width  : 100   ,     visible : true},
+                        { dataField : "insstallCtId",      headerText  : "CT ID ",  width  : 80   ,     visible : true},
                         { dataField : "ctId",        headerText  : "Old CT ID",  width  : 100   ,     visible : false},
-                        { dataField : "installEntryNo",        headerText  : "Install No ",  width  : 100   ,     visible : false}
-
+                        { dataField : "ctCode",        headerText  : "Old CT Code",  width  : 100   ,     visible : false},
+                        { dataField : "installEntryNo",        headerText  : "Install No ",  width  : 100   ,     visible : false},
+                        { dataField : "stkCode", headerText : "Item Code", width : 80, editable : false},
+                        { dataField : "stkDesc", headerText : "Product", width : 180, editable : false, style: "aui-grid-user-custom-left"},
+                        { dataField : "serialChk", headerText : "Serial Chk", width : 80, editable : false },
+                        { dataField : "serialRequireChkYn", headerText  : "Serial Require Check Y/N", width : 180, editable : false  }
 
    ];
 
@@ -127,20 +159,73 @@ function createAssignCtOrderListAUIGrid() {
 
 function fn_ctChange(){
 
+    var selectedItems = AUIGrid.getCheckedRowItems(assignCtListGridID);
     //수정된 행 아이템들(배열)
     var editedRowItems = AUIGrid.getEditedRowItems(assignCOrdtListGridID);
+    var serialObj  = new Array();
 
+    if(selectedItems.length  == 0  ||  selectedItems == null) {
+        Common.alert("<b>No CT List  selected.</b>");
+        return  false ;
+    }
 
     if(editedRowItems.length  == 0  ||  editedRowItems == null) {
         Common.alert("<b>No CTOrder List  selected.</b>");
         return  false ;
     }
 
+    var ctSerialRequireChkYn = editedRowItems[0].serialRequireChkYn;
+
+    for (var i = 0; i < editedRowItems.length; i++) {
+        if(FormUtil.isEmpty(editedRowItems[i].insstallCtId)) {
+            Common.alert("<b>No CTOrder List selected.</b>");
+            return  false ;
+        }
+
+        //if(ctSerialRequireChkYn != editedRowItems[i].serialRequireChkYn) {
+        //    Common.alert("<b>'Serial Require Check Y/N' is different.</b>");
+        //    return  false ;
+        //}
+
+        if(editedRowItems[i].serialChk == 'Y' && editedRowItems[i].serialRequireChkYn == 'Y') {
+            if(FormUtil.isEmpty(editedRowItems[i].serialNo)) {
+                Common.alert("<b>Serial No is required.( SalesOrder : " + editedRowItems[i].salesOrdNo + " )</b>");
+                return  false ;
+            }
+        }
+
+        if(FormUtil.isNotEmpty(editedRowItems[i].serialNo)) {
+            serialObj.push(editedRowItems[i].serialNo);
+        }
+    }
+
+    for (var k = 0; k < editedRowItems.length; k++) {
+        var serialCnt = 0;
+        for(var j = 0;  j < serialObj.length; j++) {
+            if(editedRowItems[k].serialNo == serialObj[j]) {
+                serialCnt ++;
+            }
+        }
+
+        if(serialCnt > 1) {
+            Common.alert("<b>Serial No is duplicated.</b>");
+            return  false ;
+        }
+    }
+
     var  updateForm ={
             "update" : editedRowItems
     }
 
-    Common.ajax("POST", "/services/assignCtOrderListSave.do", updateForm, function(result) {
+    var url = "";
+
+    if(ctSerialRequireChkYn == 'Y') {
+    	url = "/services/assignCtOrderListSaveSerial.do";
+    } else {
+    	url = "/services/assignCtOrderListSave.do";
+    }
+
+    Common.ajax("POST", url, updateForm, function(result) {
         console.log("updateAssignCT.");
         console.log( result);
 
@@ -192,6 +277,14 @@ function fn_asaAssignCtOderList(){
     });
 }
 
+function fn_ctSerialNoList(item){
+    Common.ajaxSync("GET", "/services/selectCtSerialNoList.do", {ctCode : item.ctCode, stkCode : item.stkCode}, function(result) {
+        serialList = new Array();
+        for ( var i = 0 ; i < result.length ; i++ ) {
+            serialList.push(result[i]);
+        }
+    });
+}
 </script>
 
 
