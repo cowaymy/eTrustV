@@ -80,11 +80,13 @@ public class  MembershipRejoinController {
         String[] arrExpiredPeriod   = request.getParameterValues("expiredPeriod");
 
         if(arrAppType != null && !CommonUtils.containsEmpty(arrAppType)) params.put("arrAppType", arrAppType);
-        if(arrExpiredPeriod != null && !CommonUtils.containsEmpty(arrExpiredPeriod)) params.put("arrExpiredPeriod", arrExpiredPeriod);
+        if(arrExpiredPeriod != null && !CommonUtils.containsEmpty(arrExpiredPeriod)){
+          params.put("arrExpiredPeriod", arrExpiredPeriod);
 
-        for (String str : arrExpiredPeriod){
-          if("7".equals(str))
-              params.put("expPeriod", "8");
+          for (String str : arrExpiredPeriod){
+            if("7".equals(str))
+                params.put("expPeriod", "8");
+          }
         }
 
         List<EgovMap> list = membershipRejoinService.selectExpiredMembershipList(params);
