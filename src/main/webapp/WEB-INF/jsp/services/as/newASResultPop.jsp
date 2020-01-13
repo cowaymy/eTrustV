@@ -573,7 +573,12 @@
       }
 
       // KR-OHK Serial Check
-      if($("#hidSerialChk").val() == 'Y' && FormUtil.isEmpty($("#ddSrvFilterLastSerial").val())) {
+       if($("#hidSerialRequireChkYn").val()  == 'Y' && $("#hidSerialChk").val() == 'Y' && $("#ddlFilterQty").val() > 1) {
+          Common.alert("For serial check items, only quantity 1 can be entered.");
+          $("#ddlFilterQty").val("1");
+          return false;
+      }
+      if($("#hidSerialRequireChkYn").val()  == 'Y' && $("#hidSerialChk").val() == 'Y' && FormUtil.isEmpty($("#ddSrvFilterLastSerial").val())) {
           var arg = "<spring:message code='service.title.SerialNo'/>";
           Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ arg +"'/>");
           return false;
