@@ -356,7 +356,7 @@
             #{appvPrcssNo},
             #{appvItmSeq},
             #{invcNo},
-            #{invcDt},
+            NVL(TO_DATE(#{invcDt}, 'DD/MM/YYYY'), NULL),
             #{memAccId},
             SYSDATE,
             #{expType},
@@ -375,8 +375,8 @@
             #{userId},
             SYSDATE,
             #{userId},
-            #{billPeriodFr},
-            #{billPeriodTo}
+            TO_DATE(#{billPeriodFr}, 'DD/MM/YYYY'),
+            TO_DATE(#{billPeriodTo}, 'DD/MM/YYYY')
         )
 
     </insert>
