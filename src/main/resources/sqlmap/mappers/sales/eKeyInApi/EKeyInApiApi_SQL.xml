@@ -284,7 +284,7 @@ SELECT  CASE WHEN A.APP_TYPE_ID = 5764  THEN 66                                 
     ,   A.ITM_STK_ID                                                            AS ITM_STK_ID
     ,   A.PROMO_ID                                                              AS PROMO_ID
     ,   A.TOT_AMT                                                               AS TOT_AMT
-    ,   A.DISC_RNT_FEE                                                          AS MTH_RENT_AMT
+    ,   A.MTH_RENT_AMT                                                          AS MTH_RENT_AMT
     ,   A.TOT_PV                                                                AS TOT_PV
     ,   REPLACE(REPLACE(A.INSTCT, CHR(10), '\n'), CHR(39), CHR(38)||CHR(35)||'39;') AS INSTCT
     ,   TO_CHAR(A.REQST_DT, 'YYYYMMDD')                                         AS REQST_DT
