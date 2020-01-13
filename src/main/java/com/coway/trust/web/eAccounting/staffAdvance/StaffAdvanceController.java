@@ -349,6 +349,7 @@ public class StaffAdvanceController {
 
         // Insert FCM0004M
         staffAdvanceService.insertApproveManagement(params);
+        LOGGER.debug("staffAdvance :: insertApproveManagement");
 
         if(apprGridList.size() > 0) {
             Map hm = null;
@@ -403,6 +404,7 @@ public class StaffAdvanceController {
             staffAdvanceService.insertNotification(ntf);
         }
 
+        LOGGER.debug("staffAdvance :: insert approval details");
         // Insert Approval Details
         Map hm = new HashMap<String, Object>();
         hm.put("appvPrcssNo", appvPrcssNo);
@@ -439,6 +441,7 @@ public class StaffAdvanceController {
             hm.put("userId", sessionVO.getUserId());
 
             staffAdvanceService.insertAppvDetails(hm);
+            LOGGER.debug("staffAdvance :: insertAppvDetails");
 
         } else if("2".equals(advType) || "4".equals(advType)) {
 
