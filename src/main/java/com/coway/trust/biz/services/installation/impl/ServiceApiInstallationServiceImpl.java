@@ -282,6 +282,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 		String serviceNo = "";
 
 	    Map<String, Object> params = InstallFailJobRequestForm.createMaps(installFailJobRequestForm);
+	    params.put("hidSerialRequireChkYn", "Y");
 
 	    serviceNo = String.valueOf(params.get("serviceNo"));
 
@@ -308,6 +309,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 			fraParams.put("userId", params.get("userId"));
 			fraParams.put("salesOrderNo", params.get("salesOrderNo"));
 			fraParams.put("serialNo", params.get("serialNo"));
+			fraParams.put("hidSerialRequireChkYn", "Y");
 
 	    	serviceApiInstallationDetailService.installFailJobRequestProc(params);
 

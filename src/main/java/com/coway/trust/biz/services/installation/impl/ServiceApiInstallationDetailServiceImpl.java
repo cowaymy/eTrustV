@@ -344,8 +344,6 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 	         * params.put("remark",insTransLogs.get(i).get("resultRemark"));
 	         */
 
-	    	params.put("hidSerialRequireChkYn", "Y");
-
 	    	logger.debug("### INSTALLATION FAIL JOB REQUEST PARAM : " + params.toString());
 
 	    	Map rtnValue = installationResultListService.insertInstallationResult(params, sessionVO1);
