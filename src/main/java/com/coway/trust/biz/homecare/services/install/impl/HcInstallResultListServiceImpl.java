@@ -1,5 +1,6 @@
 package com.coway.trust.biz.homecare.services.install.impl;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
@@ -66,7 +68,8 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
     	ReturnMessage message = new ReturnMessage();
     	String rmsg = "";
 
-		ReturnMessage rtnMsg = installationResultListService.insertInstallationResultSerial(params, sessionVO);
+		ReturnMessage rtnMsg = insertInstallationResultSerial(params, sessionVO);
+
 		if("99".equals(rtnMsg.getCode())){
 			throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnMsg.getMessage()));
 		}
@@ -216,7 +219,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
             params.put("hidSwapPromoPV", promotionView.get("swapPromoPV"));
             /* hidden input End - KR-JIN */
 
-    		rtnMsg = installationResultListService.insertInstallationResultSerial(params, sessionVO);
+    		rtnMsg = insertInstallationResultSerial(params, sessionVO);
     		if("99".equals(rtnMsg.getCode())){
     			throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnMsg.getMessage()));
     		}
@@ -400,4 +403,276 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 		}
 		return resultValue;
 	}
+
+	/**
+	 * Copy from existing installationResult.
+	 * runInstSp() call ~ change.
+	 * @Author KR-JIN
+	 * @Date Jan 13, 2020
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 */
+	private ReturnMessage insertInstallationResultSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception{
+
+	    Map<String, Object> resultValue = new HashMap<String, Object>();
+	    ReturnMessage message = new ReturnMessage();
+
+	    if (sessionVO != null) {
+	    	int noRcd = installationResultListService.chkRcdTms(params);
+
+	        if (noRcd == 1) {
+	          EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
+	          logger.debug("INSTALLATION RESULT : {}" + installResult);
+
+	          params.put("EXC_CT_ID", installResult.get("ctId"));
+
+	          Map<String, Object> locInfoEntry = new HashMap<String, Object>();
+	          locInfoEntry.put("CT_CODE", installResult.get("ctMemCode"));
+	          locInfoEntry.put("STK_CODE", installResult.get("installStkId"));
+
+	          //logger.debug("LOC. INFO. ENTRY : {}" + locInfoEntry);
+	          EgovMap locInfo = (EgovMap) servicesLogisticsPFCMapper.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
+
+	          //logger.debug("LOC. INFO. : {}" + locInfo);
+
+	          if(locInfo == null) {
+	        	message.setCode("99");
+	            message.setMessage("Fail to update result. [lack of stock]");
+	          } else {
+	            if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
+	            	message.setCode("99");
+	            	message.setMessage("Fail to update result. [lack of stock]");
+	            } else {
+	              EgovMap validMap = installationResultListService.validationInstallationResult(params);
+	              int resultCnt = ((BigDecimal) validMap.get("resultCnt")).intValue();
+
+	              if (resultCnt > 0) {
+	                message.setMessage("Record already exist. Please refer ResultID : " + validMap.get("resultId") + ".");
+	              } else {
+	                // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
+	                resultValue = runInstSp(params, sessionVO, "1");
+	              }
+
+	              if (null != resultValue) {
+	                HashMap spMap = (HashMap) resultValue.get("spMap");
+	                //logger.debug("spMap :" + spMap.toString());
+
+	                if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"741".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
+	                  resultValue.put("logerr", "Y");
+	                  message.setCode("99");
+	                  message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS1): " + spMap.get("P_RESULT_MSG").toString());
+	                } else { // SUCCESS
+	                  if ("000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) {
+	                	  servicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+	                	  String errCode = (String)spMap.get("pErrcode");
+	                	  String errMsg = (String)spMap.get("pErrmsg");
+
+	                      logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
+	                      logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
+
+	                      // pErrcode : 000  = Success, others = Fail
+	                      if(!"000".equals(errCode)){
+	                      	  throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+	                      }
+	                  }
+	                  String ordStat = installationResultListService.getSalStat(params);
+
+	                  if (!"1".equals(ordStat)) {
+	                    if (params.get("hidCallType").equals("258")) {
+	                      int exgCode = installationResultListService.chkExgRsnCde(params);
+	                      // SKIP SOEXC009 - EXCHANGE (WITHOUT RETURN)
+	                      if (exgCode == 0) { // PEX EXCHANGE CODE NOT IN THE LIST
+	                        if (Integer.parseInt(params.get("installStatus").toString()) == 4) {
+	                          // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
+	                          resultValue = runInstSp(params, sessionVO, "2");
+
+	                          if (null != resultValue) {
+	                            spMap = (HashMap) resultValue.get("spMap");
+	                            logger.debug("spMap :" + spMap.toString());
+
+	                            if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
+	                              resultValue.put("logerr", "Y");
+	                              message.setCode("99");
+	                              message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS2): " + spMap.get("P_RESULT_MSG").toString());
+	                            } else {
+	                            	servicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+	                            	String errCode = (String)spMap.get("pErrcode");
+	                          	  	String errMsg = (String)spMap.get("pErrmsg");
+
+	                             	logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
+	                             	logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
+
+	                             	// pErrcode : 000  = Success, others = Fail
+	                             	if(!"000".equals(errCode)){
+	                             		throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+	                             	}
+	                            }
+	                          }
+	                        }
+	                      }
+	                    }
+	                  }
+
+	                  //resultValue = Save_2(true, params, sessionVO);
+	                  resultValue = installationResultListService.insertInstallationResult_2(params, sessionVO);
+
+	                  message.setCode("1");
+	                  message.setData("Y");
+	                  if (Integer.parseInt(params.get("installStatus").toString()) == 21) {
+	                	  message.setMessage("Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to " + resultValue.get("value") + ". Please proceed to Calllog function.");
+	                  } else {
+	                	message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
+	                    message.setMessage("Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to " + resultValue.get("value") + ".");
+	                  }
+
+	                  // KR-OHK Barcode Save Start
+	                  if("Y".equals(params.get("hidSerialRequireChkYn"))) {
+	                      Map<String, Object> setmap = new HashMap();
+	                      setmap.put("serialNo", params.get("serialNo"));
+	                      setmap.put("salesOrdId", params.get("hidSalesOrderId"));
+	                      setmap.put("reqstNo", params.get("hiddeninstallEntryNo"));
+	                      setmap.put("callGbn", "INSTALL");
+	                      setmap.put("mobileYn", "N");
+	                      setmap.put("userId", sessionVO.getUserId());
+
+	                      servicesLogisticsPFCMapper.SP_SVC_BARCODE_SAVE(setmap);
+
+	                      String errCode = (String)setmap.get("pErrcode");
+	                	  String errMsg = (String)setmap.get("pErrmsg");
+
+	                   	  logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE ERROR CODE : " + errCode);
+	                	  logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE ERROR MSG: " + errMsg);
+
+	                	  // pErrcode : 000  = Success, others = Fail
+	                	  if(!"000".equals(errCode)){
+	                		throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+	                	  }
+	                  }
+	            	  // KR-OHK Barcode Save Start
+	                }
+	              }
+	            }
+	          }
+	        } else {
+	          message.setMessage("Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+	          message.setCode("99");
+	        }
+	    }
+	    return message;
+
+	}
+
+	private Map<String, Object> runInstSp(Map<String, Object> params, SessionVO sessionVO, String no) throws ParseException {
+	    Map<String, Object> resultValue = new HashMap<String, Object>();
+	    Map<String, Object> logPram = null;
+	    String p_ordID = "";
+	    String retype = "";
+	    String p_type = "";
+	    String p_Pgrnm = "";
+
+	    if (sessionVO != null) {
+	      if ("2".equals(no)) { //
+	        if (params.get("hidCallType").equals("258")) { // PRODUCT EXCHANGE RETURN OLD STOCK REQUEST
+	          p_ordID = installationResultListMapper.getINSNo(params);
+	          logger.debug("== Param :: " + params.toString());
+	          installationResultListMapper.updateExchangeEntryCt(params);
+
+	          logger.debug("== PREV. INSTALLATION NO :: " + p_ordID);
+	          if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
+	            retype = "SVO";
+	            p_type = "OD55"; // ORDER EXCHANGE FROM CUSTOMER
+	            p_Pgrnm = "PEXRTN";
+	          }
+	        }
+	      } else if ("3".equals(no)) {
+	        if (params.get("hidCallType").equals("258")) { // PRODUCT EXCHANGE RETURN OLD STOCK RESULT
+	          p_ordID = installationResultListMapper.getINSNo(params);
+	          logger.debug("== PREV. INSTALLATION NO :: " + p_ordID);
+	          if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
+	            retype = "COMPLET";
+	            p_type = "OD55";
+	            p_Pgrnm = "PEXCOM";
+	          } else if (Integer.parseInt(params.get("installStatus").toString()) == 21) { // FAIL
+	            retype = "SVO";
+	            p_type = "OD56";
+	            p_Pgrnm = "PEXCAN";
+	          }
+	        }
+	      } else {
+	        if (params.get("hidCallType").equals("258")) { // PRODUCT EXCHANGE
+	          // TO CHECK ORDER STATUS
+	          String ordStat = installationResultListMapper.getSalStat(params);
+	          logger.debug("== SALES ORDER STATUS :: " + ordStat);
+	          if ("1".equals(ordStat)) {
+	            if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
+	              p_ordID = params.get("hiddeninstallEntryNo").toString();
+	              retype = "COMPLET";
+	              p_type = "OD01";
+	              p_Pgrnm = "INSCOM";
+	            } else if (Integer.parseInt(params.get("installStatus").toString()) == 21) { // FAIL
+	              p_ordID = params.get("hiddeninstallEntryNo").toString();
+	              retype = "SVO";
+	              p_type = "OD02";
+	              p_Pgrnm = "INSCAN";
+	            }
+	          } else {
+	            if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
+	              p_ordID = params.get("hiddeninstallEntryNo").toString();
+	              retype = "COMPLET";
+	              p_type = "OD53";
+	              p_Pgrnm = "PEXCOM";
+	            } else if (Integer.parseInt(params.get("installStatus").toString()) == 21) { // FAIL
+	              p_ordID = params.get("hiddeninstallEntryNo").toString();
+	              retype = "SVO";
+	              p_type = "OD54";
+	              p_Pgrnm = "PEXCAN";
+	            }
+	          }
+	        } else { // NEW INSTALLATION
+	          if (Integer.parseInt(params.get("installStatus").toString()) == 4) { // COMPLETE
+	            p_ordID = params.get("hiddeninstallEntryNo").toString();
+	            retype = "COMPLET";
+	            p_type = "OD01";
+	            p_Pgrnm = "INSCOM";
+	          } else if (Integer.parseInt(params.get("installStatus").toString()) == 21) { // FAIL
+	            p_ordID = params.get("hiddeninstallEntryNo").toString();
+	            retype = "SVO";
+	            p_type = "OD02";
+	            p_Pgrnm = "INSCAN";
+	          }
+	        }
+	      }
+
+	      logPram = new HashMap<String, Object>();
+	      logPram.put("ORD_ID", p_ordID);
+	      logPram.put("RETYPE", retype);
+	      logPram.put("P_TYPE", p_type);
+	      logPram.put("P_PRGNM", p_Pgrnm);
+	      logPram.put("USERID", sessionVO.getUserId());
+
+	      logger.debug("============================runInstSp================================");
+	      logger.debug("INSTALLATION SP PARAM = " + logPram.toString());
+
+	      servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL(logPram);
+
+		  if(!"000".equals(logPram.get("p1"))) {
+			  throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram.get("p1")+ ":" + "INSTALLATION Result Error");
+		  }
+		  // KR-OHK Serial check add end
+
+	      logPram.put("P_RESULT_TYPE", "IN");
+	      logPram.put("P_RESULT_MSG", logPram.get("p1"));
+
+	      logger.debug("INSTALLATION RESULT SP ===>" + logPram);
+	      logger.debug("============================runInstSp================================");
+	      resultValue.put("spMap", logPram);
+	    }
+	    return resultValue;
+	  }
+
+
 }

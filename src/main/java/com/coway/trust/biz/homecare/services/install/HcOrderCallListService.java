@@ -39,6 +39,15 @@ public interface HcOrderCallListService {
 	public List<EgovMap> hcInsertCallResult(Map<String, Object>params) throws Exception;
 
 	/**
+	 * Select organization territoryList page (Homecare)
+	 * @Author KR-JIN
+	 * @Date 2020. 01. 13.
+	 * @param params
+	 * @return
+	 */
+	public List<EgovMap> selectHcDetailList(Map<String, Object> params) throws Exception;
+
+	/**
 	 * TO-DO Description
 	 * @Author KR-SH
 	 * @Date 2019. 12. 12.

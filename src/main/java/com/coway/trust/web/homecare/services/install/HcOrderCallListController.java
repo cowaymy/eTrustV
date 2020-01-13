@@ -205,4 +205,10 @@ public class HcOrderCallListController {
 		return ResponseEntity.ok(resultList);
 	}
 
+	@RequestMapping(value = "/selectHcDetailList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHcDetailList(@RequestParam Map<String, Object>params) throws Exception{
+		List<EgovMap> resultList = hcOrderCallListService.selectHcDetailList(params);
+		return ResponseEntity.ok(resultList);
+	}
+
 }

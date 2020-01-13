@@ -188,7 +188,7 @@
 		var v_ctId    =selectedItems[0].item.ct;
 		var v_sDate =selectedItems[0].item.cDate;
 
-		Common.ajax("GET", "/organization/allocation/selectDetailList", {CT_ID: v_ctId , S_DATE:v_sDate  ,P_DATE :v_sDate}, function(result) {
+		Common.ajax("GET", "/homecare/services/install/selectHcDetailList.do", {CT_ID: v_ctId , S_DATE:v_sDate  ,P_DATE :v_sDate}, function(result) {
 		    AUIGrid.setGridData(dAgrid, result);
 
 		    item = {};

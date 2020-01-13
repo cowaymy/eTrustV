@@ -45,6 +45,9 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 	@Resource(name = "allocationMapper")
 	private AllocationMapper allocationMapper;
 
+	@Resource(name = "hcAllocationMapper")
+	private HcAllocationMapper hcAllocationMapper;
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
@@ -350,7 +353,7 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 						v.put("repla", "false");
 					}
 
-					EgovMap eM = allocationMapper.makeViewList(v);
+					EgovMap eM = hcAllocationMapper.makeViewList(v);
 					fList.add(eM);
 
 				}
@@ -395,4 +398,9 @@ public class HcOrderCallListServiceImpl extends EgovAbstractServiceImpl implemen
 		return hcOrderCallListMapper.searchHcOrderCallList(params);
 	}
 
+
+	@Override
+	public List<EgovMap> selectHcDetailList(Map<String, Object> params) throws Exception{
+		return hcAllocationMapper.selectHcDetailList(params);
+	}
 }
