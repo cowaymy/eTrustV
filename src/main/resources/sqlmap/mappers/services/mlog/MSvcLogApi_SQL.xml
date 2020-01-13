@@ -5056,4 +5056,13 @@
                                                  AND FRA_ORD_NO IS NOT NULL )
     ]]>
   </select>
+
+  <select id="getDelvryNo" parameterType="Map" resultType="egovMap">
+        SELECT    /* [com.coway.trust.biz.services.mlog.impl.MSvcLogApiMapper.getDelvryNo] KR_HAN */
+                      DISTINCT Y.DELVRY_NO DELVRY_NO
+        FROM      LOG0047M X
+                          INNER JOIN LOG0055D Y ON X.REQST_NO = Y.REQST_NO
+        WHERE     X.REF_DOC_NO = #{refDocNo}
+  </select>
+
 </mapper>

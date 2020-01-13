@@ -443,6 +443,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       List<EgovMap> qryUsedFilter = hsManualMapper.selectQryUsedFilter2(insertHsResultfinal);
 
       logger.debug("= LOOP ITEM : {}", docType.size());
+
       for (int i = 0; i < docType.size(); i++) {
         Map<String, Object> docSub = (Map<String, Object>) docType.get(i);
 
@@ -453,6 +454,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
         docSub.put("bsResultRem", "");
         docSub.put("bsResultCrtUserId", sessionVO.getUserId());
         docSub.put("bsResultFilterClm", docSub.get("name"));
+        docSub.put("serialNo", docSub.get("filterBarcdSerialNo"));
 
         // docSub.put("bsResultCrtDt");
         // Map<String, Object> docSub2 = (Map<String, Object>)

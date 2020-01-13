@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.api.mobile.services.RegistrationConstants;
 import com.coway.trust.api.mobile.services.as.ASFailJobRequestDto;
@@ -25,9 +23,7 @@ import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.ServiceApiASDetailService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
-import com.coway.trust.cmmn.exception.BizExceptionFactoryBean;
 import com.coway.trust.cmmn.exception.BizException;
-import com.coway.trust.cmmn.model.BizMsgVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -80,6 +76,9 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 	    String ddMMCurDate = transFormat.format(new Date());
 	    String curDate = transFormatYY.format(new Date());
 	    String curTime = transFormatHH.format(new Date());
+
+	    logger.info("++++ asResultProc insApiresult", insApiresult);
+
 
 	    transactionId = String.valueOf(insApiresult.get("transactionId"));
 		serviceNo = String.valueOf(insApiresult.get("serviceNo"));
@@ -519,7 +518,38 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         					rtnValue.put("logerr", "Y");
         				}
 
-        				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+        				logger.debug("++++ String.valueOf( insApiresult.get('serialRequireChkYn')) ::" + String.valueOf( insApiresult.get("serialRequireChkYn")) );
+
+    					if("Y".equals(  String.valueOf( insApiresult.get("serialRequireChkYn")) )){
+            				// KR_HAN ADD
+            				// SP_SVC_BARCODE_SAVE
+            				params.put("scanSerial", String.valueOf(insApiresult.get("scanSerial")));
+        					params.put("salesOrdId", String.valueOf(getAsBasic.get("salesOrdId")));
+        					params.put("reqstNo", String.valueOf(rtnValue.get("asNo")));
+        					params.put("delvryNo", null);
+        					params.put("callGbn", "AS");
+        					params.put("mobileYn", "Y");
+        					params.put("userId", spMap.get("USERID").toString() );
+        					params.put("pErrcode", "");
+        					params.put("pErrmsg", "");
+        					MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
+
+        					logger.debug("+++ SP_SVC_BARCODE_SAVE params ::" + params.toString());
+
+        					if (!"000".equals(params.get("pErrcode"))) {
+        						String procTransactionId = transactionId;
+        						String procName = "AfterService";
+        						String procKey = serviceNo;
+        						String procMsg = "Failed to Barcode Save";
+        						String errorMsg = "[API] " + params.get("pErrmsg");
+        						throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    						}
+
+            				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+    					}else{
+    						// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
+        					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+    					}
         			}
 
         			if (RegistrationConstants.IS_INSERT_AS_LOG) {

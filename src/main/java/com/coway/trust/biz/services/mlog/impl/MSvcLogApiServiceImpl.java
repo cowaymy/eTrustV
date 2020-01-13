@@ -936,4 +936,11 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     return MSvcLogApiMapper.getPrFraOrdInfo(params);
   }
   /* Woongjin Jun */
+
+  /* Woongjin Han */
+    @Override
+    public EgovMap getDelvryNo(Map<String, Object> params) {
+      return MSvcLogApiMapper.getDelvryNo(params);
+    }
+  /* Woongjin Han */
 }

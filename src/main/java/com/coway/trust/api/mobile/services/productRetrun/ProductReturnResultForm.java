@@ -62,6 +62,16 @@ public class ProductReturnResultForm {
 	private String ccCode;
 	private String resultCode;
 
+	private String serialRequireChkYn;
+
+	public String getSerialRequireChkYn() {
+		return serialRequireChkYn;
+	}
+
+	public void setSerialRequireChkYn(String serialRequireChkYn) {
+		this.serialRequireChkYn = serialRequireChkYn;
+	}
+
 	public String getCcCode() {
 		return ccCode;
 	}

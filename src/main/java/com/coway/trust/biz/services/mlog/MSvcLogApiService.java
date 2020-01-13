@@ -212,4 +212,8 @@ public interface MSvcLogApiService {
 
   EgovMap getPrFraOrdInfo(Map<String, Object> params);
   /* Woongjin Jun */
+
+  /* Woongjin Han */
+  EgovMap getDelvryNo(Map<String, Object> params);
+  /* Woongjin Han */
 }

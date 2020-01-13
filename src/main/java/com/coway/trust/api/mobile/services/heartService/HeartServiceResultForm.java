@@ -86,6 +86,8 @@ public class HeartServiceResultForm {
   private String scanSerial;
   private String homeCareOrderYn;
 
+  private String serialRequireChkYn;
+
   public String getCheckInDate() {
     return checkInDate;
   }
@@ -281,7 +283,15 @@ public class HeartServiceResultForm {
     this.homeCareOrderYn = homeCareOrderYn;
   }
 
-  public List<Map<String, Object>> createMaps(HeartServiceResultForm heartServiceResultForm) {
+  public String getSerialRequireChkYn() {
+	return serialRequireChkYn;
+}
+
+public void setSerialRequireChkYn(String serialRequireChkYn) {
+	this.serialRequireChkYn = serialRequireChkYn;
+}
+
+public List<Map<String, Object>> createMaps(HeartServiceResultForm heartServiceResultForm) {
 
     List<Map<String, Object>> list = new ArrayList<>();
 

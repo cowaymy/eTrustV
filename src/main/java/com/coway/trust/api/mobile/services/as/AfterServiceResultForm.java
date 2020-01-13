@@ -86,6 +86,18 @@ public class AfterServiceResultForm {
 
 	private String scanSerial;
 
+	private String serialRequireChkYn;
+
+
+
+	public String getSerialRequireChkYn() {
+		return serialRequireChkYn;
+	}
+
+	public void setSerialRequireChkYn(String serialRequireChkYn) {
+		this.serialRequireChkYn = serialRequireChkYn;
+	}
+
 	public String getScanSerial() {
 		return scanSerial;
 	}

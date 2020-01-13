@@ -155,7 +155,41 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     						rtnValue.put("logerr", "Y");
     					}
 
-    					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+    					logger.debug("++++ String.valueOf( insApiresult.get('serialRequireChkYn')) ::" + String.valueOf( insApiresult.get("serialRequireChkYn")) );
+
+    					if("Y".equals(  String.valueOf( insApiresult.get("serialRequireChkYn")) )){
+        					params.put("scanSerial", String.valueOf(insApiresult.get("scanSerial")));
+        					params.put("salesOrdId", String.valueOf(getHsBasic.get("salesOrdId")));
+        					params.put("reqstNo", String.valueOf(rtnValue.get("hsrNo")));
+        					params.put("delvryNo", null);
+        					params.put("callGbn", "HS");
+        					params.put("mobileYn", "Y");
+        					params.put("userId", userId);
+        					params.put("pErrcode", "");
+        					params.put("pErrmsg", "");
+        					MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
+
+        					logger.debug("### SP_SVC_BARCODE_SAVE params  : " + params.toString());
+
+        					if (!"000".equals(params.get("pErrcode"))) {
+        						String procTransactionId = transactionId;
+        						String procName = "HeartService";
+        						String procKey = serviceNo;
+        						String procMsg = "Failed to Barcode Save";
+        						String errorMsg = "[API] " + params.get("pErrmsg");
+        						throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    						}
+
+        					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+        					logger.debug("### SP_SVC_LOGISTIC_REQUEST_SERIAL params  : " + spMap.toString());
+
+    					}else{
+    						// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
+        					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+    					}
+
+
 
     					// HS LOG HISTORY
     					if (RegistrationConstants.IS_INSERT_HEART_LOG) {

@@ -51,6 +51,8 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 		transactionId = String.valueOf(cvMp.get("transactionId"));
 		serviceNo = String.valueOf(cvMp.get("serviceNo"));
 
+		Map<String, Object> params = cvMp;
+
 		// CHECK CT VALID TO PERFORM THIS ACTION
 		int memCnt = MSvcLogApiService.prdResultSync(cvMp);
 
@@ -59,6 +61,10 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 
 	        if (isPrdRtnCnt == 0) {
 	        	try {
+	        		EgovMap ordIdMap = MSvcLogApiService.getOrdID(cvMp);
+	        		String userId = MSvcLogApiService.getUseridToMemid(params); // SELECT MEM_ID FROM ORG0001D WHERE mem_code = #{userId}
+
+	        		// SP_RETURN_BILLING_EARLY_TERMI COMMIT DELETE
 	        		EgovMap rtnValue = MSvcLogApiService.productReturnResult(cvMp);
 
 	        		if (null != rtnValue) {
@@ -67,7 +73,42 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	        				rtnValue.put("logerr", "Y");
 	        			}
 
-	        			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+						logger.debug("++++ String.valueOf( cvMp.get('serialRequireChkYn')) ::" + String.valueOf( cvMp.get("serialRequireChkYn")) );
+
+    					if("Y".equals(  String.valueOf( cvMp.get("serialRequireChkYn")) )){
+
+    	        			// DELVRY_NO
+    	        			params.put("refDocNo", String.valueOf(cvMp.get("serviceNo")));
+    	        			EgovMap delvryNoMap = MSvcLogApiService.getDelvryNo(params);
+
+    	        			params.put("scanSerial", String.valueOf(cvMp.get("scanSerial")));
+        					params.put("salesOrdId", String.valueOf(ordIdMap.get("salesOrdId")));
+        					params.put("reqstNo", String.valueOf(cvMp.get("serviceNo")));
+        					params.put("delvryNo", String.valueOf(delvryNoMap.get("delvryNo")));
+        					params.put("callGbn", "RETURN");
+        					params.put("mobileYn", "Y");
+        					params.put("userId", userId);
+        					params.put("pErrcode", "");
+        					params.put("pErrmsg", "");
+        					MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
+
+        					logger.debug("++++ SP_SVC_BARCODE_SAVE params ::" + params.toString()  );
+
+        					if (!"000".equals(params.get("pErrcode"))) {
+        						String procTransactionId = transactionId;
+        						String procName = "ProductReturn";
+        						String procKey = serviceNo;
+        						String procMsg = "Failed to Barcode Save";
+        						String errorMsg = "[API] " + params.get("pErrmsg");
+        						throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    						}
+
+    	        			// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
+    	        			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+    					}else{
+    						// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
+    						servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+    					}
 	        		}
 	        	}
 	        	catch (Exception e) {
@@ -153,6 +194,8 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
     					params.put("pErrcode", "");
     					params.put("pErrmsg", "");
     					MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
+
+    					logger.debug("### SP_SVC_BARCODE_SAVE PARAM : " + params.toString());
 
     					if (!"000".equals(params.get("pErrcode"))) {
     						String procTransactionId = transactionId;

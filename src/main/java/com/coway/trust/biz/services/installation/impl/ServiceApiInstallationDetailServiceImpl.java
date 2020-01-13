@@ -196,7 +196,39 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 							rtnValue.put("logerr", "Y");
 						}
 
-						servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+						logger.debug("++++ String.valueOf( insApiresult.get('serialRequireChkYn')) ::" + String.valueOf( insApiresult.get("serialRequireChkYn")) );
+
+    					if("Y".equals(  String.valueOf( insApiresult.get("serialRequireChkYn")) )){
+            				// KR_HAN ADD
+    						//  SP_SVC_BARCODE_SAVE : KR_HAN ADD START
+    	        			params.put("scanSerial", String.valueOf(insApiresult.get("serialNo")));
+        					params.put("salesOrdId", String.valueOf(installResult.get("salesOrdId")) );
+        					params.put("reqstNo", String.valueOf(installResult.get("installEntryNo")));
+        					params.put("delvryNo", null); // ?????????
+        					params.put("callGbn", "INSTALL");
+        					params.put("mobileYn", "Y");
+        					params.put("userId", userId);
+        					params.put("pErrcode", "");
+        					params.put("pErrmsg", "");
+        					MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
+
+        					if (!"000".equals(params.get("pErrcode"))) {
+        						String procTransactionId = transactionId;
+        						String procName = "Installation";
+        						String procKey = serviceNo;
+        						String procMsg = "Failed to Barcode Save";
+        						String errorMsg = "[API] " + params.get("pErrmsg");
+        						throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    						}
+        					// SP_SVC_BARCODE_SAVE : KR_HAN ADD END
+
+        					logger.debug("+++ SP_SVC_BARCODE_SAVE params ::" + params.toString());
+
+            				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+    					}else{
+    						// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
+    						servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+    					}
 					}
 				} catch (Exception e) {
 					String procTransactionId = transactionId;
