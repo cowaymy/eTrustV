@@ -648,22 +648,7 @@
                 }
 
                 $("#trvPeriodTo").val(dd + "/" + mm + "/" + yyyy);
-                $("#daysCount").val(minPeriod);
-            }else {
-                arrDt = $("#trvPeriodTo").val().split("/");
-                tDate = new Date(arrDt[2], arrDt[1]-1, arrDt[0]);
-                dateDiff = (new Date(tDate - fDate))/1000/60/60/24;
-
-                if(dateDiff <= 0) {
-                    $("#trvPeriodFr").val("");
-                    $("#trvPeriodTo").val("");
-                    $("#daysCount").val("");
-                    $("#refdDate").val("");
-                    Common.alert(errMsg);
-                    return false;
-                } else {
-                    $("#daysCount").val(dateDiff + 1);
-                }
+                //$("#daysCount").val(minPeriod);
             }
         } else if(mode == "T") {
             arrDt = $("#trvPeriodTo").val().split("/");
@@ -683,23 +668,31 @@
                 }
 
                 $("#trvPeriodFr").val(dd + "/" + mm + "/" + yyyy);
-                $("#daysCount").val(minPeriod);
-            }else {
-                arrDt = $("#trvPeriodFr").val().split("/");
-                fDate = new Date(arrDt[2], arrDt[1]-1, arrDt[0]);
-                dateDiff = (new Date(tDate - fDate))/1000/60/60/24;
-
-                if(dateDiff <= 0) {
-                    $("#trvPeriodFr").val("");
-                    $("#trvPeriodTo").val("");
-                    $("#daysCount").val("");
-                    $("#refdDate").val("");
-                    Common.alert(errMsg);
-                    return false;
-                } else {
-                    $("#daysCount").val(dateDiff + 1);
-                }
+                //$("#daysCount").val(minPeriod);
             }
+        }
+
+        //Calculate day difference
+        if($("#trvPeriodFr").val() != "" && $("#trvPeriodTo").val() != "") {
+            arrDt = $("#trvPeriodFr").val().split("/");
+            fDate = new Date(arrDt[2], arrDt[1]-1, arrDt[0]);
+
+            arrDt = $("#trvPeriodTo").val().split("/");
+            tDate = new Date(arrDt[2], arrDt[1]-1, arrDt[0]);
+
+            dateDiff = ((new Date(tDate - fDate))/1000/60/60/24) + 1;
+
+            if(dateDiff <= 0) {
+                $("#trvPeriodFr").val("");
+                $("#trvPeriodTo").val("");
+                $("#daysCount").val("");
+                $("#refdDate").val("");
+                Common.alert(errMsg);
+                return false;
+            } else {
+                $("#daysCount").val(dateDiff);
+            }
+
         }
 
         if($("#trvPeriodTo").val() != "") {
