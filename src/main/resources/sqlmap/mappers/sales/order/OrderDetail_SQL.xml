@@ -1633,4 +1633,16 @@
 		) T
 		ORDER BY T.AS_ID
 	</select>
+
+	<select id="getInstImg" parameterType="Map" resultType="egovMap">
+    SELECT FILE_SUB_PATH || '/' || PHYSICL_FILE_NAME AS ACT_FL_NM,
+               ATCH_FILE_NAME
+    FROM SYS0071D
+    WHERE SUBSTR(SYS0071D.ATCH_FILE_NAME, 12, 10) IN ( SELECT INSTALL_ENTRY_NO
+                                                                                     FROM SAL0046D WHERE SALES_ORD_ID = (SELECT SALES_ORD_ID
+                                                                                                                                                  FROM SAL0001D
+                                                                                                                                                  WHERE SALES_ORD_NO = #{ordNo})
+                                                                                                                 AND STUS_CODE_ID = 4
+    )
+  </select>
 </mapper>
