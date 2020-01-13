@@ -280,7 +280,7 @@ function fn_estmReqPopClose(){
                         <tr>
                             <td colspan="3">
 	                            <label><input type="radio"   id="changePop_estm" name="billType"/><span>E-Statement </span></label>
-	                            <input type="text" title="" placeholder="" class="readonly" id="changePop_estmVal" name="changePop_estmVal"/><p class="btn_sky"><a href="javascript:fn_reqNewMail();"><spring:message code='pay.btn.requestNewEmail'/></a></p>
+	                            <input type="text" title="" placeholder="" class="readonly" id="changePop_estmVal" name="changePop_estmVal" readonly="readonly"/><p class="btn_sky"><a href="javascript:fn_reqNewMail();"><spring:message code='pay.btn.requestNewEmail'/></a></p>
                             </td>
                         </tr>
                         <tr>
