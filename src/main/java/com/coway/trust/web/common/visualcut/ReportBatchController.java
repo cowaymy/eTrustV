@@ -1640,7 +1640,7 @@ public class ReportBatchController {
     email += "Hereby is the Daily Accumulated Key-In Sales Analysis Report (HP) for your reference.\r\n\r\n";
     email +=  "Sincere Regards,\r\n";
     email +=  "IT Department";
-    params.put(REPORT_FILE_NAME, "/sales/CowayDailySalesStatusHP_Adv.rpt");// visualcut
+    params.put(REPORT_FILE_NAME, "/visualcut/CowayDailySalesStatusHP_Adv.rpt");// visualcut
     params.put(EMAIL_SUBJECT, "Daily Accumulated Key-In Sales Analysis Report (HP)");
     params.put(EMAIL_TO, address);
     params.put(EMAIL_TEXT, email);
@@ -1650,7 +1650,7 @@ public class ReportBatchController {
     params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
     params.put("v_Param", " ");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "CowayDailySalesStatusHP_Adv" + CommonUtils.getNowDate() + ".xls");
+        "CowayDailySalesStatusHP_Adv" + CommonUtils.getNowDate() + ".pdf");
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] CowayDailySalesStatusHP_Adv...");
@@ -1668,7 +1668,7 @@ public class ReportBatchController {
     email += "Hereby is the Daily Accumulated Key-In Sales Analysis Report (Cody) for your reference.\r\n\r\n";
     email +=  "Sincere Regards,\r\n";
     email +=  "IT Department";
-    params.put(REPORT_FILE_NAME, "/sales/CowayDailySalesStatusCody.rpt");// visualcut
+    params.put(REPORT_FILE_NAME, "/visualcut/CowayDailySalesStatusCody.rpt");// visualcut
     params.put(EMAIL_SUBJECT, "Daily Accumulated Key-In Sales Analysis Report (Cody)");
     params.put(EMAIL_TO, address);
     params.put(EMAIL_TEXT, email);
@@ -1678,7 +1678,7 @@ public class ReportBatchController {
     params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
     params.put("v_Param", " ");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "CowayDailySalesStatusCody" + CommonUtils.getNowDate() + ".xls");
+        "CowayDailySalesStatusCody" + CommonUtils.getNowDate() + ".pdf");
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] CowayDailySalesStatusCody...");
