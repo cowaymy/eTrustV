@@ -142,7 +142,8 @@ to {
 
 <script type="text/javaScript">
   $(document).ready(function(){
-    if ("${imgLst}".length = 0) {
+	  alert("${imgLst}".length);
+    if ("${imgLst}".length <= 2) {
       $("#emtpyContainer").show();
       $("#imgContainer").hide();
     } else {
@@ -166,6 +167,11 @@ to {
     var i;
     var slides = document.getElementsByClassName("mySlides");
     var dots = document.getElementsByClassName("dot");
+
+    if (slides.length == 0) {
+      return;
+    }
+
     if (n > slides.length) {
       slideIndex = 1
     }
