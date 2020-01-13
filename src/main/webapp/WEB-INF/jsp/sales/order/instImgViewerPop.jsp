@@ -142,7 +142,6 @@ to {
 
 <script type="text/javaScript">
   $(document).ready(function(){
-	  alert("${imgLst}".length);
     if ("${imgLst}".length <= 2) {
       $("#emtpyContainer").show();
       $("#imgContainer").hide();
