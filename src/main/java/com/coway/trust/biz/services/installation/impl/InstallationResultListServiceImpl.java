@@ -2782,6 +2782,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
         s46dup.put("installEntryId", installResult.get("entryId"));
         s46dup.put("installDate", installResult.get("installDate"));
         s46dup.put("salesOrdId", installResult.get("salesOrdId"));
+        s46dup.put("creator",  installResult.get("creator"));
 
         // UPDATE SAL0046D
         installationResultListMapper.updateInstallEntry_2(s46dup);
@@ -2816,6 +2817,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
       entry.put("updator", installResult.get("creator"));
       entry.put("installDate", installResult.get("installDate"));
       entry.put("salesOrdId", installResult.get("salesOrdId"));
+      entry.put("creator", installResult.get("creator"));
 
       // UPDATE SAL0046D
       installationResultListMapper.updateInstallEntry_2(entry);
@@ -2850,6 +2852,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
         l38dup.put("installEntryId", installResult.get("entryId"));
         l38dup.put("installDate", installResult.get("installDate"));
         l38dup.put("salesOrdId", installResult.get("salesOrdId"));
+        l38dup.put("creator", installResult.get("creator"));
         installationResultListMapper.updateExchangeEntry_2(l38dup);
 
         Map<String, Object> exchgInfo = new HashMap<>();
