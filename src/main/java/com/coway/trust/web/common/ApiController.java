@@ -239,7 +239,7 @@ public class ApiController {
       params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
       params.put("V_TAXINVOICEID", params.get("taxInvoiceId").toString()); // parameter
       params.put("V_TYPE", params.get("type").toString()); // parameter
-      params.put(AppConstants.REPORT_DOWN_FILE_NAME, "CustomerPortal" + File.separator + "Rental_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Rental_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
       
     } 
     if(params.get("type").equals("")){
