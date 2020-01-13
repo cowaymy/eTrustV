@@ -114,9 +114,9 @@ var TODAY_DD      = "${toDay}";
     headerText : "Previous Month Hs Result",
     width : 120
   } , {
-	    dataField : "serialRequireChkYn",
-	    headerText : "serialRequireChkYn",
-	    width : 120}];
+    dataField : "serialRequireChkYn",
+    headerText : "serialRequireChkYn",
+    width : 0}];
 
   var columnAssiinLayout = [
       {
@@ -218,7 +218,7 @@ var TODAY_DD      = "${toDay}";
       }, {
           dataField : "serialRequireChkYn",
           headerText : "serialRequireChkYn",
-          width : 120}
+          width : 0}
       , {
         dataField : "undefined",
         headerText : "Edit",

@@ -160,6 +160,16 @@
           }
         }
 
+        // KR-OHK Serial Check add
+        var serialChk = event.item.serialChk;
+        var serialNo = event.item.serialNo;
+
+        if($("#hidSerialRequireChkYn").val()  == 'Y' && serialChk == 'Y' && Number(event.value) > 1) {
+            Common.alert("For serial check items, only quantity 1 can be entered.");
+            AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "1");
+            return false;
+        }
+
         // CHECK MINERAL FILTER - NOT ALLOW TO EDIT -- TPY
         //if(sk == 1428){
           //var msg = fn_checkStkDuration();
