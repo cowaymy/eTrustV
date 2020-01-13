@@ -261,7 +261,7 @@
             }
 
              if(FormUtil.diffDay($("#stateDateFr").val(), $("#stateDateTo").val()) > 31){
-                 Common.alert("Statement Date is only within 31 days.");
+                 Common.alert("Upload Date is only within 31 days.");
                  return ;
              }
 
@@ -271,8 +271,8 @@
                 return;
             }
 
-            if(FormUtil.diffDay($("#transDateFr").val(), $("#transDateTo").val()) > 15){
-                Common.alert("Transaction Date is only within 15 days.");
+            if(FormUtil.diffDay($("#transDateFr").val(), $("#transDateTo").val()) > 31){
+                Common.alert("Transaction Date is only within 31 days.");
                 return ;
             }
         }
