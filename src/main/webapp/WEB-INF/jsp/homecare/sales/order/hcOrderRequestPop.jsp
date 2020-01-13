@@ -112,7 +112,6 @@
             }
         });
         $('#cmbOrderProduct').change(function() {
-
             if(FormUtil.isEmpty($('#cmbOrderProduct').val())) {
                 $('#cmbPromotion option').remove();
                 return;
@@ -120,11 +119,6 @@
 
             $('#btnCurrentPromo').prop("checked", false).prop("disabled", true);
 
-//          $('#ordCampgn option').remove();
-//          $('#ordCampgn').prop("readonly", true);
-//          $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
-//          $('#trialNoChk').prop("checked", false).prop("disabled", true);
-//          $('#trialNo').val('').addClass("readonly");
             $('#txtPrice').val('');
             $('#ordPriceId').val('');
             $('#txtPV').val('');
@@ -139,6 +133,7 @@
             if($("#cmbOrderProduct option:selected").index() > 0) {
                 fn_loadProductPrice(APP_TYPE_ID, stkIdVal, SRV_PAC_ID);
                 fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);
+
                 $('#btnCurrentPromo').removeAttr("disabled");
 
                 if(GST_CHK == '1') {
@@ -146,6 +141,7 @@
                 }
             }
         });
+
         $('#cmbPromotion').change(function() {
             var stkIdVal   = $("#cmbOrderProduct").val();
             var promoIdIdx = $("#cmbPromotion option:selected").index();
@@ -261,8 +257,7 @@
             if(idx > 0) {
                 var stkType = $("#cmbAppTypeAexc").val() == '66' ? '1' : '2';
 
-                Common.ajax("GET", "/sales/order/selectProductCodeList.do", {stkType:stkType, srvPacId:selVal}, function(result) {
-
+                Common.ajax("GET", "/homecare/sales/order/selectHcProductCodeList.do", {stkType:stkType, srvPacId:selVal, stkCtgryId:'${orderDetail.basicInfo.stkCtgryId}'}, function(result) {
                     if(result != null && result.length > 0) {
                         var isExist = false;
 
@@ -333,6 +328,8 @@
             //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
             Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REGISTER_CUST_CUST"}, null, true);
         });
+
+        // Transfer Ownership - Button Click
         $('#btnReqOwnTrans').click(function() {
             if(!fn_isLockOrder('OTRN')) {
                 if(fn_validReqOwnt()) {
@@ -340,6 +337,7 @@
                 }
             }
         });
+
         $('#btnAddAddress').click(function() {
             Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callParam : "ORD_REQUEST_MAIL"}, null , true);
         });
@@ -1032,9 +1030,7 @@
         var PromoItemPV = 0;
 
         Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
-
             if(promoPriceInfo != null) {
-
                 $("#txtPriceAexc").val(promoPriceInfo.orderPricePromo);
                 $("#txtPVAexc").val(promoPriceInfo.orderPVPromo);
                 $("#ordPvGSTAexc").val(promoPriceInfo.orderPVPromoGST);
@@ -1055,7 +1051,6 @@
 
         if("${orderDetail.basicInfo.appTypeId}" == "66") {
             Common.ajax("GET", "/sales/order/selectOrderSimulatorViewByOrderNo.do", {salesOrdNo : ORD_NO}, function(result) {
-
                 if(result != null) {
                     isNull2 = false;
                 }
@@ -1065,28 +1060,12 @@
                     var today = '${toDay}';
 
                     var monthDiff = ((Number(today.substr(6, 4)) * 12) + Number(today.substr(3, 2))) - ((Number(installdate.substr(0, 4)) * 12) + Number(installdate.substr(4, 2)));
-
-                    console.log('monthDiff:'+monthDiff);
-                    /*
-                    var totalBillAmt;
-
-                    console.log('monthDiff:'+monthDiff);
-
-                    if(monthDiff >= 1) {
-                        totalBillAmt = (result.totalbillamt + result.totaldnbill - result.totalcnbill);
-                    }
-                    else {
-                        totalBillAmt = (result.TotalBillAmt + result.TotalDNBill - result.TotalCNBill) + (result.totalbillrpf + result.totaldnrpf - result.totalcnrpf);
-                    }
-                    */
                     var totalRPF = result.totalbillrpf + result.totaldnrpf - result.totalcnrpf;
                     var totalBillAmount = result.totalbillamt + result.totaldnbill - result.totalcnbill;
 
                     if(monthDiff >= 1) {
-//                      totalAmount = pd.PromoItemPrice.ToString() - (totalBillAmount / 2);
                         totalAmount = parseFloat(PromoItemPrice) - (totalBillAmount / 2);
                     } else {
-//                      totalAmount = pd.PromoItemPrice.ToString()) - (totalRPF + totalBillAmount);
                         totalAmount = parseFloat(PromoItemPrice) - (totalRPF + totalBillAmount);
                     }
                 }
@@ -1897,14 +1876,13 @@
         });
     }
 
+    // save - Transfer Ownership
     function fn_doSaveReqOwnt() {
-        Common.ajax("POST", "/sales/order/requestOwnershipTransfer.do", $('#frmReqOwnt').serializeJSON(), function(result) {
+        Common.ajax("POST", "/homecare/sales/order/hcReqOwnershipTransfer.do", $('#frmReqOwnt').serializeJSON(), function(result) {
             Common.alert('<spring:message code="sal.alert.msg.ownTransSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_selfClose);
 
         }, function(jqXHR, textStatus, errorThrown) {
             try {
-//                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-//                    console.log("Error message : " + jqXHR.responseJSON.message);
                 Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
             } catch(e) {
                 console.log(e);
@@ -1912,6 +1890,7 @@
         });
     }
 
+    // validation - Transfer Ownership
     function fn_validReqOwnt() {
         var msg = "";
 
@@ -1922,14 +1901,27 @@
             msg = '<spring:message code="sal.msg.underOwnTrans2" />';
             Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
             return false;
-        }
-        else {
-            if(!fn_validReqOwntCustmer()){     return false;}
-            if(!fn_validReqOwntMailAddress()){return false;}
-            if(!fn_validReqOwntContact()){     return false;}
-            if(!fn_validReqOwntRentPaySet()){  return false;}
-            if(!fn_validReqOwntBillGroup()){    return false;}
-            if(!fn_validReqOwntInstallation()){ return false;}
+
+        } else {
+            if(!fn_validReqOwntCustmer()) {
+            	return false;
+            }
+            if(!fn_validReqOwntMailAddress()) {
+            	return false;
+            }
+            if(!fn_validReqOwntContact()) {
+            	return false;
+            }
+            if(!fn_validReqOwntRentPaySet()) {
+            	return false;
+            }
+            if(!fn_validReqOwntBillGroup()) {
+            	$('#tabBG').click();
+            	return false;
+            }
+            if(!fn_validReqOwntInstallation()) {
+            	return false;
+            }
         }
         return true;
     }
@@ -1984,7 +1976,6 @@
       //}
 
         if(!isValid) {
-            $('#tabBG').click();
             Common.alert('<spring:message code="sal.alert.msg.ownTransSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
         }
         return isValid;
@@ -2045,7 +2036,8 @@
     }
 
     function fn_validReqOwntContact() {
-        var isValid = true, msg = "";
+        var isValid = true;
+        var msg = "";
 
         if(FormUtil.checkReqValue($('#txtHiddenContactIDOwnt'))) {
             isValid = false;
@@ -2060,7 +2052,8 @@
     }
 
     function fn_validReqOwntMailAddress() {
-        var isValid = true, msg = "";
+        var isValid = true;
+        var msg = "";
 
         if(FormUtil.checkReqValue($('#txtHiddenAddressIDOwnt'))) {
             isValid = false;
@@ -2075,7 +2068,8 @@
     }
 
     function fn_validReqOwntCustmer() {
-        var isValid = true, msg = "";
+        var isValid = true;
+        var msg = "";
 
         if(FormUtil.checkReqValue($('#txtHiddenCustIDOwnt'))) {
             isValid = false;
@@ -2297,6 +2291,7 @@
     }
 
     function fn_selfClose() {
+    	fn_selectListAjax();
         $('#btnCloseReq').click();
     }
 
@@ -2714,16 +2709,18 @@
 </form>
 
 <form id="frmReqOwnt" name="frmReqOwnt" action="#" method="post">
-<input                                 name="salesOrdId"             type="hidden" value="${orderDetail.basicInfo.ordId}"/>
-<input                                 name="hiddenCurrentCustID"    type="hidden" value="${orderDetail.basicInfo.custId}"/>
-<input id="txtHiddenCustIDOwnt"        name="txtHiddenCustID"        type="hidden"/>
-<input id="hiddenCustTypeIDOwnt"       name="hiddenCustTypeID"       type="hidden"/>
-<input id="txtHiddenContactIDOwnt"     name="txtHiddenContactID"     type="hidden"/>
-<input id="txtHiddenAddressIDOwnt"     name="txtHiddenAddressID"     type="hidden"/>
+<input name="salesOrdId" type="hidden" value="${orderDetail.basicInfo.ordId}"/>
+<input name="srvOrdId" type="hidden" value="${orderDetail.basicInfo.ordId}"/>
+<input name="salesOrdNo" type="hidden" value="${orderDetail.basicInfo.ordNo}"/>
+<input name="hiddenCurrentCustID" type="hidden" value="${orderDetail.basicInfo.custId}"/>
+<input id="txtHiddenCustIDOwnt"          name="txtHiddenCustID"          type="hidden"/>
+<input id="hiddenCustTypeIDOwnt"       name="hiddenCustTypeID"        type="hidden"/>
+<input id="txtHiddenContactIDOwnt"      name="txtHiddenContactID"      type="hidden"/>
+<input id="txtHiddenAddressIDOwnt"     name="txtHiddenAddressID"      type="hidden"/>
 <input id="hiddenAppTypeIDOwnt"        name="hiddenAppTypeID"        type="hidden"/>
 <input id="txtHiddenInstAddressIDOwnt" name="txtHiddenInstAddressID" type="hidden"/>
-<input id="txtHiddenInstContactIDOwnt" name="txtHiddenInstContactID" type="hidden"/>
-<input id="isNewVer"                   name="isNewVer"               type="hidden" value="${orderDetail.isNewVer}"/>
+<input id="txtHiddenInstContactIDOwnt" name="txtHiddenInstContactID"  type="hidden"/>
+<input id="isNewVer"                           name="isNewVer"                     type="hidden" value="${orderDetail.isNewVer}"/>
 
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.page.subTitle.ownTransInfo" /></h3>

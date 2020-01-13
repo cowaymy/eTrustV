@@ -40,4 +40,15 @@ public interface HcOrderRequestService {
 	 */
 	public ReturnMessage validOCRStus(Map<String, Object> params) throws Exception ;
 
+	/**
+	 * Homecare Order Request - Transfer Ownership
+	 * @Author KR-SH
+	 * @Date 2020. 1. 13.
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 */
+	public ReturnMessage hcReqOwnershipTransfer(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
 }

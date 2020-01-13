@@ -7,7 +7,9 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderRequestService;
+import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.order.OrderRequestService;
 import com.coway.trust.biz.sales.order.impl.OrderRequestMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -17,6 +19,7 @@ import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
  * @ClassName : HcOrderRequestServiceImpl.java
@@ -38,6 +41,11 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 	@Resource(name = "orderRequestMapper")
 	private OrderRequestMapper orderRequestMapper;
 
+	@Resource(name = "hcOrderListService")
+	private HcOrderListService hcOrderListService;
+
+	@Resource(name = "hcOrderRegisterMapper")
+	private HcOrderRegisterMapper hcOrderRegisterMapper;
 
 	/**
 	 * Request Cancel Order
@@ -131,6 +139,56 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 	    }
 
 	    message.setCode(AppConstants.SUCCESS);
+		return message;
+	}
+
+
+	/**
+	 * Homecare Order Request - Transfer Ownership
+	 * @Author KR-SH
+	 * @Date 2020. 1. 13.
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 * @see com.coway.trust.biz.homecare.sales.order.HcOrderRequestService#hcReqOwnershipTransfer(java.util.Map, com.coway.trust.cmmn.model.SessionVO)
+	 */
+	@Override
+	public ReturnMessage hcReqOwnershipTransfer(Map<String, Object> params, SessionVO sessionVO) throws Exception {
+		String rtnMsg = "Order Number : " + CommonUtils.nvl(params.get("salesOrdNo"));
+
+		EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(params);
+		String fraOrdId = CommonUtils.nvl(hcOrder.get("anoOrdId"));  // get - Frame Order Id
+
+		// update - Mattress Transfer Ownership
+		orderRequestService.requestOwnershipTransfer(params, sessionVO);
+
+		// has Frame Order
+		if(!"".equals(fraOrdId)) {
+			params.put("salesOrdId", fraOrdId);  // set - Frame Order Id
+			params.put("hiddenAppTypeID", SalesConstants.APP_TYPE_CODE_ID_AUX);  // set - Frame App Type Id
+
+		    // update - Frame Transfer Ownership
+			orderRequestService.requestOwnershipTransfer(params, sessionVO);
+			rtnMsg += ", " + CommonUtils.nvl(hcOrder.get("fraOrdNo"));
+		}
+
+		// update HMC0011d
+		HcOrderVO hcVO = new HcOrderVO();
+		hcVO.setUpdUserId(sessionVO.getUserId());
+		hcVO.setCustId(CommonUtils.intNvl(params.get("txtHiddenCustID")));
+		hcVO.setOrdSeqNo(CommonUtils.intNvl(hcOrder.get("ordSeqNo")));
+
+		int rtnCnt = hcOrderRegisterMapper.updateHcPreOrder(hcVO);
+		if(rtnCnt <= 0) { // not insert
+			throw new ApplicationException(AppConstants.FAIL, "Order Status updated Failed.");
+		}
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(rtnMsg + "<br/>Ownership successfully transferred.");
+
 		return message;
 	}
 

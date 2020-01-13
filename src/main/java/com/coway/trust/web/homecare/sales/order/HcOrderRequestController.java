@@ -118,4 +118,19 @@ public class HcOrderRequestController {
     	return ResponseEntity.ok(message);
     }
 
+  	/**
+  	 * Homecare Order Request - Transfer Ownership
+  	 * @Author KR-SH
+  	 * @Date 2020. 1. 13.
+  	 * @param params
+  	 * @return
+  	 * @throws Exception
+  	 */
+	@RequestMapping(value = "/hcReqOwnershipTransfer.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> hcReqOwnershipTransfer(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+		ReturnMessage rtnMsg = hcOrderRequestService.hcReqOwnershipTransfer(params, sessionVO);
+
+		return ResponseEntity.ok(rtnMsg);
+    }
+
 }
