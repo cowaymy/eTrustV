@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.InHouseRepairService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -55,6 +56,9 @@ public class InHouseRepairController {
 
   @Resource(name = "servicesLogisticsPFCService")
   private ServicesLogisticsPFCService servicesLogisticsPFCService;
+
+  @Resource(name = "ASManagementListService")
+  private ASManagementListService asManagementListService;
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
@@ -1258,6 +1262,11 @@ public class InHouseRepairController {
     logger.debug("===========================/getSVC_AVAILABLE_INVENTORY.do===============================");
 
     EgovMap logc = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(params);
+
+    // KR-OHK Serial Check
+    String serialChk = asManagementListService.getSerialChk(params);
+    logc.put("serialChk", serialChk);
+
     return ResponseEntity.ok(logc);
   }
 
@@ -1563,5 +1572,83 @@ public class InHouseRepairController {
       message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
     }
     return ResponseEntity.ok(message);
+  }
+  
+  // KR-OHK serial check add
+  @RequestMapping(value = "/newASInHouseAddSerial.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> newASInHouseAddSerial(@RequestBody Map<String, Object> params, Model model,
+      HttpServletRequest request, SessionVO sessionVO) {
+    logger.debug("===========================/newASInHouseAddSerial.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/newASInHouseAddSerial.do===============================");
+
+    params.put("updator", sessionVO.getUserId());
+    ReturnMessage message = new ReturnMessage();
+
+    message = inHouseRepairService.newASInHouseAddSerial(params);
+
+    return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/newResultBasicUpdateSerial.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> newResultBasicUpdateSerial(@RequestBody Map<String, Object> params, Model model,
+      HttpServletRequest request, SessionVO sessionVO) {
+    logger.debug("===========================/newResultBasicUpdateSerial.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/newResultBasicUpdateSerial.do===============================");
+
+    params.put("updator", sessionVO.getUserId());
+
+    LinkedHashMap<?, ?> asResultM = (LinkedHashMap<?, ?>) params.get("asResultM");
+
+    logger.debug("== asResultM : " + asResultM.toString());
+
+    int rtnValue = inHouseRepairService.asResultBasic_updateSerial(params);
+
+    ReturnMessage message = new ReturnMessage();
+
+    if (rtnValue > 0) {
+      message.setCode(AppConstants.SUCCESS);
+      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    } else {
+      message.setCode(AppConstants.FAIL);
+      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+    }
+    return ResponseEntity.ok(message);
+  }
+
+  //KR-OHK serial check add
+  @SuppressWarnings("unchecked")
+  @RequestMapping(value = "/newResultUpdateSerial.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> newResultUpdateSerial(@RequestBody Map<String, Object> params, Model model,
+      HttpServletRequest request, SessionVO sessionVO) {
+    logger.debug("===========================/newResultUpdateSerial.do===============================");
+    logger.debug("== params " + params.toString());
+
+    params.put("updator", sessionVO.getUserId());
+
+    LinkedHashMap<?, ?> asResultM = (LinkedHashMap<?, ?>) params.get("asResultM");
+    List<EgovMap> add = (List<EgovMap>) params.get("add");
+    List<EgovMap> remove = (List<EgovMap>) params.get("remove");
+    List<EgovMap> update = (List<EgovMap>) params.get("update");
+    // List<EgovMap> all = (List<EgovMap>) params.get("all");
+
+    logger.debug("== asResultM = " + asResultM.toString());
+    logger.debug("== ADD = " + add.toString());
+    logger.debug("== REMOVE = " + remove.toString());
+    logger.debug("== UPDATE = " + update.toString());
+    logger.debug("===========================/newResultUpdateSerial.do===============================");
+
+    EgovMap rtnValue = inHouseRepairService.asResult_updateSerial(params);
+
+    logger.debug("newResultUpdate == " + rtnValue.toString());
+
+    ReturnMessage message = new ReturnMessage();
+    message.setCode(AppConstants.SUCCESS);
+    message.setData(rtnValue.get("asNo"));
+    message.setMessage("");
+
+    return ResponseEntity.ok(message);
+
   }
 }

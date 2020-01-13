@@ -9,6 +9,7 @@ import java.util.List;
  *********************************************************************************************/
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -196,4 +197,12 @@ public interface InHouseRepairService {
 
   int saveASEntryInHouse(Map<String, Object> params);
 
+  //KR-OHK serial check add
+  ReturnMessage newASInHouseAddSerial(Map<String, Object> params);
+
+  //KR-OHK serial check add
+  int asResultBasic_updateSerial(Map<String, Object> params);
+
+  //KR-OHK serial check add
+  EgovMap asResult_updateSerial(Map<String, Object> params);
 }

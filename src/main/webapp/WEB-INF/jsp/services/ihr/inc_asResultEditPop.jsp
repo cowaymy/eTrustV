@@ -1078,6 +1078,19 @@
         fn_filterClear();
         return false;
       }
+
+      // KR-OHK Serial Check
+      if($("#hidSerialRequireChkYn").val()  == 'Y' && $("#hidSerialChk").val() == 'Y' && $("#ddlFilterQty").val() > 1) {
+          Common.alert("For serial check items, only quantity 1 can be entered.");
+          $("#ddlFilterQty").val("1");
+          return false;
+      }
+      if($("#hidSerialRequireChkYn").val()  == 'Y' && $("#hidSerialChk").val() == 'Y' && FormUtil.isEmpty($("#ddSrvFilterLastSerial").val())) {
+          var arg = "<spring:message code='service.title.SerialNo'/>";
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ arg +"'/>");
+          return false;
+      }
+
       return true;
     }
   }
@@ -1089,7 +1102,10 @@
       CT_CODE : ct,
       STK_CODE : sk
     }, function(result) {
-      availQty = result.availQty;
+    	// KR-OHK Serial Check
+        $("#hidSerialChk").val(result.serialChk);
+
+    	availQty = result.availQty;
     });
 
     return availQty;
@@ -1342,6 +1358,12 @@
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
+
+        // KR-OHK Serial Check
+        if ($("#hidSerialRequireChkYn").val() == 'Y' &&  FormUtil.checkReqValue($("#stockSerialNo"))) {
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
       } else if ($("#ddlStatus").val() == 19) { // RECALL
         if (FormUtil.checkReqValue($("#ddlFailReason"))) { // FAIL REASON
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Fail Reason' htmlEscape='false'/> </br>";
@@ -1527,7 +1549,10 @@
       IN_HUSE_REPAIR_PROMIS_DT : "",
       IN_HUSE_REPAIR_GRP_CODE : "",
       IN_HUSE_REPAIR_PRODUCT_CODE : "",
-      IN_HUSE_REPAIR_SERIAL_NO : ""
+      IN_HUSE_REPAIR_SERIAL_NO : "",
+      // KR-OHK Serial Check
+      SERIAL_NO : $("#stockSerialNo").val(),
+      SERIAL_REQUIRE_CHK_YN : $("#hidSerialRequireChkYn").val()
     }
 
     var saveForm;
@@ -1581,7 +1606,15 @@
           }
         }
 
-        Common.ajax("POST", "/services/inhouse/newResultUpdate_1.do", saveForm,
+        // KR-OHK Serial Check add
+        var url = "";
+        if ($("#hidSerialRequireChkYn").val() == 'Y') {
+            url = "/services/inhouse/newResultUpdateSerial.do";
+        } else {
+            url = "/services/inhouse/newResultUpdate_1.do";
+        }
+
+        Common.ajax("POST", url, saveForm,
           function(result) {
             if (result.data != "") {
               $("#newResultNo").html("<B>" + result.data + "</B>");
@@ -1977,7 +2010,87 @@
   }
 
   setPopData();
+
+  function fn_serialModifyPop(){
+      $("#serialNoChangeForm #pSerialNo").val( $("#stockSerialNo").val() ); // Serial No
+      $("#serialNoChangeForm #pSalesOrdId").val( $("#ORD_ID").val() ); // 주문 ID
+      $("#serialNoChangeForm #pSalesOrdNo").val( $("#ORD_NO").val() ); // 주문 번호
+      $("#serialNoChangeForm #pRefDocNo").val( $("#AS_NO").val() ); //
+     // $("#serialNoModifyForm #pItmCode").val( $("#stkCode").val()  ); // 제품 ID
+      $("#serialNoChangeForm #pCallGbn").val( "INHOUSE_EDIT" );
+      $("#serialNoChangeForm #pMobileYn").val( "N"  );
+
+      if(Common.checkPlatformType() == "mobile") {
+          popupObj = Common.popupWin("serialNoChangeForm", "/logistics/serialChange/serialNoChangePop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+      } else{
+          Common.popupDiv("/logistics/serialChange/serialNoChangePop.do", $("#serialNoChangeForm").serializeJSON(), null, true, '_serialNoChangePop');
+      }
+  }
+
+  function fn_PopSerialChangeClose(obj){
+
+      console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+
+      $("#stockSerialNo").val(obj.asIsSerialNo);
+      $("#hidStockSerialNo").val(obj.beforeSerialNo);
+
+      if(popupObj!=null) popupObj.close();
+      //fn_viewInstallResultSearch(); //조회
+  }
+
+//팝업에서 호출하는 조회 함수
+function SearchListAjax(obj){
+
+    console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+
+    $("#stockSerialNo").val(obj.asIsSerialNo);
+    $("#hidStockSerialNo").val(obj.beforeSerialNo);
+
+    //fn_viewInstallResultSearch(); //조회
+}
+
+  function fn_serialSearchPop(){
+      var filterCodeVal = $("#ddlFilterCode option:selected").val();
+      var filterCodeText = $("#ddlFilterCode option:selected").text();
+      filterCodeText = filterCodeText.substr(0, filterCodeText.indexOf(" "))
+
+      $("#pItemCodeOrName").val(filterCodeText);
+
+      if (FormUtil.isEmpty(filterCodeVal)) {
+          var text = "<spring:message code='service.grid.FilterCode'/>";
+          var rtnMsg = "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+          Common.alert(rtnMsg);
+          return false;
+      }
+
+      Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
+  }
+
+  function fnSerialSearchResult(data) {
+      data.forEach(function(dataRow) {
+          $("#ddSrvFilterLastSerial").val(dataRow.serialNo);
+          //console.log("serialNo : " + dataRow.serialNo);
+      });
+  }
 </script>
+<form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
+    <input type="hidden" name="pSerialNo" id="pSerialNo"/>
+    <input type="hidden" name="pSalesOrdId"  id="pSalesOrdId"/>
+    <input type="hidden" name="pSalesOrdNo"  id="pSalesOrdNo"/>
+    <input type="hidden" name="pRefDocNo" id="pRefDocNo"/>
+    <input type="hidden" name="pItmCode" id="pItmCode"/>
+    <input type="hidden" name="pCallGbn" id="pCallGbn"/>
+    <input type="hidden" name="pMobileYn" id="pMobileYn"/>
+  </form>
+<form id="frmSearchSerial" name="frmSearchSerial" method="post">
+     <input id="pGubun" name="pGubun" type="hidden" value="RADIO" />
+     <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" />
+     <input id="pLocationType" name="pLocationType" type="hidden" value="" />
+     <input id="pLocationCode" name="pLocationCode" type="hidden" value="" />
+     <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" />
+     <input id="pStatus" name="pStatus" type="hidden" value="" />
+     <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
+</form>
 <form id="asDataForm" method="post">
  <div style='display: none'>
   <input type="text" id='asData_AS_ID' name='asData_AS_ID' /> <input
@@ -1989,6 +2102,9 @@
  </div>
 </form>
 <form id="asResultForm" method="post">
+   <input type="hidden" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
+   <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
+   <input type="hidden" id='hidSerialChk' name='hidSerialChk' />
  <article class="acodi_wrap">
   <!-- acodi_wrap start -->
   <dl>
@@ -2104,10 +2220,15 @@
       </tr>
       <tr>
        <th scope="row"><spring:message code='sal.text.commission' /></th>
-       <td colspan="3">
+       <td>
          <label>
            <input type="checkbox" disabled="disabled" id='iscommission' name='iscommission' />
            <span><spring:message code='sal.text.commissionApplied' /></span></label></td>
+       <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must">*</span></th>
+       <td>
+           <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly/>
+            <p class="btn_grid" style="display:none" id="btnSerialEdit"><a id="serialEdit" href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
+       </td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.grid.CrtBy' /></th>
@@ -2318,6 +2439,7 @@
         <th scope="row"><spring:message code='service.title.SerialNo' /></th>
         <td colspan="3">
           <input type="text" id='ddSrvFilterLastSerial' name='ddSrvFilterLastSerial' />
+          <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()" style="display:none"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         </td>
       </tr>
       <tr>
