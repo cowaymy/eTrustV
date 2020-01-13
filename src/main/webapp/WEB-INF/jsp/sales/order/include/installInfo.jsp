@@ -63,6 +63,19 @@
     <th scope="row"><spring:message code="sal.text.ctNm" /></th>
     <td colspan="3"><span>${orderDetail.installationInfo.lastInstallCtName}</span></td>
 </tr>
+<tr>
+  <th scope="row"><spring:message code="sal.text.instImg" /></th>
+  <td colspan="5">
+    <ul class="btns">
+      <li>
+        <p class="btn_grid">
+          <a href="#" onClick=
+            "{Common.popupDiv('/sales/order/getInstImg.do', { ordNo : '${orderDetail.basicInfo.ordNo}' }, null , true);}"><spring:message code='sys.btn.view' /></a>
+        </p>
+       </li>
+      </ul>
+    </td>
+</tr>
 </tbody>
 </table><!-- table end -->
 
