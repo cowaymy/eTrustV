@@ -161,6 +161,7 @@ $(document).ready(function(){
 
     	var item = [];
     	var validQty = 0, sumQty = 0;
+        var failQty = 0;    // If there failQty, call confirm popup.
 
     	if(count == 1 ){
 
@@ -171,6 +172,7 @@ $(document).ready(function(){
             }
 
             sumQty += Number(js.String.deletecomma(param.rciptTmQty)) + js.String.naNcheck(param.failTmQty);
+            failQty += js.String.naNcheck(param.failTmQty);
 
             item.push({"hmcGrNo":param.ingGrNo
                     , "cdc":param.grCdcId
@@ -195,6 +197,7 @@ $(document).ready(function(){
                 }
 
                 sumQty += Number(js.String.deletecomma(param.rciptTmQty[i])) + js.String.naNcheck(param.failTmQty[i]);
+                failQty += js.String.naNcheck(param.failTmQty[i]);
 
                 item.push({"hmcGrNo":param.ingGrNo
                         , "cdc":param.grCdcId
@@ -221,29 +224,15 @@ $(document).ready(function(){
 	        .confirm(
 	            "Do you want to GR?",
 	            function(){
-	                Common.ajax("POST", "/homecare/po/hcDeliveryGr/multiHcDeliveryGr.do"
-	                        , {"grData":item}
-	                        , function(result){
-	                            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-	                            $("#btnPopClear").click();
-	                            $("#btnPopConfirm").click();
-	                            //console.log("성공." + JSON.stringify(result));
-	                            //console.log("data : " + result.data);
-	                         }
-	                        , function(jqXHR, textStatus, errorThrown){
-	                            try{
-	                                console.log("Fail Status : " + jqXHR.status);
-	                                console.log("code : "        + jqXHR.responseJSON.code);
-	                                console.log("message : "     + jqXHR.responseJSON.message);
-	                                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-	                            }catch (e){
-	                                console.log(e);
-	                            }
-	                            Common.alert("Fail : " + jqXHR.responseJSON.message);
-	                });
+	            	if(failQty > 0){
+	            		Common.confirm("QC Fail Qty will not be GR. Please Check again.", function(){
+	            			fn_deliveryGr(item);
+	            		});
+	            	}else{
+	            		fn_deliveryGr(item);
+	            	}
 	            }
         );
-
 
     });
 
@@ -321,6 +310,29 @@ $(document).ready(function(){
 
 
 });
+
+function fn_deliveryGr(item){
+    Common.ajax("POST", "/homecare/po/hcDeliveryGr/multiHcDeliveryGr.do"
+            , {"grData":item}
+            , function(result){
+                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+                $("#btnPopClear").click();
+                $("#btnPopConfirm").click();
+                //console.log("성공." + JSON.stringify(result));
+                //console.log("data : " + result.data);
+             }
+            , function(jqXHR, textStatus, errorThrown){
+                try{
+                    console.log("Fail Status : " + jqXHR.status);
+                    console.log("code : "        + jqXHR.responseJSON.code);
+                    console.log("message : "     + jqXHR.responseJSON.message);
+                    console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                }catch (e){
+                    console.log(e);
+                }
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+    });
+}
 
 function fn_serialYnChk(ch){
 	return ch == "Y"?"readonly":"";
