@@ -21,8 +21,8 @@
 	     UNION ALL
 	    SELECT MAX(X.COMM_TASK_ID)
 		          ,99 MONTH_VAL
-		          ,ROUND(AVG(A.V2),2) AS CALL_RATE   -- Happy Call (Success Rate %)
-		          ,AVG(A.V3) AS CALL_MARK                -- Happy Call (Performance Evaluation Mark)
+		          ,ROUND(AVG(A.V2),2) AS CALL_RATE                -- Happy Call (Success Rate %)
+		          ,ROUND(AVG(A.V3),2) AS CALL_MARK                -- Happy Call (Performance Evaluation Mark)
 	      FROM (SELECT *
 		              FROM CMM0006T
 		             WHERE COMM_TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
@@ -70,7 +70,7 @@
                   ,T1.CNT_CANCEL
                   ,T0.CNT_ACTIVE
                   ,T0.CNT_ALL
-                  ,CASE WHEN T0.CNT_ALL = 0 THEN 0 ELSE ROUND((T0.CNT_COMPLETE/T0.CNT_ALL)*100 ,2) END COMPLETE_RATE
+                  ,CASE WHEN T0.CNT_ALL = 0 THEN 0 ELSE TRUNC((T0.CNT_COMPLETE/T0.CNT_ALL)*100 ,2) END COMPLETE_RATE
                   ,T2.BS_MARK
           FROM (SELECT TASK_ID
                               ,COUNT(CASE WHEN A.BS_STUS_ID = 1 THEN 1 ELSE NULL END ) AS CNT_ACTIVE
@@ -83,6 +83,7 @@
                       LEFT OUTER JOIN SAL0029D CU ON SO.CUST_ID = CU.CUST_ID
                     WHERE TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
                        AND X.EMPLY_CODE =#{codyCode}
+                       AND A.IS_EXCLUDE = 0
                     GROUP BY TASK_ID
                   ) T0
                   LEFT OUTER JOIN (
@@ -114,14 +115,14 @@
 		          ) T2 ON T2.COMM_TASK_ID  = T0.TASK_ID
         UNION ALL
         SELECT 99 MONTH_VAL
-                  ,ROUND(AVG(T1.CNT_OPEN)) AS CNT_OPEN
-                  ,ROUND(AVG(T0.CNT_COMPLETE)) AS CNT_COMPLETE
-                  ,ROUND(AVG(T0.CNT_FAIL)) AS CNT_FAIL
-                  ,ROUND(AVG(T1.CNT_CANCEL)) AS CNT_CANCEL
-                  ,ROUND(AVG(T0.CNT_ACTIVE)) AS CNT_ACTIVE
-                  ,ROUND(AVG(T0.CNT_ALL)) AS CNT_ALL
-                  ,ROUND(AVG(CASE WHEN T0.CNT_ALL = 0 THEN 0 ELSE ROUND((T0.CNT_COMPLETE/T0.CNT_ALL)*100 ,2) END),2) AS COMPLETE_RATE
-                  ,MAX((SELECT AVG(A.V5) AS BS_MARK                    -- Heart Service (Performance Evaluation Mark)
+                  ,ROUND(AVG(T1.CNT_OPEN),2) AS CNT_OPEN
+                  ,ROUND(AVG(T0.CNT_COMPLETE),2) AS CNT_COMPLETE
+                  ,ROUND(AVG(T0.CNT_FAIL),2) AS CNT_FAIL
+                  ,ROUND(AVG(T1.CNT_CANCEL),2) AS CNT_CANCEL
+                  ,ROUND(AVG(T0.CNT_ACTIVE),2) AS CNT_ACTIVE
+                  ,ROUND(AVG(T0.CNT_ALL),2) AS CNT_ALL
+                  ,ROUND(AVG(CASE WHEN T0.CNT_ALL = 0 THEN 0 ELSE TRUNC((T0.CNT_COMPLETE/T0.CNT_ALL)*100 ,2) END),2) AS COMPLETE_RATE
+                  ,MAX((SELECT ROUND(AVG(A.V5),2) AS BS_MARK                    -- Heart Service (Performance Evaluation Mark)
 				              FROM (SELECT *
 					                      FROM CMM0006T
 					                    WHERE COMM_TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
@@ -143,7 +144,7 @@
                        LEFT OUTER JOIN SAL0029D CU ON SO.CUST_ID = CU.CUST_ID
                     WHERE TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
                         AND X.EMPLY_CODE =#{codyCode}
-                        AND CU.TYPE_ID = #{typeId}
+                        AND A.IS_EXCLUDE = 0
                      GROUP BY TASK_ID
                ) T0
                LEFT OUTER JOIN (
@@ -157,7 +158,6 @@
                     WHERE A.STUS_CODE_ID IN (0, 8, 10, 22)
                         AND (A.MONTH+A.YEAR*12)-24157 BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
                         AND X.EMPLY_CODE =#{codyCode}
-                        AND CU.TYPE_ID = #{typeId}
                      GROUP BY A.YEAR, A.MONTH
                   ) T1 ON T0.TASK_ID = T1.TASK_ID
     )
@@ -208,7 +208,7 @@
 		          ,T1.CNT_CANCEL
 		          ,T0.CNT_ACTIVE
 		          ,T0.CNT_ALL
-		          ,CASE WHEN T0.CNT_ALL = 0 THEN 0 ELSE ROUND((T0.CNT_COMPLETE/T0.CNT_ALL)*100 ,2) END COMPLETE_RATE
+		          ,CASE WHEN T0.CNT_ALL = 0 THEN 0 ELSE TRUNC((T0.CNT_COMPLETE/T0.CNT_ALL)*100 ,2) END COMPLETE_RATE
 	      FROM (SELECT TASK_ID
 			                  ,COUNT(CASE WHEN A.BS_STUS_ID = 1 THEN 1 ELSE NULL END ) AS CNT_ACTIVE
 			                  ,COUNT(CASE WHEN A.BS_STUS_ID = 4 THEN 1 ELSE NULL END ) AS CNT_COMPLETE
@@ -221,6 +221,7 @@
 		            WHERE TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
 		               AND X.EMPLY_CODE =#{codyCode}
 		               AND CU.TYPE_ID = #{typeId}
+		               AND A.IS_EXCLUDE = 0
 		            GROUP BY TASK_ID
 	              ) T0
 		          LEFT OUTER JOIN (
@@ -245,7 +246,7 @@
 		          ,ROUND(AVG(T1.CNT_CANCEL)) AS CNT_CANCEL
 		          ,ROUND(AVG(T0.CNT_ACTIVE)) AS CNT_ACTIVE
 		          ,ROUND(AVG(T0.CNT_ALL)) AS CNT_ALL
-		          ,ROUND(AVG(CASE WHEN T0.CNT_ALL = 0 THEN 0 ELSE ROUND((T0.CNT_COMPLETE/T0.CNT_ALL)*100 ,2) END),2) AS COMPLETE_RATE
+		          ,ROUND(AVG(CASE WHEN T0.CNT_ALL = 0 THEN 0 ELSE TRUNC((T0.CNT_COMPLETE/T0.CNT_ALL)*100 ,2) END),2) AS COMPLETE_RATE
 	      FROM (SELECT TASK_ID
 			                  ,COUNT(CASE WHEN A.BS_STUS_ID = 1 THEN 1 ELSE NULL END ) AS CNT_ACTIVE
 			                  ,COUNT(CASE WHEN A.BS_STUS_ID = 4 THEN 1 ELSE NULL END ) AS CNT_COMPLETE
@@ -258,6 +259,7 @@
 		            WHERE TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
 		                AND X.EMPLY_CODE =#{codyCode}
                         AND CU.TYPE_ID = #{typeId}
+                        AND A.IS_EXCLUDE = 0
 		             GROUP BY TASK_ID
 	           ) T0
 	           LEFT OUTER JOIN (
@@ -316,7 +318,7 @@
 	    SELECT T0.TASK_ID - ((TO_NUMBER(#{month})+#{year}*12)-24157) MONTH_VAL
 		          ,(T0.CNT_CORP + T1.CNT_CORP) AS CNT_CORP
 		          ,(T0.CNT_ALL + T1.CNT_ALL) AS CNT_ALL
-		          ,CASE WHEN (T0.CNT_ALL + T1.CNT_ALL) = 0 THEN 0 ELSE ROUND(((T0.CNT_CORP + T1.CNT_CORP)/(T0.CNT_ALL + T1.CNT_ALL))*100 ,2) END CORP_RATE
+		          ,CASE WHEN (T0.CNT_ALL + T1.CNT_ALL) = 0 THEN 0 ELSE TRUNC(((T0.CNT_CORP + T1.CNT_CORP)/(T0.CNT_ALL + T1.CNT_ALL))*100 ,2) END CORP_RATE
 	      FROM (SELECT TASK_ID
 			                  ,COUNT(1) AS CNT_ALL
 			                  ,COUNT(CASE WHEN CU.TYPE_ID = 965 THEN 1 ELSE NULL END ) AS CNT_CORP
@@ -326,6 +328,7 @@
 		               LEFT OUTER JOIN SAL0029D CU ON SO.CUST_ID = CU.CUST_ID
 		            WHERE TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
 		                AND X.EMPLY_CODE = #{codyCode}
+		                AND A.IS_EXCLUDE = 0
 		            GROUP BY TASK_ID
 	           ) T0
 	           LEFT OUTER JOIN (
@@ -345,7 +348,7 @@
 	    SELECT 99 MONTH_VAL
 		          ,ROUND(AVG(T0.CNT_CORP + T1.CNT_CORP)) AS CNT_CORP
 		          ,ROUND(AVG(T0.CNT_ALL + T1.CNT_ALL)) AS CNT_ALL
-		          ,ROUND(AVG(CASE WHEN (T0.CNT_ALL + T1.CNT_ALL) = 0 THEN 0 ELSE ROUND(((T0.CNT_CORP + T1.CNT_CORP)/(T0.CNT_ALL + T1.CNT_ALL))*100 ,2) END),2) CORP_RATE
+		          ,ROUND(AVG(CASE WHEN (T0.CNT_ALL + T1.CNT_ALL) = 0 THEN 0 ELSE TRUNC(((T0.CNT_CORP + T1.CNT_CORP)/(T0.CNT_ALL + T1.CNT_ALL))*100 ,2) END),2) CORP_RATE
 	      FROM (SELECT TASK_ID
 			                  ,COUNT(1) AS CNT_ALL
 			                  ,COUNT(CASE WHEN CU.TYPE_ID = 965 THEN 1 ELSE NULL END ) AS CNT_CORP
@@ -355,6 +358,7 @@
 		               LEFT OUTER JOIN SAL0029D CU ON SO.CUST_ID = CU.CUST_ID
 		            WHERE TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
 		                AND X.EMPLY_CODE = #{codyCode}
+		                AND A.IS_EXCLUDE = 0
 		            GROUP BY TASK_ID
 	           ) T0
 	           LEFT OUTER JOIN (
@@ -417,7 +421,8 @@
 		              INNER JOIN CMM0006T X ON A.TASK_ID = X.COMM_TASK_ID AND A.CLCTR_ID = X.EMPLY_ID AND X.IS_EXCLUDE <![CDATA[<>]]> 1
 		               LEFT OUTER JOIN SAL0029D CU ON A.CUST_ID = CU.CUST_ID
 		            WHERE 1=1
-		                AND TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
+		                AND A.IS_EXCLUDE = 0
+		                AND A.TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
 		                AND X.EMPLY_CODE =  #{codyCode}   -- Cody
 		            GROUP BY A.TASK_ID
 	           ) T0
@@ -437,19 +442,19 @@
 	           ) T1 ON T1.COMM_TASK_ID  = T0.TASK_ID
 	     UNION ALL
 	    SELECT 99 MONTH_VAL
-		          ,AVG(COUNT(1)) AS ORDER_CNT
-		          ,AVG(SUM(TRGET_AMT)) AS SUM_TRGET_AMT
-		          ,AVG(SUM(COLCT_AMT)) AS SUM_COLCT_AMT
-		          ,MAX((SELECT AVG(A.V7) AS RCMARK
-          FROM (SELECT *
-                      FROM CMM0006T
-                    WHERE COMM_TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
-                        AND EMPLY_TYPE_CODE = 'CD'
-                        AND IS_EXCLUDE <![CDATA[<>]]> 1
-                  )  X
-            LEFT OUTER JOIN CMM0028D A ON A.TASK_ID = X.COMM_TASK_ID AND X.EMPLY_ID = A.EMPLY_ID
-            LEFT OUTER JOIN CMM0029D B ON A.TASK_ID = B.TASK_ID AND A.EMPLY_ID = B.EMPLY_ID
-         WHERE X.EMPLY_CODE = #{codyCode})) RCMARK
+		          ,ROUND(AVG(COUNT(1)),2) AS ORDER_CNT
+		          ,ROUND(AVG(SUM(TRGET_AMT)),2) AS SUM_TRGET_AMT
+		          ,ROUND(AVG(SUM(COLCT_AMT)),2) AS SUM_COLCT_AMT
+		          ,MAX((SELECT ROUND(AVG(A.V7),2) AS RCMARK
+					          FROM (SELECT *
+					                      FROM CMM0006T
+					                    WHERE COMM_TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
+					                        AND EMPLY_TYPE_CODE = 'CD'
+					                        AND IS_EXCLUDE <![CDATA[<>]]> 1
+					                  )  X
+					           LEFT OUTER JOIN CMM0028D A ON A.TASK_ID = X.COMM_TASK_ID AND X.EMPLY_ID = A.EMPLY_ID
+					           LEFT OUTER JOIN CMM0029D B ON A.TASK_ID = B.TASK_ID AND A.EMPLY_ID = B.EMPLY_ID
+					         WHERE X.EMPLY_CODE = #{codyCode})) RCMARK
 	      FROM CMM0012T A
 	      INNER JOIN CMM0006T X ON A.TASK_ID = X.COMM_TASK_ID AND A.CLCTR_ID = X.EMPLY_ID AND X.IS_EXCLUDE <![CDATA[<>]]> 1
 	       LEFT OUTER JOIN SAL0029D CU ON A.CUST_ID = CU.CUST_ID
@@ -502,15 +507,16 @@
           INNER JOIN CMM0006T X ON A.TASK_ID = X.COMM_TASK_ID AND A.CLCTR_ID = X.EMPLY_ID AND X.IS_EXCLUDE <![CDATA[<>]]> 1
            LEFT OUTER JOIN SAL0029D CU ON A.CUST_ID = CU.CUST_ID
         WHERE 1=1
-            AND TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
+            AND A.IS_EXCLUDE = 0
+            AND A.TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
             AND CU.TYPE_ID = #{typeId}            -- Individual(964), Corporate(965)
             AND X.EMPLY_CODE = #{codyCode}    -- Cody
          GROUP BY A.TASK_ID
          UNION ALL
         SELECT 99 MONTH_VAL
-                  ,AVG(COUNT(1)) AS ORDER_CNT
-                  ,AVG(SUM(TRGET_AMT)) AS SUM_TRGET_AMT
-                  ,AVG(SUM(COLCT_AMT)) AS SUM_COLCT_AMT
+                  ,ROUND(AVG(COUNT(1)),2) AS ORDER_CNT
+                  ,ROUND(AVG(SUM(TRGET_AMT)),2) AS SUM_TRGET_AMT
+                  ,ROUND(AVG(SUM(COLCT_AMT)),2) AS SUM_COLCT_AMT
           FROM CMM0012T A
           INNER JOIN CMM0006T X ON A.TASK_ID = X.COMM_TASK_ID AND A.CLCTR_ID = X.EMPLY_ID AND X.IS_EXCLUDE <![CDATA[<>]]> 1
            LEFT OUTER JOIN SAL0029D CU ON A.CUST_ID = CU.CUST_ID
@@ -592,10 +598,10 @@
 		            ) T1 ON T0.TASK_ID = T1.COMM_TASK_ID
        UNION ALL
       SELECT 99 MONTH_VAL
-                ,AVG(SUM(NVL(UNIT_VALU,0))) UNITVALUETOTAL                                                -- Net
-                ,AVG(SUM(CASE WHEN NVL(PV_YEAR,0) > 0 THEN 1 ELSE 0 END)) AS ACTIVE_CNT    -- Active
-                ,AVG(SUM(CASE WHEN NVL(PV_YEAR,0) > 0 THEN 0 ELSE 1 END)) AS YS_CNT          -- Yellow Sheet
-                ,MAX((SELECT AVG(A.V9) AS SALES_MARK                                                         --Sales Net (Performance Evaluation Mark)
+                ,ROUND(AVG(SUM(NVL(UNIT_VALU,0))),2) UNITVALUETOTAL                                                -- Net
+                ,ROUND(AVG(SUM(CASE WHEN NVL(PV_YEAR,0) > 0 THEN 1 ELSE 0 END)),2) AS ACTIVE_CNT    -- Active
+                ,ROUND(AVG(SUM(CASE WHEN NVL(PV_YEAR,0) > 0 THEN 0 ELSE 1 END)),2) AS YS_CNT          -- Yellow Sheet
+                ,MAX((SELECT ROUND(AVG(A.V9),2) AS SALES_MARK                                                         --Sales Net (Performance Evaluation Mark)
 			               FROM (SELECT *
 				                       FROM CMM0006T
 				                     WHERE COMM_TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
@@ -671,9 +677,9 @@
 	   UNION ALL
 	  SELECT MAX(A.TASK_ID)
 		        ,99 MONTH_VAL
-		        ,AVG(SUM(NVL(UNIT_VALU,0))) UNITVALUETOTAL                                                -- Net
-		        ,AVG(SUM(CASE WHEN NVL(PV_YEAR,0) > 0 THEN 1 ELSE 0 END)) AS ACTIVE_CNT    -- Active
-		        ,AVG(SUM(CASE WHEN NVL(PV_YEAR,0) > 0 THEN 0 ELSE 1 END)) AS YS_CNT          -- Yellow Sheet
+		        ,ROUND(AVG(SUM(NVL(UNIT_VALU,0))),2) UNITVALUETOTAL                                                -- Net
+		        ,ROUND(AVG(SUM(CASE WHEN NVL(PV_YEAR,0) > 0 THEN 1 ELSE 0 END)),2) AS ACTIVE_CNT    -- Active
+		        ,ROUND(AVG(SUM(CASE WHEN NVL(PV_YEAR,0) > 0 THEN 0 ELSE 1 END)),2) AS YS_CNT          -- Yellow Sheet
 	    FROM CMM0007T A
 	   INNER JOIN CMM0006T B ON A.SALES_EMPLY_ID = B.EMPLY_ID AND A.TASK_ID = B.COMM_TASK_ID AND B.IS_EXCLUDE <![CDATA[<>]]> 1
 	    LEFT JOIN CMM0031T C ON C.ORD_ID = A.ORD_ID AND A.TASK_ID = C.TASK_ID
@@ -735,8 +741,8 @@
          UNION ALL
         SELECT MAX(X.COMM_TASK_ID)
                   ,99 MONTH_VAL
-                  ,AVG(A.V17) AS OUT_NET           -- Outright SVM (Net)
-                  ,AVG(B.R13) AS OUT_MARK          -- Outright SVM (Performance Evaluation Mark)
+                  ,ROUND(AVG(A.V17),2) AS OUT_NET            -- Outright SVM (Net)
+                  ,ROUND(AVG(B.R13),2) AS OUT_MARK          -- Outright SVM (Performance Evaluation Mark)
           FROM (SELECT *
                       FROM CMM0006T
                      WHERE COMM_TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
@@ -860,12 +866,12 @@
 		         ) T1 ON T1.COMM_TASK_ID  = T0.TASK_ID
 		UNION ALL
 		SELECT 99 MONTH_VAL
-			      ,AVG(T0.DROPTOTAL) DROPTOTAL
-			      ,AVG(T0.TARGETTOTAL) TARGETTOTAL
-			      ,AVG((T0.TARGETTOTAL - T0.DROPTOTAL)) OPENTOTAL
-			      ,TRUNC(AVG((NVL(T0.DROPTOTAL, 0)/NVL(T0.TARGETTOTAL, 0))*100),2) AS DROPRATE
-			       ,MAX((SELECT AVG(A.V13) AS DROPMARK                    -- Retention (Performance Evaluation Mark)
-				              FROM (SELECT *
+			      ,ROUND(AVG(T0.DROPTOTAL),2) DROPTOTAL
+                  ,ROUND(AVG(T0.TARGETTOTAL),2) TARGETTOTAL
+                  ,ROUND(AVG((T0.TARGETTOTAL - T0.DROPTOTAL)),2) OPENTOTAL
+                  ,ROUND(AVG(TRUNC((NVL(T0.DROPTOTAL, 0)/NVL(T0.TARGETTOTAL, 0))*100,2)),2) AS DROPRATE
+                  ,MAX((SELECT ROUND(AVG(A.V13),2) AS DROPMARK                    -- Retention (Performance Evaluation Mark)
+			                  FROM (SELECT *
 					                      FROM CMM0006T
 					                    WHERE COMM_TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
 					                        AND EMPLY_TYPE_CODE = 'CD'
@@ -944,10 +950,10 @@
                  ) T0
         UNION ALL
         SELECT 99 MONTH_VAL
-                  ,AVG(T0.DROPTOTAL) DROPTOTAL
-                  ,AVG(T0.TARGETTOTAL) TARGETTOTAL
-                  ,AVG((T0.TARGETTOTAL - T0.DROPTOTAL)) OPENTOTAL
-                  ,TRUNC(AVG((NVL(T0.DROPTOTAL, 0)/NVL(T0.TARGETTOTAL, 0))*100),2) AS DROPRATE
+                  ,ROUND(AVG(T0.DROPTOTAL),2) DROPTOTAL
+                  ,ROUND(AVG(T0.TARGETTOTAL),2) TARGETTOTAL
+                  ,ROUND(AVG((T0.TARGETTOTAL - T0.DROPTOTAL)),2) OPENTOTAL
+                  ,ROUND(AVG(TRUNC((NVL(T0.DROPTOTAL, 0)/NVL(T0.TARGETTOTAL, 0))*100,2)),2) AS DROPRATE
           FROM ( SELECT T0.TASK_ID
                                ,COUNT(*) TARGETTOTAL
                                ,COUNT(CASE WHEN T0.IS_DROP = 1 THEN 1 END) DROPTOTAL
@@ -1012,8 +1018,8 @@
          UNION ALL
         SELECT MAX(X.COMM_TASK_ID)
                   ,99 MONTH_VAL
-                 ,AVG(A.V32) AS CFF_RATE              -- CFF_Overall
-                 ,AVG(A.V33) AS CFF_MARK              -- Performance Evaluation Mark
+                  ,ROUND(AVG(A.V32),2) AS CFF_RATE              -- CFF_Overall
+                  ,ROUND(AVG(A.V33),2) AS CFF_MARK              -- Performance Evaluation Mark
           FROM (SELECT *
                       FROM CMM0006T
                      WHERE COMM_TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
@@ -1076,7 +1082,7 @@
 			         UNION ALL
 			        SELECT MAX(X.COMM_TASK_ID)
 			                  ,99 MONTH_VAL
-			                  ,AVG(A.V3+A.V5+A.V7+A.V9+A.V45+A.V47-A.V13-A.V33) AS PE_MARK    -- PE Marks : (V3)HAPPYCALL_MARK + (V5)BS_MARK + (v7)RC_MARK + (V9)NS_MARK + (V45)GROUP SALES QUANTITY + (V47)NET RATE - (v13)DROP_MARK - (V33)CFF_Mark
+			                  ,ROUND(AVG(A.V3+A.V5+A.V7+A.V9+A.V45+A.V47-A.V13-A.V33),2) AS PE_MARK    -- PE Marks : (V3)HAPPYCALL_MARK + (V5)BS_MARK + (v7)RC_MARK + (V9)NS_MARK + (V45)GROUP SALES QUANTITY + (V47)NET RATE - (v13)DROP_MARK - (V33)CFF_Mark
 			          FROM (SELECT *
 			                      FROM CMM0006T
 			                     WHERE COMM_TASK_ID BETWEEN (TO_NUMBER(TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'MM'))+TO_CHAR(ADD_MONTHS(TO_DATE(#{mmyyyy},'MM/YYYY'), -6),'YYYY')*12)-24157 AND (TO_NUMBER(#{month})+#{year}*12)-24157
