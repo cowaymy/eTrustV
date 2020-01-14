@@ -55,4 +55,17 @@ public class HcOrderListServiceImpl extends EgovAbstractServiceImpl implements H
 		return hcOrderListMapper.selectHcOrderInfo(params);
 	}
 
+	/**
+	 * select Product Info
+	 * @Author KR-SH
+	 * @Date 2020. 1. 14.
+	 * @param salesOrdId
+	 * @return
+	 * @see com.coway.trust.biz.homecare.sales.order.HcOrderListService#selectProductInfo(java.lang.String)
+	 */
+	@Override
+	public EgovMap selectProductInfo(String salesOrdId) {
+		return hcOrderListMapper.selectProductInfo(salesOrdId);
+	}
+
 }

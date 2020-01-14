@@ -36,4 +36,13 @@ public interface HcOrderListService {
 	 */
 	public EgovMap selectHcOrderInfo(Map<String, Object> params);
 
+	/**
+	 * select Product Info
+	 * @Author KR-SH
+	 * @Date 2020. 1. 14.
+	 * @param salesOrdId
+	 * @return
+	 */
+	public EgovMap selectProductInfo(String salesOrdId);
+
 }
