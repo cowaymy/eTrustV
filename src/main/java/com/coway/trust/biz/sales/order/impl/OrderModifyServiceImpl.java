@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -218,6 +219,17 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
     orderModifyMapper.updateCustBillMaster(inMap);
 
     orderModifyMapper.updateCustAddId(inMap);
+
+    //2020-01-13 추가
+    EgovMap selectMatOrFra = orderModifyMapper.selectMatOrFra(inMap);
+    if( MapUtils.isNotEmpty(selectMatOrFra)
+            && CommonUtils.isNotEmpty(selectMatOrFra.get("salesOrdId")) && Integer.parseInt(selectMatOrFra.get("salesOrdId").toString()) != 0
+                && CommonUtils.isNotEmpty(selectMatOrFra.get("custBillId")) && Integer.parseInt(selectMatOrFra.get("custBillId").toString()) != 0){
+//        inMap.put("custBillId", selectMatOrFra.get("custBillId"));
+        inMap.put("salesOrdId", selectMatOrFra.get("salesOrdId"));
+//        htOrderModifyMapper.updateCustBillMaster(inMap);
+        orderModifyMapper.updateCustAddId(inMap);
+    }
   }
 
   @Override
@@ -241,6 +253,17 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
     orderModifyMapper.updateCustBillMaster(inMap);
 
     orderModifyMapper.updateCustAddId(inMap);
+
+    //2020-01-13 추가
+    EgovMap selectMatOrFra = orderModifyMapper.selectMatOrFra(inMap);
+    if( MapUtils.isNotEmpty(selectMatOrFra)
+            && CommonUtils.isNotEmpty(selectMatOrFra.get("salesOrdId")) && Integer.parseInt(selectMatOrFra.get("salesOrdId").toString()) != 0
+                && CommonUtils.isNotEmpty(selectMatOrFra.get("custBillId")) && Integer.parseInt(selectMatOrFra.get("custBillId").toString()) != 0){
+//        inMap.put("custBillId", selectMatOrFra.get("custBillId"));
+        inMap.put("salesOrdId", selectMatOrFra.get("salesOrdId"));
+//        htOrderModifyMapper.updateCustBillMaster(inMap);
+        orderModifyMapper.updateCustAddId(inMap);
+    }
   }
 
   @Override
@@ -294,6 +317,34 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 
         orderModifyMapper.updateDocSubmissionDel(docSubVO);
       }
+    }
+
+    //2020-01-14 추가
+    Map<String, Object> inMap = new HashMap<String, Object>();
+    inMap.put("salesOrdId", salesOrdId);
+    EgovMap selectMatOrFra = orderModifyMapper.selectMatOrFra(inMap);
+    if( MapUtils.isNotEmpty(selectMatOrFra) && CommonUtils.isNotEmpty(selectMatOrFra.get("salesOrdId")) && Integer.parseInt(selectMatOrFra.get("salesOrdId").toString()) != 0){
+        for(DocSubmissionVO docSubVO : docSubVOList) {
+            if(docSubVO.getChkfield() == 1) {
+
+                docSubVO.setDocSoId(Integer.parseInt(selectMatOrFra.get("salesOrdId").toString()));
+                docSubVO.setDocSubTypeId(SalesConstants.CCP_DOC_SUB_CODE_ID_ICS);
+                docSubVO.setDocMemId(0);
+                docSubVO.setCrtUserId(sessionVO.getUserId());
+                docSubVO.setUpdUserId(sessionVO.getUserId());
+                docSubVO.setDocSubBrnchId(sessionVO.getUserBranchId());
+
+                orderModifyMapper.saveDocSubmission(docSubVO);
+            }
+            else {
+
+                docSubVO.setDocSoId(Integer.parseInt(selectMatOrFra.get("salesOrdId").toString()));
+                docSubVO.setUpdUserId(sessionVO.getUserId());
+                docSubVO.setDocSubBrnchId(sessionVO.getUserBranchId());
+
+                orderModifyMapper.updateDocSubmissionDel(docSubVO);
+            }
+        }
     }
   }
 
