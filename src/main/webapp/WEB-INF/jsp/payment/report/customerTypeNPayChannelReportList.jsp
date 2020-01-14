@@ -73,27 +73,27 @@ var gridOptions2 = {
 };
 var grid1Layout	=
 [
- 	 {   dataField : "typeName", headerText : ' ',         width : 120 , cellMerge : true  }
-     ,{   dataField : "modeCode", headerText : ' ',     width : 120, style: "aui-grid-user-custom-left" , cellMerge : true }
-     ,{   dataField : "modeDesc", headerText : ' ',     width : 160, style: "aui-grid-user-custom-left" }
+ 	 {   dataField : "typeName", headerText : ' ',         width : 100 , cellMerge : true  }
+     ,{   dataField : "modeCode", headerText : ' ',     width : 50, style: "aui-grid-user-custom-left" , cellMerge : true }
+     ,{   dataField : "modeDesc", headerText : ' ',     width : 80, style: "aui-grid-user-custom-left" }
 ];
 
 var grid2Layout =
 [
-    {   dataField : "modeCode", headerText : ' ',     width : 120, style: "aui-grid-user-custom-left" , cellMerge : true }
-    ,{   dataField : "modeDesc", headerText : ' ',     width : 160, style: "aui-grid-user-custom-left" }
+    {   dataField : "modeCode", headerText : ' ',     width : 150, style: "aui-grid-user-custom-left" , cellMerge : true }
+    ,{   dataField : "modeDesc", headerText : ' ',     width : 80, style: "aui-grid-user-custom-left" }
 ];
 
 var grid3Layout =
 [
-    {   dataField : "modeCode", headerText : ' ',     width : 120, style: "aui-grid-user-custom-left" , cellMerge : true }
-    ,{   dataField : "modeDesc", headerText : ' ',     width : 160, style: "aui-grid-user-custom-left" }
+    {   dataField : "modeCode", headerText : ' ',     width : 150, style: "aui-grid-user-custom-left" , cellMerge : true }
+    ,{   dataField : "modeDesc", headerText : ' ',     width : 80, style: "aui-grid-user-custom-left" }
 ];
 
 var grid4Layout =
 [
-    {   dataField : "modeCode", headerText : ' ',     width : 120, style: "aui-grid-user-custom-left" , cellMerge : true }
-    ,{   dataField : "modeDesc", headerText : ' ',     width : 160, style: "aui-grid-user-custom-left" }
+    {   dataField : "modeCode", headerText : ' ',     width : 150, style: "aui-grid-user-custom-left" , cellMerge : true }
+    ,{   dataField : "modeDesc", headerText : ' ',     width : 80, style: "aui-grid-user-custom-left" }
 ];
 
 
@@ -115,7 +115,7 @@ for(var i=1; i<32; i++) {
 	grid1Layout.push( {
         headerText : chars[i]+txt,
         dataField : "d"+i,
-        width:50,
+        width:100,
         style: "aui-grid-user-custom-right",
         dataType : "numeric",
         formatString : "#,###"
@@ -124,7 +124,7 @@ for(var i=1; i<32; i++) {
 	grid2Layout.push( {
         headerText : chars[i]+txt,
         dataField : "d"+i,
-        width:50,
+        width:100,
         style: "aui-grid-user-custom-right",
         dataType : "numeric",
         formatString : "#,###"
@@ -133,7 +133,7 @@ for(var i=1; i<32; i++) {
    grid3Layout.push( {
         headerText : chars[i]+txt,
         dataField : "d"+i,
-        width:50,
+        width:100,
         style: "aui-grid-user-custom-right",
         dataType : "numeric",
         formatString : "#,###"
@@ -142,7 +142,7 @@ for(var i=1; i<32; i++) {
     grid4Layout.push( {
         headerText : chars[i]+txt,
         dataField : "d"+i,
-        width:50,
+        width:100,
         style: "aui-grid-user-custom-right",
         dataType : "numeric",
         formatString : "#,###"
