@@ -209,6 +209,18 @@
         });
     }
 
+    function fn_selectCodyReportSearch() {
+    	var tab;
+
+    	if(FormUtil.isEmpty($("#tabId").val())) {
+    		tab = 'HC';
+    	} else {
+    		tab = $("#tabId").val()
+    	}
+
+    	fn_selectCodyReport(tab);
+    }
+
     // Tab
     function fn_selectCodyReport(tab) {
 
@@ -281,7 +293,7 @@
         <h2>6Mth Performance Report(Cody)</h2>
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-                <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectCodyReport('HC');"><spanclass="search"></span>Search</a></p></li>
+                <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectCodyReportSearch();"><spanclass="search"></span>Search</a></p></li>
             </c:if>
         </ul>
     </aside><!-- title_line end -->
