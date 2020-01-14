@@ -90,7 +90,7 @@ var taxObj = {};
       //fixedColumnCount : 0,        // 틀고정(index)
       editable : false,            // 편집 가능 여부 (기본값 : false)
       enterKeyColumnBase : true,   // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
-      selectionMode : "singleRow", // 셀 선택모드 (기본값: singleCell): (singleCell, singleRow), (multipleCells, multipleRows)
+      selectionMode : "singleCell", // 셀 선택모드 (기본값: singleCell): (singleCell, singleRow), (multipleCells, multipleRows)
       //showSelectionBorder:true,    // (녹색 테두리 선)(기본값 : true)
       //useContextMenu : true,       // 컨텍스트 메뉴 사용 여부 (기본값 : false)
       showRowNumColumn : true,     // 그리드 넘버링
