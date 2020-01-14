@@ -1635,7 +1635,8 @@
 	</select>
 
 	<select id="getInstImg" parameterType="Map" resultType="egovMap">
-    SELECT FILE_SUB_PATH || '/' || PHYSICL_FILE_NAME AS ACT_FL_NM,
+    SELECT ATCH_FILE_ID AS ATCH_FILE_ID,
+               FILE_SUB_PATH || '/' || PHYSICL_FILE_NAME AS ACT_FL_NM,
                ATCH_FILE_NAME
     FROM SYS0071D
     WHERE SUBSTR(SYS0071D.ATCH_FILE_NAME, 12, 10) IN ( SELECT INSTALL_ENTRY_NO
