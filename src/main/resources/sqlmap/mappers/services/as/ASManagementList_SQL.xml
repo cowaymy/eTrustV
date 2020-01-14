@@ -3105,7 +3105,10 @@
                            ASR_ITM_TXS_AMT,
                            SERIAL_NO,
                            EXCHN_ID,
-                           FILTER_BARCD_SERIAL_NO
+                           FILTER_BARCD_SERIAL_NO,
+                           RET_SMO_SERIAL_NO,
+                           IS_SMO,
+                           IS_SERIAL_REPLACE
     ) VALUES ( SVC0005D_ASR_ITM_ID_SEQ.nextval,
                #{AS_RESULT_ID},
                #{ASR_ITM_PART_ID},
@@ -3123,7 +3126,10 @@
                NVL(#{ASR_ITM_TXS_AMT}, 0),
                #{SERIAL_NO},
                #{EXCHG_ID},
-               #{FILTER_BARCD_SERIAL_NO}
+               #{FILTER_BARCD_SERIAL_NO},
+               #{RET_SMO_SERIAL_NO},
+               #{IS_SMO},
+               #{IS_SERIAL_REPLACE}
     )
   </insert>
 

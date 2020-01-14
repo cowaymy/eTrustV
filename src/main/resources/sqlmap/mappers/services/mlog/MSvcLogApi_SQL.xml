@@ -1548,6 +1548,8 @@
                        TO_CHAR (F.STK_ID) AS part_Id,
                        TO_CHAR (F.STK_DESC) AS part_Name,
                        TO_CHAR (NVL(H.SERIALCHK, '')) AS filter_Barcd_Chk_YN,
+                       TO_CHAR (NVL(H.IS_SMO, '')) AS is_Smo,
+                       TO_CHAR (NVL(H.IS_SERIAL_REPLC, '')) AS is_Serial_Replc,
                        TO_CHAR (F.STK_TYPE_ID) AS part_Type,
                        TO_CHAR (E.INTNL_CNTR) AS parts_Period,
                        TO_CHAR (E.COMPNT_QTY) AS quanity,
@@ -1577,10 +1579,12 @@
                 LEFT OUTER JOIN SVC0004D G ON A.AS_ID = G.AS_ENTRY_ID AND A.AS_SO_ID = G.AS_SO_ID
                 LEFT OUTER JOIN SVC0005D S5D  ON S5D.AS_RESULT_ID = G.AS_RESULT_ID    AND  S5D.ASR_ITM_PART_ID=    F.STK_ID
                 LEFT OUTER JOIN ( SELECT S26.STK_CODE,
-                                         NVL(S26.SERIAL_CHK , 'N') AS SERIALCHK
-                                  FROM SYS0026M S26
-                                  WHERE 1 = 1
-                                    AND S26.STUS_CODE_ID = 1
+                                                     S26.IS_SMO,
+                                                     S26.IS_SERIAL_REPLC,
+			                                         NVL(S26.SERIAL_CHK , 'N') AS SERIALCHK
+			                                  FROM SYS0026M S26
+			                                  WHERE 1 = 1
+			                                    AND S26.STUS_CODE_ID = 1
                 ) H ON F.STK_CODE = H.STK_CODE
            ) MST LEFT OUTER JOIN (SELECT A.SRV_SO_ID
                                        , B.*
@@ -1623,6 +1627,8 @@
          , TO_CHAR(CHRG_YN               )   AS        chg_Y_N
          , TO_CHAR(CRT_USER_ID           )   AS        Create_User_ID
          , TO_CHAR(CRT_DT                )   AS        Create_Date
+         , TO_CHAR(IS_SMO)   AS        is_Smo
+         , TO_CHAR(IS_SERIAL_REPLC)   AS        is_Serial_Replc
     FROM SVC0106T
     WHERE MEM_CODE = #{userId}
   </select>
