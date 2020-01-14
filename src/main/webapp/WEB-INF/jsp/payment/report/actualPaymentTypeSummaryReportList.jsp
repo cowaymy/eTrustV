@@ -186,11 +186,11 @@ $(document).ready(function() {
 
     // 엑셀다운로드
     $('#excelDownGrid1').click(function() {
-        GridCommon.exportTo("grid1_wrap", 'xlsx', "Paymode Analysis by Customer Type & Pay Channel 1");
+        GridCommon.exportTo("grid1_wrap", 'xlsx', "Actual Payment Type Summary Report 1");
      });
 
     $('#excelDownGrid2').click(function() {
-        GridCommon.exportTo("grid2_wrap", 'xlsx', "Paymode Analysis by Customer Type & Pay Channel 2");
+        GridCommon.exportTo("grid2_wrap", 'xlsx', "Actual Payment Type Summary Report 2");
      });
 
 });
@@ -205,7 +205,7 @@ $(document).ready(function() {
 
 	<aside class="title_line">				<!-- aside title_line start -->
 		<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
-		<h2>Paymode Analysis by Customer Type & Pay Channel</h2>
+		<h2>Actual Payment Type Summary Report</h2>
 		<ul class="right_btns">
 			<li><p class="btn_blue"><a onclick="fnSearchTotal();"><span class="search"></span>Search</a></p></li>
 		</ul>
