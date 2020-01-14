@@ -509,6 +509,11 @@ var mSort = {};
 
         });
 
+        // excel
+        $("#btnExcel").click(function(){
+        	GridCommon.exportTo("planGrid", 'xlsx',"Production Plans");
+        });
+
         $("input[type=text]").keypress(function(event) {
             if (event.which == '13'){
                 $("#btnSearch").click();
@@ -954,6 +959,9 @@ function fn_isDateValidate(sValidDt){
     <aside class="title_line"><!-- title_line start -->
         <h3>Plan</h3>
         <ul class="right_btns">
+            <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+	            <li><p class="btn_grid"><a id="btnExcel">Excel</a></p></li>
+            </c:if>
             <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 	            <li><p class="btn_grid"><a id="btnPlanDel">Del</a></p></li>
 	            <li><p class="btn_grid"><a id="btnPlanSave">Save</a></p></li>
