@@ -1,4 +1,4 @@
-<%@ page contentType="image/jpeg; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <!--
@@ -149,6 +149,8 @@ to {
         $("#emtpyContainer").hide();
         $("#imgContainer").show();
     }
+
+
   });
 
   var slideIndex = 1;
@@ -216,13 +218,13 @@ to {
          <c:choose>
           <c:when test="${list.first}">
            <div class="slideshow-container">
-            <img src="/resources/WebShare/${list.actFlNm}" height="800"  style="width: 100%">
+            <img src="file/fileDownClaim.do?fileId=${list.atchFileId}" height="800"  style="width: 100%">
             <div class="text">'${list.atchFileName}'</div>
            </div>
           </c:when>
           <c:otherwise>
            <div class="mySlides fade">
-            <img src="/resources/WebShare/${list.actFlNm}" height="800"  style="width: 100%">
+            <img src="file/fileDownClaim.do?fileId=${list.atchFileId}" height="800"  style="width: 100%">
             <div class="text">'${list.atchFileName}'</div>
            </div>
           </c:otherwise>
