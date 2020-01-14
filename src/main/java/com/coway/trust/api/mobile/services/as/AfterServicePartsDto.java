@@ -67,6 +67,8 @@ public class AfterServicePartsDto {
 	@ApiModelProperty(value = "Filter Barcode Check")
 	private String filterBarcdChkYn;
 
+	private String isSmo;
+	private String isSerialReplc;
 
 	public String getFilterBarcdChkYn() {
 		return filterBarcdChkYn;
@@ -74,6 +76,22 @@ public class AfterServicePartsDto {
 
 	public void setFilterBarcdChkYn(String filterBarcdChkYN) {
 		this.filterBarcdChkYn = filterBarcdChkYN;
+	}
+
+	public String getIsSmo() {
+		return isSmo;
+	}
+
+	public void setIsSmo(String isSmo) {
+		this.isSmo = isSmo;
+	}
+
+	public String getIsSerialReplc() {
+		return isSerialReplc;
+	}
+
+	public void setIsSerialReplc(String isSerialReplc) {
+		this.isSerialReplc = isSerialReplc;
 	}
 
 	public String getSalesOrderNo() {

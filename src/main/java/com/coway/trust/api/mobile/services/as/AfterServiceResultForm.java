@@ -196,6 +196,7 @@ public List<Map<String, Object>> createMaps(AfterServiceResultForm afterServiceR
 				map.put("filterChangeQty", dtl.getFilterChangeQty());
 				map.put("partsType", dtl.getPartsType());
 				map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
+				map.put("returnFilterSerialNo", dtl.getReturnFilterSerialNo());
 
 				list.add(map);
 			}

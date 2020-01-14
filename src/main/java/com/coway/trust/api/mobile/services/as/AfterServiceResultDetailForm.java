@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "AfterServiceResultDetailForm", description = "AfterServiceResultDetailForm")
 public class AfterServiceResultDetailForm {
 
-	
+
 	@ApiModelProperty(value = "필터 코드")
 	private String filterCode;
 
@@ -36,6 +36,12 @@ public class AfterServiceResultDetailForm {
 
 	@ApiModelProperty(value = "교체 필터 바코드")
 	private String filterBarcdSerialNo;
+
+	@ApiModelProperty(value = "기존 필터 바코드")
+	private String returnFilterSerialNo;
+
+	private String isSmo;
+	private String isSerialReplc;
 
 	public String getFilterCode() {
 		return filterCode;
@@ -92,31 +98,55 @@ public class AfterServiceResultDetailForm {
 	public void setFilterBarcdSerialNo(String filterBarcdSerialNo) {
 		this.filterBarcdSerialNo = filterBarcdSerialNo;
 	}
-	
-	
-	
+
+	public String getReturnFilterSerialNo() {
+		return returnFilterSerialNo;
+	}
+
+	public void setReturnFilterSerialNo(String returnFilterSerialNo) {
+		this.returnFilterSerialNo = returnFilterSerialNo;
+	}
+
+	public String getIsSmo() {
+		return isSmo;
+	}
+
+	public void setIsSmo(String isSmo) {
+		this.isSmo = isSmo;
+	}
+
+	public String getIsSerialReplc() {
+		return isSerialReplc;
+	}
+
+	public void setIsSerialReplc(String isSerialReplc) {
+		this.isSerialReplc = isSerialReplc;
+	}
+
+
+
 	public static List<Map<String, Object>>  createMaps(List<AfterServiceResultDetailForm> afterServiceResultDetailForms) {
 
 		List<Map<String, Object>> list = new ArrayList<>();
 		Map<String, Object> map;
-	
+
 //		map = BeanConverter.toMap(afterServiceResultForm, "partList");
-		
+
 		for(AfterServiceResultDetailForm form : afterServiceResultDetailForms){
 			map = BeanConverter.toMap(form);
 			list.add(map);
 		}
-		
+
 		return list;
 	}
-	
-	
 
 
 
-	
 
-	
-	
-	
+
+
+
+
+
+
 }
