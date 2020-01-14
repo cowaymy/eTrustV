@@ -13,7 +13,7 @@
 		WITH DAY_LIST AS (
 		     SELECT LEVEL DD FROM dual CONNECT BY LEVEL <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE(#{planYearMonth}, 'MM/YYYY')),'DD')  -- PARAMETER
 		)
-		SELECT B.CODE_NAME AS TYPE_NAME, DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, A.*, B.CODE, C.CODE_NAME, D.CODE
+		SELECT B.CODE_NAME AS TYPE_NAME, DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, DECODE(A.MODE_ID, -1, 'Regular', -2, 'Direct Debit', NVL(D.CODE_NAME, C.CODE_NAME)) AS MODE_DESC, A.*, B.CODE, C.CODE_NAME, D.CODE
 		  FROM (
 
 		          SELECT *
@@ -43,7 +43,10 @@
 
 		                                            AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(to_date( #{planYearMonth}, 'MM/YYYY'),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +1 -- Search condition : PARAMETER
 
-		                                            AND PAY65.PAY_ITM_MODE_ID IN ('105','106', '107')  -- Cash, Cheque, CRC
+		                                            AND (
+		                                                          PAY65.PAY_ITM_MODE_ID IN ('105','106')  -- Cash, Cheque, CRC
+		                                                     or  (PAY65.PAY_ITM_MODE_ID IN ('107') AND PAY65.PAY_ITM_CARD_TYPE_ID <![CDATA[ <> ]]> '0')  -- Cash, Cheque, CRC
+		                                                  )
 
 		                                            GROUP BY C.TYPE_ID, PAY65.PAY_ITM_MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'DD')
 
@@ -96,7 +99,7 @@
 		WITH DAY_LIST AS (
 		     SELECT LEVEL DD FROM dual CONNECT BY LEVEL <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE(#{planYearMonth}, 'MM/YYYY')),'DD')  -- PARAMETER
 		)
-		SELECT DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
+		SELECT DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, DECODE(A.MODE_ID, -1, 'Regular', -2, 'Direct Debit', NVL(D.CODE_NAME, C.CODE_NAME)) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
 		  FROM (
 
 		          SELECT *
@@ -128,6 +131,7 @@
 		                                            AND PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
 		                                            AND PAY64.OR_NO LIKE 'AER%'   -- Deduction = Success (exclude hand-collect)
 		                                            AND PAY65.PAY_ITM_STUS_ID = '1'   -- Deduction = Success (exclude hand-collect)
+		                                            AND PAY65.PAY_ITM_CARD_TYPE_ID <![CDATA[ <> ]]> '0'
 
 		                                            GROUP BY PAY65.PAY_ITM_MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'DD')
 
@@ -179,7 +183,7 @@
 		WITH DAY_LIST AS (
 		     SELECT LEVEL DD FROM dual CONNECT BY LEVEL <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE(#{planYearMonth}, 'MM/YYYY')),'DD')  -- PARAMETER
 		)
-		SELECT DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
+		SELECT DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, DECODE(A.MODE_ID, -1, 'Regular', -2, 'Direct Debit', NVL(D.CODE_NAME, C.CODE_NAME)) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
 		  FROM (
 
 		          SELECT *
@@ -208,9 +212,10 @@
 
 		                                            AND PAY64.PAY_DATA BETWEEN TO_DATE(TO_CHAR(TRUNC(to_date( #{planYearMonth}, 'MM/YYYY'),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +1 -- Search condition : PARAMETER
 
-		                                            AND PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
+		                                            AND PAY65.PAY_ITM_CARD_TYPE_ID IN ('107')  -- CRC
 		                                            AND PAY64.OR_NO LIKE 'AER%'   -- Deduction = Success (exclude hand-collect)
 		                                            AND PAY65.PAY_ITM_STUS_ID = '1'   -- Deduction = Success (exclude hand-collect)
+		                                            AND PAY65.PAY_ITM_CARD_TYPE_ID <![CDATA[ <> ]]> '0'
 
 		                                            GROUP BY PAY65.PAY_ITM_MODE_ID, NVL(PAY65.PAY_ITM_CARD_TYPE_ID, 0), TO_CHAR(PAY64.PAY_DATA,'DD')
 
@@ -262,7 +267,7 @@
 		WITH DAY_LIST AS (
 		     SELECT LEVEL DD FROM dual CONNECT BY LEVEL <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE(#{planYearMonth}, 'MM/YYYY')),'DD')  -- PARAMETER
 		)
-		SELECT DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, NVL(D.CODE_NAME, C.CODE_NAME) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
+		SELECT DECODE(A.MODE_ID, -1, 'REG', -2, 'DD', C.CODE) AS MODE_CODE, DECODE(A.MODE_ID, -1, 'Regular', -2, 'Direct Debit', NVL(D.CODE_NAME, C.CODE_NAME)) AS MODE_DESC, A.*, C.CODE_NAME, D.CODE
 		  FROM (
 
 		          SELECT *
@@ -297,6 +302,7 @@
 		                                            AND PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
 		                                            AND PAY64.OR_NO LIKE 'AER%'   -- Deduction = Success (exclude hand-collect)
 		                                            AND PAY65.PAY_ITM_STUS_ID = '1'   -- Deduction = Success (exclude hand-collect)
+		                                            AND PAY65.PAY_ITM_CARD_TYPE_ID <![CDATA[ <> ]]> '0'
 
 		                                            AND PAY41.VRESCUE = '1'  -- vRescue flag = TRUE
 		                                            AND PAY42.BANK_DTL_DR_DT BETWEEN TO_DATE(TO_CHAR(TRUNC(to_date( #{planYearMonth}, 'MM/YYYY'),'MM'),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(to_char( LAST_DAY(to_date( #{planYearMonth}, 'MM/YYYY')), 'DD/MM/YYYY'), 'DD/MM/YYYY') +1 -- Search condition : PARAMETER
@@ -389,6 +395,10 @@
 
 		                                            AND PAY65.PAY_ITM_MODE_ID IN ('105','106', '107','108')  -- Cash, Cheque, CRC
                                                     AND NOT (
+                                                              PAY65.PAY_ITM_MODE_ID = '107'  -- CRC
+                                                        AND PAY65.PAY_ITM_CARD_TYPE_ID <![CDATA[ <> ]]> '0'
+                                                    )
+                                                    AND NOT (
                                                               PAY65.PAY_ITM_MODE_ID = '108'  -- Online Payment
                                                         AND PAY64.OR_NO NOT LIKE 'AER%'   -- AUTO DEBIT
                                                     )
@@ -447,6 +457,7 @@
 		                                            AND (         (
 		                                                                       PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
 		                                                                AND PAY64.OR_NO LIKE 'WOR%'   -- Hand-collect
+		                                                                AND PAY65.PAY_ITM_CARD_TYPE_ID <![CDATA[ <> ]]> '0'
 		                                                       )
 		                                                      OR   (
 		                                                                       PAY65.PAY_ITM_MODE_ID = '108'  -- Online Payment
@@ -502,6 +513,7 @@
 		                                            AND (         (
                                                                                PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
                                                                         AND PAY64.OR_NO LIKE 'WOR%'   -- Hand-collect
+                                                                        AND PAY65.PAY_ITM_CARD_TYPE_ID <![CDATA[ <> ]]> '0'
                                                                )
                                                               OR   (
                                                                                PAY65.PAY_ITM_MODE_ID = '108'  -- Online Payment
@@ -562,6 +574,8 @@
                                                     AND (         (
                                                                                PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
                                                                         AND PAY64.OR_NO LIKE 'WOR%'   -- Hand-collect
+                                                                        AND PAY65.PAY_ITM_CARD_TYPE_ID <![CDATA[ <> ]]> '0'
+
                                                                )
                                                               OR   (
                                                                                PAY65.PAY_ITM_MODE_ID = '108'  -- Online Payment
@@ -617,6 +631,7 @@
                                                     AND (         (
                                                                                PAY65.PAY_ITM_MODE_ID IN ('107')  -- CRC
                                                                         AND PAY64.OR_NO LIKE 'WOR%'   -- Hand-collect
+                                                                        AND PAY65.PAY_ITM_CARD_TYPE_ID <![CDATA[ <> ]]> '0'
                                                                )
                                                               OR   (
                                                                                PAY65.PAY_ITM_MODE_ID = '108'  -- Online Payment
