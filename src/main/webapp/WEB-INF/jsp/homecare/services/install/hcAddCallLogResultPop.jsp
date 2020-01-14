@@ -347,7 +347,7 @@
                         </tr>
                         <tr>
                             <th scope="row"><spring:message code='service.title.RDCAvailableQty' /></th>
-					        <td><span id="rdc"><c:out value="${orderRdcInCdc.raqty}" /></span></td>
+					        <td><span id="rdc"><c:out value="${orderRdcInCdc.raqty}" /> / <c:out value="${anoRdcincdc.raqty}" /></span></td>
 					        <th scope="row"><spring:message code='service.title.InTransitQty' /></th>
 					        <td><span id="rdcInCdc"><c:out value="${orderRdcInCdc.rinqty}" /></span></td>
 					        <th scope="row"><spring:message code='service.title.CDCAvailableQty' /></th>

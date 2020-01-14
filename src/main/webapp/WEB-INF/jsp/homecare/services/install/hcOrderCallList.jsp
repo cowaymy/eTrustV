@@ -56,7 +56,7 @@
             }
         });
 
-	    /* AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
         	callStusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusCode");
             callStusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusId");
             salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
@@ -64,7 +64,7 @@
             salesOrdNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
             rcdTms = AUIGrid.getCellValue(myGridID, event.rowIndex, "rcdTms");
 
-            Common.popupDiv("/homecare/services/install/hcAddCallLogResultPop.do?isPop=true&callStusCode=" + callStusCode
+            Common.popupDiv("/callCenter/viewCallResultPop.do?isPop=true&callStusCode=" + callStusCode
                     + "&callStusId=" + callStusId
                     + "&salesOrdId=" + salesOrdId
                     + "&callEntryId=" + callEntryId
@@ -74,7 +74,7 @@
                     + "&rcdTms=" + rcdTms
                     + "&branchTypeId=" + "${branchTypeId}"
             );
-        }); */
+        });
 
         /* AUIGrid.bind(myGridID, "cellClick", function(event) {
             callStusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusCode");

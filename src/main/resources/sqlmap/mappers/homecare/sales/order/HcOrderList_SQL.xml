@@ -271,4 +271,21 @@
         ) A
     </select>
 
+    <!-- Select Product Info -->
+    <select id="selectProductInfo" parameterType="String" resultType="egovMap">
+         /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderListMapper.selectProductInfo */
+        SELECT A.STK_ID
+                 , A.STK_CODE
+                 , A.STK_DESC
+                 , A.STK_CTGRY_ID
+                 , A.STK_TYPE_ID
+                 , A.STUS_CODE_ID
+                 , A.STK_OLD_CODE
+
+         FROM SYS0026M A
+           JOIN SAL0002D B ON B.ITM_STK_ID = A.STK_ID
+        WHERE SALES_ORD_ID = #{salesOrdId}
+    </select>
+
+
 </mapper>
