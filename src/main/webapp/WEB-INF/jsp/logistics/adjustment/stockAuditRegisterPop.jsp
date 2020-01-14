@@ -380,11 +380,15 @@
 
         var url = "";
 
+        /*
         if($('#insStockAuditNo').val() == '' ) { // New
             url = "/logistics/adjustment/createStockAuditDoc.do";
         } else { // Edit
             url = "/logistics/adjustment/startStockAudit.do";
         }
+        */
+
+        url = "/logistics/adjustment/createStockAuditDoc.do";
 
         if(Common.confirm("Do you want to start audit?", function(){
                 Common.ajax("POST", url, obj, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
