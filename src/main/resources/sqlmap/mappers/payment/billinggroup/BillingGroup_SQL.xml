@@ -1028,7 +1028,7 @@
 	       Extent1.CUST_CARE_CNT_ID CUST_CARE_CNT_ID
 	  FROM SAL0001D Extent1
 	 WHERE  ( 8 <![CDATA[<> ]]>  Extent1.STUS_CODE_ID )
-	 AND ( 66 = Extent1.APP_TYPE_ID )
+	 /*AND ( 66 = Extent1.APP_TYPE_ID )*/
 	 AND ( Extent1.CUST_BILL_ID = #{custBillId} )
     </select>
 
