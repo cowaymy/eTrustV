@@ -361,7 +361,7 @@ $(document).ready(function() {
 				<tbody>
 					<tr>
 						<!-- <th scope="row">Month &amp; Year</th> -->
-						<th scope="row">Month</th>
+						<th scope="row">Month<span class="must">*</span></th>
 						<td>
 							<input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w95p" id="planYearMonth" name="planYearMonth" onchange="fnPlanYearMonthChange();" value="${toDay}"  />
 						</td>
