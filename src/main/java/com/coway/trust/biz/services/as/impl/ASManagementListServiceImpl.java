@@ -874,6 +874,22 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         iMap.put("FILTER_BARCD_SERIAL_NO", updateMap.get("srvFilterLastSerial"));
         iMap.put("EXCHG_ID", updateMap.get("filterExCode"));
 
+        String returnFilterSerialNo = "";
+        if (updateMap.get("returnFilterSerialNo") != null) {
+        	returnFilterSerialNo = updateMap.get("returnFilterSerialNo").toString();
+        }
+        String isSmo = "";
+        if (updateMap.get("isSmo") != null) {
+        	isSmo = updateMap.get("isSmo").toString();
+        }
+        String isSerialReplc = "";
+        if (updateMap.get("isSerialReplc") != null) {
+        	isSerialReplc = updateMap.get("isSerialReplc").toString();
+        }
+        iMap.put("RET_SMO_SERIAL_NO", returnFilterSerialNo);
+        iMap.put("IS_SMO", isSmo);
+        iMap.put("IS_SERIAL_REPLACE", isSerialReplc);
+
         LOGGER.debug("== INSERT SVC0005D PARAMS {}", iMap);
         rtnValue = ASManagementListMapper.insertSVC0005D(iMap);
       }
