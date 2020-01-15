@@ -68,7 +68,7 @@ public class DtAfterServicePartsDto {
 	private String filterBarcdChkYn;
 
 	private String isSmo;
-	private String isSerialReplc;
+	private String isSerialReplace;
 
 
 	public String getFilterBarcdChkYn() {
@@ -87,12 +87,12 @@ public class DtAfterServicePartsDto {
 		this.isSmo = isSmo;
 	}
 
-	public String getIsSerialReplc() {
-		return isSerialReplc;
+	public String getIsSerialReplace() {
+		return isSerialReplace;
 	}
 
-	public void setIsSerialReplc(String isSerialReplc) {
-		this.isSerialReplc = isSerialReplc;
+	public void setIsSerialReplace(String isSerialReplace) {
+		this.isSerialReplace = isSerialReplace;
 	}
 
 	public String getSalesOrderNo() {
