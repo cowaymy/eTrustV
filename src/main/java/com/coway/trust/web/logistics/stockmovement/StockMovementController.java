@@ -138,6 +138,16 @@ public class StockMovementController {
   public ResponseEntity<Map> selectStockMovementSearchList(@RequestBody Map<String, Object> params, Model model)
       throws Exception {
 
+	  if (params.get("cmbCategory") != null ){
+    	  List<String> cateList = (List)params.get("cmbCategory");
+    	  params.put("cateList" , cateList);
+	  }
+
+	  if (params.get("cmbType") != null ){
+    	  List<String> typeList = (List)params.get("cmbType");
+    	  params.put("stktype" , typeList);
+	  }
+
     List<EgovMap> list = stockMovementService.selectStockMovementMainList(params);
 
     Map<String, Object> map = new HashMap();
@@ -315,6 +325,39 @@ public class StockMovementController {
 
   @RequestMapping(value = "/StockMovementListDelivery.do")
   public String stocklistdelivery(Model model, HttpServletRequest request, HttpServletResponse response)
+      throws Exception {
+    String streq = request.getParameter("streq");
+    String sttype = request.getParameter("sttype");
+    String smtype = request.getParameter("smtype");
+    String tlocation = request.getParameter("tlocation");
+    String flocation = request.getParameter("flocation");
+    String crtsdt = request.getParameter("crtsdt");
+    String crtedt = request.getParameter("crtedt");
+    String reqsdt = request.getParameter("reqsdt");
+    String reqedt = request.getParameter("reqedt");
+    String smvpath = request.getParameter("smvpath");
+    String sstatus = request.getParameter("sstatus");
+    String rStcode = request.getParameter("rStcode");
+
+    Map<String, Object> map = new HashMap();
+    map.put("streq", streq);
+    map.put("sttype", sttype);
+    map.put("smtype", smtype);
+    map.put("tlocation", tlocation);
+    map.put("flocation", flocation);
+    map.put("crtsdt", crtsdt);
+    map.put("crtedt", crtedt);
+    map.put("reqsdt", reqsdt);
+    map.put("reqedt", reqedt);
+    map.put("smvpath", smvpath);
+    map.put("sstatus", sstatus);
+    model.addAttribute("searchVal", map);
+
+    return "logistics/stockMovement/stockMovementListDelivery";
+  }
+
+  @RequestMapping(value = "/htStockMovementListDelivery.do")
+  public String htStockMovementListDelivery(Model model, HttpServletRequest request, HttpServletResponse response)
       throws Exception {
     String streq = request.getParameter("streq");
     String sttype = request.getParameter("sttype");
