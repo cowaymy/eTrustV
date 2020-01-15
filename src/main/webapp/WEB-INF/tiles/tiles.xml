@@ -140,7 +140,7 @@
         <put-attribute name="body" value="/WEB-INF/jsp/common/main.jsp" />
     </definition>
 
-       <definition name="common/mainExternal" extends="layout.default">
+    <definition name="common/mainExternal" extends="layout.default">
         <put-attribute name="body" value="/WEB-INF/jsp/common/mainExternal.jsp" />
     </definition>
 
