@@ -230,6 +230,14 @@ public class ProductReturnResultForm {
 		this.scanSerial = scanSerial;
 	}
 
+	private String fraSerialNo;
+	public String getFraSerialNo() {
+		return fraSerialNo;
+	}
+
+	public void setFraSerialNo(String fraSerialNo) {
+		this.fraSerialNo = fraSerialNo;
+	}
 
 
 	public static  List<Map<String, Object>>   createMaps(ProductReturnResultForm productReturnResultForm) {
