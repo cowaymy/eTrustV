@@ -136,7 +136,7 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
     				params.put("sgnDt", insApiresult.get("signData"));
     				params.put("stage", "API");
 
-    				params.put("hidSerialRequireChkYn", "Y");
+    				params.put("hidSerialRequireChkYn", String.valueOf( insApiresult.get("serialRequireChkYn")));
 
     				logger.debug("### HS PARAM : " + params.toString());
     				logger.debug("### HS PARAM FILTER : " + paramsDetailList.toString());
