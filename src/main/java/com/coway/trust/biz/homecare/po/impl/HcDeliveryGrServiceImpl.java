@@ -327,4 +327,9 @@ public class HcDeliveryGrServiceImpl extends EgovAbstractServiceImpl implements 
 
 		return saveCnt;
 	}
+
+	@Override
+	public String selectLocationSerialChk(Map<String, Object> obj) throws Exception{
+		return hcDeliveryGrMapper.selectLocationSerialChk(obj);
+	}
 }

@@ -24,4 +24,7 @@ public interface HcDeliveryGrService {
 
 	// 진행중인 Serial 초기화
 	public int clearIngSerialNo(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
+	// serial use Yn check
+	public String selectLocationSerialChk(Map<String, Object> obj) throws Exception;
 }

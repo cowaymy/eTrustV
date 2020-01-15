@@ -8,6 +8,8 @@
              , STK_CODE
              , STK_DESC
              , UOM
+             , DECODE(SERIAL_CHK, 'Y', 'Y', 'N') AS SERIAL_CHK
+             , STK_TYPE_ID
 		  FROM SYS0026M
 		 WHERE STK_CODE = #{stockCode}
     </select>

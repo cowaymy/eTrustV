@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.homecare.po.HcDeliveryGrService;
 import com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -37,6 +38,10 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 
     @Resource(name = "commonService")
     private CommonService commonService;
+
+    @Resource(name = "hcDeliveryGrService")
+    private HcDeliveryGrService hcDeliveryGrService;
+
 
 	@Resource(name = "serialMgmtNewMapper")
 	private SerialMgmtNewMapper serialMgmtNewMapper;
@@ -114,6 +119,22 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 				mainMap.put("stockCode", itemmap.get("stkCode"));
 				mainMap.put("stockName", itemmap.get("stkDesc"));
 				mainMap.put("uom", itemmap.get("uom"));
+			}
+
+			// serial use Y/N check.(1)
+			if(!"Y".equals(itemmap.get("serialChk").toString())){
+				mainMap.put("stockName", "Unused item Serial No. (Invalid)");
+				mainMap.put("status", 0);
+				continue;
+			}
+
+			// serial use Y/N check.(2)
+			itemmap.put("cdc", mainMap.get("toLocCode"));
+			String serialChk = hcDeliveryGrService.selectLocationSerialChk(itemmap);
+			if(StringUtils.isEmpty(serialChk) || !"Y".equals(serialChk) ){
+				mainMap.put("stockName", "Unused Serial No. (Invalid)");
+				mainMap.put("status", 0);
+				continue;
 			}
 
 			// LOG0100M 체크
