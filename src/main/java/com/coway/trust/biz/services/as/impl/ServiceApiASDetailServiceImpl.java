@@ -758,9 +758,26 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         			map.put("filterRemark", "");
         			map.put("filterTotal", amt);
 
-        			map.put("returnFilterSerialNo", paramsDetail.get(x).get("returnFilterSerialNo"));
-        			map.put("isSmo", paramsDetail.get(x).get("isSmo"));
-        			map.put("isSerialReplc", paramsDetail.get(x).get("isSerialReplc"));
+        			if (paramsDetail.get(x).get("returnFilterSerialNo") != null) {
+        				map.put("returnFilterSerialNo", paramsDetail.get(x).get("returnFilterSerialNo"));
+        			}
+        			else {
+        				map.put("returnFilterSerialNo", "");
+        			}
+
+        			if (paramsDetail.get(x).get("isSmo") != null) {
+        				map.put("isSmo", paramsDetail.get(x).get("isSmo"));
+        			}
+        			else {
+        				map.put("isSmo", "N");
+        			}
+
+        			if (paramsDetail.get(x).get("isSerialReplc") != null) {
+        				map.put("isSerialReplc", paramsDetail.get(x).get("isSerialReplc"));
+        			}
+        			else {
+        				map.put("isSerialReplc", "N");
+        			}
 
         			logger.debug("### AS PART : " + map.toString());
 
@@ -1083,7 +1100,18 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
     						throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 						}
 
+    					spMap.put("pErrcode", "");
+    					spMap.put("pErrmsg", "");
         				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+        				if (!"000".equals(params.get("pErrcode"))) {
+    						String procTransactionId = transactionId;
+    						String procName = "AfterService";
+    						String procKey = serviceNo;
+    						String procMsg = "Failed to Barcode Save";
+    						String errorMsg = "[API] " + params.get("pErrmsg");
+    						throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+						}
         			}
         		}
         		catch (Exception e) {
