@@ -1057,6 +1057,7 @@
          , TO_CHAR(FRA_PRODUCT_NAME) AS fra_Product_Name
          , TO_CHAR(RESULT_REMARK) AS result_Result
          , TO_CHAR(SERIAL_CHK) AS serial_Chk
+         , TO_CHAR(FRA_SERIAL_CHK) AS fra_Serial_Chk
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -1079,6 +1080,13 @@
 			                  WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID(+)
 			                    AND T2.ITM_STK_ID = T3.STK_ID(+)
 			                    AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS FRA_PRODUCT_NAME
+			              , (SELECT MAX(T3.SERIAL_CHK)
+			                   FROM SAL0001D T1
+			                      , SAL0002D T2
+			                      , SYS0026M T3
+			                  WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID(+)
+			                    AND T2.ITM_STK_ID = T3.STK_ID(+)
+			                    AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS FRA_SERIAL_CHK
 		   FROM (
 				      SELECT TO_CHAR (C.SALES_ORD_NO) AS sales_Order_No,
 				             A.RETN_NO AS service_No,
@@ -1265,10 +1273,11 @@
          , TO_CHAR(CRT_USER_ID         )         AS        Create_User_ID
          , TO_CHAR(CRT_DT              )         AS        Create_Date
          , TO_CHAR(SERIAL_CHK) AS serial_Chk
-         , TO_CHAR(FRA_YN) AS fraYn
-         , TO_CHAR(FRA_ORD_NO) AS fraOrdNo
-         , TO_CHAR(FRA_PRODUCT_CODE) AS fraProductCode
-         , TO_CHAR(FRA_PRODUCT_NAME) AS fraProductName
+         , TO_CHAR(FRA_YN) AS fra_Yn
+         , TO_CHAR(FRA_ORD_NO) AS fra_Ord_No
+         , TO_CHAR(FRA_PRODUCT_CODE) AS fra_Product_Code
+         , TO_CHAR(FRA_PRODUCT_NAME) AS fra_Product_Name
+         , TO_CHAR(FRA_SERIAL_CHK) AS fra_Serial_Chk
     FROM SVC0104T
     WHERE MEM_CODE =  #{userId}
   </select>
@@ -4683,6 +4692,13 @@
 		                  WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID(+)
 		                    AND T2.ITM_STK_ID = T3.STK_ID(+)
 		                    AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS FRA_PRODUCT_NAME
+		              , (SELECT MAX(T3.SERIAL_CHK)
+		                   FROM SAL0001D T1
+		                      , SAL0002D T2
+		                      , SYS0026M T3
+		                  WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID(+)
+		                    AND T2.ITM_STK_ID = T3.STK_ID(+)
+		                    AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS FRA_SERIAL_CHK
       FROM (SELECT ROW_NUMBER () OVER (PARTITION BY SAL0001D.SALES_ORD_NO ORDER BY SAL0095D.SRV_EXPR_DT, SAL0046D.INSTALL_ENTRY_NO DESC) rnum,
                    SAL0046D.INSTALL_ENTRY_NO AS service_No,
                    SAL0046D.STUS_CODE_ID AS job_Status,
