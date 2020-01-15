@@ -2012,6 +2012,10 @@
   setPopData();
 
   function fn_serialModifyPop(){
+	  if($(this).parent().parent.hasClass("btn_disabled") == true){
+          return false;
+      }
+
       $("#serialNoChangeForm #pSerialNo").val( $("#stockSerialNo").val() ); // Serial No
       $("#serialNoChangeForm #pSalesOrdId").val( $("#ORD_ID").val() ); // 주문 ID
       $("#serialNoChangeForm #pSalesOrdNo").val( $("#ORD_NO").val() ); // 주문 번호
@@ -2227,7 +2231,7 @@ function SearchListAjax(obj){
        <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must">*</span></th>
        <td>
            <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly/>
-            <p class="btn_grid" style="display:none" id="btnSerialEdit"><a id="serialEdit" href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
+            <p class="btn_grid btn_disabled" style="display:none" id="btnSerialEdit"><a id="serialEdit" href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
        </td>
       </tr>
       <tr>
