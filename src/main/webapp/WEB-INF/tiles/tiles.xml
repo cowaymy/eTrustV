@@ -139,6 +139,11 @@
     <definition name="common/main" extends="layout.default">
         <put-attribute name="body" value="/WEB-INF/jsp/common/main.jsp" />
     </definition>
+
+       <definition name="common/mainExternal" extends="layout.default">
+        <put-attribute name="body" value="/WEB-INF/jsp/common/mainExternal.jsp" />
+    </definition>
+
     <!-- [Woongjin Jun] Tab -->
 
 	<definition name="/*" extends="layout.default">
