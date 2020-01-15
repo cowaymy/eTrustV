@@ -267,6 +267,8 @@ public class ProductReturnResultForm {
 				map.put("resultReportEmailNo", productReturnResultForm.getResultReportEmailNo());
 				map.put("resultAcceptanceName", productReturnResultForm.getResultAcceptanceName());
 				map.put("transactionId", productReturnResultForm.getTransactionId());
+				map.put("scanSerial", productReturnResultForm.getScanSerial());
+				map.put("fraSerialNo", productReturnResultForm.getFraSerialNo());
 
 
 				list.add(map);
