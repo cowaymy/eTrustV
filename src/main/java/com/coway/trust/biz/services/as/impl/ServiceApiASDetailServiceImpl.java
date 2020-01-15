@@ -502,7 +502,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
         		params.put("SGN_DT", insApiresult.get("signData")); // asTransLogs
 
-        		params.put("SERIAL_REQUIRE_CHK_YN", "Y");
+        		params.put("SERIAL_REQUIRE_CHK_YN", String.valueOf( insApiresult.get("serialRequireChkYn")));
 
         		logger.debug("### AS PARAM [AFTER]: ", params);
 
