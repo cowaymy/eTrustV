@@ -28,8 +28,8 @@
         $("#viewAdvCrtUser").text(myGridData[0].reqstUserId);
         $("#viewAdvPayeeCode").text(myGridData[0].memAccId);
         $("#viewAdvPayeeNm").text(myGridData[0].memAccName);
-        $("#viewAdvBankNm").text(myGridData[0].clmNo);
-        $("#viewAdvBankAccNo").text(myGridData[0].clmNo);
+        $("#viewAdvBankNm").text(myGridData[0].bank);
+        $("#viewAdvBankAccNo").text(myGridData[0].bankAccNo);
 
         if(myGridData[0].advType == 1) {
             //$("#trvAdv").show();
@@ -54,7 +54,8 @@
                 $("#viewTrvOth").text("RM" + myGridData[0].othAmt.trim());
             }
 
-            $("#viewTrvTotAmt").text("RM" + (parseFloat(myGridData[0].accAmt) + parseFloat(myGridData[0].milAmt) + parseFloat(myGridData[0].tollAmt) + parseFloat(myGridData[0].othAmt)).toFixed(2));
+            var trvTotAmt = (parseFloat(myGridData[0].accAmt.trim().replace(",", "")) + parseFloat(myGridData[0].milAmt.trim().replace(",", "")) + parseFloat(myGridData[0].tollAmt.trim().replace(",", "")) + parseFloat(myGridData[0].othAmt.trim().replace(",", ""))).toFixed(2);
+            $("#viewTrvTotAmt").text("RM" + trvTotAmt.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
             $("#viewTrvRefdDt").text(myGridData[0].advRefdDt);
 
         } else if(myGridData[0].advType == 2) {
@@ -216,7 +217,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <th scope="row"><spring:message code="webInvoice.costCenter" /><span class="must">*</span></th>
+	                        <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	                        <td>
 	                            <span id="viewAdvCostCenter"></span>
 	                        </td>
@@ -226,7 +227,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <th scope="row">Payee Code<span class="must">*</span></th>
+	                        <th scope="row">Payee Code</th>
 	                        <td>
 	                            <span id="viewAdvPayeeCode"></span>
 	                        </td>
@@ -260,25 +261,25 @@
                         </colgroup>
 
                         <tr>
-                            <th scope="row">Location<span class="must">*</span></th>
+                            <th scope="row">Location</th>
                             <td colspan="2">
                                 <span id="viewTrvLoc"></span>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Traveling Period<span class="must">*</span></th>
+                            <th scope="row">Traveling Period</th>
                             <td>
                                 <span id="viewTrvPeriod"></span>
                             </td>
                         </tr>
                         <!-- <tr>
-                            <th scope="row">Purpose of Travel<span class="must">*</span></th>
+                            <th scope="row">Purpose of Travel</th>
                             <td colspan="2">
                                 <textarea id="trvPurp" name="trvPurp" placeholder="Enter up to 200 characters" maxlength="200" style="resize:none"></textarea>
                             </td>
                         </tr> -->
                         <tr>
-                            <th scope="row">Remarks<span class="must">*</span></th>
+                            <th scope="row">Remarks</th>
                             <td colspan="2">
                                 <span id="viewTrvRem"></span>
                             </td>
@@ -321,7 +322,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">Total Travel Advance (RM)</th>
+                                <th scope="row"><b>Total Travel Advance (RM)</b></th>
                                 <td colspan="2">
                                     <span id="viewTrvTotAmt"></span>
                                 </td>
@@ -340,37 +341,37 @@
                         </colgroup>
 
                         <tr>
-                            <th scope="row">Traveling Period<span class="must">*</span></th>
+                            <th scope="row">Traveling Period</th>
                             <td colspan="2">
                                 <span id="refTrvPeriod"></span>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Claim No for Advance Request<span class="must">*</span></th>
+                            <th scope="row">Claim No for Advance Request</th>
                             <td colspan="2">
                                 <span id="refAdvReqClmNo"></span>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Amount Repaid (RM)<span class="must">*</span></th>
+                            <th scope="row">Amount Repaid (RM)</th>
                             <td colspan="2">
                                 <span id="refAmtRepay"></span>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Repayment Date<span class="must">*</span></th>
+                            <th scope="row">Repayment Date</th>
                             <td colspan="2">
                                 <span id="refRepayDate"></span>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Bank-in Advice Ref Note<span class="must">*</span></th>
+                            <th scope="row">Bank-in Advice Ref Note</th>
                             <td colspan="2">
                                 <span id="refBankInRefNo"></span>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Remarks<span class="must">*</span></th>
+                            <th scope="row">Remarks</th>
                             <td colspan="2">
                                 <span id="trvRefRem"></span>
                             </td>
@@ -388,7 +389,7 @@
                         <col style="width:100px" />
                     </colgroup>
                     <tr>
-                        <th scope="row">Attachment<span class="must">*</span></th>
+                        <th scope="row">Attachment</th>
                         <td colspan="2" id="attachTd">
                             <div class="auto_file2 auto_file3">
                                 <input type="file" title="file add" />

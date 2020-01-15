@@ -252,6 +252,13 @@
     function fn_advReqPop() {
         console.log("fn_advReqPop");
 
+        $("#bankName").val("CIMB BANK BHD");
+        $("#bankId").val("3");
+
+        if(claimNo != null || claimNo != "") {
+            claimNo = null;
+        }
+
         menu = "REQ";
         if(advType == "" || advType == null) {
             advType = $("#advType").val();
@@ -802,22 +809,32 @@
         if(advType == 1) {
             errMsg = "Travel advance can only be applied for oustation trip with qualifying expenses of more than RM400 and stay of at least two(2) consecutive nights."
 
-            if($("#costCenterCode").val() == "" || $("#costCenterCode").val() == null) {
+            if(FormUtil.isEmpty($("#costCenterCode").val())) {
                 Common.alert("Please select the cost center.");
                 return false;
             }
 
-            if($("#payeeCode").val() == "" || $("#payeeCode").val() == null) {
+            if(FormUtil.isEmpty($("#payeeCode").val())) {
                 Common.alert("Please select the payee's code.");
                 return false;
             }
 
-            if(($("#locationFrom").val() == "" || $("#locationFrom").val() == null) && ($("#locationTo").val() == "" || $("#locationTo").val() == null)) {
+            if(FormUtil.isEmpty($("#bankAccNo").val())) {
+                Common.alert("Please input bank account number.")
+                return false;
+            } else {
+                if($("#bankAccNo").val().length < 10) {
+                    Common.alert("Please input bank account number.");
+                    return false;
+                }
+            }
+
+            if(FormUtil.isEmpty($("#locationFrom").val()) && FormUtil.isEmpty($("#locationTo").val())) {
                 Common.alert("Please enter the traveling locations");
                 return false;
             }
 
-            if(($("#trvPeriodFr").val() == "" || $("#trvPeriodFr").val() == null) && ($("#trvPeriodTo").val() == "" || $("#trvPeriodTo").val() == null)) {
+            if(FormUtil.isEmpty($("#trvPeriodFr").val()) && FormUtil.isEmpty($("#trvPeriodTo").val())) {
                 Common.alert("Please select traveling period.");
                 return false
             } else {
@@ -833,7 +850,7 @@
                 }
             }
 
-            if($("#trvReqRem").val() == "" || $("#trvReqRem").val() == null) {
+            if(FormUtil.isEmpty($("#trvReqRem").val())) {
                 Common.alert("Please enter remark.");
                 return false;
             }
@@ -848,6 +865,13 @@
             if(parseFloat($("#reqTotAmt").val()) < minAmt) {
                 Common.alert(errMsg);
                 return false;
+            }
+
+            if(parseFloat($("#othTrsptAmt").val()) > 0) {
+                if($("#trsptMode").val() == "" || $("#trsptMode").val() == null) {
+                    Common.alert("Please enter mode of transportation.");
+                    return false;
+                }
             }
 
             if(mode != "DRAFT") {
@@ -1384,7 +1408,8 @@
                             </td>
                             <th scope="row">Bank Account</th>
                             <td>
-                                <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" />
+                                <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" maxlength="10"
+                                onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"/>
                                 <!-- <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" value="${bankAccNo}" readonly/> -->
                             </td>
                         </tr>
