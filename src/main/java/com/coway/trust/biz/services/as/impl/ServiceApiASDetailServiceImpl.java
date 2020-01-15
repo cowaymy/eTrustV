@@ -219,7 +219,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
         			map.put("retSmoSerialNo", "");
         			map.put("isSmo", "N");
-        			map.put("isSerialReplc", "N");
+        			map.put("isSerialReplace", "N");
 
         			logger.debug("### AS PART : " + map.toString());
 
@@ -772,11 +772,11 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         				map.put("isSmo", "N");
         			}
 
-        			if (paramsDetail.get(x).get("isSerialReplc") != null) {
-        				map.put("isSerialReplc", paramsDetail.get(x).get("isSerialReplc"));
+        			if (paramsDetail.get(x).get("isSerialReplace") != null) {
+        				map.put("isSerialReplace", paramsDetail.get(x).get("isSerialReplace"));
         			}
         			else {
-        				map.put("isSerialReplc", "N");
+        				map.put("isSerialReplace", "N");
         			}
 
         			logger.debug("### AS PART : " + map.toString());
