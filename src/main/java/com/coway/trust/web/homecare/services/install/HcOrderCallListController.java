@@ -1,5 +1,6 @@
 package com.coway.trust.web.homecare.services.install;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -134,6 +135,14 @@ public class HcOrderCallListController {
     	EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
     	// another order
     	EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(params);
+    	// anoProduct Info
+    	EgovMap anoProduct = hcOrderListService.selectProductInfo(CommonUtils.nvl(hcOrder.get("anoOrdId")));
+
+    	Map<String, Object> anoRdcMap = new HashMap<String, Object>();
+    	anoRdcMap.put("dscBrnchId", CommonUtils.nvl(orderCall.get("dscBrnchId")));
+    	anoRdcMap.put("productCode", CommonUtils.nvl(anoProduct.get("stkCode")));
+
+    	EgovMap anoRdcincdc = orderCallListService.getRdcInCdc(anoRdcMap);
 
     	model.addAttribute("callStusCode", CommonUtils.nvl(params.get("callStusCode")));
     	model.addAttribute("callStusId", CommonUtils.nvl(params.get("callStusId")));
@@ -149,6 +158,8 @@ public class HcOrderCallListController {
     	model.addAttribute("orderDetail", orderDetail);
     	model.addAttribute("orderRdcInCdc", rdcincdc);
     	model.addAttribute("hcOrder", hcOrder);
+    	model.addAttribute("anoRdcincdc", anoRdcincdc);
+    	model.addAttribute("anoProduct", anoProduct);
 
     	// 호출될 화면
     	return "homecare/services/install/hcAddCallLogResultPop";

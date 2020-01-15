@@ -317,8 +317,8 @@
 					        <td><span><c:out value="${orderCall.crtTm}"/> </span></td>
                         </tr>
 					    <tr>
-					        <th scope="row"></th>
-					        <td><span></span></td>
+					        <th scope="row"><spring:message code='service.title.CallLogStatus' /></th>
+                            <td><span><c:out value="${orderCall.callStusCode}" /></span></td>
 					        <th scope="row"><spring:message code='service.title.UpdateDate' /></th>
 					        <td><span><c:out value="${firstCallLog[0].callDt}" /> </span></td>
 					        <th scope="row"><spring:message code='service.title.UpdateTime' /></th>
@@ -334,16 +334,20 @@
 					            </c:if>
 					        <th scope="row"><spring:message code='service.title.Creator' /></th>
 					        <td><span><c:out value="${orderCall.crtUserId}" /></span></td>
-					        <th scope="row"></th>
-					        <td><span> </span></td>
+					        <th scope="row">Bundle Number</th>
+					        <td><span> <c:out value="${hcOrder.bndlNo}" /></span></td>
                         </tr>
                         <tr>
 					        <th scope="row"><spring:message code='service.title.ProductToInstall' /></th>
-					        <td><span><c:out value="${orderCall.productCode}" /> - <c:out value="${orderCall.productName}" /></span></td>
-					        <th scope="row"><spring:message code='service.title.CallLogStatus' /></th>
-					        <td><span><c:out value="${orderCall.callStusCode}" /></span></td>
-					        <th scope="row"></th>
-					        <td></td>
+					        <td colspan="3">
+					           <span><c:out value="${orderCall.productCode}" /> - <c:out value="${orderCall.productName}" /><br/>
+					           <c:out value="${anoProduct.stkCode}" /> - <c:out value="${anoProduct.stkDesc}" /></span>
+					        </td>
+					        <th scope="row">Order No</th>
+					        <td>
+                               <span><c:out value="${salesOrdNo}" /><br/>
+                               <c:out value="${hcOrder.anoOrdNo}" /></span>
+                            </td>
                         </tr>
                         <tr>
                             <th scope="row"><spring:message code='service.title.RDCAvailableQty' /></th>
