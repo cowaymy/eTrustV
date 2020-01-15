@@ -3064,7 +3064,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
   }
 
-  @Override
+  //@Override
   public int setPay17dData(Map<String, Object> params) {
 
     LOGGER.debug("                                  ===> setPay17dData   out");
@@ -3137,7 +3137,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     return c;
   }
 
-  @Override
+  //@Override
   public int convertAccountToTempBasedOnPayMode(int pMode) {
     int rc = 0;
     switch (pMode) {
@@ -3156,7 +3156,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     return rc;
   }
 
-  @Override
+  //@Override
   public int convertTempAccountToSettlementAccount(int p) {
 
     int rc = 0;
