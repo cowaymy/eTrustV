@@ -23,6 +23,8 @@ import com.coway.trust.cmmn.model.BizMsgVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+import com.coway.trust.AppConstants;
+import com.coway.trust.cmmn.exception.ApplicationException;
 
 /**
  * @ClassName : ServiceApiPRDetailServiceImpl.java
@@ -180,6 +182,7 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	        			HashMap spMap = (HashMap) rtnValue.get("spMap");
 	        			if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
 	        				rtnValue.put("logerr", "Y");
+	        				throw new ApplicationException(AppConstants.FAIL, "Fail");
 	        			}
 
 	        			EgovMap delvryMap = MSvcLogApiService.getPrdRtnDelvryNo(cvMp);
@@ -206,7 +209,17 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
     						throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 						}
 
+    					spMap.put("pErrcode", "");
+    					spMap.put("pErrmsg", "");
 	        			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+	        			if (!"000".equals(spMap.get("pErrcode"))) {
+    						String procTransactionId = transactionId;
+    						String procName = "ProductReturn";
+    						String procKey = serviceNo;
+    						String procMsg = "Failed to Barcode Save";
+    						String errorMsg = "[API] " + params.get("pErrmsg");
+    						throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+						}
 	        		}
 	        	}
 	        	catch (Exception e) {
