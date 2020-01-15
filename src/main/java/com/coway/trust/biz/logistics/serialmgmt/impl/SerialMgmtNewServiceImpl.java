@@ -6,6 +6,7 @@ package com.coway.trust.biz.logistics.serialmgmt.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -33,6 +35,9 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
+    @Resource(name = "commonService")
+    private CommonService commonService;
+
 	@Resource(name = "serialMgmtNewMapper")
 	private SerialMgmtNewMapper serialMgmtNewMapper;
 
@@ -41,6 +46,12 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 
 		List<Object> mainList = (List<Object>)params.get("barList");
 
+		// Supplier code List.
+		Map<String, Object> gMap = new HashMap<String, Object>();
+		gMap.put("groupCode", "449");
+		List<EgovMap> supplierList = commonService.selectCodeList(gMap);
+
+		String supplierCode = "";
 		String crDate = "";
 		String month = "";
 		String sDate = "";
@@ -54,7 +65,15 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 			mainMap.put("updUserId", sessionVO.getUserId());
 			mainMap.put("boxno", mainMap.get("barcode"));
 
-			// 날짜형식이 맞는지 체크.
+			// check supplierCode.
+			supplierCode = ((String)mainMap.get("barcode")).substring(0, 3);
+			if(!validationSupplierCode(supplierList, supplierCode)){
+				mainMap.put("stockName", "Supplier. (Invalid)");
+				mainMap.put("status", 0);
+				continue;
+			}
+
+			// check dateFormat. (날짜형식이 맞는지 체크.)
 			crDate = (String)mainMap.get("crDate");
 			if(StringUtils.isBlank(crDate) || crDate.length() != 5){
 				mainMap.put("stockName", "Serial No. (Invalid)");
@@ -340,6 +359,11 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 		}
 	}
 
+	@Override
+	public EgovMap selectItemSerch(Map<String, Object> params) throws Exception{
+		return serialMgmtNewMapper.selectItemSerch(params);
+	}
+
 	private boolean validationDate(String checkDate){
 		try{
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
@@ -349,5 +373,26 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 		}catch (ParseException  e){
 			return false;
 		}
+	}
+
+	// homecare serial - supplier code check.
+	private boolean validationSupplierCode(List<EgovMap> list, String supCode){
+		if(list == null || list.size() < 1){
+			return false;
+		}
+
+		if(StringUtils.isEmpty(supCode)){
+			return false;
+		}
+
+		boolean check = false;
+		for(EgovMap mCode : list){
+			if( supCode.equals((String)mCode.get("code")) ){
+				check = true;
+				break;
+			}
+		}
+
+		return check;
 	}
 }

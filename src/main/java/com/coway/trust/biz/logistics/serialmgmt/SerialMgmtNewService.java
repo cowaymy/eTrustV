@@ -9,6 +9,8 @@ import java.util.Map;
 
 import com.coway.trust.cmmn.model.SessionVO;
 
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
 public interface SerialMgmtNewService{
 
 	// homecare serial save
@@ -34,6 +36,9 @@ public interface SerialMgmtNewService{
 
 	// Stock Audit serial delete
 	public void deleteAdSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
+	// item check
+	public EgovMap selectItemSerch(Map<String, Object> params) throws Exception;
 
 	// Other GI/GR serial delete
 	public void deleteOgOiSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
