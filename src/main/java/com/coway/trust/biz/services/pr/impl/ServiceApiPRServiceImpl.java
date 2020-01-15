@@ -228,7 +228,7 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 				resultForm.setSalesOrderNo(String.valueOf(fraInfo.get("salesOrderNo")));
 				resultForm.setServiceNo(String.valueOf(fraInfo.get("serviceNo")));
 				resultForm.setTransactionId(newTransactionId);
-				resultForm.setScanSerial("");
+				resultForm.setScanSerial(resultForm.getFraSerialNo());
 
 				prList.add(resultForm);
 			}
