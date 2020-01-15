@@ -53,6 +53,19 @@
         <put-attribute name="body" value="" />
     </definition>
 
+    <!-- [Woongjin Jun] Tab -->
+    <definition name="layout.default2" template="/WEB-INF/tiles/layout/default2.jsp">
+        <put-attribute name="head" value="" />
+        <put-attribute name="css" value="" />
+        <put-attribute name="script" value="/WEB-INF/tiles/view/script.jsp" />
+        <put-attribute name="bodyClass" value="" />
+        <put-attribute name="header" value="/WEB-INF/tiles/view/header2.jsp" />
+        <put-attribute name="body" value="" />
+        <put-attribute name="footer" value="/WEB-INF/tiles/view/footer.jsp" />
+        <put-attribute name="var" value="/WEB-INF/tiles/view/var.jsp" />
+    </definition>
+    <!-- [Woongjin Jun] Tab -->
+
     <!-- Layout(Templates) end -->
 
     <!-- ==================================================== -->
@@ -122,20 +135,26 @@
         <put-attribute name="body" value="/WEB-INF/jsp/sample/{1}.jsp" />
     </definition>
 
+    <!-- [Woongjin Jun] Tab -->
+    <definition name="common/main" extends="layout.default">
+        <put-attribute name="body" value="/WEB-INF/jsp/common/main.jsp" />
+    </definition>
+    <!-- [Woongjin Jun] Tab -->
+
 	<definition name="/*" extends="layout.default">
 		<put-attribute name="body" value="/WEB-INF/jsp/{1}.jsp" />
 	</definition>
 
-	<definition name="*/*" extends="layout.default">
+	<definition name="*/*" extends="layout.default2">
 		<put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}.jsp" />
 	</definition>
 
-	<definition name="*/*/*" extends="layout.default">
+	<definition name="*/*/*" extends="layout.default2">
 		<put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}.jsp" />
 	</definition>
 
     <!-- SH-KR - 20191210 -->
-    <definition name="*/*/*/*" extends="layout.default">
+    <definition name="*/*/*/*" extends="layout.default2">
         <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}.jsp" />
     </definition>
     <!-- Content end -->

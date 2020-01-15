@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
@@ -69,9 +69,9 @@
         // [Woongjin Jun] Toggle Button
 
         if( '${SESSION_INFO.userIsExternal}' == "1" ) {
-        	$("a[name=mainGo]").attr("href", "${pageContext.request.contextPath}/common/mainExternal.do")
+            $("a[name=mainGo]").attr("href", "${pageContext.request.contextPath}/common/mainExternal.do")
         }else{
-        	$("a[name=mainGo]").attr("href", "${pageContext.request.contextPath}/common/main.do")
+            $("a[name=mainGo]").attr("href", "${pageContext.request.contextPath}/common/main.do")
         }
     });
 
@@ -110,8 +110,7 @@
     }
 
     // 선택한 메뉴화면으로 이동.
-    function fn_menu(obj, menuCode, menuPath, fullPath, myMenuGroupCode, fromDtType, fromDtFieldNm, fromDtVal, toDtType, toDtFieldNm, toDtVal){
-
+    function fn_menu(obj, menuCode, menuPath, fullPath, myMenuGroupCode, mnName, fromDtType, fromDtFieldNm, fromDtVal, toDtType, toDtFieldNm, toDtVal){ // [Woongjin Jun] Tab
         if(FormUtil.isEmpty(menuPath) || $(obj).hasClass("disabled")){
             return;
         }
@@ -130,24 +129,187 @@
             popupObj = Common.popupWin("serialScanningGISMO", "/logistics/SerialMgmt/serialScanningGISMOList.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
         }
         else {
+            // [Woongjin Jun] Toggle Button
+            if (Common.checkPlatformType() == "mobile") { // pc, mobile
+                if (menuPath.indexOf("serialScanningGRList.do") != -1) {
+                    $(".js-adminmenu-toggle").click();
 
-	        $("#CURRENT_MENU_CODE").val(menuCode);
+                    $("#wrap").css("min-width", "100%"); //1200px
+                    $("#container").css("min-width", "100%"); //1200px
+                    $("#header").css("min-width", "100%"); //1200px
+                }
+                else {
+                    $("#wrap").css("min-width", "1200px");
+                    $("#container").css("min-width", "1200px");
+                    $("#header").css("min-width", "1200px");
+                }
+                if (menuCode == "tttttt") {
+                 $(".js-adminmenu-toggle").click();
+                }
+            }
+            // [Woongjin Jun] Toggle Button
 
-	        if($("#_myMenu").hasClass("on")){
-	            $("#CURRENT_MENU_TYPE").val("MY_MENU");
-	            $("#CURRENT_GROUP_MY_MENU_CODE").val(myMenuGroupCode);
-	        }else{
-	            $("#CURRENT_MENU_TYPE").val("LEFT_MENU");
-	        }
+            // [Woongjin Jun] Tab
+            if ($("#mainTabs").find("li").length > 0) {
+                if ($("#mainTabs").find("li").length >= 10) {
+                    alert("Max 10 Screen");
+                    return;
+                }
+            }
+            // [Woongjin Jun] Tab
 
-	        $("#CURRENT_MENU_FULL_PATH_NAME").val(fullPath);
+            $("#CURRENT_MENU_PATH").val(menuPath);
+            $("#CURRENT_MENU_CODE").val(menuCode);
 
-	        $("#_menuForm").attr({
-	            action : getContextPath() + menuPath,
-	            method : "POST"
-	        }).submit();
+            if($("#_myMenu").hasClass("on")){
+                $("#CURRENT_MENU_TYPE").val("MY_MENU");
+                $("#CURRENT_GROUP_MY_MENU_CODE").val(myMenuGroupCode);
+            }else{
+                $("#CURRENT_MENU_TYPE").val("LEFT_MENU");
+            }
+
+            $("#CURRENT_MENU_FULL_PATH_NAME").val(fullPath);
+
+            // [Woongjin Jun] Tab
+            if ($("#mainTabs ul").find("li[aria-controls=tabs-" + menuCode + "]").length > 0) {
+                $("#mainTabs").tabs("option", "active", id2Index("#mainTabs", "#tabs-" + menuCode));
+            }
+            else {
+                var tg = addTab(mnName, getContextPath() + menuPath, menuCode);
+
+                $("#_menuForm").attr({
+                    action : getContextPath() + menuPath,
+                    method : "POST",
+                    target : tg
+                }).submit();
+            }
+
+            $(".inb_menu li").children().removeClass("on");
+
+            if($("#_leftMenu").hasClass("on") && FormUtil.isNotEmpty(menuCode)){
+                fn_addClassLeftMenu(menuCode);
+            }else{
+                fn_addClassMyMenu(menuCode, myMenuGroupCode);
+            }
+            // [Woongjin Jun] Tab
         }
     }
+
+    // [Woongjin Jun] Tab
+    var tabTemplate = "<li><a href='\#{href}'>\#{label}</a><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>";
+    var totTabCount = 0;
+    var tabs;
+    var menuLoadingCount = 0;
+
+    function addTab(nm, url, menuCode) {
+        if (totTabCount == 0) {
+            $("#content").hide();
+            $("#content2").show();
+        }
+
+        console.log("addTab1 : " + nm);
+        console.log("addTab2 : " + url);
+        console.log("addTab3 : " + menuCode);
+
+        var id = "tabs-" + menuCode;
+        var li = $(tabTemplate.replace(/#\{href}/g, "#" + id).replace(/#\{label}/g, nm));
+        var frameId = "frame-" + menuCode;
+        //var tabContentHtml = "<iframe id='" + frameId + "' name='" + frameId + "' width='100%' onload='resizeIframe(this)' class='iframetab' scrolling='no'></iframe>";
+        // 20190911 KR-MIN : for grid resizing
+        var tabContentHtml = "<iframe id='" + frameId + "' name='" + frameId + "' width='100%' onload='resizeIframe(this)' class='iframetab'  scrolling='no'></iframe>";
+
+        tabs.find("#mainTabTitle").append(li);
+        tabs.append("<div id='" + id + "' style='overflow-x: hidden; overflow-y: auto;'><p>" + tabContentHtml + "</p></div>");
+        tabs.tabs("refresh").tabs("option", "active", totTabCount);
+
+        if (FormUtil.isNotEmpty($("#_loading").html())) {
+            //$("#_loading").show();
+        } else {
+            $("body").append(Common.getLoadingObj());
+        }
+
+        menuLoadingCount = 1;
+
+        totTabCount++;
+
+        return frameId;
+    }
+
+    function addTabLink(nm, url) {
+        var frameId = addTab(nm, url);
+        $("#" + frameId).attr("src", url);
+    }
+
+    function resizeIframe(obj) {
+        /*
+        //console.log("offsetHeight : " + obj.contentWindow.document.body.offsetHeight);
+        //console.log("scrollHeight : " + obj.contentWindow.document.body.scrollHeight);
+        console.log("windowHeight1 : " + $(window).height());
+        var windowHeight = $(window).height() - 100;
+        console.log("windowHeight2 : " + windowHeight);
+        var iframeHeight = obj.contentWindow.document.body.scrollHeight + 15;
+        if (windowHeight > iframeHeight) {
+            iframeHeight = windowHeight;
+        }
+        $(obj).animate({height: iframeHeight + 'px'}, 500);
+
+         if(menuLoadingCount == 1){
+             $("#_loading").hide();
+         }
+         */
+        // 20190911 KR-MIN : for grid resizing
+        var iframeHeight = $(window).height() - $(obj).offset().top-20;
+        $(obj).height(iframeHeight + "px");
+
+         if(menuLoadingCount == 1){
+             $("#_loading").hide();
+         }
+    }
+
+
+    // 20190911 KR-MIN : for grid resizing
+    // iframe resizing
+    $(window).resize(function () {
+        $(".iframetab").each(function( index ) {
+            //alert(this)
+            resizeIframe(this);
+        });
+
+    });
+
+    function resizeIframeCall() {
+        return;
+        /*
+        var activeTabId = $(document).find("#mainTabs > ul > .ui-tabs-active").attr("aria-controls");
+        var activeFrameId = activeTabId.replace("tabs-", "frame-");
+
+        //var iframeHeight = $(window).height();
+        //console.log("html : " + $("#" + activeFrameId).contents().find("html").text());
+        var iframeHeight = $("#" + activeFrameId).contents().find("html").height();
+        //console.log("TestHeight1 : " + $(window).height());
+        //console.log("offsetHeight111 : " + iframeHeight);
+        //console.log("offsetHeight222 : " + $("#" + frameId).contents().find("html").height());
+        //console.log("offsetHeight333 : " + $("#" + frameId).contents().height());
+        $("#" + activeFrameId).animate({height: iframeHeight + 'px'}, 500);
+        */
+    }
+
+    function id2Index(tabsId, srcId) {
+        var index = -1;
+        var i = 0;
+        var tbH = $(tabsId).find("li a");
+        var lntb = tbH.length;
+        if (lntb > 0) {
+            for (i = 0; i < lntb; i++) {
+                o = tbH[i];
+                if (o.href.search(srcId)>0) {
+                    index = i;
+                }
+            }
+        }
+        return index;
+    }
+    // [Woongjin Jun] Tab
 
  // 20190903 KR-OHK : default date setting( from~to date)
     function fn_setDefaultDate (fromDtType, fromDtFieldNm, fromDtVal, toDtType, toDtFieldNm, toDtVal) {
@@ -236,7 +398,16 @@
         }
     }
 </script>
-
+<!-- [Woongjin Jun] Tab -->
+<style type="text/css">
+    .iframetab {
+        width: 100%;
+        height: 200px;
+        border: 0px;
+        margin: 0px;
+    }
+</style>
+<!-- [Woongjin Jun] Tab -->
 
 <section id="container"><!-- container start -->
 
@@ -248,8 +419,8 @@
         <header class="lnb_header"><!-- lnb_header start -->
             <form method="post">
                 <h1 class="logo_type">
-                    <a name="mainGo" href="${pageContext.request.contextPath}/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/CowayLeftLogo.png" alt="COWAY" /></a>
-                    <a name="mainGo" href="${pageContext.request.contextPath}/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a>
+                    <a href="${pageContext.request.contextPath}/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/CowayLeftLogo.png" alt="COWAY" /></a>
+                    <a href="${pageContext.request.contextPath}/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a>
                 </h1>
                 <p class="search">
                     <input type="text" id="_leftSearch" name="_leftSearch" title="Enter search term" onkeyPress="if (event.keyCode==13){return false;}" />
@@ -307,7 +478,9 @@
             <c:choose>
             <c:when test="${ list.menuLvl == 1}">
             <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" class="${menuStatusClass}">${list.menuName}</a>
+                <!-- [Woongjin Jun] Tab -->
+                <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.menuName}', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" class="${menuStatusClass}">${list.menuName}</a>
+                <!-- [Woongjin Jun] Tab -->
                 </c:when>
                 <c:otherwise>
 
@@ -315,11 +488,15 @@
                 <c:when test="${preMenuCode != '' && preMenuLvl < list.menuLvl}">
                 <ul>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" class="${menuStatusClass}">${list.menuName}</a>
+                        <!-- [Woongjin Jun] Tab -->
+                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.menuName}', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" class="${menuStatusClass}">${list.menuName}</a>
+                        <!-- [Woongjin Jun] Tab -->
                         </c:when>
                         <c:otherwise>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" class="${menuStatusClass}">${list.menuName}</a>
+                        <!-- [Woongjin Jun] Tab -->
+                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.menuName}', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" class="${menuStatusClass}">${list.menuName}</a>
+                        <!-- [Woongjin Jun] Tab -->
                         </c:otherwise>
                         </c:choose>
 
@@ -372,7 +549,9 @@
                                                 <ul>
                                             </c:if>
                                             <li  id="li_${menuList.menuCode}${groupList.mymenuCode}" group_my_menu_code="${groupList.mymenuCode}">
-                                                <a id="a_${menuList.menuCode}${groupList.mymenuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${menuList.menuCode}', '${menuList.pgmPath}', '${menuList.pathName}', '${groupList.mymenuCode}', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');">${menuList.menuName}</a>
+                                                <!-- [Woongjin Jun] Tab -->
+                                                <a id="a_${menuList.menuCode}${groupList.mymenuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${menuList.menuCode}', '${menuList.pgmPath}', '${menuList.pathName}', '${groupList.mymenuCode}', '${menuList.menuName}', '${menuList.fromDtType}', '${menuList.fromDtFieldNm}', '${menuList.fromDtVal}', '${menuList.toDtType}', '${menuList.toDtFieldNm}', '${menuList.toDtVal}');">${menuList.menuName}</a>
+                                                <!-- [Woongjin Jun] Tab -->
                                             </li>
                                             <c:set var="groupPerMenuCnt" value="${groupPerMenuCnt + 1}" />
                                         </c:when>
@@ -407,6 +586,7 @@
         <input type="hidden" id="CURRENT_MENU_FULL_PATH_NAME" name="CURRENT_MENU_FULL_PATH_NAME" value="${param.CURRENT_MENU_FULL_PATH_NAME}"/>
         <input type="hidden" id="CURRENT_GROUP_MY_MENU_CODE" name="CURRENT_GROUP_MY_MENU_CODE" value="${param.CURRENT_GROUP_MY_MENU_CODE}"/>
         <input type="hidden" id="CURRENT_MENU_TYPE" name="CURRENT_MENU_TYPE" value="${param.CURRENT_MENU_TYPE}"/>
+        <input type="hidden" id="CURRENT_MENU_PATH" name="CURRENT_MENU_PATH" value=""/>
         <!--  20190903 KR-OHK :  default date setting( from~to date) -->
         <input type="hidden" id="FROM_DT" name="FROM_DT"/>
         <input type="hidden" id="FROM_FIELD_NM" name="FROM_FIELD_NM"/>

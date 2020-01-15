@@ -3,6 +3,11 @@ $(document).ready(function(){
 // calendar : remove autocomplete
 $('.j_date,.j_date2,.j_date3.j_dateHc').attr('autocomplete','off');
 
+var agent = navigator.userAgent.toLowerCase();
+if (agent.indexOf("chrome") != -1) {
+	$('.j_date, .j_date2, .j_date3, .j_dateHc').attr('autocomplete','new-password');
+}
+
 var holidays = {//휴일 세팅 하기
     /*"0809":{type:0, title:"신정", year:"2017"}*/
 };

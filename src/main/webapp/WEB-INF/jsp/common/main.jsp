@@ -1,5 +1,14 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
+<!-- [Woongjin Jun] Tab -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<style>
+    #tabs { margin-top: 1em; }
+    #tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }
+    #add_tab { cursor: pointer; }
+</style>
+<!-- [Woongjin Jun] Tab -->
 
 <script type="text/javaScript">
 
@@ -16,7 +25,7 @@
             type: "IconRenderer",
             iconPosition: "right",  // 아이콘 위치       aisleLeft
             iconFunction: function (rowIndex, columnIndex, value, item) {
-                console.log(item.imgFlag);
+                //console.log(item.imgFlag);
 
                 if (item.imgFlag == 'Y') {
                     return "${pageContext.request.contextPath}/resources/images/common/status_new.gif";
@@ -235,76 +244,76 @@
     }];
 /*
     var tagStatusColumnLayout =
-	[
-		{
-		    dataField: "customer",
-		    headerText: "Customer",
-		    editable: false,
-		    width: "8%"
-		},
-		{
-		    dataField: "mainInquiry",
-		    headerText: "Main Inquiry",
-		    editable: false,
-		    width: "13%"
-		},
-		{
-		    dataField: "subInquiry",
-		    headerText: "Sub Inquiry",
-		    style: "aui-grid-user-custom-left ",
-		    editable: false,
-		    width: "13%"
-		},
-		{
-		    dataField: "salesOrder",
-		    headerText: "Sales Order",
-		    editable: false,
-		    width: "10%"
-		},
-		{
-		    dataField: "mainDepartment",
-		    headerText: "Main Department",
-		    editable: false,
-		    style: "aui-grid-user-custom-left ",
-		    width: "13%"
-		},
-		{
-		    dataField: "subDepartment",
-		    headerText: "Sub Department",
-		    editable: false,
-		    style: "aui-grid-user-custom-left ",
-		    width: "15%"
-		},
-		{
-		    dataField: "claimNote",
-		    headerText: "Claim Note",
-		    editable: false,
-		    style: "aui-grid-user-custom-left ",
-		    width: "18%"
-		},
-		{
-		    dataField: "status",
-		    headerText: "Status",
-		    editable: false
-		}
-	];
+    [
+        {
+            dataField: "customer",
+            headerText: "Customer",
+            editable: false,
+            width: "8%"
+        },
+        {
+            dataField: "mainInquiry",
+            headerText: "Main Inquiry",
+            editable: false,
+            width: "13%"
+        },
+        {
+            dataField: "subInquiry",
+            headerText: "Sub Inquiry",
+            style: "aui-grid-user-custom-left ",
+            editable: false,
+            width: "13%"
+        },
+        {
+            dataField: "salesOrder",
+            headerText: "Sales Order",
+            editable: false,
+            width: "10%"
+        },
+        {
+            dataField: "mainDepartment",
+            headerText: "Main Department",
+            editable: false,
+            style: "aui-grid-user-custom-left ",
+            width: "13%"
+        },
+        {
+            dataField: "subDepartment",
+            headerText: "Sub Department",
+            editable: false,
+            style: "aui-grid-user-custom-left ",
+            width: "15%"
+        },
+        {
+            dataField: "claimNote",
+            headerText: "Claim Note",
+            editable: false,
+            style: "aui-grid-user-custom-left ",
+            width: "18%"
+        },
+        {
+            dataField: "status",
+            headerText: "Status",
+            editable: false
+        }
+    ];
 */
     var detailColumnLayout =
     [
-	     /* PK , rowid 용 칼럼*/
-	     {
-	         dataField : "divCode",
-	         dataType : "string",
-	         visible : false
-	     },
-		{
-		    dataField: "divName",
-		    headerText: "Div",
-		    cellMerge : true,
-		    width: "5%",
-		    editable: false
-		},
-		{
+         /* PK , rowid 용 칼럼*/
+         {
+             dataField : "divCode",
+             dataType : "string",
+             visible : false
+         },
+        {
+            dataField: "divName",
+            headerText: "Div",
+            cellMerge : true,
+            width: "5%",
+            editable: false
+        },
+        {
             dataField: "period",
             headerText: "Period",
             width: "8.3%",
@@ -315,25 +324,25 @@
             headerText: "Key-In Qty",
             children:
             [
-				{
-				    dataField: "keyInQtyToday",
-				    headerText: "Today",
-				    style: "aui-grid-user-custom-right ",
-				    dataType : "numeric",
+                {
+                    dataField: "keyInQtyToday",
+                    headerText: "Today",
+                    style: "aui-grid-user-custom-right ",
+                    dataType : "numeric",
                     formatString : "#,##0",
-				    width: "6.7%",
-				    editable: false
-				},
-				{
-				    dataField: "keyInQtyAccum",
-				    headerText: "Accum.",
-				    style: "aui-grid-user-custom-right ",
-				    dataType : "numeric",
+                    width: "6.7%",
+                    editable: false
+                },
+                {
+                    dataField: "keyInQtyAccum",
+                    headerText: "Accum.",
+                    style: "aui-grid-user-custom-right ",
+                    dataType : "numeric",
                     formatString : "#,##0",
-				    width: "6.7%",
-				    editable: false
-				},
-				{
+                    width: "6.7%",
+                    editable: false
+                },
+                {
                     dataField: "keyInQtyMonthEnd",
                     headerText: "M.End",
                     style: "aui-grid-user-custom-right ",
@@ -489,53 +498,53 @@
             , fixedColumnCount:2};
 
     $(document).ready(function () {
-    	$(".bottom_msg_box").attr("style","display:none");
+        $(".bottom_msg_box").attr("style","display:none");
         /***********************************************[ NOTICE GRID] ************************************************/
 
         var roleType;
 
         Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
-        	console.log(result);
+            console.log(result);
 
-        	roleType = result.roleType;
+            roleType = result.roleType;
 
-        	if(result.userTypeId == 1) {
-        		$("#notice").remove();
-        		$("#noticeGrid").remove();
+            if(result.userTypeId == 1) {
+                $("#notice").remove();
+                $("#noticeGrid").remove();
 
-        		$("#salesTable").css('border-top','0');
+                $("#salesTable").css('border-top','0');
 
-        		var salesGridOption = {
-        			    usePaging : false,
-        			    showStateColumn : false,
-        			    showRowNumColumn : false,
-        			    pageRowCount : 4,
-        			    editable : false,
-        			    headerHeight : 50
-        			};
+                var salesGridOption = {
+                        usePaging : false,
+                        showStateColumn : false,
+                        showRowNumColumn : false,
+                        pageRowCount : 4,
+                        editable : false,
+                        headerHeight : 50
+                    };
 
-        		salesOrgPerfD = GridCommon.createAUIGrid("salesOrgPerfD", dailyPerfDashboard, null, salesGridOption);
+                salesOrgPerfD = GridCommon.createAUIGrid("salesOrgPerfD", dailyPerfDashboard, null, salesGridOption);
 
-        		if(result.roleType == 115) {
-        			console.log("else :: hpDashboard");
-        			salesOrgPerfM = GridCommon.createAUIGrid("salesOrgPerfM", hpDashboard, null, salesGridOption);
-        		} else if(result.roleType == 111) {
-        			console.log("else :: sgmDashboard");
-        			salesOrgPerfM = GridCommon.createAUIGrid("salesOrgPerfM", sgmDashboard, null, salesGridOption);
-        		} else {
-        			console.log("else :: salesManagerDashboard");
-        			salesOrgPerfM = GridCommon.createAUIGrid("salesOrgPerfM", salesManagerDashboard, null, salesGridOption);
-        		}
+                if(result.roleType == 115) {
+                    console.log("else :: hpDashboard");
+                    salesOrgPerfM = GridCommon.createAUIGrid("salesOrgPerfM", hpDashboard, null, salesGridOption);
+                } else if(result.roleType == 111) {
+                    console.log("else :: sgmDashboard");
+                    salesOrgPerfM = GridCommon.createAUIGrid("salesOrgPerfM", sgmDashboard, null, salesGridOption);
+                } else {
+                    console.log("else :: salesManagerDashboard");
+                    salesOrgPerfM = GridCommon.createAUIGrid("salesOrgPerfM", salesManagerDashboard, null, salesGridOption);
+                }
 
-        		AUIGrid.resize(salesOrgPerfM, 1200, 160);
+                AUIGrid.resize(salesOrgPerfM, 1200, 160);
 
-        		fn_selectSalesDashboard(roleType);
+                fn_selectSalesDashboard(roleType);
 
-        	} else {
-        		noticeGridID = GridCommon.createAUIGrid("noticeGrid", noticeLayout, null, gridOption);
-        		// 셀 더블클릭 이벤트 바인딩
+            } else {
+                noticeGridID = GridCommon.createAUIGrid("noticeGrid", noticeLayout, null, gridOption);
+                // 셀 더블클릭 이벤트 바인딩
 
-        		$("#salesOrg").remove();
+                $("#salesOrg").remove();
 
 
                 AUIGrid.bind(noticeGridID, "cellDoubleClick", function (event) {
@@ -547,9 +556,9 @@
                 });
 
                 fn_selectNoticeListAjax();
-        	}
+            }
 
-        	if(result.userTypeId == 1 || result.userTypeId == 2){
+            if(result.userTypeId == 1 || result.userTypeId == 2){
                 $("#memo").show();
                 memoGridID = GridCommon.createAUIGrid("memoGridID", memoColumnLayout, null, memoGridOption);
                 fn_selectMemoDashboard();
@@ -593,6 +602,48 @@
 
                 fn_selectDailyPerformanceListAjax();
             }
+
+            //  [Woongjin Jun] Tab
+            tabs = $("#mainTabs").tabs();
+
+            tabs.on("click", "span.ui-icon-close", function() {
+                var panelId = $(this).closest("li").remove().attr("aria-controls");
+                $("#" + panelId).remove();
+                tabs.tabs("refresh");
+
+                totTabCount--;
+
+                if (totTabCount == 0) {
+                    $("#content2").hide();
+                    $("#content").show();
+                }
+            });
+
+            $("#btnTabPrev").on("click", function() {
+                if ($("#mainTabs").tabs("option", "active") > 0) {
+                    $("#mainTabs").tabs("option", "active", ($("#mainTabs").tabs("option", "active") - 1));
+                }
+            });
+
+            $("#btnTabNext").on("click", function() {
+                if ($("#mainTabs").tabs("option", "active") < ($("#mainTabs").find("li").length - 1)) {
+                    $("#mainTabs").tabs("option", "active", ($("#mainTabs").tabs("option", "active") + 1));
+                }
+            });
+
+            $("#btnTabAllClose").on("click", function() {
+                $("#mainTabs").find("li").each(function() {
+                    var panelId = $(this).closest("li").remove().attr("aria-controls");
+                    $("#" + panelId).remove();
+                    tabs.tabs("refresh");
+                });
+
+                totTabCount = 0;
+
+                $("#content2").hide();
+                $("#content").show();
+            });
+            // [Woongjin Jun] Tab
         });
 
         /***********************************************[ CODE_ID GRID] ************************************************/
@@ -650,9 +701,9 @@
     function fn_selectMemoDashboard() {
         var url = "/logistics/memorandum/memoSearchList.do";
 
-	    Common.ajax("POST", "/logistics/memorandum/memoSearchList.do", {}, function (result) {
-	    	AUIGrid.setGridData(memoGridID, result.data);
-	    });
+        Common.ajax("POST", "/logistics/memorandum/memoSearchList.do", {}, function (result) {
+            AUIGrid.setGridData(memoGridID, result.data);
+        });
 
 
     }
@@ -683,26 +734,40 @@
         );
    }
 
+
 </script>
 <style type="text/css">
-	/* 커스텀 칼럼 스타일 정의 */
-	.aui-grid-user-custom-left {
-	    text-align:left;
-	}
-	.aui-grid-user-custom-right {
-	    text-align:right;
-	}
-	.gray-field {
-		background : #eeeeee;
-		color:#000;
-	}
+    /* 커스텀 칼럼 스타일 정의 */
+    .aui-grid-user-custom-left {
+        text-align:left;
+    }
+    .aui-grid-user-custom-right {
+        text-align:right;
+    }
+    .gray-field {
+        background : #eeeeee;
+        color:#000;
+    }
 
-	.my-row-style {
+    .my-row-style {
     background:#fff64c;
     color:#f7ea00;
 }
 </style>
-<section id="content"><!-- content start -->
+<!-- [Woongjin Jun] Tab -->
+<section id="content2" style="width: 100%; height: 1000; border: 1px; color: black; display: none; overflow-x: hidden; overflow-y: auto;">
+    <div id="mainTabs" style="width: 100%; height: 1000; border: 1px; color: black;">
+        <ul id="mainTabTitle" style="padding-right: 130px;">
+            <div style="position: absolute; top: 15px; right: 120px;"><a href="javascript:;" id="btnTabPrev">&lt;</a></div>
+            <div style="position: absolute; top: 15px; right: 100px;"><a href="javascript:;" id="btnTabNext">&gt;</a></div>
+            <div style="position: absolute; top: 15px; right: 15px;"><a href="javascript:;" id="btnTabAllClose">Close All X</a></div>
+        </ul>
+    </div>
+</section>
+<!-- [Woongjin Jun] Tab -->
+
+<!-- [Woongjin Jun] Tab Style Display -->
+<section id="content" style="display:;"><!-- content start -->
 
     <aside  id="notice" class="title_line main_title"><!-- title_line start -->
         <h2><spring:message code='sys.label.notice'/></h2>

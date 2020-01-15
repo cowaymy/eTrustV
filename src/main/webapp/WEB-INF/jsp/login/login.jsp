@@ -14,6 +14,14 @@
 
         if("${exception}" == "401"){
             Common.alert("<spring:message code='sys.msg.session.expired'/>");
+
+            //alert(window.top.location.href)
+            // go login page - 20190924 KR-MIN : for go login page
+            if(window.top.location.href.indexOf("login.do")<0){
+                window.top.Common.showLoader();
+                // go login page
+                window.top.location.href = '/login/login.do';
+            }
         }
 
         pgwBrowser = $.pgwBrowser();

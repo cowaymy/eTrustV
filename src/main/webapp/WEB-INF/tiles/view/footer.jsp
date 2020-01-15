@@ -68,7 +68,11 @@
                  gridHeight = minHeight;
             }
 
+            // 테스트
+            gridHeight = gridHeight - 10
+
              var myGridID = GridCommon.makeGridId(gridId);
+
              AUIGrid.resize(myGridID, null, gridHeight);
         });
      }

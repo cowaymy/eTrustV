@@ -98,6 +98,10 @@ var Common = {
 
                     if(jqXHR.status == "401"){
                         Common.alert(_SESSION_EXPIRE_MESSAGE);
+
+                        // go login page - 20190924 KR-MIN : for go login page
+                        window.top.location.href = '/login/login.do';
+
                         return false;
                     }
 
@@ -327,7 +331,18 @@ var Common = {
 
                 /* 팝업 드래그 start */
                 try{
+                	/*
+					$("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header',containment: "html"});
+					$("#popup_wrap, .popup_wrap").resizable({containment: "html"});	// div popup resize : zaza 20190812
+					*/
+
+					// 20190924 KR-MIN : for multiframe popup resizing
+					var wHeigth = $(window).height()-50;
+                	$(".popup_wrap").css("max-height",wHeigth + "px");
+                	$(".pop_body").css("max-height",(wHeigth-70)+ "px"); // -header height
+
                     $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header',containment: "html"});
+					$("#popup_wrap, .popup_wrap").resizable({containment: "html",maxHeight: wHeigth+ "px"});	// div popup resize : zaza 20190812
                 }catch(e){
                     console.log("[popup.draggable...] " + e);
                 }
@@ -569,6 +584,10 @@ var Common = {
         try {
             $(".bottom_msg_box").html("<p>" + message + "</p>");
             $(".bottom_msg_box p").fadeOut(30000);
+
+            /* [Woongjin Jun] Tab */
+            parent.resizeIframeCall();
+        	/* [Woongjin Jun] Tab */
         } catch (e) {
             Common.alert(message);
         }
@@ -1257,4 +1276,3 @@ function rpad(padStr, padLength, padString){
     	rtnStr += padString;
     return rtnStr;
 }
-
