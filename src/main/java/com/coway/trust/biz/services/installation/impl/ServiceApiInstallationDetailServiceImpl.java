@@ -181,7 +181,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 				params.put("remark", insApiresult.get("resultRemark"));
 				params.put("EXC_CT_ID", String.valueOf(userId));
 
-				params.put("hidSerialRequireChkYn", "Y");
+				params.put("hidSerialRequireChkYn", String.valueOf( insApiresult.get("serialRequireChkYn")));
 
 				logger.debug("### INSTALLATION PARAM : " + params.toString());
 
