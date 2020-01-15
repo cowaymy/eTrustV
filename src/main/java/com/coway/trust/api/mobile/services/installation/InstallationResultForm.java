@@ -67,6 +67,7 @@ public class InstallationResultForm {
 	private String checkInTime;
 	private String checkInGps;
 	private String scanSerial;
+	private String fraSerialNo;
 
 	private String serialRequireChkYn;
 
@@ -84,6 +85,14 @@ public class InstallationResultForm {
 
 	public void setScanSerial(String scanSerial) {
 		this.scanSerial = scanSerial;
+	}
+
+	public String getFraSerialNo() {
+		return fraSerialNo;
+	}
+
+	public void setFraSerialNo(String fraSerialNo) {
+		this.fraSerialNo = fraSerialNo;
 	}
 
 
