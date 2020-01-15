@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 
-
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 
 
@@ -57,6 +57,10 @@
         width: 700px;
         height: 120px;
     }
+
+        #tabs { margin-top: 1em; }
+    #tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }
+    #add_tab { cursor: pointer; }
 </style>
 
 
@@ -88,6 +92,49 @@
                 Common.popupDiv("/homecare/po/hcDeliveryGr/hcDeliveryGrPop.do", null, null, true, '_divDeliveryGrPop', function(){$(".popup_wrap").css("width", '550px');});
             }
         });
+
+
+        //  [Woongjin Jun] Tab
+        tabs = $("#mainTabs").tabs();
+
+        tabs.on("click", "span.ui-icon-close", function() {
+            var panelId = $(this).closest("li").remove().attr("aria-controls");
+            $("#" + panelId).remove();
+            tabs.tabs("refresh");
+
+            totTabCount--;
+
+            if (totTabCount == 0) {
+                $("#content2").hide();
+                $("#content").show();
+            }
+        });
+
+        $("#btnTabPrev").on("click", function() {
+            if ($("#mainTabs").tabs("option", "active") > 0) {
+                $("#mainTabs").tabs("option", "active", ($("#mainTabs").tabs("option", "active") - 1));
+            }
+        });
+
+        $("#btnTabNext").on("click", function() {
+            if ($("#mainTabs").tabs("option", "active") < ($("#mainTabs").find("li").length - 1)) {
+                $("#mainTabs").tabs("option", "active", ($("#mainTabs").tabs("option", "active") + 1));
+            }
+        });
+
+        $("#btnTabAllClose").on("click", function() {
+            $("#mainTabs").find("li").each(function() {
+                var panelId = $(this).closest("li").remove().attr("aria-controls");
+                $("#" + panelId).remove();
+                tabs.tabs("refresh");
+            });
+
+            totTabCount = 0;
+
+            $("#content2").hide();
+            $("#content").show();
+        });
+        // [Woongjin Jun] Tab
     });
 
 
@@ -131,18 +178,71 @@
 
 	        $("#CURRENT_MENU_FULL_PATH_NAME").val(fullPath);
 
-	        $("#_menuForm").attr({
+	       /*  $("#_menuForm").attr({
 	            action : getContextPath() + menuPath,
 	            method : "POST"
-	        }).submit();
+	        }).submit(); */
+
+	           //  [Woongjin Jun] Tab
+           /*  tabs = $("#mainTabs").tabs();
+
+            tabs.on("click", "span.ui-icon-close", function() {
+                var panelId = $(this).closest("li").remove().attr("aria-controls");
+                $("#" + panelId).remove();
+                tabs.tabs("refresh");
+
+                totTabCount--;
+
+                if (totTabCount == 0) {
+                    $("#content2").hide();
+                    $("#content").show();
+                }
+            });
+
+            $("#btnTabPrev").on("click", function() {
+                if ($("#mainTabs").tabs("option", "active") > 0) {
+                    $("#mainTabs").tabs("option", "active", ($("#mainTabs").tabs("option", "active") - 1));
+                }
+            });
+
+            $("#btnTabNext").on("click", function() {
+                if ($("#mainTabs").tabs("option", "active") < ($("#mainTabs").find("li").length - 1)) {
+                    $("#mainTabs").tabs("option", "active", ($("#mainTabs").tabs("option", "active") + 1));
+                }
+            });
+
+            $("#btnTabAllClose").on("click", function() {
+                $("#mainTabs").find("li").each(function() {
+                    var panelId = $(this).closest("li").remove().attr("aria-controls");
+                    $("#" + panelId).remove();
+                    tabs.tabs("refresh");
+                });
+
+                totTabCount = 0;
+
+                $("#content2").hide();
+                $("#content").show();
+            }); */
+            // [Woongjin Jun] Tab
         }
     }
 </script>
 
 
 
+<!-- [Woongjin Jun] Tab -->
+<section id="content2" style="width: 100%; height: 1000; border: 1px; color: black; display: none; overflow-x: hidden; overflow-y: auto;">
+    <div id="mainTabs" style="width: 100%; height: 1000; border: 1px; color: black;">
+        <ul id="mainTabTitle" style="padding-right: 130px;">
+            <div style="position: absolute; top: 15px; right: 120px;"><a href="javascript:;" id="btnTabPrev">&lt;</a></div>
+            <div style="position: absolute; top: 15px; right: 100px;"><a href="javascript:;" id="btnTabNext">&gt;</a></div>
+            <div style="position: absolute; top: 15px; right: 15px;"><a href="javascript:;" id="btnTabAllClose">Close All X</a></div>
+        </ul>
+    </div>
+</section>
+<!-- [Woongjin Jun] Tab -->
 
-
+<!-- [Woongjin Jun] Tab Style Display -->
 
 <section id="content"><!-- content start -->
     <aside class="title_line main_title"><!-- title_line start -->
