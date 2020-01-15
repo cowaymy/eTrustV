@@ -38,7 +38,7 @@ public class AfterServiceResultDetailForm {
 	private String filterBarcdSerialNo;
 
 	@ApiModelProperty(value = "기존 필터 바코드")
-	private String returnFilterSerialNo;
+	private String retSmoSerialNo;
 
 	private String isSmo;
 	private String isSerialReplc;
@@ -99,12 +99,12 @@ public class AfterServiceResultDetailForm {
 		this.filterBarcdSerialNo = filterBarcdSerialNo;
 	}
 
-	public String getReturnFilterSerialNo() {
-		return returnFilterSerialNo;
+	public String getRetSmoSerialNo() {
+		return retSmoSerialNo;
 	}
 
-	public void setReturnFilterSerialNo(String returnFilterSerialNo) {
-		this.returnFilterSerialNo = returnFilterSerialNo;
+	public void setRetSmoSerialNo(String retSmoSerialNo) {
+		this.retSmoSerialNo = retSmoSerialNo;
 	}
 
 	public String getIsSmo() {
