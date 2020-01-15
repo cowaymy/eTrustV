@@ -227,6 +227,14 @@ public class DtProductRetrunJobDto {
 		this.serialChk = serialChk;
 	}
 
+	private String fraSerialChk;
+	public String getFraSerialChk() {
+		return fraSerialChk;
+	}
+	public void setFraSerialChk(String fraSerialChk) {
+		this.fraSerialChk = fraSerialChk;
+	}
+
 	public String getSalesOrderNo() {
 		return salesOrderNo;
 	}
