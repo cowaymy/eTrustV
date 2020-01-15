@@ -1432,56 +1432,70 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
   @Override
   @Transactional
-  public Map<String, Object> insertInstallationResult(Map<String, Object> params, SessionVO sessionVO)
-      throws ParseException {
-    Map<String, Object> resultValue = new HashMap<String, Object>();
+  public Map<String, Object> insertInstallationResult(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+	  Map<String, Object> resultValue = new HashMap<String, Object>();
 
-    if (sessionVO != null) {
+	  if (sessionVO != null) {
+		  // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
+		  resultValue = this.runInstSp(params, sessionVO, "1");
 
-      // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
-      resultValue = this.runInstSp(params, sessionVO, "1");
+		  if (null != resultValue) {
+			  HashMap spMap = (HashMap) resultValue.get("spMap");
+			  logger.debug("spMap :" + spMap.toString());
+			  if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"741".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
+				  resultValue.put("logerr", "Y");
+				  throw new ApplicationException(AppConstants.FAIL, "Fail");
+			  }
+			  else { // SUCCESS
+				  if ("000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) {
+					  spMap.put("pErrcode", "");
+					  spMap.put("pErrmsg", "");
+					  servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+					  if (!"000".equals(spMap.get("pErrcode"))) {
+						  throw new ApplicationException(AppConstants.FAIL, "Fail");
+					  }
+				  }
+				  String ordStat = this.getSalStat(params);
 
-      if (null != resultValue) {
-        HashMap spMap = (HashMap) resultValue.get("spMap");
-        logger.debug("spMap :" + spMap.toString());
-        if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"741".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
-          resultValue.put("logerr", "Y");
-        } else { // SUCCESS
-          if ("000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) {
-            servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
-          }
-          String ordStat = this.getSalStat(params);
+				  if (!"1".equals(ordStat)) {
+					  if (params.get("hidCallType").equals("258")) {
+						  int exgCode = this.chkExgRsnCde(params);
+						  // SKIP SOEXC009 - EXCHANGE (WITHOUT RETURN)
+						  if (exgCode == 0) { // PEX EXCHANGE CODE NOT IN THE LIST
+							  if (Integer.parseInt(params.get("installStatus").toString()) == 4) {
+								  // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
+								  resultValue = this.runInstSp(params, sessionVO, "2");
 
-          if (!"1".equals(ordStat)) {
-            if (params.get("hidCallType").equals("258")) {
-              int exgCode = this.chkExgRsnCde(params);
-              // SKIP SOEXC009 - EXCHANGE (WITHOUT RETURN)
-              if (exgCode == 0) { // PEX EXCHANGE CODE NOT IN THE LIST
-                if (Integer.parseInt(params.get("installStatus").toString()) == 4) {
-                  // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
-                  resultValue = this.runInstSp(params, sessionVO, "2");
+								  if (null != resultValue) {
+									  spMap = (HashMap) resultValue.get("spMap");
+									  logger.debug("spMap :" + spMap.toString());
+									  if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
+										  resultValue.put("logerr", "Y");
+										  throw new ApplicationException(AppConstants.FAIL, "Fail");
+									  }
+									  else {
+										  spMap.put("pErrcode", "");
+										  spMap.put("pErrmsg", "");
+										  servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+										  if (!"000".equals(spMap.get("pErrcode"))) {
+											  throw new ApplicationException(AppConstants.FAIL, "Fail");
+										  }
+									  }
+								  }
+							  }
+						  }
+					  }
+				  }
 
-                  if (null != resultValue) {
-                    spMap = (HashMap) resultValue.get("spMap");
-                    logger.debug("spMap :" + spMap.toString());
-                    if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
-                      resultValue.put("logerr", "Y");
-                    } else {
-                      servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
-                    }
-                  }
-                }
-              }
-            }
-          }
+				  Save_2(true, params, sessionVO);
+			  }
+		  }
+	  }
+	  else {
+		  throw new ApplicationException(AppConstants.FAIL, "Fail");
+	  }
 
-          //resultValue = this.insertInstallationResult_2(params, sessionVO);
-          //resultValue = Save_2(true, params, sessionVO);
-          Save_2(true, params, sessionVO);
-        }
-      }
-    }
-    return resultValue;
+	  return resultValue;
   }
 
   @Override
