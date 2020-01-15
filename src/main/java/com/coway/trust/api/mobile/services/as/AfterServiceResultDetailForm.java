@@ -41,7 +41,7 @@ public class AfterServiceResultDetailForm {
 	private String retSmoSerialNo;
 
 	private String isSmo;
-	private String isSerialReplc;
+	private String isSerialReplace;
 
 	public String getFilterCode() {
 		return filterCode;
@@ -115,12 +115,12 @@ public class AfterServiceResultDetailForm {
 		this.isSmo = isSmo;
 	}
 
-	public String getIsSerialReplc() {
-		return isSerialReplc;
+	public String getIsSerialReplace() {
+		return isSerialReplace;
 	}
 
-	public void setIsSerialReplc(String isSerialReplc) {
-		this.isSerialReplc = isSerialReplc;
+	public void setIsSerialReplace(String isSerialReplace) {
+		this.isSerialReplace = isSerialReplace;
 	}
 
 
