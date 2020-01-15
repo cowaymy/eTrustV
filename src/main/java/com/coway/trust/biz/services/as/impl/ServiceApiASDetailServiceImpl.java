@@ -217,7 +217,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         			map.put("filterRemark", "");
         			map.put("filterTotal", amt);
 
-        			map.put("returnFilterSerialNo", "");
+        			map.put("retSmoSerialNo", "");
         			map.put("isSmo", "N");
         			map.put("isSerialReplc", "N");
 
@@ -758,11 +758,11 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         			map.put("filterRemark", "");
         			map.put("filterTotal", amt);
 
-        			if (paramsDetail.get(x).get("returnFilterSerialNo") != null) {
-        				map.put("returnFilterSerialNo", paramsDetail.get(x).get("returnFilterSerialNo"));
+        			if (paramsDetail.get(x).get("retSmoSerialNo") != null) {
+        				map.put("retSmoSerialNo", paramsDetail.get(x).get("retSmoSerialNo"));
         			}
         			else {
-        				map.put("returnFilterSerialNo", "");
+        				map.put("retSmoSerialNo", "");
         			}
 
         			if (paramsDetail.get(x).get("isSmo") != null) {
