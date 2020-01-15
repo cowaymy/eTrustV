@@ -210,8 +210,8 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl i
 				resultForm.setSalesOrderNo(Integer.parseInt(fraInfo.get("salesOrderNo").toString()));
 				resultForm.setServiceNo(String.valueOf(fraInfo.get("serviceNo")));
 				resultForm.setTransactionId(newTransactionId);
-				resultForm.setSerialNo("");
-				resultForm.setScanSerial("");
+				resultForm.setSerialNo(resultForm.getFraSerialNo());
+				resultForm.setScanSerial(resultForm.getFraSerialNo());
 
 				installationList.add(resultForm);
 			}
