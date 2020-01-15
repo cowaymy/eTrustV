@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.common.impl.SmsMapper;
@@ -25,6 +26,7 @@ import com.coway.trust.biz.services.as.impl.ASManagementListMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.impl.InstallationResultListMapper;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.ibm.icu.text.SimpleDateFormat;
@@ -442,6 +444,10 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     logger.debug("productReturnResult 물류  결과 ===>" + logPram.toString());
     logPram.put("P_RESULT_TYPE", "PR");
     logPram.put("P_RESULT_MSG", logPram.get("p1"));
+
+    if (!"000".equals(logPram.get("p1"))) {
+    	throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram.get("p1")+ ":" + "RETURN PRODUCT Result Error");
+    }
     ///////////////////////// 물류 호출 END //////////////////////
 
     rMp.put("SP_MAP", logPram);
