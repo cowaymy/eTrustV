@@ -887,8 +887,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         	iMap.put("IS_SMO", "N");
         }
 
-        if(StringUtils.isNotBlank( (String)updateMap.get("isSerialReplc")) ){
-        	iMap.put("IS_SERIAL_REPLACE", updateMap.get("isSerialReplc"));
+        if(StringUtils.isNotBlank( (String)updateMap.get("isSerialReplace")) ){
+        	iMap.put("IS_SERIAL_REPLACE", updateMap.get("isSerialReplace"));
         }else{
         	iMap.put("IS_SERIAL_REPLACE", "N");
         }
@@ -3064,6 +3064,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
   }
 
+  @Override
   public int setPay17dData(Map<String, Object> params) {
 
     LOGGER.debug("                                  ===> setPay17dData   out");
@@ -3136,6 +3137,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     return c;
   }
 
+  @Override
   public int convertAccountToTempBasedOnPayMode(int pMode) {
     int rc = 0;
     switch (pMode) {
@@ -3154,6 +3156,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     return rc;
   }
 
+  @Override
   public int convertTempAccountToSettlementAccount(int p) {
 
     int rc = 0;
