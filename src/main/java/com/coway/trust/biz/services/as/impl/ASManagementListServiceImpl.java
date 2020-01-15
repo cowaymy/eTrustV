@@ -874,21 +874,24 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         iMap.put("FILTER_BARCD_SERIAL_NO", updateMap.get("srvFilterLastSerial"));
         iMap.put("EXCHG_ID", updateMap.get("filterExCode"));
 
-        String returnFilterSerialNo = "";
-        if (updateMap.get("returnFilterSerialNo") != null) {
-        	returnFilterSerialNo = updateMap.get("returnFilterSerialNo").toString();
+        // KR-JIN
+        if(StringUtils.isNotBlank( (String)updateMap.get("retSmoSerialNo")) ){
+        	iMap.put("RET_SMO_SERIAL_NO", updateMap.get("retSmoSerialNo"));
+        }else{
+        	iMap.put("RET_SMO_SERIAL_NO", null);
         }
-        String isSmo = "";
-        if (updateMap.get("isSmo") != null) {
-        	isSmo = updateMap.get("isSmo").toString();
+
+        if(StringUtils.isNotBlank( (String)updateMap.get("isSmo")) ){
+        	iMap.put("IS_SMO", updateMap.get("isSmo"));
+        }else{
+        	iMap.put("IS_SMO", "N");
         }
-        String isSerialReplc = "";
-        if (updateMap.get("isSerialReplc") != null) {
-        	isSerialReplc = updateMap.get("isSerialReplc").toString();
+
+        if(StringUtils.isNotBlank( (String)updateMap.get("isSerialReplc")) ){
+        	iMap.put("IS_SERIAL_REPLACE", updateMap.get("isSerialReplc"));
+        }else{
+        	iMap.put("IS_SERIAL_REPLACE", "N");
         }
-        iMap.put("RET_SMO_SERIAL_NO", returnFilterSerialNo);
-        iMap.put("IS_SMO", isSmo);
-        iMap.put("IS_SERIAL_REPLACE", isSerialReplc);
 
         LOGGER.debug("== INSERT SVC0005D PARAMS {}", iMap);
         rtnValue = ASManagementListMapper.insertSVC0005D(iMap);
