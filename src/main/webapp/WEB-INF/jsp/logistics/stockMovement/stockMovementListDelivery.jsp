@@ -58,7 +58,7 @@
       {
         dataField : "status",
         headerText : "<spring:message code='log.head.status'/>",
-        width : 120,
+        width : 90,
         height : 30,
         visible : false
       },
@@ -71,19 +71,19 @@
       {
           dataField : "bndlNo",
           headerText : "Bundle No",
-          width : 120,
+          width : 100,
           height : 30
         },
       {
         dataField : "ordno",
         headerText : "Order No.",
-        width : 120,
+        width : 100,
         height : 30
       },
       {
         dataField : "staname",
         headerText : "<spring:message code='log.head.status'/>",
-        width : 120,
+        width : 100,
         height : 30
       },
       {
@@ -111,7 +111,8 @@
         dataField : "rcvlocdesc",
         headerText : "<spring:message code='log.head.fromlocation'/>",
         width : 120,
-        height : 30
+        height : 30,
+        style: "aui-grid-user-custom-left"
       },
       {
         dataField : "reqloc",
@@ -131,20 +132,22 @@
         dataField : "reqlocdesc",
         headerText : "<spring:message code='log.head.tolocation'/>",
         width : 120,
-        height : 30
+        height : 30,
+        style: "aui-grid-user-custom-left"
       },
       {
         dataField : "itmcd",
         headerText : "<spring:message code='log.head.matcode'/>",
-        width : 120,
+        width : 100,
         height : 30,
         visible : true
       },
       {
         dataField : "itmname",
         headerText : "Mat. Name",
-        width : 120,
-        height : 30
+        width : 280,
+        height : 30,
+        style: "aui-grid-user-custom-left"
       },
       {
         dataField : "reqstqty",
@@ -224,7 +227,7 @@
       {
         dataField : "uomnm",
         headerText : "UOM",
-        width : 120,
+        width : 100,
         height : 30
       },
       {
@@ -237,7 +240,7 @@
       {
         dataField : "ttext",
         headerText : "Trans. Type",
-        width : 120,
+        width : 80,
         height : 30
       },
       {
@@ -250,7 +253,7 @@
       {
         dataField : "mtext",
         headerText : "Movement Type",
-        width : 120,
+        width : 230,
         height : 30
       },
       {
@@ -283,13 +286,29 @@
         headerText : "Reqst. Required Date",
         width : 120,
         height : 30
-      }, {
-          dataField : "serialRequireChkYn",
-          headerText : "Serial Required Check Y/N",
-          width : 200,
-          height : 30,
-          visible:true
-        }
+      },
+
+	{
+	    dataField : "itmtype",
+	    headerText : "Item Type",
+	    width : 120,
+	    height : 30,
+	    visible:true
+	  },
+	  {
+	      dataField : "stkCtgryName",
+	      headerText : "Item Category",
+	      width : 120,
+	      height : 30,
+	      visible:true
+	  },
+     {
+        dataField : "serialRequireChkYn",
+        headerText : "Serial Required Check Y/N",
+        width : 200,
+        height : 30,
+        visible:true
+      }
       ];
   var reqcolumnLayout;
 
@@ -648,6 +667,12 @@
       $("#reqedt").val('${searchVal.reqedt}');
       $("#appntsdt").val('${searchVal.appntsdt}');
       $("#appntedt").val('${searchVal.appntedt}');
+
+      if(window.location.href.indexOf("htStockMovementListDelivery.do")>0){
+	      $("#htOnlyItem").css("display","");
+	      doGetCombo('/common/selectCodeList.do', '11', '', 'cmbCategory', 'M', 'f_multiCombo');
+	      doGetCombo('/common/selectCodeList.do', '15', '', 'cmbType', 'M','f_multiCombo');
+      }
 
       /**********************************
        * Header Setting End
@@ -1452,6 +1477,23 @@
 
 		});
 	}
+
+	function f_multiCombo() {
+        $(function() {
+            $('#cmbCategory').change(function() {
+
+            }).multipleSelect({
+                selectAll : true, // 전체선택
+                width : '80%'
+            });
+            $('#cmbType').change(function() {
+
+            }).multipleSelect({
+                selectAll : true,
+                width : '80%'
+            });
+        });
+    }
 </script>
 <section id="content">
  <!-- content start -->
@@ -1598,6 +1640,19 @@
       <th scope="row">Sales Order No.</th>
       <td><input type="text" class="w100p" id="ordno" name="ordno"></td>
      </tr>
+     <tr style="display:none" id="htOnlyItem">
+      <th scope="row">Item Code/Name</th>
+      <td><input type="text" class="w100p" id="itmCode" name="itmCode" placeholder="Item Code/Name"></td>
+      <th scope="row">Type</th>
+       <td>
+           <select class="w100p" id="cmbType" name="cmbType[]"></select>
+       </td>
+      <th scope="row">Category</th>
+       <td>
+           <select class="w100p" id="cmbCategory" name="cmbCategory[]"></select>
+       </td>
+
+     </tr>
      <tr>
       <th scope="row">Bundle No</th>
       <td><input type="text" class="w100p" id="bndlNo" name="bndlNo" placeholder="Bundle No"></td>
@@ -1606,6 +1661,7 @@
       <td></td>
       <td></td>
      </tr>
+
     </tbody>
    </table>
    <!-- table end -->
