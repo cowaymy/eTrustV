@@ -54,6 +54,10 @@
              , NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
              , NVL(l99.CNT, 0) SCAN_CNT
              , H11.BNDL_NO
+             , (SELECT CODE_NAME
+                      FROM SYS0013M
+                     WHERE CODE_ID = s26.STK_CTGRY_ID)
+                      stk_ctgry_name
           from log0047m l47
              , log0048d l48
              , (select * from sys0013m where code_master_id = 306) tran
@@ -114,10 +118,10 @@
 <!--               and l47.REQST_TYPE = #{sttype} -->
 <!--            </if> -->
            <if test="flocation !=null and flocation !=''">
-              and l47.rciv_cdc_rdc = #{flocation}
+              and (l47.rciv_cdc_rdc = #{flocation} or UPPER(s28c.wh_loc_code) = UPPER(#{flocation}) or UPPER(DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000)) LIKE '%' || UPPER(#{flocation}) || '%' )
            </if>
            <if test="tlocation !=null and tlocation !=''">
-              and l47.reqst_cdc_rdc = #{tlocation}
+              and (l47.reqst_cdc_rdc = #{tlocation} or UPPER(s28q.wh_loc_code) = UPPER(#{tlocation}) or UPPER(DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000)) LIKE '%' || UPPER(#{tlocation}) || '%' )
            </if>
            <if test="smvpath !=null and smvpath !=''">
               and l47.PRIDIC_FRQNCY = #{smvpath}
@@ -161,6 +165,17 @@
            <if test="bndlNo !=null and bndlNo !=''">
                 AND H11.BNDL_NO= #{bndlNo}
            </if>
+           <if test="itmCode !=null and itmCode !=''">
+                AND (l48.itm_code = #{itmCode} or UPPER(l48.itm_name) LIKE '%' || UPPER(#{itmCode}) || '%')
+           </if>
+           <if test="cateList != null">
+                    AND s26.STK_CTGRY_ID in
+                    <foreach item="item" collection="cateList" index="index" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+            </if>
+
+
            ORDER by l47.CRT_DT desc
   </select>
 
