@@ -187,6 +187,18 @@
         });
     });
 
+    function fn_selectGcmReportSearch() {
+        var tab;
+
+        if(FormUtil.isEmpty($("#tabId").val())) {
+            tab = 'STS';
+        } else {
+            tab = $("#tabId").val()
+        }
+
+        fn_selectGcmReport(tab);
+    }
+
     // Tab
     function fn_selectGcmReport(tab) {
 
@@ -272,7 +284,7 @@
         <h2>GCM_ProgressReport(HQ)</h2>
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-                <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectGcmReport('STS');"><spanclass="search"></span>Search</a></p></li>
+                <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectGcmReportSearch();"><spanclass="search"></span>Search</a></p></li>
             </c:if>
         </ul>
     </aside><!-- title_line end -->

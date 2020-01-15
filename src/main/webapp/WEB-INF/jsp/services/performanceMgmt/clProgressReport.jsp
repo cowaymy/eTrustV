@@ -19,34 +19,34 @@
 
     var rescolumnLayout1 = [
                      {dataField: "stusNm",headerText :"<spring:message code='service.grid.Status'/>",width: 150, height:20},
-                     {dataField: "janVal",headerText :"<spring:message code='service.grid.january'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
-                     {dataField: "febVal",headerText :"<spring:message code='service.grid.february'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
-                     {dataField: "marVal",headerText :"<spring:message code='service.grid.march'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
-                     {dataField: "aprVal",headerText :"<spring:message code='service.grid.april'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
-                     {dataField: "mayVal",headerText :"<spring:message code='service.grid.may'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
-                     {dataField: "junVal",headerText :"<spring:message code='service.grid.june'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
-                     {dataField: "julVal",headerText :"<spring:message code='service.grid.july'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
-                     {dataField: "augVal",headerText :"<spring:message code='service.grid.august'/>", width: 90, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
-                     {dataField: "sepVal",headerText :"<spring:message code='service.grid.september'/>", width: 90, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
-                     {dataField: "octVal",headerText :"<spring:message code='service.grid.october'/>", width: 90, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
-                     {dataField: "novVal",headerText :"<spring:message code='service.grid.november'/>", width: 90, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
-                     {dataField: "decVal",headerText :"<spring:message code='service.grid.december'/>", width: 90, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"}
+                     {dataField: "janVal",headerText :"<spring:message code='service.grid.january'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
+                     {dataField: "febVal",headerText :"<spring:message code='service.grid.february'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
+                     {dataField: "marVal",headerText :"<spring:message code='service.grid.march'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
+                     {dataField: "aprVal",headerText :"<spring:message code='service.grid.april'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
+                     {dataField: "mayVal",headerText :"<spring:message code='service.grid.may'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
+                     {dataField: "junVal",headerText :"<spring:message code='service.grid.june'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
+                     {dataField: "julVal",headerText :"<spring:message code='service.grid.july'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
+                     {dataField: "augVal",headerText :"<spring:message code='service.grid.august'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
+                     {dataField: "sepVal",headerText :"<spring:message code='service.grid.september'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
+                     {dataField: "octVal",headerText :"<spring:message code='service.grid.october'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
+                     {dataField: "novVal",headerText :"<spring:message code='service.grid.november'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"},
+                     {dataField: "decVal",headerText :"<spring:message code='service.grid.december'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0", style: "aui-grid-user-custom-right"}
              ];
 
     var rescolumnLayout2 = [
                             {dataField: "stusNm",headerText :" ",width: 150, height:20},
-                            {dataField: "janVal",headerText :"<spring:message code='service.grid.january'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
-                            {dataField: "febVal",headerText :"<spring:message code='service.grid.february'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
-                            {dataField: "marVal",headerText :"<spring:message code='service.grid.march'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
-                            {dataField: "aprVal",headerText :"<spring:message code='service.grid.april'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
-                            {dataField: "mayVal",headerText :"<spring:message code='service.grid.may'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
-                            {dataField: "junVal",headerText :"<spring:message code='service.grid.june'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
-                            {dataField: "julVal",headerText :"<spring:message code='service.grid.july'/>", width: 80, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
-                            {dataField: "augVal",headerText :"<spring:message code='service.grid.august'/>", width: 90, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
-                            {dataField: "sepVal",headerText :"<spring:message code='service.grid.september'/>", width: 90, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
-                            {dataField: "octVal",headerText :"<spring:message code='service.grid.october'/>", width: 90, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
-                            {dataField: "novVal",headerText :"<spring:message code='service.grid.november'/>", width: 90, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
-                            {dataField: "decVal",headerText :"<spring:message code='service.grid.december'/>", width: 90, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"}
+                            {dataField: "janVal",headerText :"<spring:message code='service.grid.january'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
+                            {dataField: "febVal",headerText :"<spring:message code='service.grid.february'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
+                            {dataField: "marVal",headerText :"<spring:message code='service.grid.march'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
+                            {dataField: "aprVal",headerText :"<spring:message code='service.grid.april'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
+                            {dataField: "mayVal",headerText :"<spring:message code='service.grid.may'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
+                            {dataField: "junVal",headerText :"<spring:message code='service.grid.june'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
+                            {dataField: "julVal",headerText :"<spring:message code='service.grid.july'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
+                            {dataField: "augVal",headerText :"<spring:message code='service.grid.august'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
+                            {dataField: "sepVal",headerText :"<spring:message code='service.grid.september'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
+                            {dataField: "octVal",headerText :"<spring:message code='service.grid.october'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
+                            {dataField: "novVal",headerText :"<spring:message code='service.grid.november'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"},
+                            {dataField: "decVal",headerText :"<spring:message code='service.grid.december'/>", width: 110, height:20, dataType:"numeric",  formatString:"#,##0.00", style: "aui-grid-user-custom-right"}
                     ];
 
     // 그리드 속성 설정
@@ -130,6 +130,19 @@
          });
     });
 
+
+    function fn_selectClReportSearch() {
+        var tab;
+
+        if(FormUtil.isEmpty($("#tabId").val())) {
+            tab = 'STS';
+        } else {
+            tab = $("#tabId").val()
+        }
+
+        fn_selectClReport(tab);
+    }
+
     // Tab
     function fn_selectClReport(tab) {
 
@@ -188,7 +201,7 @@
         <h2>CL_ProgressReport(HQ)</h2>
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-                <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectClReport('STS');"><spanclass="search"></span>Search</a></p></li>
+                <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectClReportSearch();"><spanclass="search"></span>Search</a></p></li>
             </c:if>
         </ul>
     </aside><!-- title_line end -->
