@@ -28,6 +28,7 @@
                   , T.SALES_ORD_NO
                   , T.OR_NO
                   , T.TRX_ID
+                  , T.F_TRNSC_ID
            FROM (SELECT DISTINCT A.CRC_STATE_ID
                               , TO_CHAR(A.CRC_STATE_CRT_DT , 'DD/MM/YYYY') CRC_STATE_CRT_DT
                               , A.CRC_STATE_REF_NO
@@ -60,6 +61,7 @@
                               , D.OR_NO
                               , C.TRX_ID
                               , E.PAY_ITM_ID
+                              , L.F_TRNSC_ID
                           FROM PAY0075D A
                          INNER JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
                           LEFT OUTER JOIN PAY0252T C ON B.CRC_TRNSC_ID = C.CRC_STATE_MAPPING_ID
@@ -74,6 +76,28 @@
                           LEFT OUTER JOIN SYS0001M H ON A.CRC_STATE_ACC_ID = H.ACC_ID AND H.ACC_STUS_ID = 1 AND H.IS_PAY_CRC = 1
                           LEFT OUTER JOIN PAY0007D I ON D.BILL_ID = I.BILL_ID
                           LEFT OUTER JOIN SAL0225D J ON  I.BILL_SO_ID = J.SRV_ORD_ID
+                          LEFT OUTER JOIN SYS0013M K ON H.ACC_CODE = K.CODE_NAME AND K.CODE_MASTER_ID = 384
+                          LEFT OUTER JOIN
+                              (SELECT
+                                    B.F_TRNSC_ID,
+                                    B.F_TRNSC_REF4 AS MID,
+                                    SUM(B.F_TRNSC_CRDIT_AMT) AS CREDIT_AMT,
+                                    SUM(B.F_TRNSC_DEBT_AMT) AS DEBIT_AMT,
+                                    B.F_TRNSC_DT,
+                                    D.CODE_ID
+                                FROM PAY0079D A JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+                                LEFT JOIN SYS0001M C ON A.F_BANK_JRNL_ACC_ID = C.ACC_ID
+                                JOIN SYS0013M D ON C.ACC_CODE = D.CODE
+                                WHERE
+                                    B.F_TRNSC_REM = 'CRC'
+                                    AND D.CODE_MASTER_ID = 384
+                                GROUP BY
+                                    B.F_TRNSC_ID,
+                                    B.F_TRNSC_REF4,
+                                    B.F_TRNSC_DT,
+                                D.CODE_ID ) L
+                          ON B.CRC_TRNSC_MID = L.MID AND K.CODE_ID = L.CODE_ID AND B.CRC_TRNSC_DT = L.F_TRNSC_DT AND B.CRC_TOT_NET_AMT = L.CREDIT_AMT
+
                        WHERE 1 = 1
                         <if test='salesOrdNo != null and salesOrdNo != ""'>
                            AND (F.SALES_ORD_NO = #{salesOrdNo} OR J.SRV_ORD_NO = #{salesOrdNo})

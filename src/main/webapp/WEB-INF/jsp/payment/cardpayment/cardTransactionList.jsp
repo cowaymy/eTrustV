@@ -199,8 +199,8 @@
         visible: true
     }
     ,{
-        dataField: "trxId",
-        headerText: "<spring:message code='pay.head.trxId'/>",
+        dataField: "fTrnscId",
+        headerText: "<spring:message code='pay.head.tranxId'/>",
         width : 90,
         editable: false,
         visible: true
