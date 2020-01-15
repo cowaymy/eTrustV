@@ -214,6 +214,12 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
 		logger.info("##### params #####" +params);
 		ReturnMessage message = eRequestCancellationService.requestCancelOrder(params, sessionVO);
 
+		if(params.get("auxOrdId") != ""){
+	          params.put("salesOrdId",params.get("auxOrdId"));
+	          params.put("appTypeId",params.get("auxAppType"));
+	          eRequestCancellationService.requestCancelOrder(params, sessionVO);
+		}
+
 		return ResponseEntity.ok(message);
 	}
 

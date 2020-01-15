@@ -4,6 +4,8 @@
   var TAB_NM = "${ordReqType}";
   var ORD_ID = "${orderDetail.basicInfo.ordId}";
   var ORD_NO = "${orderDetail.basicInfo.ordNo}";
+  var AUX_ORD_ID = "${orderDetail.basicInfo.auxSalesOrdId}";
+  var AUX_ORD_NO = "${orderDetail.basicInfo.auxSalesOrdNo}";
   var ORD_DT = "${orderDetail.basicInfo.ordDt}";
   var ORD_STUS_ID = "${orderDetail.basicInfo.ordStusId}";
   var ORD_STUS_CODE = "${orderDetail.basicInfo.ordStusCode}";
@@ -33,6 +35,8 @@
   var ISSUE_BANK = "${orderDetail.rentPaySetInf.rentPayIssBank}";
   var BANK_ACC_NO = "${orderDetail.rentPaySetInf.rentPayAccNo}";
   var MONTH_REN_FEE = "${orderDetail.basicInfo.mthRentalFees}";
+
+  var _cancleMsg = "Another order :  "+ AUX_ORD_NO +"<br/>is also canceled together.<br/><br/>";
 
   var filterGridID;
 
@@ -109,7 +113,7 @@
       if (fn_getCheckAccessRight(userid, 9)) {
 
         //if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
-        if (ORD_STUS_ID != '1') { // block if Order status is not active
+        if (ORD_STUS_ID != '1' || APP_TYPE_ID == '5764') { // block if Order status is not active
           var msg = "Order "
               + ORD_NO
               + " is under "
@@ -463,9 +467,15 @@
 
     msg += '<br/> <font style="color:red;font-weight: bold">Are you sure want to confirm order cancellation? </font><br/><br/>';
 
-    Common.confirm('<spring:message code="sal.title.text.reqCancConfrm" />'
+    if(AUX_ORD_NO != ""){
+    	Common.confirm('<spring:message code="sal.title.text.reqCancConfrm" />'
+    	        + DEFAULT_DELIMITER + "<b>" + _cancleMsg + msg + "</b>", fn_doSaveReqCanc,
+    	        fn_selfClose);
+    }else{
+        Common.confirm('<spring:message code="sal.title.text.reqCancConfrm" />'
         + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_doSaveReqCanc,
         fn_selfClose);
+    }
   }
 
   function fn_doSaveReqCanc() {
@@ -614,8 +624,9 @@
    <section class="search_table">
     <!-- search_table start -->
     <form id="frmReqCanc" action="#" method="post">
-     <input name="salesOrdId" type="hidden"
-      value="${orderDetail.basicInfo.ordId}" />
+     <input name="salesOrdId" type="hidden" value="${orderDetail.basicInfo.ordId}" />
+     <input name="auxOrdId" type="hidden" value="${orderDetail.basicInfo.auxSalesOrdId}" />
+     <input name="auxAppType" type="hidden" value="${orderDetail.basicInfo.auxAppType}" />
      <%-- <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

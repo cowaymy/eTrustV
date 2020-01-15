@@ -217,8 +217,15 @@ function createAUIGrid() {
 
 function fn_orderRequestPop() {
     var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+    var appType = AUIGrid.getCellValue(listMyGridID, selIdx, "appTypeCode");
+    console.log(appType);
+
     if(selIdx > -1) {
-        Common.popupDiv("/sales/order/eRequestCancellationPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+    	if(appType = 'AUX'){
+    		Common.alert("Auxiliary type is not allowed to do cancellation.");
+    	}else{
+    	    Common.popupDiv("/sales/order/eRequestCancellationPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+    	}
     }
     else {
         Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
