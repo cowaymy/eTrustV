@@ -506,7 +506,7 @@
     <select id="selectMobileNo" parameterType="Map" resultType="egovMap">
     SELECT B.USER_MOBILE_NO
 	  FROM LOG0095M A
-	   LEFT OUTER JOIN SYS0047M B ON B.USER_ID = A.CRT_USER_ID
+	   LEFT OUTER JOIN SYS0047M B ON B.USER_ID = A.APPV_1_REQST_USER_ID
 	WHERE STOCK_AUDIT_NO =#{stockAuditNo}
 	  <if test='whLocId != null and whLocId != ""'>
         AND WH_LOC_ID = #{whLocId}
