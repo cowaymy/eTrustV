@@ -1558,7 +1558,7 @@
                        TO_CHAR (F.STK_DESC) AS part_Name,
                        TO_CHAR (NVL(H.SERIALCHK, '')) AS filter_Barcd_Chk_YN,
                        TO_CHAR (NVL(H.IS_SMO, '')) AS is_Smo,
-                       TO_CHAR (NVL(H.IS_SERIAL_REPLC, '')) AS is_Serial_Replc,
+                       TO_CHAR (NVL(H.IS_SERIAL_REPLC, '')) AS is_Serial_Replace,
                        TO_CHAR (F.STK_TYPE_ID) AS part_Type,
                        TO_CHAR (E.INTNL_CNTR) AS parts_Period,
                        TO_CHAR (E.COMPNT_QTY) AS quanity,
@@ -1637,7 +1637,7 @@
          , TO_CHAR(CRT_USER_ID           )   AS        Create_User_ID
          , TO_CHAR(CRT_DT                )   AS        Create_Date
          , TO_CHAR(IS_SMO)   AS        is_Smo
-         , TO_CHAR(IS_SERIAL_REPLC)   AS        is_Serial_Replc
+         , TO_CHAR(IS_SERIAL_REPLC)   AS        is_Serial_Replace
     FROM SVC0106T
     WHERE MEM_CODE = #{userId}
   </select>
