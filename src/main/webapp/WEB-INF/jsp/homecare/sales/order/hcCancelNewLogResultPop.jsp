@@ -448,7 +448,11 @@
     // 저장
     function fn_procSaveCancel() {
         Common.ajax("GET", "/homecare/sales/order/hcSaveCancel.do", $("#addCallForm").serializeJSON(), function(result) {
-            Common.alert(result.msg, fn_success);
+        	Common.alert(result.message);
+
+            if(result.code == '00') {   // success
+                fn_success();
+            }
         }, function(jqXHR, textStatus, errorThrown) {
             try {
                 Common.alert("Failed to order invest reject.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
