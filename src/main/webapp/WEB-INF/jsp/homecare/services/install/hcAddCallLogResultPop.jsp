@@ -340,18 +340,28 @@
                         <tr>
 					        <th scope="row"><spring:message code='service.title.ProductToInstall' /></th>
 					        <td colspan="3">
-					           <span><c:out value="${orderCall.productCode}" /> - <c:out value="${orderCall.productName}" /><br/>
-					           <c:out value="${anoProduct.stkCode}" /> - <c:out value="${anoProduct.stkDesc}" /></span>
+					           <span><c:out value="${orderCall.productCode}" /> - <c:out value="${orderCall.productName}" />
+					           <c:if test = "${not empty anoProduct.stkCode}">
+					               <br/><c:out value="${anoProduct.stkCode}" /> - <c:out value="${anoProduct.stkDesc}" />
+					           </c:if>
+					           </span>
 					        </td>
 					        <th scope="row">Order No</th>
 					        <td>
-                               <span><c:out value="${salesOrdNo}" /><br/>
-                               <c:out value="${hcOrder.anoOrdNo}" /></span>
+                               <span><c:out value="${salesOrdNo}" />
+                               <c:if test = "${not empty hcOrder.anoOrdNo}">
+                                   <br/><c:out value="${hcOrder.anoOrdNo}" />
+                               </c:if>
+                               </span>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row"><spring:message code='service.title.RDCAvailableQty' /></th>
-					        <td><span id="rdc"><c:out value="${orderRdcInCdc.raqty}" /> / <c:out value="${anoRdcincdc.raqty}" /></span></td>
+					        <td><span id="rdc"><c:out value="${orderRdcInCdc.raqty}" />
+					        <c:if test = "${not empty anoRdcincdc.raqty}">
+                                / <c:out value="${anoRdcincdc.raqty}" />
+                            </c:if>
+                            </span></td>
 					        <th scope="row"><spring:message code='service.title.InTransitQty' /></th>
 					        <td><span id="rdcInCdc"><c:out value="${orderRdcInCdc.rinqty}" /></span></td>
 					        <th scope="row"><spring:message code='service.title.CDCAvailableQty' /></th>
