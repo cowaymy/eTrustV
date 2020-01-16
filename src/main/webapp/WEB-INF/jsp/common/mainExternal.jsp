@@ -139,7 +139,7 @@
 
 
 
-    function fn_menuMobile(obj, menuCode, menuPath, fullPath, myMenuGroupCode, fromDtType, fromDtFieldNm, fromDtVal, toDtType, toDtFieldNm, toDtVal){
+    function fn_menuMobile(obj, menuCode, menuPath, fullPath, myMenuGroupCode, fromDtType, fromDtFieldNm, fromDtVal, toDtType, toDtFieldNm, toDtVal, menuName){
         if(FormUtil.isEmpty(menuPath) || $(obj).hasClass("disabled")){
             return;
         }
@@ -178,54 +178,146 @@
 
 	        $("#CURRENT_MENU_FULL_PATH_NAME").val(fullPath);
 
-	       /*  $("#_menuForm").attr({
+	      /*  $("#_menuForm").attr({
 	            action : getContextPath() + menuPath,
 	            method : "POST"
 	        }).submit(); */
 
-	           //  [Woongjin Jun] Tab
-           /*  tabs = $("#mainTabs").tabs();
-
-            tabs.on("click", "span.ui-icon-close", function() {
-                var panelId = $(this).closest("li").remove().attr("aria-controls");
-                $("#" + panelId).remove();
-                tabs.tabs("refresh");
-
-                totTabCount--;
-
-                if (totTabCount == 0) {
-                    $("#content2").hide();
-                    $("#content").show();
-                }
-            });
-
-            $("#btnTabPrev").on("click", function() {
-                if ($("#mainTabs").tabs("option", "active") > 0) {
-                    $("#mainTabs").tabs("option", "active", ($("#mainTabs").tabs("option", "active") - 1));
-                }
-            });
-
-            $("#btnTabNext").on("click", function() {
-                if ($("#mainTabs").tabs("option", "active") < ($("#mainTabs").find("li").length - 1)) {
-                    $("#mainTabs").tabs("option", "active", ($("#mainTabs").tabs("option", "active") + 1));
-                }
-            });
-
-            $("#btnTabAllClose").on("click", function() {
-                $("#mainTabs").find("li").each(function() {
-                    var panelId = $(this).closest("li").remove().attr("aria-controls");
-                    $("#" + panelId).remove();
-                    tabs.tabs("refresh");
-                });
-
-                totTabCount = 0;
-
-                $("#content2").hide();
-                $("#content").show();
-            }); */
             // [Woongjin Jun] Tab
+
+		        console.log("addTab1 : " + menuName);
+		        console.log("addTab2 : " + getContextPath() + menuPath);
+		        console.log("addTab3 : " + menuCode);
+
+                var tg = addTab(menuName, getContextPath() + menuPath, menuCode);
+
+                $("#_menuForm").attr({
+                    action : getContextPath() + menuPath,
+                    method : "POST",
+                    target : tg
+                }).submit();
+
+
+            // [Woongjin Jun] Tab
+
         }
     }
+
+    // [Woongjin Jun] Tab
+    var tabTemplate = "<li><a href='\#{href}'>\#{label}</a><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>";
+    var totTabCount = 0;
+    var tabs;
+    var menuLoadingCount = 0;
+
+    function addTab(nm, url, menuCode) {
+        if (totTabCount == 0) {
+            $("#content").hide();
+            $("#content2").show();
+        }
+
+        console.log("addTab1 : " + nm);
+        console.log("addTab2 : " + url);
+        console.log("addTab3 : " + menuCode);
+
+        var id = "tabs-" + menuCode;
+        var li = $(tabTemplate.replace(/#\{href}/g, "#" + id).replace(/#\{label}/g, nm));
+        var frameId = "frame-" + menuCode;
+        //var tabContentHtml = "<iframe id='" + frameId + "' name='" + frameId + "' width='100%' onload='resizeIframe(this)' class='iframetab' scrolling='no'></iframe>";
+        // 20190911 KR-MIN : for grid resizing
+        var tabContentHtml = "<iframe id='" + frameId + "' name='" + frameId + "' width='100%' onload='resizeIframe(this)' class='iframetab'  scrolling='no'></iframe>";
+
+        tabs.find("#mainTabTitle").append(li);
+        tabs.append("<div id='" + id + "' style='overflow-x: hidden; overflow-y: auto;'><p>" + tabContentHtml + "</p></div>");
+        tabs.tabs("refresh").tabs("option", "active", totTabCount);
+
+        if (FormUtil.isNotEmpty($("#_loading").html())) {
+            //$("#_loading").show();
+        } else {
+            $("body").append(Common.getLoadingObj());
+        }
+
+        menuLoadingCount = 1;
+
+        totTabCount++;
+
+        return frameId;
+    }
+
+    function addTabLink(nm, url) {
+        var frameId = addTab(nm, url);
+        $("#" + frameId).attr("src", url);
+    }
+
+    function resizeIframe(obj) {
+        /*
+        //console.log("offsetHeight : " + obj.contentWindow.document.body.offsetHeight);
+        //console.log("scrollHeight : " + obj.contentWindow.document.body.scrollHeight);
+        console.log("windowHeight1 : " + $(window).height());
+        var windowHeight = $(window).height() - 100;
+        console.log("windowHeight2 : " + windowHeight);
+        var iframeHeight = obj.contentWindow.document.body.scrollHeight + 15;
+        if (windowHeight > iframeHeight) {
+            iframeHeight = windowHeight;
+        }
+        $(obj).animate({height: iframeHeight + 'px'}, 500);
+
+         if(menuLoadingCount == 1){
+             $("#_loading").hide();
+         }
+         */
+        // 20190911 KR-MIN : for grid resizing
+        var iframeHeight = $(window).height() - $(obj).offset().top-20;
+        $(obj).height(iframeHeight + "px");
+
+         if(menuLoadingCount == 1){
+             $("#_loading").hide();
+         }
+    }
+
+
+    // 20190911 KR-MIN : for grid resizing
+    // iframe resizing
+    $(window).resize(function () {
+        $(".iframetab").each(function( index ) {
+            //alert(this)
+            resizeIframe(this);
+        });
+
+    });
+
+    function resizeIframeCall() {
+        return;
+        /*
+        var activeTabId = $(document).find("#mainTabs > ul > .ui-tabs-active").attr("aria-controls");
+        var activeFrameId = activeTabId.replace("tabs-", "frame-");
+
+        //var iframeHeight = $(window).height();
+        //console.log("html : " + $("#" + activeFrameId).contents().find("html").text());
+        var iframeHeight = $("#" + activeFrameId).contents().find("html").height();
+        //console.log("TestHeight1 : " + $(window).height());
+        //console.log("offsetHeight111 : " + iframeHeight);
+        //console.log("offsetHeight222 : " + $("#" + frameId).contents().find("html").height());
+        //console.log("offsetHeight333 : " + $("#" + frameId).contents().height());
+        $("#" + activeFrameId).animate({height: iframeHeight + 'px'}, 500);
+        */
+    }
+
+    function id2Index(tabsId, srcId) {
+        var index = -1;
+        var i = 0;
+        var tbH = $(tabsId).find("li a");
+        var lntb = tbH.length;
+        if (lntb > 0) {
+            for (i = 0; i < lntb; i++) {
+                o = tbH[i];
+                if (o.href.search(srcId)>0) {
+                    index = i;
+                }
+            }
+        }
+        return index;
+    }
+    // [Woongjin Jun] Tab
 </script>
 
 
@@ -301,7 +393,8 @@
                                                                             ,   '${list.fromDtVal}'
                                                                             ,   '${list.toDtType}'
                                                                             ,   '${list.toDtFieldNm}'
-                                                                            ,   '${list.toDtVal}');"
+                                                                            ,   '${list.toDtVal}'
+                                                                            ,   '${list.menuName}');"
                                     class="${menuStatusClass}"
                                     >
                                         ${list.menuName}
