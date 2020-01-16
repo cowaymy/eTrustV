@@ -239,6 +239,10 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 	    	prTransLogs.addAll(prService.createMaps(prService));
 	    }
 
+	    for (int i = 0; i < prTransLogs.size(); i++) {
+	    	logger.debug("### PRODUCT RETURN DETAIL " + i + " : " + prTransLogs.get(i));
+	    }
+
 	    totalCnt = prTransLogs.size();
 
 	    logger.debug("### PRODUCT RETURN SIZE : " + prTransLogs.size());
