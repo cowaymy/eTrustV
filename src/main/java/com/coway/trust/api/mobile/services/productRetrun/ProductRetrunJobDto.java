@@ -235,6 +235,22 @@ public class ProductRetrunJobDto {
 		this.fraSerialChk = fraSerialChk;
 	}
 
+	private String selSerialNo;
+	public String getSelSerialNo() {
+		return selSerialNo;
+	}
+	public void setSelSerialNo(String selSerialNo) {
+		this.selSerialNo = selSerialNo;
+	}
+
+	private String selFraSerialNo;
+	public String getSelFraSerialNo() {
+		return selFraSerialNo;
+	}
+	public void setSelFraSerialNo(String selFraSerialNo) {
+		this.selFraSerialNo = selFraSerialNo;
+	}
+
 	public String getSalesOrderNo() {
 		return salesOrderNo;
 	}
