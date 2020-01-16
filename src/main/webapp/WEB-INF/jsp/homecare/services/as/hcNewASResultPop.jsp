@@ -15,10 +15,13 @@
 
 <!-- AS ORDER > AS MANAGEMENT > VIEW / ADD AS ENTRY -->
 <script type="text/javaScript">
+
   var regGridID;
   var myFltGrd10;
   var productCode;
   var asMalfuncResnId;
+
+  var ddlFilterObj = {};
 
   $(document).ready(
     function() {
@@ -28,6 +31,9 @@
       //add_CreateAUIGrid();
       AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
       AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
+
+      AUIGrid.bind(myFltGrd10, "cellEditBegin", auiCellEditBeginHandler);
+      AUIGrid.bind(myFltGrd10, "cellEditEnd", auiCellEditEndHandler);
 
       var isF = true;
       AUIGrid.bind(myFltGrd10, "rowStateCellClick", function(event) {
@@ -138,7 +144,7 @@
   }
 
   function fn_getASRulstSVC0004DInfo() {
-    Common.ajax("GET", "/homecare/services/as/getASRulstSVC0004DInfo.do", $("#resultASForm").serialize(), function(result) {
+	  Common.ajax("GET", "/homecare/services/as/getASRulstSVC0004DInfo.do", $("#resultASForm").serialize(), function(result) {
       if (result != "") {
         fn_setSVC0004dInfo(result);
       } else {
@@ -237,7 +243,7 @@
     productCode = result[0].inHuseRepairProductCode;
 
     if (typeof (productCode) != "undefined") {
-    	//doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID=' + result[0].inHuseRepairGrpCode, '', '', 'productCode', 'S', 'fn_inHouseGetProductDetails');
+      //doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID=' + result[0].inHuseRepairGrpCode, '', '', 'productCode', 'S', 'fn_inHouseGetProductDetails');
     }
 
     $('#txtLabourCharge').val(result[0].asWorkmnsh);
@@ -265,13 +271,59 @@
       var totchrge = Number($("#txtTotalCharge").val());
 
       if (fChage.toFixed(2) != "0.00") {
-        fChage = (fChage - Number(event.items[0].filterTotal)).toFixed(2);
-        totchrge = (totchrge - Number(event.items[0].filterTotal)).toFixed(2);
+        fChage = (fChage - Number(js.String.deletecomma(event.items[0].filterTotal))).toFixed(2);
+        totchrge = (totchrge - Number(js.String.deletecomma(event.items[0].filterTotal))).toFixed(2);
 
         $("#txtFilterCharge").val(fChage);
         $("#txtTotalCharge").val(totchrge);
       }
     }
+  }
+
+  function auiCellEditBeginHandler(event){
+
+	  if (event.dataField == "retSmoSerialNo"){
+		  var selectItem = AUIGrid.getSelectedItems(myFltGrd10);
+          if(selectItem.length == 0){
+              return false;
+          }
+
+          if( event.item.isSmo != "Y" ){
+              return false;
+          }
+	  }
+
+	  if (event.dataField == "srvFilterLastSerial"){
+		  if(event.item.isSerialReplc != "Y"){
+			  return false;
+		  }
+
+		  if(event.item.isChkSerial != "N"){
+			  return false;
+		  }
+	  }
+
+  }
+
+  function auiCellEditEndHandler(event){
+      if (event.dataField == "srvFilterLastSerial"){
+
+          var isChkSerial = fn_chkSerial(event.value);
+          if(isChkSerial != "Y"){
+        	  Common.alert("Invalid Serial No.");
+          }
+
+          AUIGrid.setCellValue(myFltGrd10, event.rowIndex, "isChkSerial", js.String.isEmpty(isChkSerial)?"N":isChkSerial);
+      }
+	  if (event.dataField == "retSmoSerialNo"){
+
+		  var isSmoChkYn = fn_chkSerial(event.value);
+		  if(isSmoChkYn != "Y"){
+              Common.alert("Invalid Return Serial No.");
+          }
+
+          AUIGrid.setCellValue(myFltGrd10, event.rowIndex, "isSmoChkYn", js.String.isEmpty(isSmoChkYn)?"N":isSmoChkYn);
+	  }
   }
 
   function createAUIGrid() {
@@ -383,9 +435,36 @@
     }, {
       dataField : "srvFilterLastSerial",
       headerText : "<spring:message code='service.title.SerialNo'/>",
-      editable : false,
+      editable : true,
       width : 200
     }, {
+      dataField : "isChkSerial",
+      headerText : "chkSerial",
+      editable : false,
+      visible : false,
+      width : 0
+    }, {
+      dataField : "isSerialReplace",
+      headerText : "Serial Replace",
+      editable : false,
+      width : 180
+    }, {
+      dataField : "isSmo",
+      headerText : "Create Return SMO",
+      editable : false,
+      width : 180
+    }, {
+      dataField : "retSmoSerialNo",
+      headerText : "Return Serial",
+      editable : true,
+      width : 200
+    }, {
+      dataField : "isSmoChkYn",
+      headerText : "chkYn",
+      editable : false,
+      visible : false,
+      width : 0
+    },  {
       dataField : "undefined",
       headerText : " ",
       width : 110,
@@ -402,8 +481,7 @@
       width : 150,
       editable : false,
       visible : false
-    }
-    ];
+    }];
 
     var gridPros2 = {
       usePaging : true,
@@ -452,7 +530,28 @@
       // KR-OHK Serial Check
       $("#pItmCode").val(result[0].stockCode);
 
-      doGetCombo('/homecare/services/as/getASFilterInfo.do?prdctCd=' + result[0].stockCode, '', '', 'ddlFilterCode', 'S', '');
+      // KR-JIN
+      //doGetCombo('/homecare/services/as/getASFilterInfo.do?prdctCd=' + result[0].stockCode, '', '', 'ddlFilterCode', 'S', '');
+      var sUrl = '/homecare/services/as/getASFilterInfo.do?prdctCd=' + result[0].stockCode;
+      $.ajax({
+          type : "GET",
+          url : getContextPath() + sUrl,
+          data : { groupCode : ''},
+          dataType : "json",
+          contentType : "application/json;charset=UTF-8",
+          success : function(data) {
+              $.each(data, function(idx, row){
+                ddlFilterObj[row.codeId] = {"codeId":row.codeId, "codeName":row.codeName, "isSerialReplc":row.isSerialReplc, "isSmo":row.isSmo};
+              });
+              doDefCombo(data, '', 'ddlFilterCode', 'S', '');
+          },
+          error: function(jqXHR, textStatus, errorThrown){
+              alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+          },
+          complete: function(){}
+      });
+
+
     });
   }
 
@@ -479,20 +578,47 @@
       $("#hidSerialRequireChkYn").val(result[0].serialRequireChkYn);
 
       if(  result[0].serialRequireChkYn == "Y"
-    	&& js.String.isNotEmpty(result[0].ctWhLocId)
-    	&& js.String.isNotEmpty($("#pItmCode").val())
+      && js.String.isNotEmpty(result[0].ctWhLocId)
+      && js.String.isNotEmpty($("#pItmCode").val())
       ){
-    	    var param = {"whLocId":result[0].ctWhLocId, "stkCode":$("#pItmCode").val()};
-    	    Common.ajaxSync("POST", "/homecare/services/as/selectSerialYnSearch.do", param, function(result) {
+          var param = {"whLocId":result[0].ctWhLocId, "stkCode":$("#pItmCode").val()};
+          Common.ajaxSync("POST", "/homecare/services/as/selectSerialYnSearch.do", param, function(result) {
                 $("#hidSerialRequireChkYn").val(result.data);
-    	    	if(result.data != "Y"){
-    	    		$("#stockSerialNo").val("");
-    	    		$("#s1, #s2").hide();
-    	    	}
-    	    });
+            if(result.data != "Y"){
+              $("#stockSerialNo").val("");
+              $("#s1, #s2").hide();
+            }
+          });
       }
 
     });
+  }
+
+
+  function fn_chkSerial(serial){
+	  if( js.String.isNotEmpty(serial) ){
+		  if(serial.length != 18){
+			  return "N";
+		  }
+
+		  var barCode = serial.toUpperCase();
+		  var stockCode = (js.String.roughScale(barCode.substr(3, 5), 36)).toString();
+		  if(stockCode == "0"){
+			  return "N";
+		  }
+
+		  Common.ajaxSync("POST", "/homecare/services/as/selectSerialChk.do", {"serial":barCode, "stockCode":stockCode}, function(result) {
+			    if(result.code == "00"){
+			    	return "Y";
+			    }else{
+			    	return "N";
+			    }
+		  }, function(){return "N";});
+
+	  }else{
+		  return "N";
+	  }
+	  return "Y";
   }
 
   function fn_getASHistoryInfo() {
@@ -665,6 +791,40 @@
     //fitem.filterCODE =$("#ddlFilterCode").va();
     fitem.srvFilterLastSerial = $("#ddSrvFilterLastSerial").val();
 
+    fitem.isChkSerial = "N";
+    fitem.isSmoChkYn = "N";
+
+    if(ddlFilterObj[$("#ddlFilterCode").val()] != null){
+	    fitem.isSmo = ddlFilterObj[$("#ddlFilterCode").val()].isSmo;
+	    fitem.isSerialReplc = ddlFilterObj[$("#ddlFilterCode").val()].isSerialReplc;
+
+	    if(fitem.isSerialReplc == "Y"){
+	    	fitem.isChkSerial = fn_chkSerial(fitem.srvFilterLastSerial);
+	    	if(fitem.isChkSerial != "Y"){
+	    		Common.alert("Invalid serial No.");
+	    		return false;
+	    	}
+	    }
+    }else{
+    	fitem.isSmo = "N";
+    	fitem.isSerialReplc = "N";
+    }
+
+    if(fitem.isSerialReplc == "Y"){
+    	var rows = AUIGrid.getGridData(myGridID);
+
+    	var isChk = false;
+    	$.each(rows, function(idx, item){
+            if(item.isSerialReplc == "Y"){
+            	isChk = true;
+            }
+        });
+    	if(isChk){
+    		Common.alert("There can be no more than one serial replace.");
+    		return false;
+    	}
+    }
+
     // CHECK PRICE
     var chargePrice = 0;
     var chargeTotalPrice = 0;
@@ -683,9 +843,9 @@
     fitem.filterTotal = Number(chargeTotalPrice).toFixed(2);
 
     var v = Number($("#txtFilterCharge").val()) + Number(chargeTotalPrice);
-    $("#txtFilterCharge").val(v.toFixed(2));
 
     if (AUIGrid.isUniqueValue(myFltGrd10, "filterID", fitem.filterID)) {
+      $("#txtFilterCharge").val(v.toFixed(2));
       fn_addRow(fitem);
     } else {
       Common.alert("<spring:message code='service.msg.rcdExist'/>");
@@ -1316,8 +1476,7 @@
 
     // SAVE RESULT
     // KR-OHK Serial Check add
-    if ($("#hidSerialRequireChkYn").val() == 'Y') {
-        Common.ajax("POST", "/services/as/newASInHouseAddSerial.do", saveForm,
+    Common.ajax("POST", "/homecare/services/as/newASInHouseAddSerial.do", saveForm,
             function(result) {
                 if(result.code == '99') {
                     Common.alert(result.message);
@@ -1337,27 +1496,6 @@
                     }
                 }
             });
-    } else {
-        Common.ajax("POST", "/services/as/newASInHouseAdd.do", saveForm,
-          function(result) {
-            if (result.data != "" && result.data != null && result.data != "null") {
-              Common.alert("<b>AS result save successfully.</b></br> New AS Result Number : <b>" + result.data + " </b>");
-              $("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
-              fn_DisablePageControl();
-              $("#_newASResultDiv1").remove();
-              fn_searchASManagement();
-            } else {
-              Common.alert("<b>AS result save successfully.</b>");
-              $("#txtResultNo").html("<font size='3' color='red'> <b> " + $("#txtResultNo").val() + " </b></font>");
-              fn_DisablePageControl();
-              $("#_newASResultDiv1").remove();
-              fn_searchASManagement();
-            }
-          }, function() {
-            $("#_newASResultDiv1").remove();
-            fn_searchASManagement();
-          });
-    }
   }
 
   function fn_clearPanelField_ASChargesFees() {
@@ -1585,6 +1723,43 @@
         }
       }
     }
+
+    /// KR-JIN Return SMO, Serial Replace
+    var rows = AUIGrid.getGridData(myFltGrd10);
+
+    var isChk = "Y";
+    var isSmoChk = "Y";
+    var replc = 0;
+    for(var i in rows){
+    	if(rows[i].isSerialReplc == "Y"){
+    		replc++;
+    	}
+
+    	if(rows[i].isSerialReplc == "Y" && rows[i].isChkSerial != "Y"){
+    		isChk = fn_chkSerial(rows[i].srvFilterLastSerial);
+    		if(isChk != "Y"){break;}
+    	}
+
+    	if(rows[i].isSmo == "Y" && rows[i].isSmoChkYn != "Y"){
+    		isSmoChk = fn_chkSerial(rows[i].retSmoSerialNo);
+    		if(isSmoChk != "Y"){break;}
+    	}
+    }
+
+    if(replc > 1){
+    	rtnMsg += "* Only one serial replace is possible. </br>";
+        rtnValue = false;
+    }
+
+    if(isChk != "Y"){
+    	rtnMsg += "* Invalid serial No. </br>";
+        rtnValue = false;
+    }
+    if(isSmoChk != "Y"){
+    	rtnMsg += "* Invalid return serial No. </br>";
+        rtnValue = false;
+    }
+    /////////
 
     if (rtnValue == false) {
       Common.alert(rtnMsg);
@@ -1916,10 +2091,18 @@
       $("#ddlFilterPayType").val("");
       $("#ddlFilterExchangeCode").val("");
       $("#ddSrvFilterLastSerial").val("");
+
+      /* KR-JIN */
+      if(ddlFilterObj[obj.value].isSerialReplc == "Y"){
+          $("#fcm6").show();
+      }else{
+          $("#fcm6").hide();
+      }
     } else {
       $("#fcm3").hide();
       $("#fcm4").hide();
       $("#fcm5").hide();
+      $("#fcm6").hide();
 
       $("#ddlFilterQty").val("1");
       $("#ddlFilterPayType").val("");
@@ -2036,10 +2219,10 @@
 
   function fn_PopSerialChangeClose(obj){
 
-      console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+      //console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
 
       $("#stockSerialNo").val(obj.asIsSerialNo);
-      $("#hidStockSerialNo").val(obj.beforeSerialNo);
+      // $("#hidStockSerialNo").val(obj.beforeSerialNo);
 
       if(popupObj!=null) popupObj.close();
       //fn_viewInstallResultSearch(); //조회
@@ -2047,13 +2230,13 @@
 
 //팝업에서 호출하는 조회 함수
 function SearchListAjax(obj){
-	if(typeof (obj) != "undefined"){
-	    console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+  if(typeof (obj) != "undefined"){
+      //console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
 
-	    $("#stockSerialNo").val(obj.asIsSerialNo);
-	    $("#hidStockSerialNo").val(obj.beforeSerialNo);
-	    //fn_viewInstallResultSearch(); //조회
-	}
+      $("#stockSerialNo").val(obj.asIsSerialNo);
+      // $("#hidStockSerialNo").val(obj.beforeSerialNo);
+      //fn_viewInstallResultSearch(); //조회
+  }
 }
 
 function fn_serialSearchPop(){
@@ -2128,7 +2311,7 @@ function fnSerialSearchResult(data) {
   <!-- pop_header end -->
   <form id="resultASAllForm" method="post">
    <input type="hidden" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
-   <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
+   <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" />
    <input type="hidden" id='hidSerialChk' name='hidSerialChk' />
    <section class="pop_body">
     <!-- pop_body start -->
@@ -2510,7 +2693,7 @@ function fnSerialSearchResult(data) {
       </dd>
 
       <dt class="click_add_on" id='chrFee_dt' onclick="fn_secChk(this);">
-       <a href="#"><spring:message code='service.title.asPrtChr' /></a>
+       <a href="#"><spring:message code='home.title.asPrtChr' /></a>
       </dt>
       <dd id='chrFee_div' style="display: none">
        <table class="type1">
@@ -2541,7 +2724,7 @@ function fnSerialSearchResult(data) {
               </c:forEach>
             </select>
           </td>
-          <th scope="row"><spring:message code='service.text.asfltChr' /> </th>
+          <th scope="row"><spring:message code='home.lbl.asfltChr' /> </th>
           <td>
             <input type="text" id='txtFilterCharge' name='txtFilterCharge' value='0.00' disabled/></td>
          </tr>
@@ -2615,8 +2798,7 @@ function fnSerialSearchResult(data) {
        </ul>
        <article class="grid_wrap">
         <!-- grid_wrap start -->
-        <div id="asfilter_grid_wrap"
-         style="width: 100%; height: 250px; margin: 0 auto;"></div>
+        <div id="asfilter_grid_wrap" style="width: 100%; height: 250px; margin: 0 auto;"></div>
        </article>
        <!-- grid_wrap end -->
       </dd>

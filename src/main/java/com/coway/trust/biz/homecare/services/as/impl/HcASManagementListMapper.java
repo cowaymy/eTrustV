@@ -39,6 +39,8 @@ public interface HcASManagementListMapper {
 
 	public List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params) throws Exception;
 
+	public List<EgovMap> getASRulstEditFilterInfo(Map<String, Object> params) throws Exception;
+
 	public int updateAssignCT(Map<String, Object> params) throws Exception;
 
 	public List<EgovMap> selectLbrFeeChr() throws Exception;

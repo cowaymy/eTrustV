@@ -1,5 +1,8 @@
 package com.coway.trust.web.homecare.services.as;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.services.as.HcASManagementListService;
+import com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -40,18 +44,20 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/homecare/services/as")
 public class HcASManagementListController {
-  private static final Logger logger = LoggerFactory.getLogger(HcASManagementListController.class);
+    private static final Logger logger = LoggerFactory.getLogger(HcASManagementListController.class);
 
-  @Resource(name = "hcASManagementListService")
-  private HcASManagementListService hcASManagementListService;
+    @Resource(name = "hcASManagementListService")
+    private HcASManagementListService hcASManagementListService;
 
+    @Resource(name = "ASManagementListService")
+    private ASManagementListService ASManagementListService;
 
-  @Resource(name = "ASManagementListService")
-  private ASManagementListService ASManagementListService;
+    @Resource(name = "orderDetailService")
+    private OrderDetailService orderDetailService;
 
+    @Resource(name = "serialMgmtNewService")
+    private SerialMgmtNewService serialMgmtNewService;
 
-  @Resource(name = "orderDetailService")
-  private OrderDetailService orderDetailService;
 
   /*
 
@@ -515,12 +521,12 @@ public class HcASManagementListController {
 
   @RequestMapping(value = "/getASRulstEditFilterInfo.do", method = RequestMethod.POST)
   public ResponseEntity<List<EgovMap>> getASRulstEditFilterInfo(@RequestBody Map<String, Object> params,
-      HttpServletRequest request, ModelMap model) {
+      HttpServletRequest request, ModelMap model) throws Exception{
     logger.debug("===========================/getASRulstEditFilterInfo.do===============================");
     logger.debug("== params " + params.toString());
     logger.debug("===========================/getASRulstEditFilterInfo.do===============================");
 
-    List<EgovMap> list = ASManagementListService.getASRulstEditFilterInfo(params);
+    List<EgovMap> list = hcASManagementListService.getASRulstEditFilterInfo(params);
 
     return ResponseEntity.ok(list);
   }
@@ -557,4 +563,125 @@ public class HcASManagementListController {
   }
 
 
+    @RequestMapping(value = "/selectSerialChk.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> selectSerialChk(@RequestBody Map<String, Object> params, HttpServletRequest request, Model model) throws Exception{
+    	ReturnMessage message = new ReturnMessage();
+
+        String crDate = "";
+        String month = "";
+        String sDate = "";
+        String serial = (String) params.get("serial");
+
+        crDate = serial.substring(8, 13);
+
+        if(StringUtils.isBlank(crDate) || crDate.length() != 5){
+          message.setCode(AppConstants.FAIL);
+          return ResponseEntity.ok(message);
+        }
+
+        month = crDate.substring(2, 3);
+
+        switch(month){
+          case "A":
+          	month = "10";
+          	break;
+          case "B":
+          	month = "11";
+          	break;
+          case "C":
+          	month = "12";
+          	break;
+          default:
+          	month = "0"+month;
+          break;
+        }
+        sDate = crDate.substring(0, 2) + month + crDate.substring(3, 5);
+		if(!validationDate(sDate)){
+			message.setCode(AppConstants.FAIL);
+			return ResponseEntity.ok(message);
+		}
+
+		EgovMap itemmap = serialMgmtNewService.selectItemSerch(params);
+		if(itemmap == null || itemmap.size() == 0){
+			message.setCode(AppConstants.FAIL);
+			return ResponseEntity.ok(message);
+		}
+
+		message.setCode(AppConstants.SUCCESS);
+		return ResponseEntity.ok(message);
+    }
+    private boolean validationDate(String checkDate){
+    	try{
+    		SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
+    		dateFormat.setLenient(false);
+    		dateFormat.parse(checkDate);
+    		return true;
+    	}catch (ParseException  e){
+    		return false;
+    	}
+    }
+
+    // AS result save
+    @RequestMapping(value = "/newASInHouseAddSerial.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> newASInHouseAddSerial(@RequestBody Map<String, Object> params, Model model,
+        HttpServletRequest request, SessionVO sessionVO) throws Exception{
+      logger.debug("===========================/newASInHouseAddSerial.do===============================");
+      logger.debug("== params " + params.toString());
+      logger.debug("===========================/newASInHouseAddSerial.do===============================");
+
+      params.put("updator", sessionVO.getUserId());
+      ReturnMessage message = new ReturnMessage();
+
+      message = hcASManagementListService.newASInHouseAddSerial(params);
+
+      return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/newResultAdd.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> newResultAdd(@RequestBody Map<String, Object> params, Model model,
+        HttpServletRequest request, SessionVO sessionVO) throws Exception{
+      logger.debug("===========================/newResultAdd.do===============================");
+      logger.debug("== params " + params.toString());
+      logger.debug("===========================/newResultAdd.do===============================");
+
+      params.put("updator", sessionVO.getUserId());
+      ReturnMessage message = new ReturnMessage();
+
+      message = hcASManagementListService.newResultAdd(params);
+
+      return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/newResultUpdateSerial.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> newResultUpdateSerial(@RequestBody Map<String, Object> params, Model model,
+        HttpServletRequest request, SessionVO sessionVO) throws Exception{
+      logger.debug("===========================/newResultUpdateSerial.do===============================");
+      logger.debug("== params " + params.toString());
+
+      params.put("updator", sessionVO.getUserId());
+
+      LinkedHashMap asResultM = (LinkedHashMap) params.get("asResultM");
+      List<EgovMap> add = (List<EgovMap>) params.get("add");
+      List<EgovMap> remove = (List<EgovMap>) params.get("remove");
+      List<EgovMap> update = (List<EgovMap>) params.get("update");
+      // List<EgovMap> all = (List<EgovMap>) params.get("all");
+
+      logger.debug("== asResultM = " + asResultM.toString());
+      logger.debug("== ADD = " + add.toString());
+      logger.debug("== REMOVE = " + remove.toString());
+      logger.debug("== UPDATE = " + update.toString());
+      logger.debug("===========================/newResultUpdateSerial.do===============================");
+
+      EgovMap rtnValue = hcASManagementListService.asResult_updateSerial(params);
+
+      logger.debug("newResultUpdate == " + rtnValue.toString());
+
+      ReturnMessage message = new ReturnMessage();
+      message.setCode(AppConstants.SUCCESS);
+      message.setData(rtnValue.get("asNo"));
+      message.setMessage("");
+
+      return ResponseEntity.ok(message);
+
+    }
 }

@@ -1,6 +1,5 @@
 package com.coway.trust.biz.services.as.impl;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -50,6 +49,16 @@ public class  ServicesLogisticsPFCServiceImpl  extends EgovAbstractServiceImpl i
 	@Override
 	public EgovMap SP_SVC_LOGISTIC_REQUEST_SERIAL(Map<String, Object> params) {
 		return (EgovMap) servicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST_SERIAL(params);
+	}
+
+	// KR-JIN ADD
+	@Override
+	public EgovMap SP_SVC_BARCODE_SAVE(Map<String, Object> params) {
+		return (EgovMap) servicesLogisticsPFCMapper.SP_SVC_BARCODE_SAVE(params);
+	}
+	@Override
+	public EgovMap SP_LOGISTIC_REQUEST_REVERSE_SERIAL(Map<String, Object> param){
+		return (EgovMap) servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE_SERIAL(param);
 	}
 
 }

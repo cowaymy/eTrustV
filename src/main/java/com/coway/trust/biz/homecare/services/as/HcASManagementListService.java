@@ -3,6 +3,8 @@ package com.coway.trust.biz.homecare.services.as;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.ReturnMessage;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /*********************************************************************************************
@@ -46,10 +48,20 @@ public interface HcASManagementListService {
 	// AS Defect
 	public List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params) throws Exception;
 
+	// SVC0005 search
+	public List<EgovMap> getASRulstEditFilterInfo(Map<String, Object> params) throws Exception;
+
 	public int updateAssignCT(Map<String, Object> params) throws Exception;
 
 	public List<EgovMap> selectLbrFeeChr() throws Exception;
 
 	// serial Y/N check
 	public String selectSerialYnSearch(Map<String, Object> params) throws Exception;
+
+	// AS save
+	public ReturnMessage newASInHouseAddSerial(Map<String, Object> params) throws Exception;
+
+	// AS result save
+	public ReturnMessage newResultAdd(Map<String, Object> params) throws Exception;
+	public EgovMap asResult_updateSerial(Map<String, Object> params) throws Exception;
 }

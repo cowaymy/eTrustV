@@ -343,4 +343,8 @@ public interface ASManagementListMapper {
   int insertLOG0103M(Map<String, Object> params);
 
   int reverse_CURR_LOG0103M(Map<String, Object> params);
+
+
+   // 테스트 임시용.
+  int selectTestChk (Map<String, Object> params);
 }

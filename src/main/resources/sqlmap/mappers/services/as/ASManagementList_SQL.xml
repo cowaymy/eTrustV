@@ -3649,7 +3649,10 @@
                            ASR_ITM_CLM,
                            ASR_ITM_TAX_CODE_ID,
                            ASR_ITM_TXS_AMT,
-                           SERIAL_NO
+                           SERIAL_NO,
+                           RET_SMO_SERIAL_NO,
+						   IS_SMO,
+						   IS_SERIAL_REPLACE
     )
     SELECT SVC0005D_ASR_ITM_ID_SEQ.NEXTVAL ,
            #{NEW_AS_RESULT_ID},
@@ -3666,7 +3669,10 @@
            S.ASR_ITM_CLM,
            S.ASR_ITM_TAX_CODE_ID,
            S.ASR_ITM_TXS_AMT,
-           S.SERIAL_NO
+           S.SERIAL_NO,
+           S.RET_SMO_SERIAL_NO,
+           S.IS_SMO,
+           S.IS_SERIAL_REPLACE
     FROM SVC0005D S
     WHERE AS_RESULT_ID = #{OLD_AS_RESULT_ID}
   </insert>
@@ -4791,4 +4797,11 @@
     FROM SVC0001D A JOIN SVC0004D B ON A.AS_ID = B.AS_ENTRY_ID AND AS_RESULT_ID = #{OLD_AS_RESULT_ID}
     LEFT JOIN SVC0005D C ON B.AS_RESULT_ID = C.AS_RESULT_ID
   </insert>
+
+
+  <select id="selectTestChk" parameterType="Map" resultType="int">
+  SELECT COUNT(1)
+    FROM SVC0005D S
+    WHERE AS_RESULT_ID = #{OLD_AS_RESULT_ID}
+  </select>
 </mapper>

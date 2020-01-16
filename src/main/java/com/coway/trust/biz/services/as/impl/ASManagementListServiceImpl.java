@@ -1603,6 +1603,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                 tempFilterTotal = "0";
               }
 
+              tempFilterTotal = tempFilterTotal.replaceAll("\\,", "");
+
               double ft = Double.parseDouble(CommonUtils.isEmpty(tempFilterTotal) == true ? "0" : tempFilterTotal);
 
               LOGGER.debug("= FILTER AMOUNT : " + tempFilterTotal);
@@ -3064,7 +3066,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
   }
 
-  //@Override
+  @Override
   public int setPay17dData(Map<String, Object> params) {
 
     LOGGER.debug("                                  ===> setPay17dData   out");
@@ -3089,6 +3091,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     return a;
   }
 
+  @Override
   public int setPay18dData(Map<String, Object> params) {
 
     LOGGER.debug("                                  ===> pay18dMap   out");
@@ -3137,7 +3140,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     return c;
   }
 
-  //@Override
+  @Override
   public int convertAccountToTempBasedOnPayMode(int pMode) {
     int rc = 0;
     switch (pMode) {
@@ -3156,7 +3159,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     return rc;
   }
 
-  //@Override
+  @Override
   public int convertTempAccountToSettlementAccount(int p) {
 
     int rc = 0;
@@ -3370,11 +3373,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     return ASManagementListMapper.getASEntryCommission(params);
   }
 
-  //@Override
+  @Override
   public List<EgovMap> getDftTyp(Map<String, Object> params) {
     return ASManagementListMapper.getDftTyp(params);
   }
 
+  @Override
   public ReturnMessage newASInHouseAddSerial(Map<String, Object> params) {
 
 	  ReturnMessage message = new ReturnMessage();

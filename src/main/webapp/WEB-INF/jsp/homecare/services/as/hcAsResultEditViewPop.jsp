@@ -132,7 +132,28 @@
       // KR-OHK Serial Check
       $("#pItmCode").val(result[0].stockCode);
 
-      doGetCombo('/services/as/getASFilterInfo.do?prdctCd=' + actPrdCode, '', '', 'ddlFilterCode', 'S', '');
+      // KR-JIN
+      //doGetCombo('/services/as/getASFilterInfo.do?prdctCd=' + actPrdCode, '', '', 'ddlFilterCode', 'S', '');
+      var sUrl = '/homecare/services/as/getASFilterInfo.do?prdctCd=' + result[0].stockCode;
+      $.ajax({
+          type : "GET",
+          url : getContextPath() + sUrl,
+          data : { groupCode : ''},
+          dataType : "json",
+          contentType : "application/json;charset=UTF-8",
+          success : function(data) {
+        	  //console.log(ddlFilterObj);
+              $.each(data, function(idx, row){
+                ddlFilterObj[row.codeId] = {"codeId":row.codeId, "codeName":row.codeName, "isSerialReplc":row.isSerialReplc, "isSmo":row.isSmo};
+              });
+              doDefCombo(data, '', 'ddlFilterCode', 'S', '');
+          },
+          error: function(jqXHR, textStatus, errorThrown){
+              alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+          },
+          complete: function(){}
+      });
+
     });
   }
 

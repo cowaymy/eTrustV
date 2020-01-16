@@ -192,4 +192,9 @@ public interface ASManagementListService {
   int asResultBasic_updateSerial(Map<String, Object> params);
 
   EgovMap asResult_updateSerial(Map<String, Object> params);
+
+  public int setPay17dData(Map<String, Object> params);
+  public int setPay18dData(Map<String, Object> params);
+  public int convertAccountToTempBasedOnPayMode(int pMode);
+  public int convertTempAccountToSettlementAccount(int p);
 }
