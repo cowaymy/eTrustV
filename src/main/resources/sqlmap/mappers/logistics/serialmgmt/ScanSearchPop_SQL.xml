@@ -33,6 +33,9 @@
             <if test="searchSerialNo !=null and searchSerialNo != ''">
                 AND A.SERIAL_NO = #{searchSerialNo}
             </if>
+            <if test="searchTrnscType == 'AD'">
+                AND A.FROM_LOC_ID = #{searchFromLoc}
+            </if>
         ORDER BY A.SERIAL_NO DESC
     </select>
 </mapper>

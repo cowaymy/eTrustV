@@ -58,6 +58,8 @@ public class ScanSearchPopController {
 		model.put("pRequestItem", params.get("pRequestItem"));
 		model.put("pStatus", params.get("pStatus"));
 		model.put("pSerialNo", params.get("pSerialNo"));
+		model.put("pTrnscType", params.get("zTrnscType"));
+		model.put("pFromLoc", params.get("zFromLoc"));
 
 		return "logistics/SerialMgmt/scanSearchPop";
 	}

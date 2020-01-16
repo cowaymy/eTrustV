@@ -150,7 +150,7 @@ function fnScanSearchResult(serialNo) {
             return;
         }
 
-        var data = {searchDeliveryNo : $("#searchDeliveryNo").val(), searchDeliveryItem : $("#searchDeliveryItem").val(), searchRequestNo : $("#searchRequestNo1").val(), searchRequestItem : $("#searchRequestItem").val(), searchStatus : $("#searchStatus").val(), searchSerialNo : $("#searchSerialNo").val()};
+        var data = {searchDeliveryNo : $("#searchDeliveryNo").val(), searchDeliveryItem : $("#searchDeliveryItem").val(), searchRequestNo : $("#searchRequestNo1").val(), searchRequestItem : $("#searchRequestItem").val(), searchStatus : $("#searchStatus").val(), searchSerialNo : $("#searchSerialNo").val(), searchTrnscType : $("#searchTrnscType").val(), searchFromLoc : $("#searchFromLoc").val()};
 
         /*
         Common.ajaxSync("GET", "/logistics/SerialMgmt/scanSearchDataList.do", data, function(result) {
@@ -215,6 +215,8 @@ function fnScanSearchResult(serialNo) {
     <section class="pop_body">
         <section class="search_table"><!-- search_table start -->
 	        <form id="searchForm" name="searchForm">
+	            <input type="hidden"  id="searchTrnscType" name="searchTrnscType" value="${pTrnscType}" />
+	            <input type="hidden"  id="searchFromLoc" name="searchFromLoc" value="${pFromLoc}" />
 	            <table class="type1"><!-- table start -->
 	                <caption>table</caption>
 	                <colgroup>
