@@ -115,6 +115,10 @@ public class StaffAdvanceController {
         advInfo.put("userName", sessionVO.getUserName());
         advInfo.put("userId", sessionVO.getUserId());
 
+        EgovMap rqstInfo = staffAdvanceService.getRqstInfo(advInfo);
+        advInfo.put("rqstCode", rqstInfo.get("rqstCode"));
+        advInfo.put("rqstName", rqstInfo.get("rqstName"));
+
         return ResponseEntity.ok(advInfo);
     }
 
@@ -151,7 +155,7 @@ public class StaffAdvanceController {
     /* Attachment Functions
      * Edit Save - Attachment Update
      */
-    @RequestMapping(value = "/advReqAtchUpdate.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/attachmentUpdate.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> advReqAtchUpdate(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 
         LOGGER.debug("params =====================================>>  " + params);

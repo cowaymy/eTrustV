@@ -40,8 +40,14 @@ public class staffAdvanceServiceImpl implements staffAdvanceService {
         return staffAdvanceMapper.selectAdvanceList(params);
     }
 
+    @Override
     public EgovMap getAdvConfig(Map<String, Object> params) {
         return staffAdvanceMapper.getAdvConfig(params);
+    }
+
+    @Override
+    public EgovMap getRqstInfo(Map<String, Object> params) {
+        return staffAdvanceMapper.getRqstInfo(params);
     }
 
     @Override

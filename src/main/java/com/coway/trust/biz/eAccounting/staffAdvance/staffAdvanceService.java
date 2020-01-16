@@ -11,6 +11,8 @@ public interface staffAdvanceService {
 
     EgovMap getAdvConfig(Map<String, Object> params);
 
+    EgovMap getRqstInfo(Map<String, Object> params);
+
     String selectNextClmNo(Map<String, Object> params);
 
     void insertRequest(Map<String, Object> params);

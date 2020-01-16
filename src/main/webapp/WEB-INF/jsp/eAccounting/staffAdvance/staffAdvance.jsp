@@ -255,9 +255,7 @@
         $("#bankName").val("CIMB BANK BHD");
         $("#bankId").val("3");
 
-        if(claimNo != null || claimNo != "") {
-            claimNo = null;
-        }
+        $("#reqAdvType").attr("disabled", true);
 
         menu = "REQ";
         if(advType == "" || advType == null) {
@@ -303,6 +301,9 @@
             $("#keyDate").val(today);
             $("#createUserId").val(results.userId);
             $("#createUsername").val(results.userName);
+
+            $("#payeeCode").val(results.rqstCode);
+            $("#payeeName").val(results.rqstName);
 
             if(advType == "1") {
                 console.log("Travel Advance");
@@ -597,15 +598,28 @@
         if(menu == "REQ") {
             $("#advReqForm").clearForm();
             $("#advReqPop").hide();
+
+            $("#reqAdvType").attr("disabled", false);
         } else if(menu == "REF") {
             $("#advRepayForm").clearForm();
             $("#advRepayPop").hide();
+        }
+
+        if($("#appvLinePop").is(':visible')) {
+            $("#appvLinePop").hide();
+        }
+
+        if($("#advReqMsgPop").is(':visible')) {
+            $("#advReqMsgPop").hide();
+            $("#ack1Checkbox").prop("checked", false);
         }
 
         AUIGrid.destroy("#approveLine_grid_wrap");
         approveLineGridID = GridCommon.createAUIGrid("#approveLine_grid_wrap", approveLineColumnLayout, null, approveLineGridPros);
 
         menu = "MAIN";
+        mode = "";
+        claimNo = "";
     }
 
     $.fn.clearForm = function() {
@@ -838,15 +852,23 @@
                 Common.alert("Please select traveling period.");
                 return false
             } else {
-                var dArr = $("#trvPeriodFr").val().split("/");
-                var dFr = new Date(parseInt(dArr[2]), parseInt(dArr[1]), parseInt(dArr[0]));
-                dArr = $("#trvPeriodTo").val().split("/");
-                var dTo = new Date(parseInt(dArr[2]), parseInt(dArr[1]), parseInt(dArr[0]));
-                var dateDiff = (new Date(dTo - dFr))/1000/60/60/24;
+                arrDt = $("#trvPeriodFr").val().split("/");
+                fDate = new Date(arrDt[2], arrDt[1]-1, arrDt[0]);
 
-                if((dateDiff + 1) < 3) {
+                arrDt = $("#trvPeriodTo").val().split("/");
+                tDate = new Date(arrDt[2], arrDt[1]-1, arrDt[0]);
+
+                dateDiff = ((new Date(tDate - fDate))/1000/60/60/24) + 1;
+
+                if(dateDiff <= 0) {
+                    $("#trvPeriodFr").val("");
+                    $("#trvPeriodTo").val("");
+                    $("#daysCount").val("");
+                    $("#refdDate").val("");
                     Common.alert(errMsg);
-                    return false
+                    return false;
+                } else {
+                    $("#daysCount").val(dateDiff);
                 }
             }
 
@@ -888,6 +910,8 @@
     }
 
     function fn_newSaveReq(mode) {
+        $("#reqAdvType").attr("disabled", false);
+
         var formData = Common.getFormData("advReqForm");
         Common.ajaxFile("/eAccounting/staffAdvance/attachmentUpload.do", formData, function(result) {
            console.log(result);
@@ -916,6 +940,8 @@
     function fn_submitReq() {
         console.log("fn_submitReq");
 
+        $("#reqAdvType").attr("disabled", false);
+
         if(appvStus == "T") {
             $("#clmNo").val(claimNo);
         }
@@ -940,7 +966,7 @@
     function fn_editSaveReq(mode) {
         var formData = Common.getFormData("advReqForm");
         formData.append("atchFileGrpId", $("#atchFileGrpId").val());
-        Common.ajaxFile("/eAccounting/staffAdvance/advReqAtchUpdate.do", formData, function(result) {
+        Common.ajaxFile("/eAccounting/staffAdvance/attachmentUpdate.do", formData, function(result) {
            console.log(result);
 
            Common.ajax("POST", "/eAccounting/staffAdvance/saveAdvReq.do", $("#advReqForm").serializeJSON(), function(result1) {
@@ -960,7 +986,7 @@
     ****************** REFUND SAVE ******************
     *************************************************/
 
-    function fn_saveRefund(mode) {
+    function fn_saveRefund(v) {
         console.log("fn_saveRefund");
 
         if(fn_checkRefund) {
@@ -978,7 +1004,7 @@
 
                        $("#refClmNo").val(result1.data.clmNo);
 
-                       if(mode == "S") {
+                       if(v == "S") {
                            // Create row
                            fn_appvLineGridAddRow();
 
@@ -990,7 +1016,7 @@
             } else {
                 var formData = Common.getFormData("advRepayForm");
                 formData.append("atchFileGrp", $("refATchFileGrpId").val());
-                Common.ajaxFile("/eAccounting/staffAdvance/advReqAtch.do", formData, function(result) {
+                Common.ajaxFile("/eAccounting/staffAdvance/attachmentUpdate.do", formData, function(result) {
                     console.log(result);
 
                     var obj = $("#advRepayForm").serializeJSON();
@@ -1000,7 +1026,7 @@
 
                         $("#refClmNo").val(result1.data.clmNo);
 
-                        if(mode == "S") {
+                        if(v == "S") {
                             // Create row
                             fn_appvLineGridAddRow();
 
@@ -1118,16 +1144,18 @@
         }
     }
 
-    function fn_saveRequest(mode) {
+    function fn_saveRequest(v) {
         console.log("fn_saveRequest");
-
-        if(menu == "REQ") {
-            if(fn_requestCheck()) {
+        if(fn_requestCheck()) {
+            if(v == "D" || v == "S") {
                 if(claimNo == null || claimNo == "") {
-                    fn_newSaveReq(mode);
+                    fn_newSaveReq(v);
                 } else {
-                    fn_editSaveReq(mode)
+                   fn_editSaveReq(v)
                 }
+            } else if(v == "A") {
+                $("#advReqMsgPop").show();
+                $("#acknowledgement").show();
             }
         }
     }
@@ -1341,8 +1369,12 @@
                 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" />
 
                 <ul class="right_btns mb10">
+                    <!--
                     <li><p class="btn_blue2"><a href="javascript:fn_saveRequest('D');" id="tempSave_btn"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>
-                    <li><p class="btn_blue2"><a href="javascript:fn_advanceRequest();" id="requestSubmit_btn"><spring:message code="newWebInvoice.btn.submit" /></a></p></li>
+                    <li><p class="btn_blue2"><a href="javascript:fn_saveRequest('S');" id="requestSubmit_btn"><spring:message code="newWebInvoice.btn.submit" /></a></p></li>
+                    -->
+                    <li><p class="btn_blue2"><a href="javascript:fn_saveRequest('D');" id="tempSave_btn"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>
+                    <li><p class="btn_blue2"><a href="javascript:fn_saveRequest('A');" id="requestSubmit_btn"><spring:message code="newWebInvoice.btn.submit" /></a></p></li>
                 </ul>
 
                 <table class="type1">
@@ -1364,7 +1396,7 @@
                         <tr>
                             <th scope="row">Advance Type</th>
                             <td>
-                                <select class="w100p" id="reqAdvType" name="reqAdvType" readonly>
+                                <select class="readonly w100p" id="reqAdvType" name="reqAdvType">
                                     <option value="1">Staff Travel Expenses</option>
                                     <option value="2">Staff Travel Expenses - Repayment</option>
                                 </select>
@@ -1601,7 +1633,7 @@
                         <tr>
                             <th scope="row">Advance Type</th>
                             <td>
-                                <select class="w100p" id="refAdvType" name="refAdvType" readonly>
+                                <select class="readonly w100p" id="refAdvType" name="refAdvType">
                                     <option value="1">Staff Travel Expenses</option>
                                     <option value="2">Staff Travel Expenses - Repayment</option>
                                 </select>
