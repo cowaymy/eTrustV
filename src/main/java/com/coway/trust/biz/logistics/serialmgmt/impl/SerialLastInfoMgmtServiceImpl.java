@@ -44,6 +44,10 @@ public class SerialLastInfoMgmtServiceImpl implements SerialLastInfoMgmtService 
 	public List<EgovMap> selectSerialLastInfoList(Map<String, Object> params) {
 		return serialLastInfoMgmtMapper.selectSerialLastInfoList(params);
 	}
+	@Override
+	public List<EgovMap> selectSerialLastInfoHistoryList(Map<String, Object> params) {
+		return serialLastInfoMgmtMapper.selectSerialLastInfoHistoryList(params);
+	}
 
 	@Override
 	public List<EgovMap> selectOrderBasicInfoByOrderId(Map<String, Object> params) {

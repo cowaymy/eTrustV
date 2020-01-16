@@ -120,6 +120,18 @@ public class SerialLastInfoMgmtController {
 		return ResponseEntity.ok(result);
 	}
 
+	@RequestMapping(value = "/selectSerialLastInfoHistoryList", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> selectSerialLastInfoHistoryList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> list = serialLastInfoMgmtService.selectSerialLastInfoHistoryList(params);
+
+		ReturnMessage result = new ReturnMessage();
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		result.setDataList(list);
+		return ResponseEntity.ok(result);
+	}
+
 	@RequestMapping(value = "/selectOrderBasicInfoByOrderId.do")
 	public ResponseEntity<EgovMap> selectOrderBasicInfoByOrderId(@RequestParam Map<String, Object> params, ModelMap model) {
 		EgovMap orderBasicInfo = null;

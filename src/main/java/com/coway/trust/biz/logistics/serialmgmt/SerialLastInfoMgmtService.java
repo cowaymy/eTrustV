@@ -22,6 +22,8 @@ public interface SerialLastInfoMgmtService {
 
 	List<EgovMap> selectSerialLastInfoList(Map<String, Object> params);
 
+	List<EgovMap> selectSerialLastInfoHistoryList(Map<String, Object> params);
+
 	List<EgovMap> selectOrderBasicInfoByOrderId(Map<String, Object> params);
 
 	void saveSerialLastInfo(Map<String, Object> params);

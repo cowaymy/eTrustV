@@ -43,6 +43,9 @@
                   (1,#{item})
                 </foreach>
         </if>
+        <if test='stusCode != null and stusCode != ""'>
+            AND A.STUS_CODE = #{stusCode}
+        </if>
     </if>
     </select>
 
@@ -113,6 +116,9 @@
                                           <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
                                              (1,#{item})
                                           </foreach>
+                                  </if>
+                                  <if test='stusCode != null and stusCode != ""'>
+                                      AND A.STUS_CODE = #{stusCode}
                                   </if>
                               </if>
                               ORDER BY
@@ -305,4 +311,43 @@
           FROM LOG0100M
          WHERE SERIAL_NO = #{serialNo}
     </insert>
+
+    <select id="selectSerialLastInfoHistoryList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialLastInfoMgmtMapper.selectSerialLastInfoHistoryList] 20200116 - KR OHK*/
+     SELECT A.SERIAL_NO
+               ,A.SEQ
+               ,A.STUS_CODE
+               ,A.LAST_LOC_ID
+               ,C.CODE_NAME LAST_LOC_TYPE
+               ,B.WH_LOC_DESC LAST_LOC_CODE
+               ,A.ITM_CODE
+               ,D.STK_DESC
+               ,A.LAST_LOC_STK_GRAD
+               ,A.LAST_DELVRY_GR_DT
+               ,A.LAST_CUST_ID
+               ,E.NAME LAST_CUST_NAME
+               ,A.LAST_SALES_ORD_ID
+               ,F.SALES_ORD_NO LAST_SALES_ORD_NO
+               ,A.LAST_REQST_NO
+               ,A.LAST_REQST_NO_ITM
+               ,A.LAST_DELVRY_NO
+               ,A.LAST_DELVRY_NO_ITM
+               ,A.TEMP_SCAN_NO
+               ,A.CRT_USER_ID
+               ,G.USER_NAME CRT_USER_NAME
+               ,TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH24:MI') CRT_DT
+               ,A.UPD_USER_ID
+               ,H.USER_NAME UPD_USER_NAME
+               ,TO_CHAR(A.UPD_DT, 'DD/MM/YYYY HH24:MI') UPD_DT
+       FROM LOG0101H A
+        LEFT OUTER JOIN SYS0028M B ON B.WH_LOC_ID = A.LAST_LOC_ID
+        LEFT OUTER JOIN SYS0013M C ON C.CODE = B.WH_LOC_GB AND C.CODE_MASTER_ID = '339'
+        LEFT OUTER JOIN SYS0026M D ON D.STK_CODE = A.ITM_CODE
+        LEFT OUTER JOIN SAL0029D E ON E.CUST_ID = A.LAST_CUST_ID
+        LEFT OUTER JOIN SAL0001D F ON F.SALES_ORD_ID = A.LAST_SALES_ORD_ID
+        LEFT OUTER JOIN SYS0047M G ON G.USER_ID = A.CRT_USER_ID
+        LEFT OUTER JOIN SYS0047M H ON H.USER_ID = A.UPD_USER_ID
+     WHERE A.SERIAL_NO = #{serialNo}
+     ORDER BY SEQ DESC
+    </select>
 </mapper>

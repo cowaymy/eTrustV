@@ -25,6 +25,8 @@ public interface SerialLastInfoMgmtMapper {
 
 	List<EgovMap> selectSerialLastInfoList(Map<String, Object> params);
 
+	List<EgovMap> selectSerialLastInfoHistoryList(Map<String, Object> params);
+
 	List<EgovMap> selectOrderBasicInfoByOrderId(Map<String, Object> params);
 
 	EgovMap checkSerialLastInfoValid(Map<String, Object> params);

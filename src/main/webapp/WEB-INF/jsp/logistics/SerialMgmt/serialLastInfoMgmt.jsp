@@ -15,6 +15,7 @@
 
 <script type="text/javaScript" language="javascript">
     var myGridID;
+    var detailGridID;
     var mSort = {};
     var gSelMainRowIdx;
 
@@ -25,13 +26,16 @@
 
     $(document).ready(function() {
     	createAUIGrid();
+    	createAUIHistoryGrid();
 
     	// main grid paging
         GridCommon.createExtPagingNavigator(1, 0, {funcName:'getListAjax'});
 
         AUIGrid.setGridData(myGridID, []);
+        AUIGrid.setGridData(detailGridID, []);
 
         doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '${defLocType}', 'listLocType', 'M','f_multiCombo');
+        CommonCombo.make('stusCode', '/common/selectCodeList.do', {groupCode : 446, orderValue: "CODE"} , '', {id:'code', type: 'S'});
 
         $("#btnSearch").click(function() {
         	getListAjax(1)
@@ -93,6 +97,25 @@
             getListAjax(1);
         });
 
+        AUIGrid.bind(myGridID, "cellClick", function( event )
+        {
+            var serialNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "serialNo");
+            var hidSerialNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "hidSerialNo");
+
+            if(FormUtil.isEmpty(hidSerialNo)) {
+            	return false;
+            }
+            AUIGrid.setCheckedRowsByValue(myGridID, "serialNo", serialNo);
+            var subParam = {"serialNo":serialNo};
+
+            Common.ajax("GET", "/logistics/serialLastMgmt/selectSerialLastInfoHistoryList.do"
+                    , subParam
+                    , function(result){
+                           console.log("data : " + result);
+                           AUIGrid.setGridData(detailGridID, result.dataList);
+            });
+        });
+
         AUIGrid.bind(myGridID, "beforeRemoveRow", function(event) {
             var items = event.items;
             var item;
@@ -139,7 +162,7 @@
                 },
             },
             {dataField:"lastLocId", headerText:"Location Id", width:100, height:30, editable:false, visible:false},
-            {dataField:"lastLocCode", headerText:"Location Code", width:120, height:30, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen", editable:false
+            {dataField:"lastLocCode", headerText:"Location Code", width:150, height:30, headerStyle:"aui-grid-header-input-icon aui-grid-header-input-essen", editable:false
             	, renderer : {
                   type : "IconRenderer",
                   iconWidth : 24, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
@@ -286,6 +309,75 @@
     	myGridID = GridCommon.createAUIGrid("grid_main_list", columnLayout, "", gridOptions);
     }
 
+    function createAUIHistoryGrid() {
+        var detailColumnLayout = [
+            {dataField:"serialNo", headerText:"Serial No", width:170, height:30},
+            {dataField:"seq", headerText:"Seq", width:50, height:30},
+            {dataField:"stusCode", headerText:"In/Out", width:80, height:30
+                ,labelFunction : function(rowIndex, columnIndex, value, headerText, item ) {
+                    var retStr = "";
+                    for(var i=0, len=stusDs.length; i<len; i++) {
+                        if(stusDs[i]["code"] == value) {
+                            retStr = stusDs[i]["codeName"];
+                            break;
+                        }
+                    }
+                    return retStr;
+                }
+                ,editRenderer : {
+                    type : "DropDownListRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                    list : stusDs, //key-value Object 로 구성된 리스트
+                    keyField : "code", // key 에 해당되는 필드명
+                    valueField : "codeName", // value 에 해당되는 필드명
+                    listAlign : "left"
+                },
+            },
+            {dataField:"lastLocId", headerText:"Location Id", width:100, height:30, editable:false, visible:false},
+            {dataField:"lastLocCode", headerText:"Location Code", width:150, height:30, editable:false},
+            {dataField:"lastLocType", headerText:"Location Type", width:120, height:30, editable:false},
+            {dataField:"lastSalesOrdId", headerText:"Order Id", width:100, height:30, editable:false, visible:false},
+            {dataField:"lastSalesOrdNo", headerText:"Order No.", width:120, height:30, editable:false},
+            {dataField:"itmCode", headerText:"Item Code", width:120, height:30, editable:false},
+            {dataField:"stkDesc", headerText:"Item Description", width:300, height:30, style:"aui-grid-user-custom-left", editable:false},
+            {dataField:"lastLocStkGrad", headerText:"Stock Grade", width:100, height:30, editable:false},
+            {dataField:"lastDelvryGrDt", headerText:"GR Date", width:120, dataType:"date", dateInputFormat:"dd/mm/yyyy", formatString:"dd/mm/yyyy"},
+            {dataField:"lastCustId", headerText:"Customer ID", width:100, height:30, editable:false},
+            {dataField:"lastCustName", headerText:"Customer Name", width:200, height:30, style:"aui-grid-user-custom-left", editable:false},
+            {dataField:"lastReqstNo", headerText:"Request No.", width:130, height:30},
+            {dataField:"lastReqstNoItm", headerText:"Request No. Item", width:130, height:30},
+            {dataField:"lastDelvryNo", headerText:"Delivery No.", width:130, height:30},
+            {dataField:"lastDelvryNoItm", headerText:"Delivery No. Item", width:130, height:30},
+            {dataField:"tempScanNo", headerText:"Temporary Scan No.", width:160, height:30},
+            {dataField:"crtUserName", headerText:"Create User", width:120, height:30, style:"aui-grid-user-custom-left", editable:false},
+            {dataField:"crtDt", headerText:"Create Date Time", width:140, editable:false},
+            {dataField:"updUserName", headerText:"Update User", width:120, height:30, style:"aui-grid-user-custom-left", editable:false},
+            {dataField:"updDt", headerText:"Update Date Time", width:140, editable:false}
+        ];
+
+        var detailGridPros = {
+            // 페이지 설정
+            usePaging : false,
+            showFooter : false,
+            // 편집 가능 여부 (기본값 : false)
+            editable : false,
+            // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
+            enterKeyColumnBase : true,
+            // 셀 선택모드 (기본값: singleCell)
+            selectionMode : "multipleCells",
+            // 컨텍스트 메뉴 사용 여부 (기본값 : false)
+            useContextMenu : true,
+            // 필터 사용 여부 (기본값 : false)
+            enableFilter : true,
+            // 그룹핑 패널 사용
+            useGroupingPanel : false,
+            enableSorting : true,
+            showStateColumn : false
+        };
+
+        detailGridID = GridCommon.createAUIGrid("grid_sub_list", detailColumnLayout,'',detailGridPros);
+    }
+
     function fn_checkValid(){
 
         var length =  AUIGrid.getGridData(myGridID).length;
@@ -394,7 +486,7 @@
             sortList.push(row);
         });
 
-        param = $.extend(param, {"rowCount":100, "goPage":goPage}, {"sort":sortList});
+        param = $.extend(param, {"rowCount":1000, "goPage":goPage}, {"sort":sortList});
 
         // 초기화
         AUIGrid.setGridData(myGridID, []);
@@ -402,9 +494,11 @@
         Common.ajax("POST" , url , param , function(data){
             // 그리드 페이징 네비게이터 생성
 
-            GridCommon.createExtPagingNavigator(goPage, data.total, {funcName:'getListAjax', rowCount:100 });
+            GridCommon.createExtPagingNavigator(goPage, data.total, {funcName:'getListAjax', rowCount:1000 });
 
             AUIGrid.setGridData(myGridID, data.dataList);
+            AUIGrid.setGridData(detailGridID, []);
+
         });
     }
 
@@ -575,6 +669,12 @@
                             <input type="text"  id="deliveryNo" name="deliveryNo"  class="w100p" />
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row">Status</th>
+                        <td colspan="5">
+                            <select class="w50p" id="stusCode" name="stusCode"></select>
+                        </td>
+                    </tr>
                 </tbody>
             </table><!-- table end -->
         </form>
@@ -592,12 +692,19 @@
         </ul>
 
         <article class="grid_wrap"><!-- grid_wrap start -->
-            <div id="grid_main_list" style="width:100%; height:90%; margin:0 auto;" class="autoGridHeight"></div>
+            <div id="grid_main_list" style="height:410px;"></div>
 
             <!-- 그리드 페이징 네비게이터 -->
             <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel autoFixArea"></div>
         </article><!-- grid_wrap end -->
 
+        <aside class="title_line"><!-- title_line start -->
+           <h3>Serial History</h3>
+        </aside><!-- title_line end -->
+        <article class="grid_wrap" ><!-- grid_wrap start -->
+          <!--  그리드 영역2  -->
+          <div id="grid_sub_list" class="autoGridHeight"></div>
+        </article><!-- grid_wrap end -->
     </section><!-- search_result end -->
 
 </section><!-- content end -->
