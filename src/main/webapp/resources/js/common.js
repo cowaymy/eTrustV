@@ -338,11 +338,15 @@ var Common = {
 
 					// 20190924 KR-MIN : for multiframe popup resizing
 					var wHeigth = $(window).height()-50;
+
                 	$(".popup_wrap").css("max-height",wHeigth + "px");
                 	$(".pop_body").css("max-height",(wHeigth-70)+ "px"); // -header height
 
                     $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header',containment: "html"});
-					$("#popup_wrap, .popup_wrap").resizable({containment: "html",maxHeight: wHeigth+ "px"});	// div popup resize : zaza 20190812
+                    if( wHeigth < 500 ){
+                    	$("#popup_wrap, .popup_wrap").resizable({containment: "html",maxHeight: wHeigth+ "px"});	// div popup resize : zaza 20190812
+                    }
+
                 }catch(e){
                     console.log("[popup.draggable...] " + e);
                 }
