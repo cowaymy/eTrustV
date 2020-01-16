@@ -139,10 +139,14 @@ public class HcOrderCallListController {
     	EgovMap anoProduct = hcOrderListService.selectProductInfo(CommonUtils.nvl(hcOrder.get("anoOrdId")));
 
     	Map<String, Object> anoRdcMap = new HashMap<String, Object>();
-    	anoRdcMap.put("dscBrnchId", CommonUtils.nvl(orderCall.get("dscBrnchId")));
-    	anoRdcMap.put("productCode", CommonUtils.nvl(anoProduct.get("stkCode")));
+    	EgovMap anoRdcincdc = null;
 
-    	EgovMap anoRdcincdc = orderCallListService.getRdcInCdc(anoRdcMap);
+    	if(anoProduct != null) {
+    		anoRdcMap.put("dscBrnchId", CommonUtils.nvl(orderCall.get("dscBrnchId")));
+        	anoRdcMap.put("productCode", CommonUtils.nvl(anoProduct.get("stkCode")));
+
+        	anoRdcincdc = orderCallListService.getRdcInCdc(anoRdcMap);
+    	}
 
     	model.addAttribute("callStusCode", CommonUtils.nvl(params.get("callStusCode")));
     	model.addAttribute("callStusId", CommonUtils.nvl(params.get("callStusId")));
