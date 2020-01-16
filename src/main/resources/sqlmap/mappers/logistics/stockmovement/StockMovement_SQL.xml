@@ -1088,47 +1088,51 @@
 
   <select id="selectSmoIssueOutPop" parameterType="Map" resultType="egovMap">
   /* [com.coway.trust.biz.logistics.stockmovement.impl.StockMovementMapper.selectSmoIssueOutPop] KR OHK */
-	     SELECT REQST_NO, REQST_NO_ITM, ITM_CODE, ITM_NAME, SERIAL_CHK, REQST_QTY, DELVRY_QTY, GI_QTY
-	              , DECODE(SERIAL_CHK, 'Y', SCAN_QTY, GI_QTY) SCAN_QTY
-	              , TRNSC_TYPE, TRNSC_TYPE_DTL
-	              , SERIAL_REQUIRE_CHK_YN
+         SELECT REQST_NO, REQST_NO_ITM, ITM_CODE, ITM_NAME, SERIAL_CHK, REQST_QTY, DELVRY_QTY, GI_QTY
+                  , DECODE(SERIAL_CHK, 'Y', SCAN_QTY, GI_QTY) SCAN_QTY
+                  , TRNSC_TYPE, TRNSC_TYPE_DTL
+                  , SERIAL_REQUIRE_CHK_YN
 
-	       FROM (
-	            SELECT B.REQST_NO
-		                  ,B.REQST_NO_ITM
-		                  ,B.ITM_CODE
-		                  ,B.ITM_NAME
-		                  ,CASE WHEN S26.STK_TYPE_ID= 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
-		                         WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N' END
-		                         WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
-		                         ELSE 'N'
-		                   END AS SERIAL_CHK
-		                  ,NVL(B.REQST_QTY,0) AS REQST_QTY
-		                  ,SUM(NVL(C.DELVRY_QTY, 0)) AS DELVRY_QTY
-		                  ,NVL(B.REQST_QTY,0) - SUM(NVL(C.DELVRY_QTY, 0)) GI_QTY
-		                  ,(
-		                     SELECT COUNT(1)
-		                      FROM  LOG0099D Z1
-		                     WHERE Z1.REQST_NO = B.REQST_NO
-		                         AND Z1.REQST_NO_ITM = B.REQST_NO_ITM
-		                         AND Z1.ITM_CODE = B.ITM_CODE
-		                         AND Z1.SCAN_STUS_CODE = 'C'
-		                         AND Z1.IO_TYPE = 'O'
-		                         AND Z1.DELVRY_NO IS NULL
-		                  ) AS SCAN_QTY
-		                  , NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
-		                  ,A.TRNSC_TYPE
-		                  ,A.TRNSC_TYPE_DTL
-	            FROM LOG0047M A
-		                 INNER JOIN LOG0048D B ON B.REQST_NO = A.REQST_NO
-		                 LEFT OUTER JOIN LOG0055D C ON B.REQST_NO = C.REQST_NO AND B.REQST_NO_ITM = C.REQST_NO_ITM
-		                 LEFT OUTER JOIN SYS0026M S26 ON S26.STK_CODE = B.ITM_CODE
-		                 LEFT OUTER JOIN SYS0028M S28 ON S28.WH_LOC_ID = A.REQST_CDC_RDC
-	            WHERE A.REQST_NO = #{reqstNo}
-	            GROUP BY B.REQST_NO, B.REQST_NO_ITM, B.ITM_CODE, B.ITM_NAME, A.TRNSC_TYPE, A.TRNSC_TYPE_DTL, NVL(B.REQST_QTY,0),
-	                     S26.STK_TYPE_ID, S26.SERIAL_CHK, S28.SERIAL_PD_CHK, S28.SERIAL_FT_CHK, S28.SERIAL_PT_CHK, S28.SERIAL_REQUIRE_CHK_YN
-	         )
-	         ORDER BY ITM_CODE
+           FROM (
+                SELECT B.REQST_NO
+                          ,B.REQST_NO_ITM
+                          ,B.ITM_CODE
+                          ,B.ITM_NAME
+                          ,CASE WHEN S26.STK_TYPE_ID= 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
+                                 WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+                                 WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+                                 ELSE 'N'
+                           END AS SERIAL_CHK
+                          ,NVL(B.REQST_QTY,0) AS REQST_QTY
+                          ,SUM(NVL(C.DELVRY_QTY, 0)) AS DELVRY_QTY
+                          ,NVL(B.REQST_QTY,0) - SUM(NVL(C.DELVRY_QTY, 0)) GI_QTY
+                          ,(
+                             SELECT COUNT(1)
+                              FROM  LOG0099D Z1
+                             WHERE Z1.REQST_NO = B.REQST_NO
+                                 AND Z1.REQST_NO_ITM = B.REQST_NO_ITM
+                                 AND Z1.ITM_CODE = B.ITM_CODE
+                                 AND Z1.SCAN_STUS_CODE = 'C'
+                                 AND Z1.IO_TYPE = 'O'
+                                 AND Z1.DELVRY_NO IS NULL
+                          ) AS SCAN_QTY
+                          , NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
+                          ,A.TRNSC_TYPE
+                          ,A.TRNSC_TYPE_DTL
+                FROM LOG0047M A
+                         INNER JOIN LOG0048D B ON B.REQST_NO = A.REQST_NO
+                         LEFT OUTER JOIN LOG0055D C ON B.REQST_NO = C.REQST_NO AND B.REQST_NO_ITM = C.REQST_NO_ITM
+                         LEFT OUTER JOIN SYS0026M S26 ON S26.STK_CODE = B.ITM_CODE
+                         LEFT OUTER JOIN SYS0028M S28 ON S28.WH_LOC_ID = A.REQST_CDC_RDC
+                WHERE 1=1
+                    AND A.REQST_NO IN
+                   <foreach item="item" collection="reqstList" index="index" open="(" separator="," close=")">
+                        #{item}
+                   </foreach>
+                GROUP BY B.REQST_NO, B.REQST_NO_ITM, B.ITM_CODE, B.ITM_NAME, A.TRNSC_TYPE, A.TRNSC_TYPE_DTL, NVL(B.REQST_QTY,0),
+                         S26.STK_TYPE_ID, S26.SERIAL_CHK, S28.SERIAL_PD_CHK, S28.SERIAL_FT_CHK, S28.SERIAL_PT_CHK, S28.SERIAL_REQUIRE_CHK_YN
+             )
+             ORDER BY ITM_CODE
 
   </select>
 
@@ -1149,28 +1153,15 @@
 		                    ELSE 'N'
 		               END AS SERIAL_CHK
 		             , B.DELVRY_QTY
-		             , (
+		             ,(
 		                SELECT COUNT(1)
-		                  FROM (
-		                       SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
-		                            , REQST_NO
-		                            , REQST_NO_ITM
-		                            , DELVRY_NO
-		                            , DELVRY_NO_ITM
-		                            , ITM_CODE
-		                            , SCAN_STUS_CODE
-		                            , IO_TYPE
-		                         FROM LOG0099D
-		                      ) Z1
-		               WHERE Z1.REQST_NO = B.REQST_NO
-		                 AND Z1.REQST_NO_ITM = B.REQST_NO_ITM
-		                 AND Z1.DELVRY_NO = B.DELVRY_NO
-		                 AND Z1.DELVRY_NO_ITM = B.DELVRY_NO_ITM
-		                 AND Z1.ITM_CODE = B.ITM_CODE
-		                 AND Z1.SCAN_STUS_CODE = 'C'
-		                 AND Z1.IO_TYPE = 'I'
-		                 AND Z1.RN = 1
-		               ) AS SCAN_QTY
+                           FROM LOG0099D Z1
+                         WHERE Z1.DELVRY_NO = B.DELVRY_NO
+                             AND Z1.DELVRY_NO_ITM = B.DELVRY_NO_ITM
+                             AND Z1.ITM_CODE = B.ITM_CODE
+                             AND Z1.SCAN_STUS_CODE = 'C'
+                             AND Z1.IO_TYPE = 'I'
+                      ) AS SCAN_QTY
 		             , NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
 		             , S28.WH_LOC_STK_GRAD
 		             ,C.TRNSC_TYPE_DTL MTYPE

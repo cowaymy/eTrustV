@@ -9,7 +9,8 @@
                 s1.SALES_ORD_NO ordno,
                 H11.BNDL_NO,
                 S26.STK_DESC AS itm_name,
-                TO_char(s46.APPNT_DT , 'yyyymmdd') AS APPNT_DT
+                TO_char(s46.APPNT_DT , 'yyyymmdd') AS APPNT_DT,
+                ROWNUM rnum
     FROM  (
 			    SELECT
 						    /*l55.DELVRY_NO AS delno,*/

@@ -65,10 +65,71 @@
            GridCommon.exportTo("grid_sum_list", "xlsx", "GI Serial No Scanning SMO");
         });
 
+        $('#delivery').click(function() {
+            var checkedItems = AUIGrid.getCheckedRowItemsAll(mainGridID);
+
+            if (checkedItems.length <= 0) {
+                Common.alert('No data selected.');
+                return false;
+            } else {
+                var checkedItems = AUIGrid.getCheckedRowItems(mainGridID);
+                var str = "";
+                var rowItem;
+
+                for (var i = 0, len = checkedItems.length; i < len; i++) {
+                    rowItem = checkedItems[i];
+                }
+                fn_smoIssuePop();
+            }
+        });
+
+        AUIGrid.bind(mainGridID, "rowCheckClick", function(event){
+
+            var checked = AUIGrid.getCheckedRowItems(mainGridID);
+            var reqno = AUIGrid.getCellValue(mainGridID, event.rowIndex, "reqstno");
+            var checkCnt = 0;
+
+            for (var i = 0; i < checked.length; i++) {
+            	checkCnt++ ;
+
+            	if(checked[i].item.tolocid != event.item.tolocid) {
+                    Common.alert("To Location is different.");
+                    var rown = AUIGrid.getRowIndexesByValue(mainGridID, "reqstno" , reqno);
+
+                    for (var i = 0; i < rown.length; i++)
+                    {
+                        AUIGrid.addUncheckedRowsByIds(mainGridID, AUIGrid.getCellValue(mainGridID, rown[i], "rnum"));
+                    }
+                    return false;
+                }
+                if(checked[i].item.fromlocid != event.item.fromlocid) {
+                    Common.alert("From Location is different.");
+                    var rown = AUIGrid.getRowIndexesByValue(mainGridID, "reqstno" , reqno);
+
+                    for (var i = 0; i < rown.length; i++)
+                    {
+                        AUIGrid.addUncheckedRowsByIds(mainGridID, AUIGrid.getCellValue(mainGridID, rown[i], "rnum"));
+                    }
+                    return false;
+                }
+
+                if(checkCnt > 100) {
+                    Common.alert("You can select up to 100 items.");
+                    var rown = AUIGrid.getRowIndexesByValue(mainGridID, "reqstno" , reqno);
+
+                    for (var i = 0; i < rown.length; i++)
+                    {
+                        AUIGrid.addUncheckedRowsByIds(mainGridID, AUIGrid.getCellValue(mainGridID, rown[i], "rnum"));
+                    }
+                    return false;
+                }
+            }
+        });
     });
 
     function createAUIGrid() {
     	var mainColumnLayout = [
+            {dataField: "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
             {dataField:"reqstno", headerText:"Request No", width:120, height:30,
             	renderer:{type:"LinkRenderer", baseUrl:"javascript", jsCallback : function(rowIndex, columnIndex, value, item) {
                     getDeliveryPop(item);
@@ -76,6 +137,8 @@
             },
             {dataField:"reqstdt", headerText:"Dlvd. Req. Date", width:120, editable:false, dataType:"date", dateInputFormat:"dd/mm/yyyy", formatString:"dd/mm/yyyy"},
             {dataField:"toloc", headerText:"To Location", width:250, height:30, style:"aui-grid-user-custom-left"},
+            {dataField:"frmlocid", headerText:"From Loc ID", width:100, height:30},
+            {dataField:"tolocid", headerText:"To Loc ID", width:100, height:30},
             {dataField: "bndlNo",headerText :"Bundle No"        ,width:120    ,height:30                },
             {dataField: "ordno",headerText :"Order No."        ,width:100    ,height:30                },
             {
@@ -108,6 +171,7 @@
         ];
 
     	var mainGridOptions = {
+    		rowIdField : "rnum",
     	    // 페이지 설정
     	    usePaging : true,
     	    // 한 화면에 출력되는 행 개수 10
@@ -135,7 +199,7 @@
     	    //selectionMode : "multipleCells",
     	    //rowIdField : "stkid",
     	    enableSorting : true,
-    	    showRowCheckColumn : false,
+    	    showRowCheckColumn : true
     	};
 
     	mainGridID = GridCommon.createAUIGrid("grid_sum_list", mainColumnLayout, "", mainGridOptions);
@@ -179,6 +243,32 @@
             return "";
         }
     }
+
+    function fn_smoIssuePop(){
+        var checkedItems = AUIGrid.getCheckedRowItems(mainGridID);
+        var str = "";
+        var reqstNoList = "";
+
+        for (var i = 0, len = checkedItems.length; i < len; i++) {
+          //rowItem = checkedItems[i];
+          console.log(checkedItems[i].item.reqstno);
+          if(i == len-1) {
+        	  reqstNoList += checkedItems[i].item.reqstno;
+          } else {
+        	  reqstNoList += checkedItems[i].item.reqstno +",";
+          }
+        }
+        console.log(reqstNoList);
+        $("#zReqstno").val(reqstNoList);
+        $("#zRcvloc").val(checkedItems[0].item.frmlocid); // From Location
+        $("#zReqloc").val(checkedItems[0].item.tolocid); // To Location
+
+        if(Common.checkPlatformType() == "mobile") {
+          popupObj = Common.popupWin("frmNew", "/logistics/stockMovement/smoIssueOutPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+        } else{
+          Common.popupDiv("/logistics/stockMovement/smoIssueOutPop.do", null, null, true, '_divSmoIssuePop');
+        }
+      }
 
     function getDeliveryPop(item) {
         $("#zReqstno").val(item.reqstno);
@@ -320,8 +410,9 @@
 	</section><!-- search_table end -->
 
      <section class="search_result"><!-- search_result start -->
-        <ul class="right_btns" id="ulButtonArea">
-            <li><p class="btn_grid"><a href="#" id="excelDown"><spring:message code='sys.btn.excel.dw'/></a></p></li>
+        <ul class="right_btns">
+            <li><p class="btn_grid"><a id="delivery">DELIVERY</a></p></li>
+            <li id="ulButtonArea"><p class="btn_grid"><a href="#" id="excelDown"><spring:message code='sys.btn.excel.dw'/></a></p></li>
         </ul>
 
         <article class="grid_wrap"><!-- grid_wrap start -->

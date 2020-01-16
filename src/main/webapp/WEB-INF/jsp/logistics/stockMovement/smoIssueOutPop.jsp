@@ -114,6 +114,9 @@ $(document).ready(function(){
     });
 
     $("#btnPopIssueSave").click(function(){
+
+        var arrReqstNo = ($("#zRstNo").val()).split(',');
+
     	if(FormUtil.isEmpty($("#zGiptdate").val())) {
             Common.alert("Please select the GI Posting Date.");
             return false;
@@ -139,6 +142,13 @@ $(document).ready(function(){
             if (gridList.all[i].scanQty > gridList.all[i].giQty){
                 Common.alert("Scaned(Request) Qty cannot be greater than GI Qty.")
                 return false;
+            }
+
+            if(arrReqstNo.length > 1){
+	            if (gridList.all[i].scanQty != gridList.all[i].giQty){
+	                Common.alert("GI Qty and Scaned(Request) Qty must be the same quantity.")
+	                return false;
+	            }
             }
 
             reqQty = reqQty + gridList.all[i].scanQty;
@@ -239,7 +249,6 @@ $(document).ready(function(){
             if(serialChk == "Y" && scanQty > 0){
                 $('#smoIssueOutForm #pRequestNo').val( AUIGrid.getCellValue(scanInfoGridId, rowIndex, "reqstNo") );
                 $('#smoIssueOutForm #pRequestItem').val( AUIGrid.getCellValue(scanInfoGridId, rowIndex, "reqstNoItm") );
-                $('#smoIssueOutForm #pStatus').val( "O" );
 
                 fn_scanSearchPop();
             }
@@ -291,7 +300,7 @@ function fn_smoIssueOutListAjax() {
     $("#btnAllDel").parent().addClass("btn_disabled");
     AUIGrid.setGridData(scanInfoGridId, []);
 
-    Common.ajax("POST" , url , {"reqstNo":arrReqstNo[0]} , function(data){
+    Common.ajax("POST" , url , {"reqstList":arrReqstNo} , function(data){
 
         if(data.total > 0){
             if(data.dataList[0].serialRequireChkYn == "Y"){
