@@ -144,7 +144,7 @@
           success : function(data) {
         	  //console.log(ddlFilterObj);
               $.each(data, function(idx, row){
-                ddlFilterObj[row.codeId] = {"codeId":row.codeId, "codeName":row.codeName, "isSerialReplc":row.isSerialReplc, "isSmo":row.isSmo};
+                ddlFilterObj[row.codeId] = {"codeId":row.codeId, "codeName":row.codeName, "isSerialReplace":row.isSerialReplc, "isSmo":row.isSmo};
               });
               doDefCombo(data, '', 'ddlFilterCode', 'S', '');
           },

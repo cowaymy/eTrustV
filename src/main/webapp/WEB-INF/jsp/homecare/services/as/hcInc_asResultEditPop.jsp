@@ -211,7 +211,7 @@
       }
 
       if (event.dataField == "srvFilterLastSerial"){
-          if(event.item.isSerialReplc != "Y"){
+          if(event.item.isSerialReplace != "Y"){
               return false;
           }
 
@@ -1244,9 +1244,9 @@
 
     if(ddlFilterObj[$("#ddlFilterCode").val()] != null){
         fitem.isSmo = ddlFilterObj[$("#ddlFilterCode").val()].isSmo;
-        fitem.isSerialReplc = ddlFilterObj[$("#ddlFilterCode").val()].isSerialReplc;
+        fitem.isSerialReplace = ddlFilterObj[$("#ddlFilterCode").val()].isSerialReplace;
 
-        if(fitem.isSerialReplc == "Y"){
+        if(fitem.isSerialReplace == "Y"){
             fitem.isChkSerial = fn_chkSerial(fitem.srvFilterLastSerial);
             if(fitem.isChkSerial != "Y"){
                 Common.alert("Invalid serial No.");
@@ -1255,15 +1255,15 @@
         }
     }else{
         fitem.isSmo = "N";
-        fitem.isSerialReplc = "N";
+        fitem.isSerialReplace = "N";
     }
 
-    if(fitem.isSerialReplc == "Y"){
+    if(fitem.isSerialReplace == "Y"){
         var rows = AUIGrid.getGridData(myGridID);
 
         var isChk = false;
         $.each(rows, function(idx, item){
-            if(item.isSerialReplc == "Y"){
+            if(item.isSerialReplace == "Y"){
                 isChk = true;
             }
         });
@@ -1572,11 +1572,11 @@
     var isSmoChk = "Y";
     var replc = 0;
     for(var i in rows){
-        if(rows[i].isSerialReplc == "Y"){
+        if(rows[i].isSerialReplace == "Y"){
             replc++;
         }
 
-        if(rows[i].isSerialReplc == "Y" && rows[i].isChkSerial != "Y"){
+        if(rows[i].isSerialReplace == "Y" && rows[i].isChkSerial != "Y"){
             isChk = fn_chkSerial(rows[i].srvFilterLastSerial);
             if(isChk != "Y"){break;}
         }
@@ -2103,7 +2103,7 @@
       $("#ddSrvFilterLastSerial").val("");
 
       /* KR-JIN */
-      if(ddlFilterObj[obj.value].isSerialReplc == "Y"){
+      if(ddlFilterObj[obj.value].isSerialReplace == "Y"){
           $("#fcm6").show();
       }else{
           $("#fcm6").hide();
