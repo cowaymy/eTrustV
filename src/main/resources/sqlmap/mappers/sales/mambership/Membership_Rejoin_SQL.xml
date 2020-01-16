@@ -10,6 +10,11 @@
 		    GRP_CODE ,
 		    DEPT_CODE ,
 		    MEM_CODE ,
+		    CASE WHEN MEM_LVL = 1 THEN 'GCM'
+		            WHEN MEM_LVL = 2 THEN 'SCM'
+		            WHEN MEM_LVL = 3 THEN 'CM'
+		            WHEN MEM_LVL = 4 THEN 'Cody'
+		            END MEM_LVL,
 		    TOTAL_EXPIRED ,
 		    TOTAL_FRESH_EXPIRED ,
 		    SVM_BY_OWN ,
@@ -20,6 +25,7 @@
 		    UPD_DT
 		FROM SAL0259T
 		WHERE 1 = 1
+            AND MEM_LVL <![CDATA[<>]]> 0
 
         <if test="orgCode != null and orgCode != '' ">
             AND ORG_CODE = #{orgCode}
@@ -33,7 +39,11 @@
         <if test="memCode != null and memCode != '' ">
             AND MEM_CODE = #{memCode}
         </if>
+        <if test="memLvl != null and memLvl != '' ">
+            AND MEM_LVL = #{memLvl}
+        </if>
 
+        ORDER BY SAL0259T.MEM_LVL ASC
     </select>
 
     <select id="selectExpiredMembershipList" parameterType="Map" resultType="egovMap">
@@ -61,19 +71,22 @@
 		JOIN SAL0029D T3 ON T3.CUST_ID = T1.CUST_ID
 		JOIN SAL0027D T4 ON T4.CUST_CNTC_ID = T1.CUST_CNT_ID
 		JOIN SYS0013M T5 ON T5.CODE_ID = T3.TYPE_ID
-		LEFT JOIN PAY0053S ACCDEBTSUB on ACCDEBTSUB.ACC_DEBT_ORD_ID = T0.SALES_ORD_ID
+		LEFT JOIN PAY0053S ACCDEBTSUB on ACCDEBTSUB.ACC_DEBT_ORD_ID = T0.SALES_ORD_ID  AND ACCDEBTSUB.ACC_DEBT_SRV_CNTRCT_ID = T0.SRV_MEM_CNTRCT_ID
 		JOIN SAL0045D T7 ON T7.SALES_ORD_ID = T1.SALES_ORD_ID
 		JOIN SAL0023D T8 ON T8.CUST_ADD_ID = T7.ADD_ID
 		LEFT JOIN SYS0064M T9 ON T9.AREA_ID = T8.AREA_ID
-		LEFT JOIN CMM0086T EXC ON EXC.SALES_ORD_NO = T1.SALES_ORD_NO AND exc.expiry_month = TO_CHAR(SYSDATE,'MM') AND exc.expiry_YEAR = TO_CHAR(SYSDATE,'YYYY')
+		LEFT JOIN CMM0086T EXC ON EXC.SALES_ORD_NO = T1.SALES_ORD_NO AND exc.expiry_month = EXTRACT(MONTH FROM SYSDATE) AND exc.expiry_YEAR = EXTRACT(YEAR FROM SYSDATE)
 		JOIN SYS0026M STK ON STK.STK_ID = T0.ITM_STK_ID
-		WHERE   EXPR_REJOIN_MONTH = TO_CHAR(SYSDATE,'MM')
+		WHERE T0.ORD_STUS = 4
+		    AND EXPR_REJOIN_MONTH = TO_CHAR(SYSDATE,'MM')
 		    AND EXPR_REJOIN_YEAR = TO_CHAR(SYSDATE,'YYYY')
 		    AND TO_CHAR(T0.EXPIRY_DT,'YYYY/MM') <![CDATA[<= ]]> TO_CHAR(SYSDATE,'YYYY/MM')
 		    AND STK.STK_CTGRY_ID <![CDATA[<> ]]> 924
 		    AND (T0.REN_STUS IS NULL OR T0.REN_STUS NOT IN ('RET','SUS')) AND (T0.CNTRCT_RENTAL_STUS IS NULL OR T0.CNTRCT_RENTAL_STUS NOT IN ('RET','SUS'))
             AND T0.APP_TYPE_ID IN (66, 67, 68, 142, 143, 1412)
             AND EXC.SALES_ORD_NO IS NULL
+            AND T2.MEM_TYPE = 2
+            AND T0.ORG_CODE != ' '
 
         <if test='arrAppType != null and arrAppType != ""'>
              AND T0.APP_TYPE_ID IN

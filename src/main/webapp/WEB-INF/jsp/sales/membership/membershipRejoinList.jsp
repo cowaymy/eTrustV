@@ -11,12 +11,19 @@
 <script type="text/javaScript">
 //AUIGrid 그리드 객체
 var myGridID;
+var memLvlData = [ {"codeId": "1","codeName": "GCM"}
+							,{"codeId": "2","codeName": "SCM"}
+							,{"codeId": "3","codeName": "CM"}
+							,{"codeId": "4","codeName": "Cody"}];
+
 
 $(document).ready(function(){
 
-	if("${SESSION_INFO.userTypeId}" == "1" ||"${SESSION_INFO.userTypeId}" == "2" ){
-        $("#table1").show();
-    }
+
+	// Remove upper level
+	memLvlData.splice(0,'${SESSION_INFO.memberLevel}' - 1) ;
+
+	doDefCombo(memLvlData, '${SESSION_INFO.memberLevel}' ,'memLvl', 'S', '');
 
     if("${SESSION_INFO.memberLevel}" =="1"){
 
@@ -65,6 +72,10 @@ $(document).ready(function(){
         $("#memCode").val("${memCode}");
         $("#memCode").attr("class", "w100p readonly");
         $("#memCode").attr("readonly", "readonly");
+
+
+        $("#memLvl").attr("class", "w100p readonly");
+        $("#memLvl").attr("readonly", "readonly");
     }
 
     var gridPros = {
@@ -80,6 +91,7 @@ $(document).ready(function(){
 	    , { dataField : "grpCode", headerText : "<spring:message code='sal.text.grpCode'/>" }
 	    , { dataField : "deptCode", headerText : "<spring:message code='sal.text.detpCode'/>" }
 	    , { dataField : "memCode", headerText : "<spring:message code='sal.title.codyCode'/>" }
+	    , { dataField : "memLvl", headerText : "<spring:message code='sal.title.memLvl'/>" }
 	    , { dataField : "totalExpired", headerText : "<spring:message code='sal.title.totExp'/>" }
 	    , { dataField : "totalFreshExpired", headerText : "<spring:message code='sal.title.totFreshExp'/>" }
 	    , { dataField : "svmByOwn", headerText : "<spring:message code='sal.title.svmOwn'/>" }
@@ -102,7 +114,7 @@ $(document).ready(function(){
     }
 
     function fn_excelDown() {
-      GridCommon.exportTo("grid_wrap", "xlsx", "RC by BS");
+      GridCommon.exportTo("grid_wrap", "xlsx", "RejoinSummaryRaw");
     }
 </script>
 
@@ -148,6 +160,12 @@ $(document).ready(function(){
                         <th scope="row">Member Code</th>
                         <td><input type="text" title="memCode" id="memCode" name="memCode"  placeholder="Member Code" class="w100p"/></td>
                     </tr>
+                    <tr>
+                        <th scope="row">Member Level</th>
+                        <td><p><select id="memLvl" name="memLvl" class="w100p"></select></p></td>
+                        <th scope="row"></th>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
             <!-- table end -->
@@ -158,7 +176,7 @@ $(document).ready(function(){
     <!-- link_btns_wrap end -->
     <ul class="right_btns">
         <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
-            <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a></p></li>
+            <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='sal.title.text.download'/></a></p></li>
         </c:if>
     </ul>
     <!-- search_result start -->

@@ -130,7 +130,7 @@ $(document).ready(function(){
     }
 
     function fn_excelDown() {
-      GridCommon.exportTo("grid_wrap", "xlsx", "RC by BS");
+      GridCommon.exportTo("grid_wrap", "xlsx", "RejoinListingRaw");
     }
 
     function fn_multiCombo(){
