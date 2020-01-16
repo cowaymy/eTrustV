@@ -458,10 +458,10 @@ var myGridID, excelGridId;
             	return ;
             }
 
-            if(js.date.dateDiff(dat1, dat2) > 31){
-            	Common.alert("The duration is only one months.");
-                return ;
-            }
+           // if(js.date.dateDiff(dat1, dat2) > 31){
+           // 	Common.alert("The duration is only one months.");
+           //     return ;
+           // }
 
 		    // 메인 그리드 조회
 		    getListAjax(1);
