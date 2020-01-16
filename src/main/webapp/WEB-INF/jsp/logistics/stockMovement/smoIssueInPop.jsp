@@ -39,16 +39,16 @@ var gradeList = new Array();
 var scanInfoLayout = [
           {dataField:"delvryNo", visible:false}
         , {dataField:"delvryNoItm", visible:false}
-        , {dataField:"itmCode", headerText:"Item Code", width:120}
+        , {dataField:"itmCode", headerText:"Item Code", width:100}
         , {dataField:"itmName", headerText:"Item Description", width:280, style:"aui-grid-user-custom-left"}
         , {dataField:"delGiCmplt", visible:false}
-        , {dataField:"serialChk", headerText:"Serial Chk", width:120}
-        , {dataField:"delvryQty", headerText:"GR QTY", width:100
+        , {dataField:"serialChk", headerText:"Serial", width:70}
+        , {dataField:"delvryQty", headerText:"GR QTY", width:70
             , style:"aui-grid-user-custom-right"
             , dataType:"numeric"
             , formatString:"#,##0"
         }
-        , {dataField:"scanQty", headerText:"Scaned(Request) QTY", width:180
+        , {dataField:"scanQty", headerText:"Scaned(Request) QTY", width:160
             , style:"aui-grid-user-custom-right"
             , dataType:"numeric"
             , formatString:"#,##0"
@@ -61,6 +61,7 @@ var scanInfoLayout = [
             }
         }
        ,{dataField:"mtype", visible:false}
+       ,{dataField:"reqstNo", headerText:"SMO No.", width:140, editable : false}
 ];
 
 var gradeLayout = [

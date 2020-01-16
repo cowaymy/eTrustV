@@ -73,12 +73,29 @@
                 return false;
             } else {
                 var checkedItems = AUIGrid.getCheckedRowItems(mainGridID);
-                var str = "";
-                var rowItem;
+                var checkCnt = 0;
+
+                var fromlocid = checkedItems[0].item.fromlocid;
+                var tolocid = checkedItems[0].item.tolocid;
 
                 for (var i = 0, len = checkedItems.length; i < len; i++) {
-                    rowItem = checkedItems[i];
+                    checkCnt++ ;
+
+                    if(checkedItems[i].item.tolocid != tolocid) {
+                        Common.alert("To Location is different.");
+                        return false;
+                    }
+                    if(checkedItems[i].item.fromlocid != fromlocid) {
+                        Common.alert("From Location is different.");
+                        return false;
+                    }
+
+                    if(checkCnt > 100) {
+                        Common.alert("You can select up to 100 items.");
+                        return false;
+                    }
                 }
+
                 fn_smoIssuePop();
             }
         });
@@ -92,36 +109,38 @@
             for (var i = 0; i < checked.length; i++) {
             	checkCnt++ ;
 
-            	if(checked[i].item.tolocid != event.item.tolocid) {
-                    Common.alert("To Location is different.");
-                    var rown = AUIGrid.getRowIndexesByValue(mainGridID, "reqstno" , reqno);
+            	if(event.checked) {
+	            	if(checked[i].item.tolocid != event.item.tolocid) {
+	                    Common.alert("To Location is different.");
+	                    var rown = AUIGrid.getRowIndexesByValue(mainGridID, "reqstno" , reqno);
 
-                    for (var i = 0; i < rown.length; i++)
-                    {
-                        AUIGrid.addUncheckedRowsByIds(mainGridID, AUIGrid.getCellValue(mainGridID, rown[i], "rnum"));
-                    }
-                    return false;
-                }
-                if(checked[i].item.fromlocid != event.item.fromlocid) {
-                    Common.alert("From Location is different.");
-                    var rown = AUIGrid.getRowIndexesByValue(mainGridID, "reqstno" , reqno);
+	                    for (var i = 0; i < rown.length; i++)
+	                    {
+	                        AUIGrid.addUncheckedRowsByIds(mainGridID, AUIGrid.getCellValue(mainGridID, rown[i], "rnum"));
+	                    }
+	                    return false;
+	                }
+	                if(checked[i].item.fromlocid != event.item.fromlocid) {
+	                    Common.alert("From Location is different.");
+	                    var rown = AUIGrid.getRowIndexesByValue(mainGridID, "reqstno" , reqno);
 
-                    for (var i = 0; i < rown.length; i++)
-                    {
-                        AUIGrid.addUncheckedRowsByIds(mainGridID, AUIGrid.getCellValue(mainGridID, rown[i], "rnum"));
-                    }
-                    return false;
-                }
+	                    for (var i = 0; i < rown.length; i++)
+	                    {
+	                        AUIGrid.addUncheckedRowsByIds(mainGridID, AUIGrid.getCellValue(mainGridID, rown[i], "rnum"));
+	                    }
+	                    return false;
+	                }
 
-                if(checkCnt > 100) {
-                    Common.alert("You can select up to 100 items.");
-                    var rown = AUIGrid.getRowIndexesByValue(mainGridID, "reqstno" , reqno);
+	                if(checkCnt > 100) {
+	                    Common.alert("You can select up to 100 items.");
+	                    var rown = AUIGrid.getRowIndexesByValue(mainGridID, "reqstno" , reqno);
 
-                    for (var i = 0; i < rown.length; i++)
-                    {
-                        AUIGrid.addUncheckedRowsByIds(mainGridID, AUIGrid.getCellValue(mainGridID, rown[i], "rnum"));
-                    }
-                    return false;
+	                    for (var i = 0; i < rown.length; i++)
+	                    {
+	                        AUIGrid.addUncheckedRowsByIds(mainGridID, AUIGrid.getCellValue(mainGridID, rown[i], "rnum"));
+	                    }
+	                    return false;
+	                }
                 }
             }
         });

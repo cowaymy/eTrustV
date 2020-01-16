@@ -1132,7 +1132,7 @@
                 GROUP BY B.REQST_NO, B.REQST_NO_ITM, B.ITM_CODE, B.ITM_NAME, A.TRNSC_TYPE, A.TRNSC_TYPE_DTL, NVL(B.REQST_QTY,0),
                          S26.STK_TYPE_ID, S26.SERIAL_CHK, S28.SERIAL_PD_CHK, S28.SERIAL_FT_CHK, S28.SERIAL_PT_CHK, S28.SERIAL_REQUIRE_CHK_YN
              )
-             ORDER BY ITM_CODE
+             ORDER BY ITM_CODE, REQST_NO
 
   </select>
 
@@ -1140,7 +1140,7 @@
     /* [com.coway.trust.biz.logistics.stockmovement.impl.StockMovementMapper.selectSmoIssueInPop] - KR OHK */
    SELECT DELVRY_NO, DELVRY_NO_ITM, ITM_CODE, ITM_NAME, DEL_GI_CMPLT, SERIAL_CHK, DELVRY_QTY
             , DECODE(SERIAL_CHK, 'Y', SCAN_QTY, DELVRY_QTY) SCAN_QTY
-            , SERIAL_REQUIRE_CHK_YN, WH_LOC_STK_GRAD, MTYPE, DOCNO, DELYDT, GIDT
+            , SERIAL_REQUIRE_CHK_YN, WH_LOC_STK_GRAD, MTYPE, DOCNO, DELYDT, GIDT, REQST_NO
      FROM (
 		    SELECT A.DELVRY_NO
 		             , B.DELVRY_NO_ITM
@@ -1168,6 +1168,7 @@
 		             ,C.REF_DOC_NO DOCNO
 		             ,TO_CHAR(TO_DATE(A.DELVRY_DT, 'YYYY/MM/DD'), 'DD/MM/YYYY') DELYDT
 		             ,TO_CHAR(TO_DATE(A.DELVRY_GI_DT, 'YYYY/MM/DD'), 'DD/MM/YYYY') GIDT
+		             ,B.REQST_NO
 		          FROM LOG0054M A
 		             , LOG0055D B
 		             , LOG0047M C
@@ -1179,7 +1180,7 @@
 		           AND B.ITM_CODE = S26.STK_CODE(+)
 		           AND C.REQST_CDC_RDC  = S28.WH_LOC_ID
 		           AND NVL(B.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
-		           AND A.DELVRY_NO in
+		           AND A.DELVRY_NO IN
 		                <foreach item="item" collection="delyList" index="index" open="(" separator="," close=")">
 		                #{item}
 		                </foreach>

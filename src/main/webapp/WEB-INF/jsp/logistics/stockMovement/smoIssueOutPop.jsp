@@ -36,13 +36,12 @@ var popupObj;
 var scanInfoGridId;
 
 var scanInfoLayout = [
-          {dataField:"reqstNo", visible:false, editable : false}
-        , {dataField:"reqstNoItm", visible:false, editable : false}
-        , {dataField:"itmCode", headerText:"Item Code", width:120, editable : false}
+          {dataField:"reqstNoItm", visible:false, editable : false}
+        , {dataField:"itmCode", headerText:"Item Code", width:100, editable : false}
         , {dataField:"itmName", headerText:"Item Description", width:280, style:"aui-grid-user-custom-left", editable : false}
         , {dataField:"delGiCmplt", visible:false, editable : false}
-        , {dataField:"serialChk", headerText:"Serial Chk", width:120, editable : false}
-        , {dataField:"giQty", headerText:"GI QTY", width:100, editable : false
+        , {dataField:"serialChk", headerText:"Serial", width:70, editable : false}
+        , {dataField:"giQty", headerText:"GI QTY", width:70, editable : false
             , style:"aui-grid-user-custom-right"
             , dataType:"numeric"
             , formatString:"#,##0"
@@ -66,6 +65,8 @@ var scanInfoLayout = [
         }
         , {dataField:"trnscType", visible:false, editable : false}
         , {dataField:"trnscTypeDtl", visible:false, editable : false}
+        , {dataField:"reqstNo", headerText:"SMO No.", width:140, editable : false}
+
 ];
 
 var scanInfoPros = {
@@ -79,8 +80,24 @@ var scanInfoPros = {
         showStateColumn : false,
         showBranchOnGrouping : false,
         enableRestore: true,
+        showFooter : true,
         softRemovePolicy : "exceptNew" //사용자추가한 행은 바로 삭제
 };
+
+var subFooterLayout = [{labelText : "Total", positionField : "serialChk"}
+, {dataField : "giQty"
+    , positionField : "giQty"
+    , operation : "SUM"
+    , formatString : "#,##0"
+    , style:"aui-grid-user-custom-right"
+}
+, {dataField : "scanQty"
+    , positionField : "scanQty"
+    , operation : "SUM"
+    , formatString : "#,##0"
+    , style:"aui-grid-user-custom-right"
+}
+];
 
 $(document).ready(function(){
 
@@ -91,6 +108,8 @@ $(document).ready(function(){
     doSysdate(0, 'zGipfdate');
 
     scanInfoGridId = GridCommon.createAUIGrid("scanInfoGrid", scanInfoLayout, null, scanInfoPros);
+    // 푸터 레이아웃 세팅
+    AUIGrid.setFooter(scanInfoGridId, subFooterLayout);
 
     if(Common.checkPlatformType() == "mobile") {
     	$("#zRstNo").val("${param.zReqstno}");
@@ -407,7 +426,7 @@ function fn_scanSearchPop(){
 
     <section class="search_result">
         <article class="grid_wrap">
-            <div id="scanInfoGrid" style="height:300px"></div>
+            <div id="scanInfoGrid" style="height:360px"></div>
         </article>
     </section>
     <div class="autoFixArea">
