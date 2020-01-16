@@ -117,6 +117,13 @@
             Common.popupDiv("/homecare/sales/order/hcOrderRegisterPop.do");
         });
         $('#btnEdit').click(function() {
+        	var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+        	var appTypeCd = AUIGrid.getCellValue(listMyGridID, selIdx, "appTypeCode")
+
+            if(appTypeCd == 'AUX') {
+                Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>Auxiliary products are not allowed to view</b>");
+                return false;
+            }
             fn_orderModifyPop();
         });
         $('#btnReq').click(function() {

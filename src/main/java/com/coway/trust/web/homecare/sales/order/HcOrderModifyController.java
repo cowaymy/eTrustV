@@ -20,6 +20,7 @@ import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderModifyService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderModifyService;
+import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -146,5 +147,21 @@ public class HcOrderModifyController {
 
 		return ResponseEntity.ok(rtnMsg);
     }
+
+	/**
+	 * Homecare Order Modify - Promotion
+	 * @Author KR-SH
+	 * @Date 2020. 1. 15.
+	 * @param salesOrderMVO
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/updateHcPromoPriceInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateHcPromoPriceInfo(@RequestBody SalesOrderMVO salesOrderMVO, SessionVO sessionVO) throws Exception {
+		ReturnMessage rtnMsg = hcOrderModifyService.updateHcPromoPriceInfo(salesOrderMVO, sessionVO);
+
+	    return ResponseEntity.ok(rtnMsg);
+	}
 
 }

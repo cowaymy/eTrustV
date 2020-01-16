@@ -1,5 +1,7 @@
 package com.coway.trust.biz.homecare.sales.order.impl;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -11,6 +13,8 @@ import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderModifyService;
 import com.coway.trust.biz.sales.order.OrderModifyService;
 import com.coway.trust.biz.sales.order.impl.OrderDetailMapper;
+import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -40,6 +44,9 @@ public class HcOrderModifyServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Resource(name = "hcOrderListService")
 	private HcOrderListService hcOrderListService;
+
+	@Resource(name = "hcOrderModifyMapper")
+	private HcOrderModifyMapper hcOrderModifyMapper;
 
 	/**
 	 * Homecare Order Modify - Install Info
@@ -81,6 +88,95 @@ public class HcOrderModifyServiceImpl extends EgovAbstractServiceImpl implements
 		message.setMessage(rtnMsg + "</br>Information successfully updated.");
 
 		return message;
+	}
+
+	/**
+	 * Homecare Order Modify - Promotion
+	 * @Author KR-SH
+	 * @Date 2020. 1. 15.
+	 * @param salesOrderMVO
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 * @see com.coway.trust.biz.homecare.sales.order.HcOrderModifyService#updateHcPromoPriceInfo(com.coway.trust.biz.sales.order.vo.SalesOrderMVO, com.coway.trust.cmmn.model.SessionVO)
+	 */
+	@Override
+	public ReturnMessage updateHcPromoPriceInfo(SalesOrderMVO salesOrderMVO, SessionVO sessionVO) throws Exception {
+		int rtnCnt = 0;
+		int salesOrdId = CommonUtils.intNvl(salesOrderMVO.getSalesOrdId());  // Mattress Order ID
+		if(salesOrdId <= 0) {
+			throw new ApplicationException(AppConstants.FAIL, "Order Modify Failed. - Null Order ID");
+		}
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		String rtnMsg = "Order Number : " + CommonUtils.nvl(salesOrderMVO.getSalesOrdNo());
+
+		salesOrderMVO.setUpdUserId(sessionVO.getUserId());
+
+		params.put("srvOrdId", salesOrdId);  // set - Mattress Order Id
+		// Homecare Order Info
+		EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(params);
+		int fraOrdId = CommonUtils.intNvl(hcOrder.get("anoOrdId"));  // get - Frame Order Id
+
+		if(fraOrdId > 0) {
+			/*- 메인오더 : mth_rent_amt, def_rent_amt 에  + aux오더의 disc_rnt_fee
+			 - aux오더 : mth_rent_amt, def_rent_amt = 0 으로 변경*/
+			Map<String, Object> order2params = new HashMap<String, Object>();
+			order2params.put("salesOrdId", fraOrdId);
+
+			EgovMap salesOrder2 = this.select_SAL0001D(order2params);
+			BigDecimal discRntFee = new BigDecimal(CommonUtils.nvl(salesOrder2.get("discRntFee")));  // frame rental fee
+
+			// mattress order (mth_rent_amt, def_rent_amt) + frame order(disc_rnt_fee)
+			salesOrderMVO.setMthRentAmt(salesOrderMVO.getMthRentAmt().add(discRntFee));
+			salesOrderMVO.setDefRentAmt(salesOrderMVO.getDefRentAmt().add(discRntFee));
+
+			SalesOrderMVO salesOrderMVO2 = new SalesOrderMVO();
+
+			salesOrderMVO2.setPromoId(salesOrderMVO.getPromoId());
+			salesOrderMVO2.setTotAmt(new BigDecimal(CommonUtils.nvl(salesOrder2.get("totAmt"))));
+			salesOrderMVO2.setTotPv(new BigDecimal(CommonUtils.nvl(salesOrder2.get("totPv"))));
+			salesOrderMVO2.setUpdUserId(sessionVO.getUserId());
+			salesOrderMVO2.setPromoDiscPeriodTp(CommonUtils.intNvl(salesOrder2.get("promoDiscPeriodTp")));
+			salesOrderMVO2.setPromoDiscPeriod(CommonUtils.intNvl(salesOrder2.get("promoDiscPeriod")));
+			salesOrderMVO2.setDiscRntFee(discRntFee);
+			salesOrderMVO2.setSalesOrdId(fraOrdId);
+			// frame order (mth_rent_amt, def_rent_amt) = 0
+			salesOrderMVO2.setMthRentAmt(BigDecimal.ZERO);
+			salesOrderMVO2.setDefRentAmt(BigDecimal.ZERO);
+
+			// update - Frame Promotion
+			rtnCnt = hcOrderModifyMapper.updateHcPromoPriceInfo(salesOrderMVO2);
+			if(rtnCnt <= 0) {
+				throw new ApplicationException(AppConstants.FAIL, "Promotion(Frame) updated Failed.");
+			}
+		    rtnMsg += ", " + CommonUtils.nvl(hcOrder.get("fraOrdNo"));
+		}
+
+		// update - Mattress Promotion
+		rtnCnt = hcOrderModifyMapper.updateHcPromoPriceInfo(salesOrderMVO);
+		if(rtnCnt <= 0) {
+			throw new ApplicationException(AppConstants.FAIL, "Promotion(Mattress) updated Failed.");
+		}
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(rtnMsg + "</br>Promotion successfully updated.");
+
+		return message;
+	}
+
+	/**
+	 * select Order Marster (SAL0001D)
+	 * @Author KR-SH
+	 * @Date 2020. 1. 15.
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap select_SAL0001D(Map<String, Object> params) {
+		return hcOrderModifyMapper.select_SAL0001D(params);
 	}
 
 }

@@ -1235,18 +1235,14 @@
             $("#ordPrice").val(promoPriceInfo.orderPricePromo);
             $("#ordPv").val(promoPriceInfo.orderPVPromo);
             $("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
-            $("#ordRentalFees").val(
-                promoPriceInfo.orderRentalFeesPromo);
-            $("#orgOrdRentalFees").val(
-                promoPriceInfo.normalRentalFees);
+            $("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
+            $("#orgOrdRentalFees").val(promoPriceInfo.normalRentalFees);
             /*
              $("#orgOrdPrice").val(promoPriceInfo.orderPrice);
              $("#orgOrdPv").val(promoPriceInfo.orderPV);
              */
-            $("#promoDiscPeriodTp").val(
-                promoPriceInfo.promoDiscPeriodTp);
-            $("#promoDiscPeriod").val(
-                promoPriceInfo.promoDiscPeriod);
+            $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
+            $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
           }
         });
   }
@@ -2179,7 +2175,8 @@
   }
 
   function fn_validPromoPriceInfo() {
-    var isValid = true, msg = "";
+    var isValid = true;
+    var msg = "";
 
     if ($("#ordPromo option:selected").index() <= 0) {
       isValid = false;
@@ -2194,10 +2191,9 @@
       msg += '<spring:message code="sal.alert.msg.pressCalBtn" />';
     }
 
-    if (!isValid)
-      Common
-          .alert('<spring:message code="sal.alert.msg.ordUpdSummary" />'
-              + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+    if (!isValid) {
+    	Common.alert('<spring:message code="sal.alert.msg.ordUpdSummary" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+    }
 
     return isValid;
   }
@@ -2596,71 +2592,54 @@
     });
   }
 
-  function fn_doSavePromoPriceInfo() {
-    console.log('!@# fn_doSavePromoPriceInfo START');
+    // Save - Promotion
+    function fn_doSavePromoPriceInfo() {
+        $('#promoDiscPeriodTp').removeAttr("disabled");
 
-    $('#promoDiscPeriodTp').removeAttr("disabled");
-    if (APP_TYPE_ID == 66) {
-      var salesOrderMVO = {
-        salesOrdId : ORD_ID,
-        promoId : $('#ordPromo').val().trim(),
-        totAmt : $('#ordPrice').val().trim(),
-        mthRentAmt : $('#ordRentalFees').val().trim(),
-        totPv : $('#ordPv').val().trim(),
-        discRntFee : $('#ordRentalFees').val().trim(),
-        promoDiscPeriodTp : $('#promoDiscPeriodTp').val(),
-        promoDiscPeriod : $('#promoDiscPeriod').val(),
-        salesOrdNo : ORD_NO
-      };
-    } else {
-      var salesOrderMVO = {
-        salesOrdId : ORD_ID,
-        promoId : $('#ordPromo').val().trim(),
-        totAmt : $('#ordPrice').val().trim(),
-        mthRentAmt : $('#ordRentalFees').val().trim(),
-        totPv : $('#ordPv').val().trim(),
-        discRntFee : $('#ordRentalFees').val().trim(),
-        promoDiscPeriodTp : 0,
-        promoDiscPeriod : 0,
-        salesOrdNo : ORD_NO
-      };
-    }
+        if (APP_TYPE_ID == 66) {    // Rental
+            var salesOrderMVO = {
+                salesOrdId : ORD_ID,
+		        promoId : $('#ordPromo').val().trim(),
+		        totAmt : $('#ordPrice').val().trim(),
+		        mthRentAmt : $('#ordRentalFees').val().trim(),
+		        totPv : $('#ordPv').val().trim(),
+		        discRntFee : $('#ordRentalFees').val().trim(),
+		        promoDiscPeriodTp : $('#promoDiscPeriodTp').val(),
+		        promoDiscPeriod : $('#promoDiscPeriod').val(),
+		        salesOrdNo : ORD_NO,
+		        defRentAmt : $('#ordRentalFees').val().trim()
+		    };
+        } else {
+            var salesOrderMVO = {
+                salesOrdId : ORD_ID,
+		        promoId : $('#ordPromo').val().trim(),
+		        totAmt : $('#ordPrice').val().trim(),
+		        mthRentAmt : $('#ordRentalFees').val().trim(),
+		        totPv : $('#ordPv').val().trim(),
+		        discRntFee : $('#ordRentalFees').val().trim(),
+		        promoDiscPeriodTp : 0,
+		        promoDiscPeriod : 0,
+		        salesOrdNo : ORD_NO,
+		        defRentAmt : 0
+		    };
+        }
 
-    Common
-        .ajax(
-            "POST",
-            "/sales/order/updatePromoPriceInfo.do",
-            salesOrderMVO,
-            function(result) {
+	    Common.ajax("POST", "/homecare/sales/order/updateHcPromoPriceInfo.do", salesOrderMVO, function(result) {
+	        Common.alert('<spring:message code="sal.alert.msg.updSummary" />' + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_reloadPage);
 
-              Common.alert(
-                  '<spring:message code="sal.alert.msg.updSummary" />'
-                      + DEFAULT_DELIMITER + "<b>"
-                      + result.message + "</b>",
-                  fn_reloadPage);
+	    }, function(jqXHR, textStatus, errorThrown) {
+	        try {
+	            console.log("status : " + jqXHR.status);
+	            console.log("code : " + jqXHR.responseJSON.code);
+	            console.log("message : " + jqXHR.responseJSON.message);
+	            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
 
-            },
-            function(jqXHR, textStatus, errorThrown) {
-              try {
-                console.log("status : " + jqXHR.status);
-                console
-                    .log("code : "
-                        + jqXHR.responseJSON.code);
-                console.log("message : "
-                    + jqXHR.responseJSON.message);
-                console.log("detailMessage : "
-                    + jqXHR.responseJSON.detailMessage);
-
-                //              Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                Common
-                    .alert('<spring:message code="sal.msg.dataPrepFail" />'
-                        + DEFAULT_DELIMITER
-                        + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
-              } catch (e) {
-                console.log(e);
-              }
-            });
-  }
+	            Common.alert('<spring:message code="sal.msg.dataPrepFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
+	        } catch (e) {
+	            console.log(e);
+	        }
+	    });
+	}
 
   function fn_doSaveGstCertInfo() {
     console.log('!@# fn_doSaveGstCertInfo START');
@@ -3898,52 +3877,39 @@
        <td><span id="prdName"></span></td>
        <th scope="row"><spring:message
          code="sal.title.text.priceRpfRm" /></th>
-       <td><input id="ordPrice" name="ordPrice" type="text"
-        title="" placeholder="Price/Rental Processing Fees (RPF)"
-        class="w100p readonly" readonly /> <input id="promoId"
-        name="promoId" type="hidden" /></td>
+       <td>
+       <input id="ordPrice" name="ordPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
+       <input id="promoId" name="promoId" type="hidden" />
+       </td>
        <input id="stkId" name="stkId" type="hidden" />
        </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code="sal.title.text.promo" /><span
-        class="must">*</span></th>
-       <td><select id="ordPromo" name="ordPromo" class="w100p"></select>
-       </td>
-       <th scope="row"><spring:message
-         code="sal.title.text.nomalRentFeeRm" /></th>
-       <td><input id="orgOrdRentalFees" name="orgOrdRentalFees"
-        type="text" title="" placeholder="Normal Rental Fees (Monthly)"
-        class="w100p readonly" readonly /></td>
+       <th scope="row"><spring:message code="sal.title.text.promo" /><span class="must">*</span></th>
+       <td><select id="ordPromo" name="ordPromo" class="w100p"></select></td>
+       <th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
+       <td><input id="orgOrdRentalFees" name="orgOrdRentalFees" type="text" title="" placeholder="Normal Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
       </tr>
       <tr>
        <th scope="row"><spring:message code="sal.title.text.pv" /></th>
-       <td><input id="ordPv" name="ordPv" type="text" title=""
-        placeholder="Point Value (PV)" class="w100p readonly" readonly />
+       <td><input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
         <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
-       <th scope="row"><spring:message
-         code="sal.title.text.rentFeeRm" /></th>
-       <td><p>
-         <select id="promoDiscPeriodTp" name="promoDiscPeriodTp"
-          class="w100p" disabled></select>
+       <th scope="row"><spring:message code="sal.title.text.rentFeeRm" /></th>
+       <td>
+        <p>
+         <select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select>
         </p>
         <p>
-         <input id="promoDiscPeriod" name="promoDiscPeriod" type="text"
-          title="" placeholder="" style="width: 42px;" class="readonly"
-          readonly />
+         <input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width: 42px;" class="readonly" readonly />
         </p>
         <p>
-         <input id="ordRentalFees" name="ordRentalFees" type="text"
-          title="" placeholder="" style="width: 90px;" class="readonly"
-          readonly />
-        </p></td>
+         <input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" style="width: 90px;" class="readonly" readonly />
+        </p>
+       </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message
-         code="sal.title.text.relatedNo" /></th>
-       <td><input id="relatedNo" name="relatedNo" type="text"
-        title="" placeholder="Related Number" class="w100p readonly"
-        readonly /></td>
+       <th scope="row"><spring:message code="sal.title.text.relatedNo" /></th>
+       <td><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></td>
        <td colspan="2"><p id="pBtnCal" class="btn_sky blind">
          <a id="btnCal" href="#">Exclude GST Calculation</a>
         </p></td>
@@ -3954,8 +3920,7 @@
    </section>
    <ul class="center_btns">
     <li><p class="btn_blue2">
-      <a id="btnSavePromo" href="#"><spring:message
-        code="sal.btn.save" /></a>
+      <a id="btnSavePromo" href="#"><spring:message code="sal.btn.save" /></a>
      </p></li>
    </ul>
   </section>

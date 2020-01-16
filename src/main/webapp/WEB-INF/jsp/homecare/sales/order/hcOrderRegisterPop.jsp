@@ -65,33 +65,26 @@
         if(convToOrdYn == 'Y') {
             fn_loadPreOrderInfo();
         }
-
         //Copy Change Info
         if(copyChangeYn == 'Y') {
             fn_loadCopyChange();
         }
-
     });
 
     function createAUIGrid() {
-
         //AUIGrid 칼럼 설정
-        var columnLayout = [{
-                dataField : "chkfield",
-                headerText : ' ',
-                width: 70,
-                renderer : {
-                    type : "CheckBoxEditRenderer",
-                    showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-                    editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-                    checkValue : 1, // true, false 인 경우가 기본
-                    unCheckValue : 0
+        var columnLayout = [
+            {dataField : "chkfield",       width: 70,
+            	renderer : {
+	            	type : "CheckBoxEditRenderer",
+	                showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+	                editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+	                checkValue : 1, // true, false 인 경우가 기본
+	                unCheckValue : 0
                 }
-            }, {
-                dataField   : "typeDesc",   headerText  : '<spring:message code="sal.title.text.document" />',
-                editable    : false,        style       : 'left_style'
-            }, {
-                dataField   : "codeId",     visible     : false
+            },
+            {dataField : "typeDesc",       headerText  : '<spring:message code="sal.title.text.document" />',       editable : false,       style : 'left_style'},
+            {dataField : "codeId",          visible : false
             }];
 
         //그리드 속성 설정
@@ -125,7 +118,6 @@
     }
 
     function fn_loadThirdParty(custId, sMethd) {
-
         fn_clearRentPayMode();
         fn_clearRentPay3thParty();
         fn_clearRentPaySetCRC();
@@ -133,43 +125,38 @@
 
         if(custId != $('#hiddenCustId').val()) {
             Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId}, function(result) {
+	            if(result != null && result.length == 1) {
+	                var custInfo = result[0];
 
-            if(result != null && result.length == 1) {
+	                $('#hiddenThrdPartyId').val(custInfo.custId)
+	                $('#thrdPartyId').val(custInfo.custId)
+	                $('#thrdPartyType').val(custInfo.codeName1)
+	                $('#thrdPartyName').val(custInfo.name)
+	                $('#thrdPartyNric').val(custInfo.nric)
 
-                var custInfo = result[0];
+	                $('#thrdPartyId').removeClass("readonly");
+	                $('#thrdPartyType').removeClass("readonly");
+	                $('#thrdPartyName').removeClass("readonly");
+	                $('#thrdPartyNric').removeClass("readonly");
 
-                $('#hiddenThrdPartyId').val(custInfo.custId)
-                $('#thrdPartyId').val(custInfo.custId)
-                $('#thrdPartyType').val(custInfo.codeName1)
-                $('#thrdPartyName').val(custInfo.name)
-                $('#thrdPartyNric').val(custInfo.nric)
+	            } else {
+	                if(sMethd == 2) {
+	                    Common.alert('<spring:message code="sal.alert.msg.input3rdPartyId" arguments="'+custId+'"/>');
+	                }
+	            }
+	        });
 
-                $('#thrdPartyId').removeClass("readonly");
-                $('#thrdPartyType').removeClass("readonly");
-                $('#thrdPartyName').removeClass("readonly");
-                $('#thrdPartyNric').removeClass("readonly");
-            }
-            else {
-                if(sMethd == 2) {
-//                  Common.alert('<b>Third party not found.<br />Your input third party ID : ' + custId + '</b>');
-                    Common.alert('<spring:message code="sal.alert.msg.input3rdPartyId" arguments="'+custId+'"/>');
-                }
-            }
-        });
-        }
-        else {
-//          Common.alert('<b>Third party and customer cannot be same person/company.<br />Your input third party ID : ' + custId + '</b>');
+        } else {
             Common.alert('<spring:message code="sal.alert.msg.samePerson3rdPartyId" arguments="'+custId+'"/>');
         }
 
         $('#sctThrdParty').removeClass("blind");
     }
 
-    function fn_loadCustomer(custId){
+    function fn_loadCustomer(custId) {
         $("#searchCustId").val(custId);
 
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId}, function(result) {
-
             if(result != null && result.length == 1) {
                 var custInfo = result[0];
 
@@ -195,8 +182,7 @@
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
-                }
-                else {
+                } else {
                     $("#corpTypeNm").val(""); //Industry Code
                 }
 
@@ -207,7 +193,6 @@
                 }
 
                 if(custInfo.custAddId > 0) {
-
                     //----------------------------------------------------------
                     // [Billing Detail] : Billing Address SETTING
                     //----------------------------------------------------------
@@ -266,11 +251,8 @@
         });
     }
 
-    function fn_loadMailAddr(custAddId){
-        console.log("fn_loadMailAddr START");
-
+    function fn_loadMailAddr(custAddId) {
         Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(billCustInfo) {
-
             if(billCustInfo != null) {
                 $("#hiddenBillAddId").val(billCustInfo.custAddId); //Customer Address ID(Hidden)
                 $("#billAddrDtl").val(billCustInfo.addrDtl); //Address
@@ -280,24 +262,21 @@
                 $("#billPostCode").val(billCustInfo.postcode); //Post Code
                 $("#billState").val(billCustInfo.state); //State
                 $("#billCountry").val(billCustInfo.country); //Country
-
                 $("#hiddenBillStreetId").val(billCustInfo.custAddId); //Magic Address STREET_ID(Hidden)
-
-                console.log("hiddenBillAddId2 : " + $("#hiddenBillAddId").val());
             }
         });
     }
 
-    function fn_loadInstallAddr(custAddId){
+    function fn_loadInstallAddr(custAddId) {
         Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId, 'isHomecare' : 'Y'}, function(custInfo) {
 
             if(custInfo != null) {
-                if(custInfo.areaId != undefined){
+                if(custInfo.areaId != undefined) {
                     if("DM" == custInfo.areaId.substring(0,2)) {
                         Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />');
                         $("#validAreaIdYN").val("N");
-                    }
-                    else {
+
+                    } else {
                         $("#validAreaIdYN").val("Y");
                     }
                 } else {
@@ -313,7 +292,6 @@
                 $("#instPostCode").val(custInfo.postcode); //Post Code
                 $("#instState").val(custInfo.state); //State
                 $("#instCountry").val(custInfo.country); //Country
-
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
 
                 GST_CHK = custInfo.gstChk;
@@ -343,8 +321,8 @@
                         $("#pBtnCal").removeClass("blind");
                         //fn_tabOnOffSet('REL_CER', 'SHOW');
                         fn_tabOnOffSet('REL_CER', 'HIDE');
-                    }
-                    else {
+
+                    } else {
                         $("#gstChk").val('0').prop("disabled", true);
                         $('#pBtnCal').addClass("blind");
                         fn_tabOnOffSet('REL_CER', 'HIDE');
@@ -360,7 +338,6 @@
         var vNational = $("#nationNm").val();
 
         for(var i = 0; i < AUIGrid.getRowCount(docGridID) ; i++) {
-
             AUIGrid.setCellValue(docGridID, i, "chkfield", 0);
 
             if(doCheck == true) {
@@ -373,8 +350,8 @@
 
                             if(docDefaultChk == false) docDefaultChk = true;
                         }
-                    }
-                    else {
+
+                    } else {
                         if(vCodeId == '939' || vCodeId == '940' || vCodeId == '1244') {
                             AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
 
@@ -383,35 +360,23 @@
                     }
                 }
 
-                if(convToOrdYn != 'Y'){
-                	if(vCodeId == '3198'){ // SOF Form, check default when it is not eKey-in
+                if(convToOrdYn != 'Y') {
+                	if(vCodeId == '3198') { // SOF Form, check default when it is not eKey-in
                 		AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
                 		if(docDefaultChk == false) docDefaultChk = true;
                 	}
                 }
-            }
-            else {
+            } else {
                  docDefaultChk = false;
             }
         }
     }
 
     function fn_loadSrvCntcPerson(custCareCntId) {
-        console.log("fn_loadSrvCntcPerson START");
-
         $("#searchCustCareCntId").val(custCareCntId);
 
         Common.ajax("GET", "/sales/order/selectSrvCntcJsonInfo.do", {custCareCntId : custCareCntId}, function(srvCntcInfo) {
-
             if(srvCntcInfo != null) {
-
-                console.log("성공.");
-                console.log("srvCntcInfo:"+srvCntcInfo.custCareCntId);
-                console.log("srvCntcInfo:"+srvCntcInfo.name);
-                console.log("srvCntcInfo:"+srvCntcInfo.custInitial);
-                console.log("srvCntcInfo:"+srvCntcInfo.email);
-
-                //
                 $("#srvCntcId").val(srvCntcInfo.custCareCntId);
                 $("#srvCntcName").val(srvCntcInfo.name);
                 $("#srvInitial").val(srvCntcInfo.custInitial);
@@ -425,14 +390,9 @@
         });
     }
 
-    function fn_loadCntcPerson(custCntcId){
-        console.log("fn_loadCntcPerson START");
-
+    function fn_loadCntcPerson(custCntcId) {
         Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", {custCntcId : custCntcId}, function(custCntcInfo) {
-
             if(custCntcInfo != null) {
-                console.log('custCntcInfo.custCntcId:'+custCntcInfo.custCntcId);
-                //
                 $("#hiddenInstCntcId").val(custCntcInfo.custCntcId);
                 $("#hiddenCustCntcId").val(custCntcInfo.custCntcId);
                 $("#custCntcName").val(custCntcInfo.name1);
@@ -477,7 +437,6 @@
             $('#grpOpt1').prop("checked", true);
             $('#sctBillMthd').removeClass("blind");
             $('#sctBillAddr').removeClass("blind");
-
             $('#liBillNewAddr').removeClass("blind");
             $('#liBillSelAddr').removeClass("blind");
             $('#liBillPreferNewAddr').removeClass("blind");
@@ -543,72 +502,89 @@
 
     }
 
-    $(function(){
+    $(function() {
         $('#btnRltdNo').click(function() {
             Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
         });
+
         $('#custBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
             Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REGISTER_CUST_CUST"}, null, true);
         });
+
         $('#thrdPartyBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
             Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REGISTER_PAY_3RD_PARTY"}, null, true);
         });
+
         $('#memBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
             Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
         });
+
         $('#addCustBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "580x"});
             Common.popupDiv("/sales/customer/customerRegistPop.do", {"callPrgm" : "ORD_REGISTER"}, null, true);
         });
+
         $('#thrdPartyAddCustBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerRegistPop.do", {"callPrgm" : "ORD_REGISTER_3PARTY"}, null, true);
         });
+
         $('#mstCntcNewAddBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {"custId":$('#hiddenCustId').val(), "callParam" : "ORD_REGISTER_CNTC_OWN"}, null , true ,'_editDiv3New');
         });
+
         $('#mstCntcSelAddBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_CNTC_OWN"}, null, true);
         });
+
         $('#mstCntcNewAddBtn2').click(function() {
             Common.popupDiv('/sales/customer/updateCustomerNewAddContactPop.do', {"custId":$('#hiddenCustId').val(), "callParam" : "ORD_REGISTER_CNTC_ADD"}, null , true ,'_editDiv3New');
         });
+
         $('#mstCntcSelAddBtn2').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_CNTC_ADD"}, null, true);
         });
+
         $('#billPreferAddAddrBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv('/sales/customer/updateCustomerNewAddContactPop.do', {"custId":$('#hiddenCustId').val(), "callParam" : ""}, null , true ,'_editDiv3New');
         });
+
         $('#billPreferSelAddrBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_BILL_PRF"}, null, true);
         });
+
         $('#billNewAddrBtn').click(function() {
             Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#hiddenCustId').val(), callParam : "ORD_REGISTER_BILL_MTH"}, null , true);
         });
+
         $('#billSelAddrBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerAddressSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_BILL_MTH"}, null, true);
         });
+
         $('#instNewAddrBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerAddressSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#hiddenCustId').val(), callParam : "ORD_REGISTER_INST_ADD"}, null , true);
         });
+
         $('#instSelAddrBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerAddressSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_INST_ADD"}, null, true);
         });
+
         $('#billGrpBtn').click(function() {
             //Common.popupWin("searchForm", "/customerBillGrpSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerBillGrpSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_BILL_GRP"}, null, true);
         });
+
         $('#addCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             var vCustNric = $('#thrdParty').is(":checked") ? $('#thrdPartyNric').val() : $('#nric').val();
@@ -616,6 +592,7 @@
             //Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_PAYM_CRC"}, null, true);
             Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_PAYM_CRC", nric : vCustNric}, null, true);
         });
+
         $('#selCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             //Common.popupWin("searchForm", "/sales/customer/customerCreditCardSearchPop.do", {width : "1200px", height : "630x"});
@@ -631,13 +608,16 @@
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_BANK_ACC"});
         });
+
         $('#trialNoBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/order/orderSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "ORD_REGISTER_SALE_ORD", indicator : "SearchTrialNo"});
         });
+
         $('[name="grpOpt"]').click(function() {
             fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
         });
+
         $('#trialNoChk').click(function() {
             if($('#trialNoChk').is(":checked")) {
                 $('#trialNo').val('').removeClass("readonly");
@@ -648,8 +628,8 @@
                 $('#trialNoBtn').addClass("blind");
             }
         });
-        $('#thrdParty').click(function(event) {
 
+        $('#thrdParty').click(function(event) {
             fn_clearRentPayMode();
             fn_clearRentPay3thParty();
             fn_clearRentPaySetCRC();
@@ -662,12 +642,14 @@
                 $('#sctThrdParty').addClass("blind");
             }
         });
+
         $('#billMthdPost').change(function() {
         	if($("#billMthdPost").is(":checked")) {
         		$('#billMthdEstm').change();
         		$('#billMthdSms').change();
         	}
         });
+
         $('#billMthdSms').change(function() {
             $('#billMthdSms1').prop("checked", false).prop("disabled", true);
             $('#billMthdSms2').prop("checked", false).prop("disabled", true);
@@ -678,8 +660,8 @@
                 $('#billMthdSms2').removeAttr("disabled");
             }
         });
-        $('#billMthdEstm').change(function() {
 
+        $('#billMthdEstm').change(function() {
             $('#spEmail1').text("");
             $('#spEmail2').text("");
             $('#billMthdEmail1').prop("checked", false).prop("disabled", true);
@@ -697,15 +679,18 @@
                 $('#billMthdEmailTxt2').removeAttr("disabled").val($('#srvCntcEmail').val().trim());
             }
         });
+
         $('#custId').change(function(event) {
             fn_selectCustInfo();
         });
+
         $('#custId').keydown(function (event) {
             if (event.which === 13) {    //enter
                 fn_selectCustInfo();
                 return false;
             }
         });
+
         $('#salesmanCd').change(function(event) {
             var memCd = $('#salesmanCd').val().trim();
 
@@ -713,6 +698,7 @@
                 fn_loadOrderSalesman(0, memCd);
             }
         });
+
         $('#gstChk').change(function(event) {
             if($("#gstChk").val() == '1') {
                 $('#pBtnCal').removeClass("blind");
@@ -743,6 +729,7 @@
                 GST_MANNUAL = 'N';
             }
         });
+
         $('#salesmanCd').keydown(function (event) {
             if (event.which === 13) {    //enter
                 var memCd = $('#salesmanCd').val().trim();
@@ -753,19 +740,19 @@
                 return false;
             }
         });
+
         $('#thrdPartyId').change(function(event) {
             fn_loadThirdParty($('#thrdPartyId').val().trim(), 2);
         });
+
         $('#thrdPartyId').keydown(function(event) {
             if(event.which === 13) {    //enter
                 fn_loadThirdParty($('#thrdPartyId').val().trim(), 2);
             }
         });
-
         // Application Type Change Event
         $('#appType').change(function() {
             fn_tabOnOffSet('PAY_CHA', 'HIDE');
-
             //Sales Order
             $('#salesOrderForm').clearForm();
             //CLEAR RENTAL PAY SETTING
@@ -775,7 +762,6 @@
             fn_clearRentPay3thParty();
             fn_clearRentPaySetCRC();
             fn_clearRentPaySetDD();
-
             //CLEAR BILLING GROUP
             fn_clearBillGroup();
             //ClearControl_Sales();

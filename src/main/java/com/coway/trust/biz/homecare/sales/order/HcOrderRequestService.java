@@ -51,4 +51,26 @@ public interface HcOrderRequestService {
 	 */
 	public ReturnMessage hcReqOwnershipTransfer(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 
+	/**
+	 * Homecare Order Request - Product Exchange
+	 * @Author KR-SH
+	 * @Date 2020. 1. 14.
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 */
+	public ReturnMessage hcRequestProdExch(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
+	/**
+	 * Homecare Order Request Save - Product Exchange
+	 * @Author KR-SH
+	 * @Date 2020. 1. 15.
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 */
+	public ReturnMessage saveHcRequestProdExch(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
 }

@@ -111,13 +111,14 @@
                 if(fn_validReqAexc()) fn_doSaveReqAexc();
             }
         });
+
         $('#cmbOrderProduct').change(function() {
             if(FormUtil.isEmpty($('#cmbOrderProduct').val())) {
                 $('#cmbPromotion option').remove();
                 return;
             }
 
-            $('#btnCurrentPromo').prop("checked", false).prop("disabled", true);
+            // $('#btnCurrentPromo').prop("checked", false).prop("disabled", true);
 
             $('#txtPrice').val('');
             $('#ordPriceId').val('');
@@ -125,16 +126,15 @@
             $('#txtOrderRentalFees').val('');
 
             var stkIdVal   = $("#cmbOrderProduct").val();
-
-            if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ){
+            if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ) {
                 SRV_PAC_ID = 0;
             }
 
             if($("#cmbOrderProduct option:selected").index() > 0) {
                 fn_loadProductPrice(APP_TYPE_ID, stkIdVal, SRV_PAC_ID);
-                fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);
+                fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, '${orderDetail.basicInfo.srvPacId}', PROMO_ID);
 
-                $('#btnCurrentPromo').removeAttr("disabled");
+                //$('#btnCurrentPromo').removeAttr("disabled");
 
                 if(GST_CHK == '1') {
                     fn_excludeGstAmt();
@@ -149,8 +149,7 @@
 
             if(promoIdIdx > 0 && promoIdVal != '0') {
                 fn_loadPromotionPrice(promoIdVal, stkIdVal, SRV_PAC_ID);
-            }
-            else {
+            } else {
                 fn_loadProductPrice(APP_TYPE_ID, stkIdVal, SRV_PAC_ID);
             }
 
@@ -158,6 +157,7 @@
                 fn_excludeGstAmt();
             }
         });
+
         $('#btnCurrentPromo').click(function(event) {
             if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ){
                 SRV_PAC_ID = 0;
@@ -172,6 +172,7 @@
                     $('#cmbPromotion option').remove();
                     $('#cmbPromotion').append("<option value=''>"+$('#hiddenCurrentPromotion').val()+"</option>");
                     fn_loadPromotionPrice($("#hiddenCurrentPromotionID").val(), $("#cmbOrderProduct").val(), SRV_PAC_ID);
+
                 } else {
                     fn_loadProductPrice(APP_TYPE_ID, $("#cmbOrderProduct").val(), SRV_PAC_ID);
                     fn_loadProductPromotion(APP_TYPE_ID, $("#cmbOrderProduct").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);
@@ -244,6 +245,7 @@
                 }
             }
         });
+
         $('#srvPacIdAexc').change(function() {
             var idx    = $("#srvPacIdAexc option:selected").index();
             var selVal = $("#srvPacIdAexc").val();
@@ -293,6 +295,7 @@
                 });
             }
         });
+
         $('#exTradeAexc').change(function() {
             if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ){
                 SRV_PAC_ID = 0;
@@ -341,27 +344,35 @@
         $('#btnAddAddress').click(function() {
             Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callParam : "ORD_REQUEST_MAIL"}, null , true);
         });
+
         $('#btnSelectAddress').click(function() {
             Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "fn_loadMailAddress"}, null, true);
         });
+
         $('#btnAddContact').click(function() {
             Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {"custId": $('#txtHiddenCustIDOwnt').val(), callParam : "ORD_REQUEST_MAIL"}, null , true ,'_editDiv3New');
         });
+
         $('#btnSelectContact').click(function() {
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "fn_loadCntcPerson"}, null, true);
         });
+
         $('#btnAddInstAddress').click(function() {
             Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callParam : "ORD_REQUEST_MAIL"}, null , true);
         });
+
         $('#btnSelectInstAddress').click(function() {
             Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "fn_loadInstAddress"}, null, true);
         });
+
         $('#btnAddInstContact').click(function() {
             Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {"custId": $('#txtHiddenCustIDOwnt').val(), callParam : "ORD_REQUEST_MAIL"}, null , true ,'_editDiv3New');
         });
+
         $('#btnSelectInstContact').click(function() {
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "fn_loadInstallationCntcPerson"}, null, true);
         });
+
         $('#btnThirdPartyOwnt').click(function(event) {
             fn_clearRentPayMode();
             fn_clearRentPay3thParty();
@@ -383,11 +394,11 @@
 
             if(rentPayModeIdx > 0) {
                 if(rentPayModeVal == '133' || rentPayModeVal == '134') {
-
                     var rentPayModeTxt = $("#cmbRentPaymodeOwnt option:selected").text();
 //                  Common.alert('<b>Currently we are not provide ['+rentPayModeVal+'] service.</b>');
                     Common.alert('<spring:message code="sal.alert.msg.rentPayRestriction" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.notProvideSvc" arguments="'+rentPayModeTxt+'"/>');
                     fn_clearRentPayMode();
+
                 } else {
                     if(rentPayModeVal == '131') {
                         if($('#btnThirdPartyOwnt').is(":checked") && FormUtil.isEmpty($('#txtHiddenThirdPartyIDOwnt').val())) {
@@ -406,40 +417,50 @@
                 }
             }
         });
+
         $('#txtThirdPartyIDOwnt').change(function(event) {
             fn_loadThirdParty($('#txtThirdPartyIDOwnt').val().trim(), 2);
         });
+
         $('#txtThirdPartyIDOwnt').keydown(function(event) {
             if(event.which === 13) {    //enter
                 fn_loadThirdParty($('#txtThirdPartyIDOwnt').val().trim(), 2);
             }
         });
+
         $('#thrdPartyBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
             Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REQUEST_PAY"}, null, true);
         });
+
         $('#btnAddCRC').click(function() {
             var vCustId = $('#btnThirdPartyOwnt').is(":checked") ? $('#txtHiddenThirdPartyIDOwnt').val() : $('#txtHiddenCustIDOwnt').val();
             Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId}, null, true);
         });
+
         $('#btnSelectCRC').click(function() {
             var vCustId = $('#btnThirdPartyOwnt').is(":checked") ? $('#txtHiddenThirdPartyIDOwnt').val() : $('#txtHiddenCustIDOwnt').val();
             Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : vCustId, callPrgm : "ORD_REQUEST_PAY"}, null, true);
         });
+
         $('#btnAddBankAccount').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#txtHiddenThirdPartyIDOwnt').val() : $('#txtHiddenCustIDOwnt').val();
             Common.popupDiv("/sales/customer/customerBankAccountAddPop.do", {custId : vCustId}, null, true);
         });
+
         $('#btnSelectBankAccount').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#txtHiddenThirdPartyIDOwnt').val() : $('#txtHiddenCustIDOwnt').val();
             Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : vCustId, callPrgm : "ORD_REQUEST_PAY"});
         });
+
         $('#btnAddThirdParty').click(function() {
             Common.popupWin("searchFormOwnt", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "580x"});
         });
+
         $('[name="grpOpt"]').click(function() {
             fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
         });
+
         $('#billGrpBtn').click(function() {
             Common.popupDiv("/sales/customer/customerBillGrpSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "ORD_REQUEST_BILLGRP"}, null, true);
         });
@@ -470,24 +491,22 @@
         $('#orgOrdRentalFees').val(oldRentalGST);
         $('#ordRentalFees').val(newRentalGST);
         $('#ordPv').val(newPv);
-
-      //$('#pBtnCal').addClass("blind");
 	}
 
 	function fn_excludeGstAmtAexc() {
 	    console.log('fn_excludeGstAmtAexc() start');
         //Amount before GST
-        var oldPrice     = $('#orgOrdPriceAexc').val();
+        var oldPrice      = $('#orgOrdPriceAexc').val();
         var newPrice     = $('#txtPriceAexc').val();
-        var oldRental    = $('#orgOrdRentalFeesAexc').val();
+        var oldRental     = $('#orgOrdRentalFeesAexc').val();
         var newRental    = $('#ordRentalFeesAexc').val();
-        var oldPv        = $('#txtPVAexc').val();
+        var oldPv          = $('#txtPVAexc').val();
         //Amount of GST applied
-        var oldPriceGST  = fn_calcGst(oldPrice);
-        var newPriceGST  = fn_calcGst(newPrice);
-        var oldRentalGST = fn_calcGst(oldRental);
+        var oldPriceGST    = fn_calcGst(oldPrice);
+        var newPriceGST   = fn_calcGst(newPrice);
+        var oldRentalGST  = fn_calcGst(oldRental);
         var newRentalGST = fn_calcGst(newRental);
-        var newPv        = $('#ordPvGSTAexc').val();
+        var newPv            = $('#ordPvGSTAexc').val();
 
         if($('#cmbAppTypeAexc').val() != '66') {
             oldPriceGST = Math.floor(oldPriceGST/10) * 10;
@@ -837,11 +856,11 @@
 
         //AUIGrid 칼럼 설정
         var docColumnLayout = [
-            { headerText : '<spring:message code="sal.title.filterCode" />',     dataField : "stkCode",           width : 120 }
-          , { headerText : '<spring:message code="sal.text.name" />',            dataField : "stkDesc"}
-          , { headerText : '<spring:message code="sal.title.changePeriod" />',   dataField : "srvFilterPriod",    width : 120 }
-          , { headerText : '<spring:message code="sal.title.lastChangeDate" />', dataField : "srvFilterPrvChgDt", width : 120 }
-          ];
+            {headerText : '<spring:message code="sal.title.filterCode" />',        dataField : "stkCode",             width : 120}
+          , {headerText : '<spring:message code="sal.text.name" />',              dataField : "stkDesc"}
+          , {headerText : '<spring:message code="sal.title.changePeriod" />',   dataField : "srvFilterPriod",       width : 120}
+          , {headerText : '<spring:message code="sal.title.lastChangeDate" />', dataField : "srvFilterPrvChgDt", width : 120}
+        ];
 
         //그리드 속성 설정
         var filterGridPros = {
@@ -1011,7 +1030,7 @@
     }
 
     function fn_getCheckAccessRight(userId, moduleUnitId){
-        var result = false;
+        //var result = false;
 /*
         Common.ajax("GET", "/sales/order/selectCheckAccessRight.do", {userId : userId, moduleUnitId : moduleUnitId}, function(rsltInfo) {
             if(rsltInfo != null) {
@@ -1114,20 +1133,21 @@
         if(appTypeVal == '' || exTrade == '') return;
 
         if(appTypeVal == 67 || appTypeVal == 68) {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), isSrvPac:'Y'}, '', 'cmbPromotionAexc', 'S', 'fn_setDefaultPromotionAexc'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:'${orderDetail.basicInfo.srvPacId}', isSrvPac:'Y'}, '', 'cmbPromotionAexc', 'S', ''); //Common Code
         } else {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val()}, '', 'cmbPromotionAexc', 'S'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val()}, '', 'cmbPromotionAexc', 'S'); //Common Code
         }
     }
 
     //LoadProductPromotion
-    function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade, srvPacId) {
-        $('#cmbPromotion').removeAttr("disabled");
+    function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade, srvPacId, promoId) {
+        // $('#cmbPromotion').removeAttr("disabled");
+        promoId = FormUtil.isEmpty(promoId) ? '' : promoId;
 
         if(appTypeVal == 67 || appTypeVal == 68) {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, isSrvPac:'Y'}, '', 'cmbPromotion', 'S', ''); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, isSrvPac:'Y'}, promoId, 'cmbPromotion', 'S', ''); //Common Code
         } else {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId}, '', 'cmbPromotion', 'S', ''); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId}, promoId, 'cmbPromotion', 'S', ''); //Common Code
         }
     }
 
@@ -1342,9 +1362,11 @@
 
             fn_loadListPexch();
 
-            fn_loadOrderInfoPexc();
+            //fn_loadOrderInfoPexc();
 
-            fn_isLockOrder(tabNm);
+            fn_disableControlPexc();
+            $('#btnReqPrdExch').removeClass("blind");
+            //fn_isLockOrder(tabNm);
         } else {
             $('#scPX').addClass("blind");
         }
@@ -1729,7 +1751,6 @@
     }
 
     function fn_getOrderMembershipConfigByOrderID() {
-
         var vSrvMemID = '0';
 
         Common.ajax("GET", "/sales/membership/paymentConfig", {PAY_ORD_ID : ORD_ID}, function(result) {
@@ -1737,22 +1758,15 @@
                 vSrvMemID = result[0].srvMemId;
             }
        });
-        console.log('vSrvMemID:'+vSrvMemID);
 
        return vSrvMemID;
     }
 
     function fn_getOrderLastRentalBillLedger1() {
-
         var vTotalUseMth = 0;
 
         Common.ajax("GET", "/sales/order/selectOrderLastRentalBillLedger1.do", {salesOrderId : ORD_ID}, function(result) {
-
-            console.log('result:'+result);
-
             if(result != null) {
-                console.log('result.custId:'+result.rentInstNo);
-
                 vTotalUseMth = result.rentInstNo;
             }
        });
@@ -1764,8 +1778,6 @@
         var vObligtPriod = 0;
 
         Common.ajax("GET", "/sales/order/selectObligtPriod.do", {salesOrdId : ORD_ID}, function(result) {
-            console.log('result:::::', result);
-
             if(result != null) {
                 vObligtPriod = result.obligtPriod;
             }
@@ -1805,23 +1817,15 @@
     }
 
     function fn_doSaveReqAexc() {
-        console.log('!@# fn_doSaveReqAexc START');
-
         Common.ajax("POST", "/sales/order/requestAppExch.do", $('#frmReqAppExc').serializeJSON(), function(result) {
-
-                Common.alert('<spring:message code="sal.alert.msg.appTypeExchSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_selfClose);
-
-            }, function(jqXHR, textStatus, errorThrown) {
-                try {
-//                  Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-//                  console.log("Error message : " + jqXHR.responseJSON.message);
-                    Common.alert('<spring:message code="sal.msg.dataPrepFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
-                }
-                catch(e) {
-                    console.log(e);
-                }
+            Common.alert('<spring:message code="sal.alert.msg.appTypeExchSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_success);
+        }, function(jqXHR, textStatus, errorThrown) {
+            try {
+                Common.alert('<spring:message code="sal.msg.dataPrepFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
+            } catch(e) {
+                console.log(e);
             }
-        );
+        });
     }
 
     function fn_doSaveReqSchm() {
@@ -1848,13 +1852,16 @@
 
     // Product Exchange
     function fn_doSaveReqPexc() {
-        Common.ajax("POST", "/sales/order/requestProdExch.do", $('#frmReqPrdExc').serializeJSON(),
+        Common.ajax("POST", "/homecare/sales/order/hcRequestProdExch.do", $('#frmReqPrdExc').serializeJSON(),
         	function(result) {
                 Common.alert('<spring:message code="sal.alert.msg.prodExchSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_selfClose);
 	        },
 	        function(jqXHR, textStatus, errorThrown) {
 		        try {
-		            Common.alert('<spring:message code="sal.msg.dataPrepFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
+		        	var errorResult = JSON.parse(jqXHR.responseText);
+		            var errorMsg  = FormUtil.isEmpty(errorResult.message) ? "<spring:message code="sal.alert.msg.savingDataPreprationFailed" />" : errorResult.message;
+
+		            Common.alert('<spring:message code="sal.msg.dataPrepFail" />' + DEFAULT_DELIMITER + '<b>'+errorMsg+'</b>');
 		        } catch(e) {
 		            console.log(e);
 		        }
@@ -1865,7 +1872,7 @@
     // Click Request Cancle Order
     function fn_doSaveReqCanc() {
         Common.ajax("POST", "/homecare/sales/order/hcRequestCancelOrder.do", $('#frmReqCanc').serializeJSON(), function(result) {
-            Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_selfClose);
+            Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_success);
         }, function(jqXHR, textStatus, errorThrown) {
             try {
                 //console.log("Error message : " + jqXHR.responseJSON.message);
@@ -1879,7 +1886,7 @@
     // save - Transfer Ownership
     function fn_doSaveReqOwnt() {
         Common.ajax("POST", "/homecare/sales/order/hcReqOwnershipTransfer.do", $('#frmReqOwnt').serializeJSON(), function(result) {
-            Common.alert('<spring:message code="sal.alert.msg.ownTransSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_selfClose);
+            Common.alert('<spring:message code="sal.alert.msg.ownTransSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_success);
 
         }, function(jqXHR, textStatus, errorThrown) {
             try {
@@ -2084,7 +2091,8 @@
     }
 
     function fn_validReqPexc() {
-        var isValid = true, msg = "";
+        var isValid = true;
+        var msg = "";
 
         if($("#cmbOrderProduct option:selected").index() <= 0) {
             isValid = false;
@@ -2107,20 +2115,17 @@
             msg += '<spring:message code="sal.alert.msg.plzSelTheReason" />';
         }
         if($("#cmbOrderProduct option:selected").index() > 0) {
-
             if(ORD_STUS_ID == '4') {
 
                 //AFTER INSTALL CASE
                 if(!fn_getCheckAccessRight(logInUserid, '294')) {
                     if($('#hiddenCurrentProductMasterStockID').val() > 0) {
                         //Current Product = Stock B
-                        if(($('#cmbOrderProduct').val() != $('#hiddenCurrentProductID').val())
-                        && ($('#cmbOrderProduct').val() != $('#hiddenCurrentProductMasterStockID').val())) {
+                        if(($('#cmbOrderProduct').val() != $('#hiddenCurrentProductID').val()) && ($('#cmbOrderProduct').val() != $('#hiddenCurrentProductMasterStockID').val())) {
                             isValid = false;
                             msg += '<spring:message code="sal.alert.msg.sameModelExchOnly" />';
                         }
-                    }
-                    else {
+                    } else {
                         //Current Product = Stock A
                         if($('#cmbOrderProduct').val() != $('#hiddenCurrentProductID').val()) {
                             isValid = false;
@@ -2128,8 +2133,7 @@
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 //BEFORE INSTALL CASE
                 if($('#cmbOrderProduct').val() != $('#hiddenCurrentProductID').val()) {
                     if(fn_getMembershipPurchase()) {
@@ -2234,9 +2238,14 @@
         var stkType = APP_TYPE_ID == '66' ? '1' : '2';
 
         // Homecare Product 조회
-        doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID, stkCtgryId: "${orderDetail.basicInfo.stkCtgryId}"}, '', 'cmbOrderProduct', 'S', 'fn_setOptGrpClass');//product 생성
+        doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID, stkCtgryId: "${orderDetail.basicInfo.stkCtgryId}"}, STOCK_ID, 'cmbOrderProduct', 'S', 'fn_setLoadListPexch');//product 생성
         doGetComboData('/sales/order/selectResnCodeList.do', {resnTypeId : '287', stusCodeId:'1'}, '', 'cmbReasonExch', 'S', ''); //Reason Code
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
+    }
+
+    function fn_setLoadListPexch() {
+    	$("optgroup").attr("class" , "optgroup_text");
+    	$('#cmbOrderProduct').change();
     }
 
     function fn_loadListAexc() {
@@ -2291,21 +2300,24 @@
     }
 
     function fn_selfClose() {
-    	fn_selectListAjax();
+    	// fn_selectListAjax();
+        $('#btnCloseReq').click();
+    }
+
+    function fn_success() {
+        fn_selectListAjax();
         $('#btnCloseReq').click();
     }
 
     function fn_reloadPage(){
-        Common.popupDiv("/sales/order/orderRequestPop.do", { salesOrderId : ORD_ID, ordReqType : $('#ordReqType').val() }, null , true);
+        Common.popupDiv("/sales/order/orderRequestPop.do", {salesOrderId : ORD_ID, ordReqType : $('#ordReqType').val()}, null , true);
         $('#btnCloseReq').click();
     }
 
     function fn_setDefaultSrvPacId() {
-
-        if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ){
+        if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ) {
             SRV_PAC_ID = 0;
-        }
-        else{
+        } else {
             SRV_PAC_ID = $("#srvPacIdAexc").val();
         }
 
@@ -2318,13 +2330,9 @@
     }
 
     function fn_setDefaultPromotionAexc() {
-
-
         if($('#cmbPromotionAexc option').size() >= 2) {
             $('#cmbPromotionAexc option:eq(3)').attr('selected', 'selected');
-
         }
-
     }
 </script>
 
@@ -2484,12 +2492,15 @@
 <form id="frmReqPrdExc" action="#" method="post">
 
 <input name="salesOrdId" type="hidden" value="${orderDetail.basicInfo.ordId}"/>
+<input name="salesOrdNo" type="hidden" value="${orderDetail.basicInfo.ordNo}"/>
+<input name="ordNo" type="hidden" value="${orderDetail.basicInfo.ordNo}"/>
 <input id="hiddenFreeASID" name="hiddenFreeASID" type="hidden" value=""/>
 <input id="hiddenPriceID" name="hiddenPriceID" type="hidden" value=""/>
 <input id="hiddenCurrentProductMasterStockID" name="hiddenCurrentProductMasterStockID" type="hidden" value="${orderDetail.basicInfo.masterStkId}"/>
 <input id="hiddenCurrentProductID" name="hiddenCurrentProductID" type="hidden" value="${orderDetail.basicInfo.stockId}"/>
 <input id="hiddenCurrentPromotionID" name="hiddenCurrentPromotionID" type="hidden" value="${orderDetail.basicInfo.ordPromoId}"/>
 <input id="hiddenCurrentPromotion" name="hiddenCurrentPromotion" type="hidden" value="${orderDetail.basicInfo.ordPromoDesc}"/>
+
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -2528,10 +2539,10 @@
         <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p>
         <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td>
 </tr>
-<tr>
-    <th scope="row"><spring:message code="sal.text.applyCurrPromo" /></th>
-    <td colspan="3"><input id="btnCurrentPromo" name="btnCurrentPromo" value="1" type="checkbox" disabled/></td>
-</tr>
+<!-- <tr> -->
+<%--     <th scope="row"><spring:message code="sal.text.applyCurrPromo" /></th> --%>
+<!--     <td colspan="3"><input id="btnCurrentPromo" name="btnCurrentPromo" value="1" type="checkbox" disabled/></td> -->
+<!-- </tr> -->
 <tr>
     <th scope="row"><spring:message code="sal.text.callLogDate" /><span class="must">*</span></th>
     <td><input id="dpCallLogDateExch" name="dpCallLogDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>

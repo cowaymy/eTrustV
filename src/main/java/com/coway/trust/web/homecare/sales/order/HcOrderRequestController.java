@@ -133,4 +133,20 @@ public class HcOrderRequestController {
 		return ResponseEntity.ok(rtnMsg);
     }
 
+	/**
+	 * Homecare Order Request - Product Exchange
+	 * @Author KR-SH
+	 * @Date 2020. 1. 14.
+	 * @param params
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/hcRequestProdExch.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> hcRequestProdExch(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+		ReturnMessage rtnMsg = hcOrderRequestService.hcRequestProdExch(params, sessionVO);
+
+		return ResponseEntity.ok(rtnMsg);
+    }
+
 }
