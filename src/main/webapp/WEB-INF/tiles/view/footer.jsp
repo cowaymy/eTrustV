@@ -38,7 +38,23 @@
              iHeight = iHeight - 100;  // remain message arae.
 
              $("#content").height(iHeight);
-
+/*
+             $.each($(document.body).find("article>div"), function(i){
+            	 if( $($(document.body).find("article>div")[i]).hasClass("autoGridHeight") == false ){
+            		 $($(document.body).find("article>div")[i]).addClass("autoGridHeight");
+            	 }
+             });
+*/
+             if( $(document.body).find("article>div").length == 1 ){
+            	 if( $($(document.body).find("article>div")[0]).hasClass("autoGridHeight") == false ){
+                     $($(document.body).find("article>div")[0]).addClass("autoGridHeight");
+                 }
+             }else{
+            	 $.each($(document.body).find("article>div"), function(i){
+            		 var gridId = $(this).attr("id");
+            		 AUIGrid.resize(GridCommon.makeGridId(gridId));
+                 });
+             }
          } catch (e) {}
      }
 
