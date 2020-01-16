@@ -501,10 +501,10 @@ var myGridID, excelGridId;
                 return ;
             }
 
-            if(js.date.dateDiff(dat1, dat2) > 31){
-                Common.alert("The duration is only one months.");
-                return ;
-            }
+            //if(js.date.dateDiff(dat1, dat2) > 31){
+            //    Common.alert("The duration is only one months.");
+            //    return ;
+            //}
 
             var url = "/homecare/report/hcPoStatus/selectHcPoStatusMainExcelList.do";
 
