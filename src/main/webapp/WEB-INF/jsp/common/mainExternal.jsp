@@ -89,7 +89,10 @@
         	if(Common.checkPlatformType() == "mobile") {
         		popupObj = Common.popupWin("frmNew", "/homecare/po/hcDeliveryGr/hcDeliveryGrPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
             } else{
+
+
                 Common.popupDiv("/homecare/po/hcDeliveryGr/hcDeliveryGrPop.do", null, null, true, '_divDeliveryGrPop', function(){$(".popup_wrap").css("width", '550px');});
+
             }
         });
 
@@ -136,8 +139,6 @@
         });
         // [Woongjin Jun] Tab
     });
-
-
 
     function fn_menuMobile(obj, menuCode, menuPath, fullPath, myMenuGroupCode, fromDtType, fromDtFieldNm, fromDtVal, toDtType, toDtFieldNm, toDtVal, menuName){
         if(FormUtil.isEmpty(menuPath) || $(obj).hasClass("disabled")){
@@ -322,8 +323,9 @@
 
 
 
+<!-- [Woongjin Jun] Tab Style Display -->
 <!-- [Woongjin Jun] Tab -->
-<section id="content2" style="width: 100%; height: 1000; border: 1px; color: black; display: none; overflow-x: hidden; overflow-y: auto;">
+<section id="content2" style="width: 100%; height: 1000; border: 1px; color: black;  overflow-x: hidden; overflow-y: auto;">
     <div id="mainTabs" style="width: 100%; height: 1000; border: 1px; color: black;">
         <ul id="mainTabTitle" style="padding-right: 130px;">
             <div style="position: absolute; top: 15px; right: 120px;"><a href="javascript:;" id="btnTabPrev">&lt;</a></div>
@@ -333,9 +335,6 @@
     </div>
 </section>
 <!-- [Woongjin Jun] Tab -->
-
-<!-- [Woongjin Jun] Tab Style Display -->
-
 <section id="content"><!-- content start -->
     <aside class="title_line main_title"><!-- title_line start -->
         <h2>Welcome to eTRUST System.</h2>
@@ -414,6 +413,7 @@
         </section><!-- lnb_con end -->
     </aside><!-- lnb_wrap end -->
 </section>
+
 <form id="frmNew" name="frmNew" action="#" method="post"></form>
 <form id="serialScanningGR" name="serialScanningGR" action="#" method="post">
      <input type="hidden" id="GR_FROM_DT" name="GR_FROM_DT" value=""/>
