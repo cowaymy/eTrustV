@@ -66,7 +66,8 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	        		EgovMap ordIdMap = MSvcLogApiService.getOrdID(cvMp);
 	        		String userId = MSvcLogApiService.getUseridToMemid(params); // SELECT MEM_ID FROM ORG0001D WHERE mem_code = #{userId}
 
-	        		// SP_RETURN_BILLING_EARLY_TERMI COMMIT DELETE
+	        		cvMp.put("hidSerialRequireChkYn", String.valueOf( cvMp.get("serialRequireChkYn")));
+
 	        		EgovMap rtnValue = MSvcLogApiService.productReturnResult(cvMp);
 
 	        		if (null != rtnValue) {
@@ -176,6 +177,8 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	        		EgovMap ordIdMap = MSvcLogApiService.getOrdID(cvMp);
 	        		String userId = MSvcLogApiService.getUseridToMemid(params); // SELECT MEM_ID FROM ORG0001D WHERE mem_code = #{userId}
 
+	        		cvMp.put("hidSerialRequireChkYn", "Y");
+
 	        		EgovMap rtnValue = MSvcLogApiService.productReturnResult(cvMp);
 
 	        		if (null != rtnValue) {
@@ -230,14 +233,6 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
 	    			String errorMsg = "[API] " + e.toString();
 	    			throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 	        	}
-	        }
-	        else {
-	        	String procTransactionId = transactionId;
-    			String procName = "ProductReturn";
-    			String procKey = serviceNo;
-    			String procMsg = "NoTarget Data";
-    			String errorMsg = "[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT IN ACTIVE STATUS. ";
-    			throw new BizException("04", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 	        }
 		}
 		else {
