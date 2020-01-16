@@ -150,11 +150,9 @@
             // [Woongjin Jun] Toggle Button
 
             // [Woongjin Jun] Tab
-            if ($("#mainTabs").find("li").length > 0) {
-                if ($("#mainTabs").find("li").length >= 10) {
-                    alert("Max 10 Screen");
-                    return;
-                }
+            if ($("#mainTabs").find("li").length > 0 && $("#mainTabs").find("li").length >= 10 && $("#mainTabs ul").find("li[aria-controls=tabs-" + menuCode + "]").length == 0 ) {
+            	alert("Max 10 Screen");
+                return;
             }
             // [Woongjin Jun] Tab
 
