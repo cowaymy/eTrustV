@@ -21,6 +21,7 @@ var bsHistoryGridID;
 var resultBasicObject;
 var resultSrvconfigObject;
 var resultInstallationObject;
+var defaultcTPackage = "9";
 
 
 $(document).ready(function(){
@@ -411,7 +412,9 @@ $(document).ready(function(){
 	}
 
 	function setPackgCombo() {
-		doGetCombo('/sales/membership/getSrvMemCode?SALES_ORD_ID=' + $("#ORD_ID").val(), '', '', 'cTPackage', 'S', ''); // Customer Type Combo Box
+		doGetCombo('/sales/membership/getSrvMemCode?SALES_ORD_ID=' + $("#ORD_ID").val(), '', defaultcTPackage, 'cTPackage', 'S', ''); 
+		fn_cTPackage_onchangeEvt();
+		
 	}
 
 	function fn_cTPackage_onchangeEvt() {
@@ -435,7 +438,7 @@ $(document).ready(function(){
 		//set clear
 		fn_SubscriptionYear_initEvt();
 
-		$("#SELPACKAGE_ID").val($('#cTPackage').val());
+		$("#SELPACKAGE_ID").val(defaultcTPackage);
 		$("#DUR").val($("#cYear").val().trim());
 
 		//set getMembershipPackageInfo
@@ -452,7 +455,7 @@ $(document).ready(function(){
 		if ($("#HiddenIsCharge").val() != "0") {
 			Common.ajax("GET", "/sales/membership/getFilterPromotionAmt.do", {
 				SALES_ORD_NO : resultBasicObject.ordNo,
-				SRV_PAC_ID : $('#cTPackage').val()
+				SRV_PAC_ID : $('#SELPACKAGE_ID').val()
 			}, function(result) {
 				console.log(result);
 
@@ -608,6 +611,8 @@ $(document).ready(function(){
 				$("#hiddentxtBSFreq").val(result.packageInfo.srvMemItmPriod);
 
 				$("#hiddenNomalPrice").val(pacPrice);
+				
+				$("#srvMemPacId").val(result.packageInfo.srvMemPacId);
 
 				if ($("#eurCertYn").val() == "N") {
 					//$("#txtPackagePrice").html(Math.floor(pacPrice *100/106)); -- without GST 6% edited by TPY 23/05/2018
@@ -652,13 +657,12 @@ $(document).ready(function(){
 
 		$("#cPromo").val("");
 
-		var SRV_MEM_PAC_ID = $("#cTPackage").val();
-		doGetCombo('/sales/membership/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID=' + SRV_MEM_PAC_ID + "&E_YN=" + $("#cEmplo").val(), '', '', 'cPromo', 'S', '');
+		doGetCombo('/sales/membership/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID=' + $("#SELPACKAGE_ID").val() + "&E_YN=" + $("#cEmplo").val(), '', '', 'cPromo', 'S', '');
 
-		if ($("#HiddenIsCharge").val() != "0") {
+		/* if ($("#HiddenIsCharge").val() != "0") {
 			$("#cPromo").prop("disabled", false);
 			$("#cPromo").attr("class", "");
-		}
+		} */
 	}
 
 	function fn_doPackagePro(v) {
@@ -691,10 +695,9 @@ $(document).ready(function(){
 		$("#cPromotionpac").val("");
 
 		var SALES_ORD_ID = $("#ORD_ID").val();
-		var SRV_MEM_PAC_ID = $("#cTPackage").val();
 		var E_YN = $("#cEmplo").val();
 
-		var pram = "?SALES_ORD_ID=" + SALES_ORD_ID + "&SRV_MEM_PAC_ID=" + SRV_MEM_PAC_ID + "&E_YN=" + E_YN;
+		var pram = "?SALES_ORD_ID=" + SALES_ORD_ID + "&SRV_MEM_PAC_ID=" + $("#SELPACKAGE_ID").val() + "&E_YN=" + E_YN;
 
 		doGetCombo('/sales/membership/getPromotionCode' + pram, '', '', 'cPromotionpac', 'S', '');
 
@@ -753,13 +756,13 @@ $(document).ready(function(){
 
 		if ($("#HiddenIsCharge").val() != "0") {
 
-			if ($('#cTPackage').val() != "") {
+			if ($('#SELPACKAGE_ID').val() != "") {
 
 				Common.ajax("GET", "/sales/membership/getFilterChargeListSum.do", {
 					SALES_ORD_NO : $("#ORD_NO").val(),
 					ORD_ID : $("#ORD_ID").val(),
 					PROMO_ID : $('#cPromo').val(),
-					SRV_PAC_ID : $('#cTPackage').val(),
+					SRV_PAC_ID : $('#SELPACKAGE_ID').val(),
 					zeroRatYn : $("#zeroRatYn").val(),
 					eurCertYn : $("#eurCertYn").val()
 				}, function(result) {
@@ -1061,7 +1064,7 @@ $(document).ready(function(){
 		var rtnMsg = "";
 		var rtnValue = true;
 
-		if (FormUtil.checkReqValue($("#cTPackage"))) {
+		if (FormUtil.checkReqValue($("#srvMemPacId"))) {
 			rtnMsg += "* Please select the type of package.<br />";
 			rtnValue = false;
 		}
@@ -1079,6 +1082,11 @@ $(document).ready(function(){
 			if ($("#cYear").val() == "12" && $("#cPromotionpac").val() == "544") {
 
 				rtnMsg += "<spring:message code="sal.alert.msg.notAllowPromotionDiscount" /> <br>";
+				rtnValue = false;
+			}
+			if (($("#cYear").val() != "24" )&& $("#cPromotionpac").val() == "31741") {
+
+				rtnMsg += "Subscription Year selected not 2 years. "+"<spring:message code="sal.alert.msg.notAllowPromotion" /> <br>";
 				rtnValue = false;
 			}
 		}
@@ -1270,7 +1278,7 @@ $(document).ready(function(){
 		$("#srvMemQuotId").val(0);
 		$("#srvSalesOrderId").val($("#ORD_ID").val());
 		$("#srvMemQuotNo").val("");
-		$("#srvMemPacId").val($("#cTPackage").val());
+		$("#srvMemPacId").val();
 
 		$("#srvMemPacNetAmt").val($("#txtPackagePrice").text()); //
 		//$("#srvMemPacNetAmt").val($("#hiddenNomalPrice").text());  // nomalAmt
