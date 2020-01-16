@@ -440,7 +440,14 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
     logPram.put("USERID", MSvcLogApiMapper.getRetnCrtUserId(params));
 
     logger.debug("productReturnResult 물류  PRAM ===>" + logPram.toString());
-    servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+
+    if ("Y".equals(params.get("hidSerialRequireChkYn"))) {
+    	servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL(logPram);
+    }
+    else {
+    	servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+    }
+
     logger.debug("productReturnResult 물류  결과 ===>" + logPram.toString());
     logPram.put("P_RESULT_TYPE", "PR");
     logPram.put("P_RESULT_MSG", logPram.get("p1"));
