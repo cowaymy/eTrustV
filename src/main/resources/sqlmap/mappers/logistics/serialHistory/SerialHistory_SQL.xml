@@ -74,7 +74,7 @@
           AND Z.SALES_ORD_NO = #{ordNo}
         </if>
 	    </where>
-		ORDER   BY Z.CRT_DT DESC
+		ORDER   BY Z.CRT_DT DESC, Z.SEQ DESC
     </select>
 
 </mapper>
