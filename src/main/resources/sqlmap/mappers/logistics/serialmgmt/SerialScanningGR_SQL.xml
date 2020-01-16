@@ -47,8 +47,8 @@
     <select id="serialScanningGRDataList" parameterType="Map" resultType="EgovMap">
         /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialScanningGRMapper.serialScanningGRDataList] - KR JUN */
         SELECT l55.DELVRY_NO AS delno
-                 , l55.REQST_NO AS reqstno
-                 , TO_CHAR(l47.REQST_CRT_DT, 'dd/mm/yyyy') AS reqstdt
+                 --, l55.REQST_NO AS reqstno
+                 --, TO_CHAR(l47.REQST_CRT_DT, 'dd/mm/yyyy') AS reqstdt
                  , L47.REQST_TYPE AS reqsttype
                  , l47.TRNSC_TYPE AS trnsctype
                  , l47.TRNSC_TYPE_DTL AS trnsctypedtl
@@ -59,7 +59,7 @@
                  , SUM(l55.DELVRY_QTY) AS delqty
                  , l54.CRT_USER_ID AS crt
                  , TO_CHAR(l54.CRT_DT, 'dd/mm/yyyy') AS crtdt
-                 , l47.REF_DOC_NO
+                 --, l47.REF_DOC_NO
            FROM LOG0047M l47
                  , LOG0055D l55
                  , LOG0054M l54
@@ -84,8 +84,8 @@
         <if test="searchDeliveryOrRequestNo !=null and searchDeliveryOrRequestNo != ''">
             AND (l55.DELVRY_NO = #{searchDeliveryOrRequestNo} OR l55.REQST_NO = #{searchDeliveryOrRequestNo} OR l47.REF_DOC_NO = #{searchDeliveryOrRequestNo})
         </if>
-             GROUP BY l55.DELVRY_NO, l55.REQST_NO, l47.REQST_CRT_DT, L47.REQST_TYPE, l47.TRNSC_TYPE, l47.TRNSC_TYPE_DTL, s28c.WH_LOC_DESC,
-                            l47.RCIV_CDC_RDC, l47.REQST_CDC_RDC, l54.DELVRY_DT, l54.CRT_USER_ID, l54.CRT_DT, l47.REF_DOC_NO
+             GROUP BY l55.DELVRY_NO, L47.REQST_TYPE, l47.TRNSC_TYPE, l47.TRNSC_TYPE_DTL, s28c.WH_LOC_DESC,
+                            l47.RCIV_CDC_RDC, l47.REQST_CDC_RDC, l54.DELVRY_DT, l54.CRT_USER_ID, l54.CRT_DT
              ORDER BY l55.DELVRY_NO DESC
     </select>
 </mapper>
