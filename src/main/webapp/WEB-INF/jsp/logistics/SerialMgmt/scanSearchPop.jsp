@@ -53,6 +53,10 @@ function fnScanSearchResult(serialNo) {
     </c:forEach>
 
     $(document).ready(function() {
+
+    	// Moblie Popup Setting
+        Common.setMobilePopup(true, true, 'mainPopGrid');
+
         createAUIGrid();
 
         //doDefComboCode(getCodeList("MASTER", "", "446", "", "all"), '${pStatus}', 'searchStatus', 'S', '');
