@@ -771,7 +771,9 @@
 
     <aside  id="notice" class="title_line main_title"><!-- title_line start -->
         <h2><spring:message code='sys.label.notice'/></h2>
-        <p class="more" id="moreNotice"><a href="${pageContext.request.contextPath}/notice/noticeList.do"><spring:message code='sys.label.more'/> ></a></p>
+        <%-- <p class="more" id="moreNotice"><a href="${pageContext.request.contextPath}/notice/noticeList.do"><spring:message code='sys.label.more'/> ></a></p> --%>
+        <p class="more" id="moreNotice" ><a href="#"  onclick="javascript:fn_menu(this, 'SYS10060100', '/notice/noticeList.do', '|!|System|!|Notice|!|Notice List', '', 'Notice List', '', '', '', '', '', '');"><spring:message code='sys.label.more'/> ></a> </p>
+
     </aside><!-- title_line end -->
 
     <form id="MainForm" method="get" action="">
