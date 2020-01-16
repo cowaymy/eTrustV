@@ -44,11 +44,11 @@
 				        FROM    LOG0102H T1
 				                        JOIN SAL0001D T2
 				                            ON T1.SALES_ORD_ID = T2.SALES_ORD_ID
-				                    INNER JOIN SYS0005M T4
+				                    LEFT OUTER JOIN SYS0005M T4
 				                        ON  T1.CRT_BRNCH_ID = T4.BRNCH_ID
-				                    JOIN SYS0026M T5
+				                    LEFT OUTER JOIN SYS0026M T5
 				                        ON T1.ITM_CODE = T5.STK_CODE
-				                    LEFT JOIN SYS0047M T10
+				                    LEFT OUTER JOIN SYS0047M T10
 				                        ON T1.CRT_USER_ID = T10.USER_ID
 	    ) Z
 		<where>
