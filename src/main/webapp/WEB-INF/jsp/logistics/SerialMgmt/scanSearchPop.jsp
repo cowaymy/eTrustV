@@ -233,7 +233,7 @@ function fnScanSearchResult(serialNo) {
 	                        <td>
 	                            <div class="w100p">
 	                                <input type="text"  id="searchDeliveryNo" name="searchDeliveryNo" style="width:50%;" value="${pDeliveryNo}" readonly class="readonly"/>
-	                                <input type="text"  id="searchDeliveryItem" name="searchDeliveryItem" style="width:10%;" value="${pDeliveryItem}" readonly class="readonly"/>
+	                                <input type="text"  id="searchDeliveryItem" name="searchDeliveryItem" style="width:20%;" value="${pDeliveryItem}" readonly class="readonly"/>
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -242,7 +242,7 @@ function fnScanSearchResult(serialNo) {
 	                        <td>
 	                            <div class="w100p">
 	                                <input type="text"  id="searchRequestNo1" name="searchRequestNo1" style="width:50%;" value="${pRequestNo}" readonly class="readonly"/>
-	                                <input type="text"  id="searchRequestItem" name="searchRequestItem" style="width:10%;" value="${pRequestItem}" readonly class="readonly"/>
+	                                <input type="text"  id="searchRequestItem" name="searchRequestItem" style="width:20%;" value="${pRequestItem}" readonly class="readonly"/>
 	                            </div>
 	                        </td>
 	                    </tr>
