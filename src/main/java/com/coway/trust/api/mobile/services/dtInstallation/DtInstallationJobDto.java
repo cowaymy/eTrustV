@@ -260,6 +260,14 @@ public class DtInstallationJobDto {
 	this.fraSerialChk = fraSerialChk;
   }
 
+  private String selFraSerialNo;
+  public String getSelFraSerialNo() {
+	  return selFraSerialNo;
+  }
+  public void setSelFraSerialNo(String selFraSerialNo) {
+	this.selFraSerialNo = selFraSerialNo;
+  }
+
   public String getSalesOrderNo() {
     return salesOrderNo;
   }
