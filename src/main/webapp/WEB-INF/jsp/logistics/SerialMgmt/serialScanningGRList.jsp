@@ -81,13 +81,13 @@
                 return getCodeList("CODE", "", "308", item.trnsctypedtl);
             }},
             {dataField:"reqsttype", headerText:"Req Type", width:80, height:30},
-            {dataField:"reqstno", headerText:"Request No", width:120, height:30},
-            {
+            //{dataField:"reqstno", headerText:"Request No", width:120, height:30},
+            /*{
                 dataField : "refDocNo",
                 headerText : "<spring:message code='log.head.refdocno'/>",
                 width : 120,
                 height : 30
-              }
+              }*/
         ];
 
     	var mainGridOptions = {
