@@ -1058,6 +1058,7 @@
          , TO_CHAR(RESULT_REMARK) AS result_Result
          , TO_CHAR(SERIAL_CHK) AS serial_Chk
          , TO_CHAR(FRA_SERIAL_CHK) AS fra_Serial_Chk
+         , TO_CHAR(SEL_FRA_SERIAL_NO) AS sel_Fra_Serial_No
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -1087,6 +1088,16 @@
 			                  WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID(+)
 			                    AND T2.ITM_STK_ID = T3.STK_ID(+)
 			                    AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS FRA_SERIAL_CHK
+			              , (SELECT MAX(AF_SERIAL_NO) AS AF_SERIAL_NO
+		                        FROM LOG0102H T1
+		                           , SAL0001D T2
+		                       WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID
+		                         AND T2.SALES_ORD_NO = A.sales_Order_No) AS SEL_SERIAL_NO
+		                   , (SELECT MAX(AF_SERIAL_NO) AS AF_SERIAL_NO
+		                        FROM LOG0102H T1
+		                           , SAL0001D T2
+		                       WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID
+		                         AND T2.SALES_ORD_NO = A.FRA_ORD_NO) AS SEL_FRA_SERIAL_NO
 		   FROM (
 				      SELECT TO_CHAR (C.SALES_ORD_NO) AS sales_Order_No,
 				             A.RETN_NO AS service_No,
@@ -1278,6 +1289,8 @@
          , TO_CHAR(FRA_PRODUCT_CODE) AS fra_Product_Code
          , TO_CHAR(FRA_PRODUCT_NAME) AS fra_Product_Name
          , TO_CHAR(FRA_SERIAL_CHK) AS fra_Serial_Chk
+         , TO_CHAR(SEL_SERIAL_NO) AS sel_Serial_No
+         , TO_CHAR(SEL_FRA_SERIAL_NO) AS sel_Fra_Serial_No
     FROM SVC0104T
     WHERE MEM_CODE =  #{userId}
   </select>
@@ -4699,6 +4712,13 @@
 		                  WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID(+)
 		                    AND T2.ITM_STK_ID = T3.STK_ID(+)
 		                    AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS FRA_SERIAL_CHK
+		              , (SELECT MAX(T3.SERIAL_NO) AS SERIAL_NO
+	                       FROM SAL0001D T1
+	                          , SAL0046D T2
+	                          , SAL0047D T3
+	                      WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID
+	                        AND T2.INSTALL_ENTRY_ID = T3.ENTRY_ID(+)
+	                        AND T1.SALES_ORD_NO = A.FRA_ORD_NO) AS SEL_FRA_SERIAL_NO
       FROM (SELECT ROW_NUMBER () OVER (PARTITION BY SAL0001D.SALES_ORD_NO ORDER BY SAL0095D.SRV_EXPR_DT, SAL0046D.INSTALL_ENTRY_NO DESC) rnum,
                    SAL0046D.INSTALL_ENTRY_NO AS service_No,
                    SAL0046D.STUS_CODE_ID AS job_Status,
