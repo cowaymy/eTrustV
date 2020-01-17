@@ -32,9 +32,9 @@
         $("#viewAdvBankAccNo").text(myGridData[0].bankAccNo);
 
         if(myGridData[0].advType == 1) {
-            //$("#trvAdv").show();
-            //$("#appvReqGeneral2").show();
-            $("#advanceRefDiv").hide();
+            $("#trvAdv").css("display", "none");
+            $("#advanceRefDiv").css("display", "none");
+            //$("#advanceRefDiv").hide();
 
             $("#viewTrvLoc").text(myGridData[0].advLocFr + " To " + myGridData[0].advLocTo);
             $("#viewTrvPeriod").text(myGridData[0].advPrdFr + " To " + myGridData[0].advPrdTo + " (" + myGridData[0].datediff + " Days)" );
@@ -59,9 +59,9 @@
             $("#viewTrvRefdDt").text(myGridData[0].advRefdDt);
 
         } else if(myGridData[0].advType == 2) {
-            $("#trvAdv").hide();
-            $("#appvGenBankRow").hide();
-            $("#reqRefdDate").hide();
+            $("#trvAdvGen").css("display", "none");
+            $("#trvAdvDtl").css("display", "none");
+            $("#reqRefdDate").css("display", "none");
 
             $("#refTrvPeriod").text(myGridData[0].refTrvPrdFr + " To " + myGridData[0].refTrvPrdTo);
             $("#refAdvReqClmNo").text(myGridData[0].advRefdClmNo);
@@ -252,7 +252,7 @@
                 <!-- Travel Advance Division -->
 
                 <div id="trvAdv">
-                    <table class="type1">
+                    <table class="type1" id="trvAdvGen">
                         <caption>New Advance Request</caption>
                         <colgroup>
                             <col style="width:200px" />
@@ -286,7 +286,7 @@
                         </tr>
                     </table>
 
-                    <article class="tap_block">
+                    <article class="tap_block" id="trvAdvDtl">
                         <aside class="title_line">
                             <b style="color:#25527c;">Travel Advance Calculation</b>
                         </aside>
@@ -364,12 +364,14 @@
                                 <span id="refRepayDate"></span>
                             </td>
                         </tr>
+                        <!--
                         <tr>
                             <th scope="row">Bank-in Advice Ref Note</th>
                             <td colspan="2">
                                 <span id="refBankInRefNo"></span>
                             </td>
                         </tr>
+                         -->
                         <tr>
                             <th scope="row">Remarks</th>
                             <td colspan="2">
