@@ -401,7 +401,7 @@
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
-                    <col style="width:30%" />
+                    <col style="width:26%" />
                     <col style="width:*" />
                 </colgroup>
                 <tbody>
@@ -457,7 +457,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Category/Type</th>
+                        <th scope="row">Category /Type</th>
                         <td>
                             <select id="cmbCategory" name="cmbCategory[]" multiple="multiple" style="width:100px"></select>
                             <select id="cmbType" name="cmbType[]" multiple="multiple" style="width:100px"></select>
@@ -470,7 +470,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Bundle/Ord./Ref.</th>
+                        <th scope="row">Bundle/Ord. /Ref.</th>
                         <td>
                             <input type="text"  id="searchRequestNo2" name="searchRequestNo2"  class="w100p" />
                         </td>
