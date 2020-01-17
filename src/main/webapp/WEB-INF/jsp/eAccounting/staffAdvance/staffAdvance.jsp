@@ -468,6 +468,8 @@
             $("#repayBank").hide();
             $("#repayBank").hide();
             $("#trvAdvRepay").show();
+
+            $("#refAdvType").empty().append('<option selected="selected" value="2">Staff Travel Expenses - Repayment</option>');
         }
 
         if(clmType == "R2") {
@@ -485,10 +487,6 @@
                 $("#refBankName").val(result.bankName);
                 $("#refBankAccNo").val(result.bankAccNo);
                 $("#trvAdvRepayAmt").val(result.totAmt.toFixed(2));
-
-                if(result.advType == "1") {
-                    $("#refAdvType option[value=2]").attr('selected', 'selected');
-                }
             });
 
         } else if(clmType == "A1") {
@@ -603,10 +601,16 @@
         } else if(menu == "REF") {
             $("#advRepayForm").clearForm();
             $("#advRepayPop").hide();
+
+            $("#refAdvType").empty();
+            $("#refAdvType").append('<option value="1">Staff Travel Expense</option>');
+            $("#refAdvType").append('<option selected="selected" value="2">Staff Travel Expenses - Repayment</option>');
         }
 
         if($("#appvLinePop").is(':visible')) {
             $("#appvLinePop").hide();
+            $("#requestAppvLine").hide();
+            $("#repaymentAppvLine").hide();
         }
 
         if($("#advReqMsgPop").is(':visible')) {
@@ -651,29 +655,58 @@
         var arrDt, fDate, tDate, dateDiff, rDate;
         var dd, mm, yyyy;
 
+        var cDate = new Date();
+
         if(mode == "F") {
             arrDt = $("#trvPeriodFr").val().split("/");
             fDate = new Date(arrDt[2], arrDt[1]-1, arrDt[0]);
 
-            if($("#trvPeriodTo").val() == "") {
-                fDate.setDate(fDate.getDate() + minPeriod);
-                dd = fDate.getDate();
-                if(dd < 10) {
-                    dd = "0" + dd;
-                }
-                mm = fDate.getMonth() + 1;
-                yyyy = fDate.getFullYear();
+            if(fDate > cDate) {
+                if($("#trvPeriodTo").val() == "") {
+                    fDate.setDate(fDate.getDate() + minPeriod);
+                    dd = fDate.getDate();
+                    if(dd < 10) {
+                        dd = "0" + dd;
+                    }
+                    mm = fDate.getMonth() + 1;
+                    yyyy = fDate.getFullYear();
 
-                if(mm < 10) {
-                    mm = "0" + mm;
-                }
+                    if(mm < 10) {
+                        mm = "0" + mm;
+                    }
 
-                $("#trvPeriodTo").val(dd + "/" + mm + "/" + yyyy);
-                //$("#daysCount").val(minPeriod);
+                    $("#trvPeriodTo").val(dd + "/" + mm + "/" + yyyy);
+                    //$("#daysCount").val(minPeriod);
+                }
+            } else {
+                Common.alert("Backdate not allowed!");
+                $("#trvPeriodFr").val("");
+                $("#trvPeriodTo").val("");
+                $("#daysCount").val("");
+                $("#refdDate").val("");
+                return false;
             }
         } else if(mode == "T") {
             arrDt = $("#trvPeriodTo").val().split("/");
             tDate = new Date(arrDt[2], arrDt[1]-1, arrDt[0]);
+            var nDate = new Date();
+            nDate.setDate(nDate.getDate() + minPeriod);
+
+            if(tDate < cDate) {
+                Common.alert("Backdate request not allowed!");
+                $("#trvPeriodFr").val("");
+                $("#trvPeriodTo").val("");
+                $("#daysCount").val("");
+                $("#refdDate").val("");
+                return false;
+            } else if (tDate <= nDate && tDate > cDate) {
+                Common.alert("Backdate request not allowed!");
+                $("#trvPeriodFr").val("");
+                $("#trvPeriodTo").val("");
+                $("#daysCount").val("");
+                $("#refdDate").val("");
+                return false;
+            }
 
             if($("#trvPeriodFr").val() == "") {
                 tDate.setDate(tDate.getDate() - minPeriod);
@@ -806,6 +839,7 @@
                 fn_appvLineGridAddRow();
 
                 $("#appvLinePop").show();
+                $("#requestAppvLine").show();
                 AUIGrid.resize(approveLineGridID, 565, $(".approveLine_grid_wrap").innerHeight());
             }
         } else if(mode == "J") {
@@ -959,6 +993,7 @@
             $("#acknowledgement").hide();
 
             $("#advType").val('');
+            fn_closePop();
             fn_searchAdv();
         });
     }
@@ -978,6 +1013,9 @@
                if(mode == "S") {
                    fn_submitReq();
                }
+
+               fn_closePop();
+               fn_searchAdv();
            });
         });
     }
@@ -1009,7 +1047,11 @@
                            fn_appvLineGridAddRow();
 
                            $("#appvLinePop").show();
+                           $("#repaymentAppvLine").show();
                            AUIGrid.resize(approveLineGridID, 565, $(".approveLine_grid_wrap").innerHeight());
+                       } else {
+                           fn_closePop();
+                           fn_searchAdv();
                        }
                    });
                 });
@@ -1031,7 +1073,11 @@
                             fn_appvLineGridAddRow();
 
                             $("#appvLinePop").show();
+                            $("#repaymentAppvLine").show();
                             AUIGrid.resize(approveLineGridID, 565, $(".approveLine_grid_wrap").innerHeight());
+                        } else {
+                            fn_closePop();
+                            fn_searchAdv();
                         }
                     });
                 });
@@ -1050,6 +1096,11 @@
 
         Common.ajax("POST", "/eAccounting/staffAdvance/submitAdvReq.do", data, function(result) {
             console.log(result);
+            $("#advRepayPop").hide();
+            $("#appvLinePop").hide();
+
+            fn_closePop();
+            fn_searchAdv();
         })
     }
 
@@ -1088,6 +1139,7 @@
     ********************************/
     function fn_appvLineGridAddRow() {
         AUIGrid.addRow(approveLineGridID, {}, "first");
+        AUIGrid.addRow(approveLineGridID, {memCode : "P0128", name : "TAN LEE JUN"}, "last");
     }
 
     function fn_appvLineGridDeleteRow() {
@@ -1241,7 +1293,7 @@
         <h2>Advance to Staff</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" id="request_btn">New Request</a></p></li>
-            <li><p class="btn_blue"><a href="#" id="refund_btn">Refund</a></p></li>
+            <li><p class="btn_blue"><a href="#" id="refund_btn">Repayment</a></p></li>
             <li><p class="btn_blue"><a href="#" id="advList_btn"><span class="search"></span>Search</a></p></li>
         </ul>
     </aside>
@@ -1474,7 +1526,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Traveling Period<span class="must">*</span></th>
+                            <th scope="row">Travel Period<span class="must">*</span></th>
                             <td>
                                 <div class="date_set w100p">
                                     <p>
@@ -1576,7 +1628,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Refund Date</th>
+                        <th scope="row">Repayment Due Date</th>
                         <td colspan="2">
                             <input type="text" title="Refund Date" placeholder="Refund Date" id="refdDate" name="refdDate" style="200px" readonly/>
                         </td>
@@ -1741,7 +1793,7 @@
 
 <div class="popup_wrap size_small" id="advReqMsgPop" style="display: none;">
     <header class="pop_header">
-        <h1 id="advReqMsgPopHeader">Request Agreement</h1>
+        <h1 id="advReqMsgPopHeader">Submission of Request</h1>
         <ul class="right_opt">
             <li>
                 <p class="btn_blue2">
@@ -1809,8 +1861,12 @@
             <article class="grid_wrap" id="approveLine_grid_wrap">
             </article>
 
-            <ul class="center_btns">
+            <ul class="center_btns" id="requestAppvLine" style="display: none;">
                 <li><p class="btn_blue2"><a href="javascript:fn_saveRequest('S')" id="submit"><spring:message code="newWebInvoice.btn.submit" /></a></p></li>
+            </ul>
+
+            <ul class="center_btns" id="repaymentAppvLine" style="display: none;">
+                <li><p class="btn_blue2"><a href="javascript:fn_submitRef()" id="submit"><spring:message code="newWebInvoice.btn.submit" /></a></p></li>
             </ul>
 
         </section>
