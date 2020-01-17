@@ -156,7 +156,7 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 			params.put("callEntryId", CommonUtils.nvl(callEntryMap.get("callEntryId")));
 			params.put("hidRefDocNo", CommonUtils.nvl(callEntryMap.get("retnNo")));
 			params.put("hidTaxInvDSalesOrderNo", CommonUtils.nvl(hcOrderInfo.get("fraOrdNo")));
-			params.put("serialNo", "");
+			params.put("serialNo", CommonUtils.nvl(params.get("serialNo2")));
 
 			// return - Frame Product
 			EgovMap rtnFra = orderListService.insertProductReturnResultSerial(params);

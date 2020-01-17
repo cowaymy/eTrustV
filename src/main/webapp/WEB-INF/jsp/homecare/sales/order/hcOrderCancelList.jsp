@@ -12,6 +12,8 @@
 
 	    // DT Branch CodeList 조회
 	    doGetComboSepa('/homecare/selectHomecareBranchList.do',  '', ' - ', '', 'listDscBranchId', 'M', 'fn_multiCombo'); //Branch Code
+	    // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
+	    doGetCombo('/common/selectCodeList.do', '10', '', 'cmbAppTypeId', 'M', 'f_multiCombo'); // Application Type Combo Box
 
 	    // 셀 더블클릭 이벤트 바인딩
 	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
@@ -165,32 +167,24 @@
 
 	    // 그리드 속성 설정
 	    var gridPros = {
-            // 페이징 사용
-		    usePaging : true,
-		    // 한 화면에 출력되는 행 개수 20(기본값:20)
-		    pageRowCount : 20,
-		    editable : true,
-		    fixedColumnCount : 1,
-		    showStateColumn : false,
-		    displayTreeOpen : true,
-		    selectionMode : "multipleCells",
-		    headerHeight : 30,
-		    // 그룹핑 패널 사용
-		    useGroupingPanel : false,
-		    // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-		    skipReadonlyColumns : true,
-		    // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-		    wrapSelectionMove : true,
-		    // 줄번호 칼럼 렌더러 출력
-		    showRowNumColumn : false,
-		    groupingMessage : "Here groupping"
+            usePaging                 : true,         //페이징 사용
+            pageRowCount          : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable                    : false,
+            fixedColumnCount      : 1,
+            showStateColumn       : false,
+            displayTreeOpen        : false,
+            headerHeight             : 30,
+            useGroupingPanel       : false,        //그룹핑 패널 사용
+            skipReadonlyColumns  : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove     : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn  : true,         //줄번호 칼럼 렌더러 출력
+            noDataMessage          : "No order found.",
+            //wordWrap                  : true,
+            groupingMessage       : "Here groupping"
 		};
-	    //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
-    }
 
-    // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-    doGetCombo('/common/selectCodeList.do', '10', '', 'cmbAppTypeId', 'M', 'f_multiCombo'); // Application Type Combo Box
+        myGridID = GridCommon.createAUIGrid("#list_grid_wrap", columnLayout, "", gridPros);
+    }
 
     // 조회조건 combo box
     function f_multiCombo() {
@@ -208,7 +202,7 @@
     // 리스트 조회.
     function fn_orderCancelListAjax() {
     	// 그리드 초기화.
-    	AUIGrid.setGridData(myGridID, []);
+    	// AUIGrid.setGridData(myGridID, []);
 
         Common.ajax("GET", "/homecare/sales/order/hcOrderCancellationList", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
@@ -347,7 +341,7 @@
     }
 
     function fn_excelDown() {
-        GridCommon.exportTo("grid_wrap", "xlsx", "Order Cancellation Listing");
+        GridCommon.exportTo("list_grid_wrap", "xlsx", "Order Cancellation Listing");
     }
 </script>
 
@@ -387,9 +381,9 @@
 					</p></li>
 			</c:if>
 			<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-				<li><p class="btn_blue">
-						<a href="#" onclick="javascript:fn_CTBulk()">Change Assign DT(Bulk)</a>
-					</p></li>
+<!-- 				<li><p class="btn_blue"> -->
+<!-- 						<a href="#" onclick="javascript:fn_CTBulk()">Change Assign DT(Bulk)</a> -->
+<!-- 					</p></li> -->
 			</c:if>
 			<c:if test="${PAGE_AUTH.funcView == 'Y'}">
 				<li><p class="btn_blue">
@@ -596,7 +590,8 @@
 		<!-- search_result start -->
 		<article class="grid_wrap">
 			<!-- grid_wrap start -->
-			<div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div>
+<!-- 			<div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div> -->
+			<div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 		</article>
 		<!-- grid_wrap end -->
 	</section>

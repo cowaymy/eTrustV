@@ -67,7 +67,6 @@ public class HcOrderCancelController {
 	@Resource(name = "orderListService")
 	private OrderListService orderListService;
 
-
 	/**
 	 * Homecare Order Cancellation List 초기화 화면
 	 * @Author KR-SH
@@ -233,13 +232,45 @@ public class HcOrderCancelController {
 		EgovMap hpMember= installationResultListService.getMemberFullDetailsByMemberIDCode(salseOrder);
 		EgovMap pRCtInfo =orderListService.getPrCTInfo(params);
 
-		// 시리얼 번호 조회
+		// 시리얼 번호 조회 - Mattress
 		Map<String, Object> schParams = new HashMap<String, Object>() ;
 		schParams.put("pItmCode", orderInfo.get("stkCode"));
 		schParams.put("pSalesOrdId", installResult.get("salesOrdId"));
 
 		Map<String, Object> orderSerialMap = orderListService.selectOrderSerial(schParams);
 		String orderSerialNo = CommonUtils.nvl(orderSerialMap.get("orderSerial"));
+
+		// 프레임 정보조회 -- Start
+		Map<String, Object> schParams2 = new HashMap<String, Object>() ;
+		schParams2.put("srvOrdId", installResult.get("salesOrdId"));
+
+		// Serch Homecare Info
+		EgovMap orderHcInfo = hcOrderListService.selectHcOrderInfo(schParams2);
+		int anoOrdId = 0; // another Order ID
+
+		if(orderHcInfo != null) {
+			anoOrdId = CommonUtils.intNvl(orderHcInfo.get("anoOrdId"));
+
+			// has another Order
+			if(anoOrdId > 0) {
+				// Serch another Order Product Info
+				EgovMap producInfo = hcOrderListService.selectProductInfo(String.valueOf(anoOrdId));
+
+				schParams2.put("pSalesOrdId", anoOrdId);
+				schParams2.put("pItmCode", CommonUtils.nvl(producInfo.get("stkCode")));
+				schParams2.put("salesOrdNo", CommonUtils.nvl(orderHcInfo.get("anoOrdNo")));
+
+				// 시리얼 번호 조회 - Frame
+				Map<String, Object> orderSerialMap2 = orderListService.selectOrderSerial(schParams2);
+				orderHcInfo.put("anoOrderSerial", CommonUtils.nvl(orderSerialMap2.get("orderSerial")));
+				orderHcInfo.put("anoStkCode", CommonUtils.nvl(producInfo.get("stkCode")));
+
+				List<EgovMap> productRtn = orderListService.selectProductReturnView(schParams2);
+				if(productRtn.size() > 0) {
+					orderHcInfo.put("anoRetnNo", CommonUtils.nvl(productRtn.get(0).get("retnNo")));
+				}
+			}
+		}
 
 		model.addAttribute("installResult", installResult);
 		model.addAttribute("orderInfo", orderInfo);
@@ -257,7 +288,8 @@ public class HcOrderCancelController {
 		model.addAttribute("promotionView", promotionView);
 		model.addAttribute("pRCtInfo", pRCtInfo);
 		model.addAttribute("callEntryId" , params.get("callEntryId"));
-		model.addAttribute("orderSerial" , orderSerialNo );
+		model.addAttribute("orderSerial" , orderSerialNo);
+		model.addAttribute("orderHcInfo" , orderHcInfo);
 
 		// 호출될 화면
 		return "homecare/sales/order/hcAddProductReturnPop";

@@ -3,10 +3,13 @@
 <style>
 #sirimNo {background:#f2f2f2 ; cursor:no-drop;}
 #serialNo {background:#f2f2f2; cursor:no-drop;}
+#serialNo2 {background:#f2f2f2; cursor:no-drop;}
 
 </style>
 
 <script type="text/javaScript">
+    var _vTagNum = '';
+
 	$(document).ready(function() {
 	    var myGridID_view;
 
@@ -144,7 +147,7 @@
 
 	function fn_viewInstallResultSearch(){
 	    var jsonObj = {
-	        salesOrdNo: $("#hidTaxInvDSalesOrderNo").val()
+	        salesOrdNo : $("#hidTaxInvDSalesOrderNo").val()
         };
 	    Common.ajax("GET", "/sales/order/viewProductReturnSearch.do", jsonObj, function(result) {
 	        AUIGrid.setGridData(myGridID_view, result);
@@ -155,6 +158,7 @@
 
 	    		   if($("#serialRequireChkYn").val() == "Y") {
 	    			   $("#btnSerialEdit").attr("style", "");
+	    			   $("#btnSerialEdit2").attr("style", "");
 	    		   }
 	    	   }
 	       }
@@ -162,20 +166,30 @@
 	}
 
     // 시리얼 수정 팝업 호출
-    function fn_serialChangePop(){
-		var pRetnNo = AUIGrid.getCellValue(myGridID_view, 0, "retnNo");
+    function fn_serialChangePop(_tagNum) {
+    	_vTagNum = _tagNum;
 
-	    $("#serialNoChangeForm #pSerialNo").val( $("#serialNo").val() ); // Serial No
-	    $("#serialNoChangeForm #pSalesOrdId").val( $("#hidSalesOrderId").val() ); // 주문 ID
-	    $("#serialNoChangeForm #pSalesOrdNo").val( $("#salesOrdNo").val() ); // 주문 번호
-	    $("#serialNoChangeForm #pRefDocNo").val( pRetnNo ); // Retn No
-	    $("#serialNoChangeForm #pItmCode").val( $("#stkCode").val()  ); // 제품 ID
-	    $("#serialNoChangeForm #pCallGbn").val( "RETURN" ); //
-	    $("#serialNoChangeForm #pMobileYn").val("N"  ); //
+    	if(_tagNum == '1') {   // Mattress
+    		$("#serialNoChangeForm #pSerialNo").val($("#serialNo").val()); // Serial No
+            $("#serialNoChangeForm #pSalesOrdId").val($("#hidSalesOrderId").val()); // 주문 ID
+            $("#serialNoChangeForm #pSalesOrdNo").val($("#salesOrdNo").val()); // 주문 번호
+            $("#serialNoChangeForm #pRefDocNo").val(AUIGrid.getCellValue(myGridID_view, 0, "retnNo")); // Retn No
+            $("#serialNoChangeForm #pItmCode").val($("#stkCode").val()); // 제품 ID
+
+    	} else {  // Frame
+    		$("#serialNoChangeForm #pSerialNo").val($("#serialNo2").val()); // Serial No
+            $("#serialNoChangeForm #pSalesOrdId").val($("#hidSalesOrderId2").val()); // 주문 ID
+            $("#serialNoChangeForm #pSalesOrdNo").val($("#salesOrdNo2").val()); // 주문 번호
+            $("#serialNoChangeForm #pRefDocNo").val($("#retnNo2").val()); // Retn No
+            $("#serialNoChangeForm #pItmCode").val($("#stkCode2").val()); // 제품 ID
+    	}
+
+	    $("#serialNoChangeForm #pCallGbn").val("RETURN");
+	    $("#serialNoChangeForm #pMobileYn").val("N");
 
 	    if(Common.checkPlatformType() == "mobile") {
 	        popupObj = Common.popupWin("inBoundInForm", "/logistics/serialChange/serialNoChangePop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
-	    } else{
+	    } else {
 	        Common.popupDiv("/logistics/serialChange/serialNoChangePop.do", $("#serialNoChangeForm").serializeJSON(), null, true, '_serialNoChangePop');
 	    }
 	}
@@ -184,18 +198,32 @@
 	function fn_PopSerialChangeClose(){
 	    if(popupObj!=null) popupObj.close();
 
-	    $("#addInstallForm #asIsSerialNo").val( obj.asIsSerialNo );
-	    $("#addInstallForm #beforeSerialNo").val( obj.beforeSerialNo );
-	    $("#addInstallForm #serialNo").val( obj.asIsSerialNo );
+	    if(_vTagNum == '1') {
+	    	$("#addInstallForm #asIsSerialNo").val( obj.asIsSerialNo );
+	        $("#addInstallForm #beforeSerialNo").val( obj.beforeSerialNo );
+	        $("#addInstallForm #serialNo").val( obj.asIsSerialNo );
+
+	    } else {
+	    	$("#addInstallForm #asIsSerialNo2").val( obj.asIsSerialNo );
+	        $("#addInstallForm #beforeSerialNo2").val( obj.beforeSerialNo );
+	        $("#addInstallForm #serialNo2").val( obj.asIsSerialNo );
+	    }
 
 	    fn_viewInstallResultSearch(); //조회
 	}
 
 	// 팝업에서 호출하는 조회 함수
 	function SearchListAjax(obj){
-	    $("#addInstallForm #asIsSerialNo").val( obj.asIsSerialNo );
-	    $("#addInstallForm #beforeSerialNo").val( obj.beforeSerialNo );
-	    $("#addInstallForm #serialNo").val( obj.asIsSerialNo );
+		if(_vTagNum == '1') {
+            $("#addInstallForm #asIsSerialNo").val( obj.asIsSerialNo );
+            $("#addInstallForm #beforeSerialNo").val( obj.beforeSerialNo );
+            $("#addInstallForm #serialNo").val( obj.asIsSerialNo );
+
+        } else {
+            $("#addInstallForm #asIsSerialNo2").val( obj.asIsSerialNo );
+            $("#addInstallForm #beforeSerialNo2").val( obj.beforeSerialNo );
+            $("#addInstallForm #serialNo2").val( obj.asIsSerialNo );
+        }
 
 		fn_viewInstallResultSearch(); //조회
 	}
@@ -596,7 +624,6 @@
 	<input type="hidden" value="${promotionView.swapPormoPrice}" id="hidSwapPromoPrice" name="hidSwapPromoPrice" />
 	<input type="hidden" value="${promotionView.swapPromoPV}" id="hidSwapPromoPV" name="hidSwapPromoPV" />
 	<input type="hidden" value="" id="hiddenInstallPostcode" name="hiddenInstallPostcode" />
-	<input type="hidden" value="" id="hiddenInstallPostcode" name="hiddenInstallPostcode" />
 	<input type="hidden" value="" id="hiddenInstallStateName" name="hiddenInstallStateName" />
 
 	<input type="hidden" value="${customerInfo.name}" id="hidCustomerName" name="hidCustomerName"  />
@@ -614,10 +641,17 @@
 	<input type="hidden" value="${customerContractInfo.name}" id = "hidInatallation_ContactPerson" name = "hidInatallation_ContactPerson"/>
 	<input type="hidden" value="${callEntryId}" id = "hicallEntryId" name = "callEntryId"/>
 
-	<input type="hidden" value="" id = "asIsSerialNo" name = "asIsSerialNo"/>
-	<input type="hidden" value="" id = "beforeSerialNo" name = "beforeSerialNo"/>
-	<input type="hidden" value="" id = "hidRefDocNo" name = "hidRefDocNo"/>
-	<input type="hidden" value="${homecareYn}" id = "homecareYn" name = "homecareYn"/>
+	<input type="hidden" value="" id="asIsSerialNo" name="asIsSerialNo"/>
+	<input type="hidden" value="" id="beforeSerialNo" name="beforeSerialNo"/>
+	<input type="hidden" value="" id="hidRefDocNo" name="hidRefDocNo"/>
+	<input type="hidden" value="${homecareYn}" id="homecareYn" name="homecareYn"/>
+	<input type="hidden" value="${orderHcInfo.anoOrdId}" id="hidSalesOrderId2" name="hidSalesOrderId2"/>
+	<input type="hidden" value="${orderHcInfo.anoOrdNo}" id="salesOrdNo2" name="salesOrdNo2"/>
+	<input type="hidden" value="${orderHcInfo.anoStkCode}" id="stkCode2" name="stkCode2"/>
+	<input type="hidden" value="${orderHcInfo.anoRetnNo}" id="retnNo2" name="retnNo2"/>
+	<input type="hidden" value="" id="asIsSerialNo2" name="asIsSerialNo2"/>
+    <input type="hidden" value="" id="beforeSerialNo2" name="beforeSerialNo2"/>
+
 	<!-- table start -->
 	<table class="type1 mb1m">
 		<caption>table</caption>
@@ -663,12 +697,19 @@
 		<tr>
 		    <th scope="row"><spring:message code='service.title.SIRIMNo'/></th>
 		    <td colspan="3"><input type="text" title="" placeholder="" class="w100p"    readonly = "readonly" id="sirimNo" name="sirimNo"   value="${installResult.sirimNo}"/></td>
-		    <th scope="row"><spring:message code='service.title.SerialNo'/></th>
+		    <th scope="row">
+		      <spring:message code='service.title.SerialNo'/>(MAT)</br>
+		      <spring:message code='service.title.SerialNo'/>(FRA)
+		    </th>
 		    <td colspan="3">
-		        <input type="text" title="" placeholder="" class="w95p" readonly = "readonly" id="serialNo" name="serialNo"  value="${orderSerial}"/>
+		        <input type="text" title="" placeholder="" style="position:relative; width:70%;" readonly = "readonly" id="serialNo" name="serialNo"  value="${orderSerial}"/>
 		        <p id="btnSerialEdit" class="btn_grid" style="display:none">
-		            <a href="#" onClick="fn_serialChangePop()">EDIT<!-- Modify --></a>
+		            <a href="#" onClick="fn_serialChangePop('1')">EDIT<!-- Modify --></a>
 		        </p>
+		        <input type="text" title="" placeholder="" style="position:relative; width:70%;" readonly = "readonly" id="serialNo2" name="serialNo2"  value="${orderHcInfo.anoOrderSerial}"/>
+                <p id="btnSerialEdit2" class="btn_grid" style="display:none">
+                    <a href="#" onClick="fn_serialChangePop('2')">EDIT<!-- Modify --></a>
+                </p>
 		    </td>
 		</tr>
 		<tr>
