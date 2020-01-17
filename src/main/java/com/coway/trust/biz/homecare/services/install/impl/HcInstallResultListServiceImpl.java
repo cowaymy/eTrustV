@@ -259,7 +259,24 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	 */
 	@Override
 	public List<EgovMap> assignCtOrderList(Map<String, Object> params) throws Exception{
-		return hcInstallResultListMapper.assignCtOrderList(params);
+		List<EgovMap> list = hcInstallResultListMapper.assignCtOrderList(params);
+		for(EgovMap map : list){
+			// put aux info
+			map.put("stusCodeId", 1);
+			EgovMap frmInfo = selectFrmInfo(map);
+			if(frmInfo !=null){
+				map.put("frmStkCode", frmInfo.get("stockCode"));
+				map.put("frmSerialChk", frmInfo.get("serialChk"));
+				map.put("frmSalesOrdNo", frmInfo.get("salesOrdNo"));
+				map.put("frmInstallEntryNo", frmInfo.get("installEntryNo"));
+			}else{
+				map.put("frmStkCode", "");
+				map.put("frmSerialChk", "N");
+				map.put("frmSalesOrdNo", "");
+				map.put("frmInstallEntryNo", "");
+			}
+		}
+		return list;
 	}
 
 	@Override
@@ -279,6 +296,19 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
     	        assignCt(updateMap, successList, failList);
 
     	        // one more AUX
+    	        if( StringUtils.isNotBlank((String)updateMap.get("frmSalesOrdNo"))
+    	        	&&  (updateMap.get("frmInstallEntryNo").toString()).length() > 0
+    	        ){
+    	        	updateMap.put("salesOrdNo", updateMap.get("frmSalesOrdNo"));
+    	        	updateMap.put("installEntryNo", updateMap.get("frmInstallEntryNo"));
+    	        	String sChk = StringUtils.isBlank((String)updateMap.get("frmSerialChk"))?"N":(String)updateMap.get("frmSerialChk");
+    	        	updateMap.put("serialChk", sChk);
+    	        	updateMap.put("serialRequireChkYn", sChk);
+    	        	assignCt(updateMap, successList, failList);
+    	        }
+
+    	        /*
+    	        // one more AUX
     	        EgovMap sMap = hcInstallResultListMapper.selectFrmOrdNo(updateMap);
     	        if(sMap != null && StringUtils.isNotBlank((String)sMap.get("salesOrdNo")) ){
     	        	sMap.put("stusCodeId", 1);		// active
@@ -290,7 +320,7 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
     	        	updateMap.put("serialRequireChkYn", "N");
     	        	assignCt(updateMap, successList, failList);
     	        }
-
+    	        */
 	      }
 	    }
 	    resultValue.put("successCnt", successList.size());

@@ -6,8 +6,10 @@
 
 var assignCtListGridID;
 var assignCOrdtListGridID;
-var serialList = new Array();
+var serialList = [];
+var frmSerialList = [];
 var v_ctCode = "", v_stkCode = "";
+var v_frmCtCode = "", v_frmStkCode = "";
 
 $(document).ready(function() {
 
@@ -16,6 +18,7 @@ $(document).ready(function() {
 
     fn_asaAssignCtList();
     fn_asaAssignCtOderList();
+
 
     AUIGrid.bind(assignCtListGridID, "rowCheckClick", function(event){
         var assiinCd = fn_getAssionCTListCheckedRowItems();
@@ -114,8 +117,25 @@ function createAssignCtOrderListAUIGrid() {
                                 type : "ComboBoxRenderer",
                                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                                 listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                	fn_ctSerialNoList(item);
+                                	if(item.serialChk != "Y" || item.serialRequireChkYn != "Y"){return null;}
+
+                                	fn_ctSerialNoList(item.ctCode, item.stkCode);
                                     return serialList;
+                                },
+                                keyField : "code",
+                                valueField : "codeName"
+                            }
+                        },
+
+                        { dataField : "frmSerialNo", headerText:"Frame Serial No", width:180, height:30, headerStyle : "aui-grid-header-input-icon",
+                        	editRenderer : {
+                                type : "ComboBoxRenderer",
+                                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                listFunction : function(rowIndex, columnIndex, item, dataField) {
+                                	if(item.frmSerialChk != "Y"){return null;}
+
+                                	fn_frmSerialNoList(item.ctCode, item.frmStkCode);
+                                    return frmSerialList;
                                 },
                                 keyField : "code",
                                 valueField : "codeName"
@@ -130,8 +150,13 @@ function createAssignCtOrderListAUIGrid() {
                         { dataField : "stkCode", headerText : "Item Code", width : 80, editable : false},
                         { dataField : "stkDesc", headerText : "Product", width : 180, editable : false, style: "aui-grid-user-custom-left"},
                         { dataField : "serialChk", headerText : "Serial Chk", width : 80, editable : false },
-                        { dataField : "serialRequireChkYn", headerText  : "Serial Require Check Y/N", width : 180, editable : false  }
+                        { dataField : "serialRequireChkYn", headerText  : "Serial Require Check Y/N", width : 180, editable : false  },
 
+                        // KR-JIN, AUX info
+                        { dataField : "frmStkCode", editable:false, visible:false},
+                        { dataField : "frmSerialChk", editable:false, visible:false},
+                        { dataField : "frmSalesOrdNo", editable:false, visible:false},
+                        { dataField : "frmInstallEntryNo", editable:false, visible:false}
    ];
 
 
@@ -144,6 +169,20 @@ function createAssignCtOrderListAUIGrid() {
                             showRowNumColumn : true
     };
     assignCOrdtListGridID= GridCommon.createAUIGrid("aCtOrd_grid_wrap", columnLayout  ,"" ,gridPros);
+
+    AUIGrid.bind(assignCOrdtListGridID, "cellEditBegin", function(e){
+    	if(e.dataField == "serialNo"){
+    		if( e.item.serialChk != "Y" || e.item.serialRequireChkYn != "Y"){
+    			  return false;
+    		}
+    	}
+    	if(e.dataField == "frmSerialNo"){
+    		if( e.item.frmSerialChk != "Y"){
+    			return false;
+    		}
+    	}
+    });
+
 }
 
 
@@ -222,21 +261,20 @@ function fn_ctChange(){
 }
 
 function fn_asaAssignCtList(){
-
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
     var  brnch_id ;
     brnch_id =selectedItems[0].item.brnchId;
 
     Common.ajax("GET", "/homecare/services/as/assignCtList.do",{BRNCH_ID:brnch_id}, function(result) {
-        console.log("fn_asaAssignCtList.");
-        console.log(result);
+        //console.log("fn_asaAssignCtList.");
+        //console.log(result);
+
         AUIGrid.setGridData(assignCtListGridID, result);
     });
 }
 
 function fn_asaAssignCtOderList(){
-
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
     var installNoArray =[];
@@ -248,29 +286,51 @@ function fn_asaAssignCtOderList(){
     var obj =JSON.stringify(installNoArray).replace(/[\[\]\"]/gi, '') ;
 
     Common.ajax("GET", "/homecare/services/install/assignCtOrderList.do", {installNo:obj}, function(result) {
-        console.log("fn_asaAssignCtOderList.");
-        console.log(result);
+        //console.log("fn_asaAssignCtOderList.");
+        //console.log(result);
+
+        var isFrm = false;
+        $.each(result, function(i, row){
+            if(row.frmSerialChk == "Y"){
+                isFrm = true;
+            }
+        });
+        if(isFrm){
+            AUIGrid.showColumnByDataField(assignCOrdtListGridID, "frmSerialNo");
+        }else{
+            AUIGrid.hideColumnByDataField(assignCOrdtListGridID, "frmSerialNo");
+        }
 
         AUIGrid.setGridData(assignCOrdtListGridID, result);
     });
 }
 
-function fn_ctSerialNoList(item){
-	if( v_ctCode != item.ctCode && v_stkCode != item.stkCode){
-	    Common.ajaxSync("GET", "/services/selectCtSerialNoList.do", {ctCode : item.ctCode, stkCode : item.stkCode}, function(result) {
-	    	serialList = new Array();
+function fn_ctSerialNoList(ctCode, stkCode){
+	if( v_ctCode != ctCode && v_stkCode != stkCode){
+		serialList = [];
+	    Common.ajaxSync("GET", "/services/selectCtSerialNoList.do", {ctCode : ctCode, stkCode : stkCode}, function(result) {
 	        for ( var i = 0 ; i < result.length ; i++ ) {
 	            serialList.push(result[i]);
 	        }
-	        v_ctCode = item.ctCode;
-	        v_stkCode = item.stkCode;
-	    }, function(){});
+	        v_ctCode = ctCode;
+	        v_stkCode = stkCode;
+	    }, function(){v_ctCode = ""; v_stkCode = "";});
 	}
+}
 
+function fn_frmSerialNoList(ctCode, stkCode){
+    if( v_frmCtCode != ctCode && v_frmStkCode != stkCode){
+    	frmSerialList = [];
+        Common.ajaxSync("GET", "/services/selectCtSerialNoList.do", {ctCode : ctCode, stkCode : stkCode}, function(result) {
+            for ( var i = 0 ; i < result.length ; i++ ) {
+                frmSerialList.push(result[i]);
+            }
+            v_frmCtCode = ctCode;
+            v_frmStkCode = stkCode;
+        }, function(){v_frmCtCode = ""; v_frmStkCode = "";});
+    }
 }
 </script>
-
-
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
