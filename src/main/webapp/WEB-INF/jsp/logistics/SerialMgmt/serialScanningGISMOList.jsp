@@ -47,10 +47,10 @@
     	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '${defLocType}', 'locType', 'M','f_multiCombo');
     	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'toLocType', 'M','f_multiCombo');
 
-    	doGetComboData('/common/selectCodeList.do', { groupCode : 11 , orderValue : 'CODE'}, '', 'cmbCategory', 'M','f_multiCombo');
-    	doGetComboData('/common/selectCodeList.do', { groupCode : 15 , orderValue : 'CODE'}, '', 'cmbType', 'M','f_multiCombo');
+    	doGetCombo('/common/selectCodeList.do', '11', '', 'cmbCategory', 'M', 'f_multiCombo');
+        doGetCombo('/common/selectCodeList.do', '15', '', 'cmbType', 'M','f_multiCombo');
 
-    	 if(Common.checkPlatformType() == "mobile") {
+        if(Common.checkPlatformType() == "mobile") {
     		 $(".path").css("display", "none");
     		 $("#ulButtonArea").css("display", "none");
     	     $("#btnMobileClose").attr("style", "");
@@ -382,7 +382,7 @@
                      }
 
                      var param = {searchlocgb:locgbparam , grade:""}
-                     CommonCombo.make('locCode', '/common/selectStockLocationList2.do', param , '${defLocCode}', {type: 'M', id:'codeId', name:'codeName', width:'60%', isCheckAll:false});
+                     CommonCombo.make('locCode', '/common/selectStockLocationList2.do', param , '${defLocCode}', {type: 'M', id:'codeId', name:'codeName', width:'50%', isCheckAll:false});
                   }
             }).multipleSelect({
                 selectAll : true
@@ -402,7 +402,7 @@
                      }
 
                      var param = {searchlocgb:locgbparam , grade:""}
-                     CommonCombo.make('toLocCode', '/common/selectStockLocationList2.do', param , '', {type: 'M', id:'codeId', name:'codeName', width:'60%', isCheckAll:false});
+                     CommonCombo.make('toLocCode', '/common/selectStockLocationList2.do', param , '', {type: 'M', id:'codeId', name:'codeName', width:'50%', isCheckAll:false});
                   }
             }).multipleSelect({
                 selectAll : true
@@ -412,14 +412,14 @@
 
             }).multipleSelect({
                 selectAll : true, // 전체선택
-                width : '46%'
+                width : '49%'
             });
 
             $('#cmbType').change(function() {
 
             }).multipleSelect({
                 selectAll : true,
-                width : '45%'
+                width : '48%'
             });
         });
     }
@@ -491,14 +491,14 @@
                         <th scope="row">From Location<span class="must">*</span></th>
                         <td>
                             <select id="locType" name="locType[]" multiple="multiple" style="width:100px"></select>
-                            <select id="locCode" name="locCode[]" multiple="multiple" style="width:200px"><option value="">Choose One</option></select>
+                            <select id="locCode" name="locCode[]" multiple="multiple" style="width:350px"><option value="">Choose One</option></select>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">To Location</th>
                         <td>
                             <select id="toLocType" name="toLocType[]" multiple="multiple" style="width:100px"></select>
-                            <select id="toLocCode" name="toLocCode[]" multiple="multiple" style="width:190px"><option value="">Choose One</option></select>
+                            <select id="toLocCode" name="toLocCode[]" multiple="multiple" style="width:140px"><option value="">Choose One</option></select>
                         </td>
                     </tr>
                     <tr>
@@ -517,7 +517,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Request No/To Loc.</th>
+                        <th scope="row">Req. No/To Loc.</th>
                         <td>
                             <input type="text"  id="searchRequestNo" name="searchRequestNo"  class="w100p" />
                         </td>
@@ -525,8 +525,8 @@
                     <tr>
                         <th scope="row">Category/Type</th>
                         <td>
-                            <select id="cmbCategory" name="cmbCategory[]" multiple="multiple"></select>
-                            <select id="cmbType" name="cmbType[]" multiple="multiple"></select>
+                            <select id="cmbCategory" name="cmbCategory[]" multiple="multiple" style="width:100px"></select>
+                            <select id="cmbType" name="cmbType[]" multiple="multiple" style="width:100px"></select>
                         </td>
                    </tr>
                    <tr>
@@ -536,7 +536,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Bundle/Order/Ref</th>
+                        <th scope="row">Bundle/Ord./Ref.</th>
                         <td>
                             <input type="text"  id="searchRequestNo2" name="searchRequestNo2"  class="w100p" />
                         </td>
