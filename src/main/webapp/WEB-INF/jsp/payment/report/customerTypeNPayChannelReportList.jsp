@@ -386,6 +386,7 @@ $(document).ready(function() {
 		<article class="grid_wrap">
 			<!-- Summary Grid -->
 			<div id="grid1_wrap" style="height:310px;"></div>
+			 * App Type = REN, Order Status = COM, Open Rental Status = REG & INV, Billing month = 1-60, exclude current month Net Sales
 		</article>
         <!-- Grid1 End -->
 
@@ -397,11 +398,14 @@ $(document).ready(function() {
                     <li><p class="btn_grid"><a href="#" id="excelDownGrid2"><spring:message code='sys.btn.excel.dw'/></a></p></li>
                 </c:if>
             </ul>
+
         </aside>
 
         <article class="grid_wrap">             <!-- article grid_wrap start -->
             <!-- Summary Grid -->
             <div id="grid2_wrap" style="height:156px;"></div>
+            * Customer Type = Individual + Company, Deduction = Success (exclude hand-collect), Dedcution month = 1st & 2nd
+
         </article>                              <!-- article grid_wrap end -->
         <!-- Grid2 End -->
 
@@ -418,6 +422,8 @@ $(document).ready(function() {
         <article class="grid_wrap">             <!-- article grid_wrap start -->
             <!-- Summary Grid -->
             <div id="grid3_wrap" style="height:156px;"></div>
+            * Customer Type = Individual + Company, Deduction = Success (exclude hand-collect), Dedcution month = 2nd only
+
         </article>                              <!-- article grid_wrap end -->
         <!-- Grid3 End -->
 
@@ -434,6 +440,8 @@ $(document).ready(function() {
         <article class="grid_wrap">             <!-- article grid_wrap start -->
             <!-- Summary Grid -->
             <div id="grid4_wrap" style="height:156px;"></div>
+            * Customer Type = Individual + Company, Deduction = Success (exclude hand-collect), vRescue flag = TRUE
+
         </article>                              <!-- article grid_wrap end -->
         <!-- Grid4 End -->
 

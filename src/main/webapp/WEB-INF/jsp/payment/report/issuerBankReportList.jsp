@@ -235,6 +235,7 @@ $(document).ready(function() {
         <article class="grid_wrap">
             <!-- Summary Grid -->
             <div id="grid1_wrap" class="autoGridHeight" ></div>
+            * App Type = REN, Order Status = COM, Open Rental Status = REG/INV, Billing month = 1-60, exclude current month Net Sales
         </article>
         <!-- Grid1 End -->
 

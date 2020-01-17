@@ -264,6 +264,8 @@ $(document).ready(function() {
         <article class="grid_wrap">             <!-- article grid_wrap start -->
             <!-- Summary Grid -->
             <div id="grid2_wrap" style="height:260px;"></div>
+            * App Type = REN, Order Status = COM, Open Rental Status = REG/INV, Billing month = 1-60
+
         </article>                              <!-- article grid_wrap end -->
         <!-- Grid2 End -->
 
