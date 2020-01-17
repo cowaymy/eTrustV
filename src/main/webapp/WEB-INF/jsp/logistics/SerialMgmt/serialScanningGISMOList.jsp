@@ -342,7 +342,7 @@
 
         	$('#locTypeTo').change(function() {
         		if ($('#locTypeTo').val() != null && $('#locTypeTo').val() != "" ){
-                    var searchlocgb = $('#locTypeTo').val();
+        			var searchlocgb = $('#locTypeTo').val();
 
                     var locgbparam = "";
                     for (var i = 0 ; i < searchlocgb.length ; i++){
@@ -354,7 +354,7 @@
                      }
 
                      var param = {searchlocgb:locgbparam , grade:""}
-                     CommonCombo.make('locCodeTo', '/common/selectStockLocationList2.do', param , ' ', {type: 'M', id:'codeId', name:'codeName', width:'50%', isCheckAll:false});
+                     CommonCombo.make('locCodeTo', '/common/selectStockLocationList2.do', param , '', {type: 'M', id:'codeId', name:'codeName', width:'50%', isCheckAll:false});
                   }
             }).multipleSelect({
                 selectAll : true
@@ -432,7 +432,7 @@
                         <th scope="row">To Location</th>
                         <td>
                             <select id="locTypeTo" name="locTypeTo[]" multiple="multiple" style="width:100px"></select>
-                            <select id="locCodeTo" name="locCodeTo[]" multiple="multiple" style="width:110px"></select>
+                            <select id="locCodeTo" name="locCodeTo[]" style="width:110px"></select>
                         </td>
                     </tr>
                     <tr>
