@@ -758,8 +758,7 @@
                     f_removeclass();
                     var selectedItems = event.selectedItems;
                     f_view("/stock/StockInfo.do?stkid="
-                            + AUIGrid.getCellValue(myGridID, event.rowIndex,
-                                    "stkid"), "S");
+                            + AUIGrid.getCellValue(myGridID, event.rowIndex, "stkid"), "S");
                     $("#subDiv").show();
                     if (AUIGrid.getCellValue(myGridID, event.rowIndex,
                             "stktypeid") == "61") {
