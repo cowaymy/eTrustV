@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
 
 <!--
  DATE        BY     VERSION        REMARK
@@ -8,6 +9,8 @@
  -->
 
 <script type="text/javaScript">
+var serialGubun = "1";
+
   $(document).ready(
     function() {
       $("#status").change(function() {
@@ -138,6 +141,20 @@
         if( $("#hidSerialRequireChkYn").val() == 'Y' ) {
         	$("#btnSerialEdit").attr("style", "");
         }
+
+        if(js.String.isEmpty( $("#hidFrmOrdNo").val() )){
+            $(".frmS1").hide();
+        }else{
+            $(".frmS1").show();
+        }
+
+        if(js.String.strNvl($("#hidFrmSerialChkYn").val()) == "Y"){
+            $("#frm2").show();
+            $("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
+        }else{
+            $("#frm2").hide();
+            $("#frmSerialNo").attr("disabled", true).addClass("readonly");
+        }
   });
 
   function fn_installProductExchangeSave() {
@@ -164,6 +181,16 @@
         msg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
       }
 
+      if ($("#frmSerialNo").hasClass("readonly") == false
+              && ($("#addInstallForm #frmSerialNo").val().trim() == '' || ("#addInstallForm #frmSerialNo") == null)) {
+          msg += "* <spring:message code='sys.msg.necessary' arguments='Frame Serial No' htmlEscape='false'/> </br>";
+      }else{
+          if ($("#frmSerialNo").hasClass("readonly") == false && $("#addInstallForm #frmSerialNo").val().trim().length < 18) {
+              msg += "* <spring:message code='sys.msg.invalid' arguments='Frame Serial No' htmlEscape='false'/> </br>";
+          }
+      }
+
+
       if (msg != "") {
         Common.alert(msg);
         return;
@@ -187,14 +214,6 @@
 
     // KR-OHK Serial Check add
     var url = "";
-
-    //if ($("#hidSerialRequireChkYn").val() == 'Y') {
-    //    url = "/services/addInstallationSerial.do";
-    //} else {
-    //    url = "/services/addInstallation_2.do";
-    //}
-
-    // Common.ajax("POST", "/services/addInstallation.do",
     Common.ajax("POST", "/homecare/services/install/hcAddInstallationSerial.do",
         $("#addInstallForm").serializeJSON(), function(result) {
           Common.alert(result.message, fn_saveDetailclose);
@@ -250,21 +269,41 @@
     //fn_viewInstallResultSearch(); //조회
   }
 
-  function fn_serialSearchPop(){
+  function fn_serialSearchPop1(){
+      serialGubun = "1";
 
-	  $("#pLocationType").val('${installResult.whLocGb}');
+      $("#pLocationType").val('${installResult.whLocGb}');
       $('#pLocationCode').val('${installResult.ctWhLocId}');
-      $("#pItemCodeOrName").val('${viewDetail.installationInfo.stkCode}');
+      $("#pItemCodeOrName").val('${orderDetail.basicInfo.stockCode}');
 
       Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
   }
 
   function fnSerialSearchResult(data) {
       data.forEach(function(dataRow) {
-          $("#addInstallForm #serialNo").val(dataRow.serialNo);
-          //console.log("serialNo : " + dataRow.serialNo);
+    	  if(serialGubun == "1"){
+	          $("#addInstallForm #serialNo").val(dataRow.serialNo);
+	          //console.log("serialNo : " + dataRow.serialNo);
+    	  }else{
+              $("#addInstallForm #frmSerialNo").val(dataRow.serialNo);
+              //console.log("serialNo : " + dataRow.serialNo);
+          }
       });
   }
+
+  function fn_serialSearchPop2(){
+      if( $("#frmSerialNo").hasClass("readonly") == true ){
+          return;
+      }
+      serialGubun = "2";
+
+      $("#pLocationType").val('${frameInfo.whLocGb}');
+      $('#pLocationCode').val('${frameInfo.ctWhLocId}');
+      $("#pItemCodeOrName").val('${frameInfo.stockCode}');
+
+      Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
+  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -555,6 +594,9 @@
     id="rcdTms" name="rcdTms" />
     <input type="hidden" value="${installResult.serialRequireChkYn}" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
     <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
+    <input type="hidden" value="${frameInfo.serialChk}" id="hidFrmSerialChkYn" name="hidFrmSerialChkYn" />
+    <input type="hidden" value="${frameInfo.salesOrdId}" id="hidFrmOrdId" name="hidFrmOrdId" />
+    <input type="hidden" value="${frameInfo.salesOrdNo}" id="hidFrmOrdNo" name="hidFrmOrdNo" />
 
    <table class="type1 mb1m">
     <!-- table start -->
@@ -566,7 +608,6 @@
      <col style="width: *" />
     </colgroup>
     <tbody>
-
      <tr>
         <th scope="row">Before Stock</th>
         <td colspan="3"><span><c:out value="${viewDetail.exchangeInfo.c10} - ${viewDetail.exchangeInfo.c11} " /></span>
@@ -575,8 +616,6 @@
         </td>
      </tr>
      <tr>
-
-
       <th scope="row"><spring:message code='service.title.InstallStatust' /><span name="m1" id="m1" class="must">*</span></th>
       <td><select class="w100p" id="installStatus" name="installStatus">
         <c:forEach var="list" items="${installStatus }" varStatus="status">
@@ -606,37 +645,45 @@
     <caption>table</caption>
     <colgroup>
      <col style="width: 130px" />
-     <col style="width: 130px" />
-     <col style="width: 110px" />
-     <col style="width: 110px" />
-     <col style="width: 110px" />
-     <col style="width: *" />
-     <col style="width: 110px" />
+     <col style="width: 350px" />
+     <col style="width: 170px" />
      <col style="width: *" />
     </colgroup>
     <tbody>
      <tr>
       <th scope="row"><spring:message code='service.title.SIRIMNo' /><span name="m4" id="m4" class="must">*</span></th>
-      <td  colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.SIRIMNo' />" class="w100p"
-       id="sirimNo" name="sirimNo" /></td>
-      <th scope="row"><spring:message code='service.title.SerialNo' /><span name="m5" id="m5" class="must">*</span></th>
-      <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.SerialNo' />" class="w50p"
-       id="serialNo" name="serialNo" />
+      <td>
+        <input type="text" title="" placeholder="<spring:message code='service.title.SIRIMNo' />" class="w100p" id="sirimNo" name="sirimNo" />
+      </td>
+      <th scope="row">
+        <spring:message code='service.title.SerialNo' /><span name="m5" id="m5" class="must">*</span>
+      </th>
+      <td>
+        <input type="text" title="" placeholder="<spring:message code='service.title.SerialNo' />" class="w50p" id="serialNo" name="serialNo" />
        <c:if test="${installResult.serialRequireChkYn == 'Y' }">
-       <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop1()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
        </c:if>
       </td>
      </tr>
+     <tr class="frmS1" style="display:none;">
+       <th scope="row"></th>
+       <td></td>
+       <th scope="row">Frame Serial No<span id="frm2" class="must" style="display:none">*</span></th>
+       <td>
+         <input type="text" title="" placeholder="Frame Serial No" class="w50p" id="frmSerialNo" name="frmSerialNo" />
+         <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop2()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+       </td>
+     </tr>
      <tr>
       <th scope="row"><spring:message code='service.title.RefNo' />(1)</th>
-      <td  colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(1)" class="w100p"
+      <td><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(1)" class="w100p"
        id="refNo1" name="refNo1" /></td>
       <th scope="row"><spring:message code='service.title.RefNo' />(2)</th>
-      <td  colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(2)" class="w100p"
+      <td><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(2)" class="w100p"
        id="refNo2" name="refNo2" /></td>
      </tr>
      <tr>
-      <td colspan="8">
+      <td colspan="4">
         <label>
             <input type="checkbox" id="checkCommission" name="checkCommission" />
             <span><spring:message code='service.btn.AllowCommission' /> ?</span></label>

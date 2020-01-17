@@ -219,7 +219,7 @@
     </select>
 
     <select id="selectFrmInstNO" parameterType="Map" resultType="egovMap">
-    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.selectFrmOrdNo]*/
+    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.selectFrmInstNO]*/
         SELECT A.SALES_ORD_NO
              , A.SALES_ORD_ID
              , B.INSTALL_ENTRY_ID
@@ -239,4 +239,55 @@
 	       AND ROWNUM <![CDATA[<=]]> 1
     </select>
 
+    <select id="selectFrmSerialInfo" parameterType="Map" resultType="egovMap">
+    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.selectFrmSerialInfo]*/
+        SELECT A.SALES_ORD_NO
+             , A.SALES_ORD_ID
+             , B.INSTALL_ENTRY_ID
+             , B.INSTALL_ENTRY_NO
+             , LOG.SERIAL_REQUIRE_CHK_YN
+             , LOG.WH_LOC_GB WH_LOC_GB
+             , LOG.WH_LOC_ID CT_WH_LOC_ID
+             , STK.STK_ID    STOCK_ID
+             , STK.STK_CODE  STOCK_CODE
+             , STK.STK_DESC  STOCK_DESC
+             , CASE WHEN STK.SERIAL_CHK = 'Y' AND '61' = STK.STK_TYPE_ID AND LOG.SERIAL_REQUIRE_CHK_YN = 'Y' THEN NVL(LOG.SERIAL_PD_CHK, 'N')
+                    WHEN STK.SERIAL_CHK = 'Y' AND '62' = STK.STK_TYPE_ID AND LOG.SERIAL_REQUIRE_CHK_YN = 'Y' THEN NVL(LOG.SERIAL_FT_CHK, 'N')
+                    WHEN STK.SERIAL_CHK = 'Y' AND '63' = STK.STK_TYPE_ID AND LOG.SERIAL_REQUIRE_CHK_YN = 'Y' THEN NVL(LOG.SERIAL_PT_CHK, 'N')
+                    ELSE 'N'
+                END AS SERIAL_CHK
+             , DECODE(stk.SERIAL_CHK, 'Y', 'Y', 'N') AS stk_SERIAL_CHK
+             , NVL(log.SERIAL_PD_CHK, 'N') AS SERIAL_PD_CHK  -- PRODUCT 61(15)
+             , NVL(log.SERIAL_FT_CHK, 'N') AS SERIAL_FT_CHK  -- FILTER  62(15)
+             , NVL(log.SERIAL_PT_CHK, 'N') AS SERIAL_PT_CHK  -- PARTS   63(15)
+             , NVL(log.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
+          FROM SAL0001D A
+         INNER JOIN SAL0046D B
+            ON A.SALES_ORD_ID = B.SALES_ORD_ID
+         INNER JOIN ORG0001D CTCODE
+            ON B.CT_ID = CTCODE.MEM_ID
+         INNER JOIN SAL0002D SOD
+            ON SOD.SALES_ORD_ID = A.SALES_ORD_ID
+         INNER JOIN SYS0026M STK
+            ON STK.STK_ID = SOD.ITM_STK_ID
+         LEFT outer JOIN SYS0028M LOG
+           ON CTCODE.MEM_CODE = LOG.WH_LOC_CODE
+        WHERE 1 = 1
+          AND A.SALES_ORD_NO = #{salesOrdNo}
+          AND B.STUS_CODE_ID = #{stusCodeId}
+          AND A.BNDL_ID IS NOT NULL
+          AND ROWNUM  <![CDATA[<=]]> 1
+    </select>
+
+    <select id="selectFrmSerial" parameterType="Map" resultType="String">
+    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.selectFrmSerial]*/
+	    SELECT NVL(MAX(A.SERIAL_NO), '') AS SERIAL_NO
+	      FROM (
+			    SELECT Extent3.SERIAL_NO SERIAL_NO
+				  FROM SAL0046D Extent1
+				 INNER JOIN SAL0047D Extent3 ON Extent3.ENTRY_ID = Extent1.INSTALL_ENTRY_ID
+				 WHERE Extent1.INSTALL_ENTRY_ID = TO_NUMBER(TRIM(#{installEntryId}))
+				   AND ROWNUM <![CDATA[<=]]> 1
+               ) A
+    </select>
 </mapper>

@@ -76,20 +76,25 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 		rmsg = rtnMsg.getMessage();
 
     	// another order  --  Frame Order Search.
-    	params.put("ordNo", CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")));
-    	EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(params);
+    	//params.put("ordNo", CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")));
+    	//EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(params);
+
+		Map<String, Object> oMap = new HashMap<String, Object>();
+		oMap.put("salesOrdNo", CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")));
+		EgovMap hcOrder = hcInstallResultListMapper.selectFrmOrdNo(oMap);
+		hcOrder.put("anoOrdNo", (String)hcOrder.get("salesOrdNo"));
 
     	if(!"".equals(CommonUtils.nvl(hcOrder.get("anoOrdNo")))) { // hava another order
     		params.put("anoOrdNo", CommonUtils.nvl(hcOrder.get("anoOrdNo")));
     		EgovMap anotherOrder = hcInstallResultListMapper.getAnotherInstallInfo(params);
-
     		params.put("installEntryId", CommonUtils.nvl(anotherOrder.get("installEntryId")));
     		params.put("hidSalesOrderId", CommonUtils.nvl(anotherOrder.get("salesOrdId")));
     		params.put("hiddeninstallEntryNo", CommonUtils.nvl(anotherOrder.get("installEntryNo")));
     		params.put("rcdTms", CommonUtils.nvl(anotherOrder.get("rcdTms")));
     		params.put("hidEntryId", CommonUtils.nvl(anotherOrder.get("installEntryId")));
-    		params.put("hidSerialRequireChkYn", "N");
-
+    		// frame serial use.
+    		params.put("serialNo", CommonUtils.nvl(params.get("frmSerialNo")));
+    		params.put("hidSerialRequireChkYn", CommonUtils.nvl(params.get("hidFrmSerialChkYn")));
 
     		/* hidden input Start - KR-JIN */
     		EgovMap callType = installationResultListService.selectCallType(anotherOrder);
@@ -388,8 +393,10 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	        	params.put("hidSalesOrderId", eMap.get("salesOrdId"));
 	        	params.put("hidSalesOrderNo", eMap.get("salesOrdNo"));
 	        	params.put("hidInstallEntryNo", eMap.get("installEntryNo"));
-	        	params.put("hidSerialRequireChkYn", "N");
-	        	params.put("hidSerialNo", "");
+	        	// frame serial use.
+	        	params.put("serialNo", CommonUtils.nvl(params.get("frmSerialNo")));
+	        	params.put("hidSerialNo", CommonUtils.nvl(params.get("hidFrmSerialNo")));
+	    		params.put("hidSerialRequireChkYn", CommonUtils.nvl(params.get("hidFrmSerialChkYn")));
 
 	        	// SAL0047D.RESULT_ID
 	        	EgovMap rMap = hcInstallResultListMapper.selectResultId(eMap);
@@ -675,4 +682,19 @@ public class HcInstallResultListServiceImpl extends EgovAbstractServiceImpl impl
 	  }
 
 
+	@Override
+	public EgovMap selectFrmInfo(Map<String, Object> params) throws Exception{
+		EgovMap sMap = hcInstallResultListMapper.selectFrmOrdNo(params);
+		if(sMap != null && StringUtils.isNotBlank((String)sMap.get("salesOrdNo")) ){
+			sMap.put("stusCodeId", params.get("stusCodeId"));
+			return hcInstallResultListMapper.selectFrmSerialInfo(sMap);
+		}
+		return null;
+	}
+
+	@Override
+	public String selectFrmSerial(Map<String, Object> params) throws Exception{
+		String str = hcInstallResultListMapper.selectFrmSerial(params);
+		return StringUtils.isBlank(str)?"":str;
+	}
 }

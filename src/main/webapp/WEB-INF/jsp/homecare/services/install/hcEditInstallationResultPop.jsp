@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
 
 <!--
  DATE        BY     VERSION        REMARK
@@ -36,6 +37,20 @@
         }
       });
     });
+
+    if(js.String.isEmpty( $("#hidFrmOrdNo").val() )){
+        $(".frmS1").hide();
+    }else{
+        $(".frmS1").show();
+    }
+
+    if(js.String.strNvl($("#hidFrmSerialChkYn").val()) == "Y"){
+        $("#frm2").show();
+        $("#frmSerialNo").removeAttr("disabled").removeClass("readonly");
+    }else{
+        $("#frm2").hide();
+        $("#frmSerialNo").attr("disabled", true).addClass("readonly");
+    }
   });
 
   function fn_saveInstall() {
@@ -68,6 +83,15 @@
       }
     }
 
+    if ($("#frmSerialNo").hasClass("readonly") == false
+            && ($("#editInstallForm #frmSerialNo").val().trim() == '' || ("#editInstallForm #frmSerialNo") == null)) {
+          msg += "* <spring:message code='sys.msg.necessary' arguments='Frame Serial No' htmlEscape='false'/> </br>";
+      }else{
+          if ($("#frmSerialNo").hasClass("readonly") == false && $("#editInstallForm #frmSerialNo").val().trim().length < 18) {
+              msg += "* <spring:message code='sys.msg.invalid' arguments='Frame Serial No' htmlEscape='false'/> </br>";
+          }
+      }
+
     if (msg != "") {
       Common.alert(msg);
       return false;
@@ -76,7 +100,8 @@
   }
 
 
-  function fn_serialSearchPop(){
+  function fn_serialSearchPop1(){
+	  serialGubun = "1";
 
       $("#pLocationType").val('${installInfo.whLocGb}');
       $('#pLocationCode').val('${installInfo.ctWhLocId}');
@@ -87,10 +112,29 @@
 
   function fnSerialSearchResult(data) {
       data.forEach(function(dataRow) {
-          $("#editInstallForm #serialNo").val(dataRow.serialNo);
-          //console.log("serialNo : " + dataRow.serialNo);
+    	  if(serialGubun == "1"){
+	          $("#editInstallForm #serialNo").val(dataRow.serialNo);
+	          //console.log("serialNo : " + dataRow.serialNo);
+    	  }else{
+              $("#editInstallForm #frmSerialNo").val(dataRow.serialNo);
+              //console.log("serialNo : " + dataRow.serialNo);
+          }
       });
   }
+
+  function fn_serialSearchPop2(){
+      if( $("#frmSerialNo").hasClass("readonly") == true ){
+          return;
+      }
+      serialGubun = "2";
+
+      $("#pLocationType").val('${frameInfo.whLocGb}');
+      $('#pLocationCode').val('${frameInfo.ctWhLocId}');
+      $("#pItemCodeOrName").val('${frameInfo.stockCode}');
+
+      Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
+  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -146,13 +190,18 @@
     <input type="hidden" value="<c:out value="${orderDetail.basicInfo.ordNo}"/>" id="hidSalesOrderNo" name="hidSalesOrderNo" />
     <input type="hidden" value="<c:out value="${installInfo.serialNo}"/>" id="hidSerialNo" name="hidSerialNo" />
 
+    <input type="hidden" value="<c:out value="${frameInfo.serialChk}"/>" id="hidFrmSerialChkYn" name="hidFrmSerialChkYn" />
+    <input type="hidden" value="<c:out value="${frameInfo.salesOrdId}"/>" id="hidFrmOrdId" name="hidFrmOrdId" />
+    <input type="hidden" value="<c:out value="${frameInfo.salesOrdNo}"/>" id="hidFrmOrdNo" name="hidFrmOrdNo" />
+    <input type="hidden" value="<c:out value="${frameInfo.frmSerial}"/>" id="hidFrmSerialNo" name="hidFrmSerialNo" />
+
     <table class="type1 mb1m">
      <!-- table start -->
      <caption>table</caption>
      <colgroup>
-      <col style="width: 130px" />
-      <col style="width: 350px" />
-      <col style="width: 170px" />
+      <col style="width: 160px" />
+      <col style="width: 310px" />
+      <col style="width: 150px" />
       <col style="width: *" />
      </colgroup>
      <tbody>
@@ -178,10 +227,20 @@
        <th scope="row"><spring:message code='service.title.SirimNo' /><span class="must"> *</span></th>
        <td><input type="text" id="sirimNo" name="sirimNo" class='w100p' value="<c:out value="${installInfo.sirimNo}"/>" /></td>
        <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must"> *</span></th>
-       <td><input type="text" id="serialNo" name="serialNo" class='w50p' value="<c:out value="${installInfo.serialNo}" />" />
-       <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+       <td>
+         <input type="text" id="serialNo" name="serialNo" class='w50p' value="<c:out value="${installInfo.serialNo}" />" />
+         <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop1()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
        </td>
       </tr>
+      <tr class="frmS1" style="display:none;">
+       <th scope="row"></th>
+       <td></td>
+       <th scope="row">Frame Serial No<span id="frm2" class="must" style="display:none">*</span></th>
+       <td>
+         <input type="text" id="frmSerialNo" name="frmSerialNo" placeholder="Frame Serial No" class="w50p" value="<c:out value="${frameInfo.frmSerial}"/>" />
+         <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop2()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+       </td>
+     </tr>
       <tr>
        <th scope="row"><spring:message code='service.title.RefNo' />
         (1)</th>

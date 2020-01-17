@@ -75,4 +75,25 @@ public interface HcInstallResultListService {
 	 * @throws ParseException
 	 */
 	public int hcEditInstallationResultSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
+	/**
+	 * Frame order search.
+	 * @Author KR-JIN
+	 * @Date Jan 16, 2020
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public EgovMap selectFrmInfo(Map<String, Object> params) throws Exception;
+
+	/**
+	 * Frame serial search.
+	 * @Author KR-JIN
+	 * @Date Jan 16, 2020
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public String selectFrmSerial(Map<String, Object> params) throws Exception;
+
 }

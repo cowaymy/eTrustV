@@ -257,6 +257,14 @@ public class HcInstallResultListController {
         EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
         model.put("orderDetail", orderDetail);
 
+        // frame order no
+        // frame stock id, code
+        // frame location info
+        // frame serial no
+        params.put("stusCodeId", 1);
+		EgovMap hcFrmOrder = hcInstallResultListService.selectFrmInfo(params);
+		model.addAttribute("frameInfo", hcFrmOrder);
+
         // 호출될 화면
         return "homecare/services/install/hcAddInstallationResultPop";
 	}
@@ -348,7 +356,9 @@ public class HcInstallResultListController {
       logger.debug("=====================/addinstallationResultProductDetailPop.do=========================");
 
       Object custId = (orderInfo == null ? installResult.get("custId") : orderInfo.get("custId"));
+      Object salesOrdNo = (orderInfo == null ? installResult.get("salesOrdNo") : orderInfo.get("salesOrdNo"));
       params.put("custId", custId);
+      params.put("salesOrdNo", salesOrdNo);
       EgovMap customerInfo = installationResultListService.getcustomerInfo(params);
       // EgovMap customerAddress =
       // installationResultListService.getCustomerAddressInfo(customerInfo);
@@ -397,6 +407,10 @@ public class HcInstallResultListController {
       model.addAttribute("sirimLoc", sirimLoc);
       model.addAttribute("CheckCurrentPromo", CheckCurrentPromo);
       model.addAttribute("promotionView", promotionView);
+
+      params.put("stusCodeId", 1);
+      EgovMap hcFrmOrder = hcInstallResultListService.selectFrmInfo(params);
+      model.addAttribute("frameInfo", hcFrmOrder);
 
       return "homecare/services/install/hcAddInstallationResultProductDetailPop";
     }
@@ -526,6 +540,20 @@ public class HcInstallResultListController {
 
       EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
       model.put("orderDetail", orderDetail);
+
+      // KR-JIN, AUX serial info
+      String ordNo = ((EgovMap)orderDetail.get("basicInfo")).get("ordNo").toString();
+      params.put("salesOrdNo", ordNo);
+
+      params.put("stusCodeId", 4);		// status : COM
+      EgovMap hcFrmOrder = hcInstallResultListService.selectFrmInfo(params);
+
+      if(hcFrmOrder != null){
+    	  String frmSerial = hcInstallResultListService.selectFrmSerial(hcFrmOrder);
+    	  hcFrmOrder.put("frmSerial", frmSerial);
+      }
+      model.addAttribute("frameInfo", hcFrmOrder);
+
       // 호출될 화면
       return "homecare/services/install/hcEditInstallationResultPop";
     }

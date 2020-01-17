@@ -48,4 +48,24 @@ public interface HcInstallResultListMapper {
 	public EgovMap selectFrmOrdNo(Map<String, Object> params) throws Exception;
 	public EgovMap selectFrmInstNO(Map<String, Object> params) throws Exception;
 	public EgovMap selectResultId(Map<String, Object> params) throws Exception;
+
+	/**
+	 * AUX Serial Info
+	 * @Author KR-JIN
+	 * @Date Jan 16, 2020
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public EgovMap selectFrmSerialInfo(Map<String, Object> params) throws Exception;
+
+	/**
+	 * AUX Serial
+	 * @Author KR-JIN
+	 * @Date Jan 16, 2020
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public String selectFrmSerial(Map<String, Object> params) throws Exception;
 }
