@@ -2146,7 +2146,7 @@
 		    <th scope="row">Promotion | Promosi<span class="must">*</span></th>
 		    <td><select id="ordPromo1" name="ordPromo1" class="w100p" disabled></select></td>
 		</tr>
-		<tr>
+		<tr style="display: none;">
 		    <th scope="row">Price / RPF (RM)</th>
 		    <td>
 		        <input id="ordPrice1"           name="ordPrice1"          type="text"      data-ref='ordProduct1' title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
@@ -2154,7 +2154,7 @@
 		        <input id="normalOrdPrice1" name="normalOrdPrice1" type="hidden" data-ref='ordProduct1' />
             </td>
 		</tr>
-		<tr>
+		<tr style="display: none;">
 		    <th scope="row">Rental Fee</th>
 		    <td><input id="ordRentalFees1" name="ordRentalFees1" type="text" data-ref='ordProduct1' title="" placeholder="" class="w100p readonly" readonly/></td>
 		</tr>
@@ -2197,7 +2197,7 @@
                 <select id="ordPromo2" name="ordPromo2" class="w100p" disabled></select>
              </td>
         </tr>
-        <tr>
+        <tr style="display: none;">
             <th scope="row">Price / RPF (RM)</th>
             <td>
                 <input id="ordPrice2"    name="ordPrice2"                 type="text"      data-ref='ordProduct2' title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
@@ -2205,7 +2205,7 @@
                 <input id="normalOrdPrice2" name="normalOrdPrice2" type="hidden" data-ref='ordProduct2' />
             </td>
         </tr>
-        <tr>
+        <tr style="display: none;">
             <th scope="row">Rental Fee</th>
             <td><input id="ordRentalFees2" name="ordRentalFees2" type="text" data-ref='ordProduct2' title="" placeholder="" class="w100p readonly" readonly/></td>
         </tr>
