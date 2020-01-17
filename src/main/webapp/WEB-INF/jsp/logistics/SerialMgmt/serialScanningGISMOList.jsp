@@ -341,7 +341,7 @@
             });
 
         	$('#locTypeTo').change(function() {
-                if ($('#locTypeTo').val() != null && $('#locTypeTo').val() != "" ){
+        		if ($('#locTypeTo').val() != null && $('#locTypeTo').val() != "" ){
                     var searchlocgb = $('#locTypeTo').val();
 
                     var locgbparam = "";
@@ -354,7 +354,7 @@
                      }
 
                      var param = {searchlocgb:locgbparam , grade:""}
-                     CommonCombo.make('locCodeTo', '/common/selectStockLocationList2.do', param , '', {type: 'M', id:'codeId', name:'codeName', width:'50%', isCheckAll:false});
+                     CommonCombo.make('locCodeTo', '/common/selectStockLocationList2.do', param , ' ', {type: 'M', id:'codeId', name:'codeName', width:'50%', isCheckAll:false});
                   }
             }).multipleSelect({
                 selectAll : true

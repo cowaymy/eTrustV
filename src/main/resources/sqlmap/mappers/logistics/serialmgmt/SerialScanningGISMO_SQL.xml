@@ -21,7 +21,7 @@
 						    l47.trnsc_type AS trnscType,   -- US : STO, UM and L47.REQST_TYPE = 'PO' : Inbound SMO, UM and L47.REQST_TYPE <![CDATA[<>]]> 'PO' : SMO
 						    l47.TRNSC_TYPE_DTL as trnsctypedtl,
 						    --DBMS_LOB.SUBSTR (s28c.WH_LOC_DESC, 4000) AS frmloc,
-						    DBMS_LOB.SUBSTR (s28q.WH_LOC_DESC, 4000) AS toloc,
+						    '('||s28q.WH_LOC_CODE || ')' || DBMS_LOB.SUBSTR (s28q.WH_LOC_DESC, 4000) AS toloc,
 						    l47.RCIV_CDC_RDC AS frmlocid,
 						    l47.REQST_CDC_RDC AS tolocid,
 						    NVL(TO_CHAR(TO_DATE(MAX(l55.DELVRY_DT), 'yyyymmdd'), 'dd/mm/yyyy'), '-') AS deldate,
@@ -122,7 +122,7 @@
 						 AND s28q.SERIAL_REQUIRE_CHK_YN = 'Y'
 
 						 GROUP BY /*l55.DELVRY_NO,*/ l47.REQST_NO, l47.REQST_CRT_DT, L47.REQST_TYPE, l47.trnsc_type,
-						          l47.TRNSC_TYPE_DTL, s28q.WH_LOC_DESC, l47.RCIV_CDC_RDC, l47.REQST_CDC_RDC, l47.REF_DOC_NO
+						          l47.TRNSC_TYPE_DTL, s28q.WH_LOC_CODE, s28q.WH_LOC_DESC, l47.RCIV_CDC_RDC, l47.REQST_CDC_RDC, l47.REF_DOC_NO
 						 HAVING SUM(NVL(l48.reqst_qty,0)) > SUM(NVL(l55.DELVRY_QTY,0))
 					) AA,
 		            sal0046D s46,
