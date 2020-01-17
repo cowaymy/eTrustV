@@ -45,7 +45,7 @@
     	createAUIGrid();
 
     	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '${defLocType}', 'locType', 'M','f_multiCombo');
-    	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'toLocType', 'M','f_multiCombo');
+    	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'locTypeTo', 'M','f_multiCombo');
 
     	doGetCombo('/common/selectCodeList.do', '11', '', 'cmbCategory', 'M', 'f_multiCombo');
         doGetCombo('/common/selectCodeList.do', '15', '', 'cmbType', 'M','f_multiCombo');
@@ -288,7 +288,7 @@
         	  reqstNoList += checkedItems[i].item.reqstno +",";
           }
         }
-        console.log(reqstNoList);
+        //console.log(reqstNoList);
         $("#zReqstno").val(reqstNoList);
         $("#zRcvloc").val(checkedItems[0].item.frmlocid); // From Location
         $("#zReqloc").val(checkedItems[0].item.tolocid); // To Location
@@ -316,54 +316,6 @@
         if(popupObj!=null) popupObj.close();
         SearchListAjax();
     }
-/*
-    function f_multiCombo() {
-        $(function() {
-            $('#locType').change(function() {
-                if ($('#locType').val() != null && $('#locType').val() != "" ){
-                    var searchlocgb = $('#locType').val();
-
-                    var locgbparam = "";
-                    for (var i = 0 ; i < searchlocgb.length ; i++){
-                        if (locgbparam == ""){
-                            locgbparam = searchlocgb[i];
-                         }else{
-                            locgbparam = locgbparam +"∈"+searchlocgb[i];
-                         }
-                     }
-
-                     var param = {searchlocgb:locgbparam , grade:""}
-                     CommonCombo.make('locCode', '/common/selectStockLocationList2.do', param , '${defLocCode}', {type: 'M', id:'codeId', name:'codeName', width:'50%', isCheckAll:false});
-                  }
-            }).multipleSelect({
-                selectAll : true
-            });
-        });
-    }*/
-/*
-    function f_multiComboTo() {
-        $(function() {
-            $('#toLocType').change(function() {
-                if ($('#toLocType').val() != null && $('#toLocType').val() != "" ){
-                    var searchlocgb = $('#toLocType').val();
-
-                    var locgbparam = "";
-                    for (var i = 0 ; i < searchlocgb.length ; i++){
-                        if (locgbparam == ""){
-                            locgbparam = searchlocgb[i];
-                         }else{
-                            locgbparam = locgbparam +"∈"+searchlocgb[i];
-                         }
-                     }
-
-                     var param = {searchlocgb:locgbparam , grade:""}
-                     CommonCombo.make('toLocCode', '/common/selectStockLocationList2.do', param , '', {type: 'M', id:'codeId', name:'codeName', width:'50%', isCheckAll:false});
-                  }
-            }).multipleSelect({
-                selectAll : true
-            });
-        });
-    }*/
 
     function f_multiCombo() {
         $(function() {
@@ -388,9 +340,9 @@
                 selectAll : true
             });
 
-        	$('#toLocType').change(function() {
-                if ($('#toLocType').val() != null && $('#toLocType').val() != "" ){
-                    var searchlocgb = $('#toLocType').val();
+        	$('#locTypeTo').change(function() {
+                if ($('#locTypeTo').val() != null && $('#locTypeTo').val() != "" ){
+                    var searchlocgb = $('#locTypeTo').val();
 
                     var locgbparam = "";
                     for (var i = 0 ; i < searchlocgb.length ; i++){
@@ -402,7 +354,7 @@
                      }
 
                      var param = {searchlocgb:locgbparam , grade:""}
-                     CommonCombo.make('toLocCode', '/common/selectStockLocationList2.do', param , '', {type: 'M', id:'codeId', name:'codeName', width:'50%', isCheckAll:false});
+                     CommonCombo.make('locCodeTo', '/common/selectStockLocationList2.do', param , '', {type: 'M', id:'codeId', name:'codeName', width:'50%', isCheckAll:false});
                   }
             }).multipleSelect({
                 selectAll : true
@@ -412,35 +364,17 @@
 
             }).multipleSelect({
                 selectAll : true, // 전체선택
-                width : '49%'
+                width : '46%'
             });
 
             $('#cmbType').change(function() {
 
             }).multipleSelect({
                 selectAll : true,
-                width : '48%'
+                width : '46%'
             });
         });
     }
-
-    /*function f_multiComboType() {
-    $(function() {
-        $('#locCode').change(function() {
-        }).multipleSelect({
-            selectAll : true
-        });
-    });
-}*/
-
-    /*function f_multiComboTypeTo() {
-        $(function() {
-            $('#toLocType').change(function() {
-            }).multipleSelect({
-                selectAll : true
-            });
-        });
-    }*/
 
 </script>
 
@@ -497,8 +431,8 @@
                     <tr>
                         <th scope="row">To Location</th>
                         <td>
-                            <select id="toLocType" name="toLocType[]" multiple="multiple" style="width:100px"></select>
-                            <select id="toLocCode" name="toLocCode[]" multiple="multiple" style="width:140px"><option value="">Choose One</option></select>
+                            <select id="locTypeTo" name="locTypeTo[]" multiple="multiple" style="width:100px"></select>
+                            <select id="locCodeTo" name="locCodeTo[]" multiple="multiple" style="width:100px"><option value="">Choose One</option></select>
                         </td>
                     </tr>
                     <tr>

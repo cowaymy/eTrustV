@@ -87,9 +87,9 @@
 			                  (1, #{item})
 			                </foreach>
 			         </if>
-			         <if test="toLocCode != null">
+			         <if test="locCodeTo != null">
                            AND (1, l47.REQST_CDC_RDC) IN
-                              <foreach item="item" collection="toLocCode" index="index" open="(" separator="," close=")">
+                              <foreach item="item" collection="locCodeTo" index="index" open="(" separator="," close=")">
                                 (1, #{item})
                               </foreach>
                      </if>
@@ -113,22 +113,6 @@
 		                 #{item}
 		                </foreach>
 		             </if>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 			             AND l47.trnsc_type IN ('UM')
 						 AND L47.REQST_TYPE <![CDATA[<>]]>  'PO'
