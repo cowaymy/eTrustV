@@ -636,7 +636,7 @@ public class ReportBatchController {
   private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
     this.checkArgument(params);
 
-    SimpleDateFormat fmt = new SimpleDateFormat("dd/mm/yyyy HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
+    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
     Calendar startTime = Calendar.getInstance();
     Calendar endTime = null;
 
@@ -644,6 +644,7 @@ public class ReportBatchController {
     String reportName = reportFilePath + reportFile;
     ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
     String prodName;
+    int maxLength = 0;
     String msg = "Completed";
 
     try {
@@ -672,7 +673,9 @@ public class ReportBatchController {
       }
     } catch (Exception ex) {
       LOGGER.error(CommonUtils.printStackTraceToString(ex));
-      msg = CommonUtils.printStackTraceToString(ex).substring(0,4000);
+      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
+
+      msg = CommonUtils.printStackTraceToString(ex).substring(0, maxLength);
       throw new ApplicationException(ex);
     } finally{
       // Insert Log
@@ -1634,7 +1637,7 @@ public class ReportBatchController {
   public void CowayDailySalesStatusHP_Adv() {
     LOGGER.info("[START] CowayDailySalesStatusHP_Adv...");
     Map<String, Object> params = new HashMap<>();
-    String[] address = {"jack@coway.com.my", "khongboon.soo@coway.com.my", "michael.choo@coway.com.my"} ;
+    String[] address = {"jack@coway.com.my", "khongboon.soo@coway.com.my", "michael.choo@coway.com.my", "kahkit.chew@coway.com.my"} ;
     String email = "";
     email += "Dear All,\r\n\r\n";
     email += "Hereby is the Daily Accumulated Key-In Sales Analysis Report (HP) for your reference.\r\n\r\n";
@@ -1662,7 +1665,7 @@ public class ReportBatchController {
   public void CowayDailySalesStatusCody() {
     LOGGER.info("[START] CowayDailySalesStatusCody...");
     Map<String, Object> params = new HashMap<>();
-    String[] address = {"jack@coway.com.my", "khongboon.soo@coway.com.my", "michael.choo@coway.com.my"} ;
+    String[] address = {"jack@coway.com.my", "khongboon.soo@coway.com.my", "michael.choo@coway.com.my", "kahkit.chew@coway.com.my"} ;
     String email = "";
     email += "Dear All,\r\n\r\n";
     email += "Hereby is the Daily Accumulated Key-In Sales Analysis Report (Cody) for your reference.\r\n\r\n";
