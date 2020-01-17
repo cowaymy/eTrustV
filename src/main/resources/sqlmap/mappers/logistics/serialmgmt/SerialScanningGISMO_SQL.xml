@@ -57,17 +57,27 @@
 								                  (1, #{item})
 								                </foreach>
 								       </if>
-							           <if test="searchRequestNo !=null and searchRequestNo != ''">
+								       <if test="toLocCode != null">
+                                             AND (1, M.REQST_CDC_RDC) IN
+                                                <foreach item="item" collection="toLocCode" index="index" open="(" separator="," close=")">
+                                                  (1, #{item})
+                                                </foreach>
+                                       </if>
+                                       <if test="searchRequestNo !=null and searchRequestNo != ''">
 								            AND (M.REQST_NO = #{searchRequestNo} or UPPER(D.WH_LOC_DESC) LIKE '%' || UPPER(#{searchRequestNo}) || '%')
 								       </if>
 								       GROUP BY B.REQST_NO, B.REQST_NO_ITM
 					          ) l55,
-						    sys0028m s28q
+						    sys0028m s28q,
+						    SYS0026M s26
 						WHERE 1 = 1
-						 AND l47.reqst_no = l48.reqst_no
+						 AND l47.REQST_NO = l48.REQST_NO
 						 AND l48.REQST_NO = l55.REQST_NO(+)
 						 AND l48.REQST_NO_ITM = l55.REQST_NO_ITM(+)
-						 AND l47.reqst_cdc_rdc = s28q.WH_LOC_ID(+)
+						 AND l47.REQST_CDC_RDC= s28q.WH_LOC_ID(+)
+
+						 AND l48.itm_code= s26.STK_CODE(+)
+
 
 						 AND l47.REQST_CRT_DT  <![CDATA[>=]]>  to_date(#{searchDeliverySDate},'dd/mm/yyyy')   -- FROM
 						 AND l47.REQST_CRT_DT <![CDATA[ <= ]]>  to_date(#{searchDeliveryEDate} || ' 23:59:59','dd/mm/yyyy HH24:MI:SS')   -- TO
@@ -77,12 +87,48 @@
 			                  (1, #{item})
 			                </foreach>
 			         </if>
-			         <if test="searchRequestNo !=null and searchRequestNo != ''">
+			         <if test="toLocCode != null">
+                           AND (1, l47.REQST_CDC_RDC) IN
+                              <foreach item="item" collection="toLocCode" index="index" open="(" separator="," close=")">
+                                (1, #{item})
+                              </foreach>
+                     </if>
+                     <if test="searchRequestNo !=null and searchRequestNo != ''">
 			            AND (l47.REQST_NO = #{searchRequestNo} or UPPER(s28q.WH_LOC_DESC) LIKE '%' || UPPER(#{searchRequestNo}) || '%')
 			         </if>
 			         <if test="searchItm !=null and searchItm != ''">
                           AND (l48.itm_code = #{searchItm} or UPPER(l48.ITM_NAME) LIKE '%' || UPPER(#{searchItm}) || '%')
                      </if>
+
+                     <if test="cmbCategory != null">
+	                     AND s26.STK_CTGRY_ID IN
+	                     <foreach item="item" collection="cmbCategory" index="index" open="(" separator="," close=")">
+	                     #{item}
+	                     </foreach>
+		             </if>
+
+		             <if test="cmbType != null">
+		                 AND s26.STK_TYPE_ID IN
+		                <foreach item="item" collection="cmbType" index="index" open="(" separator="," close=")">
+		                 #{item}
+		                </foreach>
+		             </if>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 			             AND l47.trnsc_type IN ('UM')
 						 AND L47.REQST_TYPE <![CDATA[<>]]>  'PO'

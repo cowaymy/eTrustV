@@ -45,6 +45,10 @@
     	createAUIGrid();
 
     	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '${defLocType}', 'locType', 'M','f_multiCombo');
+    	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'toLocType', 'M','f_multiCombo');
+
+    	doGetComboData('/common/selectCodeList.do', { groupCode : 11 , orderValue : 'CODE'}, '', 'cmbCategory', 'M','f_multiCombo');
+    	doGetComboData('/common/selectCodeList.do', { groupCode : 15 , orderValue : 'CODE'}, '', 'cmbType', 'M','f_multiCombo');
 
     	 if(Common.checkPlatformType() == "mobile") {
     		 $(".path").css("display", "none");
@@ -156,8 +160,8 @@
             },
             {dataField:"reqstdt", headerText:"Dlvd. Req. Date", width:120, editable:false, dataType:"date", dateInputFormat:"dd/mm/yyyy", formatString:"dd/mm/yyyy"},
             {dataField:"toloc", headerText:"To Location", width:250, height:30, style:"aui-grid-user-custom-left"},
-            {dataField:"frmlocid", headerText:"From Loc ID", width:100, height:30},
-            {dataField:"tolocid", headerText:"To Loc ID", width:100, height:30},
+            {dataField:"frmlocid", headerText:"From Loc ID", width:100, height:30, visible:false},
+            {dataField:"tolocid", headerText:"To Loc ID", width:100, height:30, visible:false},
             {dataField: "bndlNo",headerText :"Bundle No"        ,width:120    ,height:30                },
             {dataField: "ordno",headerText :"Order No."        ,width:100    ,height:30                },
             {
@@ -230,10 +234,17 @@
             return false;
         }
 
-        var locCodeVal = $("#locCode option:selected").val();
+        var locTypeVal = $("#locType option:selected").val();
+
+        if(FormUtil.isEmpty(locTypeVal)) {
+           Common.alert('Please enter From Location.');
+           return false;
+        }
+
+    	var locCodeVal = $("#locCode option:selected").val();
 
         if(FormUtil.isEmpty(locCodeVal)) {
-           Common.alert('Please enter Location Code.');
+           Common.alert('Please enter From Location.');
            return false;
         }
 
@@ -305,7 +316,7 @@
         if(popupObj!=null) popupObj.close();
         SearchListAjax();
     }
-
+/*
     function f_multiCombo() {
         $(function() {
             $('#locType').change(function() {
@@ -328,16 +339,109 @@
                 selectAll : true
             });
         });
-    }
-
-    function f_multiComboType() {
+    }*/
+/*
+    function f_multiComboTo() {
         $(function() {
-            $('#locCode').change(function() {
+            $('#toLocType').change(function() {
+                if ($('#toLocType').val() != null && $('#toLocType').val() != "" ){
+                    var searchlocgb = $('#toLocType').val();
+
+                    var locgbparam = "";
+                    for (var i = 0 ; i < searchlocgb.length ; i++){
+                        if (locgbparam == ""){
+                            locgbparam = searchlocgb[i];
+                         }else{
+                            locgbparam = locgbparam +"∈"+searchlocgb[i];
+                         }
+                     }
+
+                     var param = {searchlocgb:locgbparam , grade:""}
+                     CommonCombo.make('toLocCode', '/common/selectStockLocationList2.do', param , '', {type: 'M', id:'codeId', name:'codeName', width:'50%', isCheckAll:false});
+                  }
             }).multipleSelect({
                 selectAll : true
             });
         });
+    }*/
+
+    function f_multiCombo() {
+        $(function() {
+
+        	$('#locType').change(function() {
+                if ($('#locType').val() != null && $('#locType').val() != "" ){
+                    var searchlocgb = $('#locType').val();
+
+                    var locgbparam = "";
+                    for (var i = 0 ; i < searchlocgb.length ; i++){
+                        if (locgbparam == ""){
+                            locgbparam = searchlocgb[i];
+                         }else{
+                            locgbparam = locgbparam +"∈"+searchlocgb[i];
+                         }
+                     }
+
+                     var param = {searchlocgb:locgbparam , grade:""}
+                     CommonCombo.make('locCode', '/common/selectStockLocationList2.do', param , '${defLocCode}', {type: 'M', id:'codeId', name:'codeName', width:'60%', isCheckAll:false});
+                  }
+            }).multipleSelect({
+                selectAll : true
+            });
+
+        	$('#toLocType').change(function() {
+                if ($('#toLocType').val() != null && $('#toLocType').val() != "" ){
+                    var searchlocgb = $('#toLocType').val();
+
+                    var locgbparam = "";
+                    for (var i = 0 ; i < searchlocgb.length ; i++){
+                        if (locgbparam == ""){
+                            locgbparam = searchlocgb[i];
+                         }else{
+                            locgbparam = locgbparam +"∈"+searchlocgb[i];
+                         }
+                     }
+
+                     var param = {searchlocgb:locgbparam , grade:""}
+                     CommonCombo.make('toLocCode', '/common/selectStockLocationList2.do', param , '', {type: 'M', id:'codeId', name:'codeName', width:'60%', isCheckAll:false});
+                  }
+            }).multipleSelect({
+                selectAll : true
+            });
+
+        	$('#cmbCategory').change(function() {
+
+            }).multipleSelect({
+                selectAll : true, // 전체선택
+                width : '46%'
+            });
+
+            $('#cmbType').change(function() {
+
+            }).multipleSelect({
+                selectAll : true,
+                width : '45%'
+            });
+        });
     }
+
+    /*function f_multiComboType() {
+    $(function() {
+        $('#locCode').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        });
+    });
+}*/
+
+    /*function f_multiComboTypeTo() {
+        $(function() {
+            $('#toLocType').change(function() {
+            }).multipleSelect({
+                selectAll : true
+            });
+        });
+    }*/
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -363,7 +467,7 @@
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
-                    <col style="width:26%" />
+                    <col style="width:30%" />
                     <col style="width:*" />
                 </colgroup>
                 <tbody>
@@ -387,7 +491,14 @@
                         <th scope="row">From Location<span class="must">*</span></th>
                         <td>
                             <select id="locType" name="locType[]" multiple="multiple" style="width:100px"></select>
-                            <select id="locCode" name="locCode[]" multiple="multiple" style="width:350px"><option value="">Choose One</option></select>
+                            <select id="locCode" name="locCode[]" multiple="multiple" style="width:200px"><option value="">Choose One</option></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">To Location</th>
+                        <td>
+                            <select id="toLocType" name="toLocType[]" multiple="multiple" style="width:100px"></select>
+                            <select id="toLocCode" name="toLocCode[]" multiple="multiple" style="width:190px"><option value="">Choose One</option></select>
                         </td>
                     </tr>
                     <tr>
@@ -412,6 +523,13 @@
                         </td>
                     </tr>
                     <tr>
+                        <th scope="row">Category/Type</th>
+                        <td>
+                            <select id="cmbCategory" name="cmbCategory[]" multiple="multiple"></select>
+                            <select id="cmbType" name="cmbType[]" multiple="multiple"></select>
+                        </td>
+                   </tr>
+                   <tr>
                         <th scope="row">Item Code/Name</th>
                         <td>
                             <input type="text"  id="searchItm" name="searchItm"  class="w100p" />
