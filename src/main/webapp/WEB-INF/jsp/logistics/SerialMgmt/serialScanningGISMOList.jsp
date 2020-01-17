@@ -432,7 +432,7 @@
                         <th scope="row">To Location</th>
                         <td>
                             <select id="locTypeTo" name="locTypeTo[]" multiple="multiple" style="width:100px"></select>
-                            <select id="locCodeTo" name="locCodeTo[]" multiple="multiple" style="width:110px"><option value="">Choose One</option></select>
+                            <select id="locCodeTo" name="locCodeTo[]" multiple="multiple" style="width:110px"></select>
                         </td>
                     </tr>
                     <tr>
