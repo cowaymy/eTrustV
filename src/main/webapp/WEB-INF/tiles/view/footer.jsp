@@ -45,6 +45,8 @@
             	 }
              });
 */
+
+/*
              if( $(document.body).find("article>div").length == 1 ){
             	 if( $($(document.body).find("article>div")[0]).hasClass("autoGridHeight") == false ){
                      $($(document.body).find("article>div")[0]).addClass("autoGridHeight");
@@ -55,6 +57,11 @@
             		 AUIGrid.resize(GridCommon.makeGridId(gridId));
                  });
              }
+ */
+             $.each($(document.body).find("article>div"), function(i){
+                 var gridId = $(this).attr("id");
+                 AUIGrid.resize(GridCommon.makeGridId(gridId));
+             });
          } catch (e) {}
      }
 
