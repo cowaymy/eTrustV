@@ -292,12 +292,9 @@
     </section><!-- search_table end -->
 
     <section class="search_result"><!-- search_result start -->
-        <aside class="title_line">
-            <!--<h3 class="pt0">List</h3>-->
-            <ul class="right_btns">
-	            <li><p class="btn_grid"><a href="#" id="btnExcelDown">EXCEL DW</a></p></li>
-	        </ul>
-        </aside>
+        <ul class="right_btns">
+	        <li><p class="btn_grid"><a href="#" id="btnExcelDown">EXCEL DW</a></p></li>
+	    </ul>
 
 		<article class="grid_wrap">
             <div id="mainGrid" class="autoGridHeight"></div>
