@@ -2,6 +2,7 @@ package com.coway.trust.web.homecare.services.as;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -406,6 +407,18 @@ public class HcASManagementListController {
 
     orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
     model.put("orderDetail", orderDetail);
+
+    String asSol_Disable = "";
+    Map<String, Object> sParts = new HashMap<String, Object>();
+    sParts.put("AS_RESULT_NO", (String) params.get("as_Result_No"));
+    List<EgovMap> partsList = hcASManagementListService.getASRulstEditFilterInfo(sParts);
+    for(EgovMap eMap : partsList){
+    	if("Y".equals( (String)eMap.get("isSmo") )){
+    		asSol_Disable = "T";
+    		break;
+    	}
+    }
+    model.put("asSolDisable", asSol_Disable);
 
     return "homecare/services/as/hcAsResultEditBasicPop";
   }

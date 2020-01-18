@@ -1018,6 +1018,11 @@
   }
 
   function fn_dftTyp(dftTyp){
+	if("${asSolDisable}" == "T" && (dftTyp == "HDT" || dftTyp == "HSC")){
+		Common.alert("Parts with Return SMO cannot be modified.");
+		return false;
+	}
+
     var ddCde = "";
     var dtCde = "";
     if (dftTyp == "HDC") {
@@ -1038,7 +1043,7 @@
           } else {
             dtCde = $("#def_type_id").val();
           }
-}
+    }
     Common.popupDiv("/homecare/services/as/hcDftTypPop.do", {callPrgm : dftTyp, prodCde : $("#PROD_CDE").val(), ddCde: ddCde , dtCde : dtCde}, null, true);
 
   }

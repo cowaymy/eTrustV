@@ -968,10 +968,10 @@
              S.ASR_ITM_REM
              filter_Remark ,
              S.SERIAL_NO srv_Filter_Last_Serial,
-             S.IS_SERIAL_REPLACE,
+             NVL(S.IS_SERIAL_REPLACE, 'N') AS IS_SERIAL_REPLACE,
              S.IS_CHK_SERIAL,
              S.RET_SMO_SERIAL_NO,
-             S.IS_SMO,
+             NVL(S.IS_SMO, 'N') AS IS_SMO,
              S.IS_SMO_CHK_YN
              FROM ( SELECT E1.ASR_ITM_ID ,
                            E1.ASR_ITM_PART_QTY ,

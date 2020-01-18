@@ -25,6 +25,7 @@
   var asRslt;
   var ops;
 
+  var asSolDisable = false;
   var ddlFilterObj = {};
 
   $(document).ready(
@@ -143,12 +144,23 @@
       dataField : "undefined",
       headerText : " ",
       width : 110,
+      editable : false,
       renderer : {
         type : "ButtonRenderer",
         labelText : "Remove",
         onclick : function(rowIndex, columnIndex, value, item) {
+          if(item.isSerialReplace == "Y"){
+        	  Common.alert("Serial Replace cannot be deleted.");
+        	  return false;
+          }
+          if(item.isSmo == "Y"){
+              Common.alert("Create Return SMO cannot be deleted.");
+              return false;
+          }
           // isSmoChkYn = 'Y' ,  Edit AS is remove impossible.
-          if(item.isSmoChkYn == "Y"){return false;}
+          if(item.isSmoChkYn == "Y"){
+        	  return false;
+          }
 
           AUIGrid.removeRow(myFltGrd10, rowIndex);
           AUIGrid.removeSoftRows(myFltGrd10); //completed remove from AUIGrid cyc
@@ -309,6 +321,12 @@
   function fn_getASRulstEditFilterInfo() {
     Common.ajax("POST", "/homecare/services/as/getASRulstEditFilterInfo.do", { AS_RESULT_NO : $('#asData_AS_RESULT_NO').val() },
       function(result) {
+    	$.each(result, function(i, row){
+    		if(row.isSmo == "Y"){
+    			asSolDisable = true;
+    		}
+    	});
+
         AUIGrid.setGridData(myFltGrd10, result);
       });
   }
@@ -1246,6 +1264,17 @@
         fitem.isSmo = ddlFilterObj[$("#ddlFilterCode").val()].isSmo;
         fitem.isSerialReplace = ddlFilterObj[$("#ddlFilterCode").val()].isSerialReplace;
 
+        // KR-JIN, 2020-01-18
+        if(fitem.isSmo == "Y"){
+        	Common.alert("Create Return SMO cannot be edited in the edit screen.");
+        	return false;
+        }
+        // KR-JIN, 2020-01-18
+        if(fitem.isSerialReplace == "Y"){
+        	Common.alert("Serial Replace cannot be edited in the edit screen.");
+        	return false;
+        }
+
         if(fitem.isSerialReplace == "Y"){
             fitem.isChkSerial = fn_chkSerial(fitem.srvFilterLastSerial);
             if(fitem.isChkSerial != "Y"){
@@ -2150,6 +2179,11 @@
   }
 
   function fn_dftTyp(dftTyp){
+	  if(asSolDisable == true && (dftTyp == "HDT" || dftTyp == "HSC")){
+		  Common.alert("Parts with Return SMO cannot be modified.");
+		  return false;
+	  }
+
       var ddCde = "";
       var dtCde = "";
       if (dftTyp == "HDC") {
@@ -2170,7 +2204,7 @@
             } else {
               dtCde = $("#def_type_id").val();
             }
-  }
+      }
       Common.popupDiv("/homecare/services/as/hcDftTypPop.do", {callPrgm : dftTyp, prodCde : $("#PROD_CDE").val(), ddCde: ddCde , dtCde : dtCde}, null, true);
     }
 
