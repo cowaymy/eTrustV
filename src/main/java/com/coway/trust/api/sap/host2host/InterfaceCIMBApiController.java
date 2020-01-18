@@ -570,6 +570,9 @@ public class InterfaceCIMBApiController {
 
 		LOGGER.debug("3. PGP encryption/send End.");
 
+		dto.setCode("0");
+		dto.setMessage("success");
+
 		return ResponseEntity.ok(dto);
 	}
 
