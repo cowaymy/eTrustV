@@ -92,7 +92,12 @@
             }
 
             // 테스트
-            gridHeight = gridHeight - 10
+            gridHeight = gridHeight - 10;
+
+            if(Common.checkPlatformType() == "mobile") {
+                $('.bottom_msg_box').css("display", "none");
+                gridHeight = gridHeight + $(".bottom_msg_box").height();
+            }
 
              var myGridID = GridCommon.makeGridId(gridId);
 
