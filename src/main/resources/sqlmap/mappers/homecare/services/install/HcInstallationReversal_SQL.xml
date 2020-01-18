@@ -213,4 +213,32 @@
 		    AND A.SALES_ORD_ID != #{hidSalesOrderId}
     </select>
 
+    <select id="selectReversalStockState" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.services.install.impl.HcInstallationReversalMapper.selectReversalStockState] */
+        SELECT S1.SALES_ORD_NO
+             , L47.REQST_NO
+             , NVL (L54.DELVRY_GR_CMPLT , 'N') AS GR_CMPLT
+             , NVL (L54.DELVRY_GI_CMPLT , 'N') AS GI_CMPLT
+          FROM LOG0047M L47
+             , LOG0048D L48
+             , LOG0054M L54
+             , LOG0055D L55
+             , SYS0026M S26
+             , SAL0046D S46
+             , SAL0001D S1
+         WHERE 1 = 1
+           AND L48.ITM_CODE  = L55.ITM_CODE
+           AND L48.ITM_CODE = S26.STK_CODE
+           AND L54.DELVRY_NO = L55.DELVRY_NO
+           AND L48.REQST_NO  = L55.REQST_NO
+           AND L47.REQST_NO  = L48.REQST_NO
+           AND L47.REQST_TYPE   <![CDATA[<>]]>  'PO'
+           AND NVL(L54.DEL_FLAG,'N')  <![CDATA[<>]]> 'Y'
+           AND L47.REF_DOC_NO = S46.INSTALL_ENTRY_NO
+           AND S46.SALES_ORD_ID = S1.SALES_ORD_ID
+           AND NVL(L47.REQST_DEL , 'N') = 'N'
+           AND NVL(l48.REQST_DEL , 'N') = 'N'
+           AND S1.SALES_ORD_NO = #{esalesOrdNo}
+    </select>
+
 </mapper>

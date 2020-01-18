@@ -13,6 +13,8 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
@@ -37,6 +39,9 @@ public class HcInstallationReversalServiceImpl extends EgovAbstractServiceImpl i
 	@Resource(name = "installationReversalService")
 	private InstallationReversalService installationReversalService;
 
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+
 	@Override
 	public List<EgovMap> selectReverseReason() throws Exception{
 		return hcInstallationReversalMapper.selectReverseReason();
@@ -59,6 +64,7 @@ public class HcInstallationReversalServiceImpl extends EgovAbstractServiceImpl i
 
 	@Override
 	public void multiResaval(Map<String, Object> params, SessionVO sessionVO) throws Exception{
+		selectReversalStockState(params);
 
 		installationReversalService.saveResavalSerial(params);
 
@@ -73,6 +79,8 @@ public class HcInstallationReversalServiceImpl extends EgovAbstractServiceImpl i
 			Map<String, Object> sOrder = null;
 			List<EgovMap> bndlList = hcInstallationReversalMapper.selectBndlInfoList(params);
 			for (EgovMap sMap : bndlList) {
+				sMap.put("esalesOrdNo", sMap.get("salesOrdNo"));
+				selectReversalStockState(sMap);
 
 				EgovMap  list1 = hcInstallationReversalMapper.selectOrderListDetail1(sMap);
 				EgovMap  list5 = installationReversalService.installationReversalSearchDetail5(params);
@@ -111,4 +119,22 @@ public class HcInstallationReversalServiceImpl extends EgovAbstractServiceImpl i
 		}
 	}
 
+	// stock state check.
+	private void selectReversalStockState(Map<String, Object> params) throws Exception{
+		List<EgovMap> stockChkList = hcInstallationReversalMapper.selectReversalStockState(params);
+
+		if(stockChkList == null || stockChkList.size() == 0){
+			throw new ApplicationException(AppConstants.FAIL,
+					messageAccessor.getMessage(AppConstants.MSG_NOT_EXIST, new Object[] { "Stock(String)" }));
+		}
+
+		for (EgovMap stMap : stockChkList){
+			if(!"Y".equals((String)stMap.get("grCmplt"))){
+				throw new ApplicationException(AppConstants.FAIL, "Check the stock GR status.");
+			}
+			if(!"Y".equals((String)stMap.get("giCmplt"))){
+				throw new ApplicationException(AppConstants.FAIL, "Check the stock GI status.");
+			}
+		}
+	}
 }

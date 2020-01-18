@@ -18,4 +18,6 @@ public interface HcInstallationReversalMapper {
 	public EgovMap selectOrderListDetail1(Map<String, Object> params) throws Exception;
 
 	public List<EgovMap> selectBndlInfoList(Map<String, Object> params) throws Exception;
+
+	public List<EgovMap> selectReversalStockState(Map<String, Object> params) throws Exception;
 }
