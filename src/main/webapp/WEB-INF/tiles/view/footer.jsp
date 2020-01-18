@@ -35,7 +35,13 @@
              }
 
              //alert(iHeight)
-             iHeight = iHeight - 100;  // remain message arae.
+             //iHeight = iHeight - 100;  // remain message arae.
+
+             if(Common.checkPlatformType() == "mobile") {
+            	 $('.bottom_msg_box').css("display", "none");
+             } else {
+            	 iHeight = iHeight - 100;  // remain message arae.
+             }
 
              $("#content").height(iHeight);
 /*
@@ -93,11 +99,6 @@
 
             // 테스트
             gridHeight = gridHeight - 10;
-
-            if(Common.checkPlatformType() == "mobile") {
-                $('.bottom_msg_box').css("display", "none");
-                gridHeight = gridHeight + $(".bottom_msg_box").height();
-            }
 
              var myGridID = GridCommon.makeGridId(gridId);
 
