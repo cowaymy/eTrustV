@@ -32,58 +32,58 @@ public class InterfaceCIMBApiController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(InterfaceCIMBApiController.class);
 
 	@Value("${host2host.sap.ftp.host}")
-    private static String SAP_IF_FTP_HOST;	// 10.101.3.40
+    private String SAP_IF_FTP_HOST;	// 10.101.3.40
 
 	@Value("${host2host.sap.ftp.port}")
-	public static int SAP_IF_FTP_PORT;	// = 22;
+	public int SAP_IF_FTP_PORT;	// = 22;
 
 	@Value("${host2host.sap.ftp.userid}")
-	public static String SAP_IF_FTP_USERID;	// = "etrustftp4";
+	public String SAP_IF_FTP_USERID;	// = "etrustftp4";
 
 	@Value("${host2host.sap.ftp.userpw}")
-	public static String SAP_IF_FTP_USERPW;	// = "akffus#20!(";
+	public String SAP_IF_FTP_USERPW;	// = "akffus#20!(";
 
 	@Value("${host2host.sap.ftp.rootpath}")
-	public static String SAP_IF_FTP_ROOTPATH;	// = "/home/etrustftp4/data/sap2etrust/DEV";
+	public String SAP_IF_FTP_ROOTPATH;	// = "/home/etrustftp4/data/sap2etrust/DEV";
 
 	@Value("${host2host.sap.ftp.rootpath_decrypt}")
-	public static String SAP_IF_FTP_ROOTPATH_DECRYPT;	// = "/home/etrustftp4/data/etrust2sap/DEV";
+	public String SAP_IF_FTP_ROOTPATH_DECRYPT;	// = "/home/etrustftp4/data/etrust2sap/DEV";
 
 
 	@Value("${host2host.was.encrypt.temp.rootpath}")
-	public static String WAS_ENCRYPT_TEMP_ROOTPATH;	// = "/was/gnupg/cimb/encrypt/";	 // WAS_ENCRYPT_TEMP_ROOTPATH + "YYYYMMDD" = "/was/gnupg/cimb/encrypt/20191222/"
+	public String WAS_ENCRYPT_TEMP_ROOTPATH;	// = "/was/gnupg/cimb/encrypt/";	 // WAS_ENCRYPT_TEMP_ROOTPATH + "YYYYMMDD" = "/was/gnupg/cimb/encrypt/20191222/"
 
 	@Value("${host2host.was.encrypt.rootpath}")
-	public static String WAS_ENCRYPT_ROOTPATH;	// = "/was/gnupg/cimb/encrypt/";	// WAS_ENCRYPT_ROOTPATH + "YYYYMMDD" = "/was/gnupg/cimb/encrypt/20191222/"
+	public String WAS_ENCRYPT_ROOTPATH;	// = "/was/gnupg/cimb/encrypt/";	// WAS_ENCRYPT_ROOTPATH + "YYYYMMDD" = "/was/gnupg/cimb/encrypt/20191222/"
 
 	@Value("${host2host.was.decrypt.temp.rootpath}")
-	public static String WAS_DECRYPT_TEMP_ROOTPATH;	// = "/was/gnupg/cimb/decrypt/";
+	public String WAS_DECRYPT_TEMP_ROOTPATH;	// = "/was/gnupg/cimb/decrypt/";
 
 	@Value("${host2host.was.decrypt.rootpath}")
-	public static String WAS_DECRYPT_ROOTPATH;	// = "/was/gnupg/cimb/decrypt/";
+	public String WAS_DECRYPT_ROOTPATH;	// = "/was/gnupg/cimb/decrypt/";
 
 
 	@Value("${host2host.cimb.ftp.host}")
-	public static String CIMB_FTP_HOST;	// = "203.115.237.33";	// 127.0.0.1
+	public String CIMB_FTP_HOST;	// = "203.115.237.33";	// 127.0.0.1
 
 	@Value("${host2host.cimb.ftp.port}")
-	public static int CIMB_FTP_PORT;	// = 6039;    // 22;
+	public int CIMB_FTP_PORT;	// = 6039;    // 22;
 
 	@Value("${host2host.cimb.ftp.userid}")
-	public static String CIMB_FTP_USERID;	// = "COWAY_AutoPay";
+	public String CIMB_FTP_USERID;	// = "COWAY_AutoPay";
 
 	@Value("${host2host.cimb.ftp.userpw}")
-	public static String CIMB_FTP_USERPW;	// = "password";    //"1234";
+	public String CIMB_FTP_USERPW;	// = "password";    //"1234";
 
 	@Value("${host2host.cimb.ftp.rootpath}")
-	public static String CIMB_FTP_ROOTPATH;	// = "/COWAY/Inbound/";
+	public String CIMB_FTP_ROOTPATH;	// = "/COWAY/Inbound/";
 
 	@Value("${host2host.cimb.ftp.rootpath_decrypt}")
-	public static String CIMB_FTP_ROOTPATH_DECRYPT;	// = "/COWAY/Outbound/";
+	public String CIMB_FTP_ROOTPATH_DECRYPT;	// = "/COWAY/Outbound/";
 
 
 	@Value("${host2host.pgp.passphrase}")
-	public static String PGP_PASSPHRASE;	// = "TEST";
+	public String PGP_PASSPHRASE;	// = "TEST";
 
 	/*
 	public String SAP_IF_FTP_HOST = "10.101.3.40";
