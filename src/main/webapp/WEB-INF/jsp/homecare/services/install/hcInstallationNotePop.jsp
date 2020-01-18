@@ -158,8 +158,8 @@ var branchDs = [];
         //whereSeq2 += "AND CTMEM.MEM_CODE IN (" + $("#CTCode").val() + ") ";
       //}
 
-      if ($("#bndlId").val() != '' && $("#bndlId").val() != null) {
-        whereSeq += "AND A.BNDL_ID = '" + $("#bndlId").val() + "' ";
+      if ($("#sBndlNo").val() != '' && $("#sBndlNo").val() != null) {
+        whereSeq += "AND HMC.BNDL_NO = '" + $("#sBndlNo").val() + "' ";
       }
 
       // HomeCare add
@@ -186,10 +186,12 @@ var branchDs = [];
         whereSeq2 += "AND INSTALL.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '" + $("#branch").val() + "' AND STUS_ID = 1 AND TYPE_ID = 5754)";
       }
 
-      if ($("#sortType").val() == "2") {
-        orderBySql = "ORDER BY CTMEM.MEM_CODE ";
+      if ($("#sortType").val() == "1") {
+    	  orderBySql = "ORDER BY MAIN.INSTALL_ENTRY_ID ";
+      } else if($("#sortType").val() == "2") {
+    	  orderBySql = "ORDER BY CTMEM.MEM_CODE ";
       } else {
-        orderBySql = "ORDER BY MAIN.INSTALL_ENTRY_ID ";
+    	  orderBySql = "ORDER BY MAIN.BNDL_NO ";
       }
 
       console.log(whereSeq);
@@ -224,7 +226,7 @@ var branchDs = [];
     $("#instalNo").val('');
     $("#CTCode").val('');
     $("#instalType").val('');
-    $("#sortType").val('1');
+    $("#sortType").val('3');
     $("#V_WHERESQL").val('');
     $("#V_WHERESQL2").val('');
     $("#V_INSTALLSTATUS").val('');
@@ -344,7 +346,7 @@ var branchDs = [];
       </select></td>
      </tr>
      <tr>
-      <th scope="row"><spring:message code='service.title.DSCBranch' /> <span name="m4" id="m4" class="must">*</span></th>
+      <th scope="row"><spring:message code='home.lbl.hdcBranch' /> <span name="m4" id="m4" class="must">*</span></th>
       <td>
        <select id="branch" name="branch" class="w100p"></select>
       </td>
@@ -376,12 +378,13 @@ var branchDs = [];
         <select id="sortType" name="sortType">
 	        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
 	        <option value="1">Installation Number</option>
-	        <option value="2" selected>DT Code</option>
+	        <option value="2">DT Code</option>
+            <option value="3" selected>Bundle No</option>
         </select>
       </td>
       <th scope="row">Bundle No</th>
       <td>
-        <input type="text" title="" placeholder="Bundle No" class="w100p" id="bndlId" name="bndlId" />
+        <input type="text" title="" placeholder="Bundle No" class="w100p" id="sBndlNo" name="sBndlNo" />
       </td>
      </tr>
     </tbody>
