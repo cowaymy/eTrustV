@@ -450,7 +450,7 @@
                             </div>
                         </td>
                     </tr>
-                    <tr>
+                    <tr style="display:none">
                         <th scope="row">Req. No/To Loc.</th>
                         <td>
                             <input type="text"  id="searchRequestNo" name="searchRequestNo"  class="w100p" />
