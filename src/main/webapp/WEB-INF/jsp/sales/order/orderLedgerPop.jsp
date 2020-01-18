@@ -3,31 +3,31 @@
 
 
 <script type="text/javaScript" language="javascript">
-    
+
     //AUIGrid 생성 후 반환 ID
     var  ordLedgerGridID;
     var  agreGridID;
     var orderLdgrList;
     var agreList;
-    
+
     $(document).ready(function(){
-       	
+
        if('${orderLdgrList}'=='' || '${orderLdgrList}' == null){
        }else{
-    	   orderLdgrList = JSON.parse('${orderLdgrList}');           
-       }   
-       
+    	   orderLdgrList = JSON.parse('${orderLdgrList}');
+       }
+
        if('${agreList}'=='' || '${agreList}' == null){
        }else{
-    	   agreList = JSON.parse('${agreList}');           
-       }   
-        
+    	   agreList = JSON.parse('${agreList}');
+       }
+
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         createAUIGrid_agre();
-        
+
     });
-    
+
     function createAUIGrid(){
         //AUIGrid 칼럼 설정
         var ordLedgerLayout = [
@@ -48,21 +48,21 @@
      //그리드 속성 설정
      var ordLedgerGridPros = {
          usePaging           : false,             //페이징 사용
-         pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-         editable                : false,        
-         showStateColumn     : false,         
-         showRowNumColumn    : false,  
+         pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+         editable                : false,
+         showStateColumn     : false,
+         showRowNumColumn    : false,
          headerHeight : 30
-       //selectionMode       : "singleRow"  //"multipleCells",   
+       //selectionMode       : "singleRow"  //"multipleCells",
      };
-     
+
      ordLedgerGridID = GridCommon.createAUIGrid("ord_ledger_grid", ordLedgerLayout, "", ordLedgerGridPros);
-     
+
      if(orderLdgrList != '' ){
          AUIGrid.setGridData(ordLedgerGridID, orderLdgrList);
-     } 
- }  
-    
+     }
+ }
+
     function createAUIGrid_agre(){
         //AUIGrid 칼럼 설정
         var agreLayout = [
@@ -77,53 +77,53 @@
      //그리드 속성 설정
      var agreGridPros = {
          usePaging           : true,             //페이징 사용
-         pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-         editable                : false,        
-         showStateColumn     : false,        
-         showRowNumColumn    : false,   
-//         selectionMode       : "singleRow"  //"multipleCells",   
+         pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+         editable                : false,
+         showStateColumn     : false,
+         showRowNumColumn    : false,
+//         selectionMode       : "singleRow"  //"multipleCells",
      };
-     
+
      agreGridID = GridCommon.createAUIGrid("agre_grid", agreLayout, "", agreGridPros);
-     
+
      if(agreList != '' ){
          AUIGrid.setGridData(agreGridID, agreList);
      } else{
 
          $("#agreDiv").hide();
      }
- }   
-    
+ }
+
     function fn_report1(){
     	//CURRENT DATE
         var date = new Date().getDate();
         var mon = new Date().getMonth()+1;
-        
+
         if(date.toString().length == 1){
             date = "0" + date;
         }
-        
+
         if(mon.toString().length == 1){
             mon = "0" + mon;
         }
-        
+
     	var inputDate = dataForm.cutOffDate.value;
-    	
+
     	if($("#cutOffDate").val() == ""){
     		$("#V_CUTOFFDATE").val('01/01/1900');
     	}else{
     		$("#V_CUTOFFDATE").val('01/'+inputDate.substring(0,2)+'/'+inputDate.substring(3,7));
     	}
-    	
+
     	$("#reportDownFileName").val($("#V_ORDERNO").val()+"_"+date+mon+new Date().getFullYear());
-    	
+
     	var option = {
   	        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
   	    };
-    	
+
     	Common.report("dataForm", option);
     }
-</script>    
+</script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
@@ -236,7 +236,7 @@
     <td><span>${ordOutInfo.totPnaltyBal}</span></td>
 </tr>
 </tbody>
-</table>   
+</table>
 
 <ul class="right_btns mt20">
 	<li><p>Transaction Date</p></li>
@@ -249,14 +249,14 @@
     <div id="ord_ledger_grid" style="width:100%; height:330px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
- 
+
 
 <article class="grid_wrap mt20"><!-- grid_wrap start -->
 <div id ="agreDiv" >
 <aside class="title_line">
 <h2> Agreement Info</h2>
 </aside>
-    <div class = "mt10"id="agre_grid" style="width:100%; height:200px; margin:0 auto;"></div>    
+    <div class = "mt10"id="agre_grid" style="width:100%; height:200px; margin:0 auto;"></div>
 </div>
 </article><!-- grid_wrap end -->
 
@@ -265,5 +265,3 @@
 
 </div><!-- popup_wrap end -->
 
-</body>
-</html>
