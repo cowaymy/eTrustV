@@ -165,11 +165,12 @@ var monthOptions = {//년월달력 세팅
 
 $(document).on(//년월달력 실행
 	"focus", ".j_date2", function(){
-	$(this).monthpicker(monthOptions).bind('monthpicker-show',function(e){
+	$(this).monthpicker(monthOptions);
+	/*$(this).monthpicker(monthOptions).bind('monthpicker-show',function(e){
 		if($(".ui-datepicker").offset().left < $(this).offset().left){
 			$(".ui-datepicker").css('left',$(this).offset().left-$(".ui-datepicker").width()/2)
 		}
-	});
+	});*/
 });
 
 var pickerOpts2 = {//생년월일달력 세팅
