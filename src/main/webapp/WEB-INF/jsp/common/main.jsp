@@ -616,6 +616,8 @@
                 if (totTabCount == 0) {
                     $("#content2").hide();
                     $("#content").show();
+
+                    mainGridResize();
                 }
             });
 
@@ -642,6 +644,8 @@
 
                 $("#content2").hide();
                 $("#content").show();
+
+                mainGridResize();
             });
             // [Woongjin Jun] Tab
         });
@@ -665,6 +669,27 @@
 
     });   //$(document).ready
 
+    function mainGridResize() {
+    	if (typeof noticeGridID != "undefined") {
+    		AUIGrid.resize(noticeGridID, null, 132);
+    	}
+
+    	if (typeof detailGridID != "undefined") {
+            AUIGrid.resize(detailGridID, null, 210);
+        }
+
+    	if (typeof memoGridID != "undefined") {
+            AUIGrid.resize(memoGridID, null, 210);
+        }
+
+    	if (typeof salesOrgPerfM != "undefined") {
+            AUIGrid.resize(salesOrgPerfM, null, 160);
+        }
+
+    	if (typeof salesOrgPerfD != "undefined") {
+            AUIGrid.resize(salesOrgPerfD, null, 160);
+        }
+    }
 
     // 리스트 조회.
     function fn_selectNoticeListAjax() {
