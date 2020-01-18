@@ -61,6 +61,11 @@ var myGridID;
 
   function fn_noteListingGrid() {
     var columnLayout = [ {
+      dataField : "bndlNo",
+      headerText : '<spring:message code="home.lbl.bndlNo" />',
+      editable : false,
+      width : 110
+    },{
       dataField : "instno",
       headerText : '<spring:message code="service.grid.InstNo" />',
       editable : false,
@@ -152,7 +157,7 @@ var myGridID;
     usePaging : true,
     pageRowCount : 20,
     editable : true,
-    fixedColumnCount : 1,
+    fixedColumnCount : 2,
     showStateColumn : true,
     displayTreeOpen : true,
     selectionMode : "singleRow",
@@ -284,6 +289,10 @@ var myGridID;
             + $("#orderNoTo").val() + "') ";
       }
 
+      if ($("#sBndlNo").val() != '' && $("#sBndlNo").val() != null) {
+          whereSql += " AND h11.BNDL_NO = '" + $("#sBndlNo").val()+ "' ";
+      }
+
       // HomeCare add
       whereSql += " AND som.BNDL_ID IS NOT NULL ";
 
@@ -309,7 +318,7 @@ var myGridID;
       $("#reportForm #V_ORDERDATE").val(orderDate);
       $("#reportForm #V_WHERESQL").val(whereSql);
       $("#reportForm #V_ORDERBYSQL").val(orderBySql);
-      $("#reportForm #reportFileName").val('/services/InstallationNoteListing_PDF.rpt');
+      $("#reportForm #reportFileName").val('/homecare/hcInstallationNoteListing_PDF.rpt');
       $("#reportForm #viewType").val("PDF");
       $("#reportForm #reportDownFileName").val(
           "InstallationNoteList_" + day + month + date.getFullYear());
@@ -403,6 +412,10 @@ var myGridID;
         whereSql += " AND (som.Sales_Ord_No between'"
             + $("#orderNoFrom").val() + "' AND '"
             + $("#orderNoTo").val() + "') ";
+      }
+
+      if ($("#sBndlNo").val() != '' && $("#sBndlNo").val() != null) {
+          whereSql += " AND h11.BNDL_NO = '" + $("#sBndlNo").val()+ "' ";
       }
 
       // HomeCare add
@@ -642,8 +655,12 @@ var myGridID;
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.title.Product' /></th>
-       <td colspan="3">
+       <td>
            <select id="productLst" name="productLst"></select>
+       </td>
+       <th scope="row"><spring:message code="home.lbl.bndlNo" /></th>
+       <td>
+           <input type="text" id="sBndlNo" name="sBndlNo" placeholder="Bundle No" />
        </td>
       </tr>
      </tbody>
