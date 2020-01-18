@@ -50,6 +50,7 @@
     	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '${defLocType}', 'locType', 'M','f_multiCombo');
 
     	 if(Common.checkPlatformType() == "mobile") {
+    		 $(".path").css("display", "none");
              $("#btnMobileClose").attr("style", "");
          }
 
@@ -92,7 +93,7 @@
 
     	var mainGridOptions = {
     	    // 페이지 설정
-    	    usePaging : true,
+    	    usePaging : false,
     	    // 한 화면에 출력되는 행 개수 10
     	    pageRowCount : 10,
     	    // 편집 가능 여부 (기본값 : false)

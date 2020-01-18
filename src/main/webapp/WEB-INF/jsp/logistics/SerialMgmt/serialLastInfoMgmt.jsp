@@ -692,7 +692,7 @@
         </ul>
 
         <article class="grid_wrap"><!-- grid_wrap start -->
-            <div id="grid_main_list" style="height:410px;"></div>
+            <div id="grid_main_list" style="height:300px;"></div>
 
             <!-- 그리드 페이징 네비게이터 -->
             <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel autoFixArea"></div>

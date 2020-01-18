@@ -196,7 +196,7 @@
     	var mainGridOptions = {
     		rowIdField : "rnum",
     	    // 페이지 설정
-    	    usePaging : true,
+    	    usePaging : false,
     	    // 한 화면에 출력되는 행 개수 10
     	    pageRowCount : 10,
     	    showFooter : false,
@@ -487,7 +487,7 @@
         </ul>
 
         <article class="grid_wrap"><!-- grid_wrap start -->
-            <div id="grid_sum_list" style="width:100%; height:100%; margin:0 auto;" class="autoGridHeight"></div>
+            <div id="grid_sum_list" class="autoGridHeight"></div>
         </article><!-- grid_wrap end -->
 
     </section><!-- search_result end -->
