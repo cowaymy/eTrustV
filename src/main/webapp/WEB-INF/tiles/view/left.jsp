@@ -150,8 +150,8 @@
             // [Woongjin Jun] Toggle Button
 
             // [Woongjin Jun] Tab
-            if ($("#mainTabs").find("li").length > 0 && $("#mainTabs").find("li").length >= 10 && $("#mainTabs ul").find("li[aria-controls=tabs-" + menuCode + "]").length == 0 ) {
-            	alert("Max 10 Screen");
+            if ($("#mainTabs").find("li").length > 0 && $("#mainTabs").find("li").length >= 7 && $("#mainTabs ul").find("li[aria-controls=tabs-" + menuCode + "]").length == 0 ) {
+            	alert("Max 7 Screen");
                 return;
             }
             // [Woongjin Jun] Tab
