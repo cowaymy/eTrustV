@@ -16,6 +16,7 @@ import com.coway.trust.biz.common.impl.MobileAppTicketApiCommonMapper;
 import com.coway.trust.biz.payment.common.service.CommonPaymentService;
 import com.coway.trust.biz.payment.common.service.impl.CommonPaymentMapper;
 import com.coway.trust.biz.payment.mobilePaymentKeyIn.service.MobilePaymentKeyInService;
+import com.coway.trust.biz.sales.mambership.MembershipPaymentService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -46,6 +47,10 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
 	@Resource(name = "commonPaymentService")
 	private CommonPaymentService commonPaymentService;
+
+	@Resource(name = "membershipPaymentService")
+	private MembershipPaymentService membershipPaymentService;
+
 
 	@Override
 	public List<EgovMap> selectMobilePaymentKeyInList(Map<String, Object> params) {
@@ -165,9 +170,14 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
             	// checkOrderOutstanding 정보 조회
             	EgovMap targetOutMstResult = commonPaymentService.checkOrderOutstanding(params); // targetOutMstGridID
 
-            	if( "ROOT_1".equals(targetOutMstResult.get("rootState"))  ){
-            		System.out.println("++ No Outstanding" + targetOutMstResult.get("msg"));
-            	}
+//            	if( "ROOT_1".equals(targetOutMstResult.get("rootState"))  ){
+//            		System.out.println("++ No Outstanding" + targetOutMstResult.get("msg"));
+//            	}
+
+            	// Colle 정보 조회
+            	params.put("COLL_MEM_CODE", gridListMap.get("crtUserNm"));
+            	List<EgovMap> paymentColleConfirm = membershipPaymentService.paymentColleConfirm(params);
+            	EgovMap paymentColleConfirmMap = paymentColleConfirm.get(0);
 
         //        String mstChkVal = (String) orderInfoRentalList.get(0).get("btnCheck");
         //        String salesOrdNo = (String) orderInfoRentalList.get(0).get("salesOrdNo");
@@ -219,9 +229,9 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         //                     item. =  $("#rentalkeyInTrIssueDate").val() ;
                              formMap.put("trDt", ""); //
         //                     item.collectorCode =  $("#rentalkeyInCollMemNm").val()
-                             formMap.put("collectorCode", ""); //
-        //                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
-                             formMap.put("collectorId", "");
+    	                     formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
+  //  	                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
+    	                     formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
         //                     item.allowComm = $("#rentalcashIsCommChk").val()
                     		 formMap.put("allowComm", "1");
 
@@ -255,6 +265,11 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
                                 totTargetAmt = totTargetAmt + targetAmt;
 
+                                if( totTargetAmt >= payAmtDou ){
+                              	  if( !StringUtils.isEmpty(gridListMap.get("advMonth"))){
+                          			  break;
+                          		  }
+                            	}
 //                                System.out.println("++++ totTargetAmt ::" + totTargetAmt );
 //                                System.out.println("++++ targetAmt ::" + targetAmt );
 
@@ -290,9 +305,9 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         //	                     item. =  $("#rentalkeyInTrIssueDate").val() ;
         	                     formMap.put("trDt", ""); //
         //	                     item.collectorCode =  $("#rentalkeyInCollMemNm").val()
-        	                     formMap.put("collectorCode", ""); //
-        //	                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
-        	                     formMap.put("collectorId", "");
+        	                     formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
+        	                     //  	                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
+        	                     formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
         //	                     item.allowComm = $("#rentalcashIsCommChk").val()
         	            		 formMap.put("allowComm", "");
 
@@ -341,9 +356,9 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         //                     item. =  $("#rentalkeyInTrIssueDate").val() ;
                              formMap.put("trDt", ""); //
         //                     item.collectorCode =  $("#rentalkeyInCollMemNm").val()
-                             formMap.put("collectorCode", ""); //
-        //                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
-                             formMap.put("collectorId", "");
+    	                     formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
+  //  	                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
+    	                     formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
         //                     item.allowComm = $("#rentalcashIsCommChk").val()
                     		 formMap.put("allowComm", "");
 
@@ -466,7 +481,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         	 throw new ApplicationException(AppConstants.FAIL, "Check the Payment Amt");
         }
 
-        // Trnsc Id Payment Mode
+        // Trnsc Id Payment ModegridListMap
 
         System.out.println("++++ selectBankStatementInfo ::" + selectBankStatementInfo.toString() );
 
@@ -520,10 +535,15 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         	// checkOrderOutstanding 정보 조회
         	EgovMap targetOutMstResult = commonPaymentService.checkOrderOutstanding(params); // targetOutMstGridID
 
-        	if( "ROOT_1".equals(targetOutMstResult.get("rootState"))  ){
-        		System.out.println("++ No Outstanding" + targetOutMstResult.get("msg"));
-        		throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + targetOutMstResult.get("msg") );
-        	}
+//        	if( "ROOT_1".equals(targetOutMstResult.get("rootState"))  ){
+//        		System.out.println("++ No Outstanding" + targetOutMstResult.get("msg"));
+//        		throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + targetOutMstResult.get("msg") );
+//        	}
+
+        	// Colle 정보 조회
+        	params.put("COLL_MEM_CODE", gridListMap.get("crtUserNm"));
+        	List<EgovMap> paymentColleConfirm = membershipPaymentService.paymentColleConfirm(params);
+        	EgovMap paymentColleConfirmMap = paymentColleConfirm.get(0);
 
             Double mstRpf = (Double) orderInfoRentalList.get(0).get("rpf");
             Double mstRpfPaid = (Double) orderInfoRentalList.get(0).get("rpfPaid");
@@ -572,9 +592,9 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     //                       item. =  $("#rentalkeyInTrIssueDate").val() ;
                            formMap.put("trDt", ""); //
     //                       item.collectorCode =  $("#rentalkeyInCollMemNm").val()
-                           formMap.put("collectorCode", ""); //
-    //                       item.collectorId = $("#rentalkeyInCollMemId").val() ;
-                           formMap.put("collectorId", "");
+    	                     formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
+  //  	                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
+    	                     formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
     //                       item.allowComm = $("#rentalcashIsCommChk").val()
                   		 formMap.put("allowComm", "1");
 
@@ -590,6 +610,8 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
                           if(salesOrdNo.equals(detSalesOrdNo)){
 
+                        	//----------------------------------------------
+
                         	  	Double targetAmt 	= ( Double ) billInfoRentalMap.get("targetAmt");
                         	  	String payAmt 		=  String.valueOf(gridListMap.get("payAmt"));
                         	  	Double payAmtDou = Double.valueOf(payAmt) ;
@@ -597,6 +619,8 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 //                        	  	System.out.println("++++ targetAmt ::" + targetAmt );
 //                        	  System.out.println("++++ payAmt ::" + payAmt );
 //                        	System.out.println("++++ payAmtDou ::" + payAmtDou );
+
+
 
                               if( (totTargetAmt + targetAmt) > payAmtDou ){
 
@@ -612,8 +636,34 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
                               totTargetAmt = totTargetAmt + targetAmt;
 
-//                              System.out.println("++++ totTargetAmt ::" + totTargetAmt );
-//                              System.out.println("++++ targetAmt ::" + targetAmt );
+                              if( totTargetAmt >= payAmtDou ){
+                            	  if( !StringUtils.isEmpty(gridListMap.get("advMonth"))){
+                        			  break;
+                        		  }
+                          	}
+
+                              //----------------------------------------------
+
+//                        	  	Double targetAmt 	= ( Double ) billInfoRentalMap.get("targetAmt");
+//                        	  	String payAmt 		=  String.valueOf(gridListMap.get("payAmt"));
+//                        	  	Double payAmtDou = Double.valueOf(payAmt) ;
+//
+////                        	  	System.out.println("++++ targetAmt ::" + targetAmt );
+////                        	  System.out.println("++++ payAmt ::" + payAmt );
+////                        	System.out.println("++++ payAmtDou ::" + payAmtDou );
+//
+//                              if( (totTargetAmt + targetAmt) > payAmtDou ){
+//                              	targetAmt =  payAmtDou - totTargetAmt;
+//                              }else{
+//                              	targetAmt = targetAmt;
+//                              }
+//
+//                              totTargetAmt = totTargetAmt + targetAmt;
+
+                            //----------------------------------------------
+
+                              System.out.println("++++ totTargetAmt ::" + totTargetAmt );
+                              System.out.println("++++ targetAmt ::" + targetAmt );
 
                         	  formMap =  new HashMap<String, Object>();
 
@@ -649,14 +699,14 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     //  	                     item. =  $("#rentalkeyInTrIssueDate").val() ;
       	                     formMap.put("trDt", ""); //
     //  	                     item.collectorCode =  $("#rentalkeyInCollMemNm").val()
-      	                     formMap.put("collectorCode", ""); //
+      	                     formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
     //  	                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
-      	                     formMap.put("collectorId", "");
+      	                     formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
     //  	                     item.allowComm = $("#rentalcashIsCommChk").val()
       	            		 formMap.put("allowComm", "");
 
       	            		 formList.add(formMap);
-
+      	            		System.out.println("++++ formList 2 ::" + formList.toString() );
                          	if( totTargetAmt >= payAmtDou ){
                         		break;
                         	}
@@ -670,6 +720,8 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
                       if( !StringUtils.isEmpty(gridListMap.get("advMonth"))){
                       	formMap =  new HashMap<String, Object>();
 
+                      	System.out.println("++++ gridListMap.toString() ::" + gridListMap.toString() );
+
                           formMap.put("procSeq", 1);
                           formMap.put("appType", "RENTAL");
                           formMap.put("advMonth", (Integer)gridListMap.get("advMonth"));
@@ -677,7 +729,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
                           formMap.put("mstRpfPaid", mstRpfPaid);
 
                           formMap.put("assignAmt",0);
-                          formMap.put("billAmt", (Double)gridListMap.get("advAmt") );
+                          formMap.put("billAmt", gridListMap.get("advAmt") );
                           formMap.put("billDt",  "1900-01-01" );
                           formMap.put("billGrpId", mstCustBillId);
                           formMap.put("billId", 0);
@@ -692,25 +744,28 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
                           formMap.put("ordNo", salesOrdNo);
                           formMap.put("paidAmt", 0 );
                           formMap.put("appType",  "RENTAL");
-                          formMap.put("targetAmt",(Double)gridListMap.get("payAmt"));
+                          formMap.put("targetAmt",gridListMap.get("advAmt"));
                           formMap.put("srvcContractID", 0);
                           formMap.put("billAsId", 0);
-      					formMap.put("srvMemId", 0);
+      					 formMap.put("srvMemId", 0);
 
     //                       item. =  $("#rentalkeyInTrNo").val() ;
-                           formMap.put("trNo", ""); //
+                         formMap.put("trNo", ""); //
     //                       item. =  $("#rentalkeyInTrIssueDate").val() ;
-                           formMap.put("trDt", ""); //
-    //                       item.collectorCode =  $("#rentalkeyInCollMemNm").val()
-                           formMap.put("collectorCode", ""); //
-    //                       item.collectorId = $("#rentalkeyInCollMemId").val() ;
-                           formMap.put("collectorId", "");
-    //                       item.allowComm = $("#rentalcashIsCommChk").val()
+                         formMap.put("trDt", ""); //
+//                       item.collectorCode =  $("#rentalkeyInCollMemNm").val()
+  	                     formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
+//  	                     item.collectorId = $("#rentalkeyInCollMemId").val() ;
+  	                     formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
+//                       item.allowComm = $("#rentalcashIsCommChk").val()
                   		 formMap.put("allowComm", "");
 
                   		 formList.add(formMap);
 
+                  		System.out.println("++++ formList 1 ::" + formList.toString() );
                      }
+
+
     //              }
       		}
 
@@ -757,22 +812,23 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
           		formInfo.put("amount",  totPayAmt );
           		formInfo.put("slipNo", gridListMap.get("slipNo"));
           		formInfo.put("bankType", "2729");
-          		formInfo.put("keyInPayDate", selectBankStatementInfo.get("trnscDt"));
+          		//formInfo.put("keyInPayDate", selectBankStatementInfo.get("trnscDt"));
+          		formInfo.put("keyInPayDate", gridListMap.get("crtDt"));
 
           		formInfo.put("bankAcc", selectBankStatementInfo.get("bankAccId"));
 //          		formInfo.put("payType", "105");
-          		formInfo.put("trDate", gridListMap.get("trnscDt"));
+          		formInfo.put("trDate", selectBankStatementInfo.get("trnscDt"));
 
           		//User ID 세팅
 //              	gridList.put("userId", sUserId);
-              	formInfo.put("userId", sUserId);
+//              	formInfo.put("userId", sUserId);
               	formInfo.put("userid", sUserId);
 
-//              	System.out.println("++++ 3-1 formList.toString() ::" + formList.toString() );
               	System.out.println("++++ 3 formInfo.toString() ::" + formInfo.toString() );
-          		System.out.println("++++ 4 gridList.toString() ::" + gridList.toString() );
+              	System.out.println("++++ 3-1 formList.toString() ::" + formList.toString() );
+
+//          		System.out.println("++++ 4 gridList.toString() ::" + gridList.toString() );
           		System.out.println("++++ 5 key ::" + key );
-//
 
             	//=============================================================
 

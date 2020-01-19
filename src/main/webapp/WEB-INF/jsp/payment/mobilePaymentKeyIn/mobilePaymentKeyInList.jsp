@@ -147,6 +147,50 @@ var TODAY_DD      = "${toDay}";
             return false;
         }
 
+        // 유효성 추가
+        var list = AUIGrid.getCheckedRowItems(myGridID);
+        var rowCnt = list.length;
+        var asIssalesOrdId = "";
+         if(rowCnt > 0){
+            for(i = 0 ; i < rowCnt ; i++){
+
+                 var salesOrdId = list[i].item.ordId;
+                 if( i == 0 ){
+                	 asIssalesOrdId = salesOrdId;
+
+                     Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
+
+                         if(RESULT.rootState == 'ROOT_1') {
+
+                             Common.alert('No Outstanding' + DEFAULT_DELIMITER + RESULT.msg);
+                         }
+
+                     });
+
+                 }else{
+                	 if( asIssalesOrdId != salesOrdId ){
+                         Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
+
+                             if(RESULT.rootState == 'ROOT_1') {
+
+                                 Common.alert('No Outstanding' + DEFAULT_DELIMITER + RESULT.msg);
+                             }
+
+                         });
+                	 }
+                	 asIssalesOrdId = salesOrdId;
+                 }
+             /*    Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
+
+                    if(RESULT.rootState == 'ROOT_1') {
+
+                        Common.alert('No Outstanding' + DEFAULT_DELIMITER + RESULT.msg);
+                    }
+
+                }); */
+            }
+        }
+
         var isValid = true;
         var isValid_1 = true;
         var isValid_2 = true;
@@ -903,67 +947,55 @@ var TODAY_DD      = "${toDay}";
 
         data.all = reqList;
 
-        //array에 담기
-        /* if(gridList.length > 0) {
-            data.all = gridList;
-        }  else {
-            Common.alert("<spring:message code='pay.alert.noRowData'/>");
-            return;
-        } */
-
-       /*  if(formList.length > 0) data.form = formList;
-        else data.form = []; */
-
-
-        // data.key = [AUIGrid.getCellValue(bankGridID, rowId, "id")]; //id값
-
         data.key =  $("#transactionId").val();
 
-        //Bill Payment : Order 정보 조회
-        Common.ajax("POST", "/mobilePaymentKeyIn/saveMobilePaymentKeyInNormalPayment.do", data, function(result) {
+          //Bill Payment : Order 정보 조회
+          Common.ajax("POST", "/mobilePaymentKeyIn/saveMobilePaymentKeyInNormalPayment.do", data, function(result) {
 
-            if(result.p1 == 99){
-                Common.alert("<spring:message code='pay.alert.bankstmt.mapped'/>", function(){
-                  //  document.location.href = '/payment/initOtherPayment.do';
-                	fn_selectPstRequestDOListAjax();
-                });
-            }
-            else if (result.appType == "CARE_SRVC"){
-                Common.ajax("GET", "/payment/common/selectProcessCSPaymentResult.do", {seq : result.seq}, function(resultInfo) {
-                    var message = "<spring:message code='pay.alert.successProc'/>";
+             if(result.p1 == 99){
+                 Common.alert("<spring:message code='pay.alert.bankstmt.mapped'/>", function(){
+                   //  document.location.href = '/payment/initOtherPayment.do';
+                     fn_selectPstRequestDOListAjax();
+                 });
+             }
+             else if (result.appType == "CARE_SRVC"){
+                 Common.ajax("GET", "/payment/common/selectProcessCSPaymentResult.do", {seq : result.seq}, function(resultInfo) {
+                     var message = "<spring:message code='pay.alert.successProc'/>";
 
-                    if(resultInfo != null && resultInfo.length > 0){
-                        for(i=0 ; i < resultInfo.length ; i++){
-                            message += "<font color='red'>" + resultInfo[i].orNo + " (Order No: " + resultInfo[i].salesOrdNo +  ")</font><br>";
-                        }
-                    }
+                     if(resultInfo != null && resultInfo.length > 0){
+                         for(i=0 ; i < resultInfo.length ; i++){
+                             message += "<font color='red'>" + resultInfo[i].orNo + " (Order No: " + resultInfo[i].salesOrdNo +  ")</font><br>";
+                         }
+                     }
 
-                    Common.alert(message, function(){
-                        //document.location.href = '/payment/initOtherPayment.do';
-                    	fn_selectPstRequestDOListAjax();
-                    });
-                });
-            }
-            else{
-                Common.ajax("GET", "/payment/common/selectProcessPaymentResult.do", {seq : result.seq}, function(resultInfo) {
-                    var message = "<spring:message code='pay.alert.successProc'/>";
+                     Common.alert(message, function(){
+                         //document.location.href = '/payment/initOtherPayment.do';
+                         fn_selectPstRequestDOListAjax();
+                     });
+                 });
+             }
+             else{
+                 Common.ajax("GET", "/payment/common/selectProcessPaymentResult.do", {seq : result.seq}, function(resultInfo) {
+                     var message = "<spring:message code='pay.alert.successProc'/>";
 
-                    if(resultInfo != null && resultInfo.length > 0){
-                        for(i=0 ; i < resultInfo.length ; i++){
-                            message += "<font color='red'>" + resultInfo[i].orNo + " (Order No: " + resultInfo[i].salesOrdNo +  ")</font><br>";
-                        }
-                    }
+                     if(resultInfo != null && resultInfo.length > 0){
+                         for(i=0 ; i < resultInfo.length ; i++){
+                             message += "<font color='red'>" + resultInfo[i].orNo + " (Order No: " + resultInfo[i].salesOrdNo +  ")</font><br>";
+                         }
+                     }
 
-                    Common.alert(message, function(){
-                        // document.location.href = '/payment/initOtherPayment.do';
-                    	fn_selectPstRequestDOListAjax();
-                    });
-                });
-            }
+                     Common.alert(message, function(){
+                         // document.location.href = '/payment/initOtherPayment.do';
+                         fn_selectPstRequestDOListAjax();
+                     });
+                 });
+             }
 
-            $("#PopUp2_wrap").hide(); // Update [ Card ] Key-in
-            $("#PopUp1_wrap").hide(); // Update [ Cash, Cheque, Bank-In Slip ] Key-in
-        });
+             $("#PopUp2_wrap").hide(); // Update [ Card ] Key-in
+             $("#PopUp1_wrap").hide(); // Update [ Cash, Cheque, Bank-In Slip ] Key-in
+         });
+
+
     }
 
   //카드번호 입력시 번호에 따라 Card Brand 선택
