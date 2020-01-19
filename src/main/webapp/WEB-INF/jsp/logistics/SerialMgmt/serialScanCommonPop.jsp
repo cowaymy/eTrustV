@@ -495,7 +495,7 @@ function fn_scanClosePop(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>New Serial No. Scanning</h1>
+<h1>Serial No. Scanning</h1>
 <ul class="right_opt">
     <li style="display:none;"><p class="btn_blue2"><a id="btnScanAllDel" href="#">Clear Serial</a></p></li>
     <li><p class="btn_blue2"><a id="btnScanDeleteGrid" >All Delete</a></p></li>
