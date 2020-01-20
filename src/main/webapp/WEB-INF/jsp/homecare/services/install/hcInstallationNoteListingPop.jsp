@@ -20,6 +20,7 @@ var myGridID;
       $('.multy_select').on("change", function() {
       }).multipleSelect({});
 
+      doGetCombo('/organization/territory/selectState.do', '', '','sState', 'S' , '');
       doGetCombo('/common/selectCodeList.do', '10', '', 'appliType', 'M', 'f_multiCombo');
       //doGetComboSepa('/common/selectBranchCodeList.do', '5', '-', '', 'branch', 'M', 'f_multiCombo1');
       doDefCombo(branchDs, '', 'branch', 'M', 'f_multiCombo1');   // Home Care Branch : 5743
@@ -104,7 +105,7 @@ var myGridID;
 
     }, {
       dataField : "ctcode",
-      headerText : '<spring:message code="service.grid.CTCode" />',
+      headerText : '<spring:message code="home.lbl.dtCode" />',
       editable : false,
       width : 130
     }, {
@@ -293,6 +294,10 @@ var myGridID;
           whereSql += " AND h11.BNDL_NO = '" + $("#sBndlNo").val()+ "' ";
       }
 
+      if ($("#sState").val() != '' && $("#sState").val() != null) {
+          whereSql += " AND A.STATE = '" + $("#sState").val()+ "' ";
+      }
+
       // HomeCare add
       whereSql += " AND som.BNDL_ID IS NOT NULL ";
 
@@ -418,6 +423,10 @@ var myGridID;
           whereSql += " AND h11.BNDL_NO = '" + $("#sBndlNo").val()+ "' ";
       }
 
+      if ($("#sState").val() != '' && $("#sState").val() != null) {
+          whereSql += " AND A.STATE = '" + $("#sState").val()+ "' ";
+      }
+
       // HomeCare add
       whereSql += " AND som.BNDL_ID IS NOT NULL ";
 
@@ -456,6 +465,11 @@ var myGridID;
         AUIGrid.setGridData(myGridID, result);
       });
     }
+  }
+
+  function fn_excelDown(){
+      // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+      GridCommon.exportTo("grid_wrap_noteListing", "xlsx", "<spring:message code='service.btn.InstallationNoteListing' />");
   }
 
   $.fn.clearForm = function() {
@@ -548,8 +562,7 @@ var myGridID;
        </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message
-         code='service.title.DSCBranch' /></th>
+       <th scope="row"><spring:message code='home.lbl.hdcBranch' /></th>
        <td><select class="multy_select" multiple="multiple" id="branch" name="branch">
        </select></td>
        <th scope="row"><spring:message code='service.title.DODate' /></th>
@@ -598,7 +611,7 @@ var myGridID;
        </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code='service.title.CTCode' /></th>
+       <th scope="row"><spring:message code='home.lbl.dtCode' /></th>
        <td>
         <div class="date_set">
          <!-- date_set start -->
@@ -663,6 +676,14 @@ var myGridID;
            <input type="text" id="sBndlNo" name="sBndlNo" placeholder="Bundle No" />
        </td>
       </tr>
+      <tr>
+       <th scope="row">State</th>
+       <td>
+           <select id="sState" name="sState"></select>
+       </td>
+       <td colspan="2">
+       </td>
+      </tr>
      </tbody>
     </table>
     <!-- table end -->
@@ -684,6 +705,12 @@ var myGridID;
      <a href="#" onclick="javascript:fn_openReport()"><spring:message
        code='service.btn.Generate' /></a>
     </p></li>
+
+   <li>
+     <p class="btn_blue2 big">
+      <a href="#" onclick="javascript:fn_excelDown()"><spring:message code='sys.btn.excel' /></a>
+     </p>
+   </li>
    <li><p class="btn_blue2 big">
      <a href="#" onclick="javascript:$('#reportForm').clearForm();"><spring:message
        code='service.btn.Clear' /></a>
