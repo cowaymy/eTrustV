@@ -1633,11 +1633,21 @@ public class ReportBatchController {
 
 
   @RequestMapping(value = "/CowayDailySalesStatusHP_Adv.do")
-  //@Scheduled(cron = "0 0 7 * * *")//Daily (7:00am)
   public void CowayDailySalesStatusHP_Adv() {
     LOGGER.info("[START] CowayDailySalesStatusHP_Adv...");
     Map<String, Object> params = new HashMap<>();
-    String[] address = {"jack@coway.com.my", "khongboon.soo@coway.com.my", "michael.choo@coway.com.my", "kahkit.chew@coway.com.my"} ;
+    String[] address =
+      /*{"jack@coway.com.my", "khongboon.soo@coway.com.my", "michael.choo@coway.com.my", "kahkit.chew@coway.com.my"} ;*/
+      {
+        "nicky.lam@coway.com.my",
+        "eddie.toh@coway.com.my",
+        "joanne.chin@coway.com.my",
+        "ivan.liew@coway.com.my",
+        "lyeim@coway.com.my",
+        "thomas.chin@coway.com.my",
+        "khongboon.soo@coway.com.my",
+        "rachel.wong@coway.com.my",
+      };
     String email = "";
     email += "Dear All,\r\n\r\n";
     email += "Hereby is the Daily Accumulated Key-In Sales Analysis Report (HP) for your reference.\r\n\r\n";
@@ -1661,11 +1671,21 @@ public class ReportBatchController {
 
 
   @RequestMapping(value = "/CowayDailySalesStatusCody.do")
-  //@Scheduled(cron = "0 0 7 * * *")//Daily (7:00am)
   public void CowayDailySalesStatusCody() {
     LOGGER.info("[START] CowayDailySalesStatusCody...");
     Map<String, Object> params = new HashMap<>();
-    String[] address = {"jack@coway.com.my", "khongboon.soo@coway.com.my", "michael.choo@coway.com.my", "kahkit.chew@coway.com.my"} ;
+    String[] address =
+        /*{"jack@coway.com.my", "khongboon.soo@coway.com.my", "michael.choo@coway.com.my", "kahkit.chew@coway.com.my"} ;*/
+        {
+          "nicky.lam@coway.com.my",
+          "eddie.toh@coway.com.my",
+          "joanne.chin@coway.com.my",
+          "ivan.liew@coway.com.my",
+          "lyeim@coway.com.my",
+          "thomas.chin@coway.com.my",
+          "khongboon.soo@coway.com.my",
+          "rachel.wong@coway.com.my",
+        };
     String email = "";
     email += "Dear All,\r\n\r\n";
     email += "Hereby is the Daily Accumulated Key-In Sales Analysis Report (Cody) for your reference.\r\n\r\n";
