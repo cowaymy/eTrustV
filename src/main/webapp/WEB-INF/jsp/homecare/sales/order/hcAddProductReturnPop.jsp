@@ -234,8 +234,8 @@
             {dataField : "retnNo",                     headerText : 'ReturnNum',                                                         width : 130},
             {dataField : "code",                        headerText : '<spring:message code="service.grid.Status" />',        width : 180},
             {dataField : "reqstDt",                     headerText : 'Return Date',                                                        width : 180},
-            {dataField : "memCode",                 headerText : '<spring:message code="service.grid.CTCode" />',      width : 250},
-            {dataField : "name",                        headerText : '<spring:message code="service.grid.CTName" />',     width : 180},
+            {dataField : "memCode",                 headerText : 'DT Code',      width : 250},
+            {dataField : "name",                        headerText : 'DT Name',     width : 180},
             {dataField : "serialRequireChkYn",      headerText : 'SERIAL_REQUIRE_CHK_YN',                                      width : 0}
         ];
 
@@ -674,7 +674,7 @@
 			    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="installDate" name="returnDate"/></td>
 			</tr>
 			<tr>
-			    <th scope="row"><spring:message code='service.title.CTCode'/></th>
+			    <th scope="row">DT Code</th>
 			    <td colspan="3"><input type="text" title="" value="<c:out value="(${pRCtInfo.memCode}) ${pRCtInfo.name}"/>" placeholder="" class="readonly" style="width:100%;" id="ctCode"  readonly="readonly" name="ctCode" />
 			    <input type="hidden" title="" value="${pRCtInfo.memId}" placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
 			</tr>

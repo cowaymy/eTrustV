@@ -99,7 +99,7 @@
              {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '10%'},
              {dataField : "created1", headerText : "<spring:message code='sal.text.createDate' />", width : '11%'},
              {dataField : "username1", headerText : "<spring:message code='sal.text.creator' />", width : '11%'},
-             {dataField : "memCodeName2", headerText : "<spring:message code='sal.title.text.assignCt' />"},
+             {dataField : "memCodeName2", headerText : "Assign DT"},
              {dataField : "ctGrp", headerText : "<spring:message code='sal.title.text.group' />", width : '8%'},
              {dataField : "whLocCodeDesc", headerText : "<spring:message code='sal.title.text.returnWarehouse' />", width : '25%'}
          ];
