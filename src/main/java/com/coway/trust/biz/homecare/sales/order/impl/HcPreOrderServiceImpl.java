@@ -88,15 +88,19 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
 			}
 			// 제품이 둘다 있는 경우.
 			if(matStkId > 0 && fraStkId > 0) {
-				BigDecimal discRntFee2 =  new BigDecimal(CommonUtils.intNvl(preOrderVO.getDiscRntFee()));  // frame rental fee
+				BigDecimal discRntFee2 = preOrderVO.getDiscRntFee2(); // frame rental fee
 
 				// mattress order (mth_rent_amt) + frame order(disc_rnt_fee)
 				preOrderVO.setMthRentAmt1(preOrderVO.getMthRentAmt1().add(discRntFee2));
 				// frame order (mth_rent_amt) = 0
 				preOrderVO.setMthRentAmt2(BigDecimal.ZERO);
 
-				BigDecimal norAmt1 =  new BigDecimal(CommonUtils.intNvl(preOrderVO.getNorAmt1()));  // frame NOR_AMT
-				BigDecimal norAmt2 =  new BigDecimal(CommonUtils.intNvl(preOrderVO.getNorAmt2()));  // frame NOR_AMT
+				BigDecimal norAmt1 = preOrderVO.getNorAmt1(); // mattress NOR_AMT
+    			norAmt1 = norAmt1 == null ? BigDecimal.ZERO : norAmt1;
+
+				BigDecimal norAmt2 = preOrderVO.getNorAmt2(); // frame NOR_AMT
+				norAmt2 = norAmt2 == null ? BigDecimal.ZERO : norAmt2;
+
 				// mattress order NOR_AMT + frame order NOR_AMT
 				preOrderVO.setNorAmt1(norAmt1.add(norAmt2));
 				// frame order NOR_AMT = 0
@@ -223,9 +227,14 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
     			// frame order (mth_rent_amt) = 0
     			preOrderVO.setMthRentAmt2(BigDecimal.ZERO);
 
+    			BigDecimal norAmt1 = preOrderVO.getNorAmt1(); // mattress NOR_AMT
+    			norAmt1 = norAmt1 == null ? BigDecimal.ZERO : norAmt1;
+
     			BigDecimal norAmt2 = preOrderVO.getNorAmt2(); // frame NOR_AMT
+    			norAmt2 = norAmt2 == null ? BigDecimal.ZERO : norAmt2;
+
     			// mattress order NOR_AMT + frame order NOR_AMT
-    			preOrderVO.setNorAmt1(preOrderVO.getNorAmt1().add(norAmt2));
+    			preOrderVO.setNorAmt1(norAmt1.add(norAmt2));
     			// frame order NOR_AMT = 0
     			preOrderVO.setNorAmt2(BigDecimal.ZERO);
     		}
