@@ -42,7 +42,7 @@ function fn_Validation(){
 	//if (branch.CheckedItems.Count < 1)
     if($("#branch option:selected").length < 1)
     {
-		Common.alert("<spring:message code='sys.common.alert.validation' arguments='DSC Branch' htmlEscape='false'/>");
+		Common.alert("<spring:message code='sys.common.alert.validation' arguments='HDSC Branch' htmlEscape='false'/>");
 		return false;
     }
 	if($("#installCrtDt").val() != '' || $("#installEndDt").val() != ''){

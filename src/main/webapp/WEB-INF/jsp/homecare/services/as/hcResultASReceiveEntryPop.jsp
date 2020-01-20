@@ -949,7 +949,7 @@
     }
 
     if ($("#branchDSC").val() == "" || $("#branchDSC").val() == null) {
-      rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='DSC Branch' htmlEscape='false'/> </br>";
+      rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='HDSC Branch' htmlEscape='false'/> </br>";
       rtnValue = false;
     }
 

@@ -88,7 +88,7 @@ var branchDs = [];
        } */
 
     if ($("#cmbbranchId2").val() == '') {
-      Common.alert("<spring:message code='sys.common.alert.validation' arguments='DSC Branch' htmlEscape='false'/>");
+      Common.alert("<spring:message code='sys.common.alert.validation' arguments='HDSC Branch' htmlEscape='false'/>");
       return false;
     }
 

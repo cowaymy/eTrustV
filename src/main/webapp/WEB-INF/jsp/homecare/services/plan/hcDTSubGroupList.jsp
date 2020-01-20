@@ -345,7 +345,7 @@
 				</colgroup>
 				<tbody>
                     <tr>
-					    <th scope="row">DSC Branch</th>
+					    <th scope="row">HDSC Branch</th>
 					    <td><select class="w100p"  id="dscCode" name="dscCode" ></select></td>
 					    <th scope="row">DTM</th>
 					    <td><select class="w100p"id="memCode" name="memCode" ></select></td>
