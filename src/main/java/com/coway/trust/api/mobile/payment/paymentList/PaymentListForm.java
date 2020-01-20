@@ -33,6 +33,12 @@ public class PaymentListForm {
 	@ApiModelProperty(value = "userId", example = "1")
 	private String ticketType;
 
+	@ApiModelProperty(value = "userId", example = "1")
+	private String payMode;
+
+	@ApiModelProperty(value = "userId", example = "1")
+	private String searchKeyword;
+
 	public String getFromDate() {
 		return fromDate;
 	}
@@ -65,6 +71,22 @@ public class PaymentListForm {
 		this.ticketType = ticketType;
 	}
 
+	public String getPayMode() {
+		return payMode;
+	}
+
+	public void setPayMode(String payMode) {
+		this.payMode = payMode;
+	}
+
+	public String getSearchKeyword() {
+		return searchKeyword;
+	}
+
+	public void setSearchKeyword(String searchKeyword) {
+		this.searchKeyword = searchKeyword;
+	}
+
 	public static Map<String, Object> createMap(PaymentListForm paymentForm){
 		Map<String, Object> params = new HashMap<>();
 
@@ -72,6 +94,8 @@ public class PaymentListForm {
 		params.put("toDate",   			paymentForm.getToDate());
 		params.put("userId",   			paymentForm.getUserId());
 		params.put("ticketType",   	paymentForm.getTicketType());
+		params.put("payMode",   		paymentForm.getPayMode());
+		params.put("searchKeyword",	paymentForm.getSearchKeyword());
 
 		return params;
 	}

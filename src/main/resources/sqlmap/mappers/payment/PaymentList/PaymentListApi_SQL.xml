@@ -27,6 +27,12 @@
          <if test="ticketType != null and ticketType != '' ">
             AND  Extent1.PAY_STUS_ID = #{ticketType}
          </if>
+         <if test="payMode != null and payMode != '' ">
+            AND  Extent1.PAY_MODE = #{payMode}
+         </if>
+         <if test="searchKeyword != null and searchKeyword != '' ">
+            AND ( Extent1.SLIP_NO LIKE  #{searchKeyword} || '%' OR Extent1.CHEQUE_NO LIKE #{searchKeyword} || '%' )
+         </if>
          </where>
          ORDER BY Extent1.CRT_DT DESC
     </select>
