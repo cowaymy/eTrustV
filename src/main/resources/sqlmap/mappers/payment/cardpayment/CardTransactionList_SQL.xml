@@ -96,8 +96,7 @@
                                     B.F_TRNSC_REF4,
                                     B.F_TRNSC_DT,
                                 D.CODE_ID ) L
-                          ON B.CRC_TRNSC_MID = L.MID AND K.CODE_ID = L.CODE_ID AND B.CRC_TRNSC_DT = L.F_TRNSC_DT AND B.CRC_TOT_NET_AMT = L.CREDIT_AMT
-
+                          ON TO_CHAR(LTRIM(B.CRC_TRNSC_MID,'0')) = L.MID AND K.CODE_ID = L.CODE_ID AND B.CRC_TRNSC_DT = L.F_TRNSC_DT AND B.CRC_TOT_NET_AMT = L.CREDIT_AMT
                        WHERE 1 = 1
                         <if test='salesOrdNo != null and salesOrdNo != ""'>
                            AND (F.SALES_ORD_NO = #{salesOrdNo} OR J.SRV_ORD_NO = #{salesOrdNo})
