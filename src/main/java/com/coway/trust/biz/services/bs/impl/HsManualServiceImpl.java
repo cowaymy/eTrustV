@@ -2661,9 +2661,12 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
   @Override
   public EgovMap checkHsBillASInfo(Map<String, Object> params) {
-    return hsManualMapper.checkHsBillASInfo(params);
+    if (params.get("revInd").equals("1")) {
+      return hsManualMapper.checkHsBillASInfoPass(params);
+    } else {
+      return hsManualMapper.checkHsBillASInfo(params);
+    }
   }
-
 
   public String reverseHSResult(Map<String, Object> params , SessionVO sessionVO) { // ADDED BY TPY - 18/06/2019
 
