@@ -221,7 +221,7 @@ function fn_orderRequestPop() {
     console.log(appType);
 
     if(selIdx > -1) {
-    	if(appType = 'AUX'){
+    	if(appType == 'AUX'){
     		Common.alert("Auxiliary type is not allowed to do cancellation.");
     	}else{
     	    Common.popupDiv("/sales/order/eRequestCancellationPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
