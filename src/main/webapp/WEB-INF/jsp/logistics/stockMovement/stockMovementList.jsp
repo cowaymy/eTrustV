@@ -700,6 +700,16 @@
           }
         });
 
+    $("#bomItf").click(function(){
+        document.searchForm.action = '/stock/newBomList.do';
+        document.searchForm.submit();
+    });
+
+    $("#stockItf").click(function(){
+        document.searchForm.action = '/stock/newStockList.do';
+        document.searchForm.submit();
+    });
+
   });
 
   function fn_itempopList(data) {
@@ -802,9 +812,15 @@
   function fn_delete() {
     var selectedItem = AUIGrid.getSelectedItems(listGrid);
     var reqsmono = selectedItem[0].item.reqstno;
-    //alert("reqsmono ???  "+reqsmono);
-    fn_deleteAjax(reqsmono)
 
+    // Added for limiting SMO deletion by Hui Ding, 2020-01-17
+    var docno = selectedItem[0].item.docno;
+    if (docno != null || docno != undefined){
+	    Common.alert(
+	    		reqsmono + " is connected with " + docno + " order. Deletion is not allowed.</br> ","");
+    } else {
+    	   fn_deleteAjax(reqsmono)
+    }
   }
 
   function fn_deleteAjax(reqsmono) {
@@ -1010,6 +1026,14 @@
      </p></li>
    </c:if>
   </ul>
+
+  <!-- Manual Interface exection-->
+  </br>
+  <ul class="right_btns">
+    <li><p class="btn_grid"><a id="bomItf">BOM ITF</a></p></li>
+    <li><p class="btn_grid"><a id="stockItf">New stock ITF</a></p></li>
+  </ul>
+
   <div id="main_grid_wrap" class="mt10" style="height: 450px"></div>
   <!--         <div id="sub_grid_wrap" class="mt10" style="height:350px"></div> -->
  </section>
