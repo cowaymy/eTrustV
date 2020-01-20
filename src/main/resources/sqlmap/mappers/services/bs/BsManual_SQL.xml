@@ -4933,6 +4933,50 @@ WHERE
              ]]>
      </select>
 
+  <select id="checkHsBillASInfoPass" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT SVC.SALES_ORD_ID,
+                 SOM.SALES_ORD_NO,
+                 SOD.ITM_STK_ID ITM_STK_ID,
+                 SVC.NO,
+                 SVDD.BS_RESULT_PART_ID,
+                 SVC.STUS_CODE_ID,
+                 EXTENT1.TAX_INVC_ID TAXINVOICEID1,
+                 EXTENT1.TAX_INVC_REF_NO BR_NO,
+                 EXTENT2.INVC_ITM_ID TXINVOICEITEMID,
+                 EXTENT2.INVC_ITM_TYPE TXINVOICEITEMTYPEID,
+                 EXTENT2.INVC_ITM_ORD_NO INVC_ITM_ORD_NO,
+                 EXTENT2.INVC_ITM_CODE INVC_ITM_CODE,
+                 EXTENT2.INVC_ITM_DESC1 INVC_ITM_DESC1,
+                 EXTENT2.INVC_ITM_QTY INVC_ITM_QTY,
+                 EXTENT2.INVC_ITM_UNIT_PRC INVC_ITM_UNIT_PRC,
+                 EXTENT2.INVC_ITM_GST_RATE INVC_ITM_GST_RATE,
+                 EXTENT2.INVC_ITM_GST_TXS INVC_ITM_GST_TXS,
+                 EXTENT2.INVC_ITM_CHRG INVC_ITM_CHRG,
+                 EXTENT2.INVC_ITM_AMT_DUE INVC_ITM_AMT_DUE,
+                 EXTENT1.TAX_INVC_SVC_NO INVC_SVC_NO,
+                 EXTENT3.AS_ENTRY_ID AS_ID,
+                 FN_GET_ORDER_SERIAL(SVC.SALES_ORD_ID, STK.STK_CODE) LAST_SERIAL_NO,
+                 SVD.NO HSR_NO
+      FROM SVC0008D SVC
+       JOIN SAL0001D SOM ON SVC.SALES_ORD_ID = SOM.SALES_ORD_ID
+       JOIN SAL0002D SOD ON SOM.SALES_ORD_ID = SOD.SALES_ORD_ID
+       JOIN SVC0006D SVD ON SVD.RESULT_ID = (SELECT MAX(RESULT_ID)
+                                                                    FROM SVC0006D
+                                                                    WHERE SCHDUL_ID = SVC.SCHDUL_ID
+                                                                        AND RESULT_STUS_CODE_ID = 4)
+       LEFT JOIN SVC0007D SVDD ON SVD.RESULT_ID = SVDD.BS_RESULT_ID AND SVDD.BS_RESULT_PART_ID = 1428
+       LEFT JOIN SVC0004D EXTENT3 ON EXTENT3.NO = SVD.NO
+                                                AND AS_RESULT_STUS_ID = 4
+       LEFT JOIN PAY0031D EXTENT1 ON EXTENT1.TAX_INVC_SVC_NO = EXTENT3.AS_RESULT_NO
+       LEFT JOIN PAY0032D EXTENT2 ON EXTENT1.TAX_INVC_ID = EXTENT2.TAX_INVC_ID
+       JOIN SYS0026M STK ON STK.STK_ID = SOD.ITM_STK_ID
+      WHERE som.STUS_CODE_ID = 4
+          AND svc.SCHDUL_ID = #{schdulId}
+          AND svc.SALES_ORD_ID = #{salesOrdId}
+   ]]>
+  </select>
+
       <update id="updateHsResultMas" parameterType="Map">
           update SVC0006D
                set RESULT_STUS_CODE_ID = #{ResultStatusCodeID}
