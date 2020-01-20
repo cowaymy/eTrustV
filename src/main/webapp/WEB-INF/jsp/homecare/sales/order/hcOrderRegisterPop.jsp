@@ -2958,7 +2958,7 @@
     <td>
         <select id="ordProduct2" name="ordProduct2" class="w100p" disabled></select>
     </td>
-    <th scope="row" style="background-color: red"><spring:message code="sal.title.text.priceRpfRm" /></th>
+    <th scope="row" ><spring:message code="sal.title.text.priceRpfRm" /></th>
     <td>
         <input id="totOrdPrice" name="totOrdPrice" style="width:100%!important; font-weight: bold;" type="text" placeholder="Price/Rental Processing Fees (RPF)" class="readonly" readonly />
     </td>
@@ -2975,7 +2975,7 @@
     <select id="ordPromo2"     name="ordPromo2"       data-ref='ordProduct2' class="w100p" disabled></select>
 <!--     <input id="txtOldOrderID2" name="txtOldOrderID2" data-ref='ordProduct2' type="hidden" /> -->
     </td>
-    <th scope="row" style="background-color: red"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
+    <th scope="row" ><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
     <td><input id="totOrgOrdRentalFees" name="totOrgOrdRentalFees" type="text" placeholder="Rental Fees (Monthly)" style="width:100%!important; font-weight: bold;"  class="readonly" readonly /></td>
 </tr>
 <!-- Display None(20200117 - KR-SH) -->
@@ -3000,7 +3000,7 @@
         <span style="width:23%;"><input id="promoDiscPeriod2"     name="promoDiscPeriod2"     data-ref='ordProduct2' type="text" placeholder=""  class="w100p readonly" readonly/></span>
         <span style="width:32%;"><input id="ordRentalFees2"         name="ordRentalFees2"          data-ref='ordProduct2' type="text" placeholder=""  class="w100p readonly" readonly/></span>
     </td>
-    <th scope="row" style="background-color: red"><spring:message code="sal.title.text.finalRentalFees" /></th>
+    <th scope="row" ><spring:message code="sal.title.text.finalRentalFees" /></th>
     <td>
         <p><input id="totOrdRentalFees" name="totOrdRentalFees" type="text" placeholder="" style="width:100%!important; font-weight: bold;" class="readonly" readonly/></p>
     </td>
@@ -3011,7 +3011,7 @@
         <input id="ordPv2"      name="ordPv2"       data-ref='ordProduct2' type="text" placeholder="Point Value (PV)" class="w100p readonly" readonly />
         <input id="ordPvGST2" name="ordPvGST2" data-ref='ordProduct2' type="hidden" />
     </td>
-    <th scope="row" style="background-color: red"><spring:message code="sal.title.text.pv" /></th>
+    <th scope="row" ><spring:message code="sal.title.text.pv" /></th>
     <td>
         <input id="totOrdPv" name="totOrdPv" type="text" placeholder="Point Value (PV)" style="width:100%!important; font-weight: bold;" class="readonly" readonly />
     </td>
