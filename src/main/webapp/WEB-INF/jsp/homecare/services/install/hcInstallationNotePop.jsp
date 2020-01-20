@@ -68,7 +68,7 @@ var branchDs = [];
     }
     // DSC BRANCH
     if ($("#branch").val() == '') {
-      text = "<spring:message code='service.title.DSCBranch' />";
+      text = "<spring:message code='home.lbl.hdcBranch' />";
       msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
     }
     // SORT BY

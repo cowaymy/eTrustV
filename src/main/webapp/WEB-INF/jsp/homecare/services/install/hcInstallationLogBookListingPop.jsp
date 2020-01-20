@@ -253,8 +253,7 @@ $(document).ready(function() {
        </select></td>
       </tr>
       <tr>
-       <th scope="row"><spring:message
-         code='service.title.DSCBranch' /></th>
+       <th scope="row"><spring:message code='home.lbl.hdcBranch' /></th>
        <td><select id="branch" name="branch" class="w100p"></select></td>
         <th scope="row"><spring:message code='home.lbl.dtCode' /></th>
        <td>

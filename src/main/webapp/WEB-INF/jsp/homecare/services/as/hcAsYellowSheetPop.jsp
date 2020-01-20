@@ -299,7 +299,7 @@
        </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code='service.title.DSCBranch' /></th>
+       <th scope="row"><spring:message code='home.lbl.hdcBranch' /></th>
        <td colspan="3"><select id="branch">
        </select></td>
       </tr>

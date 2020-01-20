@@ -374,7 +374,7 @@
        <th scope="row"><spring:message code='service.title.DSCCode' /></th>
        <td><select id="branch" class="w100p"  onchange="fn_changeCT()">
        </select></td>
-        <th scope="row"><spring:message code='service.title.CTCode' /></th>
+        <th scope="row"><spring:message code='home.lbl.dtCode' /></th>
        <td>
        <select id="CTCode" class="w100p">
         <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>

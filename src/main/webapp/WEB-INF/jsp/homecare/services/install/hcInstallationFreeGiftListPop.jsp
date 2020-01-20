@@ -188,7 +188,7 @@ $.fn.clearForm = function() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"><spring:message code='service.title.CTCode'/></th>
+    <th scope="row"><spring:message code='home.lbl.dtCode'/></th>
     <td>
     <select id="CTCode" name="CTCode">
     </select>

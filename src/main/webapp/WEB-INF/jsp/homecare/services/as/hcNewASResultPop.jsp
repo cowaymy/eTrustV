@@ -1648,7 +1648,7 @@
         }
 
         if (FormUtil.checkReqValue($("#ddlDSCCode"))) { // DSC CODE
-          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='DSC Code' htmlEscape='false'/> </br>";
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='HDSC Code' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
 
@@ -1697,7 +1697,7 @@
           }
         }
         if (FormUtil.checkReqValue($("#branchDSC"))) { // DSC CODE
-          text = "<spring:message code='service.title.DSCBranch'/>";
+          text = "<spring:message code='home.lbl.hdcBranch'/>";
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
@@ -2594,7 +2594,7 @@ function fnSerialSearchResult(data) {
            </td>
          </tr>
          <tr>
-           <th scope="row"><spring:message code='service.title.DSCBranch' /><span class="must">*</span></th>
+           <th scope="row"><spring:message code='home.lbl.hdcBranch' /><span class="must">*</span></th>
            <td>
              <select class="w100p" id="branchDSC" name="branchDSC" class="" disabled="disabled"></select>
            </td>

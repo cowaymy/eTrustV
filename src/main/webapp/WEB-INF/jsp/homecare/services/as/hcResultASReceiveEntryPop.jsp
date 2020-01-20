@@ -1385,7 +1385,7 @@
          </td>
         </tr>
         <tr>
-         <th scope="row"><spring:message code='service.title.DSCBranch' /><span class="must">*</span></th>
+         <th scope="row"><spring:message code='home.lbl.hdcBranch' /><span class="must">*</span></th>
          <td colspan="3">
           <select class="w100p" id="branchDSC" name="branchDSC" class="" disabled="disabled">
            </select>

@@ -340,7 +340,7 @@ var branchDs = [];
        </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code='service.title.DSCBranch' /> <span class='must'> *</span></th>
+       <th scope="row"><spring:message code='home.lbl.hdcBranch' /> <span class='must'> *</span></th>
        <td><select id="cmbbranchId2" name="cmbbranchId2">
        </select></td>
        <th scope="row"><spring:message code='home.lbl.dtCode' /></th>

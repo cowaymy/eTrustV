@@ -233,7 +233,7 @@ function fn_Generate(){
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.DSCBranch'/></th>
+    <th scope="row"><spring:message code='home.lbl.hdcBranch'/></th>
     <td>
     <select class="multy_select" multiple="multiple" id="branch" name="branch">
     </select>
