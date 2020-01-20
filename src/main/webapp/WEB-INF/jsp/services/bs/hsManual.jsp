@@ -1219,7 +1219,9 @@ var TODAY_DD      = "${toDay}";
   }
 
 
-    function fn_hsReversal(){ // ADDED BY TPY - 18/06/2019
+    function fn_hsReversal(){
+    // ADDED BY TPY - 18/06/2019
+    // AMEND BY OHC - 20/01/2020 - TO ADD FOR REVERSAL PASS MONTH HS
 	  var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
 
 	    if (checkedItems.length <= 0) {
@@ -1255,8 +1257,8 @@ var TODAY_DD      = "${toDay}";
           }
 
           Common.confirm("Are you sure want to reverse this HS ?", function() {
-	    	console.log("schdulId :: " + schdulId + "  salesOrdId :: "  + salesOrdId);
-            Common.ajax("GET", url,  {schdulId : schdulId , salesOrdId : salesOrdId, serialRequireChkYn : serialRequireChkYn } , function(result) {
+        	  console.log("schdulId :: " + schdulId + "  salesOrdId :: " + salesOrdId + "  revInd :: " + i);
+            Common.ajax("GET", url,  {schdulId : schdulId , salesOrdId : salesOrdId, serialRequireChkYn : serialRequireChkYn, revInd : i } , function(result) {
             if(result == null || result == "") {
                  Common.alert("HS Reverse Failed.");
                    return;
@@ -1319,9 +1321,15 @@ var TODAY_DD      = "${toDay}";
    </p>
    <h2>HS Management</h2>
    <ul class="right_btns">
+   <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
+     <li><p class="btn_blue">
+       <a href="#" onclick="javascript:fn_hsReversal('1');"
+         id="hsReversalPass">HS Reversal (Pass Month)</a>
+       </p></li>
+    </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
        <li><p class="btn_blue">
-       <a href="#" onclick="javascript:fn_hsReversal();"
+       <a href="#" onclick="javascript:fn_hsReversal('0');"
         id="hsReversal">HS Reversal</a>
       </p></li>
       </c:if>
