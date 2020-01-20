@@ -564,9 +564,7 @@
                 return false;
               }
             });
-    $('#rentPayMode')
-        .change(
-            function(event) {
+    $('#rentPayMode').change(function(event) {
 
               fn_clearRentPaySetCRC();
               fn_clearRentPaySetDD();
@@ -581,11 +579,7 @@
                 if ($('#rentPayMode').val() == '133'
                     || $('#rentPayMode').val() == '134') {
 
-                  var rentPayModeTxt = $(
-                      "#rentPayMode option:selected")
-                      .text();
-
-                  //                  Common.alert("Rental Paymode Restriction" + DEFAULT_DELIMITER + "<b>Currently we are not provide [" + $("#rentPayMode option:selected").text() + "] service.</b>");
+                  var rentPayModeTxt = $("#rentPayMode option:selected").text();
                   Common
                       .alert('<spring:message code="sal.alert.msg.rentPayRestriction" />'
                           + DEFAULT_DELIMITER
@@ -677,32 +671,30 @@
     $('#btnAddRowReferral').click(function() {
       fn_addRowReferral();
     });
+
     $('#btnCanclChg').click(function() {
       fn_selectReferralList(ORD_NO)
     });
+
     $('#btnSaveReferral').click(function() {
       fn_doSaveReferral();
     });
-    $('#ordPromo').change(
-        function() {
 
-          $('#relatedNo').val('').prop("readonly", true).addClass(
-              "readonly");
+    $('#ordPromo').change(function() {
+        $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
 
-          var stkIdVal = $("#stkId").val();
-          var promoIdIdx = $("#ordPromo option:selected").index();
-          var promoIdVal = $("#ordPromo").val();
+        var stkIdVal = $("#stkId").val();
+        var promoIdIdx = $("#ordPromo option:selected").index();
+        var promoIdVal = $("#ordPromo").val();
 
-          if (promoIdIdx > 0 && promoIdVal != '0') {
-            $('#relatedNo').removeAttr("readonly").removeClass(
-                "readonly");
-
+        if (promoIdIdx > 0 && promoIdVal != '0') {
+            $('#relatedNo').removeAttr("readonly").removeClass("readonly");
             fn_loadPromotionPrice(promoIdVal, stkIdVal);
-          } else {
-
+        } else {
             fn_loadProductPrice(stkIdVal);
-          }
-        });
+        }
+    });
+
     $('#btnSavePromo').click(function() {
       if (!fn_validPromoPriceInfo())
         return false;
@@ -736,50 +728,43 @@
               + fileSubPath + "&fileName=" + fileName
               + "&orignlFileNm=" + orignlFileNm + "'/>");
         });
-    $('#btnCal')
-        .click(
-            function() {
 
-              var appTypeName = APP_TYPE_DESC;
-              var productName = $('#prdName').text();
-              //Amount before GST
-              var oldPrice = $('#orgOrdPrice').val();
-              var newPrice = $('#ordPrice').val();
-              var oldRental = $('#orgOrdRentalFees').val();
-              var newRental = $('#ordRentalFees').val();
-              var oldPv = $('#ordPv').val();
-              //Amount of GST applied
-              var oldPriceGST = fn_calcGst(oldPrice);
-              var newPriceGST = fn_calcGst(newPrice);
-              var oldRentalGST = fn_calcGst(oldRental);
-              var newRentalGST = fn_calcGst(newRental);
-              var newPv = $('#ordPvGST').val();
+    $('#btnCal').click(function() {
+        var appTypeName = APP_TYPE_DESC;
+        var productName = $('#prdName').text();
+        //Amount before GST
+        var oldPrice = $('#orgOrdPrice').val();
+        var newPrice = $('#ordPrice').val();
+        var oldRental = $('#orgOrdRentalFees').val();
+        var newRental = $('#ordRentalFees').val();
+        var oldPv = $('#ordPv').val();
+        //Amount of GST applied
+        var oldPriceGST = fn_calcGst(oldPrice);
+        var newPriceGST = fn_calcGst(newPrice);
+        var oldRentalGST = fn_calcGst(oldRental);
+        var newRentalGST = fn_calcGst(newRental);
+        var newPv = $('#ordPvGST').val();
 
-              if (APP_TYPE_ID != '66') {
-                oldPriceGST = Math.floor(oldPriceGST / 10) * 10;
-                newPriceGST = Math.floor(newPriceGST / 10) * 10;
-              }
+        if (APP_TYPE_ID != '66') {
+            oldPriceGST = Math.floor(oldPriceGST / 10) * 10;
+            newPriceGST = Math.floor(newPriceGST / 10) * 10;
+        }
 
-              var msg = '';
-              /*
-               msg += 'Application Type : '+appTypeName +'<br>';
-               msg += 'Product          : '+productName +'<br>';
-               msg += 'Price(RPF)       : '+newPriceGST +'<br>';
-               msg += 'Normal Rental    : '+oldRentalGST+'<br>';
-               msg += 'Promotion        : '+newRentalGST+'<br>';
-               msg += '<br>The Price(Fee) was applied to the tab of [Sales Order]';
-               */
-              msg = '<spring:message code="sal.alert.msg.gstInfo" arguments="'+appTypeName+';'+productName+';'+newPriceGST+';'+oldRentalGST+';'+newRentalGST+'" argumentSeparator=";"/>';
+        var msg = '';
+         /*
+          msg += 'Application Type : '+appTypeName +'<br>';
+          msg += 'Product          : '+productName +'<br>';
+          msg += 'Price(RPF)       : '+newPriceGST +'<br>';
+          msg += 'Normal Rental    : '+oldRentalGST+'<br>';
+          msg += 'Promotion        : '+newRentalGST+'<br>';
+          msg += '<br>The Price(Fee) was applied to the tab of [Sales Order]';
+          */
+         msg = '<spring:message code="sal.alert.msg.gstInfo" arguments="'+appTypeName+';'+productName+';'+newPriceGST+';'+oldRentalGST+';'+newRentalGST+'" argumentSeparator=";"/>';
+         Common.alert('<spring:message code="sal.alert.msg.gstAmount" />' + DEFAULT_DELIMITER + '<b>' + msg + '</b>');
 
-              fn_excludeGstAmt();
+         fn_excludeGstAmt();
+    });
 
-              Common
-                  .alert('<spring:message code="sal.alert.msg.gstAmount" />'
-                      + DEFAULT_DELIMITER
-                      + '<b>'
-                      + msg
-                      + '</b>');
-            });
     $('#btnViewHistory').click(function() {
       fn_doViewHistory_Click();
     });
@@ -1223,40 +1208,29 @@
     if (APP_TYPE_ID != 66) {
       SRV_PAC_ID = 0;
     }
-    Common.ajax("GET",
-        "/sales/order/selectProductPromotionPriceByPromoStockID.do", {
+    Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {
           promoId : promoId,
           stkId : stkId,
           srvPacId : SRV_PAC_ID
-        }, function(promoPriceInfo) {
-
+    }, function(promoPriceInfo) {
           if (promoPriceInfo != null) {
-
-            $("#ordPrice").val(promoPriceInfo.orderPricePromo);
-            $("#ordPv").val(promoPriceInfo.orderPVPromo);
-            $("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
-            $("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
-            $("#orgOrdRentalFees").val(promoPriceInfo.normalRentalFees);
-            /*
-             $("#orgOrdPrice").val(promoPriceInfo.orderPrice);
-             $("#orgOrdPv").val(promoPriceInfo.orderPV);
-             */
-            $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
-            $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
+			$("#ordPrice").val(promoPriceInfo.orderPricePromo);
+			$("#ordPv").val(promoPriceInfo.orderPVPromo);
+			$("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
+			$("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
+			$("#orgOrdRentalFees").val(promoPriceInfo.normalRentalFees);
+			/*
+			 $("#orgOrdPrice").val(promoPriceInfo.orderPrice);
+			 $("#orgOrdPv").val(promoPriceInfo.orderPV);
+			 */
+			$("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
+			$("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
           }
         });
   }
 
   function fn_loadPromotionInfo(ordId) {
-    Common
-        .ajax(
-            "GET",
-            "/sales/order/selectBasicInfoJson.do",
-            {
-              salesOrderId : ordId
-            },
-            function(basicInfo) {
-
+    Common.ajax("GET", "/sales/order/selectBasicInfoJson.do", {salesOrderId : ordId}, function(basicInfo) {
               if (basicInfo != null) {
                 var promoId = basicInfo.ordPromoId;
                 var stkId = basicInfo.stockId;
@@ -1265,30 +1239,23 @@
                 var empChk = basicInfo.empChk;
                 var exTrade = basicInfo.exTrade;
 
-                $('#prdName').text(
-                    '(' + basicInfo.stockCode + ') '
-                        + basicInfo.stockDesc);
+                $('#prdName').text('(' + basicInfo.stockCode + ') ' + basicInfo.stockDesc);
                 $('#ordPrice').val(basicInfo.ordAmt);
                 $('#ordRentalFees').val(basicInfo.ordMthRental);
                 $('#ordPv').val(basicInfo.ordPv);
 
                 $('#orgOrdRentalFees').val(basicInfo.norRntFee);
 
-                $("#promoDiscPeriodTp").val(
-                    basicInfo.promoDiscPeriodTp);
-                $("#promoDiscPeriod").val(
-                    basicInfo.promoDiscPeriod);
+                $("#promoDiscPeriodTp").val(basicInfo.promoDiscPeriodTp);
+                $("#promoDiscPeriod").val(basicInfo.promoDiscPeriod);
 
-                $('#relatedNo')
-                    .val(basicInfo.ordPromoRelatedNo);
+                $('#relatedNo').val(basicInfo.ordPromoRelatedNo);
 
                 $('#promoId').val(promoId);
                 $('#stkId').val(stkId);
 
-                if (APP_TYPE_ID == 67 || APP_TYPE_ID == 68
-                    || APP_TYPE_ID == 144) {
-                  doGetComboData(
-                      '/sales/order/selectPromotionByAppTypeStock2.do',
+                if (APP_TYPE_ID == 67 || APP_TYPE_ID == 68 || APP_TYPE_ID == 144) {
+                  doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do',
                       {
                         appTypeId : APP_TYPE_ID,
                         stkId : stkId,
@@ -1299,8 +1266,7 @@
                         isSrvPac : 'Y'
                       }, promoId, 'ordPromo', 'S', ''); //Common Code
                 } else
-                  doGetComboData(
-                      '/sales/order/selectPromotionByAppTypeStock.do',
+                  doGetComboData('/sales/order/selectPromotionByAppTypeStock.do',
                       {
                         appTypeId : APP_TYPE_ID,
                         stkId : stkId,
@@ -1314,8 +1280,6 @@
   }
 
   function fn_loadRentPaySetInfo(ordId) {
-    console.log("fn_loadRentPaySetInfo START");
-
     Common.ajax("GET", "/sales/order/selectRentPaySetInfo.do", {
       salesOrderId : ordId
     },
@@ -1356,7 +1320,7 @@
               $('#modRejectDate').removeAttr("disabled");
               $('#modStartDate').val("").prop("disabled", true);
               $('#modRejectReason').removeAttr("disabled");
-                            $("#chkRejectDate").prop("checked", true);
+              $("#chkRejectDate").prop("checked", true);
 
             }
 
@@ -2553,44 +2517,42 @@
             });
   }
 
-  //LoadProductPrice
-  function fn_loadProductPrice(stkId) {
+    //LoadProductPrice
+    function fn_loadProductPrice(stkId) {
+        if (GST_CHK == '1') {
+            $('#pBtnCal').removeClass("blind");
+        } else {
+            $('#pBtnCal').addClass("blind");
+        }
 
-    if (GST_CHK == '1') {
-      $('#pBtnCal').removeClass("blind");
-    } else {
-      $('#pBtnCal').addClass("blind");
+        if (APP_TYPE_ID != 66) {
+            SRV_PAC_ID = 0;
+        }
+
+        Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {
+            appTypeId : APP_TYPE_ID,
+            stkId : stkId,
+            srvPacId : SRV_PAC_ID
+
+        }, function(stkPriceInfo) {
+        	if (stkPriceInfo != null) {
+        	    var pvVal = stkPriceInfo.orderPV;
+        	    var pvValGst = Math.floor(pvVal * (1 / 1.06))
+
+		        $("#ordPrice").val(stkPriceInfo.orderPrice);
+		        $("#ordPv").val(pvVal);
+		        $("#ordPvGST").val(pvValGst);
+		        $("#ordRentalFees").val(stkPriceInfo.orderRentalFees);
+		        $("#orgOrdRentalFees").val(stkPriceInfo.orderRentalFees);
+		        $("#ordPriceId").val(stkPriceInfo.priceId);
+		        $("#orgOrdPrice").val(stkPriceInfo.orderPrice);
+
+		        $("#promoId").val('');
+		        $("#promoDiscPeriodTp").val('');
+		        $("#promoDiscPeriod").val('');
+		    }
+        });
     }
-
-    if (APP_TYPE_ID != 66) {
-      SRV_PAC_ID = 0;
-    }
-    Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {
-      appTypeId : APP_TYPE_ID,
-      stkId : stkId,
-      srvPacId : SRV_PAC_ID
-    }, function(stkPriceInfo) {
-
-      if (stkPriceInfo != null) {
-
-        console.log("성공.");
-
-        var pvVal = stkPriceInfo.orderPV;
-        var pvValGst = Math.floor(pvVal * (1 / 1.06))
-
-        $("#ordPrice").val(stkPriceInfo.orderPrice);
-        $("#ordPv").val(pvVal);
-        $("#ordPvGST").val(pvValGst);
-        $("#ordRentalFees").val(stkPriceInfo.orderRentalFees);
-        $("#orgOrdRentalFees").val(stkPriceInfo.orderRentalFees);
-        $("#ordPriceId").val(stkPriceInfo.priceId);
-
-        $("#promoId").val('');
-        $("#promoDiscPeriodTp").val('');
-        $("#promoDiscPeriod").val('');
-      }
-    });
-  }
 
     // Save - Promotion
     function fn_doSavePromoPriceInfo() {
@@ -2607,7 +2569,8 @@
 		        promoDiscPeriodTp : $('#promoDiscPeriodTp').val(),
 		        promoDiscPeriod : $('#promoDiscPeriod').val(),
 		        salesOrdNo : ORD_NO,
-		        defRentAmt : $('#ordRentalFees').val().trim()
+		        defRentAmt : $('#ordRentalFees').val().trim(),
+		        norAmt : $('#orgOrdPrice').val().trim()
 		    };
         } else {
             var salesOrderMVO = {
@@ -2620,7 +2583,8 @@
 		        promoDiscPeriodTp : 0,
 		        promoDiscPeriod : 0,
 		        salesOrdNo : ORD_NO,
-		        defRentAmt : 0
+		        defRentAmt : 0,
+		        norAmt : $('#orgOrdPrice').val().trim()
 		    };
         }
 
@@ -2629,11 +2593,6 @@
 
 	    }, function(jqXHR, textStatus, errorThrown) {
 	        try {
-	            console.log("status : " + jqXHR.status);
-	            console.log("code : " + jqXHR.responseJSON.code);
-	            console.log("message : " + jqXHR.responseJSON.message);
-	            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-
 	            Common.alert('<spring:message code="sal.msg.dataPrepFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.savingDataPreprationFailed" /></b>');
 	        } catch (e) {
 	            console.log(e);
@@ -2641,59 +2600,35 @@
 	    });
 	}
 
-  function fn_doSaveGstCertInfo() {
-    console.log('!@# fn_doSaveGstCertInfo START');
+    function fn_doSaveGstCertInfo() {
+        var gSTEURCertificateVO = {
+            eurcId : $('#eurcId').val().trim(),
+	        eurcSalesOrdId : ORD_ID,
+	        eurcRefNo : $('#certRefNo').val().trim(),
+	        eurcRefDt : $('#certRefDt').val().trim(),
+	        eurcCustRgsNo : $('#txtCertCustRgsNo').val().trim(),
+	        eurcRem : $('#txtCertRemark').val().trim(),
+	        eurcRliefAppTypeId : APP_TYPE_ID,
+	        atchFileGrpId : $('#atchFileGrpId').val(),
+	        existData : $('#existData').val()
+	    };
 
-    var gSTEURCertificateVO = {
-      eurcId : $('#eurcId').val().trim(),
-      eurcSalesOrdId : ORD_ID,
-      eurcRefNo : $('#certRefNo').val().trim(),
-      eurcRefDt : $('#certRefDt').val().trim(),
-      eurcCustRgsNo : $('#txtCertCustRgsNo').val().trim(),
-      eurcRem : $('#txtCertRemark').val().trim(),
-      eurcRliefAppTypeId : APP_TYPE_ID,
-      atchFileGrpId : $('#atchFileGrpId').val(),
-      existData : $('#existData').val()
-    };
+        Common.ajax("POST", "/sales/order/updateGstCertInfo.do", gSTEURCertificateVO, function(result) {
+            Common.alert("GST Certificate Saved" + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_reloadPage);
 
-    Common
-        .ajax(
-            "POST",
-            "/sales/order/updateGstCertInfo.do",
-            gSTEURCertificateVO,
-            function(result) {
-
-              Common.alert("GST Certificate Saved"
-                  + DEFAULT_DELIMITER + "<b>"
-                  + result.message + "</b>", fn_reloadPage);
-
-            },
-            function(jqXHR, textStatus, errorThrown) {
-              try {
-                console.log("status : " + jqXHR.status);
-                console
-                    .log("code : "
-                        + jqXHR.responseJSON.code);
-                console.log("message : "
-                    + jqXHR.responseJSON.message);
-                console.log("detailMessage : "
-                    + jqXHR.responseJSON.detailMessage);
-
-                //              Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save. Please try again later.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                Common
-                    .alert('<spring:message code="sal.alert.title.saveFail" />'
-                        + DEFAULT_DELIMITER
-                        + '<b><spring:message code="sal.alert.msg.saveFail" /></b>');
-              } catch (e) {
+        }, function(jqXHR, textStatus, errorThrown) {
+            try {
+                Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.saveFail" /></b>');
+            } catch (e) {
                 console.log(e);
-              }
-            });
-  }
+            }
+        });
+    }
 
-  function fn_reloadPage() {
-    //Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : ORD_ID, ordEditType : $('#ordEditType').val() }, null , true);
-    $('#btnCloseModify').click();
-  }
+    function fn_reloadPage() {
+	    //Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : ORD_ID, ordEditType : $('#ordEditType').val() }, null , true);
+	    $('#btnCloseModify').click();
+    }
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -2781,81 +2716,54 @@
       </colgroup>
       <tbody>
        <tr>
-        <th scope="row"><spring:message
-          code="sal.title.text.instDuration" /><span class="must">*</span></th>
-        <td><input id="modInstallDur" name="installDur" type="text"
-         title="" placeholder="Installment Duration (1-36 Months)"
-         class="w100p" disabled /></td>
-        <th scope="row"><spring:message code="sal.text.salManCode" /><span
-         class="must">*</span></th>
-        <td><input id="modSalesmanCd" name="salesmanCd" type="text"
-         title="" placeholder="Salesman Code" class="" /> <a
-         id="btnSalesmanPop" href="#" class="search_btn"><img
-          src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
-          alt="search" /></a></td>
+        <th scope="row"><spring:message code="sal.title.text.instDuration" /><span class="must">*</span></th>
+        <td><input id="modInstallDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p" disabled /></td>
+        <th scope="row"><spring:message code="sal.text.salManCode" /><span class="must">*</span></th>
+        <td>
+	        <input id="modSalesmanCd" name="salesmanCd" type="text" title="" placeholder="Salesman Code" class="" />
+	        <a id="btnSalesmanPop" href="#" class="search_btn">
+	            <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+	        </a>
+        </td>
        </tr>
        <tr>
         <th scope="row"><spring:message code="sal.text.refNo" /></th>
-        <td><input id="modOrdRefNo" name="ordRefNo" type="text"
-         title="" placeholder="Reference Number" class="w100p" /></td>
-        <th scope="row"><spring:message
-          code="sal.title.text.salesmanType" /></th>
-        <td><input id="modSalesmanType" name="salesmanType"
-         type="text" title="" placeholder="Salesman Type"
-         class="readonly" readonly /></td>
+        <td><input id="modOrdRefNo" name="ordRefNo" type="text" title="" placeholder="Reference Number" class="w100p" /></td>
+        <th scope="row"><spring:message code="sal.title.text.salesmanType" /></th>
+        <td><input id="modSalesmanType" name="salesmanType" type="text" title="" placeholder="Salesman Type" class="readonly" readonly /></td>
        </tr>
        <tr>
         <th scope="row"><spring:message code="sal.text.poNo" /></th>
-        <td><input id="modOrdPoNo" name="ordPoNo" type="text"
-         title="" placeholder="PO Number" class="w100p" /></td>
+        <td><input id="modOrdPoNo" name="ordPoNo" type="text" title="" placeholder="PO Number" class="w100p" /></td>
         <th scope="row"><spring:message code="sal.text.salManName" /></th>
-        <td><input id="modSalesmanName" name="salesmanName"
-         type="text" title="" placeholder="Salesman Name"
-         class="readonly" readonly /></td>
+        <td><input id="modSalesmanName" name="salesmanName" type="text" title="" placeholder="Salesman Name" class="readonly" readonly /></td>
        </tr>
        <tr>
         <th scope="row"><spring:message code="sal.text.keyInBranch" /><span
          class="must">*</span></th>
-        <td><select id="modKeyInBranch" name="keyInBranch"
-         class="w100p"></select></td>
-        <th scope="row"><spring:message
-          code="sal.title.text.salesmanNric" /></th>
-        <td><input id="modSalesmanIc" name="salesmanIc" type="text"
-         title="" placeholder="Salesman NRIC" class="readonly" readonly /></td>
+        <td><select id="modKeyInBranch" name="keyInBranch" class="w100p"></select></td>
+        <th scope="row"><spring:message code="sal.title.text.salesmanNric" /></th>
+        <td><input id="modSalesmanIc" name="salesmanIc" type="text" title="" placeholder="Salesman NRIC" class="readonly" readonly /></td>
        </tr>
        <tr>
-        <th scope="row" rowspan="3"><spring:message
-          code="sal.text.remark" /></th>
-        <td rowspan="3"><textarea id="modOrdRem" name="ordRem"
-          cols="20" rows="5"></textarea></td>
-        <th scope="row"><spring:message
-          code="sal.text.departmentCode" /></th>
-        <td><input id="modOrderDeptCode" name="orderDeptCode"
-         type="text" title="" placeholder="Department Code"
-         class="readonly" readonly /></td>
+        <th scope="row" rowspan="3"><spring:message code="sal.text.remark" /></th>
+        <td rowspan="3"><textarea id="modOrdRem" name="ordRem" cols="20" rows="5"></textarea></td>
+        <th scope="row"><spring:message code="sal.text.departmentCode" /></th>
+        <td><input id="modOrderDeptCode" name="orderDeptCode" type="text" title="" placeholder="Department Code" class="readonly" readonly /></td>
        </tr>
        <tr>
         <th scope="row"><spring:message code="sal.text.GroupCode" /></th>
-        <td><input id="modOrderGrpCode" name="orderGrpCode"
-         type="text" title="" placeholder="Group Code" class="readonly"
-         readonly /></td>
+        <td><input id="modOrderGrpCode" name="orderGrpCode" type="text" title="" placeholder="Group Code" class="readonly" readonly /></td>
        </tr>
        <tr>
-        <th scope="row"><spring:message
-          code="sal.text.organizationCode" /></th>
-        <td><input id="modOrderOrgCode" name="orderOrgCode"
-         type="text" title="" placeholder="Organization Code"
-         class="readonly" readonly /></td>
+        <th scope="row"><spring:message code="sal.text.organizationCode" /></th>
+        <td><input id="modOrderOrgCode" name="orderOrgCode" type="text" title="" placeholder="Organization Code" class="readonly" readonly /></td>
        </tr>
        <tr>
-        <th scope="row">SST Type<span
-         class="must">*</span></th>
-        <td><select id="modCorpCustType" name="corpCustType"
-         class="w100p" disabled></select></td>
-        <th scope="row">Agreement Type<span
-         class="must">*</span></th>
-        <td><select id="modAgreementType" name="agreementType"
-         class="w100p" disabled></select></td>
+        <th scope="row">SST Type<span class="must">*</span></th>
+        <td><select id="modCorpCustType" name="corpCustType" class="w100p" disabled></select></td>
+        <th scope="row">Agreement Type<span class="must">*</span></th>
+        <td><select id="modAgreementType" name="agreementType" class="w100p" disabled></select></td>
        </tr>
       </tbody>
      </table>
@@ -2865,8 +2773,7 @@
    <!-- search_table end -->
    <ul class="center_btns">
     <li><p class="btn_blue2">
-      <a id="btnSaveBasicInfo" name="btnSaveBasicInfo" href="#"><spring:message
-        code="sal.btn.save" /></a>
+      <a id="btnSaveBasicInfo" name="btnSaveBasicInfo" href="#"><spring:message code="sal.btn.save" /></a>
      </p></li>
    </ul>
   </section>
@@ -2899,10 +2806,10 @@
     <!-- search_table start -->
     <form id="frmMailAddr" method="post">
      <input name="salesOrdId" type="hidden" value="${salesOrderId}" />
-     <input id="modCustId" name="custId" type="hidden" /> <input
-      id="modBillGroupId" name="billGroupId" type="hidden" /> <input
-      id="modCustAddId" name="custAddId" type="hidden" /> <input
-      id="modCustAddIdOld" name="custAddIdOld" type="hidden" />
+     <input id="modCustId" name="custId" type="hidden" />
+     <input id="modBillGroupId" name="billGroupId" type="hidden" />
+     <input id="modCustAddId" name="custAddId" type="hidden" />
+     <input id="modCustAddIdOld" name="custAddIdOld" type="hidden" />
      <table class="type1">
       <!-- table start -->
       <caption>table</caption>
@@ -3892,8 +3799,11 @@
       </tr>
       <tr>
        <th scope="row"><spring:message code="sal.title.text.pv" /></th>
-       <td><input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
-        <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
+       <td>
+        <input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
+        <input id="ordPvGST" name="ordPvGST" type="hidden" />
+        <input id="orgOrdPrice" name="orgOrdPrice" type="hidden" />
+       </td>
        <th scope="row"><spring:message code="sal.title.text.rentFeeRm" /></th>
        <td>
         <p>
@@ -3940,14 +3850,13 @@
    <!-- title_line end -->
    <section class="search_table">
     <!-- search_table start -->
-    <form id="fileUploadForm" name="fileUploadForm"
-     enctype="multipart/form-data" action="#" method="post">
-     <input id="atchFileGrpId" name="atchFileGrpId" type="hidden" /> <input
-      id="subPath" name="subPath" type="hidden" /> <input id="fileName"
-      name="fileName" type="hidden" /> <input id="orignlFileNm"
-      name="orignlFileNm" type="hidden" /> <input id="existData"
-      name="existData" type="hidden" value="N" /> <input id="eurcId"
-      name="eurcId" type="hidden" />
+    <form id="fileUploadForm" name="fileUploadForm" enctype="multipart/form-data" action="#" method="post">
+     <input id="atchFileGrpId" name="atchFileGrpId" type="hidden" />
+     <input id="subPath" name="subPath" type="hidden" />
+     <input id="fileName" name="fileName" type="hidden" />
+     <input id="orignlFileNm" name="orignlFileNm" type="hidden" />
+     <input id="existData" name="existData" type="hidden" value="N" />
+     <input id="eurcId" name="eurcId" type="hidden" />
      <table class="type1">
       <!-- table start -->
       <caption>table</caption>
@@ -3959,30 +3868,20 @@
       </colgroup>
       <tbody>
        <tr>
-        <th scope="row"><spring:message code="sal.text.refNo" /><span
-         class="must">*</span></th>
-        <td><input id="certRefNo" name="certRefNo" type="text"
-         title="" placeholder="Cert Reference No" class="w100p" disabled /></td>
-        <th scope="row"><spring:message
-          code="sal.title.text.certificateDate" /><span class="must">*</span></th>
-        <td><input id="certRefDt" name="certRefDt" type="text"
-         title="Create start Date" placeholder="DD/MM/YYYY"
-         class="j_date w100p" disabled /></td>
+        <th scope="row"><spring:message code="sal.text.refNo" /><span class="must">*</span></th>
+        <td><input id="certRefNo" name="certRefNo" type="text" title="" placeholder="Cert Reference No" class="w100p" disabled /></td>
+        <th scope="row"><spring:message code="sal.title.text.certificateDate" /><span class="must">*</span></th>
+        <td><input id="certRefDt" name="certRefDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" disabled /></td>
        </tr>
        <tr>
-        <th scope="row"><spring:message
-          code="sal.text.gstRegistrationNo" /></th>
-        <td colspan="3"><input id="txtCertCustRgsNo"
-         name="txtCertCustRgsNo" type="text" title="" placeholder=""
-         class="w100p" disabled /></td>
+        <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
+        <td colspan="3"><input id="txtCertCustRgsNo" name="txtCertCustRgsNo" type="text" title="" placeholder="" class="w100p" disabled /></td>
        </tr>
        <tr>
-        <th scope="row"><spring:message
-          code="sal.title.text.appType" /></th>
+        <th scope="row"><spring:message code="sal.title.text.appType" /></th>
         <td><select id="eurcRliefAppTypeId" class="w100p" disabled></select>
         </td>
-        <th scope="row"><spring:message
-          code="sal.title.text.certificateType" /></th>
+        <th scope="row"><spring:message code="sal.title.text.certificateType" /></th>
         <td><select id="eurcRliefTypeId" class="w100p" disabled></select>
         </td>
        </tr>
@@ -3992,8 +3891,7 @@
           name="txtCertRemark" cols="20" rows="5" disabled></textarea></td>
        </tr>
        <tr>
-        <th scope="row"><spring:message
-          code="sal.title.text.uploadReliefZipFile" /></th>
+        <th scope="row"><spring:message code="sal.title.text.uploadReliefZipFile" /></th>
         <td colspan="3">
          <!-- auto_file start -->
          <div class="auto_file2">

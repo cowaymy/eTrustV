@@ -131,6 +131,10 @@ public class HcOrderModifyServiceImpl extends EgovAbstractServiceImpl implements
 			salesOrderMVO.setMthRentAmt(salesOrderMVO.getMthRentAmt().add(discRntFee));
 			salesOrderMVO.setDefRentAmt(salesOrderMVO.getDefRentAmt().add(discRntFee));
 
+			BigDecimal norAmt = new BigDecimal(CommonUtils.nvl(salesOrder2.get("norAmt")));  // frame NOR_AMT
+			// mattress order NOR_AMT + frame order NOR_AMT
+			salesOrderMVO.setNorAmt(salesOrderMVO.getNorAmt().add(norAmt));
+
 			SalesOrderMVO salesOrderMVO2 = new SalesOrderMVO();
 
 			salesOrderMVO2.setPromoId(salesOrderMVO.getPromoId());
@@ -144,6 +148,8 @@ public class HcOrderModifyServiceImpl extends EgovAbstractServiceImpl implements
 			// frame order (mth_rent_amt, def_rent_amt) = 0
 			salesOrderMVO2.setMthRentAmt(BigDecimal.ZERO);
 			salesOrderMVO2.setDefRentAmt(BigDecimal.ZERO);
+			// frame order NOR_AMT = 0
+    		salesOrderMVO2.setNorAmt(BigDecimal.ZERO);
 
 			// update - Frame Promotion
 			rtnCnt = hcOrderModifyMapper.updateHcPromoPriceInfo(salesOrderMVO2);

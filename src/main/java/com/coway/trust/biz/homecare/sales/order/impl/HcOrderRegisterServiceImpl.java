@@ -104,6 +104,12 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			// frame order (mth_rent_amt, def_rent_amt) = 0
 			salesOrderMVO2.setMthRentAmt(BigDecimal.ZERO);
 			salesOrderMVO2.setDefRentAmt(BigDecimal.ZERO);
+
+			BigDecimal norAmt2 = salesOrderMVO2.getNorAmt(); // frame NOR_AMT
+			// mattress order NOR_AMT + frame order NOR_AMT
+			salesOrderMVO1.setNorAmt(salesOrderMVO1.getNorAmt().add(norAmt2));
+			// frame order NOR_AMT = 0
+			salesOrderMVO2.setNorAmt(BigDecimal.ZERO);
 		}
 
 		// Order Copy(Change) -> ordSeqNo = 0

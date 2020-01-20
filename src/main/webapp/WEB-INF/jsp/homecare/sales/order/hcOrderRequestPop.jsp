@@ -1246,15 +1246,23 @@
         if(tabNm == 'PEXC') {
             if(fn_getCheckAccessRight(logInUserid, 10)) {
 
+            	Common.ajaxSync("GET", "/sales/order/chkCboPromPck.do", {promo : PROMO_CODE}, function(rsltInfo) {
+                    if (rsltInfo == 1) {
+                        Common.alert('<spring:message code="sales.msg.errEdtPromCbo" />');
+                        return;
+                    }
+                });
+
                 if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
                     msg = '<spring:message code="sal.msg.underProdExch" arguments="'+ORD_NO+';'+ORD_STUS_CODE+'" argumentSeparator=";"/>';
-
                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
+
                     return false;
                 }
             } else {
                 msg = "Sorry. You have no access rights to request product exchange.";
                 Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+
                 return false;
             }
         }
@@ -1291,13 +1299,12 @@
 
                 if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
                     msg = '<spring:message code="sal.msg.underAppExch" arguments="'+ORD_NO+';'+ORD_STUS_CODE+'" argumentSeparator=";"/>';
-
                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
                     return false;
+
                 } else {
                     if(APP_TYPE_ID != '66' && APP_TYPE_ID != '67' && APP_TYPE_ID != '68') {
                         msg = '<spring:message code="sal.msg.underAppExch2" arguments="'+ORD_NO+';'+APP_TYPE_DESC+'" argumentSeparator=";"/>';
-
                         Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
                         return false;
                     }

@@ -2627,46 +2627,46 @@
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.customerId" /><span class="must">*</span></th>
-    <td><input id="custId" name="custId" type="text" title="" placeholder="Customer ID" class="" /><a class="search_btn" id="custBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input id="custId" name="custId" type="text" placeholder="Customer ID" class="" /><a class="search_btn" id="custBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row"><spring:message code="sal.text.type" /></th>
-    <td><input id="custTypeNm" name="custTypeNm" type="text" title="" placeholder="Customer Type" class="w100p" readonly/>
+    <td><input id="custTypeNm" name="custTypeNm" type="text" placeholder="Customer Type" class="w100p" readonly/>
         <input id="typeId" name="typeId" type="hidden"/>
         <input id="corpTypeId" name="corpTypeId" type="hidden"/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.name" /></th>
-    <td><input id="name" name="name" type="text" title="" placeholder="Customer Name" class="w100p" readonly/></td>
+    <td><input id="name" name="name" type="text" placeholder="Customer Name" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.text.nricCompanyNo" /></th>
-    <td><input id="nric" name="nric" type="text" title="" placeholder="NRIC/Company No" class="w100p" readonly/></td>
+    <td><input id="nric" name="nric" type="text" placeholder="NRIC/Company No" class="w100p" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.nationality" /></th>
-    <td><input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p" readonly/>
+    <td><input id="nationNm" name="nationNm" type="text" placeholder="Nationality" class="w100p" readonly/>
         <input id="nation" name="nation" type="hidden"/>
     </td>
     <th scope="row"><spring:message code="sal.text.race" /></th>
-    <td><input id="race" name="race" type="text" title="" placeholder="Race" class="w100p" readonly/>
+    <td><input id="race" name="race" type="text" placeholder="Race" class="w100p" readonly/>
         <input id="raceId" name="raceId" type="hidden"/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.dob" /></th>
-    <td><input id="dob" name="dob" type="text" title="" placeholder="DOB" class="w100p" readonly/></td>
+    <td><input id="dob" name="dob" type="text" placeholder="DOB" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.text.gender" /></th>
-    <td><input id="gender" name="gender" type="text" title="" placeholder="Gender" class="w100p" readonly/></td>
+    <td><input id="gender" name="gender" type="text" placeholder="Gender" class="w100p" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.passportExpire" /></th>
-    <td><input id="pasSportExpr" name="pasSportExpr" type="text" title="" placeholder="Passport Expiry" class="w100p" readonly/></td>
+    <td><input id="pasSportExpr" name="pasSportExpr" type="text" placeholder="Passport Expiry" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
-    <td><input id="visaExpr" name="visaExpr" type="text" title="" placeholder="Visa Expiry" class="w100p" readonly/></td>
+    <td><input id="visaExpr" name="visaExpr" type="text" placeholder="Visa Expiry" class="w100p" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.email" /></th>
-    <td><input id="email" name="email" type="text" title="" placeholder="Email Address" class="w100p" readonly/></td>
+    <td><input id="email" name="email" type="text" placeholder="Email Address" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.text.indutryCd" /></th>
-    <td><input id="corpTypeNm" name="corpTypeNm" type="text" title="" placeholder="Industry Code" class="w100p" readonly/></td>
+    <td><input id="corpTypeNm" name="corpTypeNm" type="text" placeholder="Industry Code" class="w100p" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.employee" /><span class="must">*</span></th>
@@ -2721,28 +2721,28 @@
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.initial" /></th>
-    <td><input id="custInitial" name="custInitial" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td><input id="custInitial" name="custInitial" type="text" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.text.name" /></th>
-    <td><input id="custCntcName" name="custCntcName" type="text" title="" placeholder="" class="w100p" disabled/>
+    <td><input id="custCntcName" name="custCntcName" type="text" placeholder="" class="w100p" disabled/>
         <input id="hiddenCustCntcId" name="custCntcId" type="hidden" /></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telMOne" /></th>
-    <td><input id="custCntcTelM" name="custCntcTelM" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td><input id="custCntcTelM" name="custCntcTelM" type="text" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.title.text.telROne" /></th>
-    <td><input id="custCntcTelR" name="custCntcTelR" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td><input id="custCntcTelR" name="custCntcTelR" type="text" placeholder="" class="w100p" disabled/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telOOne" /></th>
-    <td><input id="custCntcTelO" name="custCntcTelO" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td><input id="custCntcTelO" name="custCntcTelO" type="text" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.title.text.extNo" />(1)</th>
-    <td><input id="custCntcExt" name="custCntcExt" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td><input id="custCntcExt" name="custCntcExt" type="text" placeholder="" class="w100p" disabled/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telFOne" /></th>
-    <td><input id="custCntcTelF" name="custCntcTelF" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td><input id="custCntcTelF" name="custCntcTelF" type="text" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.title.text.eamilOne" /></th>
-    <td><input id="custCntcEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td><input id="custCntcEmail" name="custCntcEmail" type="text" placeholder="" class="w100p" disabled/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -2779,25 +2779,25 @@
 <tbody>
 <tr>
     <th scope="row">Name</th>
-    <td colspan="3"><input id="srvCntcName" name="srvCntcName" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td colspan="3"><input id="srvCntcName" name="srvCntcName" type="text" placeholder="" class="w100p" disabled/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telMTwo" /></th>
-    <td><input id="srvCntcTelM" name="srvCntcTelM" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td><input id="srvCntcTelM" name="srvCntcTelM" type="text" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.title.text.telRTwo" /></th>
-    <td><input id="srvCntcTelR" name="srvCntcTelR" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td><input id="srvCntcTelR" name="srvCntcTelR" type="text" placeholder="" class="w100p" disabled/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telOTwo" /></th>
-    <td><input id="srvCntcTelO" name="srvCntcTelO" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td><input id="srvCntcTelO" name="srvCntcTelO" type="text" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.title.text.extNo" />(2)</th>
-    <td><input id="srvCntcExt" name="srvCntcExt" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td><input id="srvCntcExt" name="srvCntcExt" type="text" placeholder="" class="w100p" disabled/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telFTwo" /></th>
-    <td><input id="srvCntcTelF" name="srvCntcTelF" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td><input id="srvCntcTelF" name="srvCntcTelF" type="text" placeholder="" class="w100p" disabled/></td>
     <th scope="row"><spring:message code="sal.title.text.emailTwo" /></th>
-    <td><input id="srvCntcEmail" name="srvCntcEmail" type="text" title="" placeholder="" class="w100p" disabled/></td>
+    <td><input id="srvCntcEmail" name="srvCntcEmail" type="text" placeholder="" class="w100p" disabled/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -2836,31 +2836,31 @@
     <th scope="row"><spring:message code="sal.text.exTradeRelatedNo" /></th>
     <td>
         <span style="width:43%;"><select id="exTrade" name="exTrade" class="w100p"></select></span>
-        <span style="width:45%;"><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></span>
+        <span style="width:45%;"><input id="relatedNo" name="relatedNo" type="text" placeholder="Related Number" class="w100p readonly" readonly /></span>
         <a id="btnRltdNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.instDuration" /><span class="must">*</span></th>
-    <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
+    <td><input id="installDur" name="installDur" type="text" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
     <th scope="row"><spring:message code="sal.text.ordDate" /><span class="must">*</span></th>
     <td>${toDay}</td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.refNo" /><span class="must">*</span></th>
-    <td><input id="refereNo" name="refereNo" type="text" title="" placeholder="" class="w100p" onblur="javascript:fn_checkEkeyinSof(this.value);"/></td>
+    <td><input id="refereNo" name="refereNo" type="text" placeholder="" class="w100p" onblur="javascript:fn_checkEkeyinSof(this.value);"/></td>
     <th scope="row"><spring:message code="sal.text.salManCode" /><span class="must">*</span></th>
     <td>
-        <input id="salesmanCd" name="salesmanCd" type="text" title="" placeholder="" class="" />
+        <input id="salesmanCd" name="salesmanCd" type="text" placeholder="" class="" />
         <input id="hiddenSalesmanId" name="salesmanId" type="hidden"  />
         <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.poNo" /><span class="must">*</span></th>
-    <td><input id="poNo" name="poNo" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="poNo" name="poNo" type="text" placeholder="" class="w100p" /></td>
     <th scope="row"><spring:message code="sal.title.text.salesmanType" /></th>
-    <td><input id="salesmanType" name="salesmanType" type="text" title="" placeholder="Salesman Type" class="w100p readonly" readonly/>
+    <td><input id="salesmanType" name="salesmanType" type="text" placeholder="Salesman Type" class="w100p readonly" readonly/>
         <input id="hiddenSalesmanTypeId" name="salesmanTypeId" type="hidden" /></td>
 </tr>
 <tr>
@@ -2869,7 +2869,7 @@
     </td>
     <td></td>
     <th scope="row"><spring:message code="sal.text.salManName" /></th>
-    <td><input id="salesmanNm" name="salesmanNm" type="text" title="" placeholder="Salesman Name" class="w100p readonly" readonly/></td>
+    <td><input id="salesmanNm" name="salesmanNm" type="text" placeholder="Salesman Name" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.product" /><span class="must">*</span></th>
@@ -2877,7 +2877,7 @@
         <select id="ordProduct1" name="ordProduct1" class="w100p" disabled></select>
     </td>
     <th scope="row"><spring:message code="sal.title.text.salesmanNric" /></th>
-    <td><input id="salesmanNric" name="salesmanNric" type="text" title="" placeholder="Salesman NRIC" class="w100p readonly" readonly/></td>
+    <td><input id="salesmanNric" name="salesmanNric" type="text" placeholder="Salesman NRIC" class="w100p readonly" readonly/></td>
 </tr>
 <tr id='trCpntId1' style='visibility:collapse'>
     <th scope="row"><spring:message code="sal.title.text.cpntId" /><span class="must">*</span></th>
@@ -2895,65 +2895,73 @@
     </td>
     <th scope="row"><spring:message code="sal.text.departmentCode" /></th>
     <td>
-        <input id="departCd"       name="departCd"       type="text" title="" placeholder="Department Code" class="w100p readonly" readonly />
+        <input id="departCd"       name="departCd"       type="text" placeholder="Department Code" class="w100p readonly" readonly />
         <input id="departMemId" name="departMemId" type="hidden" />
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
-    <td>
-        <input id="ordPrice1"       name="ordPrice1"      data-ref='ordProduct1' type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
+    <!-- Display None(20200117 - KR-SH) -->
+    <th scope="row" style="display: none;"><spring:message code="sal.title.text.priceRpfRm" /></th>
+    <td style="display: none;">
+        <input id="ordPrice1"       name="ordPrice1"      data-ref='ordProduct1' type="text" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
         <input id="ordPriceId1"    name="ordPriceId1"    data-ref='ordProduct1' type="hidden" />
         <input id="orgOrdPrice1"  name="orgOrdPrice1" data-ref='ordProduct1' type="hidden" />
-        <input id="orgOrdPv1"     name="orgOrdPv1"     data-ref='ordProduct1' type="hidden" /></td>
+        <input id="orgOrdPv1"     name="orgOrdPv1"     data-ref='ordProduct1' type="hidden" />
+    </td>
+    <!-- Display None(20200117 - KR-SH) End -->
+    <th scope="row"><spring:message code="sales.promo.discPeriod" />/<br><spring:message code="sal.title.text.finalRentalFees" /></th>
+    <td>
+        <span style="width:40%;"><select id="promoDiscPeriodTp1" name="promoDiscPeriodTp1" data-ref='ordProduct1' class="w100p" disabled></select></span>
+        <span style="width:23%;"><input id="promoDiscPeriod1"     name="promoDiscPeriod1"     data-ref='ordProduct1' type="text" placeholder=""  class="w100p readonly" readonly/></span>
+        <span style="width:32%;"><input id="ordRentalFees1"         name="ordRentalFees1"          data-ref='ordProduct1' type="text" placeholder=""  class="w100p readonly" readonly/></span>
+    </td>
     <th scope="row"><spring:message code="sal.text.GroupCode" /></th>
     <td>
-        <input id="grpCd"       name="grpCd"       type="text" title="" placeholder="Group Code" class="w100p readonly" readonly />
+        <input id="grpCd"       name="grpCd"       type="text" placeholder="Group Code" class="w100p readonly" readonly />
         <input id="grpMemId" name="grpMemId" type="hidden" />
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
-    <td><input id="orgOrdRentalFees1" name="orgOrdRentalFees1" data-ref='ordProduct1' type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
+    <!-- Display None(20200117 - KR-SH) -->
+    <th scope="row" style="display: none;"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
+    <td style="display: none;"><input id="orgOrdRentalFees1" name="orgOrdRentalFees1" data-ref='ordProduct1' type="text" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
+    <!-- Display None(20200117 - KR-SH) End -->
+    <th scope="row"><spring:message code="sal.title.text.pv" /></th>
+    <td>
+        <input id="ordPv1"       name="ordPv1"      data-ref='ordProduct1' type="text" placeholder="Point Value (PV)" class="w100p readonly" readonly />
+        <input id="ordPvGST1" name="ordPvGST1" data-ref='ordProduct1' type="hidden" />
+    </td>
     <th scope="row"><spring:message code="sal.text.organizationCode" /></th>
     <td>
-        <input id="orgCd" name="orgCd" type="text" title="" placeholder="Organization Code" class="w100p readonly" readonly />
+        <input id="orgCd" name="orgCd" type="text" placeholder="Organization Code" class="w100p readonly" readonly />
         <input id="orgMemId" name="orgMemId" type="hidden" />
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sales.promo.discPeriod" />/<br><spring:message code="sal.title.text.finalRentalFees" /></th>
-    <td>
-        <span style="width:40%;"><select id="promoDiscPeriodTp1" name="promoDiscPeriodTp1" data-ref='ordProduct1' class="w100p" disabled></select></span>
-        <span style="width:23%;"><input id="promoDiscPeriod1"     name="promoDiscPeriod1"     data-ref='ordProduct1' type="text" title="" placeholder=""  class="w100p readonly" readonly/></span>
-        <span style="width:32%;"><input id="ordRentalFees1"         name="ordRentalFees1"          data-ref='ordProduct1' type="text" title="" placeholder=""  class="w100p readonly" readonly/></span>
-    </td>
+    <th scope="row"></th>
+    <td></td>
     <th scope="row"><spring:message code="sal.text.trialNo" /></th>
     <td><label><input id="trialNoChk" name="trialNoChk" type="checkbox" disabled/><span></span></label>
-        <input id="trialNo" name="trialNo" type="text" title="" placeholder="Trial No" style="width:210px;" class="readonly" readonly />
+        <input id="trialNo" name="trialNo" type="text" placeholder="Trial No" style="width:210px;" class="readonly" readonly />
         <input id="trialId" name="trialId" type="hidden" />
         <a id="trialNoBtn" name="trialNoBtn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.pv" /></th>
-    <td>
-        <input id="ordPv1"       name="ordPv1"      data-ref='ordProduct1' type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
-        <input id="ordPvGST1" name="ordPvGST1" data-ref='ordProduct1' type="hidden" />
-    </td>
-    <td colspan="2"></td>
-</tr>
-<tr>
     <td><h3>Frame</h3></td>
     <td></td>
-    <td colspan="2"></td>
+    <td><h3>Total</h3></td>
+    <td></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.product" /><span class="must">*</span></th>
     <td>
         <select id="ordProduct2" name="ordProduct2" class="w100p" disabled></select>
     </td>
-    <td colspan="2"></td>
+    <th scope="row" style="background-color: red"><spring:message code="sal.title.text.priceRpfRm" /></th>
+    <td>
+        <input id="totOrdPrice" name="totOrdPrice" style="width:100%!important; font-weight: bold;" type="text" placeholder="Price/Rental Processing Fees (RPF)" class="readonly" readonly />
+    </td>
 </tr>
 <tr id='trCpntId2' style='visibility:collapse'>
     <th scope="row"><spring:message code="sal.title.text.cpntId" /><span class="must">*</span></th>
@@ -2967,49 +2975,45 @@
     <select id="ordPromo2"     name="ordPromo2"       data-ref='ordProduct2' class="w100p" disabled></select>
 <!--     <input id="txtOldOrderID2" name="txtOldOrderID2" data-ref='ordProduct2' type="hidden" /> -->
     </td>
-    <td><h3>Total</h3></td>
-    <td></td>
+    <th scope="row" style="background-color: red"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
+    <td><input id="totOrgOrdRentalFees" name="totOrgOrdRentalFees" type="text" placeholder="Rental Fees (Monthly)" style="width:100%!important; font-weight: bold;"  class="readonly" readonly /></td>
 </tr>
-<tr>
+<!-- Display None(20200117 - KR-SH) -->
+<tr style="display: none;">
     <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
     <td>
-        <input id="ordPrice2"        name="ordPrice2"      data-ref='ordProduct2' type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
+        <input id="ordPrice2"        name="ordPrice2"      data-ref='ordProduct2' type="text" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
         <input id="ordPriceId2"     name="ordPriceId2"    data-ref='ordProduct2' type="hidden" />
         <input id="orgOrdPrice2"   name="orgOrdPrice2" data-ref='ordProduct2' type="hidden" />
         <input id="orgOrdPv2"      name="orgOrdPv2"     data-ref='ordProduct2' type="hidden" />
     </td>
-    <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
-    <td>
-        <input id="totOrdPrice"    name="totOrdPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
-    </td>
 </tr>
-<tr>
+<tr style="display: none;">
     <th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
-    <td><input id="orgOrdRentalFees2" name="orgOrdRentalFees2" data-ref='ordProduct2' type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
-    <th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
-    <td><input id="totOrgOrdRentalFees" name="totOrgOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
+    <td><input id="orgOrdRentalFees2" name="orgOrdRentalFees2" data-ref='ordProduct2' type="text" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
 </tr>
+<!-- Display None(20200117 - KR-SH) - End -->
 <tr>
     <th scope="row"><spring:message code="sales.promo.discPeriod" />/<br><spring:message code="sal.title.text.finalRentalFees" /></th>
     <td>
         <span style="width:40%;"><select id="promoDiscPeriodTp2" name="promoDiscPeriodTp2" data-ref='ordProduct2' class="w100p" disabled></select></span>
-        <span style="width:23%;"><input id="promoDiscPeriod2"     name="promoDiscPeriod2"     data-ref='ordProduct2' type="text" title="" placeholder=""  class="w100p readonly" readonly/></span>
-        <span style="width:32%;"><input id="ordRentalFees2"         name="ordRentalFees2"          data-ref='ordProduct2' type="text" title="" placeholder=""  class="w100p readonly" readonly/></span>
+        <span style="width:23%;"><input id="promoDiscPeriod2"     name="promoDiscPeriod2"     data-ref='ordProduct2' type="text" placeholder=""  class="w100p readonly" readonly/></span>
+        <span style="width:32%;"><input id="ordRentalFees2"         name="ordRentalFees2"          data-ref='ordProduct2' type="text" placeholder=""  class="w100p readonly" readonly/></span>
     </td>
-    <th scope="row"><spring:message code="sal.title.text.finalRentalFees" /></th>
+    <th scope="row" style="background-color: red"><spring:message code="sal.title.text.finalRentalFees" /></th>
     <td>
-        <p><input id="totOrdRentalFees" name="totOrdRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></p>
+        <p><input id="totOrdRentalFees" name="totOrdRentalFees" type="text" placeholder="" style="width:100%!important; font-weight: bold;" class="readonly" readonly/></p>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.pv" /></th>
     <td>
-        <input id="ordPv2"      name="ordPv2"       data-ref='ordProduct2' type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
+        <input id="ordPv2"      name="ordPv2"       data-ref='ordProduct2' type="text" placeholder="Point Value (PV)" class="w100p readonly" readonly />
         <input id="ordPvGST2" name="ordPvGST2" data-ref='ordProduct2' type="hidden" />
     </td>
-    <th scope="row"><spring:message code="sal.title.text.pv" /></th>
+    <th scope="row" style="background-color: red"><spring:message code="sal.title.text.pv" /></th>
     <td>
-        <input id="totOrdPv"    name="totOrdPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
+        <input id="totOrdPv" name="totOrdPv" type="text" placeholder="Point Value (PV)" style="width:100%!important; font-weight: bold;" class="readonly" readonly />
     </td>
 </tr>
 <tr>
@@ -3087,17 +3091,17 @@
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.customerId" /><span class="must">*</span></th>
-    <td><input id="thrdPartyId" name="thrdPartyId" type="text" title="" placeholder="Third Party ID" class="" />
+    <td><input id="thrdPartyId" name="thrdPartyId" type="text" placeholder="Third Party ID" class="" />
         <a href="#" class="search_btn" id="thrdPartyBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-        <input id="hiddenThrdPartyId" name="hiddenThrdPartyId" type="hidden" title="" placeholder="Third Party ID" class="" /></td>
+        <input id="hiddenThrdPartyId" name="hiddenThrdPartyId" type="hidden" placeholder="Third Party ID" class="" /></td>
     <th scope="row"><spring:message code="sal.text.type" /></th>
-    <td><input id="thrdPartyType" name="thrdPartyType" type="text" title="" placeholder="Costomer Type" class="w100p readonly" readonly/></td>
+    <td><input id="thrdPartyType" name="thrdPartyType" type="text" placeholder="Costomer Type" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.name" /></th>
-    <td><input id="thrdPartyName" name="thrdPartyName" type="text" title="" placeholder="Customer Name" class="w100p readonly" readonly/></td>
+    <td><input id="thrdPartyName" name="thrdPartyName" type="text" placeholder="Customer Name" class="w100p readonly" readonly/></td>
     <th scope="row"><spring:message code="sal.text.nricCompanyNo" /></th>
-    <td><input id="thrdPartyNric" name="thrdPartyNric" type="text" title="" placeholder="NRIC/Company Number" class="w100p readonly" readonly/></td>
+    <td><input id="thrdPartyNric" name="thrdPartyNric" type="text" placeholder="NRIC/Company Number" class="w100p readonly" readonly/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -3125,7 +3129,7 @@
     <select id="rentPayMode" name="rentPayMode" class="w100p"></select>
     </td>
     <th scope="row"><spring:message code="sal.text.nricPassbook" /></th>
-    <td><input id="rentPayIC" name="rentPayIC" type="text" title="" placeholder="NRIC appear on DD/Passbook" class="w100p" /></td>
+    <td><input id="rentPayIC" name="rentPayIC" type="text" placeholder="NRIC appear on DD/Passbook" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -3159,24 +3163,24 @@
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.creditCardNumber" /><span class="must">*</span></th>
-    <td><input id="rentPayCRCNo" name="rentPayCRCNo" type="text" title="" placeholder="Credit Card Number" class="w100p readonly" readonly/>
+    <td><input id="rentPayCRCNo" name="rentPayCRCNo" type="text" placeholder="Credit Card Number" class="w100p readonly" readonly/>
         <input id="hiddenRentPayCRCId" name="rentPayCRCId" type="hidden" />
         <input id="hiddenRentPayEncryptCRCNoId" name="hiddenRentPayEncryptCRCNoId" type="hidden" /></td>
     <th scope="row"><spring:message code="sal.text.creditCardType" /></th>
-    <td><input id="rentPayCRCType" name="rentPayCRCType" type="text" title="" placeholder="Credit Card Type" class="w100p readonly" readonly/></td>
+    <td><input id="rentPayCRCType" name="rentPayCRCType" type="text" placeholder="Credit Card Type" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.nameOnCard" /></th>
-    <td><input id="rentPayCRCName" name="rentPayCRCName" type="text" title="" placeholder="Name On Card" class="w100p readonly" readonly/></td>
+    <td><input id="rentPayCRCName" name="rentPayCRCName" type="text" placeholder="Name On Card" class="w100p readonly" readonly/></td>
     <th scope="row"><spring:message code="sal.text.expiry" /></th>
-    <td><input id="rentPayCRCExpiry" name="rentPayCRCExpiry" type="text" title="" placeholder="Credit Card Expiry" class="w100p readonly" readonly/></td>
+    <td><input id="rentPayCRCExpiry" name="rentPayCRCExpiry" type="text" placeholder="Credit Card Expiry" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.issueBank" /></th>
-    <td><input id="rentPayCRCBank" name="rentPayCRCBank" type="text" title="" placeholder="Issue Bank" class="w100p readonly" readonly/>
-        <input id="hiddenRentPayCRCBankId" name="rentPayCRCBankId" type="hidden" title="" class="w100p" /></td>
+    <td><input id="rentPayCRCBank" name="rentPayCRCBank" type="text" placeholder="Issue Bank" class="w100p readonly" readonly/>
+        <input id="hiddenRentPayCRCBankId" name="rentPayCRCBankId" type="hidden" class="w100p" /></td>
     <th scope="row"><spring:message code="sal.text.cardType" /></th>
-    <td><input id="rentPayCRCCardType" name="rentPayCRCCardType" type="text" title="" placeholder="Card Type" class="w100p readonly" readonly/></td>
+    <td><input id="rentPayCRCCardType" name="rentPayCRCCardType" type="text" placeholder="Card Type" class="w100p readonly" readonly/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -3213,24 +3217,24 @@
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.accountNumber" /><span class="must">*</span></th>
-    <td><input id="rentPayBankAccNo" name="rentPayBankAccNo" type="text" title="" placeholder="Account Number readonly" class="w100p readonly" readonly/>
+    <td><input id="rentPayBankAccNo" name="rentPayBankAccNo" type="text" placeholder="Account Number readonly" class="w100p readonly" readonly/>
         <input id="hiddenRentPayBankAccID" name="hiddenRentPayBankAccID" type="hidden" /></td>
     <th scope="row"><spring:message code="sal.text.accountType" /></th>
-    <td><input id="rentPayBankAccType" name="rentPayBankAccType" type="text" title="" placeholder="Account Type readonly" class="w100p readonly" readonly/></td>
+    <td><input id="rentPayBankAccType" name="rentPayBankAccType" type="text" placeholder="Account Type readonly" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.accountHolder" /></th>
-    <td><input id="accName" name="accName" type="text" title="" placeholder="Account Holder" class="w100p readonly" readonly/></td>
+    <td><input id="accName" name="accName" type="text" placeholder="Account Holder" class="w100p readonly" readonly/></td>
     <th scope="row"><spring:message code="sal.text.issueBankBranch" /></th>
-    <td><input id="accBranch" name="accBranch" type="text" title="" placeholder="Issue Bank Branch" class="w100p readonly" readonly/></td>
+    <td><input id="accBranch" name="accBranch" type="text" placeholder="Issue Bank Branch" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <spring:message code="sal.text.ddcChnl" var="ddcChnl"/> <!-- DEDUCTION CHANNEL -->
     <th scope="row">${ddcChnl}</th>
-    <td><input id="ddcChl" name="ddcChl" type="text" title="" placeholder="${ddcChnl}" class="w100p readonly" readonly />
+    <td><input id="ddcChl" name="ddcChl" type="text" placeholder="${ddcChnl}" class="w100p readonly" readonly />
     <input id="hiddenAccBankId" name="hiddenDdcChl" type="hidden" /></td>
     <th scope="row"><spring:message code="sal.text.issueBank" /></th>
-    <td><input id="accBank" name="accBank" type="text" title="" placeholder="Issue Bank" class="w100p readonly" readonly />
+    <td><input id="accBank" name="accBank" type="text" placeholder="Issue Bank" class="w100p readonly" readonly />
     <input id="hiddenAccBankId" name="hiddenAccBankId" type="hidden" /></td>
 </tr>
 </tbody>
@@ -3307,19 +3311,19 @@
     <label><input id="billMthdEmail2" name="billMthdEmail2" type="checkbox" disabled/><span><spring:message code="sal.text.email" /> 2</span></label>
     </td>
     <th scope="row"><spring:message code="sal.title.text.eamilOne" /><span id="spEmail1" class="must">*</span></th>
-    <td><input id="billMthdEmailTxt1" name="billMthdEmailTxt1" type="text" title="" placeholder="Email Address" class="w100p" disabled/></td>
+    <td><input id="billMthdEmailTxt1" name="billMthdEmailTxt1" type="text" placeholder="Email Address" class="w100p" disabled/></td>
 </tr>
 <tr>
     <td></td>
     <th scope="row"><spring:message code="sal.title.text.emailTwo" /></th>
-    <td><input id="billMthdEmailTxt2" name="billMthdEmailTxt2" type="text" title="" placeholder="Email Address" class="w100p" disabled/></td>
+    <td><input id="billMthdEmailTxt2" name="billMthdEmailTxt2" type="text" placeholder="Email Address" class="w100p" disabled/></td>
 </tr>
 <tr>
     <td>
     <label><input id="billGrpWeb" name="billGrpWeb" type="checkbox" /><span><spring:message code="sal.text.webPortal" /></span></label>
     </td>
     <th scope="row"><spring:message code="sal.text.webAddrUrl" /></th>
-    <td><input id="billGrpWebUrl" name="billGrpWebUrl" type="text" title="" placeholder="Web Address" class="w100p" /></td>
+    <td><input id="billGrpWebUrl" name="billGrpWebUrl" type="text" placeholder="Web Address" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -3355,39 +3359,39 @@
 <tr>
     <th scope="row"><spring:message code="sal.text.addressDetail" /><span class="must">*</span></th>
     <td colspan="3">
-    <input id="billAddrDtl" name="billAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly/>
+    <input id="billAddrDtl" name="billAddrDtl" type="text" placeholder="Address Detail" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.street" /></th>
     <td colspan="3">
-    <input id="billStreet" name="billStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/>
+    <input id="billStreet" name="billStreet" type="text" placeholder="Street" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.area" /><span class="must">*</span></th>
     <td colspan="3">
-    <input id="billArea" name="billArea" type="text" title="" placeholder="Area" class="w100p readonly" readonly/>
+    <input id="billArea" name="billArea" type="text" placeholder="Area" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.city" /><span class="must">*</span></th>
     <td>
-    <input id="billCity" name="billCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/>
+    <input id="billCity" name="billCity" type="text" placeholder="City" class="w100p readonly" readonly/>
     </td>
     <th scope="row"><spring:message code="sal.text.postCode" /><span class="must">*</span></th>
     <td>
-    <input id="billPostCode" name="billPostCode" type="text" title="" placeholder="Postcode" class="w100p readonly" readonly/>
+    <input id="billPostCode" name="billPostCode" type="text" placeholder="Postcode" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.state" /><span class="must">*</span></th>
     <td>
-    <input id="billState" name="billState" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
+    <input id="billState" name="billState" type="text" placeholder="State" class="w100p readonly" readonly/>
     </td>
     <th scope="row"><spring:message code="sal.text.country" /><span class="must">*</span></th>
     <td>
-    <input id="billCountry" name="billCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
+    <input id="billCountry" name="billCountry" type="text" placeholder="Country" class="w100p readonly" readonly/>
     </td>
 </tr>
 
@@ -3430,13 +3434,13 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.name" /><span class="must">*</span></th>
-    <td colspan="3"><input id="billPreferName" name="billPreferName" type="text" title="" placeholder="Name" class="w100p" readonly/></td>
+    <td colspan="3"><input id="billPreferName" name="billPreferName" type="text" placeholder="Name" class="w100p" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telO" /><span class="must">*</span></th>
-    <td><input id="billPreferTelO" name="billPreferTelO" type="text" title="" placeholder="Tel(Office)" class="w100p" readonly/></td>
+    <td><input id="billPreferTelO" name="billPreferTelO" type="text" placeholder="Tel(Office)" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.text.extNo" /><span class="must">*</span></th>
-    <td><input id="billPreferExt" name="billPreferExt" type="text" title="" placeholder="Ext No." class="w100p" readonly/></td>
+    <td><input id="billPreferExt" name="billPreferExt" type="text" placeholder="Ext No." class="w100p" readonly/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -3465,10 +3469,10 @@
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.billingGroup" /><span class="must">*</span></th>
-    <td><input id="billGrp" name="billGrp" type="text" title="" placeholder="Billing Group" class="readonly" readonly/><a id="billGrpBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    <td><input id="billGrp" name="billGrp" type="text" placeholder="Billing Group" class="readonly" readonly/><a id="billGrpBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <input id="hiddenBillGrpId" name="billGrpId" type="hidden" /></td>
     <th scope="row"><spring:message code="sal.text.billingType" /><span class="must">*</span></th>
-    <td><input id="billType" name="billType" type="text" title="" placeholder="Billing Type" class="w100p readonly" readonly/></td>
+    <td><input id="billType" name="billType" type="text" placeholder="Billing Type" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.billingAddress" /></th>
@@ -3536,34 +3540,34 @@
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.addressDetail" /><span class="must">*</span></th>
-    <td colspan="3"><input id="instAddrDtl" name="instAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly/></td>
+    <td colspan="3"><input id="instAddrDtl" name="instAddrDtl" type="text" placeholder="Address Detail" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.street" /><span class="must">*</span></th>
-    <td colspan="3"><input id="instStreet" name="instStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/></td>
+    <td colspan="3"><input id="instStreet" name="instStreet" type="text" placeholder="Street" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.area" /><span class="must">*</span></th>
-    <td colspan="3"><input id="instArea" name="instArea" type="text" title="" placeholder="Area" class="w100p readonly" readonly/></td>
+    <td colspan="3"><input id="instArea" name="instArea" type="text" placeholder="Area" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.city" /><span class="must">*</span></th>
     <td>
-    <input id="instCity" name="instCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/>
+    <input id="instCity" name="instCity" type="text" placeholder="City" class="w100p readonly" readonly/>
     </td>
     <th scope="row"><spring:message code="sal.text.postCode" /><span class="must">*</span></th>
     <td>
-    <input id="instPostCode" name="instPostCode" type="text" title="" placeholder="Post Code" class="w100p readonly" readonly/>
+    <input id="instPostCode" name="instPostCode" type="text" placeholder="Post Code" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.state" /><span class="must">*</span></th>
     <td>
-    <input id="instState" name="instState" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
+    <input id="instState" name="instState" type="text" placeholder="State" class="w100p readonly" readonly/>
     </td>
     <th scope="row"><spring:message code="sal.text.country" /><span class="must">*</span></th>
     <td>
-    <input id="instCountry" name="instCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
+    <input id="instCountry" name="instCountry" type="text" placeholder="Country" class="w100p readonly" readonly/>
     </td>
 </tr>
 
@@ -3601,39 +3605,39 @@
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.name" /><span class="must">*</span></th>
-    <td><input id="instCntcName" name="instCntcName" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="instCntcName" name="instCntcName" type="text" placeholder="" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.text.initial" /></th>
-    <td><input id="instInitial" name="instInitial" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="instInitial" name="instInitial" type="text" placeholder="" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.text.gender" /></th>
-    <td><input id="instGender" name="instGender" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="instGender" name="instGender" type="text" placeholder="" class="w100p" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.nric" /></th>
-    <td><input id="instNric" name="instNric" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="instNric" name="instNric" type="text" placeholder="" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.text.dob" /></th>
-    <td><input id="instDob" name="instDob" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="instDob" name="instDob" type="text" placeholder="" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.text.race" /></th>
-    <td><input id="instRaceId" name="instRaceId" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="instRaceId" name="instRaceId" type="text" placeholder="" class="w100p" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.email" /></th>
-    <td><input id="instCntcEmail" name="instCntcEmail" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="instCntcEmail" name="instCntcEmail" type="text" placeholder="" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.text.dept" /></th>
-    <td><input id="instDept" name="instDept" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="instDept" name="instDept" type="text" placeholder="" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.text.post" /></th>
-    <td><input id="instPost" name="instPost" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="instPost" name="instPost" type="text" placeholder="" class="w100p" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telM" /></th>
-    <td><input id="instCntcTelM" name="instCntcTelM" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="instCntcTelM" name="instCntcTelM" type="text" placeholder="" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.title.text.telR" /></th>
-    <td><input id="instCntcTelR" name="instCntcTelR" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="instCntcTelR" name="instCntcTelR" type="text" placeholder="" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.title.text.telO" /></th>
-    <td><input id="instCntcTelO" name="instCntcTelO" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="instCntcTelO" name="instCntcTelO" type="text" placeholder="" class="w100p" readonly/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.telF" /></th>
-    <td><input id="instCntcTelF" name="instCntcTelF" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="instCntcTelF" name="instCntcTelF" type="text" placeholder="" class="w100p" readonly/></td>
     <th scope="row"></th>
     <td></td>
     <th scope="row"></th>
@@ -3679,7 +3683,7 @@
     <th scope="row"><spring:message code="sal.title.text.perferInstTime" /><span class="must">*</span></th>
     <td>
     <div class="time_picker"><!-- time_picker start -->
-    <input id="prefInstTm" name="prefInstTm" type="text" title="" placeholder="Prefer Install Time (hh:mi tt)" class="time_date w100p" />
+    <input id="prefInstTm" name="prefInstTm" type="text" placeholder="Prefer Install Time (hh:mi tt)" class="time_date w100p" />
     <ul>
         <li>Time Picker</li>
         <li><a href="#">12:00 AM</a></li>
@@ -3761,13 +3765,13 @@
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.refNo" /><span class="must">*</span></th>
-    <td><input id="certRefNo" name="certRefNo" type="text" title="" placeholder="Cert Reference No" class="w100p" /></td>
+    <td><input id="certRefNo" name="certRefNo" type="text" placeholder="Cert Reference No" class="w100p" /></td>
     <th scope="row"><spring:message code="sal.title.text.certificateDate" /><span class="must">*</span></th>
     <td><input id="certRefDt" name="certRefDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
-    <td colspan="3"><input id="txtCertCustRgsNo" name="txtCertCustRgsNo" type="text" title="" placeholder="" class="w100p" /></td>
+    <td colspan="3"><input id="txtCertCustRgsNo" name="txtCertCustRgsNo" type="text" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
