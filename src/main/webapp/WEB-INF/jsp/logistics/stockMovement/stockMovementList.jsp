@@ -1027,12 +1027,12 @@
    </c:if>
   </ul>
 
-  <!-- Manual Interface exection-->
+  <!-- Manual Interface exection
   </br>
   <ul class="right_btns">
     <li><p class="btn_grid"><a id="bomItf">BOM ITF</a></p></li>
     <li><p class="btn_grid"><a id="stockItf">New stock ITF</a></p></li>
-  </ul>
+  </ul>-->
 
   <div id="main_grid_wrap" class="mt10" style="height: 450px"></div>
   <!--         <div id="sub_grid_wrap" class="mt10" style="height:350px"></div> -->
