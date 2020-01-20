@@ -251,7 +251,13 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
 
                                 if( (totTargetAmt + targetAmt) > payAmtDou ){
-                                	targetAmt =  payAmtDou - totTargetAmt;
+
+                              	  if( detailRowCnt-1 == j ){
+                              		  targetAmt = targetAmt;
+                              	  }else{
+                              		  targetAmt =  payAmtDou - totTargetAmt;
+                              	  }
+
                                 }else{
                                 	targetAmt = targetAmt;
                                 }
@@ -337,7 +343,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
                             formMap.put("ordNo", salesOrdNo);
                             formMap.put("paidAmt", 0 );
                             formMap.put("appType",  "RENTAL");
-                            formMap.put("targetAmt", gridListMap.get("payAmt"));
+                            formMap.put("targetAmt", gridListMap.get("advAmt"));
                             formMap.put("srvcContractID", 0);
                             formMap.put("billAsId", 0);
         					formMap.put("srvMemId", 0);
@@ -387,9 +393,11 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
             	gridListMap.put("userId", sUserId);
             	formInfo.put("userId", sUserId);
+
         		// 저장
-//            	System.out.println("++++ formInfo ::" + formInfo.toString() );
+
 ////            	System.out.println("++++ gridList ::" + gridList.toString() );
+//            	System.out.println("++++ formInfo ::" + formInfo.toString() );
 //            	System.out.println("++++ formList ::" + formList.toString() );
 
             	procSeq++;
