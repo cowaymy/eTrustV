@@ -95,7 +95,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			hcSetOrdYn = "Y";
 			salesOrderMVO2 = orderVO.getSalesOrderMVO2();
 			salesOrderMVO2.setAppTypeId(SalesConstants.APP_TYPE_CODE_ID_AUX);
-			BigDecimal discRntFee2 = salesOrderMVO2.getDiscRntFee();  // frame rental fee
+			BigDecimal discRntFee2 =  new BigDecimal(CommonUtils.intNvl(salesOrderMVO2.getDiscRntFee()));  // frame rental fee
 
 			// mattress order (mth_rent_amt, def_rent_amt) + frame order(disc_rnt_fee)
 			salesOrderMVO1.setMthRentAmt(salesOrderMVO1.getMthRentAmt().add(discRntFee2));
@@ -105,9 +105,10 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			salesOrderMVO2.setMthRentAmt(BigDecimal.ZERO);
 			salesOrderMVO2.setDefRentAmt(BigDecimal.ZERO);
 
-			BigDecimal norAmt2 = salesOrderMVO2.getNorAmt(); // frame NOR_AMT
+			BigDecimal norAmt1 = new BigDecimal(CommonUtils.intNvl(salesOrderMVO1.getNorAmt())); // frame NOR_AMT
+			BigDecimal norAmt2 = new BigDecimal(CommonUtils.intNvl(salesOrderMVO2.getNorAmt())); // frame NOR_AMT
 			// mattress order NOR_AMT + frame order NOR_AMT
-			salesOrderMVO1.setNorAmt(salesOrderMVO1.getNorAmt().add(norAmt2));
+			salesOrderMVO1.setNorAmt(norAmt1.add(norAmt2));
 			// frame order NOR_AMT = 0
 			salesOrderMVO2.setNorAmt(BigDecimal.ZERO);
 		}

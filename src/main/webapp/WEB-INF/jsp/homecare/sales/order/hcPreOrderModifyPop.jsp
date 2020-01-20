@@ -2412,21 +2412,21 @@
     </colgroup>
     <tbody>
         <tr>
-            <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
+            <th scope="row" style="font-weight: bold;"><spring:message code="sal.title.text.priceRpfRm" /></th>
             <td>
-                <input id="totOrdPrice" name="totOrdPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
+                <input id="totOrdPrice" name="totOrdPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" style="width:100%!important; font-weight: bold;" class="readonly" readonly />
             </td>
         </tr>
         <tr>
-            <th scope="row"><spring:message code="sal.title.text.finalRentalFees" /></th>
+            <th scope="row" style="font-weight: bold;"><spring:message code="sal.title.text.finalRentalFees" /></th>
             <td>
-                <input id="totOrdRentalFees" name="totOrdRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/>
+                <input id="totOrdRentalFees" name="totOrdRentalFees" type="text" title="" placeholder="" style="width:100%!important; font-weight: bold;" class="readonly" readonly/>
             </td>
         </tr>
         <tr>
-            <th scope="row"><spring:message code="sal.title.text.pv" /></th>
+            <th scope="row" style="font-weight: bold;"><spring:message code="sal.title.text.pv" /></th>
             <td>
-                <input id="totOrdPv" name="totOrdPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
+                <input id="totOrdPv" name="totOrdPv" type="text" title="" placeholder="Point Value (PV)" style="width:100%!important; font-weight: bold;" class="readonly" readonly />
             </td>
         </tr>
 		<tr>
