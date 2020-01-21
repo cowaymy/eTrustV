@@ -389,7 +389,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
   }
 
-  @Transactional
   private boolean doSaveInstallResult(EgovMap installResult, List<EgovMap> sirimList, SessionVO sessionVO)
       throws ParseException {
     String maxId = ""; // 각 테이블에 maxid 값 가져온다(다음 실행할 쿼리에 값을 넣기 위해 사용)
@@ -1316,7 +1315,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   }
 
   @Override
-  @Transactional
   public Map<String, Object> runInstSp(Map<String, Object> params, SessionVO sessionVO, String no) throws ParseException {
     Map<String, Object> resultValue = new HashMap<String, Object>();
     Map<String, Object> logPram = null;
@@ -1431,7 +1429,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   }
 
   @Override
-  @Transactional
   public Map<String, Object> insertInstallationResult(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
 	  Map<String, Object> resultValue = new HashMap<String, Object>();
 
@@ -1499,7 +1496,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   }
 
   @Override
-  @Transactional
   public Map<String, Object> insertInstallationResult_2(Map<String, Object> params, SessionVO sessionVO)
       throws ParseException {
     Map<String, Object> resultValue = new HashMap<String, Object>();
@@ -2604,7 +2600,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     return resultValue;
   }
 
-  @Transactional
   private boolean insertInstallation(int statusId, String ApptypeID, Map<String, Object> installResult,
       Map<String, Object> callEntry, Map<String, Object> callResult, Map<String, Object> orderLog,
       Map<String, Object> TaxinvoiceCompany, Map<String, Object> AccTradeLedger, Map<String, Object> AccOrderBill,
@@ -2756,7 +2751,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     return true;
   }
 
-  @Transactional
   private boolean insertInstallation_2(int statusId, String ApptypeID, Map<String, Object> installResult,
       Map<String, Object> callEntry, Map<String, Object> callResult, Map<String, Object> orderLog,
       Map<String, Object> TaxinvoiceCompany, Map<String, Object> AccTradeLedger, Map<String, Object> AccOrderBill,
