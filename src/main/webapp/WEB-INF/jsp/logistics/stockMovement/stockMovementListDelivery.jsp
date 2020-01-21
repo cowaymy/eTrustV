@@ -186,8 +186,12 @@
         dataType : "numeric",
         style: "aui-grid-user-custom-right",
         styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
-            if(item.serialRequireChkYn == "Y") {
-                return "aui-grid-link-renderer1";
+            if( item != null ) {
+	        	if(item.serialRequireChkYn == "Y") {
+	                return "aui-grid-link-renderer1";
+	            }
+            } else {
+            	return "";
             }
         },
         editRenderer : {
