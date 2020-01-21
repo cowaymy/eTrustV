@@ -8,30 +8,30 @@ var ordGridID;
 var timerId = null;
 
 $(document).ready(function() {
-	
+
 	createCcpAUIGrid();
 	createOrdAUIGrid();
-	
+
 //	AUIGrid.resize(ordGridID);
-	
+
 	//hidding OrdGrid
 	$("#ord_grid_wrap").css("display" , "none");
-	
+
 	 // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(ccpGridID, "cellDoubleClick", function(event){
         $("#_govAgId").val(event.item.govAgId);
         Common.popupDiv("/sales/ccp/selectAgreementMtcViewEditPop.do", $("#popForm").serializeJSON(), null , true , '_viewEditDiv');
     });
-	 
+
 	 //Move to Insert Page
     $("#_goToAddWindow").click(function() {
     	//self.location.href= "/sales/ccp/insertCcpAgreementSearch.do";
     	Common.popupDiv("/sales/ccp/newCcpAgreementSearchPop.do", $("#popForm").serializeJSON(), null , true , '_newDiv');
 	});
-	
+
     /* // 셀 클릭 이벤트 바인딩
     AUIGrid.bind(ccpGridID, "cellClick", function(event) {
-    	
+
     	//Grid 데이터 가져오기
     	$("#_ordAgId").val(event.item.govAgId);
     	Common.ajax("GET", "/sales/ccp/selectListOrdersAjax",  $("#ordGridForm").serialize(), function(result) {
@@ -40,34 +40,35 @@ $(document).ready(function() {
     	//Gird 보여주기
     	$("#ord_grid_wrap").css("display" , "");
     }); */
-    
+
     // 셀 클릭 이벤트 바인딩
     AUIGrid.bind(ccpGridID, "selectionChange", auiGridSelectionChangeHandler);
-	 
+
 });//Doc Ready Func End
 
-function auiGridSelectionChangeHandler(event) { 
-    
+function auiGridSelectionChangeHandler(event) {
+
     // 200ms 보다 빠르게 그리드 선택자가 변경된다면 데이터 요청 안함
     if(timerId) {
         clearTimeout(timerId);
     }
-    
+
     timerId = setTimeout(function() {
         var selectedItems = event.selectedItems;
         if(selectedItems.length <= 0)
             return;
-        
+
         var rowItem = selectedItems[0].item; // 행 아이템들
         var govAgId = rowItem.govAgId; // 선택한 행의 고객 ID 값
-        
+
         $("#_ordAgId").val(govAgId);
-        
+
         Common.ajax("GET", "/sales/ccp/selectListOrdersAjax",  $("#ordGridForm").serialize(), function(result) {
             AUIGrid.setGridData(ordGridID, result);
         });
         $("#ord_grid_wrap").css("display" , "");
-        
+        AUIGrid.resize("#ord_grid_wrap");/* 20200121 add */
+
     }, 200);  // 현재 200ms 민감도....환경에 맞게 조절하세요.
 };
 
@@ -94,15 +95,15 @@ $.fn.clearForm = function() {
 
 
 function fn_selectCcpAgreementListAjax(){
-	
+
 	Common.ajax("GET", "/sales/ccp/selectCcpAgreementJsonList",  $("#searchForm").serialize(), function(result) {
 		AUIGrid.setGridData(ccpGridID, result);
-		
+
    });
 }
 
 function createCcpAUIGrid(){
-	
+
 	var  columnLayout = [
 	      {dataField : "govAgBatchNo", headerText : '<spring:message code="sal.title.text.agrNo" />', width : "10%" , editable : false},
 	      {dataField : "name", headerText : '<spring:message code="sal.text.custName" />', width : "20%" , editable : false},
@@ -115,62 +116,62 @@ function createCcpAUIGrid(){
 	      {dataField : "govAgCrtDt", headerText : '<spring:message code="sal.text.created" />', width : "10%" , editable : false},
 	      {dataField : "govAgId", visible : false}
 	]
-	
+
 	//그리드 속성 설정
     var gridPros = {
 			usePaging           : true,         //페이징 사용
-            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 1,            
-            showStateColumn     : true,             
-            displayTreeOpen     : false,            
-     //       selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 1,
+            showStateColumn     : true,
+            displayTreeOpen     : false,
+     //       selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
-	
+
 	ccpGridID = GridCommon.createAUIGrid("#ccp_grid_wrap", columnLayout,'', gridPros);
 }
 
 function createOrdAUIGrid(){
-	
+
 	var orderColumnLayout = [
-                             
-                             {dataField : "salesOrdNo" , headerText :'<spring:message code="sal.title.ordNo" />' , width : "15%"},  
+
+                             {dataField : "salesOrdNo" , headerText :'<spring:message code="sal.title.ordNo" />' , width : "15%"},
                              {dataField : "codeName" , headerText : '<spring:message code="sal.title.status" />' , width : "15%"},
                              {dataField : "govAgItmStartDt" , headerText : '<spring:message code="sal.text.startDate" />' , width : "10%"},
                              {dataField : "govAgItmExprDt" , headerText : '<spring:message code="sal.text.expiryDate" />', width : "10%"},
                              {dataField : "name" , headerText : '<spring:message code="sal.title.text.customer" />' , width : "10%"},
-                             {dataField : "govAgItmInstResult" , headerText : '<spring:message code="sal.title.text.installResult" />' , width : "10%"},    
+                             {dataField : "govAgItmInstResult" , headerText : '<spring:message code="sal.title.text.installResult" />' , width : "10%"},
                              {dataField : "govAgItmRentResult" , headerText : '<spring:message code="sal.text.rentalStatus" />' , width : "10%"},
-                             {dataField : "userFullName" , headerText : '<spring:message code="sal.text.creator" />' , width : "10%"}, 
+                             {dataField : "userFullName" , headerText : '<spring:message code="sal.text.creator" />' , width : "10%"},
                              {dataField : "govAgItmCrtDt" , headerText : 'Created', width : "10%"}
        ];
-      
+
        //그리드 속성 설정
       var gridPros = {
-              
+
               usePaging           : true,         //페이징 사용
-              pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-              editable            : false,            
-              fixedColumnCount    : 1,            
-              showStateColumn     : true,             
-              displayTreeOpen     : false,            
- //             selectionMode       : "singleRow",  //"multipleCells",            
-              headerHeight        : 30,       
+              pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+              editable            : false,
+              fixedColumnCount    : 1,
+              showStateColumn     : true,
+              displayTreeOpen     : false,
+ //             selectionMode       : "singleRow",  //"multipleCells",
+              headerHeight        : 30,
               useGroupingPanel    : false,        //그룹핑 패널 사용
               skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
               wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
               showRowNumColumn    : true
           };
-      
+
       ordGridID = GridCommon.createAUIGrid("ord_grid_wrap", orderColumnLayout,'', gridPros);
-	
+
 }
 
 function popup(location){
@@ -183,13 +184,13 @@ function popup(location){
 	}else if(location == 'consignmentCourier'){
 		Common.popupDiv("/sales/ccp/ccpAgreementConsignmentCourierListingPop.do", $("#popForm").serializeJSON(), null, true);
 	}
-	
+
 }
 
 
 </script>
 <form id="ordGridForm">
-    <input type="hidden" id="_ordAgId" name="ordAgId">    
+    <input type="hidden" id="_ordAgId" name="ordAgId">
 </form>
 <form id="popForm">
     <input type="hidden" id="_govAgId" name="govAgId" >
