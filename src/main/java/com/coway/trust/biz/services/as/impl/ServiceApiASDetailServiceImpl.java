@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.services.RegistrationConstants;
 import com.coway.trust.api.mobile.services.as.ASFailJobRequestDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
@@ -23,6 +24,7 @@ import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.ServiceApiASDetailService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.util.CommonUtils;
 
@@ -549,7 +551,20 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         						throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
     						}
 
+        					spMap.put("pErrcode", "");
+        					spMap.put("pErrmsg", "");
             				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+            				String errCode = (String)spMap.get("pErrcode");
+  	                	  	String errMsg = (String)spMap.get("pErrmsg");
+
+  	                	  	logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
+  	                	  	logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
+
+  	                	  	// pErrcode : 000  = Success, others = Fail
+  	                	  	if (!"000".equals(errCode)) {
+  	                	  		throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+  	                	  	}
     					}else{
     						// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
         					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
