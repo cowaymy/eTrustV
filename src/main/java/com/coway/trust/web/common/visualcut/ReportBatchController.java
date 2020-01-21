@@ -1637,7 +1637,6 @@ public class ReportBatchController {
     LOGGER.info("[START] CowayDailySalesStatusHP_Adv...");
     Map<String, Object> params = new HashMap<>();
     String[] address =
-      /*{"jack@coway.com.my", "khongboon.soo@coway.com.my", "michael.choo@coway.com.my", "kahkit.chew@coway.com.my"} ;*/
       {
         "nicky.lam@coway.com.my",
         "eddie.toh@coway.com.my",
@@ -1647,6 +1646,13 @@ public class ReportBatchController {
         "thomas.chin@coway.com.my",
         "khongboon.soo@coway.com.my",
         "rachel.wong@coway.com.my",
+        "jypark30@coway.co.kr",// 박재영 부문장님 :
+        "enough06@coway.co.kr", //박상철 팀장 :
+        "rose3128@coway.co.kr", //조호기 팀장 :
+        "jenux@coway.co.kr", //조제석 차장 :
+        "smhong@coway.co.kr", //홍성민 차장 :
+        "yulyul@coway.co.kr",//- 정하율 과장 :
+        "ikchoul85@coway.co.kr",//- 조익철 과장 :
       };
     String email = "";
     email += "Dear All,\r\n\r\n";
@@ -1675,8 +1681,7 @@ public class ReportBatchController {
     LOGGER.info("[START] CowayDailySalesStatusCody...");
     Map<String, Object> params = new HashMap<>();
     String[] address =
-        /*{"jack@coway.com.my", "khongboon.soo@coway.com.my", "michael.choo@coway.com.my", "kahkit.chew@coway.com.my"} ;*/
-        {
+      {
           "nicky.lam@coway.com.my",
           "eddie.toh@coway.com.my",
           "joanne.chin@coway.com.my",
@@ -1685,6 +1690,13 @@ public class ReportBatchController {
           "thomas.chin@coway.com.my",
           "khongboon.soo@coway.com.my",
           "rachel.wong@coway.com.my",
+          "jypark30@coway.co.kr",// 박재영 부문장님 :
+          "enough06@coway.co.kr", //박상철 팀장 :
+          "rose3128@coway.co.kr", //조호기 팀장 :
+          "jenux@coway.co.kr", //조제석 차장 :
+          "smhong@coway.co.kr", //홍성민 차장 :
+          "yulyul@coway.co.kr",//- 정하율 과장 :
+          "ikchoul85@coway.co.kr",//- 조익철 과장 :
         };
     String email = "";
     email += "Dear All,\r\n\r\n";
