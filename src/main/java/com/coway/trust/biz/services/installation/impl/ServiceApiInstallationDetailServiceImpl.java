@@ -224,7 +224,22 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
         					logger.debug("+++ SP_SVC_BARCODE_SAVE params ::" + params.toString());
 
+        					spMap.put("pErrcode", "");
+        					spMap.put("pErrmsg", "");
             				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+            				String errCode = (String)spMap.get("pErrcode");
+  	                	  	String errMsg = (String)spMap.get("pErrmsg");
+
+            				// pErrcode : 000  = Success, others = Fail
+  	                	  	if (!"000".equals(errCode)) {
+      	                	  	String procTransactionId = transactionId;
+          	  					String procName = "Installation";
+          	  					String procKey = serviceNo;
+          	  					String procMsg = "Failed to Save";
+          	  					String errorMsg = "[API] " + errMsg;
+          	  					throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+  	                	  	}
     					}else{
     						// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
     						servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
@@ -351,7 +366,12 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 	    	if (null != rtnValue) {
 	    		HashMap spMap = (HashMap) rtnValue.get("spMap");
 	    		if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-	    			rtnValue.put("logerr", "Y");
+	    			String procTransactionId = serviceNo;
+    				String procName = "Installation";
+    				String procKey = serviceNo;
+    				String procMsg = "PRODUCT FAIL";
+    				String errorMsg = "PRODUCT FAIL";
+    				throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 	    		}
 	    		else {
 	    			if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
@@ -359,7 +379,25 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 	    			}
 	    		}
 
+	    		spMap.put("pErrcode", "");
+				spMap.put("pErrmsg", "");
 	    		servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+	    		String errCode = (String)spMap.get("pErrcode");
+          	  	String errMsg = (String)spMap.get("pErrmsg");
+
+          	  	logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
+          	  	logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
+
+          	  	// pErrcode : 000  = Success, others = Fail
+          	  	if (!"000".equals(errCode)) {
+              	  	String procTransactionId = serviceNo;
+    				String procName = "Installation";
+    				String procKey = serviceNo;
+    				String procMsg = "PRODUCT LOC NO DATA";
+    				String errorMsg = "PRODUCT LOC NO DATA";
+    				throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+          	  	}
 	    	}
 	    }
 	    else {
@@ -531,7 +569,25 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     						throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
 						}
 
+    					spMap.put("pErrcode", "");
+    					spMap.put("pErrmsg", "");
 						servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+						String errCode = (String)spMap.get("pErrcode");
+                	  	String errMsg = (String)spMap.get("pErrmsg");
+
+                	  	logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
+                	  	logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
+
+                	  	// pErrcode : 000  = Success, others = Fail
+                	  	if (!"000".equals(errCode)) {
+                	  		String procTransactionId = transactionId;
+        					String procName = "Installation";
+        					String procKey = serviceNo;
+        					String procMsg = "Failed to Save";
+        					String errorMsg = "[API] " + errMsg;
+        					throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+                	  	}
 					}
 				} catch (Exception e) {
 					String procTransactionId = transactionId;
