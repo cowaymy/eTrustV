@@ -59,8 +59,12 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "grdt",headerText :"<spring:message code='log.head.grdate'/>"                        ,width:120    ,height:30 },
                      {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>"                  ,width:120    ,height:30,  style: "aui-grid-user-custom-right",
                     	 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
-                             if(item.serialcheck == "Y" && item.serialRequireChkYn == "Y") {
-                                 return "aui-grid-link-renderer1";
+                    		 if( item != null ) {
+	                    		 if(item.serialcheck == "Y" && item.serialRequireChkYn == "Y") {
+	                                 return "aui-grid-link-renderer1";
+	                             }
+                    		 } else {
+                                 return "";
                              }
                          }
                      },
