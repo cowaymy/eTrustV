@@ -25,9 +25,9 @@
         Common.setMobilePopup(false, false, '');
 
         if(Common.checkPlatformType() == "mobile") {
-        	$('$popup_wrap').addClass("popup_wrap");
+        	$('#popup_wrap').addClass("popup_wrap");
         } else {
-        	$('$popup_wrap').addClass("popup_wrap pop_win");
+        	$('#popup_wrap').addClass("popup_wrap pop_win");
         }
 
         //j_date
