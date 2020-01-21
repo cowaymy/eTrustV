@@ -150,6 +150,7 @@ function SearchListAjax1(str) {
         sortingInfo[0] = { dataField : "updDt", sortType : -1 };
         AUIGrid.setSorting(rawFileGrid1, sortingInfo);
 
+        AUIGrid.resize(rawFileGrid1);
     });
 }
 function SearchListAjax2(str) {
@@ -164,6 +165,7 @@ function SearchListAjax2(str) {
         sortingInfo[0] = { dataField : "updDt", sortType : -1 };
         AUIGrid.setSorting(rawFileGrid2, sortingInfo);
 
+        AUIGrid.resize(rawFileGrid2);
     });
 }
 
