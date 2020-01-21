@@ -180,7 +180,25 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
         						throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
     						}
 
+        					spMap.put("pErrcode", "");
+        					spMap.put("pErrmsg", "");
         					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+        					String errCode = (String)spMap.get("pErrcode");
+  	                	  	String errMsg = (String)spMap.get("pErrmsg");
+
+        					logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
+  	                	  	logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
+
+  	                	  	// pErrcode : 000  = Success, others = Fail
+  	                	  	if (!"000".equals(errCode)) {
+      	                	  	String procTransactionId = transactionId;
+          	  					String procName = "HeartService";
+          	  					String procKey = serviceNo;
+          	  					String procMsg = "Failed to Save";
+          	  					String errorMsg = "[API] ERROR CODE : " + errCode + ", MSG : " + errMsg;
+          	  					throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+  	                	  	}
 
         					logger.debug("### SP_SVC_LOGISTIC_REQUEST_SERIAL params  : " + spMap.toString());
 
