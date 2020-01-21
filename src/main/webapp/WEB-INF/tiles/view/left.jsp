@@ -395,6 +395,16 @@
 
         }
     }
+
+    // new browser tab
+    function fn_menuNew(obj, menuCode, menuPath, fullPath, myMenuGroupCode, mnName, fromDtType, fromDtFieldNm, fromDtVal, toDtType, toDtFieldNm, toDtVal){ // [Woongjin Jun] Tab
+        var option = {
+                width: "1000px", // 창 가로 크기
+                height: "520px" // 창 세로 크기
+                 }
+         var win = window.open(menuPath, '_blank');
+          win.focus();
+    }
 </script>
 <!-- [Woongjin Jun] Tab -->
 <style type="text/css">
@@ -487,13 +497,21 @@
                 <ul>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
                         <!-- [Woongjin Jun] Tab -->
-                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.menuName}', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" class="${menuStatusClass}">${list.menuName}</a>
+                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.menuName}', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" class="${menuStatusClass}">${list.menuName}
+                        <c:if test="${list.pgmPath == '/sales/ccp/selectCalCcpList.do'}">
+                        <img src="${pageContext.request.contextPath}/resources/images/common/btn_plus.gif" alt="New Tab" onClick="javascript:fn_menuNew(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.menuName}', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" />
+                        </c:if>
+                        </a>
                         <!-- [Woongjin Jun] Tab -->
                         </c:when>
                         <c:otherwise>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
                         <!-- [Woongjin Jun] Tab -->
-                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.menuName}', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" class="${menuStatusClass}">${list.menuName}</a>
+                        <a id="a_${list.menuCode}" href="javascript:void(0);" onClick="javascript:fn_menu(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.menuName}', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" class="${menuStatusClass}">${list.menuName}
+                        <c:if test="${list.pgmPath == '/sales/ccp/selectCalCcpList.do'}">
+                        <img src="${pageContext.request.contextPath}/resources/images/common/btn_plus.gif" alt="New Tab" onClick="javascript:fn_menuNew(this, '${list.menuCode}', '${list.pgmPath}', '${list.pathName}', '', '${list.menuName}', '${list.fromDtType}', '${list.fromDtFieldNm}', '${list.fromDtVal}', '${list.toDtType}', '${list.toDtFieldNm}', '${list.toDtVal}');" />
+                        </c:if>
+                        </a>
                         <!-- [Woongjin Jun] Tab -->
                         </c:otherwise>
                         </c:choose>
