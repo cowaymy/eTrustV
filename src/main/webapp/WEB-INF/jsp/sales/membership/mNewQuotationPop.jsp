@@ -1084,9 +1084,9 @@ $(document).ready(function(){
 				rtnMsg += "<spring:message code="sal.alert.msg.notAllowPromotionDiscount" /> <br>";
 				rtnValue = false;
 			}
-			if (($("#cYear").val() != "24" )&& $("#cPromotionpac").val() == "31741") {
+			if ($("#cYear").val() == "12" && $("#cPromotionpac").val() == "31741") {
 
-				rtnMsg += "Subscription Year selected not 2 years. "+"<spring:message code="sal.alert.msg.notAllowPromotion" /> <br>";
+				rtnMsg += "Subscription Year selected 1 year. "+"<spring:message code="sal.alert.msg.notAllowPromotion" /> <br>";
 				rtnValue = false;
 			}
 		}
