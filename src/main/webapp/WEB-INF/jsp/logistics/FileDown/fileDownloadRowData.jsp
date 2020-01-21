@@ -222,7 +222,7 @@ function fileDown(rowIndex,str){
 </table><!-- table end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_wrap1"></div>
+<div id="grid_wrap1" style="width:100%; height:290px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -247,7 +247,7 @@ function fileDown(rowIndex,str){
 </table><!-- table end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_wrap2"></div>
+<div id="grid_wrap2" style="width:100%; height:290px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </form>
