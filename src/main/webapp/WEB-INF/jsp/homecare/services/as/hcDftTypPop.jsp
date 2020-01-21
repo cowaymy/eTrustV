@@ -199,10 +199,10 @@
     <!-- search_result start -->
     <ul class="right_btns">
      <li><p class="btn_grid">
-       <a href="#" onClick="fn_selectPstRequestDOListAjax();"><spring:message code='sys.btn.search'/></a>
+       <a href="#none" onClick="fn_selectPstRequestDOListAjax();"><spring:message code='sys.btn.search'/></a>
       </p></li>
      <li><p class="btn_grid">
-       <a href="#"><spring:message code='sys.btn.clear'/></a>
+       <a href="#none"><spring:message code='sys.btn.clear'/></a>
       </p></li>
     </ul>
     <article class="grid_wrap">

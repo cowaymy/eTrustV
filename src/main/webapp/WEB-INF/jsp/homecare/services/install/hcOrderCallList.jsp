@@ -244,24 +244,24 @@
 	</ul>
 	<aside class="title_line">
 		<!-- title_line start -->
-		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+		<p class="fav"><a href="#none" class="click_add_on">My menu</a></p>
 		<h2><spring:message code='service.title.OrderCallLogSearch' /></h2>
 		<ul class="right_btns">
 	        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 		   <li>
-		       <p class="btn_blue"><a href="#" onClick="fn_openAddCall()"><spring:message code='service.btn.addCallLogResult' /></a></p>
+		       <p class="btn_blue"><a href="#none" onClick="fn_openAddCall()"><spring:message code='service.btn.addCallLogResult' /></a></p>
 	        </li>
 	        </c:if>
 	        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	        <li>
 	            <p class="btn_blue">
-	                <a href="#" onClick="javascript:fn_orderCallList()"><span class="search"></span> <spring:message code='sys.btn.search' /></a>
+	                <a href="#none" onClick="javascript:fn_orderCallList()"><span class="search"></span> <spring:message code='sys.btn.search' /></a>
 	            </p>
 	        </li>
 	        </c:if>
 	        <li>
 	            <p class="btn_blue">
-	                <a href="#" onClick="javascript:fn_clear()"><span class="clear"></span> <spring:message code='sys.btn.clear' /></a>
+	                <a href="#none" onClick="javascript:fn_clear()"><span class="clear"></span> <spring:message code='sys.btn.clear' /></a>
 	            </p>
 	        </li>
 	    </ul>
@@ -402,7 +402,7 @@
 		<ul class="right_btns">
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 			<li>
-	            <p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate' /></a></p>
+	            <p class="btn_grid"><a href="#none" onClick="fn_excelDown()"><spring:message code='service.btn.Generate' /></a></p>
 			</li>
 		</c:if>
 		</ul>

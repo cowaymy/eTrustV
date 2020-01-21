@@ -110,7 +110,7 @@
   <h1>AS LEDGER</h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">
-     <a href="#">CLOSE</a>
+     <a href="#none">CLOSE</a>
     </p></li>
   </ul>
  </header>

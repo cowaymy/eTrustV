@@ -312,7 +312,7 @@ var serialGubun = "1";
   <h1>Installation Result - Product Exchange</h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">
-     <a href="#">CLOSE</a>
+     <a href="#none">CLOSE</a>
     </p></li>
   </ul>
  </header>
@@ -341,9 +341,9 @@ var serialGubun = "1";
    <section class="tap_wrap">
     <!-- tap_wrap start -->
     <ul class="tap_type1">
-     <li><a href="#" class="on">Installation Info</a></li>
-     <li><a href="#">Exchange Info</a></li>
-     <li><a href="#">Order Info</a></li>
+     <li><a href="#none" class="on">Installation Info</a></li>
+     <li><a href="#none">Exchange Info</a></li>
+     <li><a href="#none">Order Info</a></li>
     </ul>
     <article class="tap_area">
      <!-- tap_area start -->
@@ -612,7 +612,7 @@ var serialGubun = "1";
         <th scope="row">Before Stock</th>
         <td colspan="3"><span><c:out value="${viewDetail.exchangeInfo.c10} - ${viewDetail.exchangeInfo.c11} " /></span>
            <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.exchReturnSerialNo}" class="readonly" readonly/>
-           <p class="btn_grid" style="display:none" id="btnSerialEdit"><a href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
+           <p class="btn_grid" style="display:none" id="btnSerialEdit"><a href="#none" onClick="fn_serialModifyPop()">EDIT</a></p>
         </td>
      </tr>
      <tr>
@@ -630,7 +630,7 @@ var serialGubun = "1";
       <td colspan="3">
         <input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width: 100%;" id="ctCode" readonly="readonly" name="ctCode" />
         <input type="hidden" title="" value="${installResult.ctId}" placeholder="" class="" style="width: 200px;" id="CTID" name="CTID" />
-        <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
+        <!-- <p class="btn_sky"><a href="#none">Search</a></p></td> -->
         <%-- <th scope="row"><spring:message code='service.title.CTName' /></th>
               <td><input type="text" title="" placeholder=""
                 class="readonly w100p" readonly="readonly" id="ctName"
@@ -791,12 +791,12 @@ Name: ${orderInfo.name2}</textarea>
   <div id='sav_div'>
    <ul class="center_btns">
     <li><p class="btn_blue2">
-      <a href="#" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult' /></a>
+      <a href="#none" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult' /></a>
      </p></li>
    </ul>
   </div>
   <!-- <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_installProductExchangeSave()">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#none" onclick="fn_installProductExchangeSave()">Save</a></p></li>
 </ul> -->
   <!-- </form> -->
  </section>

@@ -140,15 +140,15 @@ $(document).ready(function() {
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="sal.title.text.ordSrch" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_closeOrdPop"><spring:message code="sal.btn.close" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#none" id="_closeOrdPop"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue"><span class="search"></span><a href="#" id="_orderSearchBtn"><spring:message code="sal.btn.search" /></a></p></li>
-    <li><p class="btn_blue"><span class="clear" ></span><a href="#" onclick="javascript:$('#_searchOrdForm').clearForm();"><spring:message code="sal.btn.clear" /></a></p></li>
+    <li><p class="btn_blue"><span class="search"></span><a href="#none" id="_orderSearchBtn"><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_blue"><span class="clear" ></span><a href="#none" onclick="javascript:$('#_searchOrdForm').clearForm();"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 <form id="_searchOrdForm" method="get">
 <table class="type1"><!-- table start -->

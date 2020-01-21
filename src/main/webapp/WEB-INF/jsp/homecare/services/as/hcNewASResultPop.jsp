@@ -2304,7 +2304,7 @@ function fnSerialSearchResult(data) {
    <h1><spring:message code='service.btn.addtAs'/></h1>
    <ul class="right_opt">
     <li><p class="btn_blue2">
-      <a href="#"><spring:message code='sys.btn.close' /></a>
+      <a href="#none"><spring:message code='sys.btn.close' /></a>
      </p></li>
    </ul>
   </header>
@@ -2318,9 +2318,9 @@ function fnSerialSearchResult(data) {
     <section class="tap_wrap">
      <!-- tap_wrap start -->
      <ul class="tap_type1">
-      <li><a href="#" class="on"><spring:message code='service.title.General' /></a></li>
-      <li><a href="#"><spring:message code='service.title.OrderInformation' /></a></li>
-      <li><a href="#" onclick=" javascirpt:AUIGrid.resize(regGridID, 950,300); "><spring:message code='service.title.asPassEvt' /></a></li>
+      <li><a href="#none" class="on"><spring:message code='service.title.General' /></a></li>
+      <li><a href="#none"><spring:message code='service.title.OrderInformation' /></a></li>
+      <li><a href="#none" onclick=" javascirpt:AUIGrid.resize(regGridID, 950,300); "><spring:message code='service.title.asPassEvt' /></a></li>
      </ul>
      <article class="tap_area">
       <!-- tap_area start -->
@@ -2448,7 +2448,7 @@ function fnSerialSearchResult(data) {
     <article class="acodi_wrap">
      <dl>
       <dt class="click_add_on on">
-       <a href="#"><spring:message code='service.title.asRstDtl' /></a>
+       <a href="#none"><spring:message code='service.title.asRstDtl' /></a>
       </dt>
       <dd>
        <table class="type1">
@@ -2504,7 +2504,7 @@ function fnSerialSearchResult(data) {
             <ul>
              <li><spring:message code='service.text.timePick' /></li>
              <c:forEach var="list" items="${timePick}" varStatus="status">
-              <li><a href="#">${list.codeName}</a></li>
+              <li><a href="#none">${list.codeName}</a></li>
              </c:forEach>
             </ul>
            </div>
@@ -2562,7 +2562,7 @@ function fnSerialSearchResult(data) {
           <td>
             <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly style="width:70%"/>
             <p id="s2" class="btn_grid">
-               <a href="#" onClick="fn_serialModifyPop()">EDIT</a>
+               <a href="#none" onClick="fn_serialModifyPop()">EDIT</a>
             </p>
           </td>
          </tr>
@@ -2571,7 +2571,7 @@ function fnSerialSearchResult(data) {
       </dd>
 
       <dt class="click_add_on" id='recall_dt' onclick="fn_secChk(this);">
-       <a href="#"><spring:message code='service.title.asCallLog' /></a>
+       <a href="#none"><spring:message code='service.title.asCallLog' /></a>
       </dt>
       <dd id='recall_div' style="display: none">
        <table class="type1">
@@ -2622,7 +2622,7 @@ function fnSerialSearchResult(data) {
       </dd>
 
       <dt class="click_add_on" id='defEvt_dt' onclick="fn_secChk(this);">
-       <a href="#"><spring:message code='service.title.asDefEnt' /></a>
+       <a href="#none"><spring:message code='service.title.asDefEnt' /></a>
       </dt>
       <dd id='defEvt_div' style="display: none">
        <table class="type1">
@@ -2693,7 +2693,7 @@ function fnSerialSearchResult(data) {
       </dd>
 
       <dt class="click_add_on" id='chrFee_dt' onclick="fn_secChk(this);">
-       <a href="#"><spring:message code='home.title.asPrtChr' /></a>
+       <a href="#none"><spring:message code='home.title.asPrtChr' /></a>
       </dt>
       <dd id='chrFee_div' style="display: none">
        <table class="type1">
@@ -2790,10 +2790,10 @@ function fnSerialSearchResult(data) {
        <!-- table end -->
        <ul class="center_btns">
         <li><p class="btn_blue2">
-          <a href="#" onclick="fn_filterAdd()"><spring:message code='sys.btn.add' /></a>
+          <a href="#none" onclick="fn_filterAdd()"><spring:message code='sys.btn.add' /></a>
          </p></li>
         <li><p class="btn_blue2">
-          <a href="#" onclick="fn_filterClear()"><spring:message code='sys.btn.clear' /></a>
+          <a href="#none" onclick="fn_filterClear()"><spring:message code='sys.btn.clear' /></a>
          </p></li>
        </ul>
        <article class="grid_wrap">
@@ -2805,7 +2805,7 @@ function fnSerialSearchResult(data) {
 
       <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
       <!-- <dt class="click_add_on" id='inHouse_dt' onclick="fn_secChk(this);">
-       <a href="#">In-House Repair Entry</a>
+       <a href="#none">In-House Repair Entry</a>
       </dt>
       <dd id='inHouseRepair_div' style="display: none">
        <table class="type1">
@@ -2857,12 +2857,12 @@ function fnSerialSearchResult(data) {
 
     <ul class="center_btns mt20" id='btnSaveDiv'>
      <li><p class="btn_blue2 big">
-       <a href="#" onclick="fn_doSave()"><spring:message code='sys.btn.save' /></a>
+       <a href="#none" onclick="fn_doSave()"><spring:message code='sys.btn.save' /></a>
       </p>
      </li>
      <li>
        <p class="btn_blue2 big">
-         <a href="#" onclick="javascript:fn_doClear();"><spring:message code='sys.btn.clear' /></a>
+         <a href="#none" onclick="javascript:fn_doClear();"><spring:message code='sys.btn.clear' /></a>
       </p>
      </li>
     </ul>

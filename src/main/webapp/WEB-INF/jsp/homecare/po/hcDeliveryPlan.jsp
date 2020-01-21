@@ -856,7 +856,7 @@ function fn_isDateValidate(sValidDt){
 
 
   <aside class="title_line"><!-- title_line start -->
-    <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+    <p class="fav"><a href="#none" class="click_add_on">My menu</a></p>
     <h2>Production Plans</h2>
 
     <ul class="right_btns">

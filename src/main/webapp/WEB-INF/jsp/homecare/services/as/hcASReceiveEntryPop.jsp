@@ -190,10 +190,10 @@
         <td>
           <input type="text" title="" placeholder="" class="" id="entry_orderNo" name="entry_orderNo" />
           <p class="btn_sky">
-            <a href="#" onClick="fn_checkASReceiveEntryConfirmation()"><spring:message code='pay.combo.confirm'/></a>
+            <a href="#none" onClick="fn_checkASReceiveEntryConfirmation()"><spring:message code='pay.combo.confirm'/></a>
            </p>
            <p class="btn_sky">
-            <a href="#" onclick="fn_goCustSearch()"><spring:message code='sys.btn.search'/></a>
+            <a href="#none" onclick="fn_goCustSearch()"><spring:message code='sys.btn.search'/></a>
            </p></td>
        </tr>
       </tbody>

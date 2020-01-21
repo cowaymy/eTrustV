@@ -1249,7 +1249,7 @@
     </h1>
     <ul class="right_opt">
      <li><p class="btn_blue2">
-       <a href="#"  id="btnClose"><spring:message code='sys.btn.close' /></a>
+       <a href="#none"  id="btnClose"><spring:message code='sys.btn.close' /></a>
       </p></li>
     </ul>
    </header>
@@ -1272,7 +1272,7 @@
          <input type="text" title="" id="entry_orderNo" name="entry_orderNo" value="${orderDetail.basicInfo.ordNo}"
           placeholder="<spring:message code='service.placeHolder.ordNo' />" class="readonly " readonly="readonly" />
           <p class="btn_sky" id="rbt">
-           <a href="#" onclick="fn_doReset()"><spring:message code='sal.btn.reselect' /></a>
+           <a href="#none" onclick="fn_doReset()"><spring:message code='sal.btn.reselect' /></a>
           </p>
         </td>
        </tr>
@@ -1287,9 +1287,9 @@
        <!-- tap_wrap start -->
        <section class="tap_wrap">
            <ul class="tap_type1">
-	        <li><a href="#" class="on"><spring:message code='sal.tap.title.ordInfo' /></a></li>
-	        <li><a href="#" onclick="fn_gird_resize()"><spring:message code='sal.title.text.afterService' /></a></li>
-	        <li><a href="#" onclick="fn_gird_resize()"><spring:message code='sal.title.text.beforeService' /></a></li>
+	        <li><a href="#none" class="on"><spring:message code='sal.tap.title.ordInfo' /></a></li>
+	        <li><a href="#none" onclick="fn_gird_resize()"><spring:message code='sal.title.text.afterService' /></a></li>
+	        <li><a href="#none" onclick="fn_gird_resize()"><spring:message code='sal.title.text.beforeService' /></a></li>
            </ul>
            <article class="tap_area">
 	       <!------------------------------------------------------------------------------
@@ -1352,7 +1352,7 @@
                <ul>
                 <li><spring:message code='service.text.timePick' /></li>
                 <c:forEach var="list" items="${timePick}" varStatus="status">
-                  <li><a href="#">${list.codeName}</a></li>
+                  <li><a href="#none">${list.codeName}</a></li>
                 </c:forEach>
                </ul>
               </div>
@@ -1365,7 +1365,7 @@
            <ul>
             <li><spring:message code='service.text.timePick' /></li>
             <c:forEach var="list" items="${timePick}" varStatus="status">
-              <li><a href="#">${list.codeName}</a></li>
+              <li><a href="#none">${list.codeName}</a></li>
             </c:forEach>
            </ul>
           </div>
@@ -1465,7 +1465,7 @@
         <!-- <tr>
          <th scope="row"></th>
          <td colspan="7"><p class="btn_sky">
-           <a href="#" onclick="fn_addRemark()"><spring:message code='service.title.AddRmk' /></a>
+           <a href="#none" onclick="fn_addRemark()"><spring:message code='service.title.AddRmk' /></a>
           </p></td>
         </tr> -->
         <!-- </c:if>  -->
@@ -1496,10 +1496,10 @@
       </div>
       <ul class="center_btns" id='save_bt_div'>
        <li><p class="btn_blue2 big">
-         <a href="#" onClick="fn_doSave()"><spring:message code='service.btn.Save' /></a>
+         <a href="#none" onClick="fn_doSave()"><spring:message code='service.btn.Save' /></a>
         </p></li>
        <!-- <li><p class="btn_blue2 big">
-         <a href="#" onClick="fn_rstFrm()"><spring:message code='service.btn.Clear' /></a>
+         <a href="#none" onClick="fn_rstFrm()"><spring:message code='service.btn.Clear' /></a>
         </p></li> -->
       </ul>
      </section>

@@ -1154,7 +1154,7 @@ function SearchListAjax(obj){
    <h1><spring:message code='service.title.asEdtBscRst'/></h1>
    <ul class="right_opt">
     <li><p class="btn_blue2">
-      <a href="#"><spring:message code='sys.btn.close' /></a>
+      <a href="#none"><spring:message code='sys.btn.close' /></a>
      </p></li>
    </ul>
   </header>
@@ -1164,9 +1164,9 @@ function SearchListAjax(obj){
    <section class="tap_wrap">
     <!-- tap_wrap start -->
     <ul class="tap_type1">
-     <li><a href="#" class="on"><spring:message code='service.title.General' /></a></li>
-     <li><a href="#"><spring:message code='service.title.OrderInformation' /></a></li>
-     <li><a href="#" onclick=" javascirpt:AUIGrid.resize(regGridID, 950,300);  "><spring:message code='service.title.asPassEvt' /></a></li>
+     <li><a href="#none" class="on"><spring:message code='service.title.General' /></a></li>
+     <li><a href="#none"><spring:message code='service.title.OrderInformation' /></a></li>
+     <li><a href="#none" onclick=" javascirpt:AUIGrid.resize(regGridID, 950,300);  "><spring:message code='service.title.asPassEvt' /></a></li>
     </ul>
     <article class="tap_area">
      <!-- tap_area start -->
@@ -1297,7 +1297,7 @@ function SearchListAjax(obj){
 
      <!-- GENERAL -->
      <dt class="click_add_on on">
-      <a href="#"><spring:message code='service.title.asRstDtl' /></a>
+      <a href="#none"><spring:message code='service.title.asRstDtl' /></a>
      </dt>
      <dd>
       <table class="type1">
@@ -1341,7 +1341,7 @@ function SearchListAjax(obj){
            <ul>
              <li><spring:message code='service.text.timePick' /></li>
              <c:forEach var="list" items="${timePick}" varStatus="status">
-               <li><a href="#">${list.codeName}</a></li>
+               <li><a href="#none">${list.codeName}</a></li>
              </c:forEach>
           </ul>
           </div>
@@ -1400,7 +1400,7 @@ function SearchListAjax(obj){
          <td>
             <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly style="width:70%"/>
             <p id="s2" class="btn_grid">
-               <a href="#" onClick="fn_serialModifyPop()">EDIT</a>
+               <a href="#none" onClick="fn_serialModifyPop()">EDIT</a>
             </p>
          </td>
         </tr>
@@ -1417,7 +1417,7 @@ function SearchListAjax(obj){
 
      <!-- CALL LOG -->
      <!-- <dt class="click_add_on" id='recall_dt' onclick="fn_secChk(this);">
-       <a href="#"><spring:message code='service.title.asCallLog' /></a>
+       <a href="#none"><spring:message code='service.title.asCallLog' /></a>
      </dt>
      <dd id='recall_div' style="display: none">
      <table class="type1">
@@ -1468,7 +1468,7 @@ function SearchListAjax(obj){
 
     <!-- DEFECTIVE EVENT -->
     <dt class="click_add_on on">
-     <a href="#"><spring:message code='service.title.asDefEnt' /></a>
+     <a href="#none"><spring:message code='service.title.asDefEnt' /></a>
     </dt>
     <dd>
       <table class="type1">
@@ -1539,7 +1539,7 @@ function SearchListAjax(obj){
 
      <!-- IN HOUSE REPAIR -->
      <!-- <dt class="click_add_on">
-      <a href="#">In-House Repair Entry</a>
+      <a href="#none">In-House Repair Entry</a>
      </dt>
      <dd id='inHouseRepair_div' style="display: none">
       <table class="type1">
@@ -1591,7 +1591,7 @@ function SearchListAjax(obj){
    <!-- acodi_wrap end -->
    <ul class="center_btns mt20">
     <li><p class="btn_blue2 big">
-      <a href="#" onclick="fn_doSave()"><spring:message code='sys.btn.save' /></a>
+      <a href="#none" onclick="fn_doSave()"><spring:message code='sys.btn.save' /></a>
      </p></li>
    </ul>
   </section>

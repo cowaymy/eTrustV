@@ -202,7 +202,7 @@ function fn_asaAssignCtOderList(){
 <h1>Assign DT Change</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="javascript:fn_ctChange();" >Assign DT Change</a></p></li>
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#none">CLOSE</a></p></li>
 </ul>
 
 </header><!-- pop_header end -->
@@ -220,8 +220,8 @@ function fn_asaAssignCtOderList(){
         <div class="border_box" style="height:400px"><!-- border_box start -->
 
         <ul class="right_btns">
-        <!--     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-            <li><p class="btn_grid"><a href="#">NEW</a></p></li> -->
+        <!--     <li><p class="btn_grid"><a href="#none">EDIT</a></p></li>
+            <li><p class="btn_grid"><a href="#none">NEW</a></p></li> -->
         </ul>
 
         <article class="grid_wrapCd"><!-- grid_wrap start -->
@@ -240,8 +240,8 @@ function fn_asaAssignCtOderList(){
         <div class="border_box" style="height:400px; width: 450px"><!-- border_box start -->
 
         <ul class="right_btns">
-        <!--     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-            <li><p class="btn_grid"><a href="#">NEW</a></p></li> -->
+        <!--     <li><p class="btn_grid"><a href="#none">EDIT</a></p></li>
+            <li><p class="btn_grid"><a href="#none">NEW</a></p></li> -->
         </ul>
 
         <article class="grid_wrapCust"><!-- grid_wrap start -->

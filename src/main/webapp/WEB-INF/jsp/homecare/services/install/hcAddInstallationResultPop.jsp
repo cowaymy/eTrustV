@@ -324,7 +324,7 @@ var serialGubun = "1";
   </h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">
-     <a href="#"><spring:message code='expense.CLOSE' /></a>
+     <a href="#none"><spring:message code='expense.CLOSE' /></a>
     </p></li>
   </ul>
  </header>
@@ -334,15 +334,15 @@ var serialGubun = "1";
   <section class="tap_wrap">
    <!-- tap_wrap start -->
    <ul class="tap_type1">
-     <li><a href="#" id="orderInfo" class="on"><spring:message
+     <li><a href="#none" id="orderInfo" class="on"><spring:message
        code='sales.tap.order' /></a></li>
-     <li><a href="#"><spring:message
+     <li><a href="#none"><spring:message
        code='service.title.General' /></a></li>
-    <li><a href="#"><spring:message
+    <li><a href="#none"><spring:message
        code='sales.tap.customerInfo' /></a></li>
-    <li><a href="#"><spring:message
+    <li><a href="#none"><spring:message
        code='sales.tap.installationInfo' /></a></li>
-    <li><a href="#"><spring:message code='sales.tap.HPInfo' /></a></li>
+    <li><a href="#none"><spring:message code='sales.tap.HPInfo' /></a></li>
    </ul>
 
    <!-- Order Information Start -->
@@ -850,7 +850,7 @@ var serialGubun = "1";
        placeholder="" class="readonly" style="width: 100%;" id="ctCode"
        readonly="readonly" name="ctCode" /> <input type="hidden"
        title="" value="${installResult.ctId}" placeholder="" class=""
-       style="width: 200px;" id="CTID" name="CTID" /> <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
+       style="width: 200px;" id="CTID" name="CTID" /> <!-- <p class="btn_sky"><a href="#none">Search</a></p></td> -->
        <%-- <th scope="row"><spring:message code='service.title.CTName'/></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ctName" name="ctName"/></td> --%>
      </tr>
@@ -999,7 +999,7 @@ var serialGubun = "1";
   <div id='sav_div'>
    <ul class="center_btns">
     <li><p class="btn_blue2">
-      <a href="#" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult' /></a>
+      <a href="#none" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult' /></a>
      </p></li>
    </ul>
   </div>

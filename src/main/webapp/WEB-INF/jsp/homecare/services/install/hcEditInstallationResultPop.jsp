@@ -145,7 +145,7 @@
   </h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">
-     <a href="#"><spring:message code='expense.CLOSE' /></a>
+     <a href="#none"><spring:message code='expense.CLOSE' /></a>
     </p></li>
   </ul>
  </header>
@@ -155,7 +155,7 @@
   <section class="tap_wrap">
    <!-- tap_wrap start -->
    <ul class="tap_type1">
-     <li><a href="#" id="orderInfo" class="on"><spring:message
+     <li><a href="#none" id="orderInfo" class="on"><spring:message
        code='sales.tap.order' /></a></li>
      </ul>
        <!-- Order Information Start -->
@@ -284,7 +284,7 @@
    <br/>
    <ul class="center_btns">
     <li><p class="btn_blue2">
-      <a href="#" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult' /></a>
+      <a href="#none" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult' /></a>
      </p></li>
    </ul>
   </section>

@@ -249,7 +249,7 @@ var branchDs = [];
   </h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">
-     <a href="#"><spring:message code='expense.CLOSE' /></a>
+     <a href="#none"><spring:message code='expense.CLOSE' /></a>
     </p></li>
   </ul>
  </header>
@@ -408,11 +408,11 @@ var branchDs = [];
   <!-- search_table end -->
   <ul class="center_btns">
    <li><p class="btn_blue2 big">
-     <a href="#" onclick="javascript:fn_openReport()"><spring:message
+     <a href="#none" onclick="javascript:fn_openReport()"><spring:message
        code='service.btn.Generate' /></a>
     </p></li>
    <li><p class="btn_blue2 big">
-     <a href="#" onclick="javascript:fn_clear()"><spring:message
+     <a href="#none" onclick="javascript:fn_clear()"><spring:message
        code='service.btn.Clear' /></a>
     </p></li>
   </ul>

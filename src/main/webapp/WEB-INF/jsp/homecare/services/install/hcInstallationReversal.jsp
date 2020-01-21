@@ -439,7 +439,7 @@ function fn_close(){
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+<p class="fav"><a href="#none" class="click_add_on">My menu</a></p>
 <h2><spring:message code='service.title.InstallationResultReversalList'/></h2>
 </aside><!-- title_line end -->
 
@@ -659,7 +659,7 @@ function fn_close(){
 	</tbody>
 	</table>
 	<ul class="center_btns">
-	    <li><p class="btn_blue2 big" id="btnReverse"><a href="#" onclick="javascript:save_confirm()"><spring:message code='service.btn.ConfirmToReverse'/></a></p></li>
+	    <li><p class="btn_blue2 big" id="btnReverse"><a href="#none" onclick="javascript:save_confirm()"><spring:message code='service.btn.ConfirmToReverse'/></a></p></li>
 	</ul>
 </form>
 </div>

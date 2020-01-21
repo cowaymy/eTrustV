@@ -141,7 +141,7 @@ function fn_winClose(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>Installation Result</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#none">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

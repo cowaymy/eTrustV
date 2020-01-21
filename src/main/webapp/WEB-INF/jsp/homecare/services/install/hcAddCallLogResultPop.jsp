@@ -282,7 +282,7 @@
         <ul class="right_opt">
 	    <li>
             <p class="btn_blue2">
-                <a href="#"><spring:message code='sys.btn.close' /></a>
+                <a href="#none"><spring:message code='sys.btn.close' /></a>
             </p>
         </li>
 	    </ul>
@@ -295,7 +295,7 @@
             <!-- acodi_wrap start -->
             <dl>
                 <dt class="click_add_on on">
-		            <a href="#"><spring:message code='service.title.CallLogInformationTransaction' /></a>
+		            <a href="#none"><spring:message code='service.title.CallLogInformationTransaction' /></a>
                 </dt>
                 <dd>
                     <!-- table start -->
@@ -383,7 +383,7 @@
                 <!-- grid_wrap end -->
             </dd>
             <dt class="click_add_on">
-		        <a href="#"><spring:message code='service.title.OrderFullDetails' /></a>
+		        <a href="#none"><spring:message code='service.title.OrderFullDetails' /></a>
 		    </dt>
 		    <dd>
 				<!------------------------------------------------------------------------------
@@ -521,10 +521,10 @@
     <div id='sav_div'>
 	    <ul class="center_btns" id="hiddenBtn">
 		    <li>
-	            <p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">Save</a></p>
+	            <p class="btn_blue2 big"><a href="#none" onclick="fn_saveConfirm()">Save</a></p>
 	        </li>
 		    <li>
-	            <p class="btn_blue2 big"><a href="#">Clear</a></p>
+	            <p class="btn_blue2 big"><a href="#none">Clear</a></p>
 	        </li>
 	    </ul>
     </div>

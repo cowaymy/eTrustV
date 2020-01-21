@@ -341,7 +341,7 @@
  <aside class="title_line">
   <!-- title_line start -->
   <p class="fav">
-   <a href="#" class="click_add_on">My menu</a>
+   <a href="#none" class="click_add_on">My menu</a>
   </p>
   <h2>
    <spring:message code='service.title.InstallationResultList' />
@@ -349,17 +349,17 @@
   <ul class="right_btns">
    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onClick="javascript:fn_assginCTTransfer()"><spring:message code='home.btn.assginDTTransfer' /></a>
+      <a href="#none" onClick="javascript:fn_assginCTTransfer()"><spring:message code='home.btn.assginDTTransfer' /></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="javascript:fn_installationListSearch()"><span class="search"></span>
+      <a href="#none" onclick="javascript:fn_installationListSearch()"><span class="search"></span>
       <spring:message code='sys.btn.search' /></a>
      </p></li>
    </c:if>
    <li><p class="btn_blue">
-     <a href="#" onClick="javascript:fn_clear()"><span class="clear"></span>
+     <a href="#none" onClick="javascript:fn_clear()"><span class="clear"></span>
      <spring:message code='sal.btn.clear' /></a>
     </p></li>
   </ul>
@@ -518,7 +518,7 @@
    <aside class="link_btns_wrap">
     <!-- link_btns_wrap start -->
     <p class="show_btn">
-     <a href="#"><img
+     <a href="#none"><img
       src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif"
       alt="link show" /></a>
     </p>
@@ -542,35 +542,35 @@
       <ul class="btns">
        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_doActiveList()"><spring:message
+          <a href="#none" onclick="javascript:fn_doActiveList()"><spring:message
             code='service.btn.DOActiveList' /></a>
          </p></li>
          <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_installNoteListing()"><spring:message
+          <a href="#none" onclick="javascript:fn_installNoteListing()"><spring:message
             code='service.btn.InstallationNoteListing' /></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_installationNote()"><spring:message
+          <a href="#none" onclick="javascript:fn_installationNote()"><spring:message
             code='service.btn.InstallationNote' /></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_installBookListing()"><spring:message
+          <a href="#none" onclick="javascript:fn_installBookListing()"><spring:message
             code='service.btn.InstallationLogBookListing' /></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_installRawData()"><spring:message
+          <a href="#none" onclick="javascript:fn_installRawData()"><spring:message
             code='service.btn.InstallationRawData' /></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_installFreeGiftList()"><spring:message
+          <a href="#none" onclick="javascript:fn_installFreeGiftList()"><spring:message
             code='service.btn.InstallationFreeGiftList' /></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_dailyDscReport()"><spring:message
+          <a href="#none" onclick="javascript:fn_dailyDscReport()"><spring:message
             code='service.btn.DailyDSCReport' /></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="javascript:fn_DscReport()"><spring:message
+          <a href="#none" onclick="javascript:fn_DscReport()"><spring:message
             code='service.btn.DSCReport' /></a>
          </p></li>
        </c:if>
@@ -579,13 +579,13 @@
          <!-- By KV - Install Mobile Failure Listing -->
              <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
          <li><p class="link_btn type2">
-               <a href="#" onclick="javascript:fn_InstallMobileFailureListing()"><spring:message
+               <a href="#none" onclick="javascript:fn_InstallMobileFailureListing()"><spring:message
                    code='service.btn.MobileFailListInst' /></a>
               </p></li>
           </c:if>
        </ul>
       <p class="hide_btn">
-       <a href="#"><img
+       <a href="#none"><img
         src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
         alt="hide" /></a>
       </p>
@@ -597,7 +597,7 @@
    <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
      <li><p class="btn_grid">
-       <a href="#" onClick="fn_excelDown()"><spring:message
+       <a href="#none" onClick="fn_excelDown()"><spring:message
          code='service.btn.Generate' /></a>
       </p></li>
     </c:if>

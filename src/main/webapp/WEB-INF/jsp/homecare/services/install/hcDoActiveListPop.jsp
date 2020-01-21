@@ -194,7 +194,7 @@ function fn_Generate(){
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code='service.title.DOActiveList'/></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE'/></a></p></li>
+    <li><p class="btn_blue2"><a href="#none"><spring:message code='expense.CLOSE'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -327,8 +327,8 @@ function fn_Generate(){
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_Generate()"><spring:message code='service.btn.Generate'/></a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#installationActiveForm').clearForm();"><spring:message code='service.btn.Clear'/></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#none" onclick="javascript:fn_Generate()"><spring:message code='service.btn.Generate'/></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#none" onclick="javascript:$('#installationActiveForm').clearForm();"><spring:message code='service.btn.Clear'/></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

@@ -2344,7 +2344,7 @@
   <!-- acodi_wrap start -->
   <dl>
    <dt class="click_add_on on">
-    <a href="#"><spring:message code='service.title.asRstDtl' /></a>
+    <a href="#none"><spring:message code='service.title.asRstDtl' /></a>
    </dt>
    <dd>
     <table class="type1">
@@ -2405,7 +2405,7 @@
          <ul>
           <li><spring:message code='service.text.timePick' /></li>
           <c:forEach var="list" items="${timePick}" varStatus="status">
-            <li><a href="#">${list.codeName}</a></li>
+            <li><a href="#none">${list.codeName}</a></li>
           </c:forEach>
          </ul>
         </div>
@@ -2483,7 +2483,7 @@
    </dd>
 
    <dt class="click_add_on" id='recall_dt' onclick="fn_secChk(this);">
-     <a href="#"><spring:message code='service.title.asCallLog' /></a>
+     <a href="#none"><spring:message code='service.title.asCallLog' /></a>
    </dt>
    <dd id='recall_div' style="display: none">
      <table class="type1">
@@ -2535,7 +2535,7 @@
 
 
    <dt class="click_add_on" id='defEvt_dt' onclick="fn_secChk(this);">
-    <a href="#"><spring:message code='service.title.asDefEnt' /></a>
+    <a href="#none"><spring:message code='service.title.asDefEnt' /></a>
    </dt>
    <dd id='defEvt_div' style="display: none">
     <table class="type1">
@@ -2597,7 +2597,7 @@
    </dd>
 
    <dt class="click_add_on" id='chrFee_dt' onclick="fn_secChk(this);">
-    <a href="#"><spring:message code='service.title.asPrtChr' /></a>
+    <a href="#none"><spring:message code='service.title.asPrtChr' /></a>
    </dt>
    <dd id='chrFee_div' style="display: none">
     <table class="type1">
@@ -2699,10 +2699,10 @@
     <div id='addDiv'>
     <ul class="center_btns">
      <li><p class="btn_blue2">
-       <a href="#" onclick="fn_filterAdd()"><spring:message code='sys.btn.add' /></a>
+       <a href="#none" onclick="fn_filterAdd()"><spring:message code='sys.btn.add' /></a>
       </p></li>
      <li><p class="btn_blue2">
-       <a href="#" onclick="fn_clearPanelField_ASChargesFees()"><spring:message code='sys.btn.clear' /></a>
+       <a href="#none" onclick="fn_clearPanelField_ASChargesFees()"><spring:message code='sys.btn.clear' /></a>
       </p></li>
     </ul>
     </div>
@@ -2716,7 +2716,7 @@
 
    <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
    <!-- <dt class="click_add_on" id='inHouse_dt' onclick="fn_secChk(this);">
-    <a href="#">In-House Repair Entry</a>
+    <a href="#none">In-House Repair Entry</a>
    </dt>
    <dd id='inHouseRepair_div' style="display: none">
     <table class="type1">

@@ -765,7 +765,7 @@ var cmbCategoryDs = [{codeId:"5706", codeName:"Mattress"}, {codeId:"5707", codeN
     </ul>
 
     <aside class="title_line"><!-- title_line start -->
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#none" class="click_add_on">My menu</a></p>
         <h2>Purchase Price</h2>
 
         <ul class="right_btns">
@@ -799,7 +799,7 @@ var cmbCategoryDs = [{codeId:"5706", codeName:"Mattress"}, {codeId:"5707", codeN
 		            <td>
 		                <input type="text" id="sStkCd" name="sStkCd"  placeholder="" class="w100p" />
 		                <input type="hidden" id="sStkNm" name="sStkNm"  placeholder="" class="" />
-		                <%-- <a href="#" class="search_btn" id="search_material_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> --%>
+		                <%-- <a href="#none" class="search_btn" id="search_material_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> --%>
 		            </td>
                     <th scope="row">Category</th>
                     <td>

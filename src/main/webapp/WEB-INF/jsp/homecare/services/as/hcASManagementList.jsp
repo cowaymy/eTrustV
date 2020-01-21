@@ -951,7 +951,7 @@ var branchDs = [];
  <aside class="title_line">
   <!-- title_line start -->
   <p class="fav">
-   <a href="#" class="click_add_on">My menu</a>
+   <a href="#none" class="click_add_on">My menu</a>
   </p>
   <h2><spring:message code='service.title.AsMgmt'/></h2>
   <form action="#" id="inHOForm">
@@ -967,53 +967,53 @@ var branchDs = [];
   <ul class="right_btns">
    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="fn_newASPop()"><spring:message code='service.btn.crtAs'/></a>
+      <a href="#none" onclick="fn_newASPop()"><spring:message code='service.btn.crtAs'/></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="fn_newASResultPop()"><spring:message code='service.btn.addtAs'/></a>
+      <a href="#none" onclick="fn_newASResultPop()"><spring:message code='service.btn.addtAs'/></a>
      </p></li>
    </c:if>
    <!-- FUNCTION WHICH ALLOW EDIT RECORD WHICH MORE THAN 7 DAYS -->
    <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="fn_asResultEditBasicPop(0)"><spring:message code='service.btn.edtBsAs'/></a>
+      <a href="#none" onclick="fn_asResultEditBasicPop(0)"><spring:message code='service.btn.edtBsAs'/></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="fn_asResultEditPop(0)"><spring:message code='service.btn.edtAs'/></a>
+      <a href="#none" onclick="fn_asResultEditPop(0)"><spring:message code='service.btn.edtAs'/></a>
      </p></li>
    </c:if>
    <!-- FUNCTION WHICH ALLOW EDIT RECORD WITHIN 7 DAYS -->
    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="fn_asResultEditBasicPop(1)"><spring:message code='service.btn.edtBsAs'/></a>
+      <a href="#none" onclick="fn_asResultEditBasicPop(1)"><spring:message code='service.btn.edtBsAs'/></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="fn_asResultEditPop(1)"><spring:message code='service.btn.edtAs'/></a>
+      <a href="#none" onclick="fn_asResultEditPop(1)"><spring:message code='service.btn.edtAs'/></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="fn_asResultViewPop()"><spring:message code='service.btn.viewAS'/></a>
+      <a href="#none" onclick="fn_asResultViewPop()"><spring:message code='service.btn.viewAS'/></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onclick="fn_assginCTTransfer()"><spring:message code='home.lbl.dtTrans'/></a>
+      <a href="#none" onclick="fn_assginCTTransfer()"><spring:message code='home.lbl.dtTrans'/></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue">
-      <a href="#" onClick="fn_searchASManagement()"><span class="search"></span><spring:message code='sys.btn.search'/></a>
+      <a href="#none" onClick="fn_searchASManagement()"><span class="search"></span><spring:message code='sys.btn.search'/></a>
      </p></li>
    </c:if>
    <li><p class="btn_blue">
-     <a href="#"><span class="clear"></span><spring:message code='service.btn.Clear'/></a>
+     <a href="#none"><span class="clear"></span><spring:message code='service.btn.Clear'/></a>
     </p></li>
   </ul>
  </aside>
@@ -1115,7 +1115,7 @@ var branchDs = [];
    <aside class="link_btns_wrap">
     <!-- link_btns_wrap start -->
     <p class="show_btn">
-     <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a>
+     <a href="#none"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a>
     </p>
     <dl class="link_list">
      <dt><spring:message code='sales.Link'/></dt>
@@ -1125,43 +1125,43 @@ var branchDs = [];
       <ul class="btns">
        <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
         <li><p class="link_btn type2">
-          <a href="#" onclick="fn_ASReport()"><spring:message code='service.btn.asRpt'/></a>
+          <a href="#none" onclick="fn_ASReport()"><spring:message code='service.btn.asRpt'/></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="fn_asLogBookList()"><spring:message code='service.btn.asLogBook'/></a>
+          <a href="#none" onclick="fn_asLogBookList()"><spring:message code='service.btn.asLogBook'/></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="fn_asRawData(0)"><spring:message code='service.btn.asRawData'/></a>
+          <a href="#none" onclick="fn_asRawData(0)"><spring:message code='service.btn.asRawData'/></a>
          </p></li>
         <c:if test="${PAGE_AUTH.funcUserDefine11 == 'Y'}">
          <li>
           <p class="link_btn type2">
-           <a href="#" onclick="fn_asRawData(1)"><spring:message code='service.btn.asRawData'/> (31 Day(s))</a>
+           <a href="#none" onclick="fn_asRawData(1)"><spring:message code='service.btn.asRawData'/> (31 Day(s))</a>
           </p>
          </li>
         </c:if>
         <li><p class="link_btn type2">
-          <a href="#" onclick="fn_asSummaryList()"><spring:message code='service.btn.asSumLst'/></a>
+          <a href="#none" onclick="fn_asSummaryList()"><spring:message code='service.btn.asSumLst'/></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="fn_asYsList()"><spring:message code='service.btn.asYsLst'/></a>
+          <a href="#none" onclick="fn_asYsList()"><spring:message code='service.btn.asYsLst'/></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="fn_ledger()"><spring:message code='service.btn.asLdg'/></a>
+          <a href="#none" onclick="fn_ledger()"><spring:message code='service.btn.asLdg'/></a>
          </p></li>
         <li><p class="link_btn type2">
-          <a href="#" onclick="fn_invoice()"><spring:message code='service.btn.asInvc'/></a>
+          <a href="#none" onclick="fn_invoice()"><spring:message code='service.btn.asInvc'/></a>
          </p></li>
           <!-- By KV - AS Mobile Failure Listing -->
          <li><p class="link_btn type2">
-               <a href="#" onclick="javascript:fn_ASMobileFailureListing()"><spring:message
+               <a href="#none" onclick="javascript:fn_ASMobileFailureListing()"><spring:message
                    code='service.btn.MobileFailListAS' /></a>
               </p>
           </li>
        </c:if>
       </ul>
       <p class="hide_btn">
-       <a href="#"><img
+       <a href="#none"><img
         src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
         alt="hide" /></a>
       </p>
@@ -1172,7 +1172,7 @@ var branchDs = [];
    <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
      <li><p class="btn_grid">
-       <a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a>
+       <a href="#none" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a>
       </p></li>
     </c:if>
    </ul>

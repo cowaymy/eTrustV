@@ -118,7 +118,7 @@
   </h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">
-     <a href="#"><spring:message code='sys.btn.close' /></a>
+     <a href="#none"><spring:message code='sys.btn.close' /></a>
     </p></li>
   </ul>
  </header>
@@ -128,13 +128,13 @@
   <section class="tap_wrap">
    <!-- tap_wrap start -->
    <ul class="tap_type1">
-    <li><a href="#" class="on"><spring:message
+    <li><a href="#none" class="on"><spring:message
        code='sales.tap.order' /></a></li>
-    <li><a href="#"><spring:message
+    <li><a href="#none"><spring:message
        code='sales.tap.customerInfo' /></a></li>
-    <li><a href="#"><spring:message
+    <li><a href="#none"><spring:message
        code='sales.tap.installationInfo' /></a></li>
-    <li><a href="#"><spring:message code='sales.tap.HPInfo' /></a></li>
+    <li><a href="#none"><spring:message code='sales.tap.HPInfo' /></a></li>
    </ul>
    <article class="tap_area">
     <!-- tap_area start -->

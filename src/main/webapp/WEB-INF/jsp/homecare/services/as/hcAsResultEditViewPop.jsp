@@ -301,7 +301,7 @@
    </h1>
    <ul class="right_opt">
     <li><p class="btn_blue2">
-      <a href="#"><spring:message code='sys.btn.close' /></a>
+      <a href="#none"><spring:message code='sys.btn.close' /></a>
      </p></li>
    </ul>
   </header>
@@ -311,9 +311,9 @@
    <section class="tap_wrap">
     <!-- tap_wrap start -->
     <ul class="tap_type1">
-      <li><a href="#" class="on"><spring:message code='service.title.General' /></a></li>
-      <li><a href="#"><spring:message code='service.title.OrderInformation' /></a></li>
-      <li><a href="#" onclick=" javascirpt:AUIGrid.resize(regGridID, 950,300); "><spring:message code='service.title.asPassEvt' /></a></li>
+      <li><a href="#none" class="on"><spring:message code='service.title.General' /></a></li>
+      <li><a href="#none"><spring:message code='service.title.OrderInformation' /></a></li>
+      <li><a href="#none" onclick=" javascirpt:AUIGrid.resize(regGridID, 950,300); "><spring:message code='service.title.asPassEvt' /></a></li>
     </ul>
     <article class="tap_area">
      <!-- tap_area start -->
@@ -450,11 +450,11 @@
    <div id='btnSaveDiv'>
    <ul class="center_btns mt20">
     <li><p class="btn_blue2 big">
-      <a href="#" onclick="fn_doSave()"><spring:message code='sys.btn.save' /></a>
+      <a href="#none" onclick="fn_doSave()"><spring:message code='sys.btn.save' /></a>
      </p></li>
     <%--
     <li><p class="btn_blue2 big">
-      <a href="#" onClick="fn_doClear()"><spring:message code='sys.btn.clear' /></a>
+      <a href="#none" onClick="fn_doClear()"><spring:message code='sys.btn.clear' /></a>
      </p></li>
      --%>
    </ul>

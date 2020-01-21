@@ -537,7 +537,7 @@
 	<header class="pop_header">
 	<h1>DT Allocation Matrix </h1>
 	<ul class="right_opt">
-	    <li><p class="btn_blue2"><a href="#"   >CLOSE</a></p></li>
+	    <li><p class="btn_blue2"><a href="#none"   >CLOSE</a></p></li>
 	</ul>
 	</header><!-- pop_header end -->
 
@@ -563,7 +563,7 @@
 		<input type ='hidden'  value='${TYPE}'/>
 
 		<ul class="center_btns mt20">
-		    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_AllocationConfirm()">Allocation Confirm</a></p></li>
+		    <li><p class="btn_blue2"><a href="#none" onclick="javascript:fn_AllocationConfirm()">Allocation Confirm</a></p></li>
 		</ul>
 	</section>
     <!-- pop_body end -->

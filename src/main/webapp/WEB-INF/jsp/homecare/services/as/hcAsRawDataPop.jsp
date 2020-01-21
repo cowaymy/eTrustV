@@ -351,7 +351,7 @@
   </h1>
   <ul class="right_opt">
    <li><p class="btn_blue2">
-     <a href="#">CLOSE</a>
+     <a href="#none">CLOSE</a>
     </p></li>
   </ul>
  </header>
@@ -419,10 +419,10 @@
   <!-- search_table end -->
   <ul class="center_btns">
    <li><p class="btn_blue2 big">
-     <a href="#" onclick="javascript:fn_openGenerate()">Generate</a>
+     <a href="#none" onclick="javascript:fn_openGenerate()">Generate</a>
     </p></li>
    <li><p class="btn_blue2 big">
-     <a href="#" onclick="$('#reportForm1').clearForm();">Clear</a>
+     <a href="#none" onclick="$('#reportForm1').clearForm();">Clear</a>
     </p></li>
   </ul>
  </section>
