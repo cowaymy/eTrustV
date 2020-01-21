@@ -791,7 +791,7 @@ function chgTab(tabNm) {
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
+<section class="pop_body" style="overflow-y : auto"><!-- pop_body start -->
 <form id="_editForm">
     <input type="hidden" name="editCcpId" id="_editCcpId" value="${ccpId}"/>
 
