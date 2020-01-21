@@ -127,6 +127,34 @@ $(document).ready(function() {
 
 });//Doc Ready Func End
 
+function fn_view(item) {
+	if('${PAGE_AUTH.funcChange}' == 'Y'){
+
+	    if(item.stkCtgryId != 5707 && item.apptypeid !=5764){
+	        if(item.ccpStusId == 1){
+	            $("#_ccpId").val(item.ccpId);
+	            $("#_salesOrdId").val(item.salesOrdId);
+	            $("#_ccpTotScrePoint").val(item.ccpTotScrePoint);
+	            //Common.popupDiv("/sales/ccp/selectCalCcpViewEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewEditDiv'); //Edit
+
+	            Common.popupWin('_detailForm', "/sales/ccp/selectCalCcpViewEditPop.do", option);
+
+	        }else{
+	            $("#_ccpId").val(item.ccpId);
+	            $("#_salesOrdId").val(item.salesOrdId);
+	            $("#_ccpTotScrePoint").val(item.ccpTotScrePoint);
+	            //Common.popupDiv("/sales/ccp/ccpCalCCpViewPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewDiv'); //View
+
+	            Common.popupWin('_detailForm', "/sales/ccp/ccpCalCCpViewPop.do", option);
+	        }
+	    }else{
+	        Common.alert('Auxiliary products are not allowed to view');
+	    }
+	}else{
+	    Common.alert('<spring:message code="sal.alert.msg.accessDeny" />');
+	}
+}
+
 //def Combo(select Box OptGrouping)
 function doGetComboWh(url, groupCd , selCode, obj , type, callbackFn){
 
@@ -254,7 +282,18 @@ function createCalGrid(){
 
 	var  columnLayout = [
                          {dataField : "bndlNo", headerText : '<spring:message code="sal.title.text.ordBundleNo" />', width : "7%" , editable : false},
-	                     {dataField : "salesOrdNo", headerText : '<spring:message code="sal.title.text.ordBrNo" />', width : "7%" , editable : false},
+	                     {dataField : "salesOrdNo", headerText : '<spring:message code="sal.title.text.ordBrNo" />', width : "7%" , editable : false, style : "aui-grid-link-renderer",
+	                    	 renderer :
+	                         {
+	                            type : "LinkRenderer",
+	                            baseUrl : "javascript", // 자바스크립 함수 호출로 사용하고자 하는 경우에 baseUrl 에 "javascript" 로 설정
+	                            // baseUrl 에 javascript 로 설정한 경우, 링크 클릭 시 callback 호출됨.
+	                            jsCallback : function(rowIndex, columnIndex, value, item)
+	                            {
+	                            	fn_view(item);
+	                            }
+	                         }
+	                     },
 	                     {dataField : "ccpIsHold", headerText : '<spring:message code="sal.title.text.hold" />', width : "4%" , editable : false,
 	                       renderer : {type : "CheckBoxEditRenderer", editable : false , checkValue : true , unCheckValue : false}
 	                     },
