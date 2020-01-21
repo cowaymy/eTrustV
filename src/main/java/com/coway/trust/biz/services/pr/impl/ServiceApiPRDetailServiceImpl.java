@@ -107,7 +107,20 @@ public class ServiceApiPRDetailServiceImpl extends EgovAbstractServiceImpl imple
     						}
 
     	        			// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
+        					spMap.put("pErrcode", "");
+        					spMap.put("pErrmsg", "");
     	        			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+
+    	        			String errCode = (String)spMap.get("pErrcode");
+  	                	  	String errMsg = (String)spMap.get("pErrmsg");
+
+  	                	  	logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
+  	                	  	logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
+
+  	                	  	// pErrcode : 000  = Success, others = Fail
+  	                	  	if (!"000".equals(errCode)) {
+  	                	  		throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+  	                	  	}
     					}else{
     						// SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
     						servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
