@@ -147,6 +147,8 @@ public class PreOrderVO implements Serializable {
 
     private int salesOrdIdOld;
 
+    private String relatedNo;
+
 
     // 20191210 - KR-SH 추가
     private int preOrdId1;
@@ -941,6 +943,14 @@ public class PreOrderVO implements Serializable {
 
 	public void setSalesOrdIdOld(int salesOrdIdOld) {
 		this.salesOrdIdOld = salesOrdIdOld;
+	}
+
+	public String getRelatedNo() {
+		return relatedNo;
+	}
+
+	public void setRelatedNo(String relatedNo) {
+		this.relatedNo = relatedNo;
 	}
 
 }

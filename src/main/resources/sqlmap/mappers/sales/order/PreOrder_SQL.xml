@@ -188,6 +188,8 @@
 		     , T1.UPD_DT
 		     , T1.CORP_CUST_TYPE
 		     , T1.AGREEMENT_TYPE
+		     , T1.SALES_ORD_ID_OLD
+		     , T1.RELATED_NO
 		  FROM SAL0213M T1
 		 WHERE T1.PRE_ORD_ID = #{preOrdId}
     </select>
@@ -281,6 +283,7 @@
 		     , AGREEMENT_TYPE
 		     , BNDL_ID
 		     , SALES_ORD_ID_OLD
+		     , RELATED_NO
 		     )
 		VALUES
 		     ( #{preOrdId}
@@ -349,6 +352,7 @@
              , #{agreementType}
              , #{bndlId}
              , #{salesOrdIdOld}
+             , #{relatedNo}
 		     )
     </insert>
 
@@ -412,6 +416,7 @@
              , CPNT_ID = #{itmCompId}
              , CORP_CUST_TYPE = #{corpCustType}
              , AGREEMENT_TYPE = #{agreementType}
+
          WHERE PRE_ORD_ID                 = #{preOrdId}
     </update>
 

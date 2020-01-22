@@ -111,7 +111,7 @@
 
     $(function(){
     	$('#btnRltdNoEKeyIn').click(function() {
-            Common.popupDiv("/sales/order/prevOrderNoPopEKeyIn.do", {custId : $('#hiddenCustId').val()}, null, true);
+            Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
         });
 
         $('#btnConfirm').click(function() {
@@ -1128,7 +1128,8 @@
             custBillCustCareCntId: $("#hiddenBPCareId").val(),
             corpCustType         : $('#corpCustType').val(),
             agreementType         : $('#agreementType').val(),
-            salesOrdIdOld          : $('#txtOldOrderID').val()
+            salesOrdIdOld          : $('#txtOldOrderID').val(),
+            relatedNo               : $('#relatedNo').val()
         };
 
         var formData = new FormData();
