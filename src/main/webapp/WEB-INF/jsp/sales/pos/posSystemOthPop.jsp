@@ -102,6 +102,29 @@ $(document).ready(function() {
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinRemark" />');
             return;
         }
+
+        if( null == $("#searchSt").val() || '' == $("#searchSt").val()){
+            Common.alert("Please key in Area Search");
+            return;
+        }
+
+        if( null == $("#mArea").val() || '' == $("#mArea").val()){
+            Common.alert("Please key in Area");
+            return;
+        }
+
+        if( null == $("#mPostCd").val() || '' == $("#mPostCd").val()){
+            Common.alert("Please key in Post Code");
+            return;
+        }
+        if( null == $("#mCity").val() || '' == $("#mCity").val()){
+            Common.alert("Please key in City");
+            return;
+        }
+        if( null == $("#mState").val() || '' == $("#mState").val()){
+            Common.alert("Please key in State");
+            return;
+        }
         //Save
        fn_payPass(); //No payment Save
 
@@ -205,15 +228,19 @@ function fn_payPass(){
 
 }
 
-/* function fn_bookingAndpopClose(){
+ function fn_bookingAndpopClose(){
    //프로시저 호출
    // 콜백  >>
    $("#_systemClose").click();
-} */
+}
 //////////////////////////////////////////////////
 
 
 function fn_initAddress(){
+
+    $('#mState').append($('<option>', { value: '', text: '1. State' }));
+    $('#mState').val('');
+    $("#mState").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
 
     $('#mCity').append($('<option>', { value: '', text: '2. City' }));
     $('#mCity').val('');
