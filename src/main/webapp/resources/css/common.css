@@ -459,7 +459,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .pop_header .right_opt:after{content:""; display:block; clear:both;}
 .pop_header .right_opt li{float:left; margin-left:5px;}
 /*.pop_body{max-height:500px; padding:10px; background:#fff; overflow-y:scroll;}*/
-.pop_body{height: -webkit-calc(90vh - 70px);height: -moz-calc(90vh - 70px);height: calc(90vh - 70px); padding:10px; background:#fff; overflow-y:scroll;}  /* div popup resize : zaza 20190812 */
+.pop_body{height: -webkit-calc(90vh - 70px);height: -moz-calc(90vh - 70px);height: calc(90vh - 70px); padding:10px; background:#fff; overflow-y:auto;}  /* div popup resize : zaza 20190812 */
 .pop_body.win_popup{max-height:100%;overflow-y:auto;}
 .popup_wrap.no_scroll .pop_body{max-height:100%;}
 .popup_wrap.size_small .pop_body{max-height:350px;}
@@ -491,7 +491,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .popup_wrap.pop_win:after{display:none;}
 .popup_wrap.pop_win .pop_header{cursor: default;position: fixed;width:100%;z-index:10}
 .popup_wrap.pop_win .pop_header .right_opt{margin-right:20px;}
-.popup_wrap.pop_win .pop_body{max-height:none; padding:10px; background:#fff; overflow-y:hidden;padding-top: 60px}
+.popup_wrap.pop_win .pop_body{max-height:none; padding:10px; background:#fff; overflow-y:auto;padding-top: 60px}
 
 
 /* 탭 */
