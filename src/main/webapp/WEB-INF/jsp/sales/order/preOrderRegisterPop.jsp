@@ -110,6 +110,10 @@
     }
 
     $(function(){
+    	$('#btnRltdNoEKeyIn').click(function() {
+            Common.popupDiv("/sales/order/prevOrderNoPopEKeyIn.do", {custId : $('#hiddenCustId').val()}, null, true);
+        });
+
         $('#btnConfirm').click(function() {
             if(!fn_validConfirm())  return false;
             //if(fn_isExistMember() == 'true') return false;
@@ -377,6 +381,25 @@
 
                 doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
             }
+        });
+
+        $('#exTrade').change(function() {
+
+            $('#ordPromo option').remove();
+            fn_clearAddCpnt();
+            $('#relatedNo').val("");
+
+            if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
+                //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
+                $('#btnRltdNoEKeyIn').removeClass("blind");
+            }
+            else {
+                //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+                $('#relatedNo').val('');
+                $('#btnRltdNoEKeyIn').addClass("blind");
+            }
+            $('#ordProudct').val('');
+
         });
         $('#ordProudct').change(function() {
 
@@ -1104,7 +1127,8 @@
             custBillIsSms2       : $('#billMthdSms2').is(":checked") ? 1 : 0,
             custBillCustCareCntId: $("#hiddenBPCareId").val(),
             corpCustType         : $('#corpCustType').val(),
-            agreementType         : $('#agreementType').val()
+            agreementType         : $('#agreementType').val(),
+            salesOrdIdOld          : $('#txtOldOrderID').val()
         };
 
         var formData = new FormData();
@@ -2207,7 +2231,9 @@
 <tr>
     <th scope="row">Ex-Trade/Related No</th>
     <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p>
-        <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" /></p></td>
+    <a id="btnRltdNoEKeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" /></p>
+        </td>
 </tr>
 <tr>
     <th scope="row">Application Type | Jenis Permohonan<span class="must">*</span></th>
@@ -2229,7 +2255,9 @@
 </tr>
 <tr>
     <th scope="row">Promotion | Promosi<span class="must">*</span></th>
-    <td><select id="ordPromo" name="ordPromo" class="w100p" disabled></select></td>
+    <td><select id="ordPromo" name="ordPromo" class="w100p" disabled></select>
+    <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
+    </td>
 </tr>
 <!-- <tr>
     <th scope="row">Installment Duration<span class="must">*</span></th>
@@ -2280,9 +2308,7 @@
     <td><textarea id="speclInstct" name="speclInstct" cols="20" rows="5"></textarea></td>
 </tr>
 <tr style="display:none;">
-    <th scope="row">PV<span class="must">*</span></th>
-    <td><input id="ordPv"    name="ordPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
-        <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
+
     <th scope="row">Discount Type /  Period (month)</th>
     <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p></td>

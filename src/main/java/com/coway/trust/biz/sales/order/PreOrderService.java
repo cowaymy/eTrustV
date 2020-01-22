@@ -37,4 +37,8 @@ public interface PreOrderService {
 	List<EgovMap> getAttachList(Map<String, Object> params);
 
 	int selRcdTms(Map<String, Object> params);
+
+	EgovMap checkOldOrderIdEKeyIn(Map<String, Object> params);
+
+	EgovMap checkOldOrderIdICareEKeyIn(Map<String, Object> params);
 }

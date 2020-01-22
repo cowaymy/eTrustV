@@ -145,6 +145,9 @@ public class PreOrderVO implements Serializable {
 
     private int agreementType;
 
+    private int salesOrdIdOld;
+
+
     // 20191210 - KR-SH 추가
     private int preOrdId1;
     private int preOrdId2;
@@ -930,6 +933,14 @@ public class PreOrderVO implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public int getSalesOrdIdOld() {
+		return salesOrdIdOld;
+	}
+
+	public void setSalesOrdIdOld(int salesOrdIdOld) {
+		this.salesOrdIdOld = salesOrdIdOld;
 	}
 
 }

@@ -425,4 +425,29 @@ public class PreOrderController {
 	     return ResponseEntity.ok(message);
 	   }
 
+	   @RequestMapping(value = "/checkOldOrderIdEKeyIn.do", method = RequestMethod.GET)
+	   public ResponseEntity<EgovMap> selectOldOrderIdEKeyIn(@RequestParam Map<String, Object> params, ModelMap model)
+	       throws Exception {
+	     logger.info("extrade :: " + params.get("exTrade"));
+	     EgovMap RESULT;
+	     if (params.get("exTrade").equals("2")) {
+	       RESULT = preOrderService.checkOldOrderIdICareEKeyIn(params);
+	     } else {
+	       RESULT = preOrderService.checkOldOrderIdEKeyIn(params);
+	     }
+
+	     // 데이터 리턴.
+	     return ResponseEntity.ok(RESULT);
+	   }
+
+
+	   @RequestMapping(value = "/prevOrderNoPopEKeyIn.do")
+	   public String prevOrderNoPopEKeyIn(@RequestParam Map<String, Object> params, ModelMap model) {
+		   logger.info("custid :: " + params.get("custId"));
+	     model.put("custId", params.get("custId"));
+	     //model.put("exTrade", params.get("exTrade"));
+
+	     return "sales/order/prevOrderNoPopEKeyIn";
+	   }
+
 }

@@ -280,6 +280,7 @@
 		     , CORP_CUST_TYPE
 		     , AGREEMENT_TYPE
 		     , BNDL_ID
+		     , SALES_ORD_ID_OLD
 		     )
 		VALUES
 		     ( #{preOrdId}
@@ -347,6 +348,7 @@
 		     , #{corpCustType}
              , #{agreementType}
              , #{bndlId}
+             , #{salesOrdIdOld}
 		     )
     </insert>
 
