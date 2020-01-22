@@ -1646,4 +1646,17 @@
                                                                                                                  AND STUS_CODE_ID = 4
     ) ORDER BY ATCH_FILE_ID
   </select>
+  
+  <select id="selectGSTRebateList" parameterType="Map" resultType="egovMap">
+		SELECT T1.ORD_ID
+		, T2.SALES_ORD_NO
+		, T1.REBATE_AMT_PER_INSTLMT
+		, T1.REBATE_START_INSTLMT
+		, T1.REBATE_END_INSTLMT
+		FROM PAY0286D T1
+		JOIN SAL0001D T2
+		ON T2.SALES_ORD_ID = T1.ORD_ID
+		WHERE T1.ORD_ID = #{salesOrderId}
+		AND 1 = T1.STUS_ID
+	</select>
 </mapper>

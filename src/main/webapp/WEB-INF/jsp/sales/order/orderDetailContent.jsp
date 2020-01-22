@@ -75,6 +75,12 @@
                     fn_selectDiscountList();
                 }
                 break;
+            case 'gstRebateInfo' :
+                AUIGrid.resize(discountGridID, 942, 380);
+	            if(AUIGrid.getRowCount(discountGridID) <= 0) {
+	            	fn_selectGstRebateList();
+                }
+                break;
         };
     }
 </script>
@@ -100,6 +106,7 @@
 	<li><a href="#" onClick="javascript:chgTab('ecashResult');"><spring:message code="sal.title.text.ecashRslt" /></a></li>
 	<li><a id="aTabGC"href="#"><spring:message code="sal.title.text.reliefCertificate" /></a></li>
 	<li><a href="#" onClick="javascript:chgTab('discountInfo');"><spring:message code="sal.title.text.discount" /></a></li>
+	<li><a href="#" onClick="javascript:chgTab('gstRebateInfo');"><spring:message code="sal.title.text.gstRebate" /></a></li>
 </ul>
 <!------------------------------------------------------------------------------
     Basic Info
@@ -170,6 +177,9 @@
     Discount
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/order/include/discountList.jsp" %>
-
+<!------------------------------------------------------------------------------
+    GST Rebate
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/gstRebateList.jsp" %>
 </section><!-- tap_wrap end -->
 

@@ -48,4 +48,6 @@ public interface OrderDetailService {
   
   List<EgovMap> getInstImg(Map<String, Object> params);
   
+  public List<EgovMap> selectGSTRebateList(Map<String, Object> params);
+  
 }

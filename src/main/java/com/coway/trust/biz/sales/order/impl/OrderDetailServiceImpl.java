@@ -580,4 +580,9 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	public List<EgovMap> getInstImg(Map<String, Object> params) {
       return orderDetailMapper.getInstImg(params);
 	}
+
+  @Override
+  public List<EgovMap> selectGSTRebateList(Map<String, Object> params) {
+    return orderDetailMapper.selectGSTRebateList(params);
+  }
 }
