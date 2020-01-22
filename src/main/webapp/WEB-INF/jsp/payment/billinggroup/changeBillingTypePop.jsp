@@ -222,6 +222,13 @@ function fn_newReqSave(){
             $("#newReqAdditionalEmail").val("");
             $("#newReqReason").val("");
             Common.alert(result.message);
+            $("#estmNewReqPop").hide();
+            $("#changeBillTypePop").hide();
+            if(callPrgm == 'BILLING_GROUP'){
+                searchList();
+            }else if(callPrgm == 'BILLING_GROUP_ADMIN'){
+            	searchList();
+            }
         });
         
     }else{
