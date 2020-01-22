@@ -115,10 +115,10 @@ public class SerialLastInfoMgmtServiceImpl implements SerialLastInfoMgmtService 
 		}
 		/*if(CommonUtils.isNotEmpty(params.get("lastReqstNo")) && Integer.parseInt(String.valueOf(validMap.get("validReqstCnt"))) == 0  )	{
 			throw new ApplicationException(AppConstants.FAIL, "Invalid Request No.<br />[ Request No : " + params.get("lastReqstNo") +  " ]");
-		}*/
+		}
 		if(CommonUtils.isNotEmpty(params.get("lastDelvryNo")) && Integer.parseInt(String.valueOf(validMap.get("validDelvryCnt"))) == 0  )	{
 			throw new ApplicationException(AppConstants.FAIL, "Invalid Delivery No.<br />[ Delivery No : " + params.get("lastDelvryNo") +  " ]");
-		}
+		}*/
 		if(CommonUtils.isNotEmpty(params.get("tempScanNo")) && Integer.parseInt(String.valueOf(validMap.get("validScanCnt"))) == 0  )	{
 			throw new ApplicationException(AppConstants.FAIL, "Invalid Temporay Scan No.<br />[ Temporay Scan No : " + params.get("tempScanNo") +  " ]");
 		}
