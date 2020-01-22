@@ -173,7 +173,7 @@
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body" style="overflow-y:auto"><!-- pop_body start -->
+<section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h2>${orderInfo.custName}</h2>
