@@ -246,7 +246,7 @@
 </form>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="ord_ledger_grid" style="width:100%; height:255px; margin:0 auto;"></div>
+    <div id="ord_ledger_grid" style="width:100%; height:230px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 
