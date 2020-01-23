@@ -97,7 +97,7 @@
             getListAjax(1);
         });
 
-        AUIGrid.bind(myGridID, "cellClick", function( event )
+        AUIGrid.bind(myGridID, "cellDoubleClick", function( event )
         {
             var serialNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "serialNo");
             var hidSerialNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "hidSerialNo");
