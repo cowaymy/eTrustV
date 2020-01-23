@@ -217,7 +217,7 @@
         var tabContentHtml = "<iframe id='" + frameId + "' name='" + frameId + "' width='100%' onload='resizeIframe(this)' class='iframetab'  scrolling='no' ></iframe>";
 
         tabs.find("#mainTabTitle").append(li);
-        tabs.append("<div id='" + id + "' style='overflow-x: hidden; overflow-y: auto;'><p>" + tabContentHtml + "</p></div>");
+        tabs.append("<div id='" + id + "' style='overflow-x: hidden; overflow-y: auto; padding:5px 10px 0px 10px !important;'><p>" + tabContentHtml + "</p></div>");
         tabs.tabs("refresh").tabs("option", "active", totTabCount);
 
         if (FormUtil.isNotEmpty($("#_loading").html())) {
