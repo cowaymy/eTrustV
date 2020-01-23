@@ -40,7 +40,7 @@
              if(Common.checkPlatformType() == "mobile") {
             	 $('.bottom_msg_box').css("display", "none");
              } else {
-            	 iHeight = iHeight - 100;  // remain message arae.
+            	 iHeight = iHeight - 70;  // remain message arae.
              }
 
              $("#content").height(iHeight);

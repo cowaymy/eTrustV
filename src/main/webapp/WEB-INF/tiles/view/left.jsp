@@ -214,7 +214,7 @@
         var frameId = "frame-" + menuCode;
         //var tabContentHtml = "<iframe id='" + frameId + "' name='" + frameId + "' width='100%' onload='resizeIframe(this)' class='iframetab' scrolling='no'></iframe>";
         // 20190911 KR-MIN : for grid resizing
-        var tabContentHtml = "<iframe id='" + frameId + "' name='" + frameId + "' width='100%' onload='resizeIframe(this)' class='iframetab'  scrolling='no'></iframe>";
+        var tabContentHtml = "<iframe id='" + frameId + "' name='" + frameId + "' width='100%' onload='resizeIframe(this)' class='iframetab'  scrolling='no' ></iframe>";
 
         tabs.find("#mainTabTitle").append(li);
         tabs.append("<div id='" + id + "' style='overflow-x: hidden; overflow-y: auto;'><p>" + tabContentHtml + "</p></div>");
@@ -256,7 +256,7 @@
          }
          */
         // 20190911 KR-MIN : for grid resizing
-        var iframeHeight = $(window).height() - $(obj).offset().top-20;
+        var iframeHeight = $(window).height() - $(obj).offset().top;
         $(obj).height(iframeHeight + "px");
 
          if(menuLoadingCount == 1){
