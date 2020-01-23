@@ -58,8 +58,7 @@ var GridCommon = {
 	        $(window).resize(function(){
                 if (typeof _gridID !== "undefined") {
                 	try{
-                		// 20200116 grid resize bug fix
-                        //AUIGrid.resize(_gridID);
+                		AUIGrid.resize(_gridID);
 					}catch (e){
                 		// console.log("grid is not exist.....[gridID : " + _gridID + "]")
 					}
