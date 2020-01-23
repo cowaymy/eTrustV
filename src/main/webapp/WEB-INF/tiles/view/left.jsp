@@ -1,8 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
-
+<style type="text/css" >
+.ui-tabs .ui-tabs-panel {
+    display: block;
+    border-width: 0;
+    padding: 5px 10px 1px 10px !important;
+    background: none;
+}
+</style>
 <script type="text/javaScript">
 
     $(function() {
@@ -217,7 +223,7 @@
         var tabContentHtml = "<iframe id='" + frameId + "' name='" + frameId + "' width='100%' onload='resizeIframe(this)' class='iframetab'  scrolling='no' ></iframe>";
 
         tabs.find("#mainTabTitle").append(li);
-        tabs.append("<div id='" + id + "' style='overflow-x: hidden; overflow-y: auto; padding:5px 10px 0px 10px !important;'><p>" + tabContentHtml + "</p></div>");
+        tabs.append("<div id='" + id + "' style='overflow-x: hidden; overflow-y: auto;'><p>" + tabContentHtml + "</p></div>");
         tabs.tabs("refresh").tabs("option", "active", totTabCount);
 
         if (FormUtil.isNotEmpty($("#_loading").html())) {
