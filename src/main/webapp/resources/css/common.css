@@ -106,7 +106,7 @@ section#content {
 
 
 /* content 공통 */
-.path{float:right; margin-bottom:8px;}
+.path{float:right; margin-top:5px; margin-bottom:5px;}
 .path:after{content:""; display:block; clear:both;}
 .path li{position:relative; float:left; padding-left:19px; color:#a9b4b7;}
 .path li:before{content:""; display:block; position:absolute; top:6px; left:7px; width:6px; height:5px; background:url(../images/common/path_arrow.gif) no-repeat;}
