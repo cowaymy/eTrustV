@@ -5,7 +5,7 @@
 .ui-tabs .ui-tabs-panel {
     display: block;
     border-width: 0;
-    padding: 5px 10px 1px 10px !important;
+    padding: 5px 15px 1px 10px !important;
     background: none;
 }
 </style>
