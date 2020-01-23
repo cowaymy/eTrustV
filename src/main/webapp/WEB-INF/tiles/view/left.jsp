@@ -2,10 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <style type="text/css" >
+
 .ui-tabs .ui-tabs-panel {
     display: block;
     border-width: 0;
-    padding: 5px 15px 1px 10px !important;
+    padding: 0px 15px 0px 10px !important;
     background: none;
 }
 </style>
@@ -262,7 +263,7 @@
          }
          */
         // 20190911 KR-MIN : for grid resizing
-        var iframeHeight = $(window).height() - $(obj).offset().top;
+        var iframeHeight = $(window).height() - $(obj).offset().top- 5;
         $(obj).height(iframeHeight + "px");
 
          if(menuLoadingCount == 1){
