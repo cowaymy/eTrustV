@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <style>
-    #tabs { margin-top: 1em; }
+    #tabs { margin-top: 0; }
     #tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }
     #add_tab { cursor: pointer; }
 </style>
