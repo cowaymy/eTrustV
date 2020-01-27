@@ -6,7 +6,7 @@
 .ui-tabs .ui-tabs-panel {
     display: block;
     border-width: 0;
-    padding: 0px 15px 0px 10px !important;
+    padding: 1em 1.2em 1em 0.7em !important;
     background: none;
 }
 </style>
@@ -263,7 +263,9 @@
          }
          */
         // 20190911 KR-MIN : for grid resizing
-        var iframeHeight = $(window).height() - $(obj).offset().top- 5;
+        //var iframeHeight = $(window).height() - $(obj).offset().top;
+        var iframeHeight = $(window).height() - 95;
+        console.log(">>>>>>>>>>" +$(window).height() + "," + iframeHeight);
         $(obj).height(iframeHeight + "px");
 
          if(menuLoadingCount == 1){

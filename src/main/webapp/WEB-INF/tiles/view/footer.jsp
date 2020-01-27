@@ -40,7 +40,7 @@
              if(Common.checkPlatformType() == "mobile") {
             	 $('.bottom_msg_box').css("display", "none");
              } else {
-            	 iHeight = iHeight - 70;  // remain message arae.
+            	 iHeight = iHeight - 76;  // remain message arae.
              }
 
              $("#content").height(iHeight);
@@ -89,7 +89,7 @@
             gridHeight = gridHeight - fizAreaHeight;
 
 			if($(top.document).contents().find("#mainTabTitle") == null || $(top.document).contents().find("#mainTabTitle").length ==0){
-				gridHeight = gridHeight + $(".bottom_msg_box").height() + 15;
+				gridHeight = gridHeight + $(".bottom_msg_box").height() + 10;
 			}
 
             var minHeight = 200;
