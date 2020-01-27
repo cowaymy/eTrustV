@@ -265,7 +265,7 @@
         // 20190911 KR-MIN : for grid resizing
         //var iframeHeight = $(window).height() - $(obj).offset().top;
         var iframeHeight = $(window).height() - 95;
-        console.log(">>>>>>>>>>" +$(window).height() + "," + iframeHeight);
+        //console.log(">>>>>>>>>>" +$(window).height() + "," + iframeHeight);
         $(obj).height(iframeHeight + "px");
 
          if(menuLoadingCount == 1){
