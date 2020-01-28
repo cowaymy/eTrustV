@@ -30,145 +30,154 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public class AuthenticInterceptor extends WebContentInterceptor {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticInterceptor.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticInterceptor.class);
 
-	@Autowired
-	private SessionHandler sessionHandler;
+  @Autowired
+  private SessionHandler sessionHandler;
 
-	@Autowired
-	private MenuService menuService;
+  @Autowired
+  private MenuService menuService;
 
-	@Autowired
-	private AccessMonitoringService accessMonitoringService;
+  @Autowired
+  private AccessMonitoringService accessMonitoringService;
 
-	@Autowired
-	private LoginService loginService;
+  @Autowired
+  private LoginService loginService;
 
-	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws ServletException {
-	    // Kit Wai - Start - 20180427
-	    LOGGER.debug("preHandle :: URI :: " + request.getRequestURI());
+  @Override
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+      throws ServletException {
+    // Kit Wai - Start - 20180427
+    LOGGER.debug("preHandle :: URI :: " + request.getRequestURI());
 
-	    Map<String, Object> params = new HashMap<String, Object>();
+    Map<String, Object> params = new HashMap<String, Object>();
 
-	    // Request URI's as param
-	    String[] URI = ((String) request.getRequestURI()).split("/");
-        params.put("mainDo", URI[URI.length - 1]);
-        EgovMap item = new EgovMap();
+    // Request URI's as param
+    String[] URI = ((String) request.getRequestURI()).split("/");
+    params.put("mainDo", URI[URI.length - 1]);
+    EgovMap item = new EgovMap();
 
-        item = (EgovMap) loginService.checkByPass(params);
+    item = (EgovMap) loginService.checkByPass(params);
+
+    /*
+     * Skip validation if value found in SYS0088M Param - URI .do
+     */
+    if (item == null) {
+      item = null;
+      SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+
+      // Reset param
+      params.clear();
+      // UserIDType as parameter
+      params.put("memTyp", sessionVO.getUserTypeId());
+      item = (EgovMap) loginService.checkByPass(params);
+
+      /*
+       * Skip validation if value found in SYS0088M Param - Member Type
+       */
+      if (item != null) {
+        String[] doListStr = ((String) item.get("bypassDoList")).split("\\|\\|\\|");
+
+        List<String> doList = Arrays.asList(doListStr);
 
         /*
-         * Skip validation if value found in SYS0088M
-         * Param - URI .do
+         * Only permits navigation/action within set URLs
          */
-        if(item == null) {
-            item = null;
-            SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-
-            // Reset param
-            params.clear();
-            // UserIDType as parameter
-            params.put("memTyp", sessionVO.getUserTypeId());
-            item = (EgovMap) loginService.checkByPass(params);
-
-            /*
-             * Skip validation if value found in SYS0088M
-             * Param - Member Type
-             */
-            if(item != null) {
-                String[] doListStr = ((String) item.get("bypassDoList")).split("\\|\\|\\|");
-
-                List<String> doList = Arrays.asList(doListStr);
-
-                /*
-                 * Only permits navigation/action within set URLs
-                 */
-                if(!doList.contains(request.getRequestURI())) {
-                    LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(), request.getRequestURI());
-                    throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-                }
-
-            } else {
-                if (VerifyRequest.isNotCallCenterRequest(request)) {
-
-                    if (sessionVO != null && sessionVO.getUserId() > 0) {
-                        checkAuthorized(sessionVO.getUserId(), request.getRequestURI());
-                    } else {
-                        LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(),
-                                request.getRequestURI());
-                        throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-                    }
-
-                }else{
-                    LOGGER.info("[preHandle] this url is call by Callcenter.......");
-                }
-            }
+        if (!doList.contains(request.getRequestURI())) {
+          LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(),
+              request.getRequestURI());
+          throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
-        // Kit Wai - End - 20180427
-		return true;
-	}
 
-	/**
-	 * 권한 체크. : 2017-09-13 : 각 기능(CRUD) 권한 체크는 화면단에서 한다. 메뉴에 등록 된것만 체크.
-	 */
-	private void checkAuthorized(int userId, String pgmPath) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("userId", userId);
-		params.put("pgmPath", pgmPath);
-		EgovMap pgmPahMenuAuth = menuService.getMenuAuthByPgmPath(params);
-
-		// 메뉴에 등록되어 있는 pgmPath 중 권한체크.
-		if (pgmPahMenuAuth != null && CommonUtils.isNotEmpty(pgmPahMenuAuth.get("menuCode"))
-				&& !"Y".equals(pgmPahMenuAuth.get("funcYn"))) {
-			throw new AuthException(HttpStatus.FORBIDDEN, HttpStatus.FORBIDDEN.getReasonPhrase());
-		}
-
-		// 메뉴에 등록된 uri 에 대한 menuCode.... 등록되지 않은 uri 호출이 된 경우에도 이전 메뉴를 가지고 있음.
-		if (pgmPahMenuAuth != null && CommonUtils.isNotEmpty(pgmPahMenuAuth.get("menuCode"))) {
-			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-			sessionVO.setMenuCode((String) pgmPahMenuAuth.get("menuCode"));
-		}
-	}
-
-	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-			ModelAndView modelAndView) throws Exception {
-
-		// check request to Callcenter
+      } else {
         if (VerifyRequest.isNotCallCenterRequest(request)) {
 
-            SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+          if (sessionVO != null && sessionVO.getUserId() > 0) {
+            checkAuthorized(sessionVO.getUserId(), request.getRequestURI());
+          } else {
+            LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(),
+                request.getRequestURI());
+            throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+          }
 
-            if (sessionVO == null || sessionVO.getUserId() == 0) {
-                throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            }
+        } else {
+          LOGGER.info("[preHandle] this url is call by Callcenter.......");
+        }
+      }
+    }
+    // Kit Wai - End - 20180427
+    return true;
+  }
 
-            if (modelAndView != null) {
-                Map<String, Object> params = new HashMap<>();
-                params.put("userId", sessionVO.getUserId());
-                params.put("pgmPath", request.getRequestURI());
+  /**
+   * 권한 체크. : 2017-09-13 : 각 기능(CRUD) 권한 체크는 화면단에서 한다. 메뉴에 등록 된것만 체크.
+   */
+  private void checkAuthorized(int userId, String pgmPath) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("userId", userId);
+    params.put("pgmPath", pgmPath);
+    EgovMap pgmPahMenuAuth = menuService.getMenuAuthByPgmPath(params);
 
-                if (request.getRequestURI().endsWith(".do")) {
-                    params.put("userName", sessionVO.getUserName());
-                    params.put("systemId", AppConstants.LOGIN_WEB);
-                    params.put("pgmCode", "-");
-                    params.put("ipAddr", CommonUtils.getClientIp(request));
+    // ONGHC - ADD FOR ACCESS CHECK FOR THOSE WHICH BOOKMARKED URL AND NOT ALLOW TO ACCESS
+    if (pgmPahMenuAuth == null) {
+      // CHECK ONLY FOR THOSE CONFIGURATED MENU (SYS0050M,  SYS0051M)
+      int x = menuService.getCountCommAuth(params);
+      if (x > 0) {
+        throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+      }
+    }
 
-                    accessMonitoringService.insertAccessMonitoring(params);
-                }
+    // 메뉴에 등록되어 있는 pgmPath 중 권한체크.
+    if (pgmPahMenuAuth != null && CommonUtils.isNotEmpty(pgmPahMenuAuth.get("menuCode"))
+        && !"Y".equals(pgmPahMenuAuth.get("funcYn"))) {
+      throw new AuthException(HttpStatus.FORBIDDEN, HttpStatus.FORBIDDEN.getReasonPhrase());
+    }
 
-                // url 로 직접 접근시 menuCode 처리.
-                modelAndView.getModelMap().put(AppConstants.CURRENT_MENU_CODE, sessionVO.getMenuCode());
+    // 메뉴에 등록된 uri 에 대한 menuCode.... 등록되지 않은 uri 호출이 된 경우에도 이전 메뉴를 가지고 있음.
+    if (pgmPahMenuAuth != null && CommonUtils.isNotEmpty(pgmPahMenuAuth.get("menuCode"))) {
+      SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+      sessionVO.setMenuCode((String) pgmPahMenuAuth.get("menuCode"));
+    }
 
-                modelAndView.getModelMap().put(AppConstants.PAGE_AUTH, menuService.getPageAuth(params));
-                modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));
-                modelAndView.getModelMap().put(AppConstants.MENU_FAVORITES, menuService.getFavoritesList(sessionVO));
-            }
-        }else{
-			LOGGER.info("[postHandle] this url is call by Callcenter.......");
-		}
-	}
+  }
+
+  @Override
+  public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+      ModelAndView modelAndView) throws Exception {
+
+    // check request to Callcenter
+    if (VerifyRequest.isNotCallCenterRequest(request)) {
+
+      SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+
+      if (sessionVO == null || sessionVO.getUserId() == 0) {
+        throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+      }
+
+      if (modelAndView != null) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", sessionVO.getUserId());
+        params.put("pgmPath", request.getRequestURI());
+
+        if (request.getRequestURI().endsWith(".do")) {
+          params.put("userName", sessionVO.getUserName());
+          params.put("systemId", AppConstants.LOGIN_WEB);
+          params.put("pgmCode", "-");
+          params.put("ipAddr", CommonUtils.getClientIp(request));
+
+          accessMonitoringService.insertAccessMonitoring(params);
+        }
+
+        // url 로 직접 접근시 menuCode 처리.
+        modelAndView.getModelMap().put(AppConstants.CURRENT_MENU_CODE, sessionVO.getMenuCode());
+
+        modelAndView.getModelMap().put(AppConstants.PAGE_AUTH, menuService.getPageAuth(params));
+        modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));
+        modelAndView.getModelMap().put(AppConstants.MENU_FAVORITES, menuService.getFavoritesList(sessionVO));
+      }
+    } else {
+      LOGGER.info("[postHandle] this url is call by Callcenter.......");
+    }
+  }
 
 }
