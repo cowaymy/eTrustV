@@ -376,4 +376,11 @@
             AND SYSDATE BETWEEN TO_DATE (NVL (T.VALID_DT_FROM, '19001231') || '00', 'YYYYMMDDHH24')
                            AND TO_DATE (NVL (T.VALID_DT_TO, '29991231') || '23', 'YYYYMMDDHH24')
     </select>
+
+    <select id="getCountCommAuth" parameterType="Map" resultType="integer">
+      SELECT COUNT(A.PGM_CODE) AS CNT
+      FROM SYS0050M A
+      JOIN SYS0051M B ON A.PGM_CODE = B.PGM_CODE
+      WHERE A.PGM_PATH = #{pgmPath}
+    </select>
 </mapper>
