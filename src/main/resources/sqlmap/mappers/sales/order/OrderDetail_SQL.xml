@@ -471,6 +471,7 @@
 		, V1.INST_CNT_DEPT
 		, V1.INST_CNT_POST
 		, V1.VRIFY_REM
+		, V1.VRIFY_FLG
 		FROM SAL1010V V1
 		WHERE V1.ORD_ID = #{salesOrderId}
 		AND ROWNUM &lt;= 1
@@ -1646,7 +1647,7 @@
                                                                                                                  AND STUS_CODE_ID = 4
     ) ORDER BY ATCH_FILE_ID
   </select>
-  
+
   <select id="selectGSTRebateList" parameterType="Map" resultType="egovMap">
 		SELECT T1.ORD_ID
 		, T2.SALES_ORD_NO

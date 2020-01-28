@@ -741,6 +741,18 @@
       AND DISB = 0
   </select>
 
+  <select id="getSalesVerification" parameterType="Map" resultType="egovMap">
+    <!-- SELECT VRIFY_REM
+    FROM CCR0016D
+    WHERE SALES_ORD_ID = #{salesOrdId}
+      AND VERIFY_STUS = 1 -->
+
+      SELECT VRIFY_FLG, VRIFY_REM
+      FROM SAL0045D
+      WHERE SALES_ORD_ID = #{salesOrdId}
+      AND VRIFY_FLG = 1
+  </select>
+
   <update id="chkRcdTms" parameterType="Map">
     UPDATE CCR0006D
     SET RCD_TMS = TO_CHAR(SYSTIMESTAMP,'ddmmyyyyHH24miss')
@@ -757,6 +769,9 @@
       AND RCD_TMS = #{rcdTms}
   </select>
 
+    <select id="installEntryIdSeq" resultType="Integer">
+        SELECT SAL0046D_INSTALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
   <!-- SELECT END -->
 
   <!-- INSERT START -->
@@ -815,7 +830,7 @@
                         , APPNT_DT
                         ,SESION_CODE
                         ,GRADE
-    ) VALUES (SAL0046D_INSTALL_ENTRY_ID_SEQ.NEXTVAL
+    ) VALUES (#{installEntryId}
             , #{installEntryNo}
             , #{salesOrderId}
             , #{statusCodeId}
@@ -837,6 +852,67 @@
             , #{stock}
     )
   </insert>
+
+  <insert id="insertSalesOrderLog" parameterType="Map">
+      <selectKey keyProperty="logId" resultType="Integer" order="BEFORE">
+        SELECT SAL0009D_LOG_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+        INSERT
+          INTO SAL0009D
+             ( LOG_ID
+             , SALES_ORD_ID
+             , PRGRS_ID
+             , LOG_DT
+             , REF_ID
+             , IS_LOK
+             , LOG_CRT_USER_ID
+             , LOG_CRT_DT
+             )
+        VALUES
+             ( #{logId}
+             , #{salesOrderId}
+             , #{progressId}
+             , #{logDate}
+             , #{refId}
+             , #{isLock}
+             , #{logCreator}
+             , #{logCreated}
+             )
+    </insert>
+
+    <insert id="insertSalesVerification" parameterType="Map">
+      <selectKey keyProperty="verifyId" resultType="Integer" order="BEFORE">
+        SELECT CCR0016D_CALL_VERIFY_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+        INSERT INTO CCR0016D (
+		    CALL_VERIFY_ID
+		    , SALES_ORD_ID
+		    , VERIFY_STUS
+		    , REM
+		    , CRT_USER_ID
+		    , CRT_DT
+		    , UPD_USER_ID
+		    , UPD_DT
+		) VALUES (
+		    #{verifyId}
+		,   #{salesOrdId}
+		,   #{verify}
+		,   #{veriremark}
+		,   349
+		,   SYSDATE
+		,   349
+		,   SYSDATE
+		)
+    </insert>
+
+    <update id="updateSalesVerification" parameterType="Map">
+    UPDATE SAL0045D SET
+                        VRIFY_FLG = #{verify}
+                      , VRIFY_REM = #{veriremark}
+                      , UPD_DT = SYSDATE
+                      , UPD_USER_ID = 349
+    WHERE  SALES_ORD_ID = #{salesOrdId}
+  </update>
 
   <!-- UPDATE START -->
   <update id="updateCallEntry" parameterType="Map">

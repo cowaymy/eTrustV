@@ -208,6 +208,7 @@
                          ELSE 0
                     END C4
                   , Extent1.BNDL_NO
+                  , Extent1.VRIFY_FLG
 
          FROM ( SELECT vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID
                              , vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID
@@ -245,6 +246,7 @@
                              , vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC
                              , vCallLogOrderCall.RCD_TMS RCD_TMS
                              , vCallLogOrderCall.UPD_DT UPD_DT
+                             , vCallLogOrderCall.VRIFY_FLG VRIFY_FLG
                              , AREA.STATE
                              , AREA.AREA
                              , AREA.POSTCODE

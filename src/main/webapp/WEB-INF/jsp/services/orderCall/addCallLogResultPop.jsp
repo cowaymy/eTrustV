@@ -246,6 +246,8 @@
       $("#m2").hide();
       $("#m3").hide();
     }
+
+    $("#hideContent3").hide();
   }
 
   var callLogTranID;
@@ -499,7 +501,7 @@
    <h2>
     <spring:message code='service.title.DSCVerificationRemark' />
    </h2>
-  </aside>
+
   <!-- title_line end -->
   <table class="type1" id="hideContent">
    <!-- table start -->
@@ -517,6 +519,7 @@
     </tr>
    </tbody>
   </table>
+  </aside>
   <!-- table end -->
   <aside class="title_line mt20" id="hideContent4">
    <!-- title_line start -->

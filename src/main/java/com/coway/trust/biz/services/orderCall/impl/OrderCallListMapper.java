@@ -33,6 +33,12 @@ public interface OrderCallListMapper {
 
   void updateASEntry(Map<String, Object> params);
 
+  void insertSalesOrderLog(Map<String, Object> params);
+
+  void insertSalesVerification(Map<String, Object> params);
+
+  void updateSalesVerification(Map<String, Object> params);
+
   List<EgovMap> selectCallStatus();
 
   String selectMaxId(Map<String, Object> params);
@@ -49,6 +55,8 @@ public interface OrderCallListMapper {
 
   EgovMap getRdcInCdc(Map<String, Object> params);
 
+  EgovMap getSalesVerification(Map<String, Object> params);
+
   List<EgovMap> selectProductList();
 
   List<EgovMap> selectCallLogTyp();
@@ -60,4 +68,8 @@ public interface OrderCallListMapper {
   int chkRcdTms(Map<String, Object> params);
 
   int selRcdTms(Map<String, Object> params);
+
+  int installEntryIdSeq();
+
+
 }

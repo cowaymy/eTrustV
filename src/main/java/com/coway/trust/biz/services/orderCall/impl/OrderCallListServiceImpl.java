@@ -186,7 +186,8 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
       }
       if (orderLogList != null && orderLogList.size() > 0
           && Integer.parseInt(callMaster.get("statusCodeId").toString()) == 20) {
-
+        orderLogList.put("refId", installMaster.get("installEntryId").toString());
+        orderCallListMapper.insertSalesOrderLog(orderLogList);
       }
 
     }
@@ -242,6 +243,8 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
         // IF installMaster NOT EMPTY AND INSIDE installMaster CONTAIN CALL ENTRY ID
         if (installMaster != null && callEntId > 0) {
           // PRE INSERT INSTALL ENTRY
+          installMaster.put("installEntryId",orderCallListMapper.installEntryIdSeq());
+
           orderCallListMapper.insertInstallEntry(installMaster);
         }
 
@@ -307,6 +310,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
     EgovMap maxIdValue = new EgovMap();
     // EgovMap installNo = new EgovMap();
     Map<String, Object> logPram = new HashMap<String, Object>();
+    EgovMap salesVerify = new EgovMap();
 
     // GET CALL LOG MASTER INFORMATION CCR0006D
     EgovMap callEntry = orderCallListMapper.selectCallEntry(callMaster);
@@ -375,6 +379,13 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
       }
       if (orderLogList != null && orderLogList.size() > 0
           && Integer.parseInt(callMaster.get("statusCodeId").toString()) == 20) {
+        orderLogList.put("refId", installMaster.get("installEntryId").toString());
+        orderCallListMapper.insertSalesOrderLog(orderLogList);
+      }
+
+      if(params.get("verify") != null){
+        //orderCallListMapper.insertSalesVerification(params);
+        orderCallListMapper.updateSalesVerification(params);
       }
 
     }

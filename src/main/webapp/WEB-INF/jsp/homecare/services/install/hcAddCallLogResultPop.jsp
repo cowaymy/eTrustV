@@ -120,7 +120,7 @@
                 $("#hiddenBtn").hide();
                 $("#sav_div").attr("style", "display:none");
 
-                fn_callLogTransaction(); // REFRESH THE LIST
+                //fn_callLogTransaction(); // REFRESH THE LIST
         	}
 		});
     }
@@ -139,7 +139,7 @@
     // Ready
     $(document).ready(function() {
         callLogTranGrid();
-        fn_callLogTransaction();
+        //fn_callLogTransaction();
         fn_start();
 
         $("#stock").change(function() {
@@ -229,6 +229,10 @@
             $("#m4").show();
             $("#m2").hide();
             $("#m3").hide();
+        }
+
+        if('${SESSION_INFO.userTypeId}' == 1 || '${SESSION_INFO.userTypeId}' == 2 || '${SESSION_INFO.userTypeId}' == 3 || '${SESSION_INFO.userTypeId}' == 7 ){
+        	$("#hideContent3").hide();
         }
     }
 
@@ -397,6 +401,8 @@
         </dl>
     </article>
     <!-- acodi_wrap end -->
+
+    <form action="#" id="addCallForm" autocomplete=off>
     <aside class="title_line mt20" id="hideContent3">
         <!-- title_line start -->
         <h2><spring:message code='service.title.DSCVerificationRemark' /></h2>
@@ -411,9 +417,22 @@
 		        <col style="width: *" />
 	        </colgroup>
         <tbody>
+            <tr>
+                <th scope="row"><spring:message code='service.title.verify' /></th>
+                <td>
+                <c:choose>
+                    <c:when test= "${orderDetail.installationInfo.vrifyFlg == '1'}">
+                        <input type = "checkbox" id="verify "name = "verify" value="1" checked disabled/>
+                    </c:when>
+                    <c:otherwise>
+                        <input type = "checkbox" id="verify "name = "verify" value="1"/>
+                    </c:otherwise>
+                 </c:choose>
+                 </td>
+            </tr>
 	        <tr>
 	            <th scope="row"><spring:message code='service.title.VerificationRemark' /></th>
-	            <td><textarea cols="20" rows="5" id="veriremark" name="veriremark" placeholder="<spring:message code='service.title.VerificationRemark' />"></textarea></td>
+	            <td><textarea cols="20" rows="5" id="veriremark" name="veriremark" >${orderDetail.installationInfo.vrifyRem}</textarea></td>
 	        </tr>
         </tbody>
     </table>
@@ -423,7 +442,6 @@
         <h2><spring:message code='service.title.NewCallLogResult' /></h2>
     </aside>
     <!-- title_line end -->
-    <form action="#" id="addCallForm" autocomplete=off>
 		<input type="hidden" value="${orderCall.c4}" id="hiddenProductId" name="hiddenProductId" />
 		<input type="hidden" value="${orderCall.callStusId}" id="hiddenCallLogStatusId" name="hiddenCallLogStatusId" />
 		<input type="hidden" value="${callStusCode}" id="callStusCode" name="callStusCode" />
