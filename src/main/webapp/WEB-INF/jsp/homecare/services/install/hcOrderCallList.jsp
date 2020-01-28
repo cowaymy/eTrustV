@@ -114,7 +114,6 @@
 
     function fn_openAddCall() {
         var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-
         if (selectedItems.length == 0) {
             // NO DATA SELECTED.
             Common.alert("<spring:message code='service.msg.NoRcd'/> ");
@@ -126,6 +125,12 @@
             Common.alert("<b><spring:message code='service.msg.onlyPlz'/><b>");
             return;
         }
+
+        if('${SESSION_INFO.userTypeId}' == '5758' && selectedItems.item.vrifyFlg != 1){
+        	Common.alert("Not allowed");
+            return;
+        }
+        
         callStusCode = selectedItems[0].item.callStusCode;
         callStusId = selectedItems[0].item.callStusId;
         salesOrdId = selectedItems[0].item.salesOrdId;
@@ -184,6 +189,7 @@
             {dataField : "postcode",           headerText : '<spring:message code="service.grid.PostCode" />',    editable : false,     width : 100},
             {dataField : "dscCode",            headerText : '<spring:message code="service.grid.Branch" />',        editable : false,     width : 150},
             {dataField : "isWaitCancl",         headerText : '<spring:message code="service.grid.WaitCancel" />',  editable : false,     width : 100},
+            {dataField : "vrifyFlg",         headerText : 'vrify_Flg',  editable : false,     width : 100},
             {dataField : "callStusId",           width : 0},
             {dataField : "salesOrdId",         width : 0},
             {dataField : "callEntryId",          width : 0},
