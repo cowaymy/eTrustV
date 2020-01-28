@@ -11,11 +11,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("menuMapper")
 public interface MenuMapper {
-	List<EgovMap> selectMenuList(SessionVO sessionVO);
-
-	List<EgovMap> getFavoritesList(SessionVO sessionVO);
-
-	PageAuthVO selectPageAuth(Map<String, Object> params);
-
-	EgovMap selectMenuAuthByPgmPath(Map<String, Object> params);
+  List<EgovMap> selectMenuList(SessionVO sessionVO);
+  
+  List<EgovMap> getFavoritesList(SessionVO sessionVO);
+  
+  PageAuthVO selectPageAuth(Map<String, Object> params);
+  
+  EgovMap selectMenuAuthByPgmPath(Map<String, Object> params);
+  
+  int getCountCommAuth(Map<String, Object> params);
 }
