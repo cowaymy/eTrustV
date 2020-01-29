@@ -99,21 +99,25 @@
 
         AUIGrid.bind(myGridID, "cellDoubleClick", function( event )
         {
-            var serialNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "serialNo");
-            var hidSerialNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "hidSerialNo");
+        	var serialNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "hidSerialNo");
 
-            if(FormUtil.isEmpty(hidSerialNo)) {
-            	return false;
+            if(!FormUtil.isEmpty(serialNo)){
+	            var serialNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "serialNo");
+	            var hidSerialNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "hidSerialNo");
+
+	            if(FormUtil.isEmpty(hidSerialNo)) {
+	            	return false;
+	            }
+	            AUIGrid.setCheckedRowsByValue(myGridID, "serialNo", serialNo);
+	            var subParam = {"serialNo":serialNo};
+
+	            Common.ajax("GET", "/logistics/serialLastMgmt/selectSerialLastInfoHistoryList.do"
+	                    , subParam
+	                    , function(result){
+	                           console.log("data : " + result);
+	                           AUIGrid.setGridData(detailGridID, result.dataList);
+	            });
             }
-            AUIGrid.setCheckedRowsByValue(myGridID, "serialNo", serialNo);
-            var subParam = {"serialNo":serialNo};
-
-            Common.ajax("GET", "/logistics/serialLastMgmt/selectSerialLastInfoHistoryList.do"
-                    , subParam
-                    , function(result){
-                           console.log("data : " + result);
-                           AUIGrid.setGridData(detailGridID, result.dataList);
-            });
         });
 
         AUIGrid.bind(myGridID, "beforeRemoveRow", function(event) {
