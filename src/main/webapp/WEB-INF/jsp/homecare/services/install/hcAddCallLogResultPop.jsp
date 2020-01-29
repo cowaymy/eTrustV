@@ -31,6 +31,10 @@
 		        msg += "* <spring:message code='sys.msg.necessary' arguments='Request Date' htmlEscape='false'/> </br>";
 		    }
 
+		    if(!$("input[name='verify']").prop("checked")){
+		    	msg += "* <spring:message code='sys.msg.necessary' arguments='Verification' htmlEscape='false'/> </br>";
+		    }
+
 		} else if ($("#callStatus").val() == 19) {
 		    if ($("#recallDate").val() == '') {
 		        msg += "* <spring:message code='sys.msg.necessary' arguments='Recall Date' htmlEscape='false'/> </br>";
