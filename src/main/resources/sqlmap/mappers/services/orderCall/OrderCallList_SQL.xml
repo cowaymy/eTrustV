@@ -121,7 +121,7 @@
     </if>
     <if test="contactNo != null and contactNo != '' ">
       AND ((Extent1.INSTALL_TEL_F LIKE '%' || #{contactNo} ||'%') OR
-      (Extent1.INSTALL_TEL_M LIKE '%' || #{contactNo} || '%'') OR
+      (Extent1.INSTALL_TEL_M LIKE '%' || #{contactNo} || '%') OR
       (Extent1.INSTALL_TEL_O LIKE '%' || #{contactNo} || '%') OR
       (Extent1.INSTALL_TEL_R LIKE '%' || #{contactNo} || '%'))
     </if>
