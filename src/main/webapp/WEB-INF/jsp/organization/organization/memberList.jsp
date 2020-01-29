@@ -220,7 +220,7 @@ function fn_addMemberValidDate(){ // cyc
     } */
 
 
-    Common.popupDiv("/organization/memberValidDateEdit.do" ,{membercode:membercode},null, null,true,'_editDiv3New' );
+    Common.popupDiv("/organization/memberValidDateEdit.do" ,{membercode:membercode},null, true,'_editDiv3New' );
 
 }
 
