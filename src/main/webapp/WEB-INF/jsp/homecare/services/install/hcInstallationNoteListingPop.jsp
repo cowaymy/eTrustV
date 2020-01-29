@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  08/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
+ 29/01/2020  ONGHC  1.0.1          ADD STATE AND POST CODE COLUMN TO GRID
  -->
 
 <script type="text/javaScript">
@@ -84,6 +85,16 @@ var myGridID;
     }, {
       dataField : "areaname",
       headerText : '<spring:message code="service.grid.AreaName" />',
+      editable : false,
+      width : 130
+    }, {
+      dataField : "state",
+      headerText : '<spring:message code="service.grid.State" />',
+      editable : false,
+      width : 130
+    }, {
+      dataField : "postcde",
+      headerText : '<spring:message code="service.grid.PostCode" />',
       editable : false,
       width : 130
     }, {
@@ -446,6 +457,8 @@ var myGridID;
       } else if (($("#sortType").val() == "7")) {
         orderBySql = " ORDER BY s2.Code ";
       }
+
+      console.log(whereSql);
 
       $("#reportForm #V_DSCCODE").val(DSCCode);
       $("#reportForm #V_APPDATE").val(appDate);
