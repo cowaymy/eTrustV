@@ -204,7 +204,7 @@ var branchDs = [];
       $("#installationNoteForm #V_ORDERBYSQL").val(orderBySql);
       $("#installationNoteForm #V_SELECTSQL").val(SelectSql);
       $("#installationNoteForm #V_FULLSQL").val(FullSql);
-      $("#installationNoteForm #reportFileName").val('/homecare/hcInstallationNote_WithOldOrderNo.rpt');
+      $("#installationNoteForm #reportFileName").val('/homecare/hcInstallationNote_WithOldOrderNoHC.rpt');
       $("#installationNoteForm #viewType").val("PDF");
       $("#installationNoteForm #reportDownFileName").val("InstallationNote_" + day + month + date.getFullYear());
 
