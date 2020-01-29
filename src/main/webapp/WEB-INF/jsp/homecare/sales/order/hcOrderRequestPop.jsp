@@ -4,32 +4,37 @@
 
 <script type="text/javaScript" language="javascript">
 
-    var TAB_NM        = "${ordReqType}";
-    var ORD_ID        = "${orderDetail.basicInfo.ordId}";
-    var ORD_NO        = "${orderDetail.basicInfo.ordNo}";
-    var ORD_DT        = "${orderDetail.basicInfo.ordDt}";
-    var ORD_STUS_ID   = "${orderDetail.basicInfo.ordStusId}";
+    var TAB_NM = "${ordReqType}";
+    var ORD_ID = "${orderDetail.basicInfo.ordId}";
+    var ORD_NO = "${orderDetail.basicInfo.ordNo}";
+    var ORD_DT = "${orderDetail.basicInfo.ordDt}";
+    var ORD_STUS_ID = "${orderDetail.basicInfo.ordStusId}";
     var ORD_STUS_CODE = "${orderDetail.basicInfo.ordStusCode}";
-    var CUST_ID       = "${orderDetail.basicInfo.custId}";
-    var CUST_TYPE_ID  = "${orderDetail.basicInfo.custTypeId}";
-    var APP_TYPE_ID   = "${orderDetail.basicInfo.appTypeId}";
+    var CUST_ID = "${orderDetail.basicInfo.custId}";
+    var CUST_TYPE_ID = "${orderDetail.basicInfo.custTypeId}";
+    var APP_TYPE_ID = "${orderDetail.basicInfo.appTypeId}";
     var APP_TYPE_DESC = "${orderDetail.basicInfo.appTypeDesc}";
-    var CUST_NRIC     = "${orderDetail.basicInfo.custNric}";
-    var PROMO_ID      = "${orderDetail.basicInfo.ordPromoId}";
-    var PROMO_CODE    = "${orderDetail.basicInfo.ordPromoCode}";
-    var PROMO_DESC    = "${orderDetail.basicInfo.ordPromoDesc}";
-    var STOCK_ID      = "${orderDetail.basicInfo.stockId}";
-    var STOCK_DESC    = "${orderDetail.basicInfo.stockDesc}";
-    var CNVR_SCHEME_ID= "${orderDetail.basicInfo.cnvrSchemeId}";
-    var RENTAL_STUS   = "${orderDetail.basicInfo.rentalStus}";
-    var EMP_CHK       = "${orderDetail.basicInfo.empChk}";
-    var EX_TRADE      = "${orderDetail.basicInfo.exTrade}";
-    var TODAY_DD      = "${toDay}";
-    var SRV_PAC_ID    = "${orderDetail.basicInfo.srvPacId}";
-    var GST_CHK       = "${orderDetail.basicInfo.gstChk}";
-    var IS_NEW_VER    = "${orderDetail.isNewVer}";
+    var CUST_NRIC = "${orderDetail.basicInfo.custNric}";
+    var PROMO_ID = "${orderDetail.basicInfo.ordPromoId}";
+    var PROMO_CODE = "${orderDetail.basicInfo.ordPromoCode}";
+    var PROMO_DESC = "${orderDetail.basicInfo.ordPromoDesc}";
+    var STOCK_ID = "${orderDetail.basicInfo.stockId}";
+    var STOCK_DESC = "${orderDetail.basicInfo.stockDesc}";
+    var PROMO_ID2 = "${orderDetail2.ordPromoId}";
+    var PROMO_CODE2 = "${orderDetail2.ordPromoCode}";
+    var PROMO_DESC2 = "${orderDetail2.ordPromoDesc}";
+    var STOCK_ID2 = "${orderDetail2.stockId}";
+    var STOCK_DESC2 = "${orderDetail2.stockDesc}";
+    var CNVR_SCHEME_ID = "${orderDetail.basicInfo.cnvrSchemeId}";
+    var RENTAL_STUS = "${orderDetail.basicInfo.rentalStus}";
+    var EMP_CHK = "${orderDetail.basicInfo.empChk}";
+    var EX_TRADE = "${orderDetail.basicInfo.exTrade}";
+    var TODAY_DD = "${toDay}";
+    var SRV_PAC_ID = "${orderDetail.basicInfo.srvPacId}";
+    var GST_CHK = "${orderDetail.basicInfo.gstChk}";
+    var IS_NEW_VER = "${orderDetail.isNewVer}";
     var txtPrice_uc_Value = "${orderDetail.basicInfo.ordAmt}";
-    var txtPV_uc_Value    = "${orderDetail.basicInfo.ordPv}";
+    var txtPV_uc_Value = "${orderDetail.basicInfo.ordPv}";
     var logInUserid = "${userId}";
     var hcOrder = "${hcOrder}";
     var anoOrdNo = "${hcOrder.anoOrdNo}";
@@ -100,7 +105,22 @@
         });
         // Request Product Exchange Button Click Event
         $('#btnReqPrdExch').click(function() {
-            if(fn_validReqPexc()) fn_doSaveReqPexc();
+            if(!fn_validReqPexc()) return false;
+
+            // product size check
+            if($("#ordProduct1 option:selected").index() > 0 && $("#ordProduct2 option:selected").index() > 0) {
+                // product size check
+                Common.ajax("GET", "/homecare/sales/order/checkProductSize.do", {product1 : $("#ordProduct1 option:selected").val(), product2 : $("#ordProduct2 option:selected").val()}, function(result) {
+                    if(result.code != '00') {
+                        Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+                        return false;
+                    } else {
+                    	fn_doSaveReqPexc();
+                    }
+                });
+            } else {
+            	fn_doSaveReqPexc();
+            }
         });
         $('#btnReqSchmConv').click(function() {
 //          fn_doSaveReqSchm();
@@ -112,7 +132,7 @@
             }
         });
 
-        $('#cmbOrderProduct').change(function() {
+        /* $('#cmbOrderProduct').change(function() {
             if(FormUtil.isEmpty($('#cmbOrderProduct').val())) {
                 $('#cmbPromotion option').remove();
                 return;
@@ -140,7 +160,7 @@
                     fn_excludeGstAmt();
                 }
             }
-        });
+        }); */
 
         $('#cmbPromotion').change(function() {
             var stkIdVal   = $("#cmbOrderProduct").val();
@@ -464,7 +484,106 @@
         $('#billGrpBtn').click(function() {
             Common.popupDiv("/sales/customer/customerBillGrpSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "ORD_REQUEST_BILLGRP"}, null, true);
         });
+
+        // Product Change Event
+        $('#ordProduct1, #ordProduct2').change(function(event) {
+            var _tagObj = $(event.target);
+            var _tagId = _tagObj.attr('id');
+            var _tagNum = _tagId.replace(/[^0-9]/g,"");
+            var stkIdVal = $("#ordProduct"+_tagNum).val();
+
+            $('#ordPromo'+_tagNum+' option').remove();
+            // 필드 초기화.
+            var dataList = $('[data-ref="'+_tagId+'"]');
+            for(var i=0; i<dataList.length; ++i) {
+                $('#'+ $(dataList[i]).attr('id')).val('');
+            }
+
+            if(FormUtil.isEmpty(stkIdVal)) {
+                totSumPrice();   // 합계
+                return;
+            }
+
+            $('#ordPrice'+ _tagNum).addClass("readonly");
+            $('#ordPv'+ _tagNum).addClass("readonly");
+            $('#ordRentalFees'+ _tagNum).addClass("readonly");
+
+            if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ) {
+                SRV_PAC_ID = 0;
+            }
+
+            if(FormUtil.isNotEmpty(stkIdVal)) {
+                fn_loadProductPrice(APP_TYPE_ID, stkIdVal, SRV_PAC_ID, _tagNum);
+                fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, '', _tagNum);
+            }
+        });
+
+        // change promotion
+        $('#ordPromo1, #ordPromo2').change(function(event) {
+            var _tagObj = $(event.target);
+            var _tagId = _tagObj.attr('id');
+            var _tagNum = _tagId.replace(/[^0-9]/g,"");
+
+            fn_promoChg(_tagNum);
+        });
     });
+
+    // Product Change Event - 최초 1회 호출
+    function fn_chgProduct(_tagNum) {
+    	var stkIdVal = $("#ordProduct"+_tagNum).val();
+
+        if(FormUtil.isEmpty(stkIdVal)) {
+            totSumPrice();   // 합계
+            return;
+        }
+
+        $('#ordPrice'+ _tagNum).addClass("readonly");
+        $('#ordPv'+ _tagNum).addClass("readonly");
+        $('#ordRentalFees'+ _tagNum).addClass("readonly");
+
+        if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ) {
+            SRV_PAC_ID = 0;
+        }
+
+        if(FormUtil.isNotEmpty(stkIdVal)) {
+            fn_loadProductPrice(APP_TYPE_ID, stkIdVal, SRV_PAC_ID, _tagNum);
+            if(_tagNum == '1') {
+                fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, PROMO_ID, _tagNum);
+            } else {
+                fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID, PROMO_ID2, _tagNum);
+            }
+        }
+    }
+
+    function fn_promoChg(_tagNum) {
+        var stkIdVal      = $("#ordProduct"+_tagNum).val();
+        var promoIdIdx = $("#ordPromo"+_tagNum+" option:selected").index();
+        var promoIdVal = $("#ordPromo"+_tagNum).val();
+
+        if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ) {
+            SRV_PAC_ID = 0;
+        }
+
+        if(promoIdIdx > 0 && promoIdVal != '0') {
+            fn_loadPromotionPrice(promoIdVal, stkIdVal, SRV_PAC_ID, _tagNum);
+        } else {
+            fn_loadProductPrice(APP_TYPE_ID, stkIdVal, SRV_PAC_ID, _tagNum);
+        }
+    }
+
+    // 합계
+    function totSumPrice() {
+        // 합계
+        var totOrdPrice = js.String.naNcheck($("#ordPrice1").val()) + js.String.naNcheck($("#ordPrice2").val());
+        var totOrgOrdRentalFees = js.String.naNcheck($("#orgOrdRentalFees1").val()) + js.String.naNcheck($("#orgOrdRentalFees2").val());
+        var totOrdRentalFees = js.String.naNcheck($("#ordRentalFees1").val()) + js.String.naNcheck($("#ordRentalFees2").val());
+        var totOrdPv = js.String.naNcheck($("#ordPv1").val()) + js.String.naNcheck($("#ordPv2").val());
+
+        $("#totOrdPrice").val(totOrdPrice.toFixed(2));
+        $("#totOrgOrdRentalFees").val(totOrgOrdRentalFees.toFixed(2));
+        $("#totOrdRentalFees").val(totOrdRentalFees.toFixed(2));
+        $("#totOrdPv").val(totOrdPv.toFixed(2));
+    }
 
 	function fn_excludeGstAmt() {
 	    console.log('fn_excludeGstAmt() start');
@@ -1103,25 +1222,20 @@
         }
     }
 
-    function fn_loadPromotionPrice(promoId, stkId, srvPacId) {
+    function fn_loadPromotionPrice(promoId, stkId, srvPacId, tagNum) {
         Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
 
             if(promoPriceInfo != null) {
-                $("#ordPrice").val(promoPriceInfo.orderPricePromo);
-                $("#ordPv").val(promoPriceInfo.orderPVPromo);
-                $("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
-                $("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
-              //$("#orgOrdRentalFees").val(promoPriceInfo.normalRentalFees);
+                $("#ordPrice"+tagNum).val(promoPriceInfo.orderPricePromo);
+                $("#ordPv"+tagNum).val(promoPriceInfo.orderPVPromo);
+                $("#ordPvGST"+tagNum).val(promoPriceInfo.orderPVPromoGST);
+                $("#ordRentalFees"+tagNum).val(promoPriceInfo.orderRentalFeesPromo);
 
-                $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
-                $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
+                $("#promoDiscPeriodTp"+tagNum).val(promoPriceInfo.promoDiscPeriodTp);
+                $("#promoDiscPeriod"+tagNum).val(promoPriceInfo.promoDiscPeriod);
 
-            } else {
-                Common.alert('<spring:message code="sal.msg.unableFindPromo" />' + DEFAULT_DELIMITER + '<spring:message code="sal.msg.unableFindPromoForPord" />');
-
-                if($('#btnCurrentPromo').is(":checked")) {
-                    $('#btnCurrentPromo').click();
-                }
+                // 합계
+                totSumPrice();
             }
         });
     }
@@ -1139,16 +1253,24 @@
         }
     }
 
+    var chgPromoNum = '';
     //LoadProductPromotion
-    function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade, srvPacId, promoId) {
+    function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade, srvPacId, promoId, tagNum) {
         // $('#cmbPromotion').removeAttr("disabled");
         promoId = FormUtil.isEmpty(promoId) ? '' : promoId;
+        chgPromoNum = tagNum;
+        $('#ordPromo'+tagNum).removeAttr("disabled");
 
-        if(appTypeVal == 67 || appTypeVal == 68) {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, isSrvPac:'Y'}, promoId, 'cmbPromotion', 'S', ''); //Common Code
+        if(appTypeVal !=66){
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, isSrvPac:'Y'}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
         } else {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId}, promoId, 'cmbPromotion', 'S', ''); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
         }
+    }
+
+    // change promotion
+    function fn_chgPromo() {
+        fn_promoChg(chgPromoNum);
     }
 
     //LoadProductPrice
@@ -1179,35 +1301,29 @@
     }
 
     //LoadProductPrice
-    function fn_loadProductPrice(appTypeVal, stkId, srvPacId) {
-        console.log('fn_loadProductPrice --> appTypeVal:'+appTypeVal);
-        console.log('fn_loadProductPrice --> stkId:'+stkId);
+    function fn_loadProductPrice(appTypeVal, stkId, srvPacId, tagNum) {
+        var appTypeId = appTypeVal=='68' ? '67' : appTypeVal;
 
-        var appTypeId = 0;
-
-        appTypeId = appTypeVal=='68' ? '67' : appTypeVal;
-/*
-        $("#searchAppTypeId").val(appTypeId);
-        $("#searchStkId").val(stkId);
-*/
         Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId, srvPacId : srvPacId}, function(stkPriceInfo) {
             if(stkPriceInfo != null) {
                 var pvVal = stkPriceInfo.orderPV;
                 var pvValGst = Math.floor(pvVal*(1/1.06))
 
-                $("#ordPrice").val(stkPriceInfo.orderPrice);
-                $("#ordPv").val(stkPriceInfo.orderPV);
-                $("#ordPvGST").val(pvValGst);
-                $("#ordRentalFees").val(stkPriceInfo.orderRentalFees);
-//              $("#hiddenPriceID").val(stkPriceInfo.priceId);
+                $("#ordPrice"+tagNum).val(stkPriceInfo.orderPrice);
+                $("#ordPv"+tagNum).val(pvVal);
+                $("#ordPvGST"+tagNum).val(pvValGst);
+                $("#ordRentalFees"+tagNum).val(stkPriceInfo.orderRentalFees);
+                $("#ordPriceId"+tagNum).val(stkPriceInfo.priceId);
 
-                $("#orgOrdPrice").val(stkPriceInfo.orderPrice);
-                $("#orgOrdPv").val(stkPriceInfo.orderPV);
-                $("#orgOrdRentalFees").val(stkPriceInfo.orderRentalFees);
-                $("#hiddenPriceID").val(stkPriceInfo.priceId);
+                $("#orgOrdPrice"+tagNum).val(stkPriceInfo.orderPrice);
+                $("#orgOrdPv"+tagNum).val(stkPriceInfo.orderPV);
+                $("#orgOrdRentalFees"+tagNum).val(stkPriceInfo.orderRentalFees);
+                $("#orgOrdPriceId"+tagNum).val(stkPriceInfo.priceId);
 
-                $("#promoDiscPeriodTp").val('');
-                $("#promoDiscPeriod").val('');
+                $("#promoDiscPeriodTp"+tagNum).val('');
+                $("#promoDiscPeriod"+tagNum).val('');
+                // 합계
+                totSumPrice();
             }
         });
     }
@@ -1253,7 +1369,7 @@
                     }
                 });
 
-                if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
+                if(ORD_STUS_ID != '1' /* && ORD_STUS_ID != '4' */) {
                     msg = '<spring:message code="sal.msg.underProdExch" arguments="'+ORD_NO+';'+ORD_STUS_CODE+'" argumentSeparator=";"/>';
                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
 
@@ -1371,7 +1487,7 @@
 
             //fn_loadOrderInfoPexc();
 
-            fn_disableControlPexc();
+            //fn_disableControlPexc();
             $('#btnReqPrdExch').removeClass("blind");
             //fn_isLockOrder(tabNm);
         } else {
@@ -2101,10 +2217,30 @@
         var isValid = true;
         var msg = "";
 
-        if($("#cmbOrderProduct option:selected").index() <= 0) {
+        if($("#ordProduct1 option:selected").index() <= 0) {
             isValid = false;
             msg += '<spring:message code="sal.alert.msg.plzSelProdExchg" />';
         }
+
+        if($("#ordProduct1 option:selected").index() > 0) {
+            if($("#ordPromo1 option:selected").index() <= 0) {
+                isValid = false;
+                msg += "* Please select the promotion code.<br>";
+            }
+        }
+        if($("#ordProduct2 option:selected").index() > 0) {
+            if($("#ordPromo2 option:selected").index() <= 0) {
+                isValid = false;
+                msg += "* Please select the promotion code.<br>";
+            }
+        }
+
+        // 기존주문에 프레임이 있는경우. 프레임 필수
+        if(FormUtil.isNotEmpty(anoOrdId) && $("#ordProduct2 option:selected").index() <= 0) {
+            isValid = false;
+            msg += "* Please select a product.<br>";
+        }
+
         /*
         if(!$('#btnCurrentPromo').is(":checked")) {
             if($("#cmbPromotion option:selected").index() <= 0) {
@@ -2121,7 +2257,7 @@
             isValid = false;
             msg += '<spring:message code="sal.alert.msg.plzSelTheReason" />';
         }
-        if($("#cmbOrderProduct option:selected").index() > 0) {
+        /* if($("#cmbOrderProduct option:selected").index() > 0) {
             if(ORD_STUS_ID == '4') {
 
                 //AFTER INSTALL CASE
@@ -2149,7 +2285,7 @@
                     }
                 }
             }
-        }
+        } */
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.prodExchSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
@@ -2243,16 +2379,28 @@
 
     function fn_loadListPexch() {
         var stkType = APP_TYPE_ID == '66' ? '1' : '2';
-
+        if(FormUtil.isNotEmpty(STOCK_ID2)) {
+        	$('#ordProduct2').removeAttr("disabled");
+        }
         // Homecare Product 조회
-        doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID, stkCtgryId: "${orderDetail.basicInfo.stkCtgryId}"}, STOCK_ID, 'cmbOrderProduct', 'S', 'fn_setLoadListPexch');//product 생성
+        //doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID, stkCtgryId: "${orderDetail.basicInfo.stkCtgryId}"}, STOCK_ID, 'cmbOrderProduct', 'S', 'fn_setLoadListPexch');//product 생성
+        // StkCategoryID - Mattress(5706)
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID, stkCtgryId:'5706'}, STOCK_ID, 'ordProduct1', 'S', 'fn_setOptGrpClass1');//product 생성
+         // StkCategoryID - Frame(5707)
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID, stkCtgryId:'5707'}, STOCK_ID2, 'ordProduct2', 'S', 'fn_setOptGrpClass2');//product 생성
+
         doGetComboData('/sales/order/selectResnCodeList.do', {resnTypeId : '287', stusCodeId:'1'}, '', 'cmbReasonExch', 'S', ''); //Reason Code
-        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
+        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp1', 'S'); //Discount period
+        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp2', 'S'); //Discount period
     }
 
-    function fn_setLoadListPexch() {
+    function fn_setOptGrpClass1() {
     	$("optgroup").attr("class" , "optgroup_text");
-    	$('#cmbOrderProduct').change();
+    	fn_chgProduct('1');
+    }
+    function fn_setOptGrpClass2() {
+        $("optgroup").attr("class" , "optgroup_text");
+        fn_chgProduct('2');
     }
 
     function fn_loadListAexc() {
@@ -2496,76 +2644,170 @@
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form id="frmReqPrdExc" action="#" method="post">
-
-<input name="salesOrdId" type="hidden" value="${orderDetail.basicInfo.ordId}"/>
-<input name="salesOrdNo" type="hidden" value="${orderDetail.basicInfo.ordNo}"/>
-<input name="ordNo" type="hidden" value="${orderDetail.basicInfo.ordNo}"/>
-<input id="hiddenFreeASID" name="hiddenFreeASID" type="hidden" value=""/>
-<input id="hiddenPriceID" name="hiddenPriceID" type="hidden" value=""/>
-<input id="hiddenCurrentProductMasterStockID" name="hiddenCurrentProductMasterStockID" type="hidden" value="${orderDetail.basicInfo.masterStkId}"/>
-<input id="hiddenCurrentProductID" name="hiddenCurrentProductID" type="hidden" value="${orderDetail.basicInfo.stockId}"/>
-<input id="hiddenCurrentPromotionID" name="hiddenCurrentPromotionID" type="hidden" value="${orderDetail.basicInfo.ordPromoId}"/>
-<input id="hiddenCurrentPromotion" name="hiddenCurrentPromotion" type="hidden" value="${orderDetail.basicInfo.ordPromoDesc}"/>
-
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:160px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Product<span class="must">*</span></th>
-    <td>
-    <select id="cmbOrderProduct" name="cmbOrderProduct" class="w100p"></select>
-    </td>
-    <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
-    <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
-        <input id="ordPriceId"  name="ordPriceId"  type="hidden" />
-        <input id="orgOrdPrice" name="orgOrdPrice" type="hidden" />
-        <input id="orgOrdPv"    name="orgOrdPv"    type="hidden" />
-        <input id="ordPvGST"    name="ordPvGST"    type="hidden" /></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="sal.title.text.promo" /><span class="must">*</span></th>
-    <td>
-    <select id="cmbPromotion" name="cmbPromotion" class="w100p"></select>
-    </td>
-    <th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
-    <td><input id="orgOrdRentalFees" name="orgOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="sal.title.text.pv" /></th>
-    <td><input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly /></td>
-    <th scope="row"><spring:message code="sal.text.dscntPeriodFinalRenFee" /></th>
-    <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
-        <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p>
-        <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td>
-</tr>
-<!-- <tr> -->
-<%--     <th scope="row"><spring:message code="sal.text.applyCurrPromo" /></th> --%>
-<!--     <td colspan="3"><input id="btnCurrentPromo" name="btnCurrentPromo" value="1" type="checkbox" disabled/></td> -->
-<!-- </tr> -->
-<tr>
-    <th scope="row"><spring:message code="sal.text.callLogDate" /><span class="must">*</span></th>
-    <td><input id="dpCallLogDateExch" name="dpCallLogDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
-    <th scope="row"><spring:message code="sal.text.reason" /><span class="must">*</span></th>
-    <td>
-    <select id="cmbReasonExch" name="cmbReason" class="w100p"></select>
-    </td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="sal.text.pexRem" /></th>
-    <td colspan="3"><textarea id="txtRemarkExch" name="txtRemark" cols="20" rows="5"></textarea></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</form>
+	<form id="frmReqPrdExc" action="#" method="post">
+		<input name="salesOrdId" type="hidden" value="${orderDetail.basicInfo.ordId}"/>
+		<input name="salesOrdNo" type="hidden" value="${orderDetail.basicInfo.ordNo}"/>
+		<input name="ordNo" type="hidden" value="${orderDetail.basicInfo.ordNo}"/>
+		<input id="hiddenFreeASID" name="hiddenFreeASID" type="hidden" value=""/>
+		<input id="hiddenPriceID" name="hiddenPriceID" type="hidden" value=""/>
+		<input id="hiddenCurrentProductMasterStockID" name="hiddenCurrentProductMasterStockID" type="hidden" value="${orderDetail.basicInfo.masterStkId}"/>
+		<input id="hiddenCurrentProductID" name="hiddenCurrentProductID" type="hidden" value="${orderDetail.basicInfo.stockId}"/>
+		<input id="hiddenCurrentPromotionID" name="hiddenCurrentPromotionID" type="hidden" value="${orderDetail.basicInfo.ordPromoId}"/>
+		<input id="hiddenCurrentPromotion" name="hiddenCurrentPromotion" type="hidden" value="${orderDetail.basicInfo.ordPromoDesc}"/>
+		<!-- table start -->
+		<table class="type1">
+			<caption>table</caption>
+			<colgroup>
+			    <col style="width:140px" />
+			    <col style="width:*" />
+			    <col style="width:160px" />
+			    <col style="width:*" />
+			</colgroup>
+			<tbody>
+		<!-- 	<tr> -->
+		<!-- 	    <th scope="row">Product<span class="must">*</span></th> -->
+		<!-- 	    <td> -->
+		<!-- 	    <select id="cmbOrderProduct" name="cmbOrderProduct" class="w100p"></select> -->
+		<!-- 	    </td> -->
+		<%-- 	    <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th> --%>
+		<!-- 	    <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly /> -->
+		<!-- 	        <input id="ordPriceId"  name="ordPriceId"  type="hidden" /> -->
+		<!-- 	        <input id="orgOrdPrice" name="orgOrdPrice" type="hidden" /> -->
+		<!-- 	        <input id="orgOrdPv"    name="orgOrdPv"    type="hidden" /> -->
+		<!-- 	        <input id="ordPvGST"    name="ordPvGST"    type="hidden" /></td> -->
+		<!-- 	</tr> -->
+		<!-- 	<tr> -->
+		<%-- 	    <th scope="row"><spring:message code="sal.title.text.promo" /><span class="must">*</span></th> --%>
+		<!-- 	    <td> -->
+		<!-- 	    <select id="cmbPromotion" name="cmbPromotion" class="w100p"></select> -->
+		<!-- 	    </td> -->
+		<%-- 	    <th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th> --%>
+		<!-- 	    <td><input id="orgOrdRentalFees" name="orgOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td> -->
+		<!-- 	</tr> -->
+		<!-- 	<tr> -->
+		<%-- 	    <th scope="row"><spring:message code="sal.title.text.pv" /></th> --%>
+		<!-- 	    <td><input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly /></td> -->
+		<%-- 	    <th scope="row"><spring:message code="sal.text.dscntPeriodFinalRenFee" /></th> --%>
+		<!-- 	    <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p> -->
+		<!-- 	        <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p> -->
+		<!-- 	        <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td> -->
+		<!-- 	</tr> -->
+			<!-- <tr> -->
+			<%--     <th scope="row"><spring:message code="sal.text.applyCurrPromo" /></th> --%>
+			<!--     <td colspan="3"><input id="btnCurrentPromo" name="btnCurrentPromo" value="1" type="checkbox" disabled/></td> -->
+			<!-- </tr> -->
+			<tr>
+			    <td colspan="2"><h3>Mattress</h3></td>
+			    <td colspan="2"><h3>Frame</h3></td>
+			</tr>
+			<tr>
+			    <th scope="row"><spring:message code="sal.title.text.product" /><span class="must">*</span></th>
+			    <td>
+			        <select id="ordProduct1" name="ordProduct1" class="w100p" ></select>
+			    </td>
+			    <th scope="row"><spring:message code="sal.title.text.product" /><span class="must">*</span></th>
+		        <td>
+		            <select id="ordProduct2" name="ordProduct2" class="w100p" disabled></select>
+		        </td>
+			</tr>
+			<tr>
+			    <th scope="row"><spring:message code="sal.title.text.promo" /><span class="must">*</span></th>
+			    <td>
+			        <select id="ordPromo1"     name="ordPromo1"    data-ref='ordProduct1' class="w100p" disabled></select>
+			    </td>
+			    <th scope="row"><spring:message code="sal.title.text.promo" /><span class="must">*</span></th>
+		        <td>
+		            <select id="ordPromo2"     name="ordPromo2"     data-ref='ordProduct2' class="w100p" disabled></select>
+		        </td>
+			</tr>
+			<tr style="display: none;">
+		        <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
+		        <td>
+		            <input id="ordPrice1"       name="ordPrice1"      data-ref='ordProduct1' type="text" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
+		            <input id="ordPriceId1"    name="ordPriceId1"    data-ref='ordProduct1' type="hidden" />
+		            <input id="orgOrdPrice1"  name="orgOrdPrice1" data-ref='ordProduct1' type="hidden" />
+		            <input id="orgOrdPv1"     name="orgOrdPv1"     data-ref='ordProduct1' type="hidden" />
+		        </td>
+		        <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
+		        <td>
+		            <input id="ordPrice2"        name="ordPrice2"      data-ref='ordProduct2' type="text" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
+		            <input id="ordPriceId2"     name="ordPriceId2"    data-ref='ordProduct2' type="hidden" />
+		            <input id="orgOrdPrice2"   name="orgOrdPrice2" data-ref='ordProduct2' type="hidden" />
+		            <input id="orgOrdPv2"      name="orgOrdPv2"     data-ref='ordProduct2' type="hidden" />
+		        </td>
+		    </tr>
+		    <tr style="display: none;">
+		        <th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
+		        <td><input id="orgOrdRentalFees1" name="orgOrdRentalFees1" data-ref='ordProduct1' type="text" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
+		        <th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
+		        <td><input id="orgOrdRentalFees2" name="orgOrdRentalFees2" data-ref='ordProduct2' type="text" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
+		    </tr>
+			<tr>
+			    <th scope="row"><spring:message code="sales.promo.discPeriod" />/<br><spring:message code="sal.title.text.finalRentalFees" /></th>
+			    <td>
+			        <span style="width:40%;"><select id="promoDiscPeriodTp1" name="promoDiscPeriodTp1" data-ref='ordProduct1' class="w100p" disabled></select></span>
+			        <span style="width:23%;"><input id="promoDiscPeriod1"     name="promoDiscPeriod1"     data-ref='ordProduct1' type="text" placeholder=""  class="w100p readonly" readonly/></span>
+			        <span style="width:32%;"><input id="ordRentalFees1"         name="ordRentalFees1"          data-ref='ordProduct1' type="text" placeholder=""  class="w100p readonly" readonly/></span>
+			    </td>
+			   <th scope="row"><spring:message code="sales.promo.discPeriod" />/<br><spring:message code="sal.title.text.finalRentalFees" /></th>
+		        <td>
+		            <span style="width:40%;"><select id="promoDiscPeriodTp2" name="promoDiscPeriodTp2" data-ref='ordProduct2' class="w100p" disabled></select></span>
+		            <span style="width:23%;"><input id="promoDiscPeriod2"     name="promoDiscPeriod2"     data-ref='ordProduct2' type="text" placeholder=""  class="w100p readonly" readonly/></span>
+		            <span style="width:32%;"><input id="ordRentalFees2"         name="ordRentalFees2"          data-ref='ordProduct2' type="text" placeholder=""  class="w100p readonly" readonly/></span>
+		        </td>
+			</tr>
+			<tr>
+			    <th scope="row"><spring:message code="sal.title.text.pv" /></th>
+			    <td>
+			        <input id="ordPv1"       name="ordPv1"      data-ref='ordProduct1' type="text" placeholder="Point Value (PV)" class="w100p readonly" readonly />
+			        <input id="ordPvGST1" name="ordPvGST1" data-ref='ordProduct1' type="hidden" />
+			    </td>
+			    <th scope="row"><spring:message code="sal.title.text.pv" /></th>
+		        <td>
+		            <input id="ordPv2"      name="ordPv2"       data-ref='ordProduct2' type="text" placeholder="Point Value (PV)" class="w100p readonly" readonly />
+		            <input id="ordPvGST2" name="ordPvGST2" data-ref='ordProduct2' type="hidden" />
+		        </td>
+			</tr>
+			<tr>
+			    <td><h3>Total</h3></td>
+			    <td></td>
+			    <td></td>
+			    <td></td>
+			</tr>
+			<tr>
+			    <th scope="row" style="font-weight: bold;"><spring:message code="sal.title.text.priceRpfRm" /></th>
+			    <td>
+			        <input id="totOrdPrice" name="totOrdPrice" style="width:100%!important; font-weight: bold;" type="text" placeholder="Price/Rental Processing Fees (RPF)" class="readonly" readonly />
+			    </td>
+			    <th scope="row" style="font-weight: bold;"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
+		        <td><input id="totOrgOrdRentalFees" name="totOrgOrdRentalFees" type="text" placeholder="Rental Fees (Monthly)" style="width:100%!important; font-weight: bold;"  class="readonly" readonly /></td>
+			</tr>
+			<tr>
+			    <th scope="row" style="font-weight: bold;"><spring:message code="sal.title.text.finalRentalFees" /></th>
+			    <td>
+			        <p><input id="totOrdRentalFees" name="totOrdRentalFees" type="text" placeholder="" style="width:100%!important; font-weight: bold;" class="readonly" readonly/></p>
+			    </td>
+			    <th scope="row" style="font-weight: bold;"><spring:message code="sal.title.text.pv" /></th>
+		        <td>
+		            <input id="totOrdPv" name="totOrdPv" type="text" placeholder="Point Value (PV)" style="width:100%!important; font-weight: bold;" class="readonly" readonly />
+		        </td>
+			</tr>
+			<tr>
+			    <th scope="row"><spring:message code="sal.text.callLogDate" /><span class="must">*</span></th>
+			    <td><input id="dpCallLogDateExch" name="dpCallLogDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+			    <th scope="row"><spring:message code="sal.text.reason" /><span class="must">*</span></th>
+			    <td>
+			    <select id="cmbReasonExch" name="cmbReason" class="w100p"></select>
+			    </td>
+			</tr>
+			<tr>
+			    <th scope="row"><spring:message code="sal.text.pexRem" /></th>
+			    <td colspan="3"><textarea id="txtRemarkExch" name="txtRemark" cols="20" rows="5"></textarea></td>
+			</tr>
+			</tbody>
+		</table>
+		<!-- table end -->
+	</form>
 </section><!-- search_table end -->
 
 <ul class="center_btns">

@@ -1,5 +1,6 @@
 package com.coway.trust.web.homecare.sales.order;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -73,7 +74,21 @@ public class HcOrderRequestController {
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);		// Mattress Order
 		hcOrder = hcOrderListService.selectHcOrderInfo(params);
 
+		EgovMap orderDetail2 = null;
+		// has frame order
+		if(hcOrder != null) {
+			int anoOrdId = CommonUtils.intNvl(hcOrder.get("anoOrdId"));
+
+			if(anoOrdId > 0) {
+				Map<String, Object> fraParams = new HashMap<String, Object>();
+				fraParams.put("salesOrderId", CommonUtils.nvl(anoOrdId));
+				fraParams.put("ordNo", CommonUtils.nvl(hcOrder.get("fraOrdNo")));
+				orderDetail2 = orderDetailService.selectBasicInfo(params);		// Mattress Order
+			}
+		}
+
 		model.put("orderDetail", orderDetail);
+		model.put("orderDetail2", orderDetail2);
 		model.put("hcOrder", hcOrder);
 		model.put("ordReqType", params.get("ordReqType"));
 		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));

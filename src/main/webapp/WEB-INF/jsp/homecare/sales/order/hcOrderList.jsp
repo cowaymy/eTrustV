@@ -78,7 +78,7 @@
 
     // 리스트 조회.
     function fn_selectListAjax() {
-        console.log($("#listSearchForm").serialize());
+        // console.log($("#listSearchForm").serialize());
         Common.ajax("GET", "/homecare/sales/order/selectHcOrderList", $("#listSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(listMyGridID, result);
         });

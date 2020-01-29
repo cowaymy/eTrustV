@@ -6,8 +6,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
@@ -20,12 +18,14 @@ import com.coway.trust.biz.sales.order.impl.OrderRequestMapper;
 import com.coway.trust.biz.sales.order.vo.CallEntryVO;
 import com.coway.trust.biz.sales.order.vo.CallResultVO;
 import com.coway.trust.biz.sales.order.vo.InvStkMovementVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderDVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvConfigVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvFilterVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvPeriodVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvSettingVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderExchangeVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderLogVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
 import com.coway.trust.biz.sales.order.vo.StkReturnEntryVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -65,9 +65,6 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Resource(name = "hcOrderRegisterMapper")
 	private HcOrderRegisterMapper hcOrderRegisterMapper;
-
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
 
 	/**
 	 * Request Cancel Order
@@ -229,22 +226,65 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 		String rtnMsg = "Order Number : " + CommonUtils.nvl(params.get("salesOrdNo"));
 
 		EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(params);
-		String fraOrdId = CommonUtils.nvl(hcOrder.get("anoOrdId"));  // get - Frame Order Id
+		int fraOrdId = CommonUtils.intNvl(hcOrder.get("anoOrdId"));  // get - Frame Order Id
+
+		BigDecimal norAmt1 =  new BigDecimal(CommonUtils.intNvl("orgOrdPrice1"));
+		BigDecimal mrhRenAmt1 = new BigDecimal(CommonUtils.intNvl("ordRentalFees1"));
+		BigDecimal defRentAmt1 = new BigDecimal(CommonUtils.intNvl("ordRentalFees1"));
+
+		BigDecimal norAmt2 = BigDecimal.ZERO;
+		BigDecimal discRntFee2 = BigDecimal.ZERO;
+
+		// has order frame
+		if(fraOrdId > 0) {
+			discRntFee2 = new BigDecimal(CommonUtils.intNvl("ordRentalFees2"));  // frame rental fee
+			norAmt2 = new BigDecimal(CommonUtils.intNvl("orgOrdPrice2"));
+
+			norAmt1 = norAmt1 == null ? BigDecimal.ZERO : norAmt1;
+
+			norAmt2 = new BigDecimal(CommonUtils.intNvl("orgOrdPrice2")); // frame NOR_AMT
+			norAmt2 = norAmt2 == null ? BigDecimal.ZERO : norAmt2;
+		}
 
 		// update - Product Exchange
+		params.put("cmbOrderProduct", CommonUtils.nvl("ordProduct1"));      // Product ID
+		params.put("ordPriceId", CommonUtils.nvl("ordPriceId1"));
+		params.put("ordPrice", CommonUtils.nvl("ordPrice1"));
+		params.put("ordPv", CommonUtils.nvl("ordPv1"));
+		params.put("ordRentalFees", CommonUtils.nvl("ordRentalFees1"));
+		params.put("cmbPromotion", CommonUtils.nvl("ordPromo1"));           // Promotion ID
+		params.put("promoDiscPeriodTp", CommonUtils.nvl("promoDiscPeriodTp1"));
+		params.put("promoDiscPeriod", CommonUtils.nvl("promoDiscPeriod1"));
+		params.put("orgOrdPrice", CommonUtils.nvl("orgOrdPrice1"));
+		params.put("orgOrdRentalFees", CommonUtils.nvl("orgOrdRentalFees1"));
+		// mattress order (mth_rent_amt, def_rent_amt) + frame order(disc_rnt_fee)
+		params.put("mthRentAmt", mrhRenAmt1.add(discRntFee2));
+		params.put("defRentAmt", defRentAmt1.add(discRntFee2));
+		// mattress order NOR_AMT + frame order NOR_AMT
+		params.put("norAmt", norAmt1.add(norAmt2));
+
 		this.saveHcRequestProdExch(params, sessionVO);
 
 		// has Frame Order
-		if(!"".equals(fraOrdId)) {
+		if(fraOrdId > 0) {
 			params.put("salesOrdId", fraOrdId);  // set - Frame Order Id
 			params.put("appTypeId", SalesConstants.APP_TYPE_CODE_ID_AUX);
-			params.put("asSlutnResnId", 461);
 
-			/*EgovMap rslt = orderRequestService.selectCompleteASIDByOrderIDSolutionReason(params);
-			if(rslt == null) {
-				throw new ApplicationException(AppConstants.FAIL, messageAccessor.getMessage("sal.alert.msg.mbsExpired"));
-			}
-			params.put("hiddenFreeASID", CommonUtils.nvl(rslt.get("asId")));*/
+			params.put("cmbOrderProduct", CommonUtils.nvl("ordProduct1"));      // Product ID
+			params.put("ordPriceId", CommonUtils.nvl("ordPriceId1"));
+			params.put("ordPrice", CommonUtils.nvl("ordPrice1"));
+			params.put("ordPv", CommonUtils.nvl("ordPv1"));
+			params.put("ordRentalFees", CommonUtils.nvl("ordRentalFees1"));
+			params.put("cmbPromotion", CommonUtils.nvl("ordPromo1"));           // Promotion ID
+			params.put("promoDiscPeriodTp", CommonUtils.nvl("promoDiscPeriodTp1"));
+			params.put("promoDiscPeriod", CommonUtils.nvl("promoDiscPeriod1"));
+			params.put("orgOrdPrice", CommonUtils.nvl("orgOrdPrice1"));
+			params.put("orgOrdRentalFees", CommonUtils.nvl("orgOrdRentalFees1"));
+			// frame order (mth_rent_amt, def_rent_amt) = 0
+			params.put("mthRentAmt", BigDecimal.ZERO);
+			params.put("defRentAmt", BigDecimal.ZERO);
+			// frame order NOR_AMT = 0
+			params.put("norAmt", BigDecimal.ZERO);
 
 		    // update - Product Exchange
 			this.saveHcRequestProdExch(params, sessionVO);
@@ -300,13 +340,19 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
         callEntryMasterVO.setUpdUserId(logUsrId); // UPDATE USER ID
         callEntryMasterVO.setOriCallDt(dpCallLogDate); // CALL DATE FROM USER
 
+        CallEntryVO cancCallEntryMasterVO = new CallEntryVO(); // CALL ENTRY
 	    CallResultVO cancCallResultDetailsVO = new CallResultVO(); // CALL RESULT
 	    InvStkMovementVO stkMovementMasterVO = new InvStkMovementVO(); // STOCK MOVEMENT
 	    StkReturnEntryVO stkReturnMasterVO = new StkReturnEntryVO(); // STOCK RETURN
+	    SalesOrderMVO salesOrderMVO = new SalesOrderMVO(); // SALES ORDER MASTER
+	    SalesOrderDVO salesOrderDVO = new SalesOrderDVO(); // SALES ORDER SUB
 
 	    if (SalesConstants.STATUS_ACTIVE == stusCodeId) { // ACTIVE
+	    	  this.preprocCancelCallEntryMaster(cancCallEntryMasterVO, params); // NEW INSTALLATION CALLOG WITH CANCEL STATUS
     	      this.preprocCancelCallResultDetails(cancCallResultDetailsVO, params); // NEW INSTALLATION CALLOG DETIALS WITH CANCEL STATUS
 
+    	      this.preprocSalesOrderM(salesOrderMVO, params); // SALES ORD MASTER
+    	      this.preprocSalesOrderD(salesOrderDVO, params); // SALES ORD SUB
 	    } else { // COMPLETED
     	      this.preprocStkMovementMaster(stkMovementMasterVO, params); // STOCK MOVEMENT MASTER
     	      this.preprocStkReturnMaster(stkReturnMasterVO, params); // STOCK MOVEMENT SUB
@@ -361,6 +407,10 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
     	      ccleMap.put("updUserId", logUsrId);
 
     	      orderRequestMapper.updateCallEntry2(ccleMap); // UPDATE CALL LOG MASTER'S STATUS AND RESULT ID
+
+    	      // [19/10/2015] MODIFIED BY CHIA
+              orderRequestMapper.updateSalesOrderM(salesOrderMVO); // UPDATE SALES ORDER MASTER DATA
+              orderRequestMapper.updateSalesOrderD(salesOrderDVO); // UPDATE SALES ORDER DETAILS
 
 	    } else { // AFTER INSTALL CASE
     	      stkMovementMasterVO.setInstallEntryId(orderExchangeMasterVO.getInstallEntryId());
@@ -475,44 +525,36 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
         salesOrderExchangeVO.setSoExchgUnderFreeAsId(CommonUtils.intNvl(params.get("hiddenFreeASID")));
 
         int appTypeId = CommonUtils.intNvl(somMap.get("appTypeId"));
-        int promoId = CommonUtils.intNvl(somMap.get("promoId"));
-        int itmStkId = CommonUtils.intNvl(sodMap.get("itmStkId"));
 
         // DATA FOR OLD PRODUCT
         salesOrderExchangeVO.setSoExchgOldAppTypeId(appTypeId); // OLD APPLICATION TYPE - SAME AS PREVIOUS
-        salesOrderExchangeVO.setSoExchgOldStkId(itmStkId); // OLD PRODUCT CODE
-        salesOrderExchangeVO.setSoExchgOldPromoId(promoId); // OLD PROMOTION ID
+        salesOrderExchangeVO.setSoExchgOldStkId(CommonUtils.intNvl(sodMap.get("itmStkId"))); // OLD PRODUCT CODE
+        salesOrderExchangeVO.setSoExchgOldPromoId(CommonUtils.intNvl(somMap.get("promoId"))); // OLD PROMOTION ID
         salesOrderExchangeVO.setSoExchgOldCallEntryId(0);
 
         // DATA FOR NEW EXCHANGE PRODUCT
         salesOrderExchangeVO.setSoExchgNwAppTypeId(appTypeId); // NEW APPLICATION TYPE - SAME AS PREVIOUS
-        salesOrderExchangeVO.setSoExchgNwStkId(itmStkId); // NEW SELECTED PRODUCT
-        salesOrderExchangeVO.setSoExchgNwPromoId(promoId);
+        salesOrderExchangeVO.setSoExchgNwStkId(CommonUtils.intNvl(params.get("cmbOrderProduct"))); // NEW SELECTED PRODUCT
+        salesOrderExchangeVO.setSoExchgNwPromoId(CommonUtils.intNvl(params.get("cmbPromotion")));
         salesOrderExchangeVO.setSoExchgNwCallEntryId(0);
 
-        int itmPrcId = CommonUtils.intNvl(sodMap.get("itmPrcId"));
         int custId = CommonUtils.intNvl(somMap.get("custId"));
-        BigDecimal totAmt = new BigDecimal(CommonUtils.intNvl(somMap.get("totAmt")));
-        BigDecimal totPv = new BigDecimal(CommonUtils.intNvl(somMap.get("totPv")));
-        BigDecimal mthRentAmt = new BigDecimal(CommonUtils.intNvl(somMap.get("mthRentAmt")));
-        BigDecimal defRentAmt = new BigDecimal(CommonUtils.intNvl(somMap.get("defRentAmt")));
 
         // SALES ORDER EXCHANGE - OLD
-        salesOrderExchangeVO.setSoExchgOldPrcId(itmPrcId);
-        salesOrderExchangeVO.setSoExchgOldPrc(totAmt);
-        salesOrderExchangeVO.setSoExchgOldPv(totPv);
-	    salesOrderExchangeVO.setSoExchgOldRentAmt(mthRentAmt);
-	    salesOrderExchangeVO.setSoExchgOldDefRentAmt(defRentAmt);
+        salesOrderExchangeVO.setSoExchgOldPrcId(CommonUtils.intNvl(sodMap.get("itmPrcId")));
+        salesOrderExchangeVO.setSoExchgOldPrc(new BigDecimal(CommonUtils.intNvl(somMap.get("totAmt"))));
+        salesOrderExchangeVO.setSoExchgOldPv(new BigDecimal(CommonUtils.intNvl(somMap.get("totPv"))));
+	    salesOrderExchangeVO.setSoExchgOldRentAmt(new BigDecimal(CommonUtils.intNvl(somMap.get("mthRentAmt"))));
+	    salesOrderExchangeVO.setSoExchgOldDefRentAmt(new BigDecimal(CommonUtils.intNvl(somMap.get("defRentAmt"))));
 	    salesOrderExchangeVO.setSoExchgOldCustId(custId);
 
 	    // SALES ORDER EXCHANGE - NEW
-	    salesOrderExchangeVO.setSoExchgNwPrcId(itmPrcId); // NEW PRICE ID
-        salesOrderExchangeVO.setSoExchgNwPrc(totAmt); // NEW PRICE
-        salesOrderExchangeVO.setSoExchgNwPv(totPv); // NEW PV
-        salesOrderExchangeVO.setSoExchgNwRentAmt(mthRentAmt); // NEW RENTAL AMOUNT
-        salesOrderExchangeVO.setSoExchgNwDefRentAmt(defRentAmt);
+	    salesOrderExchangeVO.setSoExchgNwPrcId(CommonUtils.intNvl(params.get("ordPriceId"))); // NEW PRICE ID
+        salesOrderExchangeVO.setSoExchgNwPrc(new BigDecimal(CommonUtils.intNvl(params.get("ordPrice")))); // NEW PRICE
+        salesOrderExchangeVO.setSoExchgNwPv(new BigDecimal(CommonUtils.intNvl(params.get("ordPv")))); // NEW PV
+        salesOrderExchangeVO.setSoExchgNwRentAmt(new BigDecimal(CommonUtils.intNvl(params.get("mthRentAmt")))); // NEW RENTAL AMOUNT
+        salesOrderExchangeVO.setSoExchgNwDefRentAmt(new BigDecimal(CommonUtils.intNvl(params.get("defRentAmt"))));
         salesOrderExchangeVO.setSoExchgNwCustId(custId);
-
 	}
 
 
@@ -572,6 +614,45 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
         stkReturnEntryVO.setCtId(0);
         stkReturnEntryVO.setCtGrp("");
         stkReturnEntryVO.setCallEntryId(0);
+	}
+
+	private void preprocCancelCallEntryMaster(CallEntryVO callEntryVO, Map<String, Object> params) {
+		callEntryVO.setCallEntryId(0);
+	    callEntryVO.setSalesOrdId(CommonUtils.intNvl(params.get("salesOrdId")));
+        callEntryVO.setTypeId(257); // NEW INSTALLATION ORDER
+        callEntryVO.setStusCodeId(SalesConstants.STATUS_CANCELLED); // 10 - CANCEL
+        callEntryVO.setResultId(0);
+        callEntryVO.setDocId(0);
+        callEntryVO.setCrtUserId(CommonUtils.intNvl(params.get("logUsrId"))); // CREATE USER ID
+        callEntryVO.setCallDt(SalesConstants.DEFAULT_DATE); // 01/01/1900
+        callEntryVO.setIsWaitForCancl(SalesConstants.IS_FALSE); // 0
+        callEntryVO.setHapyCallerId(0);
+        callEntryVO.setUpdUserId(CommonUtils.intNvl(params.get("logUsrId"))); // UPDATE USER ID
+        callEntryVO.setOriCallDt(SalesConstants.DEFAULT_DATE); // 01/01/1900
+	}
+
+	private void preprocSalesOrderM(SalesOrderMVO salesOrderMVO, Map<String, Object> params) {
+		salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(params.get("salesOrdId")));
+		salesOrderMVO.setTotAmt(new BigDecimal(CommonUtils.intNvl(params.get("ordPrice")))); // NEW PRICE
+		salesOrderMVO.setTotPv(new BigDecimal(CommonUtils.intNvl(params.get("ordPv")))); // NEW PV
+		salesOrderMVO.setMthRentAmt(new BigDecimal(CommonUtils.intNvl(params.get("mthRentAmt")))); // NEW MONTHLY RENTAL AMOUNT
+		salesOrderMVO.setDefRentAmt(new BigDecimal(CommonUtils.intNvl(params.get("defRentAmt"))));
+		salesOrderMVO.setPromoId(CommonUtils.intNvl(params.get("cmbPromotion"))); // IF CHECKED, OLD PROMOTION CODE APPLY ELSE NEW PROMOTION USED
+		salesOrderMVO.setUpdUserId(CommonUtils.intNvl(params.get("logUsrId")));  // UPDATE USER ID
+		salesOrderMVO.setPromoDiscPeriodTp(CommonUtils.intNvl(params.get("promoDiscPeriodTp")));
+		salesOrderMVO.setPromoDiscPeriod(CommonUtils.intNvl(params.get("promoDiscPeriod")));
+		salesOrderMVO.setNorAmt(new BigDecimal(CommonUtils.intNvl(params.get("norAmt"))));
+		salesOrderMVO.setNorRntFee(new BigDecimal(CommonUtils.intNvl(params.get("orgOrdRentalFees"))));
+		salesOrderMVO.setDiscRntFee(new BigDecimal(CommonUtils.intNvl(params.get("ordRentalFees"))));
+	}
+
+	private void preprocSalesOrderD(SalesOrderDVO salesOrderDVO, Map<String, Object> params) {
+        salesOrderDVO.setSalesOrdId(CommonUtils.intNvl(params.get("salesOrdId")));
+        salesOrderDVO.setItmStkId(CommonUtils.intNvl(params.get("cmbOrderProduct")));
+        salesOrderDVO.setItmPrcId(CommonUtils.intNvl(params.get("hiddenPriceID")));
+        salesOrderDVO.setItmPrc(new BigDecimal(CommonUtils.intNvl(params.get("ordPrice"))));
+        salesOrderDVO.setItmPv(new BigDecimal(CommonUtils.intNvl(params.get("ordPv"))));
+        salesOrderDVO.setUpdUserId(CommonUtils.intNvl(params.get("logUsrId")));
 	}
 
 }
