@@ -98,7 +98,7 @@ $(document).ready(function(){
 	    , { dataField : "svmByOther", headerText : "<spring:message code='sal.title.svmOther'/>" }
 	    , { dataField : "extradeByOwn", headerText : "<spring:message code='sal.title.exTradeOwn'/>" }
 	    , { dataField : "extradeByOther", headerText : "<spring:message code='sal.title.extradeOther'/>" }
-	    , { dataField : "rejoinRate", headerText : "<spring:message code='sal.title.rejoinPercent'/>" }
+	    , { dataField : "rejoinRate", headerText : "<spring:message code='sal.title.rejoinPercent'/>",dataType : "numeric",formatString : "###0.00", }
     ];
 
     // ajax list 조회.
