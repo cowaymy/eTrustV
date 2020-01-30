@@ -258,6 +258,46 @@ public class InstallationResultForm {
 		this.transactionId = transactionId;
 	}
 
+	private String serialChk;
+	public String getSerialChk() {
+		return serialChk;
+	}
+	public void setSerialChk(String serialChk) {
+		this.serialChk = serialChk;
+	}
+
+	private String realAsExchangeYn;
+	public String getRealAsExchangeYn() {
+		return realAsExchangeYn;
+	}
+	public void setRealAsExchangeYn(String realAsExchangeYn) {
+		this.realAsExchangeYn = realAsExchangeYn;
+	}
+
+	private String realBeforeProductCode;
+	public String getRealBeforeProductCode() {
+		return realBeforeProductCode;
+	}
+	public void setRealBeforeProductCode(String realBeforeProductCode) {
+		this.realBeforeProductCode = realBeforeProductCode;
+	}
+
+	private String realBeforeProductName;
+	public String getRealBeforeProductName() {
+		return realBeforeProductName;
+	}
+	public void setRealBeforeProductName(String realBeforeProductName) {
+		this.realBeforeProductName = realBeforeProductName;
+	}
+
+	private String realBeforeProductSerialNo;
+	public String getRealBeforeProductSerialNo() {
+		return realBeforeProductSerialNo;
+	}
+	public void setRealBeforeProductSerialNo(String realBeforeProductSerialNo) {
+		this.realBeforeProductSerialNo = realBeforeProductSerialNo;
+	}
+
 
 
 
