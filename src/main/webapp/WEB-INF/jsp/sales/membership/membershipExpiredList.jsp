@@ -38,8 +38,8 @@ $(document).ready(function(){
         $("#orgCode").attr("class", "w100p readonly");
         $("#orgCode").attr("readonly", "readonly");
 
-        doDefCombo(expiredPeriodData, '7' ,'expiredPeriod', 'M', 'fn_multiCombo');
-        $("#expiredPeriod").multipleSelect("disable");
+        /* doDefCombo(expiredPeriodData, '7' ,'expiredPeriod', 'M', 'fn_multiCombo');
+        $("#expiredPeriod").multipleSelect("disable"); */
 
 
     }else if("${SESSION_INFO.memberLevel}" =="2"){
@@ -53,8 +53,8 @@ $(document).ready(function(){
         $("#grpCode").attr("class", "w100p readonly");
         $("#grpCode").attr("readonly", "readonly");
 
-        doDefCombo(expiredPeriodData, '7' ,'expiredPeriod', 'M', 'fn_multiCombo');
-        $("#expiredPeriod").multipleSelect("disable");
+        /* doDefCombo(expiredPeriodData, '7' ,'expiredPeriod', 'M', 'fn_multiCombo');
+        $("#expiredPeriod").multipleSelect("disable"); */
 
     }else if("${SESSION_INFO.memberLevel}" =="3"){
 
@@ -70,8 +70,8 @@ $(document).ready(function(){
         $("#deptCode").attr("class", "w100p readonly");
         $("#deptCode").attr("readonly", "readonly");
 
-        doDefCombo(expiredPeriodData, '7' ,'expiredPeriod', 'M', 'fn_multiCombo');
-        $("#expiredPeriod").multipleSelect("disable");
+        /* doDefCombo(expiredPeriodData, '7' ,'expiredPeriod', 'M', 'fn_multiCombo');
+        $("#expiredPeriod").multipleSelect("disable"); */
 
     }else if("${SESSION_INFO.memberLevel}" =="4"){
 
