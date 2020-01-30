@@ -1262,7 +1262,7 @@
         $('#ordPromo'+tagNum).removeAttr("disabled");
 
         if(appTypeVal !=66){
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, isSrvPac:'Y'}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
         } else {
             doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
         }
@@ -1361,7 +1361,6 @@
         // Product Exchange - 제품변경
         if(tabNm == 'PEXC') {
             if(fn_getCheckAccessRight(logInUserid, 10)) {
-
             	Common.ajaxSync("GET", "/sales/order/chkCboPromPck.do", {promo : PROMO_CODE}, function(rsltInfo) {
                     if (rsltInfo == 1) {
                         Common.alert('<spring:message code="sales.msg.errEdtPromCbo" />');
@@ -2379,6 +2378,7 @@
 
     function fn_loadListPexch() {
         var stkType = APP_TYPE_ID == '66' ? '1' : '2';
+
         if(FormUtil.isNotEmpty(STOCK_ID2)) {
         	$('#ordProduct2').removeAttr("disabled");
         }
