@@ -198,7 +198,32 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 
 						logger.debug("++++ String.valueOf( insApiresult.get('serialRequireChkYn')) ::" + String.valueOf( insApiresult.get("serialRequireChkYn")) );
 
-    					if("Y".equals(  String.valueOf( insApiresult.get("serialRequireChkYn")) )){
+    					if("Y".equals(  String.valueOf(insApiresult.get("serialRequireChkYn")) )){
+    						if ("Y".equals(String.valueOf(insApiresult.get("serialChk")))) {
+    							if ("Y".equals(String.valueOf(insApiresult.get("realAsExchangeYn")))) {
+    								params.put("scanSerial", String.valueOf(insApiresult.get("serialNo")));
+    								params.put("realBeforeProductSerialNo", String.valueOf(insApiresult.get("realBeforeProductSerialNo")));
+    								params.put("salesOrdId", String.valueOf(installResult.get("salesOrdId")));
+    								params.put("itmCode", String.valueOf(insApiresult.get("realBeforeProductCode")));
+    								params.put("reqstNo", String.valueOf(installResult.get("installEntryNo")));
+    								params.put("callGbn", "EXCH_RETURN");
+    								params.put("mobileYn", "Y");
+    								params.put("userId", userId);
+    								params.put("pErrcode", "");
+    	        					params.put("pErrmsg", "");
+    								MSvcLogApiService.SP_SVC_BARCODE_CHANGE(params);
+
+    								if (!"000".equals(params.get("pErrcode"))) {
+    	        						String procTransactionId = transactionId;
+    	        						String procName = "Installation";
+    	        						String procKey = serviceNo;
+    	        						String procMsg = "Failed to Barcode Save";
+    	        						String errorMsg = "[API] " + params.get("pErrmsg");
+    	        						throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+    	    						}
+    							}
+    						}
+
             				// KR_HAN ADD
     						//  SP_SVC_BARCODE_SAVE : KR_HAN ADD START
     	        			params.put("scanSerial", String.valueOf(insApiresult.get("serialNo")));
