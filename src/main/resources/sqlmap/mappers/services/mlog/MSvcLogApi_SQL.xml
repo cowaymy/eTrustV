@@ -932,6 +932,10 @@
                    NVL (SYS0026M.SERIAL_CHK, 'N') AS SERIAL_CHK,
                    NVL (TO_CHAR (SAL0233M.AREA_COVRG_ID), '') AS before_Product_Code,
                    NVL (TO_CHAR (SVC0113D.MATT_SZ), '') AS before_Product_Serial_No
+                   , CASE WHEN CCR0006D.TYPE_ID = '258' THEN 'Y' ELSE 'N' END AS real_As_Exchange_Yn
+                   , FN_GET_ORDER_SERIAL(SAL0001D.SALES_ORD_ID, NULL) AS real_Before_Product_Serial_No
+                   , SYS0026M.STK_CODE AS REAL_BEFORE_PRODUCT_CODE
+                   , SYS0026M.STK_DESC AS REAL_BEFORE_PRODUCT_NAME
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
@@ -1059,6 +1063,10 @@
          , TO_CHAR(SERIAL_CHK) AS serial_Chk
          , TO_CHAR(FRA_SERIAL_CHK) AS fra_Serial_Chk
          , TO_CHAR(SEL_FRA_SERIAL_NO) AS sel_Fra_Serial_No
+         , TO_CHAR(REAL_AS_EXCHN_YN) AS real_As_Exchn_Yn
+         , TO_CHAR(REAL_BEFORE_PRODUCT_CODE) AS real_Before_Product_Code
+         , TO_CHAR(REAL_BEFORE_PRODUCT_NAME) AS real_Before_Porduct_Name
+         , TO_CHAR(REAL_BEFORE_PRODUCT_SERIAL_NO) AS real_Before_Product_Serial_No
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -4359,6 +4367,14 @@
   <select id="SP_SVC_BARCODE_SAVE" parameterType="Map"  statementType="CALLABLE">
     {
         call SP_SVC_BARCODE_SAVE(#{scanSerial}, NULL, #{salesOrdId}, #{reqstNo}, #{delvryNo}, #{callGbn}, #{mobileYn}, #{userId}
+        , #{pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
+        , #{pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR})
+    }
+  </select>
+
+  <select id="SP_SVC_BARCODE_CHANGE" parameterType="Map"  statementType="CALLABLE">
+    {
+        call SP_SVC_BARCODE_CHANGE(#{scanSerial}, #{realBeforeProductSerialNo}, #{salesOrdId}, #{itmCode}, #{reqstNo}, #{callGbn}, #{mobileYn}, #{userId}
         , #{pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
         , #{pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR})
     }
