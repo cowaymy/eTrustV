@@ -79,6 +79,10 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 				EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
 				params.put("installEntryId", installResult.get("installEntryId"));
 
+				Map<String, Object> salesOrdId = new HashMap<String, Object>();
+				salesOrdId.put("salesOrdId", String.valueOf(installResult.get("salesOrdId")));
+				String beforeProductSerialNo = MSvcLogApiService.getBeforeProductSerialNo(salesOrdId); // SELECT MEM_ID FROM ORG0001D WHERE mem_code = #{userId}
+
 				// DETAIL INFO SELECT (installEntryId)
 				EgovMap orderInfo = installationResultListService.getOrderInfo(params);
 
@@ -201,26 +205,28 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     					if("Y".equals(  String.valueOf(insApiresult.get("serialRequireChkYn")) )){
     						if ("Y".equals(String.valueOf(insApiresult.get("serialChk")))) {
     							if ("Y".equals(String.valueOf(insApiresult.get("realAsExchangeYn")))) {
-    								params.put("scanSerial", String.valueOf(insApiresult.get("serialNo")));
-    								params.put("realBeforeProductSerialNo", String.valueOf(insApiresult.get("realBeforeProductSerialNo")));
-    								params.put("salesOrdId", String.valueOf(installResult.get("salesOrdId")));
-    								params.put("itmCode", String.valueOf(insApiresult.get("realBeforeProductCode")));
-    								params.put("reqstNo", String.valueOf(installResult.get("installEntryNo")));
-    								params.put("callGbn", "EXCH_RETURN");
-    								params.put("mobileYn", "Y");
-    								params.put("userId", userId);
-    								params.put("pErrcode", "");
-    	        					params.put("pErrmsg", "");
-    								MSvcLogApiService.SP_SVC_BARCODE_CHANGE(params);
+    								if (beforeProductSerialNo != String.valueOf(insApiresult.get("realBeforeProductSerialNo"))) {
+    									params.put("scanSerial", String.valueOf(insApiresult.get("realBeforeProductSerialNo")));
+        								params.put("realBeforeProductSerialNo", beforeProductSerialNo);
+        								params.put("salesOrdId", String.valueOf(installResult.get("salesOrdId")));
+        								params.put("itmCode", String.valueOf(insApiresult.get("realBeforeProductCode")));
+        								params.put("reqstNo", String.valueOf(installResult.get("installEntryNo")));
+        								params.put("callGbn", "EXCH_RETURN");
+        								params.put("mobileYn", "Y");
+        								params.put("userId", userId);
+        								params.put("pErrcode", "");
+        	        					params.put("pErrmsg", "");
+        								MSvcLogApiService.SP_SVC_BARCODE_CHANGE(params);
 
-    								if (!"000".equals(params.get("pErrcode"))) {
-    	        						String procTransactionId = transactionId;
-    	        						String procName = "Installation";
-    	        						String procKey = serviceNo;
-    	        						String procMsg = "Failed to Barcode Save";
-    	        						String errorMsg = "[API] " + params.get("pErrmsg");
-    	        						throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-    	    						}
+        								if (!"000".equals(params.get("pErrcode"))) {
+        	        						String procTransactionId = transactionId;
+        	        						String procName = "Installation";
+        	        						String procKey = serviceNo;
+        	        						String procMsg = "Failed to Barcode Save";
+        	        						String errorMsg = "[API] " + params.get("pErrmsg");
+        	        						throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+        	    						}
+    								}
     							}
     						}
 
