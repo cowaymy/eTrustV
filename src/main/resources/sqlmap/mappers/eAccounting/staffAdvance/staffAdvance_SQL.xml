@@ -569,7 +569,7 @@
                 ADV_LOC_TO = #{locationTo},
             </if>
             ADV_REM = #{trvReqRem},
-            ADV_REFD_DT = #{refdDate},
+            ADV_REFD_DT = TO_DATE(#{refdDate}, 'DD/MM/YYYY'),
             UPD_DT = SYSDATE
         WHERE CLM_NO = #{clmNo}
     </update>
