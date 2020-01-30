@@ -159,7 +159,7 @@
      <colgroup>
       <col style="width: 130px" />
       <col style="width: 350px" />
-      <col style="width: 170px" />
+      <col style="width: 150px" />
       <col style="width: *" />
      </colgroup>
      <tbody>
@@ -179,9 +179,13 @@
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.title.ActionCT' /></th>
-       <td colspan="3"><span><c:out value="${installInfo.c3} - ${installInfo.c4}" /></span></td>
+       <td><span><c:out value="${installInfo.c3} - ${installInfo.c4}" /></span></td>
+       <c:if test="${codeId == '258'}">
+           <th scope="row">Before Serial</th>
+           <td ><span><c:out value="${orderDetail.basicInfo.exchReturnSerialNo}" /></span></td>
+       </c:if>
       </tr>
-      <tr>
+	  <tr>
        <th scope="row"><spring:message code='service.title.SirimNo' /><span class="must"> *</span></th>
        <td><input type="text" id="sirimNo" name="sirimNo" class='w100p' value="<c:out value="${installInfo.sirimNo}"/>" /></td>
        <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must"> *</span></th>
