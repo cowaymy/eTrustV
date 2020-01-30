@@ -953,6 +953,11 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   public EgovMap getPrFraOrdInfo(Map<String, Object> params) {
     return MSvcLogApiMapper.getPrFraOrdInfo(params);
   }
+
+  @Override
+  public String getBeforeProductSerialNo(Map<String, Object> params) {
+    return MSvcLogApiMapper.getBeforeProductSerialNo(params);
+  }
   /* Woongjin Jun */
 
   /* Woongjin Han */

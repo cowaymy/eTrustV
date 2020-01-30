@@ -276,6 +276,8 @@ public interface MSvcLogApiMapper {
   EgovMap getPrdRtnDelvryNo(Map<String, Object> params);
 
   EgovMap getPrFraOrdInfo(Map<String, Object> params);
+
+  String getBeforeProductSerialNo(Map<String, Object> params);
   /* Woongjin Jun */
 
   /* Woongjin han */
