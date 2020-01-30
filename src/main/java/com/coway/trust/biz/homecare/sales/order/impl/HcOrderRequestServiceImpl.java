@@ -228,35 +228,35 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 		EgovMap hcOrder = hcOrderListService.selectHcOrderInfo(params);
 		int fraOrdId = CommonUtils.intNvl(hcOrder.get("anoOrdId"));  // get - Frame Order Id
 
-		BigDecimal norAmt1 =  new BigDecimal(CommonUtils.intNvl("orgOrdPrice1"));
-		BigDecimal mrhRenAmt1 = new BigDecimal(CommonUtils.intNvl("ordRentalFees1"));
-		BigDecimal defRentAmt1 = new BigDecimal(CommonUtils.intNvl("ordRentalFees1"));
+		BigDecimal norAmt1 =  new BigDecimal(CommonUtils.intNvl(params.get("orgOrdPrice1")));
+		BigDecimal mrhRenAmt1 = new BigDecimal(CommonUtils.intNvl(params.get("ordRentalFees1")));
+		BigDecimal defRentAmt1 = new BigDecimal(CommonUtils.intNvl(params.get("ordRentalFees1")));
 
 		BigDecimal norAmt2 = BigDecimal.ZERO;
 		BigDecimal discRntFee2 = BigDecimal.ZERO;
 
 		// has order frame
 		if(fraOrdId > 0) {
-			discRntFee2 = new BigDecimal(CommonUtils.intNvl("ordRentalFees2"));  // frame rental fee
-			norAmt2 = new BigDecimal(CommonUtils.intNvl("orgOrdPrice2"));
+			discRntFee2 = new BigDecimal(CommonUtils.intNvl(params.get("ordRentalFees2")));  // frame rental fee
+			norAmt2 = new BigDecimal(CommonUtils.intNvl(params.get("orgOrdPrice2")));
 
 			norAmt1 = norAmt1 == null ? BigDecimal.ZERO : norAmt1;
 
-			norAmt2 = new BigDecimal(CommonUtils.intNvl("orgOrdPrice2")); // frame NOR_AMT
+			norAmt2 = new BigDecimal(CommonUtils.intNvl(params.get("orgOrdPrice2"))); // frame NOR_AMT
 			norAmt2 = norAmt2 == null ? BigDecimal.ZERO : norAmt2;
 		}
 
 		// update - Product Exchange
-		params.put("cmbOrderProduct", CommonUtils.nvl("ordProduct1"));      // Product ID
-		params.put("ordPriceId", CommonUtils.nvl("ordPriceId1"));
-		params.put("ordPrice", CommonUtils.nvl("ordPrice1"));
-		params.put("ordPv", CommonUtils.nvl("ordPv1"));
-		params.put("ordRentalFees", CommonUtils.nvl("ordRentalFees1"));
-		params.put("cmbPromotion", CommonUtils.nvl("ordPromo1"));           // Promotion ID
-		params.put("promoDiscPeriodTp", CommonUtils.nvl("promoDiscPeriodTp1"));
-		params.put("promoDiscPeriod", CommonUtils.nvl("promoDiscPeriod1"));
-		params.put("orgOrdPrice", CommonUtils.nvl("orgOrdPrice1"));
-		params.put("orgOrdRentalFees", CommonUtils.nvl("orgOrdRentalFees1"));
+		params.put("cmbOrderProduct", CommonUtils.nvl(params.get("ordProduct1")));      // Product ID
+		params.put("ordPriceId", CommonUtils.nvl(params.get("ordPriceId1")));
+		params.put("ordPrice", CommonUtils.nvl(params.get("ordPrice1")));
+		params.put("ordPv", CommonUtils.nvl(params.get("ordPv1")));
+		params.put("ordRentalFees", CommonUtils.nvl(params.get("ordRentalFees1")));
+		params.put("cmbPromotion", CommonUtils.nvl(params.get("ordPromo1")));           // Promotion ID
+		params.put("promoDiscPeriodTp", CommonUtils.nvl(params.get("promoDiscPeriodTp1")));
+		params.put("promoDiscPeriod", CommonUtils.nvl(params.get("promoDiscPeriod1")));
+		params.put("orgOrdPrice", CommonUtils.nvl(params.get("orgOrdPrice1")));
+		params.put("orgOrdRentalFees", CommonUtils.nvl(params.get("orgOrdRentalFees1")));
 		// mattress order (mth_rent_amt, def_rent_amt) + frame order(disc_rnt_fee)
 		params.put("mthRentAmt", mrhRenAmt1.add(discRntFee2));
 		params.put("defRentAmt", defRentAmt1.add(discRntFee2));
@@ -270,16 +270,16 @@ public class HcOrderRequestServiceImpl extends EgovAbstractServiceImpl implement
 			params.put("salesOrdId", fraOrdId);  // set - Frame Order Id
 			params.put("appTypeId", SalesConstants.APP_TYPE_CODE_ID_AUX);
 
-			params.put("cmbOrderProduct", CommonUtils.nvl("ordProduct1"));      // Product ID
-			params.put("ordPriceId", CommonUtils.nvl("ordPriceId1"));
-			params.put("ordPrice", CommonUtils.nvl("ordPrice1"));
-			params.put("ordPv", CommonUtils.nvl("ordPv1"));
-			params.put("ordRentalFees", CommonUtils.nvl("ordRentalFees1"));
-			params.put("cmbPromotion", CommonUtils.nvl("ordPromo1"));           // Promotion ID
-			params.put("promoDiscPeriodTp", CommonUtils.nvl("promoDiscPeriodTp1"));
-			params.put("promoDiscPeriod", CommonUtils.nvl("promoDiscPeriod1"));
-			params.put("orgOrdPrice", CommonUtils.nvl("orgOrdPrice1"));
-			params.put("orgOrdRentalFees", CommonUtils.nvl("orgOrdRentalFees1"));
+			params.put("cmbOrderProduct", CommonUtils.nvl(params.get("ordProduct1")));      // Product ID
+			params.put("ordPriceId", CommonUtils.nvl(params.get("ordPriceId1")));
+			params.put("ordPrice", CommonUtils.nvl(params.get("ordPrice1")));
+			params.put("ordPv", CommonUtils.nvl(params.get("ordPv1")));
+			params.put("ordRentalFees", CommonUtils.nvl(params.get("ordRentalFees1")));
+			params.put("cmbPromotion", CommonUtils.nvl(params.get("ordPromo1")));           // Promotion ID
+			params.put("promoDiscPeriodTp", CommonUtils.nvl(params.get("promoDiscPeriodTp1")));
+			params.put("promoDiscPeriod", CommonUtils.nvl(params.get("promoDiscPeriod1")));
+			params.put("orgOrdPrice", CommonUtils.nvl(params.get("orgOrdPrice1")));
+			params.put("orgOrdRentalFees", CommonUtils.nvl(params.get("orgOrdRentalFees1")));
 			// frame order (mth_rent_amt, def_rent_amt) = 0
 			params.put("mthRentAmt", BigDecimal.ZERO);
 			params.put("defRentAmt", BigDecimal.ZERO);
