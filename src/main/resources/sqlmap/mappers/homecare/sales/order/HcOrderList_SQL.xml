@@ -117,9 +117,6 @@
                     </if>
 
                     WHERE 1 = 1
-                       AND S1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
-                                                             WHERE AA.CODE = BB.CODE
-                                                                 AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
                         <if test='ordDt == null || ordDt == ""'>
                              AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
                         </if>
@@ -206,6 +203,9 @@
                         <if test='bndlNo != null and bndlNo != ""'>
                             AND UPPER(D1.BNDL_NO) = UPPER(#{bndlNo})
                         </if>
+                        AND S1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                             WHERE AA.CODE = BB.CODE
+                                                                 AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
          ) T
          ORDER BY T.ORD_NO ASC
     </select>
