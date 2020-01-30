@@ -5115,6 +5115,11 @@
     ]]>
   </select>
 
+  <select id="getBeforeProductSerialNo" parameterType="Map" resultType="String">
+    SELECT FN_GET_ORDER_SERIAL(#{salesOrdId}, NULL) AS beforeProductSerialNo
+       FROM DUAL
+  </select>
+
   <select id="getDelvryNo" parameterType="Map" resultType="egovMap">
         SELECT    /* [com.coway.trust.biz.services.mlog.impl.MSvcLogApiMapper.getDelvryNo] KR_HAN */
                       DISTINCT Y.DELVRY_NO DELVRY_NO
