@@ -603,8 +603,8 @@ var serialGubun = "1";
     <caption>table</caption>
     <colgroup>
      <col style="width: 130px" />
-     <col style="width: 350px" />
-     <col style="width: 170px" />
+     <col style="width: 330px" />
+     <col style="width: 150px" />
      <col style="width: *" />
     </colgroup>
     <tbody>
@@ -645,8 +645,8 @@ var serialGubun = "1";
     <caption>table</caption>
     <colgroup>
      <col style="width: 130px" />
-     <col style="width: 350px" />
-     <col style="width: 170px" />
+     <col style="width: 330px" />
+     <col style="width: 150px" />
      <col style="width: *" />
     </colgroup>
     <tbody>
