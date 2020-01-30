@@ -1002,8 +1002,8 @@
                 brnchId                 : $('#dscBrnchId').val(),
                 cntId                   : $('#hiddenInstCntcId').val(),
                 instct                  : $('#speclInstct').val(),
-                preDt                   : $('#prefInstDt').val(),
-                preTm                   : $('#prefInstTm').val()
+                preDt                   : FormUtil.isEmpty($('#prefInstDt').val().trim()) ? '01/01/1900' : $('#prefInstDt').val(),
+                preTm                   : FormUtil.isEmpty($('#prefInstTm').val().trim()) ? '00:00:00' : $('#prefInstTm').val()
             }
          //DOCUMENT SUBMISSION
         //,docSubmissionVOList         : GridCommon.getEditData(docGridID)
@@ -1253,7 +1253,7 @@
             msg += '<spring:message code="sal.alert.msg.plzSelInstallAddr" />';
         }
 
-        if(FormUtil.isEmpty($('#prefInstDt').val().trim())) {
+        /* if(FormUtil.isEmpty($('#prefInstDt').val().trim())) {
             isValid = false;
             msg += '<spring:message code="sal.alert.msg.plzSelPreferInstDate" />';
         }
@@ -1261,7 +1261,7 @@
         if(FormUtil.isEmpty($('#prefInstTm').val().trim())) {
             isValid = false;
             msg += '<spring:message code="sal.alert.msg.plzSelPreferInstTime" />';
-        }
+        } */
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
@@ -2271,9 +2271,9 @@
     </td> --%>
 </tr>
 <tr>
-    <th scope="row">Prefer Service Date<span class="must">*</span></th>
+    <th scope="row">Prefer Service Date<!-- <span class="must">*</span> --></th>
     <td><input id="prefInstDt" name="prefInstDt" type="text" title="Create start Date" placeholder="Prefer Service Date (dd/MM/yyyy)" class="j_date w100p" /></td>
-    <th scope="row">Prefer Service Time<span class="must">*</span></th>
+    <th scope="row">Prefer Service Time<!-- <span class="must">*</span> --></th>
     <td>
     <div class="time_picker"><!-- time_picker start -->
     <input id="prefInstTm" name="prefInstTm" type="text" title="" placeholder="Prefer Service Time (hh:mi tt)" class="time_date w100p" />
