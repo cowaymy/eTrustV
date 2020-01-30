@@ -1031,6 +1031,7 @@ public class InstallationResultListController {
 
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
     model.put("orderDetail", orderDetail);
+    model.put("codeId", params.get("codeId"));
     // 호출될 화면
     return "services/installation/editInstallationResultPop";
   }
