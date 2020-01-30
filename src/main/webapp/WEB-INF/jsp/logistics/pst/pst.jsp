@@ -141,6 +141,7 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
 
                     AUIGrid.setGridData(mdcGrid, result.data);
                     $("#mdc_grid").show();
+                    AUIGrid.resize(mdcGrid); // KR-OHK
                 });
             }
             /*$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
