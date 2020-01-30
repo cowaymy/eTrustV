@@ -164,4 +164,45 @@ public class PstController {
 		return ResponseEntity.ok(rmap);
 	}
 
+	//KR OHK : PST Serial Popup
+    @RequestMapping(value = "/pstIssuePop.do")
+    public String pstIssuePop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+    	model.addAttribute("url", params);
+        return "logistics/pst/pstIssuePop";
+    }
+
+    //KR OHK : PST Serial Check List
+    @RequestMapping(value = "/selectPstIssuePop.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> selectPstIssuePop(@RequestBody Map<String, Object> params, Model model) throws Exception {
+    	ReturnMessage result = new ReturnMessage();
+
+        List<EgovMap> list = pst.selectPstIssuePop(params);
+
+        result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		result.setDataList(list);
+		result.setTotal(list.size());
+
+		return ResponseEntity.ok(result);
+    }
+
+	// KR-OHK PST Serial Check save
+	@RequestMapping(value = "/pstMovementReqDeliverySerial.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> pstMovementReqDeliverySerial(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVO) {
+		int loginId = sessionVO.getUserId();
+		params.put("userId", loginId);
+
+		//reqst 만들기
+		pst.pstMovementReqDeliverySerial(params);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		//message.setData(returnValue);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+
 }

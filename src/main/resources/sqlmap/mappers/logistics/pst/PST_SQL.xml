@@ -18,9 +18,15 @@
 	     , S62.PST_LOC_ID pstlocid  , S28.WH_LOC_ID locid , S28.WH_LOC_CODE loccode , S28.WH_LOC_DESC locnm
 	     , S63.PST_ITM_STK_ID itmid , S26.STK_CODE itmcd , s26.STK_DESC itmnm , S26.UOM uom , UOM.CODE uomcd
 	     , S63.PST_ITM_REQ_QTY qty  , S63.PST_ITM_DO_QTY doqty, S63.PST_ITM_BAL_QTY balqty , S63.PST_ITM_PRC itmprc
-	     , 0 reqqty , S62.CRT_USER_ID userid , S26.SERIAL_CHK serialchk , S62.PST_CUR_RATE pcr
+	     , 0 reqqty , S62.CRT_USER_ID userid
+	     --, S26.SERIAL_CHK serialchk
+	     , case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pd_chk = 'Y' then 'Y' else 'N' end
+                  when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_ft_chk = 'Y'  then 'Y' else 'N' end
+                  when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pt_chk = 'Y' then 'Y' else 'N' end
+           else 'N' end serialchk
+	     , S62.PST_CUR_RATE pcr
 	     , S62.PST_CUR_TYPE_ID pcti, CUR.CODE pctcd , S32.CNT_NAME cntname, S62.PST_INVC_TYPE invtype
-
+         , S28.SERIAL_REQUIRE_CHK_YN
 	  FROM SAL0062D S62
 	     , SAL0063D S63
 	     , SYS0038M S38
@@ -179,7 +185,7 @@
  </insert>
  <update id="updatePSTsalesDetail" parameterType="Map">
     update SAL0063D
-	   set PST_ITM_DO_QTY   = #{reqqty}
+	   set PST_ITM_DO_QTY   = PST_ITM_DO_QTY + #{reqqty}
 	     , PST_ITM_BAL_QTY  = PST_ITM_BAL_QTY - #{reqqty}
 	 where PST_SALES_ORD_ID = #{psoid}
 	   and PST_ITM_STK_ID   = #{itmid}
@@ -367,5 +373,62 @@
         and l59.REF_DOC_NO = #{psono}
         and l59.matrl_doc_no = l60.matrl_doc_no
         order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
+ </select>
+
+ <select id="selectPstIssuePop" parameterType="Map" resultType="egovMap">
+ /* [com.coway.trust.biz.logistics.pst.impl.PstMapper.selectPstIssuePop] KR OHK */
+ SELECT REQST_NO, ITM_CODE itmcd , ITM_NAME itmnm, SERIAL_CHK, PST_ITM_BAL_QTY balqty
+          , DECODE(SERIAL_CHK, 'Y', SCAN_QTY, PST_ITM_BAL_QTY) reqqty
+	      , SERIAL_REQUIRE_CHK_YN
+	      , invtype, psttypeid, REQST_NO psono, psoid, dealerid, itmid, itmprc, crtdt1, locid, uom, pcr, pcti, pstpo, pctcd, cntname, dealernm
+   FROM (
+		    SELECT S62.PST_REF_NO REQST_NO
+			          ,S26.STK_CODE ITM_CODE
+			          ,S26.STK_DESC ITM_NAME
+			          ,S63.PST_ITM_REQ_QTY
+			          ,S63.PST_ITM_DO_QTY
+			          ,S63.PST_ITM_BAL_QTY
+			          ,(SELECT COUNT(1)
+                           FROM  LOG0099D Z1
+                         WHERE Z1.REQST_NO = S62.PST_REF_NO
+                             AND Z1.ITM_CODE = S26.STK_CODE
+                             AND Z1.SCAN_STUS_CODE = 'C'
+                             AND Z1.IO_TYPE = #{ioType}
+                             AND Z1.DELVRY_NO IS NULL
+                       ) AS SCAN_QTY
+			          ,CASE WHEN S26.STK_TYPE_ID= 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
+			                   WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+			                   WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+			           ELSE 'N'
+			           END AS SERIAL_CHK
+			          ,S28.SERIAL_REQUIRE_CHK_YN
+			          ,S62.PST_INVC_TYPE invtype
+			          ,S62.PST_TYPE psttypeid
+			          ,S62.PST_SALES_ORD_ID psoid
+			          ,S62.PST_DEALER_ID dealerid
+			          ,S63.PST_ITM_STK_ID itmid
+			          ,S63.PST_ITM_PRC itmprc
+			          ,TO_CHAR(S62.CRT_DT , 'YYYYMMDDhh24miss') crtdt1
+			          ,S28.WH_LOC_ID locid
+			          ,S26.UOM uom
+			          ,S62.PST_CUR_RATE pcr
+                      ,S62.PST_CUR_TYPE_ID pcti
+                      ,S62.PST_CUST_PO pstpo
+                      ,CUR.CODE pctcd
+                      ,S32.CNT_NAME cntname
+                      ,S30.DEALER_NAME dealernm
+		       FROM SAL0062D S62
+		      INNER JOIN SAL0063D S63 ON S63.PST_SALES_ORD_ID = S62.PST_SALES_ORD_ID
+		        JOIN SAL0030D S30 ON S30.DEALER_ID = S62.PST_DEALER_ID
+		        JOIN SAL0032D S32 ON S32.DEALER_ID = S30.DEALER_ID
+		        LEFT OUTER JOIN SYS0026M S26 ON S26.STK_ID = S63.PST_ITM_STK_ID
+		        LEFT OUTER JOIN SYS0028M S28 ON S28.WH_LOC_ID = S62.PST_LOC_ID
+		        LEFT OUTER JOIN  (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 94) CUR ON CUR.CODE_ID = S62.PST_CUR_TYPE_ID
+		     WHERE S62.PST_REF_NO = #{psoNo}
+		        AND S63.PST_ITM_STK_ID IN
+		        <foreach item="item" collection="stkId" index="index" open="(" separator="," close=")">
+                     #{item}
+                </foreach>
+           )
  </select>
 </mapper>

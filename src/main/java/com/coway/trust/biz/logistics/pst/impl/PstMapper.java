@@ -71,4 +71,6 @@ public interface PstMapper {
 	
 	List<EgovMap> PstMaterialDocViewList(Map<String, Object> params);
 
+	List<EgovMap> selectPstIssuePop(Map<String, Object> params); 				// KR OHK : PST Serial Check List
+
 }

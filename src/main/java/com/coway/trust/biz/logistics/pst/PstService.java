@@ -14,4 +14,9 @@ public interface PstService {
 	void testsample();
 	
 	List<EgovMap> PstMaterialDocViewList(Map<String, Object> map);
+
+	// KR OHK : PST Serial Check Popup
+	List<EgovMap> selectPstIssuePop(Map<String, Object> smap);
+	// KR-OHK Serial add
+	void pstMovementReqDeliverySerial(Map<String, Object> map);
 }

@@ -6,7 +6,12 @@
 	    font-weight:bold;
 	    color:#22741C;
 	}
-
+	.aui-grid-link-renderer1 {
+	  text-decoration:underline;
+	  color: #4374D9 !important;
+	  cursor: pointer;
+	  text-align: right;
+	}
 </style>
 <script type="text/javaScript" language="javascript">
 var date = new Date().getDate();
@@ -39,6 +44,68 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
         doGetCombo('/common/selectCodeList.do', '357', '','cmbDealerType', 'S' , '');     // Dealer Type Combo Box
         doDefCombo(pststatuslist, '' ,'pstStusIds', 'M', 'f_multiCombo');
 
+        // KR-OHK Serial check add
+        AUIGrid.bind(listGrid, "cellClick", function( event ) {
+            var dataField = AUIGrid.getDataFieldByColumnIndex(listGrid, event.columnIndex);
+
+            if(dataField == "reqqty"){
+                var rowIndex = event.rowIndex;
+                var serialchk = AUIGrid.getCellValue(listGrid, rowIndex, "serialchk");
+                var serialRequireChkYn = AUIGrid.getCellValue(listGrid, rowIndex, "serialRequireChkYn");
+                var psttypeid = AUIGrid.getCellValue(listGrid, rowIndex, "psttypeid");
+                var ioType = "";
+
+                if(psttypeid == '2577' || psttypeid == '2579')  {               // Dealer Sale(2577), Export(2579)
+                    ioType = 'O';
+                }else {                                                                     // Dealer Sale-Return(2578), Export-Return(2580)
+                    ioType = 'I';
+                }
+
+                if(serialchk == "Y" && serialRequireChkYn == "Y") {
+                    $("#pRequestNo").val(AUIGrid.getCellValue(listGrid, rowIndex, "psono"));
+                    $("#pStatus").val(ioType);
+
+                    fn_scanSearchPop();
+                }
+            }
+        });
+
+        // KR-OHK Serial check add
+        AUIGrid.bind(listGrid, "rowCheckClick", function(event) {
+            var psono = AUIGrid.getCellValue(listGrid, event.rowIndex, "psono");
+            var checklist = AUIGrid.getCheckedRowItems(listGrid);
+
+            for(var i = 0 ; i < checklist.length ; i++){
+                 if (checklist[i].item.psono != event.item.psono){
+                    Common.alert("PST Salse Order No is different.");
+                    var rown = AUIGrid.getRowIndexesByValue(listGrid, "psono" , psono);
+                    for (var i = 0 ; i < rown.length ; i++){
+                        AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+                    }
+                    return false;
+                }
+                if(event.item.balqty < 1) {
+                	var rown = AUIGrid.getRowIndexesByValue(listGrid, "psono" , psono);
+                    for (var i = 0 ; i < rown.length ; i++){
+                        AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+                    }
+                    return false;
+                }
+
+                if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)) {
+                	if(event.item.serialRequireChkYn == 'Y') {
+                		AUIGrid.addCheckedRowsByValue(listGrid, "psono" , psono);
+                	}
+                } else {
+                    var rown = AUIGrid.getRowIndexesByValue(listGrid, "psono" , psono);
+                    for (var i = 0; i < rown.length; i++) {
+                    	if(event.item.serialRequireChkYn == 'Y') {
+                    		AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+                    	}
+                    }
+                }
+            }
+        });
 
         AUIGrid.bind(listGrid, "cellEditBegin", function (event){
             if (event.item.balqty < 1){
@@ -168,15 +235,31 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                             { dataField : "itmnm"     , headerText : "<spring:message code='log.head.materialcodetext'/>"          , width : 140, editable : false, visible: true  },
                             { dataField : "itmprc"    , headerText : "<spring:message code='log.head.materialcodetext'/>"          , width : 140, editable : false, visible: false },
                             { dataField : "serialchk" , headerText : "<spring:message code='log.head.materialcodetext'/>"          , width : 140, editable : false, visible: false },
-                            { dataField : "qty"       , headerText : "<spring:message code='sys.scm.otdview.QTY'/>"                , width : 140, editable : false, visible: true  },
-                            { dataField : "doqty"     , headerText : "<spring:message code='log.head.deliveredqty'/>"              , width : 140, editable : false, visible: true  },
-                            { dataField : "balqty"    , headerText : "<spring:message code='log.head.remainqty'/>"                 , width : 140, editable : false, visible: true  },
-                            { dataField : "reqqty"    , headerText : "<spring:message code='log.head.reqqty'/>"                    , width : 140, editable : true , visible: true  },
+                            { dataField : "qty"       , headerText : "<spring:message code='sys.scm.otdview.QTY'/>"                , width : 140, editable : false, visible: true, style:"aui-grid-user-custom-right"  },
+                            { dataField : "doqty"     , headerText : "<spring:message code='log.head.deliveredqty'/>"              , width : 140, editable : false, visible: true, style:"aui-grid-user-custom-right"  },
+                            { dataField : "balqty"    , headerText : "<spring:message code='log.head.remainqty'/>"                 , width : 140, editable : false, visible: true, style:"aui-grid-user-custom-right"  },
+                            { dataField : "reqqty"    , headerText : "<spring:message code='log.head.reqqty'/>"                    , width : 140, editable : true , visible: true, style:"aui-grid-user-custom-right",
+                            	styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField){
+                            		if( item != null ) {
+	                            		if(item.serialRequireChkYn == "Y") {
+	                                        return "aui-grid-link-renderer1";
+	                                    }
+                            		} else {
+                            			return "";
+                            		}
+                                },
+                                editRenderer : {
+                                    type : "InputEditRenderer",
+                                    onlyNumeric : true, // 0~9 까지만 허용
+                                    allowPoint : false
+                                  // onlyNumeric 인 경우 소수점(.) 도 허용
+                                  }
+                            },
                             { dataField : "uom"       , headerText : "<spring:message code='log.head.uom'/>"                       , width : 140, editable : false, visible: false },
                             { dataField : "uomcd"     , headerText : "<spring:message code='log.head.uom'/>"                       , width : 140, editable : false, visible: true  },
                             { dataField : "crtdt"     , headerText : "<spring:message code='log.head.pstdate'/>"                   , width : 140, editable : false, visible: true , dataType:"date" , formatString : "dd/mm/yyyy" },
                             { dataField : "crtdt1"    , headerText : "<spring:message code='log.head.pstdate'/>"                   , width : 140, editable : false, visible: false },
-                            { dataField : "psttypeid" , headerText : "<spring:message code='log.head.psttype'/>"                   , width : 140, editable : false, visible: false },
+                            { dataField : "psttypeid" , headerText : "<spring:message code='log.head.psttype'/>"                   , width : 140, editable : false, visible: true },
                             { dataField : "psttype"   , headerText : "<spring:message code='log.head.psttype'/>"                   , width : 140, editable : false, visible: true  },
                             { dataField : "pstpo"     , headerText : "<spring:message code='log.head.pstpo'/>"                     , width : 140, editable : false, visible: true  },
                             { dataField : "nric"      , headerText : "<spring:message code='sales.NRIC'/>"                         , width : 140, editable : false, visible: false },
@@ -185,7 +268,9 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                             { dataField : "pcr"       , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
                             { dataField : "pcti"      , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
                             { dataField : "pctcd"     , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
-                            { dataField : "invtype"     , headerText : "Invoice Type"                      , width : 140, editable : false, visible: false }
+                            { dataField : "invtype"     , headerText : "Invoice Type"                      , width : 140, editable : false, visible: true },
+                            { dataField : "serialRequireChkYn", headerText : "Serial Require Check Y/N", width : 180, editable : false, visible: true}
+
                           ];
         var serialcolumn =[ {dataField:"itmcd"        , headerText : "<spring:message code='log.head.materialcode'/>" ,width:"20%" ,height:30 },
                             {dataField:"itmname"      , headerText : "<spring:message code='log.head.materialname'/>" ,width:"25%" ,height:30 },
@@ -306,6 +391,7 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
     $(function(){
     	$('#delivery').click(function(){
             var checkDelqty= false;
+            var serialRequireChkYn = false;
             var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
 
             if(checkedItems.length <= 0) {
@@ -317,9 +403,13 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                 var rowItem;
                 for(var i=0, len = checkedItems.length; i<len; i++) {
                     rowItem = checkedItems[i];
-                    if(rowItem.item.reqqty==0){
-                        str += "Please Check Delivery Qty of  " + rowItem.item.psono   + ", " + rowItem.item.itmnm + "<br />";
-                        checkDelqty= true;
+                    if (rowItem.item.serialRequireChkYn == 'Y') {
+                        checkDelqty = false;
+                    } else {
+                        if(rowItem.item.reqqty==0){
+	                        str += "Please Check Delivery Qty of  " + rowItem.item.psono   + ", " + rowItem.item.itmnm + "<br />";
+	                        checkDelqty= true;
+	                    }
                     }
                     /*if (rowItem.item.serialchk =='Y'){
                         serialchk = true;
@@ -327,6 +417,10 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                         serialchk = false;
                     }*/
 
+                    // KR-OHK Serial Require Check
+                    if (rowItem.item.serialRequireChkYn == 'Y') {
+                        serialRequireChkYn = true;
+                    }
                 }
                 if(checkDelqty){
                     var option = {
@@ -335,25 +429,28 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                     };
                     Common.alertBase(option);
                 }else{
-                    $("#giopenwindow").show();
-                    $("#giptdate").val("");
-                    $("#gipfdate").val("");
-                    $("#doctext").val("");
-                    doSysdate(0 , 'giptdate');
-                    doSysdate(0 , 'gipfdate');
-                    AUIGrid.clearGridData(serialGrid);
-                    AUIGrid.resize(serialGrid);
-                    if (serialchk){
-                        //fn_itempopListSerial(checkedItems);
-                        fn_itempopList_T(checkedItems);
-                        $("#ascall").show();
-                        $("#serial_grid_wrap_div").show();
-                        AUIGrid.resize(serialGrid);
-                    }else{
-                        $("#serial_grid_wrap_div").hide();
-                        $("#ascall").hide();
+                	if(serialRequireChkYn) { // KR-OHK Serial Require Check
+                         fn_pstIssuePop();
+                    } else {
+	                	$("#giopenwindow").show();
+	                    $("#giptdate").val("");
+	                    $("#gipfdate").val("");
+	                    $("#doctext").val("");
+	                    doSysdate(0 , 'giptdate');
+	                    doSysdate(0 , 'gipfdate');
+	                    AUIGrid.clearGridData(serialGrid);
+	                    AUIGrid.resize(serialGrid);
+	                    if (serialchk){
+	                        //fn_itempopListSerial(checkedItems);
+	                        fn_itempopList_T(checkedItems);
+	                        $("#ascall").show();
+	                        $("#serial_grid_wrap_div").show();
+	                        AUIGrid.resize(serialGrid);
+	                    }else{
+	                        $("#serial_grid_wrap_div").hide();
+	                        $("#ascall").hide();
+	                    }
                     }
-
                 }
             }
 
@@ -574,7 +671,55 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
 
     }
 
+    // KR-OHK Serial check add
+    function fn_pstIssuePop(){
+        var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+
+        $("#zReqstno").val(checkedItems[0].item.psono);
+        $("#zRcvloc").val(checkedItems[0].item.pstlocid); // From Location
+
+        var psttypeid = checkedItems[0].item.psttypeid;
+        var ioType = "";
+
+        if(psttypeid == '2577' || psttypeid == '2579')  {               // Dealer Sale(2577), Export(2579)
+        	ioType = 'O';
+        }else {                                                                     // Dealer Sale-Return(2578), Export-Return(2580)
+        	ioType = 'I';
+        }
+
+        $("#pStatus").val(ioType);
+
+        if(Common.checkPlatformType() == "mobile") {
+          popupObj = Common.popupWin("frmNew", "/logistics/pst/pstIssuePop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+        } else{
+          Common.popupDiv("/logistics/pst/pstIssuePop.do", null, null, true, '_divPstIssuePop');
+        }
+      }
+
+      function fn_PopPstIssueClose(){
+        if(popupObj!=null) popupObj.close();
+        SearchListAjax();
+      }
+
+      //Serial Search Pop
+      function fn_scanSearchPop(){
+          if(Common.checkPlatformType() == "mobile") {
+              popupObj = Common.popupWin("frmNew", "/logistics/SerialMgmt/scanSearchPop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+          } else{
+              Common.popupDiv("/logistics/SerialMgmt/scanSearchPop.do", $("#frmNew").serializeJSON(), null, true, '_scanSearchPop');
+          }
+      }
 </script>
+<form id="frmNew" name="frmNew" action="#" method="post">
+     <input type="hidden" name="zDelvryNo" id="zDelvryNo"/>
+     <input type="hidden" name="zReqstno" id="zReqstno" />
+     <input type="hidden" name="zReqloc" id="zReqloc" />
+     <input type="hidden" name="zRcvloc" id="zRcvloc" />
+     <input type="hidden" name="pRequestNo" id="pRequestNo" />
+     <input type="hidden" name="pRequestItem" id="pRequestItem" />
+     <input type="hidden" name="pStatus" id="pStatus" />
+     <input type="hidden" name="zItmId" id="zItmId" />
+</form>
 <form name="reportForm" id="reportForm"></form>
 <section id="content"><!-- content start -->
 <ul class="path">
