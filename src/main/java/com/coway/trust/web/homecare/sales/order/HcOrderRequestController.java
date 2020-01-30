@@ -83,7 +83,7 @@ public class HcOrderRequestController {
 				Map<String, Object> fraParams = new HashMap<String, Object>();
 				fraParams.put("salesOrderId", CommonUtils.nvl(anoOrdId));
 				fraParams.put("ordNo", CommonUtils.nvl(hcOrder.get("fraOrdNo")));
-				orderDetail2 = orderDetailService.selectBasicInfo(params);		// Mattress Order
+				orderDetail2 = orderDetailService.selectBasicInfo(fraParams);		// Mattress Order
 			}
 		}
 
