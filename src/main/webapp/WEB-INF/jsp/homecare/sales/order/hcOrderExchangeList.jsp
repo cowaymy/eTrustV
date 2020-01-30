@@ -35,7 +35,8 @@
 
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-        var columnLayout = [ {
+        var columnLayout = [
+            {
                 dataField : "codeName",
                 headerText : '<spring:message code="sal.title.type" />',
                 width : 160,
@@ -53,6 +54,7 @@
                 width : 120,
                 editable : false
             },
+            {headerText : "BNDL No.",                                              dataField : "bndlNo",               editable : false, width : 130},
             {
                 dataField : "salesDt",
                 headerText : '<spring:message code="sal.text.ordDate" />',
@@ -285,6 +287,14 @@
 					        <input type="text" title="" id="custIc" name="custIc" placeholder="NRIC/Company Number" class="w100p" />
 					    </td>
 					</tr>
+					<tr>
+                        <th scope="row">Bundle Number</th>
+                        <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
+                        <th scope="row"></th>
+                        <td></td>
+                        <th scope="row"></th>
+                        <td></td>
+                    </tr>
 				</tbody>
 			</table>
 			<!-- table end -->
