@@ -1301,6 +1301,11 @@
         }
     }
 
+    function fn_PopSerialClose(){
+        if(popupObj!=null) popupObj.close();
+        $("#btnPopSearch").click();
+    }
+
     //Serial Search Pop
     function fn_serialSearchPop(){
     	Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});

@@ -22,7 +22,8 @@
                          {dataField: "codeName",headerText :"<spring:message code='log.head.locationtype'/>" ,width: 120   ,height:30 },
                          {dataField: "whLocCode",headerText :"<spring:message code='log.head.locationcode'/>"    ,width: 120    ,height:30},
                          {dataField: "whLocDesc",headerText :"<spring:message code='log.head.locationdesc'/>"    ,width: 350    ,height:30, style: "aui-grid-user-custom-left"},
-                         {dataField: "whLocId",headerText :"<spring:message code='log.head.locationid'/>"    ,width: 100    ,height:30 }
+                         {dataField: "whLocId",headerText :"<spring:message code='log.head.locationid'/>"    ,width: 100    ,height:30 },
+                         {dataField: "serialRequireChkYn",headerText :"Serial Require Check Y/N"    ,width: 180    ,height:30 }
                  ];
 
 
@@ -31,7 +32,8 @@
                      {dataField: "adjcodeName",headerText :"<spring:message code='log.head.locationtype'/>"  ,width: 120    ,height:30 },
                      {dataField: "adjwhLocCode",headerText :"<spring:message code='log.head.locationcode'/>" ,width: 120    ,height:30},
                      {dataField: "adjwhLocDesc",headerText :"<spring:message code='log.head.locationdesc'/>" ,width: 350    ,height:30, style: "aui-grid-user-custom-left"},
-                     {dataField: "adjwhLocId",headerText :"<spring:message code='log.head.locationid'/>" ,width: 100    ,height:30 }
+                     {dataField: "adjwhLocId",headerText :"<spring:message code='log.head.locationid'/>" ,width: 100    ,height:30 },
+                     {dataField: "adjserialRequireChkYn",headerText :"Serial Require Check Y/N" ,width: 180    ,height:30 }
                      ];
 
     var itemrescolumnLayout=[
@@ -123,6 +125,22 @@
         });
     }
 
+    AUIGrid.bind(resGrid, "rowCheckClick", function(event) {
+        var serialRequireChkYn = AUIGrid.getCellValue(resGrid, event.rowIndex, "serialRequireChkYn");
+        var checklist = AUIGrid.getCheckedRowItems(resGrid);
+
+        for(var i = 0 ; i < checklist.length ; i++){
+             if (checklist[i].item.serialRequireChkYn != event.item.serialRequireChkYn){
+                Common.alert("Serial Require Check Y/N is different.");
+                var rown = AUIGrid.getRowIndexesByValue(resGrid, "serialRequireChkYn" , serialRequireChkYn);
+                for (var i = 0 ; i < rown.length ; i++){
+                    AUIGrid.addUncheckedRowsByIds(resGrid, AUIGrid.getCellValue(resGrid, rown[i], "rnum"));
+                }
+                return false;
+            }
+        }
+    });
+
     $("#popClose").click(function(){
     	if($("#hidDocStusCodeId").val() == '5679') { // Start Audit
     		   getListAjax(1);
@@ -161,7 +179,7 @@
         sortingInfo[0] = { dataField : "adjwhLocId", sortType : 1 };
         checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
         var addedItems = AUIGrid.getColumnValues(reqGrid,"adjwhLocId");
-
+        var adjserialRequireChkYn = AUIGrid.getColumnValues(reqGrid,"adjserialRequireChkYn");
 
         var bool = true;
         if (checkedItems.length > 0){
@@ -177,6 +195,10 @@
                             Common.alert("Loaction Id :"+checkedItems[j].whLocId+" is already exist.");
                             return false;
                         }
+                        if(adjserialRequireChkYn[i] != checkedItems[j].serialRequireChkYn){
+                            Common.alert("'Serial Require Check Y/N' is different.");
+                            return false;
+                        }
                     }
                 }
             }
@@ -186,7 +208,8 @@
                                 adjwhLocId : checkedItems[i].whLocId,
                                 adjwhLocCode : checkedItems[i].whLocCode,
                                 adjwhLocDesc : checkedItems[i].whLocDesc,
-                                adjcodeName: checkedItems[i].codeName
+                                adjcodeName: checkedItems[i].codeName,
+                                adjserialRequireChkYn: checkedItems[i].serialRequireChkYn
                         }
 
                 AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
@@ -221,7 +244,8 @@
                                  whLocId : reqCheckedItems[i].adjwhLocId,
                                  whLocCode : reqCheckedItems[i].adjwhLocCode,
                                  whLocDesc : reqCheckedItems[i].adjwhLocDesc,
-                                 codeName: reqCheckedItems[i].adjcodeName
+                                 codeName: reqCheckedItems[i].adjcodeName,
+                                 serialRequireChkYn: reqCheckedItems[i].adjserialRequireChkYn
                          }
 
                  AUIGrid.addUncheckedRowsByIds(reqGrid, reqCheckedItems[i].adjrnum);
@@ -486,6 +510,14 @@
        if(itemGridList.length == 0) {
            var arg = "<spring:message code='log.head.itemcode' />";
            Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ arg +"'/>");
+           return false;
+       }
+
+       var serialRequireChkYn =  locGridList[0].adjserialRequireChkYn;
+       var serialChkYn = $("input:radio[name='serialChkYn']:checked").val();
+
+       if(serialRequireChkYn == 'N' && serialChkYn == 'Y'){
+           Common.alert("If Serial Require Check Y/N is 'N', Serial Check must be 'N'.");
            return false;
        }
 

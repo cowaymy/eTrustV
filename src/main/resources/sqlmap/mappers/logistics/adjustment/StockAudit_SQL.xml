@@ -200,7 +200,8 @@
 				              A.WH_LOC_MOBILE,
 				              A.WH_LOC_GB,
 				              B.CODE_ID,
-				              B.CODE_NAME
+				              B.CODE_NAME,
+				              A.SERIAL_REQUIRE_CHK_YN
 			          FROM SYS0028M A
 			         LEFT OUTER JOIN SYS0013M B ON B.CODE = A.WH_LOC_GB AND B.CODE_MASTER_ID = '339'
 
