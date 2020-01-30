@@ -830,7 +830,7 @@
                         , APPNT_DT
                         ,SESION_CODE
                         ,GRADE
-    ) VALUES (#{installEntryId}
+    ) VALUES (SAL0046D_INSTALL_ENTRY_ID_SEQ.NEXTVAL
             , #{installEntryNo}
             , #{salesOrderId}
             , #{statusCodeId}
