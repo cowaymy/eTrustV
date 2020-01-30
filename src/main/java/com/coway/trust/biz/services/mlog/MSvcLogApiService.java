@@ -194,6 +194,8 @@ public interface MSvcLogApiService {
 
   EgovMap SP_SVC_BARCODE_SAVE(Map<String, Object> params);
 
+  EgovMap SP_SVC_BARCODE_CHANGE(Map<String, Object> params);
+
   Map<String, Object> getHtBasic(Map<String, Object> params);
 
   List<EgovMap> hcServiceHistory(Map<String, Object> params);

@@ -902,6 +902,11 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   }
 
   @Override
+  public EgovMap SP_SVC_BARCODE_CHANGE(Map<String, Object> params) {
+    return (EgovMap)MSvcLogApiMapper.SP_SVC_BARCODE_CHANGE(params);
+  }
+
+  @Override
   public Map<String, Object> getHtBasic(Map<String, Object> params) {
     return MSvcLogApiMapper.getHtBasic(params);
   }

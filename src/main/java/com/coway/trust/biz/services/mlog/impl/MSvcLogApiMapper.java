@@ -261,6 +261,8 @@ public interface MSvcLogApiMapper {
 
   EgovMap SP_SVC_BARCODE_SAVE(Map<String, Object> params);
 
+  EgovMap SP_SVC_BARCODE_CHANGE(Map<String, Object> params);
+
   List<EgovMap> selectSerialList(Map<String, Object> params);
 
   EgovMap getOrdID(Map<String, Object> params);
