@@ -107,4 +107,10 @@ public interface PosService {
 
 	int updatePOSFlexiItemInactive(Map<String, Object> params, SessionVO sessionVO);
 
+	// KR-OHK Serial check add
+	Map<String, Object> insertPosSerial(Map<String, Object> params) throws Exception;
+
+	// KR-OHK Serial check add
+	EgovMap insertPosReversalSerial(Map<String, Object> params) throws Exception;
+
 }

@@ -62,7 +62,8 @@
                 S28.WH_LOC_CODE ,
                 S28.WH_LOC_DESC ,
                 S28.WH_LOC_GB ,
-                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB,
+                S28.SERIAL_REQUIRE_CHK_YN
             FROM
                 SYS0005M S5 ,SYS0028M S28
             WHERE
@@ -470,7 +471,7 @@
                 ORDER BY RESN_ID
      </select>
 
-     <select id="getFilterSerialNum" parameterType="Map" resultType="egovMap">
+     <select id="getFilterSerialNum_backup" parameterType="Map" resultType="egovMap">
                     SELECT
                         T1.MATNR,
                         T3.STK_ID,
@@ -495,6 +496,51 @@
                          INNER JOIN SYS0026M T3  ON  T3.STK_CODE = T1.MATNR
                       WHERE
                        T2.USER_ID = #{userId}
+                       <if test=" null != basketStkCode and '' != basketStkCode">
+                            AND T1.MATNR = #{basketStkCode}
+                       </if>
+
+                        <if test="null != filterArr and filterArr.length > 0">
+                            AND T1.SERIAL_NO IN
+                            <foreach collection="filterArr" item="item" open="(" separator="," close=")">
+                                #{item}
+                            </foreach>
+                        </if>
+
+                        <if test="null != serialArr and serialArr.length > 0">
+                            AND T1.SERIAL_NO NOT IN
+                            <foreach collection="serialArr" item="idx" open="(" separator="," close=")">
+                                #{idx}
+                            </foreach>
+                        </if>
+     </select>
+
+     <select id="getFilterSerialNum" parameterType="Map" resultType="egovMap">
+                    SELECT
+                        T1.MATNR,
+                        T1.MATNR as STK_ID,
+                        T1.SERIAL_NO,
+                        T3.STK_DESC,
+                        T2.USER_ID,
+                        T2.USER_NAME,
+                        T4.WH_LOC_CODE,
+                        T1.LOC_ID AS WH_LOC_ID
+                    FROM
+                        LOG0063D T1
+                        LEFT OUTER JOIN (
+                                    SELECT
+                                        Extent1.USER_ID,
+                                        Extent1.USER_NAME,
+                                        Extent2.WH_LOC_CODE,
+                                        Extent2.WH_LOC_ID
+                                    FROM
+                                        SYS0047M Extent1
+                                        LEFT JOIN SYS0028M Extent2 ON Extent2.WH_LOC_CODE = Extent1.USER_NAME
+                                   ) T2 ON T2.WH_LOC_ID = T1.LOC_ID
+                         INNER JOIN SYS0026M T3  ON  T3.STK_CODE = T1.MATNR
+                         INNER JOIN SYS0028M T4 ON T4.WH_LOC_ID = T1.LOC_ID
+                      WHERE
+                       T1.LOC_ID = #{locId}
                        <if test=" null != basketStkCode and '' != basketStkCode">
                             AND T1.MATNR = #{basketStkCode}
                        </if>
@@ -3646,5 +3692,65 @@
 
                      </update>
 
+
+    <select id="getFilterSerialNumLOG0100" parameterType="Map" resultType="egovMap">
+     /* [com.coway.trust.biz.sales.pos.impl.PosMapper.getFilterSerialNumLOG0100] 20200109 - KR OHK */
+        SELECT T1.ITM_CODE MATNR
+                  ,T1.ITM_CODE STK_ID
+                  ,T1.SERIAL_NO
+                  ,T3.STK_DESC
+                  ,T2.USER_ID
+                  ,T2.USER_NAME
+                  ,T4.WH_LOC_CODE
+                  ,T1.LAST_LOC_ID AS WH_LOC_ID
+           FROM LOG0100M T1
+            LEFT OUTER JOIN (
+                    SELECT A.USER_ID
+                              ,A.USER_NAME
+                              ,B.WH_LOC_CODE
+                              ,B.WH_LOC_ID
+                       FROM SYS0047M A
+                        LEFT JOIN SYS0028M B ON B.WH_LOC_CODE = A.USER_NAME
+                   ) T2 ON T2.WH_LOC_ID = T1.LAST_LOC_ID
+           INNER JOIN SYS0026M T3 ON T3.STK_CODE = T1.ITM_CODE
+           INNER JOIN SYS0028M T4 ON T4.WH_LOC_ID = T1.LAST_LOC_ID
+         WHERE T1.STUS_CODE = 'I'
+             AND T1.TEMP_SCAN_NO IS NULL
+             AND T1.LAST_LOC_ID = #{locId}
+           <if test=" null != basketStkCode and '' != basketStkCode">
+             AND T1.ITM_CODE = #{basketStkCode}
+           </if>
+           <if test="null != filterArr and filterArr.length > 0">
+             AND T1.SERIAL_NO IN
+               <foreach collection="filterArr" item="item" open="(" separator="," close=")">
+                   #{item}
+               </foreach>
+           </if>
+           <if test="null != serialArr and serialArr.length > 0">
+             AND T1.SERIAL_NO NOT IN
+               <foreach collection="serialArr" item="idx" open="(" separator="," close=")">
+                   #{idx}
+               </foreach>
+           </if>
+     </select>
+
+    <resultMap type="egovMap" id="serialMap"/>
+    <select id="SP_LOGISTIC_POS_SERIAL" parameterType="Map"  statementType="CALLABLE" >
+      /* [com.coway.trust.biz.sales.pos.impl.PosMapper.SP_LOGISTIC_POS_SERIAL] 20200109 - KR OHK */
+        <![CDATA[
+            {
+                  call SP_LOGISTIC_POS_SERIAL ( #{psno}, #{retype} ,#{pType} ,#{posItmId}, #{pPrgNm}, #{userId}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=serialMap})
+            }
+         ]]>
+    </select>
+
+    <select id="SP_SALES_BARCODE_SAVE"  parameterType="Map"  statementType="CALLABLE" >
+    /* [com.coway.trust.biz.sales.pos.impl.PosMapper.SP_SALES_BARCODE_SAVE] 20200109 - KR OHK*/
+      {
+          call  SP_SALES_BARCODE_SAVE(#{reqstNo}, #{callGbn}, #{userId}
+          , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
+          , #{ pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR})
+      }
+     </select>
 
 </mapper>

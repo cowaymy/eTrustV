@@ -161,6 +161,7 @@ public class PosController {
 		model.addAttribute("posSystemModuleType", params.get("insPosModuleType"));
 		model.addAttribute("posSystemType", params.get("insPosSystemType"));
 		model.addAttribute("whBrnchId", params.get("hidLocId"));
+		model.addAttribute("serialRequireChkYn", params.get("hidSerialRequireChkYn"));
 		//model.addAttribute("", params.get("hidLocDesc"));
 
 		return "sales/pos/posItmSrchPop";
@@ -268,6 +269,8 @@ public class PosController {
 	public String posFilterSrchPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		model.addAttribute("basketStkCode", params.get("basketStkCode"));
 		model.addAttribute("tempString", params.get("tempString"));
+		model.addAttribute("locId", params.get("locId"));
+		model.addAttribute("serialRequireChkYn", params.get("serialRequireChkYn"));
 
 		return "sales/pos/posFilterSerialSrchPop";
 	}
@@ -914,4 +917,34 @@ public class PosController {
 	        return ResponseEntity.ok(message);
 
 	    }
+
+	    // KR-OHK Serial check add
+	    @RequestMapping(value = "/insertPosSerial.do", method = RequestMethod.POST)
+		public ResponseEntity<Map<String, Object>> insertPosSerial(@RequestBody Map<String, Object> params) throws Exception{
+			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+			params.put("userId", sessionVO.getUserId());
+			params.put("userDeptId", sessionVO.getUserDeptId());
+			params.put("userName", sessionVO.getUserName());
+			Map<String, Object> retunMap = null;
+			retunMap = posService.insertPosSerial(params);
+
+			return ResponseEntity.ok(retunMap);
+
+		}
+
+	    // KR-OHK Serial check add
+	    @RequestMapping(value = "/insertPosReversalSerial.do" , method = RequestMethod.POST)
+		public ResponseEntity<EgovMap> insertPosReversalSerial(@RequestBody Map<String, Object> params) throws Exception{
+
+			//Session
+			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+			params.put("userId", sessionVO.getUserId());
+			params.put("userDeptId", sessionVO.getUserDeptId());
+
+			EgovMap revMap = null;
+			revMap = posService.insertPosReversalSerial(params);
+			LOGGER.info("################################################ revMap : " + revMap.toString());
+			return ResponseEntity.ok(revMap);
+
+		}
 }

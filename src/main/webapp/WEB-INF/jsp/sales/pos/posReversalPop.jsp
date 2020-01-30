@@ -67,6 +67,7 @@ $(document).ready(function() {
     Common.ajax('GET', "/sales/pos/selectWarehouse", paramObj,function(result){
         if(result != null){
             $("#_reversalPosWhDesc").val(result.whLocDesc);
+            $("#hidSerialRequireChkYn").val(result.serialRequireChkYn); // KR-OHK Serial check add
         }else{
             $("#_reversalPosWhDesc").val('');
         }
@@ -112,7 +113,17 @@ $(document).ready(function() {
     	 $("#_rePosRcvDt").val($("#_recevDateOri").val());
 
     	if ($("#_rePosSysTypeId").val() == 1352){
-    	 Common.ajax("POST", "/sales/pos/insertPosReversal.do", $("#_revForm").serializeJSON(), function(result){
+
+    	  // KR-OHK Serial check add
+    	  var url = "";
+
+    	  if($("#hidSerialRequireChkYn").val() == 'Y' ) {
+    		url =  "/sales/pos/insertPosReversalSerial.do";
+    	  } else {
+    	    url =  "/sales/pos/insertPosReversal.do";
+    	  }
+
+    	  Common.ajax("POST", url, $("#_revForm").serializeJSON(), function(result){
 
     		 var returnMsg = '<spring:message code="sal.alert.msg.posRevSucss" />';
 
@@ -139,8 +150,7 @@ $(document).ready(function() {
 
     	}
     	else {
-
-    	       Common.ajax("POST", "/sales/pos/insertPosReversalItemBank.do", $("#_revForm").serializeJSON(), function(result){
+            Common.ajax("POST", "/sales/pos/insertPosReversalItemBank.do", $("#_revForm").serializeJSON(), function(result){
 
     	             var returnMsg = '<spring:message code="sal.alert.msg.posRevSucss" />';
 
@@ -324,7 +334,7 @@ function fn_setPayGridData(){
 
 <!--Pay Id  -->
 <input type="hidden" id="_rePayId" name="rePayId" value="${payDetailMap.payId}">
-
+<input type="hidden" name="hidSerialRequireChkYn" id="hidSerialRequireChkYn">
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="sal.title.text.posReversal" /></h1>
 <ul class="right_opt">

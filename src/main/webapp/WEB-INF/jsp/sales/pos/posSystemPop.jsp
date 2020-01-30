@@ -696,7 +696,16 @@ function fn_payPass(){
      $("#_hidInsPosSystemType").val($("#_insPosSystemType").val());
      data.form = $("#_sysForm").serializeJSON();
 
-     Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
+     // KR-OHK Serial check add
+     var url = "";
+
+     if($("#hidSerialRequireChkYn").val() == 'Y' ) {
+         url = "/sales/pos/insertPosSerial.do";
+     } else {
+         url = "/sales/pos/insertPos.do";
+     }
+
+     Common.ajax("POST", url, data,function(result){
          Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo" arguments="'+result.reqDocNo+'"/>', fn_popClose());
      });
 
@@ -728,7 +737,16 @@ function fn_payProceed(){
 
     data.payform = $("#_payForm").serializeJSON();
 
-    Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
+    // KR-OHK Serial check add
+    var url = "";
+
+    if($("#hidSerialRequireChkYn").val() == 'Y' ) {
+        url = "/sales/pos/insertPosSerial.do";
+    } else {
+        url = "/sales/pos/insertPos.do";
+    }
+
+    Common.ajax("POST", url, data,function(result){
     	if(result.logError == "000"){
 
     	    	Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo" arguments="'+result.reqDocNo+'" />' , fn_bookingAndpopClose());
@@ -767,6 +785,7 @@ function getLocIdByBrnchId(tempVal) {
 
             	$("#cmbWhIdPop").val(result.whLocDesc);
                 $("#_hidLocId").val(result.whLocId);
+                $("#hidSerialRequireChkYn").val(result.serialRequireChkYn); // KR-OHK Serial check add
             }else{
                 $("#cmbWhIdPop").val('');
                 $("#_hidLocId").val('');
@@ -1085,6 +1104,7 @@ function fn_inputAmt(obj){
 <input type="hidden" name="hidLocId" id="_hidLocId" value="${locMap.whLocId }">
 <input type="hidden" name="posReason" id="_posReason">
 <input type="hidden" name="payResult" id="_payResult">
+<input type="hidden" name="hidSerialRequireChkYn" id="hidSerialRequireChkYn">
 
 <!-- MODULE & SYSTEM -->
 <input type="hidden" name="insPosModuleType" id="_hidInsPosModuleType">

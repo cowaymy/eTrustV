@@ -251,4 +251,13 @@ public interface PosMapper {
 
 	int  updatePOSFlexiItemInactive(Map<String, Object> params);
 
+	// KR-OHK Serial Check add
+	List<EgovMap> getFilterSerialNumLOG0100(Map<String, Object> params);
+
+	// KR-OHK Serial Check add
+	Map<String, Object> SP_LOGISTIC_POS_SERIAL(Map<String, Object> params);
+
+	// KR-OHK Serial Check add
+	Map<String, Object> SP_SALES_BARCODE_SAVE(Map<String, Object> params);
+
 }

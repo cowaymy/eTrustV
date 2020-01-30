@@ -6,6 +6,7 @@
 .edit-column {
     visibility:hidden;
 }
+
 </style>
 <script type="text/javascript">
 
@@ -109,7 +110,12 @@ $(document).ready(function() {
                    result[i].subTotal  = calResult.subTotal;
                    result[i].subChanges = calResult.subChanges;
                    result[i].taxes  = calResult.taxes;
-                   result[i].inputQty = 1;
+                   // KR-OHK serial check add
+                   if("${serialRequireChkYn}" == "Y" && result[i].serialChk == "Y") {
+                	   result[i].inputQty = 0;
+                   } else {
+                	   result[i].inputQty = 1;
+                   }
                }
 
                 //GridSet
@@ -211,6 +217,30 @@ $(document).ready(function() {
 
 	});
 
+	////KR-OHK add Serial Delete Low
+    $("#_chkSerialDelBtn").click(function() {
+
+    	var selectedItems = AUIGrid.getCheckedRowItems(serialConfirmGridID);
+    	if(selectedItems.length <= 0 ){
+              Common.alert("There are no selected Items.");
+              return ;
+        }
+
+    	AUIGrid.removeCheckedRows(serialConfirmGridID);
+
+        var itemArray = AUIGrid.getGridData(basketGridID);
+        var serialItemArray  = AUIGrid.getColumnValues(serialConfirmGridID, 'matnr');
+
+        for (var idx = 0; idx < itemArray.length; idx++) {
+            var serialCnt = 0;
+            for (var i = 0; i < serialItemArray.length; i++) {
+                if(itemArray[idx].stkCode == serialItemArray[i]){
+                    serialCnt ++ ;
+                }
+            }
+            AUIGrid.setCellValue(basketGridID, idx, "inputQty", serialCnt);
+        }
+    });
 
 	//Save
 	$("#_itemSrchSaveBtn").click(function() {
@@ -289,7 +319,7 @@ $(document).ready(function() {
 		});
 		if(filterChkFlag ==true){ //필터가 있을 때
 			//6 - 1. 필터인데 reason 선택했는지 체크
-			if( null == $("#_purcReason").val() || '' == $("#_purcReason").val()){
+			if(null == $("#_purcReason").val() || '' == $("#_purcReason").val()){
 				Common.alert('<spring:message code="sal.alert.msg.keyInPosResn" />');
 				return;
 			}
@@ -345,6 +375,42 @@ $(document).ready(function() {
 				$("#_mainSerialGrid").css("display" , "");
 			}//loop end
 		}
+
+
+
+		//7. 장바구니 리스트 중에 Stock, parts가 있을 경우  serialRequireChkYn == Y, stkTypeId == 61, 63
+        var serialChkFlag = false;
+        $(typeArr).each(function(idx, el) {
+            if("${serialRequireChkYn}" == "Y" && (typeArr[idx] == 61 || typeArr[idx] == 63)){
+            	serialChkFlag = true;
+                return false;
+            }
+        });
+        if(serialChkFlag ==true){ //
+            var idxObj;
+            var serialCodeArr = AUIGrid.getColumnValues(serialConfirmGridID, 'matnr');
+
+            for (var idx = 0; idx < nullChkNo; idx++) {
+                idxObj = AUIGrid.getItemByRowIndex(basketGridID, idx); //해당 index행  가져오기 // item // basket
+                if((idxObj.stkTypeId == 61 || idxObj.stkTypeId == 63) && idxObj.serialChk == 'Y'){
+                    //idxObj.stkCode(String) 를  가지고 있는 serialGrid 와 매칭  serialCodeArr(Array)
+                    var serialCnt = 0;
+                    for (var i = 0; i < serialCodeArr.length; i++) {
+                        if(idxObj.stkCode == serialCodeArr[i]){
+                            serialCnt++;
+                        }
+                    }//loop end
+                    if(serialCnt != idxObj.inputQty){
+                        Common.alert('Please check the Serial No. for Stock or Spare Part.<br/>Contact the LOG team for Serial.');
+                        return;
+                    }
+                }else{
+                    console.log("not Serial");
+                }
+                //Exsit Filter
+                $("#_mainSerialGrid").css("display" , "");
+            }//loop end
+        }
 
 		//Vaidaton Success
         var finalPurchGridData = AUIGrid.getGridData(basketGridID);
@@ -432,8 +498,20 @@ function fn_getConfirmFilterListAjax(rtnObject){
         /* AUIGrid.setGridData(serialConfirmGridID, result); */
     	 AUIGrid.addRow(serialConfirmGridID, result, 'last');
 
-    });
+        //KR-OHK add
+    	var itemArray = AUIGrid.getGridData(basketGridID);
+        var serialItemArray  = AUIGrid.getColumnValues(serialConfirmGridID, 'matnr');
 
+        for (var idx = 0; idx < itemArray.length; idx++) {
+        	var serialCnt = 0;
+        	for (var i = 0; i < serialItemArray.length; i++) {
+                if(itemArray[idx].stkCode == serialItemArray[i]){
+                    serialCnt ++ ;
+                }
+            }
+            AUIGrid.setCellValue(basketGridID, idx, "inputQty", serialCnt);
+        }
+    });
 }
 
 
@@ -453,7 +531,7 @@ function fn_createSerialConfirmGrid(){
 	        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
 	        softRemoveRowMode : false,
-	        showRowCheckColumn : false
+	        showRowCheckColumn : true
 	};
 
 	 var seriaConfirmlColumnLayout =  [
@@ -507,16 +585,28 @@ function fn_reasonFieldContorl() {
 
 //addcolum button hidden
 function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataField){
-
-	if(item.stkTypeId == '62'){
-		//SERIAL_CHK
-		if(item.serialChk != null &&  item.serialChk == 'Y'){
-			return '';
+    // KR-OHK serial check add
+	if("${serialRequireChkYn}" == "Y") {
+		if(item.stkTypeId == '61' || item.stkTypeId == '62' || item.stkTypeId == '63'){
+			if(item.serialChk != null &&  item.serialChk == 'Y'){
+                return '';
+            }else{
+                return "edit-column";
+            }
+		} else{
+            return "edit-column";
+        }
+	} else {
+		if(item.stkTypeId == '62'){
+			//SERIAL_CHK
+			if(item.serialChk != null &&  item.serialChk == 'Y'){
+				return '';
+			}else{
+				return "edit-column";
+			}
 		}else{
 			return "edit-column";
 		}
-	}else{
-		return "edit-column";
 	}
 }
 
@@ -529,7 +619,9 @@ function fn_createBasketGrid(){
 	                            {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%' , editable : false},
 	                            {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '30%', editable : false},
 	                            {dataField : "qty", headerText : '<spring:message code="sal.title.inventory" />', width : '10%', editable : false},
-	                            {dataField : "inputQty", headerText : '<spring:message code="sal.title.qty" />', width : '10%', editable : true, dataType : "numeric"},
+	                            {dataField : "inputQty", headerText : '<spring:message code="sal.title.qty" />', width : '10%', dataType : "numeric"
+
+	                            },
 	                            {dataField : "amt", headerText :'<spring:message code="sal.title.unitPrice" />', width : '10%', dataType : "numeric", formatString : "#,##0.00",editRenderer : {
 	                                type : "InputEditRenderer",
 	                                onlyNumeric : true,
@@ -556,10 +648,11 @@ function fn_createBasketGrid(){
 	                                        	 //filter Grid`s Serial No
 	                                        	 var tempSerialArr = AUIGrid.getColumnValues(serialConfirmGridID, 'serialNo');
 	                                        	 var tempString = tempSerialArr.toString();
-	                                        	/*  console.log('tempString type : ' + $.type(tempString));
-	                                        	 console.log("tempString : " + tempString); */
-	                                        	 var arrParam  = {basketStkCode : item.stkCode , tempString : tempString};
-                                                 Common.popupDiv("/sales/pos/posFilterSrchPop.do", arrParam , null, true);
+	                                        	 /*console.log('tempString type : ' + $.type(tempString));
+	                                        	 console.log("tempString : " + tempString);*/
+	                                        	 var arrParam  = {basketStkCode : item.stkCode , tempString : tempString, locId : "${whBrnchId}", serialRequireChkYn :  "${serialRequireChkYn}"};
+
+	                                        	 Common.popupDiv("/sales/pos/posFilterSrchPop.do", arrParam , null, true);
 	                                         }
 	                                }
 	                            },
@@ -587,7 +680,7 @@ function fn_createBasketGrid(){
 	    };
 
 	    basketGridID = GridCommon.createAUIGrid("#basket_grid_wrap", basketColumnLayout,'', gridPros);
-	    AUIGrid.resize(basketGridID , 960, 300);
+	    AUIGrid.resize(basketGridID , 920, 300);
 
 }
 
@@ -755,11 +848,10 @@ function f_multiCombo(){
 
 <aside class="title_line"><!-- title_line start -->
 <h2><spring:message code="sal.title.itmList" /></h2>
-</aside><!-- title_line end -->
-
 <ul class="right_btns">
     <li><p class="btn_grid"><a id="_chkDelBtn"><spring:message code="sal.btn.delete" /></a></p></li>
 </ul>
+</aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="basket_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
@@ -776,6 +868,9 @@ function f_multiCombo(){
 
 <aside class="title_line"><!-- title_line start -->
 <h2><spring:message code="sal.title.filterSerialInfo" /></h2>
+<ul class="right_btns">
+    <li><p class="btn_grid"><a id="_chkSerialDelBtn"><spring:message code="sal.btn.delete" /></a></p></li>
+</ul>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->

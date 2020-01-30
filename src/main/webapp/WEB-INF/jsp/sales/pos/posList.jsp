@@ -244,6 +244,7 @@ $(document).ready(function() { //***********************************************
             //Ajax
             Common.ajax("GET", "/sales/pos/getPosDetailList", detailParam, function(result){
                 AUIGrid.setGridData(posItmDetailGridID, result);
+                AUIGrid.resize(posItmDetailGridID); // KR-OHK
             });
 
             Common.ajax("GET", "/sales/pos/selectPosBillingList", posParam, function(result){
@@ -266,6 +267,7 @@ $(document).ready(function() { //***********************************************
              //Ajax
              Common.ajax("GET", "/sales/pos/getPurchMemList", detailParam, function(result){
                  AUIGrid.setGridData(deductionCmGridID, result);
+                 AUIGrid.resize(deductionCmGridID); // KR-OHK
              });
 
         }
@@ -280,6 +282,7 @@ $(document).ready(function() { //***********************************************
         //Ajax
         Common.ajax("GET", "/sales/pos/getPosDetailList", detailParam, function(result){
             AUIGrid.setGridData(posItmDetailGridID, result);
+            AUIGrid.resize(posItmDetailGridID); // KR-OHK
         });
     });
 

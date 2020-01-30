@@ -8,14 +8,14 @@ var serialGrid;
 
 //그리드 속성 설정
 var gridPros = {
-        
+
         usePaging           : true,         //페이징 사용
-        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-        fixedColumnCount    : 1,            
-        showStateColumn     : false,             
-        displayTreeOpen     : false,            
- //       selectionMode       : "singleRow",  //"multipleCells",            
-        headerHeight        : 30,       
+        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+        fixedColumnCount    : 1,
+        showStateColumn     : false,
+        displayTreeOpen     : false,
+ //       selectionMode       : "singleRow",  //"multipleCells",
+        headerHeight        : 30,
         useGroupingPanel    : false,        //그룹핑 패널 사용
         skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
@@ -25,77 +25,83 @@ var gridPros = {
 };
 
 $(document).ready(function() {
-    
+
 	/* var tempSerialArr = "${tempSerialArr}";
 	var basketStkCode = '${basketStkCode}';
 	console.log("basketStkCode :  " + basketStkCode); */
-	//Create Grid 
+	//Create Grid
 	createSerialGrid();
 	//Set
 	//setSerialGridData(basketStkCode, tempSerialArr);
 	setSerialGridData();
-	
+
 	$("#_filterSaveBtn").click(function() {
 		var chkArr = AUIGrid.getCheckedRowItems(serialGrid);
-		
+
 		//Validation
 		if( null == chkArr || chkArr.length <= 0){
 			Common.alert('<spring:message code="sal.alert.msg.selSerialNum" />');
 			return;
 		}
-		
+
 		var toArr = [];
 		for (var idx = 0; idx < chkArr.length; idx++) {
 			//console.log('chkArr['+idx+'].item.serialNo : ' + chkArr[idx].item.serialNo);
 			toArr.push(chkArr[idx].item.serialNo);
 		}
 		//console.log('toArr : ' + toArr);
-		
+
 		//Move to Grid
-		var rtnObject = {toArr : toArr};
+		var locId = '${locId}';
+		var serialRequireChkYn = '${serialRequireChkYn}'; // KR-OHK Serial check add
+
+		var rtnObject = {toArr : toArr, locId: locId, serialRequireChkYn : serialRequireChkYn};
 		fn_getConfirmFilterListAjax(rtnObject);
 		$("#_filterSrchCloseBtn").click();
-		
+
 	});
-	
-	
+
+
 });//Doc Ready Func End
 //getFilterSerialNum
 function setSerialGridData() {
-	
+
 	    var basketStkCode  =  '${basketStkCode}';
         var tempString = '${tempString}';
         var tempSerialArr = tempString.split(",");
-        
+
+        var locId = '${locId}';
+        var serialRequireChkYn = '${serialRequireChkYn}'; // KR-OHK Serial check add
+
         if(tempString == null || tempString == ''){
-        	
+
         	/* console.log("tempString is null or empty!"); */
-        	var filterParamForm = {basketStkCode : basketStkCode};
+        	var filterParamForm = {basketStkCode : basketStkCode, locId: locId, serialRequireChkYn : serialRequireChkYn};
             Common.ajax('GET', '/sales/pos/getFilterSerialNum', filterParamForm , function(result) {
                  AUIGrid.setGridData(serialGrid, result);
             });
-        	
+
         }else{
-        	
+
         	/* console.log("tempString is not null!");
         	console.log('tempSerialArr type : ' + $.type(tempSerialArr));
         	console.log("tempSerialArr : " + tempSerialArr); */
-        	 var filterParamReForm = {basketStkCode : basketStkCode , tempSerialArr : tempSerialArr};
+        	 var filterParamReForm = {basketStkCode : basketStkCode , tempSerialArr : tempSerialArr, locId: locId, serialRequireChkYn: serialRequireChkYn};
              Common.ajax('GET', '/sales/pos/getFilterSerialReNum', filterParamReForm , function(result) {
                   AUIGrid.setGridData(serialGrid, result);
              });
-        	
+
         }
 }
 
 function createSerialGrid() {
-	
-	 var serialColumnLayout =  [ 
+
+	 var serialColumnLayout =  [
                                 {dataField : "matnr", headerText : '<spring:message code="sal.title.filterCode" />', width : '33%' , editable : false} ,
                                 {dataField : "stkDesc", headerText : '<spring:message code="sal.title.filterName" />', width : '33%' , editable : false},
-                                {dataField : "serialNo", headerText : '<spring:message code="sal.title.serial" />', width : '33%' , editable : false} 
+                                {dataField : "serialNo", headerText : '<spring:message code="sal.title.serial" />', width : '33%' , editable : false}
                                ];
-     serialGrid = GridCommon.createAUIGrid("#serialList_grid_wrap", serialColumnLayout,'', gridPros);  
+     serialGrid = GridCommon.createAUIGrid("#serialList_grid_wrap", serialColumnLayout,'', gridPros);
      AUIGrid.resize(serialGrid , 960, 300);
 }
 </script>
@@ -104,7 +110,7 @@ function createSerialGrid() {
 <input type="hidden" name="tempString" id="_tempString" value="${tempString}">
 <%-- <form id="_filterParamForm">
     <input type="hidden" name="basketStkCode" id="_basketStkCode" value="${basketStkCode}'">
-    
+
 </form>
 <form id="_filterParamReForm">
     <input type="hidden" name="tempSerialArr" id="_tempSerialArr" value="${tempSerialArr}'">
