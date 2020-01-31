@@ -1809,7 +1809,7 @@
 
     <update id="updateCSOrderStatus" parameterType="Map">
 	UPDATE SAL0225d
-	SET STUS_CODE_ID = 10 ,
+	SET STUS_CODE_ID = #{status} ,
 	UPD_USER_ID = #{updUserId},
 	UPD_DT = SYSDATE,
 	REM = #{txtRemark}
@@ -1818,5 +1818,107 @@
 
     </update>
 
+  <select id="selectResnCodeList" parameterType="Map" resultType="egovMap">
+    SELECT T1.RESN_ID CODE,
+           UPPER(T1.CODE || ' - ' || T1.RESN_DESC) CODE_NAME
+    FROM SYS0032M T1
+    WHERE T1.RESN_TYPE_ID = #{resnTypeId}
+
+    <if test='stusCodeId != null and stusCodeId !=""'>
+      AND T1.STUS_CODE_ID = #{stusCodeId}
+    </if>
+
+      <if test='codeIn !=null and codeIn != "" '> <!--  ex)  String codeIn = "11,22,33,44"-->
+            AND T1.CODE IN (SELECT     REGEXP_SUBSTR (#{codeIn}, '[^,]+', 1, LEVEL)
+                                    FROM DUAL
+                                    CONNECT BY REGEXP_SUBSTR (#{codeIn}, '[^,]+', 1, LEVEL) IS NOT NULL)
+        </if>
+
+    ORDER BY T1.RESN_ID
+  </select>
+
+<insert id="insertCSReqCancel" parameterType="Map">
+    <selectKey keyProperty="soReqId" resultType="Integer" order="BEFORE">
+      SELECT SAL0020D_SO_REQ_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT
+    INTO SAL0020D
+    ( SO_REQ_ID
+    , SO_REQ_SO_ID
+    , SO_REQ_STUS_ID
+    , SO_REQ_RESN_ID
+    , SO_REQ_PREV_CALL_ENTRY_ID
+    , SO_REQ_CUR_CALL_ENTRY_ID
+    , SO_REQ_CUR_STUS_ID
+    , SO_REQ_CRT_DT
+    , SO_REQ_CRT_USER_ID
+    , SO_REQ_UPD_DT
+    , SO_REQ_UPD_USER_ID
+    , SO_REQ_CUR_STK_ID
+    , SO_REQ_CUR_APP_TYPE_ID
+    , SO_REQ_CUR_AMT
+    , SO_REQ_CUR_PV
+    , SO_REQ_CURR_AMT
+    , SO_REQ_ACTUAL_CANCL_DT
+    , SO_REQ_CANCL_TOT_OTSTND
+    , SO_REQ_CANCL_PNALTY_AMT
+    , SO_REQ_CANCL_OB_PRIOD
+    , SO_REQ_CANCL_UNDER_COOL_PRIOD
+    , SO_REQ_CANCL_RENTAL_OTSTND
+    , SO_REQ_CANCL_TOT_USED_PRIOD
+    , SO_REQ_NO
+    , SO_REQ_CANCL_ADJ_AMT
+    , SO_REQSTER
+    , SO_REQ_PRE_RETN_DT
+    , SO_REQ_REM
+    , SO_REQ_BANK_ACC
+    , SO_REQ_ISS_BANK
+    , SO_REQ_ACC_NAME
+    , SO_REQ_ATTACH
+    )
+    VALUES
+    ( #{soReqId}
+    , #{soReqSoId}
+    , #{soReqStusId}
+    , #{soReqResnId}
+    , #{soReqPrevCallEntryId}
+    , #{soReqCurCallEntryId}
+    , #{soReqCurStusId}
+    , SYSDATE
+    , #{soReqCrtUserId}
+    , SYSDATE
+    , #{soReqUpdUserId}
+    , #{soReqCurStkId}
+    , #{soReqCurAppTypeId}
+    , #{soReqCurAmt}
+    , #{soReqCurPv}
+    , #{soReqCurrAmt}
+    , SYSDATE
+    , #{soReqCanclTotOtstnd}
+    , #{soReqCanclPnaltyAmt}
+    , #{soReqCanclObPriod}
+    , #{soReqCanclUnderCoolPriod}
+    , #{soReqCanclRentalOtstnd}
+    , #{soReqCanclTotUsedPriod}
+    , #{soReqNo}
+    , #{soReqCanclAdjAmt}
+    , #{soReqster}
+    , SYSDATE
+    , #{soReqRem}
+    , #{soReqBankAcc}
+    , #{soReqIssBank}
+    , #{soReqAccName}
+    , #{soReqAttach}
+    )
+  </insert>
+
+      <update id="updateCSMembershipStatus" parameterType="Map">
+        UPDATE SAL0095D
+          SET SRV_STUS_CODE_ID = #{status} ,
+            SRV_UPD_USER_ID = #{updUserId},
+            SRV_UPD_DT = SYSDATE,
+            SRV_REM = #{txtRemark}
+         WHERE SRV_SALES_ORD_ID = #{ordId}
+    </update>
 
 </mapper>
