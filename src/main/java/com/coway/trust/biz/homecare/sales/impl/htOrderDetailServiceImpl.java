@@ -35,6 +35,7 @@ import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.common.DocTypeConstants;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -640,7 +641,44 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 	 @Override
 	  public ReturnMessage requestCancelCSOrder(Map<String, Object> params, SessionVO sessionVO) throws Exception {
 
-	   htOrderDetailMapper.updateCSOrderStatus(params);
+	   String reqNo = htOrderRegisterMapper.selectDocNo(DocTypeConstants.CANCEL_REQUEST);
+	   params.put("soReqSoId", params.get("ordId")); // CARE SERVICE ORDER ID
+	   params.put("soReqStusId", 32); // 32 - CONFIRM TO CANCEL
+	   params.put("soReqResnId", params.get("cmbReason"));  // REASON CODE ID
+	   params.put("soReqPrevCallEntryId", "0");
+	   params.put("soReqCurCallEntryId", "0");
+	   params.put("soReqCurStusId", "24"); // 24 - BEFORE INSTALL
+	   params.put("soReqCrtUserId", sessionVO.getUserId());
+	   params.put("soReqUpdUserId", sessionVO.getUserId());
+	   params.put("soReqCurStkId", "0"); // NO STOCK CODE
+	   params.put("soReqCurAppTypeId", params.get("appTypeId")); // APPLICATION TYPE ID
+	   params.put("soReqCurAmt", params.get("totAmt")); // TOTAL AMOUNT
+	   params.put("soReqCurPv", "0");
+	   params.put("soReqCurrAmt", "0");
+	   params.put("soReqCanclTotOtstnd", "0");
+	   params.put("soReqCanclPnaltyAmt", "0");
+	   params.put("soReqCanclObPriod", "0");
+	   params.put("soReqCanclUnderCoolPriod", "0");
+	   params.put("soReqCanclRentalOtstnd", "0");
+	   params.put("soReqCanclTotUsedPriod", "0");
+	   params.put("soReqNo", reqNo);
+	   params.put("soReqCanclAdjAmt", "0");
+	   params.put("soReqster", params.get("cmbRequestor")); // REQUESTOR
+	   params.put("soReqRem", params.get("txtRemark")); // CANCEL REMARK
+	   params.put("soReqBankAcc", "");
+	   params.put("soReqIssBank", "");
+	   params.put("soReqAccName", "");
+	   params.put("soReqAttach", "");
+
+	   htOrderDetailMapper.insertCSReqCancel(params); // INSERT SAL0020D
+
+	   params.put("status", 10); // 10 - CANCEL
+	   params.put("updUserId", sessionVO.getUserId());
+
+	   htOrderDetailMapper.updateCSOrderStatus(params); // UPDATE SAL0225D
+
+	   htOrderDetailMapper.updateCSMembershipStatus(params); // UPDATE SAL0095D
+
 
 	   String msg = "CS Order Number : " + params.get("ordNo") + "<br/>Cancelled successfully.<br/>";
 
@@ -651,5 +689,10 @@ public class htOrderDetailServiceImpl extends EgovAbstractServiceImpl implements
 
 	    return message;
 	 }
+
+	  @Override
+	  public List<EgovMap> selectResnCodeList(Map<String, Object> params) {
+	    return htOrderDetailMapper.selectResnCodeList(params);
+	  }
 
 }
