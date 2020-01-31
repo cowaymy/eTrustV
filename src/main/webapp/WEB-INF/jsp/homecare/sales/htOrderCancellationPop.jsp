@@ -7,7 +7,26 @@ var APP_TYPE_ID = "${orderDetail.basicInfo.appTypeId}";
 var APP_TYPE_DESC = "${orderDetail.basicInfo.appTypeName}";
 var PRODUCT_NAME = "${orderDetail.basicInfo.productName}";
 
+
+
+
     $(function(){
+
+        CommonCombo.make("cmbRequestor", "/common/selectCodeList.do", {groupCode : '52', codeIn : 'HP,CODY,CDB,CUST,HC,HP,SO,HT'}, "", {
+            id: "codeId",
+            name: "codeName",
+            type:"S"
+        }); // REQUESTOR TYPE
+
+        CommonCombo.make("cmbReason", "/homecare/sales/selectResnCodeList.do", {resnTypeId : '5785', stusCodeId : '1', codeIn : '001,002,003,004,005,006'}, "", {
+            id: "code",
+            name: "codeName",
+            type:"S"
+        }); // REASON CODE
+
+
+
+
 
         $('#btnOrdCancelClose').click(function() {
 
@@ -89,12 +108,45 @@ var PRODUCT_NAME = "${orderDetail.basicInfo.productName}";
  <form id="frmReqCancel" action="#" method="post">
   <input id="ordId" name="ordId" type="hidden" value="${orderDetail.basicInfo.ordId}" />
   <input id="ordNo" name="ordNo" type="hidden" value="${orderDetail.basicInfo.ordNo}" />
-<table>
+  <input id="appTypeId" name="appTypeId" type="hidden" value="${orderDetail.basicInfo.appTypeId}" />
+   <input id="totAmt" name="totAmt" type="hidden" value="${orderDetail.basicInfo.totAmt}" />
+
+     <h3>
+     Care Service Order Cancellation Request Information
+    </h3>
+<table class="type1">
+
+<caption>table</caption>
+    <colgroup>
+        <col style="width: 180px" />
+        <col style="width: *" />
+        <col style="width: 180px" />
+        <col style="width: *" />
+        <col style="width: 180px" />
+        <col style="width: *" />
+       </colgroup>
+<tbody>
+
+<tr>
+
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.requestor" /><span class="must">*</span></th>
+    <td>
+    <select id="cmbRequestor" name="cmbRequestor" class="w300p " ></select>
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.reason" /><span class="must">*</span></th>
+    <td>
+    <select id="cmbReason" name="cmbReason" class="w300p " ></select>
+    </td>
+</tr>
 <tr>
     <th scope="row">Cancel Remark<span class="must"> *</span></th>
     <td colspan="5"><textarea id="txtRemark" name="txtRemark" cols="20" rows="5" ></textarea></td>
 </tr>
-
+</tbody>
 </table>
 
    <ul class="center_btns">
