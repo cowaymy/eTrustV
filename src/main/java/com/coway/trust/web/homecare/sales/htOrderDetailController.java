@@ -373,11 +373,19 @@ public class htOrderDetailController {
 	   @RequestMapping(value = "/htRequestCancelCSOrder.do", method = RequestMethod.POST)
 	    public ResponseEntity<ReturnMessage> htRequestCancelCSOrder(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
 
+
 	        logger.info("##### params #####" +params);
+
+
 	        ReturnMessage message = htOrderDetailService.requestCancelCSOrder(params, sessionVO);
 
 	        return ResponseEntity.ok(message);
 	    }
 
+	   @RequestMapping(value = "/selectResnCodeList.do", method = RequestMethod.GET)
+	   public ResponseEntity<List<EgovMap>> selectResnCodeList(@RequestParam Map<String, Object> params) {
+	     List<EgovMap> rsltList = htOrderDetailService.selectResnCodeList(params);
+	     return ResponseEntity.ok(rsltList);
+	   }
 
 }
