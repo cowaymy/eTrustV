@@ -265,11 +265,15 @@ function fn_orderCancelRequestPop() {
     var clickChk = AUIGrid.getSelectedItems(listMyGridID);
     if(selIdx > -1) {
     	if(clickChk[0].item.appTypeCode == "FT1T" || clickChk[0].item.appTypeCode == "FT1Y"){
+    		if(clickChk[0].item.ordStusCode == "ACT" || clickChk[0].item.ordStusCode == "COM"){
         Common.popupDiv("/homecare/sales/htOrderCancelRequestPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+    	  }else{
+    		  Common.alert("CS Cancel request disallow.");
     	  }
+    	}
     	else if (clickChk[0].item.appTypeCode == "CS1T" || clickChk[0].item.appTypeCode == "CS1Y"){
     		if(clickChk[0].item.adjnote ==  "" || clickChk[0].item.adjnote ==  null) {
-    			Common.alert("CS Cancel request disallow due to CS No. not yet created Credit Note.");
+    			Common.alert("CS Cancel request disallow due to CS No. not yet created Credit Note. </br> Kindly inform Homecare Dept to create CN and approved by Finance Dept to proceed CS Cancellation.");
     		}else{
     	        Common.popupDiv("/homecare/sales/htOrderCancelRequestPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
     		}
