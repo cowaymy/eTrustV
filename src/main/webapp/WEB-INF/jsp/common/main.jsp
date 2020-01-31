@@ -633,6 +633,30 @@
                 }
             });
 
+            // KR-JIN : Other tab close
+            $("#btnTabOtherClose").on("click", function() {
+                var current = $("#mainTabs").find(".ui-tabs-active>a").attr("href");
+                var su = 0, curr = 0;
+                $("#mainTabs").find("li").each(function() {
+                	var that = $(this).find("a").attr("href");
+                    if(current != that){
+	                    var panelId = $(this).closest("li").remove().attr("aria-controls");
+	                    $("#" + panelId).remove();
+	                    tabs.tabs("refresh");
+	                    su++;
+                    }else{
+                    	curr++;
+                    }
+                });
+
+                totTabCount = curr;
+                if(totTabCount == 0){
+                    $("#content2").hide();
+                    $("#content").show();
+                    mainGridResize();
+                }
+            });
+
             $("#btnTabAllClose").on("click", function() {
                 $("#mainTabs").find("li").each(function() {
                     var panelId = $(this).closest("li").remove().attr("aria-controls");
@@ -782,10 +806,11 @@
 <!-- [Woongjin Jun] Tab -->
 <section id="content2" style="width: 100%; height: 1000; border: 1px; color: black; display: none; overflow-x: hidden; overflow-y: auto;">
     <div id="mainTabs" style="width: 100%; height: 1000; border: 1px; color: black;">
-        <ul id="mainTabTitle" style="padding-right: 130px;">
-            <div style="position: absolute; top: 15px; right: 120px;"><a href="javascript:;" id="btnTabPrev">&lt;</a></div>
-            <div style="position: absolute; top: 15px; right: 100px;"><a href="javascript:;" id="btnTabNext">&gt;</a></div>
-            <div style="position: absolute; top: 15px; right: 15px;"><a href="javascript:;" id="btnTabAllClose">Close All X</a></div>
+        <ul id="mainTabTitle" style="padding-right: 280px;">
+            <div style="position: absolute; top: 15px; right: 230px;"><a href="javascript:;" id="btnTabPrev">&lt;</a></div>
+            <div style="position: absolute; top: 15px; right: 210px;"><a href="javascript:;" id="btnTabNext">&gt;</a></div>
+            <div style="position: absolute; top: 15px; right: 125px;"><a href="javascript:;" id="btnTabAllClose">Close All X</a></div>
+            <div style="position: absolute; top: 15px; right:  15px;"><a href="javascript:;" id="btnTabOtherClose">Other Close X</a></div>
         </ul>
     </div>
 </section>
