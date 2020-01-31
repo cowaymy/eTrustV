@@ -18,6 +18,8 @@ package com.coway.trust.biz.homecare.sales.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.sales.order.vo.SalesReqCancelVO;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -112,5 +114,11 @@ public interface htOrderDetailMapper {
 	int  updateCoverageAreaInactive(Map<String, Object> params);
 
 	int  updateCSOrderStatus(Map<String, Object> params);
+
+	List<EgovMap> selectResnCodeList(Map<String, Object> params);
+
+	void insertCSReqCancel(Map<String, Object> params);
+
+	void updateCSMembershipStatus(Map<String, Object> params);
 
 }
