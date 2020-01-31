@@ -48,6 +48,7 @@
     	createAUIGrid();
 
     	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '${defLocType}', 'locType', 'M','f_multiCombo');
+    	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'locTypeFrom', 'M','f_multiCombo');
 
     	 if(Common.checkPlatformType() == "mobile") {
     		 $(".path").css("display", "none");
@@ -73,6 +74,14 @@
             	getDeliveryPop(item.delno, item.reqstno, item.trnsctype, item.stktrans, item.reqsttype, item.frmlocid, item.tolocid);
             }}},
             {dataField:"deldate", headerText:"Delivery Date", width:100, editable:false, dataType:"date", dateInputFormat:"dd/mm/yyyy", formatString:"dd/mm/yyyy"},
+            {dataField: "bndlNo",headerText :"Bundle No"        ,width:120    ,height:30                },
+            {dataField: "ordno",headerText :"Order No."        ,width:100    ,height:30                },
+            {
+                dataField : "refDocNo",
+                headerText : "<spring:message code='log.head.refdocno'/>",
+                width : 120,
+                height : 30
+              },
             {dataField:"frmloc", headerText:"From Location", width:200, height:30, style:"aui-grid-user-custom-left"},
             {dataField:"delqty", headerText:"Qty", width:50, height:30, style:"aui-grid-user-custom-right"},
             {dataField:"trnsctype", headerText:"Transaction Type", width:130, height:30, labelFunction:function(rowIndex, columnIndex, value, headerText, item) {
@@ -83,12 +92,7 @@
             }},
             {dataField:"reqsttype", headerText:"Req Type", width:80, height:30},
             //{dataField:"reqstno", headerText:"Request No", width:120, height:30},
-            /*{
-                dataField : "refDocNo",
-                headerText : "<spring:message code='log.head.refdocno'/>",
-                width : 120,
-                height : 30
-              }*/
+
         ];
 
     	var mainGridOptions = {
@@ -257,6 +261,26 @@
             }).multipleSelect({
                 selectAll : true
             });
+
+            $('#locTypeFrom').change(function() {
+                if ($('#locTypeFrom').val() != null && $('#locTypeFrom').val() != "" ){
+                    var searchlocgb = $('#locTypeFrom').val();
+
+                    var locgbparam = "";
+                    for (var i = 0 ; i < searchlocgb.length ; i++){
+                        if (locgbparam == ""){
+                            locgbparam = searchlocgb[i];
+                         }else{
+                            locgbparam = locgbparam +"∈"+searchlocgb[i];
+                         }
+                     }
+
+                     var param = {searchlocgb:locgbparam , grade:""}
+                     CommonCombo.make('locCodeFrom', '/common/selectStockLocationList2.do', param , '', {type: 'M', id:'codeId', name:'codeName', width:'50%', isCheckAll:false});
+                  }
+            }).multipleSelect({
+                selectAll : true
+            });
         });
     }
 
@@ -325,9 +349,22 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Delivery No.<br />/ Request No/Ref No</th>
+                        <th scope="row">From Location</th>
+                        <td>
+                            <select id="locTypeFrom" name="locTypeFrom[]" multiple="multiple" style="width:100px"></select>
+                            <select id="locCodeFrom" name="locCodeFrom[]" multiple="multiple" style="width:350px"><option value="">Choose One</option></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Delivery No.<br />/ Request No</th>
                         <td>
                             <input type="text"  id="searchDeliveryOrRequestNo" name="searchDeliveryOrRequestNo"  class="w100p" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Bundle/Ord. /Ref.</th>
+                        <td>
+                            <input type="text"  id="searchRequestNo2" name="searchRequestNo2"  class="w100p" />
                         </td>
                     </tr>
                 </tbody>
