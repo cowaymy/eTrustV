@@ -63,4 +63,6 @@ public interface htOrderDetailService {
 
 	int updateCSOrderStatus(Map<String, Object> params, SessionVO sessionVO);
 
+	List<EgovMap> selectResnCodeList(Map<String, Object> params);
+
 }
