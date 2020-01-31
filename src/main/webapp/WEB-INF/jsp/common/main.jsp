@@ -806,11 +806,11 @@
 <!-- [Woongjin Jun] Tab -->
 <section id="content2" style="width: 100%; height: 1000; border: 1px; color: black; display: none; overflow-x: hidden; overflow-y: auto;">
     <div id="mainTabs" style="width: 100%; height: 1000; border: 1px; color: black;">
-        <ul id="mainTabTitle" style="padding-right: 280px;">
-            <div style="position: absolute; top: 15px; right: 230px;"><a href="javascript:;" id="btnTabPrev">&lt;</a></div>
-            <div style="position: absolute; top: 15px; right: 210px;"><a href="javascript:;" id="btnTabNext">&gt;</a></div>
-            <div style="position: absolute; top: 15px; right: 125px;"><a href="javascript:;" id="btnTabAllClose">Close All X</a></div>
-            <div style="position: absolute; top: 15px; right:  15px;"><a href="javascript:;" id="btnTabOtherClose">Other Close X</a></div>
+        <ul id="mainTabTitle" style="padding-right: 300px;">
+            <div style="position: absolute; top: 15px; right: 270px;"><a href="javascript:;" id="btnTabPrev" class="ui-state-default" style="padding:3px 10px; font-weight:bold;">&lt;</a></div>
+            <div style="position: absolute; top: 15px; right: 232px;"><a href="javascript:;" id="btnTabNext" class="ui-state-default" style="padding:3px 10px; font-weight:bold;">&gt;</a></div>
+            <div style="position: absolute; top: 15px; right: 133px;"><a href="javascript:;" id="btnTabAllClose" class="ui-state-default" style="padding:3px 10px; font-weight:bold;">Close All X</a></div>
+            <div style="position: absolute; top: 15px; right:  15px;"><a href="javascript:;" id="btnTabOtherClose" class="ui-state-default" style="padding:3px 10px; font-weight:bold;">Other Close X</a></div>
         </ul>
     </div>
 </section>
