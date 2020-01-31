@@ -1403,12 +1403,28 @@ console.log("orderRegisterPop.jsp");
                                 if(docSelCnt <= 0){
                                     Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
                                 }else{
+                                	if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
+                                        console.log('!@#### ordSaveBtn click START 11111');
+                                        $('#txtOldOrderID').val();
+                                        $('#relatedNo').val();
+                                        Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val()}, null, true);
+                                    }
+                                	else{
                                     Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+                                	}
                                     }
                             });
                         }
                          else{
+                        	 if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
+                                 console.log('!@#### ordSaveBtn click START 11111');
+                                 $('#txtOldOrderID').val();
+                                 $('#relatedNo').val();
+                                 Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val()}, null, true);
+                             }
+                        	 else{
                              Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+                        	 }
                          }
                     });
                 }
