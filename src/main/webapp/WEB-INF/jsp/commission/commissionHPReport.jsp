@@ -159,6 +159,7 @@
 				//set parameters
 				$($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
 				$("#reportForm #TaskID").val(taskID);
+				$("#reportForm #CommDate").val(cmmDt.substring(3)+"-"+cmmDt.substring(0, 2)+"-"+"01");
 
 			} else if (type == "3") {
 
