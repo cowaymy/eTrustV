@@ -1256,8 +1256,8 @@ public class ReportBatchController {
     LOGGER.info("[END] SparePartRecordMonthly...");
   }
 
-  @RequestMapping(value = "/AdminProductivityCody2.do")
-  //@Scheduled(cron = "0 0 9 * * *")//Daily (9:10am)
+  //Not longer using this report
+  /*@RequestMapping(value = "/AdminProductivityCody2.do")
   public void adminProductivityCody() throws IOException {
     LOGGER.info("[START] AdminProductivityCody2...");
     Map<String, Object> params = new HashMap<>();
@@ -1271,7 +1271,7 @@ public class ReportBatchController {
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] AdminProductivityCody2...");
-  }
+  }*/
 
   @RequestMapping(value = "/AdminProductivityPreviousMonthCody2.do")
   //@Scheduled(cron = " 0 10 9 1 * ?")//Monthly (Day 1) 5:07am
@@ -1506,8 +1506,8 @@ public class ReportBatchController {
     LOGGER.info("[END] SST_Agreement_Raw_Data_Excel...");
   }
 
-  @RequestMapping(value = "/AdminProductivitySO.do")
-  //@Scheduled(cron = "0 30 9 * * *")//Daily (9:10am)
+  //No longer using this report
+  /*@RequestMapping(value = "/AdminProductivitySO.do")
   public void AdminProductivitySO() throws IOException {
     LOGGER.info("[START] AdminProductivitySO...");
     Map<String, Object> params = new HashMap<>();
@@ -1521,7 +1521,7 @@ public class ReportBatchController {
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] AdminProductivitySO...");
-  }
+  }*/
 
   @RequestMapping(value = "/AdminProductivityPreviousMonthSO.do")
   //@Scheduled(cron = " 0 40 9 1 * ?")//Monthly (Day 1) 5:07am
@@ -1637,7 +1637,7 @@ public class ReportBatchController {
     LOGGER.info("[START] CowayDailySalesStatusHP_Adv...");
     Map<String, Object> params = new HashMap<>();
     String[] address =
-      {
+      {"kahkit.chew@coway.com.my",
         "nicky.lam@coway.com.my",
         "eddie.toh@coway.com.my",
         "joanne.chin@coway.com.my",
@@ -1646,13 +1646,14 @@ public class ReportBatchController {
         "thomas.chin@coway.com.my",
         "khongboon.soo@coway.com.my",
         "rachel.wong@coway.com.my",
-        "jypark30@coway.co.kr",// 박재영 부문장님 :
-        "enough06@coway.co.kr", //박상철 팀장 :
-        "rose3128@coway.co.kr", //조호기 팀장 :
-        "jenux@coway.co.kr", //조제석 차장 :
-        "smhong@coway.co.kr", //홍성민 차장 :
-        "yulyul@coway.co.kr",//- 정하율 과장 :
-        "ikchoul85@coway.co.kr",//- 조익철 과장 :
+        "jack@coway.com.my",
+        "jypark30@coway.co.kr",
+        "enough06@coway.co.kr",
+        "rose3128@coway.co.kr",
+        "jenux@coway.co.kr",
+        "smhong@coway.co.kr",
+        "yulyul@coway.co.kr",
+        "ikchoul85@coway.co.kr",
       };
     String email = "";
     email += "Dear All,\r\n\r\n";
@@ -1666,7 +1667,8 @@ public class ReportBatchController {
                                                                                   // rpt
                                                                                   // file
                                                                                   // name.
-    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    //params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
     params.put("v_Param", " ");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "CowayDailySalesStatusHP_Adv" + CommonUtils.getNowDate() + ".pdf");
@@ -1680,8 +1682,7 @@ public class ReportBatchController {
   public void CowayDailySalesStatusCody() {
     LOGGER.info("[START] CowayDailySalesStatusCody...");
     Map<String, Object> params = new HashMap<>();
-    String[] address =
-      {
+    String[] address ={"kahkit.chew@coway.com.my",
           "nicky.lam@coway.com.my",
           "eddie.toh@coway.com.my",
           "joanne.chin@coway.com.my",
@@ -1690,13 +1691,14 @@ public class ReportBatchController {
           "thomas.chin@coway.com.my",
           "khongboon.soo@coway.com.my",
           "rachel.wong@coway.com.my",
-          "jypark30@coway.co.kr",// 박재영 부문장님 :
-          "enough06@coway.co.kr", //박상철 팀장 :
-          "rose3128@coway.co.kr", //조호기 팀장 :
-          "jenux@coway.co.kr", //조제석 차장 :
-          "smhong@coway.co.kr", //홍성민 차장 :
-          "yulyul@coway.co.kr",//- 정하율 과장 :
-          "ikchoul85@coway.co.kr",//- 조익철 과장 :
+          "jack@coway.com.my",
+          "jypark30@coway.co.kr",
+          "enough06@coway.co.kr",
+          "rose3128@coway.co.kr",
+          "jenux@coway.co.kr",
+          "smhong@coway.co.kr",
+          "yulyul@coway.co.kr",
+          "ikchoul85@coway.co.kr",
         };
     String email = "";
     email += "Dear All,\r\n\r\n";
@@ -1710,7 +1712,8 @@ public class ReportBatchController {
                                                                                   // rpt
                                                                                   // file
                                                                                   // name.
-    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    //params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
     params.put("v_Param", " ");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "CowayDailySalesStatusCody" + CommonUtils.getNowDate() + ".pdf");
