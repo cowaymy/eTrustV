@@ -12,7 +12,7 @@ var PRODUCT_NAME = "${orderDetail.basicInfo.productName}";
 
     $(function(){
 
-        CommonCombo.make("cmbRequestor", "/common/selectCodeList.do", {groupCode : '52', codeIn : 'HP,CODY,CDB,CUST,HC,HP,SO,HT'}, "", {
+        CommonCombo.make("cmbRequestor", "/common/selectCodeList.do", {groupCode : '52', codeIn : 'HP,CODY,CDB,CUST,HC,HP,SO,HT,HBD'}, "", {
             id: "codeId",
             name: "codeName",
             type:"S"
