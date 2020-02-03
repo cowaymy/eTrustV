@@ -55,7 +55,8 @@
                 if(RESULT.rootState == 'ROOT_7') {
                     $('#txtOldOrderID').val(RESULT.oldOrderId);
                     $('#speclInstct').val(RESULT.instSpecInst);
-                    fn_popOrderDetail();
+                    btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId"));
+                    //fn_popOrderDetail();
                     //$('#oldOrderCloseBtn').click();
                 }
                 if(RESULT.rootState == 'ROOT_8') {
