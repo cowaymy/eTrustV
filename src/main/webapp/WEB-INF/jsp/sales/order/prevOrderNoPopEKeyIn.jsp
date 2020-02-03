@@ -4,18 +4,18 @@
 <script type="text/javaScript" language="javascript">
 
     //AUIGrid 생성 후 반환 ID
-    var prevOrdNoGridIDEKeyIn;
+    var prevOrdNoGridID;
 
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
 
-        fn_getPrevOrderNoEKeyIn();
+        fn_getPrevOrderNo();
 
         // 셀 더블클릭 이벤트 바인딩
-        AUIGrid.bind(prevOrdNoGridIDEKeyIn, "cellDoubleClick", function(event) {
+        AUIGrid.bind(prevOrdNoGridID, "cellDoubleClick", function(event) {
             $('#relatedNo').val("");
-            Common.ajax("GET", "/sales/order/checkOldOrderIdEKeyIn.do", {salesOrdNo : AUIGrid.getCellValue(prevOrdNoGridIDEKeyIn , event.rowIndex , "salesOrdNo"), custId : $('#custId').val(), promoId : AUIGrid.getCellValue(prevOrdNoGridIDEKeyIn , event.rowIndex , "promoId"), exTrade : $('#exTrade').val()}, function(RESULT) {
+            Common.ajax("GET", "/sales/order/checkOldOrderId.do", {salesOrdNo : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), custId : $('#custId').val(), promoId : AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "promoId"), exTrade : $('#exTrade').val()}, function(RESULT) {
                 console.log('RESULT ROOT_STATE  :'+RESULT.rootState);
                 console.log('RESULT IS_IN_VALID :'+RESULT.isInValid);
                 console.log('RESULT MSG         :'+RESULT.msg);
@@ -26,31 +26,31 @@
                // $('#relatedNo').val($('#rwOldOrder').val());
 
                 if(RESULT.rootState == 'ROOT_1') {
-                    $('#rwOldOrder').clearForm();
-                    $('#lblOldOrderNoEKeyIn').text('<spring:message code="sal.alert.msg.oldOrdNoNotFound" />');
+                    //$('#rwOldOrder').clearForm();
+                    $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.oldOrdNoNotFound" />');
                 }
                 if(RESULT.rootState == 'ROOT_2') {
                     //$('#rwOldOrder').clearForm();
-                    //$('#lblOldOrderNoEKeyIn').text('<spring:message code="sal.alert.msg.disallowExTrade" />');
-                    $('#lblOldOrderNoEKeyIn').text('Education and Free Trial type order is disallowed to register for ex-trade');
+                    //$('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.disallowExTrade" />');
+                    $('#lblOldOrderNo').text('Education and Free Trial type order is disallowed to register for ex-trade');
                 }
                 if(RESULT.rootState == 'ROOT_3') {
                     //$('#rwOldOrder').clearForm();
-                    $('#lblOldOrderNoEKeyIn').text('<spring:message code="sal.alert.msg.invalidOrdNo" />');
+                    $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.invalidOrdNo" />');
                 }
                 if(RESULT.rootState == 'ROOT_4') {
                     //$('#oldOrderCloseBtn').click();
                     $('#speclInstct').val(RESULT.instSpecInst);
-                    Common.alert('<spring:message code="sal.alert.msg.chkOldOrdNo" />' + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridIDEKeyIn , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridIDEKeyIn , event.rowIndex , "salesOrdId")));
+                    Common.alert('<spring:message code="sal.alert.msg.chkOldOrdNo" />' + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId")));
                 }
                 if(RESULT.rootState == 'ROOT_5') {
                     //$('#rwOldOrder').clearForm();
-                    $('#lblOldOrderNoEKeyIn').text('<spring:message code="sal.alert.msg.disallowExTrade2" />');
+                    $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.disallowExTrade2" />');
                 }
                 if(RESULT.rootState == 'ROOT_6') {
                     //$('#oldOrderCloseBtn').click();
                     $('#speclInstct').val(RESULT.instSpecInst);
-                    Common.alert('<spring:message code="sal.alert.msg.cnfrmProc" />' + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridIDEKeyIn , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridIDEKeyIn , event.rowIndex , "salesOrdId")));
+                    Common.alert('<spring:message code="sal.alert.msg.cnfrmProc" />' + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId")));
                 }
                 if(RESULT.rootState == 'ROOT_7') {
                     $('#txtOldOrderID').val(RESULT.oldOrderId);
@@ -60,19 +60,19 @@
                 }
                 if(RESULT.rootState == 'ROOT_8') {
                     //$('#rwOldOrder').clearForm();
-                    $('#lblOldOrderNoEKeyIn').text('<spring:message code="sal.alert.msg.usedExTrade" />');
+                    $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.usedExTrade" />');
                 }
                 if(RESULT.rootState == 'ROOT_9') {//checking for I-CARE Rental
                     //$('#rwOldOrder').clearForm();
-                    Common.alert('<spring:message code="sal.alert.msg.chkOldOrdNo" />' + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid, AUIGrid.getCellValue(prevOrdNoGridIDEKeyIn , event.rowIndex , "salesOrdNo"), AUIGrid.getCellValue(prevOrdNoGridIDEKeyIn , event.rowIndex , "salesOrdId")));
+                    Common.alert('<spring:message code="sal.alert.msg.chkOldOrdNo" />' + DEFAULT_DELIMITER + RESULT.msg);
                 }
                 if(RESULT.rootState == 'ROOT_10') {//checking for I-CARE
                     //$('#rwOldOrder').clearForm();
                     Common.alert('<spring:message code="sal.alert.msg.chkOldOrdNo" />' + DEFAULT_DELIMITER + RESULT.msg);
                 }
             });
-            //fn_setData(AUIGrid.getCellValue(prevOrdNoGridIDEKeyIn , event.rowIndex , "salesOrdNo"))
-            //$('#btnPrevOrderNoEKeyIn').click();
+            //fn_setData(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"))
+            //$('#btnPrevOrderNo').click();
         });
 
     });
@@ -111,7 +111,7 @@
             groupingMessage     : "Here groupping"
         };
 
-        prevOrdNoGridIDEKeyIn = GridCommon.createAUIGrid("grid_prev_ord_wrap", columnLayout, "", gridPros);
+        prevOrdNoGridID = GridCommon.createAUIGrid("grid_prev_ord_wrap", columnLayout, "", gridPros);
     }
 
     $(function(){
@@ -119,14 +119,14 @@
     });
 
     //Get Contact by Ajax
-    function fn_getPrevOrderNoEKeyIn(){
+    function fn_getPrevOrderNo(){
         Common.ajax("GET", "/sales/order/selectPrevOrderNoList.do", {custId : '${custId}'}, function(result) {
-            AUIGrid.setGridData(prevOrdNoGridIDEKeyIn, result);
+            AUIGrid.setGridData(prevOrdNoGridID, result);
         });
     }
 
     function fn_selfClose() {
-        $('#btnPrevOrderNoEKeyIn').click();
+        $('#btnPrevOrderNo').click();
       }
 
     function btnHidden_Valid_Click(isInValid, salesOrdNo , salesOrdId) {
@@ -138,15 +138,13 @@
 
                 fn_setData(salesOrdNo)
                 $('#txtOldOrderID').val(salesOrdId);
-                $('#btnPrevOrderNoEKeyIn').click();
+                $('#btnPrevOrderNo').click();
         }
-        else if(isInValid == 'Valid') {
 
-        }
         else {
             fn_setData(salesOrdNo)
             $('#txtOldOrderID').val(salesOrdId);
-            $('#btnPrevOrderNoEKeyIn').click();
+            $('#btnPrevOrderNo').click();
         }
     }
 
@@ -159,7 +157,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>Previous Order No.</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="btnPrevOrderNoEKeyIn" href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnPrevOrderNo" href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -175,7 +173,7 @@
 <input type="hidden" id="exTrade" name="exTrade" value="${exTrade}"/>
 
 <ul class="left_btns mb10">
-    <li><p><span id="lblOldOrderNoEKeyIn" class="red_text"></span></p></li>
+    <li><p><span id="lblOldOrderNo" class="red_text"></span></p></li>
 </ul>
 </section><!-- search_result end -->
 
