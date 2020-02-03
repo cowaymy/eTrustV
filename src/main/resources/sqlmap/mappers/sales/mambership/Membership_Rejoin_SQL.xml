@@ -26,6 +26,8 @@
 		FROM SAL0259T
 		WHERE 1 = 1
             AND MEM_LVL <![CDATA[<>]]> 0
+            AND REJOIN_YEAR = TO_CHAR(SYSDATE,'YYYY')
+            AND REJOIN_MONTH = TO_CHAR(SYSDATE,'MM')
 
         <if test="orgCode != null and orgCode != '' ">
             AND ORG_CODE = #{orgCode}
