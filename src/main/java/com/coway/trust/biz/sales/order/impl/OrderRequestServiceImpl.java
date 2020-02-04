@@ -2612,4 +2612,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     }
   }
 
+  @Override
+  public Integer chkSalStat(Map<String, Object> params) {
+    return orderRequestMapper.chkSalStat(params);
+  }
+
 }
