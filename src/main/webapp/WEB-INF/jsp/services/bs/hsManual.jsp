@@ -1219,7 +1219,7 @@ var TODAY_DD      = "${toDay}";
   }
 
 
-    function fn_hsReversal(){
+    function fn_hsReversal(i){
     // ADDED BY TPY - 18/06/2019
     // AMEND BY OHC - 20/01/2020 - TO ADD FOR REVERSAL PASS MONTH HS
 	  var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
@@ -1489,23 +1489,21 @@ var TODAY_DD      = "${toDay}";
              <a href="#" onclick="javascript:fn_filterForecastList()">HS
               Filter Forecast Listing</a>
             </p></li>
-           <li><p class="link_btn type2">
+           <!-- <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsConfigOld()">HS
               Config(Old system version)</a>
-            </p></li>
-            <!-- By KV - HS Mobile Failure Listing -->
-            <li><p class="link_btn type2">
-               <a href="#" onclick="javascript:fn_HSMobileFailureListing()"><spring:message
-                   code='service.btn.MobileFailListHS' /></a>
-              </p>
-          </li>
-
-
+            </p></li> -->
         <!--    <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsMonthlySetting()">HS
               Current Month Setting(Old system version)</a>
             </p></li> -->
           </c:if>
+                      <!-- By KV - HS Mobile Failure Listing -->
+            <li><p class="link_btn type2">
+               <a href="#" onclick="javascript:fn_HSMobileFailureListing()"><spring:message
+                   code='service.btn.MobileFailListHS' /></a>
+              </p>
+          </li>
          </ul>
          <!--
            <ul class="btns">
