@@ -270,4 +270,13 @@ public class OrderRequestController {
     Integer stat = orderRequestService.chkCboSal(params);
     return ResponseEntity.ok(stat);
   }
+
+  @RequestMapping(value = "/chkSalStat.do", method = RequestMethod.GET)
+  public ResponseEntity<Integer> chkSalStat(@RequestParam Map<String, Object> params) {
+    logger.debug("=============================chkSalStat=====================================");
+    logger.debug("= PARAMS = " + params.toString());
+    logger.debug("=============================chkSalStat=====================================");
+    Integer stat = orderRequestService.chkSalStat(params);
+    return ResponseEntity.ok(stat);
+  }
 }
