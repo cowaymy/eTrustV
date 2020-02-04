@@ -248,6 +248,11 @@ $(document).ready(function() {
            }
         }
     });
+
+    // 2020-02-04 - LaiKW - Added to block CDB Sales admin to self change branch
+    if('${userRoleId}' == 256) {
+        $("#selectBranch").attr("disabled", true);
+    }
 });
 
 
