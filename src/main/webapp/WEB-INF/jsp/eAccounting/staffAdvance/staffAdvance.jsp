@@ -700,7 +700,7 @@
                 $("#refdDate").val("");
                 return false;
             } else if (tDate <= nDate && tDate > cDate) {
-                Common.alert("Backdate request not allowed!");
+                Common.alert(errMsg);
                 $("#trvPeriodFr").val("");
                 $("#trvPeriodTo").val("");
                 $("#daysCount").val("");
