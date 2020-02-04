@@ -235,4 +235,7 @@ public interface OrderRequestMapper {
 
   int chkCboMSal(Map<String, Object> params);
 
+  int chkSalStat(Map<String, Object> params);
+
+
 }
