@@ -69,4 +69,7 @@ public interface OrderRequestService {
 
   Integer chkCboSal(Map<String, Object> params);
 
+  Integer chkSalStat(Map<String, Object> params);
+
+
 }
