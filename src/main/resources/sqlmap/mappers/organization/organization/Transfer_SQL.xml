@@ -193,9 +193,9 @@
 		                Extent1.MEM_CODE || ' - ' || Extent1.NAME C1
 		         FROM ORG0001D Extent1
 		                JOIN ORG0005D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
-		          WHERE  ( Extent1.STUS IN ( 1,8 )
-		                  )
-		                   AND ( Extent1.MEM_TYPE =  #{memberType} )
+		          WHERE
+		          <!-- ( Extent1.STUS IN ( 1,8 )) AND-->
+		                   ( Extent1.MEM_TYPE =  #{memberType} )
 		                   AND ( Extent2.MEM_UP_ID = #{memberUpId} ) ) Project1
 		  ORDER BY Project1.MEM_CODE ASC
 		  </select>
