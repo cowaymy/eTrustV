@@ -2485,6 +2485,7 @@
 <tr>
     <th scope="row">Promotion | Promosi<span class="must">*</span></th>
     <td><select id="ordPromo" name="ordPromo" class="w50p" disabled></select></td>
+    <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
 </tr>
 <!-- <tr>
     <th scope="row">Installment Duration<span class="must">*</span></th>
