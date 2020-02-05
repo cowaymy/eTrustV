@@ -416,6 +416,8 @@
              , CPNT_ID = #{itmCompId}
              , CORP_CUST_TYPE = #{corpCustType}
              , AGREEMENT_TYPE = #{agreementType}
+             , SALES_ORD_ID_OLD = #{salesOrdIdOld}
+             , RELATED_NO = #{relatedNo}
 
          WHERE PRE_ORD_ID                 = #{preOrdId}
     </update>

@@ -399,6 +399,8 @@
                 $('#btnRltdNoEKeyIn').addClass("blind");
             }
             $('#ordProudct').val('');
+            $('#speclInstct').val('');
+
 
         });
         $('#ordProudct').change(function() {

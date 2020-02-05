@@ -1179,6 +1179,7 @@ console.log("orderRegisterPop.jsp");
                 $('#btnRltdNo').addClass("blind");
             }
             $('#ordProudct').val('');
+            $('#speclInstct').val('');
 
         });
         $('#btnCal').click(function() {

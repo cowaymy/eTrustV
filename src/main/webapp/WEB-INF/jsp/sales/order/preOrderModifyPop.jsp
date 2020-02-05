@@ -98,6 +98,10 @@
     }
 
     $(function(){
+        $('#btnRltdNoEKeyIn').click(function() {
+            Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+        });
+
         $('#btnConfirm').click(function() {
             if(!fn_validConfirm())  return false;
             if(fn_isExistESalesNo() == 'true') return false;
@@ -335,6 +339,26 @@
                     }
                 }
             }
+        });
+        $('#exTrade').change(function() {
+
+            $('#ordPromo option').remove();
+            fn_clearAddCpnt();
+            $('#relatedNo').val("");
+
+            if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
+                //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
+                $('#btnRltdNoEKeyIn').removeClass("blind");
+            }
+            else {
+                //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+                $('#relatedNo').val('');
+                $('#btnRltdNoEKeyIn').addClass("blind");
+            }
+            $('#ordProudct').val('');
+            $('#speclInstct').val('');
+
+
         });
         $('#srvPacId').change(function() {
 
@@ -646,6 +670,10 @@
             Common.alert("Invalid Bank Account" + DEFAULT_DELIMITER + "<b>Invalid account for auto debit.</b>");
         }
     }
+
+    function fn_clearAddCpnt() {
+          $('#compType option').remove();
+        }
 
     function fn_loadBankAccount(bankAccId) {
         console.log("fn_loadBankAccount START");
@@ -1086,7 +1114,9 @@
                 custBillCustCareCntId: $("#hiddenBPCareId").val(),
                 stusId                     : vStusId,
                 corpCustType         : $('#corpCustType').val(),
-                agreementType         : $('#agreementType').val()
+                agreementType         : $('#agreementType').val(),
+                salesOrdIdOld          : $('#txtOldOrderID').val(),
+                relatedNo               : $('#relatedNo').val()
             };
 
         var formData = new FormData();
@@ -1657,7 +1687,7 @@
         }
 
 
-
+        $('#relatedNo').val('${preOrderInfo.relatedNo}');
         $('#ordRentalFees').val('${preOrderInfo.mthRentAmt}');
         $('#promoDiscPeriodTp').val('${preOrderInfo.promoDiscPeriodTp}');
         $('#promoDiscPeriod').val('${preOrderInfo.promoDiscPeriod}');
@@ -2435,6 +2465,7 @@
 <tr>
     <th scope="row">Ex-Trade/Related No</th>
     <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p>
+        <a id="btnRltdNoEKeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
 </tr>
 <tr>
