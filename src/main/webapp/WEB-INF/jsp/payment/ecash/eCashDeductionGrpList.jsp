@@ -21,6 +21,8 @@ var bankData = [ /* {"codeId": "21","codeName": "Maybank"},
                              {"codeId": "19","codeName": "Standard Chartered Bank"}
                            ];
 
+var subPath = "/resources/WebShare/CRT";
+
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
 	//메인 페이지
@@ -449,7 +451,9 @@ function fn_createFile(){
 
     Common.ajax("POST", "/payment/createECashDeductionFile.do", data,
             function(result) {
-                 Common.alert("<b>Claim file has successfully created.</b>");
+                 Common.alert("<b>Claim file has successfully created.</b>",function(){
+                     window.open("${pageContext.request.contextPath}" + subPath + result.data);
+                 });
 
            },
            function(result) {
