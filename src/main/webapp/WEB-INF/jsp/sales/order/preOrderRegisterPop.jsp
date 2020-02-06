@@ -907,6 +907,7 @@
         var appTypeIdx = $("#appType option:selected").index();
         var appTypeVal = $("#appType").val();
         var custType = $("#hiddenTypeId").val();
+        var exTrade = $("#exTrade").val();
 
         if(appTypeIdx <= 0) {
             isValid = false;
@@ -950,6 +951,13 @@
         if($("#ordPromo option:selected").index() <= 0) {
             isValid = false;
             msg += "* Please select a promotion.<br>";
+        }
+
+        if(exTrade == '1' || exTrade == '2') {
+            if(FormUtil.checkReqValue($('#relatedNo'))) {
+                isValid = false;
+                msg += "* Please select old order no.<br>";
+            }
         }
 
         //if (custType == '965' && appTypeVal == '66'){
