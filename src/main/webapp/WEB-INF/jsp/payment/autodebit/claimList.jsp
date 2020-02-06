@@ -11,6 +11,8 @@
   // Empty Set
   var emptyData = [];
 
+  var subPath = "/resource/WebShare/CRT";
+
   // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
   $(document)
       .ready(
@@ -1282,7 +1284,10 @@
             data,
             function(result) {
               Common
-                  .alert("<spring:message code='pay.alert.claimSucessCreate'/>");
+                  .alert("<spring:message code='pay.alert.claimSucessCreate'/>",function(){
+                	  window.open("${pageContext.request.contextPath}" + subPath + result.data);
+                	  }
+                  );
 
             },
             function(result) {
@@ -1349,6 +1354,7 @@
       Common.alert("<spring:message code='pay.alert.noClaim'/>");
     }
   }
+
 </script>
 <!-- content start -->
 <section id="content">

@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -994,7 +995,7 @@ public class ClaimController {
    * @return
    */
   @RequestMapping(value = "/createClaimFile.do", method = RequestMethod.POST)
-  public ResponseEntity<ReturnMessage> createClaimFile(@RequestBody Map<String, ArrayList<Object>> params, Model model)
+  public ResponseEntity<ReturnMessage> createClaimFile(@RequestBody Map<String, ArrayList<Object>> params, Model model,HttpServletResponse response)
       throws Exception {
 
     List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터
@@ -1017,7 +1018,7 @@ public class ClaimController {
         if ("2".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
           // this.createClaimFileALB(claimMap);
           // claimService.deleteClaimFileDownloadInfo(claimMap);
-          this.createClaimFileNewALB(claimMap);
+          this.createClaimFileNewALB(claimMap, response);
         }
 
         // CIMB
@@ -1172,12 +1173,13 @@ public class ClaimController {
     ReturnMessage message = new ReturnMessage();
     message.setCode(AppConstants.SUCCESS);
     message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    message.setData(claimMap.get("file").toString());
 
     return ResponseEntity.ok(message);
 
   }
 
-  public void createClaimFileALB(EgovMap claimMap) throws Exception {
+  public void createClaimFileALB(EgovMap claimMap,HttpServletResponse response) throws Exception {
 
     ClaimFileALBHandler downloadHandler = null;
     String sFile;
@@ -1208,7 +1210,17 @@ public class ClaimController {
 
     // E-mail 전송하기
     File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
-    EmailVO email = new EmailVO();
+
+    OutputStream out = response.getOutputStream();
+    FileInputStream in = new FileInputStream(file);
+    byte[] buffer = new byte[4096];
+    int length;
+    while ((length = in.read(buffer)) > 0){
+       out.write(buffer, 0, length);
+    }
+    in.close();
+    out.flush();
+/*    EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
     email.setHtml(false);
@@ -1217,7 +1229,7 @@ public class ClaimController {
     email.addFile(file);
 
     adaptorService.sendEmail(email, false);
-  }
+*/  }
 
   private ClaimFileALBHandler getTextDownloadALBHandler(String fileName, String[] columns, String[] titles, String path,
       String subPath, Map<String, Object> params) {
@@ -1234,7 +1246,7 @@ public class ClaimController {
    * @param claimDetailList
    * @throws Exception
    */
-  public void createClaimFileNewALB(EgovMap claimMap) throws Exception {
+  public void createClaimFileNewALB(EgovMap claimMap,HttpServletResponse response) throws Exception {
 
     ClaimFileNewALBHandler downloadHandler = null;
     String todayDate;
@@ -1271,7 +1283,8 @@ public class ClaimController {
 
     // E-mail 전송하기
     File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
-    EmailVO email = new EmailVO();
+
+    /*EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
     email.setHtml(false);
@@ -1280,7 +1293,7 @@ public class ClaimController {
     email.addFile(file);
 
     adaptorService.sendEmail(email, false);
-
+*/
   }
 
   private ClaimFileNewALBHandler getTextDownloadNewALBHandler(String fileName, String[] columns, String[] titles,
@@ -1957,6 +1970,8 @@ public class ClaimController {
           email.setSubject(emailSubj);
           email.setText(emailTxt);
           email.addFile(file);
+
+          claimMap.put("file", fileInfoConf.get("ctrlSubPath").toString() + sFile);
 
           adaptorService.sendEmail(email, false);
         }
