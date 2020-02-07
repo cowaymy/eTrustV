@@ -25,52 +25,65 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @Description : TO-DO Class Description
  *
  * @History
- * <pre>
+ *
+ *          <pre>
  * Date            Author       Description
  * -------------  -----------  -------------
  * 2019. 9. 30.   KR-HAN        First creation
- * </pre>
+ * 2020.2.06      MY-ONGHC    Add Add E-Notification
+ *          </pre>
  */
 @Mapper("paymentApiMapper")
 public interface PaymentApiMapper {
 
-	 /**
-	 * TO-DO Description
-	 * @Author KR-HAN
-	 * @Date 2019. 9. 30.
-	 * @param params
-	 * @return
-	 */
-	List<EgovMap> selectPaymentList(Map<String, Object> params);
+  /**
+   * TO-DO Description
+   *
+   * @Author KR-HAN
+   * @Date 2019. 9. 30.
+   * @param params
+   * @return
+   */
+  List<EgovMap> selectPaymentList(Map<String, Object> params);
 
+  /**
+   * TO-DO Description
+   *
+   * @Author KR-HAN
+   * @Date 2019. 10. 14.
+   * @param params
+   * @return
+   */
+  EgovMap selectBillInfoRental(Map<String, Object> params);
 
-	 /**
-	 * TO-DO Description
-	 * @Author KR-HAN
-	 * @Date 2019. 10. 14.
-	 * @param params
-	 * @return
-	 */
-	EgovMap selectBillInfoRental(Map<String, Object> params);
+  /**
+   * TO-DO Description
+   *
+   * @Author KR-HAN
+   * @Date 2019. 10. 15.
+   * @param params
+   * @return
+   */
+  EgovMap selectSalesNotificationInfo(Map<String, Object> params);
 
-	 /**
-	 * TO-DO Description
-	 * @Author KR-HAN
-	 * @Date 2019. 10. 15.
-	 * @param params
-	 * @return
-	 */
-	EgovMap selectSalesNotificationInfo(Map<String, Object> params);
+  /**
+   * TO-DO Description
+   *
+   * @Author KR-HAN
+   * @Date 2019. 10. 15.
+   * @param params
+   * @return
+   */
+  int insertSalesNotification(Map<String, Object> params);
 
-	 /**
-	 * TO-DO Description
-	 * @Author KR-HAN
-	 * @Date 2019. 10. 15.
-	 * @param params
-	 * @return
-	 */
-	int insertSalesNotification(Map<String, Object> params);
+  List<EgovMap> selectBankSelectBox(Map<String, Object> params);
 
-	List<EgovMap> selectBankSelectBox(Map<String, Object> params);
+  String getSmsTemplate();
+
+  void insertMSC0015D(Map<String, Object> params);
+
+  String getEmailTitle();
+
+  String getEmailDetails();
 
 }
