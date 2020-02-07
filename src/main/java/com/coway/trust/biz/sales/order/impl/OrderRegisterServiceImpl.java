@@ -397,8 +397,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                 ROOT_STATE = "ROOT_4";
 
                 txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
-                    + (String) promoMap.get("promoDesc") + " , SVM expired : "
-                    + (String) GetExpDate.get("srvPrdExprDtMmyy");
+                    + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION")
+                    + " , SVM expired : "+ (String) GetExpDate.get("srvPrdExprDtMmyy");
               } else {
                 ROOT_STATE = "ROOT_5";
               }
@@ -418,14 +418,14 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
               ROOT_STATE = "ROOT_6";
 
               txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
-                  + (String) promoMap.get("promoDesc") + " , SVM expired : "
-                  + (String) GetExpDate.get("srvPrdExprDtMmyy");
+                  + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION")
+                  + " , SVM expired : " + (String) GetExpDate.get("srvPrdExprDtMmyy");
             } else {
               ROOT_STATE = "ROOT_7";
 
               txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
-                  + (String) promoMap.get("promoDesc") + " , SVM expired : "
-                  + (String) GetExpDate.get("srvPrdExprDtMmyy");
+                  + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION")
+                  + " , SVM expired : "+ (String) GetExpDate.get("srvPrdExprDtMmyy");
 
             }
           }
@@ -537,7 +537,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
               ROOT_STATE = (isInValid.equals("InValid")) ? "ROOT_9" : "ROOT_7";
 
               txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
-                  + (String) promoMap.get("promoDesc");
+                  + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION");
             } else {
               ROOT_STATE = "ROOT_5";
             }
@@ -556,7 +556,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
             ROOT_STATE = "ROOT_7";
 
             txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
-                + (String) promoMap.get("promoDesc");
+                + (String) (promoMap != null ? promoMap.get("promoDesc") : "NO PROMOTION");
 
           }
         }
