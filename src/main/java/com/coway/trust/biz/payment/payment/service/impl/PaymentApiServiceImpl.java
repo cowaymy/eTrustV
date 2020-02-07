@@ -447,7 +447,7 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
   @Override
   public void sendSms(Map<String, Object> params) {
     SmsVO sms = new SmsVO(Integer.parseInt(params.get("crtUserId").toString()), 975);
-    String smsTemplate = paymentApiMapper.getSmsTemplate();
+    String smsTemplate = paymentApiMapper.getSmsTemplate(params);
     String smsNo = "";
 
     params.put("smsTemplate", smsTemplate);
@@ -473,7 +473,7 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     String[] mobileArray = CommonUtils.getDelimiterValues(smsNo);
     if (mobileArray.length > 0) {
       for (int i = 0; i < mobileArray.length; i++) {
-        Map<String, Object> logs = null;
+        Map<String, Object> logs = new HashMap<String, Object>();
 
         logs.put("smsTemplate", CommonUtils.nvl(params.get("smsTemplate")));
         logs.put("mobileNo", CommonUtils.nvl(mobileArray[i]));
@@ -488,8 +488,8 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
   @Override
   public void sendEmail(Map<String, Object> params) {
     EmailVO email = new EmailVO();
-    String emailTitle = paymentApiMapper.getEmailTitle();
-    String emailDetails = paymentApiMapper.getEmailDetails();
+    String emailTitle = paymentApiMapper.getEmailTitle(params);
+    String emailDetails = paymentApiMapper.getEmailDetails(params);
     String emailNo = "";
 
     if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
