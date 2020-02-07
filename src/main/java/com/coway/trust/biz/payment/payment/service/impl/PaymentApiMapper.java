@@ -78,12 +78,12 @@ public interface PaymentApiMapper {
 
   List<EgovMap> selectBankSelectBox(Map<String, Object> params);
 
-  String getSmsTemplate();
+  String getSmsTemplate(Map<String, Object> params);
 
   void insertMSC0015D(Map<String, Object> params);
 
-  String getEmailTitle();
+  String getEmailTitle(Map<String, Object> params);
 
-  String getEmailDetails();
+  String getEmailDetails(Map<String, Object> params);
 
 }
