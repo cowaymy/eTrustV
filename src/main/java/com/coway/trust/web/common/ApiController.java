@@ -233,24 +233,46 @@ public class ApiController {
 
   @RequestMapping(value = "/customer/genInvoice.do")
   public void genInvoice(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> params) {
-    
-    if (params.get("type").equals("133") || params.get("type").equals("134")) {
+
+    //if (params.get("type").equals("133") || params.get("type").equals("134")) {
+    if (params.get("type").equals("REN")) {
+
       params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Rental_PDF_JOMPAY_SST_2.rpt");
       params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
       params.put("V_TAXINVOICEID", params.get("taxInvoiceId").toString()); // parameter
-      params.put("V_TYPE", params.get("type").toString()); // parameter
+      params.put("V_TYPE","133");
       params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Rental_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
-      
-    } 
-    if(params.get("type").equals("")){
+
+    }else if(params.get("type").equals("OUT")){
+
       params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Outright_PDF_SST.rpt");
       params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
       params.put("V_TAXINVOICEID", params.get("taxInvoiceId").toString()); // parameter
-      params.put(AppConstants.REPORT_DOWN_FILE_NAME, "CustomerPortal" + File.separator + "Outright_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Outright_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
+
+    }else if(params.get("type").equals("SVM")){
+
+      params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST_2.rpt");
+      params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+      params.put("v_taxInvoiceID", params.get("taxInvoiceId").toString()); // parameter
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME, "ServiceMembership_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
+
+    }else if(params.get("type").equals("RENSVM")){
+
+      params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_ServiceContract_PDF_SST.rpt");
+      params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+      params.put("V_REFERENCEID", params.get("taxInvoiceId").toString()); // parameter
+      params.put("V_TYPE","134");
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME, "ServiceContractMembership_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
+
     }
-    
+
+
+
+
+
     this.viewProcedure(request, response, params);
-    
+
   }
 
   private void checkArgument(Map<String, Object> params) {
