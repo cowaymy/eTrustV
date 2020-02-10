@@ -35,6 +35,13 @@
                  Common.alert('<spring:message code="sal.alert.msg.plzKeyinCity" />');
                  return ;
              }
+
+             if($("#searchSt").val() ==''){
+                 Common.alert("Please key in Area search(3). Area search(3) cannot be null.");
+                 return ;
+             }
+
+
              if($("#mTown").val() == ''){
                   Common.alert('<spring:message code="sal.alert.msg.plzKeyinTown" />');
                   return ;
@@ -162,7 +169,10 @@
 
             }else{
 
-                 $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
+                 //$("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
+                 $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
+                 $('#mPostCd').val('');
+                 $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
 
                  $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
                  $('#mArea').val('');
@@ -290,6 +300,9 @@
             return false;
         }
         Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv');
+
+       $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
+
     }
 
 
