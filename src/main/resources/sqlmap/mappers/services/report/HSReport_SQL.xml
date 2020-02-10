@@ -264,7 +264,8 @@
                                <if test="groupCode != null and groupCode != ''">
                                and ( Extent1.MEM_LVL = #{groupCode} )
                                </if>
-                               AND ( Extent1.DEPT_CODE LIKE '%CCS%'ESCAPE '~' )
+                               <!-- AND ( Extent1.DEPT_CODE LIKE '%CCS%'ESCAPE '~' ) -->
+                               AND Extent2.MEM_TYPE = 2
                                AND ( 1 = Extent1.ORG_STUS_CODE_ID )
 
                                      UNION
