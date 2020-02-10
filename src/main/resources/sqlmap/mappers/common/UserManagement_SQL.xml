@@ -109,6 +109,7 @@
              , a.code || '-' || a.name as name
        FROM SYS0005M a
      WHERE a.stus_id = 1
+     AND a.code not like 'TRT%'
       ORDER BY a.code
 </select>
 
