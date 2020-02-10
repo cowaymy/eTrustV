@@ -485,6 +485,9 @@ public class ECashDeductionController {
                 }
         }
 */
+    	// Zip Files to email and download
+    	zipFilesEmail(claimMap);
+
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -649,7 +652,7 @@ public class ECashDeductionController {
 		String todayDate;
 		String inputDate;
 
-		String batchName  = "eCash_CIMB_CIMB";
+		String batchName  = "eCash_CIMB_CIMB_";
 		String subPath = "/eCash/CIMB_GROUP/";
 		String emailSubject = "CIMB eAuto Debit CRC Deduction File";
 
@@ -678,7 +681,6 @@ public class ECashDeductionController {
         claimMap.put("subPath", subPath);
         claimMap.put("emailSubject", emailSubject);
 
-        zipFilesEmail(claimMap);
 	}
 
 	/**
@@ -731,7 +733,6 @@ public class ECashDeductionController {
 		claimMap.put("subPath", subPath);
         claimMap.put("emailSubject", emailSubject);
 
-        zipFilesEmail(claimMap);
 	}
 
 	private ECashGrpDeductionFileCIMBHandler getTextDownloadCIMBGrpHandler(String fileName, String[] columns, String[] titles, String path,
