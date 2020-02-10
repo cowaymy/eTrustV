@@ -79,7 +79,7 @@
                 console.log("checkRC");
 
                 if(memRc != null) {
-                    if(memRc.rcPrct < 30 && memRc.cnt >= 3) {
+                    if(memRc.rcPrct < 30) {
                         Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
                         return false;
                     }

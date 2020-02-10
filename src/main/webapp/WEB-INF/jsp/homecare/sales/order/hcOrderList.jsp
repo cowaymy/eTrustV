@@ -90,7 +90,7 @@
             var memCode = AUIGrid.getCellValue(listMyGridID, selIdx, "salesmanCode");
             Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
             	if(memRc != null) {
-                    if(memRc.rcPrct < 30 && memRc.cnt >= 3) {
+                    if(memRc.rcPrct < 30) {
                         fn_clearOrderSalesman();
                         Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
                     } else {
