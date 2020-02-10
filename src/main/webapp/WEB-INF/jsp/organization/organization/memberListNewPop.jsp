@@ -269,6 +269,7 @@ function fn_departmentCode(value){
 		               var jsonObj = {
 		                       memberLvl : 3,
 		                       flag :  "%CCS%",
+		                       flag2 : "%CM%",
 		                       branchVal : $("#branch").val()
 		               };
 
