@@ -1499,4 +1499,16 @@ public class ASManagementListController {
     return ResponseEntity.ok(message);
 
   }
+
+
+  @RequestMapping(value = "/selectCustInstAddJsonInfo.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> selectCustInstAddInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+      logger.debug("== params " + params.toString());
+
+      EgovMap custInfo = ASManagementListService.selectCustomerInstallationAddress(params);
+
+      return ResponseEntity.ok(custInfo);
+  }
+
 }
