@@ -516,4 +516,39 @@
         <select id="safetyLevelList" parameterType="Map" resultType="egovMap">
               SELECT CODE CODE_ID, CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 444
        </select>
+
+       <select id="getCodyList2" parameterType="Map" resultType="egovMap">
+
+
+
+                SELECT A.MEM_ID as CODE_ID , A.MEM_CODE   || '-' || a.NAME  as CODE_NAME
+                FROM ORG0001D A
+               WHERE A.MEM_CODE  =#{userName}
+            ORDER BY A.MEM_CODE
+          </select>
+
+          <select id="getCdUpMem" parameterType="Map" resultType="egovMap">
+
+
+                SELECT C.MEM_ID AS CODE_ID
+                         , C.DEPT_CODE || '-' || D.NAME AS CODE_NAME FROM ORG0001D A
+                JOIN ORG0005D B on B.MEM_ID = A.MEM_ID
+                JOIN ORG0005D C on C.MEM_ID = B.MEM_UP_ID
+                JOIN ORG0001D D on D.MEM_ID = C.MEM_ID
+                WHERE A.MEM_CODE =#{userName}
+          </select>
+
+            <select id="selectCodyBranch" parameterType="Map" resultType="egovMap">
+        SELECT s005m.brnch_id AS CODE_ID
+             , s005m.code || '-' || s005m.name AS CODE_NAME
+        FROM SYS0005M s005m
+           , SYS0013M s0013m
+        WHERE s005m.type_id = s0013m.code_id
+          AND s005m.type_id IN (42)
+
+           AND S005M.CODE = (SELECT C.CODE FROM ORG0001D A, ORG0005D B, SYS0005M C WHERE A.MEM_ID = B.MEM_ID AND A.BRNCH = C.BRNCH_ID AND A.MEM_CODE = #{userName})
+        ORDER BY s005m.CODE ASC
+
+
+  </select>
      </mapper>

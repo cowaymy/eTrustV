@@ -84,4 +84,22 @@ public class HSReportServiceImpl extends EgovAbstractServiceImpl implements HSRe
     // TODO Auto-generated method stub
     return HSReportMapper.safetyLevelList(params);
   }
+  
+  @Override
+  public List<EgovMap> getCodyList2(Map<String, Object> params) {
+    // TODO Auto-generated method stub
+    return HSReportMapper.getCodyList2(params);
+  }
+  
+  @Override
+  public List<EgovMap> getCdUpMem(Map<String, Object> params) {
+    // TODO Auto-generated method stub
+    return HSReportMapper.getCdUpMem(params);
+  }
+  
+  @Override
+  public List<EgovMap> selectCodyBranch(Map<String, Object> params) {
+    // TODO Auto-generated method stub
+    return HSReportMapper.selectCodyBranch(params);
+  }
 }

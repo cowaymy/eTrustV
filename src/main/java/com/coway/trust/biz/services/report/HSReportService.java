@@ -30,4 +30,10 @@ public interface HSReportService {
   List<EgovMap> selectCodyCodeList_1(Map<String, Object> params);
   
   List<EgovMap> safetyLevelList(Map<String, Object> params);
+  
+  List<EgovMap> getCodyList2(Map<String, Object> params);
+  
+  List<EgovMap> getCdUpMem(Map<String, Object> params);
+  
+  List<EgovMap> selectCodyBranch(Map<String, Object> params);
 }

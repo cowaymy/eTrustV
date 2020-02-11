@@ -3,26 +3,75 @@
 
 <script type="text/javaScript">
 $(document).ready(function() {
+    if ($("#userType").val() == "2" && $("#memberLevel").val() == "4") {
+        //doGetCombo('/services/bs/getCdUpMemList.do', $(this).val(), '', 'CMGroup', 'S','fn_cmdBranchCode');
+        doGetCombo("/services/bs/report/selectCodyBranch.do",'',''   , 'branchCmb' , 'S', 'fn_setDefaultBranch');
+        doGetCombo("/services/bs/report/getCdUpMem.do",'',''   , 'CMGroup' , 'S', 'fn_setDefaultCM');
+        doGetCombo("/services/bs/report/selectCodyList2.do",'',''   , 'codyList' , 'S', 'fn_setDefaultCody');
+        $("#clearbtn").hide();
+
+
+      }
+    else{
 	doGetCombo("/services/bs/report/reportBranchCodeList.do",'' ,''   , 'branchCmb' , 'S', '');
 	doGetCombo("/services/bs/report/safetyLevelList.do",'' ,''   , 'safetyLv' , 'S', '');
-	
+    }
+
+
     $("#branchCmb").change(function(){
         doGetCombo("/services/bs/report/selectCMGroupList.do",$("#branchCmb").val() ,''   , 'CMGroup' , 'S', '');
-        
+
         if($("#branchCmb").val() != '0'){
         	$("#safetyLv").prop("disabled" , true);
         } else {
         	$("#safetyLv").prop("disabled" , false);
         }
-        
-        
+
+
     });
-    
+
     $("#CMGroup").change(function(){
-        doGetCombo("/services/bs/report/selectCodyList.do",$("#CMGroup").val() ,''   , 'codyList' , 'S', '');
+
+            doGetCombo("/services/bs/report/selectCodyList.do",$("#CMGroup").val() ,''   , 'codyList' , 'S', '');
+
+
+
+
     });
-    
+
+    if ($("#userType").val() == "2" && $("#memberLevel").val() == "4") {
+        //doGetCombo('/services/bs/getCdUpMemList.do', $(this).val(), '', 'CMGroup', 'S','fn_cmdBranchCode');
+        doGetCombo("/services/bs/report/selectCodyBranch.do",'',''   , 'branchCmb' , 'S', 'fn_setDefaultBranch');
+        doGetCombo("/services/bs/report/getCdUpMem.do",'',''   , 'CMGroup' , 'S', 'fn_setDefaultCM');
+        doGetCombo("/services/bs/report/selectCodyList2.do",'',''   , 'codyList' , 'S', 'fn_setDefaultCody');
+        $("#clearbtn").hide();
+
+
+      }
+
 });
+
+function fn_setDefaultCM() {
+        $('#CMGroup option:eq(1)').attr('selected', 'selected');
+        $("#CMGroup").prop("disabled" , true);
+        //$('#CMGroup').attr('class', 'w100p readonly ');
+
+}
+
+function fn_setDefaultCody() {
+    $('#codyList option:eq(1)').attr('selected', 'selected');
+    $("#codyList").prop("disabled" , true);
+    //$('#codyList').attr('class', 'w100p readonly ');
+
+}
+
+function fn_setDefaultBranch() {
+    $('#branchCmb option:eq(1)').attr('selected', 'selected');
+    $("#branchCmb").prop("disabled" , true);
+    $("#safetyLv").prop("disabled" , true);
+    //$('#branchCmb').attr('class', 'w100p readonly ');
+
+}
 
 function fn_validation(){
     if($("#forecastMonth").val() == ''){
@@ -33,13 +82,14 @@ function fn_validation(){
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='Branch' htmlEscape='false'/>");
             return false;
     }
+
     if($("#CMGroup").text() == 'choose one'){
     	if($("#branchCmb").val() != '0'){
     		Common.alert("<spring:message code='sys.common.alert.validation' arguments='CM Group' htmlEscape='false'/>");
             return false;
     	}
     }
-    
+
     return true;
 }
 
@@ -54,6 +104,8 @@ function fn_validation(){
 		}
 
 	}
+
+
 
 	function fn_openReport() {
 		if (fn_validation()) {
@@ -187,6 +239,10 @@ function fn_validation(){
 <input type="hidden" id="V_MEMBERLVL" name="V_MEMBERLVL" />
 <input type="hidden" id="V_CMID" name="V_CMID" />
 <input type="hidden" id="V_SAFETYLVL" name="V_SAFETYLVL" />
+
+ <input type="hidden" id="memberLevel" name="memberLevel" value="${memberLevel}">
+ <input type="hidden" id="userName" name="userName" value="${userName}">
+ <input type="hidden" id="userType" name="userType" value="${userType}">
 <!--reportFileName,  viewType 모든 레포트 필수값 -->
 <input type="hidden" id="reportFileName" name="reportFileName" />
 <input type="hidden" id="viewType" name="viewType" />
@@ -215,29 +271,31 @@ function fn_validation(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Branch</th>    
+    <th scope="row">Branch</th>
     <td>
-    <select id="branchCmb" name="branchCmb">
+
+     <select id="branchCmb" name="branchCmb">
     </select>
+
     </td>
 </tr>
 
 <tr>
-    <th scope="row">Safety Level</th>    
+    <th scope="row">Safety Level</th>
     <td>
     <select id="safetyLv" name="safetyLv">
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">CM Group</th>    
+    <th scope="row">CM Group</th>
     <td>
     <select id="CMGroup" name="CMGroup">
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Cody</th>    
+    <th scope="row">Cody</th>
     <td>
     <select id="codyList" name="codyList">
     </select>
@@ -248,7 +306,7 @@ function fn_validation(){
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport()"><spring:message code='service.btn.Generate'/></a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#hsFilterForm').clearForm();"><spring:message code='service.btn.Clear'/></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="clearbtn" onclick="javascript:$('#hsFilterForm').clearForm();"><spring:message code='service.btn.Clear'/></a></p></li>
 </ul>
 
 </form>

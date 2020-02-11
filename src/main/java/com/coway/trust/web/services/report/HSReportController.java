@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.services.report.HSReportService;
+import com.coway.trust.biz.services.bs.HsManualService;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -27,6 +29,9 @@ public class HSReportController {
   
   @Resource(name = "HSReportService")
   private HSReportService HSReportService;
+  
+  @Resource(name = "hsManualService")
+  private HsManualService hsManualService;
   
   @RequestMapping(value = "/hsCountForecastListingPop.do")
   public String hsCountForecastListingPop(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -85,8 +90,19 @@ public class HSReportController {
   }
   
   @RequestMapping(value = "/filterForecastListingPop.do")
-  public String filterForecastPop(@RequestParam Map<String, Object> params, ModelMap model) {
+  public String filterForecastPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
     // 호출될 화면
+	  params.put("memberLevel", sessionVO.getMemberLevel());
+	  params.put("userName", sessionVO.getUserName());
+	  params.put("userType", sessionVO.getUserTypeId());
+	  
+	  List<EgovMap> branchList = hsManualService.selectBranchList(params);
+	    model.addAttribute("branchList", branchList);
+	    
+	    model.addAttribute("userName", sessionVO.getUserName());
+
+	    model.addAttribute("memberLevel", sessionVO.getMemberLevel());
+	    model.addAttribute("userType", sessionVO.getUserTypeId());
     return "services/bs/filterForecastListingPop";
   }
   
@@ -235,6 +251,36 @@ public class HSReportController {
     List<EgovMap> safetyLevelList = HSReportService.safetyLevelList(params);
     logger.debug("safetyLevelList {}", safetyLevelList);
     return ResponseEntity.ok(safetyLevelList);
+  }
+  
+  @RequestMapping(value = "/selectCodyList2.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectCodyList2(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	    params.put("memLevl", sessionVO.getMemberLevel());
+	    params.put("userName", sessionVO.getUserName());
+	    params.put("userType", sessionVO.getUserTypeId());
+    List<EgovMap> selectCodyList2 = HSReportService.getCodyList2(params);
+    logger.debug("selectCodyList2 {}", selectCodyList2);
+    return ResponseEntity.ok(selectCodyList2);
+  }
+  
+  @RequestMapping(value = "/getCdUpMem.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getCdUpMem(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	    params.put("memLevl", sessionVO.getMemberLevel());
+	    params.put("userName", sessionVO.getUserName());
+	    params.put("userType", sessionVO.getUserTypeId());
+    List<EgovMap> getCdUpMem = HSReportService.getCdUpMem(params);
+    logger.debug("selectCodyList2 {}", getCdUpMem);
+    return ResponseEntity.ok(getCdUpMem);
+  }
+  
+  @RequestMapping(value = "/selectCodyBranch.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectCodyBranch(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	    params.put("memLevl", sessionVO.getMemberLevel());
+	    params.put("userName", sessionVO.getUserName());
+	    params.put("userType", sessionVO.getUserTypeId());
+    List<EgovMap> selectCodyBranch = HSReportService.selectCodyBranch(params);
+    logger.debug("selectCodyBranch {}", selectCodyBranch);
+    return ResponseEntity.ok(selectCodyBranch);
   }
   
 }
