@@ -651,7 +651,7 @@
     function fn_trvPeriod(mode) {
         console.log("fn_trvPeriod :: onChange");
 
-        var errMsg = "Travel advance can only be applied for oustation trip with qualifying expenses of more than RM400 and stay of at least two(2) consecutive nights.";
+        var errMsg = "Travel advance can only be applied for outstation trip with qualifying expenses of more than RM400 and stay of at least two(2) consecutive nights.";
         var arrDt, fDate, tDate, dateDiff, rDate;
         var dd, mm, yyyy;
 
@@ -679,7 +679,7 @@
                     //$("#daysCount").val(minPeriod);
                 }
             } else {
-                Common.alert("Backdate not allowed!");
+                Common.alert(errMsg);
                 $("#trvPeriodFr").val("");
                 $("#trvPeriodTo").val("");
                 $("#daysCount").val("");
@@ -693,7 +693,7 @@
             nDate.setDate(nDate.getDate() + minPeriod);
 
             if(tDate < cDate) {
-                Common.alert("Backdate request not allowed!");
+                Common.alert(errMsg);
                 $("#trvPeriodFr").val("");
                 $("#trvPeriodTo").val("");
                 $("#daysCount").val("");
@@ -855,7 +855,7 @@
 
         // Travel Request
         if(advType == 1) {
-            errMsg = "Travel advance can only be applied for oustation trip with qualifying expenses of more than RM400 and stay of at least two(2) consecutive nights."
+            errMsg = "Travel advance can only be applied for outstation trip with qualifying expenses of more than RM400 and stay of at least two(2) consecutive nights."
 
             if(FormUtil.isEmpty($("#costCenterCode").val())) {
                 Common.alert("Please select the cost center.");
@@ -961,12 +961,35 @@
                $("#clmNo").val(result1.data.clmNo);
 
                if(mode == "S") {
-                   fn_submitReq();
+                   var length = AUIGrid.getGridData(approveLineGridID).length;
+                   if(length >= 1) {
+                       for(var i = 0; i < length; i++) {
+                           if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
+                               Common.alert('<spring:message code="approveLine.userId.msg" />' + (i + 1) + ".");
+                               return false;
+                           }
+                       }
+                   }
+
+                   var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
+                   var obj = $("#advReqForm").serializeJSON();
+                   obj.apprGridList = apprGridList;
+
+                   Common.ajax("POST", "/eAccounting/webInvoice/checkFinAppr.do", obj, function(resultFinAppr) {
+                       console.log(resultFinAppr);
+
+                       if(resultFinAppr.code == "99") {
+                           Common.alert("Please select relevant final approver.");
+                       } else {
+                           fn_submitReq();
+                       }
+                   });
                } else if (mode == "D" && result1.message == "success") {
                    fn_alertClmNo(result1.data.clmNo);
                }
 
                fn_closePop();
+               fn_searchAdv();
            });
         });
     }
@@ -984,7 +1007,7 @@
         var apprLineGrid = AUIGrid.getOrgGridData(approveLineGridID);
         data.apprLineGrid = apprLineGrid;
 
-        console.log("fn_submitReq :: data");
+        console.log("fn_submitReq :: " + data);
 
         Common.ajax("POST", "/eAccounting/staffAdvance/submitAdvReq.do", data, function(result) {
             console.log(result);
@@ -1011,7 +1034,29 @@
                $("#clmNo").val(result1.clmNo);
 
                if(mode == "S") {
-                   fn_submitReq();
+                   var length = AUIGrid.getGridData(approveLineGridID).length;
+                   if(length >= 1) {
+                       for(var i = 0; i < length; i++) {
+                           if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
+                               Common.alert('<spring:message code="approveLine.userId.msg" />' + (i + 1) + ".");
+                               return false;
+                           }
+                       }
+                   }
+
+                   var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
+                   var obj = $("#advReqForm").serializeJSON();
+                   obj.apprGridList = apprGridList;
+
+                   Common.ajax("POST", "/eAccounting/webInvoice/checkFinAppr.do", obj, function(resultFinAppr) {
+                       console.log(resultFinAppr);
+
+                       if(resultFinAppr.code == "99") {
+                           Common.alert("Please select relevant final approver.");
+                       } else {
+                           fn_submitReq();
+                       }
+                   });
                }
 
                fn_closePop();
@@ -1148,24 +1193,6 @@
 
     function fn_searchUserIdPop() {
         Common.popupDiv("/common/memberPop.do", {callPrgm:"NRIC_VISIBLE"}, null, true);
-    }
-
-    function fn_newRegistMsgPop() {
-        var length = AUIGrid.getGridData(approveLineGridID).length;
-        var checkMemCode = true;
-        console.log(length);
-        if(length >= 1) {
-            for(var i = 0; i < length; i++) {
-                if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
-                    Common.alert('<spring:message code="approveLine.userId.msg" />' + (i +1) + ".");
-                    checkMemCode = false;
-                }
-            }
-        }
-        console.log(checkMemCode);
-        if(checkMemCode) {
-            Common.popupDiv("/eAccounting/webInvoice/newRegistMsgPop.do", null, null, true, "registMsgPop");
-        }
     }
 
     function fn_loadOrderSalesman(memId, memCode) {
