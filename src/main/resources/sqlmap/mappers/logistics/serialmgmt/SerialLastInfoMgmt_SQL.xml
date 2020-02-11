@@ -126,15 +126,15 @@
                         <when test='sort != null and sort.size != 0'>
                             <foreach item="item" index="index" collection="sort" open="" separator="," close="">
                                 <choose>
-                                    <when test='item.field == "lastDelvryGrDt"'>A.LAST_DELVRY_GR_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "lastDelvryGrDt"'>A.SERIAL_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
                                     <otherwise>
-                                        A.LAST_DELVRY_GR_DT DESC
+                                        A.SERIAL_NO DESC
                                     </otherwise>
                                 </choose>
                             </foreach>
                         </when>
                         <otherwise>
-                            A.LAST_DELVRY_GR_DT DESC
+                            A.SERIAL_NO DESC
                         </otherwise>
                     </choose>
                     ) T1
