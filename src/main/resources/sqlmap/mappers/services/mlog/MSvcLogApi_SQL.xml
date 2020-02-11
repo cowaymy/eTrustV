@@ -932,7 +932,10 @@
                    NVL (SYS0026M.SERIAL_CHK, 'N') AS SERIAL_CHK,
                    NVL (TO_CHAR (SAL0233M.AREA_COVRG_ID), '') AS before_Product_Code,
                    NVL (TO_CHAR (SVC0113D.MATT_SZ), '') AS before_Product_Serial_No
-                   , CASE WHEN CCR0006D.TYPE_ID = '258' THEN 'Y' ELSE 'N' END AS real_As_Exchange_Yn
+                   , CASE WHEN CCR0006D.TYPE_ID = '258' AND (SELECT COUNT(*) AS CNT
+                                                                                    FROM SAL0046D
+                                                                                  WHERE SALES_ORD_ID = SAL0001D.SALES_ORD_ID
+                                                                                      AND STUS_CODE_ID = '4') > 0 THEN 'Y' ELSE 'N' END AS real_As_Exchange_Yn
                    , FN_GET_ORDER_SERIAL(SAL0001D.SALES_ORD_ID, NULL) AS real_Before_Product_Serial_No
                    , SYS0026M.STK_CODE AS REAL_BEFORE_PRODUCT_CODE
                    , SYS0026M.STK_DESC AS REAL_BEFORE_PRODUCT_NAME
