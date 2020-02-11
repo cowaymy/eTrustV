@@ -311,13 +311,13 @@ function fn_downloadAgreement() {
             }
 
             if(result.memLvl == "4") {
-                $("#reportFileName").val("/logistics/HPAgreement_" + signDt + ".rpt");
+                $("#reportFileName").val("/organization/agreement/HPAgreement_" + signDt + ".rpt");
                 $("#reportDownFileName").val("HPAgreement_" + code);
             } else {
             	$("#v_contractStartDt").val($("#startDt").val());
             	$("#v_contractEndDt").val($("#endDt").val());
 
-                $("#reportFileName").val("/logistics/HMAgreement_" + signDt + ".rpt");
+                $("#reportFileName").val("/organization/agreement/HMAgreement_" + signDt + ".rpt");
                 $("#reportDownFileName").val("Manager_Agreement_" + code);
             }
 
@@ -409,7 +409,7 @@ function fn_downloadAgreement() {
 
             console.log("v_contractStartDt :: " + $("#v_contractStartDt").val());
 
-            $("#reportFileName").val("/logistics/CodyAgreement_2019v6.rpt");
+            $("#reportFileName").val("/organization/agreement/CodyAgreement_2019v6.rpt");
             $("#reportDownFileName").val("CodyAgreement_" + code);
 
             console.log("reportFileName :: " + $("#reportFileName").val());
@@ -644,6 +644,21 @@ function createAUIGrid() {
 
 </form>
 </section><!-- search_table end -->
+
+<!--
+<article class="link_btns_wrap">
+    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+        <dt><spring:message code="sal.title.text.link" /></dt>
+        <dd>
+            <ul class="btns">
+                <li><p class="link_btn"><a href="#" id="resetAgreementStus">Reset Agreement Status</a></li>
+            </ul>
+            <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+</article>
+-->
 
 <article class="grid_wrap">
     <!-- grid_wrap start -->
