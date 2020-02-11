@@ -41,7 +41,8 @@
     if ('${ORD_NO}' != "") {
       $("#entry_orderNo").val('${ORD_NO}');
       //fn_confirmOrder();
-      fn_checkASReceiveEntryConfirmation()
+      fn_checkASReceiveEntryConfirmation();
+
     }
 
   });
@@ -55,7 +56,7 @@
     $("#entry_orderNo").keydown(function(key) {
       if (key.keyCode == 13) {
         //fn_confirmOrder();
-        fn_checkASReceiveEntryConfirmation()
+        fn_checkASReceiveEntryConfirmation();
       }
     });
   }
