@@ -1004,18 +1004,20 @@ public class ClaimController {
     EgovMap claimMap = claimService.selectClaimById(map);
     String isZip = "";
 
-    List<EgovMap> fileInfo = claimService.selectMstConf(claimMap);
-    if(fileInfo.size() > 0){
-      Map<String, Object> fileInfoConf = new HashMap<String, Object>();
-      fileInfoConf = (Map<String, Object>) fileInfo.get(0);
+    if(!"3182".equals(String.valueOf(claimMap.get("ctrlDdtChl")))){
+      List<EgovMap> fileInfo = claimService.selectMstConf(claimMap);
+      if(fileInfo.size() > 0){
+        Map<String, Object> fileInfoConf = new HashMap<String, Object>();
+        fileInfoConf = (Map<String, Object>) fileInfo.get(0);
 
-      claimMap.put("batchName", fileInfoConf.get("ctrlFileNm"));
-      claimMap.put("ext", fileInfoConf.get("ctrlFileExt"));
-      claimMap.put("subPath", fileInfoConf.get("ctrlSubPath"));
-      claimMap.put("emailSubject", fileInfoConf.get("ctrlEmailSubj"));
-      claimMap.put("emailBody", fileInfoConf.get("ctrlEmailText"));
+        claimMap.put("batchName", fileInfoConf.get("ctrlFileNm"));
+        claimMap.put("ext", fileInfoConf.get("ctrlFileExt"));
+        claimMap.put("subPath", fileInfoConf.get("ctrlSubPath"));
+        claimMap.put("emailSubject", fileInfoConf.get("ctrlEmailSubj"));
+        claimMap.put("emailBody", fileInfoConf.get("ctrlEmailText"));
 
-      isZip  = fileInfoConf.get("ctrlZip").toString();
+        isZip  = fileInfoConf.get("ctrlZip").toString();
+      }
     }
 
     // 파일 생성하기
@@ -1888,12 +1890,13 @@ public class ClaimController {
      */
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("ctrlIsCrc", claimMap.get("ctrlIsCrc"));
-    map.put("ctrlBankId", claimMap.get("ctrlBankId"));
+    //map.put("ctrlBankId", claimMap.get("ctrlBankId"));
+    map.put("ctrlBankId", "0");
     List<EgovMap> fileInfo = claimService.selectMstConf(map);
 
     if (fileInfo.size() == 0) {
       // GET GENERATE SETTING
-      map.put("ctrlBankId", "0");
+      //map.put("ctrlBankId", "0");
       fileInfo = claimService.selectMstConf(map);
     }
 
