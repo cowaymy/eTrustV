@@ -464,24 +464,28 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
       }
     }
 
-    sms.setMessage(CommonUtils.nvl(smsTemplate));
-    sms.setMobiles(CommonUtils.nvl(smsNo));
-    SmsResult smsResult = adaptorService.sendSMS(sms);
-    logger.debug(" smsResult : {}", smsResult.toString());
+    if (!"".equals(CommonUtils.nvl(smsNo))) {
+      sms.setMessage(CommonUtils.nvl(smsTemplate));
+      sms.setMobiles(CommonUtils.nvl(smsNo));
+      sms.setRemark("SMS E-TR TICKET VIA MOBILE APPS");
+      sms.setRefNo(CommonUtils.nvl(params.get("mobTicketNo")));
+      SmsResult smsResult = adaptorService.sendSMS(sms);
+      logger.debug(" smsResult : {}", smsResult.toString());
 
-    // INSERT MSC0015D
-    String[] mobileArray = CommonUtils.getDelimiterValues(smsNo);
-    if (mobileArray.length > 0) {
-      for (int i = 0; i < mobileArray.length; i++) {
-        Map<String, Object> logs = new HashMap<String, Object>();
+      // INSERT MSC0015D
+      //String[] mobileArray = CommonUtils.getDelimiterValues(smsNo);
+      //if (mobileArray.length > 0) {
+      //  for (int i = 0; i < mobileArray.length; i++) {
+      //     Map<String, Object> logs = new HashMap<String, Object>();
 
-        logs.put("smsTemplate", CommonUtils.nvl(params.get("smsTemplate")));
-        logs.put("mobileNo", CommonUtils.nvl(mobileArray[i]));
-        logs.put("salesOrdNo", CommonUtils.nvl(params.get("salesOrdNo")));
-        logs.put("crtUserId", CommonUtils.nvl(params.get("crtUserId")));
+      //     logs.put("smsTemplate", CommonUtils.nvl(params.get("smsTemplate")));
+      //     logs.put("mobileNo", CommonUtils.nvl(mobileArray[i]));
+      //     logs.put("salesOrdNo", CommonUtils.nvl(params.get("salesOrdNo")));
+      //     logs.put("crtUserId", CommonUtils.nvl(params.get("crtUserId")));
 
-        paymentApiMapper.insertMSC0015D(logs);
-      }
+      //     paymentApiMapper.insertMSC0015D(logs);
+      //  }
+      //}
     }
   }
 
