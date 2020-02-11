@@ -21,7 +21,6 @@
   var asMalfuncResnId;
   var asErrorCde;
   var asBrCde;
-  var custId = "${orderDetail.basicInfo.custId}";
 
   $(document).ready(function() {
     fn_keyEvent();
@@ -54,7 +53,7 @@
 
     fn_setComboBox2();
 
-    fn_loadCustomer(custId);
+    fn_checkASInstallationArea();
 
     fn_checkASReceiveEntryPop();
 
@@ -1213,38 +1212,35 @@
       return msg;
     }
 
-  function fn_loadCustomer(custId){
-      Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId}, function(result) {
-
-    	  if(result != null && result.length == 1) {
-    		  var custInfo = result[0];
-    		  if(custInfo.custAddId > 0) {
-                  fn_loadInstallAddr(custInfo.custAddId);
-              }
-    	  }
-      });
-  }
-
-
-  function fn_loadInstallAddr(custAddId){
-      Common.ajaxSync("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(custInfo) {
+  function fn_checkASInstallationArea(){
+	    var salesOrdNo =  "${orderDetail.basicInfo.ordNo}";
+	    console.log("salesOrdNo : " + salesOrdNo);
+	  Common.ajax("GET", "/services/as/selectCustInstAddJsonInfo.do", {salesOrderNo :  salesOrdNo }, function(custInfo) {
           if(custInfo != null) {
               if(custInfo.areaId != undefined){
                   console.log("custInfo.areaId : "+custInfo.areaId);
                   if("DM" == custInfo.areaId.substring(0,2)) {
+                	  $("#AsAppInfo").hide();
                       Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />'
-                    		  ,
+                              ,
                               fn_selfClose);
+                      return false;
+                  }else if (custInfo.area == null && custInfo.area == "" && custInfo.area == undefined){
+                	  $("#AsAppInfo").hide();
+                	  Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />'
+                              ,
+                              fn_selfClose);
+                      return false;
                   }
 
               }else{
-                   Common.alert('<spring:message code="sal.alert.msg.invalidMagicAddress"/>',fn_selfClose());
+            	  $("#AsAppInfo").hide();
+                   Common.alert('<spring:message code="sal.alert.msg.invalidMagicAddress"/>',fn_selfClose);
                   return false;
               }
           }
       });
   }
-
 
 </script>
 <div id="popup_wrap" class="popup_wrap ">
@@ -1357,7 +1353,8 @@
        <!-- tap_area end -->
       </section>
       <!-- tap_wrap end -->
-      <aside class="title_line">
+        <section id = "AsAppInfo">
+        <aside class="title_line">
        <!-- title_line start -->
        <h3><spring:message code='service.title.ASAppInfo' /></h3>
       </aside>
@@ -1538,6 +1535,7 @@
          <a href="#" onClick="fn_rstFrm()"><spring:message code='service.btn.Clear' /></a>
         </p></li> -->
       </ul>
+      </section>
      </section>
      <!-- search_result end -->
     </div>
