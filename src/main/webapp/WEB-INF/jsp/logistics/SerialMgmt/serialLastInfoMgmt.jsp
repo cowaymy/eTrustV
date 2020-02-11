@@ -75,6 +75,7 @@
         });
 
         // header Click
+        /*
         AUIGrid.bind(myGridID, "headerClick", function( event ) {
             console.log(event.type + " : " + event.headerText + ", dataField : " + event.dataField + ", index : " + event.columnIndex + ", depth : " + event.item.depth);
             //return false; // 정렬 실행 안함.
@@ -95,7 +96,7 @@
             }
 
             getListAjax(1);
-        });
+        });*/
 
         AUIGrid.bind(myGridID, "cellDoubleClick", function( event )
         {
@@ -490,7 +491,7 @@
             sortList.push(row);
         });
 
-        param = $.extend(param, {"rowCount":1000, "goPage":goPage}, {"sort":sortList});
+        param = $.extend(param, {"rowCount":5000, "goPage":goPage}, {"sort":sortList});
 
         // 초기화
         AUIGrid.setGridData(myGridID, []);
@@ -498,7 +499,7 @@
         Common.ajax("POST" , url , param , function(data){
             // 그리드 페이징 네비게이터 생성
 
-            GridCommon.createExtPagingNavigator(goPage, data.total, {funcName:'getListAjax', rowCount:1000 });
+            GridCommon.createExtPagingNavigator(goPage, data.total, {funcName:'getListAjax', rowCount:5000 });
 
             AUIGrid.setGridData(myGridID, data.dataList);
             AUIGrid.setGridData(detailGridID, []);
