@@ -1483,12 +1483,13 @@ var TODAY_DD      = "${toDay}";
              <a href="#" onclick="javascript:fn_hsSummary()">HS
               Summary Listing</a>
             </p></li>
-          </c:if>
-          <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-           <li><p class="link_btn type2">
+            <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_filterForecastList()">HS
               Filter Forecast Listing</a>
             </p></li>
+          </c:if>
+          <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+
             <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsConfigOld()">HS
               Config(Old system version)</a>
