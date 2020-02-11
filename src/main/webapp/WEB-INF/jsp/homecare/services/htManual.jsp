@@ -241,8 +241,14 @@ var TODAY_DD      = "${toDay}";
           labelText : "Edit",
           onclick : function(rowIndex, columnIndex, value, item) {
 
-              var todayMMYYYY = String(TODAY_DD.substr(3, 7));
-              console.log("todayMMYYYY : "+ todayMMYYYY);
+              //var todayMMYYYY = String(TODAY_DD.substr(3, 7));
+              var todayMM = Number(TODAY_DD.substr(3, 2));
+              var todayYYYY = Number(TODAY_DD.substr(6, 4));
+
+              //console.log("todayMMYYYY : "+ todayMMYYYY);
+              console.log("todayMM : "+ todayMM);
+              console.log("todayYYYY : "+ todayYYYY);
+              console.log("item.hsDate : "+ item.hsDate);
 
             if (item.code == "ACT") {
               Common
@@ -250,7 +256,7 @@ var TODAY_DD      = "${toDay}";
               return false;
             }
 
-            if(item.hsDate != todayMMYYYY) {
+            if(item.hsDate != todayMM + "/" + todayYYYY) {
             	Common.alert("Not able to EDIT previous month CS Order.");
             	return false;
             }
