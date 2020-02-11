@@ -347,4 +347,6 @@ public interface ASManagementListMapper {
 
    // 테스트 임시용.
   int selectTestChk (Map<String, Object> params);
+
+  EgovMap selectCustomerInstallationAddress(Map<String, Object> params) throws Exception;
 }
