@@ -4804,4 +4804,21 @@
     FROM SVC0005D S
     WHERE AS_RESULT_ID = #{OLD_AS_RESULT_ID}
   </select>
+
+   <select id="selectCustomerInstallationAddress" parameterType="Map"
+    resultType="egovMap">
+        SELECT
+        A.SALES_ORD_ID ,
+        A.ADD_ID ,
+        A.INSTALL_ID ,
+        B.AREA_ID ,
+        B.AREA
+        FROM SAL0045D A
+        LEFT JOIN SAL0023D B ON A.ADD_ID = B.CUST_ADD_ID
+        LEFT JOIN SYS0064M C ON B.AREA_ID = C.AREA_ID
+        WHERE A.SALES_ORD_ID IN  (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo})
+
+  </select>
+
+
 </mapper>
