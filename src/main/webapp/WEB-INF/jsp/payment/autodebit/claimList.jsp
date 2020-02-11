@@ -11,7 +11,7 @@
   // Empty Set
   var emptyData = [];
 
-  var subPath = "/resource/WebShare/CRT";
+  var subPath = "/resources/WebShare/CRT";
 
   // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
   $(document)

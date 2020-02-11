@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -995,7 +994,7 @@ public class ClaimController {
    * @return
    */
   @RequestMapping(value = "/createClaimFile.do", method = RequestMethod.POST)
-  public ResponseEntity<ReturnMessage> createClaimFile(@RequestBody Map<String, ArrayList<Object>> params, Model model,HttpServletResponse response)
+  public ResponseEntity<ReturnMessage> createClaimFile(@RequestBody Map<String, ArrayList<Object>> params, Model model)
       throws Exception {
 
     List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터
@@ -1003,11 +1002,21 @@ public class ClaimController {
     // Calim Master 데이터 조회
     Map<String, Object> map = (Map<String, Object>) formList.get(0);
     EgovMap claimMap = claimService.selectClaimById(map);
-    String batchName  = "";
-    String fileDirectory = "";
-    String batchDate    = "";
-    String emailSubject  = "";
+    String isZip = "";
 
+    List<EgovMap> fileInfo = claimService.selectMstConf(claimMap);
+    if(fileInfo.size() > 0){
+      Map<String, Object> fileInfoConf = new HashMap<String, Object>();
+      fileInfoConf = (Map<String, Object>) fileInfo.get(0);
+
+      claimMap.put("batchName", fileInfoConf.get("ctrlFileNm"));
+      claimMap.put("ext", fileInfoConf.get("ctrlFileExt"));
+      claimMap.put("subPath", fileInfoConf.get("ctrlSubPath"));
+      claimMap.put("emailSubject", fileInfoConf.get("ctrlEmailSubj"));
+      claimMap.put("emailBody", fileInfoConf.get("ctrlEmailText"));
+
+      isZip  = fileInfoConf.get("ctrlZip").toString();
+    }
 
     // 파일 생성하기
     if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
@@ -1018,28 +1027,21 @@ public class ClaimController {
         if ("2".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
           // this.createClaimFileALB(claimMap);
           // claimService.deleteClaimFileDownloadInfo(claimMap);
-          this.createClaimFileNewALB(claimMap, response);
+          this.createClaimFileNewALB(claimMap);
         }
 
         // CIMB
         if ("3".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
           // claimService.deleteClaimFileDownloadInfo(claimMap);
           this.createClaimFileCIMB(claimMap);
-
-          batchName  = "BILLING_ORG2120";
-          batchDate   = claimMap.get("ctrlBatchDt").toString();
-          fileDirectory = filePath + "/CIMB/ClaimBank/";
-          emailSubject = "CIMB Auto Debit Claim File";
-          zipFilesEmail(batchName, fileDirectory, batchDate, emailSubject);
-
         }
 
         // HLBB
-        if ("5".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+        /*if ("5".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
           // claimService.deleteClaimFileDownloadInfo(claimMap);
           this.createClaimFileHLBB(claimMap);
           this.createClaimFileHLBB2(claimMap);
-        }
+        }*/
 
         // MBB
         if ("21".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
@@ -1066,10 +1068,10 @@ public class ClaimController {
         }
 
         // My Clear
-        if ("46".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+       /* if ("46".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
           // claimService.deleteClaimFileDownloadInfo(claimMap);
           this.createClaimFileMyClear(claimMap);
-        }
+        }*/
       }
     } else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 
@@ -1087,12 +1089,6 @@ public class ClaimController {
               claimMap.put("rowCount", 10000);
               this.createCreditCardFileCIMB(claimMap);
             }
-
-            batchName = "CRC";
-            fileDirectory = filePath + "/CRC/CIMB_GROUP/";
-            batchDate   = claimMap.get("ctrlBatchDt").toString();
-            emailSubject = "CIMB Credit Card Claim File";
-            zipFilesEmail(batchName, fileDirectory, batchDate,emailSubject);
           }
         } else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
           int totRowCount = claimService.selectCCClaimDetailByIdCnt(map);
@@ -1111,14 +1107,10 @@ public class ClaimController {
               claimMap.put("type", 2);
               this.createCreditCardFileMBB(claimMap);
             }
-            batchName = "CZ";
-            fileDirectory = filePath + "/CRC/MBB_GROUP/";
-            batchDate   = claimMap.get("ctrlBatchDt").toString();
-            emailSubject = "SCB CRC Deduction File";
-            zipFilesEmail(batchName, fileDirectory, batchDate,emailSubject);
           }
         }
-      } else {
+      }
+      /* else {
         if ("3".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
           // 10000건 단위로 추출하기 위해 전체 건수 조회
           int totRowCount = claimService.selectClaimDetailByIdCnt(map);
@@ -1135,7 +1127,7 @@ public class ClaimController {
             fileDirectory = filePath + "/CRC/CIMB/";
             batchDate   = claimMap.get("ctrlBatchDt").toString();
             emailSubject = "CIMB CRC";
-            zipFilesEmail(batchName, fileDirectory, batchDate,emailSubject);
+            zipFilesEmail(claimMap,batchName, fileDirectory, batchDate,emailSubject);
           }
         } else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
           int totRowCount = claimService.selectClaimDetailByIdCnt(map);
@@ -1159,14 +1151,19 @@ public class ClaimController {
             fileDirectory = filePath + "/CRC/MBB/";
             batchDate   = claimMap.get("ctrlBatchDt").toString();
             emailSubject = "SCB CRC Deduction File";
-            zipFilesEmail(batchName, fileDirectory, batchDate,emailSubject);
+            zipFilesEmail(claimMap,batchName, fileDirectory, batchDate,emailSubject);
           }
         }
-      }
+      }*/
 
     } else if ("134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
       // claimService.deleteClaimFileDownloadInfo(claimMap);
       this.createClaimFileFPX(claimMap);
+    }
+
+    //Zip Files to email and download
+    if(isZip.equals("Y")){
+      zipFilesEmail(claimMap);
     }
 
     // 결과 만들기
@@ -1179,7 +1176,7 @@ public class ClaimController {
 
   }
 
-  public void createClaimFileALB(EgovMap claimMap,HttpServletResponse response) throws Exception {
+  public void createClaimFileALB(EgovMap claimMap) throws Exception {
 
     ClaimFileALBHandler downloadHandler = null;
     String sFile;
@@ -1210,17 +1207,7 @@ public class ClaimController {
 
     // E-mail 전송하기
     File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
-
-    OutputStream out = response.getOutputStream();
-    FileInputStream in = new FileInputStream(file);
-    byte[] buffer = new byte[4096];
-    int length;
-    while ((length = in.read(buffer)) > 0){
-       out.write(buffer, 0, length);
-    }
-    in.close();
-    out.flush();
-/*    EmailVO email = new EmailVO();
+    EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
     email.setHtml(false);
@@ -1229,7 +1216,7 @@ public class ClaimController {
     email.addFile(file);
 
     adaptorService.sendEmail(email, false);
-*/  }
+  }
 
   private ClaimFileALBHandler getTextDownloadALBHandler(String fileName, String[] columns, String[] titles, String path,
       String subPath, Map<String, Object> params) {
@@ -1246,18 +1233,22 @@ public class ClaimController {
    * @param claimDetailList
    * @throws Exception
    */
-  public void createClaimFileNewALB(EgovMap claimMap,HttpServletResponse response) throws Exception {
+  public void createClaimFileNewALB(EgovMap claimMap) throws Exception {
 
     ClaimFileNewALBHandler downloadHandler = null;
     String todayDate;
     String sFile;
+    String fileName = claimMap.get("batchName").toString();
+    String subPath = claimMap.get("subPath").toString();
+    String ext = claimMap.get("ext").toString();
+    String emailSubject = claimMap.get("emailSubject").toString();
+    String emailBody = claimMap.get("emailBody").toString();
 
     try {
       todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
-      sFile = "AD_Billing_" + todayDate + ".txt";
+      sFile = fileName + todayDate + "." + ext;
 
-      downloadHandler = getTextDownloadNewALBHandler(sFile, claimFileColumns, null, filePath, "/ALB/ClaimBank/",
-          claimMap);
+      downloadHandler = getTextDownloadNewALBHandler(sFile, claimFileColumns, null, filePath, subPath, claimMap);
 
       largeExcelService.downLoadClaimFileNewALB(claimMap, downloadHandler);
       downloadHandler.writeFooter();
@@ -1282,18 +1273,19 @@ public class ClaimController {
     // claimService.insertClaimFileDownloadInfo(claimMap);
 
     // E-mail 전송하기
-    File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
+    File file = new File(filePath + subPath + sFile);
+    claimMap.put("file", subPath + sFile);
 
-    /*EmailVO email = new EmailVO();
+    EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
     email.setHtml(false);
-    email.setSubject("New ALB Auto Debit Claim File - Batch Date : " + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
-    email.setText("Please find attached the claim file for your kind perusal.");
+    email.setSubject(emailSubject.replace("{0}", CommonUtils.nvl(claimMap.get("ctrlBatchDt"))));
+    email.setText(emailBody);
     email.addFile(file);
 
     adaptorService.sendEmail(email, false);
-*/
+
   }
 
   private ClaimFileNewALBHandler getTextDownloadNewALBHandler(String fileName, String[] columns, String[] titles,
@@ -1317,15 +1309,15 @@ public class ClaimController {
     String sFile;
     String inputDate;
 
-    try {
-      inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01"
-          : (String) claimMap.get("ctrlBatchDt");
-      // sFile = "CIMB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd",
-      // "yyyyMMdd") + "B01.dat";
-      sFile = "BILLING_ORG2120_" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + ".txt";
+    String fileName = claimMap.get("batchName").toString();
+    String subPath = claimMap.get("subPath").toString();
 
-      downloadHandler = getTextDownloadCIMBHandler(sFile, claimFileColumns, null, filePath, "/CIMB/ClaimBank/"+inputDate+"/",
-          claimMap);
+    try {
+      inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
+
+      sFile = fileName + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + ".txt";
+
+      downloadHandler = getTextDownloadCIMBHandler(sFile, claimFileColumns, null, filePath, subPath+inputDate+"/", claimMap);
 
       largeExcelService.downLoadClaimFileCIMB(claimMap, downloadHandler);
       downloadHandler.writeFooter();
@@ -1342,24 +1334,6 @@ public class ClaimController {
       }
     }
 
-    // //파일다운로드 정보 INSERT
-    // claimMap.put("fileNo", 1);
-    // claimMap.put("filePath", fileDownloadPath+"/CIMB/ClaimBank/");
-    // claimMap.put("fileName", sFile);
-    //
-    // claimService.insertClaimFileDownloadInfo(claimMap);
-
-    // E-mail 전송하기
-  /*  File file = new File(filePath + "/CIMB/ClaimBank/" + sFile);
-    EmailVO email = new EmailVO();
-
-    email.setTo(emailReceiver);
-    email.setHtml(false);
-    email.setSubject("CIMB Auto Debit Claim File - Batch Date : " + inputDate);
-    email.setText("Please find attached the claim file for your kind perusal.");
-    email.addFile(file);
-
-    adaptorService.sendEmail(email, false);*/
   }
 
   private ClaimFileCIMBHandler getTextDownloadCIMBHandler(String fileName, String[] columns, String[] titles,
@@ -1492,13 +1466,18 @@ public class ClaimController {
     String sFile;
     String ctrlBatchDt;
     String inputDate;
+    String fileName = claimMap.get("batchName").toString();
+    String subPath = claimMap.get("subPath").toString();
+    String ext = claimMap.get("ext").toString();
+    String emailSubject = claimMap.get("emailSubject").toString();
+    String emailBody = claimMap.get("emailBody").toString();
 
     try {
       ctrlBatchDt = (String) claimMap.get("ctrlBatchDt");
       inputDate = CommonUtils.nvl(ctrlBatchDt).equals("") ? "1900-01-01" : ctrlBatchDt;
-      sFile = "ADSACC.txt";
+      sFile = fileName + "." + ext;
 
-      downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/MBB/ClaimBank/", claimMap);
+      downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, subPath, claimMap);
 
       largeExcelService.downLoadClaimFileMBB(claimMap, downloadHandler);
       downloadHandler.writeFooter();
@@ -1523,13 +1502,15 @@ public class ClaimController {
     // claimService.insertClaimFileDownloadInfo(claimMap);
 
     // E-mail 전송하기
-    File file = new File(filePath + "/MBB/ClaimBank/" + sFile);
+    File file = new File(filePath + subPath + sFile);
+    claimMap.put("file", subPath + sFile);
+
     EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
     email.setHtml(false);
-    email.setSubject("MBB Auto Debit Claim File - Batch Date : " + inputDate);
-    email.setText("Please find attached the claim file for your kind perusal.");
+    email.setSubject(emailSubject.replace("{0}", inputDate));
+    email.setText(emailBody);
     email.addFile(file);
 
     adaptorService.sendEmail(email, false);
@@ -1657,6 +1638,7 @@ public class ClaimController {
     // E-mail 전송하기
     EmailVO email2 = new EmailVO();
 
+
     email2.setTo(emailReceiver);
     email2.setHtml(false);
     email2.setSubject("PBB Auto Debit Claim File - Batch Date : " + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
@@ -1686,14 +1668,19 @@ public class ClaimController {
     String inputDate;
     String sFile;
     String todayDate;
+    String fileName = claimMap.get("batchName").toString();
+    String subPath = claimMap.get("subPath").toString();
+    String ext = claimMap.get("ext").toString();
+    String emailSubject = claimMap.get("emailSubject").toString();
+    String emailBody = claimMap.get("emailBody").toString();
 
     try {
       inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01"
           : (String) claimMap.get("ctrlBatchDt");
       todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
-      sFile = "AB_00035_Datafile_" + todayDate + "_001.txt";
+      sFile = fileName + todayDate + ext;
 
-      downloadHandler = getTextDownloadRHBHandler(sFile, claimFileColumns, null, filePath, "/RHB/ClaimBank/", claimMap);
+      downloadHandler = getTextDownloadRHBHandler(sFile, claimFileColumns, null, filePath, subPath, claimMap);
 
       largeExcelService.downLoadClaimFileRHB(claimMap, downloadHandler);
       downloadHandler.writeFooter();
@@ -1718,16 +1705,16 @@ public class ClaimController {
     // claimService.insertClaimFileDownloadInfo(claimMap);
 
     // E-mail 전송하기
-    File file = new File(filePath + "/RHB/ClaimBank/" + sFile);
+    File file = new File(filePath + subPath + sFile);
+    claimMap.put("file", subPath + sFile);
+
     EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
     email.setHtml(false);
-    email.setSubject("RHB Auto Debit Claim File - Batch Date : " + inputDate);
-    email.setText("Please find attached the claim file for your kind perusal.");
+    email.setSubject(emailSubject.replace("{0}", inputDate));
+    email.setText(emailBody);
     email.addFile(file);
-
-    adaptorService.sendEmail(email, false);
 
   }
 
@@ -1752,15 +1739,20 @@ public class ClaimController {
     String sFile;
     String todayDate;
     String inputDate;
+    String fileName = claimMap.get("batchName").toString();
+    String subPath = claimMap.get("subPath").toString();
+    String ext = claimMap.get("ext").toString();
+    String emailSubject = claimMap.get("emailSubject").toString();
+    String emailBody = claimMap.get("emailBody").toString();
 
     try {
 
       inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01"
           : (String) claimMap.get("ctrlBatchDt");
       todayDate = CommonUtils.getNowDate();
-      sFile = "BSN" + todayDate + "B01.txt";
+      sFile = fileName + todayDate + ext;
 
-      downloadHandler = getTextDownloadBSNHandler(sFile, claimFileColumns, null, filePath, "/BSN/ClaimBank/", claimMap);
+      downloadHandler = getTextDownloadBSNHandler(sFile, claimFileColumns, null, filePath, subPath, claimMap);
 
       largeExcelService.downLoadClaimFileBSN(claimMap, downloadHandler);
       downloadHandler.writeFooter();
@@ -1785,13 +1777,15 @@ public class ClaimController {
     // claimService.insertClaimFileDownloadInfo(claimMap);
 
     // E-mail 전송하기
-    File file = new File(filePath + "/BSN/ClaimBank/" + sFile);
+    File file = new File(filePath + subPath + sFile);
+    claimMap.put("file", subPath + sFile);
+
     EmailVO email = new EmailVO();
 
     email.setTo(emailReceiver);
     email.setHtml(false);
-    email.setSubject("BSN Auto Debit Claim File - Batch Date : " + inputDate);
-    email.setText("Please find attached the claim file for your kind perusal.");
+    email.setSubject(emailSubject.replace("{0}", inputDate));
+    email.setText(emailBody);
     email.addFile(file);
 
     adaptorService.sendEmail(email, false);
@@ -1910,8 +1904,7 @@ public class ClaimController {
           fileInfoConf = (Map<String, Object>) fileInfo.get(a);
           claimMap.put("ctrlConfId", fileInfoConf.get("id"));
 
-          inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01"
-              : (String) claimMap.get("ctrlBatchDt");
+          inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
           bnkCde = CommonUtils.nvl(claimMap.get("ctrlBankId"));
           if (!bnkCde.equals("")) {
             bnkCde = claimService.selectBnkCde(bnkCde);
@@ -1971,10 +1964,12 @@ public class ClaimController {
           email.setText(emailTxt);
           email.addFile(file);
 
-          claimMap.put("file", fileInfoConf.get("ctrlSubPath").toString() + sFile);
-
           adaptorService.sendEmail(email, false);
+
         }
+
+        claimMap.put("file", subPath + sFile);
+
       }
     }
   }
@@ -2036,26 +2031,6 @@ public class ClaimController {
         }
       }
     }
-
-    // //파일다운로드 정보 INSERT
-    // claimMap.put("fileNo", idx);
-    // claimMap.put("filePath", fileDownloadPath+"/CRC/");
-    // claimMap.put("fileName", sFile);
-    //
-    // claimService.insertClaimFileDownloadInfo(claimMap);
-
-    // E-mail 전송하기
-/*    File file = new File(filePath + "/CRC/" + sFile);
-    EmailVO email = new EmailVO();
-
-    email.setTo(emailReceiver);
-    email.setHtml(false);
-    email.setSubject("CIMB Credit Card Claim File - Batch Date : " + inputDate);
-    email.setText("Please find attached the claim file for your kind perusal.");
-    email.addFile(file);
-
-    adaptorService.sendEmail(email, false);*/
-
   }
 
   private ClaimFileCrcCIMBHandler getTextDownloadCrcCIMBHandler(String fileName, String[] columns, String[] titles,
@@ -2108,20 +2083,6 @@ public class ClaimController {
         }
       }
     }
-
-    // E-mail 전송하기
-    /*File file = new File(filePath + "/CRC/" + sFile);
-    EmailVO email = new EmailVO();
-
-    email.setTo(emailReceiver);
-    email.setHtml(false);
-    email.setSubject(
-        "SCB CRC Deduction File - Batch Date : " + inputDate + "_" + String.valueOf(claimMap.get("pageNo")));
-    email.setText("Please find attached the claim file for your kind perusal.");
-    email.addFile(file);
-
-    adaptorService.sendEmail(email, false);
-*/
   }
 
   private ClaimFileCrcMBBHandler getTextDownloadCrcMBBHandler(String fileName, String[] columns, String[] titles,
@@ -2146,17 +2107,17 @@ public class ClaimController {
     String todayDate;
     String inputDate;
 
-    try {
-      inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01"
-          : (String) claimMap.get("ctrlBatchDt");
-      todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
-      sFile = "CRC_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo")) + ".csv";
+    String batchName  = claimMap.get("batchName").toString();
+    String subPath = claimMap.get("subPath").toString();
 
-      downloadHandler = getTextDownloadCreditCardCIMBHandler(sFile, claimFileColumns, null, filePath, "/CRC/CIMB_GROUP/"+inputDate+"/",
-          claimMap);
+    try {
+      inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01": (String) claimMap.get("ctrlBatchDt");
+      todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
+      sFile = batchName + todayDate + "_" + String.valueOf(claimMap.get("pageNo")) + ".csv";
+
+      downloadHandler = getTextDownloadCreditCardCIMBHandler(sFile, claimFileColumns, null, filePath, subPath+inputDate+"/",claimMap);
 
       largeExcelService.downLoadCreditCardFileCIMB(claimMap, downloadHandler);
-      // downloadHandler.writeFooter();
 
     } catch (Exception ex) {
       throw new ApplicationException(ex, AppConstants.FAIL);
@@ -2169,19 +2130,6 @@ public class ClaimController {
         }
       }
     }
-
-    // E-mail 전송하기
-    File file = new File(filePath + "/CRC/" + sFile);
-   /* EmailVO email = new EmailVO();
-
-    email.setTo(emailReceiver);
-    email.setHtml(false);
-    email.setSubject("CIMB Credit Card Claim File - Batch Date : " + inputDate);
-    email.setText("Please find attached the claim file for your kind perusal.");
-    email.addFile(file);
-
-    adaptorService.sendEmail(email, false);*/
-
   }
 
   private CreditCardFileCIMBHandler getTextDownloadCreditCardCIMBHandler(String fileName, String[] columns,
@@ -2206,17 +2154,21 @@ public class ClaimController {
     String todayDate;
     String inputDate;
 
+    String batchName  = "CZ";
+    String subPath = "/CRC/MBB_GROUP/";
+
     try {
-      inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01"
-          : (String) claimMap.get("ctrlBatchDt");
+      inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
+
       todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "yyMMdd");
+
       if (1 == (Integer) claimMap.get("type")) {
-          sFile = "CZ" + todayDate + StringUtils.leftPad(String.valueOf(claimMap.get("pageNo")), 2, "0") + ".dat";
+          sFile = batchName + todayDate + StringUtils.leftPad(String.valueOf(claimMap.get("pageNo")), 2, "0") + ".dat";
       } else {
-          sFile = "CZ" + todayDate + "_NEW_" + claimMap.get("ctrlId") + ".dat";
+          sFile = batchName + todayDate + "_NEW_" + claimMap.get("ctrlId") + ".dat";
       }
 
-      downloadHandler = getTextDownloadCreditCardMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/MBB_GROUP/"+inputDate+"/", claimMap);
+      downloadHandler = getTextDownloadCreditCardMBBHandler(sFile, claimFileColumns, null, filePath, subPath+inputDate+"/", claimMap);
 
       largeExcelService.downLoadCreditCardFileMBB(claimMap, downloadHandler);
 
@@ -2235,18 +2187,10 @@ public class ClaimController {
       }
     }
 
-    // E-mail 전송하기
-   /* File file = new File(filePath + "/CRC/" + sFile);
-    EmailVO email = new EmailVO();
+    claimMap.put("batchName", batchName);
+    claimMap.put("subPath", subPath);
+    claimMap.put("emailSubject", "SCB CRC Deduction File");
 
-    email.setTo(emailReceiver);
-    email.setHtml(false);
-    email.setSubject("SCB CRC Deduction File - Batch Date : " + inputDate + "_" + String.valueOf(claimMap.get("pageNo")));
-    email.setText("Please find attached the claim file for your kind perusal.");
-    email.addFile(file);
-
-    adaptorService.sendEmail(email, false);
-*/
   }
 
   private CreditCardFileMBBHandler getTextDownloadCreditCardMBBHandler(String fileName, String[] columns,
@@ -2366,10 +2310,18 @@ public class ClaimController {
     return ResponseEntity.ok(codeList);
   }
 
-  public void zipFilesEmail(String batchName, String fileDirectory, String batchDate, String emailSubject) {
+  public void zipFilesEmail(EgovMap claimMap) {
+
+    String batchName = claimMap.get("batchName").toString();
+    String subPath = claimMap.get("subPath").toString();
+    String batchDate = claimMap.get("ctrlBatchDt").toString();
+    String emailSubject = claimMap.get("emailSubject").toString();
+    String emailBody = claimMap.get("emailBody").toString();
+    String fileDirectory = filePath + subPath;
 
       String zipFile = fileDirectory + "/" + batchName +"_" +batchDate + ".zip";
       String srcDir  = fileDirectory + "/" + batchDate;
+      String subPathFile = subPath + batchName +"_" +batchDate + ".zip";
 
       try {
 
@@ -2409,11 +2361,13 @@ public class ClaimController {
 
           email.setTo(emailReceiver);
           email.setHtml(false);
-          email.setSubject(emailSubject + " - Batch Date : " + batchDate);
-          email.setText("Please find attached the claim file for your kind perusal.");
+          email.setSubject(emailSubject.replace("{0}", batchDate));
+          email.setText(emailBody);
           email.addFile(file);
 
           adaptorService.sendEmail(email, false);
+
+          claimMap.put("file", subPathFile);
       }
       catch (IOException ioe) {
           System.out.println("Error creating zip file" + ioe);
@@ -2574,11 +2528,7 @@ public class ClaimController {
   @RequestMapping(value = "/saveVRescueUpdate.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> saveVRescueUpdate(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
 
-	  LOGGER.debug("params :"+ params.toString());
 	  params.put("userId", sessionVO.getUserId());
-
-
-
 	  claimService.saveVRescueUpdate(params);
 
 	  ReturnMessage message = new ReturnMessage();

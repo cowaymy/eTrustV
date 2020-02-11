@@ -399,7 +399,21 @@ public class ECashDeductionController {
 		Map<String, Object> map = (Map<String, Object>) formList.get(0);
 		EgovMap claimMap = eCashDeductionService.selectECashDeductById(map);
 		boolean isGrp = map.get("v_isGrp") != null ? true : false;
+		String isZip = "";
 
+		EgovMap fileInfo = eCashDeductionService.selectMstConf(claimMap);
+	    if(fileInfo != null){
+	      Map<String, Object> fileInfoConf = new HashMap<String, Object>();
+	      fileInfoConf = (Map<String, Object>) fileInfo;
+
+	      claimMap.put("batchName", fileInfoConf.get("ctrlFileNm"));
+	      claimMap.put("ext", fileInfoConf.get("ctrlFileExt"));
+	      claimMap.put("subPath", fileInfoConf.get("ctrlSubPath"));
+	      claimMap.put("emailSubject", fileInfoConf.get("ctrlEmailSubj"));
+	      claimMap.put("emailBody", fileInfoConf.get("ctrlEmailText"));
+
+	      isZip  = fileInfoConf.get("ctrlZip").toString();
+	    }
     		if(isGrp){
     			// For Credit Card Grouping Only
     			 //CIMB
@@ -486,7 +500,9 @@ public class ECashDeductionController {
         }
 */
     	// Zip Files to email and download
-    	zipFilesEmail(claimMap);
+    	if(isZip.equals("Y")){
+    	  zipFilesEmail(claimMap);
+    	}
 
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
@@ -652,14 +668,14 @@ public class ECashDeductionController {
 		String todayDate;
 		String inputDate;
 
-		String batchName  = "eCash_CIMB_CIMB_";
-		String subPath = "/eCash/CIMB_GROUP/";
-		String emailSubject = "CIMB eAuto Debit CRC Deduction File";
+		String fileName = claimMap.get("batchName").toString();
+		String subPath = claimMap.get("subPath").toString();
+		String ext = claimMap.get("ext").toString();
 
 		try {
 		  inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
-			sFile = batchName + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".csv";
+			sFile = fileName + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + "." + ext;
 
 			downloadHandler = getTextDownloadCIMBGrpHandler(sFile, claimFileColumns, null, filePath, subPath+inputDate+"/", claimMap);
 
@@ -677,10 +693,6 @@ public class ECashDeductionController {
 				}
 			}
 		}
-        claimMap.put("batchName", batchName);
-        claimMap.put("subPath", subPath);
-        claimMap.put("emailSubject", emailSubject);
-
 	}
 
 	/**
@@ -697,18 +709,18 @@ public class ECashDeductionController {
 		String todayDate;
 		String inputDate;
 
-		String batchName  = "CZ";
-        String subPath = "/eCash/MBB_GROUP/";
-        String emailSubject = "SCB eCash CRC Grouping Deduction File";
+		String fileName = claimMap.get("batchName").toString();
+        String subPath = claimMap.get("subPath").toString();
+        String ext = claimMap.get("ext").toString();
 
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "yyMMdd");
 
 	        if(1 == (Integer) claimMap.get("type")) {
-	            sFile = "CZ" + todayDate + ".dat";
+	            sFile = fileName + todayDate + "." + ext;
 	        } else {
-	            sFile = "CZ" + todayDate + "_NEW_" + claimMap.get("fileBatchId") + ".dat";
+	            sFile = fileName + todayDate + "_NEW_" + claimMap.get("fileBatchId") + "." + ext;
 	        }
 
 			downloadHandler = getTextDownloadMBBGrpHandler(sFile, claimFileColumns, null, filePath, subPath+inputDate+"/", claimMap);
@@ -728,11 +740,6 @@ public class ECashDeductionController {
 				}
 			}
 		}
-
-		claimMap.put("batchName", batchName);
-		claimMap.put("subPath", subPath);
-        claimMap.put("emailSubject", emailSubject);
-
 	}
 
 	private ECashGrpDeductionFileCIMBHandler getTextDownloadCIMBGrpHandler(String fileName, String[] columns, String[] titles, String path,
@@ -924,11 +931,12 @@ public class ECashDeductionController {
       String subPath = claimsMap.get("subPath").toString();
       String batchDate = claimsMap.get("fileBatchCrtDt").toString();
       String emailSubject = claimsMap.get("emailSubject").toString();
+      String emailBody = claimsMap.get("emailBody").toString();
       String fileDirectory = filePath + subPath;
 
-        String zipFile = fileDirectory + "/" + batchName +"_" +batchDate + ".zip";
+        String zipFile = fileDirectory + "/" + batchName +batchDate + ".zip";
         String srcDir  = fileDirectory + "/" + batchDate;
-        String subPathFile = subPath + batchName +"_" +batchDate + ".zip";
+        String subPathFile = subPath + batchName +batchDate + ".zip";
 
         try {
 
@@ -968,8 +976,8 @@ public class ECashDeductionController {
 
             email.setTo(emailReceiver);
             email.setHtml(false);
-            email.setSubject(emailSubject + " - Batch Date : " + batchDate);
-            email.setText("Please find attached the claim file for your kind perusal.");
+            email.setSubject(emailSubject.replace("{0}", batchDate));
+            email.setText(emailBody);
             email.addFile(file);
 
             adaptorService.sendEmail(email, false);

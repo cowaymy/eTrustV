@@ -131,4 +131,10 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
 		eCashDeductionMapper.deleteECashDeductionResultItem(eCashMap);
 	}
 
+	@Override
+	public EgovMap selectMstConf(Map<String, Object> params) {
+	  return eCashDeductionMapper.selectMstConf(params);
+	}
+
+
 }

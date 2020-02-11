@@ -425,4 +425,22 @@
         FROM SAL0211T
     </select>
 
+    <select id="selectMstConf" parameterType="Map" resultType="egovMap">
+    SELECT
+        ID
+        , CTRL_FILE_NM
+        , CTRL_DT_FMT
+        , CTRL_FILE_EXT
+        , CTRL_SUB_PATH
+        , CTRL_EMAIL
+        , CTRL_EMAIL_SUBJ
+        , CTRL_EMAIL_TEXT
+        , CTRL_ZIP
+    FROM    PAY0289M
+        WHERE   CTRL_IS_CRC = 2
+            AND CTRL_BANK_ID = #{fileBatchBankId}
+            AND DISB = 0
+        ORDER BY CTRL_SET
+  </select>
+
 </mapper>

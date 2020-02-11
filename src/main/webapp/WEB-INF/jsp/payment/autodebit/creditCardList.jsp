@@ -38,6 +38,8 @@ var smsData = [{"codeId": "0","codeName": "No"}, {"codeId": "1","codeName": "Yes
 //Claim Day  Data
 var claimDayData = [{"codeId": "5","codeName": "5"},{"codeId": "10","codeName": "10"}];
 
+var subPath = "/resources/WebShare/CRT";
+
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
 
@@ -737,7 +739,9 @@ function fn_createFile(){
 
     Common.ajax("POST", "/payment/createClaimFile.do", data,
             function(result) {
-                 Common.alert("<spring:message code='pay.alert.claimSucessCreate'/>");
+                 Common.alert("<spring:message code='pay.alert.claimSucessCreate'/>",function(){
+                     window.open("${pageContext.request.contextPath}" + subPath + result.data);
+                 });
 
            },
            function(result) {

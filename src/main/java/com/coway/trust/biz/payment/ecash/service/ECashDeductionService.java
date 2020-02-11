@@ -40,4 +40,6 @@ public interface ECashDeductionService
 
 	void deleteECashDeductionResultItem(Map<String, Object> eCashMap);
 
+	EgovMap selectMstConf(Map<String, Object> params);
+
 }
