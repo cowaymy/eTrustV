@@ -197,4 +197,6 @@ public interface ASManagementListService {
   public int setPay18dData(Map<String, Object> params);
   public int convertAccountToTempBasedOnPayMode(int pMode);
   public int convertTempAccountToSettlementAccount(int p);
+
+  EgovMap selectCustomerInstallationAddress(Map<String, Object> params) throws Exception;
 }
