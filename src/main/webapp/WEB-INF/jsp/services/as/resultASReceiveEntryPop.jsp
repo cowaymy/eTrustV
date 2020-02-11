@@ -21,6 +21,7 @@
   var asMalfuncResnId;
   var asErrorCde;
   var asBrCde;
+  var custId = "${orderDetail.basicInfo.custId}";
 
   $(document).ready(function() {
     fn_keyEvent();
@@ -53,7 +54,10 @@
 
     fn_setComboBox2();
 
+    fn_loadCustomer(custId);
+
     fn_checkASReceiveEntryPop();
+
   });
 
   function fn_getErrMstList(_ordNo) {
@@ -1208,6 +1212,39 @@
       });
       return msg;
     }
+
+  function fn_loadCustomer(custId){
+      Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId}, function(result) {
+
+    	  if(result != null && result.length == 1) {
+    		  var custInfo = result[0];
+    		  if(custInfo.custAddId > 0) {
+                  fn_loadInstallAddr(custInfo.custAddId);
+              }
+    	  }
+      });
+  }
+
+
+  function fn_loadInstallAddr(custAddId){
+      Common.ajaxSync("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(custInfo) {
+          if(custInfo != null) {
+              if(custInfo.areaId != undefined){
+                  console.log("custInfo.areaId : "+custInfo.areaId);
+                  if("DM" == custInfo.areaId.substring(0,2)) {
+                      Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />'
+                    		  ,
+                              fn_selfClose);
+                  }
+
+              }else{
+                   Common.alert('<spring:message code="sal.alert.msg.invalidMagicAddress"/>',fn_selfClose());
+                  return false;
+              }
+          }
+      });
+  }
+
 
 </script>
 <div id="popup_wrap" class="popup_wrap ">
