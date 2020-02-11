@@ -169,11 +169,6 @@ $(document).ready(function() {
     }
     doGetCombo('/organization/selectBusinessType.do', '', '','businessType', 'S' , '');
 
-    if($("#memberType").val() == "1" || $("#memberType").val() == "2803") {
-        doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
-        doGetCombo('/organization/selectAccBank.do', '', '', 'issuedBank', 'S', '');
-    }
-
     /*fill edit field*/
     /*
     var memberType = "${memberView.memType}";
@@ -224,6 +219,11 @@ $(document).ready(function() {
 
 
 	fn_getMemInfo();
+
+    if($("#memberType").val() == "1" || $("#memberType").val() == "2803") {
+         doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
+         doGetCombo('/organization/selectAccBank.do', '', '', 'issuedBank', 'S', '');
+    }
 
     $("#searchdepartment").change(function(){
         doGetCombo('/organization/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  '');
