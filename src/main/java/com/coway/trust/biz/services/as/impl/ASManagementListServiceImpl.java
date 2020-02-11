@@ -3529,6 +3529,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   }
 
   @Override
+  public EgovMap selectCustomerInstallationAddress(Map<String, Object> params) throws Exception {
+
+    return ASManagementListMapper.selectCustomerInstallationAddress(params);
+  }
+
+  @Override
   public EgovMap asResult_updateSerial(Map<String, Object> params) {
     // AS'S EDIT RESULT
     ArrayList<AsResultChargesViewVO> vewList = null;
@@ -4127,3 +4133,4 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     return returnemp;
   }
 }
+
