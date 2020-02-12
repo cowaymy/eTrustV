@@ -492,16 +492,26 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     // Trnsc Id Payment ModegridListMap
 
     String paymentMode = (String) selectBankStatementInfo.get("type");
+    String payType = "";
+
+    // ONGHC - ADD FOR ONL TRANSACTION
+    if ("ONL".equals(paymentMode)) {
+      payType = "108";
+    } else if ("CHQ".equals(paymentMode)) {
+      payType = "106";
+    } else {
+      payType = "105";
+    }
 
     for (int i = 0; i < gridList.size(); i++) {
       gridListMap = (Map<String, Object>) gridList.get(i);
 
       String payMode = "";
+
       if ("5697".equals(String.valueOf(gridListMap.get("payMode")))) {
         payMode = "CHQ";
       } else {
-        if ("ONL".equals(paymentMode)) { // ONGHC - ADD FOR SOLVE ONL PAYMENT
-                                         // METHOD
+        if ("ONL".equals(paymentMode)) { // ONGHC - ADD FOR SOLVE ONL PAYMENT METHOD
           payMode = "ONL";
         } else {
           payMode = "CSH";
@@ -793,7 +803,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     formInfo.put("trDate", selectBankStatementInfo.get("trnscDt"));
 
     // ONGHC - ADD FOR ONL PAYMENT TYPE
-    formInfo.put("payType", (String) selectBankStatementInfo.get("type"));
+    formInfo.put("payType", payType);
 
     // User ID 세팅
     formInfo.put("userid", sUserId);
