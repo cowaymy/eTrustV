@@ -799,7 +799,7 @@
   <select id="createClaim" statementType="CALLABLE"
     parameterType="Map">
     {
-    call SP_AUTO_DEBT_GENRT_CLM_2(#{new_claimType} ,
+    call SP_AUTO_DEBT_GENRT_CLM(#{new_claimType} ,
     #{new_issueBank},
     #{new_cardType}, #{new_debitDate}, #{userId},
     #{new_claimDay},
@@ -813,7 +813,7 @@
   <select id="createClaimCreditCard" statementType="CALLABLE"
     parameterType="Map">
     {
-    call SP_AUTO_DEBT_GENRT_CLM_CCD_2(#{new_claimType} ,
+    call SP_AUTO_DEBT_GENRT_CLM_CCD(#{new_claimType} ,
     #{new_merchantBank},
     #{new_cardType}, #{new_debitDate}, #{userId},
     #{new_issueBankId},#{mayBank},#{installMonth},
