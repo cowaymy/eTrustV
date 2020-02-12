@@ -1160,6 +1160,7 @@ var TODAY_DD      = "${toDay}";
          <div >
           <!-- auto_file start -->
             <input type="text" id="transactionId" name="transactionId" value="" />
+            <input type="checkbox" name="allowance" value="1" checked><label for="allowance"> Allow commission for this payment</label>
          </div>
          <!-- auto_file end -->
         </td>
@@ -1275,7 +1276,13 @@ var TODAY_DD      = "${toDay}";
                             <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                         </td>
                     </tr>
-
+                    <tr>
+                      <td colspan="4">
+                        <div>
+                          <input type="checkbox" name="allowance" value="1" checked><label for="allowance"> Allow commission for this payment</label>
+                        </div>
+                      </td>
+                    </tr>
 
                 </tbody>
             </table>
