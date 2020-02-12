@@ -487,6 +487,12 @@
             }
         });
     };
+
+    function fn_excelDown(){
+        // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+        GridCommon.exportTo("list_grid_wrap", "xlsx", "Homecare Mattress HC");
+    }
+
 </script>
 
 <section id="content">
@@ -788,7 +794,9 @@
 
     </section>
     <!-- search_table end -->
-
+<ul class="right_btns">
+    <li><p class="btn_grid"><a href="javascript:void(0);" onclick="fn_excelDown()">Generate</a></p></li>
+</ul>
     <section class="search_result">
         <!-- search_result start -->
 
