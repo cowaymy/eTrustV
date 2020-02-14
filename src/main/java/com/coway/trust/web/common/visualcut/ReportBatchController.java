@@ -1738,6 +1738,39 @@ public class ReportBatchController {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] AutoDebitDuductionSummary...");
   }
+  
+  @RequestMapping(value = "/RCM_Monthly.do")
+  //@Scheduled(cron = "0 0 1 2 * ?")//Monthly (Day 2) (1:00am)
+  public void rcmMonthly() {
+    LOGGER.info("[START] RCM_Monthly...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/RCM_Monthly.rpt");// visualcut rpt
+                                                               // file name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "RCM Monthly" + File.separator + "RCM_Monthly_" + CommonUtils.getNowDate() + ".xls");
+    
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] RCM_Monthly...");
+  }
+  
+  @RequestMapping(value = "/Monthly_Rental_Collection.do")
+  // @Scheduled(cron = "0 0 1 2 * ?")//Monthly (Day 2) (1:00am)
+  public void MonthlyRentalCollection() {
+    LOGGER.info("[START] Monthly_Rental_Collection...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/MonthlyRentalCollection.rpt");// visualcut
+                                                                           // rpt
+                                                                           // file name.
+    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "RCM Monthly" + File.separator + "Monthly_Ren_Coll_" + CommonUtils.getNowDate() + ".pdf");
+    
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] Monthly_Rental_Collection...");
+  }
 
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
