@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  24/10/2019  ONGHC  1.0.0          AMEND LAYOUT
+ 13/02/2020  ONGHC  1.0.1          ADD PSI FIELD
  -->
 
 <script type="text/javaScript">
@@ -36,7 +37,39 @@
         }
       });
     });
+
+    // ONGHC - 20200221 ADD FOR PSI
+    // 54 - WP
+    // 57 - SOFTENER
+    // 58 - BIDET
+    // 400 - POE
+    if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
+      $("#m4").show();
+      $("#psiRcd").attr("disabled", false);
+    } else {
+      $("#m4").hide();
+      $("#psiRcd").attr("disabled", true);
+    }
+
   });
+
+  function validate(evt) {
+       var theEvent = evt || window.event;
+
+       // Handle paste
+       if (theEvent.type === 'paste') {
+           key = event.clipboardData.getData('text/plain');
+       } else {
+       // Handle key press
+           var key = theEvent.keyCode || theEvent.which;
+         key = String.fromCharCode(key);
+     }
+     var regex = /[0-9]|\./;
+     if( !regex.test(key) ) {
+       theEvent.returnValue = false;
+       if(theEvent.preventDefault) theEvent.preventDefault();
+     }
+  }
 
   function fn_saveInstall() {
     if (fn_validate()) {
@@ -186,9 +219,9 @@
        </c:if>
       </tr>
 	  <tr>
-       <th scope="row"><spring:message code='service.title.SirimNo' /><span class="must"> *</span></th>
+       <th scope="row"><spring:message code='service.title.SirimNo' /><span class="must" id="m1"> *</span></th>
        <td><input type="text" id="sirimNo" name="sirimNo" class='w100p' value="<c:out value="${installInfo.sirimNo}"/>" /></td>
-       <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must"> *</span></th>
+       <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must" id="m2"> *</span></th>
        <td><input type="text" id="serialNo" name="serialNo" class='w50p' value="<c:out value="${installInfo.serialNo}" />" />
        <c:if test="${installInfo.serialRequireChkYn == 'Y' }">
        <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
@@ -204,15 +237,15 @@
        <td><input type="text" id="refNo2" name="refNo2" class='w100p' value="<c:out value="${installInfo.docRefNo2}" />" /></td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code='service.title.ActualInstalledDate' /><span class="must"> *</span></th>
+       <th scope="row"><spring:message code='service.title.ActualInstalledDate' /><span class="must" id="m3"> *</span></th>
        <td>
          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"
           title="Create start Date" placeholder="DD/MM/YYYY"
           id="installdt" name="installdt"
           value="<c:out value="${installInfo.installDt}" />" />
        </td>
-       <th scope="row"></th>
-       <td></td>
+       <th scope="row"><spring:message code='service.title.PSIRcd' /><span class="must" id="m4"> *</span></th>
+       <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" onkeypress='validate(event)' value="<c:out value="${installInfo.psi}"/>" /></td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.title.Remark' /></th>
