@@ -103,6 +103,8 @@
       doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE=' + result[0].asMalfuncId, '', '', 'ddlErrorDesc', 'S', 'fn_callback_ddlErrorDesc');
     }
 
+    $("#psiRcd").val(result[0].psi);
+
     /*
     $("#ddlDSCCode").val( result[0].asBrnchId);
     $("#ddlCTCodeText").val( result[0].c12);
@@ -363,6 +365,8 @@
 
       // KR-OHK Serial Check
       $("#pItmCode").val(result[0].stockCode);
+
+      $("#PROD_CAT").val(result[0].c2code);
 
       fn_getErrMstList(result[0].ordNo);
     });
@@ -1128,6 +1132,7 @@ function SearchListAjax(obj){
     <input type="text" name="AS_RESULT_NO" id="AS_RESULT_NO" value="${AS_RESULT_NO}" />
     <input type="text" name="AS_RESULT_ID" id="AS_RESULT_ID" value="${AS_RESULT_ID}" />
     <input type="text" name="PROD_CDE" id="PROD_CDE" />
+    <input type="text" name="PROD_CAT" id="PROD_CAT" />
     <input type="hidden" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
     <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
    </div>
@@ -1389,6 +1394,14 @@ function SearchListAjax(obj){
             <p class="btn_grid" style="display:none" id="btnSerialEdit"><a href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
          </td>
         </tr>
+
+        <tr>
+         <th scope="row"><spring:message code='service.title.PSIRcd' /><span class="must" id="m15" style="display:none"> *</span></th>
+         <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" disabled="disabled" onkeypress='validate(event)' </td>
+         <th scope="row"></th>
+         <td></td>
+        </tr>
+
         <tr>
          <th scope="row"><spring:message code='service.grid.CrtBy' /></th>
          <td><input type="text" title="" placeholder="" class="disabled w100p" disabled="disabled" id='creator' name='creator' /></td>
