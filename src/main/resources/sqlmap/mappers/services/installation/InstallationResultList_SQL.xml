@@ -3065,6 +3065,7 @@
            , SERIAL_REQUIRE_CHK_YN
            , WH_LOC_GB
            , CT_WH_LOC_ID
+           , PSI PSI
       FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID
                   , Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO
                   , Extent1.INSTALL_STK_ID INSTALL_STK_ID
@@ -3098,6 +3099,7 @@
                   , Extent8.SERIAL_REQUIRE_CHK_YN
                   , Extent8.WH_LOC_GB WH_LOC_GB
                   , Extent8.WH_LOC_ID CT_WH_LOC_ID
+                  , Extent3.PSI PSI
          FROM SAL0046D Extent1
          JOIN SYS0026M Extent2 ON Extent2.STK_ID = Extent1.INSTALL_STK_ID
          JOIN SAL0047D Extent3 ON Extent3.ENTRY_ID = Extent1.INSTALL_ENTRY_ID
@@ -3465,6 +3467,7 @@
                         , UPD_USER_ID
                         , ADJ_AMT
                         , MOBILE_ID
+                        , PSI
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
             , #{statusCodeId}
@@ -3487,6 +3490,7 @@
             , #{updator}
             , #{adjAmount}
             , NULL
+            , #{psi}
     )
   </insert>
 
@@ -4592,6 +4596,7 @@
                       , UPD_DT = SYSDATE
                       , UPD_USER_ID = #{user_id}
                       , INSTALL_DT = to_date( #{installdt} , 'DD/MM/YYYY' )
+                      , PSI = #{psiRcd}
     WHERE ( RESULT_ID = #{resultId} )
   </update>
 
