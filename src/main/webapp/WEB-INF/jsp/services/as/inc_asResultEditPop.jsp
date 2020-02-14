@@ -11,6 +11,7 @@
  17/09/2019  ONGHC  1.0.5          AMEND DEFECT DETAIL SECTION
  21/10/2019  ONGHC  1.0.6          ADD CHECKING FOR AS PAYMENT MAPPING
  19/11/2019  ONGHC  1.0.7          AMEND FOR ORDER MANAGEMENT VIEW ISSUE
+ 14/02/2020  ONGHC  1.0.8          AMEND FOR PSI
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > EDIT / VIEW AS ENTRY PLUG IN -->
@@ -59,6 +60,7 @@
         } else if (event.marker == "added-edited") {
         }
       });
+
     });
 
   function trim(text) {
@@ -245,6 +247,8 @@
     $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
     $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
      */
+
+     $("#psiRcd").val(result[0].psi);
 
     $("#ddlCTCode").val(result[0].c11);
     $("#ddlDSCCode").val(result[0].asBrnchId);
@@ -518,6 +522,8 @@
       $("#iscommission").attr("checked", false);
     }
 
+    $("#psiRcd").val(asRslt.psi);
+
     $('#def_type').val(this.trim(asRslt.c16));
     $('#def_type_text').val(this.trim(asRslt.c17));
     $('#def_type_id').val(this.trim(asRslt.asDefectTypeId));
@@ -554,6 +560,19 @@
     $("#CTGroup").val("");
     $("#callRem").val("");
 
+    // ONGHC - 20200221 ADD FOR PSI
+    // 54 - WP
+    // 57 - SOFTENER
+    // 58 - BIDET
+    // 400 - POE
+    if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val()  == "400" || $('#PROD_CAT').val()  == "57" || $('#PROD_CAT').val()  == "56") {
+      $("#m15").show();
+      $("#psiRcd").attr("disabled", false);
+    } else {
+      $("#m15").hide();
+      $("#psiRcd").attr("disabled", true);
+    }
+
     // OPEN MANDATORY
     $("#m2").show();
     $("#m3").hide();
@@ -581,6 +600,7 @@
       $('#ddlErrorDesc').attr("disabled", true);
       $('#txtRemark').attr("disabled", true);
       $("#iscommission").attr("disabled", true);
+      $("#psiRcd").attr("disabled", true);
 
       $('#def_type').attr("disabled", true);
       $('#def_code').attr("disabled", true);
@@ -614,6 +634,8 @@
       $('#ddlErrorCode').removeAttr("disabled").removeClass("readonly");
       $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");
       $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+      $('#psiRcd').removeAttr("disabled").removeClass("readonly");
+
       //$('#iscommission').removeAttr("disabled").removeClass("readonly");
 
       $("#iscommission").attr("disabled", false);
@@ -756,6 +778,7 @@
       $('#dpSettleDate').attr("disabled", true);
       $('#tpSettleTime').attr("disabled", true);
       $("#iscommission").attr("disabled", true);
+      $("#psiRcd").attr("disabled", true);
 
       $("#appDate").attr("disabled", true);
       $("#CTSSessionCode").attr("disabled", true);
@@ -796,6 +819,7 @@
       $('#dpSettleDate').val("").attr("disabled", true);
       $('#tpSettleTime').val("").attr("disabled", true);
       $("#iscommission").attr("disabled", true);
+      $('#psiRcd').val("").attr("disabled", true);
 
       $("#appDate").val("");
       $("#CTSSessionCode").val("");
@@ -1503,6 +1527,8 @@
       AS_MALFUNC_ID : $('#ddlErrorCode').val(),
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
 
+      AS_PSI : $('#psiRcd').val(),
+
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
       AS_APP_SESS : $("#CTSSessionCode").val(),
@@ -2134,7 +2160,7 @@ function SearchListAjax(obj){
      <!-- table start -->
      <caption>table</caption>
      <colgroup>
-       <col style="width: 150px" />
+       <col style="width: 160px" />
        <col style="width: *" />
        <col style="width: 110px" />
        <col style="width: *" />
@@ -2248,6 +2274,15 @@ function SearchListAjax(obj){
             <p class="btn_grid" style="display:none" id="btnSerialEdit"><a id="serialEdit" href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
        </td>
       </tr>
+
+      <tr>
+       <th scope="row"><spring:message code='service.title.PSIRcd' /><span class="must" id="m15" style="display:none"> *</span></th>
+       <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" disabled="disabled" onkeypress='validate(event)' </td>
+       <th scope="row"></th>
+       <td>
+       </td>
+      </tr>
+
       <tr>
        <th scope="row"><spring:message code='service.grid.CrtBy' /></th>
        <td>
