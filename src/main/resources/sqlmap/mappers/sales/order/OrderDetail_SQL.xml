@@ -920,6 +920,7 @@
 		'Success'
 		WHEN t.BANK_DTL_APPR_CODE IN (05,51,61,65) THEN 'Insufficient Fund'
 		WHEN t.BANK_DTL_APPR_CODE IN (14) THEN 'Return Pin / Invalid Card'
+		WHEN t.BANK_DTL_APPR_CODE IN (999) THEN 'AD Return'
 		ELSE (CASE WHEN t.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END)
 		END is_approve_str
 		FROM
