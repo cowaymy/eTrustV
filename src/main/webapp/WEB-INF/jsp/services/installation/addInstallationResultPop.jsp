@@ -142,6 +142,19 @@
           $("#addInstallForm #nextCallDate").val("");
           $("#addInstallForm #remark").val("");
         });
+
+      // ONGHC - 20200221 ADD FOR PSI
+      // 54 - WP
+      // 57 - SOFTENER
+      // 58 - BIDET
+      // 400 - POE
+      if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
+        $("#m8").show();
+        $("#psiRcd").attr("disabled", false);
+      } else {
+        $("#m8").hide();
+        $("#psiRcd").attr("disabled", true);
+      }
   });
 
   function fn_saveInstall() {
@@ -163,6 +176,13 @@
       } else {
         if ($("#addInstallForm #serialNo").val().trim().length < 9) {
           msg += "* <spring:message code='sys.msg.invalid' arguments='Serial No' htmlEscape='false'/> </br>";
+        }
+      }
+
+      // PSI CHECKING
+      if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
+        if ( $("#psiRcd").val() == "") {
+         msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
         }
       }
 
@@ -304,6 +324,24 @@
     	   $("#addInstallForm #serialNo").val(dataRow.serialNo);
     	   //console.log("serialNo : " + dataRow.serialNo);
        });
+   }
+
+   function validate(evt) {
+     var theEvent = evt || window.event;
+
+     // Handle paste
+     if (theEvent.type === 'paste') {
+         key = event.clipboardData.getData('text/plain');
+     } else {
+     // Handle key press
+         var key = theEvent.keyCode || theEvent.which;
+         key = String.fromCharCode(key);
+     }
+     var regex = /[0-9]|\./;
+     if( !regex.test(key) ) {
+       theEvent.returnValue = false;
+       if(theEvent.preventDefault) theEvent.preventDefault();
+     }
    }
 
 </script>
@@ -873,12 +911,15 @@
      </tr>
      <tr>
       <th scope="row"><spring:message code='service.title.CTCode' /><span name="m3" id="m3" class="must">*</span></th>
-      <td colspan="3"><input type="text" title=""
-       value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>"
-       placeholder="" class="readonly" style="width: 100%;" id="ctCode"
-       readonly="readonly" name="ctCode" /> <input type="hidden"
-       title="" value="${installResult.ctId}" placeholder="" class=""
-       style="width: 200px;" id="CTID" name="CTID" /> <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
+      <td>
+        <input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width: 100%;" id="ctCode" readonly="readonly" name="ctCode" />
+        <input type="hidden" title="" value="${installResult.ctId}" placeholder="" class="" style="width: 200px;" id="CTID" name="CTID" />
+      </td>
+      <th scope="row"><spring:message code='service.title.PSIRcd' /><span name="m8" id="m8" class="must">*</span></th>
+      <td>
+      <input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" onkeypress='validate(event)' />
+      </td>
+        <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
        <%-- <th scope="row"><spring:message code='service.title.CTName'/></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ctName" name="ctName"/></td> --%>
      </tr>
