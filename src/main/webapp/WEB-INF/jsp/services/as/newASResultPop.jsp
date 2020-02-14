@@ -9,6 +9,7 @@
  26/04/2019  ONGHC  1.0.3          ADD RECALL STATUS
  05/09/2019  ONGHC  1.0.4          REMOVE IN-HOUSE REPAIR SECTION
  17/09/2019  ONGHC  1.0.5          AMEND DEFECT DETAIL SECTION
+ 14/02/2020  ONGHC  1.0.6          AMEND FOR PSI
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > VIEW / ADD AS ENTRY -->
@@ -448,6 +449,9 @@
       // KR-OHK Serial Check
       $("#pItmCode").val(result[0].stockCode);
 
+      // ONGHC - 20200221 ADD FOR PSI
+      $("#PROD_CAT").val(result[0].c2code);
+
       doGetCombo('/services/as/getASFilterInfo.do?prdctCd=' + result[0].stockCode, '', '', 'ddlFilterCode', 'S', '');
     });
   }
@@ -845,7 +849,8 @@
       $("#m11").hide();
       $("#m12").hide();
       $("#m13").hide();
-      $("#").hide();
+      $("#m14").hide();
+      $("#m15").hide();
       break;
     }
   }
@@ -958,6 +963,7 @@
     $("#m12").show();
     $("#m13").show();
     $("#m14").show();
+    $("#m15").show();
 
     $("#btnSaveDiv").attr("style", "display:inline");
     $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
@@ -999,6 +1005,19 @@
         fn_replacement($("#replacement").val());
       }
     }*/
+
+    // ONGHC - 20200221 ADD FOR PSI
+    // 54 - WP
+    // 57 - SOFTENER
+    // 58 - BIDET
+    // 400 - POE
+    if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val()  == "400" || $('#PROD_CAT').val()  == "57" || $('#PROD_CAT').val()  == "56") {
+      $("#m15").show();
+      $("#psiRcd").attr("disabled", false);
+    } else {
+      $("#m15").hide();
+      $("#psiRcd").attr("disabled", true);
+    }
   }
 
   function fn_openField_Cancel() {
@@ -1015,6 +1034,7 @@
     $("#m11").hide();
     $("#m12").hide();
     $("#m13").hide();
+    $("#m15").hide();
 
     $("#iscommission").attr("disabled", false);
 
@@ -1023,9 +1043,11 @@
     $("#def_part").attr("disabled", "disabled");
     $("#def_def").attr("disabled", "disabled");
     $("#solut_code").attr("disabled", "disabled");
+    $('#psiRcd').attr("disabled", "disabled");
 
     $("#dpSettleDate").val("");
     $("#tpSettleTime").val("");
+    $("#psiRcd").val("");
 
     $( "#txtLabourch" ).prop( "checked", false );
 
@@ -1033,6 +1055,7 @@
     $('#txtRemark').removeAttr("disabled").removeClass("readonly");
 
     $("#btnSaveDiv").attr("style", "display:inline");
+
   }
 
   function fn_openField_Fail() {
@@ -1049,16 +1072,20 @@
     $("#m11").hide();
     $("#m12").hide();
     $("#m13").hide();
-    $("#").show();
+    $("#m14").show();
+    $("#m15").hide();
 
     $("#def_type").attr("disabled", "disabled");
     $("#def_code").attr("disabled", "disabled");
     $("#def_part").attr("disabled", "disabled");
     $("#def_def").attr("disabled", "disabled");
     $("#solut_code").attr("disabled", "disabled");
+    $('#psiRcd').attr("disabled", "disabled");
 
     $("#dpSettleDate").val("");
     $("#tpSettleTime").val("");
+
+    $("#psiRcd").val("");
 
     $( "#txtLabourch" ).prop( "checked", false );
 
@@ -1240,6 +1267,8 @@
       AS_MALFUNC_ID : $('#ddlErrorCode').val(),
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
 
+      AS_PSI : $('#psiRcd').val(),
+
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
       AS_APP_SESS : $("#CTSSessionCode").val(),
@@ -1375,6 +1404,7 @@
     $("#ddlWarehouse").attr("disabled", true);
     $("#txtRemark").attr("disabled", true);
     $("#iscommission").attr("disabled", true);
+    $("#psiRcd").attr("disabled", true);
 
     $("#def_type").attr("disabled", true);
     $("#def_code").attr("disabled", true);
@@ -1515,6 +1545,11 @@
 
         if (FormUtil.checkReqValue($("#txtRemark"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
+
+        if (FormUtil.checkReqValue($("#psiRcd"))) {
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
 
@@ -2061,6 +2096,24 @@
       });
   }
 
+  function validate(evt) {
+      var theEvent = evt || window.event;
+
+      // Handle paste
+      if (theEvent.type === 'paste') {
+          key = event.clipboardData.getData('text/plain');
+      } else {
+      // Handle key press
+          var key = theEvent.keyCode || theEvent.which;
+        key = String.fromCharCode(key);
+    }
+    var regex = /[0-9]|\./;
+    if( !regex.test(key) ) {
+      theEvent.returnValue = false;
+      if(theEvent.preventDefault) theEvent.preventDefault();
+    }
+ }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -2095,6 +2148,7 @@
     <input type="text" name="AS_RESULT_NO" id="RCD_TMS" value="${AS_RESULT_NO}" />
     <input type="text" name="IN_HOUSE_CLOSE" id="IN_HOUSE_CLOSE" />
     <input type="text" name="PROD_CDE" id="PROD_CDE" />
+     <input type="text" name="PROD_CAT" id="PROD_CAT" />
    </div>
   </form>
   <header class="pop_header">
@@ -2253,7 +2307,7 @@
         <!-- table start -->
         <caption>table</caption>
         <colgroup>
-         <col style="width: 150px" />
+         <col style="width: 160px" />
          <col style="width: *" />
          <col style="width: 110px" />
          <col style="width: *" />
@@ -2360,6 +2414,13 @@
             <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly/>
             <p class="btn_grid" style="display:none" id="btnSerialEdit"><a href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
           </td>
+         </tr>
+
+         <tr>
+           <th scope="row"><spring:message code='service.title.PSIRcd' /><span class="must" id="m15" style="display:none"> *</span></th>
+           <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" disabled="disabled" onkeypress='validate(event)' </td>
+          <th></th>
+          <td></td>
          </tr>
         </tbody>
        </table>
