@@ -911,7 +911,8 @@
            END C5 ,
            TO_CHAR(S.SRV_MEM_EXPR_DT ,'dd/mm/yyyy') C6,
            S.USER_FULL_NAME,
-           S.INST_ADDR_DTL
+           S.INST_ADDR_DTL,
+           S.CODE_ID AS C2CODE
     FROM ( SELECT E.ORD_ID ORD_ID ,
                   E.ORD_NO ORD_NO ,
                   E.RENTAL_STUS RENTAL_STUS ,
@@ -1571,7 +1572,8 @@
            CASE WHEN ( S.AS_RESULT_STUS_ID ='4' )
                   THEN TO_CHAR(S.AS_RESULT_UPD_DT,'dd/mm/yyyy')
                   ELSE '-'
-           END AS AS_RESULT_DT
+           END AS AS_RESULT_DT,
+           S.PSI
     FROM ( SELECT E.AS_RESULT_ID AS_RESULT_ID ,
                   E.AS_RESULT_NO AS_RESULT_NO ,
                   E.AS_ENTRY_ID ,
@@ -1639,7 +1641,8 @@
                   E.IN_HUSE_REPAIR_PRODUCT_CODE,
                   E.IN_HUSE_REPAIR_SERIAL_NO,
                   E.APPNT_DT,
-                  E.AS_RESULT_UPD_DT
+                  E.AS_RESULT_UPD_DT,
+                  E.PSI
            FROM SVC0004D E JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = E.AS_RESULT_STUS_ID
            LEFT JOIN SYS0032M Extent3 ON Extent3.RESN_ID = E.AS_FAIL_RESN_ID
            LEFT JOIN SYS0005M Extent4 ON Extent4.BRNCH_ID = E.AS_BRNCH_ID
@@ -3027,7 +3030,8 @@
                            RESULT_REP_EMAIL_NO,
                            RESULT_ACEPT_NAME,
                            SGN_DT,
-                           TRNSC_ID
+                           TRNSC_ID,
+                           PSI
     ) VALUES ( #{AS_RESULT_ID},
                #{AS_RESULT_NO},
                #{AS_ENTRY_ID},
@@ -3083,7 +3087,8 @@
                #{RESULT_REP_EMAIL_NO},
                #{RESULT_ACEPT_NAME},
                #{SGN_DT},
-               #{TRNSC_ID}
+               #{TRNSC_ID},
+               #{AS_PSI}
     )
   </insert>
 
