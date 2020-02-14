@@ -130,6 +130,7 @@
 
       // KR-OHK Serial Check
       $("#pItmCode").val(result[0].stockCode);
+      $("#PROD_CAT").val(result[0].c2code);
 
       doGetCombo('/services/as/getASFilterInfo.do?prdctCd=' + actPrdCode, '', '', 'ddlFilterCode', 'S', '');
     });
@@ -263,6 +264,7 @@
     <input type="text" name="AS_RESULT_NO" id="AS_RESULT_NO" value="${AS_RESULT_NO}" />
     <input type="text" name="AS_RESULT_ID" id="AS_RESULT_ID" value="${AS_RESULT_ID}" />
     <input type="text" name="PROD_CDE" id="PROD_CDE" />
+    <input type="text" name="PROD_CAT" id="PROD_CAT" />
    </div>
   </form>
   <header class="pop_header">
