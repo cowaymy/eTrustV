@@ -45,6 +45,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 09/04/2019    ONGHC      1.0.6       - Amend installationNotePop to add param
  * 24/04/2019    ONGHC      1.0.7       - Amend insertInstallationResult_2 to accept 741 code
  * 22/07/2019    ONGHC      1.0.8       - Amend insertInstallationResult_2 add installation stock checking
+ * 14/02/2020    ONGHC      1.0.9       - Amend editInstallationPopup
  *********************************************************************************************/
 
 @Controller
@@ -1032,6 +1033,17 @@ public class InstallationResultListController {
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
     model.put("orderDetail", orderDetail);
     model.put("codeId", params.get("codeId"));
+
+    EgovMap orderInfo = null;
+
+    if (params.get("codeId").toString().equals("258")) {
+      orderInfo = installationResultListService.getOrderExchangeTypeByInstallEntryID(params);
+    } else {
+      orderInfo = installationResultListService.getOrderInfo(params);
+    }
+
+    model.put("orderInfo", orderInfo);
+
     // 호출될 화면
     return "services/installation/editInstallationResultPop";
   }
