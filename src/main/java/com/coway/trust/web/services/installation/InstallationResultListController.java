@@ -31,6 +31,7 @@ import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.biz.services.orderCall.OrderCallListService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -46,6 +47,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 24/04/2019    ONGHC      1.0.7       - Amend insertInstallationResult_2 to accept 741 code
  * 22/07/2019    ONGHC      1.0.8       - Amend insertInstallationResult_2 add installation stock checking
  * 14/02/2020    ONGHC      1.0.9       - Amend editInstallationPopup
+ * 17/02/2020    THUNPY     1.0.10     - Add installationCallLogRawPop
  *********************************************************************************************/
 
 @Controller
@@ -62,6 +64,9 @@ public class InstallationResultListController {
 
   @Resource(name = "servicesLogisticsPFCService")
   private ServicesLogisticsPFCService servicesLogisticsPFCService;
+
+  @Resource(name = "orderCallListService")
+  private OrderCallListService orderCallListService;
 
   /**
    * organization transfer page
@@ -1230,4 +1235,19 @@ public class InstallationResultListController {
    return ResponseEntity.ok(message);
 
  }
+
+ @RequestMapping(value = "/installationCallLogRawPop.do")
+ public String installationCallLogRawPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+   List<EgovMap> instcallLogTyp = orderCallListService.selectCallLogTyp();
+   List<EgovMap> instcallLogSta = orderCallListService.selectCallLogSta();
+   List<EgovMap> instcallLogStatus = installationResultListService.selectInstallStatus();
+
+
+   model.addAttribute("instcallLogTyp", instcallLogTyp);
+   model.addAttribute("instcallLogSta", instcallLogSta);
+   model.addAttribute("instcallLogStatus", instcallLogStatus);
+   return "services/installation/installationCallLogRawPop";
+ }
+
 }
