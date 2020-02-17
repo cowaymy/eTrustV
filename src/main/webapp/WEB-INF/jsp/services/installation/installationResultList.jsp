@@ -7,6 +7,7 @@
  25/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  05/03/2019  ONGHC  1.0.1          Remove selection mode as singleRow
  12/06/2019  ONGHC  1.0.2          Add Column Update By
+ 17/02/2020  THUNPY 1.0.3          Add Installation Call Log Raw button at Link
  -->
 
 <script type="text/javaScript">
@@ -324,6 +325,10 @@
     Common.popupDiv("/services/installationDscReportPop.do", null, null,
         true, '');
   }
+  function fn_installCallLogRaw() {
+	    Common.popupDiv("/services/installationCallLogRawPop.do", null, null,
+	        true, '');
+	  }
 
   function fn_editInstallation() {//active 일때만 열림
 
@@ -666,6 +671,11 @@
           <a href="#" onclick="javascript:fn_DscReport()"><spring:message
             code='service.btn.DSCReport' /></a>
          </p></li>
+          <li><p class="link_btn type2">
+          <a href="#" onclick="javascript:fn_installCallLogRaw()"><spring:message
+            code='service.btn.InstCallLogRaw' /></a>
+         </p></li>
+
        </c:if>
       </ul>
        <ul class="btns">
