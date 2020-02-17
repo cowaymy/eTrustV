@@ -551,4 +551,16 @@ public class OrderModifyController {
     int rslt = orderModifyService.chkCboPromPck(params);
     return ResponseEntity.ok(rslt);
   }
+
+  @RequestMapping(value = "/getExistSofNo.do")
+	public ResponseEntity<EgovMap> getExistSofNo(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+	  logger.debug("SOFNo : {}"  + params.get("ordRefNo"));
+		int cnt = orderModifyService.getExistSofNo(params);
+
+		EgovMap result = new EgovMap();
+
+		result.put("IS_EXIST", cnt > 0 ? "true" : "false");
+
+		return ResponseEntity.ok(result);
+	}
 }

@@ -69,5 +69,7 @@ public interface OrderModifyService {
   void updateCcpOrderBasinInfo(Map<String, Object> params, SessionVO sessionVO);
 
   int chkCboPromPck(Map<String, Object> params);
+  
+  int getExistSofNo(Map<String, Object> params);
 
 }

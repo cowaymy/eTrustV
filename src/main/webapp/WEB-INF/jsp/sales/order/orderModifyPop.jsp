@@ -265,6 +265,21 @@
       AUIGrid.setGridData(modRfrGridID, result);
     });
   }
+  
+  function fn_isExistESalesNo() {
+      var isExist = false, msg = "";
+
+      Common.ajaxSync("GET", "/sales/order/getExistSofNo.do", $("#frmBasicInfo").serialize(), function(rsltInfo) {
+          if(rsltInfo != null) {
+              isExist = rsltInfo.isExist;
+          }
+          console.log('isExistSalesNo:'+isExist);
+      });
+
+      if(isExist == 'true') Common.alert("Order Summary" + DEFAULT_DELIMITER + "<b>* this SOF No already exist, no amendment allow</b>");
+
+      return isExist;
+  }
 
   $(function() {
     $('#btnEditType').click(function() {
@@ -280,6 +295,7 @@
     $('#btnSaveBasicInfo').click(function() {
       if (!fn_validBasicInfo())
         return false;
+      if(fn_isExistESalesNo() == 'true') return false;
       fn_doSaveBasicInfo();
     });
     $('#btnSaveMailingAddress').click(function() {
@@ -2885,6 +2901,7 @@
       name="deptMemId" type="hidden" /> <input id="modGrpMemId"
       name="grpMemId" type="hidden" /> <input id="modOrgMemId"
       name="orgMemId" type="hidden" />
+      <input id="selType" name="selType" type="hidden" value="1" />
       <input id="eKeyinYn" name="eKeyinYn" type="hidden" value="${eKeyinYn}" />
      <table class="type1">
       <!-- table start -->

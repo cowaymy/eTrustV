@@ -699,4 +699,21 @@ WHERE   SALES_ORD_NO = (
                               WHERE   B.SALES_ORD_ID = #{salesOrdId}
                         )
 </select>
+
+<select id="getExistSofNo" parameterType="Map" resultType="int">
+        SELECT SUM(CNT) AS CNT
+          FROM
+             ( SELECT COUNT(1) CNT
+                 FROM SAL0213M
+                WHERE SOF_NO = #{ordRefNo}
+                  AND STUS_ID NOT IN (10, 98)
+                  AND '1' = #{selType}
+                UNION ALL
+               SELECT COUNT(1) CNT
+                 FROM SAL0001D
+                WHERE REF_NO = #{ordRefNo}
+                  AND STUS_CODE_ID != 8
+                  AND ('1' = #{selType} OR '2' = #{selType})
+             )
+    </select>
 </mapper>

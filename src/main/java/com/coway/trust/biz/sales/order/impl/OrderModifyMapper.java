@@ -95,4 +95,6 @@ public interface OrderModifyMapper {
   int chkCboPromCanPck(Map<String, Object> params);
 
   EgovMap selectMatOrFra(Map<String, Object> params);
+  
+  int getExistSofNo(Map<String, Object> params);
 }
