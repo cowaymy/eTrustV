@@ -2174,7 +2174,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("updated", new Date());
     installResult.put("updator", sessionVO.getUserId());
     installResult.put("adjAmount", 0);
-    installResult.put("psi", Integer.parseInt(CommonUtils.nvl(params.get("psiRcd")).toString()));
+    installResult.put("psi", CommonUtils.nvl(params.get("psiRcd")).toString());
 
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
