@@ -182,34 +182,27 @@
 	      Common.report("installationCallLogForm", option);
 	    }
 
-
-  function fn_clear() {
-
-	 /*    $("#listAppType").val('');
-	    $("#instcallLogType").val('');
-	    $("#instcallLogStatus").val('');
-	    $("#instalcallLogStatus").val('');
-	    $("#listDSCCode").val('');
-	    $("#ddlFailReason").val('');
-	    $("#fbFailReason").val('');
-	    $("#createDate").val('');
-	    $("#endDate").val('');
-	    $("#instcallStrDate").val('');
-	    $("#instcallEndDate").val('');
-	    $("#agingDayFrom").val('');
-	    $("#agingDayTo").val('');
-
-	    $("#V_WHERESQL").val('');
-	    $("#V_WHERESQL2").val('');
-	    $("#V_ORDERBYSQL").val('');
-	    $("#V_SELECTSQL").val('');
-	    $("#V_FULLSQL").val('');
-	    $("#reportFileName").val('');
-	    $("#viewType").val(''); */
-
-
-	  }
-
+  $.fn.clearForm = function() {
+	    return this.each(function() {
+	        var type = this.type, tag = this.tagName.toLowerCase();
+	        if (tag === 'form'){
+	            return $(':input',this).clearForm();
+	        }
+	        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+	            this.value = '';
+	        }else if (type === 'checkbox' || type === 'radio'){
+	            this.checked = false;
+	        }else if (tag === 'select'){
+	            this.selectedIndex = -1;
+	        }
+	        $("#instcallcreateDate").val("");
+	        $("#instcallendDate").val("");
+	        $("#instcallStrDate").val("");
+	        $("#instcallEndDate").val("");
+	        $("#agingDayFrom").val("");
+	        $("#agingDayTo").val("");
+	    });
+	};
 
 
   </script>
@@ -409,7 +402,7 @@
          code='service.btn.Generate' /></a>
       </p></li>
      <li><p class="btn_blue2 big">
-       <a href="#" onclick="javascript:fn_clear()"><spring:message
+       <a href="#" onclick="javascript:$('#installationCallLogForm').clearForm();"><spring:message
          code='service.btn.Clear' /></a>
       </p></li>
     </ul>
