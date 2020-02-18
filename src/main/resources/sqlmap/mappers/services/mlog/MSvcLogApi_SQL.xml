@@ -468,7 +468,8 @@
                                       area_id AS area_id,
                                       addr_dtl AS addr_dtl,
                                       street AS street,
-                                      NVL(Serial_Chk, 'N') AS Serial_Chk
+                                      NVL(Serial_Chk, 'N') AS Serial_Chk,
+                                      psi AS psi
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
                                            ROW_NUMBER () OVER (PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no ORDER BY svc0004d.as_result_id DESC) rn,
                                            sal0001d.sales_ord_no AS sales_Order_No,
@@ -554,7 +555,8 @@
                                            TO_CHAR (svc0004d.result_acept_name) AS result_Acceptance_Name,
                                            svc0001d.REF_REQST AS reqRefNo,
                                            svc0001d.as_type_id,
-                                           DBMS_LOB.SUBSTR(CCR0007D.CALL_REM, 4000, 1) AS instct
+                                           DBMS_LOB.SUBSTR(CCR0007D.CALL_REM, 4000, 1) AS instct,
+                                           TO_CHAR(svc0004d.PSI) AS psi
                                     FROM sal0001d,
                                          sal0002d,
                                          sal0022d,
@@ -994,71 +996,71 @@
   </select>
 
   <select id="getInstallationJobList_b" parameterType="Map" resultType="egovMap">
-    SELECT TO_CHAR(SALES_ORD_NO             )           AS         sales_Order_No
-         , TO_CHAR(SVC_NO                   )           AS         service_No
-         , TO_CHAR(CUST_NAME                )           AS         cust_Name
-         , TO_CHAR(JOB_TYPE                 )           AS         job_Type
-         , TO_CHAR(JOB_STUS                 )           AS         job_Status
-         , TO_CHAR(APPNT_DT                 )           AS         appointment_Date
-         , TO_CHAR(APPNT_TM                 )           AS         appointment_Time
-         , TO_CHAR(JOB_SESION               )           AS         job_Session
-         , TO_CHAR(CHECKIN_DT               )           AS         check_In_Date
-         , TO_CHAR(CHECKIN_TM               )           AS         check_In_Time
-         , TO_CHAR(CHECKIN_GPS              )           AS         check_In_Gps
-         , TO_CHAR(CUST_TYPE                )           AS         customer_Type
-         , TO_CHAR(CUST_ID                  )           AS         customer_Id
-         , TO_CHAR(SVC_STATE                )           AS         service_State
-         , TO_CHAR(PLAN_YEAR                )           AS         plan_Year
-         , TO_CHAR(PLAN_MONTH               )           AS         plan_Month
-         , TO_CHAR(INSTALL_ADDR             )           AS         install_Address
-         , TO_CHAR(POST_CODE                )           AS         postcode
-         , TO_CHAR(HANDPHONE_TEL            )           AS         handphone_Tel
-         , TO_CHAR(HOME_TEL                 )           AS         home_Tel
-         , TO_CHAR(OFFICE_TEL               )           AS         office_Tel
-         , TO_CHAR(MAIL_ADDR                )           AS         mail_Address
-         , TO_CHAR(CUST_VA_NO               )           AS         customer_Va_No
-         , TO_CHAR(CUST_JOM_PAY_REF_NO      )           AS         customer_Jom_Pay_Ref_No
-         , TO_CHAR(PRODUCT_NAME             )           AS         product_Name
-         , TO_CHAR(PRODUCT_CODE             )           AS         product_Code
-         , TO_CHAR(APP_TYPE                 )           AS         app_Type
-         , TO_CHAR(INSTCT                   )           AS         instruction
-         , TO_CHAR(SALES_PROMT              )           AS         sales_Promotion
-         , TO_CHAR(CNTRCT_DUR               )           AS         contract_Duration
-         , TO_CHAR(MONTH_RENTAL_FEES        )           AS         monthly_Rental_Fees
-         , TO_CHAR(RGIST_FEES               )           AS         registration_Fees
-         , TO_CHAR(PAY_MODE                 )           AS         payment_Mode
-         , TO_CHAR(BANK_CODE                )           AS         bank_Code
-         , TO_CHAR(BANK_NAME                )           AS         bank_Name
-         , TO_CHAR(CARD_ACC_NO              )           AS         card_AccountNo
-         , TO_CHAR(OTSTND                   )           AS         outstanding
-         , TO_CHAR(EXPR_DT                  )           AS         expiry_Date
-         , TO_CHAR(DSC_CODE                 )           AS         dsc_Code
-         , TO_CHAR(SIRIM_NO                 )           AS         sirim_No
-         , TO_CHAR(SERIAL_NO                )           AS         serial_No
-         , TO_CHAR(HP_NAME                  )           AS         hp_Name
-         , TO_CHAR(HP_TEL                   )           AS         hp_Tel
-         , TO_CHAR(HM_NAME                  )           AS         hm_Name
-         , TO_CHAR(HM_TEL                   )           AS         hm_Tel
-         , TO_CHAR(BILL_AMT                 )           AS         bill_Amount
-         , TO_CHAR(PAID_AMT                 )           AS         paid_Amount
-         , TO_CHAR(ADJ_AMT                  )           AS         adjustment_Amount
-         , TO_CHAR(RESULT_REM               )           AS         result_Remark
-         , TO_CHAR(OWNER_CODE               )           AS         owner_Code
-         , TO_CHAR(OWNER_CODE_NM            )           AS         owner_Code_Nm
-         , TO_CHAR(RESULT_CUST_NAME         )           AS         result_Cust_Name
-         , TO_CHAR(RESULT_ICMOBILE_NO       )           AS         result_Ic_Mobile_No
-         , TO_CHAR(RESULT_RPT_EMAIL_NO      )           AS         result_Report_Email_No
-         , TO_CHAR(RESULT_ACEPT_NAME        )           AS         result_Acceptance_Name
-         , TO_CHAR(FAIL_RESN_CODE           )           AS         fail_Reason_Code
-         , TO_CHAR(FAIL_RESN_NAME           )           AS         fail_Reason_Name
-         , TO_CHAR(LAST_PAY_DT              )           AS         last_Payment_Date
-         , TO_CHAR(NEXT_CALL_DT             )           AS         next_Call_Date
-         , TO_CHAR(NEXT_CALL_TM             )           AS         next_Call_Time
-         , TO_CHAR(AS_EXCHN_YN              )           AS         as_Exchange_Y_N
-         , TO_CHAR(BEFORE_PRODUCT_CODE      )           AS         before_Product_Code
-         , TO_CHAR(BEFORE_PRODUCT_SERIAL_NO )           AS         before_Product_Serial_No
-         , TO_CHAR(CRT_USER_ID              )           AS         Create_User_ID
-         , TO_CHAR(CRT_DT                   )           AS         Create_Date
+    SELECT TO_CHAR(SALES_ORD_NO) AS sales_Order_No
+         , TO_CHAR(SVC_NO) AS service_No
+         , TO_CHAR(CUST_NAME) AS cust_Name
+         , TO_CHAR(JOB_TYPE) AS job_Type
+         , TO_CHAR(JOB_STUS) AS job_Status
+         , TO_CHAR(APPNT_DT) AS appointment_Date
+         , TO_CHAR(APPNT_TM) AS appointment_Time
+         , TO_CHAR(JOB_SESION) AS job_Session
+         , TO_CHAR(CHECKIN_DT) AS check_In_Date
+         , TO_CHAR(CHECKIN_TM) AS check_In_Time
+         , TO_CHAR(CHECKIN_GPS) AS check_In_Gps
+         , TO_CHAR(CUST_TYPE) AS customer_Type
+         , TO_CHAR(CUST_ID) AS customer_Id
+         , TO_CHAR(SVC_STATE) AS service_State
+         , TO_CHAR(PLAN_YEAR) AS plan_Year
+         , TO_CHAR(PLAN_MONTH) AS plan_Month
+         , TO_CHAR(INSTALL_ADDR) AS install_Address
+         , TO_CHAR(POST_CODE) AS postcode
+         , TO_CHAR(HANDPHONE_TEL) AS handphone_Tel
+         , TO_CHAR(HOME_TEL) AS home_Tel
+         , TO_CHAR(OFFICE_TEL) AS office_Tel
+         , TO_CHAR(MAIL_ADDR) AS mail_Address
+         , TO_CHAR(CUST_VA_NO) AS customer_Va_No
+         , TO_CHAR(CUST_JOM_PAY_REF_NO) AS customer_Jom_Pay_Ref_No
+         , TO_CHAR(PRODUCT_NAME) AS product_Name
+         , TO_CHAR(PRODUCT_CODE) AS product_Code
+         , TO_CHAR(APP_TYPE) AS app_Type
+         , TO_CHAR(INSTCT) AS instruction
+         , TO_CHAR(SALES_PROMT) AS sales_Promotion
+         , TO_CHAR(CNTRCT_DUR) AS contract_Duration
+         , TO_CHAR(MONTH_RENTAL_FEES) AS monthly_Rental_Fees
+         , TO_CHAR(RGIST_FEES) AS registration_Fees
+         , TO_CHAR(PAY_MODE) AS payment_Mode
+         , TO_CHAR(BANK_CODE) AS bank_Code
+         , TO_CHAR(BANK_NAME) AS bank_Name
+         , TO_CHAR(CARD_ACC_NO) AS card_AccountNo
+         , TO_CHAR(OTSTND) AS outstanding
+         , TO_CHAR(EXPR_DT) AS expiry_Date
+         , TO_CHAR(DSC_CODE) AS dsc_Code
+         , TO_CHAR(SIRIM_NO) AS sirim_No
+         , TO_CHAR(SERIAL_NO) AS serial_No
+         , TO_CHAR(HP_NAME) AS hp_Name
+         , TO_CHAR(HP_TEL) AS hp_Tel
+         , TO_CHAR(HM_NAME) AS hm_Name
+         , TO_CHAR(HM_TEL) AS hm_Tel
+         , TO_CHAR(BILL_AMT) AS bill_Amount
+         , TO_CHAR(PAID_AMT) AS paid_Amount
+         , TO_CHAR(ADJ_AMT) AS adjustment_Amount
+         , TO_CHAR(RESULT_REM) AS result_Remark
+         , TO_CHAR(OWNER_CODE) AS owner_Code
+         , TO_CHAR(OWNER_CODE_NM) AS owner_Code_Nm
+         , TO_CHAR(RESULT_CUST_NAME) AS result_Cust_Name
+         , TO_CHAR(RESULT_ICMOBILE_NO) AS result_Ic_Mobile_No
+         , TO_CHAR(RESULT_RPT_EMAIL_NO) AS result_Report_Email_No
+         , TO_CHAR(RESULT_ACEPT_NAME) AS result_Acceptance_Name
+         , TO_CHAR(FAIL_RESN_CODE) AS fail_Reason_Code
+         , TO_CHAR(FAIL_RESN_NAME) AS fail_Reason_Name
+         , TO_CHAR(LAST_PAY_DT) AS last_Payment_Date
+         , TO_CHAR(NEXT_CALL_DT) AS next_Call_Date
+         , TO_CHAR(NEXT_CALL_TM) AS next_Call_Time
+         , TO_CHAR(AS_EXCHN_YN) AS as_Exchange_Y_N
+         , TO_CHAR(BEFORE_PRODUCT_CODE) AS before_Product_Code
+         , TO_CHAR(BEFORE_PRODUCT_SERIAL_NO) AS before_Product_Serial_No
+         , TO_CHAR(CRT_USER_ID) AS Create_User_ID
+         , TO_CHAR(CRT_DT) AS Create_Date
          , TO_CHAR(FRA_YN) AS fra_Yn
          , TO_CHAR(FRA_ORD_NO) AS fra_Ord_No
          , TO_CHAR(FRA_PRODUCT_CODE) AS fra_Product_Code
@@ -1071,6 +1073,7 @@
          , TO_CHAR(REAL_BEFORE_PRODUCT_CODE) AS real_Before_Product_Code
          , TO_CHAR(REAL_BEFORE_PRODUCT_NAME) AS real_Before_Porduct_Name
          , TO_CHAR(REAL_BEFORE_PRODUCT_SERIAL_NO) AS real_Before_Product_Serial_No
+         , TO_CHAR(PSI) AS psi
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -1080,7 +1083,7 @@
         SELECT A.*
 			     , CASE WHEN FRA_ORD_NO IS NULL THEN 'N' ELSE 'Y' END AS FRA_YN
 			     , (SELECT MAX(T3.STK_CODE)
-			                   FROM SAL0001D T1
+			         FROM SAL0001D T1
 			                      , SAL0002D T2
 			                      , SYS0026M T3
 			                  WHERE T1.SALES_ORD_ID = T2.SALES_ORD_ID(+)
@@ -1559,7 +1562,8 @@
            NVL(TO_CHAR (TOT_AMT), '0') AS total_Amount,
            TO_CHAR (CRT_USER_ID) AS Create_User_ID,
            TO_CHAR (CRT_DT) AS Create_Date,
-           TO_CHAR(SERIAL_CHK) AS serial_Chk
+           TO_CHAR(SERIAL_CHK) AS serial_Chk,
+           TO_CHAR(PSI) AS psi,
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
