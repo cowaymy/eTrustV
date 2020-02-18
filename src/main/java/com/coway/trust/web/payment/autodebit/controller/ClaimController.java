@@ -1479,7 +1479,7 @@ public class ClaimController {
       inputDate = CommonUtils.nvl(ctrlBatchDt).equals("") ? "1900-01-01" : ctrlBatchDt;
       sFile = fileName + "." + ext;
 
-      downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, subPath, claimMap);
+      downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, subPath + inputDate + "/", claimMap);
 
       largeExcelService.downLoadClaimFileMBB(claimMap, downloadHandler);
       downloadHandler.writeFooter();
@@ -2336,7 +2336,7 @@ public class ClaimController {
 
           File dir = new File(srcDir);
           File[] files = dir.listFiles();
-
+          System.out.println("files "  + files);
           for (int i = 0; i < files.length; i++) {
               System.out.println("Adding file: " + files[i].getName());
 
