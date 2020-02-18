@@ -69,14 +69,14 @@ public class InstallationResultForm {
 
   private String serialRequireChkYn;
 
-  private String psi;
+  private String psiRcd;
 
-  public String getPsi() {
-    return psi;
+  public String getPsiRcd() {
+    return psiRcd;
   }
 
-  public void setPsi(String psi) {
-    this.psi = psi;
+  public void setPsiRcd(String psiRcd) {
+    this.psiRcd = psiRcd;
   }
 
   public String getSerialRequireChkYn() {
