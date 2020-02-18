@@ -1563,7 +1563,7 @@
            TO_CHAR (CRT_USER_ID) AS Create_User_ID,
            TO_CHAR (CRT_DT) AS Create_Date,
            TO_CHAR(SERIAL_CHK) AS serial_Chk,
-           TO_CHAR(PSI) AS psi,
+           TO_CHAR(PSI) AS psi
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
