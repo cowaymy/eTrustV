@@ -939,7 +939,7 @@
                    , FN_GET_ORDER_SERIAL(SAL0001D.SALES_ORD_ID, NULL) AS real_Before_Product_Serial_No
                    , SYS0026M.STK_CODE AS REAL_BEFORE_PRODUCT_CODE
                    , SYS0026M.STK_DESC AS REAL_BEFORE_PRODUCT_NAME
-                   , TO_CHAR (SAL0047D.PSI, '') AS psi
+                   , TO_CHAR (SAL0047D.PSI) AS psi
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
