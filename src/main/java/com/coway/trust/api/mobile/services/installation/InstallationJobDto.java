@@ -244,60 +244,85 @@ public class InstallationJobDto {
   @ApiModelProperty(value = "fraProductName")
   private String fraProductName;
 
+  @ApiModelProperty(value = "psi")
+  private String psi;
+
   private String serialChk;
-  public String getSerialChk() {
-	  return serialChk;
+
+  public String getPsi() {
+    return psi;
   }
+
+  public void setPsi(String psi) {
+    this.psi = psi;
+  }
+
+  public String getSerialChk() {
+    return serialChk;
+  }
+
   public void setSerialChk(String serialChk) {
-	  this.serialChk = serialChk;
+    this.serialChk = serialChk;
   }
 
   private String fraSerialChk;
+
   public String getFraSerialChk() {
-	  return fraSerialChk;
+    return fraSerialChk;
   }
+
   public void setFraSerialChk(String fraSerialChk) {
-	this.fraSerialChk = fraSerialChk;
+    this.fraSerialChk = fraSerialChk;
   }
 
   private String selFraSerialNo;
+
   public String getSelFraSerialNo() {
-	  return selFraSerialNo;
+    return selFraSerialNo;
   }
+
   public void setSelFraSerialNo(String selFraSerialNo) {
-	this.selFraSerialNo = selFraSerialNo;
+    this.selFraSerialNo = selFraSerialNo;
   }
 
   private String realAsExchangeYn;
+
   public String getRealAsExchangeYn() {
-	  return realAsExchangeYn;
+    return realAsExchangeYn;
   }
+
   public void setRealAsExchangeYn(String realAsExchangeYn) {
-	this.realAsExchangeYn = realAsExchangeYn;
+    this.realAsExchangeYn = realAsExchangeYn;
   }
 
   private String realBeforeProductCode;
+
   public String getRealBeforeProductCode() {
-	  return realBeforeProductCode;
+    return realBeforeProductCode;
   }
+
   public void setRealBeforeProductCode(String realBeforeProductCode) {
-	this.realBeforeProductCode = realBeforeProductCode;
+    this.realBeforeProductCode = realBeforeProductCode;
   }
 
   private String realBeforeProductName;
+
   public String getRealBeforeProductName() {
-	  return realBeforeProductName;
+    return realBeforeProductName;
   }
+
   public void setRealBeforeProductName(String realBeforeProductName) {
-	this.realBeforeProductName = realBeforeProductName;
+    this.realBeforeProductName = realBeforeProductName;
   }
 
   private String realBeforeProductSerialNo;
+
   public String getRealBeforeProductSerialNo() {
-	  return realBeforeProductSerialNo;
+    return realBeforeProductSerialNo;
   }
+
   public void setRealBeforeProductSerialNo(String realBeforeProductSerialNo) {
-	this.realBeforeProductSerialNo = realBeforeProductSerialNo;
+    this.realBeforeProductSerialNo = realBeforeProductSerialNo;
   }
 
   public String getSalesOrderNo() {
