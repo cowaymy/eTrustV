@@ -1664,11 +1664,12 @@
 
   <select id="getInstAsPSIData" parameterType="Map" resultType="egovMap">
     SELECT * FROM  (
-    SELECT C.SALES_ORD_NO AS ORDERNO,
+    SELECT '1' AS SEQ,
+               C.SALES_ORD_NO AS ORDERNO,
                A.INSTALL_ENTRY_NO AS ID,
                A.INSTALL_ENTRY_NO AS RID,
                TO_CHAR(B.INSTALL_DT, 'DD/MM/YYYY') AS COMPLETE_DT,
-               NVL(B.PSI, '0') AS PSI,
+               NVL(TO_CHAR(B.PSI, '999.99'), '0.00') AS PSI,
                E.CODE AS BR_CDE,
                E.NAME AS BR,
                D.MEM_CODE AS CT_CDE,
@@ -1678,15 +1679,17 @@
     JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
     JOIN ORG0001D D ON B.CT_ID = D.MEM_ID
     JOIN SYS0005M E ON D.BRNCH = E.BRNCH_ID
-    WHERE B.STUS_CODE_ID = 4 AND C.SALES_ORD_NO = #{ordNo}
+    WHERE B.STUS_CODE_ID = 4
+        AND C.SALES_ORD_NO = #{ordNo}
 
     UNION ALL
 
-    SELECT C.SALES_ORD_NO AS ORDERNO,
+    SELECT '2' AS SEQ,
+               C.SALES_ORD_NO AS ORDERNO,
                A.AS_NO AS ID,
                B.AS_RESULT_NO AS RID,
                TO_CHAR(B.AS_SETL_DT, 'DD/MM/YYYY') AS COMPLETE_DT,
-               NVL(B.PSI, '0') AS PSI,
+               NVL(TO_CHAR(B.PSI, '999.99'), '0.00') AS PSI,
                E.CODE AS BR_CDE,
                E.NAME AS BR,
                D.MEM_CODE AS CT_CDE,
@@ -1700,6 +1703,6 @@
         AND B.AS_RESULT_TYPE_ID = '457'
         AND C.SALES_ORD_NO = #{ordNo}
 
-    ) A ORDER BY A.COMPLETE_DT DESC
+    ) A ORDER BY A.SEQ, A.COMPLETE_DT ASC
   </select>
 </mapper>
