@@ -499,7 +499,7 @@ function fn_scanClosePop(){
 <ul class="right_opt">
     <li style="display:none;"><p class="btn_blue2"><a id="btnScanAllDel" href="#">Clear Serial</a></p></li>
     <li><p class="btn_blue2"><a id="btnScanDeleteGrid" >All Delete</a></p></li>
-    <li><p class="btn_blue2"><a id="btnScanClose" >CLOSE | TUTUP</a></p></li>
+    <li><p class="btn_blue2"><a id="btnScanClose" >CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

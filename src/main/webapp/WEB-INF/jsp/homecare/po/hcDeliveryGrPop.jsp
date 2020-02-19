@@ -387,7 +387,7 @@ function fnOnfocus(obj){
 <header class="pop_header"><!-- pop_header start -->
 <h1>HomeCare GR</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="btnPopClose" >CLOSE | TUTUP</a></p></li>
+    <li><p class="btn_blue2"><a id="btnPopClose" >CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

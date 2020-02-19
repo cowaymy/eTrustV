@@ -1754,7 +1754,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>eKey-in</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="btnPreOrdClose" onClick="javascript:fn_closePreOrdRegPop2();" href="#">CLOSE | TUTUP</a></p></li>
+    <li><p class="btn_blue2"><a id="btnPreOrdClose" onClick="javascript:fn_closePreOrdRegPop2();" href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
