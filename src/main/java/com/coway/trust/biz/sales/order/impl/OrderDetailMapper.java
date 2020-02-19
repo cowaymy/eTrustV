@@ -40,67 +40,69 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 @Mapper("orderDetailMapper")
 public interface OrderDetailMapper {
-  
+
   EgovMap selectBasicInfo(Map<String, Object> params); // Basic Info
-  
+
   EgovMap selectLatestOrderLogByOrderID(Map<String, Object> params); // Order Log View
-  
+
   EgovMap selectOrderAgreementByOrderID(Map<String, Object> params); // Order Log View
-  
+
   EgovMap selectOrderInstallationInfoByOrderID(Map<String, Object> params); // Installation Info
-  
+
   List<EgovMap> selectOrderReferralInfoList(Map<String, Object> params); // Referral Info
-  
+
   List<EgovMap> selectCallLogList(Map<String, Object> params); // Call Log
-  
+
   List<EgovMap> selectPaymentMasterList(Map<String, Object> params); // Payment Listing
-  
+
   List<EgovMap> selectAutoDebitResultList(Map<String, Object> params); // Auto Debit Result
-  
+
   EgovMap selectOrderCCPFeedbackCodeByOrderID(Map<String, Object> params); // CCP Feedback Code
-  
+
   EgovMap selectOrderCCPInfoByOrderID(Map<String, Object> params); // CCP Remark
-  
+
   EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params); // Salesman Info
-  
+
   EgovMap selectOrderServiceMemberViewByOrderID(Map<String, Object> params); // Cody Info
-  
+
   List<EgovMap> selectOrderSameRentalGroupOrderList(Map<String, Object> params); // Auto Debit Result
-  
+
   EgovMap selectOrderMailingInfoByOrderID(Map<String, Object> params); // Cody Info
-  
+
   EgovMap selectOrderRentPaySetInfoByOrderID(Map<String, Object> params); // Cody Info
-  
+
   EgovMap selectThirdPartyInfo(Map<String, Object> params); // Cody Info
-  
+
   List<EgovMap> selectMembershipInfoList(Map<String, Object> params); // Membership Info Result
-  
+
   List<EgovMap> selectDocumentList(Map<String, Object> params); // Document Result
-  
+
   EgovMap selectGuaranteeInfo(Map<String, Object> params); // Guarantee Info
-  
+
   List<EgovMap> selectAutoDebitList(Map<String, Object> params); // Auto Debit Result
-  
+
   List<EgovMap> selectEcashList(Map<String, Object> params); // eCash Result
-  
+
   List<EgovMap> selectDiscountList(Map<String, Object> params); // Discount
-  
+
   EgovMap selectOrderConfigInfo(Map<String, Object> params); // Guarantee Info
-  
+
   EgovMap selectGSTCertInfo(Map<String, Object> params); // Guarantee Info
-  
+
   String selectMemberInfo(String params); // Member Info
-  
+
   List<EgovMap> selectLast6MonthTransList(Map<String, Object> params); // Last 6 Months Transaction
-  
+
   List<EgovMap> selectLast6MonthTransListNew(Map<String, Object> params); // Last 6 Months Transaction
-  
+
   EgovMap selectCurrentBSResultByBSNo(Map<String, Object> params); // Guarantee Info
-  
+
   List<EgovMap> selectASInfoList(Map<String, Object> params); // Last 6 Months Transaction
-  
+
   List<EgovMap> getInstImg(Map<String, Object> params);
-  
+
   List<EgovMap> selectGSTRebateList(Map<String, Object> params);
-  
+
+  List<EgovMap> getInstAsPSIData(Map<String, Object> params);
+
 }
