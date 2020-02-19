@@ -575,7 +575,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	public List<EgovMap> selectASInfoList(Map<String, Object> params) {
 		return orderDetailMapper.selectASInfoList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> getInstImg(Map<String, Object> params) {
       return orderDetailMapper.getInstImg(params);
@@ -585,4 +585,10 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
   public List<EgovMap> selectGSTRebateList(Map<String, Object> params) {
     return orderDetailMapper.selectGSTRebateList(params);
   }
+
+  @Override
+  public List<EgovMap> getInstAsPSIData(Map<String, Object> params) {
+    return orderDetailMapper.getInstAsPSIData(params);
+  }
+
 }
