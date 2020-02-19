@@ -76,6 +76,19 @@
       </ul>
     </td>
 </tr>
+<tr>
+  <th scope="row"><spring:message code="service.title.PSIRcd" /></th>
+  <td colspan="5">
+    <ul class="btns">
+      <li>
+        <p class="btn_grid">
+          <a href="#" onClick=
+            "{Common.popupDiv('/sales/order/getInstAsPSI.do', { ordNo : '${orderDetail.basicInfo.ordNo}' }, null , true);}"><spring:message code='sys.btn.view' /></a>
+        </p>
+       </li>
+      </ul>
+    </td>
+</tr>
 </tbody>
 </table><!-- table end -->
 
