@@ -253,7 +253,7 @@ public class AfterServiceJobDto {
   private String serialChk;
 
   @ApiModelProperty(value = "PSI")
-  private int psi;
+  private String psi;
 
   @ApiModelProperty(value = "PRODCAT")
   private int prodcat;
@@ -266,11 +266,11 @@ public class AfterServiceJobDto {
     this.prodcat = prodcat;
   }
 
-  public int getPsi() {
+  public String getPsi() {
     return psi;
   }
 
-  public void setPsi(int psi) {
+  public void setPsi(String psi) {
     this.psi = psi;
   }
 
