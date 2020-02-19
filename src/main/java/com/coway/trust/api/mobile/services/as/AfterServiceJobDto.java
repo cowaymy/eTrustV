@@ -255,6 +255,17 @@ public class AfterServiceJobDto {
   @ApiModelProperty(value = "PSI")
   private int psi;
 
+  @ApiModelProperty(value = "prodCat")
+  private int prodCat;
+
+  public int getProdCat() {
+    return prodCat;
+  }
+
+  public void setProdCat(int prodCat) {
+    this.prodCat = prodCat;
+  }
+
   public int getPsi() {
     return psi;
   }
