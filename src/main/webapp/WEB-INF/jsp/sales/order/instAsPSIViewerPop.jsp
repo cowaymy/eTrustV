@@ -51,7 +51,7 @@
       editable : false,
       width : 130
     }, {
-      dataField : "lmp",
+      dataField : "lpm",
       headerText : '<spring:message code="service.title.lmp" />',
       editable : false,
       width : 130
