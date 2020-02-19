@@ -255,7 +255,7 @@ public class AfterServiceJobDto {
   @ApiModelProperty(value = "PSI")
   private int psi;
 
-  @ApiModelProperty(value = "prodCat")
+  @ApiModelProperty(value = "PRODCAT")
   private int prodCat;
 
   public int getProdCat() {
